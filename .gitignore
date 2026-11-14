@@ -1,0 +1,62 @@
+# Unity generated folders
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Asset meta data should only be ignored when the corresponding asset is also ignored
+!/[Aa]ssets/**/*.meta
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.csproj
+*.unityproj
+*.sln
+*.slnx
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+ExportedObj/
+.consulo/
+
+# Unity crash reports and packages
+sysinfo.txt
+*.apk
+*.aab
+*.unitypackage
+*.app
+crashlytics-build.properties
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Generated or downloaded files waiting for approval: only approved files move into Assets/
+/staging/*
+!/staging/README.md
+
+# Review outputs that are rebuilt by the tools; golden frames and reports are kept
+/review/shots/current/
+/review/audit/*.csv
+
+# Compiled leftovers from script run / method reload
+/AgentScripts/**/*.dll
+/AgentScripts/**/*.pdb
+
+# Local Claude Code settings (shared settings.json is committed)
+/.claude/settings.local.json

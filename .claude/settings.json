@@ -1,0 +1,80 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(unity status:*)",
+      "Bash(unity --json status:*)",
+      "Bash(unity --no-banner --no-pager --non-interactive --json status:*)",
+      "Bash(unity recompile:*)",
+      "Bash(unity --json recompile:*)",
+      "Bash(unity --no-banner --no-pager --non-interactive --json recompile:*)",
+      "Bash(unity command editor status:*)",
+      "Bash(unity command console:*)",
+      "Bash(unity command script recompile:*)",
+      "Bash(unity command script recompile_status:*)",
+      "Bash(unity command test:*)",
+      "Bash(unity command capture:*)",
+      "Bash(unity command assets find:*)",
+      "Bash(unity command scene get_hierarchy:*)",
+      "Bash(unity command --query:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)"
+    ],
+    "deny": [
+      "Edit(/**/*.unity)",
+      "Write(/**/*.unity)",
+      "Edit(/**/*.prefab)",
+      "Write(/**/*.prefab)",
+      "Edit(/**/*.meta)",
+      "Write(/**/*.meta)",
+      "Edit(/**/*.mat)",
+      "Write(/**/*.mat)",
+      "Edit(/**/*.anim)",
+      "Write(/**/*.anim)",
+      "Edit(/**/*.controller)",
+      "Write(/**/*.controller)",
+      "Edit(/Assets/**/*.asset)",
+      "Write(/Assets/**/*.asset)",
+      "Edit(/Library/**)",
+      "Write(/Library/**)",
+      "Edit(/Temp/**)",
+      "Write(/Temp/**)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/session-start.ps1",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/yaml-guard.ps1",
+            "timeout": 20
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell -NoProfile -ExecutionPolicy Bypass -File .claude/hooks/stop-compile.ps1",
+            "timeout": 180
+          }
+        ]
+      }
+    ]
+  }
+}
