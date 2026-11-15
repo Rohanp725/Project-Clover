@@ -3,6 +3,7 @@ using System.Linq;
 using Clover.Player;
 using Clover.UI;
 using UnityEditor;
+using UnityEditor.Animations;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -18,7 +19,25 @@ namespace Clover.EditorTools
     {
         public const string ScenePath = "Assets/_Project/Scenes/CombatTest.unity";
         public const string ControlsPath = "Assets/_Project/Settings/Controls.inputactions";
+        public const string PlayerModelPath = "Assets/_Project/Art/Models/Characters/player.fbx";
+        public const string ToonShaderName = "Clover/Toon";
         private const string GeneratedFolder = "Assets/_Project/Generated/CombatTest";
+        private const string PlayerFolder = "Assets/_Project/Generated/Player";
+
+        // The character's colours as authored in Blender (linear values), by the name behind "m_player_" in the model.
+        private static readonly (string name, Color linear)[] PlayerPalette =
+        {
+            ("skin", new Color(0.70f, 0.46f, 0.33f)),
+            ("jacket", new Color(0.075f, 0.10f, 0.155f)),
+            ("trouser", new Color(0.10f, 0.09f, 0.095f)),
+            ("wrap", new Color(0.58f, 0.53f, 0.43f)),
+            ("leather", new Color(0.20f, 0.12f, 0.075f)),
+            ("iron", new Color(0.06f, 0.065f, 0.08f)),
+            ("accent", new Color(0.58f, 0.13f, 0.06f)),
+            ("hair", new Color(0.035f, 0.03f, 0.04f)),
+            ("straw", new Color(0.55f, 0.43f, 0.22f)),
+        };
+
 
         [MenuItem("Clover/Build/Combat Test Arena")]
         public static void Build()
@@ -39,15 +58,16 @@ namespace Clover.EditorTools
             }
 
             EnsureFolder(GeneratedFolder);
+            EnsureFolder(PlayerFolder);
+            // Materials of the blocky stand-in figure this builder used to make.
+            foreach (string old in new[] { "PlayerBody", "PlayerDark", "PlayerFront" })
+                AssetDatabase.DeleteAsset($"{GeneratedFolder}/{old}.mat");
             // The world is muted on purpose (docs/GAME.md): only elements will carry strong colour.
             var ground = Material("Ground", new Color(0.22f, 0.23f, 0.26f));
             var stone = Material("Stone", new Color(0.33f, 0.34f, 0.38f));
-            var playerBody = Material("PlayerBody", new Color(0.78f, 0.74f, 0.66f));
-            var playerDark = Material("PlayerDark", new Color(0.16f, 0.15f, 0.17f));
             ground.SetTexture("_BaseMap", FloorTiles());
             // One tile of the checker is two metres, so a roll of 4.5 m crosses a little over two tiles.
             ground.SetTextureScale("_BaseMap", new Vector2(11f, 11f));
-            var playerFront = Material("PlayerFront", new Color(0.95f, 0.45f, 0.12f));
 
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
@@ -80,7 +100,7 @@ namespace Clover.EditorTools
             cameraObject.AddComponent<AudioListener>();
             var follow = cameraObject.AddComponent<TopDownCamera>();
 
-            var player = BuildPlayer(playerBody, playerDark, playerFront);
+            var player = BuildPlayer();
             var controller = player.GetComponent<PlayerController>();
             controller.Configure(controls, cameraObject.transform);
             follow.Configure(player.transform);
@@ -98,7 +118,7 @@ namespace Clover.EditorTools
             Debug.Log($"[Clover.Build] Combat test arena built at {ScenePath}.");
         }
 
-        private static GameObject BuildPlayer(Material body, Material dark, Material front)
+        private static GameObject BuildPlayer()
         {
             var player = new GameObject("Player");
             var capsule = player.AddComponent<CharacterController>();
@@ -107,52 +127,88 @@ namespace Clover.EditorTools
             capsule.center = new Vector3(0f, 0.9f, 0f);
             var controller = player.AddComponent<PlayerController>();
 
-            // A blocky stand-in until there is a real character. Everything hangs off a pivot at hip height so the roll
-            // can spin the whole figure about its middle.
-            var pivot = Empty("Figure", player.transform, new Vector3(0f, 0.92f, 0f));
-            Part("Torso", pivot, new Vector3(0f, 0.32f, 0f), new Vector3(0.5f, 0.62f, 0.28f), body);
-            Part("Head", pivot, new Vector3(0f, 0.8f, 0f), new Vector3(0.3f, 0.3f, 0.3f), body);
-            // Strong colour only on the front, so facing reads from above.
-            Part("Headband", pivot, new Vector3(0f, 0.84f, 0.02f), new Vector3(0.33f, 0.08f, 0.34f), front);
-            Part("Sash", pivot, new Vector3(0f, 0.3f, 0.13f), new Vector3(0.34f, 0.5f, 0.06f), front);
-            var sheath = Part("Sheath", pivot, new Vector3(-0.3f, 0.02f, -0.12f), new Vector3(0.06f, 0.07f, 0.85f), dark);
-            sheath.localRotation = Quaternion.Euler(-18f, 8f, 0f);
+            var modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerModelPath);
+            if (modelAsset == null)
+            {
+                Debug.LogError($"[Clover.Build] No character model at {PlayerModelPath}; the player was built without a body.");
+                return player;
+            }
 
-            var leftArm = Limb("Left Arm", pivot, new Vector3(-0.33f, 0.56f, 0f), new Vector3(0.14f, 0.56f, 0.14f), body);
-            var rightArm = Limb("Right Arm", pivot, new Vector3(0.33f, 0.56f, 0f), new Vector3(0.14f, 0.56f, 0.14f), body);
-            var leftLeg = Limb("Left Leg", pivot, new Vector3(-0.14f, 0f, 0f), new Vector3(0.18f, 0.9f, 0.18f), dark);
-            var rightLeg = Limb("Right Leg", pivot, new Vector3(0.14f, 0f, 0f), new Vector3(0.18f, 0.9f, 0.18f), dark);
+            var model = (GameObject)PrefabUtility.InstantiatePrefab(modelAsset);
+            model.name = "Model";
+            model.transform.SetParent(player.transform, false);
 
-            player.AddComponent<PlayerFigure>().Configure(controller, pivot, leftArm, rightArm, leftLeg, rightLeg);
+            var materials = PlayerMaterials();
+            var skinned = model.GetComponentInChildren<SkinnedMeshRenderer>();
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>())
+                renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials)).ToArray();
+
+            var animator = model.GetComponent<Animator>();
+            if (animator == null) animator = model.AddComponent<Animator>();
+            animator.runtimeAnimatorController = PlayerAnimatorController();
+            animator.applyRootMotion = false;
+            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
+            player.AddComponent<PlayerAnimator>().Configure(controller, animator);
             return player;
         }
 
-        private static Transform Empty(string name, Transform parent, Vector3 localPosition)
+        // The model's own materials only carry names; each is replaced by the toon material of the same name.
+        private static Material ToonFor(Material imported, Dictionary<string, Material> materials)
         {
-            var empty = new GameObject(name).transform;
-            empty.SetParent(parent, false);
-            empty.localPosition = localPosition;
-            return empty;
+            string name = imported != null ? imported.name.Replace("m_player_", "") : "";
+            if (materials.TryGetValue(name, out var toon)) return toon;
+            Debug.LogWarning($"[Clover.Build] The character uses a material '{name}' that the palette does not know.");
+            return imported;
         }
 
-        private static Transform Part(string name, Transform parent, Vector3 localPosition, Vector3 size, Material material)
+        private static Dictionary<string, Material> PlayerMaterials()
         {
-            var part = GameObject.CreatePrimitive(PrimitiveType.Cube);
-            part.name = name;
-            Object.DestroyImmediate(part.GetComponent<Collider>());
-            part.transform.SetParent(parent, false);
-            part.transform.localPosition = localPosition;
-            part.transform.localScale = size;
-            part.GetComponent<MeshRenderer>().sharedMaterial = material;
-            return part.transform;
+            var shader = Shader.Find(ToonShaderName);
+            if (shader == null) Debug.LogError($"[Clover.Build] Shader {ToonShaderName} was not found; the character will be pink.");
+            var materials = new Dictionary<string, Material>();
+            foreach (var (name, linear) in PlayerPalette)
+            {
+                string path = $"{PlayerFolder}/m_player_{name}.mat";
+                var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+                if (material == null)
+                {
+                    material = new Material(shader);
+                    AssetDatabase.CreateAsset(material, path);
+                }
+                material.shader = shader;
+                // Material colours are stored as the eye sees them; Blender's numbers are light values.
+                material.SetColor("_BaseColor", linear.gamma);
+                EditorUtility.SetDirty(material);
+                materials[name] = material;
+            }
+            return materials;
         }
 
-        // A limb turns about its top end, so it gets its own joint with the block hanging below it.
-        private static Transform Limb(string name, Transform parent, Vector3 jointPosition, Vector3 size, Material material)
+        private static AnimatorController PlayerAnimatorController()
         {
-            var joint = Empty(name, parent, jointPosition);
-            Part(name + " Block", joint, new Vector3(0f, -size.y * 0.5f, 0f), size, material);
-            return joint;
+            string path = $"{PlayerFolder}/PlayerAnimator.controller";
+            AssetDatabase.DeleteAsset(path);
+            var clips = AssetDatabase.LoadAllAssetsAtPath(PlayerModelPath).OfType<AnimationClip>()
+                .Where(clip => !clip.name.StartsWith("__")).ToDictionary(clip => clip.name);
+            foreach (string needed in new[] { "idle", "run", "roll" })
+                if (!clips.ContainsKey(needed)) Debug.LogError($"[Clover.Build] The character model has no '{needed}' clip.");
+
+            var controller = AnimatorController.CreateAnimatorControllerAtPath(path);
+            controller.AddParameter(PlayerAnimator.SpeedParameter, AnimatorControllerParameterType.Float);
+            var machine = controller.layers[0].stateMachine;
+
+            var locomotion = controller.CreateBlendTreeInController(PlayerAnimator.LocomotionState, out BlendTree tree, 0);
+            tree.blendType = BlendTreeType.Simple1D;
+            tree.blendParameter = PlayerAnimator.SpeedParameter;
+            tree.useAutomaticThresholds = false;
+            if (clips.TryGetValue("idle", out var idle)) tree.AddChild(idle, 0f);
+            if (clips.TryGetValue("run", out var run)) tree.AddChild(run, 1f);
+            machine.defaultState = locomotion;
+
+            var roll = machine.AddState(PlayerAnimator.RollState);
+            if (clips.TryGetValue("roll", out var rollClip)) roll.motion = rollClip;
+            EditorUtility.SetDirty(controller);
+            return controller;
         }
 
         private static Texture2D FloorTiles()

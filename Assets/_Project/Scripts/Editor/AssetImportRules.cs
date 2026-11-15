@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.IO;
 using UnityEditor;
 using UnityEngine;
@@ -9,13 +10,16 @@ namespace Clover.EditorTools
     /// accident. When a kind of asset needs something else, change the rule here; never fix single assets by hand.
     /// Textures: the suffix says what the map is (_albedo/_color sRGB; _normal a normal map; _mask/_rough/_metal/_ao/_height
     /// linear; _emissive sRGB); textures under Art/Textures/UI are sprites without mipmaps. Models: metres, no cameras or
-    /// lights, read/write off, materials in the prefab. Audio: streaming Vorbis for music and ambience, ADPCM for short sounds.
+    /// lights, read/write off, materials in the prefab. Characters: a generic rig, clips named after the part of the take
+    /// name behind the bar, looping when the clip is idle, run, walk or ends in _loop, imported materials kept only
+    /// for their names (builders swap in the toon materials by name), and smoothed normals stored in the tangents for the outline. Audio: streaming Vorbis for music and ambience, ADPCM for short sounds.
     /// </summary>
     public class AssetImportRules : AssetPostprocessor
     {
         public const string ArtDir = "Assets/_Project/Art/";
         public const string TexturesDir = ArtDir + "Textures/";
         public const string ModelsDir = ArtDir + "Models/";
+        public const string CharactersDir = ModelsDir + "Characters/";
         public const string AudioDir = "Assets/_Project/Audio/";
         public const int MaxTextureSize = 2048;
         public const int MaxUiTextureSize = 1024;
@@ -75,6 +79,69 @@ namespace Clover.EditorTools
             importer.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
             importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
             importer.generateSecondaryUV = false;
+
+            if (!assetPath.StartsWith(CharactersDir)) return;
+            importer.animationType = ModelImporterAnimationType.Generic;
+            importer.importAnimation = true;
+            // The imported materials are placeholders: builders read their names to know which toon material goes where.
+            // The outline pass needs one direction per point, not per face; it is written into the tangents after import.
+            importer.importTangents = ModelImporterTangents.None;
+            importer.weldVertices = false;
+        }
+
+        private void OnPreprocessAnimation()
+        {
+            if (!assetPath.StartsWith(CharactersDir)) return;
+            var importer = (ModelImporter)assetImporter;
+            var clips = importer.defaultClipAnimations;
+            foreach (var clip in clips)
+            {
+                // Blender names takes "rig|action"; the game wants the action.
+                int bar = clip.name.LastIndexOf('|');
+                if (bar >= 0) clip.name = clip.name.Substring(bar + 1);
+                clip.loopTime = IsLoopingClip(clip.name);
+            }
+            importer.clipAnimations = clips;
+        }
+
+        public static bool IsLoopingClip(string name) =>
+            name == "idle" || name == "run" || name == "walk" || name.EndsWith("_loop");
+
+        private void OnPostprocessModel(GameObject root)
+        {
+            if (!assetPath.StartsWith(CharactersDir)) return;
+            foreach (var skinned in root.GetComponentsInChildren<SkinnedMeshRenderer>(true)) StoreSmoothNormals(skinned.sharedMesh);
+            foreach (var filter in root.GetComponentsInChildren<MeshFilter>(true)) StoreSmoothNormals(filter.sharedMesh);
+        }
+
+        /// <summary>
+        /// Averages the normals of all vertices that share a position and stores the result in the tangents. Hard-edged
+        /// meshes have several normals per point, and an outline pushed along those splits open at every edge; pushed
+        /// along the average it stays closed. Tangents are used because skinning carries them along with the pose.
+        /// </summary>
+        public static void StoreSmoothNormals(Mesh mesh)
+        {
+            if (mesh == null) return;
+            var vertices = mesh.vertices;
+            var normals = mesh.normals;
+            if (normals.Length != vertices.Length) return;
+            var sums = new Dictionary<Vector3Int, Vector3>();
+            var keys = new Vector3Int[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                // A tenth of a millimetre is far below anything modelled, and well above export rounding.
+                keys[i] = Vector3Int.RoundToInt(vertices[i] * 10000f);
+                sums.TryGetValue(keys[i], out var sum);
+                sums[keys[i]] = sum + normals[i];
+            }
+            var tangents = new Vector4[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                Vector3 smooth = sums[keys[i]].normalized;
+                if (smooth == Vector3.zero) smooth = normals[i];
+                tangents[i] = new Vector4(smooth.x, smooth.y, smooth.z, 1f);
+            }
+            mesh.tangents = tangents;
         }
 
         private void OnPreprocessAudio()
