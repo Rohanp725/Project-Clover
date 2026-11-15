@@ -176,6 +176,10 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
 - Camera: **Decided for the vertical slice**: top-down in the manner of Hades. It is a trial: if the user dislikes
   it once the slice is playable, it changes. Worries to test: whether combat feels good from above, and the camera
   when the player is near or behind something.
+- Camera distance: **Decided for now**: 12 m at a 40 degree field of view and 55 degree pitch, closer than the first
+  try so the character reads. **Open**: how the camera frames much larger bosses (pulling back for a fight is one way).
+- Characters: **Decided**: the player character is made for this project in Blender, through the Blender MCP
+  connection, so it matches the look; no bought or downloaded character packs.
 - Style: **Decided**: cel-shaded with outlines, like an anime. A dark, muted world (stone, ash, storm cloud) in which
   the elements are the only saturated colour, so every spell and elemental effect stands out. The user's condition:
   it must be done well or it will not fit, so it is judged on screenshots early. References: Hades, Cuphead and
@@ -300,6 +304,7 @@ where a critical hit on a burning enemy causes a chained explosion.
 | 2026-11-15 | Windows PC only for now; sound and the game's title are put off | they wait on the story |
 | 2026-11-15 | The four pillars are approved | the user accepted them |
 | 2026-11-15 | Castle enemies: spear soldier, knife acolyte, lightning caster, each infected with the element | each teaches one core skill; the infection ties them to their god |
+| 2026-11-15 | The player character is modelled, rigged and animated in Blender for this project | the user wants visuals tailored to the game |
 | 2026-11-15 | Designed for a controller | matches the reference games |
 | 2026-11-15 | Limited flasks refilled at rest points; death ends the run except through Dark's revive and some later upgrades | the user's choice |
 | 2026-11-15 | Fists are the first run's weapon; Full Body Armament is an element-tree upgrade for the unarmed | gives fighting unarmed its own path |

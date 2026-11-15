@@ -1,0 +1,27 @@
+{
+    "name": "Controls",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1001",
+            "actions": [
+                { "name": "Move", "type": "Value", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1002", "expectedControlType": "Vector2", "processors": "", "interactions": "", "initialStateCheck": true },
+                { "name": "Dodge", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1003", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
+            ],
+            "bindings": [
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1010", "path": "<Gamepad>/leftStick", "interactions": "", "processors": "StickDeadzone", "groups": "Gamepad", "action": "Move", "isComposite": false, "isPartOfComposite": false },
+                { "name": "WASD", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1011", "path": "2DVector", "interactions": "", "processors": "", "groups": "", "action": "Move", "isComposite": true, "isPartOfComposite": false },
+                { "name": "up", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1012", "path": "<Keyboard>/w", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Move", "isComposite": false, "isPartOfComposite": true },
+                { "name": "down", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1013", "path": "<Keyboard>/s", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Move", "isComposite": false, "isPartOfComposite": true },
+                { "name": "left", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1014", "path": "<Keyboard>/a", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Move", "isComposite": false, "isPartOfComposite": true },
+                { "name": "right", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1015", "path": "<Keyboard>/d", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Move", "isComposite": false, "isPartOfComposite": true },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1020", "path": "<Gamepad>/buttonEast", "interactions": "", "processors": "", "groups": "Gamepad", "action": "Dodge", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1021", "path": "<Keyboard>/space", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Dodge", "isComposite": false, "isPartOfComposite": false }
+            ]
+        }
+    ],
+    "controlSchemes": [
+        { "name": "Gamepad", "bindingGroup": "Gamepad", "devices": [ { "devicePath": "<Gamepad>", "isOptional": false, "isOR": false } ] },
+        { "name": "Keyboard", "bindingGroup": "Keyboard", "devices": [ { "devicePath": "<Keyboard>", "isOptional": false, "isOR": false } ] }
+    ]
+}

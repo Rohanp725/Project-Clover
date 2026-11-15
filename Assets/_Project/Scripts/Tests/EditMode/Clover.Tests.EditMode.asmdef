@@ -4,6 +4,7 @@
     "references": [
         "Clover.Runtime",
         "Clover.Editor",
+        "Unity.InputSystem",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],
