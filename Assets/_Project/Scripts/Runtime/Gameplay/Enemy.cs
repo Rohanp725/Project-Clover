@@ -42,7 +42,7 @@ namespace Clover.Gameplay
         public Color RedMarker = new Color(1f, 0.08f, 0.05f, 1f);
         public float OutlineAlpha = 0.2f;
         public float FillAlpha = 0.55f;
-        [ColorUsage(true, true)] public Color SlashColour = new Color(1.5f, 0.5f, 1.9f, 0.8f);
+        [ColorUsage(true, true)] public Color SlashColour = new Color(1.6f, 0.45f, 1.5f, 0.6f);
         /// <summary>Half the width of the player, in metres: a blow that reaches their edge has reached them.</summary>
         public float TargetRadius = 0.4f;
 

@@ -127,14 +127,25 @@ namespace Clover.Core
             for (int s = 0; s <= Segments; s++)
             {
                 float t = s / (float)Segments;
+                if (straight)
+                {
+                    // A thrust or a downward cut is a thin flash along the line of the blow, not a wedge: it must not
+                    // cover the fighters it passes over.
+                    float along = Mathf.Lerp(0.22f, 1f, t);
+                    float half = 0.075f * Mathf.Sin(Mathf.Lerp(0.25f, 1f, t) * Mathf.PI);
+                    vertices[s * 2] = new Vector3(-half, 0f, along);
+                    vertices[s * 2 + 1] = new Vector3(half, 0f, along);
+                    uvs[s * 2] = new Vector2(t, 0f);
+                    uvs[s * 2 + 1] = new Vector2(t, 1f);
+                    continue;
+                }
                 // A cut from right to left starts at the swinger's right, which is the positive angle.
                 float angle = Mathf.Deg2Rad * Mathf.Lerp(degrees * 0.5f, -degrees * 0.5f, t);
                 var direction = new Vector3(Mathf.Sin(angle), 0f, Mathf.Cos(angle));
                 vertices[s * 2] = direction * inner;
                 vertices[s * 2 + 1] = direction;
-                // A straight blow runs its length outward instead of around.
-                uvs[s * 2] = straight ? new Vector2(0.05f, t) : new Vector2(t, 0f);
-                uvs[s * 2 + 1] = straight ? new Vector2(0.8f, t) : new Vector2(t, 1f);
+                uvs[s * 2] = new Vector2(t, 0f);
+                uvs[s * 2 + 1] = new Vector2(t, 1f);
             }
             for (int s = 0; s < Segments; s++)
             {
