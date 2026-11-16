@@ -209,6 +209,9 @@ Shader "Clover/Toon"
                 float3 positionWS = TransformObjectToWorld(input.positionOS.xyz) + TransformObjectToWorldNormal(direction) * _OutlineWidth;
                 output.positionCS = TransformWorldToHClip(positionWS);
                 output.fogFactor = ComputeFogFactor(output.positionCS.z);
+                // No line asked for: draw nothing. A two-sided mesh (grass, leaves) would otherwise have its ink
+                // copy lying exactly on its own faces, and the two flicker over each other.
+                if (_OutlineWidth <= 0.00001) output.positionCS = float4(2, 2, 2, 1);
                 return output;
             }
 

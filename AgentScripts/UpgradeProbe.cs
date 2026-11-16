@@ -97,29 +97,37 @@ public class UpgradeProbeRunner : MonoBehaviour
 
         // A: the menu. Opened as a rest fire would, it stops the world; S moves down, E learns, Space leaves.
         Place(new Vector3(6f, 0f, -6f), Vector3.forward);
-        upgrades.Earn(3);
+        upgrades.Earn(6);
         var menu = UpgradeMenu.Instance;
         menu.Open();
         yield return null;
         yield return null;
         bool stopped = Time.timeScale == 0f && player.Suspended;
         Shot("menu");
+        // The far end of a branch cannot be learned before its foot.
+        menu.Choose(Upgrade.MeteorLeap);
+        yield return Tap(Key.E);
+        bool early = upgrades.Owns(Upgrade.MeteorLeap);
+        menu.Choose(Upgrade.Heat);
         yield return Tap(Key.E);
         bool heat = upgrades.Owns(Upgrade.Heat);
-        yield return Tap(Key.S);
-        int selected = menu.Selected;
+        yield return Tap(Key.W);
+        string selected = menu.Chosen != null ? menu.Chosen.Name : "nothing";
         yield return Tap(Key.E);
-        bool second = upgrades.Owns(Upgrade.BurnAndDetonate);
-        yield return Tap(Key.S);
+        bool second = upgrades.Owns(Upgrade.BurningCrescent);
+        yield return Tap(Key.W);
+        string above = menu.Chosen != null ? menu.Chosen.Name : "nothing";
         yield return Tap(Key.E);
-        bool third = upgrades.Owns(Upgrade.Backdraft);
+        bool third = upgrades.Owns(Upgrade.MeteorLeap);
+        yield return Tap(Key.A);
+        string left = menu.Chosen != null ? menu.Chosen.Name : "nothing";
         yield return null;
         Shot("menu_learned");
         yield return null;
         Vector3 before = player.transform.position;
         yield return Tap(Key.Space);
         yield return new WaitForSecondsRealtime(0.4f);
-        Say($"A menu: stopped {stopped} heat learned {heat} moved to {selected} second learned {second} third (no embers) {third} embers left {upgrades.Points} closed {!menu.IsOpen} time {Time.timeScale:0} rolled on close {(player.transform.position - before).magnitude > 0.5f}");
+        Say($"A menu: stopped {stopped} far end before its foot {early} heat learned {heat} W moved to {selected}, learned {second}; W again to {above}, learned with 1 ember {third}; A moved to {left}; embers left {upgrades.Points} closed {!menu.IsOpen} time {Time.timeScale:0} rolled on close {(player.transform.position - before).magnitude > 0.5f}");
 
         // B: Heat and the deepening burn, from blows of the sword.
         Learn(Upgrade.Heat, Upgrade.BurnAndDetonate, Upgrade.Backdraft, Upgrade.FlameTrail, Upgrade.BurningCrescent, Upgrade.FirebombFlask, Upgrade.MeteorLeap);

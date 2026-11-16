@@ -90,6 +90,39 @@ namespace Clover.EditorTools
             return colour;
         });
 
+        /// <summary>A mark on the chart of upgrades: an inked square with its corners cut and a white line to be tinted. Sliced.</summary>
+        public static Sprite Mark() => Make("ui_mark", 64, 64, new Vector4(22, 22, 22, 22), (x, y) =>
+        {
+            float dx = Mathf.Min(x, 63 - x), dy = Mathf.Min(y, 63 - y);
+            float d = Mathf.Min(Mathf.Min(dx, dy), (dx + dy - 11f) * 0.7071f);
+            float alpha = Mathf.Clamp01(d + 0.5f);
+            // Ink outside, then the line, then ink again: the line reads against a bright world and a dark one.
+            float line = Mathf.Clamp01(2.2f - Mathf.Abs(d - 5.5f));
+            Color colour = Color.Lerp(new Color(Ink.r, Ink.g, Ink.b, 1f), Color.white, line);
+            colour.a = alpha;
+            return colour;
+        });
+
+        /// <summary>The frame that sits round the chosen mark: only a line, with nothing inside it. Sliced.</summary>
+        public static Sprite MarkCursor() => Make("ui_mark_cursor", 64, 64, new Vector4(22, 22, 22, 22), (x, y) =>
+        {
+            float dx = Mathf.Min(x, 63 - x), dy = Mathf.Min(y, 63 - y);
+            float d = Mathf.Min(Mathf.Min(dx, dy), (dx + dy - 11f) * 0.7071f);
+            float line = Mathf.Clamp01(2.4f - Mathf.Abs(d - 3f));
+            return new Color(1f, 1f, 1f, line);
+        });
+
+        /// <summary>An element's emblem at the foot of its tree: a diamond with a ring of ink and a bright heart, to be tinted.</summary>
+        public static Sprite Emblem() => Make("ui_emblem", 64, 64, Vector4.zero, (x, y) =>
+        {
+            float d = 30f - (Mathf.Abs(x - 31.5f) + Mathf.Abs(y - 31.5f));
+            float alpha = Mathf.Clamp01(d * 0.7071f + 0.5f);
+            float depth = d * 0.7071f;
+            Color colour = depth < 3f ? new Color(Ink.r, Ink.g, Ink.b, 1f) : depth < 7f ? Color.white : depth < 10f ? new Color(Ink.r, Ink.g, Ink.b, 1f) : new Color(0.85f, 0.85f, 0.85f, 1f);
+            colour.a = alpha;
+            return colour;
+        });
+
         /// <summary>A stroke of a dry brush, to lay behind a word or two. Sliced along its length.</summary>
         public static Sprite Brush() => Make("ui_brush", 256, 64, new Vector4(80, 0, 80, 0), (x, y) =>
         {

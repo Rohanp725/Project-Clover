@@ -147,7 +147,8 @@ namespace Clover.Player
         public string ElementName => element != null && element.Kit != null ? element.Kit.Name : ElementKit.FireName;
 
         public bool CanBuy(Upgrade upgrade) =>
-            upgrade != null && !RunState.Unlocked.Contains(upgrade.Id) && RunState.Points >= upgrade.Cost && upgrade.Element == ElementName;
+            upgrade != null && !upgrade.Signature && !RunState.Unlocked.Contains(upgrade.Id) && RunState.Points >= upgrade.Cost
+            && upgrade.Element == ElementName && UpgradeTree.Reachable(upgrade, RunState.Unlocked);
 
         public bool TryBuy(Upgrade upgrade)
         {

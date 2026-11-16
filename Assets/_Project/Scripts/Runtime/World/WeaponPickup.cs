@@ -21,6 +21,14 @@ namespace Clover.World
             shown = whatIsShown;
         }
 
+        // A weapon drawn in an earlier run is not here again: it waits on its stand in the hub.
+        private void Start()
+        {
+            if (!Progress.Has(Progress.WeaponKey(WeaponName))) return;
+            Taken = true;
+            if (shown != null) shown.SetActive(false);
+        }
+
         public override void Use(PlayerInteraction who)
         {
             if (Taken || who.Combat == null) return;

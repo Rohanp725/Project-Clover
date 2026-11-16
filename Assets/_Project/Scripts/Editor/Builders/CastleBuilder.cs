@@ -341,7 +341,7 @@ namespace Clover.EditorTools
             way.Prompt = "Open the way to the summit";
             way.Range = 3f;
             way.LeadsTo = "Summit";
-            way.Configure(director);
+            way.Configure(director, EnemyKind.CaptainName);
             things.Add(way);
 
             foreach (float x in new[] { -9f, 9f })

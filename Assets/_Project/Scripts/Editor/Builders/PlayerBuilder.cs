@@ -588,66 +588,64 @@ namespace Clover.EditorTools
             MenusOnTop(hud.transform);
         }
 
-        // The element's tree: a dark panel over the middle of the screen with a list on the left and what the chosen thing does on the right.
+        // The chart of the element trees: the whole screen goes dark, the trees are drawn across it by the menu itself,
+        // and what the chosen mark does is set out in a panel on the right.
         private static void BuildUpgradeMenu(PlayerController player, Transform hud)
         {
-            // The world goes dim behind the tree while it is open.
-            // Dark enough that the bars and the embers behind it read as background, not as part of the menu.
-            var dim = Panel("Upgrade Menu", hud, new Color(0.01f, 0.008f, 0.03f, 0.8f));
+            // Dark enough that the bars and the world behind it read as background, not as part of the chart.
+            var dim = Panel("Upgrade Menu", hud, new Color(0.012f, 0.01f, 0.035f, 0.975f));
             dim.anchorMin = Vector2.zero;
             dim.anchorMax = Vector2.one;
             dim.offsetMin = dim.offsetMax = Vector2.zero;
-            var panel = Framed("Tree", dim);
-            panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
-            panel.sizeDelta = new Vector2(1180f, 640f);
-            var edge = Panel("Edge", panel, new Color(0.8f, 0.72f, 0.55f, 0.7f));
+
+            // The chart: an empty thing in the middle of the screen that the menu fills and slides about.
+            var chart = new GameObject("Chart", typeof(RectTransform)).GetComponent<RectTransform>();
+            chart.SetParent(dim, false);
+            chart.anchorMin = chart.anchorMax = chart.pivot = new Vector2(0.5f, 0.5f);
+            chart.sizeDelta = Vector2.zero;
+            var cursor = Panel("Cursor", chart, new Color(1f, 0.82f, 0.4f, 1f));
+            cursor.GetComponent<Image>().sprite = UiArt.MarkCursor();
+            cursor.GetComponent<Image>().type = Image.Type.Sliced;
+            cursor.anchorMin = cursor.anchorMax = cursor.pivot = new Vector2(0.5f, 0.5f);
+            cursor.sizeDelta = new Vector2(100f, 100f);
+
+            var title = Label("Title", dim, 44, TextAnchor.UpperLeft, new Color(1f, 0.8f, 0.45f, 1f));
+            title.rectTransform.anchorMin = title.rectTransform.anchorMax = title.rectTransform.pivot = new Vector2(0f, 1f);
+            title.rectTransform.anchoredPosition = new Vector2(64f, -44f);
+            title.rectTransform.sizeDelta = new Vector2(1000f, 44f);
+
+            var words = Framed("Words", dim);
+            words.anchorMin = words.anchorMax = words.pivot = new Vector2(1f, 0.5f);
+            words.anchoredPosition = new Vector2(-56f, 0f);
+            words.sizeDelta = new Vector2(600f, 560f);
+            var name = Label("Name", words, 46, TextAnchor.UpperLeft, new Color(1f, 0.8f, 0.45f, 1f));
+            name.rectTransform.anchorMin = name.rectTransform.anchorMax = name.rectTransform.pivot = new Vector2(0f, 1f);
+            name.rectTransform.anchoredPosition = new Vector2(44f, -36f);
+            name.rectTransform.sizeDelta = new Vector2(512f, 50f);
+            var state = Label("State", words, 28, TextAnchor.UpperLeft, new Color(1f, 1f, 1f, 0.72f));
+            state.rectTransform.anchorMin = state.rectTransform.anchorMax = state.rectTransform.pivot = new Vector2(0f, 1f);
+            state.rectTransform.anchoredPosition = new Vector2(44f, -96f);
+            state.rectTransform.sizeDelta = new Vector2(512f, 34f);
+            var edge = Panel("Edge", words, new Color(0.8f, 0.72f, 0.55f, 0.7f));
             edge.anchorMin = new Vector2(0f, 1f);
             edge.anchorMax = new Vector2(1f, 1f);
             edge.pivot = new Vector2(0.5f, 1f);
             edge.sizeDelta = new Vector2(-80f, 2f);
-            edge.anchoredPosition = new Vector2(0f, -84f);
-
-            var title = Label("Title", panel, 44, TextAnchor.UpperLeft, new Color(1f, 0.8f, 0.45f, 1f));
-            title.rectTransform.anchorMin = title.rectTransform.anchorMax = title.rectTransform.pivot = new Vector2(0f, 1f);
-            title.rectTransform.anchoredPosition = new Vector2(44f, -24f);
-            title.rectTransform.sizeDelta = new Vector2(1000f, 44f);
-
-            var cursor = Panel("Cursor", panel, new Color(1f, 0.62f, 0.2f, 0.3f));
-            cursor.GetComponent<Image>().sprite = UiArt.Brush();
-            cursor.GetComponent<Image>().type = Image.Type.Sliced;
-            cursor.anchorMin = cursor.anchorMax = cursor.pivot = new Vector2(0f, 1f);
-            cursor.sizeDelta = new Vector2(500f, 50f);
-            cursor.anchoredPosition = new Vector2(30f, -110f);
-
-            const int count = 7;
-            var rows = new Text[count];
-            var costs = new Text[count];
-            for (int i = 0; i < count; i++)
-            {
-                rows[i] = Label("Row " + (i + 1), panel, 34, TextAnchor.MiddleLeft, Color.white);
-                rows[i].rectTransform.anchorMin = rows[i].rectTransform.anchorMax = rows[i].rectTransform.pivot = new Vector2(0f, 1f);
-                rows[i].rectTransform.anchoredPosition = new Vector2(44f, -110f - i * 58f);
-                rows[i].rectTransform.sizeDelta = new Vector2(360f, 50f);
-                costs[i] = Label("Cost " + (i + 1), rows[i].transform, 30, TextAnchor.MiddleRight, Color.white);
-                costs[i].rectTransform.anchorMin = costs[i].rectTransform.anchorMax = costs[i].rectTransform.pivot = new Vector2(0f, 0.5f);
-                costs[i].rectTransform.anchoredPosition = new Vector2(340f, 0f);
-                costs[i].rectTransform.sizeDelta = new Vector2(130f, 50f);
-            }
-
-            var description = Label("Description", panel, 34, TextAnchor.UpperLeft, new Color(0.95f, 0.93f, 0.9f, 1f));
+            edge.anchoredPosition = new Vector2(0f, -142f);
+            var description = Label("Description", words, 34, TextAnchor.UpperLeft, new Color(0.95f, 0.93f, 0.9f, 1f));
             description.rectTransform.anchorMin = description.rectTransform.anchorMax = description.rectTransform.pivot = new Vector2(0f, 1f);
-            description.rectTransform.anchoredPosition = new Vector2(580f, -116f);
-            description.rectTransform.sizeDelta = new Vector2(560f, 400f);
+            description.rectTransform.anchoredPosition = new Vector2(44f, -164f);
+            description.rectTransform.sizeDelta = new Vector2(512f, 360f);
             description.horizontalOverflow = HorizontalWrapMode.Wrap;
             description.lineSpacing = 1.15f;
 
-            var hint = Label("Hint", panel, 22, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.6f));
+            var hint = Label("Hint", dim, 22, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.6f));
             hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = hint.rectTransform.pivot = Vector2.zero;
-            hint.rectTransform.anchoredPosition = new Vector2(44f, 26f);
+            hint.rectTransform.anchoredPosition = new Vector2(64f, 40f);
             hint.rectTransform.sizeDelta = new Vector2(1000f, 30f);
-            hint.text = "Stick or W S: choose     Cross or E: learn     Circle or Space: leave";
+            hint.text = "Stick or W A S D: move along the tree     Cross or E: learn     Circle or Space: leave";
 
-            hud.gameObject.AddComponent<UpgradeMenu>().Configure(player, dim.gameObject, title, description, rows, costs, cursor);
+            hud.gameObject.AddComponent<UpgradeMenu>().Configure(player, dim.gameObject, chart, title, name, state, description, cursor, UiArt.Mark(), UiArt.Emblem());
         }
 
         // The pause menu: the same inked panel as the fire's tree, with a short list, and a second page that holds the controls.
