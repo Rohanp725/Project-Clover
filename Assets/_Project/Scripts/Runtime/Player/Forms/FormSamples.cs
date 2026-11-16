@@ -9,6 +9,35 @@ namespace Clover.Player.Forms
     /// </summary>
     public static class FormSamples
     {
+        // What each sample is like, in the words the yard's cards show over its stone.
+        private static readonly Dictionary<string, string> about = new Dictionary<string, string>
+        {
+            { SpellForms.Blades, "Blades appear over the enemy you face, hang a moment, then fall one after another." },
+            { SpellForms.Sword, "One sword as tall as the screen falls where you aim. It leaves a crack in the ground that keeps biting." },
+            { SpellForms.Beam, "You brace and throw a thick beam ahead. You can turn slowly while it lasts." },
+            { SpellForms.Phalanx, "Blades hover behind your shoulders and fire by themselves at enemies near, or all at once when you land a heavy blow." },
+            { SpellForms.Dragon, "A great head forms at your shoulder and lunges ahead, carrying what it meets, and bites at the end." },
+            { SpellForms.Nova, "A burst round you after a short breath, with a ring that sweeps outward." },
+            { SpellForms.Orb, "A slow orb follows the nearest enemy and bursts on it. Strike the orb yourself and it bursts at once, larger." },
+            { SpellForms.Bomb, "You stand rooted and raise a growing sphere, then throw it: a great burst and a burning patch." },
+            { SpellForms.Spikes, "Spikes run out along the ground ahead of you, one after another, in three rows." },
+            { SpellForms.Field, "A patch of ground ahead grows thorns for a while and bites what stands in it." },
+            { SpellForms.Drill, "You become a spinning point and bore through everything ahead, striking each enemy several times. Nothing can touch you on the way." },
+            { SpellForms.Minions, "Small helpers rise beside you, run at the nearest enemy and strike it for a few seconds." },
+            { SpellForms.Bullets, "A ring of bullets appears round the enemy you face, hangs, then all fly inward together." },
+            { SpellForms.Reverse, "A point ahead pulls every enemy near it inward, then bursts." },
+            { SpellForms.Parry, "A guard stance for a moment. The first blow that lands on it is turned and answered with a cone of light. If nothing strikes, the mana is lost." },
+            { SpellForms.Wall, "A wall rises ahead and blocks the way. It bursts when its time ends or when you strike it with a heavy blow." },
+            { SpellForms.Discs, "Discs circle you for a while and cut whatever they pass." },
+            { SpellForms.Brand, "A sign is set on the enemy you face. Your next three weapon blows on it each set off a burst." },
+            { SpellForms.Rain, "Strikes fall at random over an area ahead for a few seconds, each marked on the ground first." },
+            { SpellForms.Clone, "A copy of you stands beside you and repeats every weapon blow a beat late, weaker." },
+            { SpellForms.Flash, "You vanish, lines of light cross the enemy you face, and you reappear behind it. A moment later all the cuts land at once." },
+            { SpellForms.Ring, "A ring closes round you and the enemy you face. Nothing crosses it, and it bites what touches it." },
+            { SpellForms.Pillars, "Pillars burst from the ground under the nearest enemies and lift them for a moment." },
+            { SpellForms.Step, "You step through the enemy you face and cut it in passing. If it lands, your next heavy blow soon after is critical." },
+        };
+
         private static readonly Upgrade[] all =
         {
             Make(SpellForms.Blades, "Falling Blades", Elements.Metal, new SpellSpec { Cost = 30f, Count = 5, Delay = 0.7f, Radius = 1.3f, Damage = 16f, Stagger = 14f, Reach = 9f }),
@@ -47,7 +76,7 @@ namespace Clover.Player.Forms
             Kind = UpgradeKind.Spell,
             Form = form,
             Spell = spec,
-            Description = "",
+            Description = about.TryGetValue(form, out string words) ? words : "",
         };
 
         /// <summary>The sample spell of a form, or null when the form has none.</summary>

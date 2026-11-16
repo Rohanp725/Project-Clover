@@ -18,7 +18,7 @@ namespace Clover.EditorTools
     /// the Blender models waiting in staging, each weapon is a stand-in made here from boxes to the same size, the same
     /// axes (grip at the origin, business end along +Z, edge toward -Y) and the same slot names, so the approved
     /// file takes its place with no other change. Clover > Weapons > Intake Staged Models brings the staged files in
-    /// and writes their manifest rows; it is for the user's word, and has not been run.
+    /// and writes their manifest rows; it is for the user's word. The sword and scythe came in that way on 2026-11-16, pending approval.
     ///
     /// To add a weapon: one <see cref="Spec"/> in <see cref="Specs"/>. Nothing else here changes.
     /// </summary>
@@ -47,6 +47,12 @@ namespace Clover.EditorTools
             public (string bone, Vector3 position, Vector3 size)[] Worn;
             /// <summary>How it stands on a stand: lifted this far, turned by these degrees.</summary>
             public Vector3 DisplayPosition = new Vector3(0f, 0.9f, 0f), DisplayEuler = new Vector3(-90f, 0f, 0f);
+            /// <summary>
+            /// For a weapon that is one model carried twice (the knives): how the second copy is turned in the left
+            /// hand's socket. Null: one copy, in the right hand. The intake brings the one file in once; the second
+            /// copy is hung from the same prefab, and at rest it lies mirrored across the body from the first.
+            /// </summary>
+            public Vector3? OffHandEuler;
         }
 
         // Slot colours as the eye sees them, from the Blender notes (staging/blender/2026-11-16_weapons/notes.md).
@@ -80,6 +86,24 @@ namespace Clover.EditorTools
                 RestPosition = new Vector3(0.12f, 0.1f, -0.19f), RestAlong = new Vector3(0.42f, 0.9f, 0f), RestUp = new Vector3(0.9f, -0.42f, 0f),
                 // Stood on its butt, the crescent out to one side and seen whole from the front.
                 DisplayPosition = new Vector3(0f, 1.45f, 0f), DisplayEuler = new Vector3(-90f, 90f, 0f),
+            },
+            new Spec
+            {
+                Carry = "spear", ModelFile = "spear.fbx", StandIn = SpearStandIn,
+                Notes = "Great Spear: 420 triangles, slots blade guard wood accent inlay; origin on the shaft 1.0 m from the butt, point along +Z, the leaf's broad faces toward +Y and -Y",
+                // Slanted across the back, butt by the right hip, head above the left shoulder.
+                RestPosition = new Vector3(0.2f, -0.3f, -0.19f), RestAlong = new Vector3(-0.42f, 0.9f, 0f), RestUp = new Vector3(0f, 0f, -1f),
+                // Stood on its butt, the leaf's face toward whoever walks up.
+                DisplayPosition = new Vector3(0f, 1.2f, 0f), DisplayEuler = new Vector3(-90f, 0f, 0f),
+            },
+            new Spec
+            {
+                Carry = "hammer", ModelFile = "hammer.fbx", StandIn = HammerStandIn,
+                Notes = "Great Hammer: 496 triangles, slots head wood wrap accent inlay; origin at the swinging grip 0.9 m under the head, head along +Z, striking face toward -Y",
+                // Head up behind the right shoulder, the head lying across the back.
+                RestPosition = new Vector3(0.08f, -0.2f, -0.24f), RestAlong = new Vector3(0.3f, 0.95f, 0f), RestUp = new Vector3(0.95f, -0.3f, 0f),
+                // Stood on its butt, the head seen from the side.
+                DisplayPosition = new Vector3(0f, 0.62f, 0f), DisplayEuler = new Vector3(-90f, 90f, 0f),
             },
             new Spec
             {
@@ -130,6 +154,9 @@ namespace Clover.EditorTools
                 var model = (GameObject)PrefabUtility.InstantiatePrefab(approved);
                 model.name = "Model";
                 model.transform.SetParent(root.transform, false);
+                // As imported the file's business end lies along -Z (the exporter's forward is Unity's back): turned
+                // about so the point is along +Z, as the stand-ins and every pose take it to be. The edge stays toward -Y.
+                model.transform.localRotation = Quaternion.Euler(0f, 180f, 0f) * model.transform.localRotation;
                 foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
                     renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => SlotMaterial(spec, SlotOf(imported != null ? imported.name : ""))).ToArray();
             }
@@ -188,7 +215,7 @@ namespace Clover.EditorTools
             Vector3 restUp = Quaternion.Inverse(Quaternion.FromToRotation(blade, Vector3.forward)) * Vector3.up;
             var handR = Socket(model, "hand.R", WeaponRack.HandRight, new Vector3(0f, 0.061f, 0f), Quaternion.Inverse(handRest) * Quaternion.LookRotation(blade, restUp));
             Vector3 bladeLeft = new Vector3(-blade.x, blade.y, blade.z), upLeft = new Vector3(-restUp.x, restUp.y, restUp.z);
-            Socket(model, "hand.L", WeaponRack.HandLeft, new Vector3(0f, 0.061f, 0f), Quaternion.Inverse(handLeftRest) * Quaternion.LookRotation(bladeLeft, upLeft));
+            var handL = Socket(model, "hand.L", WeaponRack.HandLeft, new Vector3(0f, 0.061f, 0f), Quaternion.Inverse(handLeftRest) * Quaternion.LookRotation(bladeLeft, upLeft));
             var back = Socket(model, "chest", WeaponRack.Back, Vector3.zero, Quaternion.Inverse(chestRest));
             var hip = Socket(model, "hips", WeaponRack.Hip, Vector3.zero, Quaternion.Inverse(hipsRest));
 
@@ -214,6 +241,14 @@ namespace Clover.EditorTools
                     inHand.Add(Place(prefab, handR, spec.Carry + "_hand", Vector3.zero, Quaternion.identity));
                     var rest = spec.RestSocket == WeaponRack.Hip ? hip : back;
                     if (rest != null) atRest.Add(Place(prefab, rest, spec.Carry + "_rest", spec.RestPosition, Quaternion.LookRotation(spec.RestAlong.normalized, spec.RestUp.normalized)));
+                    if (spec.OffHandEuler.HasValue && handL != null)
+                    {
+                        // The same model a second time: in the left hand, and at rest mirrored across the body.
+                        inHand.Add(Place(prefab, handL, spec.Carry + "_hand_L", Vector3.zero, Quaternion.Euler(spec.OffHandEuler.Value)));
+                        Vector3 along = spec.RestAlong.normalized, up = spec.RestUp.normalized;
+                        if (rest != null) atRest.Add(Place(prefab, rest, spec.Carry + "_rest_L", new Vector3(-spec.RestPosition.x, spec.RestPosition.y, spec.RestPosition.z),
+                            Quaternion.LookRotation(new Vector3(-along.x, along.y, along.z), new Vector3(-up.x, up.y, up.z))));
+                    }
                 }
                 var tinted = new List<Renderer>();
                 var indices = new List<int>();
@@ -280,7 +315,35 @@ namespace Clover.EditorTools
         public static GameObject Display(string carry, Transform parent)
         {
             var spec = SpecFor(carry);
-            if (spec == null) return null;
+            if (spec == null)
+            {
+                // The Katana lives inside the character's own model and bare hands are no object at all, so neither
+                // has a prefab: each is set out from a few boxes so its stand is not left empty.
+                var made = BuildKit.Group((carry == Weapon.KatanaCarry ? "katana" : "fists") + " display", parent);
+                var wood = SlotMaterial(null, "wood");
+                if (carry == Weapon.KatanaCarry)
+                {
+                    // Point down in its stand like the Massive Sword, the flat toward whoever walks up.
+                    BuildKit.Shape(PrimitiveType.Cube, "Blade (blade)", made, new Vector3(0f, 0.72f, 0f), new Vector3(0.07f, 1.05f, 0.018f), SlotMaterial(null, "blade"), new Vector3(0f, 0f, 2f));
+                    BuildKit.Shape(PrimitiveType.Cube, "Guard (guard)", made, new Vector3(0.02f, 1.27f, 0f), new Vector3(0.16f, 0.03f, 0.1f), SlotMaterial(null, "guard"));
+                    BuildKit.Shape(PrimitiveType.Cube, "Grip (grip)", made, new Vector3(0.025f, 1.46f, 0f), new Vector3(0.05f, 0.36f, 0.045f), SlotMaterial(null, "grip"), new Vector3(0f, 0f, 2f));
+                    BuildKit.Shape(PrimitiveType.Cube, "Tassel (accent)", made, new Vector3(0.08f, 1.52f, 0f), new Vector3(0.03f, 0.22f, 0.03f), SlotMaterial(null, "accent"), new Vector3(0f, 0f, -24f));
+                }
+                else
+                {
+                    // A striking post with two wrapped fists hung from its arm.
+                    var wrap = SlotMaterial(null, "wrap");
+                    BuildKit.Shape(PrimitiveType.Cube, "Post", made, new Vector3(0f, 0.75f, 0f), new Vector3(0.12f, 1f, 0.12f), wood);
+                    BuildKit.Shape(PrimitiveType.Cube, "Arm", made, new Vector3(0f, 1.25f, 0f), new Vector3(0.9f, 0.1f, 0.1f), wood);
+                    foreach (float side in new[] { -1f, 1f })
+                    {
+                        BuildKit.Shape(PrimitiveType.Cube, "Wrist (wrap)", made, new Vector3(side * 0.4f, 1.08f, 0f), new Vector3(0.11f, 0.26f, 0.11f), wrap);
+                        BuildKit.Shape(PrimitiveType.Cube, "Fist (wrap)", made, new Vector3(side * 0.4f, 0.86f, 0f), new Vector3(0.2f, 0.2f, 0.2f), wrap, new Vector3(0f, 45f, 0f));
+                        BuildKit.Shape(PrimitiveType.Cube, "Band (accent)", made, new Vector3(side * 0.4f, 0.97f, 0f), new Vector3(0.13f, 0.04f, 0.13f), SlotMaterial(null, "accent"));
+                    }
+                }
+                return made.gameObject;
+            }
             if (spec.Worn != null)
             {
                 // The Armament has no object: a pair of shells on a short post stands for it.
@@ -397,6 +460,39 @@ namespace Clover.EditorTools
                 Box(root, "inlay", "Edge " + i, new Vector3(0f, middle.x + normal.x * width * 0.5f, middle.y + normal.y * width * 0.5f), new Vector3(0.034f, 0.06f, along.magnitude * 1.08f), euler);
                 Box(root, "guard", "Spine " + i, new Vector3(0f, middle.x - normal.x * width * 0.5f, middle.y - normal.y * width * 0.5f), new Vector3(0.05f, 0.04f, along.magnitude * 1.08f), euler);
             }
+        }
+
+        // The Great Spear: 3.06 m, the grip 1.0 m from the butt; a leaf 0.5 x 0.23 lying flat (its faces up and down)
+        // over a crossbar 0.39 wide, so a level spear shows a cross to the high camera.
+        private static void SpearStandIn(Transform root)
+        {
+            BuildKit.Shape(PrimitiveType.Cylinder, "Pole (wood)", root, new Vector3(0f, 0f, 0.26f), new Vector3(0.055f, 1.18f, 0.055f), null, new Vector3(90f, 0f, 0f));
+            Box(root, "guard", "Butt Spike", new Vector3(0f, 0f, -0.96f), new Vector3(0.05f, 0.05f, 0.12f));
+            Box(root, "guard", "Sleeve A", new Vector3(0f, 0f, 0f), new Vector3(0.07f, 0.07f, 0.16f));
+            Box(root, "guard", "Sleeve B", new Vector3(0f, 0f, 0.6f), new Vector3(0.07f, 0.07f, 0.16f));
+            for (int i = 0; i < 3; i++) Box(root, "guard", "Ring " + i, new Vector3(0f, 0f, 1.2f + 0.08f * i), new Vector3(0.075f, 0.075f, 0.03f));
+            Box(root, "guard", "Socket", new Vector3(0f, 0f, 1.5f), new Vector3(0.065f, 0.065f, 0.14f));
+            Box(root, "guard", "Crossbar", new Vector3(0f, 0f, 1.45f), new Vector3(0.39f, 0.045f, 0.045f));
+            Box(root, "blade", "Leaf", new Vector3(0f, 0f, 1.72f), new Vector3(0.2f, 0.024f, 0.32f));
+            Box(root, "blade", "Leaf Point", new Vector3(0f, 0f, 1.9f), new Vector3(0.142f, 0.022f, 0.142f), new Vector3(0f, 45f, 0f));
+            Box(root, "inlay", "Midrib", new Vector3(0f, 0f, 1.76f), new Vector3(0.035f, 0.04f, 0.42f));
+            Box(root, "accent", "Tuft", new Vector3(0f, -0.11f, 1.38f), new Vector3(0.035f, 0.2f, 0.045f));
+        }
+
+        // The Great Hammer: 1.76 m, the swinging grip 0.9 m under the head; the head 0.36 square and 0.69 from the
+        // boss on its striking face (toward -Y) to the blunt wedge behind.
+        private static void HammerStandIn(Transform root)
+        {
+            BuildKit.Shape(PrimitiveType.Cylinder, "Haft (wood)", root, new Vector3(0f, 0f, 0.44f), new Vector3(0.06f, 0.88f, 0.06f), null, new Vector3(90f, 0f, 0f));
+            Box(root, "head", "Butt Cap", new Vector3(0f, 0f, -0.44f), new Vector3(0.075f, 0.075f, 0.06f));
+            Box(root, "wrap", "Binding", new Vector3(0f, 0f, -0.1f), new Vector3(0.07f, 0.07f, 0.5f));
+            Box(root, "head", "Block", new Vector3(0f, -0.08f, 1.08f), new Vector3(0.36f, 0.42f, 0.36f));
+            Box(root, "head", "Wedge", new Vector3(0f, 0.22f, 1.08f), new Vector3(0.36f, 0.24f, 0.2f));
+            Box(root, "inlay", "Boss", new Vector3(0f, -0.315f, 1.08f), new Vector3(0.24f, 0.06f, 0.24f));
+            Box(root, "inlay", "Belt", new Vector3(0f, -0.05f, 1.08f), new Vector3(0.385f, 0.06f, 0.385f));
+            Box(root, "head", "Collar", new Vector3(0f, 0f, 0.86f), new Vector3(0.1f, 0.1f, 0.08f));
+            Box(root, "wrap", "Rope", new Vector3(0f, 0f, 0.76f), new Vector3(0.085f, 0.085f, 0.12f));
+            Box(root, "accent", "Knot", new Vector3(0.05f, -0.09f, 0.74f), new Vector3(0.05f, 0.16f, 0.05f));
         }
 
         // A point on a curve through three points; x is the weapon's Y and y its Z.

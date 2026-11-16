@@ -164,8 +164,9 @@ A technique is a weapon style. Nine weapons and one special form.
 | Super Form | Boosts all attributes and gives parts of every weapon mode | Takes all technique slots; the final boss shows it at full strength |
 
 **Built so far** (2026-11-16): Katana, and as Claude's defaults the Massive Sword, the Scythe (idea (a) below, the
-sweet spot) and the Full Body Armament; see "The newer weapons as built" at the end of this document. The design for
-all eight remaining techniques is `docs/design/weapons.md`.
+sweet spot), the Full Body Armament, the Great Spear and the Great Hammer; see "The newer weapons as built" and "The
+Great Spear and the Great Hammer as built" at the end of this document. The design for all eight remaining
+techniques is `docs/design/weapons.md`. Still to build: Twin Knives, Chain Sickle, Great Bow.
 
 Ideas offered by Claude for the two undesigned weapons, not yet accepted:
 
@@ -1117,3 +1118,64 @@ time, all **Claude's defaults, open to change**:
 - **Six Mirrors** lays a mark and a notch for each cut; its cuts are not critical.
 - **Seven Flashes** and **The Wave Stands Still** are built as their own forms (`flashes`, `frozenwave`). The wave rolls at least 2.5 m; training dummies are soaked and frozen but not carried along.
 - **Ball Lightning** and **Pawned Heart** are built as their own forms (`ball`, `heart`). The heart is set down behind the player and must be left by 2.6 m before walking back onto it counts; it asks no health price besides itself.
+
+### The Great Spear and the Great Hammer as built (2026-11-16, evening; Claude's defaults, not yet played by the user)
+
+Two more of the eight designed techniques, built to the numbers of `docs/design/weapons.md` sections 7 and 8 on
+stand-in models (the Blender models wait in staging for the user's word, as before). Everything here is Claude's
+default until the user has played it; where it departs from the design is listed in that document's Appendix C.
+
+**Great Spear.** The weapon that owns a line. Thrust, thrust (a lane 4 m long and 0.9 m wide, 0.48 s each), then a
+sweep for what has come round the side. Nearer than 1.4 m it is the haft and does six tenths. Its guard is the
+narrowest there is (160 degrees) and **a light press behind the guard thrusts without lowering it**: 8 damage for 12
+stamina, as often as the stamina lasts, and a blow that arrives during the thrust is still blocked. Heavy: the whole
+length slapped down the lane, 4.4 m. After a light: a vault on the planted spear that kicks the target 2 m back.
+Held half a second: the couched charge, 5 m in a third of a second, shoving what it meets. Held 0.9 s with 30 mana:
+the **Flying Spear**. The spear itself is thrown (34 m a second, 11 m); it stops in the first enemy for 26, or
+stands in the ground. A moment later the bearer **runs to it**, untouchable for the fifth of a second the run takes,
+and arrives with a full turning cut that rips it out and strikes all round for 18. Holding the stick away from the
+throw refuses the run: the spear tears loose and flies back to the hand in half a second. Until it is back, no
+attack can be made. Finisher, **The Standard**: a low thrust, the enemy levered up on the point, a hold with the
+spear upright and the head bowed beneath it, and the whole length brought over and down.
+
+**Great Hammer.** Stagger on one target, and a guard that has to be read. Two lights only, and the second is the
+slower: a side swing (0.30 s) and a drop onto a disc a stride ahead (0.40 s), 82 stagger between them. Quake, a
+bigger drop with a jump in it; after a light, the lift, a golfer's drive that throws the target 2.5 m; held 0.55 s,
+Earthshaker, a disc 6 m across for 100 stagger. Every swing shrugs off small blows. Its block is the cheapest in the
+game and its **perfect guard opens late**: a press less than 0.08 s before the blow is only a block, so the guard
+must be raised early. Its roll is the worst there is. Held a second with 35 mana: the **Spinning Hammer Toss**. Two
+turns that strike all round, and the hammer is let go: it flies 8 m end over end through everything, hangs, and
+comes back to the hand through everything again at half strength, about a second in all, during which the bearer
+has no attacks. Finisher, **The Bell**: a lift under the chin throws the enemy into the air; the bearer turns their
+back, lets the hammer's head to the ground, coils and waits; then turns into it and meets it as it comes down, and
+it leaves sideways.
+
+**New rules these brought, which other things can use.** An attack from behind the guard. A thrown thing that
+stays where it lands and can be followed or called back. A thrown thing that returns. A weapon that is out of the
+hand (shown as empty hands that wait, and a catch). A finisher's blow that throws the finished enemy sideways.
+
+**Stopgaps and things short of the design** (each is a choice to revisit):
+
+- Both stands are open in the hub, like the other new weapons', because there is nowhere yet to win them.
+- The run to the spear stops at an enemy standing in the way; it does not pass through bodies.
+- With the hammer thrown the guard is still the hammer's guard (the design gives the fists' guard), and the bearer
+  cannot walk during the spin.
+- The spear's idle is always the upright spear; the levelled "line" stance after an attack is not built.
+- The hands never slide along a haft: the right hand is fixed where the model's grip is.
+- Finishers still do not carry the enemy: The Standard lifts it by the same half-second lift the Wheel uses.
+- No element changes either weapon yet, and neither has sounds.
+- **Twin Knives are not started.** They need a second aimed hand in the Forge and blows that count from behind.
+
+**A fault found and mended on the way.** A weapon's own guard and dodge numbers (the sword's wide guard, the
+scythe's long roll) were quietly put back to the starting weapon's whenever a mark changed a sum. They now stay the
+weapon's own, with the marks multiplying them.
+
+**Dark's Risen marks now mean Risen** (a small thing done in the same run). Hollow Strength (a quarter more weapon
+damage, and 8 health for a kill), Slow Rot (the drain runs at seven tenths) and Grave Appetite (a point of health
+for a blow) act while the player is Risen, not while Hunger lasts. Still short of their words: Hollow Strength does
+not stop a flinch and a kill gives health in place of stilling the drain. Dead Already is unchanged (being Risen
+for good is not built), and Long Hunger was always about Hunger.
+
+**Trying them.** The practice yard's rack has seven stands now and the hub has seven (the Katana's in the south, the
+rest along the western rim). Contact sheets:
+`review/anim/player_*_spear*.png` and `player_*_hammer*.png`.

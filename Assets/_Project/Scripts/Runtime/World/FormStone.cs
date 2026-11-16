@@ -38,6 +38,14 @@ namespace Clover.World
             combat = combatToFeed;
         }
 
+        public override string Card(PlayerElement element)
+        {
+            // Only the stone that changes the element speaks for itself; a form's stone has its words written on it.
+            if (!string.IsNullOrEmpty(Form)) return "";
+            var next = Elements.All[(element.Info.Index + 1) % Elements.Count];
+            return $"ELEMENT STONE\nYou hold {element.Info.Name} (lays {element.Info.Affliction}).\nPress use (E) to hold {next.Name} (lays {next.Affliction}). The tap spell and the surge change with it.\nTap {TriggerWords.SpellButton}: its spell. Press {TriggerWords.SurgeButton}: its surge.";
+        }
+
         public override void Use(PlayerInteraction who)
         {
             Used++;

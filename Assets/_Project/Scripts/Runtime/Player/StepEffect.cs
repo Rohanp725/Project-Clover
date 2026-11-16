@@ -14,5 +14,7 @@ namespace Clover.Player
         GroundSparks,
         /// <summary>The ground splits along a line running on past the target a moment after the blow.</summary>
         GroundSplit,
+        /// <summary>Dust and a ring thrown up where the blow came down: a hammer's head, a body driven into the ground.</summary>
+        GroundSlam,
     }
 }

@@ -237,7 +237,11 @@ namespace Clover.EditorTools
             // Every other weapon is a prefab hung on the skeleton's sockets, in the hand and at rest.
             shown.ConfigureRack(WeaponBuilder.Hang(model, modelAsset));
             // What weapons throw and raise: a crescent of light, spikes out of the ground.
-            player.AddComponent<WeaponShots>().Configure(VfxBuilder.SlashMaterial());
+            var shots = player.AddComponent<WeaponShots>();
+            shots.Configure(VfxBuilder.SlashMaterial());
+            // A weapon that is itself thrown flies as its own model.
+            var thrown = WeaponBuilder.Specs.Where(spec => spec.Worn == null).ToArray();
+            shots.ConfigureProps(thrown.Select(spec => spec.Carry).ToArray(), thrown.Select(spec => WeaponBuilder.Prefab(spec.Carry)).ToArray());
             player.AddComponent<WeaponSpikes>().Configure(BuildKit.Toon(PlayerFolder, "m_weapon_spike", new Color(0.6f, 0.58f, 0.66f), false, null, 0f, 0.02f));
             return player;
         }
@@ -320,7 +324,7 @@ namespace Clover.EditorTools
                 ownTree.AddChild(idleClip, 0f);
                 if (clips.TryGetValue("run_" + prefix, out var ownRun)) ownTree.AddChild(ownRun, 1f);
             }
-            foreach (var own in clips.Values.Where(clip => clip.name.StartsWith("roll_") || (clip.name.StartsWith("charge_") && clip.name != PlayerAnimator.FistChargeState)).OrderBy(clip => clip.name))
+            foreach (var own in clips.Values.Where(clip => clip.name.StartsWith("roll_") || clip.name.StartsWith("dash_") || (clip.name.StartsWith("charge_") && clip.name != PlayerAnimator.FistChargeState)).OrderBy(clip => clip.name))
                 machine.AddState(own.name).motion = own;
             foreach (var weapon in Weapons.All)
                 foreach (string state in new[] { weapon.ChargeAnimation, weapon.LocomotionState == PlayerAnimator.LocomotionState ? "idle" : "idle_" + weapon.Prefix })
@@ -358,7 +362,8 @@ namespace Clover.EditorTools
             upperMachine.defaultState = upperMachine.AddState(PlayerAnimator.UpperIdleState);
             foreach (string name in new[] { PlayerAnimator.GuardState, PlayerAnimator.FistGuardState, PlayerAnimator.DrinkState })
                 upperMachine.AddState(name).motion = clips.TryGetValue(name, out var clip) ? clip : null;
-            foreach (var own in clips.Values.Where(clip => clip.name.StartsWith("guard_") && clip.name != PlayerAnimator.FistGuardState).OrderBy(clip => clip.name))
+            // away_p and catch_p: the arms of one whose weapon is thrown, waiting for it and taking it back.
+            foreach (var own in clips.Values.Where(clip => (clip.name.StartsWith("guard_") && clip.name != PlayerAnimator.FistGuardState) || clip.name.StartsWith("away_") || clip.name.StartsWith("catch_")).OrderBy(clip => clip.name))
                 upperMachine.AddState(own.name).motion = own;
             EditorUtility.SetDirty(controller);
             return controller;

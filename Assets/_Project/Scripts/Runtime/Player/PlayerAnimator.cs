@@ -85,6 +85,9 @@ namespace Clover.Player
         private int locomotionHash, guardHash, rollHash, guardHitHash, perfectGuardHash;
         private int seenBlocks, seenPerfects;
         private int reactionHash;
+        private int awayHash, catchHash, dashHash, seenCatches;
+        /// <summary>Seconds the catch of a returning weapon plays for.</summary>
+        public float CatchSeconds = 0.28f;
         private float reactionFor, reactionSeconds;
 
         /// <summary>Adds the weapons hung on the character's sockets, shown to suit the weapon in hand.</summary>
@@ -110,6 +113,14 @@ namespace Clover.Player
             if (animator != null) drawn = animator.GetComponentsInChildren<Renderer>(true);
         }
 
+        // A state of the upper body by name, or zero when the controller was built without it.
+        private int Upper(string state)
+        {
+            if (string.IsNullOrEmpty(state) || upperLayer < 0) return 0;
+            int hash = Animator.StringToHash(state);
+            return animator.HasState(upperLayer, hash) ? hash : 0;
+        }
+
         private void LateUpdate()
         {
             if (player == null || animator == null || combat == null || combat.Weapon == null) return;
@@ -128,6 +139,11 @@ namespace Clover.Player
                 if (guardHitHash != 0 && upperLayer >= 0 && !animator.HasState(upperLayer, guardHitHash)) guardHitHash = 0;
                 if (perfectGuardHash != 0 && upperLayer >= 0 && !animator.HasState(upperLayer, perfectGuardHash)) perfectGuardHash = 0;
                 if (!animator.HasState(0, rollHash)) rollHash = RollHash;
+                awayHash = Upper(weapon.AwayState);
+                catchHash = Upper(weapon.CatchState);
+                dashHash = string.IsNullOrEmpty(weapon.DashState) ? 0 : Animator.StringToHash(weapon.DashState);
+                if (dashHash != 0 && !animator.HasState(0, dashHash)) dashHash = 0;
+                seenCatches = combat.Catches;
                 shownStep = null;
                 reactionHash = 0;
                 if (defence != null)
@@ -152,7 +168,8 @@ namespace Clover.Player
             bool attacking = !helpless && !rolling && !leaping && !charging && combat.Combo.Current != null;
             bool casting = !helpless && !rolling && !charging && !attacking && element != null && element.IsCasting;
             bool drinking = !helpless && defence != null && defence.IsDrinking;
-            bool guarding = !helpless && ((defence != null && defence.IsGuarding) || (player.FormHold != 0 && player.FormGuardPose));
+            // The guard's own thrust is a whole-body clip that holds the guard itself: the upper body's guard would hide its arms.
+            bool guarding = !helpless && !combat.IsGuardAttacking && ((defence != null && defence.IsGuarding) || (player.FormHold != 0 && player.FormGuardPose));
 
             int locomotion = locomotionHash;
             if (helpless && defence.IsDead)
@@ -165,7 +182,8 @@ namespace Clover.Player
             }
             else if (leaping)
             {
-                animator.Play(LeapHash, 0, Mathf.Min(ClipEnd, player.LeapProgress));
+                // The run to a thrown weapon is a leap laid flat, with its own look.
+                animator.Play(combat.IsDashing && dashHash != 0 ? dashHash : LeapHash, 0, Mathf.Min(ClipEnd, player.LeapProgress));
             }
             else if (posed)
             {
@@ -215,6 +233,15 @@ namespace Clover.Player
                     reactionSeconds = perfect ? PerfectGuardSeconds : GuardHitSeconds;
                     reactionFor = 0f;
                 }
+                if (combat.Catches != seenCatches)
+                {
+                    // A thrown weapon has come home: the hand that was waiting is driven back by it.
+                    seenCatches = combat.Catches;
+                    reactionHash = catchHash;
+                    reactionSeconds = CatchSeconds;
+                    reactionFor = 0f;
+                }
+                bool waiting = awayHash != 0 && combat.WeaponAway && !helpless && !attacking && !rolling && !leaping && !drinking;
                 bool reacting = reactionHash != 0 && !helpless && !attacking && !rolling;
                 if (reacting)
                 {
@@ -229,7 +256,8 @@ namespace Clover.Player
                 if (drinking) animator.Play(DrinkHash, upperLayer, Mathf.Min(ClipEnd, defence.Flasks.Progress));
                 else if (reacting) animator.Play(reactionHash, upperLayer, Mathf.Min(ClipEnd, reactionFor / reactionSeconds));
                 else if (guarding) animator.Play(guardHash, upperLayer, Mathf.Min(ClipEnd, guardFor / Mathf.Max(0.01f, UpperBodyBlend)));
-                float target = drinking || guarding || reacting ? 1f : 0f;
+                else if (waiting) animator.Play(awayHash, upperLayer, ClipEnd);
+                float target = drinking || guarding || reacting || waiting ? 1f : 0f;
                 upperWeight = Mathf.MoveTowards(upperWeight, target, deltaTime / Mathf.Max(0.01f, UpperBodyBlend));
                 animator.SetLayerWeight(upperLayer, upperWeight);
             }
@@ -246,7 +274,7 @@ namespace Clover.Player
             if (rack != null)
             {
                 // A great weapon never leaves the hand except to drink or to cast, when it hangs at rest on the body.
-                rack.Show(weapon.UsesSword ? null : weapon.Carry, weapon.ElementColoured || !(drinking || casting || (helpless && defence.IsDead)));
+                rack.Show(weapon.UsesSword || combat.WeaponAway ? null : weapon.Carry,weapon.ElementColoured || !(drinking || casting || (helpless && defence.IsDead)));
                 bool lit = charging || (attacking && (combat.Combo.Current == combat.Combo.Skill || combat.IsFinishing));
                 bool surging = element != null && element.Kit != null && element.Kit.SurgeActive;
                 float heat = lit ? InlaySkill : surging ? InlaySurge : InlayRest;

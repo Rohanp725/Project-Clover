@@ -174,7 +174,8 @@ namespace Clover.Player
 
             if (defence != null)
             {
-                defence.Advance(deltaTime, Dodge.IsRolling, (combat != null && combat.IsAttacking) || (element != null && element.IsCasting));
+                // The guard's own thrust does not bring the guard down.
+                defence.Advance(deltaTime, Dodge.IsRolling, (combat != null && combat.IsAttacking && !combat.IsGuardAttacking) || (element != null && element.IsCasting));
                 helpless = defence.IsHelpless;
             }
             bool busy = Dodge.IsRolling || helpless || (defence != null && defence.IsDrinking);

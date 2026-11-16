@@ -180,6 +180,13 @@ namespace Clover.Player
             Weapon = weapon;
             RunState.Weapon = weapon.Name;
             Weapon.Combo.Reset();
+            // Whatever was thrown belongs to the weapon put down.
+            if (WeaponAway && shots != null) shots.Release(awayShot);
+            WeaponAway = false;
+            IsDashing = false;
+            pendingShot = null;
+            followFor = null;
+            followStep = null;
             Step = Vector3.zero;
             counterDamage = 0f;
             counterStagger = 0f;
@@ -206,6 +213,9 @@ namespace Clover.Player
                 player.Dodge.InvulnerableUntil = dodge.InvulnerableUntil;
                 player.Dodge.Recovery = dodge.Recovery;
             }
+            // The marks multiply the weapon's own numbers, not those of whatever was held when the play began.
+            if (upgrades == null) upgrades = GetComponent<PlayerUpgrades>();
+            if (upgrades != null) upgrades.WeaponChanged();
         }
 
         /// <summary>True when the swing in progress shrugs off a blow of this much damage: it still hurts, it does not interrupt.</summary>
@@ -280,14 +290,16 @@ namespace Clover.Player
             Step = Vector3.zero;
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
             if (lightAction == null || heavyAction == null) return;
-            if (lightAction.WasPressedThisFrame()) Combo.Press();
-            if (heavyAction.WasPressedThisFrame())
+            // With the weapon out of the hand there is nothing to attack with; behind a raised guard the light press is the guard's own thrust.
+            if (lightAction.WasPressedThisFrame() && !WeaponAway) Combo.Press(defence != null && defence.IsGuarding);
+            if (heavyAction.WasPressedThisFrame() && !WeaponAway)
             {
                 // Looked for on the press only, not every frame: a staggered enemy in reach turns the heavy into the finisher.
                 finisherTarget = FindEnemy(transform.forward, 360f, FinisherRange, true);
                 Combo.PressHeavy(finisherTarget != null);
             }
             if (!heavyAction.IsPressed()) Combo.ReleaseHeavy();
+            Away(deltaTime);
             if (unavailable)
             {
                 Combo.Idle(deltaTime);
@@ -323,6 +335,16 @@ namespace Clover.Player
             }
             if ((events & ComboEvents.Hit) != 0) Strike(Combo.Current);
             if ((events & ComboEvents.Repeat) != 0) Strike(Combo.Current, true, Combo.Current.RepeatScale);
+            if (pendingShot != null)
+            {
+                // A shot that leaves late leaves only if the step that throws it is still being made.
+                if (Combo.Current != pendingShot) pendingShot = null;
+                else if (Combo.Elapsed >= pendingShot.Windup + pendingShot.Shot.ReleaseAfter)
+                {
+                    Loose(pendingShot);
+                    pendingShot = null;
+                }
+            }
 
             var step = Combo.Current;
             if (step == null) return;
@@ -347,6 +369,100 @@ namespace Clover.Player
         }
 
         private const float RecoilSeconds = 0.12f;
+
+        /// <summary>True while the weapon itself is out of the hand: thrown, standing where it stuck, or on its way back. No attack can start.</summary>
+        public bool WeaponAway { get; private set; }
+        /// <summary>True during the run to a thrown weapon; blows pass through the player while it lasts.</summary>
+        public bool IsDashing { get; private set; }
+        /// <summary>For the animator and probes: times a thrown weapon came back to the hand by itself, runs made to one, and runs refused.</summary>
+        public int Catches { get; private set; }
+        public int FollowDashes { get; private set; }
+        public int FollowsRefused { get; private set; }
+        public bool IsGuardAttacking => Combo.IsGuardAttack;
+        /// <summary>Metres short of an enemy the run to a weapon stuck in it stops.</summary>
+        public float FollowStandOff = 1.0f;
+        /// <summary>Seconds a weapon called back (not fetched) takes to reach the hand.</summary>
+        public float RecallSeconds = 0.5f;
+
+        private AttackStep pendingShot;
+        private int awayShot = -1;
+        private AttackStep followFor, followStep;
+        private float followIn;
+        private Vector3 thrownAlong;
+
+        // The shot leaves the weapon. One that is the weapon itself takes it out of the hand until it is home again.
+        private void Loose(AttackStep step)
+        {
+            if (step.Shot == null || shots == null) return;
+            Vector3 forward = transform.forward;
+            int handle = shots.Fire(this, step.Shot, transform.position + forward * 0.4f, forward, EffectColour, element != null ? element.Info : null);
+            if (handle < 0 || !(step.Shot.Returns || step.FollowStep != null)) return;
+            WeaponAway = true;
+            awayShot = handle;
+            followFor = step.FollowStep != null ? step : null;
+            followIn = step.FollowDelay;
+            thrownAlong = forward;
+        }
+
+        // The weapon is somewhere else: wait for it to come home, or, once it has stuck, go to it.
+        private void Away(float deltaTime)
+        {
+            if (!WeaponAway) return;
+            if (IsDashing)
+            {
+                if (player.IsLeaping) return;
+                // Arrived: the weapon is in the hands again and the body's speed goes into the cut that tears it out.
+                IsDashing = false;
+                WeaponAway = false;
+                if (shots != null) shots.Release(awayShot);
+                Vfx.Play(VfxKind.Dust, transform.position, -transform.forward, 1.6f);
+                if (followStep != null && !(defence != null && defence.IsHelpless) && Combo.Follow(followStep, player.Stamina))
+                {
+                    lunge = 0f;
+                    beatsDone = 0;
+                    holdDone = false;
+                    counterDamage = 0f;
+                    counterStagger = 0f;
+                }
+                followStep = null;
+                return;
+            }
+            if (shots == null || !shots.IsOut(awayShot))
+            {
+                // It came back by itself: caught.
+                WeaponAway = false;
+                followFor = null;
+                Catches++;
+                if (hitStop != null) hitStop.Freeze(0.03f);
+                if (shaker != null) shaker.Shake(0.08f, 0.1f);
+                return;
+            }
+            if (followFor == null || !shots.IsStuck(awayShot)) return;
+            followIn -= deltaTime;
+            if (followIn > 0f || Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active) return;
+            var step = followFor;
+            followFor = null;
+            // The stick held away from the throw refuses the run, and so does a body that cannot make it: the weapon comes back instead.
+            Vector3 wish = moveAction != null ? player.CameraRelative(moveAction.ReadValue<Vector2>()) : Vector3.zero;
+            bool refused = wish.sqrMagnitude > 0.25f && Vector3.Dot(wish.normalized, thrownAlong) < -0.5f;
+            if (refused || (defence != null && defence.IsHelpless) || player.FormHold != 0)
+            {
+                FollowsRefused++;
+                shots.Recall(awayShot, RecallSeconds);
+                return;
+            }
+            Vector3 gap = shots.Where(awayShot) - transform.position;
+            gap.y = 0f;
+            float distance = gap.magnitude;
+            float run = Mathf.Max(0f, distance - (shots.StuckInEnemy(awayShot) ? FollowStandOff : 0f));
+            Vector3 along = distance > 0.05f ? gap / distance : transform.forward;
+            run = Mathf.Min(run, player.ClearRun(along, run));
+            followStep = step.FollowStep;
+            IsDashing = true;
+            FollowDashes++;
+            Vfx.Play(VfxKind.Dust, transform.position, -along, 1.4f);
+            player.Leap(transform.position + along * run, step.FollowSeconds, 0f);
+        }
 
         // A finisher's staging before its blow: the beats that stop time and spark, and the lean of the camera for the hold.
         private void Stage(AttackStep step)
@@ -872,9 +988,19 @@ namespace Clover.Player
             var held = element != null ? element.Info : null;
             Color colour = EffectColour;
             Vector3 forward = transform.forward;
-            if (step.Shot != null && shots != null) shots.Fire(this, step.Shot, transform.position + forward * 0.4f, forward, colour, held);
+            if (step.Shot != null && shots != null)
+            {
+                if (step.Shot.ReleaseAfter > 0f) pendingShot = step;
+                else Loose(step);
+            }
             switch (step.Effect)
             {
+                case StepEffect.GroundSlam:
+                    // Where the head came down, or where a finished body did.
+                    Vector3 spot = (finisher ? new Vector3(finished.x, transform.position.y, finished.z) : transform.position + forward * step.Reach) + Vector3.up * 0.15f;
+                    Vfx.Play(VfxKind.Dust, spot, Vector3.up, 2f + step.Radius * 0.6f);
+                    Vfx.Play(VfxKind.TintRing, spot, Vector3.up, Mathf.Max(1.2f, step.Radius), colour);
+                    break;
                 case StepEffect.SpikeLine:
                     // Eight spikes run out along a lane, each enemy struck once by whichever reaches it first.
                     if (spikes != null)
@@ -1032,6 +1158,8 @@ namespace Clover.Player
                 }
                 if (step.Pull != 0f && outcome != HitOutcome.Blocked && target is IShovable dragged)
                     dragged.Push(transform.forward * -step.Pull);
+                if (step.Fling != 0f && outcome == HitOutcome.Finisher && target is IShovable flung)
+                    flung.Push((-transform.right * (step.Sweep < 0f ? -1f : 1f) + transform.forward * 0.25f).normalized * step.Fling);
                 LastBlowCritical = critical;
                 float earned = step.ManaGain * StatMana;
                 if (Stats != null && afflictable != null) earned *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.ManaFromBlows, afflictable.Afflictions) + (afflictable.Afflictions.IsAirborne ? Stats.InAir(PlayerStat.ManaFromBlows) : 0f));

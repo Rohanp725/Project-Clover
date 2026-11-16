@@ -18,6 +18,8 @@ namespace Clover.Player
         public const string MassiveSwordName = "Massive Sword";
         public const string ScytheName = "Scythe";
         public const string ArmamentName = "Armament";
+        public const string GreatSpearName = "Great Spear";
+        public const string GreatHammerName = "Great Hammer";
 
         // Every weapon there is, by name. A new weapon is one line here and its own method below.
         private static readonly Dictionary<string, Func<Weapon>> builders = new Dictionary<string, Func<Weapon>>
@@ -28,10 +30,12 @@ namespace Clover.Player
             { MassiveSwordName, MassiveSword },
             { ScytheName, Scythe },
             { ArmamentName, () => Armament(RunState.Element) },
+            { GreatSpearName, GreatSpear },
+            { GreatHammerName, GreatHammer },
         };
 
         /// <summary>The names a stand or a rack may offer, in the order they are set out. The god's own sword is given, not chosen.</summary>
-        public static readonly string[] Offered = { FistsName, KatanaName, MassiveSwordName, ScytheName, ArmamentName };
+        public static readonly string[] Offered = { FistsName, KatanaName, MassiveSwordName, ScytheName, ArmamentName, GreatSpearName, GreatHammerName };
 
         public static Weapon ByName(string name) => name != null && builders.TryGetValue(name, out var build) ? build() : Fists();
 
@@ -153,6 +157,129 @@ namespace Clover.Player
             weapon.Combo.Finisher.InnerDamage = 1f;
             weapon.Combo.Finisher.SweetDamage = 1f;
             return weapon.Named("scythe", false);
+        }
+
+        // The spear's lane: too close, and it is the haft.
+        private static AttackStep Lane(AttackStep step, float width)
+        {
+            step.LineWidth = width;
+            step.InnerReach = 1.4f;
+            step.InnerDamage = 0.6f;
+            return step;
+        }
+
+        /// <summary>
+        /// The Great Spear: the longest straight reach there is, down one narrow lane, from behind a guard that never
+        /// has to come down. Thrust, thrust, and a sweep for what has come round the side; a thrust made from behind
+        /// the guard; a couched charge from the hold; and the Flying Spear, thrown, stuck, and run to. Numbers from
+        /// docs/design/weapons.md.
+        /// </summary>
+        public static Weapon GreatSpear()
+        {
+            var weapon = new Weapon
+            {
+                Name = GreatSpearName,
+                Carry = "spear",
+                SkillName = "Flying Spear",
+                SlashColour = new Color(1.4f, 1.8f, 2.0f, 0.85f),
+                GuardProfile = new Guard { PerfectWindow = 0.18f, StaminaPerDamage = 0.8f, ChipFraction = 0.3f, ArcDegrees = 160f },
+                DodgeProfile = new DodgeRoll { Distance = 4.2f },
+                GuardMoveFactor = 0.5f,
+                Combo = new WeaponCombo
+                {
+                    Steps = new List<AttackStep>
+                    {
+                        Lane(new AttackStep { Name = "attack_spear_1", Windup = 0.14f, Active = 0.07f, Recovery = 0.27f, Damage = 10f, Stagger = 10f, StaminaCost = 10f, ManaGain = 5f, Lunge = 0.5f, Reach = 4.0f, HitStopSeconds = 0.045f }, 0.9f),
+                        Lane(new AttackStep { Name = "attack_spear_2", Windup = 0.14f, Active = 0.07f, Recovery = 0.27f, Damage = 11f, Stagger = 10f, StaminaCost = 10f, ManaGain = 5f, Lunge = 0.5f, Reach = 4.0f, HitStopSeconds = 0.045f }, 0.9f),
+                        new AttackStep { Name = "attack_spear_3", Sweep = 1f, Windup = 0.20f, Active = 0.10f, Recovery = 0.36f, Damage = 15f, Stagger = 20f, StaminaCost = 14f, ManaGain = 8f, Lunge = 0.6f, Reach = 3.6f, ArcDegrees = 160f, HitStopSeconds = 0.07f, Shake = 0.06f },
+                    },
+                    GuardAttack = Lane(new AttackStep { Name = "attack_spear_guard", Windup = 0.16f, Active = 0.07f, Recovery = 0.30f, Damage = 8f, Stagger = 8f, StaminaCost = 12f, ManaGain = 4f, Lunge = 0.2f, Reach = 3.8f, HitStopSeconds = 0.04f }, 0.8f),
+                    Heavy = Lane(new AttackStep { Name = "attack_spear_heavy", Heavy = true, Windup = 0.30f, Active = 0.10f, Recovery = 0.48f, Damage = 24f, Stagger = 32f, StaminaCost = 20f, ManaGain = 10f, Lunge = 0.8f, Reach = 4.4f, HitStopSeconds = 0.10f, Shake = 0.16f, Effect = StepEffect.GroundSlam }, 1.1f),
+                    ChainHeavy = new AttackStep { Name = "attack_spear_chain", Heavy = true, Windup = 0.22f, Active = 0.12f, Recovery = 0.46f, Damage = 20f, Stagger = 44f, StaminaCost = 18f, ManaGain = 10f, Lunge = 2.4f, Reach = 2.4f, ArcDegrees = 80f, HitStopSeconds = 0.10f, Shake = 0.20f, Pull = -2.0f },
+                    ChargedHeavy = Lane(new AttackStep { Name = "attack_spear_charged", Heavy = true, Windup = 0.08f, Active = 0.34f, Recovery = 0.50f, Damage = 30f, Stagger = 36f, StaminaCost = 26f, ManaGain = 12f, Lunge = 0f, Reach = 3.2f, HitStopSeconds = 0.10f, Shake = 0.24f, Travel = 5.0f, Pull = -1.5f, Poise = 16f }, 1.3f),
+                    Skill = new AttackStep
+                    {
+                        Name = "attack_spear_skill", Heavy = true, Windup = 0.20f, Active = 0.06f, Recovery = 0.20f, Damage = 0f, Stagger = 0f, StaminaCost = 15f, ManaGain = 0f, Lunge = 0.6f, Reach = 0f, ArcDegrees = 0f, HitStopSeconds = 0.08f, Shake = 0.14f,
+                        // Thrown: it stops in the first enemy it meets, or stands in the ground at the end of its flight.
+                        Shot = new WeaponShot { Speed = 34f, Range = 11f, Radius = 0.5f, Damage = 26f, Stagger = 30f, Pierce = false, Sticks = true, Heavy = true, Prop = "spear", PropLength = 2.0f },
+                        // Then the bearer goes to it, and arrives with the turning cut that rips it out.
+                        FollowStep = new AttackStep { Name = "attack_spear_recall", Heavy = true, Windup = 0.22f, Active = 0.10f, Recovery = 0.36f, Damage = 18f, Stagger = 26f, StaminaCost = 0f, ManaGain = 0f, Lunge = 0f, Reach = 2.6f, ArcDegrees = 360f, HitStopSeconds = 0.12f, Shake = 0.30f },
+                        FollowDelay = 0.15f,
+                        FollowSeconds = 0.22f,
+                    },
+                    Finisher = new AttackStep
+                    {
+                        Name = "attack_spear_finisher", Heavy = true, Windup = 0.72f, Active = 0.12f, Recovery = 0.66f, Damage = 30f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 3.6f, ArcDegrees = 120f, HitStopSeconds = 0.24f, Shake = 0.60f,
+                        LungeSeconds = 0.12f, HoldAt = 0.42f, HoldSeconds = 0.24f, Effect = StepEffect.GroundSlam, Pull = -1.8f,
+                        // The low thrust under the ribs, then the lever that raises the body on the point to hang over the hold.
+                        Beats = new[]
+                        {
+                            new FinisherBeat { Time = 0.14f, HitStopSeconds = 0.05f, Shake = 0.10f, Effect = VfxKind.HitSpark },
+                            new FinisherBeat { Time = 0.26f, HitStopSeconds = 0.03f, Shake = 0.12f, Effect = VfxKind.Dust, Lift = 0.5f },
+                        },
+                    },
+                    SkillManaCost = 30f,
+                    ChargeTime = 0.50f,
+                    SkillChargeTime = 0.90f,
+                    ChargeMoveFactor = 0.3f,
+                },
+            };
+            return weapon.Named("spear", false);
+        }
+
+        /// <summary>
+        /// The Great Hammer: a block of iron on a pole that does not cut, it lands. A side swing and then a slower
+        /// drop onto a spot a stride ahead; Quake; the lift that ends a chain; Earthshaker from the hold; and the
+        /// Spinning Hammer Toss, which leaves the hand and comes back to it. Its guard is slow to rise and the best
+        /// there is once up. Numbers from docs/design/weapons.md.
+        /// </summary>
+        public static Weapon GreatHammer()
+        {
+            var weapon = new Weapon
+            {
+                Name = GreatHammerName,
+                Carry = "hammer",
+                SkillName = "Spinning Hammer Toss",
+                SlashColour = new Color(2.0f, 1.6f, 1.2f, 0.9f),
+                GuardProfile = new Guard { PerfectFrom = 0.08f, PerfectWindow = 0.24f, StaminaPerDamage = 0.55f, ChipFraction = 0.2f, ArcDegrees = 180f },
+                DodgeProfile = new DodgeRoll { Distance = 3.6f, Duration = 0.42f, StaminaCost = 32f, InvulnerableFrom = 0.06f, InvulnerableUntil = 0.25f, Recovery = 0.18f },
+                MoveFactor = 0.9f,
+                GuardMoveFactor = 0.3f,
+                Combo = new WeaponCombo
+                {
+                    Steps = new List<AttackStep>
+                    {
+                        // The clip swings from the bearer's right across to the left, so the sweep is +1 (the design's table assumed the other side).
+                        new AttackStep { Name = "attack_hammer_1", Sweep = 1f, Windup = 0.30f, Active = 0.12f, Recovery = 0.50f, Damage = 20f, Stagger = 34f, StaminaCost = 20f, ManaGain = 8f, Lunge = 0.7f, Reach = 3.0f, ArcDegrees = 150f, HitStopSeconds = 0.09f, Shake = 0.12f, Poise = 12f },
+                        new AttackStep { Name = "attack_hammer_2", Windup = 0.40f, Active = 0.14f, Recovery = 0.62f, Damage = 26f, Stagger = 48f, StaminaCost = 24f, ManaGain = 10f, Lunge = 0.6f, Reach = 2.5f, Radius = 1.5f, HitStopSeconds = 0.12f, Shake = 0.22f, Poise = 16f, Effect = StepEffect.GroundSlam },
+                    },
+                    Heavy = new AttackStep { Name = "attack_hammer_heavy", Heavy = true, Windup = 0.46f, Active = 0.12f, Recovery = 0.70f, Damage = 36f, Stagger = 70f, StaminaCost = 30f, ManaGain = 14f, Lunge = 0.8f, Reach = 2.6f, Radius = 2.0f, HitStopSeconds = 0.14f, Shake = 0.34f, Poise = 22f, Effect = StepEffect.GroundSlam },
+                    ChainHeavy = new AttackStep { Name = "attack_hammer_chain", Heavy = true, Sweep = 1f, Windup = 0.26f, Active = 0.12f, Recovery = 0.64f, Damage = 34f, Stagger = 64f, StaminaCost = 26f, ManaGain = 14f, Lunge = 0.6f, Reach = 3.0f, ArcDegrees = 110f, HitStopSeconds = 0.14f, Shake = 0.32f, Pull = -2.5f, Poise = 22f },
+                    ChargedHeavy = new AttackStep { Name = "attack_hammer_charged", Heavy = true, Windup = 0.14f, Active = 0.14f, Recovery = 0.80f, Damage = 52f, Stagger = 100f, StaminaCost = 36f, ManaGain = 16f, Lunge = 0.6f, Reach = 2.6f, Radius = 3.0f, HitStopSeconds = 0.18f, Shake = 0.50f, Poise = 30f, Effect = StepEffect.GroundSlam },
+                    Skill = new AttackStep
+                    {
+                        Name = "attack_hammer_skill", Heavy = true, Sweep = 1f, Windup = 0.30f, Active = 0.30f, Recovery = 0.50f, Damage = 14f, Stagger = 24f, StaminaCost = 20f, ManaGain = 0f, Lunge = 0f, Reach = 3.0f, ArcDegrees = 360f, HitStopSeconds = 0.08f, Shake = 0.20f,
+                        // Two turns, a blow all round with each, and it is let go at the top of the second.
+                        Repeats = new[] { 0.15f },
+                        Shot = new WeaponShot { Speed = 16f, Range = 8f, Radius = 1.2f, Damage = 28f, Stagger = 50f, Pierce = true, Heavy = true, Returns = true, ReturnSpeed = 20f, ReturnScale = 0.5f, ReleaseAfter = 0.28f, Prop = "hammer", PropLength = 0.6f, Tumble = 900f },
+                    },
+                    Finisher = new AttackStep
+                    {
+                        Name = "attack_hammer_finisher", Heavy = true, Sweep = 1f, Windup = 0.76f, Active = 0.12f, Recovery = 0.62f, Damage = 36f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 3.2f, ArcDegrees = 180f, HitStopSeconds = 0.26f, Shake = 0.70f,
+                        LungeSeconds = 0.12f, HoldAt = 0.42f, HoldSeconds = 0.30f, Fling = 6f,
+                        // The lift under the chin that sends the enemy up; the bearer turns away and winds up while it hangs.
+                        Beats = new[]
+                        {
+                            new FinisherBeat { Time = 0.16f, HitStopSeconds = 0.06f, Shake = 0.25f, Effect = VfxKind.HeavySpark, Lift = 0.6f },
+                        },
+                    },
+                    SkillManaCost = 35f,
+                    ChargeTime = 0.55f,
+                    SkillChargeTime = 1.00f,
+                    ChargeMoveFactor = 0.3f,
+                },
+            };
+            return weapon.Named("hammer", true);
         }
 
         /// <summary>

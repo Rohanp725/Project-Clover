@@ -132,6 +132,8 @@ namespace Clover.EditorTools
                 lends.Range = 1f;
                 lends.Watch(upgrades, combat);
                 stones.Add(lends);
+                Words(stone.transform, sample.Name, new Vector3(0f, 0.05f, -0.75f), 0.028f, Color.Lerp(colour, Color.white, 0.35f));
+                Card(stone.transform, lends, 1.1f, $"{sample.Name.ToUpperInvariant()} ({sample.Element}, the '{sample.Form}' form)\n{sample.Description}\nPress use (E) to wear it. {TriggerWords.HowTo(sample)}\nMana comes back by itself while a stone's spell is worn.");
             }
             var turn = new GameObject("Element Stone");
             turn.transform.SetParent(rack, false);
@@ -143,6 +145,8 @@ namespace Clover.EditorTools
             changes.Configure("", "Take the next element", false);
             changes.Range = 1.6f;
             stones.Add(changes);
+            Words(turn.transform, "ELEMENT", new Vector3(0f, 2.1f, 0f), 0.07f, new Color(0.9f, 0.9f, 0.95f));
+            Card(turn.transform, changes, 2.4f, "");
             // Two debug shrines beside the element stone, for trying the gods' gifts while only one god exists.
             stones.Add(BuildShrine(rack, plinth, new Vector3(-3f, 0f, -12.5f), false, "GOD GIFT", "Debug shrine: take the god's gift of the element you hold", new Color(1f, 0.85f, 0.35f)));
             stones.Add(BuildShrine(rack, plinth, new Vector3(3f, 0f, -12.5f), true, "CONSUME NEXT", "Debug shrine: consume the next element round the ring (opens the mix, gives its crown)", new Color(0.85f, 0.45f, 1f)));
@@ -175,7 +179,48 @@ namespace Clover.EditorTools
             var gives = shrine.AddComponent<Clover.World.GiftShrine>();
             gives.Configure(consumes, prompt);
             gives.Range = 1.4f;
+            Card(shrine.transform, gives, 2.2f, "");
             return gives;
+        }
+
+        // A line of words standing in the world, leaned back toward the camera.
+        private static TextMesh Words(Transform over, string words, Vector3 localAt, float size, Color colour)
+        {
+            var holder = new GameObject("Label");
+            holder.transform.SetParent(over, false);
+            holder.transform.localPosition = localAt;
+            holder.transform.rotation = Quaternion.Euler(55f, 0f, 0f);
+            var text = holder.AddComponent<TextMesh>();
+            var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = font;
+            holder.GetComponent<MeshRenderer>().sharedMaterial = font.material;
+            text.text = words;
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.fontSize = 48;
+            text.characterSize = size;
+            text.color = colour;
+            return text;
+        }
+
+        // The card over a thing: what it gives, what that does and what sets it going, shown while the player is near.
+        // With no words of its own the thing is asked, since what a shrine gives depends on the element held.
+        private static void Card(Transform over, Clover.World.Interactable thing, float showWithin, string words)
+        {
+            var whole = BuildKit.Group("Card", over);
+            whole.localPosition = new Vector3(0f, 3.9f, 0f);
+            whole.rotation = Quaternion.Euler(55f, 0f, 0f);
+            var back = BuildKit.Shape(PrimitiveType.Quad, "Back", whole, Vector3.zero, new Vector3(3f, 1.2f, 1f),
+                BuildKit.Glow(Folder, "m_card_back", new Color(0.03f, 0.03f, 0.05f, 0.9f), 3, false, 2f, 0f, true));
+            var text = Words(whole, "", new Vector3(0f, 0f, -0.03f), 0.03f, new Color(0.95f, 0.93f, 0.86f));
+            text.transform.localRotation = Quaternion.identity;
+            text.alignment = TextAlignment.Left;
+            // The words are drawn after their backing, whatever the distance sorting says.
+            text.GetComponent<MeshRenderer>().sortingOrder = 10;
+            var card = over.gameObject.AddComponent<Clover.World.StoneCard>();
+            card.Words = words;
+            card.ShowWithin = showWithin;
+            card.Configure(thing, text, back.transform, whole.gameObject, 0.17f, 0.075f);
         }
 
         private class DummyKit

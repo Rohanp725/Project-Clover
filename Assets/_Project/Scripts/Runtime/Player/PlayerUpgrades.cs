@@ -247,6 +247,25 @@ namespace Clover.Player
             if (player != null && basesRead) Refresh(true);
         }
 
+        /// <summary>
+        /// A weapon has been taken up and has brought its own guard and its own dodge: those are now what the marks
+        /// multiply. Without this the next change of a sum would put the first weapon's numbers back.
+        /// </summary>
+        public void WeaponChanged()
+        {
+            if (!basesRead || player == null) return;
+            baseDodgeDistance = player.Dodge.Distance;
+            baseDodgeSafe = player.Dodge.InvulnerableUntil;
+            baseDodgeCost = player.Dodge.StaminaCost;
+            if (defence != null)
+            {
+                baseGuardCost = defence.Guard.StaminaPerDamage;
+                baseGuardWindow = defence.Guard.PerfectWindow;
+            }
+            appliedVersion = Stats.Version - 1;
+            ApplyStats();
+        }
+
         private void ReadBases()
         {
             basesRead = true;
@@ -1454,7 +1473,7 @@ namespace Clover.Player
         /// <summary>True while the player is Risen: stood up again from a death, their health draining.</summary>
         public bool Risen { get; private set; }
         /// <summary>How fast the Risen drain, as a share of the usual.</summary>
-        public float RiseDrain => 1f;
+        public float RiseDrain => Has(Trees.DarkTree.SlowRot) ? 0.7f : 1f;
         /// <summary>The share of health the Risen stand up with.</summary>
         public float RiseHealth = 0.5f;
         private bool riseSpent;

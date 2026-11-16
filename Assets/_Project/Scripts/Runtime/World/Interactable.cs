@@ -14,5 +14,14 @@ namespace Clover.World
         public virtual bool Available => true;
 
         public abstract void Use(PlayerInteraction who);
+
+        /// <summary>
+        /// For a thing in the test yard whose gift depends on the element held: what it would give now, what that
+        /// does and what sets it going, as a few short lines for its <see cref="StoneCard"/>. Empty for the rest.
+        /// </summary>
+        public virtual string Card(PlayerElement element) => "";
+
+        /// <summary>Changes whenever <see cref="Card"/> would say something else though the element is the same (a gift already given).</summary>
+        public virtual string CardStamp => "";
     }
 }

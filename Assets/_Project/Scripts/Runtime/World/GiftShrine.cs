@@ -25,6 +25,23 @@ namespace Clover.World
             Prompt = prompt;
         }
 
+        public override string CardStamp => Used.ToString();
+
+        public override string Card(PlayerElement element)
+        {
+            string held = element.Info.Name;
+            if (!Consumes)
+            {
+                var own = Gifts.SignatureOf(held);
+                if (own == null) return $"{held} has no god's gift yet.";
+                return $"GOD'S GIFT OF {held.ToUpperInvariant()}: {own.Name}\n{own.Description}\n{TriggerWords.HowTo(own)}\nPress use (E) to be given it, as if you took {held} from its god.";
+            }
+            var next = Elements.All[(element.Info.Index + 1) % Elements.Count];
+            var crown = Gifts.CrownOf(held, next.Name);
+            if (crown == null) return $"{held} and {next.Name} share no branch.";
+            return $"CONSUME {next.Name.ToUpperInvariant()} WHILE HOLDING {held.ToUpperInvariant()}: opens {element.Info.MixName} and gives its crown, {crown.Name}\n{crown.Description}\n{TriggerWords.HowTo(crown)}\nPress use (E) to be given it.";
+        }
+
         public override void Use(PlayerInteraction who)
         {
             Used++;

@@ -42,8 +42,10 @@ namespace Clover.Player
         public List<AttackStep> ChainHeavies;
         /// <summary>A step started by a light press at the end of a roll. A seam for the knives and the spear: not yet read.</summary>
         public AttackStep DashAttack;
-        /// <summary>A step started by a light press behind a raised guard. A seam for the spear: not yet read.</summary>
+        /// <summary>A step started by a light press behind a raised guard, which stays up through it. It is no part of the chain. Null: the press is an ordinary light.</summary>
         public AttackStep GuardAttack;
+        /// <summary>True while the guard's own attack is being made: the one attack the guard does not come down for.</summary>
+        public bool IsGuardAttack => Current != null && Current == GuardAttack;
         /// <summary>Seconds a press is remembered.</summary>
         public float BufferTime = 0.3f;
         /// <summary>Seconds after an attack ends in which a press still continues the chain.</summary>
@@ -81,6 +83,7 @@ namespace Clover.Player
         private float heavyBuffered;
         private bool heavyHeld;
         private bool finisherWanted;
+        private bool guardWanted;
         private bool chargeAnnounced;
         private bool skillAnnounced;
         private bool currentIsLight;
@@ -97,6 +100,7 @@ namespace Clover.Player
             heavyBuffered = 0f;
             heavyHeld = false;
             finisherWanted = false;
+            guardWanted = false;
             chargeAnnounced = false;
             skillAnnounced = false;
             currentIsLight = false;
@@ -127,7 +131,22 @@ namespace Clover.Player
             return true;
         }
 
-        public void Press() => buffered = BufferTime;
+        /// <summary>The light button went down; <paramref name="guarded"/> says the guard was up, which a weapon with a <see cref="GuardAttack"/> answers with it.</summary>
+        public void Press(bool guarded = false)
+        {
+            buffered = BufferTime;
+            guardWanted = guarded && GuardAttack != null;
+        }
+
+        /// <summary>
+        /// Starts a step that follows from something else than a press (the cut that ends a run to a thrown spear).
+        /// Not while a wind-up or a swing is in progress. True when it started.
+        /// </summary>
+        public bool Follow(AttackStep step, StaminaPool stamina)
+        {
+            if (step == null || Phase == AttackPhase.Windup || Phase == AttackPhase.Active) return false;
+            return StartHeavy(step, stamina);
+        }
 
         /// <summary>
         /// The heavy button went down. With <paramref name="finisher"/> true (a staggered enemy is in reach) the press
@@ -203,6 +222,11 @@ namespace Clover.Player
                     {
                         heavyBuffered = 0f;
                     }
+                }
+                else if (buffered > 0f && guardWanted)
+                {
+                    // From behind the guard: its own thrust, which neither starts nor continues a chain.
+                    if (StartHeavy(GuardAttack, stamina)) events |= ComboEvents.Started;
                 }
                 else if (buffered > 0f && StartLight(stamina))
                 {
@@ -297,6 +321,7 @@ namespace Clover.Player
                     bool chainOpen = currentIsLight && open;
                     if (heavyBuffered > 0f && finisherWanted && open && StartHeavy(Finisher, stamina)) events |= ComboEvents.Started;
                     else if (heavyBuffered > 0f && !finisherWanted && chainOpen && StartHeavy(Ender(nextIndex), stamina)) events |= ComboEvents.Started;
+                    else if (buffered > 0f && guardWanted && open && step == GuardAttack && StartHeavy(GuardAttack, stamina)) events |= ComboEvents.Started;
                     else if (buffered > 0f && chainOpen && nextIndex < Steps.Count && StartLight(stamina)) events |= ComboEvents.Started;
                     else if (elapsed >= step.Total) EndAttack();
                 }
@@ -333,6 +358,7 @@ namespace Clover.Player
             buffered = 0f;
             heavyBuffered = 0f;
             finisherWanted = false;
+            guardWanted = false;
             if (step == null || !stamina.TrySpend(step.StaminaCost * StaminaScale)) return false;
             Current = step;
             Phase = AttackPhase.Windup;

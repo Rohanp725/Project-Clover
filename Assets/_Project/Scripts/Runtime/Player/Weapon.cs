@@ -36,6 +36,10 @@ namespace Clover.Player
         public string RollState = "roll";
         public string GuardHitState = "";
         public string PerfectGuardState = "";
+        /// <summary>For a weapon that can leave the hand: how the arms wait for it, how it is caught, and the run after it. A state that was never baked is not played.</summary>
+        public string AwayState = "";
+        public string CatchState = "";
+        public string DashState = "";
         /// <summary>The numbers of its guard and its dodge, copied onto the player's when it is taken up. Null: the usual ones.</summary>
         public Guard GuardProfile;
         public DodgeRoll DodgeProfile;
@@ -67,7 +71,9 @@ namespace Clover.Player
                 foreach (var step in Combo.ChainHeavies)
                     if (step != null) yield return step;
             if (Combo.ChargedHeavy != null) yield return Combo.ChargedHeavy;
+            if (Combo.GuardAttack != null) yield return Combo.GuardAttack;
             if (Combo.Skill != null) yield return Combo.Skill;
+            if (Combo.Skill != null && Combo.Skill.FollowStep != null) yield return Combo.Skill.FollowStep;
             if (Combo.Finisher != null) yield return Combo.Finisher;
         }
 
@@ -81,6 +87,9 @@ namespace Clover.Player
             PerfectGuardState = "guard_perfect_" + prefix;
             ChargeAnimation = "charge_" + prefix;
             RollState = ownRoll ? "roll_" + prefix : "roll";
+            AwayState = "away_" + prefix;
+            CatchState = "catch_" + prefix;
+            DashState = "dash_" + prefix;
             return this;
         }
     }

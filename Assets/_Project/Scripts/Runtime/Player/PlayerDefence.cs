@@ -312,7 +312,8 @@ namespace Clover.Player
             // player flinching for ever.
             if (IsDead || IsHurt) return HitOutcome.Missed;
             // The guard is down the moment an attack begins, even if both buttons went down on the same frame.
-            if (combat != null && combat.IsAttacking) Guard.SetRaised(false);
+            // (The guard's own thrust is the one attack made from behind it.)
+            if (combat != null && combat.IsAttacking && !combat.IsGuardAttacking) Guard.SetRaised(false);
 
             // Nothing interrupts the finisher.
             if (combat != null && combat.IsFinishing) return HitOutcome.Dodged;

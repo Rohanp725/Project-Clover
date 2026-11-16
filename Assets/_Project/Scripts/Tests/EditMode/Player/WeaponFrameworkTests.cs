@@ -275,6 +275,121 @@ namespace Clover.Tests
             Assert.IsTrue(late.IsPerfect);
         }
 
+        // Runs the combo until it is idle again.
+        private static void Finish(WeaponCombo combo, StaminaPool stamina)
+        {
+            for (float t = 0f; t < 3f && combo.IsAttacking; t += Tick) combo.Tick(Tick, stamina);
+        }
+
+        [Test]
+        public void TheSpearThrustsFromBehindItsGuard()
+        {
+            var combo = Weapons.GreatSpear().Combo;
+            var stamina = Stamina();
+            combo.Press(true);
+            Assert.AreSame(combo.GuardAttack, Run(combo, stamina, null, 0.1f), "a light press behind the guard is the guard's own thrust");
+            Assert.IsTrue(combo.IsGuardAttack);
+            Assert.AreEqual(100f - combo.GuardAttack.StaminaCost, stamina.Current, 0.001f);
+            // Pressed again during its recovery, still behind the guard: another of the same.
+            for (float t = 0f; t < combo.GuardAttack.Windup + combo.GuardAttack.Active + 0.05f; t += Tick) combo.Tick(Tick, stamina);
+            combo.Press(true);
+            Assert.AreSame(combo.GuardAttack, Run(combo, stamina, null, 0.2f));
+            Finish(combo, stamina);
+            // It was no part of the chain: with the guard down the next press is the first thrust.
+            combo.Press();
+            Assert.AreSame(combo.Steps[0], Run(combo, stamina, null, 0.1f));
+            Assert.IsFalse(combo.IsGuardAttack);
+            Assert.Less(combo.GuardAttack.Damage, combo.Steps[0].Damage, "it is for holding, not for killing");
+            Assert.Greater(combo.GuardAttack.StaminaCost, combo.Steps[0].StaminaCost);
+
+            var sword = Weapons.MassiveSword().Combo;
+            sword.Press(true);
+            Assert.AreSame(sword.Steps[0], Run(sword, Stamina(), null, 0.1f), "a weapon with no guard attack answers with its ordinary light");
+        }
+
+        [Test]
+        public void TheSpearOwnsALaneAndItsChainIsAsDesigned()
+        {
+            var weapon = Weapons.GreatSpear();
+            var steps = weapon.Combo.Steps;
+            Assert.AreEqual(36f, steps.Sum(step => step.Damage), 0.001f);
+            Assert.AreEqual(40f, steps.Sum(step => step.Stagger), 0.001f);
+            Assert.AreEqual(34f, steps.Sum(step => step.StaminaCost), 0.001f);
+            Assert.AreEqual(1.62f, steps.Sum(step => step.Total), 0.001f);
+            Assert.AreEqual(0.9f, steps[0].LineWidth, 0.001f, "the thrust is a lane");
+            Assert.AreEqual(0f, steps[2].LineWidth, 0.001f, "the sweep is an arc");
+            Assert.AreEqual(0.6f, steps[0].BandDamage(1.0f), 0.001f, "too close, and it is the haft");
+            Assert.AreEqual(1f, steps[0].BandDamage(2.0f), 0.001f);
+            Assert.Greater(steps[0].Reach, Weapons.Scythe().Combo.Steps[0].Reach, "the longest straight reach");
+            Assert.Less(weapon.GuardProfile.ArcDegrees, Weapons.Scythe().GuardProfile.ArcDegrees, "and the narrowest guard");
+            Assert.AreEqual(5f, weapon.Combo.ChargedHeavy.Travel, 0.001f);
+            Assert.Greater(weapon.Combo.ChargedHeavy.Poise, 0f);
+        }
+
+        [Test]
+        public void TheFlyingSpearSticksAndIsFollowed()
+        {
+            var weapon = Weapons.GreatSpear();
+            var skill = weapon.Combo.Skill;
+            Assert.IsTrue(skill.Shot.Sticks);
+            Assert.IsFalse(skill.Shot.Pierce, "it stops in the first enemy it meets");
+            Assert.IsFalse(skill.Shot.Returns);
+            Assert.AreEqual("spear", skill.Shot.Prop, "the spear itself flies");
+            Assert.IsNotNull(skill.FollowStep);
+            Assert.AreEqual(0.15f, skill.FollowDelay, 0.001f);
+            Assert.AreEqual(0.22f, skill.FollowSeconds, 0.001f);
+            Assert.AreEqual(360f, skill.FollowStep.ArcDegrees, 0.001f, "the cut that rips it out strikes all round");
+            CollectionAssert.Contains(weapon.AllSteps().ToList(), skill.FollowStep, "the follow step is one of the weapon's attacks, so it must have a clip");
+            CollectionAssert.Contains(weapon.AllSteps().ToList(), weapon.Combo.GuardAttack);
+
+            var combo = weapon.Combo;
+            var stamina = Stamina();
+            Assert.IsTrue(combo.Follow(skill.FollowStep, stamina), "the follow step starts without a press");
+            Assert.AreSame(skill.FollowStep, combo.Current);
+            Assert.AreEqual(100f, stamina.Current, 0.001f, "and costs nothing");
+            Assert.IsFalse(combo.Follow(skill.FollowStep, stamina), "not in the middle of a wind-up");
+            Finish(combo, stamina);
+            combo.Press();
+            Assert.AreSame(combo.Steps[0], Run(combo, stamina, null, 0.6f), "it ended a chain, as a heavy does");
+        }
+
+        [Test]
+        public void TheHammerGetsSlowerAndItsTossComesBack()
+        {
+            var weapon = Weapons.GreatHammer();
+            var steps = weapon.Combo.Steps;
+            Assert.AreEqual(2, steps.Count);
+            Assert.Greater(steps[1].Windup, steps[0].Windup, "the second blow is the slower one");
+            Assert.AreEqual(46f, steps.Sum(step => step.Damage), 0.001f);
+            Assert.AreEqual(82f, steps.Sum(step => step.Stagger), 0.001f);
+            Assert.AreEqual(44f, steps.Sum(step => step.StaminaCost), 0.001f);
+            Assert.AreEqual(2.08f, steps.Sum(step => step.Total), 0.001f);
+            Assert.Greater(steps[1].Radius, 0f, "the drop is a disc on the ground ahead");
+            Assert.Greater(steps[1].Reach - steps[1].Radius, 0.9f, "which misses what stands inside a metre");
+
+            var skill = weapon.Combo.Skill;
+            Assert.AreEqual(1, skill.Repeats.Length, "two blows all round: the step and its repeat");
+            Assert.IsTrue(skill.Shot.Returns);
+            Assert.IsTrue(skill.Shot.Pierce);
+            Assert.IsFalse(skill.Shot.Sticks);
+            Assert.AreEqual(0.9f, skill.Shot.Range / skill.Shot.Speed + skill.Shot.Range / skill.Shot.ReturnSpeed, 0.001f, "out and back");
+            Assert.AreEqual(0.5f, skill.Shot.ReturnScale, 0.001f);
+            Assert.Greater(skill.Shot.ReleaseAfter, skill.Repeats[0], "it is let go after the second blow");
+            Assert.LessOrEqual(skill.Shot.ReleaseAfter, skill.Active + skill.Recovery, "and while the step is still being made");
+
+            var guard = weapon.GuardProfile;
+            Assert.AreEqual(0.16f, guard.PerfectWindow - guard.PerfectFrom, 0.001f, "the window is as wide as any, and starts late");
+            var raised = new Guard { PerfectFrom = guard.PerfectFrom, PerfectWindow = guard.PerfectWindow };
+            raised.Press();
+            raised.SetRaised(true);
+            raised.Tick(0.04f);
+            Assert.IsFalse(raised.IsPerfect, "a press in the last instant is only a block");
+            raised.Tick(0.08f);
+            Assert.IsTrue(raised.IsPerfect);
+            Assert.Less(guard.StaminaPerDamage, Weapons.MassiveSword().GuardProfile.StaminaPerDamage, "the plain block is the best there is");
+            Assert.Less(weapon.DodgeProfile.Distance, Weapons.MassiveSword().DodgeProfile.Distance, "and the roll the worst");
+        }
+
         [Test]
         public void EveryWeaponHasANameAStandAndItsClips()
         {
@@ -290,6 +405,20 @@ namespace Clover.Tests
                     Assert.Contains(clip, clips, $"{weapon.Name} has no '{clip}' clip");
                 foreach (string clip in new[] { weapon.GuardHitState, weapon.PerfectGuardState })
                     if (!string.IsNullOrEmpty(clip)) Assert.Contains(clip, clips, $"{weapon.Name} has no '{clip}' clip");
+                // Every attack of a weapon with its own clips has one, the guard's thrust and a follow step among them.
+                if (!string.IsNullOrEmpty(weapon.Prefix) && weapon.Prefix != "fist")
+                    foreach (var step in weapon.AllSteps())
+                        Assert.Contains(step.Name, clips, $"{weapon.Name} has no '{step.Name}' clip");
+                // A weapon that leaves the hand shows the wait for it, and one that is run to shows the run.
+                var thrown = weapon.Combo.Skill != null ? weapon.Combo.Skill.Shot : null;
+                if (thrown != null && (thrown.Returns || weapon.Combo.Skill.FollowStep != null))
+                {
+                    Assert.Contains(weapon.AwayState, clips, $"{weapon.Name} has no '{weapon.AwayState}' clip");
+                    Assert.Contains(weapon.CatchState, clips, $"{weapon.Name} has no '{weapon.CatchState}' clip");
+                    Assert.IsNotNull(Clover.EditorTools.WeaponBuilder.SpecFor(thrown.Prop), $"{weapon.Name} throws '{thrown.Prop}', which no weapon model is built for");
+                }
+                if (weapon.Combo.Skill != null && weapon.Combo.Skill.FollowStep != null)
+                    Assert.Contains(weapon.DashState, clips, $"{weapon.Name} has no '{weapon.DashState}' clip");
                 // What is carried is either the Katana in the character's own model or a set the weapon builder knows.
                 if (!weapon.UsesSword && !string.IsNullOrEmpty(weapon.Carry))
                     Assert.IsNotNull(Clover.EditorTools.WeaponBuilder.SpecFor(weapon.Carry), $"{weapon.Name} carries '{weapon.Carry}', which no weapon model is built for");

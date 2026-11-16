@@ -23,13 +23,19 @@ namespace Clover.Player
         public float HangSeconds;
         public float HangBite;
         public float HangEvery = 0.4f;
-        /// <summary>It stays in what it hits and says so. A seam for the bow and the spear: not yet read.</summary>
+        /// <summary>It stays where it stops, in the first enemy or in the ground, for <see cref="StickSeconds"/> or until it is fetched or called back.</summary>
         public bool Sticks;
-        /// <summary>It flies back to the hand, striking again. A seam for the hammer: not yet read.</summary>
+        public float StickSeconds = 3f;
+        /// <summary>It flies back to the hand from the end of its flight, striking again at <see cref="ReturnScale"/> of its blow.</summary>
         public bool Returns;
         public float ReturnSpeed = 14f;
         public float ReturnScale = 0.6f;
-        /// <summary>Which thing is drawn riding it: a name the shots' pool knows ("crescent"). Empty: the crescent.</summary>
+        /// <summary>Seconds after the blow before it leaves: the hammer is let go at the end of its turns, not at their first blow.</summary>
+        public float ReleaseAfter;
+        /// <summary>Which thing is drawn riding it: the carry name of a weapon whose own model flies ("spear", "hammer"). Empty: the crescent of light.</summary>
         public string Prop = "";
+        /// <summary>For a model: metres from its grip to the part that leads (the spear's point), and degrees a second it tumbles end over end.</summary>
+        public float PropLength;
+        public float Tumble;
     }
 }

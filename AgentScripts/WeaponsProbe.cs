@@ -8,13 +8,17 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
-// Play Mode probe for the newer weapons (Massive Sword, Scythe, Armament). In CombatTest, for each: equips it, throws
+// Play Mode probe for the newer weapons (Massive Sword, Scythe, Armament, Great Spear, Great Hammer). In CombatTest, for each: equips it, throws
 // the whole light chain, the heavy, the charged heavy, the chain heavies (all four enders for the Armament), the skill
 // and the finisher at a training dummy, and writes what each dealt (damage, stagger, how far off the target stood, how
 // long it took) beside the design's numbers; then casts the held element's spell with the weapon in hand and lays an
 // affliction with a blow. Frames at the telling moments go to review/shots/current/weapon_<name>_<move>_<n>.png.
 // In Castle (or anywhere with real enemies) it instead fights the nearest soldier once with each weapon.
-//   bash AgentScripts/runprobe.sh CombatTest WeaponsProbe 90
+// The spear also thrusts from behind its guard, throws itself and is run to (into the dummy, into the ground, and
+// refused); the hammer's toss is timed out and back, and its late perfect guard is tried early and on time.
+// To run only some weapons, write their clip prefixes on one line in AgentScripts/WeaponsProbe.only (e.g. "spear hammer");
+// with no such file every weapon is run.
+//   bash AgentScripts/runprobe.sh CombatTest WeaponsProbe 250
 public static class WeaponsProbe
 {
     public static string Run()
@@ -132,9 +136,13 @@ public class WeaponsProbeRunner : MonoBehaviour
         var rack = FindObjectsByType<LoadoutChoice>();
         Say($"start: rack stands {rack.Length}, dummy at {dummy.transform.position}, element {element.Info.Name}");
 
-        yield return Sword();
-        yield return Scythe();
-        yield return Armament();
+        string only = System.IO.File.Exists("AgentScripts/WeaponsProbe.only") ? " " + System.IO.File.ReadAllText("AgentScripts/WeaponsProbe.only").Trim() + " " : null;
+        if (only != null) Say($"only:{only}");
+        if (only == null || only.Contains(" gsword ")) yield return Sword();
+        if (only == null || only.Contains(" scythe ")) yield return Scythe();
+        if (only == null || only.Contains(" arm ")) yield return Armament();
+        if (only == null || only.Contains(" spear ")) yield return Spear();
+        if (only == null || only.Contains(" hammer ")) yield return Hammer();
 
         Say($"errors none seen by the probe; time scale {Time.timeScale:0.00}");
         Say("done: weapons");
@@ -405,15 +413,224 @@ public class WeaponsProbeRunner : MonoBehaviour
         Say($"arm: worn in {element.Info.Name}, shown as '{combat.Weapon.ShownName}'");
     }
 
+    private IEnumerator Spear()
+    {
+        weaponTag = "spear";
+        var weapon = Weapons.ByName(Weapons.GreatSpearName);
+        combat.Equip(weapon);
+        var combo = weapon.Combo;
+        var shots = player.GetComponent<WeaponShots>();
+        yield return Common(weapon, 3.3f);
+
+        // The haft: from too close the thrust does little.
+        yield return Stage(1.5f);
+        float health = dummy.Health.Current;
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[0] && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        Say($"spear haft: standing 1.5 m off (nearest side {combat.LastBlowDistance:0.00} m): damage {health - dummy.Health.Current:0.#} (plain 10; x0.6 under 1.4 m)");
+
+        // From behind the guard: the thrust is made, the guard stays up, and a blow that arrives during it is blocked.
+        yield return Stage(3.2f);
+        Keys(Key.L);
+        yield return Until(() => defence.IsGuarding, 1f);
+        yield return new WaitForSeconds(0.4f);
+        health = dummy.Health.Current;
+        Keys(Key.L, Key.J);
+        yield return null;
+        yield return null;
+        Keys(Key.L);
+        yield return Until(() => combat.Combo.Current == combo.GuardAttack, 1f);
+        bool started = combat.Combo.Current == combo.GuardAttack, upAtStart = defence.IsGuarding;
+        yield return new WaitForSeconds(0.1f);
+        yield return Shot("guardthrust", 1);
+        keepWell = false;
+        float mine = defence.Health.Current;
+        int blocks = defence.Blocks;
+        var outcome = defence.TakeHit(new Hit(10f, 0f, -Vector3.forward, false, false, dummy.transform.position));
+        yield return Until(() => combat.Combo.Phase != AttackPhase.Windup, 1f);
+        yield return null;
+        yield return Shot("guardthrust", 2);
+        bool wentOn = combat.Combo.Current == combo.GuardAttack;
+        yield return Until(() => !combat.IsAttacking, 2f);
+        Say($"spear guard thrust ({combo.GuardAttack.Name}): started {started}, guard up at its start {upAtStart} and after {defence.IsGuarding}; a blow of 10 inside it was {outcome} (blocks +{defence.Blocks - blocks}, health {mine:0} -> {defence.Health.Current:0}), thrust went on {wentOn}; dummy lost {health - dummy.Health.Current:0.#} (design {combo.GuardAttack.Damage})");
+        keepWell = true;
+        Keys();
+        yield return new WaitForSeconds(0.3f);
+
+        yield return Stage(3.3f);
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[0] && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        int shoves = dummy.Shoves;
+        yield return Tap(Key.K);
+        yield return Watch("vault", combo.ChainHeavy, $"damage {combo.ChainHeavy.Damage} stagger {combo.ChainHeavy.Stagger} lunge {combo.ChainHeavy.Lunge} shove {-combo.ChainHeavy.Pull}");
+        Say($"spear vault: the dummy was shoved +{dummy.Shoves - shoves} times, last by {dummy.LastShove.magnitude:0.0} m");
+
+        yield return Stage(6.5f);
+        shoves = dummy.Shoves;
+        yield return Hold(combo.ChargeTime + 0.15f);
+        yield return Watch("charged", combo.ChargedHeavy, $"damage {combo.ChargedHeavy.Damage} stagger {combo.ChargedHeavy.Stagger} travel {combo.ChargedHeavy.Travel} shove {-combo.ChargedHeavy.Pull}, released from tier 1 at {combo.ChargeTime} s");
+        Say($"spear charged: the dummy was shoved +{dummy.Shoves - shoves} times");
+
+        // The Flying Spear into the dummy, 8 m off: it sticks, the bearer runs to it and arrives with the turning cut.
+        yield return Stage(8f);
+        yield return FlyingSpear(combo, shots, "skill", "into the dummy 8 m off (design: 26, then the recall's 18)", false);
+
+        // Into the ground: thrown where no one stands, it flies its 11 m and the bearer follows all the way.
+        yield return Stage(3f);
+        player.Teleport(dummy.transform.position - Vector3.forward * 6f, Quaternion.LookRotation(-Vector3.forward, Vector3.up));
+        yield return new WaitForSecondsRealtime(0.15f);
+        yield return FlyingSpear(combo, shots, "skillground", "at empty ground (design: an 11 m flight, then the run)", false);
+
+        // Refused: the stick held away from the throw; the spear comes back to the hand and nothing can be swung meanwhile.
+        yield return Stage(8f);
+        yield return FlyingSpear(combo, shots, "skillrefused", "with the stick held away (design: no run; the spear back in 0.5 s)", true);
+
+        yield return Finish(weapon, 3f);
+        yield return Element(weapon, 3.3f, false);
+    }
+
+    private IEnumerator FlyingSpear(WeaponCombo combo, WeaponShots shots, string move, string design, bool refuse)
+    {
+        int thrown = shots.Thrown, struck = shots.Struck, sticking = shots.Sticking, dashes = combat.FollowDashes, refused = combat.FollowsRefused, catches = combat.Catches, skills = combat.SkillsUsed, blows = combat.BlowsLanded;
+        float health = dummy.Health.Current, mana = combat.Mana.Current;
+        Vector3 from = player.transform.position;
+        yield return Hold(combo.SkillChargeTime + 0.15f);
+        yield return Until(() => combat.Combo.Current == combo.Skill, 1f);
+        yield return Until(() => combat.Combo.Phase != AttackPhase.Windup || combat.Combo.Elapsed >= combo.Skill.Windup * 0.8f, 1f);
+        yield return Shot(move, 1);
+        yield return Until(() => combat.WeaponAway, 1f);
+        float left = Time.time;
+        if (refuse) Keys(Key.S);
+        yield return null;
+        yield return null;
+        yield return Shot(move, 2);
+        // With the spear out of the hand a light press starts nothing.
+        bool idleHands = true;
+        if (refuse)
+        {
+            yield return Until(() => !combat.IsAttacking, 1f);
+            Keys(Key.S, Key.J);
+            yield return null;
+            yield return null;
+            Keys(Key.S);
+            yield return new WaitForSeconds(0.1f);
+            idleHands = !combat.IsAttacking;
+            yield return Shot(move, 3);
+        }
+        else
+        {
+            yield return Until(() => combat.IsDashing, 1.5f);
+            float dashAt = Time.time - left;
+            yield return null;
+            yield return null;
+            yield return Shot(move, 3);
+            yield return Until(() => combat.Combo.Current == combo.Skill.FollowStep, 1.5f);
+            float arrived = Time.time - left;
+            yield return Until(() => combat.Combo.Current != combo.Skill.FollowStep || combat.Combo.Phase != AttackPhase.Windup, 1f);
+            yield return null;
+            yield return Shot(move, 4);
+            yield return new WaitForSecondsRealtime(0.12f);
+            yield return Shot(move, 5);
+            Say($"spear {move} timing: the run began {dashAt:0.00} s after the throw and the recall began at {arrived:0.00} s (flight + {combo.Skill.FollowDelay} + {combo.Skill.FollowSeconds})");
+        }
+        yield return Until(() => !combat.WeaponAway, 2.5f);
+        float home = Time.time - left;
+        Keys();
+        yield return Until(() => !combat.IsAttacking, 2f);
+        Say($"spear {move} (Flying Spear) {design}: skills +{combat.SkillsUsed - skills}, mana {mana:0} -> {combat.Mana.Current:0} (cost {combo.SkillManaCost}), thrown +{shots.Thrown - thrown}, struck +{shots.Struck - struck}, stuck +{shots.Sticking - sticking}, runs +{combat.FollowDashes - dashes}, refused +{combat.FollowsRefused - refused}, came back by itself +{combat.Catches - catches}, weapon blows +{combat.BlowsLanded - blows}, dummy lost {health - dummy.Health.Current:0.#}, the bearer moved {Vector3.Distance(from, player.transform.position):0.0} m, in hand again after {home:0.00} s, away now {combat.WeaponAway}{(refuse ? $", a light press while it was away started nothing: {idleHands}" : "")}");
+        yield return new WaitForSeconds(0.4f);
+    }
+
+    private IEnumerator Hammer()
+    {
+        weaponTag = "hammer";
+        var weapon = Weapons.ByName(Weapons.GreatHammerName);
+        combat.Equip(weapon);
+        var combo = weapon.Combo;
+        var shots = player.GetComponent<WeaponShots>();
+        yield return Common(weapon, 2.8f);
+
+        yield return Stage(2.8f);
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[0] && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        int shoves = dummy.Shoves;
+        yield return Tap(Key.K);
+        yield return Watch("lift", combo.ChainHeavy, $"damage {combo.ChainHeavy.Damage} stagger {combo.ChainHeavy.Stagger} shove {-combo.ChainHeavy.Pull}");
+        Say($"hammer lift: the dummy was shoved +{dummy.Shoves - shoves} times, last by {dummy.LastShove.magnitude:0.0} m");
+
+        yield return Stage(3f);
+        yield return Hold(combo.ChargeTime + 0.15f);
+        yield return Watch("charged", combo.ChargedHeavy, $"damage {combo.ChargedHeavy.Damage} stagger {combo.ChargedHeavy.Stagger} disc {combo.ChargedHeavy.Radius}, released from tier 1 at {combo.ChargeTime} s");
+
+        // The toss with the dummy inside the spin: two blows all round, then out through it and back through it.
+        yield return Stage(2.6f);
+        int thrown = shots.Thrown, struck = shots.Struck, returned = shots.Returned, catches = combat.Catches, skills = combat.SkillsUsed, blows = combat.BlowsLanded;
+        float health = dummy.Health.Current, mana = combat.Mana.Current;
+        dummy.Stagger.Reset();
+        yield return Hold(combo.SkillChargeTime + 0.15f);
+        yield return Until(() => combat.Combo.Current == combo.Skill, 1f);
+        yield return Until(() => combat.Combo.Phase != AttackPhase.Windup, 1f);
+        yield return null;
+        yield return Shot("skill", 1);
+        yield return Until(() => combat.WeaponAway, 1f);
+        float left = Time.time;
+        yield return null;
+        yield return null;
+        yield return Shot("skill", 2);
+        yield return new WaitForSeconds(0.3f);
+        yield return Shot("skill", 3);
+        Keys(Key.J);
+        yield return null;
+        yield return null;
+        Keys();
+        yield return new WaitForSeconds(0.2f);
+        bool chained = combat.Combo.Current != null && combat.Combo.Current != combo.Skill;
+        yield return Shot("skill", 4);
+        yield return Until(() => !combat.WeaponAway, 3f);
+        float away = Time.time - left;
+        yield return null;
+        yield return null;
+        yield return Shot("skill", 5);
+        Say($"hammer skill (Spinning Hammer Toss): skills +{combat.SkillsUsed - skills}, mana {mana:0} -> {combat.Mana.Current:0} (cost {combo.SkillManaCost}), spin blows +{combat.BlowsLanded - blows} (design 2 of 14), thrown +{shots.Thrown - thrown}, struck out and back +{shots.Struck - struck} (design 28 then 14), came home +{shots.Returned - returned}, caught +{combat.Catches - catches}, out of the hand {away:0.00} s (design 0.9), a light press meanwhile started an attack: {chained} (wanted False), dummy lost {health - dummy.Health.Current:0.#} (design 14 + 14 + 28 + 14 = 70)");
+        yield return new WaitForSeconds(0.6f);
+
+        // The guard that is slow to rise: struck at once it is only a block; struck a tenth of a second later it is perfect.
+        yield return Stage(2.8f);
+        keepWell = false;
+        Keys(Key.L);
+        yield return null;
+        yield return null;
+        var early = defence.TakeHit(new Hit(10f, 0f, -Vector3.forward, false, false, dummy.transform.position));
+        Keys();
+        yield return new WaitForSeconds(0.7f);
+        Keys(Key.L);
+        yield return new WaitForSeconds(0.13f);
+        var timed = defence.TakeHit(new Hit(10f, 0f, -Vector3.forward, false, false, dummy.transform.position));
+        yield return new WaitForSecondsRealtime(0.1f);
+        yield return Shot("guard", 1);
+        Keys();
+        keepWell = true;
+        Say($"hammer guard: a blow two frames after the press was {early} (wanted Blocked); one 0.13 s after it was {timed} (wanted PerfectGuard; the window is {defence.Guard.PerfectFrom} to {defence.Guard.PerfectWindow} s)");
+        yield return new WaitForSeconds(0.5f);
+
+        yield return Finish(weapon, 3f);
+        yield return Element(weapon, 2.8f, false);
+    }
+
     // One fight with each weapon against the nearest soldier: the light chain, a heavy, the charged heavy or skill, and a finisher if it staggers.
     private IEnumerator RealEnemies(AreaDirector director)
     {
-        foreach (string name in new[] { Weapons.MassiveSwordName, Weapons.ScytheName, Weapons.ArmamentName })
+        foreach (string name in new[] { Weapons.GreatSpearName, Weapons.GreatHammerName, Weapons.MassiveSwordName, Weapons.ScytheName, Weapons.ArmamentName })
         {
             Enemy enemy = null;
             foreach (var candidate in director.Enemies)
                 if (candidate != null && candidate.gameObject.activeInHierarchy && !candidate.IsDead && candidate.Kind.Name == EnemyKind.SoldierName) { enemy = candidate; break; }
-            if (enemy == null) { Say($"{name}: no soldier left"); continue; }
+            // With the soldiers used up, whoever else is still standing will do.
+            if (enemy == null)
+                foreach (var candidate in director.Enemies)
+                    if (candidate != null && candidate.gameObject.activeInHierarchy && !candidate.IsDead) { enemy = candidate; break; }
+            if (enemy == null) { Say($"{name}: no enemy left"); continue; }
+            string kind = enemy.Kind.Name;
             combat.Equip(Weapons.ByName(name));
             weaponTag = "castle_" + combat.Weapon.Prefix;
             var combo = combat.Weapon.Combo;
@@ -433,7 +650,7 @@ public class WeaponsProbeRunner : MonoBehaviour
                 yield return new WaitForSeconds(0.28f);
             }
             yield return Shot("fight", 2);
-            Say($"{name} against a soldier: blows landed +{combat.BlowsLanded - blows}, finishers +{combat.Finishers - finishers}, soldier dead {enemy.IsDead}, blows taken +{defence.BlowsTaken - taken}, poised through {defence.PoisedBlows}, tip blows {combat.SweetBlows}");
+            Say($"{name} against a {kind}: blows landed +{combat.BlowsLanded - blows}, finishers +{combat.Finishers - finishers}, dead {enemy.IsDead}, blows taken +{defence.BlowsTaken - taken}, poised through {defence.PoisedBlows}, tip blows {combat.SweetBlows}");
             yield return new WaitForSeconds(1.5f);
         }
     }

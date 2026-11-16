@@ -55,7 +55,7 @@ namespace Clover.Player
         public float LungeSeconds;
         /// <summary>Metres covered during the swing itself, striking all the way; each target is hit once.</summary>
         public float Travel;
-        /// <summary>The player ignores enemies' bodies while travelling. A seam for the knives and the spear: not yet read.</summary>
+        /// <summary>The player ignores enemies' bodies while travelling. A seam for the knives: not yet read.</summary>
         public bool PassThrough;
         /// <summary>Metres the player is pushed back over the first of the recovery.</summary>
         public float Recoil;
@@ -76,6 +76,15 @@ namespace Clover.Player
         /// <summary>Seconds into the step at which the camera leans in for the held pose, and for how long; zero leaves it to the blow.</summary>
         public float HoldAt;
         public float HoldSeconds;
+        /// <summary>Metres a finished enemy is thrown sideways, the way the cut travels: the hammer's last blow.</summary>
+        public float Fling;
+        /// <summary>
+        /// A step whose shot stays where it lands may be followed: this long after the thing has stuck, the player
+        /// goes to it over <see cref="FollowSeconds"/>, untouchable on the way, and arrives with this step. Null: no one follows.
+        /// </summary>
+        [NonSerialized] public AttackStep FollowStep;
+        public float FollowDelay = 0.15f;
+        public float FollowSeconds = 0.22f;
 
         /// <summary>What a blow at this distance is multiplied by: less on the haft, more at the tip.</summary>
         public float BandDamage(float distance) => SweetFrom > 0f && distance >= SweetFrom ? SweetDamage : distance < InnerReach ? InnerDamage : 1f;

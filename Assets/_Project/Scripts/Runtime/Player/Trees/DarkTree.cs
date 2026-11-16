@@ -166,22 +166,20 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = HardToBury, Name = "Hard to Bury", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { NearTheGrave }, X = 1.89f, Y = 3.09f, Icon = UpgradeIcons.Shield,
                 Description = "Below a third of your health you take less from every blow.",
                 Stats = new[] { new StatMod(PlayerStat.DamageTaken, -0.12f, StatWhen.LowHealth) } });
-            // BESPOKE: the Rise. Until there is one, "Risen" is read as "while Hunger lasts".
+            // The Rise is built (PlayerUpgrades.Rise, RiseForm), and "Risen" means it: StatWhen.Risen. Not flinching is not
+            // built, and a kill gives health back in place of stilling the drain for a few breaths.
             to.Add(new Upgrade { Id = HollowStrength, Name = "Hollow Strength", Element = E, Kind = UpgradeKind.Major, Requires = new[] { NearTheGrave }, X = 1.61f, Y = 4.2f, Icon = UpgradeIcons.Fist,
                 Description = "Risen, you strike harder and no blow makes you flinch. Each kill stills the draining for a few breaths.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.25f, Seconds = 10f },
-                    new UpgradeEffect { On = UpgradeTrigger.Kill, Do = UpgradeAction.Heal, WhileSurge = true, Amount = 8f },
-                } });
-            // Stands in: nothing can slow a drain yet, so grey health fades more slowly.
+                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.25f, StatWhen.Risen) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, While = StatWhen.Risen, Do = UpgradeAction.Heal, Amount = 8f } } });
+            // The drain of the Risen runs at seven tenths: PlayerUpgrades.RiseDrain reads this mark.
             to.Add(new Upgrade { Id = SlowRot, Name = "Slow Rot", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { HollowStrength }, X = 1.02f, Y = 5.83f, Icon = UpgradeIcons.Hourglass,
                 Description = "Risen, your health drains more slowly.",
-                Stats = new[] { new StatMod(PlayerStat.GreyKept, 0.3f) } });
-            // A number, but there is no stat for it: while Hunger lasts each blow feeds a point more.
+                Effects = System.Array.Empty<UpgradeEffect>() });
+            // A number, but there is no stat for it: while Risen each blow feeds a point more.
             to.Add(new Upgrade { Id = GraveAppetite, Name = "Grave Appetite", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { HollowStrength }, X = 2.38f, Y = 4.9f, Icon = UpgradeIcons.Plus,
                 Description = "Risen, your blows feed you more.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Heal, WhileSurge = true, Amount = 1f, Cooldown = 0.2f } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.Risen, Do = UpgradeAction.Heal, Amount = 1f, Cooldown = 0.2f } } });
             // BESPOKE: the second hold that changes places with the shadow. The shadow itself is the clone form.
             to.Add(new Upgrade { Id = SecondShadow, Name = "Second Shadow", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { HollowStrength }, X = 2.0f, Y = 6.0f, Icon = UpgradeIcons.Moon,
                 Description = "Hold the spell button to leave your shadow where you stand. It strikes when you strike, at whatever is near it. Hold again to change places with it. 45 mana.",
