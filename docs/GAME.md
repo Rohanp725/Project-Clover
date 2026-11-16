@@ -244,8 +244,26 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   it must be done well or it will not fit, so it is judged on screenshots early. References: Hades, Cuphead and
   Splatoon for vividness; Elden Ring and Lies of P for the dark setting; Black Myth: Wukong, Elden Ring, Sekiro and
   Lies of P for flashy set-piece moments.
-- Style references, what to take from each: not yet pinned down.
-- Palette and lighting: not decided.
+- **Decided (user, 2026-11-15): the main visual reference is Ravenswatch**: a dark fairy-tale, comic-book look with
+  cel shading and bold ink outlines. Secondary: Death's Door and Tunic for clean, minimal flat-shaded 3D; Hades for
+  the camera angle, silhouette clarity and effect readability. What to aim for:
+  - *Shading*: stepped toon lighting, two or three hard bands, no smooth gradients; deep cool shadows; a subtle rim
+    light that lifts characters off the background.
+  - *Outlines*: thick, dark, ink-like on characters and key props; thinner or lighter on the environment so gameplay
+    elements stand out.
+  - *Colour*: dark, desaturated environments (deep blues, purples, murky greens) with saturated accents on
+    characters, enemies, hazards and spells. Readability first: player, enemies and attacks must pop from the ground.
+  - *Textures*: simple hand-painted or flat colour, minimal surface detail; shape and silhouette do the work.
+  - *Effects*: bold, graphic, hard-edged shapes, high-contrast emissive colour, comic-style impact frames and flashes;
+    magic must read clearly from above.
+  - *Mood*: grim but colourful, an illustrated dark storybook, not gritty realism.
+- As built toward that (first pass, not yet judged): three hard light bands with purple-blue shade; heavy ink on
+  characters and a thinner, lighter line on the world; stone in deep indigo with flat per-stone tones and no grain;
+  the player in saturated blue and orange, enemies in bronze, crimson and violet with cyan lightning; hard-edged
+  slash arcs and sparks with a white core; a spiked impact burst and a one-frame screen wash on heavy blows,
+  finishers, perfect guards and wounds.
+- Palette and lighting: a first version is built (see "The first area as built" under Vertical slice); not yet
+  judged by the user.
 - Fidelity targets: not decided; they depend on the camera.
 - Performance budget: default 1080p at 16.6 ms and 0 B GC per frame on the user's RTX 3080, until changed.
 
@@ -293,6 +311,78 @@ The first thing to be built. **Decided** unless marked.
   clouds in Sekiro. **Leaning**: a second phase in a huge godly form. One idea from Claude, not accepted: a vast
   storm serpent that coils through the clouds behind the duel and enters the fight in phase two.
 - **Katana moves**: a light combo, a heavy attack, and a charged draw (sheathe, hold, release for the Iaido Slash).
+
+### The first area as built (2026-11-15)
+
+Built by Claude in one pass at the user's instruction to work through the area without stopping; every choice below is
+**Claude's default, open to change**, and none of it has been played by the user yet. The scene is
+`Assets/_Project/Scenes/Castle.unity`, built by `Clover > Build > Castle`.
+
+**Layout** (north is up the screen and up the hill): a causeway over the drop with the first rest fire; the ruined
+gate; the outer court (two temple soldiers and an acolyte); a stair up to the shrine terrace, where the Katana stands
+in a stone inside a ring of standing stones (two acolytes and a storm caller, and the second rest fire); a second
+stair to the upper ward under the keep's wall (two soldiers, an acolyte, two storm callers); and the sealed door to the
+summit, which will not open while any enemy stands. Eleven enemies.
+
+**Fists** (the starting weapon): the quickest chain in the game, short reach, light damage, and a great deal of
+stagger for that damage, so fists open an enemy for the finisher. Four lights (jab, cross, hook, front kick), a
+lunging heavy, a rising heavy that ends a chain, and the skill **Breaker**: a charged straight that fills most of a
+stagger meter in one blow. The guard with fists is crossed forearms.
+
+**Fire's base kit** (mana only comes from fighting, as before):
+
+- **Flame Wave** (Triangle, 25 mana): a short committed cast that throws a cone of fire 5.5 m ahead. Modest damage,
+  good stagger, and it leaves what it touches **burning** (5 damage a second for 5 s; burning does not stack, it is
+  topped up). A dodge can break the cast; the mana is spent either way.
+- **Kindle** (L2, 40 mana): Fire's self buff. For 10 s the weapon is wrapped in flame: 30% more damage, and every blow
+  sets its target burning for 3 s.
+
+**The three enemies**, each with lightning in it (glowing marks and eyes). Every attack is drawn on the ground before
+it lands: pale for one that can be guarded, red for one that cannot.
+
+| Enemy | Health | What it does | What it teaches |
+|---|---|---|---|
+| Temple Soldier | 95 | A long narrow thrust; a wide sweep up close; a red charging lunge from range. Slow to turn. | Guarding, and the perfect guard: its blows are slow and plainly shown. |
+| Knife Acolyte | 55 | Two quick cuts with no rest between them; a red leap from range. Fast. | Dodging: a guard held through both cuts costs too much stamina. |
+| Storm Caller | 45 | Calls a bolt down on where the player stands (red); backs away; bursts in a ring when cornered. | Closing the distance. |
+
+Enemies flinch when hit, except that an attack they are already showing is broken only by a heavy blow. A full stagger
+meter drops them to one knee for three seconds, open to the finisher. A perfect guard against a blow struck by hand
+throws stagger back on the attacker.
+
+**The storm** (the user's leaning, built as a first version): bolts strike the towers as scenery. While a fight is on,
+every eight to fifteen seconds the storm marks one of the enemies in it with a blue ring that follows it, and a moment
+later a bolt lands on it. The enemy is **charged** for nine seconds (30% faster and harder-hitting, pulsing blue) and
+the player is hurt if standing inside the ring. So a marked enemy is one to step away from, or to kill first.
+
+**Resting**: lighting a rest fire refills health and flasks, brings every enemy in the area back, and becomes the
+place the player wakes after falling. Death does not yet end the run in this area: the hub and the run structure are
+not built, so falling returns the player to the last fire lit.
+
+**Look as built**: night under the storm, cool grey stone, rain, fog that swallows the keep, warm pools of light from
+braziers; cel-shaded with outlines, light falling in hard bands, a cool rim on characters; bloom on anything brighter
+than white, which is how fire, lightning, slashes and the enemies' infection glow while the world stays muted. A wall
+or tower standing between the camera and the player thins to a screen of dots.
+
+### After the user's first play of the castle (2026-11-15)
+
+The user's verdict: the base gameplay "is starting to look like what I have envisioned". Two problems, and what was
+changed for each (Claude's first answers, not yet played):
+
+- **Several small enemies ganging up was annoying.** Enemies now take turns: only one may be showing or striking a
+  hand-to-hand attack at a time (and one a thrown attack), with at least 1.1 s between one enemy starting and the
+  next. The others hold a ring about 5.5 m out and circle until it is their turn.
+- **Fights leaned toward run in, spam, run out, where the user wants the smarter, even exchange of Sekiro and Elden
+  Ring.** Three changes push toward standing and trading:
+  - *Enemy guard.* The Temple Soldier turns light blows from the front on its spear while it stands ready: it takes a
+    quarter of the damage but all of the stagger. Its guard is beaten by filling its stagger meter, by a heavy blow,
+    by fire, or by getting behind it. After turning three blows it strikes back at once.
+  - *Poise.* Light blows no longer make every enemy flinch every time: a soldier shrugs off two and flinches on the
+    third, an acolyte flinches on the second. Heavy blows always do.
+  - *The perfect guard is worth more*: it throws 55 stagger back on the attacker (was 40 to 45), so two perfect guards
+    nearly open a soldier for the finisher.
+- **Open**: whether this is enough. Further levers not yet pulled: stamina costs that punish spamming, enemies that
+  chase a retreating player harder, and enemy combos that reward holding ground.
 
 ### Upgrades in the slice (Decided: all of these are in)
 
@@ -342,6 +432,8 @@ where a critical hit on a burning enemy causes a chained explosion.
 | 2026-11-15 | Magic supports close combat and must not become the main focus of fights | the user wants the player empowered to use their weapons |
 | 2026-11-15 | Each major boss masters one element and one unique technique; beating it gives a choice of one of the two | makes every boss a build decision |
 | 2026-11-15 | Boss zones are themed to the element for atmosphere only, with no status effect | atmosphere without extra rules |
+| 2026-11-15 | Blocking is directional; the finisher is its own move on a staggered enemy | the user's feedback after playing the combat arena |
+| 2026-11-15 | The first area, its three enemies, fists and Fire's base kit were built in one pass on Claude's defaults | the user asked for long stretches of work with few check-ins and a higher bar for visuals |
 | 2026-11-15 | Only the player and the final boss use more than one element; the final boss has Light, Dark and the Super Form | makes the final boss the player's mirror |
 | 2026-11-15 | Mana for magic is harvested by landing weapon hits | forces melee, which serves the weapons-first pillar |
 | 2026-11-15 | Areas with ordinary enemies lead to each boss | exploration, and enemies teach combinations by using them on the player |

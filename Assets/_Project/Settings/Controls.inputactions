@@ -10,7 +10,10 @@
                 { "name": "LightAttack", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1004", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
                 { "name": "HeavyAttack", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1005", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
                 { "name": "Guard", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1006", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
-                { "name": "Flask", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1007", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
+                { "name": "Flask", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1007", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Spell", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1008", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Surge", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1009", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Interact", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a100a", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
             ],
             "bindings": [
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1010", "path": "<Gamepad>/leftStick", "interactions": "", "processors": "StickDeadzone", "groups": "Gamepad", "action": "Move", "isComposite": false, "isPartOfComposite": false },
@@ -28,7 +31,13 @@
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1050", "path": "<Gamepad>/leftShoulder", "interactions": "", "processors": "", "groups": "Gamepad", "action": "Guard", "isComposite": false, "isPartOfComposite": false },
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1051", "path": "<Keyboard>/l", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Guard", "isComposite": false, "isPartOfComposite": false },
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1060", "path": "<Gamepad>/buttonWest", "interactions": "", "processors": "", "groups": "Gamepad", "action": "Flask", "isComposite": false, "isPartOfComposite": false },
-                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1061", "path": "<Keyboard>/r", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Flask", "isComposite": false, "isPartOfComposite": false }
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1061", "path": "<Keyboard>/r", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Flask", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1070", "path": "<Gamepad>/buttonNorth", "interactions": "", "processors": "", "groups": "Gamepad", "action": "Spell", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1071", "path": "<Keyboard>/u", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Spell", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1080", "path": "<Gamepad>/leftTrigger", "interactions": "", "processors": "", "groups": "Gamepad", "action": "Surge", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1081", "path": "<Keyboard>/i", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Surge", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1090", "path": "<Gamepad>/buttonSouth", "interactions": "", "processors": "", "groups": "Gamepad", "action": "Interact", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1091", "path": "<Keyboard>/e", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Interact", "isComposite": false, "isPartOfComposite": false }
             ]
         }
     ],

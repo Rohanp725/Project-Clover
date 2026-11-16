@@ -32,6 +32,9 @@ namespace Clover.Player
         /// <summary>How hard the camera shakes when this attack lands, in metres; zero for none.</summary>
         public float Shake;
 
+        /// <summary>Which way the cut travels, for the arc it leaves in the air: +1 right to left, -1 left to right, 0 straight.</summary>
+        public float Sweep;
+
         public float Total => Windup + Active + Recovery;
     }
 }

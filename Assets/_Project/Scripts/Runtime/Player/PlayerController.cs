@@ -1,3 +1,4 @@
+using Clover.Core;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -36,6 +37,7 @@ namespace Clover.Player
         private CharacterController body;
         private PlayerCombat combat;
         private PlayerDefence defence;
+        private PlayerElement element;
         private InputActionAsset ownControls;
         private InputActionMap playerMap;
         private InputAction moveAction;
@@ -57,6 +59,7 @@ namespace Clover.Player
             body = GetComponent<CharacterController>();
             combat = GetComponent<PlayerCombat>();
             defence = GetComponent<PlayerDefence>();
+            element = GetComponent<PlayerElement>();
             if (controls == null)
             {
                 Debug.LogError("[Clover.Player] The controls asset is missing; the player cannot be driven.");
@@ -88,10 +91,12 @@ namespace Clover.Player
             if (defence != null) defence.ReadInput();
             bool helpless = defence != null && defence.IsHelpless;
             bool attacking = combat != null && combat.IsAttacking;
+            bool casting = element != null && element.IsCasting;
 
             // The dodge is settled before the weapon runs this frame, so it wins over an attack pressed with it. It may
             // interrupt an attack's recovery or a charge, never a wind-up or the swing itself; pressed early, it waits.
             if (dodgeAction.WasPressedThisFrame()) dodgeBuffered = DodgeBufferTime;
+            // A cast can be rolled out of at any point; the mana is not given back.
             if (dodgeBuffered > 0f && !helpless && (!attacking || combat.CanBeCancelled))
             {
                 // With no stick input the roll goes the way the player is facing.
@@ -100,6 +105,8 @@ namespace Clover.Player
                 {
                     dodgeBuffered = 0f;
                     if (attacking) combat.Interrupt();
+                    if (casting) element.Interrupt();
+                    Vfx.Play(VfxKind.Dust, transform.position, -rollDirection);
                 }
             }
             if (dodgeBuffered > 0f) dodgeBuffered -= deltaTime;
@@ -111,12 +118,18 @@ namespace Clover.Player
 
             if (defence != null)
             {
-                defence.Advance(deltaTime, Dodge.IsRolling, combat != null && combat.IsAttacking);
+                defence.Advance(deltaTime, Dodge.IsRolling, (combat != null && combat.IsAttacking) || (element != null && element.IsCasting));
                 helpless = defence.IsHelpless;
+            }
+            bool busy = Dodge.IsRolling || helpless || (defence != null && defence.IsDrinking);
+            if (element != null)
+            {
+                element.Advance(deltaTime, !busy && (combat == null || !combat.IsAttacking));
+                casting = element.IsCasting;
             }
             if (combat != null)
             {
-                combat.Advance(deltaTime, Dodge.IsRolling || helpless || (defence != null && defence.IsDrinking));
+                combat.Advance(deltaTime, busy || casting);
                 attacking = combat.IsAttacking;
             }
 
@@ -131,6 +144,12 @@ namespace Clover.Player
                 step = Dodge.Tick(deltaTime);
                 // The roll commits to its direction at once; there is no turning mid-roll.
                 transform.rotation = Quaternion.LookRotation(Dodge.Direction, Vector3.up);
+            }
+            else if (casting)
+            {
+                // A cast roots the player for its short length.
+                Dodge.Tick(deltaTime);
+                step = Vector3.zero;
             }
             else if (attacking)
             {
@@ -166,6 +185,16 @@ namespace Clover.Player
             step.y = -fallSpeed * deltaTime;
             body.Move(step);
             Stamina.Tick(deltaTime);
+        }
+
+        /// <summary>Puts the player somewhere else at once, as a respawn does. A CharacterController ignores a plain move of its transform.</summary>
+        public void Teleport(Vector3 position, Quaternion rotation)
+        {
+            body.enabled = false;
+            transform.SetPositionAndRotation(position, rotation);
+            body.enabled = true;
+            fallSpeed = 0f;
+            Dodge.Reset();
         }
 
         /// <summary>Turns stick input into a direction on the ground as the camera sees it.</summary>

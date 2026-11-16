@@ -16,6 +16,7 @@ namespace Clover.Gameplay
 
         public Health Health = new Health { Maximum = 200f };
         public StaggerMeter Stagger = new StaggerMeter();
+        public BurnStatus Burn = new BurnStatus();
         /// <summary>Damage is multiplied by this while the dummy is staggered.</summary>
         public float StaggeredDamageMultiplier = 1.5f;
         /// <summary>A heavy blow on the staggered dummy is multiplied by this instead.</summary>
@@ -42,6 +43,7 @@ namespace Clover.Gameplay
         private Vector3 rock;
         private float sinceHit = float.MaxValue;
         private float flashLeft;
+        private float untilEmber;
         private int shownFlash;
 
         public void Configure(Transform bodyToRock, Renderer[] renderersToFlash, Transform healthBar, Transform staggerBar)
@@ -59,12 +61,14 @@ namespace Clover.Gameplay
             rockFrame = body != null && body.parent != null ? body.parent : transform;
             Health.Fill();
             Stagger.Reset();
+            Burn.Reset();
         }
 
         public HitOutcome TakeHit(in Hit hit)
         {
             HitsTaken++;
             sinceHit = 0f;
+            Burn.Ignite(hit.BurnSeconds);
             bool finisher = Stagger.IsStaggered && hit.Heavy;
             float multiplier = finisher ? FinisherDamageMultiplier : Stagger.IsStaggered ? StaggeredDamageMultiplier : 1f;
             Health.Damage(hit.Damage * multiplier);
@@ -102,6 +106,18 @@ namespace Clover.Gameplay
             float deltaTime = Time.deltaTime;
             Stagger.Tick(deltaTime);
             sinceHit += deltaTime;
+            if (Burn.IsBurning)
+            {
+                Health.Damage(Burn.Tick(deltaTime));
+                sinceHit = 0f;
+                untilEmber -= deltaTime;
+                if (untilEmber <= 0f)
+                {
+                    untilEmber = 0.15f;
+                    Clover.Core.Vfx.Play(Clover.Core.VfxKind.Embers, transform.position + Vector3.up * 1.3f, Vector3.up, 0.4f);
+                    Clover.Core.Vfx.Play(Clover.Core.VfxKind.Fire, transform.position + Vector3.up * 1.2f, Vector3.up, 0.12f);
+                }
+            }
             if (sinceHit >= RestoreAfter && Health.Current < Health.Maximum) Health.Fill();
 
             rock = Vector3.Lerp(rock, Vector3.zero, 1f - Mathf.Exp(-RockRecoverPerSecond * deltaTime));

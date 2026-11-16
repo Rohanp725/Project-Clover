@@ -39,7 +39,7 @@ namespace Clover.Gameplay
 
         public int BlowsStruck { get; private set; }
 
-        private static readonly int BaseColour = Shader.PropertyToID("_BaseColor");
+        private static readonly int BaseColour = Shader.PropertyToID("_Color");
 
         private TrainingDummy dummy;
         private Transform targetRoot;

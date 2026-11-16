@@ -16,8 +16,10 @@ namespace Clover.Gameplay
         /// <summary>Where the attacker stands, when it said so; a guard uses it to tell front from behind.</summary>
         public readonly Vector3 Origin;
         public readonly bool HasOrigin;
+        /// <summary>Seconds the blow sets its target burning; zero for none.</summary>
+        public readonly float BurnSeconds;
 
-        public Hit(float damage, float stagger, Vector3 direction, bool heavy = false, bool unblockable = false, Vector3? origin = null)
+        public Hit(float damage, float stagger, Vector3 direction, bool heavy = false, bool unblockable = false, Vector3? origin = null, float burnSeconds = 0f)
         {
             Damage = damage;
             Stagger = stagger;
@@ -26,6 +28,7 @@ namespace Clover.Gameplay
             Unblockable = unblockable;
             Origin = origin ?? default;
             HasOrigin = origin.HasValue;
+            BurnSeconds = burnSeconds;
         }
     }
 }

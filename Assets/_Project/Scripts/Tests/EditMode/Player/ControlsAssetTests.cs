@@ -14,11 +14,11 @@ namespace Clover.Tests
         [Test]
         public void ControlsHaveThePlayerMapWithTheActionsThePlayerReads()
         {
-            var controls = AssetDatabase.LoadAssetAtPath<InputActionAsset>(CombatTestArenaBuilder.ControlsPath);
-            Assert.IsNotNull(controls, $"no input actions at {CombatTestArenaBuilder.ControlsPath}");
+            var controls = AssetDatabase.LoadAssetAtPath<InputActionAsset>(PlayerBuilder.ControlsPath);
+            Assert.IsNotNull(controls, $"no input actions at {PlayerBuilder.ControlsPath}");
             var map = controls.FindActionMap("Player");
             Assert.IsNotNull(map, "no Player action map");
-            foreach (string action in new[] { "Move", "Dodge", "LightAttack", "HeavyAttack", "Guard", "Flask" })
+            foreach (string action in new[] { "Move", "Dodge", "LightAttack", "HeavyAttack", "Guard", "Flask", "Spell", "Surge", "Interact" })
             {
                 var found = map.FindAction(action);
                 Assert.IsNotNull(found, $"no {action} action");

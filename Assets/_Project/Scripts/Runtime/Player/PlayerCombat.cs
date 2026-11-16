@@ -17,8 +17,13 @@ namespace Clover.Player
     {
         [SerializeField] private HitStop hitStop;
         [SerializeField] private TopDownCamera shaker;
+        [SerializeField] private SlashArcs arcs;
 
-        public WeaponCombo Combo = Katana();
+        /// <summary>The weapon the player starts the scene with: a name from <see cref="Weapons"/>.</summary>
+        public string StartingWeapon = Weapons.FistsName;
+        /// <summary>The weapon in hand. Its numbers live in <see cref="Weapons"/> and are built fresh each play.</summary>
+        public Weapon Weapon { get; private set; }
+        public WeaponCombo Combo => Weapon.Combo;
         public ManaPool Mana = new ManaPool();
         /// <summary>Metres within which an attack turns to face an enemy.</summary>
         public float AimRange = 4.5f;
@@ -47,6 +52,11 @@ namespace Clover.Player
         public int BlowsLanded { get; private set; }
         public int Finishers { get; private set; }
         public int SkillsUsed { get; private set; }
+        /// <summary>Blows an enemy turned on its guard.</summary>
+        public int BlowsTurned { get; private set; }
+        /// <summary>What an element's surge adds to every blow: more damage, and seconds of burning.</summary>
+        public float DamageMultiplier { get; private set; } = 1f;
+        public float BurnOnHit { get; private set; }
 
         private PlayerController player;
         private PlayerDefence defence;
@@ -57,39 +67,22 @@ namespace Clover.Player
         private bool warnedOverlapsFull;
         private Transform finisherTarget;
         private float lunge;
+        private bool empowered;
+        private Color empoweredColour;
         private readonly HashSet<IDamageable> struck = new HashSet<IDamageable>();
 
-        public void Configure(HitStop hitStopToUse, TopDownCamera cameraToShake)
+        public void Configure(HitStop hitStopToUse, TopDownCamera cameraToShake, SlashArcs arcsToShow)
         {
             hitStop = hitStopToUse;
             shaker = cameraToShake;
+            arcs = arcsToShow;
         }
-
-        /// <summary>
-        /// The Katana, first version. Light chain: a drawing cut, a return cut, a stepping finisher. Heavy: an overhead
-        /// cut, quicker and harder when it ends a chain. Skill: the Iaido Slash, a long drawing cut released from the sheath.
-        /// </summary>
-        public static WeaponCombo Katana() => new WeaponCombo
-        {
-            Steps = new List<AttackStep>
-            {
-                new AttackStep { Name = "attack_light_1", Windup = 0.10f, Active = 0.08f, Recovery = 0.24f, Damage = 10f, Stagger = 10f, StaminaCost = 10f, ManaGain = 5f, Lunge = 0.7f, Reach = 2.4f, ArcDegrees = 140f, HitStopSeconds = 0.045f },
-                new AttackStep { Name = "attack_light_2", Windup = 0.11f, Active = 0.08f, Recovery = 0.25f, Damage = 11f, Stagger = 10f, StaminaCost = 10f, ManaGain = 5f, Lunge = 0.6f, Reach = 2.4f, ArcDegrees = 140f, HitStopSeconds = 0.045f },
-                new AttackStep { Name = "attack_light_3", Windup = 0.16f, Active = 0.10f, Recovery = 0.38f, Damage = 18f, Stagger = 22f, StaminaCost = 14f, ManaGain = 9f, Lunge = 1.3f, Reach = 2.7f, ArcDegrees = 100f, HitStopSeconds = 0.08f },
-            },
-            Heavy = new AttackStep { Name = "attack_heavy", Heavy = true, Windup = 0.30f, Active = 0.10f, Recovery = 0.46f, Damage = 26f, Stagger = 34f, StaminaCost = 20f, ManaGain = 10f, Lunge = 1.0f, Reach = 2.8f, ArcDegrees = 90f, HitStopSeconds = 0.10f, Shake = 0.16f },
-            ChainHeavy = new AttackStep { Name = "attack_heavy", Heavy = true, Windup = 0.20f, Active = 0.10f, Recovery = 0.46f, Damage = 30f, Stagger = 40f, StaminaCost = 20f, ManaGain = 12f, Lunge = 1.2f, Reach = 2.8f, ArcDegrees = 90f, HitStopSeconds = 0.11f, Shake = 0.2f },
-            Finisher = new AttackStep { Name = "attack_finisher", Heavy = true, Windup = 0.30f, Active = 0.14f, Recovery = 0.56f, Damage = 30f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 3.2f, ArcDegrees = 120f, HitStopSeconds = 0.2f, Shake = 0.45f },
-            Skill = new AttackStep { Name = "attack_iaido", Heavy = true, Windup = 0.08f, Active = 0.12f, Recovery = 0.50f, Damage = 48f, Stagger = 50f, StaminaCost = 15f, ManaGain = 0f, Lunge = 2.6f, Reach = 3.3f, ArcDegrees = 170f, HitStopSeconds = 0.14f, Shake = 0.3f },
-            SkillManaCost = 30f,
-            ChargeTime = 0.4f,
-        };
 
         private void Awake()
         {
             player = GetComponent<PlayerController>();
             defence = GetComponent<PlayerDefence>();
-            Combo.Reset();
+            Equip(Weapons.ByName(StartingWeapon));
             Mana.Empty();
         }
 
@@ -98,6 +91,30 @@ namespace Clover.Player
             lightAction = player.FindAction("LightAttack");
             heavyAction = player.FindAction("HeavyAttack");
             moveAction = player.FindAction("Move");
+        }
+
+        /// <summary>Takes a weapon in hand, dropping whatever attack was in progress.</summary>
+        public void Equip(Weapon weapon)
+        {
+            Weapon = weapon;
+            Weapon.Combo.Reset();
+            Step = Vector3.zero;
+        }
+
+        /// <summary>An element's surge wraps the weapon: every blow hits harder, sets its target burning, and cuts in the element's colour.</summary>
+        public void Empower(float damageMultiplier, float burnSeconds, Color slashColour)
+        {
+            DamageMultiplier = damageMultiplier;
+            BurnOnHit = burnSeconds;
+            empowered = true;
+            empoweredColour = slashColour;
+        }
+
+        public void ClearEmpower()
+        {
+            DamageMultiplier = 1f;
+            BurnOnHit = 0f;
+            empowered = false;
         }
 
         /// <summary>Stops the attack in progress: a dodge or a guard cutting a recovery short, or a blow landing on the player.</summary>
@@ -140,6 +157,33 @@ namespace Clover.Player
             var step = Combo.Current;
             if (Combo.Phase == AttackPhase.Windup && step.Windup > 0f)
                 Step = transform.forward * (lunge * deltaTime / step.Windup);
+        }
+
+        /// <summary>
+        /// Strikes everything in a cone in front of the player that is not the player: what a spell does. Returns how
+        /// many things it hit. The blow is described by the caller, so spells and weapons share one path to a target.
+        /// </summary>
+        public int StrikeCone(float reach, float arcDegrees, float damage, float stagger, float burnSeconds, VfxKind effect)
+        {
+            struck.Clear();
+            Vector3 origin = transform.position + Vector3.up;
+            int count = Overlap(origin, reach);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || struck.Contains(target)) continue;
+                Vector3 offset = other.ClosestPoint(origin) - origin;
+                offset.y = 0f;
+                if (offset.magnitude > 0.6f && Vector3.Angle(transform.forward, offset) > arcDegrees * 0.5f) continue;
+                var outcome = target.TakeHit(new Hit(damage, stagger, transform.forward, false, true, transform.position, burnSeconds));
+                if (outcome == HitOutcome.Missed) continue;
+                struck.Add(target);
+                Vfx.Play(effect, other.bounds.center, transform.forward);
+                if (defence != null) defence.DealtDamage(damage);
+            }
+            return struck.Count;
         }
 
         /// <summary>The nearest enemy all around within aiming range, or null. The guard uses it to know whom to face.</summary>
@@ -221,6 +265,7 @@ namespace Clover.Player
         {
             struck.Clear();
             bool finisher = false;
+            if (arcs != null) arcs.Show(transform.position, transform.forward, step.Reach, step.ArcDegrees, step.Sweep, empowered ? empoweredColour : Weapon.SlashColour);
             Vector3 origin = transform.position + Vector3.up;
             int count = Overlap(origin, step.Reach);
             for (int i = 0; i < count; i++)
@@ -233,13 +278,18 @@ namespace Clover.Player
                 offset.y = 0f;
                 // Something touching the player is hit whatever the angle; otherwise it must be inside the swing's arc.
                 if (offset.magnitude > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
-                var outcome = target.TakeHit(new Hit(step.Damage, step.Stagger, transform.forward, step.Heavy, false, transform.position));
+                float damage = step.Damage * DamageMultiplier;
+                var outcome = target.TakeHit(new Hit(damage, step.Stagger, transform.forward, step.Heavy, false, transform.position, BurnOnHit));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
                 finisher |= outcome == HitOutcome.Finisher;
+                if (outcome != HitOutcome.Blocked) Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, other.ClosestPoint(origin), transform.forward);
+                else BlowsTurned++;
+                if (outcome == HitOutcome.Finisher) Vfx.Play(VfxKind.Burst, other.bounds.center);
+                if (step.Heavy && outcome != HitOutcome.Blocked) Vfx.Play(VfxKind.Impact, other.bounds.center);
                 Mana.Gain(step.ManaGain);
                 BlowsLanded++;
-                if (defence != null) defence.DealtDamage(step.Damage);
+                if (defence != null) defence.DealtDamage(damage);
             }
             if (struck.Count == 0) return;
 
@@ -247,6 +297,7 @@ namespace Clover.Player
             {
                 Finishers++;
                 if (defence != null) defence.Callout("Finisher");
+                ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.6f), 0.08f);
             }
             if (hitStop != null) hitStop.Freeze(finisher ? Mathf.Max(FinisherHitStop, step.HitStopSeconds) : step.HitStopSeconds);
             // After a finisher's stop, time comes back slowly: the blow gets a moment to be looked at.

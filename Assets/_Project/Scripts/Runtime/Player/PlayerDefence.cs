@@ -73,6 +73,7 @@ namespace Clover.Player
 
         private PlayerController player;
         private PlayerCombat combat;
+        private PlayerElement element;
         private InputAction guardAction;
         private InputAction flaskAction;
         private bool guardHeld;
@@ -94,6 +95,7 @@ namespace Clover.Player
         {
             player = GetComponent<PlayerController>();
             combat = GetComponent<PlayerCombat>();
+            element = GetComponent<PlayerElement>();
             Health.Fill();
             Guard.Reset();
             Flasks.Refill();
@@ -166,7 +168,11 @@ namespace Clover.Player
             bool free = !rolling && !attacking;
             // At full health the press is ignored, so a flask is never wasted.
             if (flaskBuffered > 0f && free && Health.Current < Health.Maximum && Flasks.TryStartDrink()) flaskBuffered = 0f;
-            if (Flasks.Tick(deltaTime)) Health.Heal(Flasks.HealAmount);
+            if (Flasks.Tick(deltaTime))
+            {
+                Health.Heal(Flasks.HealAmount);
+                Vfx.Play(VfxKind.Heal, transform.position + Vector3.up * 0.6f);
+            }
 
             bool raise = guardHeld && free && !Flasks.IsDrinking;
             if (raise && !Guard.IsRaised)
@@ -236,6 +242,10 @@ namespace Clover.Player
             {
                 case GuardResult.Perfect:
                     PerfectGuards++;
+                    Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
+                    Vfx.Play(VfxKind.Ring, GuardPoint(), transform.forward);
+                    Vfx.Play(VfxKind.Impact, GuardPoint());
+                    ScreenFlash.Flash(new Color(0.75f, 0.9f, 1f, 0.4f), 0.07f);
                     if (combat != null) combat.Mana.Gain(PerfectGuardMana);
                     if (hitStop != null) hitStop.Freeze(PerfectGuardHitStop);
                     if (shaker != null) shaker.Shake(0.12f, 0.15f);
@@ -243,6 +253,7 @@ namespace Clover.Player
                     return HitOutcome.PerfectGuard;
                 case GuardResult.Blocked:
                     Blocks++;
+                    Vfx.Play(VfxKind.GuardSpark, GuardPoint(), transform.forward);
                     Health.Chip(chip);
                     if (hitStop != null) hitStop.Freeze(0.04f);
                     return HitOutcome.Blocked;
@@ -260,6 +271,8 @@ namespace Clover.Player
         {
             BlowsTaken++;
             Health.Damage(hit.Damage);
+            Vfx.Play(VfxKind.Wound, transform.position + Vector3.up * 1.1f, hit.Direction);
+            ScreenFlash.Flash(new Color(1f, 0.08f, 0.1f, 0.16f), 0.09f);
             hurtSeconds = seconds;
             hurtLeft = seconds;
             knockDirection = hit.Direction;
@@ -268,6 +281,7 @@ namespace Clover.Player
             Flasks.Interrupt();
             player.Dodge.Stop();
             if (combat != null) combat.Interrupt();
+            if (element != null) element.Interrupt();
             if (hitStop != null) hitStop.Freeze(0.07f);
             if (shaker != null) shaker.Shake(0.22f, 0.22f);
             if (IsDead)
@@ -279,12 +293,25 @@ namespace Clover.Player
             }
         }
 
-        private void Revive()
+        // Where a blow meets the guard: in front of the chest.
+        private Vector3 GuardPoint() => transform.position + Vector3.up * 1.2f + transform.forward * 0.6f;
+
+        /// <summary>Raised when the player stands up again after falling, so the scene can put things back.</summary>
+        public event System.Action Revived;
+
+        /// <summary>Full health and flasks, as a rest gives.</summary>
+        public void Restore()
         {
             Health.Fill();
             Flasks.Refill();
             player.Stamina.Fill();
+        }
+
+        private void Revive()
+        {
+            Restore();
             deadFor = 0f;
+            Revived?.Invoke();
         }
 
         private static float Eased(float t)
