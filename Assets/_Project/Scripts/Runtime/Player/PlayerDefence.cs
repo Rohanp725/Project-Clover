@@ -43,6 +43,9 @@ namespace Clover.Player
         /// arena only: in the game a death ends the run. Zero or less means the player stays down.
         /// </summary>
         public float ReviveAfterSeconds = 2.5f;
+        /// <summary>With the Firebomb Flask learned: holding the flask button this long throws it; a shorter press drinks.</summary>
+        public bool HoldToThrow;
+        public float ThrowHoldSeconds = 0.3f;
 
         public bool IsHurt => hurtLeft > 0f;
         public bool IsDead => Health.IsDead;
@@ -77,6 +80,10 @@ namespace Clover.Player
         private PlayerController player;
         private PlayerCombat combat;
         private PlayerElement element;
+        private PlayerUpgrades upgrades;
+        private bool flaskHolding;
+        private float flaskHeldFor;
+        private float throwBuffered;
         private InputAction guardAction;
         private InputAction flaskAction;
         private bool guardHeld;
@@ -100,6 +107,7 @@ namespace Clover.Player
             player = GetComponent<PlayerController>();
             combat = GetComponent<PlayerCombat>();
             element = GetComponent<PlayerElement>();
+            upgrades = GetComponent<PlayerUpgrades>();
             Health.Fill();
             Guard.Reset();
             Flasks.Refill();
@@ -135,7 +143,28 @@ namespace Clover.Player
                 Guard.Press(!IsHelpless && !IsDrinking);
                 guardPressBuffered = PressBufferTime;
             }
-            if (flaskAction.WasPressedThisFrame()) flaskBuffered = PressBufferTime;
+            if (flaskAction.WasPressedThisFrame())
+            {
+                if (HoldToThrow)
+                {
+                    flaskHolding = true;
+                    flaskHeldFor = 0f;
+                }
+                else flaskBuffered = PressBufferTime;
+            }
+            if (!flaskHolding) return;
+            // Let go early it is a drink; held, it is thrown.
+            flaskHeldFor += Time.deltaTime;
+            if (!flaskAction.IsPressed())
+            {
+                flaskHolding = false;
+                flaskBuffered = PressBufferTime;
+            }
+            else if (flaskHeldFor >= ThrowHoldSeconds)
+            {
+                flaskHolding = false;
+                throwBuffered = PressBufferTime;
+            }
         }
 
         /// <summary>Runs one frame. The guard and the flask wait while the player is rolling or attacking.</summary>
@@ -146,6 +175,7 @@ namespace Clover.Player
             Health.Tick(deltaTime);
             if (guardPressBuffered > 0f) guardPressBuffered -= deltaTime;
             if (flaskBuffered > 0f) flaskBuffered -= deltaTime;
+            if (throwBuffered > 0f) throwBuffered -= deltaTime;
 
             if (IsDead)
             {
@@ -174,6 +204,15 @@ namespace Clover.Player
             bool free = !rolling && !attacking;
             // At full health the press is ignored, so a flask is never wasted.
             if (flaskBuffered > 0f && free && Health.Current < Health.Maximum && Flasks.TryStartDrink()) flaskBuffered = 0f;
+            if (throwBuffered > 0f && free)
+            {
+                throwBuffered = 0f;
+                if (Flasks.TryThrow())
+                {
+                    if (upgrades != null) upgrades.OnFlaskThrown();
+                }
+                else Callout("No flask");
+            }
             if (Flasks.Tick(deltaTime))
             {
                 Health.Heal(Flasks.HealAmount);
@@ -223,6 +262,8 @@ namespace Clover.Player
 
             // Nothing interrupts the finisher.
             if (combat != null && combat.IsFinishing) return HitOutcome.Dodged;
+            // Nor reaches the player in the air.
+            if (player.IsLeaping) return HitOutcome.Dodged;
 
             if (player.Dodge.IsInvulnerable)
             {
@@ -232,6 +273,7 @@ namespace Clover.Player
                     if (combat != null) combat.Mana.Gain(PerfectDodgeMana);
                     if (hitStop != null) hitStop.Slow(PerfectDodgeSlowSeconds, PerfectDodgeSlowScale);
                     Callout("Perfect dodge");
+                    if (upgrades != null) upgrades.OnPerfectDodge();
                     return HitOutcome.PerfectDodge;
                 }
                 Dodges++;
@@ -258,6 +300,7 @@ namespace Clover.Player
                     if (hitStop != null) hitStop.Freeze(PerfectGuardHitStop);
                     if (shaker != null) shaker.Shake(0.12f, 0.15f);
                     Callout("Perfect guard");
+                    if (upgrades != null) upgrades.OnPerfectGuard(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
                     return HitOutcome.PerfectGuard;
                 case GuardResult.Blocked:
                     Blocks++;
@@ -284,6 +327,7 @@ namespace Clover.Player
         {
             BlowsTaken++;
             Health.Damage(hit.Damage);
+            if (upgrades != null) upgrades.OnStruck();
             Vfx.Play(VfxKind.Wound, transform.position + Vector3.up * 1.1f, hit.Direction);
             ScreenFlash.Flash(new Color(1f, 0.08f, 0.1f, 0.16f), 0.09f);
             hurtSeconds = seconds;

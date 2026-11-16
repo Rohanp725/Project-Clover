@@ -73,6 +73,8 @@ namespace Clover.EditorTools
             cameraObject.AddComponent<Clover.World.OcclusionFader>().Configure(built.Player.transform);
 
             BuildHud(controller, built.Player.GetComponent<PlayerCombat>(), built.Player.GetComponent<PlayerDefence>(), hint);
+            // The player's lingering effects on the ground live in the scene, not on the player.
+            new GameObject("Hazards").AddComponent<Clover.World.Hazards>();
             return built;
         }
 
@@ -107,6 +109,7 @@ namespace Clover.EditorTools
             player.AddComponent<PlayerInteraction>();
             var element = player.AddComponent<PlayerElement>();
             element.Configure(glow, arcs, follow);
+            player.AddComponent<PlayerUpgrades>();
 
             var modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerModelPath);
             if (modelAsset == null)
@@ -212,7 +215,7 @@ namespace Clover.EditorTools
                 foreach (var step in weapon.AllSteps())
                     if (!clips.ContainsKey(step.Name)) Debug.LogWarning($"[Clover.Build] The character model has no '{step.Name}' clip; that attack will not be animated.");
 
-            foreach (string name in new[] { PlayerAnimator.ChargeState, PlayerAnimator.FistChargeState, PlayerAnimator.HurtState, PlayerAnimator.CastState, PlayerAnimator.DeathState })
+            foreach (string name in new[] { PlayerAnimator.ChargeState, PlayerAnimator.FistChargeState, PlayerAnimator.HurtState, PlayerAnimator.CastState, PlayerAnimator.DeathState, PlayerAnimator.LeapState })
                 machine.AddState(name).motion = clips.TryGetValue(name, out var clip) ? clip : null;
 
             // The guard and the drink move the body from the spine up and leave the legs to walk.
@@ -299,7 +302,81 @@ namespace Clover.EditorTools
             prompt.rectTransform.sizeDelta = new Vector2(900f, 40f);
             prompt.text = "";
 
-            canvasObject.AddComponent<PlayerHud>().Configure(player, combat, defence, health, grey, stamina, mana, flasks, callout, status, prompt);
+            var playerHud = canvasObject.AddComponent<PlayerHud>();
+            playerHud.Configure(player, combat, defence, health, grey, stamina, mana, flasks, callout, status, prompt);
+
+            // Embers held, top right; Heat's five levels under the flasks, shown only once Heat is learned.
+            var embers = Label("Embers", hud, 26, TextAnchor.UpperRight, new Color(1f, 0.72f, 0.3f, 0.95f));
+            embers.rectTransform.anchorMin = embers.rectTransform.anchorMax = embers.rectTransform.pivot = new Vector2(1f, 1f);
+            embers.rectTransform.anchoredPosition = new Vector2(-48f, -36f);
+            embers.rectTransform.sizeDelta = new Vector2(400f, 34f);
+            embers.text = "";
+            var heatRow = new GameObject("Heat", typeof(RectTransform));
+            heatRow.transform.SetParent(hud, false);
+            var heatRect = (RectTransform)heatRow.transform;
+            heatRect.anchorMin = heatRect.anchorMax = heatRect.pivot = new Vector2(0f, 1f);
+            heatRect.anchoredPosition = Vector2.zero;
+            var pips = new RectTransform[new Heat().MaximumLevel];
+            for (int i = 0; i < pips.Length; i++)
+                pips[i] = Bar("Heat " + (i + 1), heatRow.transform, new Vector2(48f + i * 34f, -150f), new Vector2(30f, 9f), new Color(1f, 0.45f, 0.08f));
+            heatRow.SetActive(false);
+            playerHud.ConfigureUpgrades(player.GetComponent<PlayerUpgrades>(), embers, heatRow, pips);
+
+            BuildUpgradeMenu(player, hud);
+        }
+
+        // The element's tree: a dark panel over the middle of the screen with a list on the left and what the chosen thing does on the right.
+        private static void BuildUpgradeMenu(PlayerController player, Transform hud)
+        {
+            var panel = Panel("Upgrade Menu", hud, new Color(0.03f, 0.03f, 0.07f, 0.9f));
+            panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
+            panel.sizeDelta = new Vector2(1180f, 640f);
+            var edge = Panel("Edge", panel, new Color(1f, 0.62f, 0.2f, 0.9f));
+            edge.anchorMin = new Vector2(0f, 1f);
+            edge.anchorMax = new Vector2(1f, 1f);
+            edge.pivot = new Vector2(0.5f, 1f);
+            edge.sizeDelta = new Vector2(0f, 4f);
+            edge.anchoredPosition = new Vector2(0f, -78f);
+
+            var title = Label("Title", panel, 36, TextAnchor.UpperLeft, new Color(1f, 0.8f, 0.45f, 1f));
+            title.rectTransform.anchorMin = title.rectTransform.anchorMax = title.rectTransform.pivot = new Vector2(0f, 1f);
+            title.rectTransform.anchoredPosition = new Vector2(44f, -24f);
+            title.rectTransform.sizeDelta = new Vector2(1000f, 44f);
+
+            var cursor = Panel("Cursor", panel, new Color(1f, 0.62f, 0.2f, 0.22f));
+            cursor.anchorMin = cursor.anchorMax = cursor.pivot = new Vector2(0f, 1f);
+            cursor.sizeDelta = new Vector2(500f, 50f);
+            cursor.anchoredPosition = new Vector2(30f, -110f);
+
+            const int count = 7;
+            var rows = new Text[count];
+            var costs = new Text[count];
+            for (int i = 0; i < count; i++)
+            {
+                rows[i] = Label("Row " + (i + 1), panel, 28, TextAnchor.MiddleLeft, Color.white);
+                rows[i].rectTransform.anchorMin = rows[i].rectTransform.anchorMax = rows[i].rectTransform.pivot = new Vector2(0f, 1f);
+                rows[i].rectTransform.anchoredPosition = new Vector2(44f, -110f - i * 58f);
+                rows[i].rectTransform.sizeDelta = new Vector2(360f, 50f);
+                costs[i] = Label("Cost " + (i + 1), rows[i].transform, 26, TextAnchor.MiddleRight, Color.white);
+                costs[i].rectTransform.anchorMin = costs[i].rectTransform.anchorMax = costs[i].rectTransform.pivot = new Vector2(0f, 0.5f);
+                costs[i].rectTransform.anchoredPosition = new Vector2(340f, 0f);
+                costs[i].rectTransform.sizeDelta = new Vector2(130f, 50f);
+            }
+
+            var description = Label("Description", panel, 28, TextAnchor.UpperLeft, new Color(0.95f, 0.93f, 0.9f, 1f));
+            description.rectTransform.anchorMin = description.rectTransform.anchorMax = description.rectTransform.pivot = new Vector2(0f, 1f);
+            description.rectTransform.anchoredPosition = new Vector2(580f, -116f);
+            description.rectTransform.sizeDelta = new Vector2(560f, 400f);
+            description.horizontalOverflow = HorizontalWrapMode.Wrap;
+            description.lineSpacing = 1.15f;
+
+            var hint = Label("Hint", panel, 22, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.6f));
+            hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = hint.rectTransform.pivot = Vector2.zero;
+            hint.rectTransform.anchoredPosition = new Vector2(44f, 26f);
+            hint.rectTransform.sizeDelta = new Vector2(1000f, 30f);
+            hint.text = "Stick or W S: choose     Cross or E: learn     Circle or Space: leave";
+
+            hud.gameObject.AddComponent<UpgradeMenu>().Configure(player, panel.gameObject, title, description, rows, costs, cursor);
         }
 
         public const string ControlsHint =

@@ -25,6 +25,8 @@ namespace Clover.Player
         public float GlowWhenSurging = 2.6f;
         /// <summary>Seconds between the sparks or embers that fall from the player while the surge lasts.</summary>
         public float EmberInterval = 0.12f;
+        /// <summary>With an upgrade that asks for it: holding the spell button this long does the upgrade's move; a shorter press casts.</summary>
+        public float SpecialHoldSeconds = 0.3f;
 
         public ElementKit Kit { get; private set; }
         /// <summary>The element's colour as light; brighter than white so it blooms.</summary>
@@ -40,6 +42,10 @@ namespace Clover.Player
         private PlayerController player;
         private PlayerCombat combat;
         private PlayerDefence defence;
+        private PlayerUpgrades upgrades;
+        private bool spellHolding;
+        private float spellHeldFor;
+        private float specialBuffered;
         private InputAction spellAction;
         private InputAction surgeAction;
         private float spellBuffered;
@@ -59,6 +65,7 @@ namespace Clover.Player
             player = GetComponent<PlayerController>();
             combat = GetComponent<PlayerCombat>();
             defence = GetComponent<PlayerDefence>();
+            upgrades = GetComponent<PlayerUpgrades>();
             Take(ElementKit.ByName(string.IsNullOrEmpty(RunState.Element) ? StartingElement : RunState.Element, RunState.ElementConsumed));
             if (glow != null) glow.intensity = 0f;
         }
@@ -78,6 +85,11 @@ namespace Clover.Player
             Colour = lightning ? LightningColour : FireColour;
             if (glow != null) glow.color = lightning ? new Color(0.5f, 0.75f, 1f) : new Color(1f, 0.5f, 0.16f);
             if (combat != null) combat.ClearEmpower();
+            // Nothing asked of the old element is carried into the new one.
+            spellBuffered = surgeBuffered = specialBuffered = 0f;
+            spellHolding = false;
+            glowLevel = 0f;
+            untilEmber = 0f;
         }
 
         /// <summary>A blow or a dodge breaks a cast in progress.</summary>
@@ -87,7 +99,35 @@ namespace Clover.Player
         public void Advance(float deltaTime, bool free)
         {
             if (spellAction == null || surgeAction == null) return;
-            if (spellAction.WasPressedThisFrame()) spellBuffered = PressBufferTime;
+            if (spellAction.WasPressedThisFrame())
+            {
+                if (upgrades != null && upgrades.HasSpecial)
+                {
+                    spellHolding = true;
+                    spellHeldFor = 0f;
+                }
+                else spellBuffered = PressBufferTime;
+            }
+            if (spellHolding)
+            {
+                spellHeldFor += deltaTime;
+                if (!spellAction.IsPressed())
+                {
+                    spellHolding = false;
+                    spellBuffered = PressBufferTime;
+                }
+                else if (spellHeldFor >= SpecialHoldSeconds)
+                {
+                    spellHolding = false;
+                    specialBuffered = PressBufferTime;
+                }
+            }
+            if (specialBuffered > 0f && free && !Kit.IsCasting)
+            {
+                specialBuffered = 0f;
+                if (!upgrades.TrySpecial() && defence != null) defence.Callout("No mana");
+            }
+            if (specialBuffered > 0f) specialBuffered -= deltaTime;
             if (surgeAction.WasPressedThisFrame()) surgeBuffered = PressBufferTime;
 
             // The surge is instant and never roots the player, so it can be lit at any free moment.
@@ -179,6 +219,7 @@ namespace Clover.Player
             if (Kit.Shape == SpellShape.Bolt) LightningBolts.Strike(transform.position, 0.4f);
             glowLevel = GlowWhenCasting;
             if (defence != null) defence.Callout(Kit.SurgeName);
+            if (upgrades != null) upgrades.OnSurge();
         }
     }
 }

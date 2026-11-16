@@ -181,6 +181,18 @@ public class CastleProbeRunner : MonoBehaviour
         yield return TapWhenFree(Key.E, () => second.Rests > 0);
         Say($"I rest: rests {second.Rests} lit {second.IsLit} enemies alive {director.EnemiesAlive} soldier active {soldier.gameObject.activeSelf} health {defence.Health.Current:0}");
 
+        // The fire opens the element's tree and the world stops; the dodge button leaves it.
+        var menu = Clover.UI.UpgradeMenu.Instance;
+        yield return null;
+        bool opened = menu != null && menu.IsOpen;
+        float stoppedAt = Time.timeScale;
+        ScreenCapture.CaptureScreenshot("review/shots/current/castle_menu.png");
+        yield return null;
+        yield return Tap(Key.Space);
+        yield return null;
+        yield return null;
+        Say($"I menu: opened {opened} time {stoppedAt:0} embers {Clover.Core.RunState.Points} closed {!menu.IsOpen} time {Time.timeScale:0}");
+
         // J: fall, and come back at the brazier rested at.
         keepAlive = false;
         player.Teleport(new Vector3(0f, 4.1f, 100f), Quaternion.identity);

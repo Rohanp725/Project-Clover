@@ -48,6 +48,8 @@ namespace Clover.World
             Vfx.Play(VfxKind.Heal, who.transform.position + Vector3.up * 0.6f);
             if (director != null) director.Rest(returnPoint != null ? returnPoint : transform);
             if (who.Defence != null) who.Defence.Callout("Rested");
+            // By the fire is where the embers are spent.
+            if (Clover.UI.UpgradeMenu.Instance != null) Clover.UI.UpgradeMenu.Instance.Open();
         }
 
         private void Update()

@@ -30,6 +30,11 @@ namespace Clover.Player
         public float GuardTurnDegreesPerSecond = 540f;
 
         public bool IsInvulnerable => Dodge.IsInvulnerable;
+        /// <summary>True while a menu has the buttons: the player does nothing and time is expected to be stopped.</summary>
+        public bool Suspended;
+        /// <summary>True while the player is in the air on a leap; nothing reaches them and nothing else can be done.</summary>
+        public bool IsLeaping { get; private set; }
+        public float LeapProgress => leapSeconds > 0f ? Mathf.Clamp01(leapElapsed / leapSeconds) : 0f;
         public bool IsGuarding => defence != null && defence.IsGuarding;
         /// <summary>Speed along the ground in metres per second, as asked for this frame.</summary>
         public float PlanarSpeed { get; private set; }
@@ -38,6 +43,9 @@ namespace Clover.Player
         private PlayerCombat combat;
         private PlayerDefence defence;
         private PlayerElement element;
+        private PlayerUpgrades upgrades;
+        private Vector3 leapFrom, leapTo;
+        private float leapSeconds, leapElapsed, leapHeight;
         private InputActionAsset ownControls;
         private InputActionMap playerMap;
         private InputAction moveAction;
@@ -60,6 +68,7 @@ namespace Clover.Player
             combat = GetComponent<PlayerCombat>();
             defence = GetComponent<PlayerDefence>();
             element = GetComponent<PlayerElement>();
+            upgrades = GetComponent<PlayerUpgrades>();
             if (controls == null)
             {
                 Debug.LogError("[Clover.Player] The controls asset is missing; the player cannot be driven.");
@@ -86,7 +95,13 @@ namespace Clover.Player
 
         private void Update()
         {
+            if (Suspended) return;
             float deltaTime = Time.deltaTime;
+            if (IsLeaping)
+            {
+                AdvanceLeap(deltaTime);
+                return;
+            }
             Vector3 wish = CameraRelative(moveAction.ReadValue<Vector2>());
             if (defence != null) defence.ReadInput();
             bool helpless = defence != null && defence.IsHelpless;
@@ -107,6 +122,7 @@ namespace Clover.Player
                     if (attacking) combat.Interrupt();
                     if (casting) element.Interrupt();
                     Vfx.Play(VfxKind.Dust, transform.position, -rollDirection);
+                    if (upgrades != null) upgrades.OnDodge(transform.position, Dodge.Direction, Dodge.Distance, Dodge.Duration);
                 }
             }
             if (dodgeBuffered > 0f) dodgeBuffered -= deltaTime;
@@ -187,6 +203,46 @@ namespace Clover.Player
             Stamina.Tick(deltaTime);
         }
 
+        /// <summary>
+        /// Throws the player through the air to a spot on the ground, over the given seconds and up to the given height.
+        /// Whatever they were doing is dropped. The upgrades are told when they land.
+        /// </summary>
+        public void Leap(Vector3 to, float seconds, float height)
+        {
+            if (combat != null) combat.Interrupt();
+            if (element != null) element.Interrupt();
+            Dodge.Stop();
+            Vector3 toward = to - transform.position;
+            toward.y = 0f;
+            if (toward.sqrMagnitude > 0.01f) transform.rotation = Quaternion.LookRotation(toward, Vector3.up);
+            leapFrom = transform.position;
+            leapTo = to;
+            leapSeconds = Mathf.Max(0.05f, seconds);
+            leapHeight = height;
+            leapElapsed = 0f;
+            IsLeaping = true;
+        }
+
+        // The leap is a set path: rising fast, hanging, and coming down faster than it went up.
+        private void AdvanceLeap(float deltaTime)
+        {
+            leapElapsed += deltaTime;
+            float t = Mathf.Clamp01(leapElapsed / leapSeconds);
+            // Most of the ground is covered in the fall, so it reads as coming down on someone.
+            float along = t * t * (3f - 2f * t);
+            Vector3 want = Vector3.Lerp(leapFrom, leapTo, along);
+            want.y = Mathf.Lerp(leapFrom.y, leapTo.y, t) + leapHeight * 4f * t * (1f - t);
+            body.Move(want - transform.position);
+            PlanarSpeed = 0f;
+            Stamina.Tick(deltaTime);
+            if (defence != null) defence.Advance(deltaTime, true, false);
+            if (combat != null) combat.Advance(deltaTime, true);
+            if (t < 1f) return;
+            IsLeaping = false;
+            fallSpeed = 1f;
+            if (upgrades != null) upgrades.OnLeapLanded();
+        }
+
         /// <summary>Puts the player somewhere else at once, as a respawn does. A CharacterController ignores a plain move of its transform.</summary>
         public void Teleport(Vector3 position, Quaternion rotation)
         {
@@ -194,6 +250,7 @@ namespace Clover.Player
             transform.SetPositionAndRotation(position, rotation);
             body.enabled = true;
             fallSpeed = 0f;
+            IsLeaping = false;
             Dodge.Reset();
         }
 

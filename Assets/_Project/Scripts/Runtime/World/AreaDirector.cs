@@ -51,6 +51,8 @@ namespace Clover.World
         private Enemy marked;
         private float untilStrike;
         private float warningLeft;
+        private PlayerUpgrades upgrades;
+        private bool[] paid;
 
         public void Configure(PlayerController playerToServe, Enemy[] enemiesHere, Transform start, MeshFilter outline, MeshFilter fill)
         {
@@ -84,12 +86,28 @@ namespace Clover.World
         {
             if (player == null) return;
             defence = player.GetComponent<PlayerDefence>();
+            upgrades = player.GetComponent<PlayerUpgrades>();
             if (defence != null) defence.Revived += OnRevived;
+            paid = new bool[enemies.Length];
+            foreach (var enemy in enemies)
+                if (enemy != null) enemy.Died += OnEnemyDied;
+        }
+
+        // Each of the fallen gives up its ember once; killing it again after a rest gives nothing more.
+        private void OnEnemyDied(Enemy who)
+        {
+            int index = System.Array.IndexOf(enemies, who);
+            if (index < 0 || paid[index] || upgrades == null) return;
+            paid[index] = true;
+            upgrades.Earn(who.Kind.IsBoss ? 5 : 1);
+            Vfx.Play(VfxKind.Embers, who.transform.position + Vector3.up, Vector3.up, 1.2f);
         }
 
         private void OnDestroy()
         {
             if (defence != null) defence.Revived -= OnRevived;
+            foreach (var enemy in enemies)
+                if (enemy != null) enemy.Died -= OnEnemyDied;
             if (disc != null) Destroy(disc);
         }
 
@@ -110,7 +128,8 @@ namespace Clover.World
         private void RestoreEnemies()
         {
             foreach (var enemy in enemies)
-                if (enemy != null) enemy.Restore();
+                // A god stays fallen.
+                if (enemy != null && !(enemy.Kind.IsBoss && enemy.IsDead)) enemy.Restore();
             marked = null;
             ShowMark(false);
             untilStrike = Random.Range(StormStrikeMin, StormStrikeMax);

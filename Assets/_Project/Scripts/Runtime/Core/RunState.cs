@@ -1,10 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Clover.Core
 {
     /// <summary>
-    /// What the player carries from one scene to the next within a run: the weapon in hand, the element, and what was
-    /// chosen at the last god. It is plain remembered state; a new play session starts it clean.
+    /// What the player carries from one scene to the next within a run: the weapon in hand, the element, what was
+    /// chosen at the last god, the upgrades learned and the points to learn more. It is plain remembered state; a new
+    /// play session, and a new run, start it clean.
     /// </summary>
     public static class RunState
     {
@@ -16,15 +18,30 @@ namespace Clover.Core
         public static bool ElementConsumed;
         /// <summary>How many gods have fallen in this run.</summary>
         public static int GodsFelled;
+        /// <summary>Embers taken from the fallen and not yet spent.</summary>
+        public static int Points;
+        /// <summary>The ids of the upgrades learned in this run.</summary>
+        public static readonly HashSet<string> Unlocked = new HashSet<string>();
+        /// <summary>How many runs have ended in this play session.</summary>
+        public static int RunsEnded;
 
         // Domain reload is off: a new play must not inherit the last one's run.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetOnLoad()
+        {
+            Reset();
+            RunsEnded = 0;
+        }
+
+        /// <summary>Starts a new run: everything a run carries is put back to nothing.</summary>
         public static void Reset()
         {
             Weapon = "";
             Element = "";
             ElementConsumed = false;
             GodsFelled = 0;
+            Points = 0;
+            Unlocked.Clear();
         }
     }
 }

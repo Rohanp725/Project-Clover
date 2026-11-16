@@ -108,6 +108,7 @@ namespace Clover.EditorTools.Forge
             yield return Iaido(katana.Skill);
             yield return RunThrough(katana.Finisher);
             yield return SwordGuard();
+            yield return Leap();
 
             var fists = Weapons.Fists().Combo;
             yield return Jab(fists.Steps[0]);
@@ -716,6 +717,79 @@ namespace Clover.EditorTools.Forge
             settle.HandR = new Vector3(0.05f, 0.74f, 0.62f);
             return Attack(step, -7f).Key(0f, SwordReady()).Key(hit * 0.5f, back, Ease.Out).Key(hit * 0.86f, coiled, Ease.InOut)
                 .Key(hit, cut, Ease.In).Key(done, buried, Ease.Out).Key(Mathf.Lerp(done, 1f, 0.45f), settle, Ease.Out).Key(1f, SwordReady(), Ease.InOut);
+        }
+
+        /// <summary>The leap: a deep crouch, up with the sword taken back over the head and the knees drawn in, and down blade first.</summary>
+        private static ForgeClip Leap()
+        {
+            var crouch = new ForgePose
+            {
+                Hips = new Vector3(0f, -0.42f, -0.04f),
+                HipLean = 26f,
+                WaistLean = 18f,
+                HeadLean = -30f,
+                FootL = new Vector3(-0.2f, 0f, -0.14f),
+                FootR = new Vector3(0.18f, 0f, 0.16f),
+                HandR = new Vector3(0.3f, 0.6f, -0.2f),
+                HandL = new Vector3(-0.34f, 0.55f, -0.16f),
+                AimBlade = true,
+                Blade = new Vector3(0.3f, -0.3f, -0.9f),
+            };
+            var risen = new ForgePose
+            {
+                Hips = new Vector3(0f, 0.04f, 0.04f),
+                HipLean = -12f,
+                WaistLean = -22f,
+                HeadLean = 22f,
+                FootL = new Vector3(-0.16f, 0.34f, -0.3f),
+                FootR = new Vector3(0.15f, 0.5f, 0.18f),
+                FootLTip = 40f,
+                FootRTip = 30f,
+                HandR = new Vector3(0.06f, 1.95f, -0.22f),
+                ElbowR = new Vector3(1f, 0.3f, 0.3f),
+                ElbowL = new Vector3(-1f, 0.3f, 0.3f),
+                ShoulderRUp = 26f,
+                ShoulderLUp = 26f,
+                AimBlade = true,
+                TwoHanded = true,
+                Blade = new Vector3(0f, -0.45f, -0.9f),
+            };
+            var hang = risen.Copy();
+            hang.WaistLean = -28f;
+            hang.FootL = new Vector3(-0.16f, 0.42f, -0.36f);
+            hang.Blade = new Vector3(0f, -0.6f, -0.8f);
+            var falling = new ForgePose
+            {
+                Hips = new Vector3(0f, -0.1f, 0.14f),
+                HipLean = 24f,
+                WaistLean = 20f,
+                HeadLean = -26f,
+                FootL = new Vector3(-0.18f, 0.3f, -0.4f),
+                FootR = new Vector3(0.15f, 0.12f, 0.4f),
+                FootLTip = 40f,
+                HandR = new Vector3(0.05f, 1.15f, 0.7f),
+                AimBlade = true,
+                TwoHanded = true,
+                Blade = new Vector3(0f, -0.3f, 0.95f),
+            };
+            var landed = new ForgePose
+            {
+                Hips = new Vector3(0f, -0.5f, 0.2f),
+                HipLean = 34f,
+                WaistLean = 30f,
+                HeadLean = -36f,
+                FootL = new Vector3(-0.22f, 0f, -0.4f),
+                FootR = new Vector3(0.17f, 0f, 0.52f),
+                FootLTurn = 40f,
+                FootLTip = 28f,
+                HandR = new Vector3(0.05f, 0.52f, 0.66f),
+                AimBlade = true,
+                TwoHanded = true,
+                Blade = new Vector3(0f, -0.62f, 0.78f),
+            };
+            return new ForgeClip("leap", 0.62f) { Wind = t => new Vector3(0f, t < 0.5f ? -6f : 8f, -8f), SheetMoments = new[] { 0f, 0.1f, 0.25f, 0.45f, 0.62f, 0.8f, 0.92f, 1f } }
+                .Key(0f, SwordReady()).Key(0.1f, crouch, Ease.Out).Key(0.3f, risen, Ease.Out).Key(0.6f, hang, Ease.InOut)
+                .Key(0.9f, falling, Ease.In).Key(1f, landed, Ease.Out);
         }
 
         // The drawing stance: sunk low and turned away, right hand on the grip, eyes on the enemy over the shoulder.

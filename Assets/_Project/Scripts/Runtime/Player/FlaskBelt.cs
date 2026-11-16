@@ -63,6 +63,14 @@ namespace Clover.Player
 
         public void Interrupt() => IsDrinking = false;
 
+        /// <summary>Uses a flask up without drinking it, as throwing it does. False when there is none, or one is at the lips.</summary>
+        public bool TryThrow()
+        {
+            if (IsDrinking || Count <= 0) return false;
+            Count--;
+            return true;
+        }
+
         /// <summary>Counts damage dealt toward a new flask. Returns true when one is earned.</summary>
         public bool EarnFromDamage(float damage)
         {

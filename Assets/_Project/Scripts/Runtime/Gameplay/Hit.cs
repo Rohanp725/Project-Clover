@@ -18,8 +18,13 @@ namespace Clover.Gameplay
         public readonly bool HasOrigin;
         /// <summary>Seconds the blow sets its target burning; zero for none.</summary>
         public readonly float BurnSeconds;
+        /// <summary>How much deeper the blow makes the burn; zero leaves its depth alone.</summary>
+        public readonly int BurnStacks;
+        /// <summary>Sets off whatever burn is on the target, all at once. Without a burn and without damage of its own, such a blow misses.</summary>
+        public readonly bool Detonate;
 
-        public Hit(float damage, float stagger, Vector3 direction, bool heavy = false, bool unblockable = false, Vector3? origin = null, float burnSeconds = 0f)
+        public Hit(float damage, float stagger, Vector3 direction, bool heavy = false, bool unblockable = false, Vector3? origin = null,
+            float burnSeconds = 0f, int burnStacks = 0, bool detonate = false)
         {
             Damage = damage;
             Stagger = stagger;
@@ -29,6 +34,8 @@ namespace Clover.Gameplay
             Origin = origin ?? default;
             HasOrigin = origin.HasValue;
             BurnSeconds = burnSeconds;
+            BurnStacks = burnStacks;
+            Detonate = detonate;
         }
     }
 }

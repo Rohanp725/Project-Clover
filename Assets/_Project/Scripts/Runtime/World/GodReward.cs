@@ -15,6 +15,8 @@ namespace Clover.World
 
         /// <summary>True to take the god's element; false to consume it.</summary>
         public bool Takes;
+        /// <summary>Embers a consumed god gives toward the tree the player already has.</summary>
+        public int ConsumeEmbers = 4;
 
         public bool Chosen { get; private set; }
         public override bool Available => !Chosen && isActiveAndEnabled;
@@ -30,8 +32,18 @@ namespace Clover.World
             if (Chosen) return;
             Chosen = true;
             var element = who.GetComponent<PlayerElement>();
+            var upgrades = who.GetComponent<PlayerUpgrades>();
             if (Takes)
             {
+                // The old element goes, and what was learned of it with it; the embers spent on it come back.
+                if (upgrades != null)
+                {
+                    int spent = 0;
+                    foreach (var upgrade in Upgrade.All)
+                        if (upgrades.Owns(upgrade.Id)) spent += upgrade.Cost;
+                    upgrades.Forget();
+                    upgrades.Earn(spent);
+                }
                 RunState.Element = ElementKit.LightningName;
                 RunState.ElementConsumed = false;
                 if (element != null) element.Take(ElementKit.Lightning());
@@ -41,9 +53,11 @@ namespace Clover.World
             }
             else
             {
-                RunState.Element = ElementKit.FireName;
+                if (string.IsNullOrEmpty(RunState.Element)) RunState.Element = element != null ? element.Kit.Name : ElementKit.FireName;
                 RunState.ElementConsumed = true;
-                if (element != null) element.Take(ElementKit.Fire(true));
+                if (element != null) element.Take(ElementKit.ByName(RunState.Element, true));
+                // What is consumed feeds the tree the player already has.
+                if (upgrades != null) upgrades.Earn(ConsumeEmbers);
                 if (who.Combat != null) who.Combat.Equip(Weapons.ByName(Weapons.KatanaName));
                 Vfx.Play(VfxKind.Fire, who.transform.position + Vector3.up, Vector3.up, 3f);
                 if (who.Defence != null) who.Defence.Callout("The storm feeds the fire");

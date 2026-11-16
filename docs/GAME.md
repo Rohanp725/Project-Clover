@@ -486,6 +486,42 @@ Signature perk of the Lightning boss (only by taking the element): **Storm Step*
 free Blink while the self buff is active. Mixed Fire and Lightning branch (only by consuming): **Plasma**,
 where a critical hit on a burning enemy causes a chained explosion.
 
+### The upgrades as built (2026-11-16, overnight run; Claude's defaults, not yet played by the user)
+
+**Embers and the tree.** Each enemy gives one ember the first time it is killed on a visit (a rest brings the enemies
+back but not their embers); a god gives five. Embers are spent at any rest fire: resting opens the element's tree, the
+world stops while it is open, the stick chooses, the use button learns and the dodge button leaves. Costs run from 1
+to 4 and all seven of a tree cost 17, so a first run through the castle (11 enemies) and its god buys most of one
+tree and not all of it. There is no order to the tree yet: anything affordable can be learned. Taking a new element
+forgets the old tree and gives back the embers spent on it; consuming gives 4 embers toward the tree already held.
+The HUD shows the embers held (top right) and, once Heat is learned, its five levels under the flasks.
+
+**Fire** (all seven built):
+
+| upgrade | cost | what it does, in numbers |
+|---|---|---|
+| Heat | 1 | every 3 blows landed raise a level, up to 5; each level is +6% weapon damage; a level cools off after 6 s without a blow; a blow taken puts it all out; Kindle fills it |
+| Burn and Detonate | 2 | every weapon blow sets a 4 s burn and deepens it a stack, up to 5; each stack adds 30% to the burn's damage; a perfect guard sets it off for 10 damage plus 10 a stack |
+| Backdraft | 2 | a perfect guard throws a 4.5 m, 100 degree cone of fire back: 16 damage, 18 stagger, 3 s burn (and it carries the detonation if that is learned) |
+| Flame Trail | 2 | the dodge leaves four patches of fire along its path for 2.6 s; each bites twice a second for 4 and sets a 2 s burn |
+| Burning Crescent | 3 | the Iaido Slash throws an arc of flame that travels 8 m/s for 1.1 s and hits each enemy once for 18 and a 3 s burn |
+| Firebomb Flask | 3 | hold the flask button (0.3 s) to throw at the enemy faced, up to 9 m: 36 damage, 30 stagger, 4 s burn in a 2.6 m burst, then the ground burns for 3.5 s. A tap still drinks |
+| Meteor Leap | 4 | hold the spell button (0.3 s), 50 mana: a 0.6 s leap, untouchable in the air, down beside the enemy faced up to 9 m off: 46 damage and 55 stagger in 3.2 m as a heavy blow, and a crater that burns for 4 s. A tap still casts |
+
+**Lightning** (all seven built, some simpler than first written):
+
+| upgrade | cost | what it does, in numbers |
+|---|---|---|
+| Static | 1 | light blows build Static on an enemy, up to 5; a heavy blow or a finisher discharges it for 7 damage and 5 stagger a stack to everyone within 4 m. (Written as "a critical hit"; there are no critical hits, so the heavy and the finisher stand in) |
+| Stored Charge | 2 | a perfect guard banks a charge; the next blow that lands deals double damage and stagger |
+| Blink | 2 | the dodge shocks whatever it passes through for 10 damage and 14 stagger. (It is still the roll to look at, not yet a teleport) |
+| Afterimage | 3 | a perfect dodge leaves a strike where the player stood, 0.3 s later: 26 damage, 28 stagger in 2.3 m. (It does not yet show a copy of the player or repeat the last attack) |
+| Delayed Cuts | 3 | the Iaido Slash lands again 0.55 s later for 60% of its damage. (It does not yet withhold the first cut) |
+| Lightning Rod | 3 | hold the spell button, 40 mana: for 6 s bolts fall in a 3.5 m circle ahead of the player, biting every 0.9 s for 12. (No rod object and no warp yet) |
+| Overclock | 4 | Overdrive opens with 2.5 s in which the enemies' own time runs at 35% |
+
+**Not built**: Storm Step and Plasma; a thrown-flask object in flight; a visible afterimage.
+
 ## Open questions
 
 1. Camera: top-down is on trial in the slice; confirm or change once it is playable.
@@ -507,6 +543,7 @@ where a critical hit on a burning enemy causes a chained explosion.
 | 2026-11-15 | Each major boss masters one element and one unique technique; beating it gives a choice of one of the two | makes every boss a build decision |
 | 2026-11-15 | Boss zones are themed to the element for atmosphere only, with no status effect | atmosphere without extra rules |
 | 2026-11-16 | Animations are written as code and baked in Unity, not keyed in Blender | it lets every action be placed, timed and checked frame by frame, and the user asked for special emphasis on animation |
+| 2026-11-16 | Upgrades are bought with embers (one per enemy, five per god) at rest fires, in any order; held buttons give the flask and the spell their upgraded moves | Claude's defaults during the unattended overnight run |
 | 2026-11-16 | The god of Lightning is Narukami, a duellist with a ring of thunder drums, fought above the clouds; take or consume is two things he leaves on the floor | Claude's defaults during the unattended overnight run |
 | 2026-11-15 | Blocking is directional; the finisher is its own move on a staggered enemy | the user's feedback after playing the combat arena |
 | 2026-11-15 | The first area, its three enemies, fists and Fire's base kit were built in one pass on Claude's defaults | the user asked for long stretches of work with few check-ins and a higher bar for visuals |

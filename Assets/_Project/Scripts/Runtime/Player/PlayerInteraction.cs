@@ -38,6 +38,7 @@ namespace Clover.Player
 
         private void Update()
         {
+            if (Controller.Suspended) return;
             untilLook -= Time.deltaTime;
             if (untilLook <= 0f)
             {
@@ -48,6 +49,7 @@ namespace Clover.Player
             // Not in the middle of a fight's motions, and not when fallen.
             if (Defence != null && Defence.IsHelpless) return;
             if (Combat != null && Combat.IsAttacking) return;
+            if (Controller.IsLeaping) return;
             Uses++;
             Current.Use(this);
             untilLook = 0f;

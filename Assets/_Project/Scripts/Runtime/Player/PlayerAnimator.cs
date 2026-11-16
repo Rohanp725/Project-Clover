@@ -40,6 +40,7 @@ namespace Clover.Player
         public const string FistChargeState = "charge_fist";
         public const string HurtState = "hurt";
         public const string CastState = "cast";
+        public const string LeapState = "leap";
         public const string UpperBodyLayer = "Upper Body";
         public const string UpperIdleState = "none";
         public const string GuardState = "guard";
@@ -53,6 +54,7 @@ namespace Clover.Player
         private static readonly int DeathHash = Animator.StringToHash(DeathState);
         private static readonly int HurtHash = Animator.StringToHash(HurtState);
         private static readonly int CastHash = Animator.StringToHash(CastState);
+        private static readonly int LeapHash = Animator.StringToHash(LeapState);
         private static readonly int GuardHash = Animator.StringToHash(GuardState);
         private static readonly int FistGuardHash = Animator.StringToHash(FistGuardState);
         private static readonly int DrinkHash = Animator.StringToHash(DrinkState);
@@ -103,9 +105,10 @@ namespace Clover.Player
             }
 
             bool helpless = defence != null && defence.IsHelpless;
-            bool rolling = !helpless && player.Dodge.IsRolling;
-            bool charging = !helpless && !rolling && combat.IsCharging;
-            bool attacking = !helpless && !rolling && !charging && combat.Combo.Current != null;
+            bool leaping = player.IsLeaping;
+            bool rolling = !helpless && !leaping && player.Dodge.IsRolling;
+            bool charging = !helpless && !rolling && !leaping && combat.IsCharging;
+            bool attacking = !helpless && !rolling && !leaping && !charging && combat.Combo.Current != null;
             bool casting = !helpless && !rolling && !charging && !attacking && element != null && element.IsCasting;
             bool drinking = !helpless && defence != null && defence.IsDrinking;
             bool guarding = !helpless && defence != null && defence.IsGuarding;
@@ -118,6 +121,10 @@ namespace Clover.Player
             else if (helpless)
             {
                 animator.Play(HurtHash, 0, Mathf.Min(ClipEnd, defence.HurtProgress));
+            }
+            else if (leaping)
+            {
+                animator.Play(LeapHash, 0, Mathf.Min(ClipEnd, player.LeapProgress));
             }
             else if (rolling)
             {
@@ -148,7 +155,7 @@ namespace Clover.Player
                 float fraction = player.MoveSpeed > 0f ? Mathf.Clamp01(player.PlanarSpeed / player.MoveSpeed) : 0f;
                 animator.SetFloat(SpeedHash, fraction, SpeedDampTime, deltaTime);
             }
-            wasBusy = helpless || rolling || charging || attacking || casting;
+            wasBusy = helpless || leaping || rolling || charging || attacking || casting;
 
             if (upperLayer >= 0)
             {
@@ -163,7 +170,7 @@ namespace Clover.Player
             sinceAttack = attacking ? 0f : sinceAttack + deltaTime;
             // With the sword carried: out for an attack and a little after, and for the guard; a charge is made from
             // the sheath. With bare hands there is no sword on the character at all.
-            bool drawn = weapon.UsesSword && !rolling && !charging && !drinking && !casting && (guarding || sinceAttack < SheatheDelay);
+            bool drawn = weapon.UsesSword && leaping || weapon.UsesSword && !rolling && !charging && !drinking && !casting && (guarding || sinceAttack < SheatheDelay);
             Show(drawnSword, drawn);
             Show(sheathedHilt, weapon.UsesSword && !drawn);
             Show(sheath, weapon.UsesSword);

@@ -23,6 +23,10 @@ namespace Clover.UI
         [SerializeField] private PlayerElement element;
         [SerializeField] private Text prompt;
         [SerializeField] private PlayerInteraction interaction;
+        [SerializeField] private PlayerUpgrades upgrades;
+        [SerializeField] private Text embers;
+        [SerializeField] private GameObject heatRow;
+        [SerializeField] private RectTransform[] heatPips = new RectTransform[0];
 
         /// <summary>Real seconds a callout stays up, the last part of it fading.</summary>
         public float CalloutSeconds = 0.9f;
@@ -32,6 +36,17 @@ namespace Clover.UI
         private int shownSurge = -1;
         private Clover.World.Interactable shownThing;
         private float calloutLeft;
+        private int shownEmbers = -1;
+        private bool shownCharge;
+
+        /// <summary>Adds what the element's tree shows: the embers held, and Heat's levels while Heat is learned.</summary>
+        public void ConfigureUpgrades(PlayerUpgrades upgradesToShow, Text embersText, GameObject heatRowRoot, RectTransform[] heatPipFills)
+        {
+            upgrades = upgradesToShow;
+            embers = embersText;
+            heatRow = heatRowRoot;
+            heatPips = heatPipFills;
+        }
 
         public void Configure(PlayerController playerToShow, PlayerCombat combatToShow, PlayerDefence defenceToShow,
             RectTransform healthBar, RectTransform greyBar, RectTransform staminaBar, RectTransform manaBar,
@@ -82,11 +97,37 @@ namespace Clover.UI
             if (status != null && combat != null && combat.Weapon != null)
             {
                 int surge = element != null && element.Kit.SurgeActive ? Mathf.CeilToInt(element.Kit.SurgeLeft) : 0;
-                if (combat.Weapon != shownWeapon || surge != shownSurge)
+                bool charge = upgrades != null && upgrades.ChargeStored;
+                if (combat.Weapon != shownWeapon || surge != shownSurge || charge != shownCharge)
                 {
                     shownWeapon = combat.Weapon;
                     shownSurge = surge;
-                    status.text = surge > 0 ? $"{shownWeapon.Name}   {element.Kit.SurgeName} {surge}" : shownWeapon.Name;
+                    shownCharge = charge;
+                    string text = surge > 0 ? $"{shownWeapon.Name}   {element.Kit.SurgeName} {surge}" : shownWeapon.Name;
+                    status.text = charge ? text + "   Charge stored" : text;
+                }
+            }
+
+            if (upgrades != null)
+            {
+                if (embers != null && upgrades.Points != shownEmbers)
+                {
+                    shownEmbers = upgrades.Points;
+                    embers.text = $"Embers  {shownEmbers}";
+                }
+                if (heatRow != null)
+                {
+                    bool show = upgrades.ShowsHeat;
+                    if (heatRow.activeSelf != show) heatRow.SetActive(show);
+                    if (show)
+                    {
+                        for (int i = 0; i < heatPips.Length; i++)
+                        {
+                            if (heatPips[i] == null) continue;
+                            float full = i < upgrades.Heat.Level ? 1f : i == upgrades.Heat.Level ? upgrades.Heat.Progress : 0f;
+                            heatPips[i].anchorMax = new Vector2(full, 1f);
+                        }
+                    }
                 }
             }
 

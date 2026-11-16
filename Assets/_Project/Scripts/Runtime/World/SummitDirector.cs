@@ -27,6 +27,8 @@ namespace Clover.World
         public bool HasChosen { get; private set; }
 
         private float untilRewards = -1f;
+        private float calmMin, calmMax;
+        private bool stormRaised;
 
         public void Configure(Enemy bossToWatch, PlayerDefence playerToServe, HitStop stop, StormRods stormRods, GodReward takeReward, GodReward consumeReward, SceneDoor door)
         {
@@ -44,6 +46,11 @@ namespace Clover.World
             if (take != null) take.gameObject.SetActive(false);
             if (consume != null) consume.gameObject.SetActive(false);
             if (wayOut != null) wayOut.Open = false;
+            if (rods != null)
+            {
+                calmMin = rods.MinSecondsBetween;
+                calmMax = rods.MaxSecondsBetween;
+            }
             if (boss == null) return;
             boss.Died += OnBossDied;
             boss.PhaseChanged += OnPhaseChanged;
@@ -63,6 +70,7 @@ namespace Clover.World
             {
                 rods.MinSecondsBetween = 0.7f;
                 rods.MaxSecondsBetween = 2f;
+                stormRaised = true;
             }
             ScreenFlash.Flash(new Color(0.8f, 0.9f, 1f, 0.45f), 0.12f);
             if (player != null) player.Callout("The storm answers him");
@@ -72,7 +80,10 @@ namespace Clover.World
         {
             if (Felled) return;
             Felled = true;
+            stormRaised = false;
             RunState.GodsFelled++;
+            var upgrades = player != null ? player.GetComponent<PlayerUpgrades>() : null;
+            if (upgrades != null) upgrades.Earn(5);
             if (hitStop != null) hitStop.Slow(1.8f, 0.2f);
             ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.8f), 0.16f);
             LightningBolts.Strike(who.transform.position, 1f);
@@ -87,6 +98,13 @@ namespace Clover.World
 
         private void Update()
         {
+            // The fight begun again from its start (the player fell and he is whole): the storm goes back to what it was.
+            if (stormRaised && boss != null && !boss.IsDead && boss.Brain.Phase == 0 && rods != null)
+            {
+                stormRaised = false;
+                rods.MinSecondsBetween = calmMin;
+                rods.MaxSecondsBetween = calmMax;
+            }
             if (untilRewards < 0f) return;
             untilRewards -= Time.unscaledDeltaTime;
             if (untilRewards > 0f) return;

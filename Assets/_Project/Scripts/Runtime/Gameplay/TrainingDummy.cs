@@ -68,7 +68,9 @@ namespace Clover.Gameplay
         {
             HitsTaken++;
             sinceHit = 0f;
-            Burn.Ignite(hit.BurnSeconds);
+            float detonated = hit.Detonate ? Burn.Detonate() : 0f;
+            if (detonated > 0f) Health.Damage(detonated);
+            Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
             bool finisher = Stagger.IsStaggered && hit.Heavy;
             float multiplier = finisher ? FinisherDamageMultiplier : Stagger.IsStaggered ? StaggeredDamageMultiplier : 1f;
             Health.Damage(hit.Damage * multiplier);
