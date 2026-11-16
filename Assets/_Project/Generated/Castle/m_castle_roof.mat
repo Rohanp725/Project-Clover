@@ -25,7 +25,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _BaseMap:
-        m_Texture: {fileID: 2800000, guid: 8601fa9787310dd45b170b570dc1f693, type: 2}
+        m_Texture: {fileID: 2800000, guid: c0d7bd088dcc01647956812a308be202, type: 2}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
@@ -40,7 +40,7 @@ Material:
     - _ShadeThreshold: 0.25
     - _SmoothNormalsInTangents: 0
     - _WorldMapping: 1
-    - _WorldScale: 0.4
+    - _WorldScale: 0.35
     m_Colors:
     - _BaseColor: {r: 0.14, g: 0.3, b: 0.38, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}

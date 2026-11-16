@@ -152,10 +152,12 @@ Shader "Clover/Toon"
                 #endif
                 LIGHT_LOOP_BEGIN(lightCount)
                     Light other = GetAdditionalLight(lightIndex, input.positionWS);
-                    half reach = saturate(dot(normalWS, other.direction)) * other.distanceAttenuation;
-                    // Stepped, so a brazier throws rings of light on the floor, not a smooth glow.
-                    half banded = floor(saturate(reach) * _LightBands + 0.35) / _LightBands;
-                    colour += albedo * other.color * banded;
+                    // How much of the light arrives, counting its strength: a strong lamp reaches further than a weak one.
+                    half strength = max(max(other.color.r, other.color.g), max(other.color.b, 0.0001));
+                    half reach = saturate(dot(normalWS, other.direction)) * other.distanceAttenuation * strength;
+                    // Stepped, so a lamp throws rings of its own colour on the floor, not a smooth glow.
+                    half banded = floor(saturate(reach * 0.5) * _LightBands + 0.35) / _LightBands;
+                    colour += albedo * (other.color / strength) * banded * 1.25;
                 LIGHT_LOOP_END
                 #endif
 

@@ -19,7 +19,7 @@ namespace Clover.EditorTools
         public const string ScenePath = "Assets/_Project/Scenes/Castle.unity";
         private const string Folder = BuildKit.GeneratedRoot + "/Castle";
 
-        private static Material paving, wall, wallDark, trim, wood, iron, cloth, earth, roof, ember, steel, rune;
+        private static Material paving, path, wall, wallDark, trim, wood, iron, cloth, earth, roof, ember, steel, rune;
         private static Material fireMaterial, rainMaterial, boltMaterial;
         private static Transform world;
         internal static readonly List<Transform> rods = new List<Transform>();
@@ -57,6 +57,7 @@ namespace Clover.EditorTools
 
             var director = new GameObject("Area Director").AddComponent<AreaDirector>();
 
+            Dressing.Prepare();
             Causeway(director);
             Gatehouse();
             OuterCourt();
@@ -99,6 +100,8 @@ namespace Clover.EditorTools
             // An illustrated night: stone in deep blues and purples, wood and moss murky, and the strong colour kept for
             // banners, fire, lightning and the living.
             paving = BuildKit.Toon(Folder, "m_castle_paving", new Color(0.3f, 0.31f, 0.4f), false, flags, 0.125f, 0f);
+            // The way through the middle of each court is laid in smaller, paler stone: it leads the eye north.
+            path = BuildKit.Toon(Folder, "m_castle_path", new Color(0.4f, 0.38f, 0.47f), false, flags, 0.21f, 0f);
             wall = BuildKit.Toon(Folder, "m_castle_wall", new Color(0.36f, 0.35f, 0.47f), false, blocks, 0.2f, 0.025f);
             wallDark = BuildKit.Toon(Folder, "m_castle_wall_dark", new Color(0.22f, 0.21f, 0.32f), false, blocks, 0.2f, 0.025f);
             trim = BuildKit.Toon(Folder, "m_castle_trim", new Color(0.46f, 0.46f, 0.58f), false, ground, 0.5f, 0.02f);
@@ -106,7 +109,7 @@ namespace Clover.EditorTools
             iron = BuildKit.Toon(Folder, "m_castle_iron", new Color(0.16f, 0.15f, 0.27f), false, null, 0f, 0.02f);
             cloth = BuildKit.Toon(Folder, "m_castle_cloth", new Color(0.82f, 0.13f, 0.22f), false, null, 0f, 0.015f);
             earth = BuildKit.Toon(Folder, "m_castle_earth", new Color(0.2f, 0.3f, 0.29f), false, ground, 0.15f, 0f);
-            roof = BuildKit.Toon(Folder, "m_castle_roof", new Color(0.14f, 0.3f, 0.38f), false, planks, 0.4f, 0.03f);
+            roof = BuildKit.Toon(Folder, "m_castle_roof", new Color(0.14f, 0.3f, 0.38f), false, ProceduralTextures.RoofTiles(), 0.35f, 0.03f);
             steel = BuildKit.Toon(Folder, "m_castle_steel", new Color(0.75f, 0.78f, 0.84f), false, null, 0f, 0.012f).Lit(new Color(1.4f, 1.6f, 2f), 0.6f, new Color(0.25f, 0.4f, 0.8f));
             ember = BuildKit.Toon(Folder, "m_castle_ember", new Color(0.9f, 0.45f, 0.15f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(1.6f, 0.5f, 0.1f));
             rune = BuildKit.Toon(Folder, "m_castle_rune", new Color(0.6f, 0.8f, 1f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(0.9f, 2f, 4.5f));
@@ -136,6 +139,16 @@ namespace Clover.EditorTools
             Brazier(group, new Vector3(3.8f, 0f, 20f), true);
             Rest(group, director, new Vector3(3.4f, 0f, 3.2f), new Vector3(1.6f, 0.05f, 2.4f));
             Rubble(group, new Vector3(-3.6f, 0f, 15f), 5);
+
+            var dress = BuildKit.Group("Dressing", group);
+            Dressing.Puddles(dress, -4f, 4f, -2f, 25f, 0f, 5, 11);
+            Dressing.GrassLine(dress, new Vector3(-4.95f, 0f, -3f), new Vector3(-4.95f, 0f, 25f), 0.35f, 12);
+            Dressing.GrassLine(dress, new Vector3(4.95f, 0f, 25f), new Vector3(4.95f, 0f, -3f), 0.35f, 13);
+            Dressing.Lantern(dress, new Vector3(4.5f, 0f, 12f), 180f);
+            Dressing.Lantern(dress, new Vector3(-4.5f, 0f, 22f), 0f);
+            Dressing.Spears(dress, new Vector3(2.6f, 0f, 16.5f), 3, 14, cloth);
+            Dressing.Barrel(dress, new Vector3(-4.2f, 0f, 3.6f), 20f);
+            Dressing.Sacks(dress, new Vector3(3.6f, 0f, -2.6f), 160f);
         }
 
         // The gate: two towers, the wall between them, and the open arch the player walks through.
@@ -189,6 +202,35 @@ namespace Clover.EditorTools
             Brazier(group, new Vector3(7f, 0f, 54f), true);
             Banner(group, new Vector3(-18.6f, 3.6f, 40f), 90f);
             Banner(group, new Vector3(18.6f, 3.6f, 50f), -90f);
+
+            var dress = BuildKit.Group("Dressing", group);
+            Slab("Court Path", dress, -3.3f, 3.3f, 28f, 56f, 0.012f, path, 0.02f);
+            Dressing.Puddles(dress, -18f, 18f, 28f, 61f, 0f, 16, 21);
+            Dressing.GrassLine(dress, new Vector3(-18.6f, 0f, 28.5f), new Vector3(-18.6f, 0f, 61.5f), 0.6f, 22);
+            Dressing.GrassLine(dress, new Vector3(18.6f, 0f, 61.5f), new Vector3(18.6f, 0f, 28.5f), 0.6f, 23);
+            Dressing.GrassLine(dress, new Vector3(-4.6f, 0f, 61.9f), new Vector3(-18.6f, 0f, 61.9f), 0.5f, 24);
+            Dressing.GrassLine(dress, new Vector3(18.6f, 0f, 61.9f), new Vector3(4.6f, 0f, 61.9f), 0.5f, 25);
+            Dressing.GrassPatch(dress, new Vector3(-9f, 0.01f, 39f), 5.2f, 34, 26);
+            Dressing.GrassPatch(dress, new Vector3(-10.4f, 0f, 48.6f), 2.2f, 9, 27);
+            Dressing.GrassPatch(dress, new Vector3(11f, 0f, 38f), 1.6f, 7, 28);
+            Dressing.GrassPatch(dress, new Vector3(13f, 0f, 50f), 1.6f, 7, 29);
+            Dressing.Leaves(dress, new Vector3(-9f, 0.01f, 39f), 4.2f, 30);
+            Dressing.Leaves(dress, new Vector3(-6.5f, 0f, 43f), 2.6f, 31);
+            foreach (float z in new[] { 37f, 47f })
+            {
+                Dressing.Lantern(dress, new Vector3(-4f, 0f, z), 0f);
+                Dressing.Lantern(dress, new Vector3(4f, 0f, z), 180f);
+            }
+            Dressing.Lantern(dress, new Vector3(-17.8f, 0f, 50f), 0f);
+            Dressing.Lantern(dress, new Vector3(17.8f, 0f, 40f), 180f);
+            Dressing.Barrel(dress, new Vector3(13.6f, 0f, 31f), 15f);
+            Dressing.Barrel(dress, new Vector3(14.1f, 0f, 33.6f), 70f, true);
+            Dressing.Barrel(dress, new Vector3(-17.4f, 0f, 60f), 0f);
+            Dressing.Sacks(dress, new Vector3(-14.4f, 0f, 59.6f), 20f);
+            Dressing.Cart(dress, new Vector3(-15.4f, 0f, 30.6f), 35f);
+            Dressing.Spears(dress, new Vector3(7.2f, 0f, 43f), 4, 32, cloth);
+            Dressing.Spears(dress, new Vector3(-5.6f, 0f, 52f), 3, 33, null);
+            Dressing.Spears(dress, new Vector3(15f, 0f, 57f), 5, 34, cloth);
         }
 
         // The middle of the area: the Katana on its stone, a place to rest, and the second stair.
@@ -226,6 +268,30 @@ namespace Clover.EditorTools
             Crates(group, new Vector3(-16f, 2f, 80f));
             Banner(group, new Vector3(-18.6f, 5.6f, 74f), 90f);
             Banner(group, new Vector3(18.6f, 5.6f, 74f), -90f);
+
+            var dress = BuildKit.Group("Dressing", group);
+            Slab("Terrace Path South", dress, -3.3f, 3.3f, 62f, 68.2f, 2.012f, path, 0.02f);
+            Slab("Terrace Path North", dress, -3.3f, 3.3f, 79.8f, 88f, 2.012f, path, 0.02f);
+            Dressing.Puddles(dress, -18f, -7f, 63f, 93f, 2f, 6, 41);
+            Dressing.Puddles(dress, 7f, 18f, 63f, 93f, 2f, 6, 42);
+            Dressing.GrassLine(dress, new Vector3(-18.6f, 2f, 62.5f), new Vector3(-18.6f, 2f, 93.5f), 0.6f, 43);
+            Dressing.GrassLine(dress, new Vector3(18.6f, 2f, 93.5f), new Vector3(18.6f, 2f, 62.5f), 0.6f, 44);
+            for (int i = 0; i < 6; i++)
+            {
+                float angle = Mathf.Deg2Rad * (i * 60f + 30f);
+                Dressing.GrassPatch(dress, new Vector3(Mathf.Sin(angle) * 6.4f, 2f, 74f + Mathf.Cos(angle) * 6.4f), 1.1f, 6, 45 + i);
+            }
+            Dressing.Leaves(dress, new Vector3(-12f, 2f, 71f), 3f, 52);
+            Dressing.Lantern(dress, new Vector3(-7.6f, 2f, 64.6f), 0f);
+            Dressing.Lantern(dress, new Vector3(7.6f, 2f, 64.6f), 180f);
+            Dressing.Lantern(dress, new Vector3(-8.4f, 2f, 84f), 0f);
+            Dressing.Lantern(dress, new Vector3(8.4f, 2f, 84f), 180f);
+            Dressing.Barrel(dress, new Vector3(16.6f, 2f, 64.4f), 0f);
+            Dressing.Barrel(dress, new Vector3(17.2f, 2f, 66f), 40f);
+            Dressing.Sacks(dress, new Vector3(15f, 2f, 64.2f), -10f);
+            Dressing.Cart(dress, new Vector3(15.6f, 2f, 90f), -50f);
+            Dressing.Spears(dress, new Vector3(9.4f, 2f, 78f), 5, 53, cloth);
+            Dressing.Spears(dress, new Vector3(-8.6f, 2f, 80.5f), 3, 54, null);
         }
 
         // The last and hardest fight, under the keep's wall, and the sealed door to the summit.
@@ -271,6 +337,30 @@ namespace Clover.EditorTools
             Rubble(group, new Vector3(13f, 4f, 106f), 4);
             Banner(group, new Vector3(-6.5f, 11f, 126.3f), 0f);
             Banner(group, new Vector3(6.5f, 11f, 126.3f), 0f);
+
+            var dress = BuildKit.Group("Dressing", group);
+            Slab("Ward Path", dress, -3.3f, 3.3f, 96f, 121f, 4.012f, path, 0.02f);
+            Dressing.Puddles(dress, -18f, 18f, 95f, 123f, 4f, 14, 61);
+            Dressing.GrassLine(dress, new Vector3(-18.6f, 4f, 94.5f), new Vector3(-18.6f, 4f, 125.5f), 0.6f, 62);
+            Dressing.GrassLine(dress, new Vector3(18.6f, 4f, 125.5f), new Vector3(18.6f, 4f, 94.5f), 0.6f, 63);
+            Dressing.GrassLine(dress, new Vector3(-16f, 4f, 126.2f), new Vector3(-5f, 4f, 126.2f), -0.5f, 64);
+            Dressing.GrassLine(dress, new Vector3(5f, 4f, 126.2f), new Vector3(16f, 4f, 126.2f), -0.5f, 65);
+            foreach (float x in new[] { -9f, 9f })
+            {
+                Dressing.GrassPatch(dress, new Vector3(x, 4f, 101f), 1.6f, 6, 66 + (int)x);
+                Dressing.GrassPatch(dress, new Vector3(x, 4f, 116f), 1.6f, 6, 86 + (int)x);
+            }
+            foreach (float z in new[] { 105f, 114f })
+            {
+                Dressing.Lantern(dress, new Vector3(-4f, 4f, z), 0f);
+                Dressing.Lantern(dress, new Vector3(4f, 4f, z), 180f);
+            }
+            Dressing.Barrel(dress, new Vector3(-17.2f, 4f, 104f), 0f);
+            Dressing.Barrel(dress, new Vector3(-16.6f, 4f, 105.6f), 25f, true);
+            Dressing.Sacks(dress, new Vector3(16.4f, 4f, 118f), 200f);
+            Dressing.Spears(dress, new Vector3(-6.4f, 4f, 109f), 5, 71, cloth);
+            Dressing.Spears(dress, new Vector3(7.4f, 4f, 112.5f), 4, 72, null);
+            Dressing.Spears(dress, new Vector3(-13f, 4f, 119f), 3, 73, cloth);
         }
 
         // ------------------------------------------------------------------ pieces
