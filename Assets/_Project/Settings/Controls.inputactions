@@ -6,7 +6,8 @@
             "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1001",
             "actions": [
                 { "name": "Move", "type": "Value", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1002", "expectedControlType": "Vector2", "processors": "", "interactions": "", "initialStateCheck": true },
-                { "name": "Dodge", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1003", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
+                { "name": "Dodge", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1003", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "LightAttack", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1004", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
             ],
             "bindings": [
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1010", "path": "<Gamepad>/leftStick", "interactions": "", "processors": "StickDeadzone", "groups": "Gamepad", "action": "Move", "isComposite": false, "isPartOfComposite": false },
@@ -16,7 +17,9 @@
                 { "name": "left", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1014", "path": "<Keyboard>/a", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Move", "isComposite": false, "isPartOfComposite": true },
                 { "name": "right", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1015", "path": "<Keyboard>/d", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Move", "isComposite": false, "isPartOfComposite": true },
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1020", "path": "<Gamepad>/buttonEast", "interactions": "", "processors": "", "groups": "Gamepad", "action": "Dodge", "isComposite": false, "isPartOfComposite": false },
-                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1021", "path": "<Keyboard>/space", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Dodge", "isComposite": false, "isPartOfComposite": false }
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1021", "path": "<Keyboard>/space", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Dodge", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1030", "path": "<Gamepad>/rightShoulder", "interactions": "", "processors": "", "groups": "Gamepad", "action": "LightAttack", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1031", "path": "<Keyboard>/j", "interactions": "", "processors": "", "groups": "Keyboard", "action": "LightAttack", "isComposite": false, "isPartOfComposite": false }
             ]
         }
     ],

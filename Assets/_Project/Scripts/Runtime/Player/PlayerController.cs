@@ -5,7 +5,8 @@ namespace Clover.Player
 {
     /// <summary>
     /// Adapts input to movement: walks the player relative to the camera's heading, turns them to face where they move, and
-    /// runs the dodge roll. The rules live in <see cref="StaminaPool"/> and <see cref="DodgeRoll"/>.
+    /// runs the dodge roll. The rules live in <see cref="StaminaPool"/> and <see cref="DodgeRoll"/>. While an attack is in
+    /// progress <see cref="PlayerCombat"/> decides the movement, and the dodge may cut the attack's recovery short.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
     public class PlayerController : MonoBehaviour
@@ -18,17 +19,21 @@ namespace Clover.Player
         public float Gravity = 25f;
         public StaminaPool Stamina = new StaminaPool();
         public DodgeRoll Dodge = new DodgeRoll();
+        /// <summary>Seconds a dodge press is remembered, so one made a moment before it is allowed still rolls.</summary>
+        public float DodgeBufferTime = 0.2f;
 
         public bool IsInvulnerable => Dodge.IsInvulnerable;
         /// <summary>Speed along the ground in metres per second, as asked for this frame.</summary>
         public float PlanarSpeed { get; private set; }
 
         private CharacterController body;
+        private PlayerCombat combat;
         private InputActionAsset ownControls;
         private InputActionMap playerMap;
         private InputAction moveAction;
         private InputAction dodgeAction;
         private float fallSpeed;
+        private float dodgeBuffered;
 
         public void Configure(InputActionAsset controlsAsset, Transform cameraToFollow)
         {
@@ -36,9 +41,13 @@ namespace Clover.Player
             cameraTransform = cameraToFollow;
         }
 
+        /// <summary>One of the player's input actions by name; null when the controls are missing. Valid from Start on.</summary>
+        public InputAction FindAction(string actionName) => playerMap?.FindAction(actionName, true);
+
         private void Awake()
         {
             body = GetComponent<CharacterController>();
+            combat = GetComponent<PlayerCombat>();
             if (controls == null)
             {
                 Debug.LogError("[Clover.Player] The controls asset is missing; the player cannot be driven.");
@@ -67,12 +76,27 @@ namespace Clover.Player
         {
             float deltaTime = Time.deltaTime;
             Vector3 wish = CameraRelative(moveAction.ReadValue<Vector2>());
+            bool attacking = combat != null && combat.IsAttacking;
 
-            if (dodgeAction.WasPressedThisFrame())
+            // The dodge is settled before the weapon runs this frame, so it wins over an attack pressed with it. It may
+            // interrupt an attack's recovery, never its wind-up or the swing itself; pressed early, it waits its turn.
+            if (dodgeAction.WasPressedThisFrame()) dodgeBuffered = DodgeBufferTime;
+            if (dodgeBuffered > 0f && (!attacking || combat.CanBeCancelled))
             {
                 // With no stick input the roll goes the way the player is facing.
                 Vector3 rollDirection = wish.sqrMagnitude > 0.01f ? wish : transform.forward;
-                Dodge.TryStart(rollDirection, Stamina);
+                if (Dodge.TryStart(rollDirection, Stamina))
+                {
+                    dodgeBuffered = 0f;
+                    if (attacking) combat.Interrupt();
+                }
+            }
+            if (dodgeBuffered > 0f) dodgeBuffered -= deltaTime;
+
+            if (combat != null)
+            {
+                combat.Advance(deltaTime, Dodge.IsRolling);
+                attacking = combat.IsAttacking;
             }
 
             Vector3 step;
@@ -81,6 +105,11 @@ namespace Clover.Player
                 step = Dodge.Tick(deltaTime);
                 // The roll commits to its direction at once; there is no turning mid-roll.
                 transform.rotation = Quaternion.LookRotation(Dodge.Direction, Vector3.up);
+            }
+            else if (attacking)
+            {
+                Dodge.Tick(deltaTime);
+                step = combat.Step;
             }
             else
             {
@@ -96,7 +125,8 @@ namespace Clover.Player
             Stamina.Tick(deltaTime);
         }
 
-        private Vector3 CameraRelative(Vector2 input)
+        /// <summary>Turns stick input into a direction on the ground as the camera sees it.</summary>
+        public Vector3 CameraRelative(Vector2 input)
         {
             if (input.sqrMagnitude > 1f) input.Normalize();
             float yaw = cameraTransform != null ? cameraTransform.eulerAngles.y : 0f;

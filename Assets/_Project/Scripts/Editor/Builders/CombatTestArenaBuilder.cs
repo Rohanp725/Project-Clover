@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
+using Clover.Core;
+using Clover.Gameplay;
 using Clover.Player;
 using Clover.UI;
 using UnityEditor;
@@ -36,6 +38,7 @@ namespace Clover.EditorTools
             ("accent", new Color(0.58f, 0.13f, 0.06f)),
             ("hair", new Color(0.035f, 0.03f, 0.04f)),
             ("straw", new Color(0.55f, 0.43f, 0.22f)),
+            ("steel", new Color(0.72f, 0.76f, 0.82f)),
         };
 
 
@@ -106,7 +109,16 @@ namespace Clover.EditorTools
             follow.Configure(player.transform);
             follow.SnapToTarget();
 
-            BuildStaminaBar(controller);
+            BuildHud(controller, player.GetComponent<PlayerCombat>());
+
+            // One dummy alone, and a pair close together to see a swing catch both.
+            var wood = ToonMaterial("DummyWood", new Color(0.42f, 0.33f, 0.24f));
+            var straw = ToonMaterial("DummyStraw", new Color(0.66f, 0.56f, 0.34f));
+            var barBack = UnlitMaterial("BarBack", new Color(0.03f, 0.03f, 0.04f));
+            var barHealth = UnlitMaterial("BarHealth", new Color(0.78f, 0.14f, 0.12f));
+            var barStagger = UnlitMaterial("BarStagger", new Color(0.96f, 0.76f, 0.2f));
+            foreach (var position in new[] { new Vector3(0f, 0f, 4f), new Vector3(5f, 0f, -2f), new Vector3(6.5f, 0f, -1.1f) })
+                BuildDummy(position, cameraObject.transform.rotation, wood, straw, barBack, barHealth, barStagger);
 
             if (!EditorSceneManager.SaveScene(scene, ScenePath))
             {
@@ -115,6 +127,9 @@ namespace Clover.EditorTools
             }
             PutFirstInBuild(ScenePath);
             AssetDatabase.SaveAssets();
+            // Open the saved scene afresh. Entering Play Mode straight from the scene as it was built in memory lost the
+            // player's reference to the controls asset every time; the same scene loaded from disk never did.
+            EditorSceneManager.OpenScene(ScenePath, OpenSceneMode.Single);
             Debug.Log($"[Clover.Build] Combat test arena built at {ScenePath}.");
         }
 
@@ -126,6 +141,8 @@ namespace Clover.EditorTools
             capsule.radius = 0.4f;
             capsule.center = new Vector3(0f, 0.9f, 0f);
             var controller = player.AddComponent<PlayerController>();
+            var combat = player.AddComponent<PlayerCombat>();
+            combat.Configure(player.AddComponent<HitStop>());
 
             var modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerModelPath);
             if (modelAsset == null)
@@ -148,7 +165,12 @@ namespace Clover.EditorTools
             animator.runtimeAnimatorController = PlayerAnimatorController();
             animator.applyRootMotion = false;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-            player.AddComponent<PlayerAnimator>().Configure(controller, animator);
+            var drawnSword = FindDeep(model.transform, "katana_drawn");
+            var sheathedHilt = FindDeep(model.transform, "katana_hilt");
+            if (drawnSword == null || sheathedHilt == null)
+                Debug.LogWarning("[Clover.Build] The character model has no katana_drawn or katana_hilt object; the sword will not move between sheath and hand.");
+            player.AddComponent<PlayerAnimator>().Configure(controller, combat, animator,
+                drawnSword != null ? drawnSword.gameObject : null, sheathedHilt != null ? sheathedHilt.gameObject : null);
             return player;
         }
 
@@ -207,6 +229,12 @@ namespace Clover.EditorTools
 
             var roll = machine.AddState(PlayerAnimator.RollState);
             if (clips.TryGetValue("roll", out var rollClip)) roll.motion = rollClip;
+
+            // One state per attack clip, named after the clip; AttackStep.Name picks the state.
+            foreach (var attack in clips.Values.Where(clip => clip.name.StartsWith("attack_")).OrderBy(clip => clip.name))
+                machine.AddState(attack.name).motion = attack;
+            foreach (var step in PlayerCombat.KatanaLightChain().Steps)
+                if (!clips.ContainsKey(step.Name)) Debug.LogWarning($"[Clover.Build] The character model has no '{step.Name}' clip; that attack will not be animated.");
             EditorUtility.SetDirty(controller);
             return controller;
         }
@@ -231,7 +259,7 @@ namespace Clover.EditorTools
             return texture;
         }
 
-        private static void BuildStaminaBar(PlayerController player)
+        private static void BuildHud(PlayerController player, PlayerCombat combat)
         {
             var canvasObject = new GameObject("HUD");
             var canvas = canvasObject.AddComponent<Canvas>();
@@ -240,17 +268,122 @@ namespace Clover.EditorTools
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
 
-            var back = Panel("Stamina Back", canvasObject.transform, new Color(0f, 0f, 0f, 0.6f));
-            back.anchorMin = back.anchorMax = back.pivot = new Vector2(0f, 1f);
-            back.anchoredPosition = new Vector2(48f, -48f);
-            back.sizeDelta = new Vector2(360f, 18f);
+            var stamina = Bar("Stamina", canvasObject.transform, new Vector2(48f, -48f), new Vector2(360f, 18f), new Color(0.45f, 0.85f, 0.4f));
+            // Mana takes the colour of the player's element; fire for now.
+            var mana = Bar("Mana", canvasObject.transform, new Vector2(48f, -74f), new Vector2(300f, 14f), new Color(1f, 0.5f, 0.1f));
+            canvasObject.AddComponent<PlayerHud>().Configure(player, combat, stamina, mana);
+        }
 
-            var fill = Panel("Stamina Fill", back, new Color(0.45f, 0.85f, 0.4f));
+        private static RectTransform Bar(string name, Transform parent, Vector2 position, Vector2 size, Color colour)
+        {
+            var back = Panel(name + " Back", parent, new Color(0f, 0f, 0f, 0.6f));
+            back.anchorMin = back.anchorMax = back.pivot = new Vector2(0f, 1f);
+            back.anchoredPosition = position;
+            back.sizeDelta = size;
+
+            var fill = Panel(name + " Fill", back, colour);
             fill.anchorMin = Vector2.zero;
             fill.anchorMax = Vector2.one;
             fill.offsetMin = fill.offsetMax = Vector2.zero;
+            return fill;
+        }
 
-            canvasObject.AddComponent<StaminaBar>().Configure(player, fill);
+        private static void BuildDummy(Vector3 position, Quaternion towardCamera, Material wood, Material straw,
+            Material barBack, Material barHealth, Material barStagger)
+        {
+            var dummy = new GameObject("Training Dummy");
+            dummy.transform.position = position;
+            var capsule = dummy.AddComponent<CapsuleCollider>();
+            capsule.radius = 0.45f;
+            capsule.height = 1.9f;
+            capsule.center = new Vector3(0f, 0.95f, 0f);
+
+            // Everything that rocks hangs off a pivot at the ground.
+            var body = new GameObject("Body").transform;
+            body.SetParent(dummy.transform, false);
+            var parts = new List<Renderer>
+            {
+                Shape(PrimitiveType.Cylinder, "Post", body, new Vector3(0f, 0.75f, 0f), new Vector3(0.22f, 0.75f, 0.22f), wood),
+                Shape(PrimitiveType.Cylinder, "Torso", body, new Vector3(0f, 1.2f, 0f), new Vector3(0.62f, 0.38f, 0.62f), straw),
+                Shape(PrimitiveType.Cube, "Arms", body, new Vector3(0f, 1.38f, 0f), new Vector3(1.5f, 0.12f, 0.12f), wood),
+                Shape(PrimitiveType.Sphere, "Head", body, new Vector3(0f, 1.82f, 0f), new Vector3(0.44f, 0.44f, 0.44f), straw),
+            };
+            Shape(PrimitiveType.Cylinder, "Base", dummy.transform, new Vector3(0f, 0.04f, 0f), new Vector3(0.9f, 0.04f, 0.9f), wood);
+
+            // Bars above the head, turned to face the camera, which never rotates.
+            var bars = new GameObject("Bars").transform;
+            bars.SetParent(dummy.transform, false);
+            bars.localPosition = new Vector3(0f, 2.45f, 0f);
+            bars.rotation = towardCamera;
+            Shape(PrimitiveType.Cube, "Back", bars, new Vector3(0f, 0.05f, 0.01f), new Vector3(1.26f, 0.3f, 0.01f), barBack);
+            var health = BarFill("Health", bars, 0.11f, 0.12f, barHealth);
+            var stagger = BarFill("Stagger", bars, -0.03f, 0.07f, barStagger);
+
+            dummy.AddComponent<TrainingDummy>().Configure(body, parts.ToArray(), health, stagger);
+        }
+
+        // A bar that shrinks toward its left end: the pivot sits at the left and the block hangs to its right.
+        private static Transform BarFill(string name, Transform parent, float height, float thickness, Material material)
+        {
+            var pivot = new GameObject(name).transform;
+            pivot.SetParent(parent, false);
+            pivot.localPosition = new Vector3(-0.6f, height, 0f);
+            Shape(PrimitiveType.Cube, name + " Block", pivot, new Vector3(0.6f, 0f, 0f), new Vector3(1.2f, thickness, 0.01f), material);
+            return pivot;
+        }
+
+        private static Renderer Shape(PrimitiveType type, string name, Transform parent, Vector3 localPosition, Vector3 size, Material material)
+        {
+            var shape = GameObject.CreatePrimitive(type);
+            shape.name = name;
+            Object.DestroyImmediate(shape.GetComponent<Collider>());
+            shape.transform.SetParent(parent, false);
+            shape.transform.localPosition = localPosition;
+            shape.transform.localScale = size;
+            var renderer = shape.GetComponent<MeshRenderer>();
+            renderer.sharedMaterial = material;
+            return renderer;
+        }
+
+        private static Transform FindDeep(Transform parent, string name)
+        {
+            foreach (var child in parent.GetComponentsInChildren<Transform>(true))
+                if (child.name == name) return child;
+            return null;
+        }
+
+        private static Material ToonMaterial(string name, Color colour)
+        {
+            string path = $"{GeneratedFolder}/{name}.mat";
+            var shader = Shader.Find(ToonShaderName);
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                material = new Material(shader);
+                AssetDatabase.CreateAsset(material, path);
+            }
+            material.shader = shader;
+            material.SetColor("_BaseColor", colour);
+            // Unity's own shapes have ordinary tangents, so their outline follows the normals.
+            material.SetFloat("_SmoothNormalsInTangents", 0f);
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        private static Material UnlitMaterial(string name, Color colour)
+        {
+            string path = $"{GeneratedFolder}/{name}.mat";
+            var shader = Shader.Find("Universal Render Pipeline/Unlit");
+            var material = AssetDatabase.LoadAssetAtPath<Material>(path);
+            if (material == null)
+            {
+                material = new Material(shader);
+                AssetDatabase.CreateAsset(material, path);
+            }
+            material.shader = shader;
+            material.SetColor("_BaseColor", colour);
+            EditorUtility.SetDirty(material);
+            return material;
         }
 
         private static RectTransform Panel(string name, Transform parent, Color colour)

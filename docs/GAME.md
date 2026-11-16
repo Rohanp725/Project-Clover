@@ -65,6 +65,37 @@ Approved by the user on 2026-11-15.
 
 ## Combat
 
+### Combat system
+
+Chosen by Claude on 2026-11-15 at the user's request ("research the good soulslike combat systems and take the good
+pieces"), from Claude's knowledge of the games named. **Adopted as the working design; any line can be changed.**
+
+| Piece | Taken from | How it works here |
+|---|---|---|
+| Committed attacks | Dark Souls, Elden Ring | Every attack has a wind-up, a moment it hits, and a recovery. Attacks cost stamina. |
+| Input buffer and chains | Elden Ring, Nioh | A press during an attack is remembered and fires the next hit of the chain. Light, light, light; a heavy placed after one or two lights is a finisher. |
+| Recovery cancel | Hades | The dodge can interrupt the recovery of an attack (never the hit itself), so play from above stays quick. |
+| Soft aim | Hades, Death's Door | An attack turns toward the nearest enemy in the direction of the stick. A hard lock for bosses comes later if it is missed. |
+| Guard and regain | Lies of P | Holding guard blocks a hit for stamina and a little "grey" health damage; grey health is won back by landing hits soon after. |
+| Perfect guard | Lies of P, Sekiro | Guarding just before a hit lands costs nothing, hurts the attacker's stagger meter, gives mana, and is the trigger for element upgrades (Backdraft, Stored Charge, Burn and Detonate). |
+| Stagger meter | Sekiro (posture), Lies of P (groggy), Elden Ring (stance) | Hits, heavies above all, and perfect guards fill an enemy's stagger meter. A full meter leaves it open for a few seconds; a heavy attack then is a finisher for large damage. The meter drains when the enemy is left alone. |
+| Red attacks | Sekiro, Lies of P | An attack telegraphed in red cannot be blocked: dodge it or perfect-guard it. |
+| Perfect dodge | Bayonetta, Black Myth: Wukong | A dodge at the last moment gives mana, and is the trigger for Afterimage. |
+| Mana from fighting | Hollow Knight, Black Myth: Wukong | Mana comes only from landing hits, perfect guards and perfect dodges. It pays for element spells and the weapon's skill. |
+| Weapon skill | Elden Ring (Ashes of War), Lies of P (Fable Arts) | Each weapon has one signature skill paid for with mana. The Katana's is the Iaido Slash; holding the heavy attack charges it. |
+| Flasks that refill by fighting | Lies of P | With no flasks left, landing hits slowly earns one back. |
+| Weight in the hit | every good action game | A few hundredths of a second of frozen time on a hit, a flash and a shove on the target, a camera shake on heavies. |
+| Read from above | Hades | Large enemy attacks mark the ground they will hit before they land. |
+
+Controller: R1 light attack, R2 heavy attack (hold to charge), L1 guard, Circle dodge, Square flask, Triangle weapon
+skill, L2 and the face buttons for element spells (to be settled).
+
+Katana, first version: the sword lives in its sheath and every chain starts with a draw. Light chain of three (a
+drawing cut, a return cut, a stepping finisher). Heavy overhead. Held heavy sheathes and releases the Iaido Slash.
+
+Build order: (1) light chain, soft aim, hit weight, stagger meter, mana, a training dummy; (2) heavy, finisher and
+the Iaido Slash; (3) guard, regain and perfect guard, with a dummy that attacks; (4) flasks, perfect dodge, red attacks.
+
 ### Elements (Draft)
 
 Eleven elements. Each has a self buff; these are the user's "super basic" starting ideas and each element is meant to
