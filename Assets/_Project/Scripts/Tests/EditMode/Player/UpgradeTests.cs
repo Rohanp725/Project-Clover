@@ -84,11 +84,13 @@ namespace Clover.Tests
                 Assert.IsTrue(ids.Add(upgrade.Id), upgrade.Id);
                 Assert.IsNotEmpty(upgrade.Name);
                 Assert.IsNotEmpty(upgrade.Description);
-                Assert.Greater(upgrade.Cost, 0);
+                // What a god leaves is never for sale; everything else has a price.
+                if (upgrade.Signature) Assert.AreEqual(0, upgrade.Cost);
+                else Assert.Greater(upgrade.Cost, 0);
                 Assert.AreSame(upgrade, Upgrade.ById(upgrade.Id));
             }
-            Assert.AreEqual(7, Upgrade.All.Count(upgrade => upgrade.Element == ElementKit.FireName));
-            Assert.AreEqual(7, Upgrade.All.Count(upgrade => upgrade.Element == ElementKit.LightningName));
+            Assert.AreEqual(7, Upgrade.All.Count(upgrade => upgrade.Element == ElementKit.FireName && !upgrade.Signature));
+            Assert.AreEqual(7, Upgrade.All.Count(upgrade => upgrade.Element == ElementKit.LightningName && !upgrade.Signature));
         }
 
         [Test]

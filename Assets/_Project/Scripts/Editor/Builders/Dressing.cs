@@ -25,8 +25,8 @@ namespace Clover.EditorTools
             leafGold = BuildKit.Toon(Folder, "m_dress_leaf_gold", new Color(0.66f, 0.42f, 0.14f), false, null, 0f, 0f);
             // Standing water, drawn flat: a dark sheet, a paler line round it where the wet stone shows, and a glint of sky.
             // It takes light like the ground does, so a lantern's pool lies across it.
-            puddle = BuildKit.Toon(Folder, "m_dress_water", new Color(0.12f, 0.15f, 0.3f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(0.015f, 0.02f, 0.06f));
-            puddleRim = BuildKit.Toon(Folder, "m_dress_water_edge", new Color(0.34f, 0.37f, 0.56f), false, null, 0f, 0f);
+            puddle = BuildKit.Toon(Folder, "m_dress_water", new Color(0.07f, 0.085f, 0.19f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(0.008f, 0.012f, 0.04f));
+            puddleRim = BuildKit.Toon(Folder, "m_dress_water_edge", new Color(0.2f, 0.22f, 0.36f), false, null, 0f, 0f);
             puddleGlint = BuildKit.Toon(Folder, "m_dress_water_glint", new Color(0.5f, 0.6f, 0.9f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(0.1f, 0.14f, 0.3f));
             iron = BuildKit.Toon(Folder, "m_dress_iron", new Color(0.15f, 0.14f, 0.24f), false, null, 0f, 0.02f);
             wood = BuildKit.Toon(Folder, "m_dress_wood", new Color(0.36f, 0.24f, 0.24f), false, ProceduralTextures.Planks(), 0.9f, 0.02f);
@@ -53,17 +53,22 @@ namespace Clover.EditorTools
                 var offset = i == 0 ? Vector3.zero : new Vector3(((float)random.NextDouble() - 0.5f) * size * 1.1f, 0f, ((float)random.NextDouble() - 0.5f) * size * 0.9f);
                 float yaw = (float)random.NextDouble() * 180f;
                 // Every pool's edge lies under every pool's water, so pools that overlap read as one shape with one edge.
-                var rim = BuildKit.Shape(PrimitiveType.Cylinder, "Edge", group, offset + Vector3.up * 0.014f, new Vector3(width + 0.12f, 0.001f, depth + 0.12f), puddleRim, new Vector3(0f, yaw, 0f));
+                var rim = BuildKit.Shape(PrimitiveType.Cylinder, "Edge", group, offset + Vector3.up * 0.014f, new Vector3(width + 0.09f, 0.001f, depth + 0.09f), puddleRim, new Vector3(0f, yaw, 0f));
                 rim.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 rim.gameObject.isStatic = true;
                 var sheet = BuildKit.Shape(PrimitiveType.Cylinder, "Water", group, offset + Vector3.up * 0.019f, new Vector3(width, 0.001f, depth), puddle, new Vector3(0f, yaw, 0f));
                 sheet.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 sheet.gameObject.isStatic = true;
-                if (i > 0) continue;
-                var glint = BuildKit.Shape(PrimitiveType.Cylinder, "Glint", group, offset + Quaternion.Euler(0f, yaw, 0f) * new Vector3(-width * 0.18f, 0.024f, depth * 0.16f),
-                    new Vector3(width * 0.3f, 0.001f, depth * 0.07f), puddleGlint, new Vector3(0f, yaw + 12f, 0f));
-                glint.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                glint.gameObject.isStatic = true;
+                // The sky in it: two or three short broken strokes, never one clean line.
+                int strokes = 2 + random.Next(2);
+                for (int stroke = 0; stroke < strokes; stroke++)
+                {
+                    var spot = offset + Quaternion.Euler(0f, yaw, 0f) * new Vector3(width * (-0.22f + stroke * 0.14f), 0.024f, depth * (0.2f - stroke * 0.12f - (float)random.NextDouble() * 0.05f));
+                    var glint = BuildKit.Shape(PrimitiveType.Cylinder, "Glint", group, spot,
+                        new Vector3(width * (0.1f + (float)random.NextDouble() * 0.16f), 0.001f, depth * 0.035f), puddleGlint, new Vector3(0f, yaw + 8f, 0f));
+                    glint.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    glint.gameObject.isStatic = true;
+                }
             }
         }
 
@@ -114,6 +119,35 @@ namespace Clover.EditorTools
                 float angle = (float)random.NextDouble() * Mathf.PI * 2f, reach = Mathf.Sqrt((float)random.NextDouble()) * radius;
                 Tuft(parent, centre + new Vector3(Mathf.Cos(angle) * reach, 0f, Mathf.Sin(angle) * reach), 0.4f + (float)random.NextDouble() * 0.6f, seed * 70 + i);
             }
+        }
+
+        /// <summary>
+        /// Breaks the ruled edge of a rectangle of ground laid on another: rounds of the same ground spill over the
+        /// line all the way round it, and grass grows along it.
+        /// </summary>
+        public static void RaggedEdge(Transform parent, float west, float east, float south, float north, float height, Material ground, int seed)
+        {
+            var random = new System.Random(seed);
+            var group = BuildKit.Group("Ragged Edge", parent);
+            void Along(Vector3 from, Vector3 to)
+            {
+                float length = (to - from).magnitude;
+                int count = Mathf.Max(2, Mathf.RoundToInt(length / 1.1f));
+                for (int i = 0; i < count; i++)
+                {
+                    Vector3 at = Vector3.Lerp(from, to, (i + (float)random.NextDouble()) / count);
+                    float size = 0.9f + (float)random.NextDouble() * 1.5f;
+                    var spill = BuildKit.Shape(PrimitiveType.Cylinder, "Spill", group, new Vector3(at.x, height + 0.004f, at.z),
+                        new Vector3(size, 0.001f, size * (0.6f + (float)random.NextDouble() * 0.5f)), ground, new Vector3(0f, (float)random.NextDouble() * 180f, 0f));
+                    spill.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                    spill.gameObject.isStatic = true;
+                    if (random.NextDouble() < 0.5) Tuft(group, new Vector3(at.x, height, at.z) + new Vector3(((float)random.NextDouble() - 0.5f) * 0.8f, 0f, ((float)random.NextDouble() - 0.5f) * 0.8f), 0.4f + (float)random.NextDouble() * 0.4f, seed * 90 + i);
+                }
+            }
+            Along(new Vector3(west, 0f, south), new Vector3(east, 0f, south));
+            Along(new Vector3(east, 0f, south), new Vector3(east, 0f, north));
+            Along(new Vector3(east, 0f, north), new Vector3(west, 0f, north));
+            Along(new Vector3(west, 0f, north), new Vector3(west, 0f, south));
         }
 
         /// <summary>Fallen leaves lying flat over a round of ground.</summary>

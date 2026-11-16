@@ -7,7 +7,7 @@ namespace Clover.Gameplay
     /// and puts itself right again after being left alone, so it can be hit for as long as the player likes. A heavy
     /// blow while it is staggered is a finisher: much more damage, and the stagger ends.
     /// </summary>
-    public class TrainingDummy : MonoBehaviour, IDamageable, IStaggerable
+    public class TrainingDummy : MonoBehaviour, IDamageable, IStaggerable, IBurnable
     {
         [SerializeField] private Transform body;
         [SerializeField] private Renderer[] flashRenderers;
@@ -16,7 +16,7 @@ namespace Clover.Gameplay
 
         public Health Health = new Health { Maximum = 200f };
         public StaggerMeter Stagger = new StaggerMeter();
-        public BurnStatus Burn = new BurnStatus();
+        public BurnStatus Burn { get; } = new BurnStatus();
         /// <summary>Damage is multiplied by this while the dummy is staggered.</summary>
         public float StaggeredDamageMultiplier = 1.5f;
         /// <summary>A heavy blow on the staggered dummy is multiplied by this instead.</summary>

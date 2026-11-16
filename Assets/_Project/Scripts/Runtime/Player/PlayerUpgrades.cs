@@ -63,6 +63,11 @@ namespace Clover.Player
         public float RodDamage = 12f;
         public float OverclockSeconds = 2.5f;
         public float OverclockScale = 0.35f;
+        public float PlasmaDamage = 18f;
+        public float PlasmaStagger = 16f;
+        public float PlasmaRadius = 3.2f;
+        /// <summary>Seconds the shape left behind by a lightning dodge stays.</summary>
+        public float AfterimageSeconds = 0.45f;
 
         public int Points => RunState.Points;
         public int Bought { get; private set; }
@@ -76,6 +81,8 @@ namespace Clover.Player
         public int Discharges { get; private set; }
         public int Leaps { get; private set; }
         public int FlasksThrown { get; private set; }
+        public int PlasmaBursts { get; private set; }
+        public int FreeDodges { get; private set; }
 
         private PlayerController player;
         private PlayerElement element;
@@ -89,6 +96,8 @@ namespace Clover.Player
         /// <summary>Seconds without a blow before the Static on an enemy has leaked away.</summary>
         public float StaticLasts = 8f;
         private readonly List<IDamageable> toDischarge = new List<IDamageable>();
+        private readonly List<IDamageable> toBurst = new List<IDamageable>();
+        private Afterimage afterimage;
         private float untilRefresh;
         private Vector3 dodgeFrom;
 
@@ -99,6 +108,7 @@ namespace Clover.Player
             combat = GetComponent<PlayerCombat>();
             defence = GetComponent<PlayerDefence>();
             hitStop = GetComponent<HitStop>();
+            afterimage = GetComponent<Afterimage>();
             Heat.Reset();
             foreach (string id in StartWith) RunState.Unlocked.Add(id);
             RunState.Points += StartingPoints;
@@ -196,6 +206,8 @@ namespace Clover.Player
                 Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.2f, Vector3.up, 0.8f);
                 if (Heat.Level == Heat.MaximumLevel && defence != null) defence.Callout("Heat");
             }
+            if (has[Index(Upgrade.Plasma)] && (step.Heavy || outcome == HitOutcome.Finisher) && target is IBurnable burning && burning.Burn.IsBurning)
+                toBurst.Add(target);
             if (!has[Index(Upgrade.Static)]) return;
             staticOn.TryGetValue(target, out int stacks);
             // Left alone, it leaks away: an enemy met again later does not still carry it.
@@ -226,6 +238,21 @@ namespace Clover.Player
                 combat.StrikeArea(body.transform.position, StaticRadius, StaticDamagePerStack * stacks, StaticStaggerPerStack * stacks, 0f, VfxKind.Shock);
             }
             toDischarge.Clear();
+            foreach (var target in toBurst)
+            {
+                // Fire and storm together: the burn goes up, and the burst lights everyone it reaches.
+                var body = (Component)target;
+                if (body == null) continue;
+                PlasmaBursts++;
+                Vector3 at = body.transform.position;
+                LightningBolts.Strike(at, 0.5f);
+                Vfx.Play(VfxKind.Burst, at + Vector3.up);
+                Vfx.Play(VfxKind.Ring, at + Vector3.up * 0.2f, Vector3.up);
+                for (int i = 0; i < 5; i++)
+                    Vfx.Play(VfxKind.Fire, at + Quaternion.Euler(0f, i * 72f, 0f) * Vector3.forward * (PlasmaRadius * 0.5f) + Vector3.up * 0.5f, Vector3.up, 0.7f);
+                combat.StrikeArea(at, PlasmaRadius, PlasmaDamage, PlasmaStagger, 4f, VfxKind.Fire, null, true);
+            }
+            toBurst.Clear();
 
             if (step != combat.Combo.Skill) return;
             Vector3 forward = transform.forward;
@@ -269,6 +296,7 @@ namespace Clover.Player
             if (!has[Index(Upgrade.Afterimage)]) return;
             // What was left standing where the player stood strikes a moment later.
             Vfx.Play(VfxKind.Glint, dodgeFrom + Vector3.up * 1.2f);
+            if (afterimage != null && !has[Index(Upgrade.Blink)]) afterimage.Leave(AfterimageDelay + 0.25f);
             Hazards.Lay(HazardKind.Lightning, dodgeFrom, 2.3f, 0.12f, AfterimageDamage, AfterimageStagger, 0f, 0.1f, true, AfterimageDelay, default, true);
         }
 
@@ -282,8 +310,16 @@ namespace Clover.Player
                 for (int i = 0; i < 4; i++)
                     Hazards.Lay(HazardKind.Fire, from + direction * (distance * (i + 0.5f) / 4.5f), 0.95f, TrailSeconds, TrailDamage, 0f, 2f, 0.5f, false, seconds * i / 4f);
             }
-            if (has[Index(Upgrade.Blink)])
+            // The god's own step: while the surge lasts the dodge is free, and it shocks whether or not Blink was learned.
+            bool stormStep = has[Index(Upgrade.StormStep)] && element != null && element.Kit.SurgeActive;
+            if (stormStep)
             {
+                FreeDodges++;
+                player.Stamina.Restore(player.Dodge.StaminaCost);
+            }
+            if (has[Index(Upgrade.Blink)] || stormStep)
+            {
+                if (afterimage != null) afterimage.Leave(AfterimageSeconds);
                 LightningBolts.Strike(from, 0.25f);
                 Hazards.Lay(HazardKind.Lightning, from, 1.1f, seconds, BlinkDamage, BlinkStagger, 0f, 0.05f, true, 0f, direction * (distance / Mathf.Max(0.05f, seconds)));
             }
@@ -314,6 +350,7 @@ namespace Clover.Player
             if (toward.sqrMagnitude > 0.01f) transform.rotation = Quaternion.LookRotation(toward, Vector3.up);
             Vfx.Play(VfxKind.Glint, transform.position + Vector3.up * 1.8f);
             const float flight = 0.4f;
+            ThrownThing.Throw(transform.position + Vector3.up * 1.6f + transform.forward * 0.3f, at + Vector3.up * 0.2f, flight, 2.2f);
             Hazards.Lay(HazardKind.Fire, at, FirebombRadius, 0.12f, FirebombDamage, FirebombStagger, 4f, 0.1f, true, flight, default, true);
             Hazards.Lay(HazardKind.Fire, at, FirebombRadius * 0.85f, 3.5f, 5f, 0f, 2f, 0.5f, false, flight + 0.15f);
         }

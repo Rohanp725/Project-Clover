@@ -12,6 +12,8 @@ namespace Clover.Player
         public string Description;
         /// <summary>The weapon it needs, or empty if it works with any.</summary>
         public string Weapon = "";
+        /// <summary>True for what only a god's fall gives: it is never for sale, and the tree does not list it.</summary>
+        public bool Signature;
 
         // Fire: pressure and momentum.
         public const string Heat = "fire.heat";
@@ -29,6 +31,9 @@ namespace Clover.Player
         public const string DelayedCuts = "lightning.cuts";
         public const string LightningRod = "lightning.rod";
         public const string Overclock = "lightning.overclock";
+        // What a god leaves, by the choice made over him.
+        public const string StormStep = "lightning.stormstep";
+        public const string Plasma = "fire.plasma";
 
         /// <summary>Every upgrade in the slice, in the order its tree shows them: cheapest first.</summary>
         public static readonly IReadOnlyList<Upgrade> All = new List<Upgrade>
@@ -62,6 +67,11 @@ namespace Clover.Player
                 Description = "Hold the spell button to plant a rod. Bolts fall around it for a while. 40 mana." },
             new Upgrade { Id = Overclock, Name = "Overclock", Element = ElementKit.LightningName, Cost = 4,
                 Description = "Overdrive opens with a breath in which everything but you is slowed." },
+
+            new Upgrade { Id = StormStep, Name = "Storm Step", Element = ElementKit.LightningName, Cost = 0, Signature = true,
+                Description = "While Overdrive lasts, every dodge costs nothing and shocks what it passes through." },
+            new Upgrade { Id = Plasma, Name = "Plasma", Element = ElementKit.FireName, Cost = 0, Signature = true,
+                Description = "A heavy blow or a finisher on a burning enemy bursts, and sets alight everyone near." },
         };
 
         public static Upgrade ById(string id)

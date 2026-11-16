@@ -33,7 +33,7 @@ Material:
     - _LightBands: 2
     - _MidThreshold: 0.62
     - _MidTone: 0.78
-    - _OutlineWidth: 0.0084
+    - _OutlineWidth: 0.028
     - _RimWidth: 0.35
     - _ShadeSoftness: 0.015
     - _ShadeThreshold: 0.25
@@ -41,9 +41,9 @@ Material:
     - _WorldMapping: 0
     - _WorldScale: 0.25
     m_Colors:
-    - _BaseColor: {r: 0.66, g: 0.56, b: 0.34, a: 1}
+    - _BaseColor: {r: 0.6, g: 0.47, b: 0.3, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _OutlineColor: {r: 0.085, g: 0.08, b: 0.17, a: 1}
+    - _OutlineColor: {r: 0.035, g: 0.02, b: 0.07, a: 1}
     - _RimColor: {r: 0, g: 0, b: 0, a: 1}
     - _ShadeColor: {r: 0.3, g: 0.28, b: 0.58, a: 1}
   m_BuildTextureStacks: []

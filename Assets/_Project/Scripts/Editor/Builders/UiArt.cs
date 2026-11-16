@@ -13,7 +13,7 @@ namespace Clover.EditorTools
     public static class UiArt
     {
         private const string Folder = BuildKit.GeneratedRoot + "/UI";
-        private const string FontPath = "Assets/_Project/Art/Fonts/cormorant_garamond_bold.ttf";
+        private const string FontPath = "Assets/_Project/Art/Fonts/spectral_semibold.ttf";
 
         public static readonly Color Ink = new Color(0.045f, 0.035f, 0.08f, 0.94f);
         public static readonly Color Gold = new Color(0.93f, 0.78f, 0.47f, 1f);

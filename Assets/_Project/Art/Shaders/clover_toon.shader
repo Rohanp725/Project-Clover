@@ -157,7 +157,8 @@ Shader "Clover/Toon"
                     half reach = saturate(dot(normalWS, other.direction)) * other.distanceAttenuation * strength;
                     // Stepped, so a lamp throws rings of its own colour on the floor, not a smooth glow.
                     half banded = floor(saturate(reach * 0.5) * _LightBands + 0.35) / _LightBands;
-                    colour += albedo * (other.color / strength) * banded * 1.25;
+                    // Mostly the surface's own colour, with a little of the lamp's laid over it so a warm lamp stays warm on cold stone.
+                    colour += (albedo * 1.05 + 0.035) * (other.color / strength) * banded;
                 LIGHT_LOOP_END
                 #endif
 

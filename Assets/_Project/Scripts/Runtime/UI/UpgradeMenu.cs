@@ -82,7 +82,7 @@ namespace Clover.UI
             if (IsOpen || player == null || upgrades == null || panel == null) return;
             shown.Clear();
             foreach (var upgrade in Upgrade.All)
-                if (upgrade.Element == upgrades.ElementName && shown.Count < rows.Length) shown.Add(upgrade);
+                if (upgrade.Element == upgrades.ElementName && !upgrade.Signature && shown.Count < rows.Length) shown.Add(upgrade);
             IsOpen = true;
             releasePlayer = false;
             openedOnFrame = Time.frameCount;

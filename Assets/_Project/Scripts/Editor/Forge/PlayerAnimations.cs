@@ -247,25 +247,29 @@ namespace Clover.EditorTools.Forge
                 float leftLift = Mathf.Max(0f, Mathf.Cos(phase)), rightLift = Mathf.Max(0f, -Mathf.Cos(phase));
                 return new ForgePose
                 {
-                    // Low and leaning into it, the way a swordsman covers ground: sheath hand at the hip, sword arm trailing.
-                    Hips = new Vector3(0f, -0.1f + 0.03f * Mathf.Cos(phase * 2f), 0.03f),
-                    HipLean = 16f,
-                    HipYaw = 9f * left,
-                    HipRoll = 3f * left,
-                    WaistLean = 10f,
-                    WaistYaw = -16f * left,
-                    HeadLean = -18f,
-                    HeadYaw = 5f * left,
-                    FootL = new Vector3(-0.11f, 0.2f * leftLift, 0.4f * left - 0.05f),
-                    FootR = new Vector3(0.11f, 0.2f * rightLift, 0.4f * right - 0.05f),
+                    // Low and thrown forward, the way a swordsman covers ground: sheath hand at the hip, sword arm
+                    // swinging behind. The game is seen from above, where legs hardly show, so the run is told by
+                    // the lean, the turn of the shoulders against the hips, and the arm.
+                    Hips = new Vector3(0.012f * left, -0.14f + 0.05f * Mathf.Cos(phase * 2f), 0.09f),
+                    HipLean = 24f,
+                    HipYaw = 15f * left,
+                    HipRoll = 6f * left,
+                    WaistLean = 15f,
+                    WaistYaw = -34f * left,
+                    WaistRoll = -4f * left,
+                    HeadLean = -30f,
+                    HeadYaw = 14f * left,
+                    FootL = new Vector3(-0.11f, 0.3f * leftLift, 0.52f * left - 0.08f),
+                    FootR = new Vector3(0.11f, 0.3f * rightLift, 0.52f * right - 0.08f),
                     FootLTurn = 2f,
                     FootRTurn = 2f,
-                    FootLTip = 28f * Mathf.Max(0f, -left) - 12f * leftLift,
-                    FootRTip = 28f * Mathf.Max(0f, -right) - 12f * rightLift,
-                    HandL = new Vector3(-0.24f, 0.9f, 0.14f + 0.03f * right),
+                    FootLTip = 34f * Mathf.Max(0f, -left) - 14f * leftLift,
+                    FootRTip = 34f * Mathf.Max(0f, -right) - 14f * rightLift,
+                    HandL = new Vector3(-0.25f, 0.84f, 0.2f + 0.05f * right),
                     ElbowL = new Vector3(-0.8f, 0f, -0.6f),
-                    HandR = new Vector3(0.36f, 0.84f + 0.04f * left, -0.2f + 0.1f * left),
+                    HandR = new Vector3(0.4f - 0.06f * left, 0.86f + 0.1f * left, -0.3f + 0.3f * left),
                     ElbowR = new Vector3(0.5f, 0.3f, -1f),
+                    ShoulderRForward = 10f * left,
                 };
             });
         }
@@ -281,22 +285,23 @@ namespace Clover.EditorTools.Forge
                 float leftLift = Mathf.Max(0f, Mathf.Cos(phase)), rightLift = Mathf.Max(0f, -Mathf.Cos(phase));
                 return new ForgePose
                 {
-                    Hips = new Vector3(0f, -0.09f + 0.035f * Mathf.Cos(phase * 2f), 0.03f),
-                    HipLean = 14f,
-                    HipYaw = 10f * left,
-                    HipRoll = 3f * left,
-                    WaistLean = 8f,
-                    WaistYaw = -22f * left,
-                    HeadLean = -15f,
-                    HeadYaw = 9f * left,
-                    FootL = new Vector3(-0.11f, 0.22f * leftLift, 0.42f * left - 0.05f),
-                    FootR = new Vector3(0.11f, 0.22f * rightLift, 0.42f * right - 0.05f),
+                    Hips = new Vector3(0.012f * left, -0.12f + 0.05f * Mathf.Cos(phase * 2f), 0.08f),
+                    HipLean = 20f,
+                    HipYaw = 15f * left,
+                    HipRoll = 6f * left,
+                    WaistLean = 13f,
+                    WaistYaw = -36f * left,
+                    WaistRoll = -4f * left,
+                    HeadLean = -26f,
+                    HeadYaw = 16f * left,
+                    FootL = new Vector3(-0.11f, 0.32f * leftLift, 0.54f * left - 0.08f),
+                    FootR = new Vector3(0.11f, 0.32f * rightLift, 0.54f * right - 0.08f),
                     FootLTurn = 2f,
                     FootRTurn = 2f,
-                    FootLTip = 30f * Mathf.Max(0f, -left) - 12f * leftLift,
-                    FootRTip = 30f * Mathf.Max(0f, -right) - 12f * rightLift,
-                    HandL = new Vector3(-0.26f, 1.02f - 0.12f * right, 0.12f + 0.3f * right),
-                    HandR = new Vector3(0.26f, 1.02f - 0.12f * left, 0.12f + 0.3f * left),
+                    FootLTip = 34f * Mathf.Max(0f, -left) - 14f * leftLift,
+                    FootRTip = 34f * Mathf.Max(0f, -right) - 14f * rightLift,
+                    HandL = new Vector3(-0.3f, 1.04f - 0.16f * right, 0.14f + 0.42f * right),
+                    HandR = new Vector3(0.3f, 1.04f - 0.16f * left, 0.14f + 0.42f * left),
                     ElbowL = new Vector3(-0.4f, -0.3f, -1f),
                     ElbowR = new Vector3(0.4f, -0.3f, -1f),
                 };

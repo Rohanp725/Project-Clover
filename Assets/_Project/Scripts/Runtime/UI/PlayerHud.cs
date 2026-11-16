@@ -44,6 +44,7 @@ namespace Clover.UI
         private int shownSurge = -1;
         private Clover.World.Interactable shownThing;
         private float calloutLeft;
+        private string shownPrompt;
         private int shownEmbers = -1;
         private Image[] flaskImages;
         private float lagFraction = 1f;
@@ -177,11 +178,13 @@ namespace Clover.UI
             }
 
             // What the interact button would do here, while the player stands by something that can be used.
-            if (prompt != null && interaction != null && interaction.Current != shownThing)
+            // The same thing can come to offer something else, as a stand does once its weapon is won.
+            if (prompt != null && interaction != null && (interaction.Current != shownThing || (shownThing != null && !ReferenceEquals(shownThing.Prompt, shownPrompt))))
             {
                 shownThing = interaction.Current;
+                shownPrompt = shownThing != null ? shownThing.Prompt : null;
                 prompt.enabled = shownThing != null;
-                if (shownThing != null) prompt.text = shownThing.Prompt;
+                if (shownThing != null) prompt.text = shownPrompt;
             }
 
             if (callout == null) return;

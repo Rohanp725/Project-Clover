@@ -43,6 +43,8 @@ namespace Clover.World
                         if (upgrades.Owns(upgrade.Id)) spent += upgrade.Cost;
                     upgrades.Forget();
                     upgrades.Earn(spent);
+                    // His own way of moving comes with his element.
+                    RunState.Unlocked.Add(Upgrade.StormStep);
                 }
                 RunState.Element = ElementKit.LightningName;
                 // Once taken from its god, a later run may begin with it.
@@ -60,6 +62,8 @@ namespace Clover.World
                 if (element != null) element.Take(ElementKit.ByName(RunState.Element, true));
                 // What is consumed feeds the tree the player already has.
                 if (upgrades != null) upgrades.Earn(ConsumeEmbers);
+                // The storm, swallowed, mixes with the fire.
+                if (RunState.Element == ElementKit.FireName) RunState.Unlocked.Add(Upgrade.Plasma);
                 if (who.Combat != null) who.Combat.Equip(Weapons.ByName(Weapons.KatanaName));
                 Vfx.Play(VfxKind.Fire, who.transform.position + Vector3.up, Vector3.up, 3f);
                 if (who.Defence != null) who.Defence.Callout("The storm feeds the fire");

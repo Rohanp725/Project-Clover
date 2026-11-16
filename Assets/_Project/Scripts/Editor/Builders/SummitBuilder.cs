@@ -37,8 +37,8 @@ namespace Clover.EditorTools
             var gold = BuildKit.Toon(Folder, "m_summit_gold", new Color(0.95f, 0.7f, 0.18f), false, null, 0f, 0.02f).Lit(new Color(1.2f, 0.9f, 0.4f), 0.4f, new Color(0.3f, 0.16f, 0.02f));
             var red = BuildKit.Toon(Folder, "m_summit_red", new Color(0.8f, 0.12f, 0.16f), false, null, 0f, 0.02f);
             var rune = BuildKit.Toon(Folder, "m_summit_rune", new Color(0.6f, 0.85f, 1f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(0.8f, 1.9f, 4.2f));
-            var cloud = BuildKit.Toon(Folder, "m_summit_cloud", new Color(0.56f, 0.56f, 0.82f), false, null, 0f, 0f).Lit(new Color(0.5f, 0.55f, 0.9f), 0.5f);
-            cloud.SetColor("_ShadeColor", new Color(0.5f, 0.48f, 0.8f));
+            var cloud = BuildKit.Toon(Folder, "m_summit_cloud", new Color(0.4f, 0.4f, 0.64f), false, null, 0f, 0f).Lit(new Color(0.3f, 0.34f, 0.6f), 0.5f);
+            cloud.SetColor("_ShadeColor", new Color(0.42f, 0.4f, 0.74f));
             var cloudDeep = BuildKit.Toon(Folder, "m_summit_cloud_deep", new Color(0.3f, 0.3f, 0.55f), false, null, 0f, 0f);
             var spirit = BuildKit.Flame(Folder, "m_summit_spirit_flame", new Color(0.3f, 0.7f, 1.8f, 1f));
 
@@ -75,7 +75,9 @@ namespace Clover.EditorTools
                 float fromNorth = Mathf.Abs(Mathf.DeltaAngle(angle, 0f));
                 bool tall = fromNorth < 95f;
                 float height = tall ? Mathf.Lerp(6.5f, 4.2f, fromNorth / 95f) : 1.1f;
-                BuildKit.Block("Post", posts, at + Vector3.up * (height * 0.5f), new Vector3(0.9f, height, 0.9f), red, angle);
+                // The low ones by the camera are stone stubs with a red band: seen from above, a red post is only a red square.
+                BuildKit.Block("Post", posts, at + Vector3.up * (height * 0.5f), new Vector3(0.9f, height, 0.9f), tall ? red : dark, angle);
+                if (!tall) BuildKit.Block("Post Band", posts, at + Vector3.up * (height - 0.2f), new Vector3(1f, 0.16f, 1f), red, angle);
                 BuildKit.Block("Post Foot", posts, at + Vector3.up * 0.2f, new Vector3(1.4f, 0.4f, 1.4f), dark, angle);
                 // Gold caps only on the tall posts: on the low ones by the camera they would be slabs of yellow across the view.
                 if (tall) BuildKit.Block("Post Cap", posts, at + Vector3.up * (height + 0.12f), new Vector3(1.2f, 0.24f, 1.2f), gold, angle);
@@ -272,6 +274,8 @@ namespace Clover.EditorTools
                 var floor = disc.AddComponent<BoxCollider>();
                 floor.size = new Vector3(1.1f, 2f, 1.1f);
             }
+            // Unity's own cylinder shows its twenty corners at this size.
+            disc.GetComponent<MeshFilter>().sharedMesh = BuildKit.RoundMesh();
             var renderer = disc.GetComponent<MeshRenderer>();
             renderer.sharedMaterial = material;
             if (!solid) renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;

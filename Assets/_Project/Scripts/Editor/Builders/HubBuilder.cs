@@ -441,6 +441,8 @@ namespace Clover.EditorTools
                 var floor = disc.AddComponent<BoxCollider>();
                 floor.size = new Vector3(1.1f, 2f, 1.1f);
             }
+            // Unity's own cylinder shows its twenty corners at this size.
+            disc.GetComponent<MeshFilter>().sharedMesh = BuildKit.RoundMesh();
             var renderer = disc.GetComponent<MeshRenderer>();
             renderer.sharedMaterial = material;
             if (!solid) renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;

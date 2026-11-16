@@ -115,7 +115,7 @@ namespace Clover.EditorTools
             rune = BuildKit.Toon(Folder, "m_castle_rune", new Color(0.6f, 0.8f, 1f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(0.9f, 2f, 4.5f));
             fireMaterial = BuildKit.Flame(Folder, "m_castle_flame", new Color(1.6f, 0.5f, 0.1f, 1f));
             rainMaterial = BuildKit.Glow(Folder, "m_castle_rain", new Color(0.8f, 0.9f, 1.3f, 0.7f), 1, true, 1f);
-            boltMaterial = BuildKit.Glow(Folder, "m_castle_bolt", new Color(5f, 7f, 12f, 1f), 3, true, 1f);
+            boltMaterial = BuildKit.Glow(Folder, "m_castle_bolt", new Color(3f, 4.4f, 8f, 1f), 3, true, 1f);
         }
 
         // ------------------------------------------------------------------ the parts of the castle
@@ -205,6 +205,7 @@ namespace Clover.EditorTools
 
             var dress = BuildKit.Group("Dressing", group);
             Slab("Court Path", dress, -3.3f, 3.3f, 28f, 56f, 0.012f, path, 0.02f);
+            Dressing.RaggedEdge(dress, -14f, -4f, 33f, 45f, 0.01f, earth, 35);
             Dressing.Puddles(dress, -18f, 18f, 28f, 61f, 0f, 16, 21);
             Dressing.GrassLine(dress, new Vector3(-18.6f, 0f, 28.5f), new Vector3(-18.6f, 0f, 61.5f), 0.6f, 22);
             Dressing.GrassLine(dress, new Vector3(18.6f, 0f, 61.5f), new Vector3(18.6f, 0f, 28.5f), 0.6f, 23);
@@ -544,7 +545,18 @@ namespace Clover.EditorTools
             var (light, flames) = Brazier(parent, foot, false);
             var brazier = light.transform.parent;
             brazier.name = "Rest Brazier";
-            BuildKit.Shape(PrimitiveType.Cube, "Mat", brazier, new Vector3(0f, 0.03f, -1.3f), new Vector3(1.6f, 0.05f, 1.2f), cloth);
+            // A worn mat to kneel on: dull red, bound at both ends, with a paler band woven across it.
+            var matCloth = BuildKit.Toon(Folder, "m_castle_mat", new Color(0.42f, 0.11f, 0.15f), false, null, 0f, 0.012f);
+            var matBand = BuildKit.Toon(Folder, "m_castle_mat_band", new Color(0.62f, 0.5f, 0.34f), false, null, 0f, 0f);
+            BuildKit.Shape(PrimitiveType.Cube, "Mat", brazier, new Vector3(0f, 0.025f, -1.3f), new Vector3(1.5f, 0.04f, 1.1f), matCloth);
+            foreach (float z in new[] { -0.36f, 0.36f })
+                BuildKit.Shape(PrimitiveType.Cube, "Mat Band", brazier, new Vector3(0f, 0.03f, -1.3f + z), new Vector3(1.5f, 0.042f, 0.07f), matBand);
+            foreach (float x in new[] { -0.78f, 0.78f })
+            {
+                BuildKit.Shape(PrimitiveType.Cube, "Mat Binding", brazier, new Vector3(x, 0.03f, -1.3f), new Vector3(0.08f, 0.05f, 1.14f), wood);
+                for (int tassel = 0; tassel < 5; tassel++)
+                    BuildKit.Shape(PrimitiveType.Cube, "Mat Tassel", brazier, new Vector3(x + Mathf.Sign(x) * 0.1f, 0.015f, -1.74f + tassel * 0.22f), new Vector3(0.14f, 0.02f, 0.03f), matBand);
+            }
             var ring = BuildKit.Shape(PrimitiveType.Cylinder, "Rune Ring", brazier, new Vector3(0f, 0.02f, 0f), new Vector3(2.6f, 0.01f, 2.6f), rune);
             ring.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             BuildKit.Shape(PrimitiveType.Cylinder, "Rune Ring Inner", brazier, new Vector3(0f, 0.025f, 0f), new Vector3(2.4f, 0.01f, 2.4f), paving);

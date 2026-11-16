@@ -75,6 +75,20 @@ namespace Clover.EditorTools
             BuildHud(controller, built.Player.GetComponent<PlayerCombat>(), built.Player.GetComponent<PlayerDefence>(), hint);
             // The player's lingering effects on the ground live in the scene, not on the player.
             new GameObject("Hazards").AddComponent<Clover.World.Hazards>();
+            // A flask in the air, for the eye only; it waits unseen until one is thrown.
+            var thrown = new GameObject("Thrown Flask");
+            var flask = BuildKit.Group("Flask", thrown.transform);
+            BuildKit.Shape(PrimitiveType.Sphere, "Belly", flask, Vector3.zero, new Vector3(0.24f, 0.24f, 0.24f),
+                BuildKit.Toon(PlayerFolder, "m_flask_thrown", new Color(1f, 0.6f, 0.2f), false, null, 0f, 0.02f).Lit(Color.black, 0.3f, new Color(1.8f, 0.6f, 0.1f)));
+            BuildKit.Shape(PrimitiveType.Cube, "Neck", flask, new Vector3(0f, 0.16f, 0f), new Vector3(0.08f, 0.14f, 0.08f),
+                BuildKit.Toon(PlayerFolder, "m_flask_neck", new Color(0.4f, 0.28f, 0.2f), false, null, 0f, 0.02f));
+            var trail = flask.gameObject.AddComponent<TrailRenderer>();
+            trail.time = 0.18f;
+            trail.startWidth = 0.2f;
+            trail.endWidth = 0f;
+            trail.sharedMaterial = BuildKit.Glow(PlayerFolder, "m_flask_trail", new Color(2.4f, 0.9f, 0.2f, 0.8f), 3, true, 1f);
+            trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            thrown.AddComponent<Clover.World.ThrownThing>().Configure(flask, trail);
             return built;
         }
 
@@ -136,6 +150,9 @@ namespace Clover.EditorTools
             if (drawnSword == null || sheathedHilt == null)
                 Debug.LogWarning("[Clover.Build] The character model has no katana_drawn or katana_hilt object; the sword will not move between sheath and hand.");
             var sheath = BuildKit.FindDeep(model.transform, "katana_sheath");
+            // The shape of light a lightning dodge leaves behind.
+            var ghost = BuildKit.Glow(PlayerFolder, "m_player_afterimage", new Color(0.5f, 1.2f, 3f, 0.8f), 3, true, 1f);
+            player.AddComponent<Afterimage>().Configure(model.GetComponentsInChildren<SkinnedMeshRenderer>(), ghost);
             player.AddComponent<PlayerAnimator>().Configure(controller, combat, defence, element, animator,
                 drawnSword != null ? drawnSword.gameObject : null, sheathedHilt != null ? sheathedHilt.gameObject : null,
                 sheath != null ? sheath.gameObject : null);
@@ -290,7 +307,14 @@ namespace Clover.EditorTools
 
             if (!string.IsNullOrEmpty(hintText))
             {
-                var hint = Label("Controls", hud, 21, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.5f));
+                // A band of ink behind the hint, so it reads over whatever floor is under it.
+                var band = Panel("Controls Band", hud, new Color(0.02f, 0.015f, 0.05f, 0.62f));
+                band.anchorMin = new Vector2(0f, 0f);
+                band.anchorMax = new Vector2(1f, 0f);
+                band.pivot = new Vector2(0.5f, 0f);
+                band.anchoredPosition = Vector2.zero;
+                band.sizeDelta = new Vector2(0f, 96f);
+                var hint = Label("Controls", hud, 21, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.72f));
                 hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = hint.rectTransform.pivot = Vector2.zero;
                 hint.rectTransform.anchoredPosition = new Vector2(48f, 30f);
                 hint.rectTransform.sizeDelta = new Vector2(1700f, 60f);
@@ -397,7 +421,12 @@ namespace Clover.EditorTools
         // The element's tree: a dark panel over the middle of the screen with a list on the left and what the chosen thing does on the right.
         private static void BuildUpgradeMenu(PlayerController player, Transform hud)
         {
-            var panel = Framed("Upgrade Menu", hud);
+            // The world goes dim behind the tree while it is open.
+            var dim = Panel("Upgrade Menu", hud, new Color(0.01f, 0.008f, 0.03f, 0.66f));
+            dim.anchorMin = Vector2.zero;
+            dim.anchorMax = Vector2.one;
+            dim.offsetMin = dim.offsetMax = Vector2.zero;
+            var panel = Framed("Tree", dim);
             panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
             panel.sizeDelta = new Vector2(1180f, 640f);
             var edge = Panel("Edge", panel, new Color(0.8f, 0.72f, 0.55f, 0.7f));
@@ -447,7 +476,7 @@ namespace Clover.EditorTools
             hint.rectTransform.sizeDelta = new Vector2(1000f, 30f);
             hint.text = "Stick or W S: choose     Cross or E: learn     Circle or Space: leave";
 
-            hud.gameObject.AddComponent<UpgradeMenu>().Configure(player, panel.gameObject, title, description, rows, costs, cursor);
+            hud.gameObject.AddComponent<UpgradeMenu>().Configure(player, dim.gameObject, title, description, rows, costs, cursor);
         }
 
         public const string ControlsHint =
@@ -460,7 +489,8 @@ namespace Clover.EditorTools
             labelObject.transform.SetParent(parent, false);
             var label = labelObject.AddComponent<Text>();
             label.font = UiArt.Font();
-            label.fontSize = size;
+            // Sizes are given as for a narrow face; this one is wider.
+            label.fontSize = Mathf.RoundToInt(size * 0.86f);
             label.alignment = anchor;
             label.color = colour;
             label.raycastTarget = false;

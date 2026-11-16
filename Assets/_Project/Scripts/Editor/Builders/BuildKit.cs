@@ -54,7 +54,7 @@ namespace Clover.EditorTools
             material.SetFloat("_WorldMapping", tilesPerMetre > 0f ? 1f : 0f);
             if (tilesPerMetre > 0f) material.SetFloat("_WorldScale", tilesPerMetre);
             // Characters carry the heavy ink; the world's line is thinner and lighter so it sits behind them.
-            material.SetFloat("_OutlineWidth", smoothNormalsInTangents ? 0.026f : outline * 0.7f);
+            material.SetFloat("_OutlineWidth", smoothNormalsInTangents ? 0.034f : outline * 0.7f);
             material.SetColor("_OutlineColor", smoothNormalsInTangents ? CharacterInk : WorldInk);
             material.SetColor("_ShadeColor", new Color(0.3f, 0.28f, 0.58f));
             material.SetColor("_RimColor", Color.black);
@@ -157,6 +157,80 @@ namespace Clover.EditorTools
             // Whatever stands in the camera's way thins out; builders take this off the ground itself.
             box.AddComponent<Clover.World.Fadeable>();
             return box;
+        }
+
+        /// <summary>
+        /// A round drum with enough sides that its edge reads as a circle however large it is drawn: the same size and
+        /// shape as Unity's own cylinder (one across, two high), which shows its corners when made into a floor.
+        /// </summary>
+        public static Mesh RoundMesh()
+        {
+            const int Sides = 72;
+            string folder = GeneratedRoot + "/Meshes";
+            EnsureFolder(folder);
+            string path = folder + "/round_drum.asset";
+            var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+            if (mesh != null && mesh.vertexCount > 0) return mesh;
+            if (mesh == null)
+            {
+                mesh = new Mesh { name = "round_drum" };
+                AssetDatabase.CreateAsset(mesh, path);
+            }
+            var vertices = new System.Collections.Generic.List<Vector3>();
+            var normals = new System.Collections.Generic.List<Vector3>();
+            var tangents = new System.Collections.Generic.List<Vector4>();
+            var uvs = new System.Collections.Generic.List<Vector2>();
+            var triangles = new System.Collections.Generic.List<int>();
+            // Top and bottom, each a fan about its middle.
+            foreach (float y in new[] { 1f, -1f })
+            {
+                int centre = vertices.Count;
+                vertices.Add(new Vector3(0f, y, 0f));
+                normals.Add(Vector3.up * y);
+                tangents.Add(new Vector4(0f, y, 0f, 1f));
+                uvs.Add(new Vector2(0.5f, 0.5f));
+                for (int i = 0; i <= Sides; i++)
+                {
+                    float angle = i * Mathf.PI * 2f / Sides;
+                    vertices.Add(new Vector3(Mathf.Cos(angle) * 0.5f, y, Mathf.Sin(angle) * 0.5f));
+                    normals.Add(Vector3.up * y);
+                    tangents.Add(new Vector4(0f, y, 0f, 1f));
+                    uvs.Add(new Vector2(Mathf.Cos(angle) * 0.5f + 0.5f, Mathf.Sin(angle) * 0.5f + 0.5f));
+                }
+                for (int i = 0; i < Sides; i++)
+                {
+                    triangles.Add(centre);
+                    triangles.Add(centre + (y > 0f ? i + 2 : i + 1));
+                    triangles.Add(centre + (y > 0f ? i + 1 : i + 2));
+                }
+            }
+            // The side.
+            int side = vertices.Count;
+            for (int i = 0; i <= Sides; i++)
+            {
+                float angle = i * Mathf.PI * 2f / Sides;
+                var outward = new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle));
+                foreach (float y in new[] { 1f, -1f })
+                {
+                    vertices.Add(new Vector3(outward.x * 0.5f, y, outward.z * 0.5f));
+                    normals.Add(outward);
+                    tangents.Add(new Vector4(outward.x, 0f, outward.z, 1f));
+                    uvs.Add(new Vector2(i / (float)Sides, y * 0.5f + 0.5f));
+                }
+            }
+            for (int i = 0; i < Sides; i++)
+            {
+                int a = side + i * 2;
+                triangles.AddRange(new[] { a, a + 2, a + 1, a + 1, a + 2, a + 3 });
+            }
+            mesh.SetVertices(vertices);
+            mesh.SetNormals(normals);
+            mesh.SetTangents(tangents);
+            mesh.SetUVs(0, uvs);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateBounds();
+            EditorUtility.SetDirty(mesh);
+            return mesh;
         }
 
         public static Transform Group(string name, Transform parent = null)

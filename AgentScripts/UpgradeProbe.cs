@@ -174,7 +174,9 @@ public class UpgradeProbeRunner : MonoBehaviour
         health = north.Health.Current;
         int flasks = defence.Flasks.Count;
         yield return Hold(Key.R, 0.45f);
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.12f);
+        Shot("flask_in_air");
+        yield return new WaitForSeconds(0.4f);
         Shot("firebomb");
         yield return new WaitForSeconds(0.6f);
         Say($"F firebomb: thrown {upgrades.FlasksThrown} flasks {flasks} -> {defence.Flasks.Count} drinking {defence.IsDrinking} dummy lost {health - north.Health.Current:0}");
@@ -280,6 +282,44 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
         Shot("delayed");
         Say($"M afterimage took {afterimage:0}; iaido took {cut:0} at once and {health - north.Health.Current - cut:0} a moment later");
+
+        // N: Storm Step. With the surge lit, a dodge costs nothing, shocks, and leaves a shape of light behind.
+        Learn(Upgrade.StormStep);
+        RunState.Unlocked.Remove(Upgrade.Blink);
+        yield return new WaitForSeconds(0.4f);
+        combat.Mana.Gain(100f);
+        yield return Tap(Key.I);
+        yield return Until(() => element.Kit.SurgeActive, 1f);
+        yield return new WaitForSeconds(3f);
+        Place(new Vector3(0.6f, 0f, 2.4f), Vector3.forward);
+        player.Stamina.Fill();
+        yield return null;
+        health = north.Health.Current;
+        var ghost = player.GetComponent<Afterimage>();
+        int ghosts = ghost != null ? ghost.Shown : -1;
+        Keys(Key.W, Key.Space);
+        yield return null;
+        yield return null;
+        Keys();
+        yield return new WaitForSeconds(0.1f);
+        Shot("storm_step");
+        yield return new WaitForSeconds(0.5f);
+        Say($"N storm step: free dodges {upgrades.FreeDodges} stamina {player.Stamina.Current:0} of {player.Stamina.Maximum:0} afterimages +{(ghost != null ? ghost.Shown - ghosts : 0)} shock took {health - north.Health.Current:0}");
+
+        // O: Plasma. Back to Fire with the storm consumed: a heavy blow on a burning enemy bursts.
+        element.Take(ElementKit.Fire(true));
+        upgrades.Forget();
+        Learn(Upgrade.Plasma);
+        yield return new WaitForSeconds(0.4f);
+        Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
+        yield return null;
+        north.TakeHit(new Hit(0f, 0f, Vector3.forward, false, true, null, 6f));
+        health = north.Health.Current;
+        yield return Tap(Key.K);
+        yield return Until(() => upgrades.PlasmaBursts > 0, 2f);
+        Shot("plasma");
+        yield return Until(() => !combat.IsAttacking, 2f);
+        Say($"O plasma: bursts {upgrades.PlasmaBursts} the heavy and the burst took {health - north.Health.Current:0}");
 
         Say("done");
         Destroy(gameObject);

@@ -35,6 +35,12 @@ namespace Clover.Player
         }
 
         /// <summary>Takes everything, as a broken guard does.</summary>
+        /// <summary>Gives some back, as a move that turned out to be free does.</summary>
+        public void Restore(float amount)
+        {
+            if (amount > 0f) Current = System.Math.Min(Maximum, Current + amount);
+        }
+
         public void Empty()
         {
             Current = 0f;
