@@ -51,6 +51,8 @@ namespace Clover.EditorTools
             Ring(world);
             Drift(world);
             FrozenRain(world, rain);
+            ClockDetail(world);
+            StoppedThings(world);
 
             var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, -4.6f), PlayerBuilder.ControlsHint);
             if (built.Player == null) return;
@@ -274,6 +276,7 @@ namespace Clover.EditorTools
             root.GetComponent<CapsuleCollider>().center = new Vector3(0f, 1.2f, 0f);
             shown = BuildKit.Group("Shown", root.transform);
             ChosenMark(root.transform, chosenRing, new Color(1f, 0.85f, 0.55f));
+            Craft(root.transform, name + " stand", 1.7f, false);
             return root;
         }
 
@@ -345,6 +348,7 @@ namespace Clover.EditorTools
             light.intensity = 8f;
             light.shadows = LightShadows.None;
             ChosenMark(root.transform, chosenRing, lightColour);
+            Craft(root.transform, name + " brazier", 1.5f, true);
             return root;
         }
 
@@ -388,11 +392,504 @@ namespace Clover.EditorTools
             light.shadows = LightShadows.None;
             Disc("Gate Step", root.transform, 0.07f, 2.3f, 0.06f, pale, false, new Vector3(at.x, 0f, at.z - 1.6f));
 
+            GateDetail(root.transform, at);
+
             var door = root.AddComponent<SceneDoor>();
             door.Prompt = "Go through, to the castle under the storm";
             door.LeadsTo = "Castle";
             door.Range = 3f;
             return door;
+        }
+
+        // ------------------------------------------------------------------ the clock's fine work, and what stopped with it
+
+        private static Vector3 V(float x, float y, float z) => new Vector3(x, y, z);
+        private static float Next(System.Random random, float low, float high) => low + (float)random.NextDouble() * (high - low);
+
+        // A point on the round: an angle clockwise from north, a distance out, and optionally a step to the right of that line.
+        private static Vector3 Polar(float angle, float radius, float height = 0f) => Quaternion.Euler(0f, angle, 0f) * new Vector3(0f, height, radius);
+        private static Vector3 Polar(float angle, float radius, float across, float height) => Quaternion.Euler(0f, angle, 0f) * new Vector3(across, height, radius);
+
+        // How high the island's own layers stand at a distance from its middle.
+        private static float FloorTop(float radius) => radius < 0.85f ? 0.07f : radius < 0.95f ? 0.06f : radius < 2.1f ? 0.05f : radius < 2.2f ? 0.04f
+            : radius < Radius - 2.5f ? 0.03f : radius < Radius - 2.4f ? 0.02f : radius < Radius - 0.7f ? 0.01f : 0f;
+
+        private static Dressing.Mould Layer(float lift) => new Dressing.Mould { Top = FloorTop, Lift = lift };
+        private static Material Flat(string name, Color colour) => BuildKit.Toon(Folder, name, colour, false, null, 0f, 0f);
+
+        /// <summary>
+        /// The fine work of the clock face: minute marks, numerals, inner rings and engraved lines, two small dials; the
+        /// ring worn into the stone by someone walking round the middle; cracks with a little light in them; and a film of
+        /// still water at the rim, its ripples stopped as rings. All of it is flat and none of it is solid.
+        /// </summary>
+        private static void ClockDetail(Transform world)
+        {
+            var group = BuildKit.Group("Clock Detail", world);
+            var random = new System.Random(77);
+            var cut = Layer(0.002f);
+            var worn = Layer(0.003f);
+            var fine = Layer(0.004f);
+            var split = Layer(0.006f);
+            var seep = Layer(0.008f);
+            var film = Layer(0.012f);
+            var filmEdge = Layer(0.014f);
+            var ripple = Layer(0.016f);
+            var drops = new Dressing.Mould();
+
+            for (int minute = 0; minute < 60; minute++)
+                if (minute % 5 != 0) fine.Line(Polar(minute * 6f, 9.28f), Polar(minute * 6f, 9.52f), 0.05f);
+            fine.Arc(Vector3.zero, 6.3f, 6.36f, 0f, 360f);
+            fine.Arc(Vector3.zero, 4.2f, 4.25f, 0f, 360f);
+            for (int i = 0; i < 24; i++) fine.Line(Polar(i * 15f, 4.25f), Polar(i * 15f, i % 2 == 0 ? 4.46f : 4.36f), 0.035f);
+            cut.Arc(Vector3.zero, 2.55f, 2.585f, 0f, 360f);
+            cut.Arc(Vector3.zero, 6.5f, 6.535f, 0f, 360f);
+            cut.Arc(Vector3.zero, 9.66f, 9.7f, 0f, 360f);
+            for (int i = 0; i < 12; i++)
+            {
+                float between = 15f + i * 30f;
+                cut.Line(Polar(between, 2.7f), Polar(between, 4.1f), 0.03f);
+                cut.Line(Polar(between, 6.62f), Polar(between, 7.9f), 0.03f);
+            }
+            string[] numerals = { "XII", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X", "XI" };
+            for (int hour = 0; hour < 12; hour++) Numeral(fine, numerals[hour], hour * 30f, 6.92f, 0.5f);
+            SmallDial(fine, cut, Polar(160f, 5.3f), 0.75f, 40f, 3);
+            SmallDial(fine, cut, Polar(200f, 5.3f), 0.75f, 250f, 5);
+
+            // Round and round the middle, for longer than there are hours to count it in.
+            for (int i = 0; i < 10; i++)
+            {
+                float start = i * 36f + Next(random, -4f, 4f);
+                worn.Arc(Vector3.zero, 2.95f + Next(random, 0f, 0.14f), 3.52f - Next(random, 0f, 0.14f), start, start + Next(random, 24f, 33f));
+            }
+
+            // The break that took the ring ran on across the face. There is light down in it.
+            (float a0, float r0, float a1, float r1)[] cracks = { (40f, 9.75f, 72f, 2.7f), (250f, 9.75f, 228f, 5.2f), (150f, 9.75f, 172f, 6.7f), (318f, 9.75f, 334f, 7f) };
+            for (int i = 0; i < cracks.Length; i++)
+            {
+                Vector3 from = Polar(cracks[i].a0, cracks[i].r0), to = Polar(cracks[i].a1, cracks[i].r1);
+                float width = i == 0 ? 0.3f : 0.18f;
+                var path = split.Jag(from, to, width, 0.35f, 900 + i, 0.55f);
+                seep.Jag(from, to, width * 0.2f, 0.35f, 900 + i, 0.55f);
+                Vector3 fork = path[path.Count / 2];
+                Vector3 end = fork + Quaternion.Euler(0f, Next(random, 0f, 360f), 0f) * Vector3.forward * Next(random, 1.2f, 2f);
+                if (new Vector2(end.x, end.z).magnitude > 9.7f || new Vector2(end.x, end.z).magnitude < 2.4f) continue;
+                split.Jag(fork, end, width * 0.45f, 0.2f, 950 + i, 0.4f);
+                seep.Jag(fork, end, width * 0.09f, 0.2f, 950 + i, 0.4f);
+            }
+
+            // Water lying on the rim, a finger deep, and never to dry.
+            (float from, float to)[] lobes = { (116f, 176f), (190f, 254f), (282f, 334f), (20f, 68f), (78f, 108f) };
+            for (int lobe = 0; lobe < lobes.Length; lobe++)
+            {
+                float Inner(float angle)
+                {
+                    float edge = Mathf.Clamp01(Mathf.Min(angle - lobes[lobe].from, lobes[lobe].to - angle) / 13f);
+                    return Mathf.Lerp(10.44f, 9.25f + 0.42f * Mathf.Sin(angle * 0.23f + lobe * 1.7f), Mathf.SmoothStep(0f, 1f, edge));
+                }
+                for (float angle = lobes[lobe].from; angle < lobes[lobe].to - 0.01f; angle += 2f)
+                {
+                    float next = Mathf.Min(angle + 2f, lobes[lobe].to);
+                    film.Patch(Polar(angle, Inner(angle)), Polar(angle, 10.46f), Polar(next, 10.46f), Polar(next, Inner(next)));
+                    filmEdge.Patch(Polar(angle, Inner(angle) - 0.05f), Polar(angle, Inner(angle)), Polar(next, Inner(next)), Polar(next, Inner(next) - 0.05f));
+                }
+                // The sky that is not there, in it: a few short pale strokes.
+                for (float angle = lobes[lobe].from + 12f; angle < lobes[lobe].to - 12f; angle += Next(random, 7f, 12f))
+                {
+                    float radius = Next(random, 9.85f, 10.3f);
+                    ripple.Line(Polar(angle, radius), Polar(angle + Next(random, 1.2f, 2.6f), radius + Next(random, -0.04f, 0.04f)), 0.03f, 0.01f);
+                }
+                int rings = lobes[lobe].to - lobes[lobe].from > 40f ? 3 : 1;
+                for (int i = 0; i < rings; i++)
+                {
+                    Vector3 centre = Polar(Mathf.Lerp(lobes[lobe].from + 14f, lobes[lobe].to - 14f, (i + Next(random, 0.2f, 0.8f)) / rings), 10.06f);
+                    for (int ring = 0; ring < 3; ring++)
+                    {
+                        float radius = 0.1f + ring * 0.11f, start = Next(random, 0f, 360f);
+                        ripple.Arc(centre, radius - 0.012f, radius + 0.012f, start, start + (ring == 0 ? 360f : Next(random, 200f, 320f)), 18f);
+                    }
+                    // The drop that made them, a hand above the water, and the one after it.
+                    drops.Ball(centre + Vector3.up * Next(random, 0.2f, 0.4f), V(0.07f, 0.1f, 0.07f), null, 6, 4);
+                    drops.Ball(centre + Vector3.up * Next(random, 0.8f, 1.3f), V(0.06f, 0.09f, 0.06f), null, 6, 4);
+                }
+            }
+
+            var dim = Flat("m_hub_inlay_dim", new Color(0.56f, 0.46f, 0.26f));
+            cut.Cast("hub_clock_engraved", group, Flat("m_hub_engraved", new Color(0.17f, 0.16f, 0.25f)), false);
+            // Worn, not laid: the same paving, its joints still running through it, only paler.
+            worn.Cast("hub_clock_worn", group, BuildKit.Toon(Folder, "m_hub_worn", new Color(0.41f, 0.41f, 0.5f), false, ProceduralTextures.Flagstones(), 0.125f, 0f), false);
+            fine.Cast("hub_clock_fine", group, dim, false);
+            split.Cast("hub_clock_cracks", group, Flat("m_hub_crack", new Color(0.05f, 0.045f, 0.1f)), false);
+            seep.Cast("hub_clock_crack_light", group, Flat("m_hub_crack_light", new Color(0.26f, 0.4f, 0.56f)).Lit(Color.black, 0.3f, new Color(0.03f, 0.1f, 0.18f)), false);
+            // A finger of water does not hide the stone under it: the same paving, darker and bluer.
+            var sheet = film.Cast("hub_water_film", group, BuildKit.Toon(Folder, "m_hub_shallows", new Color(0.15f, 0.18f, 0.36f), false, ProceduralTextures.Flagstones(), 0.125f, 0f), false);
+            if (sheet != null) sheet.receiveShadows = false;
+            filmEdge.Cast("hub_water_film_edge", group, Flat("m_hub_film_edge", new Color(0.25f, 0.27f, 0.43f)), false);
+            ripple.Cast("hub_water_ripples", group, Flat("m_hub_ripple", new Color(0.44f, 0.52f, 0.78f)), false);
+            drops.Cast("hub_water_drops", group, Flat("m_hub_drop", new Color(0.55f, 0.66f, 0.95f)).Lit(Color.black, 0.3f, new Color(0.12f, 0.18f, 0.4f)), false);
+        }
+
+        // A Roman numeral let into the face, its feet toward the middle as on any clock.
+        private static void Numeral(Dressing.Mould layer, string numeral, float angle, float radius, float height)
+        {
+            const float Gap = 0.07f, Stroke = 0.05f;
+            float total = -Gap;
+            foreach (char letter in numeral) total += (letter == 'I' ? 0.06f : 0.26f) + Gap;
+            Vector3 At(float across, float up) => Polar(angle, radius + up, across, 0f);
+            float cursor = -total * 0.5f;
+            foreach (char letter in numeral)
+            {
+                if (letter == 'I')
+                {
+                    layer.Line(At(cursor + 0.03f, 0f), At(cursor + 0.03f, height), Stroke);
+                    cursor += 0.06f + Gap;
+                }
+                else if (letter == 'V')
+                {
+                    layer.Line(At(cursor, height), At(cursor + 0.13f, 0f), Stroke);
+                    layer.Line(At(cursor + 0.26f, height), At(cursor + 0.13f, 0f), Stroke);
+                    cursor += 0.26f + Gap;
+                }
+                else
+                {
+                    layer.Line(At(cursor, 0f), At(cursor + 0.26f, height), Stroke);
+                    layer.Line(At(cursor, height), At(cursor + 0.26f, 0f), Stroke);
+                    cursor += 0.26f + Gap;
+                }
+            }
+            layer.Line(At(-total * 0.5f - 0.05f, -0.01f), At(total * 0.5f + 0.05f, -0.01f), 0.03f);
+            layer.Line(At(-total * 0.5f - 0.05f, height + 0.01f), At(total * 0.5f + 0.05f, height + 0.01f), 0.03f);
+        }
+
+        // A small dial set into the face, for something other than hours.
+        private static void SmallDial(Dressing.Mould fine, Dressing.Mould cut, Vector3 centre, float radius, float hand, int marks)
+        {
+            fine.Arc(centre, radius - 0.045f, radius, 0f, 360f, 9f);
+            cut.Arc(centre, radius * 0.56f, radius * 0.56f + 0.025f, 0f, 360f, 12f);
+            for (int i = 0; i < 12; i++)
+            {
+                Vector3 out_ = Quaternion.Euler(0f, i * 30f, 0f) * Vector3.forward;
+                fine.Line(centre + out_ * (radius - 0.17f), centre + out_ * (radius - 0.07f), 0.03f);
+            }
+            for (int i = 0; i < marks; i++)
+            {
+                Vector3 out_ = Quaternion.Euler(0f, i * 360f / marks + 20f, 0f) * Vector3.forward;
+                cut.Round(centre + out_ * (radius * 0.36f), 0.045f + (i % 2) * 0.02f, 8);
+            }
+            fine.Line(centre, centre + Quaternion.Euler(0f, hand, 0f) * Vector3.forward * (radius * 0.52f), 0.06f, 0.012f);
+            fine.Round(centre, 0.07f, 8);
+        }
+
+        /// <summary>
+        /// What was in the air or the water when the hours stopped, and is there still: gears and a great bell from the
+        /// clock half sunk, a pendulum hanging from nothing at the top of its swing, a flight of steps that climbs away
+        /// from the island and comes apart, paper lanterns adrift at different heights, a crane between two wingbeats,
+        /// drops and leaves. Each has its dim shape lying on the black water under it. All of it is beyond the rim, and
+        /// what is tall is to the north or the sides.
+        /// </summary>
+        private static void StoppedThings(Transform world)
+        {
+            var group = BuildKit.Group("Stopped Things", world);
+            var random = new System.Random(19);
+            var bronze = new Dressing.Mould();
+            var bronzeDark = new Dressing.Mould();
+            var step = new Dressing.Mould();
+            var stepDark = new Dressing.Mould();
+            var lamp = new Dressing.Mould();
+            var lampCap = new Dressing.Mould();
+            var white = new Dressing.Mould();
+            var black = new Dressing.Mould();
+            var red = new Dressing.Mould();
+            var leaf = new Dressing.Mould();
+            var drops = new Dressing.Mould();
+            var reflect = new Dressing.Mould { Lift = -0.49f };
+            var reflectWarm = new Dressing.Mould { Lift = -0.485f };
+            var all = new[] { bronze, bronzeDark, step, stepDark, lamp, lampCap, white, black, red, leaf, drops };
+            void SetAt(Vector3 at, Quaternion turn, float scale = 1f)
+            {
+                foreach (var mould in all) mould.Place(at, turn, scale);
+            }
+            // The dim shape a thing leaves on the water: toward the camera from under it, by how high it hangs.
+            Vector3 Under(Vector3 at) => V(at.x, 0f, at.z - 0.7f * Mathf.Max(0f, at.y + 0.5f));
+
+            void Gear(Vector3 centre, Quaternion turn, float radius, float thick, int teeth)
+            {
+                SetAt(centre, turn);
+                bronze.Drum(Vector3.zero, radius * 1.74f, thick, null, 22);
+                for (int tooth = 0; tooth < teeth; tooth++)
+                {
+                    Quaternion q = Quaternion.Euler(0f, tooth * 360f / teeth, 0f);
+                    bronze.Box(q * V(0f, 0f, radius * 0.93f), V(radius * 2.7f / teeth, thick, radius * 0.2f), q);
+                }
+                bronzeDark.Drum(Vector3.zero, radius * 0.5f, thick * 1.5f, null, 12);
+                bronze.Drum(Vector3.zero, radius * 0.2f, thick * 2.4f, null, 8);
+                // Where the wheel is cut away between its spokes, drawn as darker rounds standing just proud of it.
+                for (int hole = 0; hole < 5; hole++)
+                    bronzeDark.Drum(Quaternion.Euler(0f, hole * 72f + 36f, 0f) * V(0f, 0f, radius * 0.56f), radius * 0.27f, thick * 1.08f, null, 8);
+                reflect.Round(Under(centre), radius * 1.05f, 14, 0.5f, 0f);
+            }
+            Gear(Polar(52f, 13.2f, 0.1f), Quaternion.Euler(-52f, 30f, 0f), 2.2f, 0.34f, 16);
+            Gear(Polar(-104f, 12.7f, -0.44f), Quaternion.Euler(12f, 0f, 8f), 1.4f, 0.26f, 12);
+            Gear(Polar(117f, 12f, -0.25f), Quaternion.Euler(-58f, -50f, 0f), 0.9f, 0.2f, 10);
+            Gear(Polar(-36f, 15f, 0.2f), Quaternion.Euler(-42f, -20f, 10f), 1.7f, 0.3f, 14);
+            Gear(Polar(101f, 13.2f, 1.9f), Quaternion.Euler(-66f, 60f, 20f), 0.6f, 0.14f, 10);
+
+            // The bell, half under, mouth toward the island.
+            {
+                Vector3 at = Polar(-47f, 13.4f, -0.6f);
+                Quaternion turn = Quaternion.Euler(0f, 24f, 0f) * Quaternion.Euler(0f, 0f, -60f);
+                SetAt(at, turn, 1.25f);
+                bronze.Lathe(Vector3.zero, null, 16, 1.62f, 0f, 1.4f, 0.3f, 1.12f, 0.95f, 0.95f, 1.6f, 0.8f, 2.1f, 0.44f, 2.42f, 0f, 2.48f);
+                bronzeDark.Lathe(Vector3.zero, null, 16, 1.66f, 0f, 1.66f, 0.1f, 1.52f, 0.2f);
+                bronzeDark.Lathe(Vector3.zero, null, 16, 1.17f, 0.9f, 1.13f, 1.02f);
+                bronzeDark.Lathe(Vector3.zero, null, 16, 0.84f, 2.02f, 0.8f, 2.14f);
+                bronzeDark.Drum(V(0f, 2.5f, 0f), 0.34f, 0.2f, null, 8);
+                bronzeDark.Drum(V(0f, 2.82f, 0f), 0.62f, 0.14f, Quaternion.Euler(90f, 0f, 0f), 12);
+                // Cracked from the lip up, as a bell is that was rung too hard once.
+                bronzeDark.Beam(V(0.2f, 0.02f, -1.5f), V(0.05f, 0.7f, -1.3f), 0.07f, 0.05f);
+                bronzeDark.Beam(V(0.05f, 0.7f, -1.3f), V(0.22f, 1.25f, -1.1f), 0.05f, 0.05f);
+                bronzeDark.Drum(V(0f, 0.04f, 0f), 2.9f, 0.05f, null, 16);
+                reflect.Round(V(at.x + 1.2f, 0f, at.z - 1.3f), 2.2f, 14, 0.45f, 24f);
+            }
+
+            // The pendulum: hung from nothing now, and stopped at the top of its swing.
+            {
+                Vector3 pivot = Polar(27f, 13.8f, 5.8f);
+                SetAt(pivot, Quaternion.Euler(0f, 0f, 34f));
+                bronzeDark.Box(V(0f, 0.1f, 0f), V(0.5f, 0.2f, 0.3f));
+                bronzeDark.Pole(V(0f, 0f, 0f), V(0f, -4.4f, 0f), 0.09f, 6);
+                bronze.Drum(V(0f, -4.9f, 0f), 1.5f, 0.2f, Quaternion.Euler(90f, 0f, 0f), 18);
+                bronzeDark.Drum(V(0f, -4.9f, 0f), 0.9f, 0.26f, Quaternion.Euler(90f, 0f, 0f), 14);
+                bronze.Drum(V(0f, -4.9f, 0f), 0.3f, 0.34f, Quaternion.Euler(90f, 0f, 0f), 8);
+                Vector3 bob = pivot + Quaternion.Euler(0f, 0f, 34f) * V(0f, -4.9f, 0f);
+                reflect.Round(Under(bob), 0.8f, 12, 0.5f, 0f);
+            }
+
+            // Steps that lead up from the west of the island to nowhere, the last of them no longer joined to anything.
+            {
+                const float Bearing = -78f;
+                Vector3 foot = Polar(Bearing, Radius, 0f);
+                float along = 0.3f, rise = 0.02f;
+                for (int i = 0; i < 8; i++)
+                {
+                    bool loose = i >= 3;
+                    Quaternion tilt = loose ? Quaternion.Euler(Next(random, -7f, 7f), Next(random, -9f, 9f), Next(random, -6f, 6f)) : Quaternion.identity;
+                    SetAt(foot, Quaternion.Euler(0f, Bearing, 0f));
+                    step.Box(V(loose ? Next(random, -0.15f, 0.15f) : 0f, rise - 0.11f, along), V(1.7f - i * 0.04f, 0.22f, 0.6f), tilt);
+                    stepDark.Box(V(0f, rise - 0.3f - (loose ? 0.02f : 0.45f), along + 0.02f), V(1.45f - i * 0.04f, loose ? 0.2f : 1.1f, 0.5f), tilt, loose ? 0.6f : 1f);
+                    if (i == 7 || i == 4) reflect.Round(Under(foot + Quaternion.Euler(0f, Bearing, 0f) * V(0f, rise, along)), 0.8f, 10, 0.5f, Bearing);
+                    along += 0.62f + (loose ? (i - 2) * 0.16f : 0f);
+                    rise += 0.3f + (loose ? 0.05f : 0f);
+                }
+            }
+
+            // Paper lanterns, let go once, at whatever height they had reached.
+            (float angle, float radius, float height)[] lanterns =
+            {
+                (-20f, 12.3f, 2.6f), (14f, 12.3f, 1.5f), (57f, 11.7f, 3.1f), (-52f, 11.5f, 1f), (88f, 12.2f, 0.9f), (-93f, 12.5f, 1.9f),
+                (8f, 15.2f, 3.8f), (112f, 11.6f, 0.45f), (-113f, 11.7f, 0.55f), (-38f, 17f, 4.4f), (44f, 16.5f, 4.8f),
+            };
+            for (int i = 0; i < lanterns.Length; i++)
+            {
+                Vector3 at = Polar(lanterns[i].angle, lanterns[i].radius, lanterns[i].height);
+                SetAt(at, Quaternion.Euler(Next(random, -9f, 9f), Next(random, 0f, 360f), Next(random, -9f, 9f)));
+                lamp.Box(Vector3.zero, V(0.3f, 0.4f, 0.3f));
+                lampCap.Box(V(0f, 0.23f, 0f), V(0.38f, 0.06f, 0.38f));
+                lampCap.Box(V(0f, -0.23f, 0f), V(0.34f, 0.06f, 0.34f));
+                lampCap.Box(V(0f, 0.34f, 0f), V(0.04f, 0.16f, 0.04f));
+                red.Box(V(0f, -0.42f, 0f), V(0.06f, 0.32f, 0.06f));
+                reflectWarm.Round(Under(at), 0.34f, 10, 0.55f, 0f);
+                if (i > 2) continue;
+                var lightObject = new GameObject("Lantern Glow");
+                lightObject.transform.SetParent(group, false);
+                lightObject.transform.position = at;
+                var glow = lightObject.AddComponent<Light>();
+                glow.type = LightType.Point;
+                glow.color = new Color(1f, 0.66f, 0.32f);
+                glow.range = 5f;
+                glow.intensity = 4f;
+                glow.shadows = LightShadows.None;
+            }
+
+            // A crane, crossing from the west toward the ring, wings spread on a glide and banked a little.
+            {
+                Vector3 at = Polar(-64f, 11.9f, 1.3f);
+                SetAt(at, Quaternion.Euler(-4f, 64f, -13f), 0.92f);
+                void Feather(Dressing.Mould mould, Vector3 a, Vector3 b2, Vector3 c, Vector3 d)
+                {
+                    mould.Quad(a, b2, c, d, Vector3.up);
+                    mould.Quad(a, b2, c, d, Vector3.down);
+                }
+                white.Ball(Vector3.zero, V(0.26f, 0.22f, 0.66f), null, 8, 5);
+                white.Pole(V(0f, 0.02f, 0.24f), V(0f, 0.06f, 0.78f), 0.07f, 6);
+                black.Pole(V(0f, 0.035f, 0.42f), V(0f, 0.055f, 0.7f), 0.076f, 6);
+                white.Ball(V(0f, 0.07f, 0.82f), V(0.13f, 0.12f, 0.18f), null, 6, 4);
+                red.Box(V(0f, 0.135f, 0.82f), V(0.07f, 0.03f, 0.09f));
+                black.Box(V(0f, 0.06f, 1.02f), V(0.035f, 0.24f, 0.035f), Quaternion.Euler(90f, 0f, 0f), 0f);
+                foreach (float side in new[] { -1f, 1f })
+                {
+                    Vector3 root0 = V(side * 0.08f, 0.07f, 0.2f), root1 = V(side * 0.08f, 0.07f, -0.2f);
+                    Vector3 wrist0 = V(side * 0.78f, 0.2f, 0.27f), wrist1 = V(side * 0.72f, 0.18f, -0.2f);
+                    Vector3 hand0 = V(side * 1.42f, 0.13f, 0.06f), hand1 = V(side * 1.28f, 0.11f, -0.3f);
+                    Vector3 tip = V(side * 1.78f, 0.06f, -0.2f);
+                    Feather(white, root0, wrist0, wrist1, root1);
+                    Feather(white, wrist0, hand0, hand1, wrist1);
+                    Feather(black, hand0, tip, tip + V(side * -0.28f, 0f, -0.24f), hand1);
+                    Feather(black, root1, wrist1, wrist1 + V(0f, -0.01f, -0.12f), root1 + V(0f, -0.01f, -0.1f));
+                    Feather(black, wrist1, hand1, hand1 + V(0f, 0f, -0.1f), wrist1 + V(0f, -0.01f, -0.12f));
+                    black.Pole(V(side * 0.04f, -0.05f, -0.3f), V(side * 0.05f, -0.06f, -0.98f), 0.024f, 4);
+                }
+                black.Box(V(0f, 0.01f, -0.42f), V(0.2f, 0.025f, 0.26f));
+                Vector3 under = Under(at);
+                reflect.Round(under, 0.4f, 10, 0.4f, 64f);
+                reflect.Round(under, 1.5f, 10, 0.14f, 64f + 90f);
+            }
+
+            // Drops that have not landed, and leaves from no tree that stands here.
+            for (int i = 0; i < 30; i++)
+            {
+                SetAt(Polar(Next(random, 0f, 360f), Next(random, 8.9f, 11.8f), Next(random, 0.15f, 1.7f)), Quaternion.identity);
+                float size = Next(random, 0.05f, 0.1f);
+                drops.Ball(Vector3.zero, V(size, size * 1.5f, size), null, 6, 4);
+            }
+            for (int i = 0; i < 16; i++)
+            {
+                SetAt(Polar(Next(random, 0f, 360f), Next(random, 9.2f, 12.6f), Next(random, 0.3f, 2.2f)), Quaternion.Euler(Next(random, -60f, 60f), Next(random, 0f, 360f), Next(random, -60f, 60f)));
+                (i % 3 == 0 ? red : leaf).Box(Vector3.zero, V(0.2f, 0.012f, 0.1f), Quaternion.Euler(0f, 45f, 0f), 0.4f);
+            }
+
+            // The great ring, on the water before the gate, as a few dull strokes.
+            reflectWarm.Arc(V(0f, 0f, 14.6f), 3.1f, 3.3f, 148f, 172f, 4f);
+            reflectWarm.Arc(V(0f, 0f, 14.6f), 3.1f, 3.3f, 188f, 214f, 4f);
+            reflectWarm.Arc(V(0f, 0f, 14.6f), 3.7f, 3.82f, 160f, 200f, 4f);
+
+            bronze.Cast("hub_stopped_bronze", group, BuildKit.Toon(Folder, "m_hub_bronze", new Color(0.33f, 0.29f, 0.27f), false, null, 0f, 0.025f));
+            bronzeDark.Cast("hub_stopped_bronze_dark", group, BuildKit.Toon(Folder, "m_hub_bronze_dark", new Color(0.22f, 0.19f, 0.2f), false, null, 0f, 0.02f));
+            step.Cast("hub_stopped_steps", group, BuildKit.Toon(Folder, "m_hub_step", new Color(0.33f, 0.33f, 0.42f), false, null, 0f, 0.02f));
+            stepDark.Cast("hub_stopped_steps_dark", group, BuildKit.Toon(Folder, "m_hub_step_dark", new Color(0.2f, 0.19f, 0.29f), false, null, 0f, 0.02f));
+            lamp.Cast("hub_stopped_lamps", group, Flat("m_hub_lamp", new Color(1f, 0.74f, 0.42f)).Lit(Color.black, 0.3f, new Color(1.5f, 0.75f, 0.24f)), false);
+            lampCap.Cast("hub_stopped_lamp_caps", group, BuildKit.Toon(Folder, "m_hub_lamp_cap", new Color(0.15f, 0.13f, 0.21f), false, null, 0f, 0.012f), false);
+            white.Cast("hub_stopped_crane", group, BuildKit.Toon(Folder, "m_hub_crane", new Color(0.72f, 0.72f, 0.8f), false, null, 0f, 0.02f), false);
+            black.Cast("hub_stopped_crane_dark", group, BuildKit.Toon(Folder, "m_hub_crane_dark", new Color(0.1f, 0.09f, 0.16f), false, null, 0f, 0.012f), false);
+            red.Cast("hub_stopped_red", group, Flat("m_hub_red", new Color(0.6f, 0.16f, 0.18f)), false);
+            leaf.Cast("hub_stopped_leaves", group, Flat("m_hub_leaf", new Color(0.6f, 0.44f, 0.2f)), false);
+            drops.Cast("hub_stopped_drops", group, Flat("m_hub_drop", new Color(0.55f, 0.66f, 0.95f)).Lit(Color.black, 0.3f, new Color(0.12f, 0.18f, 0.4f)), false);
+            foreach (var made in new[] { reflect.Cast("hub_water_shapes", group, Flat("m_hub_reflection", new Color(0.1f, 0.095f, 0.19f)), false),
+                reflectWarm.Cast("hub_water_shapes_warm", group, Flat("m_hub_reflection_warm", new Color(0.3f, 0.2f, 0.12f)).Lit(Color.black, 0.3f, new Color(0.1f, 0.05f, 0.015f)), false) })
+                if (made != null) made.receiveShadows = false;
+        }
+
+        // The mason's and the smith's work on a stand or a brazier: bands and studs on the foot, a ring and four marks let
+        // into the floor round it. Nothing here changes where the thing stands or how big it is.
+        private static void Craft(Transform root, string name, float footWidth, bool brazier)
+        {
+            string key = name.ToLower().Replace(' ', '_');
+            var goldWork = new Dressing.Mould();
+            var paleWork = new Dressing.Mould();
+            var darkWork = new Dressing.Mould();
+            var floor = new Dressing.Mould { Lift = 0.036f };
+            var engraved = new Dressing.Mould { Lift = 0.293f };
+            float half = footWidth * 0.5f;
+            goldWork.Drum(V(0f, 0.2f, 0f), footWidth + 0.05f, 0.035f, null, 22);
+            goldWork.Drum(V(0f, 0.045f, 0f), footWidth + 0.06f, 0.03f, null, 22);
+            for (int i = 0; i < 8; i++)
+            {
+                Quaternion q = Quaternion.Euler(0f, i * 45f + 22.5f, 0f);
+                paleWork.Box(q * V(0f, 0.125f, half + 0.005f), V(0.14f, 0.08f, 0.05f), q);
+            }
+            floor.Arc(Vector3.zero, half + 0.2f, half + 0.25f, 0f, 360f, 8f);
+            for (int i = 0; i < 4; i++)
+            {
+                Vector3 out_ = Quaternion.Euler(0f, i * 90f, 0f) * Vector3.forward;
+                floor.Line(out_ * (half + 0.31f), out_ * (half + 0.58f), 0.07f, 0.02f);
+            }
+            if (!brazier)
+            {
+                engraved.Arc(Vector3.zero, 0.52f, 0.55f, 0f, 360f, 10f);
+                for (int i = 0; i < 8; i++)
+                {
+                    Vector3 out_ = Quaternion.Euler(0f, i * 45f, 0f) * Vector3.forward;
+                    engraved.Line(out_ * 0.58f, out_ * 0.66f, 0.03f);
+                }
+            }
+            else
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Quaternion q = Quaternion.Euler(0f, i * 120f + 60f, 0f);
+                    darkWork.Beam(q * V(0f, 0.24f, 0.62f), q * V(0f, 1.02f, 0.4f), 0.07f, 0.07f);
+                    goldWork.Box(q * V(0f, 0.27f, 0.62f), V(0.16f, 0.07f, 0.16f), q);
+                }
+                goldWork.Drum(V(0f, 0.62f, 0f), 0.4f, 0.06f, null, 10);
+                goldWork.Drum(V(0f, 0.36f, 0f), 0.44f, 0.05f, null, 10);
+                darkWork.Drum(V(0f, 0.95f, 0f), 0.56f, 0.1f, null, 12, 1.5f);
+                for (int i = 0; i < 8; i++)
+                {
+                    Quaternion q = Quaternion.Euler(0f, i * 45f, 0f);
+                    darkWork.Box(q * V(0f, 1.12f, 0.63f), V(0.1f, 0.14f, 0.04f), q);
+                }
+            }
+            goldWork.Cast($"hub_{key}_gold", root, gold, false);
+            paleWork.Cast($"hub_{key}_pale", root, pale, false);
+            darkWork.Cast($"hub_{key}_dark", root, Flat("m_hub_iron", new Color(0.16f, 0.15f, 0.24f)));
+            floor.Cast($"hub_{key}_floor", root, Flat("m_hub_inlay_dim", new Color(0.56f, 0.46f, 0.26f)), false);
+            engraved.Cast($"hub_{key}_engraved", root, Flat("m_hub_engraved", new Color(0.17f, 0.16f, 0.25f)), false);
+        }
+
+        // What makes the gate a gate and not two posts: bands and carved panels on the posts, a tie beam hung with
+        // paper slips, a wider landing under the step, and two lamp pillars standing in the water either side.
+        private static void GateDetail(Transform root, Vector3 at)
+        {
+            var random = new System.Random(41);
+            var darkWork = new Dressing.Mould();
+            var paleWork = new Dressing.Mould();
+            var goldWork = new Dressing.Mould();
+            var panel = new Dressing.Mould();
+            var marks = new Dressing.Mould();
+            var slips = new Dressing.Mould();
+            var lampWork = new Dressing.Mould();
+            foreach (float side in new[] { -1f, 1f })
+            {
+                float x = side * 2.1f;
+                goldWork.Box(V(x, 0.95f, 0f), V(0.9f, 0.14f, 0.9f));
+                goldWork.Box(V(x, 3.85f, 0f), V(0.9f, 0.14f, 0.9f));
+                paleWork.Box(V(x, 4.66f, 0f), V(1.02f, 0.16f, 1.02f));
+                panel.Box(V(x, 2.4f, -0.405f), V(0.46f, 2.5f, 0.03f));
+                marks.Box(V(x, 2.4f, -0.425f), V(0.04f, 2.2f, 0.015f));
+                for (int mark = 0; mark < 5; mark++)
+                    marks.Box(V(x + (mark % 2 == 0 ? -0.06f : 0.06f), 1.5f + mark * 0.45f, -0.425f), V(0.26f, 0.055f, 0.015f), Quaternion.Euler(0f, 0f, mark % 2 == 0 ? 20f : -20f));
+                darkWork.Box(V(x - side * 0.72f, 4.52f, 0f), V(0.64f, 0.34f, 0.56f), Quaternion.Euler(0f, 0f, side * -12f));
+                // A lamp pillar, rising out of the water beside the gate and a little behind it.
+                float px = side * 4.1f, pz = 2.1f;
+                darkWork.Box(V(px, -0.4f, pz), V(1.2f, 1.7f, 1.2f), null, 0.75f);
+                paleWork.Box(V(px, 0.5f, pz), V(1f, 0.12f, 1f));
+                darkWork.Box(V(px, 1.35f, pz), V(0.62f, 1.6f, 0.62f), null, 0.75f);
+                goldWork.Box(V(px, 2.19f, pz), V(0.6f, 0.09f, 0.6f));
+                lampWork.Box(V(px, 2.47f, pz), V(0.36f, 0.46f, 0.36f));
+                foreach (float cx in new[] { -0.19f, 0.19f })
+                    foreach (float cz in new[] { -0.19f, 0.19f })
+                        darkWork.Box(V(px + cx, 2.47f, pz + cz), V(0.06f, 0.48f, 0.06f));
+                darkWork.Box(V(px, 2.8f, pz), V(0.74f, 0.2f, 0.74f), null, 0.4f);
+            }
+            darkWork.Box(V(0f, 4.1f, 0f), V(5.4f, 0.32f, 0.5f));
+            goldWork.Box(V(0f, 4.1f, -0.26f), V(0.46f, 0.42f, 0.04f));
+            marks.Box(V(0f, 4.1f, -0.285f), V(0.26f, 0.05f, 0.015f), Quaternion.Euler(0f, 0f, 45f));
+            marks.Box(V(0f, 4.1f, -0.285f), V(0.26f, 0.05f, 0.015f), Quaternion.Euler(0f, 0f, -45f));
+            for (int i = 0; i < 7; i++)
+            {
+                float x = -1.5f + i * 0.5f, drop = 0.2f + (i * 37 % 5) * 0.07f;
+                slips.Box(V(x, 3.94f - drop * 0.5f, -0.2f), V(0.015f, drop, 0.015f));
+                // Each was lifting in a wind when the wind stopped.
+                slips.Box(V(x, 3.94f - drop - 0.22f, -0.2f), V(0.15f, 0.46f, 0.015f), Quaternion.Euler(Next(random, -22f, 6f), Next(random, -25f, 25f), Next(random, -10f, 10f)));
+            }
+            darkWork.Cast("hub_gate_dark", root, dark);
+            paleWork.Cast("hub_gate_pale", root, pale);
+            goldWork.Cast("hub_gate_gold", root, gold, false);
+            panel.Cast("hub_gate_panels", root, Flat("m_hub_engraved", new Color(0.17f, 0.16f, 0.25f)), false);
+            marks.Cast("hub_gate_marks", root, Flat("m_hub_inlay_dim", new Color(0.56f, 0.46f, 0.26f)), false);
+            slips.Cast("hub_gate_slips", root, cloth, false);
+            lampWork.Cast("hub_gate_lamps", root, Flat("m_hub_lamp", new Color(1f, 0.74f, 0.42f)).Lit(Color.black, 0.3f, new Color(1.5f, 0.75f, 0.24f)), false);
+            Disc("Gate Landing Edge", root, 0.04f, 3.1f, 0.02f, inlay, false, new Vector3(at.x, 0f, at.z - 1.6f));
+            Disc("Gate Landing", root, 0.045f, 3f, 0.02f, dark, false, new Vector3(at.x, 0f, at.z - 1.6f));
         }
 
         // A flame that needs no fuel.

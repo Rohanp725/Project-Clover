@@ -1389,5 +1389,333 @@ namespace Clover.EditorTools
             EditorUtility.SetDirty(mesh);
             return mesh;
         }
+
+        // ------------------------------------------------------------------ many shapes cast as one
+
+        /// <summary>
+        /// Gathers boxes, drums, balls and flat inlaid shapes and casts them as one mesh in one material, so a whole
+        /// balustrade or a whole floor emblem is a single thing to draw. Shapes are added in the mould's own space, moved
+        /// by <see cref="Frame"/>. Flat shapes lie on the ground: when <see cref="Top"/> is set it gives the height of the
+        /// floor at a distance from the origin, and each flat shape is laid <see cref="Lift"/> above the highest floor under it.
+        /// </summary>
+        public sealed class Mould
+        {
+            private readonly List<Vector3> vertices = new List<Vector3>();
+            private readonly List<Vector3> normals = new List<Vector3>();
+            private readonly List<int> triangles = new List<int>();
+
+            public Matrix4x4 Frame = Matrix4x4.identity;
+            public System.Func<float, float> Top;
+            public float Lift;
+
+            public bool Empty => vertices.Count == 0;
+
+            public void Home() => Frame = Matrix4x4.identity;
+            public void Place(Vector3 at, float yaw, float scale = 1f) => Frame = Matrix4x4.TRS(at, Quaternion.Euler(0f, yaw, 0f), Vector3.one * scale);
+            public void Place(Vector3 at, Quaternion turn, float scale = 1f) => Frame = Matrix4x4.TRS(at, turn, Vector3.one * scale);
+
+            private int Add(Vector3 point, Vector3 normal)
+            {
+                vertices.Add(Frame.MultiplyPoint3x4(point));
+                normals.Add(Frame.MultiplyVector(normal).normalized);
+                return vertices.Count - 1;
+            }
+
+            /// <summary>One triangle with a normal at each corner; it is wound to face the way its normals point.</summary>
+            public void Tri(Vector3 a, Vector3 b, Vector3 c, Vector3 na, Vector3 nb, Vector3 nc)
+            {
+                if (Vector3.Dot(Vector3.Cross(b - a, c - a), na + nb + nc) < 0f)
+                {
+                    (b, c) = (c, b);
+                    (nb, nc) = (nc, nb);
+                }
+                int start = Add(a, na);
+                Add(b, nb);
+                Add(c, nc);
+                triangles.Add(start);
+                triangles.Add(start + 1);
+                triangles.Add(start + 2);
+            }
+
+            /// <summary>A flat four-cornered face looking the way <paramref name="outward"/> points.</summary>
+            public void Quad(Vector3 a, Vector3 b, Vector3 c, Vector3 d, Vector3 outward)
+            {
+                Vector3 normal = Vector3.Cross(b - a, c - a);
+                if (normal.sqrMagnitude < 1e-10f) normal = Vector3.Cross(c - a, d - a);
+                if (normal.sqrMagnitude < 1e-10f) return;
+                normal.Normalize();
+                if (Vector3.Dot(normal, outward) < 0f)
+                {
+                    (b, d) = (d, b);
+                    normal = -normal;
+                }
+                int start = Add(a, normal);
+                Add(b, normal);
+                Add(c, normal);
+                Add(d, normal);
+                triangles.AddRange(new[] { start, start + 1, start + 2, start, start + 2, start + 3 });
+            }
+
+            /// <summary>A box. Its top is the given fraction of its foot: 1 square, 0 a point.</summary>
+            public void Box(Vector3 centre, Vector3 size, Quaternion? turn = null, float top = 1f)
+            {
+                Quaternion q = turn ?? Quaternion.identity;
+                Vector3 h = size * 0.5f;
+                Vector3[] low = { V(-h.x, -h.y, -h.z), V(h.x, -h.y, -h.z), V(h.x, -h.y, h.z), V(-h.x, -h.y, h.z) };
+                Vector3[] high = { V(-h.x * top, h.y, -h.z * top), V(h.x * top, h.y, -h.z * top), V(h.x * top, h.y, h.z * top), V(-h.x * top, h.y, h.z * top) };
+                for (int i = 0; i < 4; i++)
+                {
+                    low[i] = centre + q * low[i];
+                    high[i] = centre + q * high[i];
+                }
+                for (int i = 0; i < 4; i++)
+                {
+                    int j = (i + 1) % 4;
+                    Vector3 middle = (low[i] + low[j]) * 0.5f - (low[0] + low[2]) * 0.5f;
+                    Quad(low[i], low[j], high[j], high[i], middle);
+                }
+                Quad(low[0], low[1], low[2], low[3], q * Vector3.down);
+                if (top > 0.01f) Quad(high[0], high[1], high[2], high[3], q * Vector3.up);
+            }
+
+            /// <summary>A square bar from one point to another.</summary>
+            public void Beam(Vector3 from, Vector3 to, float width, float height)
+            {
+                Vector3 along = to - from;
+                if (along.sqrMagnitude < 1e-8f) return;
+                Vector3 direction = along.normalized;
+                Quaternion turn = Mathf.Abs(direction.y) > 0.98f ? Quaternion.FromToRotation(Vector3.forward, direction) : Quaternion.LookRotation(direction, Vector3.up);
+                Box((from + to) * 0.5f, V(width, height, along.magnitude), turn);
+            }
+
+            /// <summary>A round drum of the given width and whole height, its axis along its own up.</summary>
+            public void Drum(Vector3 centre, float width, float height, Quaternion? turn = null, int sides = 10, float top = 1f)
+            {
+                Quaternion q = turn ?? Quaternion.identity;
+                float r = width * 0.5f, h = height * 0.5f;
+                Vector3 up = q * Vector3.up;
+                for (int i = 0; i < sides; i++)
+                {
+                    float a0 = i * Mathf.PI * 2f / sides, a1 = (i + 1) * Mathf.PI * 2f / sides;
+                    Vector3 n0 = q * V(Mathf.Cos(a0), 0f, Mathf.Sin(a0)), n1 = q * V(Mathf.Cos(a1), 0f, Mathf.Sin(a1));
+                    Vector3 l0 = centre + n0 * r - up * h, l1 = centre + n1 * r - up * h;
+                    Vector3 h0 = centre + n0 * (r * top) + up * h, h1 = centre + n1 * (r * top) + up * h;
+                    Tri(l0, l1, h1, n0, n1, n1);
+                    if (top > 0.01f) Tri(l0, h1, h0, n0, n1, n0);
+                    Tri(centre - up * h, l0, l1, -up, -up, -up);
+                    if (top > 0.01f) Tri(centre + up * h, h0, h1, up, up, up);
+                }
+            }
+
+            /// <summary>A round bar from one point to another.</summary>
+            public void Pole(Vector3 from, Vector3 to, float width, int sides = 6, float top = 1f)
+            {
+                Vector3 along = to - from;
+                if (along.sqrMagnitude < 1e-8f) return;
+                Drum((from + to) * 0.5f, width, along.magnitude, Quaternion.FromToRotation(Vector3.up, along.normalized), sides, top);
+            }
+
+            /// <summary>A ball, or an egg: <paramref name="size"/> is its whole width, height and depth.</summary>
+            public void Ball(Vector3 centre, Vector3 size, Quaternion? turn = null, int sides = 10, int rings = 6)
+            {
+                Quaternion q = turn ?? Quaternion.identity;
+                Vector3 half = size * 0.5f;
+                Vector3 Unit(int ring, int side)
+                {
+                    float latitude = (-0.5f + ring / (float)rings) * Mathf.PI, longitude = side * Mathf.PI * 2f / sides;
+                    return V(Mathf.Cos(latitude) * Mathf.Cos(longitude), Mathf.Sin(latitude), Mathf.Cos(latitude) * Mathf.Sin(longitude));
+                }
+                Vector3 Point(Vector3 unit) => centre + q * Vector3.Scale(unit, half);
+                Vector3 Normal(Vector3 unit) => q * V(unit.x / Mathf.Max(half.x, 1e-4f), unit.y / Mathf.Max(half.y, 1e-4f), unit.z / Mathf.Max(half.z, 1e-4f)).normalized;
+                for (int ring = 0; ring < rings; ring++)
+                {
+                    for (int side = 0; side < sides; side++)
+                    {
+                        Vector3 a = Unit(ring, side), b = Unit(ring, side + 1), c = Unit(ring + 1, side + 1), d = Unit(ring + 1, side);
+                        if (ring > 0) Tri(Point(a), Point(b), Point(c), Normal(a), Normal(b), Normal(c));
+                        if (ring < rings - 1) Tri(Point(a), Point(c), Point(d), Normal(a), Normal(c), Normal(d));
+                    }
+                }
+            }
+
+            /// <summary>A shape turned on a lathe about its own up: each pair is a radius and a height, from the foot upward.</summary>
+            public void Lathe(Vector3 centre, Quaternion? turn, int sides, params float[] profile)
+            {
+                Quaternion q = turn ?? Quaternion.identity;
+                for (int step = 0; step + 3 < profile.Length; step += 2)
+                {
+                    float r0 = profile[step], y0 = profile[step + 1], r1 = profile[step + 2], y1 = profile[step + 3];
+                    Vector2 slope = new Vector2(y1 - y0, r0 - r1).normalized;
+                    for (int i = 0; i < sides; i++)
+                    {
+                        float a0 = i * Mathf.PI * 2f / sides, a1 = (i + 1) * Mathf.PI * 2f / sides;
+                        Vector3 d0 = V(Mathf.Cos(a0), 0f, Mathf.Sin(a0)), d1 = V(Mathf.Cos(a1), 0f, Mathf.Sin(a1));
+                        Vector3 n0 = q * (d0 * slope.x + Vector3.up * slope.y), n1 = q * (d1 * slope.x + Vector3.up * slope.y);
+                        Vector3 l0 = centre + q * (d0 * r0 + Vector3.up * y0), l1 = centre + q * (d1 * r0 + Vector3.up * y0);
+                        Vector3 h0 = centre + q * (d0 * r1 + Vector3.up * y1), h1 = centre + q * (d1 * r1 + Vector3.up * y1);
+                        if (r0 > 1e-4f) Tri(l0, l1, h1, n0, n1, n1);
+                        if (r1 > 1e-4f) Tri(l0, h1, h0, n0, n1, n0);
+                    }
+                }
+            }
+
+            // ---- flat shapes, lying on the ground and looking up
+
+            private float Height(params Vector3[] points)
+            {
+                if (Top == null) return Lift;
+                float least = float.MaxValue;
+                for (int i = 0; i < points.Length; i++)
+                {
+                    Vector3 a = points[i], b = points[(i + 1) % points.Length];
+                    least = Mathf.Min(least, new Vector2(a.x, a.z).magnitude, new Vector2((a.x + b.x) * 0.5f, (a.z + b.z) * 0.5f).magnitude);
+                }
+                return Top(Mathf.Max(0f, least - 0.05f)) + Lift;
+            }
+
+            /// <summary>A flat patch with the given corners, in order round its edge. It must bulge outward everywhere.</summary>
+            public void Patch(params Vector3[] points)
+            {
+                float y = Height(points);
+                Vector3 middle = Vector3.zero;
+                foreach (var point in points) middle += point;
+                middle /= points.Length;
+                middle.y = y;
+                for (int i = 0; i < points.Length; i++)
+                {
+                    Vector3 a = points[i], b = points[(i + 1) % points.Length];
+                    a.y = b.y = y;
+                    Tri(middle, a, b, Vector3.up, Vector3.up, Vector3.up);
+                }
+            }
+
+            /// <summary>A flat stroke from one point to another, as wide at its end as <paramref name="endWidth"/> (or the same all along).</summary>
+            public void Line(Vector3 from, Vector3 to, float width, float endWidth = -1f)
+            {
+                if (endWidth < 0f) endWidth = width;
+                Vector3 along = to - from;
+                along.y = 0f;
+                float length = along.magnitude;
+                if (length < 1e-4f) return;
+                Vector3 aside = Vector3.Cross(Vector3.up, along / length) * 0.5f;
+                // Cut into short lengths, so that a long stroke steps down with the floor it crosses.
+                int pieces = Mathf.Max(1, Mathf.CeilToInt(length / 0.9f));
+                for (int i = 0; i < pieces; i++)
+                {
+                    float t0 = i / (float)pieces, t1 = (i + 1) / (float)pieces;
+                    Vector3 p0 = Vector3.Lerp(from, to, t0), p1 = Vector3.Lerp(from, to, t1);
+                    float w0 = Mathf.Lerp(width, endWidth, t0), w1 = Mathf.Lerp(width, endWidth, t1);
+                    Patch(p0 - aside * w0, p0 + aside * w0, p1 + aside * w1, p1 - aside * w1);
+                }
+            }
+
+            /// <summary>Part of a flat ring about a point. Angles are in degrees clockwise from north, as a yaw is.</summary>
+            public void Arc(Vector3 centre, float inner, float outer, float fromDegrees, float toDegrees, float stepDegrees = 3f)
+            {
+                int steps = Mathf.Max(1, Mathf.CeilToInt(Mathf.Abs(toDegrees - fromDegrees) / stepDegrees));
+                for (int i = 0; i < steps; i++)
+                {
+                    float a0 = Mathf.Lerp(fromDegrees, toDegrees, i / (float)steps) * Mathf.Deg2Rad, a1 = Mathf.Lerp(fromDegrees, toDegrees, (i + 1) / (float)steps) * Mathf.Deg2Rad;
+                    Vector3 d0 = V(Mathf.Sin(a0), 0f, Mathf.Cos(a0)), d1 = V(Mathf.Sin(a1), 0f, Mathf.Cos(a1));
+                    Patch(centre + d0 * inner, centre + d0 * outer, centre + d1 * outer, centre + d1 * inner);
+                }
+            }
+
+            /// <summary>A flat round, or an oval when squashed, turned by a yaw.</summary>
+            public void Round(Vector3 centre, float radius, int sides = 14, float squash = 1f, float yaw = 0f)
+            {
+                var points = new Vector3[sides];
+                Quaternion turn = Quaternion.Euler(0f, yaw, 0f);
+                for (int i = 0; i < sides; i++)
+                {
+                    float angle = i * Mathf.PI * 2f / sides;
+                    points[i] = centre + turn * V(Mathf.Cos(angle) * radius, 0f, Mathf.Sin(angle) * radius * squash);
+                }
+                Patch(points);
+            }
+
+            /// <summary>A flat star of uneven points, as a burn is, or a splash.</summary>
+            public void Burst(Vector3 centre, float radius, int seed, int points = 9, float inner = 0.3f)
+            {
+                var random = new System.Random(seed);
+                var rim = new Vector3[points * 2];
+                float turn = Next(random, 0f, Mathf.PI * 2f);
+                for (int i = 0; i < rim.Length; i++)
+                {
+                    float angle = turn + (i + Next(random, -0.2f, 0.2f)) * Mathf.PI / points;
+                    float reach = radius * (i % 2 == 0 ? Next(random, 0.6f, 1f) : inner * Next(random, 0.75f, 1.2f));
+                    rim[i] = centre + V(Mathf.Cos(angle) * reach, 0f, Mathf.Sin(angle) * reach);
+                }
+                for (int i = 0; i < rim.Length; i++) Patch(centre, rim[i], rim[(i + 1) % rim.Length]);
+            }
+
+            /// <summary>
+            /// A crooked flat stroke, as a crack runs or a burn: widest at its start and thinning to nothing. Returns the
+            /// points it passed through, so that another may fork from one of them.
+            /// </summary>
+            public List<Vector3> Jag(Vector3 from, Vector3 to, float width, float wobble, int seed, float stride = 0.6f)
+            {
+                var random = new System.Random(seed);
+                Vector3 along = to - from;
+                along.y = 0f;
+                float length = along.magnitude;
+                var path = new List<Vector3> { from };
+                if (length < 1e-4f) return path;
+                Vector3 aside = Vector3.Cross(Vector3.up, along / length);
+                int pieces = Mathf.Max(2, Mathf.RoundToInt(length / stride));
+                for (int i = 1; i <= pieces; i++)
+                {
+                    Vector3 at = Vector3.Lerp(from, to, i / (float)pieces);
+                    if (i < pieces) at += aside * Next(random, -wobble, wobble) + along / length * Next(random, -0.2f, 0.2f) * stride;
+                    path.Add(at);
+                }
+                for (int i = 0; i < pieces; i++)
+                {
+                    float w0 = width * (1f - i / (float)pieces), w1 = width * (1f - (i + 1) / (float)pieces);
+                    Vector3 step = (path[i + 1] - path[i]).normalized;
+                    // Each length runs a little past its joint, so the corners close.
+                    Line(path[i] - step * (w0 * 0.3f), path[i + 1] + step * (w1 * 0.3f), Mathf.Max(w0, 0.012f), Mathf.Max(w1, 0.012f));
+                }
+                return path;
+            }
+
+            /// <summary>
+            /// Casts everything gathered as one mesh, saved under a stable name, on a new child of the parent. Returns
+            /// null when nothing was gathered.
+            /// </summary>
+            public Renderer Cast(string name, Transform parent, Material material, bool shadows = true)
+            {
+                if (Empty) return null;
+                string folder = BuildKit.GeneratedRoot + "/Meshes";
+                BuildKit.EnsureFolder(folder);
+                string path = $"{folder}/cast_{name}.asset";
+                var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);
+                if (mesh == null)
+                {
+                    mesh = new Mesh { name = "cast_" + name };
+                    AssetDatabase.CreateAsset(mesh, path);
+                }
+                mesh.Clear();
+                mesh.indexFormat = vertices.Count > 65000 ? UnityEngine.Rendering.IndexFormat.UInt32 : UnityEngine.Rendering.IndexFormat.UInt16;
+                mesh.SetVertices(vertices);
+                mesh.SetNormals(normals);
+                mesh.SetTriangles(triangles, 0);
+                // The toon shader's outline reads the tangents; these shapes have none of their own.
+                var tangents = new List<Vector4>(vertices.Count);
+                for (int i = 0; i < vertices.Count; i++) tangents.Add(new Vector4(0f, 1f, 0f, 1f));
+                mesh.SetTangents(tangents);
+                mesh.RecalculateBounds();
+                EditorUtility.SetDirty(mesh);
+
+                var made = new GameObject(name);
+                made.transform.SetParent(parent, false);
+                made.AddComponent<MeshFilter>().sharedMesh = mesh;
+                var renderer = made.AddComponent<MeshRenderer>();
+                renderer.sharedMaterial = material;
+                if (!shadows) renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                made.isStatic = true;
+                return renderer;
+            }
+        }
     }
 }
