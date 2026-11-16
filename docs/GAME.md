@@ -890,3 +890,33 @@ and hardly move elites and gods. The chart was looked at only at the editor's 19
 | 2026-11-15 | Limited flasks refilled at rest points; death ends the run except through Dark's revive and some later upgrades | the user's choice |
 | 2026-11-15 | Fists are the first run's weapon; Full Body Armament is an element-tree upgrade for the unarmed | gives fighting unarmed its own path |
 | 2026-11-16 | An elite, the Gate Captain, guards the sealed door alone on his own ground: guard, poise, a red charge, a second phase at half, three embers (Claude's design in the unattended overnight run; not yet played) | pushes the castle's last fight toward the even duel the user asked for and teaches what the god asks |
+
+## Spell forms (Claude's defaults from the day run of 2026-11-16)
+
+Nothing here was decided by the user; it is what was built while they were away, to be kept or changed.
+
+- **There are twenty-eight forms a spell can take.** The twenty-four new ones are blades from above, a great sword, a
+  held beam, blades at the shoulders, a dragon's head, a nova, a slow orb, a great bomb, spikes along the ground, a
+  bristling field, a drill, small helpers, a ring of bullets, a burst that runs backwards, a parry, a wall, orbiting
+  discs, a brand, a rain, a copy of the player, a flash of cuts, a closed ring, pillars, and a step through an enemy.
+  What each reads and does exactly is in `docs/UPGRADE_SCHEMA.md`, section 10.
+- **How a spell is seen.** Every form has the same four beats: it shows itself coming (a sign turning on the ground, a
+  rimmed disc the size of what will strike, a ring closing in, a lane of arrowheads), it lands (one white star for a
+  frame, a hard ring thrown outward, a stop of time and a shake by its weight), and it leaves something (cracks that
+  glow for a second or two, a dark stain, a blade stuck in the ground). Nothing waits less than 0.22 s to be seen coming.
+- **What spells are made of.** Solid shapes of the element drawn from a few flat wedges each, shaded in three flat
+  tones (a pale face toward their own light, the element's colour, a deep shade of it) with the characters' ink line,
+  and flat marks of light. No soft spheres, no smoke. A thing that appears is white for its first frames and snaps to
+  size; a thing that goes shrinks or sinks, it does not fade.
+- **The body does something for every cast**: the cast pose for things thrown, the charge crouch for things gathered,
+  the heavy chop for things called out of the ground or down from the sky, the iaido draw for things that are a cut.
+  The beam, the bomb and the parry root the player and the dodge lets them go; the drill, the flash and the step make
+  the player untouchable until they are over.
+- **Brightness.** The marks are drawn at half the strength first tried (`FormKit.Brightness`), because the bloom
+  turned every element white. If the look is to be louder or quieter, that is the one number.
+- **Things short of the design, by choice or by limit**: pillars do not lift (no enemy can leave the ground yet; the
+  blow is heavy instead); enemies press against a wall or a ring and do not walk round; the ring holds the player in
+  as well; the brand needs an enemy faced or the mana is lost; the forms have no sounds.
+- **Trying them.** The practice yard (the Combat Test scene, and only it) has a rack of twenty-four stones along its
+  south side, one for each form. Using a stone lends its sample spell in the element that suits it and keeps the mana
+  coming back; hold the spell button to cast. The tall stone in front of the rack gives the next element round the ring.

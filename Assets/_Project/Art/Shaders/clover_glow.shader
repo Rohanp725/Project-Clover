@@ -8,7 +8,8 @@ Shader "Clover/Glow"
         [HDR] _Color ("Colour", Color) = (1, 1, 1, 1)
         // 0 soft disc, 1 streak (soft across, pointed along), 2 slash (bright leading edge, fading tail), 3 flat, 4 ring, 5 star,
         // 6 flame (a tongue of fire, round below and pointed above, its edge licking; drawn in two flat tones),
-        // 7 bolt (a jagged line along v), 8 broken ring (four brackets), 9 crossed cut
+        // 7 bolt (a jagged line along v), 8 broken ring (four brackets), 9 crossed cut, 10 cracks from a point,
+        // 11 a sign of rings and triangles, 12 beam along u, 13 rimmed disc, 14 lane of arrowheads along u
         _Shape ("Shape", Float) = 0
         _Sharpness ("Edge sharpness", Range(0.5, 8)) = 2
         _Hard ("Hard edge at this much of the shape (0 = soft)", Range(0, 1)) = 0
@@ -99,7 +100,60 @@ Shader "Clover/Glow"
                 float2 centred = uv * 2.0 - 1.0;
                 half mask = 1;
                 half inner = 0;
-                if (_Shape > 8.5)
+                if (_Shape > 13.5)
+                {
+                    // A lane of arrowheads running along u, between two bold rails: the path something will take.
+                    half across = abs(centred.y);
+                    half rail = step(0.84, across) * step(across, 1.0);
+                    half arrow = step(frac(uv.x * _NoiseScale - across * 0.55 - _Time.y * _NoiseSpeed.x), 0.34) * step(across, 0.7);
+                    mask = max(rail, arrow * 0.8) * saturate(uv.x * 30.0) * saturate((1.0 - uv.x) * 30.0);
+                }
+                else if (_Shape > 12.5)
+                {
+                    // A disc with a bold rim and a faint inside: where something will land, without hiding who stands there.
+                    half radius = length(centred);
+                    mask = step(radius, 1.0) * max(step(0.9, radius), 0.16);
+                }
+                else if (_Shape > 11.5)
+                {
+                    // A beam along u: a ragged edge that runs toward its tip, a round nose, a flare at the mouth.
+                    half across = abs(centred.y);
+                    half rag = 0.74 + 0.26 * ValueNoise(float2(uv.x * 9.0 - _Time.y * 14.0, 3.0 + step(0.0, centred.y) * 5.0));
+                    half nose = saturate((1.0 - uv.x) * 14.0);
+                    half mouth = 1.0 + 0.6 * saturate(1.0 - uv.x * 9.0);
+                    mask = saturate(1.0 - across / (rag * mouth * 0.8)) * sqrt(nose) * saturate(uv.x * 60.0);
+                }
+                else if (_Shape > 10.5)
+                {
+                    // A sign drawn on the ground: two rings, ticks between them, and two triangles crossed inside.
+                    half radius = length(centred);
+                    half angle = atan2(centred.y, centred.x);
+                    half outer = saturate(1.0 - abs(radius - 0.93) / 0.045);
+                    half innerRing = saturate(1.0 - abs(radius - 0.7) / 0.03);
+                    half ticks = step(0.74, radius) * step(radius, 0.89) * step(abs(frac(angle * 12.0 / 6.2832) - 0.5), 0.09);
+                    half third = 2.0944;
+                    half triA = 0.33 / cos(abs(fmod(abs(angle) + 10.0 * third, third) - third * 0.5));
+                    half triB = 0.33 / cos(abs(fmod(abs(angle + 3.14159) + 10.0 * third, third) - third * 0.5));
+                    half star = max(saturate(1.0 - abs(radius - triA) / 0.03), saturate(1.0 - abs(radius - triB) / 0.03)) * step(radius, 0.68);
+                    mask = max(max(outer, innerRing), max(ticks, star));
+                }
+                else if (_Shape > 9.5)
+                {
+                    // Cracks running out from a point: seven jagged arms of different lengths, thinning as they go.
+                    half radius = length(centred);
+                    half angle = atan2(centred.y, centred.x) + 3.14159;
+                    half arms = 7.0;
+                    half slice = 6.2832 / arms;
+                    half arm = floor(angle / slice);
+                    half lean = (Hash(float2(arm, 4.0)) - 0.5) * 0.5;
+                    half kink = (abs(frac(radius * 4.5 + Hash(float2(arm, 2.0))) - 0.5) - 0.25) * 0.55;
+                    half off = (angle - (arm + 0.5 + lean) * slice) + kink * (0.25 + radius);
+                    half reach = 0.5 + 0.5 * Hash(float2(arm, 9.0));
+                    half thick = 0.06 * saturate(1.0 - radius / reach) + 0.003;
+                    mask = saturate(1.0 - abs(sin(off)) * radius / thick) * step(radius, reach);
+                    mask = max(mask, saturate(1.0 - radius / 0.12));
+                }
+                else if (_Shape > 8.5)
                 {
                     // A crossed cut: two long thin diamonds on the diagonals. _Hard sets how fat they are printed.
                     half along = (centred.x + centred.y) * 0.7071;

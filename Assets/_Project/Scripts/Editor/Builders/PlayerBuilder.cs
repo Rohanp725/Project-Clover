@@ -76,6 +76,11 @@ namespace Clover.EditorTools
             BuildFeedback(built.Player, cameraObject.transform);
             // The player's lingering effects on the ground live in the scene, not on the player.
             new GameObject("Hazards").AddComponent<Clover.World.Hazards>();
+            // What spell forms are drawn with and run by: shapes and marks kept ready, and the casts in progress.
+            var (spellSolid, spellMarks) = VfxBuilder.FormMaterials();
+            var works = new GameObject("Spell Works");
+            works.AddComponent<Clover.Player.Forms.FormFx>().Configure(spellSolid, spellMarks);
+            works.AddComponent<Clover.Player.Forms.SpellWorks>().Configure(built.Player.GetComponent<Afterimage>());
             // A flask in the air, for the eye only; it waits unseen until one is thrown.
             var thrown = new GameObject("Thrown Flask");
             var flask = BuildKit.Group("Flask", thrown.transform);

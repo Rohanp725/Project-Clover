@@ -317,6 +317,22 @@ namespace Clover.Player
             if (combat != null && combat.IsFinishing) return HitOutcome.Dodged;
             // Nor reaches the player in the air.
             if (player.IsLeaping) return HitOutcome.Dodged;
+            // Nor while a spell has made them something that cannot be struck.
+            if (player.FormHold != 0 && player.FormUntouchable) return HitOutcome.Dodged;
+            if (player.FormParrying)
+            {
+                // The spell's own guard: the blow is turned for nothing and the form answers it.
+                player.FormParrying = false;
+                player.FormParried = true;
+                player.FormParriedFrom = hit.HasOrigin ? hit.Origin : transform.position - hit.Direction;
+                PerfectGuards++;
+                Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
+                Vfx.Play(VfxKind.Impact, GuardPoint());
+                if (hitStop != null) hitStop.Freeze(PerfectGuardHitStop);
+                return HitOutcome.PerfectGuard;
+            }
+            // A wall of the element between the blow and the player takes it.
+            if (hit.HasOrigin && Clover.Player.Forms.SpellWorks.Screens(hit.Origin, transform.position)) return HitOutcome.Dodged;
 
             if (player.Dodge.IsInvulnerable)
             {
@@ -395,6 +411,7 @@ namespace Clover.Player
             Guard.SetRaised(false);
             Flasks.Interrupt();
             player.Dodge.Stop();
+            player.BreakFormHold();
             if (combat != null) combat.Interrupt();
             if (element != null) element.Interrupt();
             if (hitStop != null) hitStop.Freeze(0.07f);

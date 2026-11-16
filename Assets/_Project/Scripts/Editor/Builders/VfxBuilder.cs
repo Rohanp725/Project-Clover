@@ -1,5 +1,6 @@
 using System;
 using Clover.Core;
+using UnityEditor;
 using UnityEngine;
 
 namespace Clover.EditorTools
@@ -23,6 +24,47 @@ namespace Clover.EditorTools
 
         public static Material MarkerMaterial() =>
             BuildKit.Glow(Folder, "m_vfx_marker", Color.white, 3, false, 1f);
+
+        /// <summary>
+        /// What spell forms are drawn in: the material of their solid shapes, and one material of light for each
+        /// <see cref="Clover.Player.Forms.FormMark"/>, in the order of that list. The colour of each comes from the
+        /// cast, so these are white.
+        /// </summary>
+        public static (Material solid, Material[] marks) FormMaterials()
+        {
+            var solid = BuildKit.MaterialAt(Folder, "m_spell_solid", "Clover/Spell");
+            solid.SetColor("_Color", Color.white);
+            solid.SetFloat("_Hot", 0f);
+            solid.SetFloat("_OutlineWidth", 0.035f);
+            solid.SetColor("_OutlineColor", BuildKit.CharacterInk);
+            solid.enableInstancing = true;
+            EditorUtility.SetDirty(solid);
+
+            var lane = BuildKit.Glow(Folder, "m_spell_lane", Color.white, 14, true, 1f);
+            // Six arrowheads along it, running toward its far end.
+            lane.SetFloat("_NoiseScale", 6f);
+            lane.SetVector("_NoiseSpeed", new Vector4(1.6f, 0f, 0f, 0f));
+            EditorUtility.SetDirty(lane);
+            var scorch = BuildKit.Glow(Folder, "m_spell_scorch", Color.white, 0, false, 1.3f, 0.45f);
+            scorch.SetFloat("_NoiseScale", 5f);
+            scorch.SetVector("_NoiseSpeed", Vector4.zero);
+            EditorUtility.SetDirty(scorch);
+            var marks = new[]
+            {
+                BuildKit.Glow(Folder, "m_spell_ring", Color.white, 4, true, 1f).Graphic(0.3f),
+                BuildKit.Glow(Folder, "m_spell_disc", Color.white, 13, true, 1f),
+                BuildKit.Glow(Folder, "m_spell_star", Color.white, 5, true, 1f).Graphic(0.12f, 0.45f),
+                BuildKit.Glow(Folder, "m_spell_cross", Color.white, 9, true, 1f).Graphic(0.1f, 0.5f),
+                BuildKit.Glow(Folder, "m_spell_crack", Color.white, 10, true, 1f).Graphic(0.2f, 0.7f),
+                BuildKit.Glow(Folder, "m_spell_sigil", Color.white, 11, true, 1f).Graphic(0.3f),
+                BuildKit.Glow(Folder, "m_spell_beam", Color.white, 12, true, 1f).Graphic(0.1f, 0.5f),
+                lane,
+                BuildKit.Glow(Folder, "m_spell_streak", Color.white, 1, true, 1f).Graphic(0.12f, 0.5f),
+                scorch,
+                BuildKit.Glow(Folder, "m_spell_brackets", Color.white, 8, true, 1f).Graphic(0.3f),
+            };
+            return (solid, marks);
+        }
 
         public static Vfx Build()
         {

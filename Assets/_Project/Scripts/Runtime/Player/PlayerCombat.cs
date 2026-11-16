@@ -93,6 +93,11 @@ namespace Clover.Player
         public int Criticals { get; private set; }
         /// <summary>The damage of the last blow of the weapon that landed, as it was dealt.</summary>
         public float LastBlowDamage { get; private set; }
+        /// <summary>Seconds left in which the next heavy blow that lands is critical: what a step through an enemy earns.</summary>
+        public float HeavyCriticalLeft { get; private set; }
+
+        /// <summary>For this many seconds the next heavy blow that lands is a critical one.</summary>
+        public void PromiseHeavyCritical(float seconds) => HeavyCriticalLeft = Mathf.Max(HeavyCriticalLeft, seconds);
 
         private PlayerController player;
         private PlayerDefence defence;
@@ -186,6 +191,7 @@ namespace Clover.Player
         public void Advance(float deltaTime, bool unavailable)
         {
             Step = Vector3.zero;
+            if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
             if (lightAction == null || heavyAction == null) return;
             if (lightAction.WasPressedThisFrame()) Combo.Press();
             if (heavyAction.WasPressedThisFrame())
@@ -295,7 +301,11 @@ namespace Clover.Player
             HashSet<IDamageable> once = null, bool detonate = false, bool heavy = false) =>
             StrikeArea(centre, radius, Plain(damage, stagger, burnSeconds, effect, detonate, heavy), once);
 
-        public int StrikeArea(Vector3 centre, float radius, in SpellBlow blow, HashSet<IDamageable> once = null)
+        public int StrikeArea(Vector3 centre, float radius, in SpellBlow blow, HashSet<IDamageable> once = null) =>
+            StrikeArea(centre, radius, blow, once, 0f);
+
+        /// <summary>The same for a band: whoever stands nearer the middle than <paramref name="innerRadius"/> is left alone.</summary>
+        public int StrikeArea(Vector3 centre, float radius, in SpellBlow blow, HashSet<IDamageable> once, float innerRadius)
         {
             spellStruck.Clear();
             int count = Overlap(centre + Vector3.up, radius + 0.5f);
@@ -310,12 +320,111 @@ namespace Clover.Player
                 if (offset.magnitude > radius) continue;
                 Vector3 away = ((Component)target).transform.position - centre;
                 away.y = 0f;
+                if (innerRadius > 0f && away.magnitude < innerRadius) continue;
                 bool wasAfflicted = target is IAfflictable afflictable && afflictable.Afflictions.Any;
                 var outcome = target.TakeHit(Make(blow, target, away.sqrMagnitude > 0.01f ? away.normalized : transform.forward, centre));
                 if (outcome == HitOutcome.Missed) continue;
                 spellStruck.Add(target);
                 if (once != null) once.Add(target);
                 Landed(blow, target, other, Vector3.up, wasAfflicted);
+            }
+            return spellStruck.Count;
+        }
+
+        /// <summary>
+        /// Strikes everything standing in a lane on the ground: from a point, along a direction, this long and this far
+        /// to either side. What a beam, a dragon's lunge or a line of spikes does. Returns how many it hit.
+        /// </summary>
+        public int StrikeLane(Vector3 from, Vector3 direction, float length, float halfWidth, in SpellBlow blow, HashSet<IDamageable> once = null)
+        {
+            spellStruck.Clear();
+            direction.y = 0f;
+            if (direction.sqrMagnitude < 0.0001f || length <= 0f) return 0;
+            direction.Normalize();
+            Vector3 middle = from + direction * (length * 0.5f);
+            int count = Overlap(middle + Vector3.up, length * 0.5f + halfWidth + 0.5f);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || spellStruck.Contains(target) || (once != null && once.Contains(target))) continue;
+                // The nearest point of it to the lane's own middle line decides.
+                Vector3 offset = other.bounds.center - from;
+                offset.y = 0f;
+                float along = Mathf.Clamp(Vector3.Dot(offset, direction), 0f, length);
+                Vector3 onLine = from + direction * along;
+                Vector3 gap = other.ClosestPoint(onLine + Vector3.up) - onLine;
+                gap.y = 0f;
+                if (gap.magnitude > halfWidth) continue;
+                bool wasAfflicted = target is IAfflictable afflictable && afflictable.Afflictions.Any;
+                var outcome = target.TakeHit(Make(blow, target, direction, from));
+                if (outcome == HitOutcome.Missed) continue;
+                spellStruck.Add(target);
+                if (once != null) once.Add(target);
+                Landed(blow, target, other, direction, wasAfflicted);
+            }
+            return spellStruck.Count;
+        }
+
+        /// <summary>Strikes one thing and nothing else, from a place: a bullet, a helper's jab, a cut that was owed. True when it landed.</summary>
+        public bool StrikeOne(Component victim, in SpellBlow blow, Vector3 from)
+        {
+            if (victim == null || !victim.gameObject.activeInHierarchy || !(victim is IDamageable target)) return false;
+            Vector3 direction = victim.transform.position - from;
+            direction.y = 0f;
+            direction = direction.sqrMagnitude > 0.01f ? direction.normalized : transform.forward;
+            bool wasAfflicted = target is IAfflictable afflictable && afflictable.Afflictions.Any;
+            var outcome = target.TakeHit(Make(blow, target, direction, from));
+            if (outcome == HitOutcome.Missed) return false;
+            Vector3 at = victim.transform.position + Vector3.up * 1.1f;
+            if (blow.Tinted) Vfx.Play(blow.Effect, at, direction, 1f, blow.Tint);
+            else Vfx.Play(blow.Effect, at, direction);
+            if (defence != null) defence.DealtDamage(blow.Damage);
+            if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
+            return true;
+        }
+
+        /// <summary>The enemy standing nearest a point within a radius of it that is not on the list given, or null.</summary>
+        public Component EnemyNear(Vector3 point, float radius, HashSet<IDamageable> except)
+        {
+            Component found = null;
+            float best = float.MaxValue;
+            int count = Overlap(point + Vector3.up, radius);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                if (!targetOf.TryGetValue(other, out Component target))
+                {
+                    target = other.GetComponentInParent<IDamageable>() as Component;
+                    targetOf[other] = target;
+                }
+                if (target == null || (except != null && except.Contains((IDamageable)target))) continue;
+                float distance = (target.transform.position - point).sqrMagnitude;
+                if (distance >= best) continue;
+                best = distance;
+                found = target;
+            }
+            return found;
+        }
+
+        /// <summary>Shoves everything in a circle that can be shoved, all the same way: what carries enemies along with something. Returns how many it moved.</summary>
+        public int ShoveArea(Vector3 centre, float radius, Vector3 impulse)
+        {
+            spellStruck.Clear();
+            int count = Overlap(centre + Vector3.up, radius + 0.5f);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || spellStruck.Contains(target) || !(target is IShovable shovable)) continue;
+                Vector3 offset = ((Component)target).transform.position - centre;
+                offset.y = 0f;
+                if (offset.magnitude > radius) continue;
+                spellStruck.Add(target);
+                shovable.Push(impulse);
             }
             return spellStruck.Count;
         }
@@ -577,7 +686,8 @@ namespace Clover.Player
                 if (offset.magnitude > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
                 var afflictable = target as IAfflictable;
                 // A blow is critical by chance, or always on an enemy that is Marked.
-                bool critical = (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (CritChance > 0f && Random.value < CritChance);
+                bool promised = step.Heavy && HeavyCriticalLeft > 0f;
+                bool critical = promised || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (CritChance > 0f && Random.value < CritChance);
                 float damage = step.Damage * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
                 if (critical) damage *= CritMultiplier;
                 bool wasAfflicted = afflictable != null && afflictable.Afflictions.Any;
@@ -612,6 +722,12 @@ namespace Clover.Player
                     }
                 }
                 if (upgrades != null) upgrades.OnBlow(step, target, outcome, wasAfflicted);
+                // Spells that wait on the weapon (a brand, a copy of the player, blades at the shoulder) are told; they answer on their own next step.
+                if (outcome != HitOutcome.Blocked)
+                {
+                    if (promised) HeavyCriticalLeft = 0f;
+                    Clover.Player.Forms.SpellWorks.Blow(step, target as Component, damage);
+                }
                 finisher |= outcome == HitOutcome.Finisher;
                 if (outcome == HitOutcome.Finisher) finished = other.bounds.center;
                 clean |= outcome != HitOutcome.Blocked;
@@ -641,6 +757,7 @@ namespace Clover.Player
                 if (defence != null) defence.DealtDamage(damage);
             }
             if (upgrades != null) upgrades.OnSwing(step, struck.Count);
+            Clover.Player.Forms.SpellWorks.Swing(step, transform.position, transform.forward);
             if (struck.Count == 0) return;
             if (clean && (NextBlowDamage != 1f || NextBlowStagger != 1f))
             {

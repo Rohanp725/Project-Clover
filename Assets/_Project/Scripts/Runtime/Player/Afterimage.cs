@@ -12,10 +12,13 @@ namespace Clover.Player
         [SerializeField] private Material material;
 
         /// <summary>How many can stand at once; the oldest is taken for the next.</summary>
-        public int Copies = 3;
+        public int Copies = 6;
         [ColorUsage(true, true)] public Color Colour = new Color(0.5f, 1.2f, 3f, 0.8f);
 
         public int Shown { get; private set; }
+        /// <summary>The body's parts and the light they are copied in, for anything else that copies the body.</summary>
+        public SkinnedMeshRenderer[] Bodies => bodies;
+        public Material Material => material;
 
         private static readonly int ColourId = Shader.PropertyToID("_Color");
 
@@ -23,6 +26,7 @@ namespace Clover.Player
         private MeshRenderer[][] renderers;
         private float[] left;
         private float[] lasts;
+        private Color[] colours;
         private MaterialPropertyBlock block;
         private int next;
 
@@ -39,6 +43,7 @@ namespace Clover.Player
             renderers = new MeshRenderer[Copies][];
             left = new float[Copies];
             lasts = new float[Copies];
+            colours = new Color[Copies];
             for (int copy = 0; copy < Copies; copy++)
             {
                 meshes[copy] = new Mesh[bodies.Length];
@@ -86,9 +91,12 @@ namespace Clover.Player
         }
 
         /// <summary>Leaves a copy of the body as it is now, to fade over the given seconds.</summary>
-        public void Leave(float seconds)
+        public void Leave(float seconds) => Leave(seconds, Colour);
+
+        /// <summary>The same in a light of the caller's choosing: a spell leaves the shape in its element's colour.</summary>
+        public void Leave(float seconds, Color colour)
         {
-            if (material == null || bodies.Length == 0 || seconds <= 0f) return;
+            if (material == null || bodies.Length == 0 || seconds <= 0f || renderers == null) return;
             int copy = next;
             next = (next + 1) % Copies;
             for (int i = 0; i < bodies.Length; i++)
@@ -101,6 +109,7 @@ namespace Clover.Player
             }
             left[copy] = seconds;
             lasts[copy] = seconds;
+            colours[copy] = colour;
             Shown++;
             Paint(copy, 1f);
         }
@@ -122,7 +131,7 @@ namespace Clover.Player
 
         private void Paint(int copy, float strength)
         {
-            var colour = Colour;
+            var colour = colours[copy];
             colour.a *= strength;
             block.SetColor(ColourId, colour);
             foreach (var shown in renderers[copy]) shown.SetPropertyBlock(block);

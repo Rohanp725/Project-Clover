@@ -77,6 +77,8 @@ namespace Clover.Player
         public Upgrade Worn { get; private set; }
         /// <summary>True when holding the spell button does something of its own: a spell is worn.</summary>
         public bool HasSpecial => Worn != null;
+        /// <summary>A spell lent from outside the trees, to be tried: while one is lent it is the spell worn.</summary>
+        public Upgrade Lent { get; private set; }
         /// <summary>True while a perfect guard's charge waits on the next blow.</summary>
         public bool ChargeStored => combat != null && combat.NextBlowDamage > 1f;
         public bool ShowsHeat => hasHeat;
@@ -277,6 +279,16 @@ namespace Clover.Player
             return true;
         }
 
+        /// <summary>
+        /// Lends a spell that is on no tree, in the hold-spell slot, until another is lent or null is given: the yard's
+        /// rack of forms uses it. Nothing about the run is written down.
+        /// </summary>
+        public void Lend(Upgrade spell)
+        {
+            Lent = spell != null && spell.Spell != null ? spell : null;
+            Refresh(true);
+        }
+
         /// <summary>Embers from the fallen; the upgrades may make them count for more.</summary>
         public void Earn(int points)
         {
@@ -338,8 +350,8 @@ namespace Clover.Player
                 if (upgrade.Id == RunState.WornSpell) worn = upgrade;
             }
             // A worn spell that is no longer the player's gives way to one that is.
-            Worn = worn ?? firstSpell;
-            RunState.WornSpell = Worn != null ? Worn.Id : "";
+            RunState.WornSpell = (worn ?? firstSpell) != null ? (worn ?? firstSpell).Id : "";
+            Worn = Lent ?? worn ?? firstSpell;
 
             hasHeat = On(Upgrade.Heat);
             hasDetonate = On(Upgrade.BurnAndDetonate);

@@ -354,9 +354,45 @@ The forms that exist (`SpellForms.` constants; the id string in brackets):
 | `Leap` ("leap") | a leap out of the fight, untouchable in the air, down beside the enemy faced as a heavy blow, leaving a crater of the element for 4 s | `Reach`, `Seconds` (in the air), `Height`, `Damage`, `Stagger`, `Radius`, `LingerDamage`, `Stacks` |
 | `Rod` ("rod") | a rod planted `Reach` metres ahead; the element strikes inside a circle round it again and again | `Reach`, `Radius`, `Seconds`, `Interval`, `Damage`, `Stagger`, `Delay`, `Stacks` |
 
-More forms are being built (blades from above, beam, phalanx, dragon head, nova, tracking orb, great bomb, spiked
-floor, drill dash, minions, bullet ring, reverse blast, totem, elemental parry, wall, discs, mark, rain, clone). A tree
-may name a form that does not exist yet **only** with a `// NEEDS FORM: <name>` comment and the form set to the
+The twenty-four forms built on 2026-11-16 (the ids are fixed in `docs/design/FORMS.md`; one sample spell of each, with
+ordinary numbers, is in `FormSamples.cs`). **Reads** lists every field the form uses; anything else in the spec is ignored.
+`Damage`, `Stagger` and `Reach` are read after the player's spell stats; every blow lays `Stacks` of the caster's
+affliction for `AfflictionSeconds`. Where a form departs from `FORMS.md`, the last column says how.
+
+| Form | What the player sees | Reads | As built |
+|---|---|---|---|
+| `Blades` ("blades") | blades snap into being over the enemy faced, hang over a turning sign, fall one after another and stick in the ground | `Count` (16 at most), `Delay`, `Radius`, `Damage`, `Stagger`, `Reach` | they follow the enemy until the first falls; with more than one they are scattered over 0.9 x `Radius` round it |
+| `Sword` ("sword") | one sword 13 m long hangs over the mark, falls, and stands in ground it has cracked | `Delay`, `Radius`, `Damage`, `Stagger`, `Seconds`, `LingerDamage`, `Reach` | the blow is heavy; the crack bites in 0.75 x `Radius` every half second; it follows the enemy until 0.2 s before it falls |
+| `Beam` ("beam") | a brace, a lane on the ground, then a thick bar held | `Reach`, `Radius` (half width), `Seconds`, `Interval`, `Damage` (each bite), `Stagger` | 0.3 s of brace first; turns at 55 degrees a second with the stick; the dodge lets it go and a blow that lands breaks it |
+| `Phalanx` ("phalanx") | a wing of blades behind the shoulders | `Count` (16 at most), `Seconds`, `Reach`, `Damage`, `Stagger`, `Speed` | one lets fly every 0.55 s at the nearest enemy within `Reach`; a heavy blow that lands sends all the rest at whoever it struck; they fly at 2.4 x `Speed`; one wing at a time |
+| `Dragon` ("dragon") | a horned head forms at the shoulder and lunges down a lane, neck winding behind, jaws closing at the end | `Reach`, `Radius`, `Damage`, `Stagger`, `Speed` | what it passes takes half the damage and stagger once and is carried along with it; the bite at the end is the whole of both, heavy, in 1.5 x `Radius`; it travels at 1.5 x `Speed` |
+| `Nova` ("nova") | the element drawn in to a sign underfoot, then a crown of shards and a ring to the edge | `Radius`, `Delay`, `Damage`, `Stagger` | as written |
+| `Orb` ("orb") | a cut stone with two splinters circling it drifts after the nearest enemy and bursts | `Speed`, `Seconds`, `Radius`, `Damage`, `Stagger` | it looks for the nearest enemy within 16 m and stops 0.9 m short of it; it bursts only when its time is up, or at once, heavy and half as large again in everything, when a blow of the weapon reaches it |
+| `Bomb` ("bomb") | a growing stone held overhead, thrown, a great burst | `Delay`, `Reach`, `Radius`, `Damage`, `Stagger`, `Seconds`, `LingerDamage` | it lands on the enemy faced, or `Reach` ahead; rolling away or being struck before the throw loses it; the patch it leaves is 0.8 x `Radius` |
+| `Spikes` ("spikes") | rings run out along the ground in rows and a spike erupts in each, taller the further out | `Reach`, `Speed`, `Count` (rows, 5 at most), `Radius`, `Damage`, `Stagger` | each enemy on the line is struck once in a cast; spikes stand 1.5 x `Radius` apart |
+| `Field` ("field") | a rimmed patch that bristles with small spikes | `Reach`, `Radius`, `Seconds`, `Interval`, `LingerDamage` | as written; no stagger |
+| `Drill` ("drill") | the player is gone and a boring point runs the line, rings thrown off behind; they stand at the far end facing back and the cuts land | `Reach`, `Radius`, `Count`, `Damage` (each), `Stagger`, `Speed` | the first strike is given in passing; the other `Count` - 1 land afterwards, 0.07 s apart, on everyone still on the line; it runs at 1.8 x `Speed`; it stops at a wall and at anything that cannot be shoved (the colossus) |
+| `Minions` ("minions") | small horned helpers rise beside the player, run at enemies and jab | `Count` (6 at most), `Seconds`, `Damage` (each jab), `Stagger`, `Interval` | each takes an enemy of its own while there are enough; they run at 7.5 m a second; one band at a time |
+| `Bullets` ("bullets") | splinters in a ring round the enemy faced, points inward, then all in at once | `Count` (16 at most), `Radius`, `Delay`, `Damage` (each), `Stagger`, `Reach` | they strike the enemy faced and no other; with no enemy faced they strike a 1.2 m circle at the point aimed at |
+| `Reverse` ("reverse") | rings and streaks falling inward to a point, then everything thrown out of it | `Reach`, `Radius`, `Delay`, `Damage`, `Stagger` | enemies are drawn 0.85 x `Radius` toward the point over the delay; the burst is heavy and as wide as `Radius` |
+| `Parry` ("parry") | a sign held tipped in front of the chest; a blow turned; a fan of light thrown back | `Seconds`, `Reach`, `Arc`, `Damage`, `Stagger` | it turns a blow from any side; the turned blow counts as a perfect guard for the attacker (it reels) but gives no mana; the answer is heavy; the player is rooted and the dodge lets it go |
+| `Wall` ("wall") | a line, then slabs breaking out of the ground from the middle outward | `Reach`, `Arc` (width, 2 to 14 m), `Delay` (0.15 s at least), `Seconds`, `Radius`, `Damage`, `Stagger` | a solid barrier: nothing walks through it, the player included; a blow whose attacker stands beyond it does not reach the player; the burst strikes `Radius` round its middle and along its whole line; one wall at a time. **Enemies do not path round it**: they press against it |
+| `Discs` ("discs") | toothed wheels circling the player | `Count` (8 at most), `Radius`, `Seconds`, `Interval`, `Damage` (each bite), `Stagger` | each disc bites 1 m round itself; an enemy is bitten once an interval however many discs touch it; one halo at a time |
+| `Brand` ("brand") | a sign under the enemy faced and a crossed mark over its head, smaller for every burst spent | `Reach`, `Seconds`, `Count`, `Radius`, `Damage`, `Stagger` | with no enemy faced nothing is branded and the mana is lost ("No one to brand"); the burst strikes the branded enemy too; one brand at a time |
+| `Rain` ("rain") | rings closing on spots inside a circle and a shard down on each | `Reach`, `Radius`, `Seconds`, `Interval`, `Damage` (each), `Stagger` | each strike is 1.2 m round its spot, 0.34 s after its ring shows; every other one falls where an enemy inside the circle stands |
+| `Clone` ("clone") | the player's shape in light at their right shoulder, doing what they did a fifth of a second ago | `Seconds`, `Damage` (percent of the blow) | the echo lands 0.2 s after each blow that lands, with no stagger; one copy at a time |
+| `Flash` ("flash") | the player gone, lines crossing the enemy, the player beyond it with their back turned, every line landing at once | `Count` (12 at most), `Interval`, `Delay` (0.15 s at least), `Damage` (each cut), `Stagger`, `Reach` | they reappear 2 m beyond the enemy; with no enemy faced the cuts land on a 1.6 m circle at the point aimed at |
+| `Ring` ("ring") | stakes come in from outside and stand in a circle | `Radius`, `Seconds`, `LingerDamage`, `Reach` | its middle is half-way between the player and the enemy faced and it is never too small to hold both; a solid twelve-sided barrier that holds the player in too; the band within a metre of the stakes bites every 0.4 s, without stagger; one ring at a time |
+| `Pillars` ("pillars") | a mark under each of the nearest enemies, then a column up under each in turn | `Count` (8 at most), `Reach`, `Radius`, `Damage`, `Stagger`, `Delay` | **nothing is lifted** (no enemy can leave the ground yet): the blow is heavy instead, so it finishes a staggered enemy and shatters a frozen one; with fewer enemies than pillars the rest stand round the first |
+| `Step` ("step") | the player on the far side of the enemy, a line of light behind and their shape left at the start | `Reach`, `Damage`, `Stagger`, `Seconds` | it strikes everything within 1.1 m of the line, ends 1.8 m beyond the enemy faced, turned to face it; it stops at a wall and at anything that cannot be shoved |
+
+Every form that shows itself before it strikes waits at least 0.22 s (`FormRules.LeastWarning`) whatever its `Delay`.
+On gods: every form strikes the swordsman, the colossus and its parts through the same blows as any enemy; the
+colossus is never pulled, carried or passed through, and the swordsman is shoved a third as far as a soldier.
+Every cast in progress ends when the player falls. Marks on the ground are drawn at the height the caster stood at.
+The forms have no sounds yet.
+
+A tree may name a form that does not exist yet **only** with a `// NEEDS FORM: <name>` comment and the form set to the
 nearest existing one, because the test `EveryMarkIsWhole...` fails on an unknown form id.
 
 ### For whoever writes a form
@@ -364,21 +400,45 @@ nearest existing one, because the test `EveryMarkIsWhole...` fails on an unknown
 ```csharp
 public interface ISpellForm { string Id { get; } int Cast(in SpellCast cast); }   // returns how many it struck at once
 public interface ISpellLanding { void Landed(in SpellCast cast); }                 // only for forms that call cast.Player.Leap(...)
+public abstract class RunningForm : ISpellForm { bool Tick(ref SpellRun run, float deltaTime); ... }  // a form that lasts
 ```
 
-A form is a class under `Runtime/Player/Forms/` (namespace `Clover.Player.Forms`), stateless, one instance for every
-cast, plus a constant and one line in the array in `SpellForms.cs`. The mana is already paid. `SpellCast` hands it:
+A form is a class under `Runtime/Player/Forms/` (namespace `Clover.Player.Forms`), stateless (a test fails on a form
+with a field of its own), one instance for every cast, plus a constant and one line in the array in `SpellForms.cs`.
+The mana is already paid. `SpellCast` hands it:
 `Name`, `Source` (the upgrade, or null for a base spell), `Spec`, `Damage` / `Stagger` / `Reach` (with the player's
 spell stats already applied), `Player`, `Combat`, `Defence`, `Caster` (the `PlayerElement`), `Upgrades`, `Element`
 (`ElementInfo`), `Colour`, `Affliction`, `Target` (the enemy faced within reach, or null), `Origin`, `Forward`, `Aim`.
 Helpers: `cast.Blow(damage, stagger, stacks = -1)` makes a `SpellBlow` in the element's colour carrying its
 affliction; `cast.Linger(damage)` the light bite of ground left behind; `cast.Ground(at, radius, seconds, interval,
 blow)` a `HazardSpec` in the element's look. Strike through `cast.Combat.StrikeCone(reach, arc, blow)`,
-`StrikeArea(centre, radius, blow)`, `StrikeChain(reach, blow, leaps, leapRange, cast.Element, first)`,
-`AfflictArea`, `Displace`; lay ground and things in flight with `Hazards.Lay(spec)` (`Velocity`, `Flight`, `Target`,
-`Follow`, `Bites`, `Burst`, `Warn`, `Delay`, `Once`); draw with `ElementLook.Puff / Sparks / Ring / Strike` and
-`cast.Caster.ShowArc`; shake with `cast.Upgrades.Jolt(stop, shake, seconds)`. Never create or destroy objects in a
-cast, and never allocate per frame. `WaveForm`, `BoltForm`, `LeapForm` and `RodForm` are the examples.
+`StrikeArea(centre, radius, blow, once, innerRadius)`, `StrikeLane(from, direction, length, halfWidth, blow, once)`,
+`StrikeOne(victim, blow, from)`, `StrikeChain(reach, blow, leaps, leapRange, cast.Element, first)`, `AfflictArea`,
+`Displace`, `ShoveArea`, and find enemies with `EnemyNear(point, radius, except)`; lay ground and things in flight with
+`Hazards.Lay(spec)` (`Velocity`, `Flight`, `Target`, `Follow`, `Bites`, `Burst`, `Warn`, `Delay`, `Once`); draw with
+`ElementLook.Puff / Sparks / Ring / Strike` and `cast.Caster.ShowArc`; shake with `cast.Upgrades.Jolt(stop, shake,
+seconds)`. Never create or destroy objects in a cast, and never allocate per frame.
+
+A form that takes time extends `RunningForm`: in `Cast` it calls `SpellWorks.Begin(this, cast, out begun)` and fills in
+the `SpellRun` that comes back (plain fields that mean what the form says: `Phase`, `Count`, `Done`, `T0..T3`, `A`, `B`,
+`C`, `Flag`, `Victim`); `SpellWorks` then calls its `Tick` every frame on the game's clock until it returns false, and
+its `Swung` / `Struck` when the weapon is swung or lands (note it there, act in `Tick`). Each run has lists of its own
+(`SpellWorks.Solids / Marks / Points / Times / Things / Once(run)`); handles left in the first two are put away when
+the run ends. `SpellWorks.TakeBody(ref run, untouchable, cancellable)` gives the run the player's body (rooted, moved
+with `Player.FormStep` or `PassTo`, posed with `FormPose` and `FormPoseProgress`, hidden with `Hidden`);
+`SpellWorks.Gesture(cast, pose, seconds)` is the short pose of a cast that does not hold the body;
+`SpellWorks.Barrier` and `Screen` stand a wall; `SpellWorks.Ghost` leaves the player's shape in light. The works holds
+24 runs.
+
+What forms are drawn with is `FormFx`: 120 solid shapes (`FormMesh`: blade, sword, shard, spike, pillar, disc, orb,
+slab, dragon skull, jaw and spine, drill, minion; drawn in code by `FormMeshes`, shaded by `Clover/Spell` in three flat
+tones with an ink line) and 140 flat marks of light (`FormMark`: ring, disc, star, cross, crack, sigil, beam, lane,
+streak, scorch, brackets; shapes 10 to 14 of `Clover/Glow` were added for them). Throw one that looks after itself
+(`Erupt`, `Drop`, `Fly`, `Lay`, `Run`, `Face`, `Cut`) or hold one and place it every frame (`Hold` / `Place` / `Heat` /
+`Release`, `HoldMark` / `PlaceMark` / `ReleaseMark`). `FormKit` has what the forms share: `Warn` (something will land
+here), `Impact` (it has: star, ring, cracks, stain, stop and shake by weight), `Lit` (the colour as light; one
+`Brightness` number turns all of it up or down), the poses. `WaveForm`, `BoltForm`, `LeapForm` and `RodForm` are the
+short examples; `BladesForm` and `BeamForm` the examples of a form that lasts and of one that holds the body.
 
 ## 11. Mixes
 

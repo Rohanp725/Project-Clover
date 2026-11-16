@@ -56,8 +56,49 @@ namespace Clover.EditorTools
             // And one that hits back, off to the west, to practise the guard and the dodge on. It leaves the player
             // alone until they walk up to it.
             BuildDummy(new Vector3(-7f, 0f, 3.5f), kit, built.Player.transform);
+            BuildFormRack(world, built.Player);
 
             SceneBuild.Finish(scene, ScenePath, false);
+        }
+
+        // The rack of stones along the south side: one for every new spell form, each lending its sample spell, and a
+        // taller one in front of them that gives the next element round the ring. Only this yard has them.
+        private static void BuildFormRack(Transform world, GameObject player)
+        {
+            var rack = BuildKit.Group("Form Rack", world);
+            var plinth = BuildKit.Toon(Folder, "m_rack_plinth", new Color(0.3f, 0.3f, 0.4f), false, null, 0f, 0.02f);
+            var stones = new List<Clover.World.Interactable>();
+            var samples = Clover.Player.Forms.FormSamples.All;
+            var upgrades = player.GetComponent<PlayerUpgrades>();
+            var combat = player.GetComponent<PlayerCombat>();
+            for (int i = 0; i < samples.Count; i++)
+            {
+                var sample = samples[i];
+                var colour = Elements.Colour(sample.Element);
+                var stone = new GameObject("Form Stone " + sample.Form);
+                stone.transform.SetParent(rack, false);
+                stone.transform.position = new Vector3((i - (samples.Count - 1) * 0.5f) * 1.5f, 0f, -16f);
+                BuildKit.Shape(PrimitiveType.Cube, "Plinth", stone.transform, new Vector3(0f, 0.3f, 0f), new Vector3(0.6f, 0.6f, 0.6f), plinth);
+                var gem = BuildKit.Toon(Folder, "m_rack_gem_" + sample.Element.ToLowerInvariant(), colour, false, null, 0f, 0.02f)
+                    .Lit(Color.black, 0.3f, new Color(colour.r * 1.6f, colour.g * 1.6f, colour.b * 1.6f));
+                BuildKit.Shape(PrimitiveType.Cube, "Gem", stone.transform, new Vector3(0f, 0.85f, 0f), new Vector3(0.3f, 0.3f, 0.3f), gem, new Vector3(45f, 35f, 0f));
+                var lends = stone.AddComponent<Clover.World.FormStone>();
+                lends.Configure(sample.Form, $"Try {sample.Name} ({sample.Form}, {sample.Element})", i == 0);
+                lends.Range = 1f;
+                lends.Watch(upgrades, combat);
+                stones.Add(lends);
+            }
+            var turn = new GameObject("Element Stone");
+            turn.transform.SetParent(rack, false);
+            turn.transform.position = new Vector3(0f, 0f, -12.5f);
+            BuildKit.Shape(PrimitiveType.Cylinder, "Plinth", turn.transform, new Vector3(0f, 0.5f, 0f), new Vector3(0.8f, 0.5f, 0.8f), plinth);
+            BuildKit.Shape(PrimitiveType.Sphere, "Gem", turn.transform, new Vector3(0f, 1.3f, 0f), new Vector3(0.45f, 0.45f, 0.45f),
+                BuildKit.Toon(Folder, "m_rack_gem_any", new Color(0.9f, 0.9f, 0.95f), false, null, 0f, 0.02f).Lit(Color.black, 0.3f, new Color(1.4f, 1.4f, 1.5f)));
+            var changes = turn.AddComponent<Clover.World.FormStone>();
+            changes.Configure("", "Take the next element", false);
+            changes.Range = 1.6f;
+            stones.Add(changes);
+            player.GetComponent<PlayerInteraction>().Configure(stones.ToArray());
         }
 
         private class DummyKit

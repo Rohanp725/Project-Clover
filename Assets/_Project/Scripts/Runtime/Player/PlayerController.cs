@@ -39,6 +39,32 @@ namespace Clover.Player
         /// <summary>Speed along the ground in metres per second, as asked for this frame.</summary>
         public float PlanarSpeed { get; private set; }
 
+        /// <summary>
+        /// Not zero while a spell form has the body (a beam braced, a drill bored, a parry held): the number is the
+        /// form's own token. The buttons do nothing but the dodge, which breaks a hold that may be broken.
+        /// </summary>
+        public int FormHold { get; private set; }
+        /// <summary>True while the form holding the body lets nothing reach it.</summary>
+        public bool FormUntouchable { get; private set; }
+        public bool FormCancellable { get; private set; }
+        /// <summary>Metres the form moves the body this frame; it is spent as it is used.</summary>
+        public Vector3 FormStep;
+        /// <summary>The animation state the form shows on the body (a hash; zero for none) and how far through it.</summary>
+        public int FormPose;
+        public float FormPoseProgress;
+        /// <summary>The form holds the guard up over whatever the legs do, or has the sword out.</summary>
+        public bool FormGuardPose;
+        public bool FormSwordOut;
+        /// <summary>True while the body is not drawn at all: it has become something else for a moment.</summary>
+        public bool Hidden;
+        /// <summary>A parry form is waiting for a blow; set when one came, with where it came from.</summary>
+        public bool FormParrying;
+        public bool FormParried;
+        public Vector3 FormParriedFrom;
+        /// <summary>Where the stick points on the ground, as last read; zero with no stick.</summary>
+        public Vector3 Wish { get; private set; }
+
+        private readonly RaycastHit[] sweep = new RaycastHit[16];
         private CharacterController body;
         private PlayerCombat combat;
         private PlayerDefence defence;
@@ -111,6 +137,12 @@ namespace Clover.Player
                 return;
             }
             Vector3 wish = CameraRelative(moveAction.ReadValue<Vector2>());
+            Wish = wish;
+            if (FormHold != 0)
+            {
+                AdvanceFormHold(deltaTime);
+                return;
+            }
             if (defence != null) defence.ReadInput();
             bool helpless = defence != null && defence.IsHelpless;
             bool attacking = combat != null && combat.IsAttacking;
@@ -219,6 +251,7 @@ namespace Clover.Player
         /// </summary>
         public void Leap(Vector3 to, float seconds, float height)
         {
+            BreakFormHold();
             if (combat != null) combat.Interrupt();
             if (element != null)
             {
@@ -236,6 +269,107 @@ namespace Clover.Player
             leapHeight = height;
             leapElapsed = 0f;
             IsLeaping = true;
+        }
+
+        /// <summary>
+        /// Gives the body to a spell form until it gives it back: whatever the player was doing is dropped. A hold that
+        /// is untouchable lets no blow land; one that is cancellable ends when the dodge is pressed, and the roll follows.
+        /// False when the body cannot be taken now.
+        /// </summary>
+        public bool BeginFormHold(int token, bool untouchable, bool cancellable)
+        {
+            if (token == 0 || IsLeaping || (defence != null && defence.IsHelpless)) return false;
+            EndFormHold(FormHold);
+            if (combat != null) combat.Interrupt();
+            if (element != null)
+            {
+                element.Interrupt();
+                element.DropHolds();
+            }
+            if (defence != null) defence.DropHolds();
+            Dodge.Stop();
+            FormHold = token;
+            FormUntouchable = untouchable;
+            FormCancellable = cancellable;
+            FormStep = Vector3.zero;
+            return true;
+        }
+
+        /// <summary>The form gives the body back. Nothing happens unless it is the one holding it.</summary>
+        public void EndFormHold(int token)
+        {
+            if (token == 0 || FormHold != token) return;
+            FormHold = 0;
+            FormUntouchable = false;
+            FormCancellable = false;
+            FormStep = Vector3.zero;
+            FormPose = 0;
+            FormGuardPose = false;
+            FormSwordOut = false;
+            FormParrying = false;
+            Hidden = false;
+            fallSpeed = 1f;
+        }
+
+        /// <summary>Whatever form holds the body lets go: a blow landed, the player fell, or the scene took them.</summary>
+        public void BreakFormHold() => EndFormHold(FormHold);
+
+        private void AdvanceFormHold(float deltaTime)
+        {
+            if (FormCancellable && dodgeAction.WasPressedThisFrame())
+            {
+                // The roll itself is settled next frame, in the usual order.
+                dodgeBuffered = DodgeBufferTime;
+                BreakFormHold();
+                return;
+            }
+            Vector3 step = FormStep;
+            FormStep = Vector3.zero;
+            PlanarSpeed = 0f;
+            if (body.enabled)
+            {
+                fallSpeed = body.isGrounded ? 1f : fallSpeed + Gravity * deltaTime;
+                step.y = -fallSpeed * deltaTime;
+                body.Move(step);
+            }
+            Stamina.Tick(deltaTime);
+            if (defence != null) defence.Advance(deltaTime, true, false);
+            if (combat != null) combat.Advance(deltaTime, true);
+        }
+
+        /// <summary>
+        /// How far the body can go in a straight line before something solid stops it. Things that can be shoved aside
+        /// (enemies) do not count: a form that passes through them asks this first.
+        /// </summary>
+        public float ClearRun(Vector3 direction, float distance)
+        {
+            direction.y = 0f;
+            if (direction.sqrMagnitude < 0.0001f || distance <= 0f) return 0f;
+            direction.Normalize();
+            Vector3 foot = transform.position + Vector3.up * (body.radius + 0.35f);
+            Vector3 head = transform.position + Vector3.up * (body.height - body.radius);
+            int count = Physics.CapsuleCastNonAlloc(foot, head, body.radius * 0.8f, direction, sweep, distance, ~0, QueryTriggerInteraction.Ignore);
+            float clear = distance;
+            for (int i = 0; i < count; i++)
+            {
+                var other = sweep[i].collider;
+                if (other.transform.root == transform.root) continue;
+                if (other.GetComponentInParent<Clover.Gameplay.IShovable>() != null) continue;
+                clear = Mathf.Min(clear, Mathf.Max(0f, sweep[i].distance - 0.2f));
+            }
+            return clear;
+        }
+
+        /// <summary>Puts the body at a spot at once, through whatever stands between, keeping its feet on the ground there.</summary>
+        public void PassTo(Vector3 to)
+        {
+            if (Physics.Raycast(to + Vector3.up * 1.5f, Vector3.down, out RaycastHit under, 4f, ~0, QueryTriggerInteraction.Ignore)
+                && Mathf.Abs(under.point.y - transform.position.y) < 1.2f)
+                to.y = under.point.y + 0.02f;
+            else to.y = transform.position.y;
+            body.enabled = false;
+            transform.position = to;
+            body.enabled = true;
         }
 
         // The leap is a set path: rising fast, hanging, and coming down faster than it went up.
@@ -285,6 +419,7 @@ namespace Clover.Player
             body.enabled = true;
             fallSpeed = 0f;
             IsLeaping = false;
+            BreakFormHold();
             Dodge.Reset();
         }
 

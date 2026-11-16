@@ -72,6 +72,8 @@ namespace Clover.Player
         private float upperWeight;
         private int upperLayer = -1;
         private int shownLocomotion;
+        private Renderer[] drawn;
+        private bool hidden;
 
         public void Configure(PlayerController playerToShow, PlayerCombat combatToShow, PlayerDefence defenceToShow,
             PlayerElement elementToShow, Animator animatorToDrive, GameObject drawnSwordObject, GameObject sheathedHiltObject,
@@ -90,6 +92,7 @@ namespace Clover.Player
         private void Start()
         {
             if (animator != null) upperLayer = animator.GetLayerIndex(UpperBodyLayer);
+            if (animator != null) drawn = animator.GetComponentsInChildren<Renderer>(true);
         }
 
         private void LateUpdate()
@@ -106,12 +109,20 @@ namespace Clover.Player
 
             bool helpless = defence != null && defence.IsHelpless;
             bool leaping = player.IsLeaping;
+            // A spell form may show a pose of its own on the body, or take the body out of sight altogether.
+            bool posed = !helpless && !leaping && player.FormHold != 0 && player.FormPose != 0;
+            if (player.Hidden != hidden && drawn != null)
+            {
+                hidden = player.Hidden;
+                foreach (var part in drawn)
+                    if (part != null) part.enabled = !hidden;
+            }
             bool rolling = !helpless && !leaping && player.Dodge.IsRolling;
             bool charging = !helpless && !rolling && !leaping && combat.IsCharging;
             bool attacking = !helpless && !rolling && !leaping && !charging && combat.Combo.Current != null;
             bool casting = !helpless && !rolling && !charging && !attacking && element != null && element.IsCasting;
             bool drinking = !helpless && defence != null && defence.IsDrinking;
-            bool guarding = !helpless && defence != null && defence.IsGuarding;
+            bool guarding = !helpless && ((defence != null && defence.IsGuarding) || (player.FormHold != 0 && player.FormGuardPose));
 
             int locomotion = weapon.UsesSword ? LocomotionHash : FistLocomotionHash;
             if (helpless && defence.IsDead)
@@ -125,6 +136,10 @@ namespace Clover.Player
             else if (leaping)
             {
                 animator.Play(LeapHash, 0, Mathf.Min(ClipEnd, player.LeapProgress));
+            }
+            else if (posed)
+            {
+                animator.Play(player.FormPose, 0, Mathf.Clamp(player.FormPoseProgress, 0f, ClipEnd));
             }
             else if (rolling)
             {
@@ -155,7 +170,7 @@ namespace Clover.Player
                 float fraction = player.MoveSpeed > 0f ? Mathf.Clamp01(player.PlanarSpeed / player.MoveSpeed) : 0f;
                 animator.SetFloat(SpeedHash, fraction, SpeedDampTime, deltaTime);
             }
-            wasBusy = helpless || leaping || rolling || charging || attacking || casting;
+            wasBusy = helpless || leaping || posed || rolling || charging || attacking || casting;
 
             if (upperLayer >= 0)
             {
@@ -170,9 +185,10 @@ namespace Clover.Player
             sinceAttack = attacking ? 0f : sinceAttack + deltaTime;
             // With the sword carried: out for an attack and a little after, and for the guard; a charge is made from
             // the sheath. With bare hands there is no sword on the character at all.
-            bool drawn = weapon.UsesSword && leaping || weapon.UsesSword && !rolling && !charging && !drinking && !casting && (guarding || sinceAttack < SheatheDelay);
-            Show(drawnSword, drawn);
-            Show(sheathedHilt, weapon.UsesSword && !drawn);
+            bool inHand = weapon.UsesSword && leaping || weapon.UsesSword && posed && player.FormSwordOut
+                || weapon.UsesSword && !posed && !rolling && !charging && !drinking && !casting && (guarding || sinceAttack < SheatheDelay);
+            Show(drawnSword, inHand);
+            Show(sheathedHilt, weapon.UsesSword && !inHand);
             Show(sheath, weapon.UsesSword);
         }
 
