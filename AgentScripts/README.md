@@ -63,3 +63,21 @@ time), then a shrine. To try a mix from its other side, hold the later element a
 the one after it, so the earlier side is reached by holding the earlier element. Embers for the chart: `script eval
 "UnityEngine.Object.FindAnyObjectByType<Clover.Player.PlayerUpgrades>().Earn(40); return 1;"` in Play Mode, or the
 rest fire's menu after felling dummies. Nothing the shrines give is written to saved progress.
+
+## The gifts and crowns: `SignaturesProbe`
+
+`bash AgentScripts/runprobe.sh CombatTest SignaturesProbe 200` plays every god's gift, every crown, Seven Flashes, Ball Lightning, Pawned Heart and
+The Wave Stands Still at three dummies: it takes the element, is given the mark as a shrine gives it (nothing else
+learned), does what the words ask (lights the surge with a short surge time, presses it again, guards, lands a
+finisher, holds the spell button), photographs the telling moments to `review/shots/current/sig_<name>_<n>.png` and
+logs what each dummy lost and carries. Names: fire, wind, ice, water, life, earth, metal, light, dark, poison, tempest,
+blizzard, glacier, bloom, overgrowth, forge, halo, eclipse, blight, pyre, flashes, ball, heart, wave. The whole run is about four
+minutes.
+
+- `%TEMP%/sig_probe.txt` with a comma list of names plays only those; `soak=<seconds>` keeps raising and dropping
+  Fire's sun for that long (for `diagnostics profiler_record`). Delete the file afterwards.
+- In any other scene (`runprobe.sh Castle SignaturesProbe 60`) it plays fire, ice, tempest, halo and pyre at the
+  nearest real enemy, only to see that nothing throws: the enemy fights back, so the numbers there mean little.
+- By hand in the yard: the element stone until you hold the element, then GOD GIFT (the Signature) or CONSUME NEXT
+  (the crown). Six Mirrors and Light the Pyres are worn at once (hold the spell button). Seven Flashes and The Wave
+  Stands Still are bought on the chart.

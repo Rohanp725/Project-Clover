@@ -123,6 +123,9 @@ namespace Clover.Player
         }
 
         /// <summary>Forgets a button being held, as when a menu or a leap takes the buttons away part-way through a hold.</summary>
+        /// <summary>True while the spell button is down: for a spell that lasts as long as it is held.</summary>
+        public bool SpellHeld => spellAction != null && spellAction.IsPressed();
+
         public void DropHolds()
         {
             spellHolding = false;
@@ -211,7 +214,9 @@ namespace Clover.Player
             if (surgeBuffered > 0f && free)
             {
                 surgeBuffered = 0f;
-                if (Kit.TrySurge(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SurgeCost) : 1f, stats != null ? stats.Multiplier(PlayerStat.SurgeSeconds) : 1f)) BeginSurge();
+                // A gift that waits on a second press takes it; the surge is not lit over itself.
+                if (Kit.SurgeActive && upgrades != null && upgrades.ListensForSurge) upgrades.HeardSurge();
+                else if (Kit.TrySurge(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SurgeCost) : 1f, stats != null ? stats.Multiplier(PlayerStat.SurgeSeconds) : 1f)) BeginSurge();
                 else if (defence != null) defence.Callout("No mana");
             }
             if (spellBuffered > 0f && free && !Kit.IsCasting)

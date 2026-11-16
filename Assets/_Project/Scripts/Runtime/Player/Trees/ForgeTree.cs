@@ -61,16 +61,10 @@ namespace Clover.Player.Trees
                 Description = "Every finisher folds your blade once more, up to ten. Each fold adds to every blow for the rest of the run. Each fold makes it heavier in the hand.",
                 Tally = new TallySpec { Name = "Folds", Cap = 10, Stat = PlayerStat.WeaponDamage, PerPoint = 0.03f, Stat2 = PlayerStat.AttackStamina, PerPoint2 = 0.01f, Kept = true }, Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Bank, Count = 1 } } });
 
-            // BESPOKE: an anvil rises under the finished enemy; the ring of the blow runs out to 6 m: 15 damage, 30 stagger, Tremor and Sundered to full depth on every other enemy;
-            // a blade is forged for each one reached (six at most) and they fire with the next heavy blow. Until then: the ring, on the finished one too, and three blades thrown at once.
+            // BESPOKE (built): AnvilForm.
             to.Add(new Upgrade { Id = WorldAnvil, Name = "World Anvil", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 7.96f, Icon = UpgradeIcons.Crown,
-                Description = "Your finisher is struck on an anvil that rises out of the ground. Its ring breaks the armour of everyone near and shakes them, and a blade is forged for each one it reaches.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Burst, Radius = 6f, Damage = 15f, Stagger = 30f, Affliction = Tremor, Stacks = 3 },
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Afflict, Radius = 6f, Affliction = Notch, Stacks = 3 },
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Projectile, Flight = Flight.Homing, Count = 3, Damage = 10f, Stagger = 12f, Speed = 16f },
-                } });
+                Description = "Your finisher is struck on an anvil that rises out of the ground. Its ring breaks the armour of everyone near and shakes them, and a blade is forged for each one it reaches, up to six. They fly with your next heavy blow.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Anvil, Affliction = AfflictionKind.Tremor, Spell = new SpellSpec { Cost = 0f, Radius = 6f, Damage = 15f, Stagger = 30f, Stacks = 3, Count = 6, LingerDamage = 10f } } } });
         }
     }
 }

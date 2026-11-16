@@ -47,10 +47,10 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.GuardStamina, 0.15f) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Heal, Amount = 2f }, new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Hold, Seconds = 1f }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Tremor, Stacks = 2 } } });
 
-            // BESPOKE: the ring of root and stone. Until then everything within seven metres is held two seconds, shaken and seeded, then a burst; the mending is a set amount, not one for each held.
+            // BESPOKE (built): GroundWakesForm.
             to.Add(new Upgrade { Id = TheGroundWakes, Name = "The Ground Wakes", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 7.96f, Icon = UpgradeIcons.Crown,
                 Description = "When your surge begins, the ground rises round you in a ring of root and stone and holds every enemy inside it. Then it flowers, and you are healed for each one held.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Hold, At = EffectAt.Self, Radius = 7f, Seconds = 2f }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 7f, Affliction = AfflictionKind.Tremor, Stacks = 3 }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 7f, Affliction = AfflictionKind.Seeded, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 7f, Delay = 2f, Damage = 15f, Stagger = 20f }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Heal, Amount = 8f } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.GroundWakes, Affliction = AfflictionKind.Tremor, Spell = new SpellSpec { Cost = 0f, Radius = 7f, Seconds = 2f, Damage = 15f, Stagger = 20f, Stacks = 3, LingerDamage = 5f } } } });
         }
     }
 }

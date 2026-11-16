@@ -93,8 +93,9 @@ namespace Clover.Player.Trees
             // BESPOKE: the heart set down, health held at one, the ring that closes. Until then it costs thirty health (left grey) and no mana, and a shade of the player doubles most of every blow for ten seconds.
             to.Add(new Upgrade { Id = PawnedHeart, Name = "Pawned Heart", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { DebtsCalled }, X = -2.4f, Y = 7.8f, Icon = UpgradeIcons.Heart,
                 Description = "Hold the spell button to tear out your heart and set it down. While it beats there you stand one blow from death, and strike as you never have. Come back for it in time and it returns with what your blows have earned. No mana.",
-                Form = FormClone,
-                Spell = new SpellSpec { Cost = 0f, HealthCost = 30f, Seconds = 10f, Damage = 60f, Stacks = 0 } });
+                // BESPOKE (built): HeartForm. The form takes the health itself; the price of one point only says that one who has nothing to pawn cannot cast it.
+                Form = SpellForms.Heart,
+                Spell = new SpellSpec { Cost = 0f, HealthCost = 1f, Seconds = 10f, Damage = 60f, Count = 30, Radius = 3f, Stacks = 0 } });
             // BESPOKE: every wound left whole as grey health. Until then grey health lingers twice as long and every blow landed wins a little back.
             to.Add(new Upgrade { Id = Unpaid, Name = "Unpaid", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { PawnedHeart }, X = -3.43f, Y = 8.8f, Icon = UpgradeIcons.Chain,
                 Description = "Every wound is only owed. All of it can be won back with blows before it is collected. Flasks heal half as much.",
@@ -199,14 +200,10 @@ namespace Clover.Player.Trees
                 Description = "You do not wait to die. You are Risen from now on: in every fight your health drains, and dealing damage feeds you. You strike far harder. There is no second rising.",
                 Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.25f), new StatMod(PlayerStat.Health, -25f), new StatMod(PlayerStat.Leech, 0.3f) }, });
 
-            // BESPOKE: the Rise, the sigil on the killer and the finisher that brings the player back. Until then a shade takes a blow when health falls low, and a finisher heals a great deal.
+            // BESPOKE (built): the Rise, in PlayerUpgrades.Rise and RiseForm. This mark gives it.
             to.Add(new Upgrade { Id = LifeForALife, Name = "A Life for a Life", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
-                Description = "Risen, land a finisher on the one that killed you. You live again, and you may rise once more.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.LowHealth, Do = UpgradeAction.Ward, Count = 1, Cooldown = 30f },
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Heal, Amount = 20f, Cooldown = 10f },
-                } });
+                Description = "The blow that would kill you does not, once. You rise with half your health, and it drains away. A sigil marks the one that killed you: land a finisher on it and you live again, and may rise once more.",
+                Effects = System.Array.Empty<UpgradeEffect>() });
         }
     }
 }

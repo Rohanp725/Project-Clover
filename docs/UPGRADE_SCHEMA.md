@@ -711,3 +711,59 @@ An effect tied to one spell's hits; a per-enemy debuff or tally; "the target is 
 enemy's attacks, guard or sight; a dodge that passes through enemies; a report when a pushed enemy meets a wall; a
 revive; the weapon's chain (jump to its end, loop it, remember it through a dodge); poison's beat (bite now, hold,
 double); things that stand and block and can be struck (beyond the `wall` and `ring` forms).
+
+## 16. Added for the gifts and crowns (2026-11-16, evening)
+
+### 16.1 A mark may begin a form: `UpgradeAction.Form`
+
+| `UpgradeAction.` | What it does | Fields it reads |
+|---|---|---|
+| `Form` | casts a spell form by name, free, when the trigger fires: at the trigger's own enemy when it has one, else as a spell cast would aim | `Form` (an id in `SpellForms`), `Spell` (a `SpellSpec`; its `Cost` is 0), `Affliction` (the form is coloured and lays as that affliction's element; left out, the element held), and every condition |
+
+This is how a move that lasts, watches the weapon, or needs the body is hung on a trigger. The form is a
+`RunningForm` like any other: it is told of every swing and every blow that lands (`Swung`, `Struck`), and may read
+what the player's own parts already count: `PlayerDefence.Blocks`, `PerfectGuards`, `BlowsTaken`, `PlayerCombat.Finishers`,
+and on `PlayerUpgrades`: `LastGuardFrom` and `LastGuardEnemy` (who the last guarded blow came from), `DodgeCount`,
+`LastDodgeFrom` and `LastDodgeDirection`, and `SurgeAgain`.
+
+```csharp
+Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Sun,
+    Spell = new SpellSpec { Cost = 0f, Damage = 60f, Stagger = 80f, Radius = 4f } } }
+```
+
+### 16.2 The surge button pressed again
+
+A form that waits on a second press of the surge calls `cast.Upgrades.ListenForSurge()` every frame it waits and
+watches `SurgeAgain` rise. While any form listens, the press is its own: the surge is not lit over itself and no
+mana is spent. With no listener a second press lights the surge again, as before. Used by `sun`, `stillworld`, `sea`
+and `spring`. A held surge button is not read: the designs that asked for a hold use this press.
+
+### 16.3 One run that later casts add to
+
+`SpellWorks.Find(form, out found)` hands back the run of a form already in progress, for forms the player has one of
+at a time: `dust` (each shatter adds shards) and `plates` (each guard adds plates).
+
+### 16.4 The Rise
+
+`PlayerUpgrades.Rise(attacker)` is asked by `PlayerDefence` when a blow has taken the last health. With Dark's gift
+(`dark.lifeforalife`), and once until it is bought back, the player stands again with `RiseHealth` (0.5) of their health
+and `Risen` is true; the `rise` form drains them and watches for the finisher. `EndRise(lived, share)` ends it.
+`StatWhen.Risen` holds while it lasts, so a stat or an effect may wait on it (`While = StatWhen.Risen`); the Dark marks
+that speak of being Risen still read it as "while Hunger lasts" and are to be moved over. `RiseDrain` is the place a
+stat for the drain would go.
+
+### 16.5 Poison made to wait
+
+`Afflictions.PoisonWaits` (set by the `cleanblade` form for the length of the surge) stops poison biting and fading on
+everything; each `AfflictionSet` counts the seconds (`OwedSeconds`) and `TakeOwed()` pays one bite for each whole beat
+at the depth it has then. This is the first piece of "poison's beat" (section 14's gap): a trigger when it bites is
+still not there.
+
+### 16.6 Still not possible as data
+
+A held button other than the spell button; a finisher whose animation is replaced (Falling Thunder takes the body
+after the finisher's blow lands); "cannot begin an attack" without also stopping movement (Hold stands in).
+
+### 16.7 A spell that lasts while the button is held
+
+`PlayerElement.SpellHeld` is true while the spell button is down. A worn spell is cast after the button has been held for 0.3 s; a form that reads `cast.Caster.SpellHeld` each frame can go on for as long as the hold continues (`frozenwave`).

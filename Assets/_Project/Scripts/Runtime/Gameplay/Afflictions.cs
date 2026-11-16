@@ -40,6 +40,12 @@ namespace Clover.Gameplay
         public static int DeeperBy { get; private set; }
         /// <summary>How many more weapon blows an affliction that is spent by blows (a mark of light) lasts for.</summary>
         public static int MoreBlows { get; set; }
+        /// <summary>While true, poison on every enemy neither bites nor fades; what it would have bitten is owed (<see cref="AfflictionSet.TakeOwed"/>). Poison's gift keeps this.</summary>
+        public static bool PoisonWaits { get; set; }
+
+        // Domain reload is off: a wait left standing by the last play must not hold this one's poison.
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetWaits() => PoisonWaits = false;
 
         public static void SetDeeper(AfflictionKind kind, int by)
         {

@@ -26,7 +26,6 @@ namespace Clover.Player.Trees
         {
             // The first element is the one whose mix this is: the earlier of the two round the ring.
             const string A = Elements.Light, B = Elements.Dark;
-            const AfflictionKind Marked = AfflictionKind.Marked, Cursed = AfflictionKind.Cursed;
 
             to.Add(new Upgrade { Id = Twilight, Name = "Twilight", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, X = 0f, Y = 1f, Icon = UpgradeIcons.Moon,
                 Description = "The blow that ends a chain both Marks and Curses. Critical blows on an enemy that bears both feed you.",
@@ -61,17 +60,11 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.CritDamage, 0.2f, StatWhen.HighHealth), new StatMod(PlayerStat.ManaFromBlows, 0.2f, StatWhen.HighHealth) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.HalfHealth, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.HalfHealth, Do = UpgradeAction.Leech, Amount = 0.08f }, new UpgradeEffect { On = UpgradeTrigger.LowHealth, Do = UpgradeAction.Burst, At = EffectAt.Self, Affliction = AfflictionKind.Cursed, Damage = 16f, Stagger = 25f, Radius = 3.5f, Stacks = 1, Cooldown = 4f } } });
 
-            // BESPOKE: the covered sun, and the light's return striking each enemy for a share of what it took in the dark. Until then: both afflictions on all near, six seconds of critical blows that feed, and one burst when the surge ends.
+            // BESPOKE (built): TotalityForm. The returning light gives back half of what each enemy lost in the dark, 80 at most.
             to.Add(new Upgrade { Id = Totality, Name = "Totality", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
                 Description = "When your surge begins, the sun is covered. While the dark lasts every enemy is Marked and Cursed and every blow you land is critical and feeds you. When the light returns, it strikes all you wounded.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Afflict, At = EffectAt.Self, Affliction = Marked, Stacks = 3, Radius = 14f },
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Afflict, At = EffectAt.Self, Affliction = Cursed, Stacks = 3, Radius = 14f },
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Boon, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 6f },
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Heal, WhileSurge = true, Amount = 1f, Cooldown = 0.2f },
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeEnd, Do = UpgradeAction.Burst, At = EffectAt.Self, Affliction = Marked, Damage = 25f, Stagger = 30f, Radius = 10f },
-                } });
+                Stats = new[] { new StatMod(PlayerStat.CritChance, 1f, StatWhen.Surge) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Heal, WhileSurge = true, Amount = 1f, Cooldown = 0.2f }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Totality, Affliction = AfflictionKind.Marked, Spell = new SpellSpec { Cost = 0f, Reach = 14f, Stacks = 3, Damage = 50f, Count = 80, Stagger = 30f } } } });
         }
     }
 }

@@ -181,11 +181,10 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.SpellCost, 0.25f) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Burst, Radius = 2.5f, Delay = 0.4f, Damage = 12f, Stagger = 10f, Affliction = M, Stacks = 1, Cooldown = 0.2f } } });
 
-            // BESPOKE: while the surge lasts damage dealt and damage taken are weighed on two pans of light; if the dealt is heavier when it ends, a sword falls on every Marked enemy
-            // within 12 m for 60% of the difference (120 at most) and 80 stagger; if not, no mana can be gained for 5 s. Until then: one sword falls on the enemy faced when the surge ends.
+            // BESPOKE (built): ScalesForm. Found wanting, the mana is emptied.
             to.Add(new Upgrade { Id = TheScales, Name = "The Scales", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
-                Description = "While Clarity lasts, the wounds you deal and the wounds you take are weighed. If yours are the heavier when it ends, a sword of light falls on every Marked enemy. If not, the light leaves you for a while.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeEnd, Do = UpgradeAction.Falling, Radius = 2.5f, Delay = 0.6f, Damage = 60f, Stagger = 80f, Affliction = M, Stacks = 1 } } });
+                Description = "While Clarity lasts, the wounds you deal and the wounds you take are weighed. If yours are the heavier when it ends, a sword of light falls on every Marked enemy. If not, the light leaves you, and your mana with it.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Scales, Spell = new SpellSpec { Cost = 0f, Damage = 60f, Stagger = 80f, Radius = 2.5f, Reach = 12f, Count = 120, Stacks = 1 } } } });
         }
     }
 }

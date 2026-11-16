@@ -47,24 +47,16 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = ColdInTheBones, Name = "Cold in the Bones", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { FlashFreeze }, X = 0f, Y = 3.48f, Icon = UpgradeIcons.Hourglass,
                 Description = "An enemy both Soaked and chilled is slow to wind up its blows. The moment to guard them is easier to find.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictedHit, Do = UpgradeAction.Boon, Needs = AfflictionKind.Soaked, Stat = PlayerStat.PerfectGuardWindow, Amount = 0.25f, Seconds = 4f, Cooldown = 0.5f } } });
-            // BESPOKE: a wave rolls out while the button is held and freezes where it stands on release, with everything
-            // in it; one heavy blow shatters all of it. Until then the wall form: it rises ahead, stands, and bursts for a heavy blow.
+            // BESPOKE (built): FrozenWaveForm.
             to.Add(new Upgrade { Id = TheWaveStandsStill, Name = "The Wave Stands Still", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ColdInTheBones }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Wave,
                 Description = "Hold the spell button to throw a great wave. Let go, and it freezes where it stands with everything in it. One heavy blow shatters the wall and all it holds. 50 mana.",
-                Form = "wall",
-                Spell = new SpellSpec { Cost = 50f, Reach = 4f, Arc = 6f, Delay = 0.4f, Seconds = 4f, Radius = 5f, Damage = 45f, Stagger = 60f, Stacks = 5 } });
+                Form = SpellForms.FrozenWave,
+                Spell = new SpellSpec { Cost = 50f, Reach = 9f, Speed = 6f, Arc = 6f, LingerDamage = 10f, Seconds = 4f, Damage = 45f, Stagger = 60f, Stacks = 5 } });
 
-            // BESPOKE: guarded blows lay plates of ice, five at most, each turning a little of every wound; the next heavy
-            // blow spends them all for reach, damage and Chill. Until then: a guard hardens the player and the next blows.
+            // BESPOKE (built): PlatesForm.
             to.Add(new Upgrade { Id = Gift, Name = "Weight of Ice", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
                 Description = "Each blow you guard lays a plate of ice on you, up to five. A perfect guard lays two. Plates turn a little of every wound. Your next heavy blow spends them all in one great edge of ice.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Boon, Stat = PlayerStat.DamageTaken, Amount = -0.1f, Seconds = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.2f, Seconds = 6f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Boon, Stat = PlayerStat.DamageTaken, Amount = -0.15f, Seconds = 12f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.4f, Seconds = 6f },
-                } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Form, Form = SpellForms.Plates, Affliction = AfflictionKind.Chill, Spell = new SpellSpec { Cost = 0f, Count = 1, Damage = 12f, Stagger = 12f, Reach = 1.2f, Radius = 1.3f, Stacks = 1 } }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Form, Form = SpellForms.Plates, Affliction = AfflictionKind.Chill, Spell = new SpellSpec { Cost = 0f, Count = 2, Damage = 12f, Stagger = 12f, Reach = 1.2f, Radius = 1.3f, Stacks = 1 } } } });
         }
     }
 }

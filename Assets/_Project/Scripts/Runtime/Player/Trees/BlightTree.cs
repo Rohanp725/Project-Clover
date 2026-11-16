@@ -61,10 +61,10 @@ namespace Clover.Player.Trees
                 Description = "When a Cursed enemy dies, the poison in every other enemy bites at once, and you are fed by all of it.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Do = UpgradeAction.Burst, Affliction = AfflictionKind.Poison, Damage = 10f, Stagger = 4f, Radius = 12f, Cooldown = 1f }, new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Do = UpgradeAction.Heal, Amount = 5f, Cooldown = 1f } } });
 
-            // BESPOKE: the great blade. Until then a finisher on a Cursed, poisoned enemy sets off that enemy's own poison across nine metres and mends a set amount.
+            // BESPOKE (built): ReapingForm.
             to.Add(new Upgrade { Id = TheReaping, Name = "The Reaping", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
                 Description = "Your finisher on a Cursed, poisoned enemy reaps the field. All the poison in it and in every enemy near lands at once, and half of it is yours.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.SetOff, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Poison, Affliction = AfflictionKind.Poison, Damage = 3f, Stagger = 4f, Radius = 9f }, new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Poison, Do = UpgradeAction.Heal, Amount = 15f } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Reaping, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Poison, Affliction = AfflictionKind.Poison, Spell = new SpellSpec { Cost = 0f, Radius = 9f, Damage = 3f, Stagger = 4f } } } });
         }
     }
 }

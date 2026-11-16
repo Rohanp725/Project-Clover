@@ -196,15 +196,10 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.FlaskHeal, -0.3f) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1.5f, Do = UpgradeAction.Afflict, At = EffectAt.Self, Affliction = P, Stacks = 1, Radius = 4f } } });
 
-            // BESPOKE: the beat held still for the length of the surge and every owed bite landing on the flick. Until then: blows dose twice while the surge lasts, and its end is one burst round the player.
+            // BESPOKE (built): CleanBladeForm; the beat is held through Afflictions.PoisonWaits.
             to.Add(new Upgrade { Id = CleanBlade, Name = "Clean Blade", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
                 Description = "While Fever lasts the poison waits, and every blow doses twice. When it ends you flick the blade clean, and every bite that was owed lands at once.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Afflict, WhileSurge = true, Affliction = P, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeEnd, Do = UpgradeAction.SlowTime, Seconds = 0.5f, Amount = 0.35f },
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeEnd, Do = UpgradeAction.Burst, At = EffectAt.Self, Affliction = P, Damage = 30f, Stagger = 40f, Radius = 8f, Delay = 0.3f },
-                } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Afflict, WhileSurge = true, Affliction = AfflictionKind.Poison, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.CleanBlade, Spell = new SpellSpec { Cost = 0f, Stagger = 20f, Reach = 14f } } } });
         }
     }
 }

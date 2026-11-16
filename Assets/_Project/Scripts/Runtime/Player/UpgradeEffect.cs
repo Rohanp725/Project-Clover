@@ -75,6 +75,9 @@ namespace Clover.Player
         public PlayerStat Stat;
         public HazardShape Shape = HazardShape.Patch;
         public Flight Flight = Flight.Straight;
+        /// <summary>For <see cref="UpgradeAction.Form"/>: the form cast, by its name in <see cref="SpellForms"/>, and the numbers it reads.</summary>
+        public string Form = "";
+        public SpellSpec Spell;
 
         /// <summary>Its place among all the effects in the catalogue; set when the catalogue is gathered.</summary>
         public int Slot { get; internal set; } = -1;

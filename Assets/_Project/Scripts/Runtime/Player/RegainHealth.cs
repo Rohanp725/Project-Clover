@@ -72,6 +72,13 @@ namespace Clover.Player
             return won;
         }
 
+        /// <summary>Stands the dead up again with this much health and nothing grey.</summary>
+        public void Rise(float amount)
+        {
+            Current = Math.Max(1f, Math.Min(Maximum, amount));
+            Grey = 0f;
+        }
+
         public void Heal(float amount)
         {
             if (amount <= 0f || IsDead) return;

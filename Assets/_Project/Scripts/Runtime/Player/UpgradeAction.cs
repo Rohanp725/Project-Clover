@@ -60,5 +60,7 @@ namespace Clover.Player
         Drop,
         /// <summary>Bursts everything the player has grown, each where it stands, and heals for each. Reads: Damage, Stagger, Radius (3), Amount: health for each burst, Affliction, Stacks.</summary>
         BurstGrown,
+        /// <summary>Casts a spell form by name (<see cref="UpgradeEffect.Form"/>) with the numbers in <see cref="UpgradeEffect.Spell"/>, at the trigger's enemy when it has one: how a god's gift or a crown is begun. Costs nothing.</summary>
+        Form,
     }
 }

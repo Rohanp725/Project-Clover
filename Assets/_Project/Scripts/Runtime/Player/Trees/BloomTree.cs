@@ -64,18 +64,10 @@ namespace Clover.Player.Trees
                 Form = "pillars",
                 Spell = new SpellSpec { Cost = 45f, Count = 1, Reach = 5f, Radius = 3f, Damage = 20f, Stagger = 50f, Stacks = 1, Delay = 0.5f } });
 
-            // BESPOKE: five petals that close on attackers at each perfect guard and burst when the last one closes.
-            // Until then: a flask drunk while the surge lasts leaves ground that soaks and seeds for ten seconds, mends
-            // half a flask more, and bursts at the end.
+            // BESPOKE (built): LotusForm.
             to.Add(new Upgrade { Id = Gift, Name = "Great Lotus", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
-                Description = "A flask drunk while your surge lasts opens a great lotus under you. Inside it you mend and enemies are Soaked and Seeded. Each perfect guard inside closes a petal on the attacker and holds it, up to five. When the last petal closes, the lotus bursts.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, WhileSurge = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 3f, Seconds = 10f, Interval = 1f, Damage = 2f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, WhileSurge = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Patch, Radius = 3f, Seconds = 10f, Interval = 1f, Delay = 0.5f, Damage = 2f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, WhileSurge = true, Do = UpgradeAction.Burst, At = EffectAt.Self, Damage = 30f, Stagger = 40f, Radius = 5f, Delay = 10f },
-                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, WhileSurge = true, Do = UpgradeAction.Heal, Amount = 22f },
-                } });
+                Description = "A flask drunk while your surge lasts opens a great lotus under you. Inside it you mend and enemies are Soaked and Seeded. Each perfect guard inside closes a petal on the attacker and holds it, up to five. When the last petal closes, or its ten seconds are done, the lotus bursts.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, Do = UpgradeAction.Form, Form = SpellForms.Lotus, WhileSurge = true, Affliction = AfflictionKind.Seeded, Spell = new SpellSpec { Cost = 0f, Radius = 3f, Seconds = 10f, Damage = 30f, Stagger = 40f, Count = 5, LingerDamage = 2f, Stacks = 1 } } } });
         }
     }
 }

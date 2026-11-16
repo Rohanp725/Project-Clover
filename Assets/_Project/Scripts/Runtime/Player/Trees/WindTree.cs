@@ -196,11 +196,10 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.SkillHit, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 6f, Affliction = AfflictionKind.Unsteady, Stacks = 2, Cooldown = 1f },
                 } });
 
-            // BESPOKE: the cuts that hang in the air while Tailwind lasts and all fall again when it ends (docs/design/trees_a.md).
-            // Until then, while Tailwind lasts, a copy of the player repeats each blow a moment after it lands.
+            // BESPOKE (built): RememberForm.
             to.Add(new Upgrade { Id = TheWindRemembers, Name = "The Wind Remembers", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
-                Description = "While Tailwind lasts, every blow you land hangs in the air where it fell. When Tailwind ends, all of them fall again at once.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, Do = UpgradeAction.Echo, Amount = 0.35f, Delay = 1f, Cooldown = 0.4f } } });
+                Description = "While Tailwind lasts, every blow you land hangs in the air where it fell, up to sixteen. When Tailwind ends, all of them fall again at once, each half as hard as the blow it remembers.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Remember, Spell = new SpellSpec { Cost = 0f, Damage = 50f, Stagger = 10f, Stacks = 1 } } } });
         }
     }
 }

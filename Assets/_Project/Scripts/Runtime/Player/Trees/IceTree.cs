@@ -177,15 +177,10 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.Health, -25f) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 12f, Do = UpgradeAction.Ward, Count = 1 } } });
 
-            // BESPOKE: pressed again with the shell standing, it breaks outward as a ring that freezes all it crosses,
-            // and each shatter runs on to the next Frozen enemy. Until then: lighting the surge freezes everything near.
+            // BESPOKE (built): StillWorldForm and ShatterChainForm.
             to.Add(new Upgrade { Id = Gift, Name = "The World Holds Still", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
                 Description = "With Glaze standing, press the surge button again to break it outward. Everything it crosses is Frozen where it stands. Shatter one and its ice shatters the next.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 8f, Affliction = AfflictionKind.Chill, Stacks = 5 },
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.SlowTime, Seconds = 1.5f, Amount = 0.2f },
-                } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.StillWorld, Spell = new SpellSpec { Cost = 0f, Damage = 10f, Stagger = 30f, Radius = 9f } }, new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.Form, Form = SpellForms.ShatterChain, Cooldown = 0.1f, Spell = new SpellSpec { Cost = 0f, Damage = 20f, Stagger = 30f, Reach = 7f } } } });
         }
     }
 }

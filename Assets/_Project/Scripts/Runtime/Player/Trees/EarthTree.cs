@@ -190,15 +190,10 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Boon, Stat = PlayerStat.DamageTaken, Amount = -0.08f, Seconds = 10f },
                 } });
 
-            // BESPOKE: while the surge lasts a great hand of stone mirrors the sword arm; half a second after each heavy blow or finisher it comes down on a 3 m circle under
-            // that enemy for 70% of the blow's damage and all of its stagger, and Tremor 1. Until then: the blow is repeated where you stand, and the enemy is shaken.
+            // BESPOKE (built): HandForm.
             to.Add(new Upgrade { Id = HandOfTheMountain, Name = "Hand of the Mountain", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
                 Description = "While Bedrock lasts, a hand of stone as tall as a tower follows your arm. Each heavy blow you land, it lands again a moment after.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, WhileSurge = true, Do = UpgradeAction.Echo, Amount = 0.7f, Delay = 0.5f, Radius = 3f, Stagger = 40f, Cooldown = 0.4f },
-                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, WhileSurge = true, Do = UpgradeAction.Afflict, Affliction = T, Stacks = 1 },
-                } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Hand, Spell = new SpellSpec { Cost = 0f, Damage = 70f, Stagger = 40f, Radius = 3f, Delay = 0.5f, Stacks = 1 } } } });
         }
     }
 }

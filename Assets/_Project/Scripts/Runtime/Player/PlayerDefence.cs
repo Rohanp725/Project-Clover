@@ -414,6 +414,8 @@ namespace Clover.Player
         {
             BlowsTaken++;
             Health.Damage(hit.Damage * DamageTaken);
+            // With Dark's gift the blow that kills is not the end, once.
+            if (IsDead && upgrades != null && upgrades.Rise(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction)) Callout("Risen");
             if (upgrades != null) upgrades.OnStruck(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
             Vfx.Play(VfxKind.Wound, transform.position + Vector3.up * 1.1f, hit.Direction);
             ScreenFlash.Flash(new Color(1f, 0.08f, 0.1f, 0.16f), 0.09f);

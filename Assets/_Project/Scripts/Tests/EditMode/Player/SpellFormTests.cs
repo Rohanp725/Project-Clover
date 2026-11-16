@@ -19,16 +19,24 @@ namespace Clover.Tests
             "bullets", "reverse", "parry", "wall", "discs", "brand", "rain", "clone", "flash", "ring", "pillars", "step",
         };
 
+        // The bespoke moves in the same file: the gods' gifts and the crowns. They belong to their marks and have no sample on the rack.
+        private static readonly string[] Bespoke =
+        {
+            "sun", "remember", "stillworld", "shatterchain", "sea", "spring", "hand", "hangingswords", "scales", "rise", "cleanblade",
+            "thunder", "dust", "plates", "lotus", "groundwakes", "anvil", "mirrors", "totality", "reaping", "pyres",
+            "flashes", "frozenwave", "ball", "heart",
+        };
+
         [Test]
         public void EveryPromisedFormIsThereUnderItsOwnName()
         {
-            foreach (string id in Promised)
+            foreach (string id in Promised.Concat(Bespoke))
             {
                 var form = SpellForms.Get(id);
                 Assert.IsNotNull(form, $"No form is registered as '{id}'.");
                 Assert.AreEqual(id, form.Id);
             }
-            Assert.AreEqual(Promised.Length, SpellForms.All.Count, "A form is registered that docs/design/FORMS.md does not name, or one is registered twice.");
+            Assert.AreEqual(Promised.Length + Bespoke.Length, SpellForms.All.Count, "A form is registered that docs/design/FORMS.md does not name, or one is registered twice.");
             Assert.AreEqual(SpellForms.All.Count, SpellForms.All.Select(form => form.Id).Distinct().Count());
         }
 

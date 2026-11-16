@@ -59,12 +59,11 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.GuardStamina, 0.2f) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Cone, Reach = 6f, Arc = 120f, Damage = 0f, Stagger = 15f, Affliction = AfflictionKind.Marked, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Hold, At = EffectAt.Self, Radius = 6f, Seconds = 1.5f } } });
 
-            // BESPOKE in the design; the flash form carries it: six lines of light cross the enemy faced and the cuts land together, the player untouchable meanwhile.
-            // Still to come: each cut critical and laying a notch as well as a mark, half damage to others on a line, and the 0.3 s in which the cast can be lost.
+            // BESPOKE (built): MirrorsForm.
             to.Add(new Upgrade { Id = SixMirrors, Name = "Six Mirrors", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
                 Description = "Hold the spell button and six mirrors of steel stand in a ring round the enemy you face. You pass through it from each one in turn, faster than can be followed. The cuts land when you are back where you began. 60 mana.",
-                Form = "flash",
-                Spell = new SpellSpec { Cost = 60f, Reach = 8f, Count = 6, Interval = 0.15f, Delay = 0.3f, Damage = 14f, Stagger = 12f, Stacks = 1 } });
+                Form = SpellForms.Mirrors,
+                Spell = new SpellSpec { Cost = 60f, Reach = 8f, Radius = 3f, Count = 6, Interval = 0.13f, Delay = 0.3f, Damage = 14f, Stagger = 12f, Stacks = 1 } });
         }
     }
 }

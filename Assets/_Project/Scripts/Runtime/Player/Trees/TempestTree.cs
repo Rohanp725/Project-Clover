@@ -60,16 +60,10 @@ namespace Clover.Player.Trees
                 Form = "discs",
                 Spell = new SpellSpec { Cost = 50f, Count = 4, Radius = 3.5f, Seconds = 2.5f, Interval = 0.4f, Damage = 6f, Stagger = 8f, Stacks = 1 } });
 
-            // BESPOKE: the finisher itself changes, a throw skyward and a ride down as a bolt. What it adds where it lands
-            // is data: the burst, both afflictions three deep, and the push.
+            // BESPOKE (built): ThunderForm.
             to.Add(new Upgrade { Id = FallingThunder, Name = "Falling Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
                 Description = "Your finisher changes. You throw the enemy skyward, meet it there, and ride it down as a bolt. Where you land, everything near is shocked and thrown back.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Burst, Damage = 22f, Stagger = 40f, Radius = 4.5f, Affliction = AfflictionKind.Static, Stacks = 3 },
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 3, Radius = 4.5f },
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Push, Radius = 4.5f, Amount = 3f },
-                } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Thunder, Affliction = AfflictionKind.Static, Spell = new SpellSpec { Cost = 0f, Damage = 22f, Stagger = 40f, Radius = 4.5f, Stacks = 3 } } } });
         }
     }
 }

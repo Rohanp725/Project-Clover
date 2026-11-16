@@ -59,10 +59,10 @@ namespace Clover.Player.Trees
                 Description = "Burn and poison keep one time. Both bite together on the beat, and each bites harder for the depth of the other.",
                 Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.3f) } });
 
-            // BESPOKE: the kneel, the lines of fire that follow each afflicted enemy, and both afflictions set off under them. Until then pillars rise under the enemies near after the same wait.
+            // BESPOKE (built): PyresForm.
             to.Add(new Upgrade { Id = LightThePyres, Name = "Light the Pyres", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
                 Description = "Hold the spell button and drive your weapon into the ground. A line of fire runs to every poisoned or burning enemy near. Stand through three breaths, and a pillar of flame rises under each. 60 mana.",
-                Form = FormPillars,
+                Form = SpellForms.Pyres,
                 Spell = new SpellSpec { Cost = 60f, Count = 6, Reach = 9f, Radius = 2f, Damage = 40f, Stagger = 40f, Stacks = 2, Delay = 2.2f } });
         }
     }

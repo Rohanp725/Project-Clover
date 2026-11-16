@@ -203,16 +203,10 @@ namespace Clover.Player.Trees
                 },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Heal, Amount = 1.5f, Cooldown = 0.4f } } });
 
-            // BESPOKE: held during Wellspring for one flask, the floor floods, blows run out as waves, and the sea
-            // draws back and breaks. Until then: a flask drunk while the surge lasts soaks all, drags them in and breaks one wave.
+            // BESPOKE (built): SeaForm. The surge button is pressed again, not held.
             to.Add(new Upgrade { Id = Gift, Name = "The Sea Rises", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
-                Description = "While Wellspring lasts, hold the surge button to flood the ground. Your blows run out across the water as waves. When the time is done, the sea draws back to you and breaks where you face. One flask.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, WhileSurge = true, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 14f, Affliction = AfflictionKind.Soaked, Stacks = 3 },
-                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, WhileSurge = true, Do = UpgradeAction.Pull, At = EffectAt.Self, Radius = 9f, Amount = 3f },
-                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, WhileSurge = true, Do = UpgradeAction.Cone, Damage = 55f, Stagger = 90f, Reach = 9f, Arc = 120f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
-                } });
+                Description = "While Wellspring lasts, press the surge button again to flood the ground. One flask. For six seconds everything in the flood is Soaked and your blows run out across the water as waves. Then the sea draws back to you and breaks where you face.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Sea, Spell = new SpellSpec { Cost = 0f, Radius = 9f, Seconds = 6f, Damage = 55f, Stagger = 90f, Reach = 9f, Arc = 120f, Count = 40, Stacks = 1 } } } });
         }
     }
 }

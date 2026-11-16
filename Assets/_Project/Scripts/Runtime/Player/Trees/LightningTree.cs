@@ -175,10 +175,10 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = ForkedStep, Name = "Forked Step", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Blink }, X = 2.41f, Y = 4.98f, Icon = UpgradeIcons.Boot,
                 Description = "Blink shocks a wider path.",
                 Stats = new[] { new StatMod(PlayerStat.BlinkWidth, 0.8f) } });
-            // The flash form cuts the enemy faced; lines from enemy to enemy and the return to the starting spot are still to be written by hand.
+            // BESPOKE (built): FlashesForm.
             to.Add(new Upgrade { Id = SevenFlashes, Name = "Seven Flashes", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.Afterimage }, X = 3.33f, Y = 8.5f, Icon = UpgradeIcons.Star,
                 Description = "Hold the spell button to cut through up to seven enemies in one breath and return to where you stood. The cuts land together when you are still. 45 mana.",
-                Form = "flash",
+                Form = SpellForms.Flashes,
                 Spell = new SpellSpec { Cost = 45f, Count = 7, Interval = 0.1f, Delay = 0.5f, Damage = 9f, Stagger = 8f, Stacks = 1, Reach = 8f } });
             // Kept from the first slice; not in the design.
             to.Add(new Upgrade { Id = QuickHands, Name = "Quick Hands", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Blink }, X = 1.43f, Y = 6.25f, Icon = UpgradeIcons.Fist,

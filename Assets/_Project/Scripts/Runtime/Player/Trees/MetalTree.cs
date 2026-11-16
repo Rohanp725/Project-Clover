@@ -191,10 +191,11 @@ namespace Clover.Player.Trees
                 },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Projectile, Flight = Flight.Returning, Count = 5, Damage = 12f, Stagger = 8f, Speed = 14f, Seconds = 1.2f, Affliction = S, Stacks = 1 } } });
 
-            // BESPOKE in part: guarded blows in the surge bank swords (eight at most) and give mana, and the swords fall when Temper ends. A held guard is not yet a perfect guard.
+            // BESPOKE (built): HangingSwordsForm; the held guard is perfect through the window made as long as the surge.
             to.Add(new Upgrade { Id = HangingSwords, Name = "Hanging Swords", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
-                Description = "While Temper lasts, every blow you hold on your guard is a perfect guard, and a sword is forged above the one who struck. When Temper ends, they fall.",
-                Tally = new TallySpec { Name = "Swords", Cap = 8 }, Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, While = StatWhen.Surge, Do = UpgradeAction.Bank, Count = 1 }, new UpgradeEffect { On = UpgradeTrigger.Guard, While = StatWhen.Surge, Do = UpgradeAction.Mana, Amount = 5f, Cooldown = 0.3f }, new UpgradeEffect { On = UpgradeTrigger.SurgeEnd, SpendsAll = true, PerStack = true, Do = UpgradeAction.Falling, Count = 1, Radius = 1.5f, Delay = 0.5f, Damage = 16f, Stagger = 20f, Affliction = AfflictionKind.Sundered, Stacks = 1 } } });
+                Description = "While Temper lasts, every blow you hold on your guard is a perfect guard, and a sword is forged above the one who struck, up to eight. When Temper ends, they fall.",
+                Stats = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 200f, StatWhen.Surge) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, While = StatWhen.Surge, Do = UpgradeAction.Mana, Amount = 5f, Cooldown = 0.3f }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.Surge, Do = UpgradeAction.Mana, Amount = 5f, Cooldown = 0.3f }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.HangingSwords, Spell = new SpellSpec { Cost = 0f, Count = 8, Damage = 16f, Stagger = 20f, Radius = 1.5f, Stacks = 1 } } } });
         }
     }
 }

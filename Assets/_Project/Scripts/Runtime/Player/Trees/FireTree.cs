@@ -176,15 +176,10 @@ namespace Clover.Player.Trees
                 Form = SpellForms.Wave,
                 Spell = new SpellSpec { Cost = 30f, Reach = 4.5f, Arc = 140f, Damage = 22f, Stagger = 20f, Stacks = 2 } });
 
-            // BESPOKE: the sun raised with the surge button held, the disc of light, and its fall, as docs/design/trees_a.md has it.
-            // Until then: while Kindle lasts every burn near the player deepens by itself, and when Kindle ends a sun falls on the enemy faced.
+            // BESPOKE (built): SunForm.
             to.Add(new Upgrade { Id = FallingSun, Name = "Falling Sun", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
-                Description = "With Heat at five and Kindle lit, hold the surge button to raise a sun over the fight. While it hangs, every burn near you deepens by itself. Press again to bring it down. A blow taken puts it out.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, WhileSurge = true, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 6f, Affliction = AfflictionKind.Burn, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeEnd, Do = UpgradeAction.Falling, Damage = 60f, Stagger = 80f, Radius = 4f, Delay = 0.6f, Affliction = AfflictionKind.Burn, Stacks = 2 },
-                } });
+                Description = "When Kindle is lit a sun rises over the fight. While it hangs, every burn near you deepens by itself. When Kindle ends, or when you press the surge button again, it falls on the enemy you face, heavier for every burn it finds. A blow taken puts it out.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Sun, Spell = new SpellSpec { Cost = 0f, Damage = 60f, Stagger = 80f, Radius = 4f, Stacks = 2, LingerDamage = 5f } } } });
         }
     }
 }

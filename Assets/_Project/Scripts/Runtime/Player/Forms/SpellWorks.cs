@@ -175,6 +175,21 @@ namespace Clover.Player.Forms
             return ref works.runs[slot];
         }
 
+        /// <summary>The run of a form in progress, for forms of which there is one at a time and a new cast adds to it. When there is none, <paramref name="found"/> is false and what comes back is a spare.</summary>
+        public static ref SpellRun Find(RunningForm form, out bool found)
+        {
+            found = false;
+            if (instance != null)
+                for (int i = 0; i < instance.runs.Length; i++)
+                    if (instance.runs[i].Active && instance.runs[i].Form == form)
+                    {
+                        found = true;
+                        return ref instance.runs[i];
+                    }
+            spare = default;
+            return ref spare;
+        }
+
         /// <summary>Ends every run of a form in progress: for forms of which the player has one at a time.</summary>
         public static void EndRunsOf(RunningForm form)
         {

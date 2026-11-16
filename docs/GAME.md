@@ -1092,3 +1092,28 @@ the palm; the element goes through and is laid on what stands behind.
 **Trying them.** The practice yard (`Clover > Build > Combat Test Arena`) has a rack of five stands along its north
 wall, one per weapon, all open; the hub has the stands. Contact sheets of every clip are in `review/anim/`
 (`player_*_gsword.png`, `*_scythe.png`, `*_arm*.png`); the top row of each is the game's camera.
+
+### The gods' gifts and the crowns as built (2026-11-16, evening; Claude's defaults, not yet played by the user)
+
+Every element's Signature and every mixed branch's crown is now a move of its own (`docs/design/FORMS.md`, "Bespoke";
+Storm Step and Plasma were already hand-built). Choices made where the design was silent or could not be met in the
+time, all **Claude's defaults, open to change**:
+
+- **"Hold the surge button" became "press the surge button again"** for Falling Sun, The World Holds Still, The Sea
+  Rises and First Spring. While one of these waits, a second press does not relight the surge.
+- **Falling Sun** rises by itself when Kindle is lit (no Heat-at-five gate: Kindle fills Heat anyway) and falls at
+  Kindle's end if it was not called down sooner; 60 damage, up to double by burn stacks under it.
+- **The Wind Remembers** keeps sixteen cuts and each falls for half the blow it remembers.
+- **The Sea Rises** floods for six seconds whatever is left of Wellspring; a wave carries 40% of the blow.
+- **The Scales**: the sword deals 60% of the difference, 120 at most, one enemy each; found wanting, mana is emptied
+  (the design's "no mana for five seconds" needed a stat that is not there).
+- **The Rise** is given by A Life for a Life itself: half health, draining 4 a second to a sliver, one rise until a
+  finisher on the killer buys it back (to half health again) or until a real death. Nothing else grants it yet.
+- **Hanging Swords**: the held guard is perfect because the perfect window is made far longer than Temper; eight swords.
+- **Totality**: the returning light gives each enemy half of what it lost in the dark, 80 at most.
+- **Great Lotus** also bursts when its ten seconds are done; +30% for each petal closed.
+- **World Anvil**'s blades fly at the next heavy swing, ten damage and a notch each.
+- **Light the Pyres**: pyres that overlap strike an enemy once; with no one alight the mana is returned.
+- **Six Mirrors** lays a mark and a notch for each cut; its cuts are not critical.
+- **Seven Flashes** and **The Wave Stands Still** are built as their own forms (`flashes`, `frozenwave`). The wave rolls at least 2.5 m; training dummies are soaked and frozen but not carried along.
+- **Ball Lightning** and **Pawned Heart** are built as their own forms (`ball`, `heart`). The heart is set down behind the player and must be left by 2.6 m before walking back onto it counts; it asks no health price besides itself.

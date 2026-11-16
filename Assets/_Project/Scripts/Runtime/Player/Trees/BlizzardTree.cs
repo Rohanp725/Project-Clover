@@ -63,11 +63,10 @@ namespace Clover.Player.Trees
                 Form = "dragon",
                 Spell = new SpellSpec { Cost = 50f, Reach = 9f, Radius = 2f, Speed = 4.5f, Damage = 25f, Stagger = 30f, Stacks = 4 } });
 
-            // BESPOKE: each shatter leaves four shards turning round the player, twelve at most; the next dodge throws
-            // them down its path. Until then: a dodge throws three shards ahead, whether or not anything was shattered.
+            // BESPOKE (built): DustForm.
             to.Add(new Upgrade { Id = Gift, Name = "Diamond Dust", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
-                Description = "Shards from a shattered enemy do not fall. They hang round you, up to twelve, and your next dodge throws them down its path.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.DodgeStart, Do = UpgradeAction.Projectile, Flight = Flight.Straight, Count = 3, Damage = 6f, Stagger = 4f, Radius = 1f, Speed = 14f, Seconds = 0.6f, Affliction = AfflictionKind.Chill, Stacks = 1, Cooldown = 2f } } });
+                Description = "Shards from a shattered enemy do not fall. They hang round you, four from each, up to twelve, and your next dodge throws them down its path.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.Form, Form = SpellForms.Dust, Affliction = AfflictionKind.Chill, Spell = new SpellSpec { Cost = 0f, Count = 4, Damage = 6f, Stagger = 4f, Reach = 9f, Stacks = 1 } } } });
         }
     }
 }

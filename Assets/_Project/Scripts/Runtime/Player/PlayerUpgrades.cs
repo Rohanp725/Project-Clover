@@ -214,6 +214,7 @@ namespace Clover.Player
             CombatEvents.Carried += OnCarried;
             CombatEvents.Shattered += OnShattered;
             CombatEvents.Landed += OnLanded;
+            if (defence != null) defence.Revived += OnRevived;
         }
 
         private void OnDisable()
@@ -223,6 +224,7 @@ namespace Clover.Player
             CombatEvents.Carried -= OnCarried;
             CombatEvents.Shattered -= OnShattered;
             CombatEvents.Landed -= OnLanded;
+            if (defence != null) defence.Revived -= OnRevived;
         }
 
         private void Start()
@@ -581,6 +583,7 @@ namespace Clover.Player
             sinceDodge += deltaTime;
             Stats.SetWhen(StatWhen.Surge, element != null && element.Kit != null && element.Kit.SurgeActive);
             Stats.SetWhen(StatWhen.Unhurt, sinceStruck >= UnhurtSeconds);
+            Stats.SetWhen(StatWhen.Risen, Risen);
             Stats.SetWhen(StatWhen.Planted, sinceDodge >= Mathf.Max(0.5f, PlantedSeconds - Stats.Sum(PlayerStat.PlantedSooner)));
             Stats.SetWhen(StatWhen.ManaFull, combat != null && combat.Mana.Current >= combat.Mana.Maximum - 0.001f);
             Stats.SetWhen(StatWhen.NearGrown, Hazards.GrownNear(transform.position, 4f));
@@ -892,6 +895,24 @@ namespace Clover.Player
                     }
                     break;
                 }
+                case UpgradeAction.Form:
+                {
+                    var form = SpellForms.Get(effect.Form);
+                    if (form == null) break;
+                    var cast = element.NewCast(effect.Spell ?? plainSpell, effect.Owner != null ? effect.Owner.Name : "", effect.Owner);
+                    // Seen and laid in the way of the affliction the effect names; with none, in the element held.
+                    cast.Element = look;
+                    cast.Colour = look.Colour;
+                    cast.Affliction = kind;
+                    if (target != null)
+                    {
+                        cast.Target = target;
+                        cast.Aim = target.position;
+                    }
+                    FormsBegun++;
+                    form.Cast(cast);
+                    break;
+                }
                 case UpgradeAction.Heal:
                     if (defence != null) defence.Heal(eAmount);
                     break;
@@ -1180,11 +1201,26 @@ namespace Clover.Player
         public void OnSpellCast() => Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);
 
         /// <summary>A blow was caught on the guard; the attacker stands at the given place.</summary>
-        public void OnGuard(Vector3 attacker) => Trigger(UpgradeTrigger.Guard, combat.EnemyAt(attacker, 2.5f), attacker);
+        public void OnGuard(Vector3 attacker)
+        {
+            NoteGuard(attacker);
+            Trigger(UpgradeTrigger.Guard, LastGuardEnemy, attacker);
+        }
+
+        /// <summary>Where the last blow caught on the guard came from, and who dealt it; for forms that answer a guard.</summary>
+        public Vector3 LastGuardFrom { get; private set; }
+        public Component LastGuardEnemy { get; private set; }
+
+        private void NoteGuard(Vector3 attacker)
+        {
+            LastGuardFrom = attacker;
+            LastGuardEnemy = combat != null ? combat.EnemyAt(attacker, 2.5f) : null;
+        }
 
         /// <summary>A blow was turned at the last moment; the attacker stands at the given place.</summary>
         public void OnPerfectGuard(Vector3 attacker)
         {
+            NoteGuard(attacker);
             bool detonate = hasDetonate;
             if (hasBackdraft)
             {
@@ -1230,6 +1266,9 @@ namespace Clover.Player
         public void OnDodge(Vector3 from, Vector3 direction, float distance, float seconds)
         {
             dodgeFrom = from;
+            DodgeCount++;
+            LastDodgeFrom = from;
+            LastDodgeDirection = direction;
             sinceDodge = 0f;
             if (hasTrail)
             {
@@ -1386,6 +1425,79 @@ namespace Clover.Player
         }
 
         /// <summary>The jolt of something heavy landing: a stop of time and a shake of the camera. For spell forms.</summary>
+        /// <summary>Everything slowed for a while, the player too: the breath before something great lands. For spell forms.</summary>
+        public void Slow(float seconds, float scale)
+        {
+            if (hitStop != null && seconds > 0f) hitStop.Slow(seconds, scale);
+        }
+
+        /// <summary>Forms begun by marks (<see cref="UpgradeAction.Form"/>), for tests and probes.</summary>
+        public int FormsBegun { get; private set; }
+        /// <summary>Dodges begun, and where the last one went; for forms that answer a dodge.</summary>
+        public int DodgeCount { get; private set; }
+        public Vector3 LastDodgeFrom { get; private set; }
+        public Vector3 LastDodgeDirection { get; private set; }
+
+        /// <summary>
+        /// The surge button pressed again while the surge lasts. A form that waits on it says so every frame it waits
+        /// (<see cref="ListenForSurge"/>); while one does, the press is its own and does not light the surge again.
+        /// </summary>
+        public int SurgeAgain { get; private set; }
+        public bool ListensForSurge => Time.frameCount - listenedAt <= 2;
+        public void ListenForSurge() => listenedAt = Time.frameCount;
+        public void HeardSurge() => SurgeAgain++;
+        private int listenedAt = -100;
+        private static readonly SpellSpec plainSpell = new SpellSpec { Cost = 0f };
+
+        // ---- The Rise.
+
+        /// <summary>True while the player is Risen: stood up again from a death, their health draining.</summary>
+        public bool Risen { get; private set; }
+        /// <summary>How fast the Risen drain, as a share of the usual.</summary>
+        public float RiseDrain => 1f;
+        /// <summary>The share of health the Risen stand up with.</summary>
+        public float RiseHealth = 0.5f;
+        private bool riseSpent;
+        private static readonly SpellSpec riseSpell = new SpellSpec { Cost = 0f, Damage = 4f, Count = 50 };
+
+        /// <summary>
+        /// The blow that would have killed: with Dark's gift, and once until a finisher on the killer buys it back,
+        /// the player stands again instead, Risen. True when they rose.
+        /// </summary>
+        public bool Rise(Vector3 attacker)
+        {
+            if (Risen || riseSpent || defence == null || element == null || combat == null || !Has(Trees.DarkTree.LifeForALife)) return false;
+            var form = SpellForms.Get(SpellForms.Rise);
+            if (form == null) return false;
+            riseSpent = true;
+            Risen = true;
+            defence.Health.Rise(defence.Health.Maximum * RiseHealth);
+            var killer = combat.EnemyAt(attacker, 3f);
+            var cast = element.NewCast(riseSpell, "Risen", Upgrade.ById(Trees.DarkTree.LifeForALife));
+            cast.Target = killer != null ? killer.transform : null;
+            if (killer != null) cast.Aim = killer.transform.position;
+            form.Cast(cast);
+            return true;
+        }
+
+        /// <summary>The Rise is over: bought back with a finisher (health returns, and the player may rise again), or lost.</summary>
+        public void EndRise(bool lived, float share)
+        {
+            if (!Risen) return;
+            Risen = false;
+            if (!lived || defence == null) return;
+            riseSpent = false;
+            defence.Health.Heal(defence.Health.Maximum * share);
+            defence.Callout("A life for a life");
+        }
+
+        // Standing up after a real death, the rise is theirs to use again.
+        private void OnRevived()
+        {
+            Risen = false;
+            riseSpent = false;
+        }
+
         public void Jolt(float stopSeconds, float shake, float shakeSeconds)
         {
             if (hitStop != null && stopSeconds > 0f) hitStop.Freeze(stopSeconds);

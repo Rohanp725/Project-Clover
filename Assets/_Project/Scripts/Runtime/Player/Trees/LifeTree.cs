@@ -185,16 +185,10 @@ namespace Clover.Player.Trees
                 },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Struck, Do = UpgradeAction.Burst, At = EffectAt.Self, Damage = 6f, Radius = 8f, Cooldown = 0.5f } } });
 
-            // BESPOKE: held during Regrowth for half of present health, a forest comes up through everything Seeded and
-            // holds it, and blows on what it holds return the health. Until then: lighting the surge bursts roots round
-            // the player, seeds all they reach and slows the world for a moment.
+            // BESPOKE (built): SpringForm. The surge button is pressed again, not held.
             to.Add(new Upgrade { Id = Gift, Name = "First Spring", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
-                Description = "While Regrowth lasts, hold the surge button and give half your health to the ground. A forest comes up through everything Seeded and holds it. Strike what it holds and the health returns.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Burst, At = EffectAt.Self, Damage = 30f, Stagger = 60f, Radius = 9f, Affliction = AfflictionKind.Seeded, Stacks = 3 },
-                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.SlowTime, Seconds = 2f, Amount = 0.2f },
-                } });
+                Description = "While Regrowth lasts, press the surge button again and give half your health to the ground. A forest comes up through everything Seeded and holds it. Strike what it holds and the health returns.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Spring, Spell = new SpellSpec { Cost = 0f, Reach = 12f, Seconds = 4f, Damage = 30f, Stagger = 60f, Count = 50, Stacks = 0 } } } });
         }
     }
 }

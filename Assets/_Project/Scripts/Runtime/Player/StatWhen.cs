@@ -39,5 +39,7 @@ namespace Clover.Player
         ChainEndBlow,
         /// <summary>On a blow that lands on an enemy in the air (or reeling). Weapon damage, stagger and mana from blows.</summary>
         AirborneBlow,
+        /// <summary>While the player is Risen: stood up again from a death, and draining.</summary>
+        Risen,
     }
 }

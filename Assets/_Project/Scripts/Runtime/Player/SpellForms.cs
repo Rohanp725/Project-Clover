@@ -68,6 +68,58 @@ namespace Clover.Player
         /// <summary>A step through the enemy faced; if it lands, the next heavy blow is critical. Reads: Reach, Damage, Stagger, Stacks, Seconds.</summary>
         public const string Step = "step";
 
+        // The bespoke moves: the gods' gifts and the crowns of the mixed branches. Each has its own class under Forms/ that says what it reads.
+        /// <summary>Fire's gift: a sun that hangs and falls.</summary>
+        public const string Sun = "sun";
+        /// <summary>Wind's gift: cuts that hang and fall again.</summary>
+        public const string Remember = "remember";
+        /// <summary>Ice's gift: the shell broken outward.</summary>
+        public const string StillWorld = "stillworld";
+        /// <summary>Ice's gift: a shatter that runs on.</summary>
+        public const string ShatterChain = "shatterchain";
+        /// <summary>Water's gift: the flood.</summary>
+        public const string Sea = "sea";
+        /// <summary>Life's gift: the forest.</summary>
+        public const string Spring = "spring";
+        /// <summary>Earth's gift: the hand of stone.</summary>
+        public const string Hand = "hand";
+        /// <summary>Metal's gift: swords over those who struck the guard.</summary>
+        public const string HangingSwords = "hangingswords";
+        /// <summary>Light's gift: the weighing.</summary>
+        public const string Scales = "scales";
+        /// <summary>Dark's gift: the Rise.</summary>
+        public const string Rise = "rise";
+        /// <summary>Poison's gift: the held beat and the flick.</summary>
+        public const string CleanBlade = "cleanblade";
+        /// <summary>Tempest's crown.</summary>
+        public const string Thunder = "thunder";
+        /// <summary>Blizzard's crown.</summary>
+        public const string Dust = "dust";
+        /// <summary>Glacier's crown.</summary>
+        public const string Plates = "plates";
+        /// <summary>Bloom's crown.</summary>
+        public const string Lotus = "lotus";
+        /// <summary>Overgrowth's crown.</summary>
+        public const string GroundWakes = "groundwakes";
+        /// <summary>Forge's crown.</summary>
+        public const string Anvil = "anvil";
+        /// <summary>Halo's crown.</summary>
+        public const string Mirrors = "mirrors";
+        /// <summary>Eclipse's crown.</summary>
+        public const string Totality = "totality";
+        /// <summary>Blight's crown.</summary>
+        public const string Reaping = "reaping";
+        /// <summary>Pyre's crown.</summary>
+        public const string Pyres = "pyres";
+        /// <summary>Lightning's Seven Flashes: lines from enemy to enemy, the return, the cuts together.</summary>
+        public const string Flashes = "flashes";
+        /// <summary>Glacier's The Wave Stands Still: a wave that rolls while the button is held and freezes when it is let go.</summary>
+        public const string FrozenWave = "frozenwave";
+        /// <summary>Plasma's Ball Lightning: a slow ball the weapon bats at the enemy, larger each time.</summary>
+        public const string Ball = "ball";
+        /// <summary>Dark's Pawned Heart: health set down as a beating heart, to be come back for.</summary>
+        public const string Heart = "heart";
+
         private static readonly ISpellForm[] all =
         {
             new WaveForm(),
@@ -98,6 +150,31 @@ namespace Clover.Player
             new RingForm(),
             new PillarsForm(),
             new StepForm(),
+            new SunForm(),
+            new RememberForm(),
+            new StillWorldForm(),
+            new ShatterChainForm(),
+            new SeaForm(),
+            new SpringForm(),
+            new HandForm(),
+            new HangingSwordsForm(),
+            new ScalesForm(),
+            new RiseForm(),
+            new CleanBladeForm(),
+            new ThunderForm(),
+            new DustForm(),
+            new PlatesForm(),
+            new LotusForm(),
+            new GroundWakesForm(),
+            new AnvilForm(),
+            new MirrorsForm(),
+            new TotalityForm(),
+            new ReapingForm(),
+            new PyresForm(),
+            new FlashesForm(),
+            new FrozenWaveForm(),
+            new BallForm(),
+            new HeartForm(),
         };
 
         private static readonly Dictionary<string, ISpellForm> byId = Index();

@@ -54,6 +54,7 @@ namespace Clover.Gameplay
 
         public void Clear()
         {
+            owedSeconds = 0f;
             for (int i = 0; i < stacks.Length; i++)
             {
                 stacks[i] = 0;
@@ -232,6 +233,12 @@ namespace Clover.Gameplay
             for (int i = 2; i < stacks.Length; i++)
             {
                 if (stacks[i] <= 0) continue;
+                if (i == (int)AfflictionKind.Poison && Afflictions.PoisonWaits)
+                {
+                    // Held: it neither bites nor fades, and every beat it would have bitten is owed.
+                    owedSeconds += deltaTime;
+                    continue;
+                }
                 var spec = Afflictions.Spec((AfflictionKind)i);
                 if (spec.TickSeconds > 0f && spec.DamagePerTick > 0f)
                 {
@@ -331,6 +338,21 @@ namespace Clover.Gameplay
             float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill];
             End((int)AfflictionKind.Chill);
             return damage;
+        }
+
+        private float owedSeconds;
+        /// <summary>Seconds the poison here has been made to wait (<see cref="Afflictions.PoisonWaits"/>) and not yet paid for.</summary>
+        public float OwedSeconds => owedSeconds;
+
+        /// <summary>The bites the poison owes for the time it waited, all at once: one for each whole beat, at its depth now. What it owed is forgotten.</summary>
+        public float TakeOwed()
+        {
+            var spec = Afflictions.Spec(AfflictionKind.Poison);
+            int index = (int)AfflictionKind.Poison;
+            float seconds = owedSeconds;
+            owedSeconds = 0f;
+            if (stacks[index] <= 0 || spec.TickSeconds <= 0f) return 0f;
+            return (float)Math.Floor(seconds / spec.TickSeconds) * spec.DamagePerTick * stacks[index] * strength[index];
         }
 
         /// <summary>Takes an affliction away and says how deep it was.</summary>

@@ -56,12 +56,11 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = ChainReaction, Name = "Chain Reaction", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { ArcFire }, X = -0.5f, Y = 3.7f, Icon = UpgradeIcons.Skull,
                 Description = "An enemy that dies carrying both Burn and Static bursts, and passes both on at full depth.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Burn, Needs2 = AfflictionKind.Static, Do = UpgradeAction.Burst, Damage = 18f, Radius = 4f, Affliction = AfflictionKind.Burn, Stacks = 1, CarriesDepth = true, Cooldown = 0.3f }, new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Static, Needs2 = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1, CarriesDepth = true, Radius = 4f, Cooldown = 0.3f } } });
-            // BESPOKE in one part: a blow that sends the ball where the swing points and grows it, up to three. The orb form
-            // already bursts at once, and larger, when the player strikes it.
+            // BESPOKE (built): BallForm.
             to.Add(new Upgrade { Id = BallLightning, Name = "Ball Lightning", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { ArcFire }, X = 0f, Y = 2.86f, Icon = UpgradeIcons.Orb,
                 Description = "Hold the spell button to loose a slow ball of white fire. Strike it to send it where the blow points, larger each time, up to three. It bursts on the first enemy it meets. 40 mana.",
-                Form = "orb",
-                Spell = new SpellSpec { Cost = 40f, Speed = 2f, Seconds = 8f, Radius = 2.5f, Damage = 28f, Stagger = 30f, Stacks = 2 } });
+                Form = SpellForms.Ball,
+                Spell = new SpellSpec { Cost = 40f, Speed = 2f, Seconds = 8f, Radius = 2.5f, Damage = 16f, Stagger = 20f, Stacks = 2, LingerDamage = 12f } });
             // Kept from the first slice; not in the design.
             to.Add(new Upgrade { Id = FusedCore, Name = "Fused Core", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { IonisedAir }, X = 0.5f, Y = 5.38f, Icon = UpgradeIcons.Orb,
                 Description = "Spells hit harder, and leave both a burn and Static on what they strike.",
