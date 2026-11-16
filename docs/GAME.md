@@ -520,7 +520,12 @@ The HUD shows the embers held (top right) and, once Heat is learned, its five le
 | Lightning Rod | 3 | hold the spell button, 40 mana: for 6 s bolts fall in a 3.5 m circle ahead of the player, biting every 0.9 s for 12. (No rod object and no warp yet) |
 | Overclock | 4 | Overdrive opens with 2.5 s in which the enemies' own time runs at 35% |
 
-**Not built**: Storm Step and Plasma; a thrown-flask object in flight; a visible afterimage.
+**What a god leaves** (built later the same night): *Storm Step*, given with Lightning when it is taken: while
+Overdrive lasts every dodge costs no stamina, shocks what it passes through, and leaves a shape of light where the
+player stood. *Plasma*, given when the storm is consumed into Fire: a heavy blow or a finisher on a burning enemy
+bursts for 18 damage and 16 stagger in 3.2 m and sets alight everyone it reaches. Neither is for sale and neither is
+listed in the tree. A thrown flask is now seen in the air, and Lightning's dodge and the Afterimage leave a copy of
+the player's body made of light.
 
 ### The hub and the run's loop as built (2026-11-16, overnight run; Claude's defaults, not yet played by the user)
 
@@ -548,6 +553,36 @@ braziers to the east (Fire, Lightning), and the gate to the north under a great 
 
 **Not built**: any way to wipe the saved unlocks from inside the game; a title screen; a pause menu.
 
+### The art pass of the overnight run (2026-11-16; Claude's defaults, not yet seen by the user)
+
+Made against the Ravenswatch brief, and then against a second pair of eyes that was shown the screenshots and asked
+only for faults.
+
+- **Painted ground.** Stone, wall, wood, earth and roof textures are drawn by code at 1024 px as a hand-painted floor
+  is: rows of stones of uneven width, each its own flat tone leaning a little blue, violet, green or warm, a lit edge
+  at the top and left and a shaded edge at the bottom and right, worn corners, a crack across one stone in four, moss
+  in the joints. `Clover > Build > Repaint Textures` repaints them.
+- **Dressing** (`Dressing.cs`, for every builder): puddles drawn flat (a dark sheet, a line of wet stone round it,
+  broken strokes of sky in it) that take lamp light; tufts of grass along walls and round pillars; fallen leaves in
+  dull red and gold; iron lantern posts; barrels, sacks, a broken cart; spears left standing with a torn pennant. A
+  rectangle of earth laid on paving gets a ragged edge of spills and grass. The castle has a paler path of smaller
+  stones up its middle, with lantern posts along it.
+- **Warm against cold.** A lamp's pool on the ground is now sized by the lamp's strength, falls in two hard steps,
+  and keeps the lamp's own colour, so every court has pools of warm light on the cold stone.
+- **Fire** is drawn as tongues of flame (round below, pointed above, the edge licking) in two flat tones with a hard
+  line between, laid over one another instead of added, so a big fire stays a drawn shape and does not burn out white.
+- **Ink.** Character outlines are a third thicker. Training dummies carry the same ink as characters.
+- **HUD.** Slanted bars in inked frames; a pale piece that lingers where health was just lost, then drains; gourds for
+  flasks; a diamond for embers; framed panels; a stroke of dry brush behind prompts and under the chosen row of a
+  menu; the mana bar takes the element's colour; the world dims behind the upgrade tree. The controls hint is shown
+  only in the hub and the practice arena.
+- **The font** is Spectral SemiBold (SIL Open Font License), brought in during the run without the user's sight of it;
+  its row in `ASSETS.csv` says so. Cormorant Garamond was tried first and dropped because its old-style numerals read
+  as letters at HUD size.
+- **Title cards.** The castle's name and the god's are shown on a brush stroke for three seconds on arrival.
+- **Movement seen from above.** Both runs were re-posed for the top-down camera, where legs hardly show: more lean,
+  the shoulders turning against the hips, the sword arm swinging.
+
 ## Open questions
 
 1. Camera: top-down is on trial in the slice; confirm or change once it is playable.
@@ -569,6 +604,7 @@ braziers to the east (Fire, Lightning), and the gate to the north under a great 
 | 2026-11-15 | Each major boss masters one element and one unique technique; beating it gives a choice of one of the two | makes every boss a build decision |
 | 2026-11-15 | Boss zones are themed to the element for atmosphere only, with no status effect | atmosphere without extra rules |
 | 2026-11-16 | Animations are written as code and baked in Unity, not keyed in Blender | it lets every action be placed, timed and checked frame by frame, and the user asked for special emphasis on animation |
+| 2026-11-16 | Game text is set in Spectral SemiBold (OFL); surfaces are painted by code in a hand-painted manner; fire is drawn as layered tongues | Claude's defaults during the unattended overnight run, toward the Ravenswatch brief |
 | 2026-11-16 | The hub is a stopped clock outside time; a fall ends the run and wakes the player there; the Katana and Lightning become starting choices once won in a run | Claude's defaults during the unattended overnight run, following the decided run-based structure |
 | 2026-11-16 | Upgrades are bought with embers (one per enemy, five per god) at rest fires, in any order; held buttons give the flask and the spell their upgraded moves | Claude's defaults during the unattended overnight run |
 | 2026-11-16 | The god of Lightning is Narukami, a duellist with a ring of thunder drums, fought above the clouds; take or consume is two things he leaves on the floor | Claude's defaults during the unattended overnight run |
