@@ -118,11 +118,13 @@ namespace Clover.EditorTools
             for (int i = 0; i < 70; i++)
             {
                 float angle = (float)random.NextDouble() * 360f;
-                float distance = Radius + 2f + (float)random.NextDouble() * 46f;
-                // Banks on the camera's side stay low, so they never cover the floor.
-                bool south = Mathf.Abs(Mathf.DeltaAngle(angle, 180f)) < 80f;
                 float size = 5f + (float)random.NextDouble() * 9f;
-                float height = (south ? -3.6f : -2.4f) + (float)random.NextDouble() * (south ? 1f : 3.5f);
+                // No bank's shoulder comes within reach of the floor's edge, where the camera would look through it.
+                float distance = Radius + 1.5f + size * 0.8f + (float)random.NextDouble() * 42f;
+                // Banks on the camera's side stay low, so they never cover the floor; so do any that stand close.
+                bool south = Mathf.Abs(Mathf.DeltaAngle(angle, 180f)) < 80f;
+                bool near = distance < Radius + 14f;
+                float height = (south ? -3.6f : -2.4f) + (float)random.NextDouble() * (south ? 1f : near ? 1.2f : 3.5f) - (near ? size * 0.2f : 0f);
                 Vector3 at = Quaternion.Euler(0f, angle, 0f) * new Vector3(0f, height, distance);
                 var puff = BuildKit.Shape(PrimitiveType.Sphere, "Cloud", clouds, at, new Vector3(size * 1.5f, size * 0.7f, size * 1.2f), cloud);
                 puff.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
@@ -193,6 +195,7 @@ namespace Clover.EditorTools
 
             BossBar(boss);
             PlayerBuilder.AddRunEnd(built.Player);
+            PlayerBuilder.AddTitle("Narukami", EnemyKind.Narukami().Title);
             SceneBuild.Finish(scene, ScenePath, false);
         }
 
@@ -299,11 +302,12 @@ namespace Clover.EditorTools
             name.transform.SetParent(panel.transform, false);
             var label = name.AddComponent<Text>();
             label.font = UiArt.Font();
-            label.fontSize = 40;
+            label.fontSize = 34;
             label.alignment = TextAnchor.LowerLeft;
             label.color = new Color(1f, 0.95f, 0.85f);
             label.raycastTarget = false;
             label.horizontalOverflow = HorizontalWrapMode.Overflow;
+            label.verticalOverflow = VerticalWrapMode.Overflow;
             label.text = $"{boss.name},  {EnemyKind.Narukami().Title}";
             var outline = name.AddComponent<Outline>();
             outline.effectColor = new Color(0f, 0f, 0f, 0.85f);

@@ -84,6 +84,7 @@ namespace Clover.EditorTools
             built.Player.GetComponent<PlayerInteraction>().Configure(things.ToArray());
             built.Player.GetComponent<PlayerCombat>().StartingWeapon = Weapons.FistsName;
             PlayerBuilder.AddRunEnd(built.Player);
+            PlayerBuilder.AddTitle("The Castle Under the Storm", "where a swordsman became a god");
 
             var rodsObject = new GameObject("Storm Rods").AddComponent<StormRods>();
             rodsObject.Configure(rods.ToArray());

@@ -401,6 +401,41 @@ namespace Clover.EditorTools
             hud.gameObject.AddComponent<ReadingBox>().Configure(player, panel.gameObject, speaker, line, more);
         }
 
+        /// <summary>Shows a place's name, or its master's, across the screen for a few seconds as the scene opens.</summary>
+        public static void AddTitle(string title, string subtitle)
+        {
+            var hud = GameObject.Find("HUD");
+            if (hud == null) return;
+            var root = new GameObject("Title Card", typeof(RectTransform));
+            root.transform.SetParent(hud.transform, false);
+            var area = (RectTransform)root.transform;
+            area.anchorMin = area.anchorMax = new Vector2(0.5f, 0.68f);
+            area.sizeDelta = new Vector2(1400f, 240f);
+            var group = root.AddComponent<CanvasGroup>();
+            group.interactable = false;
+            group.blocksRaycasts = false;
+
+            var stroke = Panel("Stroke", root.transform, new Color(0.02f, 0.015f, 0.05f, 0.82f));
+            stroke.anchorMin = stroke.anchorMax = new Vector2(0.5f, 0.56f);
+            stroke.sizeDelta = new Vector2(1250f, 150f);
+            var strokeImage = stroke.GetComponent<Image>();
+            strokeImage.sprite = UiArt.Brush();
+            strokeImage.type = Image.Type.Sliced;
+
+            var name = Label("Title", root.transform, 92, TextAnchor.MiddleCenter, new Color(1f, 0.95f, 0.86f, 1f));
+            name.rectTransform.anchorMin = name.rectTransform.anchorMax = new Vector2(0.5f, 0.58f);
+            name.rectTransform.sizeDelta = new Vector2(1400f, 120f);
+            name.text = title;
+            var line = Panel("Line", root.transform, new Color(0.93f, 0.78f, 0.47f, 0.9f));
+            line.anchorMin = line.anchorMax = new Vector2(0.5f, 0.3f);
+            line.sizeDelta = new Vector2(420f, 3f);
+            var under = Label("Subtitle", root.transform, 40, TextAnchor.MiddleCenter, new Color(0.93f, 0.78f, 0.47f, 1f));
+            under.rectTransform.anchorMin = under.rectTransform.anchorMax = new Vector2(0.5f, 0.14f);
+            under.rectTransform.sizeDelta = new Vector2(1400f, 60f);
+            under.text = subtitle;
+            hud.AddComponent<TitleCard>().Configure(group, stroke, name, under);
+        }
+
         /// <summary>Makes a fall in this scene end the run: the screen goes dark and the player wakes in the hub.</summary>
         public static void AddRunEnd(GameObject player)
         {

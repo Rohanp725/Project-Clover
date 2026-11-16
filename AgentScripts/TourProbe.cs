@@ -34,6 +34,9 @@ public class TourProbeRunner : MonoBehaviour
                 new Vector3(0f, 2.1f, 68f), new Vector3(-10f, 2.1f, 68f), new Vector3(0f, 2.1f, 84f), new Vector3(0f, 4.1f, 104f), new Vector3(0f, 4.1f, 120f) }
             : scene == "Summit" ? new[] { new Vector3(0f, 0.1f, -12f), new Vector3(0f, 0.1f, 0f), new Vector3(6f, 0.1f, 6f) }
             : new[] { player.transform.position };
+        yield return new WaitForSecondsRealtime(1.6f);
+        ScreenCapture.CaptureScreenshot($"review/shots/current/tour_{scene.ToLower()}_title.png");
+        yield return null;
         for (int i = 0; i < stops.Length; i++)
         {
             player.Teleport(stops[i], Quaternion.identity);
