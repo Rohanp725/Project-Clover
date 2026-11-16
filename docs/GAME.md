@@ -619,7 +619,7 @@ braziers to the east (Fire, Lightning), and the gate to the north under a great 
   alive. All its words are in one file, `SponsorLines.cs`, and are click-through: each line stays until the use
   button is pressed.
 
-**Not built**: any way to wipe the saved unlocks from inside the game; a title screen; a pause menu.
+**Not built**: a title screen. (A pause menu, with a way to forget the saved unlocks, was added later the same night.)
 
 ### The art pass of the overnight run (2026-11-16; Claude's defaults, not yet seen by the user)
 
@@ -682,6 +682,13 @@ only for faults.
   his hands and face are in frame from the northern part of the floor. Title cards sit above the player. Enemy bars
   and the captain's name are drawn over everything and step clear of one another. Shadows use a 4096 map with four
   cascades and soft edges.
+- **The finisher, redone.** The Katana's finisher is a sheathed draw-cut: a deep coil with the hand on the hilt, the
+  draw through the enemy, a long held pose with the blade out to the side while time is slowed and the camera leans
+  in, then a slow flick and the return to the sheath. The fist finisher opens wide straight after its blow. The
+  god's first-form cuts carry the sword clear of his drums.
+- **A pause menu** on Start or Escape in every scene: resume, the controls and how a fight is won, give up the run
+  (castle and summit), forget everything saved (hub), quit. Each of the last three asks once more before it acts.
+  The hub shows one quiet line saying so in place of the old controls text.
 
 ### The Gate Captain as built (2026-11-16, overnight run; Claude's design, not yet played by the user)
 

@@ -18,7 +18,7 @@ namespace Clover.Tests
             Assert.IsNotNull(controls, $"no input actions at {PlayerBuilder.ControlsPath}");
             var map = controls.FindActionMap("Player");
             Assert.IsNotNull(map, "no Player action map");
-            foreach (string action in new[] { "Move", "Dodge", "LightAttack", "HeavyAttack", "Guard", "Flask", "Spell", "Surge", "Interact" })
+            foreach (string action in new[] { "Move", "Dodge", "LightAttack", "HeavyAttack", "Guard", "Flask", "Spell", "Surge", "Interact", "Pause" })
             {
                 var found = map.FindAction(action);
                 Assert.IsNotNull(found, $"no {action} action");

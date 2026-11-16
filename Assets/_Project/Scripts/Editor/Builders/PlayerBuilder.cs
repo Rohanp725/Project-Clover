@@ -393,7 +393,16 @@ namespace Clover.EditorTools
             status.rectTransform.sizeDelta = new Vector2(700f, 30f);
             status.text = "";
 
-            if (!string.IsNullOrEmpty(hintText))
+            if (hintText == PauseHint)
+            {
+                // The controls live in the pause menu; all the screen keeps is one quiet line saying where.
+                var quiet = Label("Controls", hud, 22, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.55f));
+                quiet.rectTransform.anchorMin = quiet.rectTransform.anchorMax = quiet.rectTransform.pivot = Vector2.zero;
+                quiet.rectTransform.anchoredPosition = new Vector2(48f, 26f);
+                quiet.rectTransform.sizeDelta = new Vector2(900f, 30f);
+                quiet.text = hintText;
+            }
+            else if (!string.IsNullOrEmpty(hintText))
             {
                 // A band of ink behind the hint, so it reads over whatever floor is under it.
                 var band = Panel("Controls Band", hud, new Color(0.02f, 0.015f, 0.05f, 0.62f));
@@ -457,6 +466,8 @@ namespace Clover.EditorTools
 
             BuildUpgradeMenu(player, hud);
             BuildReadingBox(player, hud);
+            // Last, so it lies over everything else on the HUD.
+            BuildPauseMenu(player, hud);
         }
 
         // Words read at the player's own pace: a band across the bottom with who speaks, the line, and a mark when there is more.
@@ -604,6 +615,109 @@ namespace Clover.EditorTools
 
             hud.gameObject.AddComponent<UpgradeMenu>().Configure(player, dim.gameObject, title, description, rows, costs, cursor);
         }
+
+        // The pause menu: the same inked panel as the fire's tree, with a short list, and a second page that holds the controls.
+        private static void BuildPauseMenu(PlayerController player, Transform hud)
+        {
+            var dim = Panel("Pause Menu", hud, new Color(0.01f, 0.008f, 0.03f, 0.72f));
+            dim.anchorMin = Vector2.zero;
+            dim.anchorMax = Vector2.one;
+            dim.offsetMin = dim.offsetMax = Vector2.zero;
+            var panel = Framed("Panel", dim);
+            panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
+            panel.sizeDelta = new Vector2(1320f, 800f);
+            var edge = Panel("Edge", panel, new Color(0.8f, 0.72f, 0.55f, 0.7f));
+            edge.anchorMin = new Vector2(0f, 1f);
+            edge.anchorMax = new Vector2(1f, 1f);
+            edge.pivot = new Vector2(0.5f, 1f);
+            edge.sizeDelta = new Vector2(-80f, 2f);
+            edge.anchoredPosition = new Vector2(0f, -84f);
+
+            var title = Label("Title", panel, 44, TextAnchor.UpperLeft, new Color(1f, 0.8f, 0.45f, 1f));
+            title.rectTransform.anchorMin = title.rectTransform.anchorMax = title.rectTransform.pivot = new Vector2(0f, 1f);
+            title.rectTransform.anchoredPosition = new Vector2(44f, -24f);
+            title.rectTransform.sizeDelta = new Vector2(1000f, 44f);
+            title.text = "Paused";
+
+            var list = Page("List", panel);
+            var cursor = Panel("Cursor", list, new Color(1f, 0.62f, 0.2f, 0.3f));
+            cursor.GetComponent<Image>().sprite = UiArt.Brush();
+            cursor.GetComponent<Image>().type = Image.Type.Sliced;
+            cursor.anchorMin = cursor.anchorMax = cursor.pivot = new Vector2(0f, 1f);
+            cursor.sizeDelta = new Vector2(540f, 54f);
+            cursor.anchoredPosition = new Vector2(30f, -120f);
+
+            // No scene offers more than four: resume, controls, one way out of the scene, quit.
+            const int count = 4;
+            var rows = new Text[count];
+            for (int i = 0; i < count; i++)
+            {
+                rows[i] = Label("Row " + (i + 1), list, 38, TextAnchor.MiddleLeft, Color.white);
+                rows[i].rectTransform.anchorMin = rows[i].rectTransform.anchorMax = rows[i].rectTransform.pivot = new Vector2(0f, 1f);
+                rows[i].rectTransform.anchoredPosition = new Vector2(48f, -120f - i * 68f);
+                rows[i].rectTransform.sizeDelta = new Vector2(520f, 54f);
+            }
+            var note = Label("Note", list, 34, TextAnchor.UpperLeft, new Color(0.95f, 0.93f, 0.9f, 1f));
+            note.rectTransform.anchorMin = note.rectTransform.anchorMax = note.rectTransform.pivot = new Vector2(0f, 1f);
+            note.rectTransform.anchoredPosition = new Vector2(660f, -128f);
+            note.rectTransform.sizeDelta = new Vector2(600f, 400f);
+            note.horizontalOverflow = HorizontalWrapMode.Wrap;
+            note.lineSpacing = 1.15f;
+
+            var controls = Page("Controls", panel);
+            var gold = new Color(1f, 0.8f, 0.45f, 1f);
+            var pale = new Color(0.95f, 0.93f, 0.9f, 1f);
+            Column("Names", controls, 48f, 250f, pale, "\nMove\nLight blow\nHeavy blow\nGuard\nDodge\nFlask\nSpell\nSurge\nUse\nPause");
+            Column("Pad", controls, 300f, 200f, pale, "Pad\nLeft stick\nR1\nR2\nL1\nCircle\nSquare\nTriangle\nL2\nCross\nStart");
+            Column("Keys", controls, 500f, 160f, pale, "Keys\nW A S D\nJ\nK\nL\nSpace\nR\nU\nI\nE\nEsc");
+            var holds = Column("Holds", controls, 48f, 600f, gold,
+                "Heavy held: the weapon's skill, 30 mana\nHeavy on a staggered enemy: finisher\nFlask held: throw it, once learned\nSpell held: the element's own move, once learned");
+            holds.rectTransform.anchoredPosition = new Vector2(48f, -576f);
+            var fight = Column("Fight", controls, 700f, 570f, pale,
+                "Guard turns blows from the front.\n\nA guard raised at the last instant is a perfect guard. It costs the enemy its balance.\n\nRed attacks cannot be guarded.\n\nBreak an enemy's balance, then finish it with a heavy blow.\n\nEmbers are spent at rest fires.");
+            fight.horizontalOverflow = HorizontalWrapMode.Wrap;
+            fight.lineSpacing = 1.1f;
+            var rule = Panel("Rule", controls, new Color(0.8f, 0.72f, 0.55f, 0.35f));
+            rule.anchorMin = rule.anchorMax = rule.pivot = new Vector2(0f, 1f);
+            rule.anchoredPosition = new Vector2(668f, -112f);
+            rule.sizeDelta = new Vector2(2f, 620f);
+            controls.gameObject.SetActive(false);
+
+            var hint = Label("Hint", panel, 22, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.6f));
+            hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = hint.rectTransform.pivot = Vector2.zero;
+            hint.rectTransform.anchoredPosition = new Vector2(48f, 26f);
+            hint.rectTransform.sizeDelta = new Vector2(1200f, 30f);
+            hint.text = "Stick or W S: choose     Cross or E: pick     Circle or Space: back     Start or Esc: resume";
+
+            hud.gameObject.AddComponent<PauseMenu>().Configure(player, dim.gameObject, list.gameObject, controls.gameObject, rows, note, cursor);
+        }
+
+        // An unseen sheet that fills its panel, so a whole page of a menu can be shown and hidden as one.
+        private static RectTransform Page(string name, Transform parent)
+        {
+            var page = new GameObject(name, typeof(RectTransform));
+            page.transform.SetParent(parent, false);
+            var rect = (RectTransform)page.transform;
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.offsetMin = rect.offsetMax = Vector2.zero;
+            return rect;
+        }
+
+        // Lines of text set one under another from the top of a menu page.
+        private static Text Column(string name, Transform parent, float left, float width, Color colour, string lines)
+        {
+            var column = Label(name, parent, 28, TextAnchor.UpperLeft, colour);
+            column.rectTransform.anchorMin = column.rectTransform.anchorMax = column.rectTransform.pivot = new Vector2(0f, 1f);
+            column.rectTransform.anchoredPosition = new Vector2(left, -112f);
+            column.rectTransform.sizeDelta = new Vector2(width, 400f);
+            column.lineSpacing = 1.08f;
+            column.text = lines;
+            return column;
+        }
+
+        /// <summary>The one line the hub keeps on screen now that the controls live in the pause menu.</summary>
+        public const string PauseHint = "Start or Esc: pause and controls";
 
         public const string ControlsHint =
             "R1 light   R2 heavy (hold: weapon skill, 30 mana; on a staggered enemy: finisher)   L1 guard   Circle dodge   Square flask   Triangle element spell   L2 element surge   Cross use\n"

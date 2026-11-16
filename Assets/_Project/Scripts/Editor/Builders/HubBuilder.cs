@@ -55,7 +55,7 @@ namespace Clover.EditorTools
             ClockDetail(world);
             StoppedThings(world);
 
-            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, -4.6f), PlayerBuilder.ControlsHint);
+            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, -4.6f), PlayerBuilder.PauseHint);
             if (built.Player == null) return;
             LookBuilder.Apply(LookBuilder.Stillness, built.Camera);
             // Nothing here can hurt: a player who comes back from a run badly wounded is not warned about it.
