@@ -435,6 +435,8 @@ namespace Clover.Player
                 {
                     // Turned on the enemy's guard: steel on steel, and a jolt back up the arm.
                     BlowsTurned++;
+                    // A heavy blow turned aside is no reason to recommend a heavy blow.
+                    if (!step.Heavy) Tips.BlowTurned();
                     Vfx.Play(VfxKind.Clang, other.ClosestPoint(origin));
                     if (shaker != null) shaker.Shake(0.06f, 0.1f);
                 }
@@ -466,6 +468,7 @@ namespace Clover.Player
             if (finisher)
             {
                 Finishers++;
+                Tips.FinisherLanded();
                 if (defence != null) defence.Callout("Finisher");
                 ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.45f), 0.07f);
             }

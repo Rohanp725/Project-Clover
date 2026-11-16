@@ -329,6 +329,7 @@ namespace Clover.Gameplay
                 if (Stagger.Add(hit.Heavy ? hit.Stagger : hit.Stagger * Kind.GuardedStagger))
                 {
                     Brain.Stagger();
+                    Clover.Player.Tips.EnemyStaggered(transform.position);
                     Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up);
                 }
                 else if (++blocked >= Kind.BlocksBeforeCounter)
@@ -363,6 +364,7 @@ namespace Clover.Gameplay
             if (!IsStaggered && Stagger.Add(hit.Stagger))
             {
                 Brain.Stagger();
+                Clover.Player.Tips.EnemyStaggered(transform.position);
                 Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up);
             }
             else
@@ -669,7 +671,11 @@ namespace Clover.Gameplay
             if (outcome != HitOutcome.PerfectGuard || attack.Ranged) return;
             flashLeft = 0.09f;
             shove = -transform.forward * (Shove * 1.6f);
-            if (!IsStaggered && Stagger.Add(Kind.PerfectGuardStagger)) Brain.Stagger();
+            if (!IsStaggered && Stagger.Add(Kind.PerfectGuardStagger))
+            {
+                Brain.Stagger();
+                Clover.Player.Tips.EnemyStaggered(transform.position);
+            }
         }
 
         // The mark on the ground: the shape's bold edge with a faint inside, and a brighter copy of it that grows to meet that edge as the blow nears.

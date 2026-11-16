@@ -9,7 +9,8 @@ namespace Clover.Player
     /// Everything about the player being hit: health, the guard, the flasks, and what a blow does when it arrives (passes
     /// through a dodge, is guarded, or lands and makes the player flinch). The rules are in <see cref="RegainHealth"/>,
     /// <see cref="Guard"/> and <see cref="FlaskBelt"/>. It has no Update of its own: <see cref="PlayerController"/>
-    /// calls it each frame so that dodge, guard and weapon are always settled in the same order.
+    /// calls it each frame so that dodge, guard and weapon are always settled in the same order. Its LateUpdate only
+    /// gives <see cref="Tips"/> the end of the frame.
     /// </summary>
     [RequireComponent(typeof(PlayerController))]
     public class PlayerDefence : MonoBehaviour, IDamageable
@@ -111,6 +112,7 @@ namespace Clover.Player
             Health.Fill();
             Guard.Reset();
             Flasks.Refill();
+            Tips.BeginScene(this, gameObject.scene.name);
         }
 
         private void Start()
@@ -118,6 +120,9 @@ namespace Clover.Player
             guardAction = player.FindAction("Guard");
             flaskAction = player.FindAction("Flask");
         }
+
+        // Tips are said last in the frame, when it is known whether the fight has already used the status line.
+        private void LateUpdate() => Tips.EndFrame(this, Time.deltaTime);
 
         /// <summary>Forgets a button being held, as when a menu or a leap takes the buttons away part-way through a hold.</summary>
         public void DropHolds()
@@ -328,6 +333,8 @@ namespace Clover.Player
                     return HitOutcome.Landed;
                 default:
                     Land(hit, HurtSeconds);
+                    // The blow that kills teaches nothing.
+                    if (!IsDead) Tips.UnguardedBlow();
                     return HitOutcome.Landed;
             }
         }
