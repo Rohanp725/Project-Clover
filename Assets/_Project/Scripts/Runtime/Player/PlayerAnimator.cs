@@ -28,9 +28,13 @@ namespace Clover.Player
         public float SheatheDelay = 0.6f;
         /// <summary>Seconds the guard and the drink take to come up over the body and to go down again.</summary>
         public float UpperBodyBlend = 0.07f;
+        /// <summary>Seconds the fall takes, from the blow to lying still.</summary>
+        public float DeathSeconds = 1.1f;
 
         public const string SpeedParameter = "Speed";
         public const string LocomotionState = "locomotion";
+        public const string FistLocomotionState = "locomotion_fist";
+        public const string DeathState = "death";
         public const string RollState = "roll";
         public const string ChargeState = "charge";
         public const string FistChargeState = "charge_fist";
@@ -45,6 +49,8 @@ namespace Clover.Player
         private static readonly int SpeedHash = Animator.StringToHash(SpeedParameter);
         private static readonly int LocomotionHash = Animator.StringToHash(LocomotionState);
         private static readonly int RollHash = Animator.StringToHash(RollState);
+        private static readonly int FistLocomotionHash = Animator.StringToHash(FistLocomotionState);
+        private static readonly int DeathHash = Animator.StringToHash(DeathState);
         private static readonly int HurtHash = Animator.StringToHash(HurtState);
         private static readonly int CastHash = Animator.StringToHash(CastState);
         private static readonly int GuardHash = Animator.StringToHash(GuardState);
@@ -63,6 +69,7 @@ namespace Clover.Player
         private float guardFor;
         private float upperWeight;
         private int upperLayer = -1;
+        private int shownLocomotion;
 
         public void Configure(PlayerController playerToShow, PlayerCombat combatToShow, PlayerDefence defenceToShow,
             PlayerElement elementToShow, Animator animatorToDrive, GameObject drawnSwordObject, GameObject sheathedHiltObject,
@@ -103,7 +110,12 @@ namespace Clover.Player
             bool drinking = !helpless && defence != null && defence.IsDrinking;
             bool guarding = !helpless && defence != null && defence.IsGuarding;
 
-            if (helpless)
+            int locomotion = weapon.UsesSword ? LocomotionHash : FistLocomotionHash;
+            if (helpless && defence.IsDead)
+            {
+                animator.Play(DeathHash, 0, Mathf.Min(ClipEnd, defence.DeadSeconds / DeathSeconds));
+            }
+            else if (helpless)
             {
                 animator.Play(HurtHash, 0, Mathf.Min(ClipEnd, defence.HurtProgress));
             }
@@ -131,7 +143,8 @@ namespace Clover.Player
             }
             else
             {
-                if (wasBusy) animator.CrossFadeInFixedTime(LocomotionHash, ExitBlend);
+                if (wasBusy || locomotion != shownLocomotion) animator.CrossFadeInFixedTime(locomotion, ExitBlend);
+                shownLocomotion = locomotion;
                 float fraction = player.MoveSpeed > 0f ? Mathf.Clamp01(player.PlanarSpeed / player.MoveSpeed) : 0f;
                 animator.SetFloat(SpeedHash, fraction, SpeedDampTime, deltaTime);
             }

@@ -54,6 +54,8 @@ namespace Clover.Player
         public float GuardRetargetSeconds = 0.25f;
         /// <summary>True when the player can do nothing: flinching or fallen.</summary>
         public bool IsHelpless => IsHurt || IsDead;
+        /// <summary>Seconds since the player fell.</summary>
+        public float DeadSeconds => deadFor;
         /// <summary>How far through the flinch the player is, from 0 to 1; 1 when fallen.</summary>
         public float HurtProgress => IsDead ? 1f : hurtSeconds > 0f ? Mathf.Clamp01(1f - hurtLeft / hurtSeconds) : 0f;
         /// <summary>A guard pressed during an attack's recovery: the controller cuts the recovery short for it.</summary>

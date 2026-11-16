@@ -139,6 +139,14 @@ namespace Clover.EditorTools
             return player;
         }
 
+        /// <summary>Puts the character's toon materials on a copy of its model, as the game does.</summary>
+        public static void Dress(GameObject model)
+        {
+            var materials = PlayerMaterials();
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
+                renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials)).ToArray();
+        }
+
         // The model's own materials only carry names; each is replaced by the toon material of the same name.
         private static Material ToonFor(Material imported, Dictionary<string, Material> materials)
         {
@@ -166,8 +174,11 @@ namespace Clover.EditorTools
         {
             string path = $"{PlayerFolder}/PlayerAnimator.controller";
             AssetDatabase.DeleteAsset(path);
-            var clips = AssetDatabase.LoadAllAssetsAtPath(PlayerModelPath).OfType<AnimationClip>()
-                .Where(clip => !clip.name.StartsWith("__")).ToDictionary(clip => clip.name);
+            // The animations are written as code and baked by Clover > Forge > Bake Player Animations.
+            var clips = AssetDatabase.FindAssets("t:AnimationClip", new[] { Forge.PlayerAnimations.ClipFolder })
+                .Select(guid => AssetDatabase.LoadAssetAtPath<AnimationClip>(AssetDatabase.GUIDToAssetPath(guid)))
+                .Where(clip => clip != null).ToDictionary(clip => clip.name);
+            if (clips.Count == 0) Debug.LogError("[Clover.Build] No baked player animations; run Clover > Forge > Bake Player Animations first.");
             foreach (string needed in new[] { "idle", "run", "roll", PlayerAnimator.ChargeState, PlayerAnimator.HurtState, PlayerAnimator.GuardState, PlayerAnimator.DrinkState })
                 if (!clips.ContainsKey(needed)) Debug.LogError($"[Clover.Build] The character model has no '{needed}' clip.");
 
@@ -183,6 +194,14 @@ namespace Clover.EditorTools
             if (clips.TryGetValue("run", out var run)) tree.AddChild(run, 1f);
             machine.defaultState = locomotion;
 
+            // Bare hands have their own way of standing and running.
+            controller.CreateBlendTreeInController(PlayerAnimator.FistLocomotionState, out BlendTree fistTree, 0);
+            fistTree.blendType = BlendTreeType.Simple1D;
+            fistTree.blendParameter = PlayerAnimator.SpeedParameter;
+            fistTree.useAutomaticThresholds = false;
+            if (clips.TryGetValue("idle_fist", out var idleFist)) fistTree.AddChild(idleFist, 0f);
+            if (clips.TryGetValue("run_fist", out var runFist)) fistTree.AddChild(runFist, 1f);
+
             var roll = machine.AddState(PlayerAnimator.RollState);
             if (clips.TryGetValue("roll", out var rollClip)) roll.motion = rollClip;
 
@@ -193,7 +212,7 @@ namespace Clover.EditorTools
                 foreach (var step in weapon.AllSteps())
                     if (!clips.ContainsKey(step.Name)) Debug.LogWarning($"[Clover.Build] The character model has no '{step.Name}' clip; that attack will not be animated.");
 
-            foreach (string name in new[] { PlayerAnimator.ChargeState, PlayerAnimator.FistChargeState, PlayerAnimator.HurtState, PlayerAnimator.CastState })
+            foreach (string name in new[] { PlayerAnimator.ChargeState, PlayerAnimator.FistChargeState, PlayerAnimator.HurtState, PlayerAnimator.CastState, PlayerAnimator.DeathState })
                 machine.AddState(name).motion = clips.TryGetValue(name, out var clip) ? clip : null;
 
             // The guard and the drink move the body from the spine up and leave the legs to walk.

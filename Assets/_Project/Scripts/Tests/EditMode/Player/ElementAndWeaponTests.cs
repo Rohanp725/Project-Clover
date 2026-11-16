@@ -85,14 +85,14 @@ namespace Clover.Tests
         [Test]
         public void EveryWeaponAttackHasAClipOnThePlayerModel()
         {
-            var clips = Clips("Assets/_Project/Art/Models/Characters/player.fbx");
+            var clips = Baked(Clover.EditorTools.Forge.PlayerAnimations.ClipFolder);
             foreach (var weapon in Weapons.All)
             {
                 foreach (var step in weapon.AllSteps())
                     Assert.Contains(step.Name, clips, $"{weapon.Name} has an attack with no animation");
                 Assert.Contains(weapon.ChargeAnimation, clips, $"{weapon.Name} has no charge animation");
             }
-            foreach (string needed in new[] { "idle", "run", "roll", PlayerAnimator.HurtState, PlayerAnimator.CastState, PlayerAnimator.GuardState, PlayerAnimator.FistGuardState, PlayerAnimator.DrinkState })
+            foreach (string needed in new[] { "idle", "run", "idle_fist", "run_fist", "roll", PlayerAnimator.DeathState, PlayerAnimator.HurtState, PlayerAnimator.CastState, PlayerAnimator.GuardState, PlayerAnimator.FistGuardState, PlayerAnimator.DrinkState })
                 Assert.Contains(needed, clips);
         }
 
@@ -118,6 +118,11 @@ namespace Clover.Tests
             Assert.Less(fists.Steps[0].Reach, katana.Steps[0].Reach);
             Assert.Greater(fists.Steps.Count, katana.Steps.Count, "the fists have the longer chain");
         }
+
+        // The names of the animation clips baked into a folder by the forge.
+        private static List<string> Baked(string folder) =>
+            AssetDatabase.FindAssets("t:AnimationClip", new[] { folder })
+                .Select(guid => System.IO.Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(guid))).ToList();
 
         private static List<string> Clips(string modelPath) =>
             AssetDatabase.LoadAllAssetsAtPath(modelPath).OfType<AnimationClip>().Select(clip => clip.name).ToList();
