@@ -114,6 +114,7 @@ namespace Clover.EditorTools
 
             var training = dummy.AddComponent<TrainingDummy>();
             training.Configure(body, parts.ToArray(), bars.health, bars.stagger);
+            training.ConfigureFeedback(WorldBars.FinishMark(dummy.transform, new Vector3(0f, 1.2f, 0f), 2.1f, kit.TowardCamera));
             if (fights) dummy.AddComponent<DummyAttacker>().Configure(pivot, arm, target, outline, fill);
         }
     }

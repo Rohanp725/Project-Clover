@@ -106,6 +106,20 @@ namespace Clover.EditorTools
             return new Color(1f, 1f, 1f, alpha);
         });
 
+        /// <summary>
+        /// The edge of the screen closing in: nothing in the middle, thickening to solid at the edges and most in the
+        /// corners, with a ragged inner line as if brushed on. White, so the HUD can tint it; stretched over the whole screen.
+        /// </summary>
+        public static Sprite Vignette() => Make("ui_vignette", 256, 144, Vector4.zero, (x, y) =>
+        {
+            float across = Mathf.Abs(x / 255f * 2f - 1f), up = Mathf.Abs(y / 143f * 2f - 1f);
+            // Squarer than a circle, so it hugs the frame of the screen and leaves the whole middle alone.
+            float outward = Mathf.Pow(Mathf.Pow(across, 3.2f) + Mathf.Pow(up, 3.2f), 1f / 3.2f);
+            float ragged = (Noise(Mathf.Atan2(up, across) * 9f + x * 0.05f, 4f) - 0.5f) * 0.07f;
+            float alpha = Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.74f, 1.14f, outward + ragged));
+            return new Color(1f, 1f, 1f, alpha * 0.92f);
+        });
+
         // Distance inside a slab with slanted ends, in pixels: positive inside, measured to the nearest edge.
         private static float Slab(int x, int y, int width, int height, float inset)
         {

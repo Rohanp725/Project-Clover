@@ -57,6 +57,8 @@ namespace Clover.EditorTools
             var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, -4.6f), PlayerBuilder.ControlsHint);
             if (built.Player == null) return;
             LookBuilder.Apply(LookBuilder.Stillness, built.Camera);
+            // Nothing here can hurt: a player who comes back from a run badly wounded is not warned about it.
+            PlayerBuilder.RemoveLowHealthWarning();
             var combat = built.Player.GetComponent<PlayerCombat>();
             var element = built.Player.GetComponent<PlayerElement>();
             combat.StartingWeapon = Weapons.FistsName;

@@ -13,6 +13,7 @@ namespace Clover.Gameplay
         [SerializeField] private Renderer[] flashRenderers;
         [SerializeField] private Transform healthFill;
         [SerializeField] private Transform staggerFill;
+        [SerializeField] private StaggerMark staggerMark;
 
         public Health Health = new Health { Maximum = 200f };
         public StaggerMeter Stagger = new StaggerMeter();
@@ -53,6 +54,9 @@ namespace Clover.Gameplay
             healthFill = healthBar;
             staggerFill = staggerBar;
         }
+
+        /// <summary>Adds the mark that shows over it while it is staggered.</summary>
+        public void ConfigureFeedback(StaggerMark markToShow) => staggerMark = markToShow;
 
         private void Awake()
         {
@@ -127,6 +131,7 @@ namespace Clover.Gameplay
                 body.localRotation = Quaternion.Euler(rock) * Quaternion.Euler(Stagger.IsStaggered ? SlumpDegrees : 0f, 0f, 0f);
             if (healthFill != null) healthFill.localScale = new Vector3(Health.Fraction, 1f, 1f);
             if (staggerFill != null) staggerFill.localScale = new Vector3(Stagger.Fraction, 1f, 1f);
+            if (staggerMark != null) staggerMark.Show(Stagger.IsStaggered);
 
             // The flash runs on real time so it is still seen through the moment time is stopped for the hit.
             // 0 is the dummy's own colours, 1 the white of a hit, 2 the pulse of an open stagger.

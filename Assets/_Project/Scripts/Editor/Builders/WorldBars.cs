@@ -1,36 +1,103 @@
+using Clover.Gameplay;
 using UnityEngine;
 
 namespace Clover.EditorTools
 {
-    /// <summary>The small things that float over or lie under a fighter in the world: its health and stagger bars, and the mark on the ground for its attack.</summary>
+    /// <summary>
+    /// The small things that float over or lie under a fighter in the world: its health and balance bars in their inked
+    /// frames, the mark that stands over it while it is staggered, and the mark on the ground for its attack.
+    /// </summary>
     public static class WorldBars
     {
-        /// <summary>Health and stagger bars above a fighter, turned to face the camera, which never rotates.</summary>
+        private const string Folder = BuildKit.GeneratedRoot + "/Enemies";
+        private const float Length = 1.2f;
+
+        /// <summary>
+        /// Health and balance bars above a fighter, turned to face the camera, which never rotates. Each sits in a frame
+        /// like the HUD's: ink, with a thin pale line set in from its edge. Behind the health a pale piece lingers where
+        /// a blow has just taken some, and the balance bar is put away while it is empty.
+        /// </summary>
         public static (Transform health, Transform stagger, Transform root) Build(Transform parent, float height, Quaternion towardCamera,
             Material back, Material healthMaterial, Material staggerMaterial)
         {
+            var ink = BuildKit.Glow(Folder, "m_bar_ink", UiArt.Ink, 3, false);
+            var line = BuildKit.Glow(Folder, "m_bar_line", new Color(0.8f, 0.72f, 0.55f, 0.8f), 3, false);
+            var pale = BuildKit.Glow(Folder, "m_bar_lag", new Color(1f, 0.9f, 0.75f, 1f), 3, false);
+
             var bars = BuildKit.Group("Bars", parent);
             bars.localPosition = new Vector3(0f, height, 0f);
             bars.rotation = towardCamera;
-            Plain(BuildKit.Shape(PrimitiveType.Quad, "Back", bars, new Vector3(0f, 0.05f, 0.01f), new Vector3(1.26f, 0.3f, 1f), back));
-            var health = Fill("Health", bars, 0.11f, 0.12f, healthMaterial);
-            var stagger = Fill("Stagger", bars, -0.03f, 0.07f, staggerMaterial);
+
+            Frame("Health Frame", bars, 0.11f, 0.14f, ink, line, back);
+            var lag = Fill("Health Lag", bars, 0.11f, 0.1f, pale, 3);
+            var health = Fill("Health", bars, 0.11f, 0.1f, healthMaterial, 4);
+
+            // The balance bar hangs under the health bar and shares its lower edge; it is only there while there is something to show.
+            var balanceRow = BuildKit.Group("Balance Row", bars);
+            Frame("Balance Frame", balanceRow, -0.035f, 0.07f, ink, line, back);
+            var stagger = Fill("Stagger", balanceRow, -0.035f, 0.05f, staggerMaterial, 4);
+
+            bars.gameObject.AddComponent<EnemyBars>().Configure(health, lag, stagger, balanceRow.gameObject);
             return (health, stagger, bars);
         }
 
+        // The slab a bar sits in: ink outermost, the pale line inside it, and the dark the bar empties to.
+        private static void Frame(string name, Transform parent, float height, float inside, Material ink, Material line, Material track)
+        {
+            Layer(BuildKit.Shape(PrimitiveType.Quad, name, parent, new Vector3(0f, height, 0.03f), new Vector3(Length + 0.2f, inside + 0.14f, 1f), ink), 0);
+            Layer(BuildKit.Shape(PrimitiveType.Quad, name + " Line", parent, new Vector3(0f, height, 0.02f), new Vector3(Length + 0.095f, inside + 0.035f, 1f), line), 1);
+            Layer(BuildKit.Shape(PrimitiveType.Quad, name + " Track", parent, new Vector3(0f, height, 0.01f), new Vector3(Length + 0.06f, inside, 1f), track), 2);
+        }
+
         // A bar that shrinks toward its left end: the pivot sits at the left and the block hangs to its right.
-        private static Transform Fill(string name, Transform parent, float height, float thickness, Material material)
+        private static Transform Fill(string name, Transform parent, float height, float thickness, Material material, int order)
         {
             var pivot = BuildKit.Group(name, parent);
-            pivot.localPosition = new Vector3(-0.6f, height, 0f);
-            Plain(BuildKit.Shape(PrimitiveType.Quad, name + " Block", pivot, new Vector3(0.6f, 0f, 0f), new Vector3(1.2f, thickness, 1f), material));
+            pivot.localPosition = new Vector3(-Length * 0.5f, height, 0f);
+            Layer(BuildKit.Shape(PrimitiveType.Quad, name + " Block", pivot, new Vector3(Length * 0.5f, 0f, 0f), new Vector3(Length, thickness, 1f), material), order);
             return pivot;
+        }
+
+        // These lie almost on top of one another, so the order they are drawn in is said outright.
+        private static Renderer Layer(Renderer renderer, int order)
+        {
+            Plain(renderer);
+            renderer.sortingOrder = order;
+            return renderer;
         }
 
         private static void Plain(Renderer renderer)
         {
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             renderer.receiveShadows = false;
+        }
+
+        /// <summary>
+        /// The mark that stands over a staggered fighter: a broken ring that turns, round a crossed cut that beats, in
+        /// white-gold on ink. It is drawn through whatever is in front of it, since it is the one thing that must be seen.
+        /// </summary>
+        public static StaggerMark FinishMark(Transform parent, Vector3 localPosition, float size, Quaternion towardCamera)
+        {
+            var ringInk = BuildKit.Glow(Folder, "m_mark_ring_ink", UiArt.Ink, 8, false, 1f, 0f, true).Graphic(0.36f);
+            var ringGold = BuildKit.Glow(Folder, "m_mark_ring", new Color(1.9f, 1.25f, 0.22f, 1f), 8, false, 1f, 0f, true).Graphic(0.62f);
+            var cutInk = BuildKit.Glow(Folder, "m_mark_cut_ink", UiArt.Ink, 9, false, 1f, 0f, true).Graphic(0.36f);
+            var cutGold = BuildKit.Glow(Folder, "m_mark_cut", new Color(2.3f, 2.05f, 1.3f, 1f), 9, false, 1f, 0f, true).Graphic(0.54f);
+
+            var mark = BuildKit.Group("Finish Mark", parent);
+            mark.localPosition = localPosition;
+            mark.rotation = towardCamera;
+            mark.localScale = new Vector3(size, size, size);
+            var shapes = BuildKit.Group("Shapes", mark);
+            var ring = BuildKit.Group("Ring", shapes);
+            Layer(BuildKit.Shape(PrimitiveType.Quad, "Ring Ink", ring, new Vector3(0f, 0f, 0.02f), Vector3.one, ringInk), 30);
+            Layer(BuildKit.Shape(PrimitiveType.Quad, "Ring Gold", ring, Vector3.zero, Vector3.one, ringGold), 31);
+            var cut = BuildKit.Group("Cut", shapes);
+            Layer(BuildKit.Shape(PrimitiveType.Quad, "Cut Ink", cut, new Vector3(0f, 0f, 0.01f), Vector3.one, cutInk), 32);
+            Layer(BuildKit.Shape(PrimitiveType.Quad, "Cut Gold", cut, new Vector3(0f, 0f, -0.01f), Vector3.one, cutGold), 33);
+
+            var staggerMark = mark.gameObject.AddComponent<StaggerMark>();
+            staggerMark.Configure(shapes.gameObject, ring, cut);
+            return staggerMark;
         }
 
         /// <summary>An empty mesh holder lying on the ground; the fighter gives it the shape of its attack when the game starts.</summary>

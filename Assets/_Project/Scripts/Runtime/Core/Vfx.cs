@@ -47,5 +47,20 @@ namespace Clover.Core
         }
 
         public static void Play(VfxKind kind, Vector3 position) => Play(kind, position, Vector3.up);
+
+        /// <summary>Throws the effect in a colour of the caller's choosing, as when a body breaks up into flakes of itself.</summary>
+        public static void Play(VfxKind kind, Vector3 position, Vector3 direction, float scale, Color tint)
+        {
+            if (instance == null) return;
+            int index = (int)kind;
+            if (index >= instance.emitters.Length) return;
+            var emitter = instance.emitters[index];
+            if (emitter == null) return;
+            var emitterTransform = emitter.transform;
+            emitterTransform.position = position;
+            if (direction.sqrMagnitude > 0.0001f) emitterTransform.rotation = Quaternion.LookRotation(direction, Vector3.up);
+            var with = new ParticleSystem.EmitParams { startColor = tint };
+            emitter.Emit(with, Mathf.Max(1, Mathf.RoundToInt(instance.counts[index] * scale)));
+        }
     }
 }

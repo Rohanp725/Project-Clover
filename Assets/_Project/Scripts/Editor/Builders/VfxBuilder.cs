@@ -62,6 +62,13 @@ namespace Clover.EditorTools
             Add(VfxKind.Danger, 1, Star(root, "Danger", BuildKit.Glow(Folder, "m_vfx_danger", new Color(7f, 0.5f, 0.3f, 1f), 5, true, 1f, 0f, true).Graphic(0.1f, 0.55f), 2.6f, 0.28f));
             Add(VfxKind.Clang, 1, Star(root, "Clang", BuildKit.Glow(Folder, "m_vfx_clang", new Color(3f, 4.5f, 7f, 1f), 5, true, 1f).Graphic(0.12f, 0.4f), 1.9f, 0.11f));
 
+            // A body burning away. The flakes are thrown in the body's own colours, so their material is only brightness;
+            // they are laid over what is behind them, as paint, so each keeps its colour.
+            Add(VfxKind.Ash, 4, Puffs(root, "Ash", BuildKit.Glow(Folder, "m_vfx_ash", new Color(2.6f, 2.6f, 2.6f, 1f), 3, false, 1f),
+                0.5f, 2.1f, 0.5f, 1.1f, 0.08f, 0.2f, -1.3f, 0.25f, flat: false));
+            Add(VfxKind.Wisp, 12, Sparks(root, "Wisp", Streak("m_vfx_spark_wisp", new Color(1.6f, 3.2f, 8f, 1f)), 8f, 6f, 15f, 0.25f, 0.6f, 0.06f, 0.14f, -1f));
+            Add(VfxKind.Bolt, 2, Bolt(root, "Bolt", BuildKit.Glow(Folder, "m_vfx_bolt", new Color(2.2f, 3.6f, 8f, 1f), 7, true, 1f).Graphic(0.42f, 0.78f), 1.5f, 4.4f, 0.17f));
+
             var vfx = root.AddComponent<Vfx>();
             vfx.Configure(emitters, counts);
             return vfx;
@@ -185,6 +192,27 @@ namespace Clover.EditorTools
             var size = system.sizeOverLifetime;
             size.enabled = true;
             size.size = new ParticleSystem.MinMaxCurve(1f, new AnimationCurve(new Keyframe(0f, 0.5f), new Keyframe(0.3f, 1f), new Keyframe(1f, 0.85f)));
+            return system;
+        }
+
+        // One tall jagged stroke standing on the point, drawn upward, there for an instant: the lightning leaving.
+        private static ParticleSystem Bolt(GameObject root, string name, Material material, float width, float height, float seconds)
+        {
+            var system = New(root, name, material, 16);
+            var main = system.main;
+            main.startSpeed = 0f;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(seconds * 0.6f, seconds);
+            main.startSize3D = true;
+            main.startSizeX = width;
+            main.startSizeY = height;
+            main.startSizeZ = 1f;
+            main.startRotation = 0f;
+            // The shader reads the red of the colour as which kinks this bolt has, so two thrown together fork.
+            main.startColor = new ParticleSystem.MinMaxGradient(new Color(0.2f, 1f, 1f, 1f), Color.white);
+            var shape = system.shape;
+            shape.enabled = false;
+            // It stands on the point it is thrown at and does not straddle it.
+            system.GetComponent<ParticleSystemRenderer>().pivot = new Vector3(0f, 0.5f, 0f);
             return system;
         }
 

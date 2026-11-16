@@ -73,6 +73,7 @@ namespace Clover.EditorTools
             cameraObject.AddComponent<Clover.World.OcclusionFader>().Configure(built.Player.transform);
 
             BuildHud(controller, built.Player.GetComponent<PlayerCombat>(), built.Player.GetComponent<PlayerDefence>(), hint);
+            BuildFeedback(built.Player, cameraObject.transform);
             // The player's lingering effects on the ground live in the scene, not on the player.
             new GameObject("Hazards").AddComponent<Clover.World.Hazards>();
             // A flask in the air, for the eye only; it waits unseen until one is thrown.
@@ -90,6 +91,77 @@ namespace Clover.EditorTools
             trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             thrown.AddComponent<Clover.World.ThrownThing>().Configure(flask, trail);
             return built;
+        }
+
+        // What answers the player's blows and choices in the world: the brackets under whoever the next attack would turn
+        // to, the cut lines blows leave, and the embers that fly in from the fallen. All wait unseen until wanted.
+        private static void BuildFeedback(GameObject player, Transform camera)
+        {
+            // Thinner and dimmer than any attack marker: it is a hint, not a warning.
+            var brackets = BuildKit.Glow(PlayerFolder, "m_target_brackets", Color.white, 8, false, 1f).Graphic(0.74f);
+            var ring = BuildKit.Shape(PrimitiveType.Quad, "Target Brackets", null, Vector3.zero, Vector3.one * 2f, brackets, new Vector3(90f, 0f, 0f));
+            ring.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            ring.receiveShadows = false;
+            ring.enabled = false;
+            var reticle = player.AddComponent<TargetReticle>();
+            reticle.Configure(ring.transform, ring);
+            player.GetComponent<PlayerCombat>().ConfigureFeedback(reticle);
+
+            // Each stroke is a white-hot needle on a slightly larger one of ink, drawn over whatever it crosses.
+            var strokeInk = BuildKit.Glow(PlayerFolder, "m_cut_ink", UiArt.Ink, 1, false, 1f, 0f, true).Graphic(0.2f);
+            var strokeWhite = BuildKit.Glow(PlayerFolder, "m_cut_white", new Color(4.5f, 4.4f, 4f, 1f), 1, false, 1f, 0f, true).Graphic(0.34f);
+            var cuts = new GameObject("Cut Marks");
+            var strokes = new Transform[6];
+            for (int i = 0; i < strokes.Length; i++)
+            {
+                strokes[i] = BuildKit.Group("Stroke " + (i + 1), cuts.transform);
+                Unlit(BuildKit.Shape(PrimitiveType.Quad, "Ink", strokes[i], new Vector3(0f, 0f, 0.02f), new Vector3(1.05f, 1.7f, 1f), strokeInk), 40);
+                Unlit(BuildKit.Shape(PrimitiveType.Quad, "White", strokes[i], Vector3.zero, Vector3.one, strokeWhite), 41);
+            }
+            cuts.AddComponent<CutMarks>().Configure(strokes, camera);
+
+            // An ember in the air is the HUD's ember: an upright diamond with a bright heart, and a tail of light behind it.
+            var flame = BuildKit.Glow(PlayerFolder, "m_ember_mote", new Color(5f, 1.9f, 0.3f, 1f), 3, false, 1f, 0f, true);
+            var heart = BuildKit.Glow(PlayerFolder, "m_ember_heart", new Color(6f, 5f, 3f, 1f), 3, false, 1f, 0f, true);
+            var tail = BuildKit.Glow(PlayerFolder, "m_ember_tail", new Color(3.2f, 1.1f, 0.15f, 0.9f), 3, true, 1f, 0f, true);
+            var embers = new GameObject("Ember Motes");
+            var motes = new Transform[8];
+            var tails = new TrailRenderer[motes.Length];
+            for (int i = 0; i < motes.Length; i++)
+            {
+                motes[i] = BuildKit.Group("Mote " + (i + 1), embers.transform);
+                motes[i].rotation = camera.rotation;
+                Unlit(BuildKit.Shape(PrimitiveType.Quad, "Flame", motes[i], Vector3.zero, Vector3.one, flame, new Vector3(0f, 0f, 45f)), 42);
+                Unlit(BuildKit.Shape(PrimitiveType.Quad, "Heart", motes[i], new Vector3(0f, 0f, -0.01f), Vector3.one * 0.5f, heart, new Vector3(0f, 0f, 45f)), 43);
+                tails[i] = motes[i].gameObject.AddComponent<TrailRenderer>();
+                tails[i].time = 0.2f;
+                // Narrower than the mote, and thinning to nothing behind it.
+                tails[i].widthMultiplier = 0.2f;
+                tails[i].widthCurve = AnimationCurve.Linear(0f, 1f, 1f, 0f);
+                tails[i].sharedMaterial = tail;
+                tails[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                tails[i].receiveShadows = false;
+            }
+            embers.AddComponent<EmberMotes>().Configure(motes, tails);
+        }
+
+        private static Renderer Unlit(Renderer renderer, int order)
+        {
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            renderer.sortingOrder = order;
+            return renderer;
+        }
+
+        /// <summary>Takes the low-health warning off the HUD of the scene being built: for places where nothing can hurt.</summary>
+        public static void RemoveLowHealthWarning()
+        {
+            var hud = GameObject.Find("HUD");
+            if (hud == null) return;
+            var warning = hud.GetComponent<LowHealthVignette>();
+            if (warning != null) Object.DestroyImmediate(warning);
+            var edge = hud.transform.Find("Low Health Edge");
+            if (edge != null) Object.DestroyImmediate(edge.gameObject);
         }
 
         private static GameObject BuildPlayer(TopDownCamera follow)
@@ -278,6 +350,21 @@ namespace Clover.EditorTools
             wash.offsetMin = wash.offsetMax = Vector2.zero;
             wash.GetComponent<Image>().enabled = false;
             canvasObject.AddComponent<ScreenFlash>().Configure(wash.GetComponent<Image>());
+
+            // The warning of low health: a dark red edge, under everything, the impact frame included.
+            var edge = Panel("Low Health Edge", hud, new Color(0.3f, 0.0f, 0.02f, 1f));
+            edge.anchorMin = Vector2.zero;
+            edge.anchorMax = Vector2.one;
+            edge.offsetMin = edge.offsetMax = Vector2.zero;
+            edge.SetSiblingIndex(0);
+            var edgeImage = edge.GetComponent<Image>();
+            edgeImage.sprite = UiArt.Vignette();
+            edgeImage.enabled = false;
+            var edgeGroup = edge.gameObject.AddComponent<CanvasGroup>();
+            edgeGroup.alpha = 0f;
+            edgeGroup.interactable = false;
+            edgeGroup.blocksRaycasts = false;
+            canvasObject.AddComponent<LowHealthVignette>().Configure(defence, edgeImage, edgeGroup);
 
             var health = Bar("Health", hud, new Vector2(44f, -34f), new Vector2(470f, 30f), new Color(0.86f, 0.16f, 0.14f));
             // Behind the red: the pale piece that lingers where health was just lost, and behind that the grey that a

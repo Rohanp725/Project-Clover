@@ -135,6 +135,10 @@ namespace Clover.Gameplay
         private Vector3 leftRest, rightRest;
         private float untilJitter;
         private readonly Vector3[] tetherPoints = new Vector3[9];
+        [SerializeField] private StaggerMark staggerMark;
+
+        /// <summary>Adds the mark that stands over the fallen head while it can be finished.</summary>
+        public void ConfigureFeedback(StaggerMark markToShow) => staggerMark = markToShow;
 
         public void Configure(Transform targetToFight, Transform headPiece, Transform bodyPiece, Transform left, Transform right,
             ColossusPart headToStrike, ColossusPart leftToStrike, ColossusPart rightToStrike, Renderer[] allRenderers,
@@ -370,6 +374,8 @@ namespace Clover.Gameplay
             AdvanceBolts(deltaTime);
             Paint();
             DrawTethers();
+            // Once the head has come down, not while it is still falling.
+            if (staggerMark != null) staggerMark.Show(mode == Mode.Staggered && elapsed >= 0.5f);
         }
 
         // ------------------------------------------------------------------ choosing

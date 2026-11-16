@@ -117,6 +117,9 @@ namespace Clover.EditorTools
 
             colossus.Configure(target, head, body, leftHand, rightHand, headPart, leftPart, rightPart, renderers.ToArray(),
                 slamOutline, slamFill, sweepOutline, sweepFill, boltOutlines, boltFills, tethers);
+            // Over where the head comes to lie when its balance breaks; the camera here looks the same way as everywhere.
+            var towardCamera = Camera.main != null ? Camera.main.transform.rotation : Quaternion.Euler(55f, 0f, 0f);
+            colossus.ConfigureFeedback(WorldBars.FinishMark(root.transform, new Vector3(0f, 1.7f, floorRadius - 10f), 5f, towardCamera));
             return colossus;
         }
 

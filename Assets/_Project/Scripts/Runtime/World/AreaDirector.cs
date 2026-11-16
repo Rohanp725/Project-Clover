@@ -99,7 +99,10 @@ namespace Clover.World
             int index = System.Array.IndexOf(enemies, who);
             if (index < 0 || paid[index] || upgrades == null) return;
             paid[index] = true;
-            upgrades.Earn(who.Kind.IsBoss ? 5 : 1);
+            int embers = who.Kind.IsBoss ? 5 : 1;
+            upgrades.Earn(embers);
+            // Paid now; the body will show them leaving when it burns away.
+            who.CarryEmbers(upgrades.transform, embers);
             Vfx.Play(VfxKind.Embers, who.transform.position + Vector3.up, Vector3.up, 1.2f);
         }
 

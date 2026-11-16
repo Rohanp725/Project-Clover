@@ -18,6 +18,7 @@ namespace Clover.Player
         [SerializeField] private HitStop hitStop;
         [SerializeField] private TopDownCamera shaker;
         [SerializeField] private SlashArcs arcs;
+        [SerializeField] private TargetReticle reticle;
 
         /// <summary>The weapon the player starts the scene with: a name from <see cref="Weapons"/>.</summary>
         public string StartingWeapon = Weapons.FistsName;
@@ -83,6 +84,11 @@ namespace Clover.Player
         private readonly HashSet<IDamageable> struck = new HashSet<IDamageable>();
         // Spells and lingering effects keep their own lists, so one landing in the middle of a swing cannot disturb it.
         private readonly HashSet<IDamageable> spellStruck = new HashSet<IDamageable>();
+        // What each collider belongs to, found once: looking for whom an attack would face is done several times a second.
+        private readonly Dictionary<Collider, Component> targetOf = new Dictionary<Collider, Component>();
+
+        /// <summary>Adds the brackets that show whom the next attack would turn toward, so they can flare when a blow lands.</summary>
+        public void ConfigureFeedback(TargetReticle reticleToFlare) => reticle = reticleToFlare;
 
         public void Configure(HitStop hitStopToUse, TopDownCamera cameraToShake, SlashArcs arcsToShow)
         {
@@ -299,6 +305,18 @@ namespace Clover.Player
             return found;
         }
 
+        /// <summary>
+        /// The enemy an attack started now would turn toward, or null: the one nearest to where the stick points (or, with
+        /// no stick, to where the player faces) within the aiming cone and range. The attack itself asks this same question.
+        /// </summary>
+        public Transform AimTarget() => moveAction == null ? null : FindEnemy(AimDirection(), AimConeDegrees, AimRange, false);
+
+        private Vector3 AimDirection()
+        {
+            Vector3 wish = player.CameraRelative(moveAction.ReadValue<Vector2>());
+            return wish.sqrMagnitude > 0.01f ? wish.normalized : transform.forward;
+        }
+
         // Face the enemy nearest to where the stick points; with no enemy in the cone, face the stick; with no stick, stay.
         private void Aim()
         {
@@ -316,8 +334,7 @@ namespace Clover.Player
             }
             else
             {
-                Vector3 wish = player.CameraRelative(moveAction.ReadValue<Vector2>());
-                toward = wish.sqrMagnitude > 0.01f ? wish.normalized : transform.forward;
+                toward = AimDirection();
                 enemy = FindEnemy(toward, AimConeDegrees, AimRange, false);
             }
             if (enemy != null)
@@ -339,7 +356,11 @@ namespace Clover.Player
             {
                 var other = overlaps[i];
                 if (other.transform.root == transform.root) continue;
-                var target = other.GetComponentInParent<IDamageable>() as Component;
+                if (!targetOf.TryGetValue(other, out Component target))
+                {
+                    target = other.GetComponentInParent<IDamageable>() as Component;
+                    targetOf[other] = target;
+                }
                 if (target == null) continue;
                 if (staggeredOnly && !(target is IStaggerable staggerable && staggerable.IsStaggered)) continue;
                 Vector3 offset = target.transform.position - transform.position;
@@ -369,6 +390,14 @@ namespace Clover.Player
                 Debug.LogWarning("[Clover.Player] An attack touched more colliders than it can hold; some targets may be missed. Narrow HitLayers to the layers enemies are on.");
             }
             return count;
+        }
+
+        // The way the blade travels through what it strikes: across the body for a sweeping cut, on the side it is
+        // swung from to the other, leaning into the target; straight in for a thrust or a blow with no sweep.
+        private Vector3 CutDirection(AttackStep step)
+        {
+            if (Mathf.Abs(step.Sweep) < 0.01f) return transform.forward;
+            return (-transform.right * Mathf.Sign(step.Sweep) + transform.forward * 0.45f).normalized;
         }
 
         private void Strike(AttackStep step)
@@ -405,6 +434,15 @@ namespace Clover.Player
                     Vfx.Play(VfxKind.Clang, other.ClosestPoint(origin));
                     if (shaker != null) shaker.Shake(0.06f, 0.1f);
                 }
+                if (outcome != HitOutcome.Blocked)
+                {
+                    // The cut line: which way the blade went through, drawn over the sparks.
+                    Vector3 through = CutDirection(step);
+                    if (outcome == HitOutcome.Finisher) CutMarks.Finisher(other.bounds.center, through);
+                    else if (step.Heavy) CutMarks.Heavy(other.bounds.center, through);
+                    else CutMarks.Light(other.bounds.center, through);
+                }
+                if (reticle != null && target is Component struckThing) reticle.Struck(struckThing.transform);
                 if (outcome == HitOutcome.Finisher) Vfx.Play(VfxKind.Burst, other.bounds.center);
                 if (step.Heavy && outcome != HitOutcome.Blocked) Vfx.Play(VfxKind.Impact, other.bounds.center);
                 Mana.Gain(step.ManaGain);

@@ -25,6 +25,7 @@ namespace Clover.Gameplay
         [SerializeField] private SlashArcs arcs;
         [SerializeField] private EnemyTurns turns;
         [SerializeField] private GuardArc guardArc;
+        [SerializeField] private StaggerMark staggerMark;
 
         public float StaggeredDamageMultiplier = 1.5f;
         public float FinisherDamageMultiplier = 3f;
@@ -33,6 +34,10 @@ namespace Clover.Gameplay
         public float Gravity = 25f;
         /// <summary>Seconds after dying before the body is cleared away.</summary>
         public float CorpseSeconds = 2.2f;
+        /// <summary>Seconds after dying, once it has fallen, before the body starts to burn away; it is gone by <see cref="CorpseSeconds"/>.</summary>
+        public float BurnAwayAt = 0.95f;
+        /// <summary>What the body turns to as the lightning leaves it: ink.</summary>
+        public Color BurntColour = new Color(0.02f, 0.015f, 0.04f, 1f);
         /// <summary>While charged by a bolt: how much faster it moves and harder it hits, and for how long.</summary>
         public float ChargedSpeed = 1.3f;
         public float ChargedDamage = 1.3f;
@@ -70,6 +75,9 @@ namespace Clover.Gameplay
         private static readonly int MarkerColour = Shader.PropertyToID("_Color");
         private static readonly int Emission = Shader.PropertyToID("_EmissionColor");
         private static readonly int SpeedHash = Animator.StringToHash("Speed");
+        private static readonly int BaseColour = Shader.PropertyToID("_BaseColor");
+        private static readonly int RimColour = Shader.PropertyToID("_RimColor");
+        private static readonly int Solidity = Shader.PropertyToID("_Fade");
 
         private CharacterController body;
         private Renderer outlineRenderer;
@@ -102,6 +110,29 @@ namespace Clover.Gameplay
         private float circle = 1f;
         private float untilTurnCircle;
         private Quaternion barsRotation;
+        // The body's own colours, one row for each renderer and one entry for each of its materials, and the ones bright enough to make a flake of.
+        private Color[][] ownColours;
+        private Color[] flakeColours;
+        private int flakes;
+        private bool burning;
+        private float untilFlake;
+        private Transform emberTaker;
+        private int embersOwed;
+
+        /// <summary>Adds the mark that shows over it while it is staggered.</summary>
+        public void ConfigureFeedback(StaggerMark markToShow) => staggerMark = markToShow;
+
+        /// <summary>
+        /// Embers have just been paid for this death. Nothing is paid here: the body only remembers to send that many
+        /// motes to the one who earned them when it burns away, and tells the HUD they are still on their way.
+        /// </summary>
+        public void CarryEmbers(Transform to, int count)
+        {
+            if (to == null || count <= 0) return;
+            emberTaker = to;
+            embersOwed += count;
+            EmberMotes.Promise(count);
+        }
 
         public void Configure(string kind, Transform targetToFight, Animator animatorToDrive, Renderer[] renderers,
             MeshFilter outline, MeshFilter fill, Transform barsRoot, Transform healthBar, Transform staggerBar, SlashArcs arcsToShow, EnemyTurns turnsToTake, GuardArc arcOfItsGuard)
@@ -146,6 +177,7 @@ namespace Clover.Gameplay
             }
             if (markerOutline != null) outlineRenderer = markerOutline.GetComponent<Renderer>();
             if (markerFill != null) fillRenderer = markerFill.GetComponent<Renderer>();
+            ReadOwnColours();
             Restore();
         }
 
@@ -156,10 +188,45 @@ namespace Clover.Gameplay
                 if (shape != null) Destroy(shape);
         }
 
+        // Read once, so the burning body can go from its own colours to ink and break into flakes of them.
+        private void ReadOwnColours()
+        {
+            ownColours = new Color[bodyRenderers.Length][];
+            int bright = 0;
+            for (int pass = 0; pass < 2; pass++)
+            {
+                if (pass == 1) flakeColours = new Color[Mathf.Max(1, bright)];
+                int at = 0;
+                for (int i = 0; i < bodyRenderers.Length; i++)
+                {
+                    var materials = bodyRenderers[i] != null ? bodyRenderers[i].sharedMaterials : new Material[0];
+                    if (pass == 0) ownColours[i] = new Color[materials.Length];
+                    for (int m = 0; m < materials.Length; m++)
+                    {
+                        Color colour = materials[m] != null && materials[m].HasProperty(BaseColour) ? materials[m].GetColor(BaseColour) : Color.grey;
+                        if (pass == 0) ownColours[i][m] = colour;
+                        // Cloth, plate and skin make flakes that can be seen; the near-black parts would make none.
+                        if (colour.maxColorComponent < 0.3f) continue;
+                        if (pass == 0) bright++;
+                        else flakeColours[at++] = colour;
+                    }
+                }
+            }
+            if (bright == 0) flakeColours[0] = new Color(0.9f, 0.5f, 0.3f);
+        }
+
         /// <summary>Puts the enemy back where it began, alive and unaware, as when the player rests or falls.</summary>
         public void Restore()
         {
             gameObject.SetActive(true);
+            if (burning) Unburn();
+            if (embersOwed > 0)
+            {
+                // Put back before it burned: the motes will never fly, so the HUD stops waiting for them.
+                EmberMotes.Withdraw(embersOwed);
+                embersOwed = 0;
+            }
+            if (staggerMark != null) staggerMark.Show(false);
             body.enabled = false;
             transform.SetPositionAndRotation(home, homeRotation);
             body.enabled = true;
@@ -288,6 +355,7 @@ namespace Clover.Gameplay
             deadFor = 0f;
             ShowMarker(false, false);
             if (bars != null) bars.gameObject.SetActive(false);
+            if (staggerMark != null) staggerMark.Show(false);
             Vfx.Play(VfxKind.Shock, transform.position + Vector3.up, Vector3.up, 1.5f);
             // The body no longer stands in anyone's way.
             SetPassing(false);
@@ -302,12 +370,9 @@ namespace Clover.Gameplay
             {
                 deadFor += deltaTime;
                 Animate(deltaTime, 0f);
-                Paint(deltaTime);
-                if (deadFor >= CorpseSeconds)
-                {
-                    Vfx.Play(VfxKind.Shock, transform.position + Vector3.up * 0.3f, Vector3.up, 0.8f);
-                    gameObject.SetActive(false);
-                }
+                if (deadFor >= BurnAwayAt) BurnAway(deltaTime);
+                else Paint(deltaTime);
+                if (deadFor >= CorpseSeconds) gameObject.SetActive(false);
                 return;
             }
             if (target == null) return;
@@ -421,6 +486,7 @@ namespace Clover.Gameplay
             ShowAttack(attack);
             Animate(deltaTime, Kind.WalkSpeed > 0f ? walked / Kind.WalkSpeed : 0f);
             Paint(deltaTime);
+            if (staggerMark != null) staggerMark.Show(IsStaggered);
             // The bars face the camera however the enemy turns.
             if (bars != null) bars.rotation = barsRotation;
             if (healthFill != null) healthFill.localScale = new Vector3(Health.Fraction, 1f, 1f);
@@ -612,6 +678,67 @@ namespace Clover.Gameplay
                     break;
             }
             wasBusy = busy;
+        }
+
+        // The fallen body burns away: the lightning that was in it leaves upward, what is left goes to ink, and the ink
+        // breaks up into flakes of the colours it wore. The ember it owed leaves with the lightning.
+        private void BurnAway(float deltaTime)
+        {
+            Vector3 lying = transform.position;
+            if (!burning)
+            {
+                burning = true;
+                untilFlake = 0f;
+                Vfx.Play(VfxKind.Bolt, lying + Vector3.up * 0.2f);
+                Vfx.Play(VfxKind.Wisp, lying + Vector3.up * 0.5f);
+                foreach (var bodyRenderer in bodyRenderers)
+                {
+                    if (bodyRenderer == null) continue;
+                    // Whatever glow it died wearing is dropped: from here each of its materials is painted on its own.
+                    bodyRenderer.SetPropertyBlock(null);
+                    bodyRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                }
+                for (int i = 0; i < embersOwed; i++) EmberMotes.Fly(lying + Vector3.up * 0.6f, emberTaker, i);
+                embersOwed = 0;
+            }
+            float burnt = Mathf.InverseLerp(BurnAwayAt, CorpseSeconds, deadFor);
+            // Ink quickly, then thinner and thinner until nothing is left.
+            float ink = Mathf.Clamp01(burnt / 0.18f);
+            float solid = 1f - Mathf.Clamp01((burnt - 0.22f) / 0.78f);
+            for (int i = 0; i < bodyRenderers.Length; i++)
+            {
+                var bodyRenderer = bodyRenderers[i];
+                if (bodyRenderer == null) continue;
+                for (int m = 0; m < ownColours[i].Length; m++)
+                {
+                    block.Clear();
+                    block.SetColor(BaseColour, Color.Lerp(ownColours[i][m], BurntColour, ink));
+                    block.SetColor(Emission, Color.black);
+                    block.SetColor(RimColour, Color.black);
+                    block.SetFloat(Solidity, solid);
+                    bodyRenderer.SetPropertyBlock(block, m);
+                }
+            }
+            shownGlow = -1;
+
+            untilFlake -= deltaTime;
+            if (untilFlake > 0f || burnt < 0.12f) return;
+            untilFlake = 0.045f;
+            Vector2 spread = Random.insideUnitCircle * 0.7f;
+            Vfx.Play(VfxKind.Ash, lying + new Vector3(spread.x, 0.35f, spread.y), Vector3.up, 1f, flakeColours[flakes++ % flakeColours.Length]);
+        }
+
+        // Gives the body back its colours, its solidity and its shadow.
+        private void Unburn()
+        {
+            burning = false;
+            foreach (var bodyRenderer in bodyRenderers)
+            {
+                if (bodyRenderer == null) continue;
+                bodyRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.On;
+                int count = bodyRenderer.sharedMaterials.Length;
+                for (int m = 0; m < count; m++) bodyRenderer.SetPropertyBlock(null, m);
+            }
         }
 
         // The body's glow: white for an instant when struck, a gold pulse while staggered, a blue one while charged.

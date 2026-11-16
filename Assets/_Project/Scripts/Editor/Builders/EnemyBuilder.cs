@@ -52,6 +52,8 @@ namespace Clover.EditorTools
 
         // One animator per kind for the whole scene, made once per build: making it again would orphan the earlier enemies.
         private static readonly Dictionary<string, AnimatorController> controllers = new Dictionary<string, AnimatorController>();
+        // How many enemies this scene has so far: neighbours carry their bars at different heights, so a crowd's bars do not lie on one another.
+        private static int built;
 
         public struct Kit
         {
@@ -66,6 +68,7 @@ namespace Clover.EditorTools
         public static Kit NewKit(Transform target, Quaternion towardCamera)
         {
             controllers.Clear();
+            built = 0;
             var arcsObject = new GameObject("Enemy Slash Arcs");
             var arcs = arcsObject.AddComponent<SlashArcs>();
             arcs.Capacity = 8;
@@ -121,7 +124,8 @@ namespace Clover.EditorTools
 
             var outline = WorldBars.Marker("Marker Outline", root.transform, 0.04f, kit.Marker);
             var fill = WorldBars.Marker("Marker Fill", root.transform, 0.06f, kit.Marker);
-            var bars = WorldBars.Build(root.transform, 2.5f, kit.TowardCamera, kit.BarBack, kit.BarHealth, kit.BarStagger);
+            var bars = WorldBars.Build(root.transform, 2.3f + (built++ % 2) * 0.24f, kit.TowardCamera, kit.BarBack, kit.BarHealth, kit.BarStagger);
+            var finishMark = WorldBars.FinishMark(root.transform, new Vector3(0f, 1.25f, 0f), 2.1f, kit.TowardCamera);
 
             GuardArc guardArc = null;
             if (kind.Guards)
@@ -131,6 +135,7 @@ namespace Clover.EditorTools
             }
             var enemy = root.AddComponent<Enemy>();
             enemy.Configure(kind.Name, kit.Target, animator, renderers, outline, fill, bars.root, bars.health, bars.stagger, kit.Arcs, kit.Turns, guardArc);
+            enemy.ConfigureFeedback(finishMark);
             return enemy;
         }
 

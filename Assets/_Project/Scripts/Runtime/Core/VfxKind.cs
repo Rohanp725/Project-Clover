@@ -35,5 +35,11 @@ namespace Clover.Core
         Danger,
         /// <summary>Steel on steel: the cold burst where a blow is turned on a guard.</summary>
         Clang,
+        /// <summary>Flakes of a body that is burning away, in whatever colour they are thrown; they rise and go out.</summary>
+        Ash,
+        /// <summary>The lightning leaving a body: cold streaks going straight up.</summary>
+        Wisp,
+        /// <summary>One jagged bolt standing on a point for an instant, drawn upward.</summary>
+        Bolt,
     }
 }

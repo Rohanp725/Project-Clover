@@ -7,7 +7,8 @@ Shader "Clover/Glow"
     {
         [HDR] _Color ("Colour", Color) = (1, 1, 1, 1)
         // 0 soft disc, 1 streak (soft across, pointed along), 2 slash (bright leading edge, fading tail), 3 flat, 4 ring, 5 star,
-        // 6 flame (a tongue of fire, round below and pointed above, its edge licking; drawn in two flat tones)
+        // 6 flame (a tongue of fire, round below and pointed above, its edge licking; drawn in two flat tones),
+        // 7 bolt (a jagged line along v), 8 broken ring (four brackets), 9 crossed cut
         _Shape ("Shape", Float) = 0
         _Sharpness ("Edge sharpness", Range(0.5, 8)) = 2
         _Hard ("Hard edge at this much of the shape (0 = soft)", Range(0, 1)) = 0
@@ -98,7 +99,35 @@ Shader "Clover/Glow"
                 float2 centred = uv * 2.0 - 1.0;
                 half mask = 1;
                 half inner = 0;
-                if (_Shape > 5.5)
+                if (_Shape > 8.5)
+                {
+                    // A crossed cut: two long thin diamonds on the diagonals. _Hard sets how fat they are printed.
+                    half along = (centred.x + centred.y) * 0.7071;
+                    half across = (centred.x - centred.y) * 0.7071;
+                    half first = saturate(1.0 - (abs(across) / 0.2 + abs(along) / 1.1));
+                    half second = saturate(1.0 - (abs(along) / 0.2 + abs(across) / 1.1));
+                    mask = max(first, second);
+                }
+                else if (_Shape > 7.5)
+                {
+                    // A ring broken in four places, on the diagonals: brackets round something. _Hard sets its thickness.
+                    half radius = length(centred);
+                    half angle = atan2(centred.y, centred.x);
+                    half gap = saturate((abs(cos(angle * 2.0)) - 0.3) * 4.0);
+                    mask = saturate(1.0 - abs(radius - 0.8) * 5.0) * gap;
+                }
+                else if (_Shape > 6.5)
+                {
+                    // A bolt: a jagged line from foot to head, thinning to a point at both ends. Each one takes its
+                    // own kinks from the red of its colour.
+                    half t = saturate(uv.y);
+                    half at = t * 6.0;
+                    half seed = input.color.r * 37.0;
+                    half kink = lerp(Hash(float2(floor(at), seed)), Hash(float2(floor(at) + 1.0, seed)), frac(at)) - 0.5;
+                    half taper = saturate(t * 6.0) * saturate((1.0 - t) * 2.5);
+                    mask = saturate(1.0 - abs(centred.x - kink * 1.3 * taper) / 0.3) * taper;
+                }
+                else if (_Shape > 5.5)
                 {
                     // A tongue of flame: widest a third of the way up, drawn to a point at the top, and never still.
                     half t = saturate(uv.y);

@@ -1,3 +1,4 @@
+using Clover.Core;
 using Clover.Player;
 using UnityEngine;
 using UnityEngine.UI;
@@ -30,6 +31,10 @@ namespace Clover.UI
         [SerializeField] private RectTransform healthLag;
         [SerializeField] private Image manaImage;
 
+        /// <summary>Real seconds the ember count swells for when a mote lands, and by how much.</summary>
+        public float EmberPulseSeconds = 0.28f;
+        public float EmberPulseSwell = 0.55f;
+
         /// <summary>Real seconds a lost piece of health stays shown, pale, before it drains away, and how fast it then drains.</summary>
         public float LagHold = 0.45f;
         public float LagDrainPerSecond = 0.9f;
@@ -50,6 +55,8 @@ namespace Clover.UI
         private float lagFraction = 1f;
         private float lagHeld;
         private string shownElement;
+        private int motesSeen;
+        private float emberPulseLeft;
 
         /// <summary>Adds the pale piece that lingers where health was just lost, and the mana bar's own image so it can take the element's colour.</summary>
         public void ConfigureJuice(RectTransform healthLagBar, Image manaBarImage)
@@ -90,6 +97,7 @@ namespace Clover.UI
         private void Start()
         {
             if (defence != null) calloutsShown = defence.Callouts;
+            motesSeen = EmberMotes.Arrived;
             if (callout != null) callout.enabled = false;
             if (prompt != null) prompt.enabled = false;
             // A flask drawn as a shape is filled by its image; a plain bar is filled by its size.
@@ -156,10 +164,23 @@ namespace Clover.UI
 
             if (upgrades != null)
             {
-                if (embers != null && upgrades.Points != shownEmbers)
+                // An ember whose mote is still in the air is held back from the count until it lands.
+                int held = Mathf.Max(0, upgrades.Points - EmberMotes.Pending);
+                if (embers != null && held != shownEmbers)
                 {
-                    shownEmbers = upgrades.Points;
+                    shownEmbers = held;
                     embers.text = $"Embers  {shownEmbers}";
+                }
+                if (EmberMotes.Arrived != motesSeen)
+                {
+                    motesSeen = EmberMotes.Arrived;
+                    emberPulseLeft = EmberPulseSeconds;
+                }
+                if (emberPulseLeft > 0f && embers != null)
+                {
+                    emberPulseLeft -= Time.unscaledDeltaTime;
+                    float swell = emberPulseLeft > 0f ? 1f + EmberPulseSwell * (emberPulseLeft / EmberPulseSeconds) : 1f;
+                    embers.rectTransform.localScale = new Vector3(swell, swell, 1f);
                 }
                 if (heatRow != null)
                 {

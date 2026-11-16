@@ -620,6 +620,15 @@ only for faults.
   keep wall, stakes on scorch marks, a broken ballista). Walls have footings, buttresses, arrow slits and ivy, and
   the line where floor meets wall is broken with worn stones and weeds. Far ridges and towers were built beyond the
   walls but the camera, which looks down, never shows them from inside the courts.
+- **The summit and the hub were dressed too.** The summit has a storm crest inlaid in its floor, scorch scars, a
+  stepped plinth and broken balustrade at its rim, and the keep's roofs showing through nearer cloud. The hub's clock
+  has minute ticks, numerals and two small dials, shallows at its rim, and things stopped in time round it (gears, a
+  bell, a pendulum, a crane, lanterns).
+- **Feedback in the fight.** A dead enemy burns away: the lightning leaves it, it goes to an ink shape and breaks up,
+  and its ember flies to the player. A staggered enemy carries a gold broken ring round a white cross: finish it. Thin
+  brackets on the ground show which enemy the next attack will turn to. Enemy bars have ink frames and a pale piece
+  that lingers where health was lost. Under 30% health a dark red edge breathes round the screen. A blow that lands
+  leaves a white cut line across the enemy, longer for a heavy blow and crossed for a finisher.
 
 ## Open questions
 
