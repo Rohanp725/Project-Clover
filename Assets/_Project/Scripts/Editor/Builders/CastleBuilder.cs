@@ -35,7 +35,7 @@ namespace Clover.EditorTools
             Materials();
             world = BuildKit.Group("World");
 
-            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, 2f), PlayerBuilder.ControlsHint);
+            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, 2f), "");
             if (built.Player == null) return;
             var storm = LookBuilder.Apply(LookBuilder.StormNight, built.Camera);
             if (storm != null)

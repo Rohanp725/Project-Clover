@@ -134,7 +134,7 @@ namespace Clover.EditorTools
             }
 
             // The player, the look, the storm (no rain: this is above it).
-            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, -12.5f), PlayerBuilder.ControlsHint);
+            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, -12.5f), "");
             if (built.Player == null) return;
             built.Player.GetComponent<PlayerCombat>().StartingWeapon = Weapons.KatanaName;
             var storm = LookBuilder.Apply(LookBuilder.Heavens, built.Camera);
@@ -294,8 +294,8 @@ namespace Clover.EditorTools
             var name = new GameObject("Name", typeof(RectTransform));
             name.transform.SetParent(panel.transform, false);
             var label = name.AddComponent<Text>();
-            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            label.fontSize = 30;
+            label.font = UiArt.Font();
+            label.fontSize = 40;
             label.alignment = TextAnchor.LowerLeft;
             label.color = new Color(1f, 0.95f, 0.85f);
             label.raycastTarget = false;
@@ -310,8 +310,8 @@ namespace Clover.EditorTools
             labelArea.offsetMin = new Vector2(4f, 44f);
             labelArea.offsetMax = Vector2.zero;
 
-            var health = Bar("Health", panel.transform, new Vector2(0f, 22f), new Vector2(980f, 18f), new Color(0.82f, 0.13f, 0.16f));
-            var stagger = Bar("Balance", panel.transform, new Vector2(0f, 8f), new Vector2(980f, 8f), new Color(1f, 0.8f, 0.25f));
+            var health = Bar("Health", panel.transform, new Vector2(0f, 18f), new Vector2(980f, 26f), new Color(0.86f, 0.14f, 0.16f));
+            var stagger = Bar("Balance", panel.transform, new Vector2(-4f, 0f), new Vector2(980f, 16f), new Color(1f, 0.8f, 0.25f));
             hud.AddComponent<BossHud>().Configure(boss, panel, health, stagger);
         }
 
@@ -320,7 +320,8 @@ namespace Clover.EditorTools
             var back = new GameObject(name + " Back", typeof(RectTransform));
             back.transform.SetParent(parent, false);
             var backImage = back.AddComponent<Image>();
-            backImage.color = new Color(0f, 0f, 0f, 0.65f);
+            backImage.sprite = UiArt.BarBack();
+            backImage.type = Image.Type.Sliced;
             backImage.raycastTarget = false;
             var backArea = (RectTransform)back.transform;
             backArea.anchorMin = backArea.anchorMax = backArea.pivot = new Vector2(0f, 0f);
@@ -330,6 +331,8 @@ namespace Clover.EditorTools
             fill.transform.SetParent(back.transform, false);
             var fillImage = fill.AddComponent<Image>();
             fillImage.color = colour;
+            fillImage.sprite = UiArt.BarFill();
+            fillImage.type = Image.Type.Sliced;
             fillImage.raycastTarget = false;
             var fillArea = (RectTransform)fill.transform;
             fillArea.anchorMin = Vector2.zero;

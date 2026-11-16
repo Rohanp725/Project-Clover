@@ -27,6 +27,14 @@ namespace Clover.UI
         [SerializeField] private Text embers;
         [SerializeField] private GameObject heatRow;
         [SerializeField] private RectTransform[] heatPips = new RectTransform[0];
+        [SerializeField] private RectTransform healthLag;
+        [SerializeField] private Image manaImage;
+
+        /// <summary>Real seconds a lost piece of health stays shown, pale, before it drains away, and how fast it then drains.</summary>
+        public float LagHold = 0.45f;
+        public float LagDrainPerSecond = 0.9f;
+        public Color FireMana = new Color(1f, 0.5f, 0.1f);
+        public Color LightningMana = new Color(0.35f, 0.7f, 1f);
 
         /// <summary>Real seconds a callout stays up, the last part of it fading.</summary>
         public float CalloutSeconds = 0.9f;
@@ -37,6 +45,17 @@ namespace Clover.UI
         private Clover.World.Interactable shownThing;
         private float calloutLeft;
         private int shownEmbers = -1;
+        private Image[] flaskImages;
+        private float lagFraction = 1f;
+        private float lagHeld;
+        private string shownElement;
+
+        /// <summary>Adds the pale piece that lingers where health was just lost, and the mana bar's own image so it can take the element's colour.</summary>
+        public void ConfigureJuice(RectTransform healthLagBar, Image manaBarImage)
+        {
+            healthLag = healthLagBar;
+            manaImage = manaBarImage;
+        }
         private bool shownCharge;
 
         /// <summary>Adds what the element's tree shows: the embers held, and Heat's levels while Heat is learned.</summary>
@@ -72,6 +91,13 @@ namespace Clover.UI
             if (defence != null) calloutsShown = defence.Callouts;
             if (callout != null) callout.enabled = false;
             if (prompt != null) prompt.enabled = false;
+            // A flask drawn as a shape is filled by its image; a plain bar is filled by its size.
+            flaskImages = new Image[flaskFills != null ? flaskFills.Length : 0];
+            for (int i = 0; i < flaskImages.Length; i++)
+            {
+                var image = flaskFills[i] != null ? flaskFills[i].GetComponent<Image>() : null;
+                flaskImages[i] = image != null && image.type == Image.Type.Filled ? image : null;
+            }
         }
 
         private void LateUpdate()
@@ -82,6 +108,24 @@ namespace Clover.UI
 
             if (healthFill != null) healthFill.anchorMax = new Vector2(defence.Health.Fraction, 1f);
             if (greyFill != null) greyFill.anchorMax = new Vector2(defence.Health.GreyFraction, 1f);
+            if (healthLag != null)
+            {
+                // What was just lost stays a moment as a pale piece, then drains: the size of the blow can be read.
+                float now = Mathf.Max(defence.Health.Fraction, defence.Health.GreyFraction);
+                if (now >= lagFraction)
+                {
+                    lagFraction = now;
+                    lagHeld = LagHold;
+                }
+                else if (lagHeld > 0f) lagHeld -= Time.unscaledDeltaTime;
+                else lagFraction = Mathf.MoveTowards(lagFraction, now, LagDrainPerSecond * Time.unscaledDeltaTime);
+                healthLag.anchorMax = new Vector2(lagFraction, 1f);
+            }
+            if (manaImage != null && element != null && element.Kit != null && element.Kit.Name != shownElement)
+            {
+                shownElement = element.Kit.Name;
+                manaImage.color = shownElement == ElementKit.LightningName ? LightningMana : FireMana;
+            }
             if (flaskFills != null)
             {
                 for (int i = 0; i < flaskFills.Length; i++)
@@ -89,7 +133,8 @@ namespace Clover.UI
                     if (flaskFills[i] == null) continue;
                     // With none left, the first flask fills slowly as the player earns it back.
                     float full = i < defence.Flasks.Count ? 1f : i == 0 ? defence.Flasks.RechargeFraction : 0f;
-                    flaskFills[i].anchorMax = new Vector2(1f, full);
+                    if (flaskImages != null && i < flaskImages.Length && flaskImages[i] != null) flaskImages[i].fillAmount = full;
+                    else flaskFills[i].anchorMax = new Vector2(1f, full);
                 }
             }
 

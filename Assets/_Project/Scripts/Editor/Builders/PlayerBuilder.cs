@@ -262,55 +262,76 @@ namespace Clover.EditorTools
             wash.GetComponent<Image>().enabled = false;
             canvasObject.AddComponent<ScreenFlash>().Configure(wash.GetComponent<Image>());
 
-            var health = Bar("Health", hud, new Vector2(48f, -40f), new Vector2(420f, 20f), new Color(0.78f, 0.14f, 0.12f));
-            // The grey part sits behind the red and shows where a guarded blow took health that can still be won back.
-            var grey = Panel("Health Grey", health.parent, new Color(0.74f, 0.7f, 0.66f));
-            grey.anchorMin = Vector2.zero;
-            grey.anchorMax = Vector2.one;
-            grey.offsetMin = grey.offsetMax = Vector2.zero;
+            var health = Bar("Health", hud, new Vector2(44f, -34f), new Vector2(470f, 30f), new Color(0.86f, 0.16f, 0.14f));
+            // Behind the red: the pale piece that lingers where health was just lost, and behind that the grey that a
+            // guarded blow took and that can still be won back.
+            var lag = Fill("Health Lag", health.parent, new Color(1f, 0.9f, 0.75f));
+            lag.SetSiblingIndex(0);
+            var grey = Fill("Health Grey", health.parent, new Color(0.62f, 0.58f, 0.6f));
             grey.SetSiblingIndex(0);
-            var stamina = Bar("Stamina", hud, new Vector2(48f, -68f), new Vector2(360f, 14f), new Color(0.45f, 0.85f, 0.4f));
-            // Mana takes the colour of the player's element; fire for now.
-            var mana = Bar("Mana", hud, new Vector2(48f, -90f), new Vector2(300f, 12f), new Color(1f, 0.5f, 0.1f));
+            var stamina = Bar("Stamina", hud, new Vector2(40f, -66f), new Vector2(390f, 20f), new Color(0.5f, 0.86f, 0.42f));
+            // Mana takes the colour of the player's element.
+            var mana = Bar("Mana", hud, new Vector2(37f, -88f), new Vector2(320f, 18f), new Color(1f, 0.5f, 0.1f));
 
             var flasks = new RectTransform[new FlaskBelt().Maximum];
             for (int i = 0; i < flasks.Length; i++)
-                flasks[i] = Bar("Flask " + (i + 1), hud, new Vector2(48f + i * 30f, -112f), new Vector2(22f, 30f), new Color(0.95f, 0.76f, 0.32f));
+                flasks[i] = Flask("Flask " + (i + 1), hud, new Vector2(44f + i * 38f, -112f));
 
-            var callout = Label("Callout", hud, 40, TextAnchor.MiddleCenter, Color.white);
+            var callout = Label("Callout", hud, 54, TextAnchor.MiddleCenter, new Color(1f, 0.97f, 0.9f));
             callout.rectTransform.anchorMin = callout.rectTransform.anchorMax = new Vector2(0.5f, 0.3f);
             callout.rectTransform.sizeDelta = new Vector2(900f, 60f);
             callout.text = "";
 
-            var status = Label("Status", hud, 22, TextAnchor.UpperLeft, new Color(1f, 0.82f, 0.6f, 0.95f));
+            var status = Label("Status", hud, 28, TextAnchor.UpperLeft, new Color(1f, 0.86f, 0.62f, 0.95f));
             status.rectTransform.anchorMin = status.rectTransform.anchorMax = status.rectTransform.pivot = new Vector2(0f, 1f);
-            status.rectTransform.anchoredPosition = new Vector2(150f, -112f);
+            status.rectTransform.anchoredPosition = new Vector2(168f, -120f);
             status.rectTransform.sizeDelta = new Vector2(700f, 30f);
             status.text = "";
 
             if (!string.IsNullOrEmpty(hintText))
             {
-                var hint = Label("Controls", hud, 20, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.55f));
+                var hint = Label("Controls", hud, 21, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.5f));
                 hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = hint.rectTransform.pivot = Vector2.zero;
-                hint.rectTransform.anchoredPosition = new Vector2(48f, 36f);
+                hint.rectTransform.anchoredPosition = new Vector2(48f, 30f);
                 hint.rectTransform.sizeDelta = new Vector2(1700f, 60f);
                 hint.text = hintText;
             }
 
-            var prompt = Label("Prompt", hud, 28, TextAnchor.MiddleCenter, new Color(1f, 0.95f, 0.85f, 0.95f));
+            var prompt = Label("Prompt", hud, 34, TextAnchor.MiddleCenter, new Color(1f, 0.95f, 0.85f, 1f));
             prompt.rectTransform.anchorMin = prompt.rectTransform.anchorMax = new Vector2(0.5f, 0.2f);
-            prompt.rectTransform.sizeDelta = new Vector2(900f, 40f);
+            prompt.rectTransform.sizeDelta = new Vector2(900f, 44f);
             prompt.text = "";
+            // A stroke of ink behind the words, shown and hidden with them.
+            var stroke = Panel("Stroke", prompt.transform, new Color(0.03f, 0.02f, 0.06f, 0.72f));
+            stroke.anchorMin = stroke.anchorMax = new Vector2(0.5f, 0.5f);
+            stroke.sizeDelta = new Vector2(760f, 64f);
+            var strokeImage = stroke.GetComponent<Image>();
+            strokeImage.sprite = UiArt.Brush();
+            strokeImage.type = Image.Type.Sliced;
+            var promptWords = Label("Words", prompt.transform, 34, TextAnchor.MiddleCenter, new Color(1f, 0.95f, 0.85f, 1f));
+            promptWords.rectTransform.anchorMin = Vector2.zero;
+            promptWords.rectTransform.anchorMax = Vector2.one;
+            promptWords.rectTransform.offsetMin = promptWords.rectTransform.offsetMax = Vector2.zero;
+            // The first label only switches the pair on and off; the words are drawn by the one on top of the stroke.
+            prompt.color = new Color(0f, 0f, 0f, 0f);
+            Object.DestroyImmediate(prompt.GetComponent<Outline>());
+            prompt.gameObject.AddComponent<Clover.UI.MirrorText>().Configure(prompt, promptWords, stroke.gameObject);
 
             var playerHud = canvasObject.AddComponent<PlayerHud>();
             playerHud.Configure(player, combat, defence, health, grey, stamina, mana, flasks, callout, status, prompt);
+            playerHud.ConfigureJuice(lag, mana.GetComponent<Image>());
 
             // Embers held, top right; Heat's five levels under the flasks, shown only once Heat is learned.
-            var embers = Label("Embers", hud, 26, TextAnchor.UpperRight, new Color(1f, 0.72f, 0.3f, 0.95f));
+            var embers = Label("Embers", hud, 32, TextAnchor.UpperRight, new Color(1f, 0.78f, 0.36f, 1f));
             embers.rectTransform.anchorMin = embers.rectTransform.anchorMax = embers.rectTransform.pivot = new Vector2(1f, 1f);
-            embers.rectTransform.anchoredPosition = new Vector2(-48f, -36f);
-            embers.rectTransform.sizeDelta = new Vector2(400f, 34f);
+            embers.rectTransform.anchoredPosition = new Vector2(-48f, -30f);
+            embers.rectTransform.sizeDelta = new Vector2(400f, 40f);
             embers.text = "";
+            var emberIcon = Panel("Ember Icon", embers.transform, new Color(1f, 0.6f, 0.16f));
+            emberIcon.anchorMin = emberIcon.anchorMax = emberIcon.pivot = new Vector2(1f, 0.5f);
+            emberIcon.anchoredPosition = new Vector2(-138f, 0f);
+            emberIcon.sizeDelta = new Vector2(34f, 34f);
+            emberIcon.GetComponent<Image>().sprite = UiArt.Ember();
             var heatRow = new GameObject("Heat", typeof(RectTransform));
             heatRow.transform.SetParent(hud, false);
             var heatRect = (RectTransform)heatRow.transform;
@@ -318,7 +339,7 @@ namespace Clover.EditorTools
             heatRect.anchoredPosition = Vector2.zero;
             var pips = new RectTransform[new Heat().MaximumLevel];
             for (int i = 0; i < pips.Length; i++)
-                pips[i] = Bar("Heat " + (i + 1), heatRow.transform, new Vector2(48f + i * 34f, -150f), new Vector2(30f, 9f), new Color(1f, 0.45f, 0.08f));
+                pips[i] = Bar("Heat " + (i + 1), heatRow.transform, new Vector2(42f + i * 40f, -166f), new Vector2(44f, 16f), new Color(1f, 0.5f, 0.1f));
             heatRow.SetActive(false);
             playerHud.ConfigureUpgrades(player.GetComponent<PlayerUpgrades>(), embers, heatRow, pips);
 
@@ -329,34 +350,27 @@ namespace Clover.EditorTools
         // Words read at the player's own pace: a band across the bottom with who speaks, the line, and a mark when there is more.
         private static void BuildReadingBox(PlayerController player, Transform hud)
         {
-            var panel = Panel("Reading Box", hud, new Color(0.02f, 0.02f, 0.05f, 0.88f));
+            var panel = Framed("Reading Box", hud);
             panel.anchorMin = new Vector2(0.5f, 0f);
             panel.anchorMax = new Vector2(0.5f, 0f);
             panel.pivot = new Vector2(0.5f, 0f);
             panel.anchoredPosition = new Vector2(0f, 120f);
             panel.sizeDelta = new Vector2(1240f, 190f);
-            var edge = Panel("Edge", panel, new Color(1f, 0.9f, 0.62f, 0.9f));
-            edge.anchorMin = new Vector2(0f, 1f);
-            edge.anchorMax = new Vector2(1f, 1f);
-            edge.pivot = new Vector2(0.5f, 1f);
-            edge.sizeDelta = new Vector2(0f, 3f);
-            edge.anchoredPosition = Vector2.zero;
-
-            var speaker = Label("Speaker", panel, 24, TextAnchor.UpperLeft, new Color(1f, 0.86f, 0.55f, 1f));
+            var speaker = Label("Speaker", panel, 28, TextAnchor.UpperLeft, new Color(1f, 0.82f, 0.5f, 1f));
             speaker.rectTransform.anchorMin = speaker.rectTransform.anchorMax = speaker.rectTransform.pivot = new Vector2(0f, 1f);
-            speaker.rectTransform.anchoredPosition = new Vector2(40f, -18f);
+            speaker.rectTransform.anchoredPosition = new Vector2(44f, -22f);
             speaker.rectTransform.sizeDelta = new Vector2(600f, 30f);
 
-            var line = Label("Line", panel, 32, TextAnchor.UpperLeft, new Color(0.96f, 0.95f, 0.92f, 1f));
+            var line = Label("Line", panel, 38, TextAnchor.UpperLeft, new Color(0.96f, 0.95f, 0.92f, 1f));
             line.rectTransform.anchorMin = line.rectTransform.anchorMax = line.rectTransform.pivot = new Vector2(0f, 1f);
-            line.rectTransform.anchoredPosition = new Vector2(40f, -58f);
+            line.rectTransform.anchoredPosition = new Vector2(44f, -62f);
             line.rectTransform.sizeDelta = new Vector2(1160f, 110f);
             line.horizontalOverflow = HorizontalWrapMode.Wrap;
             line.lineSpacing = 1.1f;
 
             var more = Label("More", panel, 22, TextAnchor.LowerRight, new Color(1f, 1f, 1f, 0.6f));
             more.rectTransform.anchorMin = more.rectTransform.anchorMax = more.rectTransform.pivot = new Vector2(1f, 0f);
-            more.rectTransform.anchoredPosition = new Vector2(-30f, 14f);
+            more.rectTransform.anchoredPosition = new Vector2(-36f, 20f);
             more.rectTransform.sizeDelta = new Vector2(300f, 28f);
             more.text = "Cross or E";
 
@@ -383,22 +397,24 @@ namespace Clover.EditorTools
         // The element's tree: a dark panel over the middle of the screen with a list on the left and what the chosen thing does on the right.
         private static void BuildUpgradeMenu(PlayerController player, Transform hud)
         {
-            var panel = Panel("Upgrade Menu", hud, new Color(0.03f, 0.03f, 0.07f, 0.9f));
+            var panel = Framed("Upgrade Menu", hud);
             panel.anchorMin = panel.anchorMax = panel.pivot = new Vector2(0.5f, 0.5f);
             panel.sizeDelta = new Vector2(1180f, 640f);
-            var edge = Panel("Edge", panel, new Color(1f, 0.62f, 0.2f, 0.9f));
+            var edge = Panel("Edge", panel, new Color(0.8f, 0.72f, 0.55f, 0.7f));
             edge.anchorMin = new Vector2(0f, 1f);
             edge.anchorMax = new Vector2(1f, 1f);
             edge.pivot = new Vector2(0.5f, 1f);
-            edge.sizeDelta = new Vector2(0f, 4f);
-            edge.anchoredPosition = new Vector2(0f, -78f);
+            edge.sizeDelta = new Vector2(-80f, 2f);
+            edge.anchoredPosition = new Vector2(0f, -84f);
 
-            var title = Label("Title", panel, 36, TextAnchor.UpperLeft, new Color(1f, 0.8f, 0.45f, 1f));
+            var title = Label("Title", panel, 44, TextAnchor.UpperLeft, new Color(1f, 0.8f, 0.45f, 1f));
             title.rectTransform.anchorMin = title.rectTransform.anchorMax = title.rectTransform.pivot = new Vector2(0f, 1f);
             title.rectTransform.anchoredPosition = new Vector2(44f, -24f);
             title.rectTransform.sizeDelta = new Vector2(1000f, 44f);
 
-            var cursor = Panel("Cursor", panel, new Color(1f, 0.62f, 0.2f, 0.22f));
+            var cursor = Panel("Cursor", panel, new Color(1f, 0.62f, 0.2f, 0.3f));
+            cursor.GetComponent<Image>().sprite = UiArt.Brush();
+            cursor.GetComponent<Image>().type = Image.Type.Sliced;
             cursor.anchorMin = cursor.anchorMax = cursor.pivot = new Vector2(0f, 1f);
             cursor.sizeDelta = new Vector2(500f, 50f);
             cursor.anchoredPosition = new Vector2(30f, -110f);
@@ -408,17 +424,17 @@ namespace Clover.EditorTools
             var costs = new Text[count];
             for (int i = 0; i < count; i++)
             {
-                rows[i] = Label("Row " + (i + 1), panel, 28, TextAnchor.MiddleLeft, Color.white);
+                rows[i] = Label("Row " + (i + 1), panel, 34, TextAnchor.MiddleLeft, Color.white);
                 rows[i].rectTransform.anchorMin = rows[i].rectTransform.anchorMax = rows[i].rectTransform.pivot = new Vector2(0f, 1f);
                 rows[i].rectTransform.anchoredPosition = new Vector2(44f, -110f - i * 58f);
                 rows[i].rectTransform.sizeDelta = new Vector2(360f, 50f);
-                costs[i] = Label("Cost " + (i + 1), rows[i].transform, 26, TextAnchor.MiddleRight, Color.white);
+                costs[i] = Label("Cost " + (i + 1), rows[i].transform, 30, TextAnchor.MiddleRight, Color.white);
                 costs[i].rectTransform.anchorMin = costs[i].rectTransform.anchorMax = costs[i].rectTransform.pivot = new Vector2(0f, 0.5f);
                 costs[i].rectTransform.anchoredPosition = new Vector2(340f, 0f);
                 costs[i].rectTransform.sizeDelta = new Vector2(130f, 50f);
             }
 
-            var description = Label("Description", panel, 28, TextAnchor.UpperLeft, new Color(0.95f, 0.93f, 0.9f, 1f));
+            var description = Label("Description", panel, 34, TextAnchor.UpperLeft, new Color(0.95f, 0.93f, 0.9f, 1f));
             description.rectTransform.anchorMin = description.rectTransform.anchorMax = description.rectTransform.pivot = new Vector2(0f, 1f);
             description.rectTransform.anchoredPosition = new Vector2(580f, -116f);
             description.rectTransform.sizeDelta = new Vector2(560f, 400f);
@@ -443,7 +459,7 @@ namespace Clover.EditorTools
             var labelObject = new GameObject(name, typeof(RectTransform));
             labelObject.transform.SetParent(parent, false);
             var label = labelObject.AddComponent<Text>();
-            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            label.font = UiArt.Font();
             label.fontSize = size;
             label.alignment = anchor;
             label.color = colour;
@@ -458,16 +474,57 @@ namespace Clover.EditorTools
 
         private static RectTransform Bar(string name, Transform parent, Vector2 position, Vector2 size, Color colour)
         {
-            var back = Panel(name + " Back", parent, new Color(0f, 0f, 0f, 0.6f));
+            var back = Panel(name + " Back", parent, Color.white);
             back.anchorMin = back.anchorMax = back.pivot = new Vector2(0f, 1f);
             back.anchoredPosition = position;
             back.sizeDelta = size;
+            var backImage = back.GetComponent<Image>();
+            backImage.sprite = UiArt.BarBack();
+            backImage.type = Image.Type.Sliced;
+            return Fill(name + " Fill", back, colour);
+        }
 
-            var fill = Panel(name + " Fill", back, colour);
+        // The coloured part of a bar: it fills its frame, and the HUD shortens it from the right.
+        private static RectTransform Fill(string name, Transform parent, Color colour)
+        {
+            var fill = Panel(name, parent, colour);
             fill.anchorMin = Vector2.zero;
             fill.anchorMax = Vector2.one;
             fill.offsetMin = fill.offsetMax = Vector2.zero;
+            var image = fill.GetComponent<Image>();
+            image.sprite = UiArt.BarFill();
+            image.type = Image.Type.Sliced;
             return fill;
+        }
+
+        // A flask: a gourd that empties from the top.
+        private static RectTransform Flask(string name, Transform parent, Vector2 position)
+        {
+            var back = Panel(name + " Back", parent, Color.white);
+            back.anchorMin = back.anchorMax = back.pivot = new Vector2(0f, 1f);
+            back.anchoredPosition = position;
+            back.sizeDelta = new Vector2(36f, 48f);
+            back.GetComponent<Image>().sprite = UiArt.FlaskBack();
+            var fill = Panel(name + " Fill", back, new Color(1f, 0.8f, 0.36f));
+            fill.anchorMin = Vector2.zero;
+            fill.anchorMax = Vector2.one;
+            fill.offsetMin = fill.offsetMax = Vector2.zero;
+            var image = fill.GetComponent<Image>();
+            image.sprite = UiArt.FlaskFill();
+            image.type = Image.Type.Filled;
+            image.fillMethod = Image.FillMethod.Vertical;
+            image.fillOrigin = (int)Image.OriginVertical.Bottom;
+            return fill;
+        }
+
+        // A panel for menus and spoken words, with its inked frame.
+        private static RectTransform Framed(string name, Transform parent)
+        {
+            var panel = Panel(name, parent, Color.white);
+            var image = panel.GetComponent<Image>();
+            image.sprite = UiArt.Panel();
+            image.type = Image.Type.Sliced;
+            return panel;
         }
 
         private static RectTransform Panel(string name, Transform parent, Color colour)
