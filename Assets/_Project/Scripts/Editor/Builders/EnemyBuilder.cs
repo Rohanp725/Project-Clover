@@ -124,6 +124,14 @@ namespace Clover.EditorTools
             return enemy;
         }
 
+        /// <summary>Puts the enemies' toon materials on a copy of one of their models, as the game does.</summary>
+        public static void Dress(GameObject model)
+        {
+            var materials = Materials();
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
+                renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials)).ToArray();
+        }
+
         private static Material ToonFor(Material imported, Dictionary<string, Material> materials)
         {
             string name = imported != null ? imported.name.Replace("m_enemy_", "") : "";
@@ -151,8 +159,10 @@ namespace Clover.EditorTools
             if (controllers.TryGetValue(kind.Prefix, out var made)) return made;
             string path = $"{Folder}/{kind.Prefix}.controller";
             AssetDatabase.DeleteAsset(path);
-            var clips = AssetDatabase.LoadAllAssetsAtPath(modelPath).OfType<AnimationClip>()
-                .Where(clip => !clip.name.StartsWith("__") && clip.name.StartsWith(kind.Prefix + "_")).ToDictionary(clip => clip.name);
+            // The animations are written as code and baked by Clover > Forge > Bake Enemy Animations.
+            var clips = AssetDatabase.FindAssets("t:AnimationClip", new[] { Forge.EnemyAnimations.ClipFolder })
+                .Select(guid => AssetDatabase.LoadAssetAtPath<AnimationClip>(AssetDatabase.GUIDToAssetPath(guid)))
+                .Where(clip => clip != null && clip.name.StartsWith(kind.Prefix + "_")).ToDictionary(clip => clip.name);
 
             var controller = AnimatorController.CreateAnimatorControllerAtPath(path);
             controller.AddParameter("Speed", AnimatorControllerParameterType.Float);

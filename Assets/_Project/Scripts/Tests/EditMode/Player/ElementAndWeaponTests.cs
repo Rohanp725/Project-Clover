@@ -101,7 +101,7 @@ namespace Clover.Tests
         {
             foreach (var kind in EnemyKind.All)
             {
-                var clips = Clips($"Assets/_Project/Art/Models/Characters/enemy_{kind.Prefix}.fbx");
+                var clips = Baked(Clover.EditorTools.Forge.EnemyAnimations.ClipFolder);
                 foreach (var attack in kind.Brain.Attacks)
                     Assert.Contains(attack.Name, clips, $"{kind.Name} has an attack with no animation");
                 foreach (string suffix in new[] { "_idle_loop", "_walk_loop", "_hurt", "_stagger", "_death" })
@@ -124,7 +124,5 @@ namespace Clover.Tests
             AssetDatabase.FindAssets("t:AnimationClip", new[] { folder })
                 .Select(guid => System.IO.Path.GetFileNameWithoutExtension(AssetDatabase.GUIDToAssetPath(guid))).ToList();
 
-        private static List<string> Clips(string modelPath) =>
-            AssetDatabase.LoadAllAssetsAtPath(modelPath).OfType<AnimationClip>().Select(clip => clip.name).ToList();
     }
 }
