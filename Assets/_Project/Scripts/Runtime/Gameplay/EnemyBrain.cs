@@ -25,6 +25,15 @@ namespace Clover.Gameplay
         public float FlinchSeconds = 0.3f;
         /// <summary>While another enemy has the attack, this one keeps this far back and circles.</summary>
         public float WaitRange = 5.5f;
+        /// <summary>The attack it answers with when it has turned enough blows on its guard and the target is in its reach; empty for whatever suits the range.</summary>
+        public string CounterAttack = "";
+        /// <summary>Above zero: with the target farther off than this, its rest between attacks runs out this many times faster, so hanging back is no rest from it.</summary>
+        public float ImpatientBeyond;
+        public float ImpatientRate = 3f;
+        /// <summary>For an enemy that keeps to its own ground: seconds the target may be off that ground before it gives the chase up.</summary>
+        public float GiveUpSeconds = 3f;
+        /// <summary>Struck from off its ground, it forgets the ground for this long and comes after whoever struck it.</summary>
+        public float ProvokedSeconds = 8f;
 
         /// <summary>The phase of the fight, for enemies that change as they are worn down; attacks may wait for a later one.</summary>
         public int Phase;
@@ -45,11 +54,15 @@ namespace Clover.Gameplay
         public bool IsWaiting { get; private set; }
         /// <summary>True while the enemy should keep turning to face the target.</summary>
         public bool Tracks => State == EnemyState.Stalk || (State == EnemyState.Telegraph && TelegraphProgress < Current.AimLockAt);
+        /// <summary>True while a blow from off its ground has it chasing wherever the target goes.</summary>
+        public bool IsProvoked => provokedLeft > 0f;
 
         private float stateElapsed;
         private float attackElapsed;
         private float rest;
         private bool counter;
+        private float offGround;
+        private float provokedLeft;
         private float[] cooldowns = new float[0];
 
         public void Reset()
@@ -61,6 +74,8 @@ namespace Clover.Gameplay
             attackElapsed = 0f;
             rest = 0f;
             counter = false;
+            offGround = 0f;
+            provokedLeft = 0f;
             IsWaiting = false;
             Phase = 0;
             cooldowns = new float[Attacks.Count];
@@ -68,12 +83,18 @@ namespace Clover.Gameplay
 
         /// <summary>
         /// Advances the brain. <paramref name="roll"/> is a random number from 0 to 1, used when a choice is made.
-        /// Returns true on the tick the current attack's blow lands.
+        /// Returns true on the tick the current attack's blow lands. <paramref name="targetOnGround"/> is false when
+        /// the enemy keeps to a ground of its own and the target is standing off it.
         /// </summary>
-        public bool Tick(float deltaTime, float distance, float roll, bool mayAttack = true)
+        public bool Tick(float deltaTime, float distance, float roll, bool mayAttack = true, bool targetOnGround = true)
         {
             IsWaiting = false;
             stateElapsed += deltaTime;
+            if (provokedLeft > 0f) provokedLeft -= deltaTime;
+            bool mayChase = targetOnGround || provokedLeft > 0f;
+            // Counted whatever it is doing, so an attack begun as the target left does not buy the chase more time.
+            if (mayChase) offGround = 0f;
+            else offGround += deltaTime;
             for (int i = 0; i < cooldowns.Length; i++)
                 if (cooldowns[i] > 0f) cooldowns[i] -= deltaTime;
             MoveWish = 0;
@@ -81,7 +102,7 @@ namespace Clover.Gameplay
             switch (State)
             {
                 case EnemyState.Idle:
-                    if (distance <= AggroRange) Enter(EnemyState.Stalk);
+                    if (distance <= AggroRange && mayChase) Enter(EnemyState.Stalk);
                     return false;
 
                 case EnemyState.Stalk:
@@ -90,7 +111,15 @@ namespace Clover.Gameplay
                         Enter(EnemyState.Idle);
                         return false;
                     }
-                    rest -= deltaTime;
+                    // The target has left its ground: it watches from the edge a while, then lets them go.
+                    if (offGround >= GiveUpSeconds)
+                    {
+                        counter = false;
+                        Enter(EnemyState.Idle);
+                        return false;
+                    }
+                    // One that will not be stood off from is done resting sooner when the target hangs back.
+                    rest -= ImpatientBeyond > 0f && distance > ImpatientBeyond ? deltaTime * ImpatientRate : deltaTime;
                     if (!mayAttack && !counter)
                     {
                         // Not its turn: hold a ring around the fight until it is.
@@ -102,8 +131,10 @@ namespace Clover.Gameplay
                     }
                     if (rest <= 0f || counter)
                     {
+                        // Its answer to blows turned is the one it keeps for that, when the target is close enough for it.
+                        var answer = counter ? Named(CounterAttack) : null;
                         counter = false;
-                        var attack = Choose(distance, roll);
+                        var attack = answer != null && distance <= answer.MaxRange ? answer : Choose(distance, roll);
                         if (attack != null)
                         {
                             Begin(attack);
@@ -213,7 +244,18 @@ namespace Clover.Gameplay
         /// <summary>Makes the enemy notice the target now, as when it is struck from out of sight.</summary>
         public void Alert()
         {
+            offGround = 0f;
             if (State == EnemyState.Idle) Enter(EnemyState.Stalk);
+        }
+
+        /// <summary>
+        /// Struck by a target standing off its ground: for a while the ground no longer holds it, so the edge of an
+        /// enemy's ground is not a place to hit it from in safety.
+        /// </summary>
+        public void Provoke()
+        {
+            provokedLeft = ProvokedSeconds;
+            Alert();
         }
 
         private void Enter(EnemyState state)

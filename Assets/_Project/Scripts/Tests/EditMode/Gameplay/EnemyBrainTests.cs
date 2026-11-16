@@ -191,6 +191,170 @@ namespace Clover.Tests
                     Assert.IsNotNull(god.Brain.Attacks.Find(a => a.Name == attack.ChainInto), $"{attack.Name} chains into an attack that does not exist");
         }
 
+        // Runs the brain with the target standing off the ground the enemy keeps.
+        private static void RunOffGround(EnemyBrain brain, float seconds, float distance)
+        {
+            for (float t = 0f; t < seconds; t += Frame) brain.Tick(Frame, distance, 0f, true, false);
+        }
+
+        [Test]
+        public void ItDoesNotNoticeATargetStandingOffItsGround()
+        {
+            var brain = Brain();
+            RunOffGround(brain, 2f, 2f);
+            Assert.AreEqual(EnemyState.Idle, brain.State, "close enough to see, but not on its ground");
+            Run(brain, 0.1f, 2f);
+            Assert.AreNotEqual(EnemyState.Idle, brain.State, "the same distance, on its ground");
+        }
+
+        [Test]
+        public void ItLetsATargetGoThatLeavesItsGroundButNotAtOnce()
+        {
+            var brain = Brain();
+            Run(brain, 0.1f, 15f);
+            brain.Alert();
+            RunOffGround(brain, brain.GiveUpSeconds - 0.5f, 15f);
+            Assert.AreEqual(EnemyState.Stalk, brain.State, "it watches from the edge first");
+            RunOffGround(brain, 1f, 15f);
+            Assert.AreEqual(EnemyState.Idle, brain.State);
+
+            // Stepping back onto the ground before it has given up starts the count again.
+            brain = Brain();
+            brain.Alert();
+            RunOffGround(brain, brain.GiveUpSeconds - 0.5f, 15f);
+            Run(brain, 0.1f, 15f);
+            RunOffGround(brain, brain.GiveUpSeconds - 0.5f, 15f);
+            Assert.AreEqual(EnemyState.Stalk, brain.State);
+        }
+
+        [Test]
+        public void ABlowFromOffItsGroundBringsItOutForAWhile()
+        {
+            var brain = Brain();
+            brain.Provoke();
+            Assert.IsTrue(brain.IsProvoked);
+            RunOffGround(brain, brain.GiveUpSeconds + 1f, 15f);
+            Assert.AreEqual(EnemyState.Stalk, brain.State, "the ground does not hold it while it is provoked");
+            RunOffGround(brain, brain.ProvokedSeconds + brain.GiveUpSeconds, 15f);
+            Assert.IsFalse(brain.IsProvoked);
+            Assert.AreEqual(EnemyState.Idle, brain.State, "and then it does again");
+        }
+
+        [Test]
+        public void ItsAnswerToBlowsTurnedIsTheAttackItKeepsForThat()
+        {
+            var brain = Brain();
+            brain.CounterAttack = "far";
+            brain.Attacks[1].MinRange = 0f;
+            brain.RestMin = brain.RestMax = 5f;
+            Run(brain, 0.1f, 2f);
+            Run(brain, 1.2f, 2f);
+            Assert.AreEqual(EnemyState.Stalk, brain.State, "resting after its first attack");
+            Run(brain, 6f, 12f);
+            brain.Counter();
+            Run(brain, 0.05f, 2f);
+            Assert.AreEqual("far", brain.Current.Name, "the counter, though the roll alone would have picked the other");
+
+            // Out of the counter's reach it answers with whatever suits the distance.
+            brain = Brain();
+            brain.CounterAttack = "near";
+            brain.Alert();
+            brain.Counter();
+            Run(brain, 0.05f, 7f);
+            Assert.AreEqual("far", brain.Current.Name);
+        }
+
+        [Test]
+        public void TheCaptainIsAnEliteWithTheAttacksNamedForHim()
+        {
+            var captain = EnemyKind.Captain();
+            Assert.AreEqual(EnemyKind.CaptainName, EnemyKind.ByName(EnemyKind.CaptainName).Name);
+            Assert.IsTrue(captain.IsElite);
+            Assert.IsFalse(captain.IsBoss, "the bar across the bottom of the screen is the god's");
+            Assert.AreEqual(3, captain.Embers);
+            Assert.AreEqual(1, EnemyKind.Soldier().Embers);
+            Assert.AreEqual(5, EnemyKind.Narukami().Embers);
+            Assert.IsFalse(captain.DrawsStorm);
+            foreach (string name in new[] { "captain_thrust_1", "captain_thrust_2", "captain_sweep", "captain_jab", "captain_slam", "captain_charge" })
+            {
+                var attack = captain.Brain.Attacks.Find(a => a.Name == name);
+                Assert.IsNotNull(attack, name);
+                Assert.AreEqual(0, attack.MinPhase, $"{name} is his from the start");
+            }
+            foreach (var attack in captain.Brain.Attacks)
+            {
+                Assert.IsTrue(attack.Name.StartsWith(captain.Prefix + "_"), attack.Name);
+                if (!string.IsNullOrEmpty(attack.ChainInto))
+                    Assert.IsNotNull(captain.Brain.Attacks.Find(a => a.Name == attack.ChainInto), $"{attack.Name} chains into an attack that does not exist");
+            }
+            Assert.IsNotNull(captain.Brain.Attacks.Find(a => a.Name == captain.Brain.CounterAttack), "his counter exists");
+        }
+
+        [Test]
+        public void OnlyTheCaptainsChargesAreRed()
+        {
+            foreach (var attack in EnemyKind.Captain().Brain.Attacks)
+                Assert.AreEqual(attack.Name.Contains("charge"), attack.Unblockable, attack.Name);
+            var charge = EnemyKind.Captain().Brain.Attacks.Find(a => a.Name == "captain_charge");
+            Assert.IsTrue(charge.IsLine && charge.PassThrough, "a lane he goes the length of");
+            var slam = EnemyKind.Captain().Brain.Attacks.Find(a => a.Name == "captain_slam");
+            Assert.IsTrue(slam.IsCircle && slam.Leap && !slam.Ranged, "a circle he lands on, struck by hand");
+        }
+
+        [Test]
+        public void TheCaptainsTwoThrustsLeaveABeatLongerThanARoll()
+        {
+            var captain = EnemyKind.Captain();
+            var first = captain.Brain.Attacks.Find(a => a.Name == "captain_thrust_1");
+            var second = captain.Brain.Attacks.Find(a => a.Name == first.ChainInto);
+            Assert.IsFalse(first.Unblockable || second.Unblockable, "both can be guarded");
+            float between = first.Strike + second.Telegraph;
+            Assert.Greater(between, new Clover.Player.DodgeRoll().Duration + 0.2f, "a roll begun at the first blow is over, and spent, before the second");
+            Assert.Greater(second.AimLockAt, first.AimLockAt, "the second turns to follow for longer");
+        }
+
+        [Test]
+        public void TheCaptainIsBrokenNotChippedAndChangesAtHalf()
+        {
+            var captain = EnemyKind.Captain();
+            var soldier = EnemyKind.Soldier();
+            Assert.IsTrue(captain.Guards);
+            Assert.Greater(captain.BlocksBeforeCounter, soldier.BlocksBeforeCounter, "he turns more blows before he answers");
+            Assert.Greater(captain.PoiseHits, soldier.PoiseHits);
+            Assert.Less(captain.GuardedDamage, soldier.GuardedDamage);
+            Assert.Less(captain.GuardedStagger, 1f);
+            Assert.Less(captain.HeavyGuardedDamage, 1f, "his guard meets heavy blows too");
+            Assert.IsTrue(captain.Steadfast);
+            Assert.AreEqual(0.5f, captain.SecondPhaseAt, 0.0001f);
+            Assert.Greater(captain.SecondPhasePace, 1f);
+            Assert.IsNotNull(captain.Brain.Attacks.Find(a => a.Name == captain.SecondPhaseAttack));
+            // Finishers alone: three of them fell him, two do not.
+            Assert.Less(captain.FinisherHealthShare * 2f, 1f);
+            Assert.GreaterOrEqual(captain.FinisherHealthShare * 3f, 1f);
+            // Perfect guards alone break his balance in three.
+            Assert.GreaterOrEqual(captain.PerfectGuardStagger * 3f, captain.StaggerMaximum);
+            Assert.Less(captain.PerfectGuardStagger * 2f, captain.StaggerMaximum);
+
+            int chains = 0;
+            foreach (var attack in captain.Brain.Attacks)
+                if (attack.MinPhase == 1 && !string.IsNullOrEmpty(attack.ChainInto)) chains++;
+            Assert.GreaterOrEqual(chains, 2, "in his second phase his attacks run on into one another");
+        }
+
+        [Test]
+        public void TheCaptainHasAnAnswerAtEveryRangeHeFightsAt()
+        {
+            var captain = EnemyKind.Captain();
+            foreach (float distance in new[] { 0.8f, 1.5f, 2.5f, 3.5f, 5f, 7f, 8.4f })
+            {
+                bool any = captain.Brain.Attacks.Exists(a => a.MinPhase == 0 && distance >= a.MinRange && distance <= a.MaxRange);
+                Assert.IsTrue(any, $"he has nothing to do at {distance} m");
+            }
+            var jab = captain.Brain.Attacks.Find(a => a.Name == "captain_jab");
+            foreach (var attack in captain.Brain.Attacks)
+                if (attack != jab && !attack.Unblockable) Assert.Less(jab.Telegraph, attack.Telegraph, "the jab is the quickest thing he does");
+        }
+
         [Test]
         public void EveryEnemyKindHasAttacksItCanReachWith()
         {

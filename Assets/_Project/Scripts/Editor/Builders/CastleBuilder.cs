@@ -52,8 +52,12 @@ namespace Clover.EditorTools
             var enemies = new List<Enemy>();
             var kit = EnemyBuilder.NewKit(built.Player.transform, built.Camera.transform.rotation);
             var enemyRoot = BuildKit.Group("Enemies");
-            void Spawn(string kind, float x, float y, float z, float yaw) =>
-                enemies.Add(EnemyBuilder.Build(kind, new Vector3(x, y + 0.05f, z), yaw, kit, enemyRoot));
+            Enemy Spawn(string kind, float x, float y, float z, float yaw)
+            {
+                var enemy = EnemyBuilder.Build(kind, new Vector3(x, y + 0.05f, z), yaw, kit, enemyRoot);
+                enemies.Add(enemy);
+                return enemy;
+            }
 
             var director = new GameObject("Area Director").AddComponent<AreaDirector>();
 
@@ -71,11 +75,19 @@ namespace Clover.EditorTools
             Spawn(EnemyKind.CasterName, 0f, 2f, 85f, 180f);
 
             UpperWard(director);
-            Spawn(EnemyKind.SoldierName, -5f, 4f, 108f, 180f);
-            Spawn(EnemyKind.SoldierName, 5f, 4f, 108f, 180f);
-            Spawn(EnemyKind.AcolyteName, 0f, 4f, 113f, 180f);
-            Spawn(EnemyKind.CasterName, -11f, 4f, 119f, 160f);
-            Spawn(EnemyKind.CasterName, 11f, 4f, 119f, 200f);
+            // The ward is two grounds with a line of pale stone between them. The five who hold its south end keep to
+            // that end (and its stair): they notice nobody north of the line and follow nobody over it. The captain
+            // keeps the north end, before the door, and is fought there alone.
+            foreach (var enemy in new[]
+            {
+                Spawn(EnemyKind.SoldierName, -6f, 4f, 104f, 180f),
+                Spawn(EnemyKind.SoldierName, 6f, 4f, 104f, 180f),
+                Spawn(EnemyKind.AcolyteName, 0f, 4f, 108f, 180f),
+                Spawn(EnemyKind.CasterName, -11f, 4f, 110f, 160f),
+                Spawn(EnemyKind.CasterName, 11f, 4f, 108f, 200f),
+            })
+                enemy.HoldGround(-19f, 19f, 86f, CaptainsLine - 0.5f);
+            Spawn(EnemyKind.CaptainName, 0f, 4f, 119.5f, 180f).HoldGround(-19f, 19f, CaptainsLine + 0.5f, 126f);
 
             var strikeOutline = WorldBars.Marker("Storm Mark Outline", director.transform, 0f, kit.Marker);
             var strikeFill = WorldBars.Marker("Storm Mark Fill", director.transform, 0f, kit.Marker);
@@ -297,6 +309,9 @@ namespace Clover.EditorTools
             TerraceArt(dress);
         }
 
+        // How far up the ward the captain's ground begins: a course of pale stone is laid across the floor there.
+        private const float CaptainsLine = 113f;
+
         // The last and hardest fight, under the keep's wall, and the sealed door to the summit.
         private static void UpperWard(AreaDirector director)
         {
@@ -330,7 +345,8 @@ namespace Clover.EditorTools
             foreach (float x in new[] { -9f, 9f })
             {
                 Pillar("Ward Pillar", group, new Vector3(x, 4f, 101f), 1.6f, 3.6f, wall, trim);
-                Pillar("Ward Pillar", group, new Vector3(x, 4f, 116f), 1.6f, 3.6f, wall, trim);
+                // The second pair stands on the captain's line, as its gateposts.
+                Pillar("Ward Pillar", group, new Vector3(x, 4f, CaptainsLine), 1.6f, 3.6f, wall, trim);
             }
             Brazier(group, new Vector3(-5f, 4f, 123.4f), true);
             Brazier(group, new Vector3(5f, 4f, 123.4f), true);
@@ -343,6 +359,7 @@ namespace Clover.EditorTools
 
             var dress = BuildKit.Group("Dressing", group);
             Slab("Ward Path", dress, -3.3f, 3.3f, 96f, 121f, 4.012f, path, 0.02f);
+            Slab("Captain Line", dress, -18.4f, 18.4f, CaptainsLine - 0.22f, CaptainsLine + 0.22f, 4.016f, trim, 0.02f);
             Dressing.Puddles(dress, -18f, 18f, 95f, 123f, 4f, 14, 61);
             Dressing.GrassLine(dress, new Vector3(-18.6f, 4f, 94.5f), new Vector3(-18.6f, 4f, 125.5f), 0.6f, 62);
             Dressing.GrassLine(dress, new Vector3(18.6f, 4f, 125.5f), new Vector3(18.6f, 4f, 94.5f), 0.6f, 63);
@@ -351,7 +368,7 @@ namespace Clover.EditorTools
             foreach (float x in new[] { -9f, 9f })
             {
                 Dressing.GrassPatch(dress, new Vector3(x, 4f, 101f), 1.6f, 6, 66 + (int)x);
-                Dressing.GrassPatch(dress, new Vector3(x, 4f, 116f), 1.6f, 6, 86 + (int)x);
+                Dressing.GrassPatch(dress, new Vector3(x, 4f, CaptainsLine), 1.6f, 6, 86 + (int)x);
             }
             Dressing.Lantern(dress, new Vector3(-4f, 4f, 105f), 0f);
             Dressing.Lantern(dress, new Vector3(4f, 4f, 105f), 180f);
@@ -596,7 +613,7 @@ namespace Clover.EditorTools
 
             Dressing.Ballista(dress, new Vector3(13.2f, Y, 110.6f), -14f);
             Dressing.Bolts(dress, new Vector3(10.8f, Y, 113.4f), 5, 1.6f, 5);
-            Dressing.Bolts(dress, new Vector3(3.6f, Y, 119f), 4, 1.7f, 6);
+            Dressing.Bolts(dress, new Vector3(15.4f, Y, 117.6f), 4, 1.7f, 6);
             Dressing.Mantlet(dress, new Vector3(-13.4f, Y, 106.4f), 165f);
             Dressing.Cage(dress, new Vector3(-15.2f, Y, 121.6f), 25f);
             float[] stakes = { 13f, 15.2f, 17.1f };

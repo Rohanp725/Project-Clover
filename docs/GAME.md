@@ -322,7 +322,8 @@ Built by Claude in one pass at the user's instruction to work through the area w
 gate; the outer court (two temple soldiers and an acolyte); a stair up to the shrine terrace, where the Katana stands
 in a stone inside a ring of standing stones (two acolytes and a storm caller, and the second rest fire); a second
 stair to the upper ward under the keep's wall (two soldiers, an acolyte, two storm callers); and the sealed door to the
-summit, which will not open while any enemy stands. Eleven enemies.
+summit, which will not open while any enemy stands. Eleven enemies. (2026-11-16: twelve, with the Gate Captain
+before the door; the ward's five now stand in its south half. See "The Gate Captain as built".)
 
 **Fists** (the starting weapon): the quickest chain in the game, short reach, light damage, and a great deal of
 stagger for that damage, so fists open an enemy for the finisher. Four lights (jab, cross, hook, front kick), a
@@ -630,6 +631,57 @@ only for faults.
   that lingers where health was lost. Under 30% health a dark red edge breathes round the screen. A blow that lands
   leaves a white cut line across the enemy, longer for a heavy blow and crossed for a finisher.
 
+### The Gate Captain as built (2026-11-16, overnight run; Claude's design, not yet played by the user)
+
+An elite: the castle's twelfth enemy and its last fight, alone before the sealed door. He is there to push the castle
+further toward the duel the user asked for, and to teach what the god will ask: guard, perfect guard, punish the
+opening, step out of the red. Every number is a first value. Probed by `AgentScripts/CaptainProbe.cs`.
+
+**Who he is.** The soldier's body at 1.45 (about 1.3 times a soldier), in black iron with a bone-white banner at his
+back, dull gold cloth, and the lightning in him burning brighter than in any of his men. He does not level his spear
+at whoever comes: he carries it slantwise across his chest and waits. While he is in the fight his name stands over
+his own bars; the bar across the bottom of the screen stays the god's.
+
+**His ground.** A course of pale stone crosses the upper ward at z 113, between the second pair of pillars. North of
+it is his; south of it belongs to the ward's five, who were moved south to make room. An enemy that keeps a ground
+notices only someone standing on it, never walks off it, gives a target that leaves three seconds and then goes back
+to its post. A blow struck at it from off its ground brings it out for eight seconds, so the line is not a place to
+hit from in safety. The storm does not pick him to charge. In the probe, walking his ground woke none of the five, and
+five in pursuit stopped short of the line and had all let the player go within seven seconds.
+
+| | |
+|---|---|
+| Health | 260. A finisher takes at least 34% (88), so three finishers fell him; two and some honest blows do too |
+| Balance | 150. A perfect guard throws back 50 (three break him); it is open for 3 s |
+| Guard | Turns light blows from the front for 15% of their damage and half their stagger, and heavy blows for 40% of their damage and all of their stagger. After four blows turned he answers at once with the jab |
+| Poise | Shrugs off four light blows and flinches on the fifth; a heavy blow that gets past his guard flinches him as he recovers but never breaks an attack he is showing |
+| Awareness | Notices at 8.5 m on his own ground; rests 0.7 to 1.4 s between attacks, a third of that when the player hangs back beyond 4.5 m |
+| Second phase | At half health: struck by the storm, he opens with the leap, acts 15% faster, and gains the two chains |
+| Reward | Three embers, once a run. The sealed door counts him: twelve must fall |
+
+| Attack | Shown for | Shape | Damage | Notes |
+|---|---|---|---|---|
+| Two thrusts | 0.6 s, then 0.55 s | lanes 4.4 m and 4.8 m long, 1.1 and 1.2 m wide | 16, then 22 | Both can be guarded. The second lands 0.67 s after the first, which is longer than a roll, and turns to follow for longer. Open for 0.9 s after |
+| Wide cut | 0.8 s | 200 degree wedge, 3.8 m | 26 | Punishes circling. Open for 0.8 s |
+| Short stab | 0.34 s | 70 degree wedge, 2.4 m | 12 | Only when the player is within 2.6 m; also his answer after four blows turned |
+| Leap | 1.0 s | circle of 2.6 m where the player stood | 30 | He lands at its edge. Walk out, or guard it at a price. From 3.6 to 8 m. Open for 1.0 s |
+| Charge (red) | 1.1 s | lane 9 m long, 1.5 m wide | 34 | He raises the spear upright over his head first, then couches it and goes the length of the lane and out the far end. From 5 to 11 m. Open for 1.1 s |
+| Cut into thrust (second phase) | 0.7 s, then 0.6 s | the wide cut, then the long lane | 26, then 22 | No rest between |
+| Charge twice (second phase, red) | 0.95 s, then 0.85 s | the charge, and back again | 30 and 30 | The second from wherever the first left him |
+
+**How he is beaten.** Not by chipping: blows on his guard do little, and he does not flinch out of what he has begun.
+Guard his blows (all but the charge), perfectly when it can be done, hit him in the opening after each attack, and
+when his balance breaks finish him. Twice or three times.
+
+**Made for him, usable by any enemy:** a leaping attack (a circle the attacker jumps to), a guard that meets heavy
+blows, a named counter, impatience with a player who hangs back, a ground an enemy keeps, embers by kind, and a mark
+on the ground that is lifted over a step between attacker and target so the step cannot hide it.
+
+**Not built:** sound; a model of his own (he is the soldier, recoloured and larger); any words or scene when the
+fight begins; a guard stance clip (he stands in his ready pose while guarding); a wall or gate on his line (the
+pillars on it still block sight and movement, and a marked lane passes through them as every enemy's does); return
+of his health if he is left. Not tuned by play: every number above.
+
 ## Open questions
 
 1. Camera: top-down is on trial in the slice; confirm or change once it is playable.
@@ -683,3 +735,4 @@ only for faults.
 | 2026-11-15 | Designed for a controller | matches the reference games |
 | 2026-11-15 | Limited flasks refilled at rest points; death ends the run except through Dark's revive and some later upgrades | the user's choice |
 | 2026-11-15 | Fists are the first run's weapon; Full Body Armament is an element-tree upgrade for the unarmed | gives fighting unarmed its own path |
+| 2026-11-16 | An elite, the Gate Captain, guards the sealed door alone on his own ground: guard, poise, a red charge, a second phase at half, three embers (Claude's design in the unattended overnight run; not yet played) | pushes the castle's last fight toward the even duel the user asked for and teaches what the god asks |

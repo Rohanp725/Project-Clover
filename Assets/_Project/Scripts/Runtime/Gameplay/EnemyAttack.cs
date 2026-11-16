@@ -34,6 +34,11 @@ namespace Clover.Gameplay
         public float Radius;
         /// <summary>A circle thrown onto the spot where the target stood when the attack began, not around the enemy.</summary>
         public bool Ranged;
+        /// <summary>
+        /// A circle marked where the target stood when the attack began, which the attacker jumps to and lands beside
+        /// as the blow falls. Unlike a thrown circle it is a blow struck by hand: a perfect guard turns it back on him.
+        /// </summary>
+        public bool Leap;
         /// <summary>Metres the enemy drives forward as it strikes.</summary>
         public float Lunge;
         /// <summary>The attack is chosen only with the target between these distances.</summary>

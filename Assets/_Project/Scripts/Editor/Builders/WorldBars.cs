@@ -41,6 +41,38 @@ namespace Clover.EditorTools
             return (health, stagger, bars);
         }
 
+        /// <summary>
+        /// A name over a fighter's bars, for the few who have one: small pale letters edged in ink, standing just above
+        /// the health bar and facing the camera with it. It is part of the bars, so it comes and goes with them.
+        /// </summary>
+        public static void NamePlate(Transform bars, string name)
+        {
+            var plate = new GameObject("Name Plate", typeof(RectTransform));
+            plate.transform.SetParent(bars, false);
+            var canvas = plate.AddComponent<Canvas>();
+            canvas.renderMode = RenderMode.WorldSpace;
+            canvas.sortingOrder = 6;
+            var area = (RectTransform)plate.transform;
+            area.sizeDelta = new Vector2(600f, 80f);
+            area.localPosition = new Vector3(0f, 0.36f, 0f);
+            area.localRotation = Quaternion.identity;
+            // Laid out large and shrunk, so the letters are sharp at the size they are seen.
+            area.localScale = Vector3.one * 0.0042f;
+
+            var label = plate.AddComponent<UnityEngine.UI.Text>();
+            label.font = UiArt.Font();
+            label.fontSize = 46;
+            label.alignment = TextAnchor.MiddleCenter;
+            label.color = new Color(1f, 0.93f, 0.8f);
+            label.raycastTarget = false;
+            label.horizontalOverflow = HorizontalWrapMode.Overflow;
+            label.verticalOverflow = VerticalWrapMode.Overflow;
+            label.text = name;
+            var edge = plate.AddComponent<UnityEngine.UI.Outline>();
+            edge.effectColor = new Color(0.02f, 0.015f, 0.05f, 0.95f);
+            edge.effectDistance = new Vector2(3f, -3f);
+        }
+
         // The slab a bar sits in: ink outermost, the pale line inside it, and the dark the bar empties to.
         private static void Frame(string name, Transform parent, float height, float inside, Material ink, Material line, Material track)
         {

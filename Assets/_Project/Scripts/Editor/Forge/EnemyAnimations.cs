@@ -33,7 +33,7 @@ namespace Clover.EditorTools.Forge
                 }
                 using (var rig = new ForgeRig(asset))
                 {
-                    EnemyBuilder.Dress(rig.Model);
+                    EnemyBuilder.Dress(rig.Model, kind.Palette);
                     var tails = new ForgeTails()
                         .Add(rig, 0.1f, "scarf_a1", "scarf_a2", "scarf_a3")
                         .Add(rig, 0.1f, "scarf_b1", "scarf_b2")
@@ -73,6 +73,7 @@ namespace Clover.EditorTools.Forge
                 case "soldier": return Soldier(kind);
                 case "acolyte": return Acolyte(kind);
                 case "boss": return BossAnimations.For(kind);
+                case "captain": return CaptainAnimations.For(kind);
                 default: return Caster(kind);
             }
         }

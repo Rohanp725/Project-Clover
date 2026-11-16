@@ -50,6 +50,21 @@ namespace Clover.EditorTools
             ("rope", new Color(0.86f, 0.72f, 0.4f)),
         };
 
+        // The Gate Captain wears the soldier's body in his own colours, so that he is known at a glance from the far end
+        // of the ward: black iron where they wear bronze, dull gold cloth where they wear crimson, a bone-white banner
+        // at his back, and the lightning in him burning far brighter than in any of them.
+        private static readonly (string name, Color colour)[] CaptainPalette =
+        {
+            ("cloth", new Color(0.6f, 0.43f, 0.14f)),
+            ("armour", new Color(0.15f, 0.15f, 0.23f)),
+            ("skin", new Color(0.5f, 0.55f, 0.7f)),
+            ("dark", new Color(0.05f, 0.045f, 0.1f)),
+            ("glow", new Color(0.85f, 0.97f, 1f)),
+            ("wood", new Color(0.12f, 0.1f, 0.16f)),
+            ("steel", new Color(0.86f, 0.9f, 1f)),
+            ("accent", new Color(0.95f, 0.93f, 0.86f)),
+        };
+
         // One animator per kind for the whole scene, made once per build: making it again would orphan the earlier enemies.
         private static readonly Dictionary<string, AnimatorController> controllers = new Dictionary<string, AnimatorController>();
         // How many enemies this scene has so far: neighbours carry their bars at different heights, so a crowd's bars do not lie on one another.
@@ -96,6 +111,14 @@ namespace Clover.EditorTools
             capsule.height = 1.9f;
             capsule.radius = 0.42f;
             capsule.center = new Vector3(0f, 0.95f, 0f);
+            // How much bigger than a soldier it is drawn: what stands over and around it is sized to match.
+            float size = Mathf.Max(1f, kind.Scale / 1.12f);
+            if (size > 1.1f)
+            {
+                capsule.height = 1.9f * size;
+                capsule.radius = 0.42f * size;
+                capsule.center = new Vector3(0f, 0.95f * size, 0f);
+            }
 
             Animator animator = null;
             var renderers = new Renderer[0];
@@ -114,7 +137,7 @@ namespace Clover.EditorTools
                 var materials = Materials();
                 renderers = model.GetComponentsInChildren<Renderer>();
                 foreach (var renderer in renderers)
-                    renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials)).ToArray();
+                    renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials, kind.Palette)).ToArray();
                 animator = model.GetComponent<Animator>();
                 if (animator == null) animator = model.AddComponent<Animator>();
                 animator.runtimeAnimatorController = Controller(kind, modelPath);
@@ -124,14 +147,15 @@ namespace Clover.EditorTools
 
             var outline = WorldBars.Marker("Marker Outline", root.transform, 0.04f, kit.Marker);
             var fill = WorldBars.Marker("Marker Fill", root.transform, 0.06f, kit.Marker);
-            var bars = WorldBars.Build(root.transform, 2.3f + (built++ % 2) * 0.24f, kit.TowardCamera, kit.BarBack, kit.BarHealth, kit.BarStagger);
-            var finishMark = WorldBars.FinishMark(root.transform, new Vector3(0f, 1.25f, 0f), 2.1f, kit.TowardCamera);
+            var bars = WorldBars.Build(root.transform, 2.3f * size + (built++ % 2) * 0.24f, kit.TowardCamera, kit.BarBack, kit.BarHealth, kit.BarStagger);
+            if (kind.IsElite) WorldBars.NamePlate(bars.root, kind.Name);
+            var finishMark = WorldBars.FinishMark(root.transform, new Vector3(0f, 1.25f * size, 0f), 2.1f * size, kit.TowardCamera);
 
             GuardArc guardArc = null;
             if (kind.Guards)
             {
                 guardArc = root.AddComponent<GuardArc>();
-                guardArc.Configure(VfxBuilder.GuardArcMaterial(), 1.25f, 150f, new Color(2.4f, 1.8f, 0.8f, 0.85f));
+                guardArc.Configure(VfxBuilder.GuardArcMaterial(), 1.25f * size, 150f, new Color(2.4f, 1.8f, 0.8f, 0.85f));
             }
             var enemy = root.AddComponent<Enemy>();
             enemy.Configure(kind.Name, kit.Target, animator, renderers, outline, fill, bars.root, bars.health, bars.stagger, kit.Arcs, kit.Turns, guardArc);
@@ -139,17 +163,19 @@ namespace Clover.EditorTools
             return enemy;
         }
 
-        /// <summary>Puts the enemies' toon materials on a copy of one of their models, as the game does.</summary>
-        public static void Dress(GameObject model)
+        /// <summary>Puts the enemies' toon materials on a copy of one of their models, as the game does; a kind with colours of its own gets those.</summary>
+        public static void Dress(GameObject model, string palette = "")
         {
             var materials = Materials();
             foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
-                renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials)).ToArray();
+                renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials, palette)).ToArray();
         }
 
-        private static Material ToonFor(Material imported, Dictionary<string, Material> materials)
+        private static Material ToonFor(Material imported, Dictionary<string, Material> materials, string palette)
         {
             string name = imported != null ? imported.name.Replace("m_enemy_", "").Replace("m_boss_", "boss:") : "";
+            // A kind with its own colours takes them where it has them and the shared ones where it does not.
+            if (!string.IsNullOrEmpty(palette) && materials.TryGetValue(palette + ":" + name, out var own)) return own;
             if (materials.TryGetValue(name, out var toon)) return toon;
             Debug.LogWarning($"[Clover.Build] An enemy uses a material '{name}' that the palette does not know.");
             return imported;
@@ -173,6 +199,16 @@ namespace Clover.EditorTools
                 else if (name == "gold") material.Lit(new Color(1.2f, 0.9f, 0.4f), 0.4f, new Color(0.25f, 0.14f, 0.02f));
                 else material.Lit(new Color(0.7f, 0.85f, 1.3f), 0.34f);
                 materials["boss:" + name] = material;
+            }
+            foreach (var (name, colour) in CaptainPalette)
+            {
+                var material = BuildKit.Toon(Folder, $"m_captain_{name}", colour, true);
+                if (name == "glow") material.Lit(new Color(0.8f, 1f, 1.6f), 0.5f, new Color(2.2f, 4.6f, 9f));
+                else if (name == "accent") material.Lit(new Color(0.9f, 1f, 1.3f), 0.4f, new Color(0.16f, 0.17f, 0.2f));
+                // Black iron would be lost against the night without a strong cold edge to it.
+                else if (name == "armour" || name == "wood" || name == "dark") material.Lit(new Color(0.9f, 1.2f, 2f), 0.5f);
+                else material.Lit(new Color(0.7f, 0.85f, 1.3f), 0.34f);
+                materials["captain:" + name] = material;
             }
             return materials;
         }

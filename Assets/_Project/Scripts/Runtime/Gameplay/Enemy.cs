@@ -26,6 +26,10 @@ namespace Clover.Gameplay
         [SerializeField] private EnemyTurns turns;
         [SerializeField] private GuardArc guardArc;
         [SerializeField] private StaggerMark staggerMark;
+        // The ground it keeps, as the least and greatest x and z of a rectangle; unused unless it holds one.
+        [SerializeField] private bool holdsGround;
+        [SerializeField] private Vector2 groundLeast;
+        [SerializeField] private Vector2 groundMost;
 
         public float StaggeredDamageMultiplier = 1.5f;
         public float FinisherDamageMultiplier = 3f;
@@ -49,6 +53,10 @@ namespace Clover.Gameplay
         [ColorUsage(true, true)] public Color SlashColour = new Color(1.6f, 0.45f, 1.5f, 0.6f);
         /// <summary>Half the width of the player, in metres: a blow that reaches their edge has reached them.</summary>
         public float TargetRadius = 0.4f;
+        /// <summary>Metres short of the marked spot a leaping attacker comes down, so it lands in front of the target and not inside it.</summary>
+        public float LeapShort = 1.5f;
+        /// <summary>How far through the telegraph a leap leaves the ground.</summary>
+        public float LeapFrom = 0.62f;
 
         public EnemyKind Kind { get; private set; }
         public EnemyBrain Brain => Kind.Brain;
@@ -91,6 +99,7 @@ namespace Clover.Gameplay
         private Vector3 lungeFrom;
         private Vector3 lungeForward = Vector3.forward;
         private bool lunging;
+        private Vector3 leapTo;
         private Vector3 shove;
         private Vector3 home;
         private Quaternion homeRotation;
@@ -118,6 +127,24 @@ namespace Clover.Gameplay
         private float untilFlake;
         private Transform emberTaker;
         private int embersOwed;
+
+        /// <summary>True while it keeps to a ground of its own and the target is standing on it, or it keeps none.</summary>
+        public bool TargetOnGround => !holdsGround || target == null || OffGround(target.position) <= 0f;
+
+        /// <summary>
+        /// Gives it a ground to keep: a rectangle on the map. It notices only a target standing on that ground, does
+        /// not walk off it, lets a target that leaves go after a moment, and then walks back to where it stood.
+        /// </summary>
+        public void HoldGround(float leastX, float mostX, float leastZ, float mostZ)
+        {
+            holdsGround = true;
+            groundLeast = new Vector2(leastX, leastZ);
+            groundMost = new Vector2(mostX, mostZ);
+        }
+
+        // Metres a point lies outside the ground; zero anywhere on it.
+        private float OffGround(Vector3 point) =>
+            Mathf.Max(0f, Mathf.Max(Mathf.Max(groundLeast.x - point.x, point.x - groundMost.x), Mathf.Max(groundLeast.y - point.z, point.z - groundMost.y)));
 
         /// <summary>Adds the mark that shows over it while it is staggered.</summary>
         public void ConfigureFeedback(StaggerMark markToShow) => staggerMark = markToShow;
@@ -268,7 +295,9 @@ namespace Clover.Gameplay
             if (IsDead) return HitOutcome.Missed;
             // A blow that only sets a burn off has nothing to do to an enemy that is not burning.
             if (hit.Detonate && hit.Damage <= 0f && !Burn.IsBurning) return HitOutcome.Missed;
-            Brain.Alert();
+            // Struck by someone standing off its ground: the ground stops holding it for a while.
+            if (holdsGround && !TargetOnGround) Brain.Provoke();
+            else Brain.Alert();
             if (bars != null) bars.gameObject.SetActive(true);
             float detonated = 0f;
             if (hit.Detonate && Burn.IsBurning)
@@ -281,12 +310,12 @@ namespace Clover.Gameplay
             Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
 
             // Its guard: a light blow from the front, while it stands ready, is turned on its weapon.
-            if (Kind.Guards && !hit.Heavy && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)
+            if (Kind.Guards && (!hit.Heavy || Kind.HeavyGuardedDamage < 1f) && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)
                 && Vector3.Angle(transform.forward, -hit.Direction) < 75f)
             {
                 BlowsGuarded++;
                 if (guardArc != null) guardArc.Pulse(new Color(3f, 3.4f, 4f, 1f), 0.18f, 0.25f);
-                Health.Damage(hit.Damage * Kind.GuardedDamage);
+                Health.Damage(hit.Damage * (hit.Heavy ? Kind.HeavyGuardedDamage : Kind.GuardedDamage));
                 Vfx.Play(VfxKind.GuardSpark, transform.position + Vector3.up * 1.2f + transform.forward * 0.5f, transform.forward);
                 Vector3 back = hit.Direction;
                 back.y = 0f;
@@ -296,7 +325,8 @@ namespace Clover.Gameplay
                     Die();
                     return HitOutcome.Landed;
                 }
-                if (Stagger.Add(hit.Stagger))
+                // A heavy blow met on the guard still costs it all the balance the blow carries.
+                if (Stagger.Add(hit.Heavy ? hit.Stagger : hit.Stagger * Kind.GuardedStagger))
                 {
                     Brain.Stagger();
                     Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up);
@@ -342,7 +372,7 @@ namespace Clover.Gameplay
                 if (hit.Heavy || ++lightHits >= Kind.PoiseHits)
                 {
                     lightHits = 0;
-                    Brain.Flinch(hit.Heavy);
+                    Brain.Flinch(hit.Heavy && !Kind.Steadfast);
                 }
             }
             return HitOutcome.Landed;
@@ -388,6 +418,8 @@ namespace Clover.Gameplay
                 // Worn down to the mark: the second phase opens with its own attack.
                 Brain.Phase = 1;
                 Brain.Force(Kind.SecondPhaseAttack);
+                // A god's second phase is staged by his own summit; anyone else is simply struck by the storm he carries.
+                if (!Kind.IsBoss) LightningBolts.Strike(transform.position, 0.4f);
                 PhaseChanged?.Invoke(this);
             }
 
@@ -417,13 +449,17 @@ namespace Clover.Gameplay
             sinceLightHit += deltaTime;
             if (sinceLightHit > 1.6f) lightHits = 0;
             bool mayAttack = turns == null || turns.MayAttack(this);
-            bool struck = Brain.Tick(deltaTime * pace, distance, Random.value, mayAttack);
+            bool struck = Brain.Tick(deltaTime * pace, distance, Random.value, mayAttack, TargetOnGround);
             if (!wasStriking && IsStriking && turns != null) turns.Began(this);
+            // An elite's name and bars are up for as long as it is in the fight, not only once blows are traded.
+            if (Kind.IsElite && bars != null && bars.gameObject.activeSelf != IsAware) bars.gameObject.SetActive(IsAware);
             var attack = Brain.Current;
             if (attack != null && attack != before && Brain.State == EnemyState.Telegraph)
             {
                 // A thrown attack lands where the target stood when it was begun, so moving gets clear of it.
                 strikePoint = target.position;
+                // A leap comes down just short of that spot, on the attacker's side of it.
+                leapTo = distance > LeapShort ? strikePoint - toTarget / distance * LeapShort : transform.position;
                 if (bars != null) bars.gameObject.SetActive(true);
                 if (attack.BlinkTo > 0f) Blink(attack.BlinkTo);
                 // The instant it commits: a white glint for a blow that can be guarded, a red flare for one that cannot.
@@ -460,6 +496,46 @@ namespace Clover.Gameplay
                 Vector3 sideways = Vector3.Cross(Vector3.up, toTarget / distance) * circle;
                 step += sideways * (Kind.WalkSpeed * 0.45f * deltaTime);
                 walked = Mathf.Max(walked, Kind.WalkSpeed * 0.45f);
+            }
+            if (holdsGround)
+            {
+                if (Brain.State == EnemyState.Idle)
+                {
+                    // Nothing to fight: back to where it stands guard, and facing the way it faced.
+                    Vector3 toHome = home - transform.position;
+                    toHome.y = 0f;
+                    float fromHome = toHome.magnitude;
+                    if (fromHome > 0.3f)
+                    {
+                        walked = Kind.WalkSpeed * 0.8f;
+                        step = toHome / fromHome * Mathf.Min(fromHome, walked * deltaTime);
+                        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(toHome, Vector3.up), Kind.TurnDegreesPerSecond * deltaTime);
+                    }
+                    else transform.rotation = Quaternion.RotateTowards(transform.rotation, homeRotation, Kind.TurnDegreesPerSecond * deltaTime);
+                }
+                else if (!Brain.IsProvoked)
+                {
+                    // Its own feet never carry it farther off its ground; a lunge or a shove still may.
+                    float off = OffGround(transform.position);
+                    if (OffGround(transform.position + step) > off + 0.0001f)
+                    {
+                        step = Vector3.zero;
+                        walked = 0f;
+                    }
+                }
+            }
+            if (attack != null && attack.Leap && Brain.State == EnemyState.Telegraph)
+            {
+                // The leap: off the ground late in the telegraph, and down beside the marked spot as the blow falls.
+                float elapsed = Brain.AttackProgress * attack.Total;
+                float left = attack.Telegraph - elapsed;
+                if (elapsed >= attack.Telegraph * LeapFrom)
+                {
+                    Vector3 toLanding = leapTo - transform.position;
+                    toLanding.y = 0f;
+                    float share = left > 0.0001f ? Mathf.Clamp01(deltaTime * pace / left) : 1f;
+                    step += toLanding * share;
+                }
             }
             if (attack != null && attack.Lunge > 0f)
             {
@@ -501,17 +577,19 @@ namespace Clover.Gameplay
 
             if (attack.IsCircle)
             {
-                Vector3 centre = attack.Ranged ? strikePoint : transform.position;
+                Vector3 centre = attack.Ranged || attack.Leap ? strikePoint : transform.position;
                 if (attack.Ranged) LightningBolts.Strike(centre, 0.5f);
                 else
                 {
-                    Vfx.Play(VfxKind.Shock, transform.position + Vector3.up, Vector3.up, 2.5f);
-                    Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 0.3f, Vector3.up);
+                    Vfx.Play(VfxKind.Shock, centre + Vector3.up, Vector3.up, 2.5f);
+                    Vfx.Play(VfxKind.Ring, centre + Vector3.up * 0.3f, Vector3.up);
                 }
                 Vector3 offset = target.position - centre;
                 offset.y = 0f;
-                if (offset.magnitude <= attack.Radius + 0.35f)
-                    Deal(attack, damage, offset.sqrMagnitude > 0.01f ? offset.normalized : forward, centre);
+                if (offset.magnitude > attack.Radius + 0.35f) return;
+                // A leaper's blow comes from the leaper, who has landed at the circle's edge: a guard must face him, not the middle of the circle.
+                if (attack.Leap) Deal(attack, damage, forward, transform.position);
+                else Deal(attack, damage, offset.sqrMagnitude > 0.01f ? offset.normalized : forward, centre);
                 return;
             }
 
@@ -612,7 +690,7 @@ namespace Clover.Gameplay
             }
             ShowMarker(true, attack.Unblockable);
             float shown = Brain.TelegraphProgress;
-            Vector3 centre = attack.Ranged ? strikePoint : transform.position;
+            Vector3 centre = attack.Ranged || attack.Leap ? strikePoint : transform.position;
             Quaternion facing = attack.IsCircle ? Quaternion.identity : transform.rotation;
             // Once it has begun to drive through, the lane stays where it was drawn.
             if (attack.PassThrough && lunging)
@@ -620,6 +698,9 @@ namespace Clover.Gameplay
                 centre = lungeFrom;
                 facing = Quaternion.LookRotation(lungeForward, Vector3.up);
             }
+            // A mark that starts at the attacker's feet lies at the height of whichever of the two stands higher (within reason),
+            // so a step between them cannot bury the part of it the target is standing on.
+            if (!attack.Ranged && !attack.Leap) centre.y = Mathf.Max(centre.y, Mathf.Min(target.position.y, centre.y + 0.5f));
             if (markerOutline != null) markerOutline.transform.SetPositionAndRotation(centre + Vector3.up * 0.04f, facing);
             if (markerFill != null)
             {

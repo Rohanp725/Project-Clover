@@ -25,6 +25,15 @@ namespace Clover.Gameplay
         /// </summary>
         public bool Guards;
         public float GuardedDamage = 0.25f;
+        /// <summary>The share of a light blow's stagger that comes through its guard.</summary>
+        public float GuardedStagger = 1f;
+        /// <summary>
+        /// The share of a heavy blow's damage that comes through its guard. At 1 a heavy blow goes past the guard as if
+        /// it were not there; below 1 the guard meets heavy blows too, and they cost it balance and not much blood.
+        /// </summary>
+        public float HeavyGuardedDamage = 1f;
+        /// <summary>True for an enemy whose attack, once shown, is not broken even by a heavy blow.</summary>
+        public bool Steadfast;
         /// <summary>After turning this many blows it strikes back at once.</summary>
         public int BlocksBeforeCounter = 3;
         /// <summary>Light blows it shrugs off before one makes it flinch. 1 means every blow does.</summary>
@@ -38,6 +47,14 @@ namespace Clover.Gameplay
         /// <summary>A boss has its name and bars across the bottom of the screen.</summary>
         public bool IsBoss;
         public string Title = "";
+        /// <summary>An elite stands between the ordinary enemies and a boss: its name is shown over its own bars while it fights.</summary>
+        public bool IsElite;
+        /// <summary>Embers it gives up the first time it dies in a run.</summary>
+        public int Embers = 1;
+        /// <summary>False for an enemy the area's storm never picks to charge: its fight keeps the pace it was given.</summary>
+        public bool DrawsStorm = true;
+        /// <summary>Which set of colours the builder dresses its model in; the shared enemy colours when left empty.</summary>
+        public string Palette = "";
         /// <summary>Above zero, a finisher takes this share of the enemy's whole health, whatever the blow.</summary>
         public float FinisherHealthShare;
         /// <summary>The share of health at which the fight enters its second phase; zero for never.</summary>
@@ -52,9 +69,11 @@ namespace Clover.Gameplay
         public const string AcolyteName = "Knife Acolyte";
         public const string CasterName = "Storm Caller";
         public const string NarukamiName = "Narukami";
+        public const string CaptainName = "Gate Captain";
 
         public static EnemyKind ByName(string name) =>
-            name == AcolyteName ? Acolyte() : name == CasterName ? Caster() : name == NarukamiName ? Narukami() : Soldier();
+            name == AcolyteName ? Acolyte() : name == CasterName ? Caster() : name == NarukamiName ? Narukami()
+            : name == CaptainName ? Captain() : Soldier();
 
         public static IEnumerable<EnemyKind> All
         {
@@ -64,6 +83,7 @@ namespace Clover.Gameplay
                 yield return Acolyte();
                 yield return Caster();
                 yield return Narukami();
+                yield return Captain();
             }
         }
 
@@ -170,6 +190,7 @@ namespace Clover.Gameplay
             Model = "boss_narukami",
             Scale = 1.22f,
             IsBoss = true,
+            Embers = 5,
             Health = 620f,
             StaggerMaximum = 190f,
             StaggeredSeconds = 2.8f,
@@ -215,6 +236,75 @@ namespace Clover.Gameplay
                     // Second phase only: the red draw twice, the second from wherever the first left him.
                     new EnemyAttack { Name = "boss_iai_twice", Animation = "boss_iai", Telegraph = 0.85f, Strike = 0.15f, Recovery = 0.2f, Damage = 30f, Reach = 10.5f, LineWidth = 1.7f, Lunge = 9.5f, PassThrough = true, Unblockable = true, MinRange = 4f, MaxRange = 14f, Cooldown = 10f, MinPhase = 1, AimLockAt = 0.75f, ChainInto = "boss_iai_return" },
                     new EnemyAttack { Name = "boss_iai_return", Animation = "boss_iai", Telegraph = 0.7f, Strike = 0.15f, Recovery = 1.1f, Damage = 30f, Reach = 10.5f, LineWidth = 1.7f, Lunge = 9.5f, PassThrough = true, Unblockable = true, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.7f },
+                },
+            },
+        };
+
+        /// <summary>
+        /// The Gate Captain: the soldier who still keeps the sealed door, a head taller than his men and far deeper in
+        /// the lightning. The castle's last fight and the lesson before the god: one man, alone, who waits. His guard
+        /// meets light and heavy blows alike, light blows do not make him flinch, and nothing breaks an attack he has
+        /// begun, so he is beaten by breaking his balance (perfect guards above all, and heavy blows) and finishing
+        /// him, two or three times. Everything he does can be guarded but the long red charge. Below half his health
+        /// he is quicker and his attacks run on into one another.
+        /// </summary>
+        public static EnemyKind Captain() => new EnemyKind
+        {
+            Name = CaptainName,
+            Prefix = "captain",
+            Model = "enemy_soldier",
+            Palette = "captain",
+            // About 1.3 times the soldier, who is himself drawn at 1.12.
+            Scale = 1.45f,
+            IsElite = true,
+            Embers = 3,
+            DrawsStorm = false,
+            Health = 260f,
+            StaggerMaximum = 150f,
+            StaggeredSeconds = 3f,
+            WalkSpeed = 2.9f,
+            TurnDegreesPerSecond = 260f,
+            PerfectGuardStagger = 50f,
+            Guards = true,
+            GuardedDamage = 0.15f,
+            GuardedStagger = 0.5f,
+            HeavyGuardedDamage = 0.4f,
+            Steadfast = true,
+            BlocksBeforeCounter = 4,
+            PoiseHits = 5,
+            FinisherHealthShare = 0.34f,
+            SecondPhaseAt = 0.5f,
+            SecondPhaseAttack = "captain_slam",
+            SecondPhasePace = 1.15f,
+            Brain = new EnemyBrain
+            {
+                AggroRange = 8.5f,
+                LeashRange = 22f,
+                PreferredRange = 3f,
+                RestMin = 0.7f,
+                RestMax = 1.4f,
+                FlinchSeconds = 0.2f,
+                CounterAttack = "captain_jab",
+                ImpatientBeyond = 4.5f,
+                Attacks = new List<EnemyAttack>
+                {
+                    // Two thrusts down a lane. The second waits a beat longer than a frightened roll lasts and turns to follow it.
+                    new EnemyAttack { Name = "captain_thrust_1", Telegraph = 0.6f, Strike = 0.12f, Recovery = 0.1f, Damage = 16f, Reach = 4.4f, LineWidth = 1.1f, Lunge = 0.8f, MinRange = 1.9f, MaxRange = 4.2f, ChainInto = "captain_thrust_2" },
+                    new EnemyAttack { Name = "captain_thrust_2", Telegraph = 0.55f, Strike = 0.12f, Recovery = 0.9f, Damage = 22f, Reach = 4.8f, LineWidth = 1.2f, Lunge = 1.4f, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.8f },
+                    // A wide level cut that takes in both sides: it punishes circling him.
+                    new EnemyAttack { Name = "captain_sweep", Telegraph = 0.8f, Strike = 0.18f, Recovery = 0.8f, Damage = 26f, Reach = 3.8f, ArcDegrees = 200f, Sweep = -1f, MinRange = 0f, MaxRange = 3.4f, Cooldown = 3f },
+                    // Too close for too long: a short stab with the spear choked up, quick and light. It is also his answer when he has turned enough blows.
+                    new EnemyAttack { Name = "captain_jab", Telegraph = 0.34f, Strike = 0.1f, Recovery = 0.5f, Damage = 12f, Reach = 2.4f, ArcDegrees = 70f, Lunge = 0.4f, MinRange = 0f, MaxRange = 2.6f, Cooldown = 2.5f },
+                    // He leaps to where the player stands and brings the spear down: a circle to walk out of, or to guard at a price.
+                    new EnemyAttack { Name = "captain_slam", Telegraph = 1.0f, Strike = 0.2f, Recovery = 1.0f, Damage = 30f, Radius = 2.6f, Leap = true, MinRange = 3.6f, MaxRange = 8f, Cooldown = 6f, AimLockAt = 0.5f },
+                    // The red one: couched, then the whole length of a long lane and out the far end of it.
+                    new EnemyAttack { Name = "captain_charge", Telegraph = 1.1f, Strike = 0.2f, Recovery = 1.1f, Damage = 34f, Reach = 9f, LineWidth = 1.5f, Lunge = 7.5f, PassThrough = true, Unblockable = true, MinRange = 5f, MaxRange = 11f, Cooldown = 7f, AimLockAt = 0.7f },
+                    // Second phase only: the cut runs on into a thrust with no rest between.
+                    new EnemyAttack { Name = "captain_reap", Animation = "captain_sweep", Telegraph = 0.7f, Strike = 0.18f, Recovery = 0.1f, Damage = 26f, Reach = 3.8f, ArcDegrees = 200f, Sweep = -1f, MinRange = 0f, MaxRange = 3.4f, Cooldown = 5f, MinPhase = 1, ChainInto = "captain_reap_thrust" },
+                    new EnemyAttack { Name = "captain_reap_thrust", Animation = "captain_follow", Telegraph = 0.6f, Strike = 0.12f, Recovery = 0.95f, Damage = 22f, Reach = 4.8f, LineWidth = 1.2f, Lunge = 1.4f, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.8f },
+                    // Second phase only: the red charge twice, the second back along whatever line the first left him on.
+                    new EnemyAttack { Name = "captain_charge_twice", Animation = "captain_charge", Telegraph = 0.95f, Strike = 0.2f, Recovery = 0.2f, Damage = 30f, Reach = 9f, LineWidth = 1.5f, Lunge = 7.5f, PassThrough = true, Unblockable = true, MinRange = 5f, MaxRange = 11f, Cooldown = 10f, MinPhase = 1, AimLockAt = 0.7f, ChainInto = "captain_charge_back" },
+                    new EnemyAttack { Name = "captain_charge_back", Animation = "captain_charge", Telegraph = 0.85f, Strike = 0.2f, Recovery = 1.2f, Damage = 30f, Reach = 9f, LineWidth = 1.5f, Lunge = 7.5f, PassThrough = true, Unblockable = true, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.8f },
                 },
             },
         };

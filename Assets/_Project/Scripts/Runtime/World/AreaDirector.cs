@@ -99,7 +99,7 @@ namespace Clover.World
             int index = System.Array.IndexOf(enemies, who);
             if (index < 0 || paid[index] || upgrades == null) return;
             paid[index] = true;
-            int embers = who.Kind.IsBoss ? 5 : 1;
+            int embers = who.Kind.Embers;
             upgrades.Earn(embers);
             // Paid now; the body will show them leaving when it burns away.
             who.CarryEmbers(upgrades.transform, embers);
@@ -192,17 +192,21 @@ namespace Clover.World
         {
             int aware = 0;
             foreach (var enemy in enemies)
-                if (enemy != null && enemy.IsAware && !enemy.IsCharged) aware++;
+                if (MayBeMarked(enemy)) aware++;
             if (aware == 0) return null;
             int pick = Random.Range(0, aware);
             foreach (var enemy in enemies)
             {
-                if (enemy == null || !enemy.IsAware || enemy.IsCharged) continue;
+                if (!MayBeMarked(enemy)) continue;
                 if (pick == 0) return enemy;
                 pick--;
             }
             return null;
         }
+
+        // In the fight, not charged already, and of a kind the storm is let at.
+        private static bool MayBeMarked(Enemy enemy) =>
+            enemy != null && enemy.IsAware && !enemy.IsCharged && enemy.Kind.DrawsStorm;
 
         private void ShowMark(bool shown)
         {
