@@ -3,6 +3,8 @@ using System.Collections;
 using Clover.Core;
 using Clover.Gameplay;
 using Clover.Player;
+using Clover.Player.Trees;
+using System.Collections.Generic;
 using Clover.UI;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -97,7 +99,7 @@ public class UpgradeProbeRunner : MonoBehaviour
 
         // A: the chart. Opened as a rest fire would, it stops the world; W moves outward, E learns, K shows the whole ring, Space leaves.
         Place(new Vector3(6f, 0f, -6f), Vector3.forward);
-        upgrades.Earn(10);
+        upgrades.Earn(16);
         var menu = UpgradeMenu.Instance;
         menu.Open();
         yield return null;
@@ -109,18 +111,20 @@ public class UpgradeProbeRunner : MonoBehaviour
         menu.Choose(Upgrade.MeteorLeap);
         yield return Tap(Key.E);
         bool early = upgrades.Owns(Upgrade.MeteorLeap);
-        menu.Choose(Upgrade.Heat);
+        // The root first (Cinder), then Heat above it with the stick, then down the right bough to the leap.
+        menu.Choose(FireTree.Cinder);
         yield return Tap(Key.E);
-        bool heat = upgrades.Owns(Upgrade.Heat);
+        bool heat = upgrades.Owns(FireTree.Cinder);
         yield return Tap(Key.W);
         string selected = menu.Chosen != null ? menu.Chosen.Name : "nothing";
         yield return Tap(Key.E);
-        bool second = upgrades.Owns(Upgrade.BurningCrescent);
+        bool second = menu.Chosen != null && upgrades.Owns(menu.Chosen.Id);
         yield return Tap(Key.W);
         string minor = menu.Chosen != null ? menu.Chosen.Name : "nothing";
+        menu.Choose(Upgrade.FirebombFlask);
         yield return Tap(Key.E);
-        yield return Tap(Key.W);
         string above = menu.Chosen != null ? menu.Chosen.Name : "nothing";
+        menu.Choose(Upgrade.MeteorLeap);
         yield return Tap(Key.E);
         bool third = upgrades.Owns(Upgrade.MeteorLeap);
         string wornNow = upgrades.Worn != null ? upgrades.Worn.Name : "nothing";
@@ -148,10 +152,10 @@ public class UpgradeProbeRunner : MonoBehaviour
         Vector3 before = player.transform.position;
         yield return Tap(Key.Space);
         yield return new WaitForSecondsRealtime(0.4f);
-        Say($"A chart: {menu.MarkCount} marks; stopped {stopped} far end before its foot {early} heat learned {heat} W moved to {selected}, learned {second}; W to {minor}; W to {above}, learned {third}, worn {wornNow}; A moved to {left}; whole ring {wide} at zoom {far:0.00} then back {!menu.IsWide} at {menu.Zoom:0.00}; sealed mix bought {sealedBought}; embers left {upgrades.Points} closed {!menu.IsOpen} time {Time.timeScale:0.0} moved {(player.transform.position - before).magnitude:0.00}");
+        Say($"A chart: {menu.MarkCount} marks; stopped {stopped} far end before its foot {early} root learned {heat} W moved to {selected}, learned {second}; W to {minor}; W to {above}, learned {third}, worn {wornNow}; A moved to {left}; whole ring {wide} at zoom {far:0.00} then back {!menu.IsWide} at {menu.Zoom:0.00}; sealed mix bought {sealedBought}; embers left {upgrades.Points} closed {!menu.IsOpen} time {Time.timeScale:0.0} moved {(player.transform.position - before).magnitude:0.00}");
 
         // B: Heat and the deepening burn, from blows of the sword.
-        Learn(Upgrade.Heat, Upgrade.BurnAndDetonate, Upgrade.Backdraft, Upgrade.FlameTrail, Upgrade.BurningCrescent, Upgrade.FirebombFlask, Upgrade.MeteorLeap);
+        Learn(FireTree.Cinder, Upgrade.Heat, Upgrade.BurnAndDetonate, Upgrade.Backdraft, Upgrade.FlameTrail, Upgrade.BurningCrescent, Upgrade.FirebombFlask, Upgrade.MeteorLeap);
         yield return new WaitForSeconds(0.4f);
         Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
         yield return null;
@@ -442,7 +446,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         element.Take(ElementKit.Fire());
         upgrades.Forget();
         float damageBefore = combat.StatDamage, windowBefore = defence.Guard.PerfectWindow, speedBefore = player.MoveSpeed;
-        Learn(Upgrade.Heat, Upgrade.Backdraft, Upgrade.BurningCrescent, "fire.kindling", "fire.stoked");
+        Learn(FireTree.Cinder, Upgrade.Heat, Upgrade.Backdraft, Upgrade.BurningCrescent, "fire.kindling", "fire.stoked");
         yield return new WaitForSeconds(0.4f);
         float damageAfter = combat.StatDamage, windowAfter = defence.Guard.PerfectWindow;
         upgrades.Stats.AddBoon(PlayerStat.MoveSpeed, 0.25f, 0.6f);
@@ -455,15 +459,15 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.8f);
         Say($"Q stats: weapon damage x{damageBefore:0.00} -> x{damageAfter:0.00} with Stoked; perfect guard window {windowBefore:0.000} -> {windowAfter:0.000} with Kindling; a boon took speed {speedBefore:0.0} -> {speedBoon:0.0} -> {player.MoveSpeed:0.0}, health {healthBoon:0} -> {defence.Health.Maximum:0}, flasks {flasksBoon} -> {defence.Flasks.Maximum}");
 
-        // R: effects that are only data. Searing Guard burns whoever is blocked; Grounding arcs from a perfect guard; Slipstream quickens after a perfect dodge.
-        Learn(Upgrade.BurnAndDetonate, "fire.searing");
+        // R: effects that are only data. Backdraft's burn is data now; Grounding arcs from a perfect guard; Slipstream quickens after a perfect dodge.
+        Learn(Upgrade.BurnAndDetonate);
         yield return new WaitForSeconds(0.4f);
         set.Clear();
         int done = upgrades.EffectsDone;
-        upgrades.OnGuard(north.transform.position);
+        upgrades.OnPerfectGuard(north.transform.position);
         yield return null;
         yield return null;
-        Say($"R1 searing guard: effects done +{upgrades.EffectsDone - done}; the blocked dummy burns {north.Burn.IsBurning} {north.Burn.Stacks} deep");
+        Say($"R1 backdraft's burn as data: effects done +{upgrades.EffectsDone - done}; the dummy burns {north.Burn.IsBurning} {north.Burn.Stacks} deep");
         element.Take(ElementKit.Lightning());
         upgrades.Forget();
         Learn(Upgrade.Static, Upgrade.StoredCharge, Upgrade.DelayedCuts, "lightning.grounding", Upgrade.Blink, Upgrade.Afterimage, "lightning.slipstream");
@@ -486,7 +490,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         // S: the worn spell. Two learned; the first is worn; choosing the other on the chart and pressing learn wears that one.
         element.Take(ElementKit.Fire());
         upgrades.Forget();
-        Learn(Upgrade.Heat, Upgrade.BurningCrescent, Upgrade.MeteorLeap, "fire.fan");
+        Learn(FireTree.Cinder, Upgrade.Heat, Upgrade.BurningCrescent, Upgrade.MeteorLeap, "fire.fan");
         yield return new WaitForSeconds(0.4f);
         string wornFirst = upgrades.Worn != null ? upgrades.Worn.Name : "nothing";
         menu.Open();
@@ -520,30 +524,32 @@ public class UpgradeProbeRunner : MonoBehaviour
 
         // T: a mix mark. Sealed to Fire alone; with the storm consumed it opens, is bought on the chart, and answers an affliction reaching full depth.
         upgrades.Forget();
-        Learn(Upgrade.Heat);
+        Learn(FireTree.Cinder);
         yield return new WaitForSeconds(0.4f);
-        var ionised = Upgrade.ById("plasma.ionised");
+        var ionised = Upgrade.ById("plasma.embers");
         bool openBefore = upgrades.Open(ionised);
         RunState.ElementsConsumed.Add(ElementKit.LightningName);
         bool openAfter = upgrades.Open(ionised);
         upgrades.Earn(3);
         menu.Open();
         yield return null;
-        menu.Choose("plasma.ionised");
+        menu.Choose("plasma.embers");
         yield return Tap(Key.E);
         yield return new WaitForSecondsRealtime(0.5f);
         Shot("menu_mix");
         yield return null;
         yield return Tap(Key.Space);
         yield return new WaitForSecondsRealtime(0.4f);
-        bool bought = upgrades.Has("plasma.ionised");
+        bool bought = upgrades.Has("plasma.embers");
+        Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
+        yield return null;
         set.Clear();
-        health = north.Health.Current;
         done = upgrades.EffectsDone;
-        north.TakeHit(Lay(AfflictionKind.Burn, 5));
+        yield return Lights(1);
         yield return null;
         yield return null;
-        Say($"T mix: open before the storm is consumed {openBefore} (true here: Lightning was held earlier in this play; step A shows it sealed); with Lightning consumed {openAfter}; bought on the chart {bought}; a burn brought to five deep set off an arc (effects +{upgrades.EffectsDone - done}) that took {health - north.Health.Current:0}");
+        // The branch's first mark lays both afflictions; Cinder has already laid the burn, so the branch lays only the Static.
+        Say($"T mix: open before the storm is consumed {openBefore} (true here: Lightning was held earlier in this play; step A shows it sealed); with Lightning consumed {openAfter}; bought on the chart {bought}; one light blow with Cinder and Charged Embers left burn {north.Burn.Stacks} deep (one, not two) and static {set.Stacks(AfflictionKind.Static)} (effects +{upgrades.EffectsDone - done})");
         RunState.ElementsConsumed.Clear();
 
         // U: the nine new elements. Each kit casts, lays its own affliction on the dummy, and lights its surge.
@@ -576,6 +582,315 @@ public class UpgradeProbeRunner : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
         }
         Say("U kits: " + kits);
+
+        // V: the real trees. For four elements: the root, the road to the first spell, and one more mark, bought with embers
+        // as the chart buys them; then blows and the worn spell on the dummy.
+        foreach (string name in new[] { Elements.Wind, Elements.Ice, Elements.Earth, Elements.Poison })
+        {
+            element.Take(ElementKit.ByName(name, false));
+            upgrades.Forget();
+            RunState.Points = 0;
+            upgrades.Earn(40);
+            yield return new WaitForSeconds(0.3f);
+            var info = Elements.ByName(name);
+            Upgrade spell = null, root = null;
+            foreach (var mark in Upgrade.All)
+            {
+                if (mark.Element != name || mark.IsMix) continue;
+                if (mark.Kind == UpgradeKind.Root) root = mark;
+                if (mark.Kind == UpgradeKind.Spell && spell == null) spell = mark;
+            }
+            var road = new List<Upgrade>();
+            for (var at = spell; at != null; at = at.Requires.Length > 0 ? Upgrade.ById(at.Requires[0]) : null) road.Insert(0, at);
+            string boughtNames = "";
+            int boughtCount = 0;
+            foreach (var mark in road)
+                if (upgrades.TryBuy(mark)) { boughtNames += mark.Name + ", "; boughtCount++; }
+            foreach (var mark in Upgrade.All)
+            {
+                if (boughtCount >= road.Count + 1) break;
+                if (mark.Element == name && !mark.IsMix && mark.Kind == UpgradeKind.Minor && upgrades.TryBuy(mark)) { boughtNames += mark.Name + ", "; boughtCount++; }
+            }
+            yield return new WaitForSeconds(0.4f);
+            Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
+            yield return null;
+            set.Clear();
+            north.Burn.Reset();
+            done = upgrades.EffectsDone;
+            yield return Lights(2);
+            yield return Tap(Key.K);
+            yield return new WaitForSeconds(0.9f);
+            yield return Until(() => !combat.IsAttacking, 2f);
+            int laidByBlows = set.Stacks(info.Affliction);
+            combat.Mana.Gain(100f);
+            health = north.Health.Current;
+            wornCasts = upgrades.WornCasts;
+            yield return Hold(Key.U, 0.45f);
+            yield return new WaitForSeconds(0.5f);
+            Shot("tree_" + name.ToLowerInvariant());
+            yield return new WaitForSeconds(1.6f);
+            Say($"V {name}: bought {boughtCount} for {40 - upgrades.Points} embers ({boughtNames.TrimEnd(',', ' ')}); two lights and a heavy laid {info.Affliction} {laidByBlows}; worn {(upgrades.Worn != null ? upgrades.Worn.Name + " (" + upgrades.Worn.Form + ")" : "nothing")} cast +{upgrades.WornCasts - wornCasts}, dummy lost {health - north.Health.Current:0}; effects +{upgrades.EffectsDone - done}");
+            yield return new WaitForSeconds(0.5f);
+        }
+
+        // W: the gifts, from the two debug shrines. Ice held: its own gift; then Water consumed: Glacier opens, its crown is given,
+        // and its first mark is bought and lays only the affliction not held on top of the root.
+        var who = player.GetComponent<PlayerInteraction>();
+        Clover.World.GiftShrine giftShrine = null, consumeShrine = null;
+        foreach (var shrine in FindObjectsByType<Clover.World.GiftShrine>(FindObjectsSortMode.None))
+        {
+            if (shrine.Consumes) consumeShrine = shrine;
+            else giftShrine = shrine;
+        }
+        if (giftShrine == null || consumeShrine == null) Say("W gifts: the debug shrines are missing from the yard");
+        else
+        {
+            element.Take(ElementKit.ByName(Elements.Ice, false));
+            upgrades.Forget();
+            RunState.ElementsConsumed.Clear();
+            RunState.ElementsHeld.Clear();
+            RunState.ElementsHeld.Add(Elements.Ice);
+            RunState.Points = 0;
+            upgrades.Earn(10);
+            yield return new WaitForSeconds(0.3f);
+            var foot = Upgrade.ById(GlacierTree.FlashFreeze);
+            foreach (var mark in Upgrade.All)
+                if (mark.Kind == UpgradeKind.Mix && mark.Element == Elements.Ice && mark.Requires.Length == 0) foot = mark;
+            bool sealedFirst = !upgrades.Open(foot);
+            giftShrine.Use(who);
+            yield return null;
+            string own = giftShrine.LastGift;
+            bool ownHeld = upgrades.Has(own);
+            consumeShrine.Use(who);
+            yield return null;
+            string crown = consumeShrine.LastGift;
+            bool crownHeld = upgrades.Has(crown), opened = upgrades.Open(foot);
+            upgrades.TryBuy(Upgrade.ById(IceTree.Root));
+            bool footBought = upgrades.TryBuy(foot);
+            yield return new WaitForSeconds(0.4f);
+            Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
+            yield return null;
+            set.Clear();
+            yield return Lights(1);
+            yield return null;
+            yield return null;
+            Shot("gift_shrines");
+            Say($"W gifts: Glacier sealed to Ice alone {sealedFirst}; gift shrine gave {own} (held {ownHeld}); consume shrine marked Water consumed {RunState.ElementsConsumed.Contains(Elements.Water)}, gave {crown} (held {crownHeld}), Glacier open {opened}; {foot.Name} bought {footBought}; one light blow laid chill {set.Stacks(AfflictionKind.Chill)} (the root's one, not two) and soaked {set.Stacks(AfflictionKind.Soaked)}");
+            // A gift that is a spell is worn: Poison consumes Fire and is left Light the Pyres.
+            element.Take(ElementKit.ByName(Elements.Poison, false));
+            upgrades.Forget();
+            yield return new WaitForSeconds(0.3f);
+            consumeShrine.Use(who);
+            yield return new WaitForSeconds(0.3f);
+            Say($"W gifted spell: consume shrine gave {consumeShrine.LastGift}; worn now {(upgrades.Worn != null ? upgrades.Worn.Id : "nothing")}");
+            RunState.ElementsConsumed.Clear();
+        }
+
+        // X: the engine under the newer words, one line each.
+        TrainingDummy second2 = null;
+        foreach (var dummy in FindObjectsByType<TrainingDummy>(FindObjectsSortMode.None))
+            if (dummy != north && (second2 == null || Vector3.Distance(dummy.transform.position, north.transform.position) < Vector3.Distance(second2.transform.position, north.transform.position))) second2 = dummy;
+        Vector3 secondHome = second2.transform.position;
+        second2.transform.position = north.transform.position + new Vector3(2.5f, 0f, 0f);
+        Physics.SyncTransforms();
+        // X1: a number that waits on a state (Life, Stubborn Root: less harm below a third).
+        element.Take(ElementKit.ByName(Elements.Life, false));
+        upgrades.Forget();
+        Learn(LifeTree.Root, "life.stubborn", "life.rind");
+        defence.Restore();
+        yield return new WaitForSeconds(0.4f);
+        float takenFull = defence.DamageTaken;
+        defence.Health.Damage(75f);
+        yield return new WaitForSeconds(0.2f);
+        float takenLow = defence.DamageTaken;
+        // X2: Hold (Life, Rind: a perfect guard roots the attacker).
+        int holds = upgrades.Holds;
+        set.Clear();
+        upgrades.OnPerfectGuard(north.transform.position);
+        yield return null;
+        yield return null;
+        bool heldNow = set.IsHeld;
+        float heldFor = set.HeldLeft;
+        Say($"X1 state: damage taken x{takenFull:0.00} at full health, x{takenLow:0.00} below a third (Stubborn Root). X2 hold: a perfect guard held the dummy {heldNow} for {heldFor:0.0} s (speed x{set.SpeedMultiplier:0.00}, holds +{upgrades.Holds - holds})");
+        defence.Restore();
+        // X3: a number against an affliction, a base-spell-only cost, and a kill that knows what the dead carried (Fire).
+        element.Take(ElementKit.Fire());
+        upgrades.Forget();
+        Learn(FireTree.Cinder, "fire.tinder", "fire.shortbreath", "fire.catch");
+        yield return new WaitForSeconds(0.4f);
+        Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
+        yield return null;
+        set.Clear();
+        north.Burn.Reset();
+        yield return new WaitForSeconds(0.1f);
+        yield return Lights(1);
+        float onClean = north.LastDamage;
+        yield return Lights(1);
+        float onBurning = north.LastDamage;
+        combat.Mana.Gain(100f);
+        mana = combat.Mana.Current;
+        casts = element.SpellsCast;
+        yield return Tap(Key.U);
+        yield return Until(() => element.SpellsCast > casts, 1.5f);
+        float baseCost = mana - combat.Mana.Current;
+        yield return new WaitForSeconds(0.6f);
+        second2.Afflictions.Clear();
+        second2.Burn.Reset();
+        var carried = new AfflictionSet();
+        carried.Apply(AfflictionKind.Burn, 3);
+        CombatEvents.RaiseDied(north, carried);
+        yield return null;
+        yield return null;
+        int caught = second2.Burn.Stacks;
+        CombatEvents.RaiseDied(north, new AfflictionSet());
+        Say($"X3 against: the same light blow took {onClean:0.0} from a clean dummy and {onBurning:0.0} from a burning one (Dry Tinder). Base spell alone: Flame Wave cost {baseCost:0} (Short Breath). Kill with what it carried: a death burning three deep left the dummy beside it burning {caught} deep (Catching Fire)");
+        // X4: a count banked and spent (Metal, Forged Answer), and the HUD's words for it.
+        element.Take(ElementKit.ByName(Elements.Metal, false));
+        upgrades.Forget();
+        Learn(MetalTree.Root, "metal.forgedanswer");
+        yield return new WaitForSeconds(0.4f);
+        upgrades.OnPerfectGuard(north.transform.position);
+        yield return null;
+        upgrades.OnPerfectGuard(north.transform.position);
+        yield return null;
+        yield return null;
+        int banked = upgrades.Tally("metal.forgedanswer");
+        string words = upgrades.TallyText.Trim();
+        Shot("tally_hud");
+        health = north.Health.Current;
+        yield return Tap(Key.K);
+        yield return new WaitForSeconds(1.6f);
+        Say($"X4 count: two perfect guards banked {banked} (HUD: '{words}'); the heavy blow spent them, left {upgrades.Tally("metal.forgedanswer")}, and with the blades took {health - north.Health.Current:0}; sundered {set.Stacks(AfflictionKind.Sundered)}");
+        // X5: health as a price (Dark, Blood Price) and a flask filled by parts (Water, Catch the Rain).
+        element.Take(ElementKit.ByName(Elements.Dark, false));
+        upgrades.Forget();
+        Learn("dark.curse", "dark.bloodprice");
+        defence.Restore();
+        yield return new WaitForSeconds(0.4f);
+        combat.Mana.TrySpend(combat.Mana.Current);
+        combat.Mana.Gain(5f);
+        casts = element.SpellsCast;
+        yield return Tap(Key.U);
+        yield return Until(() => element.SpellsCast > casts, 1.5f);
+        float paid = upgrades.HealthPaid, grey = defence.Health.Grey;
+        element.Take(ElementKit.ByName(Elements.Water, false));
+        upgrades.Forget();
+        Learn(WaterTree.Root, "water.catch");
+        defence.Restore();
+        yield return new WaitForSeconds(0.4f);
+        defence.Flasks.TryThrow();
+        int flasksLow = defence.Flasks.Count;
+        for (int i = 0; i < 4; i++)
+        {
+            upgrades.OnPerfectGuard(north.transform.position);
+            yield return null;
+            yield return null;
+        }
+        Say($"X5 health as a price: Grasp cast with 5 mana {element.SpellsCast - casts}, health paid {paid:0.0}, left grey {grey:0.0} (Blood Price). Flask by parts: {flasksLow} flasks, four perfect guards later {defence.Flasks.Count} (Catch the Rain)");
+        // X6: a shatter that is told (Ice, Shards), a set-off that carries its depth (Lightning, Full Discharge), the last blow of a chain (Light's root).
+        element.Take(ElementKit.ByName(Elements.Ice, false));
+        upgrades.Forget();
+        Learn(IceTree.Root, "ice.shards");
+        yield return new WaitForSeconds(0.4f);
+        Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
+        yield return null;
+        set.Clear();
+        second2.Afflictions.Clear();
+        north.TakeHit(Lay(AfflictionKind.Chill, 5));
+        bool wasFrozen = set.IsFrozen;
+        yield return Tap(Key.K);
+        yield return new WaitForSeconds(1.2f);
+        int shardChill = second2.Afflictions.Stacks(AfflictionKind.Chill);
+        element.Take(ElementKit.Lightning());
+        upgrades.Forget();
+        Learn(Upgrade.Static, "lightning.fulldischarge");
+        yield return new WaitForSeconds(0.4f);
+        set.Clear();
+        north.TakeHit(Lay(AfflictionKind.Static, 5));
+        mana = combat.Mana.Current;
+        holds = upgrades.Holds;
+        yield return Tap(Key.K);
+        yield return new WaitForSeconds(1.0f);
+        bool heldByDischarge = upgrades.Holds > holds;
+        yield return Until(() => !combat.IsAttacking, 2f);
+        element.Take(ElementKit.ByName(Elements.Light, false));
+        upgrades.Forget();
+        Learn(LightTree.Root);
+        yield return new WaitForSeconds(0.4f);
+        set.Clear();
+        yield return Lights(1);
+        int markedEarly = set.Stacks(AfflictionKind.Marked);
+        yield return new WaitForSeconds(0.8f);
+        yield return Lights(combat.Combo.Steps.Count);
+        int markedEnd = set.Stacks(AfflictionKind.Marked);
+        int blowsLeft = set.BlowsLeft(AfflictionKind.Marked);
+        Say($"X6 shatter: frozen {wasFrozen}, the heavy blow broke it and the shards chilled the dummy beside it {shardChill} deep (Shards). Set-off: a discharge of five held the dummy {heldByDischarge} (Full Discharge). Chain end: marked after one light blow {markedEarly}, after a whole chain {markedEnd} with {blowsLeft} critical blows left (Light's root)");
+        // X7: the air (Wind, Rising Cut and Open Air), with the dummy five deep in Unsteady.
+        element.Take(ElementKit.ByName(Elements.Wind, false));
+        upgrades.Forget();
+        Learn(WindTree.Unsteady, "wind.rising", "wind.openair", "wind.hang");
+        yield return new WaitForSeconds(0.4f);
+        Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
+        yield return null;
+        set.Clear();
+        north.TakeHit(Lay(AfflictionKind.Unsteady, 5));
+        int lifts = upgrades.Lifts;
+        float floor = north.transform.position.y;
+        yield return Tap(Key.K);
+        yield return Until(() => set.IsLifted, 2f);
+        bool up = set.IsLifted;
+        float hangs = set.AirLeft;
+        yield return new WaitForSeconds(0.3f);
+        float rose = north.transform.position.y - floor;
+        Shot("in_the_air");
+        yield return Until(() => !combat.IsAttacking, 1.5f);
+        yield return Lights(1);
+        float inAirBlow = north.LastDamage;
+        int heldUp = set.AirBlows;
+        yield return Until(() => !set.IsLifted, 4f);
+        yield return new WaitForSeconds(0.2f);
+        set.Clear();
+        yield return Lights(1);
+        Say($"X7 air: a heavy blow on five Unsteady threw the dummy up {up} (lifts +{upgrades.Lifts - lifts}) to hang {hangs:0.0} s, {rose:0.0} m off the ground; a light blow up there took {inAirBlow:0.0} and held it up ({heldUp} blows counted); the same blow on the ground took {north.LastDamage:0.0}; down again at {north.transform.position.y - floor:0.00} m, unsteady left {set.Stacks(AfflictionKind.Unsteady)}");
+        // X8: what is grown (Life: saplings to a limit, standing near them, the harvest) and a hand-written number changed (Fire, Stoked).
+        element.Take(ElementKit.ByName(Elements.Life, false));
+        upgrades.Forget();
+        Learn(LifeTree.Root, "life.sapling", "life.shade", "life.reap");
+        defence.Restore();
+        yield return new WaitForSeconds(0.4f);
+        int grownBefore = Clover.World.Hazards.GrownCount;
+        for (int i = 0; i < 4; i++)
+        {
+            Place(new Vector3(-6f + i * 1.5f, 0f, -6f), Vector3.forward);
+            yield return null;
+            upgrades.OnPerfectGuard(player.transform.position + Vector3.forward);
+            yield return null;
+            yield return null;
+        }
+        int grown = Clover.World.Hazards.GrownCount - grownBefore;
+        bool near = upgrades.Stats.Holds(StatWhen.NearGrown);
+        Place(new Vector3(8f, 0f, 8f), Vector3.forward);
+        yield return new WaitForSeconds(0.1f);
+        bool farOff = upgrades.Stats.Holds(StatWhen.FarFromGrown);
+        defence.Health.Damage(40f);
+        myHealth = defence.Health.Current;
+        combat.Mana.Gain(100f);
+        yield return Hold(Key.U, 0.45f);
+        yield return new WaitForSeconds(0.6f);
+        Say($"X8 grown: four saplings planted, {grown} stand (three at most); near one {near}; far from all {farOff}; the harvest burst them (left {Clover.World.Hazards.GrownCount - grownBefore}) and mended {defence.Health.Current - myHealth:0}");
+        element.Take(ElementKit.Fire());
+        upgrades.Forget();
+        defence.Restore();
+        yield return new WaitForSeconds(0.3f);
+        int blowsBefore = upgrades.Heat.BlowsPerLevel;
+        Learn(FireTree.Cinder, Upgrade.Heat, "fire.stoked", "fire.banked", FireTree.WhiteHeat);
+        yield return new WaitForSeconds(0.4f);
+        Say($"X8 hand-written numbers: Heat rose every {blowsBefore} blows, with Stoked every {upgrades.Heat.BlowsPerLevel}; cools after {upgrades.Heat.CoolAfter:0.0} s with Banked; rises to {upgrades.Heat.MaximumLevel} with White Heat");
+        second2.Afflictions.Clear();
+        second2.transform.position = secondHome;
+        Physics.SyncTransforms();
+        defence.Restore();
+
         element.Take(ElementKit.Fire());
         upgrades.Forget();
         set.Clear();

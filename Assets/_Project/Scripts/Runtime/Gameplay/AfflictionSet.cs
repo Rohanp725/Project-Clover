@@ -18,11 +18,37 @@ namespace Clover.Gameplay
         public float FrozenLeft { get; private set; }
         /// <summary>True on the step a poison's burst landed, so the body can show it.</summary>
         public bool BitThisTick { get; private set; }
+        /// <summary>Seconds it is still held fast by something other than ice: it cannot move, turn or begin an attack.</summary>
+        public float HeldLeft { get; private set; }
+        public bool IsHeld => HeldLeft > 0f;
+        /// <summary>How high something thrown into the air rises, in metres.</summary>
+        public const float AirRise = 2f;
+        /// <summary>Seconds a thing that cannot be lifted reels instead, and the share of a lift's time an elite or a god hangs.</summary>
+        public const float ReelSeconds = 1f;
+        public const float SturdyAirShare = 0.6f;
+        /// <summary>Seconds it will still be in the air (or, for what cannot be lifted, still reeling).</summary>
+        public float AirLeft { get; private set; }
+        /// <summary>True while it is in the air or reeling: every bonus against "an enemy in the air" counts.</summary>
+        public bool IsAirborne => AirLeft > 0f;
+        /// <summary>True while it is truly off the ground: helpless, hanging, to come down.</summary>
+        public bool IsLifted => AirLeft > 0f && !reeling;
+        /// <summary>True on the one tick in which something lifted came back to the ground.</summary>
+        public bool LandedThisTick { get; private set; }
+        /// <summary>How many blows have held it up in this lift.</summary>
+        public int AirBlows { get; private set; }
+        /// <summary>True when anything here runs on time, so its owner must tick it.</summary>
+        public bool Runs => Any || HeldLeft > 0f || AirLeft > 0f;
+        /// <summary>How far off the ground it is now: up quickly, hanging, down quickly.</summary>
+        public float AirHeight => !IsLifted ? 0f : AirRise * Math.Min(1f, Math.Min(airFor / 0.18f, AirLeft / 0.18f));
+
+        private bool reeling;
+        private float airFor;
 
         private readonly int[] stacks = new int[Afflictions.Count];
         private readonly float[] left = new float[Afflictions.Count];
         private readonly float[] untilTick = new float[Afflictions.Count];
         private readonly float[] strength = new float[Afflictions.Count];
+        private readonly int[] blowsLeft = new int[Afflictions.Count];
 
         public AfflictionSet() => Clear();
 
@@ -39,6 +65,12 @@ namespace Clover.Gameplay
             IsFrozen = false;
             FrozenLeft = 0f;
             BitThisTick = false;
+            HeldLeft = 0f;
+            AirLeft = 0f;
+            airFor = 0f;
+            AirBlows = 0;
+            reeling = false;
+            LandedThisTick = false;
         }
 
         public bool Has(AfflictionKind kind) => kind == AfflictionKind.Burn ? Burn.IsBurning : kind != AfflictionKind.None && stacks[(int)kind] > 0;
@@ -80,10 +112,12 @@ namespace Clover.Gameplay
             // What is frozen cannot be chilled further; the ice must break or melt first.
             if (IsFrozen && spec.FreezesAtFull) return default;
             int had = stacks[index];
-            stacks[index] = Math.Min(spec.MaximumStacks, had + count);
+            int deepest = Afflictions.Depth(kind);
+            stacks[index] = Math.Min(deepest, had + count);
             left[index] = seconds > 0f ? seconds : spec.Seconds;
+            blowsLeft[index] = spec.Blows > 0 ? spec.Blows + Afflictions.MoreBlows : 0;
             if (had == 0) untilTick[index] = spec.TickSeconds;
-            bool full = had < spec.MaximumStacks && stacks[index] >= spec.MaximumStacks;
+            bool full = had < deepest && stacks[index] >= deepest;
             if (full && spec.FreezesAtFull && CanFreeze)
             {
                 IsFrozen = true;
@@ -91,6 +125,71 @@ namespace Clover.Gameplay
                 left[index] = Math.Max(left[index], FrozenLeft);
             }
             return new AfflictionResult(true, full, carried);
+        }
+
+        /// <summary>
+        /// Holds it still for a time, as ice does but without the ice: what resists being frozen resists this the same
+        /// way (a shorter time for elites and gods, none at all for what cannot be frozen). False when it did not take.
+        /// </summary>
+        public bool Hold(float seconds)
+        {
+            if (!CanFreeze || seconds <= 0f) return false;
+            HeldLeft = Math.Max(HeldLeft, seconds * FreezeScale);
+            return HeldLeft > 0f;
+        }
+
+        /// <summary>How many more weapon blows an affliction that is spent by blows will last.</summary>
+        public int BlowsLeft(AfflictionKind kind) => kind == AfflictionKind.None || stacks[(int)kind] <= 0 ? 0 : blowsLeft[(int)kind];
+
+        /// <summary>A blow of the weapon has landed: what is spent by blows (a mark of light) loses one, and ends with its last.</summary>
+        public void BlowLanded()
+        {
+            for (int i = 2; i < stacks.Length; i++)
+            {
+                if (stacks[i] <= 0 || blowsLeft[i] <= 0) continue;
+                if (--blowsLeft[i] <= 0) End(i);
+            }
+        }
+
+        /// <summary>
+        /// Throws it into the air for a time: it hangs helpless and comes down. Elites and gods hang 0.6 of the time.
+        /// What cannot be frozen cannot be lifted: it reels for a second instead (which counts as in the air for
+        /// every bonus) and false is returned, so the caller can shake its balance.
+        /// </summary>
+        public bool Lift(float seconds)
+        {
+            if (seconds <= 0f) return false;
+            if (!CanFreeze)
+            {
+                reeling = true;
+                AirLeft = Math.Max(AirLeft, ReelSeconds);
+                return false;
+            }
+            if (!IsLifted)
+            {
+                airFor = 0f;
+                AirBlows = 0;
+            }
+            reeling = false;
+            AirLeft = Math.Max(AirLeft, seconds * (FreezeScale < 1f ? SturdyAirShare : 1f));
+            return true;
+        }
+
+        /// <summary>A blow has reached it in the air: it hangs a little longer, for the first few blows. False when it did not.</summary>
+        public bool AirBlow(float extraSeconds, int most, float fade = 1f)
+        {
+            if (!IsLifted || AirBlows >= most) return false;
+            float extra = extraSeconds;
+            for (int i = 0; i < AirBlows && fade < 1f; i++) extra *= fade;
+            AirBlows++;
+            AirLeft += extra;
+            return true;
+        }
+
+        /// <summary>Ends a lift at once: it is driven into the ground.</summary>
+        public void Drop()
+        {
+            if (IsLifted) AirLeft = 0.0001f;
         }
 
         // True when something already lying here passes this kind on to those standing near.
@@ -109,8 +208,21 @@ namespace Clover.Gameplay
         public float Tick(float deltaTime)
         {
             BitThisTick = false;
+            LandedThisTick = false;
+            if (AirLeft > 0f)
+            {
+                airFor += deltaTime;
+                AirLeft -= deltaTime;
+                if (AirLeft <= 0f)
+                {
+                    AirLeft = 0f;
+                    LandedThisTick = !reeling;
+                    reeling = false;
+                }
+            }
             float damage = Burn.Tick(deltaTime) * strength[(int)AfflictionKind.Burn];
             if (!Burn.IsBurning) strength[(int)AfflictionKind.Burn] = 1f;
+            if (HeldLeft > 0f) HeldLeft = Math.Max(0f, HeldLeft - deltaTime);
             if (IsFrozen)
             {
                 FrozenLeft -= deltaTime;
@@ -154,7 +266,7 @@ namespace Clover.Gameplay
         {
             get
             {
-                if (IsFrozen) return 0f;
+                if (IsFrozen || HeldLeft > 0f || IsLifted) return 0f;
                 float slow = 0f;
                 for (int i = 2; i < stacks.Length; i++)
                     if (stacks[i] > 0) slow += Afflictions.Spec((AfflictionKind)i).SlowPerStack * stacks[i] * strength[i];
@@ -177,7 +289,7 @@ namespace Clover.Gameplay
 
         public float StaggerTakenMultiplier => 1f + Sum(spec => spec.StaggerTakenPerStack);
         public float ShoveMultiplier => 1f + Sum(spec => spec.ShovePerStack);
-        public float TurnMultiplier => Math.Max(0.3f, 1f - Sum(spec => spec.TurnSlowPerStack));
+        public float TurnMultiplier => HeldLeft > 0f || IsLifted ? 0f : Math.Max(0.3f, 1f - Sum(spec => spec.TurnSlowPerStack));
         public float DamageDealtMultiplier => Math.Max(0.3f, 1f - Sum(spec => spec.DealsLessPerStack));
         public float HealOnBlow => Sum(spec => spec.HealOnBlowPerStack);
         public float ManaOnBlow => Sum(spec => spec.ManaPerStack);

@@ -1,6 +1,7 @@
 # The upgrade schema: how to write a tree file
 
-Written by Claude on 2026-11-16 (day run), for whoever writes an element's tree as data. Everything here matches the
+Written by Claude on 2026-11-16 (day run), for whoever writes an element's tree as data. **Section 15 lists everything added
+that afternoon** (conditions on stats, new stats, triggers, actions, counts, the air, grown things, gifts): read it with sections 5 to 7. Everything here matches the
 code under `Assets/_Project/Scripts/Runtime/Player/` as of that day. If the code and this page disagree, the code is
 right and this page has a bug: fix the page.
 
@@ -49,16 +50,16 @@ All are laid in stacks, last some seconds, and start their time over when laid a
 | Affliction | Most stacks | Seconds | What it does |
 |---|---|---|---|
 | Burn | 5 | 4 (tops up, 8 at most) | 5 damage a second, +30% a stack. Set off: 10 + 10 a stack. A burn can be laid with seconds and no depth |
-| Static | 5 | 8 | nothing by itself; set off for 7 a stack. (Lightning's own root discharges it for 7 damage and 5 stagger a stack in 4 m on a heavy blow) |
-| Unsteady | 3 | 6 | +15% stagger taken, shoved 40% further, turns 15% slower, per stack |
-| Chill | 5 | 6 | 12% slower per stack. At 5: **Frozen** for 3 s (1.2 s for elites and bosses, never the colossus): held still; a heavy blow shatters it for 45 and ends the chill |
-| Soaked | 3 | 8 | +10% damage from spells per stack. Static or Chill laid on it is also laid on everyone within 4 m |
-| Seeded | 3 | 10 | each weapon blow on it heals the player 1 per stack. When it dies: 12 damage per stack to everyone within 3.5 m |
+| Static | 5 | 6 | nothing by itself; set off for 7 a stack. (Lightning's own root discharges it for 7 damage and 5 stagger a stack in 4 m on a heavy blow) |
+| Unsteady | 5 | 6 | +6% stagger taken, shoved 15% further, turns 8% slower, per stack |
+| Chill | 5 | 6 | 7% slower per stack. At 5: **Frozen** for 2.5 s (1 s for elites and bosses, never the colossus): held still; a heavy blow shatters it for 45 and ends the chill |
+| Soaked | 1 | 8 | on or off: +25% damage from spells. Static or Chill laid on it is also laid on everyone within 4 m |
+| Seeded | 3 | 8 | each weapon blow on it heals the player 1 per stack. When it dies: 12 damage per stack to everyone within 3 m |
 | Tremor | 3 | 6 | 10% slower per stack, and its balance does not drain back |
-| Sundered | 3 | 8 | +10% damage from weapons per stack |
-| Marked | 3 | 6 | every weapon blow on it is critical (x1.5), and gives 2 more mana per stack |
-| Cursed | 3 | 8 | deals 10% less per stack. When it dies the player is healed 6 per stack |
-| Poison | 5 | 8 | nothing between bursts; every 2 s a burst of 5 per stack. Set off: 9 a stack |
+| Sundered | 3 | 8 | +8% damage from weapons per stack |
+| Marked | 1 (3 with Light's Weighed) | 8 | carries three critical blows: each weapon blow on it is critical (x1.5), gives 2 more mana per stack and spends one; the third ends the mark. Marking again refills the three |
+| Cursed | 1 | 8 | deals 15% less. When it dies the player is healed 6 |
+| Poison | 8 | 6 | nothing between bursts; every 2 s a burst of 2 per stack. Set off: 6 a stack |
 
 ## 3. The `Upgrade` fields
 
@@ -383,7 +384,7 @@ affliction for `AfflictionSeconds`. Where a form departs from `FORMS.md`, the la
 | `Clone` ("clone") | the player's shape in light at their right shoulder, doing what they did a fifth of a second ago | `Seconds`, `Damage` (percent of the blow) | the echo lands 0.2 s after each blow that lands, with no stagger; one copy at a time |
 | `Flash` ("flash") | the player gone, lines crossing the enemy, the player beyond it with their back turned, every line landing at once | `Count` (12 at most), `Interval`, `Delay` (0.15 s at least), `Damage` (each cut), `Stagger`, `Reach` | they reappear 2 m beyond the enemy; with no enemy faced the cuts land on a 1.6 m circle at the point aimed at |
 | `Ring` ("ring") | stakes come in from outside and stand in a circle | `Radius`, `Seconds`, `LingerDamage`, `Reach` | its middle is half-way between the player and the enemy faced and it is never too small to hold both; a solid twelve-sided barrier that holds the player in too; the band within a metre of the stakes bites every 0.4 s, without stagger; one ring at a time |
-| `Pillars` ("pillars") | a mark under each of the nearest enemies, then a column up under each in turn | `Count` (8 at most), `Reach`, `Radius`, `Damage`, `Stagger`, `Delay` | **nothing is lifted** (no enemy can leave the ground yet): the blow is heavy instead, so it finishes a staggered enemy and shatters a frozen one; with fewer enemies than pillars the rest stand round the first |
+| `Pillars` ("pillars") | a mark under each of the nearest enemies, then a column up under each in turn | `Count` (8 at most), `Reach`, `Radius`, `Damage`, `Stagger`, `Delay` | what a column strikes is thrown **into the air** for 0.8 s (section 15); the blow is heavy as well, so it finishes a staggered enemy and shatters a frozen one; with fewer enemies than pillars the rest stand round the first |
 | `Step` ("step") | the player on the far side of the enemy, a line of light behind and their shape left at the start | `Reach`, `Damage`, `Stagger`, `Seconds` | it strikes everything within 1.1 m of the line, ends 1.8 m beyond the enemy faced, turned to face it; it stops at a wall and at anything that cannot be shoved |
 
 Every form that shows itself before it strikes waits at least 0.22 s (`FormRules.LeastWarning`) whatever its `Delay`.
@@ -556,4 +557,157 @@ asks for.) Then, in `UpgradeTrees.AddAll`, after `LightningTree.Add(to);`: `Wind
 - Enemies that take afflictions: every ordinary enemy, the Gate Captain, the swordsman god (frozen for 1.2 s only), the
   training dummies, and the colossus (which is worn down and lets more through but is never frozen, slowed or moved,
   and cannot be killed by damage over time).
-- The player carries no afflictions; nothing in this schema lays one on the player.
+- The player carries no afflictions; nothing in this schema lays one on the player. (White Heat burns the player by hand.)
+- `FlaskCount` can take the flasks to none; `Health` never below 1.
+
+## 15. Added on the afternoon of 2026-11-16
+
+Everything here is in the code and tested (`UpgradeEngineTests`, `AfflictionTests`, `UpgradeChartTests`) and played by
+`UpgradeProbe` (sections V to X). It closes the gaps the first twenty-two tree files had to write round.
+
+### 15.1 A stat may be conditional
+
+`new StatMod(PlayerStat.X, amount, StatWhen.Y)` holds only in a state or on a kind of blow;
+`new StatMod(PlayerStat.X, amount, AfflictionKind.Z)` holds only against a target that carries Z.
+
+| `StatWhen.` | Holds | Works with |
+|---|---|---|
+| `Guarding` | while the guard is raised | any stat |
+| `Surge` | while the surge lasts | any stat |
+| `LowHealth` / `HalfHealth` / `HighHealth` | health below a third / below a half / at a half or more | any stat |
+| `Unhurt` | no blow has landed on the player for 8 s | any stat |
+| `Planted` | no dodge begun for 3 s (sooner with `PlantedSooner`) | any stat |
+| `GreyHeld` | grey health is held | any stat |
+| `ManaFull` | mana is full | any stat |
+| `NearGrown` / `FarFromGrown` | something the player grew stands within 4 m / nothing within 7 m | any stat |
+| `HeavyBlow` / `LightBlow` | on a heavy blow (finishers too) / a light blow | `WeaponDamage`, `StaggerDealt`, `CritChance` |
+| `CriticalBlow` | on a critical blow | `WeaponDamage`, `StaggerDealt` |
+| `ChainEndBlow` | on the last light blow of a chain, or the heavy blow thrown from a chain | `WeaponDamage`, `StaggerDealt` |
+| `AirborneBlow` | on a blow that lands on an enemy in the air | `WeaponDamage`, `StaggerDealt`, `ManaFromBlows` |
+
+Against an affliction works with `WeaponDamage`, `StaggerDealt`, `CritChance`, `ManaFromBlows` (weapon blows) and
+`SpellDamage` (spells and effects). State conditions join the stat's one sum while they hold. Blow and affliction
+conditions multiply the blow by `1 + their own sum`, apart from the standing sum. At most 48 stats against an
+affliction are in force at once.
+
+### 15.2 New stats
+
+| `PlayerStat.` | Kind | What it changes |
+|---|---|---|
+| `AttackStamina` | share | stamina of the weapon's own blows |
+| `GuardStamina` / `DodgeStamina` | share | stamina of a blocked blow alone / of the dodge alone (each on top of `StaminaCost`) |
+| `BaseSpellCost` / `BaseSpellReach` / `BaseSpellDamage` / `BaseSpellArc` | share | the base spell alone (on top of the stats for every spell) |
+| `BaseSpellCount` | flat, whole | one more leap, blade or pillar of the base spell |
+| `AfflictionDepth` | flat, whole | how much deeper the held element's affliction can be laid ("full" then means the deeper depth) |
+| `BurstReach` / `BurstDamage` | share | bursts afflictions make: `SetOff`, and the burst of a death |
+| `Leech` | flat | share of weapon damage dealt that returns as health (0.06 is six in a hundred) |
+| `FlaskEarn` | share | how quickly damage dealt earns an empty belt a flask back |
+| `BloodPrice` | flat | health a point of missing mana costs when a spell is cast without enough (0.5); the health is left grey |
+| `HealthPrices` | share | prices paid in health: `SpellSpec.HealthCost`, the blood price, `SpendHealth`, a surge's drain |
+| `GreyStrength` | flat | weapon damage for each point of grey health held (0.0075), to 30% |
+| `PlantedSooner` | flat, seconds | counts as planted sooner after a dodge |
+| `AirSeconds` | flat, seconds | enemies the player throws into the air hang longer |
+| `AirBlows` | flat, whole | more blows than three can hold an enemy up; past three each adds 15% less |
+| `GrownSeconds` / `GrownDamage` | share | what the player grows stands longer / bites harder |
+| `GrownLimit` | flat, whole | one more of each kind of grown thing |
+| `BackdraftStagger`, `BackdraftReach`, `TrailSeconds`, `TrailDamage`, `BlinkPower`, `BlinkWidth`, `AfterimagePower`, `DischargeReach`, `ChargeStagger` | share | the numbers of the hand-written Fire and Lightning moves (`BackdraftReach` is also the detonation's) |
+| `HeatBlows` | flat, whole | blows fewer for each level of Heat |
+| `HeatCooling` | share | how long Heat lasts between blows |
+| `HeatCap` | flat, whole | levels of Heat above five (each level above five also quickens the swing by 5%, by hand) |
+
+### 15.3 New triggers and conditions
+
+| `UpgradeTrigger.` | When | Target |
+|---|---|---|
+| `CritHit` | a critical weapon blow lands | the enemy struck |
+| `ChainEnd` | the last light blow of a chain, or the heavy blow thrown from a chain, lands | the enemy struck |
+| `SetOff` | the player sets an affliction off: the `SetOff` action, Lightning's discharge, a detonated burn, Plasma's burst | that enemy; carries the affliction and the stacks spent |
+| `Shatter` | a frozen enemy is shattered | that enemy |
+| `WardSpent` | a ward turns a blow | none |
+| `Lifted` | the player throws an enemy into the air | that enemy |
+| `Landed` | an enemy that was in the air comes down | that enemy |
+
+`Kill` now knows what the dead enemy carried: `Needs` and `Needs2` are asked of the dead one's afflictions (the target
+is still only the place it fell).
+
+| Field | Meaning |
+|---|---|
+| `Needs2` | the target must carry this as well as `Needs` |
+| `NeedsFull` | `Needs` must be at its full depth |
+| `NeedsAirborne` | the target must be in the air (or reeling) |
+| `While` | a `StatWhen` state of the player that must hold (`While = StatWhen.LowHealth`) |
+| `HealthBelow` | only while the player's health is below this share |
+| `Spent` | for `SetOff`: only when this affliction was the one spent |
+| `SpentAtLeast` | for `SetOff`: only when at least this many stacks were spent |
+| `OwnSpell` | for `SpellCast`: only when the spell cast is this mark's own |
+| `PerStack` | damage, stagger and amounts (or, for `Projectile`, `Falling` and `Ward`, the count) are multiplied by what the trigger carried: stacks spent by a set-off, stacks the dead carried of `Needs`, or points of a count spent |
+| `CarriesDepth` | the stacks it lays are as many as the trigger carried |
+| `Spends` / `SpendsAll` | it happens only if its mark's count (below) holds that many / any, and spends them; `SpendsAll` carries the number for `PerStack` |
+
+When a trigger names no enemy (`PerfectDodge`, `EverySeconds`, `SurgeStart` and the like), `Needs`, `Afflict` without
+a `Radius`, `SetOff`, `Hold` and `Lift` now take the enemy the player faces within 12 m, as section 6 always said.
+
+### 15.4 New actions
+
+| `UpgradeAction.` | What it does | Fields it reads |
+|---|---|---|
+| `Hold` | holds the target still: it cannot move, turn or begin an attack. Elites and gods for 0.4 of the time, the colossus not at all, as with Frozen | `Seconds` (1.5), `Radius` (0: the target alone), `At` |
+| `Lift` | throws the target into the air (15.6) | `Seconds` (1), `Radius` (0), `Stagger` (40) for what only reels, `At` |
+| `Drop` | drives an enemy in the air into the ground at once | none |
+| `Bank` | adds to the count its own mark keeps | `Count` (1) |
+| `FlaskFill` | fills part of a flask; a whole one joins the belt if there is room | `Amount`: share of a flask (0.25) |
+| `SpendHealth` | takes health and leaves it grey; never the last point | `Amount` |
+| `Leech` | heals by a share of the last weapon blow's damage | `Amount` (0.1) |
+| `BurstGrown` | bursts everything the player has grown, each where it stands, healing for each | `Damage`, `Stagger`, `Radius` (3), `Amount` health for each, `Affliction`, `Stacks` |
+
+`Hazard` reads two more fields: `Grown = true` makes the patch something grown (15.7), and `Limit` is how many of this
+effect's may stand at once.
+
+### 15.5 A count a mark keeps
+
+```csharp
+Tally = new TallySpec { Name = "Blades", Cap = 3 },   // optional: Stat, PerPoint, Stat2, PerPoint2, Kept
+Effects = new[]
+{
+    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Bank, Count = 1 },
+    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, SpendsAll = true, PerStack = true, Do = UpgradeAction.Projectile, Flight = Flight.Homing, Count = 1, Damage = 10f },
+}
+```
+
+One count to a mark. The HUD names it beside the weapon ("Blades 2/3") while the mark is in force. `Stat` and
+`PerPoint` change a stat by each point held (folds of a blade); `Kept = true` keeps the count from scene to scene
+until the run ends. A test fails on a mark that banks or spends with no `Tally`.
+
+### 15.6 In the air
+
+`Lift` (and the `pillars` form) throws an enemy 2 m up: it hangs helpless for its seconds and comes down, taking 20
+stagger as it lands. Each weapon blow that reaches it holds it up 0.45 s longer, three times (`AirBlows` for more).
+Elites and gods hang 0.6 of the time. What cannot be frozen cannot be lifted: the colossus **reels** for a second
+instead (and takes the action's `Stagger`), which counts as in the air for `NeedsAirborne` and `AirborneBlow`.
+
+### 15.7 What the player grows
+
+A `Hazard` with `Grown = true`, and Life's base spell, are **grown things**: they are counted, a `Limit` keeps the
+oldest of a kind from outstaying a new one, `GrownSeconds` and `GrownDamage` change them, `StatWhen.NearGrown` and
+`FarFromGrown` ask whether the player stands by one, and `BurstGrown` sets them all off.
+
+### 15.8 Spells, kits and gifts
+
+- `SpellSpec.HealthCost`: health the cast takes and leaves grey. A spell with it may have `Cost = 0` ("No mana").
+- A base spell may wear any form: `ElementKit.SpellForm` with `SpellRadius`, `SpellSeconds`, `SpellInterval`,
+  `SpellLinger`, `SpellDelay`, `SpellCount`; `SpellPull` drags what stands in its reach toward the player (negative: away).
+- **A mix's first mark does not double-lay.** An `Afflict` on a single target, on a mix mark, on a weapon-blow or
+  perfect-guard trigger, that names the held element's own affliction, lays only what it lays beyond the held
+  element's root (so with the root learned, one stack laid by both is laid once). The affliction not held is laid in full.
+- **Gifts by rule** (`Gifts.cs`): Take gives the Signature of the element taken (`Kind = Signature`, no `Element2`);
+  Consume gives the Signature that has both elements when they are neighbours. A gift with a `Form` is worn at once.
+  A new tree needs no line anywhere but `UpgradeTrees.AddAll`.
+- Roots need not set `WeaponStacks`: Earth and Metal lay theirs on heavy blows by effect, Light on `ChainEnd`.
+- A mark may not share its name with another (tested).
+
+### 15.9 Still not possible as data
+
+An effect tied to one spell's hits; a per-enemy debuff or tally; "the target is showing an attack"; changing an
+enemy's attacks, guard or sight; a dodge that passes through enemies; a report when a pushed enemy meets a wall; a
+revive; the weapon's chain (jump to its end, loop it, remember it through a dodge); poison's beat (bite now, hold,
+double); things that stand and block and can be struck (beyond the `wall` and `ring` forms).

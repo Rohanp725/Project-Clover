@@ -42,6 +42,10 @@ namespace Clover.Player
         public string Form = "";
         /// <summary>The numbers of the spell it teaches.</summary>
         public SpellSpec Spell;
+        /// <summary>A count the mark keeps for its effects to bank and spend, or null.</summary>
+        public TallySpec Tally;
+        /// <summary>Its place in <see cref="All"/>.</summary>
+        public int Index { get; internal set; }
 
         /// <summary>True for what only a god's fall gives: it is never for sale.</summary>
         public bool Signature => Kind == UpgradeKind.Signature;
@@ -125,11 +129,17 @@ namespace Clover.Player
             more?.Invoke(list);
             var index = new Dictionary<string, Upgrade>();
             int slots = 0;
+            int place = 0;
             foreach (var upgrade in list)
             {
+                upgrade.Index = place++;
                 if (upgrade.Cost == 0) upgrade.Cost = UsualCost(upgrade.Kind);
                 index[upgrade.Id] = upgrade;
-                foreach (var effect in upgrade.Effects) effect.Slot = slots++;
+                foreach (var effect in upgrade.Effects)
+                {
+                    effect.Slot = slots++;
+                    effect.Owner = upgrade;
+                }
             }
             all = list;
             byId = index;

@@ -112,6 +112,10 @@ namespace Clover.Gameplay
         private Vector3 home;
         private Quaternion homeRotation;
         private float fallSpeed;
+        private bool inAir;
+        private float airGround;
+        /// <summary>Stagger taken on coming down from being thrown into the air.</summary>
+        public float LandingStagger = 20f;
         private float flashLeft;
         private float chargedLeft;
         private float deadFor;
@@ -335,6 +339,7 @@ namespace Clover.Gameplay
             if (hit.Heavy && Afflictions.IsFrozen)
             {
                 detonated += Afflictions.Shatter();
+                CombatEvents.RaiseShattered(this);
                 Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f);
                 Vfx.Play(VfxKind.TintSpark, transform.position + Vector3.up * 1.2f, Vector3.up, 2.5f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
                 Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.3f, Vector3.up, 1f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
@@ -473,10 +478,16 @@ namespace Clover.Gameplay
                 PhaseChanged?.Invoke(this);
             }
 
-            if (Afflictions.Any)
+            if (Afflictions.Runs)
             {
                 bool wasBurning = Burn.IsBurning;
                 Health.Damage(Afflictions.Tick(deltaTime));
+                if (Afflictions.LandedThisTick && !IsDead)
+                {
+                    // Down hard: the landing shakes its balance.
+                    TakeHit(new Hit(0f, LandingStagger, Vector3.down, false, true));
+                    CombatEvents.RaiseLanded(this);
+                }
                 untilEmber -= deltaTime;
                 if (wasBurning && untilEmber <= 0f)
                 {
@@ -618,8 +629,24 @@ namespace Clover.Gameplay
             // Ice holds it where it stands, whatever shoves.
             if (!Afflictions.IsFrozen) step += shove * (deltaTime * 6f);
             shove = Vector3.Lerp(shove, Vector3.zero, 1f - Mathf.Exp(-9f * deltaTime));
-            fallSpeed = body.isGrounded ? 1f : fallSpeed + Gravity * deltaTime;
-            step.y = -fallSpeed * deltaTime;
+            if (Afflictions.IsLifted)
+            {
+                // Thrown into the air: it goes nowhere of its own will, rises, hangs and comes down over where it left the ground.
+                if (!inAir)
+                {
+                    inAir = true;
+                    airGround = transform.position.y;
+                }
+                step = Vector3.zero;
+                step.y = airGround + Afflictions.AirHeight - transform.position.y;
+                fallSpeed = 0f;
+            }
+            else
+            {
+                inAir = false;
+                fallSpeed = body.isGrounded ? 1f : fallSpeed + Gravity * deltaTime;
+                step.y = -fallSpeed * deltaTime;
+            }
             if (body.enabled) body.Move(step);
 
             // Its guard is up only while it stands ready and knows the player is there: the band going out is the opening.

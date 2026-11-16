@@ -12,6 +12,8 @@ namespace Clover.Player.Forms
 
         private const int Most = 8;
         private const float Between = 0.07f;
+        /// <summary>Seconds what a column strikes hangs in the air.</summary>
+        private const float LiftSeconds = 0.8f;
 
         public override int Cast(in SpellCast cast)
         {
@@ -76,6 +78,8 @@ namespace Clover.Player.Forms
                 var blow = cast.Blow(cast.Damage, cast.Stagger);
                 blow.Heavy = true;
                 cast.Combat.StrikeArea(points[i], radius, blow);
+                // What the column comes up under leaves the ground with it for a moment.
+                cast.Combat.LiftArea(points[i], radius, LiftSeconds);
                 FormKit.Impact(cast, points[i], radius, i == run.Count - 1 ? 1.2f : 0.8f);
             }
             return run.Done < run.Count;

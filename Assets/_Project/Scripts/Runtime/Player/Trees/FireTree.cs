@@ -4,16 +4,43 @@ using Clover.Gameplay;
 namespace Clover.Player.Trees
 {
     /// <summary>
-    /// Fire: pressure and momentum. Three boughs from Heat: on the left what a guard gives back, in the middle the
-    /// sword and the leap, on the right fire left on the ground. The seven first marks are done by hand in
-    /// <see cref="PlayerUpgrades"/> under their ids; the rest are data.
+    /// Fire: never letting up. Every blow deepens a burn, and Heat pays the one who keeps hitting and is not hit.
+    /// Three boughs from Cinder: on the left Answer (the perfect guard and the dodge turned into fire), in the middle
+    /// Pressure (Heat and momentum), on the right Ruin (big spells, burning ground and the flask). The seven first
+    /// marks are done by hand in <see cref="PlayerUpgrades"/> under their ids; the rest are data.
     /// </summary>
     public static class FireTree
     {
-        public const string Kindling = "fire.kindling";
+        public const string Cinder = "fire.cinder";
+        // Pressure.
         public const string Stoked = "fire.stoked";
+        public const string BankedCoals = "fire.banked";
+        public const string CatchingFire = "fire.catch";
+        public const string SearingEdge = "fire.searing";
+        public const string SlowFuse = "fire.fuse";
         public const string DryTinder = "fire.tinder";
-        public const string SearingGuard = "fire.searing";
+        public const string WildfireRush = "fire.rush";
+        public const string WhiteHeat = "fire.whiteheat";
+        // Answer.
+        public const string StruckFlint = "fire.flint";
+        public const string FurnaceBreath = "fire.breath";
+        public const string WideHearth = "fire.hearth";
+        public const string LongEmbers = "fire.embers";
+        public const string HotFooting = "fire.footing";
+        public const string Flashpoint = "fire.flash";
+        public const string KilnStance = "fire.kiln";
+        public const string OpenFurnace = "fire.furnace";
+        // Ruin.
+        public const string BroadWave = "fire.broadwave";
+        public const string ShortBreath = "fire.shortbreath";
+        public const string HotCoals = "fire.coals";
+        public const string LongKindle = "fire.longkindle";
+        public const string Sunspot = "fire.sunspot";
+        public const string ScorchedEarth = "fire.scorched";
+        // The god's gift.
+        public const string FallingSun = "fire.sun";
+        // Kept from the first slice; not in the design.
+        public const string Kindling = "fire.kindling";
         public const string Wildfire = "fire.wildfire";
         public const string CinderFan = "fire.fan";
 
@@ -21,47 +48,143 @@ namespace Clover.Player.Trees
         {
             const string E = Elements.Fire;
 
-            to.Add(new Upgrade { Id = Upgrade.Heat, Name = "Heat", Element = E, Kind = UpgradeKind.Root, X = 0f, Y = 1.2f, Icon = UpgradeIcons.Flame,
-                Description = "Blows landed without being struck build Heat, up to five. Each level adds damage. A blow taken puts it out. Kindle fills it at once." });
+            to.Add(new Upgrade { Id = Cinder, Name = "Cinder", Element = E, Kind = UpgradeKind.Root, X = 0f, Y = 1.2f, Icon = UpgradeIcons.Flame,
+                Description = "Every blow of the weapon sets a burn, and each blow deepens it, up to five.",
+                WeaponStacks = 1 });
 
-            // Left bough: what a guard gives back.
-            to.Add(new Upgrade { Id = Upgrade.Backdraft, Name = "Backdraft", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Heat }, X = -1.21f, Y = 2.4f, Icon = UpgradeIcons.Shield,
-                Description = "A perfect guard throws a cone of fire back at the one who struck." });
-            to.Add(new Upgrade { Id = Kindling, Name = "Kindling", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Backdraft }, X = -1.98f, Y = 3.42f, Icon = UpgradeIcons.Hourglass,
+            // Middle bough: Pressure. Heat and momentum.
+            // BESPOKE (as built): Heat, done by hand in PlayerUpgrades. It was the root; it is now the foot of this bough.
+            to.Add(new Upgrade { Id = Upgrade.Heat, Name = "Heat", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Cinder }, X = -0.02f, Y = 3.84f, Icon = UpgradeIcons.Fist,
+                Description = "Blows landed without being struck build Heat, up to five. Each level adds damage. A blow taken puts it out. Kindle fills it at once." });
+            to.Add(new Upgrade { Id = Stoked, Name = "Stoked", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Heat }, X = -0.34f, Y = 5.1f, Icon = UpgradeIcons.Fist,
+                Description = "Heat rises on fewer blows.",
+                Stats = new[] { new StatMod(PlayerStat.HeatBlows, 1f) } });
+            to.Add(new Upgrade { Id = BankedCoals, Name = "Banked Coals", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Heat }, X = 0.76f, Y = 4.34f, Icon = UpgradeIcons.Hourglass,
+                Description = "Heat cools more slowly between blows.",
+                Stats = new[] { new StatMod(PlayerStat.HeatCooling, 0.5f) } });
+            to.Add(new Upgrade { Id = CatchingFire, Name = "Catching Fire", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Heat }, X = 0.26f, Y = 6.99f, Icon = UpgradeIcons.Skull,
+                Description = "A burning enemy that dies throws its burn onto everyone near it.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1, CarriesDepth = true, Radius = 4f } } });
+            // BESPOKE (as built): the Iaido Slash throws its arc of flame. Still to add: each enemy it burns counts as a blow for Heat.
+            to.Add(new Upgrade { Id = Upgrade.BurningCrescent, Name = "Burning Crescent", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Heat }, X = 0.56f, Y = 5.43f, Icon = UpgradeIcons.Blade, Weapon = Weapons.KatanaName,
+                Description = "The Iaido Slash throws a slow arc of flame that travels on after the cut." });
+            to.Add(new Upgrade { Id = SearingEdge, Name = "Searing Edge", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { CatchingFire }, X = 1.26f, Y = 7.58f, Icon = UpgradeIcons.Flame,
+                Description = "Burns bite harder.",
+                Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.2f) } });
+            // The line of fire it leaves and the Heat it raises are still to be written by hand.
+            to.Add(new Upgrade { Id = WildfireRush, Name = "Wildfire Rush", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { CatchingFire }, X = 1.34f, Y = 8.65f, Icon = UpgradeIcons.Arrow,
+                Description = "Hold the spell button to drive through the enemies ahead in a line of fire. Each one passed is set burning and raises your Heat. 35 mana.",
+                Form = "drill",
+                Spell = new SpellSpec { Cost = 35f, Reach = 7f, Radius = 1f, Count = 1, Damage = 14f, Stagger = 20f, Stacks = 2, Speed = 20f, Seconds = 2.6f, LingerDamage = 4f } });
+            to.Add(new Upgrade { Id = SlowFuse, Name = "Slow Fuse", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { CatchingFire }, X = 0.24f, Y = 8.21f, Icon = UpgradeIcons.Hourglass,
+                Description = "Burns last longer.",
+                Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.5f) } });
+            to.Add(new Upgrade { Id = DryTinder, Name = "Dry Tinder", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { CatchingFire }, X = -0.92f, Y = 8.24f, Icon = UpgradeIcons.Leaf,
+                Description = "Your weapon cuts deeper into a burning enemy.",
+                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.08f, AfflictionKind.Burn) } });
+            to.Add(new Upgrade { Id = WhiteHeat, Name = "White Heat", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { WildfireRush }, X = 1.24f, Y = 10.26f, Icon = UpgradeIcons.Star,
+                Description = "Heat rises to eight, and above five your blows come faster. Struck above five, you burn.",
+                Stats = new[] { new StatMod(PlayerStat.HeatCap, 3f) } });
+
+            // Left bough: Answer. The perfect guard and the dodge turned into fire.
+            // BESPOKE (as built): the cone of fire, done by hand. The two stacks of Burn it now lays are data.
+            to.Add(new Upgrade { Id = Upgrade.Backdraft, Name = "Backdraft", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Cinder }, X = -1.28f, Y = 3.47f, Icon = UpgradeIcons.Shield,
+                Description = "A perfect guard throws a cone of fire back at the one who struck.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 2 } } });
+            to.Add(new Upgrade { Id = StruckFlint, Name = "Struck Flint", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Backdraft }, X = -2.15f, Y = 3.99f, Icon = UpgradeIcons.Gem,
+                Description = "A perfect guard gives more mana.",
+                Stats = new[] { new StatMod(PlayerStat.ManaFromGuards, 0.4f) } });
+            // BESPOKE (as built): the detonation, done by hand. It no longer lays the burn itself: Cinder does.
+            to.Add(new Upgrade { Id = Upgrade.BurnAndDetonate, Name = "Burn and Detonate", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Backdraft }, X = -2.51f, Y = 5.3f, Icon = UpgradeIcons.Burst,
+                Description = "A perfect guard against a burning enemy sets all of its burn off at once." });
+            // BESPOKE (as built): the line of fire behind the dodge. It used to grow from Heat.
+            to.Add(new Upgrade { Id = Upgrade.FlameTrail, Name = "Flame Trail", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Backdraft }, X = -1.27f, Y = 5.7f, Icon = UpgradeIcons.Boot,
+                Description = "The dodge leaves a line of fire behind it that burns what follows." });
+            to.Add(new Upgrade { Id = FurnaceBreath, Name = "Furnace Breath", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Backdraft }, X = -1.69f, Y = 4.85f, Icon = UpgradeIcons.Wave,
+                Description = "Backdraft breaks balance harder.",
+                Stats = new[] { new StatMod(PlayerStat.BackdraftStagger, 0.55f) } });
+            // The pillar under the attacker is the parry's own cone for now, and a blow caught does not yet count as a perfect guard.
+            to.Add(new Upgrade { Id = KilnStance, Name = "Kiln Stance", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.BurnAndDetonate }, X = -1.96f, Y = 6.49f, Icon = UpgradeIcons.Tower,
+                Description = "Hold the spell button to stand ready in flame. The first blow that reaches you, red or not, is turned and answered with a pillar of fire. 30 mana.",
+                Form = "parry",
+                Spell = new SpellSpec { Cost = 30f, Seconds = 1.2f, Reach = 4f, Arc = 90f, Damage = 30f, Stagger = 50f, Stacks = 3 } });
+            // The boon lasts its three seconds: every blow in that time is three deep, not only the next.
+            to.Add(new Upgrade { Id = Flashpoint, Name = "Flashpoint", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.FlameTrail }, X = -0.88f, Y = 7.18f, Icon = UpgradeIcons.Eye,
+                Description = "After a perfect dodge, your next blow sets a burn three deep at once.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Boon, Stat = PlayerStat.AfflictionStacks, Amount = 2f, Seconds = 3f } } });
+            // Kept from the first slice; not in the design.
+            to.Add(new Upgrade { Id = Kindling, Name = "Kindling", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Backdraft }, X = -0.83f, Y = 4.31f, Icon = UpgradeIcons.Hourglass,
                 Description = "The moment in which a guard is perfect lasts a little longer.",
                 Stats = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 0.15f) } });
-            to.Add(new Upgrade { Id = Upgrade.BurnAndDetonate, Name = "Burn and Detonate", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Backdraft }, X = -1.61f, Y = 4.2f, Icon = UpgradeIcons.Burst,
-                Description = "Every blow of the weapon sets a burn, up to five deep. A perfect guard against a burning enemy sets all of it off at once." });
-            to.Add(new Upgrade { Id = SearingGuard, Name = "Searing Guard", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.BurnAndDetonate }, X = -2.0f, Y = 6.0f, Icon = UpgradeIcons.Wall,
-                Description = "A blow caught on the guard burns the one who struck it.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 2 } } });
+            // BESPOKE: every burning enemy within eight metres should be set off where it stands and keep two stacks, and a plain
+            // guard should let more through as grey. Until then: a wide burst round the player that leaves Burn, and blows hurt more.
+            to.Add(new Upgrade { Id = OpenFurnace, Name = "Open Furnace", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { KilnStance }, X = -2.89f, Y = 7.88f, Icon = UpgradeIcons.Burst,
+                Description = "A perfect guard sets off every burning enemy near you, not only the one who struck, and leaves each still alight. A plain guard lets more of the blow through.",
+                Stats = new[] { new StatMod(PlayerStat.DamageTaken, 0.08f) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 8f, Damage = 18f, Stagger = 12f, Affliction = AfflictionKind.Burn, Stacks = 2, Cooldown = 0.5f } } });
+            to.Add(new Upgrade { Id = LongEmbers, Name = "Long Embers", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.FlameTrail }, X = -0.26f, Y = 6.22f, Icon = UpgradeIcons.Hourglass,
+                Description = "Flame Trail burns longer on the ground.",
+                Stats = new[] { new StatMod(PlayerStat.TrailSeconds, 0.54f) } });
+            to.Add(new Upgrade { Id = WideHearth, Name = "Wide Hearth", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.BurnAndDetonate }, X = -2.89f, Y = 6.65f, Icon = UpgradeIcons.Ring,
+                Description = "Backdraft and the detonation reach further.",
+                Stats = new[] { new StatMod(PlayerStat.BackdraftReach, 0.25f) } });
+            to.Add(new Upgrade { Id = HotFooting, Name = "Hot Footing", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.FlameTrail }, X = -1.8f, Y = 7.42f, Icon = UpgradeIcons.Boot,
+                Description = "Flame Trail bites harder.",
+                Stats = new[] { new StatMod(PlayerStat.TrailDamage, 0.5f) } });
 
-            // Middle bough: the sword and the leap.
-            to.Add(new Upgrade { Id = Upgrade.BurningCrescent, Name = "Burning Crescent", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Heat }, X = 0f, Y = 2.9f, Icon = UpgradeIcons.Blade, Weapon = Weapons.KatanaName,
-                Description = "The Iaido Slash throws a slow arc of flame that travels on after the cut." });
-            to.Add(new Upgrade { Id = Stoked, Name = "Stoked", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.BurningCrescent }, X = 0.62f, Y = 3.8f, Icon = UpgradeIcons.Fist,
-                Description = "Every blow of the weapon hits a little harder.",
-                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.05f) } });
-            to.Add(new Upgrade { Id = Upgrade.MeteorLeap, Name = "Meteor Leap", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.BurningCrescent }, X = 0f, Y = 4.7f, Icon = UpgradeIcons.Comet,
+            // Right bough: Ruin. Big spells, burning ground and the flask.
+            // BESPOKE (as built): the thrown flask and its burst. The three stacks of Burn it now lays are data. It used to grow from Flame Trail.
+            to.Add(new Upgrade { Id = Upgrade.FirebombFlask, Name = "Firebomb Flask", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Cinder }, X = 1.1f, Y = 3.46f, Icon = UpgradeIcons.Flask,
+                Description = "Hold the flask button to throw it. No healing: a great burst of fire where it lands.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FlaskThrown, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 3, Radius = 2.6f } } });
+            // The reach is the stat for every spell, the base one and whatever is worn.
+            to.Add(new Upgrade { Id = BroadWave, Name = "Broad Wave", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.FirebombFlask }, X = 1.45f, Y = 5.02f, Icon = UpgradeIcons.Wave,
+                Description = "Flame Wave reaches further.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellReach, 0.27f) } });
+            to.Add(new Upgrade { Id = Upgrade.MeteorLeap, Name = "Meteor Leap", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.FirebombFlask }, X = 2.37f, Y = 5.74f, Icon = UpgradeIcons.Comet,
                 Description = "Hold the spell button to leap out of the fight and come down on the enemy faced, leaving a burning crater. 50 mana.",
                 Form = SpellForms.Leap,
                 Spell = new SpellSpec { Cost = 50f, Reach = 9f, Seconds = 0.62f, Height = 3.4f, Damage = 46f, Stagger = 55f, Radius = 3.2f, LingerDamage = 5f, Stacks = 0 } });
-            to.Add(new Upgrade { Id = CinderFan, Name = "Cinder Fan", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.MeteorLeap }, X = 0f, Y = 6.5f, Icon = UpgradeIcons.Wave,
+            // The cost is the stat for every spell, the base one and whatever is worn.
+            to.Add(new Upgrade { Id = ShortBreath, Name = "Short Breath", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.FirebombFlask }, X = 2.34f, Y = 4.73f, Icon = UpgradeIcons.Gem,
+                Description = "Flame Wave costs less mana.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
+            // The brand's blows each burst as they land; feeding it and setting it off with one heavy blow is still to be written by hand.
+            to.Add(new Upgrade { Id = Sunspot, Name = "Sunspot", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.MeteorLeap }, X = 2.46f, Y = 7.87f, Icon = UpgradeIcons.Target,
+                Description = "Hold the spell button to brand the enemy faced. Each blow you land feeds the brand, up to six. A heavy blow sets it off. 35 mana.",
+                Form = "brand",
+                Spell = new SpellSpec { Cost = 35f, Reach = 6f, Seconds = 7f, Count = 6, Radius = 2f, Damage = 9f, Stagger = 8f, Stacks = 1 } });
+            // There is no number for spells on burning enemies alone: half the share, on every enemy.
+            to.Add(new Upgrade { Id = HotCoals, Name = "Hot Coals", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.MeteorLeap }, X = 1.93f, Y = 6.84f, Icon = UpgradeIcons.Orb,
+                Description = "Spells strike burning enemies harder.",
+                Stats = new[] { new StatMod(PlayerStat.SpellDamage, 0.2f, AfflictionKind.Burn) } });
+            to.Add(new Upgrade { Id = LongKindle, Name = "Long Kindle", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.MeteorLeap }, X = 2.93f, Y = 6.8f, Icon = UpgradeIcons.Hourglass,
+                Description = "Kindle lasts longer.",
+                Stats = new[] { new StatMod(PlayerStat.SurgeSeconds, 0.3f) } });
+            // BESPOKE: fire left on the ground should last twice as long, and standing in it should stop Kindle's clock and give
+            // more mana from blows. Until then: a longer Kindle and more mana from blows wherever the player stands, and dearer spells.
+            to.Add(new Upgrade { Id = ScorchedEarth, Name = "Scorched Earth", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { Sunspot }, X = 2.9f, Y = 9.29f, Icon = UpgradeIcons.Spike,
+                Description = "Fire you leave on the ground burns twice as long. While you stand in it Kindle does not run down and your blows give more mana. Your spells cost more.",
+                Stats = new[] { new StatMod(PlayerStat.SurgeSeconds, 0.3f), new StatMod(PlayerStat.ManaFromBlows, 0.25f), new StatMod(PlayerStat.SpellCost, 0.2f) } });
+            // Kept from the first slice; not in the design.
+            to.Add(new Upgrade { Id = Wildfire, Name = "Wildfire", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.FirebombFlask }, X = 2.09f, Y = 3.81f, Icon = UpgradeIcons.Skull,
+                Description = "Where an enemy dies the ground burns for a while.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 2.2f, Seconds = 4f, Damage = 5f, Interval = 0.5f, Affliction = AfflictionKind.Burn, Stacks = 1 } } });
+            // Kept from the first slice; not in the design.
+            to.Add(new Upgrade { Id = CinderFan, Name = "Cinder Fan", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.MeteorLeap }, X = 1.14f, Y = 6.32f, Icon = UpgradeIcons.Wave,
                 Description = "Hold the spell button to throw fire in a wide fan, close in. What it touches burns two deep. 30 mana.",
                 Form = SpellForms.Wave,
                 Spell = new SpellSpec { Cost = 30f, Reach = 4.5f, Arc = 140f, Damage = 22f, Stagger = 20f, Stacks = 2 } });
 
-            // Right bough: fire left on the ground.
-            to.Add(new Upgrade { Id = Upgrade.FlameTrail, Name = "Flame Trail", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Heat }, X = 1.21f, Y = 2.4f, Icon = UpgradeIcons.Boot,
-                Description = "The dodge leaves a line of fire behind it that burns what follows." });
-            to.Add(new Upgrade { Id = DryTinder, Name = "Dry Tinder", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.FlameTrail }, X = 1.98f, Y = 3.42f, Icon = UpgradeIcons.Leaf,
-                Description = "What you set burning burns for longer.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.25f) } });
-            to.Add(new Upgrade { Id = Upgrade.FirebombFlask, Name = "Firebomb Flask", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.FlameTrail }, X = 1.61f, Y = 4.2f, Icon = UpgradeIcons.Flask,
-                Description = "Hold the flask button to throw it. No healing: a great burst of fire where it lands." });
-            to.Add(new Upgrade { Id = Wildfire, Name = "Wildfire", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.FirebombFlask }, X = 2.0f, Y = 6.0f, Icon = UpgradeIcons.Skull,
-                Description = "Where an enemy dies the ground burns for a while.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 2.2f, Seconds = 4f, Damage = 5f, Interval = 0.5f, Affliction = AfflictionKind.Burn, Stacks = 1 } } });
+            // BESPOKE: the sun raised with the surge button held, the disc of light, and its fall, as docs/design/trees_a.md has it.
+            // Until then: while Kindle lasts every burn near the player deepens by itself, and when Kindle ends a sun falls on the enemy faced.
+            to.Add(new Upgrade { Id = FallingSun, Name = "Falling Sun", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
+                Description = "With Heat at five and Kindle lit, hold the surge button to raise a sun over the fight. While it hangs, every burn near you deepens by itself. Press again to bring it down. A blow taken puts it out.",
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, WhileSurge = true, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 6f, Affliction = AfflictionKind.Burn, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SurgeEnd, Do = UpgradeAction.Falling, Damage = 60f, Stagger = 80f, Radius = 4f, Delay = 0.6f, Affliction = AfflictionKind.Burn, Stacks = 2 },
+                } });
         }
     }
 }

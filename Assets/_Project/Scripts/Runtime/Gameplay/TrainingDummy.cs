@@ -94,7 +94,11 @@ namespace Clover.Gameplay
             float detonated = hit.Detonate ? Burn.Detonate() : 0f;
             if (detonated > 0f) Health.Damage(detonated);
             Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
-            if (hit.Heavy && Afflictions.IsFrozen) Health.Damage(Afflictions.Shatter());
+            if (hit.Heavy && Afflictions.IsFrozen)
+            {
+                Health.Damage(Afflictions.Shatter());
+                CombatEvents.RaiseShattered(this);
+            }
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
             float unsteadies = Afflictions.StaggerTakenMultiplier;
             if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
@@ -133,15 +137,33 @@ namespace Clover.Gameplay
             flashLeft = FlashSeconds;
         }
 
+        private bool lifted;
+        private float groundHeight;
+
         private void Update()
         {
             float deltaTime = Time.deltaTime;
             Stagger.Tick(deltaTime, Afflictions.BalanceRecovers);
             sinceHit += deltaTime;
-            if (Afflictions.Any)
+            if (Afflictions.Runs)
             {
                 bool wasBurning = Burn.IsBurning;
+                bool wasUp = Afflictions.IsLifted;
+                if (!wasUp && !lifted) groundHeight = transform.position.y;
                 Health.Damage(Afflictions.Tick(deltaTime));
+                // Thrown into the air it rises off its post, hangs and comes down, as an enemy does.
+                lifted = Afflictions.IsLifted;
+                if (lifted || wasUp)
+                {
+                    Vector3 at = transform.position;
+                    at.y = groundHeight + Afflictions.AirHeight;
+                    transform.position = at;
+                }
+                if (Afflictions.LandedThisTick)
+                {
+                    Stagger.Add(20f);
+                    CombatEvents.RaiseLanded(this);
+                }
                 if (wasBurning) sinceHit = 0f;
                 if (Afflictions.BitThisTick)
                     Clover.Core.Vfx.Play(Clover.Core.VfxKind.TintPuff, transform.position + Vector3.up * 1.3f, Vector3.up, 0.7f, Gameplay.Afflictions.Spec(AfflictionKind.Poison).Colour);

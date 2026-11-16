@@ -69,10 +69,61 @@ namespace Clover.World
         {
             instance = null;
             owner = null;
+            Growing = false;
+            GrownSecondsScale = 1f;
+            GrownDamageScale = 1f;
         }
 
         /// <summary>Whose blows these are: the damage is dealt through the player's own weapon code, so it earns what a blow earns.</summary>
         public static void OwnedBy(PlayerCombat combat) => owner = combat;
+
+        /// <summary>While true, whatever is laid counts as grown: set round the cast of a spell that grows things.</summary>
+        public static bool Growing;
+        /// <summary>What the player's numbers make of how long grown things stand and how hard they bite.</summary>
+        public static float GrownSecondsScale = 1f, GrownDamageScale = 1f;
+
+        /// <summary>How many things the player has grown stand now.</summary>
+        public static int GrownCount
+        {
+            get
+            {
+                if (instance == null) return 0;
+                int count = 0;
+                for (int i = 0; i < instance.zones.Length; i++)
+                    if (instance.zones[i].Active && instance.zones[i].Spec.Grown) count++;
+                return count;
+            }
+        }
+
+        /// <summary>True when something the player has grown stands within this many metres of a place.</summary>
+        public static bool GrownNear(Vector3 at, float metres)
+        {
+            if (instance == null) return false;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                Vector3 offset = instance.zones[i].Position - at;
+                offset.y = 0f;
+                if (offset.sqrMagnitude <= metres * metres) return true;
+            }
+            return false;
+        }
+
+        /// <summary>Bursts everything the player has grown, each where it stands, and it is gone. Returns how many burst.</summary>
+        public static int BurstGrown(in SpellBlow blow, float radius)
+        {
+            if (instance == null || owner == null) return 0;
+            int count = 0;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                if (!instance.zones[i].Active || !instance.zones[i].Spec.Grown) continue;
+                instance.zones[i].Active = false;
+                owner.StrikeArea(instance.zones[i].Position, radius, blow);
+                Puff(instance.zones[i].Spec, instance.zones[i].Position, 3f);
+                count++;
+            }
+            return count;
+        }
 
         private void Awake()
         {
@@ -121,6 +172,19 @@ namespace Clover.World
         public static void Lay(in HazardSpec spec)
         {
             if (instance == null) return;
+            bool grown = spec.Grown || Growing;
+            if (grown && spec.Limit > 0)
+            {
+                // Things of one kind share a limit: one more takes the place of the one nearest its end.
+                int standing = 0, oldest = -1;
+                for (int slot = 0; slot < instance.zones.Length; slot++)
+                {
+                    if (!instance.zones[slot].Active || !instance.zones[slot].Spec.Grown || instance.zones[slot].Spec.Family != spec.Family) continue;
+                    standing++;
+                    if (oldest < 0 || instance.zones[slot].Left < instance.zones[oldest].Left) oldest = slot;
+                }
+                if (standing >= spec.Limit && oldest >= 0) instance.zones[oldest].Active = false;
+            }
             // A free place if there is one; only with every place in use is the next in turn given up.
             int i = -1;
             for (int slot = 0; slot < instance.zones.Length && i < 0; slot++)
@@ -143,6 +207,12 @@ namespace Clover.World
                 Burst = spec.Burst,
             };
             instance.zones[i].Spec.BiteEvery = Mathf.Max(0.05f, spec.BiteEvery);
+            if (grown)
+            {
+                instance.zones[i].Spec.Grown = true;
+                instance.zones[i].Left = spec.Seconds * GrownSecondsScale;
+                instance.zones[i].Spec.Blow.Damage = spec.Blow.Damage * GrownDamageScale;
+            }
         }
 
         private static void Puff(in HazardSpec spec, Vector3 at, float scale)

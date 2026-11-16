@@ -44,5 +44,21 @@ namespace Clover.Player
         Helper,
         /// <summary>Sets an affliction on the target off: its stacks are spent for a burst round it. Reads: Affliction (the element's own), Damage: added for each stack spent, Stagger for each stack, Radius (3).</summary>
         SetOff,
+        /// <summary>Holds the target still: it cannot move, turn or begin an attack. Elites and gods are held for 0.4 of the time, the colossus not at all, as with Frozen. Reads: Seconds (1.5), Radius (0: the target alone), At.</summary>
+        Hold,
+        /// <summary>Adds to the count its own mark keeps (<see cref="Upgrade.Tally"/>), up to the cap. Reads: Count (1).</summary>
+        Bank,
+        /// <summary>Fills part of a flask; a whole one is added to the belt if there is room. Reads: Amount: the share of a flask (0.25).</summary>
+        FlaskFill,
+        /// <summary>Takes health from the player and leaves it grey, to be won back by blows. Never the last point. Reads: Amount.</summary>
+        SpendHealth,
+        /// <summary>Heals the player by a share of the damage of the last weapon blow. Reads: Amount: the share (0.1).</summary>
+        Leech,
+        /// <summary>Throws the target into the air: it hangs helpless and comes down, and blows hold it up a little longer. Elites and gods hang 0.6 of the time; what cannot be lifted reels instead and takes the Stagger. Reads: Seconds (1), Radius (0: the target alone), Stagger (40) for what only reels, At.</summary>
+        Lift,
+        /// <summary>Drives an enemy that is in the air into the ground at once. Reads: nothing.</summary>
+        Drop,
+        /// <summary>Bursts everything the player has grown, each where it stands, and heals for each. Reads: Damage, Stagger, Radius (3), Amount: health for each burst, Affliction, Stacks.</summary>
+        BurstGrown,
     }
 }

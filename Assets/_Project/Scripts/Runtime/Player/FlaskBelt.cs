@@ -16,6 +16,8 @@ namespace Clover.Player
         public float HealAt = 0.4f;
         /// <summary>Damage the player must deal, with no flasks left, to earn one back.</summary>
         public float RechargeDamage = 120f;
+        /// <summary>How quickly damage dealt earns a flask back; the upgrades set it.</summary>
+        [NonSerialized] public float EarnScale = 1f;
 
         public int Count { get; private set; }
         public bool IsDrinking { get; private set; }
@@ -81,10 +83,21 @@ namespace Clover.Player
         }
 
         /// <summary>Counts damage dealt toward a new flask. Returns true when one is earned.</summary>
+        /// <summary>Fills part of a flask (a share of one). True when that made a whole one and there was room for it on the belt.</summary>
+        public bool Fill(float share)
+        {
+            if (share <= 0f || Count >= Maximum || RechargeDamage <= 0f) return false;
+            earned += share * RechargeDamage;
+            if (earned < RechargeDamage) return false;
+            earned -= RechargeDamage;
+            Count++;
+            return true;
+        }
+
         public bool EarnFromDamage(float damage)
         {
-            if (Count > 0 || damage <= 0f) return false;
-            earned += damage;
+            if (Count > 0 || Maximum <= 0 || damage <= 0f) return false;
+            earned += damage * EarnScale;
             if (earned < RechargeDamage) return false;
             earned = 0f;
             Count = 1;

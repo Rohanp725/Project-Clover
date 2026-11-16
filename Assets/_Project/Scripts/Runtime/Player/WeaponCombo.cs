@@ -25,6 +25,8 @@ namespace Clover.Player
         /// <summary>The move the heavy button gives when a staggered enemy is in reach. Null: the plain heavy is used.</summary>
         public AttackStep Finisher;
         /// <summary>Seconds the heavy button must be held before releasing it gives the skill.</summary>
+        /// <summary>What the player's numbers make of every blow's stamina.</summary>
+        [NonSerialized] public float StaminaScale = 1f;
         public float ChargeTime = 0.4f;
         /// <summary>Seconds a press is remembered.</summary>
         public float BufferTime = 0.3f;
@@ -137,7 +139,7 @@ namespace Clover.Player
                         // Pressed and let go while something else was happening: there is nothing left to charge.
                         if (StartHeavy(Heavy, stamina)) events |= ComboEvents.Started;
                     }
-                    else if (stamina.Current >= Heavy.StaminaCost)
+                    else if (stamina.Current >= Heavy.StaminaCost * StaminaScale)
                     {
                         heavyBuffered = 0f;
                         buffered = 0f;
@@ -161,7 +163,7 @@ namespace Clover.Player
             {
                 elapsed += deltaTime;
                 bool ready = elapsed >= ChargeTime;
-                bool canPay = Skill != null && mana != null && mana.Current >= SkillManaCost && stamina.Current >= Skill.StaminaCost;
+                bool canPay = Skill != null && mana != null && mana.Current >= SkillManaCost && stamina.Current >= Skill.StaminaCost * StaminaScale;
                 if (!heavyHeld)
                 {
                     bool started;
@@ -241,7 +243,7 @@ namespace Clover.Player
             buffered = 0f;
             heavyBuffered = 0f;
             finisherWanted = false;
-            if (step == null || !stamina.TrySpend(step.StaminaCost)) return false;
+            if (step == null || !stamina.TrySpend(step.StaminaCost * StaminaScale)) return false;
             Current = step;
             Phase = AttackPhase.Windup;
             elapsed = 0f;

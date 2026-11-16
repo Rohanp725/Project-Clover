@@ -28,6 +28,8 @@ namespace Clover.Core
         public static readonly HashSet<string> ElementsConsumed = new HashSet<string>();
         /// <summary>The id of the learned spell worn in the hold-spell slot, or empty for none.</summary>
         public static string WornSpell = "";
+        /// <summary>Counts some marks keep for the whole run (folds of a blade), by the mark's id.</summary>
+        public static readonly Dictionary<string, int> Tallies = new Dictionary<string, int>();
         /// <summary>How many runs have ended in this play session.</summary>
         public static int RunsEnded;
         /// <summary>How the last run ended: true if the player fell, false if they came back by their own road.</summary>
@@ -66,6 +68,7 @@ namespace Clover.Core
             ElementsHeld.Clear();
             ElementsConsumed.Clear();
             WornSpell = "";
+            Tallies.Clear();
         }
     }
 }

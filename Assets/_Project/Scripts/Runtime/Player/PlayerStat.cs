@@ -65,5 +65,76 @@ namespace Clover.Player
         MoveSpeed,
         /// <summary>Share. How fast the weapon is swung.</summary>
         SwingSpeed,
+        /// <summary>Share. Stamina of the weapon's own blows.</summary>
+        AttackStamina,
+        /// <summary>Share. Stamina of a blocked blow alone (on top of StaminaCost).</summary>
+        GuardStamina,
+        /// <summary>Share. Stamina of the dodge alone (on top of StaminaCost).</summary>
+        DodgeStamina,
+        /// <summary>Share. Mana of the element's base spell alone (on top of SpellCost).</summary>
+        BaseSpellCost,
+        /// <summary>Share. Reach of the base spell alone (on top of SpellReach).</summary>
+        BaseSpellReach,
+        /// <summary>Share. Damage of the base spell alone (on top of SpellDamage).</summary>
+        BaseSpellDamage,
+        /// <summary>Flat, whole. How much deeper the held element's affliction can be laid than its usual greatest depth.</summary>
+        AfflictionDepth,
+        /// <summary>Share. Reach of the bursts afflictions make: set off, and the burst of a death.</summary>
+        BurstReach,
+        /// <summary>Share. Damage of those bursts.</summary>
+        BurstDamage,
+        /// <summary>Share. How quickly damage dealt earns a flask back.</summary>
+        FlaskEarn,
+        /// <summary>Flat, whole. Leaps, blades or pillars the base spell has beyond its own.</summary>
+        BaseSpellCount,
+        /// <summary>Share. Width of the base spell's cone.</summary>
+        BaseSpellArc,
+        // The numbers of the moves written by hand for Fire and Lightning, and of Heat.
+        /// <summary>Share. Stagger of Backdraft's cone.</summary>
+        BackdraftStagger,
+        /// <summary>Share. Reach of Backdraft's cone and of the detonation a perfect guard sets off.</summary>
+        BackdraftReach,
+        /// <summary>Share. How long Flame Trail burns on the ground.</summary>
+        TrailSeconds,
+        /// <summary>Share. Each bite of Flame Trail.</summary>
+        TrailDamage,
+        /// <summary>Share. Damage and stagger of Blink's shock.</summary>
+        BlinkPower,
+        /// <summary>Share. Width of the lane Blink shocks.</summary>
+        BlinkWidth,
+        /// <summary>Share. Damage and stagger of the copy Afterimage leaves.</summary>
+        AfterimagePower,
+        /// <summary>Share. How far Static's discharge reaches from the enemy struck.</summary>
+        DischargeReach,
+        /// <summary>Share. Stagger of the blow a stored charge is spent on.</summary>
+        ChargeStagger,
+        /// <summary>Flat, whole. Blows fewer for each level of Heat (never fewer than one a level).</summary>
+        HeatBlows,
+        /// <summary>Share. How long Heat lasts between blows before it cools a level.</summary>
+        HeatCooling,
+        /// <summary>Flat, whole. Levels of Heat above the usual five.</summary>
+        HeatCap,
+        /// <summary>Flat, whole. Critical blows a mark of light carries beyond its three.</summary>
+        MarkBlows,
+        /// <summary>Share. How long what the player grows stands.</summary>
+        GrownSeconds,
+        /// <summary>Share. How hard what the player grows bites.</summary>
+        GrownDamage,
+        /// <summary>Flat, whole. How many more of each kind of grown thing may stand.</summary>
+        GrownLimit,
+        /// <summary>Flat, seconds. How much longer an enemy the player throws into the air hangs.</summary>
+        AirSeconds,
+        /// <summary>Flat, whole. How many more blows than three can each hold an enemy up in the air; past three, each adds less.</summary>
+        AirBlows,
+        /// <summary>Flat, seconds. How much sooner the player counts as planted after a dodge.</summary>
+        PlantedSooner,
+        /// <summary>Flat. Health a point of missing mana costs when a spell is cast with too little: 0.5 is half a point. Zero: a spell without its mana is not cast.</summary>
+        BloodPrice,
+        /// <summary>Share. Prices paid in health: a spell's health cost, the blood price, a surge's drain.</summary>
+        HealthPrices,
+        /// <summary>Flat. Weapon damage gained for each point of grey health held (0.0075 is three quarters of a percent), to 30% at most.</summary>
+        GreyStrength,
+        /// <summary>Flat. The share of weapon damage dealt that comes back as health: 0.05 is five in a hundred.</summary>
+        Leech,
     }
 }

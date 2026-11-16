@@ -38,6 +38,8 @@ namespace Clover.Gameplay
         public float ShatterDamage;
         /// <summary>True when a weapon blow on it is always critical; mana each stack adds to such a blow.</summary>
         public bool MakesBlowsCritical;
+        /// <summary>How many weapon blows it lasts for: each one spends one, and the last ends it. Laid again, it is refilled. Zero: it is not spent by blows.</summary>
+        public int Blows;
         public float ManaPerStack;
         /// <summary>Health each stack gives the striker for a weapon blow on it.</summary>
         public float HealOnBlowPerStack;

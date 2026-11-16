@@ -2,10 +2,7 @@ using System.Collections.Generic;
 
 namespace Clover.Player.Trees
 {
-    /// <summary>
-    /// Gathers every tree file into the one catalogue. A new tree is a new file beside this one with a static
-    /// <c>Add(List&lt;Upgrade&gt;)</c>, and one line here; a test fails if a tree file is left out.
-    /// </summary>
+    /// <summary>Every tree file, gathered in the order the elements stand round the ring. A new tree is one line here.</summary>
     public static class UpgradeTrees
     {
         public static void AddAll(List<Upgrade> to)
@@ -14,6 +11,25 @@ namespace Clover.Player.Trees
             FireTree.Add(to);
             PlasmaTree.Add(to);
             LightningTree.Add(to);
+            TempestTree.Add(to);
+            WindTree.Add(to);
+            BlizzardTree.Add(to);
+            IceTree.Add(to);
+            GlacierTree.Add(to);
+            WaterTree.Add(to);
+            BloomTree.Add(to);
+            LifeTree.Add(to);
+            OvergrowthTree.Add(to);
+            EarthTree.Add(to);
+            ForgeTree.Add(to);
+            MetalTree.Add(to);
+            HaloTree.Add(to);
+            LightTree.Add(to);
+            EclipseTree.Add(to);
+            DarkTree.Add(to);
+            BlightTree.Add(to);
+            PoisonTree.Add(to);
+            PyreTree.Add(to);
         }
     }
 }

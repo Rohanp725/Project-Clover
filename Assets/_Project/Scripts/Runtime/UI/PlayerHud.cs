@@ -65,6 +65,7 @@ namespace Clover.UI
         private bool shownCharge;
         private Upgrade shownWorn;
         private int shownWards;
+        private int shownTallies = -1;
         private int shownFlasks;
 
         /// <summary>Adds what the element's tree shows: the embers held, and Heat's levels while Heat is learned.</summary>
@@ -166,17 +167,21 @@ namespace Clover.UI
                 bool charge = upgrades != null && upgrades.ChargeStored;
                 var worn = upgrades != null ? upgrades.Worn : null;
                 int wards = defence.Wards;
-                if (combat.Weapon != shownWeapon || surge != shownSurge || charge != shownCharge || worn != shownWorn || wards != shownWards)
+                int tallies = upgrades != null ? upgrades.TallyVersion : 0;
+                if (tallies != shownTallies || combat.Weapon != shownWeapon || surge != shownSurge || charge != shownCharge || worn != shownWorn || wards != shownWards)
                 {
                     shownWeapon = combat.Weapon;
                     shownSurge = surge;
                     shownCharge = charge;
                     shownWorn = worn;
                     shownWards = wards;
+                    shownTallies = tallies;
                     string text = surge > 0 ? $"{shownWeapon.Name}   {element.Kit.SurgeName} {surge}" : shownWeapon.Name;
                     // The spell worn in the hold-spell slot is named here, so the player knows what a held press will do.
                     if (worn != null) text += "   Hold spell: " + worn.Name;
                     if (wards > 0) text += wards > 1 ? $"   Wards {wards}" : "   Ward";
+                    // Counts the learned marks keep: plates, folds, swords waiting.
+                    if (upgrades != null) text += upgrades.TallyText;
                     status.text = charge ? text + "   Charge stored" : text;
                 }
             }

@@ -96,8 +96,11 @@ namespace Clover.Tests
         {
             var set = new AfflictionSet();
             Assert.IsFalse(set.Apply(AfflictionKind.Static, 1).Carried, "dry, it carries nothing");
+            // Soaked is not counted in stacks: laid twice, it is still one.
             set.Apply(AfflictionKind.Soaked, 2);
-            Assert.AreEqual(1f + 2 * Afflictions.Spec(AfflictionKind.Soaked).SpellDamageTakenPerStack, set.DamageTakenMultiplier(true), 0.0001f);
+            Assert.AreEqual(1, set.Stacks(AfflictionKind.Soaked));
+            Assert.AreEqual(1f + Afflictions.Spec(AfflictionKind.Soaked).SpellDamageTakenPerStack, set.DamageTakenMultiplier(true), 0.0001f);
+            Assert.AreEqual(1.25f, set.DamageTakenMultiplier(true), 0.0001f, "a quarter more from spells, as the design has it");
             Assert.AreEqual(1f, set.DamageTakenMultiplier(false), 0.0001f);
             Assert.IsTrue(set.Apply(AfflictionKind.Static, 1).Carried);
             Assert.IsTrue(set.Apply(AfflictionKind.Chill, 1).Carried);
@@ -151,9 +154,23 @@ namespace Clover.Tests
         {
             var set = new AfflictionSet();
             Assert.IsFalse(set.MakesBlowsCritical);
+            // A mark is one deep until a mark of the tree deepens it, and carries three critical blows.
             set.Apply(AfflictionKind.Marked, 2);
             Assert.IsTrue(set.MakesBlowsCritical);
-            Assert.AreEqual(2 * Afflictions.Spec(AfflictionKind.Marked).ManaPerStack, set.ManaOnBlow, 0.0001f);
+            Assert.AreEqual(1, set.Stacks(AfflictionKind.Marked));
+            Assert.AreEqual(Afflictions.Spec(AfflictionKind.Marked).ManaPerStack, set.ManaOnBlow, 0.0001f);
+            Assert.AreEqual(3, set.BlowsLeft(AfflictionKind.Marked));
+            set.BlowLanded();
+            set.BlowLanded();
+            Assert.IsTrue(set.MakesBlowsCritical, "two blows spent, one left");
+            set.Apply(AfflictionKind.Marked, 1);
+            Assert.AreEqual(3, set.BlowsLeft(AfflictionKind.Marked), "marking again refills the three");
+            set.BlowLanded();
+            set.BlowLanded();
+            set.BlowLanded();
+            Assert.IsFalse(set.Has(AfflictionKind.Marked), "the third blow spends the mark");
+            Assert.IsFalse(set.MakesBlowsCritical);
+            set.Apply(AfflictionKind.Marked, 1);
 
             Assert.AreEqual(0f, set.HealOnBlow);
             Assert.AreEqual(0f, set.DeathBurst(out float none));
@@ -163,9 +180,12 @@ namespace Clover.Tests
             Assert.AreEqual(Afflictions.Spec(AfflictionKind.Seeded).DeathBurstRadius, radius, 0.0001f);
 
             Assert.AreEqual(1f, set.DamageDealtMultiplier, 0.0001f);
+            // Cursed has one depth: laid twice, it is still one.
             set.Apply(AfflictionKind.Cursed, 2);
-            Assert.AreEqual(1f - 2 * Afflictions.Spec(AfflictionKind.Cursed).DealsLessPerStack, set.DamageDealtMultiplier, 0.0001f);
-            Assert.AreEqual(2 * Afflictions.Spec(AfflictionKind.Cursed).HealOnKillPerStack, set.HealOnKill, 0.0001f);
+            Assert.AreEqual(1, set.Stacks(AfflictionKind.Cursed));
+            Assert.AreEqual(1f - Afflictions.Spec(AfflictionKind.Cursed).DealsLessPerStack, set.DamageDealtMultiplier, 0.0001f);
+            Assert.AreEqual(0.85f, set.DamageDealtMultiplier, 0.0001f);
+            Assert.AreEqual(Afflictions.Spec(AfflictionKind.Cursed).HealOnKillPerStack, set.HealOnKill, 0.0001f);
         }
 
         [Test]

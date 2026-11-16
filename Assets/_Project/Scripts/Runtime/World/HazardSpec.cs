@@ -36,5 +36,10 @@ namespace Clover.World
         public int Bites;
         /// <summary>True when a mark is drawn on the ground while it waits out its delay: something is about to fall here.</summary>
         public bool Warn;
+        /// <summary>Something the player has grown or planted: it is counted, can be stood near, and can be burst with the rest.</summary>
+        public bool Grown;
+        /// <summary>For a grown thing: which kind it is (things of one kind share a limit) and how many of that kind may stand; one more takes the place of the one nearest its end. Zero: no limit.</summary>
+        public int Family;
+        public int Limit;
     }
 }

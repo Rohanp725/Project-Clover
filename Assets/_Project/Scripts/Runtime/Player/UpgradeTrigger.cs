@@ -52,5 +52,19 @@ namespace Clover.Player
         LowHealth,
         /// <summary>The player's mana becomes full. Fires once each time it fills. Target: none.</summary>
         ManaFull,
+        /// <summary>A critical blow of the weapon lands. Target: the enemy struck.</summary>
+        CritHit,
+        /// <summary>The last blow of a light chain, or the heavy blow that ends one, lands. Target: the enemy struck.</summary>
+        ChainEnd,
+        /// <summary>An affliction on an enemy is set off or discharged by the player (the SetOff action, Lightning's discharge). Target: that enemy; carries the stacks spent.</summary>
+        SetOff,
+        /// <summary>A frozen enemy is shattered. Target: that enemy.</summary>
+        Shatter,
+        /// <summary>A ward (or a plate of stone) turns a blow and is spent. Target: none.</summary>
+        WardSpent,
+        /// <summary>The player throws an enemy into the air (or makes one that cannot be lifted reel). Target: that enemy.</summary>
+        Lifted,
+        /// <summary>An enemy thrown into the air comes down. Target: that enemy.</summary>
+        Landed,
     }
 }

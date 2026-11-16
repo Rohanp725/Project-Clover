@@ -71,6 +71,13 @@ namespace Clover.Player
         public int BurnStacksOnHit;
         public float StackBurnSeconds = 4f;
         /// <summary>What the learned upgrades and timed boons make of the player's numbers; <see cref="PlayerUpgrades"/> keeps these up to date.</summary>
+        /// <summary>The player's numbers, for what is asked blow by blow (conditions on a blow, or on what the target carries). Set by <see cref="PlayerUpgrades"/>.</summary>
+        [System.NonSerialized] public PlayerStats Stats;
+        /// <summary>Seconds each blow holds an enemy up in the air, and how many blows can.</summary>
+        public float AirBlowSeconds = 0.45f;
+        public int AirBlowsMost = 3;
+        /// <summary>True when the last blow of the weapon that landed was critical.</summary>
+        public bool LastBlowCritical { get; private set; }
         public float StatDamage = 1f;
         public float StatStagger = 1f;
         public float StatMana = 1f;
@@ -237,7 +244,9 @@ namespace Clover.Player
         private Hit Make(in SpellBlow blow, IDamageable target, Vector3 direction, Vector3 origin)
         {
             float damage = blow.Damage;
-            if (StatAfflicted != 1f && target is IAfflictable afflictable && afflictable.Afflictions.Any) damage *= StatAfflicted;
+            var carrier = target as IAfflictable;
+            if (StatAfflicted != 1f && carrier != null && carrier.Afflictions.Any) damage *= StatAfflicted;
+            if (Stats != null && carrier != null) damage *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.SpellDamage, carrier.Afflictions));
             if (blow.Affliction == AfflictionKind.Burn)
             {
                 // A burn is given in seconds, with or without depth.
@@ -451,6 +460,49 @@ namespace Clover.Player
                 afflictable.Afflictions.Apply(kind, stacks + ExtraStacks, 0f, AfflictionPower);
             }
             return spellStruck.Count;
+        }
+
+        /// <summary>Throws everything in a circle into the air for a time (longer with the player's own numbers). Returns how many left the ground.</summary>
+        public int LiftArea(Vector3 centre, float radius, float seconds)
+        {
+            spellStruck.Clear();
+            int lifted = 0;
+            if (Stats != null) seconds += Stats.Sum(PlayerStat.AirSeconds);
+            int count = Overlap(centre + Vector3.up, radius + 0.5f);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || spellStruck.Contains(target) || !(target is IAfflictable afflictable)) continue;
+                Vector3 offset = ((Component)target).transform.position - centre;
+                offset.y = 0f;
+                if (offset.magnitude > radius) continue;
+                spellStruck.Add(target);
+                if (afflictable.Afflictions.Lift(seconds)) lifted++;
+            }
+            return lifted;
+        }
+
+        /// <summary>Holds everything in a circle still for a time. Returns how many it took hold of.</summary>
+        public int HoldArea(Vector3 centre, float radius, float seconds)
+        {
+            spellStruck.Clear();
+            int held = 0;
+            int count = Overlap(centre + Vector3.up, radius + 0.5f);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || spellStruck.Contains(target) || !(target is IAfflictable afflictable)) continue;
+                Vector3 offset = ((Component)target).transform.position - centre;
+                offset.y = 0f;
+                if (offset.magnitude > radius) continue;
+                spellStruck.Add(target);
+                if (afflictable.Afflictions.Hold(seconds)) held++;
+            }
+            return held;
         }
 
         /// <summary>Drags everything in a circle toward its middle, or throws it away from there, by about this many metres. Returns how many it moved.</summary>
@@ -687,8 +739,21 @@ namespace Clover.Player
                 var afflictable = target as IAfflictable;
                 // A blow is critical by chance, or always on an enemy that is Marked.
                 bool promised = step.Heavy && HeavyCriticalLeft > 0f;
-                bool critical = promised || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (CritChance > 0f && Random.value < CritChance);
+                float chance = CritChance;
+                if (Stats != null) chance += Stats.Blow(PlayerStat.CritChance, step.Heavy, false) + (afflictable != null ? Stats.Against(PlayerStat.CritChance, afflictable.Afflictions) : 0f);
+                bool critical = promised || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (chance > 0f && Random.value < chance);
                 float damage = step.Damage * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
+                float staggerShare = 1f;
+                if (Stats != null)
+                {
+                    // What holds for this kind of blow, or against what this target carries, on top of the standing sums.
+                    var carried = afflictable != null ? afflictable.Afflictions : null;
+                    var light = Combo.Steps;
+                    bool endsChain = step == Combo.ChainHeavy || (light.Count > 0 && step == light[light.Count - 1]);
+                    bool inAir = carried != null && carried.IsAirborne;
+                    damage *= Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.WeaponDamage, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.WeaponDamage, carried) + (inAir ? Stats.InAir(PlayerStat.WeaponDamage) : 0f));
+                    staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried) + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) : 0f));
+                }
                 if (critical) damage *= CritMultiplier;
                 bool wasAfflicted = afflictable != null && afflictable.Afflictions.Any;
                 if (wasAfflicted) damage *= StatAfflicted;
@@ -698,12 +763,14 @@ namespace Clover.Player
                 var kind = stacks <= 0 ? AfflictionKind.None : WeaponAfflictionStacks > 0 ? WeaponAffliction : EmpowerAffliction;
                 if (kind != AfflictionKind.None) stacks += ExtraStacks;
                 float lasts = kind != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(kind).Seconds * AfflictionSeconds : 0f;
-                var outcome = target.TakeHit(new Hit(damage, (step.Stagger + StaggerOnHit) * NextBlowStagger * StatStagger, transform.forward, step.Heavy, false, transform.position,
+                var outcome = target.TakeHit(new Hit(damage, (step.Stagger + StaggerOnHit) * NextBlowStagger * StatStagger * staggerShare, transform.forward, step.Heavy, false, transform.position,
                     burn, BurnStacksOnHit > 0 ? BurnStacksOnHit + ExtraStacks : 0, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
                 LastBlowDamage = damage;
+                LastBlowCritical = critical;
                 float earned = step.ManaGain * StatMana;
+                if (Stats != null && afflictable != null) earned *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.ManaFromBlows, afflictable.Afflictions) + (afflictable.Afflictions.IsAirborne ? Stats.InAir(PlayerStat.ManaFromBlows) : 0f));
                 if (outcome != HitOutcome.Blocked)
                 {
                     if (critical || NextBlowDamage > 1f)
@@ -719,6 +786,11 @@ namespace Clover.Player
                         float fed = afflictable.Afflictions.HealOnBlow;
                         if (fed > 0f && defence != null) defence.Heal(fed, false);
                         earned += afflictable.Afflictions.ManaOnBlow;
+                        // A mark of light carries a few critical blows and is spent by them.
+                        afflictable.Afflictions.BlowLanded();
+                        // A blow that reaches an enemy in the air holds it up a little longer: three times, or more for one who has learned to keep it there.
+                        int more = Stats != null ? Mathf.Max(0, Stats.Whole(PlayerStat.AirBlows)) : 0;
+                        afflictable.Afflictions.AirBlow(AirBlowSeconds, AirBlowsMost + more, more > 0 ? 0.85f : 1f);
                     }
                 }
                 if (upgrades != null) upgrades.OnBlow(step, target, outcome, wasAfflicted);

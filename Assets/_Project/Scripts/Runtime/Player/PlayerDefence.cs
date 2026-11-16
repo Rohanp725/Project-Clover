@@ -170,6 +170,7 @@ namespace Clover.Player
             if (Wards <= 0) return false;
             Wards--;
             BlowsWarded++;
+            if (upgrades != null) upgrades.OnWardSpent();
             Vfx.Play(VfxKind.TintRing, GuardPoint(), transform.forward, 1f, new Color(0.7f, 0.92f, 1f));
             Vfx.Play(VfxKind.TintSpark, GuardPoint(), transform.forward, 2f, new Color(0.7f, 0.92f, 1f));
             Vfx.Play(VfxKind.Clang, GuardPoint());

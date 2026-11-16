@@ -754,8 +754,9 @@ Metal, Light, Dark, Poison), each with one colour, one affliction it lays on ene
 the next element round (Plasma, Tempest, Blizzard, Glacier, Bloom, Overgrowth, Forge, Halo, Eclipse, Blight, Pyre).
 One file, `Elements.cs`, knows all of it.
 
-**All eleven elements can be held.** Fire and Lightning are as they were. The other nine have stand-in kits made from
-what already existed, each in its colour with its affliction, to be replaced when their own spells are made:
+**All eleven elements can be held.** Fire and Lightning are as they were. The other nine had stand-in kits made from
+what already existed (the table below is as it was that morning; **the kits now carry the designs' names and numbers:
+see "The great chart filled" further down**):
 
 | Element | Spell (tap) | Surge (from the user's first table of self buffs) |
 |---|---|---|
@@ -835,6 +836,79 @@ against the schema); the library of spell forms beyond the first four; Dark's re
 afflictions on the player; a sound for anything new; balance of every new number. Pull and push move ordinary enemies
 and hardly move elites and gods. The chart was looked at only at the editor's 1920 by 936 game view.
 
+### The great chart filled: the trees, the gifts and the engine under them (2026-11-16, day run, afternoon; Claude's defaults, not yet played by the user)
+
+Built while the user was away, from their words: "a massive upgrade tree, with 30-40 possible options for each element
+including the mixed elements as well as the super special boss one", "super cool, flashy, and interesting moves", "a
+branching tree outwards in many directions", and of the economy "the goal is to make it as if you have to choose a
+path in the tree". Nothing below was decided by the user; all of it is Claude's default, to be kept or changed.
+
+**The trees are in.** Twenty-two files under `Runtime/Player/Trees/`: eleven elements of 30 to 36 marks each and
+eleven mixed branches of seven to ten, 428 marks in all, written from `docs/design/trees_a.md` and `trees_b.md`. Each
+element has a root, three boughs ending in three keystones, four or five spells and a god's gift; each branch has a
+crown. Wind's "Slipstream" is called **Rushing Wake** (Lightning already had a Slipstream; no two marks share a name).
+
+**The economy holds, by test.** No element's whole tree can be bought with a run's nineteen embers (every tree costs
+more than three runs), the cheapest road from a root to one keystone costs at most twenty-two, and two keystones are
+beyond one run. The designed costs were kept as they are.
+
+**The kits carry the designs' names and, as far as the forms allow, their behaviour.**
+
+| Element | Base spell (tap) | Surge |
+|---|---|---|
+| Wind | **Gust**: a short cone, 8 damage, Unsteady two deep, everything within reach thrown 3 m | **Tailwind**, 35 mana: the dodge costs half, goes 30% further, is safe longer; 15% quicker |
+| Ice | **Hoarfrost**: a fan 4.5 m ahead, 10 damage, Chill two deep | **Glaze**, 12 s: one ward that takes the next blow |
+| Water | **Riptide**, 20 mana: a wave 5 m ahead that soaks and drags what stands within reach 2 m closer | **Wellspring**, 30 mana, 12 s: flasks heal half again as much |
+| Life | **Briar Patch**, 20 mana: a bed of thorns 3 m ahead for 6 s, biting twice a second and seeding (the `field` form; it counts as something grown) | **Regrowth**, 6 s: grey health made real at once, then 4 health a second |
+| Earth | **Stone Rise**: a pillar under the enemy faced, 14 damage, 30 stagger, Tremor (the `pillars` form: it lifts) | **Bedrock**: 20% less damage taken |
+| Metal | **Flung Blade**: a blade left in the enemy faced for 6 s; the next weapon blow drives it in for 12 and a notch (the `brand` form) | **Temper**: 30% less damage taken |
+| Light | **Glare**: a flash 4 m ahead, 8 damage, 22 stagger, Marked | **Clarity**, 8 s: grey health made whole, perfect guard and dodge windows half again as long |
+| Dark | **Grasp**: a hand to the enemy faced within 6 m that drags it to the feet, Cursed | **Hunger**, no mana: 3 health a second drained, the weapon deals 30% more and 30% of it comes back |
+| Poison | **Miasma**: a cloud 4 m ahead for 4 s, one dose a second (the `field` form) | **Fever**: 1 health a second and 6% of each blow back |
+
+Short of the designs: Gust and Riptide move everything within reach, not only what the cone touched; Stone Rise's
+pillar does not stand to be broken; Flung Blade deals nothing as it lands; Grasp does not drag the player to what
+cannot be dragged; Glaze, Wellspring, Bedrock, Temper, Clarity and Fever have their plain halves only (no "the swing
+goes on", no instant flask, no shed afflictions, no guard that throws stagger back, no doubled beat).
+
+**Afflictions follow the designs' numbers now**: Unsteady five deep at 6% stagger, 15% shove and 8% turning a stack;
+Chill 7% a stack and Frozen 2.5 s; Static 6 s; Soaked on or off at 25% more from spells; Seeded 8 s with its burst in
+3 m; Sundered 8% a notch; Marked one deep (three with Weighed) for 8 s, carrying three critical blows and then spent;
+Cursed one depth at 15%; Poison eight deep at 2 a dose for 6 s, set off for 6 a dose. Not moved: the shatter is still
+a flat 45, Seeded still heals by depth, and a guard is not opened by three notches.
+
+**Gifts are by rule.** Taking an element from its god gives the Signature at the crown of that element's tree;
+consuming a god gives the crown of the branch its element shares with the one held, when the two are neighbours on
+the ring, and the embers as before. A gift that is a spell is worn at once. The summit's choice is unchanged in play
+(Storm Step; Plasma for a Fire holder), but nothing names those ids any more. A mix's first mark lays only the
+affliction of the element not held on top of what the held element's root already lays.
+
+**Two debug shrines in the practice yard** (the Combat Test scene only), beside the element stone: **GOD GIFT** gives
+the Signature of the element held; **CONSUME NEXT** marks the next element round the ring as consumed, which opens
+the branch between them and gives its crown. With the element stone that is every gift in the game, tried by hand.
+
+**The engine grew to say what the marks say.** Stats that hold only in a state (guarding, the surge, low or high
+health, unhurt, planted, owing health, full mana, near something grown), on a kind of blow (heavy, light, critical,
+the last of a chain, on an enemy in the air) or against a named affliction; stamina split into attacks, guard and
+dodge; base-spell-only cost, reach, damage, arc and count; a deeper greatest depth; burst reach and damage; leech;
+kills that know what the dead carried; triggers for a set-off with its depth, a shatter, a critical blow, the end of
+a chain, a ward spent, a lift and a landing; **Hold**; **counts** a mark banks and spends, named on the HUD beside the
+weapon; **health as a price** (a spell's own, and mana paid in blood) and grey health read; **the air** (an enemy
+thrown up hangs helpless and lands; blows hold it up, three times; gods hang a little; the colossus reels); the flask
+filled by parts; **grown things** counted, limited, stood near and burst; and the numbers of the hand-written Fire and
+Lightning moves and of Heat (White Heat is whole: Heat to eight, quicker above five, and struck up there you burn).
+`docs/UPGRADE_SCHEMA.md` section 15 is the exact list.
+
+**Layout.** Minors were moved beside what they grow from by script; Fire and Lightning, which carry extra marks from
+the first slice, were settled whole. Plasma stands in two columns, and its kept mark Ionised Air grows from Twin
+Break now.
+
+**Not built, or left rough** (the full list of marks that do less than their words is in the day run's report): the
+bespoke spells, keystones and signatures; Dark's Rise; poison's beat; anything that changes an enemy's own attacks,
+guard or sight; things that stand and can be struck; the lift has no shadow or landing ring; counts show as words,
+not pips; no sound for anything new; none of the new numbers has been played for balance. Light's Unblemished and
+Metal's Master's Answer are the loudest untried numbers.
+
 ## Open questions
 
 1. Camera: top-down is on trial in the slice; confirm or change once it is playable.
@@ -860,6 +934,7 @@ and hardly move elites and gods. The chart was looked at only at the editor's 19
 | 2026-11-16 | Game text is set in Spectral SemiBold (OFL); surfaces are painted by code in a hand-painted manner; fire is drawn as layered tongues | Claude's defaults during the unattended overnight run, toward the Ravenswatch brief |
 | 2026-11-16 | The hub is a stopped clock outside time; a fall ends the run and wakes the player there; the Katana and Lightning become starting choices once won in a run | Claude's defaults during the unattended overnight run, following the decided run-based structure |
 | 2026-11-16 | The element trees become one great chart of eleven elements round a ring with a mixed branch between neighbours; upgrades are data (kinds, costs by kind, triggers and actions); afflictions, critical blows, wards and worn spells exist; the nine new elements have stand-in kits and lit braziers | Claude's defaults during the day run, from the user's request for a massive branching tree with mixed elements; see "The great chart" |
+| 2026-11-16 | The twenty-two tree files land (428 marks); kits renamed and rebuilt to the designs; afflictions moved to the designs' numbers; gifts given by rule; two debug shrines in the practice yard; the engine gains conditional stats, counts, Hold, the air, health as a price, grown things and tunable hand-written moves | Claude's defaults during the day run of 2026-11-16, from the user's request; see "The great chart filled" |
 | 2026-11-16 | Upgrades are bought with embers (one per enemy, five per god) at rest fires, in any order; held buttons give the flask and the spell their upgraded moves | Claude's defaults during the unattended overnight run |
 | 2026-11-16 | The god of Lightning is Narukami, a duellist with a ring of thunder drums, fought above the clouds; take or consume is two things he leaves on the floor | Claude's defaults during the unattended overnight run |
 | 2026-11-15 | Blocking is directional; the finisher is its own move on a staggered enemy | the user's feedback after playing the combat arena |

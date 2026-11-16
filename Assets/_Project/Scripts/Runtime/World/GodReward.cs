@@ -15,6 +15,8 @@ namespace Clover.World
 
         /// <summary>True to take the god's element; false to consume it.</summary>
         public bool Takes;
+        /// <summary>The element of the god this stands over. The swordsman of the summit is the storm.</summary>
+        public string Element = Elements.Lightning;
         /// <summary>Embers a consumed god gives toward the tree the player already has.</summary>
         public int ConsumeEmbers = 4;
 
@@ -37,7 +39,7 @@ namespace Clover.World
             {
                 // The old element goes, and what was learned of it with it; the embers spent on it come back.
                 // Someone who already carries this god's element keeps what they learned of it: there is no old tree to lose.
-                bool sameElement = element != null && element.Kit != null && element.Kit.Name == ElementKit.LightningName;
+                bool sameElement = element != null && element.Kit != null && element.Kit.Name == Element;
                 if (upgrades != null)
                 {
                     if (!sameElement)
@@ -48,14 +50,14 @@ namespace Clover.World
                         upgrades.Forget();
                         upgrades.Refund(spent);
                     }
-                    // His own way of moving comes with his element.
-                    RunState.Unlocked.Add(Upgrade.StormStep);
                 }
-                RunState.Element = ElementKit.LightningName;
+                RunState.Element = Element;
                 // Once taken from its god, a later run may begin with it.
-                Progress.Unlock(Progress.ElementKey(ElementKit.LightningName));
+                Progress.Unlock(Progress.ElementKey(Element));
                 RunState.ElementConsumed = false;
-                if (element != null) element.Take(ElementKit.Lightning());
+                if (element != null) element.Take(ElementKit.ByName(Element, false));
+                // The god's own gift comes with his element: the Signature at the crown of its tree, worn if it is a spell.
+                if (upgrades != null) upgrades.Give(Gifts.SignatureOf(Element));
                 if (who.Combat != null) who.Combat.Equip(Weapons.ByName(Weapons.StormKatanaName));
                 LightningBolts.Strike(who.transform.position, 1f);
                 if (who.Defence != null) who.Defence.Callout("The storm is yours");
@@ -65,12 +67,12 @@ namespace Clover.World
                 if (string.IsNullOrEmpty(RunState.Element)) RunState.Element = element != null ? element.Kit.Name : ElementKit.FireName;
                 RunState.ElementConsumed = true;
                 // The god's element, swallowed, opens the branch it shares with the one held.
-                RunState.ElementsConsumed.Add(ElementKit.LightningName);
+                RunState.ElementsConsumed.Add(Element);
                 if (element != null) element.Take(ElementKit.ByName(RunState.Element, true));
                 // What is consumed feeds the tree the player already has.
                 if (upgrades != null) upgrades.Earn(ConsumeEmbers);
-                // The storm, swallowed, mixes with the fire.
-                if (RunState.Element == ElementKit.FireName) RunState.Unlocked.Add(Upgrade.Plasma);
+                // Swallowed, it mixes with the element held when the two stand side by side on the ring: the crown of their branch.
+                if (upgrades != null) upgrades.Give(Gifts.CrownOf(RunState.Element, Element));
                 if (who.Combat != null) who.Combat.Equip(Weapons.ByName(Weapons.KatanaName));
                 Vfx.Play(VfxKind.Fire, who.transform.position + Vector3.up, Vector3.up, 3f);
                 if (who.Defence != null) who.Defence.Callout("The storm feeds the fire");

@@ -98,7 +98,39 @@ namespace Clover.EditorTools
             changes.Configure("", "Take the next element", false);
             changes.Range = 1.6f;
             stones.Add(changes);
+            // Two debug shrines beside the element stone, for trying the gods' gifts while only one god exists.
+            stones.Add(BuildShrine(rack, plinth, new Vector3(-3f, 0f, -12.5f), false, "GOD GIFT", "Debug shrine: take the god's gift of the element you hold", new Color(1f, 0.85f, 0.35f)));
+            stones.Add(BuildShrine(rack, plinth, new Vector3(3f, 0f, -12.5f), true, "CONSUME NEXT", "Debug shrine: consume the next element round the ring (opens the mix, gives its crown)", new Color(0.85f, 0.45f, 1f)));
             player.GetComponent<PlayerInteraction>().Configure(stones.ToArray());
+        }
+
+        private static Clover.World.Interactable BuildShrine(Transform rack, Material plinth, Vector3 at, bool consumes, string label, string prompt, Color colour)
+        {
+            var shrine = new GameObject(consumes ? "Debug Shrine Consume" : "Debug Shrine Gift");
+            shrine.transform.SetParent(rack, false);
+            shrine.transform.position = at;
+            BuildKit.Shape(PrimitiveType.Cube, "Plinth", shrine.transform, new Vector3(0f, 0.6f, 0f), new Vector3(0.7f, 1.2f, 0.7f), plinth);
+            var gem = BuildKit.Toon(Folder, consumes ? "m_shrine_consume" : "m_shrine_gift", colour, false, null, 0f, 0.02f).Lit(Color.black, 0.3f, new Color(colour.r * 1.6f, colour.g * 1.6f, colour.b * 1.6f));
+            BuildKit.Shape(PrimitiveType.Cube, "Gem", shrine.transform, new Vector3(0f, 1.55f, 0f), new Vector3(0.4f, 0.4f, 0.4f), gem, new Vector3(45f, 35f, 0f));
+            // Its name stands over it, turned to the camera, so it cannot be mistaken for a form stone.
+            var words = new GameObject("Label");
+            words.transform.SetParent(shrine.transform, false);
+            words.transform.localPosition = new Vector3(0f, 2.3f, 0f);
+            words.transform.localRotation = Quaternion.Euler(55f, 0f, 0f);
+            var text = words.AddComponent<TextMesh>();
+            var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.font = font;
+            words.GetComponent<MeshRenderer>().sharedMaterial = font.material;
+            text.text = label;
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.fontSize = 48;
+            text.characterSize = 0.07f;
+            text.color = colour;
+            var gives = shrine.AddComponent<Clover.World.GiftShrine>();
+            gives.Configure(consumes, prompt);
+            gives.Range = 1.4f;
+            return gives;
         }
 
         private class DummyKit

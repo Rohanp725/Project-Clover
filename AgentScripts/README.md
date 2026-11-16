@@ -31,9 +31,9 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 | `CaptainProbe` | Castle | the Gate Captain: every attack, guard, perfect guard, second phase, finisher, death |
 | `SummitProbe` | Summit | the swordsman, then the storm itself: rising, attacks, a hand cut, the head finished, the rewards |
 | `StormProbe` | Summit | the storm itself in detail: entrance, each attack hit and avoided, openings, fury, death |
-| `UpgradeProbe` | CombatTest | the chart (close, the whole ring, a sealed mix), every Fire and Lightning upgrade, Storm Step and Plasma, then each affliction measured on the dummy, the stats layer, effects that are only data, the worn spell, a mix mark bought, and the nine new elements' kits. Give it 90 polls |
+| `UpgradeProbe` | CombatTest | the chart (close, the whole ring, a sealed mix), every first-slice Fire and Lightning upgrade, Storm Step and Plasma, each affliction measured on the dummy, the stats layer, effects that are only data, the worn spell, a mix mark bought and its first mark not double-laying, the eleven kits; then (V) the real trees: Wind, Ice, Earth and Poison each buy their root, the road to their first spell and one more mark with embers, and use them; (W) the gifts from the two debug shrines, a mix opened, a gifted spell worn; (X) each piece of the newer engine: a stat on a state, Hold, a stat against an affliction, a base-spell-only cost, a kill that knows what the dead carried, a count banked and spent with its HUD words, health as a price, a flask filled by parts, a shatter, a set-off with its depth, the last blow of a chain, the air, grown things, Heat's numbers. Give it 130 polls |
 | `FormsProbe` | CombatTest | every spell form: gathers three dummies, takes the element that suits the form's sample spell, casts it, photographs it forming, landing and after (`review/shots/current/form_<id>_<n>.png`), and writes what each dummy lost and what was laid on it; then everything twice over on top of itself, and a fall with spells in the air. In Summit or Castle it casts each form once at the boss or nearest enemy instead. `%TEMP%/forms_probe.txt` may hold a comma list of ids to play only those, or `soak=<seconds>` to keep casting for the profiler. Give it 110 polls |
-| `ChartScaleProbe` | CombatTest | fills the chart to its planned size (381 marks) with the pattern tree of `docs/UPGRADE_SCHEMA.md`, photographs it close and pulled back for Fire, Water and Dark, counts garbage per frame with the chart open and with afflictions ticking, then holds each for twenty seconds so `diagnostics profiler_record` can be pointed at it. Give it 60 polls |
+| `ChartScaleProbe` | CombatTest | the real chart (428 marks): for every element it learns the road to the first spell with a run's nineteen embers, photographs the tree close and at its crown (`review/shots/current/chart_<element>_close.png`, `_crown.png`) and, for Fire, Wind, Water and Dark, the whole ring (`_ring.png`); walks it with the stick; counts garbage per frame with the chart open and with afflictions ticking; then holds each for eight seconds so `diagnostics profiler_record` can be pointed at it. Give it 70 polls |
 | `BrazierProbe` | Hub | the eleven braziers: which are lit, an element carried from one of the nine new ones, a photograph of the row |
 | `FeedbackProbe` | Castle | death burn-away, finish mark, target brackets, bars, low-health edge, cut marks |
 | `FinisherProbe` | Castle | the Katana's finisher and its camera |
@@ -46,3 +46,19 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 | `PerfProbe` | any | ten seconds of frame time, garbage and draw calls |
 
 Probes that touch saved progress forget it before and after, so the first real start still shows the first waking.
+
+## Trying the gifts by hand: the debug shrines
+
+Only the Lightning god exists, so the practice yard (the `CombatTest` scene, built by `Clover > Build > Combat Test
+Arena`) has two shrines beside the tall element stone, south of the middle, in front of the rack of form stones:
+
+| Shrine | Where | What using it does |
+|---|---|---|
+| **GOD GIFT** (gold) | 3 m west of the element stone | gives the Signature of the element you hold, as taking that element from its god would; a gift that is a spell is worn at once |
+| **CONSUME NEXT** (violet) | 3 m east of the element stone | marks the next element round the ring as consumed: the branch you share with it opens on the chart and its crown is given, as consuming that god would (no embers) |
+
+To try any gift: use the element stone until you hold the element you want (it gives the next round the ring each
+time), then a shrine. To try a mix from its other side, hold the later element and note that CONSUME NEXT always takes
+the one after it, so the earlier side is reached by holding the earlier element. Embers for the chart: `script eval
+"UnityEngine.Object.FindAnyObjectByType<Clover.Player.PlayerUpgrades>().Earn(40); return 1;"` in Play Mode, or the
+rest fire's menu after felling dummies. Nothing the shrines give is written to saved progress.

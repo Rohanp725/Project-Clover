@@ -107,6 +107,7 @@ namespace Clover.Tests
                 Assert.IsTrue(kit.TryCast(mana), element.Name);
                 Assert.IsTrue(kit.TickCast(kit.SpellWindup + 0.01f), element.Name);
                 Assert.IsTrue(kit.TrySurge(mana), element.Name);
+                if (!string.IsNullOrEmpty(kit.SpellForm)) Assert.IsNotNull(SpellForms.Get(kit.SpellForm), element.Name + "'s base spell names a form that does not exist");
                 Assert.IsTrue(kit.SurgeActive);
                 // The nine new ones lay their affliction with the spell and with every blow of the surge.
                 if (element.Name != Elements.Fire && element.Name != Elements.Lightning)
@@ -162,10 +163,14 @@ namespace Clover.Tests
                 {
                     Assert.IsNotNull(SpellForms.Get(upgrade.Form), upgrade.Id + " names a form that does not exist: " + upgrade.Form);
                     Assert.IsNotNull(upgrade.Spell, upgrade.Id + " has a form and no numbers");
-                    Assert.Greater(upgrade.Spell.Cost, 0f, upgrade.Id);
+                    // A spell is paid for: in mana, or in health where its words say so.
+                    Assert.Greater(upgrade.Spell.Cost + upgrade.Spell.HealthCost, 0f, upgrade.Id);
                 }
                 foreach (var effect in upgrade.Effects)
                 {
+                    Assert.AreSame(upgrade, effect.Owner, upgrade.Id);
+                    // What banks or spends a count needs a count to bank into.
+                    if (effect.Do == UpgradeAction.Bank || effect.Spends > 0 || effect.SpendsAll) Assert.IsNotNull(upgrade.Tally, upgrade.Id + " banks or spends a count it does not keep");
                     Assert.GreaterOrEqual(effect.Slot, 0, upgrade.Id);
                     Assert.Less(effect.Slot, Upgrade.EffectCount, upgrade.Id);
                     Assert.That(effect.Chance, Is.InRange(0.01f, 1f), upgrade.Id);
@@ -173,6 +178,88 @@ namespace Clover.Tests
             }
             Assert.AreEqual(Upgrade.All.SelectMany(upgrade => upgrade.Effects).Count(), Upgrade.EffectCount);
             Assert.AreEqual(Upgrade.All.SelectMany(upgrade => upgrade.Effects).Select(effect => effect.Slot).Distinct().Count(), Upgrade.EffectCount);
+        }
+
+        [Test]
+        public void NoTwoMarksShareAName()
+        {
+            var names = new Dictionary<string, string>();
+            foreach (var upgrade in Upgrade.All)
+            {
+                Assert.IsFalse(names.TryGetValue(upgrade.Name, out string other), $"{upgrade.Id} and {other} are both called {upgrade.Name}");
+                names[upgrade.Name] = upgrade.Id;
+            }
+        }
+
+        [Test]
+        public void TheKitsCarryTheNamesTheDesignsGiveTheirBaseSpellsAndSurges()
+        {
+            var named = new Dictionary<string, (string spell, string surge)>
+            {
+                { Elements.Fire, ("Flame Wave", "Kindle") }, { Elements.Lightning, ("Thunderclap", "Overdrive") }, { Elements.Wind, ("Gust", "Tailwind") },
+                { Elements.Ice, ("Hoarfrost", "Glaze") }, { Elements.Water, ("Riptide", "Wellspring") }, { Elements.Life, ("Briar Patch", "Regrowth") },
+                { Elements.Earth, ("Stone Rise", "Bedrock") }, { Elements.Metal, ("Flung Blade", "Temper") }, { Elements.Light, ("Glare", "Clarity") },
+                { Elements.Dark, ("Grasp", "Hunger") }, { Elements.Poison, ("Miasma", "Fever") },
+            };
+            foreach (var element in Elements.All)
+            {
+                var kit = ElementKit.ByName(element.Name, false);
+                Assert.AreEqual(named[element.Name].spell, kit.SpellName, element.Name);
+                Assert.AreEqual(named[element.Name].surge, kit.SurgeName, element.Name);
+            }
+        }
+
+        [Test]
+        public void EveryElementHasItsTreeItsGiftAndTheCrownOfEachBranchItShares()
+        {
+            foreach (var element in Elements.All)
+            {
+                int own = Upgrade.All.Count(upgrade => upgrade.Element == element.Name && !upgrade.IsMix);
+                Assert.That(own, Is.InRange(30, 40), element.Name + " has thirty to forty marks of its own");
+                var gift = Gifts.SignatureOf(element.Name);
+                Assert.IsNotNull(gift, element.Name + " has no god's gift");
+                Assert.AreEqual(element.Name, gift.Element);
+                Assert.IsFalse(gift.IsMix);
+                var crown = Gifts.CrownOf(element.Name, element.MixWith);
+                Assert.IsNotNull(crown, element.MixName + " has no crown");
+                Assert.AreSame(crown, Gifts.CrownOf(element.MixWith, element.Name), "in either order of holding");
+                Assert.IsTrue(crown.IsMix && crown.BelongsTo(element.Name) && crown.BelongsTo(element.MixWith));
+                Assert.GreaterOrEqual(Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.Element == element.Name), 6, element.MixName);
+            }
+            Assert.IsNull(Gifts.CrownOf(Elements.Fire, Elements.Water), "no branch between elements that are not neighbours");
+            Assert.IsNull(Gifts.CrownOf(Elements.Fire, Elements.Fire));
+            Assert.AreEqual(Upgrade.StormStep, Gifts.SignatureOf(Elements.Lightning).Id, "the storm's own gift is unchanged");
+            Assert.AreEqual(Upgrade.Plasma, Gifts.CrownOf(Elements.Fire, Elements.Lightning).Id, "and Plasma is still what the storm leaves the fire");
+        }
+
+        // The cheapest road from the root to a mark: every mark on the way is paid for, taking the cheapest parent each time.
+        private static int CheapestRoad(Upgrade upgrade, Dictionary<string, int> known)
+        {
+            if (known.TryGetValue(upgrade.Id, out int cost)) return cost;
+            int least = 0;
+            if (upgrade.Requires.Length > 0) least = upgrade.Requires.Min(id => CheapestRoad(Upgrade.ById(id), known));
+            return known[upgrade.Id] = least + upgrade.Cost;
+        }
+
+        [Test]
+        public void ARunCannotBuyAWholeTreeButCanReachOneKeystone()
+        {
+            // The castle and its god pay nineteen embers today.
+            const int run = 19;
+            var roads = new Dictionary<string, int>();
+            foreach (var element in Elements.All)
+            {
+                var sold = Upgrade.All.Where(upgrade => upgrade.Element == element.Name && !upgrade.IsMix && !upgrade.Signature).ToList();
+                int whole = sold.Sum(upgrade => upgrade.Cost);
+                Assert.Greater(whole, run * 3, element.Name + ": the whole tree is far more than a run pays, so a path is chosen");
+                var keystones = sold.Where(upgrade => upgrade.Kind == UpgradeKind.Keystone).ToList();
+                Assert.AreEqual(3, keystones.Count, element.Name + " ends its three boughs in three keystones");
+                int nearest = keystones.Min(keystone => CheapestRoad(keystone, roads));
+                Assert.LessOrEqual(nearest, run + 3, $"{element.Name}: the cheapest road to a keystone costs {nearest}, within reach of about one area and its god");
+                // And no run pays for two of them.
+                int two = keystones.Select(keystone => CheapestRoad(keystone, roads)).OrderBy(c => c).Take(2).Sum() - Upgrade.UsualCost(UpgradeKind.Root);
+                Assert.Greater(two, run, element.Name + ": two keystones are beyond one run");
+            }
         }
 
         [Test]
@@ -226,9 +313,9 @@ namespace Clover.Tests
                 Assert.LessOrEqual(tree.Count(upgrade => upgrade.Signature), 1, element.Name + " has one god's gift at most");
             }
             // The two trees of the slice are there, grown by six marks each, and the branch they share.
-            Assert.AreEqual(13, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.Signature));
-            Assert.AreEqual(13, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Lightning && !upgrade.IsMix && !upgrade.Signature));
-            Assert.AreEqual(3, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
+            Assert.AreEqual(33, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.Signature));
+            Assert.AreEqual(35, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Lightning && !upgrade.IsMix && !upgrade.Signature));
+            Assert.AreEqual(9, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
         }
 
         [Test]
@@ -318,9 +405,9 @@ namespace Clover.Tests
         public void AMarkIsReachableOnceAnyOneOfWhatItGrowsFromIsLearned()
         {
             var learned = new HashSet<string>();
-            Assert.IsTrue(UpgradeTree.Reachable(Upgrade.ById(Upgrade.Heat), learned));
+            Assert.IsTrue(UpgradeTree.Reachable(Upgrade.ById(FireTree.Cinder), learned));
             Assert.IsFalse(UpgradeTree.Reachable(Upgrade.ById(Upgrade.Backdraft), learned));
-            learned.Add(Upgrade.Heat);
+            learned.Add(FireTree.Cinder);
             Assert.IsTrue(UpgradeTree.Reachable(Upgrade.ById(Upgrade.Backdraft), learned));
             Assert.IsFalse(UpgradeTree.Reachable(Upgrade.ById(Upgrade.BurnAndDetonate), learned));
             // Chain Lance grows from Overclock or from Capacitor: either opens it.

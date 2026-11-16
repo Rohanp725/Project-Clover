@@ -102,6 +102,16 @@ namespace Clover.Player
             baseSpell.Radius = kit.SpellLeapRange;
             baseSpell.Stacks = kit.SpellStacks;
             baseSpell.AfflictionSeconds = kit.SpellBurnSeconds;
+            baseSpell.Seconds = kit.SpellSeconds;
+            baseSpell.Interval = kit.SpellInterval;
+            baseSpell.LingerDamage = kit.SpellLinger;
+            baseSpell.Delay = kit.SpellDelay;
+            if (!string.IsNullOrEmpty(kit.SpellForm))
+            {
+                // A base spell that wears a form reads its numbers as that form does.
+                baseSpell.Radius = kit.SpellRadius;
+                baseSpell.Count = kit.SpellCount;
+            }
             // Nothing asked of the old element is carried into the new one.
             spellBuffered = surgeBuffered = specialBuffered = 0f;
             spellHolding = false;
@@ -205,7 +215,9 @@ namespace Clover.Player
             if (spellBuffered > 0f && free && !Kit.IsCasting)
             {
                 spellBuffered = 0f;
-                if (Kit.TryCast(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SpellCost) : 1f)) BeginCast();
+                // With the mark for it, mana that is missing is paid in health.
+                if (upgrades != null) upgrades.CoverWithHealth(Kit.SpellCost * stats.Multiplier(PlayerStat.SpellCost) * stats.Multiplier(PlayerStat.BaseSpellCost));
+                if (Kit.TryCast(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SpellCost) * stats.Multiplier(PlayerStat.BaseSpellCost) : 1f)) BeginCast();
                 else if (defence != null) defence.Callout("No mana");
             }
             if (spellBuffered > 0f) spellBuffered -= deltaTime;
@@ -215,7 +227,7 @@ namespace Clover.Player
             if (Kit.SurgeActive && Kit.SurgeHealPerSecond != 0f && defence != null && !defence.IsDead)
             {
                 // Given or taken a point at a time, so the bar moves in steps that can be seen.
-                surgeHealOwed += Kit.SurgeHealPerSecond * deltaTime;
+                surgeHealOwed += Kit.SurgeHealPerSecond * deltaTime * (Kit.SurgeHealPerSecond < 0f && stats != null ? stats.Multiplier(PlayerStat.HealthPrices) : 1f);
                 if (surgeHealOwed >= 1f)
                 {
                     defence.Heal(1f, false);
@@ -257,7 +269,7 @@ namespace Clover.Player
         private void BeginCast()
         {
             // The spell goes at whoever is nearest, as an attack would.
-            var enemy = combat.NearestEnemy(Kit.Shape == SpellShape.Bolt ? Kit.SpellReach : 0f);
+            var enemy = combat.NearestEnemy(Kit.Shape == SpellShape.Bolt || !string.IsNullOrEmpty(Kit.SpellForm) ? Kit.SpellReach : 0f);
             if (enemy != null)
             {
                 Vector3 toward = enemy.position - transform.position;
@@ -269,8 +281,31 @@ namespace Clover.Player
         private void Release()
         {
             SpellsCast++;
-            var form = SpellForms.Get(Kit.Shape == SpellShape.Bolt ? SpellForms.Bolt : SpellForms.Wave);
-            SpellHits += form.Cast(NewCast(baseSpell, Kit.SpellName, null));
+            var form = (string.IsNullOrEmpty(Kit.SpellForm) ? null : SpellForms.Get(Kit.SpellForm)) ?? SpellForms.Get(Kit.Shape == SpellShape.Bolt ? SpellForms.Bolt : SpellForms.Wave);
+            if (upgrades != null)
+            {
+                // One more leap or blade, a wider cone, where a mark gives the base spell one.
+                baseSpell.Count = (string.IsNullOrEmpty(Kit.SpellForm) ? Kit.SpellLeaps : Kit.SpellCount) + Mathf.Max(0, upgrades.Stats.Whole(PlayerStat.BaseSpellCount));
+                baseSpell.Arc = Kit.SpellArcDegrees * upgrades.Stats.Multiplier(PlayerStat.BaseSpellArc);
+            }
+            var cast = NewCast(baseSpell, Kit.SpellName, null);
+            if (upgrades != null)
+            {
+                // What the marks change of the base spell alone, on top of what they change of every spell.
+                float further = upgrades.Stats.Multiplier(PlayerStat.BaseSpellReach);
+                cast.Damage *= upgrades.Stats.Multiplier(PlayerStat.BaseSpellDamage);
+                if (further != 1f)
+                {
+                    cast.Reach *= further;
+                    if (cast.Target == null) cast.Aim = cast.Origin + cast.Forward * cast.Reach;
+                }
+            }
+            // Life's bed of thorns is something grown.
+            Clover.World.Hazards.Growing = Kit.Name == Elements.Life && !string.IsNullOrEmpty(Kit.SpellForm);
+            SpellHits += form.Cast(cast);
+            Clover.World.Hazards.Growing = false;
+            // The pull of a tide or a grasping hand, or the push of a gust, on what stands within its reach.
+            if (Kit.SpellPull != 0f) combat.Displace(transform.position, cast.Reach, Mathf.Abs(Kit.SpellPull), Kit.SpellPull > 0f);
             glowLevel = GlowWhenCasting;
             if (shaker != null) shaker.Shake(0.14f, 0.2f);
             if (upgrades != null) upgrades.OnSpellCast();

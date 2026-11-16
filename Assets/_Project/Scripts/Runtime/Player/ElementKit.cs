@@ -44,6 +44,17 @@ namespace Clover.Player
         /// <summary>For a bolt: how many more enemies it leaps to, and how far each leap can be.</summary>
         public int SpellLeaps;
         public float SpellLeapRange = 5f;
+        /// <summary>The id of the spell form the base spell wears, from <see cref="SpellForms"/>. Empty: a wave or a bolt, by <see cref="Shape"/>.</summary>
+        public string SpellForm = "";
+        /// <summary>For a base spell that wears a form: its radius, how long it or what it leaves lasts, seconds between bites, each bite, the wait before it lands, and how many.</summary>
+        public float SpellRadius = 2.5f;
+        public float SpellSeconds = 4f;
+        public float SpellInterval = 0.5f;
+        public float SpellLinger = 5f;
+        public float SpellDelay;
+        public int SpellCount = 1;
+        /// <summary>Metres the base spell drags what stands within its reach toward the player (negative: throws them away).</summary>
+        public float SpellPull;
         public float SurgeCost = 40f;
         public float SurgeSeconds = 10f;
         /// <summary>Weapon damage is multiplied by this during the surge.</summary>
@@ -131,65 +142,83 @@ namespace Clover.Player
             SurgeSeconds = 10f,
         };
 
-        // The nine below are stand-ins: a wave or a bolt with its own reach, arc and cost, laying the element's
-        // affliction, and a surge built from the user's first table of self buffs as far as the game's numbers allow.
+        // The nine below carry the names and numbers of docs/design/trees_a.md and trees_b.md as far as the forms that
+        // exist allow: a wave, a bolt or one of the spell forms, with a pull or a push where the design gives one.
 
         /// <summary>Wind: a long narrow gust that leaves enemies Unsteady. The surge is the better dodge.</summary>
-        public static ElementKit Wind() => Plain(Elements.Wind, "Gale", "Tailwind", SpellShape.Wave, 20f, 12f, 30f, 7.5f, 45f, 2, new ElementKit
+        public static ElementKit Wind() => Plain(Elements.Wind, "Gust", "Tailwind", SpellShape.Wave, 20f, 8f, 20f, 5f, 70f, 2, new ElementKit
         {
+            // A short cone that does little harm and throws what it reaches three metres off.
+            SpellPull = -3f, SurgeCost = 35f,
             SurgeDamage = 1f, SurgeStacks = 1,
-            SurgeMods = new[] { new StatMod(PlayerStat.DodgeDistance, 0.3f), new StatMod(PlayerStat.DodgeSafeTime, 0.4f), new StatMod(PlayerStat.StaminaCost, -0.4f), new StatMod(PlayerStat.SurgeSpeed, 0.15f) },
+            SurgeMods = new[] { new StatMod(PlayerStat.DodgeDistance, 0.3f), new StatMod(PlayerStat.DodgeSafeTime, 0.25f), new StatMod(PlayerStat.DodgeStamina, -0.5f), new StatMod(PlayerStat.SurgeSpeed, 0.15f) },
         });
 
         /// <summary>Ice: a short wide fan of cold. The surge is a barrier that turns aside the next blow.</summary>
-        public static ElementKit Ice() => Plain(Elements.Ice, "Frost Fan", "Rime Ward", SpellShape.Wave, 25f, 14f, 14f, 4.5f, 110f, 2, new ElementKit
+        public static ElementKit Ice() => Plain(Elements.Ice, "Hoarfrost", "Glaze", SpellShape.Wave, 25f, 10f, 15f, 4.5f, 110f, 2, new ElementKit
         {
+            SurgeSeconds = 12f,
             SurgeDamage = 1f, SurgeStacks = 1, SurgeWards = 1,
         });
 
         /// <summary>Water: a broad wave that soaks. The surge makes flasks heal more.</summary>
-        public static ElementKit Water() => Plain(Elements.Water, "Tide", "Wellspring", SpellShape.Wave, 25f, 14f, 18f, 6f, 90f, 1, new ElementKit
+        public static ElementKit Water() => Plain(Elements.Water, "Riptide", "Wellspring", SpellShape.Wave, 20f, 8f, 18f, 5f, 90f, 1, new ElementKit
         {
+            // A low wave that comes back: what it touches is drawn two metres toward the player.
+            SpellPull = 2f, SurgeCost = 30f, SurgeSeconds = 12f,
             SurgeDamage = 1f, SurgeStacks = 1,
             SurgeMods = new[] { new StatMod(PlayerStat.FlaskHeal, 0.5f) },
         });
 
         /// <summary>Life: a lash of thorn that seeds one enemy and the one beside it. The surge heals.</summary>
-        public static ElementKit Life() => Plain(Elements.Life, "Thorn Lash", "Renewal", SpellShape.Bolt, 25f, 14f, 20f, 8f, 0f, 1, new ElementKit
+        public static ElementKit Life() => Plain(Elements.Life, "Briar Patch", "Regrowth", SpellShape.Wave, 20f, 4f, 0f, 3f, 0f, 1, new ElementKit
         {
-            SpellLeaps = 1, SurgeDamage = 1f, SurgeStacks = 1, SurgeHealPerSecond = 3f,
+            // A bed of thorns three metres ahead that stands six seconds and bites twice a second.
+            SpellForm = SpellForms.Field, SpellRadius = 1.25f, SpellSeconds = 6f, SpellInterval = 0.5f, SpellLinger = 4f,
+            SurgeSeconds = 6f, SurgeMendsGrey = true,
+            SurgeDamage = 1f, SurgeStacks = 1, SurgeHealPerSecond = 4f,
         });
 
         /// <summary>Earth: a short heavy shove of stone that shakes the ground under what it hits. The surge is standing firm.</summary>
-        public static ElementKit Earth() => Plain(Elements.Earth, "Stone Shove", "Bedrock", SpellShape.Wave, 30f, 22f, 40f, 4f, 80f, 1, new ElementKit
+        public static ElementKit Earth() => Plain(Elements.Earth, "Stone Rise", "Bedrock", SpellShape.Wave, 25f, 14f, 30f, 5f, 0f, 1, new ElementKit
         {
+            // A pillar of rock up under the enemy faced.
+            SpellForm = SpellForms.Pillars, SpellCount = 1, SpellRadius = 1.3f, SpellDelay = 0.25f,
             SurgeDamage = 1f, SurgeStacks = 1, SurgeStagger = 6f,
             SurgeMods = new[] { new StatMod(PlayerStat.DamageTaken, -0.2f) },
         });
 
         /// <summary>Metal: a narrow spray of shards that breaks armour. The surge is defence.</summary>
-        public static ElementKit Metal() => Plain(Elements.Metal, "Shrapnel", "Tempered", SpellShape.Wave, 25f, 24f, 20f, 5f, 40f, 1, new ElementKit
+        public static ElementKit Metal() => Plain(Elements.Metal, "Flung Blade", "Temper", SpellShape.Wave, 25f, 12f, 15f, 9f, 0f, 1, new ElementKit
         {
+            // A blade left standing in the enemy faced for six seconds; the next blow of the weapon drives it in.
+            SpellForm = SpellForms.Brand, SpellCount = 1, SpellRadius = 1.5f, SpellSeconds = 6f,
             SurgeDamage = 1f, SurgeStacks = 1,
-            SurgeMods = new[] { new StatMod(PlayerStat.DamageTaken, -0.35f) },
+            SurgeMods = new[] { new StatMod(PlayerStat.DamageTaken, -0.3f) },
         });
 
         /// <summary>Light: a lance on one enemy far off, which marks it. The surge mends what the guard lost and marks everyone near.</summary>
-        public static ElementKit Light() => Plain(Elements.Light, "Lance of Day", "Purify", SpellShape.Bolt, 25f, 20f, 22f, 12f, 0f, 1, new ElementKit
+        public static ElementKit Light() => Plain(Elements.Light, "Glare", "Clarity", SpellShape.Wave, 25f, 8f, 22f, 4f, 90f, 1, new ElementKit
         {
-            SpellLeaps = 0, SurgeDamage = 1f, SurgeStacks = 1, SurgeBurstStacks = 1, SurgeMendsGrey = true,
-            SurgeMods = new[] { new StatMod(PlayerStat.CritDamage, 0.3f) },
+            // Grey health made whole at once, and for eight seconds the perfect moments are half again as long.
+            SurgeSeconds = 8f,
+            SurgeDamage = 1f, SurgeStacks = 1, SurgeMendsGrey = true,
+            SurgeMods = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 0.5f), new StatMod(PlayerStat.DodgeSafeTime, 0.5f) },
         });
 
         /// <summary>Dark: a hex that leaps through a crowd and curses it. The surge is a hunger: health drains, and blows give it back.</summary>
-        public static ElementKit Dark() => Plain(Elements.Dark, "Hex", "Hunger", SpellShape.Bolt, 25f, 10f, 12f, 9f, 0f, 1, new ElementKit
+        public static ElementKit Dark() => Plain(Elements.Dark, "Grasp", "Hunger", SpellShape.Bolt, 25f, 10f, 12f, 6f, 0f, 1, new ElementKit
         {
-            SpellLeaps = 3, SpellLeapRange = 4f, SurgeDamage = 1.15f, SurgeStacks = 1, SurgeHealPerSecond = -2f, SurgeLeech = 0.12f,
+            // A hand of shadow to the enemy faced that drags it to the feet. Hunger asks no mana: its price is health.
+            SpellLeaps = 0, SpellPull = 5f, SurgeCost = 0f,
+            SurgeDamage = 1.3f, SurgeStacks = 1, SurgeHealPerSecond = -3f, SurgeLeech = 0.3f,
         });
 
         /// <summary>Poison: a spit of venom in a cone, two deep. The surge heals a little with every blow on a poisoned enemy.</summary>
-        public static ElementKit Poison() => Plain(Elements.Poison, "Spit", "Antivenom", SpellShape.Wave, 20f, 8f, 10f, 5.5f, 60f, 2, new ElementKit
+        public static ElementKit Poison() => Plain(Elements.Poison, "Miasma", "Fever", SpellShape.Wave, 25f, 1f, 0f, 4f, 0f, 1, new ElementKit
         {
+            // A cloud four metres ahead that hangs four seconds and doses what stands in it once a second.
+            SpellForm = SpellForms.Field, SpellRadius = 1.25f, SpellSeconds = 4f, SpellInterval = 1f, SpellLinger = 1f,
             SurgeDamage = 1f, SurgeStacks = 1, SurgeLeech = 0.06f, SurgeHealPerSecond = 1f,
         });
 

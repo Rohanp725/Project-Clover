@@ -14,6 +14,10 @@ namespace Clover.Gameplay
         public static event Action<Component, AfflictionSet> Died;
         public static event Action<Component, AfflictionKind> AfflictionFull;
         public static event Action<Component, AfflictionKind, int> Carried;
+        /// <summary>A frozen thing was shattered by a heavy blow.</summary>
+        public static event Action<Component> Shattered;
+        /// <summary>Something that was thrown into the air has come down.</summary>
+        public static event Action<Component> Landed;
 
         // Domain reload is off: listeners from the last play must not be kept.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -22,7 +26,13 @@ namespace Clover.Gameplay
             Died = null;
             AfflictionFull = null;
             Carried = null;
+            Shattered = null;
+            Landed = null;
         }
+
+        public static void RaiseLanded(Component who) => Landed?.Invoke(who);
+
+        public static void RaiseShattered(Component who) => Shattered?.Invoke(who);
 
         public static void RaiseDied(Component who, AfflictionSet afflictions) => Died?.Invoke(who, afflictions);
 

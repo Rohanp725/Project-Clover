@@ -629,7 +629,7 @@ namespace Clover.Gameplay
             elapsed += deltaTime * (mode == Mode.Staggered || mode == Mode.Dying || mode == Mode.Rising ? 1f : Pace);
             WatchWhereThePlayerStands(deltaTime);
             // What burns or poisons it wears it down but never ends it: the last of a god is taken by a blow.
-            if (Afflictions.Any && mode != Mode.Rising && mode != Mode.Dying)
+            if (Afflictions.Runs && mode != Mode.Rising && mode != Mode.Dying)
                 Health.Damage(Mathf.Min(Afflictions.Tick(deltaTime), Mathf.Max(0f, Health.Current - 1f)));
             switch (mode)
             {

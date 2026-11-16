@@ -33,5 +33,7 @@ namespace Clover.Player
         public float Height = 3.4f;
         /// <summary>Damage each bite of what it leaves behind deals.</summary>
         public float LingerDamage = 5f;
+        /// <summary>Health the cast takes and leaves grey, to be won back by blows. A spell with this may cost no mana. It cannot be cast by one who has no more health than this.</summary>
+        public float HealthCost;
     }
 }

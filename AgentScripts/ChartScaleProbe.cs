@@ -9,12 +9,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
-// Play Mode probe for the great chart at its planned size: fills the nine elements that have no tree yet, and the
-// branches between them, with the pattern tree of docs/UPGRADE_SCHEMA.md (about 380 marks in all), then photographs
-// the chart close and pulled back for three elements, walks it with the stick, and counts the garbage made each frame
-// while the chart is open and while afflictions tick on the dummies. After its own lines it holds the chart open for
-// twenty seconds and then the afflictions for twenty more, so the Profiler can be pointed at each. Run in the combat
-// arena:  bash AgentScripts/runprobe.sh CombatTest ChartScaleProbe 60
+// Play Mode probe for the great chart at its real size (the eleven trees and eleven branches of the tree files): for
+// every element it opens the chart, learns the road to the first spell, photographs the tree close, at its crown and,
+// for Fire, Wind, Water and Dark, pulled back to the whole ring; walks it with the stick; and counts the garbage made
+// each frame while the chart is open and while afflictions tick on the dummies. After its own lines it holds the chart
+// open for eight seconds and then the afflictions for eight more, so the Profiler can be pointed at each. Run in the
+// combat arena:  bash AgentScripts/runprobe.sh CombatTest ChartScaleProbe 70
 public static class ChartScaleProbe
 {
     public static string Run()
@@ -27,24 +27,6 @@ public static class ChartScaleProbe
 
 public class ChartScaleProbeRunner : MonoBehaviour
 {
-    private static readonly (string slot, float x, float y, UpgradeKind kind, string parent)[] Tree =
-    {
-        ("root", 0f, 1.2f, UpgradeKind.Root, ""),
-        ("L1", -1.21f, 2.4f, UpgradeKind.Major, "root"), ("L2", -1.61f, 4.2f, UpgradeKind.Major, "L1"), ("LS", -2.0f, 6.0f, UpgradeKind.Spell, "L2"), ("LK", -2.4f, 7.8f, UpgradeKind.Keystone, "LS"),
-        ("la", -1.98f, 3.42f, UpgradeKind.Minor, "L1"), ("lb", -2.4f, 5.23f, UpgradeKind.Minor, "L2"), ("lc", -1.2f, 4.97f, UpgradeKind.Minor, "L2"), ("ld", -2.8f, 7.03f, UpgradeKind.Minor, "LS"), ("le", -1.6f, 6.77f, UpgradeKind.Minor, "LS"),
-        ("M1", 0f, 2.9f, UpgradeKind.Major, "root"), ("M2", 0f, 4.7f, UpgradeKind.Major, "M1"), ("MS1", 0f, 6.5f, UpgradeKind.Spell, "M2"), ("M3", 0f, 8.3f, UpgradeKind.Major, "MS1"), ("MK", 0f, 10.1f, UpgradeKind.Keystone, "M3"), ("MS2", 0.75f, 9.3f, UpgradeKind.Spell, "M3"),
-        ("m1", 0.62f, 3.8f, UpgradeKind.Minor, "M1"), ("m2", -0.62f, 5.75f, UpgradeKind.Minor, "M2"), ("m3", 0.62f, 7.4f, UpgradeKind.Minor, "MS1"), ("m4", -0.62f, 9.2f, UpgradeKind.Minor, "M3"),
-        ("R1", 1.21f, 2.4f, UpgradeKind.Major, "root"), ("R2", 1.61f, 4.2f, UpgradeKind.Major, "R1"), ("RS", 2.0f, 6.0f, UpgradeKind.Spell, "R2"), ("RK", 2.4f, 7.8f, UpgradeKind.Keystone, "RS"),
-        ("ra", 1.98f, 3.42f, UpgradeKind.Minor, "R1"), ("rb", 2.4f, 5.23f, UpgradeKind.Minor, "R2"), ("rc", 1.2f, 4.97f, UpgradeKind.Minor, "R2"), ("rd", 2.8f, 7.03f, UpgradeKind.Minor, "RS"), ("re", 1.6f, 6.77f, UpgradeKind.Minor, "RS"),
-        ("gift", 0f, 12f, UpgradeKind.Signature, ""),
-    };
-
-    private static readonly (string slot, float x, float y, UpgradeKind kind, string parent)[] Mix =
-    {
-        ("x1", 0f, 1f, UpgradeKind.Mix, ""), ("x2", 0.45f, 2f, UpgradeKind.Mix, "x1"), ("x3", -0.45f, 3f, UpgradeKind.Mix, "x2"), ("x4", 0.45f, 4f, UpgradeKind.Mix, "x3"),
-        ("x5", -0.45f, 5f, UpgradeKind.Mix, "x4"), ("x6", 0.45f, 6f, UpgradeKind.Mix, "x5"), ("xs", 0f, 7.2f, UpgradeKind.Mix, "x6"), ("xgift", 0f, 8.6f, UpgradeKind.Signature, ""),
-    };
-
     private static void Keys(params Key[] held) => InputSystem.QueueStateEvent(Keyboard.current, new KeyboardState(held));
     private static void Say(string text) => Debug.Log("[Probe] " + text);
     private static void Shot(string name) => ScreenCapture.CaptureScreenshot("review/shots/current/chart_" + name + ".png");
@@ -56,39 +38,6 @@ public class ChartScaleProbeRunner : MonoBehaviour
         yield return null;
         Keys();
         yield return null;
-    }
-
-    private static void Fill(List<Upgrade> list)
-    {
-        int picture = 0;
-        foreach (var element in Elements.All)
-        {
-            bool empty = element.Name != Elements.Fire && element.Name != Elements.Lightning;
-            if (empty)
-            {
-                string prefix = "probe." + element.Name.ToLowerInvariant() + ".";
-                foreach (var (slot, x, y, kind, parent) in Tree)
-                    list.Add(new Upgrade
-                    {
-                        Id = prefix + slot, Name = element.Name + " " + slot, Element = element.Name, Kind = kind, X = x, Y = y,
-                        Requires = parent == "" ? new string[0] : new[] { prefix + parent },
-                        Icon = UpgradeIcons.All[picture++ % UpgradeIcons.All.Count],
-                        Description = "A mark put here by the probe to fill the chart to its planned size.",
-                        Form = kind == UpgradeKind.Spell ? SpellForms.Wave : "", Spell = kind == UpgradeKind.Spell ? new SpellSpec() : null,
-                    });
-            }
-            // Plasma has marks of its own already.
-            if (element.Name == Elements.Fire) continue;
-            string mixPrefix = "probe." + element.MixName.ToLowerInvariant() + ".";
-            foreach (var (slot, x, y, kind, parent) in Mix)
-                list.Add(new Upgrade
-                {
-                    Id = mixPrefix + slot, Name = element.MixName + " " + slot, Element = element.Name, Element2 = element.MixWith, Kind = kind, X = x, Y = y, Cost = kind == UpgradeKind.Mix ? 4 : 0,
-                    Requires = parent == "" ? new string[0] : new[] { mixPrefix + parent },
-                    Icon = UpgradeIcons.All[picture++ % UpgradeIcons.All.Count],
-                    Description = "A mark put here by the probe to fill the chart to its planned size.",
-                });
-        }
     }
 
     private IEnumerator Garbage(string label, int frames, System.Action eachFrame = null)
@@ -116,38 +65,33 @@ public class ChartScaleProbeRunner : MonoBehaviour
         var upgrades = player.GetComponent<PlayerUpgrades>();
         var element = player.GetComponent<PlayerElement>();
         var menu = UpgradeMenu.Instance;
-        int before = Upgrade.All.Count;
-        Upgrade.Gather(Fill);
-        upgrades.CatalogueChanged();
-        menu.Rebuild();
-        yield return null;
-        Say($"filled: {before} marks -> {Upgrade.All.Count}; effects {Upgrade.EffectCount}");
+        Say($"the chart: {Upgrade.All.Count} marks; effects {Upgrade.EffectCount}");
         yield return Garbage("the game with the chart closed and nothing happening (the editor's own share)", 120);
 
-        foreach (string held in new[] { Elements.Fire, Elements.Water, Elements.Dark })
+        foreach (var info in Elements.All)
         {
+            string held = info.Name;
             element.Take(ElementKit.ByName(held, false));
             upgrades.Forget();
-            upgrades.Earn(40);
+            RunState.Points = 0;
+            upgrades.Earn(19);
             yield return new WaitForSeconds(0.3f);
             menu.Open();
             yield return null;
-            // Learn a path up the middle so the chart shows every state a mark can be in.
-            string prefix = "probe." + held.ToLowerInvariant() + ".";
-            foreach (string slot in new[] { "root", "M1", "m1", "M2", "MS1", "L1" })
+            // Learn the road to the first spell so the chart shows every state a mark can be in.
+            Upgrade spell = null;
+            foreach (var mark in Upgrade.All)
+                if (mark.Element == held && !mark.IsMix && mark.Kind == UpgradeKind.Spell && spell == null) spell = mark;
+            var road = new List<Upgrade>();
+            for (var at = spell; at != null; at = at.Requires.Length > 0 ? Upgrade.ById(at.Requires[0]) : null) road.Insert(0, at);
+            int learned = 0;
+            foreach (var mark in road)
             {
-                if (!menu.Choose(prefix + slot)) continue;
+                if (!menu.Choose(mark.Id)) continue;
                 menu.LearnSelected();
+                if (upgrades.Owns(mark.Id)) learned++;
             }
-            if (held == Elements.Fire)
-            {
-                menu.Choose(Upgrade.Heat);
-                menu.LearnSelected();
-                menu.Choose(Upgrade.BurningCrescent);
-                menu.LearnSelected();
-                menu.Choose(Upgrade.MeteorLeap);
-                menu.LearnSelected();
-            }
+            menu.Choose(road[0].Id);
             yield return new WaitForSecondsRealtime(0.8f);
             Shot(held.ToLowerInvariant() + "_close");
             yield return null;
@@ -166,17 +110,27 @@ public class ChartScaleProbeRunner : MonoBehaviour
             Shot(held.ToLowerInvariant() + "_crown");
             yield return null;
             yield return null;
-            yield return Tap(Key.K);
-            yield return new WaitForSecondsRealtime(1f);
-            Shot(held.ToLowerInvariant() + "_ring");
-            yield return null;
-            yield return null;
-            Say($"{held}: chart of {menu.MarkCount}; W walked {steps} marks outward to {last}; wide {menu.IsWide} zoom {menu.Zoom:0.000}");
-            yield return Tap(Key.K);
-            yield return new WaitForSecondsRealtime(0.6f);
+            bool wide = false;
+            float zoom = menu.Zoom;
+            if (held == Elements.Fire || held == Elements.Wind || held == Elements.Water || held == Elements.Dark)
+            {
+                yield return Tap(Key.K);
+                yield return new WaitForSecondsRealtime(1f);
+                Shot(held.ToLowerInvariant() + "_ring");
+                yield return null;
+                yield return null;
+                wide = menu.IsWide;
+                zoom = menu.Zoom;
+                yield return Tap(Key.K);
+                yield return new WaitForSecondsRealtime(0.6f);
+            }
+            Say($"{held}: chart of {menu.MarkCount}; learned {learned} of the {road.Count} on the road to {spell.Name} with {19 - upgrades.Points} of 19 embers; W walked {steps} marks outward to {last}; wide {wide} zoom {zoom:0.000}");
             yield return Tap(Key.Space);
             yield return new WaitForSecondsRealtime(0.3f);
         }
+        element.Take(ElementKit.Fire());
+        upgrades.Forget();
+        yield return new WaitForSeconds(0.3f);
 
         // Garbage: the chart open and still, the chart moving between its two views, and afflictions ticking with their pips shown.
         menu.Open();
@@ -204,10 +158,10 @@ public class ChartScaleProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         yield return Garbage($"ten afflictions ticking on each of {dummies.Length} dummies, pips shown", 240, afflict);
 
-        // Held for the Profiler: twenty seconds of the chart, then twenty of the afflictions.
+        // Held for the Profiler: eight seconds of the chart, then eight of the afflictions.
         Say("holding the chart open for the profiler");
         menu.Open();
-        float until = Time.unscaledTime + 20f;
+        float until = Time.unscaledTime + 8f;
         float nextToggle = 0f;
         while (Time.unscaledTime < until)
         {
@@ -222,7 +176,7 @@ public class ChartScaleProbeRunner : MonoBehaviour
         menu.Close();
         yield return null;
         Say("holding the afflictions for the profiler");
-        until = Time.unscaledTime + 20f;
+        until = Time.unscaledTime + 8f;
         while (Time.unscaledTime < until)
         {
             afflict();
