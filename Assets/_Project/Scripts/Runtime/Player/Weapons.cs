@@ -11,8 +11,9 @@ namespace Clover.Player
     {
         public const string FistsName = "Fists";
         public const string KatanaName = "Katana";
+        public const string StormKatanaName = "Storm Katana";
 
-        public static Weapon ByName(string name) => name == KatanaName ? Katana() : Fists();
+        public static Weapon ByName(string name) => name == KatanaName ? Katana() : name == StormKatanaName ? StormKatana() : Fists();
 
         /// <summary>One of each, for checks.</summary>
         public static IEnumerable<Weapon> All
@@ -21,6 +22,7 @@ namespace Clover.Player
             {
                 yield return Fists();
                 yield return Katana();
+                yield return StormKatana();
             }
         }
 
@@ -53,6 +55,26 @@ namespace Clover.Player
                 ChargeTime = 0.4f,
             },
         };
+
+        /// <summary>
+        /// Narukami's own sword, given only to one who takes his element: the Katana's moves, a little more of everything,
+        /// and a draw that carries further.
+        /// </summary>
+        public static Weapon StormKatana()
+        {
+            var weapon = Katana();
+            weapon.Name = StormKatanaName;
+            weapon.SkillName = "Thunder Draw";
+            weapon.SlashColour = new Color(0.9f, 2f, 3.4f, 0.95f);
+            foreach (var step in weapon.AllSteps())
+            {
+                step.Damage *= 1.15f;
+                step.Stagger *= 1.15f;
+            }
+            weapon.Combo.Skill.Lunge = 3.6f;
+            weapon.Combo.Skill.Reach = 3.8f;
+            return weapon;
+        }
 
         /// <summary>
         /// The Katana, found partway through the castle. The sword lives in its sheath and every chain starts with a

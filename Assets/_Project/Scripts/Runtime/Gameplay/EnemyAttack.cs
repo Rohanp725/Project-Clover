@@ -9,8 +9,10 @@ namespace Clover.Gameplay
     [Serializable]
     public class EnemyAttack
     {
-        /// <summary>Also the name of the animation state that shows this attack.</summary>
         public string Name = "attack";
+        /// <summary>The animation state that shows this attack; the attack's own name when left empty.</summary>
+        public string Animation = "";
+        public string AnimationName => string.IsNullOrEmpty(Animation) ? Name : Animation;
         /// <summary>Seconds the attack is shown before it lands: the time the player has to answer it.</summary>
         public float Telegraph = 0.8f;
         /// <summary>Seconds of follow-through after the blow, then seconds before the enemy can act again.</summary>
@@ -20,6 +22,14 @@ namespace Clover.Gameplay
         /// <summary>For a wedge: metres it reaches and its full width in degrees.</summary>
         public float Reach = 3f;
         public float ArcDegrees = 60f;
+        /// <summary>Above zero, the attack is a straight lane this wide and <see cref="Reach"/> long, not a wedge.</summary>
+        public float LineWidth;
+        /// <summary>The attacker passes through the target as it drives forward, ending up behind it.</summary>
+        public bool PassThrough;
+        /// <summary>Above zero, the attacker vanishes as the attack begins and reappears this far from the target, to one side or behind.</summary>
+        public float BlinkTo;
+        /// <summary>The attack is only used from this phase of the fight on.</summary>
+        public int MinPhase;
         /// <summary>Above zero, the attack is a circle of this radius instead of a wedge.</summary>
         public float Radius;
         /// <summary>A circle thrown onto the spot where the target stood when the attack began, not around the enemy.</summary>
@@ -42,5 +52,6 @@ namespace Clover.Gameplay
 
         public float Total => Telegraph + Strike + Recovery;
         public bool IsCircle => Radius > 0f;
+        public bool IsLine => LineWidth > 0f && Radius <= 0f;
     }
 }

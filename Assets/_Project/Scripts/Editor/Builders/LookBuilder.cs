@@ -64,6 +64,22 @@ namespace Clover.EditorTools
             Saturation = 8f,
         };
 
+        /// <summary>Above the storm: clear cold moonlight on stone and cloud, the lightning now below and all around.</summary>
+        public static Mood Heavens => new Mood
+        {
+            Name = "Heavens",
+            KeyColour = new Color(0.86f, 0.9f, 1f),
+            KeyIntensity = 1.35f,
+            KeyEuler = new Vector3(52f, -28f, 0f),
+            Ambient = new Color(0.27f, 0.25f, 0.44f),
+            Fog = new Color(0.2f, 0.2f, 0.4f),
+            FogDensity = 0.011f,
+            Background = new Color(0.1f, 0.1f, 0.24f),
+            Storm = true,
+            Exposure = 0.25f,
+            Saturation = 10f,
+        };
+
         /// <summary>Adds the lights, the fog and the post-processing volume to the open scene, and sets the camera to use them.</summary>
         public static StormLight Apply(Mood mood, Camera camera)
         {

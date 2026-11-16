@@ -5,6 +5,18 @@ namespace Clover.Gameplay
     /// <summary>The flat shapes drawn on the ground to show where an attack will land.</summary>
     public static class MarkerShapes
     {
+        /// <summary>A flat lane lying on the ground, running from the origin along +Z.</summary>
+        public static Mesh Lane(float length, float width)
+        {
+            float half = width * 0.5f;
+            var mesh = new Mesh { name = "Attack Marker" };
+            mesh.vertices = new[] { new Vector3(-half, 0f, 0f), new Vector3(half, 0f, 0f), new Vector3(-half, 0f, length), new Vector3(half, 0f, length) };
+            mesh.uv = new[] { new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0f, 1f), new Vector2(1f, 1f) };
+            mesh.triangles = new[] { 0, 2, 1, 1, 2, 3 };
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
         /// <summary>A flat fan lying on the ground, pointing along +Z and facing up. 360 degrees makes a disc.</summary>
         public static Mesh Sector(float radius, float arcDegrees)
         {

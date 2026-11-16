@@ -35,9 +35,19 @@ namespace Clover.EditorTools
             ("bone", new Color(0.92f, 0.88f, 0.74f)),
         };
 
-        private static readonly Dictionary<string, float> Scales = new Dictionary<string, float>
+        // The god of Lightning: storm-grey skin and white hair, black and gold, red drums, and the lightning itself.
+        private static readonly (string name, Color colour)[] BossPalette =
         {
-            { "soldier", 1.12f }, { "acolyte", 0.95f }, { "caster", 1.03f },
+            ("skin", new Color(0.62f, 0.68f, 0.82f)),
+            ("hair", new Color(0.95f, 0.96f, 1f)),
+            ("cloth", new Color(0.13f, 0.11f, 0.26f)),
+            ("haori", new Color(0.92f, 0.92f, 0.98f)),
+            ("gold", new Color(0.98f, 0.72f, 0.16f)),
+            ("glow", new Color(0.75f, 0.95f, 1f)),
+            ("dark", new Color(0.06f, 0.05f, 0.12f)),
+            ("steel", new Color(0.8f, 0.85f, 0.95f)),
+            ("drum", new Color(0.82f, 0.12f, 0.16f)),
+            ("rope", new Color(0.86f, 0.72f, 0.4f)),
         };
 
         // One animator per kind for the whole scene, made once per build: making it again would orphan the earlier enemies.
@@ -86,7 +96,7 @@ namespace Clover.EditorTools
 
             Animator animator = null;
             var renderers = new Renderer[0];
-            string modelPath = $"{ModelFolder}/enemy_{kind.Prefix}.fbx";
+            string modelPath = $"{ModelFolder}/{kind.ModelName}.fbx";
             var modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(modelPath);
             if (modelAsset == null)
             {
@@ -97,7 +107,7 @@ namespace Clover.EditorTools
                 var model = (GameObject)PrefabUtility.InstantiatePrefab(modelAsset);
                 model.name = "Model";
                 model.transform.SetParent(root.transform, false);
-                model.transform.localScale = Vector3.one * Scales[kind.Prefix];
+                model.transform.localScale = Vector3.one * kind.Scale;
                 var materials = Materials();
                 renderers = model.GetComponentsInChildren<Renderer>();
                 foreach (var renderer in renderers)
@@ -134,7 +144,7 @@ namespace Clover.EditorTools
 
         private static Material ToonFor(Material imported, Dictionary<string, Material> materials)
         {
-            string name = imported != null ? imported.name.Replace("m_enemy_", "") : "";
+            string name = imported != null ? imported.name.Replace("m_enemy_", "").Replace("m_boss_", "boss:") : "";
             if (materials.TryGetValue(name, out var toon)) return toon;
             Debug.LogWarning($"[Clover.Build] An enemy uses a material '{name}' that the palette does not know.");
             return imported;
@@ -150,6 +160,14 @@ namespace Clover.EditorTools
                 if (name == "glow") material.Lit(new Color(0.6f, 0.9f, 1.6f), 0.5f, new Color(1.1f, 2.4f, 5.5f));
                 else material.Lit(new Color(0.6f, 0.75f, 1.2f), 0.32f);
                 materials[name] = material;
+            }
+            foreach (var (name, colour) in BossPalette)
+            {
+                var material = BuildKit.Toon(Folder, $"m_boss_{name}", colour, true);
+                if (name == "glow") material.Lit(new Color(0.8f, 1f, 1.6f), 0.5f, new Color(1.6f, 3.2f, 6f));
+                else if (name == "gold") material.Lit(new Color(1.2f, 0.9f, 0.4f), 0.4f, new Color(0.25f, 0.14f, 0.02f));
+                else material.Lit(new Color(0.7f, 0.85f, 1.3f), 0.34f);
+                materials["boss:" + name] = material;
             }
             return materials;
         }

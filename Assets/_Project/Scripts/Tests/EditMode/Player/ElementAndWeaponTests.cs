@@ -110,6 +110,31 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void LightningBreaksBalanceWhereFireBurns()
+        {
+            var fire = ElementKit.Fire();
+            var lightning = ElementKit.Lightning();
+            Assert.AreEqual(SpellShape.Wave, fire.Shape);
+            Assert.AreEqual(SpellShape.Bolt, lightning.Shape);
+            Assert.Greater(lightning.SpellStagger, fire.SpellStagger, "the bolt is for breaking a guard");
+            Assert.Greater(fire.SpellBurnSeconds, 0f);
+            Assert.AreEqual(0f, lightning.SpellBurnSeconds, 0.001f);
+            Assert.Greater(lightning.SurgeSpeed, 1f, "lightning's surge quickens the weapon");
+            Assert.Greater(fire.SurgeDamage, lightning.SurgeDamage, "fire's surge hits harder");
+            Assert.Greater(ElementKit.Fire(true).SpellDamage, fire.SpellDamage, "consuming a god strengthens the element kept");
+        }
+
+        [Test]
+        public void TheGodsSwordIsTheKatanaAndMore()
+        {
+            var plain = Weapons.Katana().Combo;
+            var storm = Weapons.StormKatana().Combo;
+            Assert.AreEqual(plain.Steps.Count, storm.Steps.Count);
+            Assert.Greater(storm.Steps[0].Damage, plain.Steps[0].Damage);
+            Assert.Greater(storm.Skill.Lunge, plain.Skill.Lunge);
+        }
+
+        [Test]
         public void TheFistsAreFasterAndTheKatanaReachesFurther()
         {
             var fists = Weapons.Fists().Combo;

@@ -57,6 +57,9 @@ namespace Clover.Player
         /// <summary>What an element's surge adds to every blow: more damage, and seconds of burning.</summary>
         public float DamageMultiplier { get; private set; } = 1f;
         public float BurnOnHit { get; private set; }
+        /// <summary>How much faster than usual the weapon is swung, and stagger added to each blow.</summary>
+        public float SwingSpeed { get; private set; } = 1f;
+        public float StaggerOnHit { get; private set; }
 
         private PlayerController player;
         private PlayerDefence defence;
@@ -82,7 +85,8 @@ namespace Clover.Player
         {
             player = GetComponent<PlayerController>();
             defence = GetComponent<PlayerDefence>();
-            Equip(Weapons.ByName(StartingWeapon));
+            // A weapon carried over from the last scene of the run takes the place of the scene's own.
+            Equip(Weapons.ByName(string.IsNullOrEmpty(RunState.Weapon) ? StartingWeapon : RunState.Weapon));
             Mana.Empty();
         }
 
@@ -97,15 +101,18 @@ namespace Clover.Player
         public void Equip(Weapon weapon)
         {
             Weapon = weapon;
+            RunState.Weapon = weapon.Name;
             Weapon.Combo.Reset();
             Step = Vector3.zero;
         }
 
         /// <summary>An element's surge wraps the weapon: every blow hits harder, sets its target burning, and cuts in the element's colour.</summary>
-        public void Empower(float damageMultiplier, float burnSeconds, Color slashColour)
+        public void Empower(float damageMultiplier, float burnSeconds, Color slashColour, float speed = 1f, float stagger = 0f)
         {
             DamageMultiplier = damageMultiplier;
             BurnOnHit = burnSeconds;
+            SwingSpeed = Mathf.Max(0.1f, speed);
+            StaggerOnHit = stagger;
             empowered = true;
             empoweredColour = slashColour;
         }
@@ -114,6 +121,8 @@ namespace Clover.Player
         {
             DamageMultiplier = 1f;
             BurnOnHit = 0f;
+            SwingSpeed = 1f;
+            StaggerOnHit = 0f;
             empowered = false;
         }
 
@@ -145,7 +154,7 @@ namespace Clover.Player
                 return;
             }
 
-            var events = Combo.Tick(deltaTime, player.Stamina, Mana);
+            var events = Combo.Tick(deltaTime * SwingSpeed, player.Stamina, Mana);
             if ((events & ComboEvents.Charged) != 0 && defence != null) defence.Callout("Ready");
             if ((events & ComboEvents.Started) != 0)
             {
@@ -156,7 +165,7 @@ namespace Clover.Player
 
             var step = Combo.Current;
             if (Combo.Phase == AttackPhase.Windup && step.Windup > 0f)
-                Step = transform.forward * (lunge * deltaTime / step.Windup);
+                Step = transform.forward * (lunge * deltaTime * SwingSpeed / step.Windup);
         }
 
         /// <summary>
@@ -187,7 +196,57 @@ namespace Clover.Player
         }
 
         /// <summary>The nearest enemy all around within aiming range, or null. The guard uses it to know whom to face.</summary>
-        public Transform NearestEnemy() => FindEnemy(transform.forward, 360f, AimRange, false);
+        public Transform NearestEnemy(float range = 0f) => FindEnemy(transform.forward, 360f, range > 0f ? range : AimRange, false);
+
+        /// <summary>
+        /// Strikes the enemy the player faces, within reach, and then leaps on to the nearest others not yet struck: what
+        /// a bolt does. A bolt from the sky marks each one. Returns how many it hit.
+        /// </summary>
+        public int StrikeChain(float reach, float damage, float stagger, int leaps, float leapRange)
+        {
+            struck.Clear();
+            Transform at = FindEnemy(transform.forward, 150f, reach, false);
+            Vector3 from = transform.position;
+            int hits = 0;
+            for (int leap = 0; leap <= leaps && at != null; leap++)
+            {
+                var target = at.GetComponentInParent<IDamageable>();
+                if (target == null) break;
+                struck.Add(target);
+                Vector3 direction = at.position - from;
+                direction.y = 0f;
+                var outcome = target.TakeHit(new Hit(damage, stagger, direction.sqrMagnitude > 0.01f ? direction.normalized : transform.forward, false, true, from));
+                Clover.World.LightningBolts.Strike(at.position, leap == 0 ? 0.5f : 0.2f);
+                if (outcome != HitOutcome.Missed)
+                {
+                    hits++;
+                    if (defence != null) defence.DealtDamage(damage);
+                }
+                from = at.position;
+                at = NextUnstruck(from, leapRange);
+            }
+            return hits;
+        }
+
+        // The nearest enemy to a point that the current strike has not yet touched.
+        private Transform NextUnstruck(Vector3 from, float range)
+        {
+            Transform found = null;
+            float best = float.MaxValue;
+            int count = Overlap(from, range);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || struck.Contains(target)) continue;
+                float distance = (((Component)target).transform.position - from).sqrMagnitude;
+                if (distance >= best) continue;
+                best = distance;
+                found = ((Component)target).transform;
+            }
+            return found;
+        }
 
         // Face the enemy nearest to where the stick points; with no enemy in the cone, face the stick; with no stick, stay.
         private void Aim()
@@ -279,7 +338,7 @@ namespace Clover.Player
                 // Something touching the player is hit whatever the angle; otherwise it must be inside the swing's arc.
                 if (offset.magnitude > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
                 float damage = step.Damage * DamageMultiplier;
-                var outcome = target.TakeHit(new Hit(damage, step.Stagger, transform.forward, step.Heavy, false, transform.position, BurnOnHit));
+                var outcome = target.TakeHit(new Hit(damage, step.Stagger + StaggerOnHit, transform.forward, step.Heavy, false, transform.position, BurnOnHit));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
                 finisher |= outcome == HitOutcome.Finisher;

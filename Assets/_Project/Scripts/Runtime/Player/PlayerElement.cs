@@ -1,4 +1,5 @@
 using Clover.Core;
+using Clover.World;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,20 +17,25 @@ namespace Clover.Player
         [SerializeField] private SlashArcs arcs;
         [SerializeField] private TopDownCamera shaker;
 
-        public ElementKit Kit = new ElementKit();
-        /// <summary>The element's colour as light; brighter than white so it blooms.</summary>
-        [ColorUsage(true, true)] public Color Colour = new Color(2.6f, 0.9f, 0.15f, 0.95f);
+        /// <summary>The element the player starts the scene with, unless the run already carries one.</summary>
+        public string StartingElement = ElementKit.FireName;
         /// <summary>Seconds a spell or surge press is remembered while the player is busy.</summary>
         public float PressBufferTime = 0.25f;
         public float GlowWhenCasting = 9f;
         public float GlowWhenSurging = 2.6f;
-        /// <summary>Seconds between the embers that fall from the player while the surge lasts.</summary>
+        /// <summary>Seconds between the sparks or embers that fall from the player while the surge lasts.</summary>
         public float EmberInterval = 0.12f;
 
+        public ElementKit Kit { get; private set; }
+        /// <summary>The element's colour as light; brighter than white so it blooms.</summary>
+        public Color Colour { get; private set; }
         public bool IsCasting => Kit.IsCasting;
         public int SpellsCast { get; private set; }
         public int Surges { get; private set; }
         public int SpellHits { get; private set; }
+
+        private static readonly Color FireColour = new Color(2.6f, 0.9f, 0.15f, 0.95f);
+        private static readonly Color LightningColour = new Color(0.9f, 1.8f, 3.2f, 0.95f);
 
         private PlayerController player;
         private PlayerCombat combat;
@@ -53,7 +59,7 @@ namespace Clover.Player
             player = GetComponent<PlayerController>();
             combat = GetComponent<PlayerCombat>();
             defence = GetComponent<PlayerDefence>();
-            Kit.Reset();
+            Take(ElementKit.ByName(string.IsNullOrEmpty(RunState.Element) ? StartingElement : RunState.Element, RunState.ElementConsumed));
             if (glow != null) glow.intensity = 0f;
         }
 
@@ -61,6 +67,17 @@ namespace Clover.Player
         {
             spellAction = player.FindAction("Spell");
             surgeAction = player.FindAction("Surge");
+        }
+
+        /// <summary>Gives the player an element's kit in place of the one they had; any surge running ends.</summary>
+        public void Take(ElementKit kit)
+        {
+            Kit = kit;
+            Kit.Reset();
+            bool lightning = kit.Name == ElementKit.LightningName;
+            Colour = lightning ? LightningColour : FireColour;
+            if (glow != null) glow.color = lightning ? new Color(0.5f, 0.75f, 1f) : new Color(1f, 0.5f, 0.16f);
+            if (combat != null) combat.ClearEmpower();
         }
 
         /// <summary>A blow or a dodge breaks a cast in progress.</summary>
@@ -98,7 +115,7 @@ namespace Clover.Player
                 if (untilEmber <= 0f)
                 {
                     untilEmber = EmberInterval;
-                    Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.1f, Vector3.up, 0.25f);
+                    Vfx.Play(Kit.Shape == SpellShape.Bolt ? VfxKind.Shock : VfxKind.Embers, transform.position + Vector3.up * 1.1f, Vector3.up, 0.25f);
                 }
             }
         }
@@ -115,7 +132,7 @@ namespace Clover.Player
         private void BeginCast()
         {
             // The spell goes at whoever is nearest, as an attack would.
-            var enemy = combat.NearestEnemy();
+            var enemy = combat.NearestEnemy(Kit.Shape == SpellShape.Bolt ? Kit.SpellReach : 0f);
             if (enemy != null)
             {
                 Vector3 toward = enemy.position - transform.position;
@@ -129,15 +146,25 @@ namespace Clover.Player
             SpellsCast++;
             Vector3 forward = transform.forward;
             Vector3 hand = transform.position + Vector3.up * 1.1f;
-            SpellHits += combat.StrikeCone(Kit.SpellReach, Kit.SpellArcDegrees, Kit.SpellDamage, Kit.SpellStagger, Kit.SpellBurnSeconds, VfxKind.Fire);
-            // The wave itself: fire thrown along the cone, an arc of light at its front, and a flash on everything near.
-            for (int i = 1; i <= 4; i++)
-                Vfx.Play(VfxKind.Fire, hand + forward * (Kit.SpellReach * i / 4.5f), forward, 0.6f);
-            Vfx.Play(VfxKind.Embers, hand + forward * (Kit.SpellReach * 0.6f), forward, 1.5f);
-            if (arcs != null)
+            if (Kit.Shape == SpellShape.Bolt)
             {
-                arcs.Show(transform.position, forward, Kit.SpellReach, Kit.SpellArcDegrees, 1f, Colour);
-                arcs.Show(transform.position, forward, Kit.SpellReach * 0.7f, Kit.SpellArcDegrees, -1f, Colour);
+                // A clap of thunder on the one aimed at, leaping on to those near it.
+                SpellHits += combat.StrikeChain(Kit.SpellReach, Kit.SpellDamage, Kit.SpellStagger, Kit.SpellLeaps, Kit.SpellLeapRange);
+                Vfx.Play(VfxKind.Shock, hand + forward * 0.6f, forward, 1.2f);
+                ScreenFlash.Flash(new Color(0.75f, 0.9f, 1f, 0.22f), 0.06f);
+            }
+            else
+            {
+                SpellHits += combat.StrikeCone(Kit.SpellReach, Kit.SpellArcDegrees, Kit.SpellDamage, Kit.SpellStagger, Kit.SpellBurnSeconds, VfxKind.Fire);
+                // The wave itself: fire thrown along the cone, an arc of light at its front, and a flash on everything near.
+                for (int i = 1; i <= 4; i++)
+                    Vfx.Play(VfxKind.Fire, hand + forward * (Kit.SpellReach * i / 4.5f), forward, 0.6f);
+                Vfx.Play(VfxKind.Embers, hand + forward * (Kit.SpellReach * 0.6f), forward, 1.5f);
+                if (arcs != null)
+                {
+                    arcs.Show(transform.position, forward, Kit.SpellReach, Kit.SpellArcDegrees, 1f, Colour);
+                    arcs.Show(transform.position, forward, Kit.SpellReach * 0.7f, Kit.SpellArcDegrees, -1f, Colour);
+                }
             }
             glowLevel = GlowWhenCasting;
             if (shaker != null) shaker.Shake(0.14f, 0.2f);
@@ -146,9 +173,10 @@ namespace Clover.Player
         private void BeginSurge()
         {
             Surges++;
-            combat.Empower(Kit.SurgeDamage, Kit.SurgeBurnSeconds, Colour);
-            Vfx.Play(VfxKind.Fire, transform.position + Vector3.up, Vector3.up, 1.2f);
+            combat.Empower(Kit.SurgeDamage, Kit.SurgeBurnSeconds, Colour, Kit.SurgeSpeed, Kit.SurgeStagger);
+            Vfx.Play(Kit.Shape == SpellShape.Bolt ? VfxKind.Shock : VfxKind.Fire, transform.position + Vector3.up, Vector3.up, 1.2f);
             Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 0.2f, Vector3.up);
+            if (Kit.Shape == SpellShape.Bolt) LightningBolts.Strike(transform.position, 0.4f);
             glowLevel = GlowWhenCasting;
             if (defence != null) defence.Callout(Kit.SurgeName);
         }

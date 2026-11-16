@@ -28,7 +28,6 @@ namespace Clover.Gameplay
 
         public float StaggeredDamageMultiplier = 1.5f;
         public float FinisherDamageMultiplier = 3f;
-        public float StaggeredSeconds = 3.2f;
         /// <summary>Metres a blow shoves the enemy back.</summary>
         public float Shove = 0.7f;
         public float Gravity = 25f;
@@ -60,6 +59,10 @@ namespace Clover.Gameplay
         /// <summary>True while it is showing or striking an attack: this is what holds the turn.</summary>
         public bool IsStriking => Brain.State == EnemyState.Telegraph || Brain.State == EnemyState.Strike;
         public bool IsRanged => Brain.RetreatRange > 0f;
+        /// <summary>Raised once when it dies.</summary>
+        public event System.Action<Enemy> Died;
+        /// <summary>Raised when the fight enters its second phase.</summary>
+        public event System.Action<Enemy> PhaseChanged;
 
         private static readonly int MarkerColour = Shader.PropertyToID("_Color");
         private static readonly int Emission = Shader.PropertyToID("_EmissionColor");
@@ -74,6 +77,9 @@ namespace Clover.Gameplay
         private int[] attackHashes;
         private EnemyAttack shownAttack;
         private Vector3 strikePoint;
+        private Vector3 lungeFrom;
+        private Vector3 lungeForward = Vector3.forward;
+        private bool lunging;
         private Vector3 shove;
         private Vector3 home;
         private Quaternion homeRotation;
@@ -85,6 +91,8 @@ namespace Clover.Gameplay
         private int shownGlow = -1;
         private bool wasBusy;
         private bool markerShown;
+        private bool passing;
+        private Collider targetBody;
         private int lightHits;
         private float sinceLightHit;
         private int blocked;
@@ -115,6 +123,7 @@ namespace Clover.Gameplay
             block = new MaterialPropertyBlock();
             Kind = EnemyKind.ByName(kindName);
             home = transform.position;
+            targetBody = target != null ? target.GetComponent<Collider>() : null;
             if (bars != null) barsRotation = bars.rotation;
             homeRotation = transform.rotation;
 
@@ -127,8 +136,10 @@ namespace Clover.Gameplay
             for (int i = 0; i < attackHashes.Length; i++)
             {
                 var attack = Brain.Attacks[i];
+                // Each attack has a clip of its own name, even when it shares a motion with another.
                 attackHashes[i] = Animator.StringToHash(attack.Name);
-                shapes[i] = attack.IsCircle ? MarkerShapes.Sector(attack.Radius, 360f) : MarkerShapes.Sector(attack.Reach, attack.ArcDegrees);
+                shapes[i] = attack.IsCircle ? MarkerShapes.Sector(attack.Radius, 360f)
+                    : attack.IsLine ? MarkerShapes.Lane(attack.Reach, attack.LineWidth) : MarkerShapes.Sector(attack.Reach, attack.ArcDegrees);
             }
             if (markerOutline != null) outlineRenderer = markerOutline.GetComponent<Renderer>();
             if (markerFill != null) fillRenderer = markerFill.GetComponent<Renderer>();
@@ -152,7 +163,7 @@ namespace Clover.Gameplay
             Health.Maximum = Kind.Health;
             Health.Fill();
             Stagger.Maximum = Kind.StaggerMaximum;
-            Stagger.StaggeredSeconds = StaggeredSeconds;
+            Stagger.StaggeredSeconds = Kind.StaggeredSeconds;
             Stagger.Reset();
             Burn.Reset();
             Brain.Reset();
@@ -162,6 +173,9 @@ namespace Clover.Gameplay
             deadFor = 0f;
             flashLeft = 0f;
             shownAttack = null;
+            lunging = false;
+            if (passing && targetBody != null) Physics.IgnoreCollision(body, targetBody, false);
+            passing = false;
             lightHits = 0;
             blocked = 0;
             ShowMarker(false, false);
@@ -218,7 +232,8 @@ namespace Clover.Gameplay
 
             bool finisher = IsStaggered && hit.Heavy;
             float multiplier = finisher ? FinisherDamageMultiplier : IsStaggered ? StaggeredDamageMultiplier : 1f;
-            Health.Damage(hit.Damage * multiplier);
+            // A god is not cut down by one blow, however good: a finisher takes a fixed share of him.
+            Health.Damage(finisher && Kind.FinisherHealthShare > 0f ? Mathf.Max(hit.Damage * multiplier, Kind.Health * Kind.FinisherHealthShare) : hit.Damage * multiplier);
             flashLeft = 0.09f;
             Vector3 away = hit.Direction;
             away.y = 0f;
@@ -264,6 +279,7 @@ namespace Clover.Gameplay
             Vfx.Play(VfxKind.Shock, transform.position + Vector3.up, Vector3.up, 1.5f);
             // The body no longer stands in anyone's way.
             body.enabled = false;
+            Died?.Invoke(this);
         }
 
         private void Update()
@@ -284,7 +300,14 @@ namespace Clover.Gameplay
             if (target == null) return;
 
             if (chargedLeft > 0f) chargedLeft -= deltaTime;
-            float pace = IsCharged ? ChargedSpeed : 1f;
+            float pace = (IsCharged ? ChargedSpeed : 1f) * (Brain.Phase > 0 ? Kind.SecondPhasePace : 1f);
+            if (Brain.Phase == 0 && Kind.SecondPhaseAt > 0f && Health.Fraction <= Kind.SecondPhaseAt && !IsStaggered)
+            {
+                // Worn down to the mark: the second phase opens with its own attack.
+                Brain.Phase = 1;
+                Brain.Force(Kind.SecondPhaseAttack);
+                PhaseChanged?.Invoke(this);
+            }
 
             if (Burn.IsBurning)
             {
@@ -322,6 +345,9 @@ namespace Clover.Gameplay
                 // A thrown attack lands where the target stood when it was begun, so moving gets clear of it.
                 strikePoint = target.position;
                 if (bars != null) bars.gameObject.SetActive(true);
+                if (attack.BlinkTo > 0f) Blink(attack.BlinkTo);
+                passing = attack.PassThrough;
+                if (passing && targetBody != null) Physics.IgnoreCollision(body, targetBody, true);
                 // The instant it commits: a white glint for a blow that can be guarded, a red flare for one that cannot.
                 Vfx.Play(attack.Unblockable ? VfxKind.Danger : VfxKind.Glint, transform.position + Vector3.up * 2.3f);
             }
@@ -333,6 +359,11 @@ namespace Clover.Gameplay
             }
 
             if (struck) Strike(attack);
+            if (passing && (attack == null || Brain.State == EnemyState.Recover || Brain.State == EnemyState.Stalk))
+            {
+                passing = false;
+                if (targetBody != null) Physics.IgnoreCollision(body, targetBody, false);
+            }
 
             // Movement: walking as the brain asks, the drive forward of a lunge, and the shove of a blow taken.
             Vector3 step = Vector3.zero;
@@ -360,7 +391,14 @@ namespace Clover.Gameplay
                 // The drive starts just before the blow and is spent by the time it lands.
                 float from = attack.Telegraph * 0.78f, until = attack.Telegraph;
                 float elapsed = Brain.AttackProgress * attack.Total;
-                if (elapsed >= from && elapsed < until) step += transform.forward * (attack.Lunge * deltaTime * pace / (until - from));
+                bool driving = elapsed >= from && elapsed < until;
+                if (driving && !lunging)
+                {
+                    lungeFrom = transform.position;
+                    lungeForward = transform.forward;
+                }
+                lunging = driving;
+                if (driving) step += transform.forward * (attack.Lunge * deltaTime * pace / (until - from));
             }
             step += shove * (deltaTime * 6f);
             shove = Vector3.Lerp(shove, Vector3.zero, 1f - Mathf.Exp(-9f * deltaTime));
@@ -402,6 +440,21 @@ namespace Clover.Gameplay
             }
 
             if (arcs != null) arcs.Show(transform.position, forward, attack.Reach, attack.ArcDegrees, attack.Sweep, SlashColour);
+            if (attack.IsLine)
+            {
+                // A lane: the player is struck if they stand within its width, anywhere along its length. A blow that
+                // passes through is measured from where it started, since the attacker is already beyond.
+                Vector3 start = attack.PassThrough ? lungeFrom : transform.position;
+                Vector3 along = attack.PassThrough ? lungeForward : forward;
+                Vector3 offset = target.position - start;
+                offset.y = 0f;
+                float ahead = Vector3.Dot(offset, along);
+                float aside = (offset - along * ahead).magnitude;
+                if (ahead >= -TargetRadius && ahead <= attack.Reach + TargetRadius && aside <= attack.LineWidth * 0.5f + TargetRadius)
+                    Deal(attack, damage, along, start);
+                return;
+            }
+
             // Enemies fight the player only, so the blow is measured against the player directly: inside the reach
             // (allowing for the player's own width) and inside the wedge, or close enough to be touching.
             Vector3 toTarget = target.position - transform.position;
@@ -410,6 +463,25 @@ namespace Clover.Gameplay
             if (gap > attack.Reach) return;
             if (gap > 0.6f && Vector3.Angle(forward, toTarget) > attack.ArcDegrees * 0.5f) return;
             Deal(attack, damage, forward, transform.position);
+        }
+
+        // Gone in a crack of light, and there again: to one side of the target or behind it, never in front.
+        private void Blink(float distance)
+        {
+            Vector3 away = transform.position - target.position;
+            away.y = 0f;
+            if (away.sqrMagnitude < 0.01f) away = -target.forward;
+            float turn = Random.Range(95f, 165f) * (Random.value < 0.5f ? -1f : 1f);
+            Vector3 to = target.position + Quaternion.AngleAxis(turn, Vector3.up) * away.normalized * distance;
+            to.y = transform.position.y;
+            LightningBolts.Strike(transform.position, 0.3f);
+            body.enabled = false;
+            transform.position = to;
+            body.enabled = true;
+            Vector3 look = target.position - to;
+            look.y = 0f;
+            if (look.sqrMagnitude > 0.01f) transform.rotation = Quaternion.LookRotation(look, Vector3.up);
+            LightningBolts.Strike(to, 0.3f);
         }
 
         private void Deal(EnemyAttack attack, float damage, Vector3 direction, Vector3 from)
@@ -444,6 +516,12 @@ namespace Clover.Gameplay
             float shown = Brain.TelegraphProgress;
             Vector3 centre = attack.Ranged ? strikePoint : transform.position;
             Quaternion facing = attack.IsCircle ? Quaternion.identity : transform.rotation;
+            // Once it has begun to drive through, the lane stays where it was drawn.
+            if (attack.PassThrough && lunging)
+            {
+                centre = lungeFrom;
+                facing = Quaternion.LookRotation(lungeForward, Vector3.up);
+            }
             if (markerOutline != null) markerOutline.transform.SetPositionAndRotation(centre + Vector3.up * 0.04f, facing);
             if (markerFill != null)
             {

@@ -22,7 +22,7 @@ namespace Clover.EditorTools
         private static Material paving, wall, wallDark, trim, wood, iron, cloth, earth, roof, ember, steel, rune;
         private static Material fireMaterial, rainMaterial, boltMaterial;
         private static Transform world;
-        private static readonly List<Transform> rods = new List<Transform>();
+        internal static readonly List<Transform> rods = new List<Transform>();
         private static readonly List<Interactable> things = new List<Interactable>();
 
         [MenuItem("Clover/Build/Castle")]
@@ -89,7 +89,7 @@ namespace Clover.EditorTools
             SceneBuild.Finish(scene, ScenePath, true);
         }
 
-        private static void Materials()
+        internal static void Materials()
         {
             var flags = ProceduralTextures.Flagstones();
             var blocks = ProceduralTextures.WallBlocks();
@@ -253,6 +253,7 @@ namespace Clover.EditorTools
             way.transform.position = new Vector3(0f, 4f, 124.2f);
             way.Prompt = "Open the way to the summit";
             way.Range = 3f;
+            way.LeadsTo = "Summit";
             way.Configure(director);
             things.Add(way);
 
@@ -548,7 +549,7 @@ namespace Clover.EditorTools
         }
 
         // The storm itself: rain that follows the player, and the bolts.
-        private static void Weather(Transform player, StormLight storm)
+        internal static void Weather(Transform player, StormLight storm)
         {
             var weather = BuildKit.Group("Weather");
 

@@ -25,7 +25,7 @@ namespace Clover.EditorTools.Forge
             int baked = 0;
             foreach (var kind in EnemyKind.All)
             {
-                var asset = AssetDatabase.LoadAssetAtPath<GameObject>($"{ModelFolder}/enemy_{kind.Prefix}.fbx");
+                var asset = AssetDatabase.LoadAssetAtPath<GameObject>($"{ModelFolder}/{kind.ModelName}.fbx");
                 if (asset == null)
                 {
                     Debug.LogError($"[Clover.Forge] No model for {kind.Name}.");
@@ -72,6 +72,7 @@ namespace Clover.EditorTools.Forge
             {
                 case "soldier": return Soldier(kind);
                 case "acolyte": return Acolyte(kind);
+                case "boss": return BossAnimations.For(kind);
                 default: return Caster(kind);
             }
         }
@@ -97,7 +98,10 @@ namespace Clover.EditorTools.Forge
         }
 
         // The clips every kind has, made from its own ready stance: breathing, walking, flinching, kneeling, falling.
-        private static IEnumerable<ForgeClip> Common(string prefix, Func<ForgePose> ready, float stride, float walkSeconds, ForgePose kneel)
+        private static IEnumerable<ForgeClip> Common(string prefix, Func<ForgePose> ready, float stride, float walkSeconds, ForgePose kneel) =>
+            CommonClips(prefix, ready, stride, walkSeconds, kneel);
+
+        public static IEnumerable<ForgeClip> CommonClips(string prefix, Func<ForgePose> ready, float stride, float walkSeconds, ForgePose kneel)
         {
             yield return new ForgeClip(prefix + "_idle_loop", 2.4f, true).From(t =>
             {

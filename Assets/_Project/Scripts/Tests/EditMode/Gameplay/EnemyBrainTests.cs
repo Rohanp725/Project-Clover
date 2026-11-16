@@ -151,6 +151,47 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AnAttackKeptForALaterPhaseWaitsForIt()
+        {
+            var brain = Brain();
+            brain.Attacks[0].MinPhase = 1;
+            brain.Reset();
+            Assert.AreEqual(0, Run(brain, 2f, 2f), "nothing it may use reaches yet");
+            brain.Phase = 1;
+            Assert.AreEqual(1, Run(brain, 1f, 2f));
+        }
+
+        [Test]
+        public void AForcedAttackBeginsAtOnceWhateverItWasDoing()
+        {
+            var brain = Brain();
+            Run(brain, 0.2f, 2f);
+            Assert.AreEqual("near", brain.Current.Name);
+            Assert.IsTrue(brain.Force("far"));
+            Assert.AreEqual("far", brain.Current.Name);
+            Assert.AreEqual(EnemyState.Telegraph, brain.State);
+            brain.Stagger();
+            Assert.IsFalse(brain.Force("near"), "not while it is broken open");
+        }
+
+        [Test]
+        public void TheGodHasAnAnswerAtEveryRangeAndASecondPhase()
+        {
+            var god = EnemyKind.Narukami();
+            Assert.IsTrue(god.IsBoss);
+            Assert.Greater(god.SecondPhaseAt, 0f);
+            Assert.IsNotNull(god.Brain.Attacks.Find(a => a.Name == god.SecondPhaseAttack), "the attack that opens his second phase exists");
+            foreach (float distance in new[] { 1f, 3f, 5f, 8f, 12f })
+            {
+                bool any = god.Brain.Attacks.Exists(a => a.MinPhase == 0 && distance >= a.MinRange && distance <= a.MaxRange);
+                Assert.IsTrue(any, $"he has nothing to do at {distance} m");
+            }
+            foreach (var attack in god.Brain.Attacks)
+                if (!string.IsNullOrEmpty(attack.ChainInto))
+                    Assert.IsNotNull(god.Brain.Attacks.Find(a => a.Name == attack.ChainInto), $"{attack.Name} chains into an attack that does not exist");
+        }
+
+        [Test]
         public void EveryEnemyKindHasAttacksItCanReachWith()
         {
             foreach (var kind in EnemyKind.All)

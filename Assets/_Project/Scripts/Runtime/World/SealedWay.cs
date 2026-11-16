@@ -10,6 +10,9 @@ namespace Clover.World
     {
         [UnityEngine.SerializeField] private AreaDirector director;
 
+        /// <summary>The scene the way leads to once it opens; empty if nothing lies beyond yet.</summary>
+        public string LeadsTo = "";
+
         public int Tries { get; private set; }
 
         public void Configure(AreaDirector areaDirector) => director = areaDirector;
@@ -19,7 +22,13 @@ namespace Clover.World
             Tries++;
             if (who.Defence == null) return;
             int left = director != null ? director.EnemiesAlive : 0;
-            who.Defence.Callout(left > 0 ? $"Sealed. {left} still stand." : "The storm waits above.");
+            if (left > 0)
+            {
+                who.Defence.Callout($"Sealed. {left} still stand.");
+                return;
+            }
+            who.Defence.Callout("The storm waits above.");
+            if (!string.IsNullOrEmpty(LeadsTo)) UnityEngine.SceneManagement.SceneManager.LoadScene(LeadsTo);
         }
     }
 }

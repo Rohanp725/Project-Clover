@@ -26,6 +26,9 @@ namespace Clover.Gameplay
         /// <summary>While another enemy has the attack, this one keeps this far back and circles.</summary>
         public float WaitRange = 5.5f;
 
+        /// <summary>The phase of the fight, for enemies that change as they are worn down; attacks may wait for a later one.</summary>
+        public int Phase;
+
         public EnemyState State { get; private set; }
         public EnemyAttack Current { get; private set; }
         public bool IsAttacking => State == EnemyState.Telegraph || State == EnemyState.Strike || State == EnemyState.Recover;
@@ -59,6 +62,7 @@ namespace Clover.Gameplay
             rest = 0f;
             counter = false;
             IsWaiting = false;
+            Phase = 0;
             cooldowns = new float[Attacks.Count];
         }
 
@@ -174,6 +178,16 @@ namespace Clover.Gameplay
             Alert();
         }
 
+        /// <summary>Begins the named attack at once, whatever the enemy was doing, unless it is dead or staggered.</summary>
+        public bool Force(string attackName)
+        {
+            if (State == EnemyState.Dead || State == EnemyState.Staggered) return false;
+            var attack = Named(attackName);
+            if (attack == null) return false;
+            Begin(attack);
+            return true;
+        }
+
         /// <summary>The stagger meter filled: the enemy drops whatever it was doing.</summary>
         public void Stagger()
         {
@@ -255,6 +269,7 @@ namespace Clover.Gameplay
         {
             var attack = Attacks[index];
             if (index < cooldowns.Length && cooldowns[index] > 0f) return false;
+            if (attack.MinPhase > Phase) return false;
             return distance >= attack.MinRange && distance <= attack.MaxRange;
         }
     }

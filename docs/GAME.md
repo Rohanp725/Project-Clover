@@ -404,6 +404,60 @@ taken, from Claude's knowledge of them, and how it is shown here (first pass, no
 - **Open**: sound for all of these (deferred with the rest of sound); a guard stance animation for the soldier, which
   still stands as it did.
 
+### The overnight run of 2026-11-15 to 16: what was built and decided
+
+Built by Claude alone, on the user's instruction to work through the night without input. Everything here is
+**Claude's default, open to change**, and none of it has been played by the user.
+
+**How animation is made now.** Animations are no longer keyed in Blender. Each one is written as code
+(`Assets/_Project/Scripts/Editor/Forge/`): a list of poses in the character's own space, with feet and hands given as
+places to be and the knees and elbows worked out from them, eased timing between poses, and the scarf, hair and
+cloak simulated frame by frame so they trail and settle. `Clover > Forge > Bake Player Animations` and `Bake Enemy
+Animations` write the clips to `Assets/_Project/Generated/Animation/` and draw a contact sheet of every clip to
+`review/anim/`, which is how they are checked. The rule every action follows: a wind-up that goes the other way
+first, a held beat, a blow that arrives fast, a follow-through past the target, a settle. Attacks read their timing
+from the game's own numbers, so the blow in the animation always falls on the moment the game deals it.
+
+**Models.** The player, the three castle enemies and the god were all rebuilt as shaped, smooth-shaded bodies with
+weights blended at the joints, on one shared skeleton. The player keeps the ronin design the user approved, with far
+more in it (bandaged chest under an open jacket, rope belt and flask, plated left arm, torn right sleeve, wide torn
+trousers, scar and headband, heavy scarf, the hat on his back). The soldier has layered plate, a wide iron hat and a
+banner on his back; the acolyte a hood, crossed wraps and a long scarf; the storm caller a robe, mantle and tall hat.
+
+**Narukami, the god of Lightning** (first form; name and details are Claude's):
+
+- *Who*: once a swordsman, now the storm. Storm-grey skin, white hair, gold horns, a living lightning scar across the
+  chest, the great rope and paper streamers of a shrine at his waist, and behind his shoulders the ring of seven
+  thunder drums. Human-sized (a fifth larger than the player), with a long sword.
+- *Where*: the summit above the storm, reached through the castle's sealed door once every enemy below is dead. A
+  round stone floor inlaid with rings, standing in a sea of cloud, with a ring of red gate-posts hung with drums
+  round its far side. No rain: the storm is below.
+- *How he fights*: as a duel. He guards and answers like the soldiers (light blows from the front are turned; after
+  two he strikes back), and his poise is high. 620 health, and a finisher takes a fixed fifth of it, so breaking
+  his balance is the real way to kill him: each perfect guard throws 42 of the 190 it takes.
+  - Three cuts in a row: across, back, and down. All can be guarded.
+  - A quick thrust down a lane at middle range.
+  - **Red**: the draw. He sheathes, sinks, holds, and goes through the player along a ten-metre lane to stand behind.
+  - He steps through lightning to the player's flank and cuts as he arrives.
+  - Three bolts called down in a row on where the player stands.
+  - A burst all round him when crowded.
+  - **Second phase** at half health: it opens with a roar that cannot be guarded, he acts a sixth faster, the bolts
+    around the summit fall three times as often, and he gains the draw twice in a row.
+- *Not built*: the huge godly second form, his voice, and any sound.
+
+**Take or consume** (built as the two things he leaves on the floor, chosen by walking up and using one):
+
+- *Take the storm*: Fire is lost. The player gains Lightning's kit and his sword, the Storm Katana (the Katana with
+  15% more damage and stagger and a draw that carries further).
+- *Consume the storm*: Fire is kept and strengthened (Flame Wave 20 to 28 damage, burning 5 to 7 s and reaching
+  further; Kindle 30% to 45% damage and 10 to 13 s), with a plain Katana.
+- Either restores the player, and then the way back down to the castle opens. Weapon and element carry between scenes.
+
+**Lightning's base kit** (for a player who takes it): *Thunderclap* (25 mana) drops a bolt on the enemy faced, up to
+ten metres off, light on damage and very heavy on stagger, and leaps to two more. *Overdrive* (40 mana, 10 s) makes
+every swing 30% faster and adds stagger to each blow. Fire's kit is damage and burning; Lightning's is speed and
+broken guards.
+
 ### Upgrades in the slice (Decided: all of these are in)
 
 Fire, built around pressure and momentum:
@@ -452,6 +506,8 @@ where a critical hit on a burning enemy causes a chained explosion.
 | 2026-11-15 | Magic supports close combat and must not become the main focus of fights | the user wants the player empowered to use their weapons |
 | 2026-11-15 | Each major boss masters one element and one unique technique; beating it gives a choice of one of the two | makes every boss a build decision |
 | 2026-11-15 | Boss zones are themed to the element for atmosphere only, with no status effect | atmosphere without extra rules |
+| 2026-11-16 | Animations are written as code and baked in Unity, not keyed in Blender | it lets every action be placed, timed and checked frame by frame, and the user asked for special emphasis on animation |
+| 2026-11-16 | The god of Lightning is Narukami, a duellist with a ring of thunder drums, fought above the clouds; take or consume is two things he leaves on the floor | Claude's defaults during the unattended overnight run |
 | 2026-11-15 | Blocking is directional; the finisher is its own move on a staggered enemy | the user's feedback after playing the combat arena |
 | 2026-11-15 | The first area, its three enemies, fists and Fire's base kit were built in one pass on Claude's defaults | the user asked for long stretches of work with few check-ins and a higher bar for visuals |
 | 2026-11-15 | Only the player and the final boss use more than one element; the final boss has Light, Dark and the Super Form | makes the final boss the player's mirror |
