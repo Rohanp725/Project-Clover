@@ -27,6 +27,7 @@ namespace Clover.EditorTools.Forge
                     case "boss_call": yield return Call(attack, true); break;
                     case "boss_call_again": yield return Call(attack, false); break;
                     case "boss_nova": yield return Burst(attack); break;
+                    case "boss_roar": yield return Roar(attack); break;
                     default: Debug.LogWarning($"[Clover.Forge] No motion written for the boss attack '{attack.AnimationName}'."); break;
                 }
             }
@@ -79,6 +80,7 @@ namespace Clover.EditorTools.Forge
             float h = hit, d = done;
             return new ForgeClip(attack.Name, attack.Total)
             {
+                Shape = ForgeClip.Impact(attack.Telegraph / attack.Total, attack.Total, 1.2f),
                 Wind = t => new Vector3(0f, 0f, t > h * 0.8f && t < d ? -9f : 0f),
                 SheetMoments = new[] { 0f, h * 0.45f, h * 0.9f, h, (h + d) * 0.5f, d, Mathf.Lerp(d, 1f, 0.4f), 1f },
             };
@@ -316,6 +318,62 @@ namespace Clover.EditorTools.Forge
             Looking(point);
             return clip.Key(0f, first ? Ready() : point).Key(hit * (first ? 0.4f : 0.5f), raised, Ease.Out).Key(hit * 0.9f, raised, Ease.Linear)
                 .Key(hit, point, Ease.In).Key(1f, point, Ease.Linear);
+        }
+
+        // The roar that opens his second phase: he draws everything in, then throws his head back and his arms wide,
+        // chest to the sky, and holds it while the storm answers. Nothing like the burst, so it is known at once.
+        private static ForgeClip Roar(EnemyAttack attack)
+        {
+            var clip = Attack(attack, out float hit, out float done);
+            var drawnIn = new ForgePose
+            {
+                Hips = new Vector3(0f, -0.34f, -0.04f),
+                HipLean = 22f,
+                WaistLean = 34f,
+                HeadLean = 30f,
+                FootL = new Vector3(-0.22f, 0f, 0.04f),
+                FootR = new Vector3(0.22f, 0f, -0.04f),
+                HandL = new Vector3(-0.16f, 0.9f, 0.34f),
+                HandR = new Vector3(0.2f, 0.86f, 0.36f),
+                ElbowL = new Vector3(-0.8f, -0.6f, 0f),
+                ElbowR = new Vector3(0.8f, -0.6f, 0f),
+                ShoulderLForward = 22f,
+                ShoulderRForward = 22f,
+                AimBlade = true,
+                Blade = new Vector3(0.3f, -0.9f, 0.3f),
+            };
+            var tighter = drawnIn.Copy();
+            tighter.Hips = new Vector3(0f, -0.4f, -0.05f);
+            tighter.WaistLean = 40f;
+            var thrown = new ForgePose
+            {
+                Hips = new Vector3(0f, 0.03f, 0.06f),
+                HipLean = -14f,
+                WaistLean = -30f,
+                HeadLean = -42f,
+                FootL = new Vector3(-0.34f, 0f, 0.02f),
+                FootR = new Vector3(0.34f, 0f, -0.02f),
+                FootLTurn = 24f,
+                FootRTurn = 24f,
+                HandL = new Vector3(-0.92f, 1.0f, -0.24f),
+                HandR = new Vector3(0.94f, 1.02f, -0.22f),
+                ElbowL = new Vector3(-0.6f, -0.3f, -1f),
+                ElbowR = new Vector3(0.6f, -0.3f, -1f),
+                ShoulderLUp = 14f,
+                ShoulderRUp = 14f,
+                ShoulderLForward = -24f,
+                ShoulderRForward = -24f,
+                AimBlade = true,
+                Blade = new Vector3(0.82f, -0.5f, -0.28f),
+            };
+            var held = thrown.Copy();
+            held.Hips = new Vector3(0f, 0.05f, 0.07f);
+            held.WaistLean = -34f;
+            held.HeadLean = -46f;
+            held.HandL = new Vector3(-0.98f, 1.08f, -0.3f);
+            held.HandR = new Vector3(1f, 1.1f, -0.28f);
+            return clip.Key(0f, Ready()).Key(hit * 0.4f, drawnIn, Ease.Out).Key(hit * 0.88f, tighter, Ease.InOut).Key(hit, thrown, Ease.In)
+                .Key(done, held, Ease.Out).Key(Mathf.Lerp(done, 1f, 0.5f), thrown, Ease.InOut).Key(1f, Ready(), Ease.InOut);
         }
 
         // The burst: he turns the sword point-down in both hands, lifts it, and drives it into the ground.

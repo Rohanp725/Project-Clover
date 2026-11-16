@@ -86,6 +86,7 @@ namespace Clover.EditorTools.Forge
             float h = hit, d = done;
             return new ForgeClip(attack.Name, attack.Total)
             {
+                Shape = ForgeClip.Impact(h, attack.Total, 1.2f),
                 Wind = t => new Vector3(0f, 0f, t > h * 0.8f && t < d ? -7f : 0f),
                 SheetMoments = new[] { 0f, h * 0.4f, h * 0.9f, h, (h + d) * 0.5f, d, Mathf.Lerp(d, 1f, 0.4f), 1f },
             };
@@ -107,12 +108,16 @@ namespace Clover.EditorTools.Forge
             {
                 float breath = Mathf.Sin(t * Mathf.PI * 2f), slow = Mathf.Sin(t * Mathf.PI * 2f + 1f);
                 var p = ready();
-                p.Hips += new Vector3(0.006f * slow, 0.012f * breath, 0f);
-                p.WaistLean += 2f * breath;
-                p.ShoulderLUp += 2f + 2f * breath;
-                p.ShoulderRUp += 2f + 2f * breath;
-                p.HeadYaw += 4f * slow;
-                p.HandR += new Vector3(0f, 0.01f * breath, 0f);
+                // Breathing that can be seen from above: the whole body rises and sinks, the weight drifts from foot to foot, the head turns.
+                p.Hips += new Vector3(0.022f * slow, 0.028f * breath, 0.01f * slow);
+                p.HipRoll += 2f * slow;
+                p.WaistLean += 4f * breath;
+                p.WaistYaw += 3f * slow;
+                p.ShoulderLUp += 3f + 4f * breath;
+                p.ShoulderRUp += 3f + 4f * breath;
+                p.HeadYaw += 9f * slow;
+                p.HeadLean -= 3f * breath;
+                p.HandR += new Vector3(0.01f * slow, 0.025f * breath, 0.02f * slow);
                 return p;
             });
 
@@ -129,11 +134,16 @@ namespace Clover.EditorTools.Forge
                 p.FootR = new Vector3(spread, 0.13f * rightLift, middle.z + stride * right);
                 p.FootLTip = 20f * Mathf.Max(0f, -left);
                 p.FootRTip = 20f * Mathf.Max(0f, -right);
-                p.Hips += new Vector3(0.02f * left, 0.02f * Mathf.Cos(phase * 2f), 0f);
-                p.HipYaw += 6f * left;
-                p.WaistYaw -= 8f * left;
-                p.HipRoll += 2.5f * left;
-                p.HandR += new Vector3(0f, 0.015f * Mathf.Cos(phase * 2f), 0.03f * left);
+                // A stalking walk told by the body, since from above the legs hardly show: it sways over each foot,
+                // dips as the weight comes down, and the shoulders turn against the hips.
+                p.Hips += new Vector3(0.045f * left, 0.04f * Mathf.Cos(phase * 2f) - 0.02f, 0.02f);
+                p.HipLean += 5f;
+                p.HipYaw += 11f * left;
+                p.WaistYaw -= 20f * left;
+                p.HipRoll += 5f * left;
+                p.WaistRoll -= 3f * left;
+                p.HeadYaw += 8f * left;
+                p.HandR += new Vector3(0f, 0.03f * Mathf.Cos(phase * 2f), 0.07f * left);
                 return p;
             });
 
@@ -147,7 +157,7 @@ namespace Clover.EditorTools.Forge
             struck.FootR = new Vector3(struck.FootR.x + 0.04f, 0f, struck.FootR.z - 0.2f);
             struck.ShoulderRUp = 14f;
             struck.ShoulderLUp = 10f;
-            yield return new ForgeClip(prefix + "_hurt", 0.3f) { Wind = t => new Vector3(0f, 0f, t < 0.3f ? 9f : 0f) }
+            yield return new ForgeClip(prefix + "_hurt", 0.3f) { Wind = t => new Vector3(0f, 0f, t < 0.3f ? 9f : 0f), Shape = ForgeClip.Shudder(0.2f, 0.3f, 1.3f) }
                 .Key(0f, ready()).Key(0.25f, struck, Ease.Snap).Key(0.55f, struck, Ease.Linear).Key(1f, ready(), Ease.InOut);
 
             // Staggered: the legs give and it drops to one knee, head down, wide open.

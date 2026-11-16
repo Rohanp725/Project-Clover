@@ -211,7 +211,7 @@ namespace Clover.Gameplay
                     // Crowded, he bursts: a ring of lightning all round him.
                     new EnemyAttack { Name = "boss_nova", Telegraph = 0.7f, Strike = 0.2f, Recovery = 0.8f, Damage = 22f, Radius = 3.8f, MinRange = 0f, MaxRange = 2.6f, Cooldown = 7f },
                     // The cry that opens the second phase: wider than the burst, and it cannot be guarded.
-                    new EnemyAttack { Name = "boss_roar", Animation = "boss_nova", Telegraph = 1.1f, Strike = 0.25f, Recovery = 0.9f, Damage = 26f, Radius = 6f, Unblockable = true, MinRange = 1f, MaxRange = 0f },
+                    new EnemyAttack { Name = "boss_roar", Telegraph = 1.1f, Strike = 0.25f, Recovery = 0.9f, Damage = 26f, Radius = 6f, Unblockable = true, MinRange = 1f, MaxRange = 0f },
                     // Second phase only: the red draw twice, the second from wherever the first left him.
                     new EnemyAttack { Name = "boss_iai_twice", Animation = "boss_iai", Telegraph = 0.85f, Strike = 0.15f, Recovery = 0.2f, Damage = 30f, Reach = 10.5f, LineWidth = 1.7f, Lunge = 9.5f, PassThrough = true, Unblockable = true, MinRange = 4f, MaxRange = 14f, Cooldown = 10f, MinPhase = 1, AimLockAt = 0.75f, ChainInto = "boss_iai_return" },
                     new EnemyAttack { Name = "boss_iai_return", Animation = "boss_iai", Telegraph = 0.7f, Strike = 0.15f, Recovery = 1.1f, Damage = 30f, Reach = 10.5f, LineWidth = 1.7f, Lunge = 9.5f, PassThrough = true, Unblockable = true, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.7f },

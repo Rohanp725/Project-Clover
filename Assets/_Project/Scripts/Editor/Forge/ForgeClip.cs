@@ -20,6 +20,11 @@ namespace Clover.EditorTools.Forge
         public Func<float, Vector3> Wind;
         /// <summary>Something done to the rig after the pose is applied, for what a pose cannot say (a full turn in a roll).</summary>
         public Action<ForgeRig, float> After;
+        /// <summary>
+        /// Something laid over the keyed pose at every moment: the shudder of a blow landing, a breath. Given the
+        /// moment and the pose, it returns the pose to use. It is what keeps a held pose from being a frozen one.
+        /// </summary>
+        public Func<float, ForgePose, ForgePose> Shape;
         /// <summary>The moments worth looking at on the contact sheet; evenly spread when null.</summary>
         public float[] SheetMoments;
 
@@ -48,6 +53,45 @@ namespace Clover.EditorTools.Forge
         }
 
         public ForgePose PoseAt(float t)
+        {
+            var pose = Keyed(t);
+            return Shape != null ? Shape(t, pose.Copy()) : pose;
+        }
+
+        /// <summary>
+        /// The shudder of a blow landing: from the moment of the hit the body rings like something struck, driving on
+        /// a little past its pose and coming back, each swing smaller, until it is still.
+        /// </summary>
+        public static Func<float, ForgePose, ForgePose> Impact(float hit, float seconds, float strength = 1f) => (t, pose) =>
+        {
+            float since = (t - hit) * seconds;
+            if (since <= 0f) return pose;
+            float ring = Mathf.Exp(-since * 10f) * Mathf.Sin(since * 40f) * strength;
+            pose.Hips += new Vector3(0f, -0.03f * ring, 0.05f * ring);
+            pose.HipLean += 2.5f * ring;
+            pose.WaistLean += 6f * ring;
+            pose.HeadLean -= 4f * ring;
+            pose.ShoulderLUp += 5f * ring;
+            pose.ShoulderRUp += 5f * ring;
+            return pose;
+        };
+
+        /// <summary>The shake of a body that has been struck: from the given moment it rocks back and forth and from side to side, dying away.</summary>
+        public static Func<float, ForgePose, ForgePose> Shudder(float from, float seconds, float strength = 1f) => (t, pose) =>
+        {
+            float since = (t - from) * seconds;
+            if (since <= 0f) return pose;
+            float ring = Mathf.Exp(-since * 9f) * strength;
+            float fore = ring * Mathf.Sin(since * 34f), side = ring * Mathf.Cos(since * 27f);
+            pose.Hips += new Vector3(0.02f * side, -0.02f * Mathf.Abs(fore), -0.04f * fore);
+            pose.WaistLean -= 7f * fore;
+            pose.WaistRoll += 5f * side;
+            pose.HeadLean -= 8f * fore;
+            pose.HeadRoll += 6f * side;
+            return pose;
+        };
+
+        private ForgePose Keyed(float t)
         {
             if (function != null) return function(t);
             if (keys.Count == 0) return new ForgePose();

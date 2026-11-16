@@ -143,6 +143,7 @@ namespace Clover.EditorTools.Forge
             var (hit, done) = Moments(step);
             return new ForgeClip(step.Name, step.Total)
             {
+                Shape = ForgeClip.Impact(hit, step.Total),
                 // The body drives forward into the blow, so what trails from it streams back until it lands.
                 Wind = t => new Vector3(0f, 0f, t < hit ? lungeWind : 0f),
                 SheetMoments = Sheet(hit, done),
@@ -213,12 +214,15 @@ namespace Clover.EditorTools.Forge
             float breath = Mathf.Sin(t * Mathf.PI * 2f);
             float slow = Mathf.Sin(t * Mathf.PI * 2f + 1.1f);
             var p = Stand();
-            p.Hips += new Vector3(0.004f * slow, 0.01f * breath, 0f);
-            p.WaistLean += 1.6f * breath;
-            p.ShoulderLUp = p.ShoulderRUp = 2.5f + 2.5f * breath;
-            p.HeadLean = -1.5f * breath;
-            p.HeadYaw = 3f * slow;
-            p.HandR += new Vector3(0.005f * slow, 0.008f * breath, 0.012f * slow);
+            // Breathing that can be seen from above: the chest rises, the weight drifts from foot to foot, the head turns to look about.
+            p.Hips += new Vector3(0.02f * slow, 0.024f * breath, 0.008f * slow);
+            p.HipRoll += 2f * slow;
+            p.WaistLean += 3.6f * breath;
+            p.WaistYaw = 3f * slow;
+            p.ShoulderLUp = p.ShoulderRUp = 3f + 4.5f * breath;
+            p.HeadLean = -3f * breath;
+            p.HeadYaw = 10f * slow;
+            p.HandR += new Vector3(0.012f * slow, 0.022f * breath, 0.03f * slow);
             return p;
         });
 
@@ -228,12 +232,14 @@ namespace Clover.EditorTools.Forge
             float bounce = Mathf.Sin(t * Mathf.PI * 4f);
             float sway = Mathf.Sin(t * Mathf.PI * 2f);
             var p = FistReady();
-            p.Hips += new Vector3(0.012f * sway, 0.014f * bounce, 0.01f * sway);
-            p.FootLTip = 6f + 4f * bounce;
-            p.FootRTip = 14f + 5f * bounce;
-            p.HandL += new Vector3(0.012f * sway, 0.014f * bounce, 0.02f * sway);
-            p.HandR += new Vector3(-0.01f * sway, -0.012f * bounce, 0.012f * sway);
-            p.WaistLean += 1.5f * bounce;
+            p.Hips += new Vector3(0.03f * sway, 0.03f * bounce, 0.02f * sway);
+            p.HipYaw += 4f * sway;
+            p.FootLTip = 8f + 7f * bounce;
+            p.FootRTip = 16f + 8f * bounce;
+            p.HandL += new Vector3(0.03f * sway, 0.03f * bounce, 0.05f * sway);
+            p.HandR += new Vector3(-0.025f * sway, -0.025f * bounce, 0.03f * sway);
+            p.WaistLean += 3f * bounce;
+            p.WaistYaw += 5f * sway;
             return p;
         });
 
@@ -389,7 +395,7 @@ namespace Clover.EditorTools.Forge
                 HandL = new Vector3(-0.3f, 0.95f, 0.22f),
                 HandR = new Vector3(0.34f, 0.9f, 0.14f),
             };
-            return new ForgeClip("hurt", 0.35f) { Wind = t => new Vector3(0f, 0f, t < 0.3f ? 9f : 0f) }
+            return new ForgeClip("hurt", 0.35f) { Wind = t => new Vector3(0f, 0f, t < 0.3f ? 9f : 0f), Shape = ForgeClip.Shudder(0.2f, 0.35f, 1.2f) }
                 .Key(0f, Stand()).Key(0.22f, struck, Ease.Snap).Key(0.5f, struck, Ease.Linear).Key(1f, gather, Ease.InOut);
         }
 
@@ -617,109 +623,130 @@ namespace Clover.EditorTools.Forge
                 .Key(done, through, Ease.Out).Key(Mathf.Lerp(done, 1f, 0.35f), settle, Ease.Out).Key(1f, SwordReady(), Ease.InOut);
         }
 
-        /// <summary>The third cut: a step in and the sword brought straight down from over the head.</summary>
+        /// <summary>
+        /// The third cut: a step in and a rising cut from the left hip up through to the right shoulder. Seen from above
+        /// the blade crosses the whole body from one side to the other, where a cut straight down would only be a line.
+        /// </summary>
         private static ForgeClip StepCut(AttackStep step)
         {
             var (hit, done) = Moments(step);
-            var raise = new ForgePose
+            var coil = Looking(new ForgePose
             {
-                Hips = new Vector3(0f, -0.04f, -0.06f),
-                HipLean = -6f,
-                WaistLean = -12f,
-                HeadLean = 10f,
-                FootL = new Vector3(-0.16f, 0f, -0.12f),
-                FootR = new Vector3(0.14f, 0.1f, 0.12f),
-                FootLTurn = 30f,
-                HandR = new Vector3(0.06f, 1.92f, -0.02f),
-                ElbowR = new Vector3(1f, 0.2f, 0.4f),
-                ElbowL = new Vector3(-1f, 0.2f, 0.4f),
-                ShoulderRUp = 20f,
-                ShoulderLUp = 20f,
+                Hips = new Vector3(-0.05f, -0.2f, -0.06f),
+                HipYaw = -26f,
+                HipLean = 8f,
+                WaistYaw = -34f,
+                WaistLean = 10f,
+                FootL = new Vector3(-0.2f, 0f, -0.14f),
+                FootR = new Vector3(0.14f, 0.08f, 0.16f),
+                FootLTurn = 34f,
+                HandR = new Vector3(-0.36f, 0.72f, 0.06f),
+                ElbowR = new Vector3(0.6f, -0.6f, -0.4f),
+                ElbowL = new Vector3(-0.8f, -0.4f, -0.5f),
                 AimBlade = true,
                 TwoHanded = true,
-                Blade = new Vector3(0f, 0.55f, -0.84f),
-            };
-            var cut = new ForgePose
+                Blade = new Vector3(-0.6f, -0.42f, -0.68f),
+            }, 0.9f);
+            var cut = Looking(new ForgePose
             {
-                Hips = new Vector3(0f, -0.2f, 0.2f),
-                HipLean = 16f,
-                WaistLean = 16f,
-                HeadLean = -14f,
-                FootL = new Vector3(-0.18f, 0f, -0.34f),
-                FootR = new Vector3(0.14f, 0f, 0.52f),
-                FootLTurn = 40f,
-                FootLTip = 20f,
-                HandR = new Vector3(0.05f, 1.22f, 0.7f),
-                AimBlade = true,
-                TwoHanded = true,
-                Blade = new Vector3(0f, 0.3f, 0.95f),
-            };
-            var low = cut.Copy();
-            low.Hips = new Vector3(0f, -0.3f, 0.24f);
-            low.HipLean = 24f;
-            low.WaistLean = 24f;
-            low.HeadLean = -26f;
-            low.HandR = new Vector3(0.05f, 0.72f, 0.62f);
-            low.Blade = new Vector3(0f, -0.5f, 0.87f);
-            var settle = low.Copy();
-            settle.Hips = new Vector3(0f, -0.28f, 0.22f);
-            settle.HandR = new Vector3(0.05f, 0.76f, 0.6f);
-            settle.Blade = new Vector3(0f, -0.42f, 0.9f);
-            return Attack(step, -8f).Key(0f, SwordReady()).Key(hit * 0.55f, raise, Ease.Out).Key(hit * 0.8f, raise, Ease.Linear)
-                .Key(hit, cut, Ease.In).Key(done, low, Ease.Out).Key(Mathf.Lerp(done, 1f, 0.4f), settle, Ease.Out).Key(1f, SwordReady(), Ease.InOut);
-        }
-
-        /// <summary>The heavy cut: the sword taken right back over the head with the body arched, held, and brought down with everything.</summary>
-        private static ForgeClip Overhead(AttackStep step)
-        {
-            var (hit, done) = Moments(step);
-            var back = new ForgePose
-            {
-                Hips = new Vector3(0f, -0.06f, -0.14f),
-                HipLean = -10f,
-                WaistLean = -20f,
-                HeadLean = 18f,
-                FootL = new Vector3(-0.17f, 0f, -0.26f),
-                FootR = new Vector3(0.15f, 0f, 0.16f),
-                FootLTurn = 36f,
-                HandR = new Vector3(0.06f, 1.9f, -0.2f),
-                ElbowR = new Vector3(1f, 0.3f, 0.3f),
-                ElbowL = new Vector3(-1f, 0.3f, 0.3f),
-                ShoulderRUp = 24f,
-                ShoulderLUp = 24f,
-                AimBlade = true,
-                TwoHanded = true,
-                Blade = new Vector3(0f, -0.35f, -0.94f),
-            };
-            var coiled = back.Copy();
-            coiled.Hips = new Vector3(0f, -0.1f, -0.17f);
-            coiled.WaistLean = -24f;
-            coiled.Blade = new Vector3(0f, -0.5f, -0.87f);
-            var cut = new ForgePose
-            {
-                Hips = new Vector3(0f, -0.26f, 0.22f),
-                HipLean = 20f,
-                WaistLean = 22f,
-                HeadLean = -20f,
+                Hips = new Vector3(0.02f, -0.16f, 0.2f),
+                HipYaw = 12f,
+                HipLean = 10f,
+                WaistYaw = 26f,
+                WaistLean = 4f,
                 FootL = new Vector3(-0.19f, 0f, -0.36f),
                 FootR = new Vector3(0.15f, 0f, 0.54f),
                 FootLTurn = 40f,
-                FootLTip = 24f,
-                HandR = new Vector3(0.05f, 1.0f, 0.74f),
+                FootLTip = 20f,
+                HandR = new Vector3(0.36f, 1.42f, 0.62f),
+                ElbowR = new Vector3(0.9f, -0.2f, -0.2f),
+                ElbowL = new Vector3(-0.5f, -0.6f, -0.4f),
+                ShoulderRUp = 14f,
                 AimBlade = true,
                 TwoHanded = true,
-                Blade = new Vector3(0f, 0.02f, 1f),
-            };
+                Blade = new Vector3(0.42f, 0.66f, 0.62f),
+            }, 0.7f);
+            var high = cut.Copy();
+            high.Hips = new Vector3(0.05f, -0.1f, 0.24f);
+            high.WaistYaw = 46f;
+            high.WaistLean = -6f;
+            high.HeadYaw = -40f;
+            high.HandR = new Vector3(0.62f, 1.78f, 0.22f);
+            high.ShoulderRUp = 26f;
+            high.Blade = new Vector3(0.74f, 0.62f, -0.26f);
+            var settle = high.Copy();
+            settle.Hips = new Vector3(0.04f, -0.13f, 0.22f);
+            settle.WaistYaw = 38f;
+            settle.HandR = new Vector3(0.56f, 1.66f, 0.28f);
+            settle.Blade = new Vector3(0.68f, 0.7f, -0.2f);
+            return Attack(step, -8f).Key(0f, SwordReady()).Key(hit * 0.5f, coil, Ease.Out).Key(hit * 0.82f, coil, Ease.Linear)
+                .Key(hit, cut, Ease.In).Key(done, high, Ease.Out).Key(Mathf.Lerp(done, 1f, 0.4f), settle, Ease.Out).Key(1f, SwordReady(), Ease.InOut);
+        }
+
+        /// <summary>
+        /// The heavy cut: the sword taken back over the right shoulder with the whole body wound round after it, held,
+        /// and brought down across to the left with everything. Seen from above the blade starts behind one shoulder
+        /// and ends beyond the other hip.
+        /// </summary>
+        private static ForgeClip Overhead(AttackStep step)
+        {
+            var (hit, done) = Moments(step);
+            var back = Looking(new ForgePose
+            {
+                Hips = new Vector3(0.04f, -0.08f, -0.14f),
+                HipYaw = 22f,
+                HipLean = -8f,
+                WaistYaw = 40f,
+                WaistLean = -14f,
+                FootL = new Vector3(-0.17f, 0f, -0.26f),
+                FootR = new Vector3(0.16f, 0f, 0.16f),
+                FootLTurn = 36f,
+                HandR = new Vector3(0.44f, 1.82f, -0.2f),
+                ElbowR = new Vector3(1f, 0.2f, -0.3f),
+                ElbowL = new Vector3(-0.6f, 0.4f, 0.6f),
+                ShoulderRUp = 26f,
+                ShoulderLUp = 18f,
+                AimBlade = true,
+                TwoHanded = true,
+                Blade = new Vector3(0.5f, -0.28f, -0.82f),
+            }, 0.85f);
+            var coiled = back.Copy();
+            coiled.Hips = new Vector3(0.05f, -0.13f, -0.18f);
+            coiled.WaistYaw = 48f;
+            coiled.WaistLean = -18f;
+            coiled.HandR = new Vector3(0.5f, 1.86f, -0.28f);
+            coiled.Blade = new Vector3(0.56f, -0.42f, -0.72f);
+            var cut = Looking(new ForgePose
+            {
+                Hips = new Vector3(-0.02f, -0.26f, 0.22f),
+                HipYaw = -8f,
+                HipLean = 20f,
+                WaistYaw = -22f,
+                WaistLean = 20f,
+                FootL = new Vector3(-0.19f, 0f, -0.36f),
+                FootR = new Vector3(0.16f, 0f, 0.56f),
+                FootLTurn = 40f,
+                FootLTip = 24f,
+                HandR = new Vector3(-0.12f, 1.02f, 0.72f),
+                ElbowR = new Vector3(0.7f, -0.5f, -0.2f),
+                AimBlade = true,
+                TwoHanded = true,
+                Blade = new Vector3(-0.36f, 0.04f, 0.93f),
+            }, 0.7f);
             var buried = cut.Copy();
-            buried.Hips = new Vector3(0f, -0.4f, 0.26f);
+            buried.Hips = new Vector3(-0.04f, -0.42f, 0.27f);
             buried.HipLean = 30f;
-            buried.WaistLean = 30f;
-            buried.HeadLean = -32f;
-            buried.HandR = new Vector3(0.05f, 0.7f, 0.64f);
-            buried.Blade = new Vector3(0f, -0.4f, 0.92f);
+            buried.WaistYaw = -40f;
+            buried.WaistLean = 28f;
+            buried.HeadYaw = 34f;
+            buried.HeadLean = -30f;
+            buried.HandR = new Vector3(-0.38f, 0.56f, 0.5f);
+            buried.Blade = new Vector3(-0.72f, -0.46f, 0.52f);
             var settle = buried.Copy();
-            settle.Hips = new Vector3(0f, -0.36f, 0.24f);
-            settle.HandR = new Vector3(0.05f, 0.74f, 0.62f);
+            settle.Hips = new Vector3(-0.04f, -0.37f, 0.25f);
+            settle.WaistYaw = -34f;
+            settle.HandR = new Vector3(-0.34f, 0.62f, 0.5f);
+            settle.Blade = new Vector3(-0.68f, -0.4f, 0.6f);
             return Attack(step, -7f).Key(0f, SwordReady()).Key(hit * 0.5f, back, Ease.Out).Key(hit * 0.86f, coiled, Ease.InOut)
                 .Key(hit, cut, Ease.In).Key(done, buried, Ease.Out).Key(Mathf.Lerp(done, 1f, 0.45f), settle, Ease.Out).Key(1f, SwordReady(), Ease.InOut);
         }
