@@ -8,6 +8,8 @@ unity command script eval "UnityEditor.SceneManagement.EditorSceneManager.OpenSc
 unity command editor set_auto_tick >/dev/null 2>&1
 unity command editor.playmode set_run_in_background >/dev/null 2>&1
 unity command console clear >/dev/null 2>&1
+# Saved progress is kept out of it: the play starts as a new player and writes nothing down.
+unity command script eval "UnityEngine.PlayerPrefs.SetInt(\"clover.progress.sandbox\", 1); UnityEngine.PlayerPrefs.Save(); return \"sandboxed\";" >/dev/null 2>&1
 unity command editor.playmode start >/dev/null 2>&1
 unity status --until-ready --project-path "$P" >/dev/null 2>&1
 unity command job wait -- --condition '{"member":"UnityEngine.Time.frameCount","op":"changed"}' --timeout 10 2>&1 | grep -E "^met"
@@ -19,4 +21,5 @@ done
 unity command console get -- --tail 150 2>&1 | grep -o "\[Probe\][^\"]*"
 unity command console get -- --tail 30 --level warn 2>&1 | grep -E '"message"|^counts' | head -12
 unity command editor.playmode stop >/dev/null 2>&1
+unity command script eval "UnityEngine.PlayerPrefs.DeleteKey(\"clover.progress.sandbox\"); UnityEngine.PlayerPrefs.Save(); return \"real\";" >/dev/null 2>&1
 unity status --until-ready --project-path "$P" >/dev/null 2>&1
