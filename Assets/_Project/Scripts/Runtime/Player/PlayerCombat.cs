@@ -463,7 +463,7 @@ namespace Clover.Player
             {
                 Finishers++;
                 if (defence != null) defence.Callout("Finisher");
-                ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.6f), 0.08f);
+                ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.45f), 0.07f);
             }
             if (hitStop != null) hitStop.Freeze(finisher ? Mathf.Max(FinisherHitStop, step.HitStopSeconds) : step.HitStopSeconds);
             // After a finisher's stop, time comes back slowly: the blow gets a moment to be looked at.

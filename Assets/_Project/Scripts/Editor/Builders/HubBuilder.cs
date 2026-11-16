@@ -32,7 +32,8 @@ namespace Clover.EditorTools
             inlay = BuildKit.Toon(Folder, "m_hub_inlay", new Color(0.78f, 0.62f, 0.3f), false, null, 0f, 0f);
             voice = BuildKit.Toon(Folder, "m_hub_voice_body", new Color(1f, 0.86f, 0.55f), false, null, 0f, 0.02f).Lit(new Color(1.4f, 1.1f, 0.6f), 0.5f, new Color(1.1f, 0.8f, 0.35f));
             dark = BuildKit.Toon(Folder, "m_hub_dark", new Color(0.2f, 0.19f, 0.28f), false, ProceduralTextures.WallBlocks(), 0.2f, 0.02f);
-            pale = BuildKit.Toon(Folder, "m_hub_pale", new Color(0.62f, 0.62f, 0.74f), false, null, 0f, 0.02f);
+            // The island's worked stone: paler than its floor, but under the figures that stand on it.
+            pale = BuildKit.Toon(Folder, "m_hub_pale", new Color(0.4f, 0.395f, 0.49f), false, ProceduralTextures.DressedStone(), 0.5f, 0.02f);
             gold = BuildKit.Toon(Folder, "m_hub_gold", new Color(0.92f, 0.7f, 0.25f), false, null, 0f, 0.02f).Lit(new Color(1.2f, 0.9f, 0.4f), 0.4f, new Color(0.35f, 0.2f, 0.03f));
             wood = BuildKit.Toon(Folder, "m_hub_wood", new Color(0.3f, 0.2f, 0.16f), false, ProceduralTextures.Planks(), 0.5f, 0.02f);
             cloth = BuildKit.Toon(Folder, "m_hub_cloth", new Color(0.78f, 0.72f, 0.6f), false, null, 0f, 0.02f);
@@ -392,7 +393,11 @@ namespace Clover.EditorTools
             light.range = 9f;
             light.intensity = 7f;
             light.shadows = LightShadows.None;
+            // The landing before the gate: a worked slab on a darker footing a little wider than itself, which draws its edge.
+            Disc("Gate Step Footing", root.transform, 0.035f, 2.42f, 0.04f, dark, false, new Vector3(at.x, 0f, at.z - 1.6f));
             Disc("Gate Step", root.transform, 0.07f, 2.3f, 0.06f, pale, false, new Vector3(at.x, 0f, at.z - 1.6f));
+            Disc("Gate Step Line", root.transform, 0.074f, 2.02f, 0.01f, dark, false, new Vector3(at.x, 0f, at.z - 1.6f));
+            Disc("Gate Step Middle", root.transform, 0.078f, 1.96f, 0.01f, pale, false, new Vector3(at.x, 0f, at.z - 1.6f));
 
             GateDetail(root.transform, at);
 
@@ -694,11 +699,26 @@ namespace Clover.EditorTools
             {
                 Vector3 at = Polar(lanterns[i].angle, lanterns[i].radius, lanterns[i].height);
                 SetAt(at, Quaternion.Euler(Next(random, -9f, 9f), Next(random, 0f, 360f), Next(random, -9f, 9f)));
-                lamp.Box(Vector3.zero, V(0.3f, 0.4f, 0.3f));
-                lampCap.Box(V(0f, 0.23f, 0f), V(0.38f, 0.06f, 0.38f));
-                lampCap.Box(V(0f, -0.23f, 0f), V(0.34f, 0.06f, 0.34f));
-                lampCap.Box(V(0f, 0.34f, 0f), V(0.04f, 0.16f, 0.04f));
-                red.Box(V(0f, -0.42f, 0f), V(0.06f, 0.32f, 0.06f));
+                // A paper lantern: a round belly of lit paper, swelling in the middle, in a dark frame of ribs and hoops,
+                // under a peaked cap with a loop to carry it by, and a red tassel hanging from its foot.
+                lamp.Drum(V(0f, 0.1f, 0f), 0.34f, 0.2f, null, 8, 0.8f);
+                lamp.Drum(V(0f, -0.1f, 0f), 0.27f, 0.2f, null, 8, 1.26f);
+                for (int rib = 0; rib < 4; rib++)
+                {
+                    Quaternion round = Quaternion.Euler(0f, rib * 90f + 22.5f, 0f);
+                    lampCap.Beam(round * V(0.125f, -0.2f, 0f), round * V(0.172f, 0f, 0f), 0.022f, 0.022f);
+                    lampCap.Beam(round * V(0.172f, 0f, 0f), round * V(0.128f, 0.2f, 0f), 0.022f, 0.022f);
+                }
+                lampCap.Drum(V(0f, 0f, 0f), 0.365f, 0.022f, null, 8);
+                lampCap.Drum(V(0f, 0.235f, 0f), 0.42f, 0.09f, null, 8, 0.45f);
+                lampCap.Drum(V(0f, 0.21f, 0f), 0.3f, 0.03f, null, 8);
+                lampCap.Drum(V(0f, -0.22f, 0f), 0.26f, 0.05f, null, 8, 0.8f);
+                lampCap.Beam(V(-0.05f, 0.28f, 0f), V(-0.05f, 0.38f, 0f), 0.018f, 0.018f);
+                lampCap.Beam(V(0.05f, 0.28f, 0f), V(0.05f, 0.38f, 0f), 0.018f, 0.018f);
+                lampCap.Beam(V(-0.06f, 0.38f, 0f), V(0.06f, 0.38f, 0f), 0.018f, 0.018f);
+                red.Beam(V(0f, -0.24f, 0f), V(0f, -0.4f, 0f), 0.018f, 0.018f);
+                red.Drum(V(0f, -0.42f, 0f), 0.06f, 0.045f, null, 6);
+                red.Drum(V(0f, -0.53f, 0f), 0.085f, 0.19f, null, 6, 0.55f);
                 reflectWarm.Round(Under(at), 0.34f, 10, 0.55f, 0f);
                 if (i > 2) continue;
                 var lightObject = new GameObject("Lantern Glow");
@@ -766,9 +786,10 @@ namespace Clover.EditorTools
 
             bronze.Cast("hub_stopped_bronze", group, BuildKit.Toon(Folder, "m_hub_bronze", new Color(0.33f, 0.29f, 0.27f), false, null, 0f, 0.025f));
             bronzeDark.Cast("hub_stopped_bronze_dark", group, BuildKit.Toon(Folder, "m_hub_bronze_dark", new Color(0.22f, 0.19f, 0.2f), false, null, 0f, 0.02f));
-            step.Cast("hub_stopped_steps", group, BuildKit.Toon(Folder, "m_hub_step", new Color(0.33f, 0.33f, 0.42f), false, null, 0f, 0.02f));
+            step.Cast("hub_stopped_steps", group, BuildKit.Toon(Folder, "m_hub_step", new Color(0.3f, 0.3f, 0.39f), false, ProceduralTextures.DressedStone(), 0.5f, 0.03f));
             stepDark.Cast("hub_stopped_steps_dark", group, BuildKit.Toon(Folder, "m_hub_step_dark", new Color(0.2f, 0.19f, 0.29f), false, null, 0f, 0.02f));
-            lamp.Cast("hub_stopped_lamps", group, Flat("m_hub_lamp", new Color(1f, 0.74f, 0.42f)).Lit(Color.black, 0.3f, new Color(1.5f, 0.75f, 0.24f)), false);
+            // Lit paper, not a bulb: warm, but dim enough that the dark frame round it is still seen against it.
+            lamp.Cast("hub_stopped_lamps", group, Flat("m_hub_lamp", new Color(0.95f, 0.6f, 0.3f)).Lit(Color.black, 0.3f, new Color(0.85f, 0.4f, 0.12f)), false);
             lampCap.Cast("hub_stopped_lamp_caps", group, BuildKit.Toon(Folder, "m_hub_lamp_cap", new Color(0.15f, 0.13f, 0.21f), false, null, 0f, 0.012f), false);
             white.Cast("hub_stopped_crane", group, BuildKit.Toon(Folder, "m_hub_crane", new Color(0.72f, 0.72f, 0.8f), false, null, 0f, 0.02f), false);
             black.Cast("hub_stopped_crane_dark", group, BuildKit.Toon(Folder, "m_hub_crane_dark", new Color(0.1f, 0.09f, 0.16f), false, null, 0f, 0.012f), false);

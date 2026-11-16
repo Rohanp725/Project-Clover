@@ -5,6 +5,7 @@ namespace Clover.Player
     /// <summary>
     /// The fixed-angle camera above the player. It never rotates during play, so the player always knows which way is up
     /// on the stick; it only follows, with a little smoothing so rolls do not jerk the view, and shakes on heavy blows.
+    /// A fight with something too big for the usual view may ask for a wider framing for as long as it lasts.
     /// </summary>
     public class TopDownCamera : MonoBehaviour
     {
@@ -17,6 +18,11 @@ namespace Clover.Player
         public float FollowTime = 0.12f;
         /// <summary>How many times a second the shake picks a new offset.</summary>
         public float ShakeRate = 45f;
+        /// <summary>Seconds the camera takes to settle into a framing that was asked for, or back out of it.</summary>
+        public float FramingTime = 0.9f;
+
+        /// <summary>True while something has asked for a framing other than the usual one.</summary>
+        public bool HasFraming { get; private set; }
 
         private Vector3 focus;
         private Vector3 focusVelocity;
@@ -25,6 +31,9 @@ namespace Clover.Player
         private float shakeLeft;
         private float shakeStepLeft;
         private Vector3 shakeOffset;
+        private float wantedDistance = 1f, shownDistance = 1f, distanceVelocity;
+        private float wantedPitch, shownPitch, pitchVelocity;
+        private Vector3 wantedLookAhead, shownLookAhead, lookAheadVelocity;
 
         public void Configure(Transform targetToFollow) => target = targetToFollow;
 
@@ -48,12 +57,37 @@ namespace Clover.Player
             shakeStepLeft = 0f;
         }
 
+        /// <summary>
+        /// Asks for a temporary framing, eased into: the camera stands this many times further off, looks at a point this
+        /// far (in metres, on the ground) from the player, and tips its pitch by this many degrees. It may be called every
+        /// frame with a new look-ahead. The heading never changes, so the stick still means what it meant.
+        /// </summary>
+        public void SetFraming(float distanceMultiplier, Vector3 lookAhead, float pitchChangeDegrees = 0f)
+        {
+            HasFraming = true;
+            wantedDistance = Mathf.Max(0.1f, distanceMultiplier);
+            wantedLookAhead = lookAhead;
+            wantedPitch = pitchChangeDegrees;
+        }
+
+        /// <summary>Lets the camera ease back to its usual framing.</summary>
+        public void ClearFraming()
+        {
+            HasFraming = false;
+            wantedDistance = 1f;
+            wantedLookAhead = Vector3.zero;
+            wantedPitch = 0f;
+        }
+
         private void Start() => SnapToTarget();
 
         private void LateUpdate()
         {
             if (target == null) return;
             focus = Vector3.SmoothDamp(focus, target.position, ref focusVelocity, FollowTime);
+            shownDistance = Mathf.SmoothDamp(shownDistance, wantedDistance, ref distanceVelocity, FramingTime);
+            shownPitch = Mathf.SmoothDamp(shownPitch, wantedPitch, ref pitchVelocity, FramingTime);
+            shownLookAhead = Vector3.SmoothDamp(shownLookAhead, wantedLookAhead, ref lookAheadVelocity, FramingTime);
 
             // The shake runs on real time: it is at its strongest exactly while a hit has time nearly stopped.
             if (shakeLeft > 0f)
@@ -76,8 +110,8 @@ namespace Clover.Player
 
         private void Place()
         {
-            var rotation = Quaternion.Euler(PitchDegrees, YawDegrees, 0f);
-            transform.SetPositionAndRotation(focus + shakeOffset - rotation * Vector3.forward * Distance, rotation);
+            var rotation = Quaternion.Euler(PitchDegrees + shownPitch, YawDegrees, 0f);
+            transform.SetPositionAndRotation(focus + shownLookAhead + shakeOffset - rotation * Vector3.forward * (Distance * shownDistance), rotation);
         }
     }
 }

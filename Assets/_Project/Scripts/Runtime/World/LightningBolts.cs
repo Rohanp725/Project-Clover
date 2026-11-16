@@ -13,15 +13,15 @@ namespace Clover.World
         [SerializeField] private StormLight storm;
         [SerializeField] private Light groundFlash;
 
-        public float Seconds = 0.22f;
+        public float Seconds = 0.16f;
         public float Height = 26f;
         /// <summary>How far, in metres, the bolt's kinks stray from the straight line.</summary>
-        public float Jitter = 1.1f;
+        public float Jitter = 1.5f;
         /// <summary>Seconds between redraws of a bolt's shape while it lasts.</summary>
         public float RedrawEvery = 0.045f;
-        public float FlashIntensity = 9f;
+        public float FlashIntensity = 5f;
 
-        private const int Points = 12;
+        private const int Points = 16;
 
         private static LightningBolts instance;
 
@@ -108,7 +108,8 @@ namespace Clover.World
                 if (untilRedraw[i] > 0f) continue;
                 untilRedraw[i] = RedrawEvery;
                 Draw(lines[i], feet[i]);
-                lines[i].widthMultiplier = Mathf.Lerp(0.5f, 0.12f, ages[i] / Seconds);
+                // Thin from the first frame: a wide line blooms into a white column that hides whoever it strikes.
+                lines[i].widthMultiplier = Mathf.Lerp(0.17f, 0.05f, ages[i] / Seconds);
             }
 
             if (groundFlash != null && flashLeft > 0f)

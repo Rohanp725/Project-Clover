@@ -156,6 +156,42 @@ namespace Clover.EditorTools
             return Color.Lerp(colour, new Color(0.78f, 0.9f, 0.66f) * tone, grass * 0.6f);
         });
 
+        /// <summary>
+        /// Dressed stone, for caps, steps and plinths: large square-cut blocks of one flat tone, each with a line chiselled
+        /// a little way in from its edge, a narrow joint, and a chip knocked out here and there. Nothing blotchy: worked
+        /// stone is even, and its only drawing is the mason's line.
+        /// </summary>
+        public static Texture2D DressedStone() => Make("stone_dressed", (x, y) =>
+        {
+            const int Blocks = 2;
+            float block = Size / (float)Blocks;
+            int column = (int)(x / block), row = (int)(y / block);
+            int id = column * 53 + row * 911 + 7;
+            float fx = Mathf.Repeat(x, block), fy = Mathf.Repeat(y, block);
+            float edge = Mathf.Min(Mathf.Min(fx, block - fx), Mathf.Min(fy, block - fy));
+            // One flat tone a block, barely apart from its neighbours, with the faintest brushed drift across it.
+            float tone = 0.9f + 0.06f * Mathf.Round(Hash(id, 1) * 2f) / 2f;
+            tone *= 0.985f + 0.03f * Noise(x + 13f, y + 71f, 512f);
+            // The chiselled line: dark, with a thin light lip on its inner side where the cut catches the light.
+            float lineAt = block * 0.085f, lineWide = block * 0.012f;
+            float line = 1f - Mathf.SmoothStep(0f, 1f, Mathf.Abs(edge - lineAt) / lineWide);
+            float lip = 1f - Mathf.SmoothStep(0f, 1f, Mathf.Abs(edge - lineAt - lineWide * 2.2f) / lineWide);
+            tone *= 1f - 0.3f * line + 0.07f * lip * (1f - line);
+            // A few chips, mostly along the edges: flat darker flakes with a hard outline.
+            const float Cell = 128f;
+            int cx = (int)(x / Cell), cy = (int)(y / Cell);
+            if (Hash(cx + 77, cy + 5) > 0.84f)
+            {
+                float px = (cx + 0.25f + 0.5f * Hash(cx, cy + 31)) * Cell, py = (cy + 0.25f + 0.5f * Hash(cx + 17, cy)) * Cell;
+                float radius = Cell * (0.1f + 0.12f * Hash(cx + 3, cy + 3));
+                float reach = Mathf.Abs(x - px) * (0.7f + 0.6f * Hash(cx, cy)) + Mathf.Abs(y - py);
+                if (reach < radius) tone *= reach > radius * 0.72f ? 0.74f : 0.86f;
+            }
+            float joint = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(edge / (block * 0.014f)));
+            float value = Mathf.Lerp(0.42f, tone, joint);
+            return new Color(value * 0.99f, value, value * 1.02f);
+        });
+
         /// <summary>Roof tiles: overlapping rows of rounded tiles, each row shading the one below.</summary>
         public static Texture2D RoofTiles() => Make("roof_tiles", (x, y) =>
         {
@@ -219,6 +255,7 @@ namespace Clover.EditorTools
             WallBlocks();
             Planks();
             Ground();
+            DressedStone();
             RoofTiles();
             AssetDatabase.SaveAssets();
             Debug.Log("[Clover.Build] Repainted the generated textures.");

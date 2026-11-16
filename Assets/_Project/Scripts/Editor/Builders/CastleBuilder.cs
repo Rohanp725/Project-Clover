@@ -117,7 +117,8 @@ namespace Clover.EditorTools
             path = BuildKit.Toon(Folder, "m_castle_path", new Color(0.4f, 0.38f, 0.47f), false, flags, 0.21f, 0f);
             wall = BuildKit.Toon(Folder, "m_castle_wall", new Color(0.36f, 0.35f, 0.47f), false, blocks, 0.2f, 0.025f);
             wallDark = BuildKit.Toon(Folder, "m_castle_wall_dark", new Color(0.22f, 0.21f, 0.32f), false, blocks, 0.2f, 0.025f);
-            trim = BuildKit.Toon(Folder, "m_castle_trim", new Color(0.46f, 0.46f, 0.58f), false, ground, 0.5f, 0.02f);
+            // Caps, steps and plinths: dressed stone, kept below the fighters in value so a slab is never the brightest thing in sight.
+            trim = BuildKit.Toon(Folder, "m_castle_trim", new Color(0.33f, 0.325f, 0.42f), false, ProceduralTextures.DressedStone(), 0.5f, 0.02f);
             wood = BuildKit.Toon(Folder, "m_castle_wood", new Color(0.36f, 0.22f, 0.28f), false, planks, 0.5f, 0.02f);
             iron = BuildKit.Toon(Folder, "m_castle_iron", new Color(0.16f, 0.15f, 0.27f), false, null, 0f, 0.02f);
             cloth = BuildKit.Toon(Folder, "m_castle_cloth", new Color(0.82f, 0.13f, 0.22f), false, null, 0f, 0.015f);
@@ -128,7 +129,7 @@ namespace Clover.EditorTools
             rune = BuildKit.Toon(Folder, "m_castle_rune", new Color(0.6f, 0.8f, 1f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(0.9f, 2f, 4.5f));
             fireMaterial = BuildKit.Flame(Folder, "m_castle_flame", new Color(1.6f, 0.5f, 0.1f, 1f));
             rainMaterial = BuildKit.Glow(Folder, "m_castle_rain", new Color(0.8f, 0.9f, 1.3f, 0.7f), 1, true, 1f);
-            boltMaterial = BuildKit.Glow(Folder, "m_castle_bolt", new Color(3f, 4.4f, 8f, 1f), 3, true, 1f);
+            boltMaterial = BuildKit.Glow(Folder, "m_castle_bolt", new Color(1.5f, 2.1f, 3.3f, 1f), 3, true, 1f);
         }
 
         // ------------------------------------------------------------------ the parts of the castle
@@ -896,7 +897,23 @@ namespace Clover.EditorTools
             BuildKit.Shape(PrimitiveType.Cylinder, "Trunk", group, new Vector3(0f, 1.6f, 0f), new Vector3(0.7f, 1.6f, 0.7f), wood, new Vector3(0f, 0f, 4f));
             BuildKit.Shape(PrimitiveType.Cylinder, "Limb", group, new Vector3(0.9f, 3.3f, 0.2f), new Vector3(0.28f, 1.2f, 0.28f), wood, new Vector3(10f, 0f, -52f));
             BuildKit.Shape(PrimitiveType.Cylinder, "Limb", group, new Vector3(-0.7f, 3.5f, -0.3f), new Vector3(0.22f, 1f, 0.22f), wood, new Vector3(-14f, 0f, 44f));
-            BuildKit.Shape(PrimitiveType.Cube, "Wound", group, new Vector3(0.05f, 2.2f, -0.33f), new Vector3(0.1f, 1.7f, 0.06f), ember, new Vector3(0f, 0f, 4f));
+            // The wound: a ragged split down the side that faces the camera, charred black at its lips and still glowing
+            // in its depth. Shards of different sizes set at odd angles, so it reads as torn wood, not as a lit strip.
+            var charred = BuildKit.Toon(Folder, "m_castle_char", new Color(0.06f, 0.05f, 0.08f), false, null, 0f, 0f);
+            var glowing = BuildKit.Toon(Folder, "m_castle_wound", new Color(0.75f, 0.3f, 0.1f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(1.25f, 0.36f, 0.06f));
+            (float height, float aside, float wide, float tall, float lean)[] shards =
+            {
+                (3.02f, 0.1f, 0.05f, 0.34f, 22f), (2.76f, 0.02f, 0.1f, 0.42f, -14f), (2.42f, 0.09f, 0.14f, 0.5f, 9f), (2.1f, 0f, 0.09f, 0.36f, -24f),
+                (1.84f, 0.07f, 0.12f, 0.44f, 16f), (1.52f, 0.01f, 0.07f, 0.4f, -8f), (1.26f, 0.06f, 0.04f, 0.3f, 19f),
+            };
+            foreach (var shard in shards)
+            {
+                // Each is a square stood on its corner and squeezed thin: a splinter-shaped diamond.
+                var at = new Vector3(shard.aside + (shard.height - 1.6f) * 0.07f, shard.height, -0.33f);
+                Splinter(group, "Wound Char", at + new Vector3(0f, 0f, 0.012f), shard.wide * 2.4f, shard.tall * 1.3f, shard.lean, charred);
+                Splinter(group, "Wound", at, shard.wide, shard.tall, shard.lean, glowing);
+            }
+            WoundEmbers(group, new Vector3(0.08f, 2.1f, -0.42f));
             var trunk = group.gameObject.AddComponent<CapsuleCollider>();
             trunk.center = new Vector3(0f, 1.5f, 0f);
             trunk.radius = 0.4f;
@@ -904,6 +921,58 @@ namespace Clover.EditorTools
             var rod = BuildKit.Group("Rod", group);
             rod.localPosition = new Vector3(0f, 4.4f, 0f);
             rods.Add(rod);
+        }
+
+        // A thin diamond lying against the trunk: a cube turned onto its corner, then stretched tall and narrow.
+        private static void Splinter(Transform parent, string name, Vector3 at, float wide, float tall, float lean, Material material)
+        {
+            var holder = BuildKit.Group(name, parent);
+            holder.localPosition = at;
+            holder.localRotation = Quaternion.Euler(0f, 0f, lean);
+            holder.localScale = new Vector3(wide / 1.414f, tall / 1.414f, 1f);
+            var shard = BuildKit.Shape(PrimitiveType.Cube, "Shard", holder, Vector3.zero, new Vector3(1f, 1f, 0.05f), material, new Vector3(0f, 0f, 45f));
+            shard.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+        }
+
+        // A few embers let go by the wound, drifting up and out and dying: small, slow and sparse.
+        private static void WoundEmbers(Transform parent, Vector3 localPosition)
+        {
+            var embersObject = new GameObject("Wound Embers");
+            embersObject.transform.SetParent(parent, false);
+            embersObject.transform.localPosition = localPosition;
+            embersObject.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+            var system = embersObject.AddComponent<ParticleSystem>();
+            system.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = system.main;
+            main.loop = true;
+            main.playOnAwake = true;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(1.1f, 2.2f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.25f, 0.7f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.045f, 0.09f);
+            main.startColor = new ParticleSystem.MinMaxGradient(new Color(1f, 0.55f, 0.2f, 1f), new Color(1f, 0.8f, 0.4f, 1f));
+            main.maxParticles = 16;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            var emission = system.emission;
+            emission.rateOverTime = 4f;
+            var shape = system.shape;
+            shape.shapeType = ParticleSystemShapeType.Box;
+            shape.scale = new Vector3(0.25f, 0.1f, 1.7f);
+            var drift = system.velocityOverLifetime;
+            drift.enabled = true;
+            drift.space = ParticleSystemSimulationSpace.World;
+            drift.x = new ParticleSystem.MinMaxCurve(-0.25f, 0.35f);
+            drift.y = new ParticleSystem.MinMaxCurve(0.1f, 0.3f);
+            drift.z = new ParticleSystem.MinMaxCurve(-0.3f, -0.05f);
+            var colour = system.colorOverLifetime;
+            colour.enabled = true;
+            var gradient = new Gradient();
+            gradient.SetKeys(
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(1f, 0.4f, 0.25f), 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 0.6f), new GradientAlphaKey(0f, 1f) });
+            colour.color = gradient;
+            var renderer = embersObject.GetComponent<ParticleSystemRenderer>();
+            renderer.sharedMaterial = BuildKit.Glow(Folder, "m_castle_wound_ember", new Color(2.2f, 0.9f, 0.25f, 1f), 3, true, 1f);
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         }
 
         private static void Crates(Transform parent, Vector3 foot)
@@ -1014,8 +1083,7 @@ namespace Clover.EditorTools
                 var line = lineObject.AddComponent<LineRenderer>();
                 line.useWorldSpace = true;
                 line.sharedMaterial = boltMaterial;
-                line.widthMultiplier = 0.2f;
-                line.numCornerVertices = 2;
+                line.widthMultiplier = 0.15f;
                 line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 line.receiveShadows = false;
                 line.enabled = false;

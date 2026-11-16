@@ -20,9 +20,10 @@ namespace Clover.EditorTools
         public static (Transform health, Transform stagger, Transform root) Build(Transform parent, float height, Quaternion towardCamera,
             Material back, Material healthMaterial, Material staggerMaterial)
         {
-            var ink = BuildKit.Glow(Folder, "m_bar_ink", UiArt.Ink, 3, false);
-            var line = BuildKit.Glow(Folder, "m_bar_line", new Color(0.8f, 0.72f, 0.55f, 0.8f), 3, false);
-            var pale = BuildKit.Glow(Folder, "m_bar_lag", new Color(1f, 0.9f, 0.75f, 1f), 3, false);
+            // Drawn over whatever is in front of them: a tall fighter's own body must not cover its bars.
+            var ink = BuildKit.Glow(Folder, "m_bar_ink", UiArt.Ink, 3, false, 2f, 0f, true);
+            var line = BuildKit.Glow(Folder, "m_bar_line", new Color(0.8f, 0.72f, 0.55f, 0.8f), 3, false, 2f, 0f, true);
+            var pale = BuildKit.Glow(Folder, "m_bar_lag", new Color(1f, 0.9f, 0.75f, 1f), 3, false, 2f, 0f, true);
 
             var bars = BuildKit.Group("Bars", parent);
             bars.localPosition = new Vector3(0f, height, 0f);
@@ -59,8 +60,14 @@ namespace Clover.EditorTools
             // Laid out large and shrunk, so the letters are sharp at the size they are seen.
             area.localScale = Vector3.one * 0.0042f;
 
+            // A name makes the bars taller, so a neighbour's bars keep further off.
+            var room = bars.GetComponent<EnemyBars>();
+            if (room != null) room.Tall = 0.9f;
+
             var label = plate.AddComponent<UnityEngine.UI.Text>();
             label.font = UiArt.Font();
+            // The world would hide an ordinary canvas that stands in it; these letters are drawn over it.
+            label.material = BuildKit.MaterialAt(Folder, "m_name_plate", "Clover/WorldText");
             label.fontSize = 46;
             label.alignment = TextAnchor.MiddleCenter;
             label.color = new Color(1f, 0.93f, 0.8f);

@@ -343,11 +343,12 @@ namespace Clover.EditorTools
             scaler.referenceResolution = new Vector2(1920f, 1080f);
             Transform hud = canvasObject.transform;
 
-            // The impact frame: a full-screen wash that blinks on a great blow. It lies under everything else on the HUD.
+            // The impact frame: spikes of light from the screen's edges that blink on a great blow, the middle left clear. It lies under everything else on the HUD.
             var wash = Panel("Impact Frame", hud, Color.white);
             wash.anchorMin = Vector2.zero;
             wash.anchorMax = Vector2.one;
             wash.offsetMin = wash.offsetMax = Vector2.zero;
+            wash.GetComponent<Image>().sprite = UiArt.ImpactFrame();
             wash.GetComponent<Image>().enabled = false;
             canvasObject.AddComponent<ScreenFlash>().Configure(wash.GetComponent<Image>());
 
@@ -496,15 +497,18 @@ namespace Clover.EditorTools
             var root = new GameObject("Title Card", typeof(RectTransform));
             root.transform.SetParent(hud.transform, false);
             var area = (RectTransform)root.transform;
-            area.anchorMin = area.anchorMax = new Vector2(0.5f, 0.68f);
+            // High on the screen: the player stands in its middle, and the card must never lie across them.
+            area.anchorMin = area.anchorMax = new Vector2(0.5f, 0.83f);
             area.sizeDelta = new Vector2(1400f, 240f);
             var group = root.AddComponent<CanvasGroup>();
             group.interactable = false;
             group.blocksRaycasts = false;
 
-            var stroke = Panel("Stroke", root.transform, new Color(0.02f, 0.015f, 0.05f, 0.82f));
-            stroke.anchorMin = stroke.anchorMax = new Vector2(0.5f, 0.56f);
-            stroke.sizeDelta = new Vector2(1250f, 150f);
+            // The stroke lies behind the name and the line under it alike, and is nearly solid, so nothing bright on the
+            // floor shows through the words.
+            var stroke = Panel("Stroke", root.transform, new Color(0.02f, 0.015f, 0.05f, 0.94f));
+            stroke.anchorMin = stroke.anchorMax = new Vector2(0.5f, 0.41f);
+            stroke.sizeDelta = new Vector2(1250f, 236f);
             var strokeImage = stroke.GetComponent<Image>();
             strokeImage.sprite = UiArt.Brush();
             strokeImage.type = Image.Type.Sliced;

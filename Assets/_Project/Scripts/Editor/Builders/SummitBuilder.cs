@@ -33,9 +33,10 @@ namespace Clover.EditorTools
 
             var stone = BuildKit.Toon(Folder, "m_summit_stone", new Color(0.4f, 0.4f, 0.56f), false, ProceduralTextures.Flagstones(), 0.125f, 0f);
             var dark = BuildKit.Toon(Folder, "m_summit_dark", new Color(0.22f, 0.21f, 0.36f), false, ProceduralTextures.WallBlocks(), 0.2f, 0.02f);
-            var pale = BuildKit.Toon(Folder, "m_summit_pale", new Color(0.62f, 0.62f, 0.8f), false, null, 0f, 0.02f);
+            var pale = BuildKit.Toon(Folder, "m_summit_pale", new Color(0.44f, 0.44f, 0.6f), false, ProceduralTextures.DressedStone(), 0.5f, 0.02f);
             var gold = BuildKit.Toon(Folder, "m_summit_gold", new Color(0.95f, 0.7f, 0.18f), false, null, 0f, 0.02f).Lit(new Color(1.2f, 0.9f, 0.4f), 0.4f, new Color(0.3f, 0.16f, 0.02f));
             var red = BuildKit.Toon(Folder, "m_summit_red", new Color(0.8f, 0.12f, 0.16f), false, null, 0f, 0.02f);
+            var carvedRed = BuildKit.Toon(Folder, "m_summit_red_carved", new Color(0.36f, 0.08f, 0.13f), false, null, 0f, 0f);
             var rune = BuildKit.Toon(Folder, "m_summit_rune", new Color(0.6f, 0.85f, 1f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(0.8f, 1.9f, 4.2f));
             var cloud = BuildKit.Toon(Folder, "m_summit_cloud", new Color(0.4f, 0.4f, 0.64f), false, null, 0f, 0f).Lit(new Color(0.3f, 0.34f, 0.6f), 0.5f);
             cloud.SetColor("_ShadeColor", new Color(0.42f, 0.4f, 0.74f));
@@ -79,7 +80,12 @@ namespace Clover.EditorTools
                 float height = tall ? Mathf.Lerp(6.5f, 4.2f, fromNorth / 95f) : 1.1f;
                 // The low ones by the camera are stone stubs with a red band: seen from above, a red post is only a red square.
                 BuildKit.Block("Post", posts, at + Vector3.up * (height * 0.5f), new Vector3(0.9f, height, 0.9f), tall ? red : dark, angle);
-                if (!tall) BuildKit.Block("Post Band", posts, at + Vector3.up * (height - 0.2f), new Vector3(1f, 0.16f, 1f), red, angle);
+                // A band cut into the stub and stained a dull red: a carving, set in from the stone's face, not a bright collar round it.
+                if (!tall)
+                {
+                    BuildKit.Block("Post Band", posts, at + Vector3.up * (height - 0.26f), new Vector3(0.93f, 0.09f, 0.93f), carvedRed, angle);
+                    BuildKit.Block("Post Cap", posts, at + Vector3.up * (height + 0.04f), new Vector3(1.02f, 0.1f, 1.02f), dark, angle);
+                }
                 BuildKit.Block("Post Foot", posts, at + Vector3.up * 0.2f, new Vector3(1.4f, 0.4f, 1.4f), dark, angle);
                 // Gold caps only on the tall posts: on the low ones by the camera they would be slabs of yellow across the view.
                 if (tall) BuildKit.Block("Post Cap", posts, at + Vector3.up * (height + 0.12f), new Vector3(1.2f, 0.24f, 1.2f), gold, angle);
@@ -677,7 +683,7 @@ namespace Clover.EditorTools
 
             stone.Cast("summit_rim_stone", group, BuildKit.Toon(Folder, "m_summit_rim_stone", new Color(0.34f, 0.34f, 0.5f), false, null, 0f, 0.02f));
             shade.Cast("summit_rim_shade", group, BuildKit.Toon(Folder, "m_summit_rim_shade", new Color(0.21f, 0.21f, 0.35f), false, null, 0f, 0.02f));
-            pale.Cast("summit_rim_pale", group, BuildKit.Toon(Folder, "m_summit_rim_pale", new Color(0.48f, 0.48f, 0.66f), false, null, 0f, 0.02f));
+            pale.Cast("summit_rim_pale", group, BuildKit.Toon(Folder, "m_summit_rim_pale", new Color(0.4f, 0.4f, 0.56f), false, ProceduralTextures.DressedStone(), 0.5f, 0.02f));
             glow.Cast("summit_rim_glow", group, rune, false);
             timber.Cast("summit_rim_timber", group, BuildKit.Toon(Folder, "m_summit_timber", new Color(0.3f, 0.21f, 0.23f), false, null, 0f, 0.015f));
             banner.Cast("summit_rim_banner", group, BuildKit.Toon(Folder, "m_summit_banner", new Color(0.42f, 0.1f, 0.2f), false, null, 0f, 0.015f));

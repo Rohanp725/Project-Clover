@@ -120,6 +120,25 @@ namespace Clover.EditorTools
             return new Color(1f, 1f, 1f, alpha * 0.92f);
         });
 
+        /// <summary>
+        /// The impact frame of a comic panel: hard spikes of light driven in from the edges of the screen toward the
+        /// middle, which is left almost clear so the blow and the fighters are still seen. White, so a flash can tint it.
+        /// </summary>
+        public static Sprite ImpactFrame() => Make("ui_impact_frame", 1024, 576, Vector4.zero, (x, y) =>
+        {
+            float across = x / 1023f * 2f - 1f, up = y / 575f * 2f - 1f;
+            float outward = Mathf.Sqrt(across * across + up * up) / 1.2f;
+            // Measured along the screen's own shape, so the spikes are as thick at the sides as at the top.
+            float angle = Mathf.Atan2(up * 0.5625f, across);
+            // Each spike reaches in a different way; two grains of noise make some broad and some thin.
+            // They start well out: at the middle of the top and bottom edges only the longest reach into the picture.
+            float reach = 0.64f + Noise(angle * 22f, 2f) * 0.34f + Noise(angle * 61f, 5f) * 0.14f;
+            float spike = Mathf.Clamp01((outward - reach) * 22f);
+            // Between the spikes only a breath of the colour, a little more toward the edge.
+            float breath = 0.03f + 0.15f * Mathf.SmoothStep(0f, 1f, Mathf.InverseLerp(0.45f, 1.05f, outward));
+            return new Color(1f, 1f, 1f, Mathf.Max(spike, breath));
+        });
+
         // Distance inside a slab with slanted ends, in pixels: positive inside, measured to the nearest edge.
         private static float Slab(int x, int y, int width, int height, float inset)
         {

@@ -33,8 +33,8 @@ namespace Clover.Gameplay
         public float ArmStruckDegrees = 60f;
         public Color PlainColour = new Color(1f, 0.93f, 0.75f, 1f);
         public Color RedColour = new Color(1f, 0.08f, 0.05f, 1f);
-        public float OutlineAlpha = 0.22f;
-        public float FillAlpha = 0.6f;
+        public float OutlineAlpha = MarkerShapes.OutlineAlpha;
+        public float FillAlpha = MarkerShapes.GrowingAlpha;
         public LayerMask HitLayers = ~0;
 
         public int BlowsStruck { get; private set; }
@@ -67,7 +67,7 @@ namespace Clover.Gameplay
             block = new MaterialPropertyBlock();
             if (pivot == null) pivot = transform;
             targetRoot = target != null ? target.root : null;
-            sector = BuildSector(Reach, ArcDegrees);
+            sector = MarkerShapes.Sector(Reach, ArcDegrees);
             if (markerOutline != null)
             {
                 markerOutline.sharedMesh = sector;
@@ -169,7 +169,7 @@ namespace Clover.Gameplay
             markerRed = red;
             Color colour = red ? RedColour : PlainColour;
             Paint(outlineRenderer, shown, colour, OutlineAlpha);
-            Paint(fillRenderer, shown, colour, FillAlpha);
+            Paint(fillRenderer, shown, MarkerShapes.Growing(colour), FillAlpha);
         }
 
         private void Paint(Renderer markerRenderer, bool shown, Color colour, float alpha)
@@ -180,31 +180,6 @@ namespace Clover.Gameplay
             colour.a = alpha;
             block.SetColor(BaseColour, colour);
             markerRenderer.SetPropertyBlock(block);
-        }
-
-        // A flat fan on the ground, pointing along +Z, facing up.
-        private static Mesh BuildSector(float radius, float arcDegrees)
-        {
-            const int Segments = 24;
-            var vertices = new Vector3[Segments + 2];
-            var triangles = new int[Segments * 3];
-            vertices[0] = Vector3.zero;
-            for (int i = 0; i <= Segments; i++)
-            {
-                float angle = Mathf.Deg2Rad * Mathf.Lerp(-arcDegrees * 0.5f, arcDegrees * 0.5f, i / (float)Segments);
-                vertices[i + 1] = new Vector3(Mathf.Sin(angle) * radius, 0f, Mathf.Cos(angle) * radius);
-            }
-            for (int i = 0; i < Segments; i++)
-            {
-                triangles[i * 3] = 0;
-                triangles[i * 3 + 1] = i + 1;
-                triangles[i * 3 + 2] = i + 2;
-            }
-            var mesh = new Mesh { name = "Attack Marker" };
-            mesh.vertices = vertices;
-            mesh.triangles = triangles;
-            mesh.RecalculateBounds();
-            return mesh;
         }
     }
 }

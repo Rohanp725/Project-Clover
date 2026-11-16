@@ -97,7 +97,7 @@ namespace Clover.EditorTools
                 Marker = VfxBuilder.MarkerMaterial(),
                 BarBack = BuildKit.Glow(Folder, "m_bar_back", new Color(0.03f, 0.03f, 0.04f, 0.85f), 3, false),
                 BarHealth = BuildKit.Glow(Folder, "m_bar_health", new Color(0.75f, 0.09f, 0.08f, 1f), 3, false),
-                BarStagger = BuildKit.Glow(Folder, "m_bar_stagger", new Color(1.4f, 1.1f, 0.3f, 1f), 3, false),
+                BarStagger = BuildKit.Glow(Folder, "m_bar_stagger", new Color(1.4f, 1.1f, 0.3f, 1f), 3, false, 2f, 0f, true),
             };
         }
 

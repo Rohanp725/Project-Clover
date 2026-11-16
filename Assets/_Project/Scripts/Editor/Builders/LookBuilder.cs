@@ -96,9 +96,63 @@ namespace Clover.EditorTools
             Saturation = -4f,
         };
 
+        /// <summary>
+        /// Sets how the key light's shadows are drawn, on the render pipeline asset the game runs with. The camera looks
+        /// down from about twelve metres and sees ten to twenty metres of ground (thirty-odd when it stands back for the
+        /// colossus), so the shadow map is spent on that and no further: a larger map, cut into four parts that are
+        /// finest where the fight is, filtered soft. Unity writes the asset; nothing here is typed into it by hand.
+        /// </summary>
+        [MenuItem("Clover/Build/Shadow Quality")]
+        public static void ApplyShadowQuality()
+        {
+            var pipeline = GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset;
+            if (pipeline == null)
+            {
+                Debug.LogWarning("[Clover.Build] No URP asset is in use; shadow quality was not set.");
+                return;
+            }
+            var asset = new SerializedObject(pipeline);
+            bool changed = false;
+            void Whole(string name, int value)
+            {
+                var property = asset.FindProperty(name);
+                if (property == null) Debug.LogWarning($"[Clover.Build] The URP asset has no setting named {name}.");
+                else if (property.intValue != value) { property.intValue = value; changed = true; }
+            }
+            void Number(string name, float value)
+            {
+                var property = asset.FindProperty(name);
+                if (property == null) Debug.LogWarning($"[Clover.Build] The URP asset has no setting named {name}.");
+                else if (!Mathf.Approximately(property.floatValue, value)) { property.floatValue = value; changed = true; }
+            }
+            Whole("m_MainLightShadowmapResolution", 4096);
+            Number("m_ShadowDistance", ShadowDistance);
+            Whole("m_ShadowCascadeCount", 4);
+            var splits = asset.FindProperty("m_Cascade4Split");
+            if (splits != null && splits.vector3Value != ShadowSplits) { splits.vector3Value = ShadowSplits; changed = true; }
+            Number("m_CascadeBorder", 0.15f);
+            // Finer texels need less pushing off the surface; too much and a shadow leaves the foot of what casts it.
+            Number("m_ShadowDepthBias", 0.5f);
+            Number("m_ShadowNormalBias", 0.4f);
+            var soft = asset.FindProperty("m_SoftShadowsSupported");
+            if (soft != null && !soft.boolValue) { soft.boolValue = true; changed = true; }
+            // 3 is the widest of URP's three soft filters.
+            Whole("m_SoftShadowQuality", 3);
+            if (!changed) return;
+            asset.ApplyModifiedPropertiesWithoutUndo();
+            EditorUtility.SetDirty(pipeline);
+            AssetDatabase.SaveAssetIfDirty(pipeline);
+            Debug.Log($"[Clover.Build] Shadow quality set on {AssetDatabase.GetAssetPath(pipeline)}.");
+        }
+
+        private const float ShadowDistance = 44f;
+        // Where the four parts end, as shares of the distance: 16, 24 and 34 metres from the camera. The first holds the whole usual view.
+        private static readonly Vector3 ShadowSplits = new Vector3(0.364f, 0.545f, 0.773f);
+
         /// <summary>Adds the lights, the fog and the post-processing volume to the open scene, and sets the camera to use them.</summary>
         public static StormLight Apply(Mood mood, Camera camera)
         {
+            ApplyShadowQuality();
             var root = BuildKit.Group("Look");
 
             var keyObject = new GameObject("Key Light");

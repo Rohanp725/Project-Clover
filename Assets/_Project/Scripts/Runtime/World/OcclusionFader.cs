@@ -19,6 +19,8 @@ namespace Clover.World
         public float Radius = 0.9f;
         /// <summary>The line is checked to this height on the player.</summary>
         public float TargetHeight = 1f;
+        /// <summary>A piece is left solid when its top is at least this far, in metres, under the line of sight.</summary>
+        public float LowClearance = 0.25f;
         public LayerMask Layers = ~0;
 
         private readonly RaycastHit[] hits = new RaycastHit[64];
@@ -45,11 +47,21 @@ namespace Clover.World
             float length = line.magnitude;
             if (length > 0.5f)
             {
+                Vector3 direction = line / length;
+                // How much of each metre along the line is travelled over the ground: the camera looks steeply down.
+                float flatShare = Mathf.Max(0.05f, Mathf.Sqrt(direction.x * direction.x + direction.z * direction.z));
                 // Stop short of the player, so the floor under their feet and what stands behind them are left alone.
-                int count = Physics.SphereCastNonAlloc(from, Radius, line / length, hits, length - Radius - 0.6f, Layers, QueryTriggerInteraction.Ignore);
+                int count = Physics.SphereCastNonAlloc(from, Radius, direction, hits, length - Radius - 0.6f, Layers, QueryTriggerInteraction.Ignore);
                 for (int i = 0; i < count; i++)
                 {
                     var hit = hits[i].collider;
+                    // Something whose top is below the line of sight even where the line is lowest over it (a planter, a
+                    // step, a low wall some way off) hides nothing of the player, and thinning it only puts a screen of
+                    // dots beside the fighters. The line falls toward the player, so it is lowest at the piece's far side.
+                    Bounds bounds = hit.bounds;
+                    float reach = Mathf.Sqrt(bounds.extents.x * bounds.extents.x + bounds.extents.z * bounds.extents.z);
+                    float farSide = Mathf.Min(Vector3.Dot(bounds.center - from, direction) + reach / flatShare, length);
+                    if (bounds.max.y < from.y + direction.y * farSide - LowClearance) continue;
                     if (!known.TryGetValue(hit, out var piece))
                     {
                         // Looked up once per collider, then remembered; null is remembered too.

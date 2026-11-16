@@ -50,7 +50,7 @@ namespace Clover.EditorTools
             // Carved things are too small for the wall's blocks to be drawn on them: one plain tone each.
             carved = BuildKit.Toon(Folder, "m_dress_carved", new Color(0.37f, 0.36f, 0.49f), false, null, 0f, 0.025f);
             carvedDark = BuildKit.Toon(Folder, "m_dress_carved_dark", new Color(0.23f, 0.22f, 0.34f), false, null, 0f, 0.025f);
-            carvedPale = BuildKit.Toon(Folder, "m_dress_carved_pale", new Color(0.47f, 0.47f, 0.6f), false, null, 0f, 0.02f);
+            carvedPale = BuildKit.Toon(Folder, "m_dress_carved_pale", new Color(0.4f, 0.4f, 0.52f), false, null, 0f, 0.02f);
             footing = BuildKit.Toon(Folder, "m_dress_footing", new Color(0.17f, 0.16f, 0.27f), false, blocks, 0.11f, 0.02f);
             worn = BuildKit.Toon(Folder, "m_dress_worn", new Color(0.23f, 0.23f, 0.35f), false, ProceduralTextures.Flagstones(), 0.3f, 0f);
             moss = BuildKit.Toon(Folder, "m_dress_moss", new Color(0.13f, 0.23f, 0.25f), false, null, 0f, 0f);
@@ -943,13 +943,34 @@ namespace Clover.EditorTools
             Pole(group, "Trunk", elbow, crown, 0.2f, bark);
             Pole(group, "Bough", knee, V(0.9f, 1.46f, -0.2f), 0.15f, bark);
             Pole(group, "Bough", elbow, V(-0.82f, 1.82f, 0.28f), 0.13f, bark);
-            Ball(group, "Leaves", V(0.15f, 2.2f, 0.1f), V(1.3f, 0.5f, 1.15f), foliage);
-            Ball(group, "Leaves", V(1f, 1.56f, -0.25f), V(1f, 0.4f, 0.86f), foliageDark);
-            Ball(group, "Leaves", V(-0.92f, 1.92f, 0.32f), V(0.92f, 0.38f, 0.82f), foliage);
+            LeafClump(group, V(0.15f, 2.2f, 0.1f), 1.3f, 3);
+            LeafClump(group, V(1f, 1.56f, -0.25f), 1f, 11);
+            LeafClump(group, V(-0.92f, 1.92f, 0.32f), 0.92f, 23);
             var body = group.gameObject.AddComponent<BoxCollider>();
             body.center = V(0f, 0.35f, 0f);
             body.size = V(2f, 0.7f, 2f);
             Settle(group);
+        }
+
+        // A pad of leaves as a tree like this carries them: a dark heart with smaller, lighter clusters crowding its edge
+        // and its top, so that from above its outline is lobed like a cloud and never a plain disc.
+        private static void LeafClump(Transform group, Vector3 centre, float width, int seed)
+        {
+            var random = new System.Random(seed);
+            Ball(group, "Leaves", centre, V(width * 0.78f, width * 0.42f, width * 0.72f), foliageDark);
+            int lobes = 7;
+            float turn = (float)random.NextDouble() * 360f;
+            for (int i = 0; i < lobes; i++)
+            {
+                float angle = (turn + i * 360f / lobes + (float)random.NextDouble() * 22f) * Mathf.Deg2Rad;
+                float out_ = width * (0.3f + 0.1f * (float)random.NextDouble());
+                float size = width * (0.34f + 0.16f * (float)random.NextDouble());
+                Vector3 at = centre + V(Mathf.Cos(angle) * out_, ((float)random.NextDouble() - 0.4f) * width * 0.14f, Mathf.Sin(angle) * out_ * 0.9f);
+                Ball(group, "Leaves", at, V(size, size * 0.62f, size * 0.92f), i % 3 == 1 ? foliageDark : foliage, V(0f, (float)random.NextDouble() * 90f, 0f));
+            }
+            // Two small tufts on top catch the light and break the crown's line.
+            Ball(group, "Leaves", centre + V(width * 0.1f, width * 0.2f, width * 0.05f), V(width * 0.4f, width * 0.26f, width * 0.36f), foliage);
+            Ball(group, "Leaves", centre + V(-width * 0.16f, width * 0.15f, -width * 0.12f), V(width * 0.3f, width * 0.2f, width * 0.28f), foliage);
         }
 
         /// <summary>Moss on paving: two or three flat rounds, dark with a brighter middle.</summary>

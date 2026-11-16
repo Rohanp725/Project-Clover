@@ -79,6 +79,15 @@ namespace Clover.Gameplay
         public float BoltRadius = 2.3f;
         public float BoltDamage = 16f;
 
+        [Header("The view of it")]
+        /// <summary>How many times further off the camera stands while it is in the fight, so its head and hands are in the picture.</summary>
+        public float ViewDistance = 1.55f;
+        /// <summary>The camera looks at a point this share of the way from the player to its head, up to the limit in metres.</summary>
+        public float ViewLead = 0.5f;
+        public float ViewLeadLimit = 3.8f;
+        /// <summary>Degrees the camera's pitch is tipped toward the horizon, so more of what stands beyond the floor is seen.</summary>
+        public float ViewPitch = -15f;
+
         public Color PlainMarker = new Color(1f, 0.93f, 0.75f, 1f);
         public Color RedMarker = new Color(1f, 0.08f, 0.05f, 1f);
 
@@ -171,7 +180,8 @@ namespace Clover.Gameplay
             Stagger.StaggeredSeconds = StaggeredSeconds;
             Stagger.Reset();
             slamMesh = MarkerShapes.Sector(SlamRadius, 360f);
-            sweepMesh = MarkerShapes.Lane(FloorRadius * 2f, SweepWidth);
+            // The sweep's lane crosses the whole floor and a third of the screen, so its inside is fainter even than a disc's.
+            sweepMesh = MarkerShapes.Lane(FloorRadius * 2f, SweepWidth, MarkerShapes.InsideOfFan * 0.7f);
             boltMesh = MarkerShapes.Sector(BoltRadius, 360f);
             slamOutlineRenderer = Prepare(slamOutline, slamMesh);
             slamFillRenderer = Prepare(slamFill, slamMesh);
@@ -208,6 +218,20 @@ namespace Clover.Gameplay
             if (slamMesh != null) Destroy(slamMesh);
             if (sweepMesh != null) Destroy(sweepMesh);
             if (boltMesh != null) Destroy(boltMesh);
+        }
+
+        // It is far larger than the usual view: the camera stands back and looks north of the player, further the
+        // further south the player is, so the head at the rim and the hands over the floor are seen together.
+        private void FrameTheFight()
+        {
+            if (shaker == null || target == null) return;
+            float north = Mathf.Clamp((HeadHome().z - target.position.z) * ViewLead, 0f, ViewLeadLimit);
+            shaker.SetFraming(ViewDistance, new Vector3(-target.position.x * 0.25f, 0f, north), ViewPitch);
+        }
+
+        private void OnDisable()
+        {
+            if (shaker != null) shaker.ClearFraming();
         }
 
         private static Renderer Prepare(MeshFilter filter, Mesh mesh)
@@ -308,7 +332,7 @@ namespace Clover.Gameplay
             rightPart.SetVulnerable(false);
             Enter(Mode.Dying);
             if (hitStop != null) hitStop.Slow(1.6f, 0.25f);
-            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.7f), 0.14f);
+            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.5f), 0.09f);
         }
 
         private void Enter(Mode next)
@@ -328,6 +352,7 @@ namespace Clover.Gameplay
         private void Update()
         {
             if (mode == Mode.Hidden || mode == Mode.Dead) return;
+            FrameTheFight();
             float deltaTime = Time.deltaTime * WorldClock.EnemyScale;
             elapsed += deltaTime * (mode == Mode.Staggered || mode == Mode.Dying || mode == Mode.Rising ? 1f : Pace);
             switch (mode)
@@ -656,6 +681,7 @@ namespace Clover.Gameplay
             if (shaker != null && Time.frameCount % 6 == 0) shaker.Shake(0.2f * (1f - t), 0.2f);
             if (elapsed < Seconds) return;
             mode = Mode.Dead;
+            if (shaker != null) shaker.ClearFraming();
             SetShown(false);
             Died?.Invoke(this);
         }
@@ -761,9 +787,8 @@ namespace Clover.Gameplay
             // A circle fills from its middle; a lane fills along its length.
             fillFilter.transform.localScale = lane ? new Vector3(1f, 1f, shown) : new Vector3(shown, 1f, shown);
             Color colour = red ? RedMarker : PlainMarker;
-            // A lane covers a third of the screen, so it is drawn fainter than a circle is.
-            Tint(outline, colour, lane ? 0.14f : 0.2f);
-            Tint(fill, colour, lane ? 0.3f : 0.5f);
+            Tint(outline, colour, MarkerShapes.OutlineAlpha);
+            Tint(fill, MarkerShapes.Growing(colour), MarkerShapes.GrowingAlpha);
         }
 
         private void Tint(Renderer shown, Color colour, float alpha)

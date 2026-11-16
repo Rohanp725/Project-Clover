@@ -67,9 +67,9 @@ namespace Clover.EditorTools
             public readonly Material Straw = BuildKit.Toon(Folder, "DummyStraw", new Color(0.6f, 0.47f, 0.3f)).Ink(0.028f, BuildKit.CharacterInk);
             public readonly Material Blade = BuildKit.Toon(Folder, "DummyBlade", new Color(0.2f, 0.18f, 0.17f)).Ink(0.028f, BuildKit.CharacterInk);
             public readonly Material Band = BuildKit.Toon(Folder, "DummyBand", new Color(0.62f, 0.14f, 0.08f)).Ink(0.028f, BuildKit.CharacterInk);
-            public readonly Material BarBack = BuildKit.Glow(Folder, "BarBack", new Color(0.03f, 0.03f, 0.04f, 0.85f), 3, false);
-            public readonly Material BarHealth = BuildKit.Glow(Folder, "BarHealth", new Color(0.75f, 0.09f, 0.08f, 1f), 3, false);
-            public readonly Material BarStagger = BuildKit.Glow(Folder, "BarStagger", new Color(1.4f, 1.1f, 0.3f, 1f), 3, false);
+            public readonly Material BarBack = BuildKit.Glow(Folder, "BarBack", new Color(0.03f, 0.03f, 0.04f, 0.85f), 3, false, 2f, 0f, true);
+            public readonly Material BarHealth = BuildKit.Glow(Folder, "BarHealth", new Color(0.75f, 0.09f, 0.08f, 1f), 3, false, 2f, 0f, true);
+            public readonly Material BarStagger = BuildKit.Glow(Folder, "BarStagger", new Color(1.4f, 1.1f, 0.3f, 1f), 3, false, 2f, 0f, true);
 
             public DummyKit(Quaternion towardCamera) => TowardCamera = towardCamera;
         }

@@ -210,16 +210,15 @@ namespace Clover.World
 
         private void ShowMark(bool shown)
         {
-            Paint(outlineRenderer, shown, 0.18f);
-            Paint(fillRenderer, shown, 0.5f);
+            Paint(outlineRenderer, shown, StrikeColour, MarkerShapes.OutlineAlpha);
+            Paint(fillRenderer, shown, MarkerShapes.Growing(StrikeColour), MarkerShapes.GrowingAlpha);
         }
 
-        private void Paint(Renderer markRenderer, bool shown, float alpha)
+        private void Paint(Renderer markRenderer, bool shown, Color colour, float alpha)
         {
             if (markRenderer == null) return;
             markRenderer.enabled = shown;
             if (!shown) return;
-            var colour = StrikeColour;
             colour.a = alpha;
             block.SetColor(MarkerColour, colour);
             markRenderer.SetPropertyBlock(block);

@@ -4,8 +4,8 @@ using UnityEngine.UI;
 namespace Clover.Core
 {
     /// <summary>
-    /// The impact frame: for a few hundredths of a second the whole screen is washed with one flat colour, as a comic
-    /// panel does at the moment of a blow. It sits on the HUD as a full-screen image; anything may call
+    /// The impact frame: for a few hundredths of a second spikes of one flat colour are driven in from the screen's
+    /// edges, as a comic panel does at the moment of a blow; the middle stays clear so the blow itself is seen. It sits on the HUD as a full-screen image; anything may call
     /// <see cref="Flash"/>. With none in the scene the call does nothing.
     /// </summary>
     public class ScreenFlash : MonoBehaviour

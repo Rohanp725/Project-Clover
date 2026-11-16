@@ -28,16 +28,17 @@ namespace Clover.Gameplay
         public float RockRecoverPerSecond = 9f;
         public float SlumpDegrees = 28f;
         public float FlashSeconds = 0.09f;
-        public Color FlashColour = Color.white;
-        /// <summary>While staggered the dummy pulses this colour, to say: finish it now.</summary>
-        public Color StaggeredColour = new Color(1f, 0.82f, 0.25f);
+        /// <summary>The light a blow adds to the dummy for an instant. It is added to its own colours, which stay under it with their ink line; painting it flat white made it a blank shape.</summary>
+        public Color FlashColour = new Color(0.62f, 0.56f, 0.46f);
+        /// <summary>While staggered the dummy pulses with this light, to say: finish it now.</summary>
+        public Color StaggeredColour = new Color(0.9f, 0.62f, 0.12f);
         public float StaggeredPulsesPerSecond = 5f;
 
         public int HitsTaken { get; private set; }
         public int FinishersTaken { get; private set; }
         public bool IsStaggered => Stagger.IsStaggered;
 
-        private static readonly int BaseColour = Shader.PropertyToID("_BaseColor");
+        private static readonly int Emission = Shader.PropertyToID("_EmissionColor");
 
         private MaterialPropertyBlock block;
         private Transform rockFrame;
@@ -134,7 +135,7 @@ namespace Clover.Gameplay
             if (staggerMark != null) staggerMark.Show(Stagger.IsStaggered);
 
             // The flash runs on real time so it is still seen through the moment time is stopped for the hit.
-            // 0 is the dummy's own colours, 1 the white of a hit, 2 the pulse of an open stagger.
+            // 0 is the dummy's own colours, 1 the flare of a hit, 2 the pulse of an open stagger.
             int flash = flashLeft > 0f ? 1
                 : Stagger.IsStaggered && Mathf.Repeat(Time.unscaledTime * StaggeredPulsesPerSecond, 1f) < 0.5f ? 2 : 0;
             flashLeft -= Time.unscaledDeltaTime;
@@ -157,7 +158,7 @@ namespace Clover.Gameplay
                 if (flashRenderer == null) continue;
                 if (flash != 0)
                 {
-                    block.SetColor(BaseColour, flash == 1 ? FlashColour : StaggeredColour);
+                    block.SetColor(Emission, flash == 1 ? FlashColour : StaggeredColour);
                     flashRenderer.SetPropertyBlock(block);
                 }
                 else

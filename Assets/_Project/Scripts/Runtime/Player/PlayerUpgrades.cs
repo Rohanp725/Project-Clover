@@ -335,7 +335,7 @@ namespace Clover.Player
             if (has[Index(Upgrade.Overclock)])
             {
                 WorldClock.SlowEnemies(OverclockSeconds, OverclockScale);
-                ScreenFlash.Flash(new Color(0.6f, 0.85f, 1f, 0.35f), 0.1f);
+                ScreenFlash.Flash(new Color(0.6f, 0.85f, 1f, 0.3f), 0.08f);
             }
         }
 
@@ -400,7 +400,7 @@ namespace Clover.Player
             Vfx.Play(VfxKind.Ring, at + Vector3.up * 0.2f, Vector3.up);
             for (int i = 0; i < 6; i++)
                 Vfx.Play(VfxKind.Fire, at + Quaternion.Euler(0f, i * 60f, 0f) * Vector3.forward * (MeteorRadius * 0.6f) + Vector3.up * 0.4f, Vector3.up, 0.8f);
-            ScreenFlash.Flash(new Color(1f, 0.75f, 0.4f, 0.4f), 0.08f);
+            ScreenFlash.Flash(new Color(1f, 0.75f, 0.4f, 0.32f), 0.07f);
             if (hitStop != null) hitStop.Freeze(0.12f);
             if (shaker != null) shaker.Shake(0.45f, 0.3f);
         }

@@ -48,8 +48,8 @@ namespace Clover.Gameplay
         public float ChargedSeconds = 9f;
         public Color PlainMarker = new Color(1f, 0.93f, 0.75f, 1f);
         public Color RedMarker = new Color(1f, 0.08f, 0.05f, 1f);
-        public float OutlineAlpha = 0.2f;
-        public float FillAlpha = 0.55f;
+        public float OutlineAlpha = MarkerShapes.OutlineAlpha;
+        public float FillAlpha = MarkerShapes.GrowingAlpha;
         [ColorUsage(true, true)] public Color SlashColour = new Color(1.6f, 0.45f, 1.5f, 0.6f);
         /// <summary>Half the width of the player, in metres: a blow that reaches their edge has reached them.</summary>
         public float TargetRadius = 0.4f;
@@ -672,7 +672,7 @@ namespace Clover.Gameplay
             if (!IsStaggered && Stagger.Add(Kind.PerfectGuardStagger)) Brain.Stagger();
         }
 
-        // The mark on the ground: the whole shape faintly, and a brighter copy that grows to fill it as the blow nears.
+        // The mark on the ground: the shape's bold edge with a faint inside, and a brighter copy of it that grows to meet that edge as the blow nears.
         private void ShowAttack(EnemyAttack attack)
         {
             if (attack == null || Brain.State != EnemyState.Telegraph)
@@ -716,7 +716,7 @@ namespace Clover.Gameplay
             if (!shown) shownAttack = null;
             Color colour = red ? RedMarker : PlainMarker;
             PaintMarker(outlineRenderer, shown, colour, OutlineAlpha);
-            PaintMarker(fillRenderer, shown, colour, FillAlpha);
+            PaintMarker(fillRenderer, shown, MarkerShapes.Growing(colour), FillAlpha);
         }
 
         private void PaintMarker(Renderer markerRenderer, bool shown, Color colour, float alpha)

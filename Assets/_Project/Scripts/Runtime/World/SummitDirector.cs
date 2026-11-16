@@ -91,7 +91,7 @@ namespace Clover.World
                 rods.MaxSecondsBetween = 2f;
                 stormRaised = true;
             }
-            ScreenFlash.Flash(new Color(0.8f, 0.9f, 1f, 0.45f), 0.12f);
+            ScreenFlash.Flash(new Color(0.8f, 0.9f, 1f, 0.38f), 0.09f);
             if (player != null) player.Callout("The storm answers him");
         }
 
@@ -106,7 +106,7 @@ namespace Clover.World
             // The man is dead. What he made of himself is not.
             SecondFormCalled = true;
             if (hitStop != null) hitStop.Slow(1.4f, 0.25f);
-            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.7f), 0.14f);
+            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.5f), 0.09f);
             LightningBolts.Strike(who.transform.position, 1f);
             if (player != null)
             {
@@ -132,7 +132,7 @@ namespace Clover.World
             stormRaised = false;
             RunState.GodsFelled++;
             if (hitStop != null) hitStop.Slow(1.8f, 0.2f);
-            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.8f), 0.16f);
+            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.55f), 0.1f);
             LightningBolts.Strike(where, 1f);
             if (player != null) player.Callout("A god falls");
             if (rods != null)

@@ -68,7 +68,7 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _XRMotionVectorsPass: 1
-    - _ZTest: 4
+    - _ZTest: 8
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 0.78, g: 0.14, b: 0.12, a: 1}

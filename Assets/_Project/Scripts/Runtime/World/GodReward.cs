@@ -69,7 +69,7 @@ namespace Clover.World
                 if (who.Defence != null) who.Defence.Callout("The storm feeds the fire");
             }
             Vfx.Play(VfxKind.Ring, who.transform.position + Vector3.up * 0.2f, Vector3.up);
-            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.5f), 0.1f);
+            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.4f), 0.09f);
             if (who.Defence != null) who.Defence.Restore();
             if (director != null) director.Chose(this);
         }
