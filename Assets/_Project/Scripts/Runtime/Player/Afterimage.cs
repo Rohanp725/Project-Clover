@@ -60,6 +60,18 @@ namespace Clover.Player
             }
         }
 
+        // The copies are not children of the player, so they are put away by hand when the player is.
+        private void OnDisable()
+        {
+            if (renderers == null) return;
+            for (int copy = 0; copy < Copies; copy++)
+            {
+                left[copy] = 0f;
+                foreach (var shown in renderers[copy])
+                    if (shown != null) shown.enabled = false;
+            }
+        }
+
         private void OnDestroy()
         {
             if (meshes == null) return;

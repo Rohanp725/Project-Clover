@@ -288,6 +288,8 @@ namespace Clover.Gameplay
         private void BeginStagger()
         {
             TimesStaggered++;
+            // Whatever he meant to do next is forgotten with his balance.
+            secondSlamOwed = false;
             HideMarkers();
             leftPart.SetVulnerable(true);
             rightPart.SetVulnerable(true);

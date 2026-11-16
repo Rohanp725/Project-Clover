@@ -101,7 +101,8 @@ namespace Clover.UI
             if (!IsOpen) return;
             IsOpen = false;
             if (panel != null) panel.SetActive(false);
-            if (Time.timeScale == 0f) Time.timeScale = scaleBefore;
+            // Back to plain time, not to whatever pace a blow's slow had it at when the fire was used: that slow has let go by now.
+            if (Time.timeScale == 0f) Time.timeScale = 1f;
             // The player gets the buttons back on the next frame, so the press that closed this is not also a dodge.
             releasePlayer = true;
         }

@@ -57,7 +57,12 @@ namespace Clover.World
             if (untilFirstWords > 0f)
             {
                 untilFirstWords -= Time.deltaTime;
-                if (untilFirstWords <= 0f) Speak();
+                if (untilFirstWords <= 0f)
+                {
+                    // Not over someone else's words: it waits until the box is free.
+                    if (ReadingBox.Instance != null && ReadingBox.Instance.IsOpen) untilFirstWords = 0.2f;
+                    else Speak();
+                }
             }
             // It is never quite still, and it brightens while it speaks.
             if (body != null)
