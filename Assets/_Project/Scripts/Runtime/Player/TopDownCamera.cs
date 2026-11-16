@@ -20,6 +20,9 @@ namespace Clover.Player
         public float ShakeRate = 45f;
         /// <summary>Seconds the camera takes to settle into a framing that was asked for, or back out of it.</summary>
         public float FramingTime = 0.9f;
+        /// <summary>Real seconds the camera takes to lean in for a finishing blow, and to draw back after it.</summary>
+        public float CloseInTime = 0.1f;
+        public float CloseOutTime = 0.22f;
 
         /// <summary>True while something has asked for a framing other than the usual one.</summary>
         public bool HasFraming { get; private set; }
@@ -34,6 +37,9 @@ namespace Clover.Player
         private float wantedDistance = 1f, shownDistance = 1f, distanceVelocity;
         private float wantedPitch, shownPitch, pitchVelocity;
         private Vector3 wantedLookAhead, shownLookAhead, lookAheadVelocity;
+        // The lean-in for a finishing blow is its own layer on top of any framing, so it can never leave a framing changed.
+        private float closeDistance = 1f, closeLeft, shownClose, closeVelocity;
+        private Vector3 closeOffset;
 
         public void Configure(Transform targetToFollow) => target = targetToFollow;
 
@@ -79,6 +85,19 @@ namespace Clover.Player
             wantedPitch = 0f;
         }
 
+        /// <summary>
+        /// Leans the view in for a moment: this many times the distance, looking this far (metres, on the ground) from
+        /// the player, for this many real seconds, eased in and out again. It is ignored while a framing is in force,
+        /// because whoever asked for that framing needs the whole of it seen.
+        /// </summary>
+        public void CloseIn(float distanceMultiplier, Vector3 offset, float seconds)
+        {
+            if (HasFraming || seconds <= 0f) return;
+            closeDistance = Mathf.Clamp(distanceMultiplier, 0.1f, 1f);
+            closeOffset = offset;
+            closeLeft = seconds;
+        }
+
         private void Start() => SnapToTarget();
 
         private void LateUpdate()
@@ -88,6 +107,14 @@ namespace Clover.Player
             shownDistance = Mathf.SmoothDamp(shownDistance, wantedDistance, ref distanceVelocity, FramingTime);
             shownPitch = Mathf.SmoothDamp(shownPitch, wantedPitch, ref pitchVelocity, FramingTime);
             shownLookAhead = Vector3.SmoothDamp(shownLookAhead, wantedLookAhead, ref lookAheadVelocity, FramingTime);
+            // On real time, like the shake: the lean-in happens while the blow has time stopped and slowed.
+            if (HasFraming) closeLeft = 0f;
+            bool closing = closeLeft > 0f;
+            if (closing) closeLeft -= Time.unscaledDeltaTime;
+            if (closing || shownClose > 0.0005f)
+                shownClose = Mathf.SmoothDamp(shownClose, closing ? 1f : 0f, ref closeVelocity, closing ? CloseInTime : CloseOutTime, Mathf.Infinity, Time.unscaledDeltaTime);
+            else
+                shownClose = 0f;
 
             // The shake runs on real time: it is at its strongest exactly while a hit has time nearly stopped.
             if (shakeLeft > 0f)
@@ -111,7 +138,8 @@ namespace Clover.Player
         private void Place()
         {
             var rotation = Quaternion.Euler(PitchDegrees + shownPitch, YawDegrees, 0f);
-            transform.SetPositionAndRotation(focus + shownLookAhead + shakeOffset - rotation * Vector3.forward * (Distance * shownDistance), rotation);
+            float distance = Distance * shownDistance * Mathf.Lerp(1f, closeDistance, shownClose);
+            transform.SetPositionAndRotation(focus + shownLookAhead + closeOffset * shownClose + shakeOffset - rotation * Vector3.forward * distance, rotation);
         }
     }
 }

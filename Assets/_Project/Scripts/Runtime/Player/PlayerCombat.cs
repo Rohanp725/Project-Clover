@@ -40,6 +40,8 @@ namespace Clover.Player
         /// <summary>Real seconds of slowed time after a finisher's stop, and how slow.</summary>
         public float FinisherSlowSeconds = 0.45f;
         public float FinisherSlowScale = 0.35f;
+        /// <summary>How close the camera leans in on a finisher (times its usual distance); 1 leaves it alone.</summary>
+        public float FinisherCameraDistance = 0.8f;
         public LayerMask HitLayers = ~0;
 
         public bool IsAttacking => Combo.IsAttacking;
@@ -405,6 +407,7 @@ namespace Clover.Player
             struck.Clear();
             bool finisher = false;
             bool clean = false;
+            Vector3 finished = transform.position;
             if (arcs != null) arcs.Show(transform.position, transform.forward, step.Reach, step.ArcDegrees, step.Sweep, empowered ? empoweredColour : Weapon.SlashColour);
             Vector3 origin = transform.position + Vector3.up;
             int count = Overlap(origin, step.Reach);
@@ -425,6 +428,7 @@ namespace Clover.Player
                 struck.Add(target);
                 if (upgrades != null) upgrades.OnBlow(step, target, outcome);
                 finisher |= outcome == HitOutcome.Finisher;
+                if (outcome == HitOutcome.Finisher) finished = other.bounds.center;
                 clean |= outcome != HitOutcome.Blocked;
                 if (outcome != HitOutcome.Blocked) Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, other.ClosestPoint(origin), transform.forward);
                 else
@@ -470,6 +474,14 @@ namespace Clover.Player
             // The slow is timed from now and the stop runs first, so it is asked to outlast the stop.
             if (finisher && hitStop != null)
                 hitStop.Slow(FinisherSlowSeconds + Mathf.Max(FinisherHitStop, step.HitStopSeconds), FinisherSlowScale);
+            if (finisher && shaker != null && FinisherCameraDistance < 1f)
+            {
+                // The camera leans in between the two of them for as long as time is stopped and slowed. It does
+                // nothing while a big fight holds its own framing.
+                Vector3 between = (finished - transform.position) * 0.5f;
+                between.y = 0f;
+                shaker.CloseIn(FinisherCameraDistance, Vector3.ClampMagnitude(between, 2f), FinisherSlowSeconds + Mathf.Max(FinisherHitStop, step.HitStopSeconds));
+            }
             float shake = finisher ? Mathf.Max(FinisherShake, step.Shake) : step.Shake;
             if (shaker != null && shake > 0f) shaker.Shake(shake, 0.25f);
         }

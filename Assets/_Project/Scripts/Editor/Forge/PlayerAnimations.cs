@@ -960,18 +960,36 @@ namespace Clover.EditorTools.Forge
                 ShoulderRUp = 10f,
                 AimBlade = true,
                 Blade = new Vector3(0.82f, 0.08f, -0.56f),
+                BladeRoll = 90f,
             }, 0.55f);
+            // The cut carries on round behind while the body skids on low: nothing stops until the flick.
             var held = through.Copy();
-            held.WaistYaw = 58f;
-            held.HandR = new Vector3(0.74f, 1.02f, -0.18f);
-            // The flick that clears the blade, then home to the sheath's mouth.
+            held.Hips = new Vector3(0.1f, -0.42f, 0.3f);
+            held.HipYaw = 44f;
+            held.WaistYaw = 70f;
+            held.HandR = new Vector3(0.66f, 1.16f, -0.36f);
+            held.ShoulderRUp = 18f;
+            held.Blade = new Vector3(0.5f, 0.3f, -0.82f);
+            Looking(held, 0.55f);
+            // The flick that clears the blade: quick, out to the right and level enough to stay off the floor.
             var flick = through.Copy();
             flick.Hips = new Vector3(0.02f, -0.24f, 0.14f);
             flick.HipYaw = 16f;
             flick.WaistYaw = 26f;
-            flick.HandR = new Vector3(0.62f, 0.82f, 0.2f);
-            flick.Blade = new Vector3(0.6f, -0.62f, 0.5f);
+            flick.ShoulderRUp = 0f;
+            flick.HandR = new Vector3(0.62f, 0.96f, 0.24f);
+            flick.Blade = new Vector3(0.66f, -0.34f, 0.66f);
+            flick.BladeRoll = 0f;
             Looking(flick);
+            // Round the front to the sheath's mouth, so the point never swings down through the ground on its way home.
+            var across = flick.Copy();
+            across.Hips = new Vector3(0f, -0.2f, 0.06f);
+            across.HipYaw = -4f;
+            across.WaistYaw = -4f;
+            across.HandR = new Vector3(0.1f, 1.0f, 0.42f);
+            across.ElbowR = new Vector3(0.9f, -0.2f, 0.2f);
+            across.Blade = new Vector3(-0.95f, 0.04f, 0.3f);
+            Looking(across);
             var sheathing = Drawing();
             sheathing.Hips = new Vector3(-0.02f, -0.18f, 0f);
             sheathing.HipYaw = -18f;
@@ -979,75 +997,153 @@ namespace Clover.EditorTools.Forge
             sheathing.HandR = new Vector3(-0.1f, 0.9f, 0.34f);
             Looking(sheathing);
             var clip = Attack(step, -12f);
-            clip.SheetMoments = new[] { 0f, hit, (hit + done) * 0.5f, done, 0.55f, 0.75f, 0.9f, 1f };
-            return clip.Key(0f, Drawing()).Key(hit, cut, Ease.In).Key(done, through, Ease.Out).Key(0.56f, held, Ease.Linear)
-                .Key(0.76f, flick, Ease.InOut).Key(1f, sheathing, Ease.InOut);
+            clip.SheetMoments = new[] { 0f, hit, (hit + done) * 0.5f, done, 0.5f, 0.68f, 0.84f, 1f };
+            return clip.Key(0f, Drawing()).Key(hit, cut, Ease.In).Key(done, through, Ease.Out).Key(0.52f, held, Ease.Out)
+                .Key(0.68f, flick, Ease.InOut).Key(0.84f, across, Ease.InOut).Key(1f, sheathing, Ease.InOut);
         }
 
-        /// <summary>The finisher: the point drawn back to the hip, driven through with a long step, held, and torn out to the side.</summary>
+        /// <summary>
+        /// The finisher: a draw-cut that ends it. Wound deep away over the sheathed sword, the blade torn out level
+        /// across the enemy, carried on round to stand out wide at the side with the body sunk low and still, and then,
+        /// slowly, the flick that clears the blade and the sword walked home to the sheath.
+        /// </summary>
         private static ForgeClip RunThrough(AttackStep step)
         {
             var (hit, done) = Moments(step);
-            var chamber = Looking(new ForgePose
+            // Wound away to the left over the hilt, the right shoulder pointed at the enemy, eyes on them over it.
+            var coil = Looking(new ForgePose
             {
-                Hips = new Vector3(0.04f, -0.24f, -0.14f),
-                HipYaw = 34f,
-                WaistYaw = 30f,
-                WaistLean = 8f,
-                FootL = new Vector3(-0.18f, 0f, 0.2f),
-                FootR = new Vector3(0.2f, 0f, -0.28f),
-                FootRTurn = 40f,
-                HandR = new Vector3(0.34f, 1.0f, -0.16f),
-                ElbowR = new Vector3(0.6f, 0f, -1f),
-                AimBlade = true,
-                TwoHanded = true,
-                GripGap = 0.14f,
-                Blade = new Vector3(-0.12f, 0.06f, 1f),
-            });
-            var thrust = Looking(new ForgePose
-            {
-                Hips = new Vector3(0f, -0.34f, 0.34f),
-                HipYaw = -14f,
-                HipLean = 18f,
-                WaistYaw = -22f,
-                WaistLean = 14f,
-                FootL = new Vector3(-0.18f, 0f, -0.42f),
-                FootR = new Vector3(0.16f, 0f, 0.66f),
-                FootLTurn = 44f,
-                FootLTip = 30f,
-                HandR = new Vector3(0.1f, 1.12f, 0.92f),
+                Hips = new Vector3(-0.06f, -0.4f, -0.1f),
+                HipYaw = -48f,
+                HipLean = 16f,
+                WaistYaw = -40f,
+                WaistLean = 20f,
+                FootL = new Vector3(-0.26f, 0f, -0.34f),
+                FootR = new Vector3(0.16f, 0f, 0.4f),
+                FootLTurn = 56f,
+                FootLTip = 12f,
+                FootRTurn = -6f,
+                HandL = new Vector3(-0.34f, 0.72f, -0.06f),
+                ElbowL = new Vector3(-0.9f, 0.1f, -0.5f),
+                HandR = new Vector3(-0.3f, 0.74f, 0.2f),
+                ElbowR = new Vector3(0.9f, -0.1f, 0.5f),
                 ShoulderRForward = 22f,
                 AimBlade = true,
-                TwoHanded = true,
-                GripGap = 0.14f,
-                Blade = new Vector3(0f, 0.02f, 1f),
-            });
-            var driven = thrust.Copy();
-            driven.Hips = new Vector3(0f, -0.36f, 0.38f);
-            driven.HandR = new Vector3(0.1f, 1.1f, 0.96f);
-            var tear = Looking(new ForgePose
+                Blade = new Vector3(-0.55f, -0.2f, -0.82f),
+            }, 0.85f);
+            var sunk = coil.Copy();
+            sunk.Hips = new Vector3(-0.08f, -0.47f, -0.14f);
+            sunk.HipYaw = -56f;
+            sunk.WaistYaw = -46f;
+            sunk.WaistLean = 24f;
+            sunk.HandR = new Vector3(-0.34f, 0.7f, 0.16f);
+            Looking(sunk, 0.85f);
+            // The blade is through them: a long step, the arm thrown out, the sheath hand torn back the other way.
+            var cut = Looking(new ForgePose
             {
-                Hips = new Vector3(0.06f, -0.3f, 0.26f),
-                HipYaw = 26f,
-                WaistYaw = 58f,
-                WaistLean = 4f,
-                FootL = new Vector3(-0.18f, 0f, -0.42f),
-                FootR = new Vector3(0.16f, 0f, 0.66f),
-                FootLTurn = 44f,
+                Hips = new Vector3(0.03f, -0.4f, 0.34f),
+                HipYaw = 8f,
+                HipLean = 18f,
+                WaistYaw = 22f,
+                WaistLean = 16f,
+                FootL = new Vector3(-0.26f, 0f, -0.52f),
+                FootR = new Vector3(0.18f, 0f, 0.7f),
+                FootLTurn = 56f,
                 FootLTip = 30f,
-                HandL = new Vector3(-0.34f, 1.0f, 0.2f),
-                HandR = new Vector3(0.74f, 1.4f, 0.02f),
-                ShoulderRUp = 18f,
+                FootRTurn = 0f,
+                HandL = new Vector3(-0.42f, 0.74f, -0.2f),
+                ElbowL = new Vector3(-0.9f, 0.2f, -0.6f),
+                HandR = new Vector3(0.2f, 1.04f, 0.9f),
+                ElbowR = new Vector3(1f, -0.2f, 0f),
+                ShoulderRForward = 18f,
                 AimBlade = true,
-                Blade = new Vector3(0.86f, 0.46f, -0.2f),
+                Blade = new Vector3(-0.32f, 0.03f, 0.95f),
+                BladeRoll = 45f,
+            });
+            // The pose time slows on: sunk on the front knee, chest turned right round, the sword standing out level
+            // to the side at arm's length and the sheath hand far behind, the head still on the enemy.
+            var through = Looking(new ForgePose
+            {
+                Hips = new Vector3(0.08f, -0.5f, 0.42f),
+                HipYaw = 40f,
+                HipLean = 14f,
+                HipRoll = -4f,
+                WaistYaw = 62f,
+                WaistLean = 12f,
+                FootL = new Vector3(-0.26f, 0f, -0.52f),
+                FootR = new Vector3(0.18f, 0f, 0.7f),
+                FootLTurn = 56f,
+                FootLTip = 34f,
+                FootRTurn = 0f,
+                HandL = new Vector3(-0.5f, 0.7f, 0.1f),
+                ElbowL = new Vector3(-0.9f, 0.2f, -0.6f),
+                HandR = new Vector3(0.92f, 1.08f, 0.0f),
+                ElbowR = new Vector3(0.6f, -0.3f, -1f),
+                ShoulderRUp = 10f,
+                AimBlade = true,
+                Blade = new Vector3(0.94f, 0.1f, -0.34f),
+                BladeRoll = 90f,
             }, 0.5f);
-            var settle = tear.Copy();
-            settle.HandR = new Vector3(0.7f, 1.3f, 0f);
-            settle.Blade = new Vector3(0.9f, 0.3f, -0.3f);
-            var clip = Attack(step, -9f);
-            clip.SheetMoments = new[] { 0f, hit * 0.7f, hit, done, 0.62f, 0.72f, 0.85f, 1f };
-            return clip.Key(0f, SwordReady()).Key(hit * 0.6f, chamber, Ease.Out).Key(hit * 0.82f, chamber, Ease.Linear).Key(hit, thrust, Ease.In)
-                .Key(done, driven, Ease.Out).Key(0.6f, driven, Ease.Linear).Key(0.72f, tear, Ease.Snap).Key(0.86f, settle, Ease.Out).Key(1f, SwordReady(), Ease.InOut);
+            through.HeadLean = -14f;
+            // Still, but not frozen: the weight goes on settling and the point drifts on behind.
+            var held = through.Copy();
+            held.Hips = new Vector3(0.09f, -0.54f, 0.44f);
+            held.WaistYaw = 68f;
+            held.HandR = new Vector3(0.9f, 1.02f, -0.12f);
+            held.Blade = new Vector3(0.82f, 0.04f, -0.58f);
+            Looking(held, 0.5f);
+            held.HeadLean = -8f;
+            // The flick: the body rises a little and the blade is snapped down and forward at the right side.
+            var flick = Looking(new ForgePose
+            {
+                Hips = new Vector3(0.05f, -0.34f, 0.3f),
+                HipYaw = 22f,
+                HipLean = 8f,
+                WaistYaw = 26f,
+                WaistLean = 6f,
+                FootL = new Vector3(-0.24f, 0f, -0.44f),
+                FootR = new Vector3(0.18f, 0f, 0.62f),
+                FootLTurn = 50f,
+                FootLTip = 20f,
+                HandL = new Vector3(-0.36f, 0.8f, 0.04f),
+                ElbowL = new Vector3(-0.9f, 0.1f, -0.5f),
+                HandR = new Vector3(0.66f, 0.9f, 0.34f),
+                AimBlade = true,
+                Blade = new Vector3(0.62f, -0.42f, 0.66f),
+            });
+            // The back of the blade laid across the front toward the sheath's mouth.
+            var across = Looking(new ForgePose
+            {
+                Hips = new Vector3(0f, -0.24f, 0.16f),
+                HipYaw = -6f,
+                HipLean = 6f,
+                WaistYaw = -8f,
+                WaistLean = 8f,
+                FootL = new Vector3(-0.22f, 0f, -0.36f),
+                FootR = new Vector3(0.17f, 0f, 0.5f),
+                FootLTurn = 46f,
+                FootLTip = 12f,
+                HandL = new Vector3(-0.28f, 0.86f, 0.1f),
+                ElbowL = new Vector3(-0.9f, 0.1f, -0.5f),
+                HandR = new Vector3(0.12f, 1.0f, 0.44f),
+                ElbowR = new Vector3(0.9f, -0.2f, 0.2f),
+                AimBlade = true,
+                Blade = new Vector3(-0.95f, 0.02f, 0.3f),
+            });
+            across.HeadLean = 10f;
+            var home = Drawing();
+            home.Hips = new Vector3(-0.02f, -0.16f, 0.02f);
+            home.HipYaw = -16f;
+            home.WaistYaw = -14f;
+            home.WaistLean = 10f;
+            home.HandR = new Vector3(-0.12f, 0.9f, 0.32f);
+            Looking(home);
+            home.HeadLean = 14f;
+            var clip = Attack(step, -12f);
+            clip.SheetMoments = new[] { hit * 0.5f, hit * 0.86f, hit, hit + 0.04f, 0.6f, 0.73f, 0.87f, 1f };
+            return clip.Key(0f, Drawing()).Key(hit * 0.5f, coil, Ease.Out).Key(hit * 0.86f, sunk, Ease.InOut).Key(hit, cut, Ease.In)
+                .Key(hit + 0.07f, through, Ease.Out).Key(0.6f, held, Ease.Out).Key(0.73f, flick, Ease.InOut)
+                .Key(0.87f, across, Ease.InOut).Key(1f, home, Ease.InOut);
         }
 
         private static ForgeClip SwordGuard()
@@ -1513,37 +1609,63 @@ namespace Clover.EditorTools.Forge
             driven.HandR = new Vector3(0.02f, 1.34f, 1.12f);
             Looking(driven, 0.6f);
             driven.HeadLean = -24f;
+            // What time slows on: the force gone out of the hands and the arms flung right open, one high and
+            // forward and one low and behind, on a body sunk over the front knee and turned to show its whole width.
             var burst = new ForgePose
             {
-                Hips = new Vector3(-0.02f, -0.28f, 0.4f),
-                HipYaw = -8f,
-                HipLean = 6f,
-                WaistYaw = -8f,
-                WaistLean = -8f,
-                HeadLean = -14f,
+                Hips = new Vector3(-0.03f, -0.48f, 0.5f),
+                HipYaw = -30f,
+                HipLean = 12f,
+                HipRoll = 4f,
+                WaistYaw = -44f,
+                WaistLean = 4f,
+                WaistRoll = 8f,
                 FootL = strike.FootL,
                 FootR = strike.FootR,
                 FootRTurn = 30f,
-                FootRTip = 44f,
-                HandL = new Vector3(-0.86f, 1.12f, 0.36f),
-                HandR = new Vector3(0.84f, 1.56f, 0.3f),
+                FootRTip = 50f,
+                HandL = new Vector3(-0.8f, 0.86f, -0.1f),
+                HandR = new Vector3(0.9f, 1.5f, 0.56f),
+                ElbowL = new Vector3(-0.3f, -1f, -0.3f),
+                ElbowR = new Vector3(0.6f, -1f, -0.2f),
+                ShoulderLUp = 4f,
+                ShoulderRUp = 22f,
+                ShoulderRForward = 10f,
+                HandLBend = -40f,
+                HandRBend = 50f,
+            };
+            Looking(burst, 0.6f);
+            burst.HeadLean = -16f;
+            // Held, and still opening: the chest goes on turning and the low hand on reaching back.
+            var open = burst.Copy();
+            open.Hips = new Vector3(-0.03f, -0.52f, 0.52f);
+            open.WaistYaw = -52f;
+            open.HandL = new Vector3(-0.84f, 0.8f, -0.24f);
+            open.HandR = new Vector3(0.96f, 1.54f, 0.44f);
+            Looking(open, 0.6f);
+            open.HeadLean = -10f;
+            var ebb = new ForgePose
+            {
+                Hips = new Vector3(-0.01f, -0.24f, 0.32f),
+                HipYaw = -6f,
+                HipLean = 6f,
+                WaistYaw = -10f,
+                WaistLean = 6f,
+                FootL = strike.FootL,
+                FootR = strike.FootR,
+                FootRTurn = 30f,
+                FootRTip = 36f,
+                HandL = new Vector3(-0.52f, 0.98f, 0.26f),
+                HandR = new Vector3(0.54f, 1.16f, 0.36f),
                 ElbowL = new Vector3(-0.3f, -1f, -0.3f),
                 ElbowR = new Vector3(0.3f, -1f, -0.3f),
-                ShoulderLUp = 8f,
-                ShoulderRUp = 18f,
-                HandLBend = -30f,
-                HandRBend = 30f,
+                HandLBend = -20f,
+                HandRBend = 20f,
             };
-            var ebb = burst.Copy();
-            ebb.Hips = new Vector3(-0.01f, -0.2f, 0.3f);
-            ebb.WaistLean = 4f;
-            ebb.HeadLean = 0f;
-            ebb.HandL = new Vector3(-0.6f, 1.0f, 0.3f);
-            ebb.HandR = new Vector3(0.6f, 1.2f, 0.26f);
             var clip = Attack(step, -9f);
-            clip.SheetMoments = new[] { 0f, hit * 0.7f, hit, done, 0.6f, 0.75f, 0.9f, 1f };
+            clip.SheetMoments = new[] { 0f, hit * 0.7f, hit, hit + 0.04f, done, 0.62f, 0.8f, 1f };
             return clip.Key(0f, FistReady()).Key(hit * 0.6f, gather, Ease.Out).Key(hit * 0.84f, wound, Ease.InOut).Key(hit, strike, Ease.In)
-                .Key(done, driven, Ease.Out).Key(0.6f, burst, Ease.Snap).Key(0.8f, ebb, Ease.InOut).Key(1f, FistReady(), Ease.InOut);
+                .Key(hit + 0.03f, driven, Ease.Out).Key(hit + 0.1f, burst, Ease.Out).Key(0.62f, open, Ease.Out).Key(0.82f, ebb, Ease.InOut).Key(1f, FistReady(), Ease.InOut);
         }
 
         private static ForgeClip FistGuard()
