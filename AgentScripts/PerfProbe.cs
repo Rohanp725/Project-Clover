@@ -1,0 +1,65 @@
+using System.Collections;
+using System.Collections.Generic;
+using Clover.Player;
+using Unity.Profiling;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+// Play Mode probe: stands the player in the middle of a fight for ten seconds and reports frame time and the memory
+// thrown away each frame, read from the profiler's own counters. Numbers in the editor are worse than in a build.
+public static class PerfProbe
+{
+    public static string Run()
+    {
+        if (!Application.isPlaying) return "not in play mode";
+        new GameObject("Perf Probe").AddComponent<PerfProbeRunner>();
+        return "probe started";
+    }
+}
+
+public class PerfProbeRunner : MonoBehaviour
+{
+    private PlayerDefence defence;
+
+    private void Update()
+    {
+        if (defence != null) defence.Health.Heal(100f);
+    }
+
+    private IEnumerator Start()
+    {
+        var player = FindAnyObjectByType<PlayerController>();
+        defence = player.GetComponent<PlayerDefence>();
+        string scene = SceneManager.GetActiveScene().name;
+        if (scene == "Castle") player.Teleport(new Vector3(0f, 0.1f, 44f), Quaternion.identity);
+        yield return new WaitForSeconds(2f);
+        var allocated = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated In Frame");
+        var mainThread = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 1);
+        var drawCalls = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Draw Calls Count");
+        var batches = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Batches Count");
+        var times = new List<float>(2000);
+        long garbage = 0, calls = 0, batchTotal = 0;
+        double mainMs = 0;
+        float end = Time.unscaledTime + 10f;
+        while (Time.unscaledTime < end)
+        {
+            yield return null;
+            times.Add(Time.unscaledDeltaTime * 1000f);
+            garbage += allocated.LastValue;
+            mainMs += mainThread.LastValue * 1e-6;
+            calls += drawCalls.LastValue;
+            batchTotal += batches.LastValue;
+        }
+        times.Sort();
+        float sum = 0f;
+        foreach (float t in times) sum += t;
+        int n = times.Count;
+        Debug.Log($"[Probe] perf {scene}: {n} frames in 10 s; frame ms mean {sum / n:0.0} median {times[n / 2]:0.0} p95 {times[(int)(n * 0.95f)]:0.0} worst {times[n - 1]:0.0}; main thread mean {mainMs / n:0.0} ms; garbage {garbage / n} bytes a frame; draw calls {calls / n} batches {batchTotal / n}; screen {Screen.width}x{Screen.height}; vsync {QualitySettings.vSyncCount} target {Application.targetFrameRate}");
+        allocated.Dispose();
+        mainThread.Dispose();
+        drawCalls.Dispose();
+        batches.Dispose();
+        Debug.Log("[Probe] done");
+        Destroy(gameObject);
+    }
+}
