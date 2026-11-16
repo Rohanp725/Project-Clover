@@ -103,7 +103,10 @@ namespace Clover.Player
         private void LateUpdate()
         {
             if (target == null) return;
-            focus = Vector3.SmoothDamp(focus, target.position, ref focusVelocity, FollowTime);
+            // A menu has stopped the world: the view holds exactly where it was, lean-in and shake included, and goes
+            // on from there when time starts again. A blow's hit-stop never reaches zero, so it does not come here.
+            if (Time.timeScale == 0f) return;
+            focus =Vector3.SmoothDamp(focus, target.position, ref focusVelocity, FollowTime);
             shownDistance = Mathf.SmoothDamp(shownDistance, wantedDistance, ref distanceVelocity, FramingTime);
             shownPitch = Mathf.SmoothDamp(shownPitch, wantedPitch, ref pitchVelocity, FramingTime);
             shownLookAhead = Vector3.SmoothDamp(shownLookAhead, wantedLookAhead, ref lookAheadVelocity, FramingTime);

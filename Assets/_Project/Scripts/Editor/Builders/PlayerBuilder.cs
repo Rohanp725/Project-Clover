@@ -536,6 +536,38 @@ namespace Clover.EditorTools
             under.rectTransform.sizeDelta = new Vector2(1400f, 60f);
             under.text = subtitle;
             hud.AddComponent<TitleCard>().Configure(group, stroke, name, under);
+            MenusOnTop(hud.transform);
+        }
+
+        /// <summary>
+        /// Says where the controls are, in the same quiet line the hub keeps, for the first seconds after the scene
+        /// opens; then it fades, since a fight needs the screen more than the line does.
+        /// </summary>
+        public static void AddPauseHint()
+        {
+            var hud = GameObject.Find("HUD");
+            if (hud == null) return;
+            var quiet = Label("Controls", hud.transform, 22, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.55f));
+            quiet.rectTransform.anchorMin = quiet.rectTransform.anchorMax = quiet.rectTransform.pivot = Vector2.zero;
+            quiet.rectTransform.anchoredPosition = new Vector2(48f, 26f);
+            quiet.rectTransform.sizeDelta = new Vector2(900f, 30f);
+            quiet.text = PauseHint;
+            var group = quiet.gameObject.AddComponent<CanvasGroup>();
+            group.interactable = false;
+            group.blocksRaycasts = false;
+            quiet.gameObject.AddComponent<FadeAway>().Configure(group, 8f, 1f);
+            MenusOnTop(hud.transform);
+        }
+
+        // Whatever a scene adds to the HUD after it is built must still lie under the menus: the fire's tree, then
+        // spoken words, then the pause menu over all of it.
+        private static void MenusOnTop(Transform hud)
+        {
+            foreach (string name in new[] { "Upgrade Menu", "Reading Box", "Pause Menu" })
+            {
+                var menu = hud.Find(name);
+                if (menu != null) menu.SetAsLastSibling();
+            }
         }
 
         /// <summary>Makes a fall in this scene end the run: the screen goes dark and the player wakes in the hub.</summary>
@@ -553,13 +585,15 @@ namespace Clover.EditorTools
             words.rectTransform.offsetMin = words.rectTransform.offsetMax = Vector2.zero;
             words.text = "The hours turn back";
             new GameObject("Run Ender").AddComponent<Clover.World.RunEnder>().Configure(player.GetComponent<PlayerDefence>(), dark.GetComponent<Image>(), words);
+            MenusOnTop(hud.transform);
         }
 
         // The element's tree: a dark panel over the middle of the screen with a list on the left and what the chosen thing does on the right.
         private static void BuildUpgradeMenu(PlayerController player, Transform hud)
         {
             // The world goes dim behind the tree while it is open.
-            var dim = Panel("Upgrade Menu", hud, new Color(0.01f, 0.008f, 0.03f, 0.66f));
+            // Dark enough that the bars and the embers behind it read as background, not as part of the menu.
+            var dim = Panel("Upgrade Menu", hud, new Color(0.01f, 0.008f, 0.03f, 0.8f));
             dim.anchorMin = Vector2.zero;
             dim.anchorMax = Vector2.one;
             dim.offsetMin = dim.offsetMax = Vector2.zero;
@@ -619,7 +653,8 @@ namespace Clover.EditorTools
         // The pause menu: the same inked panel as the fire's tree, with a short list, and a second page that holds the controls.
         private static void BuildPauseMenu(PlayerController player, Transform hud)
         {
-            var dim = Panel("Pause Menu", hud, new Color(0.01f, 0.008f, 0.03f, 0.72f));
+            // Dark enough that the player's bars behind it read as background, not as part of the menu.
+            var dim = Panel("Pause Menu", hud, new Color(0.01f, 0.008f, 0.03f, 0.8f));
             dim.anchorMin = Vector2.zero;
             dim.anchorMax = Vector2.one;
             dim.offsetMin = dim.offsetMax = Vector2.zero;

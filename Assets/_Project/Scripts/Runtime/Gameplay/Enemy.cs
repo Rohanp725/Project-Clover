@@ -55,6 +55,10 @@ namespace Clover.Gameplay
         public float TargetRadius = 0.4f;
         /// <summary>Metres short of the marked spot a leaping attacker comes down, so it lands in front of the target and not inside it.</summary>
         public float LeapShort = 1.5f;
+        /// <summary>Seconds its bars stay up after a blow when it has lost sight of the fight.</summary>
+        public float BarsLingerSeconds = 4f;
+        /// <summary>Metres from the player beyond which its bars are put away: they are drawn over walls, and far off they say nothing.</summary>
+        public float BarsDistance = 16f;
         /// <summary>How far through the telegraph a leap leaves the ground.</summary>
         public float LeapFrom = 0.62f;
 
@@ -119,6 +123,9 @@ namespace Clover.Gameplay
         private float circle = 1f;
         private float untilTurnCircle;
         private Quaternion barsRotation;
+        // The bars have been called up by a blow taken or an attack begun, and how long ago it was last hurt.
+        private bool barsCalled;
+        private float sinceHurt = float.MaxValue;
         // The body's own colours, one row for each renderer and one entry for each of its materials, and the ones bright enough to make a flake of.
         private Color[][] ownColours;
         private Color[] flakeColours;
@@ -276,6 +283,8 @@ namespace Clover.Gameplay
             blocked = 0;
             ShowMarker(false, false);
             SetGlow(0);
+            barsCalled = false;
+            sinceHurt = float.MaxValue;
             if (bars != null) bars.gameObject.SetActive(false);
             if (guardArc != null) guardArc.Show(false);
             // The animator finds its own way back: the next frame it is not busy, it blends to standing.
@@ -298,7 +307,10 @@ namespace Clover.Gameplay
             // Struck by someone standing off its ground: the ground stops holding it for a while.
             if (holdsGround && !TargetOnGround) Brain.Provoke();
             else Brain.Alert();
-            if (bars != null) bars.gameObject.SetActive(true);
+            barsCalled = true;
+            sinceHurt = 0f;
+            // Shown at once when near, so the blow and the bar it shortens are seen together; the rest is decided each frame.
+            if (bars != null && target != null && (target.position - transform.position).sqrMagnitude <= BarsDistance * BarsDistance) bars.gameObject.SetActive(true);
             float detonated = 0f;
             if (hit.Detonate && Burn.IsBurning)
             {
@@ -453,8 +465,6 @@ namespace Clover.Gameplay
             bool mayAttack = turns == null || turns.MayAttack(this);
             bool struck = Brain.Tick(deltaTime * pace, distance, Random.value, mayAttack, TargetOnGround);
             if (!wasStriking && IsStriking && turns != null) turns.Began(this);
-            // An elite's name and bars are up for as long as it is in the fight, not only once blows are traded.
-            if (Kind.IsElite && bars != null && bars.gameObject.activeSelf != IsAware) bars.gameObject.SetActive(IsAware);
             var attack = Brain.Current;
             if (attack != null && attack != before && Brain.State == EnemyState.Telegraph)
             {
@@ -462,10 +472,22 @@ namespace Clover.Gameplay
                 strikePoint = target.position;
                 // A leap comes down just short of that spot, on the attacker's side of it.
                 leapTo = distance > LeapShort ? strikePoint - toTarget / distance * LeapShort : transform.position;
-                if (bars != null) bars.gameObject.SetActive(true);
+                barsCalled = true;
                 if (attack.BlinkTo > 0f) Blink(attack.BlinkTo);
                 // The instant it commits: a white glint for a blow that can be guarded, a red flare for one that cannot.
                 Vfx.Play(attack.Unblockable ? VfxKind.Danger : VfxKind.Glint, transform.position + Vector3.up * 2.3f);
+            }
+
+            if (bars != null)
+            {
+                // The bars are drawn over whatever stands in front of them, walls included, so they are only up for an
+                // enemy that is in the fight or was hurt a moment ago, and never for one far off. An elite's name and
+                // bars are up for as long as it is in the fight; anyone else's wait for a blow taken or an attack begun.
+                if (sinceHurt < BarsLingerSeconds) sinceHurt += deltaTime;
+                bool fighting = IsAware || sinceHurt < BarsLingerSeconds;
+                if (!fighting) barsCalled = false;
+                bool show = fighting && (Kind.IsElite || barsCalled) && distance <= BarsDistance;
+                if (bars.gameObject.activeSelf != show) bars.gameObject.SetActive(show);
             }
 
             if (Brain.Tracks && distance > 0.05f)

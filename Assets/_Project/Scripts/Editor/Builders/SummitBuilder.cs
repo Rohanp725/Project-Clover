@@ -214,6 +214,7 @@ namespace Clover.EditorTools
             if (colossus != null) summit.ConfigureSecondForm(colossus, bossHud, storm);
             PlayerBuilder.AddRunEnd(built.Player);
             PlayerBuilder.AddTitle("Narukami", EnemyKind.Narukami().Title);
+            PlayerBuilder.AddPauseHint();
             SceneBuild.Finish(scene, ScenePath, false);
         }
 
