@@ -1695,3 +1695,86 @@ Existing fields used with a new kind of value: `AttackStep.Lunge` negative (Scyt
 - **Not checked, because this was a paper task**: nothing here was compiled, baked or played. Whether a negative
   `Lunge` moves the player back as expected, whether `weapon.R` exists on the player's rig for `RestBlade`, and
   whether a 1.95 m sword clears the hat and scarf on the back are the first three things to look at in the editor.
+
+---
+
+## Appendix C. What was built on 2026-11-16, and where it departs from the above
+
+Built by Claude in the day run of 2026-11-16 while the user was away: the framework (E1, E2 and the parts of E3 to
+E13 named below) and three weapons, **Massive Sword, Scythe, Full Body Armament**. Not played by the user. The
+numbers in sections 2, 5 and 9 are in the game as written unless listed here.
+
+### Engine items as built
+
+| Item | State | Notes |
+|---|---|---|
+| E1 | built | `Weapon` carries `Carry`, `Prefix`, `HudName`, the five state names, `GuardProfile`, `DodgeProfile`, `MoveFactor`, `GuardMoveFactor`, `Stowed`, sockets. `UsesSword` is kept as `Carry == "katana"`. `Weapons.ByName` is a dictionary of builders; `Weapons.All` yields every weapon; `Weapons.Offered` is what stands and racks set out. `Weapon.Named(prefix, ownRoll)` fills the state names from the clip prefix. The Katana still lives inside `player.fbx` (moving it was not cheap and safe: its sheath logic and three objects are particular to it). |
+| E2 | built, with stand-in models | `WeaponBuilder` (specs, prefabs under `Generated/Weapons/<carry>/`, sockets `socket_hand_R`, `socket_hand_L`, `socket_back`, `socket_hip`, the rack) and the runtime `WeaponRack` (shows one set, tints `accent` and `inlay`). The Blender models are **not imported** (they await the user's approval): the sword and scythe are box stand-ins on the models' axes and slot names. `AimBladeL` and the props (`PropA`, `PropB`) are **not built**: the knives, the bow and the chain need them. A new `ForgePose.BladeBack` fixes the weapon's roll by saying which way its back faces. |
+| E3 | built | `LineWidth`, `Radius`, `InnerReach`, `InnerDamage`, `SweetFrom`, `SweetDamage`, `SweetStagger` on `AttackStep`, read by `PlayerCombat.Strike`. A banded arc is drawn as a dim inner fan and a bright outer one. A lane is drawn as the straight tongue; a disc as a ring. |
+| E4 | built, unused | `Repeats`, `RepeatScale`; `ComboEvents.Repeat`. Tested in EditMode only: no weapon built so far uses it. |
+| E5 | built | `ChargedHeavy`, `SkillChargeTime`, `ChargeMoveFactor`, `SkillIsCounter`, `CounterHoldMax`; `ComboEvents.SkillReady`; `WeaponCombo.Counter`; `PlayerCombat.TryCounter`. The counter returns `HitOutcome.PerfectGuard` to the attacker, so an enemy answers it as it answers a perfect guard, and the reflected blow adds a flat 55 stagger (`PlayerCombat.CounterStagger`) on every target, not "what a perfect guard would have thrown back" per enemy. A thrown attack is answered toward where it came from, not along its line. |
+| E6 | built | `Poise` on the step; `PlayerCombat.Poised`; read in `PlayerDefence.Land`. Red attacks ignore it. |
+| E7 | partly | Negative `Lunge` works as written (probe: the scythe's heavy moves the player back). `LungeSeconds`, `Travel` and `Recoil` are built. `PassThrough` is a field nothing reads: the ram pushes against its target instead of passing it. |
+| E8 | partly | `WeaponShot` and `WeaponShots`: straight flight, `Count` and `SpreadDegrees`, `Pierce`, the hang with its bite. `Sticks`, `Returns` and `Prop` are fields nothing reads (bow, spear, hammer). It does not use `Hazards`. |
+| E9 | partly | `Pull` shoves through the existing `IShovable.Push`. No `Drag` over time, no `Weight` on `EnemyKind`, no `PullSelf`. |
+| E10 | partly | `ChainHeavies` is built. `DashAttack` and `GuardAttack` are fields nothing reads. |
+| E11 | not built | `BackMultiplier` is a field nothing reads. |
+| E12 | partly | `Beats` (time, hit stop, shake, effect, a shove of the target, a lift of the target), `HoldAt` and `HoldSeconds` (time at 0.4 and the camera's lean, before the blow), `LungeSeconds`. The target is **not** puppeted between beats, is not held in its stagger by the finisher (the stagger's own three seconds cover every wind-up), and has no `held` clip. A finisher's body may walk round its target: the clip moves the skeleton's root (`ForgeClip.MovesRoot`) and `AttackStep.EffectTurn` turns the effect's line to match. |
+| E13 | partly | `guard_hit_<p>` and `guard_perfect_<p>` play on the upper body for the three new weapons and for Fists; the Katana has none yet. `Guard.PerfectFrom` is built and tested, unused. `PerfectGuardRider` is not built. |
+| E14 | partly | The Armament's coat is in `WeaponBuilder` (no separate `ArmamentBuilder`): eight boxes on the forearms, hands, shins and upper arms, one material, tinted by the element. **The tree mark and the swap rule are not built**: the Armament is taken from a stand. |
+
+Two things the design did not ask for: `AttackStep.ElementStacks` (a blow lays the held element's affliction by
+itself: the Armament's coat) and `AttackStep.Effect` (`StepEffect`: the spike line, the ground split, the element
+thrown as a cone or a ring, sparks dragged along the ground).
+
+### Massive Sword
+
+- **Spike Line** is not eight `Hazards.Lay` calls: `WeaponSpikes` raises eight solid spikes, 1.25 m apart, one every
+  0.09 s, each striking a 0.8 m circle through `PlayerCombat.StrikeArea` with one shared list of who has been bitten.
+  They stand 1.0 s. There is always an element in hand in the present game, so the "plain stone" case does not arise.
+- **The overhead lands flat-on and beside the bearer's centre line**, with the body sunk behind the blade and not
+  folded over it: from the game's camera a bearer bent over a blade on the centre line hides all of it under his hat.
+- **The Headsman**: beats at 0.14 s (the pommel) and 0.30 s (a spark for the scoring point), the hold from 0.44 s, the
+  body walking 70 degrees round the target, the split running along the cut 0.35 s after the blow. The pommel does not
+  rock the enemy upright and no ring of sparks is drawn on the ground during the walk.
+- **The guard plants the blade on a slant** (grip at the right shoulder, point by the left foot), not straight up
+  and down: upright it stands behind the bearer and cannot be seen from the game's camera.
+- The grip ribbons are rigid; the idle's weight shift and the charge's tremble are in; `roll_gsword` is in.
+
+### Scythe
+
+- **The guard holds the blade end up to the right**, not the left: the right hand is the upper hand, and the design's
+  way crosses the arms.
+- **Crescent Slash** is the real `Shot` with a hang, not the two-`Hazards.Lay` first pass. What hangs lays one stack
+  of the held element's affliction with each bite (the design gives that to Dark alone).
+- **The Wheel** is between the design's full version and its first pass: the hook (a beat), one hauling turn on the
+  spot, a heave that **lifts** the target (through the afflictions' own lift, 0.5 s; a target that cannot be lifted
+  reels instead), the hold, the rising cut. The body is not carried round the bearer.
+- The finisher ignores the bands (a kneeling enemy at arm's length is not on the haft).
+- The Crescent leaves from 0.4 m ahead of the bearer, not 1 m: thrown up the screen from 1 m it hung at the very top
+  edge of the view. It still hangs 6.4 m off, which is near that edge; a shorter `Range` may want trying.
+- `run_scythe` lays the crescent flat with the hook out to the right, not edge up: edge up it is a line from above.
+- The left hand does not slide to the butt for the widest cuts; the grip is 0.42 to 0.6 m throughout.
+
+### Full Body Armament
+
+- **Taken from a stand** (see E14). `Weapons.Armament(element)` builds it; taking another element re-makes it.
+- The first-pass clips are the fists' with one shared change (hips 6 cm lower, feet 5 cm wider, shoulders up); the
+  idle is its own. The second pass of re-posing each light has not been done.
+- **Energy Reflect** adds a flat 55 stagger; see E5.
+- **The ram** stops against its target and shoves it 2.5 m; it does not carry the bearer 2.2 m through a crowd.
+- **The burst** does not bare the arms and regrow the coat; **One Inch** does not drain the coat into the hand. The
+  inlay's brightness rises for the skill and the finisher, which is all the coat does.
+- One Inch's six blows shove the target 6 cm each (0.36 m in all), not 15 cm, and the bearer does not step in after.
+- No element bends the Armament yet.
+
+### How the next weapon is added
+
+1. `Weapons.cs`: a method that returns the `Weapon` (numbers from its section), ending `.Named("<prefix>", ownRoll)`;
+   one line in `builders`; its name in `Offered`.
+2. `WeaponBuilder.Specs`: one `Spec` (carry name, staged model file, stand-in, rest pose, display pose).
+3. A `PlayerAnimations.<Weapon>.cs` with its clips, yielded from `PlayerAnimations.All()`. Clip names by the prefix:
+   `idle_p`, `run_p`, `guard_p`, `guard_hit_p`, `guard_perfect_p`, `charge_p`, `roll_p` if it has its own, and one
+   per `AttackStep.Name`. The animator's states are made from the names.
+4. `Clover > Forge > Bake Player Animations`, then rebuild the four scenes. The hub stand and the practice yard's
+   rack stand appear by themselves; `WeaponFrameworkTests.EveryWeaponHasANameAStandAndItsClips` says what is missing.

@@ -176,7 +176,7 @@ namespace Clover.UI
                     shownWorn = worn;
                     shownWards = wards;
                     shownTallies = tallies;
-                    string text = surge > 0 ? $"{shownWeapon.Name}   {element.Kit.SurgeName} {surge}" : shownWeapon.Name;
+                    string text = surge > 0 ? $"{shownWeapon.ShownName}   {element.Kit.SurgeName} {surge}" : shownWeapon.ShownName;
                     // The spell worn in the hold-spell slot is named here, so the player knows what a held press will do.
                     if (worn != null) text += "   Hold spell: " + worn.Name;
                     if (wards > 0) text += wards > 1 ? $"   Wards {wards}" : "   Ward";

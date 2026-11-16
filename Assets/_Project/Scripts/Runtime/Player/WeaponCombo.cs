@@ -28,6 +28,22 @@ namespace Clover.Player
         /// <summary>What the player's numbers make of every blow's stamina.</summary>
         [NonSerialized] public float StaminaScale = 1f;
         public float ChargeTime = 0.4f;
+        /// <summary>A second heavy, free of mana, released from a charge held to <see cref="ChargeTime"/>. Null: the weapon has one tier, the skill.</summary>
+        public AttackStep ChargedHeavy;
+        /// <summary>With a <see cref="ChargedHeavy"/>: seconds the button must be held for the skill. Zero means <see cref="ChargeTime"/>.</summary>
+        public float SkillChargeTime;
+        /// <summary>The share of walking speed kept while charging; above zero the stick also turns the player.</summary>
+        public float ChargeMoveFactor;
+        /// <summary>The skill is a counter: it is not released, it answers a blow taken while the charge is held (see <see cref="Counter"/>).</summary>
+        public bool SkillIsCounter;
+        /// <summary>Seconds a counter's stance can be held past <see cref="ChargeTime"/> before it lets go by itself as the <see cref="ChargedHeavy"/>.</summary>
+        public float CounterHoldMax = 1.2f;
+        /// <summary>The heavy that ends the chain after this many lights (index 1 is after one). A null entry, or none, falls to <see cref="ChainHeavy"/>.</summary>
+        public List<AttackStep> ChainHeavies;
+        /// <summary>A step started by a light press at the end of a roll. A seam for the knives and the spear: not yet read.</summary>
+        public AttackStep DashAttack;
+        /// <summary>A step started by a light press behind a raised guard. A seam for the spear: not yet read.</summary>
+        public AttackStep GuardAttack;
         /// <summary>Seconds a press is remembered.</summary>
         public float BufferTime = 0.3f;
         /// <summary>Seconds after an attack ends in which a press still continues the chain.</summary>
@@ -43,6 +59,13 @@ namespace Clover.Player
         public bool IsFinishing => Current != null && Current == Finisher;
         /// <summary>True once a charge has been held long enough, with the mana to pay, to release the skill.</summary>
         public bool IsCharged => IsCharging && chargeAnnounced;
+        /// <summary>How far the held charge has come: 0 not yet, 1 the charged heavy (or the skill, on a weapon with one tier), 2 the skill.</summary>
+        public int ChargeTier => !IsCharging ? 0 : skillAnnounced ? 2 : chargeAnnounced ? 1 : 0;
+        /// <summary>How many repeats of the current step have been struck.</summary>
+        public int RepeatsDone { get; private set; }
+        /// <summary>Seconds into the current attack or charge.</summary>
+        public float Elapsed => elapsed;
+        private float SkillAt => ChargedHeavy != null && SkillChargeTime > ChargeTime ? SkillChargeTime : ChargeTime;
         /// <summary>A dodge or a guard may cut short a recovery or a charge, never a wind-up or the swing itself.</summary>
         public bool CanBeCancelled => Phase == AttackPhase.Recovery || Phase == AttackPhase.Charge;
         /// <summary>The attack being performed; null when idle or charging.</summary>
@@ -59,6 +82,7 @@ namespace Clover.Player
         private bool heavyHeld;
         private bool finisherWanted;
         private bool chargeAnnounced;
+        private bool skillAnnounced;
         private bool currentIsLight;
         private int nextIndex;
 
@@ -74,8 +98,33 @@ namespace Clover.Player
             heavyHeld = false;
             finisherWanted = false;
             chargeAnnounced = false;
+            skillAnnounced = false;
             currentIsLight = false;
             nextIndex = 0;
+            RepeatsDone = 0;
+        }
+
+        // The heavy that ends a chain of this many lights.
+        private AttackStep Ender(int lights)
+        {
+            if (ChainHeavies != null && lights < ChainHeavies.Count && ChainHeavies[lights] != null) return ChainHeavies[lights];
+            return ChainHeavy ?? Heavy;
+        }
+
+        /// <summary>
+        /// A blow has reached the player while a counter's stance is held and ready. With the mana to pay, the mana is
+        /// spent and the skill starts at once; true means the blow was taken on the stance.
+        /// </summary>
+        public bool Counter(StaminaPool stamina, ManaPool mana)
+        {
+            if (!SkillIsCounter || Skill == null || !IsCharged || mana == null || mana.Current < SkillManaCost) return false;
+            mana.TrySpend(SkillManaCost);
+            if (!StartHeavy(Skill, stamina))
+            {
+                EndAttack();
+                return false;
+            }
+            return true;
         }
 
         public void Press() => buffered = BufferTime;
@@ -132,7 +181,7 @@ namespace Clover.Player
                     }
                     else if (nextIndex > 0)
                     {
-                        if (StartHeavy(ChainHeavy ?? Heavy, stamina)) events |= ComboEvents.Started;
+                        if (StartHeavy(Ender(nextIndex), stamina)) events |= ComboEvents.Started;
                     }
                     else if (!heavyHeld)
                     {
@@ -148,6 +197,7 @@ namespace Clover.Player
                         StepIndex = -1;
                         elapsed = 0f;
                         chargeAnnounced = false;
+                        skillAnnounced = false;
                     }
                     else
                     {
@@ -164,7 +214,39 @@ namespace Clover.Player
                 elapsed += deltaTime;
                 bool ready = elapsed >= ChargeTime;
                 bool canPay = Skill != null && mana != null && mana.Current >= SkillManaCost && stamina.Current >= Skill.StaminaCost * StaminaScale;
-                if (!heavyHeld)
+                if (ChargedHeavy != null)
+                {
+                    // Two tiers: the charged heavy for nothing, then the skill for mana. A counter's skill is never
+                    // released: it waits for a blow, and lets go by itself when it has been held too long.
+                    bool skillReady = !SkillIsCounter && elapsed >= SkillAt && canPay;
+                    bool spent = SkillIsCounter && elapsed >= ChargeTime + CounterHoldMax;
+                    if (!heavyHeld || spent)
+                    {
+                        bool started;
+                        if (skillReady)
+                        {
+                            mana.TrySpend(SkillManaCost);
+                            started = StartHeavy(Skill, stamina);
+                        }
+                        else started = StartHeavy(ready ? ChargedHeavy : Heavy, stamina);
+                        if (started) events |= ComboEvents.Started;
+                        else EndAttack();
+                    }
+                    else
+                    {
+                        if (ready && !chargeAnnounced)
+                        {
+                            chargeAnnounced = true;
+                            events |= ComboEvents.Charged;
+                        }
+                        if (skillReady && !skillAnnounced)
+                        {
+                            skillAnnounced = true;
+                            events |= ComboEvents.SkillReady;
+                        }
+                    }
+                }
+                else if (!heavyHeld)
                 {
                     bool started;
                     if (ready && canPay)
@@ -188,7 +270,8 @@ namespace Clover.Player
                 else if (ready && !chargeAnnounced)
                 {
                     chargeAnnounced = true;
-                    events |= ComboEvents.Charged;
+                    skillAnnounced = true;
+                    events |= ComboEvents.Charged | ComboEvents.SkillReady;
                 }
             }
             else
@@ -200,13 +283,20 @@ namespace Clover.Player
                     Phase = AttackPhase.Active;
                     events |= ComboEvents.Hit;
                 }
+                // A step of several blows strikes again at each of its moments, while the swing is still out.
+                if (Phase == AttackPhase.Active && step.Repeats != null && RepeatsDone < step.Repeats.Length
+                    && elapsed >= step.Windup + step.Repeats[RepeatsDone])
+                {
+                    RepeatsDone++;
+                    events |= ComboEvents.Repeat;
+                }
                 if (Phase == AttackPhase.Active && elapsed >= step.Windup + step.Active) Phase = AttackPhase.Recovery;
                 if (Phase == AttackPhase.Recovery)
                 {
                     bool open = elapsed >= step.Windup + step.Active + ChainDelay;
                     bool chainOpen = currentIsLight && open;
                     if (heavyBuffered > 0f && finisherWanted && open && StartHeavy(Finisher, stamina)) events |= ComboEvents.Started;
-                    else if (heavyBuffered > 0f && !finisherWanted && chainOpen && StartHeavy(ChainHeavy ?? Heavy, stamina)) events |= ComboEvents.Started;
+                    else if (heavyBuffered > 0f && !finisherWanted && chainOpen && StartHeavy(Ender(nextIndex), stamina)) events |= ComboEvents.Started;
                     else if (buffered > 0f && chainOpen && nextIndex < Steps.Count && StartLight(stamina)) events |= ComboEvents.Started;
                     else if (elapsed >= step.Total) EndAttack();
                 }
@@ -247,6 +337,7 @@ namespace Clover.Player
             Current = step;
             Phase = AttackPhase.Windup;
             elapsed = 0f;
+            RepeatsDone = 0;
             return true;
         }
 

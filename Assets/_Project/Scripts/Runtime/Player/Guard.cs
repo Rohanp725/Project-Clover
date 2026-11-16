@@ -12,6 +12,8 @@ namespace Clover.Player
     {
         /// <summary>Seconds after a press in which a blow is guarded perfectly.</summary>
         public float PerfectWindow = 0.18f;
+        /// <summary>Seconds after a press before the perfect window opens: a guard that is slow to rise (the hammer's).</summary>
+        public float PerfectFrom;
         /// <summary>A press this soon after the last one has no perfect window.</summary>
         public float SpamLockout = 0.4f;
         /// <summary>Stamina a block costs for each point of the blow's damage.</summary>
@@ -22,7 +24,7 @@ namespace Clover.Player
         public float ArcDegrees = 200f;
 
         public bool IsRaised { get; private set; }
-        public bool IsPerfect => IsRaised && perfectArmed && sincePress <= PerfectWindow;
+        public bool IsPerfect => IsRaised && perfectArmed && sincePress >= PerfectFrom && sincePress <= PerfectWindow;
 
         private float sincePress = float.MaxValue;
         private bool perfectArmed;

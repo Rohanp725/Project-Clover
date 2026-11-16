@@ -35,6 +35,54 @@ namespace Clover.Player
         /// <summary>Which way the cut travels, for the arc it leaves in the air: +1 right to left, -1 left to right, 0 straight.</summary>
         public float Sweep;
 
+        /// <summary>While this step is winding up or swinging, a blow whose damage is at or under this still hurts but does not interrupt. Red attacks ignore it.</summary>
+        public float Poise;
+        /// <summary>Above zero: the blow is a lane <see cref="Reach"/> long and this wide, straight ahead; the arc is ignored.</summary>
+        public float LineWidth;
+        /// <summary>Above zero: the blow is a disc of this radius centred <see cref="Reach"/> metres ahead.</summary>
+        public float Radius;
+        /// <summary>A target nearer than this takes damage and stagger times <see cref="InnerDamage"/>: the haft of a pole weapon.</summary>
+        public float InnerReach;
+        public float InnerDamage = 1f;
+        /// <summary>A target at or beyond this takes these multiples: the tip.</summary>
+        public float SweetFrom;
+        public float SweetDamage = 1f;
+        public float SweetStagger = 1f;
+        /// <summary>More blows in the one step: seconds after the first hit, each at <see cref="RepeatScale"/> of it.</summary>
+        public float[] Repeats;
+        public float RepeatScale = 1f;
+        /// <summary>The step forward (or back) is over by this many seconds; zero means the whole wind-up.</summary>
+        public float LungeSeconds;
+        /// <summary>Metres covered during the swing itself, striking all the way; each target is hit once.</summary>
+        public float Travel;
+        /// <summary>The player ignores enemies' bodies while travelling. A seam for the knives and the spear: not yet read.</summary>
+        public bool PassThrough;
+        /// <summary>Metres the player is pushed back over the first of the recovery.</summary>
+        public float Recoil;
+        /// <summary>Metres the target is dragged: positive toward the player, negative away.</summary>
+        public float Pull;
+        /// <summary>Against something too heavy to drag, the player goes to it instead. A seam for the chain: not yet read.</summary>
+        public bool PullSelf;
+        /// <summary>Something that leaves the weapon at the blow and flies on. Null: nothing does.</summary>
+        public WeaponShot Shot;
+        /// <summary>Stacks of the held element's affliction this blow lays by itself, with or without the tree's root.</summary>
+        public int ElementStacks;
+        /// <summary>What else the blow sets going.</summary>
+        public StepEffect Effect;
+        /// <summary>Degrees the effect's line is turned from the player's facing: a finisher whose body has walked round its target cuts from there.</summary>
+        public float EffectTurn;
+        /// <summary>A finisher's staging: moments before the blow that stop time, shake and spark but deal nothing.</summary>
+        public FinisherBeat[] Beats;
+        /// <summary>Seconds into the step at which the camera leans in for the held pose, and for how long; zero leaves it to the blow.</summary>
+        public float HoldAt;
+        public float HoldSeconds;
+
+        /// <summary>What a blow at this distance is multiplied by: less on the haft, more at the tip.</summary>
+        public float BandDamage(float distance) => SweetFrom > 0f && distance >= SweetFrom ? SweetDamage : distance < InnerReach ? InnerDamage : 1f;
+        public float BandStagger(float distance) => SweetFrom > 0f && distance >= SweetFrom ? SweetStagger : distance < InnerReach ? InnerDamage : 1f;
+        /// <summary>True when the blow at this distance fell in the tip's band.</summary>
+        public bool IsSweet(float distance) => SweetFrom > 0f && distance >= SweetFrom;
+
         public float Total => Windup + Active + Recovery;
     }
 }

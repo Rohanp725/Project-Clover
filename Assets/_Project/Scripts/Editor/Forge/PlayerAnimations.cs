@@ -15,7 +15,7 @@ namespace Clover.EditorTools.Forge
     /// arrives fast, a follow-through that carries past the target, and a settle before the recovery. The hips and
     /// chest lead and the arms arrive after; the head stays on the enemy while the body turns under it.
     /// </summary>
-    public static class PlayerAnimations
+    public static partial class PlayerAnimations
     {
         public const string ClipFolder = BuildKit.GeneratedRoot + "/Animation/Player";
         private const string ModelPath = PlayerBuilder.PlayerModelPath;
@@ -35,6 +35,9 @@ namespace Clover.EditorTools.Forge
             using (var rig = new ForgeRig(asset))
             {
                 PlayerBuilder.Dress(rig.Model);
+                // The other weapons hang on the same sockets as in the game, so each sheet is drawn with the right one in hand.
+                var rack = WeaponBuilder.Hang(rig.Model, asset);
+                rack.Tint(true, Clover.Player.Elements.Colour(Clover.Player.Elements.Fire), 1f);
                 var tails = new ForgeTails()
                     .Add(rig, 0.1f, "scarf_a1", "scarf_a2", "scarf_a3")
                     .Add(rig, 0.1f, "scarf_b1", "scarf_b2")
@@ -46,7 +49,11 @@ namespace Clover.EditorTools.Forge
                 {
                     if (!string.IsNullOrEmpty(filter) && !clip.Name.Contains(filter)) continue;
                     clip.Bake(rig, ClipFolder, tails);
-                    ShowSword(rig, SwordIn(clip.Name));
+                    string carry = CarryOf(clip.Name);
+                    ShowSword(rig, carry != null ? -1 : SwordIn(clip.Name));
+                    rack.Show(carry, true);
+                    // A great weapon's tip is far from the body: its sheet is drawn from further off.
+                    float distance = carry == "gsword" || carry == "scythe" ? 8.2f : 5.2f;
                     var local = clip;
                     tails.Reset(rig, local, 0f);
                     float last = 0f;
@@ -61,12 +68,20 @@ namespace Clover.EditorTools.Forge
                             tails.Step(rig, 1f / 60f, local.Wind != null ? local.Wind(at) : Vector3.zero);
                         }
                         last = t;
-                    }, 8, 0.95f, clip.SheetMoments);
+                    }, 8, 0.95f, clip.SheetMoments, distance);
                     baked++;
                 }
                 AssetDatabase.SaveAssets();
                 Debug.Log($"[Clover.Forge] Baked {baked} player clips to {ClipFolder}; sheets in {ForgeSheet.Folder}.");
             }
+        }
+
+        // Which weapon on the rack a clip belongs to, read from its name; null for the Katana's and the fists' own.
+        private static string CarryOf(string clip)
+        {
+            foreach (var spec in WeaponBuilder.Specs)
+                if (clip.EndsWith("_" + spec.Carry) || clip.Contains("_" + spec.Carry + "_")) return spec.Carry;
+            return null;
         }
 
         // Which sword object a clip is looked at with: 1 in the hand, 0 in the sheath, -1 no sword at all.
@@ -121,6 +136,12 @@ namespace Clover.EditorTools.Forge
             yield return Breaker(fists.Skill);
             yield return PalmStrike(fists.Finisher);
             yield return FistGuard();
+            yield return GuardHitFist("fist");
+            yield return GuardPerfectFist("fist");
+
+            foreach (var clip in GreatswordClips()) yield return clip;
+            foreach (var clip in ScytheClips()) yield return clip;
+            foreach (var clip in ArmamentClips()) yield return clip;
         }
 
         // The moments of an attack as fractions of its whole length: when the blow lands, and when the swing is over.

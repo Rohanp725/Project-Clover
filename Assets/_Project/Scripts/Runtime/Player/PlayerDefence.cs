@@ -350,6 +350,18 @@ namespace Clover.Player
                 return HitOutcome.Dodged;
             }
 
+            // A counter's stance, held and paid for, takes the blow from any side and throws it back.
+            if (combat != null && combat.TryCounter(hit))
+            {
+                Vfx.Play(VfxKind.PerfectGuard, transform.position + Vector3.up * 1.2f, transform.forward);
+                Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 1.1f, transform.forward, 1.2f, Color.white);
+                ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.35f), 0.06f);
+                if (hitStop != null) hitStop.Freeze(PerfectGuardHitStop);
+                if (shaker != null) shaker.Shake(0.14f, 0.15f);
+                Callout("Reflect");
+                return HitOutcome.PerfectGuard;
+            }
+
             // The guard covers the front only: a blow from behind lands whatever is held.
             // Where the attacker stands decides it; the blow's own direction is only a fallback, since a wide swing
             // need not travel straight from the attacker to the player.
@@ -405,6 +417,14 @@ namespace Clover.Player
             if (upgrades != null) upgrades.OnStruck(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
             Vfx.Play(VfxKind.Wound, transform.position + Vector3.up * 1.1f, hit.Direction);
             ScreenFlash.Flash(new Color(1f, 0.08f, 0.1f, 0.16f), 0.09f);
+            if (!IsDead && !hit.Unblockable && combat != null && combat.Poised(hit.Damage))
+            {
+                // Inside a heavy swing a small blow is taken and walked through: it hurts, the swing goes on.
+                PoisedBlows++;
+                if (hitStop != null) hitStop.Freeze(0.04f);
+                if (shaker != null) shaker.Shake(0.1f, 0.12f);
+                return;
+            }
             hurtSeconds = seconds;
             hurtLeft = seconds;
             knockDirection = hit.Direction;
@@ -424,6 +444,17 @@ namespace Clover.Player
                 hurtLeft = 0f;
                 Callout("Fallen");
             }
+        }
+
+        /// <summary>Blows taken inside a swing that had the poise to go on through them.</summary>
+        public int PoisedBlows { get; private set; }
+        /// <summary>The last guard reaction, for the animator: counts that only go up.</summary>
+        public int GuardReactions => Blocks + PerfectGuards;
+
+        /// <summary>Shows the guard as wide as the weapon in hand makes it.</summary>
+        public void GuardWidth(float degrees)
+        {
+            if (guardArc != null) guardArc.SetArc(degrees);
         }
 
         // Where a blow meets the guard: in front of the chest.

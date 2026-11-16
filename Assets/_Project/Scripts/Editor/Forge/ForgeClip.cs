@@ -21,6 +21,11 @@ namespace Clover.EditorTools.Forge
         /// <summary>Something done to the rig after the pose is applied, for what a pose cannot say (a full turn in a roll).</summary>
         public Action<ForgeRig, float> After;
         /// <summary>
+        /// When true the skeleton's own root bone is baked too, turn and place, so that what <see cref="After"/> does to
+        /// it (a full turn on the spot, a walk round an enemy) is in the clip the game plays and not only on the sheet.
+        /// </summary>
+        public bool MovesRoot;
+        /// <summary>
         /// Something laid over the keyed pose at every moment: the shudder of a blow landing, a breath. Given the
         /// moment and the pose, it returns the pose to use. It is what keeps a held pose from being a frozen one.
         /// </summary>
@@ -139,9 +144,13 @@ namespace Clover.EditorTools.Forge
                 }
             }
 
-            int hipsIndex = -1;
+            int hipsIndex = -1, rootIndex = -1;
             for (int b = 0; b < bones.Count; b++)
+            {
                 if (bones[b].Name == "hips") hipsIndex = b;
+                if (bones[b].Name == "root") rootIndex = b;
+            }
+            var rootCurves = new[] { new AnimationCurve(), new AnimationCurve(), new AnimationCurve() };
 
             for (int f = 0; f <= frames; f++)
             {
@@ -160,6 +169,13 @@ namespace Clover.EditorTools.Forge
                     curves[b, 1].AddKey(time, q.y);
                     curves[b, 2].AddKey(time, q.z);
                     curves[b, 3].AddKey(time, q.w);
+                }
+                if (rootIndex >= 0)
+                {
+                    Vector3 r = bones[rootIndex].Transform.localPosition;
+                    rootCurves[0].AddKey(time, r.x);
+                    rootCurves[1].AddKey(time, r.y);
+                    rootCurves[2].AddKey(time, r.z);
                 }
                 if (hipsIndex >= 0)
                 {
@@ -187,9 +203,11 @@ namespace Clover.EditorTools.Forge
             for (int b = 0; b < bones.Count; b++)
             {
                 // The rig's own root object is not animated; only what hangs under it.
-                if (bones[b].Transform.parent == rig.Model.transform) continue;
+                if (bones[b].Transform.parent == rig.Model.transform && !(MovesRoot && b == rootIndex)) continue;
                 string bonePath = AnimationUtility.CalculateTransformPath(bones[b].Transform, rig.Model.transform);
                 for (int c = 0; c < 4; c++) clip.SetCurve(bonePath, typeof(Transform), "localRotation." + axis[c], curves[b, c]);
+                if (MovesRoot && b == rootIndex)
+                    for (int c = 0; c < 3; c++) clip.SetCurve(bonePath, typeof(Transform), "localPosition." + axis[c], rootCurves[c]);
                 if (b == hipsIndex)
                     for (int c = 0; c < 3; c++) clip.SetCurve(bonePath, typeof(Transform), "localPosition." + axis[c], hipsCurves[c]);
             }

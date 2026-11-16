@@ -64,6 +64,17 @@ namespace Clover.Core
             if (mesh != null) Destroy(mesh);
         }
 
+        /// <summary>Redraws the band this wide: each weapon's guard covers its own arc. Not for every frame: it makes a new mesh.</summary>
+        public void SetArc(float degrees)
+        {
+            if (Mathf.Approximately(degrees, ArcDegrees)) return;
+            ArcDegrees = degrees;
+            if (band == null) return;
+            if (mesh != null) Destroy(mesh);
+            mesh = Build();
+            band.GetComponent<MeshFilter>().sharedMesh = mesh;
+        }
+
         /// <summary>Raises or lowers the band with the guard.</summary>
         public void Show(bool guardUp) => up = guardUp;
 

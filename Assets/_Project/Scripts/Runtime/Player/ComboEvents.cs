@@ -13,5 +13,9 @@ namespace Clover.Player
         Hit = 2,
         /// <summary>A held charge became ready this tick: letting go now releases the weapon's skill.</summary>
         Charged = 4,
+        /// <summary>The held charge reached the skill this tick, with the mana to pay: the callout is for this one.</summary>
+        SkillReady = 8,
+        /// <summary>A step of several blows strikes again this tick.</summary>
+        Repeat = 16,
     }
 }

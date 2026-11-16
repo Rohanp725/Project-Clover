@@ -106,9 +106,27 @@ namespace Clover.Player
         /// <summary>For this many seconds the next heavy blow that lands is a critical one.</summary>
         public void PromiseHeavyCritical(float seconds) => HeavyCriticalLeft = Mathf.Max(HeavyCriticalLeft, seconds);
 
+        /// <summary>Blows that fell in a weapon's tip band, blows taken on a counter's stance, and blows shrugged off inside a swing.</summary>
+        public int SweetBlows { get; private set; }
+        public int Counters { get; private set; }
+        /// <summary>The stagger of the last blow of the weapon that landed, as it was dealt, and how far off its target stood.</summary>
+        public float LastBlowStagger { get; private set; }
+        public float LastBlowDistance { get; private set; }
+        /// <summary>The stagger a counter adds to what it throws back, on top of the blow's own: what a perfect guard would have rebuffed.</summary>
+        public float CounterStagger = 55f;
+
         private PlayerController player;
         private PlayerDefence defence;
         private PlayerUpgrades upgrades;
+        private PlayerElement element;
+        private WeaponShots shots;
+        private WeaponSpikes spikes;
+        private int beatsDone;
+        private bool holdDone;
+        private float counterDamage;
+        private float counterStagger;
+        private readonly Guard usualGuard = new Guard();
+        private readonly DodgeRoll usualDodge = new DodgeRoll();
         private InputAction lightAction;
         private InputAction heavyAction;
         private InputAction moveAction;
@@ -139,6 +157,9 @@ namespace Clover.Player
             player = GetComponent<PlayerController>();
             defence = GetComponent<PlayerDefence>();
             upgrades = GetComponent<PlayerUpgrades>();
+            element = GetComponent<PlayerElement>();
+            shots = GetComponent<WeaponShots>();
+            spikes = GetComponent<WeaponSpikes>();
             // A weapon carried over from the last scene of the run takes the place of the scene's own.
             Equip(Weapons.ByName(string.IsNullOrEmpty(RunState.Weapon) ? StartingWeapon : RunState.Weapon));
             Mana.Empty();
@@ -149,6 +170,8 @@ namespace Clover.Player
             lightAction = player.FindAction("LightAttack");
             heavyAction = player.FindAction("HeavyAttack");
             moveAction = player.FindAction("Move");
+            // The Armament wears whatever element is held, which is known only once the element has woken too.
+            if (Weapon != null && Weapon.ElementColoured && element != null && element.Info != null) Equip(Weapons.Armament(element.Info.Name));
         }
 
         /// <summary>Takes a weapon in hand, dropping whatever attack was in progress.</summary>
@@ -158,7 +181,64 @@ namespace Clover.Player
             RunState.Weapon = weapon.Name;
             Weapon.Combo.Reset();
             Step = Vector3.zero;
+            counterDamage = 0f;
+            counterStagger = 0f;
+            // The weapon brings its own guard and its own dodge: their numbers are copied, the state they keep is not.
+            var guard = weapon.GuardProfile ?? usualGuard;
+            if (defence == null) defence = GetComponent<PlayerDefence>();
+            if (defence != null)
+            {
+                defence.Guard.PerfectWindow = guard.PerfectWindow;
+                defence.Guard.PerfectFrom = guard.PerfectFrom;
+                defence.Guard.StaminaPerDamage = guard.StaminaPerDamage;
+                defence.Guard.ChipFraction = guard.ChipFraction;
+                defence.Guard.ArcDegrees = guard.ArcDegrees;
+                defence.GuardWidth(guard.ArcDegrees);
+            }
+            var dodge = weapon.DodgeProfile ?? usualDodge;
+            if (player == null) player = GetComponent<PlayerController>();
+            if (player != null)
+            {
+                player.Dodge.Distance = dodge.Distance;
+                player.Dodge.Duration = dodge.Duration;
+                player.Dodge.StaminaCost = dodge.StaminaCost;
+                player.Dodge.InvulnerableFrom = dodge.InvulnerableFrom;
+                player.Dodge.InvulnerableUntil = dodge.InvulnerableUntil;
+                player.Dodge.Recovery = dodge.Recovery;
+            }
         }
+
+        /// <summary>True when the swing in progress shrugs off a blow of this much damage: it still hurts, it does not interrupt.</summary>
+        public bool Poised(float damage)
+        {
+            var step = Combo.Current;
+            return step != null && step.Poise > 0f && damage <= step.Poise
+                && (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active);
+        }
+
+        /// <summary>
+        /// A blow has reached the player. If a counter's stance is held, ready and paid for, the blow is taken on it and
+        /// thrown back at once toward whoever struck: true, and the blow does nothing else.
+        /// </summary>
+        public bool TryCounter(in Hit hit)
+        {
+            if (!Combo.SkillIsCounter || !Combo.IsCharged) return false;
+            if (!Combo.Counter(player.Stamina, Mana)) return false;
+            Counters++;
+            SkillsUsed++;
+            counterDamage = hit.Damage;
+            counterStagger = CounterStagger;
+            lunge = 0f;
+            beatsDone = 0;
+            holdDone = false;
+            Vector3 toward = hit.HasOrigin ? hit.Origin - transform.position : -hit.Direction;
+            toward.y = 0f;
+            if (toward.sqrMagnitude > 0.0025f) transform.rotation = Quaternion.LookRotation(toward.normalized, Vector3.up);
+            return true;
+        }
+
+        /// <summary>The colour of what the weapon throws: the held element's, or plain stone with none.</summary>
+        public Color EffectColour => element != null && element.Info != null ? element.Info.Colour : new Color(0.62f, 0.6f, 0.66f);
 
         /// <summary>An element's surge wraps the weapon: every blow hits harder, sets its target burning, and cuts in the element's colour.</summary>
         public void Empower(float damageMultiplier, float burnSeconds, Color slashColour, float speed = 1f, float stagger = 0f,
@@ -215,18 +295,95 @@ namespace Clover.Player
             }
 
             var events = Combo.Tick(deltaTime * SwingSpeed * StatSwing, player.Stamina, Mana);
-            if ((events & ComboEvents.Charged) != 0 && defence != null) defence.Callout("Ready");
+            if ((events & ComboEvents.Charged) != 0)
+            {
+                // The first tier flashes white; a counter says what it is.
+                Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.2f, Vector3.up, 1f, Color.white);
+                if (Combo.SkillIsCounter && defence != null) defence.Callout(Mana.Current >= Combo.SkillManaCost ? "Braced" : "No mana");
+            }
+            if ((events & ComboEvents.SkillReady) != 0)
+            {
+                if (Combo.ChargedHeavy != null) Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.2f, Vector3.up, 1.4f, EffectColour);
+                if (defence != null) defence.Callout("Ready");
+            }
             if ((events & ComboEvents.Started) != 0)
             {
                 Aim();
+                beatsDone = 0;
+                holdDone = false;
                 if (Combo.Current == Combo.Skill) SkillsUsed++;
+                else
+                {
+                    counterDamage = 0f;
+                    counterStagger = 0f;
+                }
+                if (Combo.Current.Effect == StepEffect.GroundSparks)
+                    for (int i = 1; i <= 3; i++)
+                        Vfx.Play(VfxKind.GuardSpark, transform.position + transform.forward * (0.6f * i) + Vector3.up * 0.1f, transform.forward);
             }
             if ((events & ComboEvents.Hit) != 0) Strike(Combo.Current);
+            if ((events & ComboEvents.Repeat) != 0) Strike(Combo.Current, true, Combo.Current.RepeatScale);
 
             var step = Combo.Current;
+            if (step == null) return;
+            float pace = deltaTime * SwingSpeed * StatSwing;
             if (Combo.Phase == AttackPhase.Windup && step.Windup > 0f)
-                Step = transform.forward * (lunge * deltaTime * SwingSpeed * StatSwing / step.Windup);
+            {
+                // The step in (or back) is spread over the wind-up, or over its first part when the step says so.
+                float over = step.LungeSeconds > 0f ? Mathf.Min(step.LungeSeconds, step.Windup) : step.Windup;
+                if (Combo.Elapsed <= over + 0.0001f) Step = transform.forward * (lunge * pace / over);
+                Stage(step);
+            }
+            else if (Combo.Phase == AttackPhase.Active && step.Travel > 0f && step.Active > 0f)
+            {
+                // A blow that is carried: the player covers ground with the swing out, and it strikes all the way.
+                Step = transform.forward * (step.Travel * pace / step.Active);
+                Strike(step, false);
+            }
+            else if (Combo.Phase == AttackPhase.Recovery && step.Recoil > 0f && Combo.Elapsed - step.Windup - step.Active < RecoilSeconds)
+            {
+                Step = -transform.forward * (step.Recoil * pace / RecoilSeconds);
+            }
         }
+
+        private const float RecoilSeconds = 0.12f;
+
+        // A finisher's staging before its blow: the beats that stop time and spark, and the lean of the camera for the hold.
+        private void Stage(AttackStep step)
+        {
+            float at = Combo.Elapsed;
+            Transform target = Combo.IsFinishing ? finisherTarget : null;
+            Vector3 where = target != null ? target.position + Vector3.up * 1.1f : transform.position + transform.forward * 1.2f + Vector3.up * 1.1f;
+            while (step.Beats != null && beatsDone < step.Beats.Length && at >= step.Beats[beatsDone].Time)
+            {
+                var beat = step.Beats[beatsDone++];
+                Vfx.Play(beat.Effect, where, transform.forward);
+                if (Weapon.ElementColoured) Vfx.Play(VfxKind.TintSpark, where, transform.forward, 0.6f, EffectColour);
+                if (hitStop != null && beat.HitStopSeconds > 0f) hitStop.Freeze(beat.HitStopSeconds);
+                if (shaker != null && beat.Shake > 0f) shaker.Shake(beat.Shake, 0.1f);
+                if (target == null) continue;
+                // What can be moved is moved; a god stays where it is and the body plays the same against it.
+                if (beat.Shove.sqrMagnitude > 0f && target.GetComponentInParent<IShovable>() is IShovable shovable)
+                    shovable.Push(transform.right * beat.Shove.x + transform.forward * beat.Shove.z);
+                if (beat.Lift > 0f && target.GetComponentInParent<IAfflictable>() is IAfflictable liftable)
+                    liftable.Afflictions.Lift(beat.Lift);
+            }
+            if (step.HoldAt > 0f && !holdDone && at >= step.HoldAt)
+            {
+                // The held pose: time runs slow and the camera comes in before the blow, not only after it.
+                holdDone = true;
+                if (hitStop != null) hitStop.Slow(step.HoldSeconds / HoldSlowScale, HoldSlowScale);
+                if (shaker != null && FinisherCameraDistance < 1f && target != null)
+                {
+                    Vector3 between = (target.position - transform.position) * 0.5f;
+                    between.y = 0f;
+                    shaker.CloseIn(FinisherCameraDistance, Vector3.ClampMagnitude(between, 2f), step.HoldSeconds / HoldSlowScale + 0.2f);
+                }
+            }
+        }
+
+        /// <summary>How slowly time runs through a finisher's held pose.</summary>
+        public float HoldSlowScale = 0.4f;
 
         // The old way of describing a spell's blow, kept for the upgrades written by hand: fire that burns for some seconds.
         private static SpellBlow Plain(float damage, float stagger, float burnSeconds, VfxKind effect, bool detonate, bool heavy = false) => new SpellBlow
@@ -709,6 +866,54 @@ namespace Clover.Player
             return count;
         }
 
+        // What a blow sets going besides itself: a shot off the blade, spikes out of the ground, the element thrown as a cone or a ring.
+        private void Thrown(AttackStep step, bool finisher, Vector3 finished)
+        {
+            var held = element != null ? element.Info : null;
+            Color colour = EffectColour;
+            Vector3 forward = transform.forward;
+            if (step.Shot != null && shots != null) shots.Fire(this, step.Shot, transform.position + forward * 0.4f, forward, colour, held);
+            switch (step.Effect)
+            {
+                case StepEffect.SpikeLine:
+                    // Eight spikes run out along a lane, each enemy struck once by whichever reaches it first.
+                    if (spikes != null)
+                        spikes.Run(this, transform.position + forward * 1.2f, forward, 8, 1.25f, 0.09f, 0f, colour, true, new SpellBlow
+                        {
+                            Damage = 34f, Stagger = 45f, Heavy = true, Effect = held != null ? ElementLook.HitEffect(held) : VfxKind.Impact,
+                            Affliction = held != null ? held.Affliction : AfflictionKind.None, Stacks = held != null ? 1 : 0,
+                            Tinted = held != null && ElementLook.Tints(held), Tint = colour,
+                        });
+                    break;
+                case StepEffect.GroundSplit:
+                    // Seen only: the ground opens along the line of the cut, a moment after it, running on past the fallen.
+                    if (finisher && spikes != null)
+                    {
+                        Vector3 along = Quaternion.Euler(0f, step.EffectTurn, 0f) * forward;
+                        spikes.Run(this, new Vector3(finished.x, transform.position.y, finished.z) + along * 0.9f, along, 6, 1.0f, 0.04f, 0.35f, colour, false, default);
+                    }
+                    break;
+                case StepEffect.ElementCone:
+                    for (int i = 1; i <= 4; i++)
+                    {
+                        Vector3 at = transform.position + Vector3.up * 1.1f + forward * (step.Reach * i / 4f);
+                        Vfx.Play(VfxKind.TintSpark, at, forward, 0.6f + 0.25f * i, colour);
+                        Vfx.Play(VfxKind.TintPuff, at, forward, 0.5f + 0.3f * i, colour);
+                    }
+                    if (shaker != null) ScreenFlash.Flash(new Color(colour.r, colour.g, colour.b, 0.18f), 0.06f);
+                    // A finisher's cone goes through and out of the back: it lays the element on what stands behind.
+                    if (finisher && held != null && held.Affliction != AfflictionKind.None)
+                        AfflictArea(finished + forward * 2.2f, 2f, held.Affliction, 1);
+                    break;
+                case StepEffect.ElementRing:
+                    Vector3 centre = transform.position + forward * step.Reach + Vector3.up * 0.15f;
+                    Vfx.Play(VfxKind.TintRing, centre, Vector3.up, Mathf.Max(1f, step.Radius), colour);
+                    Vfx.Play(VfxKind.Dust, centre, Vector3.up, 2f);
+                    Vfx.Play(VfxKind.TintSpark, centre, Vector3.up, 1.5f, colour);
+                    break;
+            }
+        }
+
         // The way the blade travels through what it strikes: across the body for a sweeping cut, on the side it is
         // swung from to the other, leaning into the target; straight in for a thrust or a blow with no sweep.
         private Vector3 CutDirection(AttackStep step)
@@ -717,15 +922,31 @@ namespace Clover.Player
             return (-transform.right * Mathf.Sign(step.Sweep) + transform.forward * 0.45f).normalized;
         }
 
-        private void Strike(AttackStep step)
+        // One blow of the weapon. A fresh blow starts a new list of who has been struck and shows its arc; one that is
+        // not (a carried blow, struck again each frame) only looks for anyone new. Scale is for the repeats of a step.
+        private void Strike(AttackStep step, bool fresh = true, float scale = 1f)
         {
-            struck.Clear();
+            if (fresh) struck.Clear();
+            int already = struck.Count;
             bool finisher = false;
             bool clean = false;
             Vector3 finished = transform.position;
-            if (arcs != null) arcs.Show(transform.position, transform.forward, step.Reach, step.ArcDegrees, step.Sweep, empowered ? empoweredColour : Weapon.SlashColour);
+            Color arcColour = empowered ? empoweredColour : Weapon.ElementColoured ? new Color(EffectColour.r * 2f, EffectColour.g * 2f, EffectColour.b * 2f, 0.9f) : Weapon.SlashColour;
+            if (fresh && arcs != null)
+            {
+                if (step.Radius > 0f) Vfx.Play(VfxKind.TintRing, transform.position + transform.forward * step.Reach + Vector3.up * 0.15f, Vector3.up, step.Radius * 0.6f, arcColour);
+                else if (step.LineWidth > 0f) arcs.Show(transform.position, transform.forward, step.Reach, 20f, 0f, arcColour);
+                else
+                {
+                    // A weapon with a tip shows where the tip is: the haft's part of the fan dim, the last metre bright.
+                    if (step.SweetFrom > 0f) arcs.Show(transform.position, transform.forward, step.SweetFrom, step.ArcDegrees, step.Sweep, new Color(arcColour.r * 0.45f, arcColour.g * 0.45f, arcColour.b * 0.45f, arcColour.a * 0.5f));
+                    arcs.Show(transform.position, transform.forward, step.Reach, step.ArcDegrees, step.Sweep, step.SweetFrom > 0f ? new Color(arcColour.r * 1.4f, arcColour.g * 1.4f, arcColour.b * 1.4f, arcColour.a) : arcColour);
+                }
+            }
             Vector3 origin = transform.position + Vector3.up;
-            int count = Overlap(origin, step.Reach);
+            Vector3 discCentre = origin + transform.forward * step.Reach;
+            var held = element != null ? element.Info : null;
+            int count = Overlap(step.Radius > 0f ? discCentre : origin, step.Radius > 0f ? step.Radius + 0.5f : step.Reach);
             for (int i = 0; i < count; i++)
             {
                 var other = overlaps[i];
@@ -734,15 +955,31 @@ namespace Clover.Player
                 if (target == null || struck.Contains(target)) continue;
                 Vector3 offset = other.ClosestPoint(origin) - origin;
                 offset.y = 0f;
+                float distance = offset.magnitude;
+                if (step.Radius > 0f)
+                {
+                    // A disc on the ground ahead: whoever stands in it, and no one nearer.
+                    Vector3 fromCentre = other.ClosestPoint(discCentre) - discCentre;
+                    fromCentre.y = 0f;
+                    if (fromCentre.magnitude > step.Radius) continue;
+                }
+                else if (step.LineWidth > 0f)
+                {
+                    // A lane straight ahead.
+                    float along = Vector3.Dot(offset, transform.forward);
+                    if (along < -0.3f || along > step.Reach) continue;
+                    if ((offset - transform.forward * along).magnitude > step.LineWidth * 0.5f) continue;
+                }
                 // Something touching the player is hit whatever the angle; otherwise it must be inside the swing's arc.
-                if (offset.magnitude > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
+                else if (distance > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
                 var afflictable = target as IAfflictable;
                 // A blow is critical by chance, or always on an enemy that is Marked.
                 bool promised = step.Heavy && HeavyCriticalLeft > 0f;
                 float chance = CritChance;
                 if (Stats != null) chance += Stats.Blow(PlayerStat.CritChance, step.Heavy, false) + (afflictable != null ? Stats.Against(PlayerStat.CritChance, afflictable.Afflictions) : 0f);
                 bool critical = promised || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (chance > 0f && Random.value < chance);
-                float damage = step.Damage * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
+                bool counter = step == Combo.Skill && Combo.SkillIsCounter;
+                float damage = (step.Damage + (counter ? counterDamage : 0f)) * scale * step.BandDamage(distance) * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
                 float staggerShare = 1f;
                 if (Stats != null)
                 {
@@ -762,12 +999,39 @@ namespace Clover.Player
                 int stacks = WeaponAfflictionStacks + EmpowerStacks;
                 var kind = stacks <= 0 ? AfflictionKind.None : WeaponAfflictionStacks > 0 ? WeaponAffliction : EmpowerAffliction;
                 if (kind != AfflictionKind.None) stacks += ExtraStacks;
+                int burnStacks = BurnStacksOnHit > 0 ? BurnStacksOnHit + ExtraStacks : 0;
+                if (step.ElementStacks > 0 && held != null && held.Affliction != AfflictionKind.None)
+                {
+                    // A blow that carries the held element by itself (the Armament's coat), whatever the tree has taught.
+                    if (held.Affliction == AfflictionKind.Burn)
+                    {
+                        burnStacks += step.ElementStacks;
+                        burn = Mathf.Max(burn, StackBurnSeconds * AfflictionSeconds);
+                    }
+                    else if (kind == AfflictionKind.None)
+                    {
+                        kind = held.Affliction;
+                        stacks = step.ElementStacks + ExtraStacks;
+                    }
+                    else if (kind == held.Affliction) stacks += step.ElementStacks;
+                }
                 float lasts = kind != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(kind).Seconds * AfflictionSeconds : 0f;
-                var outcome = target.TakeHit(new Hit(damage, (step.Stagger + StaggerOnHit) * NextBlowStagger * StatStagger * staggerShare, transform.forward, step.Heavy, false, transform.position,
-                    burn, BurnStacksOnHit > 0 ? BurnStacksOnHit + ExtraStacks : 0, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical));
+                float dealtStagger = (step.Stagger + (counter ? counterStagger : 0f) + StaggerOnHit) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
+                var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, step.Heavy, false, transform.position,
+                    burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
                 LastBlowDamage = damage;
+                LastBlowStagger = dealtStagger;
+                LastBlowDistance = distance;
+                if (step.IsSweet(distance) && outcome != HitOutcome.Blocked)
+                {
+                    // The tip: a white star where it bit, so the right distance can be learned by eye.
+                    SweetBlows++;
+                    Vfx.Play(VfxKind.TintSpark, other.bounds.center, transform.forward, 1.2f, Color.white);
+                }
+                if (step.Pull != 0f && outcome != HitOutcome.Blocked && target is IShovable dragged)
+                    dragged.Push(transform.forward * -step.Pull);
                 LastBlowCritical = critical;
                 float earned = step.ManaGain * StatMana;
                 if (Stats != null && afflictable != null) earned *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.ManaFromBlows, afflictable.Afflictions) + (afflictable.Afflictions.IsAirborne ? Stats.InAir(PlayerStat.ManaFromBlows) : 0f));
@@ -828,9 +1092,15 @@ namespace Clover.Player
                 BlowsLanded++;
                 if (defence != null) defence.DealtDamage(damage);
             }
-            if (upgrades != null) upgrades.OnSwing(step, struck.Count);
-            Clover.Player.Forms.SpellWorks.Swing(step, transform.position, transform.forward);
-            if (struck.Count == 0) return;
+            if (fresh)
+            {
+                if (upgrades != null) upgrades.OnSwing(step, struck.Count);
+                Clover.Player.Forms.SpellWorks.Swing(step, transform.position, transform.forward);
+                Thrown(step, finisher, finished);
+                counterDamage = 0f;
+                counterStagger = 0f;
+            }
+            if (struck.Count == already) return;
             if (clean && (NextBlowDamage != 1f || NextBlowStagger != 1f))
             {
                 // The stored charge is spent on the blow that lands, not on one turned aside.

@@ -19,6 +19,7 @@ namespace Clover.Player
         [SerializeField] private GameObject drawnSword;
         [SerializeField] private GameObject sheathedHilt;
         [SerializeField] private GameObject sheath;
+        [SerializeField] private WeaponRack rack;
 
         /// <summary>Seconds the blend between idle and run takes to follow a change of speed.</summary>
         public float SpeedDampTime = 0.07f;
@@ -30,6 +31,13 @@ namespace Clover.Player
         public float UpperBodyBlend = 0.07f;
         /// <summary>Seconds the fall takes, from the blow to lying still.</summary>
         public float DeathSeconds = 1.1f;
+        /// <summary>Seconds the guard's answer to a blocked blow, and to a blow turned perfectly, plays for.</summary>
+        public float GuardHitSeconds = 0.22f;
+        public float PerfectGuardSeconds = 0.30f;
+        /// <summary>How brightly a weapon's inlay burns with the held element: at rest, in a surge, and for a charge or the skill.</summary>
+        public float InlayRest = 0.7f;
+        public float InlaySurge = 2.2f;
+        public float InlaySkill = 3f;
 
         public const string SpeedParameter = "Speed";
         public const string LocomotionState = "locomotion";
@@ -74,6 +82,13 @@ namespace Clover.Player
         private int shownLocomotion;
         private Renderer[] drawn;
         private bool hidden;
+        private int locomotionHash, guardHash, rollHash, guardHitHash, perfectGuardHash;
+        private int seenBlocks, seenPerfects;
+        private int reactionHash;
+        private float reactionFor, reactionSeconds;
+
+        /// <summary>Adds the weapons hung on the character's sockets, shown to suit the weapon in hand.</summary>
+        public void ConfigureRack(WeaponRack rackToShow) => rack = rackToShow;
 
         public void Configure(PlayerController playerToShow, PlayerCombat combatToShow, PlayerDefence defenceToShow,
             PlayerElement elementToShow, Animator animatorToDrive, GameObject drawnSwordObject, GameObject sheathedHiltObject,
@@ -104,7 +119,22 @@ namespace Clover.Player
             {
                 shownWeapon = weapon;
                 chargeHash = Animator.StringToHash(weapon.ChargeAnimation);
+                locomotionHash = Animator.StringToHash(weapon.LocomotionState);
+                guardHash = Animator.StringToHash(weapon.GuardState);
+                rollHash = Animator.StringToHash(weapon.RollState);
+                guardHitHash = string.IsNullOrEmpty(weapon.GuardHitState) ? 0 : Animator.StringToHash(weapon.GuardHitState);
+                perfectGuardHash = string.IsNullOrEmpty(weapon.PerfectGuardState) ? 0 : Animator.StringToHash(weapon.PerfectGuardState);
+                // A state the controller was built without is not asked for.
+                if (guardHitHash != 0 && upperLayer >= 0 && !animator.HasState(upperLayer, guardHitHash)) guardHitHash = 0;
+                if (perfectGuardHash != 0 && upperLayer >= 0 && !animator.HasState(upperLayer, perfectGuardHash)) perfectGuardHash = 0;
+                if (!animator.HasState(0, rollHash)) rollHash = RollHash;
                 shownStep = null;
+                reactionHash = 0;
+                if (defence != null)
+                {
+                    seenBlocks = defence.Blocks;
+                    seenPerfects = defence.PerfectGuards;
+                }
             }
 
             bool helpless = defence != null && defence.IsHelpless;
@@ -124,7 +154,7 @@ namespace Clover.Player
             bool drinking = !helpless && defence != null && defence.IsDrinking;
             bool guarding = !helpless && ((defence != null && defence.IsGuarding) || (player.FormHold != 0 && player.FormGuardPose));
 
-            int locomotion = weapon.UsesSword ? LocomotionHash : FistLocomotionHash;
+            int locomotion = locomotionHash;
             if (helpless && defence.IsDead)
             {
                 animator.Play(DeathHash, 0, Mathf.Min(ClipEnd, defence.DeadSeconds / DeathSeconds));
@@ -143,7 +173,7 @@ namespace Clover.Player
             }
             else if (rolling)
             {
-                animator.Play(RollHash, 0, player.Dodge.Progress);
+                animator.Play(rollHash, 0, player.Dodge.Progress);
             }
             else if (charging)
             {
@@ -175,9 +205,31 @@ namespace Clover.Player
             if (upperLayer >= 0)
             {
                 guardFor = guarding ? guardFor + deltaTime : 0f;
+                // A blow on the guard is answered: the guard is driven back, or the blow is thrown off.
+                if (defence != null && (defence.Blocks != seenBlocks || defence.PerfectGuards != seenPerfects))
+                {
+                    bool perfect = defence.PerfectGuards != seenPerfects;
+                    seenBlocks = defence.Blocks;
+                    seenPerfects = defence.PerfectGuards;
+                    reactionHash = perfect ? perfectGuardHash : guardHitHash;
+                    reactionSeconds = perfect ? PerfectGuardSeconds : GuardHitSeconds;
+                    reactionFor = 0f;
+                }
+                bool reacting = reactionHash != 0 && !helpless && !attacking && !rolling;
+                if (reacting)
+                {
+                    reactionFor += Time.unscaledDeltaTime;
+                    if (reactionFor >= reactionSeconds)
+                    {
+                        reactionHash = 0;
+                        reacting = false;
+                    }
+                }
+                else reactionHash = 0;
                 if (drinking) animator.Play(DrinkHash, upperLayer, Mathf.Min(ClipEnd, defence.Flasks.Progress));
-                else if (guarding) animator.Play(weapon.UsesSword ? GuardHash : FistGuardHash, upperLayer, Mathf.Min(ClipEnd, guardFor / Mathf.Max(0.01f, UpperBodyBlend)));
-                float target = drinking || guarding ? 1f : 0f;
+                else if (reacting) animator.Play(reactionHash, upperLayer, Mathf.Min(ClipEnd, reactionFor / reactionSeconds));
+                else if (guarding) animator.Play(guardHash, upperLayer, Mathf.Min(ClipEnd, guardFor / Mathf.Max(0.01f, UpperBodyBlend)));
+                float target = drinking || guarding || reacting ? 1f : 0f;
                 upperWeight = Mathf.MoveTowards(upperWeight, target, deltaTime / Mathf.Max(0.01f, UpperBodyBlend));
                 animator.SetLayerWeight(upperLayer, upperWeight);
             }
@@ -190,6 +242,17 @@ namespace Clover.Player
             Show(drawnSword, inHand);
             Show(sheathedHilt, weapon.UsesSword && !inHand);
             Show(sheath, weapon.UsesSword);
+
+            if (rack != null)
+            {
+                // A great weapon never leaves the hand except to drink or to cast, when it hangs at rest on the body.
+                rack.Show(weapon.UsesSword ? null : weapon.Carry, weapon.ElementColoured || !(drinking || casting || (helpless && defence.IsDead)));
+                bool lit = charging || (attacking && (combat.Combo.Current == combat.Combo.Skill || combat.IsFinishing));
+                bool surging = element != null && element.Kit != null && element.Kit.SurgeActive;
+                float heat = lit ? InlaySkill : surging ? InlaySurge : InlayRest;
+                if (element != null && element.Info != null) rack.Tint(true, element.Info.Colour, heat);
+                else rack.Tint(false, Color.black, 0f);
+            }
         }
 
         private static void Show(GameObject part, bool shown)

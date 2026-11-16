@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using Clover.Core;
 using UnityEngine;
 
 namespace Clover.Player
@@ -13,17 +15,210 @@ namespace Clover.Player
         public const string KatanaName = "Katana";
         public const string StormKatanaName = "Storm Katana";
 
-        public static Weapon ByName(string name) => name == KatanaName ? Katana() : name == StormKatanaName ? StormKatana() : Fists();
+        public const string MassiveSwordName = "Massive Sword";
+        public const string ScytheName = "Scythe";
+        public const string ArmamentName = "Armament";
+
+        // Every weapon there is, by name. A new weapon is one line here and its own method below.
+        private static readonly Dictionary<string, Func<Weapon>> builders = new Dictionary<string, Func<Weapon>>
+        {
+            { FistsName, Fists },
+            { KatanaName, Katana },
+            { StormKatanaName, StormKatana },
+            { MassiveSwordName, MassiveSword },
+            { ScytheName, Scythe },
+            { ArmamentName, () => Armament(RunState.Element) },
+        };
+
+        /// <summary>The names a stand or a rack may offer, in the order they are set out. The god's own sword is given, not chosen.</summary>
+        public static readonly string[] Offered = { FistsName, KatanaName, MassiveSwordName, ScytheName, ArmamentName };
+
+        public static Weapon ByName(string name) => name != null && builders.TryGetValue(name, out var build) ? build() : Fists();
 
         /// <summary>One of each, for checks.</summary>
         public static IEnumerable<Weapon> All
         {
             get
             {
-                yield return Fists();
-                yield return Katana();
-                yield return StormKatana();
+                foreach (var build in builders.Values) yield return build();
             }
+        }
+
+        // The scythe's bands, on every cut it makes: little on the haft, half as much again at the tip.
+        private static AttackStep Banded(AttackStep step)
+        {
+            step.InnerReach = 1.5f;
+            step.InnerDamage = 0.6f;
+            step.SweetFrom = 2.5f;
+            step.SweetDamage = 1.5f;
+            step.SweetStagger = 1.6f;
+            return step;
+        }
+
+        /// <summary>
+        /// The Massive Sword: a slab of iron as long as its bearer. Three wide sweeps, each wound up faster than the
+        /// last, that are not put off by a small blow; an overhead that buries itself; a leaping cut from the charge;
+        /// and the Elemental Spike Line, driven into the ground from a longer hold. Numbers from docs/design/weapons.md.
+        /// </summary>
+        public static Weapon MassiveSword()
+        {
+            var weapon = new Weapon
+            {
+                Name = MassiveSwordName,
+                Carry = "gsword",
+                SkillName = "Elemental Spike Line",
+                SlashColour = new Color(1.9f, 1.8f, 1.6f, 0.9f),
+                GuardProfile = new Guard { PerfectWindow = 0.15f, StaminaPerDamage = 0.6f, ChipFraction = 0.25f, ArcDegrees = 240f },
+                DodgeProfile = new DodgeRoll { Distance = 3.9f, Duration = 0.40f, StaminaCost = 30f, InvulnerableFrom = 0.05f, InvulnerableUntil = 0.25f, Recovery = 0.16f },
+                MoveFactor = 0.92f,
+                GuardMoveFactor = 0.3f,
+                Combo = new WeaponCombo
+                {
+                    Steps = new List<AttackStep>
+                    {
+                        new AttackStep { Name = "attack_gsword_1", Sweep = -1f, Windup = 0.34f, Active = 0.14f, Recovery = 0.52f, Damage = 24f, Stagger = 26f, StaminaCost = 20f, ManaGain = 9f, Lunge = 0.8f, Reach = 3.4f, ArcDegrees = 190f, HitStopSeconds = 0.08f, Shake = 0.10f, Poise = 12f },
+                        new AttackStep { Name = "attack_gsword_2", Sweep = 1f, Windup = 0.26f, Active = 0.14f, Recovery = 0.50f, Damage = 26f, Stagger = 28f, StaminaCost = 20f, ManaGain = 9f, Lunge = 0.8f, Reach = 3.4f, ArcDegrees = 190f, HitStopSeconds = 0.08f, Shake = 0.10f, Poise = 12f },
+                        new AttackStep { Name = "attack_gsword_3", Sweep = -1f, Windup = 0.20f, Active = 0.18f, Recovery = 0.62f, Damage = 34f, Stagger = 40f, StaminaCost = 24f, ManaGain = 12f, Lunge = 0.6f, Reach = 3.6f, ArcDegrees = 360f, HitStopSeconds = 0.10f, Shake = 0.16f, Poise = 12f },
+                    },
+                    Heavy = new AttackStep { Name = "attack_gsword_heavy", Heavy = true, Windup = 0.50f, Active = 0.12f, Recovery = 0.66f, Damage = 44f, Stagger = 56f, StaminaCost = 28f, ManaGain = 14f, Lunge = 1.0f, Reach = 3.6f, ArcDegrees = 50f, HitStopSeconds = 0.13f, Shake = 0.28f, Poise = 22f },
+                    ChainHeavy = new AttackStep { Name = "attack_gsword_chain", Heavy = true, Sweep = 1f, Windup = 0.28f, Active = 0.12f, Recovery = 0.60f, Damage = 46f, Stagger = 60f, StaminaCost = 26f, ManaGain = 14f, Lunge = 1.2f, Reach = 3.6f, ArcDegrees = 120f, HitStopSeconds = 0.13f, Shake = 0.30f, Poise = 22f, Effect = StepEffect.GroundSparks },
+                    ChargedHeavy = new AttackStep { Name = "attack_gsword_charged", Heavy = true, Windup = 0.12f, Active = 0.14f, Recovery = 0.74f, Damage = 62f, Stagger = 80f, StaminaCost = 34f, ManaGain = 16f, Lunge = 1.4f, Reach = 3.8f, ArcDegrees = 60f, HitStopSeconds = 0.16f, Shake = 0.42f, Poise = 30f },
+                    Skill = new AttackStep { Name = "attack_gsword_skill", Heavy = true, Windup = 0.22f, Active = 0.10f, Recovery = 0.64f, Damage = 20f, Stagger = 30f, StaminaCost = 20f, ManaGain = 0f, Lunge = 0.4f, Reach = 2.2f, ArcDegrees = 120f, HitStopSeconds = 0.12f, Shake = 0.30f, Effect = StepEffect.SpikeLine },
+                    Finisher = new AttackStep
+                    {
+                        Name = "attack_gsword_finisher", Heavy = true, Windup = 0.62f, Active = 0.14f, Recovery = 0.74f, Damage = 44f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 3.6f, ArcDegrees = 120f, HitStopSeconds = 0.24f, Shake = 0.60f,
+                        LungeSeconds = 0.14f, HoldAt = 0.44f, HoldSeconds = 0.18f, Effect = StepEffect.GroundSplit, EffectTurn = -70f,
+                        // The pommel into the chest, then the point scoring the ground as the bearer walks round.
+                        Beats = new[]
+                        {
+                            new FinisherBeat { Time = 0.14f, HitStopSeconds = 0.04f, Shake = 0.08f, Effect = VfxKind.HitSpark },
+                            new FinisherBeat { Time = 0.30f, HitStopSeconds = 0f, Shake = 0f, Effect = VfxKind.GuardSpark },
+                        },
+                    },
+                    SkillManaCost = 35f,
+                    ChargeTime = 0.45f,
+                    SkillChargeTime = 0.95f,
+                    ChargeMoveFactor = 0.25f,
+                },
+            };
+            return weapon.Named("gsword", true);
+        }
+
+        /// <summary>
+        /// The Scythe: the longest blade on the longest haft, and it only truly cuts with its last metre. Long, short,
+        /// long: out, back, and a full turn. Its heavy is made by stepping away, and the Crescent Slash leaves a blade
+        /// of light hanging in the air. Numbers from docs/design/weapons.md.
+        /// </summary>
+        public static Weapon Scythe()
+        {
+            var weapon = new Weapon
+            {
+                Name = ScytheName,
+                Carry = "scythe",
+                SkillName = "Crescent Slash",
+                SlashColour = new Color(1.4f, 1.5f, 2.1f, 0.9f),
+                GuardProfile = new Guard { PerfectWindow = 0.18f, StaminaPerDamage = 1.0f, ChipFraction = 0.35f, ArcDegrees = 220f },
+                DodgeProfile = new DodgeRoll { Distance = 4.8f },
+                Combo = new WeaponCombo
+                {
+                    Steps = new List<AttackStep>
+                    {
+                        Banded(new AttackStep { Name = "attack_scythe_1", Sweep = 1f, Windup = 0.20f, Active = 0.14f, Recovery = 0.36f, Damage = 13f, Stagger = 12f, StaminaCost = 13f, ManaGain = 6f, Lunge = 0.3f, Reach = 3.5f, ArcDegrees = 200f, HitStopSeconds = 0.05f }),
+                        Banded(new AttackStep { Name = "attack_scythe_2", Sweep = -1f, Windup = 0.14f, Active = 0.12f, Recovery = 0.30f, Damage = 13f, Stagger = 12f, StaminaCost = 12f, ManaGain = 6f, Lunge = 0.3f, Reach = 3.5f, ArcDegrees = 200f, HitStopSeconds = 0.05f }),
+                        Banded(new AttackStep { Name = "attack_scythe_3", Sweep = 1f, Windup = 0.30f, Active = 0.16f, Recovery = 0.50f, Damage = 20f, Stagger = 22f, StaminaCost = 16f, ManaGain = 9f, Lunge = 0.5f, Reach = 3.7f, ArcDegrees = 360f, HitStopSeconds = 0.08f, Shake = 0.08f }),
+                    },
+                    Heavy = Banded(new AttackStep { Name = "attack_scythe_heavy", Heavy = true, Sweep = -1f, Windup = 0.28f, Active = 0.12f, Recovery = 0.46f, Damage = 24f, Stagger = 28f, StaminaCost = 18f, ManaGain = 10f, Lunge = -1.4f, Reach = 3.8f, ArcDegrees = 150f, HitStopSeconds = 0.09f, Shake = 0.14f }),
+                    ChainHeavy = Banded(new AttackStep { Name = "attack_scythe_chain", Heavy = true, Sweep = 1f, Windup = 0.20f, Active = 0.12f, Recovery = 0.48f, Damage = 28f, Stagger = 34f, StaminaCost = 18f, ManaGain = 12f, Lunge = 0.8f, Reach = 3.6f, ArcDegrees = 120f, HitStopSeconds = 0.10f, Shake = 0.18f }),
+                    Skill = Banded(new AttackStep
+                    {
+                        Name = "attack_scythe_skill", Heavy = true, Sweep = 1f, Windup = 0.14f, Active = 0.12f, Recovery = 0.50f, Damage = 16f, Stagger = 18f, StaminaCost = 15f, ManaGain = 0f, Lunge = 0f, Reach = 3.6f, ArcDegrees = 180f, HitStopSeconds = 0.10f, Shake = 0.20f,
+                        Shot = new WeaponShot { Speed = 12f, Range = 6f, Radius = 1.6f, Damage = 20f, Stagger = 22f, Pierce = true, HangSeconds = 1.6f, HangBite = 6f, HangEvery = 0.4f, Prop = "crescent" },
+                    }),
+                    Finisher = Banded(new AttackStep
+                    {
+                        Name = "attack_scythe_finisher", Heavy = true, Sweep = 1f, Windup = 0.78f, Active = 0.14f, Recovery = 0.56f, Damage = 30f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 3.8f, ArcDegrees = 360f, HitStopSeconds = 0.22f, Shake = 0.50f,
+                        LungeSeconds = 0.16f, HoldAt = 0.52f, HoldSeconds = 0.26f,
+                        // The hook under the kneeling enemy, then the heave that throws it up to hang over the hold.
+                        Beats = new[]
+                        {
+                            new FinisherBeat { Time = 0.16f, HitStopSeconds = 0.04f, Shake = 0.08f, Effect = VfxKind.HitSpark },
+                            new FinisherBeat { Time = 0.46f, HitStopSeconds = 0.03f, Shake = 0.12f, Effect = VfxKind.Dust, Lift = 0.5f },
+                        },
+                    }),
+                    SkillManaCost = 30f,
+                    ChargeTime = 0.40f,
+                },
+            };
+            // The finisher is the one blow that does not care where the enemy kneels.
+            weapon.Combo.Finisher.InnerDamage = 1f;
+            weapon.Combo.Finisher.SweetDamage = 1f;
+            return weapon.Named("scythe", false);
+        }
+
+        /// <summary>
+        /// The Full Body Armament: what bare hands become when the held element coats them. The fists' four blows to
+        /// the hundredth, then a choice of four enders by where the chain is stopped (ram, rising blow, slam, burst),
+        /// Meteor Fist from a short hold, and Energy Reflect: a stance that takes a blow and throws it back.
+        /// Numbers from docs/design/weapons.md.
+        /// </summary>
+        public static Weapon Armament(string element)
+        {
+            var info = Elements.ByName(element);
+            Color colour = info != null ? info.Colour : new Color(0.8f, 0.8f, 0.85f);
+            var weapon = new Weapon
+            {
+                Name = ArmamentName,
+                HudName = info != null ? info.Name + " Armament" : "Armament",
+                Carry = "arm",
+                SkillName = "Energy Reflect",
+                SlashColour = new Color(colour.r * 2f, colour.g * 2f, colour.b * 2f, 0.9f),
+                ElementColoured = true,
+                GuardProfile = new Guard { PerfectWindow = 0.18f, StaminaPerDamage = 0.8f, ChipFraction = 0.2f, ArcDegrees = 200f },
+                Combo = new WeaponCombo
+                {
+                    Steps = new List<AttackStep>
+                    {
+                        new AttackStep { Name = "attack_arm_1", Windup = 0.07f, Active = 0.06f, Recovery = 0.17f, Damage = 8f, Stagger = 10f, StaminaCost = 7f, ManaGain = 4f, Lunge = 0.5f, Reach = 2.1f, ArcDegrees = 90f, HitStopSeconds = 0.035f },
+                        new AttackStep { Name = "attack_arm_2", Windup = 0.08f, Active = 0.06f, Recovery = 0.18f, Damage = 9f, Stagger = 11f, StaminaCost = 7f, ManaGain = 4f, Lunge = 0.5f, Reach = 2.1f, ArcDegrees = 90f, HitStopSeconds = 0.035f },
+                        new AttackStep { Name = "attack_arm_3", Sweep = 1f, Windup = 0.11f, Active = 0.07f, Recovery = 0.22f, Damage = 11f, Stagger = 15f, StaminaCost = 9f, ManaGain = 5f, Lunge = 0.6f, Reach = 2.2f, ArcDegrees = 150f, HitStopSeconds = 0.05f },
+                        new AttackStep { Name = "attack_arm_4", Sweep = -1f, Windup = 0.15f, Active = 0.09f, Recovery = 0.36f, Damage = 16f, Stagger = 26f, StaminaCost = 12f, ManaGain = 8f, Lunge = 1.1f, Reach = 2.5f, ArcDegrees = 150f, HitStopSeconds = 0.08f, Shake = 0.10f },
+                    },
+                    Heavy = new AttackStep { Name = "attack_arm_heavy", Heavy = true, Windup = 0.24f, Active = 0.09f, Recovery = 0.40f, Damage = 22f, Stagger = 36f, StaminaCost = 16f, ManaGain = 9f, Lunge = 1.8f, Reach = 2.3f, ArcDegrees = 80f, HitStopSeconds = 0.09f, Shake = 0.16f, Poise = 16f },
+                    ChainHeavies = new List<AttackStep>
+                    {
+                        null,
+                        new AttackStep { Name = "attack_arm_ram", Heavy = true, Windup = 0.12f, Active = 0.14f, Recovery = 0.36f, Damage = 14f, Stagger = 30f, StaminaCost = 14f, ManaGain = 8f, Lunge = 0f, Reach = 1.6f, ArcDegrees = 120f, HitStopSeconds = 0.08f, Shake = 0.16f, Travel = 2.2f, Pull = -2.5f, Poise = 22f },
+                        new AttackStep { Name = "attack_arm_rising", Heavy = true, Windup = 0.15f, Active = 0.10f, Recovery = 0.44f, Damage = 22f, Stagger = 46f, StaminaCost = 16f, ManaGain = 11f, Lunge = 0.8f, Reach = 2.2f, ArcDegrees = 100f, HitStopSeconds = 0.10f, Shake = 0.18f },
+                        new AttackStep { Name = "attack_arm_slam", Heavy = true, Windup = 0.20f, Active = 0.10f, Recovery = 0.46f, Damage = 20f, Stagger = 34f, StaminaCost = 16f, ManaGain = 10f, Lunge = 0.3f, Reach = 0.8f, Radius = 2.2f, HitStopSeconds = 0.10f, Shake = 0.24f, Effect = StepEffect.ElementRing },
+                        new AttackStep { Name = "attack_arm_burst", Heavy = true, Windup = 0.18f, Active = 0.12f, Recovery = 0.52f, Damage = 28f, Stagger = 40f, StaminaCost = 18f, ManaGain = 12f, Lunge = 0.2f, Reach = 4.2f, ArcDegrees = 70f, HitStopSeconds = 0.12f, Shake = 0.28f, Effect = StepEffect.ElementCone },
+                    },
+                    ChargedHeavy = new AttackStep { Name = "attack_arm_charged", Heavy = true, Windup = 0.10f, Active = 0.12f, Recovery = 0.50f, Damage = 28f, Stagger = 52f, StaminaCost = 18f, ManaGain = 10f, Lunge = 2.6f, Reach = 2.5f, ArcDegrees = 90f, HitStopSeconds = 0.13f, Shake = 0.28f, Poise = 26f },
+                    Skill = new AttackStep { Name = "attack_arm_skill", Heavy = true, Windup = 0.04f, Active = 0.12f, Recovery = 0.44f, Damage = 20f, Stagger = 40f, StaminaCost = 0f, ManaGain = 0f, Lunge = 0f, Reach = 5.0f, ArcDegrees = 90f, HitStopSeconds = 0.16f, Shake = 0.40f, Effect = StepEffect.ElementCone },
+                    Finisher = new AttackStep
+                    {
+                        Name = "attack_arm_finisher", Heavy = true, Windup = 0.72f, Active = 0.12f, Recovery = 0.56f, Damage = 26f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 2.8f, ArcDegrees = 120f, HitStopSeconds = 0.22f, Shake = 0.55f,
+                        LungeSeconds = 0.08f, HoldAt = 0.54f, HoldSeconds = 0.18f, Effect = StepEffect.ElementCone,
+                        // Six fast blows, even as a drum roll, each driving the enemy a little back; then no blow at all.
+                        Beats = new[]
+                        {
+                            new FinisherBeat { Time = 0.08f, HitStopSeconds = 0.03f, Shake = 0.04f, Shove = new Vector3(0f, 0f, 0.06f) },
+                            new FinisherBeat { Time = 0.17f, HitStopSeconds = 0.03f, Shake = 0.04f, Shove = new Vector3(0f, 0f, 0.06f) },
+                            new FinisherBeat { Time = 0.26f, HitStopSeconds = 0.03f, Shake = 0.05f, Shove = new Vector3(0f, 0f, 0.06f) },
+                            new FinisherBeat { Time = 0.35f, HitStopSeconds = 0.03f, Shake = 0.05f, Shove = new Vector3(0f, 0f, 0.06f) },
+                            new FinisherBeat { Time = 0.44f, HitStopSeconds = 0.03f, Shake = 0.06f, Shove = new Vector3(0f, 0f, 0.06f) },
+                            new FinisherBeat { Time = 0.53f, HitStopSeconds = 0.03f, Shake = 0.07f, Shove = new Vector3(0f, 0f, 0.06f) },
+                        },
+                    },
+                    SkillManaCost = 25f,
+                    ChargeTime = 0.30f,
+                    SkillIsCounter = true,
+                    CounterHoldMax = 1.2f,
+                },
+            };
+            // The coat lays one stack of its element's affliction with every blow, and the burst two.
+            foreach (var step in weapon.AllSteps()) step.ElementStacks = 1;
+            weapon.Combo.ChainHeavies[4].ElementStacks = 2;
+            return weapon.Named("arm", false);
         }
 
         /// <summary>
@@ -34,7 +229,11 @@ namespace Clover.Player
         public static Weapon Fists() => new Weapon
         {
             Name = FistsName,
-            UsesSword = false,
+            LocomotionState = "locomotion_fist",
+            GuardState = "guard_fist",
+            GuardHitState = "guard_hit_fist",
+            PerfectGuardState = "guard_perfect_fist",
+            Prefix = "fist",
             SkillName = "Breaker",
             ChargeAnimation = "charge_fist",
             SlashColour = new Color(1.7f, 1.5f, 1.1f, 0.8f),

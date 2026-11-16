@@ -54,6 +54,11 @@ namespace Clover.EditorTools.Forge
         public Vector3 Blade = Vector3.down;
         /// <summary>Degrees the blade is rolled about its own length.</summary>
         public float BladeRoll;
+        /// <summary>
+        /// When set, the way the back of the weapon faces (its edge, or a scythe's crescent, faces the other way). It
+        /// fixes the roll outright, so a sweep can say "edge leading" without counting degrees. Zero: the shortest turn from rest.
+        /// </summary>
+        public Vector3 BladeBack;
         /// <summary>When true the left hand holds the weapon's grip below the right hand.</summary>
         public bool TwoHanded;
         /// <summary>Metres down the grip from the right hand that the left hand holds.</summary>
@@ -97,6 +102,8 @@ namespace Clover.EditorTools.Forge
                 AimBlade = t < 0.5f ? a.AimBlade : b.AimBlade,
                 Blade = Vector3.SlerpUnclamped(a.Blade.normalized, b.Blade.normalized, t),
                 BladeRoll = Mathf.LerpUnclamped(a.BladeRoll, b.BladeRoll, t),
+                BladeBack = a.BladeBack.sqrMagnitude < 1e-6f || b.BladeBack.sqrMagnitude < 1e-6f ? (t < 0.5f ? a.BladeBack : b.BladeBack)
+                    : Vector3.SlerpUnclamped(a.BladeBack.normalized, b.BladeBack.normalized, t),
                 TwoHanded = t < 0.5f ? a.TwoHanded : b.TwoHanded,
                 GripGap = Mathf.LerpUnclamped(a.GripGap, b.GripGap, t),
                 HandLTwist = Mathf.LerpUnclamped(a.HandLTwist, b.HandLTwist, t),
@@ -170,7 +177,11 @@ namespace Clover.EditorTools.Forge
             Vector3 blade = Blade.sqrMagnitude > 1e-6f ? Blade.normalized : Vector3.down;
             if (AimBlade)
             {
-                rig.TurnAbsolute("hand.R", Quaternion.AngleAxis(BladeRoll, blade) * Quaternion.FromToRotation(rig.RestBlade, blade));
+                Vector3 back = Vector3.ProjectOnPlane(BladeBack, blade);
+                Quaternion aim = back.sqrMagnitude > 1e-5f
+                    ? Quaternion.LookRotation(blade, back) * Quaternion.Inverse(Quaternion.LookRotation(rig.RestBlade, rig.RestBladeUp))
+                    : Quaternion.FromToRotation(rig.RestBlade, blade);
+                rig.TurnAbsolute("hand.R", Quaternion.AngleAxis(BladeRoll, blade) * aim);
             }
             else
             {

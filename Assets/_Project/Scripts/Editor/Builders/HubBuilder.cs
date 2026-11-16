@@ -74,6 +74,19 @@ namespace Clover.EditorTools
             Sword(katanaShown);
             things.Add(Choice(katana, false, Weapons.KatanaName, false, katanaShown.gameObject, "Take up the Katana", "An empty stand", "Draw it from the stone first", combat, element));
 
+            // The newer weapons stand in an arc along the western rim, as the newer elements do along the eastern. They
+            // have nowhere yet to be won, so for now every one of them is open (a stopgap, like the braziers).
+            int stood = 0;
+            foreach (string name in Weapons.Offered)
+            {
+                if (name == Weapons.FistsName || name == Weapons.KatanaName) continue;
+                float bearing = -(OuterBraziersFrom + stood * OuterBraziersStep * 1.4f);
+                var stand = Stand(world, name, Polar(bearing, OuterBraziersRadius), bearing + 180f, chosen, out Transform standShown);
+                WeaponBuilder.Display(Weapons.ByName(name).Carry, standShown);
+                things.Add(Choice(stand, false, name, true, standShown.gameObject, name == Weapons.ArmamentName ? "Wear the Armament" : "Take up the " + name, "", "", combat, element));
+                stood++;
+            }
+
             var fireBowl = Brazier(world, "Fire", new Vector3(5.7f, 0f, -0.9f), chosen, fire, new Color(1f, 0.55f, 0.2f), out Transform fireShown);
             things.Add(Choice(fireBowl, true, ElementKit.FireName, true, fireShown.gameObject, "Carry Fire", "", "", combat, element));
             var stormBowl = Brazier(world, "Lightning", new Vector3(4.1f, 0f, -5.2f), chosen, spark, new Color(0.45f, 0.7f, 1f), out Transform stormShown);

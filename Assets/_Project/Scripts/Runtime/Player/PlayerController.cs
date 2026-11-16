@@ -213,15 +213,18 @@ namespace Clover.Player
             {
                 Dodge.Tick(deltaTime);
                 step = combat.Step;
-                // While the charge is held the player stands and picks where the cut will go.
+                // While the charge is held the player stands and picks where the cut will go; some weapons let them creep.
                 if (combat.IsCharging && wish.sqrMagnitude > 0.01f) Face(wish, TurnDegreesPerSecond * deltaTime);
+                if (combat.IsCharging && combat.Combo.ChargeMoveFactor > 0f) step = wish * (MoveSpeed * combat.Combo.ChargeMoveFactor * deltaTime);
             }
             else
             {
                 Dodge.Tick(deltaTime);
                 bool guarding = defence != null && defence.IsGuarding;
                 bool drinking = defence != null && defence.IsDrinking;
-                float speed = MoveSpeed * (guarding ? GuardMoveFactor : drinking ? DrinkMoveFactor : 1f);
+                var carried = combat != null ? combat.Weapon : null;
+                float speed = MoveSpeed * (carried != null ? carried.MoveFactor : 1f)
+                    * (guarding ? (carried != null ? carried.GuardMoveFactor : GuardMoveFactor) : drinking ? DrinkMoveFactor : 1f);
                 step = wish * (speed * deltaTime);
                 // The guard stays turned to the nearest enemy and the player sidesteps behind it; with no enemy near,
                 // the stick turns the player as usual.

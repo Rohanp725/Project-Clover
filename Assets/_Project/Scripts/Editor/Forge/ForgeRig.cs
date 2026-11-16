@@ -31,6 +31,11 @@ namespace Clover.EditorTools.Forge
 
         /// <summary>Which way the weapon in the right hand points at rest, in character space.</summary>
         public Vector3 RestBlade { get; private set; } = Vector3.down;
+        /// <summary>
+        /// Which way the back of that weapon faces at rest (its edge faces the other way), in character space: chosen
+        /// so that a blade pointed straight ahead with no roll is held edge down. Weapon sockets are set to the same.
+        /// </summary>
+        public Vector3 RestBladeUp => Quaternion.Inverse(Quaternion.FromToRotation(RestBlade, Vector3.forward)) * Vector3.up;
 
         public ForgeRig(GameObject modelAsset)
         {

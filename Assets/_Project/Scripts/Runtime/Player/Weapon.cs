@@ -3,19 +3,59 @@ using UnityEngine;
 
 namespace Clover.Player
 {
-    /// <summary>One weapon technique: its attacks and how it is shown. The player holds one at a time.</summary>
+    /// <summary>
+    /// One weapon technique: its attacks, how it is carried and shown, and how its bearer guards and dodges. The player
+    /// holds one at a time. A new weapon is a new entry in <see cref="Weapons"/>, a model under its <see cref="Carry"/>
+    /// name in the weapon builder, and clips under its <see cref="Prefix"/>; nothing else needs to know it exists.
+    /// </summary>
     public class Weapon
     {
         public string Name;
+        /// <summary>What the screen calls it; empty means <see cref="Name"/>. The Armament's is its element's name and "Armament".</summary>
+        public string HudName = "";
         public WeaponCombo Combo;
-        /// <summary>True when the character carries the sword: sheath on the hip, blade in the hand for attacks.</summary>
-        public bool UsesSword;
+        /// <summary>Which set of objects on the character is this weapon: a name the <see cref="WeaponRack"/> knows. Empty: nothing is shown.</summary>
+        public string Carry = "";
+        /// <summary>The prefix of its animation clips: <c>idle_p</c>, <c>attack_p_1</c>. Empty for the Katana, whose clips have no prefix.</summary>
+        public string Prefix = "";
+        /// <summary>True for a weapon that leaves the hand when idle (the Katana in its sheath). Great weapons stay in the hand.</summary>
+        public bool Stowed;
+        /// <summary>Where on the body it sits: in the hand, in the off hand (a seam for the knives and the bow), and at rest.</summary>
+        public string HandSocket = WeaponRack.HandRight;
+        public string OffHandSocket = "";
+        public string RestSocket = WeaponRack.Back;
         /// <summary>The colour of the arc its blows leave; a light value that may pass white.</summary>
         public Color SlashColour = new Color(2.2f, 2.6f, 3.2f, 0.9f);
         /// <summary>The name of its skill, for the screen.</summary>
         public string SkillName = "";
         /// <summary>The animation state held while the heavy button charges the skill.</summary>
         public string ChargeAnimation = "charge";
+        /// <summary>The animation states of standing and running, the guard, the dodge, and the guard's two answers to a blow (empty: none is played).</summary>
+        public string LocomotionState = "locomotion";
+        public string GuardState = "guard";
+        public string RollState = "roll";
+        public string GuardHitState = "";
+        public string PerfectGuardState = "";
+        /// <summary>The numbers of its guard and its dodge, copied onto the player's when it is taken up. Null: the usual ones.</summary>
+        public Guard GuardProfile;
+        public DodgeRoll DodgeProfile;
+        /// <summary>The share of walking speed its bearer keeps, and keeps behind the guard.</summary>
+        public float MoveFactor = 1f;
+        public float GuardMoveFactor = 0.45f;
+        /// <summary>What damage and stagger from behind the target are multiplied by. A seam for the knives: not yet read.</summary>
+        public float BackMultiplier = 1f;
+        /// <summary>True for a weapon whose colours are the held element's (the Armament): its arcs follow the element.</summary>
+        public bool ElementColoured;
+
+        public const string KatanaCarry = "katana";
+        /// <summary>True when the character carries the Katana: sheath on the hip, blade in the hand for attacks.</summary>
+        public bool UsesSword
+        {
+            get => Carry == KatanaCarry;
+            set { if (value) { Carry = KatanaCarry; Stowed = true; } else if (Carry == KatanaCarry) Carry = ""; }
+        }
+
+        public string ShownName => string.IsNullOrEmpty(HudName) ? Name : HudName;
 
         /// <summary>Every attack the weapon has, for checks that each one has an animation.</summary>
         public IEnumerable<AttackStep> AllSteps()
@@ -23,8 +63,25 @@ namespace Clover.Player
             foreach (var step in Combo.Steps) yield return step;
             if (Combo.Heavy != null) yield return Combo.Heavy;
             if (Combo.ChainHeavy != null) yield return Combo.ChainHeavy;
+            if (Combo.ChainHeavies != null)
+                foreach (var step in Combo.ChainHeavies)
+                    if (step != null) yield return step;
+            if (Combo.ChargedHeavy != null) yield return Combo.ChargedHeavy;
             if (Combo.Skill != null) yield return Combo.Skill;
             if (Combo.Finisher != null) yield return Combo.Finisher;
+        }
+
+        /// <summary>Sets the usual state names from the clip prefix: <c>locomotion_p</c>, <c>guard_p</c>, <c>roll_p</c> and the rest.</summary>
+        public Weapon Named(string prefix, bool ownRoll)
+        {
+            Prefix = prefix;
+            LocomotionState = "locomotion_" + prefix;
+            GuardState = "guard_" + prefix;
+            GuardHitState = "guard_hit_" + prefix;
+            PerfectGuardState = "guard_perfect_" + prefix;
+            ChargeAnimation = "charge_" + prefix;
+            RollState = ownRoll ? "roll_" + prefix : "roll";
+            return this;
         }
     }
 }

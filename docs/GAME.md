@@ -163,6 +163,10 @@ A technique is a weapon style. Nine weapons and one special form.
 | Great Hammer | Like the Massive Sword but blunt | Suits heavier, slower elements |
 | Super Form | Boosts all attributes and gives parts of every weapon mode | Takes all technique slots; the final boss shows it at full strength |
 
+**Built so far** (2026-11-16): Katana, and as Claude's defaults the Massive Sword, the Scythe (idea (a) below, the
+sweet spot) and the Full Body Armament; see "The newer weapons as built" at the end of this document. The design for
+all eight remaining techniques is `docs/design/weapons.md`.
+
 Ideas offered by Claude for the two undesigned weapons, not yet accepted:
 
 - **Scythe**: (a) sweet-spot weapon, where the blade tip at the end of a wide arc hits hardest and the shaft hits
@@ -607,7 +611,8 @@ The practice arena keeps its old rule of standing up again.
 **The hub** (working name: the still place). An island of slate laid out as a stopped clock, in black water, with
 rain hanging in the air where it was when the hours were turned back. From where the player wakes everything is in
 view: the sponsor's light over the clock's centre, the weapon stands to the west (bare hands, the Katana), the element
-braziers to the east (Fire, Lightning), and the gate to the north under a great broken ring.
+braziers to the east (Fire, Lightning), and the gate to the north under a great broken ring. (Later on 2026-11-16 three more
+weapon stands were added along the western rim, all open for now: see "The newer weapons as built".)
 
 - *What a run can begin with.* Bare hands and Fire always. The Katana once it has been drawn from the stone in any
   run; Lightning once it has been taken from its god in any run. These unlocks are kept between sittings. A stand or
@@ -995,3 +1000,95 @@ Nothing here was decided by the user; it is what was built while they were away,
 - **Trying them.** The practice yard (the Combat Test scene, and only it) has a rack of twenty-four stones along its
   south side, one for each form. Using a stone lends its sample spell in the element that suits it and keeps the mana
   coming back; hold the spell button to cast. The tall stone in front of the rack gives the next element round the ring.
+
+## The newer weapons as built (Claude's defaults from the day run of 2026-11-16, later afternoon)
+
+Nothing here was decided by the user; it is what was built while they were away, from `docs/design/weapons.md`, to be
+kept or changed. Three of the eight designed techniques are in: the **Massive Sword**, the **Scythe** and the **Full
+Body Armament**. The other five (Great Spear, Great Hammer, Twin Knives, Great Bow, Chain Sickle) are designed and not
+built; the framework below was made so that each is added without changing it.
+
+**The models are not in the game yet.** Seven weapon models were made in Blender earlier today and wait in
+`staging/blender/2026-11-16_weapons/` (see `lineup.png` there). The rule is that nothing enters `Art/` before the
+user has looked at it, so the sword and the scythe are drawn in play by **stand-ins made of boxes** to the models' own
+sizes, axes and slot names. When the models are approved, `Clover > Weapons > Intake Staged Models` copies them in,
+writes their manifest rows and rebuilds the prefabs from them; then the scenes are rebuilt. That menu has never been
+run, so how the files sit after Unity imports them (the axis conversion) is still unchecked.
+
+**What a weapon is now.** A weapon says for itself how it is carried (which model, in which hand, where it rests on
+the body), which clips it stands, runs, guards, rolls and charges with, the numbers of its own guard and dodge, how
+fast its bearer walks, and what the screen calls it. Great weapons never leave the hand except to drink or to cast,
+when they hang on the back. Each model has two parts the held element colours in play: the **accent** (a ribbon, a
+cloth) is dyed, and the **inlay** (the sword's fuller, the scythe's cutting edge, the whole of the Armament's coat)
+glows with it: dim at rest, brighter in a surge, brightest for a charge, the skill and the finisher.
+
+**New rules the weapons brought** (all in `docs/design/weapons.md`, section 1; each is used below):
+
+- *Two tiers on a held heavy.* Let go early: the heavy. Held to the first flash (white): a charged heavy, for no
+  mana. Held on to the second (the element's colour, and the word "Ready"): the skill, for mana. Without the mana the
+  hold waits at the first tier. The Katana and the fists keep their one tier.
+- *Poise.* Inside the wind-up and the swing of some attacks a small blow still hurts but does not stop the swing. Red
+  attacks ignore it.
+- *Distance bands.* A blow can do less near the hand and more at the tip; the arc is drawn with its last metre bright.
+- *Enders.* A weapon may have a different chain heavy for each place the light chain is stopped.
+- *A counter.* A skill may be a stance instead of a release: a blow taken on it, from any side, is thrown back.
+- *Staged finishers.* A finisher may have beats before its blow (time stops for an instant, a spark, a shove or a
+  lift of the target) and a **hold**: time runs at two fifths and the camera leans in before the blow, not only after.
+- *Shapes.* A blow may be a disc on the ground ahead or a lane, a blow may be carried over ground, may shove what it
+  hits, and may throw something that flies on and hangs where it stops.
+
+**Massive Sword.** Three wide sweeps, each wound up faster than the last (0.34, 0.26, 0.20 s), 84 damage in a 190
+degree fan and then a full circle, for 64 of the 100 stamina. Poise 12 on the sweeps (an acolyte's cut does not stop
+them; a soldier's thrust does), 22 on the heavies, 30 on the charged cut. Heavy: an overhead that buries itself, 44.
+Chain heavy: a rising cut dragged up off the ground, 46. Held 0.45 s: a leaping overhead, 62 damage and 80 stagger.
+Held 0.95 s with 35 mana: **Elemental Spike Line**, the sword driven into the ground and eight spikes of the held
+element running 10 m up the lane, 34 damage to each enemy once, laying the element's affliction. Finisher, **The
+Headsman**: the pommel into the chest, a walk round to the enemy's side with the point scoring the ground, the blade
+stood up over the head and held, the cut, and the ground splitting along its line a moment after. Guard: the blade
+planted like a door: the widest (240 degrees) and cheapest guard in the game and the tightest perfect guard (0.15 s).
+Dodge: a short heavy dive (3.9 m, 30 stamina). Walks at 92% speed, and creeps at a quarter speed while charging.
+
+**Scythe.** Long, short, long: out, back, and a full turn. Every cut does 0.6 of its damage nearer than 1.5 m, plain
+in the middle, and **1.5 of its damage and 1.6 of its stagger from 2.5 m out** (measured to the near side of the
+enemy), so the chain is the best in the game at the tip (69 damage) and the worst on the haft (28). The heavy is the
+**back reap**: a hop 1.4 m backward with the cut made by the retreat, so an enemy that was too close is at the tip.
+Skill, **Crescent Slash** (hold 0.4 s, 30 mana): a cut, and a crescent of light that flies 6 m striking what it
+passes for 20, then hangs there turning for 1.6 s and bites what stands in it for 6 every 0.4 s, laying the held
+element. Finisher, **The Wheel**: the blade hooked under the enemy, one hauling turn on the spot, a heave that throws
+it into the air, the hold underneath with the scythe drawn back and the eyes up, and one rising cut that meets it.
+Guard: the haft held across, 220 degrees. Dodge: a longer step (4.8 m).
+
+**Full Body Armament.** What bare hands become in the held element: a coat on the forearms, fists, shoulders and
+shins in the element's colour, named for it ("Fire Armament"). The fists' four blows to the hundredth of a second,
+hitting a little harder and 0.3 m further, and **every blow lays one stack of the element's affliction** by itself.
+Then a choice by where the chain is stopped: after one light the **ram** (a shoulder charge that shoves the target
+2.5 m, poise 22), after two the **rising blow** (the most stagger for its time), after three the **slam** (both fists
+on the ground: a disc of 2.2 m), after four the **burst** (both palms: a cone 4.2 m long laying two stacks). Held
+0.3 s: **Meteor Fist**, a leaping punch, free. And held past that the bearer stands **braced**: a blow that lands on
+the stance in the next 1.2 s, from any side, guardable or red, costs 25 mana, does nothing, and is answered at once
+with **Energy Reflect**: a cone 5 m long for 20 damage plus the whole of the blow taken and 95 stagger. With less
+than 25 mana the stance is only a stance and the blow lands. Finisher, **One Inch**: six fast blows that deal nothing
+and drive the enemy back, a hold with the open hand laid on its chest, and then the arm straightening by the width of
+the palm; the element goes through and is laid on what stands behind.
+
+**Stopgaps and things short of the design** (each is a choice to revisit):
+
+- **Every new weapon's stand in the hub is open.** They stand in an arc along the western rim, as the nine newer
+  braziers do along the eastern, and like those they are open because there is nowhere yet to win them. The Katana
+  still has to be drawn from the stone first.
+- **The Armament is taken from a stand, not learned in the tree.** The design makes it a mark in every element's tree
+  that replaces Fists while no weapon is carried. That mark, and the rule that puts it to sleep under a weapon, are
+  not built; for now it is a weapon like the others, and it re-makes itself when the element in hand changes.
+- **Finishers move the target only a little.** The Wheel throws the enemy up (anything that can be lifted) but does
+  not carry it round the bearer; the Headsman's pommel does not rock it upright; a god stays where it stands. Enemies
+  have no limp "held" pose.
+- **The Armament's coat is the same eight boxes in every element**, coloured; the design gives each element its own
+  shapes. Its first six clips are the fists' own, set lower and wider.
+- **The perfect-guard and blocked-guard reactions** exist for the three new weapons and for the fists, not yet for
+  the Katana.
+- No element changes a weapon yet (the design's "Elements" paragraphs: Fire's burning ring under the sword's turn,
+  Dark's healing tip, Lightning's quick Armament), beyond colour and affliction. No weapon has sounds.
+
+**Trying them.** The practice yard (`Clover > Build > Combat Test Arena`) has a rack of five stands along its north
+wall, one per weapon, all open; the hub has the stands. Contact sheets of every clip are in `review/anim/`
+(`player_*_gsword.png`, `*_scythe.png`, `*_arm*.png`); the top row of each is the game's camera.

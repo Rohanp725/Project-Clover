@@ -56,18 +56,63 @@ namespace Clover.EditorTools
             // And one that hits back, off to the west, to practise the guard and the dodge on. It leaves the player
             // alone until they walk up to it.
             BuildDummy(new Vector3(-7f, 0f, 3.5f), kit, built.Player.transform);
-            BuildFormRack(world, built.Player);
+            BuildFormRack(world, built.Player, BuildWeaponRack(world, built.Player));
 
             SceneBuild.Finish(scene, ScenePath, false);
         }
 
         // The rack of stones along the south side: one for every new spell form, each lending its sample spell, and a
         // taller one in front of them that gives the next element round the ring. Only this yard has them.
-        private static void BuildFormRack(Transform world, GameObject player)
+        // The rack of weapons along the north side: every weapon that is built, to be taken up and tried.
+        private static List<Clover.World.Interactable> BuildWeaponRack(Transform world, GameObject player)
+        {
+            var rack = BuildKit.Group("Weapon Rack", world);
+            var plinth = BuildKit.Toon(Folder, "m_rack_plinth", new Color(0.3f, 0.3f, 0.4f), false, null, 0f, 0.02f);
+            var chosen = BuildKit.Glow(Folder, "m_rack_chosen", new Color(1.6f, 1.3f, 0.6f, 0.8f), 4, true, 2f);
+            var combat = player.GetComponent<PlayerCombat>();
+            var element = player.GetComponent<PlayerElement>();
+            var font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            var stands = new List<Clover.World.Interactable>();
+            var names = Weapons.Offered;
+            for (int i = 0; i < names.Length; i++)
+            {
+                var stand = new GameObject(names[i] + " Rack Stand");
+                stand.transform.SetParent(rack, false);
+                stand.transform.position = new Vector3((i - (names.Length - 1) * 0.5f) * 3.2f, 0f, 12.5f);
+                stand.transform.rotation = Quaternion.Euler(0f, 180f, 0f);
+                BuildKit.Shape(PrimitiveType.Cylinder, "Foot", stand.transform, new Vector3(0f, 0.12f, 0f), new Vector3(1.3f, 0.12f, 1.3f), plinth);
+                var shown = BuildKit.Group("Shown", stand.transform);
+                WeaponBuilder.Display(Weapons.ByName(names[i]).Carry, shown);
+                var mark = BuildKit.Group("Chosen", stand.transform);
+                BuildKit.Shape(PrimitiveType.Quad, "Chosen Ring", mark, new Vector3(0f, 0.3f, 0f), new Vector3(2.6f, 2.6f, 1f), chosen, new Vector3(90f, 0f, 0f));
+                var words = new GameObject("Label");
+                words.transform.SetParent(stand.transform, false);
+                words.transform.position = stand.transform.position + new Vector3(0f, 0.5f, -1.3f);
+                words.transform.rotation = Quaternion.Euler(55f, 0f, 0f);
+                var text = words.AddComponent<TextMesh>();
+                text.font = font;
+                words.GetComponent<MeshRenderer>().sharedMaterial = font.material;
+                text.text = names[i].ToUpperInvariant();
+                text.anchor = TextAnchor.MiddleCenter;
+                text.alignment = TextAlignment.Center;
+                text.fontSize = 48;
+                text.characterSize = 0.06f;
+                text.color = new Color(0.9f, 0.88f, 0.8f);
+                var choice = stand.AddComponent<Clover.World.LoadoutChoice>();
+                choice.Configure(false, names[i], true, shown.gameObject, mark.gameObject);
+                choice.Watch(combat, element);
+                choice.OpenPrompt = "Take up: " + names[i];
+                choice.Prompt = choice.OpenPrompt;
+                choice.Range = 1.7f;
+                stands.Add(choice);
+            }
+            return stands;
+        }
+
+        private static void BuildFormRack(Transform world, GameObject player, List<Clover.World.Interactable> stones)
         {
             var rack = BuildKit.Group("Form Rack", world);
             var plinth = BuildKit.Toon(Folder, "m_rack_plinth", new Color(0.3f, 0.3f, 0.4f), false, null, 0f, 0.02f);
-            var stones = new List<Clover.World.Interactable>();
             var samples = Clover.Player.Forms.FormSamples.All;
             var upgrades = player.GetComponent<PlayerUpgrades>();
             var combat = player.GetComponent<PlayerCombat>();

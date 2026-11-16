@@ -90,6 +90,8 @@ namespace Clover.Player
             RunState.ElementsHeld.Add(Info.Name);
             if (glow != null) glow.color = Info.Name == Elements.Lightning ? new Color(0.5f, 0.75f, 1f) : Info.Name == Elements.Fire ? new Color(1f, 0.5f, 0.16f) : Info.Colour;
             if (combat != null) combat.ClearEmpower();
+            // A weapon that is the element's own (the Armament) is made again in the new element.
+            if (combat != null && combat.Weapon != null && combat.Weapon.ElementColoured && !combat.IsAttacking) combat.Equip(Weapons.Armament(Info.Name));
             if (defence != null) defence.ClearWards();
             if (surging && upgrades != null) upgrades.OnSurgeEnd();
             // The base spell's numbers, as its form reads them.

@@ -230,9 +230,15 @@ namespace Clover.EditorTools
             // The shape of light a lightning dodge leaves behind.
             var ghost = BuildKit.Glow(PlayerFolder, "m_player_afterimage", new Color(0.5f, 1.2f, 3f, 0.8f), 3, true, 1f);
             player.AddComponent<Afterimage>().Configure(model.GetComponentsInChildren<SkinnedMeshRenderer>(), ghost);
-            player.AddComponent<PlayerAnimator>().Configure(controller, combat, defence, element, animator,
+            var shown = player.AddComponent<PlayerAnimator>();
+            shown.Configure(controller, combat, defence, element, animator,
                 drawnSword != null ? drawnSword.gameObject : null, sheathedHilt != null ? sheathedHilt.gameObject : null,
                 sheath != null ? sheath.gameObject : null);
+            // Every other weapon is a prefab hung on the skeleton's sockets, in the hand and at rest.
+            shown.ConfigureRack(WeaponBuilder.Hang(model, modelAsset));
+            // What weapons throw and raise: a crescent of light, spikes out of the ground.
+            player.AddComponent<WeaponShots>().Configure(VfxBuilder.SlashMaterial());
+            player.AddComponent<WeaponSpikes>().Configure(BuildKit.Toon(PlayerFolder, "m_weapon_spike", new Color(0.6f, 0.58f, 0.66f), false, null, 0f, 0.02f));
             return player;
         }
 
@@ -302,6 +308,24 @@ namespace Clover.EditorTools
             var roll = machine.AddState(PlayerAnimator.RollState);
             if (clips.TryGetValue("roll", out var rollClip)) roll.motion = rollClip;
 
+            // Every other weapon brings its own by name: idle_p and run_p make locomotion_p; roll_p and charge_p are
+            // states of their own; guard_p, guard_hit_p and guard_perfect_p play on the upper body.
+            foreach (var idleClip in clips.Values.Where(clip => clip.name.StartsWith("idle_") && clip.name != "idle_fist").OrderBy(clip => clip.name))
+            {
+                string prefix = idleClip.name.Substring("idle_".Length);
+                controller.CreateBlendTreeInController("locomotion_" + prefix, out BlendTree ownTree, 0);
+                ownTree.blendType = BlendTreeType.Simple1D;
+                ownTree.blendParameter = PlayerAnimator.SpeedParameter;
+                ownTree.useAutomaticThresholds = false;
+                ownTree.AddChild(idleClip, 0f);
+                if (clips.TryGetValue("run_" + prefix, out var ownRun)) ownTree.AddChild(ownRun, 1f);
+            }
+            foreach (var own in clips.Values.Where(clip => clip.name.StartsWith("roll_") || (clip.name.StartsWith("charge_") && clip.name != PlayerAnimator.FistChargeState)).OrderBy(clip => clip.name))
+                machine.AddState(own.name).motion = own;
+            foreach (var weapon in Weapons.All)
+                foreach (string state in new[] { weapon.ChargeAnimation, weapon.LocomotionState == PlayerAnimator.LocomotionState ? "idle" : "idle_" + weapon.Prefix })
+                    if (!clips.ContainsKey(state)) Debug.LogWarning($"[Clover.Build] {weapon.Name} has no '{state}' clip.");
+
             // One state per attack clip, named after the clip; AttackStep.Name picks the state.
             foreach (var attack in clips.Values.Where(clip => clip.name.StartsWith("attack_")).OrderBy(clip => clip.name))
                 machine.AddState(attack.name).motion = attack;
@@ -334,6 +358,8 @@ namespace Clover.EditorTools
             upperMachine.defaultState = upperMachine.AddState(PlayerAnimator.UpperIdleState);
             foreach (string name in new[] { PlayerAnimator.GuardState, PlayerAnimator.FistGuardState, PlayerAnimator.DrinkState })
                 upperMachine.AddState(name).motion = clips.TryGetValue(name, out var clip) ? clip : null;
+            foreach (var own in clips.Values.Where(clip => clip.name.StartsWith("guard_") && clip.name != PlayerAnimator.FistGuardState).OrderBy(clip => clip.name))
+                upperMachine.AddState(own.name).motion = own;
             EditorUtility.SetDirty(controller);
             return controller;
         }

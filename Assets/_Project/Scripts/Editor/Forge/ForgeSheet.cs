@@ -19,7 +19,7 @@ namespace Clover.EditorTools.Forge
         /// Draws the sheet. <paramref name="pose"/> puts the character in its pose for a moment from 0 to 1; the model is
         /// whatever was dressed for looking at (materials on, weapon shown or hidden).
         /// </summary>
-        public static string Render(string name, GameObject model, Action<float> pose, int frames = 8, float height = 0.95f, float[] moments = null)
+        public static string Render(string name, GameObject model, Action<float> pose, int frames = 8, float height = 0.95f, float[] moments = null, float distance = 5.2f)
         {
             if (moments != null) frames = moments.Length;
             Directory.CreateDirectory(Folder);
@@ -70,7 +70,6 @@ namespace Clover.EditorTools.Forge
                     {
                         // Top row: the game's camera, above and behind. Bottom row: from the character's right side.
                         Quaternion view = row == 0 ? Quaternion.Euler(55f, 0f, 0f) : Quaternion.Euler(4f, -90f, 0f);
-                        float distance = row == 0 ? 5.2f : 5.2f;
                         Vector3 focus = new Vector3(0f, height, 0f);
                         cameraObject.transform.SetPositionAndRotation(focus - view * Vector3.forward * distance, view);
                         camera.Render();

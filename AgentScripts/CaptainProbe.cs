@@ -342,15 +342,12 @@ public class CaptainProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.6f);
         ScreenCapture.CaptureScreenshot("review/shots/current/captain_falls.png");
         yield return new WaitForSeconds(2.6f);
+        // The door opens once the Gate Captain alone has fallen, so it is looked at and not used: using it leaves the
+        // castle, and this probe with it, before it can say what it found.
         var way = FindAnyObjectByType<SealedWay>();
         player.Teleport(way.transform.position + new Vector3(0f, 0.1f, -1f), Quaternion.identity);
-        yield return new WaitForSeconds(0.4f);
-        Keys(Key.E);
-        yield return null;
-        yield return null;
-        Keys();
-        yield return new WaitForSeconds(0.2f);
-        Say($"H he falls: dead {captain.IsDead}, embers paid {paid} (a soldier pays {EnemyKind.Soldier().Embers}), enemies alive {alive} -> {director.EnemiesAlive}, body cleared {!captain.gameObject.activeSelf}; the door says '{defence.LastCallout}'");
+        yield return new WaitForSeconds(0.6f);
+        Say($"H he falls: dead {captain.IsDead}, embers paid {paid} (a soldier pays {EnemyKind.Soldier().Embers}), enemies alive {alive} -> {director.EnemiesAlive}, body cleared {!captain.gameObject.activeSelf}; the door's seal broken {way.SealBroken}, its prompt '{way.Prompt}', leads to '{way.LeadsTo}'");
 
         Say($"done: pictures of {string.Join(" ", pictured)}; time scale {Time.timeScale:0.00}");
         Destroy(gameObject);
