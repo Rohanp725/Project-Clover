@@ -443,7 +443,30 @@ banner on his back; the acolyte a hood, crossed wraps and a long scarf; the stor
   - A burst all round him when crowded.
   - **Second phase** at half health: it opens with a roar that cannot be guarded, he acts a sixth faster, the bolts
     around the summit fall three times as often, and he gains the draw twice in a row.
-- *Not built*: the huge godly second form, his voice, and any sound.
+- *Not built*: his voice, and any sound.
+
+**Narukami's godly form, "the Storm Itself"** (built later the same night; Claude's design, not yet played by the user):
+
+- *What it is*: when the swordsman falls he does not stay fallen. After a breath (the player is given back a third of
+  their health, no flasks), what he became rises out of the cloud beyond the summit's north edge: an oni's head with
+  gold horns and a mane of white spikes, shoulders like a hill, and two clawed hands held to him by ropes of
+  lightning. He is too large to stand on the floor. The pieces are rigid models moved by code (`Colossus.cs`), not a
+  skinned character. 760 health, and the bar across the bottom takes his new name.
+- *How he fights*: with his hands, which hang in the air either side of the player when idle.
+  - **The slam**: a pale circle follows the player for 0.85 s, stops, and 0.35 s later a hand comes down on it for 28.
+    It can be guarded, and a perfect guard throws 60 of the 170 his balance takes. The hand then lies where it fell
+    for two seconds.
+  - **Red: the sweep**: a red lane is drawn right across the floor through where the player stands, and after 1.25 s a
+    hand crosses it edge-on in half a second for 30. Roll through it or leave the lane. The hand lies spent at the
+    far edge for a second and a half.
+  - **Red: the bolts**: six circles, one every half second, each landing 0.95 s after it is drawn, for 16.
+  - Below half health he acts a quarter faster and slams twice, one hand after the other.
+- *How he is hurt*: a hand lying on the floor can be cut (three quarters of a blow's damage reaches him). Blows on
+  the hands and perfect guards wear down his balance; when it breaks, the head falls on its back on the floor for five
+  and a half seconds and takes blows at 160%, and a heavy blow on it is a finisher that takes at least 22% of all his
+  health and sends him back up. Hands hanging in the air cannot be reached.
+- *Not built*: any attack from the head itself (a breath, a bite); arms; a second phase of his own beyond the faster
+  pace; the afterimage and the upgrades were not tuned against him.
 
 **Take or consume** (built as the two things he leaves on the floor, chosen by walking up and using one):
 
@@ -604,6 +627,7 @@ only for faults.
 | 2026-11-15 | Each major boss masters one element and one unique technique; beating it gives a choice of one of the two | makes every boss a build decision |
 | 2026-11-15 | Boss zones are themed to the element for atmosphere only, with no status effect | atmosphere without extra rules |
 | 2026-11-16 | Animations are written as code and baked in Unity, not keyed in Blender | it lets every action be placed, timed and checked frame by frame, and the user asked for special emphasis on animation |
+| 2026-11-16 | Narukami's godly form is a colossus beside the summit who fights with his hands; they can be cut only where they lie after a blow, and breaking his balance brings his head down | Claude's design during the unattended overnight run; the decided design called for a godly second form |
 | 2026-11-16 | Game text is set in Spectral SemiBold (OFL); surfaces are painted by code in a hand-painted manner; fire is drawn as layered tongues | Claude's defaults during the unattended overnight run, toward the Ravenswatch brief |
 | 2026-11-16 | The hub is a stopped clock outside time; a fall ends the run and wakes the player there; the Katana and Lightning become starting choices once won in a run | Claude's defaults during the unattended overnight run, following the decided run-based structure |
 | 2026-11-16 | Upgrades are bought with embers (one per enemy, five per god) at rest fires, in any order; held buttons give the flask and the spell their upgraded moves | Claude's defaults during the unattended overnight run |

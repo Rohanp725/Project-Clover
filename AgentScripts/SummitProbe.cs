@@ -129,7 +129,85 @@ public class SummitProbeRunner : MonoBehaviour
         // F: fell him.
         while (!boss.IsDead) boss.TakeHit(new Hit(60f, 0f, boss.transform.forward, true));
         yield return null;
-        Say($"F felled: dead {boss.IsDead} director felled {summit.Felled} gods felled this run {RunState.GodsFelled}");
+        Say($"F the swordsman falls: dead {boss.IsDead} second form called {summit.SecondFormCalled} felled yet {summit.Felled}");
+
+        // F2: what he became rises out of the cloud.
+        var colossus = FindAnyObjectByType<Colossus>();
+        yield return Until(() => colossus != null && colossus.HasRisen, 6f);
+        yield return new WaitForSeconds(1.2f);
+        ScreenCapture.CaptureScreenshot("review/shots/current/storm_rising.png");
+        yield return Until(() => colossus.Doing == "Idle", 6f);
+        player.Teleport(new Vector3(0f, 0.1f, 6f), Quaternion.identity);
+        yield return new WaitForSeconds(0.6f);
+        ScreenCapture.CaptureScreenshot("review/shots/current/storm_risen.png");
+        Say($"F2 risen: {colossus.HasRisen} doing {colossus.Doing} health {colossus.Health.Current:0} in fight {colossus.InFight}");
+
+        // F3: stand in the middle and let it do its worst for a while; the probe keeps the player alive.
+        int stormTaken = defence.BlowsTaken;
+        string stormSeen = "";
+        string stormLast = "";
+        int shots = 0;
+        float changedAt = 0f;
+        bool pictured = true;
+        float watchUntil = Time.time + 24f;
+        while (Time.time < watchUntil)
+        {
+            if (colossus.Doing != stormLast)
+            {
+                stormLast = colossus.Doing;
+                stormSeen += stormLast + " ";
+                changedAt = Time.time;
+                pictured = false;
+            }
+            // One picture of each attack, a second into it.
+            if (!pictured && stormLast != "Idle" && Time.time - changedAt > 1f && shots < 8)
+            {
+                pictured = true;
+                ScreenCapture.CaptureScreenshot($"review/shots/current/storm_{stormLast.ToLower()}_{shots}.png");
+                shots++;
+            }
+            yield return null;
+        }
+        Say($"F3 it attacks: {stormSeen}; slams {colossus.Slams} sweeps {colossus.Sweeps} bolts {colossus.BoltsCalled}; struck the player {colossus.BlowsStruck} times, of which landed {defence.BlowsTaken - stormTaken}");
+
+        // F4: a hand that has come down can be cut.
+        yield return Until(() => colossus.LeftPart.Vulnerable || colossus.RightPart.Vulnerable, 20f);
+        var open = colossus.LeftPart.Vulnerable ? colossus.LeftPart : colossus.RightPart;
+        float stormHealth = colossus.Health.Current;
+        player.Teleport(open.transform.position + new Vector3(0f, 0.1f, -2.6f), Quaternion.identity);
+        yield return null;
+        int landed = combat.BlowsLanded;
+        yield return TapWhenFree(Key.J, () => combat.BlowsLanded > landed);
+        yield return Until(() => combat.BlowsLanded > landed, 1f);
+        Say($"F4 a hand lying open: vulnerable {open.Vulnerable} blows landed +{combat.BlowsLanded - landed} its health {stormHealth:0} -> {colossus.Health.Current:0} balance {colossus.Stagger.Value:0}");
+        yield return Until(() => !combat.IsAttacking, 2f);
+
+        // F5: break its balance: the head falls, and can be finished.
+        yield return Until(() => colossus.Doing == "Idle", 8f);
+        colossus.Unbalance(10000f);
+        yield return new WaitForSeconds(0.9f);
+        bool broken = colossus.IsStaggered;
+        stormHealth = colossus.Health.Current;
+        player.Teleport(colossus.HeadPart.transform.position + new Vector3(0f, 0.1f, -4.6f), Quaternion.identity);
+        yield return new WaitForSeconds(0.2f);
+        ScreenCapture.CaptureScreenshot("review/shots/current/storm_broken.png");
+        finishers = combat.Finishers;
+        yield return TapWhenFree(Key.K, () => combat.Finishers > finishers);
+        Say($"F5 broken: staggered {broken} head open {colossus.HeadPart.Vulnerable} finishers +{combat.Finishers - finishers} health {stormHealth:0} -> {colossus.Health.Current:0} (22% of {colossus.MaximumHealth:0} is {colossus.MaximumHealth * 0.22f:0}) now {colossus.Doing}");
+        yield return Until(() => !combat.IsAttacking, 2f);
+
+        // F6: fell it.
+        for (int attempt = 0; attempt < 12 && !colossus.IsDead; attempt++)
+        {
+            yield return Until(() => colossus.Doing == "Idle", 10f);
+            colossus.Unbalance(10000f);
+            yield return new WaitForSeconds(0.7f);
+            for (int blow = 0; blow < 40 && !colossus.IsDead; blow++) colossus.HeadPart.TakeHit(new Hit(60f, 0f, Vector3.forward));
+        }
+        yield return new WaitForSeconds(1f);
+        ScreenCapture.CaptureScreenshot("review/shots/current/storm_dying.png");
+        yield return Until(() => summit.Felled, 8f);
+        Say($"F6 felled: storm dead {colossus.IsDead} director felled {summit.Felled} gods felled this run {RunState.GodsFelled}");
         yield return new WaitForSecondsRealtime(summit.RewardDelay + 2.5f);
 
         // G: take the storm.

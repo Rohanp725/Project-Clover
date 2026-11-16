@@ -45,14 +45,16 @@ namespace Clover.EditorTools
             var world = BuildKit.Group("World");
 
             // The floor: a round of stone with rings let into it, the innermost alight.
+            // The layers lie within three centimetres of one another, so the marks attacks draw on the ground (four
+            // centimetres up and more) are always above every one of them.
             Disc("Floor", world, 0f, Radius, 1.2f, dark, true);
-            Disc("Paving", world, 0.01f, Radius - 0.8f, 0.02f, stone, false);
-            Disc("Ring Outer", world, 0.02f, 11.2f, 0.02f, pale, false);
-            Disc("Paving Middle", world, 0.03f, 10.8f, 0.02f, stone, false);
-            Disc("Ring Inner", world, 0.04f, 5.2f, 0.02f, rune, false);
-            Disc("Paving Inner", world, 0.05f, 5f, 0.02f, stone, false);
-            Disc("Seal", world, 0.06f, 1.2f, 0.02f, rune, false);
-            Disc("Seal Core", world, 0.07f, 1f, 0.02f, dark, false);
+            Disc("Paving", world, 0.004f, Radius - 0.8f, 0.02f, stone, false);
+            Disc("Ring Outer", world, 0.008f, 11.2f, 0.02f, pale, false);
+            Disc("Paving Middle", world, 0.012f, 10.8f, 0.02f, stone, false);
+            Disc("Ring Inner", world, 0.016f, 5.2f, 0.02f, rune, false);
+            Disc("Paving Inner", world, 0.02f, 5f, 0.02f, stone, false);
+            Disc("Seal", world, 0.024f, 1.2f, 0.02f, rune, false);
+            Disc("Seal Core", world, 0.028f, 1f, 0.02f, dark, false);
 
             // An unseen wall round the edge, so no one walks off into the cloud.
             for (int i = 0; i < 36; i++)
@@ -193,7 +195,10 @@ namespace Clover.EditorTools
             consume.Configure(summit, false);
             built.Player.GetComponent<PlayerInteraction>().Configure(things.ToArray());
 
-            BossBar(boss);
+            var bossHud = BossBar(boss);
+            // What he became: under the cloud beyond the north edge until the swordsman falls.
+            var colossus = ColossusBuilder.Build(built.Player.transform, Radius, kit.Marker);
+            if (colossus != null) summit.ConfigureSecondForm(colossus, bossHud);
             PlayerBuilder.AddRunEnd(built.Player);
             PlayerBuilder.AddTitle("Narukami", EnemyKind.Narukami().Title);
             SceneBuild.Finish(scene, ScenePath, false);
@@ -286,10 +291,10 @@ namespace Clover.EditorTools
         }
 
         // The god's name and bars across the bottom of the screen.
-        private static void BossBar(Enemy boss)
+        private static BossHud BossBar(Enemy boss)
         {
             var hud = GameObject.Find("HUD");
-            if (hud == null) return;
+            if (hud == null) return null;
             var panel = new GameObject("Boss", typeof(RectTransform));
             panel.transform.SetParent(hud.transform, false);
             var area = (RectTransform)panel.transform;
@@ -320,7 +325,9 @@ namespace Clover.EditorTools
 
             var health = Bar("Health", panel.transform, new Vector2(0f, 18f), new Vector2(980f, 26f), new Color(0.86f, 0.14f, 0.16f));
             var stagger = Bar("Balance", panel.transform, new Vector2(-4f, 0f), new Vector2(980f, 16f), new Color(1f, 0.8f, 0.25f));
-            hud.AddComponent<BossHud>().Configure(boss, panel, health, stagger);
+            var bossHud = hud.AddComponent<BossHud>();
+            bossHud.Configure(boss, panel, health, stagger, label);
+            return bossHud;
         }
 
         private static RectTransform Bar(string name, Transform parent, Vector2 position, Vector2 size, Color colour)

@@ -11,7 +11,7 @@ namespace Clover.Gameplay
     /// the storm charges it for a while, making it faster and harder-hitting.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable
+    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IBoss
     {
         [SerializeField] private string kindName = EnemyKind.SoldierName;
         [SerializeField] private Transform target;
@@ -54,6 +54,9 @@ namespace Clover.Gameplay
         public bool IsDead => Brain.State == EnemyState.Dead;
         public bool IsCharged => chargedLeft > 0f;
         public bool IsAware => Brain.State != EnemyState.Idle && Brain.State != EnemyState.Dead;
+        public bool InFight => IsAware && !IsDead;
+        public float HealthFraction => Health.Fraction;
+        public float BalanceFraction => IsStaggered ? 1f : Stagger.Fraction;
         public int BlowsStruck { get; private set; }
         public int BlowsGuarded { get; private set; }
         /// <summary>True while it is showing or striking an attack: this is what holds the turn.</summary>
