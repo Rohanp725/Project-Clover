@@ -35,6 +35,8 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 | `FeedbackProbe` | Castle | death burn-away, finish mark, target brackets, bars, low-health edge, cut marks |
 | `FinisherProbe` | Castle | the Katana's finisher and its camera |
 | `PauseProbe` | Hub | the pause menu: every entry, pausing mid-attack and mid-roll, giving up, forgetting |
+| `LoopProbe` | Hub | a second loop: the Katana and Lightning taken at the hub, the whole Lightning kit in the castle and on the summit, take and consume, each with the road home |
+| `FallProbe` | Hub | a fall everywhere a run can end, the pause menu on the summit, in the air and in a finisher, giving up from the summit, the arena's standing up again |
 | `TipsProbe` | Castle | the three first-fight tips |
 | `SoakProbe` | any | random play for minutes; mode, seed and seconds are read from `%TEMP%/soak_config.txt` |
 | `TourProbe`, `TitleProbe` | any | photographs of each scene's places and its title card, to `review/shots/current/` |
