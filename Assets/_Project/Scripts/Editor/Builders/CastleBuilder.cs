@@ -129,7 +129,12 @@ namespace Clover.EditorTools
             Slab("Deck Underside", group, -5.5f, 5.5f, -4.5f, 26f, -1.2f, wallDark, 6f);
             foreach (float x in new[] { -5.4f, 5.4f })
             {
-                Wall("Parapet", group, new Vector3(x, 0f, -4f), new Vector3(x, 0f, 26f), 1.1f, 0.6f, wall);
+                // The storm has bitten a length out of each parapet: on the west the stones lie on the deck, on the east
+                // a guardian fell through it.
+                float gapSouth = x < 0f ? 12.3f : 6.4f, gapNorth = x < 0f ? 16.2f : 10.4f;
+                Wall("Parapet", group, new Vector3(x, 0f, -4f), new Vector3(x, 0f, gapSouth), 1.1f, 0.6f, wall);
+                Wall("Parapet", group, new Vector3(x, 0f, gapNorth), new Vector3(x, 0f, 26f), 1.1f, 0.6f, wall);
+                BrokenParapet(group, x, gapSouth, gapNorth);
                 for (float z = -2f; z <= 24f; z += 6.5f)
                 {
                     Pillar("Parapet Post", group, new Vector3(x, 0f, z), 0.9f, 2.2f, wall, trim);
@@ -150,6 +155,7 @@ namespace Clover.EditorTools
             Dressing.Spears(dress, new Vector3(2.6f, 0f, 16.5f), 3, 14, cloth);
             Dressing.Barrel(dress, new Vector3(-4.2f, 0f, 3.6f), 20f);
             Dressing.Sacks(dress, new Vector3(3.6f, 0f, -2.6f), 160f);
+            CausewayArt(group, dress);
         }
 
         // The gate: two towers, the wall between them, and the open arch the player walks through.
@@ -170,6 +176,13 @@ namespace Clover.EditorTools
             Block("Gate Sill", group, new Vector3(0f, -0.05f, 28f), new Vector3(6.2f, 0.12f, 3.4f), trim);
             Banner(group, new Vector3(-9.5f, 8f, 12.9f), 0f);
             Banner(group, new Vector3(9.5f, 8f, 12.9f), 0f);
+
+            // The gate itself lies where it was thrown down, and one torch still burns on the taller jamb.
+            var dress = BuildKit.Group("Dressing", group);
+            Dressing.Portcullis(dress, new Vector3(8.6f, 0f, 31.4f), 24f);
+            Torch(dress, new Vector3(4.3f, 2.3f, 26.5f), 180f);
+            Dressing.Chain(dress, new Vector3(3.6f, 3.1f, 26.45f), new Vector3(5.1f, 1.2f, 26.45f), 0.5f, 7);
+            Dressing.IvyPatch(dress, new Vector3(-4.3f, 0f, 26.5f), 180f, 2.2f, 2f, 201);
         }
 
         // The first fights: an open paved court with cover, a struck tree, and the stair north.
@@ -193,16 +206,14 @@ namespace Clover.EditorTools
             Pillar("Pillar", group, new Vector3(11f, 0f, 38f), 1.6f, 3.4f, wall, trim);
             Pillar("Pillar", group, new Vector3(13f, 0f, 50f), 1.6f, 3.4f, wall, trim);
             Rubble(group, new Vector3(-10.5f, 0f, 49f), 7);
-            Rubble(group, new Vector3(14f, 0f, 45f), 4);
             StruckTree(group, new Vector3(-9f, 0f, 39f));
             Crates(group, new Vector3(15.5f, 0f, 32f));
-            Crates(group, new Vector3(-16f, 0f, 58f));
             Brazier(group, new Vector3(-6f, 0f, 31f), true);
             Brazier(group, new Vector3(6f, 0f, 31f), true);
             Brazier(group, new Vector3(-7f, 0f, 54f), true);
             Brazier(group, new Vector3(7f, 0f, 54f), true);
             Banner(group, new Vector3(-18.6f, 3.6f, 40f), 90f);
-            Banner(group, new Vector3(18.6f, 3.6f, 50f), -90f);
+            Banner(group, new Vector3(18.6f, 3.6f, 52f), -90f);
 
             var dress = BuildKit.Group("Dressing", group);
             Slab("Court Path", dress, -3.3f, 3.3f, 28f, 56f, 0.012f, path, 0.02f);
@@ -223,8 +234,6 @@ namespace Clover.EditorTools
                 Dressing.Lantern(dress, new Vector3(-4f, 0f, z), 0f);
                 Dressing.Lantern(dress, new Vector3(4f, 0f, z), 180f);
             }
-            Dressing.Lantern(dress, new Vector3(-17.8f, 0f, 50f), 0f);
-            Dressing.Lantern(dress, new Vector3(17.8f, 0f, 40f), 180f);
             Dressing.Barrel(dress, new Vector3(13.6f, 0f, 31f), 15f);
             Dressing.Barrel(dress, new Vector3(14.1f, 0f, 33.6f), 70f, true);
             Dressing.Barrel(dress, new Vector3(-17.4f, 0f, 60f), 0f);
@@ -233,6 +242,7 @@ namespace Clover.EditorTools
             Dressing.Spears(dress, new Vector3(7.2f, 0f, 43f), 4, 32, cloth);
             Dressing.Spears(dress, new Vector3(-5.6f, 0f, 52f), 3, 33, null);
             Dressing.Spears(dress, new Vector3(15f, 0f, 57f), 5, 34, cloth);
+            OuterCourtArt(dress);
         }
 
         // The middle of the area: the Katana on its stone, a place to rest, and the second stair.
@@ -267,7 +277,6 @@ namespace Clover.EditorTools
             Brazier(group, new Vector3(-13f, 2f, 88f), true);
             Brazier(group, new Vector3(13f, 2f, 88f), true);
             Rubble(group, new Vector3(12f, 2f, 82f), 5);
-            Crates(group, new Vector3(-16f, 2f, 80f));
             Banner(group, new Vector3(-18.6f, 5.6f, 74f), 90f);
             Banner(group, new Vector3(18.6f, 5.6f, 74f), -90f);
 
@@ -284,16 +293,8 @@ namespace Clover.EditorTools
                 Dressing.GrassPatch(dress, new Vector3(Mathf.Sin(angle) * 6.4f, 2f, 74f + Mathf.Cos(angle) * 6.4f), 1.1f, 6, 45 + i);
             }
             Dressing.Leaves(dress, new Vector3(-12f, 2f, 71f), 3f, 52);
-            Dressing.Lantern(dress, new Vector3(-7.6f, 2f, 64.6f), 0f);
-            Dressing.Lantern(dress, new Vector3(7.6f, 2f, 64.6f), 180f);
-            Dressing.Lantern(dress, new Vector3(-8.4f, 2f, 84f), 0f);
-            Dressing.Lantern(dress, new Vector3(8.4f, 2f, 84f), 180f);
-            Dressing.Barrel(dress, new Vector3(16.6f, 2f, 64.4f), 0f);
-            Dressing.Barrel(dress, new Vector3(17.2f, 2f, 66f), 40f);
-            Dressing.Sacks(dress, new Vector3(15f, 2f, 64.2f), -10f);
-            Dressing.Cart(dress, new Vector3(15.6f, 2f, 90f), -50f);
             Dressing.Spears(dress, new Vector3(9.4f, 2f, 78f), 5, 53, cloth);
-            Dressing.Spears(dress, new Vector3(-8.6f, 2f, 80.5f), 3, 54, null);
+            TerraceArt(dress);
         }
 
         // The last and hardest fight, under the keep's wall, and the sealed door to the summit.
@@ -352,17 +353,284 @@ namespace Clover.EditorTools
                 Dressing.GrassPatch(dress, new Vector3(x, 4f, 101f), 1.6f, 6, 66 + (int)x);
                 Dressing.GrassPatch(dress, new Vector3(x, 4f, 116f), 1.6f, 6, 86 + (int)x);
             }
-            foreach (float z in new[] { 105f, 114f })
-            {
-                Dressing.Lantern(dress, new Vector3(-4f, 4f, z), 0f);
-                Dressing.Lantern(dress, new Vector3(4f, 4f, z), 180f);
-            }
-            Dressing.Barrel(dress, new Vector3(-17.2f, 4f, 104f), 0f);
-            Dressing.Barrel(dress, new Vector3(-16.6f, 4f, 105.6f), 25f, true);
-            Dressing.Sacks(dress, new Vector3(16.4f, 4f, 118f), 200f);
+            Dressing.Lantern(dress, new Vector3(-4f, 4f, 105f), 0f);
+            Dressing.Lantern(dress, new Vector3(4f, 4f, 105f), 180f);
             Dressing.Spears(dress, new Vector3(-6.4f, 4f, 109f), 5, 71, cloth);
-            Dressing.Spears(dress, new Vector3(7.4f, 4f, 112.5f), 4, 72, null);
             Dressing.Spears(dress, new Vector3(-13f, 4f, 119f), 3, 73, cloth);
+            WardArt(dress);
+            Beyond();
+        }
+
+        // ------------------------------------------------------------------ what makes each place its own
+
+        // A torch on a wall, burning.
+        private static void Torch(Transform parent, Vector3 at, float yaw) => Flames(Dressing.WallTorch(parent, at, yaw), Vector3.zero, true, 0.42f);
+
+        // The foot of a wall face: a darker course of stone, and the floor broken and overgrown where it meets it.
+        private static void WallFoot(Transform parent, Vector3 from, Vector3 to, Vector3 outward, int seed, bool mossy = false, float width = 1.25f)
+        {
+            Dressing.Footing(parent, from, to, outward);
+            Dressing.FloorEdge(parent, from + outward * 0.22f, to + outward * 0.22f, outward, width, seed, mossy);
+        }
+
+        // A length of parapet that has gone into the drop: the stumps of it, and nothing the player can walk through.
+        private static void BrokenParapet(Transform parent, float x, float south, float north)
+        {
+            float middle = (south + north) * 0.5f, length = north - south;
+            Block("Parapet Stump", parent, new Vector3(x, 0.15f, middle), new Vector3(0.6f, 0.3f, length), wallDark);
+            Block("Parapet Break", parent, new Vector3(x, 0.4f, south + 0.28f), new Vector3(0.62f, 0.8f, 0.6f), wall, 5f);
+            Block("Parapet Break", parent, new Vector3(x, 0.27f, south + 0.85f), new Vector3(0.6f, 0.54f, 0.55f), wall, -4f);
+            Block("Parapet Break", parent, new Vector3(x, 0.36f, north - 0.3f), new Vector3(0.62f, 0.72f, 0.62f), wall, -6f);
+            var guard = new GameObject("Parapet Guard");
+            guard.transform.SetParent(parent, false);
+            guard.transform.position = new Vector3(x, 1.5f, middle);
+            guard.AddComponent<BoxCollider>().size = new Vector3(0.6f, 3f, length);
+        }
+
+        // Something big and far down that is only ever looked at.
+        private static void Mass(string name, Transform parent, Vector3 centre, Vector3 size, Material material)
+        {
+            var mass = BuildKit.Shape(PrimitiveType.Cube, name, parent, centre, size, material);
+            mass.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            mass.gameObject.isStatic = true;
+        }
+
+        // The approach: two guardians flanked the way and one has fallen through the parapet; below, the piers of the
+        // bridge go down into the dark among the crags.
+        private static void CausewayArt(Transform group, Transform dress)
+        {
+            foreach (float side in new[] { -1f, 1f })
+            {
+                Mass("Statue Pier", group, new Vector3(side * 6.1f, -8.1f, 8f), new Vector3(1.8f, 16f, 2f), wall);
+                Mass("Statue Pier Cap", group, new Vector3(side * 6.1f, -0.1f, 8f), new Vector3(2.1f, 0.2f, 2.3f), trim);
+            }
+            Dressing.Statue(dress, new Vector3(-5.7f, 0f, 8f), 90f, false);
+            Dressing.Statue(dress, new Vector3(5.7f, 0f, 8f), -90f, true);
+            Dressing.FallenStones(dress, new Vector3(-4.3f, 0f, 14.3f), 4, 0.45f, 7);
+            Dressing.Chain(dress, new Vector3(-5.4f, 1.05f, 12.3f), new Vector3(-5.4f, 1.05f, 16.2f), 0.55f, 9);
+            Dressing.Chain(dress, new Vector3(5.4f, 1.05f, 6.4f), new Vector3(4.9f, 0.06f, 7.1f), 0.05f, 4);
+
+            var below = BuildKit.Group("Below", group);
+            Mass("Bridge Pier", below, new Vector3(0f, -16f, 8f), new Vector3(16.6f, 27.6f, 4.4f), wallDark);
+            Mass("Bridge Pier Ledge", below, new Vector3(0f, -2.3f, 8f), new Vector3(17.2f, 0.3f, 5f), trim);
+            Mass("Bridge Pier", below, new Vector3(0f, -17f, -2.5f), new Vector3(14f, 27f, 4f), wallDark);
+            Mass("Bridge Pier Ledge", below, new Vector3(0f, -3.6f, -2.5f), new Vector3(14.6f, 0.3f, 4.6f), trim);
+            foreach (float side in new[] { -1f, 1f })
+            {
+                Mass("Gate Tower Foot", below, new Vector3(side * 9.5f, -22f, 16f), new Vector3(7.6f, 32f, 7.6f), wallDark);
+                // The court stands on a wall of its own, going down beside the last of the causeway.
+                Mass("Court Foundations", below, new Vector3(side * 12.6f, -16.5f, 27.6f), new Vector3(15f, 32f, 3.6f), wallDark);
+                Mass("Court Foundation Ledge", below, new Vector3(side * 12.6f, -3.2f, 27.3f), new Vector3(15.4f, 0.4f, 4.6f), trim);
+            }
+            Dressing.Crag(below, new Vector3(13.5f, -40f, 1f), 8f, 30f, 1);
+            Dressing.Crag(below, new Vector3(-14f, -40f, 3f), 9f, 32f, 2);
+            Dressing.Crag(below, new Vector3(16.5f, -40f, 23f), 7f, 28f, 3);
+            Dressing.Crag(below, new Vector3(-16f, -40f, 21.5f), 8f, 33f, 4);
+            Dressing.Crag(below, new Vector3(-12f, -40f, 13.5f), 6f, 26f, 5);
+            Dressing.Crag(below, new Vector3(20f, -40f, 9f), 10f, 35f, 6);
+            Dressing.Crag(below, new Vector3(-21f, -40f, 10f), 10f, 34f, 7);
+            Dressing.Mist(below, new Vector3(0f, -22f, 10f), 110f, 80f);
+        }
+
+        // A garrison's yard: racks of spears on the walls, striking posts in the earth, a torn lean-to, and the well.
+        private static void OuterCourtArt(Transform dress)
+        {
+            const float W = -18.7f, E = 18.7f;
+            WallFoot(dress, new Vector3(W, 0f, 28.8f), new Vector3(W, 0f, 62f), Vector3.right, 101);
+            WallFoot(dress, new Vector3(E, 0f, 28.8f), new Vector3(E, 0f, 62f), Vector3.left, 102);
+            WallFoot(dress, new Vector3(-18.7f, 0f, 62f), new Vector3(-4.9f, 0f, 62f), Vector3.back, 103);
+            WallFoot(dress, new Vector3(4.9f, 0f, 62f), new Vector3(18.7f, 0f, 62f), Vector3.back, 104);
+            Dressing.FloorEdge(dress, new Vector3(-18.7f, 0f, 28.8f), new Vector3(-5.6f, 0f, 28.8f), Vector3.forward, 1f, 105);
+            Dressing.FloorEdge(dress, new Vector3(5.6f, 0f, 28.8f), new Vector3(18.7f, 0f, 28.8f), Vector3.forward, 1f, 106);
+            foreach (float z in new[] { 33.5f, 45f, 56.5f }) Dressing.Buttress(dress, new Vector3(W, 0f, z), 90f, 3.7f);
+            foreach (float z in new[] { 33.5f, 49.2f, 58.6f }) Dressing.Buttress(dress, new Vector3(E, 0f, z), -90f, 3.7f);
+            foreach (float x in new[] { -12.3f, 12.3f }) Dressing.Buttress(dress, new Vector3(x, 0f, 62f), 180f, 1.95f, 1.2f, 0.7f);
+
+            Torch(dress, new Vector3(W, 2.5f, 36.8f), 90f);
+            Torch(dress, new Vector3(E, 2.5f, 38.4f), -90f);
+            Dressing.ArrowSlit(dress, new Vector3(W, 3f, 30.6f), 90f, 2);
+            Dressing.ArrowSlit(dress, new Vector3(W, 3f, 42.6f), 90f, 1);
+            Dressing.ArrowSlit(dress, new Vector3(W, 3f, 52.8f), 90f, 0);
+            Dressing.ArrowSlit(dress, new Vector3(E, 3f, 36.2f), -90f, 1);
+            Dressing.ArrowSlit(dress, new Vector3(E, 3f, 57.2f), -90f, 2);
+            Dressing.IvyPatch(dress, new Vector3(W, 0f, 30.4f), 90f, 3.4f, 2.6f, 131);
+            Dressing.IvyPatch(dress, new Vector3(W, 0f, 54.3f), 90f, 2.6f, 2f, 132);
+            Dressing.IvyPatch(dress, new Vector3(W, 0f, 60f), 90f, 3f, 3f, 133);
+            Dressing.IvyPatch(dress, new Vector3(E, 0f, 35.4f), -90f, 2.6f, 2.2f, 134);
+            Dressing.IvyPatch(dress, new Vector3(E, 0f, 50.8f), -90f, 2f, 2.4f, 135);
+            Dressing.IvyPatch(dress, new Vector3(E, 0f, 60.6f), -90f, 2.4f, 3f, 136);
+            Dressing.IvyPatch(dress, new Vector3(-15.5f, 0f, 62f), 180f, 4f, 1.8f, 137);
+            Dressing.IvyPatch(dress, new Vector3(-6.4f, 0f, 62f), 180f, 2.4f, 1.7f, 138);
+            Dressing.IvyPatch(dress, new Vector3(8f, 0f, 62f), 180f, 3.4f, 1.8f, 139);
+            Dressing.IvyPatch(dress, new Vector3(16.6f, 0f, 62f), 180f, 3f, 1.7f, 140);
+            Dressing.MissingBlock(dress, new Vector3(W, 3.2f, 58.5f), 90f, 3.2f, 141);
+            Dressing.MissingBlock(dress, new Vector3(E, 3.2f, 31.2f), -90f, 3.2f, 142);
+
+            Dressing.WeaponRack(dress, new Vector3(W + 0.22f, 0f, 49f), 90f, 151);
+            Dressing.WeaponRack(dress, new Vector3(E - 0.22f, 0f, 55.2f), -90f, 152);
+            Dressing.WeaponRack(dress, new Vector3(-9f, 0f, 61.78f), 180f, 153);
+            Dressing.ShieldStack(dress, new Vector3(-16.2f, 0f, 58.2f), 30f, 154);
+            Dressing.ShieldStack(dress, new Vector3(8.8f, 0f, 60.3f), 200f, 155);
+            Dressing.StrikingPost(dress, new Vector3(-12.2f, 0f, 35.6f), 150f, true);
+            Dressing.StrikingPost(dress, new Vector3(-12.8f, 0f, 41.8f), 200f, false);
+            Dressing.StrikingPost(dress, new Vector3(-6.8f, 0f, 43.4f), 170f, true);
+            Dressing.Awning(dress, new Vector3(E - 0.05f, 0f, 43.9f), -90f, 7f);
+
+            // The well is what the yard is built round: east of the path, with its own lamp.
+            Dressing.Well(dress, new Vector3(10f, 0f, 44.6f), 20f);
+            Dressing.Trough(dress, new Vector3(12.9f, 0f, 47.3f), 70f);
+            Dressing.MossPatch(dress, new Vector3(9.2f, 0.012f, 46.5f), 1.6f, 156);
+            Dressing.MossPatch(dress, new Vector3(11.7f, 0.012f, 43.1f), 1.3f, 157);
+            Dressing.Puddle(dress, new Vector3(8f, 0f, 43f), 1.5f, 777);
+        }
+
+        // Older than the castle, and holy: stone lanterns along the way to the sword, ropes and paper on the standing
+        // stones, offerings, two old trees, moss over everything.
+        private static void TerraceArt(Transform dress)
+        {
+            const float W = -18.7f, E = 18.7f, Y = 2f;
+            WallFoot(dress, new Vector3(W, Y, 62.2f), new Vector3(W, Y, 94f), Vector3.right, 111, true, 1.5f);
+            WallFoot(dress, new Vector3(E, Y, 62.2f), new Vector3(E, Y, 94f), Vector3.left, 112, true, 1.5f);
+            WallFoot(dress, new Vector3(-18.7f, Y, 94f), new Vector3(-4.9f, Y, 94f), Vector3.back, 113, true);
+            WallFoot(dress, new Vector3(4.9f, Y, 94f), new Vector3(18.7f, Y, 94f), Vector3.back, 114, true);
+            foreach (float z in new[] { 68.5f, 86.5f })
+            {
+                Dressing.Buttress(dress, new Vector3(W, Y, z), 90f, 3.7f);
+                Dressing.Buttress(dress, new Vector3(E, Y, z), -90f, 3.7f);
+            }
+            foreach (float x in new[] { -12.3f, 12.3f }) Dressing.Buttress(dress, new Vector3(x, Y, 94f), 180f, 1.95f, 1.2f, 0.7f);
+            foreach (float z in new[] { 79.5f, 91f })
+            {
+                Dressing.Niche(dress, new Vector3(W, Y + 1.3f, z), 90f);
+                Dressing.Niche(dress, new Vector3(E, Y + 1.3f, z), -90f);
+            }
+            Dressing.IvyPatch(dress, new Vector3(W, Y, 64.8f), 90f, 4.5f, 3.2f, 161);
+            Dressing.IvyPatch(dress, new Vector3(W, Y, 71.6f), 90f, 2.4f, 2f, 162);
+            Dressing.IvyPatch(dress, new Vector3(W, Y, 82.8f), 90f, 4f, 3.4f, 163);
+            Dressing.IvyPatch(dress, new Vector3(E, Y, 66f), -90f, 3.6f, 3f, 164);
+            Dressing.IvyPatch(dress, new Vector3(E, Y, 83f), -90f, 4.6f, 3.6f, 165);
+            Dressing.IvyPatch(dress, new Vector3(E, Y, 89f), -90f, 2.4f, 2.2f, 166);
+            Dressing.IvyPatch(dress, new Vector3(-15.6f, Y, 94f), 180f, 5f, 1.8f, 167);
+            Dressing.IvyPatch(dress, new Vector3(-7.2f, Y, 94f), 180f, 3f, 1.7f, 168);
+            Dressing.IvyPatch(dress, new Vector3(8.4f, Y, 94f), 180f, 4f, 1.8f, 169);
+            Dressing.IvyPatch(dress, new Vector3(16.4f, Y, 94f), 180f, 3f, 1.7f, 170);
+            Dressing.MissingBlock(dress, new Vector3(W, Y + 3.1f, 76.4f), 90f, 3.1f, 171);
+            Dressing.MissingBlock(dress, new Vector3(E, Y + 3.2f, 71.2f), -90f, 3.2f, 172);
+
+            // Four lanterns burn along the way; a fifth fell long ago and nobody stood it up.
+            foreach (float z in new[] { 64.6f, 82.4f })
+            {
+                Dressing.Toro(dress, new Vector3(-4.3f, Y, z), 0f, true);
+                Dressing.Toro(dress, new Vector3(4.3f, Y, z), 0f, true);
+            }
+            Dressing.Toro(dress, new Vector3(-12.6f, Y, 84.4f), 40f, false, true);
+
+            // The stones are roped east and west; the way in from the south and out to the north is left open.
+            Vector3 StoneTop(int index)
+            {
+                float angle = Mathf.Deg2Rad * (index * 60f + 30f);
+                return new Vector3(Mathf.Sin(angle) * 5.6f, Y + 2.45f, 74f + Mathf.Cos(angle) * 5.6f);
+            }
+            foreach (int first in new[] { 0, 1, 3, 4 })
+            {
+                Vector3 from = StoneTop(first), to = StoneTop(first + 1);
+                Vector3 along = (to - from).normalized;
+                Dressing.Shimenawa(dress, from + along * 0.45f, to - along * 0.45f, 0.38f);
+            }
+            Dressing.OfferingTable(dress, new Vector3(-2.4f, Y + 0.25f, 75.6f), 25f);
+            Dressing.OfferingTable(dress, new Vector3(2.4f, Y + 0.25f, 75.6f), -25f);
+            Dressing.GnarledTree(dress, new Vector3(-10f, Y, 72.4f), 0f);
+            Dressing.GnarledTree(dress, new Vector3(10f, Y, 70.8f), 140f);
+
+            float green = Y + 0.015f;
+            Dressing.MossPatch(dress, new Vector3(-6.8f, green, 70.4f), 2f, 181);
+            Dressing.MossPatch(dress, new Vector3(6.9f, green, 77.9f), 1.8f, 182);
+            Dressing.MossPatch(dress, new Vector3(-5.4f, green, 79.6f), 1.6f, 183);
+            Dressing.MossPatch(dress, new Vector3(5.2f, green, 68.2f), 1.4f, 184);
+            Dressing.MossPatch(dress, new Vector3(-11.4f, green, 74.2f), 1.8f, 185);
+            Dressing.MossPatch(dress, new Vector3(11.6f, green, 72.6f), 1.7f, 186);
+            Dressing.MossPatch(dress, new Vector3(-2.3f, green, 66.2f), 1.1f, 187);
+            Dressing.MossPatch(dress, new Vector3(2.6f, green, 84.6f), 1.2f, 188);
+            Dressing.MossPatch(dress, new Vector3(3.3f, green + 0.25f, 71.5f), 1.2f, 189);
+            Dressing.MossPatch(dress, new Vector3(-3.5f, green + 0.25f, 77f), 1.3f, 190);
+        }
+
+        // An execution ground: iron rods along the keep wall to call the lightning down, stakes to chain the condemned
+        // to, the paving burned black where it struck, and the engines of whoever last tried the door.
+        private static void WardArt(Transform dress)
+        {
+            const float W = -18.7f, E = 18.7f, Y = 4f;
+            WallFoot(dress, new Vector3(W, Y, 94.2f), new Vector3(W, Y, 124.5f), Vector3.right, 121);
+            WallFoot(dress, new Vector3(E, Y, 94.2f), new Vector3(E, Y, 124.5f), Vector3.left, 122);
+            foreach (float side in new[] { -1f, 1f })
+            {
+                Dressing.Footing(dress, new Vector3(side * 13.5f, Y, 126.5f), new Vector3(side * 3.75f, Y, 126.5f), Vector3.back, 0.8f, 0.22f);
+                Dressing.FloorEdge(dress, new Vector3(side * 13.5f, Y, 126.28f), new Vector3(side * 4.7f, Y, 126.28f), Vector3.back, 1.1f, 123 + (int)side);
+                float face = side < 0f ? W : E, yaw = side < 0f ? 90f : -90f;
+                foreach (float z in new[] { 98.5f, 109.5f, 120.5f }) Dressing.Buttress(dress, new Vector3(face, Y, z), yaw, 4.3f, 1.4f);
+                Dressing.ArrowSlit(dress, new Vector3(face, Y + 3.1f, 104f), yaw, 2);
+                Dressing.ArrowSlit(dress, new Vector3(face, Y + 3.1f, 115f), yaw, 2);
+
+                // The rods: three each side of the door, and the banners of the house hung low between them and it.
+                float[] heights = { 10f, 12.5f, 9f };
+                for (int i = 0; i < 3; i++) Dressing.LightningRod(dress, new Vector3(side * (8.3f + i * 2.3f), Y, 125.5f), heights[i]);
+                Dressing.Arc(dress, new Vector3(side * 8.3f, Y + 1.5f, 125.5f), new Vector3(side * 10.6f, Y + 1f, 125.5f), 31 + (int)side);
+                Dressing.Arc(dress, new Vector3(side * 10.6f, Y + 1.5f, 125.5f), new Vector3(side * 12.9f, Y + 1.5f, 125.5f), 35 + (int)side);
+                Mass("Rod Cable", dress, new Vector3(side * 10.6f, Y + 0.05f, 124.85f), new Vector3(5.6f, 0.08f, 0.1f), iron);
+                Dressing.HeavyBanner(dress, new Vector3(side * 6.4f, Y + 3.4f, 126.3f), 180f, 1.7f, 2.6f);
+
+                var glowObject = new GameObject("Rod Light");
+                glowObject.transform.SetParent(dress, false);
+                glowObject.transform.position = new Vector3(side * 10.6f, Y + 1.5f, 124.4f);
+                var glow = glowObject.AddComponent<Light>();
+                glow.type = LightType.Point;
+                glow.color = new Color(0.45f, 0.65f, 1f);
+                glow.range = 7f;
+                glow.intensity = 7f;
+                glow.shadows = LightShadows.None;
+            }
+            Dressing.Chain(dress, new Vector3(W + 0.08f, Y + 3f, 100.2f), new Vector3(W + 0.08f, Y + 3f, 107.8f), 1.1f, 11);
+            Dressing.Chain(dress, new Vector3(E - 0.08f, Y + 3f, 111.2f), new Vector3(E - 0.08f, Y + 3f, 118.8f), 1.1f, 11);
+            Dressing.MissingBlock(dress, new Vector3(W, Y + 3f, 117.4f), 90f, 3f, 191);
+            Dressing.MissingBlock(dress, new Vector3(E, Y + 3f, 102f), -90f, 3f, 192);
+
+            Dressing.Ballista(dress, new Vector3(13.2f, Y, 110.6f), -14f);
+            Dressing.Bolts(dress, new Vector3(10.8f, Y, 113.4f), 5, 1.6f, 5);
+            Dressing.Bolts(dress, new Vector3(3.6f, Y, 119f), 4, 1.7f, 6);
+            Dressing.Mantlet(dress, new Vector3(-13.4f, Y, 106.4f), 165f);
+            Dressing.Cage(dress, new Vector3(-15.2f, Y, 121.6f), 25f);
+            float[] stakes = { 13f, 15.2f, 17.1f };
+            for (int i = 0; i < stakes.Length; i++)
+            {
+                var at = new Vector3(stakes[i], Y, 122.3f + (i % 2) * 0.25f);
+                Dressing.Stake(dress, at, 180f, i);
+                Dressing.ScorchMark(dress, at + Vector3.up * 0.014f, 1.05f, 40 + i);
+            }
+            float burn = Y + 0.014f;
+            Dressing.ScorchMark(dress, new Vector3(0f, burn, 109.6f), 2.4f, 51);
+            Dressing.ScorchMark(dress, new Vector3(-2.2f, burn, 100.2f), 1.5f, 52);
+            Dressing.ScorchMark(dress, new Vector3(6.4f, burn, 103.4f), 1.3f, 53);
+            Dressing.ScorchMark(dress, new Vector3(-7.4f, burn, 112.8f), 1.7f, 54);
+            Dressing.ScorchMark(dress, new Vector3(2.8f, burn, 117f), 1.4f, 55);
+            Dressing.ScorchMark(dress, new Vector3(12.2f, burn, 116.4f), 1.6f, 56);
+            Dressing.ScorchMark(dress, new Vector3(-10f, burn, 122.2f), 1.2f, 57);
+        }
+
+        // What stands outside the walls, so the world does not stop at them: a line of mountains north of the keep and
+        // beyond each long wall, and a few far towers. All of it is one flat tone and none of it is ever walked on.
+        private static void Beyond()
+        {
+            var beyond = BuildKit.Group("Beyond", world);
+            Dressing.Ridge(beyond, new Vector3(0f, -20f, 188f), 0f, 280f, 80f);
+            Dressing.Ridge(beyond, new Vector3(-72f, -20f, 70f), 90f, 230f, 58f);
+            Dressing.Ridge(beyond, new Vector3(72f, -20f, 62f), -90f, 230f, 64f);
+            Dressing.FarTower(beyond, new Vector3(-31f, -20f, 46f), 6f, 34f);
+            Dressing.FarTower(beyond, new Vector3(-37f, -20f, 84f), 8f, 44f);
+            Dressing.FarTower(beyond, new Vector3(33f, -20f, 68f), 7f, 40f);
+            Dressing.FarTower(beyond, new Vector3(39f, -20f, 106f), 6f, 46f);
+            Dressing.FarTower(beyond, new Vector3(28f, -30f, 20f), 5f, 32f);
+            Dressing.FarTower(beyond, new Vector3(-27f, -30f, 12f), 6f, 30f);
+            Dressing.Mist(beyond, new Vector3(-35f, 58f, 186f), 70f, 70f, true);
         }
 
         // ------------------------------------------------------------------ pieces
@@ -501,7 +769,7 @@ namespace Clover.EditorTools
             return (light, flames);
         }
 
-        private static ParticleSystem Flames(Transform parent, Vector3 localPosition, bool playing)
+        private static ParticleSystem Flames(Transform parent, Vector3 localPosition, bool playing, float scale = 1f)
         {
             var flamesObject = new GameObject("Flames");
             flamesObject.transform.SetParent(parent, false);
@@ -513,8 +781,8 @@ namespace Clover.EditorTools
             main.loop = true;
             main.playOnAwake = playing;
             main.startLifetime = new ParticleSystem.MinMaxCurve(0.4f, 0.8f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(0.5f, 1.5f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.6f, 1.15f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.5f * scale, 1.5f * scale);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.6f * scale, 1.15f * scale);
             main.startRotation = new ParticleSystem.MinMaxCurve(-0.25f, 0.25f);
             main.startColor = new ParticleSystem.MinMaxGradient(new Color(0.75f, 1f, 1f, 1f), Color.white);
             main.maxParticles = 40;
@@ -523,7 +791,7 @@ namespace Clover.EditorTools
             var shape = system.shape;
             shape.shapeType = ParticleSystemShapeType.Cone;
             shape.angle = 12f;
-            shape.radius = 0.28f;
+            shape.radius = 0.28f * scale;
             var colour = system.colorOverLifetime;
             colour.enabled = true;
             var gradient = new Gradient();
@@ -729,7 +997,7 @@ namespace Clover.EditorTools
                 var line = lineObject.AddComponent<LineRenderer>();
                 line.useWorldSpace = true;
                 line.sharedMaterial = boltMaterial;
-                line.widthMultiplier = 0.4f;
+                line.widthMultiplier = 0.2f;
                 line.numCornerVertices = 2;
                 line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 line.receiveShadows = false;

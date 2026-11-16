@@ -30,8 +30,7 @@ public class TourProbeRunner : MonoBehaviour
         defence = player.GetComponent<PlayerDefence>();
         string scene = SceneManager.GetActiveScene().name;
         Vector3[] stops = scene == "Castle"
-            ? new[] { new Vector3(0f, 0.1f, 6f), new Vector3(0f, 0.1f, 22f), new Vector3(0f, 0.1f, 36f), new Vector3(-8f, 0.1f, 44f), new Vector3(6f, 0.1f, 56f),
-                new Vector3(0f, 2.1f, 68f), new Vector3(-10f, 2.1f, 68f), new Vector3(0f, 2.1f, 84f), new Vector3(0f, 4.1f, 104f), new Vector3(0f, 4.1f, 120f) }
+            ? new[] { new Vector3(0f, 0.1f, 6f), new Vector3(0f, 0.1f, 10f), new Vector3(-2f, 0.1f, 15f), new Vector3(0f, 0.1f, 24f), new Vector3(8f, 0.1f, 33f), new Vector3(9f, 0.1f, 42f), new Vector3(14f, 0.1f, 44f), new Vector3(-13f, 0.1f, 38f), new Vector3(-14f, 0.1f, 50f), new Vector3(-8f, 0.1f, 58f), new Vector3(0f, 2.1f, 66f), new Vector3(0f, 2.1f, 71f), new Vector3(-10f, 2.1f, 70f), new Vector3(14f, 2.1f, 80f), new Vector3(0f, 2.1f, 84f), new Vector3(-13f, 2.1f, 90f), new Vector3(0f, 4.1f, 104f), new Vector3(12f, 4.1f, 110f), new Vector3(0f, 4.1f, 120f), new Vector3(12f, 4.1f, 121f), new Vector3(-12f, 4.1f, 120f), new Vector3(-14f, 4.1f, 106f) }
             : scene == "Summit" ? new[] { new Vector3(0f, 0.1f, -12f), new Vector3(0f, 0.1f, 0f), new Vector3(6f, 0.1f, 6f) }
             : new[] { player.transform.position };
         yield return new WaitForSecondsRealtime(1.6f);

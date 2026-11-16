@@ -605,6 +605,21 @@ only for faults.
 - **Title cards.** The castle's name and the god's are shown on a brush stroke for three seconds on arrival.
 - **Movement seen from above.** Both runs were re-posed for the top-down camera, where legs hardly show: more lean,
   the shoulders turning against the hips, the sword arm swinging.
+- **Animation, criticised and redone.** Every contact sheet was shown to a second pair of eyes asked only for faults.
+  From that: every attack now rings when it lands (the body drives on past its pose and comes back) so no blow is a
+  frozen pose; idles and walks move enough to be seen from above; the heavy cut goes from over the right shoulder
+  down to the left and the third light cut rises from the left hip to the right shoulder, so both cross the body in
+  the top view; the fist attacks turn the hips and shoulders into the blow, the rising blow leaves the ground and the
+  fourth is now a round kick; the soldier's thrust and lunge are no longer alike; the caster throws its bolt with the
+  free hand and slams its staff for the burst; the acolyte really leaps; deaths are staged falls that end lying long
+  on the ground; the guards are braced; the god's roar has a motion of its own.
+- **The castle's three courts are now three places.** The causeway is storm-broken (gaps in the parapet, a standing
+  and a toppled guardian, piers and crags in the drop). The outer court is a garrison yard (a well with a lamp, weapon
+  racks, striking posts, a torn lean-to). The terrace is a shrine (stone lanterns, sacred ropes between the standing
+  stones, offering tables, two old trees). The upper ward is an execution ground (lightning rods arcing along the
+  keep wall, stakes on scorch marks, a broken ballista). Walls have footings, buttresses, arrow slits and ivy, and
+  the line where floor meets wall is broken with worn stones and weeds. Far ridges and towers were built beyond the
+  walls but the camera, which looks down, never shows them from inside the courts.
 
 ## Open questions
 
