@@ -40,9 +40,9 @@ namespace Clover.EditorTools
             ring = BuildKit.Toon(Folder, "m_hub_ring", new Color(1f, 0.9f, 0.6f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(2.6f, 2f, 1f));
             water = BuildKit.Toon(Folder, "m_hub_water", new Color(0.05f, 0.045f, 0.1f), false, null, 0f, 0f);
             var rain = BuildKit.Glow(Folder, "m_hub_rain", new Color(0.8f, 0.9f, 1.3f, 0.55f), 3, true, 1f, 0f);
-            var light = BuildKit.Glow(Folder, "m_hub_voice", new Color(1.6f, 1.25f, 0.6f, 0.9f), 0, true, 1.6f, 0.4f).Graphic(0.2f, 0.35f);
-            var fire = BuildKit.Glow(Folder, "m_hub_fire", new Color(1.5f, 0.5f, 0.09f, 1f), 0, true, 1.4f, 0.7f).Graphic(0.22f, 0.15f);
-            var spark = BuildKit.Glow(Folder, "m_hub_spark", new Color(0.3f, 0.7f, 1.7f, 1f), 0, true, 1.4f, 0.7f).Graphic(0.22f, 0.15f);
+            var light = BuildKit.Flame(Folder, "m_hub_flame_voice", new Color(1.2f, 0.9f, 0.45f, 0.9f));
+            var fire = BuildKit.Flame(Folder, "m_hub_flame", new Color(1.5f, 0.45f, 0.09f, 1f));
+            var spark = BuildKit.Flame(Folder, "m_hub_flame_storm", new Color(0.25f, 0.6f, 1.6f, 1f));
             var chosen = BuildKit.Glow(Folder, "m_hub_chosen", new Color(2.4f, 1.9f, 0.9f, 0.9f), 4, true, 2f, 0f);
             var gateGlow = BuildKit.Glow(Folder, "m_hub_gate", new Color(0.22f, 0.4f, 0.95f, 0.6f), 3, true, 1f, 0.5f);
 
@@ -409,8 +409,9 @@ namespace Clover.EditorTools
             main.playOnAwake = true;
             main.startLifetime = new ParticleSystem.MinMaxCurve(0.45f, 0.95f);
             main.startSpeed = new ParticleSystem.MinMaxCurve(0.7f, 1.9f);
-            main.startSize = new ParticleSystem.MinMaxCurve(size * 0.55f, size * 1.2f);
-            main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
+            main.startSize = new ParticleSystem.MinMaxCurve(size * 0.9f, size * 1.7f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(-0.25f, 0.25f);
+            main.startColor = new ParticleSystem.MinMaxGradient(new Color(0.75f, 1f, 1f, 1f), Color.white);
             main.maxParticles = 60;
             var emission = system.emission;
             emission.rateOverTime = rate;

@@ -113,7 +113,7 @@ namespace Clover.EditorTools
             steel = BuildKit.Toon(Folder, "m_castle_steel", new Color(0.75f, 0.78f, 0.84f), false, null, 0f, 0.012f).Lit(new Color(1.4f, 1.6f, 2f), 0.6f, new Color(0.25f, 0.4f, 0.8f));
             ember = BuildKit.Toon(Folder, "m_castle_ember", new Color(0.9f, 0.45f, 0.15f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(1.6f, 0.5f, 0.1f));
             rune = BuildKit.Toon(Folder, "m_castle_rune", new Color(0.6f, 0.8f, 1f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(0.9f, 2f, 4.5f));
-            fireMaterial = BuildKit.Glow(Folder, "m_castle_fire", new Color(5f, 1.8f, 0.35f, 1f), 0, true, 1.4f, 0.7f).Graphic(0.22f, 0.7f);
+            fireMaterial = BuildKit.Flame(Folder, "m_castle_flame", new Color(1.6f, 0.5f, 0.1f, 1f));
             rainMaterial = BuildKit.Glow(Folder, "m_castle_rain", new Color(0.8f, 0.9f, 1.3f, 0.7f), 1, true, 1f);
             boltMaterial = BuildKit.Glow(Folder, "m_castle_bolt", new Color(5f, 7f, 12f, 1f), 3, true, 1f);
         }
@@ -510,13 +510,14 @@ namespace Clover.EditorTools
             var main = system.main;
             main.loop = true;
             main.playOnAwake = playing;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(0.35f, 0.8f);
-            main.startSpeed = new ParticleSystem.MinMaxCurve(0.8f, 2.2f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.3f, 0.7f);
-            main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
-            main.maxParticles = 60;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(0.4f, 0.8f);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.5f, 1.5f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.6f, 1.15f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(-0.25f, 0.25f);
+            main.startColor = new ParticleSystem.MinMaxGradient(new Color(0.75f, 1f, 1f, 1f), Color.white);
+            main.maxParticles = 40;
             var emission = system.emission;
-            emission.rateOverTime = 26f;
+            emission.rateOverTime = 11f;
             var shape = system.shape;
             shape.shapeType = ParticleSystemShapeType.Cone;
             shape.angle = 12f;
@@ -525,8 +526,8 @@ namespace Clover.EditorTools
             colour.enabled = true;
             var gradient = new Gradient();
             gradient.SetKeys(
-                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(1f, 0.5f, 0.3f), 1f) },
-                new[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(1f, 0.15f), new GradientAlphaKey(0f, 1f) });
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(1f, 0.6f, 0.45f), 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(1f, 0.7f), new GradientAlphaKey(0f, 1f) });
             colour.color = gradient;
             var size = system.sizeOverLifetime;
             size.enabled = true;

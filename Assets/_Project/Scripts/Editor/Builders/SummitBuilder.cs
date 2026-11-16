@@ -40,7 +40,7 @@ namespace Clover.EditorTools
             var cloud = BuildKit.Toon(Folder, "m_summit_cloud", new Color(0.56f, 0.56f, 0.82f), false, null, 0f, 0f).Lit(new Color(0.5f, 0.55f, 0.9f), 0.5f);
             cloud.SetColor("_ShadeColor", new Color(0.5f, 0.48f, 0.8f));
             var cloudDeep = BuildKit.Toon(Folder, "m_summit_cloud_deep", new Color(0.3f, 0.3f, 0.55f), false, null, 0f, 0f);
-            var spirit = BuildKit.Glow(Folder, "m_summit_spirit_fire", new Color(1.2f, 2.6f, 5f, 1f), 0, true, 1.4f, 0.7f).Graphic(0.22f, 0.7f);
+            var spirit = BuildKit.Flame(Folder, "m_summit_spirit_flame", new Color(0.3f, 0.7f, 1.8f, 1f));
 
             var world = BuildKit.Group("World");
 
@@ -231,11 +231,12 @@ namespace Clover.EditorTools
             main.playOnAwake = true;
             main.startLifetime = new ParticleSystem.MinMaxCurve(0.4f, 0.9f);
             main.startSpeed = new ParticleSystem.MinMaxCurve(0.8f, 2f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.4f, 0.9f);
-            main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
+            main.startSize = new ParticleSystem.MinMaxCurve(0.7f, 1.4f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(-0.25f, 0.25f);
+            main.startColor = new ParticleSystem.MinMaxGradient(new Color(0.75f, 1f, 1f, 1f), Color.white);
             main.maxParticles = 40;
             var emission = system.emission;
-            emission.rateOverTime = 16f;
+            emission.rateOverTime = 9f;
             var shape = system.shape;
             shape.shapeType = ParticleSystemShapeType.Cone;
             shape.angle = 10f;

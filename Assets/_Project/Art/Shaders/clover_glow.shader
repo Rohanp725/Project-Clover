@@ -6,7 +6,8 @@ Shader "Clover/Glow"
     Properties
     {
         [HDR] _Color ("Colour", Color) = (1, 1, 1, 1)
-        // 0 soft disc, 1 streak (soft across, pointed along), 2 slash (bright leading edge, fading tail), 3 flat, 4 ring, 5 star
+        // 0 soft disc, 1 streak (soft across, pointed along), 2 slash (bright leading edge, fading tail), 3 flat, 4 ring, 5 star,
+        // 6 flame (a tongue of fire, round below and pointed above, its edge licking; drawn in two flat tones)
         _Shape ("Shape", Float) = 0
         _Sharpness ("Edge sharpness", Range(0.5, 8)) = 2
         _Hard ("Hard edge at this much of the shape (0 = soft)", Range(0, 1)) = 0
@@ -96,7 +97,18 @@ Shader "Clover/Glow"
                 float2 uv = input.uv;
                 float2 centred = uv * 2.0 - 1.0;
                 half mask = 1;
-                if (_Shape < 0.5)
+                half inner = 0;
+                if (_Shape > 5.5)
+                {
+                    // A tongue of flame: widest a third of the way up, drawn to a point at the top, and never still.
+                    half t = saturate(uv.y);
+                    half width = 1.95 * sqrt(t) * pow(1.0 - t, 1.15);
+                    half lick = (ValueNoise(float2(uv.y * 3.0 - _Time.y * 2.6, input.color.r * 7.0 + _Time.y * 0.7)) - 0.5) * 0.55 * t;
+                    mask = saturate(1.0 - abs(centred.x + lick) / max(width, 0.001));
+                    // The hotter heart of it sits low.
+                    inner = step(0.5, mask) * step(t, 0.62);
+                }
+                else if (_Shape < 0.5)
                 {
                     mask = saturate(1.0 - length(centred));
                 }
@@ -142,6 +154,8 @@ Shader "Clover/Glow"
                 }
 
                 half4 colour = _Color * input.color;
+                // The flame's heart is the same fire, hotter: paler and yellower, with a hard line between the two.
+                colour.rgb = lerp(colour.rgb, colour.rgb * half3(1.25, 1.9, 2.4) + half3(0.25, 0.2, 0.1) * colour.a, inner);
                 if (_Core > 0.001) colour.rgb = lerp(colour.rgb, half3(3.2, 3.2, 3.2) * input.color.a, step(_Core, raw));
                 colour.a = saturate(colour.a * mask);
                 // With additive blending the colour itself must fade; with alpha blending the alpha does it.

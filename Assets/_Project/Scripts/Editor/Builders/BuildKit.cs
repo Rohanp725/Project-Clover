@@ -115,6 +115,17 @@ namespace Clover.EditorTools
             return material;
         }
 
+        /// <summary>A material for tongues of flame: a hard-edged lick of the given colour with a hotter heart. Its particles must stand upright.</summary>
+        public static Material Flame(string folder, string name, Color colour)
+        {
+            // Laid over what is behind it, not added to it: where tongues overlap they stay flat shapes and do not burn out to white.
+            var material = Glow(folder, name, colour, 6, false, 1f);
+            material.SetFloat("_Hard", 0.1f);
+            material.SetFloat("_Core", 0f);
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
         /// <summary>A primitive with no collider, as a child, at a local position and size.</summary>
         public static Renderer Shape(PrimitiveType type, string name, Transform parent, Vector3 localPosition, Vector3 size,
             Material material, Vector3? localEuler = null)

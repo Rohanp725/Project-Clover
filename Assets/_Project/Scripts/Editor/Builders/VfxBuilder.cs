@@ -49,8 +49,8 @@ namespace Clover.EditorTools
 
             Add(VfxKind.Dust, 9, Puffs(root, "Dust", BuildKit.Glow(Folder, "m_vfx_dust", new Color(0.55f, 0.55f, 0.6f, 0.5f), 0, false, 1.2f, 0.5f),
                 0.8f, 2.6f, 0.3f, 0.6f, 0.35f, 0.8f, 0f, 1.8f, flat: true));
-            Add(VfxKind.Fire, 26, Puffs(root, "Fire", BuildKit.Glow(Folder, "m_vfx_fire", new Color(5f, 1.7f, 0.3f, 1f), 0, true, 1.4f, 0.75f).Graphic(0.22f, 0.7f),
-                0.8f, 4.5f, 0.25f, 0.6f, 0.35f, 0.9f, -1.2f, 0.4f, flat: false));
+            Add(VfxKind.Fire, 26, Puffs(root, "Fire", BuildKit.Flame(Folder, "m_vfx_flame", new Color(1.7f, 0.5f, 0.1f, 1f)),
+                0.6f, 3.2f, 0.28f, 0.6f, 0.55f, 1.3f, -1.4f, 0.5f, flat: false, upright: true));
             Add(VfxKind.Embers, 12, Puffs(root, "Embers", BuildKit.Glow(Folder, "m_vfx_embers", new Color(6f, 2f, 0.3f, 1f), 0, true, 3f),
                 0.3f, 1.6f, 0.6f, 1.4f, 0.04f, 0.1f, -0.6f, 1f, flat: false));
             Add(VfxKind.Heal, 16, Puffs(root, "Heal", BuildKit.Glow(Folder, "m_vfx_heal", new Color(1.6f, 4f, 1.1f, 1f), 0, true, 3f),
@@ -143,14 +143,17 @@ namespace Clover.EditorTools
 
         // Soft blobs that drift: dust, flame, embers, healing motes. Negative gravity makes them rise.
         private static ParticleSystem Puffs(GameObject root, string name, Material material, float speedMin, float speedMax,
-            float lifeMin, float lifeMax, float sizeMin, float sizeMax, float gravity, float growTo, bool flat)
+            float lifeMin, float lifeMax, float sizeMin, float sizeMax, float gravity, float growTo, bool flat, bool upright = false)
         {
             var system = New(root, name, material, 256);
             var main = system.main;
             main.startSpeed = new ParticleSystem.MinMaxCurve(speedMin, speedMax);
             main.startLifetime = new ParticleSystem.MinMaxCurve(lifeMin, lifeMax);
             main.startSize = new ParticleSystem.MinMaxCurve(sizeMin, sizeMax);
-            main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
+            // Flames stand up, leaning a little; everything else may lie any way round.
+            main.startRotation = upright ? new ParticleSystem.MinMaxCurve(-0.3f, 0.3f) : new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
+            // Each flame licks to its own time: the shader reads the red of its colour as its place in the pattern.
+            if (upright) main.startColor = new ParticleSystem.MinMaxGradient(new Color(0.75f, 1f, 1f, 1f), Color.white);
             main.gravityModifier = gravity;
             var shape = system.shape;
             shape.enabled = true;
