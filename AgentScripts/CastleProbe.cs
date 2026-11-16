@@ -193,26 +193,31 @@ public class CastleProbeRunner : MonoBehaviour
         yield return null;
         Say($"I menu: opened {opened} time {stoppedAt:0} embers {Clover.Core.RunState.Points} closed {!menu.IsOpen} time {Time.timeScale:0}");
 
-        // J: fall, and come back at the brazier rested at.
-        keepAlive = false;
-        player.Teleport(new Vector3(0f, 4.1f, 100f), Quaternion.identity);
-        yield return null;
-        defence.TakeHit(new Hit(1000f, 0f, Vector3.back));
-        yield return null;
-        bool dead = defence.IsDead;
-        yield return new WaitForSeconds(defence.ReviveAfterSeconds + 0.4f);
-        float fromRest = Vector3.Distance(player.transform.position, second.transform.position);
-        Say($"J fall: dead {dead} then health {defence.Health.Current:0} weapon {combat.Weapon.Name} metres from the rest {fromRest:0.0}");
-
-        // K: the sealed door.
+        // J: the sealed door.
         var way = FindAnyObjectByType<SealedWay>();
         player.Teleport(way.transform.position + new Vector3(0f, 0.1f, -1f), Quaternion.identity);
         yield return new WaitForSeconds(0.4f);
         yield return Tap(Key.E);
         yield return new WaitForSeconds(0.2f);
-        Say($"K sealed way: tries {way.Tries} says '{defence.LastCallout}'");
+        Say($"J sealed way: tries {way.Tries} says '{defence.LastCallout}'");
 
-        Say($"done: time scale {Time.timeScale:0.00} player height {player.transform.position.y:0.0}");
+        // K: a fall ends the run: the dark closes and the player wakes in the hub with nothing carried.
+        DontDestroyOnLoad(gameObject);
+        keepAlive = false;
+        yield return null;
+        defence.TakeHit(new Hit(1000f, 0f, Vector3.back));
+        yield return null;
+        bool dead = defence.IsDead;
+        float until = Time.unscaledTime + 8f;
+        while (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Hub" && Time.unscaledTime < until) yield return null;
+        yield return null;
+        yield return null;
+        var woken = FindAnyObjectByType<PlayerCombat>();
+        Say($"K fall: dead {dead} woke in {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name} weapon {woken.Weapon.Name} embers {Clover.Core.RunState.Points} runs ended {Clover.Core.RunState.RunsEnded}");
+        Clover.Core.Progress.Forget(Clover.Core.Progress.MetSponsor);
+        Clover.Core.Progress.Forget(Clover.Core.Progress.WeaponKey(Weapons.KatanaName));
+
+        Say($"done: time scale {Time.timeScale:0.00}");
         Destroy(gameObject);
     }
 }

@@ -82,11 +82,12 @@ namespace Clover.EditorTools
             kit.Turns.Configure(enemies.ToArray());
             built.Player.GetComponent<PlayerInteraction>().Configure(things.ToArray());
             built.Player.GetComponent<PlayerCombat>().StartingWeapon = Weapons.FistsName;
+            PlayerBuilder.AddRunEnd(built.Player);
 
             var rodsObject = new GameObject("Storm Rods").AddComponent<StormRods>();
             rodsObject.Configure(rods.ToArray());
 
-            SceneBuild.Finish(scene, ScenePath, true);
+            SceneBuild.Finish(scene, ScenePath, false);
         }
 
         internal static void Materials()

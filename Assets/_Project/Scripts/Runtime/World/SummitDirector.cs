@@ -82,8 +82,6 @@ namespace Clover.World
             Felled = true;
             stormRaised = false;
             RunState.GodsFelled++;
-            var upgrades = player != null ? player.GetComponent<PlayerUpgrades>() : null;
-            if (upgrades != null) upgrades.Earn(5);
             if (hitStop != null) hitStop.Slow(1.8f, 0.2f);
             ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.8f), 0.16f);
             LightningBolts.Strike(who.transform.position, 1f);

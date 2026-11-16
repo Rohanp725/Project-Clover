@@ -45,6 +45,8 @@ namespace Clover.World
                     upgrades.Earn(spent);
                 }
                 RunState.Element = ElementKit.LightningName;
+                // Once taken from its god, a later run may begin with it.
+                Progress.Unlock(Progress.ElementKey(ElementKit.LightningName));
                 RunState.ElementConsumed = false;
                 if (element != null) element.Take(ElementKit.Lightning());
                 if (who.Combat != null) who.Combat.Equip(Weapons.ByName(Weapons.StormKatanaName));

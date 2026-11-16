@@ -119,6 +119,15 @@ namespace Clover.Player
             flaskAction = player.FindAction("Flask");
         }
 
+        /// <summary>Forgets a button being held, as when a menu or a leap takes the buttons away part-way through a hold.</summary>
+        public void DropHolds()
+        {
+            flaskHolding = false;
+            flaskBuffered = 0f;
+            throwBuffered = 0f;
+            guardPressBuffered = 0f;
+        }
+
         /// <summary>Puts a word or two on the screen for a moment.</summary>
         public void Callout(string text)
         {
@@ -204,7 +213,7 @@ namespace Clover.Player
             bool free = !rolling && !attacking;
             // At full health the press is ignored, so a flask is never wasted.
             if (flaskBuffered > 0f && free && Health.Current < Health.Maximum && Flasks.TryStartDrink()) flaskBuffered = 0f;
-            if (throwBuffered > 0f && free)
+            if (throwBuffered > 0f && free && !Flasks.IsDrinking)
             {
                 throwBuffered = 0f;
                 if (Flasks.TryThrow())

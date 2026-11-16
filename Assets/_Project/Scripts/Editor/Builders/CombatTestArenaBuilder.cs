@@ -57,7 +57,7 @@ namespace Clover.EditorTools
             // alone until they walk up to it.
             BuildDummy(new Vector3(-7f, 0f, 3.5f), kit, built.Player.transform);
 
-            SceneBuild.Finish(scene, ScenePath, true);
+            SceneBuild.Finish(scene, ScenePath, false);
         }
 
         private class DummyKit

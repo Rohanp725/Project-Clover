@@ -80,6 +80,22 @@ namespace Clover.EditorTools
             Saturation = 10f,
         };
 
+        /// <summary>The place outside the hours: a still, dim, warm light on pale stone, and black all round.</summary>
+        public static Mood Stillness => new Mood
+        {
+            Name = "Stillness",
+            KeyColour = new Color(0.9f, 0.9f, 1f),
+            KeyIntensity = 1.1f,
+            KeyEuler = new Vector3(55f, -25f, 0f),
+            Ambient = new Color(0.2f, 0.18f, 0.32f),
+            Fog = new Color(0.05f, 0.04f, 0.11f),
+            FogDensity = 0.016f,
+            Background = new Color(0.02f, 0.015f, 0.05f),
+            Storm = false,
+            Exposure = 0.25f,
+            Saturation = -4f,
+        };
+
         /// <summary>Adds the lights, the fog and the post-processing volume to the open scene, and sets the camera to use them.</summary>
         public static StormLight Apply(Mood mood, Camera camera)
         {

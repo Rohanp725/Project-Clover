@@ -26,6 +26,8 @@ namespace Clover.World
             if (Taken || who.Combat == null) return;
             Taken = true;
             who.Combat.Equip(Weapons.ByName(WeaponName));
+            // Once drawn, a later run may begin with it.
+            Progress.Unlock(Progress.WeaponKey(WeaponName));
             if (shown != null) shown.SetActive(false);
             Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f);
             Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 0.3f, Vector3.up);

@@ -323,6 +323,61 @@ namespace Clover.EditorTools
             playerHud.ConfigureUpgrades(player.GetComponent<PlayerUpgrades>(), embers, heatRow, pips);
 
             BuildUpgradeMenu(player, hud);
+            BuildReadingBox(player, hud);
+        }
+
+        // Words read at the player's own pace: a band across the bottom with who speaks, the line, and a mark when there is more.
+        private static void BuildReadingBox(PlayerController player, Transform hud)
+        {
+            var panel = Panel("Reading Box", hud, new Color(0.02f, 0.02f, 0.05f, 0.88f));
+            panel.anchorMin = new Vector2(0.5f, 0f);
+            panel.anchorMax = new Vector2(0.5f, 0f);
+            panel.pivot = new Vector2(0.5f, 0f);
+            panel.anchoredPosition = new Vector2(0f, 120f);
+            panel.sizeDelta = new Vector2(1240f, 190f);
+            var edge = Panel("Edge", panel, new Color(1f, 0.9f, 0.62f, 0.9f));
+            edge.anchorMin = new Vector2(0f, 1f);
+            edge.anchorMax = new Vector2(1f, 1f);
+            edge.pivot = new Vector2(0.5f, 1f);
+            edge.sizeDelta = new Vector2(0f, 3f);
+            edge.anchoredPosition = Vector2.zero;
+
+            var speaker = Label("Speaker", panel, 24, TextAnchor.UpperLeft, new Color(1f, 0.86f, 0.55f, 1f));
+            speaker.rectTransform.anchorMin = speaker.rectTransform.anchorMax = speaker.rectTransform.pivot = new Vector2(0f, 1f);
+            speaker.rectTransform.anchoredPosition = new Vector2(40f, -18f);
+            speaker.rectTransform.sizeDelta = new Vector2(600f, 30f);
+
+            var line = Label("Line", panel, 32, TextAnchor.UpperLeft, new Color(0.96f, 0.95f, 0.92f, 1f));
+            line.rectTransform.anchorMin = line.rectTransform.anchorMax = line.rectTransform.pivot = new Vector2(0f, 1f);
+            line.rectTransform.anchoredPosition = new Vector2(40f, -58f);
+            line.rectTransform.sizeDelta = new Vector2(1160f, 110f);
+            line.horizontalOverflow = HorizontalWrapMode.Wrap;
+            line.lineSpacing = 1.1f;
+
+            var more = Label("More", panel, 22, TextAnchor.LowerRight, new Color(1f, 1f, 1f, 0.6f));
+            more.rectTransform.anchorMin = more.rectTransform.anchorMax = more.rectTransform.pivot = new Vector2(1f, 0f);
+            more.rectTransform.anchoredPosition = new Vector2(-30f, 14f);
+            more.rectTransform.sizeDelta = new Vector2(300f, 28f);
+            more.text = "Cross or E";
+
+            hud.gameObject.AddComponent<ReadingBox>().Configure(player, panel.gameObject, speaker, line, more);
+        }
+
+        /// <summary>Makes a fall in this scene end the run: the screen goes dark and the player wakes in the hub.</summary>
+        public static void AddRunEnd(GameObject player)
+        {
+            var hud = GameObject.Find("HUD");
+            if (hud == null || player == null) return;
+            var dark = Panel("Run End Dark", hud.transform, new Color(0f, 0f, 0f, 0f));
+            dark.anchorMin = Vector2.zero;
+            dark.anchorMax = Vector2.one;
+            dark.offsetMin = dark.offsetMax = Vector2.zero;
+            var words = Label("Run End Words", dark, 64, TextAnchor.MiddleCenter, new Color(0.75f, 0.1f, 0.1f, 1f));
+            words.rectTransform.anchorMin = Vector2.zero;
+            words.rectTransform.anchorMax = Vector2.one;
+            words.rectTransform.offsetMin = words.rectTransform.offsetMax = Vector2.zero;
+            words.text = "The hours turn back";
+            new GameObject("Run Ender").AddComponent<Clover.World.RunEnder>().Configure(player.GetComponent<PlayerDefence>(), dark.GetComponent<Image>(), words);
         }
 
         // The element's tree: a dark panel over the middle of the screen with a list on the left and what the chosen thing does on the right.

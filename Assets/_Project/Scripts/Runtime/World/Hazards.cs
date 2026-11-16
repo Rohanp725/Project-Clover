@@ -76,8 +76,15 @@ namespace Clover.World
             float biteEvery = 0.4f, bool once = false, float delay = 0f, Vector3 velocity = default, bool burst = false)
         {
             if (instance == null) return;
-            int i = instance.next;
-            instance.next = (instance.next + 1) % instance.Capacity;
+            // A free place if there is one; only with every place in use is the next in turn given up.
+            int i = -1;
+            for (int slot = 0; slot < instance.zones.Length && i < 0; slot++)
+                if (!instance.zones[slot].Active) i = slot;
+            if (i < 0)
+            {
+                i = instance.next;
+                instance.next = (instance.next + 1) % instance.Capacity;
+            }
             instance.bitten[i].Clear();
             instance.zones[i] = new Zone
             {

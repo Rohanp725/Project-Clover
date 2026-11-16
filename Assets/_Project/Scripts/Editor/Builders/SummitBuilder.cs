@@ -175,8 +175,9 @@ namespace Clover.EditorTools
 
             var door = new GameObject("Way Down").AddComponent<SceneDoor>();
             door.transform.position = new Vector3(0f, 0f, -14.5f);
-            door.Prompt = "Go back down to the castle";
-            door.LeadsTo = "Castle";
+            door.Prompt = "Leave the summit. The hours turn back";
+            door.LeadsTo = "Hub";
+            door.EndsRun = true;
             door.Range = 2.6f;
             BuildKit.Shape(PrimitiveType.Cylinder, "Way Down Mark", door.transform, new Vector3(0f, 0.08f, 0f), new Vector3(2.4f, 0.01f, 2.4f), rune);
             BuildKit.Shape(PrimitiveType.Cylinder, "Way Down Stone", door.transform, new Vector3(0f, 0.09f, 0f), new Vector3(2.1f, 0.01f, 2.1f), dark);
@@ -189,6 +190,7 @@ namespace Clover.EditorTools
             built.Player.GetComponent<PlayerInteraction>().Configure(things.ToArray());
 
             BossBar(boss);
+            PlayerBuilder.AddRunEnd(built.Player);
             SceneBuild.Finish(scene, ScenePath, false);
         }
 

@@ -40,6 +40,7 @@ namespace Clover.UI
         private bool releasePlayer;
         private float untilRepeat;
         private int heldDirection;
+        private float scaleBefore = 1f;
 
         // Domain reload is off: the menu of the last play must not be kept.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -89,6 +90,8 @@ namespace Clover.UI
             heldDirection = 0;
             panel.SetActive(true);
             player.Suspended = true;
+            // Whatever pace time had is given back on leaving, unless it was already stopped.
+            scaleBefore = Time.timeScale > 0f ? Time.timeScale : 1f;
             Time.timeScale = 0f;
             Show();
         }
@@ -98,7 +101,7 @@ namespace Clover.UI
             if (!IsOpen) return;
             IsOpen = false;
             if (panel != null) panel.SetActive(false);
-            Time.timeScale = 1f;
+            if (Time.timeScale == 0f) Time.timeScale = scaleBefore;
             // The player gets the buttons back on the next frame, so the press that closed this is not also a dodge.
             releasePlayer = true;
         }
@@ -132,7 +135,7 @@ namespace Clover.UI
                 return;
             }
             // The press that opened it belongs to the rest fire, not to the first thing on the list.
-            if (Time.frameCount == openedOnFrame || moveAction == null) return;
+            if (Time.frameCount == openedOnFrame || moveAction == null || interactAction == null || dodgeAction == null) return;
 
             float stick = moveAction.ReadValue<Vector2>().y;
             int direction = stick > 0.5f ? -1 : stick < -0.5f ? 1 : 0;

@@ -522,6 +522,32 @@ The HUD shows the embers held (top right) and, once Heat is learned, its five le
 
 **Not built**: Storm Step and Plasma; a thrown-flask object in flight; a visible afterimage.
 
+### The hub and the run's loop as built (2026-11-16, overnight run; Claude's defaults, not yet played by the user)
+
+**The loop.** The game now opens in the hub. The gate there leads to the castle; the castle's sealed door to the
+summit; the summit's way out, once the god has fallen and the choice is made, back to the hub. **A fall anywhere in a
+run ends it**: the fallen player is looked at for a moment, the screen goes dark with the words "The hours turn back",
+and they wake in the hub with bare hands, Fire, no embers and nothing learned. Rest fires therefore no longer bring
+the player back from death; they heal, refill the flasks, bring the area's enemies back and open the element's tree.
+The practice arena keeps its old rule of standing up again.
+
+**The hub** (working name: the still place). An island of slate laid out as a stopped clock, in black water, with
+rain hanging in the air where it was when the hours were turned back. From where the player wakes everything is in
+view: the sponsor's light over the clock's centre, the weapon stands to the west (bare hands, the Katana), the element
+braziers to the east (Fire, Lightning), and the gate to the north under a great broken ring.
+
+- *What a run can begin with.* Bare hands and Fire always. The Katana once it has been drawn from the stone in any
+  run; Lightning once it has been taken from its god in any run. These unlocks are kept between sittings. A stand or
+  brazier not yet won is empty or cold and says how to win it. What is chosen is carried through the gate, and a ring
+  of light on the floor marks the one carried.
+- *The sponsor* is called only "The Voice" for now: a spindle of pale gold light with splinters turning round it. It
+  speaks unasked the first time the player ever wakes; afterwards it waits to be spoken to, and has different words
+  after a fall (five short sets, each with one true piece of advice), after a god has fallen, and after coming back
+  alive. All its words are in one file, `SponsorLines.cs`, and are click-through: each line stays until the use
+  button is pressed.
+
+**Not built**: any way to wipe the saved unlocks from inside the game; a title screen; a pause menu.
+
 ## Open questions
 
 1. Camera: top-down is on trial in the slice; confirm or change once it is playable.
@@ -543,6 +569,7 @@ The HUD shows the embers held (top right) and, once Heat is learned, its five le
 | 2026-11-15 | Each major boss masters one element and one unique technique; beating it gives a choice of one of the two | makes every boss a build decision |
 | 2026-11-15 | Boss zones are themed to the element for atmosphere only, with no status effect | atmosphere without extra rules |
 | 2026-11-16 | Animations are written as code and baked in Unity, not keyed in Blender | it lets every action be placed, timed and checked frame by frame, and the user asked for special emphasis on animation |
+| 2026-11-16 | The hub is a stopped clock outside time; a fall ends the run and wakes the player there; the Katana and Lightning become starting choices once won in a run | Claude's defaults during the unattended overnight run, following the decided run-based structure |
 | 2026-11-16 | Upgrades are bought with embers (one per enemy, five per god) at rest fires, in any order; held buttons give the flask and the spell their upgraded moves | Claude's defaults during the unattended overnight run |
 | 2026-11-16 | The god of Lightning is Narukami, a duellist with a ring of thunder drums, fought above the clouds; take or consume is two things he leaves on the floor | Claude's defaults during the unattended overnight run |
 | 2026-11-15 | Blocking is directional; the finisher is its own move on a staggered enemy | the user's feedback after playing the combat arena |

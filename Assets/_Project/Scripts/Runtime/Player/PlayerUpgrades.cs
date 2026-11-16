@@ -85,6 +85,9 @@ namespace Clover.Player
         private HitStop hitStop;
         private readonly bool[] has = new bool[Upgrade.All.Count];
         private readonly Dictionary<IDamageable, int> staticOn = new Dictionary<IDamageable, int>();
+        private readonly Dictionary<IDamageable, float> staticAt = new Dictionary<IDamageable, float>();
+        /// <summary>Seconds without a blow before the Static on an enemy has leaked away.</summary>
+        public float StaticLasts = 8f;
         private readonly List<IDamageable> toDischarge = new List<IDamageable>();
         private float untilRefresh;
         private Vector3 dodgeFrom;
@@ -157,6 +160,12 @@ namespace Clover.Player
             RunState.Unlocked.Clear();
             Heat.Reset();
             staticOn.Clear();
+            staticAt.Clear();
+            if (combat != null)
+            {
+                combat.NextBlowDamage = 1f;
+                combat.NextBlowStagger = 1f;
+            }
             Refresh();
         }
 
@@ -189,6 +198,10 @@ namespace Clover.Player
             }
             if (!has[Index(Upgrade.Static)]) return;
             staticOn.TryGetValue(target, out int stacks);
+            // Left alone, it leaks away: an enemy met again later does not still carry it.
+            if (stacks > 0 && staticAt.TryGetValue(target, out float last) && Time.time - last > StaticLasts) stacks = 0;
+            staticAt[target] = Time.time;
+            staticOn[target] = stacks;
             if (step.Heavy || outcome == HitOutcome.Finisher)
             {
                 if (stacks > 0) toDischarge.Add(target);

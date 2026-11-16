@@ -92,6 +92,13 @@ namespace Clover.Player
             untilEmber = 0f;
         }
 
+        /// <summary>Forgets a button being held, as when a menu or a leap takes the buttons away part-way through a hold.</summary>
+        public void DropHolds()
+        {
+            spellHolding = false;
+            spellBuffered = surgeBuffered = specialBuffered = 0f;
+        }
+
         /// <summary>A blow or a dodge breaks a cast in progress.</summary>
         public void Interrupt() => Kit.Interrupt();
 

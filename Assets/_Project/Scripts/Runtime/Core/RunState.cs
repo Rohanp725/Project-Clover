@@ -24,6 +24,10 @@ namespace Clover.Core
         public static readonly HashSet<string> Unlocked = new HashSet<string>();
         /// <summary>How many runs have ended in this play session.</summary>
         public static int RunsEnded;
+        /// <summary>How the last run ended: true if the player fell, false if they came back by their own road.</summary>
+        public static bool LastRunFell;
+        /// <summary>How many gods fell in the last run.</summary>
+        public static int LastRunGods;
 
         // Domain reload is off: a new play must not inherit the last one's run.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -31,6 +35,17 @@ namespace Clover.Core
         {
             Reset();
             RunsEnded = 0;
+            LastRunFell = false;
+            LastRunGods = 0;
+        }
+
+        /// <summary>Ends the run: what happened is remembered for the hub, and everything the run carried is given up.</summary>
+        public static void End(bool fell)
+        {
+            LastRunFell = fell;
+            LastRunGods = GodsFelled;
+            RunsEnded++;
+            Reset();
         }
 
         /// <summary>Starts a new run: everything a run carries is put back to nothing.</summary>

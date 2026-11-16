@@ -375,6 +375,7 @@ namespace Clover.Player
         {
             struck.Clear();
             bool finisher = false;
+            bool clean = false;
             if (arcs != null) arcs.Show(transform.position, transform.forward, step.Reach, step.ArcDegrees, step.Sweep, empowered ? empoweredColour : Weapon.SlashColour);
             Vector3 origin = transform.position + Vector3.up;
             int count = Overlap(origin, step.Reach);
@@ -395,6 +396,7 @@ namespace Clover.Player
                 struck.Add(target);
                 if (upgrades != null) upgrades.OnBlow(step, target, outcome);
                 finisher |= outcome == HitOutcome.Finisher;
+                clean |= outcome != HitOutcome.Blocked;
                 if (outcome != HitOutcome.Blocked) Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, other.ClosestPoint(origin), transform.forward);
                 else
                 {
@@ -411,9 +413,9 @@ namespace Clover.Player
             }
             if (upgrades != null) upgrades.OnSwing(step, struck.Count);
             if (struck.Count == 0) return;
-            if (NextBlowDamage != 1f || NextBlowStagger != 1f)
+            if (clean && (NextBlowDamage != 1f || NextBlowStagger != 1f))
             {
-                // The stored charge is spent on the blow that lands.
+                // The stored charge is spent on the blow that lands, not on one turned aside.
                 NextBlowDamage = 1f;
                 NextBlowStagger = 1f;
                 Clover.World.LightningBolts.Strike(transform.position + transform.forward * step.Reach * 0.6f, 0.4f);

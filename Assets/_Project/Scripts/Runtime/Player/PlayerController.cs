@@ -95,7 +95,15 @@ namespace Clover.Player
 
         private void Update()
         {
-            if (Suspended) return;
+            if (Suspended)
+            {
+                // Standing and listening, not running on the spot.
+                PlanarSpeed = 0f;
+                dodgeBuffered = 0f;
+                if (defence != null) defence.DropHolds();
+                if (element != null) element.DropHolds();
+                return;
+            }
             float deltaTime = Time.deltaTime;
             if (IsLeaping)
             {
@@ -210,7 +218,12 @@ namespace Clover.Player
         public void Leap(Vector3 to, float seconds, float height)
         {
             if (combat != null) combat.Interrupt();
-            if (element != null) element.Interrupt();
+            if (element != null)
+            {
+                element.Interrupt();
+                element.DropHolds();
+            }
+            if (defence != null) defence.DropHolds();
             Dodge.Stop();
             Vector3 toward = to - transform.position;
             toward.y = 0f;
