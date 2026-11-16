@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!319 &31900000
+AvatarMask:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UpperBody
+  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000u
+  m_Elements:
+  - m_Path: 
+    m_Weight: 0
+  - m_Path: player_lod0
+    m_Weight: 0
+  - m_Path: player_rig
+    m_Weight: 0
+  - m_Path: player_rig/root
+    m_Weight: 0
+  - m_Path: player_rig/root/hips
+    m_Weight: 0
+  - m_Path: player_rig/root/hips/katana_hilt
+    m_Weight: 0
+  - m_Path: player_rig/root/hips/katana_sheath
+    m_Weight: 0
+  - m_Path: player_rig/root/hips/spine
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/neck
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/neck/head
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/neck/head/band_a1
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/neck/head/band_a1/band_a2
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/neck/head/band_b1
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/neck/head/band_b1/band_b2
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/neck/head/pony1
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/neck/head/pony1/pony2
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/neck/head/pony1/pony2/pony3
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/scarf_a1
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/scarf_a1/scarf_a2
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/scarf_a1/scarf_a2/scarf_a3
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/scarf_b1
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/scarf_b1/scarf_b2
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/shoulder.L
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/shoulder.L/upperarm.L
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/shoulder.L/upperarm.L/forearm.L
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/shoulder.L/upperarm.L/forearm.L/hand.L
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/shoulder.R
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/shoulder.R/upperarm.R
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/shoulder.R/upperarm.R/forearm.R
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/shoulder.R/upperarm.R/forearm.R/hand.R
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/shoulder.R/upperarm.R/forearm.R/hand.R/weapon.R
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/spine/chest/shoulder.R/upperarm.R/forearm.R/hand.R/weapon.R/katana_drawn
+    m_Weight: 1
+  - m_Path: player_rig/root/hips/thigh.L
+    m_Weight: 0
+  - m_Path: player_rig/root/hips/thigh.L/shin.L
+    m_Weight: 0
+  - m_Path: player_rig/root/hips/thigh.L/shin.L/foot.L
+    m_Weight: 0
+  - m_Path: player_rig/root/hips/thigh.R
+    m_Weight: 0
+  - m_Path: player_rig/root/hips/thigh.R/shin.R
+    m_Weight: 0
+  - m_Path: player_rig/root/hips/thigh.R/shin.R/foot.R
+    m_Weight: 0

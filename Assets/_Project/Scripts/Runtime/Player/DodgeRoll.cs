@@ -36,6 +36,17 @@ namespace Clover.Player
             sinceEnd = float.MaxValue;
         }
 
+        /// <summary>Seconds since the roll began; meaningful only while rolling.</summary>
+        public float Elapsed => elapsed;
+
+        /// <summary>Ends the roll where it is, as a blow that lands on its unprotected tail does.</summary>
+        public void Stop()
+        {
+            if (!IsRolling) return;
+            IsRolling = false;
+            sinceEnd = 0f;
+        }
+
         public bool TryStart(Vector3 direction, StaminaPool stamina)
         {
             direction.y = 0f;

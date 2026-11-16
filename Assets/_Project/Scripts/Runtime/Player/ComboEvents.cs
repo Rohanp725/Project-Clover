@@ -11,5 +11,7 @@ namespace Clover.Player
         Started = 1,
         /// <summary>An attack's hit lands this tick.</summary>
         Hit = 2,
+        /// <summary>A held charge became ready this tick: letting go now releases the weapon's skill.</summary>
+        Charged = 4,
     }
 }

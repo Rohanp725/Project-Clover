@@ -15,7 +15,7 @@ namespace Clover.EditorTools
 {
     /// <summary>
     /// Builds the grey-box arena where combat feel is tried out: a floor, pillars to test the camera near tall things, the
-    /// player, the top-down camera and a stamina bar. Rebuilding replaces the scene and reuses the materials by name.
+    /// player, the top-down camera, the player's bars, dummies to hit and one dummy that hits back. Rebuilding replaces the scene and reuses the materials by name.
     /// </summary>
     public static class CombatTestArenaBuilder
     {
@@ -103,13 +103,13 @@ namespace Clover.EditorTools
             cameraObject.AddComponent<AudioListener>();
             var follow = cameraObject.AddComponent<TopDownCamera>();
 
-            var player = BuildPlayer();
+            var player = BuildPlayer(follow);
             var controller = player.GetComponent<PlayerController>();
             controller.Configure(controls, cameraObject.transform);
             follow.Configure(player.transform);
             follow.SnapToTarget();
 
-            BuildHud(controller, player.GetComponent<PlayerCombat>());
+            BuildHud(controller, player.GetComponent<PlayerCombat>(), player.GetComponent<PlayerDefence>());
 
             // One dummy alone, and a pair close together to see a swing catch both.
             var wood = ToonMaterial("DummyWood", new Color(0.42f, 0.33f, 0.24f));
@@ -118,7 +118,10 @@ namespace Clover.EditorTools
             var barHealth = UnlitMaterial("BarHealth", new Color(0.78f, 0.14f, 0.12f));
             var barStagger = UnlitMaterial("BarStagger", new Color(0.96f, 0.76f, 0.2f));
             foreach (var position in new[] { new Vector3(0f, 0f, 4f), new Vector3(5f, 0f, -2f), new Vector3(6.5f, 0f, -1.1f) })
-                BuildDummy(position, cameraObject.transform.rotation, wood, straw, barBack, barHealth, barStagger);
+                BuildDummy(position, cameraObject.transform.rotation, wood, straw, barBack, barHealth, barStagger, null);
+            // And one that hits back, off to the west, to practise the guard and the dodge on. It leaves the player
+            // alone until they walk up to it.
+            BuildDummy(new Vector3(-7f, 0f, 3.5f), cameraObject.transform.rotation, wood, straw, barBack, barHealth, barStagger, player.transform);
 
             if (!EditorSceneManager.SaveScene(scene, ScenePath))
             {
@@ -133,7 +136,7 @@ namespace Clover.EditorTools
             Debug.Log($"[Clover.Build] Combat test arena built at {ScenePath}.");
         }
 
-        private static GameObject BuildPlayer()
+        private static GameObject BuildPlayer(TopDownCamera follow)
         {
             var player = new GameObject("Player");
             var capsule = player.AddComponent<CharacterController>();
@@ -142,7 +145,10 @@ namespace Clover.EditorTools
             capsule.center = new Vector3(0f, 0.9f, 0f);
             var controller = player.AddComponent<PlayerController>();
             var combat = player.AddComponent<PlayerCombat>();
-            combat.Configure(player.AddComponent<HitStop>());
+            var defence = player.AddComponent<PlayerDefence>();
+            var hitStop = player.AddComponent<HitStop>();
+            combat.Configure(hitStop, follow);
+            defence.Configure(hitStop, follow);
 
             var modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerModelPath);
             if (modelAsset == null)
@@ -162,14 +168,14 @@ namespace Clover.EditorTools
 
             var animator = model.GetComponent<Animator>();
             if (animator == null) animator = model.AddComponent<Animator>();
-            animator.runtimeAnimatorController = PlayerAnimatorController();
+            animator.runtimeAnimatorController = PlayerAnimatorController(modelAsset);
             animator.applyRootMotion = false;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
             var drawnSword = FindDeep(model.transform, "katana_drawn");
             var sheathedHilt = FindDeep(model.transform, "katana_hilt");
             if (drawnSword == null || sheathedHilt == null)
                 Debug.LogWarning("[Clover.Build] The character model has no katana_drawn or katana_hilt object; the sword will not move between sheath and hand.");
-            player.AddComponent<PlayerAnimator>().Configure(controller, combat, animator,
+            player.AddComponent<PlayerAnimator>().Configure(controller, combat, defence, animator,
                 drawnSword != null ? drawnSword.gameObject : null, sheathedHilt != null ? sheathedHilt.gameObject : null);
             return player;
         }
@@ -206,13 +212,13 @@ namespace Clover.EditorTools
             return materials;
         }
 
-        private static AnimatorController PlayerAnimatorController()
+        private static AnimatorController PlayerAnimatorController(GameObject modelAsset)
         {
             string path = $"{PlayerFolder}/PlayerAnimator.controller";
             AssetDatabase.DeleteAsset(path);
             var clips = AssetDatabase.LoadAllAssetsAtPath(PlayerModelPath).OfType<AnimationClip>()
                 .Where(clip => !clip.name.StartsWith("__")).ToDictionary(clip => clip.name);
-            foreach (string needed in new[] { "idle", "run", "roll" })
+            foreach (string needed in new[] { "idle", "run", "roll", PlayerAnimator.ChargeState, PlayerAnimator.HurtState, PlayerAnimator.GuardState, PlayerAnimator.DrinkState })
                 if (!clips.ContainsKey(needed)) Debug.LogError($"[Clover.Build] The character model has no '{needed}' clip.");
 
             var controller = AnimatorController.CreateAnimatorControllerAtPath(path);
@@ -233,8 +239,35 @@ namespace Clover.EditorTools
             // One state per attack clip, named after the clip; AttackStep.Name picks the state.
             foreach (var attack in clips.Values.Where(clip => clip.name.StartsWith("attack_")).OrderBy(clip => clip.name))
                 machine.AddState(attack.name).motion = attack;
-            foreach (var step in PlayerCombat.KatanaLightChain().Steps)
+            var katana = PlayerCombat.Katana();
+            foreach (var step in katana.Steps.Concat(new[] { katana.Heavy, katana.ChainHeavy, katana.Skill }))
                 if (!clips.ContainsKey(step.Name)) Debug.LogWarning($"[Clover.Build] The character model has no '{step.Name}' clip; that attack will not be animated.");
+
+            foreach (string name in new[] { PlayerAnimator.ChargeState, PlayerAnimator.HurtState })
+                machine.AddState(name).motion = clips.TryGetValue(name, out var clip) ? clip : null;
+
+            // The guard and the drink move the body from the spine up and leave the legs to walk.
+            string maskPath = $"{PlayerFolder}/UpperBody.mask";
+            AssetDatabase.DeleteAsset(maskPath);
+            var mask = new AvatarMask();
+            mask.AddTransformPath(modelAsset.transform, true);
+            for (int i = 0; i < mask.transformCount; i++)
+                mask.SetTransformActive(i, ("/" + mask.GetTransformPath(i) + "/").Contains("/spine/"));
+            AssetDatabase.CreateAsset(mask, maskPath);
+            var upperMachine = new AnimatorStateMachine { name = PlayerAnimator.UpperBodyLayer, hideFlags = HideFlags.HideInHierarchy };
+            AssetDatabase.AddObjectToAsset(upperMachine, controller);
+            controller.AddLayer(new AnimatorControllerLayer
+            {
+                name = PlayerAnimator.UpperBodyLayer,
+                // The player's animator raises the weight while guarding or drinking.
+                defaultWeight = 0f,
+                avatarMask = mask,
+                blendingMode = AnimatorLayerBlendingMode.Override,
+                stateMachine = upperMachine,
+            });
+            upperMachine.defaultState = upperMachine.AddState(PlayerAnimator.UpperIdleState);
+            foreach (string name in new[] { PlayerAnimator.GuardState, PlayerAnimator.DrinkState })
+                upperMachine.AddState(name).motion = clips.TryGetValue(name, out var clip) ? clip : null;
             EditorUtility.SetDirty(controller);
             return controller;
         }
@@ -259,7 +292,7 @@ namespace Clover.EditorTools
             return texture;
         }
 
-        private static void BuildHud(PlayerController player, PlayerCombat combat)
+        private static void BuildHud(PlayerController player, PlayerCombat combat, PlayerDefence defence)
         {
             var canvasObject = new GameObject("HUD");
             var canvas = canvasObject.AddComponent<Canvas>();
@@ -267,11 +300,55 @@ namespace Clover.EditorTools
             var scaler = canvasObject.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
+            Transform hud = canvasObject.transform;
 
-            var stamina = Bar("Stamina", canvasObject.transform, new Vector2(48f, -48f), new Vector2(360f, 18f), new Color(0.45f, 0.85f, 0.4f));
+            var health = Bar("Health", hud, new Vector2(48f, -40f), new Vector2(420f, 20f), new Color(0.78f, 0.14f, 0.12f));
+            // The grey part sits behind the red and shows where a guarded blow took health that can still be won back.
+            var grey = Panel("Health Grey", health.parent, new Color(0.74f, 0.7f, 0.66f));
+            grey.anchorMin = Vector2.zero;
+            grey.anchorMax = Vector2.one;
+            grey.offsetMin = grey.offsetMax = Vector2.zero;
+            grey.SetSiblingIndex(0);
+            var stamina = Bar("Stamina", hud, new Vector2(48f, -68f), new Vector2(360f, 14f), new Color(0.45f, 0.85f, 0.4f));
             // Mana takes the colour of the player's element; fire for now.
-            var mana = Bar("Mana", canvasObject.transform, new Vector2(48f, -74f), new Vector2(300f, 14f), new Color(1f, 0.5f, 0.1f));
-            canvasObject.AddComponent<PlayerHud>().Configure(player, combat, stamina, mana);
+            var mana = Bar("Mana", hud, new Vector2(48f, -90f), new Vector2(300f, 12f), new Color(1f, 0.5f, 0.1f));
+
+            var flasks = new RectTransform[new FlaskBelt().Maximum];
+            for (int i = 0; i < flasks.Length; i++)
+                flasks[i] = Bar("Flask " + (i + 1), hud, new Vector2(48f + i * 30f, -112f), new Vector2(22f, 30f), new Color(0.95f, 0.76f, 0.32f));
+
+            var callout = Label("Callout", hud, 40, TextAnchor.MiddleCenter, Color.white);
+            callout.rectTransform.anchorMin = callout.rectTransform.anchorMax = new Vector2(0.5f, 0.3f);
+            callout.rectTransform.sizeDelta = new Vector2(900f, 60f);
+            callout.text = "";
+
+            // The arena is for testing, so it says what the buttons are.
+            var hint = Label("Controls", hud, 20, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.55f));
+            hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = hint.rectTransform.pivot = Vector2.zero;
+            hint.rectTransform.anchoredPosition = new Vector2(48f, 36f);
+            hint.rectTransform.sizeDelta = new Vector2(1500f, 60f);
+            hint.text = "R1 light attack    R2 heavy attack, hold then release for the Iaido Slash (30 mana)    L1 guard    Circle dodge    Square flask\n"
+                + "Keyboard: WASD move    J light    K heavy    L guard    Space dodge    R flask";
+
+            canvasObject.AddComponent<PlayerHud>().Configure(player, combat, defence, health, grey, stamina, mana, flasks, callout);
+        }
+
+        private static Text Label(string name, Transform parent, int size, TextAnchor anchor, Color colour)
+        {
+            var labelObject = new GameObject(name, typeof(RectTransform));
+            labelObject.transform.SetParent(parent, false);
+            var label = labelObject.AddComponent<Text>();
+            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            label.fontSize = size;
+            label.alignment = anchor;
+            label.color = colour;
+            label.raycastTarget = false;
+            label.horizontalOverflow = HorizontalWrapMode.Overflow;
+            label.verticalOverflow = VerticalWrapMode.Overflow;
+            var outline = labelObject.AddComponent<Outline>();
+            outline.effectColor = new Color(0f, 0f, 0f, 0.8f);
+            outline.effectDistance = new Vector2(2f, -2f);
+            return label;
         }
 
         private static RectTransform Bar(string name, Transform parent, Vector2 position, Vector2 size, Color colour)
@@ -288,19 +365,23 @@ namespace Clover.EditorTools
             return fill;
         }
 
+        // With a target the dummy hits back: it gets a sword arm, a red headband and the ground marker for its blow.
         private static void BuildDummy(Vector3 position, Quaternion towardCamera, Material wood, Material straw,
-            Material barBack, Material barHealth, Material barStagger)
+            Material barBack, Material barHealth, Material barStagger, Transform target)
         {
-            var dummy = new GameObject("Training Dummy");
+            bool fights = target != null;
+            var dummy = new GameObject(fights ? "Sparring Dummy" : "Training Dummy");
             dummy.transform.position = position;
             var capsule = dummy.AddComponent<CapsuleCollider>();
             capsule.radius = 0.45f;
             capsule.height = 1.9f;
             capsule.center = new Vector3(0f, 0.95f, 0f);
 
-            // Everything that rocks hangs off a pivot at the ground.
+            // The pivot turns to face the player; everything that rocks hangs off the body inside it, at the ground.
+            var pivot = new GameObject("Pivot").transform;
+            pivot.SetParent(dummy.transform, false);
             var body = new GameObject("Body").transform;
-            body.SetParent(dummy.transform, false);
+            body.SetParent(pivot, false);
             var parts = new List<Renderer>
             {
                 Shape(PrimitiveType.Cylinder, "Post", body, new Vector3(0f, 0.75f, 0f), new Vector3(0.22f, 0.75f, 0.22f), wood),
@@ -319,7 +400,58 @@ namespace Clover.EditorTools
             var health = BarFill("Health", bars, 0.11f, 0.12f, barHealth);
             var stagger = BarFill("Stagger", bars, -0.03f, 0.07f, barStagger);
 
-            dummy.AddComponent<TrainingDummy>().Configure(body, parts.ToArray(), health, stagger);
+            Transform arm = null;
+            MeshFilter outline = null, fill = null;
+            if (fights)
+            {
+                var blade = ToonMaterial("DummyBlade", new Color(0.2f, 0.18f, 0.17f));
+                var band = ToonMaterial("DummyBand", new Color(0.62f, 0.14f, 0.08f));
+                parts.Add(Shape(PrimitiveType.Cylinder, "Headband", body, new Vector3(0f, 1.9f, 0f), new Vector3(0.47f, 0.035f, 0.47f), band));
+                arm = new GameObject("Sword Arm").transform;
+                arm.SetParent(body, false);
+                arm.localPosition = new Vector3(0.62f, 1.38f, 0f);
+                parts.Add(Shape(PrimitiveType.Cube, "Wooden Sword", arm, new Vector3(0f, 0f, 0.8f), new Vector3(0.1f, 0.1f, 1.6f), blade));
+
+                var marker = MarkerMaterial();
+                outline = Marker("Marker Outline", pivot, 0.03f, marker);
+                fill = Marker("Marker Fill", pivot, 0.04f, marker);
+            }
+
+            var training = dummy.AddComponent<TrainingDummy>();
+            training.Configure(body, parts.ToArray(), health, stagger);
+            if (fights) dummy.AddComponent<DummyAttacker>().Configure(pivot, arm, target, outline, fill);
+        }
+
+        // The attack marker's shape is made by the dummy when the game starts, from its own reach and arc.
+        private static MeshFilter Marker(string name, Transform parent, float height, Material material)
+        {
+            var marker = new GameObject(name);
+            marker.transform.SetParent(parent, false);
+            marker.transform.localPosition = new Vector3(0f, height, 0f);
+            var filter = marker.AddComponent<MeshFilter>();
+            var renderer = marker.AddComponent<MeshRenderer>();
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            renderer.enabled = false;
+            return filter;
+        }
+
+        private static Material MarkerMaterial()
+        {
+            var material = UnlitMaterial("AttackMarker", new Color(1f, 0.93f, 0.75f, 0.4f));
+            // See-through, drawn after the floor, visible from both sides.
+            material.SetFloat("_Surface", 1f);
+            material.SetFloat("_Blend", 0f);
+            material.SetFloat("_SrcBlend", (float)UnityEngine.Rendering.BlendMode.SrcAlpha);
+            material.SetFloat("_DstBlend", (float)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
+            material.SetFloat("_ZWrite", 0f);
+            material.SetFloat("_Cull", (float)UnityEngine.Rendering.CullMode.Off);
+            material.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+            material.SetOverrideTag("RenderType", "Transparent");
+            material.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Transparent;
+            EditorUtility.SetDirty(material);
+            return material;
         }
 
         // A bar that shrinks toward its left end: the pivot sits at the left and the block hangs to its right.

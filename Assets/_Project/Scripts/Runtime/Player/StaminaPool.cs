@@ -34,6 +34,13 @@ namespace Clover.Player
             return true;
         }
 
+        /// <summary>Takes everything, as a broken guard does.</summary>
+        public void Empty()
+        {
+            Current = 0f;
+            secondsSinceSpend = 0f;
+        }
+
         public void Tick(float deltaTime)
         {
             secondsSinceSpend += deltaTime;

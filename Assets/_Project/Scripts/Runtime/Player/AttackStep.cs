@@ -27,6 +27,11 @@ namespace Clover.Player
         /// <summary>Seconds time nearly stops when this attack lands, which is most of what makes a hit feel heavy.</summary>
         public float HitStopSeconds = 0.05f;
 
+        /// <summary>A heavy blow: it is the one that finishes a staggered enemy.</summary>
+        public bool Heavy;
+        /// <summary>How hard the camera shakes when this attack lands, in metres; zero for none.</summary>
+        public float Shake;
+
         public float Total => Windup + Active + Recovery;
     }
 }

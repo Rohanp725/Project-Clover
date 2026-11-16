@@ -7,7 +7,10 @@
             "actions": [
                 { "name": "Move", "type": "Value", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1002", "expectedControlType": "Vector2", "processors": "", "interactions": "", "initialStateCheck": true },
                 { "name": "Dodge", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1003", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
-                { "name": "LightAttack", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1004", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
+                { "name": "LightAttack", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1004", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "HeavyAttack", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1005", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Guard", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1006", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false },
+                { "name": "Flask", "type": "Button", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1007", "expectedControlType": "Button", "processors": "", "interactions": "", "initialStateCheck": false }
             ],
             "bindings": [
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1010", "path": "<Gamepad>/leftStick", "interactions": "", "processors": "StickDeadzone", "groups": "Gamepad", "action": "Move", "isComposite": false, "isPartOfComposite": false },
@@ -19,7 +22,13 @@
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1020", "path": "<Gamepad>/buttonEast", "interactions": "", "processors": "", "groups": "Gamepad", "action": "Dodge", "isComposite": false, "isPartOfComposite": false },
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1021", "path": "<Keyboard>/space", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Dodge", "isComposite": false, "isPartOfComposite": false },
                 { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1030", "path": "<Gamepad>/rightShoulder", "interactions": "", "processors": "", "groups": "Gamepad", "action": "LightAttack", "isComposite": false, "isPartOfComposite": false },
-                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1031", "path": "<Keyboard>/j", "interactions": "", "processors": "", "groups": "Keyboard", "action": "LightAttack", "isComposite": false, "isPartOfComposite": false }
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1031", "path": "<Keyboard>/j", "interactions": "", "processors": "", "groups": "Keyboard", "action": "LightAttack", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1040", "path": "<Gamepad>/rightTrigger", "interactions": "", "processors": "", "groups": "Gamepad", "action": "HeavyAttack", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1041", "path": "<Keyboard>/k", "interactions": "", "processors": "", "groups": "Keyboard", "action": "HeavyAttack", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1050", "path": "<Gamepad>/leftShoulder", "interactions": "", "processors": "", "groups": "Gamepad", "action": "Guard", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1051", "path": "<Keyboard>/l", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Guard", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1060", "path": "<Gamepad>/buttonWest", "interactions": "", "processors": "", "groups": "Gamepad", "action": "Flask", "isComposite": false, "isPartOfComposite": false },
+                { "name": "", "id": "5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1061", "path": "<Keyboard>/r", "interactions": "", "processors": "", "groups": "Keyboard", "action": "Flask", "isComposite": false, "isPartOfComposite": false }
             ]
         }
     ],

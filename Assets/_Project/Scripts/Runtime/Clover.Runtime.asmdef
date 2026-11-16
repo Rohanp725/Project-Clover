@@ -5,7 +5,8 @@
         "Unity.InputSystem",
         "Unity.RenderPipelines.Universal.Runtime",
         "Unity.RenderPipelines.Core.Runtime",
-        "Unity.Pipeline"
+        "Unity.Pipeline",
+        "UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
