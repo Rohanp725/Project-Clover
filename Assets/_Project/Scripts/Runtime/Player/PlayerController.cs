@@ -25,6 +25,8 @@ namespace Clover.Player
         /// <summary>Share of the walking speed kept while the guard is up, and while drinking.</summary>
         public float GuardMoveFactor = 0.45f;
         public float DrinkMoveFactor = 0.4f;
+        /// <summary>How fast the raised guard turns to follow the nearest enemy.</summary>
+        public float GuardTurnDegreesPerSecond = 540f;
 
         public bool IsInvulnerable => Dodge.IsInvulnerable;
         public bool IsGuarding => defence != null && defence.IsGuarding;
@@ -144,8 +146,19 @@ namespace Clover.Player
                 bool drinking = defence != null && defence.IsDrinking;
                 float speed = MoveSpeed * (guarding ? GuardMoveFactor : drinking ? DrinkMoveFactor : 1f);
                 step = wish * (speed * deltaTime);
-                // The guard keeps facing whoever it was raised against; the player sidesteps behind it.
-                if (!guarding && wish.sqrMagnitude > 0.01f) Face(wish, TurnDegreesPerSecond * deltaTime);
+                // The guard stays turned to the nearest enemy and the player sidesteps behind it; with no enemy near,
+                // the stick turns the player as usual.
+                Transform guardTarget = guarding ? defence.GuardTarget : null;
+                if (guardTarget != null)
+                {
+                    Vector3 toward = guardTarget.position - transform.position;
+                    toward.y = 0f;
+                    if (toward.sqrMagnitude > 0.0025f) Face(toward, GuardTurnDegreesPerSecond * deltaTime);
+                }
+                else if (wish.sqrMagnitude > 0.01f)
+                {
+                    Face(wish, TurnDegreesPerSecond * deltaTime);
+                }
             }
 
             PlanarSpeed = deltaTime > 0f ? new Vector2(step.x, step.z).magnitude / deltaTime : 0f;

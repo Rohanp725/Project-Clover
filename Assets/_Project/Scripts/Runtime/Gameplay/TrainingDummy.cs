@@ -7,7 +7,7 @@ namespace Clover.Gameplay
     /// and puts itself right again after being left alone, so it can be hit for as long as the player likes. A heavy
     /// blow while it is staggered is a finisher: much more damage, and the stagger ends.
     /// </summary>
-    public class TrainingDummy : MonoBehaviour, IDamageable
+    public class TrainingDummy : MonoBehaviour, IDamageable, IStaggerable
     {
         [SerializeField] private Transform body;
         [SerializeField] private Renderer[] flashRenderers;
@@ -27,9 +27,13 @@ namespace Clover.Gameplay
         public float SlumpDegrees = 28f;
         public float FlashSeconds = 0.09f;
         public Color FlashColour = Color.white;
+        /// <summary>While staggered the dummy pulses this colour, to say: finish it now.</summary>
+        public Color StaggeredColour = new Color(1f, 0.82f, 0.25f);
+        public float StaggeredPulsesPerSecond = 5f;
 
         public int HitsTaken { get; private set; }
         public int FinishersTaken { get; private set; }
+        public bool IsStaggered => Stagger.IsStaggered;
 
         private static readonly int BaseColour = Shader.PropertyToID("_BaseColor");
 
@@ -38,7 +42,7 @@ namespace Clover.Gameplay
         private Vector3 rock;
         private float sinceHit = float.MaxValue;
         private float flashLeft;
-        private bool flashing;
+        private int shownFlash;
 
         public void Configure(Transform bodyToRock, Renderer[] renderersToFlash, Transform healthBar, Transform staggerBar)
         {
@@ -107,28 +111,30 @@ namespace Clover.Gameplay
             if (staggerFill != null) staggerFill.localScale = new Vector3(Stagger.Fraction, 1f, 1f);
 
             // The flash runs on real time so it is still seen through the moment time is stopped for the hit.
-            bool shouldFlash = flashLeft > 0f;
+            // 0 is the dummy's own colours, 1 the white of a hit, 2 the pulse of an open stagger.
+            int flash = flashLeft > 0f ? 1
+                : Stagger.IsStaggered && Mathf.Repeat(Time.unscaledTime * StaggeredPulsesPerSecond, 1f) < 0.5f ? 2 : 0;
             flashLeft -= Time.unscaledDeltaTime;
-            if (shouldFlash != flashing) SetFlash(shouldFlash);
+            if (flash != shownFlash) SetFlash(flash);
         }
 
         // A dummy switched off mid-flash would otherwise come back white.
         private void OnDisable()
         {
             flashLeft = 0f;
-            if (flashing) SetFlash(false);
+            if (shownFlash != 0) SetFlash(0);
         }
 
-        private void SetFlash(bool on)
+        private void SetFlash(int flash)
         {
-            flashing = on;
+            shownFlash = flash;
             if (flashRenderers == null) return;
             foreach (var flashRenderer in flashRenderers)
             {
                 if (flashRenderer == null) continue;
-                if (on)
+                if (flash != 0)
                 {
-                    block.SetColor(BaseColour, FlashColour);
+                    block.SetColor(BaseColour, flash == 1 ? FlashColour : StaggeredColour);
                     flashRenderer.SetPropertyBlock(block);
                 }
                 else

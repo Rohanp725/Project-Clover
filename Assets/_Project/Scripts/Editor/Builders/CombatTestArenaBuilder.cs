@@ -240,7 +240,7 @@ namespace Clover.EditorTools
             foreach (var attack in clips.Values.Where(clip => clip.name.StartsWith("attack_")).OrderBy(clip => clip.name))
                 machine.AddState(attack.name).motion = attack;
             var katana = PlayerCombat.Katana();
-            foreach (var step in katana.Steps.Concat(new[] { katana.Heavy, katana.ChainHeavy, katana.Skill }))
+            foreach (var step in katana.Steps.Concat(new[] { katana.Heavy, katana.ChainHeavy, katana.Skill, katana.Finisher }))
                 if (!clips.ContainsKey(step.Name)) Debug.LogWarning($"[Clover.Build] The character model has no '{step.Name}' clip; that attack will not be animated.");
 
             foreach (string name in new[] { PlayerAnimator.ChargeState, PlayerAnimator.HurtState })
@@ -327,7 +327,7 @@ namespace Clover.EditorTools
             hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = hint.rectTransform.pivot = Vector2.zero;
             hint.rectTransform.anchoredPosition = new Vector2(48f, 36f);
             hint.rectTransform.sizeDelta = new Vector2(1500f, 60f);
-            hint.text = "R1 light attack    R2 heavy attack, hold then release for the Iaido Slash (30 mana)    L1 guard    Circle dodge    Square flask\n"
+            hint.text = "R1 light attack    R2 heavy attack, hold then release for the Iaido Slash (30 mana)    L1 guard    Circle dodge    Square flask    R2 on a staggered enemy: finisher\n"
                 + "Keyboard: WASD move    J light    K heavy    L guard    Space dodge    R flask";
 
             canvasObject.AddComponent<PlayerHud>().Configure(player, combat, defence, health, grey, stamina, mana, flasks, callout);

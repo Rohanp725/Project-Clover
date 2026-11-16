@@ -147,6 +147,16 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheGuardCoversTheFrontOnly()
+        {
+            var guard = new Guard { ArcDegrees = 200f };
+            Assert.IsTrue(guard.Covers(0f));
+            Assert.IsTrue(guard.Covers(95f));
+            Assert.IsFalse(guard.Covers(120f));
+            Assert.IsFalse(guard.Covers(180f), "a blow from behind is not guarded");
+        }
+
+        [Test]
         public void ABlowTheStaminaCannotPayForBreaksTheGuard()
         {
             var guard = new Guard { StaminaPerDamage = 1f };

@@ -31,6 +31,7 @@ namespace Clover.Tests
                 combo.Steps.Add(new AttackStep { Name = "light" + i, Windup = 0.1f, Active = 0.1f, Recovery = 0.2f, StaminaCost = 10f });
             combo.Heavy = new AttackStep { Name = "heavy", Windup = 0.3f, Active = 0.1f, Recovery = 0.4f, StaminaCost = 20f, Heavy = true };
             combo.ChainHeavy = new AttackStep { Name = "chain heavy", Windup = 0.2f, Active = 0.1f, Recovery = 0.4f, StaminaCost = 20f, Heavy = true };
+            combo.Finisher = new AttackStep { Name = "finisher", Windup = 0.3f, Active = 0.1f, Recovery = 0.5f, StaminaCost = 0f, Heavy = true };
             combo.Skill = new AttackStep { Name = "skill", Windup = 0.1f, Active = 0.1f, Recovery = 0.5f, StaminaCost = 15f, Heavy = true };
             combo.Reset();
             return combo;
@@ -125,6 +126,32 @@ namespace Clover.Tests
             Run(combo, stamina, mana, 0.1f, null);
             Assert.AreEqual(AttackPhase.Windup, combo.Phase);
             Assert.IsFalse(combo.CanBeCancelled);
+        }
+
+        [Test]
+        public void AHeavyPressWithAStaggeredEnemyInReachIsTheFinisherAtOnce()
+        {
+            var combo = Weapon(); var stamina = Stamina(); var mana = Mana(100f);
+            var started = new List<string>();
+            combo.PressHeavy(true);
+            Run(combo, stamina, mana, 0.05f, started);
+            Assert.AreEqual(new[] { "finisher" }, started.ToArray(), "no charge, even with the button held");
+            Assert.IsTrue(combo.IsFinishing);
+            Assert.AreEqual(100f, mana.Current, 0.001f);
+        }
+
+        [Test]
+        public void TheFinisherComesOutOfAnyRecoveryIncludingAHeavys()
+        {
+            var combo = Weapon(); var stamina = Stamina(); var mana = Mana(100f);
+            var started = new List<string>();
+            combo.PressHeavy();
+            combo.ReleaseHeavy();
+            Run(combo, stamina, mana, 0.45f, started);
+            Assert.AreEqual(AttackPhase.Recovery, combo.Phase);
+            combo.PressHeavy(true);
+            Run(combo, stamina, mana, 0.1f, started);
+            Assert.AreEqual(new[] { "heavy", "finisher" }, started.ToArray());
         }
 
         [Test]

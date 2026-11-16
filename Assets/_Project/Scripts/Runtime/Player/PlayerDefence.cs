@@ -47,6 +47,10 @@ namespace Clover.Player
         public bool IsDead => Health.IsDead;
         public bool IsGuarding => Guard.IsRaised;
         public bool IsDrinking => Flasks.IsDrinking;
+        /// <summary>The enemy the raised guard is turned toward; null when none is near or the guard is down.</summary>
+        public Transform GuardTarget { get; private set; }
+        /// <summary>Seconds between looks for the nearest enemy while the guard is up.</summary>
+        public float GuardRetargetSeconds = 0.25f;
         /// <summary>True when the player can do nothing: flinching or fallen.</summary>
         public bool IsHelpless => IsHurt || IsDead;
         /// <summary>How far through the flinch the player is, from 0 to 1; 1 when fallen.</summary>
@@ -78,6 +82,7 @@ namespace Clover.Player
         private float hurtSeconds;
         private Vector3 knockDirection;
         private float deadFor;
+        private float guardRetargetIn;
 
         public void Configure(HitStop hitStopToUse, TopDownCamera cameraToShake)
         {
@@ -139,6 +144,7 @@ namespace Clover.Player
             if (IsDead)
             {
                 Guard.SetRaised(false);
+                GuardTarget = null;
                 deadFor += deltaTime;
                 if (ReviveAfterSeconds > 0f && deadFor >= ReviveAfterSeconds) Revive();
                 return;
@@ -146,6 +152,7 @@ namespace Clover.Player
             if (hurtLeft > 0f)
             {
                 Guard.SetRaised(false);
+                GuardTarget = null;
                 // The push is spent early in the flinch and has died away by its end.
                 float before = Eased(1f - hurtLeft / hurtSeconds);
                 hurtLeft = Mathf.Max(0f, hurtLeft - deltaTime);
@@ -165,8 +172,30 @@ namespace Clover.Player
             if (raise && !Guard.IsRaised)
             {
                 guardPressBuffered = 0f;
-                // Square up to whoever is nearest, so the guard looks like an answer to them.
-                if (combat != null) combat.FaceNearestEnemy();
+                guardRetargetIn = 0f;
+            }
+            if (raise && combat != null)
+            {
+                // The guard only covers the front, so it keeps turned to whoever is nearest. Who that is, is looked up
+                // a few times a second rather than every frame.
+                guardRetargetIn -= deltaTime;
+                if (guardRetargetIn <= 0f)
+                {
+                    guardRetargetIn = GuardRetargetSeconds;
+                    bool justRaised = !Guard.IsRaised;
+                    GuardTarget = combat.NearestEnemy();
+                    // Raising the guard squares up at once, so a guard pressed at the last moment faces the blow.
+                    if (justRaised && GuardTarget != null)
+                    {
+                        Vector3 toward = GuardTarget.position - transform.position;
+                        toward.y = 0f;
+                        if (toward.sqrMagnitude > 0.0025f) transform.rotation = Quaternion.LookRotation(toward, Vector3.up);
+                    }
+                }
+            }
+            else
+            {
+                GuardTarget = null;
             }
             Guard.SetRaised(raise);
         }
@@ -178,6 +207,9 @@ namespace Clover.Player
             if (IsDead || IsHurt) return HitOutcome.Missed;
             // The guard is down the moment an attack begins, even if both buttons went down on the same frame.
             if (combat != null && combat.IsAttacking) Guard.SetRaised(false);
+
+            // Nothing interrupts the finisher.
+            if (combat != null && combat.IsFinishing) return HitOutcome.Dodged;
 
             if (player.Dodge.IsInvulnerable)
             {
@@ -193,7 +225,14 @@ namespace Clover.Player
                 return HitOutcome.Dodged;
             }
 
-            switch (Guard.Resolve(hit.Damage, hit.Unblockable, player.Stamina, out float chip))
+            // The guard covers the front only: a blow from behind lands whatever is held.
+            // Where the attacker stands decides it; the blow's own direction is only a fallback, since a wide swing
+            // need not travel straight from the attacker to the player.
+            Vector3 fromAttacker = hit.HasOrigin ? hit.Origin - transform.position : -hit.Direction;
+            fromAttacker.y = 0f;
+            bool covered = fromAttacker.sqrMagnitude < 0.0001f || Guard.Covers(Vector3.Angle(transform.forward, fromAttacker));
+            float chip = 0f;
+            switch (covered ? Guard.Resolve(hit.Damage, hit.Unblockable, player.Stamina, out chip) : GuardResult.NotGuarded)
             {
                 case GuardResult.Perfect:
                     PerfectGuards++;

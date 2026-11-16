@@ -22,6 +22,8 @@ namespace Clover.Player
         /// <summary>The weapon's skill, released from a full charge. Null: holding only delays the heavy.</summary>
         public AttackStep Skill;
         public float SkillManaCost = 30f;
+        /// <summary>The move the heavy button gives when a staggered enemy is in reach. Null: the plain heavy is used.</summary>
+        public AttackStep Finisher;
         /// <summary>Seconds the heavy button must be held before releasing it gives the skill.</summary>
         public float ChargeTime = 0.4f;
         /// <summary>Seconds a press is remembered.</summary>
@@ -36,6 +38,7 @@ namespace Clover.Player
         public int StepIndex { get; private set; } = -1;
         public bool IsAttacking => Phase != AttackPhase.None;
         public bool IsCharging => Phase == AttackPhase.Charge;
+        public bool IsFinishing => Current != null && Current == Finisher;
         /// <summary>True once a charge has been held long enough, with the mana to pay, to release the skill.</summary>
         public bool IsCharged => IsCharging && chargeAnnounced;
         /// <summary>A dodge or a guard may cut short a recovery or a charge, never a wind-up or the swing itself.</summary>
@@ -52,6 +55,7 @@ namespace Clover.Player
         private float buffered;
         private float heavyBuffered;
         private bool heavyHeld;
+        private bool finisherWanted;
         private bool chargeAnnounced;
         private bool currentIsLight;
         private int nextIndex;
@@ -66,6 +70,7 @@ namespace Clover.Player
             buffered = 0f;
             heavyBuffered = 0f;
             heavyHeld = false;
+            finisherWanted = false;
             chargeAnnounced = false;
             currentIsLight = false;
             nextIndex = 0;
@@ -73,11 +78,16 @@ namespace Clover.Player
 
         public void Press() => buffered = BufferTime;
 
-        public void PressHeavy()
+        /// <summary>
+        /// The heavy button went down. With <paramref name="finisher"/> true (a staggered enemy is in reach) the press
+        /// asks for the finisher instead: it starts at once, with no charge, from idle or from any recovery.
+        /// </summary>
+        public void PressHeavy(bool finisher = false)
         {
             if (Heavy == null) return;
             heavyBuffered = BufferTime;
             heavyHeld = true;
+            finisherWanted = finisher && Finisher != null;
         }
 
         public void ReleaseHeavy() => heavyHeld = false;
@@ -114,7 +124,11 @@ namespace Clover.Player
                 if (sinceEnd > ChainGrace) nextIndex = 0;
                 if (heavyBuffered > 0f)
                 {
-                    if (nextIndex > 0)
+                    if (finisherWanted)
+                    {
+                        if (StartHeavy(Finisher, stamina)) events |= ComboEvents.Started;
+                    }
+                    else if (nextIndex > 0)
                     {
                         if (StartHeavy(ChainHeavy ?? Heavy, stamina)) events |= ComboEvents.Started;
                     }
@@ -187,8 +201,10 @@ namespace Clover.Player
                 if (Phase == AttackPhase.Active && elapsed >= step.Windup + step.Active) Phase = AttackPhase.Recovery;
                 if (Phase == AttackPhase.Recovery)
                 {
-                    bool chainOpen = currentIsLight && elapsed >= step.Windup + step.Active + ChainDelay;
-                    if (heavyBuffered > 0f && chainOpen && StartHeavy(ChainHeavy ?? Heavy, stamina)) events |= ComboEvents.Started;
+                    bool open = elapsed >= step.Windup + step.Active + ChainDelay;
+                    bool chainOpen = currentIsLight && open;
+                    if (heavyBuffered > 0f && finisherWanted && open && StartHeavy(Finisher, stamina)) events |= ComboEvents.Started;
+                    else if (heavyBuffered > 0f && !finisherWanted && chainOpen && StartHeavy(ChainHeavy ?? Heavy, stamina)) events |= ComboEvents.Started;
                     else if (buffered > 0f && chainOpen && nextIndex < Steps.Count && StartLight(stamina)) events |= ComboEvents.Started;
                     else if (elapsed >= step.Total) EndAttack();
                 }
@@ -224,6 +240,7 @@ namespace Clover.Player
         {
             buffered = 0f;
             heavyBuffered = 0f;
+            finisherWanted = false;
             if (step == null || !stamina.TrySpend(step.StaminaCost)) return false;
             Current = step;
             Phase = AttackPhase.Windup;

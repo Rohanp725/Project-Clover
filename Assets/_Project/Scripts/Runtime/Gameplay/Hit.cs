@@ -13,14 +13,19 @@ namespace Clover.Gameplay
         public readonly bool Heavy;
         /// <summary>A red attack: holding guard does not stop it. Only a dodge or a perfect guard does.</summary>
         public readonly bool Unblockable;
+        /// <summary>Where the attacker stands, when it said so; a guard uses it to tell front from behind.</summary>
+        public readonly Vector3 Origin;
+        public readonly bool HasOrigin;
 
-        public Hit(float damage, float stagger, Vector3 direction, bool heavy = false, bool unblockable = false)
+        public Hit(float damage, float stagger, Vector3 direction, bool heavy = false, bool unblockable = false, Vector3? origin = null)
         {
             Damage = damage;
             Stagger = stagger;
             Direction = direction;
             Heavy = heavy;
             Unblockable = unblockable;
+            Origin = origin ?? default;
+            HasOrigin = origin.HasValue;
         }
     }
 }

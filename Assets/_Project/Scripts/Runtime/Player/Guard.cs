@@ -18,6 +18,8 @@ namespace Clover.Player
         public float StaminaPerDamage = 0.9f;
         /// <summary>Share of a blocked blow's damage that still comes through, as grey health.</summary>
         public float ChipFraction = 0.35f;
+        /// <summary>Full width in degrees, centred on the player's facing, that the guard covers. Blows from outside it land.</summary>
+        public float ArcDegrees = 200f;
 
         public bool IsRaised { get; private set; }
         public bool IsPerfect => IsRaised && perfectArmed && sincePress <= PerfectWindow;
@@ -43,6 +45,9 @@ namespace Clover.Player
         }
 
         public void SetRaised(bool raised) => IsRaised = raised;
+
+        /// <summary>Whether the guard faces a blow whose attacker stands this many degrees off the player's facing.</summary>
+        public bool Covers(float degreesFromFacing) => degreesFromFacing <= ArcDegrees * 0.5f;
 
         public void Tick(float deltaTime)
         {

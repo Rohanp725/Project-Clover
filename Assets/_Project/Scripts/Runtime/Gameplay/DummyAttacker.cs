@@ -150,7 +150,7 @@ namespace Clover.Gameplay
                 Vector3 offset = other.ClosestPoint(origin) - origin;
                 offset.y = 0f;
                 if (offset.magnitude > 0.6f && Vector3.Angle(forward, offset) > ArcDegrees * 0.5f) continue;
-                var outcome = struck.TakeHit(new Hit(Damage, 0f, forward, false, Cycle.IsRed));
+                var outcome = struck.TakeHit(new Hit(Damage, 0f, forward, false, Cycle.IsRed, pivot.position));
                 if (outcome == HitOutcome.PerfectGuard) dummy.Rebuff(PerfectGuardStagger, -forward);
                 break;
             }

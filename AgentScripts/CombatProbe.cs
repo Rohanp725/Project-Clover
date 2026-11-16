@@ -105,7 +105,12 @@ public class CombatProbeRunner : MonoBehaviour
         north.Stagger.Add(1000f);
         float healthBefore = north.Health.Current;
         yield return Tap(Key.K);
+        yield return Until(() => combat.Combo.Current != null, 1f);
+        name = combat.Combo.Current != null ? combat.Combo.Current.Name : "none";
+        Place(new Vector3(0f, 0f, 1.6f), Vector3.forward);
+        bool passedThrough = defence.TakeHit(new Hit(50f, 0f, Vector3.back)) == HitOutcome.Dodged;
         yield return Until(() => combat.Finishers > 0, 2f);
+        Say($"D finisher move: attack {name} blows pass through {passedThrough}");
         Say($"D finisher: finishers {combat.Finishers} dummy health {healthBefore:0} -> {north.Health.Current:0} still staggered {north.Stagger.IsStaggered} time scale {Time.timeScale:0.00}");
         yield return Until(() => !combat.IsAttacking, 2f);
         yield return new WaitForSeconds(0.3f);
@@ -169,6 +174,17 @@ public class CombatProbeRunner : MonoBehaviour
         bool drinking = defence.IsDrinking;
         yield return new WaitForSeconds(1f);
         Say($"J flask: was drinking {drinking} health {healthBefore:0} -> {defence.Health.Current:0} flasks {defence.Flasks.Count}");
+
+        // L: the guard covers the front only. No enemy is near here, so the guard does not turn.
+        Place(new Vector3(0f, 0f, -12f), Vector3.forward);
+        Keys(Key.L);
+        yield return new WaitForSeconds(0.6f);
+        var front = defence.TakeHit(new Hit(10f, 0f, Vector3.back));
+        yield return new WaitForSeconds(0.1f);
+        var behind = defence.TakeHit(new Hit(10f, 0f, Vector3.back, false, false, player.transform.position + Vector3.back * 2f));
+        Keys();
+        Say($"L directional guard: from the front {front}, from behind {behind}");
+        yield return new WaitForSeconds(0.6f);
 
         // K: fall and stand up again.
         defence.TakeHit(new Hit(1000f, 0f, Vector3.back));

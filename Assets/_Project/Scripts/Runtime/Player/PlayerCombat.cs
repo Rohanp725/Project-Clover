@@ -27,10 +27,19 @@ namespace Clover.Player
         /// <summary>Seconds time nearly stops for a finisher, whatever the attack's own value.</summary>
         public float FinisherHitStop = 0.16f;
         public float FinisherShake = 0.4f;
+        /// <summary>Metres within which the heavy button finishes a staggered enemy instead of swinging.</summary>
+        public float FinisherRange = 5f;
+        /// <summary>Metres from the enemy's centre the finisher steps in to.</summary>
+        public float FinisherStandOff = 1.2f;
+        /// <summary>Real seconds of slowed time after a finisher's stop, and how slow.</summary>
+        public float FinisherSlowSeconds = 0.45f;
+        public float FinisherSlowScale = 0.35f;
         public LayerMask HitLayers = ~0;
 
         public bool IsAttacking => Combo.IsAttacking;
         public bool IsCharging => Combo.IsCharging;
+        /// <summary>True during the finisher move; blows pass through the player while it lasts.</summary>
+        public bool IsFinishing => Combo.IsFinishing;
         public bool CanBeCancelled => Combo.CanBeCancelled;
         /// <summary>How far the attack moves the player this frame; zero outside a wind-up.</summary>
         public Vector3 Step { get; private set; }
@@ -46,6 +55,8 @@ namespace Clover.Player
         private InputAction moveAction;
         private readonly Collider[] overlaps = new Collider[64];
         private bool warnedOverlapsFull;
+        private Transform finisherTarget;
+        private float lunge;
         private readonly HashSet<IDamageable> struck = new HashSet<IDamageable>();
 
         public void Configure(HitStop hitStopToUse, TopDownCamera cameraToShake)
@@ -68,6 +79,7 @@ namespace Clover.Player
             },
             Heavy = new AttackStep { Name = "attack_heavy", Heavy = true, Windup = 0.30f, Active = 0.10f, Recovery = 0.46f, Damage = 26f, Stagger = 34f, StaminaCost = 20f, ManaGain = 10f, Lunge = 1.0f, Reach = 2.8f, ArcDegrees = 90f, HitStopSeconds = 0.10f, Shake = 0.16f },
             ChainHeavy = new AttackStep { Name = "attack_heavy", Heavy = true, Windup = 0.20f, Active = 0.10f, Recovery = 0.46f, Damage = 30f, Stagger = 40f, StaminaCost = 20f, ManaGain = 12f, Lunge = 1.2f, Reach = 2.8f, ArcDegrees = 90f, HitStopSeconds = 0.11f, Shake = 0.2f },
+            Finisher = new AttackStep { Name = "attack_finisher", Heavy = true, Windup = 0.30f, Active = 0.14f, Recovery = 0.56f, Damage = 30f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 3.2f, ArcDegrees = 120f, HitStopSeconds = 0.2f, Shake = 0.45f },
             Skill = new AttackStep { Name = "attack_iaido", Heavy = true, Windup = 0.08f, Active = 0.12f, Recovery = 0.50f, Damage = 48f, Stagger = 50f, StaminaCost = 15f, ManaGain = 0f, Lunge = 2.6f, Reach = 3.3f, ArcDegrees = 170f, HitStopSeconds = 0.14f, Shake = 0.3f },
             SkillManaCost = 30f,
             ChargeTime = 0.4f,
@@ -103,7 +115,12 @@ namespace Clover.Player
             Step = Vector3.zero;
             if (lightAction == null || heavyAction == null) return;
             if (lightAction.WasPressedThisFrame()) Combo.Press();
-            if (heavyAction.WasPressedThisFrame()) Combo.PressHeavy();
+            if (heavyAction.WasPressedThisFrame())
+            {
+                // Looked for on the press only, not every frame: a staggered enemy in reach turns the heavy into the finisher.
+                finisherTarget = FindEnemy(transform.forward, 360f, FinisherRange, true);
+                Combo.PressHeavy(finisherTarget != null);
+            }
             if (!heavyAction.IsPressed()) Combo.ReleaseHeavy();
             if (unavailable)
             {
@@ -122,35 +139,56 @@ namespace Clover.Player
 
             var step = Combo.Current;
             if (Combo.Phase == AttackPhase.Windup && step.Windup > 0f)
-                Step = transform.forward * (step.Lunge * deltaTime / step.Windup);
+                Step = transform.forward * (lunge * deltaTime / step.Windup);
         }
 
-        /// <summary>Turns the player to the nearest enemy all around, if one is in range. The guard uses it.</summary>
-        public void FaceNearestEnemy()
-        {
-            if (TryFindEnemy(transform.forward, 360f, out Vector3 direction))
-                transform.rotation = Quaternion.LookRotation(direction, Vector3.up);
-        }
+        /// <summary>The nearest enemy all around within aiming range, or null. The guard uses it to know whom to face.</summary>
+        public Transform NearestEnemy() => FindEnemy(transform.forward, 360f, AimRange, false);
 
         // Face the enemy nearest to where the stick points; with no enemy in the cone, face the stick; with no stick, stay.
         private void Aim()
         {
-            Vector3 wish = player.CameraRelative(moveAction.ReadValue<Vector2>());
-            Vector3 toward = wish.sqrMagnitude > 0.01f ? wish.normalized : transform.forward;
-            if (!TryFindEnemy(toward, AimConeDegrees, out Vector3 best)) best = toward;
-            transform.rotation = Quaternion.LookRotation(best, Vector3.up);
+            lunge = Combo.Current.Lunge;
+            Transform enemy;
+            Vector3 toward;
+            if (Combo.IsFinishing && finisherTarget != null)
+            {
+                // The finisher goes to the enemy it was pressed for, and steps in exactly as far as it needs to.
+                enemy = finisherTarget;
+                toward = transform.forward;
+                Vector3 gap = enemy.position - transform.position;
+                gap.y = 0f;
+                lunge = Mathf.Clamp(gap.magnitude - FinisherStandOff, 0f, FinisherRange);
+            }
+            else
+            {
+                Vector3 wish = player.CameraRelative(moveAction.ReadValue<Vector2>());
+                toward = wish.sqrMagnitude > 0.01f ? wish.normalized : transform.forward;
+                enemy = FindEnemy(toward, AimConeDegrees, AimRange, false);
+            }
+            if (enemy != null)
+            {
+                Vector3 offset = enemy.position - transform.position;
+                offset.y = 0f;
+                if (offset.sqrMagnitude > 0.0025f) toward = offset.normalized;
+            }
+            transform.rotation = Quaternion.LookRotation(toward, Vector3.up);
         }
 
-        private bool TryFindEnemy(Vector3 toward, float coneDegrees, out Vector3 direction)
+        // The enemy nearest to the given direction within a cone and a range; optionally only one that is staggered.
+        private Transform FindEnemy(Vector3 toward, float coneDegrees, float range, bool staggeredOnly)
         {
-            direction = toward;
+            Transform found = null;
             float bestScore = float.MaxValue;
-            int count = Overlap(transform.position, AimRange);
+            int count = Overlap(transform.position, range);
             for (int i = 0; i < count; i++)
             {
                 var other = overlaps[i];
-                if (other.transform.root == transform.root || other.GetComponentInParent<IDamageable>() == null) continue;
-                Vector3 offset = other.bounds.center - transform.position;
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>() as Component;
+                if (target == null) continue;
+                if (staggeredOnly && !(target is IStaggerable staggerable && staggerable.IsStaggered)) continue;
+                Vector3 offset = target.transform.position - transform.position;
                 offset.y = 0f;
                 float distance = offset.magnitude;
                 if (distance < 0.05f) continue;
@@ -161,10 +199,10 @@ namespace Clover.Player
                 if (score < bestScore)
                 {
                     bestScore = score;
-                    direction = offset / distance;
+                    found = target.transform;
                 }
             }
-            return bestScore < float.MaxValue;
+            return found;
         }
 
         private int Overlap(Vector3 centre, float radius)
@@ -195,7 +233,7 @@ namespace Clover.Player
                 offset.y = 0f;
                 // Something touching the player is hit whatever the angle; otherwise it must be inside the swing's arc.
                 if (offset.magnitude > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
-                var outcome = target.TakeHit(new Hit(step.Damage, step.Stagger, transform.forward, step.Heavy));
+                var outcome = target.TakeHit(new Hit(step.Damage, step.Stagger, transform.forward, step.Heavy, false, transform.position));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
                 finisher |= outcome == HitOutcome.Finisher;
@@ -211,6 +249,10 @@ namespace Clover.Player
                 if (defence != null) defence.Callout("Finisher");
             }
             if (hitStop != null) hitStop.Freeze(finisher ? Mathf.Max(FinisherHitStop, step.HitStopSeconds) : step.HitStopSeconds);
+            // After a finisher's stop, time comes back slowly: the blow gets a moment to be looked at.
+            // The slow is timed from now and the stop runs first, so it is asked to outlast the stop.
+            if (finisher && hitStop != null)
+                hitStop.Slow(FinisherSlowSeconds + Mathf.Max(FinisherHitStop, step.HitStopSeconds), FinisherSlowScale);
             float shake = finisher ? Mathf.Max(FinisherShake, step.Shake) : step.Shake;
             if (shaker != null && shake > 0f) shaker.Shake(shake, 0.25f);
         }

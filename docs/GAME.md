@@ -95,19 +95,23 @@ drawing cut, a return cut, a stepping finisher). Heavy overhead. Held heavy shea
 
 Build order: (1) light chain, soft aim, hit weight, stagger meter, mana, a training dummy; (2) heavy, finisher and
 the Iaido Slash; (3) guard, regain and perfect guard, with a dummy that attacks; (4) flasks, perfect dodge, red attacks.
-All four are built in the combat test arena as of 2026-11-15; the user has approved the feel of step 1 and has yet to
-play steps 2 to 4.
+All four are built in the combat test arena as of 2026-11-15; the user has played all four and approved the feel.
 
 How the pieces work as built (first values, all to be tuned by play):
 
 - **Heavy button**: tapped, a heavy overhead cut. Pressed after one or two lights it comes out at once, quicker and
   harder, and ends the chain. Held about 0.4 s with 30 mana, releasing gives the Iaido Slash; without the mana the
   hold becomes a plain heavy. The Triangle button is not used yet: the weapon skill is on the held heavy only.
-- **Finisher**: any heavy blow (heavy, chain heavy or Iaido Slash) on a staggered enemy does three times its damage
-  and ends the stagger. Light hits on a staggered enemy do one and a half times.
-- **Guard**: blocks from every side for stamina (0.9 per point of damage); 35% of the damage comes through as grey
-  health. A blow the stamina cannot pay for breaks the guard: full damage and a long flinch. The guard and the dodge
-  can both cut an attack's recovery short. The player moves at 45% speed while guarding and does not turn.
+- **Finisher**: a staggered enemy pulses gold. Pressing heavy with one within 5 m gives the finisher instead of a
+  swing: the player steps in to it and drives the blade through, with its own animation, a long stop, slowed time
+  and a camera shake. It does three times its damage, ends the stagger, costs no stamina, gives 15 mana, and blows
+  pass through the player while it lasts. Light hits on a staggered enemy do one and a half times.
+- **Guard**: blocks for stamina (0.9 per point of damage); 35% of the damage comes through as grey health. A blow
+  the stamina cannot pay for breaks the guard: full damage and a long flinch. The guard and the dodge can both cut
+  an attack's recovery short. The player moves at 45% speed while guarding.
+- **Decided 2026-11-15 (user)**: blocking is directional. The guard covers the front 200 degrees; a blow from behind
+  lands. Raising the guard squares up to the nearest enemy at once and keeps turned to it; with no enemy near, the
+  stick turns the player.
 - **Perfect guard**: a guard pressed within 0.18 s before the blow. No cost, 15 mana, and the attacker's stagger meter
   takes a large hit. Pressing guard again within 0.4 s gives no perfect window, so it cannot be hammered.
 - **Grey health**: won back at 0.6 per point of damage dealt; fades after 2.5 s without a block or a hit. An
@@ -118,8 +122,7 @@ How the pieces work as built (first values, all to be tuned by play):
 - **Flasks**: three, 45 health each, 0.8 s to drink with the heal at 0.4 s; a blow or a roll before the heal wastes
   only the time. With none left, 120 damage dealt earns one back.
 - **Being hit**: a 0.35 s flinch that interrupts everything, with a short push back.
-- **Open**: whether the guard should only block from the front; whether the player may turn while guarding; a hard
-  lock-on for bosses.
+- **Open**: a hard lock-on for bosses, and with it a way to choose whom the guard faces when several enemies are near.
 
 ### Elements (Draft)
 
