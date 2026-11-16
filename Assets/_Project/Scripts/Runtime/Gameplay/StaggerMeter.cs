@@ -42,7 +42,8 @@ namespace Clover.Gameplay
             return true;
         }
 
-        public void Tick(float deltaTime)
+        /// <summary>Advances the meter. With <paramref name="recovers"/> false it does not drain: the ground is shaking under it.</summary>
+        public void Tick(float deltaTime, bool recovers = true)
         {
             if (IsStaggered)
             {
@@ -51,7 +52,7 @@ namespace Clover.Gameplay
                 return;
             }
             sinceBlow += deltaTime;
-            if (sinceBlow >= DrainDelay) Value = Math.Max(0f, Value - DrainPerSecond * deltaTime);
+            if (recovers && sinceBlow >= DrainDelay) Value = Math.Max(0f, Value - DrainPerSecond * deltaTime);
         }
     }
 }

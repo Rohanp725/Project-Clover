@@ -741,6 +741,100 @@ fight begins; a guard stance clip (he stands in his ready pose while guarding); 
 pillars on it still block sight and movement, and a marked lane passes through them as every enemy's does); return
 of his health if he is left. Not tuned by play: every number above.
 
+### The great chart: the framework under the element trees (2026-11-16, day run; Claude's defaults, not yet played by the user)
+
+Built from the user's request for "a massive upgrade tree, with 30-40 possible options for each element including the
+mixed elements as well as the super special boss one" on "a branching tree outwards in many directions ... when you
+choose an element it will stay zoomed to that element's upgrade tree". This is the machinery, not the content: the
+plan is in `docs/design/TREE_BRIEF.md`, and how a tree is written as data is in `docs/UPGRADE_SCHEMA.md`. Everything
+below is Claude's default unless it quotes the user.
+
+**The ring.** Eleven elements stand round one middle in a fixed order (Fire, Lightning, Wind, Ice, Water, Life, Earth,
+Metal, Light, Dark, Poison), each with one colour, one affliction it lays on enemies, and one mixed branch shared with
+the next element round (Plasma, Tempest, Blizzard, Glacier, Bloom, Overgrowth, Forge, Halo, Eclipse, Blight, Pyre).
+One file, `Elements.cs`, knows all of it.
+
+**All eleven elements can be held.** Fire and Lightning are as they were. The other nine have stand-in kits made from
+what already existed, each in its colour with its affliction, to be replaced when their own spells are made:
+
+| Element | Spell (tap) | Surge (from the user's first table of self buffs) |
+|---|---|---|
+| Wind | Gale: a long narrow wave, Unsteady two deep | Tailwind: the dodge goes 30% further, is safe 40% longer and costs 40% less; 15% quicker |
+| Ice | Frost Fan: a short wide wave, Chill two deep | Rime Ward: one ward that turns aside the next blow that would land |
+| Water | Tide: a broad wave that soaks | Wellspring: flasks heal half again as much |
+| Life | Thorn Lash: a bolt that seeds one enemy and the one beside it | Renewal: 3 health a second |
+| Earth | Stone Shove: a short heavy wave, Tremor | Bedrock: 20% less damage taken, more stagger on every blow |
+| Metal | Shrapnel: a narrow hard wave, Sundered | Tempered: 35% less damage taken |
+| Light | Lance of Day: a bolt on one enemy far off, Marked | Purify: grey health comes back at once, everyone within 7 m is Marked, critical blows hit harder |
+| Dark | Hex: a weak bolt that leaps through four, Cursed | Hunger: health drains 2 a second (as grey, never the last of it) and 12% of each blow comes back. The user's "one revive as a zombie" is not built; this stands in for it |
+| Poison | Spit: a wave, Poison two deep | Antivenom: 1 health a second and 6% of each blow back |
+
+During any of the nine surges every blow of the weapon lays one stack of the element's affliction.
+
+**Afflictions.** Burn and Static are no longer special cases; every enemy (and the training dummies, and the colossus
+in a lesser way) carries a set of afflictions with the same rules for all eleven: stacks, seconds, and what each does.
+The numbers are one table in `Afflictions.cs`, repeated in the schema document. In short: Burn burns; Static waits to
+be set off; Unsteady staggers sooner and is shoved further; Chill slows and at five stacks **freezes** (held still for
+3 s, a heavy blow shatters it for 45; elites and gods thaw in 1.2 s); Soaked takes more from spells and passes Static
+and Chill to everyone within 4 m; Seeded heals the player on each blow and bursts into thorns when it dies; Tremor
+slows and stops balance from recovering; Sundered takes more from weapons; Marked makes every blow on it critical and
+gives more mana; Cursed deals less and heals the player when it dies; Poison lands in a burst every 2 s. Each
+affliction an enemy carries shows as a small diamond in its colour under the enemy's bars, larger the deeper it lies;
+a frozen enemy glows a steady pale blue. The colossus is too great to be frozen, slowed or moved, and what burns or
+poisons it cannot take its last point of health.
+
+**Critical blows** now exist: a weapon blow is critical by chance (none to begin with; upgrades add it) or always on a
+Marked enemy, deals half again as much, and shows a gold star where it lands. Stored Charge keeps its own numbers (the
+next blow doubled) and shows the same star.
+
+**The player's numbers.** Twenty-nine numbers (weapon damage, stagger, mana gains, stamina costs, dodge distance and
+safe time, the perfect guard's window, health, flask healing and count, critical chance and damage, spell damage,
+cost and reach, surge length and cost, damage taken, grey health kept, embers earned, walking and swing speed, and the
+depth, length and strength of afflictions laid) are summed from learned upgrades, the surge and timed boons, and the
+weapon, guard, dodge, flasks and spells read them. Wards are new: each turns aside one blow that would have landed;
+three are held at most; the HUD's status line says how many.
+
+**Upgrades are data.** A mark has a kind (root, minor, major, spell, keystone, mix, signature), a cost set by its kind
+(**minor 1, root 2, major 3, spell 4, keystone 6, mix 3 to 5**; the existing marks were re-priced to this: Fire's seven
+now cost 21 and Lightning's 24, still more than the 19 a run pays), any one of several marks it may grow from, a place
+in its tree, a picture, changes to the player's numbers, and effects: a trigger (23 of them, from "a light blow lands"
+to "mana full") and an action (19, from "lay stacks" to "a helper that strikes a few times") with numbers. One runner
+does them all. The first sixteen marks of Fire and Lightning behave exactly as before and are still done by hand
+under their ids. Thirteen marks made only of data were added to prove it: Kindling, Stoked, Dry Tinder, Searing Guard,
+Wildfire and the spell Cinder Fan for Fire; Keen Edge, Quick Hands, Capacitor, Grounding, Slipstream and the spell
+Chain Lance for Lightning; and Ionised Air, Fused Core and the spell Plasma Lance on the Plasma branch. Their numbers
+are in the tree files and are first guesses.
+
+**Spells are worn.** A learned spell is worn in the hold-spell slot: hold the spell button for the worn spell, tap it
+for the element's own. The first spell learned is worn at once; on the chart, pressing learn on a spell already owned
+wears that one. The HUD names the worn spell beside the weapon. Meteor Leap and Lightning Rod are spells of this kind
+now. A spell is thrown by a "form" (wave, bolt, leap, rod so far) that knows nothing of any one element, so any
+element can wear any form in its own colour with its own affliction; the library of forms is the next piece of work.
+
+**Mixed branches.** A mix mark is open to a player who holds one of its two elements and has **held or consumed** the
+other in this run (the run now remembers both). Sealed, the branch is still drawn, and the words panel says which
+element opens it. Plasma, the gift of consuming the storm into Fire, sits at the crown of the Plasma branch.
+
+**The chart.** The rest-fire menu is now a night sky of stars with the whole ring on it. It is turned so the tree of
+the element held stands upright, and the view stays close on that tree and leans toward the chosen mark; **the heavy
+attack button (R2 or K) pulls the view back to show the whole ring, and returns**. Marks are framed pictures, not
+letters: forty small white pictograms painted by code, tinted by the mark's state; the frame says the kind (minor
+small and round, major square, spell a diamond, keystone large and eight-sided, mix six-sided, a god's gift a crowned
+sun). Other elements' trees are faint; the branches shared with the two neighbours can be walked to and read. The
+words panel gives the name, the kind and cost, how the mark stands with the player (learned, worn, what it grows from,
+what opens it), and the description. The chart was tried filled to 381 marks (every tree and branch at the size
+planned) and drawn that way it allocates nothing per frame.
+
+**The hub's braziers.** There are eleven now: Fire and Lightning where they stood, and the other nine in an arc along
+the eastern rim in the order of the ring, each burning in its own colour. **Stopgap**: Lightning still stays cold
+until it is taken from its god, but the nine new elements have no gods to be won from yet, so their braziers are lit
+from the first waking. When their gods exist each should be sealed the way Lightning is.
+
+**Not built, or left rough**: the trees themselves beyond the thirteen proof marks (other workers are writing them
+against the schema); the library of spell forms beyond the first four; Dark's revive; any way for enemies to lay
+afflictions on the player; a sound for anything new; balance of every new number. Pull and push move ordinary enemies
+and hardly move elites and gods. The chart was looked at only at the editor's 1920 by 936 game view.
+
 ## Open questions
 
 1. Camera: top-down is on trial in the slice; confirm or change once it is playable.
@@ -765,6 +859,7 @@ of his health if he is left. Not tuned by play: every number above.
 | 2026-11-16 | Narukami's godly form is a colossus beside the summit who fights with his hands; they can be cut only where they lie after a blow, and breaking his balance brings his head down | Claude's design during the unattended overnight run; the decided design called for a godly second form |
 | 2026-11-16 | Game text is set in Spectral SemiBold (OFL); surfaces are painted by code in a hand-painted manner; fire is drawn as layered tongues | Claude's defaults during the unattended overnight run, toward the Ravenswatch brief |
 | 2026-11-16 | The hub is a stopped clock outside time; a fall ends the run and wakes the player there; the Katana and Lightning become starting choices once won in a run | Claude's defaults during the unattended overnight run, following the decided run-based structure |
+| 2026-11-16 | The element trees become one great chart of eleven elements round a ring with a mixed branch between neighbours; upgrades are data (kinds, costs by kind, triggers and actions); afflictions, critical blows, wards and worn spells exist; the nine new elements have stand-in kits and lit braziers | Claude's defaults during the day run, from the user's request for a massive branching tree with mixed elements; see "The great chart" |
 | 2026-11-16 | Upgrades are bought with embers (one per enemy, five per god) at rest fires, in any order; held buttons give the flask and the spell their upgraded moves | Claude's defaults during the unattended overnight run |
 | 2026-11-16 | The god of Lightning is Narukami, a duellist with a ring of thunder drums, fought above the clouds; take or consume is two things he leaves on the floor | Claude's defaults during the unattended overnight run |
 | 2026-11-15 | Blocking is directional; the finisher is its own move on a staggered enemy | the user's feedback after playing the combat arena |

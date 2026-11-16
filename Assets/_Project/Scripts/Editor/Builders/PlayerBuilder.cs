@@ -378,7 +378,8 @@ namespace Clover.EditorTools
             // Mana takes the colour of the player's element.
             var mana = Bar("Mana", hud, new Vector2(37f, -88f), new Vector2(320f, 18f), new Color(1f, 0.5f, 0.1f));
 
-            var flasks = new RectTransform[new FlaskBelt().Maximum];
+            // More gourds than a new player carries: an upgrade may add to the three, and the HUD shows only those carried.
+            var flasks = new RectTransform[new FlaskBelt().Maximum + 3];
             for (int i = 0; i < flasks.Length; i++)
                 flasks[i] = Flask("Flask " + (i + 1), hud, new Vector2(44f + i * 38f, -112f));
 
@@ -588,64 +589,101 @@ namespace Clover.EditorTools
             MenusOnTop(hud.transform);
         }
 
-        // The chart of the element trees: the whole screen goes dark, the trees are drawn across it by the menu itself,
-        // and what the chosen mark does is set out in a panel on the right.
+        // The great chart: a night sky over the whole screen, hiding the game and its bars; the trees are drawn across
+        // it by the menu itself, and what the chosen mark does is set out in a panel on the right.
         private static void BuildUpgradeMenu(PlayerController player, Transform hud)
         {
-            // Dark enough that the bars and the world behind it read as background, not as part of the chart.
-            var dim = Panel("Upgrade Menu", hud, new Color(0.012f, 0.01f, 0.035f, 0.975f));
-            dim.anchorMin = Vector2.zero;
-            dim.anchorMax = Vector2.one;
-            dim.offsetMin = dim.offsetMax = Vector2.zero;
+            // Solid, so nothing of the HUD or the world shows through it.
+            var night = Panel("Upgrade Menu", hud, new Color(0.012f, 0.012f, 0.04f, 1f));
+            night.anchorMin = Vector2.zero;
+            night.anchorMax = Vector2.one;
+            night.offsetMin = night.offsetMax = Vector2.zero;
+            // The stars lie on a sheet a little larger than the screen, so it can drift against the chart without showing an edge.
+            var sky = Panel("Sky", night, Color.white);
+            sky.anchorMin = Vector2.zero;
+            sky.anchorMax = Vector2.one;
+            sky.offsetMin = new Vector2(-70f, -70f);
+            sky.offsetMax = new Vector2(70f, 70f);
+            sky.GetComponent<Image>().sprite = UiArt.Starfield();
 
-            // The chart: an empty thing in the middle of the screen that the menu fills and slides about.
+            // The chart: an empty thing in the middle of the screen that the menu fills, slides about, turns and draws
+            // nearer or further. It is a canvas of its own, so moving it does not make the rest of the HUD be drawn again.
             var chart = new GameObject("Chart", typeof(RectTransform)).GetComponent<RectTransform>();
-            chart.SetParent(dim, false);
+            chart.SetParent(night, false);
             chart.anchorMin = chart.anchorMax = chart.pivot = new Vector2(0.5f, 0.5f);
             chart.sizeDelta = Vector2.zero;
+            chart.gameObject.AddComponent<Canvas>();
             var cursor = Panel("Cursor", chart, new Color(1f, 0.82f, 0.4f, 1f));
             cursor.GetComponent<Image>().sprite = UiArt.MarkCursor();
             cursor.GetComponent<Image>().type = Image.Type.Sliced;
             cursor.anchorMin = cursor.anchorMax = cursor.pivot = new Vector2(0.5f, 0.5f);
             cursor.sizeDelta = new Vector2(100f, 100f);
+            // The cursor beats; on a canvas of its own its beating redraws only itself.
+            cursor.gameObject.AddComponent<Canvas>();
 
-            var title = Label("Title", dim, 44, TextAnchor.UpperLeft, new Color(1f, 0.8f, 0.45f, 1f));
+            // A band of ink under the title and another under the hint, so both read over the stars and over any mark that passes behind.
+            var top = Panel("Title Band", night, new Color(0.012f, 0.012f, 0.04f, 1f));
+            top.anchorMin = new Vector2(0f, 1f);
+            top.anchorMax = new Vector2(1f, 1f);
+            top.pivot = new Vector2(0.5f, 1f);
+            top.sizeDelta = new Vector2(0f, 104f);
+            var foot = Panel("Hint Band", night, new Color(0.012f, 0.012f, 0.04f, 1f));
+            foot.anchorMin = new Vector2(0f, 0f);
+            foot.anchorMax = new Vector2(1f, 0f);
+            foot.pivot = new Vector2(0.5f, 0f);
+            foot.sizeDelta = new Vector2(0f, 84f);
+
+            var title = Label("Title", night, 44, TextAnchor.UpperLeft, new Color(1f, 0.8f, 0.45f, 1f));
             title.rectTransform.anchorMin = title.rectTransform.anchorMax = title.rectTransform.pivot = new Vector2(0f, 1f);
-            title.rectTransform.anchoredPosition = new Vector2(64f, -44f);
+            title.rectTransform.anchoredPosition = new Vector2(64f, -30f);
             title.rectTransform.sizeDelta = new Vector2(1000f, 44f);
 
-            var words = Framed("Words", dim);
+            // The words lie on solid ink: marks of the neighbouring trees pass behind them and must not show through.
+            var words = Panel("Words", night, new Color(0.02f, 0.018f, 0.05f, 1f));
             words.anchorMin = words.anchorMax = words.pivot = new Vector2(1f, 0.5f);
-            words.anchoredPosition = new Vector2(-56f, 0f);
-            words.sizeDelta = new Vector2(600f, 560f);
+            words.anchoredPosition = new Vector2(-48f, -6f);
+            words.sizeDelta = new Vector2(580f, 600f);
+            var wordsFrame = Framed("Frame", words);
+            wordsFrame.anchorMin = Vector2.zero;
+            wordsFrame.anchorMax = Vector2.one;
+            wordsFrame.offsetMin = wordsFrame.offsetMax = Vector2.zero;
             var name = Label("Name", words, 46, TextAnchor.UpperLeft, new Color(1f, 0.8f, 0.45f, 1f));
             name.rectTransform.anchorMin = name.rectTransform.anchorMax = name.rectTransform.pivot = new Vector2(0f, 1f);
             name.rectTransform.anchoredPosition = new Vector2(44f, -36f);
-            name.rectTransform.sizeDelta = new Vector2(512f, 50f);
-            var state = Label("State", words, 28, TextAnchor.UpperLeft, new Color(1f, 1f, 1f, 0.72f));
+            name.rectTransform.sizeDelta = new Vector2(492f, 50f);
+            // Two lines: what kind of mark it is and its cost, then how it stands with the player.
+            var state = Label("State", words, 27, TextAnchor.UpperLeft, new Color(1f, 1f, 1f, 0.74f));
             state.rectTransform.anchorMin = state.rectTransform.anchorMax = state.rectTransform.pivot = new Vector2(0f, 1f);
-            state.rectTransform.anchoredPosition = new Vector2(44f, -96f);
-            state.rectTransform.sizeDelta = new Vector2(512f, 34f);
+            state.rectTransform.anchoredPosition = new Vector2(44f, -98f);
+            state.rectTransform.sizeDelta = new Vector2(492f, 100f);
+            state.horizontalOverflow = HorizontalWrapMode.Wrap;
+            state.lineSpacing = 1.12f;
             var edge = Panel("Edge", words, new Color(0.8f, 0.72f, 0.55f, 0.7f));
             edge.anchorMin = new Vector2(0f, 1f);
             edge.anchorMax = new Vector2(1f, 1f);
             edge.pivot = new Vector2(0.5f, 1f);
             edge.sizeDelta = new Vector2(-80f, 2f);
-            edge.anchoredPosition = new Vector2(0f, -142f);
-            var description = Label("Description", words, 34, TextAnchor.UpperLeft, new Color(0.95f, 0.93f, 0.9f, 1f));
+            edge.anchoredPosition = new Vector2(0f, -212f);
+            var description = Label("Description", words, 33, TextAnchor.UpperLeft, new Color(0.95f, 0.93f, 0.9f, 1f));
             description.rectTransform.anchorMin = description.rectTransform.anchorMax = description.rectTransform.pivot = new Vector2(0f, 1f);
-            description.rectTransform.anchoredPosition = new Vector2(44f, -164f);
-            description.rectTransform.sizeDelta = new Vector2(512f, 360f);
+            description.rectTransform.anchoredPosition = new Vector2(44f, -234f);
+            description.rectTransform.sizeDelta = new Vector2(492f, 340f);
             description.horizontalOverflow = HorizontalWrapMode.Wrap;
             description.lineSpacing = 1.15f;
 
-            var hint = Label("Hint", dim, 22, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.6f));
+            var hint = Label("Hint", night, 22, TextAnchor.LowerLeft, new Color(1f, 1f, 1f, 0.66f));
             hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = hint.rectTransform.pivot = Vector2.zero;
-            hint.rectTransform.anchoredPosition = new Vector2(64f, 40f);
-            hint.rectTransform.sizeDelta = new Vector2(1000f, 30f);
-            hint.text = "Stick or W A S D: move along the tree     Cross or E: learn     Circle or Space: leave";
+            hint.rectTransform.anchoredPosition = new Vector2(64f, 30f);
+            hint.rectTransform.sizeDelta = new Vector2(1700f, 30f);
+            hint.text = "";
 
-            hud.gameObject.AddComponent<UpgradeMenu>().Configure(player, dim.gameObject, chart, title, name, state, description, cursor, UiArt.Mark(), UiArt.Emblem());
+            var sheet = UiArt.ChartSheet();
+            var frames = new Sprite[UiArt.FrameCount];
+            var pictures = new Sprite[sheet.Length - UiArt.FrameCount];
+            System.Array.Copy(sheet, frames, frames.Length);
+            System.Array.Copy(sheet, frames.Length, pictures, 0, pictures.Length);
+            hud.gameObject.AddComponent<UpgradeMenu>().Configure(player, night.gameObject, chart, title, name, state, description, cursor, words.gameObject, hint,
+                sky, frames, pictures, UiArt.Emblem());
         }
 
         // The pause menu: the same inked panel as the fire's tree, with a short list, and a second page that holds the controls.

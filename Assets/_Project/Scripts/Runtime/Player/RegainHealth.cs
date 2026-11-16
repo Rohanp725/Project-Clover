@@ -25,6 +25,17 @@ namespace Clover.Player
 
         private float sinceGrey;
 
+        /// <summary>Changes the greatest health. More of it comes filled; less of it takes what no longer fits.</summary>
+        public void SetMaximum(float maximum)
+        {
+            if (maximum == Maximum) return;
+            float gained = maximum - Maximum;
+            Maximum = maximum;
+            if (IsDead) return;
+            Current = Math.Min(Maximum, gained > 0f ? Current + gained : Current);
+            Grey = Math.Min(Grey, Maximum - Current);
+        }
+
         public void Fill()
         {
             Current = Maximum;

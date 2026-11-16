@@ -38,7 +38,23 @@ namespace Clover.EditorTools
             Frame("Balance Frame", balanceRow, -0.035f, 0.07f, ink, line, back);
             var stagger = Fill("Stagger", balanceRow, -0.035f, 0.05f, staggerMaterial, 4);
 
-            bars.gameObject.AddComponent<EnemyBars>().Configure(health, lag, stagger, balanceRow.gameObject);
+            // Under the bars, a row of small diamonds: one lights for each affliction the fighter carries, in that affliction's colour.
+            var pipInk = BuildKit.Glow(Folder, "m_bar_pip_ink", UiArt.Ink, 3, false, 2f, 0f, true);
+            var pipLight = BuildKit.Glow(Folder, "m_bar_pip", Color.white, 3, false, 2f, 0f, true);
+            var pipRow = BuildKit.Group("Afflictions", bars);
+            var pips = new Renderer[6];
+            for (int i = 0; i < pips.Length; i++)
+            {
+                var holder = BuildKit.Group("Pip " + (i + 1), pipRow);
+                holder.localPosition = new Vector3(-Length * 0.5f + 0.06f + i * 0.2f, -0.215f, 0f);
+                holder.localRotation = Quaternion.Euler(0f, 0f, 45f);
+                Layer(BuildKit.Shape(PrimitiveType.Quad, "Pip Ink", holder, new Vector3(0f, 0f, 0.01f), new Vector3(0.17f, 0.17f, 1f), pipInk), 5);
+                pips[i] = Layer(BuildKit.Shape(PrimitiveType.Quad, "Pip Light", holder, Vector3.zero, new Vector3(0.115f, 0.115f, 1f), pipLight), 6);
+            }
+
+            var shown = bars.gameObject.AddComponent<EnemyBars>();
+            shown.Configure(health, lag, stagger, balanceRow.gameObject);
+            shown.ConfigurePips(pips);
             return (health, stagger, bars);
         }
 

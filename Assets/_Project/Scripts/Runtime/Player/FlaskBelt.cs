@@ -27,6 +27,15 @@ namespace Clover.Player
         private float earned;
         private bool healed;
 
+        /// <summary>Changes how many flasks are carried. One more comes full; one fewer takes a full one if there is no room for it.</summary>
+        public void SetMaximum(int maximum)
+        {
+            if (maximum == Maximum) return;
+            int gained = maximum - Maximum;
+            Maximum = maximum;
+            Count = Math.Max(0, Math.Min(Maximum, gained > 0 ? Count + gained : Count));
+        }
+
         public void Refill()
         {
             Count = Maximum;

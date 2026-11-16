@@ -9,6 +9,8 @@ namespace Clover.Gameplay
     /// then drains, and the balance bar is put away while it is empty so that the bars of a crowd do not pile up.
     /// The fighter itself still sets the length of the two bars; this reads them and does the rest. It also keeps the
     /// bars readable: clear of a neighbour's bars, and out from under the player's own bars in the screen's corner.
+    /// Under the bars it shows a pip for each affliction the fighter carries, in that affliction's colour, larger the
+    /// deeper it lies.
     /// </summary>
     public class EnemyBars : MonoBehaviour
     {
@@ -16,6 +18,7 @@ namespace Clover.Gameplay
         [SerializeField] private Transform lag;
         [SerializeField] private Transform balance;
         [SerializeField] private GameObject balanceRow;
+        [SerializeField] private Renderer[] pips = new Renderer[0];
 
         /// <summary>How much room, in metres, these bars need across and upward; a name over them makes them taller.</summary>
         public float Wide = 1.55f;
@@ -27,16 +30,29 @@ namespace Clover.Gameplay
         public float ScreenTop = 0.93f;
         /// <summary>Metres a second the bars slide when they make room.</summary>
         public float SlideSpeed = 4f;
+        /// <summary>How small a pip is at one stack, as a share of its size at full depth.</summary>
+        public float PipSmallest = 0.55f;
 
         public LagMeter Lag { get; } = new LagMeter();
+        /// <summary>How many pips are showing now, so probes can see them without the screen.</summary>
+        public int PipsShown { get; private set; }
 
         // Every set of bars now showing, so each can keep clear of those before it.
         private static readonly List<EnemyBars> showing = new List<EnemyBars>();
+        private static readonly int Colour = Shader.PropertyToID("_Color");
 
         private Camera view;
         private float restHeight;
         private float shift;
         private bool measured;
+        private AfflictionSet watched;
+        private MaterialPropertyBlock block;
+        private AfflictionKind[] pipKind;
+        private int[] pipDepth;
+        private bool[] pipFrozen;
+        private Vector3[] pipSize;
+        // Each pip is a light on a piece of ink; the two are shown, hidden and sized together by what holds them.
+        private Transform[] pipHolder;
 
         // Domain reload is off: the bars of the last play must not be kept.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -48,6 +64,29 @@ namespace Clover.Gameplay
             lag = lagFill;
             balance = balanceFill;
             balanceRow = balanceRowRoot;
+        }
+
+        /// <summary>The builder hands over the row of pips that lie under the bars.</summary>
+        public void ConfigurePips(Renderer[] pipRenderers) => pips = pipRenderers;
+
+        /// <summary>Whose afflictions the pips show.</summary>
+        public void Watch(AfflictionSet afflictions) => watched = afflictions;
+
+        private void Awake()
+        {
+            block = new MaterialPropertyBlock();
+            pipKind = new AfflictionKind[pips.Length];
+            pipDepth = new int[pips.Length];
+            pipFrozen = new bool[pips.Length];
+            pipSize = new Vector3[pips.Length];
+            pipHolder = new Transform[pips.Length];
+            for (int i = 0; i < pips.Length; i++)
+            {
+                if (pips[i] == null) continue;
+                pipHolder[i] = pips[i].transform.parent;
+                pipSize[i] = pipHolder[i].localScale;
+                pipHolder[i].gameObject.SetActive(false);
+            }
         }
 
         private void OnEnable()
@@ -75,7 +114,42 @@ namespace Clover.Gameplay
                 bool some = balance.localScale.x > 0.004f;
                 if (balanceRow.activeSelf != some) balanceRow.SetActive(some);
             }
+            ShowPips();
             MakeRoom();
+        }
+
+        // One pip for each affliction carried, in the order the elements stand. A pip is repainted only when what it shows changes.
+        private void ShowPips()
+        {
+            if (pips.Length == 0) return;
+            int used = 0;
+            if (watched != null)
+            {
+                for (int kind = 1; kind < Afflictions.Count && used < pips.Length; kind++)
+                {
+                    var affliction = (AfflictionKind)kind;
+                    int depth = watched.Stacks(affliction);
+                    if (depth <= 0) continue;
+                    var pip = pips[used];
+                    bool frozen = affliction == AfflictionKind.Chill && watched.IsFrozen;
+                    if (pip != null && (!pipHolder[used].gameObject.activeSelf || pipKind[used] != affliction || pipDepth[used] != depth || pipFrozen[used] != frozen))
+                    {
+                        pipKind[used] = affliction;
+                        pipDepth[used] = depth;
+                        pipFrozen[used] = frozen;
+                        var spec = Afflictions.Spec(affliction);
+                        float size = Mathf.Lerp(PipSmallest, 1f, spec.MaximumStacks > 1 ? (depth - 1f) / (spec.MaximumStacks - 1f) : 1f);
+                        pipHolder[used].localScale = pipSize[used] * (frozen ? 1.25f : size);
+                        block.SetColor(Colour, frozen ? Color.white : spec.Colour);
+                        pip.SetPropertyBlock(block);
+                        pipHolder[used].gameObject.SetActive(true);
+                    }
+                    used++;
+                }
+            }
+            for (int i = used; i < pips.Length; i++)
+                if (pips[i] != null && pipHolder[i].gameObject.activeSelf) pipHolder[i].gameObject.SetActive(false);
+            PipsShown = used;
         }
 
         // The bars face a camera that never turns, so "across" and "up" on the screen are the bars' own right and up.

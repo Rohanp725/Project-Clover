@@ -166,6 +166,8 @@ namespace Clover.Player
             else if (Dodge.IsRolling)
             {
                 step = Dodge.Tick(deltaTime);
+                // The roll has just come to its end: some upgrades answer that.
+                if (!Dodge.IsRolling && upgrades != null) upgrades.OnDodgeEnd();
                 // The roll commits to its direction at once; there is no turning mid-roll.
                 transform.rotation = Quaternion.LookRotation(Dodge.Direction, Vector3.up);
             }
@@ -254,6 +256,25 @@ namespace Clover.Player
             IsLeaping = false;
             fallSpeed = 1f;
             if (upgrades != null) upgrades.OnLeapLanded();
+        }
+
+        /// <summary>
+        /// A short step through the air to a spot on the ground, as some upgrades give: there at once if the spot has
+        /// ground under it and room to stand, and otherwise as far toward it as the world allows.
+        /// </summary>
+        public void StepTo(Vector3 to)
+        {
+            to.y = transform.position.y;
+            bool ground = Physics.Raycast(to + Vector3.up * 1.5f, Vector3.down, out RaycastHit under, 3f, ~0, QueryTriggerInteraction.Ignore)
+                && Mathf.Abs(under.point.y - transform.position.y) < 0.6f;
+            bool room = ground && !Physics.CheckCapsule(under.point + Vector3.up * (body.radius + 0.15f), under.point + Vector3.up * (body.height - body.radius), body.radius * 0.9f, ~0, QueryTriggerInteraction.Ignore);
+            if (room)
+            {
+                body.enabled = false;
+                transform.position = new Vector3(to.x, under.point.y + 0.02f, to.z);
+                body.enabled = true;
+            }
+            else body.Move(to - transform.position);
         }
 
         /// <summary>Puts the player somewhere else at once, as a respawn does. A CharacterController ignores a plain move of its transform.</summary>

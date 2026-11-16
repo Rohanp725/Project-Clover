@@ -11,7 +11,7 @@ namespace Clover.Gameplay
     /// the storm charges it for a while, making it faster and harder-hitting.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IBoss
+    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable, IBoss
     {
         [SerializeField] private string kindName = EnemyKind.SoldierName;
         [SerializeField] private Transform target;
@@ -66,7 +66,11 @@ namespace Clover.Gameplay
         public EnemyBrain Brain => Kind.Brain;
         public Health Health { get; } = new Health();
         public StaggerMeter Stagger { get; } = new StaggerMeter();
-        public BurnStatus Burn { get; } = new BurnStatus();
+        /// <summary>Everything the elements have laid on it. The burn is one of them.</summary>
+        public AfflictionSet Afflictions { get; } = new AfflictionSet();
+        public BurnStatus Burn => Afflictions.Burn;
+        /// <summary>What it glows while frozen: it stands still in ice until it thaws or a heavy blow breaks it.</summary>
+        public Color FrozenGlow = new Color(0.22f, 0.5f, 0.85f);
         public bool IsStaggered => Brain.State == EnemyState.Staggered;
         public bool IsDead => Brain.State == EnemyState.Dead;
         public bool IsCharged => chargedLeft > 0f;
@@ -192,8 +196,15 @@ namespace Clover.Gameplay
             Kind = EnemyKind.ByName(kindName);
             home = transform.position;
             targetBody = target != null ? target.GetComponent<Collider>() : null;
-            if (bars != null) barsRotation = bars.rotation;
+            if (bars != null)
+            {
+                barsRotation = bars.rotation;
+                var shown = bars.GetComponent<EnemyBars>();
+                if (shown != null) shown.Watch(Afflictions);
+            }
             homeRotation = transform.rotation;
+            // The great are held by ice only for a breath.
+            if (Kind.IsBoss || Kind.IsElite) Afflictions.FreezeScale = 0.4f;
 
             locomotionHash = Animator.StringToHash("locomotion");
             hurtHash = Animator.StringToHash(Kind.Prefix + "_hurt");
@@ -269,7 +280,7 @@ namespace Clover.Gameplay
             Stagger.Maximum = Kind.StaggerMaximum;
             Stagger.StaggeredSeconds = Kind.StaggeredSeconds;
             Stagger.Reset();
-            Burn.Reset();
+            Afflictions.Clear();
             Brain.Reset();
             shove = Vector3.zero;
             fallSpeed = 0f;
@@ -320,6 +331,20 @@ namespace Clover.Gameplay
                 Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.4f, Vector3.up, 2f);
             }
             Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
+            // Ice breaks under a heavy blow, and what it held takes the breaking.
+            if (hit.Heavy && Afflictions.IsFrozen)
+            {
+                detonated += Afflictions.Shatter();
+                Vfx.Play(VfxKind.Burst, transform.position + Vector3.up * 1.2f);
+                Vfx.Play(VfxKind.TintSpark, transform.position + Vector3.up * 1.2f, Vector3.up, 2.5f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
+                Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.3f, Vector3.up, 1f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
+            }
+            // Read before this blow lays anything of its own: the blow is judged against what was already there.
+            float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
+            float unsteadies = Afflictions.StaggerTakenMultiplier;
+            float shoved = Afflictions.ShoveMultiplier;
+            if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
+                CombatEvents.Report(this, hit.Affliction, hit.AfflictionStacks, Afflictions.Apply(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower));
 
             // Its guard: a light blow from the front, while it stands ready, is turned on its weapon.
             if (Kind.Guards && (!hit.Heavy || Kind.HeavyGuardedDamage < 1f) && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)
@@ -327,7 +352,7 @@ namespace Clover.Gameplay
             {
                 BlowsGuarded++;
                 if (guardArc != null) guardArc.Pulse(new Color(3f, 3.4f, 4f, 1f), 0.18f, 0.25f);
-                Health.Damage(hit.Damage * (hit.Heavy ? Kind.HeavyGuardedDamage : Kind.GuardedDamage));
+                Health.Damage(hit.Damage * takes * (hit.Heavy ? Kind.HeavyGuardedDamage : Kind.GuardedDamage));
                 Vfx.Play(VfxKind.GuardSpark, transform.position + Vector3.up * 1.2f + transform.forward * 0.5f, transform.forward);
                 Vector3 back = hit.Direction;
                 back.y = 0f;
@@ -338,7 +363,7 @@ namespace Clover.Gameplay
                     return HitOutcome.Landed;
                 }
                 // A heavy blow met on the guard still costs it all the balance the blow carries.
-                if (Stagger.Add(hit.Heavy ? hit.Stagger : hit.Stagger * Kind.GuardedStagger))
+                if (Stagger.Add((hit.Heavy ? hit.Stagger : hit.Stagger * Kind.GuardedStagger) * unsteadies))
                 {
                     Brain.Stagger();
                     Clover.Player.Tips.EnemyStaggered(transform.position);
@@ -355,11 +380,11 @@ namespace Clover.Gameplay
             bool finisher = IsStaggered && hit.Heavy;
             float multiplier = finisher ? FinisherDamageMultiplier : IsStaggered ? StaggeredDamageMultiplier : 1f;
             // A god is not cut down by one blow, however good: a finisher takes a fixed share of him.
-            Health.Damage(detonated + (finisher && Kind.FinisherHealthShare > 0f ? Mathf.Max(hit.Damage * multiplier, Kind.Health * Kind.FinisherHealthShare) : hit.Damage * multiplier));
+            Health.Damage(detonated + (finisher && Kind.FinisherHealthShare > 0f ? Mathf.Max(hit.Damage * multiplier * takes, Kind.Health * Kind.FinisherHealthShare) : hit.Damage * multiplier * takes));
             flashLeft = 0.09f;
             Vector3 away = hit.Direction;
             away.y = 0f;
-            shove = away.normalized * (Shove * (finisher ? 2.2f : hit.Heavy ? 1.6f : 1f));
+            shove = away.normalized * (Shove * shoved * (finisher ? 2.2f : hit.Heavy ? 1.6f : 1f));
 
             if (Health.IsDead)
             {
@@ -373,7 +398,7 @@ namespace Clover.Gameplay
                 Brain.Flinch(true);
                 return HitOutcome.Finisher;
             }
-            if (!IsStaggered && Stagger.Add(hit.Stagger))
+            if (!IsStaggered && Stagger.Add(hit.Stagger * unsteadies))
             {
                 Brain.Stagger();
                 Clover.Player.Tips.EnemyStaggered(transform.position);
@@ -404,7 +429,17 @@ namespace Clover.Gameplay
             // The body no longer stands in anyone's way.
             SetPassing(false);
             body.enabled = false;
+            CombatEvents.RaiseDied(this, Afflictions);
+            Afflictions.Clear();
             Died?.Invoke(this);
+        }
+
+        /// <summary>A pull or a push from outside a blow. The great are moved less.</summary>
+        public void Push(Vector3 impulse)
+        {
+            if (IsDead) return;
+            impulse.y = 0f;
+            shove += impulse * (Kind.IsBoss ? 0.3f : Kind.IsElite ? 0.6f : 1f);
         }
 
         private void Update()
@@ -426,7 +461,8 @@ namespace Clover.Gameplay
             var before = Brain.Current;
             bool wasStriking = IsStriking;
             if (chargedLeft > 0f) chargedLeft -= deltaTime;
-            float pace = (IsCharged ? ChargedSpeed : 1f) * (Brain.Phase > 0 ? Kind.SecondPhasePace : 1f);
+            // Cold and shaken ground slow everything it does; frozen, it does nothing at all.
+            float pace = (IsCharged ? ChargedSpeed : 1f) * (Brain.Phase > 0 ? Kind.SecondPhasePace : 1f) * Afflictions.SpeedMultiplier;
             if (Brain.Phase == 0 && Kind.SecondPhaseAt > 0f && Health.Fraction <= Kind.SecondPhaseAt && !IsStaggered)
             {
                 // Worn down to the mark: the second phase opens with its own attack.
@@ -437,16 +473,20 @@ namespace Clover.Gameplay
                 PhaseChanged?.Invoke(this);
             }
 
-            if (Burn.IsBurning)
+            if (Afflictions.Any)
             {
-                Health.Damage(Burn.Tick(deltaTime));
+                bool wasBurning = Burn.IsBurning;
+                Health.Damage(Afflictions.Tick(deltaTime));
                 untilEmber -= deltaTime;
-                if (untilEmber <= 0f)
+                if (wasBurning && untilEmber <= 0f)
                 {
                     untilEmber = 0.14f;
                     Vfx.Play(VfxKind.Fire, transform.position + Vector3.up * 1.2f, Vector3.up, 0.12f);
                     Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.4f, Vector3.up, 0.35f);
                 }
+                // The poison's bite is seen when it lands.
+                if (Afflictions.BitThisTick)
+                    Vfx.Play(VfxKind.TintPuff, transform.position + Vector3.up * 1.2f, Vector3.up, 0.7f, Gameplay.Afflictions.Spec(AfflictionKind.Poison).Colour);
                 if (Health.IsDead)
                 {
                     Die();
@@ -454,7 +494,7 @@ namespace Clover.Gameplay
                 }
             }
 
-            Stagger.Tick(deltaTime);
+            Stagger.Tick(deltaTime, Afflictions.BalanceRecovers);
             if (IsStaggered && !Stagger.IsStaggered) Brain.EndStagger();
 
             Vector3 toTarget = target.position - transform.position;
@@ -493,7 +533,7 @@ namespace Clover.Gameplay
             if (Brain.Tracks && distance > 0.05f)
             {
                 var facing = Quaternion.LookRotation(toTarget, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, facing, Kind.TurnDegreesPerSecond * pace * deltaTime);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, facing, Kind.TurnDegreesPerSecond * pace * Afflictions.TurnMultiplier * deltaTime);
             }
 
             if (struck) Strike(attack);
@@ -518,8 +558,8 @@ namespace Clover.Gameplay
                     circle = Random.value < 0.5f ? -1f : 1f;
                 }
                 Vector3 sideways = Vector3.Cross(Vector3.up, toTarget / distance) * circle;
-                step += sideways * (Kind.WalkSpeed * 0.45f * deltaTime);
-                walked = Mathf.Max(walked, Kind.WalkSpeed * 0.45f);
+                step += sideways * (Kind.WalkSpeed * 0.45f * Afflictions.SpeedMultiplier * deltaTime);
+                walked = Mathf.Max(walked, Kind.WalkSpeed * 0.45f * Afflictions.SpeedMultiplier);
             }
             if (holdsGround)
             {
@@ -575,7 +615,8 @@ namespace Clover.Gameplay
                 lunging = driving;
                 if (driving) step += transform.forward * (attack.Lunge * deltaTime * pace / (until - from));
             }
-            step += shove * (deltaTime * 6f);
+            // Ice holds it where it stands, whatever shoves.
+            if (!Afflictions.IsFrozen) step += shove * (deltaTime * 6f);
             shove = Vector3.Lerp(shove, Vector3.zero, 1f - Mathf.Exp(-9f * deltaTime));
             fallSpeed = body.isGrounded ? 1f : fallSpeed + Gravity * deltaTime;
             step.y = -fallSpeed * deltaTime;
@@ -596,7 +637,7 @@ namespace Clover.Gameplay
         private void Strike(EnemyAttack attack)
         {
             BlowsStruck++;
-            float damage = attack.Damage * (IsCharged ? ChargedDamage : 1f);
+            float damage = attack.Damage * (IsCharged ? ChargedDamage : 1f) * Afflictions.DamageDealtMultiplier;
             Vector3 forward = transform.forward;
 
             if (attack.IsCircle)
@@ -693,7 +734,7 @@ namespace Clover.Gameplay
             if (outcome != HitOutcome.PerfectGuard || attack.Ranged) return;
             flashLeft = 0.09f;
             shove = -transform.forward * (Shove * 1.6f);
-            if (!IsStaggered && Stagger.Add(Kind.PerfectGuardStagger))
+            if (!IsStaggered && Stagger.Add(Kind.PerfectGuardStagger * Afflictions.StaggerTakenMultiplier))
             {
                 Brain.Stagger();
                 Clover.Player.Tips.EnemyStaggered(transform.position);
@@ -850,11 +891,12 @@ namespace Clover.Gameplay
             }
         }
 
-        // The body's glow: white for an instant when struck, a gold pulse while staggered, a blue one while charged.
+        // The body's glow: white for an instant when struck, a steady pale blue while frozen, a gold pulse while staggered, a blue one while charged.
         private void Paint(float deltaTime)
         {
             int glow = 0;
             if (flashLeft > 0f) glow = 1;
+            else if (Afflictions.IsFrozen && !IsDead) glow = 5;
             else if (IsStaggered && Mathf.Repeat(Time.unscaledTime * 5f, 1f) < 0.5f) glow = 2;
             else if (IsCharged && !IsDead && Mathf.Repeat(Time.unscaledTime * 3f, 1f) < 0.6f) glow = 3;
             // Close to losing its balance, it flickers amber: one or two more blows will open it.
@@ -875,7 +917,7 @@ namespace Clover.Gameplay
                     continue;
                 }
                 block.Clear();
-                block.SetColor(Emission, glow == 1 ? new Color(1.6f, 1.6f, 1.6f) : glow == 2 ? new Color(0.9f, 0.62f, 0.12f) : glow == 3 ? new Color(0.1f, 0.24f, 0.7f) : new Color(0.7f, 0.3f, 0.03f));
+                block.SetColor(Emission, glow == 1 ? new Color(1.6f, 1.6f, 1.6f) : glow == 2 ? new Color(0.9f, 0.62f, 0.12f) : glow == 3 ? new Color(0.1f, 0.24f, 0.7f) : glow == 5 ? FrozenGlow : new Color(0.7f, 0.3f, 0.03f));
                 bodyRenderer.SetPropertyBlock(block);
             }
         }

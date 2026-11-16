@@ -22,9 +22,20 @@ namespace Clover.Gameplay
         public readonly int BurnStacks;
         /// <summary>Sets off whatever burn is on the target, all at once. Without a burn and without damage of its own, such a blow misses.</summary>
         public readonly bool Detonate;
+        /// <summary>The affliction the blow lays, how many stacks of it, for how long (zero: its usual time) and how strongly (1: as written).</summary>
+        public readonly AfflictionKind Affliction;
+        public readonly int AfflictionStacks;
+        public readonly float AfflictionSeconds;
+        public readonly float AfflictionPower;
+        /// <summary>True for a spell, false for a weapon: some afflictions let more of one through than of the other.</summary>
+        public readonly bool Spell;
+        /// <summary>True for a critical blow; its damage already includes what that adds.</summary>
+        public readonly bool Critical;
 
         public Hit(float damage, float stagger, Vector3 direction, bool heavy = false, bool unblockable = false, Vector3? origin = null,
-            float burnSeconds = 0f, int burnStacks = 0, bool detonate = false)
+            float burnSeconds = 0f, int burnStacks = 0, bool detonate = false,
+            AfflictionKind affliction = AfflictionKind.None, int afflictionStacks = 0, float afflictionSeconds = 0f, float afflictionPower = 1f,
+            bool spell = false, bool critical = false)
         {
             Damage = damage;
             Stagger = stagger;
@@ -36,6 +47,12 @@ namespace Clover.Gameplay
             BurnSeconds = burnSeconds;
             BurnStacks = burnStacks;
             Detonate = detonate;
+            Affliction = affliction;
+            AfflictionStacks = afflictionStacks;
+            AfflictionSeconds = afflictionSeconds;
+            AfflictionPower = afflictionPower;
+            Spell = spell;
+            Critical = critical;
         }
     }
 }

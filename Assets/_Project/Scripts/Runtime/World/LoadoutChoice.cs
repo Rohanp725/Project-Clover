@@ -64,7 +64,8 @@ namespace Clover.World
                 RunState.Element = Choice;
                 RunState.ElementConsumed = false;
                 if (playerElement != null) playerElement.Take(ElementKit.ByName(Choice, false));
-                Vfx.Play(Choice == ElementKit.LightningName ? VfxKind.Shock : VfxKind.Fire, who.transform.position + Vector3.up, Vector3.up, 1.4f);
+                ElementLook.Puff(Elements.ByNameOrFire(Choice), who.transform.position + Vector3.up, Vector3.up, 1.4f);
+                ElementLook.Sparks(Elements.ByNameOrFire(Choice), who.transform.position + Vector3.up * 1.2f, Vector3.up, 1.2f);
             }
             else if (who.Combat != null)
             {

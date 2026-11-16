@@ -41,5 +41,13 @@ namespace Clover.Core
         Wisp,
         /// <summary>One jagged bolt standing on a point for an instant, drawn upward.</summary>
         Bolt,
+        /// <summary>A soft mote that rises and goes out, white until it is thrown in a colour: any element's breath.</summary>
+        TintPuff,
+        /// <summary>A spray of streaks in every direction, white until it is thrown in a colour.</summary>
+        TintSpark,
+        /// <summary>A widening ring, white until it is thrown in a colour.</summary>
+        TintRing,
+        /// <summary>A gold star with long points for one instant: a critical blow.</summary>
+        Critical,
     }
 }

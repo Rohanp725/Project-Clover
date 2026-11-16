@@ -1,0 +1,56 @@
+namespace Clover.Player
+{
+    /// <summary>
+    /// The moment an upgrade's effect answers. "The target" below is what the effect's action is aimed at when the
+    /// effect says <see cref="EffectAt.Target"/>; when a trigger has none, the enemy the player faces stands in.
+    /// </summary>
+    public enum UpgradeTrigger
+    {
+        /// <summary>A light blow of the weapon lands (not blocked). Target: the enemy struck.</summary>
+        LightHit,
+        /// <summary>A heavy blow lands, the finisher included. Target: the enemy struck.</summary>
+        HeavyHit,
+        /// <summary>A finisher lands. Target: the enemy finished.</summary>
+        FinisherHit,
+        /// <summary>The weapon's skill lands (the Iaido Slash, the fists' skill). Target: the enemy struck.</summary>
+        SkillHit,
+        /// <summary>Any blow of the weapon lands. Target: the enemy struck.</summary>
+        AnyHit,
+        /// <summary>An enemy dies, by a blow or by what was laid on it. Target: where it fell.</summary>
+        Kill,
+        /// <summary>A perfect guard. Target: the attacker.</summary>
+        PerfectGuard,
+        /// <summary>A plain guard: a blow blocked for stamina. Target: the attacker.</summary>
+        Guard,
+        /// <summary>A perfect dodge. Target: none.</summary>
+        PerfectDodge,
+        /// <summary>Any dodge begins. Target: none.</summary>
+        DodgeStart,
+        /// <summary>Any dodge ends. Target: none.</summary>
+        DodgeEnd,
+        /// <summary>A blow lands on the player. Target: the attacker.</summary>
+        Struck,
+        /// <summary>The base spell or a worn spell is cast. Target: none.</summary>
+        SpellCast,
+        /// <summary>The base spell or a worn spell strikes an enemy; once for each enemy struck. Target: that enemy.</summary>
+        SpellHit,
+        /// <summary>The surge is lit. Target: none.</summary>
+        SurgeStart,
+        /// <summary>The surge runs out. Target: none.</summary>
+        SurgeEnd,
+        /// <summary>A flask is drunk (at the moment it heals). Target: none.</summary>
+        FlaskDrunk,
+        /// <summary>A flask is thrown. Having any effect on this trigger is what lets the flask be thrown (hold the flask button). Target: the enemy faced.</summary>
+        FlaskThrown,
+        /// <summary>A blow of the weapon or a spell strikes an enemy that already carries an affliction. Target: that enemy.</summary>
+        AfflictedHit,
+        /// <summary>An affliction on an enemy reaches full depth. Target: that enemy.</summary>
+        AfflictionFull,
+        /// <summary>Every so many seconds (the effect's Every) while an enemy is near. Target: none.</summary>
+        EverySeconds,
+        /// <summary>The player's health falls below a third. Fires once each time it falls there. Target: none.</summary>
+        LowHealth,
+        /// <summary>The player's mana becomes full. Fires once each time it fills. Target: none.</summary>
+        ManaFull,
+    }
+}

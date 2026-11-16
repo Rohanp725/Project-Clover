@@ -7,7 +7,7 @@ namespace Clover.Gameplay
     /// and puts itself right again after being left alone, so it can be hit for as long as the player likes. A heavy
     /// blow while it is staggered is a finisher: much more damage, and the stagger ends.
     /// </summary>
-    public class TrainingDummy : MonoBehaviour, IDamageable, IStaggerable, IBurnable
+    public class TrainingDummy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable
     {
         [SerializeField] private Transform body;
         [SerializeField] private Renderer[] flashRenderers;
@@ -17,7 +17,13 @@ namespace Clover.Gameplay
 
         public Health Health = new Health { Maximum = 200f };
         public StaggerMeter Stagger = new StaggerMeter();
-        public BurnStatus Burn { get; } = new BurnStatus();
+        public AfflictionSet Afflictions { get; } = new AfflictionSet();
+        public BurnStatus Burn => Afflictions.Burn;
+        /// <summary>The light it wears while frozen.</summary>
+        public Color FrozenColour = new Color(0.22f, 0.5f, 0.85f);
+        /// <summary>How many times it has been pulled or pushed, and the last such shove, so probes can see them.</summary>
+        public int Shoves { get; private set; }
+        public Vector3 LastShove { get; private set; }
         /// <summary>Damage is multiplied by this while the dummy is staggered.</summary>
         public float StaggeredDamageMultiplier = 1.5f;
         /// <summary>A heavy blow on the staggered dummy is multiplied by this instead.</summary>
@@ -36,6 +42,9 @@ namespace Clover.Gameplay
 
         public int HitsTaken { get; private set; }
         public int FinishersTaken { get; private set; }
+        /// <summary>What the last blow took, after everything that multiplies it, and whether it was critical.</summary>
+        public float LastDamage { get; private set; }
+        public bool LastCritical { get; private set; }
         public bool IsStaggered => Stagger.IsStaggered;
 
         private static readonly int Emission = Shader.PropertyToID("_EmissionColor");
@@ -66,7 +75,16 @@ namespace Clover.Gameplay
             rockFrame = body != null && body.parent != null ? body.parent : transform;
             Health.Fill();
             Stagger.Reset();
-            Burn.Reset();
+            Afflictions.Clear();
+            var shown = healthFill != null ? healthFill.GetComponentInParent<EnemyBars>() : null;
+            if (shown != null) shown.Watch(Afflictions);
+        }
+
+        public void Push(Vector3 impulse)
+        {
+            Shoves++;
+            LastShove = impulse;
+            if (impulse.sqrMagnitude > 0.0001f) Rock(impulse.normalized, 1f);
         }
 
         public HitOutcome TakeHit(in Hit hit)
@@ -76,9 +94,16 @@ namespace Clover.Gameplay
             float detonated = hit.Detonate ? Burn.Detonate() : 0f;
             if (detonated > 0f) Health.Damage(detonated);
             Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
+            if (hit.Heavy && Afflictions.IsFrozen) Health.Damage(Afflictions.Shatter());
+            float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
+            float unsteadies = Afflictions.StaggerTakenMultiplier;
+            if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
+                CombatEvents.Report(this, hit.Affliction, hit.AfflictionStacks, Afflictions.Apply(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower));
             bool finisher = Stagger.IsStaggered && hit.Heavy;
             float multiplier = finisher ? FinisherDamageMultiplier : Stagger.IsStaggered ? StaggeredDamageMultiplier : 1f;
-            Health.Damage(hit.Damage * multiplier);
+            LastDamage = hit.Damage * multiplier * takes;
+            LastCritical = hit.Critical;
+            Health.Damage(LastDamage);
             if (finisher)
             {
                 FinishersTaken++;
@@ -86,7 +111,7 @@ namespace Clover.Gameplay
             }
             else
             {
-                Stagger.Add(hit.Stagger);
+                Stagger.Add(hit.Stagger * unsteadies);
             }
             Rock(hit.Direction, finisher ? 2.2f : hit.Heavy ? 1.5f : 1f);
             return finisher ? HitOutcome.Finisher : HitOutcome.Landed;
@@ -111,14 +136,17 @@ namespace Clover.Gameplay
         private void Update()
         {
             float deltaTime = Time.deltaTime;
-            Stagger.Tick(deltaTime);
+            Stagger.Tick(deltaTime, Afflictions.BalanceRecovers);
             sinceHit += deltaTime;
-            if (Burn.IsBurning)
+            if (Afflictions.Any)
             {
-                Health.Damage(Burn.Tick(deltaTime));
-                sinceHit = 0f;
+                bool wasBurning = Burn.IsBurning;
+                Health.Damage(Afflictions.Tick(deltaTime));
+                if (wasBurning) sinceHit = 0f;
+                if (Afflictions.BitThisTick)
+                    Clover.Core.Vfx.Play(Clover.Core.VfxKind.TintPuff, transform.position + Vector3.up * 1.3f, Vector3.up, 0.7f, Gameplay.Afflictions.Spec(AfflictionKind.Poison).Colour);
                 untilEmber -= deltaTime;
-                if (untilEmber <= 0f)
+                if (wasBurning && untilEmber <= 0f)
                 {
                     untilEmber = 0.15f;
                     Clover.Core.Vfx.Play(Clover.Core.VfxKind.Embers, transform.position + Vector3.up * 1.3f, Vector3.up, 0.4f);
@@ -137,6 +165,7 @@ namespace Clover.Gameplay
             // The flash runs on real time so it is still seen through the moment time is stopped for the hit.
             // 0 is the dummy's own colours, 1 the flare of a hit, 2 the pulse of an open stagger.
             int flash = flashLeft > 0f ? 1
+                : Afflictions.IsFrozen ? 3
                 : Stagger.IsStaggered && Mathf.Repeat(Time.unscaledTime * StaggeredPulsesPerSecond, 1f) < 0.5f ? 2 : 0;
             flashLeft -= Time.unscaledDeltaTime;
             if (flash != shownFlash) SetFlash(flash);
@@ -158,7 +187,7 @@ namespace Clover.Gameplay
                 if (flashRenderer == null) continue;
                 if (flash != 0)
                 {
-                    block.SetColor(Emission, flash == 1 ? FlashColour : StaggeredColour);
+                    block.SetColor(Emission, flash == 1 ? FlashColour : flash == 3 ? FrozenColour : StaggeredColour);
                     flashRenderer.SetPropertyBlock(block);
                 }
                 else

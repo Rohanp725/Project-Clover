@@ -1,23 +1,57 @@
+using System;
 using System.Collections.Generic;
+using Clover.Player.Trees;
+using UnityEngine;
 
 namespace Clover.Player
 {
-    /// <summary>One thing an element's tree can teach: what it is called, what it costs, and what it does, in the game's own words.</summary>
+    /// <summary>
+    /// One mark on the chart: what it is called, what it costs, where it sits, and what it does, as data. The trees are
+    /// written one file to an element under <c>Trees/</c>; <see cref="UpgradeTrees"/> gathers them into
+    /// <see cref="All"/>. What a mark does is the sum of its <see cref="Stats"/>, its <see cref="Effects"/>, the spell
+    /// it teaches (<see cref="Form"/>) and, for the few written by hand, whatever <see cref="PlayerUpgrades"/> does
+    /// for its id.
+    /// </summary>
     public class Upgrade
     {
-        public string Id;
-        public string Name;
-        public string Element;
+        public string Id = "";
+        public string Name = "";
+        /// <summary>The element whose tree it is on. For a mix: the first of the two round the ring.</summary>
+        public string Element = "";
+        /// <summary>For a mark on a mixed branch: the second element. Empty otherwise.</summary>
+        public string Element2 = "";
+        public UpgradeKind Kind = UpgradeKind.Minor;
+        /// <summary>Embers to learn it. Left at zero it takes its kind's usual cost.</summary>
         public int Cost;
-        public string Description;
+        public string Description = "";
         /// <summary>The weapon it needs, or empty if it works with any.</summary>
         public string Weapon = "";
-        /// <summary>True for what only a god's fall gives: it is never for sale; the tree shows it at its crown.</summary>
-        public bool Signature;
-        /// <summary>The id of the upgrade that must be learned before this one, or empty if it grows straight from the element's root.</summary>
-        public string Requires = "";
-        /// <summary>Where it sits in its element's tree, in steps: Y runs outward along the trunk, X across it.</summary>
+        /// <summary>Ids of the marks it grows from: any one of them learned opens it. Empty: it grows straight from the foot of its tree.</summary>
+        public string[] Requires = Array.Empty<string>();
+        /// <summary>Where it sits in its own tree, in steps: Y runs outward from the element's emblem, X across (positive is clockwise).</summary>
         public float X, Y;
+        /// <summary>The name of its picture, from <see cref="UpgradeIcons"/>.</summary>
+        public string Icon = UpgradeIcons.Star;
+        /// <summary>Changes to the player's numbers for as long as it is learned.</summary>
+        public StatMod[] Stats = Array.Empty<StatMod>();
+        /// <summary>What it does when things happen.</summary>
+        public UpgradeEffect[] Effects = Array.Empty<UpgradeEffect>();
+        /// <summary>Stacks of the element's affliction every blow of the weapon lays while this is learned. This is what a root does.</summary>
+        public int WeaponStacks;
+        /// <summary>The id of the spell form it teaches, from <see cref="SpellForms"/>. A mark with a form can be worn in the hold-spell slot.</summary>
+        public string Form = "";
+        /// <summary>The numbers of the spell it teaches.</summary>
+        public SpellSpec Spell;
+
+        /// <summary>True for what only a god's fall gives: it is never for sale.</summary>
+        public bool Signature => Kind == UpgradeKind.Signature;
+        /// <summary>True for a mark on the branch two elements share.</summary>
+        public bool IsMix => !string.IsNullOrEmpty(Element2);
+        /// <summary>True when it teaches a spell that can be worn.</summary>
+        public bool IsSpell => !string.IsNullOrEmpty(Form);
+
+        /// <summary>True when it is on the tree of this element, or on a mixed branch this element shares.</summary>
+        public bool BelongsTo(string element) => Element == element || (IsMix && Element2 == element);
 
         // Fire: pressure and momentum.
         public const string Heat = "fire.heat";
@@ -39,50 +73,73 @@ namespace Clover.Player
         public const string StormStep = "lightning.stormstep";
         public const string Plasma = "fire.plasma";
 
-        /// <summary>Every upgrade in the slice. Each tree is a root and three branches; a branch is learned from its foot outward.</summary>
-        public static readonly IReadOnlyList<Upgrade> All = new List<Upgrade>
+        /// <summary>What a mark of each kind costs unless it says otherwise.</summary>
+        public static int UsualCost(UpgradeKind kind)
         {
-            new Upgrade { Id = Heat, Name = "Heat", Element = ElementKit.FireName, Cost = 2, X = 0f, Y = 1f,
-                Description = "Blows landed without being struck build Heat, up to five. Each level adds damage. A blow taken puts it out. Kindle fills it at once." },
-            new Upgrade { Id = BurnAndDetonate, Name = "Burn and Detonate", Element = ElementKit.FireName, Cost = 5, Requires = Backdraft, X = -1.9f, Y = 3.2f,
-                Description = "Every blow of the weapon sets a burn, up to five deep. A perfect guard against a burning enemy sets all of it off at once." },
-            new Upgrade { Id = Backdraft, Name = "Backdraft", Element = ElementKit.FireName, Cost = 3, Requires = Heat, X = -1.3f, Y = 2.0f,
-                Description = "A perfect guard throws a cone of fire back at the one who struck." },
-            new Upgrade { Id = FlameTrail, Name = "Flame Trail", Element = ElementKit.FireName, Cost = 3, Requires = Heat, X = 1.3f, Y = 2.0f,
-                Description = "The dodge leaves a line of fire behind it that burns what follows." },
-            new Upgrade { Id = BurningCrescent, Name = "Burning Crescent", Element = ElementKit.FireName, Cost = 3, Requires = Heat, X = 0f, Y = 2.4f, Weapon = Weapons.KatanaName,
-                Description = "The Iaido Slash throws a slow arc of flame that travels on after the cut." },
-            new Upgrade { Id = FirebombFlask, Name = "Firebomb Flask", Element = ElementKit.FireName, Cost = 5, Requires = FlameTrail, X = 1.9f, Y = 3.2f,
-                Description = "Hold the flask button to throw it. No healing: a great burst of fire where it lands." },
-            new Upgrade { Id = MeteorLeap, Name = "Meteor Leap", Element = ElementKit.FireName, Cost = 6, Requires = BurningCrescent, X = 0f, Y = 3.8f,
-                Description = "Hold the spell button to leap out of the fight and come down on the enemy faced, leaving a burning crater. 50 mana." },
+            switch (kind)
+            {
+                case UpgradeKind.Minor: return 1;
+                case UpgradeKind.Root: return 2;
+                case UpgradeKind.Major: return 3;
+                case UpgradeKind.Spell: return 4;
+                case UpgradeKind.Keystone: return 6;
+                case UpgradeKind.Mix: return 3;
+                default: return 0;
+            }
+        }
 
-            new Upgrade { Id = Static, Name = "Static", Element = ElementKit.LightningName, Cost = 2, X = 0f, Y = 1f,
-                Description = "Blows build Static on an enemy, up to five. A heavy blow or a finisher discharges it, and it arcs to everyone near." },
-            new Upgrade { Id = StoredCharge, Name = "Stored Charge", Element = ElementKit.LightningName, Cost = 3, Requires = Static, X = -1.3f, Y = 2.0f,
-                Description = "A perfect guard banks a charge. The next blow spends it for double damage and stagger." },
-            new Upgrade { Id = Blink, Name = "Blink", Element = ElementKit.LightningName, Cost = 3, Requires = Static, X = 1.3f, Y = 2.0f,
-                Description = "The dodge becomes a short step through lightning that shocks whatever it passes through." },
-            new Upgrade { Id = Afterimage, Name = "Afterimage", Element = ElementKit.LightningName, Cost = 5, Requires = Blink, X = 1.9f, Y = 3.2f,
-                Description = "A dodge at the last moment leaves a copy of you that strikes where you stood." },
-            new Upgrade { Id = DelayedCuts, Name = "Delayed Cuts", Element = ElementKit.LightningName, Cost = 5, Requires = StoredCharge, X = -1.9f, Y = 3.2f, Weapon = Weapons.KatanaName,
-                Description = "The Iaido Slash passes through. Its cuts land a moment later, all at once, when the blade is home." },
-            new Upgrade { Id = LightningRod, Name = "Lightning Rod", Element = ElementKit.LightningName, Cost = 3, Requires = Static, X = 0f, Y = 2.4f,
-                Description = "Hold the spell button to plant a rod. Bolts fall around it for a while. 40 mana." },
-            new Upgrade { Id = Overclock, Name = "Overclock", Element = ElementKit.LightningName, Cost = 6, Requires = LightningRod, X = 0f, Y = 3.8f,
-                Description = "Overdrive opens with a breath in which everything but you is slowed." },
+        private static List<Upgrade> all;
+        private static Dictionary<string, Upgrade> byId;
+        private static bool extended;
 
-            new Upgrade { Id = StormStep, Name = "Storm Step", Element = ElementKit.LightningName, Cost = 0, X = 0f, Y = 5.2f, Signature = true,
-                Description = "While Overdrive lasts, every dodge costs nothing and shocks what it passes through." },
-            new Upgrade { Id = Plasma, Name = "Plasma", Element = ElementKit.FireName, Cost = 0, X = 0f, Y = 5.2f, Signature = true,
-                Description = "A heavy blow or a finisher on a burning enemy bursts, and sets alight everyone near." },
-        };
+        /// <summary>Every mark there is, tree by tree in the order the elements stand round the ring, the mixes after their first element.</summary>
+        public static IReadOnlyList<Upgrade> All
+        {
+            get
+            {
+                if (all == null) Gather(null);
+                return all;
+            }
+        }
+
+        /// <summary>How many effects there are in the whole catalogue; each has its own <see cref="UpgradeEffect.Slot"/> below this.</summary>
+        public static int EffectCount { get; private set; }
+
+        // Domain reload is off: marks a probe added to try the chart at scale must not stay for the next play.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetOnLoad()
+        {
+            if (extended) Gather(null);
+        }
+
+        /// <summary>
+        /// Gathers the catalogue again, with more marks added by the caller. For probes and tests that need a chart
+        /// fuller than the game's own; whoever holds the old list must be told (the menu and the player's upgrades
+        /// each have a way to look again).
+        /// </summary>
+        public static void Gather(Action<List<Upgrade>> more)
+        {
+            var list = new List<Upgrade>();
+            UpgradeTrees.AddAll(list);
+            extended = more != null;
+            more?.Invoke(list);
+            var index = new Dictionary<string, Upgrade>();
+            int slots = 0;
+            foreach (var upgrade in list)
+            {
+                if (upgrade.Cost == 0) upgrade.Cost = UsualCost(upgrade.Kind);
+                index[upgrade.Id] = upgrade;
+                foreach (var effect in upgrade.Effects) effect.Slot = slots++;
+            }
+            all = list;
+            byId = index;
+            EffectCount = slots;
+        }
 
         public static Upgrade ById(string id)
         {
-            foreach (var upgrade in All)
-                if (upgrade.Id == id) return upgrade;
-            return null;
+            if (all == null) Gather(null);
+            return id != null && byId.TryGetValue(id, out var found) ? found : null;
         }
     }
 }

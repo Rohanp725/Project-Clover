@@ -78,6 +78,17 @@ namespace Clover.EditorTools
             things.Add(Choice(fireBowl, true, ElementKit.FireName, true, fireShown.gameObject, "Carry Fire", "", "", combat, element));
             var stormBowl = Brazier(world, "Lightning", new Vector3(4.1f, 0f, -5.2f), chosen, spark, new Color(0.45f, 0.7f, 1f), out Transform stormShown);
             things.Add(Choice(stormBowl, true, ElementKit.LightningName, false, stormShown.gameObject, "Carry Lightning", "A cold brazier", "Take it from its god first", combat, element));
+            // The other nine stand in an arc along the eastern rim behind those two, in the order of the ring, each
+            // burning in its own colour. They have no gods yet to be won from, so for now every one of them is lit.
+            int placed = 0;
+            foreach (var kind in Elements.All)
+            {
+                if (kind.Name == Elements.Fire || kind.Name == Elements.Lightning) continue;
+                var flame = BuildKit.Flame(Folder, "m_hub_flame_" + kind.Name.ToLowerInvariant(), new Color(kind.Colour.r * kind.Colour.r * 1.7f, kind.Colour.g * kind.Colour.g * 1.7f, kind.Colour.b * kind.Colour.b * 1.7f, 1f));
+                var bowl = Brazier(world, kind.Name, Polar(OuterBraziersFrom + placed * OuterBraziersStep, OuterBraziersRadius), chosen, flame, kind.Colour, out Transform bowlShown, 4.5f, 5f);
+                things.Add(Choice(bowl, true, kind.Name, true, bowlShown.gameObject, "Carry " + kind.Name, "", "", combat, element));
+                placed++;
+            }
 
             things.Add(Gate(world, new Vector3(0f, 0f, 8.4f), gateGlow));
             built.Player.GetComponent<PlayerInteraction>().Configure(things.ToArray());
@@ -326,7 +337,12 @@ namespace Clover.EditorTools
         }
 
         // A brazier for an element: lit with its fire once the element has been won.
-        private static GameObject Brazier(Transform world, string name, Vector3 at, Material chosenRing, Material flame, Color lightColour, out Transform shown)
+        private const float OuterBraziersFrom = 36f;
+        private const float OuterBraziersStep = 13.5f;
+        private const float OuterBraziersRadius = 8.7f;
+
+        private static GameObject Brazier(Transform world, string name, Vector3 at, Material chosenRing, Material flame, Color lightColour, out Transform shown,
+            float lightRange = 8f, float lightIntensity = 8f)
         {
             var root = new GameObject(name + " Brazier");
             root.transform.SetParent(world, false);
@@ -347,8 +363,8 @@ namespace Clover.EditorTools
             var light = lightObject.AddComponent<Light>();
             light.type = LightType.Point;
             light.color = lightColour;
-            light.range = 8f;
-            light.intensity = 8f;
+            light.range = lightRange;
+            light.intensity = lightIntensity;
             light.shadows = LightShadows.None;
             ChosenMark(root.transform, chosenRing, lightColour);
             Craft(root.transform, name + " brazier", 1.5f, true);

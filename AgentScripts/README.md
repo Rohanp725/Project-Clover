@@ -31,7 +31,9 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 | `CaptainProbe` | Castle | the Gate Captain: every attack, guard, perfect guard, second phase, finisher, death |
 | `SummitProbe` | Summit | the swordsman, then the storm itself: rising, attacks, a hand cut, the head finished, the rewards |
 | `StormProbe` | Summit | the storm itself in detail: entrance, each attack hit and avoided, openings, fury, death |
-| `UpgradeProbe` | CombatTest | the upgrade menu and every Fire and Lightning upgrade, Storm Step and Plasma |
+| `UpgradeProbe` | CombatTest | the chart (close, the whole ring, a sealed mix), every Fire and Lightning upgrade, Storm Step and Plasma, then each affliction measured on the dummy, the stats layer, effects that are only data, the worn spell, a mix mark bought, and the nine new elements' kits. Give it 90 polls |
+| `ChartScaleProbe` | CombatTest | fills the chart to its planned size (381 marks) with the pattern tree of `docs/UPGRADE_SCHEMA.md`, photographs it close and pulled back for Fire, Water and Dark, counts garbage per frame with the chart open and with afflictions ticking, then holds each for twenty seconds so `diagnostics profiler_record` can be pointed at it. Give it 60 polls |
+| `BrazierProbe` | Hub | the eleven braziers: which are lit, an element carried from one of the nine new ones, a photograph of the row |
 | `FeedbackProbe` | Castle | death burn-away, finish mark, target brackets, bars, low-health edge, cut marks |
 | `FinisherProbe` | Castle | the Katana's finisher and its camera |
 | `PauseProbe` | Hub | the pause menu: every entry, pausing mid-attack and mid-roll, giving up, forgetting |

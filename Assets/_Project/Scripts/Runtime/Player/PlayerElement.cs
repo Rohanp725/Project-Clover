@@ -1,5 +1,5 @@
 using Clover.Core;
-using Clover.World;
+using Clover.Gameplay;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -7,7 +7,8 @@ namespace Clover.Player
 {
     /// <summary>
     /// The player's element: casts its spell and its surge, and shows them. The rules and numbers are in
-    /// <see cref="ElementKit"/>. Like the weapon and the guard it has no Update of its own for the rules:
+    /// <see cref="ElementKit"/>; the spell itself is thrown by a <see cref="ISpellForm"/>, the same way the spells
+    /// the tree teaches are. Like the weapon and the guard it has no Update of its own for the rules:
     /// <see cref="PlayerController"/> calls <see cref="Advance"/> so everything is settled in one order.
     /// </summary>
     [RequireComponent(typeof(PlayerController))]
@@ -25,10 +26,12 @@ namespace Clover.Player
         public float GlowWhenSurging = 2.6f;
         /// <summary>Seconds between the sparks or embers that fall from the player while the surge lasts.</summary>
         public float EmberInterval = 0.12f;
-        /// <summary>With an upgrade that asks for it: holding the spell button this long does the upgrade's move; a shorter press casts.</summary>
+        /// <summary>With a spell worn: holding the spell button this long casts the worn spell; a shorter press casts the element's own.</summary>
         public float SpecialHoldSeconds = 0.3f;
 
         public ElementKit Kit { get; private set; }
+        /// <summary>What is fixed about the element held: its place on the ring, its colour, its affliction.</summary>
+        public ElementInfo Info { get; private set; }
         /// <summary>The element's colour as light; brighter than white so it blooms.</summary>
         public Color Colour { get; private set; }
         public bool IsCasting => Kit.IsCasting;
@@ -36,13 +39,11 @@ namespace Clover.Player
         public int Surges { get; private set; }
         public int SpellHits { get; private set; }
 
-        private static readonly Color FireColour = new Color(2.6f, 0.9f, 0.15f, 0.95f);
-        private static readonly Color LightningColour = new Color(0.9f, 1.8f, 3.2f, 0.95f);
-
         private PlayerController player;
         private PlayerCombat combat;
         private PlayerDefence defence;
         private PlayerUpgrades upgrades;
+        private readonly SpellSpec baseSpell = new SpellSpec();
         private bool spellHolding;
         private float spellHeldFor;
         private float specialBuffered;
@@ -52,6 +53,7 @@ namespace Clover.Player
         private float surgeBuffered;
         private float glowLevel;
         private float untilEmber;
+        private float surgeHealOwed;
 
         public void Configure(Light glowLight, SlashArcs arcsToShow, TopDownCamera cameraToShake)
         {
@@ -79,17 +81,33 @@ namespace Clover.Player
         /// <summary>Gives the player an element's kit in place of the one they had; any surge running ends.</summary>
         public void Take(ElementKit kit)
         {
+            bool surging = Kit != null && Kit.SurgeActive;
             Kit = kit;
             Kit.Reset();
-            bool lightning = kit.Name == ElementKit.LightningName;
-            Colour = lightning ? LightningColour : FireColour;
-            if (glow != null) glow.color = lightning ? new Color(0.5f, 0.75f, 1f) : new Color(1f, 0.5f, 0.16f);
+            Info = Elements.ByNameOrFire(kit.Name);
+            Colour = Info.Glow;
+            // The run remembers every element that has been in the player's hands: a mixed branch opens on it.
+            RunState.ElementsHeld.Add(Info.Name);
+            if (glow != null) glow.color = Info.Name == Elements.Lightning ? new Color(0.5f, 0.75f, 1f) : Info.Name == Elements.Fire ? new Color(1f, 0.5f, 0.16f) : Info.Colour;
             if (combat != null) combat.ClearEmpower();
+            if (defence != null) defence.ClearWards();
+            if (surging && upgrades != null) upgrades.OnSurgeEnd();
+            // The base spell's numbers, as its form reads them.
+            baseSpell.Cost = kit.SpellCost;
+            baseSpell.Damage = kit.SpellDamage;
+            baseSpell.Stagger = kit.SpellStagger;
+            baseSpell.Reach = kit.SpellReach;
+            baseSpell.Arc = kit.SpellArcDegrees;
+            baseSpell.Count = kit.SpellLeaps;
+            baseSpell.Radius = kit.SpellLeapRange;
+            baseSpell.Stacks = kit.SpellStacks;
+            baseSpell.AfflictionSeconds = kit.SpellBurnSeconds;
             // Nothing asked of the old element is carried into the new one.
             spellBuffered = surgeBuffered = specialBuffered = 0f;
             spellHolding = false;
             glowLevel = 0f;
             untilEmber = 0f;
+            surgeHealOwed = 0f;
         }
 
         /// <summary>Forgets a button being held, as when a menu or a leap takes the buttons away part-way through a hold.</summary>
@@ -101,6 +119,45 @@ namespace Clover.Player
 
         /// <summary>A blow or a dodge breaks a cast in progress.</summary>
         public void Interrupt() => Kit.Interrupt();
+
+        /// <summary>Draws an arc of the element's light on the ground in front of the player, as a spell's front.</summary>
+        public void ShowArc(float reach, float arcDegrees, float sweep)
+        {
+            if (arcs != null) arcs.Show(transform.position, transform.forward, reach, arcDegrees, sweep, Colour);
+        }
+
+        /// <summary>
+        /// A cast of a spell in the element held, aimed where the player faces: what a form is handed. The damage,
+        /// stagger and reach already carry what the upgrades add to spells.
+        /// </summary>
+        public SpellCast NewCast(SpellSpec spec, string name, Upgrade source)
+        {
+            float damage = upgrades != null ? upgrades.Stats.Multiplier(PlayerStat.SpellDamage) : 1f;
+            float reach = spec.Reach * (upgrades != null ? upgrades.Stats.Multiplier(PlayerStat.SpellReach) : 1f);
+            Transform target = combat.EnemyAhead(reach);
+            Vector3 forward = transform.forward;
+            return new SpellCast
+            {
+                Name = name,
+                Source = source,
+                Spec = spec,
+                Damage = spec.Damage * damage,
+                Stagger = spec.Stagger,
+                Reach = reach,
+                Player = player,
+                Combat = combat,
+                Defence = defence,
+                Caster = this,
+                Upgrades = upgrades,
+                Element = Info,
+                Colour = Info.Colour,
+                Affliction = Info.Affliction,
+                Target = target,
+                Origin = transform.position,
+                Forward = forward,
+                Aim = target != null ? target.position : transform.position + forward * reach,
+            };
+        }
 
         /// <summary>Runs one frame. <paramref name="free"/> is false while the player is rolling, attacking, flinching or drinking.</summary>
         public void Advance(float deltaTime, bool free)
@@ -137,24 +194,45 @@ namespace Clover.Player
             if (specialBuffered > 0f) specialBuffered -= deltaTime;
             if (surgeAction.WasPressedThisFrame()) surgeBuffered = PressBufferTime;
 
+            var stats = upgrades != null ? upgrades.Stats : null;
             // The surge is instant and never roots the player, so it can be lit at any free moment.
             if (surgeBuffered > 0f && free)
             {
                 surgeBuffered = 0f;
-                if (Kit.TrySurge(combat.Mana)) BeginSurge();
+                if (Kit.TrySurge(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SurgeCost) : 1f, stats != null ? stats.Multiplier(PlayerStat.SurgeSeconds) : 1f)) BeginSurge();
                 else if (defence != null) defence.Callout("No mana");
             }
             if (spellBuffered > 0f && free && !Kit.IsCasting)
             {
                 spellBuffered = 0f;
-                if (Kit.TryCast(combat.Mana)) BeginCast();
+                if (Kit.TryCast(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SpellCost) : 1f)) BeginCast();
                 else if (defence != null) defence.Callout("No mana");
             }
             if (spellBuffered > 0f) spellBuffered -= deltaTime;
             if (surgeBuffered > 0f) surgeBuffered -= deltaTime;
 
             if (Kit.TickCast(deltaTime)) Release();
-            if (Kit.TickSurge(deltaTime)) combat.ClearEmpower();
+            if (Kit.SurgeActive && Kit.SurgeHealPerSecond != 0f && defence != null && !defence.IsDead)
+            {
+                // Given or taken a point at a time, so the bar moves in steps that can be seen.
+                surgeHealOwed += Kit.SurgeHealPerSecond * deltaTime;
+                if (surgeHealOwed >= 1f)
+                {
+                    defence.Heal(1f, false);
+                    surgeHealOwed -= 1f;
+                }
+                else if (surgeHealOwed <= -1f)
+                {
+                    // The hunger never takes the last of it.
+                    if (defence.Health.Current > 2f) defence.Health.Chip(1f);
+                    surgeHealOwed += 1f;
+                }
+            }
+            if (Kit.TickSurge(deltaTime))
+            {
+                combat.ClearEmpower();
+                if (upgrades != null) upgrades.OnSurgeEnd();
+            }
 
             if (Kit.SurgeActive)
             {
@@ -162,7 +240,7 @@ namespace Clover.Player
                 if (untilEmber <= 0f)
                 {
                     untilEmber = EmberInterval;
-                    Vfx.Play(Kit.Shape == SpellShape.Bolt ? VfxKind.Shock : VfxKind.Embers, transform.position + Vector3.up * 1.1f, Vector3.up, 0.25f);
+                    ElementLook.Sparks(Info, transform.position + Vector3.up * 1.1f, Vector3.up, 0.25f);
                 }
             }
         }
@@ -191,41 +269,29 @@ namespace Clover.Player
         private void Release()
         {
             SpellsCast++;
-            Vector3 forward = transform.forward;
-            Vector3 hand = transform.position + Vector3.up * 1.1f;
-            if (Kit.Shape == SpellShape.Bolt)
-            {
-                // A clap of thunder on the one aimed at, leaping on to those near it.
-                SpellHits += combat.StrikeChain(Kit.SpellReach, Kit.SpellDamage, Kit.SpellStagger, Kit.SpellLeaps, Kit.SpellLeapRange);
-                Vfx.Play(VfxKind.Shock, hand + forward * 0.6f, forward, 1.2f);
-                ScreenFlash.Flash(new Color(0.75f, 0.9f, 1f, 0.22f), 0.06f);
-            }
-            else
-            {
-                SpellHits += combat.StrikeCone(Kit.SpellReach, Kit.SpellArcDegrees, Kit.SpellDamage, Kit.SpellStagger, Kit.SpellBurnSeconds, VfxKind.Fire);
-                // The wave itself: fire thrown along the cone, an arc of light at its front, and a flash on everything near.
-                for (int i = 1; i <= 4; i++)
-                    Vfx.Play(VfxKind.Fire, hand + forward * (Kit.SpellReach * i / 4.5f), forward, 0.6f);
-                Vfx.Play(VfxKind.Embers, hand + forward * (Kit.SpellReach * 0.6f), forward, 1.5f);
-                if (arcs != null)
-                {
-                    arcs.Show(transform.position, forward, Kit.SpellReach, Kit.SpellArcDegrees, 1f, Colour);
-                    arcs.Show(transform.position, forward, Kit.SpellReach * 0.7f, Kit.SpellArcDegrees, -1f, Colour);
-                }
-            }
+            var form = SpellForms.Get(Kit.Shape == SpellShape.Bolt ? SpellForms.Bolt : SpellForms.Wave);
+            SpellHits += form.Cast(NewCast(baseSpell, Kit.SpellName, null));
             glowLevel = GlowWhenCasting;
             if (shaker != null) shaker.Shake(0.14f, 0.2f);
+            if (upgrades != null) upgrades.OnSpellCast();
         }
 
         private void BeginSurge()
         {
             Surges++;
-            combat.Empower(Kit.SurgeDamage, Kit.SurgeBurnSeconds, Colour, Kit.SurgeSpeed, Kit.SurgeStagger);
-            Vfx.Play(Kit.Shape == SpellShape.Bolt ? VfxKind.Shock : VfxKind.Fire, transform.position + Vector3.up, Vector3.up, 1.2f);
-            Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 0.2f, Vector3.up);
-            if (Kit.Shape == SpellShape.Bolt) LightningBolts.Strike(transform.position, 0.4f);
+            float speed = Kit.SurgeSpeed;
+            combat.Empower(Kit.SurgeDamage, Kit.SurgeBurnSeconds, Colour, speed, Kit.SurgeStagger, Info.Affliction, Kit.SurgeStacks);
+            ElementLook.Puff(Info, transform.position + Vector3.up, Vector3.up, 1.2f);
+            ElementLook.Ring(Info, transform.position + Vector3.up * 0.2f);
+            if (Info.Name == Elements.Lightning) Clover.World.LightningBolts.Strike(transform.position, 0.4f);
             glowLevel = GlowWhenCasting;
-            if (defence != null) defence.Callout(Kit.SurgeName);
+            if (defence != null)
+            {
+                defence.Callout(Kit.SurgeName);
+                if (Kit.SurgeWards > 0) defence.GiveWards(Kit.SurgeWards);
+                if (Kit.SurgeMendsGrey) defence.Heal(defence.Health.Grey, true);
+            }
+            if (Kit.SurgeBurstStacks > 0) combat.AfflictArea(transform.position, Kit.SurgeBurstRadius, Info.Affliction, Kit.SurgeBurstStacks);
             if (upgrades != null) upgrades.OnSurge();
         }
     }

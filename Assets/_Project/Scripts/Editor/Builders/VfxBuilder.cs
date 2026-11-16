@@ -69,6 +69,15 @@ namespace Clover.EditorTools
             Add(VfxKind.Wisp, 12, Sparks(root, "Wisp", Streak("m_vfx_spark_wisp", new Color(1.6f, 3.2f, 8f, 1f)), 8f, 6f, 15f, 0.25f, 0.6f, 0.06f, 0.14f, -1f));
             Add(VfxKind.Bolt, 2, Bolt(root, "Bolt", BuildKit.Glow(Folder, "m_vfx_bolt", new Color(2.2f, 3.6f, 8f, 1f), 7, true, 1f).Graphic(0.42f, 0.78f), 1.5f, 4.4f, 0.17f));
 
+            // The effects of the nine elements that have none of their own, and of anything else that wants a colour:
+            // white light, thrown in whatever colour the caller names. The brightness is in the material; the colour is the particle's.
+            Add(VfxKind.TintPuff, 14, Puffs(root, "Tint Puff", BuildKit.Glow(Folder, "m_vfx_tint_puff", new Color(2.6f, 2.6f, 2.6f, 0.9f), 0, true, 2.4f),
+                0.5f, 2.6f, 0.3f, 0.7f, 0.3f, 0.75f, -1.2f, 0.35f, flat: false));
+            Add(VfxKind.TintSpark, 14, Sparks(root, "Tint Spark", Streak("m_vfx_spark_tint", new Color(3.6f, 3.6f, 3.6f, 1f)), 180f, 6f, 18f, 0.1f, 0.3f, 0.05f, 0.12f, 0.5f));
+            Add(VfxKind.TintRing, 1, Ring(root, "Tint Ring", BuildKit.Glow(Folder, "m_vfx_ring_tint", new Color(4.5f, 4.5f, 4.5f, 1f), 4, true, 1.5f).Graphic(0.3f)));
+            // A critical blow: a gold star larger and longer than a heavy blow's.
+            Add(VfxKind.Critical, 1, Star(root, "Critical", BuildKit.Glow(Folder, "m_vfx_critical", new Color(7f, 5f, 1.4f, 1f), 5, true, 1f).Graphic(0.1f, 0.5f), 3.4f, 0.17f));
+
             var vfx = root.AddComponent<Vfx>();
             vfx.Configure(emitters, counts);
             return vfx;

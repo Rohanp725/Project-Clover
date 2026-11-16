@@ -4,51 +4,90 @@ using UnityEngine;
 namespace Clover.Player
 {
     /// <summary>
-    /// The shape of the element trees: which upgrade grows from which, where each one sits on the great chart that
-    /// holds every element's tree around one middle, and which one a push of the stick moves the choice to. Plain
-    /// rules with no scene in them, so they can be tested.
+    /// The shape of the great chart: where each mark of each tree lies round the one middle, which marks are open to
+    /// be learned, and which one a push of the stick moves the choice to. Plain rules with no scene in them, so they
+    /// can be tested. Distances are in steps; the menu decides how many pixels a step is.
     /// </summary>
     public static class UpgradeTree
     {
-        /// <summary>How far from the middle of the chart an element's own emblem sits, in steps.</summary>
-        public const float EmblemDistance = 1.6f;
+        /// <summary>How far from the middle of the chart an element's own emblem sits. A tree's marks are placed from there: X across, Y outward.</summary>
+        public const float EmblemDistance = 9f;
+        /// <summary>How far from the middle the foot of a mixed branch sits. A mix's marks are placed from there.</summary>
+        public const float MixDistance = 10.5f;
+        /// <summary>The furthest out a tree's mark may sit (the god's gift at its crown), and a mix's.</summary>
+        public const float TreeHeight = 12f;
+        public const float MixHeight = 9f;
+        /// <summary>A mark on a mixed branch sits no further than this to either side of the branch's middle.</summary>
+        public const float MixHalfWidth = 0.6f;
+        /// <summary>No two marks anywhere on the chart sit nearer than this.</summary>
+        public const float LeastSpacing = 0.85f;
         /// <summary>A move is only made toward something within this many degrees of where the stick points.</summary>
         public const float StepHalfAngle = 62f;
 
         /// <summary>
-        /// The way an element's tree grows from the middle of the chart, in degrees clockwise from straight up. Each
-        /// element has its own, so the trees fan out from one point and neighbours can one day be joined.
+        /// How far to either side of its tree's middle a mark at this height may sit. A tree is a wedge: it may spread
+        /// as it grows outward, and must leave the gap beside it to the branch it shares with its neighbour.
         /// </summary>
-        public static float Bearing(string element)
+        public static float HalfWidth(float y) => 0.28f * (EmblemDistance + y) - 1.45f;
+
+        /// <summary>The way an element's tree grows from the middle of the chart, in degrees clockwise from straight up.</summary>
+        public static float Bearing(string element) => Elements.Bearing(element);
+
+        /// <summary>The way the tree or branch a mark is on grows.</summary>
+        public static float Bearing(Upgrade upgrade) =>
+            upgrade.IsMix ? Elements.MixBearing(upgrade.Element, upgrade.Element2) : Elements.Bearing(upgrade.Element);
+
+        /// <summary>
+        /// True when what the upgrade grows from has been learned, or it grows from the foot of its tree. Whether
+        /// the tree itself is open to the player (the element held, a mix unlocked) is asked elsewhere.
+        /// </summary>
+        public static bool Reachable(Upgrade upgrade, ICollection<string> learned)
         {
-            switch (element)
-            {
-                case ElementKit.FireName: return 0f;
-                case ElementKit.LightningName: return 65f;
-                default: return 0f;
-            }
+            if (upgrade == null) return false;
+            if (upgrade.Requires == null || upgrade.Requires.Length == 0) return true;
+            foreach (string id in upgrade.Requires)
+                if (learned.Contains(id)) return true;
+            return false;
         }
 
-        /// <summary>Every element that has a tree, in the order they stand round the chart.</summary>
-        public static readonly IReadOnlyList<string> Elements = new[] { ElementKit.FireName, ElementKit.LightningName };
-
-        /// <summary>True when what the upgrade grows from has been learned, or it grows from the root.</summary>
-        public static bool Reachable(Upgrade upgrade, ICollection<string> learned) =>
-            upgrade != null && (string.IsNullOrEmpty(upgrade.Requires) || learned.Contains(upgrade.Requires));
-
-        /// <summary>Where a place in an element's own tree lies on the chart, in steps from its middle.</summary>
-        public static Vector2 OnChart(string element, float x, float y)
+        /// <summary>
+        /// True when a mixed branch is open: the player holds one of its two elements and has held or consumed the
+        /// other in this run.
+        /// </summary>
+        public static bool MixOpen(Upgrade upgrade, string held, ICollection<string> everHeld, ICollection<string> consumed)
         {
-            float turn = -Bearing(element) * Mathf.Deg2Rad;
-            float along = y + EmblemDistance;
+            if (upgrade == null || !upgrade.IsMix || !upgrade.BelongsTo(held)) return false;
+            string other = upgrade.Element == held ? upgrade.Element2 : upgrade.Element;
+            return everHeld.Contains(other) || consumed.Contains(other);
+        }
+
+        /// <summary>Where a place lies on the chart, given the bearing of its tree and how far out that tree's foot is.</summary>
+        public static Vector2 OnChart(float bearing, float footDistance, float x, float y)
+        {
+            float turn = -bearing * Mathf.Deg2Rad;
+            float along = y + footDistance;
             float cos = Mathf.Cos(turn), sin = Mathf.Sin(turn);
             return new Vector2(x * cos - along * sin, x * sin + along * cos);
         }
 
-        public static Vector2 OnChart(Upgrade upgrade) => OnChart(upgrade.Element, upgrade.X, upgrade.Y);
+        public static Vector2 OnChart(string element, float x, float y) => OnChart(Elements.Bearing(element), EmblemDistance, x, y);
+
+        public static Vector2 OnChart(Upgrade upgrade) =>
+            OnChart(Bearing(upgrade), upgrade.IsMix ? MixDistance : EmblemDistance, upgrade.X, upgrade.Y);
 
         /// <summary>Where the element's emblem, the foot of its tree, lies on the chart.</summary>
         public static Vector2 Emblem(string element) => OnChart(element, 0f, 0f);
+
+        /// <summary>Where the foot of the branch two neighbours share lies on the chart.</summary>
+        public static Vector2 MixFoot(string one, string other) => OnChart(Elements.MixBearing(one, other), MixDistance, 0f, 0f);
+
+        /// <summary>Turns a place on the chart so that the tree with this bearing stands upright.</summary>
+        public static Vector2 Upright(Vector2 place, float bearing)
+        {
+            float turn = bearing * Mathf.Deg2Rad;
+            float cos = Mathf.Cos(turn), sin = Mathf.Sin(turn);
+            return new Vector2(place.x * cos - place.y * sin, place.x * sin + place.y * cos);
+        }
 
         /// <summary>
         /// The place the choice moves to from <paramref name="from"/> when the stick is pushed toward

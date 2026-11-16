@@ -38,8 +38,6 @@ namespace Clover.UI
         /// <summary>Real seconds a lost piece of health stays shown, pale, before it drains away, and how fast it then drains.</summary>
         public float LagHold = 0.45f;
         public float LagDrainPerSecond = 0.9f;
-        public Color FireMana = new Color(1f, 0.5f, 0.1f);
-        public Color LightningMana = new Color(0.35f, 0.7f, 1f);
 
         /// <summary>Real seconds a callout stays up, the last part of it fading.</summary>
         public float CalloutSeconds = 0.9f;
@@ -65,6 +63,9 @@ namespace Clover.UI
             manaImage = manaBarImage;
         }
         private bool shownCharge;
+        private Upgrade shownWorn;
+        private int shownWards;
+        private int shownFlasks;
 
         /// <summary>Adds what the element's tree shows: the embers held, and Heat's levels while Heat is learned.</summary>
         public void ConfigureUpgrades(PlayerUpgrades upgradesToShow, Text embersText, GameObject heatRowRoot, RectTransform[] heatPipFills)
@@ -133,13 +134,24 @@ namespace Clover.UI
             if (manaImage != null && element != null && element.Kit != null && element.Kit.Name != shownElement)
             {
                 shownElement = element.Kit.Name;
-                manaImage.color = shownElement == ElementKit.LightningName ? LightningMana : FireMana;
+                manaImage.color = Elements.Colour(shownElement);
             }
             if (flaskFills != null)
             {
                 for (int i = 0; i < flaskFills.Length; i++)
                 {
                     if (flaskFills[i] == null) continue;
+                    // Only as many flasks are drawn as are carried; an upgrade may add to them.
+                    var gourd = flaskFills[i].parent.gameObject;
+                    bool carried = i < defence.Flasks.Maximum;
+                    if (gourd.activeSelf != carried) gourd.SetActive(carried);
+                    if (!carried) continue;
+                    // The line of words beside the flasks keeps clear of however many there are.
+                    if (status != null && i == defence.Flasks.Maximum - 1 && shownFlasks != defence.Flasks.Maximum)
+                    {
+                        shownFlasks = defence.Flasks.Maximum;
+                        status.rectTransform.anchoredPosition = new Vector2(54f + shownFlasks * 38f, status.rectTransform.anchoredPosition.y);
+                    }
                     // With none left, the first flask fills slowly as the player earns it back.
                     float full = i < defence.Flasks.Count ? 1f : i == 0 ? defence.Flasks.RechargeFraction : 0f;
                     if (flaskImages != null && i < flaskImages.Length && flaskImages[i] != null) flaskImages[i].fillAmount = full;
@@ -152,12 +164,19 @@ namespace Clover.UI
             {
                 int surge = element != null && element.Kit.SurgeActive ? Mathf.CeilToInt(element.Kit.SurgeLeft) : 0;
                 bool charge = upgrades != null && upgrades.ChargeStored;
-                if (combat.Weapon != shownWeapon || surge != shownSurge || charge != shownCharge)
+                var worn = upgrades != null ? upgrades.Worn : null;
+                int wards = defence.Wards;
+                if (combat.Weapon != shownWeapon || surge != shownSurge || charge != shownCharge || worn != shownWorn || wards != shownWards)
                 {
                     shownWeapon = combat.Weapon;
                     shownSurge = surge;
                     shownCharge = charge;
+                    shownWorn = worn;
+                    shownWards = wards;
                     string text = surge > 0 ? $"{shownWeapon.Name}   {element.Kit.SurgeName} {surge}" : shownWeapon.Name;
+                    // The spell worn in the hold-spell slot is named here, so the player knows what a held press will do.
+                    if (worn != null) text += "   Hold spell: " + worn.Name;
+                    if (wards > 0) text += wards > 1 ? $"   Wards {wards}" : "   Ward";
                     status.text = charge ? text + "   Charge stored" : text;
                 }
             }

@@ -70,6 +70,29 @@ namespace Clover.Player
         /// <summary>How much deeper each blow of the weapon makes its target's burn, and for how long it then burns.</summary>
         public int BurnStacksOnHit;
         public float StackBurnSeconds = 4f;
+        /// <summary>What the learned upgrades and timed boons make of the player's numbers; <see cref="PlayerUpgrades"/> keeps these up to date.</summary>
+        public float StatDamage = 1f;
+        public float StatStagger = 1f;
+        public float StatMana = 1f;
+        public float StatSwing = 1f;
+        /// <summary>What damage to an enemy that carries any affliction is multiplied by.</summary>
+        public float StatAfflicted = 1f;
+        /// <summary>The chance that a blow of the weapon is critical, and what a critical blow multiplies its damage by.</summary>
+        public float CritChance;
+        public float CritMultiplier = 1.5f;
+        /// <summary>The affliction every blow of the weapon lays once the element's root is learned, and how deep.</summary>
+        public AfflictionKind WeaponAffliction;
+        public int WeaponAfflictionStacks;
+        /// <summary>Added to every laying of stacks, and what the seconds and the strength of everything laid are multiplied by.</summary>
+        public int ExtraStacks;
+        public float AfflictionSeconds = 1f;
+        public float AfflictionPower = 1f;
+        /// <summary>The affliction the surge adds to every blow while it lasts, and how deep.</summary>
+        public AfflictionKind EmpowerAffliction { get; private set; }
+        public int EmpowerStacks { get; private set; }
+        public int Criticals { get; private set; }
+        /// <summary>The damage of the last blow of the weapon that landed, as it was dealt.</summary>
+        public float LastBlowDamage { get; private set; }
 
         private PlayerController player;
         private PlayerDefence defence;
@@ -126,8 +149,11 @@ namespace Clover.Player
         }
 
         /// <summary>An element's surge wraps the weapon: every blow hits harder, sets its target burning, and cuts in the element's colour.</summary>
-        public void Empower(float damageMultiplier, float burnSeconds, Color slashColour, float speed = 1f, float stagger = 0f)
+        public void Empower(float damageMultiplier, float burnSeconds, Color slashColour, float speed = 1f, float stagger = 0f,
+            AfflictionKind affliction = AfflictionKind.None, int stacks = 0)
         {
+            EmpowerAffliction = affliction;
+            EmpowerStacks = stacks;
             DamageMultiplier = damageMultiplier;
             BurnOnHit = burnSeconds;
             SwingSpeed = Mathf.Max(0.1f, speed);
@@ -142,6 +168,8 @@ namespace Clover.Player
             BurnOnHit = 0f;
             SwingSpeed = 1f;
             StaggerOnHit = 0f;
+            EmpowerAffliction = AfflictionKind.None;
+            EmpowerStacks = 0;
             empowered = false;
         }
 
@@ -173,7 +201,7 @@ namespace Clover.Player
                 return;
             }
 
-            var events = Combo.Tick(deltaTime * SwingSpeed, player.Stamina, Mana);
+            var events = Combo.Tick(deltaTime * SwingSpeed * StatSwing, player.Stamina, Mana);
             if ((events & ComboEvents.Charged) != 0 && defence != null) defence.Callout("Ready");
             if ((events & ComboEvents.Started) != 0)
             {
@@ -184,14 +212,57 @@ namespace Clover.Player
 
             var step = Combo.Current;
             if (Combo.Phase == AttackPhase.Windup && step.Windup > 0f)
-                Step = transform.forward * (lunge * deltaTime * SwingSpeed / step.Windup);
+                Step = transform.forward * (lunge * deltaTime * SwingSpeed * StatSwing / step.Windup);
+        }
+
+        // The old way of describing a spell's blow, kept for the upgrades written by hand: fire that burns for some seconds.
+        private static SpellBlow Plain(float damage, float stagger, float burnSeconds, VfxKind effect, bool detonate, bool heavy = false) => new SpellBlow
+        {
+            Damage = damage,
+            Stagger = stagger,
+            Affliction = burnSeconds > 0f ? AfflictionKind.Burn : AfflictionKind.None,
+            AfflictionSeconds = burnSeconds,
+            Detonate = detonate,
+            Heavy = heavy,
+            Effect = effect,
+        };
+
+        // One blow of a spell or an effect as the target receives it, with everything the player's numbers add.
+        private Hit Make(in SpellBlow blow, IDamageable target, Vector3 direction, Vector3 origin)
+        {
+            float damage = blow.Damage;
+            if (StatAfflicted != 1f && target is IAfflictable afflictable && afflictable.Afflictions.Any) damage *= StatAfflicted;
+            if (blow.Affliction == AfflictionKind.Burn)
+            {
+                // A burn is given in seconds, with or without depth.
+                float seconds = (blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds : Clover.Gameplay.Afflictions.Spec(AfflictionKind.Burn).Seconds) * AfflictionSeconds;
+                return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, seconds, blow.Stacks > 0 ? blow.Stacks + ExtraStacks : 0, blow.Detonate,
+                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell);
+            }
+            bool lays = blow.Affliction != AfflictionKind.None && blow.Stacks > 0;
+            float lasts = !lays ? 0f : blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds * AfflictionSeconds
+                : AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(blow.Affliction).Seconds * AfflictionSeconds : 0f;
+            return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, 0f, 0, blow.Detonate,
+                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell);
+        }
+
+        // What every spell's blow does once it has landed: its effect, what it earns, and word to the upgrades.
+        private void Landed(in SpellBlow blow, IDamageable target, Collider other, Vector3 direction, bool wasAfflicted)
+        {
+            if (blow.Tinted) Vfx.Play(blow.Effect, other.bounds.center, direction, 1f, blow.Tint);
+            else Vfx.Play(blow.Effect, other.bounds.center, direction);
+            if (defence != null) defence.DealtDamage(blow.Damage);
+            if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
         }
 
         /// <summary>
         /// Strikes everything in a cone in front of the player that is not the player: what a spell does. Returns how
         /// many things it hit. The blow is described by the caller, so spells and weapons share one path to a target.
         /// </summary>
-        public int StrikeCone(float reach, float arcDegrees, float damage, float stagger, float burnSeconds, VfxKind effect, bool detonate = false)
+        public int StrikeCone(float reach, float arcDegrees, float damage, float stagger, float burnSeconds, VfxKind effect, bool detonate = false) =>
+            StrikeCone(reach, arcDegrees, Plain(damage, stagger, burnSeconds, effect, detonate));
+
+        public int StrikeCone(float reach, float arcDegrees, in SpellBlow blow)
         {
             var struck = spellStruck;
             struck.Clear();
@@ -206,11 +277,11 @@ namespace Clover.Player
                 Vector3 offset = other.ClosestPoint(origin) - origin;
                 offset.y = 0f;
                 if (offset.magnitude > 0.6f && Vector3.Angle(transform.forward, offset) > arcDegrees * 0.5f) continue;
-                var outcome = target.TakeHit(new Hit(damage, stagger, transform.forward, false, true, transform.position, burnSeconds, 0, detonate));
+                bool wasAfflicted = target is IAfflictable afflictable && afflictable.Afflictions.Any;
+                var outcome = target.TakeHit(Make(blow, target, transform.forward, transform.position));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
-                Vfx.Play(effect, other.bounds.center, transform.forward);
-                if (defence != null) defence.DealtDamage(damage);
+                Landed(blow, target, other, transform.forward, wasAfflicted);
             }
             return struck.Count;
         }
@@ -221,7 +292,10 @@ namespace Clover.Player
         /// enemy once only. Returns how many it hit.
         /// </summary>
         public int StrikeArea(Vector3 centre, float radius, float damage, float stagger, float burnSeconds, VfxKind effect,
-            HashSet<IDamageable> once = null, bool detonate = false, bool heavy = false)
+            HashSet<IDamageable> once = null, bool detonate = false, bool heavy = false) =>
+            StrikeArea(centre, radius, Plain(damage, stagger, burnSeconds, effect, detonate, heavy), once);
+
+        public int StrikeArea(Vector3 centre, float radius, in SpellBlow blow, HashSet<IDamageable> once = null)
         {
             spellStruck.Clear();
             int count = Overlap(centre + Vector3.up, radius + 0.5f);
@@ -236,18 +310,89 @@ namespace Clover.Player
                 if (offset.magnitude > radius) continue;
                 Vector3 away = ((Component)target).transform.position - centre;
                 away.y = 0f;
-                var outcome = target.TakeHit(new Hit(damage, stagger, away.sqrMagnitude > 0.01f ? away.normalized : transform.forward, heavy, true, centre, burnSeconds, 0, detonate));
+                bool wasAfflicted = target is IAfflictable afflictable && afflictable.Afflictions.Any;
+                var outcome = target.TakeHit(Make(blow, target, away.sqrMagnitude > 0.01f ? away.normalized : transform.forward, centre));
                 if (outcome == HitOutcome.Missed) continue;
                 spellStruck.Add(target);
                 if (once != null) once.Add(target);
-                Vfx.Play(effect, other.bounds.center, Vector3.up);
-                if (defence != null) defence.DealtDamage(damage);
+                Landed(blow, target, other, Vector3.up, wasAfflicted);
+            }
+            return spellStruck.Count;
+        }
+
+        /// <summary>
+        /// Lays an affliction on everything standing in a circle, without a blow: what a Soaked enemy does with the
+        /// Static laid on it, and what an upgrade that afflicts all around does. Returns how many it reached.
+        /// </summary>
+        public int AfflictArea(Vector3 centre, float radius, AfflictionKind kind, int stacks, Component except = null)
+        {
+            spellStruck.Clear();
+            int count = Overlap(centre + Vector3.up, radius + 0.5f);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || spellStruck.Contains(target) || ReferenceEquals(target, except) || !(target is IAfflictable afflictable)) continue;
+                Vector3 offset = ((Component)target).transform.position - centre;
+                offset.y = 0f;
+                if (offset.magnitude > radius) continue;
+                spellStruck.Add(target);
+                // Carried, not struck: it is not carried on again from here, so two Soaked enemies cannot pass it back and forth.
+                afflictable.Afflictions.Apply(kind, stacks + ExtraStacks, 0f, AfflictionPower);
+            }
+            return spellStruck.Count;
+        }
+
+        /// <summary>Drags everything in a circle toward its middle, or throws it away from there, by about this many metres. Returns how many it moved.</summary>
+        public int Displace(Vector3 centre, float radius, float metres, bool pull)
+        {
+            spellStruck.Clear();
+            int count = Overlap(centre + Vector3.up, radius + 0.5f);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || spellStruck.Contains(target) || !(target is IShovable shovable)) continue;
+                Vector3 offset = ((Component)target).transform.position - centre;
+                offset.y = 0f;
+                float distance = offset.magnitude;
+                if (distance > radius) continue;
+                spellStruck.Add(target);
+                Vector3 away = distance > 0.05f ? offset / distance : transform.forward;
+                // A pull never drags it past the middle.
+                shovable.Push(pull ? -away * Mathf.Min(metres, distance) : away * metres);
             }
             return spellStruck.Count;
         }
 
         /// <summary>The nearest enemy all around within aiming range, or null. The guard uses it to know whom to face.</summary>
         public Transform NearestEnemy(float range = 0f) => FindEnemy(transform.forward, 360f, range > 0f ? range : AimRange, false);
+
+        /// <summary>The enemy standing nearest a point, within a radius of it, or null: who it was that struck from there.</summary>
+        public Component EnemyAt(Vector3 point, float radius)
+        {
+            Component found = null;
+            float best = float.MaxValue;
+            int count = Overlap(point + Vector3.up, radius);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                if (!targetOf.TryGetValue(other, out Component target))
+                {
+                    target = other.GetComponentInParent<IDamageable>() as Component;
+                    targetOf[other] = target;
+                }
+                if (target == null) continue;
+                float distance = (target.transform.position - point).sqrMagnitude;
+                if (distance >= best) continue;
+                best = distance;
+                found = target;
+            }
+            return found;
+        }
 
         /// <summary>The enemy the player is facing within a range; failing one, the nearest all around; failing that, null.</summary>
         public Transform EnemyAhead(float range, float coneDegrees = 110f)
@@ -260,11 +405,18 @@ namespace Clover.Player
         /// Strikes the enemy the player faces, within reach, and then leaps on to the nearest others not yet struck: what
         /// a bolt does. A bolt from the sky marks each one. Returns how many it hit.
         /// </summary>
-        public int StrikeChain(float reach, float damage, float stagger, int leaps, float leapRange)
+        public int StrikeChain(float reach, float damage, float stagger, int leaps, float leapRange) =>
+            StrikeChain(reach, new SpellBlow { Damage = damage, Stagger = stagger, Effect = VfxKind.Shock }, leaps, leapRange, Elements.ByName(Elements.Lightning));
+
+        /// <summary>
+        /// The same in any element's colour, and from a first enemy of the caller's choosing when one is given (an arc
+        /// that starts at whoever was just struck).
+        /// </summary>
+        public int StrikeChain(float reach, in SpellBlow blow, int leaps, float leapRange, ElementInfo look, Transform first = null)
         {
             var struck = spellStruck;
             struck.Clear();
-            Transform at = FindEnemy(transform.forward, 150f, reach, false);
+            Transform at = first != null ? first : FindEnemy(transform.forward, 150f, reach, false);
             Vector3 from = transform.position;
             int hits = 0;
             for (int leap = 0; leap <= leaps && at != null; leap++)
@@ -274,12 +426,14 @@ namespace Clover.Player
                 struck.Add(target);
                 Vector3 direction = at.position - from;
                 direction.y = 0f;
-                var outcome = target.TakeHit(new Hit(damage, stagger, direction.sqrMagnitude > 0.01f ? direction.normalized : transform.forward, false, true, from));
-                Clover.World.LightningBolts.Strike(at.position, leap == 0 ? 0.5f : 0.2f);
+                bool wasAfflicted = target is IAfflictable afflictable && afflictable.Afflictions.Any;
+                var outcome = target.TakeHit(Make(blow, target, direction.sqrMagnitude > 0.01f ? direction.normalized : transform.forward, from));
+                ElementLook.Strike(look, at.position, leap == 0 ? 0.5f : 0.2f);
                 if (outcome != HitOutcome.Missed)
                 {
                     hits++;
-                    if (defence != null) defence.DealtDamage(damage);
+                    if (defence != null) defence.DealtDamage(blow.Damage);
+                    if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
                 }
                 from = at.position;
                 at = NextUnstruck(from, leapRange, struck);
@@ -421,12 +575,43 @@ namespace Clover.Player
                 offset.y = 0f;
                 // Something touching the player is hit whatever the angle; otherwise it must be inside the swing's arc.
                 if (offset.magnitude > 0.6f && Vector3.Angle(transform.forward, offset) > step.ArcDegrees * 0.5f) continue;
-                float damage = step.Damage * DamageMultiplier * UpgradeDamage * NextBlowDamage;
-                float burn = BurnStacksOnHit > 0 ? Mathf.Max(BurnOnHit, StackBurnSeconds) : BurnOnHit;
-                var outcome = target.TakeHit(new Hit(damage, (step.Stagger + StaggerOnHit) * NextBlowStagger, transform.forward, step.Heavy, false, transform.position, burn, BurnStacksOnHit));
+                var afflictable = target as IAfflictable;
+                // A blow is critical by chance, or always on an enemy that is Marked.
+                bool critical = (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (CritChance > 0f && Random.value < CritChance);
+                float damage = step.Damage * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
+                if (critical) damage *= CritMultiplier;
+                bool wasAfflicted = afflictable != null && afflictable.Afflictions.Any;
+                if (wasAfflicted) damage *= StatAfflicted;
+                float burn = (BurnStacksOnHit > 0 ? Mathf.Max(BurnOnHit, StackBurnSeconds) : BurnOnHit) * AfflictionSeconds;
+                // What the root of the tree and the surge lay, together, in the element's own affliction.
+                int stacks = WeaponAfflictionStacks + EmpowerStacks;
+                var kind = stacks <= 0 ? AfflictionKind.None : WeaponAfflictionStacks > 0 ? WeaponAffliction : EmpowerAffliction;
+                if (kind != AfflictionKind.None) stacks += ExtraStacks;
+                float lasts = kind != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(kind).Seconds * AfflictionSeconds : 0f;
+                var outcome = target.TakeHit(new Hit(damage, (step.Stagger + StaggerOnHit) * NextBlowStagger * StatStagger, transform.forward, step.Heavy, false, transform.position,
+                    burn, BurnStacksOnHit > 0 ? BurnStacksOnHit + ExtraStacks : 0, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
-                if (upgrades != null) upgrades.OnBlow(step, target, outcome);
+                LastBlowDamage = damage;
+                float earned = step.ManaGain * StatMana;
+                if (outcome != HitOutcome.Blocked)
+                {
+                    if (critical || NextBlowDamage > 1f)
+                    {
+                        // The sign of a critical blow: a gold star with long points where it lands. A stored charge shows the same.
+                        if (critical) Criticals++;
+                        Vfx.Play(VfxKind.Critical, other.bounds.center);
+                        Vfx.Play(VfxKind.TintSpark, other.bounds.center, transform.forward, 1.6f, new Color(1f, 0.85f, 0.35f));
+                    }
+                    if (afflictable != null)
+                    {
+                        // Seeded: the blow feeds the one who struck it. Marked: it gives more mana.
+                        float fed = afflictable.Afflictions.HealOnBlow;
+                        if (fed > 0f && defence != null) defence.Heal(fed, false);
+                        earned += afflictable.Afflictions.ManaOnBlow;
+                    }
+                }
+                if (upgrades != null) upgrades.OnBlow(step, target, outcome, wasAfflicted);
                 finisher |= outcome == HitOutcome.Finisher;
                 if (outcome == HitOutcome.Finisher) finished = other.bounds.center;
                 clean |= outcome != HitOutcome.Blocked;
@@ -451,7 +636,7 @@ namespace Clover.Player
                 if (reticle != null && target is Component struckThing) reticle.Struck(struckThing.transform);
                 if (outcome == HitOutcome.Finisher) Vfx.Play(VfxKind.Burst, other.bounds.center);
                 if (step.Heavy && outcome != HitOutcome.Blocked) Vfx.Play(VfxKind.Impact, other.bounds.center);
-                Mana.Gain(step.ManaGain);
+                Mana.Gain(earned);
                 BlowsLanded++;
                 if (defence != null) defence.DealtDamage(damage);
             }

@@ -46,7 +46,7 @@ namespace Clover.World
                         foreach (var upgrade in Upgrade.All)
                             if (upgrades.Owns(upgrade.Id)) spent += upgrade.Cost;
                         upgrades.Forget();
-                        upgrades.Earn(spent);
+                        upgrades.Refund(spent);
                     }
                     // His own way of moving comes with his element.
                     RunState.Unlocked.Add(Upgrade.StormStep);
@@ -64,6 +64,8 @@ namespace Clover.World
             {
                 if (string.IsNullOrEmpty(RunState.Element)) RunState.Element = element != null ? element.Kit.Name : ElementKit.FireName;
                 RunState.ElementConsumed = true;
+                // The god's element, swallowed, opens the branch it shares with the one held.
+                RunState.ElementsConsumed.Add(ElementKit.LightningName);
                 if (element != null) element.Take(ElementKit.ByName(RunState.Element, true));
                 // What is consumed feeds the tree the player already has.
                 if (upgrades != null) upgrades.Earn(ConsumeEmbers);

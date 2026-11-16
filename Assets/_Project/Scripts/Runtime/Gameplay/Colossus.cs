@@ -230,6 +230,8 @@ namespace Clover.Gameplay
 
         public Health Health { get; } = new Health();
         public StaggerMeter Stagger { get; } = new StaggerMeter();
+        /// <summary>What the elements have laid on it. It is too great to be frozen, slowed or shoved: afflictions only wear at it and let more through.</summary>
+        public AfflictionSet Afflictions { get; } = new AfflictionSet { CanFreeze = false };
         public bool IsStaggered => mode == Mode.Staggered;
         public bool IsDead => mode == Mode.Dead || mode == Mode.Dying;
         public bool HasRisen => mode != Mode.Hidden;
@@ -509,6 +511,7 @@ namespace Clover.Gameplay
             if (mode != Mode.Hidden) return;
             Health.Fill();
             Stagger.Reset();
+            Afflictions.Clear();
             Chooser.Reset();
             leftPlanted = rightPlanted = roared = false;
             leftBroken = rightBroken = headDown = false;
@@ -531,7 +534,12 @@ namespace Clover.Gameplay
             bool finisher = part.IsHead && IsStaggered && hit.Heavy;
             // The head stuck after a bite is only a head: it is the broken one that takes more, and can be finished.
             float share = !part.IsHead ? HandDamage : IsStaggered ? HeadDamage : BiteHeadDamage;
-            float damage = finisher ? Mathf.Max(hit.Damage * 3f, MaximumHealth * FinisherShare) : hit.Damage * share;
+            Afflictions.Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
+            float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
+            float unsteadies = Afflictions.StaggerTakenMultiplier;
+            if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
+                CombatEvents.Report(part, hit.Affliction, hit.AfflictionStacks, Afflictions.Apply(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower));
+            float damage = finisher ? Mathf.Max(hit.Damage * 3f * takes, MaximumHealth * FinisherShare) : hit.Damage * share * takes;
             Health.Damage(damage);
             flashLeft = 0.09f;
             if (Health.IsDead)
@@ -546,7 +554,7 @@ namespace Clover.Gameplay
                 Enter(Mode.Recovering);
                 return HitOutcome.Finisher;
             }
-            if (!IsStaggered && Stagger.Add(hit.Stagger * 0.7f)) BeginStagger();
+            if (!IsStaggered && Stagger.Add(hit.Stagger * 0.7f * unsteadies)) BeginStagger();
             return HitOutcome.Landed;
         }
 
@@ -620,6 +628,9 @@ namespace Clover.Gameplay
             float deltaTime = Time.deltaTime * WorldClock.EnemyScale;
             elapsed += deltaTime * (mode == Mode.Staggered || mode == Mode.Dying || mode == Mode.Rising ? 1f : Pace);
             WatchWhereThePlayerStands(deltaTime);
+            // What burns or poisons it wears it down but never ends it: the last of a god is taken by a blow.
+            if (Afflictions.Any && mode != Mode.Rising && mode != Mode.Dying)
+                Health.Damage(Mathf.Min(Afflictions.Tick(deltaTime), Mathf.Max(0f, Health.Current - 1f)));
             switch (mode)
             {
                 case Mode.Rising:

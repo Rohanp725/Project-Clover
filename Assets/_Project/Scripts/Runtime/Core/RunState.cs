@@ -22,6 +22,12 @@ namespace Clover.Core
         public static int Points;
         /// <summary>The ids of the upgrades learned in this run.</summary>
         public static readonly HashSet<string> Unlocked = new HashSet<string>();
+        /// <summary>The names of every element that has been in the player's hands in this run, the one held now among them.</summary>
+        public static readonly HashSet<string> ElementsHeld = new HashSet<string>();
+        /// <summary>The names of the elements whose gods were consumed in this run. With those held, they decide which mixed branches are open.</summary>
+        public static readonly HashSet<string> ElementsConsumed = new HashSet<string>();
+        /// <summary>The id of the learned spell worn in the hold-spell slot, or empty for none.</summary>
+        public static string WornSpell = "";
         /// <summary>How many runs have ended in this play session.</summary>
         public static int RunsEnded;
         /// <summary>How the last run ended: true if the player fell, false if they came back by their own road.</summary>
@@ -57,6 +63,9 @@ namespace Clover.Core
             GodsFelled = 0;
             Points = 0;
             Unlocked.Clear();
+            ElementsHeld.Clear();
+            ElementsConsumed.Clear();
+            WornSpell = "";
         }
     }
 }

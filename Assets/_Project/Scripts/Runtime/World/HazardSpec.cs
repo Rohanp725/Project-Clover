@@ -1,0 +1,40 @@
+using Clover.Player;
+using UnityEngine;
+
+namespace Clover.World
+{
+    /// <summary>
+    /// One patch of the player's ground, or one thing thrown, as <see cref="Hazards"/> is asked for it: a circle that
+    /// bites what is inside it, once each or at intervals, for a while, and may move.
+    /// </summary>
+    public struct HazardSpec
+    {
+        /// <summary>How it is seen. <see cref="HazardKind.Element"/> is drawn in <see cref="Tint"/>.</summary>
+        public HazardKind Kind;
+        public Color Tint;
+        public Vector3 Position;
+        public Vector3 Velocity;
+        public float Radius;
+        /// <summary>Seconds it lasts once it has begun.</summary>
+        public float Seconds;
+        /// <summary>Seconds between bites.</summary>
+        public float BiteEvery;
+        /// <summary>Seconds it waits before it begins.</summary>
+        public float Delay;
+        /// <summary>True when it bites each enemy once only.</summary>
+        public bool Once;
+        /// <summary>True when it arrives with a flash the size of what it strikes.</summary>
+        public bool Burst;
+        /// <summary>What each bite deals.</summary>
+        public SpellBlow Blow;
+        /// <summary>How it travels, when it has a velocity. Homing turns toward <see cref="Target"/>; Returning comes back to the player half-way through its time and may strike again.</summary>
+        public Flight Flight;
+        public Transform Target;
+        /// <summary>True when it stays on <see cref="Target"/> wherever that goes: a helper that keeps striking one enemy.</summary>
+        public bool Follow;
+        /// <summary>It ends after this many bites; zero for as many as its time allows.</summary>
+        public int Bites;
+        /// <summary>True when a mark is drawn on the ground while it waits out its delay: something is about to fall here.</summary>
+        public bool Warn;
+    }
+}

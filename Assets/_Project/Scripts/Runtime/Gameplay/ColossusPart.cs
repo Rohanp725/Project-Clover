@@ -6,7 +6,7 @@ namespace Clover.Gameplay
     /// One piece of a colossus that a blow can land on: a hand lying on the ground, or the head when it has fallen.
     /// It can be struck only while it is within reach, and it passes the blow on to the colossus it belongs to.
     /// </summary>
-    public class ColossusPart : MonoBehaviour, IDamageable, IStaggerable
+    public class ColossusPart : MonoBehaviour, IDamageable, IStaggerable, IAfflictable
     {
         [SerializeField] private Colossus owner;
         [SerializeField] private Collider body;
@@ -20,6 +20,10 @@ namespace Clover.Gameplay
         public bool Vulnerable { get; private set; }
         public bool IsStaggered => IsHead && Vulnerable && owner != null && owner.IsStaggered;
         public int BlowsTaken { get; private set; }
+        /// <summary>What is laid on any piece is laid on the whole colossus.</summary>
+        public AfflictionSet Afflictions => owner != null ? owner.Afflictions : orphan;
+
+        private readonly AfflictionSet orphan = new AfflictionSet();
 
         public void Configure(Colossus colossus, Collider collider, bool head, float multiplier)
         {

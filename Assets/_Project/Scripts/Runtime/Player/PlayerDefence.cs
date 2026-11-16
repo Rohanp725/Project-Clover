@@ -47,6 +47,13 @@ namespace Clover.Player
         /// <summary>With the Firebomb Flask learned: holding the flask button this long throws it; a shorter press drinks.</summary>
         public bool HoldToThrow;
         public float ThrowHoldSeconds = 0.3f;
+        /// <summary>What the damage of a blow that lands is multiplied by; the upgrades and the surge set it.</summary>
+        public float DamageTaken = 1f;
+        /// <summary>The most wards that can be held at once.</summary>
+        public int MaximumWards = 3;
+        /// <summary>Wards held: each turns aside one blow that would otherwise have landed.</summary>
+        public int Wards { get; private set; }
+        public int BlowsWarded { get; private set; }
 
         public bool IsHurt => hurtLeft > 0f;
         public bool IsDead => Health.IsDead;
@@ -140,6 +147,37 @@ namespace Clover.Player
             Callouts++;
         }
 
+        /// <summary>Gives health, as an upgrade or an affliction on an enemy does. Shown as healing unless asked not to be.</summary>
+        public void Heal(float amount, bool show = true)
+        {
+            if (amount <= 0f || IsDead) return;
+            Health.Heal(amount);
+            if (show) Vfx.Play(VfxKind.Heal, transform.position + Vector3.up * 0.6f, Vector3.up, 0.5f);
+        }
+
+        /// <summary>Gives wards, up to the most that can be held.</summary>
+        public void GiveWards(int count)
+        {
+            if (count > 0) Wards = Mathf.Min(MaximumWards, Wards + count);
+        }
+
+        /// <summary>Takes every ward away, as when the element that gave them is put down.</summary>
+        public void ClearWards() => Wards = 0;
+
+        // A ward is spent on a blow that was about to land: a pale ring, and the blow is gone.
+        private bool SpendWard()
+        {
+            if (Wards <= 0) return false;
+            Wards--;
+            BlowsWarded++;
+            Vfx.Play(VfxKind.TintRing, GuardPoint(), transform.forward, 1f, new Color(0.7f, 0.92f, 1f));
+            Vfx.Play(VfxKind.TintSpark, GuardPoint(), transform.forward, 2f, new Color(0.7f, 0.92f, 1f));
+            Vfx.Play(VfxKind.Clang, GuardPoint());
+            Callout("Warded");
+            if (hitStop != null) hitStop.Freeze(0.05f);
+            return true;
+        }
+
         /// <summary>Tells the defence how much damage the player's blow dealt: it wins back grey health and earns flasks.</summary>
         public void DealtDamage(float damage)
         {
@@ -231,6 +269,7 @@ namespace Clover.Player
             {
                 Health.Heal(Flasks.HealAmount);
                 Vfx.Play(VfxKind.Heal, transform.position + Vector3.up * 0.6f);
+                if (upgrades != null) upgrades.OnFlaskDrunk();
             }
 
             bool raise = guardHeld && free && !Flasks.IsDrinking;
@@ -324,14 +363,17 @@ namespace Clover.Player
                     if (shaker != null) shaker.Shake(0.07f, 0.12f);
                     Health.Chip(chip);
                     if (hitStop != null) hitStop.Freeze(0.04f);
+                    if (upgrades != null) upgrades.OnGuard(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
                     return HitOutcome.Blocked;
                 case GuardResult.Broken:
+                    if (SpendWard()) return HitOutcome.Blocked;
                     Callout("Guard broken");
                     if (guardArc != null) guardArc.Pulse(new Color(5f, 0.4f, 0.3f, 1f), 0.4f, 0.9f);
                     Vfx.Play(VfxKind.Danger, GuardPoint());
                     Land(hit, GuardBreakSeconds);
                     return HitOutcome.Landed;
                 default:
+                    if (SpendWard()) return HitOutcome.Blocked;
                     Land(hit, HurtSeconds);
                     // The blow that kills teaches nothing.
                     if (!IsDead) Tips.UnguardedBlow();
@@ -342,8 +384,8 @@ namespace Clover.Player
         private void Land(in Hit hit, float seconds)
         {
             BlowsTaken++;
-            Health.Damage(hit.Damage);
-            if (upgrades != null) upgrades.OnStruck();
+            Health.Damage(hit.Damage * DamageTaken);
+            if (upgrades != null) upgrades.OnStruck(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
             Vfx.Play(VfxKind.Wound, transform.position + Vector3.up * 1.1f, hit.Direction);
             ScreenFlash.Flash(new Color(1f, 0.08f, 0.1f, 0.16f), 0.09f);
             hurtSeconds = seconds;
@@ -378,6 +420,7 @@ namespace Clover.Player
             Health.Fill();
             Flasks.Refill();
             player.Stamina.Fill();
+            Wards = 0;
         }
 
         private void Revive()
