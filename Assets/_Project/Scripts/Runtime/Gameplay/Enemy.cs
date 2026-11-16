@@ -24,6 +24,7 @@ namespace Clover.Gameplay
         [SerializeField] private Transform staggerFill;
         [SerializeField] private SlashArcs arcs;
         [SerializeField] private EnemyTurns turns;
+        [SerializeField] private GuardArc guardArc;
 
         public float StaggeredDamageMultiplier = 1.5f;
         public float FinisherDamageMultiplier = 3f;
@@ -92,7 +93,7 @@ namespace Clover.Gameplay
         private Quaternion barsRotation;
 
         public void Configure(string kind, Transform targetToFight, Animator animatorToDrive, Renderer[] renderers,
-            MeshFilter outline, MeshFilter fill, Transform barsRoot, Transform healthBar, Transform staggerBar, SlashArcs arcsToShow, EnemyTurns turnsToTake)
+            MeshFilter outline, MeshFilter fill, Transform barsRoot, Transform healthBar, Transform staggerBar, SlashArcs arcsToShow, EnemyTurns turnsToTake, GuardArc arcOfItsGuard)
         {
             kindName = kind;
             target = targetToFight;
@@ -105,6 +106,7 @@ namespace Clover.Gameplay
             staggerFill = staggerBar;
             arcs = arcsToShow;
             turns = turnsToTake;
+            guardArc = arcOfItsGuard;
         }
 
         private void Awake()
@@ -165,6 +167,7 @@ namespace Clover.Gameplay
             ShowMarker(false, false);
             SetGlow(0);
             if (bars != null) bars.gameObject.SetActive(false);
+            if (guardArc != null) guardArc.Show(false);
             // The animator finds its own way back: the next frame it is not busy, it blends to standing.
             wasBusy = true;
         }
@@ -189,6 +192,7 @@ namespace Clover.Gameplay
                 && Vector3.Angle(transform.forward, -hit.Direction) < 75f)
             {
                 BlowsGuarded++;
+                if (guardArc != null) guardArc.Pulse(new Color(3f, 3.4f, 4f, 1f), 0.18f, 0.25f);
                 Health.Damage(hit.Damage * Kind.GuardedDamage);
                 Vfx.Play(VfxKind.GuardSpark, transform.position + Vector3.up * 1.2f + transform.forward * 0.5f, transform.forward);
                 Vector3 back = hit.Direction;
@@ -253,6 +257,7 @@ namespace Clover.Gameplay
         private void Die()
         {
             Brain.Die();
+            if (guardArc != null) guardArc.Show(false);
             deadFor = 0f;
             ShowMarker(false, false);
             if (bars != null) bars.gameObject.SetActive(false);
@@ -317,6 +322,8 @@ namespace Clover.Gameplay
                 // A thrown attack lands where the target stood when it was begun, so moving gets clear of it.
                 strikePoint = target.position;
                 if (bars != null) bars.gameObject.SetActive(true);
+                // The instant it commits: a white glint for a blow that can be guarded, a red flare for one that cannot.
+                Vfx.Play(attack.Unblockable ? VfxKind.Danger : VfxKind.Glint, transform.position + Vector3.up * 2.3f);
             }
 
             if (Brain.Tracks && distance > 0.05f)
@@ -361,6 +368,8 @@ namespace Clover.Gameplay
             step.y = -fallSpeed * deltaTime;
             if (body.enabled) body.Move(step);
 
+            // Its guard is up only while it stands ready and knows the player is there: the band going out is the opening.
+            if (guardArc != null) guardArc.Show(Kind.Guards && Brain.State == EnemyState.Stalk);
             ShowAttack(attack);
             Animate(deltaTime, Kind.WalkSpeed > 0f ? walked / Kind.WalkSpeed : 0f);
             Paint(deltaTime);
@@ -502,6 +511,8 @@ namespace Clover.Gameplay
             if (flashLeft > 0f) glow = 1;
             else if (IsStaggered && Mathf.Repeat(Time.unscaledTime * 5f, 1f) < 0.5f) glow = 2;
             else if (IsCharged && !IsDead && Mathf.Repeat(Time.unscaledTime * 3f, 1f) < 0.6f) glow = 3;
+            // Close to losing its balance, it flickers amber: one or two more blows will open it.
+            else if (!IsDead && !IsStaggered && Stagger.Fraction >= 0.7f && Mathf.Repeat(Time.unscaledTime * 8f, 1f) < 0.35f) glow = 4;
             flashLeft -= Time.unscaledDeltaTime;
             if (glow != shownGlow) SetGlow(glow);
         }
@@ -518,7 +529,7 @@ namespace Clover.Gameplay
                     continue;
                 }
                 block.Clear();
-                block.SetColor(Emission, glow == 1 ? new Color(1.6f, 1.6f, 1.6f) : glow == 2 ? new Color(0.9f, 0.62f, 0.12f) : new Color(0.1f, 0.24f, 0.7f));
+                block.SetColor(Emission, glow == 1 ? new Color(1.6f, 1.6f, 1.6f) : glow == 2 ? new Color(0.9f, 0.62f, 0.12f) : glow == 3 ? new Color(0.1f, 0.24f, 0.7f) : new Color(0.7f, 0.3f, 0.03f));
                 bodyRenderer.SetPropertyBlock(block);
             }
         }

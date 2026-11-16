@@ -284,7 +284,13 @@ namespace Clover.Player
                 struck.Add(target);
                 finisher |= outcome == HitOutcome.Finisher;
                 if (outcome != HitOutcome.Blocked) Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, other.ClosestPoint(origin), transform.forward);
-                else BlowsTurned++;
+                else
+                {
+                    // Turned on the enemy's guard: steel on steel, and a jolt back up the arm.
+                    BlowsTurned++;
+                    Vfx.Play(VfxKind.Clang, other.ClosestPoint(origin));
+                    if (shaker != null) shaker.Shake(0.06f, 0.1f);
+                }
                 if (outcome == HitOutcome.Finisher) Vfx.Play(VfxKind.Burst, other.bounds.center);
                 if (step.Heavy && outcome != HitOutcome.Blocked) Vfx.Play(VfxKind.Impact, other.bounds.center);
                 Mana.Gain(step.ManaGain);

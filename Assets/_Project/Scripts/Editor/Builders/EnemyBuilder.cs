@@ -113,8 +113,14 @@ namespace Clover.EditorTools
             var fill = WorldBars.Marker("Marker Fill", root.transform, 0.06f, kit.Marker);
             var bars = WorldBars.Build(root.transform, 2.5f, kit.TowardCamera, kit.BarBack, kit.BarHealth, kit.BarStagger);
 
+            GuardArc guardArc = null;
+            if (kind.Guards)
+            {
+                guardArc = root.AddComponent<GuardArc>();
+                guardArc.Configure(VfxBuilder.GuardArcMaterial(), 1.25f, 150f, new Color(2.4f, 1.8f, 0.8f, 0.85f));
+            }
             var enemy = root.AddComponent<Enemy>();
-            enemy.Configure(kind.Name, kit.Target, animator, renderers, outline, fill, bars.root, bars.health, bars.stagger, kit.Arcs, kit.Turns);
+            enemy.Configure(kind.Name, kit.Target, animator, renderers, outline, fill, bars.root, bars.health, bars.stagger, kit.Arcs, kit.Turns, guardArc);
             return enemy;
         }
 

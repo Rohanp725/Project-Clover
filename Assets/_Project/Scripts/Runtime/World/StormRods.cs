@@ -10,8 +10,8 @@ namespace Clover.World
     {
         [SerializeField] private Transform[] rods = new Transform[0];
 
-        public float MinSecondsBetween = 3.5f;
-        public float MaxSecondsBetween = 9f;
+        public float MinSecondsBetween = 2.5f;
+        public float MaxSecondsBetween = 6.5f;
 
         private float untilNext;
 

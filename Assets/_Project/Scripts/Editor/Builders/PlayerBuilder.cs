@@ -90,7 +90,9 @@ namespace Clover.EditorTools
             var arcs = player.AddComponent<SlashArcs>();
             arcs.Configure(VfxBuilder.SlashMaterial());
             combat.Configure(hitStop, follow, arcs);
-            defence.Configure(hitStop, follow);
+            var guardArc = player.AddComponent<GuardArc>();
+            guardArc.Configure(VfxBuilder.GuardArcMaterial(), 1.2f, new Guard().ArcDegrees, new Color(0.9f, 1.5f, 2.6f, 0.85f));
+            defence.Configure(hitStop, follow, guardArc);
 
             // The element's light: dark until a spell or the surge, then it throws the element's colour on everything near.
             var glowObject = new GameObject("Element Glow");

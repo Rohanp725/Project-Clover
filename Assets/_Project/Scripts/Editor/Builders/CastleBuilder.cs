@@ -41,8 +41,8 @@ namespace Clover.EditorTools
             if (storm != null)
             {
                 // The rods bring the flashes; the sky by itself only mutters now and then.
-                storm.MinSecondsBetween = 14f;
-                storm.MaxSecondsBetween = 30f;
+                storm.MinSecondsBetween = 7f;
+                storm.MaxSecondsBetween = 16f;
             }
             Weather(built.Player.transform, storm);
 
@@ -110,7 +110,7 @@ namespace Clover.EditorTools
             ember = BuildKit.Toon(Folder, "m_castle_ember", new Color(0.9f, 0.45f, 0.15f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(1.6f, 0.5f, 0.1f));
             rune = BuildKit.Toon(Folder, "m_castle_rune", new Color(0.6f, 0.8f, 1f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(0.9f, 2f, 4.5f));
             fireMaterial = BuildKit.Glow(Folder, "m_castle_fire", new Color(5f, 1.8f, 0.35f, 1f), 0, true, 1.4f, 0.7f).Graphic(0.22f, 0.7f);
-            rainMaterial = BuildKit.Glow(Folder, "m_castle_rain", new Color(0.7f, 0.8f, 1.1f, 0.4f), 1, true, 1f);
+            rainMaterial = BuildKit.Glow(Folder, "m_castle_rain", new Color(0.8f, 0.9f, 1.3f, 0.7f), 1, true, 1f);
             boltMaterial = BuildKit.Glow(Folder, "m_castle_bolt", new Color(5f, 7f, 12f, 1f), 3, true, 1f);
         }
 
@@ -554,8 +554,9 @@ namespace Clover.EditorTools
 
             var rainObject = new GameObject("Rain");
             rainObject.transform.SetParent(weather, false);
-            rainObject.transform.rotation = Quaternion.Euler(90f, 0f, 0f);
-            rainObject.AddComponent<Follow>().Configure(player, new Vector3(1.5f, 16f, 2f));
+            // Driven a little sideways by the wind.
+            rainObject.transform.rotation = Quaternion.Euler(78f, 62f, 0f);
+            rainObject.AddComponent<Follow>().Configure(player, new Vector3(-2f, 16f, 0.5f));
             var rain = rainObject.AddComponent<ParticleSystem>();
             rain.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
             var main = rain.main;
@@ -564,19 +565,53 @@ namespace Clover.EditorTools
             main.simulationSpace = ParticleSystemSimulationSpace.World;
             main.startLifetime = 0.75f;
             main.startSpeed = new ParticleSystem.MinMaxCurve(20f, 26f);
-            main.startSize = new ParticleSystem.MinMaxCurve(0.03f, 0.05f);
-            main.maxParticles = 1500;
+            main.startSize = new ParticleSystem.MinMaxCurve(0.03f, 0.055f);
+            main.maxParticles = 4000;
             var emission = rain.emission;
-            emission.rateOverTime = 900f;
+            emission.rateOverTime = 2000f;
             var shape = rain.shape;
             shape.shapeType = ParticleSystemShapeType.Box;
             shape.scale = new Vector3(34f, 26f, 1f);
             var rainRenderer = rainObject.GetComponent<ParticleSystemRenderer>();
             rainRenderer.renderMode = ParticleSystemRenderMode.Stretch;
             rainRenderer.velocityScale = 0.03f;
-            rainRenderer.lengthScale = 6f;
+            rainRenderer.lengthScale = 9f;
             rainRenderer.sharedMaterial = rainMaterial;
             rainRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+            // Where the rain lands: small rings that open and vanish all over the ground near the player.
+            var splashObject = new GameObject("Rain Splashes");
+            splashObject.transform.SetParent(weather, false);
+            splashObject.transform.rotation = Quaternion.Euler(-90f, 0f, 0f);
+            splashObject.AddComponent<Follow>().Configure(player, new Vector3(0f, 0.08f, 2f));
+            var splash = splashObject.AddComponent<ParticleSystem>();
+            splash.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var splashMain = splash.main;
+            splashMain.loop = true;
+            splashMain.playOnAwake = true;
+            splashMain.simulationSpace = ParticleSystemSimulationSpace.World;
+            splashMain.startLifetime = new ParticleSystem.MinMaxCurve(0.18f, 0.3f);
+            splashMain.startSpeed = 0f;
+            splashMain.startSize = new ParticleSystem.MinMaxCurve(0.25f, 0.5f);
+            splashMain.maxParticles = 600;
+            var splashEmission = splash.emission;
+            splashEmission.rateOverTime = 420f;
+            var splashShape = splash.shape;
+            splashShape.shapeType = ParticleSystemShapeType.Box;
+            splashShape.scale = new Vector3(34f, 24f, 0.01f);
+            var splashSize = splash.sizeOverLifetime;
+            splashSize.enabled = true;
+            splashSize.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 0.3f, 1f, 1f));
+            var splashColour = splash.colorOverLifetime;
+            splashColour.enabled = true;
+            var splashFade = new Gradient();
+            splashFade.SetKeys(new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(0.9f, 0f), new GradientAlphaKey(0f, 1f) });
+            splashColour.color = splashFade;
+            var splashRenderer = splashObject.GetComponent<ParticleSystemRenderer>();
+            splashRenderer.renderMode = ParticleSystemRenderMode.HorizontalBillboard;
+            splashRenderer.sharedMaterial = BuildKit.Glow(Folder, "m_castle_splash", new Color(0.75f, 0.85f, 1.3f, 0.5f), 4, true, 1f).Graphic(0.35f);
+            splashRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
             var boltsObject = new GameObject("Lightning");
             boltsObject.transform.SetParent(weather, false);

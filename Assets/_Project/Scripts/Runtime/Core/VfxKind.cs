@@ -29,5 +29,11 @@ namespace Clover.Core
         Ring,
         /// <summary>A hard-edged star for one instant where a heavy blow lands: the comic-book mark of an impact.</summary>
         Impact,
+        /// <summary>A small white glint over an enemy the instant it commits to an attack that can be guarded.</summary>
+        Glint,
+        /// <summary>A red flare over an enemy the instant it commits to an attack that cannot be guarded.</summary>
+        Danger,
+        /// <summary>Steel on steel: the cold burst where a blow is turned on a guard.</summary>
+        Clang,
     }
 }

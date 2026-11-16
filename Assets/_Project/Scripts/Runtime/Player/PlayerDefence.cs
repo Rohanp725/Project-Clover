@@ -16,6 +16,7 @@ namespace Clover.Player
     {
         [SerializeField] private HitStop hitStop;
         [SerializeField] private TopDownCamera shaker;
+        [SerializeField] private GuardArc guardArc;
 
         public RegainHealth Health = new RegainHealth();
         public Guard Guard = new Guard();
@@ -85,10 +86,11 @@ namespace Clover.Player
         private float deadFor;
         private float guardRetargetIn;
 
-        public void Configure(HitStop hitStopToUse, TopDownCamera cameraToShake)
+        public void Configure(HitStop hitStopToUse, TopDownCamera cameraToShake, GuardArc arcToShow)
         {
             hitStop = hitStopToUse;
             shaker = cameraToShake;
+            guardArc = arcToShow;
         }
 
         private void Awake()
@@ -146,6 +148,7 @@ namespace Clover.Player
             if (IsDead)
             {
                 Guard.SetRaised(false);
+                if (guardArc != null) guardArc.Show(false);
                 GuardTarget = null;
                 deadFor += deltaTime;
                 if (ReviveAfterSeconds > 0f && deadFor >= ReviveAfterSeconds) Revive();
@@ -154,6 +157,7 @@ namespace Clover.Player
             if (hurtLeft > 0f)
             {
                 Guard.SetRaised(false);
+                if (guardArc != null) guardArc.Show(false);
                 GuardTarget = null;
                 // The push is spent early in the flinch and has died away by its end.
                 float before = Eased(1f - hurtLeft / hurtSeconds);
@@ -204,6 +208,7 @@ namespace Clover.Player
                 GuardTarget = null;
             }
             Guard.SetRaised(raise);
+            if (guardArc != null) guardArc.Show(raise);
         }
 
         public HitOutcome TakeHit(in Hit hit)
@@ -243,6 +248,7 @@ namespace Clover.Player
                 case GuardResult.Perfect:
                     PerfectGuards++;
                     Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
+                    if (guardArc != null) guardArc.Pulse(new Color(4.5f, 3.2f, 0.7f, 1f), 0.35f, 0.5f);
                     Vfx.Play(VfxKind.Ring, GuardPoint(), transform.forward);
                     Vfx.Play(VfxKind.Impact, GuardPoint());
                     ScreenFlash.Flash(new Color(0.75f, 0.9f, 1f, 0.4f), 0.07f);
@@ -254,11 +260,16 @@ namespace Clover.Player
                 case GuardResult.Blocked:
                     Blocks++;
                     Vfx.Play(VfxKind.GuardSpark, GuardPoint(), transform.forward);
+                    Vfx.Play(VfxKind.Clang, GuardPoint());
+                    if (guardArc != null) guardArc.Pulse(new Color(3f, 3.4f, 4f, 1f), 0.18f, 0.22f);
+                    if (shaker != null) shaker.Shake(0.07f, 0.12f);
                     Health.Chip(chip);
                     if (hitStop != null) hitStop.Freeze(0.04f);
                     return HitOutcome.Blocked;
                 case GuardResult.Broken:
                     Callout("Guard broken");
+                    if (guardArc != null) guardArc.Pulse(new Color(5f, 0.4f, 0.3f, 1f), 0.4f, 0.9f);
+                    Vfx.Play(VfxKind.Danger, GuardPoint());
                     Land(hit, GuardBreakSeconds);
                     return HitOutcome.Landed;
                 default:

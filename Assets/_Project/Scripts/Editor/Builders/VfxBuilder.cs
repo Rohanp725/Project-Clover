@@ -17,6 +17,10 @@ namespace Clover.EditorTools
             BuildKit.Glow(Folder, "m_vfx_slash", Color.white, 2, true, 1.6f).Graphic(0.16f, 0.8f);
 
         /// <summary>A flat see-through material for marks on the ground, such as where an enemy's blow will land.</summary>
+        /// <summary>The band a raised guard draws on the ground: brightest dead ahead, tapering to both ends, hard-edged.</summary>
+        public static Material GuardArcMaterial() =>
+            BuildKit.Glow(Folder, "m_vfx_guard_arc", Color.white, 1, true, 1f).Graphic(0.1f, 0.62f);
+
         public static Material MarkerMaterial() =>
             BuildKit.Glow(Folder, "m_vfx_marker", Color.white, 3, false, 1f);
 
@@ -52,7 +56,11 @@ namespace Clover.EditorTools
             Add(VfxKind.Heal, 16, Puffs(root, "Heal", BuildKit.Glow(Folder, "m_vfx_heal", new Color(1.6f, 4f, 1.1f, 1f), 0, true, 3f),
                 0.2f, 0.9f, 0.6f, 1.1f, 0.06f, 0.14f, -1.6f, 1f, flat: false));
             Add(VfxKind.Ring, 1, Ring(root, "Ring", BuildKit.Glow(Folder, "m_vfx_ring", new Color(4f, 5.5f, 7f, 1f), 4, true, 1.5f).Graphic(0.3f)));
-            Add(VfxKind.Impact, 1, Star(root, "Impact", BuildKit.Glow(Folder, "m_vfx_impact", new Color(6f, 5.6f, 4.2f, 1f), 5, true, 1f).Graphic(0.12f, 0.45f)));
+            Add(VfxKind.Impact, 1, Star(root, "Impact", BuildKit.Glow(Folder, "m_vfx_impact", new Color(6f, 5.6f, 4.2f, 1f), 5, true, 1f).Graphic(0.12f, 0.45f), 2.6f, 0.1f));
+
+            Add(VfxKind.Glint, 1, Star(root, "Glint", BuildKit.Glow(Folder, "m_vfx_glint", new Color(5f, 5.5f, 6f, 1f), 5, true, 1f).Graphic(0.1f, 0.4f), 1.3f, 0.16f));
+            Add(VfxKind.Danger, 1, Star(root, "Danger", BuildKit.Glow(Folder, "m_vfx_danger", new Color(7f, 0.5f, 0.3f, 1f), 5, true, 1f, 0f, true).Graphic(0.1f, 0.55f), 2.6f, 0.28f));
+            Add(VfxKind.Clang, 1, Star(root, "Clang", BuildKit.Glow(Folder, "m_vfx_clang", new Color(3f, 4.5f, 7f, 1f), 5, true, 1f).Graphic(0.12f, 0.4f), 1.9f, 0.11f));
 
             var vfx = root.AddComponent<Vfx>();
             vfx.Configure(emitters, counts);
@@ -159,13 +167,13 @@ namespace Clover.EditorTools
         }
 
         // One spiked burst, there for an instant and gone: it does not fade so much as blink.
-        private static ParticleSystem Star(GameObject root, string name, Material material)
+        private static ParticleSystem Star(GameObject root, string name, Material material, float starSize, float seconds)
         {
             var system = New(root, name, material, 16);
             var main = system.main;
             main.startSpeed = 0f;
-            main.startLifetime = 0.1f;
-            main.startSize = 2.6f;
+            main.startLifetime = seconds;
+            main.startSize = starSize;
             main.startRotation = new ParticleSystem.MinMaxCurve(0f, Mathf.PI * 2f);
             // On real time, so it is seen through the stop that comes with the blow.
             main.useUnscaledTime = true;

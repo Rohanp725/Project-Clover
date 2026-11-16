@@ -384,6 +384,26 @@ changed for each (Claude's first answers, not yet played):
 - **Open**: whether this is enough. Further levers not yet pulled: stamina costs that punish spamming, enemies that
   chase a retreating player harder, and enemy combos that reward holding ground.
 
+### Reading the fight: guard and attack indicators (2026-11-15)
+
+The user found the guard visuals "fairly basic" and asked for indicators drawn from games of this kind. What was
+taken, from Claude's knowledge of them, and how it is shown here (first pass, not yet played):
+
+| Indicator | Taken from | Here |
+|---|---|---|
+| The guard as a shape on the ground | Hades (shielded enemies), top-down action games generally | While a guard is up, a bright curved band lies on the ground in front of its holder, as wide as what it covers and brightest dead ahead: blue for the player (200 degrees), gold for a guarding enemy (150 degrees). |
+| The opening | Sekiro, Elden Ring | An enemy's band goes out the moment it attacks, flinches or staggers. No band means it can be hit. |
+| Steel on steel | Sekiro's deflect | A blow turned on any guard throws a cold spiked burst and sparks at the point of contact, a small camera jolt, and the band jumps outward white. |
+| The perfect guard | Sekiro, Lies of P | The band flares gold and jumps half again as wide, with a ring, a burst, a short stop and a one-frame wash of the screen. |
+| The guard break | Lies of P, Elden Ring | The band bursts red and a red flare marks the spot. |
+| The commit glint | Elden Ring, Lies of P | The instant an enemy commits to an attack, a white glint flashes over its head; for an attack that cannot be guarded, a larger red flare. This comes before the ground marker has filled. |
+| Balance about to break | Sekiro's posture bar | An enemy at 70% or more of its stagger meter flickers amber: one or two more blows will open it. Staggered, it pulses gold as before. |
+
+- **Decided (user)**: for the lightning level the heavy blue is right; it should feel stormy. Rain is now heavy,
+  driven sideways by wind, with splash rings on the ground around the player, and the sky flashes more often.
+- **Open**: sound for all of these (deferred with the rest of sound); a guard stance animation for the soldier, which
+  still stands as it did.
+
 ### Upgrades in the slice (Decided: all of these are in)
 
 Fire, built around pressure and momentum:
