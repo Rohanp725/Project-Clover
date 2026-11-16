@@ -36,13 +36,18 @@ namespace Clover.World
             if (Takes)
             {
                 // The old element goes, and what was learned of it with it; the embers spent on it come back.
+                // Someone who already carries this god's element keeps what they learned of it: there is no old tree to lose.
+                bool sameElement = element != null && element.Kit != null && element.Kit.Name == ElementKit.LightningName;
                 if (upgrades != null)
                 {
-                    int spent = 0;
-                    foreach (var upgrade in Upgrade.All)
-                        if (upgrades.Owns(upgrade.Id)) spent += upgrade.Cost;
-                    upgrades.Forget();
-                    upgrades.Earn(spent);
+                    if (!sameElement)
+                    {
+                        int spent = 0;
+                        foreach (var upgrade in Upgrade.All)
+                            if (upgrades.Owns(upgrade.Id)) spent += upgrade.Cost;
+                        upgrades.Forget();
+                        upgrades.Earn(spent);
+                    }
                     // His own way of moving comes with his element.
                     RunState.Unlocked.Add(Upgrade.StormStep);
                 }
