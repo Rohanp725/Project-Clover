@@ -168,7 +168,7 @@ public class SummitProbeRunner : MonoBehaviour
             }
             yield return null;
         }
-        Say($"F3 it attacks: {stormSeen}; slams {colossus.Slams} sweeps {colossus.Sweeps} bolts {colossus.BoltsCalled}; struck the player {colossus.BlowsStruck} times, of which landed {defence.BlowsTaken - stormTaken}");
+        Say($"F3 it attacks: {stormSeen}; slams {colossus.Slams} sweeps {colossus.Sweeps} bolts {colossus.BoltsCalled} breaths {colossus.Breaths} bites {colossus.Bites} claps {colossus.Claps} lulls {colossus.Lulls}; struck the player {colossus.BlowsStruck} times, of which landed {defence.BlowsTaken - stormTaken}");
 
         // F4: a hand that has come down can be cut.
         yield return Until(() => colossus.LeftPart.Vulnerable || colossus.RightPart.Vulnerable, 20f);
@@ -206,7 +206,8 @@ public class SummitProbeRunner : MonoBehaviour
         }
         yield return new WaitForSeconds(1f);
         ScreenCapture.CaptureScreenshot("review/shots/current/storm_dying.png");
-        yield return Until(() => summit.Felled, 8f);
+        // His death is a scene of its own now: five seconds of it, and slowed at the start.
+        yield return Until(() => summit.Felled, 14f);
         Say($"F6 felled: storm dead {colossus.IsDead} director felled {summit.Felled} gods felled this run {RunState.GodsFelled}");
         yield return new WaitForSecondsRealtime(summit.RewardDelay + 2.5f);
 

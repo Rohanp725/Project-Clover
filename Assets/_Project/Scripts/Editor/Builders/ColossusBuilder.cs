@@ -78,8 +78,9 @@ namespace Clover.EditorTools
             colossus.FloorRadius = floorRadius;
 
             var skull = head.gameObject.AddComponent<SphereCollider>();
-            skull.center = new Vector3(0f, 2.5f, 0f);
-            skull.radius = 2.5f;
+            // The middle of the head itself, which in the model's own axes stands along +Z from the neck.
+            skull.center = new Vector3(0f, 0.3f, 3f);
+            skull.radius = 2.6f;
             var headPart = head.gameObject.AddComponent<ColossusPart>();
             headPart.Configure(colossus, skull, true, colossus.HeadDamage);
             var leftPart = Hand(leftHand, colossus, true);
@@ -99,28 +100,75 @@ namespace Clover.EditorTools
                 boltFills[i] = WorldBars.Marker("Bolt Fill " + (i + 1), marks, 0f, marker);
             }
 
-            var rope = BuildKit.Glow(Folder, "m_storm_tether", new Color(2.2f, 3.4f, 7f, 1f), 3, true, 1f);
-            var tethers = new LineRenderer[2];
+            var breathOutline = WorldBars.Marker("Breath Outline", marks, 0f, marker);
+            var breathFill = WorldBars.Marker("Breath Fill", marks, 0f, marker);
+            var biteOutline = WorldBars.Marker("Bite Outline", marks, 0f, marker);
+            var biteFill = WorldBars.Marker("Bite Fill", marks, 0f, marker);
+            var clapOutlines = new MeshFilter[2];
+            var clapFills = new MeshFilter[2];
             for (int i = 0; i < 2; i++)
             {
-                var lineObject = new GameObject(i == 0 ? "Left Tether" : "Right Tether");
-                lineObject.transform.SetParent(root.transform, false);
-                var line = lineObject.AddComponent<LineRenderer>();
-                line.useWorldSpace = true;
-                line.sharedMaterial = rope;
-                line.widthMultiplier = 0.42f;
-                line.numCornerVertices = 2;
-                line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-                line.receiveShadows = false;
-                tethers[i] = line;
+                clapOutlines[i] = WorldBars.Marker(i == 0 ? "Clap Outline West" : "Clap Outline East", marks, 0f, marker);
+                clapFills[i] = WorldBars.Marker(i == 0 ? "Clap Fill West" : "Clap Fill East", marks, 0f, marker);
             }
+            var roarRing = WorldBars.Marker("Roar Ring", marks, 0f, marker);
+            // As many pools as bolts can be burning at once: six bolts half a second apart, each pool two seconds.
+            const int Pools = 6;
+            var pools = new MeshFilter[Pools];
+            for (int i = 0; i < Pools; i++) pools[i] = WorldBars.Marker("Pool " + (i + 1), marks, 0f, marker);
+
+            // The ropes are the same stuff as the sky's bolts, and as thin: three strands to a hand, left hand first.
+            var rope = BuildKit.Glow(Folder, "m_storm_tether", new Color(1.7f, 2.4f, 3.9f, 1f), 3, true, 1f);
+            var tethers = new LineRenderer[6];
+            for (int i = 0; i < tethers.Length; i++)
+                tethers[i] = Bolt((i < 3 ? "Left Tether " : "Right Tether ") + (i % 3 + 1), root.transform, rope, 0.075f);
+            // The breath: one thick bolt down the lane and two thin ones wandering beside it.
+            var breath = BuildKit.Glow(Folder, "m_storm_breath", new Color(2.2f, 3f, 4.6f, 1f), 3, true, 1f);
+            var beam = new LineRenderer[3];
+            for (int i = 0; i < beam.Length; i++)
+                beam[i] = Bolt("Breath " + (i + 1), root.transform, breath, 0.5f);
 
             colossus.Configure(target, head, body, leftHand, rightHand, headPart, leftPart, rightPart, renderers.ToArray(),
                 slamOutline, slamFill, sweepOutline, sweepFill, boltOutlines, boltFills, tethers);
+            colossus.ConfigureSetPiece(breathOutline, breathFill, biteOutline, biteFill, clapOutlines, clapFills, roarRing, pools, beam);
+
+            // What is made of light on him, so the fight can turn it up and down: the eyes, and the scar and marks.
+            var glowing = new List<Renderer>();
+            var glowIndex = new List<int>();
+            var glowIsEye = new List<bool>();
+            foreach (var renderer in renderers)
+            {
+                var shared = renderer.sharedMaterials;
+                for (int i = 0; i < shared.Length; i++)
+                {
+                    bool eye = shared[i] == materials["eye"];
+                    if (!eye && shared[i] != materials["mark"]) continue;
+                    glowing.Add(renderer);
+                    glowIndex.Add(i);
+                    glowIsEye.Add(eye);
+                }
+            }
+            colossus.ConfigureGlow(glowing.ToArray(), glowIndex.ToArray(), glowIsEye.ToArray());
             // Over where the head comes to lie when its balance breaks; the camera here looks the same way as everywhere.
             var towardCamera = Camera.main != null ? Camera.main.transform.rotation : Quaternion.Euler(55f, 0f, 0f);
             colossus.ConfigureFeedback(WorldBars.FinishMark(root.transform, new Vector3(0f, 1.7f, floorRadius - 10f), 5f, towardCamera));
             return colossus;
+        }
+
+        private static LineRenderer Bolt(string name, Transform parent, Material material, float width)
+        {
+            var lineObject = new GameObject(name);
+            lineObject.transform.SetParent(parent, false);
+            var line = lineObject.AddComponent<LineRenderer>();
+            line.useWorldSpace = true;
+            line.sharedMaterial = material;
+            line.widthMultiplier = width;
+            // Hard corners: a bolt is kinked, not curved.
+            line.numCornerVertices = 0;
+            line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            line.receiveShadows = false;
+            line.enabled = false;
+            return line;
         }
 
         private static ColossusPart Hand(Transform hand, Colossus colossus, bool mirrored)

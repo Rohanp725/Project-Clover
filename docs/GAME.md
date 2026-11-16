@@ -446,28 +446,72 @@ banner on his back; the acolyte a hood, crossed wraps and a long scarf; the stor
     around the summit fall three times as often, and he gains the draw twice in a row.
 - *Not built*: his voice, and any sound.
 
-**Narukami's godly form, "the Storm Itself"** (built later the same night; Claude's design, not yet played by the user):
+**Narukami's godly form, "the Storm Itself"** (built later the same night and deepened the night after; Claude's design from the unattended overnight run, not yet played by the user):
 
 - *What it is*: when the swordsman falls he does not stay fallen. After a breath (the player is given back a third of
-  their health, no flasks), what he became rises out of the cloud beyond the summit's north edge: an oni's head with
+  their health, no flasks), what he became climbs out of the cloud beyond the summit's north edge: an oni's head with
   gold horns and a mane of white spikes, shoulders like a hill, and two clawed hands held to him by ropes of
   lightning. He is too large to stand on the floor. The pieces are rigid models moved by code (`Colossus.cs`), not a
-  skinned character. 760 health, and the bar across the bottom takes his new name.
-- *How he fights*: with his hands, which hang in the air either side of the player when idle.
-  - **The slam**: a pale circle follows the player for 0.85 s, stops, and 0.35 s later a hand comes down on it for 28.
-    It can be guarded, and a perfect guard throws 60 of the 170 his balance takes. The hand then lies where it fell
-    for two seconds.
-  - **Red: the sweep**: a red lane is drawn right across the floor through where the player stands, and after 1.25 s a
-    hand crosses it edge-on in half a second for 30. Roll through it or leave the lane. The hand lies spent at the
-    far edge for a second and a half.
-  - **Red: the bolts**: six circles, one every half second, each landing 0.95 s after it is drawn, for 16.
-  - Below half health he acts a quarter faster and slams twice, one hand after the other.
-- *How he is hurt*: a hand lying on the floor can be cut (three quarters of a blow's damage reaches him). Blows on
-  the hands and perfect guards wear down his balance; when it breaks, the head falls on its back on the floor for five
-  and a half seconds and takes blows at 160%, and a heavy blow on it is a finisher that takes at least 22% of all his
-  health and sends him back up. Hands hanging in the air cannot be reached.
-- *Not built*: any attack from the head itself (a breath, a bite); arms; a second phase of his own beyond the faster
-  pace; the afterimage and the upgrades were not tuned against him.
+  skinned character. 760 health, and the bar across the bottom takes his new name. Every number below is a named
+  field on `Colossus` or on its `ColossusChooser`.
+- *The entrance* (4.2 s; nothing in it hurts the player and nothing the player does counts): bolts fall round the rim
+  every 0.3 s and the floor shakes; at 1.0 s his left hand comes up over the rim and down on the floor, at 1.7 s the
+  right (each draws the pale circle of a slam first, so the first thing the fight shows is what a mark means; dust
+  and a shake, no damage); he hauls himself up on them, crown first; at 2.75 s the head stands up over the rim and at
+  3.2 s he roars: a pale ring crosses the whole floor in 0.8 s (seen only), the camera shakes, one hard frame of
+  white, the eyes flare, and the callout names him. Only at 4.2 s does the bar appear and the first attack come.
+  The camera looks further north for it (and for his death) than in the fight.
+- *How he fights*: with his hands, which hang in the air either side of the player when idle, and with his head.
+  - **The slam**: a pale circle (3 m) follows the player for 0.85 s, stops, and 0.35 s later a hand comes down on it
+    for 28. It can be guarded, and a perfect guard throws 60 of the 170 his balance takes. The hand then lies where it
+    fell for two seconds.
+  - **Red: the sweep**: a red lane 4.6 m wide is drawn right across the floor through where the player stands, and
+    after 1.25 s a hand crosses it edge-on in half a second for 30. Roll through it or leave the lane. The hand lies
+    spent at the far edge for a second and a half.
+  - **Red: the bolts**: six circles (2.3 m), one every half second, each landing 0.95 s after it is drawn, for 16.
+  - **Red: the breath** (the head): he rears up off the rim, his eyes flare to five times their light, and a red lane
+    5 m wide is drawn from the north rim through the player and on across the floor. It follows the player for 0.9 s,
+    holds for 0.4 s, and then for 0.8 s a beam of lightning stands in it, burning whoever is in it for 14 on contact
+    and again every 0.4 s. Step out of the lane or roll through it; a perfect guard turns one burn and throws 30 on
+    his balance. He hangs his head for 0.9 s afterwards (out of reach: a rest, not an opening).
+  - **The bite** (the head; only against a player who has stood within 7 m of the middle of the north rim for
+    1.2 s): the head comes in over the rim and stands up behind a pale circle (3.8 m) whose middle lies 3 m rimward
+    of the player; the circle follows for 0.8 s, holds 0.3 s, and the head falls flat on its face in it for 40. It
+    can be guarded (heavy: 36 stamina), and a perfect guard throws 60. Its crown lands at the player's feet, and it
+    is stuck there for 1.6 s: the head can be struck at plain damage (100%, not the broken head's 160%), with no
+    finisher.
+  - **The clap**: both hands draw 9 m apart either side of the player, level and edge-on, and two pale lanes (4.4 m
+    wide) grow from them toward each other along the east-west line through the player. They follow for 1.0 s, hold
+    0.4 s while the hands draw back a little further, and close in 0.16 s for 36. It can be guarded whichever way the
+    player faces, and a perfect guard counts as two (120 of his 170 balance). Leave the line north or south, or roll.
+    Both hands then lie stunned where they met for 2.6 s: the longest opening on the hands.
+- *How he chooses* (`ColossusChooser`, plain C#, with tests): the fight opens with a set pattern, slam, sweep,
+  breath, clap. After it: a player who has stood under the head long enough is bitten (never twice running); a player
+  south of the line 5 m below the floor's middle is breathed on six times in ten (never twice running, and never at
+  a player near the rim); otherwise by shares (slam 32, sweep 20, clap 18, bolts 18, breath 12 in a hundred). Nothing
+  comes three times running and only the slam twice (in his fury, where each slam is already two, not even that). Sweep, breath, bite and clap are heavy: after two of them the
+  next rest is a lull of 2.4 s instead of 0.9 s.
+- *Fury*, below half health: one flash, a shake and the callout mark it. He acts a quarter faster, slams twice (one
+  hand after the other), and rests 55% as long between attacks (the lull is not cut). The eyes burn 2.6 times and the
+  scar 1.35 times as bright, pulsing; bolts fall round the rim about every 0.9 s (scenery, off the floor); and each
+  bolt of the bolts attack leaves a red crackling pool (1.9 m) for 2 s that burns for 8 on contact and every 0.5 s.
+- *The ropes of lightning*: three thin strands from each shoulder to the wrist (the brightest 7.5 cm wide), kinked
+  at hard corners, redrawn twenty times a second and never all there at once; a hand that is attacking has all three
+  and 1.7 times the width.
+- *How he is hurt* (unchanged): a hand lying on the floor can be cut (three quarters of a blow's damage reaches
+  him). Blows on the hands and perfect guards wear down his balance; when it breaks, the head falls to the floor for
+  five and a half seconds and takes blows at 160%, and a heavy blow on it is a finisher that takes at least 22% of
+  all his health and sends him back up. Hands hanging in the air cannot be reached.
+- *The death* (5 s, then the rewards as before): everything stops on the last blow (0.35 s) and then runs slow; the
+  bar goes; the head stands up over the rim thrown back to the sky, cold light breaks out on one piece and then
+  another, and from 0.9 s the sky strikes him every 0.22 s; at 1.5 s the left rope parts and that hand falls away
+  into the cloud, at 2.0 s the right; at 2.6 s the head comes forward and at 3.0 s lands flat on its face across the
+  rim; at 3.6 s it slides back off the edge. Then the director's flash and bolt, "A god falls", the storm rods stop
+  and the sky's own flashes are set to one in 40 to 90 s.
+- *Not built*: his voice and any sound; arms; cracks drawn on the pieces in his death (it is their whole light that
+  flickers); a title card for his name (the scenes' card sits where his head is, so the callout and the bar name
+  him); the breath's own tell cannot be seen from the far south, where the head is out of the picture and the lane
+  is the whole warning; the afterimage and the upgrades were not tuned against him.
 
 **Take or consume** (built as the two things he leaves on the floor, chosen by walking up and using one):
 

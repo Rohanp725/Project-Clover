@@ -23,12 +23,16 @@ namespace Clover.World
         [SerializeField] private SceneDoor wayOut;
         [SerializeField] private Colossus colossus;
         [SerializeField] private BossHud bossHud;
+        [SerializeField] private StormLight stormOverhead;
 
         /// <summary>Real seconds after the god falls before what he leaves appears.</summary>
         public float RewardDelay = 3.2f;
         /// <summary>Real seconds between the swordsman's fall and the rising of what he became.</summary>
         public float RisingDelay = 2.4f;
         public string GodlyName = "Narukami,  the Storm Itself";
+        /// <summary>Seconds between the sky's own flashes once he has fallen: the storm is over, and the sky nearly still.</summary>
+        public float ClearedSkyMin = 40f;
+        public float ClearedSkyMax = 90f;
 
         public bool Felled { get; private set; }
         public bool HasChosen { get; private set; }
@@ -52,10 +56,11 @@ namespace Clover.World
         }
 
         /// <summary>Gives the god a godly form to rise when the swordsman falls, and the bar that will show it.</summary>
-        public void ConfigureSecondForm(Colossus godlyForm, BossHud hud)
+        public void ConfigureSecondForm(Colossus godlyForm, BossHud hud, StormLight sky = null)
         {
             colossus = godlyForm;
             bossHud = hud;
+            stormOverhead = sky;
         }
 
         private void Start()
@@ -68,7 +73,12 @@ namespace Clover.World
                 calmMin = rods.MinSecondsBetween;
                 calmMax = rods.MaxSecondsBetween;
             }
-            if (colossus != null) colossus.Died += OnColossusDied;
+            if (colossus != null)
+            {
+                colossus.Died += OnColossusDied;
+                colossus.Roared += OnColossusRoared;
+                colossus.Enraged += OnColossusEnraged;
+            }
             if (boss == null) return;
             boss.Died += OnBossDied;
             boss.PhaseChanged += OnPhaseChanged;
@@ -76,7 +86,12 @@ namespace Clover.World
 
         private void OnDestroy()
         {
-            if (colossus != null) colossus.Died -= OnColossusDied;
+            if (colossus != null)
+            {
+                colossus.Died -= OnColossusDied;
+                colossus.Roared -= OnColossusRoared;
+                colossus.Enraged -= OnColossusEnraged;
+            }
             if (boss == null) return;
             boss.Died -= OnBossDied;
             boss.PhaseChanged -= OnPhaseChanged;
@@ -125,6 +140,17 @@ namespace Clover.World
 
         private void OnColossusDied(Colossus who) => Fell(new Vector3(0f, 0f, 8f));
 
+        // His name is said when he says it himself: at the roar, as the bar that carries it appears.
+        private void OnColossusRoared(Colossus who)
+        {
+            if (player != null) player.Callout("The storm itself");
+        }
+
+        private void OnColossusEnraged(Colossus who)
+        {
+            if (player != null) player.Callout("The storm breaks");
+        }
+
         private void Fell(Vector3 where)
         {
             if (Felled) return;
@@ -135,10 +161,17 @@ namespace Clover.World
             ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.55f), 0.1f);
             LightningBolts.Strike(where, 1f);
             if (player != null) player.Callout("A god falls");
+            // The storm was his. With him gone the rods stand quiet and the sky all but stops flashing.
             if (rods != null)
             {
                 rods.MinSecondsBetween = 6f;
                 rods.MaxSecondsBetween = 14f;
+                rods.enabled = colossus == null;
+            }
+            if (stormOverhead != null && colossus != null)
+            {
+                stormOverhead.MinSecondsBetween = ClearedSkyMin;
+                stormOverhead.MaxSecondsBetween = ClearedSkyMax;
             }
             untilRewards = RewardDelay;
         }
@@ -159,7 +192,7 @@ namespace Clover.World
                 {
                     colossus.Rise();
                     if (bossHud != null) bossHud.Show(colossus, GodlyName);
-                    if (player != null) player.Callout("The storm itself");
+                    if (player != null) player.Callout("Something climbs");
                 }
             }
             if (untilRewards < 0f) return;
