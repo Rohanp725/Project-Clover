@@ -584,7 +584,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Meteor Leap** | Spell | 4 | Hold the spell button to leap out of the fight and come down on the enemy faced, leaving a burning crater. 50 mana. | Hold Triangle (U) to cast. 50 mana. |
 | **Long Embers** | Minor | 1 | Flame Trail burns longer on the ground. | Always on once it is yours. |
 | **Cinder Fan** | Spell | 4 | Hold the spell button to throw fire in a wide fan, close in. What it touches burns two deep. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
-| **Kiln Stance** | Spell | 4 | Hold the spell button to stand ready in flame for a moment. The first blow that reaches you, red or not, is turned and answered with a fan of fire that sets the attacker burning three deep. If no blow comes the mana is lost. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
+| **Kiln Stance** | Spell | 4 | Hold the spell button to stand ready in flame. The first blow that reaches you, red or not, is turned and answered with a pillar of fire. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
 | **Wide Hearth** | Minor | 1 | Backdraft and the detonation reach further. | Always on once it is yours. |
 | **Long Kindle** | Minor | 1 | Kindle lasts longer. | Always on once it is yours. |
 | **Hot Coals** | Minor | 1 | Spells strike burning enemies harder. | Always on once it is yours. |
@@ -592,14 +592,14 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Flashpoint** | Major | 3 | After a perfect dodge, your next blow within three seconds sets a burn three deep at once. | Happens when you dodge at the last moment (a perfect dodge). |
 | **Hot Footing** | Minor | 1 | Flame Trail bites harder. | Always on once it is yours. |
 | **Searing Edge** | Minor | 1 | Burns bite harder. | Always on once it is yours. |
-| **Sunspot** | Spell | 4 | Hold the spell button to brand the enemy faced for seven seconds. Each of your next six blows on it sets off a small burst of fire that strikes and burns all beside it. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Sunspot** | Spell | 4 | Hold the spell button to brand the enemy faced. Each blow you land feeds the brand, up to six. A heavy blow sets it off. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
 | **Open Furnace** | Keystone | 6 | A perfect guard sets off every burning enemy near you, not only the one who struck, and leaves each still alight. A plain guard lets more of the blow through. | Always on once it is yours. |
 | **Slow Fuse** | Minor | 1 | Burns last longer. | Always on once it is yours. |
 | **Dry Tinder** | Minor | 1 | Your weapon cuts deeper into a burning enemy. | Always on once it is yours. |
-| **Wildfire Rush** | Spell | 4 | Hold the spell button to drive seven metres through the enemies ahead, untouchable, and come out facing back. Each one on the line is struck once and set burning two deep. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
-| **Scorched Earth** | Keystone | 6 | Kindle lasts longer and your blows give more mana. Your spells cost more. | Always on once it is yours. |
+| **Wildfire Rush** | Spell | 4 | Hold the spell button to drive through the enemies ahead in a line of fire. Each one passed is set burning and raises your Heat. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Scorched Earth** | Keystone | 6 | Fire you leave on the ground burns twice as long. While you stand in it Kindle does not run down and your blows give more mana. Your spells cost more. | Always on once it is yours. |
 | **White Heat** | Keystone | 6 | Heat rises to eight, and above five your blows come faster. Struck above five, you burn. | Always on once it is yours. |
-| **Falling Sun** | Signature | gift | When Kindle is lit a sun rises over the fight. While it hangs, every burn near you deepens by itself. When Kindle ends, or when you press the surge button again, it falls on the enemy you face, heavier for every burn it finds. A blow taken puts it out. | Happens when you light the surge (press L2 (I)). |
+| **Falling Sun** | Signature | gift | Light Kindle and the sun begins its road. At dawn it is rolled along the ground to the enemy you face, and the ground it crosses burns. At noon it is carried up, and every burn near you deepens by itself. When Kindle ends, or when you press the surge button again, it sets on the enemy below it, heavier for every burn it finds. A blow taken sends it under, to rise again. | Happens when you light the surge (press L2 (I)). |
 
 #### Lightning (36)
 
@@ -611,7 +611,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Heavy Air** | Minor | 1 | Static stays longer on an enemy. | Always on once it is yours. |
 | **Conductor** | Major | 3 | Thunderclap leaves Static two deep on all it strikes, and sets off an enemy already at five. | Happens when a spell of yours strikes an enemy. |
 | **Third Leap** | Minor | 1 | Thunderclap leaps to one more enemy. | Always on once it is yours. |
-| **Deep Reserve** | Major | 3 | For four seconds after a perfect guard, every blow lands 30% harder and staggers 30% more. | Happens when you guard at the last moment (a perfect guard). |
+| **Deep Reserve** | Major | 3 | Perfect guards bank up to three charges. Each blow spends one. | Always on once it is yours. |
 | **Blink** | Major | 3 | Each dodge sends a line of lightning down its path that shocks whatever it crosses. | Always on once it is yours. |
 | **Open Seam** | Minor | 1 | Blows on an enemy carrying Static are critical more often. | Always on once it is yours. |
 | **Forked Step** | Minor | 1 | Blink shocks a wider path. | Always on once it is yours. |
@@ -625,7 +625,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Quick Hands** | Minor | 1 | The weapon is swung a little faster. | Always on once it is yours. |
 | **Full Discharge** | Major | 3 | A discharge of five Static holds its enemy still for a moment and gives mana. | Happens when you set off an affliction. |
 | **Lightning Rod** | Spell | 4 | Hold the spell button to plant a rod two metres ahead. For eight seconds bolts fall inside a circle round it, each laying Static. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **Waiting Thunder** | Spell | 4 | Hold the spell button to hang five bolts at your shoulder for ten seconds. One flies at the nearest enemy every half second or so. A heavy blow that lands sends all that are left at the one it struck. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Waiting Thunder** | Spell | 4 | Hold the spell button to hang five bolts at your shoulder. Each blow you land sends one down with it. A heavy blow sends all that are left. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
 | **Afterimage** | Major | 3 | A dodge at the last moment leaves a copy of you that strikes where you stood. | Always on once it is yours. |
 | **Bright Echo** | Minor | 1 | The copy left by Afterimage strikes harder. | Always on once it is yours. |
 | **Live Wire** | Major | 3 | Casting any spell lays a line of lightning on the ground eight metres ahead of you for four seconds. Enemies standing on it are shocked and gather Static. This can happen once every six seconds. | Happens when you cast a spell (Triangle (U)). |
@@ -636,7 +636,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Seven Flashes** | Spell | 4 | Hold the spell button to cut through up to seven enemies in one breath and return to where you stood. The cuts land together when you are still. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
 | **Long Overdrive** | Minor | 1 | Overdrive lasts longer. | Always on once it is yours. |
 | **Slipstream** | Major | 3 | A dodge at the last moment quickens your feet and your weapon for a while. | Happens when you dodge at the last moment (a perfect dodge). |
-| **Lodestone** | Spell | 4 | Hold the spell button to drag every enemy within five metres to a point just ahead of you, then burst it there with a heavy blow that lays Static. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Lodestone** | Spell | 4 | Hold the spell button to drag every enemy near toward you, further for each Static on it, then set all of it off at once. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
 | **Never There** | Keystone | 6 | Every dodge carries further and a perfect dodge costs nothing. A blow held on your guard costs twice the stamina. | Happens when you dodge at the last moment (a perfect dodge). |
 | **Overclock** | Keystone | 6 | Overdrive opens with a breath in which everything but you is slowed. Each perfect guard or perfect dodge while it lasts opens another. Overdrive costs more mana. | Happens when you guard at the last moment (a perfect guard), while the surge lasts (press L2 (I)). |
 | **Chain Lance** | Spell | 4 | Hold the spell button to throw a bolt that leaps through four more and leaves Static on each. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
@@ -674,7 +674,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Indrawn Breath** | Spell | 4 | Hold the spell button to drag everything near into one place before you, then burst it apart. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
 | **Sky Dance** | Spell | 4 | Hold the spell button to throw the enemy faced into the air and go up beside it. Press the light attack as each of five rings closes for a harder cut. Then the stick chooses where it is thrown down, and it bursts harder for each cut in time. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
 | **Leaf on the Wind** | Keystone | 6 | The dodge costs no stamina. It spends a breath of wind instead: you hold three, and time and blows win them back. With none you cannot dodge. You are easier to wound. | Always on once it is yours. |
-| **Storm Front** | Keystone | 6 | Every heavy blow that lands throws a cone of wind that leaves enemies Unsteady, and pushes everything near you away. Your blows give a quarter less mana. | Happens when a heavy blow lands. |
+| **Storm Front** | Keystone | 6 | Every heavy blow that lands throws a Gust with it at no cost. Your blows give less mana. | Always on once it is yours. |
 | **Nothing Beneath** | Keystone | 6 | An enemy in the air stays there for as long as you keep striking it, and each blow up there gives double mana. Your blows on an enemy that is not Unsteady are weaker. | Always on once it is yours. |
 | **The Wind Remembers** | Signature | gift | While Tailwind lasts, every blow you land hangs in the air where it fell, up to sixteen. When Tailwind ends, all of them fall again at once, each half as hard as the blow it remembers. | Happens when you light the surge (press L2 (I)). |
 
@@ -971,11 +971,11 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 |---|---|---|---|---|
 | **Charged Embers** | Mix | 3 | Your blows lay Burn and Static together. | Happens when any weapon blow lands. |
 | **Arc Fire** | Mix | 3 | A discharge of Static carries Burn to everyone it reaches. A burn set off leaves Static on everyone it reaches. | Happens when you set off an affliction. |
-| **Twin Break** | Mix | 4 | A perfect guard sets off the Burn on the one who struck, and the Static on it too, each in a burst that strikes all beside it. | Happens when you guard at the last moment (a perfect guard). |
+| **Twin Break** | Mix | 4 | A perfect guard sets off Burn and Static together on the one who struck. Set off together, they strike half again as hard and stop it where it stands. | Happens when you guard at the last moment (a perfect guard). |
 | **Ball Lightning** | Mix | 4 | Hold the spell button to loose a slow ball of white fire. Strike it to send it where the blow points, larger each time, up to three. It bursts on the first enemy it meets. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
 | **Chain Reaction** | Mix | 4 | An enemy that dies carrying both Burn and Static bursts, and passes both on at full depth. | Happens when an enemy dies. |
 | **Ionised Air** | Mix | 3 | When an affliction on an enemy reaches full depth, an arc leaps from it through three more. | Happens when an affliction on an enemy reaches its full depth. |
-| **Meltdown** | Mix | 5 | When any affliction reaches full depth on an enemy that carries Static, it bursts two seconds later and strikes everything within five metres. This can happen once every six seconds. | Happens when an affliction on an enemy reaches its full depth. |
+| **Meltdown** | Mix | 5 | An enemy at five Burn and five Static begins to shake with light. A few moments later it bursts, far harder than either alone. Nothing stops it. | Always on once it is yours. |
 | **Fused Core** | Mix | 4 | Spells hit harder, and leave both a burn and Static on what they strike. | Happens when a spell of yours strikes an enemy. |
 | **Plasma Lance** | Mix | 5 | Hold the spell button to throw a bolt of plasma that leaps through three more. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
 | **Plasma** | Signature | gift | A heavy blow or a finisher on a burning enemy bursts, and sets alight everyone near. | Always on once it is yours. |
