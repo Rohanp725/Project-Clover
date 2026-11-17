@@ -10,6 +10,8 @@ Shader "Clover/Spell"
         _Hot ("Heat (0 = its colour, 1 = white)", Range(0, 1)) = 0
         _OutlineWidth ("Ink width (metres)", Float) = 0.035
         _OutlineColor ("Ink colour", Color) = (0.035, 0.02, 0.07, 1)
+        _Sheen ("White on faces turned to the light", Range(0, 1)) = 0.42
+        _Thin ("Thinness (share of it stippled away: smoke, air)", Range(0, 1)) = 0
     }
 
     SubShader
@@ -33,7 +35,15 @@ Shader "Clover/Spell"
                 half _Hot;
                 half _OutlineWidth;
                 half4 _OutlineColor;
+                half _Sheen;
+                half _Thin;
             CBUFFER_END
+
+            // A fixed pattern over the screen, 0 to 1: thin stuff is drawn on only some of its pixels.
+            half Stipple(float2 pixel)
+            {
+                return frac(52.9829189 * frac(dot(floor(pixel), float2(0.06711056, 0.00583715)))) + 0.001;
+            }
 
             struct Attributes
             {
@@ -62,13 +72,14 @@ Shader "Clover/Spell"
 
             half4 Frag(Varyings input) : SV_Target
             {
+                clip(Stipple(input.positionCS.xy) - _Thin);
                 half3 normal = normalize(input.normalWS);
                 // The form's own light: from above and a little toward the camera's left, wherever the scene's sun is.
                 half lit = dot(normal, normalize(half3(-0.35, 0.8, -0.45)));
                 half facing = saturate(dot(normal, normalize(input.viewWS)));
                 half3 colour = _Color.rgb;
                 half3 shade = colour * half3(0.34, 0.3, 0.5);
-                half3 core = colour * 1.25 + half3(0.42, 0.42, 0.42);
+                half3 core = colour * 1.25 + half3(_Sheen, _Sheen, _Sheen);
                 half3 shown = lit > 0.72 ? core : lit > -0.05 ? colour : shade;
                 // A thin rim of the bright tone where a face turns away: it keeps the shape's edge inside the ink.
                 shown = facing < 0.2 ? lerp(shown, core, 0.5) : shown;
@@ -95,7 +106,15 @@ Shader "Clover/Spell"
                 half _Hot;
                 half _OutlineWidth;
                 half4 _OutlineColor;
+                half _Sheen;
+                half _Thin;
             CBUFFER_END
+
+            // A fixed pattern over the screen, 0 to 1: thin stuff is drawn on only some of its pixels.
+            half Stipple(float2 pixel)
+            {
+                return frac(52.9829189 * frac(dot(floor(pixel), float2(0.06711056, 0.00583715)))) + 0.001;
+            }
 
             struct Attributes
             {
@@ -121,6 +140,7 @@ Shader "Clover/Spell"
 
             half4 Frag(Varyings input) : SV_Target
             {
+                clip(Stipple(input.positionCS.xy) - _Thin);
                 // At full heat the whole shape is one white frame, line and all.
                 return half4(lerp(_OutlineColor.rgb, half3(2.3, 2.3, 2.3), step(0.95, _Hot)), 1);
             }
@@ -144,7 +164,15 @@ Shader "Clover/Spell"
                 half _Hot;
                 half _OutlineWidth;
                 half4 _OutlineColor;
+                half _Sheen;
+                half _Thin;
             CBUFFER_END
+
+            // A fixed pattern over the screen, 0 to 1: thin stuff is drawn on only some of its pixels.
+            half Stipple(float2 pixel)
+            {
+                return frac(52.9829189 * frac(dot(floor(pixel), float2(0.06711056, 0.00583715)))) + 0.001;
+            }
 
             struct Attributes
             {
@@ -158,8 +186,9 @@ Shader "Clover/Spell"
                 return TransformObjectToHClip(input.positionOS.xyz);
             }
 
-            half4 Frag() : SV_Target
+            half4 Frag(float4 positionCS : SV_POSITION) : SV_Target
             {
+                clip(Stipple(positionCS.xy) - _Thin);
                 return 0;
             }
             ENDHLSL

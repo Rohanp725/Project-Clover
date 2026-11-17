@@ -115,7 +115,32 @@ namespace Clover.Gameplay
                 if (balanceRow.activeSelf != some) balanceRow.SetActive(some);
             }
             ShowPips();
+            ShowOnBody();
             MakeRoom();
+        }
+
+        private float untilLook;
+        private int lookKind, lookBeat;
+
+        // Each affliction carried is also seen on the body itself, as the stuff of its element: one small piece at a
+        // time, the afflictions taking turns, on the game's own clock.
+        private void ShowOnBody()
+        {
+            if (watched == null || PipsShown == 0 || transform.parent == null) return;
+            untilLook -= Time.deltaTime;
+            if (untilLook > 0f) return;
+            for (int tried = 1; tried < Afflictions.Count; tried++)
+            {
+                lookKind = lookKind % (Afflictions.Count - 1) + 1;
+                var affliction = (AfflictionKind)lookKind;
+                int depth = watched.Stacks(affliction);
+                if (depth <= 0) continue;
+                // Two pieces at a time, so there is always something of it on the body.
+                for (int piece = 0; piece < 2; piece++)
+                    Clover.Player.Forms.AfflictionLook.Show(affliction, depth, affliction == AfflictionKind.Chill && watched.IsFrozen, transform.parent.position, lookBeat++);
+                untilLook = Mathf.Max(0.08f, Clover.Player.Forms.AfflictionLook.Interval(depth) / PipsShown);
+                return;
+            }
         }
 
         // One pip for each affliction carried, in the order the elements stand. A pip is repainted only when what it shows changes.

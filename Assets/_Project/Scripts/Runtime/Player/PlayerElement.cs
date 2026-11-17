@@ -1,4 +1,5 @@
 using Clover.Core;
+using Clover.Player.Forms;
 using Clover.Gameplay;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -85,6 +86,13 @@ namespace Clover.Player
             Kit = kit;
             Kit.Reset();
             Info = Elements.ByNameOrFire(kit.Name);
+            // The old element's surge is not left on the body, and spells are made of the new one's stuff.
+            if (surgeShown)
+            {
+                SurgeLook.End(surgePieces);
+                surgeShown = false;
+            }
+            ElementSubstance.Hold(Info);
             Colour = Info.Glow;
             // The run remembers every element that has been in the player's hands: a mixed branch opens on it.
             RunState.ElementsHeld.Add(Info.Name);
@@ -270,8 +278,26 @@ namespace Clover.Player
             }
         }
 
+        private readonly int[] surgePieces = { -1, -1, -1, -1, -1, -1 };
+        private bool surgeShown;
+
+        private void OnDisable()
+        {
+            SurgeLook.End(surgePieces);
+            surgeShown = false;
+        }
+
         private void LateUpdate()
         {
+            // The surge is worn: taken up when it is lit, placed round the body every frame, put away when it ends.
+            bool surging = Kit != null && Kit.SurgeActive;
+            if (surging != surgeShown)
+            {
+                surgeShown = surging;
+                if (surging) SurgeLook.Begin(Info, surgePieces);
+                else SurgeLook.End(surgePieces);
+            }
+            if (surging) SurgeLook.Place(Info, surgePieces, transform.position, Time.time);
             if (glow == null) return;
             float resting = Kit.SurgeActive ? GlowWhenSurging * (0.85f + 0.15f * Mathf.Sin(Time.time * 17f)) : 0f;
             glowLevel = Mathf.MoveTowards(glowLevel, resting, Time.deltaTime * 30f);
@@ -318,7 +344,7 @@ namespace Clover.Player
             SpellHits += form.Cast(cast);
             Clover.World.Hazards.Growing = false;
             // The pull of a tide or a grasping hand, or the push of a gust, on what stands within its reach.
-            if (Kit.SpellPull != 0f) combat.Displace(transform.position, cast.Reach, Mathf.Abs(Kit.SpellPull), Kit.SpellPull > 0f);
+            if (Kit.SpellPull != 0f && string.IsNullOrEmpty(Kit.SpellForm)) combat.Displace(transform.position, cast.Reach, Mathf.Abs(Kit.SpellPull), Kit.SpellPull > 0f);
             glowLevel = GlowWhenCasting;
             if (shaker != null) shaker.Shake(0.14f, 0.2f);
             if (upgrades != null) upgrades.OnSpellCast();

@@ -1333,3 +1333,25 @@ Built to their designs, with these **defaults of Claude's, open to change**:
 **124 other marks were reworded** to say only what they do today, because they were not built that night. Their
 old words and their designs are in `docs/design/marks_reworded.md`; the wording of each new description is Claude's
 and open to change, and the designed versions remain the intent.
+
+### Each element's moves are its own substance (2026-11-16, night)
+
+**The owner's word of 2026-11-16:** "each elemental move should feel like what it is doing and feel different than
+just different colored attack. So stuff like the riptide should actually show a wave come up and go towards you
+knocking people towards you". **Riptide is exactly that:** a wave rises five metres ahead of the player, rolls back
+toward them, strikes and carries everything in its path with it, and breaks 1.3 m in front of their feet, leaving
+what it carried Soaked and in sword reach.
+
+Everything else in this pass is **Claude's default, not yet played by the owner**:
+
+- The other ten tap spells each do what their stuff would do (table in `docs/design/FORMS.md`). Costs, damage and
+  afflictions are as they were. What changed in play: Gust throws straight down the wind instead of outward; Hoarfrost
+  leaves crystals a weapon blow can shatter (5 damage, one more Chill); Flame Wave leaves three patches burning 3 s;
+  Stone Rise leaves a wall behind the enemy for 4.5 s; Flung Blade bites for a quarter as it lands and cuts on its way
+  back to the hand; Glare is a narrow ray, not a wide flash (it rewards facing); Grasp is slow enough to watch, draws
+  in what it passes and drags up to five; Miasma creeps after the nearest enemy.
+- The surge is worn on the body as the element's stuff, and each affliction is seen on the enemy as its element's
+  stuff as well as the pip.
+- Spell forms shared by all elements are drawn in the held element's stuff (`ElementSubstance`).
+- Kept house rules: nothing here reaches farther than the spell it replaced except Glare's ray (5.5 m against 4 m,
+  but 1.4 m wide instead of a 90 degree fan); every shape is a hard-edged inked solid readable from the game camera.

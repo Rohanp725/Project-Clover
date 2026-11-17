@@ -110,6 +110,8 @@ namespace Clover.Player
             SpellName = "Flame Wave",
             SurgeName = "Kindle",
             Shape = SpellShape.Wave,
+            // Flame runs out along the cone and three patches of it burn on for three seconds.
+            SpellForm = SpellForms.Tap,
             SpellDamage = consumed ? 28f : 20f,
             SpellBurnSeconds = consumed ? 7f : 5f,
             SpellReach = consumed ? 6.5f : 5.5f,
@@ -135,6 +137,8 @@ namespace Clover.Player
             SpellReach = 10f,
             SpellBurnSeconds = 0f,
             SpellLeaps = 2,
+            // Its own form reads the leaps as a count and the leap's range as a radius.
+            SpellForm = SpellForms.Tap, SpellCount = 2, SpellRadius = 5f,
             SurgeDamage = 1.1f,
             SurgeBurnSeconds = 0f,
             SurgeSpeed = 1.3f,
@@ -148,8 +152,8 @@ namespace Clover.Player
         /// <summary>Wind: a long narrow gust that leaves enemies Unsteady. The surge is the better dodge.</summary>
         public static ElementKit Wind() => Plain(Elements.Wind, "Gust", "Tailwind", SpellShape.Wave, 20f, 8f, 20f, 5f, 70f, 2, new ElementKit
         {
-            // A short cone that does little harm and throws what it reaches three metres off.
-            SpellPull = -3f, SurgeCost = 35f,
+            // A rush of air that does little harm, throws what it reaches three metres straight down the wind.
+            SpellForm = SpellForms.Tap, SurgeCost = 35f,
             SurgeDamage = 1f, SurgeStacks = 1,
             SurgeMods = new[] { new StatMod(PlayerStat.DodgeDistance, 0.3f), new StatMod(PlayerStat.DodgeSafeTime, 0.25f), new StatMod(PlayerStat.DodgeStamina, -0.5f), new StatMod(PlayerStat.SurgeSpeed, 0.15f) },
         });
@@ -157,6 +161,8 @@ namespace Clover.Player
         /// <summary>Ice: a short wide fan of cold. The surge is a barrier that turns aside the next blow.</summary>
         public static ElementKit Ice() => Plain(Elements.Ice, "Hoarfrost", "Glaze", SpellShape.Wave, 25f, 10f, 15f, 4.5f, 110f, 2, new ElementKit
         {
+            // Crystals grow out along the fan and stand four seconds; a blow of the weapon among them shatters the lot.
+            SpellForm = SpellForms.Tap, SpellSeconds = 4f,
             SurgeSeconds = 12f,
             SurgeDamage = 1f, SurgeStacks = 1, SurgeWards = 1,
         });
@@ -164,8 +170,8 @@ namespace Clover.Player
         /// <summary>Water: a broad wave that soaks. The surge makes flasks heal more.</summary>
         public static ElementKit Water() => Plain(Elements.Water, "Riptide", "Wellspring", SpellShape.Wave, 20f, 8f, 18f, 5f, 90f, 1, new ElementKit
         {
-            // A low wave that comes back: what it touches is drawn two metres toward the player.
-            SpellPull = 2f, SurgeCost = 30f, SurgeSeconds = 12f,
+            // The owner's word: a wave rises five metres ahead and rolls back to the player, carrying what it reaches to their feet.
+            SpellForm = SpellForms.Tap, SurgeCost = 30f, SurgeSeconds = 12f,
             SurgeDamage = 1f, SurgeStacks = 1,
             SurgeMods = new[] { new StatMod(PlayerStat.FlaskHeal, 0.5f) },
         });
@@ -173,8 +179,8 @@ namespace Clover.Player
         /// <summary>Life: a lash of thorn that seeds one enemy and the one beside it. The surge heals.</summary>
         public static ElementKit Life() => Plain(Elements.Life, "Briar Patch", "Regrowth", SpellShape.Wave, 20f, 4f, 0f, 3f, 0f, 1, new ElementKit
         {
-            // A bed of thorns three metres ahead that stands six seconds and bites twice a second.
-            SpellForm = SpellForms.Field, SpellRadius = 1.25f, SpellSeconds = 6f, SpellInterval = 0.5f, SpellLinger = 4f,
+            // A bed of thorned vines three metres ahead that flowers, stands six seconds and bites twice a second.
+            SpellForm = SpellForms.Tap, SpellRadius = 1.25f, SpellSeconds = 6f, SpellInterval = 0.5f, SpellLinger = 4f,
             SurgeSeconds = 6f, SurgeMendsGrey = true,
             SurgeDamage = 1f, SurgeStacks = 1, SurgeHealPerSecond = 4f,
         });
@@ -182,8 +188,8 @@ namespace Clover.Player
         /// <summary>Earth: a short heavy shove of stone that shakes the ground under what it hits. The surge is standing firm.</summary>
         public static ElementKit Earth() => Plain(Elements.Earth, "Stone Rise", "Bedrock", SpellShape.Wave, 25f, 14f, 30f, 5f, 0f, 1, new ElementKit
         {
-            // A pillar of rock up under the enemy faced.
-            SpellForm = SpellForms.Pillars, SpellCount = 1, SpellRadius = 1.3f, SpellDelay = 0.25f,
+            // Rock up under the enemy faced, and a wall of it left standing behind them for four and a half seconds.
+            SpellForm = SpellForms.Tap, SpellCount = 1, SpellRadius = 1.3f, SpellDelay = 0.25f, SpellSeconds = 4.5f,
             SurgeDamage = 1f, SurgeStacks = 1, SurgeStagger = 6f,
             SurgeMods = new[] { new StatMod(PlayerStat.DamageTaken, -0.2f) },
         });
@@ -191,8 +197,8 @@ namespace Clover.Player
         /// <summary>Metal: a narrow spray of shards that breaks armour. The surge is defence.</summary>
         public static ElementKit Metal() => Plain(Elements.Metal, "Flung Blade", "Temper", SpellShape.Wave, 25f, 12f, 15f, 9f, 0f, 1, new ElementKit
         {
-            // A blade left standing in the enemy faced for six seconds; the next blow of the weapon drives it in.
-            SpellForm = SpellForms.Brand, SpellCount = 1, SpellRadius = 1.5f, SpellSeconds = 6f,
+            // A blade thrown into the enemy faced stands there six seconds; the next blow of the weapon drives it in, and it flies back to the hand.
+            SpellForm = SpellForms.Tap, SpellCount = 1, SpellRadius = 1.5f, SpellSeconds = 6f,
             SurgeDamage = 1f, SurgeStacks = 1,
             SurgeMods = new[] { new StatMod(PlayerStat.DamageTaken, -0.3f) },
         });
@@ -200,7 +206,8 @@ namespace Clover.Player
         /// <summary>Light: a lance on one enemy far off, which marks it. The surge mends what the guard lost and marks everyone near.</summary>
         public static ElementKit Light() => Plain(Elements.Light, "Glare", "Clarity", SpellShape.Wave, 25f, 8f, 22f, 4f, 90f, 1, new ElementKit
         {
-            // Grey health made whole at once, and for eight seconds the perfect moments are half again as long.
+            // The spell is a narrow ray. The surge: grey health made whole at once, and for eight seconds the perfect moments are half again as long.
+            SpellForm = SpellForms.Tap,
             SurgeSeconds = 8f,
             SurgeDamage = 1f, SurgeStacks = 1, SurgeMendsGrey = true,
             SurgeMods = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 0.5f), new StatMod(PlayerStat.DodgeSafeTime, 0.5f) },
@@ -210,15 +217,15 @@ namespace Clover.Player
         public static ElementKit Dark() => Plain(Elements.Dark, "Grasp", "Hunger", SpellShape.Bolt, 25f, 10f, 12f, 6f, 0f, 1, new ElementKit
         {
             // A hand of shadow to the enemy faced that drags it to the feet. Hunger asks no mana: its price is health.
-            SpellLeaps = 0, SpellPull = 5f, SurgeCost = 0f,
+            SpellForm = SpellForms.Tap, SpellLeaps = 0, SurgeCost = 0f,
             SurgeDamage = 1.3f, SurgeStacks = 1, SurgeHealPerSecond = -3f, SurgeLeech = 0.3f,
         });
 
         /// <summary>Poison: a spit of venom in a cone, two deep. The surge heals a little with every blow on a poisoned enemy.</summary>
         public static ElementKit Poison() => Plain(Elements.Poison, "Miasma", "Fever", SpellShape.Wave, 25f, 1f, 0f, 4f, 0f, 1, new ElementKit
         {
-            // A cloud four metres ahead that hangs four seconds and doses what stands in it once a second.
-            SpellForm = SpellForms.Field, SpellRadius = 1.25f, SpellSeconds = 4f, SpellInterval = 1f, SpellLinger = 1f,
+            // A cloud four metres ahead that hangs four seconds, creeps after the nearest enemy and doses what stands in it once a second.
+            SpellForm = SpellForms.Tap, SpellRadius = 1.25f, SpellSeconds = 4f, SpellInterval = 1f, SpellLinger = 1f,
             SurgeDamage = 1f, SurgeStacks = 1, SurgeLeech = 0.06f, SurgeHealPerSecond = 1f,
         });
 

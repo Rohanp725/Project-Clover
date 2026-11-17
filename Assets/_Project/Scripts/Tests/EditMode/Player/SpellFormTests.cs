@@ -11,10 +11,10 @@ namespace Clover.Tests
     /// <summary>The library of spell forms: every name the trees may use is there, forms keep nothing between casts, and the plain geometry they share is right.</summary>
     public class SpellFormTests
     {
-        // The ids fixed in docs/design/FORMS.md, and the four that were there before them.
+        // The ids fixed in docs/design/FORMS.md, and the five that are not on the rack: the four that were there before them and the elements' own tap spells.
         private static readonly string[] Promised =
         {
-            "wave", "bolt", "leap", "rod",
+            "wave", "bolt", "leap", "rod", "tap",
             "blades", "sword", "beam", "phalanx", "dragon", "nova", "orb", "bomb", "spikes", "field", "drill", "minions",
             "bullets", "reverse", "parry", "wall", "discs", "brand", "rain", "clone", "flash", "ring", "pillars", "step",
         };
@@ -53,7 +53,7 @@ namespace Clover.Tests
         [Test]
         public void EveryNewFormHasOneSampleSpellThatNamesIt()
         {
-            foreach (string id in Promised.Skip(4))
+            foreach (string id in Promised.Skip(5))
             {
                 var sample = FormSamples.Of(id);
                 Assert.IsNotNull(sample, $"The form '{id}' has no sample spell for the yard's rack.");
@@ -61,7 +61,7 @@ namespace Clover.Tests
                 Assert.IsNotNull(Elements.ByName(sample.Element), $"The sample of '{id}' names no element.");
                 Assert.IsFalse(sample.Name.Contains("!"));
             }
-            Assert.AreEqual(Promised.Length - 4, FormSamples.All.Count);
+            Assert.AreEqual(Promised.Length - 5, FormSamples.All.Count);
             // Between them the samples show every element's colour.
             Assert.AreEqual(Elements.Count, FormSamples.All.Select(sample => sample.Element).Distinct().Count());
         }

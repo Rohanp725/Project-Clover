@@ -66,6 +66,7 @@ namespace Clover.Player.Forms
             FormFx.Lay(FormMark.Scorch, at, radius * 2.1f, Stain(cast.Colour), 2.5f + 2f * weight, -1f, 0f, Random.value * 360f);
             if (weight >= 0.6f) FormFx.Lay(FormMark.Crack, at, radius * (2f + 0.5f * weight), Lit(cast.Colour, 2f), 0.9f + 0.7f * weight, -1f, 0f, Random.value * 360f);
             ElementLook.Sparks(cast.Element, above, Vector3.up, 1f + weight);
+            ElementSubstance.Burst(cast, at, radius, weight);
             int puffs = Mathf.Clamp(Mathf.RoundToInt(3f + 3f * weight), 3, 8);
             for (int i = 0; i < puffs; i++)
                 ElementLook.Puff(cast.Element, at + FormRules.OnRing(i, puffs, radius * 0.6f) + Vector3.up * 0.4f, Vector3.up, 0.5f + 0.25f * weight);

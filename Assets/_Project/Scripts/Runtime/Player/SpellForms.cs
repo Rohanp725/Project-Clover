@@ -12,6 +12,8 @@ namespace Clover.Player
     {
         /// <summary>A cone thrown ahead that strikes everything in it. Reads: Damage, Stagger, Reach, Arc, Stacks.</summary>
         public const string Wave = "wave";
+        /// <summary>The eleven tap spells: each element's own, by the element it is cast in.</summary>
+        public const string Tap = "tap";
         /// <summary>A bolt on the enemy faced that leaps on to others. Reads: Damage, Stagger, Reach, Count (leaps), Radius (how far each leap can be), Stacks.</summary>
         public const string Bolt = "bolt";
         /// <summary>A leap out of the fight, down beside the enemy faced, and a crater. Reads: Reach, Seconds (in the air), Height, Damage, Stagger, Radius, LingerDamage, Stacks.</summary>
@@ -129,6 +131,7 @@ namespace Clover.Player
         private static readonly ISpellForm[] all =
         {
             new WaveForm(),
+            new TapForm(),
             new BoltForm(),
             new LeapForm(),
             new RodForm(),

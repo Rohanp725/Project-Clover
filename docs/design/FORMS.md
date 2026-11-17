@@ -74,3 +74,38 @@ the GOD GIFT and CONSUME NEXT shrines give them. Storm Step (Lightning) and Plas
 | `skydance` | Sky Dance (Wind) | worn spell | The enemy faced is thrown up (what cannot be lifted reels and is danced on the ground) and the player goes up beside it, untouchable. Count rings close on it, one every Interval; a light attack in the last 45% of a ring is a cut in time (half again the Damage, a star), earlier a plain cut at once, none a plain cut as the ring closes. Then for 0.45 s (or until a heavy attack) a lane and a circle follow the stick; the enemy is carried Reach down the lane and bursts where it comes to rest: twice Damage plus LingerDamage for each cut in time, Stagger, heavy, in Radius. With no enemy faced the mana is lost. | Count, Interval, Damage, Stagger, Reach, Radius, LingerDamage, Stacks |
 | `circle` | Closing Circle (Wind) | worn spell | Needs an enemy within Reach. The player runs one full ring round it in 0.7 s (the ring is as wide as they stood from it, 2 m at least and Radius at most), untouchable, drawing a line behind; the line snaps inward in 0.2 s, a column stands in it, and everything inside takes Damage, Stagger and Stacks and is thrown up for Seconds. The player ends where they began, facing in. Deviation from the design: untouchable for the whole run, not the first half; no blow breaks the line. |
 | `eye` | Eye of the Storm (Tempest) | worn spell | While the spell button stays held (Seconds at most, half a second at least) a turning ring Radius wide follows the player, who walks at 70%, takes half and cannot be made to flinch. Enemies inside are dragged in at 2 m a second; every Interval each takes Damage and Stacks of the held element's affliction and those that can leave the ground are lifted and carried round. Let go: all are thrown Reach metres outward and 0.32 s later a bolt lands on each for LingerDamage and Stagger. Deviation: one affliction (the element held), not Static and Unsteady both. |
+
+## The elements' own stuff (2026-11-16, night)
+
+**tap** (`TapForm`) is the eleven tap spells, one behaviour per element, chosen by the element the cast is in. It is
+not on the rack and no mark names it: every `ElementKit` wears it as its base spell.
+
+| Element | Tap spell | What the form does |
+|---|---|---|
+| Fire | Flame Wave | Strikes the cone at once; flame runs out along the ground row by row in 0.3 s; three patches burn on for 3 s (2 a bite). |
+| Lightning | Thunderclap | The chain as before, drawn as jagged lengths from the hand through each body, redrawn 22 times a second for 0.2 s. Nothing is left. |
+| Wind | Gust | Strikes the cone, shoves everything in it 3 m straight down the wind (not outward from the player), streaks and leaves for 0.45 s. No lift: a lifted body comes down where it left the ground. |
+| Ice | Hoarfrost | Thirteen crystals grow out along the fan in 0.3 s, the cold strikes at 0.15 s, the crystals stand 4 s. A weapon blow that lands among them shatters all of them: 5 damage, 8 stagger and one more Chill in the fan. |
+| Water | Riptide | `TideRules`: rises at the spell's reach in 0.25 s, rolls back at 8 m/s, 4.8 m wide, strikes each body once from its far side as the face reaches it, carries it, breaks 1.3 m in front of the caster. |
+| Life | Briar Patch | Nine thorned vines and four flowers, held 6 s; bites twice a second as the field did. |
+| Earth | Stone Rise | After 0.25 s the ground breaks under the enemy faced (lifting it for a moment) and three rocks stand 1.6 m behind it for 4.5 s as a barrier nothing walks through. |
+| Metal | Flung Blade | A blade flies to the enemy faced (a quarter of the damage as it lands), stands in it 6 s; the next weapon blow on that enemy drives it in (full damage, 1.5 m burst) and it flies back to the hand, cutting the lane home for 35%. With no one faced it stands in the ground and comes back. |
+| Light | Glare | A ray 0.7 m to either side and reach + 1.5 m long, a flare on the hand and on each body crossed, brackets on the marked for 1.6 s. |
+| Dark | Grasp | A black ball at 6.5 m/s to the enemy faced, drawing in everything within 2.6 m as it goes; it strikes 1.7 m round where it arrives and drags up to five bodies within 2 m back to 1.4 m from the caster. |
+| Poison | Miasma | Eight stippled clouds over a disc, 4 s, creeping at 0.8 m/s after the nearest enemy, one dose a second, a stain left 3 s. |
+
+`ElementSubstance` is the table every form reaches without knowing it. `FormFx` asks it what a plain piece becomes in
+the colour of the element the player holds (`PlayerElement.Take` tells it): a **Shard** becomes a fireball, a jagged
+bolt, a streak of air, an ice splinter, a drop, a leaf, a pebble, a blade, a ray, a wisp of smoke or a bubble; a
+**Spike** becomes flame tongues, a crystal cluster, a spout, a vine or a rock; a **Pillar** becomes a rock or a
+crystal. It also gives the stuff its own motion wherever a form puts it (flame flickers, bolts jump to a new shape 18
+times a second, smoke swells, water and bubbles wobble), its shine (`_Sheen`) and its thinness (`_Thin`: smoke and
+air are stippled, so they are seen through), and `FormKit.Impact` calls its `Burst`, which throws the element's
+pieces out and leaves what that element leaves (flames, crystals, a spout and ripples, vines and a flower, rocks,
+blades stuck in the ground, crossed flares, sinking smoke, rising bubbles; lightning nothing). Sixteen new meshes in
+`FormMeshes` (Flame, Fireball, Bolt, Crystal, Crest, Foam, Droplet, Spout, Rock, Pebble, Leaf, Vine, Flower, Cloud,
+Bubble, Ray, Gust). A form that wants a particular shape asks for it by name and is left alone.
+
+`SurgeLook` holds six solids on the player while a surge lasts, placed every frame by element. `AfflictionLook`
+throws two small pieces of an affliction's stuff on the body that carries it a few times a second (from `EnemyBars`,
+taking turns when a body carries several).

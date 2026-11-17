@@ -108,3 +108,13 @@ health, thirty mana mending ten), **unmoved** (Unmoved and Heavy Hand: struck in
 (Leaf on the Wind: four dodges on three breaths, breaths won back), **tide** (Spring Tide: the base spell with all the mana, then with only its cost), **answer** (Master's Answer: the skill's price before, inside and after the window) and **well** (Deep Well: a flask drunk, then blows). **cleanbreak** needs a real enemy and is played
 only elsewhere: `runprobe.sh Castle MarksProbe 40` plays circle, eye, furnace and cleanbreak at the nearest enemy
 (cleanbreak kills it).
+
+`ElementsProbe` plays each element's own moves. `bash AgentScripts/runprobe.sh CombatTest ElementsProbe 250` takes
+each of the eleven elements in turn, taps its spell at three clustered dummies with the real button, photographs three
+moments (`review/shots/current/element_<name>_tap_<n>.png`; Ice gets a fourth after its crystals are shattered), lights
+the surge and photographs it (`element_<name>_surge.png`), and logs damage, stacks and the sum and direction of the
+shoves each dummy was given (dummies are posts and do not travel). `%TEMP%/elements_probe.txt` may hold a comma list of
+element names to play only those. In any other scene (`runprobe.sh Castle ElementsProbe 60`) it casts Riptide, Gust,
+Grasp and Stone Rise at the nearest real enemy from four metres and logs how near and how far that enemy came.
+`AfflictionsProbe` (`runprobe.sh CombatTest AfflictionsProbe 40`) lays each of the eleven afflictions on the dummies,
+three at a time, and photographs them (`affliction_<n>.png`).

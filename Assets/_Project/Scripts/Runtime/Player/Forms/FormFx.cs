@@ -46,6 +46,8 @@ namespace Clover.Player.Forms
         private static readonly int ColourId = Shader.PropertyToID("_Color");
         private static readonly int HotId = Shader.PropertyToID("_Hot");
         private static readonly int InkId = Shader.PropertyToID("_OutlineWidth");
+        private static readonly int SheenId = Shader.PropertyToID("_Sheen");
+        private static readonly int ThinId = Shader.PropertyToID("_Thin");
 
         private static FormFx instance;
 
@@ -57,6 +59,7 @@ namespace Clover.Player.Forms
         private MeshRenderer[] solidShown;
         private Color[] solidColour;
         private float[] solidInk;
+        private FormMesh[] solidShape;
         private Mark[] flats;
         private Transform[] flatAt;
         private MeshFilter[] flatMesh;
@@ -92,6 +95,7 @@ namespace Clover.Player.Forms
             solidShown = new MeshRenderer[SolidCount];
             solidColour = new Color[SolidCount];
             solidInk = new float[SolidCount];
+            solidShape = new FormMesh[SolidCount];
             for (int i = 0; i < SolidCount; i++)
                 Make("Form Solid", solid, out solidAt[i], out solidMesh[i], out solidShown[i]);
 
@@ -172,6 +176,9 @@ namespace Clover.Player.Forms
                 solidsShown--;
             }
             nextSolid = (found + 1) % solids.Length;
+            // A plain piece in the held element's colour is made of that element's stuff.
+            mesh = ElementSubstance.Shape(mesh, ElementSubstance.Of(colour));
+            solidShape[found] = mesh;
             solidMesh[found].sharedMesh = meshes[(int)mesh];
             solidColour[found] = colour;
             solidInk[found] = ink;
@@ -188,6 +195,8 @@ namespace Clover.Player.Forms
             block.SetColor(ColourId, solidColour[i]);
             block.SetFloat(HotId, hot);
             block.SetFloat(InkId, solidInk[i]);
+            block.SetFloat(SheenId, ElementSubstance.Sheen(solidShape[i], solidColour[i]));
+            block.SetFloat(ThinId, ElementSubstance.Thin(solidShape[i]));
             solidShown[i].SetPropertyBlock(block);
         }
 
@@ -205,6 +214,7 @@ namespace Clover.Player.Forms
         public static void Place(int handle, Vector3 position, Quaternion rotation, Vector3 scale)
         {
             if (instance == null || handle < 0 || instance.solids[handle].State != Held) return;
+            if (ElementSubstance.Moves(instance.solidShape[handle])) ElementSubstance.Sway(instance.solidShape[handle], handle, Time.time, ref scale, ref rotation);
             instance.solidAt[handle].SetPositionAndRotation(position, rotation);
             instance.solidAt[handle].localScale = scale;
         }
@@ -320,6 +330,15 @@ namespace Clover.Player.Forms
                     at.localScale = one.Scale * Mathf.Max(0.02f, 1f - age / one.A);
                     break;
                 }
+            }
+            // Flame, lightning, smoke and water never hold still, whatever their form is doing with them.
+            if (ElementSubstance.Moves(solidShape[i]) && one.Motion != Shrinking)
+            {
+                Vector3 scale = at.localScale;
+                Quaternion rotation = one.Rotation;
+                ElementSubstance.Sway(solidShape[i], i, Time.time, ref scale, ref rotation);
+                at.localScale = scale;
+                at.rotation = rotation;
             }
         }
 

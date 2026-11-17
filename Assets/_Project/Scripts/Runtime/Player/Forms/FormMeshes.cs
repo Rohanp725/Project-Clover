@@ -104,8 +104,167 @@ namespace Clover.Player.Forms
                     made.Cone(new Vector3(0.12f, 1.02f, 0f), new Vector3(0.3f, 1.38f, -0.1f), 0.07f, 4, 0f);
                     made.Bipyramid(new Vector3(0.24f, 0.56f, 0.05f), new Vector3(0.3f, 0.62f, 0.95f), 0.25f, Vector3.right * 0.035f, Vector3.up * 0.1f);
                     break;
+                case FormMesh.Flame:
+                    Tongues(made, Vector3.up, Vector3.right, Vector3.forward);
+                    break;
+                case FormMesh.Fireball:
+                    // The same tongues laid back along its flight, behind a hard head.
+                    made.Bipyramid(new Vector3(0f, 0f, 1f), new Vector3(0f, 0f, 0.45f), 0.4f, Vector3.right * 0.26f, Vector3.up * 0.26f);
+                    made.Bipyramid(new Vector3(0.05f, 0.1f, 0.7f), new Vector3(0.12f, 0.3f, 0f), 0.25f, Vector3.right * 0.14f, Vector3.forward * 0.1f);
+                    made.Bipyramid(new Vector3(-0.08f, -0.05f, 0.7f), new Vector3(-0.3f, -0.12f, 0.1f), 0.25f, Vector3.up * 0.12f, Vector3.forward * 0.1f);
+                    made.Bipyramid(new Vector3(0.1f, -0.08f, 0.7f), new Vector3(0.26f, -0.2f, 0.22f), 0.25f, Vector3.up * 0.1f, Vector3.forward * 0.1f);
+                    break;
+                case FormMesh.Bolt:
+                {
+                    // Four hard turns and a fork: never a straight line.
+                    var turns = new[] { Vector3.zero, new Vector3(0.14f, 0.05f, 0.27f), new Vector3(-0.12f, -0.05f, 0.5f), new Vector3(0.1f, 0.06f, 0.76f), new Vector3(0f, 0f, 1f) };
+                    for (int i = 0; i + 1 < turns.Length; i++)
+                        made.Bipyramid(turns[i], turns[i + 1], 0.5f, Vector3.right * 0.045f, Vector3.up * 0.045f);
+                    made.Bipyramid(turns[2], new Vector3(-0.34f, 0.04f, 0.72f), 0.3f, new Vector3(0.03f, 0f, 0.03f), Vector3.up * 0.03f);
+                    made.Bipyramid(new Vector3(-0.34f, 0.04f, 0.72f), new Vector3(-0.3f, -0.03f, 0.92f), 0.3f, Vector3.right * 0.025f, Vector3.up * 0.025f);
+                    break;
+                }
+                case FormMesh.Crystal:
+                    // Three six-sided crystals leaning out of one root, each cut to a point.
+                    Crystal(made, Vector3.zero, new Vector3(0.06f, 1f, 0.03f), 0.2f);
+                    Crystal(made, new Vector3(0.14f, 0f, 0.08f), new Vector3(0.52f, 0.62f, 0.26f), 0.13f);
+                    Crystal(made, new Vector3(-0.12f, 0f, -0.1f), new Vector3(-0.44f, 0.46f, -0.32f), 0.11f);
+                    break;
+                case FormMesh.Crest:
+                {
+                    // Six lengths of wave side by side. Each is a long swell climbing from far behind to a sharp
+                    // ridge, a steep face under it, and a lip thrown forward and down over its own foot. The ridge
+                    // is uneven from one length to the next, so the crest line is ragged.
+                    float[] tall = { 0.6f, 0.92f, 0.78f, 1f, 0.84f, 0.7f, 0.56f };
+                    float[] lean = { -0.04f, 0.1f, 0f, 0.12f, 0.04f, -0.02f, -0.06f };
+                    for (int i = 0; i < 6; i++)
+                    {
+                        float x0 = -0.5f + i / 6f, x1 = x0 + 1f / 6f;
+                        float h0 = tall[i], h1 = tall[i + 1], l0 = lean[i], l1 = lean[i + 1];
+                        // Seen from above the wave is a crescent: its middle runs ahead of its ends.
+                        float b0 = 0.45f * (1f - 4f * x0 * x0), b1 = 0.45f * (1f - 4f * x1 * x1);
+                        made.Hull(new[]
+                        {
+                            new Vector3(x0, 0f, -0.7f + b0 * 0.4f), new Vector3(x0, 0f, 0.12f + b0), new Vector3(x0, h0, 0.1f + l0 + b0),
+                            new Vector3(x1, 0f, -0.7f + b1 * 0.4f), new Vector3(x1, 0f, 0.12f + b1), new Vector3(x1, h1, 0.1f + l1 + b1),
+                        }, Prism3);
+                        made.Hull(new[]
+                        {
+                            new Vector3(x0, h0 * 0.72f, 0.1f + b0), new Vector3(x0, h0, 0.1f + l0 + b0), new Vector3(x0, h0 * 0.42f, 0.7f + l0 + b0),
+                            new Vector3(x1, h1 * 0.72f, 0.1f + b1), new Vector3(x1, h1, 0.1f + l1 + b1), new Vector3(x1, h1 * 0.42f, 0.7f + l1 + b1),
+                        }, Prism3);
+                    }
+                    break;
+                }
+                case FormMesh.Foam:
+                    for (int i = 0; i < 9; i++)
+                    {
+                        float x = -0.46f + i * 0.115f;
+                        made.Blob(new Vector3(x, 0.02f * (i % 3), 0.45f * (1f - 4f * x * x) + 0.05f * ((i * 7) % 3 - 1)), 0.05f + 0.02f * ((i * 5) % 3));
+                    }
+                    break;
+                case FormMesh.Droplet:
+                    made.Bipyramid(Vector3.zero, new Vector3(0f, 0f, 1f), 0.72f, Vector3.right * 0.24f, Vector3.up * 0.24f);
+                    break;
+                case FormMesh.Spout:
+                    made.Bipyramid(Vector3.zero, new Vector3(0f, 1f, 0f), 0.72f, Vector3.right * 0.3f, Vector3.forward * 0.3f);
+                    made.Bipyramid(new Vector3(0.2f, 0f, 0.1f), new Vector3(0.45f, 0.6f, 0.2f), 0.75f, Vector3.right * 0.13f, Vector3.forward * 0.13f);
+                    made.Bipyramid(new Vector3(-0.2f, 0f, -0.1f), new Vector3(-0.42f, 0.45f, -0.25f), 0.75f, Vector3.right * 0.11f, Vector3.forward * 0.11f);
+                    break;
+                case FormMesh.Rock:
+                    // A block broken out of the ground: wide at the foot, its top skewed and uneven.
+                    made.Hull(new[]
+                    {
+                        new Vector3(-0.5f, 0f, -0.4f), new Vector3(0.5f, 0f, -0.45f), new Vector3(0.55f, 0f, 0.4f), new Vector3(-0.45f, 0f, 0.5f),
+                        new Vector3(-0.3f, 0.82f, -0.25f), new Vector3(0.26f, 1f, -0.3f), new Vector3(0.36f, 0.68f, 0.25f), new Vector3(-0.24f, 0.9f, 0.3f),
+                    }, Box8);
+                    made.Hull(new[]
+                    {
+                        new Vector3(0.35f, 0f, 0.2f), new Vector3(0.8f, 0f, 0.15f), new Vector3(0.78f, 0f, 0.6f), new Vector3(0.4f, 0f, 0.62f),
+                        new Vector3(0.5f, 0.42f, 0.3f), new Vector3(0.72f, 0.34f, 0.28f), new Vector3(0.7f, 0.3f, 0.5f), new Vector3(0.5f, 0.38f, 0.52f),
+                    }, Box8);
+                    break;
+                case FormMesh.Pebble:
+                    made.Hull(new[]
+                    {
+                        new Vector3(-0.2f, -0.16f, 0.1f), new Vector3(0.22f, -0.2f, 0.05f), new Vector3(0.25f, -0.12f, 0.8f), new Vector3(-0.18f, -0.2f, 0.9f),
+                        new Vector3(-0.14f, 0.2f, 0.2f), new Vector3(0.12f, 0.24f, 0f), new Vector3(0.2f, 0.14f, 0.7f), new Vector3(-0.1f, 0.18f, 1f),
+                    }, Box8);
+                    break;
+                case FormMesh.Leaf:
+                    made.Bipyramid(Vector3.zero, new Vector3(0f, 0f, 1f), 0.4f, Vector3.right * 0.28f, Vector3.up * 0.035f);
+                    made.Bipyramid(new Vector3(0f, 0f, -0.2f), new Vector3(0f, 0f, 0.1f), 0.5f, Vector3.right * 0.03f, Vector3.up * 0.03f);
+                    break;
+                case FormMesh.Vine:
+                {
+                    // A stem that curls as it climbs, thorns standing off every joint, a leaf at its first turn.
+                    var joints = new[] { Vector3.zero, new Vector3(0.2f, 0.36f, 0.06f), new Vector3(0.06f, 0.7f, 0.24f), new Vector3(-0.2f, 0.92f, 0.1f), new Vector3(-0.3f, 0.8f, -0.12f) };
+                    float[] thick = { 0.11f, 0.09f, 0.07f, 0.05f };
+                    for (int i = 0; i + 1 < joints.Length; i++)
+                        made.Bipyramid(joints[i], joints[i + 1], 0.4f, Vector3.right * thick[i], Vector3.forward * thick[i]);
+                    made.Cone(joints[1], joints[1] + new Vector3(0.24f, 0.1f, -0.14f), 0.05f, 4, 0f);
+                    made.Cone(joints[2], joints[2] + new Vector3(0.1f, 0.12f, 0.26f), 0.05f, 4, 0f);
+                    made.Cone(joints[2] * 0.5f + joints[1] * 0.5f, joints[2] * 0.5f + joints[1] * 0.5f + new Vector3(-0.24f, 0.06f, 0.08f), 0.045f, 4, 0f);
+                    made.Cone(joints[3], joints[3] + new Vector3(-0.1f, 0.2f, 0.16f), 0.04f, 4, 0f);
+                    made.Bipyramid(new Vector3(0.2f, 0.36f, 0.06f), new Vector3(0.62f, 0.44f, 0.3f), 0.4f, new Vector3(-0.08f, 0f, 0.14f), Vector3.up * 0.025f);
+                    break;
+                }
+                case FormMesh.Flower:
+                    for (int i = 0; i < 5; i++)
+                    {
+                        var turn = Quaternion.Euler(0f, i * 72f, 0f);
+                        made.Bipyramid(turn * new Vector3(0f, 0.04f, 0.08f), turn * new Vector3(0f, 0.16f, 0.5f), 0.6f, turn * Vector3.right * 0.17f, Vector3.up * 0.04f);
+                    }
+                    made.Blob(new Vector3(0f, 0.1f, 0f), 0.12f);
+                    break;
+                case FormMesh.Cloud:
+                    made.Blob(Vector3.zero, 0.34f);
+                    made.Blob(new Vector3(0.3f, -0.04f, 0.08f), 0.26f);
+                    made.Blob(new Vector3(-0.28f, -0.06f, -0.06f), 0.28f);
+                    made.Blob(new Vector3(0.04f, 0.02f, 0.3f), 0.22f);
+                    made.Blob(new Vector3(-0.06f, 0.16f, -0.22f), 0.2f);
+                    break;
+                case FormMesh.Bubble:
+                    made.Blob(new Vector3(0f, 0f, 0.7f), 0.3f);
+                    made.Blob(new Vector3(0.12f, 0.1f, 0.22f), 0.16f);
+                    made.Blob(new Vector3(-0.1f, -0.06f, 0f), 0.09f);
+                    break;
+                case FormMesh.Ray:
+                    made.Bipyramid(Vector3.zero, new Vector3(0f, 0f, 1f), 0.06f, Vector3.right * 0.05f, Vector3.up * 0.05f);
+                    made.Bipyramid(new Vector3(-0.3f, 0f, 0.06f), new Vector3(0.3f, 0f, 0.06f), 0.5f, Vector3.forward * 0.03f, Vector3.up * 0.03f);
+                    made.Bipyramid(new Vector3(0f, -0.3f, 0.06f), new Vector3(0f, 0.3f, 0.06f), 0.5f, Vector3.forward * 0.03f, Vector3.right * 0.03f);
+                    break;
+                case FormMesh.Gust:
+                {
+                    // A swept curve, thick in its middle and gone to nothing at both ends, with a curl at its head.
+                    var bend = new[] { Vector3.zero, new Vector3(0.16f, 0f, 0.3f), new Vector3(0.2f, 0f, 0.62f), new Vector3(0.06f, 0f, 0.9f), new Vector3(-0.12f, 0f, 1f), new Vector3(-0.2f, 0f, 0.86f) };
+                    float[] wide = { 0.03f, 0.06f, 0.06f, 0.045f, 0.03f };
+                    for (int i = 0; i + 1 < bend.Length; i++)
+                        made.Bipyramid(bend[i], bend[i + 1], 0.5f, Vector3.right * wide[i], Vector3.up * 0.02f);
+                    break;
+                }
             }
             return made.Finish("Form " + which);
+        }
+
+        // A three-sided bar and a six-faced block, as faces between corners: the first half of the corners is one end.
+        private static readonly int[] Prism3 = { 0, 1, 2,  3, 5, 4,  0, 3, 4,  0, 4, 1,  1, 4, 5,  1, 5, 2,  2, 5, 3,  2, 3, 0 };
+        private static readonly int[] Box8 = { 0, 1, 2,  0, 2, 3,  4, 5, 6,  4, 6, 7,  0, 1, 5,  0, 5, 4,  1, 2, 6,  1, 6, 5,  2, 3, 7,  2, 7, 6,  3, 0, 4,  3, 4, 7 };
+
+        // Three tongues of flame along an axis: a tall one that leans and two short ones at its foot.
+        private static void Tongues(Maker made, Vector3 up, Vector3 right, Vector3 forward)
+        {
+            made.Bipyramid(Vector3.zero, up + right * 0.14f + forward * 0.05f, 0.3f, right * 0.3f, forward * 0.22f);
+            made.Bipyramid(right * -0.2f + forward * 0.1f, up * 0.62f + right * -0.36f + forward * 0.16f, 0.3f, right * 0.17f, forward * 0.14f);
+            made.Bipyramid(right * 0.18f + forward * -0.14f, up * 0.48f + right * 0.3f + forward * -0.26f, 0.3f, right * 0.14f, forward * 0.13f);
+        }
+
+        // One crystal: a six-sided shaft from its foot, cut to a point over its last quarter.
+        private static void Crystal(Maker made, Vector3 foot, Vector3 point, float radius)
+        {
+            Vector3 neck = Vector3.Lerp(foot, point, 0.72f);
+            made.Cone(neck, point, radius, 6, 0f);
+            made.Cone(neck, foot, radius * 0.8f, 6, 0f);
         }
 
         /// <summary>A flat square on the ground, one metre across, centred, facing up.</summary>
@@ -257,6 +416,30 @@ namespace Clover.Player.Forms
                     Vector3 depthA = a.y < 0.01f ? thick : thin, depthB = b.y < 0.01f ? thick : thin;
                     triangles.Add(ridge + Vector3.forward * 0.26f); triangles.Add(a + depthA); triangles.Add(b + depthB);
                     triangles.Add(ridge - Vector3.forward * 0.26f); triangles.Add(a - depthA); triangles.Add(b - depthB);
+                }
+                Piece(triangles);
+            }
+
+            /// <summary>A rough ball: two rings of five corners between a top and a bottom.</summary>
+            public void Blob(Vector3 centre, float radius)
+            {
+                var upper = new Vector3[5];
+                var lower = new Vector3[5];
+                for (int i = 0; i < 5; i++)
+                {
+                    float a = i * 72f * Mathf.Deg2Rad, b = (i * 72f + 36f) * Mathf.Deg2Rad;
+                    upper[i] = centre + new Vector3(Mathf.Cos(a) * 0.88f, 0.45f, Mathf.Sin(a) * 0.88f) * radius;
+                    lower[i] = centre + new Vector3(Mathf.Cos(b) * 0.88f, -0.45f, Mathf.Sin(b) * 0.88f) * radius;
+                }
+                Vector3 top = centre + Vector3.up * radius, bottom = centre - Vector3.up * radius;
+                var triangles = new List<Vector3>();
+                for (int i = 0; i < 5; i++)
+                {
+                    int next = (i + 1) % 5;
+                    triangles.Add(top); triangles.Add(upper[i]); triangles.Add(upper[next]);
+                    triangles.Add(bottom); triangles.Add(lower[i]); triangles.Add(lower[next]);
+                    triangles.Add(upper[i]); triangles.Add(lower[i]); triangles.Add(upper[next]);
+                    triangles.Add(upper[next]); triangles.Add(lower[i]); triangles.Add(lower[next]);
                 }
                 Piece(triangles);
             }
