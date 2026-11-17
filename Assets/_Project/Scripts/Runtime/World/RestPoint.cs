@@ -16,6 +16,8 @@ namespace Clover.World
         [SerializeField] private ParticleSystem flames;
 
         public float FireIntensity = 14f;
+        /// <summary>What a rest fire says to someone who holds no element yet.</summary>
+        public const string NothingToFeed = "Rested. Nothing to feed yet.";
 
         public bool IsLit { get; private set; }
         public int Rests { get; private set; }
@@ -49,6 +51,13 @@ namespace Clover.World
             if (director != null) director.Rest(returnPoint != null ? returnPoint : transform);
             if (who.Defence != null) who.Defence.Callout("Rested");
             // By the fire is where the embers are spent.
+            var held = who.GetComponent<PlayerElement>();
+            if (held != null && !held.HasElement)
+            {
+                // No element, no tree: the embers are carried until there is something to feed them to.
+                if (who.Defence != null) who.Defence.Callout(NothingToFeed);
+                return;
+            }
             if (Clover.UI.UpgradeMenu.Instance != null) Clover.UI.UpgradeMenu.Instance.Open();
         }
 

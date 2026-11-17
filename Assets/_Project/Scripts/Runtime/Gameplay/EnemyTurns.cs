@@ -41,6 +41,41 @@ namespace Clover.Gameplay
             return busy < (ranged ? RangedAtOnce : MeleeAtOnce);
         }
 
+        private int drinkAnswered = -1;
+        private Enemy drinkAnswerer;
+
+        /// <summary>
+        /// The player has started a drink (their count of drinks is <paramref name="drink"/>): only the nearest of the
+        /// thirsting that can answer it does. True for that one, once.
+        /// </summary>
+        public bool AnswersDrink(Enemy asking, int drink, Vector3 drinker)
+        {
+            if (drink != drinkAnswered)
+            {
+                drinkAnswered = drink;
+                drinkAnswerer = null;
+                float nearest = float.MaxValue;
+                for (int i = 0; i < enemies.Length; i++)
+                {
+                    var other = enemies[i];
+                    if (other == null || !other.CanAnswerDrink) continue;
+                    float apart = (other.transform.position - drinker).sqrMagnitude;
+                    if (apart >= nearest) continue;
+                    nearest = apart;
+                    drinkAnswerer = other;
+                }
+            }
+            return drinkAnswerer == asking;
+        }
+
+        /// <summary>True while any enemy here has a flask of the player's in its hands: only one may at a time.</summary>
+        public bool AnyHoldsFlask()
+        {
+            for (int i = 0; i < enemies.Length; i++)
+                if (enemies[i] != null && enemies[i].HoldsFlask) return true;
+            return false;
+        }
+
         /// <summary>An enemy has begun an attack.</summary>
         public void Began(Enemy enemy)
         {

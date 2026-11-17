@@ -132,10 +132,11 @@ namespace Clover.UI
                 else lagFraction = Mathf.MoveTowards(lagFraction, now, LagDrainPerSecond * Time.unscaledDeltaTime);
                 healthLag.anchorMax = new Vector2(lagFraction, 1f);
             }
-            if (manaImage != null && element != null && element.Kit != null && element.Kit.Name != shownElement)
+            if (manaImage != null && element != null && element.Kit != null && (element.HasElement ? element.Kit.Name : Elements.None.Name) != shownElement)
             {
-                shownElement = element.Kit.Name;
-                manaImage.color = Elements.Colour(shownElement);
+                // With no element the mana still gathers for the weapon's skill, in no element's colour.
+                shownElement = element.HasElement ? element.Kit.Name : Elements.None.Name;
+                manaImage.color = element.HasElement ? Elements.Colour(shownElement) : Elements.None.Colour;
             }
             if (flaskFills != null)
             {

@@ -30,6 +30,10 @@ namespace Clover.Gameplay
         [SerializeField] private bool holdsGround;
         [SerializeField] private Vector2 groundLeast;
         [SerializeField] private Vector2 groundMost;
+        // Placed dormant: it does not notice anyone until they come this near or strike it, and then takes a moment to rise.
+        [SerializeField] private bool dormant;
+        [SerializeField] private float wakeDistance = 3.5f;
+        [SerializeField] private string dormantClip = "";
 
         public float StaggeredDamageMultiplier = 1.5f;
         public float FinisherDamageMultiplier = 3f;
@@ -81,7 +85,58 @@ namespace Clover.Gameplay
         public int BlowsStruck { get; private set; }
         public int BlowsGuarded { get; private set; }
         /// <summary>True while it is showing or striking an attack: this is what holds the turn.</summary>
-        public bool IsStriking => Brain.State == EnemyState.Telegraph || Brain.State == EnemyState.Strike;
+        public bool IsStriking => Brain.State == EnemyState.Telegraph || Brain.State == EnemyState.Strike || busy == BusyHold;
+        /// <summary>True while it lies or stands dormant, before anyone has woken it.</summary>
+        public bool IsDormant => asleep;
+        public bool IsRising => busy == BusyRise;
+        /// <summary>True while it has hold of the player.</summary>
+        public bool IsHolding => busy == BusyHold;
+        /// <summary>True while it stands drinking a flask it took; helpless until it is done.</summary>
+        public bool IsDrinking => busy == BusyDrink;
+        public bool HoldsFlask => Snatch.Holding;
+        /// <summary>For one that hunts by light: whether it knows where the player is. Always true for the sighted.</summary>
+        public bool HasFound => !Kind.HuntsByLight || !Sunlight.InUse || Sense.Found;
+        public bool IsSearching => searching;
+        /// <summary>Whether it would answer a drink begun now: near, aware, and not in the middle of anything.</summary>
+        public bool CanAnswerDrink => Kind != null && Kind.SnatchAttack.Length > 0 && !asleep && target != null
+            && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Recover)
+            && (target.position - transform.position).sqrMagnitude <= Kind.SnatchRange * Kind.SnatchRange;
+        public SunSense Sense { get; } = new SunSense();
+        public Clover.Player.Grip Grip { get; } = new Clover.Player.Grip();
+        public FlaskSnatch Snatch { get; } = new FlaskSnatch();
+        public int FlasksTaken { get; private set; }
+        public int FlasksDrunk { get; private set; }
+        public int Holds { get; private set; }
+
+        private const int BusyNone = 0, BusyDrink = 1, BusyHold = 2, BusyThrown = 3, BusyRise = 4;
+        private int busy;
+        private bool asleep;
+        private bool searching;
+        private float searchedFor;
+        private Vector3 lastKnown;
+        private float basePreferred;
+        private Clover.Player.PlayerController targetController;
+        private Clover.Player.PlayerDefence targetDefence;
+        private int drinksSeen;
+        private int drinkHash, holdHash, thrownHash, riseHash, dormantHash, searchHash;
+        private Vector3 burnAt;
+        private float burnLeft, burnRadius, burnDamage, burnEvery, untilBurnBite, untilBurnShow, untilHoldEmber;
+        private static bool breakFreeSaid;
+
+        // Domain reload is off: the prompt is said once in a sitting, and a new play is a new sitting.
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => breakFreeSaid = false;
+
+        /// <summary>
+        /// Places it dormant: it notices no one until they come within <paramref name="wakeWithin"/> metres or strike
+        /// it. <paramref name="clip"/> is the animation it holds meanwhile (lying, kneeling); its own dormant loop when empty.
+        /// </summary>
+        public void MakeDormant(float wakeWithin, string clip = "")
+        {
+            dormant = true;
+            wakeDistance = wakeWithin;
+            dormantClip = clip;
+        }
         public bool IsRanged => Brain.RetreatRange > 0f;
         /// <summary>Raised once when it dies.</summary>
         public event System.Action<Enemy> Died;
@@ -200,6 +255,22 @@ namespace Clover.Gameplay
             Kind = EnemyKind.ByName(kindName);
             home = transform.position;
             targetBody = target != null ? target.GetComponent<Collider>() : null;
+            targetController = target != null ? target.GetComponent<Clover.Player.PlayerController>() : null;
+            targetDefence = target != null ? target.GetComponent<Clover.Player.PlayerDefence>() : null;
+            basePreferred = Brain.PreferredRange;
+            Grip.Seconds = Kind.HoldSeconds;
+            Grip.BiteEvery = Kind.HoldBiteEvery;
+            Grip.BiteDamage = Kind.HoldBiteDamage;
+            Grip.PressTakes = Kind.HoldPressTakes;
+            Snatch.DrinkSeconds = Kind.DrinkSeconds;
+            drinkHash = Animator.StringToHash(Kind.Prefix + "_drink");
+            holdHash = Animator.StringToHash(Kind.Prefix + "_hold_loop");
+            thrownHash = Animator.StringToHash(Kind.Prefix + "_thrown_off");
+            riseHash = Animator.StringToHash(Kind.Prefix + (dormantClip != null && dormantClip.EndsWith("_lie_loop") ? "_rise_lying" : "_rise"));
+            dormantHash = Animator.StringToHash(string.IsNullOrEmpty(dormantClip) ? Kind.Prefix + "_dormant_loop" : dormantClip);
+            searchHash = Animator.StringToHash(Kind.Prefix + "_search_loop");
+            // The Fire land's blows are drawn in its own two colours, not the storm's violet.
+            if (Kind.Ashen) SlashColour = new Color(1.9f, 0.95f, 0.3f, 0.6f);
             if (bars != null)
             {
                 barsRotation = bars.rotation;
@@ -253,7 +324,11 @@ namespace Clover.Gameplay
                     for (int m = 0; m < materials.Length; m++)
                     {
                         Color colour = materials[m] != null && materials[m].HasProperty(BaseColour) ? materials[m].GetColor(BaseColour) : Color.grey;
+                        // A part that is not drawn (gold a lower rank has not been given) stays undrawn as the body burns: marked by an alpha below zero.
+                        bool undrawn = materials[m] != null && materials[m].HasProperty(Solidity) && materials[m].GetFloat(Solidity) < 0.01f;
+                        if (undrawn) colour.a = -1f;
                         if (pass == 0) ownColours[i][m] = colour;
+                        if (undrawn) continue;
                         // Cloth, plate and skin make flakes that can be seen; the near-black parts would make none.
                         if (colour.maxColorComponent < 0.3f) continue;
                         if (pass == 0) bright++;
@@ -286,6 +361,16 @@ namespace Clover.Gameplay
             Stagger.Reset();
             Afflictions.Clear();
             Brain.Reset();
+            if (busy == BusyHold) Grip.Release();
+            Snatch.Drop();
+            busy = BusyNone;
+            asleep = dormant;
+            searching = false;
+            searchedFor = 0f;
+            Sense.Reset();
+            lastKnown = home;
+            burnLeft = 0f;
+            drinksSeen = targetDefence != null ? targetDefence.DrinksBegun : 0;
             shove = Vector3.zero;
             fallSpeed = 0f;
             chargedLeft = 0f;
@@ -320,6 +405,12 @@ namespace Clover.Gameplay
             // A blow that only sets a burn off has nothing to do to an enemy that is not burning.
             if (hit.Detonate && hit.Damage <= 0f && !Burn.IsBurning) return HitOutcome.Missed;
             // Struck by someone standing off its ground: the ground stops holding it for a while.
+            // Struck before it has risen, or by someone a blind hunter has not found: the blow lands the harder for it.
+            float harder = 1f;
+            if (asleep || busy == BusyRise) harder = Kind.DormantDamage;
+            if (Kind.HuntsByLight && Sunlight.InUse && !Sense.Found) harder *= Kind.UnfoundDamage;
+            if (asleep) Wake();
+            if (Kind.HuntsByLight) Sense.Fight(0f);
             if (holdsGround && !TargetOnGround) Brain.Provoke();
             else Brain.Alert();
             barsCalled = true;
@@ -345,8 +436,8 @@ namespace Clover.Gameplay
                 Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.3f, Vector3.up, 1f, Gameplay.Afflictions.Spec(AfflictionKind.Chill).Colour);
             }
             // Read before this blow lays anything of its own: the blow is judged against what was already there.
-            float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
-            float unsteadies = Afflictions.StaggerTakenMultiplier;
+            float takes = Afflictions.DamageTakenMultiplier(hit.Spell) * harder;
+            float unsteadies = Afflictions.StaggerTakenMultiplier * harder;
             float shoved = Afflictions.ShoveMultiplier;
             if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
                 CombatEvents.Report(this, hit.Affliction, hit.AfflictionStacks, Afflictions.Apply(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower));
@@ -383,7 +474,8 @@ namespace Clover.Gameplay
             }
 
             bool finisher = IsStaggered && hit.Heavy;
-            float multiplier = finisher ? FinisherDamageMultiplier : IsStaggered ? StaggeredDamageMultiplier : 1f;
+            // Drinking, it is as helpless as if its balance were broken.
+            float multiplier = finisher ? FinisherDamageMultiplier : IsStaggered || busy == BusyDrink ? StaggeredDamageMultiplier : 1f;
             // A god is not cut down by one blow, however good: a finisher takes a fixed share of him.
             Health.Damage(detonated + (finisher && Kind.FinisherHealthShare > 0f ? Mathf.Max(hit.Damage * multiplier * takes, Kind.Health * Kind.FinisherHealthShare) : hit.Damage * multiplier * takes));
             flashLeft = 0.09f;
@@ -425,12 +517,19 @@ namespace Clover.Gameplay
         private void Die()
         {
             Brain.Die();
+            BusyBroken();
+            burnLeft = 0f;
             if (guardArc != null) guardArc.Show(false);
             deadFor = 0f;
             ShowMarker(false, false);
             if (bars != null) bars.gameObject.SetActive(false);
             if (staggerMark != null) staggerMark.Show(false);
-            Vfx.Play(VfxKind.Shock, transform.position + Vector3.up, Vector3.up, 1.5f);
+            if (Kind.Ashen)
+            {
+                Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.2f, Vector3.up, 1.5f);
+                Vfx.Play(VfxKind.Dust, transform.position, Vector3.up);
+            }
+            else Vfx.Play(VfxKind.Shock, transform.position + Vector3.up, Vector3.up, 1.5f);
             // The body no longer stands in anyone's way.
             SetPassing(false);
             body.enabled = false;
@@ -464,6 +563,34 @@ namespace Clover.Gameplay
             if (target == null) return;
             // The enemies' own time can be made to drag while the player's does not.
             deltaTime *= WorldClock.EnemyScale;
+
+            if (asleep)
+            {
+                // Dormant: it holds its pose and notices nothing until someone is near enough to wake it.
+                Vector3 apart = target.position - transform.position;
+                apart.y = 0f;
+                if (apart.sqrMagnitude <= wakeDistance * wakeDistance) Wake();
+                else
+                {
+                    if (animator != null) animator.Play(dormantHash, 0, Mathf.Repeat(Time.time / 3f, 1f));
+                    wasBusy = true;
+                    Paint(deltaTime);
+                    return;
+                }
+            }
+            // Whatever it was taken up with has ended, by its time or by a broken balance.
+            if (busy != BusyNone && Brain.State != EnemyState.Busy) BusyBroken();
+            if (busy == BusyDrink && Snatch.Tick(deltaTime))
+            {
+                // It finished the flask: the flask is gone and the thirsting is whole again.
+                FlasksDrunk++;
+                Health.Fill();
+                busy = BusyNone;
+                Brain.EndBusy();
+                if (targetDefence != null) targetDefence.Callout("It drinks.");
+            }
+            if (busy == BusyHold) TickHold(deltaTime);
+            if (burnLeft > 0f) TickBurn(deltaTime);
 
             var before = Brain.Current;
             bool wasStriking = IsStriking;
@@ -516,10 +643,44 @@ namespace Clover.Gameplay
             Vector3 toTarget = target.position - transform.position;
             toTarget.y = 0f;
             float distance = toTarget.magnitude;
+            float brainDistance = distance;
+            bool found = true;
+            searching = false;
+            if (Kind.HuntsByLight && Sunlight.InUse)
+            {
+                // It cannot see: it knows where the player is only by the sun on them, their heat, or a fight.
+                found = Sense.Tick(deltaTime, Sunlight.IsLit(target.position), distance);
+                Brain.TargetLit = Sense.FoundLit;
+                Brain.PreferredRange = Sense.FoundLit ? Kind.LitPreferredRange : basePreferred;
+                Brain.RetreatRange = Sense.FoundLit ? Kind.LitRetreatRange : 0f;
+                if (found)
+                {
+                    lastKnown = target.position;
+                    searchedFor = 0f;
+                }
+                else
+                {
+                    // Lost: it goes to where they were last found, searches there a while, and gives up.
+                    toTarget = lastKnown - transform.position;
+                    toTarget.y = 0f;
+                    distance = toTarget.magnitude;
+                    searching = Brain.State == EnemyState.Stalk && distance < 0.7f;
+                    if (searching) searchedFor += deltaTime;
+                    brainDistance = Brain.State == EnemyState.Idle || searchedFor >= Kind.SearchSeconds ? float.MaxValue : Brain.LeashRange - 1f;
+                }
+            }
+            else Brain.TargetLit = true;
+            Brain.TargetFlasks = targetDefence != null ? targetDefence.Flasks.Count : 0;
+            if (targetDefence != null && targetDefence.DrinksBegun != drinksSeen)
+            {
+                // A drink draws the nearest of the thirsting at once, whoever's turn it is.
+                drinksSeen = targetDefence.DrinksBegun;
+                if (CanAnswerDrink && IsAware && (turns == null || turns.AnswersDrink(this, drinksSeen, target.position))) Brain.Force(Kind.SnatchAttack);
+            }
             sinceLightHit += deltaTime;
             if (sinceLightHit > 1.6f) lightHits = 0;
             bool mayAttack = turns == null || turns.MayAttack(this);
-            bool struck = Brain.Tick(deltaTime * pace, distance, Random.value, mayAttack, TargetOnGround);
+            bool struck = Brain.Tick(deltaTime * pace, brainDistance, Random.value, mayAttack, TargetOnGround);
             if (!wasStriking && IsStriking && turns != null) turns.Began(this);
             var attack = Brain.Current;
             if (attack != null && attack != before && Brain.State == EnemyState.Telegraph)
@@ -546,7 +707,7 @@ namespace Clover.Gameplay
                 if (bars.gameObject.activeSelf != show) bars.gameObject.SetActive(show);
             }
 
-            if (Brain.Tracks && distance > 0.05f)
+            if (Brain.Tracks && distance > 0.05f && !searching)
             {
                 var facing = Quaternion.LookRotation(toTarget, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, facing, Kind.TurnDegreesPerSecond * pace * Afflictions.TurnMultiplier * deltaTime);
@@ -559,9 +720,9 @@ namespace Clover.Gameplay
             // Movement: walking as the brain asks, the drive forward of a lunge, and the shove of a blow taken.
             Vector3 step = Vector3.zero;
             float walked = 0f;
-            if (Brain.MoveWish != 0 && distance > 0.05f)
+            if (Brain.MoveWish != 0 && distance > 0.05f && !searching)
             {
-                walked = Kind.WalkSpeed * pace * (Brain.MoveWish > 0 ? 1f : 0.75f);
+                walked = (Kind.LitWalkSpeed > 0f && Sense.FoundLit ? Kind.LitWalkSpeed : Kind.WalkSpeed) * pace * (Brain.MoveWish > 0 ? 1f : 0.75f);
                 step = toTarget / distance * (Brain.MoveWish * walked * deltaTime);
             }
             if (Brain.IsWaiting && distance > 0.05f)
@@ -577,7 +738,7 @@ namespace Clover.Gameplay
                 step += sideways * (Kind.WalkSpeed * 0.45f * Afflictions.SpeedMultiplier * deltaTime);
                 walked = Mathf.Max(walked, Kind.WalkSpeed * 0.45f * Afflictions.SpeedMultiplier);
             }
-            if (holdsGround)
+            if (holdsGround || (Kind.HuntsByLight && Brain.State == EnemyState.Idle))
             {
                 if (Brain.State == EnemyState.Idle)
                 {
@@ -593,7 +754,7 @@ namespace Clover.Gameplay
                     }
                     else transform.rotation = Quaternion.RotateTowards(transform.rotation, homeRotation, Kind.TurnDegreesPerSecond * deltaTime);
                 }
-                else if (!Brain.IsProvoked)
+                else if (holdsGround && !Brain.IsProvoked)
                 {
                     // Its own feet never carry it farther off its ground; a lunge or a shove still may.
                     float off = OffGround(transform.position);
@@ -675,7 +836,25 @@ namespace Clover.Gameplay
             if (attack.IsCircle)
             {
                 Vector3 centre = attack.Ranged || attack.Leap ? strikePoint : transform.position;
-                if (attack.Ranged) LightningBolts.Strike(centre, 0.5f);
+                if (attack.Fiery)
+                {
+                    // The sun brought down, or fire thrown up round a planted spear.
+                    Vfx.Play(VfxKind.Burst, centre + Vector3.up * 0.6f, Vector3.up, 1.6f);
+                    Vfx.Play(VfxKind.Fire, centre + Vector3.up * 0.4f, Vector3.up, 2.2f);
+                    Vfx.Play(VfxKind.Ring, centre + Vector3.up * 0.3f, Vector3.up);
+                    if (attack.LightsSeconds > 0f) Sunlight.Flare(centre, attack.Radius, attack.LightsSeconds);
+                    if (attack.BurnSeconds > 0f)
+                    {
+                        burnAt = centre;
+                        burnRadius = attack.Radius;
+                        burnLeft = attack.BurnSeconds;
+                        burnDamage = attack.BurnDamage;
+                        burnEvery = Mathf.Max(0.1f, attack.BurnEvery);
+                        untilBurnBite = burnEvery;
+                        untilBurnShow = 0f;
+                    }
+                }
+                else if (attack.Ranged) LightningBolts.Strike(centre, 0.5f);
                 else
                 {
                     Vfx.Play(VfxKind.Shock, centre + Vector3.up, Vector3.up, 2.5f);
@@ -762,6 +941,9 @@ namespace Clover.Gameplay
             var struck = target.GetComponentInParent<IDamageable>();
             if (struck == null) return;
             var outcome = struck.TakeHit(new Hit(damage, 0f, direction, false, attack.Unblockable, from));
+            // A blow that lands near him is a fight he can feel; a ray that lands far off tells him nothing new.
+            if (Kind.HuntsByLight && outcome != HitOutcome.Missed) Sense.Fight(Vector3.Distance(transform.position, target.position));
+            if (outcome == HitOutcome.Landed) Took(attack);
             // A perfect guard turns a blow struck by hand back on the one who struck it. A thrown bolt has no one to turn on.
             if (outcome != HitOutcome.PerfectGuard || attack.Ranged) return;
             flashLeft = 0.09f;
@@ -771,6 +953,98 @@ namespace Clover.Gameplay
                 Brain.Stagger();
                 Clover.Player.Tips.EnemyStaggered(transform.position);
             }
+        }
+
+        // A blow of its own has landed: the snatch takes a flask and stops to drink it, the grab takes hold.
+        private void Took(EnemyAttack attack)
+        {
+            if (attack.Snatches && targetDefence != null && (turns == null || !turns.AnyHoldsFlask()) && Snatch.Take(targetDefence.Flasks) && Brain.Occupy())
+            {
+                FlasksTaken++;
+                busy = BusyDrink;
+            }
+            else if (attack.Grabs && targetController != null && !targetController.IsHeld && targetDefence != null && !targetDefence.IsDead && Brain.Occupy())
+            {
+                Holds++;
+                busy = BusyHold;
+                Grip.Begin();
+                targetController.BeginHeld(Grip);
+                untilHoldEmber = 0f;
+                if (!breakFreeSaid)
+                {
+                    breakFreeSaid = true;
+                    targetDefence.Callout("Break free: strike or dodge");
+                }
+            }
+        }
+
+        private void Wake()
+        {
+            asleep = false;
+            Brain.Alert();
+            if (Brain.Occupy(Kind.RiseSeconds)) busy = BusyRise;
+        }
+
+        // The hold: it burns at intervals, never to the death, and ends by its time or by the struggle against it.
+        private void TickHold(float deltaTime)
+        {
+            int bites = Grip.Tick(deltaTime);
+            for (int i = 0; i < bites && targetDefence != null; i++)
+            {
+                float take = Mathf.Min(Kind.HoldBiteDamage, targetDefence.Health.Current - 1f);
+                if (take > 0f) targetDefence.Health.Damage(take);
+                Vfx.Play(VfxKind.Embers, target.position + Vector3.up * 1.1f, Vector3.up, 1.2f);
+                Vfx.Play(VfxKind.Fire, target.position + Vector3.up * 0.9f, Vector3.up, 0.22f);
+                // Being held to death teaches nothing: the bite that would kill lets go.
+                if (targetDefence.Health.Current <= 1.01f) Grip.Release();
+            }
+            untilHoldEmber -= deltaTime;
+            if (untilHoldEmber <= 0f)
+            {
+                untilHoldEmber = 0.16f;
+                Vfx.Play(VfxKind.Embers, Vector3.Lerp(transform.position, target.position, 0.6f) + Vector3.up * 1.3f, Vector3.up, 0.4f);
+            }
+            if (targetDefence != null && targetDefence.IsDead) Grip.Release();
+            if (Grip.IsHeld) return;
+            // Thrown off: flung back and open, and shaken if it was the struggle that did it.
+            Vector3 away = transform.position - target.position;
+            away.y = 0f;
+            shove = (away.sqrMagnitude > 0.001f ? away.normalized : -transform.forward) * (Kind.ThrownOff * 1.5f);
+            busy = BusyThrown;
+            Brain.Occupy(Kind.ThrownOffSeconds);
+            if (Grip.BrokenByStruggle && Stagger.Add(Kind.StruggleStagger * Afflictions.StaggerTakenMultiplier))
+            {
+                busy = BusyNone;
+                Brain.Stagger();
+            }
+        }
+
+        // Ground left burning by a planted spear: it bites whoever stands in it, and pushes them toward its edge.
+        private void TickBurn(float deltaTime)
+        {
+            burnLeft -= deltaTime;
+            untilBurnShow -= deltaTime;
+            if (untilBurnShow <= 0f)
+            {
+                untilBurnShow = 0.1f;
+                Vector2 spot = Random.insideUnitCircle * burnRadius;
+                Vfx.Play(VfxKind.Fire, burnAt + new Vector3(spot.x, 0.2f, spot.y), Vector3.up, 0.7f);
+            }
+            untilBurnBite -= deltaTime;
+            if (untilBurnBite > 0f) return;
+            untilBurnBite += burnEvery;
+            Vector3 offset = target.position - burnAt;
+            offset.y = 0f;
+            if (offset.magnitude > burnRadius || targetDefence == null) return;
+            targetDefence.TakeHit(new Hit(burnDamage, 0f, offset.sqrMagnitude > 0.01f ? offset.normalized : transform.forward, false, true));
+        }
+
+        // Whatever it was busy with is over. A flask not yet drunk goes back; a hold lets go.
+        private void BusyBroken()
+        {
+            if (busy == BusyDrink && Snatch.GiveBack(targetDefence != null ? targetDefence.Flasks : null) && targetDefence != null) targetDefence.Callout("Taken back");
+            if (busy == BusyHold) Grip.Release();
+            busy = BusyNone;
         }
 
         // The mark on the ground: the shape's bold edge with a faint inside, and a brighter copy of it that grows to meet that edge as the blow nears.
@@ -835,7 +1109,7 @@ namespace Clover.Gameplay
         {
             if (animator == null) return;
             const float ClipEnd = 0.99f;
-            bool busy = true;
+            bool taken = true;
             switch (Brain.State)
             {
                 case EnemyState.Dead:
@@ -847,6 +1121,12 @@ namespace Clover.Gameplay
                 case EnemyState.Flinch:
                     animator.Play(hurtHash, 0, Mathf.Min(ClipEnd, Brain.FlinchProgress));
                     break;
+                case EnemyState.Busy:
+                    if (busy == BusyDrink) animator.Play(drinkHash, 0, Mathf.Min(ClipEnd, Snatch.Progress));
+                    else if (busy == BusyHold) animator.Play(holdHash, 0, Mathf.Repeat(Brain.StateSeconds / 0.8f, 1f));
+                    else if (busy == BusyThrown) animator.Play(thrownHash, 0, Mathf.Min(ClipEnd, Brain.BusyProgress));
+                    else if (busy == BusyRise) animator.Play(riseHash, 0, Mathf.Min(ClipEnd, Brain.BusyProgress));
+                    break;
                 case EnemyState.Telegraph:
                 case EnemyState.Strike:
                 case EnemyState.Recover:
@@ -854,12 +1134,17 @@ namespace Clover.Gameplay
                     if (index >= 0) animator.Play(attackHashes[index], 0, Mathf.Min(ClipEnd, Brain.AttackProgress));
                     break;
                 default:
-                    busy = false;
+                    if (searching)
+                    {
+                        animator.Play(searchHash, 0, Mathf.Repeat(searchedFor / 3f, 1f));
+                        break;
+                    }
+                    taken = false;
                     if (wasBusy) animator.CrossFadeInFixedTime(locomotionHash, 0.12f);
                     animator.SetFloat(SpeedHash, Mathf.Clamp01(speedFraction), 0.1f, deltaTime);
                     break;
             }
-            wasBusy = busy;
+            wasBusy = taken;
         }
 
         // The fallen body burns away: the lightning that was in it leaves upward, what is left goes to ink, and the ink
@@ -871,8 +1156,16 @@ namespace Clover.Gameplay
             {
                 burning = true;
                 untilFlake = 0f;
-                Vfx.Play(VfxKind.Bolt, lying + Vector3.up * 0.2f);
-                Vfx.Play(VfxKind.Wisp, lying + Vector3.up * 0.5f);
+                if (Kind.Ashen)
+                {
+                    Vfx.Play(VfxKind.Fire, lying + Vector3.up * 0.3f, Vector3.up, 1.4f);
+                    Vfx.Play(VfxKind.Embers, lying + Vector3.up * 0.5f, Vector3.up, 1.2f);
+                }
+                else
+                {
+                    Vfx.Play(VfxKind.Bolt, lying + Vector3.up * 0.2f);
+                    Vfx.Play(VfxKind.Wisp, lying + Vector3.up * 0.5f);
+                }
                 foreach (var bodyRenderer in bodyRenderers)
                 {
                     if (bodyRenderer == null) continue;
@@ -893,6 +1186,7 @@ namespace Clover.Gameplay
                 if (bodyRenderer == null) continue;
                 for (int m = 0; m < ownColours[i].Length; m++)
                 {
+                    if (ownColours[i][m].a < 0f) continue;
                     block.Clear();
                     block.SetColor(BaseColour, Color.Lerp(ownColours[i][m], BurntColour, ink));
                     block.SetColor(Emission, Color.black);

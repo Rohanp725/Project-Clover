@@ -78,6 +78,44 @@ namespace Clover.Player
         private InputAction dodgeAction;
         private float fallSpeed;
         private float dodgeBuffered;
+        private Grip heldBy;
+        private InputAction struggleAction;
+
+        /// <summary>True while something has hold of the player: they can do nothing but struggle.</summary>
+        public bool IsHeld => heldBy != null && heldBy.IsHeld;
+        /// <summary>How many times the player has been taken hold of.</summary>
+        public int TimesHeld { get; private set; }
+
+        /// <summary>
+        /// Something takes hold of the player. Whatever they were doing is dropped, and until the grip lets go every
+        /// press of light attack or dodge is a struggle against it. The holder ticks the grip and deals its bites.
+        /// </summary>
+        public void BeginHeld(Grip grip)
+        {
+            if (grip == null) return;
+            BreakFormHold();
+            if (combat != null) combat.Interrupt();
+            if (element != null)
+            {
+                element.Interrupt();
+                element.DropHolds();
+            }
+            if (defence != null)
+            {
+                defence.DropHolds();
+                defence.Flasks.Interrupt();
+            }
+            Dodge.Stop();
+            dodgeBuffered = 0f;
+            heldBy = grip;
+            TimesHeld++;
+        }
+
+        /// <summary>Counts one struggle against the hold, as a press of light attack or dodge does.</summary>
+        public void Struggle()
+        {
+            if (heldBy != null) heldBy.Press();
+        }
 
         public void Configure(InputActionAsset controlsAsset, Transform cameraToFollow)
         {
@@ -131,6 +169,26 @@ namespace Clover.Player
                 return;
             }
             float deltaTime = Time.deltaTime;
+            if (heldBy != null)
+            {
+                if (!heldBy.IsHeld) heldBy = null;
+                else
+                {
+                    // Held fast: no step, no blow, no guard, no drink. Only the struggle is heard.
+                    PlanarSpeed = 0f;
+                    dodgeBuffered = 0f;
+                    if (struggleAction == null) struggleAction = playerMap.FindAction("LightAttack", true);
+                    if (dodgeAction.WasPressedThisFrame() || struggleAction.WasPressedThisFrame()) heldBy.Press();
+                    if (defence != null)
+                    {
+                        defence.DropHolds();
+                        defence.Advance(deltaTime, false, true);
+                    }
+                    if (element != null) element.DropHolds();
+                    Stamina.Tick(deltaTime);
+                    return;
+                }
+            }
             if (IsLeaping)
             {
                 AdvanceLeap(deltaTime);

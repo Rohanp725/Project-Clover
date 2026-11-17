@@ -7,7 +7,7 @@ namespace Clover.Gameplay
     /// plainly shown blows teach the guard; the acolyte's quick flurries and leaps teach the dodge; the caster's bolts
     /// from range teach closing the distance. Attack names are also the names of the animation states that show them.
     /// </summary>
-    public class EnemyKind
+    public partial class EnemyKind
     {
         public string Name;
         /// <summary>The start of this kind's animation names, as in "soldier_idle_loop".</summary>
@@ -66,6 +66,34 @@ namespace Clover.Gameplay
         /// <summary>How much faster it acts in the second phase.</summary>
         public float SecondPhasePace = 1f;
         public float StaggeredSeconds = 3.2f;
+        /// <summary>The attack it makes at once, out of turn, when the target starts to drink near it; empty for none.</summary>
+        public string SnatchAttack = "";
+        /// <summary>Metres within which a drink draws it, and seconds it takes to drink what it took.</summary>
+        public float SnatchRange = 8f;
+        public float DrinkSeconds = 1.6f;
+        /// <summary>For one that grabs: the hold it takes.</summary>
+        public float HoldSeconds = 2.5f;
+        public float HoldBiteEvery = 0.5f;
+        public float HoldBiteDamage = 6f;
+        public float HoldPressTakes = 0.4f;
+        /// <summary>Metres it is thrown off when the hold ends, seconds it is open after, and the balance it loses when the hold was broken by struggling.</summary>
+        public float ThrownOff = 2f;
+        public float ThrownOffSeconds = 1f;
+        public float StruggleStagger = 20f;
+        /// <summary>For one placed dormant: seconds it takes to rise, and how much harder a blow lands before it has risen.</summary>
+        public float RiseSeconds = 1.2f;
+        public float DormantDamage = 2f;
+        /// <summary>True for the sun-blind: it finds the target by light, heat and the noise of a fight, never by sight.</summary>
+        public bool HuntsByLight;
+        /// <summary>For the sun-blind: its speed with a target found in the sun, the distance it then keeps and backs off under, and seconds it searches where the target was last found.</summary>
+        public float LitWalkSpeed;
+        public float LitPreferredRange = 7f;
+        public float LitRetreatRange = 4f;
+        public float SearchSeconds = 3f;
+        /// <summary>How much harder a blow lands on one that hunts by light and has not found whoever struck it.</summary>
+        public float UnfoundDamage = 2f;
+        /// <summary>True for the people of the Fire land: they die in ash and embers, not in lightning.</summary>
+        public bool Ashen;
 
         public const string SoldierName = "Temple Soldier";
         public const string AcolyteName = "Knife Acolyte";
@@ -75,7 +103,7 @@ namespace Clover.Gameplay
 
         public static EnemyKind ByName(string name) =>
             name == AcolyteName ? Acolyte() : name == CasterName ? Caster() : name == NarukamiName ? Narukami()
-            : name == CaptainName ? Captain() : Soldier();
+            : name == CaptainName ? Captain() : FireByName(name) ?? Soldier();
 
         public static IEnumerable<EnemyKind> All
         {
@@ -86,6 +114,7 @@ namespace Clover.Gameplay
                 yield return Caster();
                 yield return Narukami();
                 yield return Captain();
+                foreach (var kind in FireKinds) yield return kind;
             }
         }
 

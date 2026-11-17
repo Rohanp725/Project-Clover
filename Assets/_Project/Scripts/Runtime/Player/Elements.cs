@@ -42,6 +42,25 @@ namespace Clover.Player
             Make(10, Poison, new Color(0.6f, 0.85f, 0.15f), AfflictionKind.Poison, Fire, "Pyre", UpgradeIcons.Fang),
         };
 
+        /// <summary>
+        /// What the player holds before any element is taken: no colour of its own, nothing laid on enemies, no place
+        /// on the ring. It is not one of <see cref="All"/>.
+        /// </summary>
+        public static readonly ElementInfo None = new ElementInfo
+        {
+            Index = 0,
+            Name = "None",
+            Colour = new Color(0.62f, 0.6f, 0.66f),
+            Glow = new Color(1.3f, 1.25f, 1.4f, 0.9f),
+            Affliction = AfflictionKind.None,
+        };
+
+        /// <summary>
+        /// Whether a scene begins with the player holding no element: only where the scene asks for it (the Fire
+        /// land) and only until the run carries one. Once the god's element is taken it is kept.
+        /// </summary>
+        public static bool StartsEmpty(bool sceneStartsWithNone, string runElement) => sceneStartsWithNone && string.IsNullOrEmpty(runElement);
+
         private static readonly Dictionary<string, ElementInfo> byName = Index();
 
         public static IReadOnlyList<ElementInfo> All => all;

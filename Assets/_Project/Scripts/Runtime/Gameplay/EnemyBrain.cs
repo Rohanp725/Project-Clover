@@ -37,6 +37,9 @@ namespace Clover.Gameplay
 
         /// <summary>The phase of the fight, for enemies that change as they are worn down; attacks may wait for a later one.</summary>
         public int Phase;
+        /// <summary>Set by the enemy each frame: whether the target is found standing in the sun, and how many flasks it carries.</summary>
+        [NonSerialized] public bool TargetLit;
+        [NonSerialized] public int TargetFlasks;
 
         public EnemyState State { get; private set; }
         public EnemyAttack Current { get; private set; }
@@ -63,7 +66,32 @@ namespace Clover.Gameplay
         private bool counter;
         private float offGround;
         private float provokedLeft;
+        private float busyFor;
         private float[] cooldowns = new float[0];
+
+        /// <summary>How far through whatever it is busy with, from 0 to 1; 0 when the time was left open.</summary>
+        public float BusyProgress => State == EnemyState.Busy && busyFor > 0f && busyFor < float.MaxValue ? Math.Min(1f, stateElapsed / busyFor) : 0f;
+
+        /// <summary>
+        /// Takes it up with something that is not an attack for this many seconds, or until <see cref="EndBusy"/>.
+        /// Blows do not make it flinch out of it; a broken balance and death do end it. False when it is dead or staggered.
+        /// </summary>
+        public bool Occupy(float seconds = float.MaxValue)
+        {
+            if (State == EnemyState.Dead || State == EnemyState.Staggered) return false;
+            Current = null;
+            Enter(EnemyState.Busy);
+            busyFor = seconds;
+            return true;
+        }
+
+        /// <summary>Whatever it was busy with is over: back to the fight, after this much rest.</summary>
+        public void EndBusy(float restAfter = 0.3f)
+        {
+            if (State != EnemyState.Busy) return;
+            Enter(EnemyState.Stalk);
+            rest = restAfter;
+        }
 
         public void Reset()
         {
@@ -172,6 +200,10 @@ namespace Clover.Gameplay
                     if (attackElapsed >= Current.Total) EndAttack(roll);
                     return false;
 
+                case EnemyState.Busy:
+                    if (stateElapsed >= busyFor) EndBusy();
+                    return false;
+
                 case EnemyState.Flinch:
                     if (stateElapsed >= FlinchSeconds)
                     {
@@ -191,7 +223,7 @@ namespace Clover.Gameplay
         /// </summary>
         public bool Flinch(bool heavy)
         {
-            if (State == EnemyState.Dead || State == EnemyState.Staggered || State == EnemyState.Strike) return false;
+            if (State == EnemyState.Dead || State == EnemyState.Staggered || State == EnemyState.Strike || State == EnemyState.Busy) return false;
             if (State == EnemyState.Telegraph && !heavy) return false;
             if (State == EnemyState.Idle) rest = 0f;
             Current = null;
@@ -312,6 +344,8 @@ namespace Clover.Gameplay
             var attack = Attacks[index];
             if (index < cooldowns.Length && cooldowns[index] > 0f) return false;
             if (attack.MinPhase > Phase) return false;
+            if (attack.OnlyLit && !TargetLit) return false;
+            if (attack.NeedsFlasks > TargetFlasks) return false;
             return distance >= attack.MinRange && distance <= attack.MaxRange;
         }
     }

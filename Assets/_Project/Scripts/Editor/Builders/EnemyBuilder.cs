@@ -173,6 +173,9 @@ namespace Clover.EditorTools
 
         private static Material ToonFor(Material imported, Dictionary<string, Material> materials, string palette)
         {
+            // The Fire land's people are painted by its own kit; a gilded soldier's palette carries his rank.
+            if (imported != null && SunCityKit.Knows(imported.name))
+                return SunCityKit.For(imported.name, palette != null && palette.StartsWith("gilded") && palette.Length == 7 ? palette[6] - '0' : 3);
             string name = imported != null ? imported.name.Replace("m_enemy_", "").Replace("m_boss_", "boss:") : "";
             // A kind with its own colours takes them where it has them and the shared ones where it does not.
             if (!string.IsNullOrEmpty(palette) && materials.TryGetValue(palette + ":" + name, out var own)) return own;
@@ -237,14 +240,13 @@ namespace Clover.EditorTools
             var needed = new List<string> { kind.Prefix + "_idle_loop", kind.Prefix + "_walk_loop", kind.Prefix + "_hurt", kind.Prefix + "_stagger", kind.Prefix + "_death" };
             needed.AddRange(kind.Brain.Attacks.Select(attack => attack.Name));
             foreach (string name in needed)
+                if (!clips.ContainsKey(name)) Debug.LogWarning($"[Clover.Build] The model of {kind.Name} has no '{name}' clip; that will not be animated.");
+            // Every clip of the prefix gets a state: kinds that share a prefix (the gilded ranks) share one animator,
+            // and the clips that are not attacks (drinking, holding, rising, lying dormant, searching) are played by name too.
+            foreach (var pair in clips.OrderBy(pair => pair.Key))
             {
-                if (!clips.TryGetValue(name, out var clip))
-                {
-                    Debug.LogWarning($"[Clover.Build] The model of {kind.Name} has no '{name}' clip; that will not be animated.");
-                    continue;
-                }
-                if (name.EndsWith("_loop")) continue;
-                machine.AddState(name).motion = clip;
+                if (pair.Key == kind.Prefix + "_idle_loop" || pair.Key == kind.Prefix + "_walk_loop") continue;
+                machine.AddState(pair.Key).motion = pair.Value;
             }
             EditorUtility.SetDirty(controller);
             controllers[kind.Prefix] = controller;

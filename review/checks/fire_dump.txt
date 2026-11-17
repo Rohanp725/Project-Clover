@@ -1,0 +1,78 @@
+== Assets/_Project/Art/Models/Characters/enemy_thirst.fbx rootScale (1.00, 1.00, 1.00) rot (0.00, 0.00, 0.00)
+  enemy_rig lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00)
+  enemy_thirst lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) meshBounds c(0.00, -0.09, 1.01) s(1.39, 0.44, 2.01) world c(0.00, 0.96, 0.10) s(1.61, 2.11, 0.46) mats 6
+  weapon.R at (0.60, 0.94, 0.00) head (0.00, 1.62, 0.00) foot.L (-0.10, 0.08, 0.00)
+== Assets/_Project/Art/Models/Characters/enemy_wick.fbx rootScale (1.00, 1.00, 1.00) rot (0.00, 0.00, 0.00)
+  enemy_rig lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00)
+  enemy_wick lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) meshBounds c(0.00, 0.18, 1.12) s(1.39, 0.87, 2.31) world c(-0.01, 1.09, -0.19) s(1.64, 2.37, 0.95) mats 8
+  weapon.R at (0.60, 0.94, 0.00) head (0.00, 1.62, 0.00) foot.L (-0.10, 0.08, 0.00)
+== Assets/_Project/Art/Models/Characters/enemy_gilded.fbx rootScale (1.00, 1.00, 1.00) rot (0.00, 0.00, 0.00)
+  enemy_gilded lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) meshBounds c(0.35, -0.07, 0.75) s(2.48, 0.57, 2.40) world c(0.12, 0.72, 0.20) s(3.09, 2.46, 1.25) mats 14
+  enemy_rig lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00)
+  weapon.R at (0.60, 0.94, 0.00) head (0.00, 1.62, 0.00) foot.L (-0.10, 0.08, 0.00)
+== Assets/_Project/Art/Models/Characters/enemy_sunblind.fbx rootScale (1.00, 1.00, 1.00) rot (0.00, 0.00, 0.00)
+  enemy_rig lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00)
+  enemy_sunblind lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) meshBounds c(0.52, 0.01, 0.71) s(2.48, 0.58, 2.49) world c(0.51, 0.65, 0.03) s(2.73, 2.60, 0.70) mats 11
+  weapon.R at (0.60, 0.94, 0.00) head (0.00, 1.62, 0.00) foot.L (-0.10, 0.08, 0.00)
+== Assets/_Project/Art/Models/Characters/elite_gilded.fbx rootScale (1.00, 1.00, 1.00) rot (0.00, 0.00, 0.00)
+  elite_gilded lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) meshBounds c(0.60, -0.04, 0.56) s(2.55, 0.55, 2.78) world c(0.62, 0.51, 0.06) s(2.82, 2.88, 0.58) mats 2
+  enemy_rig lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00)
+  weapon.R at (0.60, 0.94, 0.00) head (0.00, 1.62, 0.00) foot.L (-0.10, 0.08, 0.00)
+== Assets/_Project/Art/Models/Characters/boss_sunking.fbx rootScale (1.00, 1.00, 1.00) rot (0.00, 0.00, 0.00)
+  boss_sunking lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) meshBounds c(0.59, 0.05, 0.82) s(2.57, 0.72, 3.35) world c(0.62, 0.77, -0.09) s(2.83, 3.45, 0.81) mats 7
+  enemy_rig lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00)
+  weapon.R at (0.60, 0.94, 0.00) head (0.00, 1.62, 0.00) foot.L (-0.10, 0.08, 0.00)
+== Assets/_Project/Art/Models/Characters/enemy_soldier.fbx rootScale (1.00, 1.00, 1.00) rot (0.00, 0.00, 0.00)
+  enemy_rig lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00)
+  enemy_soldier lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) meshBounds c(0.58, 0.00, 0.94) s(2.49, 0.73, 3.28) world c(0.64, 0.88, 0.00) s(2.70, 3.40, 0.73) mats 8
+  weapon.R at (0.60, 0.94, 0.00) head (0.00, 1.62, 0.00) foot.L (-0.10, 0.08, 0.00)
+== Assets/_Project/Art/Models/Characters/boss_sunform.fbx rootScale (1.00, 1.00, 1.00) rot (0.00, 0.00, 0.00)
+  face lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 0.01, 0.12) s(1.03, 1.23, 0.59) mats 5
+  falcon_head lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.65, 0.18) s(3.27, 4.59, 4.16) mats 8
+  falcon_tail lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 0.02, -1.85) s(4.10, 0.68, 4.11) mats 4
+  falcon_talon_left lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, -0.68, 0.21) s(1.35, 1.45, 2.01) mats 3
+  falcon_talon_right lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, -0.68, 0.21) s(1.35, 1.45, 2.01) mats 3
+  falcon_wing_left lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) meshBounds c(-3.43, 1.31, 0.01) s(7.64, 4.06, 0.69) world c(-3.43, 0.01, -1.31) s(7.64, 0.69, 4.06) mats 4
+  falcon_wing_left_rig lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00)
+  falcon_wing_right lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) meshBounds c(3.43, 1.31, 0.01) s(7.64, 4.06, 0.69) world c(3.43, 0.01, -1.31) s(7.64, 0.69, 4.06) mats 4
+  falcon_wing_right_rig lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00)
+  scarab_abdomen lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.05, -1.60) s(3.70, 2.29, 3.12) mats 3
+  scarab_foreleg_left lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(-1.02, 0.09, 0.73) s(2.30, 1.32, 1.84) mats 2
+  scarab_foreleg_right lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(1.02, 0.09, 0.73) s(2.30, 1.32, 1.84) mats 2
+  scarab_head lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 0.85, 0.78) s(2.22, 1.72, 1.77) mats 3
+  scarab_hindleg_left lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(-1.04, 0.11, -1.02) s(2.37, 1.47, 2.40) mats 2
+  scarab_hindleg_right lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(1.04, 0.11, -1.02) s(2.37, 1.47, 2.40) mats 2
+  scarab_midleg_left lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(-1.22, 0.11, -0.25) s(2.70, 1.47, 0.85) mats 2
+  scarab_midleg_right lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(1.22, 0.11, -0.25) s(2.70, 1.47, 0.85) mats 2
+  sun lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 0.00, 0.00) s(4.91, 3.00, 5.42) mats 2
+  sun_loose lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.02, 0.00, 0.02) s(3.15, 3.00, 3.05) mats 2
+  thorax lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.05, 0.01) s(3.83, 2.11, 2.42) mats 4
+  wing_case_left lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(-1.04, 0.29, -1.77) s(2.10, 0.60, 3.66) mats 4
+  wing_case_right lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(1.04, 0.29, -1.77) s(2.10, 0.60, 3.66) mats 4
+== Assets/_Project/Art/Models/Environment/fire_kit.fbx rootScale (1.00, 1.00, 1.00) rot (0.00, 0.00, 0.00)
+  barque lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.49, 6.42, -0.31) s(12.94, 13.08, 32.51) mats 7
+  brazier lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.27, -0.02) s(1.22, 2.58, 1.20) mats 3
+  burial_niche lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.40, -0.03) s(2.60, 2.81, 1.45) mats 5
+  column_base lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 0.25, 0.00) s(2.66, 0.50, 2.66) mats 2
+  column_lotus lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 5.00, 0.00) s(3.90, 10.00, 3.90) mats 3
+  house_block lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.07, 2.13, 0.12) s(5.94, 4.27, 6.25) mats 5
+  house_doorway lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.85, 0.00) s(6.00, 3.71, 1.00) mats 3
+  market_awning lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(-0.04, 1.45, 0.00) s(4.31, 2.90, 3.22) mats 5
+  mud_tile lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 0.11, 0.00) s(4.00, 0.22, 4.00) mats 2
+  obelisk lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 7.50, 0.00) s(3.20, 15.00, 3.20) mats 4
+  pylon_gate lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.06, 5.79, 0.40) s(16.59, 11.66, 4.71) mats 6
+  reed_boat lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(-0.04, 0.73, 0.00) s(2.12, 1.46, 4.67) mats 3
+  sarcophagus lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(-0.10, 0.76, -0.03) s(1.52, 1.52, 2.86) mats 4
+  statue_head_new lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 0.83, -0.02) s(3.29, 4.10, 2.71) mats 4
+  statue_head_old lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.29, -0.05) s(2.29, 3.13, 2.54) mats 3
+  statue_king lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 4.20, 0.00) s(5.10, 8.40, 6.60) mats 5
+  wall_broken lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.01, 2.08, 0.98) s(5.98, 4.44, 3.09) mats 3
+  wall_section lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 2.15, 0.00) s(6.00, 4.30, 1.10) mats 3
+  well_shrine lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 2.36, 0.05) s(4.20, 4.72, 5.40) mats 6
+== Assets/_Project/Art/Models/Environment/tomb_panels.fbx rootScale (1.00, 1.00, 1.00) rot (0.00, 0.00, 0.00)
+  tomb_1_hearth lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.50, 0.12) s(4.00, 3.00, 0.24) mats 8
+  tomb_2_star lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.50, 0.12) s(4.00, 3.00, 0.24) mats 8
+  tomb_3_bearer lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.50, 0.12) s(4.00, 3.00, 0.25) mats 8
+  tomb_4_king lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.50, 0.13) s(4.00, 3.00, 0.25) mats 8
+  tomb_5_recut lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.50, 0.13) s(4.00, 3.00, 0.25) mats 7
+  tomb_6_flaked lp(0.00, 0.00, 0.00) lr(270, 0, 0) ls(1.00, 1.00, 1.00) world c(0.00, 1.50, 0.13) s(4.00, 3.00, 0.25) mats 8

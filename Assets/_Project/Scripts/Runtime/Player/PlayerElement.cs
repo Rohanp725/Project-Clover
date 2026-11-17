@@ -21,6 +21,13 @@ namespace Clover.Player
 
         /// <summary>The element the player starts the scene with, unless the run already carries one.</summary>
         public string StartingElement = ElementKit.FireName;
+        /// <summary>
+        /// Set by the scene's builder for a land the player enters with no element (Fire's): unless the run already
+        /// carries one, there is no spell, no surge, no colour and no affliction until an element is taken.
+        /// </summary>
+        public bool StartsWithNone;
+        /// <summary>False while the player holds no element at all.</summary>
+        public bool HasElement { get; private set; } = true;
         /// <summary>Seconds a spell or surge press is remembered while the player is busy.</summary>
         public float PressBufferTime = 0.25f;
         public float GlowWhenCasting = 9f;
@@ -70,7 +77,8 @@ namespace Clover.Player
             combat = GetComponent<PlayerCombat>();
             defence = GetComponent<PlayerDefence>();
             upgrades = GetComponent<PlayerUpgrades>();
-            Take(ElementKit.ByName(string.IsNullOrEmpty(RunState.Element) ? StartingElement : RunState.Element, RunState.ElementConsumed));
+            if (Elements.StartsEmpty(StartsWithNone, RunState.Element)) TakeNone();
+            else Take(ElementKit.ByName(string.IsNullOrEmpty(RunState.Element) ? StartingElement : RunState.Element, RunState.ElementConsumed));
             if (glow != null) glow.intensity = 0f;
         }
 
@@ -80,9 +88,22 @@ namespace Clover.Player
             surgeAction = player.FindAction("Surge");
         }
 
+        // Holding nothing. A kit is kept so that nothing that reads one finds a hole, but it is never cast from:
+        // the buttons do nothing, the colour is the plain grey of a blow with no element in it, and nothing is laid.
+        private void TakeNone()
+        {
+            HasElement = false;
+            Kit = ElementKit.ByName(ElementKit.FireName, false);
+            Kit.Reset();
+            Info = Elements.None;
+            Colour = Info.Glow;
+            if (glow != null) glow.color = Info.Colour;
+        }
+
         /// <summary>Gives the player an element's kit in place of the one they had; any surge running ends.</summary>
         public void Take(ElementKit kit)
         {
+            HasElement = true;
             bool surging = Kit != null && Kit.SurgeActive;
             Kit = kit;
             Kit.Reset();
@@ -187,6 +208,8 @@ namespace Clover.Player
         public void Advance(float deltaTime, bool free)
         {
             if (spellAction == null || surgeAction == null) return;
+            // With no element the spell and surge buttons do nothing at all.
+            if (!HasElement) return;
             if (spellAction.WasPressedThisFrame())
             {
                 if (upgrades != null && upgrades.HasSpecial)

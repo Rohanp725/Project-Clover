@@ -59,6 +59,8 @@ namespace Clover.Player
         public bool IsDead => Health.IsDead;
         public bool IsGuarding => Guard.IsRaised;
         public bool IsDrinking => Flasks.IsDrinking;
+        /// <summary>How many drinks have been started: the thirsting watch it, and come for the flask when it moves.</summary>
+        public int DrinksBegun { get; private set; }
         /// <summary>The enemy the raised guard is turned toward; null when none is near or the guard is down.</summary>
         public Transform GuardTarget { get; private set; }
         /// <summary>Seconds between looks for the nearest enemy while the guard is up.</summary>
@@ -256,7 +258,11 @@ namespace Clover.Player
             if (rolling && Flasks.IsDrinking) Flasks.Interrupt();
             bool free = !rolling && !attacking;
             // At full health the press is ignored, so a flask is never wasted.
-            if (flaskBuffered > 0f && free && Health.Current < Health.Maximum && Flasks.TryStartDrink()) flaskBuffered = 0f;
+            if (flaskBuffered > 0f && free && Health.Current < Health.Maximum && Flasks.TryStartDrink())
+            {
+                flaskBuffered = 0f;
+                DrinksBegun++;
+            }
             if (throwBuffered > 0f && free && !Flasks.IsDrinking)
             {
                 throwBuffered = 0f;

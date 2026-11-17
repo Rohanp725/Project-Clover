@@ -21,6 +21,19 @@ namespace Clover.EditorTools
             return true;
         }
 
+        /// <summary>Saves and reopens a scene that is for looking at and trying things in: it is not put in the list of scenes the game is built from.</summary>
+        public static void FinishOutsideBuild(UnityEngine.SceneManagement.Scene scene, string scenePath)
+        {
+            if (!EditorSceneManager.SaveScene(scene, scenePath))
+            {
+                Debug.LogError($"[Clover.Build] The scene could not be saved to {scenePath}.");
+                return;
+            }
+            AssetDatabase.SaveAssets();
+            EditorSceneManager.OpenScene(scenePath, OpenSceneMode.Single);
+            Debug.Log($"[Clover.Build] Built {scenePath} (not in the build list).");
+        }
+
         public static void Finish(UnityEngine.SceneManagement.Scene scene, string scenePath, bool firstInBuild)
         {
             if (!EditorSceneManager.SaveScene(scene, scenePath))

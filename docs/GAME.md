@@ -1662,3 +1662,42 @@ the Summit, zipped for other people's machines, and it must hold on screens that
   1024x768. Callouts ("Perfect guard", "Finisher") and the dark screen of a fall were not captured at the other
   shapes; both are anchored to the middle or stretched to the whole screen. The whole-ring view of the chart fits
   at every shape, its lowest marks just touching the hint band.
+
+## The Fire land, first third: its people in a test yard (2026-11-17, night; Claude's defaults unless marked)
+
+The owner's words, 2026-11-17: "start work on the fire area"; "Remember you dont need to stop for my approval"; and of
+the models, "make sure that the fire enemies are much more higher quality and in line with their lore than the demo
+enemies, the demo ones were super simplistic and did not really fit the vibe". **Decided (user)**, from
+`docs/design/WORLD.md`: the first land is Fire's, the sun-king's city, and the player starts it "with fists and no
+element, and takes the first element from the Fire god". Everything below is how that was begun, **Claude's default**,
+built to `docs/design/fire_land.md` (itself Claude's proposal) and seen only in probes and captures, never played by
+the owner. That file's last section, "As built", has the detail and every departure.
+
+- *What exists.* The scene `FireYard` (menu `Clover > Build > Fire Yard`; not in the build list, so the demo is as it
+  was): cracked mud under a white noon, the pylon gate and wall, a porch whose roof is drawn only as its shadow, two
+  burial niches with a wick dormant between them, a brazier to rest at, the seated king with his recut head on and
+  the old god's head on the ground beside him, an obelisk and the barque far off; one of each of the land's four
+  people and each of the three ranks of the gilded.
+- *No element.* A scene's builder sets `PlayerElement.StartsWithNone`. Until the run carries an element the spell and
+  surge buttons do nothing, blows carry no colour and lay nothing, the mana bar is grey (mana is still earned by
+  blows and spent on a weapon's skill), and a rest fire heals and says "Rested. Nothing to feed yet." without
+  opening the chart. Embers are kept and carried. The Hub, Castle and Summit do not set the flag and start with Fire
+  as before.
+- *The four people* are `EnemyKind`s on the castle's framework: The Thirsting (a drink within 8 m brings the nearest
+  one lunging for the flask; if the snatch lands it stops to drink for 1.6 s, helpless; killed or broken in that
+  time it gives the flask back, "Taken back", and otherwise "It drinks." and is whole again); The Wick (its red grab
+  takes hold: 2.5 s, 6 every half second, never to the death; each press of light attack or dodge takes 0.4 s off;
+  it can be placed dormant and is struck twice as hard before it has risen); the Gilded Levy, Spearman and Warden
+  (one model, three palettes: the higher the rank the more of him is gold, the more he has and the harder he hits);
+  the Sun-Blind Priest (he finds only someone who has stood in the sun for 0.4 s, or is within 2.5 m, or has traded
+  blows near him; in shade he loses them, walks to where they were, searches 3 s and goes home; a blow on one who
+  has not found the player lands twice over).
+- *Sun and shade* is a real rule the code can ask: `Sunlight.IsLit(position)`, rectangles of floor registered by the
+  scene from the same numbers that place its roofs.
+- *The look*: `LookBuilder.Noon` with the spec's first values; the materials in `SunCityKit`, by slot name. Gold is
+  lit and the ember, molten and sun slots glow; nothing else is saturated.
+
+Open for the owner: the yard has not been played by a person; the numbers are the spec's and none has been felt; the
+priest's reach (18 m in the open) makes him a sniper outside a roofed hall, which is how the spec has it but may not
+be wanted; whether the thirsting's unprompted snatch (every 14 s with two flasks carried) is too much; whether
+"Rested. Nothing to feed yet." is the line.

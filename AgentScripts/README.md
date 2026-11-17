@@ -162,3 +162,28 @@ the waking in the Hub: the dark screen has gone by the time it is held.
 it counts the frames in which the tail is between the camera and the player (`StormDragon.PlayerHidden`) and pictures
 the first (`dragon_view_finder_<move>.png`), where the gold ring should be seen through the tail. The probe reads its
 parts from `AgentScripts/dragon_view.txt`. `dragon_sheets.py` no longer deletes the `aspect_*` sheets.
+
+## The Fire land's yard: `FireProbe` (2026-11-17)
+
+`bash AgentScripts/runprobe.sh FireYard FireProbe 130` (about three and a half minutes). The player has fists and no
+element. Part 0: the spell and surge buttons with full mana (nothing is cast), then the rest fire (the chart stays
+shut; "Rested. Nothing to feed yet."). Then each enemy in turn, with every other enemy put back where it stood
+before each trial (`Only`): each attack forced on a player standing still (`Still`), on a held guard (`Guarded`) and,
+for the red ones, rolled out of sideways (`Rolled`); then its special rule; then it is killed with fists and the
+embers counted. The thirsting: a drink at 7.6 m draws the snatch; the flask comes back when its balance is broken
+mid-drink; left alone it finishes and is whole again; a roll late in the tell saves the flask; the kneeling one is
+dormant until 3 m. The wick: the hold left to run (five bites, 30), struggled out of (five presses), on 9 health (it
+ends at 1), a heavy blow breaking the grab while it is shown; the dormant one struck (double) and woken by walking
+up. The gilded by rank: the guard from the front, heavy and from behind, every attack, the planted ring. The priest:
+`Sunlight.IsLit` at three spots, not found in the porch's shade, the double blow, found in the sun after 0.4 s, the
+ray on a still and a walking player, lost in shade, the search and the giving up, found at 2 m, the flare lighting
+the ground. Frames go to `review/shots/current/fire_<enemy>_<n>.png` and `fire_yard_<n>.png`.
+
+`PerfProbe` knows the yard: `bash AgentScripts/runprobe.sh FireYard PerfProbe 30` wakes every enemy with the player in
+the middle and reports ten seconds of frame times and garbage.
+
+`FireDump.cs` writes the hierarchy, bounds and material counts of the Fire land's models to
+`review/checks/fire_dump.txt`; it was used once at intake and can be deleted.
+
+Heredocs with an apostrophe in them fail in this shell tool: write a patch script with the Write tool and run it
+with `python -I script.py </dev/null` (never `python - <<EOF </dev/null`, which reads nothing).

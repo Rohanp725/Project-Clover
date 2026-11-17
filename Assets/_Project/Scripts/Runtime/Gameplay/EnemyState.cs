@@ -16,6 +16,8 @@ namespace Clover.Gameplay
         Flinch,
         /// <summary>Stagger meter full: helpless until it passes or the finisher comes.</summary>
         Staggered,
+        /// <summary>Taken up with something that is not an attack (drinking, holding, rising, searching) until it is over or it is broken out of it.</summary>
+        Busy,
         Dead,
     }
 }

@@ -1222,3 +1222,78 @@ than half a form.
 Also worth a word, if there is time: the fourth flask at the well (a permanent gain in the first hour); the wick's
 hold never killing; Falling Sun rising again after a blow where it now goes out; and the land's length, which sits
 at 36 to 38 minutes, the top of the 30 to 40 asked for.
+
+---
+
+## As built
+
+### 2026-11-17, first worker: the models, the look, no element, the four ordinary enemies, the test yard
+
+Built by Claude in one unattended night run. Nothing here has been played by the owner. Seen in `FireProbe` and its
+frames (`review/shots/current/fire_*.png`) and in the contact sheets (`review/anim/thirst_*`, `wick_*`, `gilded_*`,
+`sunblind_*`).
+
+**Where things are.**
+
+| What | Where |
+|---|---|
+| The kinds and their numbers (section 4) | `Runtime/Gameplay/EnemyKind.Fire.cs`: `EnemyKind.ThirstName`, `WickName`, `GildedLevyName`, `GildedSpearmanName`, `GildedWardenName` (or `GildedName(rank)`), `SunBlindName` |
+| The new rules in the enemy | `Enemy.cs` (dormant, the snatch, the hold, hunting by light, burning ground), `EnemyBrain.Occupy` and `EnemyState.Busy`, `EnemyTurns.AnswersDrink` |
+| The rules as plain classes with tests | `World/Sunlight.cs`, `Gameplay/SunSense.cs`, `Player/Grip.cs`, `Gameplay/FlaskSnatch.cs`; tests in `Tests/EditMode/Gameplay/FireLandTests.cs` |
+| A scene's light and shade | `World/SunlightZones.cs` (a component the builder fills) |
+| No element | `PlayerElement.StartsWithNone` and `HasElement`, `Elements.None`, `Elements.StartsEmpty`, `RestPoint.NothingToFeed` |
+| The clips | `Editor/Forge/FireAnimations.cs`, baked by `Clover > Forge > Bake Enemy Animations` |
+| Materials and kit pieces | `Editor/Builders/SunCityKit.cs` (`For`, `Dress`, `Place`, `Panel`, `FormPiece`, `Mud`, `Brick`, `BrickDark`, `Stone`, `Shade`); materials in `Generated/SunCity` |
+| The mood | `LookBuilder.Noon`, `NoonSunDegrees`, `NoonShadowLength(height)` |
+| The yard | `Editor/Builders/FireYardBuilder.cs`, `Scenes/FireYard.unity`, saved with `SceneBuild.FinishOutsideBuild` |
+
+**Built to this document.** Every number in the four tables of section 4 (health, balance, poise, speeds, ranges,
+embers, every attack row). The snatch, points 1 to 5. The hold, points 1 to 5. Dormant wicks (wake distance, 1.2 s to
+rise, double damage until risen). The rank table of the gilded. The priest's rule, points 1 and 3 to 5. The mood's
+table of values.
+
+**Where it departs, and why.**
+
+1. *The gilded carries a shield.* Section 4.3 says "a spear and no shield"; the model has a tall hide shield on the
+   left forearm and the night's brief asked for spear and shield. He holds the spear in the gold hand alone.
+2. *Gold by rank follows the model, not the fractions in the table.* Rank 1 is the mask and the runs on the neck and
+   chest; rank 2 adds the whole right arm and the runs on it and up the spear; rank 3 adds the cuirass, kilt panel,
+   shield rim, left forearm, shins and feet and the splashes and puddles. Slots ending `_r2` and `_r3` are gold from
+   that rank up; below it the gold-only pieces are drawn with a material that draws nothing.
+3. *One wick dressing.* `Palette` "wick" and "wick_wrapped" are not two looks: the one model is the wrapped dead with
+   charred hands. No smoke thread yet.
+4. *The priest's staff carries a sun, not a mirror* (the model's), and his brow disc does not light when he has found
+   the player: nothing shows found from searching but what he does.
+5. *The yard is open sky*, so the light rule runs the other way round from the hall: everything is lit except the
+   registered shade (`Sunlight.SetOpenSky(true)` and `AddShade`). The hall will register `AddLight` rectangles under
+   a closed sky; both are tested. A flare lights its circle either way.
+6. *Burning ground* (the planted spear) is kept by the enemy that made it, since `Hazards` bites enemies only. It
+   bites 4 every 0.5 s for 3 s as written, but each bite is an ordinary blow: the player flinches and is pushed a
+   metre outward, so someone standing still takes one or two bites and is put out of the ring, not six. It stops if
+   the warden dies. There is no mark on the ground for it beyond the flames.
+7. *The fight a priest can feel* is any blow of his that lands within 8 m of him, or any blow he takes; a ray that
+   lands farther off tells him nothing.
+8. *The tip after a first snatch* (4.1, point 6) is not written. The hold's prompt is a status line, "Break free:
+   strike or dodge", once a sitting.
+9. *A dormant enemy can still be picked by soft aim.* 4.2 says it should not be.
+10. *`thirst_kneel_loop`* is used through the same dormant flag (wake distance 3 m, 0.4 s to get up, no extra
+    damage): `enemy.MakeDormant(3f, "thirst_kneel_loop")`. A wick on a table is
+    `MakeDormant(4f, "wick_lie_loop")` and rises with `wick_rise_lying`; in a doorway `MakeDormant(3.5f)`.
+11. *A rest fire with no element* says "Rested. Nothing to feed yet." (a status line) and does not open the chart.
+12. *Noon's shade colour.* The toon shader's shade colour is set on every material of the land to (0.56, 0.53, 0.66),
+    lighter than the castle's, so the south faces the camera sees (the sun leans north, so they are all in shade)
+    are a grey-violet and not navy. The mud and brick are plain colours: the stone textures made for the castle carry
+    its blues and reds.
+13. *The roof drawn as shadow only* (section 10, point 8) was tried on the yard's porch and reads: the shade is a
+    hard dark rectangle and the camera sees under it. The columns thin out when they stand between camera and player.
+
+**For the next builder.** Place an enemy with `EnemyBuilder.Build(EnemyKind.WickName, position, yaw, kit, parent)`
+exactly as the castle does, then `kit.Turns.Configure(all)` and `director.Configure(...)`. Do not call
+`PlayerBuilder.AddRunEnd`. Set `PlayerElement.StartsWithNone = true` and `StartingWeapon = Weapons.FistsName` on the
+player. Kit pieces have their fronts toward +Z: `SunCityKit.Place("column_lotus", parent, position)` turns them 180
+to face the camera by default, with a box collider round the whole piece unless `solid` is false (give the pylon and
+doorways their own colliders). `column_lotus` stands at y 0.5 on `column_base`; `statue_head_new` goes at
+(0, 8.0, -1.1) from `statue_king` when both are turned 180; `barque` wants scale 0.73. `mud_tile` is laid at y -0.19
+over a slab whose renderer is off, so its plates lie at the height of the ground. For the hall, add a
+`SunlightZones` and `Configure(false, null, lightRectangles)` from the same list that cuts the roof; the shadow of a
+roof at height h falls `LookBuilder.NoonShadowLength(h)` north of it.

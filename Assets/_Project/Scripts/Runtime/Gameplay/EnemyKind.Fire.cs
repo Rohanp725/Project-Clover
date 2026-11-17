@@ -1,0 +1,240 @@
+using System.Collections.Generic;
+
+namespace Clover.Gameplay
+{
+    /// <summary>
+    /// The people of the sun-king's city (docs/design/fire_land.md, section 4), each corrupted by fire in its own way:
+    /// the thirsting, who come for the flask; the wick, who grabs and holds to share the burning; the gilded soldier
+    /// in three ranks, told apart by how much gold is on him; and the sun-blind priest, who hunts by light and shade.
+    /// </summary>
+    public partial class EnemyKind
+    {
+        public const string ThirstName = "The Thirsting";
+        public const string WickName = "The Wick";
+        public const string GildedLevyName = "Gilded Levy";
+        public const string GildedSpearmanName = "Gilded Spearman";
+        public const string GildedWardenName = "Gilded Warden";
+        public const string SunBlindName = "Sun-Blind Priest";
+
+        public static IEnumerable<EnemyKind> FireKinds
+        {
+            get
+            {
+                yield return Thirsting();
+                yield return Wick();
+                yield return Gilded(1);
+                yield return Gilded(2);
+                yield return Gilded(3);
+                yield return SunBlind();
+            }
+        }
+
+        private static EnemyKind FireByName(string name) =>
+            name == ThirstName ? Thirsting() : name == WickName ? Wick() : name == GildedLevyName ? Gilded(1)
+            : name == GildedSpearmanName ? Gilded(2) : name == GildedWardenName ? Gilded(3) : name == SunBlindName ? SunBlind() : null;
+
+        /// <summary>The gilded soldier's name at a rank from 1 to 3.</summary>
+        public static string GildedName(int rank) => rank >= 3 ? GildedWardenName : rank == 2 ? GildedSpearmanName : GildedLevyName;
+
+        /// <summary>
+        /// One of the river people, dried out standing up. Weak, quick and plain: it teaches the chain, the perfect
+        /// guard (one breaks it) and the finisher, and to watch where one drinks, because a drink near it brings it
+        /// lunging for the flask.
+        /// </summary>
+        public static EnemyKind Thirsting() => new EnemyKind
+        {
+            Name = ThirstName,
+            Prefix = "thirst",
+            Model = "enemy_thirst",
+            Scale = 0.95f,
+            Health = 40f,
+            StaggerMaximum = 45f,
+            PerfectGuardStagger = 45f,
+            PoiseHits = 1,
+            WalkSpeed = 3.8f,
+            TurnDegreesPerSecond = 380f,
+            Embers = 1,
+            DrawsStorm = false,
+            Ashen = true,
+            SnatchAttack = "thirst_snatch",
+            SnatchRange = 8f,
+            DrinkSeconds = 1.6f,
+            // Kneeling at a dry pool it is up at once, and is struck no harder for it.
+            RiseSeconds = 0.4f,
+            DormantDamage = 1f,
+            Brain = new EnemyBrain
+            {
+                AggroRange = 9f,
+                PreferredRange = 1.9f,
+                WaitRange = 5.5f,
+                RestMin = 0.5f,
+                RestMax = 1.0f,
+                FlinchSeconds = 0.25f,
+                Attacks = new List<EnemyAttack>
+                {
+                    // Two slow plain claws: hold guard, then try the perfect guard.
+                    new EnemyAttack { Name = "thirst_claw_1", Telegraph = 0.55f, Strike = 0.12f, Recovery = 0.15f, Damage = 8f, Reach = 2.2f, ArcDegrees = 100f, Sweep = 1f, Lunge = 0.5f, MinRange = 0f, MaxRange = 2.4f, ChainInto = "thirst_claw_2", Fiery = true },
+                    new EnemyAttack { Name = "thirst_claw_2", Telegraph = 0.4f, Strike = 0.12f, Recovery = 0.6f, Damage = 10f, Reach = 2.2f, ArcDegrees = 100f, Sweep = -1f, Lunge = 0.5f, MinRange = 1f, MaxRange = 0f, Fiery = true },
+                    // The red pounce down a lane: step out of it.
+                    new EnemyAttack { Name = "thirst_pounce", Telegraph = 0.9f, Strike = 0.15f, Recovery = 0.8f, Damage = 16f, Reach = 5f, LineWidth = 1.2f, Lunge = 4f, MinRange = 3.5f, MaxRange = 7f, Unblockable = true, Cooldown = 5f, AimLockAt = 0.65f, Fiery = true },
+                    // A hand reaching for the belt, palm up. Guard it or roll; if it lands a flask goes with it.
+                    new EnemyAttack { Name = "thirst_snatch", Telegraph = 0.5f, Strike = 0.12f, Recovery = 0.3f, Damage = 6f, Reach = 6.5f, LineWidth = 1.4f, Lunge = 5.5f, MinRange = 3f, MaxRange = 6.5f, Cooldown = 14f, AimLockAt = 0.7f, NeedsFlasks = 2, Snatches = true, Fiery = true },
+                },
+            },
+        };
+
+        /// <summary>
+        /// The wrapped dead, smouldering like a candle wick. Slow and upright; the alley is what makes it dangerous.
+        /// Its red grab cannot be guarded: caught, the player is held and burnt until they struggle free.
+        /// </summary>
+        public static EnemyKind Wick() => new EnemyKind
+        {
+            Name = WickName,
+            Prefix = "wick",
+            Model = "enemy_wick",
+            Scale = 1.05f,
+            Health = 70f,
+            StaggerMaximum = 70f,
+            PerfectGuardStagger = 55f,
+            PoiseHits = 3,
+            WalkSpeed = 2.2f,
+            TurnDegreesPerSecond = 200f,
+            Embers = 1,
+            DrawsStorm = false,
+            Ashen = true,
+            HoldSeconds = 2.5f,
+            HoldBiteEvery = 0.5f,
+            HoldBiteDamage = 6f,
+            HoldPressTakes = 0.4f,
+            ThrownOff = 2f,
+            ThrownOffSeconds = 1f,
+            StruggleStagger = 20f,
+            RiseSeconds = 1.2f,
+            DormantDamage = 2f,
+            Brain = new EnemyBrain
+            {
+                AggroRange = 10f,
+                PreferredRange = 2.2f,
+                WaitRange = 4.5f,
+                RestMin = 0.7f,
+                RestMax = 1.4f,
+                Attacks = new List<EnemyAttack>
+                {
+                    new EnemyAttack { Name = "wick_swipe", Telegraph = 0.7f, Strike = 0.15f, Recovery = 0.6f, Damage = 12f, Reach = 2.4f, ArcDegrees = 120f, Sweep = 1f, Lunge = 0.4f, MinRange = 0f, MaxRange = 2.6f, Fiery = true },
+                    // Both arms brought down.
+                    new EnemyAttack { Name = "wick_slam", Telegraph = 0.9f, Strike = 0.18f, Recovery = 0.8f, Damage = 18f, Reach = 2.6f, ArcDegrees = 70f, MinRange = 0f, MaxRange = 2.6f, Cooldown = 3f, Fiery = true },
+                    // The red grab: suddenly fast. Missed, it stumbles and is open for a second.
+                    new EnemyAttack { Name = "wick_grab", Telegraph = 0.9f, Strike = 0.15f, Recovery = 1.0f, Damage = 6f, Reach = 3.4f, LineWidth = 1.6f, Lunge = 2.2f, MinRange = 1.5f, MaxRange = 4f, Unblockable = true, Cooldown = 6f, AimLockAt = 0.6f, Grabs = true, Fiery = true },
+                },
+            },
+        };
+
+        /// <summary>
+        /// A soldier of the golden way. Gold was poured on him and took; the more of it, the higher he stands. The
+        /// gold is why he guards: a blow on it rings and does little, and what is not gold is hurt as flesh is, so from
+        /// behind every blow lands in full. Each rank adds a word of the spear's grammar and of the god's.
+        /// </summary>
+        public static EnemyKind Gilded(int rank)
+        {
+            rank = rank < 1 ? 1 : rank > 3 ? 3 : rank;
+            float harder = rank == 3 ? 1.3f : rank == 2 ? 1.15f : 1f;
+            var attacks = new List<EnemyAttack>
+            {
+                new EnemyAttack { Name = "gilded_thrust", Telegraph = 0.65f, Strike = 0.15f, Recovery = 0.6f, Damage = 16f * harder, Reach = 4.4f, LineWidth = 1.0f, Lunge = 0.9f, MinRange = 0f, MaxRange = 4.6f, Fiery = true },
+                new EnemyAttack { Name = "gilded_sweep", Telegraph = 0.85f, Strike = 0.2f, Recovery = 0.75f, Damage = 20f * harder, Reach = 3.4f, ArcDegrees = 170f, Sweep = -1f, MinRange = 0f, MaxRange = 3.2f, Cooldown = 2.5f, Fiery = true },
+            };
+            if (rank >= 2)
+            {
+                // Two thrusts; the second waits longer than a frightened roll lasts and turns to follow.
+                attacks.Add(new EnemyAttack { Name = "gilded_thrust_1", Telegraph = 0.6f, Strike = 0.12f, Recovery = 0.1f, Damage = 14f * harder, Reach = 4.4f, LineWidth = 1.1f, Lunge = 0.8f, MinRange = 1.9f, MaxRange = 4.4f, Cooldown = 3f, ChainInto = "gilded_thrust_2", Fiery = true });
+                attacks.Add(new EnemyAttack { Name = "gilded_thrust_2", Telegraph = 0.5f, Strike = 0.12f, Recovery = 0.85f, Damage = 18f * harder, Reach = 4.8f, LineWidth = 1.1f, Lunge = 1.2f, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.8f, Fiery = true });
+                // The red lunge from distance.
+                attacks.Add(new EnemyAttack { Name = "gilded_lunge", Telegraph = 1.0f, Strike = 0.2f, Recovery = 0.9f, Damage = 26f * harder, Reach = 5f, LineWidth = 1.3f, Lunge = 3.4f, MinRange = 3.5f, MaxRange = 8f, Unblockable = true, Cooldown = 6f, Fiery = true });
+            }
+            if (rank >= 3)
+            {
+                // The planted spear: a ring round himself that goes on burning. His spear is stuck: he is open to anyone with reach.
+                attacks.Add(new EnemyAttack { Name = "gilded_plant", Telegraph = 1.0f, Strike = 0.2f, Recovery = 1.2f, Damage = 20f * harder, Radius = 3.2f, MinRange = 0f, MaxRange = 3f, Unblockable = true, Cooldown = 8f, BurnSeconds = 3f, BurnDamage = 4f, BurnEvery = 0.5f, Fiery = true });
+            }
+            return new EnemyKind
+            {
+                Name = GildedName(rank),
+                Prefix = "gilded",
+                Model = "enemy_gilded",
+                Palette = "gilded" + rank,
+                Scale = rank == 3 ? 1.2f : rank == 2 ? 1.12f : 1.05f,
+                Health = rank == 3 ? 150f : rank == 2 ? 110f : 80f,
+                StaggerMaximum = rank == 3 ? 120f : rank == 2 ? 100f : 80f,
+                PerfectGuardStagger = 55f,
+                PoiseHits = rank + 2,
+                Guards = true,
+                GuardedDamage = rank == 3 ? 0.2f : 0.25f,
+                GuardedStagger = 1f,
+                HeavyGuardedDamage = rank == 3 ? 0.5f : 1f,
+                Steadfast = rank == 3,
+                // The levy only turns blows; from the second rank up, three blows turned are answered with the thrust.
+                BlocksBeforeCounter = rank == 1 ? 9999 : 3,
+                WalkSpeed = 2.7f,
+                TurnDegreesPerSecond = 220f,
+                Embers = rank,
+                DrawsStorm = false,
+                Ashen = true,
+                Brain = new EnemyBrain
+                {
+                    AggroRange = 11f,
+                    PreferredRange = 3.4f,
+                    // The warden lets the lower ranks go first.
+                    WaitRange = rank == 3 ? 8f : 6f,
+                    RestMin = 0.5f,
+                    RestMax = 1.1f,
+                    CounterAttack = "gilded_thrust",
+                    Attacks = attacks,
+                },
+            };
+        }
+
+        /// <summary>
+        /// A priest who looked at his god until his eyes burned out. He cannot see: he finds whoever stands in the sun,
+        /// keeps his distance and brings the sun down on them; in shade he loses them, walks to where they were, and
+        /// searches. Struck by someone he has not found, he takes the blow twice over.
+        /// </summary>
+        public static EnemyKind SunBlind() => new EnemyKind
+        {
+            Name = SunBlindName,
+            Prefix = "sunblind",
+            Model = "enemy_sunblind",
+            Scale = 1.0f,
+            Health = 60f,
+            StaggerMaximum = 50f,
+            PerfectGuardStagger = 40f,
+            PoiseHits = 2,
+            WalkSpeed = 2.0f,
+            LitWalkSpeed = 3.4f,
+            LitPreferredRange = 7f,
+            LitRetreatRange = 4f,
+            SearchSeconds = 3f,
+            UnfoundDamage = 2f,
+            TurnDegreesPerSecond = 300f,
+            Embers = 1,
+            DrawsStorm = false,
+            Ashen = true,
+            HuntsByLight = true,
+            Brain = new EnemyBrain
+            {
+                AggroRange = 18f,
+                PreferredRange = 2.4f,
+                RestMin = 0.8f,
+                RestMax = 1.5f,
+                Attacks = new List<EnemyAttack>
+                {
+                    // He lifts the sun on his staff and it comes down where the target stood. Only at someone standing in the light.
+                    new EnemyAttack { Name = "sunblind_ray", Telegraph = 1.1f, Strike = 0.2f, Recovery = 0.6f, Damage = 20f, Radius = 2.0f, Ranged = true, MinRange = 3.5f, MaxRange = 18f, Unblockable = true, OnlyLit = true, Fiery = true },
+                    // The staff swung low.
+                    new EnemyAttack { Name = "sunblind_brand", Telegraph = 0.7f, Strike = 0.15f, Recovery = 0.7f, Damage = 16f, Reach = 2.8f, ArcDegrees = 140f, Sweep = 1f, MinRange = 0f, MaxRange = 3f, Fiery = true },
+                    // A burst of light round himself; the ground it fell on counts as sunlit for a while after.
+                    new EnemyAttack { Name = "sunblind_flare", Telegraph = 0.8f, Strike = 0.2f, Recovery = 0.9f, Damage = 16f, Radius = 3f, MinRange = 0f, MaxRange = 3.2f, Cooldown = 5f, LightsSeconds = 4f, Fiery = true },
+                },
+            },
+        };
+    }
+}

@@ -72,6 +72,20 @@ namespace Clover.Player
             return healNow;
         }
 
+        /// <summary>A full flask leaves the belt without being drunk, as when one of the thirsting snatches it. False when there is none.</summary>
+        public bool TryTake()
+        {
+            if (Count <= 0) return false;
+            Count--;
+            return true;
+        }
+
+        /// <summary>A flask that was taken comes back, if there is room for it.</summary>
+        public void PutBack()
+        {
+            if (Count < Maximum) Count++;
+        }
+
         public void Interrupt() => IsDrinking = false;
 
         /// <summary>Uses a flask up without drinking it, as throwing it does. False when there is none, or one is at the lips.</summary>

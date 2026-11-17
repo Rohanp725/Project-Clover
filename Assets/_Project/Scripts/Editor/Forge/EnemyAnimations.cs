@@ -74,11 +74,17 @@ namespace Clover.EditorTools.Forge
                 case "acolyte": return Acolyte(kind);
                 case "boss": return BossAnimations.For(kind);
                 case "captain": return CaptainAnimations.For(kind);
+                case "thirst":
+                case "wick":
+                case "gilded":
+                case "sunblind": return FireAnimations.For(kind);
                 default: return Caster(kind);
             }
         }
 
         private static EnemyAttack Named(EnemyKind kind, string name) => kind.Brain.Attacks.Find(a => a.Name == name);
+
+        public static ForgeClip AttackClip(EnemyAttack attack, out float hit, out float done) => Attack(attack, out hit, out done);
 
         private static ForgeClip Attack(EnemyAttack attack, out float hit, out float done)
         {

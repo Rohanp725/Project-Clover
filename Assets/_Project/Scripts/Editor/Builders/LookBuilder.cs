@@ -80,6 +80,32 @@ namespace Clover.EditorTools
             Saturation = 10f,
         };
 
+        /// <summary>
+        /// White noon in the sun-king's city (docs/design/fire_land.md, section 2): one hard light nearly straight
+        /// down, leaning so that every shadow falls north, the way the player walks; short black shadows, a cool
+        /// grey-violet in the shade, a pale haze and a sky with no blue in it. A 9 m roof throws its edge 1.9 m north.
+        /// </summary>
+        public static Mood Noon => new Mood
+        {
+            Name = "Noon",
+            KeyColour = new Color(1f, 0.95f, 0.84f),
+            KeyIntensity = 1.5f,
+            KeyEuler = new Vector3(NoonSunDegrees, 0f, 0f),
+            Ambient = new Color(0.36f, 0.33f, 0.38f),
+            Fog = new Color(0.62f, 0.56f, 0.47f),
+            FogDensity = 0.012f,
+            Background = new Color(0.78f, 0.74f, 0.66f),
+            Storm = false,
+            Exposure = 0.15f,
+            Saturation = -10f,
+        };
+
+        /// <summary>Degrees the noon sun stands above the ground. Shadows fall north, their length the caster's height divided by the tangent of this.</summary>
+        public const float NoonSunDegrees = 78f;
+
+        /// <summary>Metres north of its caster's edge that a noon shadow reaches, for a caster this tall.</summary>
+        public static float NoonShadowLength(float height) => height / Mathf.Tan(NoonSunDegrees * Mathf.Deg2Rad);
+
         /// <summary>The place outside the hours: a still, dim, warm light on pale stone, and black all round.</summary>
         public static Mood Stillness => new Mood
         {

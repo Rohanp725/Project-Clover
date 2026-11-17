@@ -55,6 +55,23 @@ namespace Clover.Gameplay
         /// <summary>The enemy stops turning to follow the target this far through the telegraph, so a late sidestep gets clear.</summary>
         public float AimLockAt = 0.65f;
 
+        /// <summary>Chosen only while the target is found standing in the sun (the sun-blind priest's ray).</summary>
+        public bool OnlyLit;
+        /// <summary>Above zero: chosen only while the target carries at least this many flasks.</summary>
+        public int NeedsFlasks;
+        /// <summary>A blow that lands takes a flask from the target's belt, and the attacker stops to drink it.</summary>
+        public bool Snatches;
+        /// <summary>A blow that lands takes hold of the target.</summary>
+        public bool Grabs;
+        /// <summary>Above zero: the circle goes on burning for this long after the blow, biting whoever stands in it.</summary>
+        public float BurnSeconds;
+        public float BurnDamage = 4f;
+        public float BurnEvery = 0.5f;
+        /// <summary>Above zero: the circle counts as sunlit for this long after the blow.</summary>
+        public float LightsSeconds;
+        /// <summary>The blow is shown as fire and not as lightning.</summary>
+        public bool Fiery;
+
         public float Total => Telegraph + Strike + Recovery;
         public bool IsCircle => Radius > 0f;
         public bool IsLine => LineWidth > 0f && Radius <= 0f;
