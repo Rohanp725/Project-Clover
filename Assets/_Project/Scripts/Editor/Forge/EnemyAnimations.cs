@@ -77,6 +77,7 @@ namespace Clover.EditorTools.Forge
                 case "thirst":
                 case "wick":
                 case "gilded":
+                case "champion":
                 case "sunblind": return FireAnimations.For(kind);
                 default: return Caster(kind);
             }

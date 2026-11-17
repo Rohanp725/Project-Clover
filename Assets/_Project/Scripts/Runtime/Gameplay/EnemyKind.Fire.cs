@@ -26,12 +26,85 @@ namespace Clover.Gameplay
                 yield return Gilded(2);
                 yield return Gilded(3);
                 yield return SunBlind();
+                yield return Champion();
             }
         }
 
+        public const string ChampionName = "Champion of the Gate";
+
+        /// <summary>
+        /// The Champion of the Gate (fire_land.md, section 5): one of the wholly gilded, cast in gold from mask to soles,
+        /// who holds the last gate alone with a spear and shows the god's patterns before the god does. He is fought
+        /// as the Gate Captain is: guard, guard perfectly, strike in the opening, break the balance, finish, three
+        /// times. Three thrusts down a lane, a wide sweep, the butt as his answer, a long red cast of himself and the
+        /// spear down a lane (standing in for the thrown spear and its return), and the planted spear whose ground
+        /// burns, which opens his second phase.
+        /// </summary>
+        public static EnemyKind Champion() => new EnemyKind
+        {
+            Name = ChampionName,
+            Prefix = "champion",
+            Model = "elite_gilded",
+            Palette = "cast",
+            Scale = 1.5f,
+            IsElite = true,
+            Embers = 3,
+            DrawsStorm = false,
+            Ashen = true,
+            Health = 240f,
+            StaggerMaximum = 140f,
+            StaggeredSeconds = 3f,
+            WalkSpeed = 3.0f,
+            TurnDegreesPerSecond = 260f,
+            PerfectGuardStagger = 50f,
+            Guards = true,
+            GuardedDamage = 0.15f,
+            GuardedStagger = 0.5f,
+            HeavyGuardedDamage = 0.4f,
+            Steadfast = true,
+            BlocksBeforeCounter = 4,
+            PoiseHits = 5,
+            FinisherHealthShare = 0.34f,
+            SecondPhaseAt = 0.5f,
+            SecondPhaseAttack = "champion_plant",
+            SecondPhasePace = 1.12f,
+            Brain = new EnemyBrain
+            {
+                AggroRange = 8.5f,
+                LeashRange = 22f,
+                PreferredRange = 3.4f,
+                RestMin = 0.7f,
+                RestMax = 1.4f,
+                FlinchSeconds = 0.2f,
+                CounterAttack = "champion_butt",
+                ImpatientBeyond = 5f,
+                Attacks = new List<EnemyAttack>
+                {
+                    // The god's three long thrusts, a little slower. The third waits and turns to follow.
+                    new EnemyAttack { Name = "champion_thrust_1", Telegraph = 0.6f, Strike = 0.12f, Recovery = 0.1f, Damage = 14f, Reach = 5f, LineWidth = 1.1f, Lunge = 0.8f, MinRange = 2f, MaxRange = 4.8f, ChainInto = "champion_thrust_2", Fiery = true },
+                    new EnemyAttack { Name = "champion_thrust_2", Telegraph = 0.5f, Strike = 0.12f, Recovery = 0.1f, Damage = 14f, Reach = 5f, LineWidth = 1.1f, Lunge = 0.8f, MinRange = 1f, MaxRange = 0f, ChainInto = "champion_thrust_3", Fiery = true },
+                    new EnemyAttack { Name = "champion_thrust_3", Telegraph = 0.6f, Strike = 0.12f, Recovery = 0.9f, Damage = 20f, Reach = 5.4f, LineWidth = 1.1f, Lunge = 1.4f, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.8f, Fiery = true },
+                    // Punishes circling.
+                    new EnemyAttack { Name = "champion_sweep", Telegraph = 0.8f, Strike = 0.18f, Recovery = 0.8f, Damage = 24f, Reach = 3.8f, ArcDegrees = 200f, Sweep = -1f, MinRange = 0f, MaxRange = 3.4f, Cooldown = 3f, Fiery = true },
+                    // Close in only, and his answer after four blows turned.
+                    new EnemyAttack { Name = "champion_butt", Telegraph = 0.34f, Strike = 0.1f, Recovery = 0.5f, Damage = 12f, Reach = 2.4f, ArcDegrees = 70f, Lunge = 0.4f, MinRange = 0f, MaxRange = 2.6f, Cooldown = 2.5f },
+                    // The red one, for someone who hangs back: the spear cast down a long lane and he behind it.
+                    new EnemyAttack { Name = "champion_throw", Telegraph = 1.0f, Strike = 0.2f, Recovery = 1.2f, Damage = 26f, Reach = 12f, LineWidth = 1.2f, Lunge = 8f, PassThrough = true, Unblockable = true, MinRange = 6f, MaxRange = 12f, Cooldown = 8f, AimLockAt = 0.7f, Fiery = true },
+                    // The planted spear: the ground round him burns. It opens his second phase.
+                    new EnemyAttack { Name = "champion_plant", Telegraph = 1.1f, Strike = 0.2f, Recovery = 1.2f, Damage = 18f, Radius = 4.2f, MinRange = 0f, MaxRange = 3.4f, Unblockable = true, Cooldown = 16f, BurnSeconds = 6f, BurnDamage = 8f, BurnEvery = 0.5f, Fiery = true },
+                    // Second phase only: the sweep runs on into the long thrust with no rest between.
+                    new EnemyAttack { Name = "champion_reap", Telegraph = 0.7f, Strike = 0.18f, Recovery = 0.1f, Damage = 24f, Reach = 3.8f, ArcDegrees = 200f, Sweep = -1f, MinRange = 0f, MaxRange = 3.4f, Cooldown = 5f, MinPhase = 1, ChainInto = "champion_reap_thrust", Fiery = true },
+                    new EnemyAttack { Name = "champion_reap_thrust", Telegraph = 0.6f, Strike = 0.12f, Recovery = 0.95f, Damage = 20f, Reach = 5.4f, LineWidth = 1.1f, Lunge = 1.4f, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.8f, Fiery = true },
+                    // Second phase only: the red cast twice, the second from where the first left him.
+                    new EnemyAttack { Name = "champion_throw_twice", Telegraph = 0.9f, Strike = 0.2f, Recovery = 0.2f, Damage = 24f, Reach = 12f, LineWidth = 1.2f, Lunge = 8f, PassThrough = true, Unblockable = true, MinRange = 6f, MaxRange = 12f, Cooldown = 12f, MinPhase = 1, AimLockAt = 0.7f, ChainInto = "champion_throw_again", Fiery = true },
+                    new EnemyAttack { Name = "champion_throw_again", Telegraph = 0.8f, Strike = 0.2f, Recovery = 1.2f, Damage = 24f, Reach = 12f, LineWidth = 1.2f, Lunge = 8f, PassThrough = true, Unblockable = true, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.8f, Fiery = true },
+                },
+            },
+        };
+
         private static EnemyKind FireByName(string name) =>
             name == ThirstName ? Thirsting() : name == WickName ? Wick() : name == GildedLevyName ? Gilded(1)
-            : name == GildedSpearmanName ? Gilded(2) : name == GildedWardenName ? Gilded(3) : name == SunBlindName ? SunBlind() : null;
+            : name == GildedSpearmanName ? Gilded(2) : name == GildedWardenName ? Gilded(3) : name == SunBlindName ? SunBlind() : name == ChampionName ? Champion() : null;
 
         /// <summary>The gilded soldier's name at a rank from 1 to 3.</summary>
         public static string GildedName(int rank) => rank >= 3 ? GildedWardenName : rank == 2 ? GildedSpearmanName : GildedLevyName;

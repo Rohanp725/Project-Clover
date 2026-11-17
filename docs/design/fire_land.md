@@ -1297,3 +1297,75 @@ doorways their own colliders). `column_lotus` stands at y 0.5 on `column_base`; 
 over a slab whose renderer is off, so its plates lie at the height of the ground. For the hall, add a
 `SunlightZones` and `Configure(false, null, lightRectangles)` from the same list that cuts the roof; the shadow of a
 roof at height h falls `LookBuilder.NoonShadowLength(h)` north of it.
+
+### As built: the city (2026-11-17, second worker)
+
+Built by Claude in one unattended stretch of about two hours. Nothing here has been played by the owner. Seen in
+`SunCityProbe` and its frames (`review/shots/current/suncity_*.png`) and in the champion's contact sheets
+(`review/anim/champion_*`). Sections 3.2 to 3.5, section 5 in part, and the carvings and paintings of section 7.
+
+**Where things are.**
+
+| What | Where |
+|---|---|
+| The scene and its builder | `Scenes/SunCity.unity`, `Editor/Builders/SunCityBuilder.cs`, menu `Clover/Build/Sun City`; saved with `SceneBuild.FinishOutsideBuild`, so it is not in the build list |
+| Death returns to the last rest fire | `World/LandReturn.cs`, a component the builder puts on the Area Director's object. Flags: `LoseCarriedEmbers` (the cost proposed in WORLD.md; switch it off to keep embers), `ElitesStayFallen`, `SleepBeyond` (metres). The plain rule is `Gameplay/ReturnRule.cs`; `AreaDirector.ElitesStayFallen` is false unless a `LandReturn` sets it, so the castle's captain still returns as before. `AreaDirector.ReturnPoint` says where a fall goes now |
+| The end door | `World/GateOfNoon.cs` on "Gate Of Noon" at (0, 4, 498.8). `LeadsTo = "SunCourt"`. It loads that scene only if `Application.CanStreamedLevelBeLoaded` says the game has it: build `SunCourt.unity` and put it in the build list (or it stays a status line, "It is noon within.") |
+| The champion | `EnemyKind.Champion()` / `EnemyKind.ChampionName` in `EnemyKind.Fire.cs`; model `elite_gilded.fbx`; clips `champion_*` made in `FireAnimations.Champion` and baked with `EnemyAnimations.Bake("champion")` |
+| A rest fire | `SunCityBuilder.Rest(parent, director, foot)`: the kit's brazier, a mat, a gold ring, a `RestPoint`; the return point is 1.6 m south of the foot. Add the call and rebuild |
+| A carving | `SunCityBuilder.Carving(parent, foot, yaw, what, lines...)`: a pale stele with a gold cap carrying a `Notice` (click-through) |
+| The waterskin and the grave dish | `World/LandGift.cs` (`FlasksAfter`, `Embers`, `Words`) |
+| The last painting that wakes the tomb's wicks | `World/WakingNotice.cs` |
+| The hall's light | `SunCityBuilder.HallLight`: one list makes the pale floor, the holes in the shadow-only roof and the `SunlightZones` rectangles |
+| Ground helpers | `Paving` (flagstones in half bond, tones, missing stones), `Scatter` (patches and stones on bare earth), `Drift` (sand), `Trodden` (a walked path), in the builder; `SunCityKit.Flat` for a plain colour |
+
+**Built to this document.** The three districts at the spec's sizes and heights, the five rest fires at (or within a
+few metres of) their positions, all 42 enemies of the tables (14 thirsting, 15 wicks, 5 levies, 2 spearmen, 1 warden,
+4 priests, the champion), both side paths, the gold line and the champion's ground (`HoldGround(-19, 19, 470.5, 500)`),
+carvings C1 to C10, the five paintings and two captions, the scare, the waterskin (a fourth flask), the grave dish
+(three embers), the spear at the Embalmers' Gate (`WeaponPickup`, the Great Spear as built), the title card.
+
+**Where it departs, and why.**
+
+1. *The barque is a landmark only.* There is no gangplank and nobody on the deck; E1.4's third thirsting stands on
+   the mud beside the hull. The kit's barque at scale 0.73 is 24 m by 9.5 m with its oars; only the hull is solid, and it never thins out
+   for the camera (a player close under its north side can be hidden by it); it stands at
+   (5.5, 0, 84), west of the spec's place, so that the hull is in the camera's view from the path up the west side.
+   The seated statues of the golden way likewise stand at x 14.2, not 17, so their feet and laps are in view from the road.
+2. *The Embalmers' Gate passage is 12 m wide* (x -6 to 6), not 6, so the fire, the tablet and the pinned soldier fit
+   in it. The fire (F3) is on the west side at (-4, 2, 240); the soldier and the spear on the east door at (5.4, 2, 243.4).
+3. *The pinned soldier is the gilded model standing in its bind pose* against the door with a plain shaft through
+   him. He does not slide down when the spear is taken. If the Great Spear was already drawn in an earlier run the
+   pickup is not there (`WeaponPickup` as built hides a weapon the hub already offers).
+4. *The painted tombs lie 6 m further west* than the spec (chambers x -35.5 to -26, -45.5 to -36.5, -56 to -46.5), so
+   the stair down can be walked (3 m down over 6 m). The six kit panels carry the five paintings, matched to what
+   each panel shows in the game: `tomb_1_hearth` (people round a seated figure and a fire) I; `tomb_2_star` (people
+   pointing at a falling star) II and its caption; `tomb_3_bearer` (a man carrying the star to a city) III, its
+   caption and IV; `tomb_4_king` (a seated king) the first sentence of V; `tomb_6_flaked` the rest of V, and reading
+   it wakes the wicks. **The match is loose**: no panel shows the lamp-headed figure lying dead, nor the weeping
+   herdsman, so I and II and III describe more than is painted. `tomb_5_recut` (masons on a scaffold recutting a
+   seated statue) has no words in section 7.3; it carries one line that is **Claude's, not the spec's**: "Masons on a
+   scaffold at a seated figure. They are cutting its face again."
+5. *The avenue's levels follow its stairs*: the spec puts E3.3 at y 4 but that ground (z 342 to 386) is at y 3.
+   E3.2 stands at z 348 and 351, clear of the scaffold.
+6. *No patrol.* The second priest stands at (-10, 4, 430); enemies cannot yet walk a beat.
+7. *The champion's throw is a stand-in.* `champion_throw` is a red lane 12 m long that he follows down with the
+   spear (the captain's charge in shape); there is no spear left standing, no bare-handed opening and no recall.
+   `champion_plant` is a red circle of 4.2 m round himself whose ground then burns for 6 s (the warden's rule, larger),
+   not a ring 5.5 m out round the spear. `champion_throw_twice` is the lane twice. His clips are the gilded soldier's
+   poses made again on his own body with his own timings, not new drawings; he has no idle with the spear grounded
+   that differs from the soldier's.
+8. *His bar* is the elite's: the name over his own bars above his head, as the Gate Captain has. There is no
+   screen-wide bar for elites in the framework.
+9. *The sponsor speaks through `World/LandVoice.cs`* (the "Land Voice" object; its words are set in the builder):
+   the waking lines 2.5 s after the scene starts, once per saved game (progress key `suncity.woke`); each fire's
+   lines the first time that fire is lit; the fall lines after the first fall of a sitting. All click-through. F6's
+   lines and the barque's are not in (those places are not built). The hub's `Sponsor` is not used here.
+10. *Rest fires look lit before they are lit*: the kit's brazier carries its flame in the model. Lighting adds the
+    point light only.
+11. *Shadows are a little softer here* (`shadowStrength` 0.72 on the key light, in the builder) and the hall's shaded
+    floor is a pale stone, because at full strength the hall under its roof was near black.
+12. *Enemies far off sleep*: beyond 55 m, one that has not noticed anyone stops animating
+    (`AnimatorCullingMode.CullCompletely`) until the player comes near. Nothing else about it changes.
+13. *Not built:* lamp niches that light near a wick are fixed (two are always lit); no heat haze; no smoke on the
+    wicks; no shot stations or goldens for the city; `SunCourt.unity` does not exist.

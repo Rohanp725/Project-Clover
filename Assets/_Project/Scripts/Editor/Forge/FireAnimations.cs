@@ -23,7 +23,41 @@ namespace Clover.EditorTools.Forge
                 case "sunblind": return SunBlind(kind);
                 // The three ranks share one set of clips; the warden has every attack, so his bake is the set.
                 case "gilded": return kind.Name == EnemyKind.GildedWardenName ? Gilded(kind) : Enumerable.Empty<ForgeClip>();
+                case "champion": return Champion(kind);
                 default: return Enumerable.Empty<ForgeClip>();
+            }
+        }
+
+        // The champion is the gilded soldier wholly cast: he moves as they move, on his own (larger) body and to his
+        // own timings. Each of his clips is the gilded clip named beside it, made again with his attack's seconds.
+        private static readonly (string mine, string theirs)[] ChampionMoves =
+        {
+            ("champion_thrust_1", "gilded_thrust_1"), ("champion_thrust_2", "gilded_thrust_2"), ("champion_thrust_3", "gilded_thrust_2"),
+            ("champion_sweep", "gilded_sweep"), ("champion_butt", "gilded_thrust"), ("champion_throw", "gilded_lunge"),
+            ("champion_plant", "gilded_plant"), ("champion_reap", "gilded_sweep"), ("champion_reap_thrust", "gilded_thrust_2"),
+            ("champion_throw_twice", "gilded_lunge"), ("champion_throw_again", "gilded_lunge"),
+        };
+
+        private static IEnumerable<ForgeClip> Champion(EnemyKind kind)
+        {
+            foreach (var clip in Gilded(EnemyKind.Gilded(3)))
+            {
+                string rest = clip.Name.Substring("gilded".Length);
+                if (rest != "_idle_loop" && rest != "_walk_loop" && rest != "_hurt" && rest != "_stagger" && rest != "_death") continue;
+                clip.Name = "champion" + rest;
+                yield return clip;
+            }
+            foreach (var (mine, theirs) in ChampionMoves)
+            {
+                var own = Named(kind, mine);
+                var standIn = EnemyKind.Gilded(3);
+                var borrowed = Named(standIn, theirs);
+                borrowed.Telegraph = own.Telegraph;
+                borrowed.Strike = own.Strike;
+                borrowed.Recovery = own.Recovery;
+                var clip = Gilded(standIn).First(made => made.Name == theirs);
+                clip.Name = mine;
+                yield return clip;
             }
         }
 

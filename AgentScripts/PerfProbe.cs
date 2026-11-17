@@ -39,6 +39,21 @@ public class PerfProbeRunner : MonoBehaviour
             foreach (var enemy in FindObjectsByType<Clover.Gameplay.Enemy>(FindObjectsSortMode.None))
                 enemy.TakeHit(new Clover.Gameplay.Hit(0.01f, 0f, Vector3.forward));
         }
+        if (scene == "SunCity")
+        {
+            // The busiest place in the city: the market, with everyone in it, the alley and the embalmers' yard awake and coming.
+            player.Teleport(new Vector3(2f, 2.1f, 224f), Quaternion.identity);
+            int woken = 0;
+            foreach (var enemy in FindObjectsByType<Clover.Gameplay.Enemy>(FindObjectsSortMode.None))
+            {
+                if ((enemy.transform.position - player.transform.position).magnitude > 60f) continue;
+                enemy.TakeHit(new Clover.Gameplay.Hit(0.01f, 0f, Vector3.forward));
+                woken++;
+            }
+            var land = FindAnyObjectByType<Clover.World.LandReturn>();
+            if (System.IO.File.Exists("AgentScripts/perf_nosleep.txt") && land != null) land.SleepBeyond = 0f;
+            Debug.Log($"[Probe] perf SunCity: {woken} enemies struck awake round the market; far enemies sleep beyond {(land != null ? land.SleepBeyond : -1f):0} m");
+        }
         yield return new WaitForSeconds(2f);
         var allocated = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated In Frame");
         var mainThread = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 1);

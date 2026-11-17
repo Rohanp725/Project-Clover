@@ -320,6 +320,89 @@ namespace Clover.Tests
             Assert.Greater(EnemyKind.SunBlind().Brain.Attacks.Find(a => a.Name == "sunblind_flare").LightsSeconds, 0f);
         }
 
+        // ---------------------------------------------------------------- the return to the last rest fire
+
+        [Test]
+        public void AFallBringsBackTheOrdinaryDeadButNotAGodNorABeatenEliteWhereTheLandSaysSo()
+        {
+            Assert.IsTrue(ReturnRule.ComesBack(false, false, true, true), "an ordinary enemy stands again");
+            Assert.IsTrue(ReturnRule.ComesBack(false, false, true, false));
+            Assert.IsFalse(ReturnRule.ComesBack(true, false, true, false), "a god stays fallen everywhere");
+            Assert.IsFalse(ReturnRule.ComesBack(true, false, true, true));
+            Assert.IsFalse(ReturnRule.ComesBack(false, true, true, true), "the land's elite stays dead once beaten");
+            Assert.IsTrue(ReturnRule.ComesBack(false, true, true, false), "the castle does not say so: its captain returns as before");
+            Assert.IsTrue(ReturnRule.ComesBack(false, true, false, true), "an elite still standing is put back at his post");
+            Assert.IsTrue(ReturnRule.ComesBack(true, false, false, true), "the living are always put back");
+        }
+
+        [Test]
+        public void AFallTakesTheEmbersCarriedOnlyWhileTheFlagIsOn()
+        {
+            Assert.AreEqual(0, ReturnRule.EmbersAfterFall(7, true));
+            Assert.AreEqual(7, ReturnRule.EmbersAfterFall(7, false));
+            Assert.AreEqual(0, ReturnRule.EmbersAfterFall(0, true));
+        }
+
+        [Test]
+        public void ALandsRuleIsOnByDefaultAndAnAreaWithoutOneKeepsItsElites()
+        {
+            var land = new GameObject("land").AddComponent<LandReturn>();
+            var area = new GameObject("area").AddComponent<AreaDirector>();
+            try
+            {
+                Assert.IsTrue(land.LoseCarriedEmbers);
+                Assert.IsTrue(land.ElitesStayFallen);
+                Assert.IsFalse(area.ElitesStayFallen, "only a LandReturn turns this on, so Hub, Castle and Summit are as they were");
+            }
+            finally
+            {
+                Object.DestroyImmediate(land.gameObject);
+                Object.DestroyImmediate(area.gameObject);
+            }
+        }
+
+        // ---------------------------------------------------------------- the champion and the city
+
+        [Test]
+        public void TheChampionIsAnEliteWhoGuardsOpensHisSecondPhaseWithThePlantedSpearAndHasTwoRedAttacks()
+        {
+            var champion = EnemyKind.ByName(EnemyKind.ChampionName);
+            Assert.AreEqual(EnemyKind.ChampionName, champion.Name);
+            Assert.IsTrue(champion.IsElite);
+            Assert.IsFalse(champion.IsBoss);
+            Assert.IsTrue(champion.Guards);
+            Assert.IsTrue(champion.Steadfast);
+            Assert.AreEqual(240f, champion.Health);
+            Assert.AreEqual(3, champion.Embers);
+            Assert.AreEqual("elite_gilded", champion.ModelName);
+            Assert.AreEqual("champion_plant", champion.SecondPhaseAttack);
+            Assert.Greater(champion.Brain.Attacks.Find(a => a.Name == "champion_plant").BurnSeconds, 0f);
+            Assert.AreEqual("champion_thrust_2", champion.Brain.Attacks.Find(a => a.Name == "champion_thrust_1").ChainInto);
+            Assert.AreEqual("champion_thrust_3", champion.Brain.Attacks.Find(a => a.Name == "champion_thrust_2").ChainInto);
+            foreach (var attack in champion.Brain.Attacks)
+            {
+                bool red = attack.Name.StartsWith("champion_throw") || attack.Name == "champion_plant";
+                Assert.AreEqual(red, attack.Unblockable, attack.Name);
+                if (!string.IsNullOrEmpty(attack.ChainInto)) Assert.IsNotNull(champion.Brain.Attacks.Find(a => a.Name == attack.ChainInto), attack.ChainInto);
+            }
+            Assert.AreEqual(1, champion.Brain.Attacks.Find(a => a.Name == "champion_reap").MinPhase);
+            Assert.AreEqual(1, champion.Brain.Attacks.Find(a => a.Name == "champion_throw_twice").MinPhase);
+        }
+
+        [Test]
+        public void TheHallsLightIsThreeBarsAndTheNaveAndARollCrossesABarUnfound()
+        {
+            var light = Clover.EditorTools.SunCityBuilder.HallLight;
+            Assert.AreEqual(4, light.Length);
+            Sunlight.SetOpenSky(false);
+            foreach (var lit in light) Sunlight.AddLight(lit.x, lit.y, lit.z, lit.w);
+            Assert.IsTrue(Sunlight.IsLit(new Vector3(-10f, 4f, 430f)), "in the second bar");
+            Assert.IsTrue(Sunlight.IsLit(new Vector3(0f, 4f, 420f)), "in the nave");
+            Assert.IsFalse(Sunlight.IsLit(new Vector3(-10f, 4f, 420f)), "a side aisle between bars is shade");
+            Assert.IsFalse(Sunlight.IsLit(new Vector3(10f, 4f, 440f)));
+            for (int i = 0; i < 3; i++) Assert.LessOrEqual(light[i].w - light[i].z, 4.5f, "a bar is no wider than a roll is long");
+        }
+
         [Test]
         public void TheYardsShadeLiesNorthOfItsRoofByTheNoonSun()
         {

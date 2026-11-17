@@ -188,6 +188,9 @@ namespace Clover.EditorTools
         public static Material Stone => Plain("m_sun_stone", new Color(0.66f, 0.62f, 0.55f), 0.02f);
         public static Material Shade => Plain("m_sun_shade", new Color(0.3f, 0.29f, 0.36f), 0f);
 
+        /// <summary>A plain surface of the land in a colour of the builder's own (packed earth, sand, silt), shaded as the rest is.</summary>
+        public static Material Flat(string name, Color colour, float outline = 0f) => Plain(name, colour, outline);
+
         private static Material Plain(string name, Color colour, float outline)
         {
             var material = BuildKit.Toon(Folder, name, colour, false, null, 0f, outline);

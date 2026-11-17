@@ -27,6 +27,11 @@ namespace Clover.World
         public float StrikeDamage = 18f;
         public Color StrikeColour = new Color(0.55f, 0.75f, 1f, 1f);
 
+        /// <summary>Set by a land's <see cref="LandReturn"/>: an elite once beaten is not brought back by a rest or a fall. Off, as in the castle, it returns.</summary>
+        [System.NonSerialized] public bool ElitesStayFallen;
+        /// <summary>Where a fall returns the player to now: the last fire rested at, or the start.</summary>
+        public Transform ReturnPoint => respawn;
+
         public int StormStrikes { get; private set; }
         public int EnemiesAlive
         {
@@ -131,8 +136,8 @@ namespace Clover.World
         private void RestoreEnemies()
         {
             foreach (var enemy in enemies)
-                // A god stays fallen.
-                if (enemy != null && !(enemy.Kind.IsBoss && enemy.IsDead)) enemy.Restore();
+                // A god stays fallen; an elite too, in a land that says so.
+                if (enemy != null && ReturnRule.ComesBack(enemy.Kind.IsBoss, enemy.Kind.IsElite, enemy.IsDead, ElitesStayFallen)) enemy.Restore();
             marked = null;
             ShowMark(false);
             untilStrike = Random.Range(StormStrikeMin, StormStrikeMax);

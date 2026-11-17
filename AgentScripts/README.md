@@ -54,6 +54,31 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 
 Probes that touch saved progress forget it before and after, so the first real start still shows the first waking.
 
+### SunCityProbe
+
+`bash AgentScripts/runprobe.sh SunCity SunCityProbe 120` (about four minutes). The scene is built by
+`Clover > Build > Sun City` and is not in the build list, so the runner opens it by path as it does the others. In order:
+
+0. The sponsor's waking words are read to their end first (and its words at each fire and after the first fall, as
+   they come): each is a line `the voice ...` with the count of lines.
+1. The walk: the player is put down at 33 places from the wake point to the champion's line and a frame is written at
+   each, `review/shots/current/suncity_<district>_<n>.png` with district `river`, `well`, `wicks`, `tombs`, `golden`,
+   `hall`, `gate`. The people near each place wake; the line after each district says how many. In the hall it stands
+   in shade and then in a bar of light and says how many priests found it each time.
+2. The stairs, walked with the keys: quay, gully, tomb stair down and up, both avenue stairs, the pylon, the street.
+   Each line ends `OK` or `WRONG` by the height reached.
+3. Every carving and painting read to its end with the use button (the box must open, close, and free the player);
+   the last painting must wake the two wicks in the tombs; the waterskin, the grave dish and the spear are taken.
+4. Each of the five rest fires lit, with the return point after each. Then three enemies killed, a fall far from the
+   fire: the line must say `AT THE FIRE`, all 42 alive again, embers carried 0. Then the same with
+   `LandReturn.LoseCarriedEmbers` off: the embers are kept.
+5. The champion: the gate tried while he stands, each of seven attacks forced on a still player with a frame
+   (`suncity_gate_2` to `_8`), his guard measured, his second phase, his death, a fall and a rest (he must stay dead
+   and the other 41 return), and the gate opened.
+
+The frames are the size of the Game view, not 1280 by 720. `PerfProbe` has a `SunCity` branch (the market with
+everyone within 60 m struck awake); a file `AgentScripts/perf_nosleep.txt` makes it measure with distance sleeping off.
+
 ## Trying the gifts by hand: the debug shrines
 
 Only the Lightning god exists, so the practice yard (the `CombatTest` scene, built by `Clover > Build > Combat Test

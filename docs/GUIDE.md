@@ -557,8 +557,8 @@ Taking a new element forgets the old tree and gives back the embers spent on it.
 
 All 428 marks, written out from the game's own data: the eleven trees in ring order, then the eleven mixed branches.
 "Embers" is the price; a gift is never sold. "How it happens" is read from the mark's first effect, so for a mark with
-several effects the description is the fuller account. Every description here says what the mark does today. By the builders' own count 304 are built as designed. The
-other 124 do less than their design asked, so their words were cut back to match; the designed version of each, with
+several effects the description is the fuller account. Every description here says what the mark does today. By the builders' own count 315 are built as designed. The
+other 113 do less than their design asked, so their words were cut back to match; the designed version of each, with
 its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Fire (34)
