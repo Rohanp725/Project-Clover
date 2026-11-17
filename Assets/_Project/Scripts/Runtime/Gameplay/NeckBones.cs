@@ -20,6 +20,13 @@ namespace Clover.Gameplay
         /// <summary>The sharpest bend between two neighbouring stretches of the neck in the last pose, in degrees.</summary>
         public float SharpestBend { get; private set; }
 
+        /// <summary>How long the whole neck is as it was made, from its root to the point that meets the skull; nothing until it has woken.</summary>
+        public float Length { get; private set; }
+        /// <summary>Where the neck's root is now. It does not move within the piece it belongs to.</summary>
+        public Vector3 Root => restAt != null ? transform.TransformPoint(restAt[0]) : transform.position;
+        /// <summary>Where on the skull the neck's end has to be now.</summary>
+        public Vector3 SkullPoint => skull != null ? skull.TransformPoint(skullPoint) : transform.position;
+
         private Vector3[] restAt;
         private Quaternion[] restTurn;
         private float[] lengths;
@@ -54,6 +61,8 @@ namespace Clover.Gameplay
             Vector3 last = (bones[count - 1].position - bones[count - 2].position).normalized;
             restAt[count] = transform.InverseTransformPoint(bones[count - 1].position + last * endLength);
             for (int i = 0; i < count; i++) lengths[i] = (transform.TransformPoint(restAt[i + 1]) - transform.TransformPoint(restAt[i])).magnitude;
+            Length = 0f;
+            for (int i = 0; i < count; i++) Length += lengths[i];
         }
 
         private void LateUpdate()

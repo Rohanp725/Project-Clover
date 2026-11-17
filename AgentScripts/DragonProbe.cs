@@ -101,6 +101,11 @@ public class DragonProbeRunner : MonoBehaviour
             Keys();
             yield return Until(worked, 0.8f);
         }
+        // A press that did nothing: what the input system had to say about it, to find out why.
+        if (!worked())
+            Say($"a press of {key} did nothing in 6 tries: application focused {Application.isFocused}; keyboard added {Keyboard.current != null && Keyboard.current.added} enabled {Keyboard.current != null && Keyboard.current.enabled}; "
+                + $"background behaviour {InputSystem.settings.backgroundBehavior}; in the editor {InputSystem.settings.editorInputBehaviorInPlayMode}; time scale {Time.timeScale:0.00}; "
+                + $"helpless {defence.IsHelpless} attacking {combat.IsAttacking} rolling {player.Dodge.IsRolling} dead {defence.IsDead}");
     }
 
     private static readonly Vector3 Middle = new Vector3(0f, 0.1f, 2f);
@@ -393,7 +398,7 @@ public class DragonProbeRunner : MonoBehaviour
             if (i == 2) outcome = dragon.RightClawPart.TakeHit(new Hit(60f, 50f, Vector3.forward));
         }
         yield return Until(() => dragon.Doing != "Rising", 6f);
-        Say($"1 entrance: took {Time.time - risenAt:0.00} s; in fight after it {dragon.InFight}; a blow on a forefoot during it {outcome}; blows on the player during it {defence.BlowsTaken - takenBefore}; callout '{defence.LastCallout}'; arches risen {dragon.CoilsRisen}");
+        Say($"1 entrance: took {Time.time - risenAt:0.00} s; in fight after it {dragon.InFight}; a blow on a forefoot during it {outcome}; blows on the player during it {defence.BlowsTaken - takenBefore}; callout '{defence.LastCallout}'; loops risen {dragon.LoopsRisen}");
 
         // 2: the body in the cloud, seen from three places while he does nothing.
         if (pictures)
@@ -408,8 +413,8 @@ public class DragonProbeRunner : MonoBehaviour
                 hold = places[i];
                 for (float waited = 0f; waited < 2.2f; waited += Time.deltaTime)
                 {
-                    least = Mathf.Min(least, dragon.CoilsRisen);
-                    most = Mathf.Max(most, dragon.CoilsRisen);
+                    least = Mathf.Min(least, dragon.LoopsRisen);
+                    most = Mathf.Max(most, dragon.LoopsRisen);
                     yield return null;
                 }
                 yield return Shot("body_" + placeNames[i]);
@@ -424,7 +429,7 @@ public class DragonProbeRunner : MonoBehaviour
                 yield return Shot("rim_" + i);
                 yield return new WaitForSeconds(1f);
             }
-            Say($"2 the body in the cloud: arches standing at once, least {least} most {most}; jaw at rest {dragon.JawOpen:0} degrees");
+            Say($"2 the body in the cloud: loops standing at once, least {least} most {most}; jaw at rest {dragon.JawOpen:0} degrees");
         }
 
         // 3: each attack. He still does nothing of his own between them.

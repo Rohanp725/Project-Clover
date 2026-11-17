@@ -8,15 +8,15 @@ namespace Clover.EditorTools
 {
     /// <summary>
     /// Builds the storm dragon into the open scene: the modelled pieces (head with its hinged jaw, the neck in its
-    /// bank of cloud, a forefoot used twice, an arch of the body used many times round the summit, the short tail far
+    /// bank of cloud, a forefoot used twice, a boned length of the body used many times round the summit, the short tail far
     /// off and the long tail that comes onto the floor), what can be struck on each, the marks its attacks draw, its
     /// orbs, and the lines its beam is drawn with. It is left under the cloud, unseen, until the director raises it.
     /// </summary>
     public static class DragonBuilder
     {
         private const string Folder = BuildKit.GeneratedRoot + "/Enemies";
-        // Four lengths of 30 m go round a ring of about 135 m with a little cloud between each and the next.
-        private const int BodyLengths = 4;
+        // Eight lengths of 30 m shared among three rings round the summit: three, three and two.
+        private const int BodyLengths = 8;
         private const string ModelPath = "Assets/_Project/Art/Models/Characters/boss_dragon.fbx";
 
         // Storm blue-grey hide and a pale belly, gold horn and talon, white mane, cloud the colour of the summit's own,
@@ -32,22 +32,6 @@ namespace Clover.EditorTools
             ("mark", new Color(0.7f, 0.9f, 1f)),
             ("cloud", new Color(0.52f, 0.53f, 0.76f)),
             ("mouth", new Color(0.5f, 0.1f, 0.16f)),
-        };
-
-        // The arches round the summit: degrees clockwise from north, metres out from the middle, size, and degrees turned
-        // off the round. None stands due north, where the neck is, and those the camera has behind it are smaller.
-        private static readonly (float angle, float radius, float scale, float turn)[] Coils =
-        {
-            (27f, 28f, 1.5f, 10f),
-            (42f, 21.2f, 1.2f, 6f),
-            (70f, 20.8f, 1.15f, -8f),
-            (99f, 20.8f, 1.1f, 6f),
-            (130f, 21.5f, 0.85f, -12f),
-            (230f, 21.5f, 0.85f, 12f),
-            (261f, 20.8f, 1.1f, -6f),
-            (290f, 20.8f, 1.15f, 8f),
-            (318f, 21.2f, 1.2f, -6f),
-            (333f, 28f, 1.5f, -10f),
         };
 
         public static StormDragon Build(Transform target, float floorRadius, Material marker)
@@ -86,13 +70,9 @@ namespace Clover.EditorTools
             var shortTail = Piece(model, "dragon_tail", "Tail In The Cloud", root.transform, materials, renderers, new Vector3(2f, 5.5f, 2f));
             StripCloud(shortTail, materials["cloud"], "dragon_tail_bare");
             var whip = Piece(model, "dragon_tail_whip", "Tail", root.transform, materials, renderers, new Vector3(2.4f, 2f, 26f));
-            var firstCoil = Piece(model, "dragon_coil", "Arch 1", root.transform, materials, renderers, new Vector3(12f, 6f, 2.4f));
-            // The arch's own puffs of cloud are left out: seen moving with the body they read as cloud stuck to it. Its feet are kept under the scene's cloud instead.
-            StripCloud(firstCoil, materials["cloud"], "dragon_coil_bare");
-            var coils = new Transform[Coils.Length];
-            coils[0] = firstCoil;
-            for (int i = 1; i < coils.Length; i++) coils[i] = Copy(firstCoil, "Arch " + (i + 1), root.transform, renderers);
-            // The body round the summit: boned lengths that travel through the cloud. When the model has them the rigid arches are built but never shown.
+            // The rigid arch (dragon_coil) and its puffs (dragon_coil_cloud) are in the model but not in the game: the body is boned lengths.
+            AssetDatabase.DeleteAsset($"{Folder}/dragon_coil_bare.asset");
+            // The body round the summit: boned lengths that travel through the cloud.
             var lengths = new List<SpineBones>();
             if (BuildKit.FindDeep(model.transform, "dragon_length") != null)
             {
@@ -114,11 +94,11 @@ namespace Clover.EditorTools
                         renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
                 }
             }
-            else Debug.LogWarning("[Clover.Build] The dragon's model has no dragon_length; the rigid arches stand in for the body in the cloud.");
+            else Debug.LogError("[Clover.Build] The dragon's model has no dragon_length; there is no body in the cloud.");
             Object.DestroyImmediate(model);
 
-            // The neck, the arches and the far tail are scenery: nothing strikes them, and their shadows would lie across the floor.
-            foreach (var scenery in coils.Append(body).Append(shortTail))
+            // The neck and the far tail are scenery: nothing strikes them, and their shadows would lie across the floor.
+            foreach (var scenery in new[] { body, shortTail })
                 foreach (var renderer in scenery.GetComponentsInChildren<Renderer>(true))
                     renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 
@@ -177,11 +157,9 @@ namespace Clover.EditorTools
 
             dragon.Configure(target, head, jaw, body, leftClaw, rightClaw, shortTail, whip, headPart, tailPart, leftPart, rightPart, renderers.ToArray());
             dragon.ConfigureLengths(lengths.ToArray());
-            dragon.ConfigureCoils(coils, Coils.Select(coil => coil.angle).ToArray(), Coils.Select(coil => coil.radius).ToArray(),
-                Coils.Select(coil => coil.scale).ToArray(), Coils.Select(coil => coil.turn).ToArray());
-            // Far round to the north-west, where the camera sees it over the rim.
-            dragon.ConfigureTail(new Vector3(-15.5f, 0f, 17.5f), 150f);
-            shortTail.localScale = Vector3.one * 1.3f;
+            // Far round to the north-west, beyond the outermost ring of the body, where the camera sees it over the rim.
+            dragon.ConfigureTail(new Vector3(-22f, 0f, 25.5f), 150f);
+            shortTail.localScale = Vector3.one * 1.8f;
             // Sixteen circles is the most that are ever drawn at once: the outer ring of sigils and the one inside it.
             dragon.ConfigureMarks(Pairs("Beam", 2, marks, marker), Pairs("Breath", 3, marks, marker), Pairs("Bite", 1, marks, marker),
                 Pairs("Fall", 16, marks, marker), Pairs("Orb", 3, marks, marker), Pairs("Storm", 2, marks, marker),

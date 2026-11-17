@@ -72,6 +72,12 @@ brought together once the user has confirmed the open points.
 - **Leaning (user, 2026-11-17)**: the first land takes a brand-new player about 30 to 40 minutes and an experienced
   player about 20. Claude's reading: that is the time of a clean pass, the walk and the fights won, with deaths and
   retries on top; side paths are extra and optional.
+- **Decided (user, 2026-11-17)**: later lands grow a little. The two duo lands are one and a half times to almost
+  twice the size, because they hold two gods. The final area is a bit shorter, since the weight there is on the last
+  fight.
+- **Proposal** (clean pass, new player): Fire 30 to 40 minutes; the other early solo lands about 40; the middle solo
+  lands about 45; each duo land 55 to 70; the seat 15 to 20 before the last champion; no walk before the sponsor.
+  About six hours for a first climb before deaths; perhaps three and a half for an experienced player.
 - **Proposal**: the sponsor tells one story aloud; the carvings and remains in each land quietly tell another, about
   the god murdered there before the usurper came.
 - This replaces the run-based decisions in `docs/GAME.md` ("run-based, and every run includes all the bosses", the

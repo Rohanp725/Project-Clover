@@ -481,17 +481,29 @@ banner on his back; the acolyte a hood, crossed wraps and a long scarf; the stor
   "You can also see that the body pieces are not actually connected to anything when they get rotated to simulate the
   'coiling' of a serpent. You can clearly see the cloud at the bottom attached and it looks weird." **Decided
   (user)**: the body round the summit must read as one connected serpent, with no end of it and no cloud stuck to
-  it ever seen. *What is in the game now* (a stopgap, **Claude's default**): the arches are drawn without their own
-  puffs of cloud (`DragonBuilder.StripCloud` makes `Generated/Enemies/dragon_coil_bare.asset`), both feet of every
-  arch are kept under the top of the cloud sea always (`ArchLine`, 1.3 m lower than before), they turn no more than
-  10 degrees while they slide 24 degrees round the summit, and each is a little behind its neighbour in an 11 s round
-  (`SerpentWinding`) so they rise and sink one after another round the ring. They are still ten rigid arches that
-  stand and sink. *What is written and waiting* : `StormDragon.MoveLengths` and `DragonBuilder` drive four boned
-  30 m lengths of body (`dragon_length`, the modeller's sixth pass, in `staging/blender/2026-11-16_dragon`) round a
-  ring 21.5 m out, each one long arch rising out of the cloud sea east and west of the floor and diving under again,
-  both ends 6.5 m down, lead following lead at 5 m a second; when the model has `dragon_length` the arches are not
-  shown. **It has never run**: the new `boss_dragon.fbx` was not brought into `Assets` (the copy was refused in the
-  unattended run; it needs the owner's word), so nothing of it has been seen.
+  it ever seen. The owner then approved bringing the modeller's sixth pass into the game (2026-11-17), which has a
+  boned 30 m length of body (`dragon_length`, thirty bones of 1 m, no cloud).
+  *What is in the game now* (2026-11-17; everything here is **Claude's default**, seen only in the probe's pictures,
+  not yet played by the owner): the ten rigid arches are gone (`SerpentWinding` and its two tests with them). Eight
+  boned lengths travel clockwise round the summit on three rings, 20.8 m, 24.8 m and 28.8 m out (three, three and
+  two to a ring; the nearest passes close behind the rail), at 5.2, 4.1 and 6 m a second, so nearer and further
+  loops overtake one another (`StormDragon.MoveLengths`, `LengthRings`, `LengthSpeeds`). Each length is one loop:
+  it comes up out of the cloud, arcs over and dives under, and the loop goes round with the body; both its ends
+  are held 6.2 m down, 3 m under the top of the cloud sea, always. Each time a length passes due north (behind the
+  gate) or due south, where none of it shows, it takes another of five loops (`LoopPeaks`, `LoopRamps`): its back
+  7, 6, 4.8 or 3.4 m up, or a long low stretch of back just over the cloud top. It shows only between 10 and 140
+  degrees from north on either hand. Where the tail is about to come over the rim the body goes under within 16
+  degrees of it (46 for the scythe), and comes back after. No piece wears cloud of its own: `SummitBuilder` now
+  heaps a bank of the scene's own cloud close round the foot of the plinth (tops 0.05 to 0.55 m below the floor,
+  4.6 to 5.8 m out, none before the south steps or behind the gate), and it is this that covers where the body
+  and the tail go into the sea. The short tail stands further off (beyond the outermost ring), larger, its base
+  1.6 m under the cloud sea. *What the pictures show* (`review/shots/current/sheets/rim_*.png`, from the middle,
+  four corners and four sides, four frames 1.5 s apart): large loops rising out of heaped cloud and going back
+  into it, no end, no gap and no cloud moving with a piece in any frame. *Still wrong or not judged*: between
+  none and seven loops stand at once, so now and then a side of the rim is empty for a few seconds; a loop near
+  the edge of where it may show (toward the south) is squeezed low and reads as a stump of back, not an arch; the
+  loop travels with the body, so the body is not seen to flow through a loop that stays where it is; the short
+  tail was not found in any picture and may be out of the view now.
   It winds 1.6 times faster in his fury. The neck rears out of a bank of cloud behind the north gate, the head leans
   in through the gate under its beam (so it is seen from above), two small forefeet grip the rim either side of it,
   and the short tail waves in the cloud to the north-west. The eyes, the mark on the brow and the lightning line down
@@ -547,7 +559,7 @@ banner on his back; the acolyte a hood, crossed wraps and a long scarf; the stor
   the player, from one hand and then the other (for a player in the middle, east then west; never out of the gate), for
   the slither and the flops; over the rim nearest the player for the coil and the sting; over the rim furthest from
   them for the scythe; always through one of the eight bays between gate-posts from 51 to 129 degrees either side of
-  north, so the east and the west are used and the north (his head) and the south (the camera's side) are not. Its root end is never on the floor: it runs off the rim and down under the outer cloud. What a
+  north (that was the rule until 2026-11-17; see below for the bays now), so the east and the west are used and the north (his head) is not. Its root end is never on the floor: it runs off the rim and down under the outer cloud. What a
   blow lands on is eight capsules laid along the bones. The numbers are Claude's defaults.
   *The owner, watching it on 2026-11-17*: "you can see the end of the tail in the off stage area while the tail is on
   screen hitting you", and "for the tail attacks it goes through everything including its own head and also the red
@@ -565,9 +577,31 @@ banner on his back; the acolyte a hood, crossed wraps and a long scarf; the stor
   bottom, the player should not see that portion of the tail to make it feel like its stretching from the clouds".
   *Built*: the short tail is drawn without its own cloud and stands 1.3 m lower, its base under the cloud sea; the
   long tail never comes over the rim further than 130 degrees from north (so never over the south rim, where the
-  camera looks past the rim), its hidden root is 7.5 m long and goes down 3.2 m for every metre out. **Not checked
-  from every corner**: see what the probe pictured. **Not done**: the tail does not plan a path round things or wrap a turn round a post on purpose; it is
-  only kept out of them. The beams across the tops of the tall posts and the rope between them are not obstacles.
+  camera looks past the rim), its hidden root is 7.5 m long and goes down 3.2 m for every metre out. *Reworked 2026-11-17, second pass* (**Claude's defaults**, from the owner's words above; not yet played by the owner):
+  - *Which sides*: the tail comes over the rim through six bays, three on each hand: 103, 129 and 154 degrees from
+    north (east, south-east and south-south-east, and the same to the west). Not nearer north than 100 degrees
+    (`TailNeverNorthOf`): the sacred rope hangs between the tall posts there and his head and forefeet are in the
+    gate. Not due south (`TailNeverSouthOf` 160): the steps come up there. The scythe uses 129 and 154 only.
+  - *No cut end*: the rim's bank of cloud (see the body) is what the root goes down into. `DragonViewProbe`'s part
+    `Ends` stops each of the six moves when it is furthest out, from each of the six bays, and pictures it from the
+    four corners and the four sides (`review/shots/current/sheets/<move>_<side>.png`, 288 frames). In those read,
+    no cap of the tail, of a length or of the neck shows; what does show is the thick root humping over the rail
+    and going down into the cloud, pale belly outward, which from the south corners reads blunt. Whether that is
+    what the owner called "the cut portion" is not known.
+  - *Things that stand*: the tail's way is planned so it does not go where they are, and the per-joint push-out
+    (now three passes a frame) only tidies up. It enters only through bays with no rope and no tall post; a
+    slither or a flop whose line would leave the floor between tall posts stops its tip 3.5 m short of the rim
+    there; the coil's ring is laid clear of every tall post, his head and both forefeet before it is drawn (the
+    player may then stand off its middle: the mark shows where it will close); the scythe swings all the way out
+    along the rim only toward the southern stubs, which it lies over, and toward the tall posts stops at 35 degrees
+    with all of it on the floor, its reach cut to 24 m so its tip never swings through them. `TailLeastRoom`
+    measures how near the body came to a post, the head or a forefoot, and the probe's part `Things` reports it for
+    every move from every bay: before this pass the worst was 1.37 m inside one (scythe), after it 0.3 m (the
+    coil's sprung tip and one walking flop from the south-west at 0.68 m, not looked into).
+    **Not done**: the tail does not wrap a turn round a post. Every bay it may use has stubs 1.1 m high or a rope
+    across it, the tail is 2 to 3 m thick, and a turn round anything spends 12 m of a tail that is already too
+    short to cross the floor with its root hidden; it drapes over the rail (carried 1.5 m up) and that is all. The
+    rails and stubs are lain over, not gone round. The beams are above it.
   - **Red: the slither**. The tip feels over the rim while a red winding lane as wide as the body (4 m) draws itself
     out right across the floor to the far rim, winding 3 m to either side of the line through the player and crossing
     that line where they stand; it follows them for 0.9 s and holds 0.4 s. Then the tail winds down the lane in 1.3 s,
@@ -637,11 +671,13 @@ banner on his back; the acolyte a hood, crossed wraps and a long scarf; the stor
 - *The neck* (2026-11-16, **Claude's default**): the neck's ten bones are bent every frame so that its end meets the
   back of the skull wherever the head goes (`NeckBones`): each joint is moved a share of the way the end has to go,
   more toward the end, and then the lengths between joints are put right from both ends, so it keeps its modelled
-  curve at rest and straightens as the head lunges. If the head goes further than the neck is long, the last
-  stretch is drawn out rather than a gap left.
-- *Not built*: his voice and any sound; the furrow and the whip-crack; "now and then a long stretch of back breaking
-  the cloud and rolling under again" (the arches are still ten copies of one rigid arch, each rolling over on its
-  own); nothing was tuned by play.
+  curve at rest and straightens as the head lunges. If the head goes further than 0.84 of the neck's length from its root (the longest bites), the body the
+  neck grows from rears forward through the gate after it by what is wanting, up to 7 m (`LeanAfterHead`,
+  2026-11-17, **Claude's default**); only past that is the last stretch drawn longer. Measured over the whole probe after it: drawn out 0.24 m at most (it was 1.64 m) and bent 22 to 24 degrees at most (it was 28).
+- *Not built*: his voice and any sound; the furrow and the whip-crack; a turn of the tail round a post; keeping the
+  player seen when the coiled tail is between them and the camera (no fade or outline); nothing was tuned by play.
+  The coil's body no longer burns a player who stands where it will close (2026-11-17): they are left for the
+  crush, which a perfect guard turns.
 
 **The large robot, an idea held for the Metal area** (the owner, 2026-11-16: "the colossus still has to be fully reworked with the metal element and whatever that areas story ends up being, just the idea of the large robot is still good and could be used later"). It is not in the game and no scene holds it. Its model (`boss_storm.fbx`) and its code (`Colossus.cs`, `ColossusChooser.cs`, `ColossusPart.cs`, `ColossusBuilder.cs`, the old `StormProbe`) are kept compiling only as reference for that later boss, which will be reworked then. What follows is the fight as it was built for Narukami before the dragon replaced it:
 

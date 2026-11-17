@@ -29,11 +29,6 @@ namespace Clover.Gameplay
         [SerializeField] private Transform shortTail;
         [SerializeField] private Transform tail;
         [SerializeField] private SpineBones tailBones;
-        [SerializeField] private Transform[] coils = new Transform[0];
-        [SerializeField] private float[] coilAngles = new float[0];
-        [SerializeField] private float[] coilRadii = new float[0];
-        [SerializeField] private float[] coilScales = new float[0];
-        [SerializeField] private float[] coilTurns = new float[0];
         [SerializeField] private SpineBones[] lengths = new SpineBones[0];
         [SerializeField] private ColossusPart headPart;
         [SerializeField] private ColossusPart tailPart;
@@ -74,36 +69,23 @@ namespace Clover.Gameplay
         public float ClawInset = 1.7f;
 
         [Header("The body in the cloud")]
-        /// <summary>The height of the top of the cloud, which is where an arch stands when it has wholly risen.</summary>
-        public float CloudLine = -1.2f;
-        /// <summary>Metres an arch of scale one sinks to be wholly under.</summary>
-        public float CoilSink = 8.5f;
-        /// <summary>Degrees round the summit an arch slides along its own length while it stands.</summary>
-        public float CoilSlide = 24f;
-        /// <summary>Degrees an arch turns about the middle of its own curve either side of standing, as a rope goes over a wheel: at 90 it comes up from nothing and goes under to nothing.</summary>
-        public float CoilRoll = 10f;
-        /// <summary>The height the arches' feet are kept at, under the top of the cloud sea, so no end of body is ever seen.</summary>
-        public float ArchLine = -2.5f;
-        /// <summary>The lengths of body round the summit: how far out they go round, how deep they run where they are not seen, how high the middle of their rise is and how far it rises and falls about that, how long one rise and dive is, metres a second they travel, and the metres of cloud between one length's end and the next one's.</summary>
-        public float LengthRing = 21.5f;
-        public float LengthDeep = -6.5f;
-        public float LengthMiddle = 5.5f;
-        public float LengthRise = 1.2f;
-        public float LengthWave = 20f;
-        public float LengthSpeed = 5f;
-        public float LengthGap = 3f;
+        /// <summary>The top of the summit's sea of cloud: whatever of him is under it is not seen.</summary>
+        public float CloudLine = -3f;
+        /// <summary>The lengths of body round the summit. How far out each ring of them goes round (one near behind the rail, the others further off; far enough apart that two bodies never touch), and the metres a second the body on each travels.</summary>
+        public float[] LengthRings = { 20.8f, 24.8f, 28.8f };
+        public float[] LengthSpeeds = { 5.2f, 4.1f, 6f };
+        /// <summary>How deep the middle of the body runs where it is not seen: its fins stand 2.4 m above that and have to be under the cloud.</summary>
+        public float LengthDeep = -6.2f;
+        /// <summary>The loops a length may make as it comes round: how high the middle of the body stands at the top of each, and over how many metres from either end it climbs to that. The fourth is a long low stretch of back rolling along the top of the cloud.</summary>
+        public float[] LoopPeaks = { 6f, 3.4f, 4.8f, -0.9f, 7f };
+        public float[] LoopRamps = { 15f, 13f, 14f, 9.5f, 15f };
         /// <summary>Degrees from north between which the body comes out of the cloud: not behind the gate, where the neck is, nor round the south, where it would stand between the camera and the floor.</summary>
         public float LengthFromNorth = 10f;
         public float LengthToNorth = 140f;
-        /// <summary>Half the distance between an arch's feet: what keeps its upper foot on the cloud line as it turns.</summary>
-        public float CoilFoot = 4.7f;
-        /// <summary>How much of that it is let down while it stands near upright (all of it by the time it goes under), and how much slower it turns in the middle of its pass than at the ends.</summary>
-        public float CoilFootKept = 1f;
-        public float CoilRollEase = 1f;
+        /// <summary>Degrees either side of where the tail comes over the rim within which the body stays under, so the two never cross.</summary>
+        public float LengthTailRoom = 16f;
         /// <summary>How low the lines of light down the body are turned while he shows what he is about to do.</summary>
         public float TellingBodyGlow = 0.3f;
-        /// <summary>How the arches take turns: see <see cref="SerpentWinding"/>.</summary>
-        public SerpentWinding Winding = new SerpentWinding();
         /// <summary>How many times faster the body winds in its fury.</summary>
         public float FuryWinding = 1.6f;
 
@@ -190,6 +172,9 @@ namespace Clover.Gameplay
         public float BiteStuck = 1.8f;
         /// <summary>How far behind where the player stood, toward the rim, the chin comes down: the snout reaches the rest of the way.</summary>
         public float BiteBack = 2.4f;
+        /// <summary>How much of the neck's own length the head may be from its root before the body rears forward after it, and how far forward the body may come.</summary>
+        public float NeckReach = 0.84f;
+        public float NeckLeanLimit = 7f;
 
         [Header("The bolts")]
         public float BoltWaveEvery = 0.85f;
@@ -231,8 +216,9 @@ namespace Clover.Gameplay
         public float TailFan = 4.2f;
         /// <summary>How much of the root end of the tail is kept off the floor in a slither that crosses it: the cut end is never seen.</summary>
         public float TailRootKept = 7.5f;
-        /// <summary>Degrees from north beyond which the tail never comes over the rim.</summary>
-        public float TailNeverSouthOf = 130f;
+        /// <summary>Degrees from north within which the tail never comes over the rim: a sacred rope hangs between the tall posts there, and his head and forefeet are in the gate. And degrees from north beyond which it never does: the steps come up at the south.</summary>
+        public float TailNeverNorthOf = 100f;
+        public float TailNeverSouthOf = 160f;
         /// <summary>How high the tail's belly is carried where it crosses the rim, to lie over the balustrade there, and how far inside the rim it begins to rise.</summary>
         public float RimLift = 1.5f;
         public float RimLiftWithin = 3.5f;
@@ -292,6 +278,8 @@ namespace Clover.Gameplay
         public float ScytheTelegraph = 1.5f;
         /// <summary>Degrees either side of straight across that it sweeps between.</summary>
         public float ScytheSpread = 76f;
+        /// <summary>How far it swings toward the side where the posts are tall: it stops with all of it still on the floor.</summary>
+        public float ScytheSpreadNorth = 35f;
         public float ScytheFirst = 1.3f;
         public float ScythePause = 0.5f;
         public float ScytheSecond = 0.85f;
@@ -391,6 +379,8 @@ namespace Clover.Gameplay
         public int TailStings { get; private set; }
         /// <summary>Where on the rim the tail last came over, and the way it lay from there.</summary>
         public Vector3 TailEntry => tailEntry;
+        /// <summary>The least room there has been between the tail's body and a post, his head or a forefoot in the move it is making or last made: below nothing, it went into one.</summary>
+        public float TailLeastRoom { get; private set; }
         public Vector3 TailAlong => tailAlong;
         /// <summary>The middle of the coil's ring, and where the sting will next stab.</summary>
         public Vector3 CoilCentre => coilCentre;
@@ -399,7 +389,8 @@ namespace Clover.Gameplay
         public int BlowsStruck { get; private set; }
         public int TimesStaggered { get; private set; }
         /// <summary>How many arches of the body stand at least half out of the cloud now.</summary>
-        public int CoilsRisen { get; private set; }
+        /// <summary>How many loops of the body stand out of the cloud now.</summary>
+        public int LoopsRisen { get; private set; }
         /// <summary>Degrees the jaw hangs open now.</summary>
         public float JawOpen => jawAngle;
 
@@ -516,16 +507,6 @@ namespace Clover.Gameplay
             renderers = allRenderers;
         }
 
-        /// <summary>The arches of the body round the summit: each one's angle clockwise from north, distance out, size, and how far it is turned off the round.</summary>
-        public void ConfigureCoils(Transform[] arches, float[] angles, float[] radii, float[] scales, float[] turns)
-        {
-            coils = arches;
-            coilAngles = angles;
-            coilRadii = radii;
-            coilScales = scales;
-            coilTurns = turns;
-        }
-
         /// <summary>The marks its attacks draw, each an outline and the copy that fills it, in pairs; the orbs; and the lines the beam and the breath are drawn with.</summary>
         public void ConfigureMarks(MeshFilter[] beamPairs, MeshFilter[] breathPairs, MeshFilter[] bitePair, MeshFilter[] fallPairs, MeshFilter[] orbPairs,
             MeshFilter[] stormPairs, MeshFilter[] tailSweepPair, MeshFilter[] tailSlamPair, MeshFilter roar, Transform[] orbBodies, LineRenderer[] beamLines)
@@ -560,6 +541,7 @@ namespace Clover.Gameplay
         private void Awake()
         {
             block = new MaterialPropertyBlock();
+            neckBones = body != null ? body.GetComponent<NeckBones>() : null;
             Health.Maximum = MaximumHealth;
             Health.Fill();
             Stagger.Maximum = BalanceMaximum;
@@ -704,7 +686,6 @@ namespace Clover.Gameplay
             rightClaw.gameObject.SetActive(shown);
             shortTail.gameObject.SetActive(shown);
             tail.gameObject.SetActive(shown && tailOut);
-            foreach (var coil in coils) coil.gameObject.SetActive(shown && lengths.Length == 0);
             foreach (var length in lengths) length.gameObject.SetActive(shown);
         }
 
@@ -828,7 +809,28 @@ namespace Clover.Gameplay
         private Vector3 HeadHome() => new Vector3(0f, HeadHeight, FloorRadius - HeadInset);
         private Vector3 FallenHead() => new Vector3(0f, 0f, FloorRadius - 9f);
         private Vector3 SpentHead() => new Vector3(0f, 0f, FloorRadius - 7.5f);
-        private Vector3 BodyHome() => new Vector3(0f, -2.4f, FloorRadius + 5.5f);
+        private Vector3 BodyHome() => new Vector3(0f, -2.4f, FloorRadius + 5.5f) + bodyLean;
+
+        // The neck is only so long. When the head goes further out over the floor than it reaches (the longest
+        // bites), the body it grows from rears forward through the gate after it, by what is wanting and no more,
+        // so the neck is never drawn out thin nor bent sharp to make up the distance.
+        private void LeanAfterHead()
+        {
+            if (neckBones == null || neckBones.Length <= 0f) return;
+            Vector3 to = neckBones.SkullPoint - (neckBones.Root - bodyLean);
+            float height = to.y;
+            to.y = 0f;
+            float flat = to.magnitude;
+            float reach = neckBones.Length * NeckReach;
+            float within = Mathf.Sqrt(Mathf.Max(0f, reach * reach - height * height));
+            Vector3 lean = flat > 0.01f ? to / flat * Mathf.Clamp(flat - within, 0f, NeckLeanLimit) : Vector3.zero;
+            // At once, not eased: the head falls in an eighth of a second and the neck must not be seen to lag it.
+            body.position += lean - bodyLean;
+            bodyLean = lean;
+        }
+
+        private NeckBones neckBones;
+        private Vector3 bodyLean;
         private Vector3 NorthRim() => new Vector3(0f, 0f, FloorRadius);
         // The point on the floor under his mouth that the beam and the breath turn about.
         private Vector3 MouthPivot() => new Vector3(0f, 0f, FloorRadius - HeadInset - 2.6f);
@@ -942,6 +944,7 @@ namespace Clover.Gameplay
             AdvanceStorm(deltaTime);
             AdvanceFury(deltaTime);
             AdvanceRoarRing();
+            LeanAfterHead();
             MoveSerpent(deltaTime);
             MoveJaw(deltaTime);
             MoveTail(deltaTime);
@@ -1005,50 +1008,31 @@ namespace Clover.Gameplay
 
         // ------------------------------------------------------------------ the body in the cloud
 
-        // The arches round the summit come up, roll over and go under one after another round the ring, so that a
-        // wave of one long body is seen travelling through the cloud all round the fight. The short tail waves far off.
+        // Loops of the one long body travel round the summit through the cloud, and the short tail waves far off.
         private void MoveSerpent(float deltaTime)
         {
             serpentTime += deltaTime * (Furious && mode != Mode.Dying ? FuryWinding : 1f);
-            int risenNow = MoveLengths();
-            for (int i = 0; i < coils.Length; i++)
-            {
-                float scale = coilScales[i];
-                float slide = Winding.Slide(i, serpentTime);
-                float surfaced = Surfaced(i);
-                // The arch does not stand up and sink: it turns about the middle of its own curve, as a rope goes
-                // over a wheel, so its back and fins travel through it; and it is let down as it turns so that its
-                // upper foot stays on the cloud line. It comes up from nothing, stands, and rolls under to nothing.
-                // Slowly while it stands tall and quickly as it comes up and goes under, so most of the arches round the rim stand high at any moment.
-                float turned = Mathf.Abs(slide * 2f);
-                float roll = -Mathf.Sign(slide) * Mathf.Pow(turned, CoilRollEase) * CoilRoll;
-                // Until there is a length of body that bends, an arch may only turn a little: both its feet stay
-                // under the cloud always, so no end of it is seen, and it comes and goes by rising and sinking.
-                float shown = Winding.Risen(i, serpentTime) * surfaced;
-                if (shown >= 0.5f) risenNow++;
-                float angle = coilAngles[i] + slide * CoilSlide;
-                float foot = Mathf.Abs(Mathf.Sin(roll * Mathf.Deg2Rad)) * CoilFoot * scale * Mathf.Lerp(CoilFootKept, 1f, turned);
-                coils[i].SetPositionAndRotation(Polar(angle, coilRadii[i], ArchLine - foot - (1f - shown) * CoilSink * scale),
-                    Quaternion.Euler(0f, angle + coilTurns[i], roll));
-                coils[i].localScale = Vector3.one * scale;
-            }
-            CoilsRisen = risenNow;
+            // Where the tail comes over the rim the body goes under first, quickly, and comes back slowly after.
+            tailRoom = Mathf.MoveTowards(tailRoom, tailOut ? 1f : 0f, deltaTime * (tailOut ? 1.8f : 0.5f));
+            LoopsRisen = MoveLengths(deltaTime);
             float sway = Mathf.Sin(serpentTime * 1.3f);
             // There is one tail: while the long one is out on the floor the end that waves in the cloud is under it,
             // and the long one is not drawn until that end has gone.
             tailAway = Mathf.MoveTowards(tailAway, tailOut ? 1f : 0f, deltaTime * (tailOut ? 8f : 0.8f));
             if (tail != null && mode != Mode.Hidden) tail.gameObject.SetActive(tailOut && tailAway >= 0.95f);
-            float under = (1f - Surfaced(coils.Length)) * CoilSink * 1.4f + tailAway * 10f;
-            // Its base is kept under the top of the cloud sea, as the arches' feet are: it wears no cloud of its own.
-            shortTail.SetPositionAndRotation(tailHome + Vector3.up * (ArchLine + sway * 0.5f - under),
+            float under = (1f - Surfaced(8)) * 12f + tailAway * 14f;
+            // Its base is kept well under the top of the cloud sea however it leans: it wears no cloud of its own.
+            shortTail.SetPositionAndRotation(tailHome + Vector3.up * (CloudLine - 1.6f + sway * 0.4f - under),
                 Quaternion.Euler(sway * 9f, tailTurn + sway * 14f, Mathf.Cos(serpentTime * 0.9f) * 11f));
         }
 
-        // The body round the summit is boned lengths, each laid along one long way round the summit that rises
-        // out of the cloud sea east and west of the floor, arcs over and dives under again: the rises stand where
-        // they are and the body runs through them, lead following lead, so it is one serpent travelling. Both ends
-        // of every length are held deep under the cloud always. Returns how many rises have body in them.
-        private int MoveLengths()
+        // The body round the summit is boned lengths, two to a ring, each ring further out than the last and
+        // travelling at its own pace. Each length is one loop: it comes up out of the cloud sea beside the floor,
+        // arcs over and dives under again, and the loop goes round the summit with the body, lead following lead.
+        // Both ends of every length are held deep under the cloud always. Each time a length passes behind the gate
+        // or round the south, where none of it is seen, it takes another kind of loop: tall, middling, or a long low
+        // stretch of back along the top of the cloud. Returns how many loops stand out of the cloud.
+        private int MoveLengths(float deltaTime)
         {
             if (lengths.Length == 0) return 0;
             if (lengthSpines == null)
@@ -1056,37 +1040,59 @@ namespace Clover.Gameplay
                 // Made once the bones have woken and measured themselves.
                 if (lengths[0].Lengths.Length == 0) return 0;
                 lengthSpines = new SerpentSpine[lengths.Length];
+                lengthPeak = new float[lengths.Length];
+                lengthRamp = new float[lengths.Length];
                 for (int i = 0; i < lengths.Length; i++)
                 {
                     lengthSpines[i] = new SerpentSpine(lengths[i].Lengths, 8);
                     lengths[i].Spine = lengthSpines[i];
+                    lengthPeak[i] = LoopPeaks[i % LoopPeaks.Length];
+                    lengthRamp[i] = LoopRamps[i % LoopRamps.Length];
                 }
             }
             int risen = 0;
-            float round = Mathf.PI * 2f * LengthRing;
+            int rings = Mathf.Max(1, Mathf.Min(LengthRings.Length, LengthSpeeds.Length));
+            float tailFrom = YawOf(tailEntry);
+            // The slither goes out over the far rim too.
+            bool crosses = tailShape == TailShape.Trail && tailWinds;
+            float tailTo = crosses ? YawOf(tailEntry + tailAlong * tailChord) : tailFrom;
+            float room = tailShape == TailShape.Scythe ? LengthTailRoom + 30f : LengthTailRoom;
             for (int i = 0; i < lengthSpines.Length; i++)
             {
                 var spine = lengthSpines[i];
                 var targets = spine.Targets;
                 int last = spine.Count - 1;
                 float span = spine.Spacing * last;
-                float each = round / lengthSpines.Length;
-                float from = serpentTime * LengthSpeed + i * each;
-                float surfaced = Surfaced(i * 2);
+                int ring = i % rings;
+                float radius = LengthRings[ring];
+                float round = Mathf.PI * 2f * radius;
+                // The lengths that share a ring are spread round it, not quite evenly, and no ring begins where another does.
+                int sharing = (lengthSpines.Length - ring + rings - 1) / rings;
+                float from = serpentTime * LengthSpeeds[ring] + round * ((i / rings) / (float)sharing + 0.07f * (i / rings)) + ring * 31f;
+                float surfaced = Surfaced(i);
+                // Which loop it makes this time round: chosen anew each time its middle passes due north or due south.
+                int pass = Mathf.FloorToInt((from + span * 0.5f) / (round * 0.5f));
+                int kind = (pass * 3 + i * 2 + (pass / 5)) % LoopPeaks.Length;
+                lengthPeak[i] = Mathf.MoveTowards(lengthPeak[i], LoopPeaks[kind], deltaTime * 1.5f);
+                lengthRamp[i] = Mathf.MoveTowards(lengthRamp[i], LoopRamps[Mathf.Min(kind, LoopRamps.Length - 1)], deltaTime * 1.5f);
+                float ramp = Mathf.Max(4f, lengthRamp[i]);
                 bool high = false;
                 for (int j = 0; j <= last; j++)
                 {
-                    // Not the whole of a share of the round: a stretch of cloud is left between one length and the next.
-                    float at = from + j * Mathf.Min(spine.Spacing, (each - LengthGap) / last);
-                    float degrees = at / LengthRing * Mathf.Rad2Deg;
+                    float metres = j * spine.Spacing;
+                    float at = from + metres;
+                    float degrees = at / radius * Mathf.Rad2Deg;
                     float fromNorth = Mathf.Abs(Mathf.DeltaAngle(0f, degrees));
                     float seen = Mathf.SmoothStep(0f, 1f, (fromNorth - LengthFromNorth) / 40f) * Mathf.SmoothStep(0f, 1f, (LengthToNorth - fromNorth) / 40f) * surfaced;
-                    // Each length is one long arch: its middle stands highest and toward either end it runs down
-                    // deep under the cloud, gently enough that no joint bends far.
-                    float held = Mathf.Pow(Mathf.Sin(Mathf.PI * j / last), 0.9f);
-                    float height = LengthDeep + seen * held * (LengthMiddle - LengthDeep + LengthRise * Mathf.Sin(at / LengthWave * Mathf.PI * 2f));
-                    targets[j] = Polar(degrees, LengthRing + 1.2f * Mathf.Sin(at * 0.21f), height);
-                    if (height > 1.5f) high = true;
+                    if (tailRoom > 0f)
+                    {
+                        float clear = Mathf.Min(Mathf.Abs(Mathf.DeltaAngle(degrees, tailFrom)), Mathf.Abs(Mathf.DeltaAngle(degrees, tailTo)));
+                        seen *= Mathf.Lerp(1f, Mathf.SmoothStep(0f, 1f, (clear - room) / 18f), tailRoom);
+                    }
+                    float held = Mathf.SmoothStep(0f, 1f, metres / ramp) * Mathf.SmoothStep(0f, 1f, (span - metres) / ramp);
+                    float height = LengthDeep + seen * held * (lengthPeak[i] - LengthDeep);
+                    targets[j] = Polar(degrees, radius + 0.5f * Mathf.Sin(at * 0.21f + i), height);
+                    if (height > CloudLine + 2.5f) high = true;
                 }
                 spine.Snap();
                 if (high) risen++;
@@ -1095,6 +1101,8 @@ namespace Clover.Gameplay
         }
 
         private SerpentSpine[] lengthSpines;
+        private float[] lengthPeak, lengthRamp;
+        private float tailRoom;
 
         [SerializeField] private Vector3 tailHome = new Vector3(-24f, 0f, 22f);
         [SerializeField] private float tailTurn = 140f;
@@ -1963,19 +1971,20 @@ namespace Clover.Gameplay
             flopRaised = 0f;
             flopFront = -100f;
             flopBounce = -1f;
+            TailLeastRoom = 100f;
             tailSpine.TipStiffness = 70f;
             if (TailFromDegrees < 360f) angle = TailFromDegrees;
-            // Never out of the gate, where his head is.
+            // Never out of the gate, where his head is, nor through a bay with a rope across it.
             float fromNorth = Mathf.DeltaAngle(0f, angle);
-            if (Mathf.Abs(fromNorth) < 40f) fromNorth = fromNorth >= 0f ? 40f : -40f;
+            if (Mathf.Abs(fromNorth) < TailNeverNorthOf) fromNorth = fromNorth >= 0f ? TailNeverNorthOf : -TailNeverNorthOf;
             // Where the posts are stubs, so a tail that lies out along the rim lies over them and not through them.
             if (fromTheSouth && Mathf.Abs(fromNorth) < 125f) fromNorth = fromNorth >= 0f ? 125f : -125f;
             // In through the middle of a bay, between two posts.
             float bay = 360f / Mathf.Max(1, GatePosts);
             float snapped = Mathf.Round(fromNorth / bay) * bay;
-            if (Mathf.Abs(snapped) < 40f) snapped += Mathf.Sign(fromNorth) * bay;
+            if (Mathf.Abs(snapped) < TailNeverNorthOf) snapped += Mathf.Sign(fromNorth) * bay;
             if (fromTheSouth && Mathf.Abs(snapped) < 125f) snapped += Mathf.Sign(fromNorth) * bay;
-            // Never over the south rim: the camera stands there and looks past the rim, and would see the tail's root under it.
+            // Never up the steps at the south.
             if (Mathf.Abs(snapped) > TailNeverSouthOf) snapped = Mathf.Sign(snapped) * Mathf.Floor(TailNeverSouthOf / bay) * bay;
             tailEntry = Polar(snapped, FloorRadius);
             AimTail();
@@ -1985,11 +1994,12 @@ namespace Clover.Gameplay
         // way, so the body slides round what stands on the summit; what a blow lands on follows the same joints.
         private void AvoidThings()
         {
-            thingAt[GatePosts] = OnFloor(head.position + head.forward * 1.2f);
-            thingAt[GatePosts + 1] = OnFloor(leftClaw.position);
-            thingAt[GatePosts + 2] = OnFloor(rightClaw.position);
+            FindThings();
             var points = tailSpine.Points;
             int last = points.Length - 1;
+            // More than once: putting the lengths right after a joint is moved can carry its neighbour back in.
+            for (int pass = 0; pass < 3; pass++)
+            {
             for (int i = 1; i <= last; i++)
             {
                 float body = Mathf.Lerp(1.5f, 0.5f, i / (float)last);
@@ -2014,6 +2024,27 @@ namespace Clover.Gameplay
                 points[i] = point;
             }
             tailSpine.Settle();
+            }
+            // Putting the lengths right can carry a joint back in: how near the body came to going into anything is kept for whoever tests it.
+            for (int i = 1; i <= last; i++)
+            {
+                float body = Mathf.Lerp(1.5f, 0.5f, i / (float)last);
+                for (int k = 0; k < thingAt.Length; k++)
+                {
+                    if (points[i].y >= thingTop[k]) continue;
+                    float x = points[i].x - thingAt[k].x, z = points[i].z - thingAt[k].z;
+                    float room = Mathf.Sqrt(x * x + z * z) - thingRadius[k] - body;
+                    if (room < TailLeastRoom) TailLeastRoom = room;
+                }
+            }
+        }
+
+        // Where his head and forefeet are now; the posts do not move.
+        private void FindThings()
+        {
+            thingAt[GatePosts] = OnFloor(head.position + head.forward * 1.2f);
+            thingAt[GatePosts + 1] = OnFloor(leftClaw.position);
+            thingAt[GatePosts + 2] = OnFloor(rightClaw.position);
         }
 
         // Through the player, but never so far round that it lies along the rim.
@@ -2026,6 +2057,8 @@ namespace Clover.Gameplay
             tailChord = Chord(tailEntry + tailAlong * 0.05f, tailAlong, FloorRadius) + 0.05f;
             // The slither crosses the whole floor, as far as the tail will go with its root still off it; the flop comes part of the way.
             tailReach = tailWinds ? Mathf.Min(tailChord + 1f, tailJoints - TailRootKept) : Mathf.Min(FlopReach, tailChord - 2f, tailJoints - TailRootKept);
+            // Where its way would leave the floor between the tall posts, under their rope, its tip stops short of them: it goes out over the far rim only where the posts are stubs it can lie over.
+            if (Mathf.Abs(YawOf(tailEntry + tailAlong * tailChord)) < TallPostsWithin + 8f) tailReach = Mathf.Min(tailReach, tailChord - PostRing - PostRadius - 1.6f);
         }
 
         // Laid afresh with its tip under the cloud outside the rim and the rest of it straight on down behind.
@@ -2420,6 +2453,18 @@ namespace Clover.Gameplay
             Vector3 from = stands - tailEntry;
             float least = CoilRadius + 2f;
             if (from.magnitude < least) stands = Within(tailEntry + (from.sqrMagnitude > 0.01f ? from.normalized : -tailEntry.normalized) * least, FloorRadius - 2f);
+            // The ring is laid where it goes round nothing that stands tall: clear of the tall posts, his head and his forefeet. It is drawn on the floor, so the player sees where it will close.
+            FindThings();
+            for (int pass = 0; pass < 2; pass++)
+                for (int k = 0; k < thingAt.Length; k++)
+                {
+                    if (thingTop[k] < 50f) continue;
+                    Vector3 off = OnFloor(stands - thingAt[k]);
+                    float need = CoilRadius + thingRadius[k] + 1.3f;
+                    if (off.magnitude >= need) continue;
+                    stands = thingAt[k] + (off.sqrMagnitude > 0.01f ? off.normalized : -thingAt[k].normalized) * need;
+                    stands.y = 0f;
+                }
             coilCentre = stands;
             CoilHeading();
             tailReach = Mathf.Min(TailShapes.CoilLine(tailEntry, coilCentre, CoilRadius) + CoilRadius * 5.6f, tailJoints - TailRootKept);
@@ -2472,7 +2517,9 @@ namespace Clover.Gameplay
                 tailWave = 0.15f;
                 tailPart.SetVulnerable(true);
                 coilMark.Show(coilCentre, Quaternion.identity, 1f, RedMarker, false, coilRadius + 0.8f);
-                if (!coilTouched && target != null && victim != null && TailTouches(target.position, TailHalfWidth * 0.7f))
+                // The body burns whoever walks into it from outside. Whoever is where it will close is left for the
+                // crush, which a guard at the last instant turns: the touch never comes first and takes that away.
+                if (!coilTouched && target != null && victim != null && FlatDistance(target.position, coilCentre) > CoilTight + 1.3f && TailTouches(target.position, TailHalfWidth * 0.7f))
                 {
                     coilTouched = true;
                     Vector3 away = OnFloor(target.position) - coilCentre;
@@ -2533,6 +2580,14 @@ namespace Clover.Gameplay
         // sweeps round the whole floor like the hand of a clock, but bending: every stretch of it comes later than the
         // one nearer the root, so the tip trails and then whips through. It waits, and comes back faster. Roll
         // through the body, turn it with a guard at the last instant, or stand under the arch by its root.
+        // How far to one hand of straight inward the scythe may swing: all the way if it then lies out over the rim among the stubs, less if that would lay it among the tall posts.
+        private float ScytheSpreadToward(float inward, float hand)
+        {
+            Vector3 way = Facing(inward + hand * ScytheSpread);
+            float across = Chord(tailEntry + way * 0.05f, way, FloorRadius);
+            return Mathf.Abs(YawOf(tailEntry + way * across)) >= TallPostsWithin + 8f ? ScytheSpread : ScytheSpreadNorth;
+        }
+
         private void BeginTailScythe()
         {
             TailScythes++;
@@ -2544,10 +2599,12 @@ namespace Clover.Gameplay
             float toPlayer = Mathf.DeltaAngle(inward, YawOf(OnFloor(target.position) - tailEntry));
             // It begins on the side the player is not on, so they see it come.
             float side = Mathf.Abs(toPlayer) > 3f ? Mathf.Sign(toPlayer) : tailTurns % 2 == 0 ? 1f : -1f;
-            scytheFrom = inward - side * ScytheSpread;
-            scytheTo = inward + side * ScytheSpread;
+            // Toward the south it lies out along the rim over the stubs; toward the tall posts and their rope it stops while all of it is still on the floor.
+            scytheFrom = inward - side * ScytheSpreadToward(inward, -side);
+            scytheTo = inward + side * ScytheSpreadToward(inward, side);
             tailAlong = Facing(scytheFrom);
-            tailReach = tailJoints - ScytheRootKept;
+            // No longer than the floor is wide where it stops short of the tall posts, so its tip never swings through them.
+            tailReach = Mathf.Min(tailJoints - ScytheRootKept, 2f * FloorRadius * Mathf.Cos(ScytheSpreadNorth * Mathf.Deg2Rad) - PostRing - PostRadius - 1.6f);
             SeedTail();
             Enter(Mode.TailScythe);
             Vfx.Play(VfxKind.Danger, tailEntry * 0.85f + Vector3.up * 2.5f);
@@ -2958,7 +3015,7 @@ namespace Clover.Gameplay
             {
                 untilDeathBolt = DeathBoltEvery;
                 int which = deathBolts++;
-                Vector3 at = which % 3 == 0 || coils.Length == 0 ? head.position + Vector3.up * 2f : coils[which % coils.Length].position + Vector3.up * 5f;
+                Vector3 at = which % 3 == 0 || lengthSpines == null ? head.position + Vector3.up * 2f : lengthSpines[which % lengthSpines.Length].Points[lengthSpines[0].Count / 2] + Vector3.up * 2f;
                 LightningBolts.Strike(at, 0.8f);
                 Vfx.Play(VfxKind.Burst, at);
             }

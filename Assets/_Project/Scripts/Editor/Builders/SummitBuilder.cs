@@ -145,6 +145,26 @@ namespace Clover.EditorTools
                 }
             }
 
+            // A bank of cloud close round the foot of the plinth, lower than the floor everywhere, so that whatever
+            // comes up out of the sea beside the rim or goes down into it there (the dragon's body and its tail) is
+            // lost in heaped cloud and never seen cut off by the flat of the sea. None before the steps at the south,
+            // nor behind the gate at the north, where the neck has a bank of its own.
+            var rimRandom = new System.Random(211);
+            const int RimPuffs = 34;
+            for (int i = 0; i < RimPuffs; i++)
+            {
+                float angle = (i + (float)rimRandom.NextDouble() * 0.5f) * 360f / RimPuffs;
+                float fromNorth = Mathf.Abs(Mathf.DeltaAngle(angle, 0f));
+                if (fromNorth < 24f || fromNorth > 168f) continue;
+                float high = 3f + (float)rimRandom.NextDouble() * 1.2f;
+                float top = -0.55f + (float)rimRandom.NextDouble() * 0.5f;
+                Vector3 at = Quaternion.Euler(0f, angle, 0f) * new Vector3(0f, top - high * 0.5f, Radius + 4.6f + (float)rimRandom.NextDouble() * 1.2f);
+                var puff = BuildKit.Shape(PrimitiveType.Sphere, "Rim Cloud", clouds, at, new Vector3(6.2f + (float)rimRandom.NextDouble() * 2.4f, high, 5f + (float)rimRandom.NextDouble() * 1.5f), cloud);
+                puff.transform.rotation = Quaternion.Euler(0f, angle, 0f);
+                puff.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                puff.gameObject.isStatic = true;
+            }
+
             // What makes it a place: the crest and the scars in the floor, the built edge and what stands on it, and the
             // nearer cloud with the keep's roofs coming up through it.
             Dressing.Prepare();

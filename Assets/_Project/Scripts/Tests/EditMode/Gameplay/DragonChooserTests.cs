@@ -239,51 +239,6 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void EveryArchOfTheBodyGoesWhollyUnderAndComesWhollyUpAndMostStandAtOnce()
-        {
-            var winding = new SerpentWinding();
-            const int Arches = 10;
-            var lowest = new float[Arches];
-            var highest = new float[Arches];
-            for (int i = 0; i < Arches; i++) lowest[i] = 1f;
-            int fewest = Arches;
-            for (float time = 0f; time < winding.RoundSeconds * 2f; time += 0.05f)
-            {
-                int standing = 0;
-                for (int i = 0; i < Arches; i++)
-                {
-                    float risen = winding.Risen(i, time);
-                    Assert.That(risen, Is.InRange(0f, 1f));
-                    lowest[i] = Mathf.Min(lowest[i], risen);
-                    highest[i] = Mathf.Max(highest[i], risen);
-                    if (risen >= 0.5f) standing++;
-                }
-                fewest = Mathf.Min(fewest, standing);
-            }
-            for (int i = 0; i < Arches; i++)
-            {
-                Assert.AreEqual(0f, lowest[i], 0.0001f, $"arch {i} never goes wholly under");
-                Assert.AreEqual(1f, highest[i], 0.0001f, $"arch {i} never comes wholly up");
-            }
-            Assert.GreaterOrEqual(fewest, Arches / 2 - 1, "the body is seen all round the fight, not one arch at a time");
-        }
-
-        [Test]
-        public void AnArchSlidesForwardWhileItStandsAndBeginsAgainOnlyUnderTheCloud()
-        {
-            var winding = new SerpentWinding();
-            float before = winding.Slide(0, 0f);
-            for (float time = 0.05f; time < winding.RoundSeconds * 3f; time += 0.05f)
-            {
-                float now = winding.Slide(0, time);
-                // It only ever goes back to where it began while it is wholly under.
-                if (now < before - 0.0001f) Assert.AreEqual(0f, winding.Risen(0, time), 0.02f, $"it jumped back in sight at {time:0.00}");
-                Assert.That(now, Is.InRange(-0.5f, 0.5f));
-                before = now;
-            }
-        }
-
-        [Test]
         public void TheBeamsLaneEndsWhereTheFloorDoes()
         {
             const float Radius = 17f;

@@ -57,7 +57,7 @@ public class DragonSoakRunner : MonoBehaviour
             yield return null;
         }
         long grown = System.GC.GetTotalMemory(false) - before;
-        Debug.Log($"[Probe] soak: {frames} frames, managed heap grew {grown} bytes ({(frames > 0 ? grown / frames : 0)} a frame, everything in the scene counted); beams {dragon.Beams}; arches standing {dragon.CoilsRisen}");
+        Debug.Log($"[Probe] soak: {frames} frames, managed heap grew {grown} bytes ({(frames > 0 ? grown / frames : 0)} a frame, everything in the scene counted); beams {dragon.Beams}; loops standing {dragon.LoopsRisen}");
         Debug.Log("[Probe] done");
     }
 }
