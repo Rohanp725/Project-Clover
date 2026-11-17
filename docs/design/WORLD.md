@@ -160,6 +160,19 @@ brought together once the user has confirmed the open points.
   disc and the scarab rises under it and rolls it. When the falcon falls, the disc cracks and he is lying in the
   court with the obelisk's shadow across him.
 
+### The user's review of the second pass (2026-11-17, evening)
+
+- **Decided (user)**: the scarab has no face at all (the king's face in its chest goes).
+- **Decided (user)**: the sun parry stays.
+- **Decided (user)**: heat shimmer stays as drawn squiggles for now; real refraction perhaps later.
+- **Decided (user)**: the god's fight reads too much like light and not enough like fire. Everything should look far
+  more like fire: the sun a giant burning ball, not a bright white orb; the spear attacks (thrusts, the thrown spear,
+  the ray) fire, not light.
+- **Decided (user)**: the stand-ins (the Sun-Spear made of primitives, the falcon statues and the gold-painted boat
+  in the city) are fine for now; they may be changed later.
+- **Open**: the hearth room's lines and the name "Ahu", the tomb paintings, asset approvals and the land's length
+  wait until the user has played the land.
+
 ## How a climb is structured
 
 - **Leaning (user, 2026-11-17)**: the single run in the manner of Hades gives way to this, which the user called
