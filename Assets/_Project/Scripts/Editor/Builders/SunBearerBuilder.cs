@@ -122,7 +122,94 @@ namespace Clover.EditorTools
             finder.enabled = false;
             var towardCamera = Camera.main != null ? Camera.main.transform.rotation : Quaternion.Euler(55f, 0f, 0f);
             bearer.ConfigureFeedback(finder, WorldBars.FinishMark(root.transform, new Vector3(0f, 4f, 0f), 4f, towardCamera));
+            Look(root, sun);
             return bearer;
+        }
+
+        // The effects that are not particles (fire_boss_visuals.md 2.3): the sun's light, the stoop's streak and its shock ring.
+        private static void Look(GameObject root, Transform sun)
+        {
+            string folder = BuildKit.GeneratedRoot + "/Enemies";
+            var lightObject = new GameObject("Sun Light");
+            // Under the root, not the sun: the sun spins as it rolls, and the light is kept over it by the look.
+            lightObject.transform.SetParent(root.transform, false);
+            var light = lightObject.AddComponent<Light>();
+            light.type = LightType.Point;
+            // Molten, #FF9E29.
+            light.color = new Color(1f, 0.62f, 0.16f);
+            light.range = 9f;
+            light.intensity = 0f;
+            light.shadows = LightShadows.None;
+
+            var streakLight = BuildKit.Glow(folder, "m_sunform_dive", Color.white, 1, true, 1.2f);
+            streakLight.SetFloat("_Core", 0.55f);
+            EditorUtility.SetDirty(streakLight);
+            var streak = new Renderer[2];
+            for (int i = 0; i < streak.Length; i++)
+            {
+                streak[i] = BuildKit.Shape(PrimitiveType.Quad, "Dive Streak " + (i + 1), root.transform, Vector3.zero, Vector3.one, streakLight);
+                streak[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                streak[i].receiveShadows = false;
+                streak[i].enabled = false;
+            }
+            var shockLight = BuildKit.Glow(folder, "m_sunform_shock", Color.white, 1, true, 1.4f);
+            var shock = new GameObject("Shock Ring");
+            shock.transform.SetParent(root.transform, false);
+            var ring = shock.AddComponent<MeshFilter>();
+            var ringRenderer = shock.AddComponent<MeshRenderer>();
+            ringRenderer.sharedMaterial = shockLight;
+            ringRenderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            ringRenderer.receiveShadows = false;
+            ringRenderer.enabled = false;
+
+            // The parry: a trail of fire behind the struck sun, and stars over the stunned form.
+            var trail = sun.gameObject.AddComponent<TrailRenderer>();
+            trail.time = 0.4f;
+            trail.widthMultiplier = 2.4f;
+            trail.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0.2f));
+            trail.minVertexDistance = 0.3f;
+            trail.emitting = false;
+            trail.sharedMaterial = BuildKit.Glow(folder, "m_sunform_trail", new Color(3f, 2.6f, 1.8f, 1f), 1, true, 1f);
+            var fade = new Gradient();
+            fade.SetKeys(
+                new[] { new GradientColorKey(new Color(1f, 0.95f, 0.8f), 0f), new GradientColorKey(new Color(1f, 0.72f, 0.2f), 0.4f), new GradientColorKey(new Color(1f, 0.42f, 0.08f), 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.7f, 0.5f), new GradientAlphaKey(0f, 1f) });
+            trail.colorGradient = fade;
+            trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            trail.receiveShadows = false;
+            var starLight = BuildKit.Glow(folder, "m_sunform_star", new Color(5f, 3.8f, 1f, 1f), 5, true, 1f);
+            var stars = new Renderer[5];
+            for (int i = 0; i < stars.Length; i++)
+            {
+                stars[i] = BuildKit.Shape(PrimitiveType.Quad, "Stun Star " + (i + 1), root.transform, Vector3.zero, Vector3.one * 0.7f, starLight);
+                stars[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                stars[i].receiveShadows = false;
+                stars[i].enabled = false;
+            }
+            var look = root.AddComponent<SunBearerLook>();
+            look.Configure(light, sun, streak, ring, trail, stars);
+            // The Zenith's whitening: the whole court brighter, white-gold and blooming while the floor fills and blazes.
+            var blazeObject = new GameObject("Zenith Blaze Look");
+            blazeObject.transform.SetParent(root.transform, false);
+            var blaze = blazeObject.AddComponent<UnityEngine.Rendering.Volume>();
+            blaze.isGlobal = true;
+            blaze.priority = 11f;
+            blaze.weight = 0f;
+            blaze.sharedProfile = BlazeProfile();
+            look.ConfigureBlaze(blaze);
+            // One falling spark or feather for each of the eighteen falling marks.
+            var fallLight = BuildKit.Glow(folder, "m_sunform_faller", Color.white, 1, true, 1f);
+            fallLight.SetFloat("_Core", 0.6f);
+            EditorUtility.SetDirty(fallLight);
+            var fallers = new Renderer[18];
+            for (int i = 0; i < fallers.Length; i++)
+            {
+                fallers[i] = BuildKit.Shape(PrimitiveType.Quad, "Faller " + (i + 1), root.transform, Vector3.zero, Vector3.one, fallLight);
+                fallers[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                fallers[i].receiveShadows = false;
+                fallers[i].enabled = false;
+            }
+            look.ConfigureFallers(fallers);
         }
 
         // One piece of the model under a holder of its own, at the point the game moves it from. The mesh keeps the
@@ -146,6 +233,39 @@ namespace Clover.EditorTools
                 mesh.localScale = Vector3.one;
             }
             return holder;
+        }
+
+        // Exposure up, warmth in, contrast and saturation a little down, bloom low and strong (fire_boss_visuals.md 2.3, Zenith).
+        private static UnityEngine.Rendering.VolumeProfile BlazeProfile()
+        {
+            string path = BuildKit.GeneratedRoot + "/Enemies/ZenithBlazeProfile.asset";
+            var profile = AssetDatabase.LoadAssetAtPath<UnityEngine.Rendering.VolumeProfile>(path);
+            if (profile == null)
+            {
+                profile = ScriptableObject.CreateInstance<UnityEngine.Rendering.VolumeProfile>();
+                AssetDatabase.CreateAsset(profile, path);
+            }
+            foreach (var component in profile.components.ToArray())
+            {
+                profile.components.Remove(component);
+                Object.DestroyImmediate(component, true);
+            }
+            var colour = profile.Add<UnityEngine.Rendering.Universal.ColorAdjustments>(true);
+            colour.name = "ColorAdjustments";
+            AssetDatabase.AddObjectToAsset(colour, profile);
+            colour.postExposure.Override(0.45f);
+            colour.saturation.Override(-12f);
+            colour.contrast.Override(-6f);
+            colour.colorFilter.Override(new Color(1f, 0.95f, 0.84f));
+            var bloom = profile.Add<UnityEngine.Rendering.Universal.Bloom>(true);
+            bloom.name = "Bloom";
+            AssetDatabase.AddObjectToAsset(bloom, profile);
+            bloom.intensity.Override(2.4f);
+            bloom.threshold.Override(0.8f);
+            bloom.tint.Override(new Color(1f, 0.9f, 0.72f));
+            EditorUtility.SetDirty(profile);
+            AssetDatabase.SaveAssets();
+            return profile;
         }
 
         private static Transform[] Chain(Transform wing, string prefix)

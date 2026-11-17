@@ -68,15 +68,16 @@ namespace Clover.World
                 if (element != null) element.Take(ElementKit.ByName(Element, false));
                 // The god's own gift comes with his element: the Signature at the crown of its tree, worn if it is a spell.
                 if (upgrades != null) upgrades.Give(Gifts.SignatureOf(Element));
+                // And the god's own weapon: the storm's katana, the sun's spear.
+                string godWeapon = Weapons.OfGod(Element);
+                if (godWeapon != null && who.Combat != null) who.Combat.Equip(Weapons.ByName(godWeapon));
                 if (Element == Elements.Lightning)
                 {
-                    if (who.Combat != null) who.Combat.Equip(Weapons.ByName(Weapons.StormKatanaName));
                     LightningBolts.Strike(who.transform.position, 1f);
                     if (who.Defence != null) who.Defence.Callout("The storm is yours");
                 }
                 else
                 {
-                    // The weapon in the hand is kept: this god's own spear is not made yet.
                     Vfx.Play(VfxKind.Fire, who.transform.position + Vector3.up, Vector3.up, 3f);
                     if (who.Defence != null) who.Defence.Callout(Element + " is yours.");
                 }

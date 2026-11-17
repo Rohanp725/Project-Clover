@@ -29,6 +29,10 @@ namespace Clover.World
         [SerializeField] private Transform standingSpear;
         [SerializeField] private Transform weaponBone;
         [SerializeField] private LineRenderer ray;
+        [SerializeField] private SpearRay rayLook;
+        [SerializeField] private TrailRenderer spearTrail;
+        /// <summary>Seconds the thrown spear takes to fly its lane, point first, before it stands.</summary>
+        public float SpearFlight = 0.2f;
 
         /// <summary>The gold line: the fight begins when the player is north of it.</summary>
         public float LineZ = -20f;
@@ -60,7 +64,11 @@ namespace Clover.World
         public float DuelDistance = 1.3f, DuelPitch = -8f;
 
         private float untilRising = -1f, untilReward = -1f, lightPitch = 78f;
-        private bool spoken, framed;
+        private Vector3 lastBlade, standAt, flyFrom, flyAlong;
+        private Quaternion standTurn;
+        private float flightLeft;
+        private float untilSmoke;
+        private bool spoken, framed, rayStruck;
         private TopDownCamera view;
         private PlayerUpgrades upgrades;
 
@@ -86,6 +94,12 @@ namespace Clover.World
             weaponBone = bossWeapon;
             ray = rayOfLight;
         }
+
+        /// <summary>The ray drawn as a beam of light (fire_boss_visuals.md 2.4); without it the plain line is drawn as before.</summary>
+        public void ConfigureRay(SpearRay look) => rayLook = look;
+
+        /// <summary>The fire the thrown spear trails in its flight.</summary>
+        public void ConfigureThrow(TrailRenderer trail) => spearTrail = trail;
 
         private void Awake()
         {
@@ -165,6 +179,7 @@ namespace Clover.World
         {
             if (Felled || SecondFormCalled) return;
             ShowSpear(false);
+            if (rayLook != null) rayLook.Clear();
             if (form == null)
             {
                 Fell();
@@ -221,6 +236,7 @@ namespace Clover.World
             untilRising = -1f;
             SetWall(false);
             ShowSpear(false);
+            if (rayLook != null) rayLook.Clear();
             if (form != null) form.Retire();
             if (boss != null && boss.IsDead) boss.Restore();
             Hand.Reset(ShadowHand.AgainstTheMan);
@@ -304,8 +320,67 @@ namespace Clover.World
                 float reach = Mathf.Min(attack.Reach, StormDragon.Chord(from, along.normalized, 19f));
                 standingSpear.position = new Vector3(from.x, 0f, from.z) + along.normalized * reach;
                 standingSpear.rotation = Quaternion.LookRotation(along.normalized) * Quaternion.Euler(-14f, 0f, 0f);
+                // It flies the lane first, point first, trailing fire; where it lands is where it stands.
+                standAt = standingSpear.position;
+                standTurn = standingSpear.rotation;
+                flyFrom = new Vector3(from.x, 0f, from.z) + along.normalized * 0.8f;
+                flyAlong = along.normalized;
+                flightLeft = SpearFlight;
+                if (spearTrail != null)
+                {
+                    spearTrail.Clear();
+                    spearTrail.emitting = true;
+                }
+            }
+            if (flightLeft > 0f && standingSpear != null)
+            {
+                flightLeft -= Time.deltaTime;
+                float t = 1f - Mathf.Clamp01(flightLeft / SpearFlight);
+                // The group stands its blade up its own up axis: in flight that axis points down the lane.
+                standingSpear.SetPositionAndRotation(Vector3.Lerp(flyFrom, standAt, t) - flyAlong * 3.6f + Vector3.up * 1.6f, Quaternion.FromToRotation(Vector3.up, flyAlong));
+                if (flightLeft <= 0f)
+                {
+                    standingSpear.SetPositionAndRotation(standAt, standTurn);
+                    if (spearTrail != null) spearTrail.emitting = false;
+                    // Driven into the floor: a star, a gold ring, sand thrown up and the view shaken.
+                    Vfx.Play(VfxKind.Impact, standAt + Vector3.up * 0.5f, Vector3.up, 1f, new Color(1f, 0.92f, 0.62f, 1f));
+                    Vfx.Play(VfxKind.TintRing, standAt + Vector3.up * 0.25f, Vector3.up, 1.2f, new Color(1f, 0.72f, 0.2f, 1f));
+                    for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.Dust, standAt + Quaternion.Euler(0f, i * 90f + 45f, 0f) * Vector3.forward * 0.8f, Vector3.up, 1f, new Color(1f, 0.88f, 0.64f, 1f));
+                    if (view != null) view.Shake(0.3f, 0.2f);
+                }
             }
             ShowSpear(thrown || calling);
+            // Standing, it smokes from where it went in and drops embers from the sun's disc.
+            if (SpearStands && standingSpear != null)
+            {
+                untilSmoke -= Time.deltaTime;
+                if (untilSmoke <= 0f)
+                {
+                    untilSmoke = 0.2f;
+                    Vfx.Play(VfxKind.Ash, standingSpear.position + Vector3.up * 0.3f, Vector3.up, 0.5f, new Color(0.26f, 0.24f, 0.23f, 0.85f));
+                    Vfx.Play(VfxKind.Embers, standingSpear.position + Vector3.up * 3.3f, Vector3.down, 0.25f);
+                }
+            }
+            if (rayLook != null)
+            {
+                Vector3 blade = standingSpear != null ? standingSpear.position + Vector3.up * 1.6f : boss.transform.position;
+                Vector3 hand = boss.transform.position + Vector3.up * 2.4f;
+                if (calling) rayLook.Thread(blade, hand, boss.Brain.TelegraphProgress);
+                else rayLook.HideThread();
+                bool striking = attacking && attack.Name == "sunking_ray" && boss.Brain.State == EnemyState.Strike;
+                if (striking && !rayStruck)
+                {
+                    // The spear is already back in his hand; the beam is drawn from where it stood.
+                    rayLook.Strike(lastBlade, hand);
+                    ScreenFlash.Flash(new Color(1f, 0.95f, 0.8f, 0.3f), 0.06f);
+                    if (view != null) view.Shake(0.3f, 0.2f);
+                    Vfx.Play(VfxKind.Clang, hand, Vector3.up, 1f);
+                    Vfx.Play(VfxKind.TintRing, new Vector3(hand.x, 0.3f, hand.z), Vector3.up, 1f, new Color(1f, 0.72f, 0.2f, 1f));
+                }
+                rayStruck = striking;
+                if (calling) lastBlade = blade;
+                return;
+            }
             if (ray == null) return;
             // The last of the call: a ray of light along the line the spear will come back down.
             bool lit = calling && boss.Brain.TelegraphProgress > 0.55f;
@@ -322,6 +397,11 @@ namespace Clover.World
             SpearStands = stands;
             if (standingSpear != null) standingSpear.gameObject.SetActive(stands);
             if (!stands && ray != null) ray.enabled = false;
+            if (!stands)
+            {
+                flightLeft = 0f;
+                if (spearTrail != null) spearTrail.emitting = false;
+            }
         }
 
         // After the animation has posed him: his hands are empty while the spear stands in the floor.

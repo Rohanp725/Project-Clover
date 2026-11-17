@@ -213,19 +213,22 @@ namespace Clover.Gameplay
             if (model != null) model.localPosition = modelHome;
             ShowBody(false);
 
-            // What it looks like: a white flash at the core, a ring of grey ash rolling out along the ground with fire
-            // in it, flakes of the shell thrown up all round its edge, and embers left hanging.
-            Vfx.Play(VfxKind.Burst, at + Vector3.up * 1.1f, Vector3.up, 2.2f);
-            Vfx.Play(VfxKind.TintSpark, at + Vector3.up * 1.1f, Vector3.up, 2.5f, new Color(1f, 0.8f, 0.45f, 1f));
+            // What it looks like: its own, not the shared white flash: an ember-red star at the core, a ring of grey ash
+            // rolling out along the ground with an ember ring inside it and fire in it, flakes of the shell thrown out
+            // and up all round its edge, and a fountain of embers left hanging.
+            Vfx.Play(VfxKind.Impact, at + Vector3.up * 1.1f, Vector3.up, 1.3f, new Color(1f, 0.5f, 0.16f, 1f));
+            Vfx.Play(VfxKind.TintSpark, at + Vector3.up * 1.1f, Vector3.up, 2.5f, new Color(1f, 0.55f, 0.2f, 1f));
             Vfx.Play(VfxKind.TintRing, at + Vector3.up * 0.25f, Vector3.up, radius / 2.4f, AshColour);
-            Vfx.Play(VfxKind.Ring, at + Vector3.up * 0.3f, Vector3.up, radius / 3f);
+            Vfx.Play(VfxKind.TintRing, at + Vector3.up * 0.3f, Vector3.up, radius / 3.4f, new Color(1f, 0.42f, 0.1f, 1f));
             Vfx.Play(VfxKind.Fire, at + Vector3.up * 0.5f, Vector3.up, 2.4f);
-            Vfx.Play(VfxKind.Embers, at + Vector3.up * 0.9f, Vector3.up, 2.5f);
+            Vfx.Play(VfxKind.Embers, at + Vector3.up * 0.9f, Vector3.up, 4f);
+            Vfx.Play(VfxKind.Ash, at + Vector3.up * 1.2f, Vector3.up, 2.5f, AshColour);
             for (int i = 0; i < 16; i++)
             {
                 float angle = i * Mathf.PI * 2f / 16f;
                 var edge = new Vector3(Mathf.Sin(angle), 0f, Mathf.Cos(angle));
-                Vfx.Play(VfxKind.Ash, at + edge * (radius * 0.8f) + Vector3.up * 0.3f, Vector3.up, 1.4f, AshColour);
+                Vfx.Play(VfxKind.Ash, at + edge * (radius * 0.8f) + Vector3.up * 0.3f, edge + Vector3.up, 1.4f, AshColour);
+                if (i % 2 == 1) Vfx.Play(VfxKind.Embers, at + edge * (radius * 0.7f) + Vector3.up * 0.4f, edge + Vector3.up, 0.5f);
                 if (i % 2 == 0) Vfx.Play(VfxKind.Fire, at + edge * (radius * 0.65f) + Vector3.up * 0.2f, Vector3.up, 0.6f);
                 if (i % 4 == 0) Vfx.Play(VfxKind.Dust, at + edge * radius, edge);
             }

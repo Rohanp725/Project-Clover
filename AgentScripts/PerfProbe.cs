@@ -62,6 +62,32 @@ public class PerfProbeRunner : MonoBehaviour
             if (System.IO.File.Exists("AgentScripts/perf_nosleep.txt") && land != null) land.SleepBeyond = 0f;
             Debug.Log($"[Probe] perf SunCity: {woken} enemies struck awake round the market; far enemies sleep beyond {(land != null ? land.SleepBeyond : -1f):0} m");
         }
+        if (scene == "SunCourt")
+        {
+            // The fight with the form: the man felled at once, the Sun-Bearer risen and left to its own choices, with a
+            // roll asked of it first so a furrow burns while it is measured (fire_boss_visuals.md: the effects' cost).
+            var court = FindAnyObjectByType<Clover.World.SunCourtDirector>();
+            var form = FindAnyObjectByType<Clover.Gameplay.SunBearer>();
+            player.Teleport(new Vector3(0f, 0.1f, -18.6f), Quaternion.identity);
+            yield return new WaitForSeconds(0.5f);
+            var reading = Clover.UI.ReadingBox.Instance;
+            for (int i = 0; i < 30 && reading != null && reading.IsOpen; i++)
+            {
+                UnityEngine.InputSystem.InputSystem.QueueStateEvent(UnityEngine.InputSystem.Keyboard.current, new UnityEngine.InputSystem.LowLevel.KeyboardState(UnityEngine.InputSystem.Key.E));
+                yield return null;
+                yield return null;
+                UnityEngine.InputSystem.InputSystem.QueueStateEvent(UnityEngine.InputSystem.Keyboard.current, new UnityEngine.InputSystem.LowLevel.KeyboardState());
+                yield return new WaitForSecondsRealtime(0.08f);
+            }
+            var man = FindAnyObjectByType<Clover.World.AreaDirector>().Enemies[0];
+            player.Teleport(new Vector3(0f, 0.1f, -6f), Quaternion.identity);
+            for (int blow = 0; blow < 200 && !man.IsDead; blow++) man.TakeHit(new Clover.Gameplay.Hit(60f, 0f, Vector3.forward, true, true));
+            float until = Time.time + 14f;
+            while (Time.time < until && !(form.InFight && form.Doing == "Idle")) yield return null;
+            form.Queued = Clover.Gameplay.SunBearerAttack.Roll;
+            player.Teleport(new Vector3(9f, 0.1f, -8f), Quaternion.identity);
+            Debug.Log($"[Probe] perf SunCourt: begun {court.Begun} the man dead {man.IsDead} form in the fight {form.InFight} doing {form.Doing}");
+        }
         yield return new WaitForSeconds(2f);
         var allocated = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated In Frame");
         var mainThread = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 1);

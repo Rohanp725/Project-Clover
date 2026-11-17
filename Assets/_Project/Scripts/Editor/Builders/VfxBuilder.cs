@@ -122,7 +122,36 @@ namespace Clover.EditorTools
 
             var vfx = root.AddComponent<Vfx>();
             vfx.Configure(emitters, counts);
+            Shimmer(root);
             return vfx;
+        }
+
+        // Heat shimmer as drawn squiggles: a pool of thin wavy lines that rise off hot ground (HeatShimmer).
+        private static void Shimmer(GameObject root)
+        {
+            var holder = new GameObject("Heat Shimmer");
+            holder.transform.SetParent(root.transform, false);
+            // Laid over the ground, not added to it: on the pale floors of the Fire land an added pale line would vanish.
+            // Ember-tinted, so it shows on white-gold ground at the height of the blaze as well as on stone.
+            var material = BuildKit.Glow(Folder, "m_vfx_shimmer", new Color(1.5f, 0.75f, 0.28f, 1f), 1, false, 0.7f);
+            var lines = new LineRenderer[32];
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var lineObject = new GameObject("Squiggle " + (i + 1));
+                lineObject.transform.SetParent(holder.transform, false);
+                var line = lineObject.AddComponent<LineRenderer>();
+                line.useWorldSpace = true;
+                line.sharedMaterial = material;
+                line.numCornerVertices = 2;
+                line.alignment = LineAlignment.View;
+                line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                line.receiveShadows = false;
+                line.enabled = false;
+                lines[i] = line;
+            }
+            var shimmer = holder.AddComponent<HeatShimmer>();
+            shimmer.Width = 0.18f;
+            shimmer.Configure(lines);
         }
 
         private static Material Streak(string name, Color colour) => BuildKit.Glow(Folder, name, colour, 1, true, 1.3f).Graphic(0.14f, 0.6f);

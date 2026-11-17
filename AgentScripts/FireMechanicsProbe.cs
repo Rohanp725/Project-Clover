@@ -486,17 +486,36 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         keepAlive = false;
         float before = defence.Health.Current;
         spearman.Brain.Alert();
+        int wardsBefore = defence.Wards;
+        int blowsBefore = defence.BlowsTaken, dodgesBefore = defence.Dodges, blocksBefore = defence.Blocks, perfectBefore = defence.PerfectGuards;
         bool forced = spearman.Brain.Force("gilded_cast");
         yield return Until(() => spearman.Brain.TelegraphProgress > 0.8f, 3f);
         yield return Shot("fire2_spear_0");
+        // What else reached the player during the tell: a blow then leaves them flinching, and a blow that arrives
+        // while they flinch is ignored by design (PlayerDefence.TakeHit), which is how the throw can seem harmless.
+        int blowsInTell = 0;
+        bool hurtBefore = false;
+        while (cast.Throws == 0 && spearman.Brain.Current != null)
+        {
+            blowsInTell = defence.BlowsTaken - blowsBefore;
+            hurtBefore = defence.IsHurt;
+            yield return null;
+        }
         yield return Until(() => cast.Throws > 0, 3f);
+        float atThrow = defence.Health.Current;
+        string state = $"leaping {player.IsLeaping} suspended {player.Suspended} hurt {defence.IsHurt} finishing {player.GetComponent<PlayerCombat>().IsFinishing} form {player.FormHold} wards {wardsBefore} -> {defence.Wards} screened {Clover.Player.Forms.SpellWorks.Screens(spearman.transform.position, player.transform.position)}";
+        int blowsAtThrow = defence.BlowsTaken - blowsBefore, dodgesAtThrow = defence.Dodges - dodgesBefore, blocksAtThrow = defence.Blocks - blocksBefore, perfectAtThrow = defence.PerfectGuards - perfectBefore;
+        Vector3 offAtThrow = player.transform.position - spearman.transform.position;
+        float facingOff = Vector3.Angle(Vector3.ProjectOnPlane(spearman.transform.forward, Vector3.up), Vector3.ProjectOnPlane(offAtThrow, Vector3.up));
         yield return new WaitForSeconds(0.1f);
+        // Read before the player is healed again: the heal of the next frame would hide the blow.
+        float after = defence.Health.Current;
         yield return Shot("fire2_spear_1");
         keepAlive = true;
         Stand(at + new Vector3(4f, 0f, 2f), Vector3.left);
         yield return null;
         var guarded = spearman.TakeHit(new Hit(4f, 0f, (spearman.transform.position - player.transform.position).normalized, false, false));
-        Say($"13 spear: forced {forced} thrown {cast.Thrown} stands {(cast.StandsAt - at).magnitude:0.0} m from him health {before:0} -> {defence.Health.Current:0}; a light blow from the front while bare-handed: {guarded}");
+        Say($"13 spear: forced {forced} thrown {cast.Thrown} stands {(cast.StandsAt - at).magnitude:0.0} m from him health {before:0} -> {after:0} {(after < before ? "OK" : "WRONG")} (blows taken in the tell {blowsInTell}, flinching the frame before {hurtBefore}; at the throw: health {atThrow:0} blows +{blowsAtThrow} dodged +{dodgesAtThrow} blocked +{blocksAtThrow} perfect +{perfectAtThrow}, the player {Vector3.ProjectOnPlane(offAtThrow, Vector3.up).magnitude:0.0} m off and {facingOff:0} degrees off his facing; {state}; blows in all +{defence.BlowsTaken - blowsBefore}); a light blow from the front while bare-handed: {guarded}");
         yield return Until(() => cast.Fetched > 0, 8f);
         yield return Shot("fire2_spear_2");
         Say($"   fetched {cast.Fetched} thrown {cast.Thrown}");

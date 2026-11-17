@@ -580,7 +580,7 @@ namespace Clover.Player
             if (step.Shot == null || shots == null) return;
             Vector3 forward = transform.forward;
             int handle = shots.Fire(this, step.Shot, (step.Shot.FromStepStart ? stageOrigin : transform.position) + forward * 0.4f, forward, EffectColour, element != null ? element.Info : null);
-            if (handle < 0 || !(step.Shot.Returns || step.FollowStep != null)) return;
+            if (handle < 0 || !(step.Shot.Returns || step.Shot.RaysBack || step.FollowStep != null)) return;
             WeaponAway = true;
             awayShot = handle;
             followFor = step.FollowStep != null ? step : null;

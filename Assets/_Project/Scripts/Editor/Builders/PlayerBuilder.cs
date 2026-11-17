@@ -242,6 +242,18 @@ namespace Clover.EditorTools
             // A weapon that is itself thrown flies as its own model.
             var thrown = WeaponBuilder.Specs.Where(spec => spec.Worn == null).ToArray();
             shots.ConfigureProps(thrown.Select(spec => spec.Carry).ToArray(), thrown.Select(spec => WeaponBuilder.Prefab(spec.Carry)).ToArray());
+            // The Sun-Spear's ray home: a beam of light from where it stood to the hand.
+            var rayObject = new GameObject("Spear Ray");
+            rayObject.transform.SetParent(player.transform, false);
+            var rayLine = rayObject.AddComponent<LineRenderer>();
+            rayLine.useWorldSpace = true;
+            rayLine.positionCount = 2;
+            rayLine.numCornerVertices = 0;
+            rayLine.sharedMaterial = BuildKit.Glow(PlayerFolder, "m_spear_ray", new Color(3.6f, 3f, 1.6f, 1f), 12, true, 1f);
+            rayLine.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            rayLine.receiveShadows = false;
+            rayLine.enabled = false;
+            shots.ConfigureRay(rayLine);
             // The bow's arrows once they have landed, and the chain between the sickle's hand and its weight.
             player.AddComponent<PlantedArrows>().Configure(WeaponBuilder.Prefab("arrow"));
             player.AddComponent<ChainLine>().Configure(WeaponBuilder.Prefab("weight"), WeaponBuilder.Prefab("sickle"),

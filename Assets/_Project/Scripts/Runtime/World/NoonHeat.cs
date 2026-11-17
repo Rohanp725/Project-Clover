@@ -50,7 +50,7 @@ namespace Clover.World
         }
 
         private float baseIntensity, baseShadow;
-        private float untilBurn, untilPace, untilShow;
+        private float untilBurn, untilPace, untilShow, untilShimmer;
 
         public void Configure(HeatSchedule rhythm, Vector4[] calmRectangles, Clover.Player.PlayerDefence playerDefence, Light key, Volume look, Clover.UI.LandHud landHud, Enemy[] corrupted)
         {
@@ -119,6 +119,18 @@ namespace Clover.World
                 sun.shadowStrength = Mathf.Lerp(baseShadow, 1f, white);
             }
 
+            // Heat shimmers off the lit ground round the player while the sun swells, none of it in shade.
+            if (white > 0.3f && defence != null)
+            {
+                untilShimmer -= deltaTime;
+                if (untilShimmer <= 0f)
+                {
+                    untilShimmer = 0.04f / white;
+                    Vector3 near = defence.transform.position + new Vector3(Random.Range(-9f, 9f), 0.1f, Random.Range(-6f, 7f));
+                    if (Sunlight.IsLit(near) && !IsCalm(near)) HeatShimmer.Play(near, 1.1f);
+                }
+            }
+
             bool lit = defence != null && Sunlight.IsLit(defence.transform.position);
             bool burning = defence != null && !defence.IsDead && HeatSchedule.Burns(Current, lit, playerCalm);
             if (hud != null) hud.ShowSun(playerCalm ? HeatSchedule.Phase.Calm : Current, progress, burning);
@@ -127,10 +139,11 @@ namespace Clover.World
                 untilShow -= deltaTime;
                 if (untilShow <= 0f)
                 {
-                    // Heat coming off the skin: pale wisps and the odd tongue of flame from the shoulders.
+                    // The skin scorching: embers lifting off the shoulders, a thread of smoke, the odd tongue of flame.
                     untilShow = 0.15f;
                     Vector3 at = defence.transform.position;
-                    Vfx.Play(VfxKind.TintPuff, at + Vector3.up * (1.2f + Random.value * 0.6f) + Random.insideUnitSphere * 0.25f, Vector3.up, 0.35f, new Color(1f, 0.95f, 0.8f, 1f));
+                    Vfx.Play(VfxKind.Embers, at + Vector3.up * (1.1f + Random.value * 0.6f) + Random.insideUnitSphere * 0.25f, Vector3.up, 0.3f);
+                    if (Random.value < 0.5f) Vfx.Play(VfxKind.Ash, at + Vector3.up * 1.7f + Random.insideUnitSphere * 0.2f, Vector3.up, 0.3f, new Color(0.26f, 0.24f, 0.23f, 0.8f));
                     if (Random.value < 0.35f) Vfx.Play(VfxKind.Fire, at + Vector3.up * 1.4f, Vector3.up, 0.12f);
                 }
                 untilBurn -= deltaTime;
@@ -142,7 +155,7 @@ namespace Clover.World
                     {
                         Burns++;
                         Burnt += taken;
-                        Vfx.Play(VfxKind.Fire, defence.transform.position + Vector3.up * 1f, Vector3.up, 0.5f);
+                        Vfx.Play(VfxKind.Embers, defence.transform.position + Vector3.up * 1f, Vector3.up, 0.8f);
                     }
                 }
             }

@@ -13,6 +13,7 @@ namespace Clover.Gameplay
     {
         [SerializeField] private Transform standing;
         [SerializeField] private Light glow;
+        [SerializeField] private Transform held;
 
         public float PickUpWithin = 1.1f;
 
@@ -24,10 +25,18 @@ namespace Clover.Gameplay
         private Enemy enemy;
         private float untilSmoke;
 
-        public void Configure(Transform spearInFloor, Light spearGlow)
+        public void Configure(Transform spearInFloor, Light spearGlow, Transform heldSpearBone = null)
         {
             standing = spearInFloor;
             glow = spearGlow;
+            held = heldSpearBone;
+        }
+
+        // After the animation has posed him: his hand is empty while his spear stands in the floor (the bone the
+        // spear is skinned to is shrunk to nothing, as the sun-court does for Khepharu's).
+        private void LateUpdate()
+        {
+            if (held != null) held.localScale = Thrown ? Vector3.one * 0.001f : Vector3.one;
         }
 
         private void Awake()

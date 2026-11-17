@@ -1746,3 +1746,162 @@ The city registers 78 shade rectangles. EditMode tests: 342 pass (338 before, an
 - *Side spaces are bare*: the west passage is a corridor of walls with lamp niches; the chapel has an altar and two
   columns.
 - *The mud tiles' seam* (a straight line down the bed's middle) shows in every river frame, as it did in the first pass.
+
+### As built: the bosses' attack visuals, the sun parry and the Sun-Spear (2026-11-17, sixth worker)
+
+Built from `fire_boss_visuals.md` (the plan) and `fire_rework.md` section 5, in the plan's order: its 90-minute list,
+the ray as a beam, the parry, the Sun-Spear; then from the extra list. Frames are `review/shots/current/bossfx_*.png`
+(`BossFxProbe`, see `AgentScripts/README.md`) unless named otherwise.
+
+**Where it lives.** The Sun-Bearer's effects that are not particles are in `Gameplay/SunBearerLook.cs` (the sun's light,
+the stoop's streak and shock ring, the parry's trail of fire, the stun stars), built by `SunBearerBuilder.Look`;
+`SunBearer` only says what happens. The two spearmen's effects are in `Gameplay/SpearLook.cs`, which listens to
+`Enemy.AttackStruck` and reads `Brain.Current` and `Brain.State`; `EnemyBuilder` adds it (with three streak quads, and
+for Khepharu four shaft quads) to the Champion and to Khepharu wherever they are built, and sets their `SlashColour`.
+`Enemy.cs` gained three read-only getters (`StrikePoint`, `LungeFrom`, `LungeForward`) and its fiery circle's cold ring
+became a gold one; nothing else in it changed. The ray is `Gameplay/SpearRay.cs`, owned by `SunCourtDirector`
+(`ConfigureRay`). Heat shimmer is `Core/HeatShimmer.cs`, a pool of 32 line renderers made by `VfxBuilder` in every
+scene. Every piece is made by a builder; nothing is created during play.
+
+1. **The 90-minute list.**
+   - *Gold, not magenta and not blue*: the Champion's arcs are `(2.0, 1.4, 0.4)`, Khepharu's `(2.6, 2.1, 1.1)`; every
+     ring the Sun-Bearer throws is `TintRing` in gold; its dust is thrown in sand; a fiery circle of the men gives a gold
+     ring. A lane blow of either man draws a streak of gold light down its lane at 1.1 m, tip-first in 0.06 s and eaten
+     from the tail over 0.2 s (0.3 m wide, 0.45 for the third thrust, the reach and the drive; Khepharu's with a
+     white core), with gold motes at its tip, a glint at the tip of the god's heavy ones and sand at his foot after a long
+     lunge (`bossfx_thrust_1` to `_3`, `bossfx_reach_1`). A sweep raises sand along its rim; a circle throws sand at its
+     edge.
+   - *Effects timed by time, not frame*: every `Time.frameCount % n` in `SunBearer` is now a clock (`Every`): per metre
+     travelled for the roll's and the pass's bow wave, per second for the entrance and the death.
+   - *The sun lights the court*: a point light over the sun (molten, range 9, no shadows), 3 held, 4.5 rolling or carried
+     in a pass, 6 at the Zenith, 8 while a parried sun flies, 0 loose, times `SunBearerLook.Strength` 4 (the toon
+     shader's banded lamps needed it before the pool on the floor was wider than the sun), breathing on 7 and 13 Hz waves.
+     It shows as a warm disc round the rolling sun (`bossfx_roll_2`).
+   - *The furrow follows the sun*: the hot lane is laid as the roll or the pass begins and grows behind the sun each
+     frame; the red lane is drawn only ahead of the sun, so the orange furrow is seen chasing it (`bossfx_roll_2`,
+     `bossfx_pass_1`). A bow wave of flame and sand at the sun's front foot per metre, embers off its top. The furrow
+     smokes (grey flakes on every other beat of its flame, only smoke in its last 2 s and under the shadow) and shimmers.
+     At the far rim a sand ring.
+   - *The stoop tears the air*: two crossed quads from where it left the sky to the floor of the circle, gold with a
+     white core, through the 0.24 s dive, drawn in toward the floor over 0.2 s after (`bossfx_stoop_2`); a shock ring at
+     1 m that widens from 1 to 7 m in 0.22 s (`bossfx_stoop_3`); a sun-white impact 1.5 times its size, ten flames
+     thrown outward, eight sand puffs; the shadow tightens from 5 to 3.6 m over the hold.
+2. **The ray as a beam.** Through the 1.8 s call a thread (the old line, now the glow's streak shape) joins the standing
+   spear to his hand, flickering at 15 Hz, widening at 70%, with motes drifting in and sparks off the blade
+   (`bossfx_ray_2`). At the strike the dragon's beam in gold: a 1.0 m white core in the glow's beam shape and two gold
+   strands kinking round it, redrawn every 0.04 s; the spear flies down it to his hand in 0.15 s as a white streak
+   carrying a light; a flash, a shake, a clang and a gold ring at his hand; a line of heat on the floor that fades in
+   1.5 s (`bossfx_ray_3`; the core 0.8 m and the strands 0.5 m, so the gold reads beside the white under bloom). The
+   standing spear is now the Sun-Spear's own model at his size, smoking where it stands and dropping embers from its
+   disc. **His throw flies**: the spear crosses its lane point first in 0.2 s trailing fire (sun white to ember), and
+   where it drives in a star, a gold ring, sand and a shake (`bossfx_throw_1`, `_2`).
+3. **The sun parry** (a proposal for the owner: `SunBearer.SunParry`, one serialized bool, true now; false gives back
+   today's sideways knock exactly). A perfect guard against the sun (roll, furrows, stoop or pass, the existing
+   perfect-guard path) freezes 0.18 s, flashes, throws a gold critical star and the perfect-guard burst, then slows time
+   to 35% for 0.35 s while the sun, still burning white, flies back on a 2 m arc into the form's face with a 2.4 m trail
+   of fire (`bossfx_parry_1`, `_2`); it strikes (a 0.08 s freeze, a sun-white impact three times its size, a burst, a
+   gold ring, an ember flash, a shake, the form flashing white, smoke from its edges), does 30 damage (`ParryDamage`,
+   the plan's suggestion) and the knock's 40 balance as today, then rebounds 6 m beyond the form, dull. The form lies
+   exposed for today's `ExposedSeconds` (4 s) under five circling gold stars (`bossfx_parry_4`) and must fetch the sun
+   from beyond itself, so the opening is as long as today's. The camera's lean-in of the plan is not done: the fight's
+   framing is always in force and `TopDownCamera.CloseIn` ignores calls while it is.
+   **Heat shimmer** is drawn squiggles (the owner's answer), not refraction: thin wavy lines in a warm white that rise
+   0.8 m a second, sway and thin away in 0.9 s; off the furrows and craters, all over the lit court through the blaze
+   (none in the shadow: `bossfx_zenith_1`, `_2`), and round the player in the sun during a swell.
+4. **The Sun-Spear.** `Weapons.SunSpear()`: the Great Spear (every move, number and pose the same, drawn in the god's
+   gold) with its skill replaced by the **Sun Throw**: thrown 12 m at 40 m/s, it stands in the floor where it lands (or
+   in the first enemy) for 0.9 s, then comes home as a ray 2.2 m wide in 0.18 s, striking everything on the line once at
+   the throw's full 26 (`WeaponShot.RaysBack`, `RayRadius`, `RaySeconds`; walked in strides no wider than the ray, so
+   nothing is passed over). Nobody runs to it (the Flying Spear's run is the one move given up). Taking Fire equips it
+   (`Weapons.OfGod`, used by `GodReward` for both gods). Its model is built from primitives after the king's spear
+   (`WeaponBuilder` spec `sunspear`, no FBX yet): a gold shaft, the sun's disc and a white-hot leaf, in the court's own
+   `m_fire_gold` and `m_fire_sun`. EditMode `SunSpearTests` (3): Fire gives it and Lightning the storm katana; it fights
+   as the Great Spear move for move; its throw sticks and rays back with weight, its run is gone. `BossFxProbe`
+   `sunspear`: thrown at open floor, Khepharu held on the line home: rays +1, struck +1, he lost 26
+   (`bossfx_sunspear_2`, `_3`).
+5. **The extra list.**
+   - *The heat swell's look*: its volume is now white-gold, not grey (exposure +0.55, saturation -8 instead of -35,
+     contrast +4 instead of -12, a warm filter, bloom 2.2 tinted gold), shimmer squiggles rise off the lit ground round the
+     player, and the player's burn is embers and a thread of smoke with the odd tongue of flame, not pale puffs
+     (`fire2_noon_swell_1`).
+   - *The ashen's burst* has its own look: an ember-red star, an ember ring inside its grey ash ring, a fountain of
+     embers and ash flakes thrown out and up, not the shared white burst and cold ring (`fire2_ashen_burst_2`).
+   - *Molten gold*: hot puddles carry a sheen (their glow swells and ebbs, each in its own time) and glints run across
+     them; cooling they go from bright gold to a dark bronze crust and their glow dies.
+   - *The spearman's held spear* is shrunk away (its `weapon.R` bone, as the court does for Khepharu) while his thrown one
+     stands. Not confirmed by eye: the bone is found and is part of his skin, but in the one frame taken of him
+     bare-handed (`fire2_spear_bare`) he still seems to carry a long shape; it may be weighted to another bone.
+   - *The spear throw doing no damage*: **not fixed, only half found.** Part of it was the probe: `FireMechanicsProbe`
+     read the player's health a frame after turning its healing back on, so even a throw that landed read 100 to 100;
+     it now reads at once. But the throw itself is intermittent: in 3 of 6 runs it struck (100 to 77), in 3 it did
+     nothing. In a failing run the probe now logs, at the frame of the throw: the player 8.0 m dead ahead of him and 0
+     degrees off his facing (inside the lane by `SpearCast`'s own sum, which is why the spear stands at the player), not
+     flinching, not leaping, no wards, no spell wall between, no blow, no dodge, no block, no perfect guard counted.
+     So either `Enemy.Strike` does not reach `Deal` for that blow or `PlayerDefence.TakeHit` returns early by a path
+     that counts nothing; the next step is a log inside `Enemy.Deal` of the outcome `TakeHit` returns.
+   - *Shafts of noon* (plan item 9, done after the list): from the moment one of Khepharu's noon circles is drawn a
+     thin shaft of sun-white light stands over it from 16 m up, widening to 1.2 m as it fills (`bossfx_noon_tell`); at
+     the strike it slams to the circle's full width for 0.1 s and collapses in 0.25 s (`bossfx_noon_1`), with a
+     sun-white star and sand at the edge.
+   - *The plant's ring of fire* (plan item 14): at the strike of either man's planted spear, tongues of flame (the glow's
+     flame shape, billboarded) rise out of the floor round the circle's edge in 0.15 s, sixteen for the Champion and
+     twenty for Khepharu, pulse on a 0.5 s beat for the burn's 6 or 8 s and sink one after another round the ring at
+     its end (`bossfx_plant_after`). The random flame puffs inside the circle, which `Enemy` throws, are still there.
+   - *The Zenith whitens the court* (plan item 11): a second volume (`ZenithBlazeProfile`: exposure +0.45, saturation
+     -12, a warm filter, bloom 2.4 from 0.8) follows the floor's fill to full and holds through the blaze, then eases
+     off over a second (also when the Zenith is cut short by a knock or a break); the floor's hot fill is drawn at half
+     its strength through the blaze (`bossfx_zenith_fill`, `bossfx_zenith_1`, `_2`).
+   - *Sparks that fly, feathers that fall* (plan item 13): each falling mark has its own thing in the air, from a pool
+     of 18 quads: from the scarab an ember streak thrown up from under its cases on a 5 m arc onto the mark, from the
+     falcon a gold feather swaying down; each lands exactly as its warning ends, since its place is worked out from the
+     warning left (`bossfx_sparks_1`, `bossfx_feathers_2`).
+   - *The Rising and the Setting* (part of plan item 17): at the throw a pillar of light from the floor up past the sun
+     with the ring of air, the sun's trail of fire for its climb, embers off the opening wings (`bossfx_rising_1`, `_2`);
+     at the setting a sand ring, a last shower of embers and smoke from the folding cases.
+
+**Measured** (editor, Game view 1920 by 936, no vsync; every run after the last change): EditMode tests 345 pass, 0
+fail (342 before, and the 3 new `SunSpearTests`). `SunCourtProbe` 34 `OK`, 0 `WRONG` (the perfect guard on the rolling
+sun now parries: perfect +1, knocks +1, loose, exposed, no blow taken; taking Fire gives the Sun-Spear);
+`SunCityProbe` 91 `OK`, 0 `WRONG`; `FireMechanicsProbe` complete, 0 errors (its spear-throw line `OK` in 3 of 6 runs, `WRONG` in the others: see below); the hub's `RunProbe`
+complete; `BossFxProbe` complete (the Sun-Spear's ray `OK`); console 0 errors and 0 warnings after each. `PerfProbe` in
+the sun-court with the form risen and rolling: frame 3.0 ms mean, 2.8 median, 3.9 at the 95th percentile, 12.4 worst,
+main thread 3.0 ms, 654 draw calls, 7,919 bytes of garbage a frame (the 7.9 KB measured before; the new effects
+allocate nothing a frame). `SunCourtProbe`'s Zenith with hot floor: 3.2 ms mean, 11.3 worst, 8,221 bytes a frame.
+
+**What looks weak** (from the frames):
+
+- *Hot floor is still drawn as a mark* (plan item 7 not done): the furrows and craters are the orange translucent
+  shape with flame puffs, now with smoke and shimmer over them, not a char wash with ember cracks. With the furrow
+  growing behind the sun it reads better than before, but it is still "another warning" more than "scorched ground".
+- *The shimmer squiggles are faint*: thin ember-tinted lines, easy to miss at the court's camera; at the height of the
+  blaze the whitened floor swallows most of them (`bossfx_zenith_1`), and a squiggle rising 2 m from just south of the
+  shadow is drawn over the shadow's strip by the camera's angle.
+- *The ray's strike* is still mostly a white bar with gold kinks; the spear flying down it is barely seen
+  (`bossfx_ray_3`).
+- *The thrown spear in flight* is hidden behind the thrust streak most of its 0.2 s; the trail shows more than the spear
+  (`bossfx_throw_1`). It stands blade up, as the court's first stand-in did, not driven in at 14 degrees point first.
+- *The ashen's burst is still mostly flame puffs* with ash squares; its ember ring blooms to near white.
+- *The Zenith's court is pink-salmon while it fills* (red fill under a whitening volume) and orange-cream through the
+  blaze, not the plan's white; the sun overhead is still off the top of the picture.
+- *Feathers and sparks are small* at this camera (glow streaks 0.65 to 0.75 m wide); the sparks read best while still
+  near the scarab, the feathers only in the lower half of their fall.
+- *The stoop's streak* is a narrow column next to a falcon fourteen metres across; the shock ring reads better.
+
+**Not done**: the plan's items 7 (scorched hot floor with char and ember cracks), the rest of 10 (the cracks under the
+standing spear, its cooling blade, the champion's throw and recall), 15 (the pass's wing-tip wake), most of 17 (the ram's cracks and chips, the
+sweep's dust beyond what is listed); the camera lean-in of the parry (the court's framing blocks `CloseIn`); the
+Sun-Spear's own model (built of primitives; a Blender model is wanted); the champion's real throw and recall (the
+city's departure 7) and his plant as a ring.
+
+**Changed outside the boss code**: `Core/HeatShimmer.cs` (new) and `VfxBuilder` (its pool, in every scene's Effects);
+`Player/WeaponShot.cs` (`RaysBack`, `RayRadius`, `RaySeconds`), `Player/WeaponShots.cs` (the ray home, `Rays`,
+`RayStruck`, `ConfigureRay`; a returning weapon that is not a ray strikes as before), `Player/PlayerCombat.cs` (a shot
+that rays back takes the weapon out of the hand), `Player/Weapons.cs` (`SunSpearName`, `SunSpear()`, `OfGod`),
+`World/GodReward.cs` (the god's weapon through `OfGod`), `PlayerBuilder` (the ray line on the player),
+`WeaponBuilder` (the `sunspear` spec and stand-in); `World/NoonHeat.cs` and `FireMechanicsKit.SwellProfile` (the
+swell's look); `Gameplay/AshenBurst.cs`, `Gameplay/MoltenFloor.cs`, `Gameplay/SpearCast.cs` with `FireMechanicsKit`;
+`Enemy.cs` (three getters, the gold ring); probes `BossFxProbe` (new), `PerfProbe` (SunCourt branch),
+`FireMechanicsProbe` (the spear's health read), `SunCourtProbe` (a safe spot is never beside the burning sun), and the
+scripts `AgentScripts/rebuild_fire.sh` and `check_fire.sh`. Rebuilt: Sun City, Fire Yard, Sun Court, Hub, Castle,
+Summit and the combat test arena (whose builder adds it to the build list: taken back out, the list is Hub, Castle,
+Summit).

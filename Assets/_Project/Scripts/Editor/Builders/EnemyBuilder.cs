@@ -164,7 +164,53 @@ namespace Clover.EditorTools
             var enemy = root.AddComponent<Enemy>();
             enemy.Configure(kind.Name, kit.Target, animator, renderers, outline, fill, bars.root, bars.health, bars.stagger, kit.Arcs, kit.Turns, guardArc);
             enemy.ConfigureFeedback(finishMark);
+            if (kind.Name == EnemyKind.ChampionName || kind.Name == EnemyKind.SunKingName) Spearman(enemy, kind.Name == EnemyKind.SunKingName);
             return enemy;
+        }
+
+        // The Fire land's two spearmen: gold arcs, not the default magenta, and a pool of streaks of light for their
+        // thrusts (fire_boss_visuals.md 2.1, 2.2). The champion's gold is duller and has no white heart; the god's has one.
+        private static void Spearman(Enemy enemy, bool godly)
+        {
+            enemy.SlashColour = godly ? new Color(2.6f, 2.1f, 1.1f, 0.9f) : new Color(2.0f, 1.4f, 0.4f, 0.8f);
+            var material = BuildKit.Glow(Folder, godly ? "m_spear_streak_god" : "m_spear_streak", Color.white, 2, true, 1.2f);
+            material.SetFloat("_Core", godly ? 0.62f : 0f);
+            EditorUtility.SetDirty(material);
+            var pool = new Renderer[3];
+            for (int i = 0; i < pool.Length; i++)
+            {
+                pool[i] = BuildKit.Shape(PrimitiveType.Quad, "Spear Streak " + (i + 1), enemy.transform, Vector3.zero, Vector3.one, material);
+                pool[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                pool[i].receiveShadows = false;
+                pool[i].enabled = false;
+            }
+            var look = enemy.gameObject.AddComponent<SpearLook>();
+            look.Configure(pool, godly ? new Color(4.4f, 3.2f, 1.2f, 1f) : new Color(3.6f, 2.2f, 0.55f, 1f), godly);
+            // The planted spear's ring of fire: tongues of flame round the circle's edge, twenty of them for the god's.
+            var flame = BuildKit.Flame(Folder, "m_plant_tongue", Color.white);
+            var tongues = new Renderer[godly ? 20 : 16];
+            for (int i = 0; i < tongues.Length; i++)
+            {
+                tongues[i] = BuildKit.Shape(PrimitiveType.Quad, "Plant Tongue " + (i + 1), enemy.transform, Vector3.zero, Vector3.one, flame);
+                tongues[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                tongues[i].receiveShadows = false;
+                tongues[i].enabled = false;
+            }
+            look.ConfigureTongues(tongues);
+            if (!godly) return;
+            // The god's shafts of noon: light falling from the sky onto each circle, two crossed quads to a shaft, two shafts.
+            var shaftLight = BuildKit.Glow(Folder, "m_noon_shaft", Color.white, 12, true, 1f);
+            shaftLight.SetFloat("_Core", 0.7f);
+            EditorUtility.SetDirty(shaftLight);
+            var shafts = new Renderer[4];
+            for (int i = 0; i < shafts.Length; i++)
+            {
+                shafts[i] = BuildKit.Shape(PrimitiveType.Quad, "Noon Shaft " + (i + 1), enemy.transform, Vector3.zero, Vector3.one, shaftLight);
+                shafts[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                shafts[i].receiveShadows = false;
+                shafts[i].enabled = false;
+            }
+            look.ConfigureShafts(shafts);
         }
 
         /// <summary>Puts the enemies' toon materials on a copy of one of their models, as the game does; a kind with colours of its own gets those.</summary>

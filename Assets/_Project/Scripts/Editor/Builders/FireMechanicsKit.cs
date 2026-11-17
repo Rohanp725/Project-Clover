@@ -124,7 +124,7 @@ namespace Clover.EditorTools
             lamp.shadows = LightShadows.None;
             spear.gameObject.SetActive(false);
             var cast = enemy.gameObject.AddComponent<SpearCast>();
-            cast.Configure(spear, lamp);
+            cast.Configure(spear, lamp, BuildKit.FindDeep(enemy.transform, "weapon.R"));
             return cast;
         }
 
@@ -310,7 +310,8 @@ namespace Clover.EditorTools
             return heat;
         }
 
-        // The sky and ground whitening: brighter, paler, flatter, and a touch of warmth in the light.
+        // The sky and ground blazing: brighter and white-gold, the light warm, the highlights blooming. Not grey: the
+        // owner saw the first version (paler, flatter) read as a cold, washed-out ground rather than heat.
         private static VolumeProfile SwellProfile()
         {
             string path = $"{Folder}/NoonSwellProfile.asset";
@@ -320,15 +321,16 @@ namespace Clover.EditorTools
             var colour = profile.Add<ColorAdjustments>(true);
             colour.name = nameof(ColorAdjustments);
             AssetDatabase.AddObjectToAsset(colour, profile);
-            colour.postExposure.Override(0.65f);
-            colour.saturation.Override(-35f);
-            colour.contrast.Override(-12f);
-            colour.colorFilter.Override(new Color(1f, 0.96f, 0.88f));
+            colour.postExposure.Override(0.55f);
+            colour.saturation.Override(-8f);
+            colour.contrast.Override(4f);
+            colour.colorFilter.Override(new Color(1f, 0.9f, 0.7f));
             var bloom = profile.Add<Bloom>(true);
             bloom.name = nameof(Bloom);
             AssetDatabase.AddObjectToAsset(bloom, profile);
-            bloom.intensity.Override(1.8f);
-            bloom.threshold.Override(0.95f);
+            bloom.intensity.Override(2.2f);
+            bloom.threshold.Override(0.85f);
+            bloom.tint.Override(new Color(1f, 0.85f, 0.6f));
             EditorUtility.SetDirty(profile);
             return profile;
         }

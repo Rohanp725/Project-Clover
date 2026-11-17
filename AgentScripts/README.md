@@ -50,10 +50,11 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 | `TipsProbe` | Castle | the three first-fight tips |
 | `SoakProbe` | any | random play for minutes; mode, seed and seconds are read from `%TEMP%/soak_config.txt` |
 | `TourProbe`, `TitleProbe` | any | photographs of each scene's places and its title card, to `review/shots/current/` |
-| `PerfProbe` | any | ten seconds of frame time, garbage and draw calls |
+| `PerfProbe` | any | ten seconds of frame time, garbage and draw calls (in FireYard, SunCity and SunCourt it first sets up the busy moment: see the Fire sections below) |
 | `SunCityProbe` | SunCity | the second pass of the sun-king's city: every room and vista pictured, every stair walked, the shortcuts from both sides, the mirror, the noon, the falls, the champion and the gate; see below |
 | `SunCityOverview` | SunCity, edit mode (`script run`) | a raised picture of each district: `review/shots/current/suncity2_overview_<district>.png` |
 | `FireMechanicsProbe` | FireYard | the Fire land's second pass, each mechanic forced and measured; see below |
+| `BossFxProbe` | SunCourt | the look of the Fire bosses' attacks, each pictured with time stopped at its strongest; the sun parry; the Sun-Spear's throw and ray; see below |
 
 Probes that touch saved progress forget it before and after, so the first real start still shows the first waking.
 
@@ -312,6 +313,42 @@ part puts everyone back first, then forces and measures one thing, with frames
     sun-disc is lit and the door goes.
 
 13. `spear_0/1/2`: the spearman's throw forced on a player 8 m off; the spear standing in the floor; a light blow on
-    him from the front while bare-handed; him fetching it.
+    him from the front while bare-handed; him fetching it. The health is read the moment after the throw, before the
+    probe heals the player again (it used to be read a frame later, healed, which made the throw look harmless: 100 to
+    100); the line ends `OK` when the throw cost health, and says what else was so at the frame of the throw (blows,
+    dodges, blocks, flinch, leap, wards, spell walls, where the player stood). The throw is intermittent: it ends
+    `WRONG` in about half the runs (see `docs/design/fire_land.md`, the bosses' attack visuals, the extra list).
 
-`PerfProbe`'s FireYard branch now also brings the swell on and strews 30 splashes of gold round the player.
+`PerfProbe`'s FireYard branch now also brings the swell on and strews 30 splashes of gold round the player. Its
+SunCourt branch (new) reads the king's words, fells the man, waits for the Sun-Bearer to stand in the fight, asks a
+roll of it and measures the ten seconds after, with the form left to its own choices.
+
+### BossFxProbe
+
+`bash AgentScripts/runprobe.sh SunCourt BossFxProbe 150` (about four minutes for everything). The effects of
+`docs/design/fire_boss_visuals.md` as built: each picture is taken with the time scale set to 0 for one frame, so it
+shows the instant asked for, then time is set back to 1 (which also lets go of any hit-stop in force). Frames are
+`review/shots/current/bossfx_<what>_<n>.png`. `AgentScripts/bossfx_only.txt` may hold any of these words to run only
+those parts (delete it or leave it empty for all):
+
+- `thrust` (`thrust_1` to `_3`, `reach_1`, each the frame after the blow lands, and `_after`), `sweep`, `plant`, `noon`
+  (`noon_tell` with the shaft of light standing over the filling circle, then each blow): Khepharu forced on a player
+  standing still.
+- `throw`, `ray`: his throw (`throw_1` in flight, `throw_2` standing), the call (`ray_1`, `ray_2`: the thread) and the
+  strike (`ray_3`: the beam), `ray_after`.
+- `sunspear`: the player's Sun-Spear thrown at open floor; Khepharu is held on the line home while it stands; the ray
+  must strike him (`sunspear_1` standing, `_2` the ray, `_3` back in the hand; the line ends `OK` or `WRONG`).
+- then the man is killed and the form waits for what is asked (`SunBearer.OnlyWhenAsked`): `roll` (`roll_1`, `_2` mid
+  roll, the furrow growing behind the sun, `_3` after, `_cooling` five seconds on), `parry` (a perfect guard on the
+  rolling sun: `parry_1` at contact, `_2` in the slowed flight back, `_3` as it strikes, `_4` the form stunned and the sun
+  rebounded; these four are taken without stopping time, and say the time scale they were taken at), `rising`
+  (`rising_1` the pillar of light as the sun is thrown up, `_2` its climb trailing fire), `stoop` (`stoop_1` the hold,
+  `_2` the dive's streak, `_3` the shock ring, `_4` after), `pass`, `zenith` (`zenith_fill` the floor filling red as the
+  court whitens, `zenith_1` in the open, `_2` from the shadow: the shimmer squiggles and the still shadow), `sparks` and
+  `feathers` (`_1`, `_2`: the things that fall, in the air over their marks).
+
+`bash AgentScripts/rebuild_fire.sh` rebuilds, one menu at a time, every scene the Fire bosses' effects and the Sun-Spear touch
+(Sun City, Fire Yard, Sun Court, Hub, Castle, Summit, the combat test arena). The arena's builder puts `CombatTest` into
+the build list: take it out again afterwards so the list stays Hub, Castle, Summit. `bash AgentScripts/check_fire.sh <folder>`
+runs `SunCourtProbe`, `FireMechanicsProbe`, `SunCityProbe` and the hub's `RunProbe` one after another, each into its own
+file in the folder (about twenty minutes).

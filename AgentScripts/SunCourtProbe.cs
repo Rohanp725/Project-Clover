@@ -477,7 +477,8 @@ public class SunCourtProbeRunner : MonoBehaviour
             for (int i = 0; i < 12; i++)
             {
                 Vector3 spot = near + Quaternion.Euler(0f, i * 30f, 0f) * Vector3.forward * (ring * 1.6f);
-                if (spot.magnitude > 18f || spot.magnitude < 4.5f || form.OnHotFloor(spot)) continue;
+                // Nor beside the burning sun, which burns whoever touches it (it once put the player 2 m from the held sun).
+                if (spot.magnitude > 18f || spot.magnitude < 4.5f || form.OnHotFloor(spot) || Flat(spot - form.SunAt).magnitude < 3.4f) continue;
                 bool marked = false;
                 foreach (Transform mark in marks)
                 {

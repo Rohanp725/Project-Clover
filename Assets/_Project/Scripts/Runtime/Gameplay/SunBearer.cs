@@ -60,6 +60,18 @@ namespace Clover.Gameplay
         public float KnockBalance = 40f;
         public float PerfectGuardBalance = 60f;
         public float PassGuardBalance = 30f;
+        /// <summary>
+        /// The parry made for the sun (fire_boss_visuals.md section 3), a proposal for the owner to judge: a perfect guard
+        /// against the sun strikes it back like a ball into the form, which is stunned for as long as a knock stuns it today.
+        /// Off, a perfect guard throws the sun aside as before.
+        /// </summary>
+        public bool SunParry = true;
+        /// <summary>The parry: the freeze at contact, then time slowed while the sun flies back (real seconds and the share of speed).</summary>
+        public float ParryFreeze = 0.18f, ParrySlowSeconds = 0.35f, ParrySlowScale = 0.35f;
+        /// <summary>The sun's flight back into the form in game seconds (slowed, so about half a second to the eye), the height of its arc, and the freeze as it strikes.</summary>
+        public float ParryFlight = 0.13f, ParryArc = 2f, ParryStrikeFreeze = 0.08f;
+        /// <summary>What striking the form with its own sun does, and how far beyond the form it bounces.</summary>
+        public float ParryDamage = 30f, ParryRebound = 6f;
         public float FuryAt = 0.5f;
         public float FuryPace = 1.25f;
         public float FuryRest = 0.55f;
@@ -127,6 +139,10 @@ namespace Clover.Gameplay
         public int HotLanes { get; private set; }
         public int HotPatches { get; private set; }
         public int SunKnocks { get; private set; }
+        /// <summary>Perfect guards that struck the sun back into the form: for probes.</summary>
+        public int Parries { get; private set; }
+        /// <summary>True while the parried sun is in the air on its way back: for probes.</summary>
+        public bool SunFlyingBack => parryLeft >= 0f;
         public int SunPushes { get; private set; }
         public int TimesStaggered { get; private set; }
         public int BlowsStruck { get; private set; }
@@ -147,6 +163,11 @@ namespace Clover.Gameplay
 
         private static readonly int Emission = Shader.PropertyToID("_EmissionColor");
         private static readonly int MarkerColour = Shader.PropertyToID("_Color");
+        // The land's colours for what it throws: gold rings, sand dust, grey smoke (fire_boss_visuals.md, the palette).
+        private static readonly Color Gold = new Color(1f, 0.72f, 0.2f, 1f);
+        private static readonly Color Sand = new Color(1f, 0.88f, 0.64f, 1f);
+        private static readonly Color Smoke = new Color(0.24f, 0.22f, 0.21f, 0.85f);
+        private static readonly Color SunWhite = new Color(1f, 0.92f, 0.62f, 1f);
         // Read every frame by the bar and the probes: the names are made once.
         private static readonly string[] ModeNames = System.Enum.GetNames(typeof(Mode));
         private const int HotMost = 6;
@@ -182,12 +203,24 @@ namespace Clover.Gameplay
         // Falling things: sparks and feathers.
         private Vector3[] fallPoints;
         private float[] fallLeft, fallWarning, fallRadius, fallDamage;
+        private Vector3[] fallFrom;
+        private bool[] fallFeather;
 
         // Floor left hot.
         private readonly bool[] hotIsLane = new bool[HotMost];
         private readonly Vector3[] hotFrom = new Vector3[HotMost], hotAlong = new Vector3[HotMost];
         private readonly float[] hotLength = new float[HotMost], hotWide = new float[HotMost], hotLeft = new float[HotMost];
         private float onHotFor, untilHotBite, untilFlame;
+        private bool smokeTurn;
+        // The hot lane the sun is laying now, which grows behind it as it goes (-1 when none); and metres or seconds
+        // to the next puff of what it throws, so the effects come at the same rate whatever the frame rate.
+        private int growing = -1;
+        // The parry: the sun's flight back left (-1 when none), where it left the guard, and whether the form lies stunned by it.
+        private float parryLeft = -1f;
+        private Vector3 parryFrom;
+        private bool parried;
+        private float untilPuff, untilEmber;
+        private SunBearerLook look;
 
         private Vector3 laneFrom, laneAlong, markPoint, moveFrom, landAt;
         private float laneLength, laneDone, prepare, nearFor, sinceZenith = 100f, knockCount, untilTouch, untilBlaze, flashLeft, roarLeft;
@@ -273,6 +306,8 @@ namespace Clover.Gameplay
             fallWarning = new float[falls.Length];
             fallRadius = new float[falls.Length];
             fallDamage = new float[falls.Length];
+            fallFrom = new Vector3[falls.Length];
+            fallFeather = new bool[falls.Length];
             shadowRenderer = falconShadow != null ? falconShadow.GetComponent<Renderer>() : null;
             lineRenderer = lightLine != null ? lightLine.GetComponent<Renderer>() : null;
             legRest = new Quaternion[legs.Length];
@@ -281,6 +316,7 @@ namespace Clover.Gameplay
             body.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
             RestOf(wingLeft, out wingLeftRest, out wingLeftAxis);
             RestOf(wingRight, out wingRightRest, out wingRightAxis);
+            look = GetComponent<SunBearerLook>();
             Hide();
         }
 
@@ -349,6 +385,30 @@ namespace Clover.Gameplay
             if (bulk != null) bulk.enabled = false;
             SetOpen(false, false);
             sunPart.SetVulnerable(false);
+            growing = -1;
+            parryLeft = -1f;
+            parried = false;
+            if (look != null) look.Clear();
+            // (Clear also takes the court's whitening off.)
+        }
+
+        // True once every so many seconds (or metres) of what is passed in: effects thrown at a steady rate whatever the frame rate.
+        private static bool Every(ref float clock, float interval, float passed)
+        {
+            clock -= passed;
+            if (clock > 0f) return false;
+            clock = clock < -interval ? interval : clock + interval;
+            return true;
+        }
+
+        // How brightly the sun lights the court: held, carried at speed, overhead at the Zenith, or out.
+        private float SunLightWanted()
+        {
+            if (parryLeft >= 0f) return 8f;
+            if (sunState == SunState.Loose || mode == Mode.Dying) return 0f;
+            if (mode == Mode.Zenith) return 6f;
+            if ((mode == Mode.Roll && step == 1) || (mode == Mode.Pass && elapsed >= PassShown)) return 4.5f;
+            return 3f;
         }
 
         private void SetOpen(bool head, bool trunk)
@@ -474,6 +534,12 @@ namespace Clover.Gameplay
         private void KnockSun(Vector3 going, bool squareToIt)
         {
             if (sunState == SunState.Loose || IsDead) return;
+            // Every square knock is a perfect guard's; with the parry on, the sun goes back where it came from.
+            if (squareToIt && SunParry)
+            {
+                StrikeBack();
+                return;
+            }
             SunKnocks++;
             Vector3 way = going;
             if (squareToIt)
@@ -498,6 +564,80 @@ namespace Clover.Gameplay
                 return;
             }
             BeginExposed(false);
+        }
+
+        // The parry, beat 1 (section 3): contact. Time stops, the sun goes white-hot and leaves the guard for the form's face.
+        private void StrikeBack()
+        {
+            SunKnocks++;
+            Parries++;
+            parried = true;
+            sunState = SunState.Loose;
+            sunPart.SetVulnerable(true);
+            parryFrom = sunAt;
+            parryLeft = ParryFlight;
+            untilEmber = 0f;
+            HideMarkers();
+            Blazing = false;
+            if (hitStop != null)
+            {
+                hitStop.Slow(ParryFreeze + ParrySlowSeconds, ParrySlowScale);
+                hitStop.Freeze(ParryFreeze);
+            }
+            ScreenFlash.Flash(new Color(1f, 0.95f, 0.8f, 0.55f), 0.08f);
+            Vfx.Play(VfxKind.Critical, sunAt, Vector3.up, 1.5f, Gold);
+            Vfx.Play(VfxKind.PerfectGuard, sunAt, Vector3.up, 1.5f);
+            if (look != null) look.SunTrail(true);
+            if (!saidLoose && victimDefence != null)
+            {
+                saidLoose = true;
+                victimDefence.Callout("The sun is loose");
+            }
+            if (Stagger.Add(KnockBalance))
+            {
+                BeginStagger();
+                return;
+            }
+            BeginExposed(false);
+        }
+
+        // Where the struck sun is aimed: the scarab's thorax, the falcon's breast (straight up into it after a stoop).
+        private Vector3 FaceOfForm() => falcon ? at + Vector3.up * 0.6f : at + Facing(yaw) * 1.6f + Vector3.up * 1.6f;
+
+        // Beats 2 to 5: the flight back on its arc, the blow to the form, and the rebound beyond it.
+        private void AdvanceParry(float deltaTime)
+        {
+            parryLeft -= deltaTime;
+            float t = Mathf.Clamp01(1f - parryLeft / ParryFlight);
+            Vector3 to = FaceOfForm();
+            Vector3 was = sunAt;
+            sunAt = Vector3.Lerp(parryFrom, to, t) + Vector3.up * (Mathf.Sin(t * Mathf.PI) * ParryArc);
+            sunSpin += (sunAt - was).magnitude / 1.5f * Mathf.Rad2Deg * 2f;
+            if (Every(ref untilEmber, 0.5f, (sunAt - was).magnitude)) Vfx.Play(VfxKind.Embers, sunAt, Vector3.up, 0.8f);
+            if (parryLeft > 0f) return;
+            parryLeft = -1f;
+            // It strikes the form.
+            if (hitStop != null) hitStop.Freeze(ParryStrikeFreeze);
+            Vfx.Play(VfxKind.Impact, to, Vector3.up, 3f, SunWhite);
+            Vfx.Play(VfxKind.Burst, to, Vector3.up, 2f);
+            Vfx.Play(VfxKind.TintRing, OnFloor(to) + Vector3.up * 0.3f, Vector3.up, 1.6f, Gold);
+            ScreenFlash.Flash(new Color(1f, 0.6f, 0.25f, 0.35f), 0.06f);
+            if (shaker != null) shaker.Shake(0.6f, 0.35f);
+            flashLeft = 0.12f;
+            // The fire in it goes out: smoke from its glowing edges.
+            for (int i = 0; i < 5; i++) Vfx.Play(VfxKind.Ash, at + Facing(i * 72f) * 1.6f + Vector3.up * 1.2f, Vector3.up, 1f, Smoke);
+            Health.Damage(ParryDamage);
+            if (Health.IsDead)
+            {
+                BeginDying();
+                return;
+            }
+            // The sun bounces on past the form, slowing, and rolls out dull: the form must go round itself to fetch it.
+            Vector3 onward = OnFloor(to - parryFrom);
+            onward = onward.sqrMagnitude > 0.01f ? onward.normalized : Facing(yaw);
+            sunRollTo = KeepSun(OnFloor(at) + onward * ParryRebound);
+            sunRollLeft = 0.85f;
+            if (look != null) look.SunTrail(false);
         }
 
         private void LoseSun(Vector3 rollsTo, float seconds)
@@ -529,7 +669,7 @@ namespace Clover.Gameplay
             SetOpen(true, true);
             headOpen = false;
             Enter(Mode.Staggered);
-            Vfx.Play(VfxKind.Ring, at + Vector3.up * 2f, Vector3.up);
+            Vfx.Play(VfxKind.TintRing, at + Vector3.up * 2f, Vector3.up, 1f, Gold);
             ScreenFlash.Flash(new Color(1f, 0.95f, 0.8f, 0.35f), 0.08f);
             if (shaker != null) shaker.Shake(0.5f, 0.4f);
         }
@@ -561,6 +701,7 @@ namespace Clover.Gameplay
             step = 0;
             struck = false;
             Locked = false;
+            growing = -1;
         }
 
         private float Pace => Furious ? FuryPace : 1f;
@@ -677,6 +818,17 @@ namespace Clover.Gameplay
             AdvanceFalls(deltaTime);
             AdvanceHot(deltaTime);
             AdvanceSun(deltaTime);
+            if (look != null)
+            {
+                look.SunShines(SunLightWanted());
+                // Out of the Zenith by any road (spent, knocked, broken, dying) the court comes back to its own light.
+                if (mode != Mode.Zenith) look.Blaze(0f);
+                // The sun's trail of fire is only for its flights: thrown up in the Rising, or struck back by a parry.
+                if (mode != Mode.Change && parryLeft < 0f) look.SunTrail(false);
+                // A parried form lies stunned under circling stars for as long as it lies.
+                if (parried && mode != Mode.Exposed && mode != Mode.Staggered) parried = false;
+                look.Stunned(parried && (mode == Mode.Staggered || elapsed < ExposedSeconds), at + Vector3.up * (falcon ? 2.6f : 3.4f));
+            }
             AdvanceFury();
             AdvanceRoarRing();
             Pose();
@@ -732,7 +884,7 @@ namespace Clover.Gameplay
             if (elapsed < SunLandsAt)
             {
                 circles[0].Show(from, Quaternion.identity, Mathf.Clamp01(elapsed / SunDownAt), HotMarker, false, 4.5f);
-                if (Time.frameCount % 4 == 0)
+                if (Every(ref untilEmber, 0.066f, deltaTime))
                     Vfx.Play(VfxKind.Embers, from + Facing(Random.Range(0f, 360f)) * Random.Range(0.4f, 4f) + Vector3.up * 0.3f, Vector3.up, 1.4f);
             }
             if (lineRenderer != null)
@@ -751,7 +903,7 @@ namespace Clover.Gameplay
                 step = 1;
                 circles[0].Hide();
                 Vfx.Play(VfxKind.Impact, from + Vector3.up);
-                Vfx.Play(VfxKind.Ring, from + Vector3.up * 0.2f, Vector3.up);
+                Vfx.Play(VfxKind.TintRing, from + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
                 Vfx.Play(VfxKind.Fire, from + Vector3.up, Vector3.up, 3f);
                 Vfx.Play(VfxKind.Burst, from + Vector3.up * 6f, Vector3.up, 3f);
                 ScreenFlash.Flash(new Color(1f, 0.9f, 0.6f, 0.45f), 0.1f);
@@ -764,7 +916,7 @@ namespace Clover.Gameplay
             size = Mathf.Max(0.01f, up);
             float taken = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((elapsed - SunLandsAt - 0.3f) / (RoarAt - SunLandsAt - 0.3f)));
             sunAt = Vector3.Lerp(from + Vector3.up * hangs, HeldSunPoint(), taken);
-            if (elapsed >= SunLandsAt && elapsed < RoarAt && Time.frameCount % 3 == 0)
+            if (elapsed >= SunLandsAt && elapsed < RoarAt && Every(ref untilPuff, 0.05f, deltaTime))
                 Vfx.Play(VfxKind.Fire, at + Facing(Random.Range(0f, 360f)) * Random.Range(0.5f, 2.6f) * size + Vector3.up * 0.4f, Vector3.up, 1.6f);
             // The last: it rears with the sun held, and is named.
             float rear = Mathf.Clamp01((elapsed - grown) / 0.3f) * (1f - Mathf.Clamp01((elapsed - RoarAt - 0.5f) / 0.5f));
@@ -776,7 +928,7 @@ namespace Clover.Gameplay
                 roarLeft = 0.9f;
                 if (shaker != null) shaker.Shake(0.6f, 0.6f);
                 Vfx.Play(VfxKind.Burst, at + Vector3.up * 2f, Vector3.up, 3f);
-                Vfx.Play(VfxKind.Ring, OnFloor(at) + Vector3.up * 0.2f, Vector3.up);
+                Vfx.Play(VfxKind.TintRing, OnFloor(at) + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
                 ScreenFlash.Flash(new Color(1f, 0.85f, 0.5f, 0.35f), 0.09f);
                 RaiseRoared();
             }
@@ -967,6 +1119,9 @@ namespace Clover.Gameplay
                 step = 1;
                 yaw = YawOf(laneAlong);
                 if (shaker != null) shaker.Shake(0.3f, 0.3f);
+                // The furrow follows the sun: laid now with no length, it grows behind the sun as it goes.
+                growing = LayLane(0.01f, RollWidth, furrows ? FurrowHotSeconds : HotSeconds);
+                untilPuff = 0f;
             }
             // The sun goes down the lane and the scarab behind it, pushing.
             float sunAlong = Mathf.Min(laneDone, laneLength - 1.5f);
@@ -980,14 +1135,24 @@ namespace Clover.Gameplay
                 sunAt = laneFrom + laneAlong * sunAlong + Vector3.up * 1.5f;
                 sunSpin += RollSpeed * deltaTime * Pace / 1.5f * Mathf.Rad2Deg;
             }
-            if (step == 1) lanes[0].Show(laneFrom, laneFacing, 1f, RedMarker, true, RollWidth, laneLength / (LaneUnit * RollWidth));
-            if (step == 1 && Time.frameCount % 3 == 0) Vfx.Play(VfxKind.Fire, sunAt + Vector3.down * 1.2f - laneAlong, Vector3.up, 1.6f);
+            // The red is only what is still to come: behind the sun the floor is already scorched, and shows it.
+            if (step == 1)
+            {
+                float behind = Mathf.Clamp(sunAlong - 1.2f, 0f, laneLength - 0.5f);
+                lanes[0].Show(laneFrom + laneAlong * behind, laneFacing, 1f, RedMarker, true, RollWidth, (laneLength - behind) / (LaneUnit * RollWidth));
+            }
+            if (step == 1)
+            {
+                Grown(sunAlong - 1.2f);
+                // A bow wave at the sun's front foot, one flame and one throw of sand a metre; embers spun off its top.
+                if (Every(ref untilPuff, 1f, RollSpeed * deltaTime * Pace)) BowWave(OnFloor(sunAt), RollWidth, 1.3f);
+            }
             if (step == 1 && !struck && SunMeets(sunAlong, RollWidth * 0.5f, 1.7f))
             {
                 struck = true;
                 if (Deal(new Hit(furrows ? FurrowDamage : RollDamage, 0f, laneAlong, false, true, sunAt), 0f) == HitOutcome.PerfectGuard)
                 {
-                    LayLane(sunAlong, RollWidth, furrows ? FurrowHotSeconds : HotSeconds);
+                    Grown(sunAlong);
                     KnockSun(laneAlong, true);
                     return;
                 }
@@ -999,10 +1164,14 @@ namespace Clover.Gameplay
             {
                 step = 2;
                 lanes[0].Hide();
-                LayLane(laneLength, RollWidth, furrows ? FurrowHotSeconds : HotSeconds);
+                Grown(laneLength);
+                growing = -1;
                 laneDone = laneLength;
                 elapsed = 100f;
                 if (shaker != null) shaker.Shake(0.35f, 0.25f);
+                // At the far rim it stops hard: sand thrown up in a ring round the sun.
+                Vfx.Play(VfxKind.TintRing, OnFloor(sunAt) + Vector3.up * 0.3f, Vector3.up, 1f, Sand);
+                for (int i = 0; i < 6; i++) Vfx.Play(VfxKind.Dust, OnFloor(sunAt) + Facing(i * 60f) * 1.6f, Vector3.up, 1.2f, Sand);
             }
             float after = elapsed - 100f;
             rollsLeft = Mathf.Max(rollsLeft, 0);
@@ -1100,8 +1269,8 @@ namespace Clover.Gameplay
                 pitch = 15f;
                 circles[0].Hide();
                 Vfx.Play(VfxKind.Impact, markPoint + Vector3.up * 0.6f);
-                Vfx.Play(VfxKind.Ring, markPoint + Vector3.up * 0.2f, Vector3.up);
-                for (int i = 0; i < 6; i++) Vfx.Play(VfxKind.Dust, markPoint + Facing(i * 60f) * RamRadius, Vector3.up);
+                Vfx.Play(VfxKind.TintRing, markPoint + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
+                for (int i = 0; i < 6; i++) Vfx.Play(VfxKind.Dust, markPoint + Facing(i * 60f) * RamRadius, Vector3.up, 1f, Sand);
                 if (shaker != null) shaker.Shake(0.7f, 0.35f);
                 Vector3 offset = PlayerOnFloor - markPoint;
                 if (offset.magnitude <= RamRadius + 0.35f) Deal(new Hit(RamDamage, 0f, way, false, false, at), PerfectGuardBalance);
@@ -1174,6 +1343,11 @@ namespace Clover.Gameplay
                 fallWarning[i] = warning;
                 fallLeft[i] = warning;
                 fallDamage[i] = damage;
+                // Where the thing that falls leaves the body: under the scarab's lifted cases, or the falcon itself.
+                // A feather is let go seven metres over its mark, a little toward the falcon (it flies above the top of the
+                // picture, so one let go from its own height would be unseen for most of its fall).
+                fallFrom[i] = falcon ? point + Vector3.up * 7f + Vector3.ClampMagnitude(OnFloor(at) - OnFloor(point), 2f) : at + Vector3.up * 2.6f + Facing(yaw) * -0.8f;
+                fallFeather[i] = falcon;
                 FallsLaid++;
                 return;
             }
@@ -1188,11 +1362,14 @@ namespace Clover.Gameplay
                 fallLeft[i] -= deltaTime;
                 if (fallLeft[i] > 0f && !gone)
                 {
-                    falls[i].Show(fallPoints[i], Quaternion.identity, 1f - fallLeft[i] / fallWarning[i], RedMarker, false, fallRadius[i]);
+                    float through = 1f - fallLeft[i] / fallWarning[i];
+                    falls[i].Show(fallPoints[i], Quaternion.identity, through, RedMarker, false, fallRadius[i]);
+                    if (look != null) look.Falling(i, fallFrom[i], fallPoints[i] + Vector3.up * 0.3f, through, fallFeather[i]);
                     continue;
                 }
                 fallLeft[i] = 0f;
                 falls[i].Hide();
+                if (look != null) look.Fallen(i);
                 if (gone) continue;
                 Vfx.Play(VfxKind.Fire, fallPoints[i] + Vector3.up * 0.3f, Vector3.up, 1.4f);
                 Vfx.Play(VfxKind.Burst, fallPoints[i] + Vector3.up * 0.4f, Vector3.up, 0.8f);
@@ -1227,8 +1404,16 @@ namespace Clover.Gameplay
                     step = 1;
                     circles[0].Hide();
                     Vfx.Play(VfxKind.Burst, sunAt, Vector3.up, 3f);
-                    Vfx.Play(VfxKind.Ring, OnFloor(at) + Vector3.up * 0.2f, Vector3.up);
+                    Vfx.Play(VfxKind.TintRing, OnFloor(at) + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
                     ScreenFlash.Flash(new Color(1f, 0.9f, 0.6f, 0.35f), 0.08f);
+                    // The throw: a pillar of light from the floor up past the sun, a ring of air, and the sun goes up
+                    // trailing fire, embers shed from the opening wings.
+                    if (look != null)
+                    {
+                        look.Dived(sunAt + Vector3.up * 10f, OnFloor(at));
+                        look.SunTrail(true);
+                    }
+                    Vfx.Play(VfxKind.Embers, at + Vector3.up * 2.5f, Vector3.up, 3f);
                     if (Furious)
                     {
                         Vfx.Play(VfxKind.Fire, at + Vector3.up, Vector3.up, 4f);
@@ -1248,6 +1433,7 @@ namespace Clover.Gameplay
                 flap = Mathf.Sin(Time.time * 9f) * 34f;
                 if (up < 1f) return;
                 sunState = SunState.Held;
+                if (look != null) look.SunTrail(false);
                 EndAttack();
                 return;
             }
@@ -1266,7 +1452,11 @@ namespace Clover.Gameplay
                 Turn(-landAt, 3600f, 1f);
                 sunState = SunState.Held;
                 if (bulk != null) bulk.enabled = true;
-                Vfx.Play(VfxKind.Dust, at, Vector3.up, 2f);
+                Vfx.Play(VfxKind.Dust, at, Vector3.up, 2f, Sand);
+                Vfx.Play(VfxKind.TintRing, OnFloor(at) + Vector3.up * 0.2f, Vector3.up, 1.2f, Sand);
+                // The fire of its wings goes out: a last shower of embers, and smoke from the folding cases.
+                Vfx.Play(VfxKind.Embers, at + Vector3.up * 2f, Vector3.up, 2f);
+                for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.Ash, at + Facing(yaw + 90f * i + 45f) * 1.4f + Vector3.up * 1.8f, Vector3.up, 0.8f, Smoke);
                 if (shaker != null) shaker.Shake(0.3f, 0.3f);
             }
             pitch = Mathf.MoveTowards(pitch, 0f, 60f * deltaTime);
@@ -1318,6 +1508,8 @@ namespace Clover.Gameplay
                 float t = (elapsed - tell) / drop;
                 at = Vector3.Lerp(moveFrom, stand, t * t);
                 flap = 62f;
+                // The dive tears the air: a streak from where it left the sky down to the floor it strikes.
+                if (look != null) look.Diving(moveFrom + Vector3.up * 1.5f, markPoint);
                 return;
             }
             if (!struck)
@@ -1326,10 +1518,13 @@ namespace Clover.Gameplay
                 at = stand;
                 pitch = 0f;
                 circles[0].Hide();
-                Vfx.Play(VfxKind.Impact, markPoint + Vector3.up * 0.6f);
-                Vfx.Play(VfxKind.Ring, markPoint + Vector3.up * 0.2f, Vector3.up);
+                if (look != null) look.Dived(moveFrom + Vector3.up * 1.5f, markPoint);
+                Vfx.Play(VfxKind.Impact, markPoint + Vector3.up * 0.6f, Vector3.up, 1.5f, SunWhite);
+                Vfx.Play(VfxKind.TintRing, markPoint + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
                 Vfx.Play(VfxKind.Fire, markPoint + Vector3.up * 0.5f, Vector3.up, 4f);
-                for (int i = 0; i < 6; i++) Vfx.Play(VfxKind.Dust, markPoint + Facing(i * 60f) * StoopRadius, Vector3.up);
+                // Fire thrown outward along the floor, and sand at the edge of what it struck.
+                for (int i = 0; i < 10; i++) Vfx.Play(VfxKind.Fire, markPoint + Facing(i * 36f + 18f) * 1.6f + Vector3.up * 0.3f, Facing(i * 36f + 18f) + Vector3.up * 0.4f, 0.5f);
+                for (int i = 0; i < 8; i++) Vfx.Play(VfxKind.Dust, markPoint + Facing(i * 45f) * StoopRadius, Facing(i * 45f), 1.2f, Sand);
                 if (shaker != null) shaker.Shake(0.9f, 0.4f);
                 ScreenFlash.Flash(new Color(1f, 0.85f, 0.5f, 0.25f), 0.06f);
                 LayCrater(markPoint, StoopHotRadius, HotSeconds);
@@ -1414,14 +1609,23 @@ namespace Clover.Gameplay
                 at = laneFrom + laneAlong * along + Vector3.up * PassHeight;
                 flap = 18f;
                 sunAt = HeldSunPoint();
-                lanes[0].Show(laneFrom, laneFacing, 1f, RedMarker, true, PassWidth, laneLength / (LaneUnit * PassWidth));
-                if (Time.frameCount % 2 == 0) Vfx.Play(VfxKind.Fire, OnFloor(sunAt) + Vector3.up * 0.3f, Vector3.up, 1.8f);
+                float passed = Mathf.Clamp(along - 0.5f, 0f, laneLength - 0.5f);
+                lanes[0].Show(laneFrom + laneAlong * passed, laneFacing, 1f, RedMarker, true, PassWidth, (laneLength - passed) / (LaneUnit * PassWidth));
+                // The lane catches fire in a wave behind the sun, as the roll's furrow does.
+                if (growing < 0 && !landed)
+                {
+                    growing = LayLane(0.01f, PassWidth, HotSeconds);
+                    untilPuff = 0f;
+                }
+                Grown(along - 0.5f);
+                if (along > 0f && along < laneLength && Every(ref untilPuff, 1f, (laneLength + 6f) / PassSeconds * deltaTime))
+                    BowWave(OnFloor(sunAt), PassWidth, 0.8f);
                 if (!struck && SunMeets(along, PassWidth * 0.5f, 2.6f))
                 {
                     struck = true;
                     if (Deal(new Hit(PassDamage, 0f, laneAlong, false, true, sunAt), PassGuardBalance) == HitOutcome.PerfectGuard)
                     {
-                        LayLane(Mathf.Max(2f, along), PassWidth, HotSeconds);
+                        Grown(Mathf.Max(2f, along));
                         if (mode == Mode.Pass) KnockSun(laneAlong, true);
                         return;
                     }
@@ -1432,7 +1636,8 @@ namespace Clover.Gameplay
             {
                 landed = true;
                 lanes[0].Hide();
-                LayLane(laneLength, PassWidth, HotSeconds);
+                Grown(laneLength);
+                growing = -1;
             }
             // Up off the end of the lane; in its fury it turns and comes back down another.
             float after = elapsed - PassShown - PassSeconds;
@@ -1517,6 +1722,8 @@ namespace Clover.Gameplay
                 floorMark.Show(Vector3.zero, Quaternion.identity, fill, RedMarker, false);
                 ShowShadow(hand, 1f);
                 sunSize = 1f + fill * 0.5f;
+                // The court whitens as the floor fills: the sun at the top of the sky is seen by its light.
+                if (look != null) look.Blaze(fill);
                 return;
             }
             float burning = elapsed - Climb - ZenithFill;
@@ -1535,8 +1742,16 @@ namespace Clover.Gameplay
                     turnedBack = true;
                     hand.StopAndTurnBack(0.5f);
                 }
-                float beat = 0.75f + 0.25f * Mathf.Sin(Time.time * 17f);
+                // The floor's hot fill at half its strength, so the heat over it is what the eye sees, not orange paint.
+                if (look != null) look.Blaze(1f);
+                float beat = (0.75f + 0.25f * Mathf.Sin(Time.time * 17f)) * 0.5f;
                 floorMark.Show(Vector3.zero, Quaternion.identity, 1f, HotMarker, false, 1f, 1f, beat);
+                // Heat shimmers off all the lit floor round the player, and none of it in the shadow.
+                if (Every(ref untilPuff, 0.025f, deltaTime))
+                {
+                    Vector3 near = PlayerOnFloor + Polar(Random.value * 360f, Mathf.Sqrt(Random.value) * 10f);
+                    if (near.magnitude < FloorRadius - 0.5f && !Sunlight.InHand(near)) HeatShimmer.Play(near + Vector3.up * 0.1f, 2f);
+                }
                 ShowShadow(hand, 1f);
                 sunSize = 1.5f + 0.1f * Mathf.Sin(Time.time * 23f);
                 untilBlaze -= deltaTime;
@@ -1563,6 +1778,7 @@ namespace Clover.Gameplay
                 return;
             }
             // Spent. It comes down beside the shadow, folds, and lies on the sun.
+            if (look != null) look.Blaze(0f);
             if (Blazing)
             {
                 Blazing = false;
@@ -1603,7 +1819,7 @@ namespace Clover.Gameplay
                 falcon = false;
                 Turn(PlayerOnFloor - landAt, 3600f, 1f);
                 if (bulk != null) bulk.enabled = true;
-                Vfx.Play(VfxKind.Dust, at, Vector3.up, 2.5f);
+                Vfx.Play(VfxKind.Dust, at, Vector3.up, 2.5f, Sand);
                 if (shaker != null) shaker.Shake(0.5f, 0.35f);
                 // Surviving the blaze is always paid: the head lies open.
                 headOpen = true;
@@ -1673,7 +1889,7 @@ namespace Clover.Gameplay
             {
                 step = 1;
                 Vfx.Play(VfxKind.Impact, at + Facing(yaw) * 2f + Vector3.up);
-                Vfx.Play(VfxKind.Dust, at + Facing(yaw) * 2.5f, Vector3.up, 2f);
+                Vfx.Play(VfxKind.Dust, at + Facing(yaw) * 2.5f, Vector3.up, 2f, Sand);
                 if (shaker != null) shaker.Shake(0.6f, 0.35f);
             }
             if (elapsed < StaggeredSeconds) return;
@@ -1696,7 +1912,7 @@ namespace Clover.Gameplay
                 pitch = 10f * elapsed / SunOutAt + shudder * 1.5f;
                 roll = shudder * 3f;
                 lift = Mathf.MoveTowards(lift, 0.45f, deltaTime);
-                if (Time.frameCount % 6 == 0) Vfx.Play(VfxKind.Embers, sunAt, Vector3.up, 1.5f);
+                if (Every(ref untilEmber, 0.1f, deltaTime)) Vfx.Play(VfxKind.Embers, sunAt, Vector3.up, 1.5f);
             }
             else
             {
@@ -1705,7 +1921,7 @@ namespace Clover.Gameplay
                     // The sun goes out.
                     step = 1;
                     Vfx.Play(VfxKind.Burst, sunAt, Vector3.up, 3f);
-                    Vfx.Play(VfxKind.Ring, OnFloor(sunAt) + Vector3.up * 0.2f, Vector3.up);
+                    Vfx.Play(VfxKind.TintRing, OnFloor(sunAt) + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
                     Vfx.Play(VfxKind.Ash, sunAt, Vector3.up, 3f);
                     ScreenFlash.Flash(new Color(1f, 0.8f, 0.45f, 0.4f), 0.1f);
                     if (shaker != null) shaker.Shake(0.5f, 0.4f);
@@ -1720,7 +1936,7 @@ namespace Clover.Gameplay
                 lift = Mathf.Max(lift, apart);
                 squash = Mathf.Lerp(1f, 0.05f, apart);
                 size = Mathf.Lerp(1f, 0.85f, apart);
-                if (apart > 0f && step == 1 && Time.frameCount % 2 == 0)
+                if (apart > 0f && step == 1 && Every(ref untilPuff, 0.033f, deltaTime))
                     Vfx.Play(VfxKind.Ash, at + new Vector3(Random.Range(-2.4f, 2.4f), Random.Range(0.3f, 2.2f) * squash, Random.Range(-2.4f, 2.4f)), Vector3.up, 2f);
                 if (elapsed >= GoneAt && step == 1)
                 {
@@ -1747,6 +1963,11 @@ namespace Clover.Gameplay
 
         private void AdvanceSun(float deltaTime)
         {
+            if (parryLeft >= 0f)
+            {
+                AdvanceParry(deltaTime);
+                return;
+            }
             if (sunState == SunState.Held && mode != Mode.Roll && mode != Mode.Pass)
                 sunAt = Vector3.MoveTowards(sunAt, HeldSunPoint(), 40f * deltaTime);
             if (sunState == SunState.Loose)
@@ -1774,7 +1995,7 @@ namespace Clover.Gameplay
             }
         }
 
-        private void LayLane(float length, float width, float seconds)
+        private int LayLane(float length, float width, float seconds)
         {
             int slot = FreeHot();
             hotIsLane[slot] = true;
@@ -1783,6 +2004,25 @@ namespace Clover.Gameplay
             hotLength[slot] = length;
             hotWide[slot] = width;
             hotLeft[slot] = seconds;
+            return slot;
+        }
+
+        // The growing lane reaches this far down from its start: the sun has passed that far.
+        private void Grown(float length)
+        {
+            if (growing < 0 || hotLeft[growing] <= 0f || !hotIsLane[growing]) return;
+            hotLength[growing] = Mathf.Clamp(length, 0.01f, laneLength);
+        }
+
+        // What the sun throws at its front foot as it scorches its way along the lane: flame and sand to either side, and embers off its top.
+        private void BowWave(Vector3 foot, float width, float ahead)
+        {
+            var side = new Vector3(laneAlong.z, 0f, -laneAlong.x);
+            float sign = Random.value < 0.5f ? -1f : 1f;
+            Vector3 front = foot + laneAlong * ahead;
+            Vfx.Play(VfxKind.Fire, front + side * (sign * Random.Range(0.2f, width * 0.4f)) + Vector3.up * 0.25f, Vector3.up, 1.1f);
+            Vfx.Play(VfxKind.Dust, front + side * (sign * width * 0.45f) + Vector3.up * 0.1f, (side * sign + laneAlong).normalized, 1f, Sand);
+            Vfx.Play(VfxKind.Embers, foot + Vector3.up * 2.6f, -laneAlong + Vector3.up, 0.5f);
         }
 
         private void LayCrater(Vector3 centre, float radius, float seconds)
@@ -1838,6 +2078,8 @@ namespace Clover.Gameplay
             untilFlame -= deltaTime;
             bool flame = untilFlame <= 0f;
             if (flame) untilFlame = 0.16f;
+            // Every other beat the burnt floor smokes instead of flaming; as it cools, only smoke.
+            if (flame) smokeTurn = !smokeTurn;
             for (int i = 0; i < HotMost; i++)
             {
                 if (hotLeft[i] <= 0f) continue;
@@ -1854,13 +2096,15 @@ namespace Clover.Gameplay
                     if (flame)
                     {
                         Vector3 point = hotFrom[i] + hotAlong[i] * (Random.value * hotLength[i]) + new Vector3(hotAlong[i].z, 0f, -hotAlong[i].x) * ((Random.value - 0.5f) * hotWide[i]);
-                        if (!Sunlight.InHand(point)) Vfx.Play(VfxKind.Fire, point + Vector3.up * 0.15f, Vector3.up, 1.1f);
+                        HotPuff(point, hotLeft[i]);
+                        // A long furrow smokes along its length, not from one place.
+                        if (hotLength[i] > 10f) HotPuff(hotFrom[i] + hotAlong[i] * (Random.value * hotLength[i]), hotLeft[i]);
                     }
                 }
                 else
                 {
                     if (circleMark < hotCircles.Length) hotCircles[circleMark++].Show(hotFrom[i], Quaternion.identity, 1f, HotMarker, false, hotWide[i], 1f, strength);
-                    if (flame && !Sunlight.InHand(hotFrom[i])) Vfx.Play(VfxKind.Fire, hotFrom[i] + Facing(Random.value * 360f) * (Random.value * hotWide[i]) + Vector3.up * 0.15f, Vector3.up, 1.1f);
+                    if (flame) HotPuff(hotFrom[i] + Facing(Random.value * 360f) * (Random.value * hotWide[i]), hotLeft[i]);
                 }
             }
             for (int i = laneMark; i < hotLanes.Length; i++)
@@ -1885,6 +2129,19 @@ namespace Clover.Gameplay
             HotBites++;
             blowName = "hot floor";
             Deal(new Hit(HotDamage, 0f, Vector3.down, false, true), 0f);
+        }
+
+        // A flame or a wisp of smoke off burnt floor; cold under the obelisk's shadow, where only the smoke rises.
+        private void HotPuff(Vector3 point, float left)
+        {
+            bool shaded = Sunlight.InHand(point);
+            if (!shaded && left > 1f) HeatShimmer.Play(point + Vector3.up * 0.1f, 1f);
+            if (smokeTurn || left < 2f || shaded)
+            {
+                Vfx.Play(VfxKind.Ash, point + Vector3.up * 0.3f, Vector3.up, left < 2f ? 0.9f : 0.6f, Smoke);
+                return;
+            }
+            Vfx.Play(VfxKind.Fire, point + Vector3.up * 0.15f, Vector3.up, 1.1f);
         }
 
         // ------------------------------------------------------------------ blows
@@ -1925,6 +2182,7 @@ namespace Clover.Gameplay
             {
                 fallLeft[i] = 0f;
                 falls[i].Hide();
+                if (look != null) look.Fallen(i);
             }
             landed = false;
             sunSize = 1f;
@@ -1967,9 +2225,17 @@ namespace Clover.Gameplay
             if (shadowRenderer != null)
             {
                 if (shadowRenderer.enabled != high) shadowRenderer.enabled = high;
-                if (high) falconShadow.position = OnFloor(at) + Vector3.up * 0.045f;
+                if (high)
+                {
+                    falconShadow.position = OnFloor(at) + Vector3.up * 0.045f;
+                    // Over the stoop's hold the shadow tightens on whoever it is about to fall on.
+                    float tight = mode == Mode.Stoop ? Mathf.Clamp01((elapsed - StoopFollow) / StoopHold) : 0f;
+                    float across = Mathf.Lerp(5f, 3.6f, tight);
+                    falconShadow.localScale = new Vector3(across, 0.004f, across);
+                }
             }
-            bool loose = sunState == SunState.Loose;
+            // Struck back by a parry it burns white until it strikes the form, and only then goes dull.
+            bool loose = sunState == SunState.Loose && parryLeft < 0f;
             // Dying, it gutters faster and faster before it goes out.
             if (mode == Mode.Dying && elapsed < SunOutAt) loose = Mathf.Repeat(elapsed * Mathf.Lerp(3f, 12f, elapsed / SunOutAt), 1f) > 0.6f;
             if (sunBurning.activeSelf == loose) sunBurning.SetActive(!loose);

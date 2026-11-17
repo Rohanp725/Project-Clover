@@ -107,6 +107,14 @@ namespace Clover.EditorTools
             },
             new Spec
             {
+                // No model of its own yet: built of the king's spear's parts as the court stands it in the floor.
+                Carry = "sunspear", ModelFile = null, StandIn = SunSpearStandIn, Finish = SunSpearFinish,
+                Notes = "The Sun-Spear, Khepharu's own (fire_land.md 6.1): a gold shaft, the sun's disc under the blade, the blade white-hot; the Great Spear's grip and length, point along +Z",
+                RestPosition = new Vector3(0.2f, -0.3f, -0.19f), RestAlong = new Vector3(-0.42f, 0.9f, 0f), RestUp = new Vector3(0f, 0f, -1f),
+                DisplayPosition = new Vector3(0f, 1.2f, 0f), DisplayEuler = new Vector3(-90f, 0f, 0f),
+            },
+            new Spec
+            {
                 Carry = "hammer", ModelFile = "hammer.fbx", StandIn = HammerStandIn,
                 Notes = "Great Hammer: 496 triangles, slots head wood wrap accent inlay; origin at the swinging grip 0.9 m under the head, head along +Z, striking face toward -Y",
                 // Head up behind the right shoulder, the head lying across the back.
@@ -520,6 +528,25 @@ namespace Clover.EditorTools
 
         // The Great Spear: 3.06 m, the grip 1.0 m from the butt; a leaf 0.5 x 0.23 lying flat (its faces up and down)
         // over a crossbar 0.39 wide, so a level spear shows a cross to the high camera.
+        // The Sun-Spear on the Great Spear's lengths: the shaft and fittings gold, a disc for the sun below the leaf, the leaf white-hot.
+        private static void SunSpearStandIn(Transform root)
+        {
+            BuildKit.Shape(PrimitiveType.Cylinder, "Pole (gold)", root, new Vector3(0f, 0f, 0.26f), new Vector3(0.05f, 1.18f, 0.05f), null, new Vector3(90f, 0f, 0f));
+            Box(root, "gold", "Butt Spike", new Vector3(0f, 0f, -0.96f), new Vector3(0.05f, 0.05f, 0.12f));
+            for (int i = 0; i < 3; i++) Box(root, "gold", "Ring " + i, new Vector3(0f, 0f, 0.9f + 0.1f * i), new Vector3(0.075f, 0.075f, 0.03f));
+            BuildKit.Shape(PrimitiveType.Cylinder, "Sun Disc (gold)", root, new Vector3(0f, 0f, 1.42f), new Vector3(0.36f, 0.018f, 0.36f), null, new Vector3(90f, 0f, 0f));
+            BuildKit.Shape(PrimitiveType.Cylinder, "Sun Heart (sun)", root, new Vector3(0f, 0f, 1.43f), new Vector3(0.2f, 0.022f, 0.2f), null, new Vector3(90f, 0f, 0f));
+            Box(root, "sun", "Leaf", new Vector3(0f, 0f, 1.74f), new Vector3(0.18f, 0.024f, 0.42f));
+            Box(root, "sun", "Leaf Point", new Vector3(0f, 0f, 1.95f), new Vector3(0.128f, 0.022f, 0.128f), new Vector3(0f, 45f, 0f));
+        }
+
+        // The king's colours rather than the slots': the court's own gold and white-hot sun.
+        private static void SunSpearFinish(GameObject root)
+        {
+            foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+                renderer.sharedMaterial = SunCityKit.For(renderer.name.Contains("(sun)") ? "m_fire_sun" : "m_fire_gold");
+        }
+
         private static void SpearStandIn(Transform root)
         {
             BuildKit.Shape(PrimitiveType.Cylinder, "Pole (wood)", root, new Vector3(0f, 0f, 0.26f), new Vector3(0.055f, 1.18f, 0.055f), null, new Vector3(90f, 0f, 0f));

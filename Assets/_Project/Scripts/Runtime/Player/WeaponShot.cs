@@ -35,6 +35,13 @@ namespace Clover.Player
         public bool Returns;
         public float ReturnSpeed = 14f;
         public float ReturnScale = 0.6f;
+        /// <summary>
+        /// Called back from where it stands, it comes home as a ray in <see cref="RaySeconds"/>, striking everything
+        /// within <see cref="RayRadius"/> of the line once, at <see cref="ReturnScale"/> of its blow (the Sun-Spear).
+        /// </summary>
+        public bool RaysBack;
+        public float RayRadius = 1.1f;
+        public float RaySeconds = 0.18f;
         /// <summary>Seconds after the blow before it leaves: the hammer is let go at the end of its turns, not at their first blow.</summary>
         public float ReleaseAfter;
         /// <summary>Which thing is drawn riding it: the carry name of a weapon whose own model flies ("spear", "hammer"). Empty: the crescent of light.</summary>

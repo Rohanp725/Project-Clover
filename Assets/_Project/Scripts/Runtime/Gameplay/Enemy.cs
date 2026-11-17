@@ -68,6 +68,11 @@ namespace Clover.Gameplay
 
         public EnemyKind Kind { get; private set; }
         public EnemyBrain Brain => Kind.Brain;
+        /// <summary>Where a ranged or leaping circle was aimed: for the look of the blow.</summary>
+        public Vector3 StrikePoint => strikePoint;
+        /// <summary>Where a passing lunge began and which way it went: for the look of the blow.</summary>
+        public Vector3 LungeFrom => lungeFrom;
+        public Vector3 LungeForward => lungeForward;
         public Health Health { get; } = new Health();
         public StaggerMeter Stagger { get; } = new StaggerMeter();
         /// <summary>Everything the elements have laid on it. The burn is one of them.</summary>
@@ -952,7 +957,8 @@ namespace Clover.Gameplay
                     // The sun brought down, or fire thrown up round a planted spear.
                     Vfx.Play(VfxKind.Burst, centre + Vector3.up * 0.6f, Vector3.up, 1.6f);
                     Vfx.Play(VfxKind.Fire, centre + Vector3.up * 0.4f, Vector3.up, 2.2f);
-                    Vfx.Play(VfxKind.Ring, centre + Vector3.up * 0.3f, Vector3.up);
+                    // Gold, the land's colour, not the cold ring of a storm.
+                    Vfx.Play(VfxKind.TintRing, centre + Vector3.up * 0.3f, Vector3.up, 1f, new Color(1f, 0.72f, 0.2f, 1f));
                     if (attack.LightsSeconds > 0f) Sunlight.Flare(centre, attack.Radius, attack.LightsSeconds);
                     if (attack.BurnSeconds > 0f)
                     {

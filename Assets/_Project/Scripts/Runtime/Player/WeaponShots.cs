@@ -32,7 +32,7 @@ namespace Clover.Player
             public WeaponShot Shot;
             public Vector3 At, Direction;
             public float Flown, HangLeft, BiteIn, Age, Turn;
-            public bool Hanging, Stuck, InEnemy, Returning, Harmless;
+            public bool Hanging, Stuck, InEnemy, Returning, Harmless, Ray;
             public float StuckLeft, PauseLeft, ReturnSpeed;
             public int Prop;
             public Transform Owner;
@@ -58,6 +58,18 @@ namespace Clover.Player
         /// <summary>Thrown weapons that came home to the hand, and ones that stuck.</summary>
         public int Returned { get; private set; }
         public int Sticking { get; private set; }
+        /// <summary>Thrown weapons called home as a ray, and the enemies those rays struck.</summary>
+        public int Rays { get; private set; }
+        public int RayStruck { get; private set; }
+
+        [SerializeField] private LineRenderer rayLine;
+        private Vector3 rayFrom;
+        private int rayOf = -1;
+        private float rayFade = -1f;
+        private readonly Vector3[] rayPoints = new Vector3[2];
+
+        /// <summary>The line drawn while a thrown weapon comes home as a ray.</summary>
+        public void ConfigureRay(LineRenderer line) => rayLine = line;
 
         public void Configure(Material shotMaterial) => material = shotMaterial;
 
@@ -86,8 +98,20 @@ namespace Clover.Player
             f.Stuck = false;
             f.Hanging = false;
             f.Returning = true;
-            f.Harmless = true;
             f.PauseLeft = 0f;
+            // The Sun-Spear comes home as a ray, which strikes what it crosses; anything else is only fetched.
+            f.Ray = f.Shot != null && f.Shot.RaysBack;
+            f.Harmless = !f.Ray;
+            if (f.Ray)
+            {
+                seconds = f.Shot.RaySeconds;
+                bitten[handle].Clear();
+                Rays++;
+                rayOf = handle;
+                rayFrom = f.At;
+                rayFade = -1f;
+                Vfx.Play(VfxKind.Impact, f.At + Vector3.up * Height, Vector3.up, 1f, new Color(1f, 0.92f, 0.62f, 1f));
+            }
             f.ReturnSpeed = gap.magnitude / Mathf.Max(0.05f, seconds);
         }
 
@@ -223,15 +247,37 @@ namespace Clover.Player
                         gap.y = 0f;
                         float distance = gap.magnitude;
                         float back = f.ReturnSpeed * deltaTime;
-                        if (distance <= Mathf.Max(0.7f, back))
+                        bool arrived = distance <= Mathf.Max(0.7f, back);
+                        f.Direction = distance > 0.001f ? gap / distance : f.Direction;
+                        Vector3 start = f.At;
+                        float went = arrived ? distance : back;
+                        f.At += f.Direction * went;
+                        if (!f.Harmless && f.Combat != null)
+                        {
+                            if (f.Ray)
+                            {
+                                // A ray is as fast as light: walked in strides no longer than its own width, so nothing on the line is passed over.
+                                float stride = Mathf.Max(0.3f, shot.RayRadius);
+                                for (float walked = 0f; walked < went + stride; walked += stride)
+                                {
+                                    int now = f.Combat.StrikeArea(start + f.Direction * Mathf.Min(walked, went), shot.RayRadius, f.Back, bitten[i]);
+                                    Struck += now;
+                                    RayStruck += now;
+                                }
+                            }
+                            else if (!arrived) Struck += f.Combat.StrikeArea(f.At, shot.Radius, f.Back, bitten[i]);
+                        }
+                        if (arrived)
                         {
                             Returned++;
+                            if (f.Ray)
+                            {
+                                rayFade = 0.12f;
+                                Vfx.Play(VfxKind.Clang, HandPoint(f), Vector3.up, 1f);
+                            }
                             End(i);
                             continue;
                         }
-                        f.Direction = gap / distance;
-                        f.At += f.Direction * back;
-                        if (!f.Harmless && f.Combat != null) Struck += f.Combat.StrikeArea(f.At, shot.Radius, f.Back, bitten[i]);
                     }
                 }
                 else if (!f.Hanging)
@@ -344,10 +390,50 @@ namespace Clover.Player
                 renderers[i].SetPropertyBlock(block);
             }
             Hanging = hanging;
+            DrawRay(deltaTime);
+        }
+
+        private Vector3 HandPoint(in Flying f) => (f.Owner != null ? f.Owner.position : transform.position) + Vector3.up * Height;
+
+        // The ray from where the spear stood to the hand, the spear riding it home; it lingers a moment after the catch.
+        private void DrawRay(float deltaTime)
+        {
+            if (rayLine == null) return;
+            bool riding = rayOf >= 0 && flying[rayOf].Live && flying[rayOf].Ray;
+            if (!riding && rayFade < 0f)
+            {
+                if (rayLine.enabled) rayLine.enabled = false;
+                rayOf = -1;
+                return;
+            }
+            float strength = 1f;
+            if (!riding)
+            {
+                rayFade -= deltaTime;
+                strength = Mathf.Clamp01(rayFade / 0.12f);
+                if (rayFade <= 0f)
+                {
+                    rayFade = -1f;
+                    rayLine.enabled = false;
+                    rayOf = -1;
+                    return;
+                }
+            }
+            Transform owner = rayOf >= 0 && flying[rayOf].Owner != null ? flying[rayOf].Owner : transform;
+            rayPoints[0] = rayFrom + Vector3.up * Height;
+            rayPoints[1] = owner.position + Vector3.up * Height;
+            rayLine.positionCount = 2;
+            rayLine.SetPositions(rayPoints);
+            rayLine.widthMultiplier = 0.9f * (0.85f + 0.15f * Mathf.Sin(Time.time * 90f));
+            var tint = new Color(1f, 1f, 1f, strength);
+            rayLine.startColor = tint;
+            rayLine.endColor = tint;
+            if (!rayLine.enabled) rayLine.enabled = true;
         }
 
         private void End(int i)
         {
+            if (i == rayOf && rayFade < 0f) rayFade = 0.12f;
             flying[i].Live = false;
             renderers[i].enabled = false;
             if (flying[i].Prop >= 0 && props != null && props[flying[i].Prop] != null) props[flying[i].Prop].gameObject.SetActive(false);

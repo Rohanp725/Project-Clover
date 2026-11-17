@@ -31,6 +31,8 @@ namespace Clover.Gameplay
         [ColorUsage(true, true)] public Color CoolEmission = new Color(0.5f, 0.32f, 0.05f);
         public Color HotBase = new Color(1f, 0.62f, 0.16f);
         public Color CoolBase = new Color(0.95f, 0.72f, 0.22f);
+        /// <summary>What cold gold ends as before it is gone: a dark bronze crust.</summary>
+        public Color CrustBase = new Color(0.42f, 0.29f, 0.12f);
         [ColorUsage(true, true)] public Color FootEmission = new Color(3f, 0.7f, 0.08f);
 
         private const int Gold = 1, Foot = 2, Wall = 3;
@@ -204,6 +206,9 @@ namespace Clover.Gameplay
                 // Hot gold smokes and spits now and then; the wall more.
                 if (show && Hot(i) && Random.value < (kind[i] == Wall ? 0.5f : 0.18f))
                     Vfx.Play(kind[i] == Foot ? VfxKind.Fire : VfxKind.Embers, pieces[i].position + Vector3.up * 0.15f, Vector3.up, kind[i] == Foot ? 0.12f : 0.2f);
+                // Molten gold catches the light: now and then a glint runs across a hot puddle.
+                if (show && kind[i] == Gold && Hot(i) && Random.value < 0.12f)
+                    Vfx.Play(VfxKind.Glint, pieces[i].position + new Vector3(Random.Range(-0.5f, 0.5f) * radius[i], 0.12f, Random.Range(-0.5f, 0.5f) * radius[i]), Vector3.up, 0.45f, new Color(1f, 0.9f, 0.55f, 1f));
             }
             if (player != null)
             {
@@ -290,8 +295,12 @@ namespace Clover.Gameplay
                 float spread = Mathf.Clamp01(t / 0.15f);
                 float cool = Mathf.Clamp01((t - HotSeconds) / 1.2f);
                 size = new Vector3(r * 2f, Mathf.Lerp(0.14f, 0.06f, spread), r * 2f) * (Mathf.Lerp(0.3f, 1f, spread) * Mathf.Lerp(0.2f, 1f, fade));
-                baseColour = Color.Lerp(HotBase, CoolBase, cool);
-                glow = Color.Lerp(HotEmission, CoolEmission, cool);
+                // Molten, a sheen runs over it (its glow swells and ebbs, each puddle in its own time); cooling, it
+                // goes from bright gold to a dull dark bronze crust and its glow dies, so cold gold never looks hot.
+                float sheen = 1f + 0.35f * Mathf.Sin(Time.time * 7f + i * 1.7f) * (1f - cool);
+                float darken = Mathf.Clamp01((t - HotSeconds - 1.2f) / Mathf.Max(0.1f, life[i] - HotSeconds - 1.2f - FadeSeconds));
+                baseColour = Color.Lerp(Color.Lerp(HotBase, CoolBase, cool), CrustBase, darken);
+                glow = Color.Lerp(HotEmission * sheen, CoolEmission, cool) * (1f - darken);
             }
             pieces[i].localScale = size;
             if (renderers[i] == null) return;

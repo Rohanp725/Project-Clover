@@ -177,20 +177,44 @@ namespace Clover.EditorTools
             things.Add(door);
 
             // The spear as it stands in the floor after a throw, and the ray it comes back as.
+            // The Sun-Spear itself, the one the player is given when Fire is taken, at his size, stood on its butt with
+            // the white-hot blade up.
             var spear = BuildKit.Group("Standing Spear");
-            BuildKit.Shape(PrimitiveType.Cylinder, "Shaft", spear, new Vector3(0f, 1.7f, 0f), new Vector3(0.09f, 1.7f, 0.09f), SunCityKit.For("m_fire_gold"));
-            BuildKit.Shape(PrimitiveType.Cylinder, "Disc", spear, new Vector3(0f, 3.25f, 0f), new Vector3(0.5f, 0.03f, 0.5f), SunCityKit.For("m_fire_gold"), new Vector3(90f, 0f, 0f));
-            BuildKit.Shape(PrimitiveType.Sphere, "Blade", spear, new Vector3(0f, 3.75f, 0f), new Vector3(0.26f, 1f, 0.07f), SunCityKit.For("m_fire_sun")).shadowCastingMode = ShadowCastingMode.Off;
+            var sunSpear = (GameObject)PrefabUtility.InstantiatePrefab(WeaponBuilder.Prefab("sunspear"));
+            PrefabUtility.UnpackPrefabInstance(sunSpear, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+            sunSpear.name = "Sun-Spear";
+            sunSpear.transform.SetParent(spear, false);
+            sunSpear.transform.localPosition = new Vector3(0f, 1.2f, 0f);
+            sunSpear.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+            sunSpear.transform.localScale = Vector3.one * 1.4f;
+            foreach (var shown in sunSpear.GetComponentsInChildren<Renderer>()) shown.shadowCastingMode = ShadowCastingMode.Off;
+            // The fire it trails in flight, from the blade: sun white at the spear, ember behind, then nothing.
+            var trailFrom = BuildKit.Group("Trail From", spear);
+            trailFrom.localPosition = new Vector3(0f, 3.6f, 0f);
+            var spearTrail = trailFrom.gameObject.AddComponent<TrailRenderer>();
+            spearTrail.time = 0.3f;
+            spearTrail.widthMultiplier = 0.45f;
+            spearTrail.minVertexDistance = 0.25f;
+            spearTrail.emitting = false;
+            spearTrail.sharedMaterial = BuildKit.Glow(SunCityKit.Folder, "m_sun_spear_trail", new Color(3.4f, 2.8f, 1.6f, 1f), 1, true, 1f);
+            var trailFade = new Gradient();
+            trailFade.SetKeys(
+                new[] { new GradientColorKey(new Color(1f, 0.95f, 0.8f), 0f), new GradientColorKey(new Color(1f, 0.55f, 0.15f), 0.6f), new GradientColorKey(new Color(1f, 0.4f, 0.08f), 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.6f, 0.5f), new GradientAlphaKey(0f, 1f) });
+            spearTrail.colorGradient = trailFade;
+            spearTrail.shadowCastingMode = ShadowCastingMode.Off;
+            spearTrail.receiveShadows = false;
             spear.gameObject.SetActive(false);
             var rayObject = new GameObject("Returning Ray");
             var ray = rayObject.AddComponent<LineRenderer>();
             ray.useWorldSpace = true;
             ray.positionCount = 2;
-            ray.sharedMaterial = BuildKit.Glow(SunCityKit.Folder, "m_sun_ray", new Color(4.2f, 3.2f, 1.3f, 1f), 3, true, 1f);
+            ray.sharedMaterial = BuildKit.Glow(SunCityKit.Folder, "m_sun_ray", new Color(3.8f, 3.3f, 2.2f, 1f), 1, true, 1.2f);
             ray.widthMultiplier = 0.6f;
             ray.shadowCastingMode = ShadowCastingMode.Off;
             ray.receiveShadows = false;
             ray.enabled = false;
+            var rayLook = RayLook(rayObject);
 
             var bossHud = SummitBuilder.BossBar(boss, $"{EnemyKind.SunKingName},  {EnemyKind.SunKing().Title}");
             var form = SunBearerBuilder.Build(built.Player.transform, Radius, kit.Marker);
@@ -202,6 +226,8 @@ namespace Clover.EditorTools
             var court = new GameObject("Sun Court Director").AddComponent<SunCourtDirector>();
             court.Configure(boss, built.Player.GetComponent<PlayerDefence>(), built.Player.GetComponent<HitStop>(), form, bossHud, coal, door);
             court.ConfigureCourt(heatWall, heatGlow, key != null ? key.transform : null, shade, spear, BuildKit.FindDeep(boss.transform, "weapon.R"), ray);
+            court.ConfigureRay(rayLook);
+            court.ConfigureThrow(spear.GetComponentInChildren<TrailRenderer>(true));
             court.LineZ = LineZ;
             // Section 7.5 and 7.4 of the land's document: every word here is a proposal of Claude's until the owner passes it.
             court.Greeting = new[]
@@ -225,6 +251,46 @@ namespace Clover.EditorTools
             PlayerBuilder.AddTitle("The Court of Noon", "Khepharu, God of Fire");
             PlayerBuilder.AddPauseHint();
             SceneBuild.FinishOutsideBuild(scene, ScenePath);
+        }
+
+        // The ray as a beam of light (fire_boss_visuals.md 2.4): the thread is the plain line made above; then a white core
+        // with the beam's ragged edge, two gold strands, the spear's white streak, a light that rides it and a line of heat on the floor.
+        private static SpearRay RayLook(GameObject rayObject)
+        {
+            LineRenderer Line(string name, Material material, float width)
+            {
+                var lineObject = new GameObject(name);
+                lineObject.transform.SetParent(rayObject.transform, false);
+                var line = lineObject.AddComponent<LineRenderer>();
+                line.useWorldSpace = true;
+                line.sharedMaterial = material;
+                line.widthMultiplier = width;
+                line.numCornerVertices = 0;
+                line.positionCount = 2;
+                line.shadowCastingMode = ShadowCastingMode.Off;
+                line.receiveShadows = false;
+                line.enabled = false;
+                return line;
+            }
+            var core = Line("Ray Core", BuildKit.Glow(SunCityKit.Folder, "m_sun_ray_core", new Color(2.6f, 2.3f, 1.4f, 1f), 12, true, 1f), 1f);
+            var strandLight = BuildKit.Glow(SunCityKit.Folder, "m_sun_ray_strand", new Color(5f, 2.9f, 0.5f, 1f), 1, true, 1f);
+            var strands = new[] { Line("Ray Strand 1", strandLight, 0.5f), Line("Ray Strand 2", strandLight, 0.5f) };
+            var streak = Line("Ray Spear", BuildKit.Glow(SunCityKit.Folder, "m_sun_ray_spear", new Color(6f, 5.8f, 4.6f, 1f), 1, true, 1f), 0.55f);
+            var lightObject = new GameObject("Ray Light");
+            lightObject.transform.SetParent(rayObject.transform, false);
+            var light = lightObject.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.color = new Color(1f, 0.92f, 0.62f);
+            light.range = 6f;
+            light.shadows = LightShadows.None;
+            light.enabled = false;
+            var heat = BuildKit.Shape(PrimitiveType.Quad, "Ray Heat", rayObject.transform, Vector3.zero, Vector3.one, BuildKit.Glow(SunCityKit.Folder, "m_sun_ray_heat", Color.white, 1, true, 1.4f));
+            heat.shadowCastingMode = ShadowCastingMode.Off;
+            heat.receiveShadows = false;
+            heat.enabled = false;
+            var look = rayObject.AddComponent<SpearRay>();
+            look.Configure(rayObject.GetComponent<LineRenderer>(), core, strands, streak, light, heat);
+            return look;
         }
 
         private static Vector3 Polar(float angle, float radius, float height = 0f) => Quaternion.Euler(0f, angle, 0f) * new Vector3(0f, height, radius);

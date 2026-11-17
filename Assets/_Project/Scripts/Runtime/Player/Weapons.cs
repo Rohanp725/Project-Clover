@@ -23,6 +23,7 @@ namespace Clover.Player
         public const string TwinKnivesName = "Twin Knives";
         public const string GreatBowName = "Great Bow";
         public const string ChainSickleName = "Chain Sickle";
+        public const string SunSpearName = "Sun-Spear";
 
         // Every weapon there is, by name. A new weapon is one line here and its own method below.
         private static readonly Dictionary<string, Func<Weapon>> builders = new Dictionary<string, Func<Weapon>>
@@ -38,10 +39,15 @@ namespace Clover.Player
             { TwinKnivesName, TwinKnives },
             { GreatBowName, GreatBow },
             { ChainSickleName, ChainSickle },
+            { SunSpearName, SunSpear },
         };
 
         /// <summary>The names a stand or a rack may offer, in the order they are set out. The god's own sword is given, not chosen.</summary>
         public static readonly string[] Offered = { FistsName, KatanaName, MassiveSwordName, ScytheName, ArmamentName, GreatSpearName, GreatHammerName, TwinKnivesName, GreatBowName, ChainSickleName };
+
+        /// <summary>The weapon a god gives with its element when it is taken: the storm's katana, the sun's spear. Null: none is made yet.</summary>
+        public static string OfGod(string element) =>
+            element == Elements.Lightning ? StormKatanaName : element == Elements.Fire ? SunSpearName : null;
 
         public static Weapon ByName(string name) => name != null && builders.TryGetValue(name, out var build) ? build() : Fists();
 
@@ -231,6 +237,31 @@ namespace Clover.Player
                 },
             };
             return weapon.Named("spear", false);
+        }
+
+        /// <summary>
+        /// The Sun-Spear, Khepharu's own, given with Fire when it is taken (fire_rework.md section 5): the Great Spear's
+        /// moves, drawn in the god's gold, with one of its own in place of the Flying Spear. The Sun Throw stands in the
+        /// floor where it lands, and a moment later is called back as a ray that strikes everything on the line home.
+        /// </summary>
+        public static Weapon SunSpear()
+        {
+            var weapon = GreatSpear();
+            weapon.Name = SunSpearName;
+            weapon.Carry = "sunspear";
+            weapon.SkillName = "Sun Throw";
+            weapon.SlashColour = new Color(2.6f, 2.1f, 1.1f, 0.9f);
+            var skill = weapon.Combo.Skill;
+            skill.Shot = new WeaponShot
+            {
+                Speed = 40f, Range = 12f, Radius = 0.5f, Damage = 26f, Stagger = 30f, Pierce = false, Sticks = true, StickSeconds = 0.9f, Heavy = true,
+                Prop = "sunspear", PropLength = 2.0f,
+                // Home as a ray: as wide as the king's own, every enemy on the line struck once, at the throw's full weight.
+                RaysBack = true, RayRadius = 1.1f, RaySeconds = 0.18f, ReturnScale = 1f,
+            };
+            // Nobody runs to it: it comes back.
+            skill.FollowStep = null;
+            return weapon;
         }
 
         /// <summary>
