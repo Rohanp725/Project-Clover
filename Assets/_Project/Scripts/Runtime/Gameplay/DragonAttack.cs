@@ -18,9 +18,17 @@ namespace Clover.Gameplay
         Orbs,
         /// <summary>Magic. Two opposite quarters of the floor crackle for a while. Red.</summary>
         Storm,
-        /// <summary>Tail. It sweeps low across half the floor from the rim. Red.</summary>
+        /// <summary>Tail. The slither: it winds across the whole floor along a marked lane, rim to rim. Red.</summary>
         TailSweep,
         /// <summary>Tail. It comes down along a lane, and lies there a moment. Can be guarded.</summary>
         TailSlam,
+        /// <summary>Tail. It lays itself in a ring round the player and draws tight. Red. Cut enough while it lies there, it springs open.</summary>
+        TailCoil,
+        /// <summary>Tail. It lies in over one rim and sweeps round the whole floor and back, the tip coming late. Red.</summary>
+        TailScythe,
+        /// <summary>Tail. Three flops one after another marching across the floor, lightning running out from each. Can be guarded; the lightning is red.</summary>
+        TailFlops,
+        /// <summary>Tail. It stands over the player like a scorpion's and stabs four times; the last sticks in the stone. Can be guarded.</summary>
+        TailSting,
     }
 }

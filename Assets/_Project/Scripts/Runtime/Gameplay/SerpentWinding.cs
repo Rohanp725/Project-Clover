@@ -16,8 +16,8 @@ namespace Clover.Gameplay
         public float RisingShare = 0.2f;
         public float StandingShare = 0.42f;
         public float SinkingShare = 0.2f;
-        /// <summary>How far round its own round each arch is from the one before it.</summary>
-        public float Stagger = 0.375f;
+        /// <summary>How far round its own round each arch is from the one before it: a little behind, so each comes up just after its neighbour and the eye follows a wave of body round the ring.</summary>
+        public float Stagger = 0.89f;
 
         /// <summary>Where arch <paramref name="index"/> is in its round at <paramref name="time"/>, from 0 to 1.</summary>
         public float Phase(int index, float time)

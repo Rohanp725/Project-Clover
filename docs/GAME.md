@@ -476,18 +476,32 @@ banner on his back; the acolyte a hood, crossed wraps and a long scarf; the stor
   him but never freeze, hold or lift him, as with the colossus (the same `GodlyForm` and `ColossusPart` code).
 - *The body* (`StormDragon.cs`, model `boss_dragon.fbx`, rigid pieces moved by code): ten arches of the serpent
   stand in the cloud just beyond the rim all round the east, north and west of the floor, each 0.85 to 1.5 times the
-  size of the model. Each rises out of the cloud, slides forward along its own length (16 degrees round the summit)
-  while it stands, sinks, and waits under before rising again where it began; they take turns (an 11 s round,
-  `SerpentWinding`), so four to seven stand at any moment and the whole reads as one body threading through the cloud.
+  size of the model. The first version stood each arch up and sank it in place, which read as that. A second (2026-11-16)
+  turned each arch about the middle of its own curve like a rope over a wheel; the owner, watching it on 2026-11-17:
+  "You can also see that the body pieces are not actually connected to anything when they get rotated to simulate the
+  'coiling' of a serpent. You can clearly see the cloud at the bottom attached and it looks weird." **Decided
+  (user)**: the body round the summit must read as one connected serpent, with no end of it and no cloud stuck to
+  it ever seen. *What is in the game now* (a stopgap, **Claude's default**): the arches are drawn without their own
+  puffs of cloud (`DragonBuilder.StripCloud` makes `Generated/Enemies/dragon_coil_bare.asset`), both feet of every
+  arch are kept under the top of the cloud sea always (`ArchLine`, 1.3 m lower than before), they turn no more than
+  10 degrees while they slide 24 degrees round the summit, and each is a little behind its neighbour in an 11 s round
+  (`SerpentWinding`) so they rise and sink one after another round the ring. They are still ten rigid arches that
+  stand and sink. *What is written and waiting* : `StormDragon.MoveLengths` and `DragonBuilder` drive four boned
+  30 m lengths of body (`dragon_length`, the modeller's sixth pass, in `staging/blender/2026-11-16_dragon`) round a
+  ring 21.5 m out, each one long arch rising out of the cloud sea east and west of the floor and diving under again,
+  both ends 6.5 m down, lead following lead at 5 m a second; when the model has `dragon_length` the arches are not
+  shown. **It has never run**: the new `boss_dragon.fbx` was not brought into `Assets` (the copy was refused in the
+  unattended run; it needs the owner's word), so nothing of it has been seen.
   It winds 1.6 times faster in his fury. The neck rears out of a bank of cloud behind the north gate, the head leans
   in through the gate under its beam (so it is seen from above), two small forefeet grip the rim either side of it,
   and the short tail waves in the cloud to the north-west. The eyes, the mark on the brow and the lightning line down
-  every flank are light: the eyes climb to five times as a beam gathers (the lines to less than three), all flare
-  when he is struck or his blow is turned, beat in his fury, and gutter as he dies. The hide is a brighter sea-blue
+  every flank are light: the eyes climb to five times as a beam gathers; while he is showing what he is about to do
+  (any attack's mark being drawn) the lines down the body in the cloud are turned down to a third, so the mark on the
+  floor is what the eye finds; all flare when he is struck or his blow is turned, beat in his fury, and gutter as he dies. The hide is a brighter sea-blue
   than the modeller's storm grey, so the body does not vanish into the cloud. The camera stands 1.9 times further
   off (2.2 times for a player at the south rim) and 21 degrees lower than usual for this fight (the colossus used 1.55 and 15), because the body is beyond the
   rim and has to be seen there.
-- *The mouth* (most of the fight: after any tail attack or spell the next attack is always from the mouth):
+- *The mouth* (a third of the fight, with the magic and the tail; see how he chooses):
   - **Red: the beam**. He rears with his jaws coming wide and the throat alight; a red lane 3 m wide is drawn from
     under his mouth along one edge of the floor (the side away from the player) and a faint lane runs the crossing
     twice ahead of time to show the way it will go. After 1.5 s a beam of lightning stands in the lane and crosses the
@@ -530,31 +544,89 @@ banner on his back; the acolyte a hood, crossed wraps and a long scarf; the stor
   thick), driven by a spine (`SerpentSpine`, `SpineBones`): its tip leads along a path and every joint passes where
   the one ahead passed; a wave runs down it, larger toward the tip; and each joint is sprung, more loosely toward the
   tip, so the tip comes late and goes past. It comes over the rim square to the line from the middle of the floor to
-  the player, from one hand and then the other (for a player in the middle, east then west; never out of the gate), so
-  every side is used. Its root end is never on the floor: it runs off the rim and down under the outer cloud. What a
+  the player, from one hand and then the other (for a player in the middle, east then west; never out of the gate), for
+  the slither and the flops; over the rim nearest the player for the coil and the sting; over the rim furthest from
+  them for the scythe; always through one of the eight bays between gate-posts from 51 to 129 degrees either side of
+  north, so the east and the west are used and the north (his head) and the south (the camera's side) are not. Its root end is never on the floor: it runs off the rim and down under the outer cloud. What a
   blow lands on is eight capsules laid along the bones. The numbers are Claude's defaults.
-  - **Red: the slither**. The tip feels over the rim while a path of red rings draws itself out right across the
-    floor, winding 3 m to either side of the line through the player and crossing that line where they stand; it
-    follows them for 0.9 s and holds 0.4 s. Then the tail winds down the path in 1.3 s, slow and then all at once,
-    from one rim to the other and over it, so for a moment the floor is cut in two by moving serpent; 30 to whoever
-    it touches; it lies 0.8 s and draws back out the way it came. Step off the path, or roll through the body.
+  *The owner, watching it on 2026-11-17*: "you can see the end of the tail in the off stage area while the tail is on
+  screen hitting you", and "for the tail attacks it goes through everything including its own head and also the red
+  gate stands. If possible if it could coil around those things so it doesnt stick right through or swipe through it
+  would help immersion a lot". **Decided (user)**: there is one tail, no free end of body is ever seen, and the tail
+  goes round what stands on the summit. *Built* (**Claude's defaults**): while the long tail is out the short one
+  that waves in the cloud is 10 m under it, and the long one is not drawn until the short one has gone; the long
+  tail's root end runs 6.5 m off the rim and twice as steeply down as before (about 8 m under the floor). It comes
+  over the rim through the middle of a bay between two gate-posts, carried 1.5 m up over the balustrade there, and
+  the scythe, which lies out along the rim at either end of its sweep, comes only from the southern half, where the
+  posts are stubs it lies over. Every frame any joint that has come inside a gate-post, his head or a forefoot is
+  put out of it the shortest way (`AvoidThings`), so the body slides round them, and the shapes a blow lands on
+  follow. Then, the same night: "the short tail in the background you can easily see the cloud at the bottom of it" and
+  "when you were at the bottom left corner, you could see the cut portion of the tail while it was attacking from the
+  bottom, the player should not see that portion of the tail to make it feel like its stretching from the clouds".
+  *Built*: the short tail is drawn without its own cloud and stands 1.3 m lower, its base under the cloud sea; the
+  long tail never comes over the rim further than 130 degrees from north (so never over the south rim, where the
+  camera looks past the rim), its hidden root is 7.5 m long and goes down 3.2 m for every metre out. **Not checked
+  from every corner**: see what the probe pictured. **Not done**: the tail does not plan a path round things or wrap a turn round a post on purpose; it is
+  only kept out of them. The beams across the tops of the tall posts and the rope between them are not obstacles.
+  - **Red: the slither**. The tip feels over the rim while a red winding lane as wide as the body (4 m) draws itself
+    out right across the floor to the far rim, winding 3 m to either side of the line through the player and crossing
+    that line where they stand; it follows them for 0.9 s and holds 0.4 s. Then the tail winds down the lane in 1.3 s,
+    slow and then all at once, from one rim to the other, so for a moment the floor is cut in two by moving serpent;
+    30 to whoever it touches; it lies 0.8 s and draws back out the way it came. Step off the lane, roll through the
+    body, or turn it with a guard at the last instant facing the rim it came over (60 on his balance).
   - **The flop**. The tail comes out over the rim arched up off the floor, tip highest (6.5 m), over a pale lane
     (about 24 by 4 m) through where the player stood, and hangs there swaying until 1.4 s. Then it smacks down from
     the root end to the tip in 0.3 s (so the blow lands later the further along the lane the player stands) for 34;
     the tip bounces once. It can be guarded (facing its root) and a perfect guard throws 60. It lies slack in a slow
     curve for 2.4 s, open at plain damage, and draws back.
-  - **Not built yet** (asked for by the owner, 2026-11-16): at least four more tail moves (ideas given: a coil that
-    closes round the player, a clock-hand scythe round the stage, a walking run of flops with ripples of lightning,
-    scorpion stabs of the tip that stick in the stone, a dragged line of live lightning, a whip-crack shockwave), and
-    a chooser that mixes mouth, magic and tail evenly: today the chooser still follows every tail attack or spell
-    with the mouth.
+  - *The owner asked for more, 2026-11-16*: "it seems like the tail moves might be underdone, be creative with tail
+    like moves that make sense". The four below are **Claude's defaults**, built 2026-11-16 and not yet played by the
+    owner. Each lays the tail along a line of its own that changes as the move goes on (`TailShapes`, and
+    `LayOnCurve` in `StormDragon`), joint by joint, with the same springs, so none of it is ever turned as one piece.
+  - **Red: the coil**. The tail comes over the rim nearest the player, runs straight at them and hooks round where
+    they stand in a ring 5.5 m in radius, marked by a red circle that follows them for 0.75 s; by 1.5 s the hook is
+    laid. Then it draws tight like a noose in 0.85 s (to 2.6 m, going once round and a little more while the rest of
+    the tail is pulled back out over the rim). Its body burns whoever walks into it while it tightens (16), and
+    whoever is still inside when it closes is crushed for 36. Leave through the gap before it closes, roll out
+    through the body, or turn the crush with a guard at the last instant, facing any way (60). While it tightens and
+    for the 2 s it lies loose afterwards the tail is open at plain damage; 40 of damage to it while it is coiled
+    makes it spring open at once, which crushes nobody and costs his balance 60.
+  - **Red: the scythe**. The tail lies in over the rim furthest from the player, arched 3.4 m off the floor for its
+    first seven metres, along one edge of the floor (the side the player is not on); the whole floor is ringed red
+    for 1.5 s. Then it sweeps round the whole floor like the hand of a clock in 1.3 s, but bending: each stretch of
+    it comes a little later than the one nearer the root (a quarter of a second at the tip), so it curves back and
+    the tip whips through last. It waits 0.5 s at the far edge and comes back in 0.85 s. 26 each pass. Roll through
+    the body, turn it with a guard at the last instant facing the way it comes from (30), or stand under the arch by
+    its root, where it passes overhead. No opening.
+  - **The walking flops**. Three fish-tail smacks one after another (the first after 1.3 s, the others 0.95 s
+    apart), each on a pale lane 4 m wide that reaches most of the way across the floor; each lane is a step of up to
+    30 degrees round from the last, toward where the player has gone (onto them if they are nearer than that; on
+    across the floor if they have not moved). Each smack is 26 and can be guarded (a perfect guard throws 30), and
+    from where each lands lightning runs out along the stone: two rows of three red circles (1.8 m) to either side
+    of the lane, the nearest first, for 14. After the third the tail lies slack for 2.4 s, open at plain damage.
+  - **The sting**. The tail rises over the rim nearest the player in a high arch (6 m) with its fan hanging over
+    them like a scorpion's, and stabs four times at a pale circle (1.9 m): the first after 1.1 s, the rest 0.85 s
+    apart; each circle follows the player until 0.35 s before the stab. 20 each; each can be guarded (a perfect guard
+    throws 30) or run out of. The last stab sticks in the stone: the arch sags to the floor behind it and the tail
+    is open at plain damage for 2.4 s before it tears free.
+  - **Not built** of the owner's ideas: the furrow (a dragged line of live lightning that cuts the floor in two for
+    a while) and the whip-crack (a shockwave thrown from the tip at range).
 - *How he is hurt* (**Claude's default**): the head while it is down after a bite or spent after a beam (100%); the
-  tail while it lies after a slam (100%); a forefoot at any time (35%); the fallen head when his balance is broken
-  (160%, and a heavy blow finishes). Blows on any of these and perfect guards wear down the balance.
-- *How he chooses* (`DragonChooser`, plain C#, with tests): opens with beam, tail slam, breath, bolts, beam, tail
-  sweep. After it: the bite for a player who lingers in reach; otherwise by shares (beam 20, breath 14, bite 12 when in
-  reach, tail slam 14, tail sweep 10, bolts 10, sigils 8, orbs 7, storm 5). Nothing twice running; after the tail or
-  a spell, the mouth; no storm while one burns. Beam, bite, tail sweep and sigils are heavy.
+  tail while it lies after a flop, after the third walking flop, stuck after the last sting, and while it is coiled
+  and lying loose after the coil (100%); a forefoot at any time (35%); the fallen head when his balance is broken
+  (160%, and a heavy blow finishes). Blows on any of these and perfect guards wear down the balance; cutting the
+  coil open costs it 60.
+- *How he chooses* (`DragonChooser`, plain C#, with tests; reworked 2026-11-16 because the owner's picture is "mouth
+  beam attacks, or draconic magic along with tail attacks on the stage" and the first chooser followed every tail
+  attack or spell with the mouth, so the mouth was most of the fight; the rules are **Claude's defaults**): opens with
+  beam, flop, bolts, slither, breath, sting, orbs, scythe, beam, coil, sigils, walking flops, which shows everything
+  but the bite (an answer) and the storm (which opens his fury), mouth, tail and magic taking turns. After it: the
+  bite for a player who lingers in reach; otherwise by shares (beam 15, breath 12, bite 9 when in reach, the tail 34
+  shared among its moves, bolts 10, sigils 8, orbs 7, storm 5). Nothing twice running, nor again with only one thing between (so
+  not beam, tail, beam); never the same kind (mouth, tail, magic) twice running, the bite at a lingerer aside; a kind that has stayed away three turns is the next one;
+  the tail's six moves are dealt round (only the two that came longest ago may come, and the oldest must once five
+  others have come since), so any six turns of the tail hold all six moves and all six come in any thirty turns; no storm while one burns. Beam, bite, slither, sigils, scythe and coil are heavy, and
+  two heavy attacks earn the 2.4 s lull.
 - *The entrance and the death*: arches break the cloud one after another round the summit; a forefoot comes over
   the rim at 1.0 s and the other at 1.7 s; the head comes up outside the rim and in through the gate; at 3.2 s he
   roars with his jaws wide and a pale ring crosses the floor. In death he rears to the sky, the sky strikes him, the
@@ -562,10 +634,14 @@ banner on his back; the acolyte a hood, crossed wraps and a long scarf; the stor
   on its chin on the rim at 3.0 s and slides off at 3.6 s.
 - *Names*: the bar reads "Narukami,  the Storm Dragon"; the callouts are "Something moves in the cloud", "The storm
   dragon" (at the roar) and "The storm breaks" (fury).
-- *Not built*: his voice and any sound; **the neck does not yet follow the head**: the model now has a chain of ten
-  neck bones for it and `SerpentSpine` can drive them, but they are left as modelled, so the neck ends behind the gate
-  and the head parts from it when it lunges; the arches in the cloud are the same rigid piece and cannot bend or
-  truly slide; nothing was tuned by play.
+- *The neck* (2026-11-16, **Claude's default**): the neck's ten bones are bent every frame so that its end meets the
+  back of the skull wherever the head goes (`NeckBones`): each joint is moved a share of the way the end has to go,
+  more toward the end, and then the lengths between joints are put right from both ends, so it keeps its modelled
+  curve at rest and straightens as the head lunges. If the head goes further than the neck is long, the last
+  stretch is drawn out rather than a gap left.
+- *Not built*: his voice and any sound; the furrow and the whip-crack; "now and then a long stretch of back breaking
+  the cloud and rolling under again" (the arches are still ten copies of one rigid arch, each rolling over on its
+  own); nothing was tuned by play.
 
 **The large robot, an idea held for the Metal area** (the owner, 2026-11-16: "the colossus still has to be fully reworked with the metal element and whatever that areas story ends up being, just the idea of the large robot is still good and could be used later"). It is not in the game and no scene holds it. Its model (`boss_storm.fbx`) and its code (`Colossus.cs`, `ColossusChooser.cs`, `ColossusPart.cs`, `ColossusBuilder.cs`, the old `StormProbe`) are kept compiling only as reference for that later boss, which will be reworked then. What follows is the fight as it was built for Narukami before the dragon replaced it:
 

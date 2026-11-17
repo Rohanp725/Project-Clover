@@ -3,9 +3,10 @@ using Clover.Gameplay;
 using Clover.Player;
 using UnityEngine;
 
-// Holds the storm dragon in its costliest state for the profiler: the godly form is started directly and made to beam
-// again and again for forty seconds with the body winding round it, while the player is kept alive in the middle.
-// It writes "[Probe] beaming" when the first beam begins (point `diagnostics profiler_record` at it then), the
+// Holds the storm dragon in its costliest state for the profiler: the godly form is started directly and made to do
+// its tail's moves (scythe, coil, slither, sting, flops) and then the beam, round and round for forty seconds with the
+// body winding round it, while the player is kept alive in the middle.
+// It writes "[Probe] beaming" when the first of them begins (point `diagnostics profiler_record` at it then), the
 // garbage the managed heap gathered per frame over the soak, and "[Probe] done". Run it in the Summit scene.
 public static class DragonSoakProbe
 {
@@ -19,6 +20,9 @@ public static class DragonSoakProbe
 
 public class DragonSoakRunner : MonoBehaviour
 {
+    // The tail's moves first, since they lay a spine every frame; then the beam.
+    private static readonly DragonAttack[] Cycle = { DragonAttack.TailScythe, DragonAttack.TailCoil, DragonAttack.TailSweep, DragonAttack.TailSting, DragonAttack.TailFlops, DragonAttack.Beam };
+    private int next;
     private PlayerDefence defence;
 
     private void Update()
@@ -42,8 +46,8 @@ public class DragonSoakRunner : MonoBehaviour
         long before = 0;
         while (Time.time < end)
         {
-            if (dragon.Doing == "Idle") dragon.Queued = DragonAttack.Beam;
-            if (!said && dragon.Doing == "Beam")
+            if (dragon.Doing == "Idle" && dragon.Queued == DragonAttack.None) dragon.Queued = Cycle[next++ % Cycle.Length];
+            if (!said && dragon.Doing != "Idle")
             {
                 said = true;
                 Debug.Log("[Probe] beaming");

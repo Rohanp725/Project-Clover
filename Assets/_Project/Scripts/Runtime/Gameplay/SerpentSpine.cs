@@ -204,6 +204,9 @@ namespace Clover.Gameplay
             Hold();
         }
 
+        /// <summary>Puts the lengths between the points right again, after whoever owns the spine has moved points out of things the body cannot enter.</summary>
+        public void Settle() => Hold();
+
         private void Hold()
         {
             if (!HoldLengths) return;

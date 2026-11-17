@@ -14,7 +14,7 @@ using UnityEngine.InputSystem.LowLevel;
 // the finisher, the fury and its storm, the death, and the choice of what he leaves. Writes "[Probe] ..." lines and
 // pictures named dragon_*.png. Run with
 //   bash AgentScripts/runprobe.sh Summit DragonProbe 300
-// To try some parts alone, put their names (attacks, or Look, TailStrips, Storm, Openings, Stagger, Fury), with commas between, in AgentScripts/dragon_only.txt;
+// To try some parts alone, put their names (attacks such as Beam or TailCoil, or Look, Storm, Openings, Stagger, Fight, Fury), with commas between, in AgentScripts/dragon_only.txt;
 // an empty or missing file runs everything.
 public static class DragonProbe
 {
@@ -34,20 +34,46 @@ public class DragonProbeRunner : MonoBehaviour
     private StormDragon dragon;
     private bool keepAlive = true;
     private Vector3? hold;
+    private Quaternion holdFacing = Quaternion.identity;
+    // When set, where the player is put every frame: a player on the move.
+    private Func<Vector3> follow;
 
     private static void Keys(params Key[] held) => InputSystem.QueueStateEvent(Keyboard.current, new KeyboardState(held));
 
     private static void Say(string text) => Debug.Log("[Probe] " + text);
 
+    private NeckBones neck;
+    private float neckGap, neckBend;
+    private string neckGapDuring = "", neckBendDuring = "";
+
     private void Update()
     {
         if (keepAlive && defence != null) defence.Health.Heal(100f);
+        // The neck has to reach the skull wherever the head goes, without a sharp joint: the worst of both is kept.
+        if (neck != null && dragon != null && dragon.InFight)
+        {
+            if (neck.Gap > neckGap)
+            {
+                neckGap = neck.Gap;
+                neckGapDuring = dragon.Doing;
+            }
+            if (neck.SharpestBend > neckBend)
+            {
+                neckBend = neck.SharpestBend;
+                neckBendDuring = dragon.Doing;
+            }
+        }
+        if (follow != null && player != null && !defence.IsHelpless && !player.Dodge.IsRolling)
+        {
+            player.Teleport(follow(), holdFacing);
+            return;
+        }
         // Blows knock the player about; a place under test is a place stood in.
         if (hold.HasValue && player != null && !defence.IsHelpless && !player.Dodge.IsRolling)
         {
             Vector3 off = player.transform.position - hold.Value;
             off.y = 0f;
-            if (off.magnitude > 0.8f) player.Teleport(hold.Value, Quaternion.identity);
+            if (off.magnitude > 0.8f) player.Teleport(hold.Value, holdFacing);
         }
     }
 
@@ -175,6 +201,115 @@ public class DragonProbeRunner : MonoBehaviour
         yield return Until(() => !defence.IsHelpless, 3f);
     }
 
+    private static Vector3 Flat(Vector3 direction)
+    {
+        direction.y = 0f;
+        return direction.sqrMagnitude > 0.0001f ? direction.normalized : Vector3.forward;
+    }
+
+    // Everything asked of a move of the tail. See where it is called.
+    private IEnumerator TryTail(DragonAttack attack, string file, float from, Vector3 where, float[] shots, Func<Vector3> answer, float answerLead,
+        Func<int, Quaternion> guardFacing, float balanceWanted)
+    {
+        string name = attack.ToString();
+
+        // As it comes in a fight, with the pictures.
+        dragon.TailFromDegrees = 999f;
+        dragon.Stagger.Reset();
+        yield return Begin(attack, where);
+        yield return null;
+        Vector3 cameFrom = dragon.TailEntry;
+        for (int i = 0; i < shots.Length; i++)
+        {
+            float at = shots[i];
+            yield return Until(() => dragon.DoingFor >= at || dragon.Doing != name, 8f);
+            yield return Shot(file + "_" + (i + 1));
+        }
+        yield return Over(attack);
+        dragon.TailFromDegrees = from;
+
+        // Standing still: how often it lands, and when first.
+        int taken = defence.BlowsTaken;
+        float blowAt = -1f;
+        yield return Begin(attack, where);
+        float giveUp = Time.unscaledTime + 25f;
+        while (dragon.Doing == name && Time.unscaledTime < giveUp)
+        {
+            if (blowAt < 0f && defence.BlowsTaken > taken) blowAt = dragon.DoingFor;
+            yield return null;
+        }
+        yield return Over(attack);
+        int still = defence.BlowsTaken - taken;
+        if (blowAt < 0f)
+        {
+            Say($"{name}: standing still at {where} it never landed; nothing more can be tried of it");
+            yield break;
+        }
+
+        // Answered by where one stands.
+        taken = defence.BlowsTaken;
+        yield return Begin(attack, where);
+        yield return Until(() => dragon.DoingFor >= blowAt - answerLead || dragon.Doing != name, 8f);
+        follow = answer;
+        yield return Until(() => dragon.Doing != name, 25f);
+        follow = null;
+        yield return Over(attack);
+        int left = defence.BlowsTaken - taken;
+
+        // Rolling as it comes.
+        int rolled = defence.Dodges + defence.PerfectDodges;
+        int perfectRolls = defence.PerfectDodges;
+        taken = defence.BlowsTaken;
+        float[] rollLeads = { 0.1f, 0.18f, 0.04f };
+        int rollTries = 0;
+        for (; rollTries < rollLeads.Length && defence.Dodges + defence.PerfectDodges == rolled; rollTries++)
+        {
+            yield return Begin(attack, where);
+            float lead = rollLeads[rollTries];
+            yield return Until(() => dragon.DoingFor >= blowAt - lead || dragon.Doing != name, 8f);
+            hold = null;
+            Keys(Key.Space);
+            yield return null;
+            yield return null;
+            Keys();
+            yield return Over(attack);
+        }
+        int rolls = defence.Dodges + defence.PerfectDodges - rolled;
+        int landedRolling = defence.BlowsTaken - taken;
+
+        // Guard pressed just before the blow, facing where it comes from.
+        int perfect = defence.PerfectGuards;
+        taken = defence.BlowsTaken;
+        float balanceBefore = 0f, balanceAfter = 0f;
+        bool broke = false;
+        float[] leads = { 0.1f, 0.14f, 0.06f, 0.18f };
+        int tries = 0;
+        for (; tries < leads.Length && defence.PerfectGuards == perfect; tries++)
+        {
+            dragon.Stagger.Reset();
+            yield return Begin(attack, where);
+            int staggers = dragon.TimesStaggered;
+            balanceBefore = dragon.Stagger.Value;
+            float lead = leads[tries];
+            yield return Until(() => dragon.DoingFor >= blowAt - lead - 0.08f || dragon.Doing != name, 8f);
+            holdFacing = guardFacing(tries);
+            player.Teleport(where, holdFacing);
+            yield return Until(() => dragon.DoingFor >= blowAt - lead || dragon.Doing != name, 8f);
+            Keys(Key.L);
+            yield return Until(() => defence.PerfectGuards > perfect || dragon.DoingFor >= blowAt + 0.3f || dragon.Doing != name, 2f);
+            balanceAfter = dragon.Stagger.Value;
+            broke = dragon.TimesStaggered > staggers;
+            Keys();
+            holdFacing = Quaternion.identity;
+            yield return Over(attack);
+        }
+        Say($"{name} (in a fight it came over the rim at {Mathf.Atan2(cameFrom.x, cameFrom.z) * Mathf.Rad2Deg:0} degrees from north; tried from {from:0}): standing still it landed {still}, first at {blowAt:0.00} s; "
+            + $"answered by where one stands it landed {left}; rolled +{rolls} (perfect {defence.PerfectDodges - perfectRolls}) in {rollTries} tries, landed while rolling {landedRolling}; "
+            + $"perfect guards +{defence.PerfectGuards - perfect} in {tries} tries (landed {defence.BlowsTaken - taken}), his balance {balanceBefore:0} -> {(broke ? "broken" : balanceAfter.ToString("0"))} (wanted +{balanceWanted:0})");
+        if (dragon.IsStaggered) yield return Until(() => !dragon.IsStaggered, 8f);
+        yield return Until(() => !defence.IsHelpless, 3f);
+    }
+
     // An opening: the attack is made, the piece lies open, the player walks up from where the blow left them and strikes it.
     private IEnumerator Opening(DragonAttack attack, Vector3 where, ColossusPart part, string what, Vector3 standOff)
     {
@@ -225,6 +360,7 @@ public class DragonProbeRunner : MonoBehaviour
         var summit = FindAnyObjectByType<SummitDirector>();
         var boss = FindAnyObjectByType<Enemy>();
         dragon = FindAnyObjectByType<StormDragon>();
+        neck = FindAnyObjectByType<NeckBones>(FindObjectsInactive.Include);
         const string onlyFile = "AgentScripts/dragon_only.txt";
         string only = System.IO.File.Exists(onlyFile) ? System.IO.File.ReadAllText(onlyFile).Trim() : "";
         string wanted = "," + only.Replace(" ", "") + ",";
@@ -278,6 +414,16 @@ public class DragonProbeRunner : MonoBehaviour
                 }
                 yield return Shot("body_" + placeNames[i]);
             }
+            // The rim over six seconds from one place: the body has to be seen travelling round it.
+            var rimFrom = new Vector3(0f, 0.1f, -5f);
+            player.Teleport(rimFrom, Quaternion.identity);
+            hold = rimFrom;
+            yield return new WaitForSeconds(1f);
+            for (int i = 1; i <= 6; i++)
+            {
+                yield return Shot("rim_" + i);
+                yield return new WaitForSeconds(1f);
+            }
             Say($"2 the body in the cloud: arches standing at once, least {least} most {most}; jaw at rest {dragon.JawOpen:0} degrees");
         }
 
@@ -292,32 +438,67 @@ public class DragonProbeRunner : MonoBehaviour
         if (Wants("Bolts")) yield return Try(DragonAttack.Bolts, Middle, new Vector3(3.2f, 0.1f, 2f), 1.1f, 0.4f + dragon.BoltWarning, 0.4f + dragon.BoltWaveEvery * 2f + 0.6f, 0.3f, dragon.PerfectGuardBalance);
         if (Wants("Sigils")) yield return Try(DragonAttack.Sigils, Middle, new Vector3(0f, 0.1f, -9.5f), 1.05f, 0.3f + dragon.SigilStepEvery * 2f + dragon.SigilWarning * 0.8f, 0.3f + dragon.SigilStepEvery + 0.6f, 0.3f, dragon.PerfectGuardBalance);
         if (Wants("Orbs")) yield return Try(DragonAttack.Orbs, Middle, new Vector3(-10f, 0.1f, -8f), 1.3f, dragon.OrbFirstBurst, dragon.OrbFirstBurst + 0.5f, 0.3f, dragon.PerfectGuardBalance);
-        if (Wants("TailSweep")) yield return Try(DragonAttack.TailSweep, east, new Vector3(-8f, 0.1f, 0f), dragon.TailSweepTelegraph * 0.85f, sweepBlow, dragon.TailSweepTelegraph + dragon.TailSweepSeconds + 0.1f, 0f, dragon.PerfectGuardBalance);
-        if (Wants("TailSlam")) yield return Try(DragonAttack.TailSlam, east, new Vector3(6f, 0.1f, 6f), dragon.TailSlamTelegraph * 0.85f, dragon.TailSlamTelegraph + dragon.TailSlamDrop * 0.72f, dragon.TailSlamTelegraph + dragon.TailSlamDrop + 0.7f, 0f, dragon.PerfectGuardBalance);
-
-        // The tail, five pictures across each of its attacks: it has to read as a tail, never as a stick being turned.
-        if (Wants("TailStrips"))
+        // The tail's moves. Each is pictured six times across as it comes in a fight (from whichever side where the
+        // player stands gives it), then tried from a set side so that its timing is the same every time: standing
+        // still (which also measures when its first blow lands), answering it by where one stands, rolling, and guarding.
         {
+            Vector3 Side(float metres)
+            {
+                Vector3 along = dragon.TailAlong;
+                return new Vector3(-along.z, 0f, along.x) * metres;
+            }
+            Quaternion ToEntry(int attempt) => Quaternion.LookRotation(Flat(dragon.TailEntry - player.transform.position));
             float st = dragon.TailSweepTelegraph, ss = dragon.TailSweepSeconds;
-            float[] slither = { st * 0.45f, st * 0.95f, st + ss * 0.45f, st + ss + 0.3f, st + ss + dragon.TailSweepRest + 0.45f };
-            yield return Begin(DragonAttack.TailSweep, east);
-            for (int i = 0; i < slither.Length; i++)
-            {
-                float at = slither[i];
-                yield return Until(() => dragon.DoingFor >= at || dragon.Doing != "TailSweep", 6f);
-                yield return Shot("slither_" + (i + 1));
-            }
-            yield return Over(DragonAttack.TailSweep);
+            if (Wants("TailSweep")) yield return TryTail(DragonAttack.TailSweep, "slither", 180f, east,
+                new[] { st * 0.5f, st * 0.97f, st + ss * 0.3f, st + ss * 0.6f, st + ss + 0.2f, st + ss + dragon.TailSweepRest + 0.4f },
+                () => east + Side(7f), 0.4f, ToEntry, dragon.PerfectGuardBalance);
             float ft = dragon.TailSlamTelegraph, fd = dragon.TailSlamDrop;
-            float[] flop = { 0.35f, ft * 0.9f, ft + fd * 0.55f, ft + fd + 0.14f, ft + fd + 1.2f };
-            yield return Begin(DragonAttack.TailSlam, east);
-            for (int i = 0; i < flop.Length; i++)
+            if (Wants("TailSlam")) yield return TryTail(DragonAttack.TailSlam, "flop", 90f, east,
+                new[] { 0.35f, ft * 0.6f, ft * 0.95f, ft + fd * 0.55f, ft + fd + 0.14f, ft + fd + 1.2f },
+                () => east + Side(6f), 0.4f, ToEntry, dragon.PerfectGuardBalance);
+            float ct = dragon.CoilTelegraph, cs = dragon.CoilSqueeze;
+            if (Wants("TailCoil")) yield return TryTail(DragonAttack.TailCoil, "coil", 90f, new Vector3(7f, 0.1f, 0f),
+                new[] { ct * 0.35f, ct * 0.7f, ct * 0.98f, ct + cs * 0.5f, ct + cs + 0.1f, ct + cs + dragon.CoilHold + 1f },
+                () => dragon.CoilCentre + new Vector3(-(dragon.CoilRadius + 4f), 0.1f, 0f), 0.6f, attempt => Quaternion.identity, dragon.PerfectGuardBalance);
+            float yt = dragon.ScytheTelegraph;
+            if (Wants("TailScythe")) yield return TryTail(DragonAttack.TailScythe, "scythe", 206f, new Vector3(6f, 0.1f, 4f),
+                new[] { yt * 0.6f, yt + dragon.ScytheFirst * 0.3f, yt + dragon.ScytheFirst * 0.6f, yt + dragon.ScytheFirst + 0.1f, yt + dragon.ScytheFirst + dragon.ScythePause + dragon.ScytheSecond * 0.45f, yt + dragon.ScytheFirst + dragon.ScythePause + dragon.ScytheSecond + 0.3f },
+                () => dragon.TailEntry - dragon.TailEntry.normalized * 3.5f + Vector3.up * 0.1f, 0.8f,
+                attempt => Quaternion.LookRotation(Quaternion.Euler(0f, attempt % 2 == 0 ? 90f : -90f, 0f) * Flat(player.transform.position - dragon.TailEntry)), dragon.PerfectGuardBalance * 0.5f);
+            float f1 = dragon.FlopsFirst, fn = dragon.FlopsNext + dragon.TailSlamDrop;
+            if (Wants("TailFlops")) yield return TryTail(DragonAttack.TailFlops, "flops", 180f, east,
+                new[] { f1 * 0.9f, f1 + fd + 0.12f, f1 + fd + fn * 0.55f, f1 + fd + fn + 0.12f, f1 + fd + fn * 1.6f, f1 + fd + fn * 2f + 0.5f },
+                () => dragon.TailEntry + dragon.TailAlong * Vector3.Dot(east - dragon.TailEntry, dragon.TailAlong) + Side(3.2f) + Vector3.up * 0.1f, 0.5f, ToEntry, dragon.PerfectGuardBalance * 0.5f);
+            float sr = dragon.StingRise, se = dragon.StingEvery + dragon.StingStab;
+            float began = 0f;
+            if (Wants("TailSting")) yield return TryTail(DragonAttack.TailSting, "sting", 90f, east,
+                new[] { sr * 0.5f, sr * 0.95f, sr + dragon.StingStab + 0.04f, sr + se * 0.6f, sr + se * 2f + dragon.StingStab + 0.04f, sr + se * 3f + dragon.StingStab + 1f },
+                () =>
+                {
+                    // Running round the floor at a run's pace, as a player who will not stand under it would.
+                    if (began <= 0f) began = Time.time;
+                    float round = (Time.time - began) * 6f / 8f;
+                    return new Vector3(Mathf.Cos(round) * 8f, 0.1f, -Mathf.Sin(round) * 8f);
+                }, 5f, ToEntry, dragon.StingBalance);
+            dragon.TailFromDegrees = 999f;
+
+            // The coil cut while it tightens: it springs open and his balance pays.
+            if (Wants("TailCoil"))
             {
-                float at = flop[i];
-                yield return Until(() => dragon.DoingFor >= at || dragon.Doing != "TailSlam", 6f);
-                yield return Shot("flop_" + (i + 1));
+                dragon.Stagger.Reset();
+                dragon.Health.Fill();
+                yield return Begin(DragonAttack.TailCoil, new Vector3(7f, 0.1f, 0f));
+                yield return Until(() => dragon.DoingFor >= dragon.CoilTelegraph + 0.15f || dragon.Doing != "TailCoil", 8f);
+                bool open = dragon.TailPart.Vulnerable;
+                float balance = dragon.Stagger.Value;
+                int taken = defence.BlowsTaken;
+                var first = dragon.TailPart.TakeHit(new Hit(25f, 0f, Vector3.forward));
+                var second = dragon.TailPart.TakeHit(new Hit(25f, 0f, Vector3.forward));
+                yield return new WaitForSeconds(0.35f);
+                yield return Shot("coil_sprung");
+                yield return Over(DragonAttack.TailCoil);
+                Say($"TailCoil cut while it tightens: tail open {open}; blows {first} and {second}; sprung open {dragon.CoilsSprung} time(s); his balance {balance:0} -> {dragon.Stagger.Value:0}; the player was crushed {defence.BlowsTaken - taken} times after it sprang");
             }
-            yield return Over(DragonAttack.TailSlam);
         }
 
         // The storm is not one blow but ground that burns: stood in, and left.
@@ -350,6 +531,9 @@ public class DragonProbeRunner : MonoBehaviour
             yield return Opening(DragonAttack.Bite, north, dragon.HeadPart, "head", new Vector3(1.6f, 0f, -1.2f));
             yield return Opening(DragonAttack.Beam, new Vector3(0f, 0.1f, 6f), dragon.HeadPart, "head", new Vector3(1.6f, 0f, -1.2f));
             yield return Opening(DragonAttack.TailSlam, east, dragon.TailPart, "tail", new Vector3(0f, 0f, -1.1f));
+            yield return Opening(DragonAttack.TailFlops, east, dragon.TailPart, "tail", new Vector3(0f, 0f, -1.1f));
+            yield return Opening(DragonAttack.TailSting, east, dragon.TailPart, "tail", new Vector3(0f, 0f, -1.1f));
+            yield return Opening(DragonAttack.TailCoil, east, dragon.TailPart, "tail", new Vector3(0f, 0f, -1.1f));
             // A forefoot, at any time.
             yield return Until(() => dragon.Doing == "Idle", 10f);
             float health = dragon.Health.Current;
@@ -385,6 +569,40 @@ public class DragonProbeRunner : MonoBehaviour
             yield return Until(() => !combat.IsAttacking && dragon.Doing == "Idle", 6f);
         }
 
+        // An ordinary fight, left to himself, against a player who keeps moving: what he does, in order.
+        if (Wants("Fight"))
+        {
+            yield return Until(() => dragon.Doing == "Idle", 16f);
+            dragon.Health.Fill();
+            dragon.Stagger.Reset();
+            dragon.RestBetween = usualRest;
+            dragon.Queued = DragonAttack.Beam;
+            var order = new System.Text.StringBuilder();
+            string was = "Idle";
+            float fightBegan = Time.time;
+            int lulls = dragon.Lulls, taken = defence.BlowsTaken;
+            follow = () =>
+            {
+                float round = (Time.time - fightBegan) * 5f / 9f;
+                return new Vector3(Mathf.Cos(round) * 9f, 0.1f, Mathf.Sin(round) * 9f - 2f);
+            };
+            while (Time.time - fightBegan < 80f)
+            {
+                string now = dragon.Doing;
+                if (now != was)
+                {
+                    if (now != "Idle") order.Append(now).Append(", ");
+                    was = now;
+                }
+                dragon.Health.Fill();
+                yield return null;
+            }
+            follow = null;
+            dragon.RestBetween = 60f;
+            Say($"an ordinary fight of 80 s against a player running round the floor: {order} lulls {dragon.Lulls - lulls}; blows that landed on the runner {defence.BlowsTaken - taken}");
+            yield return Until(() => dragon.Doing == "Idle", 20f);
+        }
+
         // 6: fury, which opens with the storm and brings the beam back the way it went.
         if (Wants("Fury"))
         {
@@ -416,6 +634,8 @@ public class DragonProbeRunner : MonoBehaviour
             Say($"6 fury: began {enraged} callout '{callout}' furious {dragon.Furious}; his first act in it {first}; a beam in fury crossed the still player {defence.BlowsTaken - taken} times");
             hold = null;
         }
+
+        Say($"the neck over the whole fight: driven {neck != null}; its last stretch was drawn out by at most {neckGap:0.00} m (during {neckGapDuring}); the sharpest any joint was bent beyond how it was made {neckBend:0} degrees (during {neckBendDuring})");
 
         // 7: the death, and what he leaves.
         hold = Middle;

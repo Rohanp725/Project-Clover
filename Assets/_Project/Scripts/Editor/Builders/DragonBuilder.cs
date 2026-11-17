@@ -15,6 +15,8 @@ namespace Clover.EditorTools
     public static class DragonBuilder
     {
         private const string Folder = BuildKit.GeneratedRoot + "/Enemies";
+        // Four lengths of 30 m go round a ring of about 135 m with a little cloud between each and the next.
+        private const int BodyLengths = 4;
         private const string ModelPath = "Assets/_Project/Art/Models/Characters/boss_dragon.fbx";
 
         // Storm blue-grey hide and a pale belly, gold horn and talon, white mane, cloud the colour of the summit's own,
@@ -68,14 +70,51 @@ namespace Clover.EditorTools
             // The hinge, which the model's notes give in the head's own space.
             jaw.localPosition = new Vector3(0f, 1.45f, -2f);
             var body = Piece(model, "dragon_body", "Neck", root.transform, materials, renderers, new Vector3(16f, 12f, 8f));
+            // The neck follows the head: its chain of bones is bent each frame so its end meets the back of the skull.
+            var neckChain = new List<Transform>();
+            for (int i = 0; i < 32; i++)
+            {
+                var bone = BuildKit.FindDeep(body, $"neck_{i:00}");
+                if (bone == null) break;
+                neckChain.Add(bone);
+            }
+            if (neckChain.Count < 2) Debug.LogError("[Clover.Build] The dragon's neck has no chain of bones neck_00, neck_01, ...; it will not follow the head.");
+            // The back of the skull in the head's own space, and the length of the last bone, both from the model's notes.
+            else body.gameObject.AddComponent<NeckBones>().Configure(neckChain.ToArray(), head, new Vector3(0f, 2.4f, -2.6f), 1.02f);
             var rightClaw = Piece(model, "dragon_claw", "Right Forefoot", root.transform, materials, renderers, new Vector3(2.2f, 1.4f, 4.4f));
             var leftClaw = Copy(rightClaw, "Left Forefoot", root.transform, renderers);
             var shortTail = Piece(model, "dragon_tail", "Tail In The Cloud", root.transform, materials, renderers, new Vector3(2f, 5.5f, 2f));
+            StripCloud(shortTail, materials["cloud"], "dragon_tail_bare");
             var whip = Piece(model, "dragon_tail_whip", "Tail", root.transform, materials, renderers, new Vector3(2.4f, 2f, 26f));
             var firstCoil = Piece(model, "dragon_coil", "Arch 1", root.transform, materials, renderers, new Vector3(12f, 6f, 2.4f));
+            // The arch's own puffs of cloud are left out: seen moving with the body they read as cloud stuck to it. Its feet are kept under the scene's cloud instead.
+            StripCloud(firstCoil, materials["cloud"], "dragon_coil_bare");
             var coils = new Transform[Coils.Length];
             coils[0] = firstCoil;
             for (int i = 1; i < coils.Length; i++) coils[i] = Copy(firstCoil, "Arch " + (i + 1), root.transform, renderers);
+            // The body round the summit: boned lengths that travel through the cloud. When the model has them the rigid arches are built but never shown.
+            var lengths = new List<SpineBones>();
+            if (BuildKit.FindDeep(model.transform, "dragon_length") != null)
+            {
+                var firstLength = Piece(model, "dragon_length", "Length 1", root.transform, materials, renderers, new Vector3(2.5f, 2.5f, 30f));
+                for (int i = 0; i < BodyLengths; i++)
+                {
+                    var length = i == 0 ? firstLength : Copy(firstLength, "Length " + (i + 1), root.transform, renderers);
+                    var chain = new List<Transform>();
+                    for (int bone = 0; bone < 64; bone++)
+                    {
+                        var joint = BuildKit.FindDeep(length, $"length_{bone:00}");
+                        if (joint == null) break;
+                        chain.Add(joint);
+                    }
+                    var bones = length.gameObject.AddComponent<SpineBones>();
+                    bones.Configure(chain.ToArray(), new CapsuleCollider[0]);
+                    lengths.Add(bones);
+                    foreach (var renderer in length.GetComponentsInChildren<Renderer>(true))
+                        renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                }
+            }
+            else Debug.LogWarning("[Clover.Build] The dragon's model has no dragon_length; the rigid arches stand in for the body in the cloud.");
             Object.DestroyImmediate(model);
 
             // The neck, the arches and the far tail are scenery: nothing strikes them, and their shadows would lie across the floor.
@@ -137,6 +176,7 @@ namespace Clover.EditorTools
             for (int i = 0; i < beam.Length; i++) beam[i] = Bolt("Beam " + (i + 1), root.transform, light, 0.5f);
 
             dragon.Configure(target, head, jaw, body, leftClaw, rightClaw, shortTail, whip, headPart, tailPart, leftPart, rightPart, renderers.ToArray());
+            dragon.ConfigureLengths(lengths.ToArray());
             dragon.ConfigureCoils(coils, Coils.Select(coil => coil.angle).ToArray(), Coils.Select(coil => coil.radius).ToArray(),
                 Coils.Select(coil => coil.scale).ToArray(), Coils.Select(coil => coil.turn).ToArray());
             // Far round to the north-west, where the camera sees it over the rim.
@@ -207,6 +247,24 @@ namespace Clover.EditorTools
                 renderers.Add(renderer);
             }
             return holder;
+        }
+
+        // A copy of a piece's mesh with nothing drawn in the cloud's material, kept under a stable name.
+        private static void StripCloud(Transform piece, Material cloud, string name)
+        {
+            foreach (var filter in piece.GetComponentsInChildren<MeshFilter>(true))
+            {
+                var renderer = filter.GetComponent<Renderer>();
+                int slot = renderer != null ? System.Array.IndexOf(renderer.sharedMaterials, cloud) : -1;
+                if (slot < 0 || filter.sharedMesh == null) continue;
+                var bare = Object.Instantiate(filter.sharedMesh);
+                bare.name = name;
+                bare.SetTriangles(new int[0], slot);
+                string path = $"{Folder}/{name}.asset";
+                AssetDatabase.DeleteAsset(path);
+                AssetDatabase.CreateAsset(bare, path);
+                filter.sharedMesh = bare;
+            }
         }
 
         private static Transform Copy(Transform piece, string name, Transform parent, List<Renderer> renderers)
