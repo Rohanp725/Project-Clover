@@ -22,6 +22,9 @@ namespace Clover.World
         /// <summary>A piece is left solid when its top is at least this far, in metres, under the line of sight.</summary>
         public float LowClearance = 0.25f;
         public LayerMask Layers = ~0;
+        /// <summary>While true, the lines to <see cref="AlsoAt"/> and <see cref="AndAt"/> are kept clear as the line to the player is: for a moment the player must see that is not where they stand.</summary>
+        [System.NonSerialized] public bool WatchAlso;
+        [System.NonSerialized] public Vector3 AlsoAt, AndAt;
 
         private readonly RaycastHit[] hits = new RaycastHit[64];
         private readonly Dictionary<Collider, Fadeable> known = new Dictionary<Collider, Fadeable>();
@@ -42,7 +45,31 @@ namespace Clover.World
         {
             inTheWay.Clear();
             Vector3 from = transform.position;
-            Vector3 to = target != null ? target.position + Vector3.up * TargetHeight : from;
+            Look(from, target != null ? target.position + Vector3.up * TargetHeight : from);
+            if (WatchAlso)
+            {
+                Look(from, AlsoAt);
+                Look(from, AndAt);
+            }
+
+            float amount = FadeSeconds > 0f ? Time.unscaledDeltaTime / FadeSeconds : 1f;
+            for (int i = faded.Count - 1; i >= 0; i--)
+            {
+                var piece = faded[i];
+                if (piece == null)
+                {
+                    faded.RemoveAt(i);
+                    continue;
+                }
+                bool blocking = inTheWay.Contains(piece);
+                bool arrived = piece.Step(blocking ? FadedTo : 1f, amount);
+                if (!blocking && arrived) faded.RemoveAt(i);
+            }
+        }
+
+        // Notes every piece that stands on the line from the camera to this point.
+        private void Look(Vector3 from, Vector3 to)
+        {
             Vector3 line = to - from;
             float length = line.magnitude;
             if (length > 0.5f)
@@ -72,20 +99,6 @@ namespace Clover.World
                     inTheWay.Add(piece);
                     if (!faded.Contains(piece)) faded.Add(piece);
                 }
-            }
-
-            float amount = FadeSeconds > 0f ? Time.unscaledDeltaTime / FadeSeconds : 1f;
-            for (int i = faded.Count - 1; i >= 0; i--)
-            {
-                var piece = faded[i];
-                if (piece == null)
-                {
-                    faded.RemoveAt(i);
-                    continue;
-                }
-                bool blocking = inTheWay.Contains(piece);
-                bool arrived = piece.Step(blocking ? FadedTo : 1f, amount);
-                if (!blocking && arrived) faded.RemoveAt(i);
             }
         }
     }

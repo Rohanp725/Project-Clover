@@ -167,8 +167,21 @@ public class SunCourtProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(1f);
         yield return Shot("court_2");
 
+        if (only == "Show")
+        {
+            // The entrance and the death alone, seen from the north-east and from across the obelisk.
+            form.OnlyWhenAsked = true;
+            yield return FellMan(new Vector3(12f, 0f, 10f), 8);
+            yield return PerfectGuard(new Vector3(0f, 0f, -9f));
+            yield return Idle();
+            yield return Death(new Vector3(-10f, 0f, -10f), 8);
+            Say("done");
+            Debug.Log("[Probe] done");
+            Destroy(gameObject);
+            yield break;
+        }
         if (only != "Form") yield return Man();
-        yield return FellMan();
+        yield return FellMan(new Vector3(0f, 0f, -6f), 1);
         if (only != "Man") yield return Form();
         Say("done");
         Debug.Log("[Probe] done");
@@ -277,11 +290,68 @@ public class SunCourtProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(2.5f);
     }
 
-    private IEnumerator FellMan()
+    // A perfect guard against the rolling sun: the guard goes up as it arrives, facing it, and the sun is knocked away.
+    private IEnumerator PerfectGuard(Vector3 stand)
+    {
+        yield return Idle();
+        // Round the court from it, not across the obelisk: a lane ends at the stone.
+        stand = RoundFrom(75f, 12.5f);
+        form.Queued = SunBearerAttack.Roll;
+        Go(stand, form.BodyAt - stand);
+        yield return Until(() => form.Doing == "Roll", 12f);
+        yield return Until(() => form.Locked || form.Doing != "Roll", 6f);
+        string began = form.Doing + (form.Locked ? " locked" : " not locked");
+        Go(stand, form.SunAt - stand);
+        int knocksBefore = form.SunKnocks, perfectBefore = defence.PerfectGuards, takenBefore = defence.BlowsTaken, staggersBefore = form.TimesStaggered;
+        float guardUntil = Time.time + 8f, pressedAt = -1f, nearest = 999f;
+        while (Time.time < guardUntil && form.Doing == "Roll" && form.SunKnocks == knocksBefore && defence.BlowsTaken == takenBefore)
+        {
+            float off = Flat(form.SunAt - player.transform.position).magnitude;
+            if (off < nearest) nearest = off;
+            if (pressedAt < 0f && off < 3.1f)
+            {
+                Keys(Key.L);
+                pressedAt = off;
+            }
+            yield return null;
+        }
+        yield return new WaitForSeconds(0.4f);
+        Keys();
+        bool turned = defence.PerfectGuards > perfectBefore && form.SunKnocks > knocksBefore && form.SunLoose && defence.BlowsTaken == takenBefore;
+        Say($"6 a perfect guard on the rolling sun ({began}; nearest {nearest:0.0} m; guard raised with it {pressedAt:0.0} m off): perfect +{defence.PerfectGuards - perfectBefore} knocks +{form.SunKnocks - knocksBefore} loose {form.SunLoose} "
+            + $"exposed {form.Exposed} broken +{form.TimesStaggered - staggersBefore} blows taken +{defence.BlowsTaken - takenBefore} doing {form.Doing} says '{defence.LastCallout}' {(turned ? "OK" : "WRONG")}");
+        yield return Shot("perfect_guard_1");
+        yield return Until(() => !form.Exposed && !form.IsStaggered, 20f);
+    }
+
+    private static readonly float[] EntranceShots = { 0.6f, 1.5f, 2.1f, 2.6f, 3.0f, 3.6f, 4.3f };
+    private static readonly float[] DeathShots = { 0.7f, 1.5f, 1.9f, 2.8f, 3.6f, 4.3f, 5.4f };
+
+    // Kills the form where it stands with the player at this place, and pictures its death.
+    private IEnumerator Death(Vector3 stand, int first)
+    {
+        Go(stand, form.BodyAt - stand);
+        for (int attempt = 0; attempt < 12 && !form.IsDead; attempt++)
+        {
+            form.Unbalance(999f);
+            yield return new WaitForSeconds(0.6f);
+            for (int blow = 0; blow < 40 && !form.IsDead; blow++) form.HeadPart.TakeHit(new Hit(60f, 0f, Vector3.forward));
+            yield return new WaitForSeconds(0.3f);
+        }
+        for (int i = 0; i < DeathShots.Length; i++)
+        {
+            float at = DeathShots[i];
+            yield return Until(() => form.DoingFor >= at || court.Felled, 8f);
+            yield return Shot("death_" + (first + i));
+        }
+        Say($"   death seen from {stand:0.0}: the form fell at {form.BodyAt:0.0}, free to move {!player.Suspended}");
+    }
+
+    private IEnumerator FellMan(Vector3 stand, int first)
     {
         boss.Restore();
         boss.transform.SetPositionAndRotation(new Vector3(0f, 0.05f, 8f), Quaternion.LookRotation(Vector3.back));
-        Go(new Vector3(0f, 0f, -6f), Vector3.forward);
+        Go(stand, Vector3.forward);
         boss.TakeHit(new Hit(0.01f, 0f, Vector3.forward));
         yield return new WaitForSeconds(0.8f);
         yield return Shot("man_1");
@@ -290,12 +360,17 @@ public class SunCourtProbeRunner : MonoBehaviour
         Say($"4 the man falls: dead {boss.IsDead} second form called {court.SecondFormCalled}");
         yield return Until(() => form.HasRisen, 6f);
         Say($"4 the sun comes down after {Time.time - fellAt:0.0} s: says '{defence.LastCallout}'");
-        for (int i = 1; i <= 5; i++)
+        bool held = player.Suspended, barEarly = form.InFight;
+        for (int i = 0; i < EntranceShots.Length; i++)
         {
-            yield return new WaitForSeconds(0.8f);
-            yield return Shot("entrance_" + i);
+            float at = EntranceShots[i];
+            yield return Until(() => form.Doing != "Entering" || form.DoingFor >= at, 8f);
+            if (i == 5) Say($"4 after the roar: bar shown {form.InFight} says '{defence.LastCallout}'");
+            yield return Shot("entrance_" + (first + i));
         }
-        yield return Until(() => form.InFight, 6f);
+        yield return Until(() => form.Doing != "Entering", 6f);
+        yield return null;
+        Say($"4 the entrance from {stand:0.0}: player held {held}, bar before the roar {barEarly}, free after {!player.Suspended} {(held && !barEarly && !player.Suspended ? "OK" : "WRONG")}");
         Say($"4 the form: in fight after {Time.time - fellAt:0.0} s, says '{defence.LastCallout}', health {form.Health.Current:0} shadow rate {court.Hand.DegreesPerSecond:0.0}");
     }
 
@@ -503,6 +578,8 @@ public class SunCourtProbeRunner : MonoBehaviour
         Say($"6 the scarab knocked off the sun mid-roll: loose {form.SunLoose} exposed {form.Exposed}");
         yield return Until(() => !form.Exposed, 14f);
 
+        yield return PerfectGuard(south);
+
         // Balance broken and the finisher.
         yield return Idle();
         Go(Flat(form.BodyAt) + Flat(south - form.BodyAt).normalized * 5f, form.BodyAt - south);
@@ -557,24 +634,12 @@ public class SunCourtProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         yield return Hear("the king, the second time", 0.2f);
         Say($"9 across the line again: begun {court.Begun}");
-        yield return FellMan();
+        yield return FellMan(new Vector3(0f, 0f, -6f), 1);
         yield return Idle();
-        Go(Flat(form.BodyAt) + Flat(south - form.BodyAt).normalized * 5f, form.BodyAt - south);
         int gods = RunState.GodsFelled, embers = RunState.Points;
         var upgrades = player.GetComponent<PlayerUpgrades>();
-        for (int attempt = 0; attempt < 12 && !form.IsDead; attempt++)
-        {
-            form.Unbalance(999f);
-            yield return new WaitForSeconds(0.6f);
-            for (int blow = 0; blow < 40 && !form.IsDead; blow++) form.HeadPart.TakeHit(new Hit(60f, 0f, Vector3.forward));
-            yield return new WaitForSeconds(0.3f);
-        }
         float diedAt = Time.time;
-        for (int i = 1; i <= 4; i++)
-        {
-            yield return new WaitForSeconds(1.1f);
-            yield return Shot("death_" + i);
-        }
+        yield return Death(Flat(form.BodyAt) + Flat(south - form.BodyAt).normalized * 5f, 1);
         yield return Until(() => court.Felled, 8f);
         Say($"10 death: {Time.time - diedAt:0.0} s from the last blow; dead {form.IsDead} felled {court.Felled} gods felled +{RunState.GodsFelled - gods} bar shown {form.InFight} says '{defence.LastCallout}'");
         yield return Hear("the king dying", 0.6f);

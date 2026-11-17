@@ -32,7 +32,8 @@ namespace Clover.World
 
         /// <summary>The gold line: the fight begins when the player is north of it.</summary>
         public float LineZ = -20f;
-        public float RisingDelay = 2.4f;
+        /// <summary>Short, so the sun is already coming for him while his body burns away.</summary>
+        public float RisingDelay = 0.9f;
         public float RewardDelay = 1.2f;
         public int Embers = 5;
         public string ManName = "Khepharu,  God of Fire";
@@ -248,6 +249,13 @@ namespace Clover.World
                 if (duel) view.SetFraming(DuelDistance, Vector3.zero, DuelPitch);
                 else if (framed) view.ClearFraming();
                 framed = duel;
+                // Between his fall and the form's rising the camera is already going to where he lies.
+                if (untilRising >= 0f && player != null && form is SunBearer coming)
+                {
+                    Vector3 toHim = coming.RiseFrom - player.transform.position;
+                    toHim.y = 0f;
+                    view.SetFraming(coming.ShowDistance, toHim, coming.ViewPitch);
+                }
             }
             if (untilRising >= 0f)
             {

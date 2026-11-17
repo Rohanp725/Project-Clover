@@ -1433,13 +1433,20 @@ three sets of lines and the sponsor's four on the barque, word for word. Five em
    same reason. The obelisk thins out when it stands between the camera and the player.
 10. *The shade is drawn over the floor's mark during the Zenith* (lifted to 10 cm), with a pale outline, so the one
     safe strip is the darkest thing in the court; at other times attack marks are drawn over it.
-11. *The entrance* is: a line of light where the man fell, the sun down it (1.4 to 2.2 s), the scarab grown up out
-    of the floor behind it (to 3.0 s), reared with the cases lifted, the roar and a pale ring at 3.4 s. The king's
-    body is not drawn into the sun, the sky's sun does not dim, and the spear does not burn away.
-12. *The death* is: it crawls toward the sun, shudders, shrinks and sheds ash; the sun rolls to the foot of the
-    obelisk in the shadow and shrinks. The man is **not** seen kneeling, the gold does not run, the wings do not
-    burn back, and the sky's sun does not move. His dying words are read in the box. The coal appears 4.6 m out
-    along the shadow.
+11. *The entrance* (reworked by the fourth worker, 4.6 s) begins 0.9 s after the man falls, while his body is still
+    burning away (`SunCourtDirector.RisingDelay`). To 1.3 s an orange ring closes on the floor where he lies and a
+    thread of light thickens out of him, with embers; 1.3 to 2.3 s the sun comes down the thread and hangs 6 m over
+    him, landing with a flash, a ring and fire; 2.3 to 3.2 s the scarab grows out of the floor beside it with its
+    cases thrown wide, and the sun sinks into its forelegs as they close; at 3.5 s it rears, roars, and only then are
+    its name and its bar shown (`SunBearer.InFight` is true from the roar). The player is held still
+    (`PlayerController.Suspended`) and cannot be struck from the rising to the end. The king's body is not drawn
+    into the sun, the sky's sun does not dim, and the spear does not burn away.
+12. *The death* (reworked by the fourth worker, 6 s): to 1.6 s it drags itself at the sun, shuddering, while the sun
+    gutters faster and faster between burning and dull; at 1.6 s the sun goes out with a burst and a ring, the gold
+    goes dark and the body is still; the dark sun rolls into the obelisk's shadow and shrinks to the size of a coal;
+    3.0 to 4.6 s the cases fall open and the body sinks flat into ash and is gone; the last 1.4 s nothing happens,
+    and then "A god falls" and his dying words in the box. The man is **not** seen kneeling, the gold does not
+    run, the wings do not burn back, and the sky's sun does not move. The coal appears 4.6 m out along the shadow.
 13. *After Fire.* No Sun-Spear: the player keeps what is in the hand. No barque: the sponsor's four lines are read
     in the court, then a gold mark by the gold line opens with the prompt "Cast off" and leads to the hub, ending
     the run exactly as the summit's way down does (`SceneDoor.EndsRun`). Fire is unlocked in saved progress as
@@ -1451,9 +1458,11 @@ three sets of lines and the sponsor's four on the barque, word for word. Five em
     the ground-mark shapes in orange and with flames.
 16. *The hours are counted in gold pips* inside the hour ring, one for the first hour to twelve at the north, so the
     floor reads as a clock face with the shadow for its hand. This is Claude's addition.
-17. *While the form enters, the camera leans toward where the sun comes down* (up to 9 m), because the entrance
-    happens where the man fell and that may be across the court. If the obelisk stands exactly between, it still
-    hides it: the obelisk thins out only for the player.
+17. *While the form enters and while it dies, the camera leaves the player and looks at it*, at 1.5 times the usual
+    distance (`SunBearer.ShowDistance`; the fight is at 2), starting from the moment the man falls. The obelisk thins
+    out for whatever is being shown as it does for the player: `OcclusionFader.WatchAlso` with two more points
+    (the form and the sun). So both are seen from any side; the price is that the player can be at the edge of the
+    picture or out of it for those seconds (held and safe in the entrance, free in the death).
 
 **Measured** (`SunCourtProbe`, editor, 1920 by 1080, no vsync). Over the Zenith with a pass's lane and a stoop's
 crater still hot: frame 3.0 ms mean, 9.5 ms worst, main thread 2.9 ms, 8,231 bytes of garbage a frame. The same
@@ -1461,7 +1470,12 @@ scene standing in the forecourt with nothing risen (`PerfProbe`): 2.1 ms and 7,9
 about 0.9 ms and about 300 bytes a frame, some of which is the probe's own. The 7.9 KB is there before the fight
 begins and was not looked into.
 
-**Stand-in, and what looks weak.** The standing spear and the coal are primitives. The court's floor is plain discs
+**Stand-in, and what looks weak.** The standing spear is still three primitives. The coal is now a molten heart in a crust of
+five dark shards with three crumbs on its ash, built in `SunCourtBuilder.Coal`: better than a ball, still blocks. In the entrance the scarab is still one body scaled up from nothing, the king's body takes no part beyond
+burning away under the light, and the camera's move to it is an ease, not a cut. In the death the body is squashed
+flat as a whole, not broken into its pieces, and a falcon that dies in the air drops to the floor first. A perfect
+guard knocking the sun away is now tried by the probe against the Roll only, not the Stoop or the Pass; a Roll's
+lane ends at the obelisk, so it cannot be tried from straight across the court. The court's floor is plain discs
 with thin joints and gold pips and still reads bare beside the summit's. The wall is square blocks, the colossus is the kit's statue
 scaled 1.35 and is rarely in frame. The form's motion is pieces turned by code: the scarab's legs are rigid pieces swung at the hip in two threes, the
 falcon's wings beat about two joints, and there is no lean or weight in the walk. The scarab on its back is the

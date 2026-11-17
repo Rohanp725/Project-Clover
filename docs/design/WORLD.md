@@ -55,6 +55,11 @@ brought together once the user has confirmed the open points.
     carries it up, one creature in two shapes, as the sun was a beetle at dawn and a falcon at noon. The sun is the
     shared piece of the fight. When the whole court burns, the obelisk's moving shadow is the only safe ground.
   - The player has no choice here but to take Fire. Then the barque.
+- **Built as a first pass (2026-11-17, unattended; not yet played or accepted by the user)**: the scenes `FireYard`
+  (a yard to look at the four enemies), `SunCity` (the three districts, the side paths, the Champion of the Gate)
+  and `SunCourt` (the god, here named Khepharu, a nod to the scarab of the morning sun; the name awaits the user's
+  yes). None is in the playtest build. What was built, and where it departs from the specification, is in the three
+  "As built" sections of `docs/design/fire_land.md`.
 
 ## How a climb is structured
 

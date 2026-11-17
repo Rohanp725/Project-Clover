@@ -267,7 +267,18 @@ namespace Clover.EditorTools
             var root = new GameObject("The Coal");
             root.transform.position = at;
             var ember = SunCityKit.For("m_sunform_molten");
-            BuildKit.Shape(PrimitiveType.Sphere, "Coal", root.transform, new Vector3(0f, 0.25f, 0f), new Vector3(0.42f, 0.34f, 0.38f), ember).shadowCastingMode = ShadowCastingMode.Off;
+            // A molten heart in a cracked black crust: five dark shards set round it with the glow showing between them,
+            // and a few crumbs of it fallen on the ash.
+            var crust = SunCityKit.For("m_sunform_dark");
+            BuildKit.Shape(PrimitiveType.Sphere, "Coal Heart", root.transform, new Vector3(0f, 0.26f, 0f), new Vector3(0.36f, 0.32f, 0.34f), ember).shadowCastingMode = ShadowCastingMode.Off;
+            var shardAt = new[] { new Vector3(-0.13f, 0.22f, 0.02f), new Vector3(0.14f, 0.2f, -0.04f), new Vector3(0.01f, 0.37f, 0.03f), new Vector3(0f, 0.2f, 0.16f), new Vector3(0.02f, 0.18f, -0.17f) };
+            var shardSize = new[] { new Vector3(0.2f, 0.3f, 0.3f), new Vector3(0.2f, 0.26f, 0.28f), new Vector3(0.26f, 0.12f, 0.24f), new Vector3(0.24f, 0.24f, 0.12f), new Vector3(0.22f, 0.22f, 0.1f) };
+            var shardTurn = new[] { new Vector3(12f, 20f, 18f), new Vector3(-8f, -25f, -20f), new Vector3(10f, 40f, 6f), new Vector3(-14f, 8f, 10f), new Vector3(16f, -12f, -8f) };
+            for (int i = 0; i < shardAt.Length; i++)
+                BuildKit.Shape(PrimitiveType.Cube, "Coal Crust " + i, root.transform, shardAt[i], shardSize[i], crust, shardTurn[i]).shadowCastingMode = ShadowCastingMode.Off;
+            var crumbAt = new[] { new Vector3(0.38f, 0.07f, 0.16f), new Vector3(-0.33f, 0.07f, -0.24f), new Vector3(0.1f, 0.07f, -0.42f) };
+            for (int i = 0; i < crumbAt.Length; i++)
+                BuildKit.Shape(PrimitiveType.Sphere, "Coal Crumb " + i, root.transform, crumbAt[i], Vector3.one * (0.09f - 0.015f * i), ember).shadowCastingMode = ShadowCastingMode.Off;
             BuildKit.Shape(PrimitiveType.Sphere, "Ash", root.transform, new Vector3(0f, 0.04f, 0f), new Vector3(1.3f, 0.08f, 1.2f), SunCityKit.For("m_sunform_dark")).shadowCastingMode = ShadowCastingMode.Off;
             var lightObject = new GameObject("Coal Light");
             lightObject.transform.SetParent(root.transform, false);
