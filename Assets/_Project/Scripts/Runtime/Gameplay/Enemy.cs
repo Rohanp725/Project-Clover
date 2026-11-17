@@ -686,7 +686,8 @@ namespace Clover.Gameplay
             if (attack != null && attack != before && Brain.State == EnemyState.Telegraph)
             {
                 // A thrown attack lands where the target stood when it was begun, so moving gets clear of it.
-                strikePoint = target.position;
+                // In the sun-court a shaft of sun cannot be aimed at someone the obelisk's shadow hides: it is laid at the shadow's edge.
+                strikePoint = attack.Ranged ? Clover.World.Sunlight.OutOfHand(target.position, attack.Radius + 0.5f) : target.position;
                 // A leap comes down just short of that spot, on the attacker's side of it.
                 leapTo = distance > LeapShort ? strikePoint - toTarget / distance * LeapShort : transform.position;
                 barsCalled = true;

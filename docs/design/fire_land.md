@@ -1369,3 +1369,116 @@ carvings C1 to C10, the five paintings and two captions, the scare, the waterski
     (`AnimatorCullingMode.CullCompletely`) until the player comes near. Nothing else about it changes.
 13. *Not built:* lamp niches that light near a wick are fixed (two are always lit); no heat haze; no smoke on the
     wicks; no shot stations or goldens for the city; `SunCourt.unity` does not exist.
+
+### As built: the court (2026-11-17, third worker)
+
+Built by Claude in one unattended stretch of about two and a half hours. Nothing here has been played by the owner.
+Seen in `SunCourtProbe` and its frames (`review/shots/current/suncourt_*.png`), the aspect sheets
+(`review/shots/current/sheets/aspect_court_pass.png`, `aspect_court_blaze.png`) and the king's contact sheets
+(`review/anim/sunking_*`). Sections 3.6, 6.2 to 6.5 and the lines of 7.4 and 7.5.
+
+**Where things are.**
+
+| What | Where |
+|---|---|
+| The scene and its builder | `Scenes/SunCourt.unity`, `Editor/Builders/SunCourtBuilder.cs`, menu `Clover/Build/Sun Court`; saved with `SceneBuild.FinishOutsideBuild`, so it is not in the build list |
+| The gate of noon leading here in the editor | `GateOfNoon.LoadOutsideBuild`, a loader the editor sets as play begins (`Editor/Builders/EditorSceneLoads.cs`, `EditorSceneManager.LoadSceneInPlayMode`). A built game never has it: the door stays a status line there until `SunCourt` is put in the build list |
+| The obelisk's shadow | `Gameplay/ShadowHand.cs` (plain, tested); the court's director owns one and gives it to `Sunlight.Hand`, so `Sunlight.IsLit`, `InHand` and `OutOfHand` answer for it and the sun-blind's rule and the god's are one rule |
+| The court's director | `World/SunCourtDirector.cs`: turns the shadow, the drawn shade and the key light; the gold line, the king's words and the wall of heat; the thrown spear standing in the floor and the ray; the man's fall and the form's rising; the form's fall, the coal, the sponsor's words and the way out; a fall mid-fight |
+| The man | `EnemyKind.SunKing()` / `EnemyKind.SunKingName` in `EnemyKind.Fire.cs`; model `boss_sunking.fbx` at 1.25; clips `sunking_*` drawn in `Editor/Forge/SunKingAnimations.cs` and baked with `EnemyAnimations.Bake("sunking")` |
+| The form | `Gameplay/SunBearer.cs` (a `GodlyForm`), `SunBearerAttack.cs`, `SunBearerChooser.cs` (plain, tested); built by `Editor/Builders/SunBearerBuilder.cs` from `boss_sunform.fbx` with the offsets of the modeller's notes |
+| Taking Fire | `GodReward.Configure(SunCourtDirector)`: takes only; someone holding no element loses no tree; the weapon in the hand is kept; "Fire is yours." |
+| Tests | `Tests/EditMode/Gameplay/SunCourtTests.cs` (12) |
+
+**Built to this document.** The court's size, the obelisk at its centre, twelve hours on a gold ring at radius 17, the
+seated colossus at the north, the forecourt with rest fire F6 outside the fight, the gold line at z -20 and the wall
+of heat. The shadow's shape, its test, its three rates (4, 6, 9 degrees a second), the light turned along it, its
+three effects, and the fury's stop and turn-back. Every number in the man's table but the rows listed below. The
+form's health, balance, finisher, fury, the sun's two ways of being knocked away, the exposed state (4 s, then it
+walks to the sun at 3 m a second, 9 s at most, 7 in fury), the loose sun pushed 3 m by a heavy blow and 1.5 m by a
+light one, hot floor (6 every 0.5 s, 0.3 s after stepping on, cold under the shadow, no new lane while three are
+hot), and all ten rows of the two attack tables with their timings and damage. The opening order, the shares, the
+ram for someone who stands within 9 m for 1.2 s, the Zenith's 25 s, the 2.4 s lull. The five callouts. The king's
+three sets of lines and the sponsor's four on the barque, word for word. Five embers when the form dies.
+
+**Where it departs, and why.**
+
+1. *Sizes of the form's marks are read as widths.* "A pale circle of 3.4 m", "a red circle of 5 m", "circles of 2.2 m"
+   and "1.8 m" are drawn 3.4, 5, 2.2 and 1.8 m **across** (the sun is 3 m across and the falcon's shadow 5), where the
+   man's table means radius. The Rising's flare in the fury is a radius of 6 m, as its answer says.
+2. *The thrown spear and the ray are the same line.* `sunking_throw` is a red lane 14 m long; the spear then stands in
+   the floor at its end (a stand-in spear of three primitives; his own is hidden by shrinking the `weapon.R` bone) and
+   he stands empty-handed with one hand raised for 1.8 s; `sunking_ray` is a red lane 2.2 m wide **from him along the
+   way he threw**, not to wherever he has stepped: he takes no steps aside. An enemy already has no guard while it
+   makes an attack, so he has none; blows do **not** throw half as much stagger again.
+3. *The planted spear is a filled red circle of 5 m round him* whose ground burns for 8 s (the warden's rule, larger),
+   not a ring 7 m out. The burning ray below half is not built.
+4. *The man's second half* adds `sunking_drive` and `sunking_drive_sweep` (the long thrust from standing with the sweep
+   after it, no rest between) beside the plain three thrusts; it is not a coin toss on the third thrust.
+5. *A shaft of noon aimed at someone in the shadow* is laid its own radius and half a metre clear of the shadow's
+   nearer edge, so none of it falls in the shadow.
+6. *The Furrows' later lanes* are aimed where the player has gone (5 m to their side of the last lane if they have
+   stayed near it), from where the scarab ended; they are not parallel and evenly spaced. The scarab swings the sun
+   round itself as it turns.
+7. *The Pass's lane is laid across the line from the obelisk to the player*, at least 5.5 m from the centre, so
+   neither the sun nor a wing passes through the stone; someone hugging the obelisk is beside it, not in it. The
+   falcon banks away from the obelisk. The Stoop's circle is kept 4.6 m from the centre for the same reason, and the
+   scarab walks round the obelisk, never nearer than 4.2 m.
+8. *The falcon rides the north of the court only* (115 degrees either side of north, 12 m up, 15 m out), so it does
+   not hang between the camera and a player in the south. When its body or the sun does cover the player (a stoop,
+   a pass) the dragon's finder ring is drawn through it.
+9. *The camera.* The spec's "1.7 times further off and 15 degrees lower" put the obelisk across the middle of the
+   picture and the player under the boss bar. As built: twice as far and **8 degrees steeper**, leaning up to 4.5 m
+   toward the middle of the court. The duel with the man is framed 1.3 times as far and 8 degrees steeper for the
+   same reason. The obelisk thins out when it stands between the camera and the player.
+10. *The shade is drawn over the floor's mark during the Zenith* (lifted to 10 cm), with a pale outline, so the one
+    safe strip is the darkest thing in the court; at other times attack marks are drawn over it.
+11. *The entrance* is: a line of light where the man fell, the sun down it (1.4 to 2.2 s), the scarab grown up out
+    of the floor behind it (to 3.0 s), reared with the cases lifted, the roar and a pale ring at 3.4 s. The king's
+    body is not drawn into the sun, the sky's sun does not dim, and the spear does not burn away.
+12. *The death* is: it crawls toward the sun, shudders, shrinks and sheds ash; the sun rolls to the foot of the
+    obelisk in the shadow and shrinks. The man is **not** seen kneeling, the gold does not run, the wings do not
+    burn back, and the sky's sun does not move. His dying words are read in the box. The coal appears 4.6 m out
+    along the shadow.
+13. *After Fire.* No Sun-Spear: the player keeps what is in the hand. No barque: the sponsor's four lines are read
+    in the court, then a gold mark by the gold line opens with the prompt "Cast off" and leads to the hub, ending
+    the run exactly as the summit's way down does (`SceneDoor.EndsRun`). Fire is unlocked in saved progress as
+    Lightning is by its god.
+14. *A fall in the court* loses carried embers as in the city (`LandReturn`), wakes the player at F6, puts the form
+    away (`GodlyForm.Retire`), restores the man whole at (0, 0, 8), points the shadow north at 4 degrees a second and
+    opens the wall; the king does not speak a second time.
+15. *Hot floor is the form's own*, not a `Hazards` patch (those bite enemies only): up to six patches, drawn with
+    the ground-mark shapes in orange and with flames.
+16. *The hours are counted in gold pips* inside the hour ring, one for the first hour to twelve at the north, so the
+    floor reads as a clock face with the shadow for its hand. This is Claude's addition.
+17. *While the form enters, the camera leans toward where the sun comes down* (up to 9 m), because the entrance
+    happens where the man fell and that may be across the court. If the obelisk stands exactly between, it still
+    hides it: the obelisk thins out only for the player.
+
+**Measured** (`SunCourtProbe`, editor, 1920 by 1080, no vsync). Over the Zenith with a pass's lane and a stoop's
+crater still hot: frame 3.0 ms mean, 9.5 ms worst, main thread 2.9 ms, 8,231 bytes of garbage a frame. The same
+scene standing in the forecourt with nothing risen (`PerfProbe`): 2.1 ms and 7,914 bytes a frame, so the fight adds
+about 0.9 ms and about 300 bytes a frame, some of which is the probe's own. The 7.9 KB is there before the fight
+begins and was not looked into.
+
+**Stand-in, and what looks weak.** The standing spear and the coal are primitives. The court's floor is plain discs
+with thin joints and gold pips and still reads bare beside the summit's. The wall is square blocks, the colossus is the kit's statue
+scaled 1.35 and is rarely in frame. The form's motion is pieces turned by code: the scarab's legs are rigid pieces swung at the hip in two threes, the
+falcon's wings beat about two joints, and there is no lean or weight in the walk. The scarab on its back is the
+whole body rolled over. No sound anywhere in the fight.
+
+**Changed in the city the same morning** (rebuilt, `SunCityProbe` run again):
+
+- *The Gate of Noon leads on* in the editor's play mode (item 13 of the city's list said `SunCourt.unity` did not
+  exist). `SunCityProbe` ends in the court.
+- *The champion has four tones* where he had one: `SunCityKit.CastTones` copies his mesh to
+  `Generated/SunCity/elite_gilded_cast.asset` with the gold slot split by the bone each part hangs from: mask and neck
+  a paler gold, kilt (hips and thighs), hands and feet a deep red gold, the spear's shaft dark bronze, its head and the
+  rest the gold they were. His throw is still the stand-in of point 7: no standing spear, no recall.
+- *The riverbed's pans, the ground patches, the dry stains, the sand drifts and the trodden middles of the streets* are uneven patches
+  whose colour thins to nothing at the edge (`SunCityBuilder.Soft`, five shapes from `PanMesh`), drawn with the glow
+  shader, not discs with an outline. They are not lit: in the hall's shade they are a little brighter than the floor.
+  A drift is two such patches, one inside the other; it is no longer a mound.
+- *The Gate of Noon's doors* are a bronze with its own warm light (`m_sun_bronze`), so they are bronze in shade and
+  not near black.
+- *Not done:* the statue heads of the golden way are still above the top of the picture.

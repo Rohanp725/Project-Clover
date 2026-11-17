@@ -27,10 +27,83 @@ namespace Clover.Gameplay
                 yield return Gilded(3);
                 yield return SunBlind();
                 yield return Champion();
+                yield return SunKing();
             }
         }
 
         public const string ChampionName = "Champion of the Gate";
+
+        public const string SunKingName = "Khepharu";
+
+        /// <summary>
+        /// Khepharu, the sun-king as a man (fire_land.md, section 6.2): a tall thin old man with the sun-spear, who
+        /// fights at the far end of it. Three thrusts down a lane, a long reach for someone hanging back, the haft
+        /// swept low for someone inside the lane, the butt as his answer, the spear thrown down a red lane and called
+        /// back along the same line as a ray, the spear planted so the ground round him burns (which opens his second
+        /// half), and three shafts of noon brought down one after another, which cannot be aimed into the shadow of the obelisk.
+        /// </summary>
+        public static EnemyKind SunKing() => new EnemyKind
+        {
+            Name = SunKingName,
+            Title = "God of Fire",
+            Prefix = "sunking",
+            Model = "boss_sunking",
+            Scale = 1.25f,
+            IsBoss = true,
+            Embers = 0,
+            DrawsStorm = false,
+            Ashen = true,
+            Health = 480f,
+            StaggerMaximum = 170f,
+            StaggeredSeconds = 2.8f,
+            WalkSpeed = 3.2f,
+            TurnDegreesPerSecond = 400f,
+            PerfectGuardStagger = 42f,
+            Guards = true,
+            GuardedDamage = 0.2f,
+            BlocksBeforeCounter = 2,
+            PoiseHits = 4,
+            FinisherHealthShare = 0.2f,
+            SecondPhaseAt = 0.5f,
+            SecondPhaseAttack = "sunking_plant",
+            SecondPhasePace = 1.15f,
+            Brain = new EnemyBrain
+            {
+                AggroRange = 16f,
+                LeashRange = 80f,
+                PreferredRange = 4.2f,
+                RestMin = 0.5f,
+                RestMax = 1.1f,
+                FlinchSeconds = 0.25f,
+                CounterAttack = "sunking_butt",
+                Attacks = new List<EnemyAttack>
+                {
+                    // Three long thrusts. Each can be guarded; the third waits and turns to follow, and leaves him open.
+                    new EnemyAttack { Name = "sunking_thrust_1", Telegraph = 0.5f, Strike = 0.12f, Recovery = 0.1f, Damage = 15f, Reach = 5.5f, LineWidth = 1.1f, Lunge = 1f, MinRange = 2f, MaxRange = 5.2f, ChainInto = "sunking_thrust_2", Fiery = true },
+                    new EnemyAttack { Name = "sunking_thrust_2", Telegraph = 0.34f, Strike = 0.12f, Recovery = 0.1f, Damage = 15f, Reach = 5.5f, LineWidth = 1.1f, Lunge = 1f, MinRange = 1f, MaxRange = 0f, ChainInto = "sunking_thrust_3", Fiery = true },
+                    new EnemyAttack { Name = "sunking_thrust_3", Telegraph = 0.55f, Strike = 0.12f, Recovery = 0.8f, Damage = 22f, Reach = 5.5f, LineWidth = 1.1f, Lunge = 1.6f, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.8f, Fiery = true },
+                    // For a player hanging back just past the thrusts: one long lane and a long step behind it.
+                    new EnemyAttack { Name = "sunking_reach", Telegraph = 0.55f, Strike = 0.12f, Recovery = 0.6f, Damage = 20f, Reach = 7f, LineWidth = 1f, Lunge = 1.8f, MinRange = 3.5f, MaxRange = 7f, Cooldown = 3f, Fiery = true },
+                    // The haft swept low: what he does to someone who has got inside the lane.
+                    new EnemyAttack { Name = "sunking_sweep", Telegraph = 0.7f, Strike = 0.18f, Recovery = 0.7f, Damage = 20f, Reach = 3.6f, ArcDegrees = 180f, Sweep = -1f, MinRange = 0f, MaxRange = 3f, Cooldown = 3f, Fiery = true },
+                    // Quick and light: it ends a chain on his guard.
+                    new EnemyAttack { Name = "sunking_butt", Telegraph = 0.3f, Strike = 0.1f, Recovery = 0.45f, Damage = 10f, Reach = 2.2f, ArcDegrees = 70f, Lunge = 0.3f, MinRange = 0f, MaxRange = 2.4f, Cooldown = 2.5f },
+                    // The spear thrown down a long red lane; it stands where the lane ends. Then he is bare-handed, and
+                    // calls it back down the same line as a ray of light, wider than the throw was.
+                    new EnemyAttack { Name = "sunking_throw", Telegraph = 0.9f, Strike = 0.12f, Recovery = 0.05f, Damage = 26f, Reach = 14f, LineWidth = 1.2f, Unblockable = true, MinRange = 6f, MaxRange = 16f, Cooldown = 8f, AimLockAt = 0.7f, ChainInto = "sunking_ray", Fiery = true },
+                    new EnemyAttack { Name = "sunking_ray", Telegraph = 1.8f, Strike = 0.15f, Recovery = 0.6f, Damage = 30f, Reach = 14f, LineWidth = 2.2f, Unblockable = true, MinRange = 1f, MaxRange = 0f, AimLockAt = 0.01f, Fiery = true },
+                    // The planted spear: fire comes up round him and the ground goes on burning. It opens his second half.
+                    new EnemyAttack { Name = "sunking_plant", Telegraph = 1.1f, Strike = 0.2f, Recovery = 0.9f, Damage = 22f, Radius = 5f, Unblockable = true, MinRange = 0f, MaxRange = 4f, Cooldown = 18f, BurnSeconds = 8f, BurnDamage = 10f, BurnEvery = 0.5f, Fiery = true },
+                    // Three shafts of noon, one after another, on where the player stands: keep walking, or stand in the shadow.
+                    new EnemyAttack { Name = "sunking_noon_1", Telegraph = 0.85f, Strike = 0.1f, Recovery = 0.05f, Damage = 18f, Radius = 2.1f, Ranged = true, Unblockable = true, MinRange = 6f, MaxRange = 20f, Cooldown = 9f, ChainInto = "sunking_noon_2", Fiery = true },
+                    new EnemyAttack { Name = "sunking_noon_2", Telegraph = 0.5f, Strike = 0.1f, Recovery = 0.05f, Damage = 18f, Radius = 2.1f, Ranged = true, Unblockable = true, MinRange = 1f, MaxRange = 0f, ChainInto = "sunking_noon_3", Fiery = true },
+                    new EnemyAttack { Name = "sunking_noon_3", Telegraph = 0.5f, Strike = 0.1f, Recovery = 0.7f, Damage = 18f, Radius = 2.1f, Ranged = true, Unblockable = true, MinRange = 1f, MaxRange = 0f, Fiery = true },
+                    // Below half: the long third thrust no longer ends in an opening. The sweep follows it with no rest.
+                    new EnemyAttack { Name = "sunking_drive", Telegraph = 0.55f, Strike = 0.12f, Recovery = 0.1f, Damage = 22f, Reach = 5.5f, LineWidth = 1.1f, Lunge = 1.6f, MinRange = 2f, MaxRange = 5.2f, Cooldown = 5f, MinPhase = 1, AimLockAt = 0.8f, ChainInto = "sunking_drive_sweep", Fiery = true },
+                    new EnemyAttack { Name = "sunking_drive_sweep", Telegraph = 0.7f, Strike = 0.18f, Recovery = 0.75f, Damage = 20f, Reach = 3.6f, ArcDegrees = 180f, Sweep = -1f, MinRange = 1f, MaxRange = 0f, Fiery = true },
+                },
+            },
+        };
 
         /// <summary>
         /// The Champion of the Gate (fire_land.md, section 5): one of the wholly gilded, cast in gold from mask to soles,
@@ -104,7 +177,7 @@ namespace Clover.Gameplay
 
         private static EnemyKind FireByName(string name) =>
             name == ThirstName ? Thirsting() : name == WickName ? Wick() : name == GildedLevyName ? Gilded(1)
-            : name == GildedSpearmanName ? Gilded(2) : name == GildedWardenName ? Gilded(3) : name == SunBlindName ? SunBlind() : name == ChampionName ? Champion() : null;
+            : name == GildedSpearmanName ? Gilded(2) : name == GildedWardenName ? Gilded(3) : name == SunBlindName ? SunBlind() : name == ChampionName ? Champion() : name == SunKingName ? SunKing() : null;
 
         /// <summary>The gilded soldier's name at a rank from 1 to 3.</summary>
         public static string GildedName(int rank) => rank >= 3 ? GildedWardenName : rank == 2 ? GildedSpearmanName : GildedLevyName;

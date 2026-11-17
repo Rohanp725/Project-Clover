@@ -12,6 +12,7 @@ namespace Clover.World
     public class GodReward : Interactable
     {
         [SerializeField] private SummitDirector director;
+        [SerializeField] private SunCourtDirector court;
 
         /// <summary>True to take the god's element; false to consume it.</summary>
         public bool Takes;
@@ -29,6 +30,13 @@ namespace Clover.World
             Takes = takes;
         }
 
+        /// <summary>For the sun-court, where the first god is simply taken from: there is no second thing to choose.</summary>
+        public void Configure(SunCourtDirector sunCourt)
+        {
+            court = sunCourt;
+            Takes = true;
+        }
+
         public override void Use(PlayerInteraction who)
         {
             if (Chosen) return;
@@ -40,7 +48,9 @@ namespace Clover.World
                 // The old element goes, and what was learned of it with it; the embers spent on it come back.
                 // Someone who already carries this god's element keeps what they learned of it: there is no old tree to lose.
                 bool sameElement = element != null && element.Kit != null && element.Kit.Name == Element;
-                if (upgrades != null)
+                // Someone who holds no element (the Fire land is entered with none) has no tree to lose either.
+                bool heldNone = element != null && !element.HasElement;
+                if (upgrades != null && !heldNone)
                 {
                     if (!sameElement)
                     {
@@ -58,9 +68,18 @@ namespace Clover.World
                 if (element != null) element.Take(ElementKit.ByName(Element, false));
                 // The god's own gift comes with his element: the Signature at the crown of its tree, worn if it is a spell.
                 if (upgrades != null) upgrades.Give(Gifts.SignatureOf(Element));
-                if (who.Combat != null) who.Combat.Equip(Weapons.ByName(Weapons.StormKatanaName));
-                LightningBolts.Strike(who.transform.position, 1f);
-                if (who.Defence != null) who.Defence.Callout("The storm is yours");
+                if (Element == Elements.Lightning)
+                {
+                    if (who.Combat != null) who.Combat.Equip(Weapons.ByName(Weapons.StormKatanaName));
+                    LightningBolts.Strike(who.transform.position, 1f);
+                    if (who.Defence != null) who.Defence.Callout("The storm is yours");
+                }
+                else
+                {
+                    // The weapon in the hand is kept: this god's own spear is not made yet.
+                    Vfx.Play(VfxKind.Fire, who.transform.position + Vector3.up, Vector3.up, 3f);
+                    if (who.Defence != null) who.Defence.Callout(Element + " is yours.");
+                }
             }
             else
             {
@@ -81,6 +100,7 @@ namespace Clover.World
             ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.4f), 0.09f);
             if (who.Defence != null) who.Defence.Restore();
             if (director != null) director.Chose(this);
+            if (court != null) court.Chose(this);
         }
     }
 }

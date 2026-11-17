@@ -15,6 +15,7 @@ Numbers are first values from the code and have not been tuned by play. Where th
 7. [The upgrade chart](#7-the-upgrade-chart)
 8. [Where to try things](#8-where-to-try-things)
 9. [The storm dragon](#9-the-storm-dragon)
+10. [Khepharu, the god of Fire](#10-khepharu-the-god-of-fire)
 
 ---
 
@@ -1133,6 +1134,22 @@ that hits back stands to the west, for practising the guard and the dodge.
 To try a particular god's gift: use the ELEMENT stone until you hold its element, read the GOD GIFT card, use the
 shrine, then do what the card says (most begin with the surge, L2 or I).
 
+### The Fire land (not in the demo's build)
+
+Three scenes, none of them in the list the playtest build is made from. Open one in the editor and press Play; tick
+**Clover > Play > As A New Player (saves nothing)** first if you do not want what you do there kept.
+
+| Scene | What it is | How it is rebuilt |
+|---|---|---|
+| `Assets/_Project/Scenes/FireYard.unity` | A small yard with one of each of the land's people, to meet them one at a time | **Clover > Build > Fire Yard** |
+| `Assets/_Project/Scenes/SunCity.unity` | The whole land: the dry river, the city of wicks, the golden way, the Champion of the Gate. About half an hour on foot | **Clover > Build > Sun City** |
+| `Assets/_Project/Scenes/SunCourt.unity` | The god: Khepharu the man, then the Sun-Bearer, then the coal | **Clover > Build > Sun Court** |
+
+You enter each with fists (or the Great Spear, found at the Embalmers' Gate in the city) and **no element**: the spell
+and surge buttons do nothing until Fire is taken from the god. A fall puts you back at the last rest fire you lit. In
+the editor the Gate of Noon at the end of the city leads straight into the sun-court; in a built game it would not,
+because the court is not in the build.
+
 ### The chart
 
 Rest at a rest fire in the Castle to open the chart. It stays on the tree of the element you hold; R2 or K shows the
@@ -1173,3 +1190,68 @@ opens with the storm.
   (his head) or due south (the steps). It drapes over the rail but does not wrap round a post.
 - Two more tail moves (a furrow of live lightning and a whip-crack) are designed and not built.
 - The large robot this fight first used is kept only as an idea for the Metal god.
+
+---
+
+## 10. Khepharu, the god of Fire
+
+The god of the Fire land, fought in `SunCourt.unity` (section 8 says how to open it). You have a spear or your fists
+and no element. An obelisk stands in the middle of the court and its shadow turns like the hand of a clock. **The
+shadow is the one thing to learn**: the man's falling sunlight cannot be aimed into it, hot floor is cold under it,
+and when the whole court burns it is the only ground that does not. Cross the gold line and he speaks; a wall of
+heat closes behind you. If you fall you wake at the fire in the forecourt and he is whole again.
+
+### The man with the sun-spear
+
+He keeps you at the far end of his spear. Pale marks can be guarded; red marks cannot.
+
+| Attack | What you see | What to do | Opening |
+|---|---|---|---|
+| **Three thrusts** | Three pale lanes one after another; the third waits and turns to follow you | Guard all three, perfectly if you can | After the third |
+| **Reach** | One long pale lane when you hang back | Guard, or sidestep and close | A short one |
+| **Sweep** | A pale half-circle round him when you are close | Guard | A short one |
+| **Butt** | A quick pale wedge after your blows have been turned twice | Guard or step back | None |
+| **Throw** | A long red lane; the spear stands in the floor at its end | Step off the lane | The next row |
+| **Returning ray** | He stands empty-handed with one hand raised; a wider red lane from him to the spear, then a ray of light along it | Do not stand between him and the spear. **Hit him now: his hands are empty and he cannot guard** | The largest he gives: nearly two seconds |
+| **Planted spear** | He lifts the spear point-down; a red circle round him; then the ground inside burns for eight seconds | Get out of the circle and stay out while it burns | As he pulls the spear free |
+| **Noon** | He lifts the spear to the sky; three red circles fall on you one after another | Keep walking, or stand in the obelisk's shadow: they cannot be aimed into it | None |
+
+Below half health he says "It is always noon.", plants the spear at once, moves faster, and sometimes follows the
+long third thrust with the sweep.
+
+### The Sun-Bearer
+
+When the man falls the sun comes down and he is a scarab that rolls it across the floor and a falcon that carries it
+up: one creature, one shape at a time. **The sun is what hurts you, and taking it from him is how you hurt him.**
+While he holds it his shell is hot and blows do a quarter of their damage, but thirty damage to his body during one
+attack knocks the sun out of his hold, and so does a perfect guard against the sun itself. Then he lies on his back
+(or flat with his wings spread) for four seconds, every blow counts in full, and he must walk to the sun to take it
+up again. You can push the loose sun further off with a blow.
+
+| Attack | Shape | What you see | What to do | Opening |
+|---|---|---|---|---|
+| **Roll** | Scarab | He goes to the rim; a red lane four metres wide across the court; the sun rolls down it with him behind. The lane stays hot (orange) for ten seconds | Step off the lane. A lane drawn through the obelisk stops at it. Strike his flank as he passes | Only if the sun is knocked away |
+| **Furrows** | Scarab | Three rolls, back and forth, each to the side you went. Three hot lanes | Stand between two lanes or beyond the last | He rests on the sun for two seconds after the third |
+| **Ram** | Scarab | He leaves the sun and lowers his horn; a pale circle on you | Guard, or walk out | **The horn sticks in the paving: his head is open for nearly two seconds** |
+| **Sparks** | Scarab | Wing cases lifted and shaken; five red circles in an arc, then five more in the gaps | Step into the gaps, then into where the first fell | None |
+| **Rising** | Scarab to falcon | He rears and throws the sun up. In his fury a red circle of six metres round him burns | Be more than six metres off in the fury | None |
+| **Stoop** | Falcon | His shadow stops over you and a red circle follows you, then holds. He comes straight down, sun first. The middle stays hot | Walk out of the circle | **He stands on the sun for a second and a half: thirty damage knocks him off it** |
+| **Pass** | Falcon | A red lane five metres wide from rim to rim; he flies it low with the sun under him. The lane stays hot. In his fury he comes back down a second lane | Step off the lane | Only if the sun is knocked away |
+| **Feathers** | Falcon | Small red circles: where you stand, then a ring of six, then both again with the ring turned | Step out, step in, stand in the band between; or stand in the shadow, where none fall | None |
+| **Zenith** | Falcon | He climbs over the obelisk. **The whole floor fills red, all but the shadow.** Then the court burns for six seconds (eight in his fury) | **Be in the obelisk's shadow and walk with it as it turns.** In his fury the shadow stops for half a second and comes back the other way | He comes down spent and lies as the scarab with his head open for two and a half seconds |
+| **Setting** | Falcon to scarab | He lands on the rim furthest from you and folds | Nothing | None |
+
+Blows on him while he is open, perfect guards, and knocking the sun away wear down his balance. When it breaks he
+falls on his face: a heavy blow on the head is the finisher, worth at least 123 of his 560. Below half health he is a
+quarter faster, the shadow turns faster, and he opens with the Zenith.
+
+When he dies the sun rolls to the foot of the obelisk and shrinks to a coal in its shadow. **Take the fire** gives you
+Fire (there is no choice at this god) and its gift, Falling Sun. Then **Cast off**, on the gold mark by the gold line,
+ends the land and returns you to the hub.
+
+**Not yet**
+
+- The ring of fire round the planted spear is a filled circle, not a ring you can stand inside.
+- The ray comes back down the line the spear was thrown along; he does not step aside first.
+- No Sun-Spear for the player, no barque to stand on, and the man is not seen kneeling when the form dies.
+- The form's entrance and death are short and plain beside the storm dragon's, and nothing in this fight has sound.

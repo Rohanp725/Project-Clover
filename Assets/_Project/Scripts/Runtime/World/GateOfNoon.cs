@@ -20,9 +20,22 @@ namespace Clover.World
 
         public int Tries { get; private set; }
         public int Opened { get; private set; }
+        /// <summary>Times the editor's loader took the player on to a scene the build does not hold.</summary>
+        public int Loaded { get; private set; }
         public bool SealBroken => keeper == null || keeper.IsDead;
 
         private Enemy keeper;
+
+        /// <summary>
+        /// In the editor a scene need not be in the build list to be loaded in play: the editor's own code puts a
+        /// loader here as play begins (the runtime may not name the editor). It is given the scene's name and says
+        /// whether it loaded it. In a built game it is never set, and only scenes the game was built with are loaded.
+        /// </summary>
+        public static System.Func<string, bool> LoadOutsideBuild;
+
+        // Domain reload is off: the last play's loader must not be this one's.
+        [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => LoadOutsideBuild = null;
 
         public void Configure(AreaDirector areaDirector, string keeperName)
         {
@@ -48,8 +61,9 @@ namespace Clover.World
             }
             Opened++;
             who.Defence.Callout(OpenWords);
-            if (!string.IsNullOrEmpty(LeadsTo) && UnityEngine.Application.CanStreamedLevelBeLoaded(LeadsTo))
-                UnityEngine.SceneManagement.SceneManager.LoadScene(LeadsTo);
+            if (string.IsNullOrEmpty(LeadsTo)) return;
+            if (UnityEngine.Application.CanStreamedLevelBeLoaded(LeadsTo)) UnityEngine.SceneManagement.SceneManager.LoadScene(LeadsTo);
+            else if (LoadOutsideBuild != null && LoadOutsideBuild(LeadsTo)) Loaded++;
         }
     }
 }

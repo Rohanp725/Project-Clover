@@ -79,6 +79,44 @@ Probes that touch saved progress forget it before and after, so the first real s
 The frames are the size of the Game view, not 1280 by 720. `PerfProbe` has a `SunCity` branch (the market with
 everyone within 60 m struck awake); a file `AgentScripts/perf_nosleep.txt` makes it measure with distance sleeping off.
 
+### SunCourtProbe
+
+`bash AgentScripts/runprobe.sh SunCourt SunCourtProbe 200` (about seven minutes). The scene is built by
+`Clover > Build > Sun Court` and is not in the build list. Every line that can be judged ends `OK` or `WRONG`. In order:
+
+1. The forecourt: the Great Spear is put in the hand, the rest fire is lit (it must say there is nothing to feed).
+2. The gold line: the king's four lines are read to their end, the wall of heat must be closed.
+3. The man: thrusts, reach, sweep, butt, throw (with the ray), planted spear and noon, each forced with
+   `EnemyBrain.Force` on a player standing still (blows must land) and again answered (guard held for the pale ones,
+   out of the mark for the red ones; nothing must land). Frames `suncourt_sunking_<move>_<n>.png`: 1 at the tell, 2
+   at the blow, 3 at the end of a chain. Then the thrown spear standing in the floor and the ray
+   (`suncourt_spear_stands_1`, `_2`), noon forced at a player standing in the obelisk's shadow (nothing must land),
+   and half health (the planted spear and "It is always noon.").
+4. His fall, the sun coming down (`suncourt_entrance_1` to `_5`), the form in the fight.
+5. The form, with `SunBearer.OnlyWhenAsked` set so it does nothing but what is asked through `SunBearer.Queued`: Roll,
+   Ram, Sparks, Furrows, Stoop, Feathers, Pass and Zenith, standing still and then answered (out of the lane or
+   circle, guard held for the Ram, on unmarked floor for the falling things, walking with the shadow for the Zenith).
+   `(last: ...)` names the last blow taken. Frames `suncourt_<move>_1` (tell), `_2` (blow), `_3` (after), and
+   `suncourt_spent_1`. The line `perf over the Zenith` is frame time and garbage over the blaze with lanes hot.
+6. The sun knocked out of the falcon's hold by 30 damage, pushed by a heavy blow, and fetched; the scarab knocked off
+   it mid-roll (`suncourt_exposed_falcon_1`, `suncourt_exposed_scarab_1`).
+7. Balance broken and the finisher (`suncourt_broken_1`). 8. Fury: the blaze that opens it, the shadow's stop and
+   turn-back (`suncourt_fury_blaze_1`).
+9. A fall mid-fight: the line must say `AT THE FIRE`, form risen False, king health 480 of 480, begun False.
+10. The fight again to the form's death (`suncourt_death_1` to `_4`), the king's dying words, the coal in the shadow.
+11. Taking Fire: element held, kit Fire, the gift owned, a spell cast, the sponsor's four lines, the way out open.
+
+`AgentScripts/suncourt_only.txt` may hold `Man` or `Form` to play one half, or `Hold` to go straight to a Pass and
+then the blaze and hold each with the game all but stopped. `bash AgentScripts/aspect_court.sh` uses `Hold` to write
+`review/shots/current/sheets/aspect_court_pass.png` and `aspect_court_blaze.png` at every screen shape. Delete the
+file to run everything.
+
+Last run of the whole probe: 31 lines `OK`, none `WRONG`, console 0 errors and 0 warnings. `PerfProbe` runs in this
+scene as in any other (the forecourt, nothing risen): it is the baseline the `perf over the Zenith` line is read against.
+
+`SunCityProbe` now ends in the sun-court: its last step opens the Gate of Noon, which in the editor loads
+`SunCourt.unity` (see `Editor/Builders/EditorSceneLoads.cs`), and the probe goes with the player to say where it is.
+
 ## Trying the gifts by hand: the debug shrines
 
 Only the Lightning god exists, so the practice yard (the `CombatTest` scene, built by `Clover > Build > Combat Test

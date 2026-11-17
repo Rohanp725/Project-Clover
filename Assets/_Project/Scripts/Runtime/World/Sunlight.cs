@@ -23,7 +23,7 @@ namespace Clover.World
         /// <summary>True where the sky is open: every point is lit unless a rectangle of shade covers it.</summary>
         public static bool OpenSky { get; private set; }
         /// <summary>True once a scene has said anything about its light; the sun-blind use their rule only then.</summary>
-        public static bool InUse => OpenSky || count > 0;
+        public static bool InUse => OpenSky || count > 0 || Hand != null;
         public static int Rectangles => count;
 
         // Domain reload is off: the last play's light must not be this one's.
@@ -32,10 +32,20 @@ namespace Clover.World
         {
             count = 0;
             OpenSky = false;
+            Hand = null;
             for (int i = 0; i < MostFlares; i++) flareLeft[i] = 0f;
         }
 
         public static void SetOpenSky(bool open) => OpenSky = open;
+
+        /// <summary>A shadow that turns (the sun-court's obelisk): shade wherever it lies, as a rectangle of shade is. Null for none.</summary>
+        public static Clover.Gameplay.ShadowHand Hand { get; set; }
+
+        /// <summary>True for a point the turning shadow covers.</summary>
+        public static bool InHand(Vector3 position) => Hand != null && Hand.Covers(position);
+
+        /// <summary>Where a shaft of sun aimed at this point is laid: the point itself, or the shadow's nearest edge if the shadow hides it.</summary>
+        public static Vector3 OutOfHand(Vector3 position, float clear = 0.2f) => Hand != null ? Hand.NearestOutside(position, clear) : position;
 
         /// <summary>A rectangle of floor in the sun, by its least and greatest x and z.</summary>
         public static void AddLight(float leastX, float mostX, float leastZ, float mostZ) => Add(leastX, mostX, leastZ, mostZ, false);
@@ -77,6 +87,7 @@ namespace Clover.World
                 float x = position.x - flareAt[i].x, z = position.z - flareAt[i].z;
                 if (x * x + z * z <= flareRadius[i] * flareRadius[i]) return true;
             }
+            if (Hand != null && Hand.Covers(position)) return false;
             bool lit = OpenSky;
             for (int i = 0; i < count; i++)
             {

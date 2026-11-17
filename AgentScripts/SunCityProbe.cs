@@ -363,11 +363,17 @@ public class SunCityProbeRunner : MonoBehaviour
         Say($"5 after a rest: champion dead {champion.IsDead} alive {director.EnemiesAlive} of {total}");
         player.Teleport(gate.transform.position + new Vector3(0f, 0.1f, -1.2f), Quaternion.identity);
         yield return new WaitForSeconds(0.4f);
-        yield return Tap(Key.E);
-        yield return new WaitForSeconds(0.3f);
-        Say($"5 gate after: opened {gate.Opened} says '{defence.LastCallout}' leads to '{gate.LeadsTo}' which the game can load {Application.CanStreamedLevelBeLoaded(gate.LeadsTo)} still in {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
+        // In the editor the gate now leads on to the sun-court (which is not in the build list): this probe goes with the player.
+        DontDestroyOnLoad(gameObject);
+        int asleep = land.Asleep;
         yield return Shot("gate_11");
-        Say($"asleep by distance at the gate {land.Asleep} of {total}");
+        yield return Tap(Key.E);
+        int opened = gate.Opened;
+        string said = defence.LastCallout, leads = gate.LeadsTo;
+        yield return new WaitForSecondsRealtime(2f);
+        Say($"5 gate after: opened {opened} says '{said}' leads to '{leads}' which the build holds {Application.CanStreamedLevelBeLoaded(leads)}; now in {UnityEngine.SceneManagement.SceneManager.GetActiveScene().name}");
+        Say($"asleep by distance at the gate {asleep} of {total}");
         Say("done");
+        Destroy(gameObject);
     }
 }

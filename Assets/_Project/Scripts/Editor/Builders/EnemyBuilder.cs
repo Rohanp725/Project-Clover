@@ -138,6 +138,10 @@ namespace Clover.EditorTools
                 renderers = model.GetComponentsInChildren<Renderer>();
                 foreach (var renderer in renderers)
                     renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => ToonFor(imported, materials, kind.Palette)).ToArray();
+                // The champion is cast in gold from mask to soles: his one gold is given the tones of a casting.
+                if (kind.Palette == "cast")
+                    foreach (var renderer in renderers)
+                        if (renderer is SkinnedMeshRenderer skinned) SunCityKit.CastTones(skinned);
                 animator = model.GetComponent<Animator>();
                 if (animator == null) animator = model.AddComponent<Animator>();
                 animator.runtimeAnimatorController = Controller(kind, modelPath);

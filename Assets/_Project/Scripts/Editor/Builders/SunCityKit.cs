@@ -179,6 +179,88 @@ namespace Clover.EditorTools
                 renderer.sharedMaterials = renderer.sharedMaterials.Select(imported => imported != null && Knows(imported.name) ? For(imported.name, rank) : imported).ToArray();
         }
 
+        /// <summary>
+        /// The wholly gilded champion's model has one gold slot from mask to soles, and so read as one flat colour.
+        /// This gives the cast its tones by where each part of the body hangs: the mask and neck a paler, newer gold;
+        /// the kilt (hips and thighs), the hands and the feet a darker, redder gold, as a casting is where it is
+        /// thick; the spear's shaft dark bronze. The rest keeps the gold it had. The mesh is copied to a generated
+        /// asset with a submesh for each tone; the model's own file is not touched.
+        /// </summary>
+        public static void CastTones(SkinnedMeshRenderer renderer)
+        {
+            var mesh = renderer.sharedMesh;
+            var materials = renderer.sharedMaterials;
+            int goldSlot = System.Array.FindIndex(materials, material => material != null && material.name == "m_fire_gold");
+            if (mesh == null || goldSlot < 0 || goldSlot >= mesh.subMeshCount) return;
+            var weights = mesh.boneWeights;
+            var heights = mesh.vertices;
+            var tone = new int[renderer.bones.Length];
+            for (int i = 0; i < tone.Length; i++)
+            {
+                string bone = renderer.bones[i] != null ? renderer.bones[i].name : "";
+                tone[i] = bone == "head" || bone == "neck" ? 1
+                    : bone == "hips" || bone.StartsWith("thigh") || bone.StartsWith("hand") || bone.StartsWith("foot") ? 2
+                    : bone.StartsWith("weapon") ? 3 : 0;
+            }
+            var triangles = mesh.GetTriangles(goldSlot);
+            var split = new[] { new List<int>(), new List<int>(), new List<int>(), new List<int>() };
+            // The spear's head stays bright: only the shaft is the dark bronze. The spear's line is found from its own
+            // points (the two farthest apart), and the head is the end that is the wider.
+            Vector3 middle = Vector3.zero;
+            int count = 0;
+            for (int i = 0; i < weights.Length; i++)
+                if (tone[weights[i].boneIndex0] == 3) { middle += heights[i]; count++; }
+            middle /= Mathf.Max(1, count);
+            Vector3 far = middle;
+            for (int i = 0; i < weights.Length; i++)
+                if (tone[weights[i].boneIndex0] == 3 && (heights[i] - middle).sqrMagnitude > (far - middle).sqrMagnitude) far = heights[i];
+            Vector3 line = (far - middle).normalized;
+            float least = 0f, most = 0f;
+            for (int i = 0; i < weights.Length; i++)
+            {
+                if (tone[weights[i].boneIndex0] != 3) continue;
+                float along = Vector3.Dot(heights[i] - middle, line);
+                least = Mathf.Min(least, along);
+                most = Mathf.Max(most, along);
+            }
+            float widthLow = 0f, widthHigh = 0f;
+            for (int i = 0; i < weights.Length; i++)
+            {
+                if (tone[weights[i].boneIndex0] != 3) continue;
+                float along = Vector3.Dot(heights[i] - middle, line);
+                float off = (heights[i] - middle - line * along).magnitude;
+                if (along < least + 0.6f) widthLow = Mathf.Max(widthLow, off);
+                if (along > most - 0.6f) widthHigh = Mathf.Max(widthHigh, off);
+            }
+            bool headIsHigh = widthHigh >= widthLow;
+            for (int i = 0; i < triangles.Length; i += 3)
+            {
+                int which = tone[weights[triangles[i]].boneIndex0];
+                if (which == 3)
+                {
+                    float along = Vector3.Dot(heights[triangles[i]] - middle, line);
+                    if (headIsHigh ? along > most - 0.85f : along < least + 0.85f) which = 0;
+                }
+                split[which].Add(triangles[i]);
+                split[which].Add(triangles[i + 1]);
+                split[which].Add(triangles[i + 2]);
+            }
+            var toned = Object.Instantiate(mesh);
+            toned.name = mesh.name + "_cast";
+            toned.subMeshCount = mesh.subMeshCount + 3;
+            toned.SetTriangles(split[0], goldSlot);
+            for (int extra = 1; extra <= 3; extra++) toned.SetTriangles(split[extra], mesh.subMeshCount + extra - 1);
+            string path = $"{Folder}/{toned.name}.asset";
+            AssetDatabase.DeleteAsset(path);
+            AssetDatabase.CreateAsset(toned, path);
+            renderer.sharedMesh = toned;
+            var pale = BuildKit.Toon(Folder, "m_fire_gold_pale", new Color(1f, 0.93f, 0.68f), true).Lit(new Color(2.4f, 2.1f, 1.2f), 0.6f, new Color(0.6f, 0.5f, 0.22f));
+            var deep = BuildKit.Toon(Folder, "m_fire_gold_deep", new Color(0.52f, 0.3f, 0.09f), true).Lit(new Color(1.5f, 0.9f, 0.3f), 0.4f, new Color(0.08f, 0.04f, 0.01f));
+            var shaft = BuildKit.Toon(Folder, "m_fire_cast_bronze", new Color(0.22f, 0.15f, 0.09f), true).Lit(new Color(1.2f, 0.8f, 0.4f), 0.4f);
+            foreach (var material in new[] { pale, deep, shaft }) material.SetColor("_ShadeColor", ShadeColour);
+            renderer.sharedMaterials = materials.Concat(new[] { pale, deep, shaft }).ToArray();
+        }
+
         // ------------------------------------------------------------------ the ground and plain walls
 
         // Plain colours: the stone textures made for the castle carry its blues and reds, and this land has neither.

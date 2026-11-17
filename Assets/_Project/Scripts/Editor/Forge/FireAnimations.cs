@@ -24,6 +24,7 @@ namespace Clover.EditorTools.Forge
                 // The three ranks share one set of clips; the warden has every attack, so his bake is the set.
                 case "gilded": return kind.Name == EnemyKind.GildedWardenName ? Gilded(kind) : Enumerable.Empty<ForgeClip>();
                 case "champion": return Champion(kind);
+                case "sunking": return SunKingAnimations.For(kind);
                 default: return Enumerable.Empty<ForgeClip>();
             }
         }

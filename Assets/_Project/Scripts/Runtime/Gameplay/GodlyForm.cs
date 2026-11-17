@@ -42,6 +42,8 @@ namespace Clover.Gameplay
         public abstract HitOutcome TakePartHit(ColossusPart part, in Hit hit);
         /// <summary>Wears at its balance from outside a blow; enough of it breaks the balance at once.</summary>
         public abstract void Unbalance(float amount);
+        /// <summary>Takes it out of the fight as if it had never risen, so the fight can begin again from the man: a land where a fall returns the player to a rest fire asks this. A form that cannot does nothing.</summary>
+        public virtual void Retire() { }
 
         protected void RaiseDied() => Died?.Invoke(this);
         protected void RaiseRoared() => Roared?.Invoke(this);

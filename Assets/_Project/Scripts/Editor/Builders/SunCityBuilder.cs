@@ -48,6 +48,7 @@ namespace Clover.EditorTools
             dice = new System.Random(1117);
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Materials();
+            ReadySoft();
             world = BuildKit.Group("World");
 
             var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, 4f), "");
@@ -135,7 +136,8 @@ namespace Clover.EditorTools
             cloth = SunCityKit.For("m_kit_cloth");
             blue = SunCityKit.For("m_kit_water");
             clay = SunCityKit.Flat("m_sun_clay", new Color(0.52f, 0.33f, 0.25f), 0.012f);
-            bronze = SunCityKit.Flat("m_sun_bronze", new Color(0.45f, 0.36f, 0.25f), 0.014f);
+            // Bronze that holds its colour in shade: the gate of noon's doors face south, away from the sun, and were nearly black.
+            bronze = SunCityKit.Flat("m_sun_bronze", new Color(0.62f, 0.47f, 0.27f), 0.014f).Lit(new Color(1.6f, 1.2f, 0.5f), 0.5f, new Color(0.34f, 0.2f, 0.06f));
             wrap = SunCityKit.Flat("m_sun_wrap", new Color(0.72f, 0.69f, 0.62f), 0.012f);
         }
 
@@ -178,15 +180,15 @@ namespace Clover.EditorTools
                 }
             }
 
-            // Pans where the last water stood: smooth, pale, uncracked, lying over the plates with no straight edge.
+            // Pans where the last water stood: pale silt lying in the mud. Each is an uneven patch whose colour thins to
+            // nothing at its edge, so it stains the plates under it and has no outline of its own.
             for (int i = 0; i < 34; i++)
             {
                 float z = 3f + i * 3.4f + (float)dice.NextDouble() * 3f;
                 float reach = z > 101f ? 21f : 11f;
-                var at = new Vector3(Mathf.Lerp(-reach, reach, (float)dice.NextDouble()), 0.012f + i * 0.0004f, z);
-                var pan = Deco(PrimitiveType.Cylinder, "Silt Pan", plates, at, new Vector3(3f + (float)dice.NextDouble() * 4f, 0.008f, 2.2f + (float)dice.NextDouble() * 2.6f), i % 3 == 0 ? mud : silt,
-                    new Vector3(0f, (float)dice.NextDouble() * 180f, 0f));
-                pan.shadowCastingMode = ShadowCastingMode.Off;
+                var at = new Vector3(Mathf.Lerp(-reach, reach, (float)dice.NextDouble()), 0.016f + i * 0.0004f, z);
+                // One in three is where it dried last: darker, not paler.
+                Soft("Silt Pan", plates, at, 2.2f + (float)dice.NextDouble() * 2.6f, 1.5f + (float)dice.NextDouble() * 1.8f, (float)dice.NextDouble() * 360f, i % 3 == 0 ? softDamp : softSilt);
             }
 
             // The banks: dust on top, dark brick holding them up. The west bank is cut by the gully to the well.
@@ -785,6 +787,88 @@ namespace Clover.EditorTools
         }
 
         // A primitive that is only looked at: no collider, static.
+        private static Material softSilt, softDamp, softDark, softSand;
+        private static Mesh[] softShapes;
+        private static int softCount;
+
+        // The stains of the land's ground (silt, damp, trodden earth, blown sand) are made of these, not of discs with an edge.
+        private static void ReadySoft()
+        {
+            softSilt = BuildKit.Glow(SunCityKit.Folder, "m_sun_silt_pan", new Color(0.8f, 0.76f, 0.66f, 0.62f), 3, false, 1f);
+            softDamp = BuildKit.Glow(SunCityKit.Folder, "m_sun_damp_pan", new Color(0.36f, 0.32f, 0.28f, 0.42f), 3, false, 1f);
+            softDark = BuildKit.Glow(SunCityKit.Folder, "m_sun_dark_stain", new Color(0.4f, 0.33f, 0.26f, 0.5f), 3, false, 1f);
+            softSand = BuildKit.Glow(SunCityKit.Folder, "m_sun_sand_stain", new Color(0.86f, 0.77f, 0.58f, 0.7f), 3, false, 1f);
+            softShapes = new Mesh[5];
+            for (int i = 0; i < softShapes.Length; i++) softShapes[i] = PanMesh(i);
+            softCount = 0;
+        }
+
+        // One stain lying on the ground: half as wide and half as deep as given, turned, in one of five uneven shapes.
+        private static void Soft(string name, Transform parent, Vector3 at, float halfWide, float halfDeep, float yaw, Material material)
+        {
+            if (softShapes == null || softShapes[0] == null) ReadySoft();
+            var stain = new GameObject(name);
+            stain.transform.SetParent(parent, false);
+            stain.transform.position = at;
+            stain.transform.rotation = Quaternion.Euler(0f, yaw, 0f);
+            stain.transform.localScale = new Vector3(halfWide, 1f, halfDeep);
+            stain.AddComponent<MeshFilter>().sharedMesh = softShapes[softCount++ % softShapes.Length];
+            var shown = stain.AddComponent<MeshRenderer>();
+            shown.sharedMaterial = material;
+            shown.shadowCastingMode = ShadowCastingMode.Off;
+            stain.isStatic = true;
+        }
+
+        // A flat uneven patch a metre or so in radius: full colour in its middle, a lobed edge, and nothing at the rim.
+        private static Mesh PanMesh(int variant)
+        {
+            const int Around = 32;
+            var random = new System.Random(4100 + variant * 17);
+            float a1 = (float)random.NextDouble() * 6.28f, a2 = (float)random.NextDouble() * 6.28f, a3 = (float)random.NextDouble() * 6.28f;
+            var vertices = new Vector3[1 + Around * 3];
+            var colours = new Color[vertices.Length];
+            var uvs = new Vector2[vertices.Length];
+            var triangles = new int[Around * 3 + Around * 12];
+            vertices[0] = Vector3.zero;
+            colours[0] = Color.white;
+            for (int i = 0; i < Around; i++)
+            {
+                float angle = i * Mathf.PI * 2f / Around;
+                float lobe = 1f + 0.22f * Mathf.Sin(angle * 2f + a1) + 0.14f * Mathf.Sin(angle * 3f + a2) + 0.08f * Mathf.Sin(angle * 7f + a3);
+                var way = new Vector3(Mathf.Sin(angle), 0f, Mathf.Cos(angle));
+                vertices[1 + i] = way * (lobe * 0.5f);
+                colours[1 + i] = Color.white;
+                vertices[1 + Around + i] = way * (lobe * 0.8f);
+                colours[1 + Around + i] = new Color(1f, 1f, 1f, 0.7f);
+                vertices[1 + Around * 2 + i] = way * (lobe * 1.08f + 0.05f * Mathf.Sin(angle * 11f + a1));
+                colours[1 + Around * 2 + i] = new Color(1f, 1f, 1f, 0f);
+            }
+            for (int i = 0; i < uvs.Length; i++) uvs[i] = new Vector2(0.5f, 0.5f);
+            int t = 0;
+            for (int i = 0; i < Around; i++)
+            {
+                int next = (i + 1) % Around;
+                triangles[t++] = 0; triangles[t++] = 1 + i; triangles[t++] = 1 + next;
+                for (int ring = 0; ring < 2; ring++)
+                {
+                    int inner = 1 + Around * ring, outer = 1 + Around * (ring + 1);
+                    triangles[t++] = inner + i; triangles[t++] = outer + i; triangles[t++] = outer + next;
+                    triangles[t++] = inner + i; triangles[t++] = outer + next; triangles[t++] = inner + next;
+                }
+            }
+            var mesh = new Mesh { name = "silt_pan_" + variant };
+            mesh.vertices = vertices;
+            mesh.colors = colours;
+            mesh.uv = uvs;
+            mesh.triangles = triangles;
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            string path = $"{SunCityKit.Folder}/silt_pan_{variant}.asset";
+            AssetDatabase.DeleteAsset(path);
+            AssetDatabase.CreateAsset(mesh, path);
+            return mesh;
+        }
+
         private static Renderer Deco(PrimitiveType type, string name, Transform parent, Vector3 position, Vector3 size, Material material, Vector3? euler = null)
         {
             var renderer = BuildKit.Shape(type, name, parent, position, size, material, euler);
@@ -876,9 +960,8 @@ namespace Clover.EditorTools
                     Deco(PrimitiveType.Cube, "Stone", parent, at + Vector3.up * size * 0.3f, new Vector3(size * 1.4f, size, size), brickDark, new Vector3(0f, (float)dice.NextDouble() * 90f, 0f));
                     continue;
                 }
-                var patch = Deco(PrimitiveType.Cylinder, "Ground Patch", parent, at, new Vector3(1.4f + (float)dice.NextDouble() * 3f, 0.004f, 1f + (float)dice.NextDouble() * 2f), i % 2 == 0 ? earthDark : sand,
-                    new Vector3(0f, (float)dice.NextDouble() * 180f, 0f));
-                patch.shadowCastingMode = ShadowCastingMode.Off;
+                float wide = 1.4f + (float)dice.NextDouble() * 3f, deep = 1f + (float)dice.NextDouble() * 2f;
+                Soft("Ground Patch", parent, at + Vector3.up * 0.01f, wide * 0.6f, deep * 0.6f, (float)dice.NextDouble() * 180f, i % 2 == 0 ? softDark : softSand);
             }
         }
 
@@ -891,14 +974,16 @@ namespace Clover.EditorTools
         // A drift of blown sand: a low mound, wider than it is deep.
         private static void Drift(Transform parent, Vector3 at, float wide, float deep)
         {
-            var drift = Deco(PrimitiveType.Sphere, "Sand Drift", parent, at + Vector3.down * 0.02f, new Vector3(wide, 0.34f + (float)dice.NextDouble() * 0.2f, deep), sand, new Vector3(0f, (float)dice.NextDouble() * 50f - 25f, 0f));
-            drift.shadowCastingMode = ShadowCastingMode.Off;
+            // Blown sand lying thin on the ground: a stain with no edge, and a smaller, stronger one inside it where it lies deepest.
+            float yaw = (float)dice.NextDouble() * 50f - 25f;
+            Soft("Sand Drift", parent, at + Vector3.up * 0.022f, wide * 0.6f, deep * 0.6f, yaw, softSand);
+            Soft("Sand Drift Heart", parent, at + Vector3.up * 0.026f, wide * 0.34f, deep * 0.34f, yaw + 40f, softSand);
         }
 
         private static void Stain(Transform parent, Vector3 at, float radius)
         {
-            var stain = Deco(PrimitiveType.Cylinder, "Dry Stain", parent, at + Vector3.up * 0.012f, new Vector3(radius * 2f, 0.01f, radius * 1.7f), earthDark);
-            stain.shadowCastingMode = ShadowCastingMode.Off;
+            if (softShapes == null || softShapes[0] == null) ReadySoft();
+            Soft("Dry Stain", parent, at + Vector3.up * 0.02f, radius * 1.05f, radius * 0.9f, (float)dice.NextDouble() * 180f, softDark);
         }
 
         // The middle of a street, walked darker than its edges.
@@ -912,10 +997,9 @@ namespace Clover.EditorTools
             for (int i = 0; i < pieces; i++)
             {
                 if (dice.NextDouble() < 0.18) continue;
-                var patch = Deco(PrimitiveType.Cylinder, "Trodden Earth", parent, Vector3.Lerp(from, to, (i + 0.5f) / pieces) + facing * new Vector3((float)dice.NextDouble() * 0.8f - 0.4f, 0f, 0f),
-                    new Vector3(width * (0.8f + (float)dice.NextDouble() * 0.4f), 0.006f, length / pieces * 1.5f), earthDark);
-                patch.transform.rotation = facing;
-                patch.shadowCastingMode = ShadowCastingMode.Off;
+                if (softShapes == null || softShapes[0] == null) ReadySoft();
+                Soft("Trodden Earth", parent, Vector3.Lerp(from, to, (i + 0.5f) / pieces) + facing * new Vector3((float)dice.NextDouble() * 0.8f - 0.4f, 0.012f, 0f),
+                    width * (0.8f + (float)dice.NextDouble() * 0.4f) * 0.55f, length / pieces * 0.8f, facing.eulerAngles.y, softDark);
             }
         }
 

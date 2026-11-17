@@ -1000,7 +1000,7 @@ namespace Clover.EditorTools
         }
 
         // The god's name and bars across the bottom of the screen.
-        private static BossHud BossBar(Enemy boss)
+        internal static BossHud BossBar(Enemy boss, string shownName = null)
         {
             var hud = GameObject.Find("HUD");
             if (hud == null) return null;
@@ -1022,7 +1022,7 @@ namespace Clover.EditorTools
             label.raycastTarget = false;
             label.horizontalOverflow = HorizontalWrapMode.Overflow;
             label.verticalOverflow = VerticalWrapMode.Overflow;
-            label.text = $"{boss.name},  {EnemyKind.Narukami().Title}";
+            label.text = shownName ?? $"{boss.name},  {EnemyKind.Narukami().Title}";
             var outline = name.AddComponent<Outline>();
             outline.effectColor = new Color(0f, 0f, 0f, 0.85f);
             outline.effectDistance = new Vector2(2f, -2f);
