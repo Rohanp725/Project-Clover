@@ -60,6 +60,17 @@ brought together once the user has confirmed the open points.
   and `SunCourt` (the god, here named Khepharu, a nod to the scarab of the morning sun; the name awaits the user's
   yes). None is in the playtest build. What was built, and where it departs from the specification, is in the three
   "As built" sections of `docs/design/fire_land.md`.
+- **Decided (user, 2026-11-17)**: the name Khepharu stays. The sponsor's voice lines in the city stay.
+- **Decided (user, 2026-11-17)**: unspent embers are lost on a fall, but the enemies the player had killed to earn
+  them carry them again when they come back; killing those enemies again gives the embers back.
+- **Leaning (user, 2026-11-17)**: shade is a rule of the whole land, not only of the god's court: there are times of
+  high heat when the player must find shade or burn, which also tells of the land's corruption.
+- **Leaning (user, 2026-11-17)**: perhaps a parry made for the sun itself, a perfect guard that does something
+  special to it. The user is not sure; build it as a proposal.
+- **Decided (user, 2026-11-17)**: the first pass of the land is not good enough in two ways. Areas must be designed
+  places, not flat square yards: shape, height, routes, sight lines. Enemies must fight in ways of their own and not
+  be reskins of other enemies' attacks (the user's example: a burning ash enemy that bursts when the player is too
+  close). The bosses' attacks need better visuals.
 
 ## How a climb is structured
 
@@ -105,9 +116,8 @@ brought together once the user has confirmed the open points.
 
 - **Decided (user)**: each god carries a personal, finer version of its weapon, in the way the best weapons in Elden
   Ring are boss weapons; the player's ordinary version is plainer.
-- **Open**: which choice after a god gives the god's own weapon. `docs/GAME.md` has Take giving it and Consume giving
-  a plain copy; the user's note of 2026-11-17 said "only when you consume their stuff do you get to keep their weapon".
-  To be confirmed.
+- **Decided (user, 2026-11-17)**: Take gives the god's own weapon, as `docs/GAME.md` has it (the earlier note that
+  said "consume" meant take). So the first god, who is simply taken from, gives Fire with the Sun-Spear.
 
 ### Lightning and Wind
 

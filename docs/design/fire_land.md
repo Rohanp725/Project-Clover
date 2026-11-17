@@ -1219,6 +1219,12 @@ than half a form.
    it during one attack; and that the opening lasts longer the further the sun lies. This is the heart of the
    second phase and has never been played.
 
+**The owner's answers (2026-11-17, morning).** 1: leaning yes, and more: times of high heat across the land when the
+player must find shade or burn. 2: embers are lost on a fall, but the enemies killed for them carry them again and
+give them back when killed again. 3: Take gives the god's weapon, so Fire comes with the Sun-Spear. 4: the name
+Khepharu stays; the form's shape is to be looked at in the afternoon. 5: undecided; a parry made for the sun is
+welcome as a proposal. The sponsor's voice lines stay.
+
 Also worth a word, if there is time: the fourth flask at the well (a permanent gain in the first hour); the wick's
 hold never killing; Falling Sun rising again after a blow where it now goes out; and the land's length, which sits
 at 36 to 38 minutes, the top of the 30 to 40 asked for.
