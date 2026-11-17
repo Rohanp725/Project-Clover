@@ -9,7 +9,9 @@ shots = "review/shots/current"
 out = os.path.join(shots, "sheets")
 os.makedirs(out, exist_ok=True)
 for old in glob.glob(os.path.join(out, "*.png")):
-    os.remove(old)
+    # The sheets of other probes (aspect_*) are theirs to keep.
+    if not os.path.basename(old).startswith("aspect_"):
+        os.remove(old)
 
 def sheet(name, files, columns, width):
     files = [f for f in files if os.path.exists(f)]

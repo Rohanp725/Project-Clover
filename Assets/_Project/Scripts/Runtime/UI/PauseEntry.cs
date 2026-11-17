@@ -6,6 +6,7 @@ namespace Clover.UI
         None,
         Resume,
         Controls,
+        Fullscreen,
         GiveUp,
         Forget,
         Quit,

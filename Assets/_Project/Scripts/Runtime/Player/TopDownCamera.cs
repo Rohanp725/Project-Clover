@@ -23,6 +23,9 @@ namespace Clover.Player
         /// <summary>Real seconds the camera takes to lean in for a finishing blow, and to draw back after it.</summary>
         public float CloseInTime = 0.1f;
         public float CloseOutTime = 0.22f;
+        /// <summary>The widest and narrowest screen shapes the view is made for. On a narrower screen the field is opened upward so as much is seen to either side as at 16:9; on a wider one the picture stays 21:9 in the middle of the screen, since the edges of the world were dressed no further.</summary>
+        public float NarrowestAspect = 16f / 9f;
+        public float WidestAspect = 21f / 9f;
 
         /// <summary>True while something has asked for a framing other than the usual one.</summary>
         public bool HasFraming { get; private set; }
@@ -40,6 +43,49 @@ namespace Clover.Player
         // The lean-in for a finishing blow is its own layer on top of any framing, so it can never leave a framing changed.
         private float closeDistance = 1f, closeLeft, shownClose, closeVelocity;
         private Vector3 closeOffset;
+
+        private Camera lens;
+        private Camera bars;
+        private float madeField;
+        private float fittedAspect;
+
+        private void Awake()
+        {
+            lens = GetComponent<Camera>();
+            if (lens != null) madeField = lens.fieldOfView;
+        }
+
+        // The field of view is kept up and down by the engine, so a 4:3 screen would lose the sides of a fight and a
+        // 32:9 one would see far past what was built. Narrower than 16:9, the field is opened so the sides are kept;
+        // wider than 21:9, the picture keeps 21:9 in the middle of the screen with black to either side, since closing
+        // the field instead cut the god's head off the top. Only when the screen's shape changes.
+        private void FitScreen()
+        {
+            if (lens == null || Screen.height <= 0) return;
+            float screen = Screen.width / (float)Screen.height;
+            if (Mathf.Approximately(screen, fittedAspect)) return;
+            fittedAspect = screen;
+            float shown = Mathf.Min(screen, WidestAspect);
+            float width = shown / screen;
+            bool barred = width < 0.999f;
+            lens.rect = barred ? new Rect((1f - width) * 0.5f, 0f, width, 1f) : new Rect(0f, 0f, 1f, 1f);
+            if (barred && bars == null)
+            {
+                // Something has to paint the strips the picture no longer covers: a camera that sees nothing, drawn first.
+                var barsObject = new GameObject("Screen Bars");
+                bars = barsObject.AddComponent<Camera>();
+                bars.clearFlags = CameraClearFlags.SolidColor;
+                bars.backgroundColor = Color.black;
+                bars.cullingMask = 0;
+                bars.depth = lens.depth - 10f;
+                bars.allowHDR = false;
+                bars.allowMSAA = false;
+            }
+            if (bars != null) bars.enabled = barred;
+            float held = Mathf.Max(shown, NarrowestAspect);
+            float half = Mathf.Tan(madeField * 0.5f * Mathf.Deg2Rad) * held / Mathf.Max(0.1f, shown);
+            lens.fieldOfView = Mathf.Clamp(2f * Mathf.Atan(half) * Mathf.Rad2Deg, 10f, 80f);
+        }
 
         public void Configure(Transform targetToFollow) => target = targetToFollow;
 
@@ -102,6 +148,7 @@ namespace Clover.Player
 
         private void LateUpdate()
         {
+            FitScreen();
             if (target == null) return;
             // A menu has stopped the world: the view holds exactly where it was, lean-in and shake included, and goes
             // on from there when time starts again. A blow's hit-stop never reaches zero, so it does not come here.

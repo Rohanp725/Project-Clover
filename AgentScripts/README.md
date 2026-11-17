@@ -137,3 +137,28 @@ the nearest real enemy, before cleanbreak, which kills it.
 road to roll, steps in close for the noon and the setting (`sig_fire_1` to `_7`), calls a second sun down while it
 is still being rolled (`_8`), and has a third struck at noon with time left (it goes under and rises, `_9`, `_10`)
 and again with too little left (it does not).
+
+## Screen shapes (2026-11-17)
+
+`capture game_view --width W --height H` only stretches whatever size the Game View already is, so a capture at
+another shape proves nothing by itself. `GameViewSize.cs` sets the Game View to the fixed size written in
+`AgentScripts/gameview_size.txt` ("1024x768"; "free" for Free Aspect), adding a size named "probe WxH" to the
+editor's list when it is not there. `bash AgentScripts/aspect_shots.sh <what> [sizes...]` does that for each of
+1280x720, 1920x1200, 1280x800, 1024x768, 2560x1080, 3840x1080, 2560x1440 and 3840x2160, captures
+`review/shots/current/aspect_<what>_<w>x<h>.png`, lays them on `review/shots/current/sheets/aspect_<what>.png`
+(`aspect_sheet.py`) and leaves the Game View at 1920x1080. The game must already be in the situation wanted and
+holding it. `source AgentScripts/ev.sh` gives `ev '<C#; return ...;>'` (a `script eval`) and `key E` (a tap of a
+key in the running game), for setting situations up by hand: the reading box, `PauseMenu.Instance.Open()`,
+`UpgradeMenu.Instance.Open()` and `ToggleWide()`.
+
+`bash AgentScripts/aspect_fight.sh` does the Summit: it plays as a new player (nothing saved), runs
+`DragonViewProbe`'s new parts **Hold** (the slither from the east at its furthest with time all but stopped, the
+player in the middle and then at the south rim, 45 real seconds each) and **HoldChoice** (the dragon felled, the
+player before the take-or-consume choice for 45 s; then a fall), and captures every shape each time the console
+says "holding ...". `SIZES="3840x1080 1024x768"` before it limits the shapes. The "death" sheet it makes is in fact
+the waking in the Hub: the dark screen has gone by the time it is held.
+
+`DragonViewProbe` also has **Finder**: the coil and the slither from the south-west with the player in that corner;
+it counts the frames in which the tail is between the camera and the player (`StormDragon.PlayerHidden`) and pictures
+the first (`dragon_view_finder_<move>.png`), where the gold ring should be seen through the tail. The probe reads its
+parts from `AgentScripts/dragon_view.txt`. `dragon_sheets.py` no longer deletes the `aspect_*` sheets.

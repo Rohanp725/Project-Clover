@@ -103,6 +103,16 @@ namespace Clover.EditorTools
                 placed++;
             }
 
+            // The outer arcs are not the demo's story (that is bare hands and Fire, the Katana from its stone, Lightning
+            // from its god): a sign at the head of each arc says so, in the reading box.
+            things.Add(Sign(world, "Weapons Notice", Polar(-22f, 7.7f), 158f,
+                "The stands along this rim are not part of the demo's story. Try anything.",
+                "The story begins with bare hands and Fire. The Katana waits in a stone in the castle, and Lightning is won from its god.",
+                "Start or Esc pauses. The controls are there, and the way to quit."));
+            things.Add(Sign(world, "Elements Notice", Polar(22f, 7.7f), 202f,
+                "The braziers along this rim are not part of the demo's story. Try anything.",
+                "The story begins with bare hands and Fire. The Katana waits in a stone in the castle, and Lightning is won from its god.",
+                "Start or Esc pauses. The controls are there, and the way to quit."));
             things.Add(Gate(world, new Vector3(0f, 0f, 8.4f), gateGlow));
             built.Player.GetComponent<PlayerInteraction>().Configure(things.ToArray());
 
@@ -396,6 +406,27 @@ namespace Clover.EditorTools
             made.Prompt = open;
             made.Range = 2.5f;
             return made;
+        }
+
+        // A board on a post, to be read.
+        private static Notice Sign(Transform world, string name, Vector3 at, float yaw, params string[] lines)
+        {
+            var root = new GameObject(name);
+            root.transform.SetParent(world, false);
+            root.transform.SetPositionAndRotation(at, Quaternion.Euler(0f, yaw, 0f));
+            BuildKit.Shape(PrimitiveType.Cube, "Post", root.transform, new Vector3(0f, 0.75f, 0f), new Vector3(0.14f, 1.5f, 0.14f), dark);
+            BuildKit.Shape(PrimitiveType.Cube, "Board", root.transform, new Vector3(0f, 1.45f, 0.02f), new Vector3(1.3f, 0.8f, 0.08f), pale, new Vector3(-18f, 0f, 0f));
+            BuildKit.Shape(PrimitiveType.Cube, "Board Rule", root.transform, new Vector3(0f, 1.52f, 0.09f), new Vector3(0.9f, 0.06f, 0.02f), gold, new Vector3(-18f, 0f, 0f));
+            BuildKit.Shape(PrimitiveType.Cube, "Board Rule", root.transform, new Vector3(0f, 1.34f, 0.15f), new Vector3(0.7f, 0.05f, 0.02f), dark, new Vector3(-18f, 0f, 0f));
+            var post = root.AddComponent<CapsuleCollider>();
+            post.center = new Vector3(0f, 0.8f, 0f);
+            post.radius = 0.3f;
+            post.height = 1.6f;
+            var notice = root.AddComponent<Notice>();
+            notice.Lines = lines;
+            notice.Prompt = "Read the notice";
+            notice.Range = 2.4f;
+            return notice;
         }
 
         // The gate: two posts and a lintel under the ring, and between them the storm, seen as through a door left ajar.

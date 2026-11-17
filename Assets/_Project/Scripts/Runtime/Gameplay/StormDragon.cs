@@ -215,7 +215,11 @@ namespace Clover.Gameplay
         /// <summary>How far the fan reaches beyond the last joint, at the size the tail is built at.</summary>
         public float TailFan = 4.2f;
         /// <summary>How much of the root end of the tail is kept off the floor in a slither that crosses it: the cut end is never seen.</summary>
-        public float TailRootKept = 7.5f;
+        public float TailRootKept = 14.5f;
+        /// <summary>How many times its made length the finned part of the tail is drawn out to: the plain thick root of the model is half its length, and drawn out the finned part reaches across the floor while all of the root stays over the rim and under the cloud.</summary>
+        public float TailStretch = 1.5f;
+        /// <summary>How much of the tail's made length, from its root, is the plain thick part with no fins: it is left as made, and only the finned part beyond it is drawn out.</summary>
+        public float TailPlainShare = 0.55f;
         /// <summary>Degrees from north within which the tail never comes over the rim: a sacred rope hangs between the tall posts there, and his head and forefeet are in the gate. And degrees from north beyond which it never does: the steps come up at the south.</summary>
         public float TailNeverNorthOf = 100f;
         public float TailNeverSouthOf = 160f;
@@ -287,7 +291,7 @@ namespace Clover.Gameplay
         public float ScytheLag = 0.25f;
         /// <summary>How high it is arched where it comes over the rim: under there it passes overhead.</summary>
         public float ScytheArch = 3.4f;
-        public float ScytheRootKept = 7.5f;
+        public float ScytheRootKept = 14.5f;
         public float ScytheDamage = 26f;
         public float ScytheRest = 0.6f;
 
@@ -534,6 +538,45 @@ namespace Clover.Gameplay
 
         /// <summary>The boned lengths of body that travel round the summit through the cloud. When there are any, the rigid arches are not shown.</summary>
         public void ConfigureLengths(SpineBones[] bodyLengths) => lengths = bodyLengths;
+
+        /// <summary>Adds the ring drawn over everything round the player while the tail lies between them and the camera.</summary>
+        public void ConfigureFinder(Renderer ring) => finder = ring;
+
+        /// <summary>True while the tail is between the camera and the player, and the ring that finds them is shown.</summary>
+        public bool PlayerHidden { get; private set; }
+
+        [SerializeField] private Renderer finder;
+
+        // The tail is thick and the camera low in this fight: coiled near the south rim it can cover the player
+        // entirely. While any joint of it is on the line from the camera to them, a ring is drawn through it where they stand.
+        private void FindPlayer()
+        {
+            bool hidden = false;
+            Vector3 to = target != null ? target.position + Vector3.up : Vector3.zero;
+            if (tailOut && tailSpine != null && shaker != null && target != null)
+            {
+                Vector3 eye = shaker.transform.position;
+                Vector3 line = to - eye;
+                float length = line.magnitude;
+                if (length > 1f)
+                {
+                    line /= length;
+                    var points = tailSpine.Points;
+                    int last = points.Length - 1;
+                    for (int i = 0; i <= last && !hidden; i++)
+                    {
+                        float body = Mathf.Lerp(1.5f, 0.6f, i / (float)last);
+                        Vector3 middle = points[i] + Vector3.up * (body * 0.6f);
+                        float along = Mathf.Clamp(Vector3.Dot(middle - eye, line), 0f, length - 0.4f);
+                        hidden = (eye + line * along - middle).sqrMagnitude < body * body;
+                    }
+                }
+            }
+            PlayerHidden = hidden;
+            if (finder == null) return;
+            if (finder.enabled != hidden) finder.enabled = hidden;
+            if (hidden) finder.transform.SetPositionAndRotation(to, shaker.transform.rotation);
+        }
 
         /// <summary>Adds the mark that stands over the fallen head while it can be finished.</summary>
         public void ConfigureFeedback(StaggerMark markToShow) => staggerMark = markToShow;
@@ -948,6 +991,7 @@ namespace Clover.Gameplay
             MoveSerpent(deltaTime);
             MoveJaw(deltaTime);
             MoveTail(deltaTime);
+            FindPlayer();
             Paint();
             PaintGlow();
             // Once the head has come down, not while it is still falling.
@@ -1943,10 +1987,16 @@ namespace Clover.Gameplay
             if (tailSpine == null)
             {
                 // Made once, the first time the tail is wanted: the bones are measured when they first wake.
-                tailSpine = new SerpentSpine(tailBones.Lengths);
-                tailBones.Spine = tailSpine;
+                var made = tailBones.Lengths;
+                var drawnOut = new float[made.Length];
                 tailJoints = 0f;
-                foreach (float stretch in tailBones.Lengths) tailJoints += stretch;
+                for (int i = 0; i < made.Length; i++)
+                {
+                    drawnOut[i] = made[i] * (i < made.Length * TailPlainShare ? 1f : Mathf.Max(1f, TailStretch));
+                    tailJoints += drawnOut[i];
+                }
+                tailSpine = new SerpentSpine(drawnOut);
+                tailBones.Spine = tailSpine;
             }
             return true;
         }

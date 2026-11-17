@@ -42,8 +42,8 @@ namespace Clover.Tests
             Assert.IsFalse(Offers("Castle", PauseEntry.Forget));
             Assert.IsFalse(Offers("Summit", PauseEntry.Forget));
             Assert.IsFalse(Offers("CombatTest", PauseEntry.Forget));
-            Assert.AreEqual(3, new PauseChoices("CombatTest").Count);
-            Assert.AreEqual(4, new PauseChoices("Hub").Count);
+            Assert.AreEqual(4, new PauseChoices("CombatTest").Count);
+            Assert.AreEqual(5, new PauseChoices("Hub").Count);
         }
 
         [Test]

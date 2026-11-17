@@ -160,6 +160,14 @@ namespace Clover.EditorTools
             // Far round to the north-west, beyond the outermost ring of the body, where the camera sees it over the rim.
             dragon.ConfigureTail(new Vector3(-22f, 0f, 25.5f), 150f);
             shortTail.localScale = Vector3.one * 1.8f;
+            // Drawn through whatever is in front of it: where the player is, while the tail covers them.
+            var finderLight = BuildKit.Glow(Folder, "m_player_finder", new Color(1.6f, 1.45f, 0.9f, 0.95f), 4, false, 2f, 0f, true);
+            finderLight.renderQueue = (int)UnityEngine.Rendering.RenderQueue.Overlay;
+            var finder = BuildKit.Shape(PrimitiveType.Quad, "Player Finder", root.transform, Vector3.zero, Vector3.one * 2.2f, finderLight);
+            finder.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            finder.receiveShadows = false;
+            finder.enabled = false;
+            dragon.ConfigureFinder(finder);
             // Sixteen circles is the most that are ever drawn at once: the outer ring of sigils and the one inside it.
             dragon.ConfigureMarks(Pairs("Beam", 2, marks, marker), Pairs("Breath", 3, marks, marker), Pairs("Bite", 1, marks, marker),
                 Pairs("Fall", 16, marks, marker), Pairs("Orb", 3, marks, marker), Pairs("Storm", 2, marks, marker),

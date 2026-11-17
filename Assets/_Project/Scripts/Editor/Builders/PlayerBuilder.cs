@@ -381,6 +381,9 @@ namespace Clover.EditorTools
             var scaler = canvasObject.AddComponent<CanvasScaler>();
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920f, 1080f);
+            // Fitted by height on 16:9 and wider and by width on narrower screens; ScreenFit keeps it so as the window changes.
+            scaler.matchWidthOrHeight = 1f;
+            canvasObject.AddComponent<Clover.UI.ScreenFit>();
             Transform hud = canvasObject.transform;
 
             // The impact frame: spikes of light from the screen's edges that blink on a great blow, the middle left clear. It lies under everything else on the HUD.
@@ -758,8 +761,8 @@ namespace Clover.EditorTools
             cursor.sizeDelta = new Vector2(540f, 54f);
             cursor.anchoredPosition = new Vector2(30f, -120f);
 
-            // No scene offers more than four: resume, controls, one way out of the scene, quit.
-            const int count = 4;
+            // No scene offers more than five: resume, controls, fullscreen, one way out of the scene, quit.
+            const int count = 5;
             var rows = new Text[count];
             for (int i = 0; i < count; i++)
             {

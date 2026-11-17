@@ -26,6 +26,7 @@ namespace Clover.UI
         {
             entries.Add(PauseEntry.Resume);
             entries.Add(PauseEntry.Controls);
+            entries.Add(PauseEntry.Fullscreen);
             if (IsRunScene(sceneName)) entries.Add(PauseEntry.GiveUp);
             if (sceneName == HubScene) entries.Add(PauseEntry.Forget);
             entries.Add(PauseEntry.Quit);
@@ -83,6 +84,7 @@ namespace Clover.UI
             {
                 case PauseEntry.Resume: return "Resume";
                 case PauseEntry.Controls: return "Controls";
+                case PauseEntry.Fullscreen: return "Fullscreen or window";
                 case PauseEntry.GiveUp: return "Give up the run";
                 case PauseEntry.Forget: return "Forget everything";
                 case PauseEntry.Quit: return "Quit";
@@ -108,6 +110,7 @@ namespace Clover.UI
             switch (entry)
             {
                 case PauseEntry.Controls: return "The buttons, and how a fight is won.";
+                case PauseEntry.Fullscreen: return "Switches between the whole screen and a window that can be resized.\nAlt and Enter do the same.";
                 case PauseEntry.GiveUp: return "The run ends here.\nAll it carried is lost.";
                 case PauseEntry.Forget: return "Every weapon and element won is lost.\nThe first waking comes again.";
                 case PauseEntry.Quit: return "A run is not kept.";

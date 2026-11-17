@@ -1611,3 +1611,54 @@ Everything else in this pass is **Claude's default, not yet played by the owner*
 - Spell forms shared by all elements are drawn in the held element's stuff (`ElementSubstance`).
 - Kept house rules: nothing here reaches farther than the spell it replaced except Glare's ray (5.5 m against 4 m,
   but 1.4 m wide instead of a 90 degree fan); every shape is a hard-edged inked solid readable from the game camera.
+
+## The playtest demo as zipped (2026-11-17, night; everything here is Claude's default unless marked)
+
+The owner's words: "finish up the work on the boss moves, and any leftover work for the demo. Once thats done zip up a
+playtestable version that will run on other aspect ratios". **Decided (user)**: the demo is the Hub, the Castle and
+the Summit, zipped for other people's machines, and it must hold on screens that are not 16:9. How that was done is
+**Claude's default**, seen in captures only, not played by the owner:
+
+- *Screen shapes*. The HUD's canvas (`PlayerBuilder.BuildHud`) scales with the screen against 1920 by 1080, and
+  `ScreenFit` (on the HUD) fits it by height on 16:9 and wider and by width on anything narrower, so the drawing
+  board is never less than 1920 wide or 1080 tall: nothing laid out for 1080p runs off a 4:3 screen or is blown up
+  on a 32:9 one. The camera (`TopDownCamera.FitScreen`) keeps its 40 degree field on 16:9 to 21:9; on a narrower
+  screen it opens the field upward so as much is seen to either side as at 16:9 (4:3 sees more floor above and
+  below, never less to the sides); on a screen wider than 21:9 the picture stays 21:9 in the middle with black to
+  either side (`NarrowestAspect`, `WidestAspect`), because the world's edges are dressed no further and closing the
+  field instead cut the dragon's head off the top. On 32:9 the bars, flasks and embers sit in the screen's own far
+  corners, over the black. Checked by capture at 1280x720, 1920x1200, 1280x800, 1024x768, 2560x1080, 3840x1080,
+  2560x1440 and 3840x2160 (`review/shots/current/sheets/aspect_*.png`).
+- *Window*. The build starts on the whole screen at the display's own size (borderless), the window can be resized,
+  Alt+Enter switches, and the pause menu has a new entry, "Fullscreen or window" (`PauseEntry.Fullscreen`,
+  `ScreenFit.ToggleFullscreen`: a 1280 by 720 window, or the whole screen again).
+- *What is in the build*. Hub, Castle, Summit, in that order, and nothing else (`PlaytestBuild.DemoScenes`; the
+  editor's build list is set to the same). The practice yard (CombatTest) has no door back to the Hub, so it is left
+  out of the build and stays an editor scene; SampleScene is out too.
+- *What a new player meets*. Bare hands and Fire, the Katana's stand and Lightning's brazier sealed, as designed. The
+  other weapons' stands (west rim) and the other nine braziers (east rim) are still all open, as the stopgap they
+  were; a signpost stands at the head of each arc, either side of the gate (`Notice`, read in the reading box,
+  click-through): "The stands along this rim are not part of the demo's story. Try anything." / "The story begins
+  with bare hands and Fire. The Katana waits in a stone in the castle, and Lightning is won from its god." / "Start
+  or Esc pauses. The controls are there, and the way to quit." The `READ ME FIRST.txt` beside the exe says what the
+  game is, the controls for pad and keys, how to pause, quit and switch fullscreen, that there is no sound yet, and
+  what to try (its text is in `PlaytestBuild.ReadMe`).
+- *The storm dragon's tail* (the owner's rule: no root, no cut end, "feels like its stretching from the clouds").
+  The model's tail is plain and thick for about the first half of its length, and with 7.5 m of it kept off the floor
+  the plain part still lay across the rail as a flat slab from the southern bays. Now the plain part (the first 55%
+  of the bones, `TailPlainShare`) is left as made and kept wholly beyond the rim (`TailRootKept`, `ScytheRootKept`
+  14.5 m), and the finned part beyond it is drawn out to one and a half times its made length (`TailStretch`) so it
+  still reaches about as far across the floor as before. Seen in `sheets/slither_*.png` and `coil_*.png`: fins from
+  the rail inward from every bay; the flop, flops, scythe and sting were shot again after it too (`flop_*`, `flops_*`,
+  `scythe_*`, `sting_*`, `things_*`) and show no slab and no end.
+- *Finding the player under the tail*. While any joint of the tail is on the line from the camera to the player a
+  pale gold ring is drawn through everything where they stand (`StormDragon.FindPlayer`, `PlayerHidden`, the
+  "Player Finder" quad built by `DragonBuilder`). Seen in `dragon_view_finder_TailCoil.png`.
+- *Still wrong*: the probe's measure of how near the tail comes to a post, the head or a forefoot (`TailLeastRoom`)
+  reads -0.54 m for the walking flops from the west (it was -0.68 from the south-west before the tail was drawn out)
+  and -0.01 to -0.12 m for the scythe from every bay; in the frames (`sheets/things_flops.png`, second row) the tail
+  lies close by a tall post with nothing plainly through it. Not fixed. The built game would not answer the Pipeline
+  runtime server, so no frame of the build itself was captured; its Player.log had no exception at 1280x720 or at
+  1024x768. Callouts ("Perfect guard", "Finisher") and the dark screen of a fall were not captured at the other
+  shapes; both are anchored to the middle or stretched to the whole screen. The whole-ring view of the chart fits
+  at every shape, its lowest marks just touching the hint band.

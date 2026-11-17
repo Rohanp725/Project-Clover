@@ -14,6 +14,7 @@ Numbers are first values from the code and have not been tuned by play. Where th
 6. [Spell forms](#6-spell-forms)
 7. [The upgrade chart](#7-the-upgrade-chart)
 8. [Where to try things](#8-where-to-try-things)
+9. [The storm dragon](#9-the-storm-dragon)
 
 ---
 
@@ -339,8 +340,8 @@ Each element's tap spell behaves like its substance, not like one shape in eleve
 
 **Not yet**
 
-- Gust throws a real enemy much less than its 3 m (0.4 m measured on a castle soldier), and it no longer lifts.
-- Riptide carries a real enemy closer than intended (to about 0.4 m), and its wave is drawn as flat facets, not a smooth curl.
+- Gust no longer lifts; it throws.
+- Riptide's wave is not translucent, and its spray is still drawn as shards.
 - Marks that widen the base spell's arc do not affect Riptide or Glare.
 
 ### What each surge does
@@ -405,7 +406,7 @@ Given by **taking** the element from its god.
 
 | Element | Gift | How you trigger it | What it does |
 |---|---|---|---|
-| Fire | **Falling Sun** | Light Kindle (L2). Press L2 again to drop it early. | A sun grows over the enemy you face and follows it. Every second, burns within 6 m of you deepen by one. Pressed again, or when Kindle ends, it falls: 60 damage in 4 m, +8% for each burn stack under it (up to double), burning ground after, half a second of slowed time. A blow taken puts it out. |
+| Fire | **Falling Sun** | Light Kindle (L2). Press L2 again to set it early. | The sun takes its road. **Dawn**: it is rolled along the ground to the enemy you face (14 damage, two burns) and the ground it crosses burns. **Noon**: it is carried up, and every burn within 6 m of you deepens once a second. **Dusk**: when Kindle ends or you press again it sets on the enemy below: 60 damage and 80 stagger in 4 m, heavier for every burn it finds, up to double. A blow taken sends it under; it rises again if Kindle has time left. |
 | Lightning | **Storm Step** | Light Overdrive (L2), then dodge. | While Overdrive lasts every dodge costs no stamina, shocks what it passes through, and leaves a shape of light where you stood. |
 | Wind | **The Wind Remembers** | Light Tailwind (L2), then land weapon blows. | Each blow leaves a pale cut hanging where it fell, up to sixteen. When Tailwind ends time slows and they all fall, each for half the blow it remembers. |
 | Ice | **The World Holds Still** | Light Glaze (L2). Press L2 again to break it. | A shell of six fangs of ice stands round you. The second press breaks it outward: a ring to 9 m that strikes each enemy once (10 damage) and freezes it, with enemies slowed to a fifth for 1.5 s. Also, always: shattering a frozen enemy sends a line of breaking ice to the nearest frozen one within 7 m and shatters it too, and on. |
@@ -1136,3 +1137,39 @@ shrine, then do what the card says (most begin with the surge, L2 or I).
 
 Rest at a rest fire in the Castle to open the chart. It stays on the tree of the element you hold; R2 or K shows the
 whole ring.
+
+---
+
+## 9. The storm dragon
+
+Narukami's second form, the last fight of the demo. When the swordsman falls, the dragon's head comes in through the
+north gate; two small claws grip the rim and its body winds through the cloud all round the summit. Its mouth, its
+magic and its tail take turns, and it never does the same kind of thing twice running. Pale marks on the floor can be
+guarded; red marks cannot, but a guard at the last instant turns anything.
+
+| Attack | What you see | What to do | Opening |
+|---|---|---|---|
+| **Beam** | Jaws open; a red lane from under his mouth | It crosses the whole floor. Roll through it, or get in beside his head where it cannot turn | His head lies spent: strike it |
+| **Breath** | Three red forked lanes | Step between or outside them | None |
+| **Bite** | A pale circle on you, only near the north gate | Step out or guard | His head sticks in the floor: strike it |
+| **Bolts** | Red circles: the middle, then a ring, then between | Stand in the band between | None |
+| **Sigils** | A ring of red circles that closes in three steps | Leave through a gap at once | None |
+| **Orbs** | Three orbs that drift after you | Keep walking; they burst | None |
+| **Storm** | Two opposite quarters of the floor turn red | Fight in the other two for eight seconds | None |
+| **Slither** | A red winding lane, rim to rim | Step off the lane or roll through the body | None |
+| **Flop** | The tail arched over a pale lane | Step aside or guard facing the rim | The tail lies slack: cut it |
+| **Coil** | A red ring round you | Get out through the gap, or roll through the body. Cut the coil hard enough as it tightens and it springs open and staggers him | While it tightens and just after |
+| **Scythe** | The whole floor ringed red | It sweeps across and back: roll through it each time, or stand under the arch where it comes over the rim | None |
+| **Walking flops** | Three pale lanes, one after another | Step off each and stay close to the lane, inside the red circles that run out from it | After the third it lies slack |
+| **Sting** | A pale circle under a raised tail, four times | Keep running or guard each stab | The last one sticks in the stone |
+
+Perfect guards and blows on his head, tail and claws wear down his balance. When it breaks, his head falls to the
+floor: a heavy blow there is the finisher, worth about a fifth of his health. Below half health he is faster and
+opens with the storm.
+
+**Not yet**
+
+- The tail comes in between the gate posts on the east, south-east and their mirrors on the west; not from the north
+  (his head) or due south (the steps). It drapes over the rail but does not wrap round a post.
+- Two more tail moves (a furrow of live lightning and a whip-crack) are designed and not built.
+- The large robot this fight first used is kept only as an idea for the Metal god.

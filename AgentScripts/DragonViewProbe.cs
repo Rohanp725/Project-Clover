@@ -196,6 +196,98 @@ public class DragonViewRunner : MonoBehaviour
                 }
             dragon.TailFromDegrees = 999f;
         }
+        // Finder: the coil and the slither from the south-west with the player in that corner; the first frame in which the
+        // tail is between the camera and the player is pictured (dragon_view_finder_<move>.png), with the ring that finds them.
+        if (Wants("Finder"))
+        {
+            foreach (var move in new[] { DragonAttack.TailCoil, DragonAttack.TailSweep })
+            {
+                yield return Until(() => dragon.Doing == "Idle", 16f);
+                dragon.TailFromDegrees = -129f;
+                dragon.Queued = move;
+                var corner = new Vector3(-9.5f, 0.1f, -9.5f);
+                player.Teleport(corner, Quaternion.identity);
+                hold = corner;
+                string name = move.ToString();
+                yield return Until(() => dragon.Doing == name, 8f);
+                int hidden = 0, frames = 0;
+                bool pictured = false;
+                while (dragon.Doing == name && frames < 3000)
+                {
+                    frames++;
+                    if (dragon.PlayerHidden)
+                    {
+                        hidden++;
+                        if (!pictured && hidden > 6)
+                        {
+                            pictured = true;
+                            Time.timeScale = 0.01f;
+                            yield return Shot("finder_" + name);
+                            Time.timeScale = 1f;
+                        }
+                    }
+                    yield return null;
+                }
+                Say($"finder: {name} from the south-west, player in that corner: the tail hid them in {hidden} of {frames} frames, pictured {pictured}");
+            }
+            dragon.TailFromDegrees = 999f;
+        }
+
+        // Hold: the slither from the east at its furthest, with time all but stopped, first with the player in the middle and
+        // then at the south rim, each held for 45 real seconds so the Game View can be captured at every screen shape from outside
+        // (bash AgentScripts/aspect_shots.sh fight_middle, then fight_south, when the console says "holding").
+        if (Wants("Hold"))
+        {
+            yield return Until(() => dragon.Doing == "Idle", 16f);
+            dragon.TailFromDegrees = 103f;
+            dragon.Queued = DragonAttack.TailSweep;
+            player.Teleport(middle, Quaternion.identity);
+            hold = middle;
+            yield return Until(() => dragon.Doing == "TailSweep", 8f);
+            yield return Until(() => dragon.DoingFor >= dragon.TailSweepTelegraph + dragon.TailSweepSeconds * 0.6f || dragon.Doing != "TailSweep", 10f);
+            Time.timeScale = 0.0005f;
+            view.FollowTime = view.FramingTime = 0.00002f;
+            Say("holding middle");
+            yield return new WaitForSecondsRealtime(45f);
+            player.Teleport(Places[4], Quaternion.identity);
+            hold = Places[4];
+            Say("holding south");
+            yield return new WaitForSecondsRealtime(45f);
+            Time.timeScale = 1f;
+            dragon.TailFromDegrees = 999f;
+        }
+        // HoldChoice: the dragon is felled, and the player stands before the take-or-consume choice for 45 real seconds
+        // ("holding choice"); then the player falls and the dark screen is held 14 real seconds ("holding death").
+        if (Wants("HoldChoice"))
+        {
+            hold = null;
+            for (int attempt = 0; attempt < 12 && !dragon.IsDead; attempt++)
+            {
+                yield return Until(() => dragon.Doing == "Idle", 10f);
+                dragon.Unbalance(10000f);
+                yield return new WaitForSeconds(0.7f);
+                for (int blow = 0; blow < 40 && !dragon.IsDead; blow++) dragon.HeadPart.TakeHit(new Hit(60f, 0f, Vector3.forward));
+            }
+            var summit = FindAnyObjectByType<Clover.World.SummitDirector>();
+            yield return Until(() => summit.Felled, 14f);
+            yield return new WaitForSecondsRealtime(summit.RewardDelay + 2.5f);
+            Clover.World.GodReward take = null;
+            foreach (var reward in FindObjectsByType<Clover.World.GodReward>(FindObjectsSortMode.None))
+                if (reward.Takes) take = reward;
+            if (take != null) player.Teleport(take.transform.position + new Vector3(0.9f, 0.1f, -1.4f), Quaternion.identity);
+            yield return new WaitForSeconds(0.6f);
+            Say($"holding choice (rewards shown {take != null})");
+            yield return new WaitForSecondsRealtime(45f);
+            var ender = FindAnyObjectByType<Clover.World.RunEnder>();
+            defence = null;
+            player.GetComponent<PlayerDefence>().Health.Damage(100000f);
+            yield return Until(() => ender != null && ender.IsEnding, 6f);
+            yield return new WaitForSecondsRealtime(ender != null ? ender.HoldSeconds + ender.FadeSeconds * 0.8f : 2f);
+            Time.timeScale = 0.0005f;
+            Say("holding death");
+            yield return new WaitForSecondsRealtime(14f);
+            Time.timeScale = 1f;
+        }
         hold = null;
         Say("done");
     }

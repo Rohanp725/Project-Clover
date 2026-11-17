@@ -148,6 +148,10 @@ namespace Clover.UI
                     ShowingControls = true;
                     Show();
                     break;
+                case PauseEntry.Fullscreen:
+                    ScreenFit.ToggleFullscreen();
+                    Show();
+                    break;
                 case PauseEntry.GiveUp:
                     // As a fall ends it, without the falling.
                     RunState.End(true);
