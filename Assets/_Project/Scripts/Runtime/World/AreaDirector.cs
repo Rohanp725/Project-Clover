@@ -125,7 +125,11 @@ namespace Clover.World
             respawn = at;
             if (defence != null) defence.Restore();
             RestoreEnemies();
+            Rested?.Invoke();
         }
+
+        /// <summary>Raised after the player has rested and the area's enemies have stood again.</summary>
+        public event System.Action Rested;
 
         private void OnRevived()
         {

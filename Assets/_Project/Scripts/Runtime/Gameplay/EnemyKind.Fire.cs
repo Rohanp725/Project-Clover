@@ -15,6 +15,14 @@ namespace Clover.Gameplay
         public const string GildedSpearmanName = "Gilded Spearman";
         public const string GildedWardenName = "Gilded Warden";
         public const string SunBlindName = "Sun-Blind Priest";
+        public const string AshenName = "The Ashen";
+
+        /// <summary>Above zero: killed before its own burst, it bursts where it fell after this many seconds (the ashen).</summary>
+        public float BurstsOnDeath;
+        /// <summary>The ashen's burst: metres it reaches, what it does to the player and what it does to any other enemy in it.</summary>
+        public float BurstRadius = 3.2f;
+        public float BurstDamage = 30f;
+        public float BurstEnemyDamage = 45f;
 
         public static IEnumerable<EnemyKind> FireKinds
         {
@@ -26,6 +34,7 @@ namespace Clover.Gameplay
                 yield return Gilded(2);
                 yield return Gilded(3);
                 yield return SunBlind();
+                yield return TheAshen();
                 yield return Champion();
                 yield return SunKing();
             }
@@ -177,7 +186,7 @@ namespace Clover.Gameplay
 
         private static EnemyKind FireByName(string name) =>
             name == ThirstName ? Thirsting() : name == WickName ? Wick() : name == GildedLevyName ? Gilded(1)
-            : name == GildedSpearmanName ? Gilded(2) : name == GildedWardenName ? Gilded(3) : name == SunBlindName ? SunBlind() : name == ChampionName ? Champion() : name == SunKingName ? SunKing() : null;
+            : name == GildedSpearmanName ? Gilded(2) : name == GildedWardenName ? Gilded(3) : name == SunBlindName ? SunBlind() : name == AshenName ? TheAshen() : name == ChampionName ? Champion() : name == SunKingName ? SunKing() : null;
 
         /// <summary>The gilded soldier's name at a rank from 1 to 3.</summary>
         public static string GildedName(int rank) => rank >= 3 ? GildedWardenName : rank == 2 ? GildedSpearmanName : GildedLevyName;
@@ -297,8 +306,17 @@ namespace Clover.Gameplay
                 // The red lunge from distance.
                 attacks.Add(new EnemyAttack { Name = "gilded_lunge", Telegraph = 1.0f, Strike = 0.2f, Recovery = 0.9f, Damage = 26f * harder, Reach = 5f, LineWidth = 1.3f, Lunge = 3.4f, MinRange = 3.5f, MaxRange = 8f, Unblockable = true, Cooldown = 6f, Fiery = true });
             }
+            if (rank == 2)
+            {
+                // The throw: the spear cast down a long red lane. It stands in the floor where it lands, and until he
+                // has walked to it and pulled it out he has no guard.
+                attacks.Add(new EnemyAttack { Name = "gilded_cast", Telegraph = 0.9f, Strike = 0.15f, Recovery = 0.5f, Damage = 20f * harder, Reach = 10f, LineWidth = 1.0f, MinRange = 5f, MaxRange = 10f, Unblockable = true, Cooldown = 10f, AimLockAt = 0.7f, Casts = true, Fiery = true });
+            }
             if (rank >= 3)
             {
+                // The pour: he tears gold from his own side and throws it in an arc before him, a low wall of molten
+                // gold that stands a few seconds. It keeps the player off him while the lower ranks press.
+                attacks.Add(new EnemyAttack { Name = "gilded_pour", Telegraph = 0.95f, Strike = 0.2f, Recovery = 0.9f, Damage = 12f * harder, Reach = 3.6f, ArcDegrees = 110f, Sweep = 1f, MinRange = 2.2f, MaxRange = 5.5f, Unblockable = true, Cooldown = 9f, Pours = true, Fiery = true });
                 // The planted spear: a ring round himself that goes on burning. His spear is stuck: he is open to anyone with reach.
                 attacks.Add(new EnemyAttack { Name = "gilded_plant", Telegraph = 1.0f, Strike = 0.2f, Recovery = 1.2f, Damage = 20f * harder, Radius = 3.2f, MinRange = 0f, MaxRange = 3f, Unblockable = true, Cooldown = 8f, BurnSeconds = 3f, BurnDamage = 4f, BurnEvery = 0.5f, Fiery = true });
             }
@@ -378,7 +396,56 @@ namespace Clover.Gameplay
                     // The staff swung low.
                     new EnemyAttack { Name = "sunblind_brand", Telegraph = 0.7f, Strike = 0.15f, Recovery = 0.7f, Damage = 16f, Reach = 2.8f, ArcDegrees = 140f, Sweep = 1f, MinRange = 0f, MaxRange = 3f, Fiery = true },
                     // A burst of light round himself; the ground it fell on counts as sunlit for a while after.
+                    // The mirror: the disc on his breast tipped to the sky, and a beam of the sun thrown down a lane. Where it
+                    // falls the ground counts as sunlit for a while, so it can drive someone out of shade.
+                    new EnemyAttack { Name = "sunblind_beam", Telegraph = 1.0f, Strike = 0.25f, Recovery = 0.7f, Damage = 14f, Reach = 12f, LineWidth = 1.1f, MinRange = 3f, MaxRange = 12f, Unblockable = true, Cooldown = 6f, AimLockAt = 0.75f, Beams = true, LightsSeconds = 3.5f, Fiery = true },
                     new EnemyAttack { Name = "sunblind_flare", Telegraph = 0.8f, Strike = 0.2f, Recovery = 0.9f, Damage = 16f, Radius = 3f, MinRange = 0f, MaxRange = 3.2f, Cooldown = 5f, LightsSeconds = 4f, Fiery = true },
+                },
+            },
+        };
+
+        /// <summary>
+        /// A wick burned down to its last: a shell of grey ash round a white-hot core. It comes at a stumbling run,
+        /// and close in it stops and swells (the core brightens, the cracks open, a red ring on the ground) and then
+        /// bursts, hurting everything in the ring, its own side too, and lighting any wick it reaches. Killed before
+        /// that, it bursts where it fell a moment later. It does not flinch: only killing it stops the swell.
+        /// </summary>
+        public static EnemyKind TheAshen() => new EnemyKind
+        {
+            Name = AshenName,
+            Prefix = "ashen",
+            Model = "enemy_wick",
+            Palette = "ashen",
+            Scale = 0.98f,
+            Health = 32f,
+            StaggerMaximum = 999f,
+            PerfectGuardStagger = 0f,
+            PoiseHits = 999,
+            WalkSpeed = 4.4f,
+            TurnDegreesPerSecond = 260f,
+            Embers = 1,
+            DrawsStorm = false,
+            Ashen = true,
+            RiseSeconds = 0.5f,
+            DormantDamage = 1f,
+            BurstsOnDeath = 0.7f,
+            BurstRadius = 3.2f,
+            BurstDamage = 30f,
+            BurstEnemyDamage = 45f,
+            Brain = new EnemyBrain
+            {
+                AggroRange = 11f,
+                LeashRange = 30f,
+                PreferredRange = 1.4f,
+                WaitRange = 0f,
+                RestMin = 0.2f,
+                RestMax = 0.4f,
+                FlinchSeconds = 0.1f,
+                Attacks = new List<EnemyAttack>
+                {
+                    // The swell: it stops, the core brightens and the shell cracks open, and the ring on the ground is
+                    // what it will burn. Get out of the ring; a guard does nothing.
+                    new EnemyAttack { Name = "ashen_swell", Telegraph = 1.35f, Strike = 0.1f, Recovery = 0.3f, Damage = 30f, Radius = 3.2f, MinRange = 0f, MaxRange = 2.2f, Unblockable = true, Bursts = true, AimLockAt = 0f, Fiery = true },
                 },
             },
         };

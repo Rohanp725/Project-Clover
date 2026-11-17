@@ -20,9 +20,12 @@ namespace Clover.EditorTools.Forge
             {
                 case "thirst": return Thirst(kind);
                 case "wick": return Wick(kind);
-                case "sunblind": return SunBlind(kind);
+                case "ashen": return Ashen(kind);
+                case "sunblind": return SunBlind(kind).Where(clip => clip.Name != "sunblind_beam").Concat(new[] { Borrowed(kind, EnemyKind.SunBlind(), "sunblind_beam", "sunblind_ray", SunBlind) });
                 // The three ranks share one set of clips; the warden has every attack, so his bake is the set.
-                case "gilded": return kind.Name == EnemyKind.GildedWardenName ? Gilded(kind) : Enumerable.Empty<ForgeClip>();
+                case "gilded": return kind.Name == EnemyKind.GildedWardenName
+                    ? Gilded(kind).Where(clip => clip.Name != "gilded_pour" && clip.Name != "gilded_cast").Concat(new[] { Borrowed(kind, EnemyKind.Gilded(3), "gilded_pour", "gilded_plant", Gilded), Borrowed(EnemyKind.Gilded(2), EnemyKind.Gilded(3), "gilded_cast", "gilded_lunge", Gilded) })
+                    : Enumerable.Empty<ForgeClip>();
                 case "champion": return Champion(kind);
                 case "sunking": return SunKingAnimations.For(kind);
                 default: return Enumerable.Empty<ForgeClip>();
@@ -60,6 +63,19 @@ namespace Clover.EditorTools.Forge
                 clip.Name = mine;
                 yield return clip;
             }
+        }
+
+        // A move of the second pass made from one of the first: the same motion, made again to the new attack's own seconds.
+        private static ForgeClip Borrowed(EnemyKind kind, EnemyKind standIn, string mine, string theirs, Func<EnemyKind, IEnumerable<ForgeClip>> make)
+        {
+            var own = Named(kind, mine);
+            var borrowed = Named(standIn, theirs);
+            borrowed.Telegraph = own.Telegraph;
+            borrowed.Strike = own.Strike;
+            borrowed.Recovery = own.Recovery;
+            var clip = make(standIn).First(made => made.Name == theirs);
+            clip.Name = mine;
+            return clip;
         }
 
         private static Vector3 V(float x, float y, float z) => new Vector3(x, y, z);
@@ -871,6 +887,166 @@ namespace Clover.EditorTools.Forge
                     .Key(0f, WickReady()).Key(0.14f, flare, Ease.Snap).Key(0.28f, flare, Ease.Linear).Key(0.52f, knees, Ease.In)
                     .Key(0.78f, curl, Ease.InOut).Key(1f, stump, Ease.Out);
             }
+        }
+
+        // ------------------------------------------------------------------ the ashen
+
+        // A wick burned down to its last: hunched round the core in its chest, one arm hanging dead, the other held
+        // out for balance, head lolling. It never quite stands straight.
+        private static ForgePose AshenReady()
+        {
+            var p = WickReady();
+            p.Hips = V(0f, -0.1f, 0.04f);
+            p.HipLean = 10f;
+            p.WaistLean = 22f;
+            p.WaistRoll = -6f;
+            p.HeadLean = 18f;
+            p.HeadRoll = 16f;
+            p.FootL = V(-0.16f, 0f, 0.08f);
+            p.FootR = V(0.15f, 0f, -0.1f);
+            p.HandL = V(-0.3f, 0.66f, 0.12f);
+            p.ElbowL = V(-1f, -0.6f, 0f);
+            p.HandR = V(0.6f, 1.02f, 0.32f);
+            p.HandLBend = 10f;
+            return p;
+        }
+
+        private static IEnumerable<ForgeClip> Ashen(EnemyKind kind)
+        {
+            var kneel = OnKnees(AshenReady());
+            kneel.WaistLean = 40f;
+            kneel.HeadLean = 30f;
+            foreach (var clip in HurtAndStagger("ashen", AshenReady, kneel)) yield return clip;
+
+            // Smouldering where it stands: it sways and jerks as the core flares inside it.
+            yield return new ForgeClip("ashen_idle_loop", 2.4f, true).From(t =>
+            {
+                float a = t * Mathf.PI * 2f;
+                float jerk = Mathf.Exp(-Mathf.Pow((t - 0.4f) / 0.03f, 2f)) + Mathf.Exp(-Mathf.Pow((t - 0.83f) / 0.025f, 2f));
+                var p = AshenReady();
+                p.Hips += V(0.03f * Mathf.Sin(a), 0.01f * Mathf.Sin(a * 2f), 0f);
+                p.WaistRoll += 4f * Mathf.Sin(a) - 10f * jerk;
+                p.HeadRoll += -20f * jerk;
+                p.HeadYaw = 12f * jerk;
+                p.HandR += V(0f, 0.05f * jerk, 0f);
+                return p;
+            });
+
+            // The stumbling run: fast, uneven, thrown forward and always about to fall, the dead arm swinging loose
+            // and the good one flung out to catch itself. One step is longer than the other.
+            yield return new ForgeClip("ashen_walk_loop", 0.62f, true) { Wind = _ => V(0f, 0.6f, -3f) }.From(t =>
+            {
+                float a = t * Mathf.PI * 2f;
+                // The left step is snatched short; the right one lurches long.
+                float s = Mathf.Sin(a + 0.35f * Mathf.Sin(a));
+                float left = s, right = -s;
+                var p = AshenReady();
+                p.Hips = V(0.06f * left, -0.16f + 0.05f * Mathf.Abs(Mathf.Cos(a)), 0.12f);
+                p.HipLean = 22f;
+                p.WaistLean = 30f + 6f * Mathf.Cos(a * 2f);
+                p.HipRoll = 10f * left;
+                p.HipYaw = 12f * left;
+                p.WaistYaw = -10f * left;
+                p.FootL = V(-0.15f, 0.14f * Mathf.Max(0f, Mathf.Cos(a)), 0.38f * left);
+                p.FootR = V(0.15f, 0.16f * Mathf.Max(0f, -Mathf.Cos(a)), 0.46f * right);
+                p.FootLTip = 30f * Mathf.Max(0f, -left);
+                p.FootRTip = 30f * Mathf.Max(0f, -right);
+                p.HeadLean = 4f + 10f * Mathf.Cos(a * 2f);
+                p.HeadRoll = 16f + 8f * left;
+                p.HandL = V(-0.24f + 0.08f * right, 0.6f, 0.1f + 0.3f * right);
+                p.HandR = V(0.7f, 1.12f + 0.12f * left, 0.5f + 0.1f * right);
+                return p;
+            });
+
+            // The swell: it stops dead, the arms are dragged back and wide, the chest thrown out round the core, the head
+            // goes back, and it rises on its toes, shaking harder and harder. Then the burst flings everything open.
+            {
+                var clip = Attack(kind, "ashen_swell", out float hit, out float done);
+                var catchUp = AshenReady();
+                catchUp.Hips = V(0f, -0.2f, -0.06f);
+                catchUp.WaistLean = 10f;
+                catchUp.FootL = V(-0.24f, 0f, 0.12f);
+                catchUp.FootR = V(0.24f, 0f, -0.12f);
+                var open = AshenReady();
+                open.Hips = V(0f, -0.02f, -0.1f);
+                open.HipLean = -8f;
+                open.WaistLean = -26f;
+                open.WaistRoll = 0f;
+                open.HeadLean = -36f;
+                open.HeadRoll = 0f;
+                open.FootL = V(-0.24f, 0f, 0.06f);
+                open.FootR = V(0.24f, 0f, -0.06f);
+                open.HandL = V(-0.86f, 1.18f, -0.36f);
+                open.HandR = V(0.86f, 1.22f, -0.36f);
+                open.ElbowL = V(-1f, -0.3f, -0.5f);
+                open.ElbowR = V(1f, -0.3f, -0.5f);
+                open.ShoulderLUp = 18f;
+                open.ShoulderRUp = 18f;
+                open.HandLBend = -60f;
+                open.HandRBend = -60f;
+                var toes = open.Copy();
+                toes.Hips = V(0f, 0.08f, -0.12f);
+                toes.WaistLean = -34f;
+                toes.HeadLean = -48f;
+                toes.FootLTip = -30f;
+                toes.FootRTip = -30f;
+                toes.HandL = V(-0.98f, 1.36f, -0.44f);
+                toes.HandR = V(0.98f, 1.4f, -0.44f);
+                var burst = open.Copy();
+                burst.Hips = V(0f, 0.12f, 0f);
+                burst.WaistLean = -10f;
+                burst.HeadLean = -20f;
+                burst.HandL = V(-1.1f, 1.9f, 0.2f);
+                burst.HandR = V(1.1f, 1.9f, 0.2f);
+                burst.ShoulderLUp = 40f;
+                burst.ShoulderRUp = 40f;
+                var impact = clip.Shape;
+                clip.Shape = (t, p) =>
+                {
+                    p = impact(t, p);
+                    // The shaking grows with the swell.
+                    if (t < hit)
+                    {
+                        float shake = Mathf.Sin(t * 260f) * 0.025f * (t / hit);
+                        p.Hips += V(shake, 0f, 0f);
+                        p.HandL += V(0f, shake, 0f);
+                        p.HandR += V(0f, -shake, 0f);
+                        p.HeadRoll += shake * 500f;
+                    }
+                    return p;
+                };
+                yield return clip.Key(0f, AshenReady()).Key(hit * 0.2f, catchUp, Ease.Snap).Key(hit * 0.55f, open, Ease.InOut).Key(hit * 0.95f, toes, Ease.InOut)
+                    .Key(hit, burst, Ease.Snap).Key(1f, burst, Ease.Linear);
+            }
+
+            // Struck down before its time: it drops to its knees clutching at the core, and the shell sags in on it.
+            {
+                var knees = OnKnees(AshenReady());
+                knees.Hips = V(0f, -0.54f, 0.06f);
+                knees.WaistLean = 30f;
+                knees.HeadLean = 30f;
+                knees.HandL = V(-0.12f, 1.1f, 0.34f);
+                knees.HandR = V(0.12f, 1.04f, 0.36f);
+                knees.ElbowL = V(-1f, -1f, 0f);
+                knees.ElbowR = V(1f, -1f, 0f);
+                var sag = knees.Copy();
+                sag.Hips = V(0f, -0.66f, 0.1f);
+                sag.WaistLean = 58f;
+                sag.HeadLean = 50f;
+                sag.HandL = V(-0.1f, 0.6f, 0.4f);
+                sag.HandR = V(0.1f, 0.56f, 0.42f);
+                yield return new ForgeClip("ashen_death", 0.8f) { SheetMoments = new[] { 0f, 0.15f, 0.3f, 0.45f, 0.6f, 0.75f, 0.9f, 1f } }
+                    .Key(0f, AshenReady()).Key(0.4f, knees, Ease.In).Key(1f, sag, Ease.Out);
+            }
+
+            // Dormant, as a wick is, and up quicker.
+            yield return new ForgeClip("ashen_dormant_loop", 3f, true).From(t =>
+            {
+                var p = WickLaidOut();
+                p.WaistLean = 8f + 2f * Mathf.Sin(t * Mathf.PI * 2f);
+                return p;
+            });
+            yield return new ForgeClip("ashen_rise", kind.RiseSeconds).Key(0f, WickLaidOut()).Key(0.4f, AshenReady(), Ease.Snap).Key(1f, AshenReady(), Ease.Linear);
         }
 
         // ------------------------------------------------------------------ the gilded soldier

@@ -149,6 +149,26 @@ namespace Clover.Player
             Callouts++;
         }
 
+        /// <summary>
+        /// Heat on the skin (the noon's swell, molten gold underfoot): health taken a little at a time without a flinch.
+        /// What would kill is dealt as a blow, so a fall from it is a fall like any other. Returns the health taken.
+        /// </summary>
+        public float Scorch(float amount)
+        {
+            if (amount <= 0f || IsDead) return 0f;
+            if (Health.Current - amount <= 0.5f)
+            {
+                TakeHit(new Hit(amount, 0f, -transform.forward, false, true));
+                return amount;
+            }
+            Health.Damage(amount);
+            Scorched += amount;
+            return amount;
+        }
+
+        /// <summary>Health taken by heat, in all.</summary>
+        public float Scorched { get; private set; }
+
         /// <summary>Gives health, as an upgrade or an affliction on an enemy does. Shown as healing unless asked not to be.</summary>
         public void Heal(float amount, bool show = true)
         {

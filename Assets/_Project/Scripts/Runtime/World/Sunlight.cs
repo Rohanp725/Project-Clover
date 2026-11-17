@@ -19,6 +19,11 @@ namespace Clover.World
         private static readonly Vector3[] flareAt = new Vector3[MostFlares];
         private static readonly float[] flareRadius = new float[MostFlares];
         private static readonly float[] flareLeft = new float[MostFlares];
+        public const int MostBeams = 8;
+        private static readonly Vector3[] beamFrom = new Vector3[MostBeams];
+        private static readonly Vector3[] beamTo = new Vector3[MostBeams];
+        private static readonly float[] beamHalfWidth = new float[MostBeams];
+        private static readonly float[] beamLeft = new float[MostBeams];
 
         /// <summary>True where the sky is open: every point is lit unless a rectangle of shade covers it.</summary>
         public static bool OpenSky { get; private set; }
@@ -34,6 +39,7 @@ namespace Clover.World
             OpenSky = false;
             Hand = null;
             for (int i = 0; i < MostFlares; i++) flareLeft[i] = 0f;
+            for (int i = 0; i < MostBeams; i++) beamLeft[i] = 0f;
         }
 
         public static void SetOpenSky(bool open) => OpenSky = open;
@@ -71,11 +77,45 @@ namespace Clover.World
             flareLeft[free] = seconds;
         }
 
+        /// <summary>
+        /// Lights a lane of ground for a while, as a beam of sun thrown from a mirror does: from one point to another,
+        /// this wide. Zero seconds or less puts nothing down.
+        /// </summary>
+        public static void Beam(Vector3 from, Vector3 to, float width, float seconds)
+        {
+            if (seconds <= 0f) return;
+            int free = 0;
+            for (int i = 0; i < MostBeams; i++)
+                if (beamLeft[i] < beamLeft[free]) free = i;
+            beamFrom[free] = from;
+            beamTo[free] = to;
+            beamHalfWidth[free] = width * 0.5f;
+            beamLeft[free] = seconds;
+        }
+
+        /// <summary>True for a point a beam of reflected sun is falling on now.</summary>
+        public static bool InBeam(Vector3 position)
+        {
+            for (int i = 0; i < MostBeams; i++)
+            {
+                if (beamLeft[i] <= 0f) continue;
+                float x = beamTo[i].x - beamFrom[i].x, z = beamTo[i].z - beamFrom[i].z;
+                float length = x * x + z * z;
+                float px = position.x - beamFrom[i].x, pz = position.z - beamFrom[i].z;
+                float along = length > 0.0001f ? Mathf.Clamp01((px * x + pz * z) / length) : 0f;
+                float dx = px - x * along, dz = pz - z * along;
+                if (dx * dx + dz * dz <= beamHalfWidth[i] * beamHalfWidth[i]) return true;
+            }
+            return false;
+        }
+
         /// <summary>Lets the flares burn down. Called once a frame by the scene's <see cref="SunlightZones"/>.</summary>
         public static void Tick(float deltaTime)
         {
             for (int i = 0; i < MostFlares; i++)
                 if (flareLeft[i] > 0f) flareLeft[i] -= deltaTime;
+            for (int i = 0; i < MostBeams; i++)
+                if (beamLeft[i] > 0f) beamLeft[i] -= deltaTime;
         }
 
         /// <summary>Whether a point on the ground is in the sun.</summary>
@@ -87,6 +127,7 @@ namespace Clover.World
                 float x = position.x - flareAt[i].x, z = position.z - flareAt[i].z;
                 if (x * x + z * z <= flareRadius[i] * flareRadius[i]) return true;
             }
+            if (InBeam(position)) return true;
             if (Hand != null && Hand.Covers(position)) return false;
             bool lit = OpenSky;
             for (int i = 0; i < count; i++)

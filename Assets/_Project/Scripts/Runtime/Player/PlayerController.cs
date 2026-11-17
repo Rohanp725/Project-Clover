@@ -17,6 +17,8 @@ namespace Clover.Player
         [SerializeField] private Transform cameraTransform;
 
         public float MoveSpeed = 6f;
+        /// <summary>What the ground underfoot does to the pace (cooling gold slows it). One everywhere else; set each frame by whatever lies there.</summary>
+        [System.NonSerialized] public float GroundFactor = 1f;
         public float TurnDegreesPerSecond = 900f;
         public float Gravity = 25f;
         public StaminaPool Stamina = new StaminaPool();
@@ -282,7 +284,7 @@ namespace Clover.Player
                 bool guarding = defence != null && defence.IsGuarding;
                 bool drinking = defence != null && defence.IsDrinking;
                 var carried = combat != null ? combat.Weapon : null;
-                float speed = MoveSpeed * (carried != null ? carried.MoveFactor : 1f)
+                float speed = MoveSpeed * GroundFactor * (carried != null ? carried.MoveFactor : 1f)
                     * (guarding ? (carried != null ? carried.GuardMoveFactor : GuardMoveFactor) : drinking ? DrinkMoveFactor : 1f);
                 step = wish * (speed * deltaTime);
                 // The guard stays turned to the nearest enemy and the player sidesteps behind it; with no enemy near,

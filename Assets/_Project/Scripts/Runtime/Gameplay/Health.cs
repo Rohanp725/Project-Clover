@@ -21,5 +21,12 @@ namespace Clover.Gameplay
             Current -= lost;
             return lost;
         }
+
+        /// <summary>Gives health back, never past the most; nothing for the dead.</summary>
+        public void Heal(float amount)
+        {
+            if (amount <= 0f || IsDead) return;
+            Current = Math.Min(Maximum, Current + amount);
+        }
     }
 }

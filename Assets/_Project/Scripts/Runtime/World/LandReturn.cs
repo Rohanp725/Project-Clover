@@ -23,6 +23,17 @@ namespace Clover.World
         public bool ElitesStayFallen = true;
         /// <summary>Enemies farther than this that have not noticed anyone stop animating until the player comes near. Nothing or less: none sleep.</summary>
         public float SleepBeyond = 55f;
+        /// <summary>
+        /// The owner's rule for this land (fire_rework.md, section 3): the embers lost on a fall go to the enemies killed
+        /// since the last rest, who carry them back glowing and give them up on their next death; a second fall loses
+        /// what is still waiting. Off, a fall's embers are simply gone.
+        /// </summary>
+        public bool EmbersReturnWithTheDead = true;
+
+        /// <summary>Who carries what after a fall.</summary>
+        public EmberDebt Debt { get; private set; } = new EmberDebt(0);
+        public int Reclaimed { get; private set; }
+        public int Forfeited => Debt.Forfeited;
 
         public int Falls { get; private set; }
         public int EmbersLost { get; private set; }
@@ -30,12 +41,18 @@ namespace Clover.World
 
         private Animator[] animators;
         private float untilLook;
+        private float untilMote;
+        private PlayerUpgrades upgrades;
+        [SerializeField] private Clover.UI.LandHud hud;
 
         public void Configure(AreaDirector areaDirector, PlayerDefence playerDefence)
         {
             director = areaDirector;
             defence = playerDefence;
         }
+
+        /// <summary>The HUD line that says how many embers are waiting to be reclaimed.</summary>
+        public void ConfigureHud(Clover.UI.LandHud landHud) => hud = landHud;
 
         private void Awake()
         {
@@ -44,8 +61,16 @@ namespace Clover.World
 
         private void Start()
         {
-            if (defence != null) defence.Revived += OnRevived;
+            if (defence != null)
+            {
+                defence.Revived += OnRevived;
+                upgrades = defence.GetComponent<PlayerUpgrades>();
+            }
             if (director == null) return;
+            director.Rested += OnRested;
+            Debt = new EmberDebt(director.Enemies.Length);
+            foreach (var enemy in director.Enemies)
+                if (enemy != null) enemy.Died += OnEnemyDied;
             animators = new Animator[director.Enemies.Length];
             for (int i = 0; i < animators.Length; i++)
                 if (director.Enemies[i] != null) animators[i] = director.Enemies[i].GetComponentInChildren<Animator>();
@@ -54,6 +79,27 @@ namespace Clover.World
         private void OnDestroy()
         {
             if (defence != null) defence.Revived -= OnRevived;
+            if (director == null) return;
+            director.Rested -= OnRested;
+            foreach (var enemy in director.Enemies)
+                if (enemy != null) enemy.Died -= OnEnemyDied;
+        }
+
+        private void OnRested() => Debt.Rested();
+
+        private void OnEnemyDied(Enemy who)
+        {
+            int index = System.Array.IndexOf(director.Enemies, who);
+            if (index < 0) return;
+            if (ReturnRule.ComesBack(who.Kind.IsBoss, who.Kind.IsElite, true, ElitesStayFallen)) Debt.Killed(index);
+            int share = Debt.Reclaim(index);
+            if (share <= 0 || upgrades == null) return;
+            // Its share comes back as embers always do: paid now, seen flying to the player as the body burns away.
+            Reclaimed += share;
+            upgrades.Earn(share);
+            who.CarryEmbers(upgrades.transform, share);
+            Vfx.Play(VfxKind.Burst, who.transform.position + Vector3.up * 1.2f, Vector3.up, 0.8f);
+            if (defence != null) defence.Callout(share == 1 ? "1 ember reclaimed" : share + " embers reclaimed");
         }
 
         private void OnRevived()
@@ -61,6 +107,20 @@ namespace Clover.World
             Falls++;
             int kept = ReturnRule.EmbersAfterFall(RunState.Points, LoseCarriedEmbers);
             int lost = RunState.Points - kept;
+            int waiting = Debt.Waiting;
+            if (EmbersReturnWithTheDead)
+            {
+                int gone = Debt.Fall(lost);
+                if (lost > 0)
+                {
+                    EmbersLost += lost;
+                    RunState.Points = kept;
+                }
+                if (defence != null && (lost > 0 || waiting > 0))
+                    defence.Callout(Debt.Waiting > 0 ? (gone > 0 ? gone + " embers gone. The fallen carry " + Debt.Waiting : "The fallen carry your embers")
+                        : gone == 1 ? "1 ember lost" : gone + " embers lost");
+                return;
+            }
             if (lost <= 0) return;
             EmbersLost += lost;
             RunState.Points = kept;
@@ -69,6 +129,25 @@ namespace Clover.World
 
         private void Update()
         {
+            if (hud != null) hud.ShowReclaim(Debt.Waiting);
+            if (Debt.Waiting > 0 && director != null)
+            {
+                untilMote -= Time.deltaTime;
+                if (untilMote <= 0f)
+                {
+                    // Each carrier shines with an ember mote over its heart.
+                    untilMote = 0.12f;
+                    var carriers = director.Enemies;
+                    for (int i = 0; i < carriers.Length; i++)
+                    {
+                        var enemy = carriers[i];
+                        if (enemy == null || enemy.IsDead || !enemy.gameObject.activeInHierarchy || !Debt.Carries(i)) continue;
+                        Vector3 heart = enemy.transform.position + Vector3.up * 1.35f;
+                        Vfx.Play(VfxKind.TintPuff, heart + Random.insideUnitSphere * 0.2f, Vector3.up, 0.35f, new Color(1f, 0.55f, 0.15f, 1f));
+                        if (Random.value < 0.3f) Vfx.Play(VfxKind.Embers, heart, Vector3.up, 0.25f);
+                    }
+                }
+            }
             if (animators == null || defence == null) return;
             untilLook -= Time.deltaTime;
             if (untilLook > 0f) return;

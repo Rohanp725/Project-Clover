@@ -76,6 +76,7 @@ namespace Clover.EditorTools.Forge
                 case "captain": return CaptainAnimations.For(kind);
                 case "thirst":
                 case "wick":
+                case "ashen":
                 case "gilded":
                 case "champion":
                 case "sunking":

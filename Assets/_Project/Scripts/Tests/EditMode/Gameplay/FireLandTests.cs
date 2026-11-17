@@ -123,11 +123,19 @@ namespace Clover.Tests
             priest.Brain.Reset();
             priest.Brain.Alert();
             priest.Brain.TargetLit = false;
-            for (int i = 0; i < 120; i++) priest.Brain.Tick(Frame, 10f, 0.5f);
-            Assert.AreEqual(EnemyState.Stalk, priest.Brain.State, "nothing he may throw at someone he has not found in the sun");
-            priest.Brain.TargetLit = true;
-            priest.Brain.Tick(Frame, 10f, 0.5f);
-            Assert.AreEqual("sunblind_ray", priest.Brain.Current.Name);
+            // Second pass: at someone found in shade he may throw the mirror's beam (it lights the shade), never the ray.
+            for (int i = 0; i < 120; i++)
+            {
+                priest.Brain.Tick(Frame, 10f, 0.5f);
+                Assert.AreNotEqual("sunblind_ray", priest.Brain.Current?.Name, "no ray at someone he has not found in the sun");
+            }
+            var lit = EnemyKind.SunBlind();
+            lit.Brain.Attacks.RemoveAll(a => a.Beams);
+            lit.Brain.Reset();
+            lit.Brain.Alert();
+            lit.Brain.TargetLit = true;
+            lit.Brain.Tick(Frame, 10f, 0.5f);
+            Assert.AreEqual("sunblind_ray", lit.Brain.Current.Name);
 
             var thirst = EnemyKind.Thirsting();
             thirst.Brain.Reset();
@@ -287,7 +295,8 @@ namespace Clover.Tests
             Assert.AreEqual(new[] { 80f, 100f, 120f }, new[] { levy.StaggerMaximum, spearman.StaggerMaximum, warden.StaggerMaximum });
             Assert.AreEqual(new[] { 1, 2, 3 }, new[] { levy.Embers, spearman.Embers, warden.Embers });
             Assert.AreEqual(new[] { 3, 4, 5 }, new[] { levy.PoiseHits, spearman.PoiseHits, warden.PoiseHits });
-            Assert.AreEqual(new[] { 2, 5, 6 }, new[] { levy.Brain.Attacks.Count, spearman.Brain.Attacks.Count, warden.Brain.Attacks.Count });
+            // The warden's seventh is the second pass's pour.
+            Assert.AreEqual(new[] { 2, 6, 7 }, new[] { levy.Brain.Attacks.Count, spearman.Brain.Attacks.Count, warden.Brain.Attacks.Count });
             Assert.IsTrue(levy.Guards && spearman.Guards && warden.Guards);
             Assert.IsFalse(levy.Steadfast || spearman.Steadfast);
             Assert.IsTrue(warden.Steadfast);

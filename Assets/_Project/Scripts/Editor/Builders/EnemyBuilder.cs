@@ -178,6 +178,7 @@ namespace Clover.EditorTools
         private static Material ToonFor(Material imported, Dictionary<string, Material> materials, string palette)
         {
             // The Fire land's people are painted by its own kit; a gilded soldier's palette carries his rank.
+            if (imported != null && SunCityKit.Knows(imported.name) && palette == "ashen") return SunCityKit.Ashen(imported.name);
             if (imported != null && SunCityKit.Knows(imported.name))
                 return SunCityKit.For(imported.name, palette != null && palette.StartsWith("gilded") && palette.Length == 7 ? palette[6] - '0' : 3);
             string name = imported != null ? imported.name.Replace("m_enemy_", "").Replace("m_boss_", "boss:") : "";

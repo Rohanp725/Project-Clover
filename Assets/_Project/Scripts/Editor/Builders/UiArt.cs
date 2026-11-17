@@ -77,6 +77,22 @@ namespace Clover.EditorTools
             return colour;
         });
 
+        /// <summary>The sun mark of the Fire land's HUD: a white disc with short rays round it, to be tinted and filled radially.</summary>
+        public static Sprite Sun() => Make("ui_sun", 64, 64, Vector4.zero, (x, y) =>
+        {
+            float dx = x - 31.5f, dy = y - 31.5f;
+            float r = Mathf.Sqrt(dx * dx + dy * dy);
+            float angle = Mathf.Atan2(dy, dx);
+            float disc = Mathf.Clamp01(17.5f - r);
+            // Twelve short rays, ink-edged so the mark reads on a white sky.
+            float ray = Mathf.Clamp01((Mathf.Cos(angle * 12f) - 0.55f) * 6f) * Mathf.Clamp01(29f - r) * Mathf.Clamp01(r - 20f);
+            float body = Mathf.Max(disc, ray);
+            float edge = Mathf.Clamp01(Mathf.Max(Mathf.Clamp01(19.5f - r), Mathf.Clamp01((Mathf.Cos(angle * 12f) - 0.4f) * 5f) * Mathf.Clamp01(30.5f - r) * Mathf.Clamp01(r - 18.5f)));
+            Color colour = body > 0.5f ? Color.white : new Color(Ink.r, Ink.g, Ink.b, 1f);
+            colour.a = Mathf.Max(body, edge);
+            return colour;
+        });
+
         /// <summary>A panel for menus and spoken words: ink with a pale line set in from its edge. Sliced.</summary>
         public static Sprite Panel() => Make("ui_panel", 64, 64, new Vector4(20, 20, 20, 20), (x, y) =>
         {

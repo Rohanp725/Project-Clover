@@ -1502,3 +1502,136 @@ whole body rolled over. No sound anywhere in the fight.
 - *The Gate of Noon's doors* are a bronze with its own warm light (`m_sun_bronze`), so they are bronze in shade and
   not near black.
 - *Not done:* the statue heads of the golden way are still above the top of the picture.
+
+### As built: second pass, enemies (2026-11-17, fourth worker)
+
+What `fire_rework.md` sections 1 to 3 asked for, built as parts a scene builder calls. Nothing here lays out a level:
+SunCity is untouched and still plays as the first pass did (its priests have the beam and its warden the pour, since
+those are attacks of the kinds; nothing else is added to it until its builder calls the kit). Everything was tried in
+the yard (`Clover > Build > Fire Yard`, now with an east yard through a gap in its east wall) by
+`AgentScripts/FireMechanicsProbe.cs`.
+
+**For the level worker: the one file to call is `Editor/Builders/FireMechanicsKit.cs`.** In order, in a builder:
+
+1. Build the enemies with `EnemyBuilder.Build(kind, position, yaw, kit, parent)` as before, collecting them in a list.
+   New kind name: `EnemyKind.AshenName` ("The Ashen").
+2. `FireMechanicsKit.Equip(enemies, kit)` once, after all are built. It gives every enemy its kind's trick: the ashen
+   its core, lamp, burst ring and `AshenBurst`; every wick a `WickFlame` and a flame lamp; every gilded `GoldRuns`;
+   every priest a `SunMirror` (its beam quads, and the scene's gilded to call); every thirsting a `ThirstDrinker`
+   (told the scene's enemies, whose bodies it drinks).
+3. Per enemy, as the level wants:
+   - `FireMechanicsKit.Bury(thirsting, wakeWithin = 3.2f)`: a thirsting under the mud as a breathing mound. Call after
+     `Equip`. It replaces `MakeDormant` for that one.
+   - `FireMechanicsKit.Wick(wick, burning: true)`: a wick that starts alight (it lights any wick it touches; put one
+     beside dormant ones for a chain). `Equip` already gives every wick an unlit flame; calling this again only makes
+     it start burning (the same component and lamp).
+   - `wick.MakeDormant(distance)` as before; fire from any source (a burst, a beam, a burning wick) wakes them.
+   - `FireMechanicsKit.WallOfShields(name, parent, levy1, levy2, levy3...)`: levies that lock into a line once two or
+     more of them are in the fight. Place them side by side about 1.3 m apart on a long ramp or a street.
+4. Props, anywhere: `FireMechanicsKit.Jar(parent, position, director)` (a water jar: any blow breaks it, the spill is
+   drunk by any thirsting within 8 m, 16 m in a swell; whole again after a rest), `FireMechanicsKit.Mirror(parent,
+   position, facingDegrees)` (a mirror stand; it must also go into `PlayerInteraction.Configure(...)`'s list), and
+   `FireMechanicsKit.Target(parent, position, facingDegrees, opens)` (a sun-disc; held 1 s in a mirror's beam it is
+   lit for good and `opens.SetActive(false)`).
+   **Wiring a mirror to a door:** pass the door's blocking object as `opens`. For anything else, subscribe to
+   `MirrorTarget.Lit` (an `event Action<MirrorTarget>`) from a runtime component, or pass a `reveals` object through
+   `MirrorTarget.Configure(opens, reveals, glow)` to show a hidden way. Beams stop at the first collider that is not a
+   body or trigger, at the stand's height plus 1.4 m; aim them at the target with yaw steps of 45 degrees from the
+   starting facing (`MirrorStand.TurnStep`).
+5. Once per scene: `FireMechanicsKit.Floor(world, player, enemies)` (the pool of 40 pieces the gold, footprints and
+   pour are drawn from; without it none of the three shows or does anything), `var hud = FireMechanicsKit.Hud()`,
+   `FireMechanicsKit.Heat(director.gameObject, player, schedule, calmRectangles, enemies, hud)` and, on the scene's
+   `LandReturn`, `land.ConfigureHud(hud)`.
+
+**Setting the heat schedule.** `new HeatSchedule(firstAt, every, warning = 5, swell = 15)` in seconds of play since the
+scene loaded; `HeatSchedule.Never` for none. A district's own rhythm: one `NoonHeat` per scene, so for districts call
+`NoonHeat.Instance.SetSchedule(...)` from a trigger as the player crosses into a district (no trigger component was
+written for that; it is a few lines). **A no-swell zone** is a calm rectangle `new Vector4(leastX, mostX, leastZ, mostZ)`
+in `calmRectangles`: a player inside is never burnt and the look does not whiten there. The elite's arena wants one.
+The shade the swell reads is the same `SunlightZones` rectangles the priests use, so every shade island the level
+draws must also be given to `SunlightZones.Configure`, as the yard's porch and new east awning are
+(`FireYardBuilder.AwningShade`: a roof drawn as its shadow only, its rectangle moved north by
+`LookBuilder.NoonShadowLength(height)`).
+
+**What each thing does (runtime, `Assets/_Project/Scripts/Runtime`):**
+
+- *The ashen* (`EnemyKind.TheAshen()`, `Gameplay/AshenBurst.cs`): the wick's model in its own palette
+  (`SunCityKit.Ashen`: grey ash shell, near-black char, the wick's glowing slots white-hot), 32 health, walks at 4.4
+  (the wick 2.2), never flinches (`PoiseHits` 999). One attack, `ashen_swell`: 1.35 s telegraph, a red circle of 3.2 m
+  (the burst's reach), unblockable. Through the telegraph the core (a camera-facing glow and a point lamp) brightens
+  and grows, grey flakes and white sparks come off it, the body shakes. On the blow it bursts: white flash, ring of
+  ash, flames round its edge, embers; 30 to the player, 45 (and a burn) to every other enemy in the ring; a wick in it
+  is lit and takes only a quarter (they burn and are not consumed); the ashen is gone. Killed first, it bursts where it fell 0.7 s later, its red ring drawn meanwhile. Another
+  ashen caught in a burst dies and bursts in turn. Clips: `ashen_idle_loop`, `ashen_walk_loop` (the stumbling run, an
+  uneven stride), `ashen_swell` (arms dragged back, chest out, up on the toes, then flung open), `ashen_death`,
+  `ashen_hurt`, `ashen_stagger`, `ashen_dormant_loop`, `ashen_rise`.
+- *The wick's flame* (`Gameplay/WickFlame.cs`): lit, it wakes, burns from head and hands with its own lamp, moves 1.4
+  times as fast, leaves a burning footprint every 0.35 s it walks (they bite for 3) and lights any wick within 1.6 m.
+- *The heat of noon* (`World/NoonHeat.cs`, `Gameplay/HeatSchedule.cs`, `UI/LandHud.cs`): the warning whitens the look
+  (a second global volume, `Generated/SunCity/NoonSwellProfile.asset`, its weight rising), hardens the sun's shadows,
+  fills the sun mark at the top of the screen and says "The sun swells. Find shade." once. In the swell a player
+  standing where `Sunlight.IsLit` is true burns 3 every 0.8 s (pale wisps and flame off the shoulders), never in shade
+  nor a calm rectangle. Wicks and the ashen move and act 1.45 times as fast, the thirsting 1.3 and smell water from
+  twice as far, the gilded drip gold on their own about once a second. `NoonHeat.Swelling` is static for any other
+  part to read.
+- *Embers after a fall* (`Gameplay/EmberDebt.cs`, in `World/LandReturn.cs`, on by `LandReturn.EmbersReturnWithTheDead`):
+  the embers carried at a fall go, split evenly, to the enemies killed since the last rest (the first takes any
+  remainder); each such carrier gives off ember motes over its heart; its next death pays its share (with motes
+  flying to the player and "N embers reclaimed"); a second fall loses whatever is still waiting and spreads the new
+  loss over those killed since. With nobody killed since the rest the embers are simply gone. The HUD line "Embers to
+  reclaim: N" shows while any wait. `AreaDirector.Rested` is a new event (raised after a rest), used for this and the jars.
+- *The running gold* (`Gameplay/GoldRuns.cs`, `Gameplay/MoltenFloor.cs`): each blow that lands or is turned on a gilded
+  splashes molten gold beside him (a heavy, more); hot for 2.6 s (burns 4 every 0.5 s), then cooling for 5 s (a bright
+  puddle that slows the player to 0.55 and any non-gilded enemy likewise), then gone. 40 pieces at most; when full the
+  oldest goes. `PlayerController.GroundFactor` is new and only `MoltenFloor` sets it.
+- *The warden's pour* (`gilded_pour` on rank 3): 0.95 s, a red wedge of 110 degrees and 3.6 m, cooldown 9 s, for a
+  player 2.2 to 5.5 m off. When it falls he lays an arc of molten gold at the wedge's edge: blobs 1.1 m high with
+  colliders, for 4.5 s, then they run flat. Clip borrowed from the plant at the pour's timing.
+- *The shield wall* (`Gameplay/ShieldWall.cs`): two or more levies in the fight stand in a line 1.25 m apart across the
+  way to the player, facing them, and the line steps forward at 1.5 m/s until 2.4 m off; they still thrust from it. A
+  light blow from the front is turned as a levy always turned it; a heavy blow on a shield from the front breaks the
+  line: a clang and a spray of gold, every levy's guard down for 2.5 s (`Enemy.GuardOpenFor`), and the line re-forms
+  after 4 s.
+- *The buried thirsting* (`Gameplay/BuriedMound.cs`): while dormant the body is hidden and a low mud mound with two
+  dark cracks stands there, rising and falling, a puff of dust from a crack every 1.7 s. Woken, a spray of dust, clods
+  and a ring, and its first act is the lunge for the belt (the snatch with two flasks or more, else the pounce).
+- *The thirsting drink* (`Gameplay/ThirstDrinker.cs`, `Gameplay/Waters.cs`, `World/WaterJar.cs`): a fallen body
+  (not a thirsting's) is water for 14 s, a broken jar's spill for 30 s. A thirsting not attacking runs to the nearest
+  within reach, drinks for 1.4 s (helpless, the drink clip), and rises with 60% of its health back, its most raised
+  by a quarter and its body 8% larger for each drink (three at most).
+- *The priest's mirror* (`Gameplay/SunMirror.cs`): `sunblind_beam`, a 12 m lane 1.1 m wide, 1 s telegraph with glints
+  at his breast, unblockable, 14 damage; the streak is drawn white-gold for 0.35 s and the lane stays pale and counts as
+  sunlit for 3.5 s (`Sunlight.Beam`, new). It is used at someone found in shade as well as in sun; the ray stays
+  sun-only. *The calling*: the moment he finds the player in the sun, and every 7 s while he keeps them, a ring of
+  light at his raised disc, the player's ground lit for 2.5 s, and every gilded within 14 m woken and coming.
+- *The mirror stand* (`World/MirrorStand.cs`, `World/MirrorTarget.cs`): use turns it 45 degrees in 0.4 s; while it
+  stands in the sun it throws a beam until the first wall, burning every enemy in it for 8 every 0.5 s, lighting
+  wicks, and lighting its lane.
+- `Enemy` gained, all inert unless something calls them: the events `AttackStruck`, `Struck`, `Woke`, `Restored`;
+  `Kill()`, `WakeNow()`, `Heal(amount, swell)`, `Sip(seconds)`, `Steer(point, speed, faceTarget)` and `ClearSteer()`;
+  the paces `SwellPace`, `FlamePace`, `GroundPace`; `GuardOpenFor`. `Health.Heal` is new. `EnemyAttack` gained the
+  flags `Bursts`, `Pours`, `Beams`. `PlayerDefence.Scorch(amount)` takes health without a flinch (heat), dealing a
+  blow only when it would kill.
+
+- *The spearman's throw* (`gilded_cast` on rank 2 only, `Gameplay/SpearCast.cs`, given by `Equip` to every enemy named
+  `GildedSpearmanName`): 0.9 s, a red lane 10 m long, unblockable, 20 damage, for a player 5 to 10 m off, cooldown 10 s.
+  The spear (a shaft with a molten head, its own lamp) stands leaning in the floor where the lane ends, where it met
+  the player, or short of a wall, smoking; until he has walked to it (1.3 times his pace) and pulled it out his guard
+  is down. Clip borrowed from the lunge. The spear in his model's hand stays drawn while he is bare-handed.
+
+**Not built** (in the brief, left for later): the spearman's leap from a ledge (the leap needs ledges, which the level plan will give; `EnemyAttack.Leap`
+already exists for an attack that jumps to a marked spot, so the cheap form is a `gilded_leap` attack with `Leap =
+true` that a builder enables only for a spearman placed on a ledge; not written). A spilled flask as drink for the
+thirsting (only bodies and jars count). "Fire from a knocked-over brazier" waking wicks: there is no knockable
+brazier; `WickFlame.LightWithin(point, radius)` is the call for one. The district trigger for heat schedules. No
+sounds for any of it.
+
+**What looks weak** (from the frames, see the report): the ashen's burst is mostly the shared white flash and flame
+sprites, so its ash ring reads less than its fire; the gold puddles are flat yellow lenses without a molten sheen;
+the ashen's core glow sits in front of the body as a disc rather than showing through cracks (there are no cracks
+in the mesh); the shield wall has no locked-shield effect between the levies, only their spacing and their guard arcs;
+the buried mound seen from above is a flat grey disc with two dark strokes, more a lid than a heap of mud, and its burst
+of dust comes out nearly white; the spearman keeps drawing the spear in his hand while the thrown one stands in the floor.
+Measured in the probe but not shown: the spear throw's damage did not register on the still player (health 100 -> 100,
+though the frame shows the lane and the flash on them), and in the first ashen test a levy placed 2.7 m from the burst
+was not struck (a levy was struck in the early-kill test, 80 -> 34). No sounds for any of it.

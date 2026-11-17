@@ -71,6 +71,14 @@ namespace Clover.Gameplay
         public float LightsSeconds;
         /// <summary>The blow is shown as fire and not as lightning.</summary>
         public bool Fiery;
+        /// <summary>The attacker bursts with the blow and is gone (the ashen): its <see cref="AshenBurst"/> does the rest.</summary>
+        public bool Bursts;
+        /// <summary>The blow pours molten gold along the edge of its shape, a low wall that stands for a while (the warden).</summary>
+        public bool Pours;
+        /// <summary>The blow is a beam of reflected sun: the lane it falls on counts as sunlit for a while after.</summary>
+        public bool Beams;
+        /// <summary>The weapon is thrown with the blow and stands where it lands until the attacker fetches it (the spearman): its <see cref="SpearCast"/> does the rest.</summary>
+        public bool Casts;
 
         public float Total => Telegraph + Strike + Recovery;
         public bool IsCircle => Radius > 0f;

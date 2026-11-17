@@ -51,6 +51,7 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 | `SoakProbe` | any | random play for minutes; mode, seed and seconds are read from `%TEMP%/soak_config.txt` |
 | `TourProbe`, `TitleProbe` | any | photographs of each scene's places and its title card, to `review/shots/current/` |
 | `PerfProbe` | any | ten seconds of frame time, garbage and draw calls |
+| `FireMechanicsProbe` | FireYard | the Fire land's second pass, each mechanic forced and measured; see below |
 
 Probes that touch saved progress forget it before and after, so the first real start still shows the first waking.
 
@@ -258,3 +259,36 @@ the middle and reports ten seconds of frame times and garbage.
 
 Heredocs with an apostrophe in them fail in this shell tool: write a patch script with the Write tool and run it
 with `python -I script.py </dev/null` (never `python - <<EOF </dev/null`, which reads nothing).
+
+### FireMechanicsProbe
+
+`bash AgentScripts/runprobe.sh FireYard FireMechanicsProbe 200` (about a minute and a half). The second pass of the Fire
+land's enemies in the yard's east part (`Clover > Build > Fire Yard` first if the scene is older than the kit). Each
+part puts everyone back first, then forces and measures one thing, with frames
+`review/shots/current/fire2_<what>_<n>.png` at its tell and its hit:
+
+1. `ashen_swell_0/1`, `ashen_burst_2/3`, `wick_lit_0`: an ashen swells beside a dormant wick and a levy and bursts; what
+   it struck by name, the player's health, whether the wick caught.
+2. `ashen_early_0/1`: an ashen killed outright bursts where it fell 0.7 s later; its ring meanwhile.
+3. `wick_spread_0/1`: a lit wick walks into a dormant one and lights it; footprints counted.
+4. `noon_warning_0`, `noon_swell_1`, `noon_shade_2`: the swell brought on by `NoonHeat.SetClock`; health burnt in the
+   sun, in the east awning's shade (none) and in the gate's calm rectangle (none from heat; the warden there may still hit).
+5. `embers_carrier_0`, `embers_reclaimed_1`: a rest, two kills, a fall with 11 embers; who carries what; a carrier
+   killed again; a second fall and what is forfeited.
+6. `gold_splash_0`, `gold_cool_1`, `gold_many_2`: blows on a levy splash gold; hot gold burns, cooled gold slows
+   (`PlayerController.GroundFactor`); 200 more splashes stay within the pool's 40.
+7. `wall_0`, `wall_break_1`: three levies lock into a line; a light blow from the front is `Blocked`, a heavy one
+   `Landed` and breaks the line; a light blow lands while it is open.
+8. `pour_0/1/2`: the warden's pour; the player walking at him through it, and the nearest they got.
+9. `buried_0`, `buried_burst_1`, `buried_lunge_2`: the breathing mound, the burst as the player comes within 3.2 m,
+   and the lunge it opens with.
+10. `jar_break_0`, `jar_drink_1`: a hurt thirsting goes to a broken jar, drinks, and its health and most after.
+11. `beam_0/1`, `beam_lane_2`, `calling_0`: the priest's beam forced on a still player; the lane lit; the calling
+    waking a levy put near him.
+12. `mirror_0/1`: the mirror stand's beam burning a wick put in it; the player turning it (the use key) until the
+    sun-disc is lit and the door goes.
+
+13. `spear_0/1/2`: the spearman's throw forced on a player 8 m off; the spear standing in the floor; a light blow on
+    him from the front while bare-handed; him fetching it.
+
+`PerfProbe`'s FireYard branch now also brings the swell on and strews 30 splashes of gold round the player.

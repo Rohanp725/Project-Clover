@@ -108,7 +108,7 @@ namespace Clover.Gameplay
         public int FlasksDrunk { get; private set; }
         public int Holds { get; private set; }
 
-        private const int BusyNone = 0, BusyDrink = 1, BusyHold = 2, BusyThrown = 3, BusyRise = 4;
+        private const int BusyNone = 0, BusyDrink = 1, BusyHold = 2, BusyThrown = 3, BusyRise = 4, BusySip = 5;
         private int busy;
         private bool asleep;
         private bool searching;
@@ -140,6 +140,83 @@ namespace Clover.Gameplay
         public bool IsRanged => Brain.RetreatRange > 0f;
         /// <summary>Raised once when it dies.</summary>
         public event System.Action<Enemy> Died;
+        /// <summary>Raised the instant one of its own attacks lands its blow, whether or not it reaches anyone.</summary>
+        public event System.Action<Enemy, EnemyAttack> AttackStruck;
+        /// <summary>Raised after it has taken a blow: the blow, and what came of it.</summary>
+        public event System.Action<Enemy, Hit, HitOutcome> Struck;
+        /// <summary>Raised when it wakes from lying dormant.</summary>
+        public event System.Action<Enemy> Woke;
+        /// <summary>Raised when it is put back where it began, alive (a rest, a fall).</summary>
+        public event System.Action<Enemy> Restored;
+
+        /// <summary>A multiplier on how fast it moves and acts, set from outside (the noon's swell, cooling gold underfoot). One leaves it as it is.</summary>
+        public float SpeedScale => SwellPace * FlamePace * GroundPace;
+        /// <summary>The noon's swell feeding the corruption; one outside a swell.</summary>
+        [System.NonSerialized] public float SwellPace = 1f;
+        /// <summary>A wick set alight moves faster; one otherwise.</summary>
+        [System.NonSerialized] public float FlamePace = 1f;
+        /// <summary>The ground underfoot (cooling gold); one on plain ground.</summary>
+        [System.NonSerialized] public float GroundPace = 1f;
+        /// <summary>Seconds left during which its guard is down whatever it is doing (a broken shield wall).</summary>
+        [System.NonSerialized] public float GuardOpenFor;
+        // Somewhere it has been sent by something other than the fight (water to drink, its place in a line).
+        private bool steered;
+        private Vector3 steerTo;
+        private float steerSpeed;
+        private bool steerFacesTarget;
+
+        /// <summary>The one it fights.</summary>
+        public Transform Target => target;
+
+        /// <summary>
+        /// Sends it walking to a point instead of at the player, while it is not attacking; it faces where it walks.
+        /// Lasts until <see cref="ClearSteer"/>. A speed of zero uses its own walking speed.
+        /// </summary>
+        public void Steer(Vector3 to, float speed = 0f, bool faceTarget = false)
+        {
+            steered = true;
+            steerTo = to;
+            steerSpeed = speed;
+            steerFacesTarget = faceTarget;
+        }
+
+        public void ClearSteer() => steered = false;
+        public bool IsSteered => steered;
+
+        /// <summary>Kills it outright, as its own fire does.</summary>
+        public void Kill()
+        {
+            if (IsDead) return;
+            Health.Damage(Health.Current + 1f);
+            Die();
+        }
+
+        /// <summary>Wakes it if it lies dormant, as fire or a burst nearby does.</summary>
+        public void WakeNow()
+        {
+            if (asleep) Wake();
+            else if (!IsDead) Brain.Alert();
+        }
+
+        /// <summary>Gives it health back, as a drink does; <paramref name="swell"/> also raises its most by that share.</summary>
+        public void Heal(float amount, float swell = 0f)
+        {
+            if (IsDead) return;
+            if (swell > 0f) Health.Maximum *= 1f + swell;
+            Health.Heal(amount);
+        }
+
+        /// <summary>
+        /// Lets it stand sipping for a while, helpless, as a drink taken from the player does. False if it could not stop now.
+        /// </summary>
+        public bool Sip(float seconds)
+        {
+            if (IsDead || asleep || !Brain.Occupy(seconds)) return false;
+            busy = BusySip;
+            return true;
+        }
+
+        public bool IsSipping => busy == BusySip;
         /// <summary>Raised when the fight enters its second phase.</summary>
         public event System.Action<Enemy> PhaseChanged;
 
@@ -367,6 +444,10 @@ namespace Clover.Gameplay
             asleep = dormant;
             searching = false;
             searchedFor = 0f;
+            steered = false;
+            GuardOpenFor = 0f;
+            FlamePace = 1f;
+            GroundPace = 1f;
             Sense.Reset();
             lastKnown = home;
             burnLeft = 0f;
@@ -389,6 +470,7 @@ namespace Clover.Gameplay
             if (guardArc != null) guardArc.Show(false);
             // The animator finds its own way back: the next frame it is not busy, it blends to standing.
             wasBusy = true;
+            Restored?.Invoke(this);
         }
 
         /// <summary>A bolt from the storm feeds the infection: faster and harder-hitting for a while.</summary>
@@ -402,6 +484,13 @@ namespace Clover.Gameplay
         public HitOutcome TakeHit(in Hit hit)
         {
             if (IsDead) return HitOutcome.Missed;
+            var outcome = TakeHitInner(hit);
+            Struck?.Invoke(this, hit, outcome);
+            return outcome;
+        }
+
+        private HitOutcome TakeHitInner(in Hit hit)
+        {
             // A blow that only sets a burn off has nothing to do to an enemy that is not burning.
             if (hit.Detonate && hit.Damage <= 0f && !Burn.IsBurning) return HitOutcome.Missed;
             // Struck by someone standing off its ground: the ground stops holding it for a while.
@@ -443,7 +532,7 @@ namespace Clover.Gameplay
                 CombatEvents.Report(this, hit.Affliction, hit.AfflictionStacks, Afflictions.Apply(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower));
 
             // Its guard: a light blow from the front, while it stands ready, is turned on its weapon.
-            if (Kind.Guards && (!hit.Heavy || Kind.HeavyGuardedDamage < 1f) && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)
+            if (Kind.Guards && GuardOpenFor <= 0f && (!hit.Heavy || Kind.HeavyGuardedDamage < 1f) && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)
                 && Vector3.Angle(transform.forward, -hit.Direction) < 75f)
             {
                 BlowsGuarded++;
@@ -596,7 +685,8 @@ namespace Clover.Gameplay
             bool wasStriking = IsStriking;
             if (chargedLeft > 0f) chargedLeft -= deltaTime;
             // Cold and shaken ground slow everything it does; frozen, it does nothing at all.
-            float pace = (IsCharged ? ChargedSpeed : 1f) * (Brain.Phase > 0 ? Kind.SecondPhasePace : 1f) * Afflictions.SpeedMultiplier;
+            if (GuardOpenFor > 0f) GuardOpenFor -= deltaTime;
+            float pace = SpeedScale * (IsCharged ? ChargedSpeed : 1f) * (Brain.Phase > 0 ? Kind.SecondPhasePace : 1f) * Afflictions.SpeedMultiplier;
             if (Brain.Phase == 0 && Kind.SecondPhaseAt > 0f && Health.Fraction <= Kind.SecondPhaseAt && !IsStaggered)
             {
                 // Worn down to the mark: the second phase opens with its own attack.
@@ -708,7 +798,7 @@ namespace Clover.Gameplay
                 if (bars.gameObject.activeSelf != show) bars.gameObject.SetActive(show);
             }
 
-            if (Brain.Tracks && distance > 0.05f && !searching)
+            if (Brain.Tracks && distance > 0.05f && !searching && !(steered && Brain.State == EnemyState.Stalk))
             {
                 var facing = Quaternion.LookRotation(toTarget, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, facing, Kind.TurnDegreesPerSecond * pace * Afflictions.TurnMultiplier * deltaTime);
@@ -738,6 +828,24 @@ namespace Clover.Gameplay
                 Vector3 sideways = Vector3.Cross(Vector3.up, toTarget / distance) * circle;
                 step += sideways * (Kind.WalkSpeed * 0.45f * Afflictions.SpeedMultiplier * deltaTime);
                 walked = Mathf.Max(walked, Kind.WalkSpeed * 0.45f * Afflictions.SpeedMultiplier);
+            }
+            if (steered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle || Brain.State == EnemyState.Recover))
+            {
+                // Sent somewhere by something other than the fight: it walks there and faces the way it walks.
+                Vector3 toSpot = steerTo - transform.position;
+                toSpot.y = 0f;
+                float fromSpot = toSpot.magnitude;
+                walked = 0f;
+                step = Vector3.zero;
+                if (fromSpot > 0.15f)
+                {
+                    walked = (steerSpeed > 0f ? steerSpeed : Kind.WalkSpeed) * pace;
+                    step = toSpot / fromSpot * Mathf.Min(fromSpot, walked * deltaTime);
+                    if (!steerFacesTarget) transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(toSpot, Vector3.up), Kind.TurnDegreesPerSecond * deltaTime);
+                }
+                // Kept in a line facing the enemy, it turns to the target while it steps.
+                if (steerFacesTarget && distance > 0.05f)
+                    transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(toTarget, Vector3.up), Kind.TurnDegreesPerSecond * deltaTime);
             }
             if (holdsGround || (Kind.HuntsByLight && Brain.State == EnemyState.Idle))
             {
@@ -831,6 +939,8 @@ namespace Clover.Gameplay
         private void Strike(EnemyAttack attack)
         {
             BlowsStruck++;
+            AttackStruck?.Invoke(this, attack);
+            if (IsDead) return;
             float damage = attack.Damage * (IsCharged ? ChargedDamage : 1f) * Afflictions.DamageDealtMultiplier;
             Vector3 forward = transform.forward;
 
@@ -982,6 +1092,7 @@ namespace Clover.Gameplay
         private void Wake()
         {
             asleep = false;
+            Woke?.Invoke(this);
             Brain.Alert();
             if (Brain.Occupy(Kind.RiseSeconds)) busy = BusyRise;
         }
@@ -1127,6 +1238,7 @@ namespace Clover.Gameplay
                     else if (busy == BusyHold) animator.Play(holdHash, 0, Mathf.Repeat(Brain.StateSeconds / 0.8f, 1f));
                     else if (busy == BusyThrown) animator.Play(thrownHash, 0, Mathf.Min(ClipEnd, Brain.BusyProgress));
                     else if (busy == BusyRise) animator.Play(riseHash, 0, Mathf.Min(ClipEnd, Brain.BusyProgress));
+                    else if (busy == BusySip) animator.Play(drinkHash, 0, Mathf.Min(ClipEnd, Brain.BusyProgress));
                     break;
                 case EnemyState.Telegraph:
                 case EnemyState.Strike:

@@ -162,6 +162,27 @@ namespace Clover.EditorTools
             }
         }
 
+        /// <summary>
+        /// The ashen's colours on the wick's slots: the wrappings burned to a shell of grey ash, the char gone darker, and
+        /// every glowing slot turned to the white-hot core that shows through the cracks.
+        /// </summary>
+        public static Material Ashen(string slot)
+        {
+            string name = slot.StartsWith("m_fire_") ? slot.Substring("m_fire_".Length) : slot;
+            if (name.EndsWith("_r2") || name.EndsWith("_r3")) return Hidden();
+            if (name == "ember" || name == "molten" || name == "sun")
+            {
+                var core = BuildKit.Toon(Folder, "m_ashen_core", new Color(1f, 0.93f, 0.8f), true);
+                core.SetColor("_ShadeColor", ShadeColour);
+                return core.Lit(new Color(2f, 1.8f, 1.4f), 0.6f, new Color(6f, 4.6f, 2.6f));
+            }
+            bool dark = name == "char" || name == "dark" || name == "wood";
+            var ash = BuildKit.Toon(Folder, dark ? "m_ashen_char" : "m_ashen_ash", dark ? new Color(0.17f, 0.15f, 0.15f) : new Color(0.6f, 0.58f, 0.55f), true);
+            ash.SetColor("_ShadeColor", ShadeColour);
+            // A faint ember rim: the heat inside is never quite hidden.
+            return ash.Lit(dark ? new Color(0.9f, 0.4f, 0.15f) : new Color(1f, 0.75f, 0.5f), 0.35f, dark ? (Color?)new Color(0.25f, 0.06f, 0.01f) : null);
+        }
+
         /// <summary>A material that draws nothing: for the gold a lower rank has not been given yet.</summary>
         public static Material Hidden()
         {
