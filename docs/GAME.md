@@ -315,7 +315,8 @@ The first thing to be built. **Decided** unless marked.
 - **Boss look**: the god of Lightning, a human-sized duellist with a Katana in the first phase. The stage is in
   effect the heavens, so the fight must feel that large; the user's reference is the fight against the dragon in the
   clouds in Sekiro. **Leaning**: a second phase in a huge godly form. One idea from Claude, not accepted: a vast
-  storm serpent that coils through the clouds behind the duel and enters the fight in phase two.
+  storm serpent that coils through the clouds behind the duel and enters the fight in phase two. **Decided (user), 2026-11-16**: the godly
+  form is a lightning dragon, "a long serpent winding in and out of the clouds" (see the storm dragon below).
 - **Katana moves**: a light combo, a heavy attack, and a charged draw (sheathe, hold, release for the Iaido Slash).
 
 ### The first area as built (2026-11-15)
@@ -452,7 +453,121 @@ banner on his back; the acolyte a hood, crossed wraps and a long scarf; the stor
     around the summit fall three times as often, and he gains the draw twice in a row.
 - *Not built*: his voice, and any sound.
 
-**Narukami's godly form, "the Storm Itself"** (built later the same night and deepened the night after; Claude's design from the unattended overnight run, not yet played by the user):
+**Narukami's godly form, the storm dragon** (2026-11-16; this is the god's second form on the Summit now):
+
+- *The owner's words, 2026-11-16*, after playing the colossus: "I like the ending fight, it just looks more like a giant
+  robot that climbed up. However I feel like that fits much more into something like the metal boss, I think what
+  resonates with me is something like a lightning dragon. Can we rework the visuals but still keep some of the old ones
+  for use later with the metal area". Then: "when i mean lightning dragon i imagine a long serpent winding in and out
+  of the clouds". Then: "normally lightning dragons/serpents dont have huge hands that slam down, they have smaller
+  hands and most of their attacks are mouth beam attacks, or draconic magic along with tail attacks on the stage, you
+  might need to take a look at the moves in the fight and rework or create new ones". **Decided (user)**: the godly
+  form is a lightning dragon, a long serpent in the clouds, with small forefeet; its attacks are mostly from the
+  mouth, with draconic magic and tail attacks; the idea of the large robot is kept for the Metal area, to be reworked then. Everything below that the
+  owner did not say is **Claude's default**, built without the owner having played it.
+- *What was kept from the colossus fight* (the owner liked that fight): its shape and pacing. The swordsman falls, a
+  third of the player's health comes back, and after 2.4 s the form rises in a 4.2 s entrance that hurts nobody and
+  ends in a roar; 760 health and a balance of 170; every attack draws its mark on the floor first (pale for what a
+  held guard stops, red for what it does not), follows the player and then locks a moment before the blow, and is
+  followed by a rest of 0.9 s; a set opening pattern that shows each kind of attack; a lull of 2.4 s after two heavy
+  attacks; a perfect guard throws 60 on his balance (30 for the beam and the breath); when the balance breaks the head
+  lies on the floor for 5.5 s at 160% and a heavy blow is a finisher worth at least 22% of all his health; fury below
+  half health (a quarter faster, rests 55% as long); a 5 s death; then the take-or-consume choice. Afflictions wear at
+  him but never freeze, hold or lift him, as with the colossus (the same `GodlyForm` and `ColossusPart` code).
+- *The body* (`StormDragon.cs`, model `boss_dragon.fbx`, rigid pieces moved by code): ten arches of the serpent
+  stand in the cloud just beyond the rim all round the east, north and west of the floor, each 0.85 to 1.5 times the
+  size of the model. Each rises out of the cloud, slides forward along its own length (16 degrees round the summit)
+  while it stands, sinks, and waits under before rising again where it began; they take turns (an 11 s round,
+  `SerpentWinding`), so four to seven stand at any moment and the whole reads as one body threading through the cloud.
+  It winds 1.6 times faster in his fury. The neck rears out of a bank of cloud behind the north gate, the head leans
+  in through the gate under its beam (so it is seen from above), two small forefeet grip the rim either side of it,
+  and the short tail waves in the cloud to the north-west. The eyes, the mark on the brow and the lightning line down
+  every flank are light: the eyes climb to five times as a beam gathers (the lines to less than three), all flare
+  when he is struck or his blow is turned, beat in his fury, and gutter as he dies. The hide is a brighter sea-blue
+  than the modeller's storm grey, so the body does not vanish into the cloud. The camera stands 1.9 times further
+  off (2.2 times for a player at the south rim) and 21 degrees lower than usual for this fight (the colossus used 1.55 and 15), because the body is beyond the
+  rim and has to be seen there.
+- *The mouth* (most of the fight: after any tail attack or spell the next attack is always from the mouth):
+  - **Red: the beam**. He rears with his jaws coming wide and the throat alight; a red lane 3 m wide is drawn from
+    under his mouth along one edge of the floor (the side away from the player) and a faint lane runs the crossing
+    twice ahead of time to show the way it will go. After 1.5 s a beam of lightning stands in the lane and crosses the
+    whole floor to the other side in 2.1 s (132 degrees about a point 5.4 m inside the north rim), 24 to whoever it
+    passes. Roll through it as it comes, or get round behind its turning point beside the head. A perfect guard turns
+    it and throws 30. In fury it comes back the way it went. Afterwards the head lies spent on the floor inside the
+    gate for 2.2 s, open to blows at plain damage.
+  - **Red: the breath**. Head low over the rim, mouth to the floor; three red lanes 2.8 m wide fork from under it,
+    27 degrees apart, the middle one through the player. They follow for 0.85 s, hold 0.35 s, and forked lightning
+    runs down all three at once for 18. Step outside them, or far enough from the head stand between two. No opening:
+    he lifts his head for 0.8 s.
+  - **The bite** (only at a player within 10 m of the middle of the north rim; always, once they have stood there
+    1.2 s, though never twice running). The head hangs over a pale circle (3.6 m) with its jaws wide; the circle
+    follows for 0.8 s, holds 0.3 s, and the head comes down in it for 40, chin behind where the player stood, snout at
+    their feet. It can be guarded, and a perfect guard throws 60. The head is stuck for 1.8 s, open at plain damage:
+    this is the main opening on the head.
+- *Draconic magic* (each marked in red on the floor first; none can be stopped by a held guard):
+  - **The bolts**: circles of 2.3 m in a pattern round where the player stood: the middle; 0.85 s later a ring of six
+    6 m out; 0.85 s later the middle again with the ring turned to where its gaps were (fury adds the first ring
+    again). Each falls 1 s after it is drawn, for 16. Step out, step in, stand in the band between.
+  - **The sigils**: a ring of eight circles (2 m) 7.5 m round the player with gaps between; then a closed ring 4.3 m
+    out; then the heart (3.2 m). Each bursts about a second after it is drawn, for 18. Leave through a gap at once, or
+    wait in the middle and walk out over each ring as it bursts.
+  - **The orbs**: three orbs are spat out to 6.5 m round the player and drift after them at 2.6 m a second, each
+    with a red circle (2.6 m) under it that fills; they burst at 2.6, 3.2 and 3.8 s for 20. Keep walking.
+  - **The storm**: he rears to the sky; the quarter of the floor the player stands in and the one opposite fill red
+    for 1.5 s and then crackle for 8 s, burning for 10 on contact and every 0.5 s, while he goes on attacking. The
+    fight moves to the other two quarters. His fury opens with it.
+- *The tail* (the owner, 2026-11-16, on the first version, a rigid piece turned about its root: "the tail attacks read
+  as stiff objects being rotated, and doesnt slither at all like a actual tail would feel, also the edge of the tail is
+  a cloud that the user can see and it doesnt make sense, because it should lead to under the outer clouds to show that
+  the whole dragon is connected, also for the tail attack maybe it slithers in to do damage? and for the slam it can be
+  like a tail flop similar to a fish tail that smacks down but with the flexibility that a actual tail would have".
+  **Decided (user)**: the tail bends, its root is never seen, it slithers in to strike and flops like a fish's tail.)
+  Then, the same day, on the boned tail: "the tail is a bit small and only comes on the right side of the stage, the
+  tail is just a small portion of the stage, and the slither doesnt go all the way to the other side of the stage like
+  i imagined, it seems like the tail moves might be underdone, be creative with tail like moves that make sense".
+  **Decided (user)**: a big tail, from any side, a slither that crosses the whole stage, and more tail moves.
+  *Built so far*: the tail is 26 m of skinned body on 24 bones, drawn half as large again (about 39 m long, 3.3 m
+  thick), driven by a spine (`SerpentSpine`, `SpineBones`): its tip leads along a path and every joint passes where
+  the one ahead passed; a wave runs down it, larger toward the tip; and each joint is sprung, more loosely toward the
+  tip, so the tip comes late and goes past. It comes over the rim square to the line from the middle of the floor to
+  the player, from one hand and then the other (for a player in the middle, east then west; never out of the gate), so
+  every side is used. Its root end is never on the floor: it runs off the rim and down under the outer cloud. What a
+  blow lands on is eight capsules laid along the bones. The numbers are Claude's defaults.
+  - **Red: the slither**. The tip feels over the rim while a path of red rings draws itself out right across the
+    floor, winding 3 m to either side of the line through the player and crossing that line where they stand; it
+    follows them for 0.9 s and holds 0.4 s. Then the tail winds down the path in 1.3 s, slow and then all at once,
+    from one rim to the other and over it, so for a moment the floor is cut in two by moving serpent; 30 to whoever
+    it touches; it lies 0.8 s and draws back out the way it came. Step off the path, or roll through the body.
+  - **The flop**. The tail comes out over the rim arched up off the floor, tip highest (6.5 m), over a pale lane
+    (about 24 by 4 m) through where the player stood, and hangs there swaying until 1.4 s. Then it smacks down from
+    the root end to the tip in 0.3 s (so the blow lands later the further along the lane the player stands) for 34;
+    the tip bounces once. It can be guarded (facing its root) and a perfect guard throws 60. It lies slack in a slow
+    curve for 2.4 s, open at plain damage, and draws back.
+  - **Not built yet** (asked for by the owner, 2026-11-16): at least four more tail moves (ideas given: a coil that
+    closes round the player, a clock-hand scythe round the stage, a walking run of flops with ripples of lightning,
+    scorpion stabs of the tip that stick in the stone, a dragged line of live lightning, a whip-crack shockwave), and
+    a chooser that mixes mouth, magic and tail evenly: today the chooser still follows every tail attack or spell
+    with the mouth.
+- *How he is hurt* (**Claude's default**): the head while it is down after a bite or spent after a beam (100%); the
+  tail while it lies after a slam (100%); a forefoot at any time (35%); the fallen head when his balance is broken
+  (160%, and a heavy blow finishes). Blows on any of these and perfect guards wear down the balance.
+- *How he chooses* (`DragonChooser`, plain C#, with tests): opens with beam, tail slam, breath, bolts, beam, tail
+  sweep. After it: the bite for a player who lingers in reach; otherwise by shares (beam 20, breath 14, bite 12 when in
+  reach, tail slam 14, tail sweep 10, bolts 10, sigils 8, orbs 7, storm 5). Nothing twice running; after the tail or
+  a spell, the mouth; no storm while one burns. Beam, bite, tail sweep and sigils are heavy.
+- *The entrance and the death*: arches break the cloud one after another round the summit; a forefoot comes over
+  the rim at 1.0 s and the other at 1.7 s; the head comes up outside the rim and in through the gate; at 3.2 s he
+  roars with his jaws wide and a pale ring crosses the floor. In death he rears to the sky, the sky strikes him, the
+  arches go under one after another, the forefeet are dragged back over the rim at 1.5 and 2.0 s, and the head lands
+  on its chin on the rim at 3.0 s and slides off at 3.6 s.
+- *Names*: the bar reads "Narukami,  the Storm Dragon"; the callouts are "Something moves in the cloud", "The storm
+  dragon" (at the roar) and "The storm breaks" (fury).
+- *Not built*: his voice and any sound; **the neck does not yet follow the head**: the model now has a chain of ten
+  neck bones for it and `SerpentSpine` can drive them, but they are left as modelled, so the neck ends behind the gate
+  and the head parts from it when it lunges; the arches in the cloud are the same rigid piece and cannot bend or
+  truly slide; nothing was tuned by play.
+
+**The large robot, an idea held for the Metal area** (the owner, 2026-11-16: "the colossus still has to be fully reworked with the metal element and whatever that areas story ends up being, just the idea of the large robot is still good and could be used later"). It is not in the game and no scene holds it. Its model (`boss_storm.fbx`) and its code (`Colossus.cs`, `ColossusChooser.cs`, `ColossusPart.cs`, `ColossusBuilder.cs`, the old `StormProbe`) are kept compiling only as reference for that later boss, which will be reworked then. What follows is the fight as it was built for Narukami before the dragon replaced it:
 
 - *What it is*: when the swordsman falls he does not stay fallen. After a breath (the player is given back a third of
   their health, no flasks), what he became climbs out of the cloud beyond the summit's north edge: an oni's head with

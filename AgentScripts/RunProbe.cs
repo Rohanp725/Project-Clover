@@ -151,7 +151,7 @@ public class RunProbeRunner : MonoBehaviour
         foreach (var enemy in FindObjectsByType<Enemy>(FindObjectsSortMode.None))
             if (enemy.Kind.IsBoss) boss = enemy;
         for (int blow = 0; blow < 200 && !boss.IsDead; blow++) boss.TakeHit(new Hit(60f, 0f, Vector3.forward, true, true));
-        var colossus = FindAnyObjectByType<Colossus>();
+        var colossus = FindAnyObjectByType<GodlyForm>();
         yield return Until(() => colossus.Doing == "Idle", 12f);
         for (int attempt = 0; attempt < 12 && !colossus.IsDead; attempt++)
         {

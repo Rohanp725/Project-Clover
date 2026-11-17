@@ -132,7 +132,7 @@ public class SummitProbeRunner : MonoBehaviour
         Say($"F the swordsman falls: dead {boss.IsDead} second form called {summit.SecondFormCalled} felled yet {summit.Felled}");
 
         // F2: what he became rises out of the cloud.
-        var colossus = FindAnyObjectByType<Colossus>();
+        var colossus = FindAnyObjectByType<StormDragon>();
         yield return Until(() => colossus != null && colossus.HasRisen, 6f);
         yield return new WaitForSeconds(1.2f);
         ScreenCapture.CaptureScreenshot("review/shots/current/storm_rising.png");
@@ -168,18 +168,17 @@ public class SummitProbeRunner : MonoBehaviour
             }
             yield return null;
         }
-        Say($"F3 it attacks: {stormSeen}; slams {colossus.Slams} sweeps {colossus.Sweeps} bolts {colossus.BoltsCalled} breaths {colossus.Breaths} bites {colossus.Bites} claps {colossus.Claps} lulls {colossus.Lulls}; struck the player {colossus.BlowsStruck} times, of which landed {defence.BlowsTaken - stormTaken}");
+        Say($"F3 it attacks: {stormSeen}; beams {colossus.Beams} breaths {colossus.Breaths} bites {colossus.Bites} bolts {colossus.BoltsCalled} sigils {colossus.SigilsDrawn} orbs {colossus.OrbsCast} storms {colossus.Storms} tail sweeps {colossus.TailSweeps} tail slams {colossus.TailSlams} lulls {colossus.Lulls}; struck the player {colossus.BlowsStruck} times, of which landed {defence.BlowsTaken - stormTaken}");
 
-        // F4: a hand that has come down can be cut.
-        yield return Until(() => colossus.LeftPart.Vulnerable || colossus.RightPart.Vulnerable, 20f);
-        var open = colossus.LeftPart.Vulnerable ? colossus.LeftPart : colossus.RightPart;
+        // F4: a forefoot on the rim can be cut at any time, for a little.
+        var open = colossus.RightClawPart;
         float stormHealth = colossus.Health.Current;
-        player.Teleport(open.transform.position + new Vector3(0f, 0.1f, -2.6f), Quaternion.identity);
+        player.Teleport(new Vector3(open.transform.position.x * 0.82f, 0.1f, open.transform.position.z * 0.82f), Quaternion.LookRotation(new Vector3(open.transform.position.x, 0f, open.transform.position.z)));
         yield return null;
         int landed = combat.BlowsLanded;
         yield return TapWhenFree(Key.J, () => combat.BlowsLanded > landed);
         yield return Until(() => combat.BlowsLanded > landed, 1f);
-        Say($"F4 a hand lying open: vulnerable {open.Vulnerable} blows landed +{combat.BlowsLanded - landed} its health {stormHealth:0} -> {colossus.Health.Current:0} balance {colossus.Stagger.Value:0}");
+        Say($"F4 a forefoot on the rim: vulnerable {open.Vulnerable} blows landed +{combat.BlowsLanded - landed} its health {stormHealth:0} -> {colossus.Health.Current:0} balance {colossus.Stagger.Value:0}");
         yield return Until(() => !combat.IsAttacking, 2f);
 
         // F5: break its balance: the head falls, and can be finished.
@@ -188,7 +187,7 @@ public class SummitProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.9f);
         bool broken = colossus.IsStaggered;
         stormHealth = colossus.Health.Current;
-        player.Teleport(colossus.HeadPart.transform.position + new Vector3(0f, 0.1f, -4.6f), Quaternion.identity);
+        player.Teleport(colossus.HeadPart.transform.position + new Vector3(0f, 0.1f, -3.8f), Quaternion.identity);
         yield return new WaitForSeconds(0.2f);
         ScreenCapture.CaptureScreenshot("review/shots/current/storm_broken.png");
         finishers = combat.Finishers;

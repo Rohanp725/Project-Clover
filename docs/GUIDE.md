@@ -321,39 +321,45 @@ In ring order, clockwise. Each element shares a mixed branch with the one before
 
 ### What each tap spell does
 
-A tap spell is a short committed cast. A dodge or a blow taken breaks it; the mana is spent either way.
+Each element's tap spell behaves like its substance, not like one shape in eleven colours.
 
 | Element | Spell | What it does |
 |---|---|---|
-| Fire | Flame Wave | A cone of fire 5.5 m ahead, 70 degrees wide: 20 damage, 24 stagger, and what it touches burns for 5 s. |
-| Lightning | Thunderclap | A bolt on the enemy faced, up to 10 m off: 16 damage, 45 stagger. It leaps to two more enemies. |
-| Wind | Gust | A cone 5 m ahead: 8 damage, 20 stagger, Unsteady two deep. Everything within reach is thrown 3 m away. |
-| Ice | Hoarfrost | A wide fan (110 degrees) 4.5 m ahead: 10 damage, 15 stagger, Chill two deep. |
-| Water | Riptide | A wave 5 m ahead, 90 degrees wide: 8 damage, 18 stagger, Soaked. Everything within reach is dragged 2 m toward you. |
-| Life | Briar Patch | A bed of thorns 3 m ahead that stands 6 s, bites twice a second and seeds what stands in it. It counts as something grown. |
-| Earth | Stone Rise | A pillar bursts up under the enemy faced (within 5 m) after a quarter second: 14 damage, 30 stagger, Tremor, and it lifts what it strikes. |
-| Metal | Flung Blade | A blade is left standing in the enemy faced (within 9 m) for 6 s. Your next weapon blow on it drives it in for 12 and a notch of Sundered. |
-| Light | Glare | A flash 4 m ahead, 90 degrees wide: 8 damage, 22 stagger, Marked. |
-| Dark | Grasp | A hand of shadow to the enemy faced within 6 m: 10 damage, 12 stagger, Cursed, and it is dragged to your feet. |
-| Poison | Miasma | A cloud 4 m ahead that hangs 4 s and gives what stands in it one dose of poison a second. |
+| Fire | Flame Wave | Fire runs out along the ground in a cone 5.5 m ahead, 70 degrees wide: 20 damage, 24 stagger, and what it touches burns for 5 s. Three patches of ground go on burning for 3 s. |
+| Lightning | Thunderclap | A jagged bolt on the enemy faced, up to 10 m off: 16 damage, 45 stagger. It forks to two more enemies. It is there and gone; nothing is left. |
+| Wind | Gust | A rush of air 5 m ahead: 8 damage, 20 stagger, Unsteady two deep. Everything in it is thrown 3 m straight down the wind. |
+| Ice | Hoarfrost | Crystals grow out along the ground in a wide fan (110 degrees) 4.5 m ahead: 10 damage, 15 stagger, Chill two deep. They stand 4 s. Land a weapon blow among them and they shatter: 5 damage and one more Chill to everything in the fan. |
+| Water | Riptide | A wave rises 5 m ahead of you and rolls back toward you. Everything in its path takes 8 damage and 18 stagger, is Soaked, and is carried to your feet, within sword reach. |
+| Life | Briar Patch | A bed of thorned vines grows 3 m ahead and flowers. It stands 6 s, lashes twice a second and seeds what stands in it. It counts as something grown. |
+| Earth | Stone Rise | After a quarter second the ground breaks under the enemy faced (within 5 m): 14 damage, 30 stagger, Tremor, and it is thrown up for a moment. A wall of rock is left standing behind it for 4.5 s; nothing walks through it. |
+| Metal | Flung Blade | A blade is thrown into the enemy faced (within 9 m) for 3 damage and stands in it for 6 s. Your next weapon blow on that enemy drives it in for 12 and a notch of Sundered, and the blade flies back to your hand, cutting what is in its way for 4. |
+| Light | Glare | A narrow ray 5.5 m ahead: 8 damage, 22 stagger, Marked. It strikes only what you are facing; what it marks wears brackets of light. |
+| Dark | Grasp | A black ball crawls to the enemy faced within 6 m, drawing in everything it passes. Where it arrives: 10 damage, 12 stagger, Cursed, and what it has hold of is dragged to your feet. |
+| Poison | Miasma | A cloud 4 m ahead that hangs 4 s, creeps after the nearest enemy and gives what stands in it one dose of poison a second. |
+
+**Not yet**
+
+- Gust throws a real enemy much less than its 3 m (0.4 m measured on a castle soldier), and it no longer lifts.
+- Riptide carries a real enemy closer than intended (to about 0.4 m), and its wave is drawn as flat facets, not a smooth curl.
+- Marks that widen the base spell's arc do not affect Riptide or Glare.
 
 ### What each surge does
 
-For every element but Fire and Lightning, **every weapon blow during the surge lays one stack of the element's affliction.**
+For every element but Fire and Lightning, every weapon blow during the surge also lays one stack of the element's affliction.
 
-| Element | Surge | What it does while it lasts |
-|---|---|---|
-| Fire | Kindle | Weapon damage +30%. Every blow sets its target burning for 3 s. |
-| Lightning | Overdrive | Every swing 30% faster, +8 stagger a blow, weapon damage +10%. |
-| Wind | Tailwind | The dodge costs half, goes 30% further and is safe 25% longer. You are 15% quicker. |
-| Ice | Glaze | One ward: it takes the next blow that would have landed. |
-| Water | Wellspring | Flasks heal half again as much. |
-| Life | Regrowth | Grey health is made real at once, then 4 health a second. |
-| Earth | Bedrock | 20% less damage taken. +6 stagger a blow. |
-| Metal | Temper | 30% less damage taken. |
-| Light | Clarity | Grey health is made real at once. Perfect guard and dodge windows are half again as long. |
-| Dark | Hunger | Costs health, not mana: 3 health a second drain away (never the last of it). Weapon damage +30%, and 30% of each blow's damage comes back as health. |
-| Poison | Fever | 1 health a second, and 6% of each blow's damage comes back as health. |
+| Element | Surge | What it does while it lasts | How it looks on you |
+|---|---|---|---|
+| Fire | Kindle | Weapon damage +30%. Every blow sets its target burning for 3 s. | Flames lick up your body. |
+| Lightning | Overdrive | Every swing 30% faster, +8 stagger a blow, weapon damage +10%. | Lightning crawls over you. |
+| Wind | Tailwind | The dodge costs half, goes 30% further and is safe 25% longer. You are 15% quicker. | Streaks of wind circle you; leaves spiral up. |
+| Ice | Glaze | One ward: it takes the next blow that would have landed. | A shell of ice crystals turns round you. |
+| Water | Wellspring | Flasks heal half again as much. | A ring of water circles your waist. |
+| Life | Regrowth | Grey health is made real at once, then 4 health a second. | Leaves climb round you; flowers open at your feet. |
+| Earth | Bedrock | 20% less damage taken. +6 stagger a blow. | Stones circle your feet. |
+| Metal | Temper | 30% less damage taken. | Four blades hang at your shoulders. |
+| Light | Clarity | Grey health is made real at once. Perfect guard and dodge windows are half again as long. | A crown of rays stands over your head. |
+| Dark | Hunger | Costs health, not mana: 3 health a second drain away (never the last of it). Weapon damage +30%, and 30% of each blow's damage comes back as health. | Dark smoke pours down you. |
+| Poison | Fever | 1 health a second, and 6% of each blow's damage comes back as health. | Bubbles rise off you. |
 
 ### What each affliction does
 

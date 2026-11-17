@@ -103,7 +103,7 @@ public class FeedbackProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
 
         // In the Summit only the mark over the fallen head of the godly form is looked at.
-        var colossus = FindAnyObjectByType<Colossus>(FindObjectsInactive.Include);
+        var colossus = FindAnyObjectByType<StormDragon>(FindObjectsInactive.Include);
         if (colossus != null)
         {
             keepAlive = true;

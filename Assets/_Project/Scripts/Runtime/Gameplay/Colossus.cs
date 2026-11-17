@@ -14,7 +14,7 @@ namespace Clover.Gameplay
     /// between. Blows on the hands wear down its balance; when that breaks, the head falls to the floor and can be
     /// struck, and finished. What it does next is decided by a <see cref="ColossusChooser"/>.
     /// </summary>
-    public class Colossus : MonoBehaviour, IBoss
+    public class Colossus : GodlyForm
     {
         private enum Mode { Hidden, Rising, Idle, Slam, Sweep, Bolts, Breath, Bite, Clap, Staggered, Recovering, Dying, Dead }
 
@@ -228,24 +228,13 @@ namespace Clover.Gameplay
         public Color RedMarker = new Color(1f, 0.08f, 0.05f, 1f);
         public Color RoarColour = new Color(0.75f, 0.9f, 1.3f, 1f);
 
-        public Health Health { get; } = new Health();
-        public StaggerMeter Stagger { get; } = new StaggerMeter();
-        /// <summary>What the elements have laid on it. It is too great to be frozen, slowed or shoved: afflictions only wear at it and let more through.</summary>
-        public AfflictionSet Afflictions { get; } = new AfflictionSet { CanFreeze = false };
-        public bool IsStaggered => mode == Mode.Staggered;
-        public bool IsDead => mode == Mode.Dead || mode == Mode.Dying;
-        public bool HasRisen => mode != Mode.Hidden;
+        // Health, balance, afflictions and the three moments a director listens for are the godly form's own.
+        public override bool IsStaggered => mode == Mode.Staggered;
+        public override bool IsDead => mode == Mode.Dead || mode == Mode.Dying;
+        public override bool HasRisen => mode != Mode.Hidden;
         /// <summary>The fight is on from the end of his entrance to the blow that kills him: the bar shows for as long.</summary>
-        public bool InFight => mode != Mode.Hidden && mode != Mode.Rising && mode != Mode.Dead && mode != Mode.Dying;
+        public override bool InFight => mode != Mode.Hidden && mode != Mode.Rising && mode != Mode.Dead && mode != Mode.Dying;
         public bool Furious => Health.Fraction <= FuryAt;
-        public float HealthFraction => Health.Fraction;
-        public float BalanceFraction => IsStaggered ? 1f : Stagger.Fraction;
-        /// <summary>Raised once, when it has fallen and gone.</summary>
-        public event System.Action<Colossus> Died;
-        /// <summary>Raised once in his entrance, at the roar.</summary>
-        public event System.Action<Colossus> Roared;
-        /// <summary>Raised once, when his fury begins.</summary>
-        public event System.Action<Colossus> Enraged;
         // Counters so tests and probes can see what happened without watching the screen.
         public int Slams { get; private set; }
         public int Sweeps { get; private set; }
@@ -258,10 +247,10 @@ namespace Clover.Gameplay
         public int PoolBurns { get; private set; }
         public int BlowsStruck { get; private set; }
         public int TimesStaggered { get; private set; }
-        public string Doing => mode.ToString();
+        public override string Doing => mode.ToString();
         /// <summary>Seconds into what it is doing now, at its own pace.</summary>
-        public float DoingFor => elapsed;
-        public ColossusPart HeadPart => headPart;
+        public override float DoingFor => elapsed;
+        public override ColossusPart HeadPart => headPart;
         public ColossusPart LeftPart => leftPart;
         public ColossusPart RightPart => rightPart;
 
@@ -506,7 +495,7 @@ namespace Clover.Gameplay
         }
 
         /// <summary>Brings it up out of the cloud. The fight with it begins when its entrance is over.</summary>
-        public void Rise()
+        public override void Rise()
         {
             if (mode != Mode.Hidden) return;
             Health.Fill();
@@ -528,7 +517,7 @@ namespace Clover.Gameplay
         }
 
         /// <summary>A blow has landed on one of its pieces.</summary>
-        public HitOutcome TakePartHit(ColossusPart part, in Hit hit)
+        public override HitOutcome TakePartHit(ColossusPart part, in Hit hit)
         {
             if (mode == Mode.Hidden || IsDead || mode == Mode.Rising) return HitOutcome.Missed;
             bool finisher = part.IsHead && IsStaggered && hit.Heavy;
@@ -559,7 +548,7 @@ namespace Clover.Gameplay
         }
 
         /// <summary>Wears at its balance from outside a blow; enough of it breaks the balance at once.</summary>
-        public void Unbalance(float amount)
+        public override void Unbalance(float amount)
         {
             if (mode == Mode.Hidden || mode == Mode.Rising || IsDead || IsStaggered) return;
             if (Stagger.Add(amount)) BeginStagger();
@@ -857,7 +846,7 @@ namespace Clover.Gameplay
             if (shaker != null) shaker.Shake(0.9f, RoarSeconds + 0.2f);
             LightningBolts.Strike(new Vector3(-FloorRadius * 0.75f, 0f, FloorRadius * 0.8f), 1f);
             LightningBolts.Strike(new Vector3(FloorRadius * 0.75f, 0f, FloorRadius * 0.8f), 1f);
-            Roared?.Invoke(this);
+            RaiseRoared();
         }
 
         // The roar is seen crossing the floor: a ring that widens from under his mouth until it has passed the far rim.
@@ -898,7 +887,7 @@ namespace Clover.Gameplay
                 Vfx.Play(VfxKind.Danger, head.position + Vector3.up * 3f);
                 ScreenFlash.Flash(new Color(0.7f, 0.85f, 1f, 0.5f), 0.09f);
                 if (shaker != null) shaker.Shake(0.6f, 0.5f);
-                Enraged?.Invoke(this);
+                RaiseEnraged();
             }
             untilRimBolt -= deltaTime;
             if (untilRimBolt > 0f) return;
@@ -1557,7 +1546,7 @@ namespace Clover.Gameplay
                 foreach (var shown in renderers)
                     if (shown != null) shown.SetPropertyBlock(null);
                 SetShown(false);
-                Died?.Invoke(this);
+                RaiseDied();
             }
         }
 

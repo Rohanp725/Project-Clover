@@ -8,7 +8,7 @@ namespace Clover.World
 {
     /// <summary>
     /// Runs the fight at the summit: makes the storm worse when the god enters his second phase; when the swordsman
-    /// falls, brings up what he became, the storm itself, out of the cloud; marks that one's fall; and then sets out
+    /// falls, brings up what he became (the storm dragon; the colossus where a scene is built with that) out of the cloud; marks that one's fall; and then sets out
     /// the choice every god leaves behind, to take his element or to consume it. Once the player has chosen, the way
     /// out opens.
     /// </summary>
@@ -21,7 +21,7 @@ namespace Clover.World
         [SerializeField] private GodReward take;
         [SerializeField] private GodReward consume;
         [SerializeField] private SceneDoor wayOut;
-        [SerializeField] private Colossus colossus;
+        [SerializeField] private GodlyForm colossus;
         [SerializeField] private BossHud bossHud;
         [SerializeField] private StormLight stormOverhead;
 
@@ -29,7 +29,11 @@ namespace Clover.World
         public float RewardDelay = 3.2f;
         /// <summary>Real seconds between the swordsman's fall and the rising of what he became.</summary>
         public float RisingDelay = 2.4f;
-        public string GodlyName = "Narukami,  the Storm Itself";
+        public string GodlyName = "Narukami,  the Storm Dragon";
+        /// <summary>What is said as the godly form begins to come, at its roar, and when its fury begins.</summary>
+        public string RisingCallout = "Something moves in the cloud";
+        public string RoarCallout = "The storm dragon";
+        public string FuryCallout = "The storm breaks";
         /// <summary>Seconds between the sky's own flashes once he has fallen: the storm is over, and the sky nearly still.</summary>
         public float ClearedSkyMin = 40f;
         public float ClearedSkyMax = 90f;
@@ -56,7 +60,7 @@ namespace Clover.World
         }
 
         /// <summary>Gives the god a godly form to rise when the swordsman falls, and the bar that will show it.</summary>
-        public void ConfigureSecondForm(Colossus godlyForm, BossHud hud, StormLight sky = null)
+        public void ConfigureSecondForm(GodlyForm godlyForm, BossHud hud, StormLight sky = null)
         {
             colossus = godlyForm;
             bossHud = hud;
@@ -138,17 +142,17 @@ namespace Clover.World
             untilRising = RisingDelay;
         }
 
-        private void OnColossusDied(Colossus who) => Fell(new Vector3(0f, 0f, 8f));
+        private void OnColossusDied(GodlyForm who) => Fell(new Vector3(0f, 0f, 8f));
 
         // His name is said when he says it himself: at the roar, as the bar that carries it appears.
-        private void OnColossusRoared(Colossus who)
+        private void OnColossusRoared(GodlyForm who)
         {
-            if (player != null) player.Callout("The storm itself");
+            if (player != null) player.Callout(RoarCallout);
         }
 
-        private void OnColossusEnraged(Colossus who)
+        private void OnColossusEnraged(GodlyForm who)
         {
-            if (player != null) player.Callout("The storm breaks");
+            if (player != null) player.Callout(FuryCallout);
         }
 
         private void Fell(Vector3 where)
@@ -192,7 +196,7 @@ namespace Clover.World
                 {
                     colossus.Rise();
                     if (bossHud != null) bossHud.Show(colossus, GodlyName);
-                    if (player != null) player.Callout("Something climbs");
+                    if (player != null) player.Callout(RisingCallout);
                 }
             }
             if (untilRewards < 0f) return;

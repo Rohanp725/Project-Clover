@@ -44,7 +44,7 @@ public class SoakProbeRunner : MonoBehaviour
     private PlayerInteraction interaction;
     private PlayerUpgrades upgrades;
     private Enemy[] enemies = new Enemy[0];
-    private Colossus colossus;
+    private GodlyForm colossus;
     private AreaDirector area;
     private Text emberText;
     private string sceneName = "";
@@ -171,7 +171,7 @@ public class SoakProbeRunner : MonoBehaviour
         interaction = player.GetComponent<PlayerInteraction>();
         upgrades = player.GetComponent<PlayerUpgrades>();
         enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
-        colossus = FindAnyObjectByType<Colossus>();
+        colossus = FindAnyObjectByType<GodlyForm>();
         area = FindAnyObjectByType<AreaDirector>();
         emberText = null;
         foreach (var text in FindObjectsByType<Text>(FindObjectsInactive.Include, FindObjectsSortMode.None))

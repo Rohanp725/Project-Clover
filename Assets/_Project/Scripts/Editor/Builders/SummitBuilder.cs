@@ -210,8 +210,9 @@ namespace Clover.EditorTools
 
             var bossHud = BossBar(boss);
             // What he became: under the cloud beyond the north edge until the swordsman falls.
-            var colossus = ColossusBuilder.Build(built.Player.transform, Radius, kit.Marker);
-            if (colossus != null) summit.ConfigureSecondForm(colossus, bossHud, storm);
+            // (The colossus that stood here before is held for the Metal area; ColossusBuilder is kept only as reference.)
+            var godlyForm = DragonBuilder.Build(built.Player.transform, Radius, kit.Marker);
+            if (godlyForm != null) summit.ConfigureSecondForm(godlyForm, bossHud, storm);
             PlayerBuilder.AddRunEnd(built.Player);
             PlayerBuilder.AddTitle("Narukami", EnemyKind.Narukami().Title);
             PlayerBuilder.AddPauseHint();

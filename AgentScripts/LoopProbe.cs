@@ -212,7 +212,7 @@ public class LoopProbeRunner : MonoBehaviour
             Say($"summit, the swordsman fought with the kit: boss health {boss.Health.Fraction:0.00} spells {element.SpellsCast} surges {element.Surges} discharges {upgrades.Discharges} free dodges {upgrades.FreeDodges} blows {combat.BlowsLanded}; {State()}");
         }
         for (int blow = 0; blow < 200 && !boss.IsDead; blow++) boss.TakeHit(new Hit(60f, 0f, Vector3.forward, true, true));
-        var colossus = FindAnyObjectByType<Colossus>();
+        var colossus = FindAnyObjectByType<GodlyForm>();
         yield return Until(() => colossus.Doing == "Idle", 14f);
         if (brawl)
         {

@@ -232,14 +232,14 @@ public class FallProbeRunner : MonoBehaviour
         yield return null;
     }
 
-    private Colossus colossus;
+    private GodlyForm colossus;
     private IEnumerator ToColossus(string doing)
     {
         yield return Load("Summit");
         Carry();
         Enemy boss = Find(e => e.Kind.IsBoss);
         for (int blow = 0; blow < 200 && !boss.IsDead; blow++) boss.TakeHit(new Hit(60f, 0f, Vector3.forward, true, true));
-        colossus = FindAnyObjectByType<Colossus>();
+        colossus = FindAnyObjectByType<GodlyForm>();
         yield return Until(() => colossus.Doing == doing, 16f);
     }
 

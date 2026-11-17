@@ -3,13 +3,15 @@ using UnityEngine;
 namespace Clover.Gameplay
 {
     /// <summary>
-    /// One piece of a colossus that a blow can land on: a hand lying on the ground, or the head when it has fallen.
-    /// It can be struck only while it is within reach, and it passes the blow on to the colossus it belongs to.
+    /// One piece of a godly form that a blow can land on: a colossus's hand lying on the ground or its fallen head, a
+    /// dragon's head, tail or forefoot. It can be struck only while it is within reach, and it passes the blow on to
+    /// the form it belongs to.
     /// </summary>
     public class ColossusPart : MonoBehaviour, IDamageable, IStaggerable, IAfflictable
     {
-        [SerializeField] private Colossus owner;
+        [SerializeField] private GodlyForm owner;
         [SerializeField] private Collider body;
+        [SerializeField] private Collider[] more = new Collider[0];
 
         /// <summary>True for the head: only the head can be finished.</summary>
         public bool IsHead;
@@ -20,12 +22,12 @@ namespace Clover.Gameplay
         public bool Vulnerable { get; private set; }
         public bool IsStaggered => IsHead && Vulnerable && owner != null && owner.IsStaggered;
         public int BlowsTaken { get; private set; }
-        /// <summary>What is laid on any piece is laid on the whole colossus.</summary>
+        /// <summary>What is laid on any piece is laid on the whole of it.</summary>
         public AfflictionSet Afflictions => owner != null ? owner.Afflictions : orphan;
 
         private readonly AfflictionSet orphan = new AfflictionSet();
 
-        public void Configure(Colossus colossus, Collider collider, bool head, float multiplier)
+        public void Configure(GodlyForm colossus, Collider collider, bool head, float multiplier)
         {
             owner = colossus;
             body = collider;
@@ -33,12 +35,17 @@ namespace Clover.Gameplay
             DamageMultiplier = multiplier;
         }
 
+        /// <summary>Further shapes a blow can land on, for a piece that bends: they open and close with the first.</summary>
+        public void ConfigureMore(Collider[] others) => more = others;
+
         private void Awake() => SetVulnerable(false);
 
         public void SetVulnerable(bool vulnerable)
         {
             Vulnerable = vulnerable;
             if (body != null) body.enabled = vulnerable;
+            foreach (var other in more)
+                if (other != null) other.enabled = vulnerable;
         }
 
         public HitOutcome TakeHit(in Hit hit)
