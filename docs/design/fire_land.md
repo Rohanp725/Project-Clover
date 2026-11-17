@@ -1635,3 +1635,114 @@ of dust comes out nearly white; the spearman keeps drawing the spear in his hand
 Measured in the probe but not shown: the spear throw's damage did not register on the still player (health 100 -> 100,
 though the frame shows the lane and the flash on them), and in the first ashen test a levy placed 2.7 m from the burst
 was not struck (a levy was struck in the early-kill test, 80 -> 34). No sounds for any of it.
+
+### As built: second pass, the city (2026-11-17, fifth worker)
+
+Built by Claude in one unattended stretch of about two and a half hours, to `fire_levels.md`. Nothing here has been
+played by the owner. Seen in `SunCityProbe` and its frames (`review/shots/current/suncity2_*.png`) and in eight raised
+overviews (`review/shots/current/suncity2_overview_<district>.png`, made in edit mode by `AgentScripts/SunCityOverview.cs`).
+The first pass's frames (`suncity_*.png`) are stale.
+
+**Where things are.**
+
+| What | Where |
+|---|---|
+| The builder | `Editor/Builders/SunCityBuilder.cs` (menu `Clover/Build/Sun City`), rewritten district by district: `DryRiver`, `FishersBank`, `CityOfWicks`, `PaintedTombs`, `GoldenWay`, `HallOfColumns`, `LastGate`. Its helpers, lore, the sponsor's words, the rest fires, the return rule and the gate of noon are kept. Heights are named constants (`Bed`, `Bank`, `Quay`, `Square`, `Terrace`, `Gallery`, `Avenue`, `Masons`, `Upper`, `BowlFloor`, `Rim`) |
+| The ground | `Editor/Builders/SunCityGround.cs`: `Plateau` (any outline, edges broken by a jitter, faces leaning back, strata in two materials, a mesh collider of exactly the mesh), `Ramp` (a top, two sides and two ends down to the lower ground), `Ring` (ground round an inner outline: the champion's bowl), `Oval`, `Rect` |
+| Shade | One list in the builder (`SunCityBuilder.Shade`): every `Canopy` (a frame on posts with slats; its mat is drawn only as its shadow), `ShadeRoof` (a roof drawn only as its shadow) and `Colonnade` adds its rectangle, moved north by the noon lean, and the hall adds the rectangles between its light bars. One `SunlightZones.Configure(true, shade, null)` for the scene. `Sunlight.MostRectangles` is now 160 (was 48): the city registers 66 |
+| Ladders | `World/Ladder.cs`: used from below it climbs, from above it climbs down, in the player's leap (arched 1.4 m so the body clears the lip). With a `DownKey` it lies on the top until kicked down from there (S1), and stays down |
+| Barred doors | `World/BarredDoor.cs`: `BarSide` is the direction from the door to the side that can lift the bar; from the other side, "Barred from the other side." The `OpenKey` keeps it open for good |
+| The hearth wall | `World/BreakableWall.cs`: a heavy blow, or any blow of 40 or more (an ashen's burst gives 45 to what is not the player), brings it down; `suncity.hearth` keeps it down |
+| Vistas, districts' heat, forced swells | `World/LandZones.cs`, rectangles checked by position each frame (no triggers). Vista: `TopDownCamera.SetFraming(1.5, (0,0,6), -10)` while stood in, not while any enemy in the scene is aware. District: `NoonHeat.SetSchedule` as the player crosses into it, first swell one rhythm after entering. Forced: the warning starts at once, once a sitting |
+| Progress keys | `suncity.s1.ladder`, `suncity.s2.door`, `suncity.s3.gate`, `suncity.s4.door`, `suncity.hearth` (constants on the builder) |
+
+**Built to `fire_levels.md`.** The land climbs as planned, south to north: the riverbed at 0 between 3 m banks of
+dried mud in strata that lean back 12 degrees, their edges wandering half a metre, with slumps at their feet; the bed's
+outline is the plan's table (the Narrows, the Pans swinging west, the Jam, the Barque's Bend swinging east, the basin);
+the quay at 4 with four boat-sheds cut into its face and the stair up its middle; the Lamp Street at 4, its stair to the
+Lamp Square at 6, leg two, the Oil Alley and the market's lower floor at 6, the market's L-shaped terrace, the gate and
+the yard at 8 with the gallery at 10; the avenue and lower court at 10, the Levy Ramp to the Masons' Terrace at 13, the
+Spearman's Stair between its plinths (17.5) to the upper terrace, hall and porch at 16 with raised aisles at 17.2; the
+champion's oval bowl sunk to 14.5 with three steps down the porch's width and a stair up to the gate on the rim at 16.
+The side paths: the Fishers' Bank (huts, racks, the gully stair down into the sunk well court at 1), the barque's deck
+(gangplank up, prow open to drop into the basin), the roofs at 10 (ladder up from leg two, upper rooms standing on them,
+the drop onto the market's east arm), the hearth room behind the cracked wall, the painted tombs sunk to 4 below the
+yard's west wall, and the west passage and chapel behind the sun door. Five rest fires at the plan's places (F6 is the
+court's). The four shortcuts open from the far side only and stay open (progress keys). Every room's enemies as
+tabled: 47 with the champion (15 thirsting, five of them buried; 12 wicks, two burning, five dormant; 4 ashen; 6 levies,
+three in a shield wall at the head of the Levy Ramp; 3 spearmen; the warden; 5 sun-blind priests), equipped by
+`FireMechanicsKit.Equip`; nine water jars; the mirrors M1 and M2, the sun-disc over the sun door. The noon: D1 every
+100 s with its first swell forced crossing z 31 in the Pans, D2 every 70 s, D3 every 50 s with its first forced at the
+Levy Ramp's foot, none in the hall, porch and bowl (a calm rectangle as well). Vistas V1 to V5. All the first pass's lore
+at its new place (C1 on the quay's mooring stone, C2 at the prow on the deck, C3 at the well's lid, C4 on the square,
+C5 and C6 at the gate, C7 at the first statue, C8 on the scaffold, C9 over the hall's door, C10 at the gate of noon),
+the six paintings and the scare, the waterskin, the grave dish, the spear, plus two new texts of Claude's (the hearth
+room's three lines with the placeholder name "Ahu", and the chapel's two).
+
+**Where it departs, and why.**
+
+1. *F1 is at (-2.8, 0, 9)*, under the fishers' awning, not (2.5, 0, 9): the plan's own shade rectangle for F1 is at x -5
+   to -1. *The ladder S1's foot is 1.7 m out from the bank's face*, so the leaning face does not hold the climber up.
+2. *The barque is not heeled*: its deck is a level slab at 3.35 to 3.5 so it can be walked and fought on. The hull's
+   overhang over the east channel is not registered as shade (the noon shadow falls north of the hull, not east of it);
+   the deck cabin and the sail over the west channel are.
+3. *The boat-sheds' shade is inside the sheds* (z 116 to 119), where they are cut into the face; the plan's z 113 to 116
+   lies in front of them in the sun.
+4. *The great jar of the Jam lies at (-8.6, 0, 73.4)*, off the gap's mouth, which the plan's (-4, 0, 73) would block.
+5. *Oil jars are props* (eleven in the alley, one on the roofs) with colliders: there is no oil-jar runtime (B9's oil
+   half), so an ashen's burst does not set them alight. Only the water jars work.
+6. *The market's east arm is x -4 to 4*, not -10 to 4, so the broad stair (x -11 to -5) climbs into the terrace beside it
+   rather than into the arm.
+7. *Colonnade columns are the kit's at a third of their size* to stand under a 3 m roof (the plan's 0.6 scale makes them
+   5.4 m). The colonnade roofs at 13 and 16 are drawn and fade when between the camera and the player, and are walked on
+   from above (the side stairs land on them).
+8. *No 0.5 m kerb step across the avenue at z 296*: half a metre is a wall to the character controller (step offset 0.3).
+   The statues stand at x 11.5, not 13, so their plinths are in frame from the road.
+9. *The spearmen do not leap.* `gilded_leap` (C3) is not written; the spearman on the scaffold deck and the one on the
+   east plinth walk off their edges when they notice the player and fall (enemies have gravity), with no mark first.
+   The thirsting on the barque's deck does the same. The warden has no `WaitRange` (there is no such field); he holds as
+   any gilded does. The caller has no mirror stand on his dais: his mirror is his own attack (`SunMirror`).
+10. *The bowl is flat at 14.5*, not dished to 14.2.
+11. *The hall's breach is not built*: the fallen column lies across the east aisle (where the column at (15, 443) stood),
+    but there is no lit patch where the roof broke. The sun-disc that opens the sun door stands at the beam's height
+    (the stand's height plus 1.4 m) on the door's north jamb, (-21.85, 17.4, 449.9), and M1 stands at (-8, 16, 449.6)
+    on its line, not (-8, 16, 448): a disc in the doorway's middle blocked the way through once the door was open. The
+    gold disc higher over the door is only ornament. M1 starts facing north and wants six turns of the use button.
+12. *Shade is flat rectangles*, as the plan allowed: the bridge-house's shade also covers the roof walk over it.
+13. *Awnings are drawn as their frame and slats; the mat itself is drawn only as its shadow* (Claude's choice after the
+    first frames: a drawn mat over the rest fire at the quay hid the fire and read as a table top). Sails, linen and nets
+    without posts are drawn.
+14. *Vistas give way whenever any enemy in the scene has noticed the player*, not only enemies near: V4 at the Levy
+    Ramp's head is usually suppressed by the shield wall standing over it.
+15. *The forced first swells are once a sitting*: after a fall the district's ordinary rhythm runs on.
+16. *The sun-court's approach (the Way of Noon) is not built*; `SunCourt` is untouched.
+17. *New runtime code*: `World/Ladder.cs`, `World/BarredDoor.cs`, `World/BreakableWall.cs`, `World/LandZones.cs`;
+    `Sunlight.MostRectangles` 48 to 160. Tests: `Tests/EditMode/Gameplay/SunCityGroundTests.cs` (4).
+
+**Measured** (`SunCityProbe`, editor, Game view 1920 by 936, no vsync; last run after the last change): 91 lines `OK`,
+none `WRONG`, console 0 errors and 0 warnings. Every stair and ramp walked to its height (19, the bowl's north stair with them); the four shortcuts
+refuse from the near side and open from the far; the mirror opens the sun door in six presses; the swell burns twice in
+2 s in the open in the Pans and on the avenue and not at all under the boat on trestles, in a boat-shed, under the
+court's colonnade or in the champion's bowl; falls wake at the quay's fire, the avenue's and the porch's, with 19 embers
+waiting on the two basin thirsting killed since the rest and paid back when they are killed again. `PerfProbe` in the
+Market of the Cold Oven with twelve enemies awake and coming and a swell on: frame 3.7 ms mean, 4.9 ms at the 95th
+percentile, 14.0 ms worst, main thread 3.7 ms, 731 draw calls, 7,905 bytes of garbage a frame (the same 7.9 KB the court
+measured standing still before; not from the city's new parts, which allocate nothing a frame; not looked into further).
+The city registers 78 shade rectangles. EditMode tests: 342 pass (338 before, and the 4 new).
+
+**What looks weak** (from the frames; the overviews show the whole):
+
+- *Big level floors are still big level floors.* The quay (76 by 18 m), the avenue and lower court (40 by 74 m), the
+  Masons' Terrace and the embalmers' yard have their height at their edges (faces, stairs, ramps, colonnades) but are flat
+  within, broken only by paving, props and canopies. From the game's camera the middle of the avenue or the yard is a
+  frame of flagstones with one or two things in it (`suncity2_avenue_1`, `suncity2_yard_1`, `suncity2_vista_v3`).
+- *The roofs are a flat beige plain* with upper rooms standing on them (`suncity2_roofs_0`); they read as walls, not as
+  houses.
+- *The terraces are clean boxes*: their faces are straight ashlar with course bands and no cornice, and their edges do
+  not crumble; only the river's banks wander. The plinths of the Spearman's Stair and the shrine are plain blocks.
+- *The Levy Ramp hardly reads as a slope* from above (6 degrees); its rising sides show only near its head.
+- *Kit pieces are reused where new ones are wanted*: the falcons on the plinths are the seated king at 0.45, the barque
+  shrine's boat is the reed boat painted gold, the colossus is the seated king at 1.6.
+- *Side spaces are bare*: the west passage is a corridor of walls with lamp niches; the chapel has an altar and two
+  columns.
+- *The mud tiles' seam* (a straight line down the bed's middle) shows in every river frame, as it did in the first pass.

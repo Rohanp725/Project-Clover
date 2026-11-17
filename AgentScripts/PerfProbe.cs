@@ -46,8 +46,11 @@ public class PerfProbeRunner : MonoBehaviour
         }
         if (scene == "SunCity")
         {
-            // The busiest place in the city: the market, with everyone in it, the alley and the embalmers' yard awake and coming.
-            player.Teleport(new Vector3(2f, 2.1f, 224f), Quaternion.identity);
+            // The busiest place in the city (second pass): the Market of the Cold Oven, with everyone within 60 m (the alley,
+            // the roofs, the Lamp Street, the gate and the yard) awake and coming, and the sun swelling over them.
+            player.Teleport(new Vector3(-18f, 6.1f, 188f), Quaternion.identity);
+            var swell = FindAnyObjectByType<Clover.World.NoonHeat>();
+            if (swell != null) swell.SetSchedule(new Clover.Gameplay.HeatSchedule(swell.Clock + 1f, 200f));
             int woken = 0;
             foreach (var enemy in FindObjectsByType<Clover.Gameplay.Enemy>(FindObjectsSortMode.None))
             {

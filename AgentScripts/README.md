@@ -51,34 +51,57 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 | `SoakProbe` | any | random play for minutes; mode, seed and seconds are read from `%TEMP%/soak_config.txt` |
 | `TourProbe`, `TitleProbe` | any | photographs of each scene's places and its title card, to `review/shots/current/` |
 | `PerfProbe` | any | ten seconds of frame time, garbage and draw calls |
+| `SunCityProbe` | SunCity | the second pass of the sun-king's city: every room and vista pictured, every stair walked, the shortcuts from both sides, the mirror, the noon, the falls, the champion and the gate; see below |
+| `SunCityOverview` | SunCity, edit mode (`script run`) | a raised picture of each district: `review/shots/current/suncity2_overview_<district>.png` |
 | `FireMechanicsProbe` | FireYard | the Fire land's second pass, each mechanic forced and measured; see below |
 
 Probes that touch saved progress forget it before and after, so the first real start still shows the first waking.
 
 ### SunCityProbe
 
-`bash AgentScripts/runprobe.sh SunCity SunCityProbe 120` (about four minutes). The scene is built by
-`Clover > Build > Sun City` and is not in the build list, so the runner opens it by path as it does the others. In order:
+`bash AgentScripts/runprobe.sh SunCity SunCityProbe 200` (about eight minutes). The scene is built by
+`Clover > Build > Sun City` (the second pass, `docs/design/fire_levels.md`) and is not in the build list, so the runner
+opens it by path. Every line that can be judged ends `OK` or `WRONG`, and the last lines are the tally. In order:
 
-0. The sponsor's waking words are read to their end first (and its words at each fire and after the first fall, as
-   they come): each is a line `the voice ...` with the count of lines.
-1. The walk: the player is put down at 33 places from the wake point to the champion's line and a frame is written at
-   each, `review/shots/current/suncity_<district>_<n>.png` with district `river`, `well`, `wicks`, `tombs`, `golden`,
-   `hall`, `gate`. The people near each place wake; the line after each district says how many. In the hall it stands
-   in shade and then in a bar of light and says how many priests found it each time.
-2. The stairs, walked with the keys: quay, gully, tomb stair down and up, both avenue stairs, the pylon, the street.
-   Each line ends `OK` or `WRONG` by the height reached.
-3. Every carving and painting read to its end with the use button (the box must open, close, and free the player);
-   the last painting must wake the two wicks in the tombs; the waterskin, the grave dish and the spear are taken.
-4. Each of the five rest fires lit, with the return point after each. Then three enemies killed, a fall far from the
-   fire: the line must say `AT THE FIRE`, all 42 alive again, embers carried 0. Then the same with
-   `LandReturn.LoseCarriedEmbers` off: the embers are kept.
-5. The champion: the gate tried while he stands, each of seven attacks forced on a still player with a frame
-   (`suncity_gate_2` to `_8`), his guard measured, his second phase, his death, a fall and a rest (he must stay dead
-   and the other 41 return), and the gate opened.
+0. The sponsor's waking words read to their end; counts of each kind, buried mounds, water jars, mirrors, ladders,
+   barred doors and shield walls.
+1. The walk: the player is put down, everyone calmed, at 58 places from the Narrows to the champion's bowl, every room
+   and the five vistas, with a frame at each: `review/shots/current/suncity2_<place>_<n>.png` (`narrows`, `vista_v1`
+   to `_v5`, `pans`, `jam`, `bend`, `deck`, `basin`, `quay`, `bank`, `well`, `lamp`, `hearth`, `roofs`, `alley`,
+   `market`, `gate`, `yard`, `tombs`, `avenue`, `haul`, `court`, `masons`, `scaffold`, `stair`, `warden`, `hall`,
+   `chapel`, `passage`, `vestibule`, `bowl`). A vista line is `OK` when the camera's framing is in force there, or when
+   someone has noticed the player (vistas give way then: V4 at the shield wall usually does).
+2. Every stair and ramp walked with the keys from its foot, with the height reached: the quay stair, the bank ramp, the
+   gangplank, the gully, the Lamp Street stair, the market stair and cart ramp, the gallery stair, the tomb stair both
+   ways, the yard's north gate, the Levy Ramp, a colonnade side stair, the whole haul-ramp, the Spearman's Stair, the
+   pylon into the hall, the aisle steps, the bowl's steps down.
+3. The ladders: S1 used from below while it lies (must refuse), kicked down from the top, climbed down and up; the roof
+   ladder and the scaffold ladder climbed. The three barred doors, each tried from its near side (must stay shut and say
+   so) and then its far side (must open), then walked through. The cracked wall: a light blow must not break it, a
+   heavy one must (`suncity2_hearth_1`).
+4. The mirror M1 turned with the use button until it faces west: its beam must light the disc and the sun door must open
+   (`suncity2_mirror_0`); then the player walks through into the chapel.
+5. The noon: each district's rhythm (100, 70, 50 s, none in the hall), then a swell brought on at once with the player
+   in the open in the Pans, under the boat on trestles, in a boat-shed, in the open on the avenue, under the court's
+   colonnade and in the champion's bowl: burnt in the open, not in the planned shade, not in the calm bowl
+   (`suncity2_swell_0`). Then the forced first swell at z 31.
+6. Every carving and painting read to its end; the last painting wakes the tomb's wicks; the grave dish, the waterskin,
+   the hearth's embers and the spear taken.
+7. Each of the five fires lit (return point beside it). A rest at the quay, nine embers given, two of the basin's
+   thirsting killed, a fall in the riverbed: the player must wake at the quay's fire, carry 0, and the embers wait on
+   the two who were killed; killed again they pay them back. A fall on the masons' terrace after resting at F4 must
+   wake at F4.
+8. The champion: the gate tried while he stands (sealed); not aware of a player on the porch; four of his attacks forced
+   on a still player (`suncity2_champion_<n>`); his death; the bowl's north stair walked; a fall in the bowl after resting
+   at F5 (he stays dead); the gate opened, which loads the sun-court.
 
-The frames are the size of the Game view, not 1280 by 720. `PerfProbe` has a `SunCity` branch (the market with
-everyone within 60 m struck awake); a file `AgentScripts/perf_nosleep.txt` makes it measure with distance sleeping off.
+`AgentScripts/suncity_only.txt` holding `walk` runs only the walk and its frames (about two minutes); any other word skips
+the walk and runs the rest. Delete it to run everything. The raised overviews of each district are made in edit mode by
+`unity command script run --file AgentScripts/SunCityOverview.cs --entry SunCityOverview.Run` (the scene open):
+`review/shots/current/suncity2_overview_<district>.png`.
+
+`PerfProbe` has a `SunCity` branch: the Market of the Cold Oven with everyone within 60 m struck awake and a swell
+brought on; a file `AgentScripts/perf_nosleep.txt` makes it measure with distance sleeping off.
 
 ### SunCourtProbe
 

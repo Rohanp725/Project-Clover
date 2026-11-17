@@ -10,7 +10,7 @@ namespace Clover.World
     /// </summary>
     public static class Sunlight
     {
-        public const int MostRectangles = 48;
+        public const int MostRectangles = 160;
         public const int MostFlares = 8;
 
         private static readonly Vector4[] rectangles = new Vector4[MostRectangles];
