@@ -42,6 +42,24 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheWaveOwesABodyTheWayToWhereItBreaksAndNoMore()
+        {
+            // Paid in full, with the knock of the blow, a body is set down where the wave breaks: sword reach, not at the feet.
+            foreach (float start in new[] { 2.2f, 3f, 4f, 5f })
+                Assert.AreEqual(TideRules.BreaksAt, start - TideRules.Owed(start) - TideRules.Knock, 1e-4f);
+            // One already nearer than that is owed nothing: the wave never pushes anything away or past the caster.
+            Assert.AreEqual(0f, TideRules.Owed(1.4f));
+            Assert.AreEqual(0f, TideRules.Owed(0.5f));
+        }
+
+        [Test]
+        public void TheGustsShoveIsSizedSoABodyTravelsThreeMetres()
+        {
+            Assert.AreEqual(3f, GustRules.Impulse * GustRules.ShoveTravels, 1e-4f);
+            Assert.AreEqual(4.5f, GustRules.Impulse, 1e-4f);
+        }
+
+        [Test]
         public void ABodyTheWaveTakesIsSetDownInSwordReachAndNeverBehindTheCaster()
         {
             foreach (float start in new[] { 1.8f, 3f, 4.4f, 5.2f })

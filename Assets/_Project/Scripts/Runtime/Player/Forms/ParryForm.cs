@@ -34,6 +34,37 @@ namespace Clover.Player.Forms
             return 0;
         }
 
+        // Fire's answer (Kiln Stance): the blow caught counts as a perfect guard, and a pillar of fire stands up under whoever struck.
+        private static void Kiln(ref SpellRun run, in SpellBlow blow)
+        {
+            var cast = run.Cast;
+            var player = cast.Player;
+            Vector3 from = player.FormParriedFrom;
+            var attacker = cast.Combat.EnemyNear(from, 2f, null);
+            Vector3 at = attacker != null ? attacker.transform.position : from;
+            at.y = player.transform.position.y;
+            if (cast.Defence != null)
+            {
+                cast.Combat.Mana.Gain(cast.Defence.PerfectGuardMana);
+                cast.Defence.Callout("Perfect guard");
+            }
+            cast.Combat.PerfectGuarded(from);
+            if (cast.Upgrades != null) cast.Upgrades.OnPerfectGuard(from);
+            cast.Combat.StrikeArea(at, 1.7f, blow);
+            // The pillar: a column of light, tall flames wound round it, a crown of fire at its foot.
+            SigKit.Column(at, FormKit.Lit(cast.Colour, 3.6f), 1.6f, 0.3f);
+            for (int i = 0; i < 6; i++)
+            {
+                Vector3 outward = FormRules.OnRing(i, 6, 0.55f + 0.12f * (i % 2), 15f);
+                FormFx.Erupt(FormMesh.Flame, at + outward + Vector3.up * (0.5f * (i % 3)), Quaternion.Euler(0f, i * 60f, 0f), new Vector3(1.3f, 4.2f + 0.8f * (i % 2), 1.3f), cast.Colour, 0.07f + 0.02f * i, 0.45f, 0.4f);
+            }
+            SigKit.Crown(at, 1.3f, 8, 1.4f, cast.Colour, 0.4f);
+            FormKit.Impact(cast, at, 1.7f, 1.5f);
+            FormFx.Lay(FormMark.Ring, at, 0.6f, FormKit.Lit(cast.Colour, 4f), 0.35f, 5f);
+            FormKit.Flash(cast, 0.3f, 0.07f);
+            if (cast.Upgrades != null) cast.Upgrades.Jolt(0.13f, 0.5f, 0.3f);
+        }
+
         public override bool Tick(ref SpellRun run, float deltaTime)
         {
             if (run.Phase == 9) return false;
@@ -57,6 +88,16 @@ namespace Clover.Player.Forms
                 if (toward.sqrMagnitude > 0.01f) body.rotation = Quaternion.LookRotation(toward, Vector3.up);
                 var blow = cast.Blow(cast.Damage, cast.Stagger);
                 blow.Heavy = true;
+                if (cast.Affliction == Clover.Gameplay.AfflictionKind.Burn)
+                {
+                    Kiln(ref run, blow);
+                    FormFx.ReleaseMark(marks[0]);
+                    FormFx.ReleaseMark(marks[1], 0.1f);
+                    marks[0] = marks[1] = -1;
+                    run.Phase = 1;
+                    run.T0 = run.Age;
+                    return true;
+                }
                 cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, blow);
                 Vector3 chest = body.position + Vector3.up * 1.1f;
                 cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f);

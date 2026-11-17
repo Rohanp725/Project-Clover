@@ -27,6 +27,14 @@ namespace Clover.Player
         public int StartingPoints;
 
         public Heat Heat = new Heat();
+        /// <summary>True while the surge's clock is stopped: Scorched Earth is learned and the player stands in fire they left on the ground.</summary>
+        public bool SurgeHeld { get; private set; }
+        private bool scorched;
+        private bool stormFrontOwed;
+        /// <summary>The most charges Deep Reserve banks.</summary>
+        public const int ReserveMost = 3;
+        private int reserveIndex = -1;
+        private float stormFrontAt;
 
         [Header("Fire")]
         public float BackdraftReach = 4.5f;
@@ -536,6 +544,8 @@ namespace Clover.Player
             hasFirebomb = On(Upgrade.FirebombFlask);
             hasStatic = On(Upgrade.Static);
             hasCharge = On(Upgrade.StoredCharge);
+            var reserve = Upgrade.ById(Trees.LightningTree.DeepReserve);
+            reserveIndex = hasCharge && reserve != null && On(Trees.LightningTree.DeepReserve) ? reserve.Index : -1;
             hasBlink = On(Upgrade.Blink);
             hasAfterimage = On(Upgrade.Afterimage);
             hasCuts = On(Upgrade.DelayedCuts);
@@ -656,6 +666,8 @@ namespace Clover.Player
             Afflictions.FreezeSeconds = Stats.Multiplier(PlayerStat.FreezeSeconds);
             Afflictions.ShatterDamage = Stats.Multiplier(PlayerStat.ShatterDamage);
             Hazards.GrownSecondsScale = Stats.Multiplier(PlayerStat.GrownSeconds);
+            scorched = Has(Trees.FireTree.ScorchedEarth);
+            Hazards.FireSecondsScale = scorched ? 2f : 1f;
             Hazards.GrownDamageScale = Stats.Multiplier(PlayerStat.GrownDamage);
             // Heat as the marks make it: sooner, slower to cool, higher.
             Heat.BlowsPerLevel = Mathf.Max(1, baseHeatBlows - Stats.Whole(PlayerStat.HeatBlows));
@@ -764,6 +776,28 @@ namespace Clover.Player
         {
             sinceStruck += deltaTime;
             sinceDodge += deltaTime;
+            Melt(deltaTime);
+            if (reserveIndex >= 0 && reserveIndex < tally.Length && tally[reserveIndex] > 0 && combat != null && combat.NextBlowDamage <= 1f)
+            {
+                // A blow has spent the charge that was ready: one fewer is banked, and the next is made ready.
+                tally[reserveIndex]--;
+                tallyDirty = true;
+                if (tally[reserveIndex] > 0)
+                {
+                    combat.NextBlowDamage = StoredChargeMultiplier;
+                    combat.NextBlowStagger = StoredChargeMultiplier * Stats.Multiplier(PlayerStat.ChargeStagger);
+                    Vfx.Play(VfxKind.Shock, transform.position + Vector3.up * 1.2f, Vector3.up, 0.8f);
+                }
+            }
+            if (stormFrontOwed)
+            {
+                stormFrontOwed = false;
+                if (element != null && Has(Trees.WindTree.StormFront))
+                {
+                    stormFrontAt = Time.time + 0.4f;
+                    element.CastBaseFree();
+                }
+            }
             Stats.SetWhen(StatWhen.Surge, element != null && element.Kit != null && element.Kit.SurgeActive);
             Stats.SetWhen(StatWhen.Unhurt, sinceStruck >= UnhurtSeconds);
             Stats.SetWhen(StatWhen.Risen, Risen);
@@ -797,6 +831,9 @@ namespace Clover.Player
             Stats.SetWhen(StatWhen.HeavySwing, combat != null && combat.InHeavySwing);
             Stats.SetWhen(StatWhen.NearGrown, Hazards.GrownNear(transform.position, 4f));
             Stats.SetWhen(StatWhen.FarFromGrown, !Hazards.GrownNear(transform.position, 7f));
+            bool inFire = scorched && Hazards.FireUnder(transform.position);
+            Stats.SetWhen(StatWhen.InOwnFire, inFire);
+            SurgeHeld = inFire;
             if (defence == null) return;
             Stats.SetWhen(StatWhen.Guarding, defence.IsGuarding);
             Stats.SetWhen(StatWhen.LowHealth, !defence.IsDead && defence.Health.Fraction < LowHealthShare);
@@ -1377,6 +1414,8 @@ namespace Clover.Player
             if (finisher) Trigger(UpgradeTrigger.FinisherHit, struck, at);
             if (step == combat.Combo.Skill) Trigger(UpgradeTrigger.SkillHit, struck, at);
             else if (step.Heavy || finisher) Trigger(UpgradeTrigger.HeavyHit, struck, at);
+            // Storm Front: the heavy blow or finisher that lands is owed a Gust, thrown in the next step once the swing has been reckoned.
+            if ((step.Heavy || finisher) && Time.time >= stormFrontAt) stormFrontOwed = true;
             else Trigger(UpgradeTrigger.LightHit, struck, at);
             if (hasLeaf && ++leafBlows >= BreathBlows) GainBreath();
             sinceBlowLanded = 0f;
@@ -1527,10 +1566,139 @@ namespace Clover.Player
             if (hasCharge)
             {
                 combat.NextBlowDamage = StoredChargeMultiplier;
+                // Deep Reserve: the charge is banked as well, up to three; the count is what is left, this one included.
+                if (reserveIndex >= 0 && reserveIndex < tally.Length)
+                {
+                    tally[reserveIndex] = Mathf.Min(ReserveMost, tally[reserveIndex] + 1);
+                    tallyDirty = true;
+                }
                 combat.NextBlowStagger = StoredChargeMultiplier * Stats.Multiplier(PlayerStat.ChargeStagger);
                 Vfx.Play(VfxKind.Shock, transform.position + Vector3.up * 1.2f, Vector3.up, 0.8f);
             }
-            Trigger(UpgradeTrigger.PerfectGuard, combat.EnemyAt(attacker, 2.5f), attacker);
+            var struckBy = combat.EnemyAt(attacker, 2.5f);
+            // Twin Break: Burn and Static on the one who struck are spent together, before anything sets either off alone.
+            if (struckBy is IAfflictable both && both.Afflictions.Has(AfflictionKind.Burn) && both.Afflictions.Has(AfflictionKind.Static) && Has(Trees.PlasmaTree.TwinBreak))
+                TwinBreak(struckBy, both.Afflictions);
+            Trigger(UpgradeTrigger.PerfectGuard, struckBy, attacker);
+        }
+
+        /// <summary>How many times Twin Break has spent Burn and Static together, and how many enemies have melted down: for probes.</summary>
+        public int TwinBreaks { get; private set; }
+        public int Meltdowns { get; private set; }
+
+        private void TwinBreak(Component who, AfflictionSet set)
+        {
+            int burn = set.Stacks(AfflictionKind.Burn), charge = set.Stacks(AfflictionKind.Static);
+            set.SetOff(AfflictionKind.Burn);
+            set.SetOff(AfflictionKind.Static);
+            var blow = Blow(lookOf[(int)AfflictionKind.Burn], AfflictionKind.None, PlasmaRules.TwinDamage(burn, charge) * Stats.Multiplier(PlayerStat.BurstDamage), PlasmaRules.TwinStagger(burn, charge) * Stats.Multiplier(PlayerStat.BurstStagger), 0);
+            // A heavy blow makes what is not steadfast flinch: the attack it had begun is broken.
+            blow.Heavy = true;
+            blow.Spell = true;
+            combat.StrikeOne(who, blow, transform.position);
+            TwinBreaks++;
+            Vector3 at = who.transform.position;
+            Color fire = Afflictions.Spec(AfflictionKind.Burn).Colour, spark = Afflictions.Spec(AfflictionKind.Static).Colour;
+            // Fire up from under it and lightning down onto it in the one moment.
+            for (int i = 0; i < 3; i++)
+                Forms.FormFx.Erupt(Forms.FormMesh.Flame, at + Forms.FormRules.OnRing(i, 3, 0.5f, 40f), Quaternion.Euler(0f, i * 120f, 0f), new Vector3(1.2f, 2.6f + 0.3f * burn, 1.2f), fire, 0.06f, 0.3f, 0.35f);
+            Forms.FormFx.Drop(Forms.FormMesh.Bolt, at + Vector3.up * 8f, at, Quaternion.LookRotation(Vector3.down), new Vector3(3.5f, 3.5f, 8f), Color.white, 0.04f, 0.12f, 0.08f, 0.03f);
+            Forms.SigKit.Column(at, Forms.FormKit.Lit(spark, 3.4f), 1.1f, 0.14f);
+            Forms.FormFx.Lay(Forms.FormMark.Ring, at, 0.8f, Forms.FormKit.Lit(fire, 3.6f), 0.3f, 5f);
+            Forms.FormFx.Lay(Forms.FormMark.Ring, at, 0.4f, Forms.FormKit.Lit(spark, 3.6f), 0.4f, 6.5f);
+            Forms.FormFx.Face(Forms.FormMark.Star, at + Vector3.up * 1.1f, 2f, Forms.FormKit.Lit(Color.white, 3.4f), 0.1f, 5f);
+            Forms.FormFx.Lay(Forms.FormMark.Crack, at, 3.4f, Forms.FormKit.Lit(spark, 2.4f), 1.4f);
+            Jolt(0.1f, 0.45f, 0.25f);
+        }
+
+        // Meltdown: looked for a few times a second among the enemies near; one enemy melts at a time.
+        private Component melting;
+        private float meltLeft, meltPulse, meltLook;
+        private Component meltedLast;
+        private float meltedAt = -100f;
+
+        private void Melt(float deltaTime)
+        {
+            if (melting != null)
+            {
+                if (!melting.gameObject.activeInHierarchy || (melting is Enemy fallen && fallen.IsDead))
+                {
+                    melting = null;
+                    return;
+                }
+                Vector3 at = melting.transform.position;
+                meltLeft -= deltaTime;
+                meltPulse -= deltaTime;
+                if (meltPulse <= 0f)
+                {
+                    // It shakes with light, quicker and quicker, inside the ring that says how far the burst will reach.
+                    meltPulse = PlasmaRules.Pulse(meltLeft);
+                    float near = 1f - Mathf.Clamp01(meltLeft / PlasmaRules.MeltSeconds);
+                    Forms.FormFx.Face(Forms.FormMark.Star, at + Vector3.up * 1.2f + Random.insideUnitSphere * 0.25f, 1.2f + 1.6f * near, Forms.FormKit.Lit(Color.white, 3f + 1.5f * near), 0.07f, 0.6f, Random.value * 90f);
+                    Forms.FormFx.Lay(Forms.FormMark.Ring, at, PlasmaRules.MeltRadius * 2f, Forms.FormKit.Lit(Color.Lerp(Afflictions.Spec(AfflictionKind.Burn).Colour, Color.white, near), 0.8f + 0.8f * near, 0.5f), meltPulse + 0.05f, PlasmaRules.MeltRadius * 2f * (1f - 0.12f * near));
+                    if (near > 0.4f) Forms.FormFx.Drop(Forms.FormMesh.Bolt, at + Vector3.up * 2.4f + Random.insideUnitSphere, at + Vector3.up * 1f, Random.rotation, new Vector3(1.6f, 1.6f, 1.6f), Color.white, 0.03f, 0.05f, 0.05f, 0.02f);
+                }
+                if (meltLeft > 0f) return;
+                var done = melting;
+                melting = null;
+                meltedLast = done;
+                meltedAt = Time.time;
+                Meltdowns++;
+                if (done is IAfflictable spent)
+                {
+                    spent.Afflictions.SetOff(AfflictionKind.Burn);
+                    spent.Afflictions.SetOff(AfflictionKind.Static);
+                }
+                var blow = Blow(lookOf[(int)AfflictionKind.Static], AfflictionKind.None, PlasmaRules.MeltDamage * Stats.Multiplier(PlayerStat.BurstDamage), PlasmaRules.MeltStagger * Stats.Multiplier(PlayerStat.BurstStagger), 0);
+                blow.Heavy = true;
+                blow.Spell = true;
+                combat.StrikeOne(done, blow, at + Vector3.up);
+                // Everything else in the ring takes half of each. The player is not harmed.
+                furnaceSeen.Clear();
+                if (done is IDamageable self) furnaceSeen.Add(self);
+                blow.Damage *= PlasmaRules.MeltShare;
+                blow.Stagger *= PlasmaRules.MeltShare;
+                combat.StrikeArea(at, PlasmaRules.MeltRadius, blow, furnaceSeen);
+                furnaceSeen.Clear();
+                Color fire = Afflictions.Spec(AfflictionKind.Burn).Colour, spark = Afflictions.Spec(AfflictionKind.Static).Colour;
+                Forms.FormFx.Lay(Forms.FormMark.Disc, at, PlasmaRules.MeltRadius * 2f, Forms.FormKit.Lit(Color.white, 2.4f, 0.8f), 0.12f);
+                Forms.FormFx.Lay(Forms.FormMark.Ring, at, 1f, Forms.FormKit.Lit(Color.white, 4f), 0.35f, PlasmaRules.MeltRadius * 2.6f);
+                Forms.FormFx.Lay(Forms.FormMark.Ring, at, 0.5f, Forms.FormKit.Lit(fire, 3.4f), 0.5f, PlasmaRules.MeltRadius * 2.2f);
+                Forms.FormFx.Lay(Forms.FormMark.Star, at, 2f, Forms.FormKit.Lit(spark, 3.6f), 0.3f, PlasmaRules.MeltRadius * 3.4f);
+                Forms.FormFx.Lay(Forms.FormMark.Crack, at, PlasmaRules.MeltRadius * 1.8f, Forms.FormKit.Lit(fire, 2.6f), 3f);
+                Forms.SigKit.Column(at, Forms.FormKit.Lit(Color.white, 3.6f), 2.6f, 0.22f);
+                for (int i = 0; i < 12; i++)
+                {
+                    Vector3 outward = Forms.FormRules.OnRing(i, 12, 1f, 11f);
+                    if (i % 2 == 0) Forms.FormFx.Fly(Forms.FormMesh.Fireball, at + Vector3.up, at + outward * PlasmaRules.MeltRadius + Vector3.up * 0.4f, Quaternion.LookRotation(outward), Vector3.one * 1.2f, fire, 0.26f);
+                    else Forms.FormFx.Fly(Forms.FormMesh.Bolt, at + Vector3.up, at + outward * PlasmaRules.MeltRadius + Vector3.up * 0.4f, Quaternion.LookRotation(outward), new Vector3(2.4f, 2.4f, PlasmaRules.MeltRadius), Color.white, 0.18f, 0.03f);
+                    Forms.FormFx.Erupt(Forms.FormMesh.Flame, at + outward * (PlasmaRules.MeltRadius * 0.5f), Quaternion.Euler(0f, i * 30f, 0f), new Vector3(1.1f, 2f + 0.6f * (i % 3), 1.1f), fire, 0.07f, 0.4f, 0.4f);
+                }
+                ScreenFlash.Flash(new Color(1f, 0.95f, 0.85f, 0.5f), 0.09f);
+                Jolt(0.16f, 0.8f, 0.4f);
+                return;
+            }
+            meltLook -= deltaTime;
+            if (meltLook > 0f) return;
+            meltLook = 0.25f;
+            if (combat == null || !Has(Trees.PlasmaTree.Meltdown)) return;
+            int mostBurn = Afflictions.Spec(AfflictionKind.Burn).MaximumStacks, mostCharge = Afflictions.Spec(AfflictionKind.Static).MaximumStacks;
+            furnaceSeen.Clear();
+            while (furnaceSeen.Count < 12)
+            {
+                var near = combat.EnemyNear(transform.position, 14f, furnaceSeen);
+                if (!(near is IDamageable one)) break;
+                furnaceSeen.Add(one);
+                if (!(near is IAfflictable carrier)) continue;
+                if (ReferenceEquals(near, meltedLast) && Time.time - meltedAt < PlasmaRules.MeltAgain) continue;
+                if (!PlasmaRules.Melts(carrier.Afflictions.Stacks(AfflictionKind.Burn), carrier.Afflictions.Stacks(AfflictionKind.Static), mostBurn, mostCharge)) continue;
+                melting = near;
+                meltLeft = PlasmaRules.MeltSeconds;
+                meltPulse = 0f;
+                if (defence != null) defence.Callout("Meltdown");
+                break;
+            }
+            furnaceSeen.Clear();
         }
 
         /// <summary>Open Furnace: every burning enemy within reach is set off where it stands, and keeps a little of its burn.</summary>

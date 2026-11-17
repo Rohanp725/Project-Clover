@@ -60,14 +60,9 @@ namespace Clover.Player.Trees
                 Description = "Static stays longer on an enemy.",
                 Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.5f) } });
             to.Add(new Upgrade { Id = DeepReserve, Name = "Deep Reserve", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.StoredCharge }, X = -1.39f, Y = 4.31f, Icon = UpgradeIcons.Gem,
-                // BESPOKE: three charges banked, shown as pips, each blow spending one. Until then a perfect guard also leaves
-                // every blow harder for a few seconds, so the blows after the charged one still carry something.
-                Description = "For four seconds after a perfect guard, every blow lands 30% harder and staggers 30% more.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.3f, Seconds = 4f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Boon, Stat = PlayerStat.StaggerDealt, Amount = 0.3f, Seconds = 4f },
-                } });
+                // BESPOKE (built): PlayerUpgrades banks a charge with each perfect guard (the count, shown on the HUD) and makes the next ready when a blow spends one.
+                Description = "Perfect guards bank up to three charges. Each blow spends one.",
+                Tally = new TallySpec { Name = "Charge", Cap = 3 } });
             // BESPOKE (as built): the cuts that land when the blade is home. It keeps its foot on Stored Charge and moves aside for Deep Reserve.
             to.Add(new Upgrade { Id = Upgrade.DelayedCuts, Name = "Delayed Cuts", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.StoredCharge }, X = -0.77f, Y = 5.19f, Icon = UpgradeIcons.Blade, Weapon = Weapons.KatanaName,
                 Description = "The Iaido Slash passes through. Its cuts land a moment later, all at once, when the blade is home." });
@@ -87,8 +82,8 @@ namespace Clover.Player.Trees
                 Description = "A stored charge breaks balance harder.",
                 Stats = new[] { new StatMod(PlayerStat.ChargeStagger, 0.25f) } });
             to.Add(new Upgrade { Id = WaitingThunder, Name = "Waiting Thunder", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { FullDischarge }, X = -2.69f, Y = 6.93f, Icon = UpgradeIcons.Spike,
-                Description = "Hold the spell button to hang five bolts at your shoulder for ten seconds. One flies at the nearest enemy every half second or so. A heavy blow that lands sends all that are left at the one it struck. 35 mana.",
-                Form = "phalanx",
+                Description = "Hold the spell button to hang five bolts at your shoulder. Each blow you land sends one down with it. A heavy blow sends all that are left. 35 mana.",
+                Form = SpellForms.Waiting,
                 Spell = new SpellSpec { Cost = 35f, Count = 5, Seconds = 10f, Reach = 8f, Damage = 8f, Stagger = 6f, Stacks = 1, Speed = 18f } });
             // It took the id and name the first slice gave a mark of critical chance; it is critical damage now, as designed.
             to.Add(new Upgrade { Id = KeenEdge, Name = "Keen Edge", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { DeepReserve }, X = -1.71f, Y = 5.46f, Icon = UpgradeIcons.Eye,
@@ -137,11 +132,11 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = RunningCurrent, Name = "Running Current", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { LiveWire }, X = -2.09f, Y = 7.98f, Icon = UpgradeIcons.Gem,
                 Description = "Your blows give more mana.",
                 Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.15f) } });
-            // The pull that grows with each stack of Static, and the discharge of all it gathers, are still to be written by hand.
+            // BESPOKE (built): LodestoneForm. The pull grows with each stack of Static and the burst sets all of it off.
             to.Add(new Upgrade { Id = Lodestone, Name = "Lodestone", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { LiveWire }, X = -0.22f, Y = 9.14f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button to drag every enemy within five metres to a point just ahead of you, then burst it there with a heavy blow that lays Static. 45 mana.",
-                Form = "reverse",
-                Spell = new SpellSpec { Cost = 45f, Reach = 1.5f, Radius = 5f, Delay = 0.3f, Damage = 14f, Stagger = 30f, Stacks = 1 } });
+                Description = "Hold the spell button to drag every enemy near toward you, further for each Static on it, then set all of it off at once. 45 mana.",
+                Form = SpellForms.Lodestone,
+                Spell = new SpellSpec { Cost = 45f, Reach = 1.5f, Radius = 7f, Delay = 0.3f, Damage = 14f, Stagger = 30f, Stacks = 0 } });
             // BESPOKE (as built): the breath that opens Overdrive. The breath each perfect guard or dodge adds, and the dearer surge, are data.
             // It used to grow from Lightning Rod.
             to.Add(new Upgrade { Id = Upgrade.Overclock, Name = "Overclock", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { Lodestone }, X = -1.2f, Y = 10f, Icon = UpgradeIcons.Hourglass,

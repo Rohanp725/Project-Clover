@@ -49,6 +49,9 @@ Shader "Clover/Spell"
             {
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
+                // Paint laid on the shape itself: rgb tints the element's colour (deep water at a wave's foot, green
+                // where light comes through its top) and alpha below a half is foam, drawn white whatever the colour.
+                half4 color : COLOR;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -57,6 +60,7 @@ Shader "Clover/Spell"
                 float4 positionCS : SV_POSITION;
                 half3 normalWS : TEXCOORD0;
                 half3 viewWS : TEXCOORD1;
+                half4 paint : TEXCOORD2;
             };
 
             Varyings Vert(Attributes input)
@@ -67,6 +71,7 @@ Shader "Clover/Spell"
                 output.positionCS = TransformWorldToHClip(positionWS);
                 output.normalWS = TransformObjectToWorldNormal(input.normalOS);
                 output.viewWS = GetWorldSpaceNormalizeViewDir(positionWS);
+                output.paint = input.color;
                 return output;
             }
 
@@ -77,12 +82,14 @@ Shader "Clover/Spell"
                 // The form's own light: from above and a little toward the camera's left, wherever the scene's sun is.
                 half lit = dot(normal, normalize(half3(-0.35, 0.8, -0.45)));
                 half facing = saturate(dot(normal, normalize(input.viewWS)));
-                half3 colour = _Color.rgb;
+                half3 colour = _Color.rgb * input.paint.rgb;
                 half3 shade = colour * half3(0.34, 0.3, 0.5);
                 half3 core = colour * 1.25 + half3(_Sheen, _Sheen, _Sheen);
                 half3 shown = lit > 0.72 ? core : lit > -0.05 ? colour : shade;
                 // A thin rim of the bright tone where a face turns away: it keeps the shape's edge inside the ink.
                 shown = facing < 0.2 ? lerp(shown, core, 0.5) : shown;
+                half3 foam = lit > -0.05 ? half3(0.96, 0.98, 1.0) : half3(0.6, 0.76, 0.92);
+                shown = input.paint.a < 0.5 ? foam : shown;
                 shown = lerp(shown, half3(2.3, 2.3, 2.3), _Hot);
                 return half4(shown, 1);
             }

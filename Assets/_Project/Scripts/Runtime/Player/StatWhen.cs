@@ -43,5 +43,7 @@ namespace Clover.Player
         Risen,
         /// <summary>While a heavy blow of the weapon is being wound up or swung.</summary>
         HeavySwing,
+        /// <summary>While the player stands in fire they have left on the ground.</summary>
+        InOwnFire,
     }
 }

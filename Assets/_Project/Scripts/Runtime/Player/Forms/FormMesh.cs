@@ -60,5 +60,9 @@ namespace Clover.Player.Forms
         Gust,
         /// <summary>A line of foam one metre wide across X: what rides the lip of a wave.</summary>
         Foam,
+        /// <summary>A scarab standing on the ground, facing +Z, its forelegs raised to push what is in front of it.</summary>
+        Scarab,
+        /// <summary>A falcon along +Z, its wings spread two metres across X, its claws under it.</summary>
+        Falcon,
     }
 }

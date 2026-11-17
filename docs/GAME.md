@@ -1143,6 +1143,35 @@ guard or sight; things that stand and can be struck; the lift has no shadow or l
 not pips; no sound for anything new; none of the new numbers has been played for balance. Light's Unblemished and
 Metal's Master's Answer are the loudest untried numbers.
 
+### Riptide's wave, the sun's road and eleven marks built to their designs (2026-11-17, night run; Claude's defaults, not yet played by the user)
+
+The owner's words that governed the run, 2026-11-17: "do all the work on the reworded marks (each elemental move
+should feel like what it is doing and feel different than just different colored attack. So stuff like the riptide
+should actually show a wave come up and go towards you knocking people towards you)", and "take a look at the fire
+elemental boss move, and if it needs to be reworked more to be in line with the ra theme make the change".
+
+- **Riptide** behaves as it did and is now drawn as water: one smooth swell with a lip leaning toward the player,
+  deep blue at its foot and sea-green toward its top, foam along the lip and where its foot runs out, flecks of
+  foam on the ground behind it, spray thrown ahead as it breaks, and a dark wet lane with a pale sheen left on the
+  stone for about two seconds. A real enemy is set down in sword reach (1.2 m measured, 1.3 m meant), not at the
+  feet. Claude's defaults: the colours, the 2.05 m height, the wet lasting 1.8 to 2.6 s.
+- **Gust** throws a real enemy its 3 m (2.95 m measured on a castle soldier): the wind pushes for the whole 0.45 s
+  it is seen.
+- **Falling Sun** is the sun's road as `docs/design/fire_land.md` section 8 has it (dawn rolled by a scarab, noon
+  carried by a falcon, dusk set; a blow sends it under, to rise again). Name, damage and place in the tree kept.
+  Its words: "Light Kindle and the sun begins its road. At dawn it is rolled along the ground to the enemy you
+  face, and the ground it crosses burns. At noon it is carried up, and every burn near you deepens by itself. When
+  Kindle ends, or when you press the surge button again, it sets on the enemy below it, heavier for every burn it
+  finds. A blow taken sends it under, to rise again." Claude's defaults where the section gave no number: 0.25 s
+  for the sun to come up out of the ground, 0.9 s for the falcon to stoop and lift it, a fire patch every metre.
+- **Built to design, with their designed words back:** Wildfire Rush, Kiln Stance, Sunspot, Scorched Earth (Fire);
+  Waiting Thunder, Lodestone, Deep Reserve (Lightning; its charges are the count the HUD shows beside the weapon, a number, not drawn pips); Twin Break, Meltdown (Plasma); Storm Front (Wind, with "that lands"
+  added to its words because a heavy blow that misses throws no Gust). Firebomb Flask was found to be at its design
+  already. The numbers are the designs' own (`docs/design/trees_a.md`); where a design gave none they are Claude's
+  defaults: Lodestone's burst keeps the 14 damage and 30 stagger it had; Meltdown takes one enemy at a time.
+- **Still reworded:** 113 of the 124, listed in `docs/design/marks_reworded.md`. In the demo's three branches:
+  Lightning Rod, Live Wire, Blink and Quick Return.
+
 ## Open questions
 
 1. Camera: top-down is on trial in the slice; confirm or change once it is playable.

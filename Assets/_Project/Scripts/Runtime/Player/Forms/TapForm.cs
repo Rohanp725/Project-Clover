@@ -213,7 +213,10 @@ namespace Clover.Player.Forms
             var cast = run.Cast;
             int hits = cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, cast.Blow(cast.Damage, cast.Stagger));
             Vector3 middle = run.A + run.B * (cast.Reach * 0.55f);
-            cast.Combat.ShoveArea(middle, cast.Reach * 0.6f, run.B * 3f);
+            // The wind keeps blowing for as long as it is seen: what it reached is pushed all that while, so a body
+            // that reels from the blow first is still thrown the whole way.
+            run.Phase = SigKit.Gather(run, middle, cast.Reach * 0.6f, 12);
+            run.T3 = 0f;
             Vfx.Play(VfxKind.Dust, run.A + run.B * 0.6f, run.B, 2f);
             Vfx.Play(VfxKind.Dust, middle, run.B, 3f);
             TickWind(ref run, 0.1f);
@@ -225,6 +228,15 @@ namespace Clover.Player.Forms
             var cast = run.Cast;
             const float blows = 0.45f;
             float front = (cast.Reach + 1.5f) * Mathf.Clamp01(run.Age / blows);
+            float share = Mathf.Min(deltaTime / blows, 1f - run.T3);
+            if (share > 0f)
+            {
+                run.T3 += share;
+                var blown = SpellWorks.Things(run);
+                Vector3 push = run.B * (GustRules.Impulse * share * cast.Combat.StatPush);
+                for (int i = 0; i < run.Phase; i++)
+                    if (FormKit.Alive(blown[i]) && blown[i] is IShovable body) body.Push(push);
+            }
             run.T2 -= deltaTime;
             while (run.T2 <= 0f)
             {
@@ -241,7 +253,7 @@ namespace Clover.Player.Forms
                 FormFx.Fly(FormMesh.Gust, from, from + run.B * 3.6f, Quaternion.LookRotation(run.B) * Quaternion.Euler(0f, 0f, Random.value * 360f),
                     new Vector3(4f, 4f, 2.2f + Random.value * 2.2f), run.Done % 3 == 0 ? Color.white : ElementSubstance.Pale(cast.Colour), 0.26f, 0.03f);
             }
-            return run.Age < blows;
+            return run.Age < blows || run.T3 < 1f;
         }
 
         // ---- Ice: Hoarfrost. Crystals grow out along the ground in a fan and the cold strikes as they come; they stand four seconds, and a blow of the weapon among them shatters the lot.
@@ -329,10 +341,12 @@ namespace Clover.Player.Forms
             var cast = run.Cast;
             var solids = SpellWorks.Solids(run);
             run.Done = SigKit.Gather(run, run.A + run.B * (cast.Reach * 0.5f), cast.Reach * 0.5f + TideRules.HalfWidth, 12);
-            solids[0] = FormFx.Hold(FormMesh.Crest, Deep(cast.Colour, 0.78f), 0.045f);
-            solids[1] = FormFx.Hold(FormMesh.Crest, Deep(cast.Colour, 0.5f), 0.03f);
-            solids[2] = FormFx.Hold(FormMesh.Foam, Color.white, 0.02f);
-            solids[3] = FormFx.Hold(FormMesh.Foam, Color.white, 0.02f);
+            solids[0] = FormFx.Hold(FormMesh.Crest, Deep(cast.Colour, 0.86f), 0.03f);
+            solids[1] = FormFx.Hold(FormMesh.Crest, Deep(cast.Colour, 0.6f), 0.02f);
+            solids[2] = FormFx.Hold(FormMesh.Foam, Color.white, 0.012f);
+            solids[3] = FormFx.Hold(FormMesh.Foam, Color.white, 0.012f);
+            var left = SpellWorks.Times(run);
+            for (int i = 0; i < run.Done && i < left.Length; i++) left[i] = -1f;
             run.T1 = Mathf.Max(cast.Reach, TideRules.BreaksAt);
             Vector3 rises = run.A + run.B * run.T1;
             // The way it will come, drawn on the ground from where it rises to where it breaks.
@@ -348,6 +362,7 @@ namespace Clover.Player.Forms
             var solids = SpellWorks.Solids(run);
             var things = SpellWorks.Things(run);
             var touched = SpellWorks.Once(run);
+            var left = SpellWorks.Times(run);
             float front = TideRules.Front(cast.Reach, run.Age);
             float step = run.T1 - front;
             run.T1 = front;
@@ -367,9 +382,15 @@ namespace Clover.Player.Forms
                     cast.Combat.StrikeOne(thing, cast.Blow(cast.Damage, cast.Stagger), thing.transform.position + run.B * 2f);
                     FormFx.Erupt(FormMesh.Spout, thing.transform.position, Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.7f, 1.8f, 0.7f), ElementSubstance.Pale(cast.Colour), 0.07f, 0.05f, 0.25f);
                 }
-                float carry = TideRules.Carry(along, aside, front, step);
+                if (i >= left.Length) continue;
+                // Taken once, it is owed the way from where it stood to where the wave breaks, and is paid that as
+                // the wave comes in: a body trails the water that carries it, so where it is now is no guide.
+                if (left[i] < 0f && TideRules.Reached(along, aside, front)) left[i] = TideRules.Owed(along);
+                float carry = left[i] > 0f ? Mathf.Min(step, left[i]) : 0f;
+                if (carry <= 0f) continue;
+                left[i] -= carry;
                 // A shove is spent over a moment and moves two thirds of its length: half as much again keeps a body on the wave.
-                if (carry > 0f && thing is IShovable body) body.Push(-run.B * (carry * 1.5f));
+                if (thing is IShovable body) body.Push(-run.B * (carry * 1.5f));
             }
 
             float broken = run.Phase == 1 ? Mathf.Clamp01((run.Age - run.T3) / 0.28f) : 0f;
@@ -377,23 +398,32 @@ namespace Clover.Player.Forms
             float risen = (1f - (1f - t) * (1f - t)) * (1f - broken);
             // It faces the way it travels: toward the caster. Breaking, it falls flat and runs out along the ground.
             var facing = Quaternion.LookRotation(-run.B);
-            float tall = 1.8f * risen * (1f + 0.06f * Mathf.Sin(run.Age * 30f));
-            float long_ = 1.9f + 1.4f * broken;
-            FormFx.Place(solids[0], at, facing, new Vector3(TideRules.HalfWidth * 2f, Mathf.Max(0.02f, tall), long_));
-            // A second, lower swell following the first, and the foam riding the first one's lip.
-            FormFx.Place(solids[1], at + run.B * 1.5f, facing, new Vector3(TideRules.HalfWidth * 1.6f, Mathf.Max(0.02f, tall * 0.45f), long_ * 0.8f));
-            FormFx.Place(solids[2], at - run.B * (0.42f * long_) + Vector3.up * (tall * 0.78f), facing, new Vector3(TideRules.HalfWidth * 2f, 2.2f * Mathf.Max(0.02f, risen), long_));
-            // And the churn along its foot, where it tears up the ground it crosses.
-            FormFx.Place(solids[3], at - run.B * (0.2f * long_) + Vector3.up * 0.1f, facing, new Vector3(TideRules.HalfWidth * 2.1f, 1.6f * Mathf.Max(0.02f, risen + broken), long_ * 1.05f));
+            // The swell breathes a little as it comes; breaking, it throws itself forward and lies down.
+            float tall = 2.05f * risen * (1f + 0.04f * Mathf.Sin(run.Age * 22f));
+            float long_ = 2.3f + 0.9f * broken;
+            FormFx.Place(solids[0], at, facing, new Vector3(TideRules.HalfWidth * 2.1f, Mathf.Max(0.02f, tall), long_));
+            // A second, lower swell following the first.
+            FormFx.Place(solids[1], at + run.B * 2.1f, facing, new Vector3(TideRules.HalfWidth * 1.7f, Mathf.Max(0.02f, tall * 0.36f), long_ * 0.7f));
+            // The lace of foam it leaves on the ground behind it, and the churn running out ahead of its foot.
+            float trail = Mathf.Clamp(Mathf.Max(cast.Reach, TideRules.BreaksAt) - front + 0.6f, 0.6f, 3.2f);
+            FormFx.Place(solids[2], at + run.B * (1.2f + trail * 0.5f) + Vector3.up * 0.02f, facing, new Vector3(TideRules.HalfWidth * 1.9f, 0.5f * Mathf.Max(0.05f, risen + broken), trail));
+            FormFx.Place(solids[3], at - run.B * (0.42f * long_) + Vector3.up * 0.03f, facing, new Vector3(TideRules.HalfWidth * 1.9f, 2.4f * Mathf.Max(0.05f, risen + broken * 0.5f), 0.7f + 1.6f * broken));
 
             run.T2 -= deltaTime;
             if (run.T2 <= 0f && run.Phase == 0)
             {
-                // Spray torn off the top, left behind it.
-                run.T2 = 0.035f;
-                Vector3 top = at + side * Random.Range(-TideRules.HalfWidth, TideRules.HalfWidth) + Vector3.up * tall;
-                FormFx.Fly(FormMesh.Droplet, top, top + run.B * 1.2f + Vector3.up * Random.Range(0.3f, 0.9f), Quaternion.LookRotation(run.B + Vector3.up), Vector3.one * 0.45f, Color.white, 0.3f, 0.02f);
-                if (step > 0f) FormFx.Run(FormMark.Streak, at + side * Random.Range(-TideRules.HalfWidth, TideRules.HalfWidth), run.B, 1.6f, 0.2f, FormKit.Lit(cast.Colour, 2f, 0.8f), 0.3f, 0.02f);
+                // Spray torn off the lip: some thrown ahead of it, some left hanging behind.
+                run.T2 = 0.03f;
+                Vector3 top = at + side * Random.Range(-TideRules.HalfWidth, TideRules.HalfWidth) * 0.8f - run.B * 0.9f + Vector3.up * (tall * 0.8f);
+                bool ahead = run.Done % 2 == 0 || Random.value < 0.5f;
+                Vector3 to = top + (ahead ? -run.B * Random.Range(0.6f, 1.3f) - Vector3.up * 0.3f : run.B * 1.2f + Vector3.up * Random.Range(0.3f, 0.8f));
+                FormFx.Fly(FormMesh.Droplet, top, to, Quaternion.LookRotation(to - top), Vector3.one * 0.3f, Color.white, 0.28f, 0.012f);
+                // The wet it leaves: a dark lane where it has passed, with a line of light on it.
+                if (step > 0f)
+                {
+                    FormFx.Run(FormMark.Lane, at + run.B * 0.6f, run.B, 1.2f, TideRules.HalfWidth * 1.8f, FormKit.Stain(cast.Colour, 0.4f), 1.8f);
+                    FormFx.Run(FormMark.Streak, at + run.B * 0.8f + side * Random.Range(-TideRules.HalfWidth, TideRules.HalfWidth) * 0.8f, run.B, 1.4f, 0.12f, FormKit.Lit(Color.white, 0.9f, 0.5f), 0.9f, 0.02f);
+                }
             }
 
             if (run.Phase == 0 && TideRules.Broken(cast.Reach, run.Age))
@@ -401,24 +431,29 @@ namespace Clover.Player.Forms
                 // It breaks: a wall of spray thrown up and forward over the caster's feet, and rings running out.
                 run.Phase = 1;
                 run.T3 = run.Age;
-                for (int i = 0; i < 12; i++)
+                Vector3 lip = at - run.B * 1.1f;
+                for (int i = 0; i < 18; i++)
                 {
-                    Vector3 from = at + side * FormRules.InRow(i, 12, TideRules.HalfWidth * 2f / 12f) + Vector3.up * 0.8f;
-                    Vector3 to = from - run.B * Random.Range(0.4f, 1.6f) + Vector3.up * Random.Range(0.6f, 2f);
-                    FormFx.Fly(FormMesh.Droplet, from, to, Quaternion.LookRotation(to - from), Vector3.one * 0.6f, i % 2 == 0 ? Color.white : cast.Colour, 0.4f, 0.02f);
+                    Vector3 from = lip + side * FormRules.InRow(i, 18, TideRules.HalfWidth * 1.8f / 18f) + Vector3.up * Random.Range(0.5f, 1.4f);
+                    Vector3 to = from - run.B * Random.Range(0.8f, 2.4f) + Vector3.up * Random.Range(-0.3f, 1.2f);
+                    FormFx.Fly(FormMesh.Droplet, from, to, Quaternion.LookRotation(to - from), Vector3.one * Random.Range(0.4f, 0.75f), i % 3 == 0 ? ElementSubstance.Pale(cast.Colour) : Color.white, 0.42f, 0.012f);
                 }
+                // The white of it going up where it lands, as mist, and the water thrown out of it.
+                for (int i = 0; i < 5; i++)
+                    FormFx.Erupt(FormMesh.Cloud, lip + side * FormRules.InRow(i, 5, 0.95f) + Vector3.up * 0.3f, Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(1.5f, 0.9f + 0.5f * Random.value, 1.2f), Color.white, 0.08f, 0.1f, 0.35f, 0.01f);
                 for (int i = 0; i < 4; i++)
-                    FormFx.Erupt(FormMesh.Spout, at + side * FormRules.InRow(i, 4, 1.2f), Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.8f, 1.6f + Random.value, 0.8f), i % 2 == 0 ? cast.Colour : ElementSubstance.Pale(cast.Colour), 0.07f, 0.06f, 0.3f);
-                FormFx.Lay(FormMark.Ring, at, 1.2f, FormKit.Lit(cast.Colour, 2.6f), 0.6f, TideRules.HalfWidth * 2.6f);
-                FormFx.Lay(FormMark.Ring, at, 0.4f, FormKit.Lit(cast.Colour, 1.8f), 0.9f, TideRules.HalfWidth * 2f);
-                FormFx.Lay(FormMark.Scorch, at, TideRules.HalfWidth * 2.2f, FormKit.Stain(cast.Colour, 0.45f), 2.5f);
+                    FormFx.Erupt(FormMesh.Spout, lip + side * FormRules.InRow(i, 4, 1.2f), Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.7f, 1.3f + Random.value, 0.7f), ElementSubstance.Pale(cast.Colour), 0.07f, 0.06f, 0.3f, 0.015f);
+                FormFx.Lay(FormMark.Ring, lip, 1.2f, FormKit.Lit(Color.white, 1.6f, 0.8f), 0.5f, TideRules.HalfWidth * 2.4f);
+                // The stone is left wet: dark, with a sheen that dries off it.
+                FormFx.Lay(FormMark.Scorch, lip, TideRules.HalfWidth * 2.4f, FormKit.Stain(cast.Colour, 0.5f), 2.6f);
+                FormFx.Lay(FormMark.Disc, lip, TideRules.HalfWidth * 1.7f, FormKit.Lit(ElementSubstance.Pale(cast.Colour), 0.8f, 0.3f), 1.3f, TideRules.HalfWidth * 2.1f);
                 if (cast.Upgrades != null) cast.Upgrades.Jolt(0.03f, 0.14f, 0.18f);
             }
             return run.Phase == 0 || run.Age - run.T3 < 0.3f;
         }
 
-        // The element's colour as deep water: darker, and never washed out.
-        private static Color Deep(Color colour, float share) => new Color(colour.r * share * 0.6f, colour.g * share * 0.85f, colour.b * share, 1f);
+        // The element's colour as the body of a wave: its blue kept, its green brought up so the paint on the wave can turn it to sea-green.
+        private static Color Deep(Color colour, float share) => new Color(colour.r * share * 0.55f, Mathf.Max(colour.g, colour.b * 0.62f) * share * 0.9f, colour.b * share, 1f);
 
         // ---- Life: Briar Patch. Thorned vines grow out of the ground, flowers open among them, and the bed lashes whatever stands in it twice a second.
 

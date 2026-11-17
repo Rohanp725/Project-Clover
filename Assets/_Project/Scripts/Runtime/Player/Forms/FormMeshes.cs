@@ -13,6 +13,8 @@ namespace Clover.Player.Forms
     {
         public static Mesh Build(FormMesh which)
         {
+            // Water is the one smooth thing among the cut shapes: its wave is a curved skin, not facets.
+            if (which == FormMesh.Crest) return Wave();
             var made = new Maker();
             switch (which)
             {
@@ -157,10 +159,13 @@ namespace Clover.Player.Forms
                     break;
                 }
                 case FormMesh.Foam:
-                    for (int i = 0; i < 9; i++)
+                    // Flecks scattered over a band one metre square: pressed flat on the ground they are the lace a
+                    // wave leaves behind it, stood up a little they are the churn at its foot.
+                    for (int i = 0; i < 24; i++)
                     {
-                        float x = -0.46f + i * 0.115f;
-                        made.Blob(new Vector3(x, 0.02f * (i % 3), 0.45f * (1f - 4f * x * x) + 0.05f * ((i * 7) % 3 - 1)), 0.05f + 0.02f * ((i * 5) % 3));
+                        float x = -0.48f + 0.96f * ElementSubstance.Hash(i * 3 + 1);
+                        float z = -0.5f + ElementSubstance.Hash(i * 3 + 2);
+                        made.Blob(new Vector3(x, 0.02f, z + 0.3f * (1f - 4f * x * x)), 0.03f + 0.05f * ElementSubstance.Hash(i * 3 + 3));
                     }
                     break;
                 case FormMesh.Droplet:
@@ -234,6 +239,32 @@ namespace Clover.Player.Forms
                     made.Bipyramid(new Vector3(-0.3f, 0f, 0.06f), new Vector3(0.3f, 0f, 0.06f), 0.5f, Vector3.forward * 0.03f, Vector3.up * 0.03f);
                     made.Bipyramid(new Vector3(0f, -0.3f, 0.06f), new Vector3(0f, 0.3f, 0.06f), 0.5f, Vector3.forward * 0.03f, Vector3.right * 0.03f);
                     break;
+                case FormMesh.Scarab:
+                    // Wing-case, chest and head in a row, two forelegs lifted ahead of it, four legs on the ground.
+                    made.Bipyramid(new Vector3(0f, 0.17f, -0.45f), new Vector3(0f, 0.17f, 0.2f), 0.45f, Vector3.right * 0.3f, Vector3.up * 0.17f);
+                    made.Bipyramid(new Vector3(0f, 0.16f, 0.1f), new Vector3(0f, 0.16f, 0.42f), 0.5f, Vector3.right * 0.22f, Vector3.up * 0.13f);
+                    made.Bipyramid(new Vector3(0f, 0.13f, 0.36f), new Vector3(0f, 0.1f, 0.6f), 0.4f, Vector3.right * 0.13f, Vector3.up * 0.07f);
+                    for (int i = -1; i <= 1; i += 2)
+                    {
+                        made.Bipyramid(new Vector3(0.14f * i, 0.15f, 0.4f), new Vector3(0.3f * i, 0.4f, 0.74f), 0.5f, Vector3.right * 0.04f, Vector3.up * 0.04f);
+                        made.Bipyramid(new Vector3(0.2f * i, 0.13f, 0.05f), new Vector3(0.52f * i, 0f, -0.06f), 0.4f, Vector3.forward * 0.035f, Vector3.up * 0.035f);
+                        made.Bipyramid(new Vector3(0.22f * i, 0.13f, -0.24f), new Vector3(0.5f * i, 0f, -0.42f), 0.4f, Vector3.forward * 0.035f, Vector3.up * 0.035f);
+                    }
+                    break;
+                case FormMesh.Falcon:
+                    // Body, hooked head, a fanned tail, and on each side a wing in two lengths with a long feather behind it and a claw below.
+                    made.Bipyramid(new Vector3(0f, 0f, -0.35f), new Vector3(0f, 0f, 0.4f), 0.6f, Vector3.right * 0.12f, Vector3.up * 0.1f);
+                    made.Bipyramid(new Vector3(0f, 0.03f, 0.32f), new Vector3(0f, -0.07f, 0.64f), 0.35f, Vector3.right * 0.075f, Vector3.up * 0.075f);
+                    made.Bipyramid(new Vector3(0f, 0f, -0.28f), new Vector3(0f, 0.02f, -0.78f), 0.7f, Vector3.right * 0.21f, Vector3.up * 0.025f);
+                    for (int i = -1; i <= 1; i += 2)
+                    {
+                        made.Bipyramid(new Vector3(0.08f * i, 0.02f, 0.1f), new Vector3(0.6f * i, 0.17f, 0.02f), 0.5f, Vector3.forward * 0.23f, Vector3.up * 0.03f);
+                        made.Bipyramid(new Vector3(0.5f * i, 0.15f, 0.05f), new Vector3(1.05f * i, 0.02f, -0.3f), 0.4f, Vector3.forward * 0.17f, Vector3.up * 0.025f);
+                        made.Bipyramid(new Vector3(0.7f * i, 0.1f, -0.05f), new Vector3(0.9f * i, 0.02f, -0.52f), 0.4f, Vector3.right * 0.08f, Vector3.up * 0.02f);
+                        made.Bipyramid(new Vector3(0.35f * i, 0.1f, -0.05f), new Vector3(0.45f * i, 0.03f, -0.4f), 0.4f, Vector3.right * 0.08f, Vector3.up * 0.02f);
+                        made.Bipyramid(new Vector3(0.07f * i, -0.05f, 0f), new Vector3(0.09f * i, -0.3f, 0.08f), 0.4f, Vector3.right * 0.03f, Vector3.forward * 0.03f);
+                    }
+                    break;
                 case FormMesh.Gust:
                 {
                     // A swept curve, thick in its middle and gone to nothing at both ends, with a curl at its head.
@@ -245,6 +276,96 @@ namespace Clover.Player.Forms
                 }
             }
             return made.Finish("Form " + which);
+        }
+
+        // The wave's shape seen from its side, as (ahead, up): a long back climbing to the crest, the lip thrown
+        // forward and drooping, the hollow face under it, and the foot running out in front.
+        private static readonly Vector2[] WaveSide =
+        {
+            new Vector2(-0.95f, 0f), new Vector2(-0.62f, 0.14f), new Vector2(-0.32f, 0.46f), new Vector2(-0.06f, 0.84f), new Vector2(0.2f, 1f),
+            new Vector2(0.48f, 0.93f), new Vector2(0.68f, 0.68f), new Vector2(0.52f, 0.64f), new Vector2(0.32f, 0.52f), new Vector2(0.24f, 0.27f),
+            new Vector2(0.36f, 0.08f), new Vector2(0.62f, 0f),
+        };
+
+        /// <summary>
+        /// A breaking wave one metre wide across X, rolling toward +Z: one smooth skin swept across its width, tall in
+        /// the middle and sinking to nothing at both ends, its middle running ahead of its ends. It is painted as
+        /// water is: deep at the foot, green where the light comes through the top, foam along the crest and lip and
+        /// where the foot runs out. The spell shader reads the paint.
+        /// </summary>
+        private static Mesh Wave()
+        {
+            const int across = 30, perSpan = 4;
+            int round = (WaveSide.Length - 1) * perSpan + 1;
+            var side = new Vector2[round];
+            for (int i = 0; i < round; i++)
+            {
+                int span = Mathf.Min(i / perSpan, WaveSide.Length - 2);
+                float t = (i - span * perSpan) / (float)perSpan;
+                Vector2 a = WaveSide[Mathf.Max(span - 1, 0)], b = WaveSide[span], c = WaveSide[span + 1], d = WaveSide[Mathf.Min(span + 2, WaveSide.Length - 1)];
+                side[i] = 0.5f * (2f * b + (c - a) * t + (2f * a - 5f * b + 4f * c - d) * (t * t) + (3f * b - a - 3f * c + d) * (t * t * t));
+                side[i].y = Mathf.Max(0f, side[i].y);
+            }
+            // Where along the side the crest's foam begins and ends, and where the foot's begins.
+            int crestFrom = 5 * perSpan + 2, crestTo = 7 * perSpan, footFrom = 10 * perSpan - 1;
+
+            var points = new List<Vector3>();
+            var paint = new List<Color>();
+            var faces = new List<int>();
+            for (int column = 0; column <= across; column++)
+            {
+                float x = -0.5f + column / (float)across;
+                float edge = Mathf.Abs(x) * 2f;
+                float tall = Mathf.Max(0.03f, 1f - edge * edge * edge * edge) * (0.88f + 0.12f * Mathf.Sin(x * 19f + 1.3f));
+                float ahead = 0.45f * (1f - 4f * x * x);
+                float lean = 0.07f * Mathf.Sin(x * 27f) + 0.05f * Mathf.Sin(x * 11f + 2f);
+                // The foam's edge wanders from one stretch of the wave to the next.
+                int ragged = Mathf.RoundToInt(2.2f * Mathf.Sin(x * 41f) + 1.4f * Mathf.Sin(x * 13f + 0.7f));
+                for (int i = 0; i < round; i++)
+                {
+                    float up = side[i].y;
+                    points.Add(new Vector3(x, up * tall, side[i].x * (0.35f + 0.65f * tall) + ahead + lean * up));
+                    Color water = Color.Lerp(new Color(0.22f, 0.36f, 0.7f), new Color(0.7f, 1.2f, 1.02f), Mathf.Clamp01(up * 1.25f));
+                    if (up > 0.6f) water = Color.Lerp(water, new Color(0.95f, 1.95f, 1.35f), (up - 0.6f) / 0.4f);
+                    // The hollow under the lip is in the wave's own shade.
+                    if (i > crestTo && i < footFrom) water *= 0.8f;
+                    bool foam = (i >= crestFrom - ragged / 2 && i <= crestTo + Mathf.Abs(ragged) / 2) || i >= footFrom - Mathf.Max(0, ragged) || edge > 0.97f;
+                    water.a = foam ? 0f : 1f;
+                    paint.Add(water);
+                }
+            }
+            for (int column = 0; column < across; column++)
+                for (int i = 0; i < round; i++)
+                {
+                    int a = column * round + i, b = column * round + (i + 1) % round, c = a + round, d = b + round;
+                    faces.Add(a); faces.Add(b); faces.Add(c);
+                    faces.Add(b); faces.Add(d); faces.Add(c);
+                }
+            // The two ends, closed, so the ink line has a back to it.
+            for (int end = 0; end < 2; end++)
+            {
+                int first = end * across * round, middle = points.Count;
+                Vector3 centre = Vector3.zero;
+                for (int i = 0; i < round; i++) centre += points[first + i];
+                points.Add(centre / round);
+                paint.Add(new Color(1f, 1f, 1f, 0f));
+                for (int i = 0; i < round; i++)
+                {
+                    faces.Add(middle);
+                    faces.Add(end == 1 ? first + i : first + (i + 1) % round);
+                    faces.Add(end == 1 ? first + (i + 1) % round : first + i);
+                }
+            }
+            var mesh = new Mesh { name = "Form Crest" };
+            mesh.SetVertices(points);
+            mesh.SetColors(paint);
+            mesh.SetTriangles(faces, 0);
+            mesh.RecalculateNormals();
+            var normals = new List<Vector3>();
+            mesh.GetNormals(normals);
+            mesh.SetUVs(1, normals);
+            mesh.RecalculateBounds();
+            return mesh;
         }
 
         // A three-sided bar and a six-faced block, as faces between corners: the first half of the corners is one end.
@@ -478,6 +599,10 @@ namespace Clover.Player.Forms
                 }
                 var mesh = new Mesh { name = name };
                 mesh.SetVertices(corners);
+                // Unpainted: the spell shader reads white as "the element's own colour, no foam".
+                var paint = new Color[count];
+                for (int i = 0; i < count; i++) paint[i] = Color.white;
+                mesh.colors = paint;
                 mesh.normals = normals;
                 mesh.SetUVs(1, smooth);
                 mesh.triangles = indices;

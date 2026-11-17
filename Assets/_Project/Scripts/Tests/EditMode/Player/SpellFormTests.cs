@@ -24,7 +24,7 @@ namespace Clover.Tests
         {
             "sun", "remember", "stillworld", "shatterchain", "sea", "spring", "hand", "hangingswords", "scales", "rise", "cleanblade",
             "thunder", "dust", "plates", "lotus", "groundwakes", "anvil", "mirrors", "totality", "reaping", "pyres",
-            "flashes", "frozenwave", "ball", "heart", "skydance", "circle", "eye",
+            "flashes", "frozenwave", "ball", "heart", "skydance", "circle", "eye", "sunspot", "lodestone", "waiting",
         };
 
         [Test]
@@ -136,8 +136,18 @@ namespace Clover.Tests
                 try
                 {
                     Assert.Greater(mesh.vertexCount, 0, $"{which} has no corners.");
-                    Assert.AreEqual(0, mesh.vertexCount % 3, $"{which}: every face has its own three corners.");
-                    Assert.AreEqual(mesh.vertexCount, mesh.triangles.Length);
+                    if (which == FormMesh.Crest)
+                    {
+                        // Water's wave is the one smooth shape: its faces share their corners, and it carries its paint.
+                        Assert.Greater(mesh.triangles.Length, mesh.vertexCount, "The wave should be one skin with shared corners.");
+                        Assert.AreEqual(mesh.vertexCount, mesh.colors.Length, "The wave carries no paint.");
+                        Assert.IsTrue(mesh.colors.Any(paint => paint.a < 0.5f) && mesh.colors.Any(paint => paint.a > 0.5f), "The wave should have both foam and water on it.");
+                    }
+                    else
+                    {
+                        Assert.AreEqual(0, mesh.vertexCount % 3, $"{which}: every face has its own three corners.");
+                        Assert.AreEqual(mesh.vertexCount, mesh.triangles.Length);
+                    }
                     var smooth = new List<Vector3>();
                     mesh.GetUVs(1, smooth);
                     Assert.AreEqual(mesh.vertexCount, smooth.Count, $"{which} carries no smoothed directions for its ink line.");

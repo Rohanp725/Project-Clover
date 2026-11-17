@@ -127,6 +127,12 @@ namespace Clover.Player
         public const string Circle = "circle";
         /// <summary>Tempest's Eye of the Storm: a held, walking column that drags in, carries round, throws out and calls a bolt on each.</summary>
         public const string Eye = "eye";
+        /// <summary>Fire's brand: light blows feed it, a heavy blow sets it off.</summary>
+        public const string Sunspot = "sunspot";
+        /// <summary>Lightning's pull: enemies are dragged in along lines of lightning, further for their Static, and discharged.</summary>
+        public const string Lodestone = "lodestone";
+        /// <summary>Lightning's hung bolts, loosed only by the weapon's blows.</summary>
+        public const string Waiting = "waiting";
 
         private static readonly ISpellForm[] all =
         {
@@ -187,6 +193,9 @@ namespace Clover.Player
             new SkyDanceForm(),
             new CircleForm(),
             new EyeForm(),
+            new SunspotForm(),
+            new LodestoneForm(),
+            new WaitingThunderForm(),
         };
 
         private static readonly Dictionary<string, ISpellForm> byId = Index();

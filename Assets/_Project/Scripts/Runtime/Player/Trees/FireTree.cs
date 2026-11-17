@@ -71,9 +71,9 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = SearingEdge, Name = "Searing Edge", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { CatchingFire }, X = 1.26f, Y = 7.58f, Icon = UpgradeIcons.Flame,
                 Description = "Burns bite harder.",
                 Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.2f) } });
-            // The line of fire it leaves and the Heat it raises are still to be written by hand.
+            // BESPOKE (built): DrillForm leaves the line burning and raises Heat a level for each enemy passed.
             to.Add(new Upgrade { Id = WildfireRush, Name = "Wildfire Rush", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { CatchingFire }, X = 1.34f, Y = 8.65f, Icon = UpgradeIcons.Arrow,
-                Description = "Hold the spell button to drive seven metres through the enemies ahead, untouchable, and come out facing back. Each one on the line is struck once and set burning two deep. 35 mana.",
+                Description = "Hold the spell button to drive through the enemies ahead in a line of fire. Each one passed is set burning and raises your Heat. 35 mana.",
                 Form = "drill",
                 Spell = new SpellSpec { Cost = 35f, Reach = 7f, Radius = 1f, Count = 1, Damage = 14f, Stagger = 20f, Stacks = 2, Speed = 20f, Seconds = 2.6f, LingerDamage = 4f } });
             to.Add(new Upgrade { Id = SlowFuse, Name = "Slow Fuse", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { CatchingFire }, X = 0.24f, Y = 8.21f, Icon = UpgradeIcons.Hourglass,
@@ -103,9 +103,9 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = FurnaceBreath, Name = "Furnace Breath", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Backdraft }, X = -1.69f, Y = 4.85f, Icon = UpgradeIcons.Wave,
                 Description = "Backdraft breaks balance harder.",
                 Stats = new[] { new StatMod(PlayerStat.BackdraftStagger, 0.55f) } });
-            // The pillar under the attacker is the parry's own cone for now, and a blow caught does not yet count as a perfect guard.
+            // BESPOKE (built): ParryForm answers Fire's caught blow with a pillar under the attacker and counts it as a perfect guard.
             to.Add(new Upgrade { Id = KilnStance, Name = "Kiln Stance", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.BurnAndDetonate }, X = -1.96f, Y = 6.49f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button to stand ready in flame for a moment. The first blow that reaches you, red or not, is turned and answered with a fan of fire that sets the attacker burning three deep. If no blow comes the mana is lost. 30 mana.",
+                Description = "Hold the spell button to stand ready in flame. The first blow that reaches you, red or not, is turned and answered with a pillar of fire. 30 mana.",
                 Form = "parry",
                 Spell = new SpellSpec { Cost = 30f, Seconds = 1.2f, Reach = 4f, Arc = 90f, Damage = 30f, Stagger = 50f, Stacks = 3 } });
             // UntilBlow: the first swing that lands within three seconds has it, and no other.
@@ -148,11 +148,11 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = ShortBreath, Name = "Short Breath", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.FirebombFlask }, X = 2.34f, Y = 4.73f, Icon = UpgradeIcons.Gem,
                 Description = "Flame Wave costs less mana.",
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
-            // The brand's blows each burst as they land; feeding it and setting it off with one heavy blow is still to be written by hand.
+            // BESPOKE (built): SunspotForm. Light blows feed it, a heavy blow sets it off; left alone it bursts at half.
             to.Add(new Upgrade { Id = Sunspot, Name = "Sunspot", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.MeteorLeap }, X = 2.46f, Y = 7.87f, Icon = UpgradeIcons.Target,
-                Description = "Hold the spell button to brand the enemy faced for seven seconds. Each of your next six blows on it sets off a small burst of fire that strikes and burns all beside it. 35 mana.",
-                Form = "brand",
-                Spell = new SpellSpec { Cost = 35f, Reach = 6f, Seconds = 7f, Count = 6, Radius = 2f, Damage = 9f, Stagger = 8f, Stacks = 1 } });
+                Description = "Hold the spell button to brand the enemy faced. Each blow you land feeds the brand, up to six. A heavy blow sets it off. 35 mana.",
+                Form = SpellForms.Sunspot,
+                Spell = new SpellSpec { Cost = 35f, Reach = 6f, Seconds = 7f, Count = 6, Radius = 3f, Damage = 12f, Stagger = 10f, Stacks = 1 } });
             // There is no number for spells on burning enemies alone: half the share, on every enemy.
             to.Add(new Upgrade { Id = HotCoals, Name = "Hot Coals", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.MeteorLeap }, X = 1.93f, Y = 6.84f, Icon = UpgradeIcons.Orb,
                 Description = "Spells strike burning enemies harder.",
@@ -160,11 +160,10 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = LongKindle, Name = "Long Kindle", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.MeteorLeap }, X = 2.93f, Y = 6.8f, Icon = UpgradeIcons.Hourglass,
                 Description = "Kindle lasts longer.",
                 Stats = new[] { new StatMod(PlayerStat.SurgeSeconds, 0.3f) } });
-            // BESPOKE: fire left on the ground should last twice as long, and standing in it should stop Kindle's clock and give
-            // more mana from blows. Until then: a longer Kindle and more mana from blows wherever the player stands, and dearer spells.
+            // BESPOKE (built): Hazards.FireSecondsScale doubles fire left on the ground; StatWhen.InOwnFire carries the mana; PlayerUpgrades.SurgeHeld stops Kindle's clock.
             to.Add(new Upgrade { Id = ScorchedEarth, Name = "Scorched Earth", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { Sunspot }, X = 2.9f, Y = 9.29f, Icon = UpgradeIcons.Spike,
-                Description = "Kindle lasts longer and your blows give more mana. Your spells cost more.",
-                Stats = new[] { new StatMod(PlayerStat.SurgeSeconds, 0.3f), new StatMod(PlayerStat.ManaFromBlows, 0.25f), new StatMod(PlayerStat.SpellCost, 0.2f) } });
+                Description = "Fire you leave on the ground burns twice as long. While you stand in it Kindle does not run down and your blows give more mana. Your spells cost more.",
+                Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.5f, StatWhen.InOwnFire), new StatMod(PlayerStat.SpellCost, 0.2f) } });
             // Kept from the first slice; not in the design.
             to.Add(new Upgrade { Id = Wildfire, Name = "Wildfire", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.FirebombFlask }, X = 2.09f, Y = 3.81f, Icon = UpgradeIcons.Skull,
                 Description = "Where an enemy dies the ground burns for a while.",
@@ -177,7 +176,7 @@ namespace Clover.Player.Trees
 
             // BESPOKE (built): SunForm.
             to.Add(new Upgrade { Id = FallingSun, Name = "Falling Sun", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
-                Description = "When Kindle is lit a sun rises over the fight. While it hangs, every burn near you deepens by itself. When Kindle ends, or when you press the surge button again, it falls on the enemy you face, heavier for every burn it finds. A blow taken puts it out.",
+                Description = "Light Kindle and the sun begins its road. At dawn it is rolled along the ground to the enemy you face, and the ground it crosses burns. At noon it is carried up, and every burn near you deepens by itself. When Kindle ends, or when you press the surge button again, it sets on the enemy below it, heavier for every burn it finds. A blow taken sends it under, to rise again.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Sun, Spell = new SpellSpec { Cost = 0f, Damage = 60f, Stagger = 80f, Radius = 4f, Stacks = 2, LingerDamage = 5f } } } });
         }
     }

@@ -52,6 +52,7 @@ namespace Clover.Player
         private InputAction surgeAction;
         private float spellBuffered;
         private float surgeBuffered;
+        private float surgeHeldShown;
         private float glowLevel;
         private float untilEmber;
         private float surgeHealOwed;
@@ -261,7 +262,21 @@ namespace Clover.Player
                     surgeHealOwed += 1f;
                 }
             }
-            if (Kit.TickSurge(deltaTime))
+            bool held = Kit.SurgeActive && upgrades != null && upgrades.SurgeHeld;
+            if (held)
+            {
+                // The fire underfoot feeds the surge: its clock stands still, and the flames reach up round the feet to say so.
+                surgeHeldShown -= deltaTime;
+                if (surgeHeldShown <= 0f)
+                {
+                    surgeHeldShown = 0.3f;
+                    Vector3 feet = transform.position;
+                    Forms.FormFx.Lay(Forms.FormMark.Ring, feet, 2.6f, Forms.FormKit.Lit(Colour, 2.6f), 0.3f, 1f);
+                    Vector3 outward = Forms.FormRules.OnRing(0, 1, 0.6f, Time.time * 420f);
+                    Forms.FormFx.Erupt(Forms.FormMesh.Flame, feet + outward, Quaternion.Euler(0f, Time.time * 200f, 0f), new Vector3(0.6f, 1.5f, 0.6f), Colour, 0.08f, 0.2f, 0.3f);
+                }
+            }
+            if (!held && Kit.TickSurge(deltaTime))
             {
                 combat.ClearEmpower();
                 if (upgrades != null) upgrades.OnSurgeEnd();
@@ -317,9 +332,20 @@ namespace Clover.Player
             }
         }
 
-        private void Release()
+        /// <summary>How many times the base spell has been thrown at no cost by a mark (Storm Front).</summary>
+        public int FreeCasts { get; private set; }
+
+        /// <summary>Throws the element's base spell now, as the marks have made it, the way the player faces, for no mana and without the cast's wind-up. It is not counted as a spell cast: nothing that waits on one hears it.</summary>
+        public void CastBaseFree()
         {
-            SpellsCast++;
+            if (Kit == null || combat == null) return;
+            FreeCasts++;
+            Release(true);
+        }
+
+        private void Release(bool free = false)
+        {
+            if (!free) SpellsCast++;
             var form = (string.IsNullOrEmpty(Kit.SpellForm) ? null : SpellForms.Get(Kit.SpellForm)) ?? SpellForms.Get(Kit.Shape == SpellShape.Bolt ? SpellForms.Bolt : SpellForms.Wave);
             if (upgrades != null)
             {
@@ -347,7 +373,7 @@ namespace Clover.Player
             if (Kit.SpellPull != 0f && string.IsNullOrEmpty(Kit.SpellForm)) combat.Displace(transform.position, cast.Reach, Mathf.Abs(Kit.SpellPull), Kit.SpellPull > 0f);
             glowLevel = GlowWhenCasting;
             if (shaker != null) shaker.Shake(0.14f, 0.2f);
-            if (upgrades != null) upgrades.OnSpellCast();
+            if (upgrades != null && !free) upgrades.OnSpellCast();
         }
 
         private void BeginSurge()

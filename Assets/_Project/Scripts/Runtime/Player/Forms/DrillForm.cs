@@ -70,11 +70,23 @@ namespace Clover.Player.Forms
                 float passed = distance - run.T3;
                 if (passed > 0.01f)
                 {
-                    cast.Combat.StrikeLane(run.A + run.B * run.T3, run.B, passed + 1f, cast.Spec.Radius, cast.Blow(cast.Damage, cast.Stagger), SpellWorks.Once(run));
+                    int met = cast.Combat.StrikeLane(run.A + run.B * run.T3, run.B, passed + 1f, cast.Spec.Radius, cast.Blow(cast.Damage, cast.Stagger), SpellWorks.Once(run));
+                    // Fire's drill raises Heat a level for every enemy it goes through.
+                    if (met > 0 && cast.Affliction == Clover.Gameplay.AfflictionKind.Burn && cast.Upgrades != null) cast.Upgrades.Heat.Raise(met);
                     // The rings it throws off behind it.
                     if (Mathf.FloorToInt(distance / 1.1f) != Mathf.FloorToInt(run.T3 / 1.1f))
                     {
                         FormFx.Face(FormMark.Ring, body - run.B * 0.6f, 1.2f, FormKit.Lit(cast.Colour, 2.8f), 0.22f, 3f);
+                        // The line it leaves burning behind it, for a spell that leaves one.
+                        if (cast.Spec.LingerDamage > 0f && cast.Spec.Seconds > 0f)
+                        {
+                            Vector3 patch = at - run.B * 0.55f;
+                            Clover.World.Hazards.Lay(cast.Ground(patch, Mathf.Max(0.8f, cast.Spec.Radius), cast.Spec.Seconds, 0.5f, cast.Linger(cast.Spec.LingerDamage)));
+                            Vector3 across = Vector3.Cross(Vector3.up, run.B);
+                            for (int flame = -1; flame <= 1; flame++)
+                                FormFx.Erupt(FormMesh.Spike, patch + across * (flame * 0.45f) + run.B * (0.25f * flame), Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.8f, 1.2f + 0.5f * Random.value, 0.8f), cast.Colour, 0.06f, 0.55f, 0.45f);
+                            FormFx.Run(FormMark.Lane, patch - run.B * 0.6f, run.B, 1.2f, cast.Spec.Radius * 1.8f, FormKit.Lit(cast.Colour, 2.2f, 0.8f), 0.6f, 0.4f);
+                        }
                         ElementLook.Sparks(cast.Element, body, -run.B, 0.5f);
                     }
                     run.T3 = distance;

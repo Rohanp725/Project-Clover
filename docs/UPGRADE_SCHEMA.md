@@ -885,6 +885,48 @@ None of these is data on the mark; each is turned on by owning the mark named, w
 
 ### 18.4 The account of what is unfinished, now
 
-`docs/design/marks_open.md` is empty: every mark's words are true. 124 marks are true because their words were
-rewritten to what they do today; `docs/design/marks_reworded.md` keeps, for each, the old words, the new words and
+`docs/design/marks_open.md` is empty: every mark's words are true. 124 marks were made true on 2026-11-16 by
+rewriting their words to what they did; eleven of those have since been built (section 19) and 113 remain reworded; `docs/design/marks_reworded.md` keeps, for each, the old words, the new words and
 what the design wanted. To build one to its design: build it, put the designed words back, delete its entry there.
+
+## 19. Marks built to their designs on 2026-11-17 (night run)
+
+Eleven of the 124 reworded marks now do what their designs asked, and Falling Sun was rebuilt as the sun's road.
+`docs/design/marks_reworded.md` lists them under "Built since"; 113 remain reworded.
+
+### 19.1 New pieces of the schema
+
+| Piece | Where | What it is |
+|---|---|---|
+| `StatWhen.InOwnFire` | `StatWhen`, set in `PlayerUpgrades.States` | Holds while Scorched Earth is learned and `Hazards.FireUnder(position)` is true. `PlayerStats.WhenCount` now ends on it: a new state goes after it and moves that constant. |
+| `Hazards.FireSecondsScale` | `Hazards.Lay`, set where the other scales are set in `PlayerUpgrades` | Fire patches that stay where they are laid and bite more than once last this many times as long (2 with Scorched Earth). Reset with the other statics. |
+| `Hazards.FireUnder(at)` | `Hazards` | True when a standing fire patch, past its delay, covers the point (its radius plus 0.35 m). |
+| `PlayerUpgrades.SurgeHeld` | read by `PlayerElement` | While true the surge's clock does not run (`ElementKit.TickSurge` is not called) and flames are thrown up round the player's feet every 0.3 s. |
+| `Heat.Raise(levels)` | `Heat` | Whole levels at once, to the maximum: what Wildfire Rush gives for each enemy passed. |
+| `PlayerElement.CastBaseFree()` | `PlayerElement` | Throws the base spell as the marks have made it, for no mana and with no wind-up; `SpellsCast` and `OnSpellCast` do not hear it; `FreeCasts` counts it. |
+| `PlasmaRules` | `Runtime/Player/PlasmaRules.cs` | Twin Break's and Meltdown's sums. |
+| `SunRules`, `SunspotRules`, `LodestoneRules`, `GustRules`, `TideRules.Owed`/`Knock` | `Runtime/Player/Forms` | The plain sums of those moves, each with EditMode tests. |
+
+### 19.2 The marks
+
+| Mark | How it is carried now |
+|---|---|
+| fire.sun (Falling Sun) | `SunForm`, four stations: Dawn (rolled 6 m/s to the enemy faced, up to 9 m or 2.5 s; a fire patch 0.8 m in radius for 4 s every metre, 4 a bite and one Burn; 14 damage, 20 stagger, two Burn on the first enemy met), Noon (carried up over 0.9 s to 3.8 m, grown to 1.35 m; one Burn a second on every burning enemy within 6 m of the player), Dusk (falls in 0.32 s: the spec's 60 damage and 80 stagger in 4 m, times `SunRules.Weight`), Under (a blow taken: no blow of its own; it rises again 1.5 s later from dawn if the surge had 3 s left). Called while still being rolled: half weight in 2.5 m. |
+| fire.rush | `DrillForm` lays `cast.Ground` every 1.1 m when the spec has `LingerDamage` and `Seconds`, and calls `Heat.Raise` for each enemy first struck when the cast lays Burn. |
+| fire.kiln | `ParryForm`, when the cast lays Burn: `OnPerfectGuard`, `PerfectGuarded` and the guard's mana, then `StrikeArea` 1.7 m under the attacker in place of the cone. Other elements' parries keep the cone. |
+| fire.sunspot | Form `sunspot` (`SunspotForm`). Spec: `Count` 6 (most blows fed), `Seconds` 7, `Radius` 3, `Damage` 12, `Stagger` 10; plus 9 and 8 a blow fed (`SunspotRules`). |
+| fire.scorched | Stats `ManaFromBlows +0.5` when `InOwnFire`, `SpellCost +0.2`; the rest by the switches in 19.1. |
+| lightning.waiting | Form `waiting` (`WaitingThunderForm : PhalanxForm`, `FliesByItself` false, `Piece` Bolt). |
+| lightning.lodestone | Form `lodestone` (`LodestoneForm`). Spec: `Radius` 7 (how far it reaches for enemies), `Delay` 0.3, `Damage` 14, `Stagger` 30, `Stacks` 0. The burst reaches 3.5 m round the player (`LodestoneRules.BurstRadius`). |
+| plasma.twin | `PlayerUpgrades.TwinBreak`, called in `OnPerfectGuard` before the trigger; the two `SetOff` effects stay for an enemy carrying only one. `TwinBreaks` counts. |
+| plasma.meltdown | `PlayerUpgrades.Melt`, looked for four times a second among twelve enemies within 14 m; no effects in its data. `Meltdowns` counts. |
+| wind.front | No effects in its data; `PlayerUpgrades` owes a `CastBaseFree` to each heavy blow or finisher that lands, at most one every 0.4 s. |
+| lightning.reserve | `Tally` "Charge", cap 3, no effects: `PlayerUpgrades` adds one with each perfect guard (where Stored Charge is armed) and, in `States`, takes one off and arms the next when the armed blow has been spent. |
+| fire.firebomb | Unchanged: found to be at its design. |
+
+### 19.3 Riptide and Gust
+
+Riptide's carry is now a debt: when the wave's face takes a body it is owed `TideRules.Owed(along)` metres (the way
+to where the wave breaks, less `Knock`, the 0.45 m the blow itself moves it) and is paid that as the wave comes in,
+kept in the run's `Times`. Gust gathers what stands within reach and pushes it over the 0.45 s it blows
+(`GustRules.Impulse` 4.5, which is 3 m of travel), so the blow's own flinch no longer swallows the throw.

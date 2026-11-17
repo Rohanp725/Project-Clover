@@ -44,6 +44,15 @@ namespace Clover.Player
             return true;
         }
 
+        /// <summary>Raises the heat by whole levels at once, up to its most: what a drive through enemies gives for each one passed.</summary>
+        public void Raise(int levels)
+        {
+            if (levels <= 0) return;
+            sinceBlow = 0f;
+            Level = System.Math.Min(MaximumLevel, Level + levels);
+            if (Level >= MaximumLevel) blows = 0;
+        }
+
         /// <summary>The player was struck: the heat is gone.</summary>
         public void Struck()
         {

@@ -121,3 +121,19 @@ element names to play only those. In any other scene (`runprobe.sh Castle Elemen
 Grasp and Stone Rise at the nearest real enemy from four metres and logs how near and how far that enemy came.
 `AfflictionsProbe` (`runprobe.sh CombatTest AfflictionsProbe 40`) lays each of the eleven afflictions on the dummies,
 three at a time, and photographs them (`affliction_<n>.png`).
+
+`MarksProbe` also plays the marks built to their designs on 2026-11-17 (frames `mark_<name>_<n>.png`): **rush**
+(Wildfire Rush: distance, Heat, patches of ground fire, what the line does 1.2 s on), **sunspot** (three light blows
+fed, a heavy blow sets it off; then one left alone until its time runs out), **scorched** (Scorched Earth: Kindle's
+clock in and out of the player's own fire, mana from blows, a 4 s patch still burning at 5 s), **thunder** (Waiting
+Thunder: nothing flies in 1.8 s, a bolt with each light blow, the rest with a heavy one), **lodestone** (Static four
+deep on the first dummy; dummies are posts, so the shoves are counted, not travelled), **kiln** (Kiln Stance: the
+blow caught, perfect guards counted, the mana), **twin** (Twin Break: three Burn and two Static, a perfect guard,
+66 expected), **meltdown** (five and four does nothing; five and five bursts 3 s later) and **front** (Storm Front:
+a heavy blow throws a free Gust, light blows none). In any other scene rush, sunspot and lodestone are also played at
+the nearest real enemy, before cleanbreak, which kills it.
+
+`SignaturesProbe`'s **fire** now follows Falling Sun along its road: it casts from eight metres so the dawn has a
+road to roll, steps in close for the noon and the setting (`sig_fire_1` to `_7`), calls a second sun down while it
+is still being rolled (`_8`), and has a third struck at noon with time left (it goes under and rises, `_9`, `_10`)
+and again with too little left (it does not).

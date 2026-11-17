@@ -28,6 +28,15 @@ namespace Clover.Player.Forms
             return Mathf.Max(BreaksAt, reach - (age - RiseSeconds) * Speed);
         }
 
+        /// <summary>Metres the blow that takes a body knocks it toward the caster by itself, before the water carries it.</summary>
+        public const float Knock = 0.45f;
+
+        /// <summary>
+        /// Metres the wave owes a body it has just taken hold of, standing this far ahead of the caster: the way to
+        /// where the wave breaks, less what the blow itself knocks it. Paid out as the wave comes in, never more.
+        /// </summary>
+        public static float Owed(float along) => Mathf.Max(0f, along - BreaksAt - Knock);
+
         /// <summary>True once the wave has come all the way in.</summary>
         public static bool Broken(float reach, float age) => age > RiseSeconds && Front(reach, age) <= BreaksAt;
 

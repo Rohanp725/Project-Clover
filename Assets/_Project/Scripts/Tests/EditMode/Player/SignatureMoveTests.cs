@@ -29,6 +29,35 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheSunsRoadEndsItsDawnAtTheEnemyOrAtTheEndOfItsReachOrItsTime()
+        {
+            Assert.IsFalse(SunRules.DawnOver(1f, 4f, 3f), "Still on its way.");
+            Assert.IsTrue(SunRules.DawnOver(1f, 4f, SunRules.DawnTouch), "It has reached the enemy faced.");
+            Assert.IsTrue(SunRules.DawnOver(1f, SunRules.DawnReach, 5f), "It has been rolled as far as it goes.");
+            Assert.IsTrue(SunRules.DawnOver(SunRules.DawnSeconds, 2f, 5f), "Its time is up.");
+            Assert.AreEqual(6f, SunRules.DawnSpeed);
+            Assert.AreEqual(9f, SunRules.DawnReach);
+        }
+
+        [Test]
+        public void TheSettingSunIsHeavierForEveryBurnUpToDouble()
+        {
+            Assert.AreEqual(1f, SunRules.Weight(0), 1e-4f);
+            Assert.AreEqual(1.24f, SunRules.Weight(3), 1e-4f);
+            Assert.AreEqual(2f, SunRules.Weight(40), 1e-4f);
+            Assert.AreEqual(1f, SunRules.Weight(-2), 1e-4f);
+        }
+
+        [Test]
+        public void ASunSentUnderRisesAgainOnlyWithThreeSecondsOfSurgeLeft()
+        {
+            Assert.IsTrue(SunRules.RisesAgain(3f));
+            Assert.IsTrue(SunRules.RisesAgain(7.5f));
+            Assert.IsFalse(SunRules.RisesAgain(2.9f));
+            Assert.IsFalse(SunRules.RisesAgain(0f));
+        }
+
+        [Test]
         public void EveryGiftAndCrownIsBespokeNow()
         {
             // No Signature is still carried by one of the generic forms or by plain bursts alone.

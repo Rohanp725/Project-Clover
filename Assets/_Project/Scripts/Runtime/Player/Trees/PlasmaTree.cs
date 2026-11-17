@@ -43,7 +43,7 @@ namespace Clover.Player.Trees
             // An effect can ask for one affliction, not two: each is set off if it is there. The flinch that breaks an attack is
             // still to be written by hand. Burn and Detonate, when learned, spends the burn first.
             to.Add(new Upgrade { Id = TwinBreak, Name = "Twin Break", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { ChargedEmbers }, X = 0.5f, Y = 2.02f, Icon = UpgradeIcons.Shield,
-                Description = "A perfect guard sets off the Burn on the one who struck, and the Static on it too, each in a burst that strikes all beside it.",
+                Description = "A perfect guard sets off Burn and Static together on the one who struck. Set off together, they strike half again as hard and stop it where it stands.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Burn, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Burn, Damage = 5f, Stagger = 5f, Radius = 3f },
@@ -73,8 +73,7 @@ namespace Clover.Player.Trees
             // An effect can ask for one affliction, not two, and cannot tell which one filled: this answers any affliction
             // reaching full depth on an enemy that carries Static, with a smaller burst after a shorter wait. Neither is spent.
             to.Add(new Upgrade { Id = Meltdown, Name = "Meltdown", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ChainReaction }, X = -0.5f, Y = 5.38f, Icon = UpgradeIcons.Burst,
-                Description = "When any affliction reaches full depth on an enemy that carries Static, it bursts two seconds later and strikes everything within five metres. This can happen once every six seconds.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Needs = AfflictionKind.Static, Do = UpgradeAction.Burst, Delay = 2f, Damage = 30f, Stagger = 45f, Radius = 5f, Cooldown = 6f } } });
+                Description = "An enemy at five Burn and five Static begins to shake with light. A few moments later it bursts, far harder than either alone. Nothing stops it." });
             // Kept from the first slice; not in the design.
             to.Add(new Upgrade { Id = PlasmaLance, Name = "Plasma Lance", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { FusedCore }, X = 0f, Y = 6.22f, Icon = UpgradeIcons.Beam,
                 Description = "Hold the spell button to throw a bolt of plasma that leaps through three more. 35 mana.",

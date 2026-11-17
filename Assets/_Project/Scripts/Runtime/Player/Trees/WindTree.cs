@@ -176,15 +176,10 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = RunningStart, Name = "Running Start", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { TurnedAside }, X = 3.06f, Y = 7.38f, Icon = UpgradeIcons.Wing,
                 Description = "You move faster while Tailwind lasts.",
                 Stats = new[] { new StatMod(PlayerStat.SurgeSpeed, 0.1f) } });
-            // A cone and a push stand in for the free Gust: the Gust itself, with its own upgrades, is still to be written by hand.
+            // BESPOKE (built): PlayerUpgrades throws the base spell free through PlayerElement.CastBaseFree on each heavy blow or finisher that lands.
             to.Add(new Upgrade { Id = StormFront, Name = "Storm Front", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { IndrawnBreath }, X = 2.44f, Y = 8.86f, Icon = UpgradeIcons.Wave,
-                Description = "Every heavy blow that lands throws a cone of wind that leaves enemies Unsteady, and pushes everything near you away. Your blows give a quarter less mana.",
-                Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, -0.25f) },
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Cone, Damage = 8f, Stagger = 10f, Reach = 5f, Arc = 70f, Affliction = AfflictionKind.Unsteady, Stacks = 2, Cooldown = 0.4f },
-                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Push, At = EffectAt.Self, Radius = 4.5f, Amount = 3f, Cooldown = 0.4f },
-                } });
+                Description = "Every heavy blow that lands throws a Gust with it at no cost. Your blows give less mana.",
+                Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, -0.25f) } });
             // BESPOKE: the pull should come as the draw is released, before the cut lands, and only from the cone ahead.
             // Until then the slash that lands drags everything near onto the player and leaves it Unsteady.
             to.Add(new Upgrade { Id = DrawingWind, Name = "Drawing Wind", Element = E, Kind = UpgradeKind.Major, Requires = new[] { TurnedAside }, X = 2.09f, Y = 7.43f, Icon = UpgradeIcons.Blade, Weapon = Weapons.KatanaName,

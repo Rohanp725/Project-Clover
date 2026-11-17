@@ -11,6 +11,11 @@ namespace Clover.Player.Forms
     {
         public override string Id => SpellForms.Phalanx;
 
+        /// <summary>The shape that hangs at the shoulder.</summary>
+        protected virtual FormMesh Piece => FormMesh.Blade;
+        /// <summary>True when one flies at the nearest enemy by itself every half second or so; false when only the weapon's blows loose them.</summary>
+        protected virtual bool FliesByItself => true;
+
         private const float Length = 1.7f;
         private const float FireEvery = 0.55f;
         private const float Hovering = -1f;
@@ -29,7 +34,7 @@ namespace Clover.Player.Forms
             var points = SpellWorks.Points(run);
             for (int i = 0; i < run.Count; i++)
             {
-                solids[i] = FormFx.Hold(FormMesh.Blade, cast.Colour, 0.04f);
+                solids[i] = FormFx.Hold(Piece, cast.Colour, 0.04f);
                 times[i] = Hovering;
                 points[i] = cast.Origin + Vector3.up * 1.2f;
             }
@@ -40,7 +45,15 @@ namespace Clover.Player.Forms
 
         public override void Struck(ref SpellRun run, AttackStep step, Component target, float damage)
         {
-            if (!step.Heavy || target == null) return;
+            if (target == null) return;
+            if (!step.Heavy)
+            {
+                // A light blow looses one with it, when the blows are what loose them.
+                if (FliesByItself) return;
+                run.Done++;
+                run.Victim = target;
+                return;
+            }
             run.Flag = true;
             run.Victim = target;
         }
@@ -62,6 +75,17 @@ namespace Clover.Player.Forms
                 int sent = 0;
                 for (int i = 0; i < run.Count; i++)
                     if (times[i] == Hovering) Loose(ref run, i, run.Victim, 0.05f * sent++);
+            }
+            else if (!FliesByItself)
+            {
+                // One for each light blow that landed since the last step, on the one it struck.
+                for (int i = 0; i < run.Count && run.Done > 0; i++)
+                    if (times[i] == Hovering)
+                    {
+                        Loose(ref run, i, run.Victim, 0f);
+                        run.Done--;
+                    }
+                run.Done = 0;
             }
             else if (!over && run.Age >= run.T1)
             {

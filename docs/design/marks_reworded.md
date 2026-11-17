@@ -2,61 +2,7 @@
 
 Written on the night of 2026-11-16. Each mark below did less than its description promised and was not built to its design that night, so its description was rewritten to say exactly and only what the mark does as built. The old words and what the design wanted are kept here so the designed version can be built later; when one is, put its designed words back and delete its entry.
 
-124 marks reworded; 3 more were found to be true as they stood and keep their words (listed at the end).
-
-## Wildfire Rush (`fire.rush`)
-
-- **Old words:** Hold the spell button to drive through the enemies ahead in a line of fire. Each one passed is set burning and raises your Heat. 35 mana.
-- **New words:** Hold the spell button to drive seven metres through the enemies ahead, untouchable, and come out facing back. Each one on the line is struck once and set burning two deep. 35 mana.
-- **The design wanted:** A drill dash that sets each enemy passed burning, raises Heat by one for each, and leaves a line of fire burning behind it.
-
-## Kiln Stance (`fire.kiln`)
-
-- **Old words:** Hold the spell button to stand ready in flame. The first blow that reaches you, red or not, is turned and answered with a pillar of fire. 30 mana.
-- **New words:** Hold the spell button to stand ready in flame for a moment. The first blow that reaches you, red or not, is turned and answered with a fan of fire that sets the attacker burning three deep. If no blow comes the mana is lost. 30 mana.
-- **The design wanted:** A parry held with the button whose caught blow counts as a perfect guard (mana, Backdraft, the detonation) and is answered by a pillar of fire under the attacker.
-
-## Firebomb Flask (`fire.firebomb`)
-
-- **Old words:** Hold the flask button to throw it. No healing: a great burst of fire where it lands.
-- **New words:** Hold the flask button to throw it. No healing: a great burst of fire where it lands, flames left on the ground there, and three stacks of Burn on everything near.
-- **The design wanted:** A thrown flask that bursts for heavy damage, burns the ground and lays three Burn where it lands.
-
-## Sunspot (`fire.sunspot`)
-
-- **Old words:** Hold the spell button to brand the enemy faced. Each blow you land feeds the brand, up to six. A heavy blow sets it off. 35 mana.
-- **New words:** Hold the spell button to brand the enemy faced for seven seconds. Each of your next six blows on it sets off a small burst of fire that strikes and burns all beside it. 35 mana.
-- **The design wanted:** A brand that light blows feed, up to six, and one heavy blow sets off in a single burst that grows with each blow fed and spreads the target's Burn.
-
-## Scorched Earth (`fire.scorched`)
-
-- **Old words:** Fire you leave on the ground burns twice as long. While you stand in it Kindle does not run down and your blows give more mana. Your spells cost more.
-- **New words:** Kindle lasts longer and your blows give more mana. Your spells cost more.
-- **The design wanted:** Ground fire lasts twice as long, and standing in your own fire stops Kindle's clock and gives more mana from blows, at the price of dearer spells.
-
-## Twin Break (`plasma.twin`)
-
-- **Old words:** A perfect guard sets off Burn and Static together on the one who struck. Set off together, they strike half again as hard and stop it where it stands.
-- **New words:** A perfect guard sets off the Burn on the one who struck, and the Static on it too, each in a burst that strikes all beside it.
-- **The design wanted:** A perfect guard on an enemy carrying both spends Burn and Static in one burst at one and a half times, with a flinch that breaks its attack.
-
-## Meltdown (`plasma.meltdown`)
-
-- **Old words:** An enemy at five Burn and five Static begins to shake with light. A few moments later it bursts, far harder than either alone. Nothing stops it.
-- **New words:** When any affliction reaches full depth on an enemy that carries Static, it bursts two seconds later and strikes everything within five metres. This can happen once every six seconds.
-- **The design wanted:** An enemy at full Burn and full Static shakes with light, then bursts far harder than either alone, spending both.
-
-## Deep Reserve (`lightning.reserve`)
-
-- **Old words:** Perfect guards bank up to three charges. Each blow spends one.
-- **New words:** For four seconds after a perfect guard, every blow lands 30% harder and staggers 30% more.
-- **The design wanted:** Three banked charges shown as pips, each spent by one blow for double damage and stagger.
-
-## Waiting Thunder (`lightning.waiting`)
-
-- **Old words:** Hold the spell button to hang five bolts at your shoulder. Each blow you land sends one down with it. A heavy blow sends all that are left. 35 mana.
-- **New words:** Hold the spell button to hang five bolts at your shoulder for ten seconds. One flies at the nearest enemy every half second or so. A heavy blow that lands sends all that are left at the one it struck. 35 mana.
-- **The design wanted:** Bolts that hang at the shoulder and fire only with the player's blows: one with each light blow, all that are left with a heavy blow.
+124 marks were reworded that night. 11 have since been built to their designs or found to be at them (the section "Built since" at the foot); **113 remain reworded**. 3 more were found to be true as they stood and keep their words (listed above "Built since").
 
 ## Lightning Rod (`lightning.rod`)
 
@@ -69,12 +15,6 @@ Written on the night of 2026-11-16. Each mark below did less than its descriptio
 - **Old words:** While a rod stands, a wire of lightning runs from it to you. Enemies it crosses are shocked.
 - **New words:** Casting any spell lays a line of lightning on the ground eight metres ahead of you for four seconds. Enemies standing on it are shocked and gather Static. This can happen once every six seconds.
 - **The design wanted:** A wire of lightning from the planted rod to the player, whose far end follows the player, shocking what it crosses.
-
-## Lodestone (`lightning.lodestone`)
-
-- **Old words:** Hold the spell button to drag every enemy near toward you, further for each Static on it, then set all of it off at once. 45 mana.
-- **New words:** Hold the spell button to drag every enemy within five metres to a point just ahead of you, then burst it there with a heavy blow that lays Static. 45 mana.
-- **The design wanted:** A pull that drags each enemy further for each Static on it, then discharges all of them at once.
 
 ## Blink (`lightning.blink`)
 
@@ -111,12 +51,6 @@ Written on the night of 2026-11-16. Each mark below did less than its descriptio
 - **Old words:** An enemy pushed into a wall or into another enemy is hurt and shaken by it. So is the one it hits.
 - **New words:** Each enemy your spells strike is hit by a small burst of wind that shakes it and anything beside it and leaves them Unsteady.
 - **The design wanted:** A pushed enemy that meets a wall or another enemy is hurt and shaken, and so is the one it meets.
-
-## Storm Front (`wind.front`)
-
-- **Old words:** Every heavy blow throws a Gust with it at no cost. Your blows give less mana.
-- **New words:** Every heavy blow that lands throws a cone of wind that leaves enemies Unsteady, and pushes everything near you away. Your blows give a quarter less mana.
-- **The design wanted:** A free cast of the base spell, with its own upgrades, on every heavy blow and finisher, aimed as the blow.
 
 ## Drawing Wind (`wind.drawing`)
 
@@ -753,3 +687,84 @@ Written on the night of 2026-11-16. Each mark below did less than its descriptio
 - **Burning Crescent** (`fire.crescent`): Old words already true: the code lays a moving arc of fire (18 damage, 8 m a second for 1.1 s) on the Iaido Slash. Only the Heat count is missing, and the words never promised it. The design also wanted: The slash's arc of flame should also count each enemy it burns as a blow for Heat.
 - **Stored Charge** (`lightning.charge`): Old words already true: the code sets the next blow to double damage and double stagger after a perfect guard. Only the critical is missing, and the words never promised it. The design also wanted: As built, with the charged blow also being critical.
 - **Afterimage** (`lightning.afterimage`): Old words already true: on a perfect dodge the code leaves a copy and a burst where the dodge began (26 damage, 2.3 m, 0.3 s later). The repeat of the last blow and its Static are missing, and the words never promised them. The design also wanted: A copy left by a perfect dodge that repeats the player's last blow and lays its Static.
+
+## Built since
+
+Marks from the list above that now do what their designs asked. Their descriptions in the game are the designed words again unless a line here says otherwise.
+
+### Wildfire Rush (`fire.rush`)
+
+- **Old words:** Hold the spell button to drive through the enemies ahead in a line of fire. Each one passed is set burning and raises your Heat. 35 mana.
+- **New words:** Hold the spell button to drive seven metres through the enemies ahead, untouchable, and come out facing back. Each one on the line is struck once and set burning two deep. 35 mana.
+- **The design wanted:** A drill dash that sets each enemy passed burning, raises Heat by one for each, and leaves a line of fire burning behind it.
+- **Since:** Built 2026-11-17 and its old words restored. `DrillForm` now lays a patch of fire every 1.1 m of the drive (2.6 s, as Flame Trail's) and raises Heat one level for each enemy passed.
+
+### Sunspot (`fire.sunspot`)
+
+- **Old words:** Hold the spell button to brand the enemy faced. Each blow you land feeds the brand, up to six. A heavy blow sets it off. 35 mana.
+- **New words:** Hold the spell button to brand the enemy faced for seven seconds. Each of your next six blows on it sets off a small burst of fire that strikes and burns all beside it. 35 mana.
+- **The design wanted:** A brand that light blows feed, up to six, and one heavy blow sets off in a single burst that grows with each blow fed and spreads the target's Burn.
+- **Since:** Built 2026-11-17 and its old words restored. `SunspotForm`: each light blow on the branded enemy feeds it (up to six; the small sun over its head swells and one more flame stands in its ring); a heavy blow sets it off for 12 damage plus 9 a blow fed and 10 stagger plus 8 a blow fed in 3 m, and lays the branded enemy's Burn on all it reaches; left for its 7 s it bursts at half.
+
+### Scorched Earth (`fire.scorched`)
+
+- **Old words:** Fire you leave on the ground burns twice as long. While you stand in it Kindle does not run down and your blows give more mana. Your spells cost more.
+- **New words:** Kindle lasts longer and your blows give more mana. Your spells cost more.
+- **The design wanted:** Ground fire lasts twice as long, and standing in your own fire stops Kindle's clock and gives more mana from blows, at the price of dearer spells.
+- **Since:** Built 2026-11-17 and its old words restored. Fire left on the ground that does not move burns twice as long (`Hazards.FireSecondsScale`); standing in it stops Kindle's clock (`PlayerUpgrades.SurgeHeld`) and gives 50% more mana from blows (`StatWhen.InOwnFire`); spells cost 20% more. The longer Kindle it had in the meantime is gone.
+
+### Firebomb Flask (`fire.firebomb`)
+
+- **Old words:** Hold the flask button to throw it. No healing: a great burst of fire where it lands.
+- **New words:** Hold the flask button to throw it. No healing: a great burst of fire where it lands, flames left on the ground there, and three stacks of Burn on everything near.
+- **The design wanted:** A thrown flask that bursts for heavy damage, burns the ground and lays three Burn where it lands.
+- **Since:** Found on 2026-11-17 to be at its design already (a heavy burst, burning ground and three Burn where it lands); it keeps the fuller words written on 2026-11-16, which are true.
+
+### Waiting Thunder (`lightning.waiting`)
+
+- **Old words:** Hold the spell button to hang five bolts at your shoulder. Each blow you land sends one down with it. A heavy blow sends all that are left. 35 mana.
+- **New words:** Hold the spell button to hang five bolts at your shoulder for ten seconds. One flies at the nearest enemy every half second or so. A heavy blow that lands sends all that are left at the one it struck. 35 mana.
+- **The design wanted:** Bolts that hang at the shoulder and fire only with the player's blows: one with each light blow, all that are left with a heavy blow.
+- **Since:** Built 2026-11-17 and its old words restored. `WaitingThunderForm` (a `PhalanxForm` whose pieces are bolts and never fly by themselves): one bolt with each light blow that lands, all that are left with a heavy blow. They hang ten seconds.
+
+### Lodestone (`lightning.lodestone`)
+
+- **Old words:** Hold the spell button to drag every enemy near toward you, further for each Static on it, then set all of it off at once. 45 mana.
+- **New words:** Hold the spell button to drag every enemy within five metres to a point just ahead of you, then burst it there with a heavy blow that lays Static. 45 mana.
+- **The design wanted:** A pull that drags each enemy further for each Static on it, then discharges all of them at once.
+- **Since:** Built 2026-11-17 and its old words restored. `LodestoneForm`: every enemy within 7 m is dragged toward the player 1 m plus 0.8 m a stack of Static (never nearer than sword reach), along a line of lightning from the raised hand; 0.3 s later everything within 3.5 m is struck for 14 and 30 stagger and every stack of Static on it is set off with the blow. Short of the design: the stagger is the 30 it had, not the root's discharge plus 15.
+
+### Kiln Stance (`fire.kiln`)
+
+- **Old words:** Hold the spell button to stand ready in flame. The first blow that reaches you, red or not, is turned and answered with a pillar of fire. 30 mana.
+- **New words:** Hold the spell button to stand ready in flame for a moment. The first blow that reaches you, red or not, is turned and answered with a fan of fire that sets the attacker burning three deep. If no blow comes the mana is lost. 30 mana.
+- **The design wanted:** A parry held with the button whose caught blow counts as a perfect guard (mana, Backdraft, the detonation) and is answered by a pillar of fire under the attacker.
+- **Since:** Built 2026-11-17 and its old words restored. In `ParryForm`, Fire's caught blow now counts as a perfect guard (the guard's mana, Backdraft, the detonation and every mark that waits on a perfect guard) and is answered by a pillar of fire under the attacker: 30 damage, 50 stagger, three Burn, 1.7 m. Short of the design: nothing new was added for the 0.4 s of being open after a stance that catches nothing.
+
+### Twin Break (`plasma.twin`)
+
+- **Old words:** A perfect guard sets off Burn and Static together on the one who struck. Set off together, they strike half again as hard and stop it where it stands.
+- **New words:** A perfect guard sets off the Burn on the one who struck, and the Static on it too, each in a burst that strikes all beside it.
+- **The design wanted:** A perfect guard on an enemy carrying both spends Burn and Static in one burst at one and a half times, with a flinch that breaks its attack.
+- **Since:** Built 2026-11-17 and its old words restored. A perfect guard on an enemy carrying both spends both in one blow of (10 a Burn stack plus 7 a Static stack) times 1.5 with 5 stagger a stack; it is a heavy blow, so anything not steadfast flinches out of its attack (`PlayerUpgrades.TwinBreak`, sums in `PlasmaRules`). On an enemy carrying only one, that one is still set off as before.
+
+### Meltdown (`plasma.meltdown`)
+
+- **Old words:** An enemy at five Burn and five Static begins to shake with light. A few moments later it bursts, far harder than either alone. Nothing stops it.
+- **New words:** When any affliction reaches full depth on an enemy that carries Static, it bursts two seconds later and strikes everything within five metres. This can happen once every six seconds.
+- **The design wanted:** An enemy at full Burn and full Static shakes with light, then bursts far harder than either alone, spending both.
+- **Since:** Built 2026-11-17 and its old words restored. An enemy at full Burn and full Static shakes with quickening white light for 3 s inside a 5 m ring, then bursts for 45 damage and 60 stagger, half of each to everything else in the ring; both are spent; the same enemy cannot melt down again for 10 s (`PlayerUpgrades.Melt`, sums in `PlasmaRules`). One enemy melts at a time.
+
+### Storm Front (`wind.front`)
+
+- **Old words:** Every heavy blow throws a Gust with it at no cost. Your blows give less mana.
+- **New words:** Every heavy blow that lands throws a cone of wind that leaves enemies Unsteady, and pushes everything near you away. Your blows give a quarter less mana.
+- **The design wanted:** A free cast of the base spell, with its own upgrades, on every heavy blow and finisher, aimed as the blow.
+- **Since:** Built 2026-11-17. Every heavy blow or finisher that lands throws the real Gust (`PlayerElement.CastBaseFree`), with whatever the marks have made of it, the way the player faces, for no mana, at most once every 0.4 s; it is not counted as a spell cast. Its words are the old ones with "that lands" added, because a heavy blow that misses throws nothing: "Every heavy blow that lands throws a Gust with it at no cost. Your blows give less mana."
+
+### Deep Reserve (`lightning.reserve`)
+
+- **Old words:** Perfect guards bank up to three charges. Each blow spends one.
+- **New words:** For four seconds after a perfect guard, every blow lands 30% harder and staggers 30% more.
+- **The design wanted:** Three banked charges shown as pips, each spent by one blow for double damage and stagger.
+- **Since:** Built 2026-11-17 and its old words restored. Each perfect guard banks a charge, three at most, kept as the mark's count and named "Charge" on the HUD beside the weapon; each blow that lands clean spends one at Stored Charge's double damage and stagger and the next is made ready (`PlayerUpgrades`, `ReserveMost`). Short of the design: the HUD shows the count as a number beside its name, as it does every count, not as drawn pips.

@@ -240,6 +240,7 @@ public class MarksProbeRunner : MonoBehaviour
         {
             ("skydance", SkyDance), ("beat", Beat), ("lance", Lance), ("volatile", Volatile), ("dead", Dead), ("lotus", Lotus), ("flash", Flash),
             ("circle", Circle), ("eye", Eye), ("furnace", Furnace), ("stroke", Stroke), ("allatonce", AllAtOnce), ("cleanbreak", CleanBreak), ("heartwood", Heartwood), ("unmoved", Unmoved), ("leaf", Leaf), ("tide", Tide), ("answer", Answer), ("well", WellMove),
+            ("rush", Rush), ("sunspot", Sunspot), ("scorched", Scorched), ("thunder", Thunder), ("lodestone", Lodestone), ("kiln", Kiln), ("twin", Twin), ("meltdown", Meltdown), ("front", Front), ("reserve", Reserve),
         };
         Say($"start: {SpellForms.All.Count} forms registered; works {(FindAnyObjectByType<SpellWorks>() != null)} fx {(FindAnyObjectByType<FormFx>() != null)}; scene {gameObject.scene.name}");
         yield return new WaitForSeconds(0.3f);
@@ -265,7 +266,7 @@ public class MarksProbeRunner : MonoBehaviour
             else
             {
                 toward = (real.transform.position - player.transform.position).normalized;
-                moves = moves.Where(move => move.name == "circle" || move.name == "eye" || move.name == "furnace" || move.name == "cleanbreak").ToList();
+                moves = moves.Where(move => move.name == "circle" || move.name == "eye" || move.name == "furnace" || move.name == "cleanbreak" || move.name == "rush" || move.name == "sunspot" || move.name == "lodestone").OrderBy(move => move.name == "cleanbreak").ToList();
                 StartCoroutine(ClickThrough());
             }
         }
@@ -319,6 +320,223 @@ public class MarksProbeRunner : MonoBehaviour
         string up = "";
         foreach (var set in Sets()) up += (up.Length > 0 ? "/" : "") + (set.IsLifted ? "up" : set.IsAirborne ? "reels" : "down");
         return up;
+    }
+
+    // ---- The marks built to their designs on 2026-11-17.
+
+    private IEnumerator Near()
+    {
+        Vector3 at = FirstAt - toward * 1.5f;
+        if (real != null) at = real.transform.position + (player.transform.position - real.transform.position).normalized * 1.5f;
+        player.Teleport(at, Quaternion.LookRotation(FirstAt - at));
+        yield return new WaitForSeconds(0.15f);
+    }
+
+    private IEnumerator Rush()
+    {
+        yield return Begin("rush", "Wildfire Rush");
+        int heat = upgrades.Heat.Level, patches = Clover.World.Hazards.Alive;
+        Vector3 start = player.transform.position;
+        bool cast = upgrades.TrySpecial();
+        yield return ShotAfter(0.3f);
+        yield return ShotAfter(0.45f);
+        Say($"rush: cast {cast}: went {(player.transform.position - start).magnitude:0.0} m, Heat {heat} -> {upgrades.Heat.Level}, patches of ground {patches} -> {Clover.World.Hazards.Alive}; {Lost()}");
+        Mark();
+        yield return ShotAfter(1.2f);
+        Say($"rush: the line burning 1.2 s on: {Lost()}");
+    }
+
+    private IEnumerator Sunspot()
+    {
+        yield return Begin("sunspot", "Sunspot");
+        Sets()[0].Apply(AfflictionKind.Burn, 3);
+        bool cast = upgrades.TrySpecial();
+        yield return new WaitForSeconds(0.5f);
+        yield return Near();
+        Mark();
+        yield return Blows(3, Key.J);
+        yield return ShotAfter(0.1f);
+        Say($"sunspot: cast {cast}, runs {SpellWorks.RunningOf("sunspot")}, after three light blows (the brand itself has done nothing yet): {Lost()}");
+        Mark();
+        yield return Blows(1, Key.K);
+        yield return ShotAfter(0.03f);
+        yield return ShotAfter(0.2f);
+        Say($"sunspot: set off by the heavy blow with three fed (the burst alone is 12 + 9 x 3 = 39, on top of the blow): runs {SpellWorks.RunningOf("sunspot")}; {Lost()}");
+        // Left alone: it bursts at half when its time is up.
+        if (real == null)
+        {
+            yield return Begin("sunspot", "Sunspot");
+            upgrades.Worn.Spell.Seconds = 1.2f;
+            upgrades.TrySpecial();
+            yield return new WaitForSeconds(1.7f);
+            upgrades.Worn.Spell.Seconds = 7f;
+            Say($"sunspot: left alone until its time ran out (half of 12 = 6): {Lost()}");
+        }
+    }
+
+    private IEnumerator Scorched()
+    {
+        yield return Begin("scorched", "Scorched Earth");
+        Vector3 fire = player.transform.position;
+        Clover.World.Hazards.Lay(Clover.World.HazardKind.Fire, fire, 1.6f, 4f, 1f, 0f, 2f);
+        yield return Surge(6f);
+        yield return null;
+        float lit = element.Kit.SurgeLeft;
+        yield return ShotAfter(2f);
+        Say($"scorched: stood in own fire 2 s: Kindle {lit:0.00} -> {element.Kit.SurgeLeft:0.00} s left, held {upgrades.SurgeHeld}, mana from blows x{upgrades.Stats.Multiplier(PlayerStat.ManaFromBlows):0.00}, spell cost x{upgrades.Stats.Multiplier(PlayerStat.SpellCost):0.00}, fire lasts x{Clover.World.Hazards.FireSecondsScale:0}");
+        yield return new WaitForSeconds(3f);
+        Say($"scorched: 5 s after a 4 s patch was laid, fire still under the feet {Clover.World.Hazards.FireUnder(player.transform.position)} (it burns twice as long)");
+        player.Teleport(fire - toward * 6f, Quaternion.LookRotation(toward));
+        float left = element.Kit.SurgeLeft;
+        yield return new WaitForSeconds(1f);
+        Say($"scorched: out of the fire 1 s: Kindle {left:0.00} -> {element.Kit.SurgeLeft:0.00}, held {upgrades.SurgeHeld}, mana from blows x{upgrades.Stats.Multiplier(PlayerStat.ManaFromBlows):0.00}");
+        yield return SurgeEnds();
+    }
+
+    private IEnumerator Thunder()
+    {
+        yield return Begin("thunder", "Waiting Thunder");
+        bool cast = upgrades.TrySpecial();
+        yield return Near();
+        yield return ShotAfter(1.6f);
+        Say($"thunder: cast {cast}: hung 1.8 s with no blow thrown, runs {SpellWorks.RunningOf("waiting")}: {Lost()} (nothing flies by itself)");
+        Mark();
+        yield return Blows(2, Key.J);
+        yield return ShotAfter(0.12f);
+        yield return new WaitForSeconds(0.3f);
+        Say($"thunder: two light blows, a bolt with each: {Lost()}");
+        Mark();
+        yield return Blows(1, Key.K);
+        yield return ShotAfter(0.12f);
+        yield return new WaitForSeconds(0.5f);
+        Say($"thunder: a heavy blow sends the three left: runs {SpellWorks.RunningOf("waiting")}; {Lost()}");
+    }
+
+    private IEnumerator Kiln()
+    {
+        yield return Begin("kiln", "Kiln Stance");
+        yield return Near();
+        Mark();
+        float mana = combat.Mana.Current;
+        int guards = defence.PerfectGuards;
+        bool cast = upgrades.TrySpecial();
+        yield return new WaitForSeconds(0.25f);
+        float after = combat.Mana.Current;
+        var outcome = defence.TakeHit(new Hit(20f, 0f, -toward, false, false, FirstAt));
+        yield return ShotAfter(0.1f);
+        yield return ShotAfter(0.2f);
+        Say($"kiln: cast {cast}: the blow was {outcome}, perfect guards {guards} -> {defence.PerfectGuards}, mana {mana:0} -> {after:0} (the cost) -> {combat.Mana.Current:0} (the guard's gift), health lost {defence.Health.Maximum - defence.Health.Current:0}; {Lost()}");
+    }
+
+    private IEnumerator Twin()
+    {
+        yield return Begin("twin", "Twin Break", "Fire");
+        yield return Near();
+        Sets()[0].Apply(AfflictionKind.Burn, 3);
+        Sets()[0].Apply(AfflictionKind.Static, 2);
+        Mark();
+        yield return Guarded(true);
+        yield return ShotAfter(0.02f);
+        yield return ShotAfter(0.15f);
+        Say($"twin: guard {lastGuard}, twin breaks {upgrades.TwinBreaks} ((10 x 3 + 7 x 2) x 1.5 = 66): {Lost()}");
+    }
+
+    private IEnumerator Meltdown()
+    {
+        yield return Begin("meltdown", "Meltdown", "Fire");
+        Sets()[0].Apply(AfflictionKind.Burn, 5);
+        Sets()[0].Apply(AfflictionKind.Static, 4);
+        yield return new WaitForSeconds(0.6f);
+        Say($"meltdown: at five Burn and four Static, melting begun {defence.LastCallout == "Meltdown"}, meltdowns {upgrades.Meltdowns}");
+        Sets()[0].Apply(AfflictionKind.Burn, 5);
+        Sets()[0].Apply(AfflictionKind.Static, 5);
+        Mark();
+        yield return ShotAfter(1.5f);
+        Sets()[0].Apply(AfflictionKind.Burn, 5);
+        yield return ShotAfter(1.2f);
+        yield return new WaitForSeconds(0.45f);
+        yield return ShotAfter(0.05f);
+        yield return new WaitForSeconds(0.4f);
+        Say($"meltdown: at five and five: callout '{defence.LastCallout}', meltdowns {upgrades.Meltdowns} (45 to it, half to the rest, less whatever the burn did meanwhile): {Lost()}");
+    }
+
+    private IEnumerator Front()
+    {
+        yield return Begin("front", "Storm Front");
+        yield return Near();
+        int[] shoves = group.Select(dummy => dummy.Shoves).ToArray();
+        float mana = combat.Mana.Current;
+        int casts = element.SpellsCast;
+        Mark();
+        yield return Blows(1, Key.K);
+        yield return ShotAfter(0.1f);
+        yield return ShotAfter(0.2f);
+        Say($"front: a heavy blow landed: free Gusts {element.FreeCasts}, spells counted as cast {element.SpellsCast - casts}, mana {mana:0} -> {combat.Mana.Current:0}, shoves {string.Join(", ", group.Select((dummy, i) => dummy.Shoves - shoves[i]))}; {Lost()}");
+        Mark();
+        yield return Blows(2, Key.J);
+        Say($"front: two light blows: free Gusts {element.FreeCasts} (no more)");
+    }
+
+    private IEnumerator Reserve()
+    {
+        yield return Begin("reserve", "Deep Reserve");
+        upgrades.Give(Upgrade.All.First(upgrade => upgrade.Id == Upgrade.StoredCharge));
+        yield return null;
+        string id = Upgrade.All.First(upgrade => upgrade.Name == "Deep Reserve").Id;
+        string banked = "";
+        for (int i = 0; i < 4; i++)
+        {
+            yield return Guarded(true);
+            banked += (i > 0 ? ", " : "") + lastGuard + " -> " + upgrades.Tally(id);
+            yield return new WaitForSeconds(0.25f);
+        }
+        Say($"reserve: four perfect guards bank {banked} (three at most); charge ready {upgrades.ChargeStored}");
+        yield return Near();
+        Shot();
+        string spent = "";
+        for (int i = 0; i < 4; i++)
+        {
+            Mark();
+            yield return Blows(1, Key.J);
+            yield return new WaitForSeconds(0.2f);
+            spent += (i > 0 ? "; " : "") + $"blow {i + 1} lost {before[0] - group[0].Health.Current:0}, left {upgrades.Tally(id)}";
+        }
+        Say($"reserve: {spent} (the fourth blow is a plain one)");
+    }
+
+    private IEnumerator Lodestone()
+    {
+        yield return Begin("lodestone", "Lodestone");
+        Sets()[0].Apply(AfflictionKind.Static, 4);
+        if (real != null)
+        {
+            Vector3 from = real.transform.position + (player.transform.position - real.transform.position).normalized * 6f;
+            player.Teleport(from, Quaternion.LookRotation(real.transform.position - from));
+            yield return new WaitForSeconds(0.2f);
+        }
+        float gap = Vector3.Distance(FirstAt, player.transform.position);
+        int[] shoves = group.Select(dummy => dummy.Shoves).ToArray();
+        Mark();
+        bool cast = upgrades.TrySpecial();
+        float nearest = gap;
+        for (int i = 0; i < 3; i++)
+        {
+            float until = Time.time + (i == 0 ? 0.16f : i == 1 ? 0.2f : 0.12f);
+            while (Time.time < until)
+            {
+                nearest = Mathf.Min(nearest, Vector3.Distance(FirstAt, player.transform.position));
+                yield return null;
+            }
+            Shot();
+        }
+        float after = Time.time + 0.5f;
+        while (Time.time < after)
+        {
+            nearest = Mathf.Min(nearest, Vector3.Distance(FirstAt, player.transform.position));
+            yield return null;
+        }
+        string moved = real != null ? $"gap {gap:0.0} m before, nearest {nearest:0.0}, {Vector3.Distance(FirstAt, player.transform.position):0.0} half a second after" : "shoves " + string.Join(", ", group.Select((dummy, i) => dummy.Shoves - shoves[i]));
+        Say($"lodestone: cast {cast}: first carried Static x4 (owed 1 + 0.8 x 4 = 4.2 m, to sword reach at most), {moved}; Static left on first x{Sets()[0].Stacks(AfflictionKind.Static)}; {Lost()}");
     }
 
     private IEnumerator Circle()

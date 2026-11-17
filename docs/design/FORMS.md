@@ -109,3 +109,23 @@ Bubble, Ray, Gust). A form that wants a particular shape asks for it by name and
 `SurgeLook` holds six solids on the player while a surge lasts, placed every frame by element. `AfflictionLook`
 throws two small pieces of an affliction's stuff on the body that carries it a few times a second (from `EnemyBars`,
 taking turns when a body carries several).
+
+## Forms and shapes added on 2026-11-17 (night run)
+
+| Form id | Class | Mark | What is seen |
+|---|---|---|---|
+| `sun` (rebuilt) | `SunForm` | fire.sun, Falling Sun | The sun's road: a gold orb rolled along the ground by a scarab of embers with flame standing up behind it; a red falcon stooping onto it and beating upward with it; the orb hanging in a double halo with rays let down each second; the fall, a crown of fangs, a ring of tall flame and fourteen long rays thrown flat along the ground. |
+| `sunspot` | `SunspotForm` | fire.sunspot | A small sun over the branded enemy's head that swells with each light blow, a ring under it that grows a step, one flame standing in the ring for each blow fed; the burst throws a fireball for each. |
+| `lodestone` | `LodestoneForm` | lightning.lodestone | A jagged line of lightning with a white thread in it from the raised hand to every enemy within 7 m, thicker for the Static it carries; then a bolt from the sky on each one discharged and ten bolts thrown outward. |
+| `waiting` | `WaitingThunderForm` | lightning.waiting | Five bolts of lightning hung behind the shoulders, jumping to new shapes as lightning does; each flies only with a blow. |
+| `parry` (Fire only) | `ParryForm.Kiln` | fire.kiln | A column of light and six tall flames wound round it under the attacker, a crown of fire at its foot. |
+| `drill` | `DrillForm` | fire.rush | The line driven is left burning: fire's fangs and a lane of light every metre, over real ground fire. |
+
+Two shapes were added to `FormMesh` (at the end, so no number moved): **Scarab** and **Falcon**. **Crest** is no
+longer cut from facets: `FormMeshes.Wave` sweeps a side profile (a long back, a crest, a lip thrown forward, a
+hollow face, a foot) across thirty columns as one smooth skin with shared normals, tall in the middle and sinking
+to nothing at both ends, and paints it per vertex. **Foam** is twenty-four flecks scattered over a square metre.
+
+`Clover/Spell` now reads vertex colour in its main pass: rgb multiplies the object's colour (the wave is deep at
+its foot and green toward its top) and alpha below a half is drawn as foam (white where lit, blue-grey in shade)
+whatever the object's colour. Every mesh `FormMeshes` makes is painted white with alpha one, which changes nothing.

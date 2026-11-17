@@ -318,23 +318,51 @@ public class SignaturesProbeRunner : MonoBehaviour
     private IEnumerator Fire()
     {
         yield return Begin("fire", "Falling Sun");
+        // From eight metres off, so the dawn has a road to roll along.
+        player.Teleport(stand - toward * 5f, Quaternion.LookRotation(toward));
         LayAll(AfflictionKind.Burn, 3);
-        yield return Surge(8f);
+        Mark();
+        yield return Surge(9f);
+        yield return ShotAfter(0.75f);
+        Say($"fire: dawn, the sun rolled {Vector3.Distance(player.transform.position, FirstAt):0.0} m off the first; runs of sun {SpellWorks.RunningOf("sun")}, solids {FormFx.SolidsShown}");
+        yield return ShotAfter(0.85f);
+        Say($"fire: dawn's end: {Lost()}");
+        // Up close for the noon and the setting, so the camera has them.
+        player.Teleport(stand, Quaternion.LookRotation(toward));
+        yield return ShotAfter(0.45f);
         yield return ShotAfter(1.6f);
-        Say($"fire: sun hanging, runs of sun {SpellWorks.RunningOf("sun")}, burn on first x{Sets()[0].Stacks(AfflictionKind.Burn)}");
+        Say($"fire: noon, sun hanging, runs of sun {SpellWorks.RunningOf("sun")}, burn on first x{Sets()[0].Stacks(AfflictionKind.Burn)}");
+        Mark();
         yield return Tap(Key.I);
         yield return ShotAfter(0.2f);
         yield return ShotAfter(0.14f);
         yield return ShotAfter(0.5f);
-        Say($"fire: fallen on a second press (surge again heard {upgrades.SurgeAgain}, surge still lit {element.Kit.SurgeActive}): {Lost()}");
-        // A second sun, put out by a blow.
+        Say($"fire: set on a second press (surge again heard {upgrades.SurgeAgain}, surge still lit {element.Kit.SurgeActive}): {Lost()}");
+        // Called down while still being rolled: half weight.
         yield return SurgeEnds();
-        defence.DamageTaken = 0.01f;
-        yield return Surge(6f);
-        yield return new WaitForSeconds(0.8f);
-        defence.TakeHit(new Hit(1f, 0f, -toward, false, true, FirstAt));
+        player.Teleport(stand - toward * 5f, Quaternion.LookRotation(toward));
+        yield return Surge(9f);
+        yield return new WaitForSeconds(0.9f);
+        Mark();
+        yield return Tap(Key.I);
+        yield return ShotAfter(0.12f);
         yield return new WaitForSeconds(0.3f);
-        Say($"fire: struck while it hung, runs of sun {SpellWorks.RunningOf("sun")} (0 = put out), callout '{defence.LastCallout}'");
+        Say($"fire: called at dawn, runs of sun {SpellWorks.RunningOf("sun")}: {Lost()}");
+        // A third sun, sent under by a blow, rises again; struck with too little surge left, it does not.
+        yield return SurgeEnds();
+        player.Teleport(stand, Quaternion.LookRotation(toward));
+        defence.DamageTaken = 0.01f;
+        yield return Surge(8f);
+        yield return new WaitForSeconds(2.2f);
+        defence.TakeHit(new Hit(1f, 0f, -toward, false, true, FirstAt));
+        yield return ShotAfter(0.25f);
+        Say($"fire: struck at noon with {element.Kit.SurgeLeft:0.0} s of surge left, runs of sun {SpellWorks.RunningOf("sun")} (1 = under, to rise), callout '{defence.LastCallout}'");
+        yield return ShotAfter(1.9f);
+        Say($"fire: risen again: runs of sun {SpellWorks.RunningOf("sun")}");
+        yield return new WaitForSeconds(1.6f);
+        defence.TakeHit(new Hit(1f, 0f, -toward, false, true, FirstAt));
+        yield return new WaitForSeconds(0.6f);
+        Say($"fire: struck with {element.Kit.SurgeLeft:0.0} s left, runs of sun {SpellWorks.RunningOf("sun")} (0 = gone under for good)");
         defence.DamageTaken = 0f;
     }
 

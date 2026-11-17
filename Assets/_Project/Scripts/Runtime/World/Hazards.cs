@@ -72,6 +72,7 @@ namespace Clover.World
             Growing = false;
             GrownSecondsScale = 1f;
             GrownDamageScale = 1f;
+            FireSecondsScale = 1f;
         }
 
         /// <summary>Whose blows these are: the damage is dealt through the player's own weapon code, so it earns what a blow earns.</summary>
@@ -81,6 +82,25 @@ namespace Clover.World
         public static bool Growing;
         /// <summary>What the player's numbers make of how long grown things stand and how hard they bite.</summary>
         public static float GrownSecondsScale = 1f, GrownDamageScale = 1f;
+
+        /// <summary>How many times as long fire left on the ground burns: the trail, the crater, the flask, a spell's fire. Patches that move are left alone.</summary>
+        public static float FireSecondsScale = 1f;
+
+        /// <summary>True when fire the player has left on the ground is burning under this place.</summary>
+        public static bool FireUnder(Vector3 at)
+        {
+            if (instance == null) return false;
+            for (int i = 0; i < instance.zones.Length; i++)
+            {
+                ref var zone = ref instance.zones[i];
+                if (!zone.Active || zone.Spec.Kind != HazardKind.Fire || zone.Delay > 0f || zone.Velocity.sqrMagnitude > 0.01f) continue;
+                Vector3 offset = zone.Position - at;
+                offset.y = 0f;
+                float reach = zone.Spec.Radius + 0.35f;
+                if (offset.sqrMagnitude <= reach * reach) return true;
+            }
+            return false;
+        }
 
         /// <summary>How many things the player has grown stand now.</summary>
         public static int GrownCount
@@ -207,6 +227,7 @@ namespace Clover.World
                 Burst = spec.Burst,
             };
             instance.zones[i].Spec.BiteEvery = Mathf.Max(0.05f, spec.BiteEvery);
+            if (spec.Kind == HazardKind.Fire && !spec.Once && spec.Velocity.sqrMagnitude < 0.01f) instance.zones[i].Left = spec.Seconds * FireSecondsScale;
             if (grown)
             {
                 instance.zones[i].Spec.Grown = true;
