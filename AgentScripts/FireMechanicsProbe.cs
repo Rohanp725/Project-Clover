@@ -488,6 +488,7 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         spearman.Brain.Alert();
         int wardsBefore = defence.Wards;
         int blowsBefore = defence.BlowsTaken, dodgesBefore = defence.Dodges, blocksBefore = defence.Blocks, perfectBefore = defence.PerfectGuards;
+        int throwsBefore = cast.Throws;
         bool forced = spearman.Brain.Force("gilded_cast");
         yield return Until(() => spearman.Brain.TelegraphProgress > 0.8f, 3f);
         yield return Shot("fire2_spear_0");
@@ -495,13 +496,14 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         // while they flinch is ignored by design (PlayerDefence.TakeHit), which is how the throw can seem harmless.
         int blowsInTell = 0;
         bool hurtBefore = false;
-        while (cast.Throws == 0 && spearman.Brain.Current != null)
+        // He may already have thrown earlier in the probe, awake from another section: wait for this throw, not any.
+        while (cast.Throws == throwsBefore && spearman.Brain.Current != null)
         {
             blowsInTell = defence.BlowsTaken - blowsBefore;
             hurtBefore = defence.IsHurt;
             yield return null;
         }
-        yield return Until(() => cast.Throws > 0, 3f);
+        yield return Until(() => cast.Throws > throwsBefore, 3f);
         float atThrow = defence.Health.Current;
         string state = $"leaping {player.IsLeaping} suspended {player.Suspended} hurt {defence.IsHurt} finishing {player.GetComponent<PlayerCombat>().IsFinishing} form {player.FormHold} wards {wardsBefore} -> {defence.Wards} screened {Clover.Player.Forms.SpellWorks.Screens(spearman.transform.position, player.transform.position)}";
         int blowsAtThrow = defence.BlowsTaken - blowsBefore, dodgesAtThrow = defence.Dodges - dodgesBefore, blocksAtThrow = defence.Blocks - blocksBefore, perfectAtThrow = defence.PerfectGuards - perfectBefore;

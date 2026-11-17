@@ -1831,14 +1831,12 @@ scene. Every piece is made by a builder; nothing is created during play.
    - *The spearman's held spear* is shrunk away (its `weapon.R` bone, as the court does for Khepharu) while his thrown one
      stands. Not confirmed by eye: the bone is found and is part of his skin, but in the one frame taken of him
      bare-handed (`fire2_spear_bare`) he still seems to carry a long shape; it may be weighted to another bone.
-   - *The spear throw doing no damage*: **not fixed, only half found.** Part of it was the probe: `FireMechanicsProbe`
-     read the player's health a frame after turning its healing back on, so even a throw that landed read 100 to 100;
-     it now reads at once. But the throw itself is intermittent: in 3 of 6 runs it struck (100 to 77), in 3 it did
-     nothing. In a failing run the probe now logs, at the frame of the throw: the player 8.0 m dead ahead of him and 0
-     degrees off his facing (inside the lane by `SpearCast`'s own sum, which is why the spear stands at the player), not
-     flinching, not leaping, no wards, no spell wall between, no blow, no dodge, no block, no perfect guard counted.
-     So either `Enemy.Strike` does not reach `Deal` for that blow or `PlayerDefence.TakeHit` returns early by a path
-     that counts nothing; the next step is a log inside `Enemy.Deal` of the outcome `TakeHit` returns.
+   - *The spear throw doing no damage*: **the throw was never broken; the probe was.** First the probe read the
+     player's health a frame after turning its healing back on. Then (found afterwards, with a log inside
+     `Enemy.Deal`) it waited for `SpearCast.Throws > 0`, but in some runs the spearman had already woken and thrown
+     during an earlier section, so the wait ended at once and health was read before the forced throw landed. The log
+     showed every forced throw `Landed` for 23. The probe now waits for a throw after the one it counted before
+     forcing; three runs in a row read 100 to 77 `OK`.
    - *Shafts of noon* (plan item 9, done after the list): from the moment one of Khepharu's noon circles is drawn a
      thin shaft of sun-white light stands over it from 16 m up, widening to 1.2 m as it fills (`bossfx_noon_tell`); at
      the strike it slams to the circle's full width for 0.1 s and collapses in 0.25 s (`bossfx_noon_1`), with a
@@ -1862,7 +1860,7 @@ scene. Every piece is made by a builder; nothing is created during play.
 **Measured** (editor, Game view 1920 by 936, no vsync; every run after the last change): EditMode tests 345 pass, 0
 fail (342 before, and the 3 new `SunSpearTests`). `SunCourtProbe` 34 `OK`, 0 `WRONG` (the perfect guard on the rolling
 sun now parries: perfect +1, knocks +1, loose, exposed, no blow taken; taking Fire gives the Sun-Spear);
-`SunCityProbe` 91 `OK`, 0 `WRONG`; `FireMechanicsProbe` complete, 0 errors (its spear-throw line `OK` in 3 of 6 runs, `WRONG` in the others: see below); the hub's `RunProbe`
+`SunCityProbe` 91 `OK`, 0 `WRONG`; `FireMechanicsProbe` complete, 0 errors (its spear-throw line `OK` in 3 of 6 runs then; after the probe's fix above, 3 of 3); the hub's `RunProbe`
 complete; `BossFxProbe` complete (the Sun-Spear's ray `OK`); console 0 errors and 0 warnings after each. `PerfProbe` in
 the sun-court with the form risen and rolling: frame 3.0 ms mean, 2.8 median, 3.9 at the 95th percentile, 12.4 worst,
 main thread 3.0 ms, 654 draw calls, 7,919 bytes of garbage a frame (the 7.9 KB measured before; the new effects

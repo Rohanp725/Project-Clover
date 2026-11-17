@@ -316,8 +316,8 @@ part puts everyone back first, then forces and measures one thing, with frames
     him from the front while bare-handed; him fetching it. The health is read the moment after the throw, before the
     probe heals the player again (it used to be read a frame later, healed, which made the throw look harmless: 100 to
     100); the line ends `OK` when the throw cost health, and says what else was so at the frame of the throw (blows,
-    dodges, blocks, flinch, leap, wards, spell walls, where the player stood). The throw is intermittent: it ends
-    `WRONG` in about half the runs (see `docs/design/fire_land.md`, the bosses' attack visuals, the extra list).
+    dodges, blocks, flinch, leap, wards, spell walls, where the player stood). It waits for a throw after the count
+    it read before forcing one, since the spearman may already have thrown during an earlier section.
 
 `PerfProbe`'s FireYard branch now also brings the swell on and strews 30 splashes of gold round the player. Its
 SunCourt branch (new) reads the king's words, fells the man, waits for the Sun-Bearer to stand in the fight, asks a
