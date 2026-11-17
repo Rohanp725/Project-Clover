@@ -16,5 +16,7 @@ namespace Clover.Player
         GroundSplit,
         /// <summary>Dust and a ring thrown up where the blow came down: a hammer's head, a body driven into the ground.</summary>
         GroundSlam,
+        /// <summary>Landmines: five arrows loosed upward come down in a ring round the enemy faced, and stand where they fall.</summary>
+        ArrowRain,
     }
 }

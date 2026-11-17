@@ -242,6 +242,10 @@ namespace Clover.EditorTools
             // A weapon that is itself thrown flies as its own model.
             var thrown = WeaponBuilder.Specs.Where(spec => spec.Worn == null).ToArray();
             shots.ConfigureProps(thrown.Select(spec => spec.Carry).ToArray(), thrown.Select(spec => WeaponBuilder.Prefab(spec.Carry)).ToArray());
+            // The bow's arrows once they have landed, and the chain between the sickle's hand and its weight.
+            player.AddComponent<PlantedArrows>().Configure(WeaponBuilder.Prefab("arrow"));
+            player.AddComponent<ChainLine>().Configure(WeaponBuilder.Prefab("weight"), WeaponBuilder.Prefab("sickle"),
+                BuildKit.Toon(PlayerFolder, "m_chain_line", new Color(1.7f, 1.8f, 2.1f), false, null, 0f, 0.02f));
             player.AddComponent<WeaponSpikes>().Configure(BuildKit.Toon(PlayerFolder, "m_weapon_spike", new Color(0.6f, 0.58f, 0.66f), false, null, 0f, 0.02f));
             return player;
         }
@@ -827,7 +831,7 @@ namespace Clover.EditorTools
         public const string PauseHint = "Start or Esc: pause and controls";
 
         public const string ControlsHint =
-            "R1 light   R2 heavy (hold: weapon skill, 30 mana; on a staggered enemy: finisher)   L1 guard   Circle dodge   Square flask   Triangle element spell   L2 element surge   Cross use\n"
+            "R1 light   R2 heavy (hold: weapon skill, costs mana; on a staggered enemy: finisher)   L1 guard   Circle dodge   Square flask   Triangle element spell   L2 element surge   Cross use\n"
             + "Keyboard: WASD move   J light   K heavy   L guard   Space dodge   R flask   U spell   I surge   E use";
 
         private static Text Label(string name, Transform parent, int size, TextAnchor anchor, Color colour)

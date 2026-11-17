@@ -2,30 +2,51 @@ using System;
 
 namespace Clover.Player
 {
-    /// <summary>
-    /// Mana pays for element spells and weapon skills. It never refills by itself: it is earned by landing hits, perfect
-    /// guards and perfect dodges, which is what keeps magic in the service of close combat.
-    /// </summary>
     [Serializable]
     public class ManaPool
     {
         public float Maximum = 100f;
 
-        public float Current { get; private set; }
-        public float Fraction => Maximum > 0f ? Current / Maximum : 0f;
+        /// <summary>
+        /// When set, there is no mana: whatever would be spent is asked of this instead (true: it was paid), and
+        /// whatever would be gained is set aside in <see cref="Diverted"/> for whoever set it to take. Heartwood sets it.
+        /// </summary>
+        [NonSerialized] public Func<float, bool> Instead;
 
-        public void Empty() => Current = 0f;
+        private float current;
+        /// <summary>Mana held. With no mana (<see cref="Instead"/>) every price can be asked, so this reads as full; the bar reads <see cref="Fraction"/>, which is empty.</summary>
+        public float Current => Instead != null ? Maximum : current;
+        public float Fraction => Instead != null ? 0f : Maximum > 0f ? current / Maximum : 0f;
+        /// <summary>True when there is no mana and prices are paid another way.</summary>
+        public bool Sealed => Instead != null;
+        /// <summary>Mana that would have been gained while there was none, since it was last taken.</summary>
+        public float Diverted { get; private set; }
+
+        public void Empty() => current = 0f;
 
         public void Gain(float amount)
         {
             if (amount <= 0f) return;
-            Current = Math.Min(Maximum, Current + amount);
+            if (Instead != null)
+            {
+                Diverted += amount;
+                return;
+            }
+            current = Math.Min(Maximum, current + amount);
+        }
+
+        public float TakeDiverted()
+        {
+            float taken = Diverted;
+            Diverted = 0f;
+            return taken;
         }
 
         public bool TrySpend(float cost)
         {
-            if (cost > Current) return false;
-            Current -= cost;
+            if (Instead != null) return cost <= 0f || Instead(cost);
+            if (cost > current) return false;
+            current -= cost;
             return true;
         }
     }

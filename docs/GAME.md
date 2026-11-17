@@ -164,9 +164,10 @@ A technique is a weapon style. Nine weapons and one special form.
 | Super Form | Boosts all attributes and gives parts of every weapon mode | Takes all technique slots; the final boss shows it at full strength |
 
 **Built so far** (2026-11-16): Katana, and as Claude's defaults the Massive Sword, the Scythe (idea (a) below, the
-sweet spot), the Full Body Armament, the Great Spear and the Great Hammer; see "The newer weapons as built" and "The
-Great Spear and the Great Hammer as built" at the end of this document. The design for all eight remaining
-techniques is `docs/design/weapons.md`. Still to build: Twin Knives, Chain Sickle, Great Bow.
+sweet spot), the Full Body Armament, the Great Spear, the Great Hammer and the Twin Knives; see "The newer weapons as
+built", "The Great Spear and the Great Hammer as built" and "The Twin Knives as built" at the end of this document. The design for all eight remaining
+techniques is `docs/design/weapons.md`. The Great Bow and the Chain Sickle were built last, also as Claude's defaults:
+see "The Great Bow and the Chain Sickle as built" at the end. All eight are now in.
 
 Ideas offered by Claude for the two undesigned weapons, not yet accepted:
 
@@ -1164,7 +1165,8 @@ hand (shown as empty hands that wait, and a catch). A finisher's blow that throw
 - The hands never slide along a haft: the right hand is fixed where the model's grip is.
 - Finishers still do not carry the enemy: The Standard lifts it by the same half-second lift the Wheel uses.
 - No element changes either weapon yet, and neither has sounds.
-- **Twin Knives are not started.** They need a second aimed hand in the Forge and blows that count from behind.
+- The Twin Knives were built later the same night: see "The Twin Knives as built" below; the Great Bow and the Chain
+  Sickle after them: see "The Great Bow and the Chain Sickle as built".
 
 **A fault found and mended on the way.** A weapon's own guard and dodge numbers (the sword's wide guard, the
 scythe's long roll) were quietly put back to the starting weapon's whenever a mark changed a sum. They now stay the
@@ -1179,3 +1181,155 @@ for good is not built), and Long Hunger was always about Hunger.
 **Trying them.** The practice yard's rack has seven stands now and the hub has seven (the Katana's in the south, the
 rest along the western rim). Contact sheets:
 `review/anim/player_*_spear*.png` and `player_*_hammer*.png`.
+
+### Marks finished on the night of 2026-11-16 (Claude's defaults, not yet played by the user)
+
+All numbers and wordings here are **Claude's defaults, open to change**. The list of marks still unfinished is
+`docs/design/marks_open.md` (284 of 428 counted fully true).
+
+- **Sky Dance (Wind, worn spell, 45 mana)** is its own move: the enemy faced is thrown up and the player goes up
+  beside it; five rings close on it in turn (0.34 s each) and a light attack pressed in the last 45% of a ring is a
+  cut in time (15 for 10, a star); then for 0.45 s the stick aims a lane and the enemy is thrown down it, bursting
+  where it comes to rest for 20 + 6 for each cut in time, 60 stagger, 3 m. The player cannot be struck throughout.
+  What cannot be lifted is danced on the ground. With no enemy faced the mana is lost.
+- **Poison's beat can be played with.** In Time: a blow within a quarter second of the bite doses again and makes
+  blows critical for 1.2 s. Left to Ripen: each bite with no fresh dose is a quarter stronger than the last. Lance the
+  Wound: a perfect guard makes every poisoned enemy within 5 m of the attacker bite at once. Catching: each bite sends
+  one dose to another enemy within 4 m. One Sickness: one beat for all, 15% stronger for each further poisoned enemy.
+  Volatile: no beat at all. Slow Death: twelve doses deeper (not without limit) and no fading. Wither: a quarter harder
+  on the Cursed. Feeding Rot: half a point of health a dose from each bite on a Cursed enemy. One Death Feeds: every
+  poisoned enemy within 12 m of a Cursed death bites, four health for each.
+- **Dead Already** is the Rise for good: every "Risen" mark works always, two health a second drain while an enemy is
+  within 12 m (never the last point), three tenths of weapon damage returns, and there is no second rising. It no
+  longer shortens the health bar. **Hollow Strength**: Risen, blows do not make the player flinch, and a kill stills
+  the drain for three seconds.
+- Words changed to say what the mark does (the designs they gave up are noted in the tree files): Slow Burn, Still
+  Air, Wide Cloud, Sweet Fever, Devouring Maw, Black Ice, Slow Pulse, Still Pool, Slow Death, In Time, Left to Ripen,
+  Wither, One Death Feeds, Dead Already, Falling Thunder, Sky Dance, Undertow, Grey Tide, Long Flood, Dread, Feast,
+  Carrion Flies, Sapling, Rooted, Stone Skin, Easy Burden, Landslide, Windchill, Turned Aside, Clean Pass, Splinter
+  Ward, Rushing Wake, Following Draft, Flashpoint, Never There.
+- **A boon may be for one blow.** Rushing Wake (Wind) and Flashpoint (Fire) end with the first swing that lands.
+  Following Draft lengthens every timed gift of the marks by two thirds. A perfect dodge now acts on the attacker it
+  dodged (Empty Air, Dazzle), not on the enemy faced. Never There makes a guarded blow cost twice the stamina in place
+  of a shorter perfect guard.
+
+### The Twin Knives as built (2026-11-16, night; Claude's defaults, not yet played by the user)
+
+Built from `docs/design/weapons.md` section 3 with its numbers; nothing here was decided by the user. The model is
+a box stand-in to the staged knife's size (the Blender knife still waits for approval), one model in both hands.
+
+**Twin Knives.** Be behind them. Five quick cuts (the third is two blows), and every blow on an enemy's back counts
+for half as much again, damage and stagger. The fifth cut and the heavy that ends a chain both carry you through
+the enemy and turn you to face its back. The dodge is a short cheap spinning sidestep (three for the price of two
+rolls), and a light pressed in its second half is a flat cut out of the turn. The guard has the widest perfect
+window in the game and the dearest block: a parry and nothing else. Held heavy, 25 mana: **Fan of Knives**, a back
+handspring 2.6 m away with five knives of light thrown in a fan (all five on an enemy a step away, one from range;
+it earns no mana). Finisher: **Three Crossings**, three dashes through the kneeling enemy to the corners of a
+triangle, each leaving a line of light; the back turned, both knives spun once and stopped dead, and the lines
+burst on the enemy behind.
+
+Claude's defaults to keep or change:
+
+- What counts as "behind": roughly the rear 145 degrees of the enemy (`PlayerCombat.BackDot` -0.3). A spark in the
+  knives' colour marks a blow that counted. The finisher and the fan do not get the bonus.
+- The fan is thrown from where you stood when the spring began, so point-blank it is 45 damage as designed; the
+  body is already in the air behind the knives as they leave.
+- After a passing cut the player is turned by the game to face what was passed; with nothing struck, to face back
+  the way they came.
+- The cut out of the sidestep needs the press during the second half of the dodge, not after it.
+
+Not yet: no element changes the knives, no sounds, no true reverse grip on the left hand, no sheaths at rest, the
+finisher does not move or hold the enemy. The Great Bow and the Chain Sickle are below.
+
+### The Great Bow and the Chain Sickle as built (2026-11-16, late night; Claude's defaults, not yet played by the user)
+
+Nothing here was decided by the user. Both are from sections 6 and 4 of `docs/design/weapons.md`, on box stand-in
+models (the Blender models `bow.fbx`, `arrow.fbx` and `chain_sickle.fbx` wait in staging for approval). Each stands
+on the hub's weapon stands and the test yard's rack. What departs from the design is in that file's Appendix C.
+
+**Great Bow.** Plant with the shots, cash with the stave. The bow is in the left hand and an arrow in the right.
+Every arrow that strikes an enemy stays standing in it (three at most, twelve seconds each; a fourth takes the
+oldest one's place), and every blow of the stave (the swat, the stab, the kick, the finisher) snaps every arrow in
+what it lands on: 10 damage and 14 stagger each, one after another, with "Snap x2" or "Snap x3" called out. Light,
+light: a long backhand swat with the upper limb, then a stab with the arrow in the fist, which leaves that arrow
+behind. Heavy: the snap shot, 18 from nine metres. Heavy after a light: a kick that throws the bearer three metres
+back and looses a shot from the air on the way. Heavy held 0.6 s: the full draw, 34, through every enemy on its
+line and fourteen metres long, walking and turning while it is drawn. Held 1.0 s, 35 mana: **Landmines**, five
+arrows loosed upward that come down half a second later in a ring round the enemy faced and stand there. An arrow
+that hits no one stands in the ground (six at most, eight seconds; Landmines' stand ten) and goes off under the
+first enemy to come within 1.1 m. A perfect guard leaves the arrow from the fist in the attacker. Finisher,
+**Nailed**: the stave takes the legs and comes over the top, a foot is set on the enemy, and the high draw is made
+slowly straight down with the bow lying across the whole body; loose, and every arrow already in the enemy goes off.
+With an element held, a snapped or tripped arrow lays one stack of its affliction.
+
+Claude's defaults inside it, to keep or change:
+- The bow is held canted (laid out to the left like a horse archer's), never upright: upright it is a dot from the
+  game's camera.
+- An attack of the bow turns to an enemy up to twelve metres off, but only one within thirty degrees of where the
+  stick (or the body) points; other weapons take the nearest within seventy.
+- The swat travels right to left (the design's table said the other way; its text describes this).
+- An arrow's fletching takes the held element's colour as it lands (red in the hand and in flight).
+
+Not yet: the second tier of the hold has no pose of its own (the bow is tipped up in the skill's wind-up), the
+legs do not walk under the draw (the stance slides), no quiver on the hip, the right hand never looks empty, the
+finisher does not throw the enemy flat, no element changes the bow (no fuses, needles or marks), no sounds.
+
+**Chain Sickle.** Two ranges at once, and it moves what it catches. Sickle in the right hand, a weight on a chain
+in the left that never stops turning. Light chain: sickle cut, the weight snapped 5.2 m down a lane, a hook that
+pulls its target 0.6 m nearer, then the whirl, two rings at 4 m. Heavy: the sickle itself thrown out on the chain
+and swept across 220 degrees at 4.6 m. Heavy after a light: the yank, a 5.5 m lane that drags an ordinary enemy
+3 m to the bearer's feet; an elite, a god or anything fixed is not dragged, and the bearer flies to it instead.
+Heavy held 0.4 s, 30 mana: **Entangle**, the weight thrown 7 m; the nearest enemy it strikes is **Bound** for
+2.5 s (held still, a quarter more stagger from every blow, the chain drawn to it), and while it is bound the heavy
+button is the yank from any state. A roll, or eight metres of distance, lets go. A perfect guard yanks the attacker
+1.2 m in and adds 15 stagger. Finisher, **Unwinding**: the weight wraps the kneeling enemy, the bearer turns the
+back and walks the chain out over the shoulder as two heaves drag the enemy in behind, stops with the sickle raised,
+and cuts backward without looking.
+
+Claude's defaults inside it:
+- Its clips and its model are named `sickle`, not `chain`: "chain" is already every weapon's word for the heavy
+  that ends a chain (`attack_gsword_chain`).
+- The chain is a plain pale line with the weight on its end, drawn by code; no link pattern, no coil at the hip.
+- Entangle strikes everything in its lane and binds the nearest (the design: it stops at the first).
+- Something that cannot be held (a god) is bound for one second and is not stopped at all.
+- The bearer is not kept within seven metres of what is bound: at eight the chain lets go.
+- Unwinding's blow reaches all round, since the enemy is behind the bearer when it is made.
+
+Not yet: the bound enemy's attack is not broken by the bind itself (it is held as ice holds), the enemy does not
+spin in on the chain in the finisher, the flight to a heavy enemy has no landing chop of its own, the weight and the
+link of `chain_sickle.fbx` have no intake rule (the file holds three objects), no element changes it (no live wire,
+frost shackle or leash), no sounds.
+
+### Keystones and marks finished late on the night of 2026-11-16, and the marks reworded (Claude's defaults, not yet played by the user)
+
+Built to their designs, with these **defaults of Claude's, open to change**:
+
+- **Closing Circle** (Wind): the ring is as wide as the player stood from the enemy (2 to 3 m); 6 damage, 5 Unsteady,
+  1.2 s in the air. The player cannot be touched for the whole run (the design says the first half only).
+- **Eye of the Storm** (Tempest): 3.5 m ring, up to 2.5 s and never less than half a second; each bite lays the
+  affliction of the element held, not one of each; the bolt at the end is a heavy blow of 12.
+- **Open Furnace** (Fire): the single detonation of a perfect guard is replaced, not added to; each enemy keeps 2 Burn.
+- **Single Stroke** (Lightning): the discharge is 14 damage and 10 stagger a stack on the one struck.
+- **All at Once** (Ice): the shatter is three times the plain shatter (135 where it was 45), which is more than the
+  design's "two to three"; the words said three times and now it is so.
+- **Clean Break** (Ice): under a fifth of its health; gods are spared, elites are not. The words now say so.
+- **Unmoved** (Ice) and **Heavy Hand** (Earth): no interruption in the wind-up and swing of a heavy blow, red blows
+  included; damage taken then is halved (Unmoved) or cut by 35% (Heavy Hand). The recovery after the swing is not covered.
+- **Heartwood** (Life): 1 health for 2 mana, left grey; 1 health mended for 3 mana gained. The mana bar stays on the
+  screen, empty. A weapon skill asked for when the health cannot pay still goes out.
+- **Leaf on the Wind** (Wind): one breath back every 2 s and one for every 3 blows landed (each enemy a swing
+  strikes counts); with none there is no dodge. The words now say that.
+- **Brittle** (Ice, 5 s, a fifth more), **Buckled** (Forge, 40% more stagger), **Flash Freeze** (Glacier, at three,
+  spends Soaked), **Counter Cut** (Metal, critical on an enemy in its wind-up or strike; the design's 25% more
+  stagger is not in it).
+
+- **Spring Tide** (Water): damage grows to two and a half times with four times the cost held or more; reach by the
+  square root. A form that lasts takes its numbers when it is cast.
+- **Master's Answer** (Metal): the window is 2 s; in it any press of heavy is the skill, at once and free (a plain
+  heavy blow cannot be made in the window). Outside it the skill costs half again as much.
+- **Deep Well** (Water): 70 a flask into a well of 140, paid at 6 a second while a blow has landed in the last 3 s;
+  nothing is paid at full health. The well is shown with the other counts (`Well 70/140`), not beside the health bar.
+
+**124 other marks were reworded** to say only what they do today, because they were not built that night. Their
+old words and their designs are in `docs/design/marks_reworded.md`; the wording of each new description is Claude's
+and open to change, and the designed versions remain the intent.

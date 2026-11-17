@@ -36,25 +36,25 @@ namespace Clover.Player.Trees
                 } });
             // NEEDS: a pillar that stands and can be broken by a heavy blow. Here the spike strikes and breaks into its three blades at once.
             to.Add(new Upgrade { Id = StruckOre, Name = "Struck Ore", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { HammerAndAnvil }, X = -0.5f, Y = 2.36f, Icon = UpgradeIcons.Spike,
-                Description = "A perfect guard strikes a spike of ore from the ground under the attacker. It stands. A heavy blow breaks it into blades.",
+                Description = "A perfect guard strikes a spike of ore from the ground under the attacker and shakes it, and three blades fly from you that notch what they pass.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Falling, Radius = 1.2f, Delay = 0.2f, Damage = 10f, Stagger = 20f, Affliction = Tremor, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Projectile, Flight = Flight.Straight, Count = 3, Damage = 9f, Stagger = 4f, Affliction = Notch, Stacks = 1 },
                 } });
-            // NEEDS: a condition on two afflictions at once, and stagger taken by an enemy from every source. Here blows on a shaken enemy raise the weapon's stagger for a while.
+            // Built (Afflictions.BuckledShare): an enemy carrying Tremor and Sundered together takes 40% more stagger from every source.
             to.Add(new Upgrade { Id = Buckled, Name = "Buckled", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { StruckOre }, X = 0f, Y = 3.48f, Icon = UpgradeIcons.Anvil,
                 Description = "An enemy both shaken and notched loses its balance far sooner.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictedHit, Needs = Tremor, Do = UpgradeAction.Boon, Stat = PlayerStat.StaggerDealt, Amount = 0.4f, Seconds = 3f } } });
+                Stats = new StatMod[0] });
             // The sword form is the one great thing that falls after a delay. NEEDS: the timing check that doubles the hammer and a heavy blow landing together.
             to.Add(new Upgrade { Id = TripHammer, Name = "Trip Hammer", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { StruckOre }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Hammer,
-                Description = "Hold the spell button and a great hammer forms above the enemy you face, and falls. Land a heavy blow of your own as it lands and both strike twice as hard. 40 mana.",
+                Description = "Hold the spell button and a great hammer forms above the enemy you face, and falls after a moment. It leaves a crack in the ground that bites for a second. 40 mana.",
                 Form = "sword",
                 Spell = new SpellSpec { Cost = 40f, Reach = 10f, Delay = 1f, Radius = 2.5f, Damage = 30f, Stagger = 50f, Stacks = 1, Seconds = 1f, LingerDamage = 2f } });
             // BESPOKE: a held pose draws a sword of stone and iron twice the player's height; for three swings (or 10 s) the weapon is replaced: each a heavy blow over 180 degrees
             // to 4 m for 40 damage, 60 stagger, Tremor 1 and a notch, through any guard; the third throws shards 6 m. Until then: one such swing, as a wave.
             to.Add(new Upgrade { Id = DrawnFromStone, Name = "Drawn From Stone", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { TripHammer }, X = 0f, Y = 5.72f, Icon = UpgradeIcons.Blade,
-                Description = "Hold the spell button to thrust your hand into the ground and draw out a sword of stone and iron far too large for you. It gives three great swings. The third breaks it. 50 mana.",
+                Description = "Hold the spell button to draw a sword of stone and iron from the ground and give one great swing, a half circle before you. 50 mana.",
                 Form = SpellForms.Wave,
                 Spell = new SpellSpec { Cost = 50f, Reach = 4f, Arc = 180f, Damage = 40f, Stagger = 60f, Stacks = 1 } });
             to.Add(new Upgrade { Id = FoldedSteel, Name = "Folded Steel", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { Buckled }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Blade,

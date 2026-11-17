@@ -48,6 +48,12 @@ namespace Clover.Player
         public int Limit;
         /// <summary>For the SpellCast trigger: only when the spell cast is this mark's own.</summary>
         public bool OwnSpell;
+        /// <summary>For SpellCast: only when the spell cast is the element's base spell.</summary>
+        public bool BaseSpell;
+        /// <summary>The target's poison must have bitten, or be about to bite, within this many seconds (0: not asked).</summary>
+        public float OnBeat;
+        /// <summary>For Boon: it ends with the next swing of the weapon that lands, if that comes before its time is up.</summary>
+        public bool UntilBlow;
         /// <summary>It happens only if its mark's count holds this many, and spends them.</summary>
         public int Spends;
         /// <summary>It happens only if its mark's count holds any, spends them all, and carries how many were spent (for <see cref="PerStack"/>).</summary>

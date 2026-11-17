@@ -143,6 +143,9 @@ public class WeaponsProbeRunner : MonoBehaviour
         if (only == null || only.Contains(" arm ")) yield return Armament();
         if (only == null || only.Contains(" spear ")) yield return Spear();
         if (only == null || only.Contains(" hammer ")) yield return Hammer();
+        if (only == null || only.Contains(" knife ")) yield return Knives();
+        if (only == null || only.Contains(" bow ")) yield return Bow();
+        if (only == null || only.Contains(" sickle ")) yield return Sickle();
 
         Say($"errors none seen by the probe; time scale {Time.timeScale:0.00}");
         Say("done: weapons");
@@ -617,10 +620,398 @@ public class WeaponsProbeRunner : MonoBehaviour
         yield return Element(weapon, 2.8f, false);
     }
 
+    // Where the player stands by the dummy: how far, whether beyond it (north of it), and whether turned to it.
+    private string Place()
+    {
+        Vector3 gap = dummy.transform.position - player.transform.position;
+        gap.y = 0f;
+        float facing = gap.sqrMagnitude > 0.01f ? Vector3.Dot(player.transform.forward, gap.normalized) : 0f;
+        float behind = gap.sqrMagnitude > 0.01f ? Vector3.Dot(dummy.transform.forward, -gap.normalized) : 0f;
+        return $"{gap.magnitude:0.00} m from the dummy, {(gap.z < 0f ? "beyond" : "short of")} it, facing it {facing:0.00}, on its {(behind < combat.BackDot ? "BACK" : "front or side")} ({behind:0.00})";
+    }
+
+    private IEnumerator Knives()
+    {
+        weaponTag = "knife";
+        var weapon = Weapons.ByName(Weapons.TwinKnivesName);
+        combat.Equip(weapon);
+        var combo = weapon.Combo;
+        var shots = player.GetComponent<WeaponShots>();
+        int backs = combat.BackBlows;
+        // "pass" beside the prefix in WeaponsProbe.only begins at the passing cut, for looking at that alone.
+        bool passOnly = System.IO.File.Exists("AgentScripts/WeaponsProbe.only") && System.IO.File.ReadAllText("AgentScripts/WeaponsProbe.only").Contains("pass");
+        if (!passOnly)
+        {
+            yield return Common(weapon, 1.5f);
+            Say($"knife after the chain and a heavy: back blows so far +{combat.BackBlows - backs}; {Place()}");
+        }
+
+        // The fifth cut alone: where it leaves the player.
+        yield return Stage(1.5f);
+        for (int i = 0; i < 5; i++)
+        {
+            yield return Tap(Key.J);
+            var wanted = combo.Steps[i];
+            if (i == 4)
+            {
+                // Frame by frame through the passing cut: the phase, whether the body is being carried, and where it is.
+                var trace = new System.Text.StringBuilder();
+                for (int frame = 0; frame < 26; frame++)
+                {
+                    trace.Append($"{(combat.Combo.Current != null ? combat.Combo.Current.Name.Replace("attack_knife_", "") : "-")}{combat.Combo.Phase.ToString()[0]}{(combat.PassingThrough ? "*" : "")} {player.transform.position.z:0.00} | ");
+                    yield return null;
+                }
+                Say("knife passing cut, by frame (step, phase, * carried, z; the dummy is at 4): " + trace);
+            }
+            yield return Until(() => combat.Combo.Current == wanted && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+            if (i >= 3) Say($"knife after cut {i + 1} of a chain on one dummy (doing {(combat.Combo.Current != null ? combat.Combo.Current.Name : "nothing")}, dummy staggered {dummy.IsStaggered}): {Place()}");
+        }
+        yield return new WaitForSeconds(0.1f);
+        Say($"knife after the fifth cut (design: through, 2.4 m, turned to its back): {Place()}");
+        yield return Shot("pass", 1);
+
+        // One cut on the front (the usual place to stand is the dummy's back: it faces north): the plain number.
+        yield return Stage(1.5f);
+        player.Teleport(dummy.transform.position + Vector3.forward * 1.5f, Quaternion.LookRotation(-Vector3.forward, Vector3.up));
+        yield return new WaitForSecondsRealtime(0.15f);
+        backs = combat.BackBlows;
+        float health = dummy.Health.Current;
+        Say($"knife staged in front: {Place()}");
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[0] && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        Say($"knife first cut on the front: damage {health - dummy.Health.Current:0.##} (design 5), back blows +{combat.BackBlows - backs} (wanted 0)");
+
+        // The crossing step after one light.
+        yield return Stage(1.5f);
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[0] && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        yield return Tap(Key.K);
+        yield return Watch("chain", combo.ChainHeavy, $"damage {combo.ChainHeavy.Damage} stagger {combo.ChainHeavy.Stagger} travel {combo.ChainHeavy.Travel} through");
+        yield return new WaitForSeconds(0.1f);
+        Say($"knife after the crossing step: {Place()}");
+
+        // The cut out of the sidestep: the dodge toward the dummy from range, the light pressed in its second half.
+        yield return Stage(4.6f);
+        int dashes = combat.DashAttacks;
+        Keys(Key.Space);
+        yield return null;
+        yield return null;
+        Keys();
+        yield return Until(() => player.Dodge.IsRolling && player.Dodge.Progress >= 0.6f, 1f);
+        yield return Shot("roll", 1);
+        Keys(Key.J);
+        yield return null;
+        yield return null;
+        Keys();
+        yield return Watch("dash", combo.DashAttack, $"damage {combo.DashAttack.Damage} stagger {combo.DashAttack.Stagger}");
+        Say($"knife dash attack: started +{combat.DashAttacks - dashes} (wanted 1)");
+
+        // Fan of Knives from a step away, then from range.
+        foreach (float stand in new[] { 1.5f, 6f })
+        {
+            yield return Stage(stand);
+            int thrown = shots.Thrown, struck = shots.Struck, skills = combat.SkillsUsed;
+            health = dummy.Health.Current;
+            float mana = combat.Mana.Current;
+            Vector3 from = player.transform.position;
+            dummy.Stagger.Reset();
+            yield return Hold(combo.ChargeTime + 0.12f);
+            yield return Until(() => combat.Combo.Current == combo.Skill, 1f);
+            if (stand < 2f) yield return Shot("skill", 1);
+            yield return Until(() => combat.Combo.Phase != AttackPhase.Windup, 1f);
+            yield return null;
+            yield return null;
+            if (stand < 2f) yield return Shot("skill", 2);
+            yield return new WaitForSeconds(0.12f);
+            if (stand < 2f) yield return Shot("skill", 3);
+            yield return new WaitForSeconds(0.6f);
+            if (stand < 2f) yield return Shot("skill", 4);
+            Say($"knife skill (Fan of Knives) from {stand} m: skills +{combat.SkillsUsed - skills}, mana {mana:0} -> {combat.Mana.Current:0} (cost {combo.SkillManaCost}), thrown +{shots.Thrown - thrown} (design 5), struck +{shots.Struck - struck}, dummy lost {health - dummy.Health.Current:0.#} (design 45 with all five), sprang back {Vector3.Dot(from - player.transform.position, Vector3.forward):0.00} m (design 2.6)");
+        }
+
+        // The guard: struck two frames after the press it is perfect, and a blocked blow costs dear.
+        yield return Stage(1.5f);
+        keepWell = false;
+        Keys(Key.L);
+        yield return null;
+        yield return null;
+        var timed = defence.TakeHit(new Hit(10f, 0f, -Vector3.forward, false, false, dummy.transform.position));
+        yield return new WaitForSeconds(0.4f);
+        float before = player.Stamina.Current, life = defence.Health.Current;
+        var late = defence.TakeHit(new Hit(10f, 0f, -Vector3.forward, false, false, dummy.transform.position));
+        yield return Shot("guard", 1);
+        Say($"knife guard: a blow two frames after the press was {timed} (wanted PerfectGuard, window {defence.Guard.PerfectWindow}); one 0.4 s later was {late}, cost {before - player.Stamina.Current:0.#} stamina (design 12.5) and {life - defence.Health.Current:0.#} health (design 4.5)");
+        Keys();
+        keepWell = true;
+        yield return new WaitForSeconds(0.4f);
+
+        yield return Finish(weapon, 1.6f);
+        Say($"knife after Three Crossings: {Place()}");
+        yield return Element(weapon, 1.5f, false);
+    }
+
+    // The Great Bow: the chain and what it leaves standing, three shots and the swat that cashes them, the fourth arrow,
+    // an arrow in the ground and one set off, the kick shot, the full draw, Landmines, the guard's arrow, and Nailed.
+    private IEnumerator Bow()
+    {
+        weaponTag = "bow";
+        var weapon = Weapons.ByName(Weapons.GreatBowName);
+        combat.Equip(weapon);
+        var combo = weapon.Combo;
+        var shots = player.GetComponent<WeaponShots>();
+        var arrows = combat.Arrows;
+        yield return Common(weapon, 1.8f);
+        yield return new WaitForSeconds(0.3f);
+        Say($"bow after swat, stab and a snap shot: arrows standing in the dummy {arrows.CountIn(dummy)} (design 2: the stab's and the shot's), planted {arrows.Planted}, snapped {arrows.Snapped}");
+
+        // Three shots from range, a fourth, then the swat.
+        yield return Stage(6f);
+        yield return new WaitForSeconds(1.2f);
+        int thrown = shots.Thrown;
+        combat.Mana.TrySpend(50f);
+        float mana = combat.Mana.Current, health0 = dummy.Health.Current;
+        float began = Time.time;
+        for (int i = 0; i < 4; i++)
+        {
+            int struckBefore = shots.Struck;
+            began = Time.time;
+            yield return Tap(Key.K);
+            yield return Until(() => combat.Combo.Current == combo.Heavy, 1f);
+            if (i == 0)
+            {
+                yield return Until(() => combat.Combo.StepProgress * combo.Heavy.Total >= combo.Heavy.Windup * 0.8f, 1f);
+                yield return Shot("draw", 1);
+            }
+            yield return Until(() => shots.Struck > struckBefore, 2f);
+            if (i == 0) Say($"bow snap shot from 6 m: struck {Time.time - began:0.00} s after the press (wind-up 0.32 and the flight), dummy lost {health0 - dummy.Health.Current:0.#} (design 18), mana {mana:0} -> {combat.Mana.Current:0} (design +8)");
+            yield return Until(() => combat.Combo.Current != combo.Heavy || combat.Combo.Phase == AttackPhase.None, 2f);
+            if (i == 0) Say($"bow snap shot: the whole step {Time.time - began:0.00} s (design 0.78)");
+            if (i == 2) Say($"bow three shots: thrown +{shots.Thrown - thrown}, arrows in the dummy {arrows.CountIn(dummy)} (design 3)");
+        }
+        Say($"bow a fourth shot: arrows in the dummy {arrows.CountIn(dummy)} (design 3: the oldest makes way)");
+        yield return Shot("arrows", 1);
+        yield return Stage(1.8f);
+        int snapped = arrows.Snapped;
+        float health = dummy.Health.Current;
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[0] && combat.Combo.Phase != AttackPhase.Windup, 1f);
+        yield return Shot("snap", 1);
+        yield return new WaitForSeconds(0.1f);
+        yield return Shot("snap", 2);
+        yield return new WaitForSeconds(0.4f);
+        Say($"bow swat on three arrows: snapped +{arrows.Snapped - snapped}, dummy lost {health - dummy.Health.Current:0.#} (design 39), stagger {(dummy.IsStaggered ? "BROKEN" : dummy.Stagger.Value.ToString("0.#"))} (design 56), arrows left {arrows.CountIn(dummy)}");
+
+        // A shot at nothing stands in the ground; an arrow in the ground beside an enemy goes off.
+        yield return Stage(6f);
+        player.Teleport(dummy.transform.position + Vector3.forward * 1.5f, Quaternion.LookRotation(Vector3.forward, Vector3.up));
+        yield return new WaitForSecondsRealtime(0.15f);
+        int grounded = arrows.Grounded, tripped = arrows.Tripped, struckThen = shots.Struck;
+        yield return Tap(Key.K);
+        yield return new WaitForSeconds(1.2f);
+        Say($"bow a shot at nothing (north, the dummy behind): struck +{shots.Struck - struckThen}, arrows in the ground +{arrows.Grounded - grounded}, standing {arrows.Standing} (design 1, for 8 s)");
+        yield return Shot("ground", 1);
+        health = dummy.Health.Current;
+        arrows.PlantGround(dummy.transform.position + Vector3.right * 0.9f, Vector3.forward);
+        yield return new WaitForSeconds(0.6f);
+        Say($"bow an arrow in the ground 0.9 m from the dummy: set off +{arrows.Tripped - tripped} (design 1), dummy lost {health - dummy.Health.Current:0.#} (design 10)");
+
+        // The kick shot after one light.
+        yield return Stage(1.7f);
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[0] && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        thrown = shots.Thrown;
+        health = dummy.Health.Current;
+        Vector3 from = player.transform.position;
+        yield return Tap(Key.K);
+        yield return Watch("chain", combo.ChainHeavy, $"kick {combo.ChainHeavy.Damage} then the shot {combo.ChainHeavy.Shot.Damage}, recoil {combo.ChainHeavy.Recoil}");
+        yield return new WaitForSeconds(0.12f);
+        yield return Shot("chain", 4);
+        yield return new WaitForSeconds(0.5f);
+        Say($"bow kick shot: thrown +{shots.Thrown - thrown}, dummy lost {health - dummy.Health.Current:0.#} (design 26 and what the kick snapped), sprang back {Vector3.Dot(from - player.transform.position, Vector3.forward):0.00} m (design 3.0 less the step in), arrows in the dummy {arrows.CountIn(dummy)}");
+
+        // The full draw from range.
+        yield return Stage(7f);
+        dummy.Afflictions.Clear();
+        int struckFull = shots.Struck;
+        health = dummy.Health.Current;
+        thrown = shots.Thrown;
+        int groundedBefore = arrows.Grounded;
+        from = player.transform.position;
+        yield return Hold(combo.ChargeTime + 0.15f);
+        yield return Watch("charged", combo.ChargedHeavy, $"shot {combo.ChargedHeavy.Shot.Damage} through everything, recoil {combo.ChargedHeavy.Recoil}");
+        yield return new WaitForSeconds(0.5f);
+        Say($"bow full draw from 7 m (the player now at z {player.transform.position.z:0.00}): struck +{shots.Struck - struckFull}, thrown +{shots.Thrown - thrown}, dummy lost {health - dummy.Health.Current:0.#} (design 34), rocked back {Vector3.Dot(from - player.transform.position, Vector3.forward):0.00} m (design 0.8), arrows in the dummy {arrows.CountIn(dummy)}, in the ground beyond +{arrows.Grounded - groundedBefore}");
+
+        // Landmines round the dummy from five metres.
+        yield return Stage(5f);
+        int rained = arrows.Rained, skills = combat.SkillsUsed;
+        grounded = arrows.Grounded;
+        health = dummy.Health.Current;
+        mana = combat.Mana.Current;
+        yield return Hold(combo.SkillChargeTime + 0.2f);
+        yield return Until(() => combat.Combo.Current == combo.Skill, 1f);
+        yield return Until(() => combat.Combo.StepProgress * combo.Skill.Total >= combo.Skill.Windup * 0.8f, 1f);
+        yield return Shot("skill", 1);
+        yield return Until(() => combat.Combo.Phase != AttackPhase.Windup, 1f);
+        yield return Shot("skill", 2);
+        yield return new WaitForSeconds(0.75f);
+        yield return Shot("skill", 3);
+        yield return new WaitForSeconds(0.5f);
+        Say($"bow skill (Landmines): skills +{combat.SkillsUsed - skills}, mana {mana:0} -> {combat.Mana.Current:0} (cost {combo.SkillManaCost}), arrows dropped +{arrows.Rained - rained} (design 5), standing in the ground {arrows.Standing} (+{arrows.Grounded - grounded}), dummy in the middle lost {health - dummy.Health.Current:0.#} (design 0: the ring is round it)");
+
+        // The guard: a perfect guard leaves the arrow from the fist in the attacker.
+        yield return Stage(1.6f);
+        int riders = combat.GuardRiders, inDummy = arrows.CountIn(dummy);
+        Keys(Key.L);
+        yield return null;
+        yield return null;
+        var timed = defence.TakeHit(new Hit(10f, 0f, -Vector3.forward, false, false, dummy.transform.position));
+        yield return new WaitForSeconds(0.25f);
+        yield return Shot("guard", 1);
+        Say($"bow guard: a blow two frames after the press was {timed}; riders +{combat.GuardRiders - riders}, arrows in the attacker {inDummy} -> {arrows.CountIn(dummy)} (design +1)");
+        Keys();
+        yield return new WaitForSeconds(0.4f);
+
+        // Nailed, on a dummy carrying arrows: they go off after the blow.
+        yield return Stage(6f);
+        for (int i = 0; i < 2; i++)
+        {
+            yield return Tap(Key.K);
+            yield return new WaitForSeconds(0.9f);
+        }
+        snapped = arrows.Snapped;
+        int carried = arrows.CountIn(dummy);
+        yield return Finish(weapon, 1.6f);
+        Say($"bow after Nailed: the dummy carried {carried} arrows, snapped +{arrows.Snapped - snapped}");
+        yield return Element(weapon, 1.8f, false);
+    }
+
+    private string Off() => $"{Vector3.Distance(player.transform.position, dummy.transform.position):0.00} m from the dummy";
+
+    // The Chain Sickle: the chain of four (near, far, near, far), the weight from range, the yank on something too
+    // heavy to come (the player goes) and on something light (it comes), Entangle and the heavy button while it
+    // holds, the bind broken by a roll, the guard's yank, and Unwinding.
+    private IEnumerator Sickle()
+    {
+        weaponTag = "sickle";
+        var weapon = Weapons.ByName(Weapons.ChainSickleName);
+        combat.Equip(weapon);
+        var combo = weapon.Combo;
+        var chain = player.GetComponent<ChainLine>();
+        int shoves = dummy.Shoves;
+        yield return Common(weapon, 1.8f);
+        Say($"sickle after the chain and the thrown sickle: the chain's end went {chain.Furthest:0.00} m from the hand at its furthest (design 4.6), the hook's pull shoved the dummy +{dummy.Shoves - shoves} (design 1, 0.6 m)");
+
+        // The weight alone from beyond any blade.
+        yield return Stage(4.6f);
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[0] && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        float health = dummy.Health.Current;
+        chain.Furthest = 0f;
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[1] && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        yield return Shot("far", 1);
+        Say($"sickle weight snap with the dummy {Off()}: dummy lost {health - dummy.Health.Current:0.#} (design 11), chain out {chain.Furthest:0.00} m");
+
+        // The yank on the post (too heavy to come): the player goes to it.
+        yield return Stage(4.6f);
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[0] && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        int pulls = combat.SelfPulls;
+        shoves = dummy.Shoves;
+        string before = Off();
+        yield return Tap(Key.K);
+        yield return Watch("chain", combo.ChainHeavy, $"damage {combo.ChainHeavy.Damage} stagger {combo.ChainHeavy.Stagger}, pull {combo.ChainHeavy.Pull} or the player goes");
+        yield return new WaitForSeconds(0.2f);
+        yield return Shot("chain", 4);
+        yield return new WaitForSeconds(0.5f);
+        Say($"sickle yank on something too heavy (weight {dummy.Weight}): pulled self +{combat.SelfPulls - pulls} (design 1), dummy shoved +{dummy.Shoves - shoves} (design 0); the player was {before}, is now {Off()}");
+
+        // The same on something light: it comes.
+        dummy.Weight = 1f;
+        yield return Stage(4.6f);
+        yield return Tap(Key.J);
+        yield return Until(() => combat.Combo.Current == combo.Steps[0] && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        pulls = combat.SelfPulls;
+        shoves = dummy.Shoves;
+        yield return Tap(Key.K);
+        yield return Until(() => combat.Combo.Current == combo.ChainHeavy && combat.Combo.Phase == AttackPhase.Recovery, 2f);
+        yield return new WaitForSeconds(0.4f);
+        Say($"sickle yank on something light (weight 1): pulled self +{combat.SelfPulls - pulls} (design 0), dummy shoved +{dummy.Shoves - shoves} by {dummy.LastShove.magnitude:0.00} m toward the player {Vector3.Dot(dummy.LastShove.normalized, -Vector3.forward):0.00} (design 3.0, never past the feet)");
+        dummy.Weight = 10f;
+
+        // Entangle from six metres, and the heavy button while it holds.
+        yield return Stage(6f);
+        int binds = combat.Bindings, skills = combat.SkillsUsed;
+        health = dummy.Health.Current;
+        float mana = combat.Mana.Current;
+        chain.Furthest = 0f;
+        yield return Hold(combo.ChargeTime + 0.12f);
+        yield return Until(() => combat.Combo.Current == combo.Skill, 1f);
+        yield return Shot("skill", 1);
+        yield return Until(() => combat.Combo.Phase != AttackPhase.Windup, 1f);
+        yield return null;
+        yield return Shot("skill", 2);
+        yield return Until(() => combat.Combo.Current != combo.Skill || combat.Combo.Phase == AttackPhase.Recovery, 1f);
+        yield return new WaitForSeconds(0.25f);
+        yield return Shot("skill", 3);
+        Say($"sickle skill (Entangle) from 6 m: skills +{combat.SkillsUsed - skills}, mana {mana:0} -> {combat.Mana.Current:0} (cost {combo.SkillManaCost}), dummy lost {health - dummy.Health.Current:0.#} (design 12), binds +{combat.Bindings - binds}, bound to the dummy {combat.BoundTarget == dummy} for {combat.BoundLeft:0.00} s more (design 2.5 from the blow), dummy held {dummy.Afflictions.IsHeld}, chain out {chain.Furthest:0.00} m");
+        yield return Until(() => !combat.IsAttacking, 1f);
+        pulls = combat.SelfPulls;
+        dummy.Stagger.Reset();
+        yield return Tap(Key.K);
+        yield return Until(() => combat.Combo.Current != null, 0.5f);
+        bool hauled = combat.Combo.Current == combo.ChainHeavy;
+        yield return Until(() => combat.Combo.Current == combo.ChainHeavy && combat.Combo.Phase == AttackPhase.Recovery, 1f);
+        float boundStagger = dummy.Stagger.Value;
+        yield return new WaitForSeconds(0.6f);
+        Say($"sickle heavy button with the dummy bound, from a standing start: the yank {hauled} (design true), stagger {boundStagger:0.#} (design 30 x 1.25 = 37.5), pulled self +{combat.SelfPulls - pulls}, now {Off()}");
+        yield return new WaitForSeconds(2.2f);
+        Say($"sickle 2.5 s after the bind: still bound {combat.BoundTarget != null} (design false)");
+
+        // A roll lets go of it.
+        yield return Stage(6f);
+        yield return Hold(combo.ChargeTime + 0.12f);
+        yield return Until(() => combat.BoundTarget != null, 1.5f);
+        bool was = combat.BoundTarget != null;
+        yield return Until(() => !combat.IsAttacking, 1.5f);
+        Keys(Key.Space);
+        yield return null;
+        yield return null;
+        Keys();
+        yield return new WaitForSeconds(0.3f);
+        Say($"sickle a roll while bound: bound before {was}, after {combat.BoundTarget != null} (design false)");
+        yield return new WaitForSeconds(0.5f);
+
+        // The guard: a perfect guard yanks the attacker in and shakes it.
+        yield return Stage(1.6f);
+        int riders = combat.GuardRiders;
+        shoves = dummy.Shoves;
+        Keys(Key.L);
+        yield return null;
+        yield return null;
+        float staggerBefore = dummy.Stagger.Value;
+        var timed = defence.TakeHit(new Hit(10f, 0f, -Vector3.forward, false, false, dummy.transform.position));
+        yield return null;
+        float rider = dummy.Stagger.Value - staggerBefore;
+        yield return new WaitForSeconds(0.2f);
+        yield return Shot("guard", 1);
+        Say($"sickle guard: a blow two frames after the press was {timed}; riders +{combat.GuardRiders - riders}, the attacker shoved +{dummy.Shoves - shoves} by {dummy.LastShove.magnitude:0.00} m (design 1.2, less when it is already close), stagger +{rider:0.#} (design 15)");
+        Keys();
+        yield return new WaitForSeconds(0.4f);
+
+        shoves = dummy.Shoves;
+        yield return Finish(weapon, 1.6f);
+        Vector3 gap = dummy.transform.position - player.transform.position;
+        gap.y = 0f;
+        Say($"sickle after Unwinding: {Off()} (design about 2.6), back to it {Vector3.Dot(player.transform.forward, gap.normalized):0.00} (design near -1), heaves on the dummy +{dummy.Shoves - shoves} (design 2)");
+        yield return Element(weapon, 1.8f, false);
+    }
+
     // One fight with each weapon against the nearest soldier: the light chain, a heavy, the charged heavy or skill, and a finisher if it staggers.
     private IEnumerator RealEnemies(AreaDirector director)
     {
-        foreach (string name in new[] { Weapons.GreatSpearName, Weapons.GreatHammerName, Weapons.MassiveSwordName, Weapons.ScytheName, Weapons.ArmamentName })
+        foreach (string name in new[] { Weapons.ChainSickleName, Weapons.GreatBowName, Weapons.TwinKnivesName, Weapons.GreatSpearName, Weapons.GreatHammerName, Weapons.MassiveSwordName, Weapons.ScytheName, Weapons.ArmamentName })
         {
             Enemy enemy = null;
             foreach (var candidate in director.Enemies)
@@ -634,7 +1025,7 @@ public class WeaponsProbeRunner : MonoBehaviour
             combat.Equip(Weapons.ByName(name));
             weaponTag = "castle_" + combat.Weapon.Prefix;
             var combo = combat.Weapon.Combo;
-            float stand = name == Weapons.ArmamentName ? 1.8f : 3f;
+            float stand = name == Weapons.TwinKnivesName ? 1.5f : name == Weapons.ArmamentName ? 1.8f : 3f;
             player.Teleport(enemy.transform.position + enemy.transform.forward * stand, Quaternion.LookRotation(-enemy.transform.forward, Vector3.up));
             combat.Mana.Gain(100f);
             yield return new WaitForSeconds(0.3f);

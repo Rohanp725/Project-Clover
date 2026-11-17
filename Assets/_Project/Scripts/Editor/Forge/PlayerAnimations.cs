@@ -53,7 +53,7 @@ namespace Clover.EditorTools.Forge
                     ShowSword(rig, carry != null ? -1 : SwordIn(clip.Name));
                     rack.Show(carry, true);
                     // A great weapon's tip is far from the body: its sheet is drawn from further off.
-                    float distance = carry == "spear" ? 11f : carry == "gsword" || carry == "scythe" || carry == "hammer" ? 8.2f : 5.2f;
+                    float distance = carry == "spear" ? 11f : carry == "gsword" || carry == "scythe" || carry == "hammer" ? 8.2f : carry == "bow" ? 6.8f : 5.2f;
                     var local = clip;
                     tails.Reset(rig, local, 0f);
                     float last = 0f;
@@ -144,6 +144,9 @@ namespace Clover.EditorTools.Forge
             foreach (var clip in ArmamentClips()) yield return clip;
             foreach (var clip in SpearClips()) yield return clip;
             foreach (var clip in HammerClips()) yield return clip;
+            foreach (var clip in KnifeClips()) yield return clip;
+            foreach (var clip in BowClips()) yield return clip;
+            foreach (var clip in SickleClips()) yield return clip;
         }
 
         // The moments of an attack as fractions of its whole length: when the blow lands, and when the swing is over.

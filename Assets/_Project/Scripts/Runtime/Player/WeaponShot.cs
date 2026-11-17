@@ -17,6 +17,11 @@ namespace Clover.Player
         public int Count = 1;
         public float SpreadDegrees;
         /// <summary>True: it goes on through what it strikes. False: it stops at the first enemy.</summary>
+        /// <summary>
+        /// True for a shot thrown as its step begins to carry the thrower away (the knives' fan): it leaves from where
+        /// the step began, not from where the spring back has taken the body by the time of the blow.
+        /// </summary>
+        public bool FromStepStart;
         public bool Pierce;
         public bool Heavy;
         /// <summary>Seconds it stays at the end of its flight, biting every <see cref="HangEvery"/> for <see cref="HangBite"/> damage and stagger.</summary>
@@ -34,6 +39,13 @@ namespace Clover.Player
         public float ReleaseAfter;
         /// <summary>Which thing is drawn riding it: the carry name of a weapon whose own model flies ("spear", "hammer"). Empty: the crescent of light.</summary>
         public string Prop = "";
+        /// <summary>
+        /// An arrow: where it stops it is handed to <see cref="PlantedArrows"/>, to stand in each enemy it struck, or in
+        /// the ground at the end of a flight that stopped in no one.
+        /// </summary>
+        public bool Plants;
+        /// <summary>Mana the thrower gains for each enemy it strikes: a shot that is its step's whole blow pays the step's gain.</summary>
+        public float ManaGain;
         /// <summary>For a model: metres from its grip to the part that leads (the spear's point), and degrees a second it tumbles end over end.</summary>
         public float PropLength;
         public float Tumble;

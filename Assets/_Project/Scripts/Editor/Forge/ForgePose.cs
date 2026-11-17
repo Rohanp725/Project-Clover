@@ -59,6 +59,13 @@ namespace Clover.EditorTools.Forge
         /// fixes the roll outright, so a sweep can say "edge leading" without counting degrees. Zero: the shortest turn from rest.
         /// </summary>
         public Vector3 BladeBack;
+        /// <summary>
+        /// When true the left hand is turned so the weapon in it (a second knife) points along <see cref="BladeL"/>,
+        /// with its back toward <see cref="BladeLBack"/> when that is set. Ignored while the left hand is on the right hand's grip.
+        /// </summary>
+        public bool AimBladeL;
+        public Vector3 BladeL = Vector3.down;
+        public Vector3 BladeLBack;
         /// <summary>When true the left hand holds the weapon's grip below the right hand.</summary>
         public bool TwoHanded;
         /// <summary>Metres down the grip from the right hand that the left hand holds.</summary>
@@ -104,6 +111,10 @@ namespace Clover.EditorTools.Forge
                 BladeRoll = Mathf.LerpUnclamped(a.BladeRoll, b.BladeRoll, t),
                 BladeBack = a.BladeBack.sqrMagnitude < 1e-6f || b.BladeBack.sqrMagnitude < 1e-6f ? (t < 0.5f ? a.BladeBack : b.BladeBack)
                     : Vector3.SlerpUnclamped(a.BladeBack.normalized, b.BladeBack.normalized, t),
+                AimBladeL = t < 0.5f ? a.AimBladeL : b.AimBladeL,
+                BladeL = Vector3.SlerpUnclamped(a.BladeL.normalized, b.BladeL.normalized, t),
+                BladeLBack = a.BladeLBack.sqrMagnitude < 1e-6f || b.BladeLBack.sqrMagnitude < 1e-6f ? (t < 0.5f ? a.BladeLBack : b.BladeLBack)
+                    : Vector3.SlerpUnclamped(a.BladeLBack.normalized, b.BladeLBack.normalized, t),
                 TwoHanded = t < 0.5f ? a.TwoHanded : b.TwoHanded,
                 GripGap = Mathf.LerpUnclamped(a.GripGap, b.GripGap, t),
                 HandLTwist = Mathf.LerpUnclamped(a.HandLTwist, b.HandLTwist, t),
@@ -191,6 +202,20 @@ namespace Clover.EditorTools.Forge
 
             Vector3 leftTarget = TwoHanded && AimBlade ? rig["hand.R"].Transform.position - blade * GripGap : HandL;
             rig.Reach("upperarm.L", "forearm.L", "hand.L", leftTarget, ElbowL);
+            if (AimBladeL && !(TwoHanded && AimBlade))
+            {
+                // The left hand's weapon lies along the right's rest line mirrored across the body (as its socket is made).
+                Vector3 restL = new Vector3(-rig.RestBlade.x, rig.RestBlade.y, rig.RestBlade.z);
+                Vector3 restUpL = rig.RestBladeUp;
+                restUpL.x = -restUpL.x;
+                Vector3 bladeL = BladeL.sqrMagnitude > 1e-6f ? BladeL.normalized : Vector3.down;
+                Vector3 backL = Vector3.ProjectOnPlane(BladeLBack, bladeL);
+                Quaternion aimL = backL.sqrMagnitude > 1e-5f
+                    ? Quaternion.LookRotation(bladeL, backL) * Quaternion.Inverse(Quaternion.LookRotation(restL, restUpL))
+                    : Quaternion.FromToRotation(restL, bladeL);
+                rig.TurnAbsolute("hand.L", aimL);
+                return;
+            }
             Vector3 forearmL = (rig["hand.L"].Transform.position - rig["forearm.L"].Transform.position).normalized;
             rig.TurnOnParent("hand.L", Quaternion.AngleAxis(HandLTwist, forearmL) * Quaternion.AngleAxis(HandLBend, Vector3.Cross(forearmL, Vector3.up)));
         }

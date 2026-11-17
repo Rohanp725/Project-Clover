@@ -53,6 +53,15 @@ namespace Clover.EditorTools
             /// copy is hung from the same prefab, and at rest it lies mirrored across the body from the first.
             /// </summary>
             public Vector3? OffHandEuler;
+            /// <summary>True for a weapon held in the left hand (the bow): its one copy hangs on the left hand's socket.</summary>
+            public bool LeftHanded;
+            /// <summary>The carry name of something else held in the right hand with it (the bow's arrow), and where in that hand.</summary>
+            public string AlsoInRightHand;
+            public Vector3 AlsoPosition;
+            /// <summary>True for a thing that is never a weapon by itself (an arrow, the chain's weight): a prefab and nothing on the rack.</summary>
+            public bool PropOnly;
+            /// <summary>What is added to the prefab once its model or stand-in is in place: lines, markers, parts that code moves.</summary>
+            public Action<GameObject> Finish;
         }
 
         // Slot colours as the eye sees them, from the Blender notes (staging/blender/2026-11-16_weapons/notes.md).
@@ -104,6 +113,49 @@ namespace Clover.EditorTools
                 RestPosition = new Vector3(0.08f, -0.2f, -0.24f), RestAlong = new Vector3(0.3f, 0.95f, 0f), RestUp = new Vector3(0.95f, -0.3f, 0f),
                 // Stood on its butt, the head seen from the side.
                 DisplayPosition = new Vector3(0f, 0.62f, 0f), DisplayEuler = new Vector3(-90f, 90f, 0f),
+            },
+            new Spec
+            {
+                Carry = "knife", ModelFile = "knife.fbx", StandIn = KnifeStandIn,
+                Notes = "Twin Knives: one knife, 370 triangles, carried twice; slots blade guard grip accent inlay; origin at the middle of the grip, point along +Z, edge toward -Y",
+                // Crossed at the small of the back under the belt, hilts out to either side (the second lies mirrored).
+                RestSocket = WeaponRack.Hip,
+                RestPosition = new Vector3(0.12f, 0.04f, -0.15f), RestAlong = new Vector3(-0.85f, -0.5f, 0f), RestUp = new Vector3(0f, 0f, -1f),
+                // Point up on its stand, the flat toward whoever walks up.
+                DisplayPosition = new Vector3(0f, 1.0f, 0f), DisplayEuler = new Vector3(-90f, 90f, 0f),
+                // The same way round in the left hand: the reverse grip is a matter of where the pose points it.
+                OffHandEuler = Vector3.zero,
+            },
+            new Spec
+            {
+                Carry = "bow", ModelFile = "bow.fbx", StandIn = BowStandIn, Finish = BowFinish, LeftHanded = true,
+                AlsoInRightHand = "arrow", AlsoPosition = new Vector3(0f, 0f, -0.2f),
+                Notes = "Great Bow: 360 triangles and a 12 triangle string, slots wood wrap grip accent inlay string; origin at the middle of the grip, upper limb along +Z, the back toward -Y (the target) and the string on +Y",
+                OwnColours = { { "wood", new Color(0.21f, 0.21f, 0.25f) } },
+                // Slung on the back, upper limb up past the left shoulder, the string across the chest.
+                RestPosition = new Vector3(0.02f, -0.12f, -0.2f), RestAlong = new Vector3(-0.3f, 0.95f, 0f), RestUp = new Vector3(0f, 0f, 1f),
+                // Stood on its lower tip, seen from the side: the whole curve and the string.
+                DisplayPosition = new Vector3(0f, 0.95f, 0f), DisplayEuler = new Vector3(-90f, 90f, 0f),
+            },
+            new Spec
+            {
+                Carry = "arrow", ModelFile = "arrow.fbx", StandIn = ArrowStandIn, PropOnly = true,
+                Notes = "Great Bow's arrow: 84 triangles, slots shaft blade accent; origin at the nock, point along +Z",
+            },
+            new Spec
+            {
+                Carry = "sickle", ModelFile = "chain_sickle.fbx", StandIn = SickleStandIn,
+                Notes = "Chain Sickle: three objects (sickle 382 triangles, weight 200, one link 80), slots blade guard wood accent inlay; origin on the haft under the blade's collar, haft along Z (top +0.17, butt ring -0.43), the blade leaving the top toward -Y",
+                // Thrust through the back of the belt, haft upright, blade to the right.
+                RestSocket = WeaponRack.Hip,
+                RestPosition = new Vector3(0.06f, 0.08f, -0.16f), RestAlong = new Vector3(0.1f, 1f, 0f), RestUp = new Vector3(-1f, 0.1f, 0f),
+                // Hung blade up, the crescent seen whole from the front.
+                DisplayPosition = new Vector3(0f, 1.1f, 0f), DisplayEuler = new Vector3(-90f, 90f, 0f),
+            },
+            new Spec
+            {
+                Carry = "weight", StandIn = WeightStandIn, PropOnly = true,
+                Notes = "Chain Sickle's weight: a stand-in for the chain_weight object of chain_sickle.fbx; origin where the chain joins it, body toward +Z",
             },
             new Spec
             {
@@ -166,6 +218,7 @@ namespace Clover.EditorTools
                 foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
                     renderer.sharedMaterial = SlotMaterial(spec, SlotOf(renderer.name));
             }
+            spec.Finish?.Invoke(root);
             var prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
             UnityEngine.Object.DestroyImmediate(root);
             return prefab;
@@ -222,6 +275,7 @@ namespace Clover.EditorTools
             var sets = new List<WeaponRack.Set>();
             foreach (var spec in Specs)
             {
+                if (spec.PropOnly) continue;
                 var inHand = new List<GameObject>();
                 var atRest = new List<GameObject>();
                 if (spec.Worn != null)
@@ -237,8 +291,10 @@ namespace Clover.EditorTools
                 else
                 {
                     var prefab = Prefab(spec.Carry);
-                    if (prefab == null || handR == null) continue;
-                    inHand.Add(Place(prefab, handR, spec.Carry + "_hand", Vector3.zero, Quaternion.identity));
+                    if (prefab == null || handR == null || (spec.LeftHanded && handL == null)) continue;
+                    inHand.Add(Place(prefab, spec.LeftHanded ? handL : handR, spec.Carry + "_hand", Vector3.zero, Quaternion.identity));
+                    var also = spec.AlsoInRightHand != null ? Prefab(spec.AlsoInRightHand) : null;
+                    if (also != null) inHand.Add(Place(also, handR, spec.AlsoInRightHand + "_hand", spec.AlsoPosition, Quaternion.identity));
                     var rest = spec.RestSocket == WeaponRack.Hip ? hip : back;
                     if (rest != null) atRest.Add(Place(prefab, rest, spec.Carry + "_rest", spec.RestPosition, Quaternion.LookRotation(spec.RestAlong.normalized, spec.RestUp.normalized)));
                     if (spec.OffHandEuler.HasValue && handL != null)
@@ -479,6 +535,20 @@ namespace Clover.EditorTools
             Box(root, "accent", "Tuft", new Vector3(0f, -0.11f, 1.38f), new Vector3(0.035f, 0.2f, 0.045f));
         }
 
+        // One of the Twin Knives, to the staged model's size: 0.53 m, the point 0.39 ahead of the grip's middle and the
+        // ring 0.14 behind it, the blade 0.11 deep with its edge (the inlay) toward -Y and an iron back.
+        private static void KnifeStandIn(Transform root)
+        {
+            Box(root, "grip", "Grip", new Vector3(0f, 0f, 0f), new Vector3(0.032f, 0.036f, 0.11f));
+            Box(root, "accent", "Cord", new Vector3(0f, 0f, 0.045f), new Vector3(0.042f, 0.046f, 0.02f));
+            Box(root, "guard", "Guard", new Vector3(0f, 0f, 0.066f), new Vector3(0.05f, 0.14f, 0.02f));
+            Box(root, "blade", "Blade", new Vector3(0f, -0.004f, 0.2f), new Vector3(0.014f, 0.08f, 0.25f));
+            Box(root, "blade", "Point", new Vector3(0f, 0.004f, 0.325f), new Vector3(0.013f, 0.09f, 0.09f), new Vector3(45f, 0f, 0f));
+            Box(root, "guard", "Back", new Vector3(0f, 0.044f, 0.19f), new Vector3(0.018f, 0.022f, 0.23f));
+            Box(root, "inlay", "Edge", new Vector3(0f, -0.05f, 0.2f), new Vector3(0.016f, 0.03f, 0.25f));
+            Box(root, "guard", "Ring", new Vector3(0f, 0f, -0.105f), new Vector3(0.02f, 0.06f, 0.06f));
+        }
+
         // The Great Hammer: 1.76 m, the swinging grip 0.9 m under the head; the head 0.36 square and 0.69 from the
         // boss on its striking face (toward -Y) to the blunt wedge behind.
         private static void HammerStandIn(Transform root)
@@ -493,6 +563,110 @@ namespace Clover.EditorTools
             Box(root, "head", "Collar", new Vector3(0f, 0f, 0.86f), new Vector3(0.1f, 0.1f, 0.08f));
             Box(root, "wrap", "Rope", new Vector3(0f, 0f, 0.76f), new Vector3(0.085f, 0.085f, 0.12f));
             Box(root, "accent", "Knot", new Vector3(0.05f, -0.09f, 0.74f), new Vector3(0.05f, 0.16f, 0.05f));
+        }
+
+        // A box laid from one point to another in the weapon's Y-Z plane (x of each point is the weapon's Y, y its Z).
+        private static void Span(Transform root, string slot, string name, Vector2 from, Vector2 to, float thick, float width)
+        {
+            Vector2 middle = (from + to) * 0.5f, along = to - from;
+            Box(root, slot, name, new Vector3(0f, middle.x, middle.y), new Vector3(thick, width, along.magnitude * 1.06f), new Vector3(Mathf.Atan2(-along.x, along.y) * Mathf.Rad2Deg, 0f, 0f));
+        }
+
+        // The Great Bow to the staged model's size: 1.99 m, gripped a third of the way up (upper tip at +1.28, lower at
+        // -0.71), both limbs sweeping from the grip back toward the archer (+Y) so the string runs straight at Y 0.312
+        // from Z -0.628 to +1.178, and each tip recurving away again under its horn cap.
+        private static void BowStandIn(Transform root)
+        {
+            Box(root, "grip", "Grip", Vector3.zero, new Vector3(0.062f, 0.058f, 0.15f));
+            Box(root, "accent", "Tie Above", new Vector3(0f, 0f, 0.095f), new Vector3(0.07f, 0.066f, 0.04f));
+            Box(root, "accent", "Tie Below", new Vector3(0f, 0f, -0.095f), new Vector3(0.07f, 0.066f, 0.04f));
+            var upper = new[] { new Vector2(0f, 0.07f), new Vector2(0.03f, 0.42f), new Vector2(0.13f, 0.76f), new Vector2(0.26f, 1.03f), new Vector2(0.312f, 1.178f) };
+            var lower = new[] { new Vector2(0f, -0.07f), new Vector2(0.05f, -0.3f), new Vector2(0.19f, -0.5f), new Vector2(0.312f, -0.628f) };
+            for (int i = 0; i + 1 < upper.Length; i++)
+            {
+                Span(root, "wood", "Upper Limb " + i, upper[i], upper[i + 1], Mathf.Lerp(0.07f, 0.045f, i / 3f), Mathf.Lerp(0.052f, 0.034f, i / 3f));
+                Span(root, "inlay", "Upper Strip " + i, upper[i], upper[i + 1], 0.024f, Mathf.Lerp(0.062f, 0.044f, i / 3f));
+            }
+            for (int i = 0; i + 1 < lower.Length; i++)
+            {
+                Span(root, "wood", "Lower Limb " + i, lower[i], lower[i + 1], Mathf.Lerp(0.07f, 0.045f, i / 2f), Mathf.Lerp(0.052f, 0.034f, i / 2f));
+                Span(root, "inlay", "Lower Strip " + i, lower[i], lower[i + 1], 0.024f, Mathf.Lerp(0.062f, 0.044f, i / 2f));
+            }
+            Span(root, "wrap", "Horn Cap Upper", upper[upper.Length - 1], new Vector2(0.275f, 1.28f), 0.05f, 0.045f);
+            Span(root, "wrap", "Horn Cap Lower", lower[lower.Length - 1], new Vector2(0.285f, -0.71f), 0.05f, 0.045f);
+            foreach (var at in new[] { upper[1], upper[2], upper[3], lower[1], lower[2] })
+                Box(root, "wrap", "Binding", new Vector3(0f, at.x, at.y), new Vector3(0.075f, 0.062f, 0.05f));
+            Box(root, "string", "String", new Vector3(0f, 0.312f, 0.275f), new Vector3(0.012f, 0.012f, 1.806f));
+        }
+
+        // What the bow needs besides its shape: the two points its string runs between, and the line drawn through
+        // the string hand while it is drawn (the bar is the string at rest).
+        private static void BowFinish(GameObject root)
+        {
+            Renderer bar = null;
+            foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
+                if (renderer.name.ToLowerInvariant().Contains("string")) bar = renderer;
+            var upper = new GameObject("tip_upper").transform;
+            upper.SetParent(root.transform, false);
+            upper.localPosition = new Vector3(0f, 0.312f, 1.178f);
+            var lower = new GameObject("tip_lower").transform;
+            lower.SetParent(root.transform, false);
+            lower.localPosition = new Vector3(0f, 0.312f, -0.628f);
+            var drawn = new GameObject("Drawn String");
+            drawn.transform.SetParent(root.transform, false);
+            var line = drawn.AddComponent<LineRenderer>();
+            line.sharedMaterial = BuildKit.Toon(Folder, "m_weapon_string_line", SlotColours["string"], false, null, 0f, 0.02f);
+            line.positionCount = 3;
+            line.useWorldSpace = true;
+            line.startWidth = line.endWidth = 0.02f;
+            line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            line.receiveShadows = false;
+            line.enabled = false;
+            root.AddComponent<BowString>().Configure(line, upper, lower, bar);
+        }
+
+        // An arrow: 1.1 m from the nock at the origin to the point, a leaf head and three vanes.
+        private static void ArrowStandIn(Transform root)
+        {
+            Box(root, "shaft", "Shaft", new Vector3(0f, 0f, 0.5f), new Vector3(0.022f, 0.022f, 1.0f));
+            Box(root, "blade", "Leaf", new Vector3(0f, 0f, 1.02f), new Vector3(0.014f, 0.085f, 0.085f), new Vector3(45f, 0f, 0f));
+            Box(root, "blade", "Leaf Point", new Vector3(0f, 0f, 1.07f), new Vector3(0.012f, 0.04f, 0.06f));
+            for (int i = 0; i < 3; i++)
+                Box(root, "accent", "Vane " + i, new Vector3(0f, 0f, 0.13f), new Vector3(0.008f, 0.1f, 0.2f), new Vector3(0f, 0f, 120f * i));
+        }
+
+        // The Chain Sickle's blade hand, to the staged model's size: a haft 0.6 m long gripped just under the collar,
+        // and a crescent leaving its top toward -Y and curving back down to a point near (0, -0.34, -0.16).
+        private static void SickleStandIn(Transform root)
+        {
+            Box(root, "wood", "Haft", new Vector3(0f, 0f, -0.13f), new Vector3(0.036f, 0.036f, 0.6f));
+            Box(root, "guard", "Butt Ring", new Vector3(0f, 0f, -0.455f), new Vector3(0.016f, 0.06f, 0.06f), new Vector3(45f, 0f, 0f));
+            Box(root, "guard", "Collar", new Vector3(0f, 0f, 0.15f), new Vector3(0.052f, 0.052f, 0.06f));
+            Box(root, "accent", "Cord", new Vector3(0f, 0f, 0.09f), new Vector3(0.046f, 0.046f, 0.03f));
+            Vector2 start = new Vector2(0.02f, 0.17f), bend = new Vector2(-0.34f, 0.3f), end = new Vector2(-0.34f, -0.16f);
+            const int Pieces = 5;
+            for (int i = 0; i < Pieces; i++)
+            {
+                float a = i / (float)Pieces, b = (i + 1) / (float)Pieces;
+                Vector2 from = Curve(start, bend, end, a), to = Curve(start, bend, end, b);
+                Vector2 middle = (from + to) * 0.5f, along = to - from;
+                float width = Mathf.Lerp(0.125f, 0.04f, (a + b) * 0.5f);
+                Vector2 inward = (new Vector2(-0.12f, -0.05f) - middle).normalized;
+                Vector2 normal = new Vector2(-along.y, along.x).normalized;
+                if (Vector2.Dot(normal, inward) < 0f) normal = -normal;
+                Span(root, "blade", "Blade " + i, from, to, 0.022f, width);
+                Span(root, "inlay", "Inner " + i, from + normal * width * 0.5f, to + normal * width * 0.5f, 0.026f, 0.03f);
+                Span(root, "guard", "Spine " + i, from - normal * width * 0.5f, to - normal * width * 0.5f, 0.036f, 0.024f);
+            }
+        }
+
+        // The weight on the end of the chain: an iron teardrop with a band round its belly, the chain joining at the origin.
+        private static void WeightStandIn(Transform root)
+        {
+            Box(root, "guard", "Eye", new Vector3(0f, 0f, 0f), new Vector3(0.02f, 0.05f, 0.05f), new Vector3(45f, 0f, 0f));
+            Box(root, "guard", "Neck", new Vector3(0f, 0f, 0.05f), new Vector3(0.07f, 0.07f, 0.07f), new Vector3(0f, 0f, 45f));
+            Box(root, "guard", "Body", new Vector3(0f, 0f, 0.14f), new Vector3(0.13f, 0.13f, 0.15f), new Vector3(0f, 0f, 45f));
+            Box(root, "inlay", "Belly", new Vector3(0f, 0f, 0.14f), new Vector3(0.15f, 0.15f, 0.045f), new Vector3(0f, 0f, 45f));
         }
 
         // A point on a curve through three points; x is the weapon's Y and y its Z.

@@ -58,11 +58,11 @@ namespace Clover.Player.Trees
             // Left bough: Slipstream. The dodge as a weapon.
             // The boons last their 1.2 seconds: every blow in that time is harder, not only the first.
             to.Add(new Upgrade { Id = Slipstream, Name = "Rushing Wake", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Unsteady }, X = -0.94f, Y = 2.51f, Icon = UpgradeIcons.Boot,
-                Description = "The first blow after any dodge strikes harder and leaves its enemy more Unsteady.",
+                Description = "The first blow that lands soon after any dodge strikes harder and leaves its enemy more Unsteady.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.3f, Seconds = 1.2f },
-                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Boon, Stat = PlayerStat.AfflictionStacks, Amount = 2f, Seconds = 1.2f },
+                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.3f, Seconds = 1.2f, UntilBlow = true },
+                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Boon, Stat = PlayerStat.AfflictionStacks, Amount = 2f, Seconds = 1.2f, UntilBlow = true },
                 } });
             to.Add(new Upgrade { Id = LongStride, Name = "Long Stride", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Slipstream }, X = -0.72f, Y = 3.42f, Icon = UpgradeIcons.Boot,
                 Description = "The dodge carries further.",
@@ -70,16 +70,16 @@ namespace Clover.Player.Trees
             // BESPOKE: the dodge should pass through enemies, cut each one passed, and leave it unable to turn for a moment.
             // Until then the end of every dodge cuts whatever stands close by.
             to.Add(new Upgrade { Id = PassingCut, Name = "Passing Cut", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Slipstream }, X = -1.44f, Y = 4.47f, Icon = UpgradeIcons.Blade,
-                Description = "Dodge through an enemy to cut it as you pass. It is left facing where you were.",
+                Description = "Where a dodge ends, a cut of wind strikes everything close to you and leaves it Unsteady.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 2.2f, Damage = 10f, Stagger = 8f, Affliction = AfflictionKind.Unsteady, Stacks = 1, Cooldown = 0.5f } } });
-            // BESPOKE: Slipstream's boon should wait two seconds for its blow, not 1.2. Until then the weapon is swung a little faster.
+            // BoonSeconds lengthens every timed boon of the marks, Rushing Wake's wait among them (1.2 s to 2 s); the words say so.
             to.Add(new Upgrade { Id = FollowingDraft, Name = "Following Draft", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Slipstream }, X = -1.82f, Y = 2.84f, Icon = UpgradeIcons.Hourglass,
-                Description = "Rushing Wake waits longer for its blow.",
-                Stats = new[] { new StatMod(PlayerStat.SwingSpeed, 0.05f) } });
+                Description = "Rushing Wake waits longer for its blow, and every other timed gift of your marks lasts longer too.",
+                Stats = new[] { new StatMod(PlayerStat.BoonSeconds, 0.67f) } });
             to.Add(new Upgrade { Id = ThinAir, Name = "Thin Air", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Slipstream }, X = -2.05f, Y = 3.75f, Icon = UpgradeIcons.Wing,
                 Description = "The dodge is safe a moment longer.",
                 Stats = new[] { new StatMod(PlayerStat.DodgeSafeTime, 0.15f) } });
-            // A perfect dodge names no attacker: the stacks go on the enemy faced. The stamina is the dodge's usual 25.
+            // The perfect dodge names its attacker now. The stamina is the dodge's usual 25.
             to.Add(new Upgrade { Id = EmptyAir, Name = "Empty Air", Element = E, Kind = UpgradeKind.Major, Requires = new[] { PassingCut }, X = -2.02f, Y = 6.14f, Icon = UpgradeIcons.Eye,
                 Description = "A perfect dodge gives back its stamina and leaves the one who struck three deeper in Unsteady.",
                 Effects = new[]
@@ -92,19 +92,19 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.StaminaCost, -0.2f) } });
             // BESPOKE: Passing Cut's own damage should rise by half. Until then blows on an enemy carrying anything cut deeper.
             to.Add(new Upgrade { Id = CleanPass, Name = "Clean Pass", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { PassingCut }, X = -1.12f, Y = 5.36f, Icon = UpgradeIcons.Blade,
-                Description = "Passing Cut bites deeper.",
+                Description = "Everything you do cuts deeper into an enemy that carries an affliction.",
                 Stats = new[] { new StatMod(PlayerStat.DamageToAfflicted, 0.08f) } });
-            // BESPOKE: the run round the enemy, the line drawn behind, and the column that takes everything inside off the ground.
-            // Until then the ring form: a ring closed round the player and the enemy faced that bites what touches it.
+            // BESPOKE (built): CircleForm. The player cannot be touched for the whole run; the design asks for the first half only.
             to.Add(new Upgrade { Id = ClosingCircle, Name = "Closing Circle", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { EmptyAir }, X = -2.14f, Y = 7.49f, Icon = UpgradeIcons.Ring,
                 Description = "Hold the spell button to run a ring round the enemy faced. When the ring closes, the wind inside it rises and takes everything off the ground. 35 mana.",
-                Form = "ring",
-                Spell = new SpellSpec { Cost = 35f, Reach = 5f, Radius = 3f, Seconds = 3f, LingerDamage = 4f, Stacks = 3 } });
-            // BESPOKE: three breaths of wind that pay for the dodge in place of stamina, won back by time and by blows.
-            // Until then the dodge costs half its stamina, and blows that land on the player hurt more.
+                Form = SpellForms.Circle,
+                Spell = new SpellSpec { Cost = 35f, Reach = 5f, Radius = 3f, Seconds = 1.2f, Damage = 6f, Stagger = 10f, Stacks = 5 } });
+            // Built by hand (DodgeRoll.PayInstead, PlayerUpgrades.SpendBreath): three breaths kept as the mark's count, one back every
+            // two seconds and one for every three blows landed. With none, no dodge.
             to.Add(new Upgrade { Id = LeafOnTheWind, Name = "Leaf on the Wind", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { ClosingCircle }, X = -2.91f, Y = 8.83f, Icon = UpgradeIcons.Leaf,
-                Description = "The dodge costs no stamina. It spends a breath of wind instead: you hold three, and blows win them back. You are easier to wound.",
-                Stats = new[] { new StatMod(PlayerStat.StaminaCost, -0.5f), new StatMod(PlayerStat.DamageTaken, 0.2f) } });
+                Description = "The dodge costs no stamina. It spends a breath of wind instead: you hold three, and time and blows win them back. With none you cannot dodge. You are easier to wound.",
+                Tally = new TallySpec { Name = "Breath", Cap = 3 },
+                Stats = new[] { new StatMod(PlayerStat.DamageTaken, 0.2f) } });
 
             // Middle bough: Updraft. Launch and juggle.
             to.Add(new Upgrade { Id = RisingCut, Name = "Rising Cut", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Unsteady }, X = 0.28f, Y = 3.08f, Icon = UpgradeIcons.Arrow,
@@ -131,12 +131,11 @@ namespace Clover.Player.Trees
                 Description = "Hold the spell button to raise a column of wind under the enemy faced. It goes up whatever its footing. 30 mana.",
                 Form = "pillars",
                 Spell = new SpellSpec { Cost = 30f, Count = 1, Reach = 5f, Radius = 2f, Damage = 8f, Stagger = 25f, Stacks = 1, Delay = 0.35f } });
-            // BESPOKE: the dance in the air, the five timed cuts and the throw to a chosen spot. Until then the flash form:
-            // five cuts across the enemy faced that land together.
+            // BESPOKE (built): SkyDanceForm.
             to.Add(new Upgrade { Id = SkyDance, Name = "Sky Dance", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { LiftingWind }, X = -0.92f, Y = 8.29f, Icon = UpgradeIcons.Wing,
-                Description = "With an enemy in the air, hold the spell button to go up after it. Strike in time, up to five, then send it down where you choose. 45 mana.",
-                Form = "flash",
-                Spell = new SpellSpec { Cost = 45f, Count = 5, Interval = 0.25f, Delay = 0.3f, Damage = 10f, Stagger = 12f, Stacks = 1, Reach = 6f } });
+                Description = "Hold the spell button to throw the enemy faced into the air and go up beside it. Press the light attack as each of five rings closes for a harder cut. Then the stick chooses where it is thrown down, and it bursts harder for each cut in time. 45 mana.",
+                Form = SpellForms.SkyDance,
+                Spell = new SpellSpec { Cost = 45f, Count = 5, Interval = 0.34f, Damage = 10f, Stagger = 60f, Stacks = 1, Reach = 6f, Radius = 3f, LingerDamage = 6f } });
             to.Add(new Upgrade { Id = NothingBeneath, Name = "Nothing Beneath", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SkyDance }, X = -1.32f, Y = 9.77f, Icon = UpgradeIcons.Spiral,
                 Description = "An enemy in the air stays there for as long as you keep striking it, and each blow up there gives double mana. Your blows on an enemy that is not Unsteady are weaker.",
                 Stats = new[] { new StatMod(PlayerStat.AirBlows, 20f), new StatMod(PlayerStat.ManaFromBlows, 1f, StatWhen.AirborneBlow), new StatMod(PlayerStat.WeaponDamage, -0.15f), new StatMod(PlayerStat.WeaponDamage, 0.15f, AfflictionKind.Unsteady) } });
@@ -145,7 +144,7 @@ namespace Clover.Player.Trees
             // BESPOKE: a pushed enemy that meets a wall or another enemy should stop there and both be hurt. Until then every
             // enemy a spell strikes (Gust is the push) is shaken where it stands, and so is whoever is beside it.
             to.Add(new Upgrade { Id = AgainstTheWall, Name = "Against the Wall", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Unsteady }, X = 1.46f, Y = 3.62f, Icon = UpgradeIcons.Wall,
-                Description = "An enemy pushed into a wall or into another enemy is hurt and shaken by it. So is the one it hits.",
+                Description = "Each enemy your spells strike is hit by a small burst of wind that shakes it and anything beside it and leaves them Unsteady.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Burst, Damage = 6f, Stagger = 15f, Radius = 1.6f, Affliction = AfflictionKind.Unsteady, Stacks = 1 } } });
             // The reach is the stat for every spell; the wider cone is still to be written by hand.
             to.Add(new Upgrade { Id = WideGust, Name = "Wide Gust", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { AgainstTheWall }, X = 1.25f, Y = 5.05f, Icon = UpgradeIcons.Gust,
@@ -153,7 +152,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellArc, 0.43f), new StatMod(PlayerStat.BaseSpellReach, 0.2f) } });
             // A thrown attack sent back to its thrower is still to be written by hand.
             to.Add(new Upgrade { Id = TurnedAside, Name = "Turned Aside", Element = E, Kind = UpgradeKind.Major, Requires = new[] { AgainstTheWall }, X = 1.9f, Y = 6.06f, Icon = UpgradeIcons.Shield,
-                Description = "A perfect guard throws the attacker back and leaves it three deeper in Unsteady. A thrown attack is sent back to its thrower.",
+                Description = "A perfect guard throws everyone near you back and leaves the attacker three deeper in Unsteady.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 3 },
@@ -163,10 +162,10 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = EasyBreath, Name = "Easy Breath", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { AgainstTheWall }, X = 2.27f, Y = 4.45f, Icon = UpgradeIcons.Gem,
                 Description = "Gust costs less mana.",
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.25f) } });
-            // There is no number for push distance alone: Unsteady is what makes an enemy fly further, so it works more strongly.
+            // PushDistance: the Push action and what spell forms shove.
             to.Add(new Upgrade { Id = StrongArm, Name = "Strong Arm", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { TurnedAside }, X = 1.08f, Y = 6.89f, Icon = UpgradeIcons.Fist,
                 Description = "Your pushes throw enemies further.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.15f) } });
+                Stats = new[] { new StatMod(PlayerStat.PushDistance, 0.3f) } });
             to.Add(new Upgrade { Id = IndrawnBreath, Name = "Indrawn Breath", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { TurnedAside }, X = 1.06f, Y = 8.07f, Icon = UpgradeIcons.Spiral,
                 Description = "Hold the spell button to drag everything near into one place before you, then burst it apart. 35 mana.",
                 Form = "reverse",
@@ -179,7 +178,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.SurgeSpeed, 0.1f) } });
             // A cone and a push stand in for the free Gust: the Gust itself, with its own upgrades, is still to be written by hand.
             to.Add(new Upgrade { Id = StormFront, Name = "Storm Front", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { IndrawnBreath }, X = 2.44f, Y = 8.86f, Icon = UpgradeIcons.Wave,
-                Description = "Every heavy blow throws a Gust with it at no cost. Your blows give less mana.",
+                Description = "Every heavy blow that lands throws a cone of wind that leaves enemies Unsteady, and pushes everything near you away. Your blows give a quarter less mana.",
                 Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, -0.25f) },
                 Effects = new[]
                 {
@@ -189,7 +188,7 @@ namespace Clover.Player.Trees
             // BESPOKE: the pull should come as the draw is released, before the cut lands, and only from the cone ahead.
             // Until then the slash that lands drags everything near onto the player and leaves it Unsteady.
             to.Add(new Upgrade { Id = DrawingWind, Name = "Drawing Wind", Element = E, Kind = UpgradeKind.Major, Requires = new[] { TurnedAside }, X = 2.09f, Y = 7.43f, Icon = UpgradeIcons.Blade, Weapon = Weapons.KatanaName,
-                Description = "The Iaido Slash draws breath first. Everything before you is pulled onto the cut.",
+                Description = "When the Iaido Slash lands, everything within six metres is pulled toward you and left Unsteady.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SkillHit, Do = UpgradeAction.Pull, At = EffectAt.Self, Radius = 6f, Amount = 2.5f, Cooldown = 1f },

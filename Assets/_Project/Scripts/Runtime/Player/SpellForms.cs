@@ -119,6 +119,12 @@ namespace Clover.Player
         public const string Ball = "ball";
         /// <summary>Dark's Pawned Heart: health set down as a beating heart, to be come back for.</summary>
         public const string Heart = "heart";
+        /// <summary>Wind's Sky Dance: up beside an enemy in the air, cuts pressed as a ring closes, and a throw the stick aims.</summary>
+        public const string SkyDance = "skydance";
+        /// <summary>Wind's Closing Circle: a ring run round an enemy that snaps shut and lifts all inside.</summary>
+        public const string Circle = "circle";
+        /// <summary>Tempest's Eye of the Storm: a held, walking column that drags in, carries round, throws out and calls a bolt on each.</summary>
+        public const string Eye = "eye";
 
         private static readonly ISpellForm[] all =
         {
@@ -175,6 +181,9 @@ namespace Clover.Player
             new FrozenWaveForm(),
             new BallForm(),
             new HeartForm(),
+            new SkyDanceForm(),
+            new CircleForm(),
+            new EyeForm(),
         };
 
         private static readonly Dictionary<string, ISpellForm> byId = Index();

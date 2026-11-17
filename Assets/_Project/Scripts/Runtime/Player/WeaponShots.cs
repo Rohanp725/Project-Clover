@@ -236,14 +236,38 @@ namespace Clover.Player
                 }
                 else if (!f.Hanging)
                 {
-                    float step = Mathf.Min(shot.Speed * deltaTime, shot.Range - f.Flown);
-                    f.At += f.Direction * step;
-                    f.Flown += step;
-                    int hit = f.Combat != null ? f.Combat.StrikeArea(f.At, shot.Radius, f.Blow, bitten[i]) : 0;
+                    // A fast shot on a slow frame covers more ground than it is wide: it is walked there in strides
+                    // no longer than its own radius, so nothing standing in its way is stepped over.
+                    float left = Mathf.Min(shot.Speed * deltaTime, shot.Range - f.Flown);
+                    float stride = Mathf.Max(0.2f, shot.Radius);
+                    var planted = shot.Plants && f.Combat != null ? f.Combat.Arrows : null;
+                    int hit = 0;
+                    do
+                    {
+                        float step = Mathf.Min(left, stride);
+                        left -= step;
+                        f.At += f.Direction * step;
+                        f.Flown += step;
+                        int now = f.Combat != null ? f.Combat.StrikeArea(f.At, shot.Radius, f.Blow, bitten[i]) : 0;
+                        hit += now;
+                        if (now == 0) continue;
+                        if (shot.ManaGain > 0f) f.Combat.Mana.Gain(shot.ManaGain * now);
+                        if (planted == null) continue;
+                        // An arrow stays in each body it struck.
+                        foreach (var body in f.Combat.LastStruck)
+                            if (body is Component host) planted.Plant(host, f.Direction);
+                    }
+                    while (left > 0.0001f && (hit == 0 || shot.Pierce));
                     Struck += hit;
                     if (f.Flown >= shot.Range - 0.001f || (hit > 0 && !shot.Pierce))
                     {
-                        if (shot.Sticks)
+                        if (shot.Plants)
+                        {
+                            // One that stopped in no one stands in the ground where its flight ended.
+                            if (planted != null && (hit == 0 || shot.Pierce)) planted.PlantGround(f.At, f.Direction);
+                            End(i);
+                        }
+                        else if (shot.Sticks)
                         {
                             f.Stuck = true;
                             f.InEnemy = hit > 0;

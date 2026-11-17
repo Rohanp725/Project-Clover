@@ -67,6 +67,7 @@ namespace Clover.Player
                 case UpgradeTrigger.WardSpent: return "a ward turns a blow";
                 case UpgradeTrigger.Lifted: return "you throw an enemy into the air";
                 case UpgradeTrigger.Landed: return "an enemy you threw comes down";
+                case UpgradeTrigger.PoisonBite: return "poison bites an enemy";
                 default: return "its moment comes";
             }
         }

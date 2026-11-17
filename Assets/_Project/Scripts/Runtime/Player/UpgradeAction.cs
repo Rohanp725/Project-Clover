@@ -62,5 +62,9 @@ namespace Clover.Player
         BurstGrown,
         /// <summary>Casts a spell form by name (<see cref="UpgradeEffect.Form"/>) with the numbers in <see cref="UpgradeEffect.Spell"/>, at the trigger's enemy when it has one: how a god's gift or a crown is begun. Costs nothing.</summary>
         Form,
+        /// <summary>Makes poison bite at once, out of turn: on the target, or with a Radius on everyone within it. Reads: Radius (0), Amount: health for each one bitten, At.</summary>
+        Bite,
+        /// <summary>Lays stacks on the nearest other enemy within reach of the target, and nothing on the target itself: a dose that leaps. Reads: Affliction, Stacks (1), Reach (4; longer with LeapReach).</summary>
+        Pass,
     }
 }

@@ -84,7 +84,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.AttackStamina, -0.15f, StatWhen.GreyHeld) } });
             // The burst does not yet grow as health falls.
             to.Add(new Upgrade { Id = DebtsCalled, Name = "Debts Called", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { BorrowedStrength }, X = -2.0f, Y = 6.0f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button. Everything near is dragged to you, and then thrown back by a burst that is greater the less health you have. 40 mana.",
+                Description = "Hold the spell button. Everything near is dragged to a point before you, and then thrown back by a burst. 40 mana.",
                 Form = FormReverse,
                 Spell = new SpellSpec { Cost = 40f, Reach = 1f, Radius = 4.5f, Delay = 0.5f, Damage = 18f, Stagger = 35f, Stacks = 1 } });
             to.Add(new Upgrade { Id = BitterHarvest, Name = "Bitter Harvest", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { DebtsCalled }, X = -2.88f, Y = 6.74f, Icon = UpgradeIcons.Gem,
@@ -98,7 +98,7 @@ namespace Clover.Player.Trees
                 Spell = new SpellSpec { Cost = 0f, HealthCost = 1f, Seconds = 10f, Damage = 60f, Count = 30, Radius = 3f, Stacks = 0 } });
             // BESPOKE: every wound left whole as grey health. Until then grey health lingers twice as long and every blow landed wins a little back.
             to.Add(new Upgrade { Id = Unpaid, Name = "Unpaid", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { PawnedHeart }, X = -3.43f, Y = 8.8f, Icon = UpgradeIcons.Chain,
-                Description = "Every wound is only owed. All of it can be won back with blows before it is collected. Flasks heal half as much.",
+                Description = "Grey health lingers twice as long, and every blow you land wins a little health back. Flasks heal half as much.",
                 Stats = new[] { new StatMod(PlayerStat.GreyKept, 1f), new StatMod(PlayerStat.FlaskHeal, -0.5f) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Heal, Amount = 2f, Cooldown = 0.5f } } });
 
@@ -106,7 +106,7 @@ namespace Clover.Player.Trees
 
             // The surge is not yet lengthened by a finisher.
             to.Add(new Upgrade { Id = Feast, Name = "Feast", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Curse }, X = 0f, Y = 2.9f, Icon = UpgradeIcons.Claw,
-                Description = "A finisher on a Cursed enemy feeds you. It heals, and Hunger lasts a while longer.",
+                Description = "A finisher on a Cursed enemy feeds you. It heals, and heals more while Hunger lasts.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Heal, Needs = AfflictionKind.Cursed, Amount = 12f },
@@ -120,7 +120,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.47f) } });
             // BESPOKE: healing beyond a full bar kept as a second measure of health. Until then a flask or a kill wraps the player in a shade that takes one blow.
             to.Add(new Upgrade { Id = Glut, Name = "Glut", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Feast }, X = 0f, Y = 4.7f, Icon = UpgradeIcons.Plus,
-                Description = "Healing beyond a full bar is kept as a second, dark measure of health that slowly drains away.",
+                Description = "A flask drunk wraps you in a shade that turns aside one blow. So does a kill, once in ten seconds. Three shades at most.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, Do = UpgradeAction.Ward, Count = 1 },
@@ -132,19 +132,19 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Do = UpgradeAction.Heal, Amount = 3f } } });
             // NEAREST: every enemy within eight metres buckles when a Cursed one dies, not only the Cursed, and no guard is dropped.
             to.Add(new Upgrade { Id = Dread, Name = "Dread", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Glut }, X = 0f, Y = 6.5f, Icon = UpgradeIcons.Eye,
-                Description = "When a Cursed enemy dies, the other Cursed lose heart. Their balance buckles and their guard falls for a moment.",
+                Description = "When a Cursed enemy dies, every enemy near it loses heart and its balance buckles.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Do = UpgradeAction.Burst, Damage = 0f, Stagger = 30f, Radius = 8f, Cooldown = 1f } } });
             to.Add(new Upgrade { Id = EasyPrey, Name = "Easy Prey", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Dread }, X = -0.79f, Y = 7.37f, Icon = UpgradeIcons.Target,
                 Description = "Cursed enemies take more from your weapon.",
                 Stats = new[] { new StatMod(PlayerStat.DamageToAfflicted, 0.08f) } });
-            // The swallow is not yet tied to the bite: while this is learned, any spell that strikes a Cursed enemy feeds a little.
+            // The feeding is the Maw's own (OwnSpell on SpellHit). The swallow of a kill or a staggered enemy is not built, and the words do not promise it.
             to.Add(new Upgrade { Id = DevouringMaw, Name = "Devouring Maw", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Dread }, X = 0f, Y = 8.3f, Icon = UpgradeIcons.Fang,
-                Description = "Hold the spell button and a great jaw rises out of your shadow and bites what stands before you. If the bite kills, or its prey is staggered, it swallows, and you are fed. 40 mana.",
+                Description = "Hold the spell button and a great jaw rises out of your shadow and bites what stands before you. Each Cursed enemy it bites feeds you. 40 mana.",
                 Form = FormDragon,
                 Spell = new SpellSpec { Cost = 40f, Reach = 5f, Radius = 1.6f, Damage = 30f, Stagger = 30f, Stacks = 1, Speed = 14f },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Heal, Needs = AfflictionKind.Cursed, Amount = 5f, Cooldown = 2f } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Heal, Needs = AfflictionKind.Cursed, Amount = 5f } } });
             to.Add(new Upgrade { Id = LongHunger, Name = "Long Hunger", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { DevouringMaw }, X = 1.02f, Y = 9.01f, Icon = UpgradeIcons.Hourglass,
-                Description = "Hunger lasts longer and takes no more for it.",
+                Description = "Hunger lasts longer.",
                 Stats = new[] { new StatMod(PlayerStat.SurgeSeconds, 0.3f) } });
             // The game never lets the flasks fall below one, so one is left.
             to.Add(new Upgrade { Id = NeverSated, Name = "Never Sated", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { DevouringMaw }, X = -0.83f, Y = 9.56f, Icon = UpgradeIcons.Flask,
@@ -170,8 +170,7 @@ namespace Clover.Player.Trees
             // built, and a kill gives health back in place of stilling the drain for a few breaths.
             to.Add(new Upgrade { Id = HollowStrength, Name = "Hollow Strength", Element = E, Kind = UpgradeKind.Major, Requires = new[] { NearTheGrave }, X = 1.61f, Y = 4.2f, Icon = UpgradeIcons.Fist,
                 Description = "Risen, you strike harder and no blow makes you flinch. Each kill stills the draining for a few breaths.",
-                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.25f, StatWhen.Risen) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, While = StatWhen.Risen, Do = UpgradeAction.Heal, Amount = 8f } } });
+                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.25f, StatWhen.Risen) } });
             // The drain of the Risen runs at seven tenths: PlayerUpgrades.RiseDrain reads this mark.
             to.Add(new Upgrade { Id = SlowRot, Name = "Slow Rot", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { HollowStrength }, X = 1.02f, Y = 5.83f, Icon = UpgradeIcons.Hourglass,
                 Description = "Risen, your health drains more slowly.",
@@ -182,21 +181,21 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.Risen, Do = UpgradeAction.Heal, Amount = 1f, Cooldown = 0.2f } } });
             // BESPOKE: the second hold that changes places with the shadow. The shadow itself is the clone form.
             to.Add(new Upgrade { Id = SecondShadow, Name = "Second Shadow", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { HollowStrength }, X = 2.0f, Y = 6.0f, Icon = UpgradeIcons.Moon,
-                Description = "Hold the spell button to leave your shadow where you stand. It strikes when you strike, at whatever is near it. Hold again to change places with it. 45 mana.",
+                Description = "Hold the spell button and your shadow stands at your shoulder for a while. It repeats every blow you land a beat late, for half its damage. 45 mana.",
                 Form = FormClone,
                 Spell = new SpellSpec { Cost = 45f, Seconds = 8f, Damage = 50f, Stacks = 1 } });
             to.Add(new Upgrade { Id = LongShadows, Name = "Long Shadows", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { SecondShadow }, X = 2.9f, Y = 6.72f, Icon = UpgradeIcons.Orb,
-                Description = "Shades and shadows strike harder.",
+                Description = "Your spells strike 15% harder.",
                 Stats = new[] { new StatMod(PlayerStat.SpellDamage, 0.15f) } });
             // The shades rise beside the player, not where the dead fell, and need no dead to rise.
             to.Add(new Upgrade { Id = TheDeadStand, Name = "The Dead Stand", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { SecondShadow }, X = 2.4f, Y = 7.8f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button and those you have killed in this fight stand up where they fell, up to three. Each strikes a few times for you and is gone. 40 mana.",
+                Description = "Hold the spell button and three shades rise beside you. Each runs at an enemy, strikes a few times for you and is gone. 40 mana.",
                 Form = FormMinions,
                 Spell = new SpellSpec { Cost = 40f, Count = 3, Seconds = 5f, Interval = 1.6f, Damage = 12f, Stagger = 12f, Stacks = 1 } });
-            // BESPOKE: Risen for good, with its drain and no second rising. Until then: the strength and three tenths of weapon damage back at all times, paid for with a smaller health bar.
+            // Built in PlayerUpgrades: Risen for good (StatWhen.Risen always holds), two points of health a second while an enemy is within twelve metres, never the last point, and Rise() refuses.
             to.Add(new Upgrade { Id = DeadAlready, Name = "Dead Already", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { TheDeadStand }, X = 2.25f, Y = 9.28f, Icon = UpgradeIcons.Skull,
-                Description = "You do not wait to die. You are Risen from now on: in every fight your health drains, and dealing damage feeds you. You strike far harder. There is no second rising.",
-                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.25f), new StatMod(PlayerStat.Health, -25f), new StatMod(PlayerStat.Leech, 0.3f) }, });
+                Description = "You do not wait to die. You are Risen from now on: in every fight your health drains to its last point, and dealing damage feeds you. You strike far harder. There is no second rising.",
+                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.25f), new StatMod(PlayerStat.Leech, 0.3f) }, });
 
             // BESPOKE (built): the Rise, in PlayerUpgrades.Rise and RiseForm. This mark gives it.
             to.Add(new Upgrade { Id = LifeForALife, Name = "A Life for a Life", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,

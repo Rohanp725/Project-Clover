@@ -46,8 +46,16 @@ namespace Clover.Player
         /// <summary>The share of walking speed its bearer keeps, and keeps behind the guard.</summary>
         public float MoveFactor = 1f;
         public float GuardMoveFactor = 0.45f;
-        /// <summary>What damage and stagger from behind the target are multiplied by. A seam for the knives: not yet read.</summary>
+        /// <summary>What a blow's damage and stagger are multiplied by when it lands on the target's back (not a finisher, not a shot).</summary>
         public float BackMultiplier = 1f;
+        /// <summary>Metres within which its attacks turn to face an enemy; zero means the usual. A bow looks further than a sword.</summary>
+        public float AimRange;
+        /// <summary>Full width in degrees, round where the stick points, in which its attacks pick an enemy to face; zero means the usual.</summary>
+        public float AimConeDegrees;
+        /// <summary>What a perfect guard with it does to the attacker besides: arrows left standing in it, metres it is yanked toward the bearer, stagger added.</summary>
+        public int PerfectGuardPlants;
+        public float PerfectGuardPull;
+        public float PerfectGuardStagger;
         /// <summary>True for a weapon whose colours are the held element's (the Armament): its arcs follow the element.</summary>
         public bool ElementColoured;
 
@@ -72,6 +80,7 @@ namespace Clover.Player
                     if (step != null) yield return step;
             if (Combo.ChargedHeavy != null) yield return Combo.ChargedHeavy;
             if (Combo.GuardAttack != null) yield return Combo.GuardAttack;
+            if (Combo.DashAttack != null) yield return Combo.DashAttack;
             if (Combo.Skill != null) yield return Combo.Skill;
             if (Combo.Skill != null && Combo.Skill.FollowStep != null) yield return Combo.Skill.FollowStep;
             if (Combo.Finisher != null) yield return Combo.Finisher;

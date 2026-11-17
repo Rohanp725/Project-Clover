@@ -45,7 +45,91 @@ namespace Clover.Gameplay
 
         // Domain reload is off: a wait left standing by the last play must not hold this one's poison.
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetWaits() => PoisonWaits = false;
+        private static void ResetWaits()
+        {
+            PoisonWaits = false;
+            PoisonBeatOff = false;
+            PoisonKeeps = false;
+            PoisonRipens = 0f;
+            PoisonOnCursed = 0f;
+            SharedBeat = false;
+            SharedBeatShare = 0f;
+            BeatNow = false;
+            BeatStrength = 1f;
+            BeatCount = 0;
+            beatLeft = 0f;
+            beatWasNow = false;
+            FreezeSeconds = 1f;
+            ShatterDamage = 1f;
+            ChillSlowOff = false;
+            BrittleSeconds = 0f;
+            BrittleShare = 0.2f;
+            BuckledShare = 0f;
+            FlashFreezeAt = 0;
+        }
+
+        // ---- Poison's beat, as the player's marks change it. The player's upgrades keep all of these.
+
+        /// <summary>While true, poison does not bite on its beat at all (it is only ever set off).</summary>
+        public static bool PoisonBeatOff { get; set; }
+        /// <summary>While true, poison does not fade while its bearer lives.</summary>
+        public static bool PoisonKeeps { get; set; }
+        /// <summary>Each bite that comes with no fresh dose since the last is this share stronger than the one before.</summary>
+        public static float PoisonRipens { get; set; }
+        /// <summary>Above zero: poison bites this share harder on the Cursed and does not fade from them.</summary>
+        public static float PoisonOnCursed { get; set; }
+        /// <summary>While true, the poison in everything bites on one beat (<see cref="TickBeat"/>), not each on its own.</summary>
+        public static bool SharedBeat { get; set; }
+        /// <summary>On the shared beat, each poisoned thing beyond the first that bit on the last beat makes every bite this share stronger.</summary>
+        public static float SharedBeatShare { get; set; }
+        /// <summary>True for the one step in which the shared beat falls.</summary>
+        public static bool BeatNow { get; private set; }
+        /// <summary>What every bite of the shared beat is multiplied by.</summary>
+        public static float BeatStrength { get; private set; } = 1f;
+        /// <summary>How many have bitten on the shared beat now falling.</summary>
+        public static int BeatCount { get; set; }
+        /// <summary>Seconds until the shared beat falls.</summary>
+        public static float BeatLeft => beatLeft;
+        private static float beatLeft;
+        private static bool beatWasNow;
+        /// <summary>How long a freeze lasts, and how hard a shatter lands, as shares of the usual.</summary>
+        public static float FreezeSeconds { get; set; } = 1f;
+        public static float ShatterDamage { get; set; } = 1f;
+        /// <summary>While true, Chill slows no one (it still freezes at full depth). The player's upgrades keep it.</summary>
+        public static bool ChillSlowOff { get; set; }
+        /// <summary>Above zero: what thaws or is shattered stays brittle this long, taking <see cref="BrittleShare"/> more from the weapon and to its balance.</summary>
+        public static float BrittleSeconds { get; set; }
+        public static float BrittleShare { get; set; } = 0.2f;
+        /// <summary>Above zero: what carries Tremor and Sundered together takes this share more stagger from everything.</summary>
+        public static float BuckledShare { get; set; }
+        /// <summary>Above zero: what is Soaked freezes at this depth of Chill, and the freeze spends the Soaked.</summary>
+        public static int FlashFreezeAt { get; set; }
+
+        /// <summary>
+        /// Moves the shared beat on by one step. Called once a step by whoever keeps the beat (the player's upgrades):
+        /// the beat is "now" from this call until the next, so everything that ticks once in between sees it once.
+        /// </summary>
+        public static void TickBeat(float deltaTime)
+        {
+            if (beatWasNow)
+            {
+                // The beat that has just fallen is counted: the next is as strong as the company it kept.
+                BeatStrength = 1f + SharedBeatShare * System.Math.Max(0, BeatCount - 1);
+                BeatCount = 0;
+            }
+            BeatNow = false;
+            beatWasNow = false;
+            if (!SharedBeat)
+            {
+                BeatStrength = 1f;
+                return;
+            }
+            beatLeft -= deltaTime;
+            if (beatLeft > 0f) return;
+            beatLeft += specs[(int)AfflictionKind.Poison].TickSeconds;
+            BeatNow = true;
+            beatWasNow = true;
+        }
 
         public static void SetDeeper(AfflictionKind kind, int by)
         {

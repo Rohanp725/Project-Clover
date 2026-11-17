@@ -24,7 +24,7 @@ namespace Clover.Tests
         {
             "sun", "remember", "stillworld", "shatterchain", "sea", "spring", "hand", "hangingswords", "scales", "rise", "cleanblade",
             "thunder", "dust", "plates", "lotus", "groundwakes", "anvil", "mirrors", "totality", "reaping", "pyres",
-            "flashes", "frozenwave", "ball", "heart",
+            "flashes", "frozenwave", "ball", "heart", "skydance", "circle", "eye",
         };
 
         [Test]

@@ -7,7 +7,7 @@ namespace Clover.Gameplay
     /// and puts itself right again after being left alone, so it can be hit for as long as the player likes. A heavy
     /// blow while it is staggered is a finisher: much more damage, and the stagger ends.
     /// </summary>
-    public class TrainingDummy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable
+    public class TrainingDummy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable, IWeighted
     {
         [SerializeField] private Transform body;
         [SerializeField] private Renderer[] flashRenderers;
@@ -79,6 +79,9 @@ namespace Clover.Gameplay
             var shown = healthFill != null ? healthFill.GetComponentInParent<EnemyBars>() : null;
             if (shown != null) shown.Watch(Afflictions);
         }
+
+        /// <summary>A post set in the ground is not dragged; a probe may make it light to see a drag.</summary>
+        public float Weight { get; set; } = 10f;
 
         public void Push(Vector3 impulse)
         {
@@ -166,7 +169,10 @@ namespace Clover.Gameplay
                 }
                 if (wasBurning) sinceHit = 0f;
                 if (Afflictions.BitThisTick)
+                {
                     Clover.Core.Vfx.Play(Clover.Core.VfxKind.TintPuff, transform.position + Vector3.up * 1.3f, Vector3.up, 0.7f, Gameplay.Afflictions.Spec(AfflictionKind.Poison).Colour);
+                    CombatEvents.RaisePoisonBit(this, Afflictions.BitDepth, Afflictions.BitDamage);
+                }
                 untilEmber -= deltaTime;
                 if (wasBurning && untilEmber <= 0f)
                 {

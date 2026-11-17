@@ -11,7 +11,7 @@ namespace Clover.Gameplay
     /// the storm charges it for a while, making it faster and harder-hitting.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable, IBoss
+    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable, IBoss, IWeighted
     {
         [SerializeField] private string kindName = EnemyKind.SoldierName;
         [SerializeField] private Transform target;
@@ -439,6 +439,8 @@ namespace Clover.Gameplay
             Died?.Invoke(this);
         }
 
+        public float Weight => Kind != null ? Kind.Weight : 1f;
+
         /// <summary>A pull or a push from outside a blow. The great are moved less.</summary>
         public void Push(Vector3 impulse)
         {
@@ -497,7 +499,10 @@ namespace Clover.Gameplay
                 }
                 // The poison's bite is seen when it lands.
                 if (Afflictions.BitThisTick)
+                {
                     Vfx.Play(VfxKind.TintPuff, transform.position + Vector3.up * 1.2f, Vector3.up, 0.7f, Gameplay.Afflictions.Spec(AfflictionKind.Poison).Colour);
+                    CombatEvents.RaisePoisonBit(this, Afflictions.BitDepth, Afflictions.BitDamage);
+                }
                 if (Health.IsDead)
                 {
                     Die();

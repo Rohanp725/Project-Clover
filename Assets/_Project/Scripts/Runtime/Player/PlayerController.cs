@@ -245,7 +245,22 @@ namespace Clover.Player
             PlanarSpeed = deltaTime > 0f ? new Vector2(step.x, step.z).magnitude / deltaTime : 0f;
             fallSpeed = body.isGrounded ? 1f : fallSpeed + Gravity * deltaTime;
             step.y = -fallSpeed * deltaTime;
-            body.Move(step);
+            if (combat != null && combat.PassingThrough)
+            {
+                // A passing cut goes through bodies and stops at walls: the body is put there. The controller is not
+                // asked to move at all on these frames: standing inside an enemy, any move of its own pushes it back out
+                // the way it came, and a pass made in small steps never gets through.
+                Vector3 along = new Vector3(step.x, 0f, step.z);
+                float far = along.magnitude;
+                if (far > 0.0001f)
+                {
+                    float clear = ClearRun(along, far);
+                    body.enabled = false;
+                    transform.position += along * (clear / far);
+                    body.enabled = true;
+                }
+            }
+            else body.Move(step);
             Stamina.Tick(deltaTime);
         }
 

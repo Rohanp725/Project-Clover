@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Clover.Core;
 using Clover.Gameplay;
+using Clover.Player.Forms;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -121,7 +122,41 @@ namespace Clover.Player
         private PlayerElement element;
         private WeaponShots shots;
         private WeaponSpikes spikes;
+        private PlantedArrows arrows;
+        /// <summary>The bow's arrows that have landed, or null on a player built without them.</summary>
+        public PlantedArrows Arrows => arrows;
+        /// <summary>Whom the last strike of an area, a lane or a cone landed on. Read at once: the next such strike empties it.</summary>
+        public HashSet<IDamageable> LastStruck => spellStruck;
+        /// <summary>True while the bow's string is drawn back: the charge, or the wind-up of a step that looses something.</summary>
+        public bool StringDrawn => Combo.IsCharging || (Combo.Current != null && Combo.Phase == AttackPhase.Windup
+            && ((Combo.Current.Shot != null && Combo.Current.Shot.Plants && Combo.Current.Damage <= 0f) || Combo.Current.Effect == StepEffect.ArrowRain));
+
+        /// <summary>The enemy the chain holds, or null; and counts for probes: binds made, times the chain pulled the player to something too heavy, perfect guards that did more.</summary>
+        public Component BoundTarget => boundTo;
+        /// <summary>Whom the finisher in progress is being made on, or null.</summary>
+        public Transform FinisherTarget => Combo.IsFinishing ? finisherTarget : null;
+        public float BoundLeft => boundTo != null ? boundLeft : 0f;
+        public int Bindings { get; private set; }
+        public int SelfPulls { get; private set; }
+        public int GuardRiders { get; private set; }
+        /// <summary>At this weight and over a thing is not dragged by a chain; the player is.</summary>
+        public float HeavyWeight = 2f;
+        /// <summary>Metres the chain lets its bearer stand from what it binds; a step further and it lets go.</summary>
+        public float BindLeash = 7f;
+        /// <summary>What a bound enemy's stagger from blows is multiplied by, and seconds something that cannot be held is bound.</summary>
+        public float BoundStagger = 1.25f;
+        public float GodBindSeconds = 1f;
+        private Component boundTo, pullSelfTo;
+        private float boundLeft, pullSelfIn;
         private int beatsDone;
+        /// <summary>True on a frame in which the step carries the body through enemies (a passing cut, a finisher's crossing): the controller moves it past them.</summary>
+        public bool PassingThrough { get; private set; }
+        /// <summary>Counts for probes: blows that landed on a back, cuts made out of a dodge.</summary>
+        public int BackBlows { get; private set; }
+        public int DashAttacks { get; private set; }
+        private AttackStep passTurn;
+        private Vector3 stageForward, stageOrigin, dashFrom, dashTo, dashCentre;
+        private float dashFor, dashAt;
         private bool holdDone;
         private float counterDamage;
         private float counterStagger;
@@ -160,6 +195,7 @@ namespace Clover.Player
             element = GetComponent<PlayerElement>();
             shots = GetComponent<WeaponShots>();
             spikes = GetComponent<WeaponSpikes>();
+            arrows = GetComponent<PlantedArrows>();
             // A weapon carried over from the last scene of the run takes the place of the scene's own.
             Equip(Weapons.ByName(string.IsNullOrEmpty(RunState.Weapon) ? StartingWeapon : RunState.Weapon));
             Mana.Empty();
@@ -187,7 +223,12 @@ namespace Clover.Player
             pendingShot = null;
             followFor = null;
             followStep = null;
+            boundTo = null;
+            pullSelfTo = null;
             Step = Vector3.zero;
+            PassingThrough = false;
+            passTurn = null;
+            dashFor = 0f;
             counterDamage = 0f;
             counterStagger = 0f;
             // The weapon brings its own guard and its own dodge: their numbers are copied, the state they keep is not.
@@ -218,9 +259,26 @@ namespace Clover.Player
             if (upgrades != null) upgrades.WeaponChanged();
         }
 
+        /// <summary>While true, a blow that lands on an enemy winding up or striking is critical. The player's upgrades keep it.</summary>
+        public bool CounterCut { get; set; }
+        /// <summary>Blows made critical that way, for probes.</summary>
+        public int CounterCuts { get; private set; }
+        /// <summary>While true, nothing that lands on the player interrupts a heavy blow being wound up or swung. The player's upgrades keep it.</summary>
+        public bool HeavyUnbroken { get; set; }
+        /// <summary>True while a heavy blow is being wound up or swung.</summary>
+        public bool InHeavySwing
+        {
+            get
+            {
+                var step = Combo.Current;
+                return step != null && step.Heavy && (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active);
+            }
+        }
+
         /// <summary>True when the swing in progress shrugs off a blow of this much damage: it still hurts, it does not interrupt.</summary>
         public bool Poised(float damage)
         {
+            if (HeavyUnbroken && InHeavySwing) return true;
             var step = Combo.Current;
             return step != null && step.Poise > 0f && damage <= step.Poise
                 && (Combo.Phase == AttackPhase.Windup || Combo.Phase == AttackPhase.Active);
@@ -288,10 +346,14 @@ namespace Clover.Player
         public void Advance(float deltaTime, bool unavailable)
         {
             Step = Vector3.zero;
+            PassingThrough = false;
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
             if (lightAction == null || heavyAction == null) return;
+            Tether(deltaTime);
+            Combo.EnderAlways = boundTo != null;
             // With the weapon out of the hand there is nothing to attack with; behind a raised guard the light press is the guard's own thrust.
-            if (lightAction.WasPressedThisFrame() && !WeaponAway) Combo.Press(defence != null && defence.IsGuarding);
+            if (lightAction.WasPressedThisFrame() && !WeaponAway)
+                Combo.Press(defence != null && defence.IsGuarding, player != null && player.Dodge.IsRolling && player.Dodge.Progress >= 0.5f);
             if (heavyAction.WasPressedThisFrame() && !WeaponAway)
             {
                 // Looked for on the press only, not every frame: a staggered enemy in reach turns the heavy into the finisher.
@@ -311,7 +373,7 @@ namespace Clover.Player
             {
                 // The first tier flashes white; a counter says what it is.
                 Vfx.Play(VfxKind.TintRing, transform.position + Vector3.up * 0.2f, Vector3.up, 1f, Color.white);
-                if (Combo.SkillIsCounter && defence != null) defence.Callout(Mana.Current >= Combo.SkillManaCost ? "Braced" : "No mana");
+                if (Combo.SkillIsCounter && defence != null) defence.Callout(Mana.Current >= Combo.SkillPrice ? "Braced" : "No mana");
             }
             if ((events & ComboEvents.SkillReady) != 0)
             {
@@ -323,6 +385,12 @@ namespace Clover.Player
                 Aim();
                 beatsDone = 0;
                 holdDone = false;
+                passTurn = null;
+                dashFor = 0f;
+                stageForward = transform.forward;
+                stageOrigin = transform.position;
+                recoilLeft = Combo.Current.Recoil;
+                if (Combo.Current == Combo.DashAttack) DashAttacks++;
                 if (Combo.Current == Combo.Skill) SkillsUsed++;
                 else
                 {
@@ -347,6 +415,12 @@ namespace Clover.Player
             }
 
             var step = Combo.Current;
+            if (passTurn != null && (step != passTurn || Combo.Phase == AttackPhase.Recovery))
+            {
+                // The passing cut is over: the player comes round to face the back of what was passed.
+                if (step == passTurn) TurnToPassed();
+                passTurn = null;
+            }
             if (step == null) return;
             float pace = deltaTime * SwingSpeed * StatSwing;
             if (Combo.Phase == AttackPhase.Windup && step.Windup > 0f)
@@ -355,20 +429,130 @@ namespace Clover.Player
                 float over = step.LungeSeconds > 0f ? Mathf.Min(step.LungeSeconds, step.Windup) : step.Windup;
                 if (Combo.Elapsed <= over + 0.0001f) Step = transform.forward * (lunge * pace / over);
                 Stage(step);
+                if (dashFor > 0f)
+                {
+                    // A crossing: carried through the target to the far side, whatever stands between.
+                    dashAt += pace;
+                    float through = Mathf.Clamp01(dashAt / dashFor);
+                    Vector3 want = Vector3.Lerp(dashFrom, dashTo, through * through * (3f - 2f * through));
+                    Step = new Vector3(want.x - transform.position.x, 0f, want.z - transform.position.z);
+                    PassingThrough = true;
+                    if (through >= 1f)
+                    {
+                        dashFor = 0f;
+                        // Arrived with the back to it.
+                        Vector3 away = dashTo - dashCentre;
+                        away.y = 0f;
+                        if (away.sqrMagnitude > 0.01f) transform.rotation = Quaternion.LookRotation(away, Vector3.up);
+                    }
+                }
             }
             else if (Combo.Phase == AttackPhase.Active && step.Travel > 0f && step.Active > 0f)
             {
                 // A blow that is carried: the player covers ground with the swing out, and it strikes all the way.
                 Step = transform.forward * (step.Travel * pace / step.Active);
                 Strike(step, false);
+                if (step.PassThrough)
+                {
+                    PassingThrough = true;
+                    passTurn = step;
+                }
             }
-            else if (Combo.Phase == AttackPhase.Recovery && step.Recoil > 0f && Combo.Elapsed - step.Windup - step.Active < RecoilSeconds)
+            else if (Combo.Phase == AttackPhase.Recovery && step.Recoil > 0f && recoilLeft > 0f)
             {
-                Step = -transform.forward * (step.Recoil * pace / RecoilSeconds);
+                // Counted in metres, not in time: on a slow frame a clock would give more or less than the step says.
+                float back = Mathf.Min(recoilLeft, step.Recoil * pace / RecoilSeconds);
+                recoilLeft -= back;
+                Step = -transform.forward * back;
             }
         }
 
         private const float RecoilSeconds = 0.12f;
+        private float recoilLeft;
+
+        // The chain's two ends: the bind runs out, breaks on a roll or at the end of its leash; and a pull on something
+        // too heavy to come is paid a moment later by the player going to it.
+        private void Tether(float deltaTime)
+        {
+            if (pullSelfTo != null)
+            {
+                pullSelfIn -= deltaTime;
+                if (pullSelfIn <= 0f)
+                {
+                    var to = pullSelfTo;
+                    pullSelfTo = null;
+                    if (to.gameObject.activeInHierarchy && !player.IsLeaping && !(defence != null && defence.IsHelpless))
+                    {
+                        Vector3 gap = to.transform.position - transform.position;
+                        gap.y = 0f;
+                        float distance = gap.magnitude;
+                        float run = distance - FollowStandOff - 0.4f;
+                        if (run > 0.3f)
+                        {
+                            Vector3 along = gap / distance;
+                            run = Mathf.Min(run, player.ClearRun(along, run));
+                            SelfPulls++;
+                            Vfx.Play(VfxKind.Dust, transform.position, -along, 1.4f);
+                            player.Leap(transform.position + along * run, 0.2f, 0.45f);
+                        }
+                    }
+                }
+            }
+            if (boundTo == null) return;
+            boundLeft -= deltaTime;
+            Vector3 away = boundTo.transform.position - transform.position;
+            away.y = 0f;
+            bool gone = !boundTo.gameObject.activeInHierarchy || (boundTo is Enemy enemy && enemy.IsDead);
+            if (boundLeft <= 0f || gone || away.magnitude > BindLeash + 1f || (player != null && player.Dodge.IsRolling)) boundTo = null;
+        }
+
+        // The chain takes hold of something: it is held still if it can be, and the heavy button now hauls on it.
+        private void Bind(Component target, float seconds)
+        {
+            bool held = target is IAfflictable afflictable && afflictable.Afflictions.Hold(seconds);
+            boundTo = target;
+            boundLeft = held ? seconds : GodBindSeconds;
+            Bindings++;
+            Vfx.Play(VfxKind.TintRing, target.transform.position + Vector3.up * 0.2f, Vector3.up, 1.2f, Weapon.SlashColour);
+            if (defence != null) defence.Callout("Bound");
+        }
+
+        /// <summary>
+        /// A blow from here was turned by a perfect guard. Some weapons do more with that: the bow leaves the arrow
+        /// from its bearer's fist in the attacker; the chain whips round the attacking limb and yanks it in, off balance.
+        /// </summary>
+        public void PerfectGuarded(Vector3 from)
+        {
+            if (Weapon == null || (Weapon.PerfectGuardPlants <= 0 && Weapon.PerfectGuardPull <= 0f && Weapon.PerfectGuardStagger <= 0f)) return;
+            var attacker = EnemyAt(from, 1.5f);
+            if (attacker == null) return;
+            GuardRiders++;
+            if (arrows != null)
+                for (int i = 0; i < Weapon.PerfectGuardPlants; i++) arrows.Plant(attacker, transform.forward);
+            Vector3 toMe = transform.position - attacker.transform.position;
+            toMe.y = 0f;
+            if (Weapon.PerfectGuardPull > 0f && attacker is IShovable yanked && toMe.sqrMagnitude > 0.01f)
+                yanked.Push(toMe.normalized * Mathf.Min(Weapon.PerfectGuardPull, Mathf.Max(0f, toMe.magnitude - 0.9f)));
+            if (Weapon.PerfectGuardStagger > 0f)
+                StrikeOne(attacker, new SpellBlow { Damage = 0f, Stagger = Weapon.PerfectGuardStagger, Effect = VfxKind.GuardSpark }, transform.position);
+        }
+
+        // After a passing cut: face the nearest thing it struck; having struck nothing, face back the way it came.
+        private void TurnToPassed()
+        {
+            Vector3 toward = -transform.forward;
+            float nearest = float.MaxValue;
+            foreach (var target in struck)
+            {
+                if (!(target is Component body) || body == null) continue;
+                Vector3 gap = body.transform.position - transform.position;
+                gap.y = 0f;
+                if (gap.sqrMagnitude < 0.01f || gap.sqrMagnitude >= nearest) continue;
+                nearest = gap.sqrMagnitude;
+                toward = gap;
+            }
+            transform.rotation = Quaternion.LookRotation(toward.normalized, Vector3.up);
+        }
 
         /// <summary>True while the weapon itself is out of the hand: thrown, standing where it stuck, or on its way back. No attack can start.</summary>
         public bool WeaponAway { get; private set; }
@@ -395,7 +579,7 @@ namespace Clover.Player
         {
             if (step.Shot == null || shots == null) return;
             Vector3 forward = transform.forward;
-            int handle = shots.Fire(this, step.Shot, transform.position + forward * 0.4f, forward, EffectColour, element != null ? element.Info : null);
+            int handle = shots.Fire(this, step.Shot, (step.Shot.FromStepStart ? stageOrigin : transform.position) + forward * 0.4f, forward, EffectColour, element != null ? element.Info : null);
             if (handle < 0 || !(step.Shot.Returns || step.FollowStep != null)) return;
             WeaponAway = true;
             awayShot = handle;
@@ -477,6 +661,23 @@ namespace Clover.Player
                 if (Weapon.ElementColoured) Vfx.Play(VfxKind.TintSpark, where, transform.forward, 0.6f, EffectColour);
                 if (hitStop != null && beat.HitStopSeconds > 0f) hitStop.Freeze(beat.HitStopSeconds);
                 if (shaker != null && beat.Shake > 0f) shaker.Shake(beat.Shake, 0.1f);
+                if (beat.DashBeyond > 0f)
+                {
+                    dashCentre = target != null ? target.position : transform.position + stageForward * 1.5f;
+                    dashCentre.y = transform.position.y;
+                    dashFrom = transform.position;
+                    Vector3 bearing = Quaternion.Euler(0f, beat.DashBearing, 0f) * stageForward;
+                    Vector3 line = dashCentre + bearing * beat.DashBeyond - dashFrom;
+                    float run = player != null ? player.ClearRun(line, line.magnitude) : line.magnitude;
+                    dashTo = dashFrom + line.normalized * run;
+                    dashFor = Mathf.Max(0.02f, beat.DashSeconds);
+                    dashAt = 0f;
+                    if (line.sqrMagnitude > 0.01f) transform.rotation = Quaternion.LookRotation(line.normalized, Vector3.up);
+                    // The line it leaves, through the target, hanging until the blow sets it off.
+                    Color white = new Color(Weapon.SlashColour.r * 1.6f, Weapon.SlashColour.g * 1.6f, Weapon.SlashColour.b * 1.6f, 0.95f);
+                    FormFx.Cut(dashCentre + Vector3.up * 1.1f, line, run + 0.6f, 0.34f, white, Mathf.Max(0.1f, step.Windup - beat.Time) / Mathf.Max(0.2f, SwingSpeed * StatSwing) + step.HoldSeconds / HoldSlowScale + 0.12f, 0.05f);
+                    Vfx.Play(VfxKind.Dust, dashFrom, -line.normalized, 1.2f);
+                }
                 if (target == null) continue;
                 // What can be moved is moved; a god stays where it is and the body plays the same against it.
                 if (beat.Shove.sqrMagnitude > 0f && target.GetComponentInParent<IShovable>() is IShovable shovable)
@@ -694,6 +895,7 @@ namespace Clover.Player
         /// <summary>Shoves everything in a circle that can be shoved, all the same way: what carries enemies along with something. Returns how many it moved.</summary>
         public int ShoveArea(Vector3 centre, float radius, Vector3 impulse)
         {
+            impulse *= StatPush;
             spellStruck.Clear();
             int count = Overlap(centre + Vector3.up, radius + 0.5f);
             for (int i = 0; i < count; i++)
@@ -715,6 +917,30 @@ namespace Clover.Player
         /// Lays an affliction on everything standing in a circle, without a blow: what a Soaked enemy does with the
         /// Static laid on it, and what an upgrade that afflicts all around does. Returns how many it reached.
         /// </summary>
+        /// <summary>How far the player's pushes throw, as a share of the usual. The upgrades keep it.</summary>
+        public float StatPush = 1f;
+
+        /// <summary>Makes the poison in everything within a circle bite on its next step. Returns how many carried any.</summary>
+        public int BiteArea(Vector3 centre, float radius)
+        {
+            spellStruck.Clear();
+            int bitten = 0;
+            int count = Overlap(centre + Vector3.up, radius + 0.5f);
+            for (int i = 0; i < count; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                var target = other.GetComponentInParent<IDamageable>();
+                if (target == null || spellStruck.Contains(target) || !(target is IAfflictable afflictable)) continue;
+                Vector3 offset = ((Component)target).transform.position - centre;
+                offset.y = 0f;
+                if (offset.magnitude > radius) continue;
+                spellStruck.Add(target);
+                if (afflictable.Afflictions.BiteSoon()) bitten++;
+            }
+            return bitten;
+        }
+
         public int AfflictArea(Vector3 centre, float radius, AfflictionKind kind, int stacks, Component except = null)
         {
             spellStruck.Clear();
@@ -781,6 +1007,7 @@ namespace Clover.Player
         /// <summary>Drags everything in a circle toward its middle, or throws it away from there, by about this many metres. Returns how many it moved.</summary>
         public int Displace(Vector3 centre, float radius, float metres, bool pull)
         {
+            if (!pull) metres *= StatPush;
             spellStruck.Clear();
             int count = Overlap(centre + Vector3.up, radius + 0.5f);
             for (int i = 0; i < count; i++)
@@ -899,7 +1126,8 @@ namespace Clover.Player
         /// The enemy an attack started now would turn toward, or null: the one nearest to where the stick points (or, with
         /// no stick, to where the player faces) within the aiming cone and range. The attack itself asks this same question.
         /// </summary>
-        public Transform AimTarget() => moveAction == null ? null : FindEnemy(AimDirection(), AimConeDegrees, AimRange, false);
+        public Transform AimTarget() => moveAction == null ? null : FindEnemy(AimDirection(), Weapon != null && Weapon.AimConeDegrees > 0f ? Weapon.AimConeDegrees : AimConeDegrees,
+            Weapon != null && Weapon.AimRange > 0f ? Weapon.AimRange : AimRange, false);
 
         private Vector3 AimDirection()
         {
@@ -925,7 +1153,9 @@ namespace Clover.Player
             else
             {
                 toward = AimDirection();
-                enemy = FindEnemy(toward, AimConeDegrees, AimRange, false);
+                // What the chain holds is what the haul is aimed at; a bow looks further off than a blade does.
+                enemy = boundTo != null && Combo.Current == Combo.ChainHeavy ? boundTo.transform
+                    : FindEnemy(toward, Weapon.AimConeDegrees > 0f ? Weapon.AimConeDegrees : AimConeDegrees, Weapon.AimRange > 0f ? Weapon.AimRange : AimRange, false);
             }
             if (enemy != null)
             {
@@ -1031,6 +1261,16 @@ namespace Clover.Player
                     if (finisher && held != null && held.Affliction != AfflictionKind.None)
                         AfflictArea(finished + forward * 2.2f, 2f, held.Affliction, 1);
                     break;
+                case StepEffect.ArrowRain:
+                    // Five arrows come down in a ring round the enemy faced, or round a spot five metres ahead.
+                    if (arrows != null)
+                    {
+                        Transform faced = EnemyAhead(9f);
+                        Vector3 middle = faced != null ? faced.position : transform.position + forward * 5f;
+                        middle.y = transform.position.y;
+                        arrows.Rain(middle, forward, 5, 1.25f, 0.5f, 8f, 8f, 0.8f, 10f);
+                    }
+                    break;
                 case StepEffect.ElementRing:
                     Vector3 centre = transform.position + forward * step.Reach + Vector3.up * 0.15f;
                     Vfx.Play(VfxKind.TintRing, centre, Vector3.up, Mathf.Max(1f, step.Radius), colour);
@@ -1050,6 +1290,9 @@ namespace Clover.Player
 
         // One blow of the weapon. A fresh blow starts a new list of who has been struck and shows its arc; one that is
         // not (a carried blow, struck again each frame) only looks for anyone new. Scale is for the repeats of a step.
+        /// <summary>How far round the target the player must be for a blow to count as on its back: the dot of its facing with the way to the player, under this.</summary>
+        public float BackDot = -0.3f;
+
         private void Strike(AttackStep step, bool fresh = true, float scale = 1f)
         {
             if (fresh) struck.Clear();
@@ -1072,7 +1315,11 @@ namespace Clover.Player
             Vector3 origin = transform.position + Vector3.up;
             Vector3 discCentre = origin + transform.forward * step.Reach;
             var held = element != null ? element.Info : null;
-            int count = Overlap(step.Radius > 0f ? discCentre : origin, step.Radius > 0f ? step.Radius + 0.5f : step.Reach);
+            // The haul on a bound enemy reaches it wherever on its leash it stands.
+            float reach = boundTo != null && step == Combo.ChainHeavy ? Mathf.Max(step.Reach, BindLeash + 1f) : step.Reach;
+            Component nearest = null;
+            float nearestAt = float.MaxValue;
+            int count = Overlap(step.Radius > 0f ? discCentre : origin, step.Radius > 0f ? step.Radius + 0.5f : reach);
             for (int i = 0; i < count; i++)
             {
                 var other = overlaps[i];
@@ -1093,7 +1340,7 @@ namespace Clover.Player
                 {
                     // A lane straight ahead.
                     float along = Vector3.Dot(offset, transform.forward);
-                    if (along < -0.3f || along > step.Reach) continue;
+                    if (along < -0.3f || along > reach) continue;
                     if ((offset - transform.forward * along).magnitude > step.LineWidth * 0.5f) continue;
                 }
                 // Something touching the player is hit whatever the angle; otherwise it must be inside the swing's arc.
@@ -1103,7 +1350,10 @@ namespace Clover.Player
                 bool promised = step.Heavy && HeavyCriticalLeft > 0f;
                 float chance = CritChance;
                 if (Stats != null) chance += Stats.Blow(PlayerStat.CritChance, step.Heavy, false) + (afflictable != null ? Stats.Against(PlayerStat.CritChance, afflictable.Afflictions) : 0f);
-                bool critical = promised || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (chance > 0f && Random.value < chance);
+                // Counter Cut: a blow that lands on an enemy showing its own attack (winding up or striking) is critical.
+                bool countered = CounterCut && target is Enemy showing && showing.IsStriking;
+                if (countered) CounterCuts++;
+                bool critical = promised || countered || (afflictable != null && afflictable.Afflictions.MakesBlowsCritical) || (chance > 0f && Random.value < chance);
                 bool counter = step == Combo.Skill && Combo.SkillIsCounter;
                 float damage = (step.Damage + (counter ? counterDamage : 0f)) * scale * step.BandDamage(distance) * DamageMultiplier * UpgradeDamage * NextBlowDamage * StatDamage;
                 float staggerShare = 1f;
@@ -1118,6 +1368,15 @@ namespace Clover.Player
                     staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried) + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) : 0f));
                 }
                 if (critical) damage *= CritMultiplier;
+                // A back is a back: the knives' blows count for more on it. The finisher has its own number.
+                bool fromBehind = false;
+                if (Weapon.BackMultiplier != 1f && !Combo.IsFinishing && target is Component back)
+                {
+                    Vector3 toMe = transform.position - back.transform.position;
+                    toMe.y = 0f;
+                    fromBehind = toMe.sqrMagnitude > 0.01f && Vector3.Dot(back.transform.forward, toMe.normalized) < BackDot;
+                    if (fromBehind) damage *= Weapon.BackMultiplier;
+                }
                 bool wasAfflicted = afflictable != null && afflictable.Afflictions.Any;
                 if (wasAfflicted) damage *= StatAfflicted;
                 float burn = (BurnStacksOnHit > 0 ? Mathf.Max(BurnOnHit, StackBurnSeconds) : BurnOnHit) * AfflictionSeconds;
@@ -1143,11 +1402,18 @@ namespace Clover.Player
                 }
                 float lasts = kind != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(kind).Seconds * AfflictionSeconds : 0f;
                 float dealtStagger = (step.Stagger + (counter ? counterStagger : 0f) + StaggerOnHit) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
+                if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
+                if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
                 var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, step.Heavy, false, transform.position,
                     burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
                 LastBlowDamage = damage;
+                if (fromBehind && outcome != HitOutcome.Blocked)
+                {
+                    BackBlows++;
+                    Vfx.Play(VfxKind.TintSpark, other.bounds.center, transform.forward, 0.9f, Weapon.SlashColour);
+                }
                 LastBlowStagger = dealtStagger;
                 LastBlowDistance = distance;
                 if (step.IsSweet(distance) && outcome != HitOutcome.Blocked)
@@ -1156,8 +1422,24 @@ namespace Clover.Player
                     SweetBlows++;
                     Vfx.Play(VfxKind.TintSpark, other.bounds.center, transform.forward, 1.2f, Color.white);
                 }
+                if (outcome != HitOutcome.Blocked && distance < nearestAt && target is Component nearBody)
+                {
+                    nearestAt = distance;
+                    nearest = nearBody;
+                }
                 if (step.Pull != 0f && outcome != HitOutcome.Blocked && target is IShovable dragged)
-                    dragged.Push(transform.forward * -step.Pull);
+                {
+                    // What is too heavy to come is not moved: the one who pulled goes to it instead.
+                    if (step.PullSelf && target is IWeighted weighed && weighed.Weight >= HeavyWeight) pullSelfTo = target as Component;
+                    // A drag never brings its target past the feet of whoever drags.
+                    else dragged.Push(transform.forward * -(step.Pull > 0f ? Mathf.Min(step.Pull, Mathf.Max(0f, distance - 0.9f)) : step.Pull));
+                }
+                if (outcome != HitOutcome.Blocked && arrows != null && target is Component host)
+                {
+                    // The stave snaps what stands in the body; the arrow in the fist is left there after.
+                    if (step.SnapsArrows) arrows.Snap(host, outcome == HitOutcome.Finisher ? 0.08f : 0.05f);
+                    for (int planted = 0; planted < step.PlantsArrows; planted++) arrows.Plant(host, transform.forward);
+                }
                 if (step.Fling != 0f && outcome == HitOutcome.Finisher && target is IShovable flung)
                     flung.Push((-transform.right * (step.Sweep < 0f ? -1f : 1f) + transform.forward * 0.25f).normalized * step.Fling);
                 LastBlowCritical = critical;
@@ -1224,6 +1506,8 @@ namespace Clover.Player
             {
                 if (upgrades != null) upgrades.OnSwing(step, struck.Count);
                 Clover.Player.Forms.SpellWorks.Swing(step, transform.position, transform.forward);
+                if (step.Binds > 0f && nearest != null) Bind(nearest, step.Binds);
+                if (pullSelfTo != null) pullSelfIn = 0.1f;
                 Thrown(step, finisher, finished);
                 counterDamage = 0f;
                 counterStagger = 0f;

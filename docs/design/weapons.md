@@ -1704,26 +1704,26 @@ Built by Claude in the day run of 2026-11-16 while the user was away: the framew
 E13 named below) and three weapons, **Massive Sword, Scythe, Full Body Armament**; and, the same evening, the
 **Great Spear** and the **Great Hammer** with the engine parts they needed (the guard attack, the shot that sticks,
 the follow, the shot that returns). Not played by the user. The numbers in sections 2, 5, 7, 8 and 9 are in the game
-as written unless listed here. **Twin Knives are not built** (see the end of this appendix).
+as written unless listed here. The **Twin Knives** were built later the same night (their own part below, with the engine parts they added), and the **Great Bow** and the **Chain Sickle** last of all (their parts are near the end, with what they added to the engine). All eight are built.
 
 ### Engine items as built
 
 | Item | State | Notes |
 |---|---|---|
 | E1 | built | `Weapon` carries `Carry`, `Prefix`, `HudName`, the five state names, `GuardProfile`, `DodgeProfile`, `MoveFactor`, `GuardMoveFactor`, `Stowed`, sockets. `UsesSword` is kept as `Carry == "katana"`. `Weapons.ByName` is a dictionary of builders; `Weapons.All` yields every weapon; `Weapons.Offered` is what stands and racks set out. `Weapon.Named(prefix, ownRoll)` fills the state names from the clip prefix. The Katana still lives inside `player.fbx` (moving it was not cheap and safe: its sheath logic and three objects are particular to it). |
-| E2 | built, with stand-in models | `WeaponBuilder` (specs, prefabs under `Generated/Weapons/<carry>/`, sockets `socket_hand_R`, `socket_hand_L`, `socket_back`, `socket_hip`, the rack) and the runtime `WeaponRack` (shows one set, tints `accent` and `inlay`). The Blender models are **not imported** (they await the user's approval): the sword and scythe are box stand-ins on the models' axes and slot names. `AimBladeL` and the props (`PropA`, `PropB`) are **not built**: the knives, the bow and the chain need them. A new `ForgePose.BladeBack` fixes the weapon's roll by saying which way its back faces. |
+| E2 | built, with stand-in models | `WeaponBuilder` (specs, prefabs under `Generated/Weapons/<carry>/`, sockets `socket_hand_R`, `socket_hand_L`, `socket_back`, `socket_hip`, the rack) and the runtime `WeaponRack` (shows one set, tints `accent` and `inlay`). The Blender models are **not imported** (they await the user's approval): the sword and scythe are box stand-ins on the models' axes and slot names. `AimBladeL` is built (the knives use it); the props (`PropA`, `PropB`) are **not built**: the bow and the chain need them. A new `ForgePose.BladeBack` fixes the weapon's roll by saying which way its back faces. |
 | E3 | built | `LineWidth`, `Radius`, `InnerReach`, `InnerDamage`, `SweetFrom`, `SweetDamage`, `SweetStagger` on `AttackStep`, read by `PlayerCombat.Strike`. A banded arc is drawn as a dim inner fan and a bright outer one. A lane is drawn as the straight tongue; a disc as a ring. |
 | E4 | built | `Repeats`, `RepeatScale`; `ComboEvents.Repeat`. The hammer's toss is its first user (two blows all round). |
 | E5 | built | `ChargedHeavy`, `SkillChargeTime`, `ChargeMoveFactor`, `SkillIsCounter`, `CounterHoldMax`; `ComboEvents.SkillReady`; `WeaponCombo.Counter`; `PlayerCombat.TryCounter`. The counter returns `HitOutcome.PerfectGuard` to the attacker, so an enemy answers it as it answers a perfect guard, and the reflected blow adds a flat 55 stagger (`PlayerCombat.CounterStagger`) on every target, not "what a perfect guard would have thrown back" per enemy. A thrown attack is answered toward where it came from, not along its line. |
 | E6 | built | `Poise` on the step; `PlayerCombat.Poised`; read in `PlayerDefence.Land`. Red attacks ignore it. |
-| E7 | partly | Negative `Lunge` works as written (probe: the scythe's heavy moves the player back). `LungeSeconds`, `Travel` and `Recoil` are built. `PassThrough` is a field nothing reads: the ram pushes against its target instead of passing it, and so does the spear's couched charge. |
+| E7 | partly | Negative `Lunge` works as written (probe: the scythe's heavy moves the player back). `LungeSeconds`, `Travel` and `Recoil` are built. `PassThrough` is built (the knives' fifth cut and crossing step); the ram and the spear's couched charge do not set it and still push against their target. |
 | E8 | built but for the bow's needs | `WeaponShot` and `WeaponShots`: straight flight, `Count` and `SpreadDegrees`, `Pierce`, the hang with its bite; **`Sticks`** (it stands where it stopped, in the first enemy or in the ground, for `StickSeconds`, then comes home by itself); **`Returns`** (`ReturnSpeed`, `ReturnScale`: it hangs 0.08 s at the far end and flies back to wherever the thrower now stands, striking again); **`ReleaseAfter`** (it leaves this long after the blow); **`Prop`** is the carry name of a weapon whose own prefab flies (`PropLength`, `Tumble`), given to the shots by `PlayerBuilder`. A shot that is the weapon itself takes it out of the hand (`PlayerCombat.WeaponAway`): no attack starts until it is home. Handles: `IsOut`, `IsStuck`, `Where`, `Recall`, `Release`. Arrows that stay in a body and are counted (the bow) are not built. It does not use `Hazards`. |
-| E9 | partly | `Pull` shoves through the existing `IShovable.Push`. No `Drag` over time, no `Weight` on `EnemyKind`, no `PullSelf`. |
-| E10 | partly | `ChainHeavies` is built. **`GuardAttack` is built**: `WeaponCombo.Press(guarded)`; a light press behind a raised guard starts it, the guard stays up through it (`PlayerDefence` and `PlayerController` except it from "an attack lowers the guard"), it repeats from its own recovery, and it neither starts nor continues the chain. `DashAttack` is a field nothing reads. |
+| E9 | built | `Pull` shoves through the existing `IShovable.Push`, which an enemy pays out over time. `Weight` on `EnemyKind` and `PullSelf` came with the Chain Sickle (its part below). |
+| E10 | partly | `ChainHeavies` is built. **`GuardAttack` is built**: `WeaponCombo.Press(guarded)`; a light press behind a raised guard starts it, the guard stays up through it (`PlayerDefence` and `PlayerController` except it from "an attack lowers the guard"), it repeats from its own recovery, and it neither starts nor continues the chain. **`DashAttack` is built** (the knives): a light pressed in the second half of a dodge. |
 | follow | built | `AttackStep.FollowStep`, `FollowDelay`, `FollowSeconds` (section 7's new item). `PlayerCombat.Away` waits for the thrown thing to stick, then `PlayerController.Leap` laid flat carries the bearer to it (untouchable, as any leap), stopping 1 m short of an enemy it stands in and at any wall, and `WeaponCombo.Follow` starts the step. The stick held more than 120 degrees from the throw refuses: the weapon is called back over `RecallSeconds` 0.5. |
-| E11 | not built | `BackMultiplier` is a field nothing reads. |
+| E11 | built | `Weapon.BackMultiplier`, read in `PlayerCombat.Strike`; `PlayerCombat.BackDot` says how far round counts as the back. |
 | E12 | partly | `Beats` (time, hit stop, shake, effect, a shove of the target, a lift of the target), `HoldAt` and `HoldSeconds` (time at 0.4 and the camera's lean, before the blow), `LungeSeconds`. The target is **not** puppeted between beats, is not held in its stagger by the finisher (the stagger's own three seconds cover every wind-up), and has no `held` clip. A finisher's body may walk round its target: the clip moves the skeleton's root (`ForgeClip.MovesRoot`) and `AttackStep.EffectTurn` turns the effect's line to match. |
-| E13 | partly | `guard_hit_<p>` and `guard_perfect_<p>` play on the upper body for the five new weapons and for Fists; the Katana has none yet. `Guard.PerfectFrom` is built and the hammer uses it. `PerfectGuardRider` is not built. |
+| E13 | partly | `guard_hit_<p>` and `guard_perfect_<p>` play on the upper body for the five new weapons and for Fists; the Katana has none yet. `Guard.PerfectFrom` is built and the hammer uses it. `PerfectGuardRider` is built for the bow and the chain only, as three numbers on `Weapon` (their parts below). |
 | E14 | partly | The Armament's coat is in `WeaponBuilder` (no separate `ArmamentBuilder`): eight boxes on the forearms, hands, shins and upper arms, one material, tinted by the element. **The tree mark and the swap rule are not built**: the Armament is taken from a stand. |
 
 Two things the design did not ask for: `AttackStep.ElementStacks` (a blow lays the held element's affliction by
@@ -1828,13 +1828,138 @@ thrown as a cone or a ring, sparks dragged along the ground).
   slerps the blade's direction; from "fallen back behind" to "slapped down ahead" the shortest way is undefined. Put a
   pose in between (the spear's `SpearOverTop`, the hammer's `rising` in Earthshaker).
 
-### Twin Knives: not built, and what they need
+### Twin Knives (built 2026-11-16, night)
 
-`AimBladeL` in `ForgePose` (a second aimed hand, with its own blade and back), E11's `BackMultiplier` read in
-`PlayerCombat.Strike`, `DashAttack` and `PassThrough`. `WeaponBuilder.Spec.OffHandEuler` is in: a spec that sets it
-has its one model hung a second time in the left hand's socket and, at rest, mirrored across the body, so
-`Intake Staged Models` brings `knife.fbx` in once and both hands show it. No spec for the knives exists yet, so the
-intake does not take `knife.fbx`.
+- Every number of section 3's table is in, the guard, the dodge and `MoveFactor` 1.08 too. Probe, on a training
+  dummy: the chain on its back 58.5 damage (39 x 1.5) for 32 stamina, six blows; one cut on its front 5; the heavy
+  on its back 24; the crossing step 27 on its back and the bearer 2.4 m beyond, turned to it; the cut out of the
+  sidestep 13.5 on its back; the guard perfect two frames after the press, a blocked blow of 10 costing 12.5 stamina
+  and 4.5 health. In the castle the knives killed a Temple Soldier in sixteen blows.
+- **Engine parts added for them.** E11: `Weapon.BackMultiplier` is read in `PlayerCombat.Strike` (a blow counts as
+  on the back when the dot of the target's facing with the way to the player is under `PlayerCombat.BackDot`, -0.3;
+  damage and stagger both; not the finisher, not shots; a small spark in the weapon's colour marks it). E7:
+  `AttackStep.PassThrough` is read: `PlayerCombat.PassingThrough` is true on the frames a step carries the body, and
+  `PlayerController` then puts the body where it is going through enemies (walls still stop it, by `ClearRun`)
+  without asking the character controller to move, and when the swing ends the player is turned to face the nearest
+  thing it struck (or back the way it came). E10: `WeaponCombo.DashAttack` is read: a light pressed in the second
+  half of a dodge starts it as the dodge ends; it is no part of the chain. E2: `ForgePose.AimBladeL`, `BladeL`,
+  `BladeLBack` aim a second weapon in the left hand, and `WeaponBuilder.Spec.OffHandEuler` (now used) hangs the one
+  knife in both hands and twice at rest. E12: `FinisherBeat.DashBeyond`, `DashBearing`, `DashSeconds` carry the
+  player through the target to a point beyond it and leave a line of light. `WeaponShot.FromStepStart` makes a shot
+  leave from where its step began.
+- **A fault found by the probe on the way.** A pass made in small steps never got through: with the body inside an
+  enemy, any move of the character controller pushed it back out the way it came. At the probe's hitching frames it
+  passed; at a steady high frame rate it did not. The controller is now not moved at all on passing frames.
+- **The fan leaves from where the step began**, not from the top of the spring 2.6 m back (`FromStepStart`):
+  thrown from the far end of the spring, a 50 degree fan put one knife of five on a target that had been a step
+  away. As built: 45 from one step, 9 from six metres. The body is at the top of its handspring as they go, but the
+  knives appear ahead of it. The knives are the plain shot in the held element's colour (no model of light).
+- **The left knife is not held in a true reverse grip.** Both hands hold the same model the same way round; the
+  left's blade is pointed where a reversed blade would lie. From the game's camera the hands cannot be told apart.
+- **At rest the knives are crossed on the hip socket; no sheaths.** `Stowed` is false: they are in the hands in play.
+- **The passing spin turns a turn and a half** in the clip (540 degrees by the end of the swing) and the game then
+  turns the player the last half for real; the crossing step's clip makes its half turn the same way.
+- **The lunge's knives splay forward past either side of the head**, not both points together on the centre line:
+  together they are under the hat from the game's camera. It is still the weakest clip.
+- **Three Crossings** is the full version but for the enemy's part: three real crossings (the player is moved, 2.2 m
+  beyond the target on bearings 0, 120 and 240 degrees from the first facing, 0.10 s each, at 0.10, 0.28 and 0.46 s),
+  each leaving a line through the target that hangs until the blow; the back turned, the slow rise, one flat turn of
+  both knives, the hold at slowed time with the camera's lean (0.52 s, 0.16 s), the stop, the blow on the enemy
+  behind (probe: 66 on a dummy, at 0.70 s; the player 2.2 m off with the back to it). The second and third
+  crossings are chords of the triangle, so they pass beside the enemy, not through its middle; their lines are
+  drawn through it all the same. The lines are not burst by an effect of their own (the blow's own sparks do it),
+  and the camera leans on the midpoint of player and enemy as for every finisher, not on the player alone.
+- `idle_knife` spins the right knife once a loop; `roll_knife` is the pirouette (the root turns in the clip).
+- The cut out of the sidestep is asked for only by a press during the second half of the dodge (the design says
+  "near its end"); a press just after the dodge is an ordinary first cut.
+- No element bends the knives yet (no gust, no ring of knives, no Slipstream, Open Vein or Needlework), and no sounds.
+
+### Great Bow (built 2026-11-16, late night)
+
+- Every number of section 6's tables is in (steps, the three shots, the guard, the planted arrows' counts, times
+  and values, Landmines), with one change of sign: **`attack_bow_1` has `Sweep` +1**, because a left arm's backhand
+  from the right hip travels right to left, as the text describes. Probe, on a training dummy with Fire held:
+  swat 9 and 14, stab 12 and 10 and one arrow left; snap shot 18 and 22 with 0.30 m of recoil; three shots leave
+  three arrows and a fourth still three; the swat on three arrows 43.8 damage (39 and three stacks of Burn) and 56
+  stagger exactly; a shot at nothing stands in the ground; an arrow in the ground 0.9 m from the dummy goes off;
+  the kick shot springs the bearer 2.84 m back and its arrow lands; the full draw 34 and 44 from 7 m with 0.80 m of
+  recoil, an arrow in the dummy and another in the ground beyond it; Landmines five arrows for 35 mana, none on
+  the dummy in the middle; a perfect guard plants one arrow; Nailed 90 on the dummy (30 x 3) and three arrows
+  going off after it.
+- **Engine parts added for it.** E2: `WeaponBuilder.Spec.LeftHanded` hangs the one model on the left hand's
+  socket, `AlsoInRightHand` hangs another spec's model in the right (the arrow), `PropOnly` is a spec that is a
+  prefab and nothing on the rack (the arrow, the chain's weight), and `Finish` adds what a prefab needs besides
+  its shape. The string: the model's straight bar at rest; `BowString` on the prefab hides it and draws a
+  two-part `LineRenderer` from tip to tip through the right hand's socket while `PlayerCombat.StringDrawn` (the
+  charge, or the wind-up of a step that looses). E8: `WeaponShot.Plants` hands a shot to `PlantedArrows` where it
+  stops (in each enemy struck; in the ground at the end of a flight that stopped in no one), `WeaponShot.ManaGain`
+  pays the thrower when it strikes, and a shot is now walked forward in strides no longer than its radius (a fast
+  shot on a slow frame stepped over a body: found by this probe, and true of the spear before it). E14:
+  `PlantedArrows` (a fixed pool of 28 arrow models on the player; `Plant`, `PlantGround`, `Snap`, `Rain`,
+  `CountIn`), `AttackStep.SnapsArrows` and `PlantsArrows`, `StepEffect.ArrowRain`. E13: `Weapon.PerfectGuardPlants`
+  (and `PerfectGuardPull`, `PerfectGuardStagger` for the chain) through `PlayerCombat.PerfectGuarded`, called by
+  `PlayerDefence` on a perfect guard: the first `PerfectGuardRider`s. E7: `Recoil` is now counted in metres, not
+  in a tenth of a second of clock (on a slow frame it gave more or less than the step said). Aiming:
+  `Weapon.AimRange` (12 m) and `Weapon.AimConeDegrees` (60) say how far and how narrowly its attacks look for an
+  enemy to face; the stick already turned the bearer while a charge is held.
+- **Every pose cants the bow** out to the left of the bow hand: upright it is a dot from the game's camera. The
+  idle is canted too (the design has it upright).
+- **Landmines is not `Hazards.Lay`**: `PlantedArrows.Rain` marks five spots with a ring, strikes each 0.5 s later
+  (0.03 s apart) and stands an arrow there for 10 s. The ring's five take all six places in the ground but one.
+- **Nailed** is the first-pass form with two beats: the lower limb at the legs (a small shove sideways), the upper
+  over the top (a heavier beat and a shove back), the foot set forward and raised, the hold from 0.36 s for 0.40 s
+  with the slow draw straight down and the trembling arms, the loose with dust and a ring, and the arrows in the
+  enemy going off 0.08 s apart after the blow. The enemy is not thrown flat and the inlay does not brighten.
+- **The second tier has no pose** (as for every two-tier weapon): the bow is tipped up in the skill's wind-up.
+  **The legs do not walk under the draw**: the stance slides at `ChargeMoveFactor` 0.35.
+- The stab's hand does not come away empty and there is no quiver: the arrow model is always in the right hand.
+- A planted arrow's vanes take the held element's colour as it lands; in the hand and in flight they are red.
+  A snapped or tripped arrow lays one stack of the held element; arrows burn, poison or mark nothing while they
+  only stand (section 6's Elements are not built). No sounds.
+
+### Chain Sickle (built 2026-11-16, late night)
+
+- Every number of section 4's table is in, the guard too. **Its prefix and carry name are `sickle`**
+  (`attack_sickle_1`, `idle_sickle`), not `chain`: `attack_chain_chain` aside, the Forge finds a clip's weapon by
+  its name and every weapon already has an `attack_<p>_chain`. Probe, on a training dummy: cut 9 and 8, weight 11
+  and 20 (and 11 from 3.8 m with the chain 4.3 m out), hook 10 and 8 with one shove, whirl two blows for 16 and
+  24, the chain 46 damage for 43 stamina; thrown sickle 22 and 26; the yank 14 and 30 from 3.5 m; on the post
+  (too heavy) the bearer went from 4.0 m to 1.4 m off; on the post made light it was shoved 2.64 m toward the
+  bearer (3.0 less what would bring it past the feet); Entangle 12 for 30 mana from 6 m, bound and held; the heavy
+  button from a standing start while bound gave the yank with 37.5 stagger (30 x 1.25); the bind gone after 2.5 s
+  and after a roll; a perfect guard shoved the attacker 0.70 m (it stood 1.6 m off) and added 15 stagger;
+  Unwinding 84 (28 x 3) with the bearer 2.6 m off, back turned, and two heaves on the dummy.
+- **Engine parts added for it.** E9: `IWeighted` (`EnemyKind.Weight`: 1, 2 for an elite, 4 for a god; a training
+  dummy 10); `AttackStep.PullSelf` is read: a pull on something of weight 2 or more moves the bearer instead, by
+  `PlayerController.Leap` a tenth of a second after the blow, stopping 1.4 m short; a positive `Pull` never brings
+  its target nearer than 0.9 m. Drag over time is `IShovable.Push` as it was (an enemy's shove is already paid out
+  over about a third of a second). E14: `ChainLine` on the player (a 24-point `LineRenderer` from the left hand's
+  socket to the weight, with a sag that goes to nothing when taut and a wave on the whip back; the weight and a
+  second sickle are its own two models; `ChainThrow` on a step says how the chain goes out: `Lane`, `Whirl`,
+  `Sweep`), and the bind: `AttackStep.Binds`, `PlayerCombat.BoundTarget`, `BoundLeft`, `BindLeash`,
+  `BoundStagger`, and `WeaponCombo.EnderAlways`, which makes the heavy button the chain's heavy from a standing
+  start.
+- **Bound is the afflictions' `Hold`**, not a state of `EnemyBrain`: the enemy stands still as if frozen without
+  the ice, for 2.5 s (less for an elite, by the same rule as ice). What cannot be held is bound for 1.0 s and not
+  stopped. The bind does not by itself break an attack already showing.
+- **Entangle strikes everything in its lane** and binds the nearest it struck; it does not stop at the first.
+- **No seven-metre leash**: the bearer may walk away, and at eight metres the chain lets go.
+- **The weight is not keyed by the clips** (no `PropA`): `ChainLine` puts it where the step says, between the
+  step's own times. At rest it turns in an upright circle beside the left hand; in the hold it rings overhead;
+  behind the guard the line is taut between the two hands. The contact sheets therefore show no chain.
+- **For the thrown sickle the in-hand model is hidden** and a second one rides the end of the line, which still
+  starts at the left hand.
+- **Unwinding** is between the design's full version and its first pass: the wrap (a beat at 0.16 s), the bearer
+  carried 2.6 m out on the near side with the back turned (`DashBearing` 180, 0.30 s, leaving the taut line), two
+  heaves that shove the enemy 0.7 m each toward the bearer, the hold from 0.50 s, the blind backward cut. The
+  enemy does not spin. `ArcDegrees` is 360 and `Reach` 3.4 (design 120 and 3.2): the blow is made on an enemy
+  behind. Against something fixed the same plays and it simply is not moved.
+- The flight to a heavy enemy ends in the yank's own last frames (the sickle raised and brought down); there is no
+  second blow on landing.
+- The chain is a plain pale line: no link texture, no ink edge, no coil on the hip at rest. The weight's
+  stand-in has no staged file of its own: `chain_sickle.fbx` holds the sickle, the weight and a link together, and
+  the intake has no rule for taking the three apart.
+- No element bends the chain yet (no Live Wire, Frost Shackle or Tithe), and no sounds.
 
 ### How the next weapon is added
 

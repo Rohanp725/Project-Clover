@@ -136,5 +136,23 @@ namespace Clover.Player
         GreyStrength,
         /// <summary>Flat. The share of weapon damage dealt that comes back as health: 0.05 is five in a hundred.</summary>
         Leech,
+        /// <summary>Share: how far the player's pushes throw (the Push action and what spell forms shove).</summary>
+        PushDistance,
+        /// <summary>Share: how much of a blow held on the guard still comes through as grey health.</summary>
+        GuardGrey,
+        /// <summary>Share: how long a freeze lasts.</summary>
+        FreezeSeconds,
+        /// <summary>Share: how hard a shatter lands.</summary>
+        ShatterDamage,
+        /// <summary>Share: the stagger of bursts afflictions make (a set-off, the burst of a death).</summary>
+        BurstStagger,
+        /// <summary>Share: how long ground laid by an effect or left by a spell lasts.</summary>
+        GroundSeconds,
+        /// <summary>Share: how wide that ground is.</summary>
+        GroundSize,
+        /// <summary>Share: how far an Arc effect leaps from one enemy to the next.</summary>
+        LeapReach,
+        /// <summary>Share: how long the timed boons of the player's marks last.</summary>
+        BoonSeconds,
     }
 }

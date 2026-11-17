@@ -66,5 +66,7 @@ namespace Clover.Player
         Lifted,
         /// <summary>An enemy thrown into the air comes down. Target: that enemy.</summary>
         Landed,
+        /// <summary>Poison bites an enemy, on its beat or made to. Target: that enemy. Carries the depth it bit at (for PerStack).</summary>
+        PoisonBite,
     }
 }

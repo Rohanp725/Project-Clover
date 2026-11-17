@@ -70,13 +70,13 @@ namespace Clover.Player.Trees
 
             // Left bough: Patience. Depth and the beat.
 
-            // BESPOKE: a blow within a fifth of a second of the target's beat. Until blows can be timed against the beat, one blow in five on a poisoned enemy doses twice and makes the next blow critical.
+            // Built on the beat (UpgradeEffect.OnBeat): a blow within a quarter of a second of the target's bite doses again and makes the blows of the next moment critical. The timed blow itself is not made critical.
             to.Add(new Upgrade { Id = InTime, Name = "In Time", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Venom }, X = -1.21f, Y = 2.4f, Icon = UpgradeIcons.Hourglass,
-                Description = "A blow that lands as the poison bites is critical and doses twice.",
+                Description = "A blow that lands as the poison bites doses twice, and for a moment after it your blows are critical.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Afflict, Needs = P, Chance = 0.2f, Affliction = P, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Boon, Needs = P, Chance = 0.2f, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Afflict, Needs = P, OnBeat = 0.25f, Affliction = P, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Boon, Needs = P, OnBeat = 0.25f, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 1.2f },
                 } });
             // Stands in: nothing can raise an affliction's greatest depth, so each dose works harder.
             to.Add(new Upgrade { Id = DeeperDose, Name = "Deeper Dose", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { InTime }, X = -0.78f, Y = 3.57f, Icon = UpgradeIcons.Drop,
@@ -85,17 +85,17 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = BitterDose, Name = "Bitter Dose", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { InTime }, X = -1.89f, Y = 3.06f, Icon = UpgradeIcons.Fang,
                 Description = "Each dose bites harder.",
                 Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.2f) } });
-            // BESPOKE: bites that grow while no blow of the weapon doses the bearer. Until then the poison on the enemy faced deepens by itself every few seconds.
+            // Built in the beat (Afflictions.PoisonRipens, kept by PlayerUpgrades): each bite with no fresh dose since the last is a quarter stronger than the one before. Any fresh dose resets it, not only a blow of the weapon.
             to.Add(new Upgrade { Id = LeftToRipen, Name = "Left to Ripen", Element = E, Kind = UpgradeKind.Major, Requires = new[] { InTime }, X = -1.61f, Y = 4.2f, Icon = UpgradeIcons.Leaf,
-                Description = "Poison you leave alone ripens. Each bite that comes without a fresh blow from you is stronger than the last.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 4f, Do = UpgradeAction.Afflict, Affliction = P, Stacks = 1, Radius = 2f } } });
+                Description = "Poison you leave alone ripens. Each bite that comes without a fresh dose from you is stronger than the last.",
+                Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.34f) } });
             to.Add(new Upgrade { Id = Lingering, Name = "Lingering", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { LeftToRipen }, X = -2.4f, Y = 4.91f, Icon = UpgradeIcons.Hourglass,
                 Description = "Poison stays longer before it fades.",
                 Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.5f) } });
-            // The bite is a burst of a set size round a poisoned attacker; it does not yet measure the depth of each enemy it reaches.
+            // Built on the beat (UpgradeAction.Bite): every poisoned enemy within five metres of the attacker bites on the next step, each at its own depth.
             to.Add(new Upgrade { Id = LanceTheWound, Name = "Lance the Wound", Element = E, Kind = UpgradeKind.Major, Requires = new[] { LeftToRipen }, X = -2.0f, Y = 6.0f, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard makes the attacker's poison bite at once, and with it the poison in everyone near.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Burst, Needs = P, Affliction = P, Damage = 12f, Stagger = 6f, Radius = 4f } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Bite, Radius = 5f } } });
             to.Add(new Upgrade { Id = WaitingGame, Name = "Waiting Game", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { LanceTheWound }, X = -1.45f, Y = 7.03f, Icon = UpgradeIcons.Gem,
                 Description = "Perfect guards give more mana.",
                 Stats = new[] { new StatMod(PlayerStat.ManaFromGuards, 0.33f) } });
@@ -104,13 +104,13 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.GuardStamina, -0.167f) } });
             // BESPOKE: the hold that coils through three fangs, and the release that passes through a blow. Until then: the step through the enemy at the strength of two fangs.
             to.Add(new Upgrade { Id = CoiledStrike, Name = "Coiled Strike", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { LanceTheWound }, X = -2.4f, Y = 7.8f, Icon = UpgradeIcons.Arrow,
-                Description = "Hold the spell button to coil, for as long as you dare. Let go to strike through the enemy you face, deeper for every breath you waited. Let go as a blow is about to land and it passes through you. 35 mana.",
+                Description = "Hold the spell button to strike through the enemy you face, cutting it and poisoning it deeply. If the cut lands, your next heavy blow in the moment after is critical. 35 mana.",
                 Form = FormStep,
                 Spell = new SpellSpec { Cost = 35f, Reach = 6f, Damage = 24f, Stagger = 25f, Stacks = 4, Seconds = 3f } });
-            // Poison still has a top to its depth and still fades, only far later; nothing closes Volatile to one who holds this.
+            // Poison goes twelve deeper (not without limit) and does not fade (Afflictions.PoisonKeeps). Nothing closes Volatile to one who holds this.
             to.Add(new Upgrade { Id = SlowDeath, Name = "Slow Death", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CoiledStrike }, X = -1.93f, Y = 9.18f, Icon = UpgradeIcons.Skull,
-                Description = "Your weapon wounds far less. Your poison has no limit to its depth, and it does not fade while its bearer lives.",
-                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, -0.3f), new StatMod(PlayerStat.AfflictionSeconds, 2f), new StatMod(PlayerStat.AfflictionStacks, 1f) } });
+                Description = "Your weapon wounds far less. Your poison goes twelve doses deeper, and it does not fade while its bearer lives.",
+                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, -0.3f), new StatMod(PlayerStat.AfflictionDepth, 12f) } });
 
             // Middle bough: Rupture. Bursts.
 
@@ -132,10 +132,10 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, Do = UpgradeAction.Burst, Affliction = AfflictionKind.Poison, Damage = 10f, Stagger = 6f, Radius = 3.5f, Stacks = 1, CarriesDepth = true, Cooldown = 0.3f } } });
             to.Add(new Upgrade { Id = Buckling, Name = "Buckling", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { RottenFruit }, X = 0.84f, Y = 5.78f, Icon = UpgradeIcons.Hammer,
                 Description = "Bursting poison breaks balance sooner.",
-                Stats = new[] { new StatMod(PlayerStat.StaggerDealt, 0.08f) } });
+                Stats = new[] { new StatMod(PlayerStat.BurstStagger, 0.4f) } });
             // The blister is the brand form: the next blow of the weapon breaks it, light or heavy, at one size.
             to.Add(new Upgrade { Id = Blister, Name = "Blister", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { RottenFruit }, X = 0f, Y = 6.5f, Icon = UpgradeIcons.Orb,
-                Description = "Hold the spell button to raise a blister on the enemy you face. It swells each time its poison bites, through three sizes. Break it with a heavy blow. Wait too long and it withers. 40 mana.",
+                Description = "Hold the spell button to raise a blister on the enemy you face. Your next blow on it breaks it in a wide burst that poisons deeply. Wait too long and it withers. 40 mana.",
                 Form = FormBrand,
                 Spell = new SpellSpec { Cost = 40f, Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 40f, Stagger = 30f, Stacks = 4 } });
             to.Add(new Upgrade { Id = SpentVenom, Name = "Spent Venom", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Blister }, X = 1.04f, Y = 7.1f, Icon = UpgradeIcons.Gem,
@@ -143,39 +143,38 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.2f, AfflictionKind.Poison) } });
             // BESPOKE: the raised hand, the line from enemy to enemy, each burst passing its depth to the next. Until then a burst rises under every enemy near.
             to.Add(new Upgrade { Id = OneByOne, Name = "One by One", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Blister }, X = 0f, Y = 8.3f, Icon = UpgradeIcons.Chain,
-                Description = "Hold the spell button and raise your hand. At the snap of your fingers every poisoned enemy bursts in turn, nearest first, each passing its depth on to the next. 50 mana.",
+                Description = "Hold the spell button and a burst rises under each of the six nearest enemies in turn, throwing them into the air. 50 mana.",
                 Form = FormPillars,
                 Spell = new SpellSpec { Cost = 50f, Count = 6, Reach = 10f, Radius = 2.5f, Damage = 30f, Stagger = 20f, Stacks = 0, Delay = 0.5f } });
-            // The beat still bites as well, and nothing closes Slow Death to one who holds this.
+            // The beat is stilled (Afflictions.PoisonBeatOff); what is full is set off. Nothing closes Slow Death to one who holds this.
             to.Add(new Upgrade { Id = Volatile, Name = "Volatile", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { OneByOne }, X = 0.26f, Y = 9.84f, Icon = UpgradeIcons.Burst,
                 Description = "Your poison no longer bites on its beat. It builds until it is full, and then bursts by itself and begins again.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Do = UpgradeAction.SetOff, Needs = P, Affliction = P, Damage = 1f, Stagger = 4f, Radius = 2.5f, Cooldown = 0.5f } } });
 
             // Right bough: Contagion. Spreading.
 
-            // There is no trigger for the bite itself: a blow or a spell on a poisoned enemy sends the dose across, once a beat.
+            // On the bite itself (UpgradeTrigger.PoisonBite): one dose leaps to an enemy within four metres.
             to.Add(new Upgrade { Id = Catching, Name = "Catching", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Venom }, X = 1.21f, Y = 2.4f, Icon = UpgradeIcons.Chain,
                 Description = "Each time poison bites, one dose leaps to the nearest enemy within reach.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictedHit, Do = UpgradeAction.Arc, Needs = P, Affliction = P, Damage = 2f, Count = 1, Reach = 4f, Stacks = 1, Cooldown = 2f } } });
-            // Stands in: the base spell leaves no cloud yet, so what it lays lasts longer.
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Do = UpgradeAction.Pass, Affliction = P, Reach = 4f, Stacks = 1 } } });
+            // There are no clouds: the words say what the number does.
             to.Add(new Upgrade { Id = StillAir, Name = "Still Air", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Catching }, X = 0.77f, Y = 3.52f, Icon = UpgradeIcons.Gust,
-                Description = "Clouds of poison hang longer.",
+                Description = "Poison you lay lasts longer before it fades.",
                 Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.25f) } });
             to.Add(new Upgrade { Id = WideCloud, Name = "Wide Cloud", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Catching }, X = 1.88f, Y = 3.05f, Icon = UpgradeIcons.Ring,
-                Description = "Clouds of poison are larger.",
+                Description = "Your spells reach further.",
                 Stats = new[] { new StatMod(PlayerStat.SpellReach, 0.25f) } });
-            // BESPOKE: one beat shared by every enemy, stronger for each one poisoned. Until then poison works harder always, and poison that reaches its full depth doses everyone near its bearer.
+            // Built in the beat (Afflictions.SharedBeat, kept by PlayerUpgrades): one beat for everything, each bite 15% stronger for every poisoned enemy beyond the first that bit on the beat before.
             to.Add(new Upgrade { Id = OneSickness, Name = "One Sickness", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Catching }, X = 1.61f, Y = 4.2f, Icon = UpgradeIcons.Spiral,
                 Description = "The poison in every enemy bites on the same beat. Each poisoned enemy beyond the first makes every bite stronger.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.2f) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Do = UpgradeAction.Afflict, Needs = P, Affliction = P, Stacks = 1, Radius = 5f, Cooldown = 2f } } });
-            // Stands in: no stat reaches how far a dose leaps, so spells reach further.
+                Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.1f, AfflictionKind.Poison) } });
+            // LeapReach: how far a dose leaps (the Pass action of Catching, and every Arc effect).
             to.Add(new Upgrade { Id = LongLeap, Name = "Long Leap", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { OneSickness }, X = 2.39f, Y = 4.9f, Icon = UpgradeIcons.Arrow,
                 Description = "Poison leaps further between enemies.",
-                Stats = new[] { new StatMod(PlayerStat.SpellReach, 0.15f) } });
+                Stats = new[] { new StatMod(PlayerStat.LeapReach, 0.5f) } });
             // The censer leaves no smoke behind it yet.
             to.Add(new Upgrade { Id = SwingingCenser, Name = "Swinging Censer", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { OneSickness }, X = 2.0f, Y = 6.0f, Icon = UpgradeIcons.Ring,
-                Description = "Hold the spell button to set a smoking censer swinging round you on its chain. It doses whatever it passes and leaves its smoke behind. 35 mana.",
+                Description = "Hold the spell button to set a smoking censer swinging round you on its chain. It doses whatever it passes. 35 mana.",
                 Form = FormDiscs,
                 Spell = new SpellSpec { Cost = 35f, Count = 1, Radius = 3f, Seconds = 8f, Interval = 1.2f, Damage = 4f, Stagger = 4f, Stacks = 1 } });
             // It makes every spell cheaper by half as much, not the base spell alone.
@@ -184,12 +183,12 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
             // It doses everyone passed two deep; it does not yet raise them all to the depth of the sickest.
             to.Add(new Upgrade { Id = ShareAlike, Name = "Share Alike", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { SwingingCenser }, X = 2.4f, Y = 7.8f, Icon = UpgradeIcons.Comet,
-                Description = "Hold the spell button to rush through everything before you. Every enemy you pass is poisoned as deeply as the sickest among them. 40 mana.",
+                Description = "Hold the spell button to rush through everything before you, untouchable. Every enemy you pass is struck and poisoned two deep. 40 mana.",
                 Form = FormDrill,
                 Spell = new SpellSpec { Cost = 40f, Reach = 7f, Radius = 1f, Count = 1, Damage = 10f, Stagger = 10f, Stacks = 2, Speed = 20f } });
-            // Stands in: no stat reaches what the surge gives back, so the surge lasts longer.
+            // The words say what the number does.
             to.Add(new Upgrade { Id = SweetFever, Name = "Sweet Fever", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { ShareAlike }, X = 1.53f, Y = 8.6f, Icon = UpgradeIcons.Plus,
-                Description = "Fever returns more of what the poison takes.",
+                Description = "Fever lasts longer.",
                 Stats = new[] { new StatMod(PlayerStat.SurgeSeconds, 0.2f) } });
             to.Add(new Upgrade { Id = PlagueBearer, Name = "Plague Bearer", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { ShareAlike }, X = 2.59f, Y = 9.3f, Icon = UpgradeIcons.Fang,
                 Description = "You carry the sickness. Enemies near you are poisoned without a blow, deeper the longer they stay. Your flasks heal less.",

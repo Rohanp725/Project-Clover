@@ -42,7 +42,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Do = UpgradeAction.SetOff, Needs = AfflictionKind.Poison, NeedsFull = true, Needs2 = AfflictionKind.Burn, Affliction = AfflictionKind.Poison, Stagger = 4f, Radius = 3f, Cooldown = 0.5f }, new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Do = UpgradeAction.Afflict, Needs = AfflictionKind.Poison, NeedsFull = true, Needs2 = AfflictionKind.Burn, Affliction = AfflictionKind.Burn, Stacks = 2, Radius = 3f, Cooldown = 0.5f } } });
             // BESPOKE: a cone that stands for as long as the button is held. The beam form is the nearest held breath; it lays only the affliction of the element held.
             to.Add(new Upgrade { Id = FireEater, Name = "Fire Eater", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { Fuel }, X = 0.5f, Y = 2.36f, Icon = UpgradeIcons.Wave,
-                Description = "Hold the spell button to take a mouthful and breathe it out as green fire, for as long as you hold. It poisons and burns all it sweeps across. 40 mana.",
+                Description = "Hold the spell button to brace and breathe out a stream of green fire for two seconds, turning slowly as it burns. It lays the affliction of the element you hold on all it sweeps across. 40 mana.",
                 Form = FormBeam,
                 Spell = new SpellSpec { Cost = 40f, Reach = 5f, Radius = 1.2f, Seconds = 2f, Interval = 0.25f, Damage = 4f, Stagger = 3f, Stacks = 1 } });
             // Every death does it, whatever the dead one carried.
@@ -51,12 +51,12 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, Needs2 = AfflictionKind.Burn, Do = UpgradeAction.Burst, Affliction = AfflictionKind.Poison, Damage = 20f, Stagger = 20f, Radius = 3.5f, Stacks = 2, Cooldown = 0.5f }, new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, Needs2 = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1, Radius = 3.5f, Cooldown = 0.5f }, new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, Needs2 = AfflictionKind.Burn, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Affliction = AfflictionKind.Burn, Damage = 5f, Radius = 1.5f, Seconds = 4f, Interval = 0.5f, Stacks = 1, Cooldown = 0.5f } } });
             // The fuse is the brand form: the next blow of the weapon on the enemy sets it off, at one size. It does not yet burn down by time, grow with doses or answer a perfect guard.
             to.Add(new Upgrade { Id = LitFuse, Name = "Lit Fuse", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { GoesUp }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Target,
-                Description = "Hold the spell button to set a fuse on the enemy you face. It burns down while you work. Every dose you lay makes the blast greater, and a perfect guard against that enemy sets it off at once, and harder. 45 mana.",
+                Description = "Hold the spell button to set a fuse on the enemy you face. Your next blow on it within five seconds sets off a great blast. 45 mana.",
                 Form = FormBrand,
                 Spell = new SpellSpec { Cost = 45f, Reach = 8f, Seconds = 5f, Count = 1, Radius = 3.5f, Damage = 40f, Stagger = 40f, Stacks = 2 } });
-            // BESPOKE: burn biting on the poison's beat, each stronger for the depth of the other. Until then both simply work harder.
+            // NOT BUILT: burn biting on the poison's beat, each stronger for the depth of the other. The words say what the number does.
             to.Add(new Upgrade { Id = SlowBurn, Name = "Slow Burn", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { FuneralFire }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Hourglass,
-                Description = "Burn and poison keep one time. Both bite together on the beat, and each bites harder for the depth of the other.",
+                Description = "Burn and poison both work harder.",
                 Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.3f) } });
 
             // BESPOKE (built): PyresForm.

@@ -44,6 +44,19 @@ namespace Clover.Player
 
         public void Configure(Set[] carried) => sets = carried;
 
+        /// <summary>A socket (or any part) by name, anywhere under a root. For Awake, not for every frame.</summary>
+        public static Transform FindSocket(Transform root, string name)
+        {
+            if (root == null) return null;
+            if (root.name == name) return root;
+            for (int i = 0; i < root.childCount; i++)
+            {
+                var found = FindSocket(root.GetChild(i), name);
+                if (found != null) return found;
+            }
+            return null;
+        }
+
         public bool Has(string carry)
         {
             foreach (var set in sets)

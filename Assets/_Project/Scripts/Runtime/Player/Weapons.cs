@@ -20,6 +20,9 @@ namespace Clover.Player
         public const string ArmamentName = "Armament";
         public const string GreatSpearName = "Great Spear";
         public const string GreatHammerName = "Great Hammer";
+        public const string TwinKnivesName = "Twin Knives";
+        public const string GreatBowName = "Great Bow";
+        public const string ChainSickleName = "Chain Sickle";
 
         // Every weapon there is, by name. A new weapon is one line here and its own method below.
         private static readonly Dictionary<string, Func<Weapon>> builders = new Dictionary<string, Func<Weapon>>
@@ -32,10 +35,13 @@ namespace Clover.Player
             { ArmamentName, () => Armament(RunState.Element) },
             { GreatSpearName, GreatSpear },
             { GreatHammerName, GreatHammer },
+            { TwinKnivesName, TwinKnives },
+            { GreatBowName, GreatBow },
+            { ChainSickleName, ChainSickle },
         };
 
         /// <summary>The names a stand or a rack may offer, in the order they are set out. The god's own sword is given, not chosen.</summary>
-        public static readonly string[] Offered = { FistsName, KatanaName, MassiveSwordName, ScytheName, ArmamentName, GreatSpearName, GreatHammerName };
+        public static readonly string[] Offered = { FistsName, KatanaName, MassiveSwordName, ScytheName, ArmamentName, GreatSpearName, GreatHammerName, TwinKnivesName, GreatBowName, ChainSickleName };
 
         public static Weapon ByName(string name) => name != null && builders.TryGetValue(name, out var build) ? build() : Fists();
 
@@ -280,6 +286,187 @@ namespace Clover.Player
                 },
             };
             return weapon.Named("hammer", true);
+        }
+
+        /// <summary>
+        /// The Twin Knives: the quickest hands and the least reach. Five cuts in a second and a half (the third is two
+        /// blows), every blow worth half as much again on a back; the fifth cut and the chain's heavy both carry the
+        /// bearer through the target and turn them to face its back; a cut out of the sidestep; and the Fan of Knives,
+        /// a spring away with five knives of light thrown from the top of it. The guard is a parry and nothing else.
+        /// Numbers from docs/design/weapons.md.
+        /// </summary>
+        public static Weapon TwinKnives()
+        {
+            var weapon = new Weapon
+            {
+                Name = TwinKnivesName,
+                Carry = "knife",
+                SkillName = "Fan of Knives",
+                SlashColour = new Color(1.5f, 1.9f, 1.7f, 0.85f),
+                BackMultiplier = 1.5f,
+                OffHandSocket = WeaponRack.HandLeft,
+                RestSocket = WeaponRack.Hip,
+                GuardProfile = new Guard { PerfectWindow = 0.21f, StaminaPerDamage = 1.25f, ChipFraction = 0.45f, ArcDegrees = 160f },
+                DodgeProfile = new DodgeRoll { Distance = 3.4f, Duration = 0.26f, StaminaCost = 16f, InvulnerableFrom = 0.02f, InvulnerableUntil = 0.19f, Recovery = 0.06f },
+                MoveFactor = 1.08f,
+                GuardMoveFactor = 0.7f,
+                Combo = new WeaponCombo
+                {
+                    Steps = new List<AttackStep>
+                    {
+                        new AttackStep { Name = "attack_knife_1", Sweep = -1f, Windup = 0.06f, Active = 0.05f, Recovery = 0.13f, Damage = 5f, Stagger = 4f, StaminaCost = 5f, ManaGain = 3f, Lunge = 0.5f, Reach = 1.7f, ArcDegrees = 100f, HitStopSeconds = 0.025f },
+                        new AttackStep { Name = "attack_knife_2", Sweep = 1f, Windup = 0.06f, Active = 0.05f, Recovery = 0.13f, Damage = 5f, Stagger = 4f, StaminaCost = 5f, ManaGain = 3f, Lunge = 0.5f, Reach = 1.7f, ArcDegrees = 100f, HitStopSeconds = 0.025f },
+                        // The cross: both knives in, then both out.
+                        new AttackStep { Name = "attack_knife_3", Windup = 0.08f, Active = 0.10f, Recovery = 0.16f, Damage = 5f, Stagger = 5f, StaminaCost = 7f, ManaGain = 3f, Lunge = 0.6f, Reach = 1.8f, ArcDegrees = 120f, HitStopSeconds = 0.03f, Repeats = new[] { 0.06f } },
+                        new AttackStep { Name = "attack_knife_4", Sweep = -1f, Windup = 0.07f, Active = 0.05f, Recovery = 0.14f, Damage = 7f, Stagger = 5f, StaminaCost = 6f, ManaGain = 4f, Lunge = 0.5f, Reach = 1.8f, ArcDegrees = 100f, HitStopSeconds = 0.03f },
+                        // The passing spin: through the target and out the far side.
+                        new AttackStep { Name = "attack_knife_5", Sweep = 1f, Windup = 0.12f, Active = 0.08f, Recovery = 0.30f, Damage = 12f, Stagger = 12f, StaminaCost = 9f, ManaGain = 6f, Lunge = 0.4f, Reach = 2.0f, ArcDegrees = 200f, HitStopSeconds = 0.06f, Shake = 0.06f, Travel = 2.4f, PassThrough = true },
+                    },
+                    Heavy = new AttackStep { Name = "attack_knife_heavy", Heavy = true, Windup = 0.18f, Active = 0.08f, Recovery = 0.34f, Damage = 16f, Stagger = 18f, StaminaCost = 14f, ManaGain = 8f, Lunge = 2.2f, Reach = 2.0f, ArcDegrees = 60f, HitStopSeconds = 0.07f, Shake = 0.08f },
+                    ChainHeavy = new AttackStep { Name = "attack_knife_chain", Heavy = true, Sweep = -1f, Windup = 0.10f, Active = 0.10f, Recovery = 0.30f, Damage = 18f, Stagger = 20f, StaminaCost = 14f, ManaGain = 9f, Lunge = 0.4f, Reach = 1.8f, ArcDegrees = 140f, HitStopSeconds = 0.07f, Shake = 0.10f, Travel = 3.0f, PassThrough = true },
+                    DashAttack = new AttackStep { Name = "attack_knife_dash", Sweep = 1f, Windup = 0.04f, Active = 0.08f, Recovery = 0.20f, Damage = 9f, Stagger = 8f, StaminaCost = 6f, ManaGain = 5f, Lunge = 1.0f, Reach = 2.0f, ArcDegrees = 160f, HitStopSeconds = 0.04f },
+                    Skill = new AttackStep
+                    {
+                        Name = "attack_knife_skill", Heavy = true, Windup = 0.10f, Active = 0.06f, Recovery = 0.36f, Damage = 0f, Stagger = 0f, StaminaCost = 12f, ManaGain = 0f, Lunge = -2.6f, Reach = 0f, ArcDegrees = 0f, HitStopSeconds = 0.05f, Shake = 0.10f,
+                        // Five knives of light in a fan: from a step away all five find one enemy, from range it thins out.
+                        Shot = new WeaponShot { Count = 5, SpreadDegrees = 50f, Speed = 22f, Range = 8f, Radius = 0.35f, Damage = 9f, Stagger = 8f, Pierce = false, FromStepStart = true },
+                    },
+                    Finisher = new AttackStep
+                    {
+                        Name = "attack_knife_finisher", Heavy = true, Windup = 0.70f, Active = 0.10f, Recovery = 0.50f, Damage = 22f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 3.0f, ArcDegrees = 360f, HitStopSeconds = 0.20f, Shake = 0.45f,
+                        LungeSeconds = 0.08f, HoldAt = 0.52f, HoldSeconds = 0.16f,
+                        // Three Crossings: three passes through the kneeling enemy to the corners of a triangle round it, each leaving a line.
+                        Beats = new[]
+                        {
+                            new FinisherBeat { Time = 0.10f, HitStopSeconds = 0.03f, Shake = 0.05f, Effect = VfxKind.HitSpark, DashBeyond = 2.2f, DashBearing = 0f, DashSeconds = 0.10f },
+                            new FinisherBeat { Time = 0.28f, HitStopSeconds = 0.03f, Shake = 0.05f, Effect = VfxKind.HitSpark, DashBeyond = 2.2f, DashBearing = 120f, DashSeconds = 0.10f },
+                            new FinisherBeat { Time = 0.46f, HitStopSeconds = 0.03f, Shake = 0.06f, Effect = VfxKind.HitSpark, DashBeyond = 2.2f, DashBearing = 240f, DashSeconds = 0.10f },
+                        },
+                    },
+                    SkillManaCost = 25f,
+                    ChargeTime = 0.30f,
+                },
+            };
+            return weapon.Named("knife", true);
+        }
+
+        /// <summary>
+        /// The Chain Sickle: a blade in the right hand for the enemy in front and a weight on a chain in the left for
+        /// the one four metres off, and the light chain goes from one to the other: cut, weight, hook, whirl. The
+        /// sickle itself thrown on the chain for the heavy; the yank, which drags what is light to the bearer's feet
+        /// and drags the bearer to what is not; and Entangle, which binds the first enemy down a long lane.
+        /// Numbers from docs/design/weapons.md. Its clips and its model are named "sickle": "chain" is already the
+        /// word every weapon uses for the heavy that ends a chain.
+        /// </summary>
+        public static Weapon ChainSickle()
+        {
+            var weapon = new Weapon
+            {
+                Name = ChainSickleName,
+                Carry = "sickle",
+                SkillName = "Entangle",
+                SlashColour = new Color(1.6f, 1.7f, 1.9f, 0.85f),
+                OffHandSocket = WeaponRack.HandLeft,
+                RestSocket = WeaponRack.Hip,
+                AimRange = 7.5f,
+                // A perfect guard whips the chain round the attacking limb: the attacker is yanked in, off balance.
+                PerfectGuardPull = 1.2f,
+                PerfectGuardStagger = 15f,
+                GuardProfile = new Guard { PerfectWindow = 0.18f, StaminaPerDamage = 1.1f, ChipFraction = 0.4f, ArcDegrees = 200f },
+                Combo = new WeaponCombo
+                {
+                    Steps = new List<AttackStep>
+                    {
+                        new AttackStep { Name = "attack_sickle_1", Sweep = 1f, Windup = 0.10f, Active = 0.07f, Recovery = 0.22f, Damage = 9f, Stagger = 8f, StaminaCost = 9f, ManaGain = 5f, Lunge = 0.6f, Reach = 2.2f, ArcDegrees = 130f, HitStopSeconds = 0.04f },
+                        new AttackStep { Name = "attack_sickle_2", Windup = 0.18f, Active = 0.08f, Recovery = 0.34f, Damage = 11f, Stagger = 20f, StaminaCost = 11f, ManaGain = 6f, Lunge = 0.2f, Reach = 5.2f, LineWidth = 0.9f, HitStopSeconds = 0.06f, Shake = 0.06f, Chain = ChainThrow.Lane },
+                        new AttackStep { Name = "attack_sickle_3", Sweep = -1f, Windup = 0.10f, Active = 0.07f, Recovery = 0.24f, Damage = 10f, Stagger = 8f, StaminaCost = 9f, ManaGain = 5f, Lunge = 0.7f, Reach = 2.3f, ArcDegrees = 130f, HitStopSeconds = 0.04f, Pull = 0.6f },
+                        // The whirl: two rings at four metres.
+                        new AttackStep { Name = "attack_sickle_4", Sweep = 1f, Windup = 0.24f, Active = 0.20f, Recovery = 0.42f, Damage = 8f, Stagger = 12f, StaminaCost = 14f, ManaGain = 4f, Lunge = 0f, Reach = 4.0f, ArcDegrees = 360f, HitStopSeconds = 0.05f, Shake = 0.08f, Repeats = new[] { 0.10f }, Chain = ChainThrow.Whirl },
+                    },
+                    Heavy = new AttackStep { Name = "attack_sickle_heavy", Heavy = true, Sweep = 1f, Windup = 0.30f, Active = 0.14f, Recovery = 0.50f, Damage = 22f, Stagger = 26f, StaminaCost = 20f, ManaGain = 10f, Lunge = 0.4f, Reach = 4.6f, ArcDegrees = 220f, HitStopSeconds = 0.09f, Shake = 0.14f, Chain = ChainThrow.Sweep },
+                    ChainHeavy = new AttackStep { Name = "attack_sickle_chain", Heavy = true, Windup = 0.16f, Active = 0.08f, Recovery = 0.44f, Damage = 14f, Stagger = 30f, StaminaCost = 16f, ManaGain = 9f, Lunge = 0f, Reach = 5.5f, LineWidth = 1.0f, HitStopSeconds = 0.08f, Shake = 0.12f, Pull = 3.0f, PullSelf = true, Chain = ChainThrow.Lane },
+                    Skill = new AttackStep { Name = "attack_sickle_skill", Heavy = true, Windup = 0.16f, Active = 0.10f, Recovery = 0.40f, Damage = 12f, Stagger = 35f, StaminaCost = 14f, ManaGain = 0f, Lunge = 0f, Reach = 7.0f, LineWidth = 1.2f, HitStopSeconds = 0.10f, Shake = 0.20f, Binds = 2.5f, Chain = ChainThrow.Lane },
+                    Finisher = new AttackStep
+                    {
+                        // The blow is made backward, on an enemy behind: it reaches all round.
+                        Name = "attack_sickle_finisher", Heavy = true, Sweep = -1f, Windup = 0.66f, Active = 0.12f, Recovery = 0.60f, Damage = 28f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 3.4f, ArcDegrees = 360f, HitStopSeconds = 0.22f, Shake = 0.50f,
+                        LungeSeconds = 0.10f, HoldAt = 0.50f, HoldSeconds = 0.16f,
+                        // The weight wraps, and the bearer turns the back and walks the chain out to its length; two heaves bring the enemy in behind.
+                        Beats = new[]
+                        {
+                            new FinisherBeat { Time = 0.16f, HitStopSeconds = 0.04f, Shake = 0.08f, Effect = VfxKind.HitSpark, DashBeyond = 2.6f, DashBearing = 180f, DashSeconds = 0.30f },
+                            new FinisherBeat { Time = 0.30f, HitStopSeconds = 0.02f, Shake = 0.06f, Effect = VfxKind.Dust, Shove = new Vector3(0f, 0f, 0.7f) },
+                            new FinisherBeat { Time = 0.42f, HitStopSeconds = 0.02f, Shake = 0.08f, Effect = VfxKind.Dust, Shove = new Vector3(0f, 0f, 0.7f) },
+                        },
+                    },
+                    SkillManaCost = 30f,
+                    ChargeTime = 0.40f,
+                },
+            };
+            return weapon.Named("sickle", false);
+        }
+
+        // An arrow off the string: it stays in what it strikes, or stands in the ground where its flight ends.
+        private static WeaponShot Arrow(float speed, float range, float radius, float damage, float stagger, bool pierce, float manaGain, float releaseAfter = 0f) => new WeaponShot
+        {
+            Speed = speed, Range = range, Radius = radius, Damage = damage, Stagger = stagger, Pierce = pierce, Heavy = true,
+            Plants = true, ManaGain = manaGain, ReleaseAfter = releaseAfter, Prop = "arrow", PropLength = 1.1f,
+        };
+
+        /// <summary>
+        /// The Great Bow: a war bow taller than its bearer, shod with horn for striking. Its arrows stay in what they
+        /// hit, and every blow of the stave snaps the arrows standing in its target: step off and plant, step in and
+        /// cash. A swat and a stab with the arrow in the fist (which leaves it there); a snap shot; a kick that throws
+        /// the bearer back with a shot loosed in the air; a full draw that goes through a line of enemies; and
+        /// Landmines, five arrows dropped in a ring. Numbers from docs/design/weapons.md.
+        /// </summary>
+        public static Weapon GreatBow()
+        {
+            var weapon = new Weapon
+            {
+                Name = GreatBowName,
+                Carry = "bow",
+                SkillName = "Landmines",
+                SlashColour = new Color(1.8f, 1.7f, 1.3f, 0.85f),
+                HandSocket = WeaponRack.HandLeft,
+                OffHandSocket = WeaponRack.HandRight,
+                AimRange = 12f,
+                // Narrow: at twelve metres the usual wide cone would turn a shot to whoever stood nearest off to one side.
+                AimConeDegrees = 60f,
+                // A perfect guard drives the arrow in the right fist into the attacker.
+                PerfectGuardPlants = 1,
+                GuardProfile = new Guard { PerfectWindow = 0.18f, StaminaPerDamage = 1.15f, ChipFraction = 0.4f, ArcDegrees = 180f },
+                Combo = new WeaponCombo
+                {
+                    Steps = new List<AttackStep>
+                    {
+                        // The clip winds the stave to the right hip and sweeps it out to the left, so the sweep is +1 (the design's table says -1 and its text describes this).
+                        new AttackStep { Name = "attack_bow_1", Sweep = 1f, Windup = 0.13f, Active = 0.07f, Recovery = 0.30f, Damage = 9f, Stagger = 14f, StaminaCost = 9f, ManaGain = 5f, Lunge = 0.6f, Reach = 2.6f, ArcDegrees = 130f, HitStopSeconds = 0.045f, SnapsArrows = true },
+                        new AttackStep { Name = "attack_bow_2", Windup = 0.20f, Active = 0.08f, Recovery = 0.38f, Damage = 12f, Stagger = 10f, StaminaCost = 11f, ManaGain = 6f, Lunge = 0.9f, Reach = 2.2f, ArcDegrees = 50f, HitStopSeconds = 0.06f, SnapsArrows = true, PlantsArrows = 1 },
+                    },
+                    Heavy = new AttackStep { Name = "attack_bow_heavy", Heavy = true, Windup = 0.32f, Active = 0.06f, Recovery = 0.40f, Damage = 0f, Stagger = 0f, StaminaCost = 16f, ManaGain = 0f, Lunge = 0f, Reach = 0f, ArcDegrees = 0f, HitStopSeconds = 0.07f, Shake = 0.08f, Recoil = 0.3f, Shot = Arrow(30f, 9f, 0.4f, 18f, 22f, false, 8f) },
+                    // The kick lands and snaps; the shot leaves from the far end of the spring back.
+                    ChainHeavy = new AttackStep { Name = "attack_bow_chain", Heavy = true, Windup = 0.16f, Active = 0.08f, Recovery = 0.44f, Damage = 6f, Stagger = 12f, StaminaCost = 16f, ManaGain = 8f, Lunge = 0.3f, Reach = 1.8f, ArcDegrees = 80f, HitStopSeconds = 0.08f, Shake = 0.12f, Recoil = 3.0f, SnapsArrows = true, Shot = Arrow(30f, 7f, 0.4f, 20f, 24f, false, 0f, 0.2f) },
+                    ChargedHeavy = new AttackStep { Name = "attack_bow_charged", Heavy = true, Windup = 0.06f, Active = 0.08f, Recovery = 0.50f, Damage = 0f, Stagger = 0f, StaminaCost = 24f, ManaGain = 0f, Lunge = 0f, Reach = 0f, ArcDegrees = 0f, HitStopSeconds = 0.11f, Shake = 0.22f, Recoil = 0.8f, Shot = Arrow(40f, 14f, 0.5f, 34f, 44f, true, 12f) },
+                    Skill = new AttackStep { Name = "attack_bow_skill", Heavy = true, Windup = 0.26f, Active = 0.08f, Recovery = 0.46f, Damage = 0f, Stagger = 0f, StaminaCost = 15f, ManaGain = 0f, Lunge = 0f, Reach = 0f, ArcDegrees = 0f, HitStopSeconds = 0.08f, Shake = 0.16f, Effect = StepEffect.ArrowRain },
+                    Finisher = new AttackStep
+                    {
+                        Name = "attack_bow_finisher", Heavy = true, Windup = 0.80f, Active = 0.10f, Recovery = 0.60f, Damage = 30f, Stagger = 0f, StaminaCost = 0f, ManaGain = 15f, Lunge = 0f, Reach = 2.6f, ArcDegrees = 120f, HitStopSeconds = 0.24f, Shake = 0.55f,
+                        LungeSeconds = 0.10f, HoldAt = 0.36f, HoldSeconds = 0.40f, Effect = StepEffect.GroundSlam, SnapsArrows = true,
+                        // The lower limb takes the legs, then the upper comes over the top and knocks the enemy down.
+                        Beats = new[]
+                        {
+                            new FinisherBeat { Time = 0.10f, HitStopSeconds = 0.03f, Shake = 0.06f, Effect = VfxKind.HitSpark, Shove = new Vector3(0.12f, 0f, 0f) },
+                            new FinisherBeat { Time = 0.18f, HitStopSeconds = 0.05f, Shake = 0.16f, Effect = VfxKind.HeavySpark, Shove = new Vector3(0f, 0f, 0.15f) },
+                        },
+                    },
+                    SkillManaCost = 35f,
+                    ChargeTime = 0.60f,
+                    SkillChargeTime = 1.00f,
+                    ChargeMoveFactor = 0.35f,
+                },
+            };
+            return weapon.Named("bow", false);
         }
 
         /// <summary>

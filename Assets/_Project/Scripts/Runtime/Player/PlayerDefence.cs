@@ -306,6 +306,11 @@ namespace Clover.Player
             if (guardArc != null) guardArc.Show(raise);
         }
 
+        /// <summary>While true a blow that lands hurts but does not make the player flinch. The upgrades keep it.</summary>
+        public bool Unflinching { get; set; }
+        /// <summary>Blows taken without flinching, counted for probes.</summary>
+        public int UnflinchedBlows { get; private set; }
+
         public HitOutcome TakeHit(in Hit hit)
         {
             // A blow that arrives during the flinch from the last one is ignored, so two enemies cannot keep the
@@ -344,7 +349,7 @@ namespace Clover.Player
                     if (combat != null) combat.Mana.Gain(PerfectDodgeMana);
                     if (hitStop != null) hitStop.Slow(PerfectDodgeSlowSeconds, PerfectDodgeSlowScale);
                     Callout("Perfect dodge");
-                    if (upgrades != null) upgrades.OnPerfectDodge();
+                    if (upgrades != null) upgrades.OnPerfectDodge(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
                     return HitOutcome.PerfectDodge;
                 }
                 Dodges++;
@@ -383,6 +388,7 @@ namespace Clover.Player
                     if (hitStop != null) hitStop.Freeze(PerfectGuardHitStop);
                     if (shaker != null) shaker.Shake(0.12f, 0.15f);
                     Callout("Perfect guard");
+                    if (combat != null) combat.PerfectGuarded(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
                     if (upgrades != null) upgrades.OnPerfectGuard(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
                     return HitOutcome.PerfectGuard;
                 case GuardResult.Blocked:
@@ -420,11 +426,18 @@ namespace Clover.Player
             if (upgrades != null) upgrades.OnStruck(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
             Vfx.Play(VfxKind.Wound, transform.position + Vector3.up * 1.1f, hit.Direction);
             ScreenFlash.Flash(new Color(1f, 0.08f, 0.1f, 0.16f), 0.09f);
-            if (!IsDead && !hit.Unblockable && combat != null && combat.Poised(hit.Damage))
+            if (!IsDead && combat != null && (!hit.Unblockable || (combat.HeavyUnbroken && combat.InHeavySwing)) && combat.Poised(hit.Damage))
             {
                 // Inside a heavy swing a small blow is taken and walked through: it hurts, the swing goes on.
                 PoisedBlows++;
                 if (hitStop != null) hitStop.Freeze(0.04f);
+                if (shaker != null) shaker.Shake(0.1f, 0.12f);
+                return;
+            }
+            if (!IsDead && Unflinching)
+            {
+                // Past caring: the blow is taken whole and nothing is broken off for it.
+                UnflinchedBlows++;
                 if (shaker != null) shaker.Shake(0.1f, 0.12f);
                 return;
             }

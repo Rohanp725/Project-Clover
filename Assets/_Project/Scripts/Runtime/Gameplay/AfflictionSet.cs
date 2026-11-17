@@ -16,8 +16,37 @@ namespace Clover.Gameplay
         public BurnStatus Burn { get; } = new BurnStatus();
         public bool IsFrozen { get; private set; }
         public float FrozenLeft { get; private set; }
+        /// <summary>Seconds it stays brittle after a freeze ended (see <see cref="Afflictions.BrittleSeconds"/>).</summary>
+        public float BrittleLeft { get; private set; }
+        public bool IsBrittle => BrittleLeft > 0f;
         /// <summary>True on the step a poison's burst landed, so the body can show it.</summary>
         public bool BitThisTick { get; private set; }
+        /// <summary>How deep the poison was, and what it dealt, at its last bite.</summary>
+        public int BitDepth { get; private set; }
+        public float BitDamage { get; private set; }
+        /// <summary>How many bites the poison has made with no fresh dose since.</summary>
+        public int RipeBites => ripeBites;
+        private int ripeBites;
+        private bool biteOwed;
+        private float sinceBite = float.MaxValue;
+
+        /// <summary>Makes the poison here bite on the next step, whatever its beat. False when there is none.</summary>
+        public bool BiteSoon()
+        {
+            if (stacks[(int)AfflictionKind.Poison] <= 0) return false;
+            biteOwed = true;
+            return true;
+        }
+
+        /// <summary>True when the poison here bit, or will bite, within the given seconds of now.</summary>
+        public bool NearBeat(float within)
+        {
+            int index = (int)AfflictionKind.Poison;
+            if (stacks[index] <= 0 || Afflictions.PoisonWaits) return false;
+            if (sinceBite <= within) return true;
+            if (Afflictions.PoisonBeatOff) return false;
+            return (Afflictions.SharedBeat ? Afflictions.BeatLeft : untilTick[index]) <= within;
+        }
         /// <summary>Seconds it is still held fast by something other than ice: it cannot move, turn or begin an attack.</summary>
         public float HeldLeft { get; private set; }
         public bool IsHeld => HeldLeft > 0f;
@@ -65,6 +94,7 @@ namespace Clover.Gameplay
             Burn.Reset();
             IsFrozen = false;
             FrozenLeft = 0f;
+            BrittleLeft = 0f;
             BitThisTick = false;
             HeldLeft = 0f;
             AirLeft = 0f;
@@ -113,17 +143,27 @@ namespace Clover.Gameplay
             // What is frozen cannot be chilled further; the ice must break or melt first.
             if (IsFrozen && spec.FreezesAtFull) return default;
             int had = stacks[index];
+            // A fresh dose: the poison is no longer left alone to ripen.
+            if (kind == AfflictionKind.Poison) ripeBites = 0;
             int deepest = Afflictions.Depth(kind);
             stacks[index] = Math.Min(deepest, had + count);
             left[index] = seconds > 0f ? seconds : spec.Seconds;
             blowsLeft[index] = spec.Blows > 0 ? spec.Blows + Afflictions.MoreBlows : 0;
             if (had == 0) untilTick[index] = spec.TickSeconds;
             bool full = had < deepest && stacks[index] >= deepest;
-            if (full && spec.FreezesAtFull && CanFreeze)
+            // Flash Freeze: what is Soaked freezes sooner, and the water goes into the ice.
+            bool flash = kind == AfflictionKind.Chill && Afflictions.FlashFreezeAt > 0 && stacks[(int)AfflictionKind.Soaked] > 0
+                && stacks[index] >= Afflictions.FlashFreezeAt && stacks[index] < deepest;
+            if ((full || flash) && spec.FreezesAtFull && CanFreeze)
             {
                 IsFrozen = true;
-                FrozenLeft = spec.FrozenSeconds * FreezeScale;
+                FrozenLeft = spec.FrozenSeconds * FreezeScale * Afflictions.FreezeSeconds;
                 left[index] = Math.Max(left[index], FrozenLeft);
+                if (flash)
+                {
+                    End((int)AfflictionKind.Soaked);
+                    full = true;
+                }
             }
             return new AfflictionResult(true, full, carried);
         }
@@ -210,6 +250,7 @@ namespace Clover.Gameplay
         {
             BitThisTick = false;
             LandedThisTick = false;
+            if (sinceBite < float.MaxValue) sinceBite += deltaTime;
             if (AirLeft > 0f)
             {
                 airFor += deltaTime;
@@ -230,6 +271,7 @@ namespace Clover.Gameplay
                 // Thawed: the cold that froze it is spent.
                 if (FrozenLeft <= 0f) End((int)AfflictionKind.Chill);
             }
+            if (BrittleLeft > 0f) BrittleLeft = Math.Max(0f, BrittleLeft - deltaTime);
             for (int i = 2; i < stacks.Length; i++)
             {
                 if (stacks[i] <= 0) continue;
@@ -240,16 +282,48 @@ namespace Clover.Gameplay
                     continue;
                 }
                 var spec = Afflictions.Spec((AfflictionKind)i);
+                bool poison = i == (int)AfflictionKind.Poison;
+                bool cursed = poison && Afflictions.PoisonOnCursed > 0f && stacks[(int)AfflictionKind.Cursed] > 0;
                 if (spec.TickSeconds > 0f && spec.DamagePerTick > 0f)
                 {
-                    untilTick[i] -= deltaTime;
-                    if (untilTick[i] <= 0f)
+                    bool bites;
+                    if (poison && Afflictions.PoisonBeatOff) bites = false;
+                    else if (poison && Afflictions.SharedBeat) bites = Afflictions.BeatNow;
+                    else
                     {
-                        untilTick[i] += spec.TickSeconds;
-                        damage += spec.DamagePerTick * stacks[i] * strength[i];
+                        untilTick[i] -= deltaTime;
+                        bites = untilTick[i] <= 0f;
+                        if (bites) untilTick[i] += spec.TickSeconds;
+                    }
+                    bool shared = bites && poison && Afflictions.SharedBeat;
+                    if (poison && biteOwed)
+                    {
+                        // Made to bite out of turn: its own beat goes on as it was.
+                        bites = true;
+                        biteOwed = false;
+                    }
+                    if (bites)
+                    {
+                        float bite = spec.DamagePerTick * stacks[i] * strength[i];
+                        if (poison)
+                        {
+                            bite *= 1f + Afflictions.PoisonRipens * ripeBites;
+                            if (cursed) bite *= 1f + Afflictions.PoisonOnCursed;
+                            if (shared)
+                            {
+                                bite *= Afflictions.BeatStrength;
+                                Afflictions.BeatCount++;
+                            }
+                            ripeBites++;
+                            sinceBite = 0f;
+                            BitDepth = stacks[i];
+                            BitDamage = bite;
+                        }
+                        damage += bite;
                         BitThisTick = true;
                     }
                 }
+                if (poison && (Afflictions.PoisonKeeps || cursed)) continue;
                 left[i] -= deltaTime;
                 if (left[i] <= 0f) End(i);
             }
@@ -261,8 +335,16 @@ namespace Clover.Gameplay
             stacks[index] = 0;
             left[index] = 0f;
             strength[index] = 1f;
+            if (index == (int)AfflictionKind.Poison)
+            {
+                ripeBites = 0;
+                biteOwed = false;
+                sinceBite = float.MaxValue;
+            }
             if (index == (int)AfflictionKind.Chill)
             {
+                // Brittle: the ice is gone, by thaw or by breaking, and what it held is weaker for a while.
+                if (IsFrozen && Afflictions.BrittleSeconds > 0f) BrittleLeft = Afflictions.BrittleSeconds;
                 IsFrozen = false;
                 FrozenLeft = 0f;
             }
@@ -276,7 +358,10 @@ namespace Clover.Gameplay
                 if (IsFrozen || HeldLeft > 0f || IsLifted) return 0f;
                 float slow = 0f;
                 for (int i = 2; i < stacks.Length; i++)
-                    if (stacks[i] > 0) slow += Afflictions.Spec((AfflictionKind)i).SlowPerStack * stacks[i] * strength[i];
+                {
+                    if (stacks[i] <= 0 || (Afflictions.ChillSlowOff && i == (int)AfflictionKind.Chill)) continue;
+                    slow += Afflictions.Spec((AfflictionKind)i).SlowPerStack * stacks[i] * strength[i];
+                }
                 return Math.Max(0.3f, 1f - slow);
             }
         }
@@ -291,10 +376,12 @@ namespace Clover.Gameplay
                 var spec = Afflictions.Spec((AfflictionKind)i);
                 more += (spell ? spec.SpellDamageTakenPerStack : spec.WeaponDamageTakenPerStack) * stacks[i] * strength[i];
             }
-            return 1f + more;
+            return (1f + more) * (!spell && BrittleLeft > 0f ? 1f + Afflictions.BrittleShare : 1f);
         }
 
-        public float StaggerTakenMultiplier => 1f + Sum(spec => spec.StaggerTakenPerStack);
+        public float StaggerTakenMultiplier => (1f + Sum(spec => spec.StaggerTakenPerStack))
+            * (BrittleLeft > 0f ? 1f + Afflictions.BrittleShare : 1f)
+            * (Afflictions.BuckledShare > 0f && stacks[(int)AfflictionKind.Tremor] > 0 && stacks[(int)AfflictionKind.Sundered] > 0 ? 1f + Afflictions.BuckledShare : 1f);
         public float ShoveMultiplier => 1f + Sum(spec => spec.ShovePerStack);
         public float TurnMultiplier => HeldLeft > 0f || IsLifted ? 0f : Math.Max(0.3f, 1f - Sum(spec => spec.TurnSlowPerStack));
         public float DamageDealtMultiplier => Math.Max(0.3f, 1f - Sum(spec => spec.DealsLessPerStack));
@@ -335,7 +422,7 @@ namespace Clover.Gameplay
         public float Shatter()
         {
             if (!IsFrozen) return 0f;
-            float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill];
+            float damage = Afflictions.Spec(AfflictionKind.Chill).ShatterDamage * strength[(int)AfflictionKind.Chill] * Afflictions.ShatterDamage;
             End((int)AfflictionKind.Chill);
             return damage;
         }

@@ -63,8 +63,8 @@ namespace Clover.Player
             Kind = ElementLook.Ground(Element),
             Tint = Colour,
             Position = at,
-            Radius = radius,
-            Seconds = seconds,
+            Radius = radius * (Upgrades != null ? Upgrades.Stats.Multiplier(PlayerStat.GroundSize) : 1f),
+            Seconds = seconds * (Upgrades != null ? Upgrades.Stats.Multiplier(PlayerStat.GroundSeconds) : 1f),
             BiteEvery = interval,
             Blow = blow,
         };

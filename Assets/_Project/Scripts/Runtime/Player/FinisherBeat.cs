@@ -20,5 +20,13 @@ namespace Clover.Player
         public Vector3 Shove;
         /// <summary>Seconds the target is thrown into the air at this beat; zero leaves it on the ground.</summary>
         public float Lift;
+        /// <summary>
+        /// Above zero: at this beat the player is carried through the target to a point this many metres beyond it, on
+        /// the bearing given (degrees from the way the player faced when the step began), over <see cref="DashSeconds"/>,
+        /// leaving a line of light through the target that hangs until the blow.
+        /// </summary>
+        public float DashBeyond;
+        public float DashBearing;
+        public float DashSeconds = 0.1f;
     }
 }

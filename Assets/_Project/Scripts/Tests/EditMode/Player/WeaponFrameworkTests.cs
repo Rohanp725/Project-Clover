@@ -391,6 +391,195 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheKnivesChainIsAsDesigned()
+        {
+            var weapon = Weapons.TwinKnives();
+            var steps = weapon.Combo.Steps;
+            // Six blows in five steps: the third is two.
+            Assert.AreEqual(39f, steps.Sum(step => step.Damage * (1 + (step.Repeats != null ? step.Repeats.Length : 0))), 0.001f);
+            Assert.AreEqual(35f, steps.Sum(step => step.Stagger * (1 + (step.Repeats != null ? step.Repeats.Length : 0))), 0.001f);
+            Assert.AreEqual(32f, steps.Sum(step => step.StaminaCost), 0.001f);
+            Assert.AreEqual(1.58f, steps.Sum(step => step.Total), 0.001f);
+            Assert.AreEqual(1.5f, weapon.BackMultiplier, 0.001f, "a back is worth half as much again");
+            Assert.AreEqual(1f, Weapons.Katana().BackMultiplier, 0.001f, "and only to the knives");
+            Assert.IsTrue(steps[4].PassThrough && steps[4].Travel > 2f, "the fifth cut goes through");
+            Assert.IsTrue(weapon.Combo.ChainHeavy.PassThrough && weapon.Combo.ChainHeavy.Travel > steps[4].Travel, "and so does the chain's heavy, further");
+            Assert.IsFalse(weapon.Combo.Heavy.PassThrough);
+            Assert.IsNull(weapon.Combo.ChargedHeavy, "one tier: the hold is the fan");
+            var fan = weapon.Combo.Skill.Shot;
+            Assert.AreEqual(5, fan.Count);
+            Assert.AreEqual(45f, fan.Count * fan.Damage, 0.001f, "all five from a step away");
+            Assert.Less(weapon.Combo.Skill.Lunge, 0f, "it is the way out");
+            Assert.AreEqual(0f, weapon.Combo.Skill.ManaGain, 0.001f);
+            foreach (var other in Weapons.All)
+            {
+                if (other.Name == weapon.Name || other.GuardProfile == null) continue;
+                Assert.Less(other.GuardProfile.PerfectWindow - other.GuardProfile.PerfectFrom, weapon.GuardProfile.PerfectWindow, $"the widest perfect guard, wider than the {other.Name}'s");
+                Assert.Less(other.GuardProfile.StaminaPerDamage, weapon.GuardProfile.StaminaPerDamage, $"and the dearest block, dearer than the {other.Name}'s");
+            }
+            Assert.Less(weapon.DodgeProfile.StaminaCost * 3f, new DodgeRoll().StaminaCost * 2f + 0.001f, "three sidesteps for the price of two rolls");
+            // Three crossings to three corners, a third of a circle apart.
+            var beats = weapon.Combo.Finisher.Beats;
+            Assert.AreEqual(3, beats.Length);
+            Assert.IsTrue(beats.All(beat => beat.DashBeyond > 0f && beat.Time + beat.DashSeconds < weapon.Combo.Finisher.Windup));
+            Assert.AreEqual(120f, beats[1].DashBearing - beats[0].DashBearing, 0.001f);
+            Assert.AreEqual(120f, beats[2].DashBearing - beats[1].DashBearing, 0.001f);
+            Assert.Less(beats[0].DashBeyond, weapon.Combo.Finisher.Reach, "the blow still reaches from the last corner");
+        }
+
+        [Test]
+        public void TheBowPlantsWithItsShotsAndCashesWithItsStave()
+        {
+            var weapon = Weapons.GreatBow();
+            var combo = weapon.Combo;
+            // Without arrows the two lights are the weakest melee there is, on purpose.
+            Assert.AreEqual(21f, combo.Steps.Sum(step => step.Damage), 0.001f);
+            Assert.AreEqual(24f, combo.Steps.Sum(step => step.Stagger), 0.001f);
+            Assert.AreEqual(1.16f, combo.Steps.Sum(step => step.Total), 0.001f);
+            foreach (var other in new[] { Weapons.Katana(), Weapons.MassiveSword(), Weapons.Scythe(), Weapons.GreatSpear(), Weapons.GreatHammer() })
+                Assert.Greater(other.Combo.Steps.Take(2).Sum(step => step.Damage), 20.999f, $"the {other.Name}'s first two lights are not weaker");
+            Assert.Greater(weapon.AimConeDegrees, 0f);
+            Assert.Less(weapon.AimConeDegrees, 90f, "a shot goes where it is pointed, not to whoever is nearest off to one side");
+            // Every blow of the stave snaps; the stab leaves its arrow behind; a shot is not a blow of the stave.
+            Assert.IsTrue(combo.Steps.All(step => step.SnapsArrows) && combo.ChainHeavy.SnapsArrows && combo.Finisher.SnapsArrows);
+            Assert.AreEqual(1, combo.Steps[1].PlantsArrows);
+            Assert.AreEqual(0, combo.Steps[0].PlantsArrows);
+            Assert.IsFalse(combo.Heavy.SnapsArrows || combo.ChargedHeavy.SnapsArrows || combo.Skill.SnapsArrows);
+            // The three shots: each plants, only the full draw goes through, and each pays its step's mana itself.
+            var snap = combo.Heavy.Shot;
+            var kick = combo.ChainHeavy.Shot;
+            var full = combo.ChargedHeavy.Shot;
+            foreach (var shot in new[] { snap, kick, full })
+                Assert.IsTrue(shot.Plants && shot.Heavy && !shot.Sticks && !shot.Returns && shot.Prop == "arrow");
+            Assert.AreEqual(18f, snap.Damage, 0.001f);
+            Assert.AreEqual(9f, snap.Range, 0.001f);
+            Assert.AreEqual(20f, kick.Damage, 0.001f);
+            Assert.AreEqual(34f, full.Damage, 0.001f);
+            Assert.AreEqual(14f, full.Range, 0.001f);
+            Assert.IsTrue(full.Pierce && !snap.Pierce && !kick.Pierce);
+            Assert.AreEqual(8f, snap.ManaGain, 0.001f);
+            Assert.AreEqual(12f, full.ManaGain, 0.001f);
+            Assert.AreEqual(0f, combo.Heavy.Damage + combo.Heavy.ManaGain, 0.001f, "the snap shot's step deals and earns nothing itself");
+            // The kick throws the bearer back to shooting distance and looses from there.
+            Assert.AreEqual(3f, combo.ChainHeavy.Recoil, 0.001f);
+            Assert.Greater(kick.ReleaseAfter, combo.ChainHeavy.Active, "the shot leaves after the spring back has begun");
+            Assert.Less(kick.ReleaseAfter, combo.ChainHeavy.Active + combo.ChainHeavy.Recovery);
+            Assert.AreEqual(StepEffect.ArrowRain, combo.Skill.Effect);
+            Assert.AreEqual(35f, combo.SkillManaCost, 0.001f);
+            Assert.Greater(weapon.AimRange, snap.Range, "it turns to face what it can reach");
+            Assert.AreEqual(1, weapon.PerfectGuardPlants, "a perfect guard is always worth a snap");
+            Assert.IsTrue(Weapons.All.Where(other => other.Name != weapon.Name).All(other => other.PerfectGuardPlants == 0));
+            // Three arrows and the swat: more than the Katana's heavy, earned by three shots.
+            var holder = new UnityEngine.GameObject("arrows");
+            try
+            {
+                var arrows = holder.AddComponent<PlantedArrows>();
+                Assert.AreEqual(3, arrows.MostInOne);
+                Assert.AreEqual(39f, combo.Steps[0].Damage + arrows.MostInOne * arrows.SnapDamage, 0.001f);
+                Assert.AreEqual(56f, combo.Steps[0].Stagger + arrows.MostInOne * arrows.SnapStagger, 0.001f);
+                Assert.Greater(combo.Steps[0].Damage + arrows.MostInOne * arrows.SnapDamage, Weapons.Katana().Combo.Heavy.Damage);
+                Assert.AreEqual(12f, arrows.InBodySeconds, 0.001f);
+                Assert.AreEqual(6, arrows.MostInGround);
+            }
+            finally
+            {
+                UnityEngine.Object.DestroyImmediate(holder);
+            }
+        }
+
+        [Test]
+        public void TheChainSickleWorksTwoRangesAndMovesWhatItHolds()
+        {
+            var weapon = Weapons.ChainSickle();
+            var combo = weapon.Combo;
+            var steps = combo.Steps;
+            // Five blows in four steps: the whirl strikes twice.
+            Assert.AreEqual(46f, steps.Sum(step => step.Damage * (1 + (step.Repeats != null ? step.Repeats.Length : 0))), 0.001f);
+            Assert.AreEqual(60f, steps.Sum(step => step.Stagger * (1 + (step.Repeats != null ? step.Repeats.Length : 0))), 0.001f);
+            Assert.AreEqual(43f, steps.Sum(step => step.StaminaCost), 0.001f);
+            Assert.AreEqual(2.26f, steps.Sum(step => step.Total), 0.001f);
+            // Near, far, near, far.
+            Assert.IsTrue(steps[0].Chain == ChainThrow.None && steps[2].Chain == ChainThrow.None);
+            Assert.AreEqual(ChainThrow.Lane, steps[1].Chain);
+            Assert.AreEqual(ChainThrow.Whirl, steps[3].Chain);
+            Assert.Greater(steps[1].Reach, 2f * steps[0].Reach);
+            Assert.Greater(steps[1].LineWidth, 0f);
+            Assert.AreEqual(360f, steps[3].ArcDegrees, 0.001f);
+            Assert.AreEqual(0.6f, steps[2].Pull, 0.001f, "the hook brings its target nearer");
+            Assert.AreEqual(ChainThrow.Sweep, combo.Heavy.Chain, "the heavy is the sickle itself on the chain");
+            Assert.IsNull(combo.ChargedHeavy);
+            // The yank drags, and against what will not come drags the bearer.
+            Assert.IsTrue(combo.ChainHeavy.PullSelf);
+            Assert.AreEqual(3f, combo.ChainHeavy.Pull, 0.001f);
+            Assert.IsTrue(Weapons.All.Where(other => other.Name != weapon.Name).SelectMany(other => other.AllSteps()).All(step => !step.PullSelf && step.Binds <= 0f && step.Chain == ChainThrow.None));
+            Assert.AreEqual(1f, Clover.Gameplay.EnemyKind.ByName(Clover.Gameplay.EnemyKind.SoldierName).Weight, 0.001f);
+            Assert.GreaterOrEqual(Clover.Gameplay.EnemyKind.ByName(Clover.Gameplay.EnemyKind.CaptainName).Weight, 2f, "an elite is too heavy to drag");
+            Assert.GreaterOrEqual(Clover.Gameplay.EnemyKind.ByName(Clover.Gameplay.EnemyKind.NarukamiName).Weight, 2f, "and so is a god");
+            // Entangle binds down the longest lane the weapon has.
+            Assert.AreEqual(2.5f, combo.Skill.Binds, 0.001f);
+            Assert.AreEqual(7f, combo.Skill.Reach, 0.001f);
+            Assert.AreEqual(30f, combo.SkillManaCost, 0.001f);
+            Assert.GreaterOrEqual(weapon.AimRange, combo.Skill.Reach);
+            Assert.AreEqual(1.2f, weapon.PerfectGuardPull, 0.001f);
+            Assert.AreEqual(15f, weapon.PerfectGuardStagger, 0.001f);
+            // The finisher: walked away from with the back turned, and the blow made behind.
+            var beats = combo.Finisher.Beats;
+            Assert.AreEqual(180f, beats[0].DashBearing, 0.001f);
+            Assert.Less(beats[0].Time + beats[0].DashSeconds, combo.Finisher.HoldAt + 0.001f);
+            Assert.Less(beats[0].DashBeyond, combo.Finisher.Reach);
+            Assert.AreEqual(360f, combo.Finisher.ArcDegrees, 0.001f);
+        }
+
+        [Test]
+        public void WithAnEnemyBoundTheHeavyButtonHauls()
+        {
+            var combo = Weapons.ChainSickle().Combo;
+            var stamina = Stamina();
+            // From a standing start the heavy is the thrown sickle...
+            combo.PressHeavy();
+            combo.ReleaseHeavy();
+            Assert.AreSame(combo.Heavy, Run(combo, stamina, null, 0.1f));
+            Finish(combo, stamina);
+            combo.Idle(1f);
+            Run(combo, stamina, null, 1f);
+            // ...and with something on the end of the chain it is the yank, whatever came before.
+            combo.EnderAlways = true;
+            combo.PressHeavy();
+            combo.ReleaseHeavy();
+            Assert.AreSame(combo.ChainHeavy, Run(combo, stamina, null, 0.1f));
+            Finish(combo, stamina);
+            combo.Reset();
+            Assert.IsFalse(combo.EnderAlways, "the bind does not outlive the weapon being put down");
+        }
+
+        [Test]
+        public void ACutIsMadeOutOfTheDodge()
+        {
+            var combo = Weapons.TwinKnives().Combo;
+            var stamina = Stamina();
+            // Pressed in the second half of a dodge: the dodge's own cut, as the dodge ends.
+            combo.Press(false, true);
+            combo.Idle(0.1f);
+            Assert.AreSame(combo.DashAttack, Run(combo, stamina, null, 0.1f));
+            Assert.AreEqual(100f - combo.DashAttack.StaminaCost, stamina.Current, 0.001f);
+            Finish(combo, stamina);
+            // It was no part of the chain.
+            combo.Press();
+            Assert.AreSame(combo.Steps[0], Run(combo, stamina, null, 0.1f));
+            Finish(combo, stamina);
+            // A press too stale to be remembered gives nothing.
+            combo.Press(false, true);
+            combo.Idle(combo.BufferTime + 0.05f);
+            Assert.IsNull(Run(combo, stamina, null, 0.1f));
+
+            var sword = Weapons.MassiveSword().Combo;
+            sword.Press(false, true);
+            Assert.AreSame(sword.Steps[0], Run(sword, Stamina(), null, 0.1f), "a weapon with no cut of its own for the dodge answers with its ordinary light");
+            Assert.IsTrue(Weapons.TwinKnives().AllSteps().Contains(combo.DashAttack) == false, "each call builds a fresh weapon");
+            Assert.IsTrue(Weapons.TwinKnives().AllSteps().Any(step => step.Name == combo.DashAttack.Name), "and the dodge's cut is among the steps that need a clip");
+        }
+
+        [Test]
         public void EveryWeaponHasANameAStandAndItsClips()
         {
             var clips = AssetDatabase.FindAssets("t:AnimationClip", new[] { Clover.EditorTools.Forge.PlayerAnimations.ClipFolder })

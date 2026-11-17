@@ -28,7 +28,13 @@ namespace Clover.Gameplay
             Carried = null;
             Shattered = null;
             Landed = null;
+            PoisonBit = null;
         }
+
+        /// <summary>Poison bit something on its beat (or was made to): who, how deep it was, and what the bite dealt.</summary>
+        public static event Action<Component, int, float> PoisonBit;
+
+        public static void RaisePoisonBit(Component who, int depth, float damage) => PoisonBit?.Invoke(who, depth, damage);
 
         public static void RaiseLanded(Component who) => Landed?.Invoke(who);
 

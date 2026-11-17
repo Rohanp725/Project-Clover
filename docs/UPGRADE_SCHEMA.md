@@ -159,7 +159,7 @@ when the effect's `At` is `EffectAt.Target` (the default).
 | `Kill` | an enemy dies, by a blow or by an affliction | where it fell (a point, not an enemy) |
 | `PerfectGuard` | a perfect guard | the attacker (a point if it was a thrown bolt) |
 | `Guard` | a blow blocked for stamina | the attacker |
-| `PerfectDodge` | a perfect dodge | none |
+| `PerfectDodge` | a perfect dodge | the attacker whose blow was dodged (none if it was a thrown bolt): see 17.6 |
 | `DodgeStart` | any dodge begins | none |
 | `DodgeEnd` | any dodge ends | none |
 | `Struck` | a blow lands on the player | the attacker |
@@ -767,3 +767,124 @@ after the finisher's blow lands); "cannot begin an attack" without also stopping
 ### 16.7 A spell that lasts while the button is held
 
 `PlayerElement.SpellHeld` is true while the spell button is down. A worn spell is cast after the button has been held for 0.3 s; a form that reads `cast.Caster.SpellHeld` each frame can go on for as long as the hold continues (`frozenwave`).
+
+## 17. Added on the night of 2026-11-16: poison's beat, nine stats, whose spell it was, the Risen, a boon for one blow, the dodge's attacker
+
+Tested in `PoisonBeatTests` (EditMode) and played by `AgentScripts/MarksProbe.cs`.
+
+### 17.1 Poison's beat
+
+| What | How it is written | What it does |
+|---|---|---|
+| `UpgradeTrigger.PoisonBite` | `On = UpgradeTrigger.PoisonBite` | fires each time poison bites an enemy (on its beat or made to). Target: that enemy. Carries the depth it bit at, so `PerStack` multiplies by it. `Needs` is asked of the bitten enemy |
+| `UpgradeAction.Bite` | `Do = UpgradeAction.Bite, Radius = 5f, Amount = 4f` | makes poison bite out of turn on its next step: the target's, or with `Radius` everyone's within it, each at its own depth. `Amount` heals the player that much for each one bitten. The enemy's own beat goes on as it was |
+| `UpgradeAction.Pass` | `Do = UpgradeAction.Pass, Affliction = P, Stacks = 1, Reach = 4f` | lays stacks on the nearest other enemy within `Reach` of the target and nothing on the target: a dose that leaps |
+| `UpgradeEffect.OnBeat` | `OnBeat = 0.25f` | a condition: the target's poison bit, or will bite, within that many seconds of now (a blow timed to the beat) |
+
+Five rules of the beat are kept by `PlayerUpgrades` as statics on `Afflictions`, each switched by one mark while it is in
+force (they are not data; a new mark that wants one needs a line in `PlayerUpgrades.Refresh`):
+
+| Static | Mark | Rule |
+|---|---|---|
+| `PoisonBeatOff` | Volatile | poison never bites on its beat; it can only be set off |
+| `PoisonKeeps` | Slow Death | poison does not fade while its bearer lives |
+| `PoisonRipens` (0.25) | Left to Ripen | each bite with no fresh dose since the last is that share stronger than the one before; any fresh dose starts it over |
+| `PoisonOnCursed` (0.25) | Wither (Blight) | poison bites that share harder on a Cursed enemy and does not fade from it while the curse lasts |
+| `SharedBeat`, `SharedBeatShare` (0.15) | One Sickness | the poison in everything bites on one beat (`Afflictions.TickBeat`); each bite is that share stronger for every poisoned enemy beyond the first that bit on the beat before |
+
+Still not there: burn biting on poison's beat (Slow Burn); a bite that grows with the depth of another affliction; an
+affliction with no top at all (Slow Death goes twelve deeper by `AfflictionDepth`).
+
+### 17.2 New stats
+
+| `PlayerStat.` | Kind | What it changes |
+|---|---|---|
+| `PushDistance` | share | how far the `Push` action, `PlayerCombat.Displace` (outward) and `ShoveArea` throw. Not the shove of a weapon blow |
+| `GuardGrey` | share | the part of a blow held on the guard that still comes through as grey health (-0.2 lets a fifth less through) |
+| `FreezeSeconds` | share | how long a freeze lasts |
+| `ShatterDamage` | share | how hard a shatter lands (`AfflictionPower` still scales it too) |
+| `BurstStagger` | share | the stagger of `SetOff` and of the burst of a death |
+| `GroundSeconds` / `GroundSize` | share | how long / how wide ground is that a `Hazard` effect lays or a form leaves through `cast.Ground`. Forms that build walls, pillars or spikes of their own do not read them. No mark gives `GroundSize` yet |
+| `LeapReach` | share | how far an `Arc` effect or a `Pass` leaps |
+| `BoonSeconds` | share | how long every timed `Boon` of the marks lasts |
+
+### 17.3 Whose spell it was
+
+`OwnSpell = true` now also works on `SpellHit`: the effect fires only when the blow is the mark's own spell's. It is
+known for what the form strikes during its `Cast` and during every `Tick` of a form that lasts
+(`PlayerUpgrades.Casting`). It is **not** known for ground the spell leaves behind (the `Hazards` bite later, by
+themselves): those hits count as no one's. `BaseSpell = true` on a `SpellCast` effect holds only for the element's
+base spell (the tap), never a worn spell.
+
+### 17.4 The Risen
+
+- `PlayerDefence.Unflinching`: a blow that lands hurts but does not break what the player is doing. Set by
+  `PlayerUpgrades` while Risen with Hollow Strength.
+- A kill while Risen with Hollow Strength stills the drain for `StilledSeconds` (3): `RiseDrain` reads 0.
+- Dead Already: `PlayerUpgrades.Risen` is true for good (so `StatWhen.Risen` holds and every "Risen, ..." mark works
+  at all times), health drains `DeadAlreadyDrain` (2) a second while an enemy is within 12 m, slower with Slow Rot,
+  stilled by Hollow Strength's kills, never the last point; `Rise()` refuses. `RisenNow` is true only inside the Rise itself.
+
+### 17.5 The account of what is unfinished
+
+`docs/design/marks_open_notes.tsv` has one line for every mark that does not yet do all its words say (id, tab, what
+is missing). `unity command script run -- --file AgentScripts/DumpMarks.cs --entry DumpMarks.Open` writes
+`docs/design/marks_open.md` from it with the count. Delete a mark's line when it is finished, and run it again.
+
+### 17.6 A boon for one blow, and who was dodged
+
+- `UntilBlow = true` on a `Boon`: it ends with the next swing of the weapon that lands on anything, if that comes
+  before its `Seconds` are up (every enemy that swing strikes has it). Eight such boons wait at once.
+- `PerfectDodge` now names the attacker, as `PerfectGuard` does: `Afflict`, `Hold`, `SetOff`, `Burst` and the rest at
+  `EffectAt.Target` fall on the one whose blow was dodged, and `Needs` is asked of it. A dodged bolt names no one and
+  the effect takes the enemy faced, as before.
+
+## 18. Added late on the night of 2026-11-16: keystones written by hand, a state for the heavy swing, no mana, breaths, three debuffs on one enemy
+
+### 18.1 `StatWhen.HeavySwing`
+
+Holds while a heavy blow of the weapon is being wound up or swung (`PlayerCombat.InHeavySwing`). A conditional stat
+may stand on it: `new StatMod(PlayerStat.DamageTaken, -0.5f, StatWhen.HeavySwing)`. `PlayerStats.WhenCount` is the
+last state plus one: move it when a state is added after this one.
+
+### 18.2 Rules that are switches, kept by `PlayerUpgrades.Refresh`
+
+None of these is data on the mark; each is turned on by owning the mark named, with the element held as always.
+
+| Switch | Mark | What it does |
+|---|---|---|
+| `PlayerCombat.HeavyUnbroken` | ice.unmoved, earth.heavyhand | Nothing that lands on the player interrupts a heavy blow in its wind-up or swing, red blows included. |
+| `PlayerCombat.CounterCut` | metal.countercut | A blow that lands on an `Enemy` whose brain is in Telegraph or Strike is critical. |
+| `Afflictions.ChillSlowOff` | ice.allatonce | Chill slows no one; it still freezes at full depth. |
+| `Afflictions.BrittleSeconds` (5), `BrittleShare` (0.2) | ice.brittle | When a freeze ends, by thaw or shatter, the enemy is brittle for the time: weapon damage and stagger taken are multiplied by 1 + share. `AfflictionSet.IsBrittle`. |
+| `Afflictions.BuckledShare` (0.4) | forge.buckled | An enemy carrying Tremor and Sundered together takes that share more stagger from everything. |
+| `Afflictions.FlashFreezeAt` (3) | glacier.flash | A Soaked enemy freezes at that depth of Chill, and the freeze spends the Soaked. |
+| `ManaPool.Instead` | life.heartwood | There is no mana: every `TrySpend` is asked of `PlayerUpgrades.PayInHealth` (1 health for 2 mana, left grey, never the last point) and every `Gain` is set aside and mends 1 health for 3 mana on the next frame. `Current` reads as full so that every price may be asked; the bar reads `Fraction`, which is empty. |
+| `DodgeRoll.PayInstead` | wind.leaf | The roll asks `PlayerUpgrades.SpendBreath` in place of stamina. Breaths are the mark's own count (`Tally`, cap 3, shown with the other counts); one comes back every `BreathSeconds` (2) and one for every `BreathBlows` (3) blows landed. With none there is no dodge. |
+
+| `WeaponCombo.SkillCostScale`, `SkillAtOnce` | metal.mastersanswer | The weapon skill's mana price is `SkillPrice` (cost times scale). For `AnswerSeconds` (2) after a perfect guard the scale is 0 and a press of heavy releases the skill at once; at any other time the scale is `AnswerDearer` (1.5). |
+
+### 18.3 Moves written by hand in `PlayerUpgrades`
+
+- **Spring Tide** (`TideRises`, `TideSpent`; called where the base spell and a worn spell are paid for): a spell that
+  can be paid for is made greater by mana held over its cost, to `TideMost` (2.5), as a boon to `SpellDamage` for
+  `TideSeconds` (1.2 s) and to `SpellReach` by the square root; then all the mana is taken.
+- **Deep Well** (`OnFlaskDrunk`, `Update`): the flask's own healing is 0; each flask adds `WellPerFlask` (70, times
+  `FlaskHeal`) to a well of `WellMost` (140), shown as the mark's count; it pays `WellPerSecond` (6) while a blow has
+  landed in the last `WellBlowSeconds` (3) and health is not full.
+
+- **Open Furnace** (`OpenFurnace`, on a perfect guard): every burning enemy within `FurnaceRadius` (8 m) is set off
+  where it stands by a detonating blow on itself alone, then given `FurnaceKeeps` (2) Burn back; the `SetOff` trigger
+  fires for each. The single detonation of Burn and Detonate is not also made. Its other half is the stat
+  `GuardGrey +0.71` (35% of a guarded blow through as grey becomes 60%).
+- **Single Stroke** (in `OnSwing`): `AfflictionDepth +5` lets Static lie ten deep with Lightning held; the discharge
+  strikes the one enemy (half a metre) at twice the damage and stagger a stack, and does not reach the rest.
+- **Clean Break** (`OnShattered`, `FinishBroken`): a shattered `Enemy` under `CleanBreakShare` (a fifth) of its
+  health, not a god, is killed on the next frame.
+- `StandFirm(seconds)`: a form may ask that the player not flinch for a while (Eye of the Storm does).
+
+### 18.4 The account of what is unfinished, now
+
+`docs/design/marks_open.md` is empty: every mark's words are true. 124 marks are true because their words were
+rewritten to what they do today; `docs/design/marks_reworded.md` keeps, for each, the old words, the new words and
+what the design wanted. To build one to its design: build it, put the designed words back, delete its entry there.

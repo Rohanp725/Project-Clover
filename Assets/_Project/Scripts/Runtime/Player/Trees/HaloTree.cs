@@ -37,7 +37,7 @@ namespace Clover.Player.Trees
                 Tally = new TallySpec { Name = "Blades", Cap = 6 }, Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.CritHit, Do = UpgradeAction.Bank, Count = 1 }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, SpendsAll = true, PerStack = true, Do = UpgradeAction.Projectile, Flight = Flight.Homing, Count = 1, Damage = 9f, Stagger = 8f, Speed = 16f, Affliction = AfflictionKind.Sundered, Stacks = 1 } } });
             // NEEDS: a small extension, the perfect guard check on the skill's release. Here the Iaido Slash marks and notches what it cuts, and a perfect guard makes the blows of the next moment critical.
             to.Add(new Upgrade { Id = AnsweringDraw, Name = "Answering Draw", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { BrightSteel }, X = 0.5f, Y = 2.36f, Icon = UpgradeIcons.Blade, Weapon = Weapons.KatanaName,
-                Description = "Needs the Katana. Release the Iaido Slash at the instant a blow would land. The blow is turned, and the draw cuts as light: critical, and through any guard.",
+                Description = "Needs the Katana. The Iaido Slash Marks what it cuts and notches its armour. After a perfect guard, every blow you land for a moment is critical.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SkillHit, Do = UpgradeAction.Afflict, Affliction = Mark, Stacks = 1 },
@@ -46,16 +46,16 @@ namespace Clover.Player.Trees
                 } });
             // NEEDS: a trigger "a perfect guard against something thrown", the damage of what was turned, and a critical effect. Here every perfect guard sends one bright bolt back.
             to.Add(new Upgrade { Id = MirrorEdge, Name = "Mirror Edge", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { HaloOfBlades }, X = 0f, Y = 3.48f, Icon = UpgradeIcons.Beam,
-                Description = "A perfect guard against anything thrown sends it back as light.",
+                Description = "A perfect guard throws a bolt of light straight back at the attacker. It strikes hard and Marks what it hits.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Projectile, Flight = Flight.Straight, Damage = 20f, Stagger = 30f, Speed = 18f, Seconds = 1.5f, Affliction = Mark, Stacks = 1 } } });
             // The discs form orbits and strikes. NEEDS: the perfect guard that sends both wheels out through the attacker and back.
             to.Add(new Upgrade { Id = SunWheels, Name = "Sun Wheels", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { HaloOfBlades }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button and two wheels of bright steel turn round you. A perfect guard sends both out through the attacker and back. 40 mana.",
+                Description = "Hold the spell button and two wheels of bright steel turn round you for a while, cutting what they pass. 40 mana.",
                 Form = "discs",
                 Spell = new SpellSpec { Cost = 40f, Count = 2, Radius = 2.5f, Seconds = 9f, Interval = 0.5f, Damage = 5f, Stagger = 4f, Stacks = 1 } });
             // NEAREST: everyone within six metres is held for a moment (they cannot begin an attack, nor move), not only those in the cone ahead.
             to.Add(new Upgrade { Id = BlindingGuard, Name = "Blinding Guard", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { MirrorEdge }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Eye,
-                Description = "A perfect guard blinds everyone before you. They are Marked, and for a breath none of them can begin an attack. A blow held on a plain guard costs more stamina.",
+                Description = "A perfect guard blinds those before you: they are Marked and their balance shaken. Everyone within six metres, on any side, is held still for a breath. A blow held on a plain guard costs a fifth more stamina.",
                 Stats = new[] { new StatMod(PlayerStat.GuardStamina, 0.2f) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Cone, Reach = 6f, Arc = 120f, Damage = 0f, Stagger = 15f, Affliction = AfflictionKind.Marked, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Hold, At = EffectAt.Self, Radius = 6f, Seconds = 1.5f } } });
 

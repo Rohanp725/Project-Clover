@@ -31,13 +31,13 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Soaked, Stacks = 1 },
                 } });
-            // NEAREST: the depth at which Chill freezes cannot be changed, so a Soaked enemy takes one more Chill from a blow or a spell, and reaches five sooner.
+            // Built (Afflictions.FlashFreezeAt): a Soaked enemy freezes at three Chill, and the freeze spends the Soaked.
             to.Add(new Upgrade { Id = FlashFreeze, Name = "Flash Freeze", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { ColdWater }, X = -0.5f, Y = 2.36f, Icon = UpgradeIcons.Snowflake,
                 Description = "A Soaked enemy freezes at three Chill, not five.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictedHit, Do = UpgradeAction.Afflict, Needs = AfflictionKind.Soaked, Affliction = AfflictionKind.Chill, Stacks = 1, Cooldown = 1f } } });
+                Stats = new StatMod[0] });
             // The spikes form gives the line of ice; holding enemies by the feet is not in it yet.
             to.Add(new Upgrade { Id = CreepingIce, Name = "Creeping Ice", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { ColdWater }, X = 0.5f, Y = 2.36f, Icon = UpgradeIcons.Spike,
-                Description = "Hold the spell button to send a line of ice along the ground. Those it reaches are held to the floor by their feet: they can strike but cannot turn or step. 35 mana.",
+                Description = "Hold the spell button to send a line of ice spikes eight metres along the ground. Each enemy on the line is struck once. 35 mana.",
                 Form = "spikes",
                 Spell = new SpellSpec { Cost = 35f, Reach = 8f, Speed = 20f, Count = 1, Radius = 0.6f, Damage = 8f, Stagger = 10f, Stacks = 2 } });
             to.Add(new Upgrade { Id = Icebreaker, Name = "Icebreaker", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { FlashFreeze }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Hammer,
@@ -45,7 +45,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.Mana, Amount = 12f }, new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.FlaskFill, Amount = 0.33f } } });
             // NEAREST: an enemy's wind-up cannot be changed, so a blow on a Soaked enemy lengthens the player's own moment to guard for a while.
             to.Add(new Upgrade { Id = ColdInTheBones, Name = "Cold in the Bones", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { FlashFreeze }, X = 0f, Y = 3.48f, Icon = UpgradeIcons.Hourglass,
-                Description = "An enemy both Soaked and chilled is slow to wind up its blows. The moment to guard them is easier to find.",
+                Description = "For four seconds after you strike a Soaked enemy, the moment for a perfect guard is a quarter longer.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictedHit, Do = UpgradeAction.Boon, Needs = AfflictionKind.Soaked, Stat = PlayerStat.PerfectGuardWindow, Amount = 0.25f, Seconds = 4f, Cooldown = 0.5f } } });
             // BESPOKE (built): FrozenWaveForm.
             to.Add(new Upgrade { Id = TheWaveStandsStill, Name = "The Wave Stands Still", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ColdInTheBones }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Wave,

@@ -32,7 +32,7 @@ namespace Clover.Player.Trees
                 } });
             // NEAREST: only the enemy faced grows colder, once every two seconds.
             to.Add(new Upgrade { Id = Windchill, Name = "Windchill", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { BitingWind }, X = -0.5f, Y = 2.36f, Icon = UpgradeIcons.Snowflake,
-                Description = "An enemy both Unsteady and chilled grows colder by itself.",
+                Description = "The enemy you face, if it is both Unsteady and chilled, grows colder by itself.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 2f, Needs = AfflictionKind.Unsteady, Needs2 = AfflictionKind.Chill, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 } } });
             // A perfect dodge names no attacker: the cone goes at the enemy faced, and the push and the Unsteady go out round the player.
             to.Add(new Upgrade { Id = ColdFront, Name = "Cold Front", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { BitingWind }, X = 0.5f, Y = 2.36f, Icon = UpgradeIcons.Boot,
@@ -46,7 +46,7 @@ namespace Clover.Player.Trees
             // BESPOKE (small): a light blow sends a Frozen enemy sliding until it meets a wall or another enemy, and it
             // shatters there. Until then: a light blow on a chilled enemy throws back those near and a burst follows.
             to.Add(new Upgrade { Id = SlidingIce, Name = "Sliding Ice", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { Windchill }, X = 0f, Y = 3.48f, Icon = UpgradeIcons.Arrow,
-                Description = "A light blow sends a Frozen enemy sliding until it meets something. It shatters there, and what it met is hurt as much.",
+                Description = "A light blow on a chilled enemy throws everything close to you back, and half a second later ice bursts round the one struck.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.LightHit, Do = UpgradeAction.Push, Needs = AfflictionKind.Chill, At = EffectAt.Self, Radius = 3.5f, Amount = 5f, Cooldown = 1.5f },
@@ -54,12 +54,12 @@ namespace Clover.Player.Trees
                 } });
             // The rain form gives the snow and its bite. Losing sight of the player, the slow turn and blows from behind being critical are not in it yet.
             to.Add(new Upgrade { Id = Whiteout, Name = "Whiteout", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { Windchill }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button to call down driving snow around you. Enemies in it lose sight of you beyond arm's reach and turn slowly. A blow from behind is critical there. 40 mana.",
+                Description = "Hold the spell button to call down driving snow in a wide circle for eight seconds. Shards fall inside it again and again, each a small bite. 40 mana.",
                 Form = "rain",
                 Spell = new SpellSpec { Cost = 40f, Reach = 0.5f, Radius = 7f, Seconds = 8f, Interval = 0.6f, Damage = 3f, Stagger = 4f, Stacks = 1 } });
             // The dragon form carries what it meets along its line, as the rolling snow does; it does not bury them Frozen where it stops.
             to.Add(new Upgrade { Id = Avalanche, Name = "Avalanche", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { SlidingIce }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Wave,
-                Description = "Hold the spell button to send a wall of snow rolling out before you. It carries enemies along and buries them where it stops, Frozen. 50 mana.",
+                Description = "Hold the spell button to send a great head of snow down a lane nine metres long. It strikes what it passes and carries it along, then bites hard where it stops. 50 mana.",
                 Form = "dragon",
                 Spell = new SpellSpec { Cost = 50f, Reach = 9f, Radius = 2f, Speed = 4.5f, Damage = 25f, Stagger = 30f, Stacks = 4 } });
 

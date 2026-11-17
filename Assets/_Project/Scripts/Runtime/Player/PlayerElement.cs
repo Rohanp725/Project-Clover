@@ -224,7 +224,13 @@ namespace Clover.Player
                 spellBuffered = 0f;
                 // With the mark for it, mana that is missing is paid in health.
                 if (upgrades != null) upgrades.CoverWithHealth(Kit.SpellCost * stats.Multiplier(PlayerStat.SpellCost) * stats.Multiplier(PlayerStat.BaseSpellCost));
-                if (Kit.TryCast(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SpellCost) * stats.Multiplier(PlayerStat.BaseSpellCost) : 1f)) BeginCast();
+                // Spring Tide: the spell grows with all the mana held, and takes it all.
+                bool tide = upgrades != null && upgrades.TideRises(Kit.SpellCost * stats.Multiplier(PlayerStat.SpellCost) * stats.Multiplier(PlayerStat.BaseSpellCost));
+                if (Kit.TryCast(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SpellCost) * stats.Multiplier(PlayerStat.BaseSpellCost) : 1f))
+                {
+                    if (tide) upgrades.TideSpent();
+                    BeginCast();
+                }
                 else if (defence != null) defence.Callout("No mana");
             }
             if (spellBuffered > 0f) spellBuffered -= deltaTime;

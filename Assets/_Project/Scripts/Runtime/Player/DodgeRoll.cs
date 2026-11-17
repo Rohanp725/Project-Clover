@@ -13,6 +13,8 @@ namespace Clover.Player
         public float Distance = 4.5f;
         public float Duration = 0.35f;
         public float StaminaCost = 25f;
+        /// <summary>When set, the roll is paid for by asking this (true: paid) and costs no stamina. Leaf on the Wind sets it.</summary>
+        [NonSerialized] public Func<bool> PayInstead;
         /// <summary>Hits pass through the player between these two moments of the roll, in seconds from its start.</summary>
         public float InvulnerableFrom = 0.03f;
         public float InvulnerableUntil = 0.25f;
@@ -51,7 +53,11 @@ namespace Clover.Player
         {
             direction.y = 0f;
             if (!CanStart || direction.sqrMagnitude < 0.0001f) return false;
-            if (!stamina.TrySpend(StaminaCost)) return false;
+            if (PayInstead != null)
+            {
+                if (!PayInstead()) return false;
+            }
+            else if (!stamina.TrySpend(StaminaCost)) return false;
             Direction = direction.normalized;
             IsRolling = true;
             elapsed = 0f;

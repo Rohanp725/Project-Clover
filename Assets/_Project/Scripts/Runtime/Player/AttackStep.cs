@@ -55,13 +55,13 @@ namespace Clover.Player
         public float LungeSeconds;
         /// <summary>Metres covered during the swing itself, striking all the way; each target is hit once.</summary>
         public float Travel;
-        /// <summary>The player ignores enemies' bodies while travelling. A seam for the knives: not yet read.</summary>
+        /// <summary>The player goes through enemies' bodies while travelling, and when the swing is over turns to face what was passed.</summary>
         public bool PassThrough;
         /// <summary>Metres the player is pushed back over the first of the recovery.</summary>
         public float Recoil;
         /// <summary>Metres the target is dragged: positive toward the player, negative away.</summary>
         public float Pull;
-        /// <summary>Against something too heavy to drag, the player goes to it instead. A seam for the chain: not yet read.</summary>
+        /// <summary>Against something too heavy to drag (<see cref="Clover.Gameplay.IWeighted"/>), the player goes to it instead.</summary>
         public bool PullSelf;
         /// <summary>Something that leaves the weapon at the blow and flies on. Null: nothing does.</summary>
         public WeaponShot Shot;
@@ -78,6 +78,14 @@ namespace Clover.Player
         public float HoldSeconds;
         /// <summary>Metres a finished enemy is thrown sideways, the way the cut travels: the hammer's last blow.</summary>
         public float Fling;
+        /// <summary>A blow of the bow's stave: landing, it snaps every arrow standing in its target (<see cref="PlantedArrows"/>).</summary>
+        public bool SnapsArrows;
+        /// <summary>Arrows this blow leaves standing in its target, after any snapping: the stab with an arrow in the fist.</summary>
+        public int PlantsArrows;
+        /// <summary>Seconds the nearest enemy this blow lands on is bound to the bearer by the chain; zero binds nothing.</summary>
+        public float Binds;
+        /// <summary>How the chain goes out with this step, for the line that draws it.</summary>
+        public ChainThrow Chain;
         /// <summary>
         /// A step whose shot stays where it lands may be followed: this long after the thing has stuck, the player
         /// goes to it over <see cref="FollowSeconds"/>, untouchable on the way, and arrives with this step. Null: no one follows.

@@ -14,8 +14,8 @@ namespace Clover.Player
     /// </summary>
     public class PlayerStats
     {
-        public const int Count = (int)PlayerStat.Leech + 1;
-        public const int WhenCount = (int)StatWhen.Risen + 1;
+        public const int Count = (int)PlayerStat.BoonSeconds + 1;
+        public const int WhenCount = (int)StatWhen.HeavySwing + 1;
         /// <summary>How many timed boons can run at once; a new one past that takes the place of the one nearest its end.</summary>
         public const int BoonCapacity = 16;
         /// <summary>How many learned changes can be tied to an affliction on the target; more are dropped.</summary>
@@ -153,6 +153,20 @@ namespace Clover.Player
         }
 
         /// <summary>A timed change. The same stat by the same amount given again starts its time over and does not stack with itself.</summary>
+        /// <summary>Ends a boon before its time (one that lasts only until the next blow). False when no such boon runs.</summary>
+        public bool EndBoon(PlayerStat stat, float amount)
+        {
+            for (int i = 0; i < boons.Length; i++)
+            {
+                if (boons[i].Left <= 0f || boons[i].Stat != stat || boons[i].Amount != amount) continue;
+                boons[i].Left = 0f;
+                boon[(int)stat] -= amount;
+                Version++;
+                return true;
+            }
+            return false;
+        }
+
         public void AddBoon(PlayerStat stat, float amount, float seconds)
         {
             if (seconds <= 0f || amount == 0f) return;

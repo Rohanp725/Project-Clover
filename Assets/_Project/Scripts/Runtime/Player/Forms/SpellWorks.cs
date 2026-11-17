@@ -374,7 +374,12 @@ namespace Clover.Player.Forms
                     }
                 }
                 run.Age += deltaTime;
-                if (!run.Form.Tick(ref run, deltaTime)) Finish(i);
+                // What the run strikes in this step is its own spell's doing, for marks that ask whose spell it was.
+                var owner = run.Cast.Upgrades;
+                if (owner != null) owner.Casting(run.Cast.Source);
+                bool goesOn = run.Form.Tick(ref run, deltaTime);
+                if (owner != null) owner.Casting(null);
+                if (!goesOn) Finish(i);
             }
         }
 

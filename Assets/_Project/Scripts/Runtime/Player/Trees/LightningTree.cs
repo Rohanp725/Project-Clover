@@ -62,7 +62,7 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = DeepReserve, Name = "Deep Reserve", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.StoredCharge }, X = -1.39f, Y = 4.31f, Icon = UpgradeIcons.Gem,
                 // BESPOKE: three charges banked, shown as pips, each blow spending one. Until then a perfect guard also leaves
                 // every blow harder for a few seconds, so the blows after the charged one still carry something.
-                Description = "Perfect guards bank up to three charges. Each blow spends one.",
+                Description = "For four seconds after a perfect guard, every blow lands 30% harder and staggers 30% more.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.3f, Seconds = 4f },
@@ -87,7 +87,7 @@ namespace Clover.Player.Trees
                 Description = "A stored charge breaks balance harder.",
                 Stats = new[] { new StatMod(PlayerStat.ChargeStagger, 0.25f) } });
             to.Add(new Upgrade { Id = WaitingThunder, Name = "Waiting Thunder", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { FullDischarge }, X = -2.69f, Y = 6.93f, Icon = UpgradeIcons.Spike,
-                Description = "Hold the spell button to hang five bolts at your shoulder. Each blow you land sends one down with it. A heavy blow sends all that are left. 35 mana.",
+                Description = "Hold the spell button to hang five bolts at your shoulder for ten seconds. One flies at the nearest enemy every half second or so. A heavy blow that lands sends all that are left at the one it struck. 35 mana.",
                 Form = "phalanx",
                 Spell = new SpellSpec { Cost = 35f, Count = 5, Seconds = 10f, Reach = 8f, Damage = 8f, Stagger = 6f, Stacks = 1, Speed = 18f } });
             // It took the id and name the first slice gave a mark of critical chance; it is critical damage now, as designed.
@@ -98,11 +98,11 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = OpenSeam, Name = "Open Seam", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { DeepReserve }, X = -2.32f, Y = 4.61f, Icon = UpgradeIcons.Target,
                 Description = "Blows on an enemy carrying Static are critical more often.",
                 Stats = new[] { new StatMod(PlayerStat.CritChance, 0.08f, AfflictionKind.Static) } });
-            // BESPOKE: Static to ten deep, and a discharge that does not arc and lands twice as hard on the one struck.
-            // Until then a heavy blow on an enemy carrying Static bursts on that enemy alone, on top of the root's discharge.
+            // Built by hand (the discharge in PlayerUpgrades.OnSwing): Static to ten deep with Lightning held, and a discharge
+            // that does not arc and lands twice as hard on the one struck.
             to.Add(new Upgrade { Id = SingleStroke, Name = "Single Stroke", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { WaitingThunder }, X = -3.21f, Y = 8.27f, Icon = UpgradeIcons.Blade,
                 Description = "Static builds to ten. A discharge no longer arcs: all of it lands on the one struck, twice as hard.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Static, Do = UpgradeAction.Burst, Damage = 24f, Stagger = 20f, Radius = 1f, Cooldown = 0.5f } } });
+                Stats = new[] { new StatMod(PlayerStat.AfflictionDepth, 5f) } });
 
             // Middle bough: Thunder. The sky and the surge.
             // A bolt that sets off an enemy already at five is still to be written by hand.
@@ -119,7 +119,7 @@ namespace Clover.Player.Trees
             // BESPOKE: holding the spell button again while the rod stands should step the player to it with a shock, and spend it.
             // It used to grow straight from Static.
             to.Add(new Upgrade { Id = Upgrade.LightningRod, Name = "Lightning Rod", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Conductor }, X = 0.58f, Y = 6.85f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button to plant a rod. Bolts fall around it for a while. Hold again to step to it in a flash. 40 mana.",
+                Description = "Hold the spell button to plant a rod two metres ahead. For eight seconds bolts fall inside a circle round it, each laying Static. 40 mana.",
                 Form = SpellForms.Rod,
                 Spell = new SpellSpec { Cost = 40f, Reach = 2f, Radius = 3.5f, Seconds = 8f, Interval = 0.9f, Damage = 12f, Stagger = 12f, Delay = 0.2f, Stacks = 1 } });
             // Kept from the first slice; not in the design.
@@ -129,7 +129,7 @@ namespace Clover.Player.Trees
             // BESPOKE: a line of ground whose far end follows the player, from the rod, while it stands. Until then any spell cast
             // lays a line of lightning ahead of the player for a while.
             to.Add(new Upgrade { Id = LiveWire, Name = "Live Wire", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.LightningRod }, X = -0.94f, Y = 7.67f, Icon = UpgradeIcons.Beam,
-                Description = "While a rod stands, a wire of lightning runs from it to you. Enemies it crosses are shocked.",
+                Description = "Casting any spell lays a line of lightning on the ground eight metres ahead of you for four seconds. Enemies standing on it are shocked and gather Static. This can happen once every six seconds.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.Hazard, Shape = HazardShape.Line, Count = 5, Reach = 8f, Radius = 0.9f, Seconds = 4f, Interval = 0.5f, Damage = 5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 6f } } });
             to.Add(new Upgrade { Id = LongOverdrive, Name = "Long Overdrive", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { LiveWire }, X = -1.37f, Y = 8.8f, Icon = UpgradeIcons.Hourglass,
                 Description = "Overdrive lasts longer.",
@@ -139,7 +139,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.15f) } });
             // The pull that grows with each stack of Static, and the discharge of all it gathers, are still to be written by hand.
             to.Add(new Upgrade { Id = Lodestone, Name = "Lodestone", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { LiveWire }, X = -0.22f, Y = 9.14f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button to drag every enemy near toward you, further for each Static on it, then set all of it off at once. 45 mana.",
+                Description = "Hold the spell button to drag every enemy within five metres to a point just ahead of you, then burst it there with a heavy blow that lays Static. 45 mana.",
                 Form = "reverse",
                 Spell = new SpellSpec { Cost = 45f, Reach = 1.5f, Radius = 5f, Delay = 0.3f, Damage = 14f, Stagger = 30f, Stacks = 1 } });
             // BESPOKE (as built): the breath that opens Overdrive. The breath each perfect guard or dodge adds, and the dearer surge, are data.
@@ -161,7 +161,7 @@ namespace Clover.Player.Trees
             // Right bough: Flicker. The dodge.
             // BESPOKE (as built). Still to add: the player is gone for the first tenth of a second and passes through enemies.
             to.Add(new Upgrade { Id = Upgrade.Blink, Name = "Blink", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Static }, X = 1.58f, Y = 4.51f, Icon = UpgradeIcons.Boot,
-                Description = "The dodge becomes a short step through lightning that shocks whatever it passes through." });
+                Description = "Each dodge sends a line of lightning down its path that shocks whatever it crosses." });
             to.Add(new Upgrade { Id = BitingStep, Name = "Biting Step", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Blink }, X = 1.08f, Y = 5.39f, Icon = UpgradeIcons.Fang,
                 Description = "Blink shocks harder.",
                 Stats = new[] { new StatMod(PlayerStat.BlinkPower, 0.4f) } });
@@ -170,7 +170,7 @@ namespace Clover.Player.Trees
                 Description = "A dodge at the last moment leaves a copy of you that strikes where you stood." });
             // There is no stamina cost for a dodge out of a recovery alone: a quarter of the saving, on every dodge.
             to.Add(new Upgrade { Id = QuickReturn, Name = "Quick Return", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Blink }, X = 2.52f, Y = 5.92f, Icon = UpgradeIcons.Arrow,
-                Description = "A dodge that breaks off an attack costs less stamina.",
+                Description = "The dodge and a blow held on the guard cost a tenth less stamina.",
                 Stats = new[] { new StatMod(PlayerStat.StaminaCost, -0.1f) } });
             to.Add(new Upgrade { Id = ForkedStep, Name = "Forked Step", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Blink }, X = 2.41f, Y = 4.98f, Icon = UpgradeIcons.Boot,
                 Description = "Blink shocks a wider path.",
@@ -190,8 +190,8 @@ namespace Clover.Player.Trees
             // BESPOKE: a guard that costs twice the stamina for each point caught. Until then the price is a shorter perfect guard.
             // The stamina given back is the dodge's usual 25.
             to.Add(new Upgrade { Id = NeverThere, Name = "Never There", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SevenFlashes }, X = 2.96f, Y = 9.94f, Icon = UpgradeIcons.Wing,
-                Description = "Every dodge carries further and a perfect dodge costs nothing. Your guard holds half as well.",
-                Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.3f), new StatMod(PlayerStat.PerfectGuardWindow, -0.25f) },
+                Description = "Every dodge carries further and a perfect dodge costs nothing. A blow held on your guard costs twice the stamina.",
+                Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.3f), new StatMod(PlayerStat.GuardStamina, 1f) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Stamina, Amount = 25f } } });
             to.Add(new Upgrade { Id = BrightEcho, Name = "Bright Echo", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Afterimage }, X = 3.08f, Y = 7.37f, Icon = UpgradeIcons.Eye,
                 Description = "The copy left by Afterimage strikes harder.",
