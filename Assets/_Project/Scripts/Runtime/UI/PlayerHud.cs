@@ -194,7 +194,7 @@ namespace Clover.UI
                 if (embers != null && held != shownEmbers)
                 {
                     shownEmbers = held;
-                    embers.text = $"Embers  {shownEmbers}";
+                    embers.text = $"Shards  {shownEmbers}";
                 }
                 if (EmberMotes.Arrived != motesSeen)
                 {

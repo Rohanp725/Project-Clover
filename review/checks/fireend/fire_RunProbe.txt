@@ -1,0 +1,11 @@
+opened
+met: true
+result: probe started
+[Probe] 1 castle: scene Castle weapon Fists element Fire
+[Probe] 2 castle cleared: weapon Katana embers earned 14 menu opened True learned [fire.cinder] embers left 12; the rest brought back 12; embers after felling them again 12; alive 0
+[Probe] 3 summit: scene Summit weapon Katana element Fire learning kept [fire.cinder] embers 12
+[Probe] 4 the god: swordsman dead True storm dead True felled True embers 17
+[Probe] 5 consumed: chosen True element Fire consumed True plasma True embers 21
+[Probe] 6 home: scene Hub runs ended 1 fell False gods last run 1 weapon Fists embers 0 katana stand open True lightning brazier open False (the storm was consumed, so it should be cold)
+[Probe] done
+counts: {"error":0,"warn":0,"log":7}

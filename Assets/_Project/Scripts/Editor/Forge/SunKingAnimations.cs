@@ -376,6 +376,92 @@ namespace Clover.EditorTools.Forge
             yield return Noon("sunking_noon_1", true);
             yield return Noon("sunking_noon_2", false);
             yield return Noon("sunking_noon_3", false);
+            yield return Becoming();
+            yield return Fallen();
+        }
+
+        // Beaten, he does not fall (WORLD.md, "Every god transforms"): down on one knee, then up, the spear lifted straight
+        // at the sky, and as the sun comes down it he arches back onto his toes with the free arm thrown wide, lifted
+        // off his heels by what is pouring into him. The court's director holds it at a moment, so the keys are spread
+        // over the whole: the knee to a third, the spear high by half, the arch from there to the end.
+        private static ForgeClip Becoming()
+        {
+            var lifted = Ready();
+            lifted.Hips = V(0f, 0.02f, -0.04f);
+            lifted.HipYaw = 0f;
+            lifted.WaistLean = -14f;
+            lifted.HeadLean = -18f;
+            lifted.HeadYaw = 0f;
+            lifted.FootL = V(-0.16f, 0f, 0.08f);
+            lifted.FootR = V(0.16f, 0f, -0.06f);
+            lifted.FootRTurn = 12f;
+            lifted.HandR = V(0.3f, 2.15f, 0.08f);
+            lifted.ElbowR = V(1f, 0.2f, 0.1f);
+            lifted.ShoulderRUp = 36f;
+            lifted.Blade = V(0.02f, 1f, 0f);
+            lifted.HandL = V(-0.62f, 1.45f, 0.2f);
+            lifted.ElbowL = V(-1f, -0.4f, 0f);
+            var arched = lifted.Copy();
+            arched.Hips = V(0f, 0.07f, -0.1f);
+            arched.WaistLean = -24f;
+            arched.HeadLean = -24f;
+            arched.FootL = V(-0.16f, 0.05f, 0.06f);
+            arched.FootR = V(0.16f, 0.05f, -0.04f);
+            arched.FootLTip = 34f;
+            arched.FootRTip = 34f;
+            arched.HandR = V(0.26f, 2.25f, -0.02f);
+            arched.HandL = V(-0.82f, 1.9f, -0.05f);
+            arched.ElbowL = V(-1f, -0.2f, -0.2f);
+            var lifting = arched.Copy();
+            lifting.Hips = V(0f, 0.12f, -0.12f);
+            lifting.WaistLean = -28f;
+            lifting.HeadLean = -28f;
+            lifting.FootL = V(-0.14f, 0.12f, 0.04f);
+            lifting.FootR = V(0.14f, 0.12f, -0.02f);
+            lifting.FootLTip = 50f;
+            lifting.FootRTip = 50f;
+            lifting.HandL = V(-0.86f, 2.05f, -0.1f);
+            var rising = Kneel();
+            rising.Hips = V(0.02f, -0.3f, 0f);
+            rising.HeadLean = 4f;
+            rising.WaistLean = 10f;
+            return new ForgeClip("sunking_transform", 2f) { SheetMoments = new[] { 0f, 0.15f, 0.3f, 0.45f, 0.6f, 0.75f, 0.9f, 1f } }
+                .Key(0f, Kneel()).Key(0.15f, Kneel(), Ease.Linear).Key(0.3f, rising, Ease.InOut).Key(0.48f, lifted, Ease.Out)
+                .Key(0.75f, arched, Ease.InOut).Key(1f, lifting, Ease.In);
+        }
+
+        // The man again, after the falcon: on his back on the court floor, one knee up, the spear fallen out of his open
+        // right hand along the floor beside him, the left hand on his chest. His head is lifted to look along himself at
+        // whoever stands over him, and his chest rises and falls: he is alive for these few breaths, and sane.
+        private static ForgeClip Fallen()
+        {
+            ForgePose Lying(float breath)
+            {
+                return new ForgePose
+                {
+                    Hips = V(0f, -0.8f, -0.12f),
+                    HipLean = -84f,
+                    WaistLean = -3f + 3f * breath,
+                    HeadLean = 34f + 2f * breath,
+                    HeadYaw = 14f,
+                    FootL = V(-0.2f, 0.07f, 0.74f),
+                    FootR = V(0.22f, 0.06f, 0.36f),
+                    FootLTurn = 18f,
+                    FootRTurn = 6f,
+                    FootLTip = -64f,
+                    FootRTip = -20f,
+                    KneeL = V(-0.15f, 1f, 0.3f),
+                    KneeR = V(0.3f, 1f, 0.1f),
+                    HandL = V(-0.08f, 0.32f + 0.025f * breath, -0.42f),
+                    ElbowL = V(-1f, 0.3f, -0.2f),
+                    HandR = V(0.72f, 0.07f, -0.5f),
+                    ElbowR = V(1f, 0.2f, 0.3f),
+                    AimBlade = true,
+                    Blade = V(0.12f, 0.01f, 1f),
+                };
+            }
+            return new ForgeClip("sunking_fallen", 3.2f, true) { SheetMoments = new[] { 0f, 0.25f, 0.5f, 0.75f } }
+                .From(t => Lying(0.5f - 0.5f * Mathf.Cos(t * Mathf.PI * 2f)));
         }
     }
 }

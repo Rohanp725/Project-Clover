@@ -66,7 +66,7 @@ namespace Clover.UI
             if (embers == shownReclaim || reclaim == null) return;
             shownReclaim = embers;
             reclaim.enabled = embers > 0;
-            if (embers > 0) reclaim.text = $"Embers to reclaim: {embers}";
+            if (embers > 0) reclaim.text = $"Shards to reclaim: {embers}";
         }
     }
 }

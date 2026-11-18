@@ -335,7 +335,8 @@ namespace Clover.EditorTools
             Spawn(EnemyKind.ThirstName, -10f, Bed, 71.5f, 160f);
             Spawn(EnemyKind.ThirstName, -1f, Bed, 73f, 200f);
 
-            // 1D, the Barque's Bend: the boat of the morning stranded down the middle, its deck a high branch.
+            // 1D, the Barque's Bend: the boat of the morning stranded down the middle, its deck a high branch. Scenery only: the
+            // land's way out is the sunset in the sun-court, not this boat (WORLD.md, rides out of each land).
             var barque = SunCityKit.Place("barque", group, new Vector3(4f, 0f, 88f), 200f, 0.73f, false);
             Solid(barque, new Vector3(0.5f, 2.2f, -0.3f), new Vector3(6.4f, 4.4f, 29f), false);
             var deck = BuildKit.Block("Barque Deck", group, new Vector3(4f, 3.35f, 88f), new Vector3(4.4f, 0.3f, 20f), wood, 200f);
@@ -344,7 +345,7 @@ namespace Clover.EditorTools
             Object.DestroyImmediate(rail.GetComponent<Fadeable>());
             SunCityGround.Ramp("Gangplank", group, new Vector3(0.2f, Bed, 72.4f), new Vector3(0.9f, 3.5f, 79f), 3f, reed, wood);
             Canopy(group, "Deck Cabin", 2.6f, 5.8f, 86f, 89.5f, 3.5f, 2.2f, cloth);
-            Carving(group, new Vector3(6.6f, 3.5f, 96.4f), 200f, "The barque's prow", "\"The boat of the morning. It waits for one who rises.\"");
+            Carving(group, new Vector3(6.6f, 3.5f, 96.4f), 200f, "The barque's prow", "\"The boat of the morning. It stopped when the river did.\"");
             Spawn(EnemyKind.ThirstName, 3.4f, 3.5f, 90f, 250f);
             Bury(Spawn(EnemyKind.ThirstName, -6f, Bed, 86f, 160f));
             jars.Add((group, new Vector3(-8f, Bed, 84f)));
@@ -552,10 +553,10 @@ namespace Clover.EditorTools
             var hearth = new GameObject("Hearth Gift").AddComponent<LandGift>();
             hearth.transform.SetParent(group, false);
             hearth.transform.position = new Vector3(-7.4f, Quay, 142f);
-            hearth.Prompt = "Take the embers they missed";
+            hearth.Prompt = "Take the Shards they missed";
             hearth.Range = 2.2f;
             hearth.Embers = 5;
-            hearth.Words = "Five embers";
+            hearth.Words = "Five Shards";
             hearth.Configure(hearthEmbers.gameObject);
             things.Add(hearth);
             // Claude's words, new in the second pass; "Ahu" stands in for the old god's name until the owner gives it.
@@ -907,7 +908,7 @@ namespace Clover.EditorTools
             dish.Prompt = "Take what was left for the dead";
             dish.Range = 2.2f;
             dish.Embers = 3;
-            dish.Words = "Three embers";
+            dish.Words = "Three Shards";
             dish.Configure(embers.gameObject);
             things.Add(dish);
         }

@@ -175,7 +175,7 @@ public class SoakProbeRunner : MonoBehaviour
         area = FindAnyObjectByType<AreaDirector>();
         emberText = null;
         foreach (var text in FindObjectsByType<Text>(FindObjectsInactive.Include, FindObjectsSortMode.None))
-            if (text.text.StartsWith("Embers")) emberText = text;
+            if (text.text.StartsWith("Shards")) emberText = text;
         spawn = player.transform.position;
         lastPosition = spawn;
         boxAnchor = spawn;
@@ -299,7 +299,7 @@ public class SoakProbeRunner : MonoBehaviour
         if (!MenuOpen && Mathf.Abs(Time.timeScale - 1f) > 0.001f) scaleOffFor += real; else scaleOffFor = 0f;
         if (scaleOffFor > 6f) { Trouble("time scale stuck", $"timeScale {Time.timeScale} for 6 s outside the menu, dead {dead}"); scaleOffFor = 0f; }
 
-        if (emberText != null && emberText.isActiveAndEnabled && emberText.text != $"Embers  {RunState.Points}") emberOffFor += real; else emberOffFor = 0f;
+        if (emberText != null && emberText.isActiveAndEnabled && emberText.text != $"Shards  {RunState.Points}") emberOffFor += real; else emberOffFor = 0f;
         if (emberOffFor > 5f) { Trouble("ember count wrong", $"HUD says '{emberText.text}' but the run holds {RunState.Points}"); emberOffFor = 0f; }
 
         int alive = 0;

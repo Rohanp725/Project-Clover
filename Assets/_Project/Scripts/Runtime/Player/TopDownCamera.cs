@@ -122,6 +122,65 @@ namespace Clover.Player
             wantedPitch = pitchChangeDegrees;
         }
 
+        /// <summary>
+        /// A framing that keeps the player and one other point on the ground both in the picture (and whatever stands
+        /// <paramref name="otherHeight"/> metres tall there), with a margin round each, standing back no less than <paramref name="least"/> times the usual distance and no more than
+        /// <paramref name="most"/>. For a moment that must show who it happens to and who watches it.
+        /// </summary>
+        public void FrameBoth(Vector3 other, float least, float pitchChangeDegrees = 0f, float most = 3f, float otherHeight = 2f)
+        {
+            if (target == null) return;
+            float field = lens != null ? lens.fieldOfView : 40f;
+            float aspect = lens != null && Screen.height > 0 ? Mathf.Min(Screen.width / (float)Screen.height, WidestAspect) : 16f / 9f;
+            Vector3 look = Hold(target.position, other, PitchDegrees + pitchChangeDegrees, field, aspect, Distance, least, most, out float multiplier, otherHeight);
+            SetFraming(multiplier, look - new Vector3(target.position.x, 0f, target.position.z), pitchChangeDegrees);
+        }
+
+        /// <summary>Metres kept clear round each of the two points held in the picture.</summary>
+        public const float HoldMargin = 1.6f;
+
+        /// <summary>
+        /// Where on the ground a camera of this pitch, field and distance must look, and how many times the distance it
+        /// must stand back, to hold two points on the ground in the picture with <see cref="HoldMargin"/> round each.
+        /// The camera looks north and down, so it sees less of the ground nearer to it than beyond what it looks at.
+        /// </summary>
+        public static Vector3 Hold(Vector3 first, Vector3 second, float pitchDegrees, float fieldDegrees, float aspect, float distance,
+            float least, float most, out float multiplier, float secondHeight = 0f)
+        {
+            float pitch = Mathf.Clamp(pitchDegrees, 15f, 89f) * Mathf.Deg2Rad;
+            float half = Mathf.Clamp(fieldDegrees, 5f, 120f) * 0.5f * Mathf.Deg2Rad;
+            float height = Mathf.Sin(pitch);
+            float middle = height / Mathf.Tan(pitch);
+            // Metres of ground per metre of distance: toward the camera, beyond the point looked at, and to either side.
+            float near = middle - height / Mathf.Tan(Mathf.Min(pitch + half, 89.9f * Mathf.Deg2Rad));
+            float far = height / Mathf.Tan(Mathf.Max(pitch - half, 1f * Mathf.Deg2Rad)) - middle;
+            float side = Mathf.Tan(half) * Mathf.Max(0.5f, aspect);
+            // Something tall at the second point reaches up the picture as far as ground this much further north would,
+            // seen along the steepest-lying ray of the picture, its top edge.
+            float top = second.z + Mathf.Max(0f, secondHeight) / Mathf.Tan(Mathf.Max(pitch - half, 5f * Mathf.Deg2Rad));
+            float south = Mathf.Min(first.z, second.z) - HoldMargin, north = Mathf.Max(first.z, top) + HoldMargin;
+            float west = Mathf.Min(first.x, second.x) - HoldMargin, east = Mathf.Max(first.x, second.x) + HoldMargin;
+            float need = Mathf.Max((north - south) / ((near + far) * distance), (east - west) / (2f * side * distance));
+            multiplier = Mathf.Clamp(need, least, most);
+            float x = (west + east) * 0.5f, halfAcross = (east - west) * 0.5f;
+            float z = 0f;
+            // Nearer the camera less ground is seen to either side: stand back a little at a time until the side of each
+            // point is held too. Twenty steps at most, so a framing asked for every frame costs next to nothing.
+            for (int step = 0; step < 20; step++)
+            {
+                float depth = multiplier * distance;
+                // Anywhere between these the two are held top to bottom; the middle leaves the most room either way.
+                float lookFrom = north - far * depth, lookTo = south + near * depth;
+                // When they only just fit (or cannot), the halfway point between the two limits is still the fairest.
+                z = (lookFrom + lookTo) * 0.5f;
+                float nearest = Mathf.Min(first.z, second.z) - HoldMargin;
+                float seenAt = (nearest - z) * Mathf.Cos(pitch) + depth;
+                if (halfAcross <= seenAt * side || multiplier >= most) break;
+                multiplier = Mathf.Min(most, multiplier * 1.06f);
+            }
+            return new Vector3(x, 0f, z);
+        }
+
         /// <summary>Lets the camera ease back to its usual framing.</summary>
         public void ClearFraming()
         {

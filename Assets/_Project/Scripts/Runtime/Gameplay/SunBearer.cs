@@ -80,10 +80,23 @@ namespace Clover.Gameplay
         public float EntranceSeconds = 4.6f;
         public float RoarAt = 3.5f;
         /// <summary>The entrance: when the sun starts down the thread of light, and when it hangs over where he fell.</summary>
-        public float SunDownAt = 1.3f, SunLandsAt = 2.3f;
-        public float DeathSeconds = 6f;
-        /// <summary>The death: when the sun goes out, when the body starts to come apart, and when it is gone. What is left of <see cref="DeathSeconds"/> is quiet.</summary>
-        public float SunOutAt = 1.6f, ApartAt = 3f, GoneAt = 4.6f;
+        public float SunDownAt = 1.1f, SunLandsAt = 2.1f;
+        /// <summary>
+        /// Metres above the floor the sun comes down to: onto the point of the spear he lifts, so he is seen under it,
+        /// burning from inside as it pours down the spear into him; in the flash as it arrives he is gone into it.
+        /// </summary>
+        public float SunHangs = 4.6f;
+        /// <summary>Metres above the floor the thread of light comes down to: the point of the lifted spear, not through him.</summary>
+        public float ThreadFoot = 3.8f;
+        public float DeathSeconds = 5.4f;
+        /// <summary>
+        /// The death: when the sun goes out, when the body starts to come apart, when it is gone, and when the dull sun,
+        /// rolled into the obelisk's shadow, cracks open and leaves the man lying where it lay. What is left of
+        /// <see cref="DeathSeconds"/> is quiet.
+        /// </summary>
+        public float SunOutAt = 1.6f, ApartAt = 2.6f, GoneAt = 3.9f, CrackAt = 4.3f;
+        /// <summary>How far from the obelisk the dull sun rolls along its shadow, and how big it is when it cracks.</summary>
+        public float SunRestsAt = 6f, CrackSize = 0.7f;
         /// <summary>How far off the camera stands, in its usual distances, while the entrance and the death are shown.</summary>
         public float ShowDistance = 1.5f;
         public float FlightHeight = 12f;
@@ -152,6 +165,9 @@ namespace Clover.Gameplay
         public int Lulls { get; private set; }
         public int FallsLaid { get; private set; }
         public bool PlayerHidden { get; private set; }
+        /// <summary>True once the dull sun has cracked open in its death; <see cref="CrackedAt"/> is where, on the floor.</summary>
+        public bool SunCracked { get; private set; }
+        public Vector3 CrackedAt { get; private set; }
         /// <summary>What the last blow it gave the player was: for probes.</summary>
         public string LastBlow { get; private set; } = "";
         /// <summary>The middle of the mark of whatever it is about to do: for probes.</summary>
@@ -421,6 +437,7 @@ namespace Clover.Gameplay
         public override void Retire()
         {
             if (mode == Mode.Hidden) return;
+            SunCracked = false;
             HideMarkers();
             ClearHot();
             Blazing = false;
@@ -435,6 +452,7 @@ namespace Clover.Gameplay
         public override void Rise()
         {
             if (mode != Mode.Hidden) return;
+            SunCracked = false;
             Health.Fill();
             Stagger.Reset();
             Afflictions.Clear();
@@ -445,7 +463,8 @@ namespace Clover.Gameplay
             sinceZenith = 100f;
             nearFor = 0f;
             ClearHot();
-            Vector3 from = Keep(OnFloor(RiseFrom), FloorRadius - 6f);
+            // Where he stands, so the sun comes down into him wherever the duel ended (no nearer the wall than the scarab needs).
+            Vector3 from = Keep(OnFloor(RiseFrom), FloorRadius - 2.5f);
             // It gathers itself on the far side of the sun from whoever is watching.
             Vector3 away = target != null ? OnFloor(from - target.position) : Vector3.forward;
             away = away.sqrMagnitude > 0.01f ? away.normalized : Vector3.forward;
@@ -851,8 +870,11 @@ namespace Clover.Gameplay
             // and the obelisk is thinned if it stands in the way: both are seen from wherever the player stands.
             if (mode == Mode.Entering || mode == Mode.Dying)
             {
-                Vector3 seen = mode == Mode.Entering ? Vector3.Lerp(markPoint, OnFloor(at), 0.35f) : Vector3.Lerp(OnFloor(at), OnFloor(sunAt), 0.4f);
-                shaker.SetFraming(ShowDistance, seen - OnFloor(target.position), ViewPitch);
+                // Whoever watches stays in the picture too: earlier the view went to the form alone and lost them.
+                // Before the sun arrives it is him under it that matters; after, the scarab rising behind him, which is tall.
+                Vector3 seen = mode == Mode.Entering ? Vector3.Lerp(markPoint, OnFloor(at), elapsed < SunLandsAt ? 0f : 0.7f)
+                    : SunCracked ? CrackedAt : Vector3.Lerp(OnFloor(at), OnFloor(sunAt), 0.4f);
+                shaker.FrameBoth(seen, ShowDistance, ViewPitch, 3f, mode == Mode.Entering ? 5.5f : 2.5f);
                 if (fader != null)
                 {
                     fader.WatchAlso = true;
@@ -880,7 +902,7 @@ namespace Clover.Gameplay
         private void AdvanceEntering(float deltaTime)
         {
             Vector3 from = markPoint;
-            // The first beat: where he fell a ring of gold closes on the floor and a thread of light stands up out of him.
+            // The first beat: where he stands with the spear lifted a ring of gold closes on the floor and a thread of light stands up out of the spear.
             if (elapsed < SunLandsAt)
             {
                 circles[0].Show(from, Quaternion.identity, Mathf.Clamp01(elapsed / SunDownAt), HotMarker, false, 4.5f);
@@ -890,14 +912,15 @@ namespace Clover.Gameplay
             if (lineRenderer != null)
             {
                 lineRenderer.enabled = elapsed < SunLandsAt + 0.7f;
-                lightLine.position = from + Vector3.up * 20f;
-                float thick = elapsed < SunDownAt ? Mathf.Lerp(0.05f, 0.7f, elapsed / SunDownAt)
-                    : elapsed < SunLandsAt ? 0.7f : Mathf.Lerp(0.7f, 0f, (elapsed - SunLandsAt) / 0.7f);
-                lightLine.localScale = new Vector3(thick, 20f, thick);
+                float half = (40f - ThreadFoot) * 0.5f;
+                lightLine.position = from + Vector3.up * (ThreadFoot + half);
+                float thick = elapsed < SunDownAt ? Mathf.Lerp(0.05f, 0.5f, elapsed / SunDownAt)
+                    : elapsed < SunLandsAt ? 0.5f : Mathf.Lerp(0.5f, 0f, (elapsed - SunLandsAt) / 0.7f);
+                lightLine.localScale = new Vector3(thick, half, thick);
             }
-            // The second: the sun comes down the thread and hangs over what is left of him.
+            // The second: the sun comes down the thread, down the spear, into him; in the flash as it arrives he is gone into it.
             float down = Mathf.Clamp01((elapsed - SunDownAt) / (SunLandsAt - SunDownAt));
-            float hangs = Mathf.Lerp(40f, 6f, 1f - (1f - down) * (1f - down));
+            float hangs = Mathf.Lerp(40f, SunHangs, 1f - (1f - down) * (1f - down));
             if (elapsed >= SunLandsAt && step == 0)
             {
                 step = 1;
@@ -1898,8 +1921,8 @@ namespace Clover.Gameplay
         }
 
         // It drags itself at the sun, which gutters and goes out. Then it is still, the gold gone dark; then the cases
-        // fall open and it sinks into ash. The sun rolls into the obelisk's shadow and shrinks to a coal. Then nothing,
-        // for a breath, before he speaks.
+        // fall open and it sinks into ash. The dull sun rolls into the obelisk's shadow, shudders with light, and cracks open:
+        // the man is lying where it lay. Then nothing, for a breath, before he speaks.
         private void AdvanceDying(float deltaTime)
         {
             at.y = Mathf.MoveTowards(at.y, 0f, 20f * deltaTime);
@@ -1926,9 +1949,11 @@ namespace Clover.Gameplay
                     ScreenFlash.Flash(new Color(1f, 0.8f, 0.45f, 0.4f), 0.1f);
                     if (shaker != null) shaker.Shake(0.5f, 0.4f);
                     var hand = Sunlight.Hand;
-                    sunRollTo = (hand != null ? hand.Direction : Vector3.forward) * 3.4f;
-                    sunRollLeft = 2.4f;
+                    sunRollTo = KeepSun((hand != null ? hand.Centre + hand.Direction * SunRestsAt : Vector3.forward * SunRestsAt));
+                    sunRollLeft = 2f;
                 }
+                // The shadow goes on turning while the sun rolls: it rolls to where the shadow is, not where it was.
+                if (sunRollLeft > 0f && Sunlight.Hand != null) sunRollTo = KeepSun(Sunlight.Hand.Centre + Sunlight.Hand.Direction * SunRestsAt);
                 float apart = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((elapsed - ApartAt) / (GoneAt - ApartAt)));
                 pitch = Mathf.MoveTowards(pitch, 14f, 30f * deltaTime);
                 roll = Mathf.MoveTowards(roll, 0f, 30f * deltaTime);
@@ -1946,8 +1971,28 @@ namespace Clover.Gameplay
                     Vfx.Play(VfxKind.Ash, at + Vector3.up * 0.4f, Vector3.up, 4f);
                     Vfx.Play(VfxKind.Embers, at + Vector3.up * 0.4f, Vector3.up, 2f);
                 }
+                // Light shows through it before it goes: a shudder, then it cracks open in a flash, and he is lying there.
+                if (step == 2 && elapsed >= CrackAt - 0.6f && Every(ref untilPuff, 0.08f, deltaTime))
+                    Vfx.Play(VfxKind.TintSpark, sunAt + Random.onUnitSphere * 0.9f * sunSize * 1.5f, Vector3.up, 1f, SunWhite);
+                if (elapsed >= CrackAt && step == 2)
+                {
+                    step = 3;
+                    SunCracked = true;
+                    CrackedAt = OnFloor(sunAt);
+                    sun.gameObject.SetActive(false);
+                    Vfx.Play(VfxKind.Burst, sunAt, Vector3.up, 3f);
+                    Vfx.Play(VfxKind.Impact, sunAt, Vector3.up, 2f, SunWhite);
+                    Vfx.Play(VfxKind.TintRing, CrackedAt + Vector3.up * 0.2f, Vector3.up, 1.6f, Gold);
+                    for (int i = 0; i < 6; i++)
+                        Vfx.Play(VfxKind.TintSpark, sunAt, Quaternion.Euler(0f, i * 60f + 20f, 0f) * (Vector3.forward + Vector3.up * 0.4f), 1.4f, Gold);
+                    Vfx.Play(VfxKind.Ash, CrackedAt + Vector3.up * 0.5f, Vector3.up, 2.5f);
+                    ScreenFlash.Flash(new Color(1f, 0.97f, 0.88f, 0.7f), 0.14f);
+                    if (shaker != null) shaker.Shake(0.45f, 0.4f);
+                    if (hitStop != null) hitStop.Slow(0.8f, 0.35f);
+                }
             }
-            sunSize = Mathf.Lerp(1f, 0.14f, Mathf.Clamp01((elapsed - SunOutAt - 0.6f) / 2.4f));
+            // It rolls into the shadow and settles there, still the size of a man, not shrunk to a coal.
+            sunSize = Mathf.Lerp(1f, CrackSize, Mathf.Clamp01((elapsed - SunOutAt) / 2f));
             if (elapsed < DeathSeconds) return;
             body.gameObject.SetActive(false);
             if (shadowRenderer != null) shadowRenderer.enabled = false;
@@ -2238,6 +2283,8 @@ namespace Clover.Gameplay
             bool loose = sunState == SunState.Loose && parryLeft < 0f;
             // Dying, it gutters faster and faster before it goes out.
             if (mode == Mode.Dying && elapsed < SunOutAt) loose = Mathf.Repeat(elapsed * Mathf.Lerp(3f, 12f, elapsed / SunOutAt), 1f) > 0.6f;
+            // Before it cracks the light inside shows through, faster and faster.
+            else if (mode == Mode.Dying && elapsed >= CrackAt - 0.6f && elapsed < CrackAt) loose = Mathf.Repeat((elapsed - CrackAt + 0.6f) * Mathf.Lerp(4f, 16f, (elapsed - CrackAt + 0.6f) / 0.6f), 1f) < 0.55f;
             if (sunBurning.activeSelf == loose) sunBurning.SetActive(!loose);
             if (sunDull.activeSelf != loose) sunDull.SetActive(loose);
             sun.SetPositionAndRotation(sunAt, Quaternion.Euler(sunSpin, yaw, 0f));

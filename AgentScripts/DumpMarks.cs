@@ -17,7 +17,7 @@ public static class DumpMarks
         {
             var list = marks.OrderBy(m => (int)m.Kind == (int)UpgradeKind.Root ? 0 : 1).ThenBy(m => m.Y).ThenBy(m => m.X).ToList();
             text.Append("#### ").Append(title).Append(" (").Append(list.Count).Append(")\n\n");
-            text.Append("| Mark | Kind | Embers | What it does | How it happens |\n|---|---|---|---|---|\n");
+            text.Append("| Mark | Kind | Shards | What it does | How it happens |\n|---|---|---|---|---|\n");
             foreach (var m in list)
             {
                 count++;

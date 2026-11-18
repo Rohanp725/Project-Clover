@@ -34707,7 +34707,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 55
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -116540,7 +116540,7 @@ MonoBehaviour:
     Break an enemy''s balance, then finish it with a heavy blow.
 
 
-    Embers are spent at rest fires.'
+    Shards are spent at rest fires.'
 --- !u!222 &1439904305
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -127862,7 +127862,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 79
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -174623,7 +174623,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 46
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1

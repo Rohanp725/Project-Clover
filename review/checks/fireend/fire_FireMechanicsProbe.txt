@@ -1,0 +1,35 @@
+opened
+met: true
+result: probe started
+[Probe] start: enemies 17 heat True first swell at 25 floor capacity 40 land return True embers return True
+[Probe] 1 ashen at burst: levy 3.8 m off, wick 2.5 m off, player 2.7 m off; struck 'The Wick' wick health 48 has flame True
+[Probe] 1 ashen swell: forced True burst 1 dead True player hurt True (100 -> 70) enemies hurt 1 levy 80 -> 80 wicks lit 1 wick lit True wick dormant False
+[Probe] 2 ashen killed early: pending after 0.35 s True burst 1 struck 'Gilded Levy, The Ashen' where it fell 0.00 m off; levy 80 -> 34; player 5 m off hurt False
+[Probe] 3 wick flame: lit True pace 1.40 spread 1 sleeper lit True sleeper awake True footprints and marks 3 -> 6
+[Probe] 4 noon: phase Warning progress 0.58 callout 'The sun swells. Find shade.'
+[Probe]    swell in the sun: lit True health 97 -> 88 burnt 9 wick swell pace 1.45 swelling True
+[Probe]    swell in the awning's shade: lit False health 88 -> 88 burnt 0
+[Probe]    swell at the calm gate: lit True calm True health 88 -> 32 burnt 0; swells so far 1
+[Probe] 5 embers: carried 11 at the fall; after it carried 0 waiting 11 (The Thirsting 6, The Wick 5) callout 'The fallen carry your Shards'
+[Probe]    carrier killed again: embers 0 -> 5 reclaimed 5 waiting 6 callout '5 Shards reclaimed'
+[Probe]    second fall carrying 5: forfeited 6 waiting 5 first still carries 0 callout '6 Shards gone. The fallen carry 5'
+[Probe] 6 gold: blows 4 splashes +4 gold lying 4
+[Probe]    standing in hot gold: burns True health 100 -> 92 pace 1.00
+[Probe]    cooled: burns False pace on it 0.55 (MoltenFloor.PaceAt 0.55)
+[Probe]    200 more splashes at once: lying 40 of capacity 40
+[Probe] 7 wall: formed True levies at 47.8,27.8 / 48.3,26.8 / 48.6,28.0 player at z 23.4
+[Probe]    light blow from the front: Blocked; heavy blow on the shield: Landed; broken True breaks 1 guard open 2.4 s
+[Probe]    light blow from the front while the line is open: Landed
+[Probe] 8 pour: forced True wall pieces 10; walking at him through it, nearest 4.39 m (the arc lies at 3.6 m)
+[Probe] 9 buried: under True dormant True
+[Probe]    burst 1 under False lunge 'thirst_snatch' state Telegraph
+[Probe] 10 jar: broken True drinks 1 health 15/40 -> 39/50 from 0.3 m of the jar
+[Probe] 11 beam: forced True beams 1 health 100 -> 86 lane lit True
+[Probe]    calling: calls 2 levy aware False -> True player lit by it True
+[Probe] 12 mirror: beam ends at 47.6,34.0 enemies burnt 2 wick lit True wick health 48
+[Probe]    turned 1 times; target lit True door standing False beam ends at 64.3,39.8
+[Probe] 13 spear: forced True thrown True stands 8.0 m from him health 100 -> 77 OK (blows taken in the tell 0, flinching the frame before False; at the throw: health 77 blows +1 dodged +0 blocked +0 perfect +0, the player 8.0 m off and 0 degrees off his facing; leaping False suspended False hurt True finishing False form 0 wards 0 -> 0 screened False; blows in all +1); a light blow from the front while bare-handed: Landed
+[Probe]    fetched 1 thrown False
+[Probe] done
+[Probe] done
+counts: {"error":0,"warn":0,"log":31}

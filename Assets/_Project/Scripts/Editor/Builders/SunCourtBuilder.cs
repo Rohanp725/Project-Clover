@@ -14,7 +14,8 @@ namespace Clover.EditorTools
     /// Builds the sun-court (fire_land.md, sections 3.6 and 6): a round court of radius 20 under the white noon, the
     /// obelisk at its centre with the shadow that turns, twelve hours cut in the floor, the seated colossus against
     /// the north wall, a forecourt to the south with the land's last rest fire outside the fight, the gold line the
-    /// fight begins at, Khepharu the man, and what he becomes. The player comes with fists or the spear and no
+    /// fight begins at, Khepharu the man, and what he becomes. In the west wall a gilded gate stands shut until the sun
+    /// sets through it after the fight; its beam is the way out. The player comes with fists or the spear and no
     /// element. The scene is not in the list the game is built from; the gate of noon loads it in the editor.
     /// </summary>
     public static class SunCourtBuilder
@@ -22,6 +23,8 @@ namespace Clover.EditorTools
         public const string ScenePath = "Assets/_Project/Scenes/SunCourt.unity";
         public const float Radius = 20f;
         public const float LineZ = -20f;
+        /// <summary>Degrees round from north of the west gate the sun sets through.</summary>
+        public const float WestGate = 270f;
 
         [MenuItem("Clover/Build/Sun Court")]
         public static void Build()
@@ -96,12 +99,45 @@ namespace Clover.EditorTools
                 float angle = i * 10f + 5f;
                 float fromSouth = Mathf.Abs(Mathf.DeltaAngle(angle, 180f));
                 if (fromSouth < 17f) continue;
+                // The west gate stands here.
+                if (Mathf.Abs(Mathf.DeltaAngle(angle, WestGate)) < 6f) continue;
                 float height = fromSouth < 75f ? 1.2f : 3f;
                 var block = BuildKit.Block("Court Wall", walls, Polar(angle, Radius + 1.1f, height * 0.5f), new Vector3(3.9f, height, 1.4f), SunCityKit.Brick, angle);
                 if (height < 2f) Object.DestroyImmediate(block.GetComponent<Fadeable>());
                 // A pale coping on the tall wall.
                 if (height > 2f) BuildKit.Shape(PrimitiveType.Cube, "Coping", block.transform, new Vector3(0f, 0.5f + 0.06f, 0f), new Vector3(1.04f, 0.1f, 1.2f), pale).shadowCastingMode = ShadowCastingMode.Off;
             }
+
+            // The west gate: two pylons and a gilded leaf in the tall wall, shut all through the fight. When the sun sets
+            // the leaf sinks into the floor and the low sun shines through it across the court (WORLD.md, the ride out of Fire).
+            var gate = BuildKit.Group("West Gate", world);
+            foreach (float side in new[] { -8f, 8f })
+            {
+                var pylon = BuildKit.Block("Gate Pylon", gate, Polar(WestGate + side, Radius + 1.1f, 2f), new Vector3(2.4f, 4f, 1.8f), SunCityKit.Brick, WestGate + side);
+                BuildKit.Shape(PrimitiveType.Cube, "Pylon Cap", pylon.transform, new Vector3(0f, 0.5f + 0.03f, 0f), new Vector3(1.08f, 0.06f, 1.1f), gold).shadowCastingMode = ShadowCastingMode.Off;
+            }
+            var leaf = BuildKit.Block("Gate Leaf", gate, Polar(WestGate, Radius + 1.1f, 1.5f), new Vector3(3.7f, 3f, 0.5f), gold, WestGate);
+            // It moves, so it may not be batched with the walls.
+            leaf.isStatic = false;
+            BuildKit.Shape(PrimitiveType.Cube, "Leaf Sun", leaf.transform, new Vector3(0f, 0.12f, -0.52f), new Vector3(0.3f, 0.36f, 0.1f), SunCityKit.For("m_sunform_molten")).shadowCastingMode = ShadowCastingMode.Off;
+            // Beyond the open gate the way is only for the eye: the player goes west by the gate's mark, not out onto the mud.
+            var beyond = new GameObject("Beyond The Gate");
+            beyond.transform.SetParent(gate, false);
+            beyond.transform.SetPositionAndRotation(Polar(WestGate, Radius + 2.6f, 2f), Quaternion.Euler(0f, WestGate, 0f));
+            beyond.AddComponent<BoxCollider>().size = new Vector3(6f, 4f, 0.6f);
+            // The low sun's beam through the open gate, laid on the floor from the gate to the foot of the obelisk.
+            // It runs on out of the gate to the sun on the horizon, so the way out is seen to go into it.
+            var road = BuildKit.Shape(PrimitiveType.Quad, "Sun Road", world, new Vector3(-22f, 0.06f, 0f), new Vector3(38f, 3.4f, 1f),
+                BuildKit.Glow(SunCityKit.Folder, "m_sun_road", new Color(3.2f, 1.6f, 0.45f, 1f), 12, true, 1f), new Vector3(90f, 0f, 0f));
+            road.shadowCastingMode = ShadowCastingMode.Off;
+            road.receiveShadows = false;
+            road.enabled = false;
+            // The sun itself on the western horizon, beyond the gate: a soft disc turned to the camera, which never turns.
+            var lowSun = BuildKit.Shape(PrimitiveType.Quad, "Low Sun", world, new Vector3(-40f, 3f, 0f), new Vector3(12f, 12f, 1f),
+                BuildKit.Glow(SunCityKit.Folder, "m_sun_low", new Color(6f, 2.6f, 0.7f, 1f), 0, true, 0.6f), new Vector3(55f, 0f, 0f));
+            lowSun.shadowCastingMode = ShadowCastingMode.Off;
+            lowSun.receiveShadows = false;
+            lowSun.enabled = false;
 
             // The seated colossus against the north wall, with the face he had cut on it.
             var north = BuildKit.Group("Colossus", world);
@@ -161,19 +197,20 @@ namespace Clover.EditorTools
             var things = new List<Interactable>();
             things.Add(Rest(fore, director, new Vector3(3.6f, 0f, -29f), gold, dark));
 
-            // What he leaves: the coal, in the obelisk's shadow. It can only be taken.
-            var coal = Coal(new Vector3(0f, 0.1f, 4.6f));
-            things.Add(coal);
+            // What he leaves is the fire in him, taken from his body where he lies. It can only be taken.
+            var fire = HisFire();
+            things.Add(fire);
 
-            // The way out of the land, for now: the barque is not built, so "Cast off" leads to the hub as the summit's way down does.
-            var door = new GameObject("Cast Off").AddComponent<SceneDoor>();
-            door.transform.position = new Vector3(0f, 0f, -16.5f);
-            door.Prompt = "Cast off";
+            // The way out of the land: west, after the setting sun, from the open gate (it leads where the barque once did).
+            var door = new GameObject("West After The Sun").AddComponent<SceneDoor>();
+            // Inside the gate, not in it: from the camera the gate's south pylon would stand in front of whoever stands there.
+            door.transform.position = Polar(WestGate, Radius - 3.6f, 0f);
+            door.Prompt = "Go west with the sun";
             door.LeadsTo = "Hub";
             door.EndsRun = true;
-            door.Range = 2.6f;
-            BuildKit.Shape(PrimitiveType.Cylinder, "Cast Off Mark", door.transform, new Vector3(0f, 0.05f, 0f), new Vector3(2.4f, 0.01f, 2.4f), gold).shadowCastingMode = ShadowCastingMode.Off;
-            BuildKit.Shape(PrimitiveType.Cylinder, "Cast Off Stone", door.transform, new Vector3(0f, 0.055f, 0f), new Vector3(2.1f, 0.01f, 2.1f), dark).shadowCastingMode = ShadowCastingMode.Off;
+            door.Range = 2.8f;
+            BuildKit.Shape(PrimitiveType.Cylinder, "Sunset Mark", door.transform, new Vector3(0f, 0.07f, 0f), new Vector3(2.6f, 0.01f, 2.6f), gold).shadowCastingMode = ShadowCastingMode.Off;
+            BuildKit.Shape(PrimitiveType.Cylinder, "Sunset Stone", door.transform, new Vector3(0f, 0.075f, 0f), new Vector3(2.3f, 0.01f, 2.3f), dark).shadowCastingMode = ShadowCastingMode.Off;
             things.Add(door);
 
             // The spear as it stands in the floor after a throw, and the ray it comes back as.
@@ -223,8 +260,17 @@ namespace Clover.EditorTools
             foreach (var light in Object.FindObjectsByType<Light>())
                 if (light.type == LightType.Directional && (key == null || light.intensity > key.intensity)) key = light;
 
+            // The sunset's grade: warm, deeper, the shadows violet. It is weighed in by the court as the sun goes down.
+            var sunsetObject = new GameObject("Sunset Look");
+            var sunsetLook = sunsetObject.AddComponent<Volume>();
+            sunsetLook.isGlobal = true;
+            sunsetLook.priority = 10f;
+            sunsetLook.weight = 0f;
+            sunsetLook.sharedProfile = SunsetProfile();
+
             var court = new GameObject("Sun Court Director").AddComponent<SunCourtDirector>();
-            court.Configure(boss, built.Player.GetComponent<PlayerDefence>(), built.Player.GetComponent<HitStop>(), form, bossHud, coal, door);
+            court.Configure(boss, built.Player.GetComponent<PlayerDefence>(), built.Player.GetComponent<HitStop>(), form, bossHud, fire, door);
+            court.ConfigureSunset(sunsetLook, leaf.transform, leaf.GetComponent<Collider>(), road, lowSun);
             court.ConfigureCourt(heatWall, heatGlow, key != null ? key.transform : null, shade, spear, BuildKit.FindDeep(boss.transform, "weapon.R"), ray);
             court.ConfigureRay(rayLook);
             court.ConfigureThrow(spear.GetComponentInChildren<TrailRenderer>(true));
@@ -237,15 +283,16 @@ namespace Clover.EditorTools
                 "I carried the day home on my back. They were sitting in the dark. Look at them now. Warm.",
                 "Come. It is noon.",
             };
-            court.DyingWords = new[] { "The light is low.", "I had forgotten evening.", "Ask it what became of the morning.", "Carry this better than I did." };
+            // His one line, as the owner wrote it (WORLD.md, "Every god transforms").
+            court.Regret = new[] { "I promised them gold. I gave them fire." };
             court.Barque = new[]
             {
                 "You have it.",
                 "It burns the hand that holds it. You will learn where to hold it.",
                 "The sun is moving. That is your doing. Do not stay to watch it set.",
-                "The boat knows the way down the sky. Cast off.",
+                "The sun knows the way down the sky. Follow it west.",
             };
-            coal.Configure(court);
+            fire.Configure(court);
             built.Player.GetComponent<PlayerInteraction>().Configure(things.ToArray());
 
             PlayerBuilder.AddTitle("The Court of Noon", "Khepharu, God of Fire");
@@ -327,40 +374,66 @@ namespace Clover.EditorTools
             return rest;
         }
 
-        // What is left of the sun: a coal the size of a fist, still alight.
-        private static GodReward Coal(Vector3 at)
+        // What is left of the sun is the fire in his chest: a warm light over his body where he lies, the place the
+        // fire is taken from him. The court puts it on him when the disc cracks and shows it once he has spoken.
+        private static GodReward HisFire()
         {
-            var root = new GameObject("The Coal");
-            root.transform.position = at;
-            var ember = SunCityKit.For("m_sunform_molten");
-            // A molten heart in a cracked black crust: five dark shards set round it with the glow showing between them,
-            // and a few crumbs of it fallen on the ash.
-            var crust = SunCityKit.For("m_sunform_dark");
-            BuildKit.Shape(PrimitiveType.Sphere, "Coal Heart", root.transform, new Vector3(0f, 0.26f, 0f), new Vector3(0.36f, 0.32f, 0.34f), ember).shadowCastingMode = ShadowCastingMode.Off;
-            var shardAt = new[] { new Vector3(-0.13f, 0.22f, 0.02f), new Vector3(0.14f, 0.2f, -0.04f), new Vector3(0.01f, 0.37f, 0.03f), new Vector3(0f, 0.2f, 0.16f), new Vector3(0.02f, 0.18f, -0.17f) };
-            var shardSize = new[] { new Vector3(0.2f, 0.3f, 0.3f), new Vector3(0.2f, 0.26f, 0.28f), new Vector3(0.26f, 0.12f, 0.24f), new Vector3(0.24f, 0.24f, 0.12f), new Vector3(0.22f, 0.22f, 0.1f) };
-            var shardTurn = new[] { new Vector3(12f, 20f, 18f), new Vector3(-8f, -25f, -20f), new Vector3(10f, 40f, 6f), new Vector3(-14f, 8f, 10f), new Vector3(16f, -12f, -8f) };
-            for (int i = 0; i < shardAt.Length; i++)
-                BuildKit.Shape(PrimitiveType.Cube, "Coal Crust " + i, root.transform, shardAt[i], shardSize[i], crust, shardTurn[i]).shadowCastingMode = ShadowCastingMode.Off;
-            var crumbAt = new[] { new Vector3(0.38f, 0.07f, 0.16f), new Vector3(-0.33f, 0.07f, -0.24f), new Vector3(0.1f, 0.07f, -0.42f) };
-            for (int i = 0; i < crumbAt.Length; i++)
-                BuildKit.Shape(PrimitiveType.Sphere, "Coal Crumb " + i, root.transform, crumbAt[i], Vector3.one * (0.09f - 0.015f * i), ember).shadowCastingMode = ShadowCastingMode.Off;
-            BuildKit.Shape(PrimitiveType.Sphere, "Ash", root.transform, new Vector3(0f, 0.04f, 0f), new Vector3(1.3f, 0.08f, 1.2f), SunCityKit.For("m_sunform_dark")).shadowCastingMode = ShadowCastingMode.Off;
-            var lightObject = new GameObject("Coal Light");
+            var root = new GameObject("His Fire");
+            var lightObject = new GameObject("Fire Light");
             lightObject.transform.SetParent(root.transform, false);
             lightObject.transform.localPosition = new Vector3(0f, 0.9f, 0f);
             var light = lightObject.AddComponent<Light>();
             light.type = LightType.Point;
-            light.color = new Color(1f, 0.5f, 0.15f);
-            light.range = 6f;
-            light.intensity = 8f;
+            light.color = new Color(1f, 0.55f, 0.18f);
+            light.range = 4.5f;
+            light.intensity = 6f;
             light.shadows = LightShadows.None;
             var reward = root.AddComponent<GodReward>();
-            reward.Prompt = "Take the fire";
+            reward.Prompt = "Take his fire";
             reward.Element = Elements.Fire;
             reward.Takes = true;
-            reward.Range = 2.4f;
+            reward.Range = 2.6f;
             return reward;
+        }
+
+        // The sun's last light on the court: a warm filter, a little deeper, the shade violet and the light orange.
+        private static VolumeProfile SunsetProfile()
+        {
+            string path = BuildKit.GeneratedRoot + "/Look/SunsetProfile.asset";
+            BuildKit.EnsureFolder(BuildKit.GeneratedRoot + "/Look");
+            var profile = AssetDatabase.LoadAssetAtPath<VolumeProfile>(path);
+            if (profile == null)
+            {
+                profile = ScriptableObject.CreateInstance<VolumeProfile>();
+                AssetDatabase.CreateAsset(profile, path);
+            }
+            foreach (var component in profile.components.ToArray())
+            {
+                profile.components.Remove(component);
+                Object.DestroyImmediate(component, true);
+            }
+            var colour = profile.Add<UnityEngine.Rendering.Universal.ColorAdjustments>(true);
+            colour.name = "ColorAdjustments";
+            AssetDatabase.AddObjectToAsset(colour, profile);
+            colour.postExposure.Override(-0.1f);
+            colour.saturation.Override(4f);
+            colour.contrast.Override(10f);
+            colour.colorFilter.Override(new Color(1f, 0.9f, 0.8f));
+            var split = profile.Add<UnityEngine.Rendering.Universal.SplitToning>(true);
+            split.name = "SplitToning";
+            AssetDatabase.AddObjectToAsset(split, profile);
+            split.shadows.Override(new Color(0.38f, 0.3f, 0.62f));
+            split.highlights.Override(new Color(0.66f, 0.46f, 0.3f));
+            split.balance.Override(-20f);
+            var vignette = profile.Add<UnityEngine.Rendering.Universal.Vignette>(true);
+            vignette.name = "Vignette";
+            AssetDatabase.AddObjectToAsset(vignette, profile);
+            vignette.intensity.Override(0.4f);
+            vignette.smoothness.Override(0.5f);
+            vignette.color.Override(new Color(0.18f, 0.06f, 0.04f));
+            EditorUtility.SetDirty(profile);
+            AssetDatabase.SaveAssets();
+            return profile;
         }
     }
 }

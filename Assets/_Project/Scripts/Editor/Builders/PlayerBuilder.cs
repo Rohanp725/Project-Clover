@@ -800,7 +800,7 @@ namespace Clover.EditorTools
                 "Heavy held: the weapon's skill, 30 mana\nHeavy on a staggered enemy: finisher\nFlask held: throw it, once learned\nSpell held: the element's own move, once learned");
             holds.rectTransform.anchoredPosition = new Vector2(48f, -576f);
             var fight = Column("Fight", controls, 700f, 570f, pale,
-                "Guard turns blows from the front.\n\nA guard raised at the last instant is a perfect guard. It costs the enemy its balance.\n\nRed attacks cannot be guarded.\n\nBreak an enemy's balance, then finish it with a heavy blow.\n\nEmbers are spent at rest fires.");
+                "Guard turns blows from the front.\n\nA guard raised at the last instant is a perfect guard. It costs the enemy its balance.\n\nRed attacks cannot be guarded.\n\nBreak an enemy's balance, then finish it with a heavy blow.\n\nShards are spent at rest fires.");
             fight.horizontalOverflow = HorizontalWrapMode.Wrap;
             fight.lineSpacing = 1.1f;
             var rule = Panel("Rule", controls, new Color(0.8f, 0.72f, 0.55f, 0.35f));

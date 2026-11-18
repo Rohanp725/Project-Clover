@@ -33,7 +33,7 @@ namespace Clover.World
             new[]
             {
                 "You fell. It is turned back.",
-                "The embers of the dead are only worth something at a fire. Rest. Spend them.",
+                "The Shards of the dead are only worth something at a fire. Rest. Spend them.",
             },
             new[]
             {

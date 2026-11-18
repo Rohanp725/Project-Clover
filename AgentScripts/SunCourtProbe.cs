@@ -15,11 +15,13 @@ using UnityEngine.InputSystem.LowLevel;
 // Khepharu the man (standing still, then answered), the shafts of noon against someone in the obelisk's shadow, his
 // fall and the Sun-Bearer's entrance, every move of the form (standing still, then answered), the sun knocked away
 // and pushed, the blaze inside and outside the shadow, balance broken and the finisher, fury and the shadow's
-// turn-back, a fall mid-fight (back at the fire, the god whole again), the form's death, the coal taken (Fire held, a
-// spell cast), the sponsor's last words and the way out. Frames: review/shots/current/suncourt_<what>_<n>.png. Run with
+// turn-back, a fall mid-fight (back at the fire, the god whole again), the form's death and the god's end: the disc
+// cracking and the man lying in the obelisk's shadow, his one line, his fire taken over his body (Fire held, the
+// Sun-Spear, a spell cast), the sponsor's last words, the sunset and the way out west through the gate.
+// Frames: review/shots/current/suncourt_<what>_<n>.png and, for the end, fireend_<what>_<n>.png. Run with
 //   bash AgentScripts/runprobe.sh SunCourt SunCourtProbe 200
-// AgentScripts/suncourt_only.txt may hold "Hold" to go straight to the blaze and hold it (for aspect_court.sh) or
-// "Man" / "Form" to play only that half.
+// AgentScripts/suncourt_only.txt may hold "Hold" to go straight to the blaze and hold it (for aspect_court.sh),
+// "Man" / "Form" to play only that half, or "End" for the transformation and the god's end alone (about 60 polls).
 public static class SunCourtProbe
 {
     public static string Run()
@@ -91,6 +93,32 @@ public class SunCourtProbeRunner : MonoBehaviour
         ScreenCapture.CaptureScreenshot("review/shots/current/suncourt_" + name + ".png");
         yield return null;
         yield return null;
+    }
+
+    private IEnumerator EndShot(string name)
+    {
+        yield return null;
+        ScreenCapture.CaptureScreenshot("review/shots/current/fireend_" + name + ".png");
+        yield return null;
+        yield return null;
+    }
+
+    // Whether a point is inside the picture the camera shows (with a small margin), and the player too.
+    private static bool OnScreen(Vector3 point)
+    {
+        var lens = Camera.main;
+        if (lens == null) return false;
+        Vector3 seen = lens.WorldToViewportPoint(point);
+        return seen.z > 0f && seen.x > 0.03f && seen.x < 0.97f && seen.y > 0.03f && seen.y < 0.97f;
+    }
+
+    private string Framed(Vector3 other) => $"player on screen {OnScreen(player.transform.position + Vector3.up)} and it {OnScreen(other)}";
+
+    private bool ManDrawn()
+    {
+        foreach (var shown in boss.GetComponentsInChildren<Renderer>())
+            if (shown.enabled && shown is SkinnedMeshRenderer) return true;
+        return false;
     }
 
     private IEnumerator Hear(string when, float wait = 0.5f)
@@ -178,6 +206,14 @@ public class SunCourtProbeRunner : MonoBehaviour
             Say("done");
             Debug.Log("[Probe] done");
             Destroy(gameObject);
+            yield break;
+        }
+        if (only == "End")
+        {
+            form.OnlyWhenAsked = true;
+            yield return FellMan(new Vector3(-6f, 0f, -6f), 1);
+            yield return Idle();
+            yield return Ending(new Vector3(0f, 0f, -9f));
             yield break;
         }
         if (only != "Form") yield return Man();
@@ -325,7 +361,7 @@ public class SunCourtProbeRunner : MonoBehaviour
     }
 
     private static readonly float[] EntranceShots = { 0.6f, 1.5f, 2.1f, 2.6f, 3.0f, 3.6f, 4.3f };
-    private static readonly float[] DeathShots = { 0.7f, 1.5f, 1.9f, 2.8f, 3.6f, 4.3f, 5.4f };
+    private static readonly float[] DeathShots = { 0.7f, 1.5f, 1.9f, 2.8f, 3.6f, 4.0f, 4.45f };
 
     // Kills the form where it stands with the player at this place, and pictures its death.
     private IEnumerator Death(Vector3 stand, int first)
@@ -357,15 +393,30 @@ public class SunCourtProbeRunner : MonoBehaviour
         yield return Shot("man_1");
         for (int blow = 0; blow < 200 && !boss.IsDead; blow++) boss.TakeHit(new Hit(60f, 0f, Vector3.forward, true, true));
         float fellAt = Time.time;
-        Say($"4 the man falls: dead {boss.IsDead} second form called {court.SecondFormCalled}");
+        Say($"4 the man is beaten: dead {boss.IsDead} transforming {court.Transforming} body kept {boss.gameObject.activeInHierarchy && ManDrawn()} second form called {court.SecondFormCalled}");
+        yield return new WaitForSeconds(0.9f);
+        bool standing = ManDrawn() && boss.gameObject.activeInHierarchy;
+        Say($"4 he gets up and lifts the spear: drawn {standing} {Framed(boss.transform.position)} {(standing && OnScreen(player.transform.position + Vector3.up) && OnScreen(boss.transform.position) ? "OK" : "WRONG")}");
+        if (first == 1) yield return EndShot("transform_1");
         yield return Until(() => form.HasRisen, 6f);
         Say($"4 the sun comes down after {Time.time - fellAt:0.0} s: says '{defence.LastCallout}'");
+        Vector3 manAt = boss.transform.position;
+        foreach (float at in new[] { 1.0f, 1.6f, 1.95f })
+        {
+            yield return Until(() => form.Doing != "Entering" || form.DoingFor >= at, 6f);
+            if (first == 1) yield return EndShot("transform_" + (at < 1.5f ? 2 : at < 1.9f ? 3 : 4));
+        }
+        Say($"4 the sun in the spear and in him: man drawn {ManDrawn()} gone {court.ManGone} {Framed(manAt)} {(ManDrawn() && OnScreen(player.transform.position + Vector3.up) && OnScreen(manAt) ? "OK" : "WRONG")}");
+        yield return Until(() => form.Doing != "Entering" || form.DoingFor >= form.SunLandsAt + 0.05f, 6f);
+        yield return null;
+        Say($"4 the sun has arrived: man gone into it {court.ManGone && !ManDrawn()} sun at {form.SunAt:0.0} over where he stood {Flat(form.SunAt - manAt).magnitude:0.0} m off {(court.ManGone && !ManDrawn() ? "OK" : "WRONG")}");
+        if (first == 1) yield return EndShot("transform_5");
         bool held = player.Suspended, barEarly = form.InFight;
         for (int i = 0; i < EntranceShots.Length; i++)
         {
             float at = EntranceShots[i];
             yield return Until(() => form.Doing != "Entering" || form.DoingFor >= at, 8f);
-            if (i == 5) Say($"4 after the roar: bar shown {form.InFight} says '{defence.LastCallout}'");
+            if (i == 5) Say($"4 after the roar: bar shown {form.InFight} says '{defence.LastCallout}' {Framed(form.BodyAt)} {(OnScreen(player.transform.position + Vector3.up) && OnScreen(form.BodyAt) ? "OK" : "WRONG")}");
             yield return Shot("entrance_" + (first + i));
         }
         yield return Until(() => form.Doing != "Entering", 6f);
@@ -637,36 +688,166 @@ public class SunCourtProbeRunner : MonoBehaviour
         Say($"9 across the line again: begun {court.Begun}");
         yield return FellMan(new Vector3(0f, 0f, -6f), 1);
         yield return Idle();
+        yield return Ending(Flat(form.BodyAt) + Flat(south - form.BodyAt).normalized * 5f);
+    }
+
+    // The god's end (WORLD.md, "Every god transforms" and "Fire's land: changes"): the form killed, the disc cracking and
+    // the man lying in the obelisk's shadow, his one line, his fire taken over his body, the sponsor, the sunset, and
+    // the way out west through the gate, gone through to the hub.
+    private IEnumerator Ending(Vector3 stand)
+    {
+        DontDestroyOnLoad(gameObject);
         int gods = RunState.GodsFelled, embers = RunState.Points;
         var upgrades = player.GetComponent<PlayerUpgrades>();
+        var hisFire = FindAnyObjectByType<GodReward>(FindObjectsInactive.Include);
         float diedAt = Time.time;
-        yield return Death(Flat(form.BodyAt) + Flat(south - form.BodyAt).normalized * 5f, 1);
+        Go(stand, form.BodyAt - stand);
+        for (int attempt = 0; attempt < 12 && !form.IsDead; attempt++)
+        {
+            form.Unbalance(999f);
+            yield return new WaitForSeconds(0.6f);
+            for (int blow = 0; blow < 40 && !form.IsDead; blow++) form.HeadPart.TakeHit(new Hit(60f, 0f, Vector3.forward));
+            yield return new WaitForSeconds(0.3f);
+        }
+        diedAt = Time.time;
+        yield return Until(() => form.DoingFor >= 2.2f || court.ManLaid, 8f);
+        yield return EndShot("crack_1");
+        yield return Until(() => form.DoingFor >= form.CrackAt - 0.25f || court.ManLaid, 8f);
+        yield return EndShot("crack_2");
+        yield return Until(() => court.ManLaid, 8f);
+        float crackedAt = Time.time - diedAt;
+        yield return null;
+        yield return EndShot("crack_3");
+        Vector3 lies = boss.transform.position;
+        court.Hand.Measure(lies, out float along, out float across);
+        bool inShade = court.Hand.Covers(lies);
+        Vector3 length = boss.transform.forward;
+        float square = Mathf.Abs(Vector3.Dot(length, court.Hand.Direction));
+        // Square to the shadow, or as near as lying within 35 degrees of east and west lets him (seen end on he reads as sitting).
+        float fromLevel = Mathf.Abs(Mathf.Asin(Mathf.Clamp(length.z, -1f, 1f)) * Mathf.Rad2Deg);
+        Say($"10 the disc cracks {crackedAt:0.0} s after the last blow: man laid {court.ManLaid} drawn {ManDrawn()} at {lies:0.0}, {along:0.0} m down the shadow and {across:0.0} m from its middle, in it {inShade}, across it (cos {square:0.00} to the shadow, {fromLevel:0} degrees from lying east and west) {Framed(lies)} "
+            + $"{(court.ManLaid && ManDrawn() && inShade && (square < 0.2f || fromLevel <= 35.5f) && fromLevel <= 35.5f && OnScreen(lies) && OnScreen(player.transform.position + Vector3.up) ? "OK" : "WRONG")}");
+        yield return new WaitForSeconds(0.5f);
+        yield return EndShot("fallen_1");
         yield return Until(() => court.Felled, 8f);
-        Say($"10 death: {Time.time - diedAt:0.0} s from the last blow; dead {form.IsDead} felled {court.Felled} gods felled +{RunState.GodsFelled - gods} bar shown {form.InFight} says '{defence.LastCallout}'");
-        yield return Hear("the king dying", 0.6f);
-        var coal = FindAnyObjectByType<GodReward>(FindObjectsInactive.Include);
-        yield return Until(() => coal.gameObject.activeInHierarchy, 5f);
-        bool inShadow = Sunlight.InHand(coal.transform.position);
-        Go(coal.transform.position + new Vector3(0f, 0f, -1.4f), Vector3.forward);
+        Say($"10 the form's death: {Time.time - diedAt:0.0} s from the last blow; dead {form.IsDead} felled {court.Felled} gods felled +{RunState.GodsFelled - gods} bar shown {form.InFight} says '{defence.LastCallout}' free to move {!player.Suspended}");
+        yield return Until(() => ReadingBox.Instance != null && ReadingBox.Instance.IsOpen, 4f);
+        yield return new WaitForSecondsRealtime(0.7f);
+        var box = ReadingBox.Instance;
+        string speaker = "", line = "";
+        foreach (var text in box.GetComponentsInChildren<UnityEngine.UI.Text>(true))
+        {
+            if (text.name == "Speaker") speaker = text.text;
+            else if (text.name == "Line") line = text.text;
+        }
+        yield return EndShot("line_1");
+        bool lineRight = box.IsOpen && line.Contains("I promised them gold. I gave them fire.");
+        Say($"11 his line: box open {box.IsOpen} speaker '{speaker}' says '{line}' fire shown before it is read {hisFire.gameObject.activeInHierarchy} {(lineRight && !hisFire.gameObject.activeInHierarchy ? "OK" : "WRONG")}");
+        yield return Hear("his line", 0.1f);
         yield return new WaitForSeconds(0.6f);
-        yield return Shot("coal_1");
+        bool again = box.IsOpen;
+        Say($"11 said once: said {court.RegretSaid}, box open again {again} {(court.RegretSaid && !again ? "OK" : "WRONG")}");
+
+        // The Take, over his body.
+        float onBody = Flat(hisFire.transform.position - boss.transform.position).magnitude;
+        Vector3 to = hisFire.transform.position - court.Hand.Direction * 1.6f;
+        Go(to, hisFire.transform.position - to);
+        yield return new WaitForSeconds(0.6f);
+        string prompt = interaction.Current != null ? interaction.Current.Prompt : "(nothing)";
+        yield return EndShot("take_1");
+        Say($"12 his fire: shown {hisFire.gameObject.activeInHierarchy} on his body ({onBody:0.0} m from him) prompt offered '{prompt}' element before {element.HasElement} {(hisFire.gameObject.activeInHierarchy && onBody < 1.2f && interaction.Current == hisFire ? "OK" : "WRONG")}");
         float angle = court.Hand.Angle;
-        yield return new WaitForSeconds(0.5f);
-        Say($"10 the coal: shown {coal.gameObject.activeInHierarchy} in the shadow {inShadow} prompt '{coal.Prompt}' shadow stopped {Mathf.Approximately(angle, court.Hand.Angle)} element before {element.HasElement}");
-        coal.Use(interaction);
-        yield return new WaitForSeconds(0.4f);
-        string said = defence.LastCallout;
-        yield return Hear("the sponsor, after", 0.3f);
-        var door = FindAnyObjectByType<SceneDoor>();
-        float mana = combat.Mana.Current;
-        combat.Mana.Gain(100f);
-        Go(new Vector3(0f, 0f, -10f), Vector3.forward);
+        yield return Tap(Key.E);
         yield return new WaitForSeconds(0.3f);
+        bool takenByKey = court.HasChosen;
+        if (!court.HasChosen && hisFire.Available) hisFire.Use(interaction);
+        yield return new WaitForSeconds(0.3f);
+        string said = defence.LastCallout;
+        bool spear = combat.Weapon != null && combat.Weapon.Name == Weapons.OfGod(Elements.Fire);
+        yield return EndShot("take_2");
+        Say($"12 taken (by the key {takenByKey}): said '{said}' element {element.HasElement} kit {(element.Kit != null ? element.Kit.Name : "none")} run element '{RunState.Element}' weapon {combat.Weapon.Name} gift owned {upgrades.Owns(Gifts.SignatureOf(Elements.Fire).Id)} chosen {court.HasChosen} "
+            + $"his spear hidden {BossSpearHidden()} {(court.HasChosen && element.HasElement && element.Kit.Name == Elements.Fire && spear ? "OK" : "WRONG")}");
+
+        // The sunset, while the sponsor speaks.
+        float setFrom = Time.time;
+        float pitchBefore = KeyPitch();
+        yield return new WaitForSecondsRealtime(0.5f);
+        var sponsorBox = ReadingBox.Instance;
+        string sponsorLines = "";
+        if (sponsorBox != null && sponsorBox.IsOpen)
+        {
+            for (int i = 0; i < 12 && sponsorBox.IsOpen; i++)
+            {
+                foreach (var text in sponsorBox.GetComponentsInChildren<UnityEngine.UI.Text>())
+                    if (text.name == "Line") { yield return new WaitForSecondsRealtime(0.55f); if (!sponsorLines.EndsWith(text.text)) sponsorLines += " / " + text.text; break; }
+                if (i == 2) yield return EndShot("sunset_1");
+                yield return Tap(Key.E);
+                yield return new WaitForSecondsRealtime(0.1f);
+            }
+        }
+        Say($"13 the sponsor: lines{sponsorLines} ; any 'boat' or 'barque' or 'cast off' {(sponsorLines.ToLower().Contains("boat") || sponsorLines.ToLower().Contains("barque") || sponsorLines.ToLower().Contains("cast off") ? "WRONG" : "none OK")}");
+        yield return Until(() => court.Sun.Progress >= 0.55f, 12f);
+        yield return EndShot("sunset_2");
+        yield return Until(() => court.WayOpen, 14f);
+        yield return new WaitForSeconds(1.2f);
+        yield return EndShot("sunset_3");
+        var gate = GameObject.Find("Gate Leaf");
+        var gateWall = gate != null ? gate.GetComponent<Collider>() : null;
+        var door = FindAnyObjectByType<SceneDoor>();
+        Say($"13 the sunset: {Time.time - setFrom:0.0} s; done {court.Sun.Done} shadow points {court.Hand.Angle:0} (90 is east) sun pitch {pitchBefore:0} -> {KeyPitch():0} key {KeyColour()} gate shut {(gateWall != null && gateWall.enabled)} gate at {(gate != null ? gate.transform.position.y : 99f):0.0} "
+            + $"way open {court.WayOpen} door '{door.Prompt}' leads to {door.LeadsTo} open {door.Open} {(court.Sun.Done && Mathf.Abs(Mathf.DeltaAngle(court.Hand.Angle, 90f)) < 1f && KeyPitch() < 15f && gateWall != null && !gateWall.enabled && court.WayOpen && door.Open ? "OK" : "WRONG")}");
+        // A spell, to show Fire is held.
+        combat.Mana.Gain(100f);
         element.CastBaseFree();
+        yield return new WaitForSeconds(0.6f);
+
+        // Out: into the beam at the gate.
+        Vector3 road = door.transform.position + Vector3.right * 5f;
+        Go(road, Vector3.left);
+        yield return new WaitForSeconds(0.8f);
+        yield return EndShot("exit_1");
+        Go(door.transform.position + Vector3.right * 0.8f, Vector3.left);
         yield return new WaitForSeconds(0.5f);
-        yield return Shot("fire_1");
-        Say($"11 taking Fire: said '{said}' has element {element.HasElement} kit {element.Kit.Name} run element '{RunState.Element}' chosen {court.HasChosen} gift owned {upgrades.Owns(Gifts.SignatureOf(Elements.Fire).Id)} "
-            + $"weapon {combat.Weapon.Name} spell cast without error; way out open {door.Open} prompt '{door.Prompt}' leads to {door.LeadsTo}; embers {embers} -> {RunState.Points}");
+        string exitPrompt = interaction.Current != null ? interaction.Current.Prompt : "(nothing)";
+        yield return EndShot("exit_2");
+        Say($"14 at the gate: prompt '{exitPrompt}' embers {embers} -> {RunState.Points} {(interaction.Current == door ? "OK" : "WRONG")}");
+        // Why a press could be refused, as PlayerInteraction refuses it: held, helpless, or mid-attack.
+        string state = $"suspended {player.Suspended} helpless {defence.IsHelpless} attacking {combat.IsAttacking}";
+        yield return Tap(Key.E);
+        float left = Time.realtimeSinceStartup;
+        while (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "SunCourt" && Time.realtimeSinceStartup - left < 2f) yield return null;
+        bool byKey = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "SunCourt";
+        if (!byKey)
+        {
+            state += $" (after: suspended {player.Suspended} helpless {defence.IsHelpless} attacking {combat.IsAttacking})";
+            if (door.Available) door.Use(interaction);
+            left = Time.realtimeSinceStartup;
+            while (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "SunCourt" && Time.realtimeSinceStartup - left < 6f) yield return null;
+        }
+        yield return new WaitForSecondsRealtime(1f);
+        string scene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+        Say($"14 went west: now in {scene}, by the key {byKey} ({state}) {(scene == "Hub" ? "OK" : "WRONG")}");
+        Say("done");
+        Debug.Log("[Probe] done");
+        Destroy(gameObject);
+    }
+
+    private float KeyPitch()
+    {
+        var key = RenderSettings.sun;
+        return key != null ? key.transform.eulerAngles.x : -1f;
+    }
+
+    private string KeyColour()
+    {
+        var key = RenderSettings.sun;
+        return key != null ? $"({key.color.r:0.00}, {key.color.g:0.00}, {key.color.b:0.00}) x{key.intensity:0.0}" : "none";
+    }
+
+    private bool BossSpearHidden()
+    {
+        var bone = boss.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "weapon.R");
+        return bone != null && bone.localScale.x < 0.01f;
     }
 
     // Straight to the blaze, and held there with the game all but stopped, for pictures at every screen shape.

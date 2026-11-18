@@ -167,7 +167,9 @@ brought together once the user has confirmed the open points.
 - **Decided (user)**: heat shimmer stays as drawn squiggles for now; real refraction perhaps later.
 - **Decided (user)**: the god's fight reads too much like light and not enough like fire. Everything should look far
   more like fire: the sun a giant burning ball, not a bright white orb; the spear attacks (thrusts, the thrown spear,
-  the ray) fire, not light.
+  the ray) fire, not light. The same goes for every other effect in the land, not only the god's fight:
+  the city's enemies and their attacks, the heat and the sunlight zones, the rest fires, the scorch marks and the hit
+  sparks should all look like flame, smoke, embers and char.
 - **Decided (user)**: the stand-ins (the Sun-Spear made of primitives, the falcon statues and the gold-painted boat
   in the city) are fine for now; they may be changed later.
 - **Open**: the hearth room's lines and the name "Ahu", the tomb paintings, asset approvals and the land's length

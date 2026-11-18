@@ -99,7 +99,7 @@ namespace Clover.World
             upgrades.Earn(share);
             who.CarryEmbers(upgrades.transform, share);
             Vfx.Play(VfxKind.Burst, who.transform.position + Vector3.up * 1.2f, Vector3.up, 0.8f);
-            if (defence != null) defence.Callout(share == 1 ? "1 ember reclaimed" : share + " embers reclaimed");
+            if (defence != null) defence.Callout(share == 1 ? "1 Shard reclaimed" : share + " Shards reclaimed");
         }
 
         private void OnRevived()
@@ -117,14 +117,14 @@ namespace Clover.World
                     RunState.Points = kept;
                 }
                 if (defence != null && (lost > 0 || waiting > 0))
-                    defence.Callout(Debt.Waiting > 0 ? (gone > 0 ? gone + " embers gone. The fallen carry " + Debt.Waiting : "The fallen carry your embers")
-                        : gone == 1 ? "1 ember lost" : gone + " embers lost");
+                    defence.Callout(Debt.Waiting > 0 ? (gone > 0 ? gone + " Shards gone. The fallen carry " + Debt.Waiting : "The fallen carry your Shards")
+                        : gone == 1 ? "1 Shard lost" : gone + " Shards lost");
                 return;
             }
             if (lost <= 0) return;
             EmbersLost += lost;
             RunState.Points = kept;
-            if (defence != null) defence.Callout(lost == 1 ? "1 ember lost" : lost + " embers lost");
+            if (defence != null) defence.Callout(lost == 1 ? "1 Shard lost" : lost + " Shards lost");
         }
 
         private void Update()

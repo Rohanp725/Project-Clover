@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-4666028613006206979
+--- !u!114 &-1704876573931972193
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,9 +41,9 @@ MonoBehaviour:
   m_Name: NoonSwellProfile
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.VolumeProfile
   components:
-  - {fileID: -4666028613006206979}
-  - {fileID: 2232976322004385256}
---- !u!114 &2232976322004385256
+  - {fileID: -1704876573931972193}
+  - {fileID: 2667342337024188506}
+--- !u!114 &2667342337024188506
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}

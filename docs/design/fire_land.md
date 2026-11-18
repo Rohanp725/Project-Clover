@@ -1903,3 +1903,102 @@ swell's look); `Gameplay/AshenBurst.cs`, `Gameplay/MoltenFloor.cs`, `Gameplay/Sp
 scripts `AgentScripts/rebuild_fire.sh` and `check_fire.sh`. Rebuilt: Sun City, Fire Yard, Sun Court, Hub, Castle,
 Summit and the combat test arena (whose builder adds it to the build list: taken back out, the list is Hub, Castle,
 Summit).
+
+### As built: the god's fall and the sunset, and Shards (2026-11-17, seventh worker)
+
+Built from the owner's decisions of the afternoon (WORLD.md, "Every god transforms", "The upgrade currency is Shards"
+and "Fire's land: changes"), only for Fire: Narukami, the castle, the summit and the demo's flow are untouched.
+
+**Shards.** Every player-facing word for the currency now says Shard or Shards: the HUD count (`Shards  12`), the
+chart's title and costs (`1 Shard`, `3 Shards`), the land's "Shards to reclaim", the fall callouts ("3 Shards lost",
+"The fallen carry your Shards", "2 Shards reclaimed"), the sponsor's line after a fall ("The Shards of the dead are
+only worth something at a fire."), the pause page's "Shards are spent at rest fires.", and the city's two gifts
+("Take the Shards they missed", "Five Shards", "Three Shards"). Code names and serialized fields keep `Embers`
+(`PlayerUpgrades.Earn`, `Enemy.CarryEmbers`, `EmberMotes`, `LandGift.Embers`, `GodReward.ConsumeEmbers`, ...), and
+fire embers as an effect (`VfxKind.Embers`, Long Embers, Charged Embers, Ember Rain, Dragon of Embers) are not the
+currency and stay. `docs/GUIDE.md` says Shards throughout (39 places), `DumpMarks` writes a `Shards` column. The
+pause page's text is baked into every scene by `PlayerBuilder`; in Hub, Castle, Summit, CombatTest and FireYard it was
+changed in place through the editor (open, set the Text, save) instead of rebuilding them. The HUD icon (a small
+upright diamond) already reads as a shard and was kept.
+
+**He transforms in front of the player.** Beaten, Khepharu is no longer burnt away: the court sets
+`Enemy.KeepsBody` on him (new: a kept body is not burnt or cleared, its Shards' motes fly at once, and it holds
+whatever clip `Enemy.HoldPose` gives it; `Enemy.Shine` lights it from within). Two clips of his own were added in
+`SunKingAnimations` and baked (`sunking_transform`: down on one knee, up, the spear lifted straight at the sky, then
+arched back onto his toes with the free arm thrown wide; `sunking_fallen`: on his back, one knee up, the spear fallen
+along the floor by his open hand, the left hand on his chest, the head lifted, breathing). The order, all on game time
+so the pause stops it: he gets up and lifts the spear and turns to whoever beat him (`RisingDelay` 1.1 s, the camera
+easing in at 0.35 s instead of its usual 0.9 and the obelisk thinned for him as well as for the player); the
+Sun-Bearer's entrance begins on him: the gold ring closes on the floor round his feet, the thread of light comes down
+to the point of his spear (`SunBearer.ThreadFoot` 3.8 m) instead of through him, the sun comes down the thread onto the
+spear (`SunHangs` 4.6 m; it came to 6 m over the place he had burnt away), and he burns gold and then white from
+inside as it comes (`PouredGlow`, with embers off him); in the flash as it arrives (`SunLandsAt`, now 2.1 s) his body is
+no longer drawn and the scarab rises under the sun and takes it up as before. About five seconds from the killing
+blow to the roar. The camera holds both him and the player the whole time (`TopDownCamera.FrameBoth` and `Hold`, new:
+the look point and distance that keep two ground points, and the height of what stands at the second, in the
+picture; the Sun-Bearer's entrance and death use it too, which is the fix for the player going off screen there).
+
+**He falls back as a man.** When the form dies its body comes apart into ash as before; the dull sun now rolls out along
+the obelisk's shadow (following it as it turns) to six metres, stays the size of a man, shudders with light from inside
+and cracks open (`CrackAt` 4.3 s: flash, gold ring, sparks): Khepharu is lying there, on the shadow's middle line,
+across it (his length square to the shadow, but never more than 35 degrees from lying east and west, since the camera
+looks north and a man lying north and south reads as sitting up), feet toward the player. The shadow stops, and the sun
+leans from noon for the first time (78 to 42 degrees) so the obelisk's own shadow reaches over him. A breath after the
+form's death he says his one line through the reading box: "I promised them gold. I gave them fire." Only once it is
+read does **Take his fire** appear, on his chest (the coal is gone; `HisFire` in the builder is a warm light and the
+`GodReward`). Taking it gives Fire, Falling Sun and the Sun-Spear as before, and his own spear is gone from beside him.
+
+**The sunset.** On the Take, `Sunset` (new, plain numbers, tested) runs for eight seconds while the sponsor speaks: the
+shadow swings round to point east (the light from the west), the key light sinks from where it stood to 13 degrees and
+goes orange, the air, the fog and the sky go warm and violet, a sunset grade is weighed in (`SunsetProfile`), the drawn
+shadow stretches to 2.4 times its length, and in the last 40 percent the gilded leaf of the new west gate (two pylons in
+the tall west wall) sinks into the floor. The camera stands back over the court for it. The low sun's beam is drawn
+through the gate across the floor to the obelisk's foot and on out of the gate to the sun itself on the horizon (a soft
+disc beyond the wall). When the sun has set and the sponsor is read, "West, after the sun" and the gate's gold mark
+offers **Go west with the sun**, which ends the land and leads to the hub as Cast Off did. The way out is the beam and
+not the long shadow: lit from the west the obelisk's shadow points east, and going west after the sun means walking
+into the light (WORLD.md allows either). The sponsor's last line, the only one that named the boat, is now "The sun
+knows the way down the sky. Follow it west."
+
+**The barque in the city** stays as scenery. The prow's carving no longer promises a ride ("It waits for one who
+rises" is now "The boat of the morning. It stopped when the river did."), and no text in the city or the court names
+it as the way out.
+
+**Checks.** EditMode 353 of 353 (eight new in `FireEndTests`: the sunset's rule, the gate, the shadow pointed outright,
+lying across the shadow, his line, the camera holding both, the sponsor saying Shards). `SunCourtProbe` has a new `End`
+part (`suncourt_only.txt`) and its last steps are now the god's end: the whole probe ran 51 lines `OK`, none `WRONG`,
+console 0 errors and 0 warnings (the transformation with both on screen at each beat, the man gone into the sun as it
+arrives, the disc cracking and him laid in the shadow, the line read once, the Take by the interact key over his body
+with Fire, Falling Sun and the Sun-Spear, the sponsor's four lines with no boat in them, the sunset done with the
+shadow pointing east and the sun at 13 degrees, the gate open, and the hub reached through it by the interact key).
+`SunCityProbe` 91 `OK`, 0 `WRONG` (the prow's new carving read, the two gifts giving Shards); `FireMechanicsProbe`
+and the hub's `RunProbe` 0 `WRONG`, 0 errors; the fall callouts read "The fallen carry your Shards", "5 Shards
+reclaimed", "6 Shards gone. The fallen carry 5". Reports in `review/checks/fireend/`. A finding on the way: when the
+editor is not the active application, the Input System drops the keys a probe queues (background behaviour
+`ResetAndDisableNonBackgroundDevices`, keyboards respecting the Game view's focus), and every probe that walks or uses
+things fails wholesale (a first run of `SunCityProbe` read 44 `WRONG` for that alone). Setting
+`InputSystem.settings.backgroundBehavior` to `IgnoreFocus` and `editorInputBehaviorInPlayMode` to
+`AllDeviceInputAlwaysGoesToGameView` through `script eval` for the run, and back after, fixed it; the settings are not
+an asset here, so nothing on disk changes.
+
+Frames worth opening (`review/shots/current/`): `fireend_transform_3` (gold-white under the thread, spear raised),
+`fireend_transform_4` (white under the descending sun, the strongest), `fireend_crack_2` (the dull sun shuddering in the
+shadow), `fireend_fallen_1` (lying on the shadow by the obelisk), `fireend_line_1` (the line), `fireend_take_1` (the
+prompt over him), `fireend_sunset_2` (half-way: orange court, long shadow east, gate pylons), `fireend_sunset_3` (set:
+the wall's shadow over the west half, the beam through the gate to the obelisk, his body in the long shadow),
+`fireend_exit_1` and `_2` (the road out to the sun).
+
+**What looks weak.** The camera has to hold the player and him together, so when they are far apart (the probe's case: the player
+fourteen metres south-west, across the obelisk) he is small in the picture and the descending sun is cut by its top
+edge for a moment. In the transformation clip the head is thrown back far enough that the tall crown juts out behind
+him seen from the side. The fallen pose reads as a man lying down from the court's camera only because he is turned
+toward east and west; at 35 degrees off it, with the head lifted, he can still look half sat up from further off
+(`fireend_fallen_1`); close to (`fireend_take_1`) he reads as lying, with the obelisk's real shadow over him.
+The sun's beam is a flat glowing strip on the floor, not light in the air, and the sun on the horizon is a soft disc;
+outside the walls there is only fogged mud, so at the gate (`fireend_exit_2`) the picture is mostly red haze with the
+pylons beside it (`fireend_exit_2`: the player on the gate's mark in the beam, readable but plain). The sunset court itself (`fireend_sunset_2`, `_3`) is the strongest picture.
+
+**Not done.** No sound anywhere in it. He does not speak with his body (no gesture as he says the line). The sun's
+light on the floor at the gate is only the drawn beam: the real low key light lights the court from the west but the
+gate's opening is not a lit shaft in the air. Nothing outside the court was built for the sun to set over (the mud
+ground and the fog). The demo's Narukami still dies as before (by the owner's word: Fire only).

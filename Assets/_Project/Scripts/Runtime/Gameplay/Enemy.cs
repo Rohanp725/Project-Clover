@@ -279,6 +279,42 @@ namespace Clover.Gameplay
         private float untilFlake;
         private Transform emberTaker;
         private int embersOwed;
+        // A kept body: the pose it is held in (0 for none) and how far through it, and whether it is lit from within.
+        private int heldPose;
+        private float heldAt;
+        private bool shining;
+
+        /// <summary>
+        /// A god's body is kept when he falls (WORLD.md, "Every god transforms"): it is not burnt away or cleared, the
+        /// Shards it owed fly at once, and it holds whatever pose its keeper gives it with <see cref="HoldPose"/>.
+        /// </summary>
+        [System.NonSerialized] public bool KeepsBody;
+
+        /// <summary>Holds a kept body in this clip, this far through it (0 to 1). An empty name lets it fall as the dead fall.</summary>
+        public void HoldPose(string clip, float at)
+        {
+            heldPose = string.IsNullOrEmpty(clip) ? 0 : Animator.StringToHash(clip);
+            heldAt = Mathf.Clamp(at, 0f, 0.999f);
+        }
+
+        /// <summary>Lights the body from within with this glow; black puts it back to its own colours.</summary>
+        public void Shine(Color glow)
+        {
+            shining = glow.maxColorComponent > 0.001f;
+            shownGlow = -1;
+            foreach (var bodyRenderer in bodyRenderers)
+            {
+                if (bodyRenderer == null) continue;
+                if (!shining)
+                {
+                    bodyRenderer.SetPropertyBlock(null);
+                    continue;
+                }
+                block.Clear();
+                block.SetColor(Emission, glow);
+                bodyRenderer.SetPropertyBlock(block);
+            }
+        }
 
         /// <summary>True while it keeps to a ground of its own and the target is standing on it, or it keeps none.</summary>
         public bool TargetOnGround => !holdsGround || target == null || OffGround(target.position) <= 0f;
@@ -433,6 +469,8 @@ namespace Clover.Gameplay
                 embersOwed = 0;
             }
             if (staggerMark != null) staggerMark.Show(false);
+            heldPose = 0;
+            if (shining) Shine(Color.black);
             body.enabled = false;
             transform.SetPositionAndRotation(home, homeRotation);
             body.enabled = true;
@@ -648,6 +686,16 @@ namespace Clover.Gameplay
             if (IsDead)
             {
                 deadFor += deltaTime;
+                if (KeepsBody)
+                {
+                    // Kept, the body stays as its keeper poses it; what it owed is shown leaving it now, not at a burning that never comes.
+                    for (int i = 0; i < embersOwed; i++) EmberMotes.Fly(transform.position + Vector3.up * 1.2f, emberTaker, i);
+                    embersOwed = 0;
+                    if (animator != null && heldPose != 0) animator.Play(heldPose, 0, heldAt);
+                    else Animate(deltaTime, 0f);
+                    if (!shining) Paint(deltaTime);
+                    return;
+                }
                 Animate(deltaTime, 0f);
                 if (deadFor >= BurnAwayAt) BurnAway(deltaTime);
                 else Paint(deltaTime);

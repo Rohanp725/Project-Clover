@@ -63,7 +63,7 @@ Pad names are PlayStation's. The game is designed for a pad; the keyboard does e
 
 ## 2. How a fight works
 
-- **Health** is 100. A blow taken unguarded makes you flinch for 0.35 s and pushes you back. In a run, falling ends the run and wakes you in the hub with bare hands, Fire, no embers and nothing learned.
+- **Health** is 100. A blow taken unguarded makes you flinch for 0.35 s and pushes you back. In a run, falling ends the run and wakes you in the hub with bare hands, Fire, no Shards and nothing learned.
 - **Stamina** is 100. Attacks, dodges and blocked blows spend it. It refills at 30 a second after 0.8 s of spending nothing.
 - **Mana** is 100 at most and comes only from fighting: each weapon blow that lands (4 to 16 by move), a perfect guard (15), a perfect dodge (12), a finisher (15). It pays for the tap spell, the worn spell, the surge and the weapon skill.
 - **Guard** blocks the front arc (200 degrees for most weapons). A block costs stamina (0.9 per point of damage for most weapons), and 35% of the damage comes through as grey health. A blow the stamina cannot pay for breaks the guard: full damage and a long flinch.
@@ -71,8 +71,8 @@ Pad names are PlayStation's. The game is designed for a pad; the keyboard does e
 - **Perfect guard** costs nothing, gives 15 mana, and throws a large amount of stagger back on the attacker. **Red attacks** go through a held guard: dodge them or perfect-guard them.
 - **Perfect dodge**: a blow that passes through the first 0.13 s of a roll gives 12 mana and a third of a second of slowed time.
 - **Stagger**: blows (heavies most of all) and perfect guards fill an enemy's stagger meter. At 70% it flickers amber. Full, it kneels for about 3 s and pulses gold. Light blows on it then do one and a half times damage. Heavy within 5 m is the **finisher**: three times the finisher's damage, no stamina, 15 mana, and blows pass through you while it lasts.
-- **Embers** buy marks on the chart. Each enemy gives 1 the first time it is killed on a visit, the Gate Captain 3, a god 5.
-- **Resting** at a rest fire refills health and flasks, brings the area's enemies back (not their embers) and opens the chart. **Flasks**: three, 45 health each, 0.8 s to drink with the heal at 0.4 s. With none left, 120 damage dealt earns one back.
+- **Shards** buy marks on the chart. Each enemy gives 1 the first time it is killed on a visit, the Gate Captain 3, a god 5.
+- **Resting** at a rest fire refills health and flasks, brings the area's enemies back (not their Shards) and opens the chart. **Flasks**: three, 45 health each, 0.8 s to drink with the heal at 0.4 s. With none left, 120 damage dealt earns one back.
 
 **Not yet**
 
@@ -383,13 +383,13 @@ Critical blows: none by chance to begin with; marks add a chance. A critical blo
 
 ### Taking and consuming
 
-When a god falls it leaves two things on the floor; walk up and use one. **Take**: your element and tree switch to the god's, the old tree is forgotten and the embers spent on it are given back, you receive the god's own weapon and the **god's gift** at the crown of the new tree. **Consume**: you keep your element and gain 4 embers; if the god's element is your neighbour on the ring you also receive the **crown** of the branch the two share, and a plain version of the god's weapon. Either choice restores you. A gift that is a spell is worn at once.
+When a god falls it leaves two things on the floor; walk up and use one. **Take**: your element and tree switch to the god's, the old tree is forgotten and the Shards spent on it are given back, you receive the god's own weapon and the **god's gift** at the crown of the new tree. **Consume**: you keep your element and gain 4 Shards; if the god's element is your neighbour on the ring you also receive the **crown** of the branch the two share, and a plain version of the god's weapon. Either choice restores you. A gift that is a spell is worn at once.
 
 A **mixed branch** opens when you hold one of its two elements and have held or consumed the other in this run. Sealed, it is still drawn on the chart, and the words panel says which element opens it.
 
 **Not yet**
 
-- Only one god exists: Narukami, of Lightning. In play the choice is therefore Take (Lightning, the Storm Katana, Storm Step) or Consume (stay as you are, 4 embers, a plain Katana; for a Fire holder also Plasma and a stronger Flame Wave and Kindle).
+- Only one god exists: Narukami, of Lightning. In play the choice is therefore Take (Lightning, the Storm Katana, Storm Step) or Consume (stay as you are, 4 Shards, a plain Katana; for a Fire holder also Plasma and a stronger Flame Wave and Kindle).
 - The other nine elements have no gods. Their braziers in the hub are lit from the start as a stopgap. Lightning's stays cold until it has been taken once.
 - Gust and Riptide move everything within reach, not only what the cone touched. Stone Rise's pillar does not stand to be broken. Flung Blade deals nothing as it lands. Grasp does not drag you to what cannot be dragged.
 - Glaze, Wellspring, Bedrock, Temper, Clarity and Fever have only the plain halves listed above.
@@ -443,11 +443,11 @@ These are bought on the chart like any spell, then worn and cast with hold Trian
 
 | Spell | Where | Cost | What you do and what it does |
 |---|---|---|---|
-| **Seven Flashes** | Lightning tree (grows from Afterimage) | 4 embers, 45 mana | You vanish. Seven lines are drawn on the ground from enemy to enemy within 8 m (one enemy: through it from seven sides). You stand again on the starting spot, back to the fight, still for half a second. Then the cuts land together (9 each), and any enemy at full Static discharges. Untouchable while gone, open while still: struck then, the cuts land at half and nothing discharges. |
-| **The Wave Stands Still** | Glacier branch | 5 embers, 50 mana | **Keep the button held**: a wave 6 m wide rolls out, up to 9 m, soaking what it meets and carrying it along. **Let go**: it turns to a wall of ice for 4 s. Nothing walks through it, and everything within 3 m behind its face is Frozen. A heavy swing beside the wall shatters it and all it holds (45 damage, 60 stagger each). |
-| **Ball Lightning** | Plasma branch | 4 embers, 40 mana | A ball of white fire appears 1.5 m ahead and drifts slowly after the nearest enemy for 8 s. **Hit it with a weapon swing** to send it along the swing and grow it a step, three at most. It bursts on the first enemy it meets, bigger and harder for each strike, laying Burn and Static. Left alone it bursts small when its time is up. |
-| **Pawned Heart** | Dark tree | 4 embers, no mana | Your health drops to 1. The rest is set down behind you as a beating heart in a ring that closes over 10 s. While it beats your weapon deals 60% more and swings cost the least stamina they can. **Walk at least 2.6 m away, then back onto it** to get back all that was pawned plus 30% of the damage dealt meanwhile. If the ring closes first: health stays at 1 and half of what was pawned comes back grey. |
-| **Sky Dance** | Wind tree | 4 embers, 45 mana | The enemy you face is thrown into the air and you go up beside it, untouchable. Five rings close on it: **press light attack as each ring closes** for a harder cut (15 in place of 10). Then the stick chooses where it is thrown down, and it bursts where it lands: 20 plus 6 for each cut in time, in 3 m. The cast is refused, and the mana kept, if there is no enemy it can lift. |
+| **Seven Flashes** | Lightning tree (grows from Afterimage) | 4 Shards, 45 mana | You vanish. Seven lines are drawn on the ground from enemy to enemy within 8 m (one enemy: through it from seven sides). You stand again on the starting spot, back to the fight, still for half a second. Then the cuts land together (9 each), and any enemy at full Static discharges. Untouchable while gone, open while still: struck then, the cuts land at half and nothing discharges. |
+| **The Wave Stands Still** | Glacier branch | 5 Shards, 50 mana | **Keep the button held**: a wave 6 m wide rolls out, up to 9 m, soaking what it meets and carrying it along. **Let go**: it turns to a wall of ice for 4 s. Nothing walks through it, and everything within 3 m behind its face is Frozen. A heavy swing beside the wall shatters it and all it holds (45 damage, 60 stagger each). |
+| **Ball Lightning** | Plasma branch | 4 Shards, 40 mana | A ball of white fire appears 1.5 m ahead and drifts slowly after the nearest enemy for 8 s. **Hit it with a weapon swing** to send it along the swing and grow it a step, three at most. It bursts on the first enemy it meets, bigger and harder for each strike, laying Burn and Static. Left alone it bursts small when its time is up. |
+| **Pawned Heart** | Dark tree | 4 Shards, no mana | Your health drops to 1. The rest is set down behind you as a beating heart in a ring that closes over 10 s. While it beats your weapon deals 60% more and swings cost the least stamina they can. **Walk at least 2.6 m away, then back onto it** to get back all that was pawned plus 30% of the damage dealt meanwhile. If the ring closes first: health stays at 1 and half of what was pawned comes back grey. |
+| **Sky Dance** | Wind tree | 4 Shards, 45 mana | The enemy you face is thrown into the air and you go up beside it, untouchable. Five rings close on it: **press light attack as each ring closes** for a harder cut (15 in place of 10). Then the stick chooses where it is thrown down, and it bursts where it lands: 20 plus 6 for each cut in time, in 3 m. The cast is refused, and the mana kept, if there is no enemy it can lift. |
 
 **Not yet**
 
@@ -514,7 +514,7 @@ Every form shows itself coming on the ground before it lands (never less than 0.
 
 ### Mark kinds and costs
 
-| Kind | Cost in embers | Frame | What it is |
+| Kind | Cost in Shards | Frame | What it is |
 |---|---|---|---|
 | Root | 2 | The tree's foot | The foot of a tree. Turns the element's affliction on for weapon blows. |
 | Minor | 1 | Small and round | A plain number: more damage, cheaper dodge, and so on. |
@@ -524,7 +524,7 @@ Every form shows itself coming on the ground before it lands (never less than 0.
 | Mix | 3 to 5, written on the mark | Six-sided | A mark on a branch shared by two neighbouring elements. Some are spells. |
 | Signature (a god's gift) | Never sold | The largest, a crowned sun | Given only by a god's fall (section 5). |
 
-A run through the castle and its god pays about 19 embers. No tree can be bought whole in a run, and two keystones are beyond one run, so a path must be chosen.
+A run through the castle and its god pays about 19 Shards. No tree can be bought whole in a run, and two keystones are beyond one run, so a path must be chosen.
 
 ### What can be learned
 
@@ -533,11 +533,11 @@ A mark can be learned when all of these hold:
 - **It is yours**: it is on the tree of the element you hold, or on one of the two branches that element shares.
 - **It is open**: a mix mark needs its branch open (you hold one element and have held or consumed the other this run). Otherwise it reads "Sealed" and names the element that opens it.
 - **It is reachable**: it grows from the foot of its tree, or **any one** of the marks it grows from is already learned. Otherwise the panel says "Grows from ..." and names them.
-- **You carry enough embers.**
+- **You carry enough Shards.**
 
 How a mark is tinted tells you where it stands: the element's colour when learned; pale white when it can be bought now; grey-blue when reachable but too dear; dark when out of reach; dull red when sealed; dull gold for a god's gift. A gold ring sits round the worn spell. Other elements' trees are drawn faint.
 
-Taking a new element forgets the old tree and gives back the embers spent on it. Falling in a run loses everything learned.
+Taking a new element forgets the old tree and gives back the Shards spent on it. Falling in a run loses everything learned.
 
 ### Moving around and zoom
 
@@ -546,7 +546,7 @@ Taking a new element forgets the old tree and gives back the embers spent on it.
 - **Cross / E** learns the chosen mark. On a spell you already own, it wears that spell.
 - **R2 / K** pulls the view back to show the whole ring with every tree; the words panel is hidden while pulled back. Press again to return. There are only these two zoom levels.
 - **Circle / Space** leaves.
-- The words panel on the right gives the mark's name, kind and cost, how it stands with you (learned, worn, what it grows from, what opens it) and its description. The title shows your element and embers.
+- The words panel on the right gives the mark's name, kind and cost, how it stands with you (learned, worn, what it grows from, what opens it) and its description. The title shows your element and Shards.
 
 **Not yet**
 
@@ -557,14 +557,14 @@ Taking a new element forgets the old tree and gives back the embers spent on it.
 ### Every mark
 
 All 428 marks, written out from the game's own data: the eleven trees in ring order, then the eleven mixed branches.
-"Embers" is the price; a gift is never sold. "How it happens" is read from the mark's first effect, so for a mark with
+"Shards" is the price; a gift is never sold. "How it happens" is read from the mark's first effect, so for a mark with
 several effects the description is the fuller account. Every description here says what the mark does today. By the builders' own count 315 are built as designed. The
 other 113 do less than their design asked, so their words were cut back to match; the designed version of each, with
 its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Fire (34)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Cinder** | Root | 2 | Every blow of the weapon sets a burn, and each blow deepens it, up to five. | Always on once it is yours. |
 | **Firebomb Flask** | Major | 3 | Hold the flask button to throw it. No healing: a great burst of fire where it lands, flames left on the ground there, and three stacks of Burn on everything near. | Happens when you throw a flask (hold the flask button). |
@@ -603,7 +603,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Lightning (36)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Static** | Root | 2 | Blows build Static on an enemy, up to five. A heavy blow or a finisher discharges it, and it arcs to everyone near. | Always on once it is yours. |
 | **Stored Charge** | Major | 3 | A perfect guard banks a charge. The next blow spends it for double damage and stagger. | Always on once it is yours. |
@@ -644,7 +644,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Wind (31)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Unsteady** | Root | 2 | Blows knock an enemy Unsteady, up to five. It is pushed further, turns slower and loses its balance sooner. | Always on once it is yours. |
 | **Rushing Wake** | Major | 3 | The first blow that lands soon after any dodge strikes harder and leaves its enemy more Unsteady. | Happens when a dodge ends. |
@@ -680,7 +680,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Ice (31)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Chill** | Root | 2 | Blows chill an enemy, up to five. Each slows it. At five it is Frozen, and a heavy blow shatters it. | Always on once it is yours. |
 | **Black Ice** | Major | 3 | Hoarfrost leaves a sheet of ice on the ground. Enemies standing on it grow colder. | Happens when you cast a spell (Triangle (U)). |
@@ -716,7 +716,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Water (31)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Soaked** | Root | 2 | Blows leave an enemy Soaked. Spells strike it harder, and Static or Chill laid on it spreads to others who are Soaked. | Always on once it is yours. |
 | **Spilled Water** | Major | 3 | Drinking a flask throws a ring of water that pushes back and soaks everyone near. | Happens when you drink a flask. |
@@ -752,7 +752,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Life (31)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Seeded** | Root | 2 | Blows plant a seed in an enemy. Each blow on a Seeded enemy mends you a little. When it dies, it bursts into thorns. | Always on once it is yours. |
 | **Paid in Blood** | Major | 3 | The mana a spell lacks is paid in health, one point for every two of mana. The health is left grey. | Always on once it is yours. |
@@ -788,7 +788,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Earth (31)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Tremor** | Root | 2 | Heavy blows and finishers shake an enemy's footing, up to three deep. A shaken enemy is slow, and its balance does not come back. | Happens when a heavy blow lands. |
 | **Rooted** | Major | 3 | Fight without rolling for a few breaths and you are Rooted. Rooted, you take less harm and your guard costs less. A roll ends it. | Always on once it is yours. |
@@ -824,7 +824,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Metal (30)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Sunder** | Root | 2 | Heavy blows and perfect guards notch an enemy's armour, up to three, and a finisher notches it three deep at once. Each notch lets your weapon bite deeper. | Happens when a heavy blow lands. |
 | **Forged Answer** | Major | 3 | A perfect guard forges a blade from the blow it turned. Up to three hang at your shoulder. Your next heavy blow sends them all. | Happens when you guard at the last moment (a perfect guard). |
@@ -859,7 +859,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Light (31)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Marked** | Root | 2 | The last blow of a chain and every perfect guard leave a mark of light. The next three blows on a Marked enemy are critical and give more mana. | Happens when the last blow of a chain lands. |
 | **Brimming** | Major | 3 | While your mana is full, every heavy blow throws a wave of light ahead of it. | Happens when a heavy blow lands. |
@@ -895,7 +895,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Dark (31)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Curse** | Root | 2 | Blows of the weapon curse an enemy. A Cursed enemy deals less, and killing it heals you. | Always on once it is yours. |
 | **Blood Price** | Major | 3 | With too little mana for a spell, the rest is paid in health. Health paid this way is only owed: blows win it back. | Always on once it is yours. |
@@ -931,7 +931,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Poison (31)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Venom** | Root | 2 | Blows of the weapon poison, up to eight deep. On a slow, steady beat the poison bites for all its depth at once. | Happens when a heavy blow lands. |
 | **In Time** | Major | 3 | A blow that lands as the poison bites doses twice, and for a moment after it your blows are critical. | Happens when any weapon blow lands. |
@@ -967,7 +967,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Plasma (Fire + Lightning) (10)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Charged Embers** | Mix | 3 | Your blows lay Burn and Static together. | Happens when any weapon blow lands. |
 | **Arc Fire** | Mix | 3 | A discharge of Static carries Burn to everyone it reaches. A burn set off leaves Static on everyone it reaches. | Happens when you set off an affliction. |
@@ -982,7 +982,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Tempest (Lightning + Wind) (7)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Charged Air** | Mix | 3 | Your blows lay Static and Unsteady together. | Happens when any weapon blow lands. |
 | **Thunder Lift** | Mix | 4 | A discharge of five Static throws its enemy into the air. | Happens when you set off an affliction. |
@@ -994,7 +994,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Blizzard (Wind + Ice) (7)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Biting Wind** | Mix | 3 | Your blows lay Unsteady and Chill together. | Happens when any weapon blow lands. |
 | **Windchill** | Mix | 3 | The enemy you face, if it is both Unsteady and chilled, grows colder by itself. | Happens when an enemy is near, every few seconds. |
@@ -1006,7 +1006,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Glacier (Ice + Water) (7)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Cold Water** | Mix | 3 | Your blows lay Chill and Soaked together. | Happens when any weapon blow lands. |
 | **Flash Freeze** | Mix | 3 | A Soaked enemy freezes at three Chill, not five. | Always on once it is yours. |
@@ -1018,7 +1018,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Bloom (Water + Life) (7)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Wet Seed** | Mix | 3 | Your blows lay Soaked and Seeded together. | Happens when any weapon blow lands. |
 | **Flowering** | Mix | 3 | A heavy blow on a Seeded enemy bursts its seed: you are mended and everyone near is Seeded and Soaked. It can happen once every seven seconds. | Happens when a heavy blow lands. |
@@ -1030,7 +1030,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Overgrowth (Life + Earth) (7)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Root Grip** | Mix | 3 | Heavy blows lay both Tremor and Seed. A heavy blow on an enemy that bears both sends roots up its legs and holds it where it stands. | Happens when a heavy blow lands. |
 | **Moss on Stone** | Mix | 3 | While you fight without rolling you heal slowly, and thorns grow on you that cut whoever strikes you. | Happens when an enemy is near, every few seconds. |
@@ -1042,7 +1042,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Forge (Earth + Metal) (7)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Hammer and Anvil** | Mix | 3 | A heavy blow on an enemy with stone at its back strikes twice: once from your weapon, once from the stone. | Happens when a heavy blow lands. |
 | **Struck Ore** | Mix | 3 | A perfect guard strikes a spike of ore from the ground under the attacker and shakes it, and three blades fly from you that notch what they pass. | Happens when you guard at the last moment (a perfect guard). |
@@ -1054,7 +1054,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Halo (Metal + Light) (7)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Bright Steel** | Mix | 3 | A perfect guard flashes off the blade. The attacker is Marked, and its armour is notched. | Happens when you guard at the last moment (a perfect guard). |
 | **Halo of Blades** | Mix | 4 | Each critical blow forges a blade of light in a ring behind your shoulders, up to six. A perfect guard looses them all at the one who struck. | Happens when a critical blow lands. |
@@ -1066,7 +1066,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Eclipse (Light + Dark) (7)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Twilight** | Mix | 3 | The blow that ends a chain both Marks and Curses. Critical blows on an enemy that bears both feed you. | Happens when the last blow of a chain lands. |
 | **Day and Night** | Mix | 4 | A perfect dodge heals a little. For a while after a perfect dodge, a perfect guard gives double mana, and for a while after a perfect guard, a perfect dodge gives double mana. | Happens when you dodge at the last moment (a perfect dodge). |
@@ -1078,7 +1078,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Blight (Dark + Poison) (7)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Wither** | Mix | 3 | Heavy blows both Curse and poison. Poison bites harder on the Cursed, and does not fade from them while the curse lasts. | Happens when a heavy blow lands. |
 | **Feeding Rot** | Mix | 3 | Each time poison bites a Cursed enemy, a little of it comes back to you as health. | Happens when poison bites an enemy. |
@@ -1090,7 +1090,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 #### Pyre (Poison + Fire) (7)
 
-| Mark | Kind | Embers | What it does | How it happens |
+| Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
 | **Fuel** | Mix | 3 | Heavy blows both poison and burn. | Happens when a heavy blow lands. |
 | **Goes Up** | Mix | 4 | When a burning enemy's poison reaches its full depth, it goes up. The poison explodes and sets alight everyone near. | Happens when an affliction on an enemy reaches its full depth. |
@@ -1143,7 +1143,7 @@ Three scenes, none of them in the list the playtest build is made from. Open one
 |---|---|---|
 | `Assets/_Project/Scenes/FireYard.unity` | A small yard with one of each of the land's people, to meet them one at a time | **Clover > Build > Fire Yard** |
 | `Assets/_Project/Scenes/SunCity.unity` | The whole land: the dry river, the city of wicks, the golden way, the Champion of the Gate. About half an hour on foot | **Clover > Build > Sun City** |
-| `Assets/_Project/Scenes/SunCourt.unity` | The god: Khepharu the man, then the Sun-Bearer, then the coal | **Clover > Build > Sun Court** |
+| `Assets/_Project/Scenes/SunCourt.unity` | The god: Khepharu the man, then the Sun-Bearer, then the man again, and the sunset that is the way out | **Clover > Build > Sun Court** |
 
 You enter each with fists (or the Great Spear, found at the Embalmers' Gate in the city) and **no element**: the spell
 and surge buttons do nothing until Fire is taken from the god. A fall puts you back at the last rest fire you lit. In
@@ -1221,8 +1221,11 @@ long third thrust with the sweep.
 
 ### The Sun-Bearer
 
-When the man falls the sun comes down and he is a scarab that rolls it across the floor and a falcon that carries it
-up: one creature, one shape at a time. **The sun is what hurts you, and taking it from him is how you hurt him.**
+Beaten, the man does not fall. He gets up off one knee and lifts the spear to the sky; a thread of light stands out
+of it, the sun comes down it into him and he burns gold and then white; in the flash as it arrives he is gone into the
+disc, and the scarab rises under it and takes it up. This takes about five seconds, you cannot be struck while it
+happens, and the camera holds both of you. Then he is a scarab that rolls the sun across the floor and a falcon that
+carries it up: one creature, one shape at a time. **The sun is what hurts you, and taking it from him is how you hurt him.**
 While he holds it his shell is hot and blows do a quarter of their damage, but thirty damage to his body during one
 attack knocks the sun out of his hold, and so does a perfect guard against the sun itself. Then he lies on his back
 (or flat with his wings spread) for four seconds, every blow counts in full, and he must walk to the sun to take it
@@ -1245,13 +1248,20 @@ Blows on him while he is open, perfect guards, and knocking the sun away wear do
 falls on his face: a heavy blow on the head is the finisher, worth at least 123 of his 560. Below half health he is a
 quarter faster, the shadow turns faster, and he opens with the Zenith.
 
-When he dies the sun rolls to the foot of the obelisk and shrinks to a coal in its shadow. **Take the fire** gives you
-Fire (there is no choice at this god) and its gift, Falling Sun. Then **Cast off**, on the gold mark by the gold line,
-ends the land and returns you to the hub.
+When the form dies its body comes apart into ash, and the dull sun rolls out along the obelisk's shadow, shudders with
+light and cracks open: **Khepharu is lying there**, a man again, across the shadow, and the sun leans from noon for the
+first time so the obelisk's own shadow falls over him. He says one line, which you read at your own pace: "I promised
+them gold. I gave them fire." Then **Take his fire**, standing over him, gives you Fire (there is no choice at this
+god), its gift Falling Sun, and the Sun-Spear; his own spear is gone from beside him. The sponsor speaks while **the
+sun sets**: it swings round into the west and sinks, the light goes orange and low, the obelisk's shadow stretches long
+to the east, and the gilded gate in the west wall sinks into the floor. The low sun's beam runs in through the gate
+across the court; walk into it to the gate's gold mark and **Go west with the sun** ends the land and returns you to
+the hub. (The stranded barque in the city's dry river is scenery; it is not the way out.)
 
 **Not yet**
 
 - The ring of fire round the planted spear is a filled circle, not a ring you can stand inside.
 - The ray comes back down the line the spear was thrown along; he does not step aside first.
-- No Sun-Spear for the player, no barque to stand on, and the man is not seen kneeling when the form dies.
-- The form's entrance and death are short and plain beside the storm dragon's, and nothing in this fight has sound.
+- Nothing in this fight has sound, the transformation and the sunset included.
+- The man is posed only as the court's director holds him (lifting the spear, lying fallen); he does not speak with his
+  hands or turn his head to follow you.

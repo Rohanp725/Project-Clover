@@ -546,7 +546,7 @@ namespace Clover.UI
         private void Show()
         {
             string held = upgrades.ElementName;
-            if (title != null) title.text = $"{held}      Embers  {upgrades.Points}";
+            if (title != null) title.text = $"{held}      Shards  {upgrades.Points}";
             ShowHint();
             for (int i = 0; i < emblems.Count; i++)
             {
@@ -617,7 +617,7 @@ namespace Clover.UI
             {
                 bool owned = upgrades.Owns(chosen.Id);
                 string kind = KindWords(chosen);
-                string cost = chosen.Signature ? "" : chosen.Cost == 1 ? "     1 ember" : $"     {chosen.Cost} embers";
+                string cost = chosen.Signature ? "" : chosen.Cost == 1 ? "     1 Shard" : $"     {chosen.Cost} Shards";
                 string state;
                 if (chosen.Signature) state = owned ? "Left to you by a god." : "Only a god's fall gives this.";
                 else if (owned && chosen.IsSpell) state = worn == chosen ? "Worn. Hold the spell button to cast it." : "Learned. Press learn to wear it.";

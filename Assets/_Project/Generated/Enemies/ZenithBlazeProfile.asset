@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: ZenithBlazeProfile
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.VolumeProfile
   components:
-  - {fileID: 1931772485009002346}
-  - {fileID: 8161932658013636379}
---- !u!114 &1931772485009002346
+  - {fileID: 2300859978669049613}
+  - {fileID: 2952315459324605695}
+--- !u!114 &2300859978669049613
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,7 +43,7 @@ MonoBehaviour:
   saturation:
     m_OverrideState: 1
     m_Value: -12
---- !u!114 &8161932658013636379
+--- !u!114 &2952315459324605695
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}

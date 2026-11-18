@@ -117,9 +117,13 @@ brought on; a file `AgentScripts/perf_nosleep.txt` makes it measure with distanc
    at the blow, 3 at the end of a chain. Then the thrown spear standing in the floor and the ray
    (`suncourt_spear_stands_1`, `_2`), noon forced at a player standing in the obelisk's shadow (nothing must land),
    and half health (the planted spear and "It is always noon.").
-4. His fall and the form's entrance with the player south of the obelisk and the king north of it
-   (`suncourt_entrance_1` to `_7`, at 0.6, 1.5, 2.1, 2.6, 3.0, 3.6 and 4.3 s of it). The line must say the player was
-   held, the bar was not shown before the roar, and the player was free after.
+4. His beating and the transformation, with the player south of the obelisk and the king north of it: he must be
+   kept (not burnt away), get up and lift the spear with both him and the player on screen, still be drawn as the sun
+   comes down into him, and be gone into it once it arrives, the sun over where he stood. Then the form's entrance
+   (`suncourt_entrance_1` to `_7`, at 0.6, 1.5, 2.1, 2.6, 3.0, 3.6 and 4.3 s of it); after the roar the scarab and the
+   player must both be on screen. The line must say the player was held, the bar was not shown before the roar, and
+   the player was free after. The first time through, `fireend_transform_1` (lifting the spear) to `_5` (the flash as
+   the sun arrives) are taken.
 5. The form, with `SunBearer.OnlyWhenAsked` set so it does nothing but what is asked through `SunBearer.Queued`: Roll,
    Ram, Sparks, Furrows, Stoop, Feathers, Pass and Zenith, standing still and then answered (out of the lane or
    circle, guard held for the Ram, on unmarked floor for the falling things, walking with the shadow for the Zenith).
@@ -133,18 +137,32 @@ brought on; a file `AgentScripts/perf_nosleep.txt` makes it measure with distanc
 7. Balance broken and the finisher (`suncourt_broken_1`). 8. Fury: the blaze that opens it, the shadow's stop and
    turn-back (`suncourt_fury_blaze_1`).
 9. A fall mid-fight: the line must say `AT THE FIRE`, form risen False, king health 480 of 480, begun False.
-10. The fight again to the form's death (`suncourt_death_1` to `_7`, at 0.7, 1.5, 1.9, 2.8, 3.6, 4.3 and 5.4 s of
-    it), the king's dying words, the coal in the shadow.
-11. Taking Fire: element held, kit Fire, the gift owned, a spell cast, the sponsor's four lines, the way out open.
+10. The fight again to the form's death: the disc cracking (`fireend_crack_1` to `_3`) and the man lying in the
+    obelisk's shadow (`fireend_fallen_1`): laid, drawn, inside the shadow's strip, as near square to it as lying
+    within 35 degrees of east and west allows, and on screen with the player.
+11. His one line through the reading box (`fireend_line_1`): the speaker Khepharu and the words "I promised them gold.
+    I gave them fire.", his fire not offered until it is read, and not said twice.
+12. The Take over his body (`fireend_take_1` with the prompt, `_2` after): his fire within 1.2 m of him and offered as
+    "Take his fire", taken with the interact key; Fire held, the gift owned, the Sun-Spear in hand, his own spear gone.
+13. The sponsor's four lines read (none may name a boat, the barque or casting off) while the sun sets
+    (`fireend_sunset_1` early, `_2` half-way, `_3` set): the shadow pointing east (90), the sun low, the key light
+    orange, the west gate sunk and its wall open, the way out open as "Go west with the sun". A spell is cast.
+14. Into the beam (`fireend_exit_1` on the road, `_2` at the gate's mark with the prompt), the interact key, and the
+    hub must load.
 
-`AgentScripts/suncourt_only.txt` may hold `Show` to play only the entrance and the death from two other places
+`AgentScripts/suncourt_only.txt` may hold `End` to play only the transformation and steps 10 to 14 (about three
+minutes, 70 polls), `Show` to play only the entrance and the death from two other places
 (the player north-east for the entrance, south-west across the obelisk for the death: `suncourt_entrance_8` to
 `_14`, `suncourt_death_8` to `_14`; about a minute), `Man` or `Form` to play one half, or `Hold` to go straight to a Pass and
 then the blaze and hold each with the game all but stopped. `bash AgentScripts/aspect_court.sh` uses `Hold` to write
 `review/shots/current/sheets/aspect_court_pass.png` and `aspect_court_blaze.png` at every screen shape. Delete the
 file to run everything.
 
-Last run of the whole probe: 34 lines `OK`, none `WRONG`, console 0 errors and 0 warnings. `PerfProbe` runs in this
+Last run of the whole probe (2026-11-17, the god's end): 51 lines `OK`, none `WRONG`, console 0 errors and 0 warnings.
+If the editor is not the active application while a probe runs, the keys it queues are dropped (the Input System's
+background behaviour) and every walk, read and use fails; set `InputSystem.settings.backgroundBehavior` to
+`IgnoreFocus` and `editorInputBehaviorInPlayMode` to `AllDeviceInputAlwaysGoesToGameView` with `script eval` for the
+run and put them back after (they are not saved to disk). `PerfProbe` runs in this
 scene as in any other (the forecourt, nothing risen): it is the baseline the `perf over the Zenith` line is read against.
 
 `SunCityProbe` now ends in the sun-court: its last step opens the Gate of Noon, which in the editor loads

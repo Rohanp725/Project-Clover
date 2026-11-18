@@ -41,6 +41,13 @@ namespace Clover.Gameplay
             DegreesPerSecond = degreesPerSecond;
         }
 
+        /// <summary>Points the hand this many degrees round from north at once, as the setting sun moves it after the fight.</summary>
+        public void PointTo(float degrees)
+        {
+            Angle = Mathf.Repeat(degrees, 360f);
+            Stopped = 0f;
+        }
+
         public void Tick(float deltaTime)
         {
             if (Stopped > 0f)
