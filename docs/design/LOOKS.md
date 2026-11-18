@@ -57,11 +57,11 @@ down a column to check that no two lands blur together.
 | Fire (Egypt) | Always noon; white-hot sky | Bone mud brick, sand, pale stone | Flame orange and poured gold | Lapis blue | Squares, slopes, pyramids, flat roofs | Cracked mud, dust drifts, worn stone with gold seams |
 | Water (Polynesia) | Late afternoon under a low storm-grey sky | Black volcanic sand, grey basalt, bleached driftwood, dry thatch | Sea turquoise in the shallows, ink in the deep, white foam | Coral red | Curves, hooks, spirals, canoe prows | Wet black sand with foam lines, tide pools, reef that comes and goes |
 | Metal (Greece) | Volcanic dusk; ash sky lit from below | Soot-grey marble, slag, verdigris bronze | Molten bronze: white-gold pour cooling through cherry red to black, sparks | Aegean deep blue | Straight lines, right angles, Greek key, columns | Meander flagstones, rails, slag, grates with forge glow under them |
-| Ice (Norse) | Polar twilight: the sun never rises; aurora over the skull lake | Blue-grey snow, black rock, dark pine, grey timber | Ice cyan-white, frost, breath | Blood red (the hunt) | Long verticals: pines, masts, ribs; knotwork | Wind-rippled snow, clear ice with things frozen under it |
-| Poison (China) | Night; a sick moon in haze; paper lanterns | Black lacquer, grey roof tiles, dark water, pale clay | Miasma: sick yellow-green mist and venom | Cinnabar red, and mercury silver | Upturned eaves, round moon gates, lattices, walls inside walls | Dark wet stone in courtyard grids; the mist line swallowing the floor |
+| Ice (Norse) | Overcast mountain daylight, softened by blowing snow (Decided) | Blue-grey snow, black rock, dark pine, grey timber | Ice cyan-white, frost, breath | Blood red (the hunt) | Long verticals: pines, masts, ribs; knotwork | Wind-rippled snow, clear ice with things frozen under it |
+| Poison (China) | Night; a sick moon in haze; paper lanterns | Black lacquer (the Qin court's colour), grey roof tiles, dark water, grey clay | The miasma in two strengths: blue-green "green-grass" mist, and bile-yellow "yellow-grass" mist at the deadliest hour | Cinnabar red and mercury silver; the alchemist's own purple and gold | Upturned eaves, round moon gates, lattices, walls inside walls | Dark wet stone in courtyard grids; the mist line swallowing the floor |
 | Lightning and Wind (Japan) | Dry storm night, no rain, cloud lit from inside | Indigo stone, dry grass, ash | Lightning cyan-violet; wind as pale streaming dust and grass | Shrine vermilion | Sloped castle walls, tiled roofs, torii | Stone and dry grass combed flat by the wind |
 | Earth and Life (Celtic) | Grey dawn mist on a moor, low sun | Grey-green moor, peat, lichen stone | Earth: ochre stone dust and cracks. Life: living green that overgrows | Gold torcs and spirals | Circles, spirals, standing stones, barrows | Heather, peat, stone circles, roots breaking through |
-| The champion's seat (India) | A great war frozen under an eclipse; corona in the sky | Everything outside the thaw drained to grey, motionless | Colour returns only around the player; in the fight, Light gold-white and Dark violet-black | Saffron and vermilion (marigolds, banners) | Mandalas, stepped temple towers, chariots | A battlefield of frozen arrows, dust hanging in the air, shadows of things that will not fall |
+| The champion's seat (India) | A great war frozen under an eclipse; corona in the sky | Everything outside the thaw drained to grey, motionless (Decided) | Colour returns only around the player (Decided); the council's seats each in their element's colour (Decided); in the fight, Light gold-white and Dark violet-black | Saffron and vermilion (marigolds, banners), seen only inside the thaw | Mandalas, stepped temple towers, chariots | A battlefield of frozen arrows, dust hanging in the air, shadows of things that will not fall |
 
 **Open**: Fire's flame orange and Metal's molten bronze sit close. The proposal keeps them apart by substance and
 setting: Fire is soft flame and smoke in bleached daylight; Metal is hard liquid metal, sparks and glowing seams in a
@@ -181,13 +181,22 @@ bronze-age making.
 
 ## 6. Ice: the huntress of the snows (Norse)
 
-**One image.** A blue twilight that never becomes day, snow and black pines, a frozen fjord full of ships, and far
-off a red-fletched arrow standing in the snow just ahead of where the player was about to step.
+**Decided (user, 2026-11-17, evening)**: a snowy mountainscape, in the vein of the opening snowy mountains of
+*Horizon Zero Dawn* and the ice area of *Prince of Persia: The Lost Crown*, with a layer of snow blowing around, so it
+is not very bright but not very dark either. This replaces Claude's first proposal of endless blue twilight.
 
-**Light and weather.** Polar twilight all land: the sun never rises, the sky is a deep blue with a pale band at the
-horizon. Snow lights everything from below, so the shade is blue, not black. Breath shows. Snow falls lightly in the
-harbour, thicker in the forest, and the giant's bones are wind-blasted and clear. Over the skull lake an aurora, the
-only moving light in the sky, which turns the lake green-violet when the fight begins.
+**One image.** High snowy mountains under a pale overcast sky, snow streaming off the ridges and blowing low across
+the ground, black pines, a frozen fjord full of ships far below, and a red-fletched arrow standing in the snow just
+ahead of where the player was about to step.
+
+**Light and weather.** Overcast mountain daylight. The sun is a soft bright patch behind high cloud, so shadows are
+present but soft-edged and blue. A layer of snow is always blowing: low drifting streams across the floor, which
+show the wind's direction, and thin veils in the air that take the glare off the snow and hide the far distance.
+The snow lights things from below, so the shade is blue-grey, never black. Breath shows. The harbour is calmest. The
+forest has the thickest snowfall, dimmer under the pines. The giant's bones are the windiest, with the most blowing
+snow and the brightest sky. **Proposal**: the skull lake at the top is where the cloud breaks, and the light there is
+clearest, until the fight's blizzard closes it in again. (The aurora of the first proposal is dropped unless the user
+wants it back for the lake.)
 
 **Palette.** Blue-grey snow, black rock, dark green-black pine, grey weathered timber, iron. The strong colour is ice:
 cyan-white, frost, the glow inside thick ice. **Accent**: blood red, used for the hunt only (the huntress's fletching
@@ -214,11 +223,12 @@ enemies shatter into real fragments.
 3. *The giant's bones*: wind-cleared ridges that are ribs and a spine; climbing from rib to rib; at the top the horns
    of the skull.
 
-**The god's room.** The frozen lake in the bowl of the skull, a crater rim all round, the aurora above (the
-"thoughts" in the clouds). Phase two closes in to a blizzard: white, with only the wolf's shadow, breath and eyes.
+**The god's room.** The frozen lake in the bowl of the skull, a crater rim all round, the clouds above (the
+"thoughts" of the myth) broken open over it. Phase two closes in to a blizzard: white, with only the wolf's shadow,
+breath and eyes.
 
-**The ride out.** The burial longship rising through the broken lake, frosted, ancient, the player alone on it under
-the aurora.
+**The ride out.** The burial longship rising through the broken lake, frosted, ancient, the player alone on it as
+the snow settles and the wind drops for the first time in the land.
 
 **Avoid.** A white screen where nothing reads; the blizzard thins with each heavy hit (Proposal in `WORLD.md`).
 
@@ -226,17 +236,48 @@ the aurora.
 
 ## 7. Poison: the court alchemist (China)
 
-**One image.** A city of black lacquer and grey tile at night, red lanterns on dark water, and a yellow-green mist
-rising up the streets with the gong while the player climbs onto the roofs.
+**What the sources give** (researched 2026-11-17, evening, at the user's request: "research what this might look like
+with inspiration from the actual myths"):
+- *The miasma of the south* (zhang, zhangqi). Chinese writers from the Tang onward feared the poison air of the far
+  south, which rose from twisted, overgrown mountains and stagnant water: "a great amount of mist and fog that
+  cause miasmas", described as "neither smoke nor fog nor clouds". It was named by season and grass. The
+  *green-grass* miasma came in spring and summer. The *yellow-floss-grass* miasma came in autumn and was held to be
+  the deadliest. So the myths give the poison mist two colours: a blue-green, and a yellow that is worse.
+- *The alchemist's furnace* (waidan). The elixir work used cinnabar (red mercury ore), mercury, lead, realgar
+  (orange-red arsenic), orpiment (gold-yellow arsenic) and malachite (green). The word for elixir, *dan*, also means
+  cinnabar and vermilion. One recipe heats mercury and lead until they give off their "Essence and Flower", which is
+  **purple or gold**, and cinnabar roasts into mercury and back into cinnabar in a cycle. Several emperors died of
+  these elixirs.
+- *The first emperor's tomb*. Sima Qian wrote that it held a hundred rivers of flowing mercury, kept moving by
+  machinery, under a ceiling of the heavens, with crossbows set to fire on intruders. The clay army was not grey
+  when made: it was painted in lacquer with cinnabar red, malachite green, azurite blue, pink skin and the man-made
+  *Han purple*, which flaked away after burial. The Qin court's own colour was black.
+- *The five poisons* (wudu: centipede, snake, scorpion, toad, gecko) are pictured on red paper and pierced with five
+  needles to kill them; children have the character for king, the tiger, written on their brow in realgar wine. The
+  *golden silkworm* gu, the most potent gu, gleams gold all over, and the house that keeps one is spotless.
+- *The jiangshi*: stiff corpses in dark official robes, pale skin with a greenish mould, held still by a yellow paper
+  talisman written in red.
+
+**One image.** A city of black lacquer and grey tile at night, red lanterns on dark water, and a blue-green mist
+rising up the streets with the gong, turning bile-yellow at the deadliest hour, while the player climbs onto the
+roofs.
 
 **Light and weather.** Night, with a sick, haloed moon in haze. The warm lights are the lanterns; the cold light is
-the moon. The miasma is lit from inside, so when it rises the streets glow a sick yellow-green from below and the
-roofs above it stay dark and safe. After the gong the mist falls and the streets are wet and shining.
+the moon. The miasma is lit from inside, so when it rises the streets glow from below and the roofs above it stay
+dark and safe. It is *neither smoke nor fog nor cloud*: thicker than fog, slow, layered, with a hard top edge the
+player can read. Most hours it is the blue-green of the green-grass miasma. At the deadliest gong it is the
+yellow-grass miasma, sick yellow, higher and faster, so the colour itself warns. After the gong the mist falls and
+the streets are wet and shining.
 
-**Palette.** Black lacquer, grey roof tiles, pale unfired clay, dark water, faded silk. The strong colour is the
-miasma and venom: a sick yellow-green, thick enough to read as a substance. **Accents**: cinnabar red (the lacquer of
-the court, the elixir, seals and talismans) and mercury silver (the tomb's rivers). The proposal uses two accents
-here because both are the story: cinnabar is mercury ore, the elixir that killed the emperor.
+**Palette.** Black lacquer (the Qin court's colour), grey roof tiles, grey clay, dark water, faded silk. The strong
+colour is the miasma and venom, in its two strengths, blue-green and bile-yellow. **Accents**: cinnabar red (the
+court's lacquer, seals, talismans, the five-poison papers) and mercury silver (the tomb's rivers). Both are the
+story: cinnabar is mercury ore, the elixir that killed the emperor. **The alchemist's own colours**, seen only on him,
+his vials and his fight, are the purple and gold of the elixir's "Essence and Flower". The last gu, if it is the
+golden one, gleams gold.
+
+**The clay army.** Grey clay with flakes of its first paint still on it (cinnabar, malachite, azurite, Han purple),
+the only place those colours appear: what the emperor's world looked like before it was buried.
 
 **Shapes.** Upturned eaves, round moon gates, lattice screens, walls inside walls, stairs up to roofs. The terracotta
 army is rows, grids and ranks, the one place where the land is orderly.
@@ -249,7 +290,9 @@ over the floor and up the steps; mercury pooling silver in the tomb.
 gong's ripple across the water, the clay army in lockstep.
 
 **The element's effects.** Poison as a substance: mist that rolls and pools, bubbling puddles that leave stains,
-venom spat in strings, clouds that burst and hang. Bright only in its sick green; never pure white.
+venom spat in strings, clouds that burst and hang. Bright only in its blue-green or bile-yellow; never pure white.
+Mercury is the land's second substance: silver beads that run together, roll downhill and reflect, in the tomb and
+in the alchemist's fight.
 
 **District by district.**
 1. *The river town*: paper lanterns on black water, boats, bridges, the vessels drinking on the quays.
@@ -259,11 +302,15 @@ venom spat in strings, clouds that burst and hang. Bright only in its sick green
 
 **The god's room.** His laboratory: shelves of jars, the furnace, the five vials. When he splits, the lid slams and
 the camera pulls up: the arena is inside a giant gu jar, its curved walls glazed and cracked, the five creatures on
-and around them.
+and around them. The jar's inner wall is pasted with the red five-poison papers, each creature pierced with five
+needles, as people did at the Double Fifth to kill the poisons, and the alchemist's own needles are the same ones.
+The floor of the jar is the colour of whichever miasma the gong last called.
 
 **The ride out.** The crane, white against the night, lifting out of the mist into clean air and the moon.
 
-**Avoid.** Generic neon-green slime; the mist is sick and yellowed, like old jade and bile, not a highlighter.
+**Avoid.** Generic neon-green slime. The mist is old jade and bile, not a highlighter. The jiangshi's look from
+1980s Hong Kong film (Qing robes) is later than the first emperor; the undying emperor wears the black of his own
+court, with the yellow talisman.
 
 ---
 
@@ -304,6 +351,9 @@ Sketch only; the land itself is not worked out in `WORLD.md` yet.
 
 ## 10. The champion's seat under the eclipse (India)
 
+**Decided (user, 2026-11-17, evening)**: the frozen world is grey and uncoloured, and the bubble round the player
+brings colour back. The final area is themed with each seat in its own element's colour, and then the final fight.
+
 **One image.** A vast battlefield stopped in time, every soldier and arrow grey and motionless, and a small circle of
 colour and motion around the player, in which the war comes back to life.
 
@@ -322,20 +372,27 @@ court.
 
 **What moves.** Only what the thaw touches. That stillness is the land's identity, and the one exception to rule 7.
 
-**The god's room.** The council of twelve seats; in phase two the split day-and-night domain.
+**The god's room.** The council of twelve seats, and the first place in the land with colour of its own, outside the
+thaw: each seat in its element's colour and substance, the same colour the player has seen as that element all
+climb (fire's seat smoulders orange, water's runs turquoise, ice's frosts cyan-white, poison's breathes its mist, and
+so on). The seats of Light and Dark in front are the exception, broken and burnt to grey by the breaking. **Proposal**:
+the seats of elements the player has taken glow brighter, and those they consumed are dull. In phase two, the split
+day-and-night domain.
 
 ---
 
 ## 11. Questions for the user
 
-1. **Water's sky**: a heavy storm-grey sky (proposed, to keep the game's dark look and make the sea the only bright
-   thing), or a bright tropical day?
-2. **Metal against Fire**: is keeping them apart by setting (dark volcanic dusk, sea blue, hard sparks and liquid
-   metal) enough, or should Metal lean colder still, for example blue-white sparks and steel, keeping bronze only for
-   the giant?
-3. **Ice's light**: endless blue twilight with an aurora (proposed), or bright white winter daylight?
-4. **Poison's colour**: sick yellow-green mist (proposed), or a different poison colour, such as violet or
-   mercury silver?
-5. **The champion's frozen world**: drained of colour outside the thaw (proposed). Is that the feel you imagined?
-6. **Earth and Life**: two element colours in one land (ochre and green), or one shared colour?
-7. Anything you already picture for a land that this misses: a single image, a game, a film, a painting.
+Answers of 2026-11-17, evening:
+
+1. **Water's sky.** The user leans tropical ("a more tropical vibe would fit the polynesian vibe") and asked for an
+   image. Mood frames of a tropical and a storm-grey version of the same beach are being made in Blender
+   (`staging/blender/2026-11-17_moods/`). **Open** until the user has seen them.
+2. **Metal against Fire.** The user thinks the separation by setting is enough and asked for an image. Mood frames
+   are being made alongside Water's.
+3. **Ice's light.** **Decided**: a snowy mountainscape with blowing snow, neither very bright nor very dark (see
+   section 6).
+4. **Poison's colour.** Researched (section 7). **Proposal**: the two miasmas of the old texts, blue-green and the
+   deadlier bile-yellow, with cinnabar, mercury, and the alchemist's purple and gold.
+5. **The champion's frozen world.** **Decided**, as proposed, with the seats in their elements' colours (section 10).
+6. **Earth and Life.** Deferred by the user until the review of the Lightning and Wind and the Earth and Life lands.
