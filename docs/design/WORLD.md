@@ -42,6 +42,7 @@ brought together once the user has confirmed the open points.
   regret. Only the last champion has time to say more (see his land).
 - **Decided (user)**: the regret lines below stay as written. They do not need to hint at the god murdered before.
   - Narukami (Lightning): "I only wanted the storm to answer me."
+  - Kazehaya (Wind): "I was always first. There was never anyone at the end." (Decided, user, 2026-11-18)
   - Khepharu (Fire): "I promised them gold. I gave them fire."
   - The fisher (Water): "I pulled up islands... and drowned them."
   - The huntress (Ice): "The hunt never ended. I forgot what I hunted."
@@ -94,7 +95,7 @@ brought together once the user has confirmed the open points.
 | Metal | A bronze chariot pulled by bronze horses | Decided |
 | Ice | A longship that rises through the broken lake; the player rides alone | Decided |
 | Poison | A crane | Decided; replaces the paper lantern boat |
-| Lightning and Wind | A storm cloud (earlier proposal) | Unchanged |
+| Lightning and Wind | A storm cloud: a mix of both, lightning in the wind-driven cloud | Decided (user, 2026-11-18) |
 | Earth and Life | The solstice passage: the first sunrise in ages runs down a barrow's passage, and the player walks into it | Decided (2026-11-17, night) |
 | The champion's land | None | Unchanged |
 
@@ -206,8 +207,8 @@ brought together once the user has confirmed the open points.
 
 | Element | Mythology | The god (a nod) | Weapon | Godly form | Ride out | Status |
 |---|---|---|---|---|---|---|
-| Lightning | Japan | Narukami, a swordsman | Katana | The storm dragon, a serpent winding through the cloud | A storm cloud (proposal) | Decided and built |
-| Wind | Japan, paired with Lightning | A nod to the wind god who carries the winds in a bag | War fan (a new weapon) | A great white tiger (proposal) | same land | War fan decided; the rest proposal |
+| Lightning | Japan | Narukami, a swordsman | Katana | The storm dragon, a serpent winding through the cloud | A storm cloud (decided 2026-11-18) | Decided and built |
+| Wind | Japan, paired with Lightning | Kazehaya ("swift wind"), a woman; a nod to the wind god who carries the winds in a bag | War fan (a new weapon) | The white tiger | same land | Decided (2026-11-18) |
 | Fire | Egypt | Khepharu, the sun-king | Sun-Spear | Falcon and scarab in one | The sunset | Decided; the first pass and second pass are built |
 | Water | Polynesian islands | The fisher of islands | Bone hook on a line | A giant octopus of living seawater | A voyaging canoe | Decided in outline (below) |
 | Ice | Norse | The huntress of the snows | Great Bow | A wolf the size of a hall | A burial longship from under the lake | Decided in outline (below) |
@@ -227,8 +228,72 @@ brought together once the user has confirmed the open points.
 - **Decided (user)**: the demo has Narukami alone.
 - **Decided (user)**: in the full game the castle and the summit are reworked with a mix of wind, perhaps as a dry
   lightning storm with no rain, and the last fight there is the duo, paced so it is fair as well as hard.
-- **Proposal**: only one of the pair is on the stage at a time; the other acts from the cloud with slower, marked
-  attacks, and they change places when one is staggered.
+- *Superseded 2026-11-18*: ~~only one of the pair is on the stage at a time; the other acts from the cloud~~ (the
+  fight is now a race to the player, below).
+
+#### The land worked out (2026-11-18, with the user)
+
+- **Decided (user)**: the two gods are **rivals, forever fighting over who is faster** (Earth and Life are allies who
+  forgot; these two never were).
+- **Decided (user)**, the story fold, which reaches every land: each first god was killed by Time in its own land;
+  Light and Dark saw what was happening, went to the gods' gathering place, and their deaths there broke the sponsor.
+  So each land's murdered god is that element's first god. Here two first gods died: the original thunder and wind,
+  nods to Raijin and Fujin. **Proposal**: the summit's painted screens show them as one storm, facing each other
+  across a gold field like the famous folding screens; Narukami and the Wind god, who sit in their seats, are
+  corrupted copies who can only race each other.
+- **Decided (user)**, the shape: the climb starts at a **shore of old ruins**, goes up **two stairs of torii gates
+  that criss-cross up the mountain** (the rivals' racecourse: **Proposal** scorched gates on one, wind-split gates on
+  the other, swapping the lead at every crossing), to a **split summit**: one great hall in two mirrored halves,
+  Narukami's castle on one side and the Wind god's monastery on the other, equal, so neither seems the lesser. Then
+  through the clouds to fight in the heavens; when the beasts come, the summit's top breaks away and the player walks
+  on clouds.
+- **Decided (user)**: the shore is the **drowned shrine of the two murdered first gods**: a great torii standing in
+  the surf (a nod to Itsukushima) is the first gate of the stair, with a wind-scoured shrine town falling into the
+  sea. Not the mortal army of the opening.
+- **Decided (user)**: the Wind god's beast is the **white tiger**; **the dragon and the tiger** are the land's emblem
+  ("clouds follow the dragon, wind follows the tiger"): carved on the gates, painted on the screens, and the two
+  beasts of the last phase.
+- **Decided (user)**: the fight is **a race to the player**: both fight on the ground, and every attack is a race to
+  reach the player first.
+- **Decided (user)**, the race rules: every attack shows both racers' paths converging on the player (Narukami's a
+  jagged cyan line, the Wind god's a pale streak); the shorter path shows who arrives first. Only the winner's blow
+  lands and the loser's is cut short, so the player never takes two blows from one race. When their paths cross, the
+  slower crashes into the faster and both stagger, so the player can bait them into each other.
+- **Decided (user)**: the transformation is a race too. When one is beaten down it becomes its beast to be faster,
+  and the other follows at once because it cannot stand to be outpaced; the summit's top breaks away between the
+  two transformations.
+- **Decided (user)**: the Wind god is **Kazehaya** ("swift wind"), a woman. Her regret line: "I was always first.
+  There was never anyone at the end."
+- **Liked (user)**, the beasts on the clouds: the dragon coils through the cloud layers and strikes down through holes
+  it bursts in the floor; the tiger bounds from cloud to cloud and pounces, and her roar shoves whole clouds sideways,
+  moving the floor under the player; they still race to the player and can still be baited into each other (the
+  tiger crashing into the dragon's coils). The user wants this phase taken much deeper, as possibly the second to
+  last fight of the game; to be designed creatively when the fight is made.
+- **Decided (user)**: the ride out is the storm cloud, a mix of both.
+- **Decided (user)**: the order inside tier 4 stays the player's choice; both duo lands are to be super epic.
+- **Decided (user)**, the rivals on the stairs: every so often during the climb Narukami and Kazehaya streak past
+  up the stairs; a lightning strike and a gust sweep the steps, and the player dodges or shelters under a gate. The
+  race is felt long before it is fought (as the Hunt sweeps Earth and Life's plain). At each crossing of the two
+  stairs a small shrine lets the player rest or change stairs.
+- **Decided (user)**, the screen room: where the two halves of the summit meet, a central hall with the two first
+  gods painted on the screens as one storm: the last quiet room before the roof, where the story fold lands; then
+  the stairs to the roof and phase 1. Inside the halves: a drum tower and an armour hall in the castle half; a court
+  of wind bells and a hall of fans in the monastery half.
+- **Decided (user)**: two plain weapons on side paths, one for each god's weapon. **Proposal**: a plain Katana in a
+  wreck on the shore and a plain War Fan in a hermit's cave off the stairs.
+- **Decided (user)**, the elites, one in each half of the summit, each the champion of its god's speed, taken in
+  either order:
+  - **The Last Retainer** (castle half, Katana): the last of Narukami's samurai, keeping the fastest draw in the land.
+    Teaches the Katana's gated technique (draft: Before the Thunder).
+  - **The Hermit of the Pass** (monastery half, War Fan): a tengu master of the fastest step, who turns blows aside
+    with a fan. Teaches the War Fan's gated technique (draft: Turn the Spear).
+- **Decided (user)**, the ordinary enemies, by area:
+  - **The shore:** Heike crabs, crabs said to carry the faces of drowned samurai, scuttling from the ruined shrine;
+    ship-ghosts (funayurei) who try to sink the player with ladles.
+  - **The stairs:** the gods' messengers racing each other up the gates, a thunder beast (raiju) against crow-tengu
+    runners; fox-masked shrine guards that wake as the player passes.
+  - **The castle half:** samurai in lightning-struck lacquered armour; taiko drummers whose beats call down bolts.
+  - **The monastery half:** mountain ascetics (yamabushi) with conch and staff; crow-tengu with feather fans.
 
 ### Water's land: the fisher of islands (Polynesian)
 

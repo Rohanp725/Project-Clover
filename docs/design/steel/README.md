@@ -268,6 +268,7 @@ and three aspects, one active at a time. A god's weapon adds a fourth.
 - **5. Pair count:** 110 pairs.
 - **6. Cuts:** yes, cut the dead marks. Depth is to be added where the trees thin out, with marks that bend the standard rules.
 - **8. Spare ring-mix spells:** asked about, not yet decided.
+- **Later the same day:** the Lightning and Wind elites are decided: the Last Retainer (Katana) and the Hermit of the Pass (War Fan). See `docs/design/WORLD.md`, Lightning and Wind. Their techniques are still drafts.
 
 1. **Merge the Bone Hook into the Chain Sickle?** `weapons.md` recommends it: a thrown, catching, pulling line is
    what the chain already is. The fisher's Jawbone would become the Chain Sickle's god's bough, and the Lure and Line

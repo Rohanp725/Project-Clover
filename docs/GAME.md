@@ -254,8 +254,13 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   hair and the rust scarf (in that land's cloth), with a blue base against the land's palette. **Approved**: the
   ronin (Lightning and Wind, with a new head shared by all outfits), Fire (Egyptian kilt, bead apron, broad collar),
   Ice (Norse tunic, fur mantle, leg wraps) and Water (Polynesian tapa wrap, smoked pandanus cape). Sources in
-  `staging/blender/2026-11-18_outfits/`. Still to make: Metal (Greek), Poison (Chinese), Earth and Life (Celtic), the
-  last champion's land (Indian).
+  `staging/blender/2026-11-18_outfits/`; in the game since 2026-11-18 as `player.fbx` (the ronin) and
+  `player_outfit_<land>.fbx`, worn by `PlayerOutfit` (the land's outfit, the Hub keeps the last one worn, and a chosen
+  outfit saved under `clover.outfit.chosen` overrides both; no wardrobe screen yet). **Also approved (same day)**, after a pass that made blue an accent so the eight
+  read apart: Metal (undyed exomis with an Aegean key border, bronze greaves), Poison (approved in black lacquer,
+  then changed by the user the same day to bright red and gold, as in classic Chinese dress, with a straw hat;
+  approved as revision 6), Earth and Life (green and ochre check, rust brat to the calves, gold torc), the last champion's
+  land (cream dhoti with an indigo border, brass, rust angavastram).
 - Style: **Decided**: cel-shaded with outlines, like an anime. A dark, muted world (stone, ash, storm cloud) in which
   the elements are the only saturated colour, so every spell and elemental effect stands out. The user's condition:
   it must be done well or it will not fit, so it is judged on screenshots early. References: Hades, Cuphead and

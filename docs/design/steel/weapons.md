@@ -6,6 +6,13 @@ first guesses, sized against the moves as built (`docs/GUIDE.md` section 3) and 
 `docs/design/weapons.md`. The weapon tree is called **the Way** (owner, 2026-11-18); the Earth and Metal mix keeps
 the name Forge.
 
+**The owner's answers of 2026-11-18, applied here (Decided):** the Water god's bone hook is now the Chain Sickle's
+god's bough, the Fisher's Jawbone; the Poison god's hook swords are now the Twin Knives' god's bough, the Alchemist's
+Hooks. Ten weapon kinds remain, so Pair Bond has 110 pairs. The Teacher is the champion's land's elite (13.1). The
+Lightning and Wind land's elites wait for that land's overview, so the Katana's and War Fan's techniques are
+placeholders. Every weapon kind has an elite (14). Rule-breaking marks for the long game, the Heresies, are in
+`depth_weapons.md`.
+
 ## Index
 
 **0. How every Way is laid out**
@@ -21,7 +28,7 @@ the name Forge.
 - The Stream: five cuts, dodges that keep the chain, a loop with no last cut.
 - The Answer: a perfect guard opens a riposte; at the keystone it answers by itself.
 - Narukami's Storm Katana (Lightning): his three cuts, his red draw, the flank step, thunder down the lane.
-- Technique, Before the Thunder: a draw that breaks an attack in its wind-up.
+- Technique, Before the Thunder (placeholder): a draw that breaks an attack in its wind-up.
 
 **2. Massive Sword**
 - The Wall: the planted blade as a stance, barge and uproot from behind it.
@@ -55,7 +62,9 @@ the name Forge.
 - The Shadow: a perfect dodge puts you behind; crossings blind them.
 - The Rattle: hold the chain open for a hundred nicks.
 - The Reverse Grip: the guard becomes a parry that slips past and cuts.
-- Technique, Fillet: a carving pass along a held enemy.
+- The Alchemist's Hooks (Poison): the knives become his hook swords; needle grids, pressure points, five vials, near
+  and far in one swing.
+- Technique, Fillet: a carving pass along a held enemy (the blade brother).
 
 **7. Great Bow**
 - The Stave: the bow as a close weapon; point-blank shots that shove.
@@ -65,50 +74,45 @@ the name Forge.
 - Technique, Only the Eye: a closing ring on one point; let go as it closes.
 
 **8. Chain Sickle**
-- The Weight: the meteor's whirl, a ring that grows overhead.
-- The Bind: swing and hurl what is bound.
+- The Weight: the meteor's whirl, a ring that grows overhead; swing round posts.
+- The Bind: swing and hurl what is bound; stake the chain as a tripwire.
 - The Sickle: the chain coiled short; hook the guard and cut.
-- Technique, Bite and Shake: catch, shake three times, throw aside.
+- The Fisher's Jawbone (Water): the hook on a line, the lure, fish up the ground, many lines at once.
+- Technique, Hook and Hold: pin a foot to the floor and leave the chain staked (the hook brother).
 
 **9. Fists** (Full Body Armament becomes their third aspect)
 - Wrapped Hands: the boxer's slip, short hooks, standing in.
 - The Hold: grabs and throws, a body as a weapon.
 - The Armament: the element coat; two elements, one on each arm.
-- Technique, The Scorpion's Tail: a heel over the shoulder at whoever stands behind.
+- Technique, The Scorpion's Tail: a heel over the shoulder at whoever stands behind (the Undying Emperor).
+- Technique, Bear Them Down: a pounce onto a far enemy (the pack's alpha). One of the two sits on the chord.
 
 **10. War Fan** (new; the Wind god)
 - The plain war fan: closed strikes, an open sweep, a thrown fan.
 - The Iron Fan: a baton that turns blades aside.
 - The Commander's Fan: a signal that drives every push toward one enemy.
 - The Wind God's Fan: winds out of the bag, a glide, every stroke a wind.
-- Technique, Turn the Spear: step along a thrust and strike its bearer.
+- Technique, Turn the Spear (placeholder): step along a thrust and strike its bearer.
 
-**11. Bone Hook** (new; the Water god)
-- The plain bone hook on a line: strikes, the cast, reel and heave.
-- The Lure: a cast that misses lies glinting and draws them in.
-- The Line: anchors to swing round, tripwires.
-- The Fisher's Jawbone: fish up the ground, the water mace, many lines at once.
-- Technique, Hook and Hold: pin a foot to the floor and leave the line staked.
+**11. Bone Hook** — merged into the Chain Sickle (8).
 
-**12. Hook Swords and needles** (new; the Poison god)
-- The plain hook swords: back-edge cuts, the leg hook, the linked whip, needles.
-- Linked: the pair joined as one long weapon; near and far in one swing.
-- The Catch: hooks that catch weapons and legs.
-- The Alchemist's Hooks: needle grids, pressure points, five vials.
-- No technique: no elite is left for it (see 14).
+**12. Hook Swords and needles** — merged into the Twin Knives (6).
 
-**13. The last champion's weapons** — one line.
+**13. The last champion's weapons, and the Teacher**
+- 13.1 The Teacher: the champion's teacher, bow first, drawing the champion's weapons from his quiver.
 
-**14. Gated techniques, land by land** — eleven elites, one weapon each.
+**14. Gated techniques, land by land** — eleven elites for ten weapons; the Fists are taught twice.
 
 **15. Pair Bond**
 - 15.1 How it grows.
 - 15.2 The rule: the carrier's footprint and the element's verb.
 - 15.3 Three worked examples: Katana and Fire, Great Hammer and Lightning, Scythe and Water.
 - 15.4 Twelve standouts: Stored in the Sheath, The Obelisk, The Lake Sings, The Uncounted, Mistletoe, Quench,
-  The Bag Opened, Taken From Below, The Last One Alive, Flint and Tinder, Arrow at Noon, The Air Closes.
+  The Bag Opened, Taken From Below (now the Chain Sickle's), The Last One Alive (now the Twin Knives'), Flint and
+  Tinder, Arrow at Noon, The Air Closes.
 
-**16. What to cut or merge** — the Bone Hook into the chain family, the Armament into the Fists.
+**16. What was cut or merged** — the Bone Hook into the Chain Sickle, the Hook Swords into the Twin Knives, the
+Armament into the Fists; what of each merged Way was kept and what was cut.
 
 **17. New engine work, in one place.**
 
@@ -126,8 +130,12 @@ the name Forge.
   Opening a bough gives its form at once ("What changes"); four marks and a keystone deepen it. Marks bought on a
   bough that is not active are kept and sleep.
 - **A god's bough** is the fourth (Decided): the god's weapon itself, its look and its moves. Take opens it for
-  nothing; its marks cost as any other. For the three new kinds the god's bough sits beside two plain ones, and
-  Consume gives the plain weapon with those two (Decided).
+  nothing; its marks cost as any other. For the one new kind left, the War Fan, the god's bough sits beside two
+  plain ones, and Consume gives the plain weapon with those two (Decided). The Water and Poison gods' weapons are now
+  boughs of the Chain Sickle and the Twin Knives (Decided, 2026-11-18): Consume over those two gods gives the plain
+  chain or the plain knives if the player has not found them yet.
+- **A god's bough may change the carrier** (0.4) and the moveset: the Jawbone casts a hook, the Alchemist's Hooks
+  whip. The trunk's temper, infusion and technique serve it as they serve the plain boughs.
 - The moves as built stay the weapon's base. An aspect says only what it changes.
 
 ### 0.2 Costs and kinds
@@ -183,6 +191,8 @@ five built tree marks that need the Katana come here too (Katana, Infusion).
 - **Input**: every technique is **R1 and R2 pressed together** (keyboard: both mouse buttons). The chord is used by
   nothing else, so a technique never collides with an aspect's own inputs.
 - The elite uses the same move against the player, with the same tell, before the player can learn it.
+- **A weapon taught twice** (only the Fists: eleven elites, ten kinds) keeps both marks and sets one on the chord at a
+  rest fire, as it sets its aspect.
 
 ### 0.6 Bond (Decided in 8.1)
 
@@ -272,11 +282,11 @@ itself and drags all it struck 1.5 m onto the point.
 working while their element is carried): Burning Crescent (Fire), Delayed Cuts (Lightning), Drawing Wind (Wind),
 Winter Draw (Ice) and Answering Draw (Light, from Halo). Each keeps its built rule on the Iaido Slash.
 
-**Gated technique: Before the Thunder.** Taught by the Lightning land's elite (Proposal: the Last Retainer, 14).
-R1 and R2 together: a draw that is quickest to land of any move (0.12 s). If it strikes an enemy that is winding up
+**Gated technique: Before the Thunder (placeholder).** Taught by an elite of the Lightning and Wind land, who waits
+for that land's overview (owner, 2026-11-18); the move stands as a draft until then. R1 and R2 together: a draw that is quickest to land of any move (0.12 s). If it strikes an enemy that is winding up
 an attack, red ones included, the attack is broken and the enemy takes 50 stagger. If it strikes nothing in a
-wind-up it is a plain draw with a long recovery (0.6 s). The Retainer stands sheathed and never moves first: when the
-player begins a heavy, a charge or a skill, he cuts it before it lands.
+wind-up it is a plain draw with a long recovery (0.6 s). The draft's teacher stands sheathed and never moves first:
+when the player begins a heavy, a charge or a skill, he cuts it before it lands.
 
 ---
 
@@ -662,17 +672,56 @@ every perfect guard slips you to the attacker's side with a cut (8).
 
 True form: two perfect guards are enough.
 
-**Temper.** III: from behind 1.5 to 1.6 times. V: the passing spin carries 2.4 to 3.0 m.
+### The Alchemist's Hooks (Poison; god's bough, Decided 2026-11-18)
+
+The Chinese twin hook swords, one of whose names is "Heaven and Earth, Sun and Moon sword": the back of the blade
+cuts, the hook trips and catches, the crescent guard blocks and slashes, the pommel is a dagger, and the two hook
+together into one long weapon. They are paired blades, so they are the knives' god's form. The alchemist adds
+needles that stand in the floor (decided in WORLD.md).
+
+**What changes**: the knives become his hook swords, blued steel with green lacquer, crescent guards and pommel
+points, a needle case on the left forearm; +15%. The moveset is the hook swords':
+
+| Input | Move | What it does |
+|---|---|---|
+| R1 x4 | Back-edge cut, back-edge cut, crescent slash, pommel stab | 8, 8, 10, 12, reach 2.3 m |
+| R2 | Leg hook | At 2.4 m: 16; a light enemy is knocked down 1 s |
+| R2 after a light | Linked whip | One hook caught in the other and the far sword swung on the near: a 200 degree arc at 4.2 m, 20, 34 stagger |
+| Hold R2 0.4 s | Skill: Needles (30 mana) | Twelve needles thrown in a fan (4 each); they stand in the floor 6 s and prick what walks among them (2 every 0.5 s) |
+| R2 on a staggered enemy | Finisher: Both Hooks | Both hooks behind the neck, pulled down onto the knee. 28, tripled |
+
+Guard: crossed crescents, 180 degrees, perfect window 0.20 s, 1.0 a point; a perfect guard catches the weapon in a
+hook (held 0.5 s). Every fourth light throws a needle that stands in the floor (twelve at most, 8 s). **Pressure
+points**: the third blow on one enemy within 3 s strikes a point: its next attack is 0.5 s late, or it walks at half
+for 2 s (alternating). The knives' "from behind" rule still holds: the hooks strike 1.5 times from behind.
+
+| Mark | Kind | Memories | What it does |
+|---|---|---|---|
+| Needle Grid | Rule | 2 | An enemy passing between two needles less than 3 m apart is pricked (4) and slowed by 30% for 1 s |
+| Five Vials | Move | 2 | Hold the flask button 0.6 s: drink a vial (three a rest, not flasks) and take the next stance in turn for 12 s: centipede (whips +1 m), snake (lights become thrusts), toad (blows taken -25%), scorpion (heavies leave a needle in the enemy that pricks each second), gecko (dodge +30%, needles never prick you) |
+| Sun and Moon | Move | 2 | Hold R2 after the linked whip: the pair stays linked until the chain ends, and every swing strikes near and far at once (the crescent at 1.5 m, the hook at 4.2 m). One caught between is pulled out to the hook; one struck by both in a swing takes the second blow twice. (Kept from the Linked aspect) |
+| Hooked Twice | Rule | 2 | An enemy caught by both hooks within a second (its weapon on the guard, a leg on the hook) is thrown flat 2 s, and blows on it land as on the staggered. (Kept from the Catch aspect) |
+| Gather the Needles | Move | 2 | R2 while guarding: every standing needle flies to the faced enemy (2 each) |
+| **Keystone: Forever** | Keystone | 4 | Stances no longer end: each vial adds one, five at most at once. A blow taken loses the oldest |
+
+True form: vials last 20 s, and the fifth stance at once gives all five.
+
+**Temper.** III: from behind 1.5 to 1.6 times. V: the passing spin carries 2.4 to 3.0 m (on the Alchemist's Hooks,
+the linked whip +0.3 m instead).
 
 **Infusion** (on the crossing step). Ground: the dash's line is left lying 3 s. Line: the crossing goes 6 m, through
 every enemy on it. Weight: both knives stop in the enemy instead of passing; it is held 0.6 s and you stand behind it.
-Draw: the passing cut drags the enemy round with you, so it ends facing away.
+Draw: the passing cut drags the enemy round with you, so it ends facing away. **On the Alchemist's Hooks the carrier
+is the linked whip** (an arc): Ground, the arc is left lying 3 s; Line, the far sword is let go and flies on 5 m
+before it comes home; Weight, the far hook sets in what it strikes and holds it 0.8 s; Draw, the whip catches all in
+its arc and draws them to the near crescent.
 
 **Gated technique: Fillet.** Taught by the blade brother of the Water land (Proposal: two shark-tooth carving knives;
 they never stopped carving the island). R1 and R2 together on an enemy that is held (staggered, Bound, Frozen,
 knocked down, hooked or pinned): you run both knives along it in one carving pass, six cuts in 0.6 s (6 each, all as
 from behind), and end behind it. On an enemy that is not held it is a plain crossing step. He uses it the moment his
-brother's hook has the player pinned.
+brother's hook has the player pinned. (Decided, 2026-11-18: the blade brother teaches the Twin Knives. On the
+Alchemist's Hooks the pass is made with the back edges, and the sixth cut leaves a needle in the wound.)
 
 ---
 
@@ -751,7 +800,7 @@ True form: when the quarry dies the next nearest becomes it, with the arrows the
 shot goes the full draw's 14 m through everything. Weight: the first enemy struck is pinned where it stands 1 s.
 Draw: the arrow is on a line, and the enemy struck is reeled 3 m toward you.
 
-**Gated technique: Only the Eye.** Taught by the Teacher (Proposal: an elite for the last champion's land, 14). R1
+**Gated technique: Only the Eye.** Taught by the Teacher (Decided, 2026-11-18: the champion's land's elite; 13.1). R1
 and R2 held together: all but the faced enemy dims, and a ring closes on one point of it over 1.2 s. Let go as it
 closes: the arrow strikes that point for 2.5 times, critical, through any guard, 80 stagger. Struck while aiming, the
 shot is lost; let go early, it is a plain snap shot. The Teacher aims at the player through the same closing ring;
@@ -775,7 +824,7 @@ the faced enemy, +4 for each turn, 30 at most.
 | Wrap the Arm | Move | 2 | R2 while whirling: the chain wraps the forearm and the weight is a fist: three close blows (10, 10, 18) |
 | Figure of Eight | Rule | 2 | While whirling you may guard: the turning chain is the guard, 200 degrees, half cost |
 | Release Point | Rule | 2 | A throw out of the whirl goes 9 m |
-| Heavy Ball | Number | 1 | Weight blows +15% stagger |
+| Round the Post | Move | 2 | The weight thrown at an anchor within 6 m (a post, a rock, a standing stone, a brazier, a fished-up slab) wraps it, and R2 swings you round it on the chain: a ring of 4 m, 14 to all you pass, untouchable while you swing. Let go to fly on 3 m. (Kept from the Bone Hook's Line) |
 | **Keystone: Always Turning** | Keystone | 4 | When you are not attacking, the weight circles on its own at 2.2 m (6 every 0.5 s on touch). The light chain is the sickle only |
 
 True form: two rings, at 2.2 and 4 m.
@@ -790,7 +839,7 @@ you on the chain (14 to all within 4 m, 10 to it). R2: hurl it 6 m where you fac
 | Two on One Chain | Rule | 2 | Entangle binds the first two enemies on its lane together and drags them into each other (20 each, 30 stagger) |
 | Lead It | Move | 2 | Walk while a heavy enemy is bound: it turns with you, its back to you after 1 s |
 | Held Fast | Rule | 2 | Your roll no longer frees what is bound |
-| Tight Bind | Number | 1 | Bound 2.5 to 3.2 s |
+| Staked Chain | Move | 2 | Hold R2 0.3 s aimed at the floor: the weight is driven in where it lands (up to 6 m) and the chain runs taut from it to your hand for 6 s. Walk round the stake and the chain sweeps the floor like a clock hand; what it crosses is tripped (knocked down 1 s, a heavy one stumbles). R2 tears it free in a snap (12). Lights meanwhile are the sickle at half reach. (Kept from the Bone Hook's tripwire; Tight Bind is cut, as Temper V does the same) |
 | **Keystone: Nothing Gets Away** | Keystone | 4 | Every weight blow that lands binds for 0.8 s, for no mana. Entangle itself is gone |
 
 True form: each bind lasts 1.2 s.
@@ -810,17 +859,57 @@ changes**: the chain is coiled short. The lights are the sickle only: four hooki
 
 True form: the neck cut also breaks an attack the enemy is winding up.
 
-**Temper.** III: chain lanes +0.4 m. V: Bound 2.5 to 3.0 s.
+### The Fisher's Jawbone (Water; god's bough, Decided 2026-11-18)
+
+The fisher of islands hauled them up on a hook of his grandmother's jawbone. Polynesian bone hooks trap the jaw by
+turning rather than piercing; the trolling lure flashes its shell like a fish's scales. A hook on a line is a chain
+sickle's kin (a blade on a thrown line that catches and pulls), so it is the chain's god's form. Kept far from any
+film's magic hook: no moving tattoos, no shape-changing.
+
+**What changes**: his hook in place of the sickle, old yellow bone as long as a forearm with the teeth still set in
+its curve, lashed with plaited flax to a line that drips; the weight becomes a stone sinker; +15%. **Hooked** is a
+state of its own: unlike Bound, a hooked enemy can still move, but the line is yours to reel or heave for 3 s. The
+moveset is the hook's:
+
+| Input | Move | What it does |
+|---|---|---|
+| R1 x3 | Hooking swing, a backhand with the line wrapped round the fist, a jab with the point | 9, 9, 12, reach 2.2 m |
+| R2 | Cast | Down a lane of 12 m: 14; the first enemy struck is Hooked |
+| R1 while one is Hooked | Reel | A light enemy is dragged 3 m to you; you are drawn to a heavy one. 8 |
+| R2 while one is Hooked | Heave | Hauled overhead and down in front of you (a heavy one is turned instead). 22, 40 stagger; the hook comes free |
+| R2 at the floor | Fish up the ground | Hooked and heaved, the floor comes up as a slab of land 2 m across that stands 6 s as cover and counts as an anchor (his islets, lifted by the sea) |
+| Hold R2 0.4 s | Skill: Spin the Line (30 mana) | The hook swung overhead, a ring of 4.5 m, three turns (6 each), then cast |
+| R2 on a staggered enemy | Finisher: Landed | The line round the enemy, hauled over the shoulder like a catch and down. 28, tripled |
+
+Guard: the line held taut between the hands, 200 degrees, 1.1 stamina a point. The chain's Round the Post and Staked
+Chain work with the line as with the chain.
+
+| Mark | Kind | Memories | What it does |
+|---|---|---|---|
+| The Lure | Rule | 2 | A cast that strikes nobody leaves the hook lying, its shell flashing, for 4 s: light enemies within 5 m walk to it, heavy ones turn to look, and your blows on an enemy walking to it count as from behind (1.4 times). R1 reels it home through them (14), hooking the first it crosses. (Kept from the Bone Hook's Lure aspect) |
+| The Water Mace | Move | 2 | The skill: the hook spun overhead while seawater gathers round it in a ball (1.2 s), slammed down 4 m ahead: a disc of 3 m, 40, 60 stagger |
+| The Surge | Move | 2 | R2 at a fished-up slab: yanked along the line toward you, striking all it passes (24) |
+| Set the Hook | Rule | 2 | Enemies stay Hooked 6 s, and a heavy one is held still 1 s as the hook sets |
+| **Keystone: The Hook Remembers** | Keystone | 4 | Three enemies can be on lines at once; each cast adds one. The reel draws all three to one point at your feet, where they crash (16 each, 30 stagger) |
+
+True form: five lines.
+
+**Temper.** III: chain lanes +0.4 m (the cast's too). V: Bound 2.5 to 3.0 s, and Hooked 3 to 4 s.
 
 **Infusion** (on the weight snap). Ground: the lane is left lying 3 s. Line: the weight flies 8 m and strikes the
 first two on its line. Weight: the first enemy is wrapped and Bound 1 s, for no mana. Draw: all on the lane are pulled
-2 m toward you.
+2 m toward you. **On the Fisher's Jawbone the carrier is the cast** (a lane): the four marks bend it the same way,
+except that Weight sets the hook in the floor beside the enemy and pins it 1 s.
 
-**Gated technique: Bite and Shake.** Taught by the pack's alpha (Ice; Proposal: a broken fetter still locked on his
-wrist, its chain dragging, as the wolf broke his first two chains). R1 and R2 together: the weight thrown at the faced
-enemy up to 6 m; if it catches, it is shaken, three yanks side to side (10 damage and 15 stagger each), then flung 3 m
-aside. A heavy or fixed enemy pulls you to it instead, arriving with the sickle. The alpha catches the player in his
-chain, shakes them, and throws them to the pack.
+**Gated technique: Hook and Hold.** Taught by the hook brother of the Water land (Decided, 2026-11-18: he now teaches
+the chain; he fights with plainer versions of the fisher's hook moves, decided in WORLD.md). R1 and R2 together: the
+sickle (on the Jawbone, the hook) thrown low through the faced enemy's foot within 6 m and into the floor: it is held
+1.5 s where it stands (heavy ones too; a god 0.5 s), the chain left staked. While it holds, your lights are the
+weight swung from the hand on the short end (8, 8, 14). When it ends, or at R2, the blade tears free back to your hand
+through the foot (12, 20 stagger). Missed, it is a plain throw of the sickle. He pins the player, and his brother
+carves (Fillet).
+
+The chain's earlier technique, Bite and Shake, is retired: the pack's alpha now teaches the Fists (9, 14).
 
 ---
 
@@ -900,6 +989,21 @@ shoulder at whatever stands behind you (2.4 m, the 120 degrees behind), 24, 50 s
 it is a hop that turns you round. The emperor is a stiff corpse who cannot turn; a player who gets behind him meets
 his heel.
 
+**Gated technique: Bear Them Down.** Taught by the pack's alpha (Ice; Proposal, 2026-11-18, replacing his chain
+technique). He is a huge man-wolf who runs on all fours and fights with claws and weight, so his weapon is the body;
+the broken fetter on his wrist stays as his look and his lore (the wolf broke his first two chains), not as a weapon.
+R1 and R2 together at a faced enemy 3 to 9 m off: you drop to all fours for 0.25 s (the tell), then leap and land on
+it. A light or middle enemy is borne down (knocked down 1.2 s) with you on it, and three quick blows follow (8 each,
+critical, as on the staggered); an elite stumbles and takes the first blow only; a god is struck once and you spring
+off. You end 2 m back. Missed, you land in a long crouch (0.5 s). The alpha pounces out of the pack and the snow; the
+answer he teaches is a late dodge toward him, under the leap. It gives the Fists the one thing they lack, reach, and
+the Scorpion's Tail covers behind: one sits on the chord at a rest fire (0.5).
+
+**Why the alpha teaches the Fists and not the chain** (recommended, 2026-11-18): with the hook brother on the chain,
+a second chain technique would be a second catch on a weapon whose three aspects already catch, bind and pull. The
+Fists are the weapon that most wants a gap-closer, the alpha's fight is a beast's bare body, and the starting weapon
+gets a reason to come back to it in the third tier.
+
 ---
 
 ## 10. War Fan (a new Way; the Wind god)
@@ -976,169 +1080,23 @@ True form: the cuts of wind go 5 m.
 Weight: the air sets: what it strikes is held 0.8 s where the shove ends. Draw: the sweep is made backward, pulling
 all in it 3 m to you.
 
-**Gated technique: Turn the Spear.** Taught by the Wind land's elite (Proposal: the Hermit of the Pass, 14). R1 and R2
-together during an enemy's thrust or lane attack, red included: you step along its lane at the instant it would land,
+**Gated technique: Turn the Spear (placeholder).** Taught by an elite of the Lightning and Wind land, who waits for
+that land's overview (owner, 2026-11-18); the move stands as a draft until then. R1 and R2 together during an enemy's thrust or lane attack, red included: you step along its lane at the instant it would land,
 the fan turning the point aside, and arrive at the attacker with a shut-fan blow (20, 60 stagger). Mistimed, it is a
-plain step. The Hermit does it to every lane the player throws at him: the spear's thrust, the knives' crossing, the
-sword's draw.
+plain step. The draft's teacher does it to every lane the player throws at him: the spear's thrust, the knives'
+crossing, the sword's draw.
 
 ---
 
-## 11. Bone Hook (a new Way; the Water god)
+## 11. Bone Hook (merged)
 
-The fisher of islands hauled them up on a hook of his grandmother's jawbone. Polynesian bone hooks trap the jaw by
-turning rather than piercing; the trolling lure flashes its shell like a fish's scales. Kept far from any film's
-magic hook: no moving tattoos, no shape-changing.
-
-### The plain bone hook (Proposal)
-
-A hook of bone as long as a forearm, lashed with plaited flax to 6 m of line coiled on the left wrist. **Hooked** is
-a new state: unlike Bound, a hooked enemy can still move, but the line is yours to reel or heave for 3 s.
-
-| Input | Move | What it does |
-|---|---|---|
-| R1 x3 | Hooking swing, a backhand with the line wrapped round the fist, a jab with the point | 9, 9, 12, reach 2.2 m |
-| R2 | Cast | Down a lane of 6 m: 14; the first enemy struck is Hooked |
-| R1 while one is Hooked | Reel | A light enemy is dragged 3 m to you; you are drawn to a heavy one. 8 |
-| R2 while one is Hooked | Heave | Hauled overhead and down in front of you (a heavy one is turned instead). 22, 40 stagger; the hook comes free |
-| Hold R2 0.4 s | Skill: Spin the Line (30 mana) | The hook swung overhead, a ring of 4.5 m, three turns (6 each), then cast |
-| R2 on a staggered enemy | Finisher: Landed | The line round the enemy, hauled over the shoulder like a catch and down. 28, tripled |
-
-Guard: the line held taut between the hands, 200 degrees, 1.1 stamina a point. Default dodge.
-
-### The Lure
-
-**What changes**: a cast that strikes nobody leaves the hook lying, its shell flashing. For 4 s light enemies within
-4 m walk to it; heavy ones turn to look. Reel it in through them (14).
-
-| Mark | Kind | Memories | What it does |
-|---|---|---|---|
-| Trolling | Move | 2 | Walk away from a lying lure: it drags after you and hooks the first enemy that steps on its line |
-| Bait and Strike | Rule | 2 | Blows on an enemy walking to the lure count as from behind (1.4 times) |
-| Set the Hook | Rule | 2 | A lure that catches holds even a heavy enemy still for 1 s |
-| Bright Shell | Number | 1 | The lure draws from 5 m |
-| **Keystone: The Sea Is Patient** | Keystone | 4 | Three lures can lie at once and a cast no longer comes back by itself; the reel calls all three home, each hooking what crosses its line |
-
-True form: lures lie 8 s.
-
-### The Line
-
-**What changes**: the hook catches the world as well as enemies: posts, rocks, standing stones, braziers. R2 at one
-swings you round it at the line's length (a ring of 4 m, 14 to all you pass); let go to fly on 3 m.
-
-| Mark | Kind | Memories | What it does |
-|---|---|---|---|
-| Tripwire | Move | 2 | Cast at the floor: the line is staked from you to the hook for 6 s; what crosses it is tripped (knocked down 1 s) |
-| Wrap Them | Rule | 2 | Swinging round a hooked enemy wraps it: Bound 1.5 s, heavy ones too |
-| Swing Through | Rule | 2 | Untouchable while swinging |
-| Long Line | Number | 1 | The line 6 to 8 m |
-| **Keystone: Every Post a Pivot** | Keystone | 4 | Near any anchor within 6 m, the dodge is a swing round it; elsewhere it is the roll |
-
-True form: swinging round a hooked enemy also turns it, back to you.
-
-### The Fisher's Jawbone (god's bough)
-
-**What changes**: his hook, old yellow bone with the teeth still set in its curve, on a line that drips; +15%. It
-casts 12 m and can hook the floor itself: hooked and heaved, the ground is fished up as a slab of land 2 m across
-that stands 6 s as cover (his islets, lifted by the sea).
-
-| Mark | Kind | Memories | What it does |
-|---|---|---|---|
-| The Water Mace | Move | 2 | The skill: the hook spun overhead while seawater gathers round it in a ball (1.2 s), slammed down 4 m ahead: a disc of 3 m, 40, 60 stagger |
-| The Surge | Move | 2 | R2 at a fished-up slab: yanked along the line toward you, striking all it passes (24) |
-| Long Haul | Rule | 2 | Enemies stay hooked 6 s |
-| Old Bone | Number | 1 | The heave +20% |
-| **Keystone: The Hook Remembers** | Keystone | 4 | Three enemies can be on lines at once; each cast adds one. The reel draws all three to one point at your feet, where they crash (16 each, 30 stagger) |
-
-True form: five lines.
-
-**Temper.** III: the cast 6 to 7 m. V: hooked 3 to 4 s.
-
-**Infusion** (on the cast). Ground: the line's lane is left lying 3 s. Line: the hook flies 10 m and strikes the
-first two. Weight: the hook sets in the floor beside the enemy and pins it 1 s. Draw: the reel comes by itself and
-drags everything on the line.
-
-**Gated technique: Hook and Hold.** Taught by the hook brother of the Water land. R1 and R2 together: a cast that
-pins the enemy's foot to the floor: held 1.5 s where it stands (heavy ones too; a god 0.5 s), the line left staked
-so both your hands are free. Mistimed or missed, it is a plain cast. He pins the player, and his brother carves.
+Merged into the Chain Sickle (Decided, 2026-11-18): it is now the chain's god's bough, the Fisher's Jawbone (8).
 
 ---
 
-## 12. Hook Swords and needles (a new Way; the Poison god)
+## 12. Hook Swords and needles (merged)
 
-The Chinese twin hook swords: the back of the blade cuts, the hook trips and catches, the crescent guard blocks and
-slashes, the pommel is a dagger, and the two can be hooked together into one long weapon. One of their names is
-"Heaven and Earth, Sun and Moon sword". The alchemist adds needles that stand in the floor.
-
-### The plain hook swords (Proposal)
-
-| Input | Move | What it does |
-|---|---|---|
-| R1 x4 | Back-edge cut, back-edge cut, crescent slash, pommel stab | 8, 8, 10, 12, reach 2.3 m |
-| R2 | Leg hook | At 2.4 m: 16; a light enemy is knocked down 1 s |
-| R2 after a light | Linked whip | One hook caught in the other and the far sword swung on the near: a 200 degree arc at 4.2 m, 20, 34 stagger |
-| Hold R2 0.4 s | Skill: Needles (30 mana) | Twelve needles thrown in a fan (4 each); they stand in the floor 6 s and prick what walks among them (2 every 0.5 s) |
-| R2 on a staggered enemy | Finisher: Both Hooks | Both hooks behind the neck, pulled down onto the knee. 28, tripled |
-
-Guard: crossed crescents, 180 degrees, perfect window 0.20 s, 1.0 a point; a perfect guard catches the weapon in a
-hook (held 0.5 s). Default dodge.
-
-### Linked
-
-**What changes**: the swords stay joined: the lights are long whips at 4.2 m (12, 14, 18) at a slower beat, and
-the near sword's crescent cuts on the way in. An enemy struck by the near crescent and the far hook in one swing takes
-the second blow twice as hard.
-
-| Mark | Kind | Memories | What it does |
-|---|---|---|---|
-| Unlink | Move | 2 | R2 at full reach: the far sword let go flies on 3 m and is caught on its way back, striking twice |
-| Catch the Neck | Rule | 2 | The far hook catches round an enemy and pulls it 1.5 m |
-| Turning Link | Move | 2 | Hold R1: the linked pair turns round you, a ring at 4.2 m and one at 1.5 m together (8 and 8) |
-| Long Link | Number | 1 | Reach +0.4 m |
-| **Keystone: Sun and Moon** | Keystone | 4 | Every swing strikes near and far at once (the crescent at 1.5 m, the hook at 4.2 m); an enemy at either is struck, and one caught between is pulled out to the hook |
-
-True form: the doubled blow is three times, not twice.
-
-### The Catch
-
-**What changes**: the hooks catch. Every R2 hooks a leg; every perfect guard catches the weapon and holds it 0.8 s.
-
-| Mark | Kind | Memories | What it does |
-|---|---|---|---|
-| Into the Crescent | Move | 2 | R1 on a caught enemy: pulled onto the crescent guard (12, 30 stagger) |
-| Wrench | Rule | 2 | A caught weapon wrenched with R2 throws the enemy off balance: +40 stagger |
-| Short Hook | Number | 1 | The leg hook +0.3 m |
-| Pommel Point | Rule | 2 | The pommel stab on a caught enemy is critical |
-| **Keystone: Hooked Twice** | Keystone | 4 | An enemy caught by both hooks within a second (a weapon and a leg) is thrown flat 2 s, and blows on it land as on the staggered |
-
-True form: one hook is enough on light enemies.
-
-### The Alchemist's Hooks (god's bough)
-
-**What changes**: his hooks, blued steel with green lacquer, a needle case on the left forearm; +15%. Every fourth
-light throws a needle that stands in the floor (twelve at most, 8 s). **Pressure points**: the third blow on one
-enemy within 3 s strikes a point: its next attack is 0.5 s late, or it walks at half for 2 s (alternating).
-
-| Mark | Kind | Memories | What it does |
-|---|---|---|---|
-| Needle Grid | Rule | 2 | An enemy passing between two needles less than 3 m apart is pricked (4) and slowed by 30% for 1 s |
-| Five Vials | Move | 2 | Hold the flask button 0.6 s: drink a vial (three a rest, not flasks) and take the next stance in turn for 12 s: centipede (whips +1 m), snake (lights become thrusts), toad (blows taken -25%), scorpion (heavies leave a needle in the enemy that pricks each second), gecko (dodge +30%, needles never prick you) |
-| Gather the Needles | Move | 2 | R2 while guarding: every standing needle flies to the faced enemy (2 each) |
-| Fine Points | Number | 1 | Pressure points on the second blow |
-| **Keystone: Forever** | Keystone | 4 | Stances no longer end: each vial adds one, five at most at once. A blow taken loses the oldest |
-
-True form: vials last 20 s, and the fifth stance at once gives all five.
-
-**Temper.** III: the linked whip +0.3 m. V: the leg hook knocks down 1.4 s.
-
-**Infusion** (on the linked whip). Ground: the arc is left lying 3 s. Line: the far sword is let go and flies on 5
-m before it comes home. Weight: the far hook sets in what it strikes and holds it 0.8 s. Draw: the whip catches all in
-its arc and draws them to the near crescent.
-
-**Gated technique: none.** No elite is left to carry it (14). If the owner would rather the Undying Emperor preview
-the alchemist's weapon than the five venoms' hands, his technique becomes **Hook the Dead**: R1 and R2 together, both
-hooks caught behind the faced enemy's knees and pulled, so it hops forward stiff-legged onto your crossed crescents
-(24, 60 stagger), and the Fists lose theirs.
+Merged into the Twin Knives (Decided, 2026-11-18): they are now the knives' god's bough, the Alchemist's Hooks (6).
 
 ---
 
@@ -1148,29 +1106,74 @@ He carries his own version of every weapon (Decided), with no element and no bou
 the Super Form he gives is made of the player's own Ways, each of its moves borrowing the active aspect of the weapon
 it uses, so what the player built across the climb is what the Super Form is.
 
+### 13.1 The Teacher (the champion's land's elite; Decided as the bow's teacher, the rest Proposal)
+
+**Who he is.** A nod to Drona, who taught the princes the bow, taught Arjuna above them all, and in the war commanded
+the army against his own pupil. He is the champion's teacher. When the war was stopped he was on the far side of the
+field, and he stands at the end of the path, before the council, frozen in the act of drawing. He alone thaws whole
+as the player passes, because he has been waiting for the next pupil to come up the path. An old archer-general with a
+long white plait, a bow taller than he is, and on his back a teacher's quiver that holds arrows and, among them, the
+hafts of the champion's practice weapons, one of each. In his story a forest boy who was refused as a pupil learned
+the bow from a clay image of him, and paid for it with his thumb; every gated technique in this game is learned the
+same way, by watching it done. He is the one elite who could say so, and says it in one line when he falls: "You
+learned by watching. So did the boy."
+
+**His ground.** The wheel formation of the war: frozen soldiers standing in three broken rings round him, each ring
+with gaps. The rings are cover from his arrows; the nearer the player gets, the less cover there is. Nothing closes
+behind the player: the rings thin as they are struck, never seal.
+
+**His fight: bow first.**
+- **Only the Eye.** His aimed shot through a ring closing on the player over 1.2 s. A soldier between, or a dodge
+  through as it closes, breaks it. This is the technique he teaches.
+- **The Lesson Marked.** Three arrows loosed into the floor round the player: two that make a lane, or three that
+  make a ring. The arrows say where his next blow will land.
+- **The draws.** His right hand goes over his shoulder to the quiver for 0.4 s, and the haft that comes out tells the
+  move. Each drawn weapon makes one string and is thrown down to stand in the floor.
+  - *The spear*, when two arrows make a lane: a running thrust 9 m down it.
+  - *The sword*, when the player comes within 3 m: the bow passes to his left hand and the right draws in one stroke,
+    three cuts, then a hop back to range. Closing on an archer is not safety.
+  - *The mace*, when three arrows ring the player: a leap into the ring and a quake of 4 m.
+- **The empty quiver.** After twelve arrows he fights 6 s with whatever he last drew, slower, while he gathers arrows
+  from the floor: the opening.
+- **At half health** the draws come in the middle of a string with no pause: a shot, the drawn weapon, a shot. The
+  champion's habit, in small.
+- **The end.** On his fall he lays down his weapons and sits, as Drona did when he was told his son was dead. The
+  technique and his Heresy, *Over the Wall* (`depth_weapons.md`), are left with the laid-down bow.
+
+**Gated technique: Only the Eye** (Great Bow; section 7 holds the move). R1 and R2 held together: a ring closes on
+one point of the faced enemy over 1.2 s; let go as it closes for 2.5 times, critical, through any guard, 80 stagger.
+
+**Why his fight teaches the last champion.** The champion (WORLD.md) changes weapons in the middle of a string, marks
+where his thousandfold arrows will fall with rings, has a "quiver empty" window when he goes to melee, and carries his
+own version of every god's weapon. The Teacher teaches the four readings in that order and at half the speed: the hand
+at the quiver is the tell; arrows on the floor say where the blow lands; standing close to an archer is not safe; the
+empty quiver is the opening. The champion does the same with ten weapons, both hands and no pause. A player who beat
+the Teacher has already read the champion once.
+
 ---
 
 ## 14. Gated techniques, land by land
 
-Eleven fighters and twelve weapon kinds: one each, with the Hook Swords left over. Where WORLD.md and fire_land.md
-set no weapon, the weapon is a Proposal.
+Eleven elites and ten weapon kinds (Decided, 2026-11-18: every kind has a teacher). The Fists are taught twice and
+set one technique on the chord at a rest fire (0.5). Where WORLD.md and fire_land.md set no weapon, the weapon is a
+Proposal.
 
 | Land | Elite | Weapon | Technique | What the fight shows |
 |---|---|---|---|---|
 | Fire | The Champion of the Gate | Great Spear (Decided) | Hold the Gate | His plant into the reap |
-| Water | The brothers: the blade brother | Twin Knives (Proposal: shark-tooth carving knives) | Fillet | He carves the player the moment his brother's hook holds them |
-| Water | The brothers: the hook brother | Bone Hook (decided: plainer fisher's moves) | Hook and Hold | He pins the player's foot |
+| Water | The brothers: the blade brother | Twin Knives (Decided, 2026-11-18) | Fillet | He carves the player the moment his brother's hook holds them |
+| Water | The brothers: the hook brother | Chain Sickle (Decided, 2026-11-18; plainer fisher's moves, decided in WORLD.md) | Hook and Hold | He pins the player's foot |
 | Metal | The first golden handmaiden | Great Hammer (Proposal: the striker's sledge and tongs) | The Smith's Tap | Her tongs tap the floor; the sledge falls there |
-| Ice | The pack's alpha | Chain Sickle (Proposal: a broken fetter's chain and his claws) | Bite and Shake | He catches, shakes and throws the player to the pack |
+| Ice | The pack's alpha | Fists (Proposal, 2026-11-18: claws and weight; was the Chain Sickle) | Bear Them Down | He pounces out of the pack; dodge late, under the leap |
 | Poison | The Undying Emperor | Fists (Proposal: the five venoms' styles) | The Scorpion's Tail | He cannot turn; he kicks back over his shoulder |
 | Earth | The Bargain | Massive Sword (his axe previews Brannoch's blade) | The Return Blow | He offers his neck, takes the free blow, returns it |
 | Life | The Wicker Man | Scythe (Proposal: a great reaping hook) | Over the Shoulder | Its grab throws the player over its shoulder into a cage |
-| Lightning | Proposal: **the Last Retainer**, Narukami's sworn swordsman, keeping the reworked castle's gate in the dry storm. He replaces the demo's Gate Captain, whose spear would repeat the Champion's | Katana | Before the Thunder | He cuts every heavy and charge before it lands |
-| Wind | Proposal: **the Hermit of the Pass**, an old long-nosed mountain ascetic with a feather war fan (a nod to the tengu who taught the young Yoshitsune on Kurama) | War Fan | Turn the Spear | He steps along every lane the player throws |
-| The champion's land | Proposal: **the Teacher**, a frozen general-archer at the path's end who thaws as the player passes (a nod to Drona, who taught the princes the bow) | Great Bow | Only the Eye | He aims at the player through a closing ring |
-| (none) | | Hook Swords | none | See 12 |
+| Lightning and Wind | Placeholder: waits for that land's overview | Katana | Before the Thunder (draft) | Draft: he cuts every heavy and charge before it lands |
+| Lightning and Wind | Placeholder: waits for that land's overview | War Fan | Turn the Spear (draft) | Draft: he steps along every lane the player throws |
+| The champion's land | **The Teacher** (Decided, 2026-11-18; 13.1) | Great Bow | Only the Eye | He aims through a closing ring, and draws the champion's weapons from his quiver |
 
-The demo's Gate Captain stays as built and teaches nothing until the castle is reworked.
+The earlier proposals for the Lightning and Wind elites (the Last Retainer and the Hermit of the Pass) are set aside
+until the land's overview. The demo's Gate Captain stays as built and teaches nothing until the castle is reworked.
 
 ---
 
@@ -1182,7 +1185,9 @@ A weapon and an element carried together grow a shared Bond: blows the weapon la
 count once; blows carrying the element (the charged blade, the infused strike) count twice; an elite beaten with the
 pair counts 50 blows, a god 200. Three ranks: I and II each +5% to the pair's infused strike; at III the infused
 strike of that element on that weapon becomes the pair's own strike. Splitting the pair loses the strike, not either
-Bond (Decided). Twelve kinds and eleven elements make 132 pairs (8.2's "about 110" counted ten weapons).
+Bond (Decided). **Ten kinds and eleven elements make 110 pairs** (Decided, 2026-11-18, after the two merges). A god's
+bough shares its weapon's Pair Bond: the Jawbone grows the Chain Sickle's pairs, the Alchemist's Hooks the Twin
+Knives'.
 
 ### 15.2 The rule (Decided: built from the weapon's infused strike and the element's substance)
 
@@ -1193,8 +1198,9 @@ at **1.3 times its damage and stagger**, plus **the element's verb** acting on t
 arc (radius R, angle A), a disc (radius R), a ring (radius R, width 1 m), or a path (a shot's or a dash's line, length
 L). Every carrier above is one of these: the Katana's draw an arc, the Massive Sword's rising cut an arc, the
 Scythe's turn a ring, the Spear's thrust a lane, the Hammer's drop a disc, the Knives' crossing a path, the Bow's shot
-a path, the Chain's snap a lane, the Fists' kick an arc, the Fan's sweep an arc, the Hook's cast a lane, the Hook
-Swords' whip an arc. **The struck** are the enemies it hit.
+a path, the Chain's snap a lane, the Fists' kick an arc, the Fan's sweep an arc. Two god's boughs change the carrier
+and so the footprint: the Jawbone's cast is a lane, the Alchemist's Hooks' whip an arc. **The struck** are the
+enemies it hit.
 
 **The verbs** (one per element, from its substance in `docs/design/LOOKS.md`; each built from actions the schema has,
 `docs/UPGRADE_SCHEMA.md` section 7):
@@ -1281,14 +1287,17 @@ everything thrown 5 m, and you ride 6 m behind it, landing where they stood. Lea
 whole way. Out, and you go with it. (Drawing everything in first is Wind's Indrawn Breath, and catching blows in a
 bag is Wind's Bag of Winds.)
 
-**Bone Hook and Water (the fisher): Taken From Below.** The infused cast sinks into the floor as into the sea. 1 s
-later the hook surfaces under the faced enemy within 10 m, wherever it has walked, in a burst of spray: it is lifted
-1 m (30, 50 stagger) and hooked. A fish taking the bait from beneath; the tell is a moving ring of foam on the floor.
+**Chain Sickle and Water (the fisher): Taken From Below.** The infused weight snap (on the Jawbone, the cast) sinks
+into the floor as into the sea. 1 s later the weight, or the hook, surfaces under the faced enemy within 10 m,
+wherever it has walked, in a burst of spray: it is lifted 1 m (30, 50 stagger) and Bound (on the Jawbone, Hooked). A
+fish taking the bait from beneath; the tell is a moving ring of foam on the floor. Works in every aspect of the
+chain.
 
-**Hook Swords and Poison (the alchemist): The Last One Alive.** The infused linked whip draws a ring of 4 m round you
-that seals as the lip of a jar for 4 s: mist fills it (a dose a second), and nothing walks out. When an enemy inside
-dies, all its doses pass to the nearest enemy inside, plus three, as in the gu jar the last creature alive takes the
-others' poison.
+**Twin Knives and Poison (the alchemist): The Last One Alive.** The infused crossing step (on the Alchemist's Hooks,
+the linked whip) ends by drawing a ring of 4 m round the place it struck, which seals as the lip of a jar for 4 s:
+mist fills it (a dose a second), and nothing walks out. When an enemy inside dies, all its doses pass to the nearest
+enemy inside, plus three, as in the gu jar the last creature alive takes the others' poison. Works in every aspect of
+the knives; the Shadow's blows from behind make the jar a killing room.
 
 **Fists and Fire: Flint and Tinder.** The pair every player starts with: fists, then Fire from the first god. The
 knuckles are struck together before the infused kick, throwing a shower of sparks in a cone of 3 m (Burn 1 to all in
@@ -1308,18 +1317,26 @@ whirlwind of three, trip, cut and close, is the Wind and Metal duo spell Three W
 
 ---
 
-## 16. What to cut or merge
+## 16. What was cut or merged (Decided, 2026-11-18)
 
-- **Merge the Bone Hook into the chain family.** A weighted line that is thrown, catches, binds and pulls is what the
-  Chain Sickle already is; the Hook's Lure and Line aspects are its best new ideas and fit the chain family as well.
-  Making the fisher's Jawbone a god's bough on the Chain Sickle's Way would leave eleven kinds, give the chain a god,
-  and give every kind a technique (the hook brother would teach the chain family's). The owner decided the hook is
-  its own kind, so it is written whole above; this is the one place two Ways risk feeling alike.
-- **Fold Full Body Armament into the Fists** as their third aspect (section 9), and take its mark off the eleven
-  element trees.
-- **Watch the Twin Knives and the Hook Swords**: both are two short blades. Kept apart here by what each asks (knives
-  are about being behind; hooks about catching and reach), but if one must go after play, it is the plain Hook Swords'
-  Catch aspect, not the god's bough.
+- **The Bone Hook is the Chain Sickle's god's bough, the Fisher's Jawbone** (8). Kept: the hook's whole moveset and
+  the Hooked state, fishing up the ground, The Water Mace, The Surge, The Hook Remembers, and from its plain aspects
+  the Lure (now a Jawbone mark, with Bait and Strike folded in), the Line's swing round an anchor (now the Weight's
+  Round the Post, with Swing Through folded in) and the tripwire (now the Bind's Staked Chain). Set the Hook takes in
+  Long Haul. Cut: Trolling, The Sea Is Patient (three lures at once repeats The Hook Remembers), Wrap Them (the Bind
+  already binds), Every Post a Pivot (a dodge that changes by place is hard to read), and the plain numbers Bright
+  Shell, Long Line and Old Bone. The chain keeps exactly three plain aspects. Its old technique, Bite and Shake,
+  leaves with the alpha.
+- **The Hook Swords are the Twin Knives' god's bough, the Alchemist's Hooks** (6). Kept: the hook swords' whole
+  moveset, Needle Grid, Five Vials, Gather the Needles and Forever; from Linked, its keystone Sun and Moon (now a
+  move); from the Catch, its keystone Hooked Twice (now a rule) and the guard that catches a weapon (now the bough's
+  guard). Cut: Unlink, Turning Link, Catch the Neck, Into the Crescent, Wrench and Pommel Point (each a smaller
+  version of a kept piece), and the numbers Long Link, Short Hook and Fine Points. The knives keep their three plain
+  aspects untouched: the Shadow, the Rattle and the Reverse Grip are about being behind and inside, the hooks about
+  catching and reach, so the bough feels like a second weapon in the same hands.
+- **Full Body Armament is the Fists' third aspect** (9), and its mark leaves the eleven element trees.
+- **Two plain number marks made room for merged pieces**: Tight Bind (it repeated Temper V) and Heavy Ball.
+  The other number marks stay as the cheap 1-Memory steps of each bough until play says otherwise.
 - No other cut: the Massive Sword and the Great Hammer were built far enough apart (poise and trading against placed
   discs and the late guard).
 
@@ -1327,14 +1344,19 @@ whirlwind of three, trip, cut and close, is the Wind and Metal duo spell Three W
 
 ## 17. New engine work, in one place
 
-- The technique chord: R1 and R2 pressed together, as an input action.
+- The technique chord: R1 and R2 pressed together, as an input action; and for the Fists, which of two techniques
+  sits on it (a rest-fire choice like the aspect).
 - Enemy states: **knocked down** (a timed fall, its own clip), **Hooked** (moves, but the line is the player's),
   **disarmed** (no weapon attacks), **pinned** (held, like Bound, but by a staked point).
-- A grip or stance flag on the weapon that swaps its combo (Half-Sword, the War Fan shut and open, Linked).
+- A grip or stance flag on the weapon that swaps its combo (Half-Sword, the War Fan shut and open, Sun and Moon).
+- **A god's bough that swaps the whole moveset and the carrier** (the Jawbone's hook, the Alchemist's Hooks), so the
+  carrier and its footprint are read from the active bough, not the weapon.
 - Counters a weapon keeps: Heat, sheaves, nicks, weights, drums, layers of the coat.
 - An answer window after a perfect guard (the Katana's Answer, the Hammer's ring) as a timed state that changes what R1
   and R2 start.
-- Anchors in the scenery the Bone Hook can catch (a tag on colliders).
+- Anchors in the scenery the chain and the Jawbone can catch (a tag on colliders), and a staked chain that sweeps
+  round its stake.
+- A leap onto a far enemy that knocks it down and keeps the player on it (Bear Them Down).
 - For Pair Bond: the strike records its footprint and its struck; one new action, a mirrored `Echo`.
 
 ---
@@ -1372,6 +1394,10 @@ whirlwind of three, trip, cut and close, is the Wind and Metal duo spell Three W
 - Norse archery: [Skaði](https://en.wikipedia.org/wiki/Ska%C3%B0i), [Bow International](https://www.bow-international.com/features/traditional/viking-archery/),
   [Bow-gods](https://earthandstarryheaven.com/2017/02/14/archers/). Drona and Arjuna:
   [Drona](https://en.wikipedia.org/wiki/Drona), [Isha on Arjuna](https://isha.sadhguru.org/en/wisdom/article/mahabharat-18-arjuna-ekalavya).
+  The Teacher (2026-11-18): [Ekalavya](https://en.wikipedia.org/wiki/Ekalavya) (the clay image and the thumb),
+  [Drona Parva](https://en.wikipedia.org/wiki/Drona_Parva) (his command and his laying down of arms),
+  [Mahabharata Online on Drona](https://www.mahabharataonline.com/stories/mahabharata_character.php?id=76) (the wheel
+  formation).
 - Polynesian hooks and weapons: [Hei matau](https://en.wikipedia.org/wiki/Hei_matau),
   [Te Papa trolling lure](https://collections.tepapa.govt.nz/object/166746),
   [NZ Geographic](https://www.nzgeo.com/stories/the-lost-art-of-fishing/), [Leiomano](https://www.shakaguide.com/article/oahu/shark-tooth-weapon),
