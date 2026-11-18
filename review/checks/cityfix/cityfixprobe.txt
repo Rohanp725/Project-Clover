@@ -1,0 +1,39 @@
+opened
+met: true
+result: probe started
+[Probe] 6 the thirsting's blows by hand: thirst_claw_1, thirst_claw_2, thirst_pounce; horizontal gap deck to it 2.0 m, height 3.5 m
+[Probe]    forced on a player on the deck over it: blows struck 4, landed 0 OK
+[Probe]    forced on a player beside it on the bed: blows struck 4, landed 4 OK
+[Probe]    the player's light chain from the deck: it lost 0 OK
+[Probe]    the player's light chain from beside it: it lost 36 OK
+[Probe] 7 into the back of each boat-shed:
+[Probe]    shed at x -18: from (-18.0, 0.0, 116.6) ended (-18.0, 0.1, 118.5), lowest 0.08 OK
+[Probe]    shed at x -8: from (-8.0, 0.0, 116.6) ended (-8.0, 0.1, 118.5), lowest 0.08 OK
+[Probe]    shed at x 8: from (8.0, 0.0, 116.6) ended (8.0, 0.1, 118.5), lowest 0.08 OK
+[Probe]    shed at x 18: from (18.0, 0.0, 116.6) ended (18.0, 0.1, 118.5), lowest 0.08 OK
+[Probe]    shed at x -8, back to the quay stair: from (-8.0, 0.0, 118.2) ended (-6.5, 0.1, 118.2), lowest 0.08 OK
+[Probe] 8 off the old open edges:
+[Probe]    fishers' bank, from the top of its ramp all the way south: from (-23.5, 3.0, 97.0) ended (-23.2, 3.1, -4.5), lowest 3.08 OK
+[Probe]    west bank's south end: from (-30.0, 3.0, -2.0) ended (-30.0, 3.1, -4.5), lowest 3.08 OK
+[Probe]    east bank's south end: from (20.0, 3.0, -2.0) ended (20.0, 3.1, -4.5), lowest 3.08 OK
+[Probe]    quay's west end: from (-37.0, 4.0, 125.0) ended (-39.5, 4.1, 125.0), lowest 4.08 OK
+[Probe]    lane level's east gap: from (35.0, 4.0, 135.5) ended (37.5, 4.1, 135.5), lowest 4.08 OK
+[Probe]    roofs' east edge: from (37.0, 10.0, 162.0) ended (39.0, 10.1, 162.0), lowest 10.08 OK
+[Probe] net: put at (-60, -12, -30), now at (-10.0, 0.1, 40.0), last firm ground (-10.0, 0.1, 40.0), catches +1 OK
+[Probe] net: dropped from -4 under the avenue, now at (-10.0, 0.1, 40.0) OK
+[Probe] 5 the barque:
+[Probe]    gangplank up the west side: from (-6.3, 0.0, 83.3) ended (1.4, 3.6, 83.6), lowest 0.08 OK
+[Probe]    from the aft deck into the shrine: from (4.0, 3.5, 84.6) ended (1.9, 3.6, 86.3), lowest 3.58 OK
+[Probe]      stopped at the boat's own z 3.2 (the shrine's aft face is at 2.8)
+[Probe]    from the fore deck into the prow: from (6.4, 3.5, 92.6) ended (4.8, 0.1, 97.6), lowest 0.08 OK
+[Probe]    from the aft deck into the stern: from (1.9, 3.5, 81.3) ended (2.8, 3.6, 79.9), lowest 3.58 OK
+[Probe]    frame 1_bank_edge: 0 pieces thinned out
+[Probe]    frame 1_jam: 0 pieces thinned out
+[Probe]    frame 1_fishers_bank: 0 pieces thinned out
+[Probe]    frame 9_hut_behind: 1 pieces thinned out
+[Probe]    frame 9_hut_beside: 0 pieces thinned out
+[Probe]    frame 2_roof_room_behind: 1 pieces thinned out
+[Probe]    frame 9_lane_houses_behind: 3 pieces thinned out
+[Probe] tally: 21 OK, 0 WRONG
+[Probe] done
+counts: {"error":0,"warn":0,"log":35}

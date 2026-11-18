@@ -1030,6 +1030,7 @@ namespace Clover.Gameplay
                 Vector3 offset = target.position - centre;
                 offset.y = 0f;
                 if (offset.magnitude > attack.Radius + 0.35f) return;
+                if (!ReachesHeight(attack)) return;
                 // A leaper's blow comes from the leaper, who has landed at the circle's edge: a guard must face him, not the middle of the circle.
                 if (attack.Leap) Deal(attack, damage, forward, transform.position);
                 else Deal(attack, damage, offset.sqrMagnitude > 0.01f ? offset.normalized : forward, centre);
@@ -1047,7 +1048,7 @@ namespace Clover.Gameplay
                 offset.y = 0f;
                 float ahead = Vector3.Dot(offset, along);
                 float aside = (offset - along * ahead).magnitude;
-                if (ahead >= -TargetRadius && ahead <= attack.Reach + TargetRadius && aside <= attack.LineWidth * 0.5f + TargetRadius)
+                if (ahead >= -TargetRadius && ahead <= attack.Reach + TargetRadius && aside <= attack.LineWidth * 0.5f + TargetRadius && ReachesHeight(attack))
                     Deal(attack, damage, along, start);
                 return;
             }
@@ -1059,8 +1060,16 @@ namespace Clover.Gameplay
             float gap = Mathf.Max(0f, toTarget.magnitude - TargetRadius);
             if (gap > attack.Reach) return;
             if (gap > 0.6f && Vector3.Angle(forward, toTarget) > attack.ArcDegrees * 0.5f) return;
+            if (!ReachesHeight(attack)) return;
             Deal(attack, damage, forward, transform.position);
         }
+
+        /// <summary>
+        /// A blow struck by hand does not reach a player standing well above or below the striker (on a roof, a deck, the
+        /// floor under a ledge). Thrown and called blows, and a god's, reach as they always did.
+        /// </summary>
+        public bool ReachesHeight(EnemyAttack attack) =>
+            attack.Ranged || attack.Casts || attack.Beams || Kind.IsBoss || target == null || HeightReach.Within(transform.position.y, target.position.y);
 
         private void SetPassing(bool pass)
         {

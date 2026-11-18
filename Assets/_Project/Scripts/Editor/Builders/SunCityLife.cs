@@ -51,7 +51,7 @@ namespace Clover.EditorTools
                 (13f, 6f, 159f, "a"), (-32.5f, 6f, 178.5f, "b"),
                 // District 3: in pairs, the king's planting.
                 // (Kept to the walls: a palm in the middle of the way is a green blot over the player from this camera.)
-                (-21.5f, 10f, 322f, "c"), (21.5f, 10f, 321f, "c"), (-22.5f, 16f, 389f, "b"), (22.5f, 16f, 389f, "b"),
+                (-21.5f, 10f, 322f, "c"), (21.5f, 10f, 321f, "c"), (-21.2f, 16f, 389f, "b"), (21.9f, 16f, 389f, "b"),
             })
                 Palm(group, new Vector3(x, y, z), kind, (float)dice.NextDouble() * 360f, 0.85f + (float)dice.NextDouble() * 0.3f);
             // Reeds and papyrus grown up dry along the foot of the banks, where the water stood last.

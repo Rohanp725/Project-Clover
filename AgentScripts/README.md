@@ -432,3 +432,19 @@ player off from the shape.
   when the scene opens and hidden, so they are not counted there.
 - `profile_city.sh <label> [folder]` now takes the folder under `review/checks/` (default `world1`; the second half used
   `world2`). `world1_frames.sh - review/shots/current world2` names the walk's frames `world2_<district>_<spot>.png`.
+
+## The owner's Sun City bugs (2026-11-18): `CityScan`, `CityFixProbe`, `CityLook`
+
+- `CityScan` (edit mode, Sun City open): `unity command script run --file AgentScripts/CityScan.cs --entry CityScan.Run --args '["label"]'`
+  writes `review/checks/cityfix/scan_<label>.md`: dressing that reaches past the surface holding it up (roof tiles left
+  out: their spouts and eaves stand out by design), pieces lying on a box that thins out without thinning out with it,
+  anything in the body's space (0.3 to 1.8 m) over floor the player can reach, pieces standing more than 0.2 m inside a
+  wall, a building or the face of a rise, and, from a flood over every floor the player can walk to (stairs, ramps,
+  drops and ladders), every place where they can walk off into nothing, and every drop of more than 2 m.
+- `CityFixProbe`: `bash AgentScripts/runprobe.sh SunCity CityFixProbe 90` plays the fixes: a thirsting's blows by hand
+  at a player on the barque's deck over it (none may land) and beside it (they must), and the player's own chain both
+  ways; the boat-sheds' backs; the old open edges (the whole fishers' bank walked south from its ramp, the banks' ends,
+  the quay's west end, the lane level's east gap, the roofs' east edge); the safety net (`FallCatch`) with the player
+  put under the land; the barque's shrine, prow and stern walked into. Frames `review/shots/current/fix_<n>_<what>.png`.
+- `CityLook` (edit mode, any scene): one frame from a point toward a point, `--args '["name", fx, fy, fz, ax, ay, az, fov]'`,
+  to `review/shots/current/look_<name>.png`.

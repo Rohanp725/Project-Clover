@@ -1,0 +1,119 @@
+opened
+met: true
+result: probe started
+[Probe]    the voice on waking: 6 line(s), box closed True player free True
+[Probe] start: scene SunCity weapon Fists has element False enemies 47 of 47 fires 5 things to read 18 sunlight rectangles 78 open sky True sandboxed True
+[Probe]    15 x The Thirsting
+[Probe]    12 x The Wick
+[Probe]    4 x The Ashen
+[Probe]    6 x Gilded Levy
+[Probe]    3 x Gilded Spearman
+[Probe]    1 x Gilded Warden
+[Probe]    5 x Sun-Blind Priest
+[Probe]    1 x Champion of the Gate
+[Probe]    buried 5 water jars 9 mirrors 2 ladders 4 barred doors 3 shield walls 1
+[Probe]    vista_v1: in vista 0 or noticed by 0 OK
+[Probe]    vista_v2: in vista 1 or noticed by 0 OK
+[Probe]    vista_v3: in vista 2 or noticed by 0 OK
+[Probe]    vista_v4: in vista -1 or noticed by 3 OK
+[Probe]    vista_v5: in vista 4 or noticed by 0 OK
+[Probe] 1 the walk: 58 places pictured
+[Probe]    walk quay stair up: from (0.00, 0.00, 106.50) ended (0.0, 4.1, 119.7) wanted height 4.0 OK
+[Probe]    walk bank ramp up from the basin: from (-23.50, 0.00, 113.60) ended (-23.5, 3.1, 95.6) wanted height 3.0 OK
+[Probe]    walk gangplank onto the deck: from (-6.30, 0.00, 83.30) ended (1.4, 3.6, 83.6) wanted height 3.5 OK
+[Probe]    walk gully down to the well: from (-38.50, 3.00, 77.00) ended (-47.5, 1.1, 77.0) wanted height 1.0 OK
+[Probe]    walk lamp street stair: from (0.50, 4.00, 146.00) ended (0.5, 6.1, 153.2) wanted height 6.0 OK
+[Probe]    walk market stair: from (-8.00, 6.00, 197.60) ended (-8.0, 8.1, 205.4) wanted height 8.0 OK
+[Probe]    walk cart ramp: from (-32.00, 6.00, 190.00) ended (-32.0, 8.1, 205.6) wanted height 8.0 OK
+[Probe]    walk gallery stair: from (-18.00, 8.00, 256.40) ended (-18.0, 10.1, 263.7) wanted height 10.0 OK
+[Probe]    walk tomb stair down: from (-20.50, 8.00, 250.00) ended (-32.5, 4.1, 250.0) wanted height 4.0 OK
+[Probe]    walk tomb stair up: from (-31.50, 4.00, 250.00) ended (-19.5, 8.1, 250.0) wanted height 8.0 OK
+[Probe]    walk yard gate to the avenue: from (0.00, 10.00, 266.00) ended (0.0, 10.1, 276.1) wanted height 10.0 OK
+[Probe]    walk levy ramp: from (0.00, 10.00, 316.50) ended (0.0, 12.8, 343.7) wanted height 13.0 OK
+[Probe]    walk colonnade side stair: from (-21.00, 10.00, 333.80) ended (-21.0, 13.1, 342.2) wanted height 13.0 OK
+[Probe]    walk haul-ramp up to the masons' gate: from (-28.00, 10.00, 287.00) ended (-28.0, 13.1, 350.0) wanted height 13.0 OK
+[Probe]    walk spearman's stair: from (0.00, 13.00, 378.40) ended (0.0, 16.1, 388.0) wanted height 16.0 OK
+[Probe]    walk pylon into the hall: from (0.00, 16.00, 408.00) ended (0.0, 16.1, 422.4) wanted height 16.0 near z 422 OK
+[Probe]    walk aisle steps: from (-9.00, 16.00, 468.00) ended (-15.0, 17.3, 468.0) wanted height 17.2 OK
+[Probe]    walk bowl steps down: from (0.00, 16.00, 484.60) ended (0.0, 14.6, 491.2) wanted height 14.5 OK
+[Probe] 3 S1 ladder from below while it lies: down False climbs 0 height 0.1 says 'A ladder lies on the top, out of reach.' OK
+[Probe]    S1 kicked from the top: down True OK
+[Probe]    S1 climbed down: at (-3.3, 0.1, 13.0) OK
+[Probe]    S1 climbed up: at (-6.2, 3.1, 13.0) OK
+[Probe]    roof ladder up: at (15.1, 10.1, 163.0) OK
+[Probe]    scaffold ladder up: at (-8.4, 16.1, 356.9) OK
+[Probe] 3 S2 market door: from the near side open False says 'Barred from the other side.'; from the far side open True OK
+[Probe]    walked south through it: from (-28.6, 6.1, 176.8) to (-28.6, 4.1, 163.1) OK
+[Probe] 3 S3 masons' gate: from the near side open False says 'Barred from the other side.'; from the far side open True OK
+[Probe]    walked west through it: from (-22.4, 13.1, 350.0) to (-29.5, 13.1, 350.0) OK
+[Probe] 3 S4 vestibule door: from the near side open False says 'Barred from the other side.'; from the far side open True OK
+[Probe]    walked east through it: from (-25.6, 13.1, 381.0) to (-18.5, 13.1, 380.9) OK
+[Probe] 3 the cracked wall: a light blow broke it False, a heavy one broke it True OK
+[Probe]    M1 turned by the use button 6 time(s) in 6 presses
+[Probe] 4 mirror M1: turns 6 lighting Mirror Target beam ends at (-21.7, 17.4, 449.6) target lit True sun door shut False OK
+[Probe]    walk through the sun door into the chapel: from (-20.50, 17.20, 448.00) ended (-25.2, 17.3, 448.8) wanted height 17.2 OK
+[Probe]    in the chapel at x -25.2 OK
+[Probe] 5 D1: district 0 every 100 swells True OK
+[Probe] 5 D2: district 1 every 70 swells True OK
+[Probe] 5 D3: district 2 every 50 swells True OK
+[Probe] 5 hall: district 3 every 0 swells False OK
+[Probe] 5 swell in the open in the Pans: lit True burnt 2 times in 2 s OK
+[Probe] 5 swell under the boat on trestles: lit False burnt 0 times in 2 s OK
+[Probe] 5 swell in a boat-shed: lit False burnt 0 times in 2 s OK
+[Probe] 5 swell in the open on the avenue: lit True burnt 2 times in 2 s OK
+[Probe] 5 swell under the court's colonnade: lit False burnt 0 times in 2 s OK
+[Probe] 5 swell in the champion's bowl: lit True burnt 0 times in 2 s OK
+[Probe] 5 forced swell at z 31: forced 1 phase Warning OK
+[Probe]    read The well's lid @z77: box opened True closed again True lines read 2 of 2 player free True OK
+[Probe]    read The barque's prow @z93: box opened True closed again True lines read 1 of 1 player free True OK
+[Probe]    read A mooring stone @z119: box opened True closed again True lines read 2 of 2 player free True OK
+[Probe]    read The hearth's name @z145: box opened True closed again True lines read 3 of 3 player free True OK
+[Probe]    read A hearth niche @z158: box opened True closed again True lines read 2 of 2 player free True OK
+[Probe]    read A tablet in the gate @z219: box opened True closed again True lines read 2 of 2 player free True OK
+[Probe]    read The lintel of the yard @z227: box opened True closed again True lines read 1 of 1 player free True OK
+[Probe]    read A painted wall @z254: box opened True closed again True lines read 2 of 2 player free True OK
+[Probe]    read A painted wall @z254: box opened True closed again True lines read 3 of 3 player free True OK
+[Probe]    read A painted wall @z254: box opened True closed again True lines read 1 of 1 player free True OK
+[Probe]    read A painted wall @z254: box opened True closed again True lines read 1 of 1 player free True OK
+[Probe]    read A painted wall @z254: box opened True closed again True lines read 1 of 1 player free True OK
+[Probe]    read The base of the first statue @z290: box opened True closed again True lines read 2 of 2 player free True OK
+[Probe]    read Mason's marks on the scaffold @z367: box opened True closed again True lines read 1 of 1 player free True OK
+[Probe]    read Over the door of the hall @z409: box opened True closed again True lines read 2 of 2 player free True OK
+[Probe]    read The chapel's lintel @z452: box opened True closed again True lines read 2 of 2 player free True OK
+[Probe]    read The gate of noon @z521: box opened True closed again True lines read 1 of 1 player free True OK
+[Probe]    read the last painting: box opened True closed again True lines read 2 of 2 player free True OK
+[Probe] 6 last painting: woken True dormant in the tombs before 2 aware after 2 says 'Back on firm ground'
+[Probe] 6 Grave Dish Gift: taken True flasks 3 -> 3 embers 0 -> 3 OK
+[Probe] 6 Waterskin Gift: taken True flasks 3 -> 4 embers 3 -> 3 OK
+[Probe] 6 Hearth Gift: taken True flasks 4 -> 4 embers 3 -> 8 OK
+[Probe] 6 spear: taken True weapon now Great Spear
+[Probe]    the voice at a fire: 3 line(s), box closed True player free True
+[Probe] 7 fire 1 at (-2.8, 0.0, 9.0): lit True return point (-2.8, 0.1, 7.4) OK
+[Probe]    the voice at a fire: 2 line(s), box closed True player free True
+[Probe] 7 fire 2 at (-22.0, 4.0, 127.0): lit True return point (-22.0, 4.1, 125.4) OK
+[Probe]    the voice at a fire: 2 line(s), box closed True player free True
+[Probe] 7 fire 3 at (-4.0, 8.0, 220.0): lit True return point (-4.0, 8.1, 218.4) OK
+[Probe]    the voice at a fire: 2 line(s), box closed True player free True
+[Probe] 7 fire 4 at (-6.0, 10.0, 280.0): lit True return point (-6.0, 10.1, 278.4) OK
+[Probe]    the voice at a fire: 2 line(s), box closed True player free True
+[Probe] 7 fire 5 at (8.0, 16.0, 482.0): lit True return point (8.0, 16.1, 480.4) OK
+[Probe]    the voice after the fall: 2 line(s), box closed True player free True
+[Probe]    fall in the riverbed, last fire the quay: deaths +1 fell at (0.0, 0.1, 60.0) woke at (-22.0, 4.1, 125.4), the fire wanted is at (-22.0, 4.1, 125.4) OK
+[Probe] 7 after the fall: alive 47 of 47 embers carried 19 -> 0, waiting with the dead 19 on 2 carrier(s) OK
+[Probe]    the carriers killed again: embers now 19, reclaimed 19 OK
+[Probe]    fall on the masons' terrace, last fire the avenue: deaths +1 fell at (0.0, 13.1, 360.0) woke at (-6.0, 10.1, 278.4), the fire wanted is at (-6.0, 10.0, 278.4) OK
+[Probe] 8 gate while he stands: tries 1 opened 0 says 'Sealed. The Champion of the Gate holds the way.' OK
+[Probe] 8 champion: health 240 aware from the porch False OK
+[Probe]    champion_thrust_1 at 3.2 m: forced True blows landed on a still player +2 OK
+[Probe]    champion_sweep at 3.2 m: forced True blows landed on a still player +1 OK
+[Probe]    champion_throw at 8.0 m: forced True blows landed on a still player +1 OK
+[Probe]    champion_plant at 2.2 m: forced True blows landed on a still player +2 OK
+[Probe] 8 champion beaten: dead True OK
+[Probe]    walk bowl's north stair to the gate: from (0.00, 14.50, 514.40) ended (0.0, 16.1, 521.3) wanted height 16.0 OK
+[Probe]    fall in the bowl, last fire the porch: deaths +1 fell at (0.0, 14.6, 500.0) woke at (8.0, 16.1, 480.4), the fire wanted is at (8.0, 16.0, 480.4) OK
+[Probe] 8 after a fall: champion dead True alive 46 of 47 OK
+[Probe] tally before the gate: 90 OK, 0 WRONG
+[Probe] 8 gate after: opened 1 now in SunCourt OK
+[Probe] tally: 91 OK, 0 WRONG
+[Probe] done
+counts: {"error":0,"warn":0,"log":115}

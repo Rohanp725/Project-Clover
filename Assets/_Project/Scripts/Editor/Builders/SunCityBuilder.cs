@@ -111,6 +111,10 @@ namespace Clover.EditorTools
             var strikeFill = WorldBars.Marker("Storm Mark Fill", director.transform, 0f, kit.Marker);
             director.Configure(built.Player.GetComponent<PlayerController>(), enemies.ToArray(), start, strikeOutline, strikeFill);
             kit.Turns.Configure(enemies.ToArray());
+            // Nobody falls for ever: under the lowest floor (the riverbed, at 0) the player is put back on firm ground.
+            var catcher = director.gameObject.AddComponent<FallCatch>();
+            catcher.Configure(built.Player.GetComponent<PlayerController>(), director);
+            catcher.Floor = -6f;
 
             // The second pass: each kind's trick, then the ones placed one by one, the props, the gold floor and the noon.
             FireMechanicsKit.Equip(enemies, kit);
@@ -158,6 +162,11 @@ namespace Clover.EditorTools
             SunCityProps.Dress(world);
             SunCityBeyond.City(world);
             SunCityLife.Build(world, playerTransform, zones);
+            // What lies on a surface is kept wholly on it and out of the walls, and what lies on a box that thins out
+            // thins out with it (a house's roof and all on it), before it is written down for the merge.
+            var (moved, shrunk, removed) = SceneryFit.Settle(world);
+            int joined = SceneryFit.JoinFades(world);
+            Debug.Log($"[Clover.Build] Settled the sun city's dressing: {moved} moved in, {shrunk} made smaller, {removed} taken away; {joined} pieces now thin out with the box they lie on.");
             SceneryMerge.Prepare(world, "city", 40f);
 
             PlayerBuilder.AddTitle("The Sun-King's City", "where a herdsman became the sun");
@@ -272,9 +281,11 @@ namespace Clover.EditorTools
         {
             var group = BuildKit.Group("Dry River", world);
             // Stood on: one slab at the bed's level under the whole district. Seen: the kit's cracked plates where the bed is.
-            var bed = Floor("Riverbed", group, -80f, 50f, -12f, 118f, Bed, mud, 2f);
+            // On to 120 under the quay's face: the boat-sheds are cut 3 m into it, and their backs had no floor (the sand of
+            // the plain showed through there, and a player walking in fell for ever).
+            var bed = Floor("Riverbed", group, -80f, 50f, -12f, 120f, Bed, mud, 2f);
             bed.GetComponent<Renderer>().enabled = false;
-            Deco(PrimitiveType.Cube, "Riverbed Under", group, new Vector3(0f, -0.65f, 55f), new Vector3(60f, 1f, 124f), mud).shadowCastingMode = ShadowCastingMode.Off;
+            Deco(PrimitiveType.Cube, "Riverbed Under", group, new Vector3(0f, -0.65f, 56.5f), new Vector3(60f, 1f, 127f), mud).shadowCastingMode = ShadowCastingMode.Off;
             var plates = BuildKit.Group("Mud", group);
             for (int z = -2; z < 29; z++)
             {
@@ -330,6 +341,10 @@ namespace Clover.EditorTools
             Slumps(group, BedEast, -1f);
             Wall("River Mouth Wall", group, -5f, 5f, -7f, -6f, -0.5f, 1.2f, brickDark, "s");
             Wall("Outer Wall East", group, 38f, 40f, -6f, 134f, Bank, 7f, brick, "w");
+            // The banks' south ends, toward the camera, dropped 3 m onto the bed's slab, which ends in nothing: a low wall
+            // along each, as the river mouth has, and solid to a body's height above it.
+            Edge("Bank End West", group, -40f, -5.3f, -5.6f, -5f, Bank, 0.8f, brickDark);
+            Edge("Bank End East", group, 5.3f, 38f, -5.6f, -5f, Bank, 0.8f, brickDark);
             Rest(group, director, new Vector3(-2.8f, Bed, 9f));
             Canopy(group, "Fishers' Awning", -5f, -0.5f, 6.5f, 11.5f, Bed, 2.6f, reed);
             Tilt(SunCityKit.Place("reed_boat", group, new Vector3(3.2f, 0f, 14f), 200f), 0f, 14f);
@@ -345,9 +360,10 @@ namespace Clover.EditorTools
             Canopy(group, "Drying Rack", -8f, -4f, 23.6f, 25.6f, Bed, 2.2f, reed);
             Canopy(group, "Drying Rack", -6f, -2f, 51.6f, 53.6f, Bed, 2.2f, reed);
             // The old boat on trestles: the shade the first swell sends the player to.
-            Box("Trestle", group, -15.5f, -15f, 38.5f, 40.5f, Bed, 1.6f, wood);
-            Box("Trestle", group, -12f, -11.5f, 38.5f, 40.5f, Bed, 1.6f, wood);
-            var boat = SunCityKit.Place("reed_boat", group, new Vector3(-13.5f, 1.6f, 39.5f), 90f, 1.1f, false);
+            // High enough that the hull clears a head walking under it (at 1.6 m it went through the player's).
+            Box("Trestle", group, -15.5f, -15f, 38.5f, 40.5f, Bed, 2.15f, wood);
+            Box("Trestle", group, -12f, -11.5f, 38.5f, 40.5f, Bed, 2.15f, wood);
+            var boat = SunCityKit.Place("reed_boat", group, new Vector3(-13.5f, 2.15f, 39.5f), 90f, 1.1f, false);
             Tilt(boat, 0f, 4f);
             AddShade(-16f, -11f, 38f, 41.6f);
 
@@ -357,8 +373,9 @@ namespace Clover.EditorTools
             foreach (var (x, yaw, roll) in new[] { (-14f, 70f, 28f), (-10.5f, 115f, -22f), (2f, 160f, 33f) })
                 Tilt(SunCityKit.Place("reed_boat", group, new Vector3(x, 1.2f, 68f), yaw, 1f, false), 0f, roll);
             Deco(PrimitiveType.Cylinder, "Broken Mast", group, new Vector3(-1f, 0.3f, 68f), new Vector3(0.35f, 2.3f, 0.35f), wood, new Vector3(90f, 26f, 0f));
-            Rubble(group, -16f, -7f, 65.5f, 70.5f, 1.2f, 10);
-            Rubble(group, -1.5f, 5f, 65.5f, 70.5f, 1.2f, 6);
+            // On the heaps' tops (they were strewn a metre past the heaps' edges, and hung there over the bed).
+            Rubble(group, -16.2f, -6.8f, 66.4f, 69.6f, 1.4f, 10);
+            Rubble(group, -1.3f, 5.3f, 66.4f, 69.6f, 1.4f, 6);
             var jar = Deco(PrimitiveType.Cylinder, "Great Jar", group, new Vector3(-8.6f, 1f, 73.4f), new Vector3(2f, 1.5f, 2f), clay, new Vector3(0f, 0f, 84f));
             jar.gameObject.AddComponent<BoxCollider>();
             Stain(group, new Vector3(-6.6f, 0f, 73.4f), 2f);
@@ -369,22 +386,38 @@ namespace Clover.EditorTools
             // 1D, the Barque's Bend: the boat of the morning stranded down the middle, its deck a high branch. Scenery only: the
             // land's way out is the sunset in the sun-court, not this boat (WORLD.md, rides out of each land).
             var barque = SunCityKit.Place("barque", group, new Vector3(4f, 0f, 88f), 200f, 0.73f, false);
-            Solid(barque, new Vector3(0.5f, 2.2f, -0.3f), new Vector3(6.4f, 4.4f, 29f), false);
-            var deck = BuildKit.Block("Barque Deck", group, new Vector3(4f, 3.35f, 88f), new Vector3(4.4f, 0.3f, 20f), wood, 200f);
+            // Its colliders follow what is drawn, in the boat's own frame (model units, along its length in z): the hull up
+            // to the deck, and solid where things stand on the deck: the prow's post and papyrus head, the stern's, the
+            // shrine amidships (the deck house) and the table aft of it. The deck (3.5 m) is walked round them.
+            Solid(barque, new Vector3(0.5f, 2.2f, 0.9f), new Vector3(6.4f, 4.4f, 21f), false);
+            // The hull narrows to its two ends: the box there is only as wide as the drawn hull (one box the whole length
+            // made a floor of air beside the prow).
+            Solid(barque, new Vector3(-0.6f, 2.2f, -12.2f), new Vector3(3.6f, 4.4f, 5.2f), false);
+            Solid(barque, new Vector3(-0.6f, 2.2f, 12.8f), new Vector3(4.0f, 4.4f, 2.8f), false);
+            Solid(barque, new Vector3(-0.95f, 8.65f, -13.4f), new Vector3(5.3f, 8.7f, 7.6f), false);
+            Solid(barque, new Vector3(-0.75f, 8.25f, 13.9f), new Vector3(4.7f, 7.9f, 4.6f), false);
+            Solid(barque, new Vector3(-0.8f, 6.15f, -1.3f), new Vector3(4.6f, 2.7f, 8.2f), false);
+            Solid(barque, new Vector3(-0.8f, 5.37f, 8.1f), new Vector3(2.8f, 1.15f, 3.2f), false);
+            // The deck's planking between the two posts (it ran on through both, and past the hull where it narrows).
+            var deckCentre = barque.transform.TransformPoint(new Vector3(0f, 3.35f / 0.73f, 0.9f));
+            var deck = BuildKit.Block("Barque Deck", group, deckCentre, new Vector3(4.4f, 0.3f, 15.3f), wood, 200f);
             Object.DestroyImmediate(deck.GetComponent<Fadeable>());
-            var rail = BuildKit.Block("Deck Rail", group, new Vector3(4f, 0f, 88f) + Quaternion.Euler(0f, 200f, 0f) * new Vector3(-2.1f, 3.8f, 0f), new Vector3(0.15f, 0.6f, 18f), wood, 200f);
+            var rail = BuildKit.Block("Deck Rail", group, deckCentre + Quaternion.Euler(0f, 200f, 0f) * new Vector3(-2.1f, 0.45f, 0f), new Vector3(0.15f, 0.6f, 15.3f), wood, 200f);
             Object.DestroyImmediate(rail.GetComponent<Fadeable>());
-            SunCityGround.Ramp("Gangplank", group, new Vector3(0.2f, Bed, 72.4f), new Vector3(0.9f, 3.5f, 79f), 3f, reed, wood);
-            Canopy(group, "Deck Cabin", 2.6f, 5.8f, 86f, 89.5f, 3.5f, 2.2f, cloth);
-            Carving(group, new Vector3(6.6f, 3.5f, 96.4f), 200f, "The barque's prow", "\"The boat of the morning. It stopped when the river did.\"");
-            Spawn(EnemyKind.ThirstName, 3.4f, 3.5f, 90f, 250f);
-            Bury(Spawn(EnemyKind.ThirstName, -6f, Bed, 86f, 160f));
+            // Up the boat's west side to its aft deck, beside the table: it came up over the stern, into the stern's post.
+            SunCityGround.Ramp("Gangplank", group, new Vector3(-5.3f, Bed, 83.3f), new Vector3(-0.12f, 3.5f, 83.3f), 2.4f, reed, wood);
+            // The shrine is the deck's shade (an awning was stood over it once, twice over).
+            float cabinLean = LookBuilder.NoonShadowLength(2.2f);
+            AddShade(2.6f, 5.8f, 86f + cabinLean, 89.5f + cabinLean);
+            Carving(group, new Vector3(6.7f, 3.5f, 93.2f), 200f, "The barque's prow", "\"The boat of the morning. It stopped when the river did.\"");
+            Spawn(EnemyKind.ThirstName, 2.2f, 3.5f, 84f, 250f);
+            Bury(Spawn(EnemyKind.ThirstName, -8.5f, Bed, 89.5f, 160f));
             jars.Add((group, new Vector3(-8f, Bed, 84f)));
             Spawn(EnemyKind.ThirstName, 11f, Bed, 97f, 200f);
             // A sail lying over two spars in the west channel.
-            Box("Spar", group, -9.2f, -8.9f, 92.5f, 94.5f, Bed, 1.8f, wood);
-            Box("Spar", group, -5.3f, -5f, 92.5f, 94.5f, Bed, 1.8f, wood);
-            Canopy(group, "Sail", -9.5f, -4.7f, 92f, 95f, Bed, 1.9f, cloth, false);
+            Box("Spar", group, -9.2f, -8.9f, 92.5f, 94.5f, Bed, 2.2f, wood);
+            Box("Spar", group, -5.3f, -5f, 92.5f, 94.5f, Bed, 2.2f, wood);
+            Canopy(group, "Sail", -9.5f, -4.7f, 92f, 95f, Bed, 2.3f, cloth, false);
             Tilt(SunCityKit.Place("reed_boat", group, new Vector3(-12f, 0f, 58f), 30f), 0f, -8f);
 
             // 1E, the Harbour Basin: squared, paved near its face, a dry cistern, jars, four boat-sheds in the quay's face.
@@ -413,6 +446,9 @@ namespace Clover.EditorTools
             quay.Add(new Vector2(40f, 134f));
             quay.Add(new Vector2(-40f, 134f));
             SunCityGround.Plateau("Quay", group, quay.ToArray(), Quay, -1f, stone, ashlar, ashlarBand, 0f, 0f, 1f);
+            // The quay's west end stood open over nothing: the bank's outer wall carries on along it, solid to the ground.
+            Aside(4401, () => Wall("Quay Wall West", group, -42f, -40f, 116f, 134f, Quay, 8f, brick, "e"));
+            Bound("Quay Wall West Foot", group, -42f, -39.6f, 116f, 134f, -1f, Quay - 0.02f);
             Paving(group, -38f, 38f, 116f, 134f, Quay, 2.5f, paveA, paveB, paveC, 0.22f, false, new Vector4(-2f, 3f, 116f, 134f));
             Cornice(group, -26f, -20f, 116f, Quay, Bed);
             Cornice(group, -16f, -10f, 116f, Quay, Bed);
@@ -479,6 +515,10 @@ namespace Clover.EditorTools
             var group = BuildKit.Group("Fishers' Bank", world);
             Wall("Bank Outer Wall South", group, -42f, -40f, -6f, 74f, Bank, 6f, brick, "e");
             Wall("Bank Outer Wall North", group, -42f, -40f, 80f, 116f, Bank, 6f, brick, "e");
+            // The wall stands on the bank's broken outer edge, its foot at the bank's top and open under: the bed's slab ran
+            // out under it to nothing. Solid from the ground up to just under the bank's top.
+            Bound("Bank Outer Wall South Foot", group, -42f, -39.4f, -6f, 74f, -1f, Bank - 0.02f);
+            Bound("Bank Outer Wall North Foot", group, -42f, -39.4f, 80f, 116f, -1f, Bank - 0.02f);
             foreach (float z in new[] { 27f, 39f, 51f })
             {
                 House(group, "Fishers' Hut", -36.5f, -31f, z - 2.6f, z + 2.6f, Bank, Bank + 3.4f, "swe", true);
@@ -534,6 +574,8 @@ namespace Clover.EditorTools
             // The ground the city climbs: the lane level at 4 off the quay, the square and the alley at 6, the market's
             // terrace, the gate and the yard at 8, with the yard's gallery at 10. Each rise faces south and reads as a band.
             SunCityGround.Plateau("Lower Town", group, SunCityGround.Rect(-40f, 40f, 134f, 150f), Quay, -1f, earth, brickDark, null, 0f);
+            // The outer wall's last three metres, where the lane level met the east edge between it and the first houses.
+            Aside(4402, () => Wall("Outer Wall East North", group, 38f, 40f, 134f, 137f, Quay, 8f, brick, "w"));
             SunCityGround.Plateau("Middle Town", group, new[]
             {
                 new Vector2(-40f, 148f), new Vector2(-40f, 204f), new Vector2(40f, 204f), new Vector2(40f, 148f), new Vector2(3f, 148f), new Vector2(3f, 152f),
@@ -594,7 +636,9 @@ namespace Clover.EditorTools
 
             // The Lamp Square at 6, a dry fountain; leg two north from it under the bridge-house.
             Mass(group, -27f, -2f, 148f, 160f, Square, 4f);
-            Mass(group, 14f, 40f, 148f, 204f, Square, 4f);
+            // Walked over (the roofs at 10), so its houses stand level: at their own heights the way over was steps of up
+            // to two metres, with the roof laid at 10 hanging over the low ones and buried in the tall.
+            Mass(group, 14f, 40f, 148f, 204f, Square, 4f, true);
             Wall("Square South Houses", group, 3f, 14f, 148f, 152f, Square, 7.4f, brick, "s");
             SunCityKit.Place("house_doorway", group, new Vector3(-2.2f, Square, 156f), 90f, 1f, false);
             Spawn(EnemyKind.WickName, -1.4f, Square, 156f, 90f).MakeDormant(3.5f);
@@ -634,7 +678,10 @@ namespace Clover.EditorTools
             Wall("Alley Houses D", group, 11f, 14f, 180f, 196f, Square, 10f, brick, "s", true, false, false);
             Wall("Arm Houses", group, 4f, 14f, 196f, 204f, Terrace, 10f, brick, "s");
             RoofTop(group, -10f, 14f, 180f, 196f, 10f);
-            RoofTop(group, 14f, 40f, 148f, 204f, 10f);
+            // The houses under it have roofs of their own now that they stand level: this one keeps only its parapet and clutter.
+            RoofTop(group, 14f, 40f, 148f, 204f, 10f, false);
+            // Its east edge is the city's: a parapet along it (walking off it, the player fell out of the land).
+            Edge("Roof Parapet East", group, 39.5f, 40f, 148f, 204f, 10f, 0.6f, brickDark);
             foreach (var (w, e) in new[] { (-4f, -2f), (3f, 5f), (9f, 11f) }) AddShade(w, e, 180f, 181.5f);
             ShadeRoof(group, "Alley End Roof", -10f, -6f, 176f, 180f, Square, 4f);
             for (int i = 0; i < 11; i++)
@@ -666,7 +713,7 @@ namespace Clover.EditorTools
             var roofOil = Deco(PrimitiveType.Cylinder, "Oil Jar", group, new Vector3(21.6f, 10.42f, 187.6f), new Vector3(0.6f, 0.42f, 0.6f), clay);
             roofOil.gameObject.AddComponent<CapsuleCollider>();
             foreach (float z in new[] { 184f, 188.5f })
-                Canopy(group, "Drying Linen", 18.5f, 23f, z, z + 0.3f, 10f, 1.6f, wrap, false);
+                Canopy(group, "Drying Linen", 18.5f, 23f, z, z + 0.3f, 10f, 2.05f, wrap, false);
 
             // 2C, the Market of the Cold Oven: an open lower floor at 6, an L-shaped terrace at 8 up a broad stair or a cart ramp.
             Mass(group, -40f, -34f, 160f, 204f, Square, 4f);
@@ -684,11 +731,16 @@ namespace Clover.EditorTools
             oven.enabled = false;
             SunCityKit.City("prop_oven", group, new Vector3(-16f, Square, 196.2f), 180f, new Vector3(2.4f, 3.4f, 2.6f));
             Deco(PrimitiveType.Cube, "Oven Mouth", group, new Vector3(-16f, Square + 0.5f, 194.05f), new Vector3(1.1f, 0.8f, 0.3f), shade).enabled = false;
-            Deco(PrimitiveType.Cube, "Oven Shelf", group, new Vector3(-16f, Square + 0.9f, 193.8f), new Vector3(1.8f, 0.08f, 0.5f), stoneDark);
+            // The shelf stood in the air in front of the oven's mouth, its bread at a walker's waist: it is bumped into.
+            var shelf = Deco(PrimitiveType.Cube, "Oven Shelf", group, new Vector3(-16f, Square + 0.9f, 193.8f), new Vector3(1.8f, 0.08f, 0.5f), stoneDark);
+            var shelfBox = shelf.gameObject.AddComponent<BoxCollider>();
+            shelfBox.center = new Vector3(0f, -0.9f / 0.08f * 0.5f + 0.5f, 0f);
+            shelfBox.size = new Vector3(1f, 0.98f / 0.08f, 1f);
             for (int i = 0; i < 3; i++) Deco(PrimitiveType.Sphere, "Grey Bread", group, new Vector3(-16.5f + i * 0.5f, Square + 1.02f, 193.8f), new Vector3(0.4f, 0.16f, 0.34f), silt);
             AddShade(-18f, -14f, 198f, 200f);
             Canopy(group, "Market Awning", -20f, -16f, 189.6f, 192.6f, Square, 2.6f, cloth);
-            Canopy(group, "Market Awning", -30f, -26f, 197.6f, 200.6f, Square, 2.6f, reed);
+            // Clear of the cart ramp beside it, whose rising floor brought the awning's rails to head height.
+            Canopy(group, "Market Awning", -29.5f, -25.5f, 197.6f, 200.6f, Square, 2.6f, reed);
             Canopy(group, "Market Awning", -14f, -10f, 181.6f, 184.6f, Square, 2.6f, cloth);
             foreach (var at in new[] { new Vector3(-23f, Square, 190f), new Vector3(-12f, Square, 188f), new Vector3(-26f, Square, 180f) })
                 Box("Stall", group, at.x - 1.2f, at.x + 1.2f, at.z - 0.5f, at.z + 0.5f, Square, Square + 0.9f, wood);
@@ -794,7 +846,11 @@ namespace Clover.EditorTools
             {
                 Box("Drying Frame Post", group, x - 2.4f, x - 2.2f, z - 0.1f, z + 0.1f, Terrace, Terrace + 2.6f, wood);
                 Box("Drying Frame Post", group, x + 2.2f, x + 2.4f, z - 0.1f, z + 0.1f, Terrace, Terrace + 2.6f, wood);
-                Deco(PrimitiveType.Cube, "Drying Frame Bar", group, new Vector3(x, Terrace + 2.55f, z), new Vector3(4.9f, 0.1f, 0.1f), wood);
+                var bar = Deco(PrimitiveType.Cube, "Drying Frame Bar", group, new Vector3(x, Terrace + 2.55f, z), new Vector3(4.9f, 0.1f, 0.1f), wood);
+                // The strips hang to a metre off the floor: the frame is walked round, not through the linen.
+                var frameBox = bar.gameObject.AddComponent<BoxCollider>();
+                frameBox.center = new Vector3(0f, -2.55f / 0.1f * 0.5f + 0.5f, 0f);
+                frameBox.size = new Vector3(1f, 2.6f / 0.1f, 3f);
                 for (int k = 0; k < 5; k++)
                     Deco(PrimitiveType.Cube, "Linen Strip", group, new Vector3(x - 1.8f + k * 0.9f, Terrace + 1.75f + (k % 2) * 0.15f, z), new Vector3(0.5f, 1.5f - (k % 2) * 0.3f, 0.03f), wrap);
             }
@@ -819,7 +875,9 @@ namespace Clover.EditorTools
                 }
                 else
                 {
-                    Deco(PrimitiveType.Cube, "Cornice", parent, new Vector3(x + length * 0.5f, top - 0.14f, face - 0.16f), new Vector3(length - 0.04f, 0.28f, 0.36f), stoneNew);
+                    var cornice = Deco(PrimitiveType.Cube, "Cornice", parent, new Vector3(x + length * 0.5f, top - 0.14f, face - 0.16f), new Vector3(length - 0.04f, 0.28f, 0.36f), stoneNew);
+                    // Over a low face it stands at head height over the floor below: it is bumped into, not walked through.
+                    if (top - foot < 3f) cornice.gameObject.AddComponent<BoxCollider>();
                     Deco(PrimitiveType.Cube, "Architrave", parent, new Vector3(x + length * 0.5f, top - 0.5f, face - 0.06f), new Vector3(length - 0.04f, 0.44f, 0.14f), ashlarBand);
                 }
                 x += length;
@@ -847,10 +905,10 @@ namespace Clover.EditorTools
 
         // A walkable flat roof: the kit's plaster tiles, a parapet on the north (the fronts below carry the others), and
         // what people kept there, against its edges so the way over stays clear.
-        private static void RoofTop(Transform parent, float west, float east, float south, float north, float top)
+        private static void RoofTop(Transform parent, float west, float east, float south, float north, float top, bool tiles = true)
         {
             Deco(PrimitiveType.Cube, "Roof Parapet North", parent, new Vector3((west + east) * 0.5f, top + 0.3f, north - 0.15f), new Vector3(east - west, 0.6f, 0.3f), brickDark);
-            Roof(parent, west, east, south, north, top, 0, true, true, true);
+            Roof(parent, west, east, south, north, top, 0, true, true, true, tiles);
             int count = Mathf.Max(2, Mathf.RoundToInt((east - west) * (north - south) / 70f));
             for (int i = 0; i < count; i++)
             {
@@ -1078,7 +1136,7 @@ namespace Clover.EditorTools
                 Object.DestroyImmediate(deckFloor.GetComponent<Fadeable>());
                 Deco(PrimitiveType.Cube, "Scaffold Rail", group, new Vector3(-7.05f, up + 0.55f, 364f), new Vector3(0.1f, 0.1f, 16f), wood);
             }
-            Canopy(group, "Reed Mats", -10f, -7f, 356f, 372f, 19f, 1.6f, reed, false);
+            Canopy(group, "Reed Mats", -10f, -7f, 356f, 372f, 19f, 2.1f, reed, false);
             AddShade(-12f, -6f, 356f, 372.6f);
             Ladder(group, "Scaffold Ladder Low", new Vector3(-6.3f, Masons, 358f), new Vector3(-8.4f, 16f, 358f), "");
             Ladder(group, "Scaffold Ladder High", new Vector3(-7.6f, 16f, 370f), new Vector3(-8.6f, 19f, 370.6f), "");
@@ -1360,7 +1418,8 @@ namespace Clover.EditorTools
         {
             var group = BuildKit.Group("City Fires", world);
             // District 1.
-            SunCityKit.Smoulder(group, new Vector3(-7.2f, Bed, 8.2f), 0.45f);
+            // The fishers' cook fire, out in the bed by their awning (it was set 2 m inside the bank, its flames buried).
+            SunCityKit.Smoulder(group, new Vector3(-1.0f, Bed, 5.8f), 0.45f);
             SunCityKit.Smoulder(group, new Vector3(-29.5f, Bank, 30.5f), 0.5f);
             SunCityKit.Smoulder(group, new Vector3(-29.2f, Bank, 54.5f), 0.45f);
             SunCityKit.Smoulder(group, new Vector3(-18.5f, Bank, 15.5f), 0.7f, false, 1.6f);
@@ -1381,7 +1440,8 @@ namespace Clover.EditorTools
             SunCityKit.Brazier(group, new Vector3(-11.5f, Square, 200.5f));
             SunCityKit.Smoulder(group, new Vector3(-21.5f, Square, 187.6f), 0.4f);
             SunCityKit.Brazier(group, new Vector3(-8.6f, Terrace, 212.9f));
-            SunCityKit.Brazier(group, new Vector3(8.6f, Terrace, 212.9f));
+            // Inside the colonnade, in front of the first pillar: at x 8.6 it stood inside the houses east of the terrace.
+            SunCityKit.Brazier(group, new Vector3(3.6f, Terrace, 212.9f));
             SunCityKit.Brazier(group, new Vector3(-20f, Terrace, 228.4f));
             SunCityKit.Brazier(group, new Vector3(20f, Terrace, 228.4f));
             // District 3: the king's order.
@@ -1394,10 +1454,12 @@ namespace Clover.EditorTools
             SunCityKit.Brazier(group, new Vector3(-10f, Avenue, 339.2f));
             SunCityKit.Brazier(group, new Vector3(10f, Avenue, 339.2f));
             SunCityKit.Smoulder(group, new Vector3(13.2f, Masons, 364.2f), 0.5f);
-            SunCityKit.Brazier(group, new Vector3(-9f, Upper, 389.5f));
-            SunCityKit.Brazier(group, new Vector3(9f, Upper, 389.5f));
-            SunCityKit.Brazier(group, new Vector3(-4.6f, Upper, 410.2f));
-            SunCityKit.Brazier(group, new Vector3(4.6f, Upper, 410.2f));
+            // Beside the great plinths, not sunk in their feet.
+            SunCityKit.Brazier(group, new Vector3(-11.2f, Upper, 389.5f));
+            SunCityKit.Brazier(group, new Vector3(11.2f, Upper, 389.5f));
+            // Clear of the pylon's wings (they stood a third of a metre inside them).
+            SunCityKit.Brazier(group, new Vector3(-3.8f, Upper, 409.7f));
+            SunCityKit.Brazier(group, new Vector3(3.8f, Upper, 409.7f));
             // Lamps on the hall's nave columns, on the side toward the nave: pools of firelight in the shade.
             foreach (float side in new[] { -1f, 1f })
                 foreach (float z in new[] { 423f, 433f, 443f, 453f, 463f, 473f })
@@ -1542,6 +1604,38 @@ namespace Clover.EditorTools
             return slab;
         }
 
+        // An edge nobody may walk off: a low wall drawn to the height given, solid to well over a body's height, so nothing
+        // (a vault, a shove) carries the player over it. It never thins out: it is under the line of sight.
+        private static void Edge(string name, Transform parent, float west, float east, float south, float north, float floor, float shown, Material material)
+        {
+            var wall = Box(name, parent, west, east, south, north, floor - 0.1f, floor + shown, material);
+            Object.DestroyImmediate(wall.GetComponent<Fadeable>());
+            var box = wall.GetComponent<BoxCollider>();
+            float drawn = shown + 0.1f, solid = 2.7f;
+            box.size = new Vector3(1f, solid / drawn, 1f);
+            box.center = new Vector3(0f, (solid / drawn - 1f) * 0.5f, 0f);
+        }
+
+        // Solid and not drawn: what fills the gap under a wall that stands on the broken edge of a rise.
+        private static void Bound(string name, Transform parent, float west, float east, float south, float north, float bottom, float top)
+        {
+            var bound = new GameObject(name);
+            bound.transform.SetParent(parent, false);
+            bound.transform.position = new Vector3((west + east) * 0.5f, (bottom + top) * 0.5f, (south + north) * 0.5f);
+            bound.AddComponent<BoxCollider>().size = new Vector3(east - west, top - bottom, north - south);
+            bound.isStatic = true;
+        }
+
+        // Builds something added after the land was laid out with a dice of its own, so the shared dice is drawn exactly as
+        // before and nothing placed after it moves.
+        private static void Aside(int seed, System.Action make)
+        {
+            var kept = dice;
+            dice = new System.Random(seed);
+            make();
+            dice = kept;
+        }
+
         // A solid mass between two x, two z and two heights. It thins out when it stands between the camera and the player.
         private static GameObject Box(string name, Transform parent, float west, float east, float south, float north, float bottom, float top, Material material) =>
             BuildKit.Block(name, parent, new Vector3((west + east) * 0.5f, (bottom + top) * 0.5f, (south + north) * 0.5f), new Vector3(east - west, top - bottom, north - south), material);
@@ -1550,7 +1644,7 @@ namespace Clover.EditorTools
         // own height, fronted on the sides the camera sees with the kit's mud-brick walls (beam ends, doors, windows, a
         // parapet with a broken top), roofed with the kit's plaster roofs, and lived on. Nobody walks these roofs, so
         // each house may stand higher or a little lower than the height asked for.
-        private static void Mass(Transform parent, float west, float east, float south, float north, float bottom, float height)
+        private static void Mass(Transform parent, float west, float east, float south, float north, float bottom, float height, bool level = false)
         {
             bool alongX = east - west >= north - south;
             float length = alongX ? east - west : north - south;
@@ -1559,6 +1653,7 @@ namespace Clover.EditorTools
             for (int i = 0; i < count; i++)
             {
                 float rise = new[] { 0f, 0.8f, 1.6f, -0.6f, 0.4f, 1.1f }[dice.Next(6)];
+                if (level) rise = 0f;
                 float w = alongX ? west + i * step : west, e = alongX ? west + (i + 1) * step : east;
                 float s2 = alongX ? south : south + i * step, n2 = alongX ? north : south + (i + 1) * step;
                 // Only the outer sides of the row are fronted; where two houses meet, the taller shows its plain brick.
@@ -1747,7 +1842,7 @@ namespace Clover.EditorTools
         }
 
         // A flat roof of the kit's plaster tiles inside the parapets, and on it what the house kept up there.
-        private static void Roof(Transform parent, float west, float east, float south, float north, float top, int clutter, bool westFront, bool eastFront, bool southFront)
+        private static void Roof(Transform parent, float west, float east, float south, float north, float top, int clutter, bool westFront, bool eastFront, bool southFront, bool tiles = true)
         {
             // Out to the box's edge where no front stands: a gap there showed the box's top as a strip between houses.
             float w = west + (westFront ? 0.35f : -0.02f), e = east - (eastFront ? 0.35f : -0.02f), s2 = south + (southFront ? 0.35f : -0.02f), n2 = north + 0.02f;
@@ -1767,7 +1862,8 @@ namespace Clover.EditorTools
                     bool asHatch = dice.Next(3) == 0 && hatches.Count < most && !hatches.Contains((x - 1, z)) && !hatches.Contains((x, z - 1))
                         && !hatches.Contains((x - 1, z - 1)) && !hatches.Contains((x + 1, z - 1));
                     if (asHatch) hatches.Add((x, z));
-                    SunCityKit.City(asHatch ? "roof_flat_b" : "roof_flat_a", parent, new Vector3(w + (x + 0.5f) * wide, top + 0.01f, s2 + (z + 0.5f) * deep), turn * 90f,
+                    // Without tiles the dice are still drawn, so nothing placed after moves.
+                    if (tiles) SunCityKit.City(asHatch ? "roof_flat_b" : "roof_flat_a", parent, new Vector3(w + (x + 0.5f) * wide, top + 0.01f, s2 + (z + 0.5f) * deep), turn * 90f,
                         new Vector3(sx, 1f, sz), RoofPaint, false);
                 }
             RoofClutter(parent, w, e, s2, n2, top, clutter);
@@ -2178,6 +2274,9 @@ namespace Clover.EditorTools
             shaft.localPosition = Vector3.zero;
             shaft.localRotation = Quaternion.identity;
             shaft.localScale = new Vector3(0.06f, 0.06f, 2.7f);
+            // It sticks out of the door at head height across the passage: bumped into until it is pulled free (the pickup
+            // hides it, and this with it).
+            shaft.gameObject.AddComponent<BoxCollider>().size = new Vector3(3f, 3f, 1f);
             var pickup = new GameObject("Spear Pickup").AddComponent<WeaponPickup>();
             pickup.transform.SetParent(parent, false);
             pickup.transform.position = foot + new Vector3(-1.2f, 0f, 0f);

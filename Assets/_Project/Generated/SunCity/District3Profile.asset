@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-3640604969686095997
+--- !u!114 &-7694843882661425217
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,9 +63,9 @@ MonoBehaviour:
   m_Name: District3Profile
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.VolumeProfile
   components:
-  - {fileID: 7761516362977632351}
-  - {fileID: -3640604969686095997}
---- !u!114 &7761516362977632351
+  - {fileID: 6287492134878815505}
+  - {fileID: -7694843882661425217}
+--- !u!114 &6287492134878815505
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}

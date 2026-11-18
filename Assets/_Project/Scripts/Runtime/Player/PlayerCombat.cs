@@ -1332,6 +1332,9 @@ namespace Clover.Player
                 if (other.transform.root == transform.root) continue;
                 var target = other.GetComponentInParent<IDamageable>();
                 if (target == null || struck.Contains(target)) continue;
+                // A blade does not reach an enemy on the floor far below or the ledge far above (the gods, whose
+                // parts stand high off the ground, are struck as they always were).
+                if (target is Enemy below && !below.Kind.IsBoss && !HeightReach.Within(transform.position.y, below.transform.position.y)) continue;
                 Vector3 offset = other.ClosestPoint(origin) - origin;
                 offset.y = 0f;
                 float distance = offset.magnitude;

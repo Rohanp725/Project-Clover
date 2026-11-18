@@ -191,7 +191,7 @@ namespace Clover.World
             // list pointing at them would point at nothing.
             if (!Application.isPlaying) return;
             foreach (var pair in byGroup)
-                if (pair.Key < groups.Length && groups[pair.Key] != null) groups[pair.Key].AlsoFade(pair.Value.ToArray());
+                if (pair.Key < groups.Length && groups[pair.Key] != null) groups[pair.Key].AlsoFadeMerged(pair.Value.ToArray());
         }
 
         // One submesh of a mesh as a mesh of its own, holding only the points it uses, each coloured with the tint.

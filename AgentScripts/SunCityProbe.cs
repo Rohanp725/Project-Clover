@@ -234,7 +234,7 @@ public class SunCityProbeRunner : MonoBehaviour
         // 2: every stair and ramp walked with the keys.
         yield return Walk("quay stair up", new Vector3(0f, 0f, 106.5f), Key.W, 2.2f, 4f);
         yield return Walk("bank ramp up from the basin", new Vector3(-23.5f, 0f, 113.6f), Key.S, 3f, 3f);
-        yield return Walk("gangplank onto the deck", new Vector3(0.1f, 0f, 71f), Key.W, 1.4f, 3.5f);
+        yield return Walk("gangplank onto the deck", new Vector3(-6.3f, 0f, 83.3f), Key.D, 1.4f, 3.5f);
         yield return Walk("gully down to the well", new Vector3(-38.5f, 3f, 77f), Key.A, 1.5f, 1f);
         yield return Walk("lamp street stair", new Vector3(0.5f, 4f, 146f), Key.W, 1.2f, 6f);
         yield return Walk("market stair", new Vector3(-8f, 6f, 197.6f), Key.W, 1.3f, 8f);

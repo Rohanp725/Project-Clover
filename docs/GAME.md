@@ -20,8 +20,10 @@ what your patron wants the elements for.
 Approved by the user on 2026-11-15.
 
 1. **Combat is difficult and immersive.** Fights reward learning the enemy (references: Elden Ring, Lies of P).
-2. **Close combat comes first.** Elemental magic is a large part of a fight but never the main focus; every magic
-   feature must make the player want to use their weapon more, not less.
+2. **Steel and element are equal partners.** Every fight uses both, and each makes the other stronger: weapon play
+   speeds the magic, and magic that lands empowers the weapon. **Decided (user, 2026-11-18)**: the element is weighted
+   equally with close combat; the wording is Claude's. This replaces "Close combat comes first" (2026-11-15). See
+   "Steel and element: the rework of 2026-11-18".
 3. **Elements and techniques mix.** The player's build is a combination of elements and weapon techniques, and
    combining them (an element empowering a weapon) is where the depth is.
 4. **Every boss is a master and a choice.** Each boss shows one element and one technique at full strength, and
@@ -32,8 +34,10 @@ Approved by the user on 2026-11-15.
 - **Decided**: the game is about fighting bosses; the player goes through all of them.
 - **Decided**: after a major boss the player chooses to take **either** its element **or** its technique.
 - **Decided**: the player is the only one who can hold several elements, apart from the final boss.
-- **Decided**: run-based, and every run includes all the bosses. Run length is not yet known; the user's worry
-  stands that a late death in a long, hard run is costly.
+- **Decided (user, 2026-11-18)**: a linear story game with constant progression through the lands, not run-based.
+  Upgrades bought are kept through death. Shards not yet spent are lost on death, unless the player kills whoever
+  killed them. This confirms the change written in `docs/design/WORLD.md` and replaces the run-based lines below.
+- *Replaced 2026-11-18*: ~~run-based, and every run includes all the bosses~~.
 - **Decided**: between runs the player keeps unlocked starting weapons and starting elements.
 - **Decided**: boss order varies inside tiers. The final boss is always last and the late bosses are
   always late, though their order among themselves can change. A reward not chosen is gone for that run.
@@ -1172,6 +1176,96 @@ elemental boss move, and if it needs to be reworked more to be in line with the 
 - **Still reworded:** 113 of the 124, listed in `docs/design/marks_reworded.md`. In the demo's three branches:
   Lightning Rod, Live Wire, Blink and Quick Return.
 
+## Steel and element: the rework of 2026-11-18
+
+The whole design, written to be read in one go, is `docs/design/STEEL_AND_ELEMENT.md`. This section is the record
+of what was decided and when.
+
+The user's direction: the element is as strong a part of the game as close combat, so fights use both kinds of
+technique; and there is a weapon tree that specialises and upgrades the weapon, with health, stamina and the like.
+Research behind it (Hades II's Magick and charged moves, Final Fantasy XVI's cooldowns, Nine Sols's parry-loaded
+talismans, Kingdom Hearts 2's MP charge, Black Myth: Wukong, God of War's weapon trees, Sekiro's beads, Elden Ring's
+affinities, Avatar's bending as martial arts) is in the session notes of that day.
+
+- **Decided (user)**: magic is paid for the FFXVI way. Basic spells sit on short cooldowns that weapon play shortens
+  (hits, perfect guards, perfect dodges). Mana pays only for the big things: the surge, tree spells and charged
+  versions. **Proposal**: cooldowns about 6 to 12 s; mana starts each fight half full.
+- **Proposal**: the loop runs both ways. A spell that lands charges the blade: the next few weapon blows carry the
+  element and hit harder. Weaving weapon and spell beats spamming either.
+- **Decided (user)**: four spells on an L2 layer. **Proposal for the buttons**: hold L2, then a face button casts one
+  of the four; L2 with R1 or R2 is an infused strike (a weapon move carried by the element); a tap of L2 stays the
+  surge; Triangle goes back to the weapon skill.
+- **Decided (user)**: the player can run two elements at once. The four slots can hold spells from either.
+- **Decided (user)**: every pair of elements has its own unlocked duo branch, not only ring neighbours, so unlikely
+  pairs such as Ice and Lightning get their own moves. With eleven elements that is 55 branches (the 11 ring mixes
+  already built become 11 of them). **Proposal**: each new duo branch is small (three to five marks and one duo spell).
+- Answered below: how elements are gained (Take), and which surge a tap of L2 lights (the surge slot of the Hand).
+- **Decided (user's idea, 2026-11-18)**: a second currency, **Memories**, earned by beating people, which teaches techniques.
+  Shards stay the element's currency; Memories buy the weapon tree. **Proposal**: Memories come from the first defeat
+  of each kind of enemy, from elites and named fighters, and from gods, so they cannot be farmed. Some enemies' Memories
+  open a particular technique (the spear captain teaches a spear move). It fits the story: a player with no past
+  filling the gap with other people's memories.
+- **Proposal: the weapon tree ("the Way", named by the user on 2026-11-18; first proposed as "the Forge", a name the Earth and Metal mix already has)**, built like the element trees so the chart reads as one system. Each
+  weapon has three boughs, one per specialisation (for the Katana: Iai, Flow, Counter), buying moves as well as
+  numbers, each ending in a keystone; infusion marks where the weapon meets the held element; a shared Body branch for
+  health, stamina, flasks and poise. Swapping weapons refunds what was spent on the old one. Take gives the god's
+  weapon with its own signature bough; Consume gives the plain weapon and Memories.
+- **Decided (user)**: Memories are kept through death; only unspent Shards are at risk.
+- **Decided (user)**: health, stamina, flask and poise upgrades come both ways: bought with Memories on the Body
+  branch, and found in the world or given by gods. Exploring is rewarded, never required.
+- **Decided (user)**: the Bloodborne rule for lost Shards. The enemy that killed the player glows and carries them;
+  killing it gives them back; dying again first loses them for good. **Proposal**: after a fall or a hazard they lie
+  where the player last stood safely.
+- **Decided (user)**: the player builds their four spells: all four from one element, or a mix from two, possibly
+  with a combination spell, the spells chosen from branches on the element trees.
+- **Decided (user)**: Take makes the god's element the player's for good (it can be attuned) and gives the god's
+  weapon. Consume does not give the element; it pays a large sum of Shards and Memories and strengthens one element
+  the player already owns (for example a free Devotion mark or a free mark on one of its branches).
+- **Decided (user)**: the build is changed only at rest fires.
+- **Decided (user)**: slots open gradually. **Proposal**: two spell slots and one element at the start, the third
+  slot partway through the Fire land, the fourth at its god, the second attunement after the first god.
+- **Decided (user)**: every pair of elements reacts when their afflictions meet on one enemy, and upgrades both
+  strengthen a reaction and change what it does. **Proposal**: a mark on an element's own tree can lift every
+  reaction that element is part of; the pair's duo branch deepens that one reaction and offers a choice of two shapes
+  for it (Burn and Soaked: a blinding steam cloud, or a scalding burst), swappable at rest fires; the duo spell crowns
+  the branch.
+- **Decided (user)**: the Way's boughs work like Hades's weapon aspects: each bough is a different form of the
+  weapon, and one is active at a time, chosen at a rest fire.
+- **Decided (user)**: the Way is the only thing that improves a weapon; raw damage comes from temper marks on it.
+- **Decided (user)**: when resting, the player can go to the hub and choose other elements and weapons from those
+  collected, then go back. This replaces "no weapon inventory: swapping leaves the old weapon on the ground"
+  (2026-11-15). There must be a benefit to finding something and going all in, while still allowing a change of
+  mind. **Proposal**: Bond (below).
+- **Decided (user)**: gated techniques: some marks on the Way open only after beating a particular miniboss. Minibosses'
+  fights are more about the weapon than the element.
+- **Decided (user)**: Bond. Every owned weapon and element has a Bond that grows only while it is equipped (blows,
+  kills, elites, gods, a god counting most) and never decays. About five ranks of modest bonuses, so changing is never
+  a punishment; a Bond mark at the top rank, available no other way (a weapon's aspect in its true form; an element's
+  second Devotion-strength passive); the look shows it (the weapon wears in, the element's effects grow richer).
+- **Decided (user)**: Pair Bond. A weapon and an element used together grow a shared Bond; at the top it gives an
+  infused strike unique to that pair (Katana and Lightning, a draw no other pairing has). Splitting the pair loses
+  the strike, not each one's own Bond.
+- **Decided (user)**: why the hub works this way: what the player takes from the gods does not come back into time;
+  the patron keeps it. A mortal body carries one weapon and two elements into the world at once, and a rest fire is
+  where time is thin enough to step out and choose. It also feeds the doubt about what the patron is gathering.
+- **Decided (user)**: each miniboss teaches one gated technique for its own weapon only (not a move for every weapon:
+  there are too many minibosses for that). It unlocks even when the player uses another weapon and waits for them,
+  which pushes players to try other weapons and find what they really like.
+- **Decided (user)**: taking a god's weapon unlocks it as a bough on that weapon's Way. That bough gives the god's
+  weapon itself; any other bough gives the plain weapon in that form; the player can change back and forth.
+- **Decided (user)**: Pair Bond strikes are built by rule from weapon and element, with about a dozen hand-made
+  standouts for the gods' pairs.
+- **Proposal: the Hand** (the build screen at a rest fire). Two attunements (the same element twice is all in);
+  four spell slots (L2 with a face button), each taking any learned spell of an attuned element or a duo spell while
+  both its elements are attuned; one surge slot (a tap of L2: either element's surge or a duo surge); two infused
+  strikes (L2 with R1 is the first element on the weapon, L2 with R2 the second). Each spell is a short branch on its
+  tree: learn, empower, a choice of two shapes (swappable at rest fires), a master mark tied to timing; about six
+  spells and ten passives make a tree of about 34 marks. Each spell carries a role icon (opener, breaker, detonator,
+  counter, movement). Going all in turns on the element's Devotion, a strong passive no mix can have, and deepens the
+  second infused strike. One screen with the slots in a button diamond and at most about 13 choices per slot; up to
+  three saved Hands; a suggested starter Hand per element; the hub's dummy to try them on; the HUD shows the four
+  spells in a diamond with cooldown rings while L2 is held.
+
 ## Open questions
 
 1. Camera: top-down is on trial in the slice; confirm or change once it is playable.
@@ -1187,6 +1281,12 @@ elemental boss move, and if it needs to be reworked more to be in line with the 
 
 | date | decision | why |
 |---|---|---|
+| 2026-11-18 | The element is weighted equally with close combat (pillar 2 rewritten); spells on cooldowns that weapon play shortens, mana for big moves; four spells on an L2 layer; two elements at once; a duo branch for every pair | the user: the game is more fun when fights use both kinds of technique, and any two elements should be able to mix |
+| 2026-11-18 | Bond and Pair Bond; the patron keeps what is taken and a mortal carries one weapon and two elements; minibosses do not each gate every weapon | the user: reward going all in without punishing a change of mind |
+| 2026-11-18 | The Way's boughs are weapon aspects, one active; the Way only, with temper marks; collected weapons and elements chosen in the hub when resting; minibosses gate techniques and are weapon-first fights | the user, on the weapon tree |
+| 2026-11-18 | Take keeps the god's element for good and Consume strengthens one already owned; the build changes only at rest fires; slots open gradually; every pair reacts and upgrades strengthen and reshape reactions | the user, on the spell-build design |
+| 2026-11-18 | Memories (the weapon tree's currency) kept through death; body upgrades both bought and found; lost Shards follow the Bloodborne rule; the player builds their four spells from one element or two | the user: reward exploring without forcing it, and let builds go all in or mix |
+| 2026-11-18 | Linear story with constant progression: upgrades kept through death, unspent Shards lost unless the killer is killed | the user: the game is no longer run-based |
 | 2026-11-14 | Workflow set up before the game is designed; the Unity CLI is the only editor bridge | one bridge is safer and covers everything the project needs |
 | 2026-11-15 | The game is a difficult, melee-first action game built on elements plus weapon techniques | the user's core idea; references Elden Ring and Lies of P |
 | 2026-11-15 | Magic supports close combat and must not become the main focus of fights | the user wants the player empowered to use their weapons |

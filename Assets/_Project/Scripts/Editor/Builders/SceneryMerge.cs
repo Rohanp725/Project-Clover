@@ -89,7 +89,9 @@ namespace Clover.EditorTools
                 Object.DestroyImmediate(renderer);
                 Object.DestroyImmediate(filter);
             }
-            foreach (var fadeable in groups) fadeable.AlsoFade(new Renderer[0]);
+            // A group keeps, saved, what was not merged (a swaying line of linen on a roof, a fire on it): the merged
+            // pieces are handed to it each time the scene opens.
+            foreach (var fadeable in groups) fadeable.AlsoFade(fadeable.AlsoShown.Where(renderer => renderer != null).ToArray());
 
             // What thins out keeps its own drawing, but its shadow is merged too: a box or a column casts into each of the
             // sun's four cascades, a draw each. Its own renderer casts nothing now; a merged copy casts for it, which

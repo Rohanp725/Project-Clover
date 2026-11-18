@@ -1,0 +1,563 @@
+# Sun City scan: after1
+
+pieces 6019, fade groups 130, reachable floor cells 105489
+
+## 1. dressing hanging off its surface: 105
+
+- fire_roof_flat_a_lod0 at (39.3, 7.1, -3.3): 3 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_b_lod0 at (39.3, 7.1, 3.4): 1 points reach up to 0.20 m past what holds them up
+- fire_roof_flat_a_lod0 at (39.3, 7.1, 21.7): 2 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_b_lod0 at (39.3, 7.1, 33.8): 3 points reach up to 0.35 m past what holds them up
+- fire_roof_flat_a_lod0 at (39.3, 7.1, 40.0): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (39.3, 7.1, 88.7): 2 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (39.3, 7.1, 100.8): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (39.3, 7.1, 106.9): 2 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (39.3, 7.1, 119.1): 2 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_b_lod0 at (-41.3, 8.1, 119.3): 3 points reach up to 0.35 m past what holds them up
+- fire_roof_flat_a_lod0 at (-41.3, 8.1, 124.7): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (-41.3, 8.1, 130.7): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (-41.3, 6.1, -2.6): 2 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (-41.3, 6.1, 9.7): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_b_lod0 at (-41.3, 6.1, 27.6): 3 points reach up to 0.35 m past what holds them up
+- fire_roof_flat_b_lod0 at (-41.3, 6.1, 40.4): 3 points reach up to 0.35 m past what holds them up
+- fire_roof_flat_a_lod0 at (-41.3, 6.1, 46.6): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (-41.3, 6.1, 70.6): 2 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (-41.1, 6.1, 82.7): 2 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_b_lod0 at (-41.3, 6.1, 94.7): 3 points reach up to 0.35 m past what holds them up
+- fire_roof_flat_a_lod0 at (-41.3, 6.1, 101.3): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (-34.0, 6.5, 39.4): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (-34.0, 6.5, 51.4): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (-53.7, 4.1, 91.3): 2 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (-48.1, 4.1, 91.3): 2 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (-42.5, 4.1, 91.3): 2 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_b_lod0 at (-67.3, 4.1, 64.7): 3 points reach up to 0.35 m past what holds them up
+- fire_roof_flat_a_lod0 at (-67.3, 4.1, 70.7): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (-67.3, 4.1, 76.7): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (-67.3, 4.1, 82.7): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (-67.1, 4.1, 89.3): 2 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_a_lod0 at (39.3, 8.1, 135.7): 1 points reach up to 0.25 m past what holds them up
+- fire_roof_flat_a_lod0 at (-3.1, 8.1, 135.8): 2 points reach up to 0.30 m past what holds them up
+- fire_roof_flat_b_lod0 at (-37.1, 9.7, 144.8): 1 points reach up to 0.15 m past what holds them up
+- fire_roof_flat_a_lod0 at (-32.4, 9.7, 144.1): 1 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_b_lod0 at (-22.9, 8.9, 140.3): 3 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (-13.1, 8.9, 139.7): 2 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_a_lod0 at (-13.1, 8.9, 145.6): 2 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_a_lod0 at (6.6, 9.7, 145.6): 2 points reach up to 0.60 m past what holds them up
+- fire_roof_flat_a_lod0 at (12.6, 9.7, 139.7): 1 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (18.8, 8.9, 140.3): 1 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (30.4, 8.1, 140.3): 1 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (-24.0, 10.5, 151.0): 2 points reach up to 0.15 m past what holds them up
+- fire_roof_flat_b_lod0 at (-17.4, 11.2, 151.5): 3 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (-17.3, 11.2, 156.8): 1 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (-5.6, 10.5, 157.4): 2 points reach up to 0.65 m past what holds them up
+- fire_roof_flat_a_lod0 at (17.2, 10.1, 162.3): 2 points reach up to 0.20 m past what holds them up
+- fire_roof_flat_a_lod0 at (36.8, 10.1, 173.5): 2 points reach up to 0.20 m past what holds them up
+- fire_roof_flat_a_lod0 at (11.3, 13.1, 168.4): 2 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (6.2, 10.1, 199.8): 1 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_b_lod0 at (-1.2, 10.1, 182.7): 4 points reach up to 1.90 m past what holds them up
+- fire_roof_flat_a_lod0 at (5.2, 10.1, 182.7): 3 points reach up to 1.25 m past what holds them up
+- fire_roof_flat_b_lod0 at (10.5, 10.1, 182.7): 7 points reach up to 1.10 m past what holds them up
+- fire_roof_flat_a_lod0 at (-0.6, 10.1, 193.7): 2 points reach up to 0.60 m past what holds them up
+- fire_roof_flat_a_lod0 at (4.6, 10.1, 193.7): 1 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (36.5, 12.7, 151.0): 2 points reach up to 0.15 m past what holds them up
+- fire_roof_flat_a_lod0 at (25.5, 12.7, 157.4): 1 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (37.1, 12.7, 157.4): 2 points reach up to 0.15 m past what holds them up
+- fire_roof_flat_a_lod0 at (29.3, 12.3, 167.4): 2 points reach up to 0.25 m past what holds them up
+- fire_roof_flat_a_lod0 at (30.0, 12.3, 175.0): 2 points reach up to 0.70 m past what holds them up
+- fire_roof_flat_a_lod0 at (36.0, 12.3, 175.0): 1 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_b_lod0 at (23.1, 11.9, 171.5): 3 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_a_lod0 at (37.1, 12.9, 201.6): 2 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (17.6, 12.5, 200.1): 2 points reach up to 0.30 m past what holds them up
+- fire_roof_flat_b_lod0 at (8.5, 12.3, 191.6): 1 points reach up to 0.20 m past what holds them up
+- fire_roof_flat_a_lod0 at (-8.0, 12.1, 193.0): 2 points reach up to 0.60 m past what holds them up
+- fire_roof_flat_a_lod0 at (-37.3, 11.7, 163.6): 2 points reach up to 0.60 m past what holds them up
+- fire_roof_flat_b_lod0 at (-37.2, 11.7, 176.0): 1 points reach up to 0.15 m past what holds them up
+- fire_roof_flat_b_lod0 at (-37.2, 11.2, 188.0): 3 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (-32.2, 11.7, 168.3): 2 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (-23.7, 10.9, 167.9): 1 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (-24.3, 10.9, 173.7): 1 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (-18.8, 10.5, 173.7): 1 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_b_lod0 at (-13.3, 11.7, 163.2): 1 points reach up to 0.15 m past what holds them up
+- fire_roof_flat_a_lod0 at (-13.3, 11.7, 167.9): 2 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_a_lod0 at (-13.3, 11.7, 173.1): 1 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (-37.3, 12.9, 211.2): 1 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (9.3, 13.7, 207.0): 2 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_a_lod0 at (9.3, 13.7, 211.3): 2 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_a_lod0 at (19.9, 13.7, 207.0): 1 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (19.9, 13.7, 211.3): 2 points reach up to 0.60 m past what holds them up
+- fire_roof_flat_a_lod0 at (31.8, 13.7, 207.0): 1 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (31.8, 13.7, 211.9): 3 points reach up to 0.60 m past what holds them up
+- fire_roof_flat_a_lod0 at (-25.8, 13.1, 217.0): 2 points reach up to 0.15 m past what holds them up
+- fire_roof_flat_a_lod0 at (-37.4, 13.1, 222.8): 2 points reach up to 0.60 m past what holds them up
+- fire_roof_flat_a_lod0 at (13.6, 13.1, 223.4): 2 points reach up to 0.65 m past what holds them up
+- fire_roof_flat_a_lod0 at (37.4, 13.1, 223.4): 2 points reach up to 0.60 m past what holds them up
+- fire_roof_flat_a_lod0 at (-8.9, 15.1, 223.4): 3 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_a_lod0 at (8.4, 15.1, 217.0): 2 points reach up to 0.15 m past what holds them up
+- fire_roof_flat_a_lod0 at (8.9, 15.1, 222.8): 2 points reach up to 0.55 m past what holds them up
+- fire_roof_flat_a_lod0 at (-23.3, 13.1, 239.2): 2 points reach up to 0.45 m past what holds them up
+- fire_roof_flat_a_lod0 at (-23.1, 13.1, 245.1): 1 points reach up to 0.35 m past what holds them up
+- fire_roof_flat_b_lod0 at (-23.3, 13.1, 262.5): 3 points reach up to 0.35 m past what holds them up
+- fire_roof_flat_a_lod0 at (23.3, 13.1, 257.3): 1 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (37.4, 13.9, 229.2): 2 points reach up to 0.20 m past what holds them up
+- fire_roof_flat_a_lod0 at (32.3, 13.9, 249.4): 1 points reach up to 0.50 m past what holds them up
+- fire_roof_flat_a_lod0 at (31.7, 13.5, 261.8): 2 points reach up to 0.65 m past what holds them up
+- fire_roof_flat_a_lod0 at (26.6, 14.2, 269.1): 2 points reach up to 0.65 m past what holds them up
+- fire_roof_flat_b_lod0 at (31.8, 14.2, 268.4): 1 points reach up to 0.15 m past what holds them up
+- fire_roof_flat_a_lod0 at (37.4, 14.2, 268.4): 2 points reach up to 0.65 m past what holds them up
+- fire_roof_flat_a_lod0 at (-21.1, 16.1, 273.3): 1 points reach up to 0.35 m past what holds them up
+- fire_roof_flat_a_lod0 at (-16.4, 16.1, 273.3): 2 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (-11.2, 16.1, 273.3): 2 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_a_lod0 at (5.3, 16.1, 273.3): 3 points reach up to 0.40 m past what holds them up
+- fire_roof_flat_b_lod0 at (11.1, 16.1, 273.3): 3 points reach up to 0.30 m past what holds them up
+
+## 2/9. on a box that thins out, not thinning with it: 29
+
+- fire_house_wall_b_lod0 at (14.0, 11.7, 168.0) on World/City Of Wicks/Houses (group 45)
+- Cube at (2.0, 10.3, 195.9) on World/City Of Wicks/Alley Houses B (group -1)
+- Cube at (27.0, 10.3, 203.9) on World/City Of Wicks/Houses (group -1)
+- fire_house_wall_low_lod0 at (28.2, 11.1, 163.9) on World/City Of Wicks/Houses (group 56)
+- fire_house_wall_low_lod0 at (32.9, 11.1, 163.9) on World/City Of Wicks/Houses (group 56)
+- fire_house_wall_low_lod0 at (37.8, 11.1, 163.9) on World/City Of Wicks/Houses (group 56)
+- fire_house_wall_low_lod0 at (25.9, 11.1, 166.4) on World/City Of Wicks/Houses (group 56)
+- fire_house_wall_low_lod0 at (25.9, 11.1, 170.9) on World/City Of Wicks/Houses (group 56)
+- fire_house_wall_low_lod0 at (25.9, 11.1, 175.8) on World/City Of Wicks/Houses (group 56)
+- fire_house_wall_low_lod0 at (23.2, 10.9, 166.9) on World/City Of Wicks/Houses (group 57)
+- fire_house_wall_low_lod0 at (21.4, 10.9, 168.9) on World/City Of Wicks/Houses (group 57)
+- fire_house_wall_low_lod0 at (21.4, 10.9, 172.9) on World/City Of Wicks/Houses (group 57)
+- fire_house_wall_low_lod0 at (25.1, 10.9, 169.1) on World/City Of Wicks/Houses (group 57)
+- fire_house_wall_low_lod0 at (25.1, 10.9, 173.1) on World/City Of Wicks/Houses (group 57)
+- fire_house_wall_b_lod0 at (28.0, 11.6, 183.8) on World/City Of Wicks/Houses (group 58)
+- fire_house_wall_b_lod0 at (28.0, 11.6, 191.2) on World/City Of Wicks/Houses (group 58)
+- fire_house_wall_b_lod0 at (16.0, 11.3, 196.5) on World/City Of Wicks/Houses (group 59)
+- fire_house_wall_b_lod0 at (22.0, 11.3, 198.4) on World/City Of Wicks/Houses (group 59)
+- fire_house_wall_low_lod0 at (6.7, 11.1, 186.4) on World/City Of Wicks/Alley Houses C (group 60)
+- fire_house_wall_low_lod0 at (9.8, 11.1, 186.4) on World/City Of Wicks/Alley Recess C (group 60)
+- fire_house_wall_low_lod0 at (4.9, 11.1, 188.9) on World/City Of Wicks/Alley Recess B (group 60)
+- fire_house_wall_low_lod0 at (4.9, 11.1, 193.2) on World/City Of Wicks/Alley Recess B (group 60)
+- fire_house_wall_low_lod0 at (11.6, 11.1, 188.9) on World/City Of Wicks/Alley Houses D (group 60)
+- fire_house_wall_low_lod0 at (11.6, 11.1, 193.4) on World/City Of Wicks/Alley Houses D (group 60)
+- fire_house_wall_low_lod0 at (-7.9, 11.0, 188.9) on World/City Of Wicks/Alley Houses A (group 61)
+- fire_house_wall_low_lod0 at (-5.4, 11.0, 190.7) on World/City Of Wicks/Alley Houses A (group 61)
+- fire_house_wall_low_lod0 at (-5.4, 11.0, 194.3) on World/City Of Wicks/Alley Houses A (group 61)
+- fire_brazier_lod0 at (-8.5, 16.5, 220.0) on World/City Of Wicks/Gate Tower West (group -1)
+- fire_brazier_lod0 at (8.5, 16.5, 220.0) on World/City Of Wicks/Gate Tower East (group -1)
+
+## 3. floating in the body's space over reachable floor: 3
+
+- fire_roof_flat_a_lod0 at (-42.5, 4.1, 91.3) (bottom 4.01): 4 points in the body's space over the floor at 2.98, e.g. (-39.5, 4.1, 92.0)
+- World/City Fires/brazier/Coals at (-19.1, 11.8, 298.2) (bottom 11.77): 3 points in the body's space over the floor at 10.00, e.g. (-18.2, 11.8, 298.1)
+- World/City Fires/brazier/Coals at (10.0, 11.8, 339.2) (bottom 11.77): 4 points in the body's space over the floor at 10.00, e.g. (9.9, 11.8, 338.3)
+
+## 4. more than 0.2 m into a wall or building: 285
+
+- fire_ground_mud_cracked_lod0 at (-4.9, 0.0, -6.0) 0.46 m into World/Dry River/River Mouth Wall
+- fire_ground_mud_cracked_lod0 at (-0.9, 0.0, -6.0) 0.48 m into World/Dry River/River Mouth Wall
+- fire_ground_mud_cracked_lod0 at (3.1, 0.0, -6.0) 0.46 m into World/Dry River/River Mouth Wall
+- fire_ground_mud_cracked_lod0 at (4.5, 0.0, 14.0) 0.23 m into World/Dry River/reed_boat/Model
+- silt_pan_1 at (2.4, 0.1, 13.8) 0.29 m into World/Dry River/reed_boat/Model
+- fire_ground_dust_drift_lod0 at (-36.2, 3.1, 40.8) 0.22 m into World/Fishers' Bank/Fishers' Hut
+- fire_ground_dust_drift_lod0 at (-31.4, 3.1, 39.1) 0.22 m into World/Fishers' Bank/Fishers' Hut
+- Sphere at (2.8, 0.1, 66.0) 0.48 m into World/Dry River/Jam Heap East
+- reed_boat at (-14.1, 1.8, 68.4) 0.23 m into World/Dry River/Jam Heap West
+- reed_boat at (-10.6, 1.9, 67.8) 0.38 m into World/Dry River/Jam Heap West
+- reed_boat at (2.4, 1.8, 68.2) 0.29 m into World/Dry River/Jam Heap East
+- fire_ground_bricks_lod0 at (-9.0, 0.9, 67.4) 0.64 m into World/Dry River/Jam Heap West
+- fire_ground_bricks_lod0 at (-11.0, 1.0, 69.2) 0.51 m into World/Dry River/Jam Heap West
+- fire_rubble_lod0 at (-7.9, 1.1, 69.0) 0.45 m into World/Dry River/Jam Heap West
+- fire_rubble_lod0 at (-15.9, 1.2, 67.0) 0.39 m into World/Dry River/Jam Heap West
+- fire_ground_bricks_lod0 at (2.0, 1.1, 68.8) 0.42 m into World/Dry River/Jam Heap East
+- fire_ground_bricks_lod0 at (-0.2, 1.0, 68.1) 0.48 m into World/Dry River/Jam Heap East
+- silt_pan_0 at (-47.9, 1.0, 65.8) 0.99 m into World/Fishers' Bank/Gully Cheek South
+- fire_ground_sherds_lod0 at (-23.8, 9.0, 148.8) 1.46 m into World/City Of Wicks/Houses
+- fire_ground_sherds_lod0 at (-19.5, 7.6, 148.7) 1.19 m into World/City Of Wicks/Houses
+- fire_ground_sherds_lod0 at (21.1, 9.0, 148.7) 1.10 m into World/City Of Wicks/Houses
+- fire_ground_sherds_lod0 at (28.7, 7.6, 141.1) 0.50 m into World/City Of Wicks/Houses
+- fire_ground_sherds_lod0 at (-15.1, 10.6, 152.9) 0.60 m into World/City Of Wicks/Houses
+- fire_prop_ladder_lod0 at (22.8, 8.1, 148.0) 0.21 m into World/City Of Wicks/Upper Room
+- fire_prop_ladder_lod0 at (22.8, 8.1, 148.0) 0.49 m into World/City Of Wicks/Houses
+- fire_ground_sherds_lod0 at (27.4, 10.2, 149.2) 0.34 m into World/City Of Wicks/Upper Room
+- fire_ground_sherds_lod0 at (38.5, 10.2, 155.0) 0.34 m into World/City Of Wicks/Upper Room
+- fire_prop_reedmat_lod0 at (32.6, 10.2, 191.7) 0.32 m into World/City Of Wicks/Upper Room
+- fire_prop_reedmat_lod0 at (35.4, 10.2, 194.3) 0.32 m into World/City Of Wicks/Upper Room
+- fire_prop_reedmat_lod0 at (38.4, 10.2, 199.7) 0.32 m into World/City Of Wicks/Upper Room
+- fire_ground_sherds_lod0 at (15.9, 10.2, 203.0) 0.34 m into World/City Of Wicks/Upper Room
+- fire_prop_reedmat_lod0 at (-9.0, 10.2, 194.6) 0.32 m into World/City Of Wicks/Upper Room
+- fire_ground_bricks_lod0 at (25.6, 10.3, 203.0) 0.30 m into World/City Of Wicks/Houses
+- fire_prop_reedmat_lod0 at (38.7, 10.2, 166.2) 0.27 m into World/City Of Wicks/Upper Room
+- fire_ground_sherds_lod0 at (34.2, 10.2, 148.9) 0.34 m into World/City Of Wicks/Upper Room
+- fire_prop_reedmat_lod0 at (27.5, 10.2, 149.0) 0.32 m into World/City Of Wicks/Upper Room
+- fire_ground_sherds_lod0 at (29.5, 10.2, 148.9) 0.34 m into World/City Of Wicks/Upper Room
+- fire_ground_sherds_lod0 at (-39.2, 9.6, 165.4) 1.16 m into World/City Of Wicks/Houses
+- fire_ground_sherds_lod0 at (18.1, 13.0, 211.9) 0.70 m into World/City Of Wicks/Houses
+- fire_ground_sherds_lod0 at (10.6, 13.0, 210.1) 0.70 m into World/City Of Wicks/Houses
+- fire_ground_sherds_lod0 at (18.5, 13.0, 209.1) 0.70 m into World/City Of Wicks/Houses
+- fire_prop_ladder_lod0 at (24.1, 10.6, 204.1) 0.49 m into World/City Of Wicks/Houses
+- fire_prop_ladder_lod0 at (33.3, 10.9, 204.2) 0.49 m into World/City Of Wicks/Houses
+- fire_ground_sherds_lod0 at (18.4, 10.1, 307.6) 0.21 m into World/City Fires/brazier/Model
+- fire_ground_sherds_lod0 at (-14.4, 13.1, 361.0) 0.26 m into World/Golden Way/statue_king/Model
+- fire_ground_dust_patch_lod0 at (-18.8, 13.0, 378.8) 0.49 m into World/Golden Way/statue_head_new/Model
+- Cube at (-16.9, 13.2, 379.5) 0.31 m into World/Golden Way/statue_head_new/Model
+- fire_ground_dust_drift_lod0 at (-30.4, 16.5, 404.0) 0.42 m into World/Golden Way/Passage Wall West
+- fire_ground_dust_patch_lod0 at (-29.3, 16.4, 401.9) 0.29 m into World/Golden Way/Passage Wall East
+- fire_rubble_lod0 at (9.4, 10.1, 324.5) 0.24 m into World/Golden Way/statue_head_new/Model
+- column_base at (-15.0, 17.5, 423.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-15.0, 17.5, 433.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-15.0, 17.5, 443.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-15.0, 17.5, 453.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-15.0, 17.5, 463.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-15.0, 17.5, 473.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-5.0, 16.3, 423.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-5.0, 16.3, 433.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-5.0, 16.3, 443.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-5.0, 16.3, 453.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-5.0, 16.3, 463.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (-5.0, 16.3, 473.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (5.0, 16.3, 423.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (5.0, 16.3, 433.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (5.0, 16.3, 443.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (5.0, 16.3, 453.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (5.0, 16.3, 463.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (5.0, 16.3, 473.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (15.0, 17.5, 423.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (15.0, 17.5, 433.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (15.0, 17.5, 453.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (15.0, 17.5, 463.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- column_base at (15.0, 17.5, 473.0) 0.26 m into World/Hall Of Columns/column_lotus/Model
+- fire_brazier_lod0 at (8.6, 8.9, 212.9) 1.71 m into World/City Of Wicks/Houses
+- fire_brazier_lod0 at (-4.6, 16.9, 410.2) 0.35 m into World/Golden Way/pylon_gate/Model
+- fire_brazier_lod0 at (4.6, 16.9, 410.2) 0.35 m into World/Golden Way/pylon_gate/Model
+- World/City Of Wicks/Roof Fire/Scorch at (20.6, 8.9, 147.4) 0.30 m into World/City Of Wicks/Houses
+- World/City Fires/brazier/Coals at (8.6, 9.8, 212.9) 1.77 m into World/City Of Wicks/Houses
+- World/City Fires/brazier/Flames at (8.6, 11.8, 212.7) 1.44 m into World/City Of Wicks/Houses
+- World/City Fires/brazier/Coals at (-4.6, 17.8, 410.2) 0.54 m into World/Golden Way/pylon_gate/Model
+- World/City Fires/brazier/Coals at (4.6, 17.8, 410.2) 0.38 m into World/Golden Way/pylon_gate/Model
+- Life/Palms/palm_b/Model at (-22.4, 19.8, 388.9) 1.18 m into World/Golden Way/Passage Wall East
+- Life/Palms/palm_b/Model at (22.6, 19.3, 389.0) 0.53 m into World/Golden Way/Terrace Side East
+- fire_ground_mud_cracked_lod0 at (-4.9, 0.0, -6.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (3.1, 0.0, -6.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-2.7, 0.0, -2.0) 0.96 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (5.3, 0.0, -2.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-6.6, 0.0, 2.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-2.6, 0.0, 2.0) 2.79 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (5.4, 0.0, 2.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-5.0, 0.0, 6.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (3.0, 0.0, 6.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-3.8, 0.0, 10.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (4.2, 0.0, 10.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-3.5, 0.0, 14.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (4.5, 0.0, 14.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.2)
+- fire_ground_mud_cracked_lod0 at (-6.7, 0.0, 18.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (5.3, 0.0, 18.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-9.8, 0.0, 22.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (6.2, 0.0, 22.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-15.6, 0.0, 26.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (4.4, 0.0, 26.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-17.6, 0.0, 30.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (6.4, 0.0, 30.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-18.7, 0.0, 34.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (5.3, 0.0, 34.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-19.3, 0.0, 38.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (4.7, 0.0, 38.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-20.5, 0.0, 42.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (3.5, 0.0, 42.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-22.3, 0.0, 46.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (1.7, 0.0, 46.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-19.2, 0.0, 50.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (0.8, 0.0, 50.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-19.1, 0.0, 54.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (0.9, 0.0, 54.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-17.8, 0.0, 58.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-1.8, 0.0, 58.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-16.0, 0.0, 62.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (0.0, 0.0, 62.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-14.0, 0.0, 66.0) 3.02 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-2.0, 0.0, 66.0) 2.43 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (2.0, 0.0, 66.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-15.8, 0.0, 70.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (0.2, 0.0, 70.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (4.2, 0.0, 70.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-14.4, 0.0, 74.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-10.4, 0.0, 74.0) 0.87 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (1.6, 0.0, 74.0) 1.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (5.6, 0.0, 74.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-10.9, 0.0, 78.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (9.1, 0.0, 78.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (13.1, 0.0, 78.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-8.2, 0.0, 82.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-4.2, 0.0, 82.0) 2.13 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-0.2, 0.0, 82.0) 3.45 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (15.8, 0.0, 82.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-9.3, 0.0, 86.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-5.3, 0.0, 86.0) 1.31 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-1.3, 0.0, 86.0) 3.43 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (14.7, 0.0, 86.0) 1.50 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (18.7, 0.0, 86.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-8.8, 0.0, 90.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-4.8, 0.0, 90.0) 2.10 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (19.2, 0.0, 90.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-4.6, 0.0, 94.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (19.4, 0.0, 94.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-15.4, 0.0, 98.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-11.4, 0.0, 98.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-7.4, 0.0, 98.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (20.6, 0.0, 98.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-26.7, 0.0, 102.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-22.7, 0.0, 102.0) 2.77 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-2.7, 0.0, 102.0) 0.85 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (1.3, 0.0, 102.0) 0.85 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (21.3, 0.0, 102.0) 1.13 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (25.3, 0.0, 102.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-24.2, 0.0, 106.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-20.2, 0.0, 106.0) 1.86 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (-0.2, 0.0, 106.0) 0.85 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- fire_ground_mud_cracked_lod0 at (23.8, 0.0, 106.0) 3.05 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- Sphere at (-8.3, 0.1, 20.9) 1.13 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Sphere at (-24.4, 0.1, 104.0) 2.33 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Sphere at (25.6, 0.1, 109.0) 3.45 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Sphere at (19.7, 0.1, 88.1) 3.45 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Sphere at (13.5, 0.1, 76.4) 3.45 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Sphere at (2.8, 0.1, 66.0) 3.45 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Sphere at (3.9, 0.1, 51.5) 3.45 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Sphere at (7.0, 0.1, 38.4) 3.45 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Sphere at (6.6, 0.1, 9.9) 3.45 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Sphere at (6.6, 0.1, -0.1) 3.45 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Cube at (-4.9, 1.3, 6.7) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Cube at (-4.9, 1.3, 11.4) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- reed_boat at (-14.1, 1.8, 68.4) 0.95 m under the top of a rise beside it (its foot at 0.7, ground there 0.0)
+- reed_boat at (2.4, 1.8, 68.2) 1.89 m under the top of a rise beside it (its foot at 0.6, ground there 0.0)
+- barque at (3.7, 4.7, 88.3) 0.23 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- Gangplank at (-2.7, 1.7, 83.3) 3.55 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Bank Ramp at (-23.5, 1.5, 105.4) 3.05 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Cube at (0.0, 1.8, 112.1) 0.42 m under the top of a rise beside it (its foot at -0.5, ground there 0.0)
+- Cube at (0.0, 1.8, 115.7) 4.10 m under the top of a rise beside it (its foot at -0.1, ground there 0.0)
+- Cube at (-42.9, 1.7, 77.0) 0.46 m under the top of a rise beside it (its foot at 0.5, ground there 1.0)
+- Cube at (-40.3, 1.9, 77.0) 2.10 m under the top of a rise beside it (its foot at 0.9, ground there 1.0)
+- Cube at (0.5, 4.8, 150.1) 0.42 m under the top of a rise beside it (its foot at 3.5, ground there -999.0)
+- Cube at (0.5, 4.9, 151.8) 2.10 m under the top of a rise beside it (its foot at 3.9, ground there -999.0)
+- Cube at (-28.5, 4.7, 172.1) 0.48 m under the top of a rise beside it (its foot at 3.5, ground there -999.0)
+- Cube at (-28.5, 4.9, 175.6) 2.10 m under the top of a rise beside it (its foot at 3.9, ground there -999.0)
+- Cube at (-8.0, 6.8, 202.0) 0.44 m under the top of a rise beside it (its foot at 5.5, ground there 6.0)
+- Cube at (-8.0, 6.9, 203.9) 2.10 m under the top of a rise beside it (its foot at 5.9, ground there 6.0)
+- Cart Ramp at (-32.0, 7.0, 198.0) 2.05 m under the top of a rise beside it (its foot at 6.0, ground there 6.0)
+- Cube at (-18.0, 8.8, 260.1) 0.43 m under the top of a rise beside it (its foot at 7.5, ground there 8.0)
+- Cube at (-18.0, 8.9, 262.0) 2.10 m under the top of a rise beside it (its foot at 7.9, ground there 8.0)
+- Cube at (18.0, 8.8, 260.1) 0.43 m under the top of a rise beside it (its foot at 7.5, ground there 8.0)
+- Cube at (18.0, 8.9, 262.0) 2.10 m under the top of a rise beside it (its foot at 7.9, ground there 8.0)
+- natron_heap at (16.3, 7.6, 235.3) 0.85 m under the top of a rise beside it (its foot at 7.2, ground there -999.0)
+- natron_heap at (18.5, 7.6, 233.8) 0.85 m under the top of a rise beside it (its foot at 7.2, ground there -999.0)
+- natron_heap at (-17.9, 7.6, 229.7) 0.85 m under the top of a rise beside it (its foot at 7.2, ground there -999.0)
+- Tomb West Ground at (-60.0, 3.5, 250.0) 9.00 m under the top of a rise beside it (its foot at -1.0, ground there -999.0)
+- Tomb Stair Cheek South at (-25.0, 3.5, 246.8) 9.00 m under the top of a rise beside it (its foot at -1.0, ground there -999.0)
+- Tomb Stair Cheek North at (-25.0, 3.5, 253.3) 9.00 m under the top of a rise beside it (its foot at -1.0, ground there -999.0)
+- Cube at (-43.0, 3.5, 250.0) 5.00 m under the top of a rise beside it (its foot at 3.0, ground there -999.0)
+- Cube at (-25.8, 5.8, 250.0) 0.42 m under the top of a rise beside it (its foot at 3.5, ground there -999.0)
+- Cube at (-22.1, 5.8, 250.0) 4.10 m under the top of a rise beside it (its foot at 3.9, ground there -999.0)
+- Cube at (-24.2, 5.3, 250.0) 4.10 m under the top of a rise beside it (its foot at 3.9, ground there -999.0)
+- Cube at (-24.9, 5.2, 250.0) 4.10 m under the top of a rise beside it (its foot at 3.9, ground there -999.0)
+- Cube at (-25.6, 5.0, 250.0) 4.10 m under the top of a rise beside it (its foot at 3.9, ground there -999.0)
+- Cube at (-26.2, 4.8, 250.0) 4.10 m under the top of a rise beside it (its foot at 3.9, ground there -999.0)
+- Cube at (-26.9, 4.7, 250.0) 4.10 m under the top of a rise beside it (its foot at 3.9, ground there -999.0)
+- Cube at (-27.6, 4.5, 250.0) 4.10 m under the top of a rise beside it (its foot at 3.9, ground there -999.0)
+- Cube at (-28.3, 4.3, 250.0) 4.10 m under the top of a rise beside it (its foot at 3.9, ground there 4.0)
+- Levy Ramp at (0.0, 11.5, 332.2) 3.05 m under the top of a rise beside it (its foot at 10.0, ground there 10.0)
+- Cube at (0.0, 14.3, 383.1) 5.01 m under the top of a rise beside it (its foot at 12.5, ground there 13.0)
+- Cube at (0.0, 13.0, 380.1) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.1)
+- Cube at (0.0, 13.1, 380.6) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.4)
+- Cube at (0.0, 13.2, 381.1) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.0)
+- Cube at (0.0, 13.4, 381.7) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.0)
+- Cube at (0.0, 13.5, 382.2) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.0)
+- Cube at (0.0, 13.6, 382.7) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.0)
+- Cube at (0.0, 13.7, 383.3) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.0)
+- Cube at (0.0, 13.9, 383.8) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.0)
+- Cube at (0.0, 14.0, 384.3) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.0)
+- Cube at (0.0, 14.1, 384.9) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.0)
+- Cube at (0.0, 14.2, 385.4) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.0)
+- Cube at (0.0, 14.4, 385.9) 4.60 m under the top of a rise beside it (its foot at 12.9, ground there 13.0)
+- Great Plinth at (-7.0, 15.3, 384.0) 4.50 m under the top of a rise beside it (its foot at 13.0, ground there 13.0)
+- Great Plinth at (7.0, 15.3, 384.0) 4.50 m under the top of a rise beside it (its foot at 13.0, ground there 13.0)
+- Cube at (-11.1, 16.4, 428.0) 0.41 m under the top of a rise beside it (its foot at 15.5, ground there 16.0)
+- Cube at (-11.9, 16.5, 428.0) 1.30 m under the top of a rise beside it (its foot at 15.9, ground there 16.0)
+- Cube at (-11.1, 16.4, 448.0) 0.41 m under the top of a rise beside it (its foot at 15.5, ground there 16.0)
+- Cube at (-11.9, 16.5, 448.0) 1.30 m under the top of a rise beside it (its foot at 15.9, ground there 16.0)
+- Cube at (-11.1, 16.4, 468.0) 0.41 m under the top of a rise beside it (its foot at 15.5, ground there 16.0)
+- Cube at (-11.9, 16.5, 468.0) 1.30 m under the top of a rise beside it (its foot at 15.9, ground there 16.0)
+- Cube at (11.1, 16.4, 428.0) 0.41 m under the top of a rise beside it (its foot at 15.5, ground there 16.0)
+- Cube at (11.9, 16.5, 428.0) 1.30 m under the top of a rise beside it (its foot at 15.9, ground there 16.0)
+- Cube at (11.1, 16.4, 448.0) 0.41 m under the top of a rise beside it (its foot at 15.5, ground there 16.0)
+- Cube at (11.9, 16.5, 448.0) 1.30 m under the top of a rise beside it (its foot at 15.9, ground there 16.0)
+- Cube at (11.1, 16.4, 468.0) 0.41 m under the top of a rise beside it (its foot at 15.5, ground there 16.0)
+- Cube at (11.9, 16.5, 468.0) 1.30 m under the top of a rise beside it (its foot at 15.9, ground there 16.0)
+- Cube at (-22.8, 16.5, 448.0) 1.40 m under the top of a rise beside it (its foot at 15.8, ground there 16.0)
+- Bowl Floor at (0.0, 13.3, 503.5) 4.00 m under the top of a rise beside it (its foot at 12.0, ground there -999.0)
+- Cube at (0.0, 15.0, 488.4) 0.46 m under the top of a rise beside it (its foot at 14.0, ground there 14.5)
+- Cube at (0.0, 15.1, 486.7) 1.60 m under the top of a rise beside it (its foot at 14.4, ground there 14.5)
+- Cube at (0.0, 15.0, 487.3) 1.60 m under the top of a rise beside it (its foot at 14.4, ground there 14.5)
+- Cube at (0.0, 14.9, 487.9) 1.60 m under the top of a rise beside it (its foot at 14.4, ground there 14.5)
+- Cube at (0.0, 15.0, 518.0) 0.45 m under the top of a rise beside it (its foot at 14.0, ground there 14.5)
+- Cube at (0.0, 15.1, 519.6) 1.60 m under the top of a rise beside it (its foot at 14.4, ground there 14.5)
+- fire_column_broken_lod0 at (-14.0, 15.4, 505.0) 1.60 m under the top of a rise beside it (its foot at 14.5, ground there 14.5)
+- fire_column_broken_lod0 at (14.0, 15.4, 505.0) 1.60 m under the top of a rise beside it (its foot at 14.5, ground there 14.5)
+- fire_brazier_lod0 at (-9.0, 16.9, 389.5) 1.49 m under the top of a rise beside it (its foot at 16.0, ground there 16.0)
+- fire_brazier_lod0 at (9.0, 16.9, 389.5) 1.49 m under the top of a rise beside it (its foot at 16.0, ground there 16.0)
+- World/Dry River/Jam Heap West at (-11.5, 0.7, 68.0) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- World/Dry River/Jam Heap East at (2.0, 0.7, 68.0) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- World/Dry River/Spar at (-9.0, 1.1, 93.5) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- World/Dry River/Boat-shed Ceiling at (-18.0, 3.5, 117.5) 1.00 m under the top of a rise beside it (its foot at 3.0, ground there 0.0)
+- World/Dry River/Water Jar/Spill at (-8.0, 0.0, 84.0) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- World/City Of Wicks/burial_niche/Model at (-13.0, 8.9, 261.6) 0.26 m under the top of a rise beside it (its foot at 8.0, ground there 8.0)
+- World/City Of Wicks/burial_niche/Model at (-9.4, 8.9, 261.6) 0.26 m under the top of a rise beside it (its foot at 8.0, ground there 8.0)
+- World/City Of Wicks/burial_niche/Model at (-5.8, 8.9, 261.6) 0.26 m under the top of a rise beside it (its foot at 8.0, ground there 8.0)
+- World/City Of Wicks/burial_niche/Model at (-2.2, 8.9, 261.6) 0.26 m under the top of a rise beside it (its foot at 8.0, ground there 8.0)
+- World/City Of Wicks/burial_niche/Model at (2.2, 8.9, 261.6) 0.26 m under the top of a rise beside it (its foot at 8.0, ground there 8.0)
+- World/City Of Wicks/burial_niche/Model at (5.8, 8.9, 261.6) 0.26 m under the top of a rise beside it (its foot at 8.0, ground there 8.0)
+- World/City Of Wicks/burial_niche/Model at (9.4, 8.9, 261.6) 0.26 m under the top of a rise beside it (its foot at 8.0, ground there 8.0)
+- World/City Of Wicks/burial_niche/Model at (13.0, 8.9, 261.6) 0.26 m under the top of a rise beside it (its foot at 8.0, ground there 8.0)
+- World/Painted Tombs/Tomb Divider North at (-48.0, 6.0, 252.8) 4.00 m under the top of a rise beside it (its foot at 4.0, ground there 4.0)
+- World/Painted Tombs/Tomb Divider North at (-38.0, 6.0, 252.8) 4.00 m under the top of a rise beside it (its foot at 4.0, ground there 4.0)
+- World/Golden Way/Terrace Colonnade West/Terrace Colonnade West Roof at (-17.0, 15.8, 383.5) 1.90 m under the top of a rise beside it (its foot at 15.6, ground there 16.0)
+- World/Golden Way/Terrace Colonnade East/Terrace Colonnade East Roof at (17.0, 15.8, 383.5) 1.90 m under the top of a rise beside it (its foot at 15.6, ground there 16.0)
+- World/City Fires/Smoulder/Scorch at (-7.2, 0.0, 8.2) 2.97 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- World/City Fires/Smoulder/Flames at (-7.2, 2.0, 8.4) 2.98 m under the top of a rise beside it (its foot at -1.0, ground there -999.0)
+- Life/Palms/papyrus/Model at (-6.4, 1.4, 12.7) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/reeds/Model at (-8.0, 1.0, 18.7) 2.99 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/reeds/Model at (-14.3, 1.1, 26.1) 1.90 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/papyrus/Model at (-20.0, 1.3, 36.2) 2.99 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/reeds/Model at (-21.5, 1.1, 50.2) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/reeds/Model at (-16.7, 1.0, 62.1) 2.37 m under the top of a rise beside it (its foot at 0.0, ground there 0.1)
+- Life/Palms/reeds/Model at (-11.6, 1.1, 77.2) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/papyrus/Model at (-8.2, 1.5, 90.4) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/papyrus/Model at (5.2, 1.2, 19.9) 2.65 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/papyrus/Model at (7.2, 1.1, 27.3) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/reeds/Model at (6.5, 1.2, 37.6) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/reeds/Model at (3.1, 1.0, 50.8) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/reeds/Model at (1.1, 0.8, 60.7) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/papyrus/Model at (5.7, 1.4, 71.2) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/reeds/Model at (15.1, 1.3, 81.4) 0.52 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- Life/Palms/reeds/Model at (19.7, 1.1, 95.0) 3.00 m under the top of a rise beside it (its foot at 0.0, ground there 0.0)
+- (house fronts and roofs inside the next house in their row, hidden there: 196, not counted)
+
+## 7. reachable floor next to nothing (a fall forever): 0
+
+
+## 8. drops of more than 2 m off a reachable floor: 119
+
+- square x -4, z -4: 1 cells, e.g. (-5.3, 3.0 -> 0.0, -3.3)
+- square x -4, z 0: 2 cells, e.g. (-5.3, 3.0 -> 0.0, 1.3)
+- square x 0, z 0: 1 cells, e.g. (4.8, 3.0 -> 0.0, 3.3)
+- square x -4, z 4: 3 cells, e.g. (-4.8, 3.0 -> 0.0, 6.8)
+- square x -4, z 8: 2 cells, e.g. (-5.3, 3.0 -> 0.0, 9.8)
+- square x -4, z 12: 1 cells, e.g. (-4.8, 3.0 -> 0.0, 15.3)
+- square x 0, z 16: 1 cells, e.g. (5.3, 3.0 -> 0.0, 16.8)
+- square x -16, z 20: 1 cells, e.g. (-12.3, 3.0 -> 0.0, 22.3)
+- square x -12, z 20: 2 cells, e.g. (-12.3, 3.0 -> 0.0, 22.3)
+- square x -8, z 20: 1 cells, e.g. (-9.3, 3.0 -> 0.0, 20.3)
+- square x 4, z 20: 1 cells, e.g. (6.3, 3.0 -> 0.0, 23.8)
+- square x -16, z 24: 2 cells, e.g. (-16.8, 3.0 -> 0.0, 27.8)
+- square x 4, z 24: 1 cells, e.g. (6.3, 3.0 -> 0.0, 26.8)
+- square x -20, z 28: 1 cells, e.g. (-18.3, 3.0 -> 0.0, 31.3)
+- square x -20, z 32: 1 cells, e.g. (-19.3, 3.0 -> 0.0, 34.3)
+- square x 4, z 32: 4 cells, e.g. (6.3, 3.0 -> 0.0, 35.8)
+- square x -20, z 36: 1 cells, e.g. (-19.3, 3.0 -> 0.0, 34.3)
+- square x -20, z 40: 1 cells, e.g. (-21.3, 3.0 -> 0.0, 41.8)
+- square x -24, z 44: 1 cells, e.g. (-21.8, 3.0 -> 0.0, 46.8)
+- square x 0, z 52: 1 cells, e.g. (1.8, 3.0 -> 0.0, 52.3)
+- square x -20, z 56: 1 cells, e.g. (-18.8, 3.0 -> 0.0, 59.8)
+- square x -4, z 56: 1 cells, e.g. (0.3, 3.0 -> 0.0, 56.8)
+- square x -20, z 60: 1 cells, e.g. (-18.3, 3.0 -> 0.0, 60.8)
+- square x -4, z 60: 1 cells, e.g. (0.3, 3.0 -> 0.0, 61.8)
+- square x -4, z 64: 1 cells, e.g. (0.3, 3.0 -> 0.0, 65.3)
+- square x 4, z 72: 1 cells, e.g. (7.3, 3.0 -> 0.0, 74.3)
+- square x -12, z 76: 2 cells, e.g. (-10.8, 3.0 -> 0.0, 78.3)
+- square x -4, z 76: 2 cells, e.g. (-2.3, 3.2 -> 0.0, 79.8)
+- square x 8, z 76: 2 cells, e.g. (11.8, 3.0 -> 0.0, 77.3)
+- square x 12, z 76: 2 cells, e.g. (15.8, 3.0 -> 0.0, 79.8)
+- square x -4, z 80: 2 cells, e.g. (-2.3, 2.1 -> 0.0, 81.8)
+- square x 12, z 80: 3 cells, e.g. (15.8, 3.0 -> 0.0, 79.8)
+- square x -4, z 84: 2 cells, e.g. (-0.3, 3.2 -> 0.0, 85.3)
+- square x 0, z 84: 1 cells, e.g. (0.8, 3.2 -> 0.0, 87.8)
+- square x 16, z 84: 1 cells, e.g. (17.8, 3.0 -> 0.0, 87.8)
+- square x -8, z 88: 2 cells, e.g. (-7.3, 3.0 -> 0.0, 90.3)
+- square x 0, z 88: 3 cells, e.g. (0.8, 3.2 -> 0.0, 88.3)
+- square x 0, z 92: 4 cells, e.g. (2.3, 3.2 -> 0.0, 92.3)
+- square x 16, z 92: 1 cells, e.g. (19.3, 3.0 -> 0.0, 94.8)
+- square x -16, z 96: 1 cells, e.g. (-14.3, 3.0 -> 0.0, 97.8)
+- square x 16, z 96: 1 cells, e.g. (20.3, 3.0 -> 0.0, 96.3)
+- square x 20, z 96: 1 cells, e.g. (20.3, 3.0 -> 0.0, 96.3)
+- square x -20, z 100: 1 cells, e.g. (-18.8, 3.0 -> 0.0, 98.8)
+- square x 20, z 100: 1 cells, e.g. (24.3, 3.0 -> 0.0, 103.3)
+- square x -28, z 108: 1 cells, e.g. (-25.8, 3.0 -> 0.2, 111.3)
+- square x 20, z 108: 3 cells, e.g. (23.8, 3.0 -> 0.0, 110.3)
+- square x -20, z 112: 6 cells, e.g. (-16.3, 4.0 -> 0.0, 115.8)
+- square x -12, z 112: 4 cells, e.g. (-8.3, 4.0 -> 0.0, 115.8)
+- square x -8, z 112: 3 cells, e.g. (-6.8, 4.0 -> 0.0, 115.8)
+- square x -4, z 112: 7 cells, e.g. (-3.3, 2.1 -> 0.0, 112.3)
+- square x 0, z 112: 7 cells, e.g. (3.3, 2.1 -> 0.0, 112.3)
+- square x 4, z 112: 3 cells, e.g. (6.8, 4.0 -> 0.0, 115.8)
+- square x 8, z 112: 4 cells, e.g. (8.3, 4.0 -> 0.0, 115.8)
+- square x 16, z 112: 6 cells, e.g. (16.3, 4.0 -> 0.0, 115.8)
+- square x 0, z 136: 1 cells, e.g. (2.8, 9.6 -> 4.0, 137.3)
+- square x 0, z 148: 1 cells, e.g. (2.8, 7.4 -> 4.4, 148.8)
+- square x 12, z 148: 3 cells, e.g. (13.8, 10.0 -> 7.4, 149.8)
+- square x 12, z 152: 3 cells, e.g. (13.8, 10.0 -> 6.0, 155.3)
+- square x 12, z 160: 6 cells, e.g. (13.8, 10.0 -> 6.0, 162.8)
+- square x 12, z 164: 3 cells, e.g. (13.8, 10.0 -> 6.0, 164.3)
+- square x 12, z 168: 2 cells, e.g. (13.8, 10.0 -> 6.0, 171.3)
+- square x 12, z 172: 3 cells, e.g. (13.8, 10.0 -> 6.0, 174.8)
+- square x -12, z 176: 2 cells, e.g. (-8.8, 10.0 -> 6.0, 179.8)
+- square x -8, z 176: 5 cells, e.g. (-4.3, 10.0 -> 6.0, 179.8)
+- square x -4, z 176: 3 cells, e.g. (-0.3, 10.0 -> 6.0, 179.8)
+- square x 0, z 176: 3 cells, e.g. (2.8, 10.0 -> 6.0, 179.8)
+- square x 4, z 176: 2 cells, e.g. (6.8, 10.0 -> 6.0, 179.8)
+- square x 8, z 176: 1 cells, e.g. (11.3, 10.0 -> 6.0, 179.8)
+- square x 12, z 176: 4 cells, e.g. (13.8, 10.0 -> 6.0, 177.3)
+- square x -12, z 180: 4 cells, e.g. (-10.3, 10.0 -> 6.0, 181.8)
+- square x -4, z 180: 3 cells, e.g. (-2.3, 10.0 -> 6.0, 180.8)
+- square x 0, z 180: 2 cells, e.g. (3.8, 10.0 -> 6.0, 181.3)
+- square x 4, z 180: 2 cells, e.g. (4.8, 10.0 -> 6.0, 180.8)
+- square x 8, z 180: 4 cells, e.g. (10.8, 10.0 -> 6.0, 180.3)
+- square x -12, z 184: 2 cells, e.g. (-10.3, 10.0 -> 6.0, 184.3)
+- square x -24, z 200: 1 cells, e.g. (-22.3, 8.0 -> 6.0, 203.8)
+- square x 4, z 204: 1 cells, e.g. (5.3, 10.0 -> 8.0, 204.3)
+- square x -8, z 260: 1 cells, e.g. (-4.3, 10.0 -> 8.0, 261.3)
+- square x -20, z 332: 1 cells, e.g. (-19.8, 13.0 -> 10.0, 340.8)
+- square x 16, z 332: 1 cells, e.g. (19.8, 13.0 -> 10.0, 340.8)
+- square x 20, z 332: 1 cells, e.g. (22.3, 13.0 -> 10.0, 340.8)
+- square x -24, z 336: 1 cells, e.g. (-22.3, 12.2 -> 10.0, 339.8)
+- square x -20, z 336: 1 cells, e.g. (-19.8, 12.2 -> 10.0, 339.8)
+- square x 4, z 336: 5 cells, e.g. (3.8, 12.0 -> 10.0, 337.3)
+- square x 16, z 336: 1 cells, e.g. (19.8, 12.2 -> 10.0, 339.8)
+- square x 20, z 336: 1 cells, e.g. (22.3, 12.2 -> 10.0, 339.8)
+- square x -24, z 340: 2 cells, e.g. (-22.3, 12.5 -> 10.0, 340.3)
+- square x -20, z 340: 5 cells, e.g. (-16.3, 13.0 -> 10.0, 340.8)
+- square x -16, z 340: 6 cells, e.g. (-12.3, 13.0 -> 10.0, 340.8)
+- square x -12, z 340: 6 cells, e.g. (-8.3, 13.0 -> 10.0, 340.8)
+- square x -8, z 340: 6 cells, e.g. (-4.3, 13.0 -> 10.0, 340.8)
+- square x 4, z 340: 6 cells, e.g. (4.3, 13.0 -> 10.0, 340.8)
+- square x 8, z 340: 6 cells, e.g. (8.3, 13.0 -> 10.0, 340.8)
+- square x 12, z 340: 6 cells, e.g. (12.3, 13.0 -> 10.0, 340.8)
+- square x 16, z 340: 5 cells, e.g. (16.3, 13.0 -> 10.0, 340.8)
+- square x 20, z 340: 2 cells, e.g. (22.3, 12.5 -> 10.0, 340.3)
+- square x -12, z 352: 3 cells, e.g. (-8.3, 16.0 -> 13.0, 355.8)
+- square x -8, z 352: 1 cells, e.g. (-7.8, 16.0 -> 13.0, 355.8)
+- square x -12, z 356: 7 cells, e.g. (-10.3, 16.0 -> 13.0, 358.3)
+- square x -8, z 356: 7 cells, e.g. (-6.8, 16.0 -> 13.0, 358.3)
+- square x -12, z 360: 7 cells, e.g. (-10.3, 16.0 -> 13.0, 360.3)
+- square x -8, z 360: 7 cells, e.g. (-6.8, 16.0 -> 13.0, 360.3)
+- square x -12, z 364: 7 cells, e.g. (-10.3, 16.0 -> 13.0, 364.8)
+- square x -8, z 364: 7 cells, e.g. (-6.8, 16.0 -> 13.0, 364.8)
+- square x -12, z 368: 7 cells, e.g. (-10.3, 16.0 -> 13.0, 368.3)
+- square x -8, z 368: 7 cells, e.g. (-6.8, 16.0 -> 13.0, 368.3)
+- square x -12, z 372: 3 cells, e.g. (-8.3, 16.0 -> 13.0, 372.3)
+- square x -8, z 372: 1 cells, e.g. (-7.8, 16.0 -> 13.0, 372.3)
+- square x -28, z 380: 2 cells, e.g. (-24.3, 16.0 -> 13.0, 381.8)
+- square x -24, z 380: 6 cells, e.g. (-20.3, 16.0 -> 13.0, 380.8)
+- square x -20, z 380: 6 cells, e.g. (-16.3, 16.0 -> 13.0, 380.8)
+- square x -16, z 380: 5 cells, e.g. (-12.3, 16.0 -> 13.0, 380.8)
+- square x -12, z 380: 3 cells, e.g. (-10.8, 16.0 -> 13.0, 380.8)
+- square x 8, z 380: 1 cells, e.g. (10.8, 16.0 -> 13.0, 380.8)
+- square x 12, z 380: 6 cells, e.g. (12.3, 16.0 -> 13.0, 380.8)
+- square x 16, z 380: 6 cells, e.g. (16.3, 16.0 -> 13.0, 380.8)
+- square x 20, z 380: 8 cells, e.g. (20.3, 16.0 -> 13.0, 380.8)
+- square x 24, z 380: 6 cells, e.g. (24.3, 16.0 -> 13.0, 383.8)
+- square x 24, z 384: 4 cells, e.g. (24.3, 16.0 -> 13.0, 385.8)
+
