@@ -422,3 +422,13 @@ player off from the shape.
 - `profile_city.sh <label>` runs PerfProbe's SunCity branch (the market, everyone near awake, a swell) and records 600
   profiler frames over it into `review/checks/world1/city_<label>.data`, printing the summary. PerfProbe now also
   reports set-pass calls and triangles.
+
+## The Fire land's world pass, second half (2026-11-18): `rebuild_city.sh`, `CityCount`
+
+- `rebuild_city.sh [court]` opens the Hub first (with Sun City open, every recompile remakes its merged scenery), recompiles,
+  rebuilds Sun City (and the court with `court`) and prints the merge's line and any warnings.
+- `CityCount` (edit mode, the scene open, `script run`) writes to `review/checks/world2/count.txt` how many objects,
+  renderers, triangles, submeshes and materials the open scene draws, by group. Merged scenery and laid paving are made
+  when the scene opens and hidden, so they are not counted there.
+- `profile_city.sh <label> [folder]` now takes the folder under `review/checks/` (default `world1`; the second half used
+  `world2`). `world1_frames.sh - review/shots/current world2` names the walk's frames `world2_<district>_<spot>.png`.

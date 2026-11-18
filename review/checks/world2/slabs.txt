@@ -1,0 +1,21 @@
+fire_ground_slabs_lod0: verts 1250 submeshes 3 readable False
+  0 m_city_sand: tris 122 z 0.000..0.050 area 18.17 up 18.17 islands 6 smallest 0.315 median 0.541 largest 16.00
+  1 m_city_stone: tris 394 z 0.000..0.078 area 10.56 up 8.18 islands 18 smallest 0.210 median 0.619 largest 1.19
+  2 m_city_plaster: tris 59 z 0.000..0.072 area 2.39 up 1.96 islands 3 smallest 0.686 median 0.796 largest 0.91
+fire_ground_slabs_gold_lod0: verts 1330 submeshes 4 readable False
+  0 m_city_sand: tris 26 z 0.000..0.050 area 16.35 up 16.35 islands 2 smallest 0.350 median 16.000 largest 16.00
+  1 m_city_stone: tris 430 z 0.000..0.084 area 14.95 up 11.96 islands 20 smallest 0.132 median 0.748 largest 1.84
+  2 m_city_plaster: tris 82 z 0.000..0.074 area 1.95 up 1.51 islands 4 smallest 0.376 median 0.505 largest 0.60
+  3 m_city_gold: tris 96 z 0.000..0.069 area 2.68 up 1.60 islands 10 smallest 0.024 median 0.057 largest 0.82
+fire_roof_flat_b_lod0: verts 1000 submeshes 5 readable False
+  0 m_city_plaster: tris 280 z 0.000..0.125 area 17.61 up 16.01 islands 1 smallest 17.610 median 17.610 largest 17.61
+  1 m_city_mudbrick: tris 92 z 0.100..0.135 area 0.55 up 0.36 islands 2 smallest 0.216 median 0.338 largest 0.34
+  2 m_city_sand: tris 78 z 0.027..0.219 area 4.67 up 4.51 islands 2 smallest 0.820 median 3.853 largest 3.85
+  3 m_city_char: tris 48 z 0.095..0.141 area 1.45 up 1.34 islands 4 smallest 0.026 median 0.026 largest 1.38
+  4 m_city_timber: tris 108 z 0.092..0.220 area 3.52 up 2.26 islands 9 smallest 0.232 median 0.399 largest 0.47
+fire_roof_flat_a_lod0: verts 1555 submeshes 5 readable False
+  0 m_city_plaster: tris 280 z 0.000..0.130 area 17.61 up 16.01 islands 1 smallest 17.610 median 17.610 largest 17.61
+  1 m_city_reed: tris 412 z 0.000..0.167 area 1.99 up 0.48 islands 1 smallest 1.991 median 1.991 largest 1.99
+  2 m_city_mudbrick: tris 46 z 0.100..0.135 area 0.56 up 0.47 islands 1 smallest 0.563 median 0.563 largest 0.56
+  3 m_city_sand: tris 124 z 0.022..0.187 area 5.99 up 5.96 islands 3 smallest 0.587 median 0.804 largest 4.60
+  4 m_city_char: tris 96 z 0.129..0.141 area 0.21 up 0.15 islands 8 smallest 0.026 median 0.026 largest 0.03

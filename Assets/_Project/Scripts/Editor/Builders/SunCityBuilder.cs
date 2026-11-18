@@ -52,7 +52,7 @@ namespace Clover.EditorTools
         private static EnemyBuilder.Kit kit;
         private static Transform enemyRoot;
         private static System.Random dice;
-        private static Material mud, silt, sand, earth, earthDark, brick, brickDark, stone, stoneNew, stoneDark, shade, hallFloor, paveA, paveB, paveC, newA, newB, gold, ember, wood, reed, cloth, blue, clay, bronze, wrap, char_, bankFace, bankBand, ashlar, ashlarBand, goldVein;
+        private static Material houseBody, mud, silt, sand, earth, earthDark, brick, brickDark, stone, stoneNew, stoneDark, shade, hallFloor, paveA, paveB, paveC, newA, newB, gold, ember, wood, reed, cloth, blue, clay, bronze, wrap, char_, bankFace, bankBand, ashlar, ashlarBand, goldVein;
 
         [MenuItem("Clover/Build/Sun City")]
         public static void Build()
@@ -67,9 +67,12 @@ namespace Clover.EditorTools
             walls.Clear();
             jars.Clear();
             dice = new System.Random(1117);
-            tones.Clear();
+            paveSets.Clear();
+            paveCarriers.Clear();
+            pavingCount = 0;
             burntPaint = null;
             groundPaint = null;
+            mudPaint = null;
             roofPaint = null;
             SunCityKit.BeginBuild();
             SunCityGround.Seed(5150);
@@ -125,7 +128,7 @@ namespace Clover.EditorTools
             land.Configure(director, built.Player.GetComponent<PlayerDefence>());
             land.ConfigureHud(landHud);
             new GameObject("Sunlight").AddComponent<SunlightZones>().Configure(true, shadeList.ToArray(), null);
-            Zones(director, built.Camera.GetComponent<TopDownCamera>());
+            var zones = Zones(director, built.Camera.GetComponent<TopDownCamera>());
             built.Player.GetComponent<PlayerInteraction>().Configure(things.ToArray());
 
             // The sponsor: what it says on waking, at each fire the first time it is lit, and after the first fall (section 7.4).
@@ -150,6 +153,13 @@ namespace Clover.EditorTools
                 "Past the gate is his court. He will tell you he carried it home for them.\nLook at them. Then listen to him.",
             });
 
+            // Last: the still scenery is written down and drawn merged (the world pass's second half: the city drew
+            // fifteen hundred draws a frame piece by piece).
+            SunCityProps.Dress(world);
+            SunCityBeyond.City(world);
+            SunCityLife.Build(world, playerTransform, zones);
+            SceneryMerge.Prepare(world, "city", 40f);
+
             PlayerBuilder.AddTitle("The Sun-King's City", "where a herdsman became the sun");
             PlayerBuilder.AddPauseHint();
             SceneBuild.FinishOutsideBuild(scene, ScenePath);
@@ -159,10 +169,15 @@ namespace Clover.EditorTools
         public static Vector4[] Shade => shadeList.ToArray();
 
         // The places that change something while stood in: vistas, the districts' rhythms of noon, the forced first swells.
-        private static void Zones(AreaDirector director, TopDownCamera view)
+        private static LandZones Zones(AreaDirector director, TopDownCamera view)
         {
             var zones = new GameObject("Land Zones").AddComponent<LandZones>();
             zones.Configure(playerTransform, view, director);
+            // Vistas pull well back and look out, so the next tall thing (its fire and its smoke) is in the picture
+            // (the visual overview, step 9).
+            zones.VistaDistance = 2.2f;
+            zones.VistaPitch = -20f;
+            zones.VistaLookAhead = new Vector3(0f, 0f, 10f);
             zones.SetVistas(new[]
             {
                 new Vector4(-5f, 5f, 13f, 17f), new Vector4(-4f, 4f, 116.5f, 119.5f), new Vector4(-4f, 4f, 318f, 322f),
@@ -173,6 +188,7 @@ namespace Clover.EditorTools
                 new Vector4(-90f, 60f, -30f, 134f), new Vector4(-90f, 60f, 134f, 272f), new Vector4(-90f, 60f, 272f, HallSouth), new Vector4(-90f, 60f, HallSouth, 640f),
             }, new[] { 100f, 70f, 50f, 0f });
             zones.SetForced(new[] { new Vector4(-30f, 12f, 30f, 33f), new Vector4(-12f, 12f, 320f, 330f) }, new[] { new Vector2(-1f, 2f), new Vector2(9f, 11.5f) });
+            return zones;
         }
 
         private static void Materials()
@@ -180,6 +196,8 @@ namespace Clover.EditorTools
             mud = SunCityKit.MudWorked;
             brick = SunCityKit.Brick;
             brickDark = SunCityKit.BrickDark;
+            // What shows of a house's box between the modelled fronts (its side above a lower neighbour): mud plaster.
+            houseBody = SunCityKit.Flat("m_sun_plaster", new Color(0.68f, 0.62f, 0.53f));
             stone = SunCityKit.StoneWorked;
             shade = SunCityKit.Shade;
             hallFloor = SunCityKit.Flat("m_sun_hall_floor", new Color(0.62f, 0.58f, 0.62f));
@@ -269,7 +287,7 @@ namespace Clover.EditorTools
                     // Plates only in the bed, and not in the basin's paved strip under the quay.
                     if (!InBed(new Vector2(at.x, at.z)) && !InBed(new Vector2(at.x + 1.6f, at.z)) && !InBed(new Vector2(at.x - 1.6f, at.z))) continue;
                     if (at.z > 108f) continue;
-                    SunCityKit.City("ground_mud_cracked", plates, at + Vector3.up * -0.05f, dice.Next(4) * 90f, new Vector3(dice.Next(2) == 0 ? -1f : 1f, 1f, 1f), GroundPaint, false);
+                    SunCityKit.City("ground_mud_cracked", plates, at + Vector3.up * -0.05f, dice.Next(4) * 90f, new Vector3(dice.Next(2) == 0 ? -1f : 1f, 1f, 1f), MudPaint, false);
                 }
             }
             // Pans where the last water stood: pale silt lying in the mud.
@@ -395,7 +413,7 @@ namespace Clover.EditorTools
             quay.Add(new Vector2(40f, 134f));
             quay.Add(new Vector2(-40f, 134f));
             SunCityGround.Plateau("Quay", group, quay.ToArray(), Quay, -1f, stone, ashlar, ashlarBand, 0f, 0f, 1f);
-            Paving(group, -38f, 38f, 116f, 134f, Quay, 2.5f, paveA, paveB, paveC, 0.22f);
+            Paving(group, -38f, 38f, 116f, 134f, Quay, 2.5f, paveA, paveB, paveC, 0.22f, false, new Vector4(-2f, 3f, 116f, 134f));
             Cornice(group, -26f, -20f, 116f, Quay, Bed);
             Cornice(group, -16f, -10f, 116f, Quay, Bed);
             Cornice(group, -6f, -3.2f, 116f, Quay, Bed);
@@ -719,8 +737,8 @@ namespace Clover.EditorTools
             Scatter(group, -21f, 21f, 227f, 261f, Terrace, 36);
             // Drains cut in the paving between the rows of tables, running to a sump in the middle.
             foreach (float x in new[] { -8f, 3.5f, 9f })
-                Deco(PrimitiveType.Cube, "Drain", group, new Vector3(x, Terrace + 0.075f, 244f), new Vector3(0.35f, 0.02f, 30f), char_).shadowCastingMode = ShadowCastingMode.Off;
-            Deco(PrimitiveType.Cube, "Drain", group, new Vector3(0f, Terrace + 0.075f, 244f), new Vector3(34f, 0.02f, 0.35f), char_).shadowCastingMode = ShadowCastingMode.Off;
+                Deco(PrimitiveType.Cube, "Drain", group, new Vector3(x, Terrace + 0.075f, 244f), new Vector3(0.3f, 0.02f, 30f), DrainStone).shadowCastingMode = ShadowCastingMode.Off;
+            Deco(PrimitiveType.Cube, "Drain", group, new Vector3(0f, Terrace + 0.075f, 244f), new Vector3(34f, 0.02f, 0.3f), DrainStone).shadowCastingMode = ShadowCastingMode.Off;
             Disc("Sump", group, new Vector3(0f, Terrace, 244f), 1f, 0.15f, stoneDark);
             foreach (var at in new[] { new Vector3(-17f, Terrace, 235f), new Vector3(-16f, Terrace, 246f), new Vector3(17.5f, Terrace, 246f), new Vector3(-6f, Terrace, 256f) })
             {
@@ -1553,7 +1571,7 @@ namespace Clover.EditorTools
         // a roof of the kit's plaster tiles, and on that roof what people kept there.
         private static GameObject House(Transform parent, string name, float west, float east, float south, float north, float bottom, float top, string faces, bool clutter, bool burnt = false)
         {
-            var body = Wall(name, parent, west, east, south, north, bottom, top, burnt ? brickDark : brick, faces, true, burnt, false);
+            var body = Wall(name, parent, west, east, south, north, bottom, top, burnt ? brickDark : houseBody, faces, true, burnt, false);
             Roof(parent, west, east, south, north, top, clutter ? 2 + dice.Next(4) : 0, faces.Contains("w"), faces.Contains("e"), faces.Contains("s"));
             return body;
         }
@@ -1589,7 +1607,11 @@ namespace Clover.EditorTools
             if (cap && !masonry && north - south >= 1.9f && east - west >= 1.9f)
                 Roof(parent, west, east, south, north, top, 0, faces.Contains("w"), faces.Contains("e"), faces.Contains("s"));
             var renderer = body.GetComponent<Renderer>();
-            if (thinNorthSouth && faces.Contains("s")) renderer.enabled = false;
+            // The box casts the wall's shadow and the fronts none: two to three thousand triangles a front, drawn again
+            // for each of the sun's four shadow cascades, were half of what the city drew. The sun stands south, so a
+            // front's own relief throws nothing the box does not.
+            foreach (var front in shown) front.shadowCastingMode = ShadowCastingMode.Off;
+            if (thinNorthSouth && faces.Contains("s")) renderer.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
             else Inset(body, faces.Contains("s") ? inset : 0f, faces.Contains("w") && !thinEastWest ? inset : 0f, faces.Contains("e") && !thinEastWest ? inset : 0f);
             var fades = body.GetComponent<Fadeable>();
             if (fades != null) fades.AlsoFade(shown.ToArray());
@@ -1641,6 +1663,9 @@ namespace Clover.EditorTools
             }
             if (face == 's' && !low && !thin)
             {
+                // The parapet's shadow falls north across the roof behind it: a thin box drawn only as its shadow.
+                var parapet = Deco(PrimitiveType.Cube, "Parapet Shadow", parent, new Vector3((west + east) * 0.5f, bottom + height + 0.22f, south + 0.45f), new Vector3(east - west, 0.5f, 0.38f), houseBody);
+                parapet.shadowCastingMode = ShadowCastingMode.ShadowsOnly;
                 Collect(SunCityKit.City("house_corner", parent, new Vector3(east - 0.5f, bottom, south + 0.5f), 180f, new Vector3(1f, height / 4f, 1f), paint), shown);
                 Collect(SunCityKit.City("house_corner", parent, new Vector3(west + 0.5f, bottom, south + 0.5f), 270f, new Vector3(1f, height / 4f, 1f), paint), shown);
             }
@@ -1724,18 +1749,25 @@ namespace Clover.EditorTools
         // A flat roof of the kit's plaster tiles inside the parapets, and on it what the house kept up there.
         private static void Roof(Transform parent, float west, float east, float south, float north, float top, int clutter, bool westFront, bool eastFront, bool southFront)
         {
-            float w = west + (westFront ? 0.35f : 0.1f), e = east - (eastFront ? 0.35f : 0.1f), s2 = south + (southFront ? 0.35f : 0.1f), n2 = north - 0.1f;
+            // Out to the box's edge where no front stands: a gap there showed the box's top as a strip between houses.
+            float w = west + (westFront ? 0.35f : -0.02f), e = east - (eastFront ? 0.35f : -0.02f), s2 = south + (southFront ? 0.35f : -0.02f), n2 = north + 0.02f;
             if (e - w < 1.5f || n2 - s2 < 1.5f) return;
             // Tiles about six metres across (the kit's scale up to 1.5): fewer edges, so a roof reads as one house's roof.
             int across = Mathf.Max(1, Mathf.RoundToInt((e - w) / 6f)), up = Mathf.Max(1, Mathf.RoundToInt((n2 - s2) / 6f));
             float wide = (e - w) / across, deep = (n2 - s2) / up;
+            // Hatches few and apart: on the big roofs a third of the tiles were hatches, and they stood in a grid.
+            var hatches = new HashSet<(int, int)>();
+            int most = Mathf.Max(1, across * up / 6);
             for (int z = 0; z < up; z++)
                 for (int x = 0; x < across; x++)
                 {
                     int turn = dice.Next(4);
                     float sx = (turn % 2 == 0 ? wide : deep) / 4.2f, sz = (turn % 2 == 0 ? deep : wide) / 4.2f;
                     if (dice.Next(2) == 0) sx = -sx;
-                    SunCityKit.City(dice.Next(3) == 0 ? "roof_flat_b" : "roof_flat_a", parent, new Vector3(w + (x + 0.5f) * wide, top + 0.01f, s2 + (z + 0.5f) * deep), turn * 90f,
+                    bool asHatch = dice.Next(3) == 0 && hatches.Count < most && !hatches.Contains((x - 1, z)) && !hatches.Contains((x, z - 1))
+                        && !hatches.Contains((x - 1, z - 1)) && !hatches.Contains((x + 1, z - 1));
+                    if (asHatch) hatches.Add((x, z));
+                    SunCityKit.City(asHatch ? "roof_flat_b" : "roof_flat_a", parent, new Vector3(w + (x + 0.5f) * wide, top + 0.01f, s2 + (z + 0.5f) * deep), turn * 90f,
                         new Vector3(sx, 1f, sz), RoofPaint, false);
                 }
             RoofClutter(parent, w, e, s2, n2, top, clutter);
@@ -1772,7 +1804,7 @@ namespace Clover.EditorTools
                 // In the city of wicks a roof oven or a hearth hole still smokes, and the roof round it is sooted.
                 if (district == 2 && (piece == "prop_oven" || dice.NextDouble() < 0.12))
                 {
-                    var fire = SunCityKit.Smoulder(parent, at + new Vector3(piece == "prop_oven" ? 0.9f : 1.2f, 0f, 0f), piece == "prop_oven" ? 0.3f : 0.5f, piece != "prop_oven", 0.8f);
+                    var fire = SunCityKit.Smoulder(parent, at + new Vector3(piece == "prop_oven" ? 0.9f : 1.2f, 0f, 0f), piece == "prop_oven" ? 0.3f : 0.5f, piece != "prop_oven", 0.8f, false);
                     fire.name = "Roof Fire";
                 }
             }
@@ -1920,51 +1952,63 @@ namespace Clover.EditorTools
             disc.isStatic = true;
         }
 
-        // Paving (the overview, steps 1 and 2): the kit's four-metre stretches of worn slabs, each slab under a metre or
-        // so (the size real ones are, against a player 1.8 m tall), chipped, cracked, sunk, some recut, sand where one is
-        // missing. Each stretch is turned and mirrored at random so no two read alike, and laid in the builder's tones:
-        // mostly the usual, some the other, a few the rare. Where the paving is gone the ground shows, with blown sand,
-        // loose brick or broken pots on it. With gold the king's gold is run into the joints.
-        private static void Paving(Transform parent, float west, float east, float south, float north, float top, float size, Material usual, Material other, Material rare, float missing, bool golden = false)
+        // Paving (the overview, steps 1 and 2; calmed in the world pass's second half): courses of slabs under a metre or
+        // so (the size real ones are, against a player 1.8 m tall) running across the whole stretch, laid when the scene
+        // opens (PavedFloor), one layer, joints a shade darker than the stone, so it reads as paving and not as a board of
+        // tiles; a large wash of tone over it (the mottle) breaks up any repeat. Where the paving has worn through (about
+        // one four-metre square in "missing", now an uneven patch round it) the ground shows, with blown sand, loose
+        // brick or broken pots on it. The dice are drawn exactly as when the stretch was laid in kit tiles, so nothing
+        // placed after it moves.
+        private static int pavingCount;
+        private static void Paving(Transform parent, float west, float east, float south, float north, float top, float size, Material usual, Material other, Material rare, float missing, bool golden = false, Vector4 hole = default)
         {
             var group = BuildKit.Group("Paving", parent);
             int across = Mathf.Max(1, Mathf.RoundToInt((east - west) / 4f)), up = Mathf.Max(1, Mathf.RoundToInt((north - south) / 4f));
             float wide = (east - west) / across, deep = (north - south) / up;
-            var tones = new[] { Tone(usual), Tone(other), Tone(rare) };
+            var bare = new List<Vector4>();
             for (int z = 0; z < up; z++)
                 for (int x = 0; x < across; x++)
                 {
                     var centre = new Vector3(west + (x + 0.5f) * wide, top - 0.015f, south + (z + 0.5f) * deep);
                     if (dice.NextDouble() < missing)
                     {
-                        // The paving gone here: the ground, and on it what the wind and the people left.
                         int what = dice.Next(5);
                         string litter = what == 0 ? "ground_dust_patch" : what == 1 ? "ground_bricks" : what == 2 ? "ground_sherds" : null;
+                        float spread = Mathf.Min(wide, deep) * (0.42f + 0.12f * ((x * 7 + z * 13) % 5) / 4f);
+                        bare.Add(new Vector4(centre.x + (((x * 31 + z * 17) % 7) - 3) * 0.12f, centre.z + (((x * 11 + z * 23) % 7) - 3) * 0.12f, spread, 0f));
                         if (litter != null)
                             SunCityKit.City(litter, group, centre + new Vector3(((float)dice.NextDouble() - 0.5f) * wide * 0.4f, 0.02f, ((float)dice.NextDouble() - 0.5f) * deep * 0.4f), (float)dice.NextDouble() * 360f, null, GroundPaint, false);
                         continue;
                     }
-                    double pick = dice.NextDouble();
-                    int turn = dice.Next(4);
-                    float sx = (turn % 2 == 0 ? wide : deep) / 4f, sz = (turn % 2 == 0 ? deep : wide) / 4f;
-                    if (dice.Next(2) == 0) sx = -sx;
-                    SunCityKit.City(golden && dice.NextDouble() < 0.6 ? "ground_slabs_gold" : "ground_slabs", group, centre, turn * 90f, new Vector3(sx, 1f, sz),
-                        tones[pick < 0.62 ? 0 : pick < 0.9 ? 1 : 2], false);
+                    dice.NextDouble();
+                    dice.Next(4);
+                    dice.Next(2);
+                    if (golden) dice.NextDouble();
                 }
+            bool royal = usual == newA || usual == newB;
+            var floor = new GameObject("Paved Floor").AddComponent<PavedFloor>();
+            floor.transform.SetParent(group, false);
+            floor.gameObject.isStatic = true;
+            // The four tones drawn as one material whose points carry them: a stretch of paving is one draw.
+            var set = PaveSet(usual);
+            var carried = set.Select(material => SceneryMerge.Carried(material, paveCarriers, "pave")).ToArray();
+            floor.Configure(new Vector4(west, east, south, north), top, royal ? new Vector2(0.9f, 1.45f) : new Vector2(0.62f, 1.1f), 0.035f, 0.025f,
+                bare.ToArray(), hole, 7919 * ++pavingCount + 101, new[] { carried[0].Item1 }, carried.Select(pair => pair.Item2).ToArray());
         }
 
-        // The kit's slabs repainted in one of a builder's paving tones: the stone takes the tone, the recut slabs a paler one.
-        private static readonly Dictionary<string, Dictionary<string, Material>> tones = new Dictionary<string, Dictionary<string, Material>>();
-        private static Dictionary<string, Material> Tone(Material from)
+        // The paving's four materials in a builder's tone: the joints' bed a shade under the stone, the stone, a shade
+        // darker, the paler recut slabs. The palest new stone sits near white under the noon sun: it is laid a shade down.
+        private static readonly Dictionary<string, Material[]> paveSets = new Dictionary<string, Material[]>();
+        private static readonly Dictionary<string, Material> paveCarriers = new Dictionary<string, Material>();
+        private static Material[] PaveSet(Material from)
         {
-            if (tones.TryGetValue(from.name, out var known) && known.Values.All(material => material != null)) return known;
-            // The palest new stone sits near white under the noon sun (the overview): it is laid a shade down.
+            if (paveSets.TryGetValue(from.name, out var known) && known.All(material => material != null)) return known;
             Color colour = from.GetColor("_BaseColor");
             if (colour.grayscale > 0.7f) colour *= 0.9f;
             colour.a = 1f;
-            var paint = SunCityKit.Ground("slab_" + from.name.Replace("m_sun_", "").Replace("m_kit_", ""), colour);
-            tones[from.name] = paint;
-            return paint;
+            var set = SunCityKit.PaveSet(from.name.Replace("m_sun_", "").Replace("m_kit_", ""), colour);
+            paveSets[from.name] = set;
+            return set;
         }
 
         // Bare ground is never one colour: darker patches, paler dusty ones, and a few stones.
@@ -2005,6 +2049,23 @@ namespace Clover.EditorTools
                 float size = 0.7f + (float)dice.NextDouble() * 0.5f;
                 SunCityKit.City(i % 2 == 0 ? "ground_dust_drift" : "ground_dust_patch", parent, spot + Vector3.up * 0.01f, yaw + (float)dice.NextDouble() * 40f - 20f + (dice.Next(2) == 0 ? 0f : 180f),
                     new Vector3(size, 1f, size), GroundPaint, false);
+            }
+        }
+
+        // A drain cut in the yard's paving: a channel stained dark with what ran in it, not a black strip.
+        private static Material DrainStone => SunCityKit.Flat("m_sun_drain", new Color(0.36f, 0.31f, 0.27f));
+
+        // The cracked mud of the riverbed: its pale silt plates only a little paler than the mud, so the bed reads as one
+        // cracked floor and not as a field of white spots.
+        private static Dictionary<string, Material> mudPaint;
+        private static Dictionary<string, Material> MudPaint
+        {
+            get
+            {
+                if (mudPaint != null && mudPaint.Values.All(material => material != null)) return mudPaint;
+                mudPaint = new Dictionary<string, Material>(SunCityKit.Ground("riverbed"));
+                mudPaint["m_city_plaster"] = SunCityKit.CityTone("m_city_riverbed_silt", new Color(0.6f, 0.53f, 0.44f), 0f);
+                return mudPaint;
             }
         }
 

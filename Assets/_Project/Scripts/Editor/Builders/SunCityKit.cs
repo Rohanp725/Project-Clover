@@ -182,6 +182,9 @@ namespace Clover.EditorTools
         {
             material.SetFloat("_ShadeThreshold", 0.12f);
             material.SetColor("_BounceColor", new Color(0.34f, 0.24f, 0.13f));
+            // With no line, the outline pass would still be drawn for nothing: it is not asked for (a draw saved on
+            // every floor, roof and drift of the land).
+            material.SetShaderPassEnabled("SRPDefaultUnlit", material.GetFloat("_OutlineWidth") > 0.00001f);
             EditorUtility.SetDirty(material);
             return material;
         }
@@ -473,6 +476,8 @@ namespace Clover.EditorTools
                 case "m_sun_brick_dark":
                     return (ProceduralTextures.SunBrick(), 0.25f);
                 case "m_sun_stone_worked":
+                case "m_sun_pave_new_a":
+                case "m_sun_pave_new_b":
                 case "m_sun_ashlar":
                 case "m_sun_ashlar_band":
                 case "m_sun_hall_floor":
@@ -482,6 +487,8 @@ namespace Clover.EditorTools
                     return (ProceduralTextures.SunEarth(), 0.125f);
                 case "m_sun_sand":
                     return (ProceduralTextures.SunSand(), 0.1f);
+                case "m_sun_plaster":
+                    return (ProceduralTextures.SunEarth(), 0.18f);
                 case "m_sun_bank_face":
                 case "m_sun_bank_band":
                     return (ProceduralTextures.SunEarth(), 0.18f);
@@ -586,6 +593,48 @@ namespace Clover.EditorTools
             return paint;
         }
 
+        /// <summary>
+        /// The city kit's slots as materials that sway in the wind (clover_toon's _Sway: bend at a metre's height), for
+        /// palms, reeds and hanging cloth: m_city_<paramref name="tag"/>_<slot>. Only pieces painted with these move.
+        /// </summary>
+        public static Dictionary<string, Material> Swaying(string tag, float sway)
+        {
+            var paint = new Dictionary<string, Material>();
+            foreach (var slot in city)
+            {
+                float outline = slot.Key == "palm" || slot.Key == "linen" ? 0f : slot.Key == "reed" ? 0.004f : 0.008f;
+                var material = Scenery($"m_city_{tag}_{slot.Key}", slot.Value, slot.Key, outline);
+                material.SetFloat("_Sway", sway);
+                EditorUtility.SetDirty(material);
+                paint["m_city_" + slot.Key] = material;
+            }
+            return paint;
+        }
+
+        /// <summary>
+        /// The four materials of a stretch of paving (<see cref="Clover.World.PavingLayout"/>) in a stone colour: the
+        /// joints' bed (a shade under the stone, warmed by the sand in it, so joints read as thin lines), the stone, a
+        /// shade darker, and the paler recut slabs. All carry the land's large wash of tone, laid from world space forty
+        /// metres to a repeat, so a plaza is never one flat colour and its courses never show a repeat.
+        /// </summary>
+        public static Material[] PaveSet(string name, Color stone)
+        {
+            var mottle = ProceduralTextures.SunMottle();
+            Material Make(string part, Color colour)
+            {
+                var material = BuildKit.Toon(Folder, $"m_city_pave_{name}_{part}", colour, false, mottle, 1f / 40f, 0f);
+                return Worked(Light(material, "", 0.8f));
+            }
+            var sand = new Color(0.64f, 0.56f, 0.43f);
+            return new[]
+            {
+                Make("bed", Color.Lerp(stone * 0.86f, sand, 0.18f)),
+                Make("a", stone),
+                Make("b", stone * 0.95f),
+                Make("recut", Color.Lerp(stone, new Color(0.86f, 0.83f, 0.77f), 0.35f)),
+            };
+        }
+
         // ------------------------------------------------------------------ fire in the city
 
         /// <summary>
@@ -626,7 +675,7 @@ namespace Clover.EditorTools
         /// of small tongues on it, embers spat up, a thread of smoke leaning off, and, if asked for, a light that
         /// flickers on the floor and walls round it. <paramref name="radius"/> in metres, 0.4 to 2.5.
         /// </summary>
-        public static Transform Smoulder(Transform parent, Vector3 at, float radius, bool light = true, float smoke = 1f)
+        public static Transform Smoulder(Transform parent, Vector3 at, float radius, bool light = true, float smoke = 1f, bool embers = true)
         {
             var group = new GameObject("Smoulder").transform;
             group.SetParent(parent, false);
@@ -634,10 +683,38 @@ namespace Clover.EditorTools
             Scorch(group, at, radius * 1.35f, 0.75f);
             int count = Mathf.Clamp(Mathf.RoundToInt(radius * radius * 14f), 5, 48);
             Flames(group, at, radius, count, Mathf.Lerp(0.45f, 0.8f, Mathf.InverseLerp(0.4f, 2f, radius)), 0.55f, "smoulder");
-            Embers(group, at + Vector3.up * 0.2f, radius * 0.8f, 3f + radius * 5f);
+            // Sparks are worth their cost only near the eye: far fires and fires on roofs go without (a particle system
+            // is some fifty kilobytes of scene, and a draw).
+            if (embers) Embers(group, at + Vector3.up * 0.2f, radius * 0.8f, 3f + radius * 5f);
             if (smoke > 0f) Smoke(group, at + Vector3.up * 0.5f, radius * 0.6f, smoke * (1.2f + radius));
             if (light) FireLight(group, at + Vector3.up * 1.1f, Mathf.Max(3.2f, radius * 2.8f), 1.6f + radius * 0.5f);
             return group;
+        }
+
+        /// <summary>
+        /// A tall column of smoke going up from a fire seen from far (a beacon, a hearth in the lower town): dark puffs
+        /// rising, leaning east with the wind and spreading. It keeps going off the screen, as something seen from afar.
+        /// </summary>
+        public static ParticleSystem SmokeColumn(Transform parent, Vector3 at, float scale)
+        {
+            var host = new GameObject("Smoke Column");
+            host.transform.SetParent(parent, false);
+            host.transform.SetPositionAndRotation(at, Quaternion.Euler(-90f, 0f, 0f));
+            var system = Burning(host, BuildKit.Smoke(VfxBuilder.Folder, "m_vfx_smoke", new Color(0.85f, 0.8f, 0.76f, 0.75f)),
+                2.2f * scale, 7f, 10f, 1.2f * scale, 2.2f * scale, 1.4f, 2.2f, 0.3f * scale, -0.02f);
+            var main = system.main;
+            main.startColor = new Color(0.26f, 0.23f, 0.22f, 0.45f);
+            main.startRotation = new ParticleSystem.MinMaxCurve(0f, 6.28f);
+            main.cullingMode = ParticleSystemCullingMode.AlwaysSimulate;
+            var drift = system.velocityOverLifetime;
+            drift.enabled = true;
+            drift.space = ParticleSystemSimulationSpace.World;
+            drift.x = new ParticleSystem.MinMaxCurve(0.6f, 1.2f);
+            drift.y = new ParticleSystem.MinMaxCurve(0f, 0.2f);
+            drift.z = new ParticleSystem.MinMaxCurve(0.1f, 0.4f);
+            var grow = system.sizeOverLifetime;
+            grow.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 0.7f, 1f, 3.2f));
+            return system;
         }
 
         /// <summary>A small flame burning in a niche or a lamp: a few tongues, a glint of light on the wall round it.</summary>
@@ -772,7 +849,7 @@ namespace Clover.EditorTools
         }
 
         // A mesh made by code, kept as an asset under a stable name so scenes can point at it.
-        private static Mesh SavedMesh(string name, System.Func<Mesh> make)
+        public static Mesh SavedMesh(string name, System.Func<Mesh> make)
         {
             string path = $"{Folder}/{name}.asset";
             var mesh = AssetDatabase.LoadAssetAtPath<Mesh>(path);

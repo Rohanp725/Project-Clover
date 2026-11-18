@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Clover.Core;
 using Clover.Gameplay;
 using Clover.Player;
@@ -47,6 +48,8 @@ namespace Clover.EditorTools
             // The ground: one slab to stand on under everything, plain mud beyond the walls.
             var ground = BuildKit.Block("Ground", world, new Vector3(0f, -0.5f, -4f), new Vector3(120f, 1f, 120f), SunCityKit.Mud);
             Object.DestroyImmediate(ground.GetComponent<Fadeable>());
+            // What lies below and beyond the court (the visual overview, step 8): kept to a method of its own.
+            SunCityBeyond.Court(world, ground, Radius, WestGate);
 
             // The court's floor, laid in rings: pale stone, a gold ring the hours are cut on, darker stone round the obelisk.
             var floor = BuildKit.Group("Court Floor", world);
@@ -363,17 +366,16 @@ namespace Clover.EditorTools
         {
             var dressing = BuildKit.Group("Forecourt Dressing", fore);
             var ground = SunCityKit.Ground("court_slab", new Color(0.64f, 0.6f, 0.53f));
-            var dice = new System.Random(2081);
-            // Three stretches across, three deep, from the door's wall to short of the gold line.
-            for (int z = 0; z < 3; z++)
-                for (int x = 0; x < 3; x++)
-                {
-                    int turn = dice.Next(4);
-                    float wide = 4f, deep = 14.6f / 3f;
-                    float sx = (turn % 2 == 0 ? wide : deep) / 4f, sz = (turn % 2 == 0 ? deep : wide) / 4f;
-                    if (dice.Next(2) == 0) sx = -sx;
-                    SunCityKit.City("ground_slabs", dressing, new Vector3(-4f + x * 4f, -0.01f, -35.8f + (z + 0.5f) * deep), turn * 90f, new Vector3(sx, 1f, sz), ground, false);
-                }
+            // One calm layer of slabs from the door's wall to short of the gold line, as the city's paving is laid (the
+            // world pass's second half): courses of slabs, quiet joints, a worn patch by the door and one by the fire.
+            var carriers = new Dictionary<string, Material>();
+            var carried = SunCityKit.PaveSet("court", new Color(0.62f, 0.58f, 0.51f)).Select(material => SceneryMerge.Carried(material, carriers, "pave")).ToArray();
+            var paved = new GameObject("Paved Floor").AddComponent<PavedFloor>();
+            paved.transform.SetParent(dressing, false);
+            paved.gameObject.isStatic = true;
+            paved.Configure(new Vector4(-6f, 6f, -36.4f, -20.6f), 0.012f, new Vector2(0.62f, 1.1f), 0.035f, 0.025f,
+                new[] { new Vector4(-1.6f, -35.2f, 1.3f, 0f), new Vector4(3.4f, -27.6f, 1.1f, 0f) }, default, 2081,
+                new[] { carried[0].Item1 }, carried.Select(pair => pair.Item2).ToArray());
             // The walls' inner faces: the west wall 3 m high fronted with house walls, the east wall 2 m with the low broken wall.
             var westShown = new List<Renderer>();
             var eastShown = new List<Renderer>();

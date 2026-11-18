@@ -39,6 +39,8 @@ Material:
     - _ShadeSoftness: 0.015
     - _ShadeThreshold: 0.25
     - _SmoothNormalsInTangents: 1
+    - _Sway: 0
+    - _VertexColour: 0
     - _WorldMapping: 0
     - _WorldScale: 0.25
     m_Colors:

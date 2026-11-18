@@ -70,7 +70,8 @@ namespace Clover.EditorTools
             importer.useFileUnits = true;
             importer.importCameras = false;
             importer.importLights = false;
-            importer.isReadable = false;
+            // The Fire land's kits are read when a scene opens: their pieces are merged into a few meshes (MergedScenery).
+            importer.isReadable = assetPath.StartsWith(ModelsDir + "Environment/fire_") || assetPath.StartsWith(ModelsDir + "Environment/tomb_");
             importer.meshCompression = ModelImporterMeshCompression.Off;
             importer.optimizeMeshPolygons = true;
             importer.optimizeMeshVertices = true;

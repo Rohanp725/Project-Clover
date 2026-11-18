@@ -1,0 +1,33 @@
+objects 5901 renderers enabled 1937 kit 5 other 1932 tris 234763 casting tris 230687 verts 359201 submeshes 2174 materials 66
+World/Golden Way: renderers 129 tris 113840 submeshes 222
+World/Hall Of Columns: renderers 46 tris 66954 submeshes 96
+World/Painted Tombs: renderers 11 tris 19117 submeshes 52
+World/City Of Wicks: renderers 327 tris 13616 submeshes 361
+World/Dry River: renderers 76 tris 9172 submeshes 84
+Enemies/The Thirsting: renderers 390 tris 4710 submeshes 390
+World/Fishers' Bank: renderers 21 tris 3114 submeshes 26
+World/Last Gate: renderers 20 tris 814 submeshes 22
+World/City Fires: renderers 80 tris 786 submeshes 80
+Thrown Flask/Flask: renderers 2 tris 780 submeshes 2
+Enemies/The Wick: renderers 300 tris 600 submeshes 300
+Enemies/Gilded Levy: renderers 150 tris 300 submeshes 150
+Enemies/Sun-Blind Priest: renderers 125 tris 250 submeshes 125
+Enemies/The Ashen: renderers 104 tris 208 submeshes 104
+Player/Model: renderers 3 tris 196 submeshes 7
+Enemies/Gilded Spearman: renderers 75 tris 150 submeshes 75
+Enemies/Champion of the Gate: renderers 25 tris 50 submeshes 25
+Enemies/Gilded Warden: renderers 25 tris 50 submeshes 25
+Ember Motes/Mote 7: renderers 2 tris 4 submeshes 2
+Ember Motes/Mote 4: renderers 2 tris 4 submeshes 2
+Ember Motes/Mote 5: renderers 2 tris 4 submeshes 2
+Cut Marks/Stroke 5: renderers 2 tris 4 submeshes 2
+Ember Motes/Mote 8: renderers 2 tris 4 submeshes 2
+Cut Marks/Stroke 6: renderers 2 tris 4 submeshes 2
+Cut Marks/Stroke 4: renderers 2 tris 4 submeshes 2
+Cut Marks/Stroke 3: renderers 2 tris 4 submeshes 2
+Cut Marks/Stroke 1: renderers 2 tris 4 submeshes 2
+Ember Motes/Mote 3: renderers 2 tris 4 submeshes 2
+Cut Marks/Stroke 2: renderers 2 tris 4 submeshes 2
+Ember Motes/Mote 1: renderers 2 tris 4 submeshes 2
+Ember Motes/Mote 6: renderers 2 tris 4 submeshes 2
+Ember Motes/Mote 2: renderers 2 tris 4 submeshes 2

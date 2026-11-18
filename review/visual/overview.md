@@ -718,6 +718,100 @@ Each step lists what to change, where, how to check it with a frame, and the pay
 | Brazier variants, lamp niche, wall lamp | `SunCityKit.Place("brazier")` (one model), "Lamp Niche" plus "Lamp" spheres | The kit's brazier |
 | Far-city low-detail houses | `Beyond()` | Textured boxes |
 
+### As built (2026-11-18)
+
+Two workers in one night. The first half (commit `0a20bec`) did steps 1 to 5 with the Blender city kit. The second half
+calmed the paving, paid back the cost, and did steps 6 to 11 in part. Nothing here is accepted by the owner yet.
+
+**First half (steps 1 to 5).**
+
+- The land's own textures (`ProceduralTextures.Sun*`) are on the city's walls, floors and faces.
+- The kit's brick and stone fronts stand on the house boxes (`Wall`, `House`, `Roof`, `RoofClutter`).
+- The ground is the kit's slabs and cracked mud, painted per district (`GroundPaint`, `Tone`).
+- A warm bounce lights faces in shade (`clover_toon` `_BounceColor`).
+- Fire is in the streets: braziers, smoulders, lamps and hearth glows, with flickering lights (`SunCityKit.Brazier`,
+  `Smoulder`, `Lamp`, `FireFlicker`).
+
+**Second half: fixes.**
+
+- *Paving.* The kit's slab tiles (40% sand, octagon heaps, overlapping in places) are replaced. Each `Paving` call now lays
+  one `PavedFloor`, built when the scene opens by `PavingLayout`:
+  - courses of slabs 0.6 to 1.1 m across (0.9 to 1.45 m on the king's new stone), laid across the whole stretch with no
+    tile repeat;
+  - joints a shade under the stone; some slabs chipped, cracked or recut paler;
+  - worn-through patches with uneven edges where the old "missing" squares were, with the same litter;
+  - one layer only (the quay's strip is cut out of the main paving);
+  - a 40 m wash of tone over it all (`ProceduralTextures.SunMottle`).
+
+  The dice are drawn exactly as before, so nothing placed after a stretch moved. The forecourt is paved the same way.
+- *Roofs.* There is one hatch tile per six at most, never touching another. Roofs run to the box's edge where no front
+  stands. House boxes are mud plaster (`m_sun_plaster`), not brick courses.
+- *Riverbed.* Its pale silt plates are toned near the mud (`MudPaint`). The yard's drains are dark earth, not char.
+
+**Second half: cost.**
+
+- *Merging.* `SceneryMerge.Prepare` (editor) writes every still, static, toon-drawn piece of the city down as mesh,
+  materials and place, and takes the piece out of the scene. `MergedScenery` (runtime, `[ExecuteAlways]`, never saved)
+  merges them when the scene opens: one object for each 40 m square and each fade group.
+- *Carrier materials.* Materials that differ only in colour share one white carrier (`clover_toon` `_VertexColour`,
+  default off), and each piece's colour rides in its points. The city's 131 materials draw as 23.
+- *Fades.* Fronts still thin out with their box: they are merged per Fadeable, and the Fadeable is pointed at the merged
+  renderer in play.
+- *Shadows.* Fronts cast no shadow; the box behind them does, with a thin parapet caster for the roof behind a south
+  front. Fadeables' shadows are merged per square.
+- *Outlines.* Materials with no outline skip the outline pass.
+- *Particles.* Far fires and roof fires go without sparks.
+- *The kits* are read when the scene opens (`AssetImportRules`: Environment `fire_*` and `tomb_*` are readable).
+
+**Second half: steps 6 to 11.**
+
+- *Step 6.* Done.
+  - Palms (kit `palm_a/b/c`), reeds and papyrus sway through `clover_toon` `_Sway` (default 0; height-weighted, gust and
+    flutter). The yard's linen strips hang and swing. Roof drying lines sway.
+  - `DistrictMood` (runtime) follows the player with each district's air: dust motes and blown sand over the river
+    town; ash, sparks and smoke wisps over the city of wicks; glare motes, sand and the court's smoke pall on the king's
+    ground; motes in the hall's bars of light.
+  - Three kites wheel high over the player, drawn only as their shadows (`CirclingBirds`).
+- *Step 7.* Done for the light. Each district has a global volume (exposure, contrast, saturation, colour filter,
+  bloom) and its own fog density, eased by `DistrictMood` from `LandZones.District`. The floor signatures per district
+  were not changed.
+- *Step 8.* Done.
+  - The city now stands on a mound (the tell, its faces dried mud in strata) 11 m over a lower town of flat-roofed
+    houses, lanes, roof hearths and smoke columns, palms, and dunes beyond. Gardens and palm groves lie on the mound
+    outside the west wall (`SunCityBeyond.City`).
+  - The court stands on a platform 18 m over its own lower town (`SunCityBeyond.Court`, called from
+    `SunCourtBuilder.Build` right after the ground slab; the slab is kept to stand on and no longer drawn).
+  - A 40 m stair goes down west from the sunset gate, and a road runs on toward the dunes with fires along it. A dry
+    river line runs south-east.
+- *Step 9.* Partly.
+  - Vistas pull back to 2.2 times the distance at 20 degrees less pitch, looking 10 m ahead.
+  - Fire bowls with smoke plumes stand on the embalmers' gate towers, the pylon, the gate of noon's wall and the
+    obelisk.
+  - The court's smoke drifts south over district 3 (`DistrictMood` "Pall").
+  - Not done: the statues' heads (impossible from this camera without moving them) and new floor lines.
+- *Step 10.* Partly (`SunCityProps.Dress`).
+  - Oil, cargo, vendors' and great jars are kit jars and amphorae.
+  - Natron heaps are lumpy mounds and the wrapped dead are bound bundles (meshes made here).
+  - Squared blocks and offcuts are kit fallen blocks; broken drums are kit broken columns.
+  - The bowl's predecessors are the seated king cast in dull gold.
+  - Rubble cubes are kit rubble and brick heaps.
+  - Not done: the yard's baskets and linen bundles, the column drums' look.
+- *Step 11.* Only reeds and papyrus at the banks' feet, palms, and gardens on the mound. No new cornices, wall-top
+  crumbling or fallen blocks at faces.
+- *Step 12.* This note; frames are `review/shots/current/world2_*.png`; numbers in `review/checks/world2/`.
+
+**Cost, measured in the market's busy moment** (`profile_city.sh`, PerfProbe):
+
+| | Draw calls | Set-pass calls | Triangles | Profiler main thread median | GPU median |
+|---|---|---|---|---|---|
+| Before the pass | ~796 | n/a | ~333k | 10.3 ms | 3.4 ms |
+| After the first half | 1549 | 334 | 712k | 11.7 ms | 4.3 ms |
+| After the second half | 736 | 232 | 707k | 11.9 ms | 4.5 ms |
+
+The triangle count is back where the first half left it: the merged squares are culled whole, and the district air and the
+fire on the tall things add to it. About 6 ms of every recorded main-thread frame is the profiler's own memory counters. The render loop's own time is back
+to 1.56 ms (before 1.51, first half 1.86). The scene file is 30 MB, down from 36 MB.
+
 ---
 
 ## A later work plan for the castle, the summit and the hub

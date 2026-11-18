@@ -26,6 +26,8 @@ Shader "Clover/Toon"
         [Toggle] _SmoothNormalsInTangents ("Smooth normals are in the tangents", Float) = 1
         _Fade ("Solidity (thinned to dots below 1)", Range(0, 1)) = 1
         [HDR] _BounceColor ("Warm light thrown up from a bright floor onto walls in shade", Color) = (0, 0, 0, 1)
+        [Toggle] _VertexColour ("Multiply by the mesh's own vertex colours (merged scenery)", Float) = 0
+        _Sway ("Sway in the wind (bend at a metre's height; below 0 hangs and swings from the top)", Range(-0.1, 0.1)) = 0
     }
 
     SubShader
@@ -58,7 +60,26 @@ Shader "Clover/Toon"
             half _SmoothNormalsInTangents;
             half _Fade;
             half4 _BounceColor;
+            half _Sway;
+            half _VertexColour;
         CBUFFER_END
+
+        // A palm, a reed or a hanging cloth moving in the wind: bent by the square of its height over its own origin (or,
+        // hanging, of its depth under it), leaning with a slow gust from the west and a flutter at its tips, each in its
+        // own time by where it stands. Nothing moves when _Sway is 0, the default, so every other material is as it was.
+        float3 SwayWS(float3 positionWS)
+        {
+            if (_Sway == 0) return positionWS;
+            float3 origin = float3(UNITY_MATRIX_M._m03, UNITY_MATRIX_M._m13, UNITY_MATRIX_M._m23);
+            float rise = _Sway > 0 ? max(0.0, positionWS.y - origin.y) : max(0.0, origin.y - positionWS.y);
+            float phase = dot(origin.xz, float2(0.37, 0.71));
+            float t = _Time.y;
+            float gust = 0.55 + 0.45 * sin(t * 0.47 + phase * 0.3);
+            float2 lean = float2(0.7 + 0.5 * sin(t * 1.13 + phase), 0.45 * sin(t * 0.83 + phase * 1.7)) * gust;
+            float flutter = sin(t * 4.3 + dot(positionWS, float3(1.7, 1.1, 1.3))) * 0.05 * saturate(rise / 3.0);
+            float bend = abs(_Sway) * rise * rise;
+            return positionWS + float3(lean.x * bend + flutter, 0, lean.y * bend + flutter * 0.5);
+        }
 
         // A piece of the world in the camera's way is thinned to a screen of dots, so the fight behind it shows through.
         void ClipFade(float4 positionCS)
@@ -87,6 +108,7 @@ Shader "Clover/Toon"
                 float4 positionOS : POSITION;
                 float3 normalOS : NORMAL;
                 float2 uv : TEXCOORD0;
+                half4 colour : COLOR;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -97,17 +119,20 @@ Shader "Clover/Toon"
                 float3 normalWS : TEXCOORD1;
                 float2 uv : TEXCOORD2;
                 half fogFactor : TEXCOORD3;
+                half3 colour : TEXCOORD4;
             };
 
             Varyings Vert(Attributes input)
             {
                 Varyings output;
                 UNITY_SETUP_INSTANCE_ID(input);
-                output.positionWS = TransformObjectToWorld(input.positionOS.xyz);
+                output.positionWS = SwayWS(TransformObjectToWorld(input.positionOS.xyz));
                 output.positionCS = TransformWorldToHClip(output.positionWS);
                 output.normalWS = TransformObjectToWorldNormal(input.normalOS);
                 output.uv = TRANSFORM_TEX(input.uv, _BaseMap);
                 output.fogFactor = ComputeFogFactor(output.positionCS.z);
+                // Merged scenery carries each piece's colour in its points; everything else ignores them.
+                output.colour = _VertexColour > 0.5 ? input.colour.rgb : half3(1, 1, 1);
                 return output;
             }
 
@@ -124,7 +149,7 @@ Shader "Clover/Toon"
                     float3 scaled = input.positionWS * _WorldScale;
                     uv = facingAxis.y > 0.6 ? scaled.xz : (facingAxis.x > facingAxis.z ? scaled.zy : scaled.xy);
                 }
-                half3 albedo = _BaseColor.rgb * SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv).rgb;
+                half3 albedo = _BaseColor.rgb * input.colour * SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, uv).rgb;
 
                 Light light = GetMainLight(TransformWorldToShadowCoord(input.positionWS));
                 half facing = saturate(dot(normalWS, light.direction));
@@ -212,7 +237,7 @@ Shader "Clover/Toon"
                 Varyings output;
                 UNITY_SETUP_INSTANCE_ID(input);
                 float3 direction = _SmoothNormalsInTangents > 0.5 ? input.tangentOS.xyz : input.normalOS;
-                float3 positionWS = TransformObjectToWorld(input.positionOS.xyz) + TransformObjectToWorldNormal(direction) * _OutlineWidth;
+                float3 positionWS = SwayWS(TransformObjectToWorld(input.positionOS.xyz)) + TransformObjectToWorldNormal(direction) * _OutlineWidth;
                 output.positionCS = TransformWorldToHClip(positionWS);
                 output.fogFactor = ComputeFogFactor(output.positionCS.z);
                 // No line asked for: draw nothing. A two-sided mesh (grass, leaves) would otherwise have its ink
@@ -254,7 +279,7 @@ Shader "Clover/Toon"
             float4 Vert(Attributes input) : SV_POSITION
             {
                 UNITY_SETUP_INSTANCE_ID(input);
-                float3 positionWS = TransformObjectToWorld(input.positionOS.xyz);
+                float3 positionWS = SwayWS(TransformObjectToWorld(input.positionOS.xyz));
                 float3 normalWS = TransformObjectToWorldNormal(input.normalOS);
                 float4 positionCS = TransformWorldToHClip(ApplyShadowBias(positionWS, normalWS, _LightDirection));
                 #if UNITY_REVERSED_Z
@@ -293,7 +318,7 @@ Shader "Clover/Toon"
             float4 Vert(Attributes input) : SV_POSITION
             {
                 UNITY_SETUP_INSTANCE_ID(input);
-                return TransformObjectToHClip(input.positionOS.xyz);
+                return TransformWorldToHClip(SwayWS(TransformObjectToWorld(input.positionOS.xyz)));
             }
 
             half4 Frag() : SV_Target
@@ -332,7 +357,7 @@ Shader "Clover/Toon"
             {
                 Varyings output;
                 UNITY_SETUP_INSTANCE_ID(input);
-                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                output.positionCS = TransformWorldToHClip(SwayWS(TransformObjectToWorld(input.positionOS.xyz)));
                 output.normalWS = TransformObjectToWorldNormal(input.normalOS);
                 return output;
             }

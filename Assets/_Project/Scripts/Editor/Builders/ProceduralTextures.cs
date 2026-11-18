@@ -371,6 +371,21 @@ namespace Clover.EditorTools
             return new Color(tone * 1.02f, tone, tone * 0.95f);
         });
 
+        /// <summary>
+        /// A wash of tone for a large floor, the texture forty metres across: broad soft patches a few per cent paler or
+        /// darker (worn and dusty places, damp and trodden ones), with a lean to warm or grey, and nothing sharp. Laid
+        /// over a floor already made of slabs, it breaks up any repeat without adding a line.
+        /// </summary>
+        public static Texture2D SunMottle() => Make("sun_mottle", (x, y) =>
+        {
+            float broad = Noise(x, y, 340f) - 0.5f;
+            float middle = Noise(x + 300f, y + 120f, 130f) - 0.5f;
+            float small = Noise(x + 50f, y + 700f, 48f) - 0.5f;
+            float tone = 0.94f + broad * 0.16f + middle * 0.08f + small * 0.03f;
+            float warm = (Noise(x + 610f, y + 40f, 260f) - 0.5f) * 0.05f;
+            return new Color(tone * (1f + warm), tone, tone * (1f - warm * 1.4f));
+        });
+
         private static Texture2D Make(string name, System.Func<float, float, Color> paint)
         {
             BuildKit.EnsureFolder(Folder);
@@ -421,6 +436,7 @@ namespace Clover.EditorTools
             SunEarth();
             SunSand();
             SunMud();
+            SunMottle();
             AssetDatabase.SaveAssets();
             Debug.Log("[Clover.Build] Repainted the generated textures.");
         }

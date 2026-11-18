@@ -77,6 +77,26 @@ are strong. What the frames show still needs (for a later pass, after the curren
 from above, roofs with life, fire actually present in the city (braziers that burn, wicks that smoulder, soot over
 doors, embers in the air), and effects that look like flame rather than light.
 
+**As built (2026-11-18, the world pass; awaiting the owner's review, nothing here is decided).** The detail is in
+`review/visual/overview.md`, "As built". In short:
+
+- **Surfaces.**
+  - Walls, floors and faces carry the land's own patterns.
+  - House fronts and roofs are the Blender city kit.
+  - Paving is courses of slabs under a metre and a half with quiet joints and a broad wash of tone, worn through in
+    patches.
+- **Fire.** Braziers, smoulders, lamps and hearth glows burn in the streets, and fire bowls with smoke plumes stand on the
+  tall things.
+- **Movement.**
+  - Palms, reeds and hanging linen sway.
+  - Dust, ash, sparks, smoke and glare motes drift by district.
+  - Kites' shadows cross the ground.
+- **Light.** Each district has its own grade and fog: warm ochre by the river, sooty in the city of wicks, glaring on the
+  king's ground, cool in the hall.
+- **What lies beyond.**
+  - The city stands on a mound over a lower town and dunes.
+  - The court stands on a platform over its own lower town, with a stair going down west from the sunset gate.
+
 ---
 
 ## 4. Water: the fisher of islands (Polynesia)

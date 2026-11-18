@@ -18,7 +18,8 @@ Material:
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
-  disabledShaderPasses: []
+  disabledShaderPasses:
+  - SRPDEFAULTUNLIT
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -47,6 +48,8 @@ Material:
     - _Sharpness: 1
     - _SmoothNormalsInTangents: 0
     - _SrcBlend: 5
+    - _Sway: 0
+    - _VertexColour: 0
     - _WorldMapping: 0
     - _WorldScale: 0.25
     - _ZTest: 4

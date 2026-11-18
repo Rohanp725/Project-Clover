@@ -1,0 +1,8 @@
+part1 (this session, before any part-2 change): PerfProbe draw calls 1549 set-pass 334 triangles 712197; frame median 10.9 ms; profiler cpu median 11.745 gpu median 4.338
+before world pass (city_before, 2026-11-18): draw calls ~796, triangles ~333k, profiler cpu median 10.337
+merge1 (merged per 24 m cell, one material per slot): draw calls 1132 set-pass 440 triangles 602038; profiler cpu median 11.831 gpu 4.195
+merge2 (slot colours carried in vertex colours, 21 carrier materials): draw calls 844 set-pass 256 triangles 579636; cpu 11.396 gpu 4.252
+final (24 m cells, with part-2 life, beyond, props): draw calls 843 set-pass 247 triangles 577059; cpu 11.766 gpu 4.239
+cell40 (40 m cells; kept): draw calls 674 set-pass 214 triangles 654453; frame median 10.8 ms; cpu 11.76 gpu 4.418
+Note: the profiler's own Profiler.FlushMemoryCounters takes 5.5 to 6.4 ms of every recorded main-thread frame (before 5.53, part1 6.28, merge2 6.36); the render loop's own time (Inl_RenderCameraStack median) was 1.513 before, 1.858 after part 1, 1.559 merged.
+final (40 m cells, readable district air; the state handed over): draw calls 736 set-pass 232 triangles 707141; frame median 11.2 ms; profiler cpu median 11.888 gpu 4.547 (review/checks/world2/city_final.summary.txt)
