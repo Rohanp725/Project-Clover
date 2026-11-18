@@ -556,7 +556,8 @@ namespace Clover.EditorTools
             more.rectTransform.anchorMin = more.rectTransform.anchorMax = more.rectTransform.pivot = new Vector2(1f, 0f);
             more.rectTransform.anchoredPosition = new Vector2(-36f, 20f);
             more.rectTransform.sizeDelta = new Vector2(300f, 28f);
-            more.text = "Cross or E";
+            // The reading box names the use button of the device in use; this is only what shows before it does.
+            more.text = "E";
 
             hud.gameObject.AddComponent<ReadingBox>().Configure(player, panel.gameObject, speaker, line, more);
         }
@@ -795,22 +796,21 @@ namespace Clover.EditorTools
             note.horizontalOverflow = HorizontalWrapMode.Wrap;
             note.lineSpacing = 1.15f;
 
+            // The table of actions and their buttons, and its rebinding, is laid out at play by ControlsPage, which
+            // names the buttons of the device in use; the builder leaves only the words that do not name a button.
             var controls = Page("Controls", panel);
             var gold = new Color(1f, 0.8f, 0.45f, 1f);
             var pale = new Color(0.95f, 0.93f, 0.9f, 1f);
-            Column("Names", controls, 48f, 250f, pale, "\nMove\nLight blow\nHeavy blow\nGuard\nDodge\nFlask\nSpell\nSurge\nUse\nPause");
-            Column("Pad", controls, 300f, 200f, pale, "Pad\nLeft stick\nR1\nR2\nL1\nCircle\nSquare\nTriangle\nL2\nCross\nStart");
-            Column("Keys", controls, 500f, 160f, pale, "Keys\nW A S D\nJ\nK\nL\nSpace\nR\nU\nI\nE\nEsc");
-            var holds = Column("Holds", controls, 48f, 600f, gold,
-                "Heavy held: the weapon's skill, 30 mana\nHeavy on a staggered enemy: finisher\nFlask held: throw it, once learned\nSpell held: the element's own move, once learned");
-            holds.rectTransform.anchoredPosition = new Vector2(48f, -576f);
-            var fight = Column("Fight", controls, 700f, 570f, pale,
+            var holds = Column("Holds", controls, 840f, 440f, gold,
+                "Heavy held: the weapon's skill, costs mana\nHeavy on a staggered enemy: finisher\nFlask held: throw it, once learned\nSpell held: the element's own move, once learned");
+            holds.rectTransform.anchoredPosition = new Vector2(840f, -430f);
+            var fight = Column("Fight", controls, 840f, 440f, pale,
                 "Guard turns blows from the front.\n\nA guard raised at the last instant is a perfect guard. It costs the enemy its balance.\n\nRed attacks cannot be guarded.\n\nBreak an enemy's balance, then finish it with a heavy blow.\n\nShards are spent at rest fires.");
             fight.horizontalOverflow = HorizontalWrapMode.Wrap;
             fight.lineSpacing = 1.1f;
             var rule = Panel("Rule", controls, new Color(0.8f, 0.72f, 0.55f, 0.35f));
             rule.anchorMin = rule.anchorMax = rule.pivot = new Vector2(0f, 1f);
-            rule.anchoredPosition = new Vector2(668f, -112f);
+            rule.anchoredPosition = new Vector2(808f, -112f);
             rule.sizeDelta = new Vector2(2f, 620f);
             controls.gameObject.SetActive(false);
 
@@ -818,7 +818,8 @@ namespace Clover.EditorTools
             hint.rectTransform.anchorMin = hint.rectTransform.anchorMax = hint.rectTransform.pivot = Vector2.zero;
             hint.rectTransform.anchoredPosition = new Vector2(48f, 26f);
             hint.rectTransform.sizeDelta = new Vector2(1200f, 30f);
-            hint.text = "Stick or W S: choose     Cross or E: pick     Circle or Space: back     Start or Esc: resume";
+            // The pause menu writes this for the device in use.
+            hint.text = "W S: choose     E: pick     Space: back     Esc: resume";
 
             hud.gameObject.AddComponent<PauseMenu>().Configure(player, dim.gameObject, list.gameObject, controls.gameObject, rows, note, cursor);
         }
@@ -847,12 +848,11 @@ namespace Clover.EditorTools
             return column;
         }
 
-        /// <summary>The one line the hub keeps on screen now that the controls live in the pause menu.</summary>
-        public const string PauseHint = "Start or Esc: pause and controls";
+        /// <summary>The one line the hub keeps on screen now that the controls live in the pause menu. It is a template:
+        /// at play a <see cref="Clover.UI.PromptLine"/> names the buttons of the device in use.</summary>
+        public const string PauseHint = Clover.UI.PromptLine.PauseTemplate;
 
-        public const string ControlsHint =
-            "R1 light   R2 heavy (hold: weapon skill, costs mana; on a staggered enemy: finisher)   L1 guard   Circle dodge   Square flask   Triangle element spell   L2 element surge   Cross use\n"
-            + "Keyboard: WASD move   J light   K heavy   L guard   Space dodge   R flask   U spell   I surge   E use";
+        public const string ControlsHint = Clover.UI.PromptLine.FightTemplate;
 
         private static Text Label(string name, Transform parent, int size, TextAnchor anchor, Color colour)
         {

@@ -8,9 +8,11 @@ using UnityEngine.UI;
 namespace Clover.UI
 {
     /// <summary>
-    /// The pause menu: the world stops, and the player may go on, read the controls, give up the run, forget
-    /// everything or quit. The stick chooses, the use button picks, the dodge button goes back, and the pause button
-    /// closes it from anywhere. It will not open over the other menus, over spoken words, or once the player has fallen.
+    /// The pause menu: the world stops, and the player may go on, change the controls, give up the run, forget
+    /// everything or quit. The stick (or the d-pad, or the mouse) chooses, the use button (or a click) picks, the dodge
+    /// button goes back, and the pause button closes it from anywhere. Escape and Start always open and close it as well,
+    /// whatever the pause action has been rebound to, so no binding can lock the player out of the menu. It will not
+    /// open over the other menus, over spoken words, or once the player has fallen.
     /// </summary>
     public class PauseMenu : MonoBehaviour
     {
@@ -39,6 +41,11 @@ namespace Clover.UI
         private InputAction moveAction;
         private InputAction interactAction;
         private InputAction dodgeAction;
+        // Escape and Start, outside the player's rebindable controls: the way back to this menu can never be lost.
+        private InputAction alwaysPause;
+        private ControlsPage controlsPage;
+        private Text hint;
+        private int hintVersion = -1;
         private int openedOnFrame;
         private bool releasePlayer;
         private bool stoppedTime;
@@ -76,12 +83,40 @@ namespace Clover.UI
         {
             Choices = new PauseChoices(SceneManager.GetActiveScene().name);
             if (panel != null) panel.SetActive(false);
+            // The lines on the HUD that name buttons follow the device in use.
+            PromptLine.Attach(transform);
             if (player == null) return;
             pauseAction = player.FindAction("Pause");
             moveAction = player.FindAction("Move");
             interactAction = player.FindAction("Interact");
             dodgeAction = player.FindAction("Dodge");
+            alwaysPause = new InputAction("Always Pause", InputActionType.Button);
+            foreach (string path in ControlBindings.Reserved) alwaysPause.AddBinding(path);
+            alwaysPause.Enable();
+            if (panel != null)
+            {
+                var hintObject = panel.transform.Find("Panel/Hint");
+                hint = hintObject != null ? hintObject.GetComponent<Text>() : null;
+            }
+            if (controls != null)
+            {
+                controlsPage = controls.GetComponent<ControlsPage>();
+                if (controlsPage == null) controlsPage = controls.AddComponent<ControlsPage>();
+                var cursorImage = cursor != null ? cursor.GetComponent<Image>() : null;
+                controlsPage.Setup(player, note, cursorImage != null ? cursorImage.sprite : null);
+            }
         }
+
+        private void OnDestroy()
+        {
+            if (alwaysPause == null) return;
+            alwaysPause.Disable();
+            alwaysPause.Dispose();
+            alwaysPause = null;
+        }
+
+        /// <summary>The page that lists and rebinds the controls; null before the menu has started.</summary>
+        public ControlsPage ControlsPage => controlsPage;
 
         /// <summary>True when nothing else has the screen or the player: no other menu, no spoken words, no fall, no leaving.</summary>
         public bool CanOpen =>
@@ -136,7 +171,8 @@ namespace Clover.UI
             if (!IsOpen) return;
             if (ShowingControls)
             {
-                Back();
+                if (controlsPage != null) controlsPage.Pick();
+                else Back();
                 return;
             }
             switch (Choices.Press())
@@ -146,6 +182,7 @@ namespace Clover.UI
                     break;
                 case PauseEntry.Controls:
                     ShowingControls = true;
+                    if (controlsPage != null) controlsPage.Opened();
                     Show();
                     break;
                 case PauseEntry.Fullscreen:
@@ -181,6 +218,7 @@ namespace Clover.UI
         public void Back()
         {
             if (!IsOpen) return;
+            if (ShowingControls && controlsPage != null && controlsPage.Busy) return;
             if (ShowingControls)
             {
                 ShowingControls = false;
@@ -201,6 +239,7 @@ namespace Clover.UI
 
         private void Update()
         {
+            bool pausePressed = (pauseAction != null && pauseAction.WasPressedThisFrame()) || (alwaysPause != null && alwaysPause.WasPressedThisFrame());
             if (!IsOpen)
             {
                 if (releasePlayer)
@@ -209,18 +248,34 @@ namespace Clover.UI
                     if (player != null) player.Suspended = false;
                     return;
                 }
-                if (pauseAction != null && pauseAction.WasPressedThisFrame()) Open();
+                if (pausePressed) Open();
                 return;
             }
             if (Time.frameCount == openedOnFrame || moveAction == null || interactAction == null || dodgeAction == null) return;
-            if (pauseAction.WasPressedThisFrame())
+            // A rebind in progress has every button; Escape and Start then mean "leave it as it was", not "resume".
+            if (ShowingControls && controlsPage != null && controlsPage.Busy)
+            {
+                controlsPage.Tick(Vector2.zero, false, false);
+                ShowHint();
+                return;
+            }
+            if (pausePressed)
             {
                 Close();
+                return;
+            }
+            if (hintVersion != ControlDevices.Version) ShowHint();
+
+            if (ShowingControls && controlsPage != null)
+            {
+                if (controlsPage.Tick(moveAction.ReadValue<Vector2>(), interactAction.WasPressedThisFrame(), dodgeAction.WasPressedThisFrame())) Back();
+                ShowHint();
                 return;
             }
 
             if (!ShowingControls)
             {
+                PointAt();
                 float stick = moveAction.ReadValue<Vector2>().y;
                 int direction = stick > 0.5f ? -1 : stick < -0.5f ? 1 : 0;
                 if (direction != heldDirection)
@@ -244,9 +299,42 @@ namespace Clover.UI
             else if (dodgeAction.WasPressedThisFrame()) Back();
         }
 
+        // The mouse: the entry under the cursor is chosen as it moves over it, and a click picks it.
+        private void PointAt()
+        {
+            var mouse = Mouse.current;
+            if (mouse == null) return;
+            bool clicked = mouse.leftButton.wasPressedThisFrame;
+            if (!clicked && mouse.delta.ReadValue().sqrMagnitude <= 1f) return;
+            Vector2 at = mouse.position.ReadValue();
+            for (int i = 0; i < rows.Length && i < Choices.Count; i++)
+            {
+                if (rows[i] == null || !RectTransformUtility.RectangleContainsScreenPoint(rows[i].rectTransform, at, null)) continue;
+                if (i != Choices.Selected) Move(i - Choices.Selected);
+                if (clicked) Pick();
+                return;
+            }
+        }
+
+        private void ShowHint()
+        {
+            hintVersion = ControlDevices.Version;
+            if (hint == null) return;
+            if (ShowingControls && controlsPage != null)
+            {
+                hint.text = controlsPage.Hint();
+                return;
+            }
+            var style = ControlDevices.Current;
+            string choose = style == ControlDevice.Keys ? "W S or the mouse" : "Stick or d-pad";
+            hint.text = $"{choose}: choose     {ControlNames.Of("Interact")}: pick     {ControlNames.Of("Dodge")}: back     "
+                + $"{(style == ControlDevice.Keys ? "Esc" : ControlNames.Pad("<Gamepad>/start", style))}: resume";
+        }
+
         // Called when something changes, never every frame.
         private void Show()
         {
+            ShowHint();
             if (list != null) list.SetActive(!ShowingControls);
             if (controls != null) controls.SetActive(ShowingControls);
             if (ShowingControls) return;

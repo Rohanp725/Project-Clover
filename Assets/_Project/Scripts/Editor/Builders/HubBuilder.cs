@@ -108,11 +108,11 @@ namespace Clover.EditorTools
             things.Add(Sign(world, "Weapons Notice", Polar(-22f, 7.7f), 158f,
                 "The stands along this rim are not part of the demo's story. Try anything.",
                 "The story begins with bare hands and Fire. The Katana waits in a stone in the castle, and Lightning is won from its god.",
-                "Start or Esc pauses. The controls are there, and the way to quit."));
+                "{Pause} pauses. The controls are there, to see and to change, and the way to quit."));
             things.Add(Sign(world, "Elements Notice", Polar(22f, 7.7f), 202f,
                 "The braziers along this rim are not part of the demo's story. Try anything.",
                 "The story begins with bare hands and Fire. The Katana waits in a stone in the castle, and Lightning is won from its god.",
-                "Start or Esc pauses. The controls are there, and the way to quit."));
+                "{Pause} pauses. The controls are there, to see and to change, and the way to quit."));
             things.Add(Gate(world, new Vector3(0f, 0f, 8.4f), gateGlow));
             built.Player.GetComponent<PlayerInteraction>().Configure(things.ToArray());
 

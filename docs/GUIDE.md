@@ -21,43 +21,80 @@ Numbers are first values from the code and have not been tuned by play. Where th
 
 ## 1. Controls
 
-Pad names are PlayStation's. The game is designed for a pad; the keyboard does everything the pad does.
+The game plays with a PlayStation pad, an Xbox pad (or any pad Windows sees as one), or the keyboard and mouse. Every
+prompt on screen names the buttons of the device used last: PlayStation's names for a DualShock or DualSense, Xbox's
+for every other pad, keys and mouse buttons for the keyboard and mouse. Every action can be rebound (see the end of
+this section), and the prompts follow the rebinding.
 
 ### In a fight
 
-| Action | Pad | Keyboard | Notes |
-|---|---|---|---|
-| Move | Left stick | W A S D | Attacks turn toward the nearest enemy in the stick's direction. There is no lock-on. |
-| Light attack | R1 | J | Press again during an attack to chain. The press is remembered. |
-| Heavy attack | R2 (tap) | K (tap) | After one or more lights it is the weapon's chain heavy: quicker, harder, ends the chain. |
-| Charged heavy | R2 (hold, let go at the white flash) | K (hold) | Massive Sword, Great Spear, Great Hammer and Armament only. Costs no mana. |
-| Weapon skill | R2 (hold to full, let go) | K (hold) | Costs mana (25 to 35 by weapon). Hold time is in each weapon's table. Without the mana the hold gives the heavy or charged heavy. |
-| Finisher | R2 with a staggered enemy within 5 m | K | A staggered enemy pulses gold and carries a gold broken ring. Replaces the heavy. |
-| Guard | L1 (hold) | L (hold) | Blocks from the front. Turns you to the nearest enemy. You walk slowly while guarding. |
-| Perfect guard | L1 just before the blow lands | L | Usually within 0.18 s. Pressing guard again within 0.4 s gives no perfect window. |
-| Dodge | Circle | Space | Costs stamina. Can cut short an attack's recovery, never its wind-up or swing. |
-| Flask | Square (tap) | R (tap) | Heals. With Fire's Firebomb Flask learned, holding 0.3 s throws it instead. |
-| Element spell | Triangle (tap) | U (tap) | The held element's own spell. |
-| Worn spell | Triangle (hold 0.3 s) | U (hold) | The spell learned on the chart and worn. With no spell worn, any press is the tap spell. |
-| Surge | L2 | I | The element's self buff. One press; it is not held. Pressed while it runs, it starts over at full length and is paid for again. |
-| Surge again | L2 while the surge runs | I | Only with a gift that listens for it (Falling Sun, The World Holds Still, The Sea Rises, First Spring). The second press triggers the gift and does not relight the surge. |
-| Use | Cross | E | Rest fires, weapon stands, braziers, stones, doors, the next line of speech. |
-| Pause | Start (Options) | Escape | Resume, controls, give up the run (castle and summit), forget everything saved (hub), quit. |
+| Action | PlayStation | Xbox | Keys and mouse | Keys only | Notes |
+|---|---|---|---|---|---|
+| Move | Left stick or d-pad | Left stick or d-pad | W A S D | W A S D | Attacks turn toward the nearest enemy in the stick's direction; with the mouse in use, toward the nearest enemy near the cursor. There is no lock-on. |
+| Light attack | R1 | RB | Left mouse | J | Press again during an attack to chain. The press is remembered. |
+| Heavy attack | R2 (tap) | RT (tap) | Right mouse (tap) | K (tap) | After one or more lights it is the weapon's chain heavy: quicker, harder, ends the chain. |
+| Charged heavy | R2 (hold, let go at the white flash) | RT (hold) | Right mouse (hold) | K (hold) | Massive Sword, Great Spear, Great Hammer and Armament only. Costs no mana. While charging, the stick (or the cursor) picks where the cut goes. |
+| Weapon skill | R2 (hold to full, let go) | RT (hold to full) | Right mouse (hold to full) | K (hold to full) | Costs mana (25 to 35 by weapon). Hold time is in each weapon's table. Without the mana the hold gives the heavy or charged heavy. |
+| Finisher | R2 with a staggered enemy within 5 m | RT | Right mouse | K | A staggered enemy pulses gold and carries a gold broken ring. Replaces the heavy. |
+| Guard | L1 (hold) | LB (hold) | Left Shift (hold) | L (hold) | Blocks from the front. Turns you to the nearest enemy. You walk slowly while guarding. |
+| Perfect guard | L1 just before the blow lands | LB | Left Shift | L | Usually within 0.18 s. Pressing guard again within 0.4 s gives no perfect window. |
+| Dodge | Circle | B | Space | Space | Costs stamina. Can cut short an attack's recovery, never its wind-up or swing. |
+| Flask | Square (tap) | X (tap) | R (tap) | R | Heals. With Fire's Firebomb Flask learned, holding 0.3 s throws it instead. |
+| Element spell | Triangle (tap) | Y (tap) | Q (tap) | Q | The held element's own spell. With the mouse in use, the player turns to the cursor as it is cast. |
+| Worn spell | Triangle (hold 0.3 s) | Y (hold) | Q (hold) | Q (hold) | The spell learned on the chart and worn. With no spell worn, any press is the tap spell. A held beam or a Sky Dance turns with the stick, or with the cursor. |
+| Surge | L2 | LT | F | F | The element's self buff. One press; it is not held. Pressed while it runs, it starts over at full length and is paid for again. |
+| Surge again | L2 while the surge runs | LT | F | F | Only with a gift that listens for it (Falling Sun, The World Holds Still, The Sea Rises, First Spring). The second press triggers the gift and does not relight the surge. |
+| Use | Cross | A | E | E | Rest fires, weapon stands, braziers, stones, doors, the next line of speech (a left click also reads on). |
+| Pause | Options | Menu | Esc | Esc | Resume, controls, fullscreen, give up the run (castle and summit), forget everything saved (hub), quit. Esc and Start (Options, Menu) always pause, whatever Pause is rebound to. |
+
+"Keys only" is a second set for playing without a mouse: J, K and L stand in for the two mouse buttons and Left Shift;
+everything else is the same key. "The mouse in use" means the mouse was moved or clicked more lately than a pad was
+touched; pressing keys does not end it, touching a pad does.
+
+### In the menus
+
+| Action | Pad | Keys and mouse |
+|---|---|---|
+| Choose | Left stick or d-pad | W A S D, or point with the mouse |
+| Pick | Cross / A | E, or a left click |
+| Back | Circle / B | Space |
+| Close the pause menu | Options / Menu | Esc |
 
 ### On the upgrade chart (opened by using a rest fire)
 
-| Action | Pad | Keyboard |
-|---|---|---|
-| Move from mark to mark | Left stick | W A S D |
-| Learn the chosen mark; on a spell already learned, wear it | Cross | E |
-| Whole-ring view, and back to your tree | R2 | K |
-| Leave | Circle | Space |
+| Action | PlayStation | Xbox | Keys and mouse |
+|---|---|---|---|
+| Move from mark to mark | Left stick or d-pad | Left stick or d-pad | W A S D |
+| Learn the chosen mark; on a spell already learned, wear it | Cross | A | E |
+| Whole-ring view, and back to your tree | R2 | RT | Right mouse (or K) |
+| Leave | Circle | B | Space |
+
+The chart is not yet clickable with the mouse.
+
+### Rebinding
+
+Pause, then Controls. The page lists every action in a row (Move as its four directions) with three columns: the pad,
+the keys and mouse, and the keys-only set. Choose a cell with the stick, the d-pad, the keys or the mouse, and press use
+(or click it): the cell says "press...", and the next button of that column's kind becomes the binding. Esc (keys) or
+Start (pad) leaves it as it was; so does waiting eight seconds.
+
+- A clash is swapped: give the light attack Q and the spell takes the left mouse button, and the page says so.
+- Esc and Start are kept for the pause menu and cannot be given to anything. Pause itself can be given another key or
+  button, but Esc and Start go on pausing, so no binding can lock the player out of the menu. If giving Pause a key
+  would hand Esc or Start to another action, the change is refused and the page says why.
+- The pad's Move is the stick (left or right); the d-pad always moves as well and is never offered. Sticks and the
+  d-pad cannot be given to a button.
+- The bottom row, Reset to defaults, asks once and then puts every binding back as the game came.
+- Bindings are kept at once, between sessions, as the Input System's binding-override JSON in PlayerPrefs under the key
+  `clover.controls.bindings`, and laid over the controls when the player is made, before any button is read. A probe's
+  sandboxed play keeps them under `clover.controls.bindings.sandbox` instead and never touches the owner's.
 
 **Not yet**
 
-- Triangle is the element spell only; the weapon skill lives on the held heavy.
 - No hard lock-on. No way to choose whom the guard faces when several enemies are near.
-- The controls line on screen says "weapon skill, 30 mana" for every weapon; the real cost is per weapon (see section 3).
+- The four-spell L2 layer and the infused strikes of `docs/design/STEEL_AND_ELEMENT.md` 3.5 are not built.
+- The chart cannot be clicked; the pause menu and the controls page can.
+- Text names only; there are no button pictures.
 
 ---
 

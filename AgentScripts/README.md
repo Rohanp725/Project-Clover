@@ -448,3 +448,26 @@ player off from the shape.
   put under the land; the barque's shrine, prow and stern walked into. Frames `review/shots/current/fix_<n>_<what>.png`.
 - `CityLook` (edit mode, any scene): one frame from a point toward a point, `--args '["name", fx, fy, fz, ax, ay, az, fov]'`,
   to `review/shots/current/look_<name>.png`.
+
+## The controls (2026-11-18): `ControlsProbe`, `controls_probe.sh`
+
+`bash AgentScripts/controls_probe.sh` (about six minutes) plays three sandboxed plays and puts the editor back after
+(Hub open, background input settings as they were, sandbox flag and sandbox bindings cleared). It prints whether the
+owner's own bindings key (`clover.controls.bindings`) is held before and after; nothing in it writes there.
+
+1. Hub: a virtual Xbox pad (`XInputControllerWindows`) reads the waking words with A, walks with the stick and the
+   d-pad, strikes with RB, opens the pause menu with Menu and walks it with the d-pad and the stick, opens the controls
+   page (`controls_xbox.png`), rebinds the flask to Y (a clash with the spell, swapped; `controls_rebind_pad.png`),
+   asks for the spell's key and waits for `simulate_key T` (`controls_rebind_listening.png`, `controls_rebound.png`),
+   then walks the chart and leaves it (`chart_xbox.png`).
+2. CombatTest: the rebinds came back from PlayerPrefs; a walk held with `simulate_key W`; the cursor put beside a
+   dummy with `simulate_pointer` and a click (`controls_mouse_aim_before.png`, `controls_mouse_aim.png`: the attack
+   must turn onto the dummy), then at open ground (`controls_mouse_open.png`: it must turn to the cursor); the pause
+   menu walked with keys (`controls_keys_walked.png`); the page in keys names (`controls_keys.png`); reset to defaults
+   through the page (`controls_reset_ask.png`, `controls_reset_done.png`).
+3. Hub again: nothing kept after the reset.
+
+The CLI's `simulate_key` and `simulate_pointer` presses reach held state (a held W walks; a rebind's listener hears
+T) but never count as `WasPressedThisFrame` in the player loop while the editor is in the background, so attacks
+and menu presses are queued from the game's own frames (`ControlsProbe` parts `click` and `keys`). A
+`simulate_pointer` move jumps without a delta, so mouse aim begins at the click rather than at the move.

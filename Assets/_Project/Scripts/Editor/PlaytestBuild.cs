@@ -34,25 +34,29 @@ TO START
   Run {product}.exe. It opens on the whole screen at your display's own size.
   Alt+Enter switches between fullscreen and a window you can resize; so does
   ""Fullscreen or window"" in the pause menu. Any screen shape should work.
-  A voice speaks first: press Cross (pad) or E (keys) to read on.
+  A voice speaks first: press E, Cross (PlayStation) or A (Xbox) to read on.
   Then walk north through the gate.
 
-CONTROLS            PlayStation pad        Keyboard
-  Move              Left stick             W A S D
-  Light blow        R1                     J
-  Heavy blow        R2                     K      (hold: the weapon's skill)
-  Guard             L1                     L      (at the last instant: perfect guard)
-  Dodge             Circle                 Space
-  Flask (heal)      Square                 R
-  Element spell     Triangle               U
-  Element surge     L2                     I
-  Use / read on     Cross                  E
-  Pause             Start                  Esc
-  An Xbox pad works too: the same buttons by position (RB, RT, LB, B, X, Y, LT, A, Menu).
+CONTROLS          Keys and mouse       PlayStation   Xbox
+  Move            W A S D              Left stick    Left stick
+  Light blow      Left mouse  (or J)   R1            RB
+  Heavy blow      Right mouse (or K)   R2            RT     (hold: charge, then the weapon's skill)
+  Guard           Left Shift  (or L)   L1            LB     (at the last instant: perfect guard)
+  Dodge           Space                Circle        B
+  Flask (heal)    R                    Square        X
+  Element spell   Q                    Triangle      Y
+  Element surge   F                    L2            LT
+  Use / read on   E                    Cross         A
+  Pause           Esc                  Options       Menu
+  With the mouse, blows and spells go toward the cursor. J, K and L are a second
+  set for playing without a mouse. On-screen prompts name the buttons of whatever
+  you used last.
 
-PAUSE, QUIT
-  Start or Esc pauses. The pause menu has the controls, the fullscreen switch,
-  ""Give up the run"" (back to the clock) and ""Quit"". Alt+F4 also quits.
+PAUSE, CONTROLS, QUIT
+  Esc, Options or Menu pauses. The pause menu has the controls, where every action
+  can be rebound for the pad and for the keys (kept between sessions, with a reset
+  to defaults), the fullscreen switch, ""Give up the run"" (back to the clock) and
+  ""Quit"". Esc and Start always pause, whatever is rebound. Alt+F4 also quits.
 
 WHAT TO TRY
   - The story: bare hands and Fire, through the gate to the castle. Draw the Katana

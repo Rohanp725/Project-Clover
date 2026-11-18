@@ -95,6 +95,7 @@ namespace Clover.UI
         private InputAction interactAction;
         private InputAction dodgeAction;
         private InputAction heavyAction;
+        private int hintVersion = -1;
         private RectTransform wornBadge;
         private int openedOnFrame;
         private bool releasePlayer;
@@ -497,6 +498,7 @@ namespace Clover.UI
             // The press that opened it belongs to the rest fire, not to the first mark on the chart.
             if (Time.frameCount == openedOnFrame || moveAction == null || interactAction == null || dodgeAction == null) return;
 
+            if (hintVersion != ControlDevices.Version) ShowHint();
             Vector2 stick = moveAction.ReadValue<Vector2>();
             bool pushed = stick.sqrMagnitude > 0.25f;
             if (pushed && !stickHeld)
@@ -522,10 +524,12 @@ namespace Clover.UI
 
         private void ShowHint()
         {
+            hintVersion = ControlDevices.Version;
             if (hint == null) return;
+            string move = ControlDevices.Current == ControlDevice.Keys ? ControlNames.Of("Move") : "Stick or d-pad";
             hint.text = IsWide
-                ? "R2 or K: back to your tree     Circle or Space: leave"
-                : "Stick or W A S D: move along the tree     Cross or E: learn, or wear a spell     R2 or K: the whole chart     Circle or Space: leave";
+                ? ControlNames.Expand("{HeavyAttack}: back to your tree     {Dodge}: leave")
+                : move + ControlNames.Expand(": move along the tree     {Interact}: learn, or wear a spell     {HeavyAttack}: the whole chart     {Dodge}: leave");
         }
 
         private static string KindWords(Upgrade upgrade)

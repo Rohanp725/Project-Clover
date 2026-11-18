@@ -37,10 +37,12 @@ namespace Clover.Player.Forms
             var solids = SpellWorks.Solids(run);
             var marks = SpellWorks.Marks(run);
             float reach = cast.Reach, half = cast.Spec.Radius;
-            if (run.HoldsBody && player.Wish.sqrMagnitude > 0.01f)
+            // The stick turns the beam, or the cursor while the mouse is in use.
+            Vector3 steer = player.Steer;
+            if (run.HoldsBody && steer.sqrMagnitude > 0.01f)
             {
                 float turn = (run.Phase == 0 ? 240f : TurnWhileFiring) * deltaTime;
-                player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation, Quaternion.LookRotation(player.Wish, Vector3.up), turn);
+                player.transform.rotation = Quaternion.RotateTowards(player.transform.rotation, Quaternion.LookRotation(steer, Vector3.up), turn);
             }
             Vector3 forward = player.transform.forward;
             Vector3 foot = player.transform.position;

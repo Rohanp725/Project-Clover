@@ -8,7 +8,8 @@ namespace Clover.UI
 {
     /// <summary>
     /// Words the player reads at their own pace: one line at a time across the bottom of the screen, each staying until
-    /// the use button is pressed. The player stands still while it is open. Anything may call <see cref="Show"/>; with
+    /// the use button is pressed (or the mouse clicked). The player stands still while it is open. A line may name a
+    /// button as {ActionName}; it is written in the names of the device in use. Anything may call <see cref="Show"/>; with
     /// no box in the scene the call does nothing and what was to follow happens at once.
     /// </summary>
     public class ReadingBox : MonoBehaviour
@@ -75,7 +76,8 @@ namespace Clover.UI
 
         private void Open(string who, string[] whatIsSaid, Action whenRead)
         {
-            lines = whatIsSaid;
+            lines = new string[whatIsSaid.Length];
+            for (int i = 0; i < lines.Length; i++) lines[i] = ControlNames.Expand(whatIsSaid[i]);
             after = whenRead;
             index = 0;
             IsOpen = true;
@@ -91,7 +93,11 @@ namespace Clover.UI
         {
             written = 0f;
             if (line != null) line.text = "";
-            if (more != null) more.enabled = false;
+            if (more != null)
+            {
+                more.enabled = false;
+                more.text = ControlNames.Of("Interact");
+            }
         }
 
         private void Update()
@@ -118,7 +124,9 @@ namespace Clover.UI
                 if (written >= 1f && more != null) more.enabled = true;
             }
 
-            if (Time.frameCount == openedOnFrame || interactAction == null || !interactAction.WasPressedThisFrame()) return;
+            var mouse = Mouse.current;
+            bool clicked = mouse != null && mouse.leftButton.wasPressedThisFrame;
+            if (Time.frameCount == openedOnFrame || interactAction == null || !(interactAction.WasPressedThisFrame() || clicked)) return;
             if (!done)
             {
                 written = 1f;

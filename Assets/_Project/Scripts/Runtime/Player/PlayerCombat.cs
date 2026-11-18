@@ -1137,11 +1137,13 @@ namespace Clover.Player
 
         private Vector3 AimDirection()
         {
+            // With the mouse in use the cursor says where; the nearest enemy near it is still the one turned to.
+            if (player.PointerAim(out Vector3 pointed)) return pointed;
             Vector3 wish = player.CameraRelative(moveAction.ReadValue<Vector2>());
             return wish.sqrMagnitude > 0.01f ? wish.normalized : transform.forward;
         }
 
-        // Face the enemy nearest to where the stick points; with no enemy in the cone, face the stick; with no stick, stay.
+        // Face the enemy nearest to where the stick (or the cursor) points; with no enemy in the cone, face that way; with neither, stay.
         private void Aim()
         {
             lunge = Combo.Current.Lunge;

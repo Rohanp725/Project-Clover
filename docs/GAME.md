@@ -249,6 +249,13 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   try so the character reads. **Open**: how the camera frames much larger bosses (pulling back for a fight is one way).
 - Characters: **Decided**: the player character is made for this project in Blender, through the Blender MCP
   connection, so it matches the look; no bought or downloaded character packs.
+- **Decided (user, 2026-11-18)**: the player wears an outfit from each land's culture; the animations do not change,
+  only the look. Later the player may choose among the outfits they like. Every outfit keeps the face, scar, spiked
+  hair and the rust scarf (in that land's cloth), with a blue base against the land's palette. **Approved**: the
+  ronin (Lightning and Wind, with a new head shared by all outfits), Fire (Egyptian kilt, bead apron, broad collar),
+  Ice (Norse tunic, fur mantle, leg wraps) and Water (Polynesian tapa wrap, smoked pandanus cape). Sources in
+  `staging/blender/2026-11-18_outfits/`. Still to make: Metal (Greek), Poison (Chinese), Earth and Life (Celtic), the
+  last champion's land (Indian).
 - Style: **Decided**: cel-shaded with outlines, like an anime. A dark, muted world (stone, ash, storm cloud) in which
   the elements are the only saturated colour, so every spell and elemental effect stands out. The user's condition:
   it must be done well or it will not fit, so it is judged on screenshots early. References: Hades, Cuphead and
@@ -1255,6 +1262,15 @@ affinities, Avatar's bending as martial arts) is in the session notes of that da
   weapon itself; any other bough gives the plain weapon in that form; the player can change back and forth.
 - **Decided (user)**: Pair Bond strikes are built by rule from weapon and element, with about a dozen hand-made
   standouts for the gods' pairs.
+- **Decided (user)**: the Water god's bone hook merges into the Chain Sickle (its god's bough), and the Poison god's
+  hook swords merge into the Twin Knives as a form (its god's bough). Ten weapon kinds remain, so Pair Bond has 110
+  pairs.
+- **Decided (user)**: the Teacher is the elite of the last champion's land: the Great Bow is his main weapon, and some
+  of his moves draw other weapons, as the last champion fights. The elites of the Lightning and Wind land wait for that
+  land's overview. Every weapon kind needs an elite to teach its gated technique.
+- **Decided (user)**: cut the marks that do nothing under the new rules. The trees must still hold up through a long
+  game, so depth is added where needed with marks that break the standard rules a little and let the player feel the
+  fantasy of their build.
 - **Proposal: the Hand** (the build screen at a rest fire). Two attunements (the same element twice is all in);
   four spell slots (L2 with a face button), each taking any learned spell of an attuned element or a duo spell while
   both its elements are attuned; one surge slot (a tap of L2: either element's surge or a duo surge); two infused
@@ -1282,6 +1298,7 @@ affinities, Avatar's bending as martial arts) is in the session notes of that da
 | date | decision | why |
 |---|---|---|
 | 2026-11-18 | The element is weighted equally with close combat (pillar 2 rewritten); spells on cooldowns that weapon play shortens, mana for big moves; four spells on an L2 layer; two elements at once; a duo branch for every pair | the user: the game is more fun when fights use both kinds of technique, and any two elements should be able to mix |
+| 2026-11-18 | Bone hook into the Chain Sickle, hook swords into the Twin Knives; the Teacher (bow, drawing other weapons) is the champion's elite; Lightning and Wind elites wait; dead marks cut, depth added by rule-breaking marks | the user, on the reconciled content |
 | 2026-11-18 | Bond and Pair Bond; the patron keeps what is taken and a mortal carries one weapon and two elements; minibosses do not each gate every weapon | the user: reward going all in without punishing a change of mind |
 | 2026-11-18 | The Way's boughs are weapon aspects, one active; the Way only, with temper marks; collected weapons and elements chosen in the hub when resting; minibosses gate techniques and are weapon-first fights | the user, on the weapon tree |
 | 2026-11-18 | Take keeps the god's element for good and Consume strengthens one already owned; the build changes only at rest fires; slots open gradually; every pair reacts and upgrades strengthen and reshape reactions | the user, on the spell-build design |

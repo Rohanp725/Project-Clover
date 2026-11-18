@@ -435,7 +435,8 @@ strikes. Each step is played before the next is built.
 
 ## 14. Open questions
 
-- **Pair Bond's size: Decided (owner, 2026-11-18).** About 110 pairs. Each pair's strike is built by rule from the
+- **Pair Bond's size: Decided (owner, 2026-11-18).** 110 pairs (ten weapon kinds, after the bone hook merged into
+  the Chain Sickle and the hook swords into the Twin Knives). Each pair's strike is built by rule from the
   weapon's infused strike and the element's substance, with about a dozen hand-made standouts for the pairs the gods
   carry.
 - **Content.** 55 reactions, 44 new duo branches, three aspects for each weapon: a lot. Which come first after Fire

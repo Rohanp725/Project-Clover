@@ -177,8 +177,8 @@ namespace Clover.Player.Forms
             }
             if (run.Phase == 2)
             {
-                // Where the stick points, as the camera sees it; with the stick at rest, on past the enemy.
-                Vector3 wish = player.Wish;
+                // Where the stick points, as the camera sees it (or the cursor, while the mouse is in use); with the stick at rest, on past the enemy.
+                Vector3 wish = player.Steer;
                 wish.y = 0f;
                 if (wish.sqrMagnitude > 0.09f) run.B = wish.normalized;
                 float far = Mathf.Max(2f, cast.Reach);

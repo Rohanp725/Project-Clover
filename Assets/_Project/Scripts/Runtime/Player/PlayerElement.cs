@@ -236,6 +236,8 @@ namespace Clover.Player
             if (specialBuffered > 0f && free && !Kit.IsCasting)
             {
                 specialBuffered = 0f;
+                // A spell goes where the player faces; with the mouse in use, that is toward the cursor.
+                player.FacePointer();
                 if (!upgrades.TrySpecial() && defence != null) defence.Callout("No mana");
             }
             if (specialBuffered > 0f) specialBuffered -= deltaTime;
@@ -254,6 +256,7 @@ namespace Clover.Player
             if (spellBuffered > 0f && free && !Kit.IsCasting)
             {
                 spellBuffered = 0f;
+                player.FacePointer();
                 // With the mark for it, mana that is missing is paid in health.
                 if (upgrades != null) upgrades.CoverWithHealth(Kit.SpellCost * stats.Multiplier(PlayerStat.SpellCost) * stats.Multiplier(PlayerStat.BaseSpellCost));
                 // Spring Tide: the spell grows with all the mana held, and takes it all.

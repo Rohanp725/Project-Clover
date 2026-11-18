@@ -1,13 +1,13 @@
 namespace Clover.Player
 {
     /// <summary>
-    /// Says in plain words what the player does to make a mark happen, for the cards over the test yard's stones.
-    /// The words name both the pad's button and the keyboard's key, as the hint line at the foot of the screen does.
+    /// Says in plain words what the player does to make a mark happen, for the cards over the test yard's stones and the
+    /// chart. The buttons are named for the device in use, as the hint line at the foot of the screen does.
     /// </summary>
     public static class TriggerWords
     {
-        public const string SpellButton = "Triangle (U)";
-        public const string SurgeButton = "L2 (I)";
+        public static string SpellButton => ControlNames.Of("Spell");
+        public static string SurgeButton => ControlNames.Of("Surge");
 
         /// <summary>How a mark is set going: a worn spell is cast, a mark with an effect waits for its moment, the rest are always on.</summary>
         public static string HowTo(Upgrade mark)

@@ -261,6 +261,14 @@ and three aspects, one active at a time. A god's weapon adds a fourth.
 
 ## Decisions the owner needs to make
 
+**The owner's answers (2026-11-18):**
+- **1. Merge:** yes. The bone hook becomes the Chain Sickle's god's bough. The Poison god's hook swords also merge, into the Twin Knives as a form (their god's bough). Ten weapon kinds remain.
+- **2. Elites:** the Teacher is the champion's land's elite, with the bow as his main weapon and moves that draw other weapons, as the last champion does. The Lightning and Wind elites wait for that land's overview.
+- **4. Hook Swords:** they are now the Twin Knives, which the blade brother teaches.
+- **5. Pair count:** 110 pairs.
+- **6. Cuts:** yes, cut the dead marks. Depth is to be added where the trees thin out, with marks that bend the standard rules.
+- **8. Spare ring-mix spells:** asked about, not yet decided.
+
 1. **Merge the Bone Hook into the Chain Sickle?** `weapons.md` recommends it: a thrown, catching, pulling line is
    what the chain already is. The fisher's Jawbone would become the Chain Sickle's god's bough, and the Lure and Line
    aspects would join the chain. You decided the hook is its own kind, so it is written whole; this is the one place

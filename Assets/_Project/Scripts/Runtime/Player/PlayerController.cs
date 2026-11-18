@@ -82,6 +82,8 @@ namespace Clover.Player
         private float dodgeBuffered;
         private Grip heldBy;
         private InputAction struggleAction;
+        private Camera aimCamera;
+        private bool inputHeld;
         private Vector3 shoveVelocity;
         private float shoveLeft, shoveSeconds = 1f;
 
@@ -161,24 +163,89 @@ namespace Clover.Player
             }
             // A private copy: with domain reload off, enabling the shared asset would leak its state into the next play.
             ownControls = Instantiate(controls);
+            // The player's own bindings go on before anything can read a button.
+            ControlBindings.Use(ownControls);
             playerMap = ownControls.FindActionMap("Player", true);
             moveAction = playerMap.FindAction("Move", true);
             dodgeAction = playerMap.FindAction("Dodge", true);
+            playerMap.actionTriggered += NoticeDevice;
+            if (cameraTransform != null) aimCamera = cameraTransform.GetComponent<Camera>();
             Stamina.Fill();
             Dodge.Reset();
         }
 
-        private void OnEnable() => playerMap?.Enable();
+        private void OnEnable()
+        {
+            if (!inputHeld) playerMap?.Enable();
+        }
 
         private void OnDisable() => playerMap?.Disable();
 
         private void OnDestroy()
         {
+            if (playerMap != null) playerMap.actionTriggered -= NoticeDevice;
+            ControlBindings.Forget(ownControls);
             if (ownControls != null) Destroy(ownControls);
+        }
+
+        // Prompts follow whichever device's press an action last heard; a resting pad's steady reports never get this far.
+        private static void NoticeDevice(InputAction.CallbackContext context)
+        {
+            if (context.phase == InputActionPhase.Started || context.phase == InputActionPhase.Performed)
+                ControlDevices.Notice(context.control?.device);
+        }
+
+        /// <summary>
+        /// Turns every button of the player off (true) or back on (false): a rebind needs its action quiet while it
+        /// listens. Menus read the same actions, so they hear nothing either until it is given back.
+        /// </summary>
+        public void HoldInput(bool held)
+        {
+            inputHeld = held;
+            if (playerMap == null) return;
+            if (held) playerMap.Disable();
+            else if (isActiveAndEnabled) playerMap.Enable();
+        }
+
+        /// <summary>The player's copy of the controls, with their own bindings on it: what the controls page rebinds.</summary>
+        public InputActionAsset Controls => ownControls;
+
+        /// <summary>
+        /// Where the mouse cursor lies on the ground, as a direction from the player, while the mouse is the device in
+        /// use. False with a pad, with no mouse, or with the cursor on the player.
+        /// </summary>
+        public bool PointerAim(out Vector3 direction)
+        {
+            direction = Vector3.zero;
+            var mouse = Mouse.current;
+            if (!ControlDevices.MouseAim || mouse == null) return false;
+            var view = aimCamera != null ? aimCamera : Camera.main;
+            if (view == null) return false;
+            var ray = view.ScreenPointToRay(mouse.position.ReadValue());
+            var ground = new Plane(Vector3.up, transform.position);
+            if (!ground.Raycast(ray, out float distance)) return false;
+            Vector3 offset = ray.GetPoint(distance) - transform.position;
+            offset.y = 0f;
+            if (offset.sqrMagnitude < 0.04f) return false;
+            direction = offset.normalized;
+            return true;
+        }
+
+        /// <summary>Where a held spell or charge turns: the cursor while the mouse is in use, else the stick.</summary>
+        public Vector3 Steer => PointerAim(out Vector3 toward) ? toward : Wish;
+
+        /// <summary>Turns the player at once to the cursor, when the mouse is in use: what a spell does as it is pressed.</summary>
+        public void FacePointer()
+        {
+            if (PointerAim(out Vector3 toward)) transform.rotation = Quaternion.LookRotation(toward, Vector3.up);
         }
 
         private void Update()
         {
+            // Moving the mouse makes it the device in use, so the cursor aims and the prompts name keys.
+            var mouse = Mouse.current;
+            if (mouse != null && !inputHeld && mouse.delta.ReadValue().sqrMagnitude > ControlDevices.MousePixels * ControlDevices.MousePixels)
+                ControlDevices.Notice(mouse);
             if (Suspended)
             {
                 // Standing and listening, not running on the spot.
@@ -292,8 +359,10 @@ namespace Clover.Player
             {
                 Dodge.Tick(deltaTime);
                 step = combat.Step;
-                // While the charge is held the player stands and picks where the cut will go; some weapons let them creep.
-                if (combat.IsCharging && wish.sqrMagnitude > 0.01f) Face(wish, TurnDegreesPerSecond * deltaTime);
+                // While the charge is held the player stands and picks where the cut will go (with the stick, or the
+                // cursor while the mouse is in use); some weapons let them creep.
+                Vector3 pick = combat.IsCharging ? Steer : Vector3.zero;
+                if (pick.sqrMagnitude > 0.01f) Face(pick, TurnDegreesPerSecond * deltaTime);
                 if (combat.IsCharging && combat.Combo.ChargeMoveFactor > 0f) step = wish * (MoveSpeed * combat.Combo.ChargeMoveFactor * deltaTime);
             }
             else
