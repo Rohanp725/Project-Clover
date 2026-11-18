@@ -1,3 +1,4 @@
+using Clover.Core;
 using Clover.Player;
 
 namespace Clover.World
@@ -11,13 +12,17 @@ namespace Clover.World
         /// <summary>True for the road home: going through it ends the run.</summary>
         public bool EndsRun;
 
+        public int Used { get; private set; }
+
         public override bool Available => Open && !string.IsNullOrEmpty(LeadsTo);
 
         public override void Use(PlayerInteraction who)
         {
             if (!Available) return;
-            if (EndsRun) Clover.Core.RunState.End(false);
-            UnityEngine.SceneManagement.SceneManager.LoadScene(LeadsTo);
+            Used++;
+            // In the playtest nothing is lost on the way home: the build carried is kept for the next door.
+            if (EndsRun && !PlaytestMode.On) RunState.End(false);
+            SceneRoutes.Load(LeadsTo);
         }
     }
 }

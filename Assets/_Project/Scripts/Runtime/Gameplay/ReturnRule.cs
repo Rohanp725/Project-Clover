@@ -17,5 +17,8 @@ namespace Clover.Gameplay
 
         /// <summary>The embers still carried after a fall.</summary>
         public static int EmbersAfterFall(int carried, bool loseCarriedEmbers) => loseCarriedEmbers ? 0 : carried;
+
+        /// <summary>The embers still carried after a fall, in the playtest (where a fall loses nothing) or not.</summary>
+        public static int EmbersAfterFall(int carried, bool loseCarriedEmbers, bool playtest) => playtest ? carried : EmbersAfterFall(carried, loseCarriedEmbers);
     }
 }

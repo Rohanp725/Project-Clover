@@ -223,7 +223,7 @@ namespace Clover.EditorTools
             card.Configure(thing, text, back.transform, whole.gameObject, 0.17f, 0.075f);
         }
 
-        private class DummyKit
+        internal class DummyKit
         {
             public readonly Quaternion TowardCamera;
             public readonly Material Wood = BuildKit.Toon(Folder, "DummyWood", new Color(0.36f, 0.25f, 0.22f)).Ink(0.028f, BuildKit.CharacterInk);
@@ -238,7 +238,7 @@ namespace Clover.EditorTools
         }
 
         // With a target the dummy hits back: it gets a sword arm, a red headband and the ground marker for its blow.
-        private static void BuildDummy(Vector3 position, DummyKit kit, Transform target)
+        internal static GameObject BuildDummy(Vector3 position, DummyKit kit, Transform target)
         {
             bool fights = target != null;
             var dummy = new GameObject(fights ? "Sparring Dummy" : "Training Dummy");
@@ -279,6 +279,7 @@ namespace Clover.EditorTools
             training.Configure(body, parts.ToArray(), bars.health, bars.stagger);
             training.ConfigureFeedback(WorldBars.FinishMark(dummy.transform, new Vector3(0f, 1.2f, 0f), 2.1f, kit.TowardCamera));
             if (fights) dummy.AddComponent<DummyAttacker>().Configure(pivot, arm, target, outline, fill);
+            return dummy;
         }
     }
 }

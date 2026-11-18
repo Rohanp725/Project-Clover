@@ -10,5 +10,11 @@ namespace Clover.UI
         GiveUp,
         Forget,
         Quit,
+        /// <summary>The playtest's guide to every effect.</summary>
+        Guide,
+        /// <summary>The playtest's version and what each update added.</summary>
+        WhatsNew,
+        /// <summary>The playtest's way home from any level.</summary>
+        ProvingGround,
     }
 }

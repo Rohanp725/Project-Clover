@@ -1194,6 +1194,21 @@ elemental boss move, and if it needs to be reworked more to be in line with the 
 The whole design, written to be read in one go, is `docs/design/STEEL_AND_ELEMENT.md`. This section is the record
 of what was decided and when.
 
+**Decided (user, 2026-11-18, evening)**: every proposal in `docs/design/STEEL_AND_ELEMENT.md` and in
+`docs/design/steel/` is approved for now, to be built as written and changed as needed during the Phase 3 playtesting.
+
+- **Approved (user, 2026-11-18)**: the gods' weapons as modelled in `staging/blender/2026-11-18_godweapons/`: the
+  Storm Katana, the Sun-Spear, Kazehaya's War Fan (and a plain war fan), the Fisher's Jawbone, the Huntress's Bow, the
+  Smith's Hammer, the Alchemist's Hooks, Brannoch's Standing Stone and Carnwyn's Golden Scythe. They enter the game
+  with the Way's phase, as the gods' boughs.
+- **Decided (user, 2026-11-18)**: apply the recommended fixes of the two feel reviews
+  (`docs/design/steel/review_elements.md`, `review_pairs.md`) to the content files.
+- **Decided (user, 2026-11-18)**: the elements carried (and the weapon) are picked in the hub; the Hand at a rest fire
+  sets the four spells and the surge from those two elements.
+- **Decided (user, 2026-11-18)**: weapon blows lay only the first element's affliction. The second comes from
+  spells, the charged blade and infused strikes, so reactions come from weaving weapon and spell, not from swinging
+  alone.
+
 The user's direction: the element is as strong a part of the game as close combat, so fights use both kinds of
 technique; and there is a weapon tree that specialises and upgrades the weapon, with health, stamina and the like.
 Research behind it (Hades II's Magick and charged moves, Final Fantasy XVI's cooldowns, Nine Sols's parry-loaded
@@ -1272,8 +1287,9 @@ affinities, Avatar's bending as martial arts) is in the session notes of that da
   hook swords merge into the Twin Knives as a form (its god's bough). Ten weapon kinds remain, so Pair Bond has 110
   pairs.
 - **Decided (user)**: the Teacher is the elite of the last champion's land: the Great Bow is his main weapon, and some
-  of his moves draw other weapons, as the last champion fights. The elites of the Lightning and Wind land wait for that
-  land's overview. Every weapon kind needs an elite to teach its gated technique.
+  of his moves draw other weapons, as the last champion fights. The elites of the Lightning and Wind land waited for that
+  land's overview; decided later the same day: the Last Retainer (Katana) and the Hermit of the Pass (War Fan), see
+  `docs/design/WORLD.md`. Every weapon kind needs an elite to teach its gated technique.
 - **Decided (user)**: cut the marks that do nothing under the new rules. The trees must still hold up through a long
   game, so depth is added where needed with marks that break the standard rules a little and let the player feel the
   fantasy of their build.
@@ -1314,6 +1330,47 @@ changed. The old playtest stays with its players until the first few phases of t
   elements and the Hand; 3, reactions. Later updates: 4, trees reshaped into spell branches; 5, the Way, Memories and
   the Body branch; 6, Bond, Heresies and Evolutions.
 
+### Phase 0 as built (2026-11-18; the owner's decisions, the rest Claude's defaults, not yet played by the owner)
+
+- **The Proving Ground** (`Clover > Build > Proving Ground`, `ProvingGroundBuilder`; scene
+  `Scenes/ProvingGround.unity`, not in the editor's build list). The patron's own ground in the hub's still black
+  water and stone, frozen rain over it, a broken ring over the gates. A round plaza: the rest fire in the middle and
+  the eleven element altars round it (hub braziers, `LoadoutChoice`). West terrace: the rack, every weapon in front, the
+  Storm Katana and the Sun-Spear behind with an empty, shrouded stand for each god's weapon not built (a `Notice`
+  says what will be there). East terrace: a still dummy, the yard's dummy that fights back (pale and red blows) and a
+  row of eleven dummies that each always carry one element's affliction (`AfflictedDummy`; Chill held one short of
+  Frozen). North: the castle's pen (castle stone) and the Fire land's pen (Sun City mud brick), with a post per enemy,
+  a post per group and a pale post that clears (`EnemyPen`, `PenPost`; penned enemies give no Shards, keep to their
+  pen, and are put away by a rest or a fall). Furthest north: gates to Narukami (Summit) and Khepharu (Sun Court), and
+  doors to the Castle and Sun City. Not the Fire Yard: that stays removed.
+- **Playtest mode** (`Clover.Core.PlaytestMode`): on in the Combat Playtest build (the `CLOVER_PLAYTEST` define), in the
+  editor with `Clover > Play > Playtest Mode`, and whenever the Proving Ground is entered. A rest tops Shards up to
+  9999; every tree and branch is open and walkable on the chart (guard and light attack turn to the tree before and
+  after); the gods' gifts are sold as playtest unlocks (`MarkRules`); a fall returns to the last fire with nothing lost
+  (on the Summit, where there is no fire, the scene starts again); taking a god's element forgets nothing; every way
+  home leads to the Proving Ground (`SceneRoutes`), and the pause menu has "Return to the Proving Ground", "Guide to
+  effects" and "What's new". Memories: `PlaytestMode.RestMemories` is the hook for phase 5. Off, the game is
+  unchanged (412 EditMode tests, CastleProbe, SunCityProbe).
+- **Not built yet** (`NotBuiltYet`): every god and god's weapon from `WORLD.md` and `steel/README.md`; the rack's
+  shrouded stands, a faint slot beside each tree's crown on the chart for that god's bough on the Way, and the READ ME.
+- **The guide to effects and the marks' details**: words in `docs/design/playtest/effects.md` and
+  `docs/design/playtest/marks/*.md` (Fire, Lightning, Plasma, Tempest, Pyre written in full), read by
+  `Clover > Build > Playtest Texts` into `Generated/Playtest/Resources/PlaytestTexts.asset`; shown by `GuidePage`
+  (made at play under the HUD, so no level was rebuilt), click-through, paged, with pad, keys and mouse. Other trees'
+  high-level marks show details read from their data (`MarkDetails`).
+- **The title and what is new**: `docs/design/playtest/whats_new.md` (first heading is the version: Combat Playtest
+  0.1 (unreleased)), shown on the first arrival at the Proving Ground in a sitting.
+- **The build**: `Clover > Build > Combat Playtest` (`CombatPlaytestBuild`), next to the old demo's, which still builds.
+  Proving Ground, Castle, Summit, Sun City, Sun Court; product name "Project Clover Combat Playtest" for the length of
+  the build so its saves never mix with the demo's; READ ME from `docs/design/playtest/readme.md`.
+
+## Credits (decided 2026-11-18)
+
+- **Decided (user)**: the published game has a credits section. It thanks **_dnen**, **parvar11** and **nairarj000**,
+  who helped think up ideas, bounced ideas around, and gave criticism on the gameplay and the story. Their names are
+  written exactly as given here.
+- Already owed in the credits: "Powered by Poly Haven" for any Poly Haven asset used (`.claude/rules/art.md`).
+
 ## Open questions
 
 1. Camera: top-down is on trial in the slice; confirm or change once it is playable.
@@ -1330,6 +1387,7 @@ changed. The old playtest stays with its players until the first few phases of t
 | date | decision | why |
 |---|---|---|
 | 2026-11-18 | The element is weighted equally with close combat (pillar 2 rewritten); spells on cooldowns that weapon play shortens, mana for big moves; four spells on an L2 layer; two elements at once; a duo branch for every pair | the user: the game is more fun when fights use both kinds of technique, and any two elements should be able to mix |
+| 2026-11-18 | A credits section thanking _dnen, parvar11 and nairarj000 | the user: they helped with ideas and gave criticism on the gameplay and story |
 | 2026-11-18 | An evolving combat playtest: a dedicated testing ground, unlimited Shards and Memories, a free chart, god items unlockable, no loss on death, a guide to effects and detailed mark explanations; released after the first few phases | the user: a testbed for outside players that grows with the combat system |
 | 2026-11-18 | Bone hook into the Chain Sickle, hook swords into the Twin Knives; the Teacher (bow, drawing other weapons) is the champion's elite; Lightning and Wind elites wait; dead marks cut, depth added by rule-breaking marks | the user, on the reconciled content |
 | 2026-11-18 | Bond and Pair Bond; the patron keeps what is taken and a mortal carries one weapon and two elements; minibosses do not each gate every weapon | the user: reward going all in without punishing a change of mind |

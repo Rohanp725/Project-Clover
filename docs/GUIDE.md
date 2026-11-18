@@ -1155,6 +1155,21 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 5. For a standalone build: **Clover > Build > Windows Playtest**. The build on disk is older than today's work until
    that is run again.
 
+### The Proving Ground (the combat playtest)
+
+Open `Assets/_Project/Scenes/ProvingGround.unity` and press Play (rebuilt by **Clover > Build > Proving Ground**). It
+is the combat playtest's start, and being there turns on the playtest's rules; **Clover > Play > Playtest Mode** turns
+them on for every other scene too. The title shows the version and what is new. The rest fire is in the middle with the
+eleven element altars round it; the rack is west (the gods' weapons and the "Not built yet" stands in its back row); the
+dummies are east; the castle's and the Fire land's pens are north, each with a post per enemy, a post per group and a
+pale post that clears; the gates to Narukami and Khepharu and the doors to the Castle and Sun City are furthest north.
+
+Playtest rules: a rest gives unlimited Shards; the chart is open in every tree and branch (guard and light attack turn
+to the tree before and after; the spell button opens the chosen mark's details; the flask button opens the guide to
+effects); the gods' gifts can be bought; a fall loses nothing; pause has "Guide to effects", "What's new" and "Return to
+the Proving Ground". The words of the guide, the details and what is new are in `docs/design/playtest/`; after editing
+them run **Clover > Build > Playtest Texts**. The build is **Clover > Build > Combat Playtest**.
+
 ### The test yard
 
 Open `Assets/_Project/Scenes/CombatTest.unity` and press Play. Three training dummies stand in the middle and one

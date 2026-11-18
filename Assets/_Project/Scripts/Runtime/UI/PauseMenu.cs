@@ -82,6 +82,22 @@ namespace Clover.UI
         private void Start()
         {
             Choices = new PauseChoices(SceneManager.GetActiveScene().name);
+            // The playtest offers more entries than the scene's builder laid rows for: the rest are made like the last.
+            if (rows.Length > 0 && rows[rows.Length - 1] != null && rows.Length < Choices.Count)
+            {
+                var more = new Text[Choices.Count];
+                System.Array.Copy(rows, more, rows.Length);
+                var last = rows[rows.Length - 1];
+                float step = rows.Length > 1 && rows[rows.Length - 2] != null
+                    ? last.rectTransform.anchoredPosition.y - rows[rows.Length - 2].rectTransform.anchoredPosition.y : -68f;
+                for (int i = rows.Length; i < more.Length; i++)
+                {
+                    more[i] = Instantiate(last, last.transform.parent);
+                    more[i].name = "Row " + (i + 1);
+                    more[i].rectTransform.anchoredPosition = last.rectTransform.anchoredPosition + new Vector2(0f, step * (i - rows.Length + 1));
+                }
+                rows = more;
+            }
             if (panel != null) panel.SetActive(false);
             // The lines on the HUD that name buttons follow the device in use.
             PromptLine.Attach(transform);
@@ -125,6 +141,7 @@ namespace Clover.UI
             && !player.Suspended
             && (UpgradeMenu.Instance == null || !UpgradeMenu.Instance.IsOpen)
             && (ReadingBox.Instance == null || !ReadingBox.Instance.IsOpen)
+            && !GuidePage.Showing
             // A fallen player is on the way to the dark; there is nothing left to pause.
             && (defence == null || !defence.IsDead);
 
@@ -194,6 +211,18 @@ namespace Clover.UI
                     RunState.End(true);
                     Leave();
                     break;
+                case PauseEntry.Guide:
+                    var guide = GuidePage.Ensure();
+                    if (guide != null) guide.OpenGuide();
+                    break;
+                case PauseEntry.WhatsNew:
+                    var page = GuidePage.Ensure();
+                    if (page != null) page.OpenWhatsNew();
+                    break;
+                case PauseEntry.ProvingGround:
+                    // Everything carried goes with the player: the playtest loses nothing on the way home.
+                    Leave(PlaytestMode.ProvingGroundScene);
+                    break;
                 case PauseEntry.Forget:
                     Progress.Forget(Progress.MetSponsor);
                     Progress.Forget(Progress.WeaponKey(Weapons.KatanaName));
@@ -228,17 +257,20 @@ namespace Clover.UI
             else Close();
         }
 
-        // Both roads out of the scene lead to the hub, with time running and no menu able to open on the way.
-        private void Leave()
+        // The roads out of the scene lead to the hub (in the playtest, to the Proving Ground), with time running and no
+        // menu able to open on the way.
+        private void Leave(string scene = PauseChoices.HubScene)
         {
             leaving = true;
             Close();
             Time.timeScale = 1f;
-            SceneManager.LoadScene(PauseChoices.HubScene);
+            SceneRoutes.Load(scene);
         }
 
         private void Update()
         {
+            // The guide's page lies over this menu and has the buttons while it is open, and on the frame it closes.
+            if (GuidePage.BusyThisFrame) return;
             bool pausePressed = (pauseAction != null && pauseAction.WasPressedThisFrame()) || (alwaysPause != null && alwaysPause.WasPressedThisFrame());
             if (!IsOpen)
             {

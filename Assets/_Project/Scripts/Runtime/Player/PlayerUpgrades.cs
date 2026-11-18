@@ -395,14 +395,13 @@ namespace Clover.Player
         /// <summary>True when the mark is on a tree or branch open to the player now: the element held, or a mix of it with an element held or consumed in this run.</summary>
         public bool Open(Upgrade upgrade)
         {
-            if (upgrade == null) return false;
-            if (upgrade.IsMix) return UpgradeTree.MixOpen(upgrade, ElementName, RunState.ElementsHeld, RunState.ElementsConsumed);
-            return upgrade.Element == ElementName;
+            // The playtest's free chart: every tree and branch is open, whatever is held.
+            return MarkRules.Open(upgrade, ElementName, RunState.ElementsHeld, RunState.ElementsConsumed, PlaytestMode.On);
         }
 
+        /// <summary>True when the mark can be bought now. A god's gift is never sold, except in the playtest, where it is a playtest unlock.</summary>
         public bool CanBuy(Upgrade upgrade) =>
-            upgrade != null && !upgrade.Signature && !RunState.Unlocked.Contains(upgrade.Id) && RunState.Points >= upgrade.Cost
-            && Open(upgrade) && UpgradeTree.Reachable(upgrade, RunState.Unlocked);
+            MarkRules.CanBuy(upgrade, RunState.Unlocked, RunState.Points, Open(upgrade), PlaytestMode.On);
 
         public bool TryBuy(Upgrade upgrade)
         {

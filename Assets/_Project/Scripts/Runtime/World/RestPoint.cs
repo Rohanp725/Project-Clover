@@ -50,9 +50,11 @@ namespace Clover.World
             Vfx.Play(VfxKind.Heal, who.transform.position + Vector3.up * 0.6f);
             if (director != null) director.Rest(returnPoint != null ? returnPoint : transform);
             if (who.Defence != null) who.Defence.Callout("Rested");
+            // The playtest's rule: a rest gives as many Shards as the whole chart could ask for.
+            RunState.Points = PlaytestMode.ShardsAfterRest(RunState.Points);
             // By the fire is where the embers are spent.
             var held = who.GetComponent<PlayerElement>();
-            if (held != null && !held.HasElement)
+            if (held != null && !held.HasElement && !PlaytestMode.On)
             {
                 // No element, no tree: the embers are carried until there is something to feed them to.
                 if (who.Defence != null) who.Defence.Callout(NothingToFeed);

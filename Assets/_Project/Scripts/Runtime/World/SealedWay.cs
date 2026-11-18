@@ -66,7 +66,7 @@ namespace Clover.World
                 }
             }
             who.Defence.Callout("The storm waits above.");
-            if (!string.IsNullOrEmpty(LeadsTo)) UnityEngine.SceneManagement.SceneManager.LoadScene(LeadsTo);
+            if (!string.IsNullOrEmpty(LeadsTo)) Clover.Core.SceneRoutes.Load(LeadsTo);
         }
     }
 }

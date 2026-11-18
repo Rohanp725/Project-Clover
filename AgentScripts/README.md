@@ -21,7 +21,8 @@ git-ignored.
 
 `runprobe.sh <SceneName> <ProbeName> [maxPolls]` recompiles, opens the scene, enters Play Mode, runs
 `AgentScripts/<ProbeName>.cs` (entry `<ProbeName>.Run`), waits for its `[Probe] done` line, prints the probe's lines and
-any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle`, `Summit`, `CombatTest`.
+any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle`, `Summit`, `CombatTest`, `SunCity`,
+`SunCourt`, `ProvingGround`.
 
 | Probe | Scene | What it plays |
 |---|---|---|
@@ -52,6 +53,8 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 | `TourProbe`, `TitleProbe` | any | photographs of each scene's places and its title card, to `review/shots/current/` |
 | `PerfProbe` | any | ten seconds of frame time, garbage and draw calls (in SunCity and SunCourt it first sets up the busy moment: see the Fire sections below) |
 | `SunCityProbe` | SunCity | the second pass of the sun-king's city: every room and vista pictured, every stair walked, the shortcuts from both sides, the mirror, the noon, the falls, the champion and the gate; see below |
+| `ProvingGroundProbe` | ProvingGround | the combat playtest's ground, with the real keys: the title read through, an altar's element, the rack (a plain weapon, the Storm Katana, the Sun-Spear, a "Not built yet" stand), both pens let out alone and together and cleared, a penned soldier struck, the dummies (still, fighting back, the afflicted row), a rest with unlimited Shards, marks and a god's gift bought, the chart walked round every tree, a mark's details (written and from data), the guide from the chart and the pause menu, a fall with nothing lost, the door into Sun City and the pause menu's way back. Frames `review/shots/current/pg_*.png`; every judged line ends OK or WRONG and the last is the tally. Set the Input System to ignore focus first (see the SunCourtProbe notes). `bash AgentScripts/runprobe.sh ProvingGround ProvingGroundProbe 120` |
+| `PgShots` | ProvingGround, edit mode (`script run`) | raised pictures of the ground, the rack, the pens, the dummies, the gates and the plaza: `review/shots/current/pg_<part>.png` |
 | `SunCityOverview` | SunCity, edit mode (`script run`) | a raised picture of each district: `review/shots/current/suncity2_overview_<district>.png` |
 | `FireMechanicsProbe` | SunCity | the Fire land's second pass, each mechanic forced and measured on the open riverbed south of the waking spot; see below |
 | `BossFxProbe` | SunCourt | the look of the Fire bosses' attacks, each pictured with time stopped at its strongest; the sun parry; the Sun-Spear's throw and ray; see below |

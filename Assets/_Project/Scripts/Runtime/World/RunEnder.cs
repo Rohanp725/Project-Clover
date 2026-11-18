@@ -29,6 +29,7 @@ namespace Clover.World
 
         private float elapsed;
         private bool left;
+        private float reviveSeconds = 2.5f;
 
         public void Configure(PlayerDefence playerToWatch, Image darkImage, Text wordsText)
         {
@@ -40,13 +41,31 @@ namespace Clover.World
         private void Start()
         {
             // The run decides what a fall means here, not the arena's rule of standing up again.
-            if (player != null) player.ReviveAfterSeconds = 0f;
+            if (player != null)
+            {
+                reviveSeconds = player.ReviveAfterSeconds > 0f ? player.ReviveAfterSeconds : reviveSeconds;
+                player.ReviveAfterSeconds = 0f;
+            }
+            // A god's own ground has no fire to come back to and a fight that cannot be put back by halves: in the
+            // playtest a fall there begins the scene again, keeping everything carried.
+            restartsScene = PlaytestMode.On && FindAnyObjectByType<SummitDirector>() != null;
             Show(0f);
         }
+
+        /// <summary>True in the playtest where a fall begins the scene again instead of standing the player up at a fire.</summary>
+        public bool RestartsInPlaytest => restartsScene;
+        private bool restartsScene;
 
         private void Update()
         {
             if (player == null || left) return;
+            // The playtest's rule: a fall loses nothing. The player stands again at the last fire rested at, as in a
+            // land, and the area puts its enemies back; the run is not ended.
+            if (PlaytestMode.On && !IsEnding && !restartsScene)
+            {
+                if (player.ReviveAfterSeconds <= 0f) player.ReviveAfterSeconds = reviveSeconds;
+                return;
+            }
             if (!IsEnding)
             {
                 if (!player.IsDead) return;
@@ -58,8 +77,13 @@ namespace Clover.World
             if (elapsed < HoldSeconds + FadeSeconds + DarkSeconds) return;
             left = true;
             Time.timeScale = 1f;
+            if (PlaytestMode.On)
+            {
+                SceneRoutes.Load(SceneManager.GetActiveScene().name);
+                return;
+            }
             RunState.End(true);
-            SceneManager.LoadScene(WakesIn);
+            SceneRoutes.Load(WakesIn);
         }
 
         private void Show(float amount)

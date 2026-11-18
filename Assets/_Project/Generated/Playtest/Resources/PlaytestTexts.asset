@@ -1,0 +1,1458 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 24d13becfb3100d4d8970a3eb64c00bc, type: 3}
+  m_Name: PlaytestTexts
+  m_EditorClassIdentifier: Clover.Runtime::Clover.UI.PlaytestTexts
+  Version: Combat Playtest 0.1 (unreleased)
+  WhatsNew: "<color=#E8C77A>What this playtest is</color>\n\nA testbed for the combat. It grows with each update as the fighting is reworked. Everything is open: try anything, and tell us what felt good, what felt wrong and what you did not understand.\n\n<color=#E8C77A>New in 0.1</color>\n\n\u2022  <b>The Proving Ground</b>, where the playtest begins: a rest fire, a rack of every weapon (the Storm Katana and the Sun-Spear among them), altars for every element, training dummies (one still, one that fights back with red and pale blows, and one carrying each element's affliction), pens to let out the castle's soldiers and the Fire land's people, gates to Narukami and Khepharu, and doors to the Castle, the Summit, Sun City and the Sun Court.\n\u2022  <b>Playtest rules.</b> Resting gives unlimited Shards, so every mark can be bought, the gods' gifts included. The chart can be walked into every tree and branch. A fall puts you back at the last fire with nothing lost.\n\u2022  <b>Back to the Proving Ground</b> from any level: pause, then Return to the Proving Ground.\n\u2022  <b>The guide to effects</b>, from the pause menu and from the chart: every affliction, state and resource, with its numbers, what sets it off, how to use it and how it looks.\n\u2022  <b>Details for the high-level marks</b> on the chart: what a mark does, when, the numbers, what it works with and an example. Written in full for the Fire and Lightning trees and their mixes; the other trees show what their data says for now.\n\u2022  <b>Not built yet</b>: empty slots on the rack and on the chart show where the gods' weapons and boughs still to come will be.\n\u2022  This title, with the version and what is new."
+  Effects:
+  - Id: burn
+    Title: Burn
+    Group: Afflictions
+    Body: '<b>What it is.</b> Fire''s affliction. A burning enemy takes steady damage until the fire goes out. Depth makes it hurt more each second.
+
+
+      <b>The numbers.</b> 5 damage a second. Each stack adds 30%, up to 5 stacks (12.5 a second at full depth). Laying it again keeps whichever time is longer, never past 8 s. When it goes out, its stacks go with it. Set off, it deals 10, plus 10 for each stack, all at once.
+
+
+      <b>What sets it off.</b> Flame Wave burns what it touches for 5 s, and its burning ground burns too. Each blow during Kindle burns for 3 s. With Fire''s root mark learned, every weapon blow burns for 4 s and adds a stack. Some marks set a burn off.
+
+
+      <b>How to use it.</b> Burn works while you guard and dodge. Light it, then fight safely. Stack it before a mark sets it off, so the burst lands harder.
+
+
+      <b>How it looks.</b> Flames lick up the enemy''s body. An orange diamond sits under its bars, larger the deeper the burn.'
+  - Id: static
+    Title: Static
+    Group: Afflictions
+    Body: '<b>What it is.</b> Lightning''s affliction. Charge builds up on an enemy and waits to be set off. When it goes, it arcs into the enemy and everyone near it.
+
+
+      <b>The numbers.</b> Up to 5 stacks, 6 s, and each new stack starts the time again. A discharge deals 7 damage and 5 stagger for each stack to everyone within 4 m (35 damage and 25 stagger at full charge).
+
+
+      <b>What sets it off.</b> With Lightning''s root mark learned, each light blow adds a stack. A heavy blow or a finisher on a charged enemy discharges it. Some marks set it off in other ways. Static laid on a Soaked enemy also spreads to everyone within 4 m.
+
+
+      <b>How to use it.</b> Chain light blows up to five, then end with a heavy blow. Do it in a crowd: the discharge hits them all, and its stagger opens them up for finishers.
+
+
+      <b>How it looks.</b> Small bolts jump over the enemy''s body. A pale blue diamond sits under its bars. A discharge strikes the enemy with a bolt.'
+  - Id: unsteady
+    Title: Unsteady
+    Group: Afflictions
+    Body: '<b>What it is.</b> Wind''s affliction. An unsteady enemy loses its footing: it is easier to stagger, flies further when struck, and turns slowly.
+
+
+      <b>The numbers.</b> Up to 5 stacks, 6 s. Each stack means 6% more stagger taken, a 15% longer shove and 8% slower turning. At full depth that is 30% more stagger, 75% longer shoves and 40% slower turning.
+
+
+      <b>What sets it off.</b> Gust lays it two deep. With Wind''s root mark learned, every weapon blow adds a stack. During Tailwind, every weapon blow adds one more.
+
+
+      <b>How to use it.</b> Slower turning lets you circle behind an enemy and hit its back. Longer shoves help you throw enemies into hazards and walls. The extra stagger works with every heavy blow.
+
+
+      <b>How it looks.</b> Streaks of pale air circle the enemy''s feet. A pale green diamond sits under its bars.'
+  - Id: chill
+    Title: Chill and Frozen
+    Group: Afflictions
+    Body: '<b>What it is.</b> Ice''s affliction. Each stack of Chill slows an enemy. At full depth it is Frozen: held still in ice until it thaws or a heavy blow shatters it.
+
+
+      <b>The numbers.</b> Up to 5 stacks, 6 s. Each stack slows it by 7%. At 5 it freezes for 2.5 s. Elites and gods thaw after 1 s, and some great forms cannot be frozen. A heavy blow on a frozen enemy shatters it for 45 more damage. A thaw or a shatter ends the Chill. Nothing can chill a frozen enemy further.
+
+
+      <b>What sets it off.</b> Hoarfrost lays two stacks, and a weapon blow among its crystals breaks them for one more. With Ice''s root mark learned, every weapon blow adds a stack. During Glaze, every weapon blow adds one more.
+
+
+      <b>How to use it.</b> Freeze a dangerous enemy to buy time, then shatter it with a heavy blow. Soaked spreads Chill to everyone close by.
+
+
+      <b>How it looks.</b> Frost crystals grow at the enemy''s feet. Frozen, it glows a steady pale blue inside a cage of tall white crystals, and its diamond turns white and grows.'
+  - Id: soaked
+    Title: Soaked
+    Group: Afflictions
+    Body: '<b>What it is.</b> Water''s affliction. A soaked enemy takes more from spells, and passes Static and Chill on to everyone close to it.
+
+
+      <b>The numbers.</b> On or off, 8 s. Spells deal it 25% more damage. Static or Chill laid on it is also laid on everyone within 4 m.
+
+
+      <b>What sets it off.</b> Riptide soaks everything its wave carries. With Water''s root mark learned, every weapon blow soaks. During Wellspring, every weapon blow soaks too.
+
+
+      <b>How to use it.</b> Soak a group, then charge or chill one of them, and it reaches them all. Cast your spells on soaked enemies.
+
+
+      <b>How it looks.</b> Water drips off the enemy and rings of water spread on the ground at its feet. A deep blue diamond sits under its bars.'
+  - Id: seeded
+    Title: Seeded
+    Group: Afflictions
+    Body: '<b>What it is.</b> Life''s affliction. A seed grows in the enemy. Each of your weapon blows on it mends you, and when it dies it bursts into thorns.
+
+
+      <b>The numbers.</b> Up to 3 stacks, 8 s. Each weapon blow on it heals you 1 for each stack. When it dies, it deals 12 for each stack to everyone within 3 m (36 at full depth).
+
+
+      <b>What sets it off.</b> Briar Patch seeds whatever stands in it. With Life''s root mark learned, every weapon blow adds a stack. During Regrowth, every weapon blow adds one more.
+
+
+      <b>How to use it.</b> Quick weapons gain the most, since every blow heals. Kill a fully seeded enemy in the middle of a group, so its thorns hit the rest.
+
+
+      <b>How it looks.</b> Vines grow at the enemy''s feet and pink flowers open on it. A green diamond sits under its bars.'
+  - Id: tremor
+    Title: Tremor
+    Group: Afflictions
+    Body: '<b>What it is.</b> Earth''s affliction. The ground shakes under the enemy. It is slowed, and its balance does not come back while the shaking lasts.
+
+
+      <b>The numbers.</b> Up to 3 stacks, 6 s. Each stack slows it by 10%. While it lasts, the enemy''s stagger meter does not drain.
+
+
+      <b>What sets it off.</b> Stone Rise lays a stack. With Earth''s root mark learned, every heavy blow adds a stack and a finisher lays all three. During Bedrock, every weapon blow adds one more.
+
+
+      <b>How to use it.</b> Tremor keeps stagger from fading, so you can step back, guard or heal, and the meter waits for you. Use it on enemies with a big stagger meter.
+
+
+      <b>How it looks.</b> Pebbles hop around the enemy and the ground cracks under it. A brown diamond sits under its bars.'
+  - Id: sundered
+    Title: Sundered
+    Group: Afflictions
+    Body: '<b>What it is.</b> Metal''s affliction. Notches in the enemy''s armour let your weapon bite deeper.
+
+
+      <b>The numbers.</b> Up to 3 notches, 8 s. Each notch means 8% more damage from weapon blows (24% at full depth). Spells are not affected.
+
+
+      <b>What sets it off.</b> Flung Blade adds a notch when your next weapon blow drives the blade in. With Metal''s root mark learned, every heavy blow and every perfect guard adds a notch, and a finisher lays all three. During Temper, every weapon blow adds one more.
+
+
+      <b>How to use it.</b> Notch the armour first, then spend your hardest blows. Sundered and a critical blow multiply each other.
+
+
+      <b>How it looks.</b> Splinters of plate fall from the enemy. A steel grey diamond sits under its bars.'
+  - Id: marked
+    Title: Marked
+    Group: Afflictions
+    Body: '<b>What it is.</b> Light''s affliction. A mark of light makes your weapon blows on the enemy critical, until the mark is spent or fades.
+
+
+      <b>The numbers.</b> One deep. It lasts 8 s or three weapon blows, whichever ends first. Each weapon blow on it is critical (one and a half times damage) and gives 2 more mana. Laying it again refills the three blows.
+
+
+      <b>What sets it off.</b> Glare marks what its ray strikes. With Light''s root mark learned, the last blow of a chain and every perfect guard mark. During Clarity, every weapon blow marks.
+
+
+      <b>How to use it.</b> Save the mark for your three hardest blows. A heavy blow or a finisher on a marked enemy hits hardest. The extra mana pays for your next spell.
+
+
+      <b>How it looks.</b> A ray of white light stands over the enemy''s head. A pale gold diamond sits under its bars. Each critical blow shows a gold star.'
+  - Id: cursed
+    Title: Cursed
+    Group: Afflictions
+    Body: '<b>What it is.</b> Dark''s affliction. A cursed enemy hits more weakly, and killing it feeds you.
+
+
+      <b>The numbers.</b> One deep, 8 s. It deals 15% less damage. Killing it heals you 6.
+
+
+      <b>What sets it off.</b> Grasp curses what it reaches. With Dark''s root mark learned, every weapon blow curses. During Hunger, every weapon blow curses too.
+
+
+      <b>How to use it.</b> Curse the enemy that hits hardest, and its blows take less of your health. Curse enemies that are nearly dead to heal as you kill them. This pairs well with Hunger, which costs health.
+
+
+      <b>How it looks.</b> Dark violet smoke sinks over the enemy. A violet diamond sits under its bars.'
+  - Id: poisoned
+    Title: Poisoned
+    Group: Afflictions
+    Body: '<b>What it is.</b> Poison''s affliction. Doses build up, and on a slow beat the poison bites for all of them at once.
+
+
+      <b>The numbers.</b> Up to 8 doses, 6 s. Each new dose starts the time again. Every 2 s it bites for 2 for each dose (16 at full depth). The first bite comes 2 s after the first dose. Set off, it deals 6 for each dose at once.
+
+
+      <b>What sets it off.</b> Miasma doses whatever stands in its cloud once a second. With Poison''s root mark learned, every weapon blow adds a dose, a heavy blow adds one more, and a finisher adds two more. During Fever, every weapon blow adds one more. Some marks set it off.
+
+
+      <b>How to use it.</b> Keep adding doses so the time never runs out. The deeper the poison, the harder each bite. Then dodge, guard and let the beat work.
+
+
+      <b>How it looks.</b> Yellow-green bubbles rise off the enemy, larger the deeper the poison. A yellow-green diamond sits under its bars.'
+  - Id: staggered
+    Title: Staggered and the finisher
+    Group: States
+    Body: '<b>What it is.</b> Every enemy has a balance meter. Blows fill it. When it is full, the enemy is staggered: it kneels, helpless, for a few seconds. A heavy blow on it then is a finisher.
+
+
+      <b>The numbers.</b> Ordinary enemies stagger for 3.2 s, elites for 3 s and gods for 2.8 s. The meter starts to drain 2 s after the last blow, at 25 a second. While staggered, light blows deal one and a half times damage. A finisher reaches up to 5 m, deals three times damage, costs no stamina, gives 15 mana, and nothing can hit you while it lasts. On a god it takes at least a fifth of his health, and on an elite at least a third.
+
+
+      <b>What sets it off.</b> Every blow fills it. Heavy blows, perfect guards and some spells fill it most. Unsteady makes everything fill it more. Tremor stops it draining.
+
+
+      <b>How to use it.</b> Watch the balance bar under the enemy''s health. When the enemy flickers, one or two more blows will open it. Save your heavy blow for the finisher.
+
+
+      <b>How it looks.</b> At 70% the enemy flickers amber. Staggered, it pulses gold and carries a broken gold ring.'
+  - Id: grey-health
+    Title: Grey health
+    Group: States
+    Body: '<b>What it is.</b> A blocked blow still takes a little health, but that part turns grey and can be won back. Deal damage soon and it comes back. Wait too long and it fades.
+
+
+      <b>The numbers.</b> 35% of a blocked blow''s damage turns grey. Each point of damage you deal wins back 0.6 of grey health. The grey starts to fade 2.5 s after your last block or regain, at 10 a second. A blow you do not block removes all of it. Grey can never take your last point of health, so guarding alone cannot kill you.
+
+
+      <b>What sets it off.</b> Blocking with the guard button. Regrowth and Clarity turn all grey health back into real health at once.
+
+
+      <b>How to use it.</b> After a block, strike back straight away to win the grey back. Do not take an unblocked blow while you have grey health, or you lose it.
+
+
+      <b>How it looks.</b> A grey stretch at the end of your health bar, between your health and the empty part.'
+  - Id: guard-broken
+    Title: Guard broken
+    Group: States
+    Body: '<b>What it is.</b> A held guard costs stamina for every blow it blocks. If you do not have the stamina to pay for a blow, the guard breaks and the blow lands in full.
+
+
+      <b>The numbers.</b> A block costs 0.9 stamina for each point of damage, for most weapons. When the guard breaks, the blow deals full damage, your stamina empties, and you are stuck for 0.8 s (an ordinary flinch is 0.35 s).
+
+
+      <b>What sets it off.</b> A blocked blow that costs more stamina than you have. A ward takes the blow instead, if you have one.
+
+
+      <b>How to use it.</b> Watch your stamina while you guard. Against long chains, dodge some of the blows or perfect-guard them, since a perfect guard costs nothing. Stop attacking and let stamina refill before you block a big blow.
+
+
+      <b>How it looks.</b> The guard arc pulses red, a danger flash shows, and the words "Guard broken" appear.'
+  - Id: perfect-guard
+    Title: Perfect guard
+    Group: States
+    Body: '<b>What it is.</b> Press the guard button just before a blow lands. The blow is turned aside for nothing and the attacker loses its balance.
+
+
+      <b>The numbers.</b> The blow must land within 0.18 s of the press, for most weapons. Pressing guard again within 0.4 s of the last press gives no perfect window, so mashing does not work. A perfect guard costs no stamina and no health, gives 15 mana, and adds a large amount of stagger to the attacker (40 to 55 on the castle''s enemies). Clarity makes the window half again as long.
+
+
+      <b>What sets it off.</b> A fresh press of the guard button, timed to the blow. It also turns red attacks, which a held guard cannot stop.
+
+
+      <b>How to use it.</b> Learn each enemy''s rhythm and press at the moment of impact, not at the wind-up. It is the best source of mana and stagger in the game, and several marks reward it.
+
+
+      <b>How it looks.</b> The guard arc flashes gold, a ring and a pale flash burst from it, the world stops for an instant, and the words "Perfect guard" appear.'
+  - Id: perfect-dodge
+    Title: Perfect dodge
+    Group: States
+    Body: '<b>What it is.</b> Roll through a blow at the last moment and time slows for a moment, giving you mana and an opening.
+
+
+      <b>The numbers.</b> A roll goes 4.5 m in 0.35 s for 25 stamina. Blows pass through you from 0.03 s to 0.25 s into the roll. A blow that passes through in the first 0.13 s is a perfect dodge. It gives 12 mana and slows time to 0.3 speed for 0.35 s.
+
+
+      <b>What sets it off.</b> A dodge started just as a blow arrives. Red attacks can be dodged this way like any other.
+
+
+      <b>How to use it.</b> Roll into or across the attack, not away from it, so you come out close enough to punish. Tailwind halves the dodge''s cost, sends it 30% further and keeps you safe 25% longer.
+
+
+      <b>How it looks.</b> The world slows briefly and the words "Perfect dodge" appear.'
+  - Id: red-attacks
+    Title: Red attacks
+    Group: States
+    Body: '<b>What it is.</b> Some enemy attacks cannot be guarded. A held guard does nothing against them: the blow lands in full and you flinch.
+
+
+      <b>The numbers.</b> They hit as hard as any other attack, and often harder. The lunges, charges, leaps, bolts and roars of the castle''s enemies and gods are among them.
+
+
+      <b>What sets it off.</b> The enemy chooses them, often at range or as the last blow of a chain.
+
+
+      <b>How to use it.</b> Dodge them, or perfect-guard them, since a perfect guard turns even these. A ward also takes one. Many leave the attacker open for a long time afterwards, so punish.
+
+
+      <b>How it looks.</b> As the enemy commits, a red flare shows over its head instead of the white glint of a blow you can guard. The warning shape on the ground is drawn in red.'
+  - Id: critical
+    Title: Critical blows
+    Group: States
+    Body: '<b>What it is.</b> A critical blow is a weapon blow that lands for one and a half times its damage.
+
+
+      <b>The numbers.</b> One and a half times damage. You start with no chance of a critical blow. Some marks add a chance, some make certain blows always critical, and Marked makes every weapon blow critical for three blows.
+
+
+      <b>What sets it off.</b> Weapon blows on a Marked enemy, the chance that marks give, and blows that marks promise (for example a counter cut on an enemy showing its attack).
+
+
+      <b>How to use it.</b> Put your hardest blows on a critical: a heavy blow or a finisher on a Marked enemy. Critical blows stack with Sundered and with the surge.
+
+
+      <b>How it looks.</b> A gold star with long points and a spray of gold sparks where the blow lands.'
+  - Id: wards
+    Title: Wards
+    Group: States
+    Body: '<b>What it is.</b> A ward turns aside one blow that would have hurt you. It is spent instead of your health.
+
+
+      <b>The numbers.</b> You can hold up to 3 wards. Each one takes a blow you did not guard, or a blow that would have broken your guard. Wards stay until they are spent, until you rest, or until you change element.
+
+
+      <b>What sets it off.</b> Glaze (Ice''s surge, 40 mana, 12 s) gives one ward when you light it. Some marks give wards too.
+
+
+      <b>How to use it.</b> Light Glaze before a big attack you cannot avoid, or when you want to trade blows. A ward also takes a red attack, which a held guard cannot.
+
+
+      <b>How it looks.</b> The status line by your bars reads "Ward" or "Wards 2". When one is spent, a pale blue ring and sparks burst in front of you with a clang, and the word "Warded" appears.'
+  - Id: hurt
+    Title: Hurt (the flinch)
+    Group: States
+    Body: '<b>What it is.</b> A blow that lands makes you flinch. You are pushed back and cannot act for a moment.
+
+
+      <b>The numbers.</b> A flinch lasts 0.35 s and pushes you back 1.1 m. A broken guard holds you for 0.8 s. A blow that arrives during a flinch is ignored, so two enemies cannot keep you down.
+
+
+      <b>What sets it off.</b> Any blow that is not blocked, dodged or warded. The flinch cuts off your attack, spell, dodge or drink, and drops your guard. Some heavy moves are poised: during their wind-up and swing a small blow hurts but does not stop them.
+
+
+      <b>How to use it.</b> Do not start a slow drink or a long chain next to an enemy that is about to swing. Enemies flinch too: most at every blow, some only after a few light blows.
+
+
+      <b>How it looks.</b> A red flash at the screen''s edges, a spray from the wound and a shake of the camera.'
+  - Id: health
+    Title: Health
+    Group: Resources
+    Body: '<b>What it is.</b> Your life. It drops when blows land, partly turns grey when you block, and comes back from flasks, from some marks and from resting.
+
+
+      <b>The numbers.</b> 100 to begin with. Some marks raise it. Below 30% the screen''s edges darken red, and they darken more below 15%.
+
+
+      <b>What sets it off.</b> Unblocked blows take it for good. Blocked blows turn some of it grey (see Grey health). Flasks, Seeded enemies, Cursed kills, Regrowth, Hunger and Fever give it back. A rest fire fills it.
+
+
+      <b>How to use it.</b> Win back grey health by attacking, and drink only when you are safe. In the playtest: a fall returns you to your last rest fire with nothing lost, so try risky things freely.
+
+
+      <b>How it looks.</b> Your health bar in the corner of the screen. What a blow just took stays pale for a moment before it drains, so you can read how big the blow was.'
+  - Id: stamina
+    Title: Stamina
+    Group: Resources
+    Body: '<b>What it is.</b> What you spend to attack, dodge and block. When it runs out, you cannot dodge, and the next blocked blow breaks your guard.
+
+
+      <b>The numbers.</b> 100. It refills at 30 a second, starting 0.8 s after you last spent any. A dodge costs 25. Attacks cost about 12 each, more for the heavier weapons. A block costs 0.9 for each point of damage, for most weapons. A broken guard empties it.
+
+
+      <b>What sets it off.</b> Attacking, dodging and blocking spend it. Waiting refills it. A rest fire fills it.
+
+
+      <b>How to use it.</b> Never empty it completely in front of an enemy. Keep enough for one dodge. Short pauses between chains let it refill.
+
+
+      <b>How it looks.</b> The bar under your health bar.'
+  - Id: mana
+    Title: Mana
+    Group: Resources
+    Body: '<b>What it is.</b> The power behind your spells, your surge and your weapon skill. It comes only from fighting.
+
+
+      <b>The numbers.</b> Up to 100, and empty when you enter an area. Weapon blows that land give 3 to 16, depending on the move. A perfect guard gives 15, a perfect dodge 12 and a finisher 15. A Marked enemy gives 2 more for each blow. Blocked blows give nothing. Tap spells cost 20 to 25, surges 30 to 40 (Hunger costs health instead), and weapon skills 25 to 35.
+
+
+      <b>What sets it off.</b> Landing blows and timing guards and dodges well. The spell button, the surge and a full hold of the heavy button spend it.
+
+
+      <b>How to use it.</b> Weave steel and spells: hit, earn mana, cast, then hit again. Perfect guards and perfect dodges fill it fastest.
+
+
+      <b>How it looks.</b> The bar under your stamina, in the colour of the element you hold (grey with none).'
+  - Id: flasks
+    Title: Flasks
+    Group: Resources
+    Body: '<b>What it is.</b> Your healing draughts. Drinking takes a moment, so drink when you are safe.
+
+
+      <b>The numbers.</b> 3 flasks, 45 health each. A drink takes 0.8 s and heals at 0.4 s. If a blow or a roll stops the drink before then, the flask is not used. At full health the button does nothing, so a flask is never wasted. With none left, dealing 120 damage earns one back. Wellspring makes flasks heal half again as much.
+
+
+      <b>What sets it off.</b> The flask button. A rest fire refills them all.
+
+
+      <b>How to use it.</b> Drink after a dodge has put distance between you and the enemy, or while it is staggered. With every flask gone, keep fighting to earn one back. Some enemies come for your flask when they see you drink.
+
+
+      <b>How it looks.</b> Flasks drawn beside your bars, one for each you carry. With none left, the first slowly fills as you earn it back, and the words "Flask earned" appear when it is full.'
+  - Id: shards
+    Title: Shards
+    Group: Resources
+    Body: '<b>What it is.</b> The currency of the upgrade chart. Spend them at a rest fire to learn marks on your element''s tree.
+
+
+      <b>The numbers.</b> Most enemies give 1 the first time they fall, the stronger gilded ranks up to 3, an elite 3 and Narukami 5. Marks cost 1 (minor), 2 (root), 3 (major), 4 (spell), 6 (keystone), and 3 to 5 on a mixed branch.
+
+
+      <b>What sets it off.</b> Killing enemies. In the full game, unspent Shards are lost when you fall. In the lands, the enemies you killed since your last rest carry them back, glowing, and killing them returns the Shards. Falling again first loses them for good.
+
+
+      <b>How to use it.</b> In the playtest: resting gives unlimited Shards and a fall loses nothing, so learn anything you want and try every tree.
+
+
+      <b>How it looks.</b> "Shards" and a count on the HUD. Motes fly from each body to you, and the count swells as they land.'
+  - Id: memories
+    Title: Memories
+    Group: Resources
+    Body: '<b>What it is.</b> The second currency, earned by beating people. It will buy the weapon tree, the Way, and the Body branch of health, stamina, flasks and poise. Memories do not exist yet.
+
+
+      <b>The numbers.</b> None yet. Memories arrive in a later phase of the playtest (phase 5), with the Way.
+
+
+      <b>What sets it off.</b> The plan is that Memories come from beating each kind of enemy for the first time, and from elites, named fighters and gods, so they cannot be farmed.
+
+
+      <b>How to use it.</b> In the playtest, Memories will be unlimited, like Shards, so every technique can be tried. In the full game they are kept when you fall.
+
+
+      <b>How it looks.</b> Not shown yet.'
+  - Id: reactions
+    Title: Reactions (not built yet)
+    Group: Reactions
+    Body: '<b>What it is.</b> When two elements'' afflictions meet on one enemy, they will react, and each pair of elements will do something of its own. Reactions are not built yet.
+
+
+      <b>The numbers.</b> None yet. Reactions arrive in a later phase of the playtest (phase 3), and this part of the guide will fill then, with one entry for each reaction.
+
+
+      <b>What sets it off.</b> Two different afflictions lying on the same enemy at once. Playing two elements together arrives in phase 2, before reactions.
+
+
+      <b>How to use it.</b> For now, afflictions only add up. Soaked spreads Static and Chill. Unsteady adds stagger and Tremor stops it fading. Sundered and Marked both make weapon blows hit harder.
+
+
+      <b>How it looks.</b> Not shown yet. Today each affliction shows as its own diamond under the enemy''s bars.'
+  Marks:
+  - Id: fire.cinder
+    Title: Cinder
+    Group: 
+    Body: '<b>What it does.</b> Every blow of your weapon that lands sets the enemy burning and lays one stack of Burn. Each further blow adds another stack, up to five. A burning enemy takes damage every second, more for each stack.
+
+
+      <b>When it happens.</b> Always on once learned: every weapon blow that lands, light or heavy.
+
+
+      <b>The numbers.</b> 2 Shards. One stack a blow, five at most. A burn deals 5 damage a second and each stack adds 30%, so 12.5 a second at five. Each blow sets its clock back to 4 seconds; when it runs out the stacks go with it. A burn set off by another mark deals 10 damage and 10 more for each stack: 60 at five.
+
+
+      <b>Works with.</b> Heat, Burn and Detonate, Catching Fire, Searing Edge, Slow Fuse, Dry Tinder, and Kindle, which sets every blow burning.
+
+
+      <b>Example.</b> Five quick light blows on a soldier leave it five deep, burning for 12.5 a second while you step back and raise your guard.'
+  - Id: fire.heat
+    Title: Heat
+    Group: 
+    Body: '<b>What it does.</b> Landing blows without being struck builds Heat, a level at a time, up to five. Each level makes your weapon hit harder. A blow that lands on you puts it out, and standing off too long cools it a level at a time.
+
+
+      <b>When it happens.</b> Always on once learned. Every weapon blow that lands counts; lighting Kindle with the surge button fills it at once.
+
+
+      <b>The numbers.</b> 3 Shards. Three blows a level, five levels. Each level adds 6% weapon damage, 30% at five. Six seconds without landing a blow loses a level. A blow that lands on you drops it to nothing.
+
+
+      <b>Works with.</b> Stoked (two blows a level), Banked Coals (nine seconds, not six), White Heat, Wildfire Rush (a level for each enemy passed), Kindle, and Backdraft.
+
+
+      <b>Example.</b> Fifteen blows in, every cut is 30% heavier. One careless swing from a brute and you are back to nothing.'
+  - Id: fire.catch
+    Title: Catching Fire
+    Group: 
+    Body: '<b>What it does.</b> When a burning enemy dies, its burn is thrown onto everyone standing near it, as deep as it was.
+
+
+      <b>When it happens.</b> The moment a burning enemy dies, whatever killed it.
+
+
+      <b>The numbers.</b> 3 Shards. Every enemy within 4 metres of the one that died takes as many stacks of Burn as it carried, up to five. It can happen at most five times a second.
+
+
+      <b>Works with.</b> Cinder to build the depth first, Searing Edge and Slow Fuse to make the passed burns count, Wildfire (the ground burns where it fell as well), and Burn and Detonate or Open Furnace to set the new burns off.
+
+
+      <b>Example.</b> Kill a soldier at five Burn in the middle of a pack, and the two beside it are five deep at once without a blow from you.'
+  - Id: fire.crescent
+    Title: Burning Crescent
+    Group: 
+    Body: '<b>What it does.</b> The Iaido Slash throws a slow arc of flame ahead of you that travels on after the cut, striking and burning what it passes through.
+
+
+      <b>When it happens.</b> Each time you perform the Iaido Slash, the Katana''s weapon skill (hold the heavy attack to full). It needs the Katana.
+
+
+      <b>The numbers.</b> 3 Shards. The arc starts 1.4 metres ahead of you, 1.5 metres in radius, and travels at 8 metres a second for 1.1 seconds, about 9 metres. It strikes each enemy once for 18 damage and 12 stagger and sets it burning for 3 seconds. The skill costs its usual mana.
+
+
+      <b>Works with.</b> Cinder and Heat on the cut itself, Catching Fire, and Burn and Detonate on what the arc leaves burning.
+
+
+      <b>Example.</b> Against a line of spearmen, the slash cuts the first and the flame rolls on to burn the two behind it.'
+  - Id: fire.rush
+    Title: Wildfire Rush
+    Group: 
+    Body: '<b>What it does.</b> You become a point of fire and drive straight through every enemy in your path, coming out the far side facing back. Each enemy passed is struck, set burning and raises your Heat a level. Then a second cut lands on everyone on the line, and the line burns. Nothing can strike you while you drive; a wall, or something too big to shove, stops you.
+
+
+      <b>When it happens.</b> When worn: hold the spell button.
+
+
+      <b>The numbers.</b> 4 Shards, 35 mana. Up to 7 metres, along a lane 2 metres wide. Passing: 14 damage, 20 stagger and two stacks of Burn. The cut after: 14 damage, 20 stagger and two stacks more. The line burns 2.6 seconds, biting for 4 every half second. One Heat level for each enemy passed.
+
+
+      <b>Works with.</b> Heat and White Heat, Cinder, Catching Fire, Burn and Detonate, Hot Coals.
+
+
+      <b>Example.</b> Drive through three soldiers in a row: Heat goes from none to three, and each is four deep in Burn.'
+  - Id: fire.whiteheat
+    Title: White Heat
+    Group: 
+    Body: '<b>What it does.</b> Heat can rise to eight. Every level above five also quickens your swing. But struck while above five, you catch fire yourself for a while.
+
+
+      <b>When it happens.</b> Always on once learned. The speed comes with each level above five; the burn comes when a blow lands on you up there.
+
+
+      <b>The numbers.</b> 6 Shards. Heat to eight, 48% weapon damage at the top. Each level above five adds 5% swing speed, 15% at eight. Struck above five, you burn for 4 seconds at 4 damage a second; it never takes your last point. The blow still puts your Heat out, as always.
+
+
+      <b>Works with.</b> Heat, Stoked, Banked Coals, Wildfire Rush, and Kindle, which now fills Heat to eight at once.
+
+
+      <b>Example.</b> Light Kindle at the start of a fight: you are at eight Heat straight away, swinging 15% faster for 48% more, as long as nothing touches you.'
+  - Id: fire.backdraft
+    Title: Backdraft
+    Group: 
+    Body: '<b>What it does.</b> A perfect guard throws a cone of fire back at the one who struck. You turn to face it; everything in the cone is struck and set burning, and the attacker takes two stacks of Burn besides.
+
+
+      <b>When it happens.</b> A perfect guard: press the guard button just before a blow lands.
+
+
+      <b>The numbers.</b> 3 Shards. A cone 4.5 metres long and 100 degrees wide. 16 damage and 18 stagger to all in it, and each burns for 3 seconds. Two stacks of Burn on the attacker.
+
+
+      <b>Works with.</b> Furnace Breath (55% more stagger), Wide Hearth (25% further), Struck Flint, Kindling, Burn and Detonate (the cone sets off every burn it touches), Kiln Stance and Open Furnace.
+
+
+      <b>Example.</b> Against a soldier''s thrust, guard just before it lands: the fire throws it off balance and leaves it burning two deep before you have swung.'
+  - Id: fire.detonate
+    Title: Burn and Detonate
+    Group: 
+    Body: '<b>What it does.</b> A perfect guard sets off the burn on burning enemies: all of it goes at once as a single blow, and the burn ends. With Backdraft, which it grows from, every burning enemy in Backdraft''s cone is set off, not only the one who struck.
+
+
+      <b>When it happens.</b> A perfect guard while the enemies in front of you are burning.
+
+
+      <b>The numbers.</b> 3 Shards. A burn set off deals 10 damage and 10 more for each stack: 60 at five. Backdraft''s fire then lights it again for 3 seconds with no depth, and the attacker takes its two stacks. Wide Hearth: 25% further.
+
+
+      <b>Works with.</b> Cinder, Searing Edge, Backdraft, Kiln Stance (its caught blow counts as a perfect guard), and Arc Fire on the Plasma branch. Open Furnace replaces it with a wider version.
+
+
+      <b>Example.</b> Lay five Burn on a brute, then perfect-guard its next swing: 60 damage lands at once on top of Backdraft''s cone.'
+  - Id: fire.trail
+    Title: Flame Trail
+    Group: 
+    Body: '<b>What it does.</b> Your dodge leaves a line of fire on the ground behind it that burns whatever walks through.
+
+
+      <b>When it happens.</b> Every dodge.
+
+
+      <b>The numbers.</b> 3 Shards. Four patches along the dodge''s path, each 0.95 metres in radius, laid as you roll. Each burns for 2.6 seconds and bites for 4 damage every half second, setting what it touches burning for 2 seconds.
+
+
+      <b>Works with.</b> Long Embers (54% longer), Hot Footing (50% harder), Flashpoint, Scorched Earth (the line lasts twice as long, and standing in it feeds you), and Wildfire Rush for a second line.
+
+
+      <b>Example.</b> Roll back from a charging brute: it runs through all four patches to reach you and arrives burning.'
+  - Id: fire.kiln
+    Title: Kiln Stance
+    Group: 
+    Body: '<b>What it does.</b> You stand ready in flame. The first blow that reaches you, from any side, red attack or not, is turned for nothing and answered with a pillar of fire under the one who struck. The caught blow counts as a perfect guard, so it gives that mana and sets off every mark that waits on one. If nothing comes, the stance goes out and the mana is lost. A dodge lets it go.
+
+
+      <b>When it happens.</b> When worn: hold the spell button, then any blow in the next 1.2 seconds.
+
+
+      <b>The numbers.</b> 4 Shards, 30 mana. Ready for 1.2 seconds. The pillar is 1.7 metres in radius: 30 damage, 50 stagger, a heavy blow, three stacks of Burn.
+
+
+      <b>Works with.</b> Backdraft, Burn and Detonate, Open Furnace, Struck Flint, and Twin Break on the Plasma branch.
+
+
+      <b>Example.</b> A brute winds up a red overhead you cannot guard: cast just before it falls, and the pillar answers it.'
+  - Id: fire.flash
+    Title: Flashpoint
+    Group: 
+    Body: '<b>What it does.</b> After a perfect dodge, the next swing you land within three seconds lays two more stacks than usual, so with Cinder it sets a burn three deep at once.
+
+
+      <b>When it happens.</b> A perfect dodge: a blow passes through the very start of your roll. The gift waits up to three seconds for a swing that lands, and that swing spends it.
+
+
+      <b>The numbers.</b> 3 Shards. Two extra stacks, for 3 seconds or one swing that lands, whichever comes first.
+
+
+      <b>Works with.</b> Cinder, Flame Trail, Burn and Detonate and Open Furnace (a deep burn to set off), Heat.
+
+
+      <b>Example.</b> Roll through a soldier''s swing at the last moment and cut it on the way out: it is three deep in Burn from one blow.'
+  - Id: fire.furnace
+    Title: Open Furnace
+    Group: 
+    Body: '<b>What it does.</b> A perfect guard sets off the burn of every burning enemy near you, each where it stands, not only the one who struck, and leaves each still alight. The price: a plain guard, one that is not perfect, lets more of a blow through as grey health.
+
+
+      <b>When it happens.</b> Always on: the blast with every perfect guard, the price with every plain one.
+
+
+      <b>The numbers.</b> 6 Shards. Reaches 8 metres round you. Each enemy''s burn is set off on it alone, 10 damage and 10 more for each stack, and it keeps two stacks afterward. A plain guard lets 60% of a blow through as grey health, where it lets 35%.
+
+
+      <b>Works with.</b> Cinder, Catching Fire, Searing Edge, Backdraft and Kiln Stance (both count as perfect guards), and Arc Fire on the Plasma branch.
+
+
+      <b>Example.</b> Four soldiers burning round you, five deep: one perfect guard sets off all four for 60 each, and they are still burning.'
+  - Id: fire.firebomb
+    Title: Firebomb Flask
+    Group: 
+    Body: '<b>What it does.</b> Holding the flask button throws the flask instead of drinking it. It heals nothing: it bursts in fire where it lands, leaves flames on the ground there, and lays three stacks of Burn on everything near. A short press still drinks.
+
+
+      <b>When it happens.</b> Hold the flask button. Each throw uses a flask.
+
+
+      <b>The numbers.</b> 3 Shards. Hold 0.3 seconds to throw. It flies at the enemy ahead within 9 metres, or 5 metres ahead, and lands 0.4 seconds later. The burst is 2.6 metres in radius: 36 damage, 30 stagger, three stacks of Burn and 4 seconds of burning. The flames left are 2.2 metres in radius and bite for 5 every half second for 3.5 seconds.
+
+
+      <b>Works with.</b> Burn and Detonate, Catching Fire, Wildfire, Scorched Earth.
+
+
+      <b>Example.</b> Three soldiers bunch at a gate: one flask leaves all three three deep and standing in fire.'
+  - Id: fire.meteor
+    Title: Meteor Leap
+    Group: 
+    Body: '<b>What it does.</b> You leap out of the fight and come down beside the enemy you face as a heavy blow, leaving a burning crater. Nothing can strike you in the air.
+
+
+      <b>When it happens.</b> When worn: hold the spell button.
+
+
+      <b>The numbers.</b> 4 Shards, 50 mana. It finds an enemy faced within 9 metres and lands you 1 metre short of it; with none, 5 metres ahead. The leap takes 0.62 seconds. The landing strikes everything within 3.2 metres for 46 damage and 55 stagger. The crater is about 2.6 metres in radius, burns for 4 seconds and bites for 5 every half second, keeping what stands in it alight.
+
+
+      <b>Works with.</b> Scorched Earth (the crater lasts twice as long), Hot Coals, Burn and Detonate, Catching Fire.
+
+
+      <b>Example.</b> An archer stands behind two shield-bearers: leap over them and land on it.'
+  - Id: fire.sunspot
+    Title: Sunspot
+    Group: 
+    Body: '<b>What it does.</b> You brand the enemy you face with a spot of fire. Each light blow you land on it feeds the brand, up to six. A heavy blow sets it off in one burst, bigger for every blow fed, which also lays the branded enemy''s own Burn on all it reaches. Left alone, it bursts at half when its time runs out. With no enemy faced the mana is lost.
+
+
+      <b>When it happens.</b> When worn: hold the spell button. Then light blows feed it and a heavy blow on it sets it off.
+
+
+      <b>The numbers.</b> 4 Shards, 35 mana. An enemy within 6 metres; the brand lasts 7 seconds. The burst is 3 metres in radius: 12 damage and 10 stagger, plus 9 damage and 8 stagger for each blow fed (66 and 58 at six), and one stack of Burn.
+
+
+      <b>Works with.</b> Cinder (the branded enemy''s depth is passed on), Heat, Hot Coals, Catching Fire.
+
+
+      <b>Example.</b> Brand a brute, land six light blows, then a heavy: its Burn spreads to all near.'
+  - Id: fire.scorched
+    Title: Scorched Earth
+    Group: 
+    Body: '<b>What it does.</b> Fire you leave on the ground burns twice as long. While you stand in it, Kindle does not run down and your blows give more mana. The price: your spells cost more.
+
+
+      <b>When it happens.</b> Always on once learned. The Kindle and mana gifts hold for as long as you stand in fire you left.
+
+
+      <b>The numbers.</b> 6 Shards. Twice as long for every fire you lay on the ground. Standing in it: Kindle''s clock stops, and weapon blows give 50% more mana. Every worn spell costs 20% more.
+
+
+      <b>Works with.</b> Flame Trail, Meteor Leap''s crater, Firebomb Flask, Wildfire, Wildfire Rush, Falling Sun, Kindle, Long Kindle.
+
+
+      <b>Example.</b> Throw the flask at your feet, light Kindle and fight inside the flames: Kindle never ends while you hold the ground.'
+  - Id: fire.wildfire
+    Title: Wildfire
+    Group: 
+    Body: '<b>What it does.</b> Where an enemy dies, the ground burns for a while, biting and burning whatever stands there.
+
+
+      <b>When it happens.</b> Whenever an enemy dies.
+
+
+      <b>The numbers.</b> 3 Shards. A patch 2.2 metres in radius where it fell, for 4 seconds. It bites for 5 damage every half second and lays one stack of Burn with each bite.
+
+
+      <b>Works with.</b> Catching Fire, Scorched Earth (the patch lasts twice as long), Burn and Detonate, Cinder.
+
+
+      <b>Example.</b> Kill the first of a pack where they are crowding in, and the rest must walk through fire to reach you.'
+  - Id: fire.fan
+    Title: Cinder Fan
+    Group: 
+    Body: '<b>What it does.</b> You throw fire in a wide fan close in front of you. What it touches burns two deep.
+
+
+      <b>When it happens.</b> When worn: hold the spell button.
+
+
+      <b>The numbers.</b> 4 Shards, 30 mana. A cone 4.5 metres long and 140 degrees wide. 22 damage, 20 stagger and two stacks of Burn to everything in it.
+
+
+      <b>Works with.</b> Hot Coals, Cinder, Burn and Detonate, Catching Fire.
+
+
+      <b>Example.</b> Surrounded on three sides: one fan sets the whole front half of the ring burning.'
+  - Id: fire.sun
+    Title: Falling Sun
+    Group: 
+    Body: '<b>What it does.</b> Lighting Kindle starts the sun on its road. At dawn it is rolled to the enemy you face, and the ground it crosses burns. At noon it hangs over that enemy, and burns near you deepen by themselves. At dusk it sets on the enemy below, heavier for every burn it finds. A blow on you sends it under, to rise again.
+
+
+      <b>When it happens.</b> Light Kindle with the surge button. It sets when Kindle ends, or when you press the surge button again.
+
+
+      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Dawn: up to 9 metres; the first enemy met takes 14 damage, 20 stagger, two Burn. Noon: each second, a stack of Burn on all within 6 metres of you. Dusk: 60 damage, 80 stagger in 4 metres, 8% more a Burn stack found, up to double; half if called while rolling. Sent under, it rises in 1.5 seconds if Kindle has 3 left.
+
+
+      <b>Works with.</b> Cinder, Heat, Long Kindle.
+
+
+      <b>Example.</b> Press again over a crowd at five Burn.'
+  - Id: lightning.static
+    Title: Static
+    Group: 
+    Body: '<b>What it does.</b> Light blows build Static on an enemy, a stack at a time, up to five. Static does nothing by itself: a heavy blow or a finisher discharges it all at once, into the one struck and everyone standing near it.
+
+
+      <b>When it happens.</b> Always on once learned. Every light blow that lands adds a stack; a heavy blow or a finisher on an enemy carrying Static discharges it.
+
+
+      <b>The numbers.</b> 2 Shards. One stack a light blow, five at most, lasting 6 seconds. A discharge deals 7 damage and 5 stagger for each stack to everything within 4 metres: 35 damage and 25 stagger at five.
+
+
+      <b>Works with.</b> Long Arc (the discharge reaches 5.5 metres), Heavy Air, Full Discharge, Single Stroke, Conductor, Overdrive''s quicker swings, and Arc Fire or Thunder Lift on the mixed branches.
+
+
+      <b>Example.</b> Four light blows on a soldier, then a heavy: 28 damage leaps out of it into the two beside it as well.'
+  - Id: lightning.charge
+    Title: Stored Charge
+    Group: 
+    Body: '<b>What it does.</b> A perfect guard banks a charge. The next blow you land spends it for double damage and double stagger.
+
+
+      <b>When it happens.</b> A perfect guard (press the guard button just before a blow lands) banks it; your next weapon blow that lands spends it.
+
+
+      <b>The numbers.</b> 3 Shards. The charged blow deals twice its damage and twice its stagger.
+
+
+      <b>Works with.</b> Hard Charge (the charged blow breaks balance 2.5 times as hard), Deep Reserve, a heavy blow that also discharges Static, Grounding, and Overclock''s slowed breath.
+
+
+      <b>Example.</b> Perfect-guard a soldier''s thrust and answer with a heavy blow: it lands for double, often enough to stagger it at once.'
+  - Id: lightning.reserve
+    Title: Deep Reserve
+    Group: 
+    Body: '<b>What it does.</b> Perfect guards bank up to three charges instead of one. Each blow you land spends one, and the next is made ready at once. The count shows on the screen as Charge.
+
+
+      <b>When it happens.</b> Each perfect guard adds a charge; each weapon blow that lands spends one.
+
+
+      <b>The numbers.</b> 3 Shards. Three charges at most. Each charged blow deals twice its damage and twice its stagger.
+
+
+      <b>Works with.</b> Stored Charge (it needs it), Hard Charge, Keen Edge, Open Seam, Full Discharge.
+
+
+      <b>Example.</b> Perfect-guard all three blows of a duellist''s flurry, then answer with three light blows that each land for double.'
+  - Id: lightning.cuts
+    Title: Delayed Cuts
+    Group: 
+    Body: '<b>What it does.</b> The Iaido Slash cuts twice. A moment after the slash, when the blade is home, its cut lands again all at once across the ground it covered.
+
+
+      <b>When it happens.</b> Each time the Iaido Slash, the Katana''s weapon skill (hold the heavy attack to full), strikes at least one enemy. It needs the Katana.
+
+
+      <b>The numbers.</b> 3 Shards. The second cut lands 0.55 seconds later, over a circle in front of you as wide as about two thirds of the slash''s reach, for 60% of the slash''s damage and 22 stagger.
+
+
+      <b>Works with.</b> Static (the slash discharges it), Stored Charge on the first cut, Grounding.
+
+
+      <b>Example.</b> Slash through a pair of soldiers and sheathe: both are struck again before they can turn.'
+  - Id: lightning.fulldischarge
+    Title: Full Discharge
+    Group: 
+    Body: '<b>What it does.</b> A discharge of five Static or more holds its enemy still for a moment and gives you mana.
+
+
+      <b>When it happens.</b> Whenever a discharge spends five stacks or more: a heavy blow or finisher on a full enemy, or Conductor setting one off.
+
+
+      <b>The numbers.</b> 3 Shards. Held still for 0.8 seconds (elites and bosses for less, a god not at all). 10 mana.
+
+
+      <b>Works with.</b> Static, Single Stroke (ten stacks still counts), Waiting Thunder, Stored Charge, Thunder Lift on the Tempest branch.
+
+
+      <b>Example.</b> Build five Static on a brute and discharge it: it freezes mid-swing for a breath, long enough for two more cuts.'
+  - Id: lightning.grounding
+    Title: Grounding
+    Group: 
+    Body: '<b>What it does.</b> A perfect guard sends an arc of lightning through the one who struck and on to two more enemies near it.
+
+
+      <b>When it happens.</b> A perfect guard: press the guard button just before a blow lands.
+
+
+      <b>The numbers.</b> 3 Shards. 12 damage and 20 stagger to each, leaping up to 5 metres from one to the next.
+
+
+      <b>Works with.</b> Stored Charge, Deep Reserve, Overclock, Capacitor.
+
+
+      <b>Example.</b> Three soldiers close in and the first swings: guard it perfectly and all three are jolted.'
+  - Id: lightning.waiting
+    Title: Waiting Thunder
+    Group: 
+    Body: '<b>What it does.</b> Five bolts hang at your shoulder, crackling. Each light blow you land sends one down onto the enemy struck. A heavy blow sends every one that is left. Those not sent when the time runs out go out.
+
+
+      <b>When it happens.</b> When worn: hold the spell button. Then your blows send the bolts.
+
+
+      <b>The numbers.</b> 4 Shards, 35 mana. Five bolts, for 10 seconds. Each deals 8 damage and 6 stagger and lays one stack of Static.
+
+
+      <b>Works with.</b> Static (the bolts build it as you cut), Full Discharge, Single Stroke, Overdrive.
+
+
+      <b>Example.</b> Cast, land two light blows, then a heavy: the last three bolts fall with it and the heavy discharges what they laid.'
+  - Id: lightning.stroke
+    Title: Single Stroke
+    Group: 
+    Body: '<b>What it does.</b> Static builds to ten. A discharge no longer arcs to anyone else: all of it lands on the one struck, twice as hard.
+
+
+      <b>When it happens.</b> Always on once learned, while you hold Lightning.
+
+
+      <b>The numbers.</b> 6 Shards. Static up to ten stacks. A discharge deals 14 damage and 10 stagger for each stack to the one struck alone: 140 damage and 100 stagger at ten.
+
+
+      <b>Works with.</b> Static, Heavy Air, Waiting Thunder, Full Discharge, Stored Charge (a charged heavy blow that also discharges).
+
+
+      <b>Example.</b> Against the Gate Captain, keep cutting until it carries ten Static, then land one heavy blow for 140.'
+  - Id: lightning.conductor
+    Title: Conductor
+    Group: 
+    Body: '<b>What it does.</b> Thunderclap leaves Static two deep on everything it strikes. An enemy already at full Static when it is struck is set off at once.
+
+
+      <b>When it happens.</b> When Thunderclap strikes. As built it answers every spell of yours that strikes an enemy, not only Thunderclap.
+
+
+      <b>The numbers.</b> 3 Shards. Two stacks of Static on each enemy struck. Setting off a full enemy deals 7 damage a stack to everything within 4 metres (35 at five), with no stagger.
+
+
+      <b>Works with.</b> Third Leap (Thunderclap leaps to one more), Quick Clap, Static, Full Discharge, Live Wire, Chain Lance.
+
+
+      <b>Example.</b> Thunderclap a group twice: the first leaves each two deep, and each struck at five by the second goes off.'
+  - Id: lightning.rod
+    Title: Lightning Rod
+    Group: 
+    Body: '<b>What it does.</b> You plant a rod a little ahead of you. For eight seconds bolts fall inside a circle round it, again and again, striking whatever stands there and laying Static.
+
+
+      <b>When it happens.</b> When worn: hold the spell button.
+
+
+      <b>The numbers.</b> 4 Shards, 40 mana. Planted 2 metres ahead; the circle is 3.5 metres in radius. It strikes 0.2 seconds after planting and then every 0.9 seconds for 8 seconds: 12 damage, 12 stagger and one stack of Static each time.
+
+
+      <b>Works with.</b> Static (heavy blows on enemies inside discharge it), Lodestone, Live Wire, Capacitor.
+
+
+      <b>Example.</b> Plant it in a doorway and fight on its edge: everything that comes through it arrives already carrying Static.'
+  - Id: lightning.wire
+    Title: Live Wire
+    Group: 
+    Body: '<b>What it does.</b> Casting any spell lays a line of lightning on the ground ahead of you. Enemies standing on it are shocked again and again and gather Static.
+
+
+      <b>When it happens.</b> Each time you cast a spell, Thunderclap or the worn spell, at most once every six seconds.
+
+
+      <b>The numbers.</b> 3 Shards. Five patches along a line 8 metres ahead, each 0.9 metres in radius, for 4 seconds. Each bites every half second for 5 damage and one stack of Static.
+
+
+      <b>Works with.</b> Static, Lightning Rod, Lodestone (drag them onto the line), Long Overdrive, Running Current.
+
+
+      <b>Example.</b> Thunderclap down a corridor, and the soldiers who follow walk onto the wire and are three deep before they reach you.'
+  - Id: lightning.lodestone
+    Title: Lodestone
+    Group: 
+    Body: '<b>What it does.</b> A line of lightning leaps from your hand to every enemy near, and each is dragged toward you, further for every Static it carries. Then everything close to you is struck, and all the Static on it is set off at once and added to the blow.
+
+
+      <b>When it happens.</b> When worn: hold the spell button.
+
+
+      <b>The numbers.</b> 4 Shards, 45 mana. Reaches enemies within 7 metres, eight at most. Each is dragged 1 metre, and 0.8 metres more for each stack of Static, never nearer than 1.3 metres. About 0.3 seconds later everything within 3.5 metres of you takes 14 damage and 30 stagger, plus 7 for each stack of Static it carried.
+
+
+      <b>Works with.</b> Static, Lightning Rod, Live Wire, Conductor, Seven Flashes.
+
+
+      <b>Example.</b> Five soldiers spread round you at five Static: one cast pulls them all into sword reach and each takes 49.'
+  - Id: lightning.overclock
+    Title: Overclock
+    Group: 
+    Body: '<b>What it does.</b> Overdrive opens with a breath in which everything but you is slowed. Each perfect guard or perfect dodge while Overdrive lasts opens another such breath. The price: Overdrive costs more mana.
+
+
+      <b>When it happens.</b> Pressing the surge button to light Overdrive; then every perfect guard or perfect dodge until it ends.
+
+
+      <b>The numbers.</b> 6 Shards. The opening breath slows enemies to 35% of their speed for 2.5 seconds; each later one for 1 second. Overdrive costs 55 mana where it cost 40.
+
+
+      <b>Works with.</b> Storm Step, Long Overdrive, Stored Charge, Afterimage, Never There.
+
+
+      <b>Example.</b> Light Overdrive as a brute begins its combo: you get two and a half slowed seconds to cut and step clear.'
+  - Id: lightning.lance
+    Title: Chain Lance
+    Group: 
+    Body: '<b>What it does.</b> You throw a bolt at the enemy you face that leaps on through four more, leaving Static on each.
+
+
+      <b>When it happens.</b> When worn: hold the spell button.
+
+
+      <b>The numbers.</b> 4 Shards, 35 mana. Reaches 12 metres to the first enemy, then leaps up to 5 metres from one to the next, five enemies in all. 26 damage, 30 stagger and two stacks of Static to each.
+
+
+      <b>Works with.</b> Conductor, Static, Live Wire, Lodestone.
+
+
+      <b>Example.</b> Open on a pack of five archers from range: each takes 26 and two Static before they draw.'
+  - Id: lightning.blink
+    Title: Blink
+    Group: 
+    Body: '<b>What it does.</b> Each dodge sends a line of lightning down its path that shocks whatever it crosses.
+
+
+      <b>When it happens.</b> Every dodge.
+
+
+      <b>The numbers.</b> 3 Shards. The shock is 1.1 metres in radius and travels with you for the length of the dodge, striking each enemy once for 10 damage and 14 stagger.
+
+
+      <b>Works with.</b> Forked Step (80% wider), Biting Step (40% harder), Afterimage, Never There, Storm Step.
+
+
+      <b>Example.</b> Roll through a gap between two soldiers and both are shocked as you pass.'
+  - Id: lightning.afterimage
+    Title: Afterimage
+    Group: 
+    Body: '<b>What it does.</b> A dodge at the last moment leaves a copy of you that strikes where you stood a moment later.
+
+
+      <b>When it happens.</b> A perfect dodge: a blow passes through the very start of your roll.
+
+
+      <b>The numbers.</b> 3 Shards. The strike lands 0.3 seconds later where your dodge began, 2.3 metres in radius: 26 damage and 28 stagger.
+
+
+      <b>Works with.</b> Bright Echo (30% harder), Blink, Seven Flashes, Slipstream, Charged Step, Overclock.
+
+
+      <b>Example.</b> A brute''s overhead: roll through it at the last moment, and the copy left behind hits it as the blow lands.'
+  - Id: lightning.flashes
+    Title: Seven Flashes
+    Group: 
+    Body: '<b>What it does.</b> You vanish and cut from enemy to enemy in one breath, then stand again where you began with your back to the fight. The cuts land together once you are still, and any enemy left at full Static discharges. You cannot be struck while gone; if you are struck while standing still, the cuts land at half and nothing discharges.
+
+
+      <b>When it happens.</b> When worn: hold the spell button.
+
+
+      <b>The numbers.</b> 4 Shards, 45 mana. Seven cuts among enemies within 8 metres (against one enemy, seven from all sides), 0.1 seconds apart, then half a second still. Each cut deals 9 damage, 8 stagger and one stack of Static. A full enemy discharges for 7 damage and 5 stagger a stack within 4 metres.
+
+
+      <b>Works with.</b> Static, Afterimage, Never There, Lodestone.
+
+
+      <b>Example.</b> Against one duellist at three Static: seven cuts bring it to full and it discharges as you turn.'
+  - Id: lightning.neverthere
+    Title: Never There
+    Group: 
+    Body: '<b>What it does.</b> Every dodge carries you further and a perfect dodge costs nothing. The price: a blow held on your guard costs twice the stamina.
+
+
+      <b>When it happens.</b> Always on once learned. The free dodge comes with each perfect dodge; the price with each blow you block.
+
+
+      <b>The numbers.</b> 6 Shards. Dodges go 30% further. A perfect dodge gives back 25 stamina, the dodge''s usual cost. A blocked blow costs twice the stamina for each point caught.
+
+
+      <b>Works with.</b> Blink, Afterimage, Slipstream, Charged Step, Seven Flashes, Overclock.
+
+
+      <b>Example.</b> Fight a fast duellist by dodging every swing at the last moment and never raising your guard.'
+  - Id: lightning.slipstream
+    Title: Slipstream
+    Group: 
+    Body: '<b>What it does.</b> A dodge at the last moment quickens your feet and your weapon for a while.
+
+
+      <b>When it happens.</b> A perfect dodge: a blow passes through the very start of your roll.
+
+
+      <b>The numbers.</b> 3 Shards. 25% faster on your feet and 15% faster swings, for 6 seconds.
+
+
+      <b>Works with.</b> Afterimage, Never There, Overdrive, Charged Step, Quick Hands.
+
+
+      <b>Example.</b> Roll through a spear thrust at the last moment and close the gap before it can draw back.'
+  - Id: lightning.stormstep
+    Title: Storm Step
+    Group: 
+    Body: '<b>What it does.</b> While Overdrive lasts, every dodge costs nothing and shocks what it passes through, whether or not you learned Blink. A shape of light is left where you stood.
+
+
+      <b>When it happens.</b> Every dodge while Overdrive, lit with the surge button, is running.
+
+
+      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Each dodge gives back its whole stamina cost. The shock is Blink''s: 10 damage and 14 stagger, 1.1 metres in radius along the dodge.
+
+
+      <b>Works with.</b> Blink''s minors (Forked Step, Biting Step), Overclock, Long Overdrive, Afterimage, Never There.
+
+
+      <b>Example.</b> Light Overdrive in a crowd and roll back and forth through them: no stamina spent, and every pass shocks.'
+  - Id: plasma.embers
+    Title: Charged Embers
+    Group: 
+    Body: '<b>What it does.</b> Your blows lay Burn and Static together. Your root mark lays the affliction of the element you hold; this mark adds the other one. A heavy blow on an enemy carrying Static sets the Static off, as Lightning''s root would.
+
+
+      <b>When it happens.</b> Every weapon blow that lands lays Burn; every light blow lays Static; a heavy blow or finisher sets the Static off.
+
+
+      <b>The numbers.</b> Mix, 3 Shards. One stack of each a blow. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most a few times a second.
+
+
+      <b>Works with.</b> Cinder or Static, Arc Fire, Twin Break, Meltdown, Chain Reaction, Plasma.
+
+
+      <b>Example.</b> Holding Fire, five light blows leave a soldier five deep in Burn and five in Static, ready for Twin Break or Meltdown.'
+  - Id: plasma.arcfire
+    Title: Arc Fire
+    Group: 
+    Body: '<b>What it does.</b> A discharge of Static carries Burn to everyone it reaches. A burn set off leaves Static on everyone it reaches. Each element''s burst plants the other.
+
+
+      <b>When it happens.</b> Whenever you set off Static (a heavy blow on Static, Conductor) or a burn (Burn and Detonate, Open Furnace, Plasma).
+
+
+      <b>The numbers.</b> Mix, 3 Shards. A Static discharge lays two stacks of Burn on everything within 4 metres of the one set off. A burn set off lays two stacks of Static on everything within 3.2 metres.
+
+
+      <b>Works with.</b> Charged Embers, Static, Burn and Detonate, Open Furnace, Plasma, Chain Reaction.
+
+
+      <b>Example.</b> Discharge a full soldier in the middle of a pack: everyone near it is now burning two deep as well as shocked.'
+  - Id: plasma.twin
+    Title: Twin Break
+    Group: 
+    Body: '<b>What it does.</b> A perfect guard sets off Burn and Static together on the one who struck. Spent together they strike half again as hard, and the blow is heavy, so it stops the enemy where it stands. If it carries only one of the two, that one is set off alone.
+
+
+      <b>When it happens.</b> A perfect guard (press the guard button just before a blow lands) against an enemy carrying Burn, Static, or both.
+
+
+      <b>The numbers.</b> Mix, 4 Shards. Together: 10 damage a Burn stack and 7 a Static stack, times 1.5, with 5 stagger a stack: 127.5 damage and 50 stagger at five and five. Alone, in 3 metres: Burn 10 plus 15 a stack, Static 10.5 a stack, 5 stagger a stack.
+
+
+      <b>Works with.</b> Charged Embers, Kiln Stance, Stored Charge, Meltdown. Burn and Detonate spends the burn first, so the two clash.
+
+
+      <b>Example.</b> A burning, charged brute swings: guard it perfectly and it takes 127 and stops dead.'
+  - Id: plasma.ionised
+    Title: Ionised Air
+    Group: 
+    Body: '<b>What it does.</b> When any affliction on an enemy reaches its full depth, an arc leaps from that enemy through three more.
+
+
+      <b>When it happens.</b> The moment an affliction on an enemy fills: five Burn, five Static, and so on.
+
+
+      <b>The numbers.</b> Mix, 3 Shards. 10 damage and 8 stagger to the first and to each of three more, leaping up to 5 metres from one to the next. At most once a second.
+
+
+      <b>Works with.</b> Charged Embers (two afflictions to fill), Cinder, Static, Fused Core.
+
+
+      <b>Example.</b> Fill a soldier''s Burn in a crowd and the arc jumps through three of its friends.'
+  - Id: plasma.chain
+    Title: Chain Reaction
+    Group: 
+    Body: '<b>What it does.</b> An enemy that dies carrying both Burn and Static bursts, and passes both on to everyone near at the depth it carried them.
+
+
+      <b>When it happens.</b> The moment an enemy carrying both dies.
+
+
+      <b>The numbers.</b> Mix, 4 Shards. The burst is 4 metres in radius: 18 damage, and as many Burn stacks as the dead one had. Everyone within 4 metres also takes as many Static stacks as it had. At most a few times a second.
+
+
+      <b>Works with.</b> Charged Embers, Arc Fire, Catching Fire, Meltdown.
+
+
+      <b>Example.</b> Kill one soldier at five and five, and the three round it start at five and five too, one blow from Meltdown.'
+  - Id: plasma.ball
+    Title: Ball Lightning
+    Group: 
+    Body: '<b>What it does.</b> You loose a slow ball of white fire that drifts after the nearest enemy. Strike it with a swing to send it fast along the swing and grow it a step, up to three. It bursts on the first enemy it meets with Burn and Static, harder for each strike. Left alone, it bursts small when its time is up.
+
+
+      <b>When it happens.</b> When worn: hold the spell button, then swing at the ball.
+
+
+      <b>The numbers.</b> Mix, 4 Shards, 40 mana. It appears 1.5 metres ahead and drifts at 2 metres a second for 8 seconds; batted, it flies at 9. Burst: 2.5 metres in radius, 16 damage and 20 stagger, two stacks of Burn and of Static; each strike adds 0.7 metres, 12 damage, 10 stagger and a stack of each. At three strikes: 52 damage, 50 stagger and a heavy blow.
+
+
+      <b>Works with.</b> Charged Embers, Meltdown, Fused Core, Hot Coals.
+
+
+      <b>Example.</b> Bat it three times into an archer: 52 damage, and all near are five deep in both.'
+  - Id: plasma.fused
+    Title: Fused Core
+    Group: 
+    Body: '<b>What it does.</b> Your spells hit harder, and every enemy a spell strikes is left with a burn and Static.
+
+
+      <b>When it happens.</b> Always on once learned; the afflictions come each time a spell of yours strikes an enemy.
+
+
+      <b>The numbers.</b> Mix, 4 Shards. Spells deal 15% more damage. One stack of Burn and one of Static on each enemy a spell strikes.
+
+
+      <b>Works with.</b> Flame Wave, Thunderclap, Ball Lightning, Plasma Lance, Ionised Air, Conductor.
+
+
+      <b>Example.</b> A Thunderclap that forks to three enemies leaves all three burning and charged.'
+  - Id: plasma.meltdown
+    Title: Meltdown
+    Group: 
+    Body: '<b>What it does.</b> An enemy near you carrying five Burn and five Static begins to shake with light. A few moments later it bursts, far harder than either alone, and the burst spends both. Nothing stops it, and it does not harm you.
+
+
+      <b>When it happens.</b> Always on once learned. It looks a few times a second for an enemy within 14 metres at full depth in both; one enemy melts at a time.
+
+
+      <b>The numbers.</b> Mix, 5 Shards. It shakes for 3 seconds, then bursts: 45 damage and 60 stagger to it as a heavy blow, and half of each to everything else within 5 metres. The same enemy cannot melt again for 10 seconds.
+
+
+      <b>Works with.</b> Charged Embers, Chain Reaction, Ball Lightning, Fused Core, Twin Break.
+
+
+      <b>Example.</b> Fill a brute with both and roll away: three seconds later it goes up and staggers the pack around it.'
+  - Id: plasma.lance
+    Title: Plasma Lance
+    Group: 
+    Body: '<b>What it does.</b> You throw a bolt of plasma at the enemy you face that leaps on through three more.
+
+
+      <b>When it happens.</b> When worn: hold the spell button.
+
+
+      <b>The numbers.</b> Mix, 5 Shards, 35 mana. Reaches 11 metres to the first enemy, then leaps up to 5 metres from one to the next, four enemies in all. 30 damage, 26 stagger and two stacks of your held element''s affliction on each.
+
+
+      <b>Works with.</b> Fused Core (both afflictions on each), Conductor, Ionised Air, Hot Coals.
+
+
+      <b>Example.</b> Four soldiers in a loose line: one cast strikes all four for 30 each.'
+  - Id: fire.plasma
+    Title: Plasma
+    Group: 
+    Body: '<b>What it does.</b> A heavy blow or a finisher on a burning enemy bursts. The burst sets off the burn on everyone it reaches and then sets each of them alight again.
+
+
+      <b>When it happens.</b> Every heavy blow or finisher that lands on a burning enemy.
+
+
+      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The burst is 3.2 metres in radius: 18 damage and 16 stagger. Each enemy in it that was burning takes its burn set off as well, 10 damage and 10 more a stack, and every enemy in it burns for 4 seconds afterward.
+
+
+      <b>Works with.</b> Cinder, Charged Embers, Arc Fire (each burst leaves Static), Heat, Kindle.
+
+
+      <b>Example.</b> Three soldiers burning five deep: a heavy blow on one bursts over all three for 78 each, and leaves them burning.'
+  - Id: pyre.fuel
+    Title: Fuel
+    Group: 
+    Body: '<b>What it does.</b> Heavy blows both poison and burn. Your root mark lays the affliction of the element you hold; this mark adds the other one, and more poison.
+
+
+      <b>When it happens.</b> Every heavy blow or finisher that lands.
+
+
+      <b>The numbers.</b> Mix, 3 Shards. Two doses of poison and one stack of Burn on each heavy blow, less what your root already lays with the same blow. Poison holds up to eight doses for 6 seconds and bites for 2 a dose every 2 seconds; set off, it deals 6 a dose.
+
+
+      <b>Works with.</b> Cinder or Poison''s root, Goes Up, Funeral Fire, Light the Pyres.
+
+
+      <b>Example.</b> Holding Fire, a chain ending in a heavy blow leaves a soldier burning and two doses poisoned.'
+  - Id: pyre.flashpoint
+    Title: Goes Up
+    Group: 
+    Body: '<b>What it does.</b> When a burning enemy''s poison reaches its full depth, it goes up. The poison explodes and sets alight everyone near.
+
+
+      <b>When it happens.</b> The moment an affliction fills on an enemy that is burning and carries a full eight doses of poison.
+
+
+      <b>The numbers.</b> Mix, 4 Shards. The poison is set off: 6 damage a dose to everything within 3 metres, 48 at eight, with 4 stagger a dose. Everything within 3 metres also takes two stacks of Burn. At most twice a second.
+
+
+      <b>Works with.</b> Fuel, Cinder, Funeral Fire, Slow Burn, Searing Edge.
+
+
+      <b>Example.</b> Keep a burning brute poisoned; the blow that brings it to eight doses makes it go up among its friends.'
+  - Id: pyre.fireeater
+    Title: Fire Eater
+    Group: 
+    Body: '<b>What it does.</b> You brace and breathe out a stream of green fire for two seconds, turning slowly as it burns. It lays the affliction of the element you hold on everything it sweeps across. A dodge lets it go.
+
+
+      <b>When it happens.</b> When worn: hold the spell button. While it pours, the stick or the cursor turns it.
+
+
+      <b>The numbers.</b> Mix, 4 Shards, 40 mana. A bar 5 metres long and 1.2 metres to each side, after a 0.3-second brace, for 2 seconds. It bites every quarter second for 4 damage, 3 stagger and one stack of your held element''s affliction: eight bites on what stays in it.
+
+
+      <b>Works with.</b> Goes Up (eight doses fast), Fuel, Funeral Fire, Light the Pyres.
+
+
+      <b>Example.</b> Sweep it across a line of soldiers as they come up the stair.'
+  - Id: pyre.funeralfire
+    Title: Funeral Fire
+    Group: 
+    Body: '<b>What it does.</b> An enemy that dies poisoned and burning explodes, and leaves the ground burning where it fell.
+
+
+      <b>When it happens.</b> The moment an enemy dies carrying both poison and Burn.
+
+
+      <b>The numbers.</b> Mix, 3 Shards. A burst 3.5 metres in radius: 20 damage, 20 stagger and two doses of poison, and one stack of Burn on all within it. The ground burns 1.5 metres round for 4 seconds, biting for 5 every half second with a stack of Burn. At most twice a second.
+
+
+      <b>Works with.</b> Fuel, Goes Up, Catching Fire, Wildfire.
+
+
+      <b>Example.</b> Kill one poisoned, burning soldier in a crowd and the rest catch both.'
+  - Id: pyre.slowfuse
+    Title: Lit Fuse
+    Group: 
+    Body: '<b>What it does.</b> You set a fuse on the enemy you face. Your next weapon blow on it within five seconds sets off a great blast round it. With no enemy faced nothing is set and the mana is lost.
+
+
+      <b>When it happens.</b> When worn: hold the spell button. Then land a blow on that enemy.
+
+
+      <b>The numbers.</b> Mix, 5 Shards, 45 mana. An enemy within 8 metres. The blast is 3.5 metres in radius: 40 damage, 40 stagger and two stacks of your held element''s affliction.
+
+
+      <b>Works with.</b> Fuel (make that blow a heavy one), Goes Up, Funeral Fire.
+
+
+      <b>Example.</b> Set the fuse on the brute in the middle and cut it once: the whole group takes 40.'
+  - Id: pyre.slowburn
+    Title: Slow Burn
+    Group: 
+    Body: '<b>What it does.</b> Every affliction you lay works harder, Burn and poison among them: each bite, and each set-off.
+
+
+      <b>When it happens.</b> Always on once learned.
+
+
+      <b>The numbers.</b> Mix, 5 Shards. 30% stronger afflictions.
+
+
+      <b>Works with.</b> Fuel, Goes Up, Funeral Fire, Searing Edge, Light the Pyres.
+
+
+      <b>Example.</b> A five-deep burn that dealt 12.5 a second now deals over 16.'
+  - Id: pyre.lightthepyres
+    Title: Light the Pyres
+    Group: 
+    Body: '<b>What it does.</b> You kneel and drive your weapon into the ground. A line of fire runs to every poisoned or burning enemy near and follows it. Stand through three breaths, and a pillar of flame rises under each, setting off its burn and its poison. A dodge or a blow taken breaks it. With no one alight, the mana comes back.
+
+
+      <b>When it happens.</b> Hold the spell button and stay still.
+
+
+      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. 60 mana. Up to six enemies within 9 metres. The three breaths take 2.2 seconds. Each pillar is 2 metres in radius: 40 damage and 40 stagger, a heavy blow, two stacks of your held element''s affliction, plus 6 a dose of poison and 10 and 10 a stack of Burn set off.
+
+
+      <b>Works with.</b> Fuel, Fire Eater, Goes Up, Cinder, Slow Burn.
+
+
+      <b>Example.</b> Fight until five enemies are burning, roll clear, and light the pyres.'
+  - Id: tempest.charged
+    Title: Charged Air
+    Group: 
+    Body: '<b>What it does.</b> Your blows lay Static and Unsteady together. Your root mark lays the affliction of the element you hold; this mark adds the other one. A heavy blow on an enemy carrying Static sets the Static off, as Lightning''s root would.
+
+
+      <b>When it happens.</b> Every weapon blow that lands lays Unsteady; every light blow lays Static; a heavy blow or finisher sets the Static off.
+
+
+      <b>The numbers.</b> Mix, 3 Shards. One stack of each a blow. Unsteady makes an enemy take 6% more stagger, be shoved 15% further and turn 8% slower for each stack, up to five. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger.
+
+
+      <b>Works with.</b> Static or Wind''s root, Thunder Lift, Slip Current, The Sky Finds Them, Falling Thunder.
+
+
+      <b>Example.</b> Holding Wind, four light blows and a heavy: the soldier is four deep in Unsteady and the Static goes off into its neighbours.'
+  - Id: tempest.lift
+    Title: Thunder Lift
+    Group: 
+    Body: '<b>What it does.</b> A discharge of five Static or more throws its enemy into the air. What is too heavy to leave the ground reels where it stands instead.
+
+
+      <b>When it happens.</b> Whenever a discharge spends five stacks or more: a heavy blow or finisher on a full enemy, or Conductor setting one off.
+
+
+      <b>The numbers.</b> Mix, 4 Shards. Thrown up for 1 second. One too heavy to lift takes 40 stagger instead.
+
+
+      <b>Works with.</b> Static, Charged Air, The Sky Finds Them, Full Discharge, Single Stroke, Eye of the Storm.
+
+
+      <b>Example.</b> Fill a soldier with Static and land a heavy blow: it is thrown up, helpless, while you cut the next one.'
+  - Id: tempest.slip
+    Title: Slip Current
+    Group: 
+    Body: '<b>What it does.</b> Where a dodge ends, every enemy close to you is left one deeper in Static and in Unsteady.
+
+
+      <b>When it happens.</b> At the end of every dodge.
+
+
+      <b>The numbers.</b> Mix, 3 Shards. One stack of Static and one of Unsteady on every enemy within 2.2 metres of where you stop.
+
+
+      <b>Works with.</b> Charged Air, Thunder Lift, Blink, Storm Step, Tailwind.
+
+
+      <b>Example.</b> Roll into the middle of three soldiers: all three gain a stack of each before you have swung.'
+  - Id: tempest.sky
+    Title: The Sky Finds Them
+    Group: 
+    Body: '<b>What it does.</b> An enemy you throw into the air is struck by a bolt, which leaps on to two more near it and leaves Static on each.
+
+
+      <b>When it happens.</b> Each time one of your marks throws an enemy into the air, such as Thunder Lift. As built the bolt falls as soon as it is thrown up, not at the top of its rise.
+
+
+      <b>The numbers.</b> Mix, 3 Shards. 14 damage and two stacks of Static to the one thrown, then the same to up to two more within 4 metres of each other.
+
+
+      <b>Works with.</b> Thunder Lift, Static, Charged Air.
+
+
+      <b>Example.</b> Thunder Lift throws a soldier up; the bolt strikes it and its two neighbours and leaves each two deep in Static.'
+  - Id: tempest.cloud
+    Title: Storm Overhead
+    Group: 
+    Body: '<b>What it does.</b> You call a storm over the ground before you. For ten seconds bolts fall inside its circle, each warned by a ring closing on the spot. Half of them fall where an enemy stands.
+
+
+      <b>When it happens.</b> When worn: hold the spell button.
+
+
+      <b>The numbers.</b> Mix, 4 Shards, 40 mana. The circle is 3 metres in radius, 1 metre ahead of you, for 10 seconds. A bolt every 0.8 seconds, 0.34 seconds after its warning ring, 1.2 metres across in radius: 14 damage, 20 stagger and one stack of your held element''s affliction.
+
+
+      <b>Works with.</b> Charged Air, Static, Thunder Lift, Lodestone, Live Wire.
+
+
+      <b>Example.</b> Call it over a gate as a pack comes through and fight on its edge.'
+  - Id: tempest.eye
+    Title: Eye of the Storm
+    Group: 
+    Body: '<b>What it does.</b> You become the storm: a turning column of wind and lightning round you that drags enemies in and bites them, and carries the light ones round. While it turns you walk slower, take half damage and cannot be made to flinch. Let go and it throws them all out, and a bolt meets each where it lands.
+
+
+      <b>When it happens.</b> When worn: hold the spell button, and keep holding it. Letting go ends it.
+
+
+      <b>The numbers.</b> Mix, 5 Shards, 50 mana. Up to 2.5 seconds, at least half a second. The column is 3.5 metres in radius and holds up to eight. A bite every 0.4 seconds: 6 damage and one stack of your held element''s affliction. Thrown out up to 5 metres; each bolt deals 12 damage and 20 stagger.
+
+
+      <b>Works with.</b> Charged Air, Slip Current, Thunder Lift, Static.
+
+
+      <b>Example.</b> Swarmed by small enemies: hold it the full time, then let go and the bolts fall on every one thrown.'
+  - Id: tempest.falling
+    Title: Falling Thunder
+    Group: 
+    Body: '<b>What it does.</b> After your finisher lands, you throw the enemy skyward, vanish after it in a line of light, and come down on it as a bolt. Where you land, everything near is shocked, unsteadied and thrown back. Nothing can strike you from the throw to the landing.
+
+
+      <b>When it happens.</b> Every finisher that lands (a heavy blow on a staggered enemy).
+
+
+      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. You land 0.34 seconds after the throw. Everything within 4.5 metres takes 22 damage, 40 stagger, three stacks of Static and three of Unsteady, and is pushed 3 metres.
+
+
+      <b>Works with.</b> Charged Air, Static, Thunder Lift, Slip Current, Stored Charge.
+
+
+      <b>Example.</b> Finish a staggered brute in a crowd and land among its friends with each three deep in both.'

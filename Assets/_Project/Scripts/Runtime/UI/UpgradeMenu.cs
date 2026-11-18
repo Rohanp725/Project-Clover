@@ -40,6 +40,8 @@ namespace Clover.UI
         public Color Sealed = new Color(0.5f, 0.3f, 0.36f, 1f);
         public Color GodsGift = new Color(0.62f, 0.52f, 0.3f, 1f);
         public Color Guide = new Color(0.55f, 0.6f, 0.85f, 0.16f);
+        /// <summary>The frame of a playtest slot for what is not built yet.</summary>
+        public Color NotBuiltColour = new Color(0.55f, 0.55f, 0.62f, 0.55f);
         /// <summary>How strongly the trees of elements the player does not hold are drawn.</summary>
         public float OtherTrees = 0.4f;
         public float WideTrees = 0.85f;
@@ -65,6 +67,11 @@ namespace Clover.UI
         /// <summary>Which of the marks open to the choice is chosen: those of the held element's tree and of the two branches it shares.</summary>
         public int Selected { get; private set; }
         public Upgrade Chosen => Selected < shown.Count ? marks[shown[Selected]].Upgrade : null;
+        /// <summary>The element whose tree the choice moves on: the one held, or in the playtest any tree walked to.</summary>
+        public string Viewed => viewed;
+        /// <summary>How many times the details view and the guide have been opened from the chart, for probes.</summary>
+        public int DetailsOpened { get; private set; }
+        public int GuideOpened { get; private set; }
         /// <summary>How many marks the chart holds, and how far back the view is now (1 is the close view).</summary>
         public int MarkCount => marks.Count;
         public float Zoom => zoom;
@@ -95,6 +102,12 @@ namespace Clover.UI
         private InputAction interactAction;
         private InputAction dodgeAction;
         private InputAction heavyAction;
+        private InputAction spellAction;
+        private InputAction flaskAction;
+        private InputAction guardAction;
+        private InputAction lightAction;
+        private string viewed;
+        private bool slotsDrawn;
         private int hintVersion = -1;
         private RectTransform wornBadge;
         private int openedOnFrame;
@@ -149,6 +162,10 @@ namespace Clover.UI
             interactAction = player.FindAction("Interact");
             dodgeAction = player.FindAction("Dodge");
             heavyAction = player.FindAction("HeavyAttack");
+            spellAction = player.FindAction("Spell");
+            flaskAction = player.FindAction("Flask");
+            guardAction = player.FindAction("Guard");
+            lightAction = player.FindAction("LightAttack");
         }
 
         private static Color ColourOf(Upgrade upgrade) =>
@@ -217,6 +234,11 @@ namespace Clover.UI
                 marks.Add(mark);
                 byId[upgrade.Id] = mark;
             }
+            // In the playtest, where each god's bough on the weapon tree will be: drawn as a god's gift, faint, never bought.
+            slotsDrawn = PlaytestMode.On;
+            if (slotsDrawn)
+                foreach (var slot in NotBuiltYet.ChartSlots)
+                    marks.Add(new Mark { Upgrade = slot, Place = UpgradeTree.OnChart(slot) * StepPixels, Size = SizeOf(slot) * 0.8f, Colour = NotBuiltColour });
             // Lines first, so every mark lies over the lines that reach it.
             foreach (var mark in marks)
             {
@@ -327,31 +349,10 @@ namespace Clover.UI
         public void Open()
         {
             if (IsOpen || player == null || upgrades == null || panel == null) return;
+            // A chart drawn before the playtest was switched on has no slots for what is not built yet: draw it again.
+            if (built && slotsDrawn != PlaytestMode.On) Rebuild();
             if (!built) Build();
-            string held = upgrades.ElementName;
-            bearing = Elements.Bearing(held);
-            treeMiddle = new Vector2(0f, (UpgradeTree.EmblemDistance + 5.2f) * StepPixels);
-            // The choice moves among the marks of the held tree and of the two branches it shares, as they lie once the tree stands upright.
-            string was = heldShown == held && Chosen != null ? Chosen.Id : null;
-            shown.Clear();
-            places.Clear();
-            int root = 0;
-            for (int i = 0; i < marks.Count; i++)
-            {
-                var upgrade = marks[i].Upgrade;
-                if (!upgrade.BelongsTo(held)) continue;
-                if (upgrade.Id == was || (was == null && upgrade.Kind == UpgradeKind.Root && !upgrade.IsMix)) root = shown.Count;
-                shown.Add(i);
-                places.Add(UpgradeTree.Upright(marks[i].Place, bearing));
-            }
-            Selected = Mathf.Clamp(root, 0, Mathf.Max(0, shown.Count - 1));
-            heldShown = held;
-            if (chart != null)
-            {
-                chart.localRotation = Quaternion.Euler(0f, 0f, bearing);
-                var level = Quaternion.Euler(0f, 0f, -bearing);
-                for (int i = 0; i < upright.Count; i++) upright[i].localRotation = level;
-            }
+            ShowTree(upgrades.ElementName);
             IsOpen = true;
             IsWide = false;
             releasePlayer = false;
@@ -364,6 +365,80 @@ namespace Clover.UI
             zoom = CloseZoom();
             labelZoom = -1f;
             Place(1f);
+        }
+
+        /// <summary>
+        /// The playtest's free chart: turns the chart to another element's tree and lets the choice move on it and its
+        /// two shared branches, whatever is held. Outside the playtest only the held element's tree is walked.
+        /// </summary>
+        public bool View(string element)
+        {
+            if (!IsOpen || !PlaytestMode.On || Elements.ByName(element) == null) return false;
+            ShowTree(element);
+            Show();
+            return true;
+        }
+
+        /// <summary>The next tree round the ring (by 1) or the one before (by -1), in the playtest.</summary>
+        public bool ViewNext(int by)
+        {
+            if (!IsOpen || !PlaytestMode.On) return false;
+            var at = Elements.ByName(viewed);
+            int index = at != null ? at.Index : 0;
+            return View(Elements.All[((index + by) % Elements.Count + Elements.Count) % Elements.Count].Name);
+        }
+
+        /// <summary>Opens the details view of the chosen mark, in the playtest. True when it opened.</summary>
+        public bool OpenDetails()
+        {
+            var chosen = Chosen;
+            if (!IsOpen || !PlaytestMode.On || !MarkDetails.HasDetails(chosen)) return false;
+            var page = GuidePage.Ensure();
+            if (page == null) return false;
+            DetailsOpened++;
+            page.OpenOne(MarkDetails.For(chosen, PlaytestTexts.Get()));
+            return true;
+        }
+
+        /// <summary>Opens the guide to effects over the chart, in the playtest. True when it opened.</summary>
+        public bool OpenGuide()
+        {
+            if (!IsOpen || !PlaytestMode.On) return false;
+            var page = GuidePage.Ensure();
+            if (page == null) return false;
+            GuideOpened++;
+            page.OpenGuide();
+            return true;
+        }
+
+        private void ShowTree(string tree)
+        {
+            string held = tree;
+            viewed = tree;
+            bearing = Elements.Bearing(held);
+            treeMiddle = new Vector2(0f, (UpgradeTree.EmblemDistance + 5.2f) * StepPixels);
+            // The choice moves among the marks of the held tree and of the two branches it shares, as they lie once the tree stands upright.
+            string was = heldShown == held && Chosen != null ? Chosen.Id : null;
+            shown.Clear();
+            places.Clear();
+            int root = 0;
+            for (int i = 0; i < marks.Count; i++)
+            {
+                var upgrade = marks[i].Upgrade;
+                if (!upgrade.BelongsTo(held)) continue;
+                if (NotBuiltYet.IsSlot(upgrade) && !PlaytestMode.On) continue;
+                if (upgrade.Id == was || (was == null && upgrade.Kind == UpgradeKind.Root && !upgrade.IsMix)) root = shown.Count;
+                shown.Add(i);
+                places.Add(UpgradeTree.Upright(marks[i].Place, bearing));
+            }
+            Selected = Mathf.Clamp(root, 0, Mathf.Max(0, shown.Count - 1));
+            heldShown = held;
+            if (chart != null)
+            {
+                chart.localRotation = Quaternion.Euler(0f, 0f, bearing);
+                var level = Quaternion.Euler(0f, 0f, -bearing);
+                for (int i = 0; i < upright.Count; i++) upright[i].localRotation = level;
+            }
         }
 
         public void Close()
@@ -490,6 +565,12 @@ namespace Clover.UI
             }
             float step = Time.unscaledDeltaTime;
             Place(1f - Mathf.Exp(-ViewSpeed * step));
+            // The details or the guide lie over the chart and have the buttons while open, and on the frame they close.
+            if (GuidePage.BusyThisFrame)
+            {
+                stickHeld = true;
+                return;
+            }
             if (cursor != null)
             {
                 float beat = 1f + 0.06f * Mathf.Sin(Time.unscaledTime * 5f);
@@ -520,6 +601,13 @@ namespace Clover.UI
             if (interactAction.WasPressedThisFrame()) LearnSelected();
             else if (dodgeAction.WasPressedThisFrame()) Close();
             else if (heavyAction != null && heavyAction.WasPressedThisFrame()) ToggleWide();
+            else if (PlaytestMode.On)
+            {
+                if (spellAction != null && spellAction.WasPressedThisFrame()) OpenDetails();
+                else if (flaskAction != null && flaskAction.WasPressedThisFrame()) OpenGuide();
+                else if (!IsWide && lightAction != null && lightAction.WasPressedThisFrame()) ViewNext(1);
+                else if (!IsWide && guardAction != null && guardAction.WasPressedThisFrame()) ViewNext(-1);
+            }
         }
 
         private void ShowHint()
@@ -527,6 +615,15 @@ namespace Clover.UI
             hintVersion = ControlDevices.Version;
             if (hint == null) return;
             string move = ControlDevices.Current == ControlDevice.Keys ? ControlNames.Of("Move") : "Stick or d-pad";
+            if (PlaytestMode.On)
+            {
+                // Two lines in the playtest: the chart's own buttons, then the playtest's.
+                hint.text = IsWide
+                    ? ControlNames.Expand("{HeavyAttack}: back to the tree     {Flask}: guide to effects     {Dodge}: leave")
+                    : move + ControlNames.Expand(": move     {Interact}: learn, or wear a spell     {HeavyAttack}: the whole chart     {Dodge}: leave\n"
+                        + "{Spell}: details     {Guard} / {LightAttack}: tree before / next     {Flask}: guide to effects");
+                return;
+            }
             hint.text = IsWide
                 ? ControlNames.Expand("{HeavyAttack}: back to your tree     {Dodge}: leave")
                 : move + ControlNames.Expand(": move along the tree     {Interact}: learn, or wear a spell     {HeavyAttack}: the whole chart     {Dodge}: leave");
@@ -549,8 +646,12 @@ namespace Clover.UI
 
         private void Show()
         {
-            string held = upgrades.ElementName;
-            if (title != null) title.text = $"{held}      Shards  {upgrades.Points}";
+            string held = viewed ?? upgrades.ElementName;
+            string holding = upgrades.ElementName;
+            if (title != null)
+                title.text = PlaytestMode.On
+                    ? (held == holding ? held : $"{held}      (you hold {holding})") + $"      Shards  {upgrades.Points}      Playtest: everything open"
+                    : $"{held}      Shards  {upgrades.Points}";
             ShowHint();
             for (int i = 0; i < emblems.Count; i++)
             {
@@ -571,7 +672,13 @@ namespace Clover.UI
                 bool owned = ours && upgrades.Owns(upgrade.Id);
                 bool reachable = open && !upgrade.Signature && UpgradeTree.Reachable(upgrade, RunState.Unlocked);
                 Color frame, picture;
-                if (!ours)
+                if (NotBuiltYet.IsSlot(upgrade))
+                {
+                    frame = NotBuiltColour;
+                    if (!ours) frame.a *= IsWide ? WideTrees : OtherTrees;
+                    picture = frame;
+                }
+                else if (!ours)
                 {
                     // Another element's tree: there to be seen, faint, in its own colour.
                     frame = Color.Lerp(OutOfReach, mark.Colour, 0.55f);
@@ -586,7 +693,9 @@ namespace Clover.UI
                 }
                 else
                 {
-                    frame = upgrade.Signature ? GodsGift : !open ? Sealed : !reachable ? OutOfReach : upgrades.Points >= upgrade.Cost ? Affordable : TooDear;
+                    // In the playtest a god's gift can be bought: it is drawn nearer the colour of what is ready to learn.
+                    frame = upgrade.Signature ? (PlaytestMode.On ? Color.Lerp(GodsGift, Affordable, 0.5f) : GodsGift)
+                        : !open ? Sealed : !reachable ? OutOfReach : upgrades.Points >= upgrade.Cost ? Affordable : TooDear;
                     picture = frame;
                 }
                 mark.Frame.color = frame;
@@ -623,12 +732,21 @@ namespace Clover.UI
                 string kind = KindWords(chosen);
                 string cost = chosen.Signature ? "" : chosen.Cost == 1 ? "     1 Shard" : $"     {chosen.Cost} Shards";
                 string state;
-                if (chosen.Signature) state = owned ? "Left to you by a god." : "Only a god's fall gives this.";
+                if (NotBuiltYet.IsSlot(chosen))
+                {
+                    kind = NotBuiltYet.Label;
+                    cost = "";
+                    state = "A place kept for what is coming.";
+                }
+                else if (chosen.Signature && PlaytestMode.On) state = owned ? "Learned (a playtest unlock)." : "Playtest unlock: learn it here. " + NotBuiltYet.GiftSource(chosen.Element);
+                else if (chosen.Signature) state = owned ? "Left to you by a god." : "Only a god's fall gives this.";
                 else if (owned && chosen.IsSpell) state = worn == chosen ? "Worn. Hold the spell button to cast it." : "Learned. Press learn to wear it.";
+                else if (owned && PlaytestMode.On && !upgrades.Has(chosen.Id)) state = "Learned. In force while you hold " + (chosen.IsMix ? chosen.Element + " or " + chosen.Element2 : chosen.Element) + (string.IsNullOrEmpty(chosen.Weapon) ? "." : ", with the " + chosen.Weapon + ".");
                 else if (owned) state = "Learned.";
                 else if (!upgrades.Open(chosen)) state = $"Sealed. Hold or consume {(chosen.Element == held ? chosen.Element2 : chosen.Element)} in this run to open it.";
                 else if (!UpgradeTree.Reachable(chosen, RunState.Unlocked)) state = "Grows from " + Parents(chosen) + ".";
                 else state = upgrades.Points >= chosen.Cost ? "Can be learned." : $"You carry {upgrades.Points}.";
+                if (PlaytestMode.On && MarkDetails.HasDetails(chosen)) state += "\n" + ControlNames.Expand("{Spell}: details");
                 chosenState.text = kind + cost + "\n" + state;
             }
             if (description != null)

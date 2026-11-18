@@ -105,7 +105,9 @@ namespace Clover.World
         private void OnRevived()
         {
             Falls++;
-            int kept = ReturnRule.EmbersAfterFall(RunState.Points, LoseCarriedEmbers);
+            int kept = ReturnRule.EmbersAfterFall(RunState.Points, LoseCarriedEmbers, PlaytestMode.On);
+            // The playtest's rule: a fall costs nothing, so no Shards are lost or left with the dead.
+            if (kept == RunState.Points && PlaytestMode.On) return;
             int lost = RunState.Points - kept;
             int waiting = Debt.Waiting;
             if (EmbersReturnWithTheDead)

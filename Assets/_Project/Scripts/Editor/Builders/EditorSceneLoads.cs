@@ -21,7 +21,9 @@ namespace Clover.EditorTools
 
         private static void OnPlayModeChanged(PlayModeStateChange change)
         {
-            if (change == PlayModeStateChange.EnteredPlayMode) GateOfNoon.LoadOutsideBuild = Load;
+            if (change != PlayModeStateChange.EnteredPlayMode) return;
+            GateOfNoon.LoadOutsideBuild = Load;
+            Clover.Core.SceneRoutes.LoadOutsideBuild = Load;
         }
 
         private static bool Load(string sceneName)

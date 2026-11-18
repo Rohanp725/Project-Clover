@@ -27,7 +27,22 @@ namespace Clover.EditorTools
         {
             if (!SceneBuild.Begin("the hub")) return;
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            Materials();
+            var rain = BuildKit.Glow(Folder, "m_hub_rain", new Color(0.8f, 0.9f, 1.3f, 0.55f), 3, true, 1f, 0f);
+            var light = BuildKit.Flame(Folder, "m_hub_flame_voice", new Color(1.2f, 0.9f, 0.45f, 0.9f));
+            var fire = BuildKit.Flame(Folder, "m_hub_flame", new Color(1.5f, 0.45f, 0.09f, 1f));
+            var spark = BuildKit.Flame(Folder, "m_hub_flame_storm", new Color(0.25f, 0.6f, 1.6f, 1f));
+            var chosen = BuildKit.Glow(Folder, "m_hub_chosen", new Color(2.4f, 1.9f, 0.9f, 0.9f), 4, true, 2f, 0f);
+            var gateGlow = BuildKit.Glow(Folder, "m_hub_gate", new Color(0.22f, 0.4f, 0.95f, 0.6f), 3, true, 1f, 0.5f);
+            BuildAfterMaterials(scene, rain, light, fire, spark, chosen, gateGlow);
+        }
 
+        /// <summary>
+        /// The hub's materials, made or loaded under their stable names. The Proving Ground is built of the same stone
+        /// and calls this before using the hub's pieces.
+        /// </summary>
+        internal static void Materials()
+        {
             stone = BuildKit.Toon(Folder, "m_hub_stone", new Color(0.33f, 0.33f, 0.4f), false, ProceduralTextures.Flagstones(), 0.125f, 0f);
             inlay = BuildKit.Toon(Folder, "m_hub_inlay", new Color(0.78f, 0.62f, 0.3f), false, null, 0f, 0f);
             voice = BuildKit.Toon(Folder, "m_hub_voice_body", new Color(1f, 0.86f, 0.55f), false, null, 0f, 0.02f).Lit(new Color(1.4f, 1.1f, 0.6f), 0.5f, new Color(1.1f, 0.8f, 0.35f));
@@ -40,13 +55,21 @@ namespace Clover.EditorTools
             steel = BuildKit.Toon(Folder, "m_hub_steel", new Color(0.75f, 0.8f, 0.9f), false, null, 0f, 0.02f).Lit(new Color(1f, 1f, 1.2f), 0.3f);
             ring = BuildKit.Toon(Folder, "m_hub_ring", new Color(1f, 0.9f, 0.6f), false, null, 0f, 0f).Lit(Color.black, 0.3f, new Color(2.6f, 2f, 1f));
             water = BuildKit.Toon(Folder, "m_hub_water", new Color(0.05f, 0.045f, 0.1f), false, null, 0f, 0f);
-            var rain = BuildKit.Glow(Folder, "m_hub_rain", new Color(0.8f, 0.9f, 1.3f, 0.55f), 3, true, 1f, 0f);
-            var light = BuildKit.Flame(Folder, "m_hub_flame_voice", new Color(1.2f, 0.9f, 0.45f, 0.9f));
-            var fire = BuildKit.Flame(Folder, "m_hub_flame", new Color(1.5f, 0.45f, 0.09f, 1f));
-            var spark = BuildKit.Flame(Folder, "m_hub_flame_storm", new Color(0.25f, 0.6f, 1.6f, 1f));
-            var chosen = BuildKit.Glow(Folder, "m_hub_chosen", new Color(2.4f, 1.9f, 0.9f, 0.9f), 4, true, 2f, 0f);
-            var gateGlow = BuildKit.Glow(Folder, "m_hub_gate", new Color(0.22f, 0.4f, 0.95f, 0.6f), 3, true, 1f, 0.5f);
+        }
 
+        /// <summary>The hub's stone, dark stone, pale stone, gold, inlay, cloth, wood, steel, ring light and water, once <see cref="Materials"/> has run.</summary>
+        internal static Material Stone => stone;
+        internal static Material Dark => dark;
+        internal static Material Pale => pale;
+        internal static Material Gold => gold;
+        internal static Material Inlay => inlay;
+        internal static Material Cloth => cloth;
+        internal static Material Wood => wood;
+        internal static Material RingLight => ring;
+        internal static Material Water => water;
+
+        private static void BuildAfterMaterials(UnityEngine.SceneManagement.Scene scene, Material rain, Material light, Material fire, Material spark, Material chosen, Material gateGlow)
+        {
             var world = BuildKit.Group("World");
             Floor(world);
             Ring(world);
@@ -204,7 +227,7 @@ namespace Clover.EditorTools
         }
 
         // Stones adrift round the island, stopped in the air. Those on the camera's side lie low.
-        private static void Drift(Transform world)
+        internal static void Drift(Transform world)
         {
             var group = BuildKit.Group("Drift", world);
             var random = new System.Random(5);
@@ -223,7 +246,7 @@ namespace Clover.EditorTools
         }
 
         // Rain that does not fall: every drop a thin streak of light, hanging.
-        private static void FrozenRain(Transform world, Material material)
+        internal static void FrozenRain(Transform world, Material material)
         {
             var rainObject = new GameObject("Frozen Rain");
             rainObject.transform.SetParent(world, false);
@@ -301,7 +324,7 @@ namespace Clover.EditorTools
         }
 
         // A stand for a weapon: a stone foot, a post, and a ring of light on the floor when it is the one carried.
-        private static GameObject Stand(Transform world, string name, Vector3 at, float yaw, Material chosenRing, out Transform shown)
+        internal static GameObject Stand(Transform world, string name, Vector3 at, float yaw, Material chosenRing, out Transform shown)
         {
             var root = new GameObject(name + " Stand");
             root.transform.SetParent(world, false);
@@ -317,7 +340,7 @@ namespace Clover.EditorTools
             return root;
         }
 
-        private static void ChosenMark(Transform root, Material ringMaterial, Color lightColour)
+        internal static void ChosenMark(Transform root, Material ringMaterial, Color lightColour)
         {
             var mark = BuildKit.Group("Chosen", root);
             var quad = BuildKit.Shape(PrimitiveType.Quad, "Chosen Ring", mark, new Vector3(0f, 0.07f, 0f), new Vector3(3.4f, 3.4f, 1f), ringMaterial, new Vector3(90f, 0f, 0f));
@@ -334,7 +357,7 @@ namespace Clover.EditorTools
         }
 
         // Bare hands: a striking post bound with rope, and the wraps hung over it.
-        private static void Wraps(Transform shown)
+        internal static void Wraps(Transform shown)
         {
             BuildKit.Shape(PrimitiveType.Cylinder, "Post", shown, new Vector3(0f, 1.05f, 0f), new Vector3(0.36f, 0.8f, 0.36f), wood);
             for (int i = 0; i < 4; i++)
@@ -345,7 +368,7 @@ namespace Clover.EditorTools
         }
 
         // The Katana: laid across two forked uprights, edge up.
-        private static void Sword(Transform shown)
+        internal static void Sword(Transform shown)
         {
             foreach (float side in new[] { -1f, 1f })
             {
@@ -364,7 +387,7 @@ namespace Clover.EditorTools
         private const float OuterBraziersStep = 13.5f;
         private const float OuterBraziersRadius = 8.7f;
 
-        private static GameObject Brazier(Transform world, string name, Vector3 at, Material chosenRing, Material flame, Color lightColour, out Transform shown,
+        internal static GameObject Brazier(Transform world, string name, Vector3 at, Material chosenRing, Material flame, Color lightColour, out Transform shown,
             float lightRange = 8f, float lightIntensity = 8f)
         {
             var root = new GameObject(name + " Brazier");
@@ -394,7 +417,7 @@ namespace Clover.EditorTools
             return root;
         }
 
-        private static LoadoutChoice Choice(GameObject root, bool isElement, string choice, bool alwaysOpen, GameObject shown, string open, string sealedPrompt, string sealedWords,
+        internal static LoadoutChoice Choice(GameObject root, bool isElement, string choice, bool alwaysOpen, GameObject shown, string open, string sealedPrompt, string sealedWords,
             PlayerCombat combat, PlayerElement element)
         {
             var made = root.AddComponent<LoadoutChoice>();
@@ -409,7 +432,7 @@ namespace Clover.EditorTools
         }
 
         // A board on a post, to be read.
-        private static Notice Sign(Transform world, string name, Vector3 at, float yaw, params string[] lines)
+        internal static Notice Sign(Transform world, string name, Vector3 at, float yaw, params string[] lines)
         {
             var root = new GameObject(name);
             root.transform.SetParent(world, false);
@@ -863,7 +886,7 @@ namespace Clover.EditorTools
 
         // The mason's and the smith's work on a stand or a brazier: bands and studs on the foot, a ring and four marks let
         // into the floor round it. Nothing here changes where the thing stands or how big it is.
-        private static void Craft(Transform root, string name, float footWidth, bool brazier)
+        internal static void Craft(Transform root, string name, float footWidth, bool brazier)
         {
             string key = name.ToLower().Replace(' ', '_');
             var goldWork = new Dressing.Mould();
@@ -920,7 +943,7 @@ namespace Clover.EditorTools
 
         // What makes the gate a gate and not two posts: bands and carved panels on the posts, a tie beam hung with
         // paper slips, a wider landing under the step, and two lamp pillars standing in the water either side.
-        private static void GateDetail(Transform root, Vector3 at)
+        internal static void GateDetail(Transform root, Vector3 at)
         {
             var random = new System.Random(41);
             var darkWork = new Dressing.Mould();
@@ -976,7 +999,7 @@ namespace Clover.EditorTools
         }
 
         // A flame that needs no fuel.
-        private static void Flame(Transform parent, Vector3 localPosition, Material material, float size, float rate)
+        internal static void Flame(Transform parent, Vector3 localPosition, Material material, float size, float rate)
         {
             var flameObject = new GameObject("Flame");
             flameObject.transform.SetParent(parent, false);
@@ -1007,7 +1030,7 @@ namespace Clover.EditorTools
             renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
         }
 
-        private static void Disc(string name, Transform parent, float top, float radius, float thickness, Material material, bool solid, Vector3? centre = null)
+        internal static void Disc(string name, Transform parent, float top, float radius, float thickness, Material material, bool solid, Vector3? centre = null)
         {
             var disc = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             disc.name = name;

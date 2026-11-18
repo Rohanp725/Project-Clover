@@ -22,13 +22,32 @@ namespace Clover.UI
         public bool Asking { get; private set; }
         public PauseEntry Current => entries[Selected];
 
-        public PauseChoices(string sceneName)
+        public PauseChoices(string sceneName) : this(sceneName, Clover.Core.PlaytestMode.On) { }
+
+        /// <summary>
+        /// The entries for a scene. In the playtest the guide to effects and what is new come after the controls, and
+        /// in every scene but the Proving Ground itself the way back to it takes the place of giving up the run (in the
+        /// playtest nothing is given up).
+        /// </summary>
+        public PauseChoices(string sceneName, bool playtest)
         {
             entries.Add(PauseEntry.Resume);
             entries.Add(PauseEntry.Controls);
+            if (playtest)
+            {
+                entries.Add(PauseEntry.Guide);
+                entries.Add(PauseEntry.WhatsNew);
+            }
             entries.Add(PauseEntry.Fullscreen);
-            if (IsRunScene(sceneName)) entries.Add(PauseEntry.GiveUp);
-            if (sceneName == HubScene) entries.Add(PauseEntry.Forget);
+            if (playtest)
+            {
+                if (sceneName != Clover.Core.PlaytestMode.ProvingGroundScene) entries.Add(PauseEntry.ProvingGround);
+            }
+            else
+            {
+                if (IsRunScene(sceneName)) entries.Add(PauseEntry.GiveUp);
+                if (sceneName == HubScene) entries.Add(PauseEntry.Forget);
+            }
             entries.Add(PauseEntry.Quit);
         }
 
@@ -88,6 +107,9 @@ namespace Clover.UI
                 case PauseEntry.GiveUp: return "Give up the run";
                 case PauseEntry.Forget: return "Forget everything";
                 case PauseEntry.Quit: return "Quit";
+                case PauseEntry.Guide: return "Guide to effects";
+                case PauseEntry.WhatsNew: return "What's new";
+                case PauseEntry.ProvingGround: return "Return to the Proving Ground";
                 default: return "";
             }
         }
@@ -113,7 +135,10 @@ namespace Clover.UI
                 case PauseEntry.Fullscreen: return "Switches between the whole screen and a window that can be resized.\nAlt and Enter do the same.";
                 case PauseEntry.GiveUp: return "The run ends here.\nAll it carried is lost.";
                 case PauseEntry.Forget: return "Every weapon and element won is lost.\nThe first waking comes again.";
-                case PauseEntry.Quit: return "A run is not kept.";
+                case PauseEntry.Quit: return Clover.Core.PlaytestMode.On ? "Leaves the playtest." : "A run is not kept.";
+                case PauseEntry.Guide: return "What every affliction, state and resource does: the numbers, what sets it off, how to use it and how it looks.";
+                case PauseEntry.WhatsNew: return "This playtest's version, and what each update added.";
+                case PauseEntry.ProvingGround: return "Back to the testing ground, keeping everything: the weapon, the element and every mark.";
                 default: return "";
             }
         }

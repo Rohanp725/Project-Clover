@@ -50,7 +50,8 @@ namespace Clover.World
                 bool sameElement = element != null && element.Kit != null && element.Kit.Name == Element;
                 // Someone who holds no element (the Fire land is entered with none) has no tree to lose either.
                 bool heldNone = element != null && !element.HasElement;
-                if (upgrades != null && !heldNone)
+                // In the playtest nothing learned is ever lost: the old tree's marks stay, for when it is held again.
+                if (upgrades != null && !heldNone && !PlaytestMode.On)
                 {
                     if (!sameElement)
                     {
