@@ -55,7 +55,7 @@ down a column to check that no two lands blur together.
 | Land | Time and sky | The muted world | The element's strong colour | Rare accent | Shapes | The floor from above |
 |---|---|---|---|---|---|---|
 | Fire (Egypt) | Always noon; white-hot sky | Bone mud brick, sand, pale stone | Flame orange and poured gold | Lapis blue | Squares, slopes, pyramids, flat roofs | Cracked mud, dust drifts, worn stone with gold seams |
-| Water (Polynesia) | Late afternoon under a low storm-grey sky | Black volcanic sand, grey basalt, bleached driftwood, dry thatch | Sea turquoise in the shallows, ink in the deep, white foam | Coral red | Curves, hooks, spirals, canoe prows | Wet black sand with foam lines, tide pools, reef that comes and goes |
+| Water (Polynesia) | Tropical sun with a storm coming in from the sea (Decided); the storm nearer the deeper you go | Black volcanic sand, grey basalt, green peaks and palms, bleached driftwood, dry thatch | Sea turquoise in the shallows, ink in the deep, white foam | Coral red | Curves, hooks, spirals, canoe prows | Wet black sand with foam lines, tide pools, reef that comes and goes |
 | Metal (Greece) | Volcanic dusk; ash sky lit from below | Soot-grey marble, slag, verdigris bronze | Molten bronze: white-gold pour cooling through cherry red to black, sparks | Aegean deep blue | Straight lines, right angles, Greek key, columns | Meander flagstones, rails, slag, grates with forge glow under them |
 | Ice (Norse) | Overcast mountain daylight, softened by blowing snow (Decided) | Blue-grey snow, black rock, dark pine, grey timber | Ice cyan-white, frost, breath | Blood red (the hunt) | Long verticals: pines, masts, ribs; knotwork | Wind-rippled snow, clear ice with things frozen under it |
 | Poison (China) | Night; a sick moon in haze; paper lanterns | Black lacquer (the Qin court's colour), grey roof tiles, dark water, grey clay | The miasma in two strengths: blue-green "green-grass" mist, and bile-yellow "yellow-grass" mist at the deadliest hour | Cinnabar red and mercury silver; the alchemist's own purple and gold | Upturned eaves, round moon gates, lattices, walls inside walls | Dark wet stone in courtyard grids; the mist line swallowing the floor |
@@ -81,17 +81,24 @@ doors, embers in the air), and effects that look like flame rather than light.
 
 ## 4. Water: the fisher of islands (Polynesia)
 
-**One image.** A grey sky pressing down on black sand, the sea the only bright thing in the world, turquoise where
-it is shallow and black where it is deep, and the land itself breathing in and out with the tide.
+**Decided (user, 2026-11-17, night)**: tropical with a storm coming, after seeing the two mood frames
+(`staging/blender/2026-11-17_moods/water_tropical_*.png` and `water_storm_*.png`). The frames below were rewritten to
+that.
 
-**Light and weather.** Late afternoon under a low, heavy storm-grey sky, the sun a pale patch behind cloud. The key
-light comes low from the west and warm-grey; the shade is a cool slate-teal. Spray and drizzle drift across, never
-rain heavy enough to hide the floor. When the tide is high the light dims and greens a little, as if seen through
+**One image.** Black sand and green peaks under a hot tropical sun, palms leaning in the wind, turquoise shallows,
+and out at sea a dark wall of storm that is a little nearer every time you look.
+
+**Light and weather.** Tropical daylight, warm and clear overhead, the sun high and slightly west. Out to sea a storm
+wall stands on the horizon: anvil cloud, rain curtains, lightning without sound. The storm is the land's clock of
+story, not a timer: the deeper the player goes, the nearer it is and the more of the sky it takes, so the light goes
+from bright and warm in the first district, to half sun and half shadow at the storm's edge, to the full storm on
+the fight's beach. Wind rises with it. When the tide is high the light dims and greens a little, as if seen through
 shallow water; at low tide it is drier and paler.
 
-**Palette.** The world is black sand, wet dark basalt, bleached grey driftwood, sun-dried thatch and pandanus mats.
-Only the water is strong: turquoise shallows, white foam, ink-black deep water. **Accent**: coral red, used only on
-the reef-grown's armour, the fisher's hook and the gash where the brothers cut.
+**Palette.** The world is black sand, wet dark basalt, green volcanic peaks and palms, bleached grey driftwood,
+sun-dried thatch and pandanus mats. The greens are deep and a little muted so the water stays the strongest thing:
+turquoise shallows, white foam, ink-black deep water. The storm is slate and bruise-purple. **Accent**: coral red, used
+only on the reef-grown's armour, the fisher's hook and the gash where the brothers cut.
 
 **Shapes.** Curves and hooks: canoe prows, fishhook carvings, spirals, outrigger frames, carved poles with stacked
 faces kept vague and respectful, nothing copied from real carving traditions. Thatch roofs are steep and long.
@@ -109,27 +116,33 @@ where water hit, black ink water from the deep. Arms of the octopus are seawater
 (Decided). A lane is a line of churning foam; a ring is a ring of rising water.
 
 **District by district.**
-1. *The drowned village*: stilt houses half under the water, thatch roofs at water level, canoes hanging in trees
-   where the tide left them. At low tide a muddy road appears between the houses; at high tide only the roofs. The
-   drowned stand still under the surface, seen as dark shapes.
-2. *The fished-up island*: raw land that is still a fish. The ground is ridged like scales and shines wet; caves are
+1. *The drowned village* (in full sun, the storm far off): stilt houses half under the water, thatch roofs at water
+   level, canoes hanging in trees where the tide left them. At low tide a muddy road appears between the houses; at
+   high tide only the roofs. The drowned stand still under the surface, seen as dark shapes; the sunny calm makes
+   them worse.
+2. *The fished-up island* (at the storm's edge, half sun and half cloud shadow): raw land that is still a fish. The ground is ridged like scales and shines wet; caves are
    gill slits that breathe out warm mist in rhythm; tufts of seaweed instead of grass. No buildings, only the
    brothers' cuts, with red wet rock showing, deepening toward their room.
 3. *The navigators' cliffs*: high dark headlands, wind, carved hook-shaped stones marking star paths, canoe sheds,
    and from the top the long beach where the fight starts.
 
-**The god's room.** A long beach of black sand between the cliffs and the sea, islets just offshore. In phase two
-the eye of the whirlpool: bare seabed, wrecks, walls of spinning green-black water rising all round, light falling
-in from the hole of sky high above.
+**The god's room.** A long beach of black sand between the cliffs and the sea, islets just offshore, under the full
+storm: the sun gone, rain driving across, the sea white-capped. In phase two the eye of the whirlpool: bare seabed,
+wrecks, walls of spinning green-black water rising all round, light falling in from the hole of sky high above.
 
-**The ride out.** The voyaging canoe under a crab-claw sail, with the clouds finally breaking and the first clear
-sky in the land.
+**The ride out.** The voyaging canoe under a crab-claw sail as the storm breaks: the cloud tears open and the
+tropical sun comes back over a calm sea.
 
-**Avoid.** Bright tropical-postcard blue sky; anything that looks like *Moana* (Decided caution in `WORLD.md`).
+**Avoid.** A postcard with no threat in it: the storm is always somewhere on the horizon. Anything that looks like
+*Moana* (Decided caution in `WORLD.md`).
 
 ---
 
 ## 5. Metal: the lame smith (Greece)
+
+**Decided (user, 2026-11-17, night)**: the separation from Fire is enough, and the game-camera mood frame
+(`staging/blender/2026-11-17_moods/metal_game.png`) is what the user had in mind, "just obviously way less detailed".
+The frames below stand.
 
 **One image.** A white marble island gone grey with soot under a dusk sky lit from below by forges, the deep blue
 sea all round it far below, and a bronze giant walking the coast on its round.
@@ -345,7 +358,10 @@ the stones and grow through buildings and bodies.
 **The element's effects.** Earth: stone that cracks, heaves and bursts, dust clouds. Life: vines and roots that grow
 in fast, flowers that open and close, spores.
 
-Sketch only; the land itself is not worked out in `WORLD.md` yet.
+Sketch only. The land itself is now worked out in `WORLD.md` (2026-11-17, night): the border bog, the King's Men's
+hill and the Giant's Dance on Earth's side, the wildwood village and the sacred grove on Life's side, the barrows,
+the Wild Hunt's plain and the meeting ground. Its look waits for the user's review. The dawn that never finishes is
+now part of the story: when both gods fall the sun clears the horizon at last and runs down the barrow passage.
 
 ---
 
@@ -385,11 +401,8 @@ day-and-night domain.
 
 Answers of 2026-11-17, evening:
 
-1. **Water's sky.** The user leans tropical ("a more tropical vibe would fit the polynesian vibe") and asked for an
-   image. Mood frames of a tropical and a storm-grey version of the same beach are being made in Blender
-   (`staging/blender/2026-11-17_moods/`). **Open** until the user has seen them.
-2. **Metal against Fire.** The user thinks the separation by setting is enough and asked for an image. Mood frames
-   are being made alongside Water's.
+1. **Water's sky.** **Decided** after the mood frames: tropical with a storm coming (section 4).
+2. **Metal against Fire.** **Decided**: the separation is enough; the game-camera frame is right (section 5).
 3. **Ice's light.** **Decided**: a snowy mountainscape with blowing snow, neither very bright nor very dark (see
    section 6).
 4. **Poison's colour.** Researched (section 7). **Proposal**: the two miasmas of the old texts, blue-green and the

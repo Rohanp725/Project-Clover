@@ -49,9 +49,9 @@ brought together once the user has confirmed the open points.
   - The antlered lord (Life): "I let the forest grow through them."
   - The smith (Metal): "I built a body that wouldn't limp. I never left it."
   - The alchemist (Poison): "So this is what forever tastes like."
-- The transformation for each god is listed in that god's section. Earth and Life are not yet worked out; the
-  first sketch was: **Proposal**: Earth, the giant steps into the stone circle, becomes a stone, and the boar bursts
-  out of it; Life, the antlered lord kneels, roots swallow him and the stag grows from the ground.
+- The transformation for each god is listed in that god's section. Earth and Life: see their land below.
+- **Decided (user, 2026-11-17, night)**: in a duo land the take-or-consume choice is made over each body separately.
+  The same rule holds for Lightning and Wind.
 
 ### The upgrade currency is Shards
 
@@ -95,7 +95,7 @@ brought together once the user has confirmed the open points.
 | Ice | A longship that rises through the broken lake; the player rides alone | Decided |
 | Poison | A crane | Decided; replaces the paper lantern boat |
 | Lightning and Wind | A storm cloud (earlier proposal) | Unchanged |
-| Earth and Life | A door in a barrow mound (earlier proposal) | Unchanged |
+| Earth and Life | The solstice passage: the first sunrise in ages runs down a barrow's passage, and the player walks into it | Decided (2026-11-17, night) |
 | The champion's land | None | Unchanged |
 
 ## Fire's land: the sun-king's city
@@ -211,8 +211,8 @@ brought together once the user has confirmed the open points.
 | Fire | Egypt | Khepharu, the sun-king | Sun-Spear | Falcon and scarab in one | The sunset | Decided; the first pass and second pass are built |
 | Water | Polynesian islands | The fisher of islands | Bone hook on a line | A giant octopus of living seawater | A voyaging canoe | Decided in outline (below) |
 | Ice | Norse | The huntress of the snows | Great Bow | A wolf the size of a hall | A burial longship from under the lake | Decided in outline (below) |
-| Earth | Celtic, paired with Life | The giant who raised the standing stones | Massive Sword as a standing stone | A giant boar | A door in a barrow mound | Proposal |
-| Life | Celtic, paired with Earth | A nod to the antlered lord of wild things | Scythe | A great stag grown through with forest | same land | Proposal |
+| Earth | Celtic, paired with Life | Brannoch, the giant who raised the standing stones | Massive Sword as a standing stone | A giant boar (a nod to Twrch Trwyth) | The solstice passage: sunrise down a barrow | Decided in outline (below) |
+| Life | Celtic, paired with Earth | Carnwyn, a nod to the antlered lord of wild things | Golden scythe | A great stag grown through with forest | same land | Decided in outline (below) |
 | Metal | Greek | The lame smith | Great Hammer | A new bronze giant, Talos-like | A bronze chariot with bronze horses | Decided in outline (below) |
 | Poison | Chinese | The court alchemist | Hook swords and needles | Five poison creatures in a gu jar | A crane | Decided in outline (below) |
 | Light and Dark | Indian (replaces Persian) | The last champion, a nod to Arjuna | His own version of every weapon | The eagle and the bull (Garuda and Nandi nods) | None | Decided in outline (below) |
@@ -555,6 +555,180 @@ brought together once the user has confirmed the open points.
   marked attacks; when one falls another drops in. At each gong, poison gas fills the bottom of the jar and the
   player climbs onto shelves in the wall or onto the scorpion's back.
 
+### Earth and Life's land: the stones and the grove (Celtic)
+
+Worked through in a think session with the user on the night of 2026-11-17. A duo land in tier 4, one and a half to
+almost twice the size of an ordinary land.
+
+#### Sources and lore
+
+- **Twrch Trwyth** (Welsh, *Culhwch and Olwen*): a king turned into a boar for his sins, with a comb, a razor and
+  shears between his ears. Arthur's men hunt him across Wales and snatch the razor and the shears in the Severn; the
+  comb, the last, is harder to win than everything before. His seven young include Grugyn Silver-bristle.
+- **Brân the Blessed** (Welsh, *Branwen*): a giant king who lay down as a bridge for his army and whose cut-off head
+  kept talking. He owned the Cauldron of Rebirth, which brings the dead back mute; it was broken from inside.
+- **Cernunnos** (Gaulish, the Gundestrup cauldron): an antlered god sitting cross-legged with a torc in one hand and a
+  ram-horned serpent in the other, ringed by animals.
+- **The Cailleach** (Scottish and Irish): the giant hag of winter whose dropped stones became mountains; she turned
+  to a grey standing stone each summer.
+- **The Dagda** (Irish): his club killed with one end and brought back to life with the other; his cauldron was
+  never empty.
+- **The Rollright Stones** (English folk tale): a king and his men turned to stone; the stones cannot be counted.
+- **The beheading game** (Irish, *Bricriu's Feast*, and later the Green Knight): a giant churl lets a hero cut off his
+  head if he may return the blow; only the hero who keeps the bargain is spared.
+- **The druids' grove**: Pliny's golden sickle cutting mistletoe from an oak; Caesar's huge wicker figures filled with
+  living people.
+- **The Oldest Animals** (*Culhwch*): the blackbird, the stag, the owl, the eagle and the salmon, each older than the
+  last; the salmon knows where the stolen Mabon is.
+- **The Wild Hunt**: in Welsh lore led by Gwyn ap Nudd; people swept up by it are set down far away.
+- **Newgrange**: on the winter solstice the sunrise runs straight down the barrow's passage.
+- **The Odin Stone** at Stenness, Orkney: a holed standing stone through which people clasped hands to swear oaths.
+- **Proposal**: the murdered gods under the land are a nod to the Cailleach (under Earth; the giant came while she
+  slept as stone and stood her stones on end as his own) and to the Dagda (under Life; his cauldron is how the
+  lord's dead come back).
+
+#### The two gods
+
+- **Decided (user)**: the giant and the antlered lord were allies at first. As the corruption took them they forgot
+  that they were allies, and now they fight each other.
+- **Decided (user)**: the names **Brannoch** (the giant; a nod to Brân, whose talking head ties him to the beheading
+  game) and **Carnwyn** (the lord; "white horn", with the sound of Gwyn ap Nudd, who leads the Wild Hunt).
+- **Decided (user)**: the gods' own weapons. Brannoch's standing-stone sword: a heavy blow plants a short stone where
+  it lands, which stays as cover and as a wall to slam enemies into (stone remembering). Carnwyn's golden scythe: a
+  kill sprouts a healing bloom, or a sweep grows a brief thicket that slows enemies (life growing back).
+- The regret lines stand as written: Brannoch, "I raised the stones so they'd remember me."; Carnwyn, "I let the
+  forest grow through them."
+- **Proposal** (from the last question of the session, not yet answered): as they fall, one of them says the
+  other's name, so they remember each other at the very end.
+
+#### The land
+
+- **Decided (user)**: all four rules offered, layered (the order is Claude's recommendation, which the user asked
+  for):
+  - **Stone remembers, wood forgets** is the core. On Earth's side whatever is broken stays broken; on Life's side cut
+    paths and broken things grow back at each rest.
+  - **The dead take root** is how it shows: corpses on Earth's side set into stone, on Life's side they sprout
+    thorns; respawned enemies climb out of their own stone or thicket.
+  - **The mounds turn the years**: the barrows under the hills are how the player travels, and each trip under ages
+    Life's side by a year, so some paths close and roots bridge others.
+  - **The Wild Hunt** is one set piece on the plain before the meeting ground (below).
+  - Teaching order: Earth's side, Life's side, the bog, the mounds, the Hunt.
+- **Decided (user)**, the areas:
+  1. **The border bog**, where the player arrives, crossed by an oak plank road.
+  2. **Earth's branch**: the King's Men's hill, then **the Giant's Dance**, Brannoch's seat (a nod to Stonehenge),
+     with its elite.
+  3. **Life's branch**: the wildwood village, then **the sacred grove**, Carnwyn's seat, with its elite.
+  4. The two branches can be taken in either order.
+  5. **The barrows** under the hills, linking the land.
+  6. **The Wild Hunt's plain**.
+  7. **The meeting ground**, the arena where the two gods fight.
+- **Decided (user)**: the gods' brawl at the meeting ground can be seen only from the arenas of the two seats and on
+  the walk to the meeting ground. **Proposal**: the seats are empty, abandoned when the war began; the elite guards
+  each empty seat; the meeting ground's barrow gate has two seals, a stone and a thorn, and beating each elite
+  breaks one. Elsewhere the landmarks are the seats themselves, seen from the bog: the stone circle on its hill and
+  the grove's great oak. From the Giant's Dance the player sees the forest surge at the meeting ground; from the grove,
+  the stone side breaking the ground.
+- **Decided (user)**, the Wild Hunt: a horn sounds and the Hunt rides across the plain with Carnwyn's herd and the dead.
+  It cannot pass stone, so the player runs from standing stone to standing stone. Caught in the open, the player is
+  not killed: the Hunt carries them back to the plain's edge, hurt.
+- **Open**: whether the distant brawl can still be heard elsewhere in the land; whether the mounds' ageing only goes
+  one way or can be pushed back.
+
+#### The enemies
+
+- **Decided (user)**, Earth's side:
+  - *The King's Men*: an army turned to stone mid-march. They move only while the player is not facing them; look at
+    one and it freezes, turn away and it closes in.
+  - *The countless*: cairns that stand up as bodies. Broken, they scatter and build themselves again, unless the
+    player strikes the one stone that differs from the rest.
+  - *The boar's litter*: Twrch Trwyth's young, led by Grugyn Silver-bristle; they root up the ground.
+  - *The haulers*: gangs dragging standing stones; kill them and the stone rolls back.
+- **Decided (user)**, Life's side:
+  - *The Green Men*: people with the forest growing through them. Hurt, they root on the spot as saplings and heal;
+    strike them while uprooted, or cut the roots.
+  - *The mute reborn*: warriors from the cauldron who fight with no sound and no telegraph noise, only what can be
+    seen. A cauldron in their district brings them back until it is broken from inside.
+  - *The wicker*: walking wicker cages with a living person inside. Breaking the cage frees them; the wicker tries
+    to regrow round them.
+  - *The overgrown herd*: stags with thicket antlers. Their charge tangles the player so they cannot roll for a
+    moment; shed antlers take root as thorns.
+- Not picked: the bog-dead, the ram-horned serpents, the hounds, the heads in the walls, Grugyn as the elite, the
+  Huntsman.
+
+#### The two elites
+
+- **Decided (user)**: two elites, one at each god's seat.
+- **The Bargain**, at the Giant's Dance (Brannoch's champion). **Proposal**, accepted in outline: a huge churl sits
+  on a fallen stone with an axe across his knees and offers his neck for one free blow; he picks up his head, sets it
+  back on, and the fight begins. Partway through he plants his axe and holds out his hand: the bargain is due, a
+  clear stance and a clear pause.
+  - *Take it* (stand still or guard): he brings the axe down with the flat, three times, kneels and calls the player a
+    champion, and the rest of the fight is a fair duel at normal pace.
+  - *Roll away*: he roars "oath-breaker" and fights at full fury, faster and with longer combos, and never offers
+    the bargain again.
+  - His heavy axe previews Brannoch's blade, as the Champion of the Gate previews Khepharu.
+- **The Wicker Man**, in the sacred grove (Carnwyn's champion). **Proposal**, accepted in outline: a giant wicker
+  figure walking through the grove with living people inside its chest and limbs.
+  - Its health is the people: each part broken frees one, every freed captive weakens it, and free them all and it
+    collapses.
+  - Life regrows it: damaged wicker slowly weaves itself back, and a bundle cut open weaves shut again if the player
+    goes to free someone elsewhere.
+  - Its moves: a stamp that sets the cages hung from its arms swinging; a grab into an empty cage that the player
+    breaks out of from inside; it sheds the ordinary wicker enemies from its body as adds.
+  - **Decided (user)**: burning it is not a choice; fire hurts it like any element (a choice there would favour Fire
+    for one fight and be one mechanic too many). **Proposal** for why: it is woven from green, living willow, which
+    does not catch.
+  - **Proposal**: freed captives light the grove's lamps.
+
+#### The Oldest Animals (side path)
+
+- **Decided (user)**: the side path gives the land's plain weapons and a way to make the god fight easier.
+- **Proposal**, the thread through the land: the blackbird in the bog starts it; the stag in the wildwood gives the
+  plain scythe; the owl is in the barrows; the eagle on the Giant's Dance hill gives the plain greatsword (a weathered
+  slab from a fallen stone); the salmon, in a pool beside the meeting ground, remembers the two gods as friends and
+  leads the player to the oath stone.
+- **Proposal**, the oath stone (the Odin Stone nod): the holed stone where Brannoch and Carnwyn swore their alliance,
+  one growing a stone through it and the other an oak sapling. The player takes a ring of ivy grown through stone.
+  It is carried, not used: whenever one beast hurts the other in the fight, the one who did it freezes for a few
+  seconds in half-remembered remorse, a free window; in phase 1 the survivor's flicker lasts longer. At the end the
+  two dying men clasp hands, as at the oath stone.
+
+#### The fight at the meeting ground
+
+- **Decided (user)**, the shape:
+  - Phase 1: both gods in their base forms at once. Beat one early and the player finishes the other 1v1.
+  - When one partner falls in phase 1, the survivor flickers: it stops for a beat and turns its head toward the
+    body (perhaps the start of a name), then roars and fights angrier.
+  - Both transform at the same moment.
+  - Phase 2: both beasts are on the field at once, and each undoes the other's work. The boar's rush knocks over
+    the planted trees; the stag's dance sprouts trees where it passes. The user wants this to be the set piece: the
+    unchanging earth and the ever-changing life, almost a yin and yang. It must not be too hard for the player.
+  - **Decided (user)**, keeping it fair: the beasts take turns, one attacking the player while the other reshapes
+    the arena; they can hurt each other (bait the boar's rush through the stag, lead the stag's thorns under the
+    boar); and neither starts its biggest move while the other's is under way.
+- **Proposal**, the rest of the fairness: the camera pulls back for phase 2; each beast has its own health bar, and
+  when one falls the other finishes alone, more desperate.
+- **Proposal**, Brannoch in phase 1 (standing-stone sword): plants new standing stones mid-fight; the Giant's Dance,
+  the stones whirling round like dancers; seven strides across the arena, each a quake; lies down as a living wall;
+  pours water over a healing stone to heal, which the player can break first.
+- **Proposal**, Carnwyn in phase 1 (golden scythe, torc): a harvest sweep with the scythe; animals called from the
+  cauldron plate; thorn walls growing up.
+- **Proposal**, the transformations: Brannoch drives his sword into the earth, turns to grey stone (the Cailleach
+  nod), and the stone cracks as the boar bursts out with the comb, razor and shears between its ears. Carnwyn kneels,
+  his antlers grow into a tree, and the tree pulls up its roots and stands on four legs as the stag.
+- **Proposal**, the boar: the comb, the razor and the shears are three weak points; taking each changes its moves,
+  the comb last and worst, as in the myth. It ploughs bare stone furrows. Trees stop its charge, and thick stands
+  stagger it.
+- **Proposal**, the stag: sheds its antlers, which take root as trees; a rutting bellow that knocks the player back;
+  flowers that bloom in its hoofprints and turn to thorns; stone blocks its growth.
+- **Proposal**: the Celtic double spiral, rather than a yin and yang, as the arena's motif.
+- **Proposal**, the end: the arena is left half forest and half stone; the two men lie side by side and turn their
+  heads to each other. The player chooses over each body separately (decided above).
+- **Decided (user)**, the ride out: the solstice passage. **Proposal**: the land is a dawn that never finishes; when
+  both gods fall the sun at last clears the horizon, and its first ray runs straight down the passage of a barrow at
+  the edge of the meeting ground, as at Newgrange. It answers Fire's land: there the sun set for the first time in
+  ages, here it rises.
+
 ### The last champion and his land (Indian)
 
 This replaces the Persian proposal for Light and Dark (2026-11-17, afternoon).
@@ -812,8 +986,8 @@ the one thing it cannot undo.
 
 ## Still open (as of 2026-11-17, afternoon)
 
-- Lightning and Wind (the dry storm rework) and Earth and Life (the Celtic duo land) were not worked on in the
-  afternoon session.
+- Lightning and Wind (the dry storm rework) has not been worked on. Earth and Life was worked through on the night
+  of 2026-11-17 (see its land above); its open points are listed there.
 - The two endings were not revisited.
 - Whether the council is the hub.
 - Where the Water god's canoe comes from.
