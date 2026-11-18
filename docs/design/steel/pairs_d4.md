@@ -11,20 +11,21 @@ ring. Everything here is a **Proposal**; every number is a first guess. Written 
    grown throws a bolt into it.
    Shapes: *The Rice Wakes* (a field that mends you) or *Struck Oak* (the body bursts like a struck tree). Duo spell
    *Sowing Thunder*: seeds flung out, and a heavy blow calls a bolt onto every one.
-3. **Wind and Earth: Topple.** A shaken, unsteady enemy goes down flat. Shapes: *Sandblast* (the dust of the fall is
-   thrown on as stinging grit) or *Logan Stone* (it rocks under three blows, then falls hard). Duo spell *Walking
-   Dune*: a ridge of sand the wind drives over them.
-4. **Ice and Metal: Cold Short.** Frost in the notches turns armour to glass. Shapes: *Spall* (shrapnel thrown out
-   behind) or *Snapped Blade* (its own blow snaps on your guard). Duo spell *Cold Chisel*: tap it in, then drive it.
+3. **Wind and Earth: Logan Stone.** A shaken, unsteady enemy rocks like a balanced stone, and your third blow throws
+   it down hard. Shapes: *Sandblast* (the dust of the fall is thrown on as stinging grit) or *Drifted Over* (sand
+   heaps over it where it falls). Duo spell *Walking Dune*: a ridge of sand the wind drives over them.
+4. **Ice and Metal: Cold Short.** Frost in the notches turns armour to glass, and the heavy cracks its plates off.
+   Shapes: *Shed Plate* (the cracked plate falls as black ice) or *Snapped Blade* (its own blow snaps on your guard).
+   Duo spell *Cold Chisel*: tap it in, then drive it.
 5. **Water and Light: Caught Light.** The light caught in wet ground makes a net that marks all who stand in it.
    Shapes: *Thrown Wide* (the net hauls them in) or *The Fish's Eye* (one point, a triple critical). Duo spell
    *The Gods' Road*: run a rainbow of spray to an enemy and come down on it.
-6. **Life and Dark: Grave Roots.** Black roots hold the enemy down, and blows on it feed you. Shapes: *Corpse
-   Flowers* (pale flowers that mend) or *Hollow Trunk* (its death leaves a trunk of roots to fight round). Duo
-   spell *Death Turned Back*: the roots take a blow meant for you.
-7. **Earth and Poison: Blackdamp.** The cracked ground breathes out a heavy poison that sits on the floor. Shapes:
-   *Chokedamp* (it runs to other shaken enemies) or *Red Ore* (arsenic veins your heavy blow bursts). Duo spell
-   *The Clay Rank*: three clay soldiers march out and burst in poison.
+6. **Life and Dark: Girdled.** Black fig roots coil tighter with each blow and girdle it at four; if it dies
+   girdled, a hollow trunk stands where it stood. Shapes: *Corpse Flowers* (pale flowers that mend) or *Fig in the
+   Crown* (the trunk's seed starts the next one). Duo spell *Death Turned Back*: the roots take a blow meant for you.
+7. **Earth and Poison: Chokedamp.** The cracked ground breathes out a heavy poison that runs along the floor to every
+   other shaken enemy. Shapes: *Blackdamp* (it lies still and deep) or *Red Ore* (arsenic veins your heavy blow
+   bursts). Duo spell *The Clay Rank*: three clay soldiers march out and burst in poison.
 8. **Metal and Fire: Red Hot.** Notched armour heats red and burns its wearer. Shapes: *Slag* (it drips fire where
    it walks) or *The Burning Shirt* (the armour clings and sears it each time it attacks). Duo spell *Tipped Crucible*: each heavy blow pours
    molten bronze. Duo surge *Heated Bronze*.
@@ -100,7 +101,8 @@ cut mistletoe from the oaks heaven favoured. Lightning that strikes the living l
 **Reaction: Lightning Flower.** Either order. The Static finds the seed's roots, and the roots find yours: a red fern
 of lightning flowers over the enemy's skin, and every grown thing of yours within 8 m (briars, saplings, shoots,
 lilies) throws a bolt into it, four at most: 8 damage and 10 stagger each, and one Static. With nothing grown near,
-the seed itself cracks for 10 damage. The enemy keeps both afflictions. Once every 4 s on one enemy. Seen: a branching
+the fern itself is the plant: it throws one bolt to the nearest other Seeded enemy within 8 m (8 damage, 10 stagger,
+one Static), so the reaction never falls to a small crack. The enemy keeps both afflictions. Once every 4 s on one enemy. Seen: a branching
 red-violet fern spreading over the body, and thin bolts leaping from the player's plants to it. (A fern spread over
 the floor is the Lightning and Earth reaction, Earthed: there the charge goes to ground, here it comes up out of
 your garden.)
@@ -137,29 +139,33 @@ a child can rock them, were said to be beyond any human power to overturn, until
 walks the earth itself: a barchan dune creeps downwind, tens of metres a year, over whatever stands in its way. The
 wind god's bag against the standing stones: what can be rocked can be toppled, and what is toppled is buried.
 
-**Reaction: Topple.** Either order. The shaken, unsteady enemy goes down flat for 1.2 s (elites 0.5 s; gods and the
-colossus reel for 40 stagger instead). Its fall shakes the ground: 10 damage, 15 stagger and a Tremor in 2.5 m. Once
-every 6 s on one enemy. Seen: the body tips over and hits the floor, and a ring of dust bursts out from under it.
+**Reaction: Logan Stone** (made the plain reaction by the pair review: the old Topple was Capsize again, the same
+fall for the same time). Either order. It does not fall: it rocks on its feet like a balanced stone for 3 s. Each of
+your blows in that time rocks it further and breaks balance harder (the first at 1.25 times, the second at 1.5), and
+the third throws it down hard: flat for 1.8 s, and its fall strikes 20 damage, 30 stagger and a Tremor in 3 m. Elites
+rock and then reel (40 stagger); gods and the colossus take only the stagger. Once every 6 s on one enemy. Seen: the
+body leaning to one side, then the other, dust puffing from under alternate feet, a rut widening round it; then the
+fall and a ring of dust. Steel: the knockdown is earned by three blows inside a window, so the weapon fells it, where
+Capsize is given by the afflictions.
 
 **Shape A: Sandblast.** The dust of the fall is not let settle. The wind throws it on, away from you, as a cone of
 stinging grit 5 m long and 60 degrees wide: 6 damage, 15 stagger and an Unsteady to each enemy in it, so one that is
-already shaken may topple in turn (this breaks the no-cascade rule on purpose). Fell them in a row. **Shape B: Logan
-Stone.** It does not fall at once: it rocks. Each of your next three blows within 3 s rocks it further (each breaks
-balance a quarter harder than the last, dust puffing from alternate sides), and the third throws it down hard: flat for
-1.8 s, its fall 20 damage and 30 stagger in 3 m.
+already shaken may begin to rock in turn (this breaks the no-cascade rule on purpose). Fell them in a row. **Shape B:
+Drifted Over.** When it falls the wind heaps sand over it: it lies buried to the shoulders 1 s longer, and enemies
+within 2 m of it wade at 60% speed.
 
 **Duo branch**
 
 | Mark | Kind | Shards | What it does |
 |---|---|---|---|
 | Grit in the Wind | Major | 3 | Your light blows on a shaken enemy leave it Unsteady; your heavy blows on an Unsteady enemy shake it. |
-| Grit or Stone | Shape | 3 | Opens the shapes of Topple: Sandblast or Logan Stone. |
-| New Face | Major | 3 | Your first blow on a toppled enemy is critical and gives 6 mana. |
-| The Prophecy Broken | Keystone | 5 | Elites and gods can be toppled: after three Topples have only made one reel in a fight, the fourth throws it flat for 1 s. |
+| Grit or Drift | Shape | 3 | Opens the shapes of Logan Stone: Sandblast or Drifted Over. |
+| New Face | Major | 3 | Your first blow on a felled enemy is critical and gives 6 mana. |
+| The Prophecy Broken | Keystone | 5 | Elites and gods can be felled: after three Logan Stones have only made one reel in a fight, the fourth throws it flat for 1 s. |
 
 **Duo spell: Walking Dune** (breaker). 12 s cooldown. A ridge of sand and grit 5 m wide heaps up before you and the
 wind drives it forward 7 m in 1.2 s, its crest smoking with blown sand. Each enemy it rolls over takes 16 damage and
-35 stagger, two Unsteady and a Tremor, so it topples as the dune passes. Where it stops it lies 4 s as a low dune:
+35 stagger, two Unsteady and a Tremor, so it rocks as the dune passes. Where it stops it lies 4 s as a low dune:
 enemies in it wade at 60% speed. Seen: a ridge with a sharp crest and a long back, ripples combed across it, sand
 streaming off the top the way it goes. **Steel**: a heavy blow struck into the standing dune drives it on again, 5 m
 more along the blow, once.
@@ -174,12 +180,13 @@ hold of the Greek bronze, and what the smith made to bend, snaps.
 
 **Reaction: Cold Short.** Either order. Frost fills the notches and the armour goes brittle for 5 s: blue-white rime
 in every cut, a glassy sheen on the plates. While brittle its notches do not fade. The next heavy blow on it cracks
-the armour across: 10 damage and 10 more for each notch, 25 stagger for each notch. The notches stay. Once every 5 s
-on one enemy. Seen: a white crack runs the body's length with a high ring of steel, and splinters fly.
+its plates off (the pair review moved the payoff onto the armour, so it no longer repeats Thermal Shock): its notches
+stay for the rest of the fight, and for 6 s it takes 25% more from weapon blows. There is no second burst of damage.
+Once every 5 s on one enemy. Seen: a white crack runs the body's length with a high ring of steel, and the plates
+drop away.
 
-**Shape A: Spall.** The crack throws the armour off the far side of the body, away from your blow: a cone of frozen
-splinters 4 m long and 60 degrees wide, 8 damage, a Chill and a notch to each enemy it reaches. Line them up.
-**Shape B: Snapped Blade.** The armour does not crack under your blow; its own weapon snaps on yours. While brittle,
+**Shape A: Shed Plate.** The cracked plate falls as a sheet of black ice 2 m across under it for 4 s; enemies that step
+on it slip flat for 0.6 s. (It replaces Spall, which was Rime's far-side cone.) **Shape B: Snapped Blade.** The armour does not crack under your blow; its own weapon snaps on yours. While brittle,
 any blow of its that you guard counts as a perfect guard and breaks its weapon: 50 stagger, held 1 s, and its blows
 deal half for 5 s.
 
@@ -188,7 +195,7 @@ deal half for 5 s.
 | Mark | Kind | Shards | What it does |
 |---|---|---|---|
 | Rimed Edge | Major | 3 | Your heavy blows lay a Chill and a notch together. |
-| Spall or Snap | Shape | 3 | Opens the shapes of Cold Short: Spall or Snapped Blade. |
+| Plate or Snap | Shape | 3 | Opens the shapes of Cold Short: Shed Plate or Snapped Blade. |
 | Glass Bell | Major | 3 | Each blow on a brittle enemy rings like glass: 3 mana, and 0.3 s off every running spell cooldown. |
 | Brittle to the Core | Keystone | 5 | Cold Short on a frozen enemy shatters it as well, the shatter and the crack landing together. |
 
@@ -243,25 +250,30 @@ own, fed through the roots of others. Under a banyan, whose kin the strangler fi
 stood, Savitri followed Death with his noose and talked him into giving her husband back. Growth that feeds in the
 dark, on the dying.
 
-**Reaction: Grave Roots.** Either order. Black roots grow from the seed down the enemy's legs into the floor and hold
-it for 1.2 s (elites 0.5 s). While it is held each of your blows on it mends you 2. Once every 6 s on one enemy.
-Seen: roots like a fig's, black and glossy, winding up to the knee in 0.2 s, pale waxy flowers opening along them.
+**Reaction: Girdled** (the strangler fig, made the reaction by the pair review: the old Grave Roots was a hold and a
+lifesteal side by side, and the fourth root hold). Either order. Black fig roots wind up it from the floor: one coil.
+It is not held: it is slowed 25% and cannot dodge or leap. Each of your weapon blows on it draws the roots one coil
+tighter (four at most, rings climbing the body); each coil makes it take 6% more from your weapon and mends you 1 a
+blow. At four coils it is girdled: held 1.5 s while the roots crush (20 damage, 40 stagger), and a fifth of what it
+loses heals you. If it dies girdled, the roots stand where it stood for 8 s as a hollow trunk: it blocks movement and
+shots, and Seeds and Curses what touches it. Once every 6 s on one enemy. Seen: dark glossy rings tightening up the
+body, pale waxy flowers along them; then a lattice column with nothing inside. Steel: the blade tightens the coils,
+and where you make the kill places the wall.
 
 **Shape A: Corpse Flowers.** When the roots let go, three pale flowers stand where it stood for 8 s (grown things).
 Each weapon blow you land on an enemy within 3 m of a flower makes 3 of your grey health real: fight beside them, do
-not walk over them (walk-over pickups are Shining Herb's). **Shape B: Hollow Trunk.** The roots do not let go: they
-stand round the enemy as a cage for 6 s, and if it dies inside, the cage stays where it stood for 8 s as a hollow
-trunk of black roots. Nothing walks or shoots through it, and an enemy that touches it is Seeded and Cursed. Kill
-them where you want a wall.
+not walk over them (walk-over pickups are Shining Herb's). **Shape B: Fig in the Crown.** When the hollow trunk forms,
+its seed drops onto the nearest enemy within 5 m, which starts at one coil. (It replaces Hollow Trunk, which is now
+the plain reaction's end.)
 
 **Duo branch**
 
 | Mark | Kind | Shards | What it does |
 |---|---|---|---|
 | Bitter Seed | Major | 3 | Your finishers lay a Seed and a Curse on every enemy within 3 m. |
-| Flowers or Trunk | Shape | 3 | Opens the shapes of Grave Roots: Corpse Flowers or Hollow Trunk. |
-| Held Down | Major | 3 | A perfect guard against a Cursed enemy roots it as Grave Roots does, whatever else it carries. Once every 6 s. |
-| What the Yew Keeps | Keystone | 5 | A Seeded, Cursed enemy that dies does not burst into thorns: its seed and its curse pass whole to the nearest enemy within 6 m, which is rooted at once. |
+| Flowers or Fig | Shape | 3 | Opens the shapes of Girdled: Corpse Flowers or Fig in the Crown. |
+| Held Down | Major | 3 | A perfect guard against a Cursed enemy winds the fig round it at two coils, whatever else it carries. Once every 6 s. |
+| What the Yew Keeps | Keystone | 5 | A Seeded, Cursed enemy that dies does not burst into thorns: its seed and its curse pass whole to the nearest enemy within 6 m, and the fig starts on it at two coils. |
 
 **Duo spell: Death Turned Back** (counter). 12 s cooldown. You go down on one knee and roots spread round you, 1.5 m,
 for 1.2 s. The first blow that would land on you is taken by the roots: they climb the attacker and hold it 2 s
@@ -278,13 +290,15 @@ their lamps out; at Lake Nyos a cloud heavier than air rolled silently down the 
 stone, was drunk in wine in China to drive off the five poisons. The Celts' barrows and cairns and the First
 Emperor's buried clay army: the earth keeps its dead, and its poisons with them.
 
-**Reaction: Blackdamp.** Either order. The ground cracks under the enemy and breathes out a heavy mist that hugs the
-floor: a pool 2.5 m wide for 5 s. What stands in it takes a dose each second, moves 20% slower, and does not regain
-balance. Once every 6 s on one enemy. Seen: cracks open in a star, grey-green mist pours out and settles in them,
-never above the knee, with the cracks showing through.
+**Reaction: Chokedamp** (made the plain reaction by the pair review, so the pair is not Miasma lying on the ground).
+Either order. The ground cracks under the enemy and breathes out a heavy damp that runs: it pools under it (2 m, 5 s),
+and a creeping tongue of it flows along the floor to each other shaken enemy within 7 m, three at most, and pools
+under each. What stands in the damp takes a dose each second, moves 20% slower, and does not regain balance. Once
+every 6 s on one enemy. Seen: cracks open in a star, grey-green mist pours out and settles in them, never above the
+knee, then tongues of it creeping across the floor to the other shaken bodies.
 
-**Shape A: Chokedamp.** The damp is heavy and runs: a creeping tongue of it flows along the floor to each other
-shaken enemy within 7 m, three at most, and pools under each. **Shape B: Red Ore.** No mist. The poison sets in the
+**Shape A: Blackdamp** (the old plain reaction). The damp does not run: it lies still and deep under the one, a pool
+3.5 m wide for 7 s. A place to hold, not a spread. **Shape B: Red Ore.** No mist. The poison sets in the
 cracks as veins of orange-red realgar under the enemy. Your next heavy blow on it within 4 s breaks the ore: a burst
 of red dust and stone chips in 3 m, 14 damage and 3 more for each dose it carries, three doses and 30 stagger to each
 enemy reached.
@@ -294,7 +308,7 @@ enemy reached.
 | Mark | Kind | Shards | What it does |
 |---|---|---|---|
 | Foul Ground | Major | 3 | Your heavy blows lay a Tremor and a dose together. |
-| Damp or Ore | Shape | 3 | Opens the shapes of Blackdamp: Chokedamp or Red Ore. |
+| Damp or Ore | Shape | 3 | Opens the shapes of Chokedamp: Blackdamp or Red Ore. |
 | The Lamp Goes Out | Major | 3 | Your weapon breaks the balance of enemies standing in the damp a quarter harder. |
 | Seam of Ore | Keystone | 5 | Each time poison bites a shaken enemy, the ground shakes under it: a Tremor to every enemy within 2 m. |
 
@@ -467,10 +481,11 @@ Beyond the reactions themselves (two afflictions on one enemy, a reaction table,
 
 1. **Enemy sight cut short** inside a cloud (Blind Steam). Section 15.9 lists "changing an enemy's sight" as not yet
    possible.
-2. **A knocked-flat state** (Topple, Logan Stone, Walking Dune). `Hold` with a fall animation can stand in.
+2. **A knocked-flat state** (Logan Stone, Drifted Over, Shed Plate's slip, Walking Dune), and **a rocking state**
+   that counts blows within a window (Logan Stone). `Hold` with a fall animation can stand in.
 3. **"Begins no attack" without stopping movement** (Breath Taken's winding). Section 16.6 says `Hold` stands in.
 4. **A timed change to one enemy's damage dealt or taken, or to whether it can guard** (Snapped Blade, Red-Short,
-   The Burning Shirt). Section 15.9 says no per-enemy
+   The Burning Shirt, Cold Short's cracked plates, Girdled's coils). Section 15.9 says no per-enemy
    debuff exists as data.
 5. **Ground laid behind a moving enemy** (Slag), and **a moving ridge that rolls enemies over and then stands as
    slowing ground** (Walking Dune; the `wave` and `wall` forms are the nearest).
@@ -483,7 +498,7 @@ Beyond the reactions themselves (two afflictions on one enemy, a reaction table,
    curses downwind** (Wind From the Grave). Both are bespoke surge forms.
 10. **A guard against an afflicted enemy counted as perfect** (Snapped Blade). Hanging Swords already stretches the
     window by hand, so it may be close.
-11. **A cage of roots that stands, blocks and can outlast its enemy** (Hollow Trunk). Section 15.9 lists "things that
+11. **A trunk of roots that stands, blocks and outlasts its enemy** (Girdled's hollow trunk). Section 15.9 lists "things that
     stand and block and can be struck" beyond `wall` and `ring` as not yet possible.
 
 Everything else uses actions and forms that exist: `Hazard` with `Grown` for the rice field and the flowers, `Pull`

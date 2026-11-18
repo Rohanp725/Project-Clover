@@ -24,9 +24,10 @@ Rules that hold for every entry below:
 3. **Wind and Life**: *Windthrow* roots the enemy so the next shove tears it out; *Thistledown* blows you through
    a crowd as seed.
 4. **Ice and Earth**: *Frost Heave* lifts the enemy on a frozen mound; *The Hag's Staff* hammers frost into the ground.
-5. **Water and Metal**: *Rust* keeps the notches and adds more; *The Weighted Net* drops a wet chain net.
-6. **Life and Light**: *Shining Herb* grows a herb to pick up; *Life-Herb* roots in one enemy and ripens on critical
-   blows.
+5. **Water and Metal**: *Rust* keeps the notches, adds more, and at five a plate falls; *The Sea Takes It* rusts every
+   notched enemy a wave of brine crosses.
+6. **Life and Light**: *Shining Herb* grows a herb to pick up; *Turned to the Sun* plants a lit herb that every Seeded
+   or Marked enemy turns to face, so their backs are yours.
 7. **Earth and Dark**: *Turned to Stone* stiffens it for a heavy blow to break; *Stone Underfoot* strides to an enemy
    and turns it to stone at once.
 8. **Metal and Poison**: *Quicksilver* makes every blow bite; *Ichor* turns a blow and pulls the nail, so the
@@ -35,11 +36,11 @@ Rules that hold for every entry below:
    flame.
 10. **Dark and Lightning**: *The Grudge* hangs a cloud that answers the enemy's blow; *The Exile's Grudge* pays back
     every blow taken. Duo surge *Ash and Thunder*.
-11. **Poison and Wind**: *Ill Wind* trails poison from every enemy thrown; *The Yellow Gale* drinks the poison in,
-    then blows it out.
+11. **Poison and Wind**: *Ill Wind* sheds an enemy's poison in a plume wherever it is thrown; *The Yellow Gale* drinks
+    the poison in, then blows it out.
 
-Roles of the eleven duo spells: openers 4 (The Flashing, The Weighted Net, Life-Herb, Hands of the Sun), breaker 1
-(The Hag's Staff), detonators 2 (Fire-Setting, The Yellow Gale), counters 2 (Ichor, The Exile's Grudge),
+Roles of the eleven duo spells: openers 3 (The Flashing, Turned to the Sun, Hands of the Sun), breakers 2 (The Hag's
+Staff, The Sea Takes It), detonators 2 (Fire-Setting, The Yellow Gale), counters 2 (Ichor, The Exile's Grudge),
 movement 2 (Thistledown, Stone Underfoot).
 
 ---
@@ -213,12 +214,13 @@ Engine needs: mounds and stone rings are the barriers Stone Rise and the ring fo
 **The image.** Salt water in broken armour rusts it. In the Iliad, Hephaestus, thrown out of heaven, fell into the sea,
 and two sea goddesses kept him nine years in a cave with the Ocean flowing round it, where he forged. The smith who
 caught the swift war god in a net of chains as fine as spider's web meets the fisher who pulls up islands. Their
-meeting is a net.
+meeting is rust: the sea taking back what the smith made.
 
 **Reaction: Rust.** When a notched enemy is Soaked, or a Soaked enemy notched. The wet cuts rust. While it is Soaked
 its notches do not fade, and the rust spreads by itself: one more notch every 2 s, up to five (two past Sundered's
-usual three). What the player sees: an orange-brown bloom creeping out from each notch over its armour, flakes falling,
-and a brown drip line on the floor where it walks.
+usual three). At five a plate rusts through and falls to the floor, a wreck the camera can see: for 6 s it takes
+weapon blows as if notched five deep, wet or dry. What the player sees: an orange-brown bloom creeping out from each
+notch over its armour, flakes falling, and a brown drip line on the floor where it walks; then the plate dropping.
 
 **Shape A: Seized Joints.** Each notch of rust slows its walk 6% and its turning 10%, so a rusted enemy cannot turn to
 face you in time: go round it. **Shape B: Flaking.** A heavy blow knocks the rust off in a shower. It spends the
@@ -230,19 +232,19 @@ notches, and each one throws flakes at enemies within 3 m: 6 damage, one notch a
 |---|---|---|---|
 | Salt Edge | Major | 3 | Heavy blows lay one notch and Soak. |
 | Seized Joints or Flaking | Shape | 3 | Opens the two shapes of Rust. |
-| The Plate Falls | Major | 3 | At five notches of rust, the next heavy blow knocks a plate off: 30 damage, and for 6 s the enemy takes weapon blows as if notched five deep, wet or dry. |
+| Salt Guard | Major | 3 | A perfect guard lays one notch and Soaks the attacker: Salt Edge's twin for the guard. (The Plate Falls, the old Major here, is now the end of the plain reaction.) |
 | Brine | Minor | 1 | Soaked lasts longer on a notched enemy. |
 | The Wreck | Keystone | 5 | A rusted enemy that dies leaves its armour on the floor as a wreck 1.5 m across for 8 s. It Soaks and notches whatever stands in it, and your heavy blows struck from inside it are not broken by blows taken. |
 
-**Duo spell: The Weighted Net** (the crown, 5 Shards; the invisible Smith's Net is the Metal and Dark duo spell, so
-this is the fisher's half of the meeting). Opener. Cooldown 12 s. You throw a net of fine wet chain up to 8 m. It spreads over a disc 3.5 m across and falls. Everything under it is Soaked, notched once and held for 1.2 s
-(elites and gods less). The net then lies on them for 5 s, and they move 40% slower under it. What it looks like: a
-glinting mesh of fine chain beaded with water, its edge weighted with shell sinkers, water running from every knot as
-it settles. How it rewards steel: a heavy blow on any netted enemy hauls the net, and every other enemy under it is
-dragged 2 m toward the one struck and notched again.
+**Duo spell: The Sea Takes It** (the crown, 5 Shards; it replaces The Weighted Net, a third net, because the Smith's
+Net and the Golden Chair already net enemies and this pair's crown should be rust, its own substance, made large).
+Breaker. Cooldown 13 s. A wave of brine 6 m wide rolls 7 m ahead. Every notched enemy it crosses rusts to five notches
+at once, and its joints seize: it turns 40% slower for 4 s. Everything it crosses is Soaked. What it looks like:
+grey-green surf, then an orange bloom racing over every plate it touched. How it rewards steel: a heavy blow on a
+seized enemy knocks a plate off: 20 damage, 35 stagger.
 
-Engine needs: Rust's notches past three (an `AfflictionDepth` for Sundered alone). A net that follows the enemies it
-holds.
+Engine needs: Rust's notches past three (an `AfflictionDepth` for Sundered alone). A plate fallen to the floor as a
+visible wreck.
 
 ---
 
@@ -274,16 +276,15 @@ the next critical blow as a flare that Marks and Seeds every enemy within 4 m.
 | Long Day | Minor | 1 | Herbs stand 3 s longer before they flower. |
 | The Whole Mountain | Keystone | 5 | Picking a herb draws every other standing herb to you across the floor, and each one picked after the first heals twice. |
 
-**Duo spell: Life-Herb** (the crown, 5 Shards; the herb of Dronagiri that gives back life. Mistletoe is the Scythe and
-Life Pair Bond strike). Opener. Cooldown 11 s. You throw a shining herb into the enemy faced within 8 m. It roots
-there for 8 s and seeds the enemy three deep. While it grows, every weapon blow on that enemy is critical, and each
-critical blow opens a lit leaf on the herb. At six leaves, or when the host dies, or when the time ends, the leaves
-fall: each heals you 3 and Marks and Seeds every enemy within 2.5 m of the host. What it looks like: a small bush
-with veins glowing like lit sap standing out of the enemy's shoulder, leaves opening one by one with a glint, then
-dropping in a little rain of rays. How it rewards steel: it is six critical blows held in a herb, and only the blade
-picks them.
+**Duo spell: Turned to the Sun** (the crown, 5 Shards; green things turn toward the light. It replaces Life-Herb,
+whose every-blow-critical window was Life's own Drawn From the Wood for free). Opener. Cooldown 11 s. You plant a lit
+herb at the aim point (within 7 m) for 6 s. Every 2 s it flares, and every Seeded or Marked enemy within 6 m turns to
+face it for 1 s (a swing already begun is finished). Blows on an enemy's back while it faces the herb are critical and
+Seed it. Elites turn for 0.4 s; gods do not turn. What it looks like: a sprig whose veins glow like lit sap, and a
+ring of bodies turning toward it at each flare. How it rewards steel: it hands the blade every back in the room, so
+the player gets behind them.
 
-Engine needs: **pickups** the player walks over (new). Life-Herb is the `brand` form, with the leaves as its count.
+Engine needs: **pickups** the player walks over (new). Turned to the Sun needs enemies turned to face a point.
 
 ---
 
@@ -459,14 +460,17 @@ before Japan's shore. What the Chinese alchemist brews, the Japanese wind god ca
 it.
 
 **Reaction: Ill Wind.** When a poisoned enemy is made Unsteady, or an Unsteady enemy poisoned. Its poison goes loose
-like dust. Whenever it is shoved or thrown (a Gust, a heavy that shoves, a lift), it sheds one dose into a trail of
-yellow-green grit along its path, 1.2 m wide, lasting 3 s, which doses each enemy in it once a second. What the player
-sees: the thrown body pours a tail of dust like smoke behind it, and the grit settles slowly on the floor. Fire and
+like dust. Whenever it is shoved or thrown (a Gust, a heavy that shoves, a lift), it sheds all its loose doses at
+once (the pair review gave the trail its weight) in a plume of yellow-green grit along its path, 1.2 m wide, that
+settles over 3 s; the doses shed are shared among the enemies the plume settles on, and the grit doses each enemy in it
+once a second while it lies. What the player sees: the thrown body pours a tail of dust like smoke behind it, and the
+plume settles slowly on the floor. Fire and
 Wind (Carried Embers) throws fire downwind off the body; this is different: it lays a line along the path the enemy
 travels.
 
-**Shape A: Turned Back.** No trail. The dust goes with the body, and where it lands it bursts: every poisoned enemy
-within 3 m bites at once. Throw the bearer into the crowd. **Shape B: Dust Bank.** The trail does not settle. It
+**Shape A: Dust on the Blade.** No trail. The shove that throws it coats your edge with the yellow grit, and your
+next three light blows each lay a dose and an Unsteady. (It replaces Turned Back, a burst where the body lands, which
+was Thunder Gust in poison.) **Shape B: Dust Bank.** The trail does not settle. It
 drifts on the way the enemy was thrown, 2 m a second for 4 s, as a low bank of dust that makes Unsteady what it
 passes.
 
@@ -475,7 +479,7 @@ passes.
 | Mark | Kind | Shards | What it does |
 |---|---|---|---|
 | Spring Dust | Major | 3 | Heavy blows dose what they shove, and make it Unsteady. |
-| Turned Back or Dust Bank | Shape | 3 | Opens the two shapes of Ill Wind. |
+| Dust on the Blade or Dust Bank | Shape | 3 | Opens the two shapes of Ill Wind. |
 | Gust at the Heel | Major | 3 | A perfect dodge leaves a gust behind you that throws the attacker 3 m, so a poisoned attacker trails at once. |
 | Fine Dust | Minor | 1 | Trails last 2 s longer. |
 | No Still Air | Keystone | 5 | A poisoned, Unsteady enemy cannot stand still: every 2 s the wind shoves it 1 m away from you, and it sheds a trail each time. |
@@ -502,6 +506,7 @@ Engine needs: drawing stacks off enemies into a store (new; `Pass` only gives). 
 - A **second press** of a slot spell: Fire-Setting (16.2 covers only the surge).
 - A **rooted** state: cannot move or be shoved, can still attack (Windthrow). 16.6 says Hold has to stand in for it.
 - **Pickups** the player walks over (Shining Herb).
+- **Enemies turned to face a point** for a moment (Turned to the Sun).
 - **Taking stacks off** an enemy into a store (The Yellow Gale); a **tally per enemy** (The Exile's Grudge).
 - **Sundered past three** (Rust).
 - **A quickened poison beat** on one enemy for a time (Ichor).

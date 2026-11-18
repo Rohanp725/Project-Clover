@@ -3,6 +3,9 @@
 The design for making the element as strong a part of the game as close combat, and for a weapon tree that
 specialises and upgrades the weapon. Worked out between the owner and Claude on 2026-11-18.
 
+**Approved for building (owner, 2026-11-18, evening)**: every Proposal here and in `docs/design/steel/` is approved
+for now and is built as written; changes come from the Phase 3 playtesting.
+
 **How to read the status marks.** **Decided** means the owner said so. **Proposal** means Claude's design, waiting
 for the owner's word or for play. A number is always a first guess to be tuned by play. The record of what was
 decided and when is the section "Steel and element: the rework of 2026-11-18" in `docs/GAME.md`. This document is

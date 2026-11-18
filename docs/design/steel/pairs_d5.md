@@ -11,22 +11,24 @@ found by accident and remembered: two substances that should not meet, and somet
 | Fire and Life | Firebloom | Need-Fire (opener) | Fire opens the seed: burning seeds fly out and grow into flame lilies |
 | Lightning and Earth | Earthed | The Capstone (breaker) | The charge goes to ground as a burnt fern across the floor that strikes everyone standing on it |
 | Wind and Metal | Sickle Wind | Three Weasels (movement) | The wind tears off the broken plates and whirls them round the enemy as blades |
-| Ice and Light | Prism | Sunstone (counter) | Frozen flesh turns to lens: a blow's light comes out the far side as a fan of rays |
+| Ice and Light | Mock Suns | Sunstone (counter) | Two mock suns hang in plates of ice either side of it, and a blow from beside one is critical |
 | Water and Dark | Drowned Weight | Under the Black Water (movement) | The curse turns the water on it black and heavy: it swells, slows, takes more, and bursts in black water when it falls |
 | Life and Poison | Rot Roots | The Stalks Rise (detonator) | Pale roots join the host to its neighbours, and every bite runs down them |
-| Earth and Fire | Baked Earth | Vitrified Wall (breaker) | The shaken ground's cracks fill with fire, and what stands in them is fired like clay |
-| Metal and Lightning | Live Iron | Lightning Seeks Iron (movement) | Broken armour conducts: every blow arcs to the next enemy and breaks its armour too |
+| Earth and Fire | Burnt Mound | Vitrified Wall (breaker) | The shaken floor throws up three stones, the fire heats them red, and your weapon bats them across the room |
+| Metal and Lightning | Live Iron | Lightning Seeks Iron (movement) | Broken armour conducts: every blow arcs from iron to iron and breaks the armour further |
 | Light and Wind | Golden Feathers | Sweep of Wings (opener) | The brackets of light break into feathers that ride the wind and mark whoever they reach |
-| Dark and Ice | Frostbite | Ice in the Blood (detonator) | The curse lets the cold in: chill deepens by itself from inside |
-| Poison and Water | Fouled Water | The Hundred Rivers (opener) | The soaked enemy bleeds a poisoned pool, and every bite reaches all who stand in it |
+| Dark and Ice | Stolen Warmth | Ice in the Blood (detonator) | The curse takes its warmth and the cold is what is left: each blow draws warmth out of it into you |
+| Poison and Water | Fish Poison | Poison the Lagoon (opener) | The water runs off it fouled, and the heavily dosed float up stunned for the blade |
 
 Duo surges: **When the Watch Sleeps** (Lightning and Earth), **Three Winters** (Dark and Ice).
 
-How the eleven were kept apart: two spread a mark (Light and Wind by the wind's direction, Ice and Light through
-the far side of the enemy), one ties enemies together (Life and Poison by roots; a leash between two enemies is the
-Metal and Dark reaction, Black Chain, so Water and Dark swells one body instead), three make ground (Lightning and
-Earth a burnt figure, Earth and Fire seams, Poison and Water a pool), one makes a whirl, one an arc, one a garden, one
-a deepening cold, one a swelling. No two share a look.
+How the eleven were kept apart: one spreads a mark (Light and Wind by the wind's direction) and one teaches the flank
+(Ice and Light's mock suns), one ties enemies together (Life and Poison by roots; a leash between two enemies is the
+Metal and Dark reaction, Black Chain, so Water and Dark swells one body instead), two make ground (Lightning and
+Earth a burnt figure, Poison and Water a fouled slick), one leaves hot stones for the blade (Earth and Fire), one
+makes a whirl, one an arc from iron to iron, one a garden, one a stolen warmth, one a swelling. No two share a look.
+(Ice and Light, Earth and Fire, Metal and Lightning, Dark and Ice and Poison and Water were reworked by the pair
+review of 2026-11-18.)
 
 How the branches are built: each is four marks (the Shape mark that opens the two shapes, a minor, a major and a
 keystone), then the duo spell as its crown. Prices follow the shared chart (`README.md`): Shape 3, minor 1, major 3,
@@ -161,17 +163,19 @@ sunstone that showed a navigator where the sun stood behind cloud, and a crystal
 to show it. Where the huntress's winter meets the champion's judging light, the ice becomes a lens: what is frozen is
 seen through, and the light comes out the other side.
 
-**Reaction: Prism.** Chill (any depth) and Marked on one enemy, in either order. The ice in it goes clear: the next
-weapon blow on it is critical and does not spend the Mark, and the light of that blow passes through the body and
-out the far side as a fan of three rays, 6 m long and 30 degrees wide: 8 damage each, a Mark and a Chill on what they
-cross. Seen: the frost on the body clears to glass; on the blow, three thin rays fan out behind it, red on the inside
-edge and blue on the outside, ice glints falling along each. The player aims by where they stand.
+**Reaction: Mock Suns** (made the plain reaction by the pair review, which took the pair off the far-side cone that
+Rime already owns). Chill (any depth) and Marked on one enemy, in either order. Two mock suns, small glints held in
+flat ice plates, hang 2 m either side of the enemy for 4 s and turn with it. A weapon blow struck from beside one
+(from the enemy's left or right, not its face) is critical, lays two Chill and does not spend the Mark. It teaches the
+flank, not the spread. (Rays thrown at the nearest other enemy are Halo's Glint, and marks carried to others are
+Light and Wind's feathers.) Seen: two glints beside the body, red on their inner edge, wheeling as it turns. Steel:
+footwork round the enemy is the reaction.
 
-**Shape A: Mock Suns.** No fan. Two mock suns, small glints held in flat ice plates, hang 2 m either side of the enemy
-for 4 s and turn with it. A weapon blow struck from beside one (from the enemy's left or right, not its face) is
-critical, lays two Chill and does not spend the Mark. It teaches the flank, not the spread. (Rays thrown at the
-nearest other enemy are Halo's Glint, and marks carried to others are Light and Wind's feathers.) **Shape B: Lens of
-Ice** (fire from ice). No rays: the light is gathered into the one body. While it is Frozen its Mark is
+**Shape A: Prism** (the old plain reaction). No mock suns. The ice in it goes clear: the next weapon blow on it is
+critical and does not spend the Mark, and the light of that blow passes through the body and out the far side as a
+fan of three rays, 6 m long and 30 degrees wide: 8 damage each, a Mark and a Chill on what they cross. Seen: the
+frost on the body clears to glass; on the blow, three thin rays fan out behind it, red on the inside edge and blue on
+the outside. **Shape B: Lens of Ice** (fire from ice). No rays: the light is gathered into the one body. While it is Frozen its Mark is
 not spent by blows, and a shatter of a Marked, frozen enemy deals 60% more and throws its Mark onto every enemy within
 4 m.
 
@@ -179,8 +183,8 @@ not spent by blows, and a shatter of a Marked, frozen enemy deals 60% more and t
 
 | Mark | Kind | Shards | What it does |
 |---|---|---|---|
-| Through the Ice | Shape | 3 | Opens the two shapes of Prism. |
-| Wide Fan | Minor | 1 | The fan reaches 8 m and holds five rays. |
+| Through the Ice | Shape | 3 | Opens the two shapes of Mock Suns: Prism or Lens of Ice. |
+| Wide Fan | Minor | 1 | The mock suns hang 2 s longer; with Prism, the fan reaches 8 m and holds five rays. |
 | Bent Light | Major | 3 | A ray that meets ice the player made (Hoarfrost's crystals, a wall of ice, a frozen enemy) bends toward the nearest enemy and runs on 5 m. |
 | White Night | Keystone | 5 | A perfect guard against a Marked enemy that carries three or more Chill freezes it at once. |
 
@@ -272,26 +276,29 @@ steel in the 1.2 s window.
 
 **The image.** Stone in the kiln. In Iron Age Scotland whole ramparts laced with timber burned so long and so hot that
 their stones melted and fused into glass. The sun-king's city is mud brick, and the Egyptian potter god Khnum shaped
-people from clay on his wheel. Here shaken earth meets fire and is fired: broken ground runs with heat, and what stands
-in it sets hard as a pot, ready to break.
+people from clay on his wheel. Here shaken earth meets fire and is fired: the stones the shaking throws up glow red,
+and crack when they are struck, as the stones of the Celtic burnt mounds did.
 
-**Reaction: Baked Earth.** Tremor and Burn on one enemy, in either order. The cracks the tremor shook into the ground under
-it fill with fire: a star of glowing seams 3 m round it for 4 s. Enemies on the seams take 3 damage and a Burn every
-half second. The enemy in the middle is fired: slowed a further 20%, and its Burn does not fade while it stands in the
-baked ground. Seen: dark cracks lit orange from below, smoke rising out of them, the enemy's skin dulling to the red-brown of
-clay.
+**Reaction: Burnt Mound** (it replaces Baked Earth, whose star of glowing seams was Earthlight's in orange and whose
+Fired Clay was Turned to Stone). In Bronze Age Ireland and Britain stones were heated in a fire and dropped in water,
+and they cracked apart; nearly six thousand mounds of fire-cracked stone are left. Tremor and Burn on one enemy, in
+either order; rest 6 s. The shaken floor throws up three stones round it, 1.5 m out, and its fire heats them red. They
+lie 6 s, black with orange cracks and smoking, and burn what touches them (3 damage and a Burn each half second). Any
+weapon swing that passes over a stone, or a heavy blow within 1.5 m of one, knocks it along the swing: it skips 7 m,
+strikes the first enemy for 14 damage, 20 stagger, a Burn and a Tremor, and cracks into hot sherds (6 damage and a Burn
+in 1.5 m). Seen: three glowing stones; a skipping stone leaving a line of sparks. Steel: the reaction is ammunition and
+only the weapon fires it, so light blows bat each stone at a target.
 
-**Shape A: Fired Clay.** No seams: the enemy is baked hard. It is held 1 s, and the next heavy blow breaks it like a
-pot: 25 damage, 40 stagger, and hot sherds thrown 3 m that shake and burn what they hit. **Shape B: Running Seam.** The
-seams run on as two lines of molten cracks, 6 m, toward the two nearest enemies, burning and shaking everything they
-cross.
+**Shape A: Heaped Stones.** The three fuse into one boulder that a heavy blow rolls 8 m through a line: 20 damage, two
+Burn and two Tremor to each it crosses. **Shape B: Fire-Cracked.** No batting: each stone cracks by itself when an
+enemy steps within 1 m: 12 damage and a Burn in 2 m. A field to drive them across.
 
 **Duo branch:**
 
 | Mark | Kind | Shards | What it does |
 |---|---|---|---|
-| Fired Hard | Shape | 3 | Opens the two shapes of Baked Earth. |
-| Hot Seams | Minor | 1 | Seams are 1 m wider and last 2 s longer. |
+| Fired Hard | Shape | 3 | Opens the two shapes of Burnt Mound: Heaped Stones or Fire-Cracked. |
+| Hot Stones | Minor | 1 | The stones lie 2 s longer and skip 2 m further. |
 | Timber-Laced | Major | 3 | Rock the player raises catches fire from a burning enemy within 2 m: it burns what touches it (4 damage and a Burn every half second), and when it ends it bursts in glass sherds (12 damage in 2.5 m). |
 | Brick and Fire | Keystone | 5 | Heavy blows that land on a burning enemy lay Tremor; light blows that land on a shaken enemy lay Burn. The weave of light and heavy feeds both. |
 
@@ -311,15 +318,19 @@ for the king of the gods; the smith's land remembers them as its murdered god. I
 lodestone: the bolt's field sets iron ore into a lasting magnet. Where the storm meets the forge, broken armour is a
 conductor, and a bolt that finds iron goes on from iron to iron.
 
-**Reaction: Live Iron.** Sundered and Static on one enemy, in either order. For 6 s every weapon blow on it arcs to the
-nearest other enemy within 6 m for 35% of the blow and breaks a notch of its armour. An arc that reaches an enemy
-already Sundered leaps once more (two leaps at most; one arc every 0.3 s). Seen: the cracked plates glowing blue-white
+**Reaction: Live Iron.** Sundered and Static on one enemy, in either order. For 6 s every weapon blow on it arcs
+only from iron to iron: to the nearest other Sundered enemy within 8 m, never to a clean one, for 35% of the blow,
+and lays a notch where it lands. An arc that reaches an enemy already Sundered leaps once more (two leaps at most; one
+arc every 0.3 s). The notches become a wire the player lays with heavy blows (the pair review moved it off
+Lightning's own charged blade, which leaps to any second enemy). Seen: the cracked plates glowing blue-white
 at their edges, arcs jumping plate to plate, molten sparks spitting where they land.
 
 **Shape A: Drawn Iron.** The arcs magnetise: each enemy an arc reaches is drawn 1.5 m toward the one struck, plates
-clattering, so a crowd folds in onto the blade. **Shape B: Draws the Bolt.** No arcs. The enemy draws every discharge:
-any Static set off within 8 m jumps to it instead and strikes it for double, while the others take none. One target,
-everything into it.
+clattering, so a crowd folds in onto the blade. **Shape B: Forged Bolt** (the Cyclopes, named Thunder, Lightning and
+Bright, forged the bolt). No arcs. Each weapon blow on it hammers one of its Static into a glowing iron spike standing
+in it (three at most); a heavy blow tears them out as one thunderbolt thrown in a line 10 m: 12 damage a spike, 20
+stagger, two Static to all on the line. (It replaces Draws the Bolt, which pulled every discharge into one body as
+Flashover now does.)
 
 **Duo branch:**
 
@@ -378,25 +389,30 @@ critical blows of the Mark and the stagger of Unsteady together.
 **The image.** The cold when the sun is eaten. The Norse send wolves after the sun until they catch it at the world's
 end, after three winters with no summer; in India the head of Rahu, who drank the nectar, swallows the sun again and
 again, and it falls out of his cut throat. Both tell of what really happens in a total eclipse: the air drops several
-degrees in a minute. Hel, who rules the cold dead, is half living and half dead in her body. Here the curse lets the
-cold all the way in: frost that grows from the inside out.
+degrees in a minute. Hel, who rules the cold dead, is half living and half dead in her body. Here the curse takes the
+warmth out of the body, and the cold is what is left.
 
-**Reaction: Frostbite.** Cursed and Chill on one enemy, in either order. While both last, its Chill no longer fades
-and deepens by one every 2 s on its own; when it freezes it stays frozen 1 s longer. Seen: black veins of frost
-creeping out over the body from the curse's sign, cold smoke at its mouth.
+**Reaction: Stolen Warmth** (it replaces Frostbite, in which Dark did nothing of its own). Cursed and Chill on one
+enemy, in either order; rest 6 s. The curse takes its warmth, and the cold is what is left. While both last its Chill
+does not fade, and each of your weapon blows on it draws warmth out of it: one Chill on it, and 2 health to you (8 a
+second at most). When it freezes, the last of its warmth is torn out at once: you heal 2 for every Chill it carried,
+and it stays frozen 1 s longer. Gods give half. Seen: frost thickening on the body from the curse's sign while a pale
+wisp of breath-smoke runs from it to you at each blow; at the freeze, one last cloud of breath torn out of it. Steel:
+every blow is a draw, so the healing is paced by the weapon.
 
-**Shape A: Cold Shade.** When a frostbitten enemy is shattered, its shadow stays behind as a figure of black ice for
+**Shape A: Cold Shade.** When an enemy whose warmth is stolen is shattered, its shadow stays behind as a figure of black ice for
 4 s. Enemies within 2.5 m of it are chilled a stack a second, and a heavy blow on the shade shatters it a second time
-(30 damage, two Chill in 3 m). **Shape B: Swallowed Warmth.** While it is frozen it drinks the warmth round it: the
-player heals 2 a second within 4 m of it, and every other enemy within 4 m gains a Chill a second.
+(30 damage, two Chill in 3 m). **Shape B: The Long Night.** The warmth goes to the dark instead of to you: no health
+is drawn, and every other enemy within 3 m of it gains a Chill each second while it is frozen. (It replaces
+Swallowed Warmth, now the plain reaction's idea.)
 
 **Duo branch:**
 
 | Mark | Kind | Shards | What it does |
 |---|---|---|---|
-| Let the Cold In | Shape | 3 | Opens the two shapes of Frostbite. |
-| Deep Veins | Minor | 1 | Frostbite deepens every 1.5 s. |
-| Hel's Half | Major | 3 | Killing a frostbitten enemy Curses every enemy within 4 m and gives each two Chill. |
+| Let the Cold In | Shape | 3 | Opens the two shapes of Stolen Warmth: Cold Shade or The Long Night. |
+| Deep Veins | Minor | 1 | Each blow draws 3 health, not 2 (12 a second at most). |
+| Hel's Half | Major | 3 | Killing an enemy whose warmth is stolen Curses every enemy within 4 m and gives each two Chill. |
 | No Summer | Keystone | 5 | Hunger costs no health while any enemy within 8 m is Frozen. |
 
 **Duo spell: Ice in the Blood** (detonator). Cooldown 12 s. A sign of black frost is set on the enemy faced (within
@@ -414,35 +430,37 @@ as a statue of black ice for 5 s, chilling a stack a second within 2.5 m. A heav
 
 ### Poison and Water (Poisoned + Soaked), distance 5
 
-**The image.** Poison carried by water. The first emperor, killed by the mercury he drank to live forever, was said by
-Sima Qian to lie under a model of his realm whose hundred rivers and sea were flowing mercury; the soil of the mound
-still holds far more mercury than it should. On Pacific shores the pounded seeds of the fish-poison tree are stirred
-into shallow water, and the stunned fish float up to be gathered by hand. Here the water is the poison's road: the
-soaked body bleeds poison into a pool, and the pool reaches everyone standing in it.
+**The image.** Poison carried by water. On Pacific shores the seeds of the fish-poison tree are scraped on the rock
+beside a tide pool and stirred into the shallows, and the stunned fish float up to be gathered by hand. The Chinese
+alchemist's poison meets the fisher's sea, and the sea gives up what it holds. (The mercury rivers of the first
+emperor's tomb belong to quicksilver, the Metal and Poison substance, and are left to that pair.)
 
-**Reaction: Fouled Water.** Soaked and Poisoned on one enemy, in either order. The water runs off it fouled: a pool
-2.5 m across spreads under it for 4 s. Every poison bite on it also bites everything standing in the pool for one
-dose's worth, and each enemy that enters is Soaked. Seen: a slick of dark water with a yellow-green sheen, bubbles
-rising, a ripple running out with every bite.
+**Reaction: Fish Poison** (made the plain reaction by the pair review; the old Fouled Water passed bites through a
+pool, as Rot Roots does by root). Soaked and Poisoned on one enemy, in either order; rest 6 s. The water runs off it
+fouled into a slick 3 m across for 5 s: dark water with a yellow-green sheen and rising bubbles. What stands in it is
+Soaked. Any enemy in the slick that comes to carry four doses or more floats up stunned: lifted off its feet and held
+1.5 s (elites 0.5 s; gods take 30 stagger instead), and the next weapon blow on it is critical and spends two doses
+for 6 damage each. Seen: bodies lifting belly-up out of a sheen that ripples with every bite. Steel: the float is a
+window for the blade, and the doses are what you built to reach it.
 
-**Shape A: Silver Pool** (Quicksilver is the Metal and Poison reaction). The pool is heavy and silver. It creeps after the poisoned enemy as it moves; enemies in it
-are slowed 25%, and their poison does not fade while they stand in it. **Shape B: Fish Poison.** The pool stuns. An
-enemy in it that reaches full poison floats up stunned, held 1.5 s, and the next weapon blow on it is critical.
+**Shape A: Rock Pool.** The slick is 1.5 m across and stuns at two doses: one enemy, often. **Shape B: The Ebb Takes
+It.** The slick runs 6 m away from you as a stream 1.5 m wide over 1 s, stunning by the same rule along its length.
 
 **Duo branch:**
 
 | Mark | Kind | Shards | What it does |
 |---|---|---|---|
-| Bad Water | Shape | 3 | Opens the two shapes of Fouled Water. |
-| Wide Slick | Minor | 1 | The pool is 3.5 m across and lasts 2 s longer. |
-| The Tide Brings It | Major | 3 | Riptide's wave, crossing a fouled pool, carries it: everything the wave carries takes two doses. |
+| Bad Water | Shape | 3 | Opens the two shapes of Fish Poison: Rock Pool or The Ebb Takes It. |
+| Wide Slick | Minor | 1 | The slick is 4 m across and lasts 2 s longer. |
+| The Tide Brings It | Major | 3 | Riptide's wave, crossing a fouled slick, carries it: everything the wave carries takes two doses. |
 | Fast Water | Keystone | 5 | Poison on a Soaked enemy bites twice as often and fades twice as fast. |
 
-**Duo spell: The Hundred Rivers** (opener). Cooldown 12 s. Three channels of quicksilver run out from the player along
-the ground in a 60 degree fan, 9 m long, poured in 0.5 s, and stand 6 s. What stands in them is Soaked, slowed 25%
-and given a dose a second. Each weapon blow on an enemy standing in a channel splashes a dose onto every enemy within
-2 m. Seen: bright silver lines with beads breaking off them and a faint mist above, cinnabar red where they begin. It
-rewards steel: the blows splash the poison.
+**Duo spell: Poison the Lagoon** (opener; it replaces The Hundred Rivers, whose quicksilver belongs to Metal and
+Poison). Cooldown 12 s. You crush the fish-poison seed on the floor at the aim point (within 7 m): a slick spreads in
+rings to 6 m across and stands 6 s, Soaking all in it. Each weapon blow you land on an enemy in the slick stirs the
+water: every other enemy in it takes a dose. Any enemy in it that reaches four doses floats up as Fish Poison does
+(past its rest, once each). Seen: grey husks scattered, the sheen spreading out in rings from where they fell. It
+rewards steel: the blade stirs the poison through the crowd.
 
 ---
 
@@ -456,15 +474,18 @@ Beyond the reactions themselves (two afflictions on one enemy, and a hook when t
   blows is Black Chain's, in `pairs_d1_d2.md`).
 - **A swollen state** on one enemy that slows it and raises damage taken, then bursts (Drowned Weight).
 - **Swapping the player and an enemy** (Under the Black Water).
-- **A hazard that follows an enemy**: the whirl of Sickle Wind, the Silver Pool, the mock suns.
+- **A hazard that follows an enemy**: the whirl of Sickle Wind, the mock suns.
 - **Side of a blow** (Mock Suns' flank; Rime's facing side needs the same).
 - **A cone or throw that starts at an enemy and faces away from the player**: Prism's fan, Golden Feathers, Wingbeat.
+- **Things on the floor that a weapon swing knocks along**: Burnt Mound's stones (a skip along the swing).
+- **An enemy lifted off its feet and held**: Fish Poison's float.
+- **Spikes counted in one enemy and torn out as a line**: Forged Bolt.
 - **Memory of the direction an enemy was last shoved**: Dust Devil and Golden Feathers.
 - **A per-enemy count of damage owed**: Cut Unfelt (15.9's "per-enemy tally").
 - **A move that passes through an enemy**: Three Weasels' second press and Lightning Seeks Iron (the `drill` and
   `step` forms are close).
 - **A spell pressed three times in a row**: Three Weasels.
-- **Chill that grows by itself and does not fade**, and redirecting a discharge to one enemy (Draws the Bolt).
+- **Chill that does not fade while a curse holds, and health drawn by each blow** (Stolen Warmth).
 - **A trigger for the player walking through a grown thing**: Firebloom's lilies, Between Two Fires.
 - **A hazard that bites only moving enemies**: Step Current.
 
@@ -508,6 +529,8 @@ Beyond the reactions themselves (two afflictions on one enemy, and a hook when t
 - The temperature drop in a total eclipse: https://www.planetary.org/articles/eclipse-checklist
 - The mercury rivers of the first emperor's tomb: https://en.wikipedia.org/wiki/Mausoleum_of_Qin_Shi_Huang
 - The fish-poison tree: https://en.wikipedia.org/wiki/Barringtonia_asiatica
+- Burnt mounds and fulachtaí fia (Burnt Mound): https://en.wikipedia.org/wiki/Burnt_mound ;
+  https://en.wikipedia.org/wiki/Fulacht_fiadh
 - Duo boons (the principle of two gods' powers made one): https://hades.fandom.com/wiki/Duo_Boons/Hades_II
 - Project documents: `docs/design/STEEL_AND_ELEMENT.md`, `docs/GUIDE.md` sections 4 to 7, `docs/design/WORLD.md`,
   `docs/design/LOOKS.md`, `docs/UPGRADE_SCHEMA.md`, `docs/design/FORMS.md`.

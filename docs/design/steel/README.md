@@ -20,6 +20,8 @@ Start here. The drafts are the detail behind each line.
 | `pairs_d4.md` | The 11 pairs four apart, with four duo surges |
 | `pairs_d5.md` | The 11 pairs opposite each other on the ring, with two duo surges |
 | `weapons.md` | Every weapon's Way (three aspects, a fourth for a god's weapon), temper, infusion, gated techniques, Pair Bond |
+| `depth_elements.md` | The element Heresies and Evolutions |
+| `review_elements.md`, `review_pairs.md` | The two feel reviews of 2026-11-18; their recommended fixes are now in the files above (changelog at the end) |
 | `README.md` | This page |
 
 (`grep.exe.stackdump` in this folder is a crash file left by a tool, not content. It can be deleted.)
@@ -35,7 +37,7 @@ Where the drafts assumed differently, one rule was chosen and all seven files no
 - **Basic spells never cost mana.** They run on cooldowns of 6 to 12 s, which weapon play shortens.
 - **Each element has exactly one larger spell paid in mana** (35 to 50). Dark's is paid in health instead (Pawned
   Heart). Ice and Earth had none; Winter Wall (35) and the new Cairn (40) now take that place.
-- A spell may also be paid in health where an element's own rule says so (Life's Red Harvest, Dark's Blood Price).
+- A spell may also be paid in health where an element's own rule says so (Life's Feed the Ground, Dark's Blood Price).
 - **Duo spells** run on cooldowns (9 to 16 s). A duo spell may instead be its pair's larger spell, paid in mana (The
   Sown Men, Tipped Crucible, and the 11 built ring-mix spells at 40 to 60).
 
@@ -95,7 +97,7 @@ An element tree is 34 marks and about 95 Shards. A duo branch is about 17 to 20 
 
 Fifteen pieces worth getting excited about.
 
-1. **Uraeus** (Fire). A cobra of flame rises on your shoulder and spits burning pitch at whatever begins an attack
+1. **Uraeus** (Fire). A cobra of flame rises on your shoulder and spits burning venom at whatever begins an attack
    near you. It reads the room for you.
 2. **In One Breath** (Lightning's Devotion). After a perfect guard or dodge your spells have no cooldown for 2.5 s:
    wait for the one moment, then spend the whole hand in it.
@@ -138,7 +140,7 @@ Fifteen pieces worth getting excited about.
 | Wind | **On the Wind**: spells have no wind-up and are cast from inside a dodge | **Bag of Winds**: catch blows and arrows, then open the bag |
 | Ice | **Deep Winter**: Chill never fades, and Glaze freezes all near as it lights | **Rime Guard**: a freezing fog in which a perfect guard freezes the attacker |
 | Water | **The Sea Comes In**: every spell leaves standing water you fight best in | **Deep Crack**: a collapsing bubble that boils out the Soaked |
-| Life | **Wood Grows Back**: what you grow grows back, and every spell sows | **Red Harvest**: pay a quarter of your health; every blow critical and mending |
+| Life | **Wood Grows Back**: what you grow grows back, and every spell sows | **Drawn From the Wood**: the garden withers into you; every blow critical and mending |
 | Earth | **Stone Remembers**: nothing you raise falls by itself | **Fissure** with Basalt: a row of columns your heavy blow topples like dominoes |
 | Metal | **The Guard Holds**: the guard never breaks, and you take less | **Poured Bronze**: molten bronze poured into every notch, setting as a hold |
 | Light | **Full Daylight**: a mark is not spent by blows, it burns out | **Reckoning**: a clock-faced seal that pays back half of what you dealt |
@@ -154,16 +156,16 @@ exist (paid in mana). Duo surges are listed after the table.
 
 | # | Pair | Reaction: what it does | Duo spell (role) |
 |---|---|---|---|
-| 1 | Fire and Lightning | **Flashover**: both burst at once in one white-violet crack | Ball Lightning (built; detonator) |
+| 1 | Fire and Lightning | **Flashover**: its flame goes live, and every discharge near bends into it and bursts again | Ball Lightning (built; detonator) |
 | 2 | Lightning and Wind | **Thunder Gust**: thrown away, its charge goes off where it lands | Eye of the Storm (built; breaker) |
 | 3 | Wind and Ice | **Rime**: frost on the side facing you, blown out the back by your heavy | Avalanche (built; breaker) |
 | 4 | Ice and Water | **Supercooled**: the next blow freezes it outright | The Wave Stands Still (built; breaker) |
-| 5 | Water and Life | **Quickening**: the soaked seed flowers; a heavy blow bursts it to heal | Strangling Vine (built; breaker) |
-| 6 | Life and Earth | **Taking Root**: roots hold it in the shaken ground | Stone Oak (built; opener) |
-| 7 | Earth and Metal | **Ringing Iron**: the armour rings, breaks to full and throws sparks | Drawn From Stone (built; breaker) |
+| 5 | Water and Life | **Quickening**: the soaked seed flowers; a heavy blow bursts it to heal | Strangling Vine (built, re-aimed at the flower; breaker) |
+| 6 | Life and Earth | **Split Rock**: roots wedge into the shaken ground and hold it; a heavy splits the floor | Stone Oak (built; opener) |
+| 7 | Earth and Metal | **Anvil Stone**: an anvil heaves up at its back; the heavy drives it on, the armour breaks to full and throws sparks | Drawn From Stone (built; breaker) |
 | 8 | Metal and Light | **Glint**: broken armour throws a ray to the next enemy | Six Mirrors (built; detonator) |
 | 9 | Light and Dark | **Diamond Ring**: dark closes over it, a bead of light breaks critical | Dusk and Dawn (built, re-aimed; movement) |
-| 10 | Dark and Poison | **Brood**: the poison breeds in the dark, a dose a bite | Wasting Grip (built; opener) |
+| 10 | Dark and Poison | **Shut in the Dark**: a black ring seals it as a jar; the poisoned that die inside feed it, then it breaks | Wasting Grip (built, re-aimed to seal the jar; opener) |
 | 11 | Poison and Fire | **Fire Medicine**: the poison catches like powder and bangs | Light the Pyres (built; detonator) |
 | 12 | Fire and Wind | **Carried Embers**: embers fly downwind and light what they land by | The Fire Breathes In (opener) |
 | 13 | Lightning and Ice | **Sleet Charge**: the frost charges itself until a bolt falls | Glass Storm (opener) |
@@ -173,27 +175,27 @@ exist (paid in mana). Duo surges are listed after the table.
 | 17 | Life and Metal | **Iron Thorns**: thorns grow through the armour and fly off with each blow | The Sown Men (opener, mana) |
 | 18 | Earth and Light | **Earthlight**: light breaks up through cracks under it | The Stone Keeps the Hour (opener) |
 | 19 | Metal and Dark | **Black Chain**: chained to the next enemy, sharing its wounds | The Smith's Net (opener) |
-| 20 | Light and Poison | **Burning Sap**: each critical blow makes its poison bite | Bitter Lantern (opener) |
+| 20 | Light and Poison | **Burning Sap**: the sun wakes the sap; the poison holds back while criticals raise weals, then lands doubled | Bared to the Sun (opener) |
 | 21 | Dark and Fire | **Smoulder**: the fire sinks in, deepens unseen, then flares | The Burning Lake (opener; a zone) |
 | 22 | Poison and Lightning | **Nerve Fire**: each bite jolts it and breaks its wind-up | Paper Seal (detonator) |
 | 23 | Fire and Ice | **Thermal Shock**: the body cracks, and the next heavy splits it | Fire-Setting (detonator) |
 | 24 | Lightning and Water | **Seized**: the muscles lock and the floor goes live | The Flashing (opener) |
 | 25 | Wind and Life | **Windthrow**: rooted, so the next shove tears it out | Thistledown (movement) |
 | 26 | Ice and Earth | **Frost Heave**: the frozen ground heaves it up on a mound | The Hag's Staff (breaker) |
-| 27 | Water and Metal | **Rust**: the notches stay and spread | The Weighted Net (opener) |
-| 28 | Life and Light | **Shining Herb**: a herb springs up at its feet to pick | Life-Herb (opener) |
+| 27 | Water and Metal | **Rust**: the notches stay and spread, and at five a plate falls | The Sea Takes It (breaker) |
+| 28 | Life and Light | **Shining Herb**: a herb springs up at its feet to pick | Turned to the Sun (opener) |
 | 29 | Earth and Dark | **Turned to Stone**: stone climbs it for a heavy blow to break | Stone Underfoot (movement) |
 | 30 | Metal and Poison | **Quicksilver**: every weapon blow makes its poison bite | Ichor (counter) |
 | 31 | Light and Fire | **Kindling Point**: the brackets close to a burning point; criticals deepen the burn | Hands of the Sun (opener) |
 | 32 | Dark and Lightning | **The Grudge**: a cloud that answers the next blow it lands on you | The Exile's Grudge (counter) |
-| 33 | Poison and Wind | **Ill Wind**: thrown, it trails poison along its path | The Yellow Gale (detonator) |
+| 33 | Poison and Wind | **Ill Wind**: thrown, it sheds all its poison in a plume along its path | The Yellow Gale (detonator) |
 | 34 | Fire and Water | **Steam**: water flashes off the burning body in a scalding puff | The Sisters' Quarrel (breaker) |
 | 35 | Lightning and Life | **Lightning Flower**: a red fern on its skin, and your garden throws bolts into it | Sowing Thunder (detonator) |
-| 36 | Wind and Earth | **Topple**: it goes down flat and the fall shakes the ground | Walking Dune (breaker) |
-| 37 | Ice and Metal | **Cold Short**: the armour goes brittle; the next heavy cracks it | Cold Chisel (detonator) |
+| 36 | Wind and Earth | **Logan Stone**: it rocks like a balanced stone, and your third blow throws it down hard | Walking Dune (breaker) |
+| 37 | Ice and Metal | **Cold Short**: the armour goes brittle; the next heavy cracks its plates off | Cold Chisel (detonator) |
 | 38 | Water and Light | **Caught Light**: a net of light on the wet floor marks and slows | The Gods' Road (movement) |
-| 39 | Life and Dark | **Grave Roots**: black roots hold it, and blows on it feed you | Death Turned Back (counter) |
-| 40 | Earth and Poison | **Blackdamp**: the cracked ground breathes out a heavy poison | The Clay Rank (opener) |
+| 39 | Life and Dark | **Girdled**: fig roots coil tighter with each blow and girdle it; dead, it leaves a hollow trunk | Death Turned Back (counter) |
+| 40 | Earth and Poison | **Chokedamp**: the cracked ground breathes out a heavy poison that runs to the other shaken | The Clay Rank (opener) |
 | 41 | Metal and Fire | **Red Hot**: notched armour heats red and burns its wearer | Tipped Crucible (breaker, mana) |
 | 42 | Light and Lightning | **The Bolt Runs True**: a straight bolt comes down a thread of light | Diamond Thunder (detonator) |
 | 43 | Dark and Wind | **Breath Taken**: winded, it begins no attack | Blown Through (counter) |
@@ -201,21 +203,21 @@ exist (paid in mana). Duo surges are listed after the table.
 | 45 | Fire and Life | **Firebloom**: burning seeds fly out and grow into flame lilies | Need-Fire (opener) |
 | 46 | Lightning and Earth | **Earthed**: the charge runs to ground as a burnt fern that strikes all on it | The Capstone (breaker) |
 | 47 | Wind and Metal | **Sickle Wind**: its loose plates whirl round it as blades | Three Weasels (movement) |
-| 48 | Ice and Light | **Prism**: the next blow's light comes out its far side as rays | Sunstone (counter) |
+| 48 | Ice and Light | **Mock Suns**: two mock suns hang either side of it; a blow from the flank is critical | Sunstone (counter) |
 | 49 | Water and Dark | **Drowned Weight**: it swells with black water, and bursts when it falls | Under the Black Water (movement) |
 | 50 | Life and Poison | **Rot Roots**: roots join it to its neighbours, and every bite runs down them | The Stalks Rise (detonator) |
-| 51 | Earth and Fire | **Baked Earth**: the cracks fill with fire, and it is fired like clay | Vitrified Wall (breaker) |
-| 52 | Metal and Lightning | **Live Iron**: every blow on it arcs to the next enemy | Lightning Seeks Iron (movement) |
+| 51 | Earth and Fire | **Burnt Mound**: three stones thrown up and heated red, for your weapon to bat across the room | Vitrified Wall (breaker) |
+| 52 | Metal and Lightning | **Live Iron**: every blow on it arcs from iron to iron, to the next Sundered enemy | Lightning Seeks Iron (movement) |
 | 53 | Light and Wind | **Golden Feathers**: its mark breaks into feathers that ride the wind | Sweep of Wings (opener) |
-| 54 | Dark and Ice | **Frostbite**: its chill deepens by itself from inside | Ice in the Blood (detonator) |
-| 55 | Poison and Water | **Fouled Water**: it bleeds a poisoned pool, and every bite reaches all in it | The Hundred Rivers (opener) |
+| 54 | Dark and Ice | **Stolen Warmth**: the curse takes its warmth; each blow draws it into you and leaves a Chill | Ice in the Blood (detonator) |
+| 55 | Poison and Water | **Fish Poison**: it fouls the water, and the heavily dosed float up stunned for the blade | Poison the Lagoon (opener) |
 
 **Duo surges** (eleven): Open the Gourd (Wind and Water), Great Lotus (Water and Life, built), The Ground Wakes (Life
 and Earth, built), Totality (Light and Dark, built), The Yawning Gap (Fire and Ice), Ash and Thunder (Dark and
 Lightning), Heated Bronze (Metal and Fire), The Net of Jewels (Light and Lightning), Wind From the Grave (Dark and
 Wind), When the Watch Sleeps (Lightning and Earth), Three Winters (Dark and Ice).
 
-**Role count of the 44 new duo spells**: openers 16, detonators 9, breakers 7, movement 7, counters 5 (the built
+**Role count of the 44 new duo spells**: openers 15, detonators 9, breakers 8, movement 7, counters 5 (the built
 11 add 5 breakers, 3 detonators, 2 openers, 1 movement). Counters are the thin role if more are wanted.
 
 ---
@@ -294,6 +296,8 @@ and three aspects, one active at a time. A god's weapon adds a fourth.
      (repeats Cinder), Earth's Rampart, Metal's Hone, Poison's Rotten Fruit.
    - Folded in as shapes: Cinder Fan, Lodestone, River Serpent, Standing Rain, Hollow Statue, Thorn Ring, Black Ice,
      Swinging Censer, Toppling, Stone Skin, Sentence, What It Owes, Dazzle; The Dead Stand into Dark's Devotion.
+     (Since the review fixes, Standing Rain, Hollow Statue and Thorn Ring are cut outright, and Sunspot and Moon on
+     Water with them; see the changelog.)
    - Gone: Landslide, Ricochet, Splinter, Shatter Point, Unpaid, Feast, Glut, Borrowed Strength, Left to Ripen, One
      Sickness, Lance the Wound, and keystones Open Furnace, Scorched Earth, Overclock, Storm Front, Second Skin, River
      Without End, Shared Roots.
@@ -308,9 +312,10 @@ and three aspects, one active at a time. A god's weapon adds a fourth.
    both. Rename one (the Hammer's could be its glow), or let Fire's Heat drive the Hammer's.
 10. **Earth's Devotion and Brannoch's stones overlap a little**: both hurt an enemy driven into a standing stone
     (and so does Earth's Standing Stones major). Fine as "stone remembers" twice, or trim one.
-11. **Still close, left as they are, for your eye**: several decoys that enemies turn to strike (Ski Run's Left
-    Standing, Coiled Strike's Shed Skin, Seven Flashes' Left Behind, the Scythe's Last Sheaf, Root Walk's
-    Changeling); Rot Roots and Fouled Water both pass poison bites to others (one by root, one by pool); Poured
+11. **Still close, left as they are, for your eye**: several decoys that enemies turn to strike (Coiled Strike's
+    Shed Skin, Seven Flashes' Left Behind, the Scythe's Last Sheaf, Root Walk's Changeling; Ski Run's Left Standing
+    is now Thin Ice); Rot Roots passes poison bites to others (Fouled Water, which did it by pool, is now Fish
+    Poison); Poured
     Bronze, Tipped Crucible and the Hammer's Quench all pour molten bronze (on notches, on a lane, in a disc).
 12. **Two names in the old `docs/design/weapons.md`** (Water's Undertow for the spear, Lightning's Live Wire for the
     chain) repeat built tree marks. They need new names when built.
@@ -328,8 +333,8 @@ Gathered from all seven files and de-duplicated. **Most needed** marks the piece
 - **Two afflictions on one enemy at once**, and a **reaction trigger** when the second lands, with a rest kept per
   enemy and pair and a flag on what a reaction lays so it starts nothing. All 55 pairs.
 - **The cooldown model**: per-spell cooldowns, weapon play cutting every running cooldown, and "take N seconds off
-  running cooldowns" as an action (Glass Bell, Strike While Hot, Short of Breath, Blown Through, Need-Fire, Kindle,
-  Wellspring, Tailwind and the Masters).
+  running cooldowns" as an action (Glass Bell, Strike While Hot, Short of Breath, Blown Through, Need-Fire,
+  Wellspring's The Flask Breaks, Tailwind and the Masters).
 - **The infused strike** on L2 with R1 and R2, its own cooldown, and the deep strike's mana.
 - **The R1 and R2 chord** as an input action (every gated technique).
 
@@ -337,10 +342,14 @@ Gathered from all seven files and de-duplicated. **Most needed** marks the piece
 
 - **A timed state on one enemy that runs an effect on a beat** (most needed: the schema's missing per-enemy debuff).
   Corona, Sleet Charge, Rime, Supercooled, Iron Thorns, Smoulder, Cracked, Seized, the Grudge's cloud, Kindling Point,
-  Cold Short, Red Hot, Breath Taken, Live Iron, Frostbite, Venom Rime, Drowned Weight, Paper Seal, Ichor and more:
-  well over twenty pieces.
-- **Knocked down** (most needed): a timed fall with its own clip. Capsize, Topple, Logan Stone, Walking Dune, Fire
-  Front, the Hamstring, the Hip Throw, tripwires and snares, Hooked Twice, Low Turn.
+  Cold Short, Red Hot, Breath Taken, Live Iron, Stolen Warmth, Venom Rime, Drowned Weight, Paper Seal, Ichor, Girdled,
+  Burning Sap's wait, Flashover's live flame and more: well over twenty pieces.
+- **Knocked down** (most needed): a timed fall with its own clip. Capsize, Logan Stone (after rocking), Drifted Over,
+  Shed Plate's slip, Thrown on the Reef, Walking Dune, Fire Front, the Hamstring, the Hip Throw, tripwires and snares,
+  Hooked Twice, Low Turn.
+- **Thrown into something** (most needed for Wind and Water): a thrown body that meets a wall, a stone or another
+  enemy (Against the Wall, Gale Edge, Thrown on the Reef, Sent Sliding).
+- **A coat that waits for fire** and lights on any Burn (Black Pitch).
 - **Rooted**: cannot move or be shoved, can still attack (Windthrow; Hold stands in now).
 - **Begins no attack** without stopping movement (Breath Taken).
 - **Cannot guard** for a time (Red Paper, The Burning Shirt; Open Line is close).
@@ -351,13 +360,13 @@ Gathered from all seven files and de-duplicated. **Most needed** marks the piece
 - **Sinking**: a pool that slows, forbids dodges and leaps, and draws the body lower (The Ground Gives).
 - **Disarmed**, **Hooked** (moves, but the line is yours), **pinned** (held by a staked point).
 - **Affliction rules per enemy**: Sundered past three (Rust); Burn that sinks in unseen (Smoulder); an affliction that
-  stops fading while a condition holds (Venom Rime, Neither Wins, Permafrost, Frostbite); a mark not spent but not
+  stops fading while a condition holds (Venom Rime, Neither Wins, Permafrost, Stolen Warmth); a mark not spent but not
   renewable (Full Daylight); a quickened poison beat (Ichor).
 
 ### Triggers and memory
 
 - **Downwind** (most needed): the direction from the player through the enemy. Carried Embers, The Wind Carries It,
-  Hot Wind, Bolt from the Blue, Breakers, Down the Passage, Fire Lance, Breath Taken, Golden Feathers, Sandblast, Spall.
+  Hot Wind, Bolt from the Blue, Breakers, Down the Passage, Fire Lance, Breath Taken, Golden Feathers, Sandblast.
 - **The direction an enemy was last shoved** (Sent Downwind, Golden Feathers).
 - **An enemy beginning an attack** (Uraeus, Gust's and Whirlpool's Masters, Devouring Maw's Master, Before the
   Thunder).
@@ -374,11 +383,12 @@ Gathered from all seven files and de-duplicated. **Most needed** marks the piece
 
 ### Forms
 
-- **Standing things that block and can be struck** (thunderstone, cold shade, black ice statues, Hollow Trunk, Clay
-  Rank soldiers, the turf bank of Ditch and Bank).
+- **Standing things that block and can be struck** (thunderstone, cold shade, black ice statues, Girdled's hollow
+  trunk, Clay Rank soldiers, the turf bank of Ditch and Bank, Left in Rubble's heaps).
+- **Things on the floor a weapon swing knocks along** (Burnt Mound's stones).
 - **Links between enemies**: a leash that passes blows (Black Chain, The Smith's Net), roots that pass bites (Rot
   Roots), threads that pass discharges (The Net of Jewels).
-- **Hazards that follow an enemy** (Sickle Wind's whirl, the Silver Pool, Mock Suns, The Weighted Net) and **ground
+- **Hazards that follow an enemy** (Sickle Wind's whirl, Mock Suns) and **ground
   laid behind a moving enemy** (Slag, Ill Wind).
 - **Dash through enemies** (Ride the Squall, Thistledown, Lightning Seeks Iron, Three Weasels; near `drill`).
 - **The player under the ground** (Under the Mound, Root Walk) and **swapping places** with an enemy (Under the Black
@@ -498,6 +508,120 @@ became Rolled In, and Clear Ice (a built minor) became Through the Ice.
 | The R1 and R2 chord | `weapons` (Bare-Handed King no longer reads as a chord) |
 | "The Way", not "the weapon tree" | `pairs_d1_d2` |
 | Moved mix spells are offers | `pairs_d1_d2` (the rule, and Lotus Step is not a movement spell) |
+
+### Review fixes applied (2026-11-18)
+
+The owner said "apply the recommended fixes" of `review_elements.md` and `review_pairs.md`. Each Weak piece took the
+review's recommended option, each empty Shape was filled, the Masters moved to their element's own timing, and the OK
+pieces with a clear recommendation were changed. The standouts the pair review named were not touched.
+
+**`elements_a.md`** (Fire, Lightning, Wind, Ice, Water, Life)
+
+| Was | Now |
+|---|---|
+| Sunspot (Fire spell) | **Black Pitch**: blows smear pitch over a crowd, the first fire takes all of it. Shapes **Pitch Pool** and **The Torch**; Master kept from Sunspot (lit by a finisher) |
+| Kindle's new half (cooldown cuts) | **Fed Flame**: Kindle lasts while blows feed it |
+| Kiln Stance's Learn (the pillar parry) | **Shut Door** made the Learn; the built pillar is Shape A, **The Kiln**; Master: a burning attacker's Burn goes off |
+| Uraeus's Master (a free spit on a perfect dodge) | A spit on a burning enemy lays double Burn; the spits are drawn as burning venom (pitch is Black Pitch's) |
+| Backdraft (passive) | Renamed **Breath of the Lioness**, so the backdraft is Shut Door's alone |
+| Falling Sun (look) | Drawn as a burning ball, never a white orb |
+| Chain Lance's Planted Bolt | **Stepped Leader**: you draw the bolt's path, the heavy calls the return stroke |
+| Lightning Rod (look) | Drawn as a sword planted point-up (Takemikazuchi); rule unchanged |
+| Lifting Wind's Downdraft | **Turned About**: the column spins it to face away |
+| Wind's charged blade (1 m more reach) | **Gale Edge**: blows shove, the third throws into what is behind |
+| Against the Wall (a small burst) | As designed: thrown bodies that meet a wall, stone or enemy |
+| Indrawn Breath's Master (after a finisher) | Cast mid-dodge, the draw rides with you |
+| Ski Run's Left Standing | **Thin Ice**: the lane is lake ice that breaks under followers; Master: slide through a shatter |
+| Unmoved (keystone) | **Sent Sliding**: the heavy sends a frozen body down the ice |
+| Moon on Water (Water spell) | **Blowhole**: Still Water kept; Undertow Cut became **Blown Out** |
+| Whirlpool's Standing Rain | **Rip Current**: a lane that carries them away |
+| Reeled In (deep strike) | **Thrown on the Reef** |
+| Catch the Rain | **Drawn From the Drowned** |
+| Wellspring's new half | **The Flask Breaks**: each flask bursts out as a wave |
+| Riptide's Master (after a perfect guard) | A second press within 1 s sends the wave out again, carrying them past you |
+| Briar Patch's Thorn Ring | **Burrs**; Master: cast on something grown, it becomes a thicket |
+| Red Harvest (Learn, paid in health) | The spell is now **Drawn From the Wood**: the garden withers into you. Feed the Ground keeps the one health price |
+| Life's charged blade (mends 3) | **Sprout**: blows plant saplings |
+| Thorn Set (infused strike) | **Grown Into It**: the enemy becomes part of the garden (Briar Root grows from the cutting) |
+| Thin Blood | **The Garden Holds You** |
+| Regrowth's new half (mend 6 a spell) | **The Garden Grows** |
+| Elder Tree's Master (after a finisher) | Planted on something grown, it grows at once |
+
+**`elements_b.md`** (Earth, Metal, Light, Dark, Poison)
+
+| Was | Now |
+|---|---|
+| The Hill's Weight (Earth lift) | **Left in Rubble**: reactions leave heaps that stand as your stones |
+| Mountain Stance's Learn (the fist parry) | **Grey Stone** made the Learn; the built fist is Shape B, **Fist of Rock** |
+| Masters of Stone Rise, Fissure, Cairn | Standing your ground; a heavy on the crack's line; standing still 1 s |
+| Under the Mound's Master (an unguardable heavy) | A heavy with Tremor 2 that breaks more balance (passing guards stays Metal's and Light's) |
+| Grave of Swords' Grave (empty) | **Clashing Bronze** |
+| Ring of Spears' Together, Standing Light's Lamp, Reckoning's The Hand Turns, Daybreak's Dawn (all empty) | **The Drawn Line**, **Row of Lamps**, **Witnessed**, **Red Before the Sun** |
+| Masters of Step Into Light, Ring of Spears | Cast through two in a line; a critical blow while the spears hang |
+| Debts Called's Called In, Gone to Ash's Behind It, Second Shadow's Changed Places, Pawned Heart's Pawned (all empty) | **The Black Buffalo**, **Ash on the Brow**, **Return to the Shadow**, **Buried Heart** |
+| Dark's charged blade (10% as health) | **Shadow Cut Loose** |
+| Every Debt Collected (Dark lift) | **Collected Twice** |
+| Masters of Grasp, Debts Called, Second Shadow | Within 1 s of being struck; below a third of your health; within 1 s of being struck |
+| Miasma's Creeping, Coiled Strike's Snake, Blister's Lanced, Share Alike's Share Alike, One by One's Snap (all empty) | **Low Mist**, **Centipede's Run**, **Weeping Sore**, **Carried on the Blade**, **Eaten in Turn** |
+| Bitter Mix (Poison lift) | **The Delayed Touch** |
+| Masters of Miasma, Five Needles, Share Alike | On the poison's beat |
+
+**`pairs_d1_d2.md`**
+
+| Was | Now |
+|---|---|
+| Flashover (two set-offs at half) | Re-aimed on flame that conducts: the flame goes live and draws every discharge near; Ball Lightning drawn violet-cored |
+| Strangling Vine (no water in it) | Re-aimed: it drinks the Soaked and opens Quickening |
+| Taking Root (reaction) | **Split Rock** is the reaction; **Taking Root** is the short-hold shape |
+| Ringing Iron (reaction) | **Anvil Stone** is the reaction; **Ringing Iron** is a shape |
+| Brood (reaction) | **Shut in the Dark** (the review's The Sealed Jar, renamed apart from The Last One in the Jar); Swarm moves the jar; Wasting Grip re-aimed to seal it |
+| Burning Sap (criticals make it bite) | Given the hogweed's delay: held 3 s, weals raised by criticals, then all at once; Blistered and Bright Venom follow |
+| Bitter Lantern (duo spell) | **Bared to the Sun** |
+
+**`pairs_d3.md`**
+
+| Was | Now |
+|---|---|
+| Rust (a quiet creep) | At five a plate falls (The Plate Falls folded in); the freed Major is **Salt Guard** |
+| The Weighted Net (opener) | **The Sea Takes It** (breaker) |
+| Life-Herb (duo spell) | **Turned to the Sun** |
+| Ill Wind's trail (one dose) | Sheds all its doses in a plume |
+| Turned Back (shape) | **Dust on the Blade** |
+
+**`pairs_d4.md`**
+
+| Was | Now |
+|---|---|
+| Topple (reaction) | **Logan Stone** is the reaction; its old shape slot is **Drifted Over**; New Face, The Prophecy Broken and Walking Dune's wording follow |
+| Cold Short's crack (damage) | Its plates crack off: notches stay, 25% more from weapons |
+| Spall (shape) | **Shed Plate** |
+| Lightning Flower with nothing grown (a small crack) | The fern itself throws a bolt to the nearest Seeded |
+| Grave Roots (reaction) | **Girdled**; Hollow Trunk is now its end, and its slot is **Fig in the Crown**; Held Down and What the Yew Keeps follow |
+| Blackdamp (reaction) | **Chokedamp** is the reaction; **Blackdamp** is a shape |
+
+**`pairs_d5.md`**
+
+| Was | Now |
+|---|---|
+| Prism (reaction) | **Mock Suns** is the reaction; **Prism** is a shape; Wide Fan follows |
+| Baked Earth (reaction), Fired Clay, Running Seam | **Burnt Mound**, **Heaped Stones**, **Fire-Cracked**; Hot Seams is **Hot Stones**; Vitrified Wall kept |
+| Live Iron (arcs to any enemy) | Arcs only from iron to iron |
+| Draws the Bolt (shape) | **Forged Bolt** |
+| Frostbite (reaction), Swallowed Warmth | **Stolen Warmth**, **The Long Night**; Deep Veins and Hel's Half follow |
+| Fouled Water (reaction), Silver Pool, Fish Poison (shapes) | **Fish Poison** is the reaction; shapes **Rock Pool** and **The Ebb Takes It** |
+| The Hundred Rivers (duo spell) | **Poison the Lagoon** |
+
+**`depth_elements.md`** (dependent pieces): Lit Fuse's base is Black Pitch; Lotus Step's base is Blowhole and it opens
+its lotuses on the spray; Creeping Ice loses its hold by the feet (Thin Ice holds now); The Winged Sun spits venom;
+The Hour Freezes is drawn as rime racing over the world; Water Takes the Blow speaks as the reef that takes the
+swell; Grown Through Them no longer names Thin Blood; Grave Soil runs Shut in the Dark's rule; Trip Hammer rings as
+Anvil Stone.
+
+**This page**: Uraeus's highlight spits venom; Life's best spell is Drawn From the Wood; seventeen pair rows; the role
+count (Weighted Net was an opener, The Sea Takes It is a breaker); the engine needs.
+
+**Names changed for clashes**: The Sealed Jar became **Shut in the Dark**; Black Pitch's shape "The Wick" became
+**The Torch** (The Wick is a Fire-land enemy); Backdraft became **Breath of the Lioness**.
 
 ## What could not be settled here
 

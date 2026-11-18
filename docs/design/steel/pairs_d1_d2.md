@@ -8,16 +8,16 @@ Everything here is **Proposal**. Every number is a first guess. The weapon's own
 **How a reaction fires**: the shared rules this file assumes.
 
 Distance 1 (built branches; image, reaction, shapes, and what to keep):
-1. **Fire and Lightning, Plasma**: *Flashover*, both burst at once in one white crack.
+1. **Fire and Lightning, Plasma**: *Flashover*, the flame goes live and every discharge near bends into it.
 2. **Lightning and Wind, Tempest**: *Thunder Gust*, the enemy is thrown and its charge goes off where it lands.
 3. **Wind and Ice, Blizzard**: *Rime*, frost grows on the side facing you and your heavy blow blows it out the back.
 4. **Ice and Water, Glacier**: *Supercooled*, the next blow freezes it outright.
 5. **Water and Life, Bloom**: *Quickening*, the soaked seed splits and flowers at once.
-6. **Life and Earth, Overgrowth**: *Taking Root*, roots go down through its feet into the shaken ground.
-7. **Earth and Metal, Forge**: *Ringing Iron*, the shaken armour rings like struck iron and breaks.
+6. **Life and Earth, Overgrowth**: *Split Rock*, roots wedge into the shaken ground and hold it, and a heavy splits the floor.
+7. **Earth and Metal, Forge**: *Anvil Stone*, an anvil of stone heaves up at its back, and your heavy drives it onto it.
 8. **Metal and Light, Halo**: *Glint*, its broken armour throws the light at the next enemy.
 9. **Light and Dark, Eclipse**: *Diamond Ring*, dark closes over it and a bead of light breaks at the rim.
-10. **Dark and Poison, Blight**: *Brood*, the poison breeds in the dark.
+10. **Dark and Poison, Blight**: *Shut in the Dark*, a black ring seals it as a jar, and the poisoned that die inside feed it.
 11. **Poison and Fire, Pyre**: *Fire Medicine*, the poison catches like powder and bangs.
 
 Distance 2 (full branches):
@@ -29,7 +29,7 @@ Distance 2 (full branches):
 17. **Life and Metal**: *Iron Thorns* grow out through its broken armour and fly off with each blow; duo spell *The Sown Men*.
 18. **Earth and Light**: *Earthlight* breaks up through the cracks under it; duo spell *The Stone Keeps the Hour*.
 19. **Metal and Dark**: *Black Chain* binds it to the next enemy and shares its wounds; duo spell *The Smith's Net*.
-20. **Light and Poison**: *Burning Sap*, each critical blow makes its poison bite; duo spell *Bitter Lantern*.
+20. **Light and Poison**: *Burning Sap*, the sun wakes the sap, the poison holds back while criticals raise weals, then it all lands; duo spell *Bared to the Sun*.
 21. **Dark and Fire**: *Smoulder*, the fire goes out of sight and deepens until it flares; duo spell *The Burning Lake*.
 22. **Poison and Lightning**: *Nerve Fire*, each bite jolts it and breaks its wind-up; duo spell *Paper Seal*.
 
@@ -64,9 +64,13 @@ Then: **Engine needs**, one line each, and **Sources**.
 turns it to plasma: the sun's fire and the storm's are one thing at that heat. The Egyptian sun-disc meets the drums of
 the Japanese thunder god.
 
-**Reaction: Flashover.** Static meets Burn. Both are spent in one white-violet crack, each at half its own set-off: 5 a
-Burn stack and 3.5 a Static stack, in 3 m, 20 stagger, and a 0.4 s flinch on the one that reacted. Seen: the flames on
-it go white at the root, a jagged ring snaps outward, and the smoke left behind crackles for a moment.
+**Reaction: Flashover** (re-aimed by the pair review: flame is ionised and carries current, which is why wildfires trip
+power lines; the engineers' word for it is flashover). Static meets Burn. The fire on it stands up violet at the root
+and goes live for 4 s. Its own Static discharges at once through the flame (7 a stack in 3 m, 20 stagger), and none
+of the Burn is spent. For the 4 s every discharge or arc within 6 m bends into its flame and bursts there again (5 a
+Burn stack in 2.5 m, once every 0.8 s). Seen: real flame on the body, violet at its roots, and arcs bending sideways
+across the floor into it. Steel: heavy blows on other charged enemies throw their charge into the flame, so the
+burning one becomes the room's conductor.
 
 **Shape A: Corona.** Nothing is spent. Violet flame crawls over it for 4 s (the fire on ships' masts in a storm), and
 every 0.7 s an arc leaps from it to the nearest enemy within 5 m: 4 damage, 1 Burn, 1 Static. **Shape B: Fulgurite.**
@@ -76,7 +80,8 @@ bites 4 a second with 1 Burn and 1 Static. A place to fight on rather than a bur
 **The built branch.** Cut Charged Embers (both afflictions are now laid by carrying both; the Shape mark takes its
 place) and Fused Core (a plain number). Arc Fire folds into Corona; cut it. Keep Twin Break, Chain Reaction and
 Meltdown (Meltdown as the branch's keystone). Re-aim Ionised Air: when Flashover fires, an arc leaps on through three
-more. Ball Lightning is the duo spell (as section 11 has it); Plasma Lance moves to Lightning's tree or is cut. The
+more. Ball Lightning is the duo spell (as section 11 has it), drawn as violet-cored plasma with real flame on its
+skin, never "white fire"; Plasma Lance moves to Lightning's tree or is cut. The
 crown Plasma (a heavy blow on a burning enemy bursts) now overlaps Flashover: make it the branch's top mark, its burst
 a Flashover that spends nothing.
 
@@ -151,7 +156,10 @@ you 3 a second. This is the Scythe build of section 11: stand in the flower and 
 Rootlets.** As it opens, white rootlets run through the wet to every Soaked enemy within 5 m and seed each to full.
 
 **The built branch.** Cut Wet Seed (Shape mark). Flowering is now the reaction without its wait; cut it. Keep Drowned
-Roots and Morning Dew. Strangling Vine is the duo spell; Lotus Step (a standing lotus that cuts, not a movement) moves to Water's tree. Great
+Roots and Morning Dew. Strangling Vine is the duo spell, re-aimed at the flower (as built it had no water in it): it
+rises under the nearest Soaked enemy and drinks, its Soaked is spent and Quickening opens on it at once, past the
+rest, and a heavy blow on it while it is lifted bursts the flower for twice the heal. Lotus Step (a standing lotus
+that cuts, not a movement) moves to Water's tree. Great
 Lotus, begun by a flask in the surge, becomes the duo surge.
 
 ### Life and Earth (Seeded + Tremor), distance 1
@@ -159,15 +167,15 @@ Lotus, begun by a flask in the surge, becomes the duo surge.
 **The image.** A seed in a crack becomes a tree that splits the rock: roots wedge stone apart. The giant raised the
 stones and the antlered lord grew the grove; they were allies before they forgot.
 
-**Reaction: Taking Root.** Seeded meets Tremor. Roots go down through its feet into the shaken ground: it is held 1 s,
-and the floor cracks round it: Tremor 1 on every other enemy within 2.5 m. Seen: a star of roots and broken flags round
-its feet.
+**Reaction: Split Rock** (made the plain reaction by the pair review: the split is the image, and it was buried in a
+shape). Seeded meets Tremor. Roots go down through its feet and wedge into the shaken ground: it is held 2 s, and a
+heavy blow on it while it is held splits the floor round it, throwing up shards in 3 m: 10 damage, Tremor 1 and
+Seeded on each. Seen: roots driving into a star of cracked flags round its feet, then the floor heaving apart. Steel:
+the heavy blow is the wedge.
 
-**Shape A: Split Rock.** The roots wedge into the cracks and hold on: it is held 1 s longer (2 s in all), and a heavy
-blow on it while it is held splits the floor round it, throwing up shards in 3 m: 10 damage, Tremor 1 and Seeded on
-each. (An earlier stone-at-its-back shape fed the Forge's Hammer and Anvil, which this pair cannot carry, and repeated
-the Forge's Anvil Stone.) **Shape B: Root Web.** The roots run on underground to every
-Seeded enemy within 6 m, a line of lifting soil to each: each is held 0.5 s and given Tremor 1.
+**Shape A: Taking Root** (the old plain reaction, now the short hold). Held only 1 s, and no split: the floor cracks
+round it at once, Tremor 1 on every other enemy within 2.5 m. **Shape B: Root Web.** The roots run on underground to
+every Seeded enemy within 6 m, a line of lifting soil to each: each is held 0.5 s and given Tremor 1.
 
 **The built branch.** Root Grip is now the reaction; cut it and put the Shape mark in its place. Keep Moss on Stone and
 Living Rampart (keystone). Its mark Briar Patch shares a name with Life's tap spell: rename it Thorns Take Root. Stone
@@ -178,16 +186,19 @@ Oak is the duo spell; Thorn Wall moves to Earth's tree. The Ground Wakes, begun 
 **The image.** Ore lies in the stone, and iron was first drawn out of bogs; the Celtic giant's stones are the anvil and
 the Greek smith's hammer falls on them. Struck hot iron rings and throws off flakes of scale.
 
-**Reaction: Ringing Iron.** Tremor meets Sundered. The shaken armour rings like struck iron: its Sundered goes to full
-depth, and a ring of sparks runs out 3 m: 10 damage, 15 stagger and a notch on each enemy it reaches. Seen: one bright
-orange ring on the floor and a shower of sparks, never a plain flash.
+**Reaction: Anvil Stone** (made the plain reaction by the pair review: hammer on anvil is the forge). Tremor meets
+Sundered. An iron-faced stone heaves up at its back, away from you, and stands 5 s, "stone at its back" for Hammer and
+Anvil. Your next heavy blow on it drives it onto the anvil: its Sundered goes to full depth, and a ring of sparks runs
+out 3 m: 10 damage, 15 stagger and a notch on each enemy it reaches. Seen: a grey stone with an iron face rising
+behind the body, then one bright orange ring on the floor and a shower of sparks, never a plain flash. Steel: the ring
+is the heavy blow's payoff.
 
-**Shape A: Anvil Stone.** An iron-faced stone heaves up behind it and stands 5 s, "stone at its back" for Hammer and
-Anvil: the reaction sets up the heavy blow. **Shape B: Hammer Scale.** No ring: four flakes of glowing scale fly from it
-at the nearest enemies within 6 m, 8 damage, a notch and Tremor 1 each.
+**Shape A: Ringing Iron** (the old plain reaction). No stone: the shaken armour rings like struck iron at once,
+Sundered to full and the ring of sparks as above. **Shape B: Hammer Scale.** No ring: four flakes of glowing scale fly
+from it at the nearest enemies within 6 m, 8 damage, a notch and Tremor 1 each.
 
-**The built branch.** The name Forge stays (the weapon tree is now called the Way). Keep Hammer and Anvil (both
-shapes feed it), Struck Ore and Buckled (Buckled is the standing rule while both are on; the reaction is the event).
+**The built branch.** The name Forge stays (the weapon tree is now called the Way). Keep Hammer and Anvil (the
+reaction's stone feeds it), Struck Ore and Buckled (Buckled is the standing rule while both are on; the reaction is the event).
 Re-aim Folded Steel: its folds add weapon damage for the rest of the run, which clashes with the rule that the Way is
 the only thing that improves a weapon. Settled (`README.md`): the folds last until the next rest fire, so they are a
 fight's growth and not a weapon's.
@@ -238,16 +249,22 @@ begun by the surge, becomes the duo surge.
 **The image.** The gu: venomous creatures sealed in a dark jar until the last alive is the poison. The halahala that
 rose first from the churned ocean, which Shiva held in his throat until it turned blue. Poison kept in the dark grows.
 
-**Reaction: Brood.** Cursed meets Poisoned. The poison breeds in the dark: while both last, each bite adds one dose (to
-the top, eight). Seen: green-black bubbles swelling on it, its poison diamond growing a step with each bite.
+**Reaction: Shut in the Dark** (the gu, made the reaction by the pair review; named apart from Poison's Heresy, The
+Last One in the Jar). Cursed meets Poisoned; rest 8 s. A ring of black lacquer 4 m across closes on the floor round it
+for 8 s: the jar's mouth, seen from above. Its doses stop fading. Each other poisoned enemy that dies inside the ring
+crawls to it as a black swarm and gives it every dose (to twelve, past the usual eight), and each kill you make inside
+feeds you 4. When it dies, or the 8 s end, the jar breaks: 5 a dose in 3 m, and half its doses laid on all it reaches.
+Seen: a black ring, swarms crawling across the floor to one body, green-black bubbles swelling on it. Steel: kill order
+is the play: finish the small ones beside the jar, then break the jar with a finisher.
 
-**Shape A: Swarm.** When it dies, the brood crawls out as a dark swarm to the nearest enemy within 8 m and gives it all
-its doses and the curse. **Shape B: Rot to the Bone.** The brood eats its balance: each bite fills its stagger meter by
-3 a dose, and the meter does not recover while it is Cursed.
+**Shape A: Swarm.** The jar moves on: when it breaks, its swarm crawls to the nearest enemy within 8 m and seals a new
+jar there. **Shape B: Rot to the Bone.** The jar eats its balance: each bite fills its stagger meter by 3 a dose, and
+the meter does not recover while it is sealed.
 
-**The built branch.** Wither re-aims to a minor (the curse's half of it now overlaps Brood). Carrion Flies is now Swarm;
-cut it. Keep Feeding Rot and One Death Feeds (keystone). Wasting Grip is the duo spell; Grave Soil moves to Dark's or
-Poison's tree. The Reaping, begun by a finisher, becomes the top mark.
+**The built branch.** Wither re-aims to a minor (the curse's half of it overlaps the jar). Carrion Flies is now Swarm;
+cut it. Keep Feeding Rot and One Death Feeds (keystone). Wasting Grip is the duo spell, re-aimed at the jar: the stream
+seals a jar on the first enemy it bites, past the rest, and each second of the stream adds a dose to whatever is
+inside the ring. Grave Soil moves to Dark's or Poison's tree. The Reaping, begun by a finisher, becomes the top mark.
 
 ### Poison and Fire (Poisoned + Burn), distance 1
 
@@ -527,13 +544,17 @@ netted, a quarter of every weapon blow on one lands on all the others.
 of the gu, glow blue-green under ultraviolet light. Shennong, who tasted a hundred herbs, had a body you could see
 through, and watched each poison work inside him. The sun shows the poison and wakes it.
 
-**Reaction: Burning Sap.** Marked meets Poisoned. The light wakes the poison in its veins: lines of green-gold show on
-its body, and while both last, each critical blow on it (Marked makes three) makes its poison bite at once, out of
-turn. Seen: the veins flaring and a green burst at each critical star. It is the plainest weave in this file: mark it,
-poison it, then strike.
+**Reaction: Burning Sap** (given the hogweed's delay by the pair review). Marked meets Poisoned; rest 6 s. The light
+wakes the sap, but the burn waits. For 3 s its poison stops biting and its veins light gold-green under the skin,
+brighter each second. Each critical blow in those 3 s raises a weal (a swollen yellow bead on the body, three at most:
+the Mark's three). At the end every bite it held back lands at once, doubled, and each weal bursts, splashing two
+doses on every enemy within 2.5 m. Seen: veins brightening, beads swelling, then one wet yellow burst. Steel: the three
+criticals load the weals; stay for the burst or move on. Held, then released, not bitten blow by blow (that is
+Quicksilver).
 
 **Shape A: The Light Finds Them.** When it reacts, every poisoned enemy within 8 m is Marked as well; their veins light
-up across the room. **Shape B: Blistered.** Each bite made out of turn also splashes one dose on every enemy within 2 m.
+up across the room. **Shape B: Blistered.** The weals do not wait for the end: each bursts at the critical that
+raises it, splashing its two doses on every enemy within 2.5 m.
 
 **Duo branch** (four marks):
 
@@ -542,13 +563,14 @@ up across the room. **Shape B: Blistered.** Each bite made out of turn also spla
 | Lit Veins | Shape | 3 | Opens The Light Finds Them and Blistered. |
 | Nectar After Poison | Major | 3 | An enemy that dies carrying both gives up 6 health and 8 mana (the nectar came after the poison in the churning). |
 | Seen Through | Major | 3 | A perfect guard against a poisoned enemy Marks it and makes all its poison bite at once. |
-| Bright Venom | Minor | 1 | Bites made out of turn strike 15% harder. |
+| Bright Venom | Minor | 1 | The held bites strike 15% harder when they land. |
 
-**Duo spell: Bitter Lantern** (the crown). Opener; holds a place. Cooldown 15 s; learned for 5 Shards. You plant a paper
-lantern on a pole 3 m ahead for 10 s, burning green-gold oil. Its light lies on the floor 4 m round it, edged with a
-creeping line of mist: every enemy in it is Marked again every 2 s and takes a dose every 2 s from the smoke. Steel:
-each weapon blow you land inside its light feeds the flame, and the light reaches 0.5 m further, to 7 m. Seen: the
-Poison land's lanterns turned on its own people; light as rays, poison as smoke, never a plain green glow.
+**Duo spell: Bared to the Sun** (the crown). Opener. Cooldown 13 s; learned for 5 Shards. You tear the shade off a
+place: a hard-edged shaft of sun 5 m across falls on the aim point (within 8 m) for 5 s, drawn as dust motes in the
+air and a bright floor with the enemies' shadows thrown sharp across it. Every poisoned enemy in it is Marked and
+starts Burning Sap at once (past its rest, once each). Steel: each weapon blow you land inside raises one more weal on
+the one struck, so every weal is a blow. In the Fire land, where shade is a rule, it reads twice. (It replaces Bitter
+Lantern, which laid a mark and a dose side by side.)
 
 ### Dark and Fire (Cursed + Burn), distance 2
 
@@ -634,9 +656,12 @@ first, the thunder falls at half. Seen: the paper fluttering and charring at eac
 - **A dash through enemies**: Ride the Squall (the drill form's pass, low and wet).
 - **Helpers that answer the heavy blow**: The Sown Men.
 - **A sweeping line form** round a planted stone, with a timing window on blows (The Stone Keeps the Hour).
-- **A light that grows with blows**: Bitter Lantern (the rod form, growing).
-- Data only, no new code: Flashover (two SetOffs), Glint (Arc), Diamond Ring (delayed Burst and a Boon), Burning Sap
-  (CritHit, Needs, Bite), Brood (PoisonBite, Afflict), Strike on the Beat (OnBeat), Paper Seal (brand form and Hold).
+- **A shaft of sun on a place** that starts a reaction in those inside: Bared to the Sun (a field form).
+- **Discharges that bend toward one enemy**: Flashover's live flame (arcs within 6 m redirected into it).
+- **Poison held back and released**: Burning Sap's 3 s wait, with weals counted by critical blows.
+- **A ring on the floor that keeps count of deaths inside it**: Shut in the Dark (doses passed past eight, to twelve).
+- Data only, no new code: Glint (Arc), Diamond Ring (delayed Burst and a Boon), Strike on the Beat (OnBeat), Paper
+  Seal (brand form and Hold).
 
 ## Sources
 
@@ -652,6 +677,8 @@ Phenomena:
 - [Wood frog freezing (National Geographic)](https://www.nationalgeographic.com/animals/article/animals-freeze-then-thaw-explained), [PeerJ/PMC paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5682099/)
 - [Giant hogweed, NYSDEC](https://dec.ny.gov/nature/animals-fish-plants/plants/harmful-plants/giant-hogweed) (phototoxic sap)
 - [Scorpion fluorescence, ASU Ask a Biologist](https://askabiologist.asu.edu/ultraviolet-scorpion)
+- The review fixes of 2026-11-18 (Flashover on conducting flame, Burning Sap's delay, the gu jar of Shut in the Dark)
+  carry their sources in `review_pairs.md`: wildfire flashover on power lines, phytophotodermatitis, the gu.
 - [Gunpowder and Chinese alchemy: elixir poisoning](https://en.wikipedia.org/wiki/Chinese_alchemical_elixir_poisoning)
 - [Archimedes' heat ray](https://en.wikipedia.org/wiki/Archimedes'_heat_ray)
 

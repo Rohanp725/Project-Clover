@@ -37,7 +37,7 @@ weapon side of the same two layers is in `depth_weapons.md` (another writer); th
 - Poison, **All Turns to Venom**: what enemies lay on you turns to venom you pour out with the blade.
 
 **Evolutions** (base spell, partner, result; twelve use the spare ring-mix spells)
-- Fire, **Lit Fuse** (spare): Sunspot with Pyre's Fire Lance shape; a fuse that grows with all you lay on it.
+- Fire, **Lit Fuse** (spare): Black Pitch with Pyre's Fire Lance shape; a fuse that grows with all you lay on it.
 - Fire, **The Winged Sun**: Uraeus with Khepharu's Sun-Spear; two cobras and a disc, spitting with each thrust.
 - Lightning, **Plasma Lance** (spare): Chain Lance with Fire's Devotion; a lance of plasma that sets off Flashover.
 - Lightning, **Thunder Beast**: Lightning Rod with Lightning's Bond IV; a beast of lightning that prowls from the rod.
@@ -45,7 +45,7 @@ weapon side of the same two layers is in `depth_weapons.md` (another writer); th
 - Wind, **Up the Column**: Lifting Wind with the Great Spear's Pole; ride the dust devil up and come down on it.
 - Ice, **Whiteout** (spare): Rime Guard with the War Fan; the fan drives the fog into a blizzard.
 - Ice, **Creeping Ice** (spare): Ski Run with Glacier's Sea Ice shape; the lane freezes the wet by the feet.
-- Water, **Lotus Step** (spare): Moon on Water with Bloom's Floating Flower shape; every turned blow opens a lotus.
+- Water, **Lotus Step** (spare): Blowhole with Bloom's Floating Flower shape; every turned blow opens a lotus on the spray.
 - Water, **The Sea Boils**: Deep Crack with Water's Bond IV; the bubble collapses so hard the water burns.
 - Life, **Thorn Wall** (spare): Briar Patch with Earth's Stone Rise in the Hand; a wall of field stone and briar.
 - Life, **Harvest Home**: Reap What Is Sown with the Scythe's Harvest; one swath round you reaps every Seeded.
@@ -252,8 +252,9 @@ Count the Stones with Death Passed On (Earth and Dark: the fifth stone's fall is
   took three or more is Frozen outright. Elites freeze 0.8 s; gods are only slowed to half for 1 s.
 - **Cost**: once every 10 s. Perfect dodges give no mana and cut no cooldowns. A plain dodge costs twice the stamina.
 - **Why it is Ice**: the long winter that stops the world while the hunter takes the shot.
-- **From above**: frost runs out over the floor in a ring from the player; the world goes grey; arrows hang with rime
-  on them. On release every frozen enemy cracks white at once.
+- **From above**: rime races out over the floor in a ring from the player and up every body, blow and arrow it
+  reaches, so the stop reads as winter, not a clock; the world goes grey under it. On release every frozen enemy
+  cracks white at once.
 - **Earned**: the deep Heresy, from Deep Winter or either Ice keystone.
 
 ## Water
@@ -279,8 +280,8 @@ Count the Stones with Death Passed On (Earth and Dark: the fifth stone's fall is
   health twice its damage.
 - **Cost**: grey health is lost to an unguarded blow as now, and red attacks still go through, so one red blow takes
   the whole store and its own damage. Perfect guards work as ever.
-- **Why it is Water**: be like water: take it in, give it back. A guard that invites the blow and must be paid off
-  with the blade.
+- **Why it is Water**: the reef that takes the swell. The sea breaks on it whole, and the lagoon behind lies still
+  until the tide gives it back. A guard that invites the blow and must be paid off with the blade.
 - **From above**: guarded blows splash into a sheet of water that hangs round the body and swells with the store;
   each blow landed pours some of it back into the player.
 - **Earned**: the deep Heresy, from The Sea Comes In or either Water keystone.
@@ -292,7 +293,7 @@ Count the Stones with Death Passed On (Earth and Dark: the fifth stone's fall is
 - **Breaks**: an affliction fades.
 - **Instead**: Seeded never fades, and grows a depth every 4 s. At full depth the enemy takes root where it stands for
   good: it can turn and strike but never move again. Elites root 4 s at a time; gods are slowed 30% instead.
-- **Cost**: the seed no longer mends you (the root's mending and Thin Blood's are off). A rooted enemy cannot be
+- **Cost**: the seed no longer mends you (the root's mending is off). A rooted enemy cannot be
   thrown, pulled or lifted.
 - **Why it is Life**: "I let the forest grow through them." Sow a room, step back, and watch it become a wood.
 - **From above**: bark climbs the enemy from the feet, a band a depth; at full it is a trunk to the waist with roots in
@@ -480,7 +481,7 @@ Devotion 2.
 
 ### Lit Fuse (the Pyre spare)
 
-- **Recipe**: Sunspot, Mastered, with the Poison and Fire reaction set to **Fire Lance**.
+- **Recipe**: Black Pitch (which replaced Sunspot), Mastered, with the Poison and Fire reaction set to **Fire Lance**.
 - **Evolved**: detonator, 12 s. A burning cord circles the enemy faced (within 6 m) and burns down over 5 s. Every
   blow, Burn and dose laid on it meanwhile adds to the blast. It goes off at the end, on your heavy blow, or at once
   on a perfect guard against its bearer (one and a half times): 20 damage and 6 for each thing laid (90 at most) in
@@ -494,12 +495,12 @@ Devotion 2.
 ### The Winged Sun
 
 - **Recipe**: Uraeus, Mastered, with Khepharu's Sun-Spear (the Great Spear's god's bough) active.
-- **Evolved**: opener, 10 s. Two cobras of flame rise, one on each shoulder, with a disc of burning pitch between them
-  and wings of smoke behind, for 10 s. Each spits at any enemy within 9 m that begins an attack (8 damage, 2 Burn, the
-  pitch burning at its feet 2 s), once a second each. Each spear thrust you land makes both spit at what it struck.
+- **Evolved**: opener, 10 s. Two cobras of flame rise, one on each shoulder, with a burning disc between them and
+  wings of smoke behind, for 10 s. Each spits at any enemy within 9 m that begins an attack (8 damage, 2 Burn, the
+  venom burning at its feet 2 s), once a second each. Each spear thrust you land makes both spit at what it struck.
   When both spit on one enemy within 0.5 s, its wind-up is held 0.4 s.
 - **Seen**: the winged sun of the gates: a burning disc between two hooded cobras of layered flame, smoke spread out
-  behind like wings; each spit an arcing black gob trailing fire.
+  behind like wings; each spit an arcing gob of burning venom trailing fire.
 - **Hint**: carved over every gate of the sun-king's city. And Khepharu, fought as a man, wears it: two cobras rise
   from his shoulders and spit at the player's wind-ups.
 
@@ -569,10 +570,11 @@ Devotion 2.
 ### Creeping Ice (the Glacier spare)
 
 - **Recipe**: Ski Run, Mastered, with the Ice and Water reaction set to **Sea Ice**.
-- **Evolved**: movement, 8 s. A lane of clear ice runs 12 m and you slide down it. Every enemy on the lane is held by
-  the feet for 2 s (it can strike but cannot turn or step, so its back is open), and a Soaked one freezes outright. The
-  lane stays 6 s; a heavy blow struck on it sends spikes up its whole length (14 damage, 2 Chill to all on it).
-- **Seen**: frost running out of the lane in fingers to each enemy's feet; a row of spikes standing up the line.
+- **Evolved**: movement, 8 s. A lane of clear ice runs 12 m and you slide down it. Every enemy on the lane takes 2
+  Chill, and a Soaked one freezes outright. The lane stays 6 s; a heavy blow struck on it sends spikes up its whole
+  length (14 damage, 2 Chill to all on it). (The hold by the feet is gone: Ski Run's Thin Ice now holds what steps on
+  the lane.)
+- **Seen**: frost running out of the lane in fingers to each wet enemy's feet; a row of spikes standing up the line.
 - **Hint**: seen through the huntress's lake, a hollow finger of ice reaching down to the bed, and the fish frozen
   where it touched.
 
@@ -580,12 +582,13 @@ Devotion 2.
 
 ### Lotus Step (the Bloom spare)
 
-- **Recipe**: Moon on Water, Mastered, with the Water and Life reaction set to **Floating Flower**.
-- **Evolved**: counter, 10 s. Stand open on the still pool up to 3 s: each blow turned opens a lotus on it, five at
-  most. Let go for the cut (14 damage and 22 stagger a ring, Soaked and Seeded); then the lotuses float out to where
-  your next dodges end, for 12 s. Standing on one mends you 8. An enemy that steps on one is cut for 12, Soaked and
-  Seeded, and the flower closes on its feet for 0.6 s.
-- **Seen**: dark still water reflecting the player, a pale lotus opening at each turned blow, then drifting.
+- **Recipe**: Blowhole (which replaced Moon on Water), Mastered, with the Water and Life reaction set to **Floating
+  Flower**.
+- **Evolved**: counter, 10 s. Stand on the vent up to 3 s: each blow turned drives the sea down it and opens a lotus on
+  the rising spray, five at most. Let go for the spout under the nearest attacker (14 damage and 22 stagger a step,
+  Soaked and Seeded); then the lotuses float out to where your next dodges end, for 12 s. Standing on one mends you 8.
+  An enemy that steps on one is cut for 12, Soaked and Seeded, and the flower closes on its feet for 0.6 s.
+- **Seen**: a ring of wet black rock, a pale lotus opening on the spray at each turned blow, then drifting.
 - **Hint**: in the sun-king's painted tombs, a figure stands on dark water while blades fall on it, and a lotus opens
   at every blow.
 
@@ -630,7 +633,7 @@ Devotion 2.
 - **Evolved**: breaker, 10 s. A great hammer of stone and iron forms over the enemy faced (within 7 m): its circle
   follows for 0.5 s, holds 0.5 s as its rim closes, and the hammer falls: 34 damage, 55 stagger, Tremor 2, a notch. An
   iron-faced stone is left standing behind it 6 s. Land your own heavy blow on it within 0.2 s of the hammer and both
-  deal double; drive it into the stone and it rings as Ringing Iron at full.
+  deal double; drive it onto the stone and it rings as the Forge's Anvil Stone at full.
 - **Seen**: the hammer's shadow, then stone and iron coming down; sparks and dust; the iron face of the stone.
 - **Hint**: in the smith's foundry the water-driven hammers beat in time, and the first golden handmaiden calls one
   down on the player in time with her own blow (an enemy using it).
@@ -702,8 +705,9 @@ Devotion 2.
 
 - **Recipe**: Grasp, Mastered, with the Dark and Poison reaction set to **Rot to the Bone**.
 - **Evolved**: opener, 9 s. The black ball sinks where it stops and fouls the ground 6 m round for 10 s. Everything on
-  it is drawn slowly to the middle, Cursed, and dosed every 2 s; its poison bites twice as often; Brood runs on every
-  one on it while it stands, and their stagger meters do not recover.
+  it is drawn slowly to the middle, Cursed, and dosed every 2 s; its poison bites twice as often; the ground is a
+  sealed jar (Shut in the Dark's rule on every one on it: doses do not fade, and the poisoned that die on it give their
+  doses to the one nearest the middle), and their stagger meters do not recover.
 - **Seen**: black soil turning over as though something moves under it, green-black bubbles breaking through.
 - **Hint**: the court's burial garden where the gu-makers bury their jars; the soil moves, and the grave-keepers foul
   the ground under the player's feet (an enemy using it).
