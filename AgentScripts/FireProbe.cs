@@ -7,10 +7,12 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
-// Play Mode probe for the Fire land's test yard: the player with no element fights each of the land's four people with
-// fists, each special rule is tried (the snatch and how it is undone, the hold and how it is broken, the ranks of the
-// gilded, the priest's light and shade), and frames are written to review/shots/current/fire_*.png. Run with
-//   bash AgentScripts/runprobe.sh FireYard FireProbe 250
+// Play Mode probe for the Fire land's people, in Sun City (the test yard was removed on 2026-11-18): the player with no
+// element fights each of the land's four people with fists, each special rule is tried (the snatch and how it is
+// undone, the hold and how it is broken, the ranks of the gilded, the priest's light and shade), and frames are written
+// to review/shots/current/fire_*.png. The priest is brought out of his roofed hall onto the open riverbed south of the
+// waking spot, where the sun falls, and the nearest real shade there is found by search. Run with
+//   bash AgentScripts/runprobe.sh SunCity FireProbe 250
 public static class FireProbe
 {
     public static string Run()
@@ -59,6 +61,60 @@ public class FireProbeRunner : MonoBehaviour
         ScreenCapture.CaptureScreenshot("review/shots/current/" + name + ".png");
         yield return null;
         yield return null;
+    }
+
+    // A point on the floor near the given one, found by looking down for it.
+    private static Vector3 Ground(Vector3 near)
+    {
+        var from = new Vector3(near.x, near.y + 3f, near.z);
+        return Physics.Raycast(from, Vector3.down, out var hit, 12f, ~0, QueryTriggerInteraction.Ignore) ? hit.point + Vector3.up * 0.05f : near;
+    }
+
+    // The nearest spot on the same floor as the given point that lies in shade with room to stand, searched ring by ring.
+    private static Vector3? ShadeNear(Vector3 centre, float most)
+    {
+        for (float radius = 2f; radius <= most; radius += 1f)
+            for (float angle = 0f; angle < 360f; angle += 15f)
+            {
+                var floor = Ground(centre + Quaternion.Euler(0f, angle, 0f) * Vector3.forward * radius);
+                if (Mathf.Abs(floor.y - centre.y) > 0.6f) continue;
+                if (!Sunlight.IsLit(floor) && !Physics.CheckCapsule(floor + Vector3.up * 0.5f, floor + Vector3.up * 1.4f, 0.35f, ~0, QueryTriggerInteraction.Ignore)) return floor;
+            }
+        return null;
+    }
+
+    private static void Put(Enemy enemy, Vector3 at, Vector3 face)
+    {
+        var body = enemy.GetComponent<CharacterController>();
+        body.enabled = false;
+        enemy.transform.position = at;
+        face.y = 0f;
+        if (face.sqrMagnitude > 0.01f) enemy.transform.rotation = Quaternion.LookRotation(face, Vector3.up);
+        body.enabled = true;
+        Physics.SyncTransforms();
+    }
+
+    // The first of a kind that is (or is not) lying dormant where the city put it, leaving out the buried thirsting.
+    private Enemy FindResting(string kind, bool dormant)
+    {
+        foreach (var enemy in director.Enemies)
+            if (enemy.Kind.Name == kind && enemy.IsDormant == dormant && enemy.GetComponent<BuriedMound>() == null) return enemy;
+        return null;
+    }
+
+    // Reads whatever the voice has put in the reading box to its end, so the buttons are the player's again.
+    private IEnumerator Hear()
+    {
+        yield return new WaitForSeconds(0.5f);
+        var box = Clover.UI.ReadingBox.Instance;
+        for (int i = 0; i < 30 && box != null && box.IsOpen; i++)
+        {
+            Keys(Key.E);
+            yield return null;
+            yield return null;
+            Keys();
+            yield return new WaitForSeconds(0.05f);
+        }
     }
 
     private Enemy Find(string kind, int which)
@@ -190,15 +246,17 @@ public class FireProbeRunner : MonoBehaviour
         defence = player.GetComponent<PlayerDefence>();
         element = player.GetComponent<PlayerElement>();
         director = FindAnyObjectByType<AreaDirector>();
-        yield return new WaitForSeconds(0.5f);
+        // The open riverbed south of where the player wakes.
+        Vector3 anchor = Ground(player.transform.position + new Vector3(0f, 0f, -5f));
+        yield return Hear();
         Say($"start: weapon {combat.Weapon.Name} has element {element.HasElement} holds '{element.Info.Name}' affliction {element.Info.Affliction} run element '{Clover.Core.RunState.Element}' enemies {director.EnemiesAlive} sunlight in use {Sunlight.InUse} open sky {Sunlight.OpenSky} rectangles {Sunlight.Rectangles}");
-        yield return Shot("fire_yard_0");
+        yield return Shot("fire_city_0");
 
         // 0: no element. The spell and surge buttons do nothing even with mana; the rest fire does not open the chart.
         combat.Mana.Gain(100f);
-        yield return Tap(Key.U);
+        yield return Tap(Key.Q);
         yield return new WaitForSeconds(0.3f);
-        yield return Tap(Key.I);
+        yield return Tap(Key.F);
         yield return new WaitForSeconds(0.3f);
         Say($"0 no element: spells cast {element.SpellsCast} surges {element.Surges} casting {element.IsCasting} surge active {element.Kit.SurgeActive} mana kept {combat.Mana.Current:0} weapon affliction {combat.WeaponAffliction}");
         var rest = FindAnyObjectByType<RestPoint>();
@@ -208,10 +266,10 @@ public class FireProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.3f);
         var menu = Clover.UI.UpgradeMenu.Instance;
         Say($"0 rest fire: rests {rest.Rests} chart open {menu != null && menu.IsOpen} says '{defence.LastCallout}' time {Time.timeScale:0}");
-        yield return Shot("fire_yard_1");
+        yield return Shot("fire_city_1");
 
         // 1: the thirsting.
-        var thirst = Find(EnemyKind.ThirstName, 0);
+        var thirst = FindResting(EnemyKind.ThirstName, false) ?? Find(EnemyKind.ThirstName, 0);
         Say($"1 THE THIRSTING: health {thirst.Health.Current:0} balance {thirst.Stagger.Maximum:0} embers {thirst.Kind.Embers}");
         StandBefore(thirst, 3f);
         yield return new WaitForSeconds(0.7f);
@@ -299,8 +357,8 @@ public class FireProbeRunner : MonoBehaviour
         thirst.Restore();
         yield return Kill(thirst, "fire_thirst_4");
 
-        // The one kneeling at the dry pool.
-        var kneeler = Find(EnemyKind.ThirstName, 1);
+        // One kneeling where the city put it (at a pool or a body).
+        var kneeler = FindResting(EnemyKind.ThirstName, true) ?? Find(EnemyKind.ThirstName, 1);
         player.Teleport(kneeler.transform.position - kneeler.transform.forward * 6f, kneeler.transform.rotation);
         yield return new WaitForSeconds(0.6f);
         bool asleep = kneeler.IsDormant;
@@ -312,7 +370,7 @@ public class FireProbeRunner : MonoBehaviour
         kneeler.TakeHit(new Hit(2000f, 0f, kneeler.transform.forward, true, true));
 
         // 2: the wick.
-        var wick = Find(EnemyKind.WickName, 0);
+        var wick = FindResting(EnemyKind.WickName, false) ?? Find(EnemyKind.WickName, 0);
         Say($"2 THE WICK: health {wick.Health.Current:0} balance {wick.Stagger.Maximum:0} embers {wick.Kind.Embers}");
         Only(wick);
         StandBefore(wick, 3f);
@@ -392,8 +450,13 @@ public class FireProbeRunner : MonoBehaviour
         wick.Restore();
         yield return Kill(wick, "fire_wick_4");
 
-        // The dormant one between the niches.
-        var sleeper = Find(EnemyKind.WickName, 1);
+        // A dormant one, as the city lays them among the dead.
+        var sleeper = FindResting(EnemyKind.WickName, true);
+        if (sleeper == null)
+        {
+            sleeper = Find(EnemyKind.WickName, 1);
+            sleeper.MakeDormant(30f);
+        }
         Only(sleeper);
         player.Teleport(sleeper.transform.position + sleeper.transform.forward * 5.5f, Quaternion.LookRotation(-sleeper.transform.forward));
         yield return new WaitForSeconds(0.7f);
@@ -466,10 +529,22 @@ public class FireProbeRunner : MonoBehaviour
         var priest = Find(EnemyKind.SunBlindName, 0);
         Say($"4 SUN-BLIND PRIEST: health {priest.Health.Current:0} balance {priest.Stagger.Maximum:0} embers {priest.Kind.Embers}");
         Only(priest);
-        var shade = Clover.EditorTools.FireYardBuilder.PorchShade;
-        Vector3 inShade = new Vector3((shade.x + shade.y) * 0.5f, 0.05f, (shade.z + shade.w) * 0.5f);
-        Vector3 inSun = priest.transform.position + new Vector3(0f, 0f, -9.5f);
-        Say($"   the rule: lit at the sun spot {Sunlight.IsLit(inSun)}; lit under the porch {Sunlight.IsLit(inShade)}; lit just south of the shade {Sunlight.IsLit(new Vector3(inShade.x, 0f, shade.z - 0.5f))}");
+        // Out of the roofed hall and onto the open riverbed, where the sun falls; the nearest real shade found there.
+        // Restore sends him home to the hall, so every restore in this section is followed by putting him back here.
+        Vector3 priestSpot = Ground(anchor + new Vector3(0f, 0f, 3f));
+        Put(priest, priestSpot, Vector3.back);
+        Vector3 inSun = Ground(priest.transform.position + new Vector3(0f, 0f, -9.5f));
+        var found = ShadeNear(priest.transform.position, 40f);
+        bool made = found == null;
+        if (made)
+        {
+            // No real shade near: a probe-made rectangle 7 m east, so the rule itself can still be tried.
+            Vector3 east = Ground(priest.transform.position + new Vector3(7f, 0f, 0f));
+            Sunlight.AddShade(east.x - 1.5f, east.x + 1.5f, east.z - 1.5f, east.z + 1.5f);
+            found = east;
+        }
+        Vector3 inShade = found.Value;
+        Say($"   the rule: lit at the sun spot {Sunlight.IsLit(inSun)}; lit at the shade spot {Sunlight.IsLit(inShade)} ({(made ? "made by the probe" : "the city's own")}, {(inShade - priest.transform.position).magnitude:0.0} m from him)");
         player.Teleport(inShade, Quaternion.identity);
         yield return new WaitForSeconds(1.5f);
         yield return Shot("fire_sunblind_0");
@@ -479,6 +554,7 @@ public class FireProbeRunner : MonoBehaviour
         priest.TakeHit(new Hit(18f, 10f, Vector3.back, true));
         Say($"   a heavy fist blow (18) on a priest who has not found the player took {ph - priest.Health.Current:0} and {priest.Stagger.Value:0} balance; found now {priest.HasFound} (the heat of a fight)");
         priest.Restore();
+        Put(priest, priestSpot, Vector3.back);
         yield return new WaitForSeconds(0.2f);
 
         // In the sun: found, and the ray.
@@ -526,20 +602,27 @@ public class FireProbeRunner : MonoBehaviour
         yield return Still(priest, "sunblind_brand", 2f);
         yield return Guarded(priest, "sunblind_brand", 2f);
         priest.Restore();
+        Put(priest, priestSpot, Vector3.back);
         yield return Still(priest, "sunblind_flare", 2f, "fire_sunblind_4");
         Say($"   after the flare the ground round him counts as lit: {Sunlight.IsLit(priest.transform.position)}");
         priest.Restore();
+        Put(priest, priestSpot, Vector3.back);
         yield return Kill(priest, "fire_sunblind_5");
 
-        // The yard as a whole.
+        // Each of the four where the city stands its first one.
         foreach (var enemy in director.Enemies) enemy.Restore();
-        Vector3[] views = { new Vector3(0f, 0.05f, 2f), new Vector3(-15f, 0.05f, 20f), new Vector3(-9f, 0.05f, 29f), new Vector3(2f, 0.05f, 33f), new Vector3(27f, 0.05f, 27f), new Vector3(10f, 0.05f, 8f) };
-        for (int i = 0; i < views.Length; i++)
+        var views = new System.Collections.Generic.List<Vector3>();
+        foreach (string kind in new[] { EnemyKind.ThirstName, EnemyKind.WickName, EnemyKind.GildedLevyName, EnemyKind.SunBlindName })
+        {
+            var first = Find(kind, 0);
+            if (first != null) views.Add(Ground(first.transform.position + new Vector3(0f, 0f, -6f)));
+        }
+        for (int i = 0; i < views.Count; i++)
         {
             foreach (var enemy in director.Enemies) enemy.Restore();
             player.Teleport(views[i], Quaternion.identity);
             yield return new WaitForSeconds(0.9f);
-            yield return Shot("fire_yard_" + (i + 2));
+            yield return Shot("fire_city_" + (i + 2));
         }
         Say($"embers carried at the end {Clover.Core.RunState.Points}; has element {element.HasElement}");
         Say($"done: time scale {Time.timeScale:0.00}");

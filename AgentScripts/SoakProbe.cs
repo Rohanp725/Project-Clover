@@ -432,7 +432,7 @@ public class SoakProbeRunner : MonoBehaviour
         return null;
     }
 
-    private static readonly Key[] Fight = { Key.J, Key.J, Key.J, Key.K, Key.K, Key.L, Key.Space, Key.Space, Key.R, Key.U, Key.I, Key.E };
+    private static readonly Key[] Fight = { Key.J, Key.J, Key.J, Key.K, Key.K, Key.L, Key.Space, Key.Space, Key.R, Key.Q, Key.F, Key.E };
 
     private void Play()
     {
@@ -522,7 +522,7 @@ public class SoakProbeRunner : MonoBehaviour
                 // Now and then a long hold: guard, the weapon's skill, a thrown flask, the spell's special.
                 if (random.Next(100) < 14)
                 {
-                    Key[] holds = { Key.L, Key.K, Key.R, Key.U, Key.J, Key.I, Key.Space };
+                    Key[] holds = { Key.L, Key.K, Key.R, Key.Q, Key.J, Key.F, Key.Space };
                     held.Add(holds[random.Next(holds.Length)]);
                     length = 0.5f + (float)random.NextDouble() * 1.4f;
                     wantsMove = false;

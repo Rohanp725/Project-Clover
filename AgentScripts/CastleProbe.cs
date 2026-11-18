@@ -112,13 +112,13 @@ public class CastleProbeRunner : MonoBehaviour
         StandBefore(soldier, 2.5f);
         yield return null;
         healthBefore = soldier.Health.Current;
-        yield return TapWhenFree(Key.U, () => element.SpellsCast > 0);
+        yield return TapWhenFree(Key.Q, () => element.SpellsCast > 0);
         yield return new WaitForSeconds(0.5f);
         Say($"B spell: cast {element.SpellsCast} hits {element.SpellHits} burning {soldier.Burn.IsBurning} soldier health {healthBefore:0} -> {soldier.Health.Current:0} mana {combat.Mana.Current:0}");
 
         // C: the surge.
         combat.Mana.Gain(100f);
-        yield return TapWhenFree(Key.I, () => element.Surges > 0);
+        yield return TapWhenFree(Key.F, () => element.Surges > 0);
         Say($"C surge: surges {element.Surges} active {element.Kit.SurgeActive} damage x{combat.DamageMultiplier:0.0} burn on hit {combat.BurnOnHit:0.0} mana {combat.Mana.Current:0}");
 
         // D: stand still and be hit by the soldier.

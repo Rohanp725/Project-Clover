@@ -1173,12 +1173,11 @@ shrine, then do what the card says (most begin with the surge, L2 or I).
 
 ### The Fire land (not in the demo's build)
 
-Three scenes, none of them in the list the playtest build is made from. Open one in the editor and press Play; tick
+Two scenes, neither of them in the list the playtest build is made from. Open one in the editor and press Play; tick
 **Clover > Play > As A New Player (saves nothing)** first if you do not want what you do there kept.
 
 | Scene | What it is | How it is rebuilt |
 |---|---|---|
-| `Assets/_Project/Scenes/FireYard.unity` | A small yard with one of each of the land's people, to meet them one at a time | **Clover > Build > Fire Yard** |
 | `Assets/_Project/Scenes/SunCity.unity` | The whole land: the dry river, the city of wicks, the golden way, the Champion of the Gate. About half an hour on foot | **Clover > Build > Sun City** |
 | `Assets/_Project/Scenes/SunCourt.unity` | The god: Khepharu the man, then the Sun-Bearer, then the man again, and the sunset that is the way out | **Clover > Build > Sun Court** |
 

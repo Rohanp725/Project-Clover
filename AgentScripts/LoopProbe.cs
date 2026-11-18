@@ -171,11 +171,11 @@ public class LoopProbeRunner : MonoBehaviour
             switch (turn % 9)
             {
                 case 0: yield return Tap(Key.J); yield return new WaitForSeconds(0.25f); yield return Tap(Key.J); break;
-                case 1: yield return Tap(Key.U); break;
+                case 1: yield return Tap(Key.Q); break;
                 case 2: Keys(Key.Space, Key.W); yield return null; yield return null; Keys(); break;
-                case 3: yield return Tap(Key.I); break;
+                case 3: yield return Tap(Key.F); break;
                 case 4: yield return Tap(Key.J); yield return new WaitForSeconds(0.2f); yield return Tap(Key.K); break;
-                case 5: Keys(Key.U); yield return new WaitForSeconds(0.9f); Keys(); break;
+                case 5: Keys(Key.Q); yield return new WaitForSeconds(0.9f); Keys(); break;
                 case 6: Keys(Key.Space, Key.A); yield return null; yield return null; Keys(); break;
                 case 7: Keys(Key.J); yield return new WaitForSeconds(0.8f); Keys(); break;
                 case 8: yield return Tap(Key.K); break;

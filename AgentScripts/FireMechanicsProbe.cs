@@ -7,9 +7,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
-// Play Mode probe for the Fire land's second pass in the test yard: each new mechanic forced and measured, with frames at
-// its tell and at its hit in review/shots/current/fire2_<what>_<n>.png. Run with
-//   bash AgentScripts/runprobe.sh FireYard FireMechanicsProbe 200
+// Play Mode probe for the Fire land's second pass, in Sun City (the test yard was removed on 2026-11-18): each mechanic
+// forced and measured, with frames at its tell and at its hit in review/shots/current/fire2_<what>_<n>.png. The
+// enemies are brought to an open stretch of the riverbed south of the waking spot, so each test stands on flat ground.
+// Sun City's noon never swells on its own; the noon test gives it the old yard's rhythm while it runs. Run with
+//   bash AgentScripts/runprobe.sh SunCity FireMechanicsProbe 220
 public static class FireMechanicsProbe
 {
     public static string Run()
@@ -28,6 +30,8 @@ public class FireMechanicsProbeRunner : MonoBehaviour
     private NoonHeat heat;
     private LandReturn land;
     private bool keepAlive = true;
+    // The open riverbed south of where the player wakes: every placed test is laid out round it.
+    private Vector3 anchor;
 
     private void Update()
     {
@@ -70,6 +74,57 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         Physics.SyncTransforms();
     }
 
+    // A point on the floor this far east and north of the anchor, found by looking down for it.
+    private Vector3 At(float east, float north) => Ground(anchor + new Vector3(east, 0f, north));
+
+    private static Vector3 Ground(Vector3 near)
+    {
+        var from = new Vector3(near.x, near.y + 3f, near.z);
+        return Physics.Raycast(from, Vector3.down, out var hit, 12f, ~0, QueryTriggerInteraction.Ignore) ? hit.point + Vector3.up * 0.05f : near;
+    }
+
+    // The nearest spot on the same floor as the given point that lies in shade with room to stand, searched ring by ring.
+    private static Vector3 ShadeNear(Vector3 centre, float most)
+    {
+        for (float radius = 1f; radius <= most; radius += 1f)
+            for (float angle = 0f; angle < 360f; angle += 15f)
+            {
+                var probe = centre + Quaternion.Euler(0f, angle, 0f) * Vector3.forward * radius;
+                var floor = Ground(probe);
+                if (Mathf.Abs(floor.y - centre.y) > 0.6f) continue;
+                if (!Sunlight.IsLit(floor) && !Physics.CheckCapsule(floor + Vector3.up * 0.5f, floor + Vector3.up * 1.4f, 0.35f, ~0, QueryTriggerInteraction.Ignore)) return floor;
+            }
+        return centre;
+    }
+
+    // A wick that is not burning, so the test can see it lit.
+    private Enemy UnlitWick(int skip)
+    {
+        foreach (var enemy in director.Enemies)
+        {
+            if (enemy.Kind.Name != EnemyKind.WickName) continue;
+            var flame = enemy.GetComponent<WickFlame>();
+            if (flame != null && flame.IsLit) continue;
+            if (skip-- == 0) return enemy;
+        }
+        return Find(EnemyKind.WickName, 0);
+    }
+
+    // Reads whatever the voice has put in the reading box to its end, so the buttons are the player's again.
+    private IEnumerator Hear()
+    {
+        yield return new WaitForSeconds(0.5f);
+        var box = Clover.UI.ReadingBox.Instance;
+        for (int i = 0; i < 30 && box != null && box.IsOpen; i++)
+        {
+            Keys(Key.E);
+            yield return null;
+            yield return null;
+            Keys();
+            yield return new WaitForSeconds(0.05f);
+        }
+    }
+
     private void Stand(Vector3 at, Vector3 face)
     {
         face.y = 0f;
@@ -92,22 +147,17 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         director = FindAnyObjectByType<AreaDirector>();
         heat = FindAnyObjectByType<NoonHeat>();
         land = FindAnyObjectByType<LandReturn>();
-        yield return new WaitForSeconds(0.5f);
-        Say($"start: enemies {director.Enemies.Length} heat {(heat != null)} first swell at {heat.Schedule.FirstAt} floor capacity {MoltenFloor.Capacity} land return {(land != null)} embers return {land.EmbersReturnWithTheDead}");
+        anchor = Ground(player.transform.position + new Vector3(0f, 0f, -5f));
+        yield return Hear();
+        Say($"start: anchor {anchor} enemies {director.Enemies.Length} heat {(heat != null)} first swell at {heat.Schedule.FirstAt} floor capacity {MoltenFloor.Capacity} land return {(land != null)} embers return {land.EmbersReturnWithTheDead}");
 
-        yield return Ashen();
-        yield return AshenEarly();
-        yield return WickSpread();
-        yield return Noon();
-        yield return Embers();
-        yield return Gold();
-        yield return Wall();
-        yield return Pour();
-        yield return Buried();
-        yield return Jar();
-        yield return Beam();
-        yield return Mirror();
-        yield return Spear();
+        // The city's voice speaks after a fall and at some places; each part first reads it out, so the player is free.
+        foreach (var part in new Func<IEnumerator>[] { Ashen, AshenEarly, WickSpread, Noon, Embers, Gold, Wall, Pour, Buried, Jar, Beam, Mirror, Spear })
+        {
+            yield return Hear();
+            if (player.Suspended) Say($"   the player is held before {part.Method.Name}: reading box open {Clover.UI.ReadingBox.Instance != null && Clover.UI.ReadingBox.Instance.IsOpen}");
+            yield return part();
+        }
         Calm();
         Say("done");
         Debug.Log("[Probe] done");
@@ -119,10 +169,10 @@ public class FireMechanicsProbeRunner : MonoBehaviour
     {
         Calm();
         var ashen = Find(EnemyKind.AshenName, 0);
-        var wick = Find(EnemyKind.WickName, 2);
+        var wick = UnlitWick(0);
         var levy = Find(EnemyKind.GildedLevyName, 1);
         var burst = ashen.GetComponent<AshenBurst>();
-        Vector3 at = new Vector3(46f, 0.05f, 16f);
+        Vector3 at = At(0f, 0f);
         Put(ashen, at, Vector3.back);
         Put(wick, at + new Vector3(2f, 0f, 0.5f), Vector3.left);
         Put(levy, at + new Vector3(-2f, 0f, 0.6f), Vector3.right);
@@ -156,7 +206,7 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         var ashen = Find(EnemyKind.AshenName, 1);
         var levy = Find(EnemyKind.GildedLevyName, 0);
         var burst = ashen.GetComponent<AshenBurst>();
-        Vector3 at = new Vector3(50f, 0.05f, 8f);
+        Vector3 at = At(0f, 2f);
         Put(ashen, at, Vector3.back);
         Put(levy, at + new Vector3(1.6f, 0f, 0f), Vector3.left);
         Stand(at + new Vector3(0f, 0f, -5f), Vector3.forward);
@@ -178,15 +228,15 @@ public class FireMechanicsProbeRunner : MonoBehaviour
     private IEnumerator WickSpread()
     {
         Calm();
-        var walker = Find(EnemyKind.WickName, 0);
-        var sleeper = Find(EnemyKind.WickName, 3);
+        var walker = UnlitWick(0);
+        var sleeper = UnlitWick(1);
         var flame = walker.GetComponent<WickFlame>();
-        Put(walker, new Vector3(40f, 0.05f, 20f), Vector3.right);
-        Put(sleeper, new Vector3(45f, 0.05f, 20f), Vector3.left);
+        Put(walker, At(-5f, 0f), Vector3.right);
+        Put(sleeper, At(0f, 0f), Vector3.left);
         sleeper.MakeDormant(0.5f);
         sleeper.Restore();
-        Put(sleeper, new Vector3(45f, 0.05f, 20f), Vector3.left);
-        Stand(new Vector3(51f, 0.05f, 20f), Vector3.left);
+        Put(sleeper, At(0f, 0f), Vector3.left);
+        Stand(At(6f, 0f), Vector3.left);
         yield return null;
         bool lit = flame.Light();
         int marks = MoltenFloor.Count;
@@ -204,7 +254,10 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         Calm();
         keepAlive = false;
         var wick = Find(EnemyKind.WickName, 0);
-        Stand(new Vector3(64f, 0.05f, -2f), Vector3.forward);
+        // Sun City never swells on its own: the old yard's rhythm, for this test only.
+        var cityRhythm = heat.Schedule;
+        heat.SetSchedule(new HeatSchedule(25f, 60f, 5f, 15f));
+        Stand(At(0f, -4f), Vector3.forward);
         heat.SetClock(heat.Schedule.FirstAt - 2.6f);
         yield return new WaitForSeconds(0.5f);
         Say($"4 noon: phase {heat.Current} progress {heat.Progress:0.00} callout '{defence.LastCallout}'");
@@ -216,22 +269,26 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         yield return Shot("fire2_noon_swell_1");
         float sun = defence.Health.Current;
         Say($"   swell in the sun: lit {Sunlight.IsLit(player.transform.position)} health {before:0} -> {sun:0} burnt {heat.Burnt - burnt:0} wick swell pace {wick.SwellPace:0.00} swelling {NoonHeat.Swelling}");
-        var shade = Clover.EditorTools.FireYardBuilder.AwningShade;
-        Stand(new Vector3((shade.x + shade.y) * 0.5f, 0.05f, (shade.z + shade.w) * 0.5f), Vector3.forward);
+        Vector3 shaded = ShadeNear(At(0f, 0f), 40f);
+        Stand(shaded, Vector3.forward);
         yield return new WaitForSeconds(0.3f);
         before = defence.Health.Current;
         burnt = heat.Burnt;
         yield return new WaitForSeconds(2.5f);
         yield return Shot("fire2_noon_shade_2");
-        Say($"   swell in the awning's shade: lit {Sunlight.IsLit(player.transform.position)} health {before:0} -> {defence.Health.Current:0} burnt {heat.Burnt - burnt:0}");
-        var calm = Clover.EditorTools.FireYardBuilder.GateCalm;
-        Stand(new Vector3((calm.x + calm.y) * 0.5f, 0.05f, (calm.z + calm.w) * 0.5f - 1f), Vector3.forward);
+        Say($"   swell in the city's shade at {shaded.x:0.0},{shaded.y:0.0},{shaded.z:0.0}: lit {Sunlight.IsLit(player.transform.position)} health {before:0} -> {defence.Health.Current:0} burnt {heat.Burnt - burnt:0}");
+        // The champion's bowl and the hall before it never swell: a spot there, on its floor.
+        Vector3 calmSpot = anchor;
+        // Looked for from just over the hall's floor (about 16 m up), under its roof.
+        for (float z = 430f; z <= 476f && !heat.IsCalm(calmSpot); z += 2f) calmSpot = Ground(new Vector3(0f, 17f, z));
+        Stand(calmSpot, Vector3.forward);
         yield return new WaitForSeconds(0.3f);
         before = defence.Health.Current;
         burnt = heat.Burnt;
         yield return new WaitForSeconds(2f);
-        Say($"   swell at the calm gate: lit {Sunlight.IsLit(player.transform.position)} calm {heat.IsCalm(player.transform.position)} health {before:0} -> {defence.Health.Current:0} burnt {heat.Burnt - burnt:0}; swells so far {heat.Swells}");
+        Say($"   swell in the calm hall at z {calmSpot.z:0}: lit {Sunlight.IsLit(player.transform.position)} calm {heat.IsCalm(player.transform.position)} health {before:0} -> {defence.Health.Current:0} burnt {heat.Burnt - burnt:0}; swells so far {heat.Swells}");
         keepAlive = true;
+        heat.SetSchedule(cityRhythm);
         heat.SetClock(0f);
         yield return null;
     }
@@ -280,8 +337,8 @@ public class FireMechanicsProbeRunner : MonoBehaviour
     {
         Calm();
         var levy = Find(EnemyKind.GildedLevyName, 2);
-        Put(levy, new Vector3(56f, 0.05f, 4f), Vector3.back);
-        Stand(new Vector3(56f, 0.05f, 2.4f), Vector3.forward);
+        Put(levy, At(0f, 1.6f), Vector3.back);
+        Stand(At(0f, 0f), Vector3.forward);
         yield return null;
         int splashes = MoltenFloor.Splashes;
         for (int i = 0; i < 4; i++)
@@ -296,7 +353,7 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         // A puddle under the player's feet, hot then cooling, with the levy put back so it cannot knock the player off it.
         Calm();
         keepAlive = false;
-        Vector3 spot = new Vector3(60f, 0.05f, 4f);
+        Vector3 spot = At(4f, 0f);
         Stand(spot + Vector3.back * 3f, Vector3.forward);
         MoltenFloor.Splash(spot, 0.8f);
         yield return new WaitForSeconds(0.3f);
@@ -319,8 +376,10 @@ public class FireMechanicsProbeRunner : MonoBehaviour
     {
         Calm();
         var wall = FindAnyObjectByType<ShieldWall>();
-        var levies = new[] { Find(EnemyKind.GildedLevyName, 1), Find(EnemyKind.GildedLevyName, 2), Find(EnemyKind.GildedLevyName, 3) };
-        Stand(new Vector3(48.3f, 0.05f, 24.5f), Vector3.forward);
+        // The wall's own levies, wherever the city stands them; the player six metres before the middle one.
+        var members = (Enemy[])typeof(ShieldWall).GetField("members", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic).GetValue(wall);
+        var levies = members.Length >= 3 ? new[] { members[0], members[1], members[2] } : new[] { Find(EnemyKind.GildedLevyName, 1), Find(EnemyKind.GildedLevyName, 2), Find(EnemyKind.GildedLevyName, 3) };
+        Stand(Ground(levies[1].transform.position + levies[1].transform.forward * 6f), -levies[1].transform.forward);
         foreach (var levy in levies) levy.Brain.Alert();
         yield return new WaitForSeconds(2.2f);
         yield return Shot("fire2_wall_0");
@@ -341,7 +400,7 @@ public class FireMechanicsProbeRunner : MonoBehaviour
     {
         Calm();
         var warden = Find(EnemyKind.GildedWardenName, 0);
-        Vector3 at = new Vector3(2f, 0.05f, 30f);
+        Vector3 at = At(0f, 2f);
         Put(warden, at, Vector3.back);
         Stand(at + Vector3.back * 4f, Vector3.forward);
         yield return null;
@@ -394,7 +453,11 @@ public class FireMechanicsProbeRunner : MonoBehaviour
     private IEnumerator Jar()
     {
         Calm();
-        var thirst = Find(EnemyKind.ThirstName, 3);
+        // One that walks: not buried, not kneeling.
+        Enemy thirst = null;
+        foreach (var enemy in director.Enemies)
+            if (thirst == null && enemy.Kind.Name == EnemyKind.ThirstName && !enemy.IsDormant && enemy.GetComponent<BuriedMound>() == null && enemy.GetComponent<ThirstDrinker>() != null) thirst = enemy;
+        if (thirst == null) thirst = Find(EnemyKind.ThirstName, 3);
         var drinker = thirst.GetComponent<ThirstDrinker>();
         WaterJar jar = null;
         foreach (var each in FindObjectsByType<WaterJar>(FindObjectsSortMode.None))
@@ -402,7 +465,9 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         Stand(jar.transform.position + new Vector3(0f, 0f, -3f), Vector3.forward);
         thirst.TakeHit(new Hit(25f, 0f, Vector3.forward, false, true));
         float hurt = thirst.Health.Current, most = thirst.Health.Maximum;
-        Stand(new Vector3(60f, 0.05f, 30f), Vector3.forward);
+        // Beside its jar, as the yard stood one, and the player off at a distance, so it may slip away to drink.
+        Put(thirst, Ground(jar.transform.position + new Vector3(2.5f, 0f, 0f)), Vector3.left);
+        Stand(Ground(jar.transform.position + new Vector3(8f, 0f, -8f)), Vector3.forward);
         yield return null;
         jar.TakeHit(new Hit(5f, 0f, Vector3.forward));
         yield return new WaitForSeconds(0.1f);
@@ -422,7 +487,7 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         var priest = Find(EnemyKind.SunBlindName, 0);
         var mirror = priest.GetComponent<SunMirror>();
         var levy = Find(EnemyKind.GildedLevyName, 0);
-        Vector3 at = new Vector3(27f, 0.05f, 22f);
+        Vector3 at = At(0f, 3f);
         Put(priest, at, Vector3.back);
         Stand(at + Vector3.back * 7f, Vector3.forward);
         yield return null;
@@ -479,7 +544,7 @@ public class FireMechanicsProbeRunner : MonoBehaviour
         Calm();
         var spearman = Find(EnemyKind.GildedSpearmanName, 0);
         var cast = spearman.GetComponent<SpearCast>();
-        Vector3 at = new Vector3(-7f, 0.05f, 29f);
+        Vector3 at = At(0f, 3f);
         Stand(at + Vector3.back * 8f, Vector3.forward);
         Put(spearman, at, Vector3.back);
         yield return null;

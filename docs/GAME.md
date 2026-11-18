@@ -260,7 +260,8 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   read apart: Metal (undyed exomis with an Aegean key border, bronze greaves), Poison (approved in black lacquer,
   then changed by the user the same day to bright red and gold, as in classic Chinese dress, with a straw hat;
   approved as revision 6), Earth and Life (green and ochre check, rust brat to the calves, gold torc), the last champion's
-  land (cream dhoti with an indigo border, brass, rust angavastram).
+  land (cream dhoti with an indigo border, brass, rust angavastram). All eight are in the game; the four lands
+  without scenes yet have their outfits mapped in data (Metal, Poison, Earth and Life, Light and Dark).
 - Style: **Decided**: cel-shaded with outlines, like an anime. A dark, muted world (stone, ash, storm cloud) in which
   the elements are the only saturated colour, so every spell and elemental effect stands out. The user's condition:
   it must be done well or it will not fit, so it is judged on screenshots early. References: Hades, Cuphead and
@@ -1287,6 +1288,32 @@ affinities, Avatar's bending as martial arts) is in the session notes of that da
   three saved Hands; a suggested starter Hand per element; the hub's dummy to try them on; the HUD shows the four
   spells in a diamond with cooldown rings while L2 is held.
 
+## The evolving combat playtest (decided 2026-11-18)
+
+A testbed build to hand to outside players to test the combat. It is updated as the combat system is added to and
+changed. The old playtest stays with its players until the first few phases of the new one are done.
+
+- **Decided (user)**: a new dedicated testing ground is the playtest's start. **Proposal**: a rest fire, a rack of
+  every built weapon and god weapon, element altars to take any element, training dummies (still, attacking,
+  elemental), enemy pens for each built land, gates straight to the built god fights, and doors into the built
+  levels (castle and summit, Sun City and the Sun Court).
+- **Decided (user)**: resting gives unlimited Shards and Memories, so everything can be unlocked, the god items
+  included. The upgrade chart can be moved through freely, including trees and branches that do not belong to what
+  the player holds.
+- **Decided (user)**: a death returns the player to the last rest fire with nothing lost.
+- **Decided (user)**: the god weapons, moves and most other god content are still to be made. They are listed as a
+  note (in the playtest's READ ME and here), and in the playtest they show where they will go, marked "Not built
+  yet".
+- **Decided (user)**: an in-game section explains every effect (afflictions, reactions, states such as Frozen and
+  staggered), and every high-level mark (majors, keystones, spells, gifts, Heresies, Evolutions, aspects) has a
+  detailed explanation the player can open, so testers truly understand what is going on.
+- **Decided (user)**: testers type up notes and send them back; nothing in the build collects feedback.
+- **Decided (user)**: release after the first few phases. **Proposal** for the phases: 0, the testing ground and
+  playtest mode, the guide to effects and the detailed explanations, a version number and "What's new" on the title;
+  1, spells on cooldowns, mana for big moves, the charged blade, infused strikes and the four-spell L2 layer; 2, two
+  elements and the Hand; 3, reactions. Later updates: 4, trees reshaped into spell branches; 5, the Way, Memories and
+  the Body branch; 6, Bond, Heresies and Evolutions.
+
 ## Open questions
 
 1. Camera: top-down is on trial in the slice; confirm or change once it is playable.
@@ -1303,6 +1330,7 @@ affinities, Avatar's bending as martial arts) is in the session notes of that da
 | date | decision | why |
 |---|---|---|
 | 2026-11-18 | The element is weighted equally with close combat (pillar 2 rewritten); spells on cooldowns that weapon play shortens, mana for big moves; four spells on an L2 layer; two elements at once; a duo branch for every pair | the user: the game is more fun when fights use both kinds of technique, and any two elements should be able to mix |
+| 2026-11-18 | An evolving combat playtest: a dedicated testing ground, unlimited Shards and Memories, a free chart, god items unlockable, no loss on death, a guide to effects and detailed mark explanations; released after the first few phases | the user: a testbed for outside players that grows with the combat system |
 | 2026-11-18 | Bone hook into the Chain Sickle, hook swords into the Twin Knives; the Teacher (bow, drawing other weapons) is the champion's elite; Lightning and Wind elites wait; dead marks cut, depth added by rule-breaking marks | the user, on the reconciled content |
 | 2026-11-18 | Bond and Pair Bond; the patron keeps what is taken and a mortal carries one weapon and two elements; minibosses do not each gate every weapon | the user: reward going all in without punishing a change of mind |
 | 2026-11-18 | The Way's boughs are weapon aspects, one active; the Way only, with temper marks; collected weapons and elements chosen in the hub when resting; minibosses gate techniques and are weapon-first fights | the user, on the weapon tree |
@@ -1786,6 +1814,8 @@ the Summit, zipped for other people's machines, and it must hold on screens that
   at every shape, its lowest marks just touching the hint band.
 
 ## The Fire land, first third: its people in a test yard (2026-11-17, night; Claude's defaults unless marked)
+
+Removed 2026-11-18 by the owner's decision; Sun City is the testing ground.
 
 The owner's words, 2026-11-17: "start work on the fire area"; "Remember you dont need to stop for my approval"; and of
 the models, "make sure that the fire enemies are much more higher quality and in line with their lore than the demo

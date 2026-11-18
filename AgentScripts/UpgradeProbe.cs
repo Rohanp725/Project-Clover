@@ -220,7 +220,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return null;
         health = north.Health.Current;
         float mana = combat.Mana.Current;
-        Keys(Key.U);
+        Keys(Key.Q);
         yield return Until(() => player.IsLeaping, 1f);
         Keys();
         bool leaping = player.IsLeaping;
@@ -236,7 +236,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         // H: a tap of the spell button is still the spell.
         combat.Mana.Gain(100f);
         int casts = element.SpellsCast;
-        yield return Tap(Key.U);
+        yield return Tap(Key.Q);
         yield return Until(() => element.SpellsCast > casts, 1.5f);
         Say($"H tap still casts: {element.SpellsCast - casts}; a tap of the flask still drinks: see next");
         defence.Health.Damage(40f);
@@ -274,7 +274,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return null;
         health = north.Health.Current;
         mana = combat.Mana.Current;
-        yield return Hold(Key.U, 0.45f);
+        yield return Hold(Key.Q, 0.45f);
         yield return new WaitForSeconds(1.3f);
         Shot("rod");
         yield return new WaitForSeconds(2f);
@@ -282,7 +282,7 @@ public class UpgradeProbeRunner : MonoBehaviour
 
         // L: Overclock slows the enemies when the surge is lit; the blink shocks what the dodge passes.
         combat.Mana.Gain(100f);
-        yield return Tap(Key.I);
+        yield return Tap(Key.F);
         yield return Until(() => element.Surges > 0, 1f);
         float scale = WorldClock.EnemyScale;
         yield return new WaitForSeconds(3f);
@@ -321,7 +321,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         RunState.Unlocked.Remove(Upgrade.Blink);
         yield return new WaitForSeconds(0.4f);
         combat.Mana.Gain(100f);
-        yield return Tap(Key.I);
+        yield return Tap(Key.F);
         yield return Until(() => element.Kit.SurgeActive, 1f);
         yield return new WaitForSeconds(3f);
         Place(new Vector3(0.6f, 0f, 2.4f), Vector3.forward);
@@ -511,13 +511,13 @@ public class UpgradeProbeRunner : MonoBehaviour
         health = north.Health.Current;
         int wornCasts = upgrades.WornCasts;
         casts = element.SpellsCast;
-        yield return Hold(Key.U, 0.45f);
+        yield return Hold(Key.Q, 0.45f);
         yield return new WaitForSeconds(0.15f);
         Shot("cinder_fan");
         yield return new WaitForSeconds(0.3f);
         float fanTook = health - north.Health.Current;
         int fanBurn = north.Burn.Stacks;
-        yield return Tap(Key.U);
+        yield return Tap(Key.Q);
         yield return Until(() => element.SpellsCast > casts, 1.5f);
         Say($"S worn spell: first worn {wornFirst}; after choosing on the chart {wornSecond}; held: worn casts +{upgrades.WornCasts - wornCasts}, mana {mana:0} -> spent {mana - combat.Mana.Current:0} before the tap, dummy lost {fanTook:0}, burn {fanBurn} deep; a tap still cast the base spell {element.SpellsCast - casts}");
         yield return new WaitForSeconds(0.6f);
@@ -566,14 +566,14 @@ public class UpgradeProbeRunner : MonoBehaviour
             combat.Mana.Gain(100f);
             casts = element.SpellsCast;
             health = north.Health.Current;
-            yield return Tap(Key.U);
+            yield return Tap(Key.Q);
             yield return Until(() => element.SpellsCast > casts, 1.5f);
             yield return null;
             if (info.Name == Elements.Ice || info.Name == Elements.Poison || info.Name == Elements.Dark) Shot("kit_" + info.Name.ToLowerInvariant());
             int laid = set.Stacks(info.Affliction);
             yield return new WaitForSeconds(0.45f);
             int surges = element.Surges;
-            yield return Tap(Key.I);
+            yield return Tap(Key.F);
             yield return Until(() => element.Surges > surges, 1f);
             yield return null;
             kits += $"{info.Name}: {element.Kit.SpellName} cast {element.SpellsCast - casts} took {health - north.Health.Current:0} laid {info.Affliction} {laid}; {element.Kit.SurgeName} lit {element.Surges - surges} wards {defence.Wards}. ";
@@ -625,7 +625,7 @@ public class UpgradeProbeRunner : MonoBehaviour
             combat.Mana.Gain(100f);
             health = north.Health.Current;
             wornCasts = upgrades.WornCasts;
-            yield return Hold(Key.U, 0.45f);
+            yield return Hold(Key.Q, 0.45f);
             yield return new WaitForSeconds(0.5f);
             Shot("tree_" + name.ToLowerInvariant());
             yield return new WaitForSeconds(1.6f);
@@ -730,7 +730,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         combat.Mana.Gain(100f);
         mana = combat.Mana.Current;
         casts = element.SpellsCast;
-        yield return Tap(Key.U);
+        yield return Tap(Key.Q);
         yield return Until(() => element.SpellsCast > casts, 1.5f);
         float baseCost = mana - combat.Mana.Current;
         yield return new WaitForSeconds(0.6f);
@@ -770,7 +770,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         combat.Mana.TrySpend(combat.Mana.Current);
         combat.Mana.Gain(5f);
         casts = element.SpellsCast;
-        yield return Tap(Key.U);
+        yield return Tap(Key.Q);
         yield return Until(() => element.SpellsCast > casts, 1.5f);
         float paid = upgrades.HealthPaid, grey = defence.Health.Grey;
         element.Take(ElementKit.ByName(Elements.Water, false));
@@ -875,7 +875,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         defence.Health.Damage(40f);
         myHealth = defence.Health.Current;
         combat.Mana.Gain(100f);
-        yield return Hold(Key.U, 0.45f);
+        yield return Hold(Key.Q, 0.45f);
         yield return new WaitForSeconds(0.6f);
         Say($"X8 grown: four saplings planted, {grown} stand (three at most); near one {near}; far from all {farOff}; the harvest burst them (left {Clover.World.Hazards.GrownCount - grownBefore}) and mended {defence.Health.Current - myHealth:0}");
         element.Take(ElementKit.Fire());

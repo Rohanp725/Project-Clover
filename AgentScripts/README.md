@@ -50,12 +50,14 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 | `TipsProbe` | Castle | the three first-fight tips |
 | `SoakProbe` | any | random play for minutes; mode, seed and seconds are read from `%TEMP%/soak_config.txt` |
 | `TourProbe`, `TitleProbe` | any | photographs of each scene's places and its title card, to `review/shots/current/` |
-| `PerfProbe` | any | ten seconds of frame time, garbage and draw calls (in FireYard, SunCity and SunCourt it first sets up the busy moment: see the Fire sections below) |
+| `PerfProbe` | any | ten seconds of frame time, garbage and draw calls (in SunCity and SunCourt it first sets up the busy moment: see the Fire sections below) |
 | `SunCityProbe` | SunCity | the second pass of the sun-king's city: every room and vista pictured, every stair walked, the shortcuts from both sides, the mirror, the noon, the falls, the champion and the gate; see below |
 | `SunCityOverview` | SunCity, edit mode (`script run`) | a raised picture of each district: `review/shots/current/suncity2_overview_<district>.png` |
-| `FireMechanicsProbe` | FireYard | the Fire land's second pass, each mechanic forced and measured; see below |
+| `FireMechanicsProbe` | SunCity | the Fire land's second pass, each mechanic forced and measured on the open riverbed south of the waking spot; see below |
 | `BossFxProbe` | SunCourt | the look of the Fire bosses' attacks, each pictured with time stopped at its strongest; the sun parry; the Sun-Spear's throw and ray; see below |
 | `SunFightProbe` | SunCourt | the Sun-Bearer's fight as reworked on 2026-11-18: the man's ring of fire, the old endless stagger, the loose sun as a ball, the hot floor's rule, the burrow, each new attack, how far any piece reaches past the rim or into the obelisk, a player camping on the flank, and the busiest fury; see below |
+| `OutfitProbe` | Castle, SunCity, CombatTest | what the player wears and whether it went on by a plain mesh swap or by bones looked up by name; pictures with time stopped of standing, running, the roll (its dive, the middle of the tuck and the rise, each with the hips' and head's height above the feet), attacking and close beside the nearest enemy with the game camera brought in (`review/shots/current/outfit_<scene>_<pose>.png`; the Castle skips the roll and attacks; in Sun City the poses are taken again closer, `_near`). In CombatTest it puts on all eight outfits in turn (`_<outfit>` on each name); in SunCity it then goes to the Hub and checks the Fire outfit stays on. It checks the real `clover.outfit.*` keys are untouched. Set the Game View to 1280x720 first (`GameViewSize`), then delete `clover.outfit.last.sandbox` and `clover.outfit.chosen.sandbox` after |
+| `ClipFloorScan` | edit mode, `script run` | plays every baked player clip on a copy of the player model and lists those that take the body above the shins more than 5 cm under the floor, with when and which part; the whole table goes to `%TEMP%/clip_floor_scan.txt`. After the floor guard of 2026-11-18 only the greatsword and hammer rolls (a scarf tail, 8 to 9 cm) and the death (a hand, 6 cm) remain |
 
 Probes that touch saved progress forget it before and after, so the first real start still shows the first waking.
 
@@ -278,24 +280,22 @@ it counts the frames in which the tail is between the camera and the player (`St
 the first (`dragon_view_finder_<move>.png`), where the gold ring should be seen through the tail. The probe reads its
 parts from `AgentScripts/dragon_view.txt`. `dragon_sheets.py` no longer deletes the `aspect_*` sheets.
 
-## The Fire land's yard: `FireProbe` (2026-11-17)
+## The Fire land's people: `FireProbe` (2026-11-17; moved to Sun City 2026-11-18)
 
-`bash AgentScripts/runprobe.sh FireYard FireProbe 130` (about three and a half minutes). The player has fists and no
+The test yard it was written for was removed on 2026-11-18; it now runs in Sun City.
+`bash AgentScripts/runprobe.sh SunCity FireProbe 250`. The player has fists and no
 element. Part 0: the spell and surge buttons with full mana (nothing is cast), then the rest fire (the chart stays
 shut; "Rested. Nothing to feed yet."). Then each enemy in turn, with every other enemy put back where it stood
 before each trial (`Only`): each attack forced on a player standing still (`Still`), on a held guard (`Guarded`) and,
 for the red ones, rolled out of sideways (`Rolled`); then its special rule; then it is killed with fists and the
 embers counted. The thirsting: a drink at 7.6 m draws the snatch; the flask comes back when its balance is broken
 mid-drink; left alone it finishes and is whole again; a roll late in the tell saves the flask; the kneeling one is
-dormant until 3 m. The wick: the hold left to run (five bites, 30), struggled out of (five presses), on 9 health (it
+dormant until 3 m (in Sun City, the first thirsting found dormant that is not buried). The wick: the hold left to run (five bites, 30), struggled out of (five presses), on 9 health (it
 ends at 1), a heavy blow breaking the grab while it is shown; the dormant one struck (double) and woken by walking
 up. The gilded by rank: the guard from the front, heavy and from behind, every attack, the planted ring. The priest:
-`Sunlight.IsLit` at three spots, not found in the porch's shade, the double blow, found in the sun after 0.4 s, the
+brought out of his roofed hall onto the open riverbed, `Sunlight.IsLit` at the sun spot and at the nearest real shade the probe finds (or a shade it makes, and says so), not found in the shade, the double blow, found in the sun after 0.4 s, the
 ray on a still and a walking player, lost in shade, the search and the giving up, found at 2 m, the flare lighting
-the ground. Frames go to `review/shots/current/fire_<enemy>_<n>.png` and `fire_yard_<n>.png`.
-
-`PerfProbe` knows the yard: `bash AgentScripts/runprobe.sh FireYard PerfProbe 30` wakes every enemy with the player in
-the middle and reports ten seconds of frame times and garbage.
+the ground. Frames go to `review/shots/current/fire_<enemy>_<n>.png` and `fire_city_<n>.png`.
 
 `FireDump.cs` writes the hierarchy, bounds and material counts of the Fire land's models to
 `review/checks/fire_dump.txt`; it was used once at intake and can be deleted.
@@ -305,8 +305,10 @@ with `python -I script.py </dev/null` (never `python - <<EOF </dev/null`, which 
 
 ### FireMechanicsProbe
 
-`bash AgentScripts/runprobe.sh FireYard FireMechanicsProbe 200` (about a minute and a half). The second pass of the Fire
-land's enemies in the yard's east part (`Clover > Build > Fire Yard` first if the scene is older than the kit). Each
+`bash AgentScripts/runprobe.sh SunCity FireMechanicsProbe 220`. The second pass of the Fire land's enemies, brought to
+the open riverbed south of Sun City's waking spot (the test yard they were first tried in was removed on 2026-11-18). The
+noon test gives the city, which never swells on its own, the yard's old rhythm for its length, and looks for real shade
+near the riverbed and a calm spot in the hall. The shield wall is the city's own, with its own levies. Each
 part puts everyone back first, then forces and measures one thing, with frames
 `review/shots/current/fire2_<what>_<n>.png` at its tell and its hit:
 
@@ -338,8 +340,7 @@ part puts everyone back first, then forces and measures one thing, with frames
     dodges, blocks, flinch, leap, wards, spell walls, where the player stood). It waits for a throw after the count
     it read before forcing one, since the spearman may already have thrown during an earlier section.
 
-`PerfProbe`'s FireYard branch now also brings the swell on and strews 30 splashes of gold round the player. Its
-SunCourt branch (new) reads the king's words, fells the man, waits for the Sun-Bearer to stand in the fight, asks a
+`PerfProbe`'s SunCourt branch (new) reads the king's words, fells the man, waits for the Sun-Bearer to stand in the fight, asks a
 roll of it and measures the ten seconds after, with the form left to its own choices.
 
 ### BossFxProbe
@@ -367,7 +368,7 @@ those parts (delete it or leave it empty for all):
   `feathers` (`_1`, `_2`: the things that fall, in the air over their marks).
 
 `bash AgentScripts/rebuild_fire.sh` rebuilds, one menu at a time, every scene the Fire bosses' effects and the Sun-Spear touch
-(Sun City, Fire Yard, Sun Court, Hub, Castle, Summit, the combat test arena). The arena's builder puts `CombatTest` into
+(Sun City, Sun Court, Hub, Castle, Summit, the combat test arena). The arena's builder puts `CombatTest` into
 the build list: take it out again afterwards so the list stays Hub, Castle, Summit. `bash AgentScripts/check_fire.sh <folder>`
 runs `SunCourtProbe`, `FireMechanicsProbe`, `SunCityProbe` and the hub's `RunProbe` one after another, each into its own
 file in the folder (about twenty minutes).

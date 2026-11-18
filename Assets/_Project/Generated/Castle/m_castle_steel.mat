@@ -38,10 +38,13 @@ Material:
     - _ShadeSoftness: 0.015
     - _ShadeThreshold: 0.25
     - _SmoothNormalsInTangents: 0
+    - _Sway: 0
+    - _VertexColour: 0
     - _WorldMapping: 0
     - _WorldScale: 0.25
     m_Colors:
     - _BaseColor: {r: 0.75, g: 0.78, b: 0.84, a: 1}
+    - _BounceColor: {r: 0, g: 0, b: 0, a: 1}
     - _EmissionColor: {r: 0.25, g: 0.4, b: 0.8, a: 1}
     - _OutlineColor: {r: 0.085, g: 0.08, b: 0.17, a: 1}
     - _RimColor: {r: 1.4, g: 1.6, b: 2, a: 1}

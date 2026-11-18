@@ -413,13 +413,13 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void TheYardsShadeLiesNorthOfItsRoofByTheNoonSun()
+        public void AShadeLiesNorthOfItsRoofByTheNoonSun()
         {
+            // Sun City's builder lays every roof's shade this far north of the roof (the test yard's porch, which this
+            // once also checked, went with the yard on 2026-11-18).
             float north = Clover.EditorTools.LookBuilder.NoonShadowLength(9f);
             Assert.AreEqual(1.9f, north, 0.05f, "a 9 m roof throws its edge 1.9 m north");
-            var shade = Clover.EditorTools.FireYardBuilder.PorchShade;
-            Assert.Greater(shade.z, Clover.EditorTools.FireYardBuilder.PorchSouth);
-            Assert.AreEqual(Clover.EditorTools.FireYardBuilder.PorchNorth - Clover.EditorTools.FireYardBuilder.PorchSouth, shade.w - shade.z, 0.001f);
+            Assert.AreEqual(0f, Clover.EditorTools.LookBuilder.NoonShadowLength(0f), 0.001f, "a shade on the ground lies where it is");
         }
     }
 }

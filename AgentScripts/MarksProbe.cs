@@ -158,7 +158,7 @@ public class MarksProbeRunner : MonoBehaviour
     {
         element.Kit.SurgeSeconds = seconds;
         combat.Mana.Gain(1000f);
-        yield return Tap(Key.I);
+        yield return Tap(Key.F);
         float give = Time.unscaledTime + 1f;
         while (!element.Kit.SurgeActive && Time.unscaledTime < give) yield return null;
         yield return null;
@@ -669,7 +669,7 @@ public class MarksProbeRunner : MonoBehaviour
         float paid = upgrades.HealthPaid;
         float health = defence.Health.Current;
         Say($"heartwood: no mana {combat.Mana.Sealed}, the bar reads {combat.Mana.Fraction:0.00}, health {health:0}");
-        yield return Tap(Key.U);
+        yield return Tap(Key.Q);
         yield return ShotAfter(0.35f);
         yield return new WaitForSeconds(0.4f);
         Say($"heartwood: the base spell cast: health paid {upgrades.HealthPaid - paid:0.0} (grey {defence.Health.Grey:0.0}), health now {defence.Health.Current:0}; {Lost()}");
@@ -750,14 +750,14 @@ public class MarksProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.6f);
         float held = combat.Mana.Current;
         int tides = upgrades.Tides;
-        yield return Tap(Key.U);
+        yield return Tap(Key.Q);
         yield return ShotAfter(0.35f);
         yield return new WaitForSeconds(0.7f);
         Say($"tide: the base spell ({element.Kit.SpellName}, {element.Kit.SpellCost:0} mana, {element.Kit.SpellDamage:0} damage) cast with {held:0} held: tides {upgrades.Tides - tides}, x{upgrades.LastTide:0.00}, mana left {combat.Mana.Current:0}; {Lost()}");
         yield return new WaitForSeconds(1f);
         Mark();
         combat.Mana.Gain(element.Kit.SpellCost + 0.5f);
-        yield return Tap(Key.U);
+        yield return Tap(Key.Q);
         yield return new WaitForSeconds(1.1f);
         Say($"tide: cast again with only its cost held: x{upgrades.LastTide:0.00}, mana left {combat.Mana.Current:0}; {Lost()}");
     }

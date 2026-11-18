@@ -48,6 +48,8 @@ namespace Clover.EditorTools.Forge
                 foreach (var clip in All())
                 {
                     if (!string.IsNullOrEmpty(filter) && !clip.Name.Contains(filter)) continue;
+                    // No pose may put the player's knees, trunk or head through the floor (the roll once did).
+                    clip.KeepsAboveFloor = true;
                     clip.Bake(rig, ClipFolder, tails);
                     string carry = CarryOf(clip.Name);
                     ShowSword(rig, carry != null ? -1 : SwordIn(clip.Name));
@@ -374,7 +376,8 @@ namespace Clover.EditorTools.Forge
                 HandL = new Vector3(-0.3f, 0.5f, 0.3f),
                 HandR = new Vector3(0.34f, 0.62f, 0.1f),
             };
-            var clip = new ForgeClip("roll", 0.4f) { Wind = t => new Vector3(0f, 0f, t < 0.8f ? -9f : 0f) };
+            // The root's turn and place are baked: without its place the body turned about the floor and sank through it.
+            var clip = new ForgeClip("roll", 0.4f) { Wind = t => new Vector3(0f, 0f, t < 0.8f ? -9f : 0f), MovesRoot = true };
             clip.Key(0f, Stand()).Key(0.14f, dive, Ease.Out).Key(0.3f, tuck, Ease.InOut).Key(0.72f, tuck, Ease.Linear).Key(1f, land, Ease.Out);
             // The body turns once, head over heels, about a point at its middle.
             clip.After = (rig, t) =>

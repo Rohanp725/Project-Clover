@@ -11,7 +11,7 @@ AvatarMask:
   m_Elements:
   - m_Path: 
     m_Weight: 0
-  - m_Path: player_lod0
+  - m_Path: player_outfit_ronin_lod0
     m_Weight: 0
   - m_Path: player_rig
     m_Weight: 0

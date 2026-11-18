@@ -37,6 +37,62 @@ namespace Clover.EditorTools
             ("steel", new Color(0.72f, 0.76f, 0.82f)),
         };
 
+        // The land outfits' colours as authored in Blender (linear, the lit band), by the name behind "m_outfit_" in
+        // each model. Fire, Ice and Water take staging/blender/2026-11-18_outfits/notes.md after its revision 2.
+        private static readonly (string name, Color linear)[] OutfitPalette =
+        {
+            ("fire_skin", new Color(0.70f, 0.46f, 0.33f)),
+            ("fire_dark", new Color(0.05f, 0.035f, 0.035f)),
+            ("fire_accent", new Color(0.61f, 0.135f, 0.05f)),
+            ("fire_linen", new Color(0.80f, 0.76f, 0.64f)),
+            ("fire_lapis", new Color(0.035f, 0.09f, 0.42f)),
+            ("fire_turquoise", new Color(0.06f, 0.48f, 0.44f)),
+            ("ice_skin", new Color(0.70f, 0.46f, 0.33f)),
+            ("ice_dark", new Color(0.05f, 0.035f, 0.035f)),
+            ("ice_accent", new Color(0.61f, 0.135f, 0.05f)),
+            ("ice_wool", new Color(0.035f, 0.062f, 0.18f)),
+            ("ice_wrap", new Color(0.20f, 0.155f, 0.11f)),
+            ("ice_fur", new Color(0.16f, 0.095f, 0.05f)),
+            ("water_skin", new Color(0.70f, 0.46f, 0.33f)),
+            ("water_dark", new Color(0.05f, 0.035f, 0.035f)),
+            ("water_accent", new Color(0.61f, 0.135f, 0.05f)),
+            ("water_tapa", new Color(0.03f, 0.05f, 0.19f)),
+            ("water_cream", new Color(0.82f, 0.74f, 0.58f)),
+            ("water_weave", new Color(0.10f, 0.055f, 0.03f)),
+            // Revisions 4 to 6 give no numbers in the notes; these are the colours the FBX materials carry from Blender.
+            ("metal_skin", new Color(0.70f, 0.46f, 0.33f)),
+            ("metal_dark", new Color(0.06f, 0.035f, 0.025f)),
+            ("metal_accent", new Color(0.60f, 0.13f, 0.05f)),
+            ("metal_wool", new Color(0.025f, 0.085f, 0.34f)),
+            ("metal_bronze", new Color(0.46f, 0.27f, 0.08f)),
+            ("metal_cream", new Color(0.78f, 0.72f, 0.58f)),
+            ("poison_skin", new Color(0.70f, 0.46f, 0.33f)),
+            ("poison_dark", new Color(0.032f, 0.028f, 0.036f)),
+            ("poison_accent", new Color(0.36f, 0.075f, 0.03f)),
+            ("poison_robe", new Color(0.72f, 0.045f, 0.025f)),
+            ("poison_gold", new Color(0.62f, 0.42f, 0.07f)),
+            ("poison_trim", new Color(0.04f, 0.12f, 0.50f)),
+            ("poison_straw", new Color(0.55f, 0.41f, 0.18f)),
+            ("celtic_skin", new Color(0.70f, 0.46f, 0.33f)),
+            ("celtic_dark", new Color(0.06f, 0.035f, 0.025f)),
+            ("celtic_accent", new Color(0.58f, 0.12f, 0.045f)),
+            ("celtic_gold", new Color(0.50f, 0.33f, 0.07f)),
+            ("celtic_check", new Color(0.055f, 0.13f, 0.045f)),
+            ("celtic_line", new Color(0.03f, 0.07f, 0.30f)),
+            ("champion_skin", new Color(0.70f, 0.46f, 0.33f)),
+            ("champion_dark", new Color(0.06f, 0.035f, 0.025f)),
+            ("champion_accent", new Color(0.62f, 0.13f, 0.04f)),
+            ("champion_brass", new Color(0.60f, 0.42f, 0.10f)),
+            ("champion_cream", new Color(0.80f, 0.74f, 0.60f)),
+            ("champion_indigo", new Color(0.03f, 0.065f, 0.30f)),
+        };
+
+        public const string OutfitsPath = PlayerFolder + "/Outfits.asset";
+
+        /// <summary>The model each outfit comes from; the ronin is the player's own model, which also carries the katana.</summary>
+        public static string OutfitModelPath(string id) =>
+            id == Outfits.Ronin ? PlayerModelPath : $"Assets/_Project/Art/Models/Characters/player_outfit_{id}.fbx";
+
         public struct Built
         {
             public GameObject Player;
@@ -235,6 +291,10 @@ namespace Clover.EditorTools
             // The shape of light a lightning dodge leaves behind.
             var ghost = BuildKit.Glow(PlayerFolder, "m_player_afterimage", new Color(0.5f, 1.2f, 3f, 0.8f), 3, true, 1f);
             player.AddComponent<Afterimage>().Configure(model.GetComponentsInChildren<SkinnedMeshRenderer>(), ghost);
+            // The body changes with the land: the outfit's mesh goes on this renderer and this skeleton.
+            var body = model.GetComponentsInChildren<SkinnedMeshRenderer>(true).FirstOrDefault();
+            if (body != null) player.AddComponent<PlayerOutfit>().Configure(BuildOutfits(), body, model.transform);
+            else Debug.LogWarning("[Clover.Build] The character model has no skinned body; the player cannot change outfits.");
             var shown = player.AddComponent<PlayerAnimator>();
             shown.Configure(controller, combat, defence, element, animator,
                 drawnSword != null ? drawnSword.gameObject : null, sheathedHilt != null ? sheathedHilt.gameObject : null,
@@ -278,12 +338,13 @@ namespace Clover.EditorTools
         // The model's own materials only carry names; each is replaced by the toon material of the same name.
         private static Material ToonFor(Material imported, Dictionary<string, Material> materials)
         {
-            string name = imported != null ? imported.name.Replace("m_player_", "") : "";
+            string name = imported != null ? imported.name : "";
             if (materials.TryGetValue(name, out var toon)) return toon;
             Debug.LogWarning($"[Clover.Build] The character uses a material '{name}' that the palette does not know.");
             return imported;
         }
 
+        // Every character material by its full name: the ronin's m_player_* and the land outfits' m_outfit_<land>_*.
         private static Dictionary<string, Material> PlayerMaterials()
         {
             var materials = new Dictionary<string, Material>();
@@ -293,9 +354,95 @@ namespace Clover.EditorTools
                 var material = BuildKit.Toon(PlayerFolder, $"m_player_{name}", linear.gamma, true);
                 // A cool rim lifts the dark clothes off a dark floor; the blade catches the light outright.
                 material.Lit(name == "steel" ? new Color(1.6f, 1.8f, 2.2f) : new Color(0.75f, 0.85f, 1.2f), name == "steel" ? 0.6f : 0.34f);
-                materials[name] = material;
+                materials[material.name] = material;
+            }
+            // The outfits take the ronin's ink and rim, so every outfit reads the same against the ground.
+            foreach (var (name, linear) in OutfitPalette)
+            {
+                var material = BuildKit.Toon(PlayerFolder, $"m_outfit_{name}", linear.gamma, true);
+                material.Lit(new Color(0.75f, 0.85f, 1.2f), 0.34f);
+                materials[material.name] = material;
             }
             return materials;
+        }
+
+        [MenuItem("Clover/Build/Player Outfits")]
+        public static void BuildOutfitsMenu() => BuildOutfits();
+
+        /// <summary>
+        /// Writes Generated/Player/Outfits.asset: for each outfit its mesh, its toon materials in submesh order, the bone
+        /// names its bind poses are written against and its bounds. The asset is updated in place so scenes keep it.
+        /// </summary>
+        public static OutfitSet BuildOutfits()
+        {
+            var materials = PlayerMaterials();
+            var built = new List<Outfit>();
+            Matrix4x4[] roninPoses = null;
+            string[] roninBones = null;
+            var waiting = new List<string>();
+            foreach (string id in Outfits.All)
+            {
+                string path = OutfitModelPath(id);
+                // An outfit registered for its land before its model is brought in is left out until it arrives.
+                if (id != Outfits.Ronin && !System.IO.File.Exists(path))
+                {
+                    waiting.Add(id);
+                    continue;
+                }
+                var model = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                var skinned = model != null ? model.GetComponentsInChildren<SkinnedMeshRenderer>(true).FirstOrDefault() : null;
+                if (skinned == null || skinned.sharedMesh == null)
+                {
+                    Debug.LogError($"[Clover.Build] No skinned outfit mesh at {path}; the outfit '{id}' cannot be worn.");
+                    continue;
+                }
+                var outfit = new Outfit
+                {
+                    Id = id,
+                    Mesh = skinned.sharedMesh,
+                    Materials = skinned.sharedMaterials.Select(imported => ToonFor(imported, materials)).ToArray(),
+                    BoneNames = skinned.bones.Select(bone => bone != null ? bone.name : "").ToArray(),
+                    Bounds = skinned.localBounds,
+                };
+                // Every outfit is skinned to the ronin's rig: one whose bind poses differ would wear crooked on it.
+                var poses = skinned.sharedMesh.bindposes;
+                if (roninPoses == null)
+                {
+                    roninPoses = poses;
+                    roninBones = outfit.BoneNames;
+                }
+                else
+                {
+                    for (int i = 0; i < poses.Length; i++)
+                    {
+                        int match = System.Array.IndexOf(roninBones, outfit.BoneNames[i]);
+                        if (match < 0 || !Close(poses[i], roninPoses[match]))
+                            Debug.LogWarning($"[Clover.Build] The outfit '{id}' binds '{outfit.BoneNames[i]}' differently from the ronin's rig.");
+                    }
+                }
+                built.Add(outfit);
+            }
+
+            var set = AssetDatabase.LoadAssetAtPath<OutfitSet>(OutfitsPath);
+            if (set == null)
+            {
+                set = ScriptableObject.CreateInstance<OutfitSet>();
+                AssetDatabase.CreateAsset(set, OutfitsPath);
+            }
+            set.Configure(built.ToArray());
+            if (waiting.Count > 0)
+                Debug.Log($"[Clover.Build] Outfits registered but not yet in the project: {string.Join(", ", waiting)}.");
+            EditorUtility.SetDirty(set);
+            AssetDatabase.SaveAssets();
+            return set;
+        }
+
+        // A millimetre and a tenth of a degree's worth in every term of the matrix.
+        private static bool Close(Matrix4x4 a, Matrix4x4 b)
+        {
+            for (int i = 0; i < 16; i++)
+                if (Mathf.Abs(a[i] - b[i]) > 0.002f) return false;
+            return true;
         }
 
         private static AnimatorController AnimatorController(GameObject modelAsset)

@@ -143,9 +143,9 @@ public class ElementsProbeRunner : MonoBehaviour
                 player.Teleport(stand, Quaternion.LookRotation(toward));
                 element.Take(ElementKit.ByName(names[cast % names.Count], false));
                 combat.Mana.Gain(1000f);
-                yield return Tap(Key.U);
+                yield return Tap(Key.Q);
                 yield return new WaitForSeconds(0.35f);
-                yield return Tap(Key.I);
+                yield return Tap(Key.F);
                 yield return new WaitForSeconds(0.45f);
                 cast++;
             }
@@ -175,7 +175,7 @@ public class ElementsProbeRunner : MonoBehaviour
             var shoves = group.Select(dummy => dummy.Shoves).ToArray();
             var shoved = new Vector3[3];
             int castsBefore = element.SpellsCast;
-            yield return Tap(Key.U);
+            yield return Tap(Key.Q);
             float waitedForCast = 0f;
             while (element.SpellsCast == castsBefore && waitedForCast < 1f)
             {
@@ -238,7 +238,7 @@ public class ElementsProbeRunner : MonoBehaviour
             player.Teleport(stand, Quaternion.LookRotation(toward));
             int surgesBefore = element.Surges;
             float health = defence.Health.Current;
-            yield return Tap(Key.I);
+            yield return Tap(Key.F);
             yield return new WaitForSeconds(0.7f);
             ScreenCapture.CaptureScreenshot($"review/shots/current/element_{name.ToLowerInvariant()}_surge.png");
             yield return null;
@@ -270,7 +270,7 @@ public class ElementsProbeRunner : MonoBehaviour
             float gapBefore = Vector3.Distance(enemy.transform.position, player.transform.position);
             float healthBefore = enemy.Health.Current;
             int castsBefore = element.SpellsCast;
-            yield return Tap(Key.U);
+            yield return Tap(Key.Q);
             float waited = 0f;
             while (element.SpellsCast == castsBefore && waited < 1f)
             {

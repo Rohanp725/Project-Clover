@@ -226,7 +226,7 @@ public class FallProbeRunner : MonoBehaviour
         RunState.Unlocked.Add(Upgrade.MeteorLeap);
         yield return new WaitForSeconds(0.4f);
         combat.Mana.Gain(100f);
-        Keys(Key.U);
+        Keys(Key.Q);
         yield return Until(() => player.IsLeaping, 2f);
         Keys();
         yield return null;

@@ -26,7 +26,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Fade: 1
-    - _FlameHeight: 0.5003125
+    - _FlameHeight: 0.47187498
     - _FlameWidth: 0.55
     - _Grown: 1
     - _Heat: 1

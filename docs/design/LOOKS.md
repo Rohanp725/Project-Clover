@@ -49,6 +49,9 @@ floor and blank rectangles of roof. So, in every land:
 
 ## 2. The climb at a glance
 
+**Decided (user, 2026-11-18)**: the mood frames of Ice, Poison, Lightning and Wind, Earth and Life and the champion's
+seat (`staging/blender/2026-11-18_moods/`) are the right moods; small details come when each land is built.
+
 The lands are set apart by time of day, sky, shape and the one strong colour. Read across a row for one land; read
 down a column to check that no two lands blur together.
 
@@ -61,7 +64,7 @@ down a column to check that no two lands blur together.
 | Poison (China) | Night; a sick moon in haze; paper lanterns (proposed amber, not red, so they do not compete with the player's red robe) | Black lacquer (the Qin court's colour), grey roof tiles, dark water, grey clay | The miasma in two strengths: blue-green "green-grass" mist, and bile-yellow "yellow-grass" mist at the deadliest hour | Cinnabar red (kept small and flat, below the player's vermilion robe) and mercury silver; the alchemist's own purple and gold | Upturned eaves, round moon gates, lattices, walls inside walls | Dark wet stone in courtyard grids; the mist line swallowing the floor |
 | Lightning and Wind (Japan) | Dry storm night, no rain, cloud lit from inside; the climb goes into the storm and out of its top, so the light steps from far and dim on the shore to strobing on the summit to lit from below on the clouds | Indigo stone, dry grass bleaching toward silver as the climb rises, ash, char-black and wind-stripped grey gates, blue-black sea | Lightning cyan-violet; wind as pale streaming dust and grass | Shrine vermilion: the one whole torii in the surf, paint left on ruined gates, the crossing shrines, the war fan | Torii, zigzag stairs crossing like a braid; the castle half angular (sloped walls, stacked tile roofs), the monastery half curved (swept bark roofs, bells, fans) | Stone and dry grass combed flat by the wind; branching lightning scorch; raked gravel the wind keeps raking |
 | Earth and Life (Celtic) | Grey dawn mist on a moor; a low sun that never clears the horizon until both gods fall, always in the same quarter | Grey-green moor, peat, lichen stone, black bog water, weathered oak | Earth: ochre stone dust and cracks. Life: living green that overgrows, the brightest colour in the land | Gold as worked metal: torcs, brooches, the scythe, lit spirals | Circles, spirals, standing stones, barrows; upright and straight on Earth's side, tangled and round on Life's; no knotwork (Ice's) | Heather, peat, the plank road over black pools, stone circles, ochre cracks, roots breaking through |
-| The champion's seat (India) | A great war frozen under an eclipse; corona in the sky (proposed: frozen just before totality, a last crescent of sun, totality at the fight's phase change) | Everything outside the thaw drained to grey, motionless (Decided) | Colour returns only around the player (Decided); the council's seats each in their element's colour (Decided); in the fight, Light gold-white and Dark violet-black | Saffron and vermilion (marigolds, banners), seen only inside the thaw | Mandalas, stepped temple towers, chariots; in the grey, each land's soldiers told apart by silhouette | A battlefield of frozen arrows, dust hanging in the air, shadows of things that will not fall; the thaw's circle of colour |
+| The champion's seat (India) | A great war frozen under an eclipse; corona in the sky (decided 2026-11-18: frozen just before totality, a last crescent of sun, totality at the fight's phase change) | Everything outside the thaw drained to grey, motionless (Decided) | Colour returns only around the player (Decided); the council's seats each in their element's colour (Decided); in the fight, Light gold-white and Dark violet-black | Saffron and vermilion (marigolds, banners), seen only inside the thaw | Mandalas, stepped temple towers, chariots; in the grey, each land's soldiers told apart by silhouette | A battlefield of frozen arrows, dust hanging in the air, shadows of things that will not fall; the thaw's circle of colour |
 
 **Open**: Fire's flame orange and Metal's molten bronze sit close. The proposal keeps them apart by substance and
 setting: Fire is soft flame and smoke in bleached daylight; Metal is hard liquid metal, sparks and glowing seams in a
@@ -535,8 +538,14 @@ hall, with a drum tower and an armour hall on one side and a court of wind bells
 screen room where the two halves meet; phase 1 on the roof; the summit's top breaking away and phase 2 on clouds with
 the dragon and the white tiger; the storm cloud as the ride out. The base look (dry storm night with no rain, cloud
 lit from inside, indigo stone, lightning cyan-violet, wind as pale streaming dust and grass, shrine vermilion as the
-accent, floors combed by the wind) is the 2026-11-17 proposal, kept as the base of this sheet. Everything else here is
-a **Proposal**.
+accent, floors combed by the wind) is the 2026-11-17 proposal, kept as the base of this sheet. **Decided (user,
+2026-11-18)**: the dry storm night with no rain; the first rain falls behind the storm cloud on the ride out. The
+cloud lit from inside is decided too: lightning flickers inside the clouds and is the land's main light, so bolts
+that reach the ground are rare and mean something. Everything else here is a **Proposal**.
+
+**Decided (user, 2026-11-18)**: the mood of the frames is right (details to come when the land is built), and the
+mountain must not be barren: it is full of life and places, as in Sekiro, with the trees showing the wind (see
+`WORLD.md`, "the mountain is not barren").
 
 **One image.** A dry storm on a holy mountain at night: two stairs of weathered gates zigzagging up through dry grass
 that the wind combs flat, crossing and recrossing, a cyan-violet bolt and a pale streak of dust racing each other up
@@ -775,6 +784,10 @@ view, the player at the centre, 1280 by 720. The player wears the ronin
 ## 9. Earth and Life (Celtic): the stones and the grove
 
 *Rewritten 2026-11-18 for mood frames.*
+
+**Decided (user, 2026-11-18)**: the mood of the frames is right. To keep it apart from Fire's
+sandstone and the champion's dust, the land is a cooler grey-green; ochre is kept to the cracks and Earth's
+worked stone, not the ground.
 
 **Decided (user, 2026-11-17, night; in `WORLD.md`)**:
 - the areas: the border bog crossed by an oak plank road; Earth's branch with the King's Men's hill and the Giant's
@@ -1020,8 +1033,9 @@ colour and motion around the player, in which the war comes back to life.
 but faint. Nothing moves in the world, not even dust; the dust hangs.
 
 **The eclipse and the fight** (found 2026-11-18; see question 13). The land is under an eclipse, and `WORLD.md` also
-has the champion make the eclipse at the end of phase 1 by hurling the chakram at the sun. **Proposal** to make both
-true: the war froze in the last moment before totality. Over the path and the council the sky holds the black disc with
+has the champion make the eclipse at the end of phase 1 by hurling the chakram at the sun. **Decided (user,
+2026-11-18)**: the champion causes the eclipse; the sun was almost eclipsed, but time stopped before it could be.
+As written: the war froze in the last moment before totality. Over the path and the council the sky holds the black disc with
 a thin hooked crescent of sun still burning on one side and the corona faint round the rest. The crescent gives the
 only direct light, which is why shadows are sharp but faint. Under anything with gaps in it (a banner's fringe, a
 hanging volley of arrows) the light falls in small crescents on the floor, as it does in a real partial eclipse. At the
@@ -1180,23 +1194,23 @@ Answers of 2026-11-17, evening:
 
 Questions of 2026-11-18, raised while writing the sheets for the mood frames (all **Open**):
 
-7. **Lightning and Wind's base.** The base look (dry storm night, indigo stone, cyan-violet lightning, pale wind,
-   vermilion, combed floors) is recorded only as Claude's proposal of 2026-11-17. Is it decided?
-8. **Rain on the ride out.** **Proposal**: the dry storm breaks into the land's first rain behind the storm cloud as
+7. **Lightning and Wind's base.** **Decided (user, 2026-11-18)**: the dry storm night with no rain. Also decided:
+   the cloud lit from inside (lightning flickering within the cloud as the land's main light; ground bolts rare).
+8. **Rain on the ride out.** **Decided (user, 2026-11-18)**: yes. The dry storm breaks into the land's first rain behind the storm cloud as
    the player leaves, the way Water's storm breaks to sun and Fire's noon sets. Yes, or does it stay dry to the end?
 9. **The screen room's gold.** **Proposal**: dull, darkened gold leaf kept to that one room, the land's only warm
    surface. Is a second warm colour welcome there, or should the screens be ink on dark paper?
 10. **The vermilion on the stairs.** **Proposal**: the gates are ruined, so vermilion survives only as scraps of paint
     on them, whole only on the great torii and the crossing shrines. Is that rare enough, or too little red for a
     stair of gates?
-11. **Poison's red.** The approved red and gold robe shares the cinnabar accent's hue. **Proposal**: cinnabar stays
-    small, flat and a step browner than the robe, and the river town's lanterns become amber paper instead of red. Or
-    should the robe move to a deeper imperial red, or the cinnabar toward orange, as the outfit notes suggest?
+11. **Poison's red.** The approved red and gold robe shares the cinnabar accent's hue. **Decided (user, 2026-11-18)**,
+    which also gives the land a more corrupted, poisonous look: cinnabar stays
+    small, flat and a step browner than the robe, and the river town's lanterns become amber paper instead of red.
 12. **Earth and Life's player.** The green check tunic sits near the moor and Life's green. **Proposal**: keep it a
     muted olive and let the rust cloak carry the figure. To be judged in `el_giants_dance` and `el_sacred_grove`.
 13. **The eclipse's timing.** The land is under an eclipse, and the champion also makes one at the end of phase 1.
-    **Proposal**: the war froze just before totality, with a last crescent of sun burning; the chakram covers that
-    crescent at the phase change (section 10). Does that hold?
+    **Decided (user, 2026-11-18)**: the champion causes the eclipse; the sun was almost eclipsed when time stopped,
+    so a last crescent burns until his chakram covers it at the phase change (section 10).
 14. **The man on the bed of arrows.** **Proposal**: grey like the frozen world but moving, coloured only when the
     player's thaw reaches him, so the council stays the first place with colour of its own. Yes?
 15. **Ice's two reds and the alpha.** **Proposal**: the hunt's red a cool deep crimson, apart from the scarf's rust;

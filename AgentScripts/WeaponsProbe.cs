@@ -216,7 +216,7 @@ public class WeaponsProbeRunner : MonoBehaviour
     {
         yield return Stage(stand);
         int casts = element.SpellsCast;
-        yield return Tap(Key.U);
+        yield return Tap(Key.Q);
         yield return new WaitForSeconds(0.9f);
         bool cast = element.SpellsCast > casts;
         yield return Stage(stand);

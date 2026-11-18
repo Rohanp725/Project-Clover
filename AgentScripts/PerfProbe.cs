@@ -32,18 +32,6 @@ public class PerfProbeRunner : MonoBehaviour
         defence = player.GetComponent<PlayerDefence>();
         string scene = SceneManager.GetActiveScene().name;
         if (scene == "Castle") player.Teleport(new Vector3(0f, 0.1f, 44f), Quaternion.identity);
-        if (scene == "FireYard")
-        {
-            // Every enemy of the yard awake and in the fight at once, the player in the middle of them.
-            player.Teleport(new Vector3(0f, 0.1f, 22f), Quaternion.identity);
-            foreach (var enemy in FindObjectsByType<Clover.Gameplay.Enemy>(FindObjectsSortMode.None))
-                enemy.TakeHit(new Clover.Gameplay.Hit(0.01f, 0f, Vector3.forward));
-            // The second pass: the sun swelling over them all and the floor round the player strewn with gold.
-            var heat = FindAnyObjectByType<Clover.World.NoonHeat>();
-            if (heat != null) heat.SetClock(heat.Schedule.FirstAt + 0.5f);
-            for (int i = 0; i < 30; i++) Clover.Gameplay.MoltenFloor.Splash(player.transform.position + new Vector3(Random.Range(-8f, 8f), 0f, Random.Range(-8f, 8f)), 0.6f);
-            Debug.Log($"[Probe] perf FireYard: swelling {Clover.World.NoonHeat.Swelling} marks on the floor {Clover.Gameplay.MoltenFloor.Count} of {Clover.Gameplay.MoltenFloor.Capacity}");
-        }
         if (scene == "SunCity")
         {
             // The busiest place in the city (second pass): the Market of the Cold Oven, with everyone within 60 m (the alley,

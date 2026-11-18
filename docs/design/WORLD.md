@@ -279,6 +279,12 @@ brought together once the user has confirmed the open points.
   gods painted on the screens as one storm: the last quiet room before the roof, where the story fold lands; then
   the stairs to the roof and phase 1. Inside the halves: a drum tower and an armour hall in the castle half; a court
   of wind bells and a hall of fans in the monastery half.
+- **Decided (user, 2026-11-18)**: the mountain is not barren. Like Sekiro and the best Japanese-themed games, it is
+  full of life and places around the two stairs, even though the land's focus is lightning and wind; a mountain of
+  bare gates "has nothing". **Proposal**, by height: the shore town; foothills of bamboo and cedar with a village and
+  dry terraced fields; slopes of maple and pine with temples, graveyards of stone lanterns and statues, waterfalls and
+  rope bridges over ravines; high crags with pagodas and wind-bent pines going up into the cloud; then the summit.
+  The trees are where the wind shows: bending pines, bamboo thrashing, dry leaves streaming in long lines.
 - **Decided (user)**: two plain weapons on side paths, one for each god's weapon. **Proposal**: a plain Katana in a
   wreck on the shore and a plain War Fan in a hermit's cave off the stairs.
 - **Decided (user)**, the elites, one in each half of the summit, each the champion of its god's speed, taken in
@@ -849,6 +855,8 @@ This replaces the Persian proposal for Light and Dark (2026-11-17, afternoon).
   - The council as a clock face: twelve first gods, with Time as the twelfth; Time's seat is the gnomon in the centre,
     whose shadow sweeps the floor like the obelisk in Khepharu's court, so the first god's room and the last rhyme.
   - The champion sits between the two ruined seats of Light and Dark, waiting.
+- **Decided (user, 2026-11-18)**: the champion causes the eclipse. The sun was almost eclipsed when time stopped, so a
+  last crescent of sun burns over the frozen land until his chakram covers it at the end of phase 1.
 - **Decided (user)**: the domain in phase 2 is a split arena, half the floor in blazing day and half in night.
   **Proposal**: the line between them sweeps round like a clock hand.
 - **Open**: whether the council and the hub (where the sponsor is fought) are the same place.

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -111,12 +112,70 @@ namespace Clover.EditorTools.Forge
             return keys[keys.Count - 1].pose;
         }
 
+        /// <summary>
+        /// When true the body is kept on top of the floor: a kneel deep enough to push a knee through it raises the hips
+        /// until the knee rests on it, and a clip that moves the root (a roll, a somersault) is lifted whole while any
+        /// part of the trunk, head or knees would be under it.
+        /// </summary>
+        public bool KeepsAboveFloor;
+
+        // How high the knee joint must stay for the kneecap around it to rest on the floor and not go through.
+        private const float KneeClearance = 0.13f;
+
         /// <summary>Puts the rig in the clip's pose for a moment, without the trailing parts.</summary>
         public void Pose(ForgeRig rig, float t)
         {
-            PoseAt(t).ApplyTo(rig);
+            var pose = PoseAt(t);
+            pose.ApplyTo(rig);
+            if (KeepsAboveFloor)
+            {
+                // Raising the hips with the feet held where they are lifts the knee by less than the hips, so a few rounds.
+                for (int round = 0; round < 6; round++)
+                {
+                    float knee = Mathf.Min(Height(rig, "shin.L"), Height(rig, "shin.R"));
+                    if (knee >= KneeClearance - 0.002f) break;
+                    if (round == 0) pose = pose.Copy();
+                    pose.Hips.y += KneeClearance - knee;
+                    pose.ApplyTo(rig);
+                }
+            }
             After?.Invoke(rig, t);
+            if (KeepsAboveFloor && MovesRoot)
+            {
+                // A body turned over has its hair and back below its joints, so the skinned body itself is measured.
+                float lowest = LowestPoint(rig);
+                if (lowest < 0f) rig["root"].Transform.position -= rig.Model.transform.up * lowest;
+            }
         }
+
+        private static Mesh measured;
+        private static Mesh measuredSource;
+        private static bool[] measuredCounts;
+
+        // The lowest point of the skinned body above the floor, leaving out what a foot carries (a sole may touch it).
+        private static float LowestPoint(ForgeRig rig)
+        {
+            var body = rig.Model.GetComponentInChildren<SkinnedMeshRenderer>();
+            if (body == null || body.sharedMesh == null) return 0f;
+            if (measured == null) measured = new Mesh { hideFlags = HideFlags.HideAndDontSave };
+            if (measuredSource != body.sharedMesh)
+            {
+                measuredSource = body.sharedMesh;
+                var names = body.bones.Select(bone => bone != null ? bone.name : "").ToArray();
+                measuredCounts = body.sharedMesh.boneWeights.Select(weight => !names[weight.boneIndex0].StartsWith("foot")).ToArray();
+            }
+            body.BakeMesh(measured, true);
+            var toModel = rig.Model.transform.worldToLocalMatrix * body.transform.localToWorldMatrix;
+            var vertices = measured.vertices;
+            float lowest = float.MaxValue;
+            for (int i = 0; i < vertices.Length; i++)
+                if (measuredCounts[i]) lowest = Mathf.Min(lowest, toModel.MultiplyPoint3x4(vertices[i]).y);
+            return lowest == float.MaxValue ? 0f : lowest;
+        }
+
+        // A joint's height above the floor the character stands on.
+        private static float Height(ForgeRig rig, string bone) =>
+            rig.Model.transform.InverseTransformPoint(rig[bone].Transform.position).y;
 
         /// <summary>Bakes the clip on the rig and saves it under the folder, replacing the curves of an existing clip in place.</summary>
         public AnimationClip Bake(ForgeRig rig, string folder, ForgeTails tails)

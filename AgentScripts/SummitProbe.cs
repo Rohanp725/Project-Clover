@@ -225,8 +225,8 @@ public class SummitProbeRunner : MonoBehaviour
 
         // H: the new element's surge and spell.
         combat.Mana.Gain(100f);
-        yield return TapWhenFree(Key.I, () => element.Surges > 0);
-        yield return TapWhenFree(Key.U, () => element.SpellsCast > 0);
+        yield return TapWhenFree(Key.F, () => element.Surges > 0);
+        yield return TapWhenFree(Key.Q, () => element.SpellsCast > 0);
         Say($"H lightning kit: surges {element.Surges} swing speed x{combat.SwingSpeed:0.0} spells {element.SpellsCast}");
 
         // I: the way down.

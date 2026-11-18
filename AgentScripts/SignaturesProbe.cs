@@ -157,7 +157,7 @@ public class SignaturesProbeRunner : MonoBehaviour
     {
         element.Kit.SurgeSeconds = seconds;
         combat.Mana.Gain(1000f);
-        yield return Tap(Key.I);
+        yield return Tap(Key.F);
         float give = Time.unscaledTime + 1f;
         while (!element.Kit.SurgeActive && Time.unscaledTime < give) yield return null;
         yield return null;
@@ -333,7 +333,7 @@ public class SignaturesProbeRunner : MonoBehaviour
         yield return ShotAfter(1.6f);
         Say($"fire: noon, sun hanging, runs of sun {SpellWorks.RunningOf("sun")}, burn on first x{Sets()[0].Stacks(AfflictionKind.Burn)}");
         Mark();
-        yield return Tap(Key.I);
+        yield return Tap(Key.F);
         yield return ShotAfter(0.2f);
         yield return ShotAfter(0.14f);
         yield return ShotAfter(0.5f);
@@ -344,7 +344,7 @@ public class SignaturesProbeRunner : MonoBehaviour
         yield return Surge(9f);
         yield return new WaitForSeconds(0.9f);
         Mark();
-        yield return Tap(Key.I);
+        yield return Tap(Key.F);
         yield return ShotAfter(0.12f);
         yield return new WaitForSeconds(0.3f);
         Say($"fire: called at dawn, runs of sun {SpellWorks.RunningOf("sun")}: {Lost()}");
@@ -387,7 +387,7 @@ public class SignaturesProbeRunner : MonoBehaviour
         yield return Begin("ice", "The World Holds Still");
         yield return Surge(12f);
         yield return ShotAfter(0.6f);
-        yield return Tap(Key.I);
+        yield return Tap(Key.F);
         yield return ShotAfter(0.25f);
         yield return ShotAfter(0.5f);
         Say($"ice: broken outward: {Lost()}; frozen {Sets().Count(set => set.IsFrozen)} of {Sets().Length}");
@@ -403,7 +403,7 @@ public class SignaturesProbeRunner : MonoBehaviour
         yield return Begin("water", "The Sea Rises");
         yield return Surge(12f);
         int flasks = defence.Flasks.Count;
-        yield return Tap(Key.I);
+        yield return Tap(Key.F);
         yield return ShotAfter(0.5f);
         yield return Blows(3, Key.J);
         Shot();
@@ -426,7 +426,7 @@ public class SignaturesProbeRunner : MonoBehaviour
         LayAll(AfflictionKind.Seeded, 3);
         yield return Surge(10f);
         float health = defence.Health.Current;
-        yield return Tap(Key.I);
+        yield return Tap(Key.F);
         yield return ShotAfter(0.35f);
         float after = defence.Health.Current;
         yield return ShotAfter(0.5f);
@@ -810,7 +810,7 @@ public class SignaturesProbeRunner : MonoBehaviour
     private IEnumerator Wave()
     {
         yield return Begin("wave", "The Wave Stands Still");
-        Keys(Key.U);
+        Keys(Key.Q);
         float give = Time.unscaledTime + 2f;
         while (SpellWorks.RunningOf("frozenwave") == 0 && Time.unscaledTime < give) yield return null;
         yield return ShotAfter(0.3f);
