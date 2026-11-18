@@ -49,5 +49,7 @@ namespace Clover.Core
         TintRing,
         /// <summary>A gold star with long points for one instant: a critical blow.</summary>
         Critical,
+        /// <summary>Smoke: dark puffs that rise slowly, spread and thin away. Thrown in a colour, it takes that colour.</summary>
+        Smoke,
     }
 }

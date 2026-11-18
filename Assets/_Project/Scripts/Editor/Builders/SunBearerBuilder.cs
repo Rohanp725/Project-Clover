@@ -9,7 +9,8 @@ namespace Clover.EditorTools
     /// Builds Khepharu, the Sun-Bearer, from boss_sunform.fbx: twenty rigid pieces (and the falcon's two boned wings)
     /// set round the thorax where the modeller's notes put them, the sun and its dull twin, the parts a blow can land
     /// on, and every mark its attacks draw. The scarab's pieces and the falcon's hang under two holders so the fight
-    /// shows one shape at a time; the thorax, the king's face and the wing cases belong to both.
+    /// shows one shape at a time; the thorax and the wing cases belong to both. The model's mask of the king's face is
+    /// left out: the owner's word (2026-11-17) is that the scarab has no face at all.
     /// </summary>
     public static class SunBearerBuilder
     {
@@ -35,7 +36,6 @@ namespace Clover.EditorTools
 
             // Shared by both shapes.
             Piece(model, "thorax", body, Thorax);
-            Piece(model, "face", body, Thorax + new Vector3(0f, 1.05f, 1.2f)).localRotation = Quaternion.Euler(-15f, 0f, 0f);
             var caseLeft = Piece(model, "wing_case_left", body, Thorax + new Vector3(-0.03f, 1.6f, -0.7f));
             var caseRight = Piece(model, "wing_case_right", body, Thorax + new Vector3(0.03f, 1.6f, -0.7f));
 
@@ -62,6 +62,16 @@ namespace Clover.EditorTools
             var burning = Piece(model, "sun", sun, Vector3.zero);
             var dull = Piece(model, "sun_loose", sun, Vector3.zero);
             foreach (var renderer in sun.GetComponentsInChildren<Renderer>(true)) renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            // A ball of burning matter, not a white lamp with gold rays (the owner's review, 2026-11-17): the ball is
+            // molten and churning, and its gold spikes are not drawn; flames lick off its rim instead (SunBearerLook).
+            var ball = burning.GetComponentInChildren<Renderer>(true);
+            if (ball != null)
+            {
+                var molten = BuildKit.Molten(BuildKit.GeneratedRoot + "/Enemies", "m_sunform_burning", Color.white, 0.38f, 0.26f);
+                var shown = ball.sharedMaterials;
+                for (int i = 0; i < shown.Length; i++) shown[i] = i == 0 ? molten : SunCityKit.Hidden();
+                ball.sharedMaterials = shown;
+            }
             Object.DestroyImmediate(model);
 
             var renderers = new List<Renderer>(body.GetComponentsInChildren<Renderer>(true));
@@ -71,7 +81,7 @@ namespace Clover.EditorTools
             var bearer = root.AddComponent<SunBearer>();
             bearer.FloorRadius = floorRadius;
 
-            // What a blow can land on: the head (and the king's face), the trunk, and the sun when it lies loose.
+            // What a blow can land on: the head, the trunk, and the sun when it lies loose.
             var headReach = BuildKit.Group("Head Reach", body);
             var skull = headReach.gameObject.AddComponent<SphereCollider>();
             skull.center = new Vector3(0f, 1.3f, 2f);
@@ -86,27 +96,33 @@ namespace Clover.EditorTools
             var bodyPart = trunkReach.gameObject.AddComponent<ColossusPart>();
             bodyPart.Configure(bearer, trunk, false, 1f);
             var sunReach = BuildKit.Group("Sun Reach", sun);
-            var ball = sunReach.gameObject.AddComponent<SphereCollider>();
-            ball.radius = 1.5f;
+            var reach = sunReach.gameObject.AddComponent<SphereCollider>();
+            reach.radius = 1.5f;
             var sunPart = sunReach.gameObject.AddComponent<ColossusPart>();
-            sunPart.Configure(bearer, ball, false, 1f);
+            sunPart.Configure(bearer, reach, false, 1f);
             // The scarab on the floor is solid: nobody walks through it.
             var bulk = BuildKit.Group("Bulk", body).gameObject.AddComponent<BoxCollider>();
             bulk.center = new Vector3(0f, 1.4f, -0.7f);
             bulk.size = new Vector3(3.2f, 2.8f, 4.8f);
             bulk.enabled = false;
 
-            // The falcon's shadow on the floor, the first tell of everything it does; and the line of light the sun comes down.
+            // The falcon's shadow on the floor, the first tell of everything it does; and the column of fire the sun comes down.
             var blob = BuildKit.Shape(PrimitiveType.Cylinder, "Falcon Shadow", root.transform, Vector3.zero, new Vector3(5f, 0.004f, 5f), SunCityKit.Shade);
             blob.GetComponent<MeshFilter>().sharedMesh = BuildKit.RoundMesh();
             blob.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             blob.enabled = false;
-            var line = BuildKit.Shape(PrimitiveType.Cylinder, "Light Line", root.transform, Vector3.zero, new Vector3(0.3f, 20f, 0.3f), SunCityKit.For("m_sunform_sun"));
-            line.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
-            line.enabled = false;
+            // A stream of fire standing on the spear's point: a quad turned to the camera, which never turns. The fight
+            // scales its holder as it did the old thread of light, its width across and half its height up; the beam
+            // shape runs along the quad's length, so it is turned to stand.
+            var line = BuildKit.Group("Light Line", root.transform);
+            var column = BuildKit.Shape(PrimitiveType.Quad, "Fire Column", line, Vector3.zero, new Vector3(2f, 2.6f, 1f),
+                BuildKit.Fire(BuildKit.GeneratedRoot + "/Enemies", "m_sunform_column", 12, new Vector2(1.6f, 0f), 5f), new Vector3(0f, 0f, -90f));
+            column.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            column.receiveShadows = false;
+            column.enabled = false;
 
             bearer.Configure(target, body, scarab, falcon, caseLeft, caseRight, legs.ToArray(), Chain(wingLeft, "wing_l_"), Chain(wingRight, "wing_r_"),
-                sun, burning.gameObject, dull.gameObject, blob.transform, line.transform, bulk, headPart, bodyPart, sunPart, renderers.ToArray());
+                sun, burning.gameObject, dull.gameObject, blob.transform, line, bulk, headPart, bodyPart, sunPart, renderers.ToArray());
 
             var marks = BuildKit.Group("Marks", root.transform);
             bearer.ConfigureMarks(Pairs("Lane", 2, marks, marker), Pairs("Circle", 2, marks, marker), Pairs("Fall", 18, marks, marker),
@@ -122,12 +138,13 @@ namespace Clover.EditorTools
             finder.enabled = false;
             var towardCamera = Camera.main != null ? Camera.main.transform.rotation : Quaternion.Euler(55f, 0f, 0f);
             bearer.ConfigureFeedback(finder, WorldBars.FinishMark(root.transform, new Vector3(0f, 4f, 0f), 4f, towardCamera));
-            Look(root, sun);
+            Look(root, sun, burning);
             return bearer;
         }
 
-        // The effects that are not particles (fire_boss_visuals.md 2.3): the sun's light, the stoop's streak and its shock ring.
-        private static void Look(GameObject root, Transform sun)
+        // The effects that are not particles (fire_boss_visuals.md 2.3): the sun's light, the stoop's streak and its shock
+        // ring. Since the owner's review (2026-11-17) every one of them is fire: flame, smoke and orange-red heat.
+        private static void Look(GameObject root, Transform sun, Transform burning)
         {
             string folder = BuildKit.GeneratedRoot + "/Enemies";
             var lightObject = new GameObject("Sun Light");
@@ -135,15 +152,14 @@ namespace Clover.EditorTools
             lightObject.transform.SetParent(root.transform, false);
             var light = lightObject.AddComponent<Light>();
             light.type = LightType.Point;
-            // Molten, #FF9E29.
-            light.color = new Color(1f, 0.62f, 0.16f);
+            // Firelight, a deep orange: the court is lit by a fire, not by a lamp.
+            light.color = new Color(1f, 0.46f, 0.1f);
             light.range = 9f;
             light.intensity = 0f;
             light.shadows = LightShadows.None;
 
-            var streakLight = BuildKit.Glow(folder, "m_sunform_dive", Color.white, 1, true, 1.2f);
-            streakLight.SetFloat("_Core", 0.55f);
-            EditorUtility.SetDirty(streakLight);
+            // The dive is a fall of flame tearing down through the air, not a streak of gold light.
+            var streakLight = BuildKit.Fire(folder, "m_sunform_dive_fire", 1, new Vector2(-2.4f, 0f), 4f);
             var streak = new Renderer[2];
             for (int i = 0; i < streak.Length; i++)
             {
@@ -152,7 +168,7 @@ namespace Clover.EditorTools
                 streak[i].receiveShadows = false;
                 streak[i].enabled = false;
             }
-            var shockLight = BuildKit.Glow(folder, "m_sunform_shock", Color.white, 1, true, 1.4f);
+            var shockLight = BuildKit.Fire(folder, "m_sunform_shock_fire", 1, new Vector2(1.2f, 0f), 6f);
             var shock = new GameObject("Shock Ring");
             shock.transform.SetParent(root.transform, false);
             var ring = shock.AddComponent<MeshFilter>();
@@ -169,15 +185,17 @@ namespace Clover.EditorTools
             trail.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0.2f));
             trail.minVertexDistance = 0.3f;
             trail.emitting = false;
-            trail.sharedMaterial = BuildKit.Glow(folder, "m_sunform_trail", new Color(3f, 2.6f, 1.8f, 1f), 1, true, 1f);
+            // Fire behind it: the trail's alpha falling along it cools it from a yellow heart through red to smoke.
+            trail.sharedMaterial = BuildKit.Fire(folder, "m_sunform_trail_fire", 12, new Vector2(-2f, 0f), 3f);
+            trail.textureMode = LineTextureMode.Stretch;
             var fade = new Gradient();
             fade.SetKeys(
-                new[] { new GradientColorKey(new Color(1f, 0.95f, 0.8f), 0f), new GradientColorKey(new Color(1f, 0.72f, 0.2f), 0.4f), new GradientColorKey(new Color(1f, 0.42f, 0.08f), 1f) },
-                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.7f, 0.5f), new GradientAlphaKey(0f, 1f) });
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.75f, 0.45f), new GradientAlphaKey(0.2f, 1f) });
             trail.colorGradient = fade;
             trail.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
             trail.receiveShadows = false;
-            var starLight = BuildKit.Glow(folder, "m_sunform_star", new Color(5f, 3.8f, 1f, 1f), 5, true, 1f);
+            var starLight = BuildKit.Fire(folder, "m_sunform_star_fire", 5, new Vector2(0f, -0.6f), 2f, 0.88f);
             var stars = new Renderer[5];
             for (int i = 0; i < stars.Length; i++)
             {
@@ -188,7 +206,13 @@ namespace Clover.EditorTools
             }
             var look = root.AddComponent<SunBearerLook>();
             look.Configure(light, sun, streak, ring, trail, stars);
-            // The Zenith's whitening: the whole court brighter, white-gold and blooming while the floor fills and blazes.
+            // The burning rim: one quad behind the ball, turned to the camera, flames licking outward from under its edge.
+            var corona = BuildKit.Shape(PrimitiveType.Quad, "Corona", burning, Vector3.zero, Vector3.one * 5.8f,
+                BuildKit.Fire(folder, "m_sunform_corona", 15, new Vector2(0.15f, -0.4f), 5f));
+            corona.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            corona.receiveShadows = false;
+            look.ConfigureBurning(burning.gameObject, corona.transform, sun.Find("sun_loose").gameObject);
+            // The Zenith's blaze: the whole court hotter, orange and fierce while the floor fills and burns.
             var blazeObject = new GameObject("Zenith Blaze Look");
             blazeObject.transform.SetParent(root.transform, false);
             var blaze = blazeObject.AddComponent<UnityEngine.Rendering.Volume>();
@@ -198,9 +222,7 @@ namespace Clover.EditorTools
             blaze.sharedProfile = BlazeProfile();
             look.ConfigureBlaze(blaze);
             // One falling spark or feather for each of the eighteen falling marks.
-            var fallLight = BuildKit.Glow(folder, "m_sunform_faller", Color.white, 1, true, 1f);
-            fallLight.SetFloat("_Core", 0.6f);
-            EditorUtility.SetDirty(fallLight);
+            var fallLight = BuildKit.Fire(folder, "m_sunform_faller_fire", 1, new Vector2(0f, 2f), 3f);
             var fallers = new Renderer[18];
             for (int i = 0; i < fallers.Length; i++)
             {
@@ -235,7 +257,8 @@ namespace Clover.EditorTools
             return holder;
         }
 
-        // Exposure up, warmth in, contrast and saturation a little down, bloom low and strong (fire_boss_visuals.md 2.3, Zenith).
+        // The blaze is heat, not whiteness (the owner's review, 2026-11-17): the court goes orange and fierce, a little
+        // brighter and redder, with an orange bloom; never washed out to white.
         private static UnityEngine.Rendering.VolumeProfile BlazeProfile()
         {
             string path = BuildKit.GeneratedRoot + "/Enemies/ZenithBlazeProfile.asset";
@@ -253,16 +276,16 @@ namespace Clover.EditorTools
             var colour = profile.Add<UnityEngine.Rendering.Universal.ColorAdjustments>(true);
             colour.name = "ColorAdjustments";
             AssetDatabase.AddObjectToAsset(colour, profile);
-            colour.postExposure.Override(0.45f);
-            colour.saturation.Override(-12f);
-            colour.contrast.Override(-6f);
-            colour.colorFilter.Override(new Color(1f, 0.95f, 0.84f));
+            colour.postExposure.Override(0.15f);
+            colour.saturation.Override(14f);
+            colour.contrast.Override(8f);
+            colour.colorFilter.Override(new Color(1f, 0.76f, 0.56f));
             var bloom = profile.Add<UnityEngine.Rendering.Universal.Bloom>(true);
             bloom.name = "Bloom";
             AssetDatabase.AddObjectToAsset(bloom, profile);
-            bloom.intensity.Override(2.4f);
-            bloom.threshold.Override(0.8f);
-            bloom.tint.Override(new Color(1f, 0.9f, 0.72f));
+            bloom.intensity.Override(1.5f);
+            bloom.threshold.Override(1f);
+            bloom.tint.Override(new Color(1f, 0.5f, 0.2f));
             EditorUtility.SetDirty(profile);
             AssetDatabase.SaveAssets();
             return profile;

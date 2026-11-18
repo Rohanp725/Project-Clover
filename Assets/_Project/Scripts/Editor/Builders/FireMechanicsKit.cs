@@ -255,8 +255,10 @@ namespace Clover.EditorTools
         // The beam's two quads of light: the streak at chest height and the lane on the ground. They are laid in the world each frame.
         private static (Transform beam, Transform lane) BeamQuads(Transform parent)
         {
-            var beamMaterial = BuildKit.Glow(Folder, "m_fire_sunbeam", new Color(4f, 3.3f, 1.8f, 1f), 3, true, 1f);
-            var laneMaterial = BuildKit.Glow(Folder, "m_fire_sunlane", new Color(1.4f, 1.2f, 0.75f, 0.55f), 3, true, 1f);
+            // The priest's gathered sun burns: a jet of flame down the beam, and the lane under it scorching orange, not
+            // a bar of white light (the owner's review, 2026-11-17).
+            var beamMaterial = BuildKit.Fire(Folder, "m_fire_sunbeam_flame", 1, new Vector2(0f, 2.4f), 4f);
+            var laneMaterial = BuildKit.Glow(Folder, "m_fire_sunlane_heat", new Color(1.3f, 0.42f, 0.1f, 0.5f), 3, true, 1f);
             var beam = BuildKit.Shape(PrimitiveType.Quad, "Beam", parent, Vector3.zero, Vector3.one, beamMaterial);
             var lane = BuildKit.Shape(PrimitiveType.Quad, "Beam Lane", parent, Vector3.zero, Vector3.one, laneMaterial);
             beam.shadowCastingMode = ShadowCastingMode.Off;
@@ -310,7 +312,8 @@ namespace Clover.EditorTools
             return heat;
         }
 
-        // The sky and ground blazing: brighter and white-gold, the light warm, the highlights blooming. Not grey: the
+        // The sky and ground blazing with heat: a little brighter, hotter and redder, an orange bloom, never white (the
+        // owner's review of 2026-11-17: heat and scorch, not bright light). Not grey either: the
         // owner saw the first version (paler, flatter) read as a cold, washed-out ground rather than heat.
         private static VolumeProfile SwellProfile()
         {
@@ -321,16 +324,16 @@ namespace Clover.EditorTools
             var colour = profile.Add<ColorAdjustments>(true);
             colour.name = nameof(ColorAdjustments);
             AssetDatabase.AddObjectToAsset(colour, profile);
-            colour.postExposure.Override(0.55f);
-            colour.saturation.Override(-8f);
-            colour.contrast.Override(4f);
-            colour.colorFilter.Override(new Color(1f, 0.9f, 0.7f));
+            colour.postExposure.Override(0.25f);
+            colour.saturation.Override(12f);
+            colour.contrast.Override(8f);
+            colour.colorFilter.Override(new Color(1f, 0.8f, 0.6f));
             var bloom = profile.Add<Bloom>(true);
             bloom.name = nameof(Bloom);
             AssetDatabase.AddObjectToAsset(bloom, profile);
-            bloom.intensity.Override(2.2f);
-            bloom.threshold.Override(0.85f);
-            bloom.tint.Override(new Color(1f, 0.85f, 0.6f));
+            bloom.intensity.Override(1.4f);
+            bloom.threshold.Override(1f);
+            bloom.tint.Override(new Color(1f, 0.55f, 0.25f));
             EditorUtility.SetDirty(profile);
             return profile;
         }

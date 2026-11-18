@@ -1005,8 +1005,8 @@ namespace Clover.Gameplay
                     // The sun brought down, or fire thrown up round a planted spear.
                     Vfx.Play(VfxKind.Burst, centre + Vector3.up * 0.6f, Vector3.up, 1.6f);
                     Vfx.Play(VfxKind.Fire, centre + Vector3.up * 0.4f, Vector3.up, 2.2f);
-                    // Gold, the land's colour, not the cold ring of a storm.
-                    Vfx.Play(VfxKind.TintRing, centre + Vector3.up * 0.3f, Vector3.up, 1f, new Color(1f, 0.72f, 0.2f, 1f));
+                    // A ring of fire: fiery blows are the Fire land's, whose scenes draw the ring as flame, not light.
+                    Vfx.Play(VfxKind.Ring, centre + Vector3.up * 0.3f, Vector3.up, 1f);
                     if (attack.LightsSeconds > 0f) Sunlight.Flare(centre, attack.Radius, attack.LightsSeconds);
                     if (attack.BurnSeconds > 0f)
                     {

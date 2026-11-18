@@ -4,10 +4,11 @@ using UnityEngine;
 namespace Clover.Gameplay
 {
     /// <summary>
-    /// The Sun-Spear's ray drawn as a beam of real light (fire_boss_visuals.md 2.4). While he calls the spear back a
-    /// flickering thread joins its blade to his raised hand and motes drift into it; at the strike the dragon's beam, in
-    /// gold: a white core with the glow's beam shape and two gold strands kinking round it, redrawn every 0.04 s, with the
-    /// spear itself flying down it as a white streak carrying a light; after it, a line of heat on the floor fades. Every
+    /// The Sun-Spear's ray, drawn since the owner's review (2026-11-17) as a jet of fire, not light (it was a beam of
+    /// light in fire_boss_visuals.md 2.4). While he calls the spear back a
+    /// flickering stream of fire joins its blade to his raised hand and embers drift into it; at the strike the dragon's beam, in
+    /// flame: a core with the glow's beam shape and two tongues of fire kinking round it, redrawn every 0.04 s, with the
+    /// spear itself flying down it as a burning streak carrying a firelight; after it, a scorch on the floor cools. Every
     /// line is made by the builder; nothing here is created during play.
     /// </summary>
     public class SpearRay : MonoBehaviour
@@ -24,12 +25,14 @@ namespace Clover.Gameplay
         public float CoreWidth = 0.8f, StrandWidth = 0.5f, StrandStray = 0.55f;
         public float StrikeSeconds = 0.15f, FadeSeconds = 0.14f, HeatSeconds = 1.5f, HeatWidth = 0.6f;
         public float LightIntensity = 14f;
-        [ColorUsage(true, true)] public Color HeatColour = new Color(2.6f, 0.9f, 0.2f, 1f);
+        /// <summary>A multiplier on the scorch's own fire: as it fades it cools through red to a smoky char and is gone.</summary>
+        [ColorUsage(true, true)] public Color HeatColour = new Color(1f, 1f, 1f, 1f);
 
         private const int Points = 12;
         private static readonly int ColourId = Shader.PropertyToID("_Color");
-        private static readonly Color SunWhite = new Color(1f, 0.92f, 0.62f, 1f);
-        private static readonly Color Gold = new Color(1f, 0.72f, 0.2f, 1f);
+        private static readonly Color SunWhite = new Color(1f, 0.92f, 0.78f, 1f);
+        private static readonly Color Gold = new Color(1f, 0.82f, 0.62f, 1f);
+        private static readonly Color Smoke = new Color(0.25f, 0.22f, 0.2f, 0.85f);
 
         private readonly Vector3[] points = new Vector3[Points];
         private readonly Vector3[] pair = new Vector3[2];
@@ -89,7 +92,8 @@ namespace Clover.Gameplay
             float flicker = 1f + 0.2f * Mathf.Sin(Time.time * 15f * 2f * Mathf.PI);
             bool wide = progress >= ThreadWidensAt;
             thread.widthMultiplier = (wide ? ThreadWideWidth : ThreadWidth) * flicker;
-            var tint = new Color(1f, 0.95f, 0.8f, Mathf.Lerp(0.4f, 0.9f, progress));
+            // The stream burns hotter as the call goes on: its alpha is the fire's life, cool red to a yellow heart.
+            var tint = new Color(1f, 1f, 1f, Mathf.Lerp(0.55f, 1f, progress));
             thread.startColor = tint;
             thread.endColor = tint;
             // Motes drift into the thread from either side; near the end the blade throws sparks.
@@ -100,13 +104,14 @@ namespace Clover.Gameplay
                 untilMote = 0.1f;
                 Vector3 point = Vector3.Lerp(blade, hand, Random.value);
                 Vector3 across = Vector3.Cross(Vector3.up, (hand - blade).normalized) * (Random.value < 0.5f ? -1.4f : 1.4f);
-                Vfx.Play(VfxKind.Embers, point + across, -across, 0.4f, SunWhite);
+                Vfx.Play(VfxKind.Embers, point + across, -across, 0.4f);
             }
             if (!wide) return;
             untilSpark -= deltaTime;
             if (untilSpark > 0f) return;
             untilSpark = 0.15f;
-            Vfx.Play(VfxKind.TintSpark, blade, Vector3.up, 0.6f, Gold);
+            Vfx.Play(VfxKind.HitSpark, blade, Vector3.up, 0.6f, Gold);
+            Vfx.Play(VfxKind.Fire, blade, Vector3.up, 0.4f);
         }
 
         public void HideThread() => Show(thread, false);
@@ -133,6 +138,14 @@ namespace Clover.Gameplay
                 }
             }
             Vfx.Play(VfxKind.Impact, blade, Vector3.up, 1f, SunWhite);
+            // The jet scorches the floor under it: flames spring up along its line and smoke after them.
+            for (int i = 1; i <= 5; i++)
+            {
+                Vector3 under = Vector3.Lerp(blade, hand, i / 6f);
+                under.y = 0.2f;
+                Vfx.Play(VfxKind.Fire, under, Vector3.up, 0.9f);
+                if (i % 2 == 1) Vfx.Play(VfxKind.Smoke, under + Vector3.up, Vector3.up, 0.6f, Smoke);
+            }
         }
 
         private void LateUpdate()
@@ -182,7 +195,7 @@ namespace Clover.Gameplay
                 rayLight.transform.position = head;
                 rayLight.intensity = LightIntensity * strength;
             }
-            var fade = new Color(1f, 1f, 1f, strength);
+            var fade = new Color(1f, 1f, 1f, Mathf.Lerp(0.35f, 1.15f, strength));
             untilRedraw -= deltaTime;
             bool redraw = untilRedraw <= 0f;
             if (redraw) untilRedraw = 0.04f;

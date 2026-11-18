@@ -143,7 +143,7 @@ namespace Clover.World
                     untilShow = 0.15f;
                     Vector3 at = defence.transform.position;
                     Vfx.Play(VfxKind.Embers, at + Vector3.up * (1.1f + Random.value * 0.6f) + Random.insideUnitSphere * 0.25f, Vector3.up, 0.3f);
-                    if (Random.value < 0.5f) Vfx.Play(VfxKind.Ash, at + Vector3.up * 1.7f + Random.insideUnitSphere * 0.2f, Vector3.up, 0.3f, new Color(0.26f, 0.24f, 0.23f, 0.8f));
+                    if (Random.value < 0.5f) Vfx.Play(VfxKind.Smoke, at + Vector3.up * 1.7f + Random.insideUnitSphere * 0.2f, Vector3.up, 0.35f, new Color(0.26f, 0.24f, 0.23f, 0.8f));
                     if (Random.value < 0.35f) Vfx.Play(VfxKind.Fire, at + Vector3.up * 1.4f, Vector3.up, 0.12f);
                 }
                 untilBurn -= deltaTime;

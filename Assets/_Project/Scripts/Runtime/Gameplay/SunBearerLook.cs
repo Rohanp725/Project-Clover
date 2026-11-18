@@ -1,3 +1,4 @@
+using Clover.Core;
 using UnityEngine;
 
 namespace Clover.Gameplay
@@ -6,10 +7,23 @@ namespace Clover.Gameplay
     /// The Sun-Bearer's effects that are not particles (fire_boss_visuals.md, section 2.3): the light the sun throws on
     /// the court, breathing on two waves; the streak the falcon's stoop tears down through the air; and the shock ring
     /// that runs out through the air where it lands. <see cref="SunBearer"/> says what happens; this draws it. Every piece
-    /// is made by the builder and only moved, scaled and tinted here, through one property block.
+    /// is made by the builder and only moved, scaled and tinted here, through one property block. Since the owner's
+    /// review (2026-11-17) all of it is fire, not light: the sun is a burning ball with flames licking off its rim,
+    /// smoke rolling up from it and embers falling, and the colours here are multipliers on the fire material's own.
+    /// It runs after the fight has placed the sun for the frame, so the rim is never a frame behind the ball.
     /// </summary>
+    [DefaultExecutionOrder(100)]
     public class SunBearerLook : MonoBehaviour
     {
+        [SerializeField] private GameObject burningSun;
+        [SerializeField] private Transform corona;
+        [SerializeField] private GameObject dullSun;
+        /// <summary>How far behind the ball's middle, away from the eye, the burning rim hangs, in the ball's own metres.</summary>
+        public float CoronaBehind = 0.7f;
+        /// <summary>Seconds between puffs of smoke off the burning ball, and between embers falling from it.</summary>
+        public float SmokeEvery = 0.12f, EmberEvery = 0.22f;
+        public Color SmokeColour = new Color(0.23f, 0.2f, 0.19f, 0.8f);
+        private float untilSmoke, untilEmber;
         [SerializeField] private Light sunLight;
         [SerializeField] private Transform sun;
         [SerializeField] private Renderer[] diveStreak = new Renderer[0];
@@ -18,12 +32,12 @@ namespace Clover.Gameplay
         [SerializeField] private Renderer[] stars = new Renderer[0];
         [SerializeField] private UnityEngine.Rendering.Volume blazeLook;
         [SerializeField] private Renderer[] fallers = new Renderer[0];
-        [ColorUsage(true, true)] public Color SparkColour = new Color(4.5f, 1.6f, 0.3f, 1f);
-        [ColorUsage(true, true)] public Color FeatherColour = new Color(3.4f, 2.4f, 0.7f, 1f);
+        [ColorUsage(true, true)] public Color SparkColour = new Color(1f, 1f, 1f, 1f);
+        [ColorUsage(true, true)] public Color FeatherColour = new Color(1.1f, 0.95f, 0.8f, 1f);
 
-        [ColorUsage(true, true)] public Color DiveColour = new Color(4.4f, 3.1f, 0.9f, 1f);
-        [ColorUsage(true, true)] public Color ShockColour = new Color(3.4f, 3.2f, 2.6f, 1f);
-        public float DiveWidth = 2.2f, DiveFade = 0.2f;
+        [ColorUsage(true, true)] public Color DiveColour = new Color(1.1f, 1f, 1f, 1f);
+        [ColorUsage(true, true)] public Color ShockColour = new Color(1f, 1f, 1f, 1f);
+        public float DiveWidth = 3.4f, DiveFade = 0.3f;
         public float ShockHeight = 1f, ShockFrom = 1f, ShockTo = 7f, ShockSeconds = 0.22f;
         /// <summary>How much the sun's light breathes either way, on waves of these speeds.</summary>
         public float Flicker = 0.08f, FlickerSlow = 7f, FlickerFast = 13f;
@@ -98,7 +112,15 @@ namespace Clover.Gameplay
             if (index >= 0 && index < fallers.Length && fallers[index] != null && fallers[index].enabled) fallers[index].enabled = false;
         }
 
-        /// <summary>The Zenith's whitening of the whole court: a volume whose weight follows the fill and the blaze.</summary>
+        /// <summary>The burning ball (shown while the sun burns) and the quad of flames that licks off its rim.</summary>
+        public void ConfigureBurning(GameObject burning, Transform rim, GameObject dull)
+        {
+            burningSun = burning;
+            corona = rim;
+            dullSun = dull;
+        }
+
+        /// <summary>The Zenith's blaze over the whole court: a volume whose weight follows the fill and the blaze.</summary>
         public void ConfigureBlaze(UnityEngine.Rendering.Volume look) => blazeLook = look;
 
         public void Configure(Light light, Transform sunHolder, Renderer[] streak, MeshFilter ring, TrailRenderer trail, Renderer[] stunStars)
@@ -237,6 +259,7 @@ namespace Clover.Gameplay
                 bool on = lightNow > 0.01f;
                 if (sunLight.enabled != on) sunLight.enabled = on;
             }
+            DrawBurning(deltaTime);
             DrawDive(deltaTime);
             DrawShock(deltaTime);
             DrawStars(deltaTime);
@@ -245,6 +268,41 @@ namespace Clover.Gameplay
                 // It whitens as fast as the fill asks, and comes back over a second when the blaze ends.
                 blazeNow = blazeWanted > blazeNow ? blazeWanted : Mathf.MoveTowards(blazeNow, blazeWanted, BlazePace * deltaTime);
                 blazeLook.weight = blazeNow;
+            }
+        }
+
+        // The burning ball: its rim of flames turned to the eye and hung behind it so the ball hides the rim's middle,
+        // smoke rolling up off its top, and embers dropping from its underside.
+        private void DrawBurning(float deltaTime)
+        {
+            if (sun == null) return;
+            // Burnt out, it is a charred ball that still smokes from its glowing cracks.
+            if (dullSun != null && dullSun.activeInHierarchy)
+            {
+                untilSmoke -= deltaTime;
+                if (untilSmoke > 0f) return;
+                untilSmoke = SmokeEvery * 2.5f;
+                Vector3 crack = new Vector3(Random.Range(-0.8f, 0.8f), 0f, Random.Range(-0.8f, 0.8f)) * sun.lossyScale.x;
+                Vfx.Play(VfxKind.Smoke, sun.position + crack + Vector3.up * (1.2f * sun.lossyScale.x), Vector3.up, 0.7f * sun.lossyScale.x, SmokeColour);
+                return;
+            }
+            if (burningSun == null || !burningSun.activeInHierarchy) return;
+            float across = sun.lossyScale.x;
+            if (corona != null && eye != null)
+                corona.SetPositionAndRotation(sun.position + eye.forward * (CoronaBehind * across), eye.rotation);
+            untilSmoke -= deltaTime;
+            if (untilSmoke <= 0f)
+            {
+                untilSmoke = SmokeEvery;
+                Vector3 drift = new Vector3(Random.Range(-0.6f, 0.6f), 0f, Random.Range(-0.6f, 0.6f)) * across;
+                Vfx.Play(VfxKind.Smoke, sun.position + Vector3.up * (1.6f * across) + drift, Vector3.up, across, SmokeColour);
+            }
+            untilEmber -= deltaTime;
+            if (untilEmber <= 0f)
+            {
+                untilEmber = EmberEvery;
+                Vector3 side = new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f)) * (1.2f * across);
+                Vfx.Play(VfxKind.Embers, sun.position + side + Vector3.down * (0.6f * across), Vector3.down, 0.5f);
             }
         }
 

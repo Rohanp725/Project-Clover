@@ -32,12 +32,13 @@ namespace Clover.EditorTools
             if (!SceneBuild.Begin("the sun court")) return;
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             var world = BuildKit.Group("World");
-            var gold = SunCityKit.For("m_kit_gold");
+            // The gold laid in the court is worn and dull, lit only by what falls on it: it must not glow like light.
+            var gold = SunCityKit.FloorGold;
             var stone = SunCityKit.Stone;
             var pale = SunCityKit.Flat("m_sun_court_pale", new Color(0.78f, 0.75f, 0.68f));
             var dark = SunCityKit.Flat("m_sun_court_dark", new Color(0.46f, 0.42f, 0.38f));
 
-            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, -33f), "");
+            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, -33f), "", true);
             if (built.Player == null) return;
             LookBuilder.Apply(LookBuilder.Noon, built.Camera);
             built.Player.GetComponent<PlayerCombat>().StartingWeapon = Weapons.FistsName;
@@ -225,19 +226,19 @@ namespace Clover.EditorTools
             sunSpear.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
             sunSpear.transform.localScale = Vector3.one * 1.4f;
             foreach (var shown in sunSpear.GetComponentsInChildren<Renderer>()) shown.shadowCastingMode = ShadowCastingMode.Off;
-            // The fire it trails in flight, from the blade: sun white at the spear, ember behind, then nothing.
+            // The fire it trails in flight, from the blade: a yellow heart at the spear, red behind, cooling to smoke.
             var trailFrom = BuildKit.Group("Trail From", spear);
             trailFrom.localPosition = new Vector3(0f, 3.6f, 0f);
             var spearTrail = trailFrom.gameObject.AddComponent<TrailRenderer>();
-            spearTrail.time = 0.3f;
-            spearTrail.widthMultiplier = 0.45f;
+            spearTrail.time = 0.4f;
+            spearTrail.widthMultiplier = 0.7f;
             spearTrail.minVertexDistance = 0.25f;
             spearTrail.emitting = false;
-            spearTrail.sharedMaterial = BuildKit.Glow(SunCityKit.Folder, "m_sun_spear_trail", new Color(3.4f, 2.8f, 1.6f, 1f), 1, true, 1f);
+            spearTrail.sharedMaterial = BuildKit.Fire(SunCityKit.Folder, "m_sun_spear_trail_fire", 12, new Vector2(-2.4f, 0f), 4f);
             var trailFade = new Gradient();
             trailFade.SetKeys(
-                new[] { new GradientColorKey(new Color(1f, 0.95f, 0.8f), 0f), new GradientColorKey(new Color(1f, 0.55f, 0.15f), 0.6f), new GradientColorKey(new Color(1f, 0.4f, 0.08f), 1f) },
-                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.6f, 0.5f), new GradientAlphaKey(0f, 1f) });
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.7f, 0.5f), new GradientAlphaKey(0.15f, 1f) });
             spearTrail.colorGradient = trailFade;
             spearTrail.shadowCastingMode = ShadowCastingMode.Off;
             spearTrail.receiveShadows = false;
@@ -246,7 +247,8 @@ namespace Clover.EditorTools
             var ray = rayObject.AddComponent<LineRenderer>();
             ray.useWorldSpace = true;
             ray.positionCount = 2;
-            ray.sharedMaterial = BuildKit.Glow(SunCityKit.Folder, "m_sun_ray", new Color(3.8f, 3.3f, 2.2f, 1f), 1, true, 1.2f);
+            // The call is a stream of fire from the standing blade to his hand, not a thread of light.
+            ray.sharedMaterial = BuildKit.Fire(SunCityKit.Folder, "m_sun_ray_stream", 12, new Vector2(-3f, 0f), 4f);
             ray.widthMultiplier = 0.6f;
             ray.shadowCastingMode = ShadowCastingMode.Off;
             ray.receiveShadows = false;
@@ -319,19 +321,21 @@ namespace Clover.EditorTools
                 line.enabled = false;
                 return line;
             }
-            var core = Line("Ray Core", BuildKit.Glow(SunCityKit.Folder, "m_sun_ray_core", new Color(2.6f, 2.3f, 1.4f, 1f), 12, true, 1f), 1f);
-            var strandLight = BuildKit.Glow(SunCityKit.Folder, "m_sun_ray_strand", new Color(5f, 2.9f, 0.5f, 1f), 1, true, 1f);
+            // A jet of fire (the owner's review, 2026-11-17): a churning core of flame in the beam's shape with the
+            // smallest white heart, two tongues of fire kinking round it, the spear a burning streak, its light firelight.
+            var core = Line("Ray Core", BuildKit.Fire(SunCityKit.Folder, "m_sun_ray_jet", 12, new Vector2(-4f, 0f), 5f, 0.96f), 1f);
+            var strandLight = BuildKit.Fire(SunCityKit.Folder, "m_sun_ray_tongue", 1, new Vector2(-3f, 0f), 4f);
             var strands = new[] { Line("Ray Strand 1", strandLight, 0.5f), Line("Ray Strand 2", strandLight, 0.5f) };
-            var streak = Line("Ray Spear", BuildKit.Glow(SunCityKit.Folder, "m_sun_ray_spear", new Color(6f, 5.8f, 4.6f, 1f), 1, true, 1f), 0.55f);
+            var streak = Line("Ray Spear", BuildKit.Fire(SunCityKit.Folder, "m_sun_ray_spear_fire", 1, new Vector2(-3f, 0f), 3f, 0.9f), 0.55f);
             var lightObject = new GameObject("Ray Light");
             lightObject.transform.SetParent(rayObject.transform, false);
             var light = lightObject.AddComponent<Light>();
             light.type = LightType.Point;
-            light.color = new Color(1f, 0.92f, 0.62f);
+            light.color = new Color(1f, 0.48f, 0.12f);
             light.range = 6f;
             light.shadows = LightShadows.None;
             light.enabled = false;
-            var heat = BuildKit.Shape(PrimitiveType.Quad, "Ray Heat", rayObject.transform, Vector3.zero, Vector3.one, BuildKit.Glow(SunCityKit.Folder, "m_sun_ray_heat", Color.white, 1, true, 1.4f));
+            var heat = BuildKit.Shape(PrimitiveType.Quad, "Ray Heat", rayObject.transform, Vector3.zero, Vector3.one, BuildKit.Fire(SunCityKit.Folder, "m_sun_ray_scorch", 1, new Vector2(0.4f, 0f), 6f));
             heat.shadowCastingMode = ShadowCastingMode.Off;
             heat.receiveShadows = false;
             heat.enabled = false;
@@ -370,7 +374,7 @@ namespace Clover.EditorTools
             var rest = brazier.AddComponent<RestPoint>();
             rest.Prompt = "Light the fire and rest";
             rest.FireIntensity = 6f;
-            rest.Configure(director, returnPoint, fire, null);
+            rest.Configure(director, returnPoint, fire, SunCityKit.RestFlames(brazier));
             return rest;
         }
 

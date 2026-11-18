@@ -66,7 +66,12 @@ namespace Clover.EditorTools
             return (solid, marks);
         }
 
-        public static Vfx Build()
+        /// <summary>
+        /// The scene's effects. <paramref name="fireLand"/> gives the Fire land's scenes their own sparks, stars, rings,
+        /// flames and bursts, made of fire rather than light (LOOKS.md 1, rule 5), from materials of their own, so
+        /// the lands that share the rest (the castle, the summit, the hub) keep exactly the look they had.
+        /// </summary>
+        public static Vfx Build(bool fireLand = false)
         {
             var root = new GameObject("Effects");
             int kinds = Enum.GetValues(typeof(VfxKind)).Length;
@@ -75,6 +80,8 @@ namespace Clover.EditorTools
 
             void Add(VfxKind kind, int count, ParticleSystem emitter)
             {
+                // The Fire land's set is laid over the common one: the emitter it replaces goes.
+                if (emitters[(int)kind] != null) UnityEngine.Object.DestroyImmediate(emitters[(int)kind].gameObject);
                 emitters[(int)kind] = emitter;
                 counts[(int)kind] = count;
             }
@@ -119,11 +126,47 @@ namespace Clover.EditorTools
             Add(VfxKind.TintRing, 1, Ring(root, "Tint Ring", BuildKit.Glow(Folder, "m_vfx_ring_tint", new Color(4.5f, 4.5f, 4.5f, 1f), 4, true, 1.5f).Graphic(0.3f)));
             // A critical blow: a gold star larger and longer than a heavy blow's.
             Add(VfxKind.Critical, 1, Star(root, "Critical", BuildKit.Glow(Folder, "m_vfx_critical", new Color(7f, 5f, 1.4f, 1f), 5, true, 1f).Graphic(0.1f, 0.5f), 3.4f, 0.17f));
+            // Smoke rises slowly, spreads and thins, laid over what is behind it: pale until it is thrown in a colour,
+            // which every caller does (a dark grey-brown for burning things).
+            Add(VfxKind.Smoke, 3, Puffs(root, "Smoke", BuildKit.Smoke(Folder, "m_vfx_smoke", new Color(0.85f, 0.8f, 0.76f, 0.75f)),
+                0.3f, 1.1f, 1.3f, 2.3f, 0.5f, 1f, -0.18f, 2.8f, flat: false));
+
+            if (fireLand) FireSet(root, Add);
 
             var vfx = root.AddComponent<Vfx>();
             vfx.Configure(emitters, counts);
             Shimmer(root);
             return vfx;
+        }
+
+        // The Fire land's own sparks, stars, rings, bursts and flames (LOOKS.md 1, rule 5): every one of them is drawn as
+        // fire, a yellow heart in orange and deep red with a smoky edge, cooling to red and smoke as it dies, where the
+        // common set is white or cold light. Same sizes, speeds and counts, so the blows weigh what they did.
+        private static void FireSet(GameObject root, Action<VfxKind, int, ParticleSystem> add)
+        {
+            var spark = BuildKit.Fire(Folder, "m_vfx_fire_spark", 1, new Vector2(0f, 1.5f), 2f);
+            var sparkHot = BuildKit.Fire(Folder, "m_vfx_fire_spark_hot", 1, new Vector2(0f, 1.5f), 2f, 0.92f);
+            add(VfxKind.HitSpark, 10, Sparks(root, "Hit Spark", spark, 26f, 6f, 15f, 0.12f, 0.3f, 0.06f, 0.13f, 2f));
+            add(VfxKind.HeavySpark, 24, Sparks(root, "Heavy Spark", spark, 38f, 8f, 22f, 0.16f, 0.45f, 0.07f, 0.17f, 2.5f));
+            add(VfxKind.GuardSpark, 9, Sparks(root, "Guard Spark", spark, 75f, 3f, 9f, 0.1f, 0.22f, 0.05f, 0.1f, 1f));
+            add(VfxKind.PerfectGuard, 30, Sparks(root, "Perfect Guard", sparkHot, 180f, 8f, 20f, 0.2f, 0.5f, 0.07f, 0.16f, 0.5f));
+            add(VfxKind.Burst, 36, Sparks(root, "Burst", spark, 180f, 7f, 24f, 0.22f, 0.6f, 0.08f, 0.2f, 1f));
+            add(VfxKind.Dust, 9, Puffs(root, "Dust", BuildKit.Glow(Folder, "m_vfx_dust_sand", new Color(0.64f, 0.56f, 0.44f, 0.5f), 0, false, 1.2f, 0.5f),
+                0.8f, 2.6f, 0.3f, 0.6f, 0.35f, 0.8f, 0f, 1.8f, flat: true));
+            // Tongues of flame that lick and cool through red to smoke as they rise.
+            add(VfxKind.Fire, 26, Puffs(root, "Fire", BuildKit.Fire(Folder, "m_vfx_fire_flame", 6, new Vector2(0f, -1.8f), 3f),
+                0.6f, 3.2f, 0.32f, 0.7f, 0.6f, 1.4f, -1.4f, 0.6f, flat: false, upright: true));
+            add(VfxKind.Ring, 1, Ring(root, "Ring", BuildKit.Fire(Folder, "m_vfx_fire_ring", 4, new Vector2(0.4f, -0.6f), 7f)));
+            // The mark of an impact is a burst of flame: a ragged star with a yellow heart, not a white one.
+            add(VfxKind.Impact, 1, Star(root, "Impact", BuildKit.Fire(Folder, "m_vfx_fire_impact", 5, new Vector2(0f, -0.8f), 3f), 2.6f, 0.12f));
+            add(VfxKind.Critical, 1, Star(root, "Critical", BuildKit.Fire(Folder, "m_vfx_fire_critical", 5, new Vector2(0f, -0.8f), 3f, 0.9f), 3.4f, 0.18f));
+            add(VfxKind.Glint, 1, Star(root, "Glint", BuildKit.Fire(Folder, "m_vfx_fire_glint", 5, new Vector2(0f, -0.5f), 2f, 0.86f), 1.3f, 0.16f));
+            add(VfxKind.Clang, 1, Star(root, "Clang", BuildKit.Fire(Folder, "m_vfx_fire_clang", 5, new Vector2(0f, -0.5f), 2f, 0.88f), 1.9f, 0.11f));
+            // What cannot be guarded keeps its red: the flare is fire burning red, seen through walls as before.
+            var danger = BuildKit.Fire(Folder, "m_vfx_fire_danger", 5, new Vector2(0f, -0.8f), 3f, 0f, false, new Color(1.5f, 0.32f, 0.3f, 1f));
+            danger.SetFloat("_ZTest", (float)UnityEngine.Rendering.CompareFunction.Always);
+            EditorUtility.SetDirty(danger);
+            add(VfxKind.Danger, 1, Star(root, "Danger", danger, 2.6f, 0.28f));
         }
 
         // Heat shimmer as drawn squiggles: a pool of thin wavy lines that rise off hot ground (HeatShimmer).

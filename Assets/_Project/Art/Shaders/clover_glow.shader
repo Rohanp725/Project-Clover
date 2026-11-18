@@ -9,8 +9,12 @@ Shader "Clover/Glow"
         // 0 soft disc, 1 streak (soft across, pointed along), 2 slash (bright leading edge, fading tail), 3 flat, 4 ring, 5 star,
         // 6 flame (a tongue of fire, round below and pointed above, its edge licking; drawn in two flat tones),
         // 7 bolt (a jagged line along v), 8 broken ring (four brackets), 9 crossed cut, 10 cracks from a point,
-        // 11 a sign of rings and triangles, 12 beam along u, 13 rimmed disc, 14 lane of arrowheads along u
+        // 11 a sign of rings and triangles, 12 beam along u, 13 rimmed disc, 14 lane of arrowheads along u,
+        // 15 a burning rim (flames licking outward round a disc of half the quad: a sun's corona)
         _Shape ("Shape", Float) = 0
+        // Fire: the shape is not light but flame. Its strength is read through bands of fire (smoke, deep red, orange,
+        // yellow, and white only above _Core), broken up by a churning turbulence that scrolls at _NoiseSpeed.
+        _Fire ("Drawn as fire", Float) = 0
         _Sharpness ("Edge sharpness", Range(0.5, 8)) = 2
         _Hard ("Hard edge at this much of the shape (0 = soft)", Range(0, 1)) = 0
         _Core ("White core above this much of the shape (0 = none)", Range(0, 1)) = 0
@@ -53,6 +57,7 @@ Shader "Clover/Glow"
                 half _SrcBlend;
                 half _DstBlend;
                 half _ZTest;
+                half _Fire;
             CBUFFER_END
 
             struct Attributes
@@ -100,7 +105,31 @@ Shader "Clover/Glow"
                 float2 centred = uv * 2.0 - 1.0;
                 half mask = 1;
                 half inner = 0;
-                if (_Shape > 13.5)
+                if (_Shape > 14.5)
+                {
+                    // A burning rim: inside half the quad the disc is whole (the ball in front hides it); outside it
+                    // tongues of flame of every height lick outward, the noise sampled moving out along each radius.
+                    // Two rows of tongues round the rim, the second between the first and shorter: each its own
+                    // height, leaning and swaying on its own time, widest at the root and drawn to a point.
+                    half radius = length(centred);
+                    half turns = (atan2(centred.y, centred.x) + 3.14159) / 6.28318 * 14.0;
+                    half tongues = 0;
+                    for (int row = 0; row < 2; row++)
+                    {
+                        half at = turns + row * 0.5;
+                        half k = floor(at);
+                        half seed = k + row * 31.0;
+                        half within = at - k - 0.5;
+                        half sway = sin(_Time.y * (2.2 + Hash(float2(seed, 3.0)) * 2.6) + seed * 1.7);
+                        half tall = (0.16 + 0.3 * Hash(float2(seed, 1.0)) + 0.05 * sway) * (row == 0 ? 1.0 : 0.65);
+                        half up = saturate((radius - 0.47) / tall);
+                        half lean = ((Hash(float2(seed, 5.0)) - 0.5) * 0.5 + 0.15 * sway) * up;
+                        half body = saturate(1.0 - abs(within - lean) / (0.6 * (1.0 - up) + 0.001));
+                        tongues = max(tongues, body * (1.0 - 0.55 * up) * step(up, 0.999));
+                    }
+                    mask = radius < 0.5 ? 1.0 : tongues;
+                }
+                else if (_Shape > 13.5)
                 {
                     // A lane of arrowheads running along u, between two bold rails: the path something will take.
                     half across = abs(centred.y);
@@ -225,6 +254,24 @@ Shader "Clover/Glow"
                     mask = saturate(1.0 - radius / reach);
                 }
                 half raw = mask;
+                if (_Fire > 0.5)
+                {
+                    // Flame, not light: a churning turbulence scales the shape's strength, and the result is read
+                    // through flat bands, from a dark smoky fringe through deep red and orange to a yellow heart. As
+                    // the vertex or material alpha falls the whole of it cools, so a dying flame goes red, then smoke.
+                    float2 flow = uv * _NoiseScale + _NoiseSpeed.xy * _Time.y;
+                    half churn = 0.62 * ValueNoise(flow) + 0.38 * ValueNoise(flow * 2.3 + 7.1 + _NoiseSpeed.yx * _Time.y * 0.6);
+                    half life = input.color.a * _Color.a;
+                    half heat = raw * lerp(0.4, 1.45, churn) - (1.0 - life) * 0.8;
+                    half b1 = smoothstep(0.27, 0.3, heat);
+                    half b2 = smoothstep(0.5, 0.53, heat);
+                    half b3 = smoothstep(0.8, 0.83, heat);
+                    half3 fire = lerp(lerp(lerp(half3(0.13, 0.06, 0.045), half3(1.0, 0.13, 0.025), b1), half3(2.0, 0.52, 0.06), b2), half3(2.5, 1.3, 0.26), b3);
+                    if (_Core > 0.001) fire = lerp(fire, half3(3.0, 2.6, 1.9), smoothstep(_Core - 0.02, _Core + 0.02, heat));
+                    half4 burnt = half4(fire * _Color.rgb * input.color.rgb, saturate(smoothstep(0.1, 0.14, heat) * lerp(0.7, 1.0, b1)));
+                    burnt.rgb *= _DstBlend < 1.5 ? burnt.a : 1.0;
+                    return burnt;
+                }
                 mask = pow(mask, _Sharpness);
                 // Graphic, not misty: the shape is cut off sharply, as if printed.
                 if (_Hard > 0.001) mask = smoothstep(_Hard - 0.025, _Hard + 0.025, raw);

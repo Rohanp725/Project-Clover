@@ -151,7 +151,8 @@ namespace Clover.EditorTools
             {
                 case "ember": return material.Lit(new Color(1.6f, 0.7f, 0.2f), 0.5f, new Color(2.7f, 0.62f, 0.07f) * strength);
                 case "molten": return material.Lit(new Color(1.6f, 0.9f, 0.3f), 0.5f, new Color(3.1f, 1.15f, 0.12f) * strength);
-                case "sun": return material.Lit(new Color(1.6f, 1.4f, 0.8f), 0.5f, new Color(3.8f, 2.7f, 1.0f) * strength);
+                // The hottest slot is a coal's yellow-orange, not white light (the owner's review, 2026-11-17).
+                case "sun": return material.Lit(new Color(1.6f, 1.1f, 0.5f), 0.5f, new Color(3.0f, 1.5f, 0.3f) * strength);
                 // Gold is lit, not glowing: a broad warm rim and a little of its own light so it holds its colour in shade.
                 case "gold": return material.Lit(new Color(2.2f, 1.6f, 0.6f), 0.6f, new Color(0.42f, 0.27f, 0.04f));
                 case "char":
@@ -291,6 +292,111 @@ namespace Clover.EditorTools
         public static Material Stone => Plain("m_sun_stone", new Color(0.66f, 0.62f, 0.55f), 0.02f);
         public static Material Shade => Plain("m_sun_shade", new Color(0.3f, 0.29f, 0.36f), 0f);
 
+        /// <summary>
+        /// Gold laid into a floor: worn, a deep bronze-gold, with no light of its own and only a narrow warm rim, so the
+        /// court's rings and hour bars read as metal in the stone and not as lines of light (the owner's review, 2026-11-17).
+        /// </summary>
+        public static Material FloorGold
+        {
+            get
+            {
+                var material = BuildKit.Toon(Folder, "m_sun_floor_gold", new Color(0.66f, 0.47f, 0.2f), false, null, 0f, 0.012f);
+                material.SetColor("_ShadeColor", ShadeColour);
+                return material.Lit(new Color(0.85f, 0.55f, 0.25f), 0.18f);
+            }
+        }
+
+        /// <summary>
+        /// A brazier's fire. The model's flame is a hard faceted shape that read as a gold crystal (the owner's review,
+        /// 2026-11-17), so it is not drawn; instead real fire burns in the bowl: tongues of flame that lick up and cool
+        /// through red to smoke, and a thread of smoke over them. It burns from the start; a rest fire stops it at once
+        /// and lights it when rested at (<see cref="Clover.World.RestPoint"/> plays it).
+        /// </summary>
+        public static ParticleSystem BrazierFire(Transform brazier, GameObject model)
+        {
+            foreach (var renderer in model.GetComponentsInChildren<Renderer>(true))
+            {
+                var slots = renderer.sharedMaterials;
+                for (int i = 0; i < slots.Length; i++)
+                    if (slots[i] != null && slots[i].name == "m_kit_ember") slots[i] = Hidden();
+                renderer.sharedMaterials = slots;
+            }
+            var fireObject = new GameObject("Brazier Fire");
+            fireObject.transform.SetParent(brazier, false);
+            fireObject.transform.localPosition = new Vector3(0f, 1.8f, 0f);
+            fireObject.transform.localRotation = Quaternion.Euler(-90f, 0f, 0f);
+            var flames = Burning(fireObject, BuildKit.Fire(Folder, "m_brazier_flame", 6, new Vector2(0f, -1.8f), 3f), 16f, 0.45f, 0.85f, 0.55f, 0.95f, 0.5f, 1.3f, 0.28f, -0.4f);
+            flames.GetComponent<ParticleSystemRenderer>().sortingFudge = -1f;
+            var main = flames.main;
+            // Each tongue licks to its own time: the flame shape reads the red of its colour as its place in the pattern.
+            main.startColor = new ParticleSystem.MinMaxGradient(new Color(0.75f, 1f, 1f, 1f), Color.white);
+            main.startRotation = new ParticleSystem.MinMaxCurve(-0.2f, 0.2f);
+            var smokeObject = new GameObject("Brazier Smoke");
+            smokeObject.transform.SetParent(fireObject.transform, false);
+            smokeObject.transform.localPosition = new Vector3(0f, 0f, 0.9f);
+            var smoke = Burning(smokeObject, BuildKit.Smoke(VfxBuilder.Folder, "m_vfx_smoke", new Color(0.85f, 0.8f, 0.76f, 0.75f)),
+                3f, 1.6f, 2.6f, 0.45f, 0.8f, 0.3f, 0.8f, 0.2f, -0.12f);
+            var smokeMain = smoke.main;
+            smokeMain.startColor = new Color(0.32f, 0.29f, 0.27f, 0.7f);
+            var grow = smoke.sizeOverLifetime;
+            grow.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 1f, 1f, 2.6f));
+            return flames;
+        }
+
+        /// <summary>A rest fire's flames, out until it is rested at: the brazier's fire and its smoke do not start by themselves.</summary>
+        public static ParticleSystem RestFlames(GameObject brazier)
+        {
+            var flames = brazier.GetComponentInChildren<ParticleSystem>(true);
+            if (flames == null) return null;
+            foreach (var system in flames.GetComponentsInChildren<ParticleSystem>(true))
+            {
+                var main = system.main;
+                main.playOnAwake = false;
+            }
+            return flames;
+        }
+
+        // A looping emitter that throws upward along its forward from a small disc: fire and smoke that keep burning.
+        private static ParticleSystem Burning(GameObject host, Material material, float rate, float lifeMin, float lifeMax,
+            float sizeMin, float sizeMax, float speedMin, float speedMax, float radius, float gravity)
+        {
+            var system = host.AddComponent<ParticleSystem>();
+            system.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+            var main = system.main;
+            main.loop = true;
+            main.playOnAwake = true;
+            main.duration = 1f;
+            main.simulationSpace = ParticleSystemSimulationSpace.World;
+            main.maxParticles = 48;
+            main.startLifetime = new ParticleSystem.MinMaxCurve(lifeMin, lifeMax);
+            main.startSize = new ParticleSystem.MinMaxCurve(sizeMin, sizeMax);
+            main.startSpeed = new ParticleSystem.MinMaxCurve(speedMin, speedMax);
+            main.gravityModifier = gravity;
+            var emission = system.emission;
+            emission.enabled = true;
+            emission.rateOverTime = rate;
+            var shape = system.shape;
+            shape.enabled = true;
+            shape.shapeType = ParticleSystemShapeType.Cone;
+            shape.angle = 8f;
+            shape.radius = radius;
+            var fade = system.colorOverLifetime;
+            fade.enabled = true;
+            var gradient = new Gradient();
+            gradient.SetKeys(
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(Color.white, 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.8f, 0.5f), new GradientAlphaKey(0f, 1f) });
+            fade.color = gradient;
+            var size = system.sizeOverLifetime;
+            size.enabled = true;
+            size.size = new ParticleSystem.MinMaxCurve(1f, AnimationCurve.Linear(0f, 1f, 1f, 0.55f));
+            var renderer = host.GetComponent<ParticleSystemRenderer>();
+            renderer.sharedMaterial = material;
+            renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            renderer.receiveShadows = false;
+            return system;
+        }
+
         /// <summary>A plain surface of the land in a colour of the builder's own (packed earth, sand, silt), shaded as the rest is.</summary>
         public static Material Flat(string name, Color colour, float outline = 0f) => Plain(name, colour, outline);
 
@@ -346,6 +452,7 @@ namespace Clover.EditorTools
             var shown = Object.Instantiate(source.gameObject, holder.transform, false);
             shown.name = "Model";
             Dress(shown);
+            if (piece == "brazier") BrazierFire(holder.transform, shown);
             foreach (var renderer in shown.GetComponentsInChildren<Renderer>()) renderer.gameObject.isStatic = true;
             if (solid)
             {

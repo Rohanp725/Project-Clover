@@ -50,6 +50,23 @@ namespace Clover.Gameplay
             else fill.enabled = false;
         }
 
+        /// <summary>
+        /// Burnt ground rather than a warning: the shape's outline in <paramref name="edge"/>, so the boundary of what
+        /// bites stays a clean line, and its inside washed in <paramref name="burnt"/> (char, laid over the floor at
+        /// that colour's own alpha) instead of a brighter copy of the edge. Fades with <paramref name="strength"/>.
+        /// </summary>
+        public void ShowBurnt(Vector3 at, Quaternion facing, Color edge, Color burnt, bool lane, float size = 1f, float lengthScale = 1f, float strength = 1f)
+        {
+            if (outline == null) return;
+            Shown = true;
+            outlineAt.SetPositionAndRotation(at + Vector3.up * 0.05f, facing);
+            fillAt.SetPositionAndRotation(at + Vector3.up * 0.07f, facing);
+            outlineAt.localScale = new Vector3(size, 1f, size * lengthScale);
+            fillAt.localScale = new Vector3(size, 1f, size * lengthScale);
+            Tint(outline, edge, MarkerShapes.OutlineAlpha * strength);
+            Tint(fill, burnt, burnt.a * Mathf.Clamp01(0.4f + 0.6f * strength));
+        }
+
         public void Hide()
         {
             Shown = false;

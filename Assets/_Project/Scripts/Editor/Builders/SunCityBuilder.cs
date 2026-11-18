@@ -72,7 +72,7 @@ namespace Clover.EditorTools
             ReadySoft();
             world = BuildKit.Group("World");
 
-            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, 4f), "");
+            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, 4f), "", true);
             if (built.Player == null) return;
             playerTransform = built.Player.transform;
             LookBuilder.Apply(LookBuilder.Noon, built.Camera);
@@ -1741,7 +1741,7 @@ namespace Clover.EditorTools
             var rest = brazier.AddComponent<RestPoint>();
             rest.Prompt = "Light the fire and rest";
             rest.FireIntensity = 6f;
-            rest.Configure(director, returnPoint, fire, null);
+            rest.Configure(director, returnPoint, fire, SunCityKit.RestFlames(brazier));
             things.Add(rest);
             fires.Add(rest);
         }

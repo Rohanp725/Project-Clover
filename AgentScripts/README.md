@@ -158,7 +158,7 @@ then the blaze and hold each with the game all but stopped. `bash AgentScripts/a
 `review/shots/current/sheets/aspect_court_pass.png` and `aspect_court_blaze.png` at every screen shape. Delete the
 file to run everything.
 
-Last run of the whole probe (2026-11-17, the god's end): 51 lines `OK`, none `WRONG`, console 0 errors and 0 warnings.
+Last run of the whole probe (2026-11-17 evening, after the fire-not-light pass): 51 lines `OK`, none `WRONG`, console 0 errors and 0 warnings.
 If the editor is not the active application while a probe runs, the keys it queues are dropped (the Input System's
 background behaviour) and every walk, read and use fails; set `InputSystem.settings.backgroundBehavior` to
 `IgnoreFocus` and `editorInputBehaviorInPlayMode` to `AllDeviceInputAlwaysGoesToGameView` with `script eval` for the
@@ -350,19 +350,19 @@ shows the instant asked for, then time is set back to 1 (which also lets go of a
 those parts (delete it or leave it empty for all):
 
 - `thrust` (`thrust_1` to `_3`, `reach_1`, each the frame after the blow lands, and `_after`), `sweep`, `plant`, `noon`
-  (`noon_tell` with the shaft of light standing over the filling circle, then each blow): Khepharu forced on a player
+  (`noon_tell` with the column of fire standing over the filling circle, then each blow): Khepharu forced on a player
   standing still.
-- `throw`, `ray`: his throw (`throw_1` in flight, `throw_2` standing), the call (`ray_1`, `ray_2`: the thread) and the
-  strike (`ray_3`: the beam), `ray_after`.
+- `throw`, `ray`: his throw (`throw_1` in flight, `throw_2` standing and burning), the call (`ray_1`, `ray_2`: the stream of fire) and the
+  strike (`ray_3`: the jet of fire), `ray_after`.
 - `sunspear`: the player's Sun-Spear thrown at open floor; Khepharu is held on the line home while it stands; the ray
   must strike him (`sunspear_1` standing, `_2` the ray, `_3` back in the hand; the line ends `OK` or `WRONG`).
 - then the man is killed and the form waits for what is asked (`SunBearer.OnlyWhenAsked`): `roll` (`roll_1`, `_2` mid
   roll, the furrow growing behind the sun, `_3` after, `_cooling` five seconds on), `parry` (a perfect guard on the
   rolling sun: `parry_1` at contact, `_2` in the slowed flight back, `_3` as it strikes, `_4` the form stunned and the sun
   rebounded; these four are taken without stopping time, and say the time scale they were taken at), `rising`
-  (`rising_1` the pillar of light as the sun is thrown up, `_2` its climb trailing fire), `stoop` (`stoop_1` the hold,
-  `_2` the dive's streak, `_3` the shock ring, `_4` after), `pass`, `zenith` (`zenith_fill` the floor filling red as the
-  court whitens, `zenith_1` in the open, `_2` from the shadow: the shimmer squiggles and the still shadow), `sparks` and
+  (`rising_1` the column as the sun is thrown up, `_2` its climb trailing fire), `stoop` (`stoop_1` the hold,
+  `_2` the dive's fall of flame, `_3` the ring of fire, `_4` after), `pass`, `zenith` (`zenith_fill` the floor filling red as the
+  court goes hot and orange, `zenith_1` in the open, `_2` from the shadow: the shimmer squiggles and the still shadow), `sparks` and
   `feathers` (`_1`, `_2`: the things that fall, in the air over their marks).
 
 `bash AgentScripts/rebuild_fire.sh` rebuilds, one menu at a time, every scene the Fire bosses' effects and the Sun-Spear touch

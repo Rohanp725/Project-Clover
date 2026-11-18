@@ -164,18 +164,20 @@ namespace Clover.EditorTools
             var enemy = root.AddComponent<Enemy>();
             enemy.Configure(kind.Name, kit.Target, animator, renderers, outline, fill, bars.root, bars.health, bars.stagger, kit.Arcs, kit.Turns, guardArc);
             enemy.ConfigureFeedback(finishMark);
+            // The Fire land's people swing in ember, not the default magenta: their blows are heat.
+            if (renderers.Any(shown => shown != null && shown.sharedMaterials.Any(material => material != null && material.name.StartsWith("m_fire_"))))
+                enemy.SlashColour = new Color(1.9f, 0.55f, 0.1f, 0.7f);
             if (kind.Name == EnemyKind.ChampionName || kind.Name == EnemyKind.SunKingName) Spearman(enemy, kind.Name == EnemyKind.SunKingName);
             return enemy;
         }
 
-        // The Fire land's two spearmen: gold arcs, not the default magenta, and a pool of streaks of light for their
-        // thrusts (fire_boss_visuals.md 2.1, 2.2). The champion's gold is duller and has no white heart; the god's has one.
+        // The Fire land's two spearmen: ember arcs, not the default magenta, and a pool of trails of flame for their
+        // thrusts (fire_boss_visuals.md 2.1, 2.2; fire, not light, since the owner's review of 2026-11-17). The god's
+        // flame burns hotter at the tip, with a small white heart; the champion's has none.
         private static void Spearman(Enemy enemy, bool godly)
         {
-            enemy.SlashColour = godly ? new Color(2.6f, 2.1f, 1.1f, 0.9f) : new Color(2.0f, 1.4f, 0.4f, 0.8f);
-            var material = BuildKit.Glow(Folder, godly ? "m_spear_streak_god" : "m_spear_streak", Color.white, 2, true, 1.2f);
-            material.SetFloat("_Core", godly ? 0.62f : 0f);
-            EditorUtility.SetDirty(material);
+            enemy.SlashColour = godly ? new Color(2.4f, 0.75f, 0.14f, 0.9f) : new Color(1.9f, 0.55f, 0.1f, 0.8f);
+            var material = BuildKit.Fire(Folder, godly ? "m_spear_flame_god" : "m_spear_flame", 2, new Vector2(-2.6f, 0f), 4f, godly ? 0.95f : 0f);
             var pool = new Renderer[3];
             for (int i = 0; i < pool.Length; i++)
             {
@@ -185,9 +187,9 @@ namespace Clover.EditorTools
                 pool[i].enabled = false;
             }
             var look = enemy.gameObject.AddComponent<SpearLook>();
-            look.Configure(pool, godly ? new Color(4.4f, 3.2f, 1.2f, 1f) : new Color(3.6f, 2.2f, 0.55f, 1f), godly);
+            look.Configure(pool, godly ? new Color(1.1f, 1.05f, 1f, 1f) : new Color(1f, 0.92f, 0.85f, 1f), godly);
             // The planted spear's ring of fire: tongues of flame round the circle's edge, twenty of them for the god's.
-            var flame = BuildKit.Flame(Folder, "m_plant_tongue", Color.white);
+            var flame = BuildKit.Fire(Folder, "m_plant_tongue_fire", 6, new Vector2(0f, -1.6f), 3f);
             var tongues = new Renderer[godly ? 20 : 16];
             for (int i = 0; i < tongues.Length; i++)
             {
@@ -198,10 +200,8 @@ namespace Clover.EditorTools
             }
             look.ConfigureTongues(tongues);
             if (!godly) return;
-            // The god's shafts of noon: light falling from the sky onto each circle, two crossed quads to a shaft, two shafts.
-            var shaftLight = BuildKit.Glow(Folder, "m_noon_shaft", Color.white, 12, true, 1f);
-            shaftLight.SetFloat("_Core", 0.7f);
-            EditorUtility.SetDirty(shaftLight);
+            // The god's noon: fire pouring down from the sky onto each circle, two crossed quads to a column, two columns.
+            var shaftLight = BuildKit.Fire(Folder, "m_noon_fire", 1, new Vector2(2.2f, 0f), 5f);
             var shafts = new Renderer[4];
             for (int i = 0; i < shafts.Length; i++)
             {

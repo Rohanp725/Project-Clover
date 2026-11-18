@@ -4,9 +4,10 @@ using UnityEngine;
 namespace Clover.Gameplay
 {
     /// <summary>
-    /// What the blows of the two spearmen of the Fire land look like (fire_boss_visuals.md, section 2.1 and 2.2): a
-    /// thrust leaves a streak of gold light down its lane, drawn tip-first and fading tail-first; a haft skimming the
-    /// floor raises sand along the rim it swept; a circle of fire leaves a gold ring and sand thrown out at its edge. It
+    /// What the blows of the two spearmen of the Fire land look like (fire_boss_visuals.md, section 2.1 and 2.2), all of it
+    /// fire since the owner's review (2026-11-17), not light: a
+    /// thrust leaves a trail of flame down its lane, drawn tip-first and cooling to smoke tail-first; a haft skimming the
+    /// floor raises sand along the rim it swept; a circle of fire leaves a ring of fire and sand thrown out at its edge. It
     /// listens to the enemy's own blow, so the enemy's code does not grow; the streaks are a pool the builder made.
     /// </summary>
     [RequireComponent(typeof(Enemy))]
@@ -15,22 +16,24 @@ namespace Clover.Gameplay
         [SerializeField] private Renderer[] streaks = new Renderer[0];
         /// <summary>Shafts of noon: crossed pairs of tall quads, the even one and the odd one after it.</summary>
         [SerializeField] private Renderer[] shafts = new Renderer[0];
-        [ColorUsage(true, true)] public Color ShaftColour = new Color(2.4f, 2.2f, 1.6f, 1f);
+        [ColorUsage(true, true)] public Color ShaftColour = new Color(1f, 1f, 1f, 1f);
         public float ShaftHeight = 16f, ShaftThin = 0.3f, ShaftFoot = 1.2f, ShaftSlam = 0.1f, ShaftCollapse = 0.25f;
         /// <summary>The planted spear's ring of fire: tongues of flame standing round the edge that bites.</summary>
         [SerializeField] private Renderer[] tongues = new Renderer[0];
-        [ColorUsage(true, true)] public Color TongueColour = new Color(2.2f, 0.85f, 0.18f, 1f);
+        [ColorUsage(true, true)] public Color TongueColour = new Color(1f, 1f, 1f, 1f);
         public float TongueRise = 0.15f, TongueSink = 0.4f, TongueBeat = 0.5f;
-        /// <summary>The streak's light: gold, far past white for the bloom.</summary>
-        [ColorUsage(true, true)] public Color StreakColour = new Color(4f, 2.6f, 0.7f, 1f);
+        /// <summary>A multiplier on the streak's own fire (its material is flame, not light): white leaves it as it is.</summary>
+        [ColorUsage(true, true)] public Color StreakColour = new Color(1f, 1f, 1f, 1f);
         /// <summary>True for the god: his streaks are wider and his rings sun white at the heart.</summary>
         public bool Godly;
-        public float StreakHeight = 1.1f, StreakWidth = 0.3f, HeavyWidth = 0.45f, GrowSeconds = 0.06f, FadeSeconds = 0.2f;
+        // Wide enough to read as a trail of flame at the court's camera, not a line of light.
+        public float StreakHeight = 1.1f, StreakWidth = 0.6f, HeavyWidth = 0.85f, GrowSeconds = 0.06f, FadeSeconds = 0.26f;
 
         private static readonly int ColourId = Shader.PropertyToID("_Color");
-        private static readonly Color Gold = new Color(1f, 0.72f, 0.2f, 1f);
+        private static readonly Color Gold = new Color(1f, 0.82f, 0.62f, 1f);
+        private static readonly Color Smoke = new Color(0.25f, 0.22f, 0.2f, 0.85f);
         private static readonly Color Sand = new Color(1f, 0.88f, 0.64f, 1f);
-        private static readonly Color SunWhite = new Color(1f, 0.92f, 0.62f, 1f);
+        private static readonly Color SunWhite = new Color(1f, 0.92f, 0.78f, 1f);
 
         private Enemy enemy;
         private MaterialPropertyBlock block;
@@ -122,7 +125,7 @@ namespace Clover.Gameplay
                     warning = -1;
                     warned = null;
                 }
-                // Sand thrown out at the edge that bites, and for the god's shafts of noon a sun-white star.
+                // Sand thrown out at the edge that bites, and for the god's noon a splash of fire where it fell.
                 int puffs = Mathf.Clamp(Mathf.RoundToInt(attack.Radius * 2.4f), 6, 14);
                 for (int i = 0; i < puffs; i++)
                 {
@@ -130,7 +133,13 @@ namespace Clover.Gameplay
                     var way = new Vector3(Mathf.Sin(turn), 0f, Mathf.Cos(turn));
                     Vfx.Play(VfxKind.Dust, centre + way * attack.Radius + Vector3.up * 0.1f, way, 1f, Sand);
                 }
-                if (attack.Ranged && Godly) Vfx.Play(VfxKind.Impact, centre + Vector3.up * 0.8f, Vector3.up, 1.2f, SunWhite);
+                if (attack.Ranged && Godly)
+                {
+                    // The fire that fell from the sky splashes and burns where it struck, and smokes.
+                    Vfx.Play(VfxKind.Impact, centre + Vector3.up * 0.8f, Vector3.up, 1.2f, SunWhite);
+                    Vfx.Play(VfxKind.Fire, centre + Vector3.up * 0.3f, Vector3.up, 2.5f);
+                    Vfx.Play(VfxKind.Smoke, centre + Vector3.up * 1.2f, Vector3.up, 1.6f, Smoke);
+                }
                 // The planted spear: fire stands up round the edge of the circle for as long as it burns.
                 if (!attack.Ranged && attack.BurnSeconds > 0f && tongues.Length > 0)
                 {
@@ -140,7 +149,7 @@ namespace Clover.Gameplay
                     ringAge = 0f;
                     ringCount = Mathf.Min(tongues.Length, Mathf.RoundToInt(attack.Radius * 4f));
                 }
-                if (!attack.Fiery) Vfx.Play(VfxKind.TintRing, centre + Vector3.up * 0.3f, Vector3.up, 1f, Gold);
+                if (!attack.Fiery) Vfx.Play(VfxKind.Ring, centre + Vector3.up * 0.3f, Vector3.up, 1f, Gold);
                 return;
             }
             if (attack.IsLine)
@@ -153,6 +162,7 @@ namespace Clover.Gameplay
                 Streak(start + along * 0.6f, start + along * attack.Reach, heavy ? HeavyWidth : StreakWidth);
                 Vector3 end = start + along * attack.Reach + Vector3.up * StreakHeight;
                 Vfx.Play(VfxKind.Embers, end, along, 0.6f, Gold);
+                Vfx.Play(VfxKind.Smoke, end, Vector3.up, 0.35f, Smoke);
                 if (Godly && heavy) Vfx.Play(VfxKind.Glint, end, along, 1f, SunWhite);
                 if (attack.Lunge >= 1.2f) Vfx.Play(VfxKind.Dust, transform.position + Vector3.up * 0.1f, -along, 1.2f, Sand);
                 return;
@@ -249,11 +259,11 @@ namespace Clover.Gameplay
                 if (shaftAge[i] < 0f) continue;
                 shaftAge[i] += deltaTime;
                 float age = shaftAge[i];
-                if (age < ShaftSlam) Place(i, shaftWide[i], 1.6f);
+                if (age < ShaftSlam) Place(i, shaftWide[i], 1.15f);
                 else if (age < ShaftSlam + ShaftCollapse)
                 {
                     float t = (age - ShaftSlam) / ShaftCollapse;
-                    Place(i, Mathf.Lerp(shaftWide[i] * 0.5f, 0.2f, t), 1.2f * (1f - t));
+                    Place(i, Mathf.Lerp(shaftWide[i] * 0.5f, 0.2f, t), 1f - t);
                 }
                 else
                 {

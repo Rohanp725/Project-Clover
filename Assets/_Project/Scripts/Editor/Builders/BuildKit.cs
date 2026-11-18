@@ -111,6 +111,8 @@ namespace Clover.EditorTools
             material.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
             material.SetFloat("_DstBlend", (float)(additive ? BlendMode.One : BlendMode.OneMinusSrcAlpha));
             material.SetFloat("_ZTest", (float)(throughWalls ? CompareFunction.Always : CompareFunction.LessEqual));
+            // Light unless a caller makes it fire (Fire, below).
+            material.SetFloat("_Fire", 0f);
             material.renderQueue = (int)RenderQueue.Transparent;
             return material;
         }
@@ -122,6 +124,48 @@ namespace Clover.EditorTools
             var material = Glow(folder, name, colour, 6, false, 1f);
             material.SetFloat("_Hard", 0.1f);
             material.SetFloat("_Core", 0f);
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        /// <summary>
+        /// A material of fire, not light (LOOKS.md 1, rule 5): the glow shader's shape read through bands of flame, from a
+        /// dark smoky fringe through deep red and orange to a yellow heart, churned by turbulence that scrolls at
+        /// <paramref name="flow"/> (uv a second) at <paramref name="grain"/> cells across the shape. White only above
+        /// <paramref name="core"/> (0 for none). Laid over what is behind it unless <paramref name="additive"/>, so it
+        /// reads as a substance on pale floors and overlaps do not burn out to white. The colour is a multiplier on
+        /// the fire's own colours: white leaves them as they are.
+        /// </summary>
+        public static Material Fire(string folder, string name, int shape, Vector2 flow, float grain = 4f, float core = 0f, bool additive = false, Color? tint = null)
+        {
+            var material = Glow(folder, name, tint ?? Color.white, shape, additive, 1f);
+            material.SetFloat("_Fire", 1f);
+            material.SetFloat("_Core", core);
+            material.SetFloat("_NoiseScale", grain);
+            material.SetVector("_NoiseSpeed", new Vector4(flow.x, flow.y, 0f, 0f));
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        /// <summary>Smoke: a soft grey-brown blot laid over what is behind it, broken up so it reads as a puff, not a disc.</summary>
+        public static Material Smoke(string folder, string name, Color colour)
+        {
+            var material = Glow(folder, name, colour, 0, false, 0.8f, 0.55f);
+            material.SetFloat("_NoiseScale", 3.5f);
+            material.SetVector("_NoiseSpeed", new Vector4(0.1f, 0.35f, 0f, 0f));
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        /// <summary>The sun as a ball of burning matter (clover_molten.shader).</summary>
+        public static Material Molten(string folder, string name, Color tint, float crust = 0.32f, float heart = 0.35f, float speed = 0.35f)
+        {
+            var material = MaterialAt(folder, name, "Clover/Molten");
+            material.SetColor("_Tint", tint);
+            material.SetFloat("_Crust", crust);
+            material.SetFloat("_Heart", heart);
+            material.SetFloat("_Speed", speed);
+            material.enableInstancing = true;
             EditorUtility.SetDirty(material);
             return material;
         }

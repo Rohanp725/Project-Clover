@@ -45,8 +45,11 @@ namespace Clover.EditorTools
             public Vfx Effects;
         }
 
-        /// <summary>Builds the camera, the player at the given spot, the effects and the HUD into the open scene.</summary>
-        public static Built Build(Vector3 position, string hint)
+        /// <summary>
+        /// Builds the camera, the player at the given spot, the effects and the HUD into the open scene. The Fire land
+        /// passes <paramref name="fireLand"/> for its own effects, made of fire rather than light.
+        /// </summary>
+        public static Built Build(Vector3 position, string hint, bool fireLand = false)
         {
             var built = new Built();
             var controls = AssetDatabase.LoadAssetAtPath<InputActionAsset>(ControlsPath);
@@ -63,7 +66,7 @@ namespace Clover.EditorTools
             cameraObject.AddComponent<AudioListener>();
             built.Follow = cameraObject.AddComponent<TopDownCamera>();
 
-            built.Effects = VfxBuilder.Build();
+            built.Effects = VfxBuilder.Build(fireLand);
             built.Player = BuildPlayer(built.Follow);
             built.Player.transform.position = position;
             var controller = built.Player.GetComponent<PlayerController>();
@@ -73,7 +76,7 @@ namespace Clover.EditorTools
             cameraObject.AddComponent<Clover.World.OcclusionFader>().Configure(built.Player.transform);
 
             BuildHud(controller, built.Player.GetComponent<PlayerCombat>(), built.Player.GetComponent<PlayerDefence>(), hint);
-            BuildFeedback(built.Player, cameraObject.transform);
+            BuildFeedback(built.Player, cameraObject.transform, fireLand);
             // The player's lingering effects on the ground live in the scene, not on the player.
             new GameObject("Hazards").AddComponent<Clover.World.Hazards>();
             // What spell forms are drawn with and run by: shapes and marks kept ready, and the casts in progress.
@@ -100,7 +103,7 @@ namespace Clover.EditorTools
 
         // What answers the player's blows and choices in the world: the brackets under whoever the next attack would turn
         // to, the cut lines blows leave, and the embers that fly in from the fallen. All wait unseen until wanted.
-        private static void BuildFeedback(GameObject player, Transform camera)
+        private static void BuildFeedback(GameObject player, Transform camera, bool fireLand)
         {
             // Thinner and dimmer than any attack marker: it is a hint, not a warning.
             var brackets = BuildKit.Glow(PlayerFolder, "m_target_brackets", Color.white, 8, false, 1f).Graphic(0.74f);
@@ -127,7 +130,9 @@ namespace Clover.EditorTools
 
             // An ember in the air is the HUD's ember: an upright diamond with a bright heart, and a tail of light behind it.
             var flame = BuildKit.Glow(PlayerFolder, "m_ember_mote", new Color(5f, 1.9f, 0.3f, 1f), 3, false, 1f, 0f, true);
-            var heart = BuildKit.Glow(PlayerFolder, "m_ember_heart", new Color(6f, 5f, 3f, 1f), 3, false, 1f, 0f, true);
+            // In the Fire land the heart is the hottest yellow of a coal, not white light.
+            var heart = fireLand ? BuildKit.Glow(PlayerFolder, "m_ember_heart_fire", new Color(3.4f, 1.7f, 0.35f, 1f), 3, false, 1f, 0f, true)
+                : BuildKit.Glow(PlayerFolder, "m_ember_heart", new Color(6f, 5f, 3f, 1f), 3, false, 1f, 0f, true);
             var tail = BuildKit.Glow(PlayerFolder, "m_ember_tail", new Color(3.2f, 1.1f, 0.15f, 0.9f), 3, true, 1f, 0f, true);
             var embers = new GameObject("Ember Motes");
             var motes = new Transform[8];

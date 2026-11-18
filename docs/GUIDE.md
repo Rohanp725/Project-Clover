@@ -1221,9 +1221,10 @@ long third thrust with the sweep.
 
 ### The Sun-Bearer
 
-Beaten, the man does not fall. He gets up off one knee and lifts the spear to the sky; a thread of light stands out
-of it, the sun comes down it into him and he burns gold and then white; in the flash as it arrives he is gone into the
-disc, and the scarab rises under it and takes it up. This takes about five seconds, you cannot be struck while it
+Beaten, the man does not fall. He gets up off one knee and lifts the spear to the sky; a stream of fire pours down
+onto its point, the sun (a ball of burning matter, flames licking off it and smoke rolling up) comes down it into him
+and he catches and burns; in a burst of flame and smoke as it arrives he is gone into it, and the scarab rises under
+it and takes it up. This takes about five seconds, you cannot be struck while it
 happens, and the camera holds both of you. Then he is a scarab that rolls the sun across the floor and a falcon that
 carries it up: one creature, one shape at a time. **The sun is what hurts you, and taking it from him is how you hurt him.**
 While he holds it his shell is hot and blows do a quarter of their damage, but thirty damage to his body during one
@@ -1233,7 +1234,7 @@ up again. You can push the loose sun further off with a blow.
 
 | Attack | Shape | What you see | What to do | Opening |
 |---|---|---|---|---|
-| **Roll** | Scarab | He goes to the rim; a red lane four metres wide across the court; the sun rolls down it with him behind. The lane stays hot (orange) for ten seconds | Step off the lane. A lane drawn through the obelisk stops at it. Strike his flank as he passes | Only if the sun is knocked away |
+| **Roll** | Scarab | He goes to the rim; a red lane four metres wide across the court; the sun rolls down it with him behind. The lane stays hot for ten seconds: scorched dark inside an orange edge, burning and smoking | Step off the lane. A lane drawn through the obelisk stops at it. Strike his flank as he passes | Only if the sun is knocked away |
 | **Furrows** | Scarab | Three rolls, back and forth, each to the side you went. Three hot lanes | Stand between two lanes or beyond the last | He rests on the sun for two seconds after the third |
 | **Ram** | Scarab | He leaves the sun and lowers his horn; a pale circle on you | Guard, or walk out | **The horn sticks in the paving: his head is open for nearly two seconds** |
 | **Sparks** | Scarab | Wing cases lifted and shaken; five red circles in an arc, then five more in the gaps | Step into the gaps, then into where the first fell | None |

@@ -57,7 +57,7 @@ namespace Clover.EditorTools
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             var world = BuildKit.Group("World");
 
-            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, 0f), "");
+            var built = PlayerBuilder.Build(new Vector3(0f, 0.05f, 0f), "", true);
             if (built.Player == null) return;
             LookBuilder.Apply(LookBuilder.Noon, built.Camera);
             // The owner's decision of 2026-11-17: the player enters this land with fists and no element.
@@ -225,7 +225,7 @@ namespace Clover.EditorTools
             var rest = brazier.AddComponent<RestPoint>();
             rest.Prompt = "Rest at the fire";
             rest.FireIntensity = 6f;
-            rest.Configure(director, returnPoint, fire, null);
+            rest.Configure(director, returnPoint, fire, SunCityKit.RestFlames(brazier));
             built.Player.GetComponent<PlayerInteraction>().Configure(new Interactable[] { rest, mirror });
 
             PlayerBuilder.AddTitle("The Sun-King's City", "a yard under the noon");

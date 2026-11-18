@@ -14,8 +14,9 @@ namespace Clover.Gameplay
         private readonly Renderer beamRenderer, laneRenderer;
         private readonly MaterialPropertyBlock block = new MaterialPropertyBlock();
 
-        public Color BeamColour = new Color(4f, 3.3f, 1.8f, 1f);
-        public Color LaneColour = new Color(1.4f, 1.2f, 0.75f, 0.55f);
+        /// <summary>A multiplier on the beam's own fire (its material is flame); the lane under it is a scorching orange.</summary>
+        public Color BeamColour = new Color(1f, 1f, 1f, 1f);
+        public Color LaneColour = new Color(1.3f, 0.42f, 0.1f, 0.5f);
 
         public SunBeamShape(Transform beamQuad, Transform laneQuad)
         {

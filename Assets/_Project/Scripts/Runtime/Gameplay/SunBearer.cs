@@ -118,6 +118,10 @@ namespace Clover.Gameplay
         public Color PlainMarker = new Color(1f, 0.93f, 0.75f, 1f);
         public Color RedMarker = new Color(1f, 0.08f, 0.05f, 1f);
         public Color HotMarker = new Color(1f, 0.45f, 0.06f, 1f);
+        /// <summary>What hot floor is inside its orange edge: scorched, a char wash laid over the paving, not orange paint.</summary>
+        public Color BurntFloor = new Color(0.17f, 0.075f, 0.045f, 0.62f);
+        /// <summary>The whole court through the Zenith's blaze: scorched red-brown, thin enough that the shadow still reads through it.</summary>
+        public Color BlazeFloor = new Color(0.42f, 0.13f, 0.04f, 0.3f);
 
         public SunBearerChooser Chooser = new SunBearerChooser();
         /// <summary>What it does next, whatever the chooser would say: for probes. A falcon's attack asked of the scarab brings the Rising first.</summary>
@@ -179,11 +183,14 @@ namespace Clover.Gameplay
 
         private static readonly int Emission = Shader.PropertyToID("_EmissionColor");
         private static readonly int MarkerColour = Shader.PropertyToID("_Color");
-        // The land's colours for what it throws: gold rings, sand dust, grey smoke (fire_boss_visuals.md, the palette).
-        private static readonly Color Gold = new Color(1f, 0.72f, 0.2f, 1f);
+        // The land's colours for what it throws: sand dust and grey smoke (fire_boss_visuals.md, the palette).
+        // Multipliers on the Fire land's effects, which are fire of their own colour: these only warm them a little.
+        private static readonly Color Gold = new Color(1f, 0.82f, 0.62f, 1f);
         private static readonly Color Sand = new Color(1f, 0.88f, 0.64f, 1f);
         private static readonly Color Smoke = new Color(0.24f, 0.22f, 0.21f, 0.85f);
-        private static readonly Color SunWhite = new Color(1f, 0.92f, 0.62f, 1f);
+        // What a burnt body comes apart into: dark red-brown cinders, not pale flakes that read as light.
+        private static readonly Color Cinder = new Color(0.36f, 0.13f, 0.06f, 1f);
+        private static readonly Color SunWhite = new Color(1f, 0.92f, 0.78f, 1f);
         // Read every frame by the bar and the probes: the names are made once.
         private static readonly string[] ModeNames = System.Enum.GetNames(typeof(Mode));
         private const int HotMost = 6;
@@ -325,7 +332,7 @@ namespace Clover.Gameplay
             fallFrom = new Vector3[falls.Length];
             fallFeather = new bool[falls.Length];
             shadowRenderer = falconShadow != null ? falconShadow.GetComponent<Renderer>() : null;
-            lineRenderer = lightLine != null ? lightLine.GetComponent<Renderer>() : null;
+            lineRenderer = lightLine != null ? lightLine.GetComponentInChildren<Renderer>(true) : null;
             legRest = new Quaternion[legs.Length];
             for (int i = 0; i < legs.Length; i++) legRest[i] = legs[i].localRotation;
             // The wings' bones are turned about the body's own forward line, wherever the file left their axes.
@@ -570,7 +577,7 @@ namespace Clover.Gameplay
             LoseSun(KeepSun(OnFloor(sunAt) + way * 8f), 0.6f);
             HideMarkers();
             Blazing = false;
-            ScreenFlash.Flash(new Color(1f, 0.95f, 0.8f, 0.35f), 0.08f);
+            ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.28f), 0.08f);
             if (shaker != null) shaker.Shake(0.4f, 0.3f);
             if (!saidLoose && victimDefence != null)
             {
@@ -603,7 +610,7 @@ namespace Clover.Gameplay
                 hitStop.Slow(ParryFreeze + ParrySlowSeconds, ParrySlowScale);
                 hitStop.Freeze(ParryFreeze);
             }
-            ScreenFlash.Flash(new Color(1f, 0.95f, 0.8f, 0.55f), 0.08f);
+            ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.44f), 0.08f);
             Vfx.Play(VfxKind.Critical, sunAt, Vector3.up, 1.5f, Gold);
             Vfx.Play(VfxKind.PerfectGuard, sunAt, Vector3.up, 1.5f);
             if (look != null) look.SunTrail(true);
@@ -639,12 +646,12 @@ namespace Clover.Gameplay
             if (hitStop != null) hitStop.Freeze(ParryStrikeFreeze);
             Vfx.Play(VfxKind.Impact, to, Vector3.up, 3f, SunWhite);
             Vfx.Play(VfxKind.Burst, to, Vector3.up, 2f);
-            Vfx.Play(VfxKind.TintRing, OnFloor(to) + Vector3.up * 0.3f, Vector3.up, 1.6f, Gold);
+            Vfx.Play(VfxKind.Ring, OnFloor(to) + Vector3.up * 0.3f, Vector3.up, 1.6f, Gold);
             ScreenFlash.Flash(new Color(1f, 0.6f, 0.25f, 0.35f), 0.06f);
             if (shaker != null) shaker.Shake(0.6f, 0.35f);
             flashLeft = 0.12f;
             // The fire in it goes out: smoke from its glowing edges.
-            for (int i = 0; i < 5; i++) Vfx.Play(VfxKind.Ash, at + Facing(i * 72f) * 1.6f + Vector3.up * 1.2f, Vector3.up, 1f, Smoke);
+            for (int i = 0; i < 5; i++) Vfx.Play(VfxKind.Smoke, at + Facing(i * 72f) * 1.6f + Vector3.up * 1.2f, Vector3.up, 1f, Smoke);
             Health.Damage(ParryDamage);
             if (Health.IsDead)
             {
@@ -688,8 +695,8 @@ namespace Clover.Gameplay
             SetOpen(true, true);
             headOpen = false;
             Enter(Mode.Staggered);
-            Vfx.Play(VfxKind.TintRing, at + Vector3.up * 2f, Vector3.up, 1f, Gold);
-            ScreenFlash.Flash(new Color(1f, 0.95f, 0.8f, 0.35f), 0.08f);
+            Vfx.Play(VfxKind.Ring, at + Vector3.up * 2f, Vector3.up, 1f, Gold);
+            ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.28f), 0.08f);
             if (shaker != null) shaker.Shake(0.5f, 0.4f);
         }
 
@@ -709,7 +716,7 @@ namespace Clover.Gameplay
                 hitStop.Slow(1.5f, 0.3f);
                 hitStop.Freeze(0.12f);
             }
-            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.6f), 0.12f);
+            ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.48f), 0.12f);
             if (shaker != null) shaker.Shake(0.5f, 0.5f);
         }
 
@@ -892,7 +899,7 @@ namespace Clover.Gameplay
             furyShown = true;
             zenithOwed = true;
             if (Sunlight.Hand != null) Sunlight.Hand.DegreesPerSecond = Mathf.Sign(Sunlight.Hand.DegreesPerSecond) * ShadowHand.InFury;
-            ScreenFlash.Flash(new Color(1f, 0.8f, 0.4f, 0.4f), 0.1f);
+            ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.32f), 0.1f);
             if (shaker != null) shaker.Shake(0.5f, 0.5f);
             RaiseEnraged();
         }
@@ -902,12 +909,16 @@ namespace Clover.Gameplay
         private void AdvanceEntering(float deltaTime)
         {
             Vector3 from = markPoint;
-            // The first beat: where he stands with the spear lifted a ring of gold closes on the floor and a thread of light stands up out of the spear.
+            // The first beat: where he stands with the spear lifted a ring of fire closes on the floor and a stream of fire
+            // comes down out of the sky onto the point of the spear, spitting flame where it pours onto it.
             if (elapsed < SunLandsAt)
             {
                 circles[0].Show(from, Quaternion.identity, Mathf.Clamp01(elapsed / SunDownAt), HotMarker, false, 4.5f);
                 if (Every(ref untilEmber, 0.066f, deltaTime))
+                {
                     Vfx.Play(VfxKind.Embers, from + Facing(Random.Range(0f, 360f)) * Random.Range(0.4f, 4f) + Vector3.up * 0.3f, Vector3.up, 1.4f);
+                    Vfx.Play(VfxKind.Fire, from + Vector3.up * ThreadFoot, Vector3.up, 0.5f + Mathf.Clamp01(elapsed / SunDownAt));
+                }
             }
             if (lineRenderer != null)
             {
@@ -926,10 +937,12 @@ namespace Clover.Gameplay
                 step = 1;
                 circles[0].Hide();
                 Vfx.Play(VfxKind.Impact, from + Vector3.up);
-                Vfx.Play(VfxKind.TintRing, from + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
-                Vfx.Play(VfxKind.Fire, from + Vector3.up, Vector3.up, 3f);
+                Vfx.Play(VfxKind.Ring, from + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
+                // He is consumed: a burst of flame where he stood and a pall of smoke rolling up off it.
+                Vfx.Play(VfxKind.Fire, from + Vector3.up, Vector3.up, 5f);
                 Vfx.Play(VfxKind.Burst, from + Vector3.up * 6f, Vector3.up, 3f);
-                ScreenFlash.Flash(new Color(1f, 0.9f, 0.6f, 0.45f), 0.1f);
+                for (int i = 0; i < 6; i++) Vfx.Play(VfxKind.Smoke, from + Facing(i * 60f) * 1.2f + Vector3.up * (1.5f + 0.4f * i), Vector3.up, 2.2f, Smoke);
+                ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.36f), 0.1f);
                 if (shaker != null) shaker.Shake(0.7f, 0.5f);
             }
             // The third: the scarab comes up out of the floor under it with its cases thrown wide, and the sun
@@ -951,8 +964,8 @@ namespace Clover.Gameplay
                 roarLeft = 0.9f;
                 if (shaker != null) shaker.Shake(0.6f, 0.6f);
                 Vfx.Play(VfxKind.Burst, at + Vector3.up * 2f, Vector3.up, 3f);
-                Vfx.Play(VfxKind.TintRing, OnFloor(at) + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
-                ScreenFlash.Flash(new Color(1f, 0.85f, 0.5f, 0.35f), 0.09f);
+                Vfx.Play(VfxKind.Ring, OnFloor(at) + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
+                ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.28f), 0.09f);
                 RaiseRoared();
             }
             if (elapsed < EntranceSeconds) return;
@@ -1292,7 +1305,7 @@ namespace Clover.Gameplay
                 pitch = 15f;
                 circles[0].Hide();
                 Vfx.Play(VfxKind.Impact, markPoint + Vector3.up * 0.6f);
-                Vfx.Play(VfxKind.TintRing, markPoint + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
+                Vfx.Play(VfxKind.Ring, markPoint + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
                 for (int i = 0; i < 6; i++) Vfx.Play(VfxKind.Dust, markPoint + Facing(i * 60f) * RamRadius, Vector3.up, 1f, Sand);
                 if (shaker != null) shaker.Shake(0.7f, 0.35f);
                 Vector3 offset = PlayerOnFloor - markPoint;
@@ -1427,8 +1440,8 @@ namespace Clover.Gameplay
                     step = 1;
                     circles[0].Hide();
                     Vfx.Play(VfxKind.Burst, sunAt, Vector3.up, 3f);
-                    Vfx.Play(VfxKind.TintRing, OnFloor(at) + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
-                    ScreenFlash.Flash(new Color(1f, 0.9f, 0.6f, 0.35f), 0.08f);
+                    Vfx.Play(VfxKind.Ring, OnFloor(at) + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
+                    ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.28f), 0.08f);
                     // The throw: a pillar of light from the floor up past the sun, a ring of air, and the sun goes up
                     // trailing fire, embers shed from the opening wings.
                     if (look != null)
@@ -1479,7 +1492,7 @@ namespace Clover.Gameplay
                 Vfx.Play(VfxKind.TintRing, OnFloor(at) + Vector3.up * 0.2f, Vector3.up, 1.2f, Sand);
                 // The fire of its wings goes out: a last shower of embers, and smoke from the folding cases.
                 Vfx.Play(VfxKind.Embers, at + Vector3.up * 2f, Vector3.up, 2f);
-                for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.Ash, at + Facing(yaw + 90f * i + 45f) * 1.4f + Vector3.up * 1.8f, Vector3.up, 0.8f, Smoke);
+                for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.Smoke, at + Facing(yaw + 90f * i + 45f) * 1.4f + Vector3.up * 1.8f, Vector3.up, 0.8f, Smoke);
                 if (shaker != null) shaker.Shake(0.3f, 0.3f);
             }
             pitch = Mathf.MoveTowards(pitch, 0f, 60f * deltaTime);
@@ -1543,13 +1556,13 @@ namespace Clover.Gameplay
                 circles[0].Hide();
                 if (look != null) look.Dived(moveFrom + Vector3.up * 1.5f, markPoint);
                 Vfx.Play(VfxKind.Impact, markPoint + Vector3.up * 0.6f, Vector3.up, 1.5f, SunWhite);
-                Vfx.Play(VfxKind.TintRing, markPoint + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
+                Vfx.Play(VfxKind.Ring, markPoint + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
                 Vfx.Play(VfxKind.Fire, markPoint + Vector3.up * 0.5f, Vector3.up, 4f);
                 // Fire thrown outward along the floor, and sand at the edge of what it struck.
                 for (int i = 0; i < 10; i++) Vfx.Play(VfxKind.Fire, markPoint + Facing(i * 36f + 18f) * 1.6f + Vector3.up * 0.3f, Facing(i * 36f + 18f) + Vector3.up * 0.4f, 0.5f);
                 for (int i = 0; i < 8; i++) Vfx.Play(VfxKind.Dust, markPoint + Facing(i * 45f) * StoopRadius, Facing(i * 45f), 1.2f, Sand);
                 if (shaker != null) shaker.Shake(0.9f, 0.4f);
-                ScreenFlash.Flash(new Color(1f, 0.85f, 0.5f, 0.25f), 0.06f);
+                ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.2f), 0.06f);
                 LayCrater(markPoint, StoopHotRadius, HotSeconds);
                 Vector3 offset = PlayerOnFloor - markPoint;
                 if (offset.magnitude <= StoopRadius + 0.35f
@@ -1745,7 +1758,7 @@ namespace Clover.Gameplay
                 floorMark.Show(Vector3.zero, Quaternion.identity, fill, RedMarker, false);
                 ShowShadow(hand, 1f);
                 sunSize = 1f + fill * 0.5f;
-                // The court whitens as the floor fills: the sun at the top of the sky is seen by its light.
+                // The court grows hotter and redder as the floor fills: the sun at the top of the sky is felt by its heat.
                 if (look != null) look.Blaze(fill);
                 return;
             }
@@ -1756,7 +1769,7 @@ namespace Clover.Gameplay
                 {
                     Blazing = true;
                     untilBlaze = 0f;
-                    ScreenFlash.Flash(new Color(1f, 0.9f, 0.6f, 0.5f), 0.12f);
+                    ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.4f), 0.12f);
                     if (shaker != null) shaker.Shake(0.5f, 0.6f);
                 }
                 // In its fury the shadow stops half-way through, and comes back the other way.
@@ -1765,10 +1778,10 @@ namespace Clover.Gameplay
                     turnedBack = true;
                     hand.StopAndTurnBack(0.5f);
                 }
-                // The floor's hot fill at half its strength, so the heat over it is what the eye sees, not orange paint.
+                // The whole floor scorched under its orange edge, fire standing up out of it and smoke over it: burning, not painted.
                 if (look != null) look.Blaze(1f);
                 float beat = (0.75f + 0.25f * Mathf.Sin(Time.time * 17f)) * 0.5f;
-                floorMark.Show(Vector3.zero, Quaternion.identity, 1f, HotMarker, false, 1f, 1f, beat);
+                floorMark.ShowBurnt(Vector3.zero, Quaternion.identity, HotMarker, BlazeFloor, false, 1f, 1f, beat * 2f);
                 // Heat shimmers off all the lit floor round the player, and none of it in the shadow.
                 if (Every(ref untilPuff, 0.025f, deltaTime))
                 {
@@ -1785,7 +1798,9 @@ namespace Clover.Gameplay
                     for (int i = 0; i < 5; i++)
                     {
                         Vector3 point = Polar(Random.value * 360f, Mathf.Sqrt(Random.value) * (FloorRadius - 1f));
-                        if (!Sunlight.InHand(point)) Vfx.Play(VfxKind.Fire, point + Vector3.up * 0.2f, Vector3.up, 2.2f);
+                        if (Sunlight.InHand(point)) continue;
+                        Vfx.Play(VfxKind.Fire, point + Vector3.up * 0.2f, Vector3.up, 2.2f);
+                        Vfx.Play(VfxKind.Smoke, point + Vector3.up * 1.2f, Vector3.up, 0.7f, Smoke);
                     }
                     if (target != null && victim != null)
                     {
@@ -1944,9 +1959,9 @@ namespace Clover.Gameplay
                     // The sun goes out.
                     step = 1;
                     Vfx.Play(VfxKind.Burst, sunAt, Vector3.up, 3f);
-                    Vfx.Play(VfxKind.TintRing, OnFloor(sunAt) + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
-                    Vfx.Play(VfxKind.Ash, sunAt, Vector3.up, 3f);
-                    ScreenFlash.Flash(new Color(1f, 0.8f, 0.45f, 0.4f), 0.1f);
+                    Vfx.Play(VfxKind.Ring, OnFloor(sunAt) + Vector3.up * 0.2f, Vector3.up, 1f, Gold);
+                    Vfx.Play(VfxKind.Ash, sunAt, Vector3.up, 3f, Cinder);
+                    ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.32f), 0.1f);
                     if (shaker != null) shaker.Shake(0.5f, 0.4f);
                     var hand = Sunlight.Hand;
                     sunRollTo = KeepSun((hand != null ? hand.Centre + hand.Direction * SunRestsAt : Vector3.forward * SunRestsAt));
@@ -1962,18 +1977,18 @@ namespace Clover.Gameplay
                 squash = Mathf.Lerp(1f, 0.05f, apart);
                 size = Mathf.Lerp(1f, 0.85f, apart);
                 if (apart > 0f && step == 1 && Every(ref untilPuff, 0.033f, deltaTime))
-                    Vfx.Play(VfxKind.Ash, at + new Vector3(Random.Range(-2.4f, 2.4f), Random.Range(0.3f, 2.2f) * squash, Random.Range(-2.4f, 2.4f)), Vector3.up, 2f);
+                    Vfx.Play(VfxKind.Ash, at + new Vector3(Random.Range(-2.4f, 2.4f), Random.Range(0.3f, 2.2f) * squash, Random.Range(-2.4f, 2.4f)), Vector3.up, 2f, Cinder);
                 if (elapsed >= GoneAt && step == 1)
                 {
                     step = 2;
                     body.gameObject.SetActive(false);
                     if (shadowRenderer != null) shadowRenderer.enabled = false;
-                    Vfx.Play(VfxKind.Ash, at + Vector3.up * 0.4f, Vector3.up, 4f);
+                    Vfx.Play(VfxKind.Ash, at + Vector3.up * 0.4f, Vector3.up, 4f, Cinder);
                     Vfx.Play(VfxKind.Embers, at + Vector3.up * 0.4f, Vector3.up, 2f);
                 }
                 // Light shows through it before it goes: a shudder, then it cracks open in a flash, and he is lying there.
                 if (step == 2 && elapsed >= CrackAt - 0.6f && Every(ref untilPuff, 0.08f, deltaTime))
-                    Vfx.Play(VfxKind.TintSpark, sunAt + Random.onUnitSphere * 0.9f * sunSize * 1.5f, Vector3.up, 1f, SunWhite);
+                    Vfx.Play(VfxKind.HeavySpark, sunAt + Random.onUnitSphere * 0.9f * sunSize * 1.5f, Vector3.up, 1f, SunWhite);
                 if (elapsed >= CrackAt && step == 2)
                 {
                     step = 3;
@@ -1982,11 +1997,11 @@ namespace Clover.Gameplay
                     sun.gameObject.SetActive(false);
                     Vfx.Play(VfxKind.Burst, sunAt, Vector3.up, 3f);
                     Vfx.Play(VfxKind.Impact, sunAt, Vector3.up, 2f, SunWhite);
-                    Vfx.Play(VfxKind.TintRing, CrackedAt + Vector3.up * 0.2f, Vector3.up, 1.6f, Gold);
+                    Vfx.Play(VfxKind.Ring, CrackedAt + Vector3.up * 0.2f, Vector3.up, 1.6f, Gold);
                     for (int i = 0; i < 6; i++)
-                        Vfx.Play(VfxKind.TintSpark, sunAt, Quaternion.Euler(0f, i * 60f + 20f, 0f) * (Vector3.forward + Vector3.up * 0.4f), 1.4f, Gold);
-                    Vfx.Play(VfxKind.Ash, CrackedAt + Vector3.up * 0.5f, Vector3.up, 2.5f);
-                    ScreenFlash.Flash(new Color(1f, 0.97f, 0.88f, 0.7f), 0.14f);
+                        Vfx.Play(VfxKind.HeavySpark, sunAt, Quaternion.Euler(0f, i * 60f + 20f, 0f) * (Vector3.forward + Vector3.up * 0.4f), 1.4f, Gold);
+                    Vfx.Play(VfxKind.Ash, CrackedAt + Vector3.up * 0.5f, Vector3.up, 2.5f, Cinder);
+                    ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.56f), 0.14f);
                     if (shaker != null) shaker.Shake(0.45f, 0.4f);
                     if (hitStop != null) hitStop.Slow(0.8f, 0.35f);
                 }
@@ -2137,7 +2152,7 @@ namespace Clover.Gameplay
                 {
                     lanesHot++;
                     if (laneMark < hotLanes.Length)
-                        hotLanes[laneMark++].Show(hotFrom[i], Quaternion.LookRotation(hotAlong[i]), 1f, HotMarker, true, hotWide[i], hotLength[i] / (LaneUnit * hotWide[i]), strength);
+                        hotLanes[laneMark++].ShowBurnt(hotFrom[i], Quaternion.LookRotation(hotAlong[i]), HotMarker, BurntFloor, true, hotWide[i], hotLength[i] / (LaneUnit * hotWide[i]), strength);
                     if (flame)
                     {
                         Vector3 point = hotFrom[i] + hotAlong[i] * (Random.value * hotLength[i]) + new Vector3(hotAlong[i].z, 0f, -hotAlong[i].x) * ((Random.value - 0.5f) * hotWide[i]);
@@ -2148,7 +2163,7 @@ namespace Clover.Gameplay
                 }
                 else
                 {
-                    if (circleMark < hotCircles.Length) hotCircles[circleMark++].Show(hotFrom[i], Quaternion.identity, 1f, HotMarker, false, hotWide[i], 1f, strength);
+                    if (circleMark < hotCircles.Length) hotCircles[circleMark++].ShowBurnt(hotFrom[i], Quaternion.identity, HotMarker, BurntFloor, false, hotWide[i], 1f, strength);
                     if (flame) HotPuff(hotFrom[i] + Facing(Random.value * 360f) * (Random.value * hotWide[i]), hotLeft[i]);
                 }
             }
@@ -2183,7 +2198,7 @@ namespace Clover.Gameplay
             if (!shaded && left > 1f) HeatShimmer.Play(point + Vector3.up * 0.1f, 1f);
             if (smokeTurn || left < 2f || shaded)
             {
-                Vfx.Play(VfxKind.Ash, point + Vector3.up * 0.3f, Vector3.up, left < 2f ? 0.9f : 0.6f, Smoke);
+                Vfx.Play(VfxKind.Smoke, point + Vector3.up * 0.3f, Vector3.up, left < 2f ? 0.9f : 0.6f, Smoke);
                 return;
             }
             Vfx.Play(VfxKind.Fire, point + Vector3.up * 0.15f, Vector3.up, 1.1f);

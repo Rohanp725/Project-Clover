@@ -27,6 +27,7 @@ Material:
     m_Floats:
     - _Core: 0.5
     - _DstBlend: 1
+    - _Fire: 0
     - _Hard: 0.1
     - _Noise: 0
     - _NoiseScale: 6

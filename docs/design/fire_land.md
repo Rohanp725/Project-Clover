@@ -2002,3 +2002,134 @@ pylons beside it (`fireend_exit_2`: the player on the gate's mark in the beam, r
 light on the floor at the gate is only the drawn beam: the real low key light lights the court from the west but the
 gate's opening is not a lit shaft in the air. Nothing outside the court was built for the sun to set over (the mud
 ground and the fog). The demo's Narukami still dies as before (by the owner's word: Fire only).
+
+### As built: fire, not light (2026-11-17, evening)
+
+The owner's review of the Fire land: "The fight overall reads too much like light and not fire ... the sun should be a
+giant burning ball and not just a bright white orb, same for the spear attacks"; "make sure the other effects in the
+stage read like fire and not like light as well"; "for the scarab beetle it shouldnt have the face at all". The rule
+is now LOOKS.md section 1, rule 5. Every effect in the court, the city and the yard was moved from light (additive
+white and gold, white flashes, gold rings, bloom) to substance: flame, smoke, char and orange-red heat, white kept for
+the hottest heart. Before and after frames are `review/shots/current/firelook_<what>_before.png` (the frames that stood
+before the change, copied before the probes overwrote them) beside the probes' new frames named below.
+
+**How fire is drawn now.** One new mode in the glow shader (`_Fire`, set through `BuildKit.Fire`): any of its shapes
+is read not as light but through flat bands of flame (a dark smoky fringe, deep red, orange, a yellow heart, and white
+only above `_Core`), churned by a turbulence that scrolls with `_NoiseSpeed`. The fall of a particle's or a property
+block's alpha cools the whole flame through red to smoke, so every trail, spark and tongue dies as fire dies. It is laid
+over the floor, not added to it, so overlaps never burn out to white and it reads as a substance on the pale stone.
+With `_Fire` 0 (every existing material) the shader is exactly as it was. A new shader, `Art/Shaders/clover_molten.shader`
+(`BuildKit.Molten`), draws the sun's ball: three layers of 3D noise in the ball's own space (so it turns as it rolls)
+banded from a dark crust through red and orange to yellow, white only where the hottest patch faces the eye. A new
+glow shape (15) is the burning rim: two rows of tongues round a disc, each its own height, leaning and swaying.
+
+**The Fire land's own effects.** `VfxBuilder.Build(fireLand)`, passed by `PlayerBuilder.Build(..., fireLand: true)` from
+the Sun City, Sun Court and Fire Yard builders only, lays a second set over the common emitters: hit, heavy, guard and
+perfect-guard sparks, the burst, the flame puffs, the ring, and the impact, critical, glint, clang and danger stars are
+all fire materials of their own (`m_vfx_fire_*`), and the dust is sand. The danger flare keeps its red (fire burning red)
+and still draws through walls. A new `VfxKind.Smoke` (soft, grey-brown, rising and thinning) exists in every scene; only
+the Fire land throws it. The Shards' motes have a coal-yellow heart in the Fire land (`m_ember_heart_fire`) instead of
+white. The castle, the summit, the hub and the yard of tests keep their emitters exactly, since they are not rebuilt and
+their materials are not touched (their `.mat` files only gained `_Fire: 0` when rebuilt, which draws as before).
+
+Effect by effect (frames `bossfx_*` from `BossFxProbe`, `fireend_*` from `SunCourtProbe`, `suncity2_*` from `SunCityProbe`,
+`fire2_*` from `FireMechanicsProbe`):
+
+1. **The scarab has no face.** `SunBearerBuilder` no longer places the model's `face` piece; nothing else used it (the
+   head's reach collider is the same box, only its comment named the face). `firelook_sun_roll_before` against `bossfx_roll_2`.
+2. **The sun is a burning ball** (`firelook_sun_roll_before` and `bossfx_roll_2`, `firelook_parry_before` and
+   `bossfx_parry_2`, `firelook_stoop_before` and `bossfx_stoop_2`). The ball is the molten material; the model's gold
+   spikes are not drawn; a quad of rim flames hangs behind it turned to the camera (`SunBearerLook.DrawBurning`, after
+   the fight has placed the sun, `DefaultExecutionOrder(100)`); smoke rolls up off its top every 0.12 s and embers drop
+   from under it. Its light on the court is a deep firelight orange `(1, 0.46, 0.1)`. Wherever it appears (carried,
+   rolled, in the stoop and dive, at the Zenith, struck back by the parry, coming down in the transformation) it is this
+   ball, since it is one object. Lying loose and in the god's fall it is the charred ball (`sun_loose`: dark shell,
+   orange cracks), which now smokes from its cracks.
+3. **The transformation** (`firelook_transform_3_before`, `_4_before` against `fireend_transform_3`, `_4`). The thread of
+   light is a stream of fire (the beam shape as fire, on a quad turned to the camera, flowing down) that pours onto the
+   point of the spear and spits flame there. He burns instead of shining: `PouredGlow` is an orange-red heat, and flames
+   climb him and wrap him, with embers and smoke, thicker as the sun comes down. As it arrives he is consumed in a burst
+   of flame (a five-times flame puff and the fire burst) with a pall of smoke rolling up, and the scarab rises. The
+   screen flashes of the whole fight are ember orange, not white. The fall (`firelook_crack_before`, `fireend_crack_2`):
+   the dull sun is the charred ball, smoking, its cracks orange; the crack throws fire sparks, a ring of fire and an
+   orange flash.
+4. **The spears** (`firelook_thrust_before`, `bossfx_thrust_1` to `_3`; `firelook_throw_before`, `bossfx_throw_1`;
+   `firelook_spear_stands_before`, `bossfx_throw_2`; `firelook_ray_call_before`, `firelook_ray_before`, `bossfx_ray_2`,
+   `_3`; `firelook_plant_before`, `bossfx_plant_after`). A thrust leaves a trail of flame (the slash shape as fire, 0.6 m
+   wide, 0.85 for the heavy ones, cooling to smoke from the tail; the god's with a small white heart at the tip, the
+   champion's none) and a puff of smoke at its point; arcs of every Fire land enemy are ember, not magenta or gold. The
+   thrown spear trails fire and smoke, lands in a burst of flame with a ring of fire and smoke, and stands burning
+   (flames on its blade, smoke at its foot). The call is a stream of fire from the blade to his hand; the ray is a jet
+   of fire (a churning core with the smallest white heart, two tongues of fire round it, the spear a burning streak, a
+   firelight riding it) and it scorches the floor: flames spring up along its line, smoke after them, and the line of
+   heat cools through red to char. The planted spear's ring is tongues of real flame.
+5. **The rest of the god's fight.** The noon shafts are columns of fire pouring from the sky, a splash of flame and smoke
+   where they strike (`firelook_noon_before`, `bossfx_noon_1`). The dive is a fall of flame 3.4 m wide; its shock ring a
+   ring of fire; the rising's column fire; the feathers and sparks burning things (`bossfx_feathers_2`,
+   `bossfx_sparks_1`); the stun stars fire stars. The parry: the freeze and the slowed time are kept; the sun flies back
+   as the burning ball with a trail of fire that cools to smoke (`bossfx_parry_2`). **Hot floor is scorched**: inside
+   the hot edge's orange outline the floor is a char wash (`SunBearer.BurntFloor`, `GroundMark.ShowBurnt`, new), with
+   real flames and smoke, not orange paint (`firelook_hot_floor_before`, `bossfx_roll_cooling`). The Zenith's blaze
+   (`firelook_zenith_before`, `bossfx_zenith_1`): its look is heat, not whiteness (`ZenithBlazeProfile`: exposure +0.15,
+   saturation +14, contrast +8, an orange filter, an orange bloom from 1.0), the whole floor scorched red-brown
+   (`BlazeFloor`, thin enough that the shadow reads), fire and smoke standing up out of it. The court's gold rings,
+   hour bars and pips are worn bronze-gold with no light of their own (`SunCityKit.FloorGold`), so they no longer glow.
+6. **The rest of the land.** The braziers' flame was a faceted gold crystal in the model; it is no longer drawn, and real
+   fire burns in every brazier (`SunCityKit.BrazierFire`: tongues of flame that lick and cool to smoke, a thread of smoke
+   over them); a rest fire's flames are out until it is rested at, when `RestPoint` lights them
+   (`firelook_rest_fire_before`, `suncity2_fire_1`; `firelook_brazier_avenue_before`, `suncity2_avenue_0`). Hits and
+   bursts in the two scenes are the fire set above: the white-pink eight-petal star of `suncity2_alley_0` and
+   `suncity2_market_1` was the danger flare (light at 7, 0.5, 0.3 blooming to white); it is now a red flame star
+   (`firelook_hit_alley_before`, `firelook_hit_market_before`). The priest's gathered sun is a jet of flame with a
+   scorching orange lane under it (`firelook_priest_beam_before`, `fire2_beam_0`); the mirror's sparks and rings are
+   fire. The noon swell (`firelook_swell_before`, `firelook_noon_swell_before`, `suncity2_swell_0`, `fire2_noon_swell_1`)
+   is heat, not white (exposure +0.25, saturation +12, an orange filter, an orange bloom), and the player burning in it
+   smokes rather than throwing grey squares. Death bursts are the fire burst and fire puffs; the Shards keep their shape
+   with a coal heart.
+
+**Measured** (editor, Game view 1920 by 936, no vsync; after the last rebuild of each scene). EditMode tests 353 of
+353. `SunCourtProbe` (whole) 51 `OK`, 0 `WRONG`, console 0 errors and 0 warnings; its `perf over the Zenith with hot
+floor` line 3.9 ms mean, 11.6 worst, 8,640 bytes of garbage a frame (3.2 ms and 8,221 before). `SunCityProbe` tally
+91 `OK`, 0 `WRONG`, 0 errors, 0 warnings. `FireMechanicsProbe` complete, 0 errors, its spear-throw line `OK`. The hub's
+`RunProbe` complete (both gods, the choice, home), 0 errors, one editor warning ("Ran out of Graphics Ring Buffer space",
+from the editor's GUI, not the game). `BossFxProbe` complete, the Sun-Spear `OK` (a first run read `WRONG` with thrown
++0: its key was dropped before the input settings had taken; the second run threw, struck and read `OK`). `PerfProbe` in
+the court with the form risen and rolling, while the profiler recorded (which costs the editor time): 4.5 ms mean, 3.5
+median, 9.9 at the 95th percentile, 8,418 bytes a frame (3.0 mean and 2.8 median before, without a recording). The
+profiler's own 300 frames of it: GPU 2.8 ms mean; garbage 7,783 bytes a frame at the median (7.9 KB before), so
+nothing new allocates a frame. The frame time is higher by about 0.7 ms: more particles (smoke on the sun, the fire and
+smoke over hot floor), the rim and molten shaders; well inside the 16.6 ms budget.
+
+**What still reads as light, or is weak** (from the frames):
+
+- The rim flames are sharp printed spikes in the game's comic style (`bossfx_roll_2`, `fireend_transform_4`): they read
+  as a ball on fire, but bolder, fewer tongues might read as flame from further off.
+- The flame puffs (hot floor, the Zenith, the man on fire) are clumps of two-tone tongues with a yellow heart: fire, but
+  clustered they still have a little of the old crystal hardness at a distance.
+- The god's thrust trail keeps a small white heart at its tip (`bossfx_thrust_3`), as the rule allows for the hottest
+  core; the impact star is still an eight-pointed shape, now ragged orange-red flame.
+- The danger flare in the city (`suncity2_alley_0`) is still an eight-petal star, now red flame instead of white-pink
+  light; it is the land's one red warning, so its shape was kept.
+- The noon columns of fire and the call's stream are fire, but the call is thin (`bossfx_ray_2`).
+- The sunset's beam and low sun were left as light, as asked. The heat shimmer stays drawn squiggles, as decided.
+- Not looked at by eye this time: the priest's beam at its strike (`fire2_beam_0` is taken during the tell, when only
+  the red lane shows), the champion's frames in the city, the falcon's pass and the rising. They use the same fire
+  materials as the frames above.
+- The falcon's and the scarab's gold edges are the model's own toon gold, unchanged; they still shine.
+
+**Not done.** The hot floor is scorched char under its orange edge with fire and smoke, but the plan's ember cracks in
+the char (`fire_boss_visuals.md` 2.5) are still not drawn. The champion's arcs are ember, but they use the common slash
+material (light, additive), so a sweep is an orange crescent of light rather than a sheet of flame. The fiery priest
+statues and gold dressing of the city were not reviewed. The stun stars after the parry are fire stars, but still
+stars.
+
+**Changed outside the Fire scenes' own code.** `Art/Shaders/clover_glow.shader` (the `_Fire` mode and shape 15; with
+`_Fire` 0 nothing changes), `Art/Shaders/clover_molten.shader` (new), `Core/VfxKind.cs` (`Smoke`, added last, so every
+older scene's emitter list is still right: a kind past its end does nothing), `Editor/Builders/VfxBuilder.cs` (the
+Smoke emitter in every scene, the Fire set only when asked), `Editor/Builders/BuildKit.cs` (`Fire`, `Smoke`, `Molten`;
+`Glow` now writes `_Fire` 0), `Editor/Builders/PlayerBuilder.cs` (`fireLand`, passed to the effects and the Shards'
+heart), `Gameplay/GroundMark.cs` (`ShowBurnt`, new; `Show` unchanged), `Gameplay/Enemy.cs` (the fiery circle's ring is
+`VfxKind.Ring`, which only the Fire land's scenes throw), `Editor/Builders/EnemyBuilder.cs` (ember arcs for every enemy
+dressed in the Fire land's `m_fire_*` materials; the spearmen's materials). The Lightning land's scenes were not
+rebuilt; the castle frame `firelook_castle_hit_after` (sparks, a ring and a flame thrown there with time stopped) shows
+its warm-white sparks, cold blue-white ring and old two-tone flame exactly as before.

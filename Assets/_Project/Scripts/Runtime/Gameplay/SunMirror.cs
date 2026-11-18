@@ -64,7 +64,7 @@ namespace Clover.Gameplay
             Clover.World.Sunlight.Beam(beamFrom, beamTo, attack.LineWidth, attack.LightsSeconds);
             Vfx.Play(VfxKind.Burst, beamFrom, transform.forward, 0.8f);
             for (int i = 1; i <= 6; i++)
-                Vfx.Play(VfxKind.TintSpark, Vector3.Lerp(beamFrom, beamTo, i / 6f), transform.forward, 0.3f, new Color(1f, 0.95f, 0.7f, 1f));
+                Vfx.Play(VfxKind.HitSpark, Vector3.Lerp(beamFrom, beamTo, i / 6f), transform.forward, 0.3f);
         }
 
         private void Update()
@@ -105,12 +105,12 @@ namespace Clover.Gameplay
             Calls++;
             var target = enemy.Target;
             Vector3 disc = transform.position + Vector3.up * (DiscHeight + 0.6f);
-            Vfx.Play(VfxKind.TintRing, disc, Vector3.up, 1.2f, new Color(1f, 0.9f, 0.55f, 1f));
+            Vfx.Play(VfxKind.Ring, disc, Vector3.up, 1.2f);
             Vfx.Play(VfxKind.Glint, disc, Vector3.up, 2f);
             if (target != null)
             {
                 Clover.World.Sunlight.Flare(target.position, 1.6f, 2.5f);
-                Vfx.Play(VfxKind.TintRing, target.position + Vector3.up * 0.2f, Vector3.up, 0.7f, new Color(1f, 0.9f, 0.55f, 1f));
+                Vfx.Play(VfxKind.Ring, target.position + Vector3.up * 0.2f, Vector3.up, 0.7f);
             }
             foreach (var other in neighbours)
             {

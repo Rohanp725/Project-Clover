@@ -66,8 +66,10 @@ namespace Clover.World
         /// <summary>The man's two clips that are only his: lifting the spear as the sun comes into him, and lying fallen.</summary>
         public string RisingClip = "sunking_transform", FallenClip = "sunking_fallen";
         public float FallenBreath = 3.2f;
-        /// <summary>How he burns from inside as the sun comes down the spear into him, at its brightest.</summary>
-        [ColorUsage(true, true)] public Color PouredGlow = new Color(5f, 3.6f, 1.5f, 1f);
+        /// <summary>How he burns as the fire comes down the spear into him, at its fiercest: an orange-red heat, not a white light.</summary>
+        [ColorUsage(true, true)] public Color PouredGlow = new Color(3.4f, 0.95f, 0.14f, 1f);
+        /// <summary>The smoke off a burning thing in the court: off the standing spear, and off him as he burns.</summary>
+        public Color SpearSmoke = new Color(0.25f, 0.22f, 0.2f, 0.85f);
         /// <summary>How the camera stands for the transformation: far enough off to hold him, the sky's thread and whoever watches.</summary>
         public float ShowDistance = 1.5f, ShowPitch = -8f;
         /// <summary>How far the sun leans from noon once he lies fallen, so the obelisk's real shadow is laid across him.</summary>
@@ -261,7 +263,7 @@ namespace Clover.World
         private void OnPhaseChanged(Enemy who)
         {
             if (player != null) player.Callout(HalfCallout);
-            ScreenFlash.Flash(new Color(1f, 0.85f, 0.5f, 0.35f), 0.09f);
+            ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.28f), 0.09f);
         }
 
         private void OnBossDied(Enemy who)
@@ -277,7 +279,7 @@ namespace Clover.World
             // Beaten, he does not fall. He gets up and lifts the spear, and the sun he carried comes down it.
             SecondFormCalled = true;
             if (hitStop != null) hitStop.Slow(1.4f, 0.25f);
-            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.5f), 0.09f);
+            ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.4f), 0.09f);
             if (form is SunBearer bearer) bearer.RiseFrom = who.transform.position;
             if (player != null)
             {
@@ -313,7 +315,7 @@ namespace Clover.World
             RunState.GodsFelled++;
             SetWall(false);
             if (hitStop != null) hitStop.Slow(1.8f, 0.2f);
-            ScreenFlash.Flash(new Color(1f, 1f, 1f, 0.55f), 0.1f);
+            ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.44f), 0.1f);
             if (player != null) player.Callout("A god falls");
             // The five Shards of a god are paid when the form falls, not the man.
             if (upgrades != null) upgrades.Earn(Embers);
@@ -372,8 +374,8 @@ namespace Clover.World
 
         // ------------------------------------------------------------------ the man becomes the sun
 
-        // He gets up and lifts the spear; the thread of light stands out of it, the sun comes down it into him and he burns
-        // gold and then white from inside; in the flash as it arrives he is gone, and the scarab rises under the disc.
+        // He gets up and lifts the spear; a column of fire stands out of it, the sun comes down it into him and he burns,
+        // flames wrapping him; in the burst of flame and smoke as it arrives he is gone, and the scarab rises under the disc.
         private void AdvanceTransformation(float deltaTime)
         {
             if (transformFor < 0f || boss == null) return;
@@ -390,8 +392,14 @@ namespace Clover.World
                 lit = Mathf.Clamp01((form.DoingFor - from) / Mathf.Max(0.01f, bearer.SunLandsAt - from));
             }
             boss.Shine(PouredGlow * (lit * lit));
-            if (lit > 0.2f && Every(ref untilGlow, 0.09f, deltaTime))
+            // He catches and burns: flames climb him and wrap him, smoke rolls off him, thicker as the fire comes down.
+            if (lit > 0.05f && Every(ref untilGlow, Mathf.Lerp(0.12f, 0.04f, lit), deltaTime))
+            {
+                Vector3 on = boss.transform.position + new Vector3(Random.Range(-0.45f, 0.45f), Random.Range(0.2f, 2.3f) * Mathf.Max(0.4f, lit), Random.Range(-0.45f, 0.45f));
+                Vfx.Play(VfxKind.Fire, on, Vector3.up, 0.35f + 0.9f * lit);
                 Vfx.Play(VfxKind.Embers, boss.transform.position + Vector3.up * Random.Range(0.4f, 2.2f), Vector3.up, 0.6f + lit);
+                if (Random.value < 0.5f) Vfx.Play(VfxKind.Smoke, boss.transform.position + Vector3.up * (2.2f + Random.value), Vector3.up, 0.5f + lit, SpearSmoke);
+            }
             // He turns to face whoever beat him.
             if (player != null)
             {
@@ -657,6 +665,8 @@ namespace Clover.World
             if (flightLeft > 0f && standingSpear != null)
             {
                 flightLeft -= Time.deltaTime;
+                // It trails smoke behind its fire as it flies.
+                if (Every(ref untilSmoke, 0.04f, Time.deltaTime)) Vfx.Play(VfxKind.Smoke, standingSpear.position + standingSpear.up * 3.2f, Vector3.up, 0.5f, SpearSmoke);
                 float t = 1f - Mathf.Clamp01(flightLeft / SpearFlight);
                 // The group stands its blade up its own up axis: in flight that axis points down the lane.
                 standingSpear.SetPositionAndRotation(Vector3.Lerp(flyFrom, standAt, t) - flyAlong * 3.6f + Vector3.up * 1.6f, Quaternion.FromToRotation(Vector3.up, flyAlong));
@@ -664,22 +674,26 @@ namespace Clover.World
                 {
                     standingSpear.SetPositionAndRotation(standAt, standTurn);
                     if (spearTrail != null) spearTrail.emitting = false;
-                    // Driven into the floor: a star, a gold ring, sand thrown up and the view shaken.
+                    // Driven into the floor: a burst of flame, a ring of fire, sand and smoke thrown up and the view shaken.
                     Vfx.Play(VfxKind.Impact, standAt + Vector3.up * 0.5f, Vector3.up, 1f, new Color(1f, 0.92f, 0.62f, 1f));
-                    Vfx.Play(VfxKind.TintRing, standAt + Vector3.up * 0.25f, Vector3.up, 1.2f, new Color(1f, 0.72f, 0.2f, 1f));
+                    Vfx.Play(VfxKind.Ring, standAt + Vector3.up * 0.25f, Vector3.up, 1.2f);
+                    Vfx.Play(VfxKind.Fire, standAt + Vector3.up * 0.4f, Vector3.up, 1.6f);
+                    Vfx.Play(VfxKind.Smoke, standAt + Vector3.up * 0.8f, Vector3.up, 1.2f, SpearSmoke);
                     for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.Dust, standAt + Quaternion.Euler(0f, i * 90f + 45f, 0f) * Vector3.forward * 0.8f, Vector3.up, 1f, new Color(1f, 0.88f, 0.64f, 1f));
                     if (view != null) view.Shake(0.3f, 0.2f);
                 }
             }
             ShowSpear(thrown || calling);
-            // Standing, it smokes from where it went in and drops embers from the sun's disc.
+            // Standing, it burns: fire on the blade, smoke from where it went in, embers dropping from the sun's disc.
             if (SpearStands && standingSpear != null)
             {
                 untilSmoke -= Time.deltaTime;
                 if (untilSmoke <= 0f)
                 {
                     untilSmoke = 0.2f;
-                    Vfx.Play(VfxKind.Ash, standingSpear.position + Vector3.up * 0.3f, Vector3.up, 0.5f, new Color(0.26f, 0.24f, 0.23f, 0.85f));
+                    Vfx.Play(VfxKind.Smoke, standingSpear.position + Vector3.up * 0.4f, Vector3.up, 0.6f, SpearSmoke);
+                    // The blade burns where it stands.
+                    Vfx.Play(VfxKind.Fire, standingSpear.position + standingSpear.up * (2.6f + Random.value * 1.2f), Vector3.up, 0.35f);
                     Vfx.Play(VfxKind.Embers, standingSpear.position + Vector3.up * 3.3f, Vector3.down, 0.25f);
                 }
             }
@@ -694,10 +708,10 @@ namespace Clover.World
                 {
                     // The spear is already back in his hand; the beam is drawn from where it stood.
                     rayLook.Strike(lastBlade, hand);
-                    ScreenFlash.Flash(new Color(1f, 0.95f, 0.8f, 0.3f), 0.06f);
+                    ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.24f), 0.06f);
                     if (view != null) view.Shake(0.3f, 0.2f);
                     Vfx.Play(VfxKind.Clang, hand, Vector3.up, 1f);
-                    Vfx.Play(VfxKind.TintRing, new Vector3(hand.x, 0.3f, hand.z), Vector3.up, 1f, new Color(1f, 0.72f, 0.2f, 1f));
+                    Vfx.Play(VfxKind.Ring, new Vector3(hand.x, 0.3f, hand.z), Vector3.up, 1f);
                 }
                 rayStruck = striking;
                 if (calling) lastBlade = blade;
