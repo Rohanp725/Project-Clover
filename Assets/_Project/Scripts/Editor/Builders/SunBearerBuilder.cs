@@ -125,9 +125,16 @@ namespace Clover.EditorTools
                 sun, burning.gameObject, dull.gameObject, blob.transform, line, bulk, headPart, bodyPart, sunPart, renderers.ToArray());
 
             var marks = BuildKit.Group("Marks", root.transform);
-            bearer.ConfigureMarks(Pairs("Lane", 2, marks, marker), Pairs("Circle", 2, marks, marker), Pairs("Fall", 18, marks, marker),
-                Pairs("Hot Lane", 5, marks, marker), Pairs("Hot Circle", 3, marks, marker), Pairs("Floor", 1, marks, marker), Pairs("Shadow", 1, marks, marker),
+            // Six lanes: the Flares draw five at once in the fury, the Ricochet three. Hot floor is drawn as fire by the
+            // Scorch below, not as marks, so it has no pairs of its own any more.
+            bearer.ConfigureMarks(Pairs("Lane", 6, marks, marker), Pairs("Circle", 3, marks, marker), Pairs("Fall", 18, marks, marker),
+                new MeshFilter[0], new MeshFilter[0], Pairs("Floor", 1, marks, marker), Pairs("Shadow", 1, marks, marker),
                 WorldBars.Marker("Roar Ring", marks, 0f, marker));
+            bearer.ConfigureAim(Pairs("Aim", 1, marks, marker));
+            // Burning ground: eight lanes and eight craters of char, ember cracks and standing flame.
+            ScorchBuilder.Build(root.transform, "Scorch", 8, 8, 0);
+            // Flames standing on the shell when its own sun is rolled into it.
+            ScorchBuilder.Build(root.transform, "Shell Fire", 0, 1, 0);
 
             // Drawn through whatever is in front of it: where the player is, while the falcon or the sun covers them.
             var finderLight = BuildKit.Glow(BuildKit.GeneratedRoot + "/Enemies", "m_player_finder", new Color(1.6f, 1.45f, 0.9f, 0.95f), 4, false, 2f, 0f, true);
@@ -232,6 +239,51 @@ namespace Clover.EditorTools
                 fallers[i].enabled = false;
             }
             look.ConfigureFallers(fallers);
+
+            // The burrowing scarab's ridge: a heave of paving, slabs of it tipped up round it, and the cracks it leaves.
+            var heave = BuildKit.Shape(PrimitiveType.Sphere, "Ridge Heave", root.transform, Vector3.zero, Vector3.one, SunCityKit.Mud);
+            heave.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            heave.enabled = false;
+            var slabs = new Renderer[6];
+            for (int i = 0; i < slabs.Length; i++)
+            {
+                slabs[i] = BuildKit.Shape(PrimitiveType.Cube, "Ridge Slab " + (i + 1), root.transform, Vector3.zero, new Vector3(0.9f + 0.15f * (i % 3), 0.16f, 0.7f + 0.1f * (i % 2)), SunCityKit.Stone);
+                slabs[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                slabs[i].enabled = false;
+            }
+            // Laid over the floor, not added to it: dark cracks, or ember red with the sun under them (the tint says which).
+            var crackLook = BuildKit.Glow(folder, "m_sunform_crack", Color.white, 10, false, 1f);
+            var cracks = new Renderer[22];
+            for (int i = 0; i < cracks.Length; i++)
+            {
+                cracks[i] = BuildKit.Shape(PrimitiveType.Quad, "Crack " + (i + 1), root.transform, Vector3.zero, Vector3.one, crackLook);
+                cracks[i].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                cracks[i].receiveShadows = false;
+                cracks[i].enabled = false;
+            }
+            // The Flares: an arc of flame for each line, drawn as a line through the air.
+            var arcFire = BuildKit.Fire(folder, "m_sunform_flare_arc", 1, new Vector2(-3f, 0f), 3f);
+            var arcs = new LineRenderer[5];
+            for (int i = 0; i < arcs.Length; i++)
+            {
+                var holder = BuildKit.Group("Flare Arc " + (i + 1), root.transform);
+                var arc = holder.gameObject.AddComponent<LineRenderer>();
+                arc.sharedMaterial = arcFire;
+                arc.useWorldSpace = true;
+                arc.widthMultiplier = 1f;
+                arc.widthCurve = new AnimationCurve(new Keyframe(0f, 0.7f), new Keyframe(0.5f, 1f), new Keyframe(1f, 0.6f));
+                arc.textureMode = LineTextureMode.Stretch;
+                arc.numCapVertices = 3;
+                arc.numCornerVertices = 2;
+                arc.alignment = LineAlignment.View;
+                arc.positionCount = 0;
+                arc.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                arc.receiveShadows = false;
+                arc.enabled = false;
+                arcs[i] = arc;
+            }
+            // The Ember Gust: rows of flames driven across the band at its front.
+            look.ConfigureGround(heave, slabs, cracks, arcs, ScorchBuilder.Build(root.transform, "Gust Fire", 2, 0, 0));
         }
 
         // One piece of the model under a holder of its own, at the point the game moves it from. The mesh keeps the

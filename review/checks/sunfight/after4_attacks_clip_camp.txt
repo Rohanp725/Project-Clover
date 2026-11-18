@@ -1,0 +1,82 @@
+error: 'script eval' did not complete within its 30 s timeout. It may still be running and its effects may still land. Pass a larger --timeout (seconds).
+met: true
+result: probe started
+[Probe] start: 17 pieces measured; parts 'Sun Hot Burrow Attacks Clip Camp'
+[Probe] the form has risen: doing Idle
+[Probe] Sun: the loose sun pays nothing, shows where a heavy blow sends it, and set rolling into the scarab sets its shell alight
+[Probe]    the sun knocked loose: True, exposed True
+[Probe]    picture sunfight_aim_1
+[Probe]    a light blow on the sun: pushes +1 mana 0 to 0, flask earned 0.000 to 0.000 aim line shown True OK
+[Probe]    picture sunfight_rolled_1
+[Probe]    picture sunfight_shellfire_1
+[Probe]    picture sunfight_shellfire_2
+[Probe]    a heavy blow rolled it into the scarab: strikes +1 balance 40 to 100 (broken False) health 553 to 529 says 'The shell catches fire' OK
+[Probe] Hot: a roll's lane burns six seconds, narrowing from its edges; walked across, one bite; rolled across, none
+[Probe]    picture sunfight_lane_0
+[Probe]    picture sunfight_lane_1
+[Probe]    (walked across 1, rolled across 0, stood 1.1 s in it 2, all done 3.8 s after the lane was lit)
+[Probe]    picture sunfight_lane_3
+[Probe]    picture sunfight_lane_cooling
+[Probe]    picture sunfight_lane_char
+[Probe]    the lane: its edge stopped burning after 3.8 s, all of it after 6.0 s (OK); walked across: 1 bite(s) (OK); rolled across: 0 (OK); stood in it 1.1 s: 2 bite(s) (OK)
+[Probe]    picture sunfight_furrows_hot
+[Probe] Burrow: knocked off its sun, it digs in, goes under a ridge, bursts up beside the sun; then the Burrow as an attack
+[Probe]    picture sunfight_emerge_2
+[Probe]    the return: dug False ridge False came up False never vanished True holds the sun True poised True WRONG
+[Probe]    picture sunfight_burrow_chase
+[Probe]    picture sunfight_burrow_locked
+[Probe]    picture sunfight_burrow_erupt
+[Probe]    picture sunfight_burrow_halfout
+[Probe]    the Burrow: chased True struck +1 (last: the sun touched) head open half out True OK
+[Probe] Attacks: each new attack on a player standing still, then answered
+[Probe]    picture sunfight_ricochet_1
+[Probe]    picture sunfight_ricochet_2
+[Probe]    picture sunfight_ricochet_3
+[Probe]    Ricochet standing still: struck +1 (last: the ricochet); a blow of 20 on the cool shell took 20 OK; then Idle
+[Probe]    picture sunfight_flares_1
+[Probe]    picture sunfight_flares_2
+[Probe]    picture sunfight_flares_3
+[Probe]    Flares standing still: struck +1 (last: a flare) OK
+[Probe]    Flares answered in a gap: struck +0 OK
+[Probe]    picture sunfight_gust_1
+[Probe]    picture sunfight_gust_2
+[Probe]    picture sunfight_gust_3
+[Probe]    Gust standing still: struck +1 blocked +0 shoved +1 moved 5.6 m OK
+[Probe]    Gust guard held: struck +0 blocked +1 shoved +0 moved 0.0 m OK
+[Probe]    picture sunfight_grab_1
+[Probe]    picture sunfight_grab_2
+[Probe]    Grab standing still: caught +1 highest 5.9 m held up there True lost 36 health; free after True on the floor at 0.08 OK
+[Probe]    after the drop the player walks: 2.4 m OK
+[Probe]    picture sunfight_grab_missed
+[Probe]    Grab rolled out of: missed +1 caught +0 lost 0; free True OK
+[Probe]    picture sunfight_sunfall_1
+[Probe]    picture sunfight_sunfall_2
+[Probe]    picture sunfight_sunfall_3
+[Probe]    Sunfall standing still: struck +3 (last: hot floor) small fires 3 OK
+[Probe] Clip: every attack from four places, then the exposed tumble, the broken balance and the falcon's fall
+[Probe]    clip Roll: rim -0.50 m by scarab_hindleg_left (Roll); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Roll)
+[Probe]    clip Ram: rim -0.50 m by scarab_foreleg_left (Ram); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.29 m by scarab_foreleg_left (Ram)
+[Probe]    clip Sparks: rim -2.05 m by sun (Idle); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Sparks)
+[Probe]    clip Furrows: rim -0.20 m by sun (Furrows); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Furrows)
+[Probe]    clip Ricochet: rim -0.41 m by sun (Ricochet); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Ricochet)
+[Probe]    clip Burrow: rim -0.50 m by scarab_hindleg_right (Burrow); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Idle)
+[Probe]    clip Flares: rim -9.21 m by scarab_hindleg_left (Flares); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.02 m by sun (Flares)
+[Probe]    clip Rising: rim -0.50 m by falcon_wing_left (Setting); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.01 m by sun (Setting)
+[Probe]    clip Stoop: rim -1.70 m by sun (Stoop); obelisk 0.00 m by falcon_head (Idle); under the floor 0.00 m by sun (Stoop)
+[Probe]    clip Feathers: rim none; obelisk 0.00 m by falcon_head (Idle); under the floor -4.63 m by falcon_wing_right (Feathers)
+[Probe]    clip Pass: rim -1.81 m by sun (Pass); obelisk 0.39 m by falcon_wing_right (Pass); under the floor 0.00 m by sun (Pass)
+[Probe]    clip Gust: rim -2.20 m by sun (Gust); obelisk 0.64 m by falcon_wing_right (Gust); under the floor -2.90 m by sun (Gust)
+[Probe]    clip Grab: rim -1.61 m by falcon_wing_right (Grab); obelisk 0.00 m by falcon_head (Idle); under the floor 0.02 m by sun (Grab)
+[Probe]    clip Sunfall: rim none; obelisk 0.00 m by falcon_head (Idle); under the floor -6.73 m by falcon_wing_right (Sunfall)
+[Probe]    clip Zenith: rim -2.21 m by falcon_wing_left (Rising); obelisk 0.00 m by falcon_head (Idle); under the floor 0.01 m by sun (Spent)
+[Probe]    clip Setting: rim -0.52 m by falcon_wing_left (Setting); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.02 m by sun (Setting)
+[Probe]    clip Exposed: rim -0.50 m by scarab_midleg_right (Roll); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Roll)
+[Probe]    clip Staggered: rim -0.48 m by sun (Roll); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Roll)
+[Probe]    clip Falcon down: rim -0.50 m by falcon_wing_left (Staggered); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.02 m by sun (Stoop)
+[Probe] Clip overall: worst past the rim 0.00 m, worst into the obelisk 0.64 m WRONG
+[Probe] Camp: twenty seconds on the scarab's right flank, attacking
+[Probe] Camp: on the flank 19.7 s of 20; blows landed 20; the form lost 67 health; the player was struck 1 times for 16 (the shell flaring); what it did: Idle > Sparks > Exposed > Idle > Roll > Idle > ShellBurst > Idle > Ram
+[Probe] lanes moved aside so the player kept a way through 1, laid without fire 2
+[Probe] done
+[Probe] done
+counts: {"error":0,"warn":0,"log":80}

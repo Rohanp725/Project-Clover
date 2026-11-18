@@ -1,0 +1,32 @@
+opened
+met: true
+result: probe started
+[Probe] start: 17 pieces measured; parts ''
+[Probe] the form has risen: doing Idle
+[Probe] Clip: every attack from four places, then the exposed tumble, the broken balance and the falcon's fall
+[Probe]    clip Roll: rim -0.15 m by scarab_foreleg_left (Roll); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Roll)
+[Probe]    clip Ram: rim -0.42 m by scarab_hindleg_right (Ram); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 6.10 m by scarab_hindleg_left (Burrow)
+[Probe]    clip Sparks: rim -1.94 m by sun (Idle); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Sparks)
+[Probe]    clip Furrows: rim -0.15 m by scarab_hindleg_right (Furrows); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by scarab_foreleg_right (Furrows)
+[Probe]    clip Ricochet: rim -0.15 m by scarab_hindleg_right (Ricochet); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.46 m by scarab_abdomen (Ricochet)
+[Probe]    clip Burrow: rim -0.15 m by scarab_hindleg_right (Burrow); obelisk 0.06 m by scarab_midleg_right (Burrow); under the floor 6.08 m by scarab_hindleg_left (Burrow)
+[Probe]    clip Flares: rim -9.67 m by scarab_hindleg_left (Flares); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.37 m by sun (Flares)
+[Probe]    clip Rising: rim 0.41 m by falcon_wing_right (Rising); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 4.58 m by falcon_wing_left (Rising)
+[Probe]    clip Stoop: rim -1.70 m by sun (Stoop); obelisk 0.00 m by falcon_head (Idle); under the floor 0.00 m by sun (Stoop)
+[Probe]    clip Feathers: rim none; obelisk 0.72 m by sun (Feathers); under the floor -5.27 m by falcon_wing_right (Feathers)
+[Probe]    clip Pass: rim -1.90 m by sun (Pass); obelisk 0.61 m by falcon_wing_right (Pass); under the floor 0.00 m by sun (Pass)
+[Probe]    clip Gust: rim -2.20 m by sun (Gust); obelisk 0.46 m by falcon_wing_right (Gust); under the floor -2.90 m by sun (Gust)
+[Probe]    clip Grab: rim 0.24 m by falcon_wing_left (Grab); obelisk 0.00 m by falcon_head (Idle); under the floor 2.40 m by sun (Grab)
+[Probe]    clip Sunfall: rim none; obelisk 0.00 m by falcon_head (Idle); under the floor -5.42 m by sun (Idle)
+[Probe]    clip Zenith: rim -0.15 m by falcon_wing_left (Rising); obelisk 0.70 m by sun (Spent); under the floor 3.25 m by sun (Spent)
+[Probe]    clip Setting: rim 0.22 m by falcon_wing_left (Rising); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 4.00 m by falcon_wing_right (Rising)
+[Probe]    clip Exposed: rim -0.15 m by scarab_hindleg_right (Roll); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.02 m by scarab_midleg_left (Exposed)
+[Probe]    clip Staggered: rim -0.15 m by scarab_hindleg_left (Roll); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.10 m by scarab_foreleg_right (Roll)
+[Probe]    clip Falcon down: rim -0.15 m by falcon_wing_left (Staggered); obelisk 0.46 m by falcon_wing_left (Stoop); under the floor 2.58 m by scarab_hindleg_right (Rising)
+[Probe] Clip overall: worst past the rim 0.41 m, worst into the obelisk 0.72 m WRONG
+[Probe] Camp: twenty seconds on the scarab's right flank, attacking
+[Probe] Camp: on the flank 20.0 s of 20; blows landed 22; the form lost 90 health; the player was struck 2 times for 22 (the shell flaring, hot floor); what it did: Idle > Roll > Exposed > Idle > Ram > Idle > ShellBurst > Idle > Furrows
+[Probe] done
+[Probe] done
+entries: [{"seq":4591580,"timestampUtc":"2026-11-18T07:37:58.2913347Z","level":"error","logType":"Error","message":"Exceeded budget for maximum input event throughput per InputSystem.Update(). Discarding remaining events. Increase InputSystem.settings.maxEventBytesPerUpdate or set it to 0 to remove the limit.\nTotal events processed by devices in last update call:\n - 5242952 bytes processed by DualShock4GamepadHID:/DualShock4GamepadHID\n","stackTrace":"UnityEngine.InputSystem.LowLevel.NativeInputRuntime/<>c__DisplayClass10_0:<set_onUpdate>b__0 (UnityEngineInternal.Input.NativeInputUpdateType,UnityEngineInternal.Input.NativeInputEventBuffer*)\nUnityEngineInternal.Input.NativeInputSystem:ProcessInputUpdate (UnityEngineInternal.Input.NativeInputUpdateType,intptr)\n","seeded":false}]
+counts: {"error":1,"warn":0,"log":27}

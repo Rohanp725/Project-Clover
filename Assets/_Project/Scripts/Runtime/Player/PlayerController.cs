@@ -82,6 +82,8 @@ namespace Clover.Player
         private float dodgeBuffered;
         private Grip heldBy;
         private InputAction struggleAction;
+        private Vector3 shoveVelocity;
+        private float shoveLeft, shoveSeconds = 1f;
 
         /// <summary>True while something has hold of the player: they can do nothing but struggle.</summary>
         public bool IsHeld => heldBy != null && heldBy.IsHeld;
@@ -112,6 +114,22 @@ namespace Clover.Player
             heldBy = grip;
             TimesHeld++;
         }
+
+        /// <summary>
+        /// Pushes the body along the ground by about <paramref name="metres"/> over <paramref name="seconds"/>, on top of
+        /// whatever it is doing, as a gust of wind does; walls stop it as they stop a step.
+        /// </summary>
+        public void Shove(Vector3 metres, float seconds)
+        {
+            metres.y = 0f;
+            shoveSeconds = Mathf.Max(0.05f, seconds);
+            shoveLeft = shoveSeconds;
+            shoveVelocity = metres / shoveSeconds;
+            Shoves++;
+        }
+
+        /// <summary>How many times the player has been shoved: for probes.</summary>
+        public int Shoves { get; private set; }
 
         /// <summary>Counts one struggle against the hold, as a press of light attack or dodge does.</summary>
         public void Struggle()
@@ -303,6 +321,13 @@ namespace Clover.Player
             }
 
             PlanarSpeed = deltaTime > 0f ? new Vector2(step.x, step.z).magnitude / deltaTime : 0f;
+            if (shoveLeft > 0f)
+            {
+                // A shove carries the body on over whatever it is doing, easing off as it ends.
+                float share = Mathf.Min(deltaTime, shoveLeft);
+                step += shoveVelocity * (share * Mathf.Clamp01(shoveLeft / shoveSeconds) * 2f);
+                shoveLeft -= deltaTime;
+            }
             fallSpeed = body.isGrounded ? 1f : fallSpeed + Gravity * deltaTime;
             step.y = -fallSpeed * deltaTime;
             if (combat != null && combat.PassingThrough)
@@ -493,6 +518,7 @@ namespace Clover.Player
         /// <summary>Puts the player somewhere else at once, as a respawn does. A CharacterController ignores a plain move of its transform.</summary>
         public void Teleport(Vector3 position, Quaternion rotation)
         {
+            shoveLeft = 0f;
             body.enabled = false;
             transform.SetPositionAndRotation(position, rotation);
             body.enabled = true;

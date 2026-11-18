@@ -1,0 +1,71 @@
+opened
+met: true
+result: probe started
+[Probe] start: begun True boss Khepharu
+[Probe]    picture bossfx_thrust_1
+[Probe]    picture bossfx_thrust_2
+[Probe]    picture bossfx_thrust_3
+[Probe]    picture bossfx_thrust_after
+[Probe] sunking_thrust_1: forced True
+[Probe]    picture bossfx_reach_1
+[Probe]    picture bossfx_reach_after
+[Probe] sunking_reach: forced True
+[Probe]    picture bossfx_sweep_1
+[Probe]    picture bossfx_sweep_after
+[Probe] sunking_sweep: forced True
+[Probe]    picture bossfx_plant_1
+[Probe]    picture bossfx_plant_after
+[Probe] sunking_plant: forced True
+[Probe]    picture bossfx_noon_tell
+[Probe]    picture bossfx_noon_1
+[Probe]    picture bossfx_noon_2
+[Probe]    picture bossfx_noon_3
+[Probe]    picture bossfx_noon_after
+[Probe] sunking_noon_1: forced True
+[Probe]    picture bossfx_throw_1
+[Probe]    picture bossfx_throw_2
+[Probe]    picture bossfx_ray_1
+[Probe]    picture bossfx_ray_2
+[Probe]    picture bossfx_ray_3
+[Probe]    picture bossfx_ray_after
+[Probe] throw and ray: spear stood and came back True
+[Probe]    picture bossfx_sunspear_1
+[Probe]    picture bossfx_sunspear_2
+[Probe]    picture bossfx_sunspear_3
+[Probe] the Sun-Spear: equipped Sun-Spear carry sunspear, thrown +1, rays +1, ray struck +1, the man lost 26, in the hand again True OK
+[Probe] the form has risen: doing Idle
+[Probe]    picture bossfx_rising_1
+[Probe]    picture bossfx_rising_2
+[Probe] rising: falcon True
+[Probe]    picture bossfx_roll_1
+[Probe]    picture bossfx_roll_2
+[Probe]    picture bossfx_roll_3
+[Probe]    picture bossfx_roll_cooling
+[Probe] roll: hot lanes 0 doing Idle
+[Probe]    picture bossfx_parry_1 at time scale 0.03
+[Probe]    picture bossfx_parry_2 at time scale 0.35
+[Probe]    picture bossfx_parry_3 at time scale 1.00
+[Probe]    picture bossfx_parry_4
+[Probe] parry: perfect +1 knocks +1 loose True exposed True broken False blows taken +0
+[Probe]    picture bossfx_stoop_1
+[Probe]    picture bossfx_stoop_2
+[Probe]    picture bossfx_stoop_3
+[Probe]    picture bossfx_stoop_4
+[Probe] stoop: hot patches 1
+[Probe]    picture bossfx_pass_1
+[Probe]    picture bossfx_pass_2
+[Probe]    picture bossfx_pass_3
+[Probe] pass: hot lanes 1
+[Probe]    picture bossfx_zenith_fill
+[Probe]    picture bossfx_zenith_1
+[Probe]    picture bossfx_zenith_2
+[Probe] zenith: blazing True
+[Probe]    picture bossfx_sparks_1
+[Probe]    picture bossfx_sparks_2
+[Probe] sparks: falls laid 10
+[Probe]    picture bossfx_feathers_1
+[Probe]    picture bossfx_feathers_2
+[Probe] feathers: falls laid 15
+[Probe] done
+[Probe] done
+counts: {"error":0,"warn":0,"log":67}

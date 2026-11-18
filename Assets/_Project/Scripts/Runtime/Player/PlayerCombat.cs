@@ -715,6 +715,12 @@ namespace Clover.Player
         };
 
         // One blow of a spell or an effect as the target receives it, with everything the player's numbers add.
+        /// <summary>
+        /// False for what pays nothing back for a blow (the Sun-Bearer's loose sun): no mana, no flask earned, no grey health
+        /// won back, nothing for the upgrades that feed on blows.
+        /// </summary>
+        public static bool PaysBack(IDamageable target) => !(target is Clover.Gameplay.IPaysNothing nothing && nothing.PaysNothing);
+
         private Hit Make(in SpellBlow blow, IDamageable target, Vector3 direction, Vector3 origin)
         {
             float damage = blow.Damage;
@@ -740,7 +746,7 @@ namespace Clover.Player
         {
             if (blow.Tinted) Vfx.Play(blow.Effect, other.bounds.center, direction, 1f, blow.Tint);
             else Vfx.Play(blow.Effect, other.bounds.center, direction);
-            if (defence != null) defence.DealtDamage(blow.Damage);
+            if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
             if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
         }
 
@@ -863,7 +869,7 @@ namespace Clover.Player
             Vector3 at = victim.transform.position + Vector3.up * 1.1f;
             if (blow.Tinted) Vfx.Play(blow.Effect, at, direction, 1f, blow.Tint);
             else Vfx.Play(blow.Effect, at, direction);
-            if (defence != null) defence.DealtDamage(blow.Damage);
+            if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
             if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
             return true;
         }
@@ -1093,7 +1099,7 @@ namespace Clover.Player
                 if (outcome != HitOutcome.Missed)
                 {
                     hits++;
-                    if (defence != null) defence.DealtDamage(blow.Damage);
+                    if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
                     if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
                 }
                 from = at.position;
@@ -1443,9 +1449,10 @@ namespace Clover.Player
                 if (step.Fling != 0f && outcome == HitOutcome.Finisher && target is IShovable flung)
                     flung.Push((-transform.right * (step.Sweep < 0f ? -1f : 1f) + transform.forward * 0.25f).normalized * step.Fling);
                 LastBlowCritical = critical;
-                float earned = step.ManaGain * StatMana;
+                bool pays = PaysBack(target);
+                float earned = pays ? step.ManaGain * StatMana : 0f;
                 if (Stats != null && afflictable != null) earned *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.ManaFromBlows, afflictable.Afflictions) + (afflictable.Afflictions.IsAirborne ? Stats.InAir(PlayerStat.ManaFromBlows) : 0f));
-                if (outcome != HitOutcome.Blocked)
+                if (outcome != HitOutcome.Blocked && pays)
                 {
                     if (critical || NextBlowDamage > 1f)
                     {
@@ -1467,9 +1474,9 @@ namespace Clover.Player
                         afflictable.Afflictions.AirBlow(AirBlowSeconds, AirBlowsMost + more, more > 0 ? 0.85f : 1f);
                     }
                 }
-                if (upgrades != null) upgrades.OnBlow(step, target, outcome, wasAfflicted);
+                if (upgrades != null && pays) upgrades.OnBlow(step, target, outcome, wasAfflicted);
                 // Spells that wait on the weapon (a brand, a copy of the player, blades at the shoulder) are told; they answer on their own next step.
-                if (outcome != HitOutcome.Blocked)
+                if (outcome != HitOutcome.Blocked && pays)
                 {
                     if (promised) HeavyCriticalLeft = 0f;
                     Clover.Player.Forms.SpellWorks.Blow(step, target as Component, damage);
@@ -1500,7 +1507,7 @@ namespace Clover.Player
                 if (step.Heavy && outcome != HitOutcome.Blocked) Vfx.Play(VfxKind.Impact, other.bounds.center);
                 Mana.Gain(earned);
                 BlowsLanded++;
-                if (defence != null) defence.DealtDamage(damage);
+                if (defence != null && pays) defence.DealtDamage(damage);
             }
             if (fresh)
             {

@@ -1,0 +1,42 @@
+opened
+met: true
+result: probe started
+status: queued
+captureId: b0601dd4
+path: C:\Users\rohan\UnityProjects\Project Clover\review\checks\sunfight\court_fury.data
+target: Editor
+status: completed
+framesRequested: 1200
+framesRecorded: 1200
+framesSaved: 1200
+session a8ef706d
+sessionId: a8ef706d
+capture: C:\Users\rohan\UnityProjects\Project Clover\review\checks\sunfight\court_fury.data
+loaded: false
+captureKind: editor
+frameRange: {"first":0,"last":1199,"count":1200}
+analyzedRange: {"first":1,"last":1199,"count":1199}
+sort: cpu
+cpuFrameMs: {"min":8.684,"p25":9.212,"median":9.708,"p75":10.432,"p95":13.993,"max":24.613,"mean":10.164}
+mainActiveMs: {"min":8.682,"p25":9.209,"median":9.705,"p75":10.429,"p95":13.989,"max":24.606,"mean":10.16}
+renderActiveMs: {"min":1.357,"p25":1.589,"median":1.754,"p75":2.045,"p95":2.47,"max":4.197,"mean":1.847}
+gpuFrameMs: {"min":1.452,"p25":2.178,"median":3.706,"p75":4.003,"p95":4.974,"max":6.443,"mean":3.284}
+gcAllocBytes: {"min":7931.0,"p25":7931.0,"median":7931.0,"p75":7931.0,"p95":8073.0,"max":101210.0,"mean":8724.0}
+budget: {"targetFrameMs":16.6,"framesOverBudget":6,"percentOverBudget":0.5}
+medianFrame: 533
+hiccupFrames: 3
+gcFrames: 1199
+spikes: [{"frame":935,"cpuMs":24.613,"mainActiveMs":24.606,"renderActiveMs":3.997,"gpuMs":4.302,"gcAllocBytes":7931,"bottleneck":"cpu","overBudget":true,"hiccup":true},{"frame":940,"cpuMs":21.436,"mainActiveMs":21.428,"renderActiveMs":3.039,"gpuMs":4.166,"gcAllocBytes":8021,"bottleneck":"cpu","overBudget":true,"hiccup":true},{"frame":936,"cpuMs":19.774,"mainActiveMs":19.766,"renderActiveMs":4.197,"gpuMs":4.268,"gcAllocBytes":7983,"bottleneck":"cpu","overBudget":true,"hiccup":true}]
+Clover.Runtime.dll!Clover.Gameplay::SunBearer.Update() [Invoke]  Scripts   1199            1199   0.931         {"sum":112.919,"mean":0.094,"median":0.085,"min":0.064,"max":1.952,"perAnalyzedFrame":0.094}  {"sum":114.389,"mean":0.095,"median":0.085,"min":0.064,"max":1.954,"maxFrame":1079,"perAnalyzedFrame":0.095}  {"sum":436,"mean":0.4,"max":320}  {"frame":1079,"thread":"Main Thread","sampleId":37
+UpdateScene                   PlayerLoop  1199            2398   0.446         {"sum":54.164,"mean":0.045,"median":0.043,"min":0.032,"max":0.176,"perAnalyzedFrame":0.045}   {"sum":4775.723,"mean":3.983,"median":3.871,"min":3.182,"max":13.1,"maxFrame":935,"perAnalyzedFrame":3.983}  {"sum":0,"mean":0.0,"max":0}  {"frame":935,"thread":"Main Thread","sampleId":68,"selfMs":0.169}
+PostLateUpdate.MemoryFrameMaintenance  PlayerLoop  1199            1199   0.405         {"sum":49.166,"mean":0.041,"median":0.039,"min":0.012,"max":0.325,"perAnalyzedFrame":0.041}   {"sum":49.166,"mean":0.041,"median":0.039,"min":0.012,"max":0.325,"maxFrame":935,"perAnalyzedFrame":0.041}   {"sum":0,"mean":0.0,"max":0}  {"frame":935,"thread":"Main Thread","sampleId":637,"selfMs":0.325}
+Clover.Runtime.dll!Clover.Player::PlayerController.Update() [Invoke]  Scripts   1199            1199   0.328         {"sum":39.782,"mean":0.033,"median":0.032,"min":0.024,"max":0.137,"perAnalyzedFrame":0.033}   {"sum":39.782,"mean":0.033,"median":0.032,"min":0.024,"max":0.137,"maxFrame":80,"perAnalyzedFrame":0.033}    {"sum":0,"mean":0.0,"max":0}  {"frame":80,"thread":"Main Thread","sampleId":382,
+[Probe] start: 17 pieces measured; parts 'Perf'
+[Probe] the form has risen: doing Idle
+[Probe] Perf: the fury asked for its fieriest run (the Furrows, the Flares, the Ricochet, the Rising, the Sunfall, the Pass), the player running round, every lane burning
+[Probe] busiest: the fury is fighting
+[Probe] Perf: 5940 frames, frame ms mean 5.3 worst 852.5; garbage 80340 bytes a frame; most hot patches at once 6 (lanes 3); attacks asked 5; screen 1920x936
+[Probe] lanes moved aside so the player kept a way through 0, laid without fire 0
+[Probe] done
+[Probe] done
+counts: {"error":0,"warn":0,"log":8}

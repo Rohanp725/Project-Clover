@@ -1,0 +1,65 @@
+opened
+met: true
+result: probe started
+[Probe] start: 17 pieces measured; parts 'Ring Burrow Attacks Clip Camp Perf'
+[Probe] Ring: the man's planted spear, a field of flame inside and a wall round it
+[Probe]    picture sunfight_ring_1
+[Probe]    picture sunfight_ring_2
+[Probe]    picture sunfight_ring_dying
+[Probe]    picture sunfight_ring_char
+[Probe] Ring: forced True
+[Probe] the form has risen: doing Idle
+[Probe] Burrow: knocked off its sun, it digs in, goes under a ridge, bursts up beside the sun; then the Burrow as an attack
+[Probe]    picture sunfight_dig_1
+[Probe]    picture sunfight_ridge_1
+[Probe]    picture sunfight_emerge_1
+[Probe]    picture sunfight_emerge_2
+[Probe]    the return: dug True ridge True came up True never vanished True holds the sun True poised True OK
+[Probe]    picture sunfight_burrow_chase
+[Probe]    picture sunfight_burrow_locked
+[Probe]    picture sunfight_burrow_erupt
+[Probe]    picture sunfight_burrow_halfout
+[Probe]    the Burrow: chased True struck +1 (last: the sun touched) head open half out True OK
+[Probe] Attacks: each new attack on a player standing still, then answered
+[Probe]    picture sunfight_ricochet_1
+[Probe]    picture sunfight_ricochet_2
+[Probe]    picture sunfight_ricochet_3
+[Probe]    Ricochet standing still: struck +1 (last: the ricochet); a blow of 20 on the cool shell took 20 OK; then Idle
+[Probe]    picture sunfight_flares_1
+[Probe]    picture sunfight_flares_2
+[Probe]    picture sunfight_flares_3
+[Probe]    Flares standing still: struck +1 (last: a flare) OK
+[Probe]    Flares answered in a gap: struck +0 OK
+[Probe]    picture sunfight_gust_1
+[Probe]    picture sunfight_gust_2
+[Probe]    picture sunfight_gust_3
+[Probe]    Gust standing still: struck +1 blocked +0 shoved +1 moved 5.6 m OK
+[Probe]    Gust guard held: struck +0 blocked +1 shoved +0 moved 0.0 m OK
+[Probe]    picture sunfight_grab_1
+[Probe]    picture sunfight_grab_2
+[Probe]    Grab standing still: caught +1 highest 5.9 m held up there True lost 36 health; free after True on the floor at 0.08 OK
+[Probe]    after the drop the player walks: 2.4 m OK
+[Probe]    picture sunfight_grab_missed
+[Probe]    Grab rolled out of: missed +1 caught +0 lost 0; free True OK
+[Probe]    picture sunfight_sunfall_1
+[Probe]    picture sunfight_sunfall_2
+[Probe]    picture sunfight_sunfall_3
+[Probe]    Sunfall standing still: struck +3 (last: hot floor) small fires 3 OK
+[Probe] Clip: every attack from four places, then the exposed tumble, the broken balance and the falcon's fall
+[Probe]    clip Rising: rim -0.51 m by falcon_wing_right (Setting); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.02 m by sun (Setting)
+[Probe]    clip Pass: rim -1.92 m by sun (Pass); obelisk 0.00 m by falcon_head (Idle); under the floor 0.00 m by sun (Pass)
+[Probe]    clip Gust: rim -2.20 m by sun (Gust); obelisk 0.00 m by falcon_head (Idle); under the floor -2.90 m by sun (Gust)
+[Probe]    clip Grab: rim -0.51 m by falcon_wing_right (Grab); obelisk 0.00 m by falcon_head (Idle); under the floor 0.02 m by sun (Grab)
+[Probe]    clip Zenith: rim -1.55 m by falcon_wing_left (Rising); obelisk 0.00 m by falcon_head (Idle); under the floor 0.01 m by sun (Spent)
+[Probe] Clip overall: worst past the rim -0.51 m, worst into the obelisk 0.00 m OK
+[Probe] Camp: twenty seconds on the scarab's right flank, attacking
+[Probe]    picture sunfight_camp_heat
+[Probe]    picture sunfight_camp_answer
+[Probe] Camp: on the flank 19.5 s of 20; blows landed 21; the form lost 98 health; the player was struck 1 times for 16 (the shell flaring); what it did: Idle > Exposed > Idle > Ram > Idle > ShellBurst > Idle > Roll > Idle > Rising
+[Probe] Perf: the fury left to itself for twenty seconds with the player running round, fire everywhere
+[Probe] busiest: the fury is fighting
+[Probe] Perf: 6253 frames, frame ms mean 3.5 worst 14.4; garbage 8764 bytes a frame; most hot patches 0; screen 1920x936
+[Probe] lanes moved aside so the player kept a way through 0, laid without fire 1
+[Probe] done
+[Probe] done
+counts: {"error":0,"warn":0,"log":62}

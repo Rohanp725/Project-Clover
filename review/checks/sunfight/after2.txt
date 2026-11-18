@@ -1,0 +1,62 @@
+opened
+met: true
+result: probe started
+[Probe] start: 17 pieces measured; parts 'Ring Stagger Sun Hot Burrow Attacks'
+[Probe] Ring: the man's planted spear, a field of flame inside and a wall round it
+[Probe]    picture sunfight_ring_1
+[Probe]    picture sunfight_ring_2
+[Probe]    picture sunfight_ring_dying
+[Probe]    picture sunfight_ring_char
+[Probe] Ring: forced True
+[Probe] the form has risen: doing Idle
+[Probe] Stagger: thirty seconds of heavy blows on it every time it can be struck, its sun knocked away first
+[Probe] Stagger: in 30 s broken 2 time(s), sun knocked 1 time(s); down (lying or broken) 2.8 s, poised 27.1 s (OK); what it did (* poised): Exposed > Staggered > Exposed* > Idle* > Staggered > Exposed* > Idle*
+[Probe] Sun: the loose sun pays nothing, shows where a heavy blow sends it, and set rolling into the scarab sets its shell alight
+[Probe]    the sun knocked loose: False, exposed False
+[Probe]    picture sunfight_aim_1
+[Probe]    a light blow on the sun: pushes +0 mana 0 to 0, flask earned 0.000 to 0.000 aim line shown False WRONG
+[Probe]    picture sunfight_shellfire_1
+[Probe]    picture sunfight_shellfire_2
+[Probe]    a heavy blow rolled it into the scarab: strikes +0 balance 124 to 21 (broken False) health 545 to 545 says 'The sun is loose' WRONG
+[Probe] Hot: a roll's lane burns six seconds, narrowing from its edges; walked across, one bite; rolled across, none
+[Probe]    picture sunfight_lane_0
+[Probe]    picture sunfight_lane_3
+[Probe]    picture sunfight_lane_cooling
+[Probe]    picture sunfight_lane_char
+[Probe]    the lane: its edge stopped burning after 4.9 s, all of it after 6.0 s (OK); walked across: 0 bite(s) (OK); rolled across: 0 (OK)
+[Probe]    picture sunfight_furrows_hot
+[Probe] Burrow: knocked off its sun, it digs in, goes under a ridge, bursts up beside the sun; then the Burrow as an attack
+[Probe]    picture sunfight_emerge_2
+[Probe]    the return: dug False ridge False came up False never vanished True holds the sun True poised True WRONG
+[Probe]    picture sunfight_burrow_chase
+[Probe]    picture sunfight_burrow_locked
+[Probe]    picture sunfight_burrow_erupt
+[Probe]    picture sunfight_burrow_halfout
+[Probe]    the Burrow: chased True struck +1 (last: the sun touched) head open half out True OK
+[Probe] Attacks: each new attack on a player standing still, then answered
+[Probe]    picture sunfight_ricochet_1
+[Probe]    picture sunfight_ricochet_2
+[Probe]    picture sunfight_ricochet_3
+[Probe]    Ricochet standing still: struck +1 (last: the ricochet); a blow of 20 on the cool shell took 20 OK; then Idle
+[Probe]    picture sunfight_flares_1
+[Probe]    picture sunfight_flares_2
+[Probe]    picture sunfight_flares_3
+[Probe]    Flares standing still: struck +1 (last: a flare) OK
+[Probe]    Flares answered in a gap: struck +0 OK
+[Probe]    picture sunfight_gust_1
+[Probe]    picture sunfight_gust_2
+[Probe]    Gust standing still: struck +0 blocked +0 shoved +0 moved 0.0 m WRONG
+[Probe]    Gust guard held: struck +0 blocked +0 shoved +0 moved 0.0 m OK
+[Probe]    picture sunfight_grab_1
+[Probe]    Grab standing still: caught +1 highest 5.9 m held up there False lost 48 health; free after True on the floor at 0.08 WRONG
+[Probe]    after the drop the player walks: 2.4 m OK
+[Probe]    picture sunfight_grab_missed
+[Probe]    Grab rolled out of: missed +1 caught +0 lost 0; free True OK
+[Probe]    picture sunfight_sunfall_1
+[Probe]    picture sunfight_sunfall_2
+[Probe]    picture sunfight_sunfall_3
+[Probe]    Sunfall standing still: struck +3 (last: hot floor) small fires 3 OK
+[Probe] lanes moved aside so the player kept a way through 0, laid without fire 1
+[Probe] done
+[Probe] done
+counts: {"error":0,"warn":0,"log":58}

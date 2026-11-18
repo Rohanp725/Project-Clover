@@ -830,71 +830,106 @@ heavy blow finishes; fury below half; a 5 s death. The new class is `SunBearer :
   and it goes up after it as the falcon (1.5 s). **The Setting**: the falcon comes down on the rim, folds, and is
   the scarab, the sun set down in front of it (1.5 s). Neither hurts anyone outside the fury.
 
-**The sun: the rule.** A burning ball 3 m across. It is always in one of four states.
+**The sun: the rule.** A burning ball 3 m across. It is always in one of four states (five since the Burrow).
 
 | State | Where it is | What it does |
 |---|---|---|
 | Held by the scarab | on the floor in front of the scarab, between its forelegs | Touching it burns for 12. It is the blow in the scarab's lane attacks |
 | Held by the falcon | in the talons, in the air | Out of reach. It is the blow in the stoop and the pass |
 | At the zenith | high over the obelisk, the falcon under it | The blaze |
-| **Loose** | lying on the floor, dull red, harmless | Nothing. It can be pushed: a heavy blow moves it 3 m, a light blow 1.5 m, away from the striker, until it meets the rim |
+| Under *(2026-11-18)* | carried under the floor by the burrowing scarab in the Burrow | Not drawn; the cracks the ridge leaves glow with it. It comes up with the scarab in a fountain of fire |
+| Left *(as built)* | set down on the floor: before the Ram, shoved away in the Ricochet, planted for the Flares | Touching it burns for 12. The scarab's shell is cool while it is away (Ricochet, Flares) and it fetches it after |
+| **Loose** | lying on the floor, dull red, harmless | Nothing by itself. **It is a ball to strike at the god** (reworked 2026-11-18): a heavy blow sends it rolling hard the way the blow went (17 m/s, about 16 m on open floor, slowing; it bounces off the wall and the obelisk and never passes into either); a light blow nudges it (5 m/s, about 1.4 m). Rolled hard into the scarab or the grounded falcon (on its sun after a stoop, lying exposed or broken, landed after a missed grab) **the shell catches fire**: 60 to its balance, 24 to its health, flames over the shell for 3 s. While the sun lies still and the player stands within 3.6 m of it facing it (within 55 degrees), **a short line is drawn on the floor from its front the way a heavy blow would send it**, 7 m at most, pale, ember red when it would roll into the shape. Blows on it pay nothing back: no mana, no flask earned, no grey health won back, nothing for the upgrades that feed on blows |
 
 **How the sun is knocked away.** Two ways, the same for both shapes:
 1. **A perfect guard against the sun itself** (the roll, the furrows, the stoop, the pass). The sun is thrown 8 m
    off, at right angles to the way it was going, and is loose.
 2. **30 damage to the body of the shape holding it, dealt during one attack** (from the moment its mark is drawn to
    the end of its recovery). The scarab's flank as it passes; the falcon standing on the sun after a stoop. The
-   count starts again with each attack. While it holds the sun its shell is hot and blows on the body do only 25%
-   of their damage to its health, but they count in full toward the 30.
+   count starts again with each attack, and again whenever the sun is knocked away or taken up (the endless stagger
+   of the owner's play came from a count that was not started again: see the reworked section below). While it
+   holds the sun its shell is hot and blows on the body do only 25% of their damage to its health, but they count in
+   full toward the 30. **Not while it is poised** (below): then the blows only hurt.
 
-**What knocking it away does: the shape is exposed.** The scarab goes over on its back; the falcon tumbles and lies
-with its wings spread. Its fire goes out: no glow, no burn. **For 4 s it lies there, and every blow on it lands at
-100% and wears its balance.** Then it rights itself and goes to the sun at 3 m a second, still exposed, still
-hittable, and takes it up (1.0 s). So **the further the sun was knocked, and the further it is pushed while loose,
-the longer the opening**: 4 s at the least, 9 s at the most (after 9 s the sun rolls to it). A player may spend the
-time on the body or on pushing the sun; the body is nearly always right, and the choice is there for those who
-look. Then the fight goes on with the shape it was.
+**What knocking it away does: the shape is exposed.** The scarab goes over on its back (lying on the paving, not
+sunk through it); the falcon tumbles and lies with its wings spread. Its fire goes out: no glow, no burn. **For 4 s
+it lies there, and every blow on it lands at 100% and wears its balance.** Then (reworked 2026-11-18) the falcon
+hops to the sun as before; **the scarab rights itself and burrows to it**: it digs into the court nose first in a
+burst of sand, dust, broken paving and embers (0.7 s), a ridge of heaving, cracking paving travels under the floor
+at 9 m a second round the obelisk to beside the sun, and it bursts up there (0.55 s) and takes the sun up (0.8 s).
+A sun within 7.5 m is walked to instead. **From the moment it is up and going back it holds full poise**, and
+**once it holds its sun again its balance cannot be broken for 12 s** (`ShapePoise`): blows still hurt it and still
+fill the meter, to one short of breaking. The time it is underground is the player's time to line the loose sun up
+on where it will come up, and strike it.
 
 **The scarab's attacks.**
 
 | Attack | Kind | Mark and timing | Damage | Answer | Opening |
 |---|---|---|---|---|---|
-| **The Roll** | red, heavy | The scarab goes to the rim. A red lane 4 m wide is drawn right across the court through the player; it follows for 0.9 s and holds 0.4 s. Then the sun is rolled down it at 12 m a second, the scarab behind it. **The lane is left hot for 10 s** (glowing orange; 6 every 0.5 s to whoever stands on it) | 28 | Step off the lane. A perfect guard facing the sun knocks it away. Or let the sun pass and put 30 into the scarab's flank as it follows | None, unless the sun is knocked. It turns at the far rim for 1.0 s |
-| **The Furrows** | red, heavy | Three rolls one after another, 1.0 s apart, back and forth, each lane 5 m nearer the player's side than the last. Each lane follows for 0.6 s and holds 0.3 s. **Three hot lanes for 14 s** | 24 each | As the roll. Stand in the strip between two lanes, or beyond the last | After the third it rests on the sun at the rim for 2.0 s: the body can be struck (25% to health; counts toward the 30) |
+| **The Roll** | red, heavy | The scarab goes to the rim. A red lane 4 m wide is drawn right across the court through the player; it follows for 0.9 s and holds 0.4 s. Then the sun is rolled down it at 12 m a second, the scarab behind it. **The lane is left burning for 6 s** (see the hot-floor rule) | 28 | Step off the lane. A perfect guard facing the sun knocks it away. Or let the sun pass and put 30 into the scarab's flank as it follows | None, unless the sun is knocked. It turns at the far rim for 1.0 s |
+| **The Furrows** | red, heavy | Three rolls one after another, 1.0 s apart, back and forth, each lane 5 m nearer the player's side than the last. Each lane follows for 0.6 s and holds 0.3 s. **Three burning lanes, 6 s each** | 24 each | As the roll. Stand in the strip between two lanes, or beyond the last | After the third it rests on the sun at the rim for 2.0 s: the body can be struck (25% to health; counts toward the 30) |
 | **The Ram** | pale | Only at a player within 9 m; always, once they have stood there 1.2 s, never twice running. It leaves the sun behind it and lunges horn first at a pale circle of 3.4 m that follows for 0.8 s and holds 0.3 s | 34 | Guard it; a perfect guard throws 60. Or walk out of the circle | **The horn is stuck in the paving for 1.8 s: the head is open at 100%.** The plain opening, as the dragon's bite is |
 | **The Sparks** | red | It lifts its wing cases and shakes them. Five circles of 2.2 m in an arc 7 m out from it on the player's side, each falling 1.0 s after it is drawn; 0.7 s later five more in the gaps (the fury adds the first five again) | 16 each | Step into the gaps, then into where the first fell | None; it lowers the cases for 0.8 s |
 | **The Rising** | the change; in the fury red, heavy | It rears with the sun over its head for 1.2 s and throws it up. In the fury a red circle of 6 m round it fills over that 1.2 s and the flare burns it | 0; 20 in the fury | Be more than 6 m off in the fury | None |
+| **The Ricochet** *(2026-11-18)* | red, heavy | It goes to the rim as for the Roll and shoves the sun hard at the court's wall: **the whole bounce path is drawn first as three red lanes** (the shove, off the wall, off the wall again, slowing to a stop), each filling in its turn, 1.5 s, following the player for the first 0.8 s. Of the ways it can shove, it takes the one whose path comes nearest the player, preferring a bounce that finds them. Then the sun goes down the path at 19 m a second, slowing over the last stretch; **each stretch is left burning for 3.5 s** | 26, once a stretch | Step off the path; watch the bounce, not the shove. A perfect guard on the sun parries it as on the roll | **The shell is cool while the sun is away** (from the shove until it holds the sun again): blows on the body land in full. It fetches the sun underground after, unless the Ram follows |
+| **The Burrow** *(2026-11-18)* | red, heavy | It digs in with the sun (0.7 s). **A ridge of heaving, cracking paving chases the player for 2 s** at 6.2 m a second, the cracks behind it glowing with the sun under them; then it locks and **a red circle of 2.6 m fills over 0.75 s** under the ridge's head. It bursts up there in a fountain of fire, sand and broken paving; the sun stays under until it hauls itself out, so nothing hides the open head, and comes up out of the floor in front of it then | 32, and a shove of 3 m | Keep moving across its line, not away along it; be out of the circle when it fills | **Half out of the ground for 1.8 s with its head open at 100%**, then it hauls itself out. In the fury it dives again after 0.75 s for a second, shorter chase (1.5 s) before the opening |
+| **The Flares** *(2026-11-18)* | red | It plants the sun in front of it (0.6 s), which swells. **Three lines 1.8 m wide radiate from the sun, up to 15 m, marked at once**: 38 degrees either side of the player and through them. Over the half second before each fires, an arc of flame climbs off the sun and loops over to the far end of its line; then it slams down flat along the line, and fire bursts all along it. They fire one after another, 0.45 s apart, the line through the player last. In the fury **five lines 32 degrees apart, fired 0.34 s apart as a sweep from one side to the other** (which side is chosen at random), so walking with the sweep is no escape | 22 each | Stand in a gap between lines, or close behind the scarab | **The shell is cool while the sun is planted**: blows on the body land in full. The flank-heat (below) still answers whoever stays there |
+| **The shell flaring** *(2026-11-18, the answer to camping)* | pale | Someone who stands within 2.5 m of the scarab's shell and not in front of it (more than 50 degrees off its facing) for 2.5 s sees the shell under them heat, from dull red to bright orange, on the side they stand, with embers and smoke spitting off it, over 1.5 s. At its next rest it answers: from the flank, the cases lift and **a pale ring of 4.6 m fills over 0.55 s and the shell flares**, fire thrown out round it | 16 and a shove of 3 m; a perfect guard throws back 30 of balance | Guard it, or step off when the shell glows | None; blows on the flank before it are still worth it |
+| **The kick** *(2026-11-18, the answer to camping)* | pale | As above, but from behind (more than 125 degrees off its facing): the hind legs are drawn up over a pale circle of 2.3 m behind it for 0.45 s, then kick | 14 and a shove of 4.5 m | Guard it, or step off when the shell glows | None |
 
 **The falcon's attacks.**
 
 | Attack | Kind | Mark and timing | Damage | Answer | Opening |
 |---|---|---|---|---|---|
-| **The Stoop** | red, heavy | Its shadow stops over the player and becomes a red circle of 5 m that follows for 1.0 s and holds 0.5 s. It comes straight down, sun first. **The circle's inner 4 m is left hot for 10 s** | 38 | Walk or roll out. A perfect guard at the last instant knocks the sun out of its talons | **It stands on the sun for 1.6 s with its wings spread: 30 damage to it then knocks it off the sun.** The falcon's main opening |
-| **The Pass** | red, heavy | A red lane 5 m wide from rim to rim through the player, shown for 1.2 s. It flies the lane low in 1.0 s with the sun hanging under it. **The lane is left hot for 10 s.** In the fury it turns and comes back down a lane 30 degrees round from the first, 0.9 s later | 26 | Step off. A perfect guard facing it knocks the sun away (and throws 30) | None, unless the sun is knocked |
+| **The Stoop** | red, heavy | Its shadow stops over the player and becomes a red circle of 5 m that follows for 1.0 s and holds 0.5 s. It comes straight down, sun first, facing the obelisk so its wings lie along the rim and not into the wall. **The circle's inner 4 m is left burning for 6 s** | 38 | Walk or roll out. A perfect guard at the last instant knocks the sun out of its talons | **It stands on the sun for 1.6 s with its wings spread: 30 damage to it then knocks it off the sun.** The falcon's main opening |
+| **The Pass** | red, heavy | A red lane 5 m wide across the court through the player, **within 15.5 m of the middle** (2026-11-18: so its wings never sweep the wall; someone nearer the rim is beside the lane), shown for 1.2 s. It comes down into the lane from 6 m higher, flies it low in 1.0 s with the sun hanging under it, and climbs out of its far end. **The lane is left burning for 6 s.** In the fury it turns and comes back down a lane 30 degrees round from the first, 0.9 s later | 26 | Step off. A perfect guard facing it knocks the sun away (and throws 30) | None, unless the sun is knocked |
 | **The Feathers** | red | It beats its wings over the court. Burning feathers fall: a circle of 1.8 m where the player stands; 0.85 s later a ring of six 5 m out; 0.85 s later the middle again with the ring turned to its gaps. Each falls 1.0 s after it is drawn. None is marked in the obelisk's shadow | 14 each | Step out, step in, stand in the band between; or stand in the shadow | None |
 | **The Zenith: the blaze** | red, heavy; the fight's set piece | It climbs with the sun to the top of the sky over the obelisk. **The whole floor fills red over 3.0 s, all but the obelisk's shadow**, which is outlined pale so it cannot be missed. Then the court blazes for **6 s** (8 in the fury): **12 every 0.5 s** to anyone not in the shadow. The shadow goes on turning at 6 degrees a second. In the fury it turns at 9 and, half-way through, **stops for 0.5 s and comes back the other way** (the stop is the warning) | 12 every 0.5 s | **Be in the shadow and walk with it.** Nothing else in the court attacks while the blaze lasts | When it ends the falcon comes down spent, sets (1.5 s) and lies on the sun as the scarab for **2.5 s with the head open at 100%**. Surviving the blaze is always paid |
 | **The Setting** | the change | It lands on the rim furthest from the player and folds | 0 | | None |
+| **The Ember Gust** *(2026-11-18)* | pale | It comes round low (6.5 m up) to the far side of the court and rears its wings back: **a pale band 7 m wide runs from there through the player to the far rim**, following them for 0.65 s of its 1.1 s. Then a great wingbeat: a wall of burning wind (two leaning sheets of fire, embers, sand and flame) crosses the band at 24 m a second | 8, and **a shove of 4.5 m along the band**; a held guard holds its ground (no shove) | Guard it, or be out of the band | None: it sets up what comes next (the Stoop follows at once more often than not, its circle following for 0.7 s, not 1.0). In the fury the other wing beats back across from 60 degrees round the court |
+| **The Talon Grab** *(2026-11-18)* | red, heavy; a set piece | Its shadow over the player tightens to **a red circle of 2.2 m that follows for 1.1 s and holds 0.45 s**; it dives in 0.26 s | caught: 6, then **carried up 8.5 m and across toward the middle (1.25 s) and dropped: 30** (less if they struggled free lower down; the struggle is light attack or dodge, as against the wick) | Roll out of the circle, or walk out of it | **Missed, it lands hard in the circle, talons in the paving, wings spread: grounded and open (body and head at 100%) for 2.2 s**, then climbs away. The camera stays with the player all the way up and down; once down they are flinched as by any blow and then theirs again |
+| **The Sunfall** *(2026-11-18)* | red | It hangs over the north of the court beating hard and tears burning pieces off the sun, which shrinks a little with each: **three red circles of 1.7 m, 0.3 s apart, each falling 1.2 s after it is drawn**: where the player stands, then either side of them. Each piece is hurled high and comes down steep, trailing smoke, and **leaves a small fire (1.3 m) for 3 s**. In the fury **five**: a closing ring of four round the player and the last where they stand | 22 each | Move along the line it threw from, not across it; in the fury, out through a gap of the ring before it closes | None |
 
-**Hot floor, as a rule.** A hot lane or crater bites whoever stands on it for 6 every 0.5 s, the first bite 0.3 s
-after stepping on. It is drawn as glowing orange paving with heat shimmer and cools from its edges. The chooser
-does not lay a new lane while three are hot, so there is always ground to stand on. Under the obelisk's shadow it
-is cold (section 6.3). It is the same `Hazards` patch as the dragon's storm.
+**Hot floor, as a rule** (reworked 2026-11-18, the owner: "there can be flame fields perma trapping you"). A burning
+lane or crater bites whoever stands on it for 6 every 0.5 s, **the first bite 0.5 s after stepping on**, so walking
+straight across a lane costs one bite at most; **a dodge roll across it costs nothing**, and the count starts again
+where the roll ends. **It burns for 6 s** (the Ricochet's stretches 3.5 s, the Sunfall's little fires 3 s), and as
+it cools **it dies from its edges in**: the burning width narrows with the heat and only what still burns bites
+(the flames over it die by the same rule, so what is seen burning is what bites). Then it lies as char with fading
+ember cracks for 2.5 s more, harmless. **No lane is laid that would leave the player no fire-free way to the shape**
+(`CourtReach`: the court as a grid of one-metre cells, the burning floor and the new lane blocked, a flood from the
+player): a lane that would shut them in is moved 3 or 6 m aside (the Pass turned 25 or 50 degrees), and if none of
+those leaves a way it is laid with no fire, only char. The chooser does not lay a new lane while three are
+burning. Under the obelisk's shadow it is cold (section 6.3). It is drawn as fire (`ScorchedGround`, below), not as a mark.
 
-**How it is hurt.** The scarab's head while the horn is stuck, and after the Zenith (100%); either shape while
-exposed (100%); the body while it holds the sun (25%, but it counts toward knocking the sun away); the fallen head
-when the balance is broken (160%, and a heavy blow finishes). Blows on any of these and perfect guards wear the
-balance; knocking the sun away costs it 40.
+**How it is hurt.** The scarab's head while the horn is stuck, after the Zenith, half out of the ground after the
+Burrow (100%); the falcon grounded after a missed Talon Grab (100%); either shape while exposed (100%); the scarab's
+body while its shell is cool, the sun shoved away in the Ricochet or planted for the Flares (100%); the body while it
+holds the sun (25%, but it counts toward knocking the sun away); the fallen head when the balance is broken (160%,
+and a heavy blow finishes); its own sun rolled into it (24 and 60 of balance). Blows on any of these and perfect
+guards wear the balance; knocking the sun away costs it 40. For 12 s after it has its sun back from a fall its
+balance cannot be broken.
 
-**How it chooses** (`SunBearerChooser`; Claude's defaults). It opens with: Roll, Ram, Sparks, Furrows, Rising,
-Stoop, Feathers, Pass, Setting, Roll, Rising, **Zenith**, which shows everything once. After that it stays in a
-shape for three or four attacks (two or three as the falcon) and then changes. As the scarab: Roll 30, Furrows 20,
-Sparks 25, the Ram when the player is in reach. As the falcon: Stoop 35, Pass 25, Feathers 25, Zenith 15. Nothing
-twice running. The Zenith never comes within 25 s of the last one, and its fury opens with one. The Roll, the
-Furrows, the Stoop, the Pass and the Zenith are heavy, and two heavy attacks earn the 2.4 s lull.
+**How it chooses** (`SunBearerChooser`; Claude's defaults, reworked 2026-11-18). It opens with: Roll, Ram, Sparks,
+Ricochet, Rising, Stoop, Gust, Feathers, Setting, Burrow, Flares, Furrows, Rising, Grab, Pass, Sunfall, Setting,
+Roll, Rising, **Zenith**, which shows everything once and never stays in a shape past four. After that it stays in
+a shape for three or four attacks (two or three as the falcon) and then changes. As the scarab: Roll 20, Furrows 14,
+Sparks 14, Ricochet 18, Burrow 16, Flares 16, the Ram when the player is in reach. As the falcon: Stoop 22, Pass 16,
+Feathers 12, Gust 16, Grab 14, Sunfall 18, Zenith 14. **Nothing twice running, and what it did lately is less likely
+to come round:** an attack made two or three picks ago keeps a quarter of its share, four ago 60%. **Pairs:** the
+Ricochet leads into the Ram (the sun lies far off, so it rams first and fetches after), the Ember Gust into the
+Stoop (on whoever the wind has thrown), the Burrow into the Flares; each follows six times in ten, always in the
+fury, and only while the shape still has an attack to make. The Zenith never comes within 25 s of the last one, and
+its fury opens with one. The Roll, the Furrows, the Ricochet, the Burrow, the Stoop, the Pass, the Grab and the
+Zenith are heavy, and two heavy attacks earn the 2.4 s lull. A camper on its flank is answered at its next rest,
+before anything else.
 
 **Fury** (below half health). A quarter faster; rests 55% as long; the shadow turns at 9 degrees a second; it opens
 with the Zenith, longer and with the shadow's turn-back; the Rising's flare burns; the Pass comes back; the Sparks
-fall three times; the sun, loose, is taken up after 7 s at the most, not 9.
+fall three times; the sun, loose, is taken up after 7 s at the most, not 9. **And its patterns change, not only its
+pace** (2026-11-18): the Flares are five lines swept from one side; the Burrow dives twice; the Ember Gust beats back
+from the other side; the Sunfall throws five pieces in a closing ring; every pair always follows, and two more are
+made: the Sparks into the Ricochet, the Sunfall into the Talon Grab.
 
 **Callouts** (timed, as the dragon's are): "The sun comes down" (as the form rises); "Khepharu, the Sun-Bearer" (at
 the roar); "The sun is loose" (the first time it is knocked away, and never again); "The court blazes" (the first
@@ -2133,3 +2168,190 @@ heart), `Gameplay/GroundMark.cs` (`ShowBurnt`, new; `Show` unchanged), `Gameplay
 dressed in the Fire land's `m_fire_*` materials; the spearmen's materials). The Lightning land's scenes were not
 rebuilt; the castle frame `firelook_castle_hit_after` (sparks, a ring and a flame thrown there with time stopped) shows
 its warm-white sparks, cold blue-white ring and old two-tone flame exactly as before.
+
+### As built: the fight reworked (2026-11-18, overnight)
+
+The owner played the fight and asked for fixes and more (their words: the ring of fire and the rolled lanes "just
+orange highlighted areas with flame"; the second phase "repetitive"; "i can heavy attack the beetle each time it
+comes back after dropping the ball and it perma staggers"; the beetle's disappearance and return "looks jank"; "the
+ball on the ground to hit around with no point other than farming flask charge"; "parts of the bosses clipping in and
+out of the arena"; "flame fields perma trapping you"; "sticking to the beetles right flank and perma hitting him makes
+it a little trivial"; "not ... super gimmicky ... fun to fight but also has cool set pieces"). The plan they approved
+was built in one unattended night by Claude. Nothing here has been played by the owner. The rules as they now stand
+are in section 6.4 above (the sun's table, the exposed state, both attack tables, the hot-floor rule, how it is hurt,
+how it chooses, the fury); this section says what was built, where it lives, what was measured and what is weak.
+
+**Where it lives.**
+
+| What | Where |
+|---|---|
+| The poise after a fall | `Gameplay/ShapePoise.cs` (plain, tested); `SunBearer.Poise` |
+| Hot floor's bite | `Gameplay/HotFloorClock.cs` (plain, tested) |
+| A way through the fire | `Gameplay/CourtReach.cs` (plain, tested): a one-metre grid of the court and a flood |
+| The loose sun as a ball | `Gameplay/RollingSun.cs` (plain, tested) |
+| No mana, flask or grey health from the sun | `Gameplay/IPaysNothing.cs`; `ColossusPart.Inert`; `PlayerCombat.PaysBack` (the weapon's blows, the spells' blows and chains) |
+| The fight | `Gameplay/SunBearer.cs` (the old body, changed), `SunBearer.Body.cs` (keeping inside, the ball, shell fire, the aim line, flank heat, fair lanes), `SunBearer.Ground.cs` (the burrow and the Burrow), `SunBearer.Moves.cs` (Ricochet, Flares, Ember Gust, Talon Grab, Sunfall) |
+| What it chooses | `Gameplay/SunBearerChooser.cs`, `SunBearerAttack.cs` (six new values, added at the end) |
+| Burning ground drawn as fire | `Gameplay/ScorchedGround.cs`, `Gameplay/FlameField.cs`, `Art/Shaders/clover_scorch.shader` (char and ember cracks), `Art/Shaders/clover_flame_field.shader` (a field of flames in one mesh); built by `Editor/Builders/ScorchBuilder.cs` |
+| The ridge, the cracks, the Flares' arcs, the Gust's wall | `Gameplay/SunBearerLook.cs`; built in `SunBearerBuilder.Look` |
+| The planted spear's fire | `Gameplay/SpearLook.cs` (`ConfigurePlantFire`), `EnemyBuilder` (both spearmen) |
+| A shove | `Player/PlayerController.Shove` (the Ember Gust, the shell flaring, the kick, the Burrow) |
+| Tests | `Tests/EditMode/Gameplay/SunFightTests.cs` (13) |
+| Probe | `AgentScripts/SunFightProbe.cs`, `AgentScripts/profile_court.sh`; see `AgentScripts/README.md` |
+
+**The fixes.**
+
+1. *The endless stagger: the cause.* The count of damage that knocks the sun out of the scarab's hold (30 during one
+   attack) was set back to zero only when a new attack was chosen. Knocking the sun away did not set it back, so when
+   the scarab took its sun up again and stood idle the count was still at 30 or more, and the first blow of any kind
+   knocked the sun away again: exposed, 40 off its balance, blows at 100% that wear its balance, broken, finished,
+   exposed again. Now the count is set back whenever the sun is knocked away or taken up, and only counts while the
+   shape is not poised. *The poise* (`ShapePoise`): from the moment the shape is up and going back for its sun it
+   holds full poise, and for 12 s after it has the sun again its balance cannot be broken; blows still hurt it and
+   still fill the meter to one short of breaking, so what is owed is there when the poise ends. A parry still knocks
+   the sun away under the poise (it is the player's skill, not a pile of blows), but cannot break the balance.
+   Measured (`SunFightProbe` part `Stagger`, 30 s of the great spear's heavy blow every 0.55 s on whatever can be
+   struck, the form's health kept up): in 30 s its balance broke twice, more than twelve seconds apart, its sun was knocked away once, and it was poised for 27 of the 30 s: Exposed > Staggered > Exposed (poised) > Idle (poised) > Staggered > Exposed (poised) > Idle (poised). Before, the same player on the flank for 20 s read (part `Camp`
+   on the old code): Idle > Sparks > Exposed > Staggered > Exposed > Idle > Exposed > Idle > Exposed.
+2. *No vanishing.* The jank was the scarab "on its back": it was rolled 180 degrees about a pivot at the floor, so
+   the whole body went under the paving and came back up out of it. Now everything about its pose is measured each
+   frame (see 4) and a body lying on its back, rearing or down on its face is lifted to lie on the floor. And it no
+   longer walks or pops back to the sun: it rights itself, **digs in** (0.7 s: sand thrown up in a ring, dust, broken
+   paving, embers, a star of cracks), goes under a **ridge** (a hump of broken earth half a metre high with six slabs
+   of paving tipped up round it, rocking, dust and stone chips off its sides, and dark cracks left behind it every
+   0.8 m that fade over 3.5 s; with the sun under it, in the Burrow, the cracks glow ember red and embers come off
+   them), round the obelisk, at 9 m a second, and **bursts up** beside the sun (sand, broken paving, a star of cracks)
+   and takes it up. A sun within 7.5 m is walked to. The same burrow fetches the sun after the Ricochet and the Ram.
+3. *The loose sun has a purpose* (the sun's table above). It pays nothing back (`IPaysNothing`; a probe light blow
+   with flasks empty and mana spent earned 0 mana and 0.000 of a flask); a heavy blow rolls it hard; rolled into the
+   scarab or the grounded falcon it sets the shell alight (60 balance, 24 damage, flames standing over the shell for
+   3.2 s, "The shell catches fire" the first time); the aim line shows where it will go and turns ember red when it
+   would strike the shape. The time the scarab spends underground fetching it is the time to line it up.
+4. *No clipping.* Each frame after the pose is set, the eight corners of every piece's own box are measured
+   (`KeepInside`): anything below the wall's top that reaches past the rim moves the whole body back in (a flying
+   falcon climbs over the wall instead), anything in the obelisk moves it out sideways, a body that is not meant to be
+   in the floor is lifted out of it, and the sun is kept inside the wall, clear of the stone at any height, and on the
+   floor (taking whatever holds it along). And the paths were planned so the clamp rarely has to act: the roll and the
+   Ricochet start 4.5 m in from the rim, not 3; the scarab walks no nearer than 3.4 m; the Ram's mark 2.2 m; the
+   Stoop's and the Grab's circles 3 m, with the falcon facing the obelisk so its wings lie along the rim; the Pass
+   flies low only inside 15.5 m and climbs in and out of its lane; the scarab turns to face the court as it rears
+   for the Rising near the wall; the Setting and the Spent land from 1.4 m up. Measured by `SunFightProbe` part
+   `Clip` (every attack from three places by the rim and one by the obelisk, the exposed tumble three times, the
+   broken balance at the rim three times, the falcon brought down three times; the same eight corners of every
+   piece, the probe's rim at 20 m below the wall's top plus 0.2):
+
+   | Metres: past the rim / into the obelisk / under the floor | Before (old code) | After |
+   |---|---|---|
+   | Roll | 2.94 / 0 / 0 | -0.50 / 0 / 0 |
+   | Ram | 0.78 / 0 / 0.90 | -0.50 / 0 / 0.29 (the horn in the paving, on purpose) |
+   | Sparks | -1.66 / 0 / 0 | -2.05 / 0 / 0 |
+   | Furrows | 2.91 / 1.00 / 0 | -0.20 / 0 / 0 |
+   | Ricochet (new) | (did not exist) | -0.41 / 0 / 0 |
+   | Burrow (new) | (did not exist) | -0.50 / 0 / 0 (not counting going under) |
+   | Flares (new) | (did not exist) | -9.21 / 0 / 0.02 |
+   | Rising | 1.54 / 0.51 / 4.61 | -0.51 / 0 / 0.02 |
+   | Stoop | 4.34 / 0 / 0 | -1.70 / 0 / 0 |
+   | Feathers | none / 0.90 / below | none / 0 / below |
+   | Pass | 11.00 / 0 / 2.38 | -1.92 / 0 / 0 (0.39 into the obelisk before the lane was kept 8.6 m from it) |
+   | Ember Gust (new) | (did not exist) | -2.20 / 0 / below (0.64 into the obelisk before the falcon was made to cross the middle high) |
+   | Talon Grab (new) | (did not exist) | -0.51 / 0 / 0.02 |
+   | Sunfall (new) | (did not exist) | none / 0 / below |
+   | Zenith (and Spent) | 4.18 / 0.70 / 4.70 | -1.55 / 0 / 0.01 |
+   | Setting | 2.74 / 0.20 / 4.59 | -0.52 / 0 / 0.02 |
+   | Exposed, three times | 2.96 / 0 / 4.75 | -0.50 / 0 / 0 |
+   | Broken at the rim, three times | 2.99 / 0 / 0.37 | -0.48 / 0 / 0 |
+   | Falcon brought down, three times | 5.02 / 0.67 / 2.77 | -0.50 / 0 / 0.02 |
+   | **Worst of all** | **11.00 past the rim, 1.00 into the obelisk** | **nothing past the rim (the nearest -0.20, the sun at the end of a furrow), nothing into the obelisk, 0.29 under the floor (the Ram's forelegs with the horn)** |
+
+   Negative is room to spare (the clamp keeps half a metre). "Below" is the falcon high in the air. The before figures
+   come from the same probe run on the code as it stood (`review/checks/sunfight/before_clip_camp.txt`), the after
+   ones from `after4_attacks_clip_camp.txt` and, for the falcon's flights over the obelisk after the last change,
+   `after5.txt`.
+
+5. *No trapping in fire* (the hot-floor rule above): 6 s, the first bite at 0.5 s, nothing through a roll, narrowing
+   from the edges, and no lane that would shut the player off (`CourtReach`). Measured (part `Hot`): a roll's lane stopped biting at its edge (1.7 m off its middle) 3.8 s after it was lit and all of it at 6.0 s; walked straight across at 0.9 s, 1 bite; a dodge roll across it at 1.6 s, 0 bites; standing in its middle for 1.1 s, 2 bites. Over
+   the whole of the probe's last four runs (every attack asked, the fury's busiest half minute, the camp) the check
+   for a way through moved a lane aside once and laid one without fire three times (a roll or a furrow that would
+   have closed the last way out rolls cold instead); each is written to the console as `[Clover.Gameplay]` when it
+   happens. It was never seen to leave the player shut in.
+6. *No flank-camping* (the shell flaring and the kick in the scarab's table). Measured (part `Camp`, 20 s three metres
+   off the right flank attacking, three light blows to a heavy, the form left to choose): on the flank 19.7 s of the 20; the form lost 67 health (254 before the rework); the player was struck once, by the shell flaring (16), and its order was Idle > Sparks > Exposed (the flank blows knocked the sun away mid-sparks, which is the design's own answer) > Idle > Roll > Idle > **ShellBurst** > Idle > Ram. Before, on the old code: on the flank 19.9 s, the form lost 254, the player was struck once (touching the sun), and its order was Idle > Sparks > Exposed > Staggered > Exposed > Idle > Exposed > Idle > Exposed: the endless loop. A camper is now answered about every five seconds of standing there, and the scarab keeps choosing attacks that carry it away (`sunfight_camp_heat`, `sunfight_camp_answer`). Hitting the flank
+   is still worth it: blows there land at 25% and count toward knocking the sun away.
+
+**Real fire, not highlighted ground.** `ScorchedGround` draws each burning patch as two meshes. The ground
+(`clover_scorch.shader`) is a char wash over the paving, near black mottled with ash, its outer edge ragged, broken
+by cracks (the edges of a field of plates about a metre across, and finer ones between) that glow from deep red to
+orange as embers, breathing; the glow dies from the edges in as the patch cools, and what is left is char with fading
+cracks for 2.5 s. The flames (`clover_flame_field.shader`) are one mesh of 260 tongues for a lane (80 for a disc, 90
+for a ring), each four corners at its own foot, scattered irregularly (stratified along the lane, half of them
+clumped onto a few hot runs, taller in the middle, one in twelve half again as tall), each with its own height,
+width, lean, sway and flicker, stood up toward the camera in the vertex stage and drawn as flame bands (a smoky
+fringe, deep red, orange, a yellow heart, no white); they die from the edges in by the same rule as the bite, so what
+burns is what bites. Under the obelisk's shadow the embers go cold and the flames all but out. Smoke rises and heat
+shimmers off them as before. **The planted spear** (both spearmen) is now a field of low, dense flames on charred,
+cracking floor inside the circle and a wall of tall flame (90 tongues in two rows) round its edge that rises in
+0.3 s and sinks one tongue after another round the ring as the burn ends, with smoke rolling up off it; the circle's
+old random puffs are gone. The Flares' slammed lines, the Gust's front (two rows of flames driven across the band)
+and the Sunfall's little fires are the same fire. Frames: `sunfight_ring_1`, `_2`, `sunfight_lane_0`, `_1`, `_3`,
+`_cooling`, `_char`, `sunfight_furrows_hot`, `sunfight_flares_2`.
+
+**The new attacks** are in the tables above. The opening order now shows all eighteen moves in two turns of each
+shape and never stays in one past four.
+
+**Measured** (editor, Game view 1920 by 936, no vsync). EditMode tests 366 of 366 pass (353 before, and the 13 in `SunFightTests`: the poise, the hot floor's
+timings and the roll, no flask or mana from the sun, the rolled sun's strike, the chooser's repeat and pair rules, the
+way through the fire). `SunCourtProbe` (the whole Sun Court as before) 51 lines `OK`, none `WRONG`; `BossFxProbe`
+every move forced; console 0 errors and 0 warnings in all of them. `SunFightProbe`, every part `OK` in its last run:
+the stagger, the sun, the hot floor, the burrow and the Burrow, the Ricochet, the Flares, the Ember Gust (shoved
+5.6 m; guarding, 0 m), the Talon Grab (caught, carried 5.9 m, 36 lost, free and walking after; rolled out of, missed
+and grounded), the Sunfall, the clipping and the camping as above. **Cost**, recorded with the profiler for 1200
+frames in the middle of the fury's fieriest half minute (`profile_court.sh`: the Furrows, the Flares, the Ricochet,
+the Sunfall and the Pass asked in turn, up to six burning patches at once, three of them lanes; the capture is
+`review/checks/sunfight/court_fury.data`): main thread median 9.7 ms, 95th percentile 14.0, worst 24.6, six frames of
+1199 over 16.6 ms, all in one hitch of three frames; but 5.5 ms of every frame of that is the profiler's own
+bookkeeping (`Profiler.FlushMemoryCounters`), so without it about 4.2 ms median. GPU median 3.7 ms, 95th percentile
+5.0. `SunBearer.Update` 0.09 ms a frame on average, 1.95 at worst. Garbage: 7931 bytes a frame median, the editor's
+own as before the rework (7.9 to 8.6 KB); the Sun-Bearer's update made 436 bytes in all over the 1199 frames (320 of
+them in one frame, the console line when a lane is laid without fire). The probe's own count without the profiler,
+the fury left to itself for 20 s: 3.5 ms a frame mean, 14.4 worst, 8764 bytes a frame.
+
+**What is weak, honestly.**
+
+- *The flames are the game's flat comic tongues.* Dense, irregular and dying from the edges in, but every tongue is
+  the same teardrop drawn in the same four bands, bright orange with a yellow heart, so a fully burning lane still has a
+  little of a hedge of orange spikes about it from far off, and the flames give no light to the paving round them.
+  They stand up toward the top of the screen (camera-facing), so a lane running north and south reads thinner than one
+  running east and west (`sunfight_lane_1`, `scorchlook_100`).
+- *The planted spear's wall* is tall and bright and reads as fire (`sunfight_ring_1`, `_2`), but its top is near the
+  top of the picture when the man stands north of the player, and the smoke off it is thin.
+- *The ridge* is a hump of mud-coloured stone (a squashed sphere) with six pale slabs rocking round it and dark cracks
+  behind: it reads as something moving under the floor, not as paving actually heaving; there is no hole where it went
+  down, only a star of cracks. The dig is the body sinking nose first through the floor in a cloud of sand
+  (`sunfight_dig_1`).
+- *The shell on fire* is the whole body tinted a flat red-orange with a field of flames over its back
+  (`sunfight_shellfire_1`): readable, but the tint is a filter more than a burning shell, and the same tint (on one
+  side) is the flank-camping heat.
+- *The Talon Grab's carry*: carried up, the player is mostly behind the falcon's body and wings from the camera, found by
+  the finder ring (`sunfight_grab_2`); they are held a metre and a half toward the camera to help. No animation of
+  the player being held: they stand in the talons.
+- *The Flares' arcs* are a fat ribbon of fire (a line renderer), not a looping prominence with a body; the slam reads
+  well, the arc less so (`sunfight_flares_2`).
+- *The Ember Gust* is two rows of flames swept across the band, a front of fire more than a wind; no dust wall or
+  bending of the flames with it (`sunfight_gust_3`).
+- *The Sunfall's pieces* are thrown from the falcon high above the top of the picture and are seen only for the last
+  part of their fall (`sunfight_sunfall_1`).
+- *The poise has no tell.* A player who keeps hitting after a fall is not shown that the balance cannot break for
+  twelve seconds (the bar fills to one short and holds there). A gold edge on the bar while it is poised would say so.
+- *The Ram's horn* still goes into the paving on purpose and the forelegs' tips go 0.29 m into it with it.
+- *Balance numbers and shares are first guesses* (60 balance and 24 damage for the rolled sun, 12 s of poise, the
+  shares and the pair chances); none of it has been played.
+
+**Not done.** No sound for anything new: the Ricochet's bounces, the dig and the ridge, the eruption, the Flares, the
+Gust, the Grab and the Sunfall are silent but for the shared hit and fire sounds already there. The Sun City was not
+rebuilt, so its champion's planted spear keeps the old ring of flame until the next `Clover/Build/Sun City`; and
+`SunCityProbe`, `FireMechanicsProbe`, the hub's `RunProbe` and the PlayMode tests were not run. The review stations
+were not re-shot (`Clover > Review > Capture Stations`). `BossFxProbe`'s roll frames now miss the lane (the roll starts
+further in than when that probe was framed); its numbers are fine. The castle was photographed after the work
+(`TourProbe`) and looks as it did, but the frame kept to compare it with was older than the last commit (it still
+says Embers), so it shows only the HUD's and the braziers' earlier changes; nothing from this work shows there. The
+poise has no tell (above). Nothing here has been played by a person.

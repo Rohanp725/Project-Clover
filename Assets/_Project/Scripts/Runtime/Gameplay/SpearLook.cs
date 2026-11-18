@@ -22,6 +22,15 @@ namespace Clover.Gameplay
         [SerializeField] private Renderer[] tongues = new Renderer[0];
         [ColorUsage(true, true)] public Color TongueColour = new Color(1f, 1f, 1f, 1f);
         public float TongueRise = 0.15f, TongueSink = 0.4f, TongueBeat = 0.5f;
+        /// <summary>
+        /// The planted spear's fire as fire (the owner's review, 2026-11-18): a field of low, dense flames over charred,
+        /// cracking floor inside the circle and a tall wall of fierce flame round its edge with smoke rising off it. Without
+        /// it (a scene built before) the ring is the old tongues.
+        /// </summary>
+        [SerializeField] private ScorchedGround plantFire;
+        /// <summary>How low the flames inside the ring stand beside the wall's, how long the wall takes to rise, and how long the char lies after.</summary>
+        public float FieldFlames = 0.55f, WallRise = 0.3f, CharAfter = 1.6f;
+        private float untilWallSmoke;
         /// <summary>A multiplier on the streak's own fire (its material is flame, not light): white leaves it as it is.</summary>
         [ColorUsage(true, true)] public Color StreakColour = new Color(1f, 1f, 1f, 1f);
         /// <summary>True for the god: his streaks are wider and his rings sun white at the heart.</summary>
@@ -64,6 +73,8 @@ namespace Clover.Gameplay
 
         public void ConfigureTongues(Renderer[] flames) => tongues = flames;
 
+        public void ConfigurePlantFire(ScorchedGround fire) => plantFire = fire;
+
         private void Awake()
         {
             enemy = GetComponent<Enemy>();
@@ -87,6 +98,8 @@ namespace Clover.Gameplay
                 if (shaft != null) shaft.enabled = false;
             foreach (var tongue in tongues)
                 if (tongue != null) tongue.enabled = false;
+            // The ring's own fire is drawn here; the circle's random puffs of flame are not needed.
+            if (plantFire != null) enemy.BurnDrawn = true;
             var main = Camera.main;
             eye = main != null ? main.transform : null;
         }
@@ -100,6 +113,7 @@ namespace Clover.Gameplay
         {
             if (enemy != null) enemy.AttackStruck -= OnStruck;
             ringAge = -1f;
+            if (plantFire != null) plantFire.HideAll();
             foreach (var tongue in tongues)
                 if (tongue != null) tongue.enabled = false;
             for (int i = 0; i < streaks.Length; i++)
@@ -141,7 +155,7 @@ namespace Clover.Gameplay
                     Vfx.Play(VfxKind.Smoke, centre + Vector3.up * 1.2f, Vector3.up, 1.6f, Smoke);
                 }
                 // The planted spear: fire stands up round the edge of the circle for as long as it burns.
-                if (!attack.Ranged && attack.BurnSeconds > 0f && tongues.Length > 0)
+                if (!attack.Ranged && attack.BurnSeconds > 0f && (tongues.Length > 0 || plantFire != null))
                 {
                     ringAt = centre;
                     ringRadius = attack.Radius;
@@ -277,6 +291,11 @@ namespace Clover.Gameplay
         // pulsing on the burn's beat, and as the ring dies sink one after another round it.
         private void DrawTongues(float deltaTime)
         {
+            if (plantFire != null)
+            {
+                DrawPlantFire(deltaTime);
+                return;
+            }
             if (ringAge < 0f) return;
             ringAge += deltaTime;
             if (ringAge > ringLife + TongueSink)
@@ -311,6 +330,40 @@ namespace Clover.Gameplay
                 block.SetColor(ColourId, TongueColour);
                 tongue.SetPropertyBlock(block);
             }
+        }
+
+        // The planted spear's fire: the wall rises out of the floor round the edge in a moment, one tongue after
+        // another; inside it the floor chars and cracks and low flames stand thick on it; as the burn ends the wall sinks
+        // round the ring and the field dies from the edge in, leaving char that fades.
+        private void DrawPlantFire(float deltaTime)
+        {
+            if (ringAge < 0f) return;
+            ringAge += deltaTime;
+            if (ringAge > ringLife + CharAfter)
+            {
+                ringAge = -1f;
+                plantFire.HideAll();
+                return;
+            }
+            float rise = Mathf.Clamp01(ringAge / WallRise);
+            float heat = Mathf.Clamp01((ringLife - ringAge) / 1.2f);
+            float fade = ringAge <= ringLife ? 1f : 1f - (ringAge - ringLife) / CharAfter;
+            plantFire.Ring(0, ringAt, ringRadius, heat, rise);
+            plantFire.Disc(0, ringAt, ringRadius, heat, fade, FieldFlames);
+            if (heat <= 0.05f || !Every(ref untilWallSmoke, 0.07f, deltaTime)) return;
+            // Smoke rolls up off the wall.
+            float turn = Random.value * Mathf.PI * 2f;
+            Vector3 on = ringAt + new Vector3(Mathf.Sin(turn), 0f, Mathf.Cos(turn)) * ringRadius;
+            Vfx.Play(VfxKind.Smoke, on + Vector3.up * 2.4f, Vector3.up, 1.2f, Smoke);
+            if (Random.value < 0.3f) Vfx.Play(VfxKind.Embers, on + Vector3.up * 1.5f, Vector3.up, 0.8f);
+        }
+
+        private static bool Every(ref float clock, float interval, float passed)
+        {
+            clock -= passed;
+            if (clock > 0f) return false;
+            clock = clock < -interval ? interval : clock + interval;
+            return true;
         }
 
         private void Place(int pair, float width, float strength)

@@ -1,0 +1,26 @@
+error: 'script eval' did not complete within its 30 s timeout. It may still be running and its effects may still land. Pass a larger --timeout (seconds).
+met: true
+result: probe started
+[Probe] start: 17 pieces measured; parts 'Burrow Hot'
+[Probe] the form has risen: doing Idle
+[Probe] Hot: a roll's lane burns six seconds, narrowing from its edges; walked across, one bite; rolled across, none
+[Probe]    picture sunfight_lane_0
+[Probe]    picture sunfight_lane_1
+[Probe]    (walked across 1, rolled across 0, stood 1.1 s in it 2, all done 3.8 s after the lane was lit)
+[Probe]    picture sunfight_lane_3
+[Probe]    picture sunfight_lane_cooling
+[Probe]    picture sunfight_lane_char
+[Probe]    the lane: its edge stopped burning after 3.8 s, all of it after 6.0 s (OK); walked across: 1 bite(s) (OK); rolled across: 0 (OK); stood in it 1.1 s: 2 bite(s) (OK)
+[Probe]    picture sunfight_furrows_hot
+[Probe] Burrow: knocked off its sun, it digs in, goes under a ridge, bursts up beside the sun; then the Burrow as an attack
+[Probe]    picture sunfight_emerge_2
+[Probe]    the return: dug False ridge False came up False never vanished True holds the sun True poised True WRONG
+[Probe]    picture sunfight_burrow_chase
+[Probe]    picture sunfight_burrow_locked
+[Probe]    picture sunfight_burrow_erupt
+[Probe]    picture sunfight_burrow_halfout
+[Probe]    the Burrow: chased True struck +0 (last: hot floor) head open half out True WRONG
+[Probe] lanes moved aside so the player kept a way through 0, laid without fire 0
+[Probe] done
+[Probe] done
+counts: {"error":0,"warn":0,"log":22}

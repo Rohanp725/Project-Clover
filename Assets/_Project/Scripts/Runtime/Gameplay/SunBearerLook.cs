@@ -34,6 +34,27 @@ namespace Clover.Gameplay
         [SerializeField] private Renderer[] fallers = new Renderer[0];
         [ColorUsage(true, true)] public Color SparkColour = new Color(1f, 1f, 1f, 1f);
         [ColorUsage(true, true)] public Color FeatherColour = new Color(1.1f, 0.95f, 0.8f, 1f);
+        [ColorUsage(true, true)] public Color MeteorColour = new Color(1.2f, 1f, 0.9f, 1f);
+        // The ridge over the burrowing scarab: a heave of paving, slabs of it lifted round it, and cracks left behind.
+        [SerializeField] private Renderer mound;
+        [SerializeField] private Renderer[] slabs = new Renderer[0];
+        [SerializeField] private Renderer[] cracks = new Renderer[0];
+        /// <summary>The cracks: dark in plain paving, glowing ember red where the sun went under; how long they last, how far apart they are laid.</summary>
+        public Color CrackColour = new Color(0.07f, 0.05f, 0.04f, 1f);
+        [ColorUsage(true, true)] public Color HotCrackColour = new Color(2.2f, 0.55f, 0.08f, 0.95f);
+        public float CrackSeconds = 3.5f, CrackEvery = 0.8f, CrackSize = 3.2f;
+        // The Flares' arcs of flame and the Ember Gust's wall of burning wind.
+        [SerializeField] private LineRenderer[] arcs = new LineRenderer[0];
+        /// <summary>The Ember Gust's wall as fire: a row of tall flames across the band, leaning on, and a lower one behind.</summary>
+        [SerializeField] private ScorchedGround gustFire;
+        public float ArcHeight = 7f, GustHeight = 2.6f;
+        private readonly Vector3[] arcPoints = new Vector3[24];
+        private float[] crackAge = new float[0];
+        private bool[] crackHot = new bool[0];
+        private float[] crackSize = new float[0];
+        private int nextCrack;
+        private Vector3 lastCrack;
+        private bool ridgeOn;
 
         [ColorUsage(true, true)] public Color DiveColour = new Color(1.1f, 1f, 1f, 1f);
         [ColorUsage(true, true)] public Color ShockColour = new Color(1f, 1f, 1f, 1f);
@@ -75,8 +96,21 @@ namespace Clover.Gameplay
         /// <summary>The things that fall: the scarab's burning sparks and the falcon's burning feathers, one per falling mark.</summary>
         public void ConfigureFallers(Renderer[] pool) => fallers = pool;
 
-        /// <summary>One falling thing, this far through its fall (0 to 1), from where it left the body to the middle of its mark.</summary>
-        public void Falling(int index, Vector3 from, Vector3 to, float t, bool feather)
+        /// <summary>The ridge's pieces, the cracks it leaves, the Flares' arcs and the Gust's wall.</summary>
+        public void ConfigureGround(Renderer heave, Renderer[] lifted, Renderer[] crackPool, LineRenderer[] flareArcs, ScorchedGround windFire)
+        {
+            gustFire = windFire;
+            mound = heave;
+            slabs = lifted;
+            cracks = crackPool;
+            arcs = flareArcs;
+        }
+
+        /// <summary>
+        /// One falling thing, this far through its fall (0 to 1), from where it left the body to the middle of its mark:
+        /// <paramref name="kind"/> 0 a spark from under the scarab's cases, 1 a feather, 2 a burning piece of the sun.
+        /// </summary>
+        public void Falling(int index, Vector3 from, Vector3 to, float t, int kind)
         {
             if (index < 0 || index >= fallers.Length || fallers[index] == null) return;
             var shown = fallers[index];
@@ -84,6 +118,20 @@ namespace Clover.Gameplay
             Vector3 at;
             float spin;
             Vector3 size;
+            bool feather = kind == 1;
+            if (kind == 2)
+            {
+                // Torn off the sun and hurled high, it comes down steep onto its mark, a lump of fire.
+                at = Vector3.Lerp(from, to, t) + Vector3.up * (4f * 6f * t * (1f - t));
+                spin = t * 540f;
+                size = new Vector3(1.5f, 2.1f, 1f);
+                Quaternion turned = eye != null ? eye.rotation : Quaternion.identity;
+                shown.transform.SetPositionAndRotation(at, turned * Quaternion.Euler(0f, 0f, spin));
+                shown.transform.localScale = size;
+                block.SetColor(ColourId, MeteorColour);
+                shown.SetPropertyBlock(block);
+                return;
+            }
             if (feather)
             {
                 // A feather comes down swaying, and lands exactly as its warning ends.
@@ -106,6 +154,9 @@ namespace Clover.Gameplay
             block.SetColor(ColourId, feather ? FeatherColour : SparkColour);
             shown.SetPropertyBlock(block);
         }
+
+        /// <summary>Where a falling thing is now (for the smoke it trails).</summary>
+        public Vector3 FallerAt(int index) => index >= 0 && index < fallers.Length && fallers[index] != null ? fallers[index].transform.position : Vector3.zero;
 
         public void Fallen(int index)
         {
@@ -144,6 +195,19 @@ namespace Clover.Gameplay
                 if (star != null) star.enabled = false;
             foreach (var faller in fallers)
                 if (faller != null) faller.enabled = false;
+            crackAge = new float[cracks.Length];
+            crackHot = new bool[cracks.Length];
+            crackSize = new float[cracks.Length];
+            for (int i = 0; i < cracks.Length; i++)
+            {
+                crackAge[i] = 999f;
+                if (cracks[i] != null) cracks[i].enabled = false;
+            }
+            if (mound != null) mound.enabled = false;
+            foreach (var slab in slabs)
+                if (slab != null) slab.enabled = false;
+            foreach (var arc in arcs)
+                if (arc != null) arc.enabled = false;
             foreach (var shown in diveStreak)
                 if (shown != null) shown.enabled = false;
             if (shockRing != null)
@@ -244,6 +308,154 @@ namespace Clover.Gameplay
             foreach (var shown in diveStreak)
                 if (shown != null) shown.enabled = false;
             if (shockRenderer != null) shockRenderer.enabled = false;
+            Ridge(false, Vector3.zero, Vector3.forward, false, 0f);
+            for (int i = 0; i < cracks.Length && i < crackAge.Length; i++)
+            {
+                crackAge[i] = 999f;
+                if (cracks[i] != null) cracks[i].enabled = false;
+            }
+            FlaresDone();
+            GustWall(false, Vector3.zero, Vector3.forward, 0f, 0f);
+        }
+
+        // ------------------------------------------------------------------ the ground broken by the burrowing scarab
+
+        /// <summary>
+        /// The ridge over the scarab going underground, its head at <paramref name="head"/>: a heave of paving with slabs
+        /// lifted and tilted round it, rocking as it goes, and cracks left behind it on the floor every so often, glowing
+        /// ember red when the sun is under it. Off, it is gone.
+        /// </summary>
+        public void Ridge(bool on, Vector3 head, Vector3 heading, bool fiery, float speed)
+        {
+            ridgeOn = on;
+            if (mound != null && mound.enabled != on) mound.enabled = on;
+            foreach (var slab in slabs)
+                if (slab != null && slab.enabled != on) slab.enabled = on;
+            if (!on) return;
+            heading.y = 0f;
+            if (heading.sqrMagnitude < 0.0001f) heading = Vector3.forward;
+            heading.Normalize();
+            var facing = Quaternion.LookRotation(heading);
+            float time = Time.time;
+            // It heaves: the mound rises and falls a little as it goes, faster when it goes fast.
+            float heave = 0.55f + 0.12f * Mathf.Sin(time * (6f + speed));
+            if (mound != null)
+            {
+                // A hump of broken earth and paving half a metre high, over the head of it.
+                mound.transform.SetPositionAndRotation(head + Vector3.up * (heave * 0.5f - 0.12f), facing);
+                mound.transform.localScale = new Vector3(2.4f, heave, 3.2f);
+            }
+            for (int i = 0; i < slabs.Length; i++)
+            {
+                var slab = slabs[i];
+                if (slab == null) continue;
+                float turn = i * 360f / slabs.Length + 20f;
+                Vector3 round = Quaternion.Euler(0f, turn, 0f) * heading;
+                float rock = Mathf.Sin(time * (9f + i) + i * 1.9f) * 9f;
+                Vector3 spot = head + round * (1.25f + 0.25f * (i % 2)) + Vector3.up * (0.12f + 0.1f * Mathf.Sin(time * 7f + i));
+                // Each slab tipped up away from the heave, as paving breaks over something pushing through.
+                slab.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(round) * Quaternion.Euler(-28f - rock, (i * 37f) % 40f - 20f, rock));
+            }
+            if ((head - lastCrack).sqrMagnitude >= CrackEvery * CrackEvery) LayCrack(head - heading * 0.8f, fiery, CrackSize * Random.Range(0.8f, 1.15f));
+        }
+
+        /// <summary>A star of cracks broken into the floor where the scarab went down or came up.</summary>
+        public void Crater(Vector3 at, float radius, bool fiery)
+        {
+            LayCrack(at, fiery, radius * 2.2f);
+            LayCrack(at + new Vector3(0.6f, 0f, -0.4f), false, radius * 1.6f);
+        }
+
+        private void LayCrack(Vector3 at, bool fiery, float size)
+        {
+            lastCrack = at;
+            if (cracks.Length == 0) return;
+            int slot = nextCrack;
+            nextCrack = (nextCrack + 1) % cracks.Length;
+            var shown = cracks[slot];
+            if (shown == null) return;
+            crackAge[slot] = 0f;
+            crackHot[slot] = fiery;
+            crackSize[slot] = size;
+            shown.enabled = true;
+            shown.transform.SetPositionAndRotation(new Vector3(at.x, 0.075f, at.z), Quaternion.Euler(90f, Random.Range(0f, 360f), 0f));
+            shown.transform.localScale = new Vector3(size, size, 1f);
+        }
+
+        private void DrawCracks(float deltaTime)
+        {
+            for (int i = 0; i < cracks.Length; i++)
+            {
+                if (crackAge[i] > CrackSeconds) continue;
+                crackAge[i] += deltaTime;
+                var shown = cracks[i];
+                if (shown == null) continue;
+                if (crackAge[i] > CrackSeconds)
+                {
+                    shown.enabled = false;
+                    continue;
+                }
+                float left = 1f - crackAge[i] / CrackSeconds;
+                // Hot cracks cool to plain dark ones as they fade.
+                Color colour = crackHot[i] ? Color.Lerp(CrackColour, HotCrackColour, Mathf.Clamp01(left * 1.6f - 0.3f)) : CrackColour;
+                colour.a *= Mathf.Clamp01(left * 2.5f);
+                block.SetColor(ColourId, colour);
+                shown.SetPropertyBlock(block);
+            }
+        }
+
+        // ------------------------------------------------------------------ the Flares and the Gust
+
+        /// <summary>
+        /// One of the Flares' arcs of flame, from the sun's top to the far end of its line: <paramref name="grow"/> from 0
+        /// to 1 draws it up and over; <paramref name="slam"/> from 0 to 1 brings it down flat along its line, and past 1 it is gone.
+        /// </summary>
+        public void FlareArc(int index, Vector3 from, Vector3 to, float grow, float slam)
+        {
+            if (index < 0 || index >= arcs.Length || arcs[index] == null) return;
+            var arc = arcs[index];
+            bool on = grow > 0.01f && slam < 1f;
+            if (arc.enabled != on) arc.enabled = on;
+            if (!on) return;
+            float height = ArcHeight * Mathf.Clamp01((to - from).magnitude / 12f + 0.3f) * (1f - slam);
+            int count = arcPoints.Length;
+            for (int i = 0; i < count; i++)
+            {
+                float u = grow * i / (count - 1f);
+                Vector3 point = Vector3.Lerp(from, to + Vector3.up * 0.3f, u);
+                // A loop, not a parabola: it leans back over the sun before it comes down along the line.
+                point += Vector3.up * (Mathf.Sin(u * Mathf.PI) * height * (1.1f - 0.2f * u));
+                arcPoints[i] = point;
+            }
+            arc.positionCount = count;
+            arc.SetPositions(arcPoints);
+            arc.widthMultiplier = Mathf.Lerp(0.9f, 1.4f, slam);
+        }
+
+        public void FlaresDone()
+        {
+            foreach (var arc in arcs)
+                if (arc != null && arc.enabled) arc.enabled = false;
+        }
+
+        /// <summary>
+        /// The Ember Gust's wall of burning wind across its band at <paramref name="front"/>, going along it: a row of tall
+        /// flames standing across the band at its front and a lower row a little behind, a front of fire driven over the
+        /// floor. The char under them is not drawn: only the wind passes.
+        /// </summary>
+        public void GustWall(bool on, Vector3 front, Vector3 along, float width, float strength)
+        {
+            if (gustFire == null) return;
+            if (!on || strength <= 0.01f)
+            {
+                gustFire.HideAll();
+                return;
+            }
+            along.y = 0f;
+            along.Normalize();
+            var side = new Vector3(along.z, 0f, -along.x);
+            gustFire.Lane(0, front - side * (width * 0.5f), side, 2.4f, width, 1f, strength, strength, 1.5f, false);
+            gustFire.Lane(1, front - along * 2.2f - side * (width * 0.45f), side, 2f, width * 0.9f, 1f, strength * 0.6f, strength, 0.8f, false);
         }
 
         private void LateUpdate()
@@ -260,6 +472,7 @@ namespace Clover.Gameplay
                 if (sunLight.enabled != on) sunLight.enabled = on;
             }
             DrawBurning(deltaTime);
+            DrawCracks(deltaTime);
             DrawDive(deltaTime);
             DrawShock(deltaTime);
             DrawStars(deltaTime);

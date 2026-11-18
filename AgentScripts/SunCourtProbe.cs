@@ -369,7 +369,7 @@ public class SunCourtProbeRunner : MonoBehaviour
         Go(stand, form.BodyAt - stand);
         for (int attempt = 0; attempt < 12 && !form.IsDead; attempt++)
         {
-            form.Unbalance(999f);
+            form.ForceBreak();
             yield return new WaitForSeconds(0.6f);
             for (int blow = 0; blow < 40 && !form.IsDead; blow++) form.HeadPart.TakeHit(new Hit(60f, 0f, Vector3.forward));
             yield return new WaitForSeconds(0.3f);
@@ -617,8 +617,9 @@ public class SunCourtProbeRunner : MonoBehaviour
         yield return Until(() => !form.Exposed, 14f);
         Say($"6 it took the sun up again after {Time.time - lay + 1.3f:0.0} s: loose {form.SunLoose} doing {form.Doing}");
 
-        // The scarab on its back, for the picture.
+        // The scarab on its back, for the picture. Not while it is poised after the falcon's fall (fire_land.md 6.4): then blows only hurt it.
         yield return Idle();
+        yield return Until(() => !form.Poise.Holds, 14f);
         form.Queued = SunBearerAttack.Roll;
         Go(south, Vector3.forward);
         yield return Until(() => form.Doing == "Roll", 12f);
@@ -635,7 +636,7 @@ public class SunCourtProbeRunner : MonoBehaviour
         // Balance broken and the finisher.
         yield return Idle();
         Go(Flat(form.BodyAt) + Flat(south - form.BodyAt).normalized * 5f, form.BodyAt - south);
-        form.Unbalance(999f);
+        form.ForceBreak();
         yield return new WaitForSeconds(1f);
         yield return Shot("broken_1");
         health = form.Health.Current;
@@ -704,7 +705,7 @@ public class SunCourtProbeRunner : MonoBehaviour
         Go(stand, form.BodyAt - stand);
         for (int attempt = 0; attempt < 12 && !form.IsDead; attempt++)
         {
-            form.Unbalance(999f);
+            form.ForceBreak();
             yield return new WaitForSeconds(0.6f);
             for (int blow = 0; blow < 40 && !form.IsDead; blow++) form.HeadPart.TakeHit(new Hit(60f, 0f, Vector3.forward));
             yield return new WaitForSeconds(0.3f);

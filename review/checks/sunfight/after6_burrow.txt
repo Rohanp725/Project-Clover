@@ -1,0 +1,21 @@
+opened
+met: true
+result: probe started
+[Probe] start: 17 pieces measured; parts 'Burrow'
+[Probe] the form has risen: doing Idle
+[Probe] Burrow: knocked off its sun, it digs in, goes under a ridge, bursts up beside the sun; then the Burrow as an attack
+[Probe]    the sun lies 18.2 m from the scarab
+[Probe]    picture sunfight_dig_1
+[Probe]    picture sunfight_ridge_1
+[Probe]    picture sunfight_emerge_1
+[Probe]    picture sunfight_emerge_2
+[Probe]    the return: dug True ridge True came up True never vanished True holds the sun True poised True OK
+[Probe]    picture sunfight_burrow_chase
+[Probe]    picture sunfight_burrow_locked
+[Probe]    picture sunfight_burrow_erupt
+[Probe]    picture sunfight_burrow_halfout
+[Probe]    the Burrow: chased True struck +1 (last: the burrow) head open half out True OK
+[Probe] lanes moved aside so the player kept a way through 0, laid without fire 0
+[Probe] done
+[Probe] done
+counts: {"error":0,"warn":0,"log":17}

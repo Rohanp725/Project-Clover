@@ -46,6 +46,8 @@ namespace Clover.Gameplay
         public float BurnAwayAt = 0.95f;
         /// <summary>What the body turns to as the lightning leaves it: ink.</summary>
         public Color BurntColour = new Color(0.02f, 0.015f, 0.04f, 1f);
+        /// <summary>True when something else draws the ground its planted circle leaves burning (SpearLook's fire), so it throws no puffs of its own there.</summary>
+        [System.NonSerialized] public bool BurnDrawn;
         /// <summary>While charged by a bolt: how much faster it moves and harder it hits, and for how long.</summary>
         public float ChargedSpeed = 1.3f;
         public float ChargedDamage = 1.3f;
@@ -1190,7 +1192,7 @@ namespace Clover.Gameplay
         {
             burnLeft -= deltaTime;
             untilBurnShow -= deltaTime;
-            if (untilBurnShow <= 0f)
+            if (untilBurnShow <= 0f && !BurnDrawn)
             {
                 untilBurnShow = 0.1f;
                 Vector2 spot = Random.insideUnitCircle * burnRadius;

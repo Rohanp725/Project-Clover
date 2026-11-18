@@ -1,0 +1,25 @@
+opened
+met: true
+result: probe started
+[Probe] start: 17 pieces measured; parts ''
+[Probe] the form has risen: doing Idle
+[Probe] Clip: every attack from four places, then the exposed tumble, the broken balance and the falcon's fall
+[Probe]    clip Roll: rim 2.94 m by scarab_hindleg_left (Roll); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Roll)
+[Probe]    clip Ram: rim 0.78 m by scarab_hindleg_left (Ram); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.90 m by scarab_abdomen (Ram)
+[Probe]    clip Sparks: rim -1.66 m by sun (Idle); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.00 m by sun (Sparks)
+[Probe]    clip Furrows: rim 2.91 m by scarab_hindleg_left (Furrows); obelisk 1.00 m by scarab_midleg_right (Furrows); under the floor 0.00 m by sun (Furrows)
+[Probe]    clip Rising: rim 1.54 m by falcon_wing_right (Rising); obelisk 0.51 m by falcon_wing_left (Setting); under the floor 4.61 m by falcon_wing_right (Rising)
+[Probe]    clip Stoop: rim 4.34 m by falcon_wing_left (Stoop); obelisk 0.00 m by falcon_head (Idle); under the floor 0.00 m by sun (Stoop)
+[Probe]    clip Feathers: rim none; obelisk 0.90 m by sun (Feathers); under the floor -4.61 m by falcon_wing_right (Feathers)
+[Probe]    clip Pass: rim 11.00 m by falcon_wing_left (Pass); obelisk 0.00 m by falcon_head (Idle); under the floor 2.38 m by falcon_wing_left (Pass)
+[Probe]    clip Zenith: rim 4.18 m by sun (Zenith); obelisk 0.70 m by sun (Spent); under the floor 4.70 m by falcon_wing_right (Rising)
+[Probe]    clip Setting: rim 2.74 m by falcon_wing_left (Setting); obelisk 0.20 m by falcon_wing_right (Setting); under the floor 4.59 m by falcon_wing_right (Rising)
+[Probe]    clip Exposed: rim 2.96 m by scarab_hindleg_right (Roll); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 4.75 m by scarab_midleg_left (Exposed)
+[Probe]    clip Staggered: rim 2.99 m by scarab_hindleg_right (Roll); obelisk 0.00 m by scarab_abdomen (Idle); under the floor 0.37 m by scarab_foreleg_left (Staggered)
+[Probe]    clip Falcon down: rim 5.02 m by falcon_wing_right (Exposed); obelisk 0.67 m by falcon_wing_left (Stoop); under the floor 2.77 m by falcon_wing_right (Stoop)
+[Probe] Clip overall: worst past the rim 11.00 m, worst into the obelisk 1.00 m WRONG
+[Probe] Camp: twenty seconds on the scarab's right flank, attacking
+[Probe] Camp: on the flank 19.9 s of 20; blows landed 20; the form lost 254 health; the player was struck 1 times for 12 (the sun touched); what it did: Idle > Sparks > Exposed > Staggered > Exposed > Idle > Exposed > Idle > Exposed
+[Probe] done
+[Probe] done
+counts: {"error":0,"warn":0,"log":21}

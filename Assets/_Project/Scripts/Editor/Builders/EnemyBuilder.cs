@@ -199,6 +199,8 @@ namespace Clover.EditorTools
                 tongues[i].enabled = false;
             }
             look.ConfigureTongues(tongues);
+            // And as fire: a field of flames on charred floor inside it, a wall of flame round it.
+            look.ConfigurePlantFire(ScorchBuilder.Build(enemy.transform, "Plant Fire", 0, 1, 1));
             if (!godly) return;
             // The god's noon: fire pouring down from the sky onto each circle, two crossed quads to a column, two columns.
             var shaftLight = BuildKit.Fire(Folder, "m_noon_fire", 1, new Vector2(2.2f, 0f), 5f);

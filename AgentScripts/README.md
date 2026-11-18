@@ -55,6 +55,7 @@ any console warnings or errors, and stops Play Mode. Scene names: `Hub`, `Castle
 | `SunCityOverview` | SunCity, edit mode (`script run`) | a raised picture of each district: `review/shots/current/suncity2_overview_<district>.png` |
 | `FireMechanicsProbe` | FireYard | the Fire land's second pass, each mechanic forced and measured; see below |
 | `BossFxProbe` | SunCourt | the look of the Fire bosses' attacks, each pictured with time stopped at its strongest; the sun parry; the Sun-Spear's throw and ray; see below |
+| `SunFightProbe` | SunCourt | the Sun-Bearer's fight as reworked on 2026-11-18: the man's ring of fire, the old endless stagger, the loose sun as a ball, the hot floor's rule, the burrow, each new attack, how far any piece reaches past the rim or into the obelisk, a player camping on the flank, and the busiest fury; see below |
 
 Probes that touch saved progress forget it before and after, so the first real start still shows the first waking.
 
@@ -158,7 +159,7 @@ then the blaze and hold each with the game all but stopped. `bash AgentScripts/a
 `review/shots/current/sheets/aspect_court_pass.png` and `aspect_court_blaze.png` at every screen shape. Delete the
 file to run everything.
 
-Last run of the whole probe (2026-11-17 evening, after the fire-not-light pass): 51 lines `OK`, none `WRONG`, console 0 errors and 0 warnings.
+Last run of the whole probe (2026-11-18, after the overnight rework of the fight): 51 lines `OK`, none `WRONG`, console 0 errors and 0 warnings.
 If the editor is not the active application while a probe runs, the keys it queues are dropped (the Input System's
 background behaviour) and every walk, read and use fails; set `InputSystem.settings.backgroundBehavior` to
 `IgnoreFocus` and `editorInputBehaviorInPlayMode` to `AllDeviceInputAlwaysGoesToGameView` with `script eval` for the
@@ -370,3 +371,42 @@ those parts (delete it or leave it empty for all):
 the build list: take it out again afterwards so the list stays Hub, Castle, Summit. `bash AgentScripts/check_fire.sh <folder>`
 runs `SunCourtProbe`, `FireMechanicsProbe`, `SunCityProbe` and the hub's `RunProbe` one after another, each into its own
 file in the folder (about twenty minutes).
+
+### SunFightProbe
+
+`bash AgentScripts/runprobe.sh SunCourt SunFightProbe 300` (about twelve minutes for everything). `AgentScripts/sunfight_only.txt`
+may hold part names with spaces between; empty or missing runs them all, in this order. Frames are
+`review/shots/current/sunfight_<what>.png`, each taken with time stopped for one frame.
+
+- `Ring` (before the form rises): the man's planted spear forced, pictured just after it rises (`ring_1`), standing
+  (`ring_2`), dying round the ring (`ring_dying`) and as char (`ring_char`).
+- `Stagger`: the sun knocked away, then thirty seconds of the great spear's heavy blow on whatever can be struck every
+  0.55 s, the form's health kept up: how many times its balance broke and its sun was knocked, and the order of what it
+  did (`*` marks the poise). This is the loop the owner found; before the rework it read Exposed > Staggered > Exposed > ...
+- `Sun`: the loose sun struck light with no flask and no mana (nothing may be earned; the aim line must show, `aim_1`),
+  then heavy straight at the scarab (`rolled_1`, `shellfire_1`, `_2`): the strike, the balance and the health.
+- `Hot`: a roll's lane: when its edge and then all of it stop burning, the bites walking straight across and rolling
+  across, frames at 0.45 s (`lane_0`), 2.6 s (`lane_3`), as the edge goes out (`lane_cooling`) and as char
+  (`lane_char`); then the furrows (`furrows_hot`).
+- `Burrow`: knocked off its sun, which is pushed away, it must dig (`dig_1`), go under a ridge (`ridge_1`) and come up
+  (`emerge_1`, `_2`) without ever vanishing; then the Burrow attack chasing a walking player (`burrow_chase`,
+  `burrow_locked`, `burrow_erupt`, `burrow_halfout`).
+- `Attacks`: the Ricochet (`ricochet_1` the path, `_2`, `_3` the bounces; a blow on the cool shell), the Flares standing
+  still (`flares_1` to `_3`) and in a gap, the Ember Gust standing still (shoved) and with the guard held (holds ground;
+  `gust_1`, `_2`), the Talon Grab caught (`grab_1`, `grab_2` up in the talons; the player must be free and walking
+  after) and rolled out of (`grab_missed`), the Sunfall (`sunfall_1` to `_3`).
+- `Clip`: every attack from three places by the rim and one by the obelisk, then the exposed tumble three times, the
+  broken balance at the rim three times and the falcon brought down three times: for each, the worst reach of any piece
+  (the corners of each piece's own box) past the rim below the wall's top, into the obelisk, and under the floor (not
+  counting digging in or coming up). The last line is the worst of all. `AgentScripts/sunfight_clip.txt` may name only some attacks (spaces between), and `NoStates` to leave out the tumble and the falls; the whole part takes about twenty-five minutes.
+- `Camp`: twenty seconds keeping three metres off the scarab's right flank and attacking (three light blows to a
+  heavy), the form left to choose: time on the flank, blows landed, health it lost, what struck the player and the
+  order of what it did.
+- `Perf`: after the fury's blaze, thirty seconds of its fieriest run asked in turn (Furrows, Flares, Ricochet, Sunfall,
+  Pass) with the player running round the court: frame time, garbage and the most burning patches at once.
+  `bash AgentScripts/profile_court.sh` runs this part alone and records 1200 frames of the profiler in the middle of it
+  (`review/checks/sunfight/court_fury.data`), printing the summary; the probe's own garbage figure is then swollen
+  by the recording, so read the profiler's.
+
+The last line says how many lanes were moved aside, and how many laid without fire, because they would have shut the
+player off from the shape.

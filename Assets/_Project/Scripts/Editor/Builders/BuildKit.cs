@@ -157,6 +157,25 @@ namespace Clover.EditorTools
             return material;
         }
 
+        /// <summary>Burnt ground: char with ember cracks, laid over the floor (clover_scorch.shader). Drawn before the marks and the flames.</summary>
+        public static Material Scorch(string folder, string name)
+        {
+            var material = MaterialAt(folder, name, "Clover/Scorch");
+            material.renderQueue = (int)RenderQueue.Transparent - 20;
+            material.enableInstancing = false;
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
+        /// <summary>A field of flames standing on burning ground (clover_flame_field.shader). Drawn after the marks.</summary>
+        public static Material FlameField(string folder, string name)
+        {
+            var material = MaterialAt(folder, name, "Clover/FlameField");
+            material.renderQueue = (int)RenderQueue.Transparent + 5;
+            EditorUtility.SetDirty(material);
+            return material;
+        }
+
         /// <summary>The sun as a ball of burning matter (clover_molten.shader).</summary>
         public static Material Molten(string folder, string name, Color tint, float crust = 0.32f, float heart = 0.35f, float speed = 0.35f)
         {

@@ -7,7 +7,7 @@ namespace Clover.Gameplay
     /// dragon's head, tail or forefoot. It can be struck only while it is within reach, and it passes the blow on to
     /// the form it belongs to.
     /// </summary>
-    public class ColossusPart : MonoBehaviour, IDamageable, IStaggerable, IAfflictable
+    public class ColossusPart : MonoBehaviour, IDamageable, IStaggerable, IAfflictable, IPaysNothing
     {
         [SerializeField] private GodlyForm owner;
         [SerializeField] private Collider body;
@@ -17,6 +17,10 @@ namespace Clover.Gameplay
         public bool IsHead;
         /// <summary>How much of a blow's damage this piece lets through.</summary>
         public float DamageMultiplier = 1f;
+
+        /// <summary>True for a piece that is only a thing to strike (the Sun-Bearer's loose sun): blows on it pay the striker nothing back.</summary>
+        [System.NonSerialized] public bool Inert;
+        public bool PaysNothing => Inert;
 
         /// <summary>True while the piece lies where a blow can reach it.</summary>
         public bool Vulnerable { get; private set; }
