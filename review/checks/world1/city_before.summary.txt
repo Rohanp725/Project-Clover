@@ -1,0 +1,17 @@
+sessionId: 5c9508e5
+capture: C:\Users\rohan\UnityProjects\Project Clover\review\checks\world1\city_before.data
+loaded: false
+captureKind: editor
+frameRange: {"first":0,"last":599,"count":600}
+analyzedRange: {"first":1,"last":599,"count":599}
+sort: cpu
+cpuFrameMs: {"min":9.271,"p25":9.823,"median":10.337,"p75":11.128,"p95":14.737,"max":39.317,"mean":10.838}
+mainActiveMs: {"min":9.269,"p25":9.82,"median":10.334,"p75":11.124,"p95":14.733,"max":39.312,"mean":10.835}
+renderActiveMs: {"min":1.199,"p25":1.331,"median":1.449,"p75":1.57,"p95":1.838,"max":7.554,"mean":1.497}
+gpuFrameMs: {"min":0.0,"p25":3.194,"median":3.438,"p75":3.59,"p95":4.423,"max":8.383,"mean":3.408}
+gcAllocBytes: {"min":7783.0,"p25":7783.0,"median":7783.0,"p75":7783.0,"p95":8182.0,"max":99548.0,"mean":8801.0}
+budget: {"targetFrameMs":16.6,"framesOverBudget":6,"percentOverBudget":1.0}
+medianFrame: 235
+hiccupFrames: 1
+gcFrames: 599
+spikes: [{"frame":4,"cpuMs":39.317,"mainActiveMs":39.312,"renderActiveMs":1.574,"gpuMs":1.528,"gcAllocBytes":7783,"bottleneck":"cpu","overBudget":true,"hiccup":true},{"frame":223,"cpuMs":18.368,"mainActiveMs":18.361,"renderActiveMs":1.846,"gpuMs":3.252,"gcAllocBytes":19892,"bottleneck":"cpu","overBudget":true,"hiccup":false}]

@@ -30,8 +30,9 @@ namespace Clover.EditorTools
         public static Texture2D WallBlocks() => Make("stone_wall", (x, y) => Stones(x, y, 8, 6, 0.45f, 0.045f, 0.3f, false, 17));
 
         // Stones laid in rows. Each row is cut into stones one or two units wide; where the cuts fall is the row's own.
-        private static Color Stones(float x, float y, int rows, int units, float splitChance, float jointWidth, float jointTone, bool moss, int salt)
+        private static Color Stones(float x, float y, int rows, int units, float splitChance, float jointWidth, float jointTone, bool moss, int salt, Color[] tints = null)
         {
+            tints = tints ?? Tints;
             float rowHeight = Size / (float)rows, unit = Size / (float)units;
             // The joints wander a little, so no line is ruled.
             float wy = Mathf.Repeat(y + (Noise(x, y, 256f) - 0.5f) * rowHeight * 0.08f, Size);
@@ -64,7 +65,7 @@ namespace Clover.EditorTools
             float tone = 0.78f + 0.22f * Mathf.Round(Hash(id, 1) * 4f) / 4f;
             tone *= 0.97f + 0.06f * Mathf.Round(Noise(x, y, 64f) * 2f) / 2f;
             tone *= 0.92f + 0.1f * Noise(x + 91f, y + 17f, 512f);
-            Color colour = Tints[(int)(Hash(id, 2) * Tints.Length) % Tints.Length] * tone;
+            Color colour = tints[(int)(Hash(id, 2) * tints.Length) % tints.Length] * tone;
 
             // Painted edges: light catches the top and left of each stone, and the bottom and right fall away.
             float band = joint * 2.4f;
@@ -91,7 +92,7 @@ namespace Clover.EditorTools
                 if (speck > 0.8f) colour *= 1.08f;
             }
 
-            Color jointColour = new Color(jointTone * 0.92f, jointTone * 0.95f, jointTone * 1.1f);
+            Color jointColour = tints == Tints ? new Color(jointTone * 0.92f, jointTone * 0.95f, jointTone * 1.1f) : new Color(jointTone * 1.02f, jointTone, jointTone * 0.94f);
             if (moss)
             {
                 // Moss gathers in the joints and creeps on to the stones beside them, in patches.
@@ -212,6 +213,164 @@ namespace Clover.EditorTools
             return new Color(value, value, value);
         });
 
+        // ------------------------------------------------------------------ the sun land's own surfaces
+        // Warm greys only: no stone leans blue, violet or green, because the land has none of those colours (the visual
+        // overview, step 1). Each is near white and multiplied by the material's colour, and each is drawn for a known
+        // size of ground (see SunCityKit.Surface for the repeats a metre).
+
+        private static readonly Color[] WarmTints =
+        {
+            new Color(1f, 1f, 1f), new Color(1f, 1f, 1f), new Color(1.04f, 1f, 0.95f), new Color(0.97f, 0.97f, 0.98f), new Color(1.05f, 0.99f, 0.92f),
+        };
+
+        /// <summary>
+        /// Mud brick in courses, the texture 4 m across: sixteen courses of bricks about 0.57 m long, each its own tone,
+        /// mortar eroded back between them, straw in the clay, and patches where the mud plaster still holds, smooth and
+        /// paler, with a dark broken edge.
+        /// </summary>
+        public static Texture2D SunBrick() => Make("sun_brick", (x, y) =>
+        {
+            const int Rows = 16, Units = 7;
+            float rowHeight = Size / (float)Rows, unit = Size / (float)Units;
+            float wy = Mathf.Repeat(y + (Noise(x, y, 128f) - 0.5f) * 3f, Size);
+            int row = (int)(wy / rowHeight);
+            float wx = Mathf.Repeat(x + (row % 2) * unit * 0.5f + Hash(row, 41) * unit * 0.2f, Size);
+            int column = (int)(wx / unit);
+            int id = column * 37 + row * 1013 + 5;
+            float fx = wx - column * unit, fy = wy - row * rowHeight;
+            float edge = Mathf.Min(Mathf.Min(fx, unit - fx), Mathf.Min(fy, rowHeight - fy));
+            // Mortar worn back unevenly: the joint is wider where the weather has eaten it.
+            float joint = 3.5f + 4.5f * Noise(x + 17f, y + 5f, 32f);
+            float inside = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((edge - joint) / 2.5f));
+            float tone = 0.86f + 0.12f * Mathf.Round(Hash(id, 1) * 3f) / 3f;
+            tone *= 0.96f + 0.06f * Noise(x, y, 32f);
+            // A lit top edge and a shaded foot on each brick, as it stands proud of the worn mortar.
+            float top = 1f - Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((rowHeight - fy - joint) / 6f));
+            float foot = 1f - Mathf.SmoothStep(0f, 1f, Mathf.Clamp01((fy - joint) / 7f));
+            tone *= 1f + 0.08f * top - 0.12f * foot;
+            // Straw chopped into the clay: short pale and dark flecks.
+            int sx = (int)(x / 10f), sy = (int)(y / 10f);
+            if (Hash(sx + 900, sy) > 0.9f)
+            {
+                float px = (sx + Hash(sx, sy + 3)) * 10f, py = (sy + Hash(sx + 3, sy)) * 10f;
+                float angle = Hash(sx + 7, sy + 7) * Mathf.PI;
+                float along = (x - px) * Mathf.Cos(angle) + (y - py) * Mathf.Sin(angle);
+                float across = -(x - px) * Mathf.Sin(angle) + (y - py) * Mathf.Cos(angle);
+                if (Mathf.Abs(along) < 5f && Mathf.Abs(across) < 0.9f) tone *= Hash(sx, sy) > 0.5f ? 1.12f : 0.82f;
+            }
+            float value = Mathf.Lerp(0.6f, tone, inside);
+            Color colour = WarmTints[(int)(Hash(id, 2) * WarmTints.Length) % WarmTints.Length] * value;
+            // The plaster that still holds: smooth, a shade paler, its broken edge dark where it has come away.
+            float plaster = Noise(x + 300f, y + 120f, 512f) * 0.75f + Noise(x, y + 40f, 128f) * 0.25f;
+            float held = Mathf.SmoothStep(0.56f, 0.575f, plaster);
+            float rim = 1f - Mathf.SmoothStep(0f, 1f, Mathf.Abs(plaster - 0.565f) / 0.006f);
+            Color plastered = new Color(1.08f, 1.06f, 1.02f) * (0.98f + 0.04f * Noise(x, y, 64f));
+            colour = Color.Lerp(colour, plastered, held);
+            return colour * (1f - 0.35f * rim);
+        });
+
+        /// <summary>
+        /// Dressed stone in courses, the texture 8 m across: blocks a metre or so high and one to three long, each its own
+        /// warm tone, a fine joint, chips at corners, a crack across a few, and the masons' chisel strokes faint in the face.
+        /// </summary>
+        public static Texture2D SunAshlar() => Make("sun_ashlar", (x, y) =>
+        {
+            Color colour = Stones(x, y, 7, 6, 0.5f, 0.022f, 0.52f, false, 23, WarmTints);
+            // Chisel strokes: fine slanting lines, only on some blocks and only faintly.
+            float strokes = Mathf.Repeat((x * 0.8f + y * 0.6f) / 7f + Noise(x, y, 64f) * 2f, 1f);
+            float worked = Mathf.SmoothStep(0.45f, 0.6f, Noise(x + 61f, y + 13f, 256f));
+            if (strokes < 0.18f) colour *= 1f - 0.05f * worked;
+            return colour;
+        });
+
+        /// <summary>
+        /// Packed earth, the texture 8 m across: broad patches of three tones, scuffs where feet have dragged, pebbles with
+        /// a shaded side, chopped straw, and a hairline crack here and there.
+        /// </summary>
+        public static Texture2D SunEarth() => Make("sun_earth", (x, y) =>
+        {
+            float broad = Noise(x, y, 256f) * 0.6f + Noise(x + 50f, y + 90f, 128f) * 0.4f;
+            float tone = 0.86f + 0.14f * Mathf.Round(broad * 3f) / 3f;
+            tone *= 0.95f + 0.07f * Noise(x, y, 16f);
+            // Scuffs: long pale smears running one way.
+            if (Noise(x * 0.25f, y * 2.2f, 64f) > 0.74f) tone *= 1.06f;
+            Color colour = new Color(tone * 1.02f, tone, tone * 0.95f);
+            const float Cell = 48f;
+            int cx = (int)(x / Cell), cy = (int)(y / Cell);
+            if (Hash(cx + 400, cy) > 0.72f)
+            {
+                float px = (cx + 0.2f + 0.6f * Hash(cx, cy + 9)) * Cell, py = (cy + 0.2f + 0.6f * Hash(cx + 5, cy)) * Cell;
+                float radius = Cell * (0.05f + 0.09f * Hash(cx + 1, cy + 1));
+                float distance = Mathf.Sqrt((x - px) * (x - px) + (y - py) * (y - py));
+                if (distance < radius) colour *= (y - py) > -radius * 0.25f ? 1.12f : 0.8f;
+            }
+            int sx = (int)(x / 12f), sy = (int)(y / 12f);
+            if (Hash(sx + 77, sy + 3) > 0.93f)
+            {
+                float px = (sx + Hash(sx, sy + 3)) * 12f, py = (sy + Hash(sx + 3, sy)) * 12f;
+                float angle = Hash(sx + 7, sy + 7) * Mathf.PI;
+                float along = (x - px) * Mathf.Cos(angle) + (y - py) * Mathf.Sin(angle);
+                float across = -(x - px) * Mathf.Sin(angle) + (y - py) * Mathf.Cos(angle);
+                if (Mathf.Abs(along) < 5f && Mathf.Abs(across) < 0.8f) colour *= new Color(1.12f, 1.08f, 0.9f);
+            }
+            // A hairline crack here and there: thin, short, and only where a second pattern allows, so none repeats as a mark.
+            float ridge = Mathf.Abs(Noise(x + 211f, y + 7f, 128f) - 0.5f);
+            if (ridge < 0.0022f && Noise(x, y + 500f, 64f) > 0.72f) colour *= 0.8f;
+            return colour;
+        });
+
+        /// <summary>Blown sand, the texture 10 m across: wind ripples about 0.3 m apart, steep on their lee side, and dark grains.</summary>
+        public static Texture2D SunSand() => Make("sun_sand", (x, y) =>
+        {
+            const float Period = Size / 34f;
+            float phase = (y + (Noise(x, y, 256f) - 0.5f) * 160f + (Noise(x + 90f, y, 128f) - 0.5f) * 40f) / Period;
+            float t = Mathf.Repeat(phase, 1f);
+            // A long gentle windward slope, a short shaded lee face.
+            float tone = t < 0.72f ? 0.92f + 0.08f * (t / 0.72f) : 1f - 0.13f * ((t - 0.72f) / 0.28f);
+            tone *= 0.97f + 0.05f * Noise(x, y, 32f);
+            if (Hash((int)x * 3 + 1, (int)y * 7) > 0.995f) tone *= 0.8f;
+            return new Color(tone * 1.01f, tone, tone * 0.96f);
+        });
+
+        /// <summary>
+        /// Dried mud, the texture 8 m across: plates half a metre across split by dark, deep cracks, each plate's edge
+        /// curled up and catching the light, a few pale plates of silt, and flecks.
+        /// </summary>
+        public static Texture2D SunMud() => Make("sun_mud", (x, y) =>
+        {
+            const int Cells = 16;
+            float cell = Size / (float)Cells;
+            float gx = x / cell, gy = y / cell;
+            int ix = Mathf.FloorToInt(gx), iy = Mathf.FloorToInt(gy);
+            float nearest = 9f, second = 9f;
+            int nearestId = 0;
+            for (int oy = -1; oy <= 1; oy++)
+                for (int ox = -1; ox <= 1; ox++)
+                {
+                    int cx = ix + ox, cy = iy + oy;
+                    int wx = (cx % Cells + Cells) % Cells, wy = (cy % Cells + Cells) % Cells;
+                    float px = cx + 0.15f + 0.7f * Hash(wx, wy + 19), py = cy + 0.15f + 0.7f * Hash(wx + 23, wy);
+                    float d = Mathf.Sqrt((gx - px) * (gx - px) + (gy - py) * (gy - py));
+                    if (d < nearest)
+                    {
+                        second = nearest;
+                        nearest = d;
+                        nearestId = wx * 131 + wy;
+                    }
+                    else if (d < second) second = d;
+                }
+            float edge = (second - nearest) * cell;
+            float tone = 0.84f + 0.12f * Hash(nearestId, 3);
+            if (Hash(nearestId, 9) > 0.86f) tone *= 1.14f;
+            tone *= 0.97f + 0.05f * Noise(x, y, 16f);
+            float crack = 1.6f + 1.6f * Noise(x + 5f, y + 9f, 64f);
+            if (edge < crack) return new Color(0.34f, 0.31f, 0.29f);
+            // The curled lip: a lit band just inside the crack, then a faint shadow where the plate dips again.
+            if (edge < crack + 5f) tone *= 1.12f;
+            else if (edge < crack + 9f) tone *= 0.95f;
+            return new Color(tone * 1.02f, tone, tone * 0.95f);
+        });
+
         private static Texture2D Make(string name, System.Func<float, float, Color> paint)
         {
             BuildKit.EnsureFolder(Folder);
@@ -257,6 +416,11 @@ namespace Clover.EditorTools
             Ground();
             DressedStone();
             RoofTiles();
+            SunBrick();
+            SunAshlar();
+            SunEarth();
+            SunSand();
+            SunMud();
             AssetDatabase.SaveAssets();
             Debug.Log("[Clover.Build] Repainted the generated textures.");
         }

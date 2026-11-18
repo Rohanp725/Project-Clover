@@ -60,3 +60,7 @@ Thumbs.db
 
 # Local Claude Code settings (shared settings.json is committed)
 /.claude/settings.local.json
+
+# Profiler captures are hundreds of megabytes; keep them local
+/review/checks/**/*.data
+/review/shots/before_*/

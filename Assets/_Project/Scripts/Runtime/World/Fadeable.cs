@@ -11,6 +11,10 @@ namespace Clover.World
     {
         private static readonly int FadeId = Shader.PropertyToID("_Fade");
 
+        // Pieces drawn over this one (a modelled house front on a box of mud brick) that thin out with it. Empty unless
+        // a builder fills it.
+        [SerializeField] private Renderer[] alsoShown = new Renderer[0];
+
         private Renderer shown;
         private MaterialPropertyBlock block;
         private float fade = 1f;
@@ -24,6 +28,9 @@ namespace Clover.World
             block = new MaterialPropertyBlock();
         }
 
+        /// <summary>Other renderers that thin out and fill in with this piece.</summary>
+        public void AlsoFade(Renderer[] others) => alsoShown = others ?? new Renderer[0];
+
         /// <summary>Moves toward the given solidity. Returns true once it has arrived.</summary>
         public bool Step(float target, float amount)
         {
@@ -32,11 +39,15 @@ namespace Clover.World
             if (fade >= 0.999f)
             {
                 shown.SetPropertyBlock(null);
+                for (int i = 0; i < alsoShown.Length; i++)
+                    if (alsoShown[i] != null) alsoShown[i].SetPropertyBlock(null);
             }
             else
             {
                 block.SetFloat(FadeId, fade);
                 shown.SetPropertyBlock(block);
+                for (int i = 0; i < alsoShown.Length; i++)
+                    if (alsoShown[i] != null) alsoShown[i].SetPropertyBlock(block);
             }
             return Mathf.Approximately(fade, target);
         }

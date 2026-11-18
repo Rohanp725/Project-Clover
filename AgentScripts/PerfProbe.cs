@@ -93,8 +93,10 @@ public class PerfProbeRunner : MonoBehaviour
         var mainThread = ProfilerRecorder.StartNew(ProfilerCategory.Internal, "Main Thread", 1);
         var drawCalls = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Draw Calls Count");
         var batches = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Batches Count");
+        var triangles = ProfilerRecorder.StartNew(ProfilerCategory.Render, "Triangles Count");
+        var setPass = ProfilerRecorder.StartNew(ProfilerCategory.Render, "SetPass Calls Count");
         var times = new List<float>(2000);
-        long garbage = 0, calls = 0, batchTotal = 0;
+        long garbage = 0, calls = 0, batchTotal = 0, triangleTotal = 0, setPassTotal = 0;
         double mainMs = 0;
         float end = Time.unscaledTime + 10f;
         while (Time.unscaledTime < end)
@@ -105,16 +107,20 @@ public class PerfProbeRunner : MonoBehaviour
             mainMs += mainThread.LastValue * 1e-6;
             calls += drawCalls.LastValue;
             batchTotal += batches.LastValue;
+            triangleTotal += triangles.LastValue;
+            setPassTotal += setPass.LastValue;
         }
         times.Sort();
         float sum = 0f;
         foreach (float t in times) sum += t;
         int n = times.Count;
-        Debug.Log($"[Probe] perf {scene}: {n} frames in 10 s; frame ms mean {sum / n:0.0} median {times[n / 2]:0.0} p95 {times[(int)(n * 0.95f)]:0.0} worst {times[n - 1]:0.0}; main thread mean {mainMs / n:0.0} ms; garbage {garbage / n} bytes a frame; draw calls {calls / n} batches {batchTotal / n}; screen {Screen.width}x{Screen.height}; vsync {QualitySettings.vSyncCount} target {Application.targetFrameRate}");
+        Debug.Log($"[Probe] perf {scene}: {n} frames in 10 s; frame ms mean {sum / n:0.0} median {times[n / 2]:0.0} p95 {times[(int)(n * 0.95f)]:0.0} worst {times[n - 1]:0.0}; main thread mean {mainMs / n:0.0} ms; garbage {garbage / n} bytes a frame; draw calls {calls / n} batches {batchTotal / n} set-pass calls {setPassTotal / n} triangles {triangleTotal / n}; screen {Screen.width}x{Screen.height}; vsync {QualitySettings.vSyncCount} target {Application.targetFrameRate}");
         allocated.Dispose();
         mainThread.Dispose();
         drawCalls.Dispose();
         batches.Dispose();
+        triangles.Dispose();
+        setPass.Dispose();
         Debug.Log("[Probe] done");
         Destroy(gameObject);
     }

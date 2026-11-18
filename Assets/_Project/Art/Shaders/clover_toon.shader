@@ -25,6 +25,7 @@ Shader "Clover/Toon"
         _OutlineWidth ("Outline width (metres)", Range(0, 0.05)) = 0.012
         [Toggle] _SmoothNormalsInTangents ("Smooth normals are in the tangents", Float) = 1
         _Fade ("Solidity (thinned to dots below 1)", Range(0, 1)) = 1
+        [HDR] _BounceColor ("Warm light thrown up from a bright floor onto walls in shade", Color) = (0, 0, 0, 1)
     }
 
     SubShader
@@ -56,6 +57,7 @@ Shader "Clover/Toon"
             half _OutlineWidth;
             half _SmoothNormalsInTangents;
             half _Fade;
+            half4 _BounceColor;
         CBUFFER_END
 
         // A piece of the world in the camera's way is thinned to a screen of dots, so the fight behind it shows through.
@@ -136,6 +138,10 @@ Shader "Clover/Toon"
                 half full = smoothstep(_MidThreshold - _ShadeSoftness, _MidThreshold + _ShadeSoftness, facing * light.shadowAttenuation);
                 half3 colour = lerp(shade, max(bright * _MidTone, shade), lit);
                 colour = lerp(colour, max(bright, shade), full);
+                // A wall turned from the sun still takes the light thrown up off the sunlit floor in front of it, so a
+                // face in shade reads as a wall and not a hole. Black (the default) leaves a material as it was.
+                half upright = 1.0 - saturate(abs(normalWS.y) * 1.6);
+                colour += albedo * _BounceColor.rgb * upright * (1.0 - lit);
 
                 #if defined(_ADDITIONAL_LIGHTS)
                 InputData inputData = (InputData)0;

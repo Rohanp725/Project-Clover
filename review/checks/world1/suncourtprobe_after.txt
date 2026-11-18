@@ -1,0 +1,90 @@
+opened
+met: true
+result: probe started
+[Probe]    on arriving: nothing was said
+[Probe] 1 start: scene SunCourt player at (0.0, 0.1, -33.0) weapon Great Spear has element False sandboxed True boss Khepharu health 480 form risen False shadow in use True begun False
+[Probe] 1 rest: lit True says 'Rested. Nothing to feed yet.' return point (3.6, 0.1, -30.6)
+[Probe]    the king at the line: 4 line(s) read, box closed True, player free True
+[Probe] 2 the line: begun True wall closed True king aware False shadow angle 27.7 rate 4.0
+[Probe] 3 the man: each move standing still and then answered
+[Probe]    sunking_thrust_1 standing still: forced True blows taken +3 blocked +0 perfect +0 at 3.4 m spear stood False OK
+[Probe]    sunking_thrust_1 guard held: forced True blows taken +0 blocked +3 perfect +0 at 0.9 m spear stood False OK
+[Probe]    sunking_reach standing still: forced True blows taken +1 blocked +0 perfect +0 at 4.2 m spear stood False OK
+[Probe]    sunking_reach guard held: forced True blows taken +0 blocked +1 perfect +0 at 3.7 m spear stood False OK
+[Probe]    sunking_sweep standing still: forced True blows taken +1 blocked +0 perfect +0 at 3.5 m spear stood False OK
+[Probe]    sunking_sweep guard held: forced True blows taken +0 blocked +1 perfect +0 at 2.4 m spear stood False OK
+[Probe]    sunking_butt standing still: forced True blows taken +1 blocked +0 perfect +0 at 2.6 m spear stood False OK
+[Probe]    sunking_butt guard held: forced True blows taken +0 blocked +1 perfect +0 at 1.7 m spear stood False OK
+[Probe]    sunking_throw standing still: forced True blows taken +2 blocked +0 perfect +0 at 9.1 m spear stood False OK
+[Probe]    sunking_throw having left the mark: forced True blows taken +0 blocked +0 perfect +0 at 10.3 m spear stood False OK
+[Probe]    sunking_plant standing still: forced True blows taken +2 blocked +0 perfect +0 at 4.2 m spear stood False OK
+[Probe]    sunking_plant having left the mark: forced True blows taken +0 blocked +0 perfect +0 at 7.7 m spear stood False OK
+[Probe]    sunking_noon_1 standing still: forced True blows taken +2 blocked +0 perfect +0 at 10.4 m spear stood False OK
+[Probe]    sunking_noon_1 having left the mark: forced True blows taken +0 blocked +0 perfect +0 at 15.3 m spear stood False OK
+[Probe]    the thrown spear: stood in the floor True, back in his hand True
+[Probe]    noon against someone standing in the shadow: lit there False, blows taken +0 OK
+[Probe]    below half: phase 1 doing sunking_plant says 'It is always noon.'
+[Probe] 4 the man is beaten: dead True transforming True body kept True second form called True
+[Probe] 4 he gets up and lifts the spear: drawn True player on screen True and it True OK
+[Probe] 4 the sun comes down after 1.1 s: says 'The sun comes down'
+[Probe] 4 the sun in the spear and in him: man drawn True gone False player on screen True and it True OK
+[Probe] 4 the sun has arrived: man gone into it True sun at (0.8, 4.6, 6.4) over where he stood 0.0 m off OK
+[Probe] 4 after the roar: bar shown True says 'Khepharu, the Sun-Bearer' player on screen True and it True OK
+[Probe] 4 the entrance from (0.0, 0.0, -6.0): player held True, bar before the roar False, free after True OK
+[Probe] 4 the form: in fight after 5.7 s, says 'Khepharu, the Sun-Bearer', health 560 shadow rate 6.0
+[Probe] 5 the form: each move standing still and then answered
+[Probe]    Roll standing still: blows taken +3 (last: hot floor) blocked +0 hot lanes 1 hot patches 1 hot bites so far 2 blaze bites 0 spared 0 falcon False OK
+[Probe]    Ram standing still: blows taken +1 (last: Ram) blocked +0 hot lanes 0 hot patches 0 hot bites so far 2 blaze bites 0 spared 0 falcon False OK
+[Probe]    Sparks standing still: blows taken +2 (last: something falling) blocked +0 hot lanes 0 hot patches 0 hot bites so far 2 blaze bites 0 spared 0 falcon False OK
+[Probe]    Furrows standing still: blows taken +14 (last: hot floor) blocked +0 hot lanes 1 hot patches 1 hot bites so far 14 blaze bites 0 spared 0 falcon False OK
+[Probe]    Stoop standing still: blows taken +1 (last: the sun touched) blocked +0 hot lanes 0 hot patches 1 hot bites so far 14 blaze bites 0 spared 0 falcon True OK
+[Probe]    Feathers standing still: blows taken +2 (last: something falling) blocked +0 hot lanes 0 hot patches 1 hot bites so far 14 blaze bites 0 spared 0 falcon True OK
+[Probe]    Pass standing still: blows taken +2 (last: hot floor) blocked +0 hot lanes 1 hot patches 1 hot bites so far 15 blaze bites 0 spared 0 falcon True OK
+[Probe]    Zenith standing still: blows taken +6 (last: the blaze) blocked +0 hot lanes 0 hot patches 0 hot bites so far 15 blaze bites 6 spared 6 falcon True OK
+[Probe]    after the blaze: doing Spent head open False falcon True
+[Probe]    Roll having left the mark: blows taken +0 (last: the blaze) blocked +0 hot lanes 1 hot patches 1 hot bites so far 15 blaze bites 6 spared 6 falcon False OK
+[Probe]    Ram guard held: blows taken +0 (last: Ram) blocked +1 hot lanes 0 hot patches 0 hot bites so far 15 blaze bites 6 spared 6 falcon False OK
+[Probe]    Sparks having left the mark: blows taken +0 (last: Ram) blocked +0 hot lanes 0 hot patches 0 hot bites so far 15 blaze bites 6 spared 6 falcon False OK
+[Probe]    Furrows having left the mark: blows taken +0 (last: Ram) blocked +0 hot lanes 1 hot patches 1 hot bites so far 15 blaze bites 6 spared 6 falcon False OK
+[Probe]    Stoop having left the mark: blows taken +0 (last: Ram) blocked +0 hot lanes 0 hot patches 1 hot bites so far 15 blaze bites 6 spared 6 falcon True OK
+[Probe]    Feathers having left the mark: blows taken +0 (last: Ram) blocked +0 hot lanes 0 hot patches 1 hot bites so far 15 blaze bites 6 spared 6 falcon True OK
+[Probe]    Pass having left the mark: blows taken +0 (last: Ram) blocked +0 hot lanes 1 hot patches 1 hot bites so far 15 blaze bites 6 spared 6 falcon True OK
+[Probe]    Zenith walking with the shadow: blows taken +0 (last: hot floor) blocked +0 hot lanes 0 hot patches 0 hot bites so far 17 blaze bites 6 spared 18 falcon True OK
+[Probe]    perf over the Zenith with hot floor (3056 frames): frame ms mean 3.3 worst 12.1; main thread mean 3.3 ms; garbage 8258 bytes a frame; screen 1920x936
+[Probe]    after the blaze: doing Spent head open False falcon True
+[Probe] 6 the sun knocked away by blows on the falcon: knocks +1 loose True exposed True health lost 7.5 (a quarter of the blows) sun went 6.5 m says 'The sun is loose' balance 40
+[Probe] 6 the loose sun pushed by a heavy blow: pushes +1 moved 1.5 m; a blow of 10 on the exposed body took 10.0
+[Probe] 6 it took the sun up again after 5.8 s: loose False doing Idle
+[Probe] 6 the scarab knocked off the sun mid-roll: loose True exposed True
+[Probe] 6 a perfect guard on the rolling sun (Roll locked; nearest 1.7 m; guard raised with it 3.1 m off): perfect +1 knocks +1 loose True exposed True broken +0 blows taken +0 doing Exposed says 'Perfect guard' OK
+[Probe] 7 balance broken: staggered 1 time(s), a heavy blow on the fallen head was a Finisher worth 123 (at least 123 wanted) doing Exposed
+[Probe] 8 fury: furious True says 'Noon breaks' shadow rate 9.0
+[Probe] 8 the fury's blaze: lasted 6.4 s, the shadow stopped True and turned back (rate 9.0 -> -9.0), bites while walking with it +0
+[Probe]    after the fall: nothing was said
+[Probe] 9 a fall mid-fight: deaths +1 woke at (3.6, 0.1, -30.6) return point (3.6, 0.1, -30.6) AT THE FIRE; form risen False king dead False king health 480 of 480 begun False retries 1 shadow angle 6.0 rate 4.0 element False
+[Probe]    the king, the second time: nothing was said
+[Probe] 9 across the line again: begun True
+[Probe] 4 the man is beaten: dead True transforming True body kept True second form called True
+[Probe] 4 he gets up and lifts the spear: drawn True player on screen True and it True OK
+[Probe] 4 the sun comes down after 1.1 s: says 'The sun comes down'
+[Probe] 4 the sun in the spear and in him: man drawn True gone False player on screen True and it True OK
+[Probe] 4 the sun has arrived: man gone into it True sun at (0.0, 4.6, 8.2) over where he stood 0.0 m off OK
+[Probe] 4 after the roar: bar shown True says 'Khepharu, the Sun-Bearer' player on screen True and it True OK
+[Probe] 4 the entrance from (0.0, 0.0, -6.0): player held True, bar before the roar False, free after True OK
+[Probe] 4 the form: in fight after 5.7 s, says 'Khepharu, the Sun-Bearer', health 560 shadow rate 6.0
+[Probe] 10 the disc cracks 4.0 s after the last blow: man laid True drawn True at (5.4, 0.1, 2.6), 6.0 m down the shadow and 0.0 m from its middle, in it True, across it (cos 0.50 to the shadow, 35 degrees from lying east and west) player on screen True and it True OK
+[Probe] 10 the form's death: 5.1 s from the last blow; dead True felled True gods felled +1 bar shown False says 'A god falls' free to move True
+[Probe] 11 his line: box open True speaker 'Khepharu' says 'I promised them gold. I gave them fire.' fire shown before it is read False OK
+[Probe]    his line: 1 line(s) read, box closed True, player free True
+[Probe] 11 said once: said True, box open again False OK
+[Probe] 12 his fire: shown True on his body (0.3 m from him) prompt offered 'Take his fire' element before False OK
+[Probe] 12 taken (by the key True): said 'Fire is yours.' element True kit Fire run element 'Fire' weapon Sun-Spear gift owned True chosen True his spear hidden True OK
+[Probe] 13 the sponsor: lines / You have it. / It burns the hand that holds it. You will learn where to hold it. / The sun is moving. That is your doing. Do not stay to watch it set. / The sun knows the way down the sky. Follow it west. ; any 'boat' or 'barque' or 'cast off' none OK
+[Probe] 13 the sunset: 8.6 s; done True shadow points 90 (90 is east) sun pitch 41 -> 13 key (1.00, 0.58, 0.30) x2.3 gate shut False gate at -1.9 way open True door 'Go west with the sun' leads to Hub open True OK
+[Probe] 14 at the gate: prompt 'Go west with the sun' embers 0 -> 5 OK
+[Probe] 14 went west: now in Hub, by the key True (suspended False helpless False attacking False) OK
+[Probe] done
+[Probe] done
+[Probe] done
+[Probe] done
+counts: {"error":0,"warn":0,"log":86}

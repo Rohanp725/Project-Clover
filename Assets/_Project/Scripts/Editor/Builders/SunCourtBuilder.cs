@@ -197,6 +197,7 @@ namespace Clover.EditorTools
 
             var things = new List<Interactable>();
             things.Add(Rest(fore, director, new Vector3(3.6f, 0f, -29f), gold, dark));
+            Forecourt(fore);
 
             // What he leaves is the fire in him, taken from his body where he lies. It can only be taken.
             var fire = HisFire();
@@ -355,9 +356,56 @@ namespace Clover.EditorTools
             disc.gameObject.isStatic = true;
         }
 
+        // The forecourt as a place the city reaches (the visual overview, steps 1 to 5; kept apart from the fight's own
+        // code): the city kit's worn paving south of the gold line, mud-brick house fronts on the inner faces of its two
+        // walls, two braziers burning either side of the door the player came through, sand blown against the walls.
+        private static void Forecourt(Transform fore)
+        {
+            var dressing = BuildKit.Group("Forecourt Dressing", fore);
+            var ground = SunCityKit.Ground("court_slab", new Color(0.64f, 0.6f, 0.53f));
+            var dice = new System.Random(2081);
+            // Three stretches across, three deep, from the door's wall to short of the gold line.
+            for (int z = 0; z < 3; z++)
+                for (int x = 0; x < 3; x++)
+                {
+                    int turn = dice.Next(4);
+                    float wide = 4f, deep = 14.6f / 3f;
+                    float sx = (turn % 2 == 0 ? wide : deep) / 4f, sz = (turn % 2 == 0 ? deep : wide) / 4f;
+                    if (dice.Next(2) == 0) sx = -sx;
+                    SunCityKit.City("ground_slabs", dressing, new Vector3(-4f + x * 4f, -0.01f, -35.8f + (z + 0.5f) * deep), turn * 90f, new Vector3(sx, 1f, sz), ground, false);
+                }
+            // The walls' inner faces: the west wall 3 m high fronted with house walls, the east wall 2 m with the low broken wall.
+            var westShown = new List<Renderer>();
+            var eastShown = new List<Renderer>();
+            for (int i = 0; i < 4; i++)
+            {
+                float z = -36.6f + 4.1f * (i + 0.5f);
+                Collect(SunCityKit.City(i == 1 ? "house_window" : i % 2 == 0 ? "house_wall" : "house_wall_b", dressing, new Vector3(-6.0f - 0.28f, 0f, z), 90f, new Vector3(i % 2 == 0 ? 1.025f : -1.025f, 0.75f, 1f)), westShown);
+                Collect(SunCityKit.City("house_wall_low", dressing, new Vector3(6.0f + 0.3f, 0f, z), 270f, new Vector3(i % 2 == 0 ? 0.98f : -0.98f, 1.4f, 1f)), eastShown);
+            }
+            foreach (var (name, shown) in new[] { ("Forecourt Wall West", westShown), ("Forecourt Wall East", eastShown) })
+            {
+                var wall = fore.Find(name);
+                var fades = wall != null ? wall.GetComponent<Fadeable>() : null;
+                if (fades != null) fades.AlsoFade(shown.ToArray());
+            }
+            SunCityKit.Brazier(dressing, new Vector3(-3.9f, 0f, -34.9f));
+            SunCityKit.Brazier(dressing, new Vector3(-3.9f, 0f, -23.2f));
+            foreach (var (x, z, yaw) in new[] { (-5.2f, -31f, 90f), (5.3f, -26f, 270f), (-5.1f, -22.6f, 80f) })
+                SunCityKit.City("ground_dust_drift", dressing, new Vector3(x, 0.02f, z), yaw, new Vector3(0.8f, 1f, 0.8f), ground, false);
+            SunCityKit.City("ground_sherds", dressing, new Vector3(-2.2f, 0.06f, -27.4f), 40f, null, ground, false);
+            SunCityKit.City("prop_jars", dressing, new Vector3(-4.9f, 0.02f, -28.6f), 100f);
+        }
+
+        private static void Collect(GameObject piece, List<Renderer> into)
+        {
+            if (piece != null) into.AddRange(piece.GetComponentsInChildren<Renderer>());
+        }
+
         private static RestPoint Rest(Transform parent, AreaDirector director, Vector3 foot, Material gold, Material dark)
         {
-            var brazier = SunCityKit.Place("brazier", parent, foot);
+            // The city kit's brazier, banked: its coals glow and smoke until it is rested at (the visual overview, step 5).
+            var brazier = SunCityKit.Brazier(parent, foot, 180f, true);
             brazier.name = "Rest Brazier";
             BuildKit.Shape(PrimitiveType.Cylinder, "Rest Ring", parent, foot + new Vector3(0f, 0.025f, 0f), new Vector3(2.7f, 0.008f, 2.7f), gold).shadowCastingMode = ShadowCastingMode.Off;
             BuildKit.Shape(PrimitiveType.Cylinder, "Rest Ring Inner", parent, foot + new Vector3(0f, 0.03f, 0f), new Vector3(2.45f, 0.008f, 2.45f), dark).shadowCastingMode = ShadowCastingMode.Off;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Clover.Gameplay;
 using Clover.Player;
 using Clover.World;
@@ -66,6 +67,11 @@ namespace Clover.EditorTools
             walls.Clear();
             jars.Clear();
             dice = new System.Random(1117);
+            tones.Clear();
+            burntPaint = null;
+            groundPaint = null;
+            roofPaint = null;
+            SunCityKit.BeginBuild();
             SunCityGround.Seed(5150);
             var scene = EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
             Materials();
@@ -96,6 +102,7 @@ namespace Clover.EditorTools
             GoldenWay(director);
             HallOfColumns(director);
             LastGate(director);
+            Fires();
 
             var strikeOutline = WorldBars.Marker("Storm Mark Outline", director.transform, 0f, kit.Marker);
             var strikeFill = WorldBars.Marker("Storm Mark Fill", director.transform, 0f, kit.Marker);
@@ -170,10 +177,10 @@ namespace Clover.EditorTools
 
         private static void Materials()
         {
-            mud = SunCityKit.Mud;
+            mud = SunCityKit.MudWorked;
             brick = SunCityKit.Brick;
             brickDark = SunCityKit.BrickDark;
-            stone = SunCityKit.Stone;
+            stone = SunCityKit.StoneWorked;
             shade = SunCityKit.Shade;
             hallFloor = SunCityKit.Flat("m_sun_hall_floor", new Color(0.62f, 0.58f, 0.62f));
             paveA = SunCityKit.Flat("m_sun_pave_a", new Color(0.65f, 0.61f, 0.54f), 0.012f);
@@ -252,21 +259,27 @@ namespace Clover.EditorTools
             Deco(PrimitiveType.Cube, "Riverbed Under", group, new Vector3(0f, -0.65f, 55f), new Vector3(60f, 1f, 124f), mud).shadowCastingMode = ShadowCastingMode.Off;
             var plates = BuildKit.Group("Mud", group);
             for (int z = -2; z < 29; z++)
-                for (int x = -7; x < 7; x++)
+            {
+                // Each row of the kit's cracked plates is slid along by its own amount, so no tile edge runs straight down
+                // the bed (the overview, step 2: the seam at x 0).
+                float slide = (float)dice.NextDouble() * 4f;
+                for (int x = -8; x < 7; x++)
                 {
-                    var at = new Vector3(x * 4f + 2f, 0f, z * 4f + 2f);
+                    var at = new Vector3(x * 4f + 2f + slide, 0f, z * 4f + 2f);
                     // Plates only in the bed, and not in the basin's paved strip under the quay.
                     if (!InBed(new Vector2(at.x, at.z)) && !InBed(new Vector2(at.x + 1.6f, at.z)) && !InBed(new Vector2(at.x - 1.6f, at.z))) continue;
                     if (at.z > 108f) continue;
-                    SunCityKit.Place("mud_tile", plates, at + Vector3.up * -0.19f, dice.Next(4) * 90f, 1f, false);
+                    SunCityKit.City("ground_mud_cracked", plates, at + Vector3.up * -0.05f, dice.Next(4) * 90f, new Vector3(dice.Next(2) == 0 ? -1f : 1f, 1f, 1f), GroundPaint, false);
                 }
+            }
             // Pans where the last water stood: pale silt lying in the mud.
             for (int i = 0; i < 40; i++)
             {
                 float z = 2f + i * 2.7f + (float)dice.NextDouble() * 2f;
-                var at = new Vector3(Mathf.Lerp(-24f, 22f, (float)dice.NextDouble()), 0.016f + i * 0.0004f, z);
+                var at = new Vector3(Mathf.Lerp(-24f, 22f, (float)dice.NextDouble()), 0.09f + i * 0.0004f, z);
                 if (!InBed(new Vector2(at.x, at.z))) continue;
-                Soft("Silt Pan", plates, at, 2.2f + (float)dice.NextDouble() * 2.6f, 1.5f + (float)dice.NextDouble() * 1.8f, (float)dice.NextDouble() * 360f, i % 3 == 0 ? softDamp : softSilt);
+                // Lying over the plates now, they are kept to a few metres: wider, they read as flat sheets laid on the bed.
+                Soft("Silt Pan", plates, at, 1.2f + (float)dice.NextDouble() * 1.4f, 0.9f + (float)dice.NextDouble() * 1.0f, (float)dice.NextDouble() * 360f, i % 3 == 0 ? softDamp : softSilt);
             }
 
             // The banks: 3 m of dried mud in strata leaning back, their edges wandering. The west bank is the fishers' walk.
@@ -293,12 +306,12 @@ namespace Clover.EditorTools
             foreach (var (x, z, yaw) in new[] { (8.6f, 26f, 4f), (9.6f, 40f, -12f), (5.8f, 52f, 70f), (9f, 64f, 40f), (20f, 86f, -14f), (24.8f, 98f, 60f) })
                 Box("Levee Wall", group, x - 0.3f, x + 0.3f, z - 2.5f, z + 2.5f, Bank, Bank + 0.6f + (float)dice.NextDouble() * 0.6f, brickDark);
             foreach (var at in new[] { new Vector3(-16f, Bank, 14f), new Vector3(-24f, Bank, 25f), new Vector3(14f, Bank, 12f), new Vector3(-30f, Bank, 66f), new Vector3(-12f, Bank, 90f) })
-                Deco(PrimitiveType.Cylinder, "Reed Bundle", group, at + new Vector3(0f, 0.3f, 0f), new Vector3(0.6f, 1.6f, 0.6f), reed, new Vector3(90f, (float)dice.NextDouble() * 180f, 0f));
+                SunCityKit.City("reeds", group, at, (float)dice.NextDouble() * 360f, Vector3.one * (0.8f + (float)dice.NextDouble() * 0.4f));
             // Slumps of fallen mud at the banks' feet, and loose brick on their lips.
             Slumps(group, BedWest, 1f);
             Slumps(group, BedEast, -1f);
-            Box("River Mouth Wall", group, -5f, 5f, -7f, -6f, -0.5f, 1.2f, brickDark);
-            Box("Outer Wall East", group, 38f, 40f, -6f, 134f, Bank, 7f, brick);
+            Wall("River Mouth Wall", group, -5f, 5f, -7f, -6f, -0.5f, 1.2f, brickDark, "s");
+            Wall("Outer Wall East", group, 38f, 40f, -6f, 134f, Bank, 7f, brick, "w");
             Rest(group, director, new Vector3(-2.8f, Bed, 9f));
             Canopy(group, "Fishers' Awning", -5f, -0.5f, 6.5f, 11.5f, Bed, 2.6f, reed);
             Tilt(SunCityKit.Place("reed_boat", group, new Vector3(3.2f, 0f, 14f), 200f), 0f, 14f);
@@ -446,11 +459,11 @@ namespace Clover.EditorTools
         private static void FishersBank(AreaDirector director)
         {
             var group = BuildKit.Group("Fishers' Bank", world);
-            Box("Bank Outer Wall South", group, -42f, -40f, -6f, 74f, Bank, 6f, brick);
-            Box("Bank Outer Wall North", group, -42f, -40f, 80f, 116f, Bank, 6f, brick);
+            Wall("Bank Outer Wall South", group, -42f, -40f, -6f, 74f, Bank, 6f, brick, "e");
+            Wall("Bank Outer Wall North", group, -42f, -40f, 80f, 116f, Bank, 6f, brick, "e");
             foreach (float z in new[] { 27f, 39f, 51f })
             {
-                SunCityKit.Place("house_block", group, new Vector3(-34f, Bank, z), 90f);
+                House(group, "Fishers' Hut", -36.5f, -31f, z - 2.6f, z + 2.6f, Bank, Bank + 3.4f, "swe", true);
                 AddShade(-35f, -30f, z - 1f, z + 1.2f);
             }
             Canopy(group, "Net Rack", -27f, -24f, 33f, 34.4f, Bank, 2f, reed, false);
@@ -466,10 +479,10 @@ namespace Clover.EditorTools
             Floor("Well Court", group, -66f, -40f, 64f, 90f, 1f, earth, 2.4f);
             Paving(group, -62f, -50f, 72f, 86f, 1f, 2f, paveA, paveB, paveC, 0.3f);
             Scatter(group, -65f, -47f, 65f, 89f, 1f, 24);
-            Box("Well Wall North", group, -68f, -40f, 90f, 92f, 1f, 4f, brick);
-            Box("Well Wall West", group, -68f, -66f, 62f, 92f, 1f, 4f, brick);
+            Wall("Well Wall North", group, -68f, -40f, 90f, 92f, 1f, 4f, brick, "s");
+            Wall("Well Wall West", group, -68f, -66f, 62f, 92f, 1f, 4f, brick, "e");
             // Low on the camera's side.
-            Box("Well Wall South", group, -66f, -46f, 62.6f, 64f, 1f, 2.4f, brickDark);
+            Wall("Well Wall South", group, -66f, -46f, 62.6f, 64f, 1f, 2.4f, brickDark, "s");
             SunCityKit.Place("well_shrine", group, new Vector3(-56f, 1f, 80f));
             Drift(group, new Vector3(-64f, 1f, 87f), 5f, 4f);
             Carving(group, new Vector3(-52.2f, 1f, 76.6f), 200f, "The well's lid",
@@ -521,19 +534,18 @@ namespace Clover.EditorTools
             Trodden(group, 0f, 214f, 0f, 270f, 3f, Terrace);
 
             // 2A, the Lamp Street, leg one: north off the quay through a gatehouse arch, houses either side.
-            Box("Gatehouse West", group, -4f, -2f, 134f, 137f, Quay, 8f, brick);
-            Box("Gatehouse East", group, 3f, 5f, 134f, 137f, Quay, 8f, brick);
+            Wall("Gatehouse West", group, -4f, -2f, 134f, 137f, Quay, 8f, brick, "se");
+            Wall("Gatehouse East", group, 3f, 5f, 134f, 137f, Quay, 8f, brick, "sw");
             ShadeRoof(group, "Gatehouse Arch", -2f, 3f, 134f, 137f, Quay, 4f);
             Mass(group, -40f, -30f, 134f, 148f, Quay, 4f);
             Mass(group, -26f, -10f, 137f, 148f, Quay, 4f);
             Mass(group, 3f, 40f, 137f, 148f, Quay, 4f);
-            SunCityKit.Place("house_block", group, new Vector3(5.2f, Quay, 141f), 270f);
-            SunCityKit.Place("house_block", group, new Vector3(5.2f, Quay, 146.2f), 270f);
             for (int i = 0; i < 2; i++)
             {
                 float z = 141f + i * 6f;
                 Deco(PrimitiveType.Cube, "Lamp Niche", group, new Vector3(-1.9f, 5.5f, z + 3f), new Vector3(0.2f, 0.5f, 0.5f), shade);
-                Deco(PrimitiveType.Sphere, "Lamp", group, new Vector3(-1.78f, 5.42f, z + 3f), new Vector3(0.16f, 0.16f, 0.22f), i == 1 ? ember : clay);
+                Deco(PrimitiveType.Sphere, "Lamp", group, new Vector3(-1.72f, 5.3f, z + 3f), new Vector3(0.2f, 0.1f, 0.24f), clay);
+                SunCityKit.Lamp(group, new Vector3(-1.7f, 5.36f, z + 3f));
             }
             AddShade(-2f, -0.5f, 140f, 142f);
             AddShade(3f, 4.5f, 145f, 147f);
@@ -541,8 +553,8 @@ namespace Clover.EditorTools
             Stairs(group, new Vector3(0.5f, Quay, 148f), new Vector3(0.5f, Square, 152f), 5f);
 
             // The secret: the hearth room behind a cracked wall on the street's west side, roofless, its fire still banked.
-            Box("Hearth Room North", group, -10f, -2f, 146f, 148f, Quay, 7.5f, brick);
-            Box("Hearth Room South", group, -10f, -2f, 137f, 138f, Quay, 5f, brickDark);
+            Wall("Hearth Room North", group, -10f, -2f, 146f, 148f, Quay, 7.5f, brick, "s");
+            Wall("Hearth Room South", group, -10f, -2f, 137f, 138f, Quay, 5f, brickDark, "s");
             Box("Hearth Room Wall South", group, -2.6f, -2f, 138f, 139f, Quay, 7.5f, brick);
             Box("Hearth Room Wall North", group, -2.6f, -2f, 143f, 146f, Quay, 7.5f, brick);
             HearthWall(group, new Vector3(-2.3f, Quay, 141f));
@@ -565,7 +577,7 @@ namespace Clover.EditorTools
             // The Lamp Square at 6, a dry fountain; leg two north from it under the bridge-house.
             Mass(group, -27f, -2f, 148f, 160f, Square, 4f);
             Mass(group, 14f, 40f, 148f, 204f, Square, 4f);
-            Box("Square South Houses", group, 3f, 14f, 148f, 152f, Square, 7.4f, brick);
+            Wall("Square South Houses", group, 3f, 14f, 148f, 152f, Square, 7.4f, brick, "s");
             SunCityKit.Place("house_doorway", group, new Vector3(-2.2f, Square, 156f), 90f, 1f, false);
             Spawn(EnemyKind.WickName, -1.4f, Square, 156f, 90f).MakeDormant(3.5f);
             Carving(group, new Vector3(-1.25f, Square, 158.4f), 90f, "A hearth niche",
@@ -576,7 +588,7 @@ namespace Clover.EditorTools
             Paving(group, -2f, 14f, 152f, 160f, Square, 1.8f, paveB, paveA, earthDark, 0.45f);
             Doorstep(group, new Vector3(9.6f, Square, 163f));
             // The bridge-house: a room over leg two; its body thins out, the street under it is shade.
-            Box("Bridge-house", group, 9f, 14f, 166f, 170f, 10f, 13f, brick);
+            Wall("Bridge-house", group, 9f, 14f, 166f, 170f, 10f, 13f, brick, "swe");
             ShadeRoof(group, "Bridge-house Underside", 9f, 14f, 166f, 170f, Square, 4f);
             Ladder(group, "Roof Ladder", new Vector3(13.4f, Square, 163f), new Vector3(15.1f, 10f, 163f), "");
             Spawn(EnemyKind.AshenName, 11.5f, Square, 172f, 180f);
@@ -584,8 +596,8 @@ namespace Clover.EditorTools
             // The burnt houses south of the alley: roofless shells, black floors, walls low enough to see over.
             var burnt = BuildKit.Group("Burnt Houses", group);
             Deco(PrimitiveType.Cube, "Char", burnt, new Vector3(-0.5f, Square + 0.01f, 168f), new Vector3(19f, 0.02f, 16f), char_).shadowCastingMode = ShadowCastingMode.Off;
-            Box("Burnt Wall South", burnt, -10f, 9f, 160f, 160.6f, Square, 7.4f, brickDark);
-            Box("Burnt Wall North", burnt, -10f, 9f, 175.4f, 176f, Square, 7.4f, brickDark);
+            Wall("Burnt Wall South", burnt, -10f, 9f, 160f, 160.6f, Square, 7.4f, brickDark, "s", false, true);
+            Wall("Burnt Wall North", burnt, -10f, 9f, 175.4f, 176f, Square, 7.4f, brickDark, "s", false, true);
             Box("Burnt Wall West", burnt, -10f, -9.4f, 160f, 176f, Square, 8.5f, brickDark);
             Box("Burnt Wall East", burnt, 8.4f, 9f, 160f, 176f, Square, 8.5f, brickDark);
             Box("Burnt Divider", burnt, -1.3f, -0.7f, 160.6f, 175.4f, Square, 7.8f, brickDark);
@@ -595,14 +607,14 @@ namespace Clover.EditorTools
             Rubble(burnt, -9f, 8f, 161f, 175f, Square, 14);
 
             // 2B, the Oil Alley: west along the houses' doors, jars of oil against the north wall, its end roofed.
-            Box("Alley Houses A", group, -10f, -4f, 180f, 196f, Square, 10f, brick);
+            Wall("Alley Houses A", group, -10f, -4f, 180f, 196f, Square, 10f, brick, "s", true, false, false);
             Box("Alley Recess A", group, -4f, -2f, 181.5f, 196f, Square, 10f, brick);
-            Box("Alley Houses B", group, -2f, 3f, 180f, 196f, Square, 10f, brick);
+            Wall("Alley Houses B", group, -2f, 3f, 180f, 196f, Square, 10f, brick, "s", true, false, false);
             Box("Alley Recess B", group, 3f, 5f, 181.5f, 196f, Square, 10f, brick);
-            Box("Alley Houses C", group, 5f, 9f, 180f, 196f, Square, 10f, brick);
+            Wall("Alley Houses C", group, 5f, 9f, 180f, 196f, Square, 10f, brick, "s", true, false, false);
             Box("Alley Recess C", group, 9f, 11f, 181.5f, 196f, Square, 10f, brick);
-            Box("Alley Houses D", group, 11f, 14f, 180f, 196f, Square, 10f, brick);
-            Box("Arm Houses", group, 4f, 14f, 196f, 204f, Terrace, 10f, brick);
+            Wall("Alley Houses D", group, 11f, 14f, 180f, 196f, Square, 10f, brick, "s", true, false, false);
+            Wall("Arm Houses", group, 4f, 14f, 196f, 204f, Terrace, 10f, brick, "s");
             RoofTop(group, -10f, 14f, 180f, 196f, 10f);
             RoofTop(group, 14f, 40f, 148f, 204f, 10f);
             foreach (var (w, e) in new[] { (-4f, -2f), (3f, 5f), (9f, 11f) }) AddShade(w, e, 180f, 181.5f);
@@ -629,8 +641,7 @@ namespace Clover.EditorTools
                 (14f, 22f, 196.5f, 204f, 2.4f), (5f, 11.5f, 186.5f, 195.6f, 2.2f), (-10f, -5.5f, 189f, 196f, 2f),
             })
             {
-                Box("Upper Room", group, w, e, s2, n2, 10f, 10f + h, brick);
-                Deco(PrimitiveType.Cube, "Upper Room Parapet", group, new Vector3((w + e) * 0.5f, 10f + h + 0.12f, (s2 + n2) * 0.5f), new Vector3(e - w + 0.2f, 0.24f, n2 - s2 + 0.2f), brickDark);
+                House(group, "Upper Room", w, e, s2, n2, 10f, 10f + h, "swe", true);
             }
             foreach (var (x, z, along) in new[] { (17f, 158f, true), (24f, 181f, false), (2f, 184f, true), (-4f, 188f, false) })
                 Box("Roof Wall", group, x - (along ? 1.6f : 0.2f), x + (along ? 1.6f : 0.2f), z - (along ? 0.2f : 1.6f), z + (along ? 0.2f : 1.6f), 10f, 10.7f, brickDark);
@@ -649,9 +660,12 @@ namespace Clover.EditorTools
             Barred(group, "Market Door", new Vector3(-28.5f, Square, 176f), 3f, Vector3.forward, MarketDoorKey, Square);
             Paving(group, -33f, -11f, 177f, 203f, Square, 2.2f, paveA, earthDark, paveC, 0.55f);
             Scatter(group, -33f, -11f, 177f, 203f, Square, 30);
+            // The cold oven: the kit's bread oven at the market's scale; the sphere is only its body to bump into.
             var oven = Deco(PrimitiveType.Sphere, "Cold Oven", group, new Vector3(-16f, Square, 196f), new Vector3(4f, 3.6f, 4f), brickDark);
             oven.gameObject.AddComponent<SphereCollider>();
-            Deco(PrimitiveType.Cube, "Oven Mouth", group, new Vector3(-16f, Square + 0.5f, 194.05f), new Vector3(1.1f, 0.8f, 0.3f), shade);
+            oven.enabled = false;
+            SunCityKit.City("prop_oven", group, new Vector3(-16f, Square, 196.2f), 180f, new Vector3(2.4f, 3.4f, 2.6f));
+            Deco(PrimitiveType.Cube, "Oven Mouth", group, new Vector3(-16f, Square + 0.5f, 194.05f), new Vector3(1.1f, 0.8f, 0.3f), shade).enabled = false;
             Deco(PrimitiveType.Cube, "Oven Shelf", group, new Vector3(-16f, Square + 0.9f, 193.8f), new Vector3(1.8f, 0.08f, 0.5f), stoneDark);
             for (int i = 0; i < 3; i++) Deco(PrimitiveType.Sphere, "Grey Bread", group, new Vector3(-16.5f + i * 0.5f, Square + 1.02f, 193.8f), new Vector3(0.4f, 0.16f, 0.34f), silt);
             AddShade(-18f, -14f, 198f, 200f);
@@ -679,10 +693,10 @@ namespace Clover.EditorTools
             Mass(group, 6f, 40f, 204f, 214f, Terrace, 4f);
 
             // 2D, the Embalmers' Gate: two square towers, the passage between them roofed, timber doors standing open.
-            Box("Gate Wall West", group, -40f, -11f, 214f, 226f, Terrace, 13f, brick);
-            Box("Gate Wall East", group, 11f, 40f, 214f, 226f, Terrace, 13f, brick);
-            Box("Gate Tower West", group, -11f, -6f, 214f, 226f, Terrace, 15f, brick);
-            Box("Gate Tower East", group, 6f, 11f, 214f, 226f, Terrace, 15f, brick);
+            Wall("Gate Wall West", group, -40f, -11f, 214f, 226f, Terrace, 13f, brick, "s");
+            Wall("Gate Wall East", group, 11f, 40f, 214f, 226f, Terrace, 13f, brick, "s");
+            Wall("Gate Tower West", group, -11f, -6f, 214f, 226f, Terrace, 15f, brick, "se");
+            Wall("Gate Tower East", group, 6f, 11f, 214f, 226f, Terrace, 15f, brick, "sw");
             foreach (float x in new[] { -8.5f, 8.5f })
                 Deco(PrimitiveType.Cube, "Tower Cap", group, new Vector3(x, 15.15f, 220f), new Vector3(5.6f, 0.3f, 12.6f), brickDark);
             ShadeRoof(group, "Gate Passage Roof", -6f, 6f, 214f, 226f, Terrace, 6.4f);
@@ -697,16 +711,16 @@ namespace Clover.EditorTools
             Carving(group, new Vector3(-5.2f, Terrace, 227.2f), 180f, "The lintel of the yard", "\"The king says: you burn and are not consumed. Wrap them. Stand them in the sun. No one here is buried.\"");
 
             // 2E, the Embalmers' Yard: a working floor at 8, tables in staggered rows, and the gallery of the standing dead at 10.
-            Box("Yard Wall West", group, -24f, -22f, 226f, 247.5f, 4.5f, 13f, brick);
-            Box("Yard Wall West North", group, -24f, -22f, 252.5f, 272f, Terrace, 13f, brick);
-            Box("Yard Wall East", group, 22f, 24f, 226f, 272f, Terrace, 13f, brick);
+            Wall("Yard Wall West", group, -24f, -22f, 226f, 247.5f, 4.5f, 13f, brick, "e");
+            Wall("Yard Wall West North", group, -24f, -22f, 252.5f, 272f, Terrace, 13f, brick, "e");
+            Wall("Yard Wall East", group, 22f, 24f, 226f, 272f, Terrace, 13f, brick, "w");
             Mass(group, 24f, 40f, 226f, 272f, Terrace, 5f);
             Paving(group, -22f, 22f, 226f, 262f, Terrace, 2.4f, paveB, paveA, paveC, 0.5f);
             Scatter(group, -21f, 21f, 227f, 261f, Terrace, 36);
             // Drains cut in the paving between the rows of tables, running to a sump in the middle.
             foreach (float x in new[] { -8f, 3.5f, 9f })
-                Deco(PrimitiveType.Cube, "Drain", group, new Vector3(x, Terrace + 0.012f, 244f), new Vector3(0.35f, 0.02f, 30f), char_).shadowCastingMode = ShadowCastingMode.Off;
-            Deco(PrimitiveType.Cube, "Drain", group, new Vector3(0f, Terrace + 0.012f, 244f), new Vector3(34f, 0.02f, 0.35f), char_).shadowCastingMode = ShadowCastingMode.Off;
+                Deco(PrimitiveType.Cube, "Drain", group, new Vector3(x, Terrace + 0.075f, 244f), new Vector3(0.35f, 0.02f, 30f), char_).shadowCastingMode = ShadowCastingMode.Off;
+            Deco(PrimitiveType.Cube, "Drain", group, new Vector3(0f, Terrace + 0.075f, 244f), new Vector3(34f, 0.02f, 0.35f), char_).shadowCastingMode = ShadowCastingMode.Off;
             Disc("Sump", group, new Vector3(0f, Terrace, 244f), 1f, 0.15f, stoneDark);
             foreach (var at in new[] { new Vector3(-17f, Terrace, 235f), new Vector3(-16f, Terrace, 246f), new Vector3(17.5f, Terrace, 246f), new Vector3(-6f, Terrace, 256f) })
             {
@@ -735,10 +749,10 @@ namespace Clover.EditorTools
                 for (int k = 0; k < 3; k++)
                     Deco(PrimitiveType.Capsule, "Standing Dead", group, new Vector3(x - 0.8f + k * 0.8f, Gallery + 0.95f, 270.2f), new Vector3(0.5f, 0.92f, 0.45f), wrap);
             }
-            SunCityKit.Place("brazier", group, new Vector3(-7.4f, Gallery, 269f));
-            SunCityKit.Place("brazier", group, new Vector3(7.4f, Gallery, 269f));
-            Box("Yard North Wall West", group, -24f, -3f, 272f, 274f, Gallery, 16f, brick);
-            Box("Yard North Wall East", group, 3f, 24f, 272f, 274f, Gallery, 16f, brick);
+            SunCityKit.Brazier(group, new Vector3(-7.4f, Gallery, 269f));
+            SunCityKit.Brazier(group, new Vector3(7.4f, Gallery, 269f));
+            Wall("Yard North Wall West", group, -24f, -3f, 272f, 274f, Gallery, 16f, brick, "s");
+            Wall("Yard North Wall East", group, 3f, 24f, 272f, 274f, Gallery, 16f, brick, "s");
             foreach (var at in new[] { new Vector3(-10f, Terrace, 250f), new Vector3(6f, Terrace, 243f), new Vector3(-4f, Terrace, 233f), new Vector3(12f, Terrace, 254f), new Vector3(-15f, Terrace, 240f), new Vector3(1f, Terrace, 252f) })
             {
                 // A table to lay the dead out on: low, of stone, a drain cut round it.
@@ -813,22 +827,20 @@ namespace Clover.EditorTools
             }
         }
 
-        // A walkable flat roof: dust and a parapet, low on the south so the camera sees whoever walks it.
+        // A walkable flat roof: the kit's plaster tiles, a parapet on the north (the fronts below carry the others), and
+        // what people kept there, against its edges so the way over stays clear.
         private static void RoofTop(Transform parent, float west, float east, float south, float north, float top)
         {
-            Deco(PrimitiveType.Cube, "Roof Dust", parent, new Vector3((west + east) * 0.5f, top + 0.01f, (south + north) * 0.5f), new Vector3(east - west - 0.8f, 0.02f, north - south - 0.8f), sand).shadowCastingMode = ShadowCastingMode.Off;
             Deco(PrimitiveType.Cube, "Roof Parapet North", parent, new Vector3((west + east) * 0.5f, top + 0.3f, north - 0.15f), new Vector3(east - west, 0.6f, 0.3f), brickDark);
-            // Low on the south, the camera's side; along the sides as high as the north.
-            Deco(PrimitiveType.Cube, "Roof Parapet South", parent, new Vector3((west + east) * 0.5f, top + 0.2f, south + 0.15f), new Vector3(east - west, 0.4f, 0.3f), brickDark);
-            Deco(PrimitiveType.Cube, "Roof Parapet West", parent, new Vector3(west + 0.15f, top + 0.3f, (south + north) * 0.5f), new Vector3(0.3f, 0.6f, north - south), brickDark);
-            Deco(PrimitiveType.Cube, "Roof Parapet East", parent, new Vector3(east - 0.15f, top + 0.3f, (south + north) * 0.5f), new Vector3(0.3f, 0.6f, north - south), brickDark);
-            // The line between one house's roof and the next, every eight metres or so.
-            for (float z = south + 8f; z < north - 2f; z += 7f + (float)dice.NextDouble() * 3f)
-                Deco(PrimitiveType.Cube, "Roof Seam", parent, new Vector3((west + east) * 0.5f, top + 0.08f, z), new Vector3(east - west, 0.16f, 0.25f), brick);
-            for (int i = 0; i < Mathf.Max(1, Mathf.RoundToInt((east - west) * (north - south) / 120f)); i++)
+            Roof(parent, west, east, south, north, top, 0, true, true, true);
+            int count = Mathf.Max(2, Mathf.RoundToInt((east - west) * (north - south) / 70f));
+            for (int i = 0; i < count; i++)
             {
-                float x = Mathf.Lerp(west + 2f, east - 2f, (float)dice.NextDouble()), z = Mathf.Lerp(south + 2f, north - 2f, (float)dice.NextDouble());
-                Deco(PrimitiveType.Cube, "Roof Hatch", parent, new Vector3(x, top + 0.05f, z), new Vector3(1.2f, 0.1f, 1.2f), wood);
+                // Along the parapets: a band a metre in from one of the four edges.
+                int side = dice.Next(4);
+                float x = side < 2 ? Mathf.Lerp(west + 1.2f, east - 1.2f, (float)dice.NextDouble()) : side == 2 ? west + 1f : east - 1f;
+                float z = side >= 2 ? Mathf.Lerp(south + 1.2f, north - 1.2f, (float)dice.NextDouble()) : side == 0 ? south + 1f : north - 1.1f;
+                RoofClutter(parent, x - 1.2f, x + 1.2f, z - 1f, z + 1f, top, 1);
             }
         }
 
@@ -940,17 +952,17 @@ namespace Clover.EditorTools
             SunCityGround.Plateau("Avenue And Court", group, SunCityGround.Rect(-40f, 40f, 272f, 346f), Avenue, -1f, stone, ashlar, null, 0f);
             SunCityGround.Plateau("Masons' Terrace", group, SunCityGround.Rect(-32f, 40f, 346f, 386f), Masons, 9f, stone, ashlar, ashlarBand, 0.12f, 0f, 1f);
             SunCityGround.Plateau("Upper Terrace", group, SunCityGround.Rect(-24f, 24f, 386f, HallSouth), Upper, 12f, stone, ashlar, ashlarBand, 0.12f, 0f, 1f);
-            Box("Masons' Side East", group, 26f, 40f, 346f, 386f, Masons, 20f, stone);
-            Box("Terrace Side East", group, 24f, 40f, 386f, 418f, Masons, 24f, stone);
+            Wall("Masons' Side East", group, 26f, 40f, 346f, 386f, Masons, 20f, stone, "w");
+            Wall("Terrace Side East", group, 24f, 40f, 386f, 418f, Masons, 24f, stone, "w");
 
             // 3A, the Avenue of the Seated King: pale paving with two gold lines, two pairs of statues, stalls at its sides.
             Paving(group, -10f, 10f, 274f, 318f, Avenue, 3f, newA, newB, paveC, 0.04f);
             Paving(group, -20f, -10f, 274f, 318f, Avenue, 3.3f, paveA, paveB, paveC, 0.3f);
             Paving(group, 10f, 20f, 274f, 318f, Avenue, 3.3f, paveA, paveB, paveC, 0.25f);
             foreach (float x in new[] { -6f, 6f }) GoldLine(group, x - 0.11f, x + 0.11f, 275f, 345.4f, Avenue);
-            Box("Avenue Wall West", group, -24f, -20f, 274f, 284f, Avenue, 16f, stone);
-            Box("Avenue Wall West North", group, -24f, -20f, 288f, 318f, Avenue, 16f, stone);
-            Box("Avenue Wall East", group, 20f, 24f, 274f, 318f, Avenue, 16f, stone);
+            Wall("Avenue Wall West", group, -24f, -20f, 274f, 284f, Avenue, 16f, stone, "e");
+            Wall("Avenue Wall West North", group, -24f, -20f, 288f, 318f, Avenue, 16f, stone, "e");
+            Wall("Avenue Wall East", group, 20f, 24f, 274f, 318f, Avenue, 16f, stone, "w");
             Drift(group, new Vector3(-17.5f, Avenue, 312f), 4f, 9f);
             Drift(group, new Vector3(17.8f, Avenue, 296f), 3.6f, 8f);
             foreach (float z in new[] { 286f, 302f })
@@ -966,8 +978,8 @@ namespace Clover.EditorTools
                 }
             Carving(group, new Vector3(-9.4f, Avenue, 289.9f), 90f, "The base of the first statue",
                 "\"Khepharu, who is the sun. Who is not born. Who does not set.\"", "Under it, shallow, half ground away: \"...who carries the day up from the river for us.\"");
-            SunCityKit.Place("brazier", group, new Vector3(-9.5f, Avenue, 276.5f));
-            SunCityKit.Place("brazier", group, new Vector3(9.5f, Avenue, 276.5f));
+            SunCityKit.Brazier(group, new Vector3(-9.5f, Avenue, 276.5f));
+            SunCityKit.Brazier(group, new Vector3(9.5f, Avenue, 276.5f));
             Rest(group, director, new Vector3(-6f, Avenue, 280f));
             Canopy(group, "Stall Awning", -8f, -4f, 292.6f, 295.6f, Avenue, 2.6f, cloth);
             Canopy(group, "Stall Awning", 4f, 8f, 308.6f, 311.6f, Avenue, 2.6f, reed);
@@ -988,9 +1000,9 @@ namespace Clover.EditorTools
             Box("Offcut", group, 13.8f, 15.2f, 280.5f, 282f, Avenue, Avenue + 0.7f, stoneNew);
 
             // S3: the masons' haul-ramp behind the avenue's west wall, from the terrace's barred gate down to beside F4.
-            Box("Haul Wall West", group, -34f, -30f, 284f, 352f, Avenue, 18f, stone);
-            Box("Haul Wall East", group, -26f, -24f, 290f, 346f, Avenue, 16f, stone);
-            Box("Haul Wall South", group, -30f, -20f, 282f, 284f, Avenue, 16f, stone);
+            Wall("Haul Wall West", group, -34f, -30f, 284f, 352f, Avenue, 18f, stone, "e");
+            Wall("Haul Wall East", group, -26f, -24f, 290f, 346f, Avenue, 16f, stone, "w");
+            Wall("Haul Wall South", group, -30f, -20f, 282f, 284f, Avenue, 16f, stone, "s");
             SunCityGround.Ramp("Haul-ramp", group, new Vector3(-28f, Avenue, 290f), new Vector3(-28f, Masons, 346.6f), 4f, stoneDark, ashlar);
             foreach (float x in new[] { -28.9f, -27.1f })
             {
@@ -1003,14 +1015,18 @@ namespace Clover.EditorTools
 
             // 3B, the Lower Court and the Levy Ramp: a causeway up the middle to the masons' terrace, a colonnade either side.
             Paving(group, -24f, 24f, 318f, 341f, Avenue, 3f, paveA, paveB, paveC, 0.2f);
-            Box("Court Wall East", group, 24f, 26f, 318f, 346f, Avenue, 16f, stone);
+            Wall("Court Wall East", group, 24f, 26f, 318f, 346f, Avenue, 16f, stone, "w");
             SunCityGround.Ramp("Levy Ramp", group, new Vector3(0f, Avenue, 318f), new Vector3(0f, Masons, 346.4f), 7f, newA, ashlar);
             Colonnade(group, "Court Colonnade West", -24f, -3.5f, 341f, 346f, Avenue, Masons - Avenue);
             Colonnade(group, "Court Colonnade East", 3.5f, 24f, 341f, 346f, Avenue, Masons - Avenue);
             Stairs(group, new Vector3(-21f, Avenue, 335.4f), new Vector3(-21f, Masons, 341.2f), 2f);
             Stairs(group, new Vector3(21f, Avenue, 335.4f), new Vector3(21f, Masons, 341.2f), 2f);
             foreach (var at in new[] { new Vector3(-14f, Avenue, 326f), new Vector3(12f, Avenue, 330f), new Vector3(-8f, Avenue, 336f), new Vector3(16f, Avenue, 322f) })
-                Box("Fallen Block", group, at.x - 1f, at.x + 1f, at.z - 0.7f, at.z + 0.7f, Avenue, Avenue + 1.2f, stoneNew);
+            {
+                // The kit's fallen block, chipped and half in sand; the box is only its body to bump into.
+                Box("Fallen Block", group, at.x - 1f, at.x + 1f, at.z - 0.7f, at.z + 0.7f, Avenue, Avenue + 1.2f, stoneNew).GetComponent<Renderer>().enabled = false;
+                SunCityKit.City("block_fallen", group, at, (float)dice.NextDouble() * 360f, new Vector3(0.62f, 0.75f, 0.52f));
+            }
             // What the court has shed: a toppled statue of the king face down, column drums rolled against the colonnade.
             var toppled = SunCityKit.Place("statue_head_new", group, new Vector3(13f, Avenue + 0.4f, 327f), 60f, 1.2f);
             if (toppled != null) toppled.transform.rotation = Quaternion.Euler(-84f, 60f, 10f);
@@ -1018,6 +1034,9 @@ namespace Clover.EditorTools
             {
                 var drum = Deco(PrimitiveType.Cylinder, "Column Drum", group, new Vector3(x, Avenue + 0.9f, z), new Vector3(1.8f, 0.9f, 1.8f), stoneNew, new Vector3(0f, yaw, 90f));
                 drum.gameObject.AddComponent<CapsuleCollider>();
+                // Drawn as the kit's drum, a bite out of its edge; the cylinder stays as what is bumped into.
+                drum.enabled = false;
+                SunCityKit.City("column_drum", group, new Vector3(x, Avenue, z), yaw + 90f, Vector3.one * 0.92f);
             }
             Rubble(group, 9f, 16f, 324f, 330f, Avenue, 9);
             Drift(group, new Vector3(-18f, Avenue, 323f), 6f, 4f);
@@ -1057,7 +1076,7 @@ namespace Clover.EditorTools
             Spawn(EnemyKind.GildedLevyName, 6f, Masons, 372f, 180f);
 
             // S3's gate in the terrace's west wall, barred on the terrace side.
-            Box("Masons' Wall", group, -32f, -23.6f, 352f, 378f, Masons, 18f, stone);
+            Wall("Masons' Wall", group, -32f, -23.6f, 352f, 378f, Masons, 18f, stone, "e");
             Box("Masons' Gate South", group, -24.4f, -23.6f, 346f, 348f, Masons, 18f, stone);
             Barred(group, "Masons' Gate", new Vector3(-24f, Masons, 350f), 4f, Vector3.right, MasonsGateKey, Masons);
 
@@ -1073,9 +1092,9 @@ namespace Clover.EditorTools
             Spawn(EnemyKind.GildedSpearmanName, 6f, 17.5f, 384f, 270f);
 
             // S4's way down from the hall's chapel: a passage outside the hall's west wall, a stair, a vestibule, a door from inside.
-            Box("Passage Wall West", group, -34f, -32f, 378f, 458f, Masons, 26f, stone);
-            Box("Passage Wall East", group, -28f, -24f, 386f, 418f, Masons, 24f, stone);
-            Box("Passage Wall East North", group, -28f, -23.5f, 418f, 440f, Upper, 26f, stone);
+            Wall("Passage Wall West", group, -34f, -32f, 378f, 458f, Masons, 26f, stone, "e");
+            Wall("Passage Wall East", group, -28f, -24f, 386f, 418f, Masons, 24f, stone, "w");
+            Wall("Passage Wall East North", group, -28f, -23.5f, 418f, 440f, Upper, 26f, stone, "w");
             SunCityGround.Ramp("West Passage", group, new Vector3(-30f, Upper, 390f), new Vector3(-30f, AisleTop, 440.4f), 4f, stone, ashlar, 4f);
             Stairs(group, new Vector3(-30f, Masons, 383.8f), new Vector3(-30f, Upper, 390.2f), 4f);
             Box("Vestibule Door South", group, -24.4f, -23.6f, 378f, 379.5f, Masons, 18f, stone);
@@ -1087,7 +1106,8 @@ namespace Clover.EditorTools
             for (float z = 394f; z < 438f; z += 9f)
             {
                 Deco(PrimitiveType.Cube, "Lamp Niche", group, new Vector3(-31.9f, Upper + 2.2f + (z - 390f) * 0.024f, z + 2f), new Vector3(0.2f, 0.6f, 0.6f), shade);
-                Deco(PrimitiveType.Sphere, "Lamp", group, new Vector3(-31.75f, Upper + 2.1f + (z - 390f) * 0.024f, z + 2f), new Vector3(0.18f, 0.18f, 0.24f), clay);
+                Deco(PrimitiveType.Sphere, "Lamp", group, new Vector3(-31.7f, Upper + 1.98f + (z - 390f) * 0.024f, z + 2f), new Vector3(0.2f, 0.1f, 0.26f), clay);
+                SunCityKit.Lamp(group, new Vector3(-31.68f, Upper + 2.04f + (z - 390f) * 0.024f, z + 2f));
             }
             Drift(group, new Vector3(-30f, Upper + 0.4f, 402f), 3f, 6f);
             AddShade(-32f, -24f, 378f, 384f);
@@ -1118,8 +1138,8 @@ namespace Clover.EditorTools
             var pylon = SunCityKit.Place("pylon_gate", group, new Vector3(0f, Upper, 414f), 180f, 1.5f, false);
             Solid(pylon, new Vector3(-5.35f, 5.8f, 0f), new Vector3(6.1f, 11.7f, 4.7f));
             Solid(pylon, new Vector3(5.35f, 5.8f, 0f), new Vector3(6.1f, 11.7f, 4.7f));
-            Box("Pylon Wing West", group, -24f, -12.3f, 412.4f, 416f, Upper, 25f, stone);
-            Box("Pylon Wing East", group, 12.3f, 24f, 412.4f, 416f, Upper, 25f, stone);
+            Wall("Pylon Wing West", group, -24f, -12.3f, 412.4f, 416f, Upper, 25f, stone, "s");
+            Wall("Pylon Wing East", group, 12.3f, 24f, 412.4f, 416f, Upper, 25f, stone, "s");
             Carving(group, new Vector3(5.2f, Upper, 409.4f), 180f, "Over the door of the hall", "\"Look on him and see.\"", "Below, by another hand: \"They look.\"");
         }
 
@@ -1223,7 +1243,7 @@ namespace Clover.EditorTools
             Deco(PrimitiveType.Cylinder, "Sun Door Disc", group, new Vector3(-21.9f, 19.6f, 448f), new Vector3(1.4f, 0.05f, 1.4f), gold, new Vector3(0f, 0f, 90f));
             // The west chapel behind it, and its words.
             SunCityGround.Plateau("West Chapel", group, SunCityGround.Rect(-32f, -23.5f, 440f, 456f), AisleTop, 12f, hallFloor, ashlar, null, 0f);
-            Box("Chapel Wall North", group, -34f, -22f, 456f, 458f, AisleTop, 27f, stone);
+            Wall("Chapel Wall North", group, -34f, -22f, 456f, 458f, AisleTop, 27f, stone, "s");
             AddShade(-32f, -22f, 440f, 456f);
             // The chapel: an altar under a hole in its roof, and two columns of the older stone.
             ShadeRoof(group, "Chapel Roof", -32f, -22f, 440f, 446f, AisleTop, 5f, false);
@@ -1254,8 +1274,8 @@ namespace Clover.EditorTools
             // 3G, the porch, and F5.
             SunCityGround.Plateau("Porch", group, SunCityGround.Rect(-24f, 24f, HallNorth, 486.2f), Upper, 12f, stone, ashlar, null, 0f);
             Paving(group, -22f, 22f, HallNorth, 486f, Upper, 3f, newA, newB, paveC, 0.04f);
-            Box("Porch Wall West", group, -26f, -22f, HallNorth, 486f, Upper, 24f, stone);
-            Box("Porch Wall East", group, 22f, 26f, HallNorth, 486f, Upper, 24f, stone);
+            Wall("Porch Wall West", group, -26f, -22f, HallNorth, 486f, Upper, 24f, stone, "e");
+            Wall("Porch Wall East", group, 22f, 26f, HallNorth, 486f, Upper, 24f, stone, "w");
             Rest(group, director, new Vector3(8f, Upper, 482f));
 
             // The bowl: an oval sunk 1.5 m in the stone, three steps down from the porch the width of it, a stair up to the gate.
@@ -1268,8 +1288,8 @@ namespace Clover.EditorTools
             Stairs(group, new Vector3(0f, Rim, 486.4f), new Vector3(0f, BowlFloor, 490.6f), 20.6f);
             GoldLine(group, -10.3f, 10.3f, 486.3f, 486.6f, Rim);
             Stairs(group, new Vector3(0f, BowlFloor, 516f), new Vector3(0f, Rim, 519.9f), 8f);
-            Box("Rim Wall West", group, -26f, -21f, 486f, 522f, Rim, 22f, stone);
-            Box("Rim Wall East", group, 21f, 26f, 486f, 522f, Rim, 22f, stone);
+            Wall("Rim Wall West", group, -26f, -21f, 486f, 522f, Rim, 22f, stone, "e");
+            Wall("Rim Wall East", group, 21f, 26f, 486f, 522f, Rim, 22f, stone, "w");
             // His fallen predecessors, cast gold, kneeling on plinths; two broken drums.
             foreach (var at in new[] { new Vector3(-10f, BowlFloor, 496f), new Vector3(10f, BowlFloor, 496f), new Vector3(-10f, BowlFloor, 514f), new Vector3(10f, BowlFloor, 514f) })
             {
@@ -1282,14 +1302,14 @@ namespace Clover.EditorTools
             }
             Disc("Broken Drum", group, new Vector3(-14f, BowlFloor, 505f), 1.2f, 1.6f, stone);
             Disc("Broken Drum", group, new Vector3(14f, BowlFloor, 505f), 1.2f, 1.6f, stone);
-            SunCityKit.Place("brazier", group, new Vector3(-17f, Rim, 488.5f));
-            SunCityKit.Place("brazier", group, new Vector3(17f, Rim, 488.5f));
+            SunCityKit.Brazier(group, new Vector3(-17f, Rim, 488.5f));
+            SunCityKit.Brazier(group, new Vector3(17f, Rim, 488.5f));
 
             // The gate of noon: a wall fourteen metres high on the north rim, bronze doors, a band of gold over them.
             const float dz = 22f, dy = 12f;
-            Box("Gate Wall West", group, -26f, -3.2f, 500f + dz, 503.5f + dz, Rim, 18f + dy, stone);
-            Box("Gate Wall East", group, 3.2f, 26f, 500f + dz, 503.5f + dz, Rim, 18f + dy, stone);
-            Box("Gate Lintel", group, -3.2f, 3.2f, 500f + dz, 503.5f + dz, 12.4f + dy, 18f + dy, stone);
+            Wall("Gate Wall West", group, -26f, -3.2f, 500f + dz, 503.5f + dz, Rim, 18f + dy, stone, "s");
+            Wall("Gate Wall East", group, 3.2f, 26f, 500f + dz, 503.5f + dz, Rim, 18f + dy, stone, "s");
+            Wall("Gate Lintel", group, -3.2f, 3.2f, 500f + dz, 503.5f + dz, 12.4f + dy, 18f + dy, stone, "s");
             Box("Bronze Doors", group, -3.2f, 3.2f, 499.75f + dz, 500.4f + dz, Rim, 12.4f + dy, bronze);
             Deco(PrimitiveType.Cube, "Door Seam", group, new Vector3(0f, 8.2f + dy, 499.72f + dz), new Vector3(0.1f, 8.4f, 0.06f), shade);
             foreach (float up in new[] { 5.2f, 8.2f, 11.2f })
@@ -1310,6 +1330,63 @@ namespace Clover.EditorTools
 
             // He keeps this ground as the Gate Captain keeps his: he notices nobody south of the gold line and follows nobody over it.
             Spawn(EnemyKind.ChampionName, 0f, BowlFloor, 508f, 180f).HoldGround(-18f, 18f, ChampionsLine + 0.5f, 520f);
+        }
+
+        // ------------------------------------------------------------------ fire in the city
+
+        // The land of the god who stole fire, with fire in it (the overview, step 5): sparse in the river town (the
+        // fishers' cook fires, reed heaps smoking), everywhere in the city of wicks (lamps, hearths glowing in doorways,
+        // the burnt houses still smouldering, roofs smoking, spilled oil burning), ordered and royal on the king's ground
+        // (a brazier at every stall on the avenue, at the pylon, lamps on the hall's columns). Rest fires are banked.
+        private static void Fires()
+        {
+            var group = BuildKit.Group("City Fires", world);
+            // District 1.
+            SunCityKit.Smoulder(group, new Vector3(-7.2f, Bed, 8.2f), 0.45f);
+            SunCityKit.Smoulder(group, new Vector3(-29.5f, Bank, 30.5f), 0.5f);
+            SunCityKit.Smoulder(group, new Vector3(-29.2f, Bank, 54.5f), 0.45f);
+            SunCityKit.Smoulder(group, new Vector3(-18.5f, Bank, 15.5f), 0.7f, false, 1.6f);
+            SunCityKit.Smoulder(group, new Vector3(16.5f, Bank, 13.5f), 0.6f, false, 1.4f);
+            SunCityKit.Smoulder(group, new Vector3(-12.5f, 1.35f, 68.4f), 0.9f, true, 1.8f);
+            SunCityKit.Smoulder(group, new Vector3(-30.5f, Quay, 125.5f), 0.45f);
+            // District 2. The hearth room's fire, still banked, in front of the hearth's mouth.
+            SunCityKit.Smoulder(group, new Vector3(-7.9f, Quay, 142f), 0.32f, true, 0.7f);
+            SunCityKit.Smoulder(group, new Vector3(-6f, Square, 164.5f), 1f, true, 1.6f);
+            SunCityKit.Smoulder(group, new Vector3(2.5f, Square, 172f), 0.7f);
+            SunCityKit.Smoulder(group, new Vector3(6.4f, Square, 165.5f), 0.5f, false);
+            SunCityKit.Smoulder(group, new Vector3(-7.5f, Square, 172.5f), 0.4f, false, 0.6f);
+            // Lamp oil spilled from a broken jar in the alley, burning against the wall.
+            SunCityKit.Smoulder(group, new Vector3(0.6f, Square, 179.1f), 0.65f);
+            SunCityKit.City("prop_jar", group, new Vector3(1.6f, Square, 179.6f), 30f).transform.rotation = Quaternion.Euler(0f, 30f, 84f);
+            SunCityKit.Brazier(group, new Vector3(4.6f, Square, 159.3f));
+            SunCityKit.Brazier(group, new Vector3(-29f, Square, 191f));
+            SunCityKit.Brazier(group, new Vector3(-11.5f, Square, 200.5f));
+            SunCityKit.Smoulder(group, new Vector3(-21.5f, Square, 187.6f), 0.4f);
+            SunCityKit.Brazier(group, new Vector3(-8.6f, Terrace, 212.9f));
+            SunCityKit.Brazier(group, new Vector3(8.6f, Terrace, 212.9f));
+            SunCityKit.Brazier(group, new Vector3(-20f, Terrace, 228.4f));
+            SunCityKit.Brazier(group, new Vector3(20f, Terrace, 228.4f));
+            // District 3: the king's order.
+            for (float z = 278f; z < 316f; z += 9.5f)
+            {
+                if (Mathf.Abs(z - 286f) < 4f || Mathf.Abs(z - 302f) < 4f) continue;
+                SunCityKit.Brazier(group, new Vector3(-19.1f, Avenue, z + 1.2f));
+                SunCityKit.Brazier(group, new Vector3(19.1f, Avenue, z + 1.2f));
+            }
+            SunCityKit.Brazier(group, new Vector3(-10f, Avenue, 339.2f));
+            SunCityKit.Brazier(group, new Vector3(10f, Avenue, 339.2f));
+            SunCityKit.Smoulder(group, new Vector3(13.2f, Masons, 364.2f), 0.5f);
+            SunCityKit.Brazier(group, new Vector3(-9f, Upper, 389.5f));
+            SunCityKit.Brazier(group, new Vector3(9f, Upper, 389.5f));
+            SunCityKit.Brazier(group, new Vector3(-4.6f, Upper, 410.2f));
+            SunCityKit.Brazier(group, new Vector3(4.6f, Upper, 410.2f));
+            // Lamps on the hall's nave columns, on the side toward the nave: pools of firelight in the shade.
+            foreach (float side in new[] { -1f, 1f })
+                foreach (float z in new[] { 423f, 433f, 443f, 453f, 463f, 473f })
+                {
+                    Deco(PrimitiveType.Cube, "Lamp Bracket", group, new Vector3(side * 3.9f, HallFloor + 2.5f, z), new Vector3(0.3f, 0.08f, 0.3f), bronze);
+                    SunCityKit.Lamp(group, new Vector3(side * 3.85f, HallFloor + 2.56f, z));
+                }
         }
 
         // ------------------------------------------------------------------ the second pass's pieces
@@ -1451,20 +1528,253 @@ namespace Clover.EditorTools
         private static GameObject Box(string name, Transform parent, float west, float east, float south, float north, float bottom, float top, Material material) =>
             BuildKit.Block(name, parent, new Vector3((west + east) * 0.5f, (bottom + top) * 0.5f, (south + north) * 0.5f), new Vector3(east - west, top - bottom, north - south), material);
 
-        // A block of houses: mud brick, a darker parapet round its flat roof, the roof itself dusty.
+        // A block of houses (the overview, step 3): not one box but a row of houses four to eight metres wide, each its
+        // own height, fronted on the sides the camera sees with the kit's mud-brick walls (beam ends, doors, windows, a
+        // parapet with a broken top), roofed with the kit's plaster roofs, and lived on. Nobody walks these roofs, so
+        // each house may stand higher or a little lower than the height asked for.
         private static void Mass(Transform parent, float west, float east, float south, float north, float bottom, float height)
         {
-            Box("Houses", parent, west, east, south, north, bottom, bottom + height, brick);
-            var centre = new Vector3((west + east) * 0.5f, bottom + height, (south + north) * 0.5f);
-            Deco(PrimitiveType.Cube, "Roof Parapet", parent, centre + Vector3.up * 0.14f, new Vector3(east - west + 0.3f, 0.3f, north - south + 0.3f), brickDark);
-            Deco(PrimitiveType.Cube, "Roof Dust", parent, centre + Vector3.up * 0.3f, new Vector3(east - west - 1.2f, 0.04f, north - south - 1.2f), sand).shadowCastingMode = ShadowCastingMode.Off;
-            // Roofs were lived on: a few low walls and a hatch break up the flat.
-            int things = Mathf.Max(1, Mathf.RoundToInt((east - west) * (north - south) / 160f));
-            for (int i = 0; i < things; i++)
+            bool alongX = east - west >= north - south;
+            float length = alongX ? east - west : north - south;
+            int count = Mathf.Max(1, Mathf.RoundToInt(length / (5f + (float)dice.NextDouble() * 2f)));
+            float step = length / count;
+            for (int i = 0; i < count; i++)
             {
-                float x = Mathf.Lerp(west + 2f, east - 2f, (float)dice.NextDouble()), z = Mathf.Lerp(south + 2f, north - 2f, (float)dice.NextDouble());
-                bool along = dice.Next(2) == 0;
-                Deco(PrimitiveType.Cube, "Roof Wall", parent, new Vector3(x, bottom + height + 0.6f, z), along ? new Vector3(3.5f, 0.9f, 0.4f) : new Vector3(0.4f, 0.9f, 3.5f), i % 3 == 0 ? brickDark : brick);
+                float rise = new[] { 0f, 0.8f, 1.6f, -0.6f, 0.4f, 1.1f }[dice.Next(6)];
+                float w = alongX ? west + i * step : west, e = alongX ? west + (i + 1) * step : east;
+                float s2 = alongX ? south : south + i * step, n2 = alongX ? north : south + (i + 1) * step;
+                // Only the outer sides of the row are fronted; where two houses meet, the taller shows its plain brick.
+                string faces = alongX ? "s" + (i == 0 ? "w" : "") + (i == count - 1 ? "e" : "") : (i == 0 ? "s" : "") + "we";
+                House(parent, "Houses", w, e, s2, n2, bottom, bottom + Mathf.Max(2.6f, height + rise), faces, true);
+            }
+        }
+
+        // One house: a box of brick for the body and the way it is walked against, the kit's fronts on the given sides,
+        // a roof of the kit's plaster tiles, and on that roof what people kept there.
+        private static GameObject House(Transform parent, string name, float west, float east, float south, float north, float bottom, float top, string faces, bool clutter, bool burnt = false)
+        {
+            var body = Wall(name, parent, west, east, south, north, bottom, top, burnt ? brickDark : brick, faces, true, burnt, false);
+            Roof(parent, west, east, south, north, top, clutter ? 2 + dice.Next(4) : 0, faces.Contains("w"), faces.Contains("e"), faces.Contains("s"));
+            return body;
+        }
+
+        // The kit's pieces stood in front of a box's faces: "s", "e" and "w" in faces say which (the camera never sees a
+        // north face). The box keeps its collider, so the way is as it was; its own drawing is pulled back behind the
+        // modelled fronts (a thin wall's is not drawn at all), and the fronts thin out with it when it is in the way.
+        private static GameObject Wall(string name, Transform parent, float west, float east, float south, float north, float bottom, float top, Material material, string faces = "s", bool doors = false, bool burnt = false, bool cap = true)
+        {
+            var body = Box(name, parent, west, east, south, north, bottom, top, material);
+            bool masonry = material == stone || material == stoneDark || material == stoneNew || material == ashlar;
+            float height = top - bottom;
+            if (height < 0.8f) return body;
+            var shown = new List<Renderer>();
+            var paint = burnt ? Burnt() : null;
+            bool thinNorthSouth = north - south < 1.6f, thinEastWest = east - west < 1.6f;
+            float inset = masonry ? 0.6f : 0.55f;
+            foreach (char face in faces)
+            {
+                bool alongX = face == 's';
+                float from = alongX ? west : south, to = alongX ? east : north;
+                float length = to - from;
+                if (length < 2.4f) continue;
+                // A thin wall is drawn by its fronts alone, stood on its middle line; a thick one has them on its faces.
+                bool thin = alongX ? thinNorthSouth : thinEastWest;
+                if (!alongX && thin) continue;
+                float yaw = face == 's' ? 180f : face == 'e' ? 90f : 270f;
+                if (masonry) StoneFace(parent, shown, face, from, length, west, east, south, north, bottom, height, yaw, thin);
+                else BrickFace(parent, shown, face, from, length, west, east, south, north, bottom, height, yaw, thin, doors && !thin, paint);
+            }
+            if (shown.Count == 0) return body;
+            // A thick brick mass not walked on is roofed as a house is: its top seen from above is plaster, not brick courses.
+            if (cap && !masonry && north - south >= 1.9f && east - west >= 1.9f)
+                Roof(parent, west, east, south, north, top, 0, faces.Contains("w"), faces.Contains("e"), faces.Contains("s"));
+            var renderer = body.GetComponent<Renderer>();
+            if (thinNorthSouth && faces.Contains("s")) renderer.enabled = false;
+            else Inset(body, faces.Contains("s") ? inset : 0f, faces.Contains("w") && !thinEastWest ? inset : 0f, faces.Contains("e") && !thinEastWest ? inset : 0f);
+            var fades = body.GetComponent<Fadeable>();
+            if (fades != null) fades.AlsoFade(shown.ToArray());
+            return body;
+        }
+
+        // Pulls a box's drawing back from its south, west and east faces while its collider stays where the face was.
+        private static void Inset(GameObject body, float south, float west, float east)
+        {
+            var collider = body.GetComponent<BoxCollider>();
+            Vector3 size = body.transform.localScale, centre = body.transform.position;
+            var drawn = new Vector3(Mathf.Max(0.2f, size.x - west - east), size.y, Mathf.Max(0.2f, size.z - south));
+            var drawnCentre = centre + new Vector3((west - east) * 0.5f, 0f, south * 0.5f);
+            body.transform.localScale = drawn;
+            body.transform.position = drawnCentre;
+            if (collider == null) return;
+            // In the box's own units: the collider is the whole of the old box.
+            collider.size = new Vector3(size.x / drawn.x, 1f, size.z / drawn.z);
+            collider.center = new Vector3((centre.x - drawnCentre.x) / drawn.x, 0f, (centre.z - drawnCentre.z) / drawn.z);
+        }
+
+        // Mud-brick fronts along one face: spans of about four metres (plain, the other plain, windows, now and then a
+        // door), mirrored at random, corners at the ends of a south face; a low broken wall where the face is low.
+        private static void BrickFace(Transform parent, List<Renderer> shown, char face, float from, float length, float west, float east, float south, float north,
+            float bottom, float height, float yaw, bool thin, bool doors, IDictionary<string, Material> paint)
+        {
+            bool low = height < 2.3f;
+            int spans = Mathf.Max(1, Mathf.RoundToInt(length / (low ? 4.2f : 4f)));
+            float span = length / spans;
+            int stack = low || height <= 7f ? 1 : Mathf.RoundToInt(height / 5f);
+            float lift = low ? height / 1.42f : height / (4f * stack);
+            for (int i = 0; i < spans; i++)
+            {
+                float along = from + span * (i + 0.5f);
+                string piece = low ? "house_wall_low"
+                    : doors && i % 3 == 1 && span > 3.2f ? "house_door"
+                    : dice.NextDouble() < 0.3 ? "house_window"
+                    : dice.Next(2) == 0 ? "house_wall" : "house_wall_b";
+                for (int level = 0; level < stack; level++)
+                {
+                    // Upper storeys of a tall wall are plain: doors are at the foot.
+                    string storey = level == 0 ? piece : dice.Next(2) == 0 ? "house_wall" : "house_window";
+                    float mirror = dice.Next(2) == 0 ? -1f : 1f;
+                    var at = FaceSpot(face, along, west, east, south, north, bottom + level * 4f * lift, thin ? 0f : 0.28f, thin);
+                    var placed = SunCityKit.City(storey, parent, at, yaw, new Vector3(mirror * span / (low ? 4.2f : 4f), lift, 1f), paint);
+                    Collect(placed, shown);
+                    if (storey == "house_door") Doorway(parent, face, along, south, bottom, mirror * span / 4f);
+                }
+            }
+            if (face == 's' && !low && !thin)
+            {
+                Collect(SunCityKit.City("house_corner", parent, new Vector3(east - 0.5f, bottom, south + 0.5f), 180f, new Vector3(1f, height / 4f, 1f), paint), shown);
+                Collect(SunCityKit.City("house_corner", parent, new Vector3(west + 0.5f, bottom, south + 0.5f), 270f, new Vector3(1f, height / 4f, 1f), paint), shown);
+            }
+            // Now and then a ladder leant on a house front, up to its roof.
+            if (face == 's' && !low && !thin && height < 6f && dice.NextDouble() < 0.25)
+            {
+                var ladder = SunCityKit.City("prop_ladder", parent, new Vector3(Mathf.Lerp(west + 1f, east - 1f, (float)dice.NextDouble()), bottom, south - 0.45f), 180f, new Vector3(1f, (height + 0.3f) / 4.4f, 1f));
+                if (ladder != null) ladder.transform.rotation = Quaternion.Euler(-12f, 180f, 0f);
+                Collect(ladder, shown);
+            }
+        }
+
+        // Dressed-stone fronts along one face: four-metre spans, stacked where the wall is tall.
+        private static void StoneFace(Transform parent, List<Renderer> shown, char face, float from, float length, float west, float east, float south, float north,
+            float bottom, float height, float yaw, bool thin)
+        {
+            int spans = Mathf.Max(1, Mathf.RoundToInt(length / 4f));
+            float span = length / spans;
+            int rows = Mathf.Max(1, Mathf.RoundToInt(height / 3.9f));
+            float lift = height / (rows * 3.91f);
+            // From this camera a wall is seen to about eight metres up; above that the dressed box carries on, set back.
+            rows = Mathf.Min(rows, 2);
+            for (int i = 0; i < spans; i++)
+                for (int row = 0; row < rows; row++)
+                {
+                    var at = FaceSpot(face, from + span * (i + 0.5f), west, east, south, north, bottom + row * 3.91f * lift, thin ? 0f : 0.63f, thin);
+                    Collect(SunCityKit.City("stone_wall", parent, at, yaw, new Vector3((dice.Next(2) == 0 ? -1f : 1f) * span / 3.98f, lift, 1f)), shown);
+                }
+        }
+
+        // Where a piece's origin goes for a point along a face: back from the face by the piece's own depth to its front.
+        private static Vector3 FaceSpot(char face, float along, float west, float east, float south, float north, float y, float depth, bool thin)
+        {
+            switch (face)
+            {
+                case 's': return new Vector3(along, y, thin ? (south + north) * 0.5f : south + depth);
+                case 'e': return new Vector3(thin ? (west + east) * 0.5f : east - depth, y, along);
+                default: return new Vector3(thin ? (west + east) * 0.5f : west + depth, y, along);
+            }
+        }
+
+        // A lived-in doorway in the city of wicks: a fire banked in the hearth inside, its glow on the threshold.
+        private static void Doorway(Transform parent, char face, float along, float south, float bottom, float scaleX)
+        {
+            if (face != 's' || south < 134f || south > 272f || dice.NextDouble() > 0.45) return;
+            // The door's opening lies left of the span's middle as modelled; turned to the camera it lies right of it.
+            float x = along + 0.3f * scaleX;
+            SunCityKit.Lamp(parent, new Vector3(x, bottom + 0.05f, south + 0.3f), false);
+            var glow = new GameObject("Hearth Glow");
+            glow.transform.SetParent(parent, false);
+            glow.transform.position = new Vector3(x, bottom + 0.7f, south - 0.6f);
+            var light = glow.AddComponent<Light>();
+            light.type = LightType.Point;
+            light.color = new Color(1f, 0.42f, 0.1f);
+            light.range = 2.6f;
+            light.intensity = 1.6f;
+            light.shadows = LightShadows.None;
+            glow.AddComponent<FireFlicker>().Intensity = 1.6f;
+        }
+
+        private static void Collect(GameObject piece, List<Renderer> into)
+        {
+            if (piece != null) into.AddRange(piece.GetComponentsInChildren<Renderer>());
+        }
+
+        // The burnt houses' brick: blackened, its plaster gone grey with ash.
+        private static Dictionary<string, Material> burntPaint;
+        private static Dictionary<string, Material> Burnt()
+        {
+            if (burntPaint != null && burntPaint.Values.All(material => material != null)) return burntPaint;
+            burntPaint = new Dictionary<string, Material>
+            {
+                { "m_city_mudbrick", SunCityKit.CityTone("m_city_burnt_brick", new Color(0.25f, 0.21f, 0.19f)) },
+                { "m_city_plaster", SunCityKit.CityTone("m_city_burnt_plaster", new Color(0.44f, 0.41f, 0.38f)) },
+                { "m_city_timber", SunCityKit.CityTone("m_city_burnt_timber", new Color(0.12f, 0.1f, 0.09f)) },
+                { "m_city_sand", SunCityKit.CityTone("m_city_ash", new Color(0.52f, 0.49f, 0.46f)) },
+            };
+            return burntPaint;
+        }
+
+        // A flat roof of the kit's plaster tiles inside the parapets, and on it what the house kept up there.
+        private static void Roof(Transform parent, float west, float east, float south, float north, float top, int clutter, bool westFront, bool eastFront, bool southFront)
+        {
+            float w = west + (westFront ? 0.35f : 0.1f), e = east - (eastFront ? 0.35f : 0.1f), s2 = south + (southFront ? 0.35f : 0.1f), n2 = north - 0.1f;
+            if (e - w < 1.5f || n2 - s2 < 1.5f) return;
+            // Tiles about six metres across (the kit's scale up to 1.5): fewer edges, so a roof reads as one house's roof.
+            int across = Mathf.Max(1, Mathf.RoundToInt((e - w) / 6f)), up = Mathf.Max(1, Mathf.RoundToInt((n2 - s2) / 6f));
+            float wide = (e - w) / across, deep = (n2 - s2) / up;
+            for (int z = 0; z < up; z++)
+                for (int x = 0; x < across; x++)
+                {
+                    int turn = dice.Next(4);
+                    float sx = (turn % 2 == 0 ? wide : deep) / 4.2f, sz = (turn % 2 == 0 ? deep : wide) / 4.2f;
+                    if (dice.Next(2) == 0) sx = -sx;
+                    SunCityKit.City(dice.Next(3) == 0 ? "roof_flat_b" : "roof_flat_a", parent, new Vector3(w + (x + 0.5f) * wide, top + 0.01f, s2 + (z + 0.5f) * deep), turn * 90f,
+                        new Vector3(sx, 1f, sz), RoofPaint, false);
+                }
+            RoofClutter(parent, w, e, s2, n2, top, clutter);
+        }
+
+        // What people kept on their roofs, by district: mats and linen and jars everywhere; ovens, grain and frond shades in
+        // the river town; in the city of wicks a hearth that still smokes now and then.
+        private static void RoofClutter(Transform parent, float west, float east, float south, float north, float top, int count)
+        {
+            if (count <= 0) return;
+            float middle = (south + north) * 0.5f;
+            int district = middle < 134f ? 1 : middle < 272f ? 2 : 3;
+            var table = district == 1
+                ? new[] { "prop_reedmat", "prop_linenline", "prop_jars", "prop_grainbaskets", "prop_oven", "prop_sunshade", "prop_basket", "prop_pot" }
+                : district == 2
+                ? new[] { "prop_reedmat", "prop_linenline", "prop_jars", "prop_jar", "prop_amphora", "prop_oven", "prop_basket", "ground_bricks", "ground_sherds", "prop_grainbaskets" }
+                : new[] { "prop_reedmat", "prop_jars", "prop_linenline", "prop_basket" };
+            // Each item takes a cell of the roof, so two never stand in one another.
+            int across = Mathf.Max(1, Mathf.FloorToInt((east - west) / 2.6f)), up = Mathf.Max(1, Mathf.FloorToInt((north - south) / 2.6f));
+            float cw = (east - west) / across, cd = (north - south) / up;
+            var free = new List<int>();
+            for (int i = 0; i < across * up; i++) free.Add(i);
+            for (int k = 0; k < count && free.Count > 0; k++)
+            {
+                int pick = dice.Next(free.Count);
+                int cell = free[pick];
+                free.RemoveAt(pick);
+                var at = new Vector3(west + (cell % across + 0.5f) * cw + ((float)dice.NextDouble() - 0.5f) * cw * 0.3f, top + 0.08f, south + (cell / across + 0.5f) * cd + ((float)dice.NextDouble() - 0.5f) * cd * 0.3f);
+                string piece = table[dice.Next(table.Length)];
+                // Big pieces only where the roof has room for them.
+                if ((piece == "prop_sunshade" || piece == "prop_linenline") && cw < 3.6f && cd < 3.6f) piece = "prop_reedmat";
+                float yaw = piece == "prop_linenline" ? (cw >= cd ? 180f : 90f) + dice.Next(2) * 180f : (float)dice.NextDouble() * 360f;
+                SunCityKit.City(piece, parent, at, yaw, null, null, piece == "prop_sunshade" || piece == "prop_linenline" || piece == "prop_oven");
+                // In the city of wicks a roof oven or a hearth hole still smokes, and the roof round it is sooted.
+                if (district == 2 && (piece == "prop_oven" || dice.NextDouble() < 0.12))
+                {
+                    var fire = SunCityKit.Smoulder(parent, at + new Vector3(piece == "prop_oven" ? 0.9f : 1.2f, 0f, 0f), piece == "prop_oven" ? 0.3f : 0.5f, piece != "prop_oven", 0.8f);
+                    fire.name = "Roof Fire";
+                }
             }
         }
 
@@ -1476,13 +1786,23 @@ namespace Clover.EditorTools
         // The stains of the land's ground (silt, damp, trodden earth, blown sand) are made of these, not of discs with an edge.
         private static void ReadySoft()
         {
-            softSilt = BuildKit.Glow(SunCityKit.Folder, "m_sun_silt_pan", new Color(0.8f, 0.76f, 0.66f, 0.62f), 3, false, 1f);
-            softDamp = BuildKit.Glow(SunCityKit.Folder, "m_sun_damp_pan", new Color(0.36f, 0.32f, 0.28f, 0.42f), 3, false, 1f);
-            softDark = BuildKit.Glow(SunCityKit.Folder, "m_sun_dark_stain", new Color(0.4f, 0.33f, 0.26f, 0.5f), 3, false, 1f);
-            softSand = BuildKit.Glow(SunCityKit.Folder, "m_sun_sand_stain", new Color(0.86f, 0.77f, 0.58f, 0.7f), 3, false, 1f);
+            // Lit and hard-edged, as the ground they lie on is: pale unlit blots with soft edges read as fog lying on the
+            // ground (the overview, step 2). Each a little apart from the earth's own colour, warmer or darker.
+            softSilt = Patch("m_sun_silt_pan", new Color(0.6f, 0.55f, 0.46f));
+            softDamp = Patch("m_sun_damp_pan", new Color(0.43f, 0.38f, 0.32f));
+            softDark = Patch("m_sun_dark_stain", new Color(0.53f, 0.45f, 0.35f));
+            softSand = Patch("m_sun_sand_stain", new Color(0.69f, 0.61f, 0.46f));
             softShapes = new Mesh[5];
             for (int i = 0; i < softShapes.Length; i++) softShapes[i] = PanMesh(i);
             softCount = 0;
+        }
+
+        // A ground patch's material: the toon, no ink, drawn with the opaque world (it was a see-through effect once).
+        private static Material Patch(string name, Color colour)
+        {
+            var material = SunCityKit.Flat(name, colour);
+            material.renderQueue = -1;
+            return material;
         }
 
         // One stain lying on the ground: half as wide and half as deep as given, turned, in one of five uneven shapes.
@@ -1520,8 +1840,9 @@ namespace Clover.EditorTools
                 var way = new Vector3(Mathf.Sin(angle), 0f, Mathf.Cos(angle));
                 vertices[1 + i] = way * (lobe * 0.5f);
                 colours[1 + i] = Color.white;
-                vertices[1 + Around + i] = way * (lobe * 0.8f);
-                colours[1 + Around + i] = new Color(1f, 1f, 1f, 0.7f);
+                // Full almost to its edge, then gone over the last tenth: a printed edge, not a mist.
+                vertices[1 + Around + i] = way * (lobe * 0.97f);
+                colours[1 + Around + i] = Color.white;
                 vertices[1 + Around * 2 + i] = way * (lobe * 1.08f + 0.05f * Mathf.Sin(angle * 11f + a1));
                 colours[1 + Around * 2 + i] = new Color(1f, 1f, 1f, 0f);
             }
@@ -1599,35 +1920,51 @@ namespace Clover.EditorTools
             disc.isStatic = true;
         }
 
-        // Flagstones over a floor: each its own slab, a little apart, in two or three tones, some missing where the
-        // ground shows through. What makes a paved place read as paved, and no two stretches alike.
-        private static void Paving(Transform parent, float west, float east, float south, float north, float top, float size, Material usual, Material other, Material rare, float missing)
+        // Paving (the overview, steps 1 and 2): the kit's four-metre stretches of worn slabs, each slab under a metre or
+        // so (the size real ones are, against a player 1.8 m tall), chipped, cracked, sunk, some recut, sand where one is
+        // missing. Each stretch is turned and mirrored at random so no two read alike, and laid in the builder's tones:
+        // mostly the usual, some the other, a few the rare. Where the paving is gone the ground shows, with blown sand,
+        // loose brick or broken pots on it. With gold the king's gold is run into the joints.
+        private static void Paving(Transform parent, float west, float east, float south, float north, float top, float size, Material usual, Material other, Material rare, float missing, bool golden = false)
         {
             var group = BuildKit.Group("Paving", parent);
-            int across = Mathf.Max(1, Mathf.RoundToInt((east - west) / size)), up = Mathf.Max(1, Mathf.RoundToInt((north - south) / size));
+            int across = Mathf.Max(1, Mathf.RoundToInt((east - west) / 4f)), up = Mathf.Max(1, Mathf.RoundToInt((north - south) / 4f));
             float wide = (east - west) / across, deep = (north - south) / up;
+            var tones = new[] { Tone(usual), Tone(other), Tone(rare) };
             for (int z = 0; z < up; z++)
                 for (int x = 0; x < across; x++)
                 {
-                    if (dice.NextDouble() < missing) continue;
-                    double pick = dice.NextDouble();
-                    // Every other course is shifted half a stone, as laid paving is: it begins with a half stone and ends with one.
-                    float from = west + x * wide, to = from + wide;
-                    if (z % 2 == 1)
+                    var centre = new Vector3(west + (x + 0.5f) * wide, top - 0.015f, south + (z + 0.5f) * deep);
+                    if (dice.NextDouble() < missing)
                     {
-                        from = x == 0 ? west : from - wide * 0.5f;
-                        to = to - wide * 0.5f;
+                        // The paving gone here: the ground, and on it what the wind and the people left.
+                        int what = dice.Next(5);
+                        string litter = what == 0 ? "ground_dust_patch" : what == 1 ? "ground_bricks" : what == 2 ? "ground_sherds" : null;
+                        if (litter != null)
+                            SunCityKit.City(litter, group, centre + new Vector3(((float)dice.NextDouble() - 0.5f) * wide * 0.4f, 0.02f, ((float)dice.NextDouble() - 0.5f) * deep * 0.4f), (float)dice.NextDouble() * 360f, null, GroundPaint, false);
+                        continue;
                     }
-                    Flag(group, from, to, south + z * deep, south + (z + 1) * deep, top, pick < 0.62 ? usual : pick < 0.9 ? other : rare);
-                    if (z % 2 == 1 && x == across - 1) Flag(group, to, east, south + z * deep, south + (z + 1) * deep, top, other);
+                    double pick = dice.NextDouble();
+                    int turn = dice.Next(4);
+                    float sx = (turn % 2 == 0 ? wide : deep) / 4f, sz = (turn % 2 == 0 ? deep : wide) / 4f;
+                    if (dice.Next(2) == 0) sx = -sx;
+                    SunCityKit.City(golden && dice.NextDouble() < 0.6 ? "ground_slabs_gold" : "ground_slabs", group, centre, turn * 90f, new Vector3(sx, 1f, sz),
+                        tones[pick < 0.62 ? 0 : pick < 0.9 ? 1 : 2], false);
                 }
         }
 
-        private static void Flag(Transform parent, float west, float east, float south, float north, float top, Material material)
+        // The kit's slabs repainted in one of a builder's paving tones: the stone takes the tone, the recut slabs a paler one.
+        private static readonly Dictionary<string, Dictionary<string, Material>> tones = new Dictionary<string, Dictionary<string, Material>>();
+        private static Dictionary<string, Material> Tone(Material from)
         {
-            var flag = Deco(PrimitiveType.Cube, "Flag", parent, new Vector3((west + east) * 0.5f, top + 0.004f + (float)dice.NextDouble() * 0.012f, (south + north) * 0.5f),
-                new Vector3(east - west - 0.07f, 0.04f, north - south - 0.07f), material);
-            flag.shadowCastingMode = ShadowCastingMode.Off;
+            if (tones.TryGetValue(from.name, out var known) && known.Values.All(material => material != null)) return known;
+            // The palest new stone sits near white under the noon sun (the overview): it is laid a shade down.
+            Color colour = from.GetColor("_BaseColor");
+            if (colour.grayscale > 0.7f) colour *= 0.9f;
+            colour.a = 1f;
+            var paint = SunCityKit.Ground("slab_" + from.name.Replace("m_sun_", "").Replace("m_kit_", ""), colour);
+            tones[from.name] = paint;
+            return paint;
         }
 
         // Bare ground is never one colour: darker patches, paler dusty ones, and a few stones.
@@ -1649,18 +1986,33 @@ namespace Clover.EditorTools
 
         private static void GoldLine(Transform parent, float west, float east, float south, float north, float top)
         {
-            var line = Deco(PrimitiveType.Cube, "Gold Line", parent, new Vector3((west + east) * 0.5f, top + 0.03f, (south + north) * 0.5f), new Vector3(east - west, 0.05f, north - south), gold);
+            // Worn metal laid in the stone, as the court's rings are: not a strip of light (the overview, step 2).
+            var line = Deco(PrimitiveType.Cube, "Gold Line", parent, new Vector3((west + east) * 0.5f, top + 0.06f, (south + north) * 0.5f), new Vector3(east - west, 0.05f, north - south), SunCityKit.FloorGold);
             line.shadowCastingMode = ShadowCastingMode.Off;
         }
 
-        // A drift of blown sand: a low mound, wider than it is deep.
+        // A drift of blown sand: the kit's rippled drifts and patches, a few along the length asked for, each its own
+        // size, rather than one sheet stretched to it.
         private static void Drift(Transform parent, Vector3 at, float wide, float deep)
         {
-            // Blown sand lying thin on the ground: a stain with no edge, and a smaller, stronger one inside it where it lies deepest.
             float yaw = (float)dice.NextDouble() * 50f - 25f;
-            Soft("Sand Drift", parent, at + Vector3.up * 0.022f, wide * 0.6f, deep * 0.6f, yaw, softSand);
-            Soft("Sand Drift Heart", parent, at + Vector3.up * 0.026f, wide * 0.34f, deep * 0.34f, yaw + 40f, softSand);
+            int count = Mathf.Clamp(Mathf.RoundToInt(wide * deep / 9f), 1, 4);
+            var turn = Quaternion.Euler(0f, yaw, 0f);
+            for (int i = 0; i < count; i++)
+            {
+                float along = count == 1 ? 0f : (i / (count - 1f) - 0.5f) * wide * 0.7f;
+                var spot = at + turn * new Vector3(along, 0f, ((float)dice.NextDouble() - 0.5f) * deep * 0.5f);
+                float size = 0.7f + (float)dice.NextDouble() * 0.5f;
+                SunCityKit.City(i % 2 == 0 ? "ground_dust_drift" : "ground_dust_patch", parent, spot + Vector3.up * 0.01f, yaw + (float)dice.NextDouble() * 40f - 20f + (dice.Next(2) == 0 ? 0f : 180f),
+                    new Vector3(size, 1f, size), GroundPaint, false);
+            }
         }
+
+        // The city kit's slots for what lies on the ground, without ink (SunCityKit.Ground), made once a build.
+        private static Dictionary<string, Material> groundPaint;
+        private static Dictionary<string, Material> GroundPaint => groundPaint ?? (groundPaint = SunCityKit.Ground());
+        private static Dictionary<string, Material> roofPaint;
+        private static Dictionary<string, Material> RoofPaint => roofPaint ?? (roofPaint = SunCityKit.Ground("roof", null, true));
 
         private static void Stain(Transform parent, Vector3 at, float radius)
         {
@@ -1723,7 +2075,7 @@ namespace Clover.EditorTools
         // A brazier to rest at. Lighting it is resting; it becomes where a fall returns the player to.
         private static void Rest(Transform parent, AreaDirector director, Vector3 foot)
         {
-            var brazier = SunCityKit.Place("brazier", parent, foot);
+            var brazier = SunCityKit.Brazier(parent, foot, 180f, true);
             brazier.name = "Rest Brazier";
             Deco(PrimitiveType.Cube, "Rest Mat", parent, foot + new Vector3(0f, 0.03f, -1.4f), new Vector3(1.5f, 0.04f, 1.1f), reed).shadowCastingMode = ShadowCastingMode.Off;
             Deco(PrimitiveType.Cylinder, "Rest Ring", parent, foot + new Vector3(0f, 0.015f, 0f), new Vector3(2.7f, 0.008f, 2.7f), gold).shadowCastingMode = ShadowCastingMode.Off;

@@ -410,3 +410,15 @@ may hold part names with spaces between; empty or missing runs them all, in this
 
 The last line says how many lanes were moved aside, and how many laid without fire, because they would have shut the
 player off from the shape.
+
+## The Fire land's world pass (2026-11-18): `World1Shot`, `world1_frames.sh`, `profile_city.sh`
+
+- `World1Shot` (any scene): puts the player at each line of `AgentScripts/world1_shots.txt` (`name x y z`) with everyone
+  calmed and writes `review/shots/current/world1_<name>.png`; no file means one frame where the player stands.
+  `bash AgentScripts/runprobe.sh SunCourt World1Shot 30`.
+- `world1_frames.sh before|after [folder]` copies SunCityProbe's walk frames (`suncity_only.txt` holding `walk`) into
+  `review/shots/current/world1_<district>_<spot>_<label>.png`; the before frames of the pass are kept in
+  `review/shots/before_world1/`.
+- `profile_city.sh <label>` runs PerfProbe's SunCity branch (the market, everyone near awake, a swell) and records 600
+  profiler frames over it into `review/checks/world1/city_<label>.data`, printing the summary. PerfProbe now also
+  reports set-pass calls and triangles.
