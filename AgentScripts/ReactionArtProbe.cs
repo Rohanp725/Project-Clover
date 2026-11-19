@@ -60,6 +60,7 @@ public class ReactionArtProbeRunner : MonoBehaviour
     private static readonly float[] StripTimes = { 0.05f, 0.2f, 0.4f, 0.65f, 0.95f };
     private const int ImpactFrame = 2;
     private const int StripWidth = 384, StripHeight = 216;
+    private const int CloseSize = 420;
 
     private void Update()
     {
@@ -230,6 +231,8 @@ public class ReactionArtProbeRunner : MonoBehaviour
     private IEnumerator Strip(string file, float start, Matrix4x4[][] poses, int[] parts, int[] lamps)
     {
         var strip = new Texture2D(StripWidth * StripTimes.Length, StripHeight, TextureFormat.RGB24, false);
+        // The same moments cropped about the struck body at the screen's own size, so its motion can be read.
+        var close = new Texture2D(CloseSize * StripTimes.Length, CloseSize, TextureFormat.RGB24, false);
         for (int i = 0; i < StripTimes.Length; i++)
         {
             while (Time.time - start < StripTimes[i]) yield return null;
@@ -246,6 +249,14 @@ public class ReactionArtProbeRunner : MonoBehaviour
                     strip.SetPixel(i * StripWidth + x, y, frame.GetPixelBilinear((x + 0.5f) / StripWidth, (y + 0.5f) / StripHeight));
             // A thin dark rule between frames.
             for (int y = 0; y < StripHeight; y++) strip.SetPixel(i * StripWidth, y, Color.black);
+            var view = Camera.main;
+            Vector3 onScreen = view != null ? view.WorldToScreenPoint(host.transform.position + Vector3.up * 1.1f) : new Vector3(frame.width * 0.5f, frame.height * 0.5f, 1f);
+            float scaleX = frame.width / (float)Screen.width, scaleY = frame.height / (float)Screen.height;
+            int left = Mathf.Clamp(Mathf.RoundToInt(onScreen.x * scaleX) - CloseSize / 2, 0, Mathf.Max(0, frame.width - CloseSize));
+            int bottom = Mathf.Clamp(Mathf.RoundToInt(onScreen.y * scaleY) - CloseSize / 2, 0, Mathf.Max(0, frame.height - CloseSize));
+            for (int y = 0; y < CloseSize; y++)
+                for (int x = 0; x < CloseSize; x++)
+                    close.SetPixel(i * CloseSize + x, y, x == 0 ? Color.black : left + x < frame.width && bottom + y < frame.height ? frame.GetPixel(left + x, bottom + y) : Color.black);
             Destroy(frame);
             Time.timeScale = 1f;
             yield return null;
@@ -253,6 +264,9 @@ public class ReactionArtProbeRunner : MonoBehaviour
         strip.Apply();
         System.IO.File.WriteAllBytes("review/shots/current/" + file + "_strip.png", strip.EncodeToPNG());
         Destroy(strip);
+        close.Apply();
+        System.IO.File.WriteAllBytes("review/shots/current/" + file + "_close.png", close.EncodeToPNG());
+        Destroy(close);
     }
 
     // Parts moved when, between two frames, a part's pose changed by more than a centimetre (or a hundredth of its
