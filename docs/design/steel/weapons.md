@@ -13,11 +13,17 @@ Lightning and Wind land's elites wait for that land's overview, so the Katana's 
 placeholders. Every weapon kind has an elite (14). Rule-breaking marks for the long game, the Heresies, are in
 `depth_weapons.md`.
 
+**The owner's structural answers of 2026-11-19 (Decided)** are written into section 0: forking boughs of about ten
+marks with two keystones, five weapon basics on every trunk, bigger gods' boughs, real traditions with mythic peaks,
+the prices kept and the income raised, and a twelve-mark Body branch. The boughs below still have the earlier shape
+(four marks and one keystone); the options in the new shape, bough by bough, are in `way_plan.md`.
+
 ## Index
 
 **0. How every Way is laid out**
-- 0.1 Shape: a trunk (temper, infusion, technique, Bond) and three boughs, one active; a fourth for a god's weapon.
-- 0.2 Costs in Memories, and the four kinds of mark.
+- 0.1 Shape: a trunk (temper, infusion, technique, Bond, five weapon basics) and three boughs, one active, each
+  forking to two keystones; a bigger fourth for a god's weapon (Decided, 2026-11-19).
+- 0.2 Costs in Memories, the four kinds of mark, the income, and the Body branch.
 - 0.3 Temper: five marks, the only raw damage, two lines per weapon.
 - 0.4 Infusion: each weapon's carrier move, bent by four element families.
 - 0.5 Gated techniques: one chord (R1 and R2 together), opened by an elite.
@@ -125,15 +131,31 @@ Armament into the Fists; what of each merged Way was kept and what was cut.
 ### 0.1 Shape
 
 - **The trunk** works in every aspect: five temper marks, four infusion marks (one per element family), the gated
-  technique (once opened), and at the top the Bond mark.
+  technique (once opened), and at the top the Bond mark. **Decided (owner, 2026-11-19)**: all of these are kept, and
+  the trunk adds **four to six weapon basics** that every form of the weapon gets (a better dodge-attack, a
+  guard-break kick or shove, a quicker recovery, a throw or pommel strike for that weapon, and the like).
+  **Proposal** (`way_plan.md` 0.2): five basics on one frame for every weapon, roll then R1 to cut, roll then R2 to
+  break, guard held and R1 for the weapon's own, one Number and one Rule.
 - **Three boughs**, each an aspect: a form of the weapon, chosen at a rest fire, one active at a time (Decided).
-  Opening a bough gives its form at once ("What changes"); four marks and a keystone deepen it. Marks bought on a
-  bough that is not active are kept and sleep.
+  Opening a bough gives its form at once ("What changes"). Marks bought on a bough that is not active are kept and
+  sleep. **Decided (owner, 2026-11-19)**: three plain boughs for every weapon, plus the god's bough where a god carries
+  that weapon (the War Fan: the god's bough and two plain ones, as drafted).
+- **Decided (owner, 2026-11-19), replacing "four marks and a keystone deepen it"**: a bough is **about 8 to 10 marks
+  and forks**: the opening (the aspect, which gives the form), a shared stem of three or four marks, then a fork into
+  two paths of two or three marks, each ending in its own keystone. **A player may buy both keystones** over time and
+  switches the active one at a rest fire, as the aspect is chosen; only one is active. **Proposal** (`way_plan.md`
+  0.1): ten marks, a stem of three (one Number and two Moves or Rules) and two paths of two marks and a keystone; a
+  path's marks work whichever keystone is set.
+- **Decided (owner, 2026-11-19)**, where the boughs come from: each bough starts from a **real fighting tradition**
+  (iaijutsu, Fiore's half-sword, scything, the meteor hammer and the like), and its keystones **go over the top into
+  myth**: grounded feel, flashy peaks.
 - **A god's bough** is the fourth (Decided): the god's weapon itself, its look and its moves. Take opens it for
   nothing; its marks cost as any other. For the one new kind left, the War Fan, the god's bough sits beside two
   plain ones, and Consume gives the plain weapon with those two (Decided). The Water and Poison gods' weapons are now
   boughs of the Chain Sickle and the Twin Knives (Decided, 2026-11-18): Consume over those two gods gives the plain
-  chain or the plain knives if the player has not found them yet.
+  chain or the plain knives if the player has not found them yet. **Decided (owner, 2026-11-19)**: a god's bough is
+  **bigger and showier**: a plain bough's size plus two or three marks, and each of its keystones is a signature **god
+  move** with its own animation and effect. **Proposal** (`way_plan.md` 0.1): twelve marks, a stem of five.
 - **A god's bough may change the carrier** (0.4) and the moveset: the Jawbone casts a hook, the Alchemist's Hooks
   whip. The trunk's temper, infusion and technique serve it as they serve the plain boughs.
 - The moves as built stay the weapon's base. An aspect says only what it changes.
@@ -151,8 +173,16 @@ Armament into the Fists; what of each merged Way was kept and what was cut.
 | Infusion | 2 each | One per element family (0.4) |
 | Technique | 2 | Only after its elite falls (0.5) |
 
-A bough is about 13 Memories; a whole Way about 58. As a scale: an elite should pay about 3, a god 6, each new kind
-of enemy 1 the first time.
+**Decided (owner, 2026-11-19)**: these prices are kept, and the **income is raised** instead: an elite about 4, a
+god about 8, each new kind of enemy 1 the first time, and Memories found in the world, so that one main bough is
+done by mid-game and a full Way near the end. This replaces "an elite about 3, a god 6". **Proposal**
+(`way_plan.md` 0.3), at the new shape: a plain bough 23 Memories, a god's bough 25, the trunk 28; **a plain Way 97, a
+Way with its god's bough 122** (the War Fan and the Fists 99, the Katana with its five element infusion marks 132),
+the Body 28; about 200 Memories in a first climb. This replaces "a bough about 13, a whole Way about 58".
+
+**The Body branch. Decided (owner, 2026-11-19)**: about twelve marks: steady numbers first, then a fork between
+**the enduring body** (health, poise, flask strength) and **the light body** (stamina, dodge distance, recovery);
+pieces found in the world add on top. The twelve marks are written out in `way_plan.md` 0.4.
 
 ### 0.3 Temper (Decided: the only way raw damage grows)
 
@@ -198,7 +228,8 @@ five built tree marks that need the Katana come here too (Katana, Infusion).
 
 Weapon Bond ranks (Proposal): I, recoveries 4% shorter; II, the finisher +10%; III, recoveries 8% shorter; IV, the
 finisher +20%; V, the **Bond mark**: the active aspect's keystone in its **true form**. Each aspect below gives its
-true form in one line.
+true form in one line. (Proposal, 2026-11-19: now that a bough has two keystones, the true form is that of whichever
+keystone is active; the new keystones' true forms are written once they are chosen.)
 
 ---
 
