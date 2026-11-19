@@ -45,7 +45,13 @@ namespace Clover.Core
 
         // Domain reload is off: each play decides afresh from the build and the editor's setting.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetOnLoad() => On = Built || EditorSwitch;
+        private static void ResetOnLoad() => ResetToSetting();
+
+        /// <summary>
+        /// Back to what the build and the editor's setting say. The editor calls it when a play ends, so a Proving Ground
+        /// visit does not leave the mode on for the edit-mode tests that follow (it made one of them loop forever).
+        /// </summary>
+        public static void ResetToSetting() => On = Built || EditorSwitch;
 
         /// <summary>Turns the mode on or off for the rest of this play: the Proving Ground turns it on, tests and probes either way.</summary>
         public static void Set(bool on) => On = on;

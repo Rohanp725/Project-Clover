@@ -16,7 +16,18 @@ namespace Clover.EditorTools
         private const string Path = "Clover/Play/Playtest Mode";
         private const string Key = "Clover.PlaytestMode";
 
-        static PlaytestModeMenu() => PlaytestMode.EditorSwitch = EditorPrefs.GetBool(Key, false);
+        static PlaytestModeMenu()
+        {
+            PlaytestMode.EditorSwitch = EditorPrefs.GetBool(Key, false);
+            EditorApplication.playModeStateChanged -= PlayChanged;
+            EditorApplication.playModeStateChanged += PlayChanged;
+        }
+
+        // Domain reload is off, so what a play set (the Proving Ground turns the mode on) would outlive it into edit mode.
+        private static void PlayChanged(PlayModeStateChange change)
+        {
+            if (change == PlayModeStateChange.EnteredEditMode) PlaytestMode.ResetToSetting();
+        }
 
         [MenuItem(Path)]
         public static void Toggle()

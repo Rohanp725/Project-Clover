@@ -6,6 +6,27 @@ namespace Clover.Tests
     /// <summary>What the pause menu offers where, and that the things which cannot be taken back are asked twice.</summary>
     public class PauseChoicesTests
     {
+        // These are the game's own menus, not the playtest's: the mode is a static a play can leave on (domain reload is
+        // off), so it is set here and put back after.
+        private bool wasOn;
+
+        [SetUp]
+        public void OutOfThePlaytest()
+        {
+            wasOn = Clover.Core.PlaytestMode.On;
+            Clover.Core.PlaytestMode.Set(false);
+        }
+
+        [TearDown]
+        public void PutBack() => Clover.Core.PlaytestMode.Set(wasOn);
+
+        // Moves down to the entry, at most once round the menu, so a missing entry fails the test instead of hanging it.
+        private static void MoveTo(PauseChoices choices, PauseEntry entry)
+        {
+            for (int i = 0; i < choices.Count && choices.Current != entry; i++) choices.Move(1);
+            Assert.AreEqual(entry, choices.Current, $"the menu offers no {entry}");
+        }
+
         private static bool Offers(string scene, PauseEntry entry)
         {
             var choices = new PauseChoices(scene);
@@ -62,14 +83,14 @@ namespace Clover.Tests
             foreach (var entry in new[] { PauseEntry.GiveUp, PauseEntry.Quit })
             {
                 var choices = new PauseChoices("Castle");
-                while (choices.Current != entry) choices.Move(1);
+                MoveTo(choices, entry);
                 Assert.AreEqual(PauseEntry.None, choices.Press(), "the first press only asks");
                 Assert.IsTrue(choices.Asking);
                 Assert.AreEqual(entry, choices.Press(), "the second press does it");
                 Assert.IsFalse(choices.Asking);
             }
             var hub = new PauseChoices("Hub");
-            while (hub.Current != PauseEntry.Forget) hub.Move(1);
+            MoveTo(hub, PauseEntry.Forget);
             Assert.AreEqual(PauseEntry.None, hub.Press());
             Assert.AreEqual(PauseEntry.Forget, hub.Press());
         }
