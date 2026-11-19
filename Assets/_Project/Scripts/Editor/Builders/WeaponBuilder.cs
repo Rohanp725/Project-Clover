@@ -73,7 +73,7 @@ namespace Clover.EditorTools
             /// <summary>True for a thing that is never a weapon by itself (an arrow, the chain's weight): a prefab and nothing on the rack.</summary>
             public bool PropOnly;
             /// <summary>What is added to the prefab once its model or stand-in is in place: lines, markers, parts that code moves.</summary>
-            public Action<GameObject> Finish;
+            public Action<GameObject, Spec> Finish;
         }
 
         // Slot colours as the eye sees them, from the Blender notes (staging/blender/2026-11-16_weapons/notes.md).
@@ -111,7 +111,10 @@ namespace Clover.EditorTools
             new Spec
             {
                 Carry = "spear", ModelFile = "spear.fbx", StandIn = SpearStandIn,
-                Notes = "Great Spear: 420 triangles, slots blade guard wood accent inlay; origin on the shaft 1.0 m from the butt, point along +Z, the leaf's broad faces toward +Y and -Y",
+                Notes = "Great Spear (spear_v2 of 2026-11-19): 973 triangles, slots blade edge guard wood wrap grip accent inlay string; origin on the shaft 1.0 m from the butt, point along +Z, the leaf's broad faces toward +Y and -Y",
+                // notes.md 10 and its follow-up: bright bevels, a dark leather grip, and the off-white horsehair tails in
+                // the string slot; the red collar is the shared accent that takes the element's tint.
+                OwnColours = { { "edge", Linear(0.80f, 0.84f, 0.90f) }, { "grip", Linear(0.09f, 0.06f, 0.05f) }, { "string", Linear(0.86f, 0.82f, 0.72f) } },
                 // Slanted across the back, butt by the right hip, head above the left shoulder.
                 RestPosition = new Vector3(0.2f, -0.3f, -0.19f), RestAlong = new Vector3(-0.42f, 0.9f, 0f), RestUp = new Vector3(0f, 0f, -1f),
                 // Stood on its butt, the leaf's face toward whoever walks up.
@@ -120,7 +123,7 @@ namespace Clover.EditorTools
             new Spec
             {
                 // No model of its own yet: built of the king's spear's parts as the court stands it in the floor.
-                Carry = "sunspear", ModelFile = null, StandIn = SunSpearStandIn, Finish = SunSpearFinish,
+                Carry = "sunspear", ModelFile = null, StandIn = SunSpearStandIn, Finish = (root, _) => SunSpearFinish(root),
                 Notes = "The Sun-Spear, Khepharu's own (fire_land.md 6.1): a gold shaft, the sun's disc under the blade, the blade white-hot; the Great Spear's grip and length, point along +Z",
                 RestPosition = new Vector3(0.2f, -0.3f, -0.19f), RestAlong = new Vector3(-0.42f, 0.9f, 0f), RestUp = new Vector3(0f, 0f, -1f),
                 DisplayPosition = new Vector3(0f, 1.2f, 0f), DisplayEuler = new Vector3(-90f, 0f, 0f),
@@ -219,6 +222,38 @@ namespace Clover.EditorTools
 
         public static Spec SpecFor(string carry) => Specs.FirstOrDefault(spec => spec.Carry == carry);
 
+        /// <summary>
+        /// How a bow model is strung, in its own axes (upper limb along +Z, the archer toward +Y): where the hand holds
+        /// it and the two nocks its string runs between.
+        /// </summary>
+        public struct BowShape
+        {
+            public Vector3 Grip, NockUpper, NockLower;
+        }
+
+        /// <summary>The plain bow's: gripped a third of the way up, so its lower limb is the shorter.</summary>
+        public static readonly BowShape PlainBow = new BowShape
+        {
+            Grip = Vector3.zero, NockUpper = new Vector3(0f, 0.312f, 1.178f), NockLower = new Vector3(0f, 0.312f, -0.628f),
+        };
+
+        /// <summary>
+        /// Each bow model's shape, by its file under Art/Models/Weapons (staging/blender/2026-11-19_plainweapons/notes.md
+        /// gives the points). A bow file not listed is strung as the plain bow.
+        /// </summary>
+        public static readonly Dictionary<string, BowShape> BowShapes = new Dictionary<string, BowShape>
+        {
+            { "bow.fbx", PlainBow },
+            // The Ice make gripped a third of the way up was built on the plain bow's points.
+            { "bow_ice.fbx", PlainBow },
+            // The true longbow: gripped in the middle, symmetric, its string 1.80 m long and 0.19 m toward the archer.
+            { "bow_ice_true.fbx", new BowShape { Grip = Vector3.zero, NockUpper = new Vector3(0f, 0.19f, 0.90f), NockLower = new Vector3(0f, 0.19f, -0.90f) } },
+        };
+
+        /// <summary>The shape a bow's Spec is strung on: its model's, or the plain bow's.</summary>
+        public static BowShape BowShapeOf(Spec spec) =>
+            spec != null && spec.ModelFile != null && BowShapes.TryGetValue(spec.ModelFile, out var shape) ? shape : PlainBow;
+
         /// <summary>The name of the Katana in the hand: the stick in the character's file, then the model put in its place.</summary>
         public const string KatanaDrawn = "katana_drawn";
 
@@ -270,7 +305,7 @@ namespace Clover.EditorTools
                 foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
                     renderer.sharedMaterial = SlotMaterial(spec, SlotOf(renderer.name));
             }
-            spec.Finish?.Invoke(root);
+            spec.Finish?.Invoke(root, spec);
             var prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
             UnityEngine.Object.DestroyImmediate(root);
             return prefab;
@@ -658,15 +693,16 @@ namespace Clover.EditorTools
         }
 
         // The Great Bow to the staged model's size: 1.99 m, gripped a third of the way up (upper tip at +1.28, lower at
-        // -0.71), both limbs sweeping from the grip back toward the archer (+Y) so the string runs straight at Y 0.312
-        // from Z -0.628 to +1.178, and each tip recurving away again under its horn cap.
+        // -0.71), both limbs sweeping from the grip back toward the archer (+Y) so the string runs straight between the
+        // plain bow's nocks (Y 0.312, Z -0.628 to +1.178), and each tip recurving away again under its horn cap.
         private static void BowStandIn(Transform root)
         {
             Box(root, "grip", "Grip", Vector3.zero, new Vector3(0.062f, 0.058f, 0.15f));
             Box(root, "accent", "Tie Above", new Vector3(0f, 0f, 0.095f), new Vector3(0.07f, 0.066f, 0.04f));
             Box(root, "accent", "Tie Below", new Vector3(0f, 0f, -0.095f), new Vector3(0.07f, 0.066f, 0.04f));
-            var upper = new[] { new Vector2(0f, 0.07f), new Vector2(0.03f, 0.42f), new Vector2(0.13f, 0.76f), new Vector2(0.26f, 1.03f), new Vector2(0.312f, 1.178f) };
-            var lower = new[] { new Vector2(0f, -0.07f), new Vector2(0.05f, -0.3f), new Vector2(0.19f, -0.5f), new Vector2(0.312f, -0.628f) };
+            Vector2 nockUpper = new Vector2(PlainBow.NockUpper.y, PlainBow.NockUpper.z), nockLower = new Vector2(PlainBow.NockLower.y, PlainBow.NockLower.z);
+            var upper = new[] { new Vector2(0f, 0.07f), new Vector2(0.03f, 0.42f), new Vector2(0.13f, 0.76f), new Vector2(0.26f, 1.03f), nockUpper };
+            var lower = new[] { new Vector2(0f, -0.07f), new Vector2(0.05f, -0.3f), new Vector2(0.19f, -0.5f), nockLower };
             for (int i = 0; i + 1 < upper.Length; i++)
             {
                 Span(root, "wood", "Upper Limb " + i, upper[i], upper[i + 1], Mathf.Lerp(0.07f, 0.045f, i / 3f), Mathf.Lerp(0.052f, 0.034f, i / 3f));
@@ -681,22 +717,26 @@ namespace Clover.EditorTools
             Span(root, "wrap", "Horn Cap Lower", lower[lower.Length - 1], new Vector2(0.285f, -0.71f), 0.05f, 0.045f);
             foreach (var at in new[] { upper[1], upper[2], upper[3], lower[1], lower[2] })
                 Box(root, "wrap", "Binding", new Vector3(0f, at.x, at.y), new Vector3(0.075f, 0.062f, 0.05f));
-            Box(root, "string", "String", new Vector3(0f, 0.312f, 0.275f), new Vector3(0.012f, 0.012f, 1.806f));
+            Box(root, "string", "String", new Vector3(0f, nockUpper.x, (nockUpper.y + nockLower.y) * 0.5f), new Vector3(0.012f, 0.012f, nockUpper.y - nockLower.y));
         }
 
-        // What the bow needs besides its shape: the two points its string runs between, and the line drawn through
-        // the string hand while it is drawn (the bar is the string at rest).
-        private static void BowFinish(GameObject root)
+        // What the bow needs besides its shape: the two points its string runs between (its model's own, from
+        // BowShapes), and the line drawn through the string hand while it is drawn (the bar is the string at rest).
+        private static void BowFinish(GameObject root, Spec spec)
         {
+            var shape = BowShapeOf(spec);
+            // The prefab's origin is where the hand holds it: a model gripped elsewhere is moved so its grip comes there.
+            if (shape.Grip != Vector3.zero)
+                foreach (Transform part in root.transform) part.localPosition -= shape.Grip;
             Renderer bar = null;
             foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
                 if (renderer.name.ToLowerInvariant().Contains("string")) bar = renderer;
             var upper = new GameObject("tip_upper").transform;
             upper.SetParent(root.transform, false);
-            upper.localPosition = new Vector3(0f, 0.312f, 1.178f);
+            upper.localPosition = shape.NockUpper - shape.Grip;
             var lower = new GameObject("tip_lower").transform;
             lower.SetParent(root.transform, false);
-            lower.localPosition = new Vector3(0f, 0.312f, -0.628f);
+            lower.localPosition = shape.NockLower - shape.Grip;
             var drawn = new GameObject("Drawn String");
             drawn.transform.SetParent(root.transform, false);
             var line = drawn.AddComponent<LineRenderer>();
