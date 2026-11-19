@@ -264,6 +264,24 @@ namespace Clover.Tests
             }
         }
 
+        // The pieces taken from the source .blend move by what they are: the jar's lacquer ring rings and the anvil
+        // grows. Read by their whole source names, "combo" held Wind's word "comb" and both swept in like wind.
+        [Test]
+        public void ThePiecesTakenFromTheSourceMoveByWhatTheyAre()
+        {
+            var set = ReactionArtBuilder.Set();
+            if (set == null || AssetDatabase.LoadAssetAtPath<GameObject>(ReactionArtBuilder.SourcePath) == null)
+                Assert.Ignore("The reaction art has not been built from the source .blend yet; run Clover > Build > Reaction Art.");
+            Assert.AreEqual(ReactionTimelines.Ring, ReactionTimelines.RoleOf("combo_lacquer_ring"));
+            Assert.AreEqual(ReactionTimelines.Growth, ReactionTimelines.RoleOf("combo_anvilstone"));
+            foreach (string key in new[] { "dark_poison", "earth_metal" })
+            {
+                var look = set.Looks.First(each => each.Key == key);
+                for (int i = look.FirstPart; i < look.FirstPart + look.PartCount; i++)
+                    Assert.AreNotEqual(ReactionTimelines.Wind, set.Parts[i].Role, $"{set.Parts[i].Name}: {look.Name} has no wind in it");
+            }
+        }
+
         // Clover/Decal's colours are [HDR], which Unity hands to the shader unconverted: a mark's colours are stored
         // linear, as the paints are (stored as the eye sees them, Caught Light's navy ink pool showed sky blue).
         [Test]

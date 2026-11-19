@@ -144,7 +144,8 @@ namespace Clover.Player.Forms
                 case Sink:
                     // Held up and spread wide, it drops into place, gathering inward as it goes, faster at the end.
                     pose.Lift = cue.Amount * (1f - p * p);
-                    pose.Across = Mathf.Lerp(1.15f, 1f, p * p);
+                    // A third wider at the start, so the slabs are seen gathering in round the pit (15% read as still).
+                    pose.Across = Mathf.Lerp(1.35f, 1f, p * p);
                     pose.Size = Mathf.Lerp(0.6f, 1f, EaseOut(Mathf.Clamp01(p * 3f)));
                     break;
                 case Sweep:

@@ -167,6 +167,9 @@ namespace Clover.EditorTools
             ["m2_life_dark"] = new Paint(0.03f, 0.14f, 0.03f),
             // Dark: ink black-violet.
             ["m_vfx_dark_body"] = new Paint(0.02f, 0.005f, 0.03f),
+            // Firebloom's lilies: white in the kit, lit amber in the look-dev's frames by orange lamps the game leaves
+            // out (two lamps a look), so the warmth is painted on instead. Claude's number, matched by eye to the frames.
+            ["mc_firebloom_lily"] = new Paint(1.15f, 0.62f, 0.2f),
         };
 
         // The combos' own materials by the element whose ink they are drawn in.
@@ -175,6 +178,22 @@ namespace Clover.EditorTools
             ["coal"] = "fire", ["plasmaflame"] = "fire", ["slag"] = "fire", ["frost"] = "ice", ["steam"] = "water", ["sheen"] = "water",
             ["whiteflash"] = "light", ["violetedge"] = "lightning", ["blackcore"] = "lightning", ["greenheart"] = "poison", ["ghost"] = "dark",
         };
+
+        /// <summary>
+        /// A material one look wears differently, by "pair|material": what lamps the game leaves out once coloured is
+        /// painted on. The new paint's element is the pair's first (so Firebloom's lilies take Fire's ink and no white flash).
+        /// </summary>
+        public static readonly Dictionary<string, string> LookRecolours = new Dictionary<string, string>
+        {
+            ["fire_life|m_vfx_combo_whiteflash"] = "mc_firebloom_lily",
+        };
+
+        private static string[] Recoloured(string pair, string[] worn)
+        {
+            for (int t = 0; t < worn.Length; t++)
+                if (worn[t] != null && LookRecolours.TryGetValue(pair + "|" + worn[t], out string instead)) worn[t] = instead;
+            return worn;
+        }
 
         private static readonly StringBuilder Report = new StringBuilder();
         private static readonly StringBuilder Motion = new StringBuilder();
@@ -654,7 +673,11 @@ namespace Clover.EditorTools
                     }
                     float top = float.MinValue;
                     foreach (var corner in mesh.vertices) top = Mathf.Max(top, place.MultiplyPoint3x4(corner).y);
-                    AddMesh(combo.Pair, name, mesh, place, worn.ToArray(), top <= GroundTop, worn.Count > 0 ? worn[0] : null, gathered, split);
+                    // Its motion role is read from the name without the source's "c2_<pair>_": the whole name's "combo"
+                    // holds Wind's word "comb", which made the jar's lacquer ring and the anvil sweep in like wind.
+                    string prefix = "c2_" + combo.Pair + "_";
+                    string kitObject = name.StartsWith(prefix) ? name.Substring(prefix.Length) : name;
+                    AddMesh(combo.Pair, kitObject, mesh, place, worn.ToArray(), top <= GroundTop, worn.Count > 0 ? worn[0] : null, gathered, split);
                     source.Added++;
                 }
             }
@@ -696,6 +719,8 @@ namespace Clover.EditorTools
             var bounds = new Bounds(vertices.Length > 0 ? vertices[0] : Vector3.zero, Vector3.zero);
             foreach (var v in vertices) bounds.Encapsulate(v);
 
+            worn = Recoloured(pair, worn);
+            if (inkFallback != null && LookRecolours.TryGetValue(pair + "|" + inkFallback, out string fallbackInstead)) inkFallback = fallbackInstead;
             var triangles = new List<int>();
             for (int s = 0; s < mesh.subMeshCount; s++) triangles.AddRange(mesh.GetTriangles(s));
             var paints = new Paint[worn.Length];

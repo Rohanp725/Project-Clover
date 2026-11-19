@@ -158,12 +158,17 @@ namespace Clover.Player.Forms
                 S("growth", M.Rise, A, 0f, 0.25f, 1f),
                 S("static", M.Flicker, A, 0.1f, 0.3f, 0.6f, 0f, 3, true),
                 S("strike", M.Fall, I, 0.38f, 0.15f, 0.55f, 5f, 2, true),
+                // The crack-web flares and the scorch is burnt where the bolt lands (0.53 s), not before it.
+                S("ring", M.Pulse, I, 0.52f, 0.08f, 0.8f, 2f, 0, true),
+                S("scorch", M.Pop, I, 0.53f, 0.1f, 0.85f),
                 S("debris", M.Burst, I, 0.5f, 0.22f, 0.7f, 0f, 0, true),
                 S("mark", M.Spread, F, 0.5f, 0.3f, 0.9f, 0.35f)),
             T("light_dark", "dark's streaks wheel in; the slatted shaft lands; the eclipse ring and its bead flare; the corona and shadow bands spread",
                 S("swirl", M.Spin, A, 0f, 0.3f, 0.6f, -200f),
                 S("strike", M.Fall, I, 0.2f, 0.18f, 0.7f, 4.5f, 0, true),
                 S("ring", M.Pulse, I, 0.38f, 0.08f, 0.9f, 2f, 0, true),
+                // The wheel and the shadow bands on the ground show where the shaft lands (0.38 s).
+                S("still", M.Pop, I, 0.38f, 0.1f, 0.9f),
                 S("mark", M.Spread, F, 0.38f, 0.4f, 1f, 0.3f)),
             T("dark_lightning", "the ash knot gathers over the head with pale streaks drawn in; cyan crawls in it; the black bolt strikes; the black fern spreads",
                 S("swirl", M.Spin, A, 0f, 0.4f, 0.9f, 240f),
@@ -212,7 +217,8 @@ namespace Clover.Player.Forms
                 S("ring", M.Pulse, I, 0.28f, 0.06f, 0.8f, 4f),
                 S("mark", M.Spread, F, 0.3f, 0.35f, 1f, 0.4f)),
             T("water_earth", "the slabs drop and tip in round the pit; the funnel and collar open; water seeps up in rings",
-                S("growth", M.Sink, A, 0f, 0.4f, 1.1f, 0.45f),
+                // Held a metre up so the drop is seen from the game's camera (0.45 m read as standing still).
+                S("growth", M.Sink, A, 0f, 0.4f, 1.1f, 1f),
                 S("mark", M.Spread, I, 0.25f, 0.5f, 1.15f, 0.3f),
                 S("ring", M.Pulse, F, 0.45f, 0.1f, 0.8f, 2f)),
             T("wind_earth", "wind sweeps in from the side; the rut ring heaves up and dust bursts; the comb spreads",
