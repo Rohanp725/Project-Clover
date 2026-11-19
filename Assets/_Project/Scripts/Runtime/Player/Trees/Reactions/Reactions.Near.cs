@@ -85,7 +85,7 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Flower, By = StruckBy.Heavy, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Flower, By = StruckBy.Heavy, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 }));
 
-            // Life and Earth (6). Roots wedge into the shaken ground: held 2 s (an elite 0.8 s, a god not at all), and a
+            // Life and Earth (6). Roots wedge into the shaken ground: held 2 s (an elite 0.8 s, a god by GodHolds), and a
             // heavy blow while it is held splits the floor round it: 10 damage, Tremor 1 and Seeded in 3 m.
             to.Add(Reaction(AfflictionKind.Seeded, AfflictionKind.Tremor,
                 "Seeded meets Tremor: roots wedge it into the ground and hold it 2 s. A heavy blow while it is held splits the floor, 10, Tremor and Seeded to all within 3 m.",

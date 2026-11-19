@@ -37,8 +37,8 @@ namespace Clover.Player.Trees
             // depth, in either order, and nothing rests until then). Held 1 s (elites 0.4 s); the water runs off into a
             // live film 2.5 m round its feet for 3 s that gives one Static every half second to what stands in it. Its
             // own Static is not spent.
-            // NEEDS: a hold that reaches gods (0.4 s); here what cannot be frozen is not held. And a ground that spares
-            // the one it ran from: the film charges the seized one too.
+            // A god is held by GodHolds (the man 0.3 s, a godly form 0.12 s, neither again while its guard lasts).
+            // NEEDS: a ground that spares the one it ran from: the film charges the seized one too.
             to.Add(Reaction(AfflictionKind.Static, AfflictionKind.Soaked,
                 "Soaked and two Static or more: the current locks its muscles and holds it 1 s, and the water runs off it into a live film that charges all who stand in it for 3 s.",
                 new ReactionDef { DepthOf = AfflictionKind.Static, Depth = 2 },

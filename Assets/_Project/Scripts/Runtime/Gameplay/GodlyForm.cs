@@ -13,8 +13,21 @@ namespace Clover.Gameplay
     {
         public Health Health { get; } = new Health();
         public StaggerMeter Stagger { get; } = new StaggerMeter();
-        /// <summary>What the elements have laid on it. It is too great to be frozen, slowed or shoved: afflictions only wear at it and let more through.</summary>
-        public AfflictionSet Afflictions { get; } = new AfflictionSet { CanFreeze = false };
+        /// <summary>
+        /// What the elements have laid on it. It is too great to be lifted, rooted, slowed or shoved, and ranks as a god;
+        /// ice and holds stop it only for a hitch (<see cref="GodHolds"/>), during which its own clock stands still.
+        /// </summary>
+        public AfflictionSet Afflictions { get; } = new AfflictionSet { CanFreeze = false, IsGod = true, InGodlyForm = true, HoldsRefused = true };
+        /// <summary>What its body glows while ice has it, as a frozen enemy's does.</summary>
+        public Color FrozenGlow = new Color(0.22f, 0.5f, 0.85f);
+        /// <summary>True on the steps ice or a hold has it: its own clock stands still (<see cref="OwnSeconds"/>).</summary>
+        public bool IsStopped { get; private set; }
+        /// <summary>Its own seconds, which stand still while it is stopped: what sways, flaps or pulses on its body reads this, not the world's time, so it stops too and carries on where it was.</summary>
+        protected float FormTime { get; private set; }
+        /// <summary>The piece a blow last landed on, where the ice is shown; the head until one has.</summary>
+        public ColossusPart LastStruck { get; private set; }
+        private int iceBeat;
+        private const int IcePieces = 3;
 
         public abstract bool IsStaggered { get; }
         public abstract bool IsDead { get; }
@@ -46,6 +59,46 @@ namespace Clover.Gameplay
         public abstract void Unbalance(float amount);
         /// <summary>Takes it out of the fight as if it had never risen, so the fight can begin again from the man: a land where a fall returns the player to a rest fire asks this. A form that cannot does nothing.</summary>
         public virtual void Retire() { }
+
+        /// <summary>Notes the piece a blow is landing on, before the blow is passed on (<see cref="ColossusPart.TakeHit"/>).</summary>
+        public void NoteStruck(ColossusPart part) => LastStruck = part;
+
+        /// <summary>
+        /// False while it must not be stopped: its entrance, its broken balance and its death, the times its clock
+        /// already runs plain. Ice and holds do not take on it then (<see cref="AfflictionSet.HoldsRefused"/>).
+        /// </summary>
+        protected virtual bool MayBeStopped => InFight && !IsStaggered;
+
+        /// <summary>
+        /// Its own seconds for this step, from the world's: none while ice or a hold has it, so everything its body does
+        /// that runs on them (its attacks' timers and telegraphs, its turning and moving, its sway) stops for that moment
+        /// and carries on where it was, nothing cancelled or skipped. The one place a form's clock is stopped; each form
+        /// calls it once at the top of its step, ticks its afflictions on the world's seconds, and keeps on the world's
+        /// seconds only what it has already set loose. Also says whether ice or holds may take on it now.
+        /// </summary>
+        protected float OwnSeconds(float worldSeconds)
+        {
+            Afflictions.HoldsRefused = !MayBeStopped;
+            bool stopped = !Afflictions.HoldsRefused && (Afflictions.IsFrozen || Afflictions.IsHeld);
+            if (stopped && !IsStopped && Afflictions.IsFrozen) ShowIce();
+            IsStopped = stopped;
+            float own = stopped ? 0f : worldSeconds;
+            FormTime += own;
+            return own;
+        }
+
+        /// <summary>True on the steps ice has it: its body is painted <see cref="FrozenGlow"/>.</summary>
+        protected bool Iced => IsStopped && Afflictions.IsFrozen;
+
+        // The ice taking it, drawn as an enemy's freezing is drawn (the frozen Chill's crystals), at the piece last struck.
+        private void ShowIce()
+        {
+            var part = LastStruck != null ? LastStruck : HeadPart;
+            Vector3 at = part != null ? part.transform.position : transform.position;
+            int depth = Afflictions.Stacks(AfflictionKind.Chill);
+            for (int piece = 0; piece < IcePieces; piece++)
+                Clover.Player.Forms.AfflictionLook.Show(AfflictionKind.Chill, depth, true, at, iceBeat++);
+        }
 
         protected void RaiseDied() => Died?.Invoke(this);
         protected void RaiseRoared() => Roared?.Invoke(this);

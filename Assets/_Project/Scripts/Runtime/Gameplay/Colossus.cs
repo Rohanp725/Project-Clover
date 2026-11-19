@@ -613,12 +613,14 @@ namespace Clover.Gameplay
         {
             if (mode == Mode.Hidden || mode == Mode.Dead) return;
             FrameTheFight();
-            float deltaTime = Time.deltaTime * WorldClock.EnemyScale;
+            float worldSeconds = Time.deltaTime * WorldClock.EnemyScale;
+            // Ice or a hold stops its own clock for a moment: all its body does waits, and then goes on where it was.
+            float deltaTime = OwnSeconds(worldSeconds);
             elapsed += deltaTime * (mode == Mode.Staggered || mode == Mode.Dying || mode == Mode.Rising ? 1f : Pace);
             WatchWhereThePlayerStands(deltaTime);
             // What burns or poisons it wears it down but never ends it: the last of a god is taken by a blow.
             if (Afflictions.Runs && mode != Mode.Rising && mode != Mode.Dying)
-                Health.Damage(Mathf.Min(Afflictions.Tick(deltaTime), Mathf.Max(0f, Health.Current - 1f)));
+                Health.Damage(Mathf.Min(Afflictions.Tick(worldSeconds), Mathf.Max(0f, Health.Current - 1f)));
             switch (mode)
             {
                 case Mode.Rising:
@@ -662,8 +664,9 @@ namespace Clover.Gameplay
                     break;
             }
             if (mode == Mode.Dead) return;
-            AdvanceBolts(deltaTime);
-            AdvancePools(deltaTime);
+            // What it has already set loose (the called bolts, the pools) goes on in the world's time.
+            AdvanceBolts(worldSeconds);
+            AdvancePools(worldSeconds);
             AdvanceFury(deltaTime);
             AdvanceRoarRing();
             Paint();
@@ -778,7 +781,7 @@ namespace Clover.Gameplay
             else if (elapsed < EntranceRoarAt + RoarSeconds)
             {
                 if (!roared) Roar();
-                float shudder = Mathf.Sin(Time.time * 61f) * 0.14f;
+                float shudder = Mathf.Sin(FormTime * 61f) * 0.14f;
                 PoseHead(deltaTime, HeadHome() + new Vector3(shudder, -1f, -3.2f), -58f, shudder * 20f, shudder * 25f, 18f);
             }
             else FaceTarget(deltaTime, 0f);
@@ -1165,7 +1168,7 @@ namespace Clover.Gameplay
                 // He rears up off the rim until his face is seen, and shakes more the nearer it is.
                 float reared = Mathf.SmoothStep(0f, 1f, Mathf.Clamp01(elapsed / (BreathTelegraph * 0.5f)));
                 float near = elapsed / BreathTelegraph;
-                float shudder = Mathf.Sin(Time.time * 53f) * 0.1f * near;
+                float shudder = Mathf.Sin(FormTime * 53f) * 0.1f * near;
                 PoseHead(deltaTime, HeadHome() + new Vector3(shudder, -1f * reared, -1.5f * reared), -28f - 56f * reared, yaw, shudder * 30f, 7f);
                 ShowMark(breathOutlineRenderer, breathFillRenderer, breathFill, breathFrom, along, near, true, true);
                 if (Time.frameCount % 5 == 0) Vfx.Play(VfxKind.Shock, Mouth(), Vector3.up, 0.6f + near);
@@ -1180,7 +1183,7 @@ namespace Clover.Gameplay
                     if (shaker != null) shaker.Shake(0.4f, BreathSeconds);
                 }
                 // Thrown forward and down over the rim, mouth to the floor, for as long as it lasts.
-                float shudder = Mathf.Sin(Time.time * 67f) * 0.12f;
+                float shudder = Mathf.Sin(FormTime * 67f) * 0.12f;
                 PoseHead(deltaTime, HeadHome() + new Vector3(shudder, -0.4f, -2.6f), -38f, yaw, shudder * 30f, 16f);
                 ShowMark(breathOutlineRenderer, breathFillRenderer, breathFill, breathFrom, along, 1f, true, true);
                 DrawBeam();
@@ -1325,7 +1328,7 @@ namespace Clover.Gameplay
             {
                 // Stuck. He pulls at it harder as the moment runs out, which is how the player knows it is ending.
                 float pulling = Mathf.Clamp01((elapsed - fall) / BiteStuck);
-                float shudder = Mathf.Sin(Time.time * 41f) * 0.05f * (0.3f + pulling * pulling * 2f);
+                float shudder = Mathf.Sin(FormTime * 41f) * 0.05f * (0.3f + pulling * pulling * 2f);
                 head.SetPositionAndRotation(lie + new Vector3(shudder, 0f, shudder), faceDown * Quaternion.Euler(0f, 0f, shudder * 60f));
             }
             else
@@ -1481,7 +1484,7 @@ namespace Clover.Gameplay
         // one after the other, and the head comes down on the rim, lies there, and slides off into the cloud.
         private void AdvanceDying(float deltaTime)
         {
-            float shudder = Mathf.Sin(Time.time * 47f) * Mathf.Lerp(0.06f, 0.2f, Mathf.Clamp01(elapsed / DeathHeadFallsAt));
+            float shudder = Mathf.Sin(FormTime * 47f) * Mathf.Lerp(0.06f, 0.2f, Mathf.Clamp01(elapsed / DeathHeadFallsAt));
             if (shaker != null && Time.frameCount % 6 == 0 && elapsed < DeathHeadFallsAt) shaker.Shake(0.22f, 0.2f);
 
             // The sky strikes him: the head, then a hand, then the other, and round again.
@@ -1585,7 +1588,7 @@ namespace Clover.Gameplay
             Vector3 about = target != null ? target.position : Vector3.zero;
             about.y = 0f;
             about.z = Mathf.Min(about.z + 4.5f, FloorRadius - 4f);
-            float bob = Mathf.Sin(Time.time * 1.7f) * 0.35f;
+            float bob = Mathf.Sin(FormTime * 1.7f) * 0.35f;
             if (left)
             {
                 Vector3 want = about + new Vector3(leftRest.x, leftRest.y + bob + higher, 0f);
@@ -1611,7 +1614,7 @@ namespace Clover.Gameplay
                 want = Mathf.Clamp(Mathf.Atan2(to.x, -to.z) * Mathf.Rad2Deg, -38f, 38f);
             }
             headYaw = Mathf.Lerp(headYaw, want, 1f - Mathf.Exp(-3f * deltaTime));
-            float breath = Mathf.Sin(Time.time * 1.3f);
+            float breath = Mathf.Sin(FormTime * 1.3f);
             head.position = Vector3.Lerp(head.position, HeadHome() + Vector3.up * (breath * 0.25f), 1f - Mathf.Exp(-4f * deltaTime));
             Turn(head, Quaternion.Euler(-28f + nod + breath * 2f, 180f - headYaw, 0f), deltaTime);
         }
@@ -1717,8 +1720,8 @@ namespace Clover.Gameplay
             boltsToCall = 0;
         }
 
-        // White for an instant when struck, a gold pulse for as long as it lies broken, and in its death a cold light
-        // that breaks out on one piece and then another, more of them the nearer the end.
+        // White for an instant when struck, a gold pulse for as long as it lies broken, pale blue while ice has it,
+        // and in its death a cold light that breaks out on one piece and then another, more of them the nearer the end.
         private void Paint()
         {
             bool pulse = IsStaggered && Mathf.Repeat(Time.unscaledTime * 4f, 1f) < 0.5f;
@@ -1748,7 +1751,8 @@ namespace Clover.Gameplay
                 }
                 return;
             }
-            bool lit = flash || pulse;
+            bool iced = Iced;
+            bool lit = flash || pulse || iced;
             if (!lit && !flashing) return;
             flashing = lit;
             foreach (var shown in renderers)
@@ -1760,7 +1764,7 @@ namespace Clover.Gameplay
                     continue;
                 }
                 block.Clear();
-                block.SetColor(Emission, flash ? new Color(1.5f, 1.5f, 1.5f) : new Color(0.8f, 0.55f, 0.12f));
+                block.SetColor(Emission, flash ? new Color(1.5f, 1.5f, 1.5f) : iced ? FrozenGlow : new Color(0.8f, 0.55f, 0.12f));
                 shown.SetPropertyBlock(block);
             }
         }
@@ -1772,7 +1776,7 @@ namespace Clover.Gameplay
             float eyes = 1f, scar = 1f;
             if (Furious && mode != Mode.Dying)
             {
-                float pulse = 0.85f + 0.3f * Mathf.Sin(Time.time * 7f);
+                float pulse = 0.85f + 0.3f * Mathf.Sin(FormTime * 7f);
                 eyes = FuryEyeGlow * pulse;
                 scar = FuryScarGlow * pulse;
             }
@@ -1789,7 +1793,7 @@ namespace Clover.Gameplay
             else if (mode == Mode.Dying)
             {
                 // Brighter than it ever was, unsteady, and out when the head is down.
-                float flicker = Mathf.Repeat(Time.time * 17f, 1f) < 0.5f ? 1f : 0.35f;
+                float flicker = Mathf.Repeat(FormTime * 17f, 1f) < 0.5f ? 1f : 0.35f;
                 eyes = elapsed < DeathHeadLandsAt ? DeathEyeGlow * flicker : 0.05f;
                 scar = elapsed < DeathHeadLandsAt ? FuryScarGlow * flicker : 0.05f;
             }

@@ -9,14 +9,29 @@ namespace Clover.Gameplay
     /// </summary>
     public class AfflictionSet
     {
-        /// <summary>Bosses cannot be frozen for long, and some things not at all.</summary>
+        /// <summary>
+        /// Bosses cannot be frozen for long, and some things not at all. False also means it cannot be lifted, rooted or
+        /// slowed; a godly form is false here and yet takes ice and holds for a moment (<see cref="GodHolds"/>).
+        /// </summary>
         public bool CanFreeze = true;
         public float FreezeScale = 1f;
         /// <summary>
-        /// True for a god in an ordinary enemy's body (Narukami, Khepharu as a man), which can be frozen for a breath and
-        /// so would read as an elite: every god ranks as a god (the owner's decision of 2026-11-19). Set by its body.
+        /// True for every god, in either body: the man (Narukami, Khepharu as a man), which can be frozen for a breath and
+        /// so would read as an elite, and the godly form. Every god ranks as a god (the owner's decision of 2026-11-19),
+        /// and ice and holds stop a god only by <see cref="GodHolds"/>. Set by its body.
         /// </summary>
         public bool IsGod;
+        /// <summary>True for a god's godly form, its second phase, which ice and holds stop for no more than a hitch.</summary>
+        public bool InGodlyForm;
+        /// <summary>Which of a god's bodies this is, for <see cref="GodHolds"/>; none for what is no god.</summary>
+        public GodPhase GodPhase => !IsGod ? GodPhase.None : InGodlyForm ? GodPhase.Godly : GodPhase.Man;
+        /// <summary>
+        /// True while its body will not be stopped at all (a godly form in its entrance, its broken balance or its
+        /// death): no freeze or hold takes, and Chill only builds. Set by the body each step.
+        /// </summary>
+        public bool HoldsRefused;
+        /// <summary>Seconds before a god whose freeze or hold has ended can be frozen or held again (<see cref="GodHolds.Guard"/>).</summary>
+        public float GuardLeft { get; private set; }
 
         public BurnStatus Burn { get; } = new BurnStatus();
         public bool IsFrozen { get; private set; }
@@ -71,7 +86,7 @@ namespace Clover.Gameplay
         /// <summary>How many blows have held it up in this lift.</summary>
         public int AirBlows { get; private set; }
         /// <summary>True when anything here runs on time, so its owner must tick it. A resting reaction counts: its rest must run out even after the afflictions have gone.</summary>
-        public bool Runs => Any || HeldLeft > 0f || AirLeft > 0f || restLongest > 0f || Conditions.Any;
+        public bool Runs => Any || HeldLeft > 0f || AirLeft > 0f || restLongest > 0f || GuardLeft > 0f || Conditions.Any;
 
         /// <summary>The timed states reactions and marks set on it (six slots), ticked and cleared with the rest.</summary>
         public EnemyConditions Conditions { get; } = new EnemyConditions();
@@ -222,6 +237,7 @@ namespace Clover.Gameplay
             BrittleLeft = 0f;
             BitThisTick = false;
             HeldLeft = 0f;
+            GuardLeft = 0f;
             AirLeft = 0f;
             airFor = 0f;
             AirBlows = 0;
@@ -280,10 +296,15 @@ namespace Clover.Gameplay
             // Flash Freeze: what is Soaked freezes sooner, and the water goes into the ice.
             bool flash = kind == AfflictionKind.Chill && Afflictions.FlashFreezeAt > 0 && stacks[(int)AfflictionKind.Soaked] > 0
                 && stacks[index] >= Afflictions.FlashFreezeAt && stacks[index] < deepest;
-            if ((full || flash) && spec.FreezesAtFull && CanFreeze)
+            var phase = GodPhase;
+            // A god kept from freezing by its guard lies at full Chill: the next cold that reaches it once the guard is
+            // over freezes it, though the Chill was full already.
+            bool freezes = phase == GodPhase.None ? (full || flash) && CanFreeze && !HoldsRefused
+                : (full || flash || stacks[index] >= deepest) && GodMayStop;
+            if (freezes && spec.FreezesAtFull)
             {
                 IsFrozen = true;
-                FrozenLeft = spec.FrozenSeconds * FreezeScale * Afflictions.FreezeSeconds;
+                FrozenLeft = GodHolds.Seconds(spec.FrozenSeconds * Afflictions.FreezeSeconds, phase, FreezeScale);
                 left[index] = Math.Max(left[index], FrozenLeft);
                 if (flash)
                 {
@@ -296,13 +317,33 @@ namespace Clover.Gameplay
 
         /// <summary>
         /// Holds it still for a time, as ice does but without the ice: what resists being frozen resists this the same
-        /// way (a shorter time for elites and gods, none at all for what cannot be frozen). False when it did not take.
+        /// way (a shorter time for elites, none at all for what cannot be frozen). A god takes it by
+        /// <see cref="GodHolds"/>: a moment, only when nothing already stops it and its guard is over, and never made
+        /// longer while it lasts. False when it did not take.
         /// </summary>
         public bool Hold(float seconds)
         {
-            if (!CanFreeze || seconds <= 0f) return false;
-            HeldLeft = Math.Max(HeldLeft, seconds * FreezeScale);
+            if (seconds <= 0f) return false;
+            var phase = GodPhase;
+            if (phase == GodPhase.None)
+            {
+                if (!CanFreeze || HoldsRefused) return false;
+                HeldLeft = Math.Max(HeldLeft, seconds * FreezeScale);
+                return HeldLeft > 0f;
+            }
+            if (!GodMayStop) return false;
+            HeldLeft = GodHolds.Seconds(seconds, phase);
             return HeldLeft > 0f;
+        }
+
+        // A god may be frozen or held only when nothing stops it now, its body allows it and its guard is over.
+        private bool GodMayStop => !HoldsRefused && GuardLeft <= 0f && !IsFrozen && HeldLeft <= 0f;
+
+        // A god's freeze or hold has ended: it cannot be stopped again for a while.
+        private void GuardGod()
+        {
+            var phase = GodPhase;
+            if (phase != GodPhase.None) GuardLeft = Math.Max(GuardLeft, GodHolds.Guard(phase));
         }
 
         /// <summary>How many more weapon blows an affliction that is spent by blows will last.</summary>
@@ -411,7 +452,13 @@ namespace Clover.Gameplay
             if (Burn.IsBurning && Conditions.KeepsKind(AfflictionKind.Burn)) Burn.Ignite(Burn.SecondsLeft + deltaTime);
             float damage = Burn.Tick(deltaTime) * strength[(int)AfflictionKind.Burn];
             if (!Burn.IsBurning) strength[(int)AfflictionKind.Burn] = 1f;
-            if (HeldLeft > 0f) HeldLeft = Math.Max(0f, HeldLeft - deltaTime);
+            // The guard is spent before a new one can begin on this step, so a guard always starts whole.
+            if (GuardLeft > 0f) GuardLeft = Math.Max(0f, GuardLeft - deltaTime);
+            if (HeldLeft > 0f)
+            {
+                HeldLeft = Math.Max(0f, HeldLeft - deltaTime);
+                if (HeldLeft <= 0f) GuardGod();
+            }
             if (IsFrozen)
             {
                 FrozenLeft -= deltaTime;
@@ -496,6 +543,7 @@ namespace Clover.Gameplay
             {
                 // Brittle: the ice is gone, by thaw or by breaking, and what it held is weaker for a while.
                 if (IsFrozen && Afflictions.BrittleSeconds > 0f) BrittleLeft = Afflictions.BrittleSeconds;
+                if (IsFrozen) GuardGod();
                 IsFrozen = false;
                 FrozenLeft = 0f;
             }

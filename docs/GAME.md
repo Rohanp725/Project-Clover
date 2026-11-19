@@ -1235,7 +1235,21 @@ of what was decided and when.
   `BaseSpellCost`).
 - **Decided (user, 2026-11-19)**: every god ranks as a god for the reactions' numbers, Narukami and Khepharu as a man
   included, though they fight in bodies ice holds for a breath (`EnemyKind.IsGod`, `AfflictionSet.IsGod`). Holds,
-  roots and freezes still go by the body (an elite's share); no god is ever knocked flat.
+  roots and freezes still go by the body (an elite's share); no god is ever knocked flat. (Freezes and holds on gods
+  were given their own rule the same day, next; roots, slows and lifts still go by the body.)
+- **Decided (user, 2026-11-19)**: "gods should have a moment of holds and freezes, but only momentary to fit their
+  godly idea. Maybe phase 1 has longer holds and freezes and the big setpieces phase 2 has much less stun." As built
+  (`GodHolds`, every number a named field there): the man (phase 1) is frozen or held for 0.3 of the plain time (an
+  elite's is 0.4), never more than 1 s, so a full Chill's 2.5 s freeze is 0.75 s; the godly form (phase 2: the storm
+  dragon, the Sun-Bearer) can now be frozen and held too, for 0.12 of the plain time and never more than 0.4 s (a
+  freeze 0.3 s), a visible hitch and not a stun. While it is stopped the form's own clock stands still: its attack's
+  timers and telegraph, its turning and moving and its sway wait and then carry on where they were, nothing cancelled
+  or skipped; what it has already set loose (marked falls, orbs, the storm, the hot floor, the loosed sun) runs on.
+  Its body glows a frozen enemy's pale blue and the frozen Chill's crystals burst at the piece last struck. It is not
+  stopped during its entrance, its broken balance, its death, or the Sun-Bearer's exposed fall. After a freeze or a
+  hold ends, a god cannot be frozen or held again for 3 s (the man) or 5 s (the godly form); a hold is never made
+  longer while it lasts. Chill still builds under that guard, and the next cold after it freezes a Chill that lay
+  full. A frozen godly form still ranks as a god, and is still never lifted, rooted, slowed or knocked flat.
 
 The user's direction: the element is as strong a part of the game as close combat, so fights use both kinds of
 technique; and there is a weapon tree that specialises and upgrades the weapon, with health, stamina and the like.

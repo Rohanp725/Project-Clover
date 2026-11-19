@@ -167,6 +167,8 @@ namespace Clover.Gameplay
         public override bool HasRisen => mode != Mode.Hidden;
         // From the roar of its entrance: that is when its name and its bar are shown.
         public override bool InFight => mode != Mode.Hidden && (mode != Mode.Entering || roared) && mode != Mode.Dead && mode != Mode.Dying;
+        // Not stopped in the times its clock already runs plain: the end of its entrance, and lying exposed and stunned.
+        protected override bool MayBeStopped => base.MayBeStopped && mode != Mode.Entering && mode != Mode.Exposed;
         public override string Doing => mode == Mode.Roll && rollsInAll > 1 ? "Furrows" : mode == Mode.Change ? (toFalcon ? "Rising" : "Setting") : ModeNames[(int)mode];
         /// <summary>True once the mark of what it is doing has stopped following the player: from then it lands where it lies.</summary>
         public bool Locked { get; private set; }
@@ -956,7 +958,9 @@ namespace Clover.Gameplay
         {
             if (mode == Mode.Hidden || mode == Mode.Dead) return;
             FrameTheFight();
-            float deltaTime = Time.deltaTime * WorldClock.EnemyScale;
+            float worldSeconds = Time.deltaTime * WorldClock.EnemyScale;
+            // Ice or a hold stops its own clock for a moment: all its body does waits, and then goes on where it was.
+            float deltaTime = OwnSeconds(worldSeconds);
             bool plain = mode == Mode.Staggered || mode == Mode.Dying || mode == Mode.Entering || mode == Mode.Exposed;
             elapsed += deltaTime * (plain ? 1f : Pace);
             sinceZenith += deltaTime;
@@ -967,7 +971,7 @@ namespace Clover.Gameplay
             if (target != null && !falcon && mode == Mode.Idle)
                 nearFor = (PlayerOnFloor - OnFloor(at)).sqrMagnitude <= RamReach * RamReach ? nearFor + deltaTime : 0f;
             if (Afflictions.Runs && mode != Mode.Entering && mode != Mode.Dying)
-                Health.Damage(Mathf.Min(Afflictions.Tick(deltaTime), Mathf.Max(0f, Health.Current - 1f)));
+                Health.Damage(Mathf.Min(Afflictions.Tick(worldSeconds), Mathf.Max(0f, Health.Current - 1f)));
             switch (mode)
             {
                 case Mode.Entering: AdvanceEntering(deltaTime); break;
@@ -994,11 +998,13 @@ namespace Clover.Gameplay
                 case Mode.Kick: AdvanceKick(deltaTime); break;
             }
             if (mode == Mode.Dead || mode == Mode.Hidden) return;
-            AdvanceFalls(deltaTime);
-            AdvanceHot(deltaTime);
-            AdvanceSun(deltaTime);
+            // What it has already set loose (the falling stones, the hot floor, the sun once out of its hands, the fire
+            // burning on its shell) goes on in the world's time; only the shell heating under a camper waits with it.
+            AdvanceFalls(worldSeconds);
+            AdvanceHot(worldSeconds);
+            AdvanceSun(worldSeconds);
             AdvanceCamp(deltaTime);
-            AdvanceShellFire(deltaTime);
+            AdvanceShellFire(worldSeconds);
             AdvanceAim();
             if (look != null)
             {
@@ -1196,7 +1202,7 @@ namespace Clover.Gameplay
             pitch = Mathf.MoveTowards(pitch, 0f, 60f * deltaTime);
             roll = Mathf.MoveTowards(roll, -14f * flyTurn, 40f * deltaTime);
             lift = Mathf.MoveTowards(lift, 1f, 2f * deltaTime);
-            flap = Mathf.Sin(Time.time * 3.2f) * 22f + 6f;
+            flap = Mathf.Sin(FormTime * 3.2f) * 22f + 6f;
         }
 
         private void Choose()
@@ -1511,7 +1517,7 @@ namespace Clover.Gameplay
             if (stuck < RamStuck)
             {
                 float pulling = Mathf.Clamp01(stuck / RamStuck);
-                float shudder = Mathf.Sin(Time.time * 41f) * (0.3f + pulling * pulling * 2f);
+                float shudder = Mathf.Sin(FormTime * 41f) * (0.3f + pulling * pulling * 2f);
                 pitch = 15f + shudder * 1.5f;
                 roll = shudder * 2f;
                 return;
@@ -1539,7 +1545,7 @@ namespace Clover.Gameplay
         private void AdvanceSparks(float deltaTime)
         {
             // The wing cases lifted and shaken.
-            float shake = Mathf.Sin(Time.time * 38f);
+            float shake = Mathf.Sin(FormTime * 38f);
             lift = Mathf.MoveTowards(lift, 0.55f + shake * 0.06f, 4f * deltaTime);
             roll = shake * 1.5f;
             Turn(PlayerOnFloor - OnFloor(at), 60f, deltaTime);
@@ -1685,7 +1691,7 @@ namespace Clover.Gameplay
                 Fly(Polar(flyAngle, FlightRadius, FlightHeight), 16f, deltaTime, false);
                 pitch = Mathf.Lerp(-42f, 0f, up);
                 lift = Mathf.MoveTowards(lift, 1f, 3f * deltaTime);
-                flap = Mathf.Sin(Time.time * 9f) * 34f;
+                flap = Mathf.Sin(FormTime * 9f) * 34f;
                 if (up < 1f) return;
                 sunState = SunState.Held;
                 if (look != null) look.SunTrail(false);
@@ -1696,7 +1702,7 @@ namespace Clover.Gameplay
             if (step == 0)
             {
                 bool there = Fly(landAt + Vector3.up * 1.4f, 15f, deltaTime);
-                flap = Mathf.Sin(Time.time * 7f) * 30f + 10f;
+                flap = Mathf.Sin(FormTime * 7f) * 30f + 10f;
                 pitch = Mathf.MoveTowards(pitch, -18f, 60f * deltaTime);
                 roll = Mathf.MoveTowards(roll, 0f, 60f * deltaTime);
                 if (!there && elapsed < 3f) return;
@@ -1754,7 +1760,7 @@ namespace Clover.Gameplay
                 Turn(-markPoint, 200f, deltaTime);
                 roll = Mathf.MoveTowards(roll, 0f, 80f * deltaTime);
                 pitch = Mathf.MoveTowards(pitch, 30f, 80f * deltaTime);
-                flap = Mathf.Lerp(Mathf.Sin(Time.time * 8f) * 30f, 55f, Mathf.Clamp01((elapsed - stoopFollow) / StoopHold));
+                flap = Mathf.Lerp(Mathf.Sin(FormTime * 8f) * 30f, 55f, Mathf.Clamp01((elapsed - stoopFollow) / StoopHold));
                 circles[0].Show(markPoint, Quaternion.identity, elapsed / tell, RedMarker, false, StoopRadius);
                 MarkAt = markPoint;
                 moveFrom = at;
@@ -1805,7 +1811,7 @@ namespace Clover.Gameplay
             }
             // Up again.
             SetOpen(false, false);
-            flap = Mathf.Sin(Time.time * 9f) * 34f;
+            flap = Mathf.Sin(FormTime * 9f) * 34f;
             if (at.y < FlightHeight - 3f && stood < StoopStands + 1.2f)
             {
                 Fly(new Vector3(at.x, FlightHeight, at.z), 12f, deltaTime, false);
@@ -1857,7 +1863,7 @@ namespace Clover.Gameplay
                 Turn(laneAlong, 400f, deltaTime);
                 pitch = Mathf.MoveTowards(pitch, 8f, 60f * deltaTime);
                 roll = Mathf.MoveTowards(roll, lean, 120f * deltaTime);
-                flap = Mathf.Sin(Time.time * 8f) * 26f + 10f;
+                flap = Mathf.Sin(FormTime * 8f) * 26f + 10f;
                 lanes[0].Show(laneFrom, laneFacing, elapsed / PassShown, RedMarker, true, PassWidth, laneLength / (LaneUnit * PassWidth));
                 MarkAt = laneFrom + laneAlong * (laneLength * 0.5f);
                 return;
@@ -1907,7 +1913,7 @@ namespace Clover.Gameplay
             float after = elapsed - PassShown - PassSeconds;
             Fly(new Vector3(at.x, FlightHeight, at.z) + laneAlong * 2f, 14f, deltaTime, false);
             roll = Mathf.MoveTowards(roll, 0f, 90f * deltaTime);
-            flap = Mathf.Sin(Time.time * 9f) * 30f;
+            flap = Mathf.Sin(FormTime * 9f) * 30f;
             if (passes > 1 && HotLanes < Chooser.MostHotLanes + 1)
             {
                 if (after < 0.9f) return;
@@ -1931,7 +1937,7 @@ namespace Clover.Gameplay
         {
             Circle(deltaTime);
             // It beats its wings over the court.
-            flap = Mathf.Sin(Time.time * 14f) * 42f;
+            flap = Mathf.Sin(FormTime * 14f) * 42f;
             if (step < 3 && elapsed >= 0.3f + step * 0.85f)
             {
                 // The middle, then a ring of six, then the middle again with the ring turned to its gaps.
@@ -1976,7 +1982,7 @@ namespace Clover.Gameplay
             Turn(Vector3.back, 200f, deltaTime);
             roll = Mathf.MoveTowards(roll, 0f, 60f * deltaTime);
             pitch = Mathf.MoveTowards(pitch, -30f, 60f * deltaTime);
-            flap = Mathf.Sin(Time.time * 5f) * 16f + 30f;
+            flap = Mathf.Sin(FormTime * 5f) * 16f + 30f;
             sunState = SunState.High;
             sunAt = Vector3.MoveTowards(sunAt, at + Vector3.up * 4.5f, 30f * deltaTime);
             var hand = Sunlight.Hand;
@@ -2009,7 +2015,7 @@ namespace Clover.Gameplay
                 }
                 // The whole floor scorched under its orange edge, fire standing up out of it and smoke over it: burning, not painted.
                 if (look != null) look.Blaze(1f);
-                float beat = (0.75f + 0.25f * Mathf.Sin(Time.time * 17f)) * 0.5f;
+                float beat = (0.75f + 0.25f * Mathf.Sin(FormTime * 17f)) * 0.5f;
                 floorMark.ShowBurnt(Vector3.zero, Quaternion.identity, HotMarker, BlazeFloor, false, 1f, 1f, beat * 2f);
                 // Heat shimmers off all the lit floor round the player, and none of it in the shadow.
                 if (Every(ref untilPuff, 0.025f, deltaTime))
@@ -2018,7 +2024,7 @@ namespace Clover.Gameplay
                     if (near.magnitude < FloorRadius - 0.5f && !Sunlight.InHand(near)) HeatShimmer.Play(near + Vector3.up * 0.1f, 2f);
                 }
                 ShowShadow(hand, 1f);
-                sunSize = 1.5f + 0.1f * Mathf.Sin(Time.time * 23f);
+                sunSize = 1.5f + 0.1f * Mathf.Sin(FormTime * 23f);
                 untilBlaze -= deltaTime;
                 if (untilBlaze <= 0f)
                 {
@@ -2275,7 +2281,7 @@ namespace Clover.Gameplay
             at.y = Mathf.MoveTowards(at.y, 0f, 20f * deltaTime);
             if (elapsed < SunOutAt)
             {
-                float shudder = Mathf.Sin(Time.time * 47f);
+                float shudder = Mathf.Sin(FormTime * 47f);
                 Vector3 toSun = OnFloor(sunAt) - OnFloor(at);
                 Turn(toSun, 120f, deltaTime);
                 Walk(OnFloor(at) + (toSun.sqrMagnitude > 0.01f ? toSun.normalized : Facing(yaw)), 1.2f, deltaTime, false);
@@ -2718,7 +2724,8 @@ namespace Clover.Gameplay
             return (eye + line * along - middle).sqrMagnitude < round * round;
         }
 
-        // White for an instant when struck, a gold pulse while it lies broken, and its fire out while it lies exposed.
+        // White for an instant when struck, a gold pulse while it lies broken, pale blue while ice has it, and its fire
+        // out while it lies exposed.
         private void Paint()
         {
             bool flash = flashLeft > 0f;
@@ -2729,7 +2736,8 @@ namespace Clover.Gameplay
             // and the whole shell burning where the rolled sun struck it.
             float camping = mode == Mode.ShellBurst ? 1f : campHeat;
             bool hot = camping > 0.01f || shellFireLeft > 0f;
-            bool lit = flash || pulse || dark || hot;
+            bool iced = Iced;
+            bool lit = flash || pulse || dark || hot || iced;
             if (!lit && !flashing) return;
             flashing = lit;
             Vector3 towardPlayer = target != null ? OnFloor(target.position - at) : Vector3.zero;
@@ -2743,7 +2751,7 @@ namespace Clover.Gameplay
                     shown.SetPropertyBlock(null);
                     continue;
                 }
-                Color glow = flash ? new Color(1.5f, 1.5f, 1.5f) : pulse ? new Color(0.8f, 0.55f, 0.12f) : Color.black;
+                Color glow = flash ? new Color(1.5f, 1.5f, 1.5f) : pulse ? new Color(0.8f, 0.55f, 0.12f) : iced ? FrozenGlow : Color.black;
                 if (!flash && hot)
                 {
                     // Nearer the side the player stands on, hotter; a burning shell glows all over.

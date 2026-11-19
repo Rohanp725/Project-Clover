@@ -303,7 +303,7 @@ namespace Clover.Gameplay
                 AimFlares();
                 return;
             }
-            sunSize = 1.2f + 0.05f * Mathf.Sin(Time.time * 19f);
+            sunSize = 1.2f + 0.05f * Mathf.Sin(FormTime * 19f);
             pitch = Mathf.MoveTowards(pitch, 0f, 30f * deltaTime);
             Locked = true;
             Vector3 top = sunAt + Vector3.up * 1.6f;
@@ -450,7 +450,7 @@ namespace Clover.Gameplay
                 AimGust(60f);
                 return;
             }
-            flap = Mathf.Sin(Time.time * 9f) * 30f;
+            flap = Mathf.Sin(FormTime * 9f) * 30f;
             if (gustFront < gustLength + 2f + GustSpeed * 0.35f) return;
             EndAttack();
         }
@@ -476,7 +476,7 @@ namespace Clover.Gameplay
                 Turn(-markPoint, 200f, deltaTime);
                 pitch = Mathf.MoveTowards(pitch, 24f, 80f * deltaTime);
                 roll = Mathf.MoveTowards(roll, 0f, 80f * deltaTime);
-                flap = Mathf.Lerp(Mathf.Sin(Time.time * 8f) * 30f, 50f, Mathf.Clamp01((elapsed - GrabFollow) / GrabHold));
+                flap = Mathf.Lerp(Mathf.Sin(FormTime * 8f) * 30f, 50f, Mathf.Clamp01((elapsed - GrabFollow) / GrabHold));
                 circles[0].Show(markPoint, Quaternion.identity, elapsed / tell, RedMarker, false, GrabRadius);
                 MarkAt = markPoint;
                 moveFrom = at;
@@ -537,7 +537,7 @@ namespace Clover.Gameplay
                 float t = Mathf.Clamp01((elapsed - prepare) / GrabCarry);
                 float eased = t * t * (3f - 2f * t);
                 at = Vector3.Lerp(carryFrom, carryTo, eased);
-                flap = Mathf.Sin(Time.time * 11f) * 38f + 8f;
+                flap = Mathf.Sin(FormTime * 11f) * 38f + 8f;
                 pitch = Mathf.MoveTowards(pitch, -6f, 60f * deltaTime);
                 if (t < 1f && talons.IsHeld) return;
                 // Let go: at the top, or lower when they struggled free.
@@ -559,7 +559,7 @@ namespace Clover.Gameplay
             }
             // Missed and grounded: struggling to pull its talons out of the paving, open.
             float stuck = elapsed - prepare;
-            float shudder = Mathf.Sin(Time.time * 41f);
+            float shudder = Mathf.Sin(FormTime * 41f);
             roll = shudder * 2f;
             flap = Mathf.MoveTowards(flap, 12f, 120f * deltaTime);
             if (stuck < GrabMissed) return;
@@ -568,7 +568,7 @@ namespace Clover.Gameplay
             SetOpen(false, false);
             roll = 0f;
             Fly(new Vector3(at.x, FlightHeight, at.z), 12f, deltaTime, false);
-            flap = Mathf.Sin(Time.time * 9f) * 34f;
+            flap = Mathf.Sin(FormTime * 9f) * 34f;
             if (at.y < FlightHeight - 3f && stuck < GrabMissed + 1.4f) return;
             EndAttack();
         }
@@ -630,7 +630,7 @@ namespace Clover.Gameplay
             // It hangs over the north of the court, beating hard, and tears the sun apart in its talons.
             Fly(Polar(Mathf.Clamp(flyAngle, -80f, 80f), FlightRadius - 2f, FlightHeight - 1f), 14f, deltaTime, false);
             Turn(PlayerOnFloor - OnFloor(at), 200f, deltaTime);
-            flap = Mathf.Sin(Time.time * 13f) * 40f;
+            flap = Mathf.Sin(FormTime * 13f) * 40f;
             Locked = thrown > 0;
             if (thrown < pieces && elapsed >= 0.5f + thrown * SunfallEvery)
             {

@@ -247,7 +247,7 @@ namespace Clover.Gameplay
                 {
                     // Half out of the ground, its head open: the opening.
                     float hold = eruptions > 1 ? 0.75f : HalfOutSeconds;
-                    float shudder = Mathf.Sin(Time.time * 37f);
+                    float shudder = Mathf.Sin(FormTime * 37f);
                     roll = shudder * 1.5f;
                     if (elapsed - prepare < hold) return;
                     roll = 0f;
