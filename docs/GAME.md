@@ -307,6 +307,14 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
     preferred pass 2 for everything (2026-11-19)**: pass 2 is final, and pass 3 is kept only as `v3discarded_*` files.
   - The combos come after the elements. **Approved by the owner (2026-11-19)**: the elemental combos, the duo
     effects of pass 2 in `staging/blender/2026-11-18_vfx/v2_all_combos*.png`.
+- **Plain weapons (approved by the owner, 2026-11-19)**: every model in `staging/blender/2026-11-19_plainweapons/`
+  (`lineup.png`): the first real Katana with its scabbard; the land makes the plans name (Lightning and Wind's
+  katana in a salt-whitened scabbard and iron-ribbed war fan, Earth and Life's iron scythe and standing-stone sword,
+  Ice's yew longbow, Water's basalt chain sickle, Poison's bronze herb knives); second versions of the hammer, spear,
+  knives and chain sickle. Also decided: Metal's plain hammer gets an Aegean smith's make; the Ice longbow is a true
+  symmetric longbow, so each bow gets its own grip and nock points in code; scabbards and the war fan's closed state
+  are shown in the game (the draw comes out of the scabbard at the hip; the fan closes for strikes and opens for
+  sweeps), built with the Way's moves in Phase 5.
   - **In the game since 2026-11-19**: see "Elemental effects in the game (2026-11-19)" under Vertical slice. F8 in the
     playtest switches back to the old effects to compare; the switch is temporary.
 
