@@ -19,6 +19,8 @@ namespace Clover.Player.Forms
         /// <summary>Throws one piece of an affliction's look on a body standing at a point. <paramref name="beat"/> is any number that changes from call to call.</summary>
         public static void Show(AfflictionKind kind, int depth, bool frozen, Vector3 feet, int beat)
         {
+            // The approved effect art, unless the owner's switch has the old effects showing.
+            if (AfflictionArt.Show(kind, depth, frozen, feet, beat)) return;
             Color colour = Afflictions.Spec(kind).Colour;
             float turn = ElementSubstance.Hash(beat) * 360f;
             Vector3 round = FormRules.OnRing(0, 1, 0.42f, turn);

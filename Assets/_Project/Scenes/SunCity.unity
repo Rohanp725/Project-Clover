@@ -49264,6 +49264,7 @@ GameObject:
   - component: {fileID: 111105276}
   - component: {fileID: 111105275}
   - component: {fileID: 111105274}
+  - component: {fileID: 111105277}
   m_Layer: 0
   m_Name: Spell Works
   m_TagString: Untagged
@@ -49328,6 +49329,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &111105277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 111105273}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe92744434d04a14497d9cdbf70089bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.ElementArt
+  set: {fileID: 11400000, guid: 0d9e570f6c1e95b459527147aa1dbf9b, type: 2}
+  LabelSeconds: 2.5
 --- !u!1 &111163758
 GameObject:
   m_ObjectHideFlags: 0
@@ -181223,7 +181238,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 46
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -181737,7 +181752,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 79
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -627499,7 +627514,6 @@ MonoBehaviour:
   GlowWhenCasting: 9
   GlowWhenSurging: 2.6
   EmberInterval: 0.12
-  SpecialHoldSeconds: 0.3
 --- !u!114 &1083113563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -627536,6 +627550,8 @@ MonoBehaviour:
   StartingWeapon: Fists
   Mana:
     Maximum: 100
+    SettleShare: 0.5
+    SettleRate: 5
   AimRange: 4.5
   AimConeDegrees: 140
   FinisherHitStop: 0.16
@@ -627568,6 +627584,13 @@ MonoBehaviour:
   AfflictionSeconds: 1
   AfflictionPower: 1
   CounterStagger: 55
+  Blade:
+    Blows: 3
+    DamageShare: 1.2
+    Mode: 0
+  Chord:
+    ChordSeconds: 0.08
+  StrikeBufferTime: 0.25
   HeavyWeight: 2
   BindLeash: 7
   BoundStagger: 1.25
@@ -852829,7 +852852,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 46
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -966625,6 +966648,7 @@ MonoBehaviour:
   Sealed: {r: 0.5, g: 0.3, b: 0.36, a: 1}
   GodsGift: {r: 0.62, g: 0.52, b: 0.3, a: 1}
   Guide: {r: 0.55, g: 0.6, b: 0.85, a: 0.16}
+  NotBuiltColour: {r: 0.55, g: 0.55, b: 0.62, a: 0.55}
   OtherTrees: 0.4
   WideTrees: 0.85
   StepPixels: 84

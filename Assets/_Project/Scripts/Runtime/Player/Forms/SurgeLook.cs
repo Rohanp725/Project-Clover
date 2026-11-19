@@ -21,6 +21,8 @@ namespace Clover.Player.Forms
         {
             End(handles);
             if (element == null) return;
+            // The element art's surge, and for the elements whose built pieces it replaces, nothing else.
+            if (SurgeArt.Begin(element) && SurgeArt.ReplacesBuilt(element)) return;
             Color colour = element.Colour;
             for (int k = 0; k < Pieces && k < handles.Length; k++)
             {
@@ -45,6 +47,7 @@ namespace Clover.Player.Forms
         /// <summary>Hands the pieces back.</summary>
         public static void End(int[] handles)
         {
+            SurgeArt.End();
             for (int k = 0; k < handles.Length; k++)
             {
                 FormFx.Release(handles[k], 0.15f);
@@ -56,6 +59,7 @@ namespace Clover.Player.Forms
         public static void Place(ElementInfo element, int[] handles, Vector3 feet, float time)
         {
             if (element == null) return;
+            SurgeArt.Place(feet, time);
             for (int k = 0; k < Pieces && k < handles.Length; k++)
             {
                 if (handles[k] < 0) continue;

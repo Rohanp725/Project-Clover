@@ -14,6 +14,12 @@ namespace Clover.Player
         public static void Play(int pair, Vector3 at)
         {
             if (pair < 0 || pair >= AfflictionPairs.Count) return;
+            // Until the combos are approved, the element art shows the pair's two parents landing together.
+            if (Forms.ElementArt.Ready)
+            {
+                Forms.HitArt.Play(Forms.HitArt.ElementOf(AfflictionPairs.First(pair)), at + Vector3.up * 1.1f, Vector3.forward);
+                Forms.HitArt.Play(Forms.HitArt.ElementOf(AfflictionPairs.Second(pair)), at + Vector3.up * 1.15f, Vector3.back);
+            }
             Vfx.Play(VfxKind.TintPuff, at + Vector3.up * 1.3f, Vector3.up, 1.1f, Colour(pair));
         }
 

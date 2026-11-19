@@ -55,6 +55,7 @@ namespace Clover.Player
             Effect = ElementLook.HitEffect(Element),
             Tinted = ElementLook.Tints(Element),
             Tint = Colour,
+            Look = Element,
         };
 
         /// <summary>

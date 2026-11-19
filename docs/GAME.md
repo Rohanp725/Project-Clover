@@ -298,6 +298,8 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   - A third pass on Earth, Water's crest, Fire's hoods and Poison's Fever and Venom Flick was made. **The owner
     preferred pass 2 for everything (2026-11-19)**: pass 2 is final, and pass 3 is kept only as `v3discarded_*` files.
   - The combos come after the elements.
+  - **In the game since 2026-11-19**: see "Elemental effects in the game (2026-11-19)" under Vertical slice. F8 in the
+    playtest switches back to the old effects to compare; the switch is temporary.
 
 ## Sound
 
@@ -1468,6 +1470,56 @@ changed. The old playtest stays with its players until the first few phases of t
 - **Claude's defaults** (the owner may change any): a pair not built yet still rests but shows and does nothing; conditions that hold or slow take half on elites and nothing on what cannot be frozen; Live Iron's 0.3 s is one clock for all enemies and its 35% is of the blow before the struck one's own multipliers; Flashover's stagger is per Static stack; a forced reaction needs both afflictions present; the world's water (and the Proving Ground's afflicted row, laid as the world's) reacts with what the player lays; sight cut short stops the enemy rather than turning it about; the reaction's word is status text, so it is timed.
 - **Words**: `effects.md` (Reactions, and one entry for each of the six), `whats_new.md` (Combat Playtest 0.4, phase 3 begun); controls are unchanged, so `GUIDE.md` and the readme are too. Playtest Texts rebuilt: 40 effects, 63 marks' details, version 0.4.
 - **Verified** in the editor on 2026-11-19: the EditMode suite 557 of 557 (new: `EnemyConditionTests` 10, `ReactionCatalogueTests` 4, `ReactionHookupTests` 4); `ReactionProbe` 51 OK, 0 WRONG (each of the six reacts once, shows its name, rests and does its effect; a reaction's laying starts nothing; Flame Wave on a river-wet dummy is Steam); `ConditionProbe` 15 OK, 0 WRONG (a rooted soldier strikes in reach and does not move); `P2Probe` 43 (two checks now accept Flashover spending the Static they look for), `P1bProbe` 48, `ProvingGroundProbe` 39 and `SunCityProbe` 91, all OK with none WRONG; every run 0 console errors and 0 warnings. Frames `review/shots/current/p3_*.png`. Not yet played by the owner.
+
+### Elemental effects in the game (2026-11-19; the owner's approved second pass, brought in on the unattended run; Claude's defaults in the placing, not yet seen in play by the owner)
+
+- **Imported** (asset-intake, approved pass-2 files only; no `v3discarded_*`, no `v2old_*`, no `combo_*`): the eleven kits
+  `Art/VFX/<Element>/vfx_<element>_kit_v2.fbx`, fifteen sheets (`vfx_<element>_<thing>_flipbook.png`, the four second-pass
+  ones as `..._v2_flipbook.png`), and the source `Art/Source/vfx_elements_v2.blend` (a copy of `vfx_v2.blend`); 27 rows in
+  `ASSETS.csv`. `AssetImportRules` has a rule for `Art/VFX` (kits readable, materials kept for their names; sheets sRGB,
+  no mipmaps, clamped) and for the masks in `Generated/Vfx/Element` (linear).
+- **Built** by `Clover > Build > Element Art` (`ElementArtBuilder`) into `Generated/Vfx/Element/element_art.asset`
+  (`ElementArtSet`): 170 pieces. 116 solid or see-through pieces are baked in the game's axes, each Blender slot
+  painted in its band from `notes.md` (chrome and foam flagged). 54 flat pieces (char rings, rosettes, runes, stains
+  and pits, the sun-wheel, jali, dial, kolam, lotus, clang rings, meander, filings, drained discs, gas layers, Dark's
+  streaks, eclipse and bite, the fern) are rasterised into masks, one part per channel. There is also a flat body's
+  shadow. `Clover > Build > Element Art Into Scenes` put the art beside the spell works in the seven built scenes, and
+  `PlayerBuilder` adds it to any scene built from now on.
+- **Shaders** (URP, unlit):
+  - `Clover/Flipbook`: the 4x4 sheets, alpha cut hard, an HDR tint, the frame from a particle's sheet animation or
+    from `_Frame`.
+  - `Clover/Decal`: masked floor marks in the `Clover/Scorch` manner. Each mask part is printed in its own flat colour
+    with a pixel-wide hard edge. A mark can be drawn on as a sweep, outward, or along its length.
+  - `Clover/Spell` gained `_Bands4` (Ice and Light: shade, colour, pale, and a white glint only on top facets),
+    `_Chrome` (Metal's stripes, about 6 cm at the least) and `_Cull`. Each element has its own solid material
+    `m_element_solid_<element>` with its ink colour: Fire brown-red, Lightning indigo, Ice navy, Dark violet, Light
+    amber, and so on.
+- **The six moments**, through the existing pools (`FormFx` solids and marks, nothing made in play):
+  - `AfflictionArt`: on the body, from `EnemyBars`.
+  - `SpellArt` in `TapForm`: the eleven tap spells. Their built shapes stay in for the first pass's tongues, bolts,
+    crystals, vines and rocks. Added: the hoods, fern and leader, flattened grass, runes, the crest, runners, standing
+    stones, the xiphos and its sparks, the jali with thrown shadows, the travelling hole, and the terraced gas.
+  - `HitArt`: on every spell blow and charged blow, with a crowd drawn once.
+  - `BladeArt` via `BladeLook`: an edge piece, and the trail each swing leaves.
+  - `StrikeArt`: from `ElementSteel.Strike`.
+  - `SurgeArt` via `SurgeLook`: held round the player.
+  - The charged and infused cuts take each element's own band (Fire orange, Poison jade), never pushed into white.
+    Under the art, flame, stone and leaf no longer land with a white frame.
+  - `ReactionLook` stays a placeholder: it now also plays the pair's two parents' hits.
+  - Gameplay is unchanged: only calls that draw moved.
+- **The owner's switch (temporary)**: F8, in the playtest and in the editor, flips between the new effects and the old
+  ones. A line at the top of the screen says which are showing. Every play starts with the new effects.
+  `ElementArt.On` is the switch. Noted in the playtest readme.
+- **Claude's defaults**:
+  - Pieces are placed from their panels: a fixed yaw of 180 shows a piece as its panel did, since the look-dev
+    camera faced the other way. A piece drawn toward the enemy is turned from about 225 degrees.
+  - The first-pass kits (tongue, ember, shard and other single pieces) were not imported (pass-2 files only). The
+    code-built shapes stand in for them.
+  - See-through floor washes inside solid pieces (Wind's cleared strip, Water's wet sheen) are left out.
+  - Enemy recolours (drained, pallor, bleach), the inverted-hull hit frame, hit-stop, lights and particle sub-emitters
+    from the notes are not built.
+  - Other spell forms and worn spells still use `ElementLook`'s old puffs and sparks.
+- **Verified**: see the report of the run (EditMode suite, `FxProbe`, regressions, profiler).
 
 ## Credits (decided 2026-11-18)
 

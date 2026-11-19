@@ -22,7 +22,7 @@ namespace Clover.Player.Forms
         public static int MarksShown => instance != null ? instance.marksShown : 0;
 
         private const byte Free = 0, Held = 1, Auto = 2;
-        private const int Erupting = 0, Dropping = 1, Flying = 2, Shrinking = 3;
+        private const int Erupting = 0, Dropping = 1, Flying = 2, Shrinking = 3, Standing = 4;
 
         private struct Solid
         {
@@ -41,13 +41,20 @@ namespace Clover.Player.Forms
             public Color Colour;
             public bool Facing;
             public float Roll;
+            // The element art's marks: a drawn sheet played through, a mark drawn on by degrees, one that never fades.
+            public byte Extra;
+            public float Rate;
         }
+
+        private const byte Sheet = 1, Loops = 2, Reveals = 4, Holds = 8;
 
         private static readonly int ColourId = Shader.PropertyToID("_Color");
         private static readonly int HotId = Shader.PropertyToID("_Hot");
         private static readonly int InkId = Shader.PropertyToID("_OutlineWidth");
         private static readonly int SheenId = Shader.PropertyToID("_Sheen");
         private static readonly int ThinId = Shader.PropertyToID("_Thin");
+        private static readonly int FrameId = Shader.PropertyToID("_Frame");
+        private static readonly int RevealId = Shader.PropertyToID("_Reveal");
 
         private static FormFx instance;
 
@@ -60,6 +67,10 @@ namespace Clover.Player.Forms
         private Color[] solidColour;
         private float[] solidInk;
         private FormMesh[] solidShape;
+        // A piece of the element art in place of a built shape: its own mesh and material, its look left to the material.
+        private bool[] solidPiece;
+        private Mesh pendingMesh;
+        private Material pendingMaterial;
         private Mark[] flats;
         private Transform[] flatAt;
         private MeshFilter[] flatMesh;
@@ -96,6 +107,7 @@ namespace Clover.Player.Forms
             solidColour = new Color[SolidCount];
             solidInk = new float[SolidCount];
             solidShape = new FormMesh[SolidCount];
+            solidPiece = new bool[SolidCount];
             for (int i = 0; i < SolidCount; i++)
                 Make("Form Solid", solid, out solidAt[i], out solidMesh[i], out solidShown[i]);
 
@@ -176,10 +188,24 @@ namespace Clover.Player.Forms
                 solidsShown--;
             }
             nextSolid = (found + 1) % solids.Length;
-            // A plain piece in the held element's colour is made of that element's stuff.
-            mesh = ElementSubstance.Shape(mesh, ElementSubstance.Of(colour));
-            solidShape[found] = mesh;
-            solidMesh[found].sharedMesh = meshes[(int)mesh];
+            if (pendingMesh != null)
+            {
+                solidPiece[found] = true;
+                solidShape[found] = FormMesh.Slab;
+                solidMesh[found].sharedMesh = pendingMesh;
+                solidShown[found].sharedMaterial = pendingMaterial != null ? pendingMaterial : solid;
+                pendingMesh = null;
+                pendingMaterial = null;
+            }
+            else
+            {
+                // A plain piece in the held element's colour is made of that element's stuff.
+                mesh = ElementSubstance.Shape(mesh, ElementSubstance.Of(colour));
+                solidPiece[found] = false;
+                solidShape[found] = mesh;
+                solidMesh[found].sharedMesh = meshes[(int)mesh];
+                solidShown[found].sharedMaterial = solid;
+            }
             solidColour[found] = colour;
             solidInk[found] = ink;
             solids[found] = new Solid { State = Held, Rotation = Quaternion.identity, Scale = Vector3.one };
@@ -195,9 +221,23 @@ namespace Clover.Player.Forms
             block.SetColor(ColourId, solidColour[i]);
             block.SetFloat(HotId, hot);
             block.SetFloat(InkId, solidInk[i]);
-            block.SetFloat(SheenId, ElementSubstance.Sheen(solidShape[i], solidColour[i]));
-            block.SetFloat(ThinId, ElementSubstance.Thin(solidShape[i]));
+            // A piece of the element art keeps its material's sheen and thinness: its element decided them.
+            if (!solidPiece[i])
+            {
+                block.SetFloat(SheenId, ElementSubstance.Sheen(solidShape[i], solidColour[i]));
+                block.SetFloat(ThinId, ElementSubstance.Thin(solidShape[i]));
+            }
             solidShown[i].SetPropertyBlock(block);
+        }
+
+        // The white frame a thing lands with. The element art keeps it only for the cold hard stuff (a bolt, ice, steel,
+        // a ray): flame, stone, leaf and smoke never flash white, and the art's own pieces carry their bands throughout.
+        private bool Flashes(int i)
+        {
+            if (solidPiece[i]) return false;
+            if (!ElementArt.Ready) return true;
+            var shape = solidShape[i];
+            return shape == FormMesh.Bolt || shape == FormMesh.Crystal || shape == FormMesh.Shard || shape == FormMesh.Blade || shape == FormMesh.Sword || shape == FormMesh.Ray;
         }
 
         private void FreeSolid(int i)
@@ -210,6 +250,49 @@ namespace Clover.Player.Forms
 
         /// <summary>Takes a solid to be moved by the caller every frame. Returns its handle, or -1 when none can be had; every other call accepts -1 and does nothing.</summary>
         public static int Hold(FormMesh mesh, Color colour, float ink = 0.035f) => instance != null ? instance.TakeSolid(mesh, colour, ink) : -1;
+
+        // ---- Pieces of the element art: a mesh and a material of their own, held, erupting, falling, flying or standing.
+
+        private static bool Pending(Mesh mesh, Material material)
+        {
+            if (instance == null || mesh == null) return false;
+            instance.pendingMesh = mesh;
+            instance.pendingMaterial = material;
+            return true;
+        }
+
+        public static int HoldMesh(Mesh mesh, Material material, Color colour, float ink = 0.03f)
+        {
+            if (!Pending(mesh, material)) return -1;
+            int handle = instance.TakeSolid(FormMesh.Slab, colour, ink);
+            instance.pendingMesh = null;
+            return handle;
+        }
+
+        public static void EruptMesh(Mesh mesh, Material material, Vector3 at, Quaternion rotation, Vector3 scale, Color colour, float rise, float hold, float sink, float ink = 0.03f)
+        {
+            if (Pending(mesh, material)) Thrown(FormMesh.Slab, colour, ink, Erupting, at, at, rotation, scale, rise, hold, sink);
+            if (instance != null) instance.pendingMesh = null;
+        }
+
+        public static void DropMesh(Mesh mesh, Material material, Vector3 from, Vector3 to, Quaternion rotation, Vector3 scale, Color colour, float seconds, float stay, float sink, float ink = 0.03f)
+        {
+            if (Pending(mesh, material)) Thrown(FormMesh.Slab, colour, ink, Dropping, from, to, rotation, scale, seconds, stay, sink);
+            if (instance != null) instance.pendingMesh = null;
+        }
+
+        public static void FlyMesh(Mesh mesh, Material material, Vector3 from, Vector3 to, Quaternion rotation, Vector3 scale, Color colour, float seconds, float ink = 0.03f)
+        {
+            if (Pending(mesh, material)) Thrown(FormMesh.Slab, colour, ink, Flying, from, to, rotation, scale, seconds, 0f, 0.01f);
+            if (instance != null) instance.pendingMesh = null;
+        }
+
+        /// <summary>A piece standing where it is put, whole at once and gone at its end: a held frame of a drawn moment.</summary>
+        public static void StandMesh(Mesh mesh, Material material, Vector3 at, Quaternion rotation, Vector3 scale, Color colour, float seconds, float ink = 0.03f)
+        {
+            if (Pending(mesh, material)) Thrown(FormMesh.Slab, colour, ink, Standing, at, at, rotation, scale, seconds, 0f, 0.01f);
+            if (instance != null) instance.pendingMesh = null;
+        }
 
         public static void Place(int handle, Vector3 position, Quaternion rotation, Vector3 scale)
         {
@@ -292,7 +375,7 @@ namespace Clover.Player.Forms
                     at.SetPositionAndRotation(one.From, one.Rotation);
                     float wide = age < one.A + one.B ? 1f : Mathf.Lerp(1f, 0.5f, (age - one.A - one.B) / one.C);
                     at.localScale = new Vector3(one.Scale.x * wide, one.Scale.y * up, one.Scale.z * wide);
-                    Paint(i, age < one.A + 0.05f ? 1f : 0f);
+                    Paint(i, age < one.A + 0.05f && Flashes(i) ? 1f : 0f);
                     break;
                 }
                 case Dropping:
@@ -312,8 +395,15 @@ namespace Clover.Player.Forms
                         at.SetPositionAndRotation(one.To, one.Rotation);
                         float left = since < one.B ? 1f : Mathf.Max(0.02f, 1f - (since - one.B) / one.C);
                         at.localScale = one.Scale * left;
-                        Paint(i, since < 0.06f ? 1f : 0f);
+                        Paint(i, since < 0.06f && Flashes(i) ? 1f : 0f);
                     }
+                    break;
+                }
+                case Standing:
+                {
+                    if (age >= one.A) { FreeSolid(i); return; }
+                    at.SetPositionAndRotation(one.From, one.Rotation);
+                    at.localScale = one.Scale;
                     break;
                 }
                 case Flying:
@@ -344,9 +434,9 @@ namespace Clover.Player.Forms
 
         // ---- Marks.
 
-        private int TakeMark(FormMark kind, Color colour, bool onStrip)
+        private int TakeMark(FormMark kind, Color colour, bool onStrip, Material own = null)
         {
-            if ((int)kind >= marks.Length) return -1;
+            if (own == null && (int)kind >= marks.Length) return -1;
             int found = -1;
             for (int tried = 0; tried < flats.Length && found < 0; tried++)
             {
@@ -365,7 +455,7 @@ namespace Clover.Player.Forms
             }
             nextFlat = (found + 1) % flats.Length;
             flatMesh[found].sharedMesh = onStrip ? strip : square;
-            flatShown[found].sharedMaterial = marks[(int)kind];
+            flatShown[found].sharedMaterial = own != null ? own : marks[(int)kind];
             flats[found] = new Mark { State = Held, Colour = colour };
             block.Clear();
             block.SetColor(ColourId, colour);
@@ -388,10 +478,10 @@ namespace Clover.Player.Forms
             marksShown--;
         }
 
-        private static int Thrown(FormMark kind, Vector3 at, Quaternion rotation, Vector3 scale, Vector3 endScale, Color colour, float seconds, float spin, bool facing, float roll, bool lift)
+        private static int Thrown(FormMark kind, Vector3 at, Quaternion rotation, Vector3 scale, Vector3 endScale, Color colour, float seconds, float spin, bool facing, float roll, bool lift, Material own = null)
         {
             if (instance == null || seconds <= 0f) return -1;
-            int i = instance.TakeMark(kind, colour, OnStrip(kind));
+            int i = instance.TakeMark(kind, colour, own == null && OnStrip(kind), own);
             if (i < 0) return -1;
             ref var one = ref instance.flats[i];
             one.State = Auto;
@@ -445,6 +535,53 @@ namespace Clover.Player.Forms
             // The strip's own length runs along its Z and its face looks along its Y.
             var rotation = Quaternion.LookRotation(across, -toward);
             Thrown(FormMark.Streak, through - across * (length * 0.5f), rotation, new Vector3(width, 1f, length), new Vector3(endWidth, 1f, length * 1.15f), colour, seconds, 0f, false, 0f, false);
+        }
+
+        // ---- Marks of the element art: masked decals on the ground and drawn sheets turned to the camera.
+
+        /// <summary>
+        /// Lays a mark of the element art's own material on the ground: <paramref name="scale"/> is its size along X and
+        /// Z, growing to <paramref name="endScale"/>. It may be drawn on over <paramref name="revealSeconds"/> (the
+        /// material says how) and may hold to its end instead of fading.
+        /// </summary>
+        public static void LayDecal(Material material, Vector3 at, Quaternion rotation, Vector3 scale, Vector3 endScale, Color colour, float seconds, float revealSeconds = 0f, bool fades = true, float spinDegrees = 0f)
+        {
+            if (material == null) return;
+            int i = Thrown(FormMark.Disc, at, rotation, scale, endScale, colour, seconds, spinDegrees, false, 0f, true, material);
+            if (i < 0) return;
+            ref var one = ref instance.flats[i];
+            one.Extra = (byte)((revealSeconds > 0f ? Reveals : 0) | (fades ? 0 : Holds));
+            one.Rate = revealSeconds;
+            instance.Paint(i, one.Colour, 0f, revealSeconds > 0f ? 0f : 1f);
+        }
+
+        /// <summary>
+        /// Hangs a drawn sheet (4x4 frames) at a point, turned to the camera, played through once over the seconds
+        /// given, or round and round at <paramref name="framesPerSecond"/> when it loops.
+        /// </summary>
+        public static void FaceSheet(Material material, Vector3 at, float size, Color colour, float seconds, bool loops = false, float framesPerSecond = 16f, float roll = 0f)
+        {
+            if (material == null) return;
+            int i = Thrown(FormMark.Disc, at, Quaternion.identity, new Vector3(size, 1f, size), new Vector3(size, 1f, size), colour, seconds, 0f, true, roll, false, material);
+            if (i < 0) return;
+            ref var one = ref instance.flats[i];
+            one.Extra = (byte)(Sheet | Holds | (loops ? Loops : 0));
+            one.Rate = framesPerSecond;
+            instance.Turn(i);
+            instance.Paint(i, one.Colour, 0f, 1f);
+        }
+
+        /// <summary>Takes a mark of the element art's own material, to be placed by the caller every frame until it is let go.</summary>
+        public static int HoldDecal(Material material, Color colour) => instance != null && material != null ? instance.TakeMark(FormMark.Disc, colour, false, material) : -1;
+
+        // The property block of a mark of the element art: its tint, which frame of its sheet, how much of it is drawn.
+        private void Paint(int i, Color colour, float frame, float reveal)
+        {
+            block.Clear();
+            block.SetColor(ColourId, colour);
+            if ((flats[i].Extra & Sheet) != 0) block.SetFloat(FrameId, frame);
+            if ((flats[i].Extra & Reveals) != 0) block.SetFloat(RevealId, reveal);
+            flatShown[i].SetPropertyBlock(block);
         }
 
         /// <summary>Takes a mark to be placed by the caller every frame until it is let go.</summary>
@@ -523,7 +660,15 @@ namespace Clover.Player.Forms
                 flatAt[i].localScale = Vector3.Lerp(one.Scale, one.EndScale, grown);
                 if (one.Spin != 0f) flatAt[i].Rotate(0f, one.Spin * deltaTime, 0f, Space.Self);
                 var colour = one.Colour;
-                colour.a *= t < 0.6f ? 1f : 1f - (t - 0.6f) / 0.4f;
+                if ((one.Extra & Holds) == 0) colour.a *= t < 0.6f ? 1f : 1f - (t - 0.6f) / 0.4f;
+                if (one.Extra != 0)
+                {
+                    // A drawn sheet steps through its sixteen frames; a mark drawn on by degrees is revealed.
+                    float frame = (one.Extra & Loops) != 0 ? Mathf.Floor(one.Age * one.Rate) % 16f : Mathf.Min(15f, Mathf.Floor(t * 16f));
+                    float reveal = (one.Extra & Reveals) != 0 ? Mathf.Clamp01(one.Age / Mathf.Max(0.01f, one.Rate)) : 1f;
+                    Paint(i, colour, frame, reveal);
+                    continue;
+                }
                 block.Clear();
                 block.SetColor(ColourId, colour);
                 flatShown[i].SetPropertyBlock(block);

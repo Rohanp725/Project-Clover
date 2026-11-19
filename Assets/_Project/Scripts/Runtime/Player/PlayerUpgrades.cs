@@ -1094,6 +1094,7 @@ namespace Clover.Player
             Effect = ElementLook.HitEffect(look),
             Tinted = ElementLook.Tints(look),
             Tint = look.Colour,
+            Look = look,
             // What a reaction's effect strikes with starts no reaction of its own.
             FromReaction = laying == LaySource.Reaction,
         };

@@ -29,6 +29,8 @@ namespace Clover.Player
         public VfxKind Effect;
         public bool Tinted;
         public Color Tint;
+        /// <summary>The element it is seen as when it lands, for the element art's hit (<see cref="Forms.HitArt"/>); null for none.</summary>
+        public ElementInfo Look;
         /// <summary>A reaction dealt it: what it lays starts no reaction (<see cref="Hit.FromReaction"/>).</summary>
         public bool FromReaction;
     }

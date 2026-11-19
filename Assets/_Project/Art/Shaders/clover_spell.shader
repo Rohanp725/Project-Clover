@@ -12,6 +12,9 @@ Shader "Clover/Spell"
         _OutlineColor ("Ink colour", Color) = (0.035, 0.02, 0.07, 1)
         _Sheen ("White on faces turned to the light", Range(0, 1)) = 0.42
         _Thin ("Thinness (share of it stippled away: smoke, air)", Range(0, 1)) = 0
+        _Bands4 ("Four bands: a white glint on the top facets (Ice, Light)", Range(0, 1)) = 0
+        _Chrome ("Chrome stripes on painted chrome (Metal)", Range(0, 1)) = 0
+        [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Faces drawn (the kits' single sheets want both)", Float) = 2
     }
 
     SubShader
@@ -22,7 +25,7 @@ Shader "Clover/Spell"
         {
             Name "Spell"
             Tags { "LightMode" = "UniversalForward" }
-            Cull Back
+            Cull [_Cull]
 
             HLSLPROGRAM
             #pragma vertex Vert
@@ -37,6 +40,8 @@ Shader "Clover/Spell"
                 half4 _OutlineColor;
                 half _Sheen;
                 half _Thin;
+                half _Bands4;
+                half _Chrome;
             CBUFFER_END
 
             // A fixed pattern over the screen, 0 to 1: thin stuff is drawn on only some of its pixels.
@@ -61,6 +66,7 @@ Shader "Clover/Spell"
                 half3 normalWS : TEXCOORD0;
                 half3 viewWS : TEXCOORD1;
                 half4 paint : TEXCOORD2;
+                float3 positionOS : TEXCOORD3;
             };
 
             Varyings Vert(Attributes input)
@@ -72,13 +78,15 @@ Shader "Clover/Spell"
                 output.normalWS = TransformObjectToWorldNormal(input.normalOS);
                 output.viewWS = GetWorldSpaceNormalizeViewDir(positionWS);
                 output.paint = input.color;
+                output.positionOS = input.positionOS.xyz;
                 return output;
             }
 
-            half4 Frag(Varyings input) : SV_Target
+            half4 Frag(Varyings input, bool front : SV_IsFrontFace) : SV_Target
             {
                 clip(Stipple(input.positionCS.xy) - _Thin);
-                half3 normal = normalize(input.normalWS);
+                // A single sheet seen from behind is lit as its other side.
+                half3 normal = normalize(input.normalWS) * (front ? 1.0 : -1.0);
                 // The form's own light: from above and a little toward the camera's left, wherever the scene's sun is.
                 half lit = dot(normal, normalize(half3(-0.35, 0.8, -0.45)));
                 half facing = saturate(dot(normal, normalize(input.viewWS)));
@@ -88,6 +96,20 @@ Shader "Clover/Spell"
                 half3 shown = lit > 0.72 ? core : lit > -0.05 ? colour : shade;
                 // A thin rim of the bright tone where a face turns away: it keeps the shape's edge inside the ink.
                 shown = facing < 0.2 ? lerp(shown, core, 0.5) : shown;
+                if (_Bands4 > 0.5)
+                {
+                    // Ice and Light: shade, colour, a pale facet toward the light, and white only on the facets that
+                    // face straight up and to the light, so the glint sits on the tops as the look-dev has it.
+                    half3 pale = lerp(colour, half3(1, 1, 1), 0.55);
+                    shown = lit > 0.72 && normal.y > 0.86 ? half3(1.6, 1.6, 1.6) : lit > 0.45 ? pale : lit > -0.05 ? colour : shade;
+                }
+                if (_Chrome > 0.5 && input.paint.a >= 0.5 && input.paint.a < 0.85)
+                {
+                    // Polished steel prints the world as hard stripes: near black, one white streak (never under 6 cm,
+                    // so it survives the 12 m camera), mid steel, dark steel; turned a little by the facet's light.
+                    half band = frac(dot(input.positionOS, float3(1.6, 1.0, 0.5)) + lit * 0.18);
+                    shown = band < 0.12 ? half3(1.9, 1.9, 1.95) : band < 0.42 ? half3(0.42, 0.44, 0.48) : band < 0.7 ? half3(0.12, 0.13, 0.15) : half3(0.03, 0.03, 0.035);
+                }
                 half3 foam = lit > -0.05 ? half3(0.96, 0.98, 1.0) : half3(0.6, 0.76, 0.92);
                 shown = input.paint.a < 0.5 ? foam : shown;
                 shown = lerp(shown, half3(2.3, 2.3, 2.3), _Hot);
@@ -115,6 +137,8 @@ Shader "Clover/Spell"
                 half4 _OutlineColor;
                 half _Sheen;
                 half _Thin;
+                half _Bands4;
+                half _Chrome;
             CBUFFER_END
 
             // A fixed pattern over the screen, 0 to 1: thin stuff is drawn on only some of its pixels.
@@ -173,6 +197,8 @@ Shader "Clover/Spell"
                 half4 _OutlineColor;
                 half _Sheen;
                 half _Thin;
+                half _Bands4;
+                half _Chrome;
             CBUFFER_END
 
             // A fixed pattern over the screen, 0 to 1: thin stuff is drawn on only some of its pixels.

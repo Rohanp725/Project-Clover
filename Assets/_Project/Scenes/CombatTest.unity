@@ -3713,6 +3713,7 @@ GameObject:
   - component: {fileID: 49057030}
   - component: {fileID: 49057029}
   - component: {fileID: 49057028}
+  - component: {fileID: 49057031}
   m_Layer: 0
   m_Name: Spell Works
   m_TagString: Untagged
@@ -3777,6 +3778,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &49057031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 49057027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe92744434d04a14497d9cdbf70089bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.ElementArt
+  set: {fileID: 11400000, guid: 0d9e570f6c1e95b459527147aa1dbf9b, type: 2}
+  LabelSeconds: 2.5
 --- !u!1 &49578008
 GameObject:
   m_ObjectHideFlags: 0
@@ -15596,6 +15611,7 @@ MonoBehaviour:
   Sealed: {r: 0.5, g: 0.3, b: 0.36, a: 1}
   GodsGift: {r: 0.62, g: 0.52, b: 0.3, a: 1}
   Guide: {r: 0.55, g: 0.6, b: 0.85, a: 0.16}
+  NotBuiltColour: {r: 0.55, g: 0.55, b: 0.62, a: 0.55}
   OtherTrees: 0.4
   WideTrees: 0.85
   StepPixels: 84
@@ -27193,6 +27209,8 @@ MonoBehaviour:
   OpenPrompt: 'Take up: Katana'
   SealedPrompt: Empty
   SealedWords: Not yet yours
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &363268565
 GameObject:
   m_ObjectHideFlags: 0
@@ -27990,7 +28008,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 46
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -58806,6 +58824,8 @@ MonoBehaviour:
   OpenPrompt: 'Take up: Twin Knives'
   SealedPrompt: Empty
   SealedWords: Not yet yours
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &914462352
 GameObject:
   m_ObjectHideFlags: 0
@@ -77815,7 +77835,6 @@ MonoBehaviour:
   GlowWhenCasting: 9
   GlowWhenSurging: 2.6
   EmberInterval: 0.12
-  SpecialHoldSeconds: 0.3
 --- !u!114 &1178787443
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77852,6 +77871,8 @@ MonoBehaviour:
   StartingWeapon: Katana
   Mana:
     Maximum: 100
+    SettleShare: 0.5
+    SettleRate: 5
   AimRange: 4.5
   AimConeDegrees: 140
   FinisherHitStop: 0.16
@@ -77884,6 +77905,13 @@ MonoBehaviour:
   AfflictionSeconds: 1
   AfflictionPower: 1
   CounterStagger: 55
+  Blade:
+    Blows: 3
+    DamageShare: 1.2
+    Mode: 0
+  Chord:
+    ChordSeconds: 0.08
+  StrikeBufferTime: 0.25
   HeavyWeight: 2
   BindLeash: 7
   BoundStagger: 1.25
@@ -91497,6 +91525,8 @@ MonoBehaviour:
   OpenPrompt: 'Take up: Great Bow'
   SealedPrompt: Empty
   SealedWords: Not yet yours
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1406372796
 GameObject:
   m_ObjectHideFlags: 0
@@ -101136,6 +101166,8 @@ MonoBehaviour:
   OpenPrompt: 'Take up: Great Hammer'
   SealedPrompt: Empty
   SealedWords: Not yet yours
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1659155004
 GameObject:
   m_ObjectHideFlags: 0
@@ -101270,6 +101302,8 @@ MonoBehaviour:
   OpenPrompt: 'Take up: Fists'
   SealedPrompt: Empty
   SealedWords: Not yet yours
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1661419914
 GameObject:
   m_ObjectHideFlags: 0
@@ -104649,6 +104683,8 @@ MonoBehaviour:
   OpenPrompt: 'Take up: Armament'
   SealedPrompt: Empty
   SealedWords: Not yet yours
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1694842587
 GameObject:
   m_ObjectHideFlags: 0
@@ -113965,6 +114001,8 @@ MonoBehaviour:
   OpenPrompt: 'Take up: Scythe'
   SealedPrompt: Empty
   SealedWords: Not yet yours
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1816337728
 GameObject:
   m_ObjectHideFlags: 0
@@ -115609,6 +115647,8 @@ MonoBehaviour:
   OpenPrompt: 'Take up: Great Spear'
   SealedPrompt: Empty
   SealedWords: Not yet yours
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1865986145
 GameObject:
   m_ObjectHideFlags: 0
@@ -115667,6 +115707,8 @@ MonoBehaviour:
   OpenPrompt: 'Take up: Massive Sword'
   SealedPrompt: Empty
   SealedWords: Not yet yours
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1869774548
 GameObject:
   m_ObjectHideFlags: 0
@@ -127962,6 +128004,8 @@ MonoBehaviour:
   OpenPrompt: 'Take up: Chain Sickle'
   SealedPrompt: Empty
   SealedWords: Not yet yours
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &2084434942
 GameObject:
   m_ObjectHideFlags: 0

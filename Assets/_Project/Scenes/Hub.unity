@@ -4446,6 +4446,8 @@ MonoBehaviour:
   OpenPrompt: Carry Metal
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &34388360
 GameObject:
   m_ObjectHideFlags: 0
@@ -8533,6 +8535,7 @@ GameObject:
   - component: {fileID: 83411957}
   - component: {fileID: 83411956}
   - component: {fileID: 83411955}
+  - component: {fileID: 83411958}
   m_Layer: 0
   m_Name: Spell Works
   m_TagString: Untagged
@@ -8597,6 +8600,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &83411958
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 83411954}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe92744434d04a14497d9cdbf70089bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Forms.ElementArt
+  set: {fileID: 11400000, guid: 0d9e570f6c1e95b459527147aa1dbf9b, type: 2}
+  LabelSeconds: 2.5
 --- !u!1 &84603857
 GameObject:
   m_ObjectHideFlags: 0
@@ -10136,7 +10153,6 @@ MonoBehaviour:
   GlowWhenCasting: 9
   GlowWhenSurging: 2.6
   EmberInterval: 0.12
-  SpecialHoldSeconds: 0.3
 --- !u!114 &110246401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10173,6 +10189,8 @@ MonoBehaviour:
   StartingWeapon: Fists
   Mana:
     Maximum: 100
+    SettleShare: 0.5
+    SettleRate: 5
   AimRange: 4.5
   AimConeDegrees: 140
   FinisherHitStop: 0.16
@@ -10205,6 +10223,13 @@ MonoBehaviour:
   AfflictionSeconds: 1
   AfflictionPower: 1
   CounterStagger: 55
+  Blade:
+    Blows: 3
+    DamageShare: 1.2
+    Mode: 0
+  Chord:
+    ChordSeconds: 0.08
+  StrikeBufferTime: 0.25
   HeavyWeight: 2
   BindLeash: 7
   BoundStagger: 1.25
@@ -11950,7 +11975,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 46
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -23985,6 +24010,8 @@ MonoBehaviour:
   OpenPrompt: Carry Earth
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &207284627
 GameObject:
   m_ObjectHideFlags: 0
@@ -30672,6 +30699,8 @@ MonoBehaviour:
   OpenPrompt: Take up the Great Hammer
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &313569989
 GameObject:
   m_ObjectHideFlags: 0
@@ -33811,6 +33840,8 @@ MonoBehaviour:
   OpenPrompt: Carry Water
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &331138635
 GameObject:
   m_ObjectHideFlags: 0
@@ -41792,6 +41823,8 @@ MonoBehaviour:
   OpenPrompt: Take up the Great Spear
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &408455199
 GameObject:
   m_ObjectHideFlags: 0
@@ -41977,6 +42010,8 @@ MonoBehaviour:
   OpenPrompt: Carry Lightning
   SealedPrompt: A cold brazier
   SealedWords: Take it from its god first
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &419399568
 GameObject:
   m_ObjectHideFlags: 0
@@ -42904,6 +42939,7 @@ MonoBehaviour:
   Sealed: {r: 0.5, g: 0.3, b: 0.36, a: 1}
   GodsGift: {r: 0.62, g: 0.52, b: 0.3, a: 1}
   Guide: {r: 0.55, g: 0.6, b: 0.85, a: 0.16}
+  NotBuiltColour: {r: 0.55, g: 0.55, b: 0.62, a: 0.55}
   OtherTrees: 0.4
   WideTrees: 0.85
   StepPixels: 84
@@ -47136,6 +47172,8 @@ MonoBehaviour:
   OpenPrompt: Take up the Chain Sickle
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &476030429
 GameObject:
   m_ObjectHideFlags: 0
@@ -84585,6 +84623,8 @@ MonoBehaviour:
   OpenPrompt: Take up the Scythe
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &857066437
 GameObject:
   m_ObjectHideFlags: 0
@@ -84761,6 +84801,8 @@ MonoBehaviour:
   OpenPrompt: Take up the Massive Sword
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &859212654
 GameObject:
   m_ObjectHideFlags: 0
@@ -85386,7 +85428,7 @@ ParticleSystem:
           m_PostInfinity: 2
           m_RotationOrder: 4
       cycleCount: 1
-      repeatInterval: 0.0001
+      repeatInterval: 0.01
       probability: 1
   SizeModule:
     enabled: 0
@@ -95124,6 +95166,8 @@ MonoBehaviour:
   OpenPrompt: Carry Dark
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1076109167
 GameObject:
   m_ObjectHideFlags: 0
@@ -95976,6 +96020,8 @@ MonoBehaviour:
   OpenPrompt: Carry Life
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1095441857
 GameObject:
   m_ObjectHideFlags: 0
@@ -102481,6 +102527,8 @@ MonoBehaviour:
   OpenPrompt: Carry Ice
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1186065447
 GameObject:
   m_ObjectHideFlags: 0
@@ -121575,6 +121623,8 @@ MonoBehaviour:
   OpenPrompt: Carry Wind
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1374070711
 GameObject:
   m_ObjectHideFlags: 0
@@ -136942,6 +136992,8 @@ MonoBehaviour:
   OpenPrompt: Take up the Katana
   SealedPrompt: An empty stand
   SealedWords: Draw it from the stone first
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1562278747
 GameObject:
   m_ObjectHideFlags: 0
@@ -139884,6 +139936,8 @@ MonoBehaviour:
   OpenPrompt: Carry Fire
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1582268965
 GameObject:
   m_ObjectHideFlags: 0
@@ -141510,6 +141564,8 @@ MonoBehaviour:
   OpenPrompt: Fight with your hands
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1626727693
 GameObject:
   m_ObjectHideFlags: 0
@@ -141688,6 +141744,8 @@ MonoBehaviour:
   OpenPrompt: Carry Light
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1630437300
 GameObject:
   m_ObjectHideFlags: 0
@@ -154781,6 +154839,8 @@ MonoBehaviour:
   OpenPrompt: Take up the Great Bow
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &1863173691
 GameObject:
   m_ObjectHideFlags: 0
@@ -163039,6 +163099,8 @@ MonoBehaviour:
   OpenPrompt: Wear the Armament
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &2009683107
 GameObject:
   m_ObjectHideFlags: 0
@@ -166014,6 +166076,8 @@ MonoBehaviour:
   OpenPrompt: Take up the Twin Knives
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &2086803688
 GameObject:
   m_ObjectHideFlags: 0
@@ -166192,6 +166256,8 @@ MonoBehaviour:
   OpenPrompt: Carry Poison
   SealedPrompt: 
   SealedWords: 
+  SetsEitherAttunement: 0
+  AltarNote: 
 --- !u!1 &2092326387
 GameObject:
   m_ObjectHideFlags: 0

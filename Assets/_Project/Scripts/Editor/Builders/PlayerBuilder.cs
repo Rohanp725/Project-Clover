@@ -140,6 +140,8 @@ namespace Clover.EditorTools
             var works = new GameObject("Spell Works");
             works.AddComponent<Clover.Player.Forms.FormFx>().Configure(spellSolid, spellMarks);
             works.AddComponent<Clover.Player.Forms.SpellWorks>().Configure(built.Player.GetComponent<Afterimage>());
+            // The elements' approved effect art, drawn through the works' pools (Clover > Build > Element Art makes it).
+            works.AddComponent<Clover.Player.Forms.ElementArt>().Configure(ElementArtBuilder.Set());
             // A flask in the air, for the eye only; it waits unseen until one is thrown.
             var thrown = new GameObject("Thrown Flask");
             var flask = BuildKit.Group("Flask", thrown.transform);

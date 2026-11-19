@@ -35,6 +35,9 @@ namespace Clover.Player
         private Vector3 gripLocal, tipLocal;
         private bool hasBlade;
         private float untilShed, untilSmoke;
+        // The element art's piece on the edge (BladeArt), when this element has one and the new effects were on when taken.
+        private bool artEdge;
+        private float artLength = 1f;
 
         /// <summary>For probes: the element shown on the weapon (empty for none) and how many pieces are held.</summary>
         public string ShownElement => shown != null ? shown.Name : "";
@@ -48,7 +51,19 @@ namespace Clover.Player
             handLeft = WeaponRack.FindSocket(transform, WeaponRack.HandLeft);
         }
 
-        private void OnDisable() => Let();
+        private void OnEnable() => combat.Swung += Swung;
+
+        private void OnDisable()
+        {
+            combat.Swung -= Swung;
+            Let();
+        }
+
+        // Each swing of a charged blade leaves the element art's trail.
+        private void Swung(AttackStep step)
+        {
+            if (shown != null && taken > 0) BladeArt.Swing(shown, transform.position, transform.forward);
+        }
 
         private void LateUpdate()
         {
@@ -90,10 +105,24 @@ namespace Clover.Player
             shape = ShapeOf(element);
             Color colour = element.Name == Elements.Dark ? ElementSubstance.Shade(element.Colour) : element.Name == Elements.Ice ? ElementSubstance.Pale(element.Colour) : element.Colour;
             int count = Mathf.Clamp(Mathf.CeilToInt(Pieces * Mathf.Max(1, left) / (float)Mathf.Max(1, blows)) + 1, 2, MostPieces);
+            string edge = ElementArt.Ready ? BladeArt.EdgePiece(element.Index) : null;
+            artEdge = edge != null;
+            artLength = artEdge ? BladeArt.EdgeLength(element.Index) : 1f;
+            if (artEdge) count = Mathf.Min(count, 3);
             for (int i = 0; i < count; i++)
             {
-                held[i] = FormFx.Hold(shape, colour, 0.02f);
+                held[i] = artEdge ? ElementArt.Hold(ElementArt.Piece(edge)) : FormFx.Hold(shape, colour, 0.02f);
                 if (held[i] >= 0) taken = i + 1;
+            }
+            if (artEdge && taken == 0)
+            {
+                // The art's piece could not be had: the built shape stands in.
+                artEdge = false;
+                for (int i = 0; i < count; i++)
+                {
+                    held[i] = FormFx.Hold(shape, colour, 0.02f);
+                    if (held[i] >= 0) taken = i + 1;
+                }
             }
             // Embers and sparks start at once, so a charge is seen on the frame it lands.
             untilShed = 0f;
@@ -127,6 +156,12 @@ namespace Clover.Player
         private void Place(int handle, Vector3 at, Vector3 direction, float span, int index)
         {
             if (handle < 0) return;
+            if (artEdge)
+            {
+                // The element art's piece lies along its length of the edge.
+                FormFx.Place(handle, at, BladeArt.Along(direction, index), Vector3.one * Mathf.Clamp(span / artLength * 1.1f, 0.25f, 1.2f));
+                return;
+            }
             switch (shape)
             {
                 case FormMesh.Flame:
@@ -164,6 +199,8 @@ namespace Clover.Player
             untilSmoke -= Time.deltaTime;
             if (untilShed > 0f) return;
             untilShed = ShedEvery;
+            // The element art sheds nothing of light: only fire's embers and lightning's crackle stay.
+            if (ElementArt.Ready && artEdge) return;
             switch (shown.Name)
             {
                 case Elements.Fire:

@@ -20,12 +20,19 @@ namespace Clover.EditorTools
         public const string TexturesDir = ArtDir + "Textures/";
         public const string ModelsDir = ArtDir + "Models/";
         public const string CharactersDir = ModelsDir + "Characters/";
+        public const string VfxDir = ArtDir + "VFX/";
+        public const string VfxMasksDir = "Assets/_Project/Generated/Vfx/Element/";
         public const string AudioDir = "Assets/_Project/Audio/";
         public const int MaxTextureSize = 2048;
         public const int MaxUiTextureSize = 1024;
 
         private void OnPreprocessTexture()
         {
+            if (assetPath.StartsWith(VfxDir) || assetPath.StartsWith(VfxMasksDir))
+            {
+                PreprocessEffectTexture((TextureImporter)assetImporter);
+                return;
+            }
             if (!assetPath.StartsWith(TexturesDir)) return;
             var importer = (TextureImporter)assetImporter;
             string name = Path.GetFileNameWithoutExtension(assetPath);
@@ -54,6 +61,29 @@ namespace Clover.EditorTools
             if (importer.maxTextureSize > MaxTextureSize) importer.maxTextureSize = MaxTextureSize;
         }
 
+        /// <summary>
+        /// The elements' effect sheets (Art/VFX/<Element>/*_flipbook.png: 4x4 frames of hard cel bands with alpha) and the
+        /// floor-mark masks baked from the kits (Generated/Vfx/Element/*_mask.png). Both are seen small and must keep
+        /// their hard edges: no mipmaps (a blurred mip turns a band edge into a soft glow), bilinear, clamped so a frame
+        /// never bleeds into its neighbour. Sheets are sRGB colour; masks are linear data, one shape per channel.
+        /// </summary>
+        private void PreprocessEffectTexture(TextureImporter importer)
+        {
+            string name = Path.GetFileNameWithoutExtension(assetPath);
+            WarnName(name);
+            bool mask = name.ToLowerInvariant().EndsWith("_mask");
+            importer.textureType = TextureImporterType.Default;
+            importer.sRGBTexture = !mask;
+            importer.alphaSource = TextureImporterAlphaSource.FromInput;
+            importer.alphaIsTransparency = !mask;
+            importer.mipmapEnabled = false;
+            importer.wrapMode = TextureWrapMode.Clamp;
+            importer.filterMode = FilterMode.Bilinear;
+            importer.anisoLevel = 0;
+            importer.textureCompression = TextureImporterCompression.CompressedHQ;   // BC7 on PC keeps the alpha edges
+            if (importer.maxTextureSize > MaxTextureSize) importer.maxTextureSize = MaxTextureSize;
+        }
+
         private void OnPostprocessTexture(Texture2D texture)
         {
             if (!assetPath.StartsWith(TexturesDir)) return;
@@ -63,6 +93,29 @@ namespace Clover.EditorTools
 
         private void OnPreprocessModel()
         {
+            if (assetPath.StartsWith(VfxDir))
+            {
+                // The elements' effect kits: many small pieces in one file. They are read once by the element-art builder,
+                // which bakes normalised copies and floor masks from them, so they must be readable; they carry no rig,
+                // animation, camera or light, and their imported materials are kept only for their names.
+                var kit = (ModelImporter)assetImporter;
+                WarnName(Path.GetFileNameWithoutExtension(assetPath));
+                kit.globalScale = 1f;
+                kit.useFileUnits = true;
+                kit.importCameras = false;
+                kit.importLights = false;
+                kit.importAnimation = false;
+                kit.animationType = ModelImporterAnimationType.None;
+                kit.importBlendShapes = false;
+                kit.isReadable = true;
+                kit.meshCompression = ModelImporterMeshCompression.Off;
+                kit.weldVertices = true;
+                kit.importNormals = ModelImporterNormals.Import;
+                kit.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
+                kit.materialLocation = ModelImporterMaterialLocation.InPrefab;
+                kit.generateSecondaryUV = false;
+                return;
+            }
             if (!assetPath.StartsWith(ModelsDir)) return;
             var importer = (ModelImporter)assetImporter;
             WarnName(Path.GetFileNameWithoutExtension(assetPath));

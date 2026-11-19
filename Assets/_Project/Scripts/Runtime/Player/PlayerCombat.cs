@@ -123,6 +123,8 @@ namespace Clover.Player
         /// </summary>
         public event System.Action<AttackStep> BlowLanded;
         public event System.Action Finished;
+        /// <summary>A move was swung (struck or not): the charged blade's look draws its trail on it.</summary>
+        public event System.Action<AttackStep> Swung;
         private bool cutGiven;
 
         /// <summary>
@@ -872,7 +874,9 @@ namespace Clover.Player
         // What every spell's blow does once it has landed: its effect, what it earns, and word to the upgrades.
         private void Landed(in SpellBlow blow, IDamageable target, Collider other, Vector3 direction, bool wasAfflicted)
         {
-            if (blow.Tinted) Vfx.Play(blow.Effect, other.bounds.center, direction, 1f, blow.Tint);
+            // The element art's hit in place of the effect, unless the owner's switch has the old effects showing.
+            if (Clover.Player.Forms.HitArt.Play(blow.Look, other.bounds.center, direction)) { }
+            else if (blow.Tinted) Vfx.Play(blow.Effect, other.bounds.center, direction, 1f, blow.Tint);
             else Vfx.Play(blow.Effect, other.bounds.center, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
             if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
@@ -996,7 +1000,8 @@ namespace Clover.Player
             var outcome = target.TakeHit(Make(blow, target, direction, from));
             if (outcome == HitOutcome.Missed) return false;
             Vector3 at = victim.transform.position + Vector3.up * 1.1f;
-            if (blow.Tinted) Vfx.Play(blow.Effect, at, direction, 1f, blow.Tint);
+            if (Clover.Player.Forms.HitArt.Play(blow.Look, at, direction)) { }
+            else if (blow.Tinted) Vfx.Play(blow.Effect, at, direction, 1f, blow.Tint);
             else Vfx.Play(blow.Effect, at, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
             if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
@@ -1415,7 +1420,7 @@ namespace Clover.Player
                         {
                             Damage = 34f, Stagger = 45f, Heavy = true, Effect = held != null ? ElementLook.HitEffect(held) : VfxKind.Impact,
                             Affliction = held != null ? held.Affliction : AfflictionKind.None, Stacks = held != null ? 1 : 0,
-                            Tinted = held != null && ElementLook.Tints(held), Tint = colour,
+                            Tinted = held != null && ElementLook.Tints(held), Tint = colour, Look = held,
                         });
                     break;
                 case StepEffect.GroundSplit:
@@ -1595,6 +1600,8 @@ namespace Clover.Player
             // A charged move cuts in its element's colour too, so the three blows can be told from plain ones.
             var arcElement = infused ? infusedElement : moveCharged ? moveElement : null;
             Color arcColour = arcElement != null ? new Color(arcElement.Colour.r * 1.9f, arcElement.Colour.g * 1.9f, arcElement.Colour.b * 1.9f, 0.95f) : empowered ? empoweredColour : Weapon.ElementColoured ? new Color(EffectColour.r * 2f, EffectColour.g * 2f, EffectColour.b * 2f, 0.9f) : Weapon.SlashColour;
+            // The element art cuts in the element's own band, never pushed past white: Fire's stays flame, Poison's never highlighter.
+            if (arcElement != null && Clover.Player.Forms.ElementArt.Ready) arcColour = Clover.Player.Forms.BladeArt.ArcColour(arcElement.Index);
             if (fresh && arcs != null)
             {
                 if (step.Radius > 0f) Vfx.Play(VfxKind.TintRing, transform.position + transform.forward * step.Reach + Vector3.up * 0.15f, Vector3.up, step.Radius * 0.6f, arcColour);
@@ -1857,6 +1864,7 @@ namespace Clover.Player
             {
                 if (upgrades != null) upgrades.OnSwing(step, struck.Count);
                 Clover.Player.Forms.SpellWorks.Swing(step, transform.position, transform.forward);
+                Swung?.Invoke(step);
                 if (step.Binds > 0f && nearest != null) Bind(nearest, step.Binds);
                 if (pullSelfTo != null) pullSelfIn = 0.1f;
                 Thrown(step, finisher, finished);

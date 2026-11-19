@@ -72,7 +72,7 @@ namespace Clover.Player
             Vector3 at = target.transform.position;
             Vector3 forward = combat.transform.forward;
             // The element shows where the charge went in, whatever it adds.
-            ElementLook.Sparks(element, at + Vector3.up * 1.1f, forward, blow.Third ? 1.2f : 0.7f);
+            if (!HitArt.Play(element, at + Vector3.up * 1.1f, forward)) ElementLook.Sparks(element, at + Vector3.up * 1.1f, forward, blow.Third ? 1.2f : 0.7f);
             switch (element.Name)
             {
                 case Elements.Fire:
@@ -99,7 +99,7 @@ namespace Clover.Player
                 case Elements.Water:
                     // Each splashes everything within 1.5 m of its target for a fifth of the blow, and soaks it.
                     combat.StrikeArea(at, 1.5f, Blow(element, damage * 0.2f, 4f, 1));
-                    FormFx.Lay(FormMark.Ring, Ground(at), 1.5f, FormKit.Lit(element.Colour, 1.6f, 0.8f), 0.35f, 3f);
+                    if (!ElementArt.Ready) FormFx.Lay(FormMark.Ring, Ground(at), 1.5f, FormKit.Lit(element.Colour, 1.6f, 0.8f), 0.35f, 3f);
                     break;
                 case Elements.Life:
                     // NEEDS: the seed that stays and the sapling three seeds make. For now the third throws thorns round its target.
@@ -121,7 +121,7 @@ namespace Clover.Player
                     {
                         Vector3 from = combat.transform.position;
                         combat.StrikeLane(from, forward, 5f, 0.6f, Blow(element, 6f, 6f, 1));
-                        FormFx.Run(FormMark.Beam, Ground(from) + Vector3.up * 0.9f, forward, 5f, 0.5f, FormKit.Lit(element.Colour, 2.2f), 0.35f, 0.1f);
+                        if (!ElementArt.Ready) FormFx.Run(FormMark.Beam, Ground(from) + Vector3.up * 0.9f, forward, 5f, 0.5f, FormKit.Lit(element.Colour, 2.2f), 0.35f, 0.1f);
                     }
                     break;
                 case Elements.Dark:
@@ -129,7 +129,7 @@ namespace Clover.Player
                     if (blow.Third && target is IAfflictable cursed)
                     {
                         cursed.Afflictions.Lay(AfflictionKind.Cursed, 2, 0f, 1f, LaySource.Weapon, target);
-                        Vfx.Play(VfxKind.TintPuff, Ground(at) + Vector3.up * 0.3f, Vector3.down, 1.4f, ElementSubstance.Shade(element.Colour));
+                        if (!ElementArt.Ready) Vfx.Play(VfxKind.TintPuff, Ground(at) + Vector3.up * 0.3f, Vector3.down, 1.4f, ElementSubstance.Shade(element.Colour));
                     }
                     break;
                 case Elements.Poison:
@@ -171,12 +171,14 @@ namespace Clover.Player
         {
             if (combat == null || element == null) return;
             Color colour = element.Colour;
+            // The element art draws the strike once its blows are dealt (StrikeArt, below); the old pieces stay for the switch.
+            bool art = ElementArt.Ready;
             switch (element.Name)
             {
                 case Elements.Fire:
                     // Burning Edge: a sheet of flame along the arc and 3 m beyond, 2 Burn on all it reaches, the arc's ground burning 3 s.
                     Cover(combat, print, Blow(element, blowDamage * 0.25f, 8f, 2), 3f);
-                    Show(combat, element, print, 3f);
+                    if (!art) Show(combat, element, print, 3f);
                     Burn(print, 3f);
                     if (deep)
                     {
@@ -184,7 +186,7 @@ namespace Clover.Player
                         Vector3 at = first != null ? first.transform.position : print.Far;
                         combat.StrikeArea(at, 1.6f, new SpellBlow { Damage = 30f, Stagger = 30f, Affliction = AfflictionKind.Burn, Stacks = 1, Detonate = true, Heavy = true, Effect = VfxKind.Fire });
                         FormFx.Erupt(FormMesh.Flame, Ground(at), Quaternion.identity, new Vector3(1.4f, 4.2f, 1.4f), colour, 0.1f, 0.35f, 0.4f);
-                        Vfx.Play(VfxKind.Fire, at + Vector3.up * 1.4f, Vector3.up, 2.4f);
+                        if (!art) Vfx.Play(VfxKind.Fire, at + Vector3.up * 1.4f, Vector3.up, 2.4f);
                         Vfx.Play(VfxKind.Embers, at + Vector3.up * 2f, Vector3.up, 2.2f);
                         Vfx.Play(VfxKind.Smoke, at + Vector3.up * 3f, Vector3.up, 1.6f);
                     }
@@ -192,7 +194,7 @@ namespace Clover.Player
                 case Elements.Lightning:
                     // Flash Cut: the lunge was the carrier, bent; its end lays 2 Static on what it cut.
                     combat.StrikeLane(print.Origin, print.Forward, print.Reach, 0.9f, Blow(element, 0f, 6f, 2));
-                    FormFx.Run(FormMark.Streak, Ground(print.Origin) + Vector3.up * 1f, print.Forward, print.Reach, 0.35f, FormKit.Lit(colour, 3f), 0.3f, 0.05f);
+                    if (!art) FormFx.Run(FormMark.Streak, Ground(print.Origin) + Vector3.up * 1f, print.Forward, print.Reach, 0.35f, FormKit.Lit(colour, 3f), 0.3f, 0.05f);
                     LightningBolts.Strike(print.Far, 0.35f);
                     if (deep)
                     {
@@ -211,13 +213,13 @@ namespace Clover.Player
                 case Elements.Wind:
                     // Cutting Wind: a crescent 7 m along the arc, 60% of the blow, 2 Unsteady and a 1 m push.
                     Cover(combat, print, Blow(element, blowDamage * 0.6f, 10f, 2), 7f - print.Reach);
-                    Show(combat, element, print, 7f - print.Reach);
+                    if (!art) Show(combat, element, print, 7f - print.Reach);
                     PushStruck(combat, print.Forward, 1f);
                     if (deep && first != null)
                     {
                         // Whirl Cut: a small whirlwind that holds the first enemy it reaches in the air for 1 s.
                         combat.LiftArea(first.transform.position, 1f, 1f);
-                        Vfx.Play(VfxKind.TintPuff, first.transform.position + Vector3.up * 0.6f, Vector3.up, 2f, colour);
+                        if (!art) Vfx.Play(VfxKind.TintPuff, first.transform.position + Vector3.up * 0.6f, Vector3.up, 2f, colour);
                     }
                     break;
                 case Elements.Ice:
@@ -230,19 +232,19 @@ namespace Clover.Player
                         var one = struck[i];
                         Vector3 at = one.transform.position;
                         combat.HoldArea(at, 0.6f, 0.8f);
-                        FormFx.Erupt(FormMesh.Crystal, Ground(at), Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), new Vector3(0.7f, 2.4f, 0.7f), colour, 0.08f, 0.7f, 0.3f);
+                        if (!art) FormFx.Erupt(FormMesh.Crystal, Ground(at), Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), new Vector3(0.7f, 2.4f, 0.7f), colour, 0.08f, 0.7f, 0.3f);
                         // Ice Through: frozen at once when it already carries three Chill or more.
                         if (deep && one is IAfflictable cold && cold.Afflictions.Stacks(AfflictionKind.Chill) >= 3)
                             cold.Afflictions.Lay(AfflictionKind.Chill, Afflictions.Depth(AfflictionKind.Chill), 0f, 1f, LaySource.Weapon, one);
                     }
-                    Vfx.Play(VfxKind.TintPuff, Ground(print.Centre) + Vector3.up * 0.4f, Vector3.up, 1.4f, ElementSubstance.Pale(colour));
+                    if (!art) Vfx.Play(VfxKind.TintPuff, Ground(print.Centre) + Vector3.up * 0.4f, Vector3.up, 1.4f, ElementSubstance.Pale(colour));
                     // NEEDS: the next blow breaking the spike for 15 damage in 2 m.
                     break;
                 }
                 case Elements.Water:
                     // Lash: a whip of water twice the weapon's reach, 80% of the blow, Soaked, pulled 1.5 m in.
                     combat.StrikeLane(print.Origin, print.Forward, Mathf.Max(4f, print.Reach * 2f), 0.8f, Blow(element, blowDamage * 0.8f, 10f, 1));
-                    FormFx.Run(FormMark.Lane, Ground(print.Origin) + Vector3.up * 0.05f, print.Forward, Mathf.Max(4f, print.Reach * 2f), 0.7f, FormKit.Lit(colour, 1.8f, 0.8f), 0.4f, 0.2f);
+                    if (!art) FormFx.Run(FormMark.Lane, Ground(print.Origin) + Vector3.up * 0.05f, print.Forward, Mathf.Max(4f, print.Reach * 2f), 0.7f, FormKit.Lit(colour, 1.8f, 0.8f), 0.4f, 0.2f);
                     // Thrown on the Reef: the wave throws it 5 m away instead. NEEDS: the 30 damage on meeting a wall.
                     PushStruck(combat, print.Forward, deep ? 5f : -1.5f);
                     break;
@@ -254,7 +256,7 @@ namespace Clover.Player
                     for (int i = 0; i < count; i++)
                     {
                         Vector3 at = struck[i].transform.position;
-                        FormFx.Erupt(FormMesh.Vine, Ground(at), Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), new Vector3(0.6f, 1.6f, 0.6f), colour, 0.15f, 1.2f, 0.4f);
+                        if (!art) FormFx.Erupt(FormMesh.Vine, Ground(at), Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), new Vector3(0.6f, 1.6f, 0.6f), colour, 0.15f, 1.2f, 0.4f);
                         if (deep) combat.HoldArea(at, 0.6f, 1f);
                     }
                     // NEEDS: the cutting counting as something grown, and the thorn thrown to a neighbour on each blow.
@@ -280,8 +282,11 @@ namespace Clover.Player
                     // Struck Plate: a sharp ripple 3 m from the one struck, 10 damage and a notch. Red Iron: a cut half again as hard, two notches.
                     Vector3 at = first != null ? first.transform.position : print.Far;
                     combat.StrikeArea(at, 3f, Blow(element, 10f, 12f, 1));
-                    FormFx.Lay(FormMark.Ring, Ground(at), 0.5f, FormKit.Lit(colour, 2.4f), 0.3f, 6f);
-                    Vfx.Play(VfxKind.GuardSpark, at + Vector3.up * 1.1f, print.Forward, 1.4f);
+                    if (!art)
+                    {
+                        FormFx.Lay(FormMark.Ring, Ground(at), 0.5f, FormKit.Lit(colour, 2.4f), 0.3f, 6f);
+                        Vfx.Play(VfxKind.GuardSpark, at + Vector3.up * 1.1f, print.Forward, 1.4f);
+                    }
                     if (deep && first != null) combat.StrikeOne(first, Blow(element, blowDamage * 0.5f, 20f, 2, true), print.Origin);
                     break;
                 }
@@ -289,7 +294,7 @@ namespace Clover.Player
                 {
                     // Ray Along the Edge: a ray follows the swing 6 m out, 10 damage, 15 stagger, Marks.
                     combat.StrikeLane(print.Origin, print.Forward, 6f, 0.7f, Blow(element, 10f, 15f, 1));
-                    FormFx.Run(FormMark.Beam, Ground(print.Origin) + Vector3.up * 0.9f, print.Forward, 6f, 0.6f, FormKit.Lit(colour, 2.4f), 0.35f, 0.15f);
+                    if (!art) FormFx.Run(FormMark.Beam, Ground(print.Origin) + Vector3.up * 0.9f, print.Forward, 6f, 0.6f, FormKit.Lit(colour, 2.4f), 0.35f, 0.15f);
                     if (deep)
                     {
                         // The Sun on the Blade: the same cut opens at half strength on every Marked enemy within 8 m.
@@ -308,7 +313,7 @@ namespace Clover.Player
                     // Taken: the cut drags each enemy struck 2 m toward you, 12 damage, 20 stagger, Cursed.
                     Cover(combat, print, Blow(element, 12f, 20f, 1), 0f);
                     PushStruck(combat, print.Forward, -2f);
-                    Vfx.Play(VfxKind.TintPuff, Ground(print.Centre) + Vector3.up * 0.2f, Vector3.down, 1.2f, ElementSubstance.Shade(colour));
+                    if (!art) Vfx.Play(VfxKind.TintPuff, Ground(print.Centre) + Vector3.up * 0.2f, Vector3.down, 1.2f, ElementSubstance.Shade(colour));
                     if (deep)
                     {
                         // Yama's Noose: a black rope to the enemy faced within 8 m: 40 damage and 50 stagger through any guard.
@@ -331,11 +336,16 @@ namespace Clover.Player
                         Kind = HazardKind.Element, Tint = colour, Position = Ground(at), Radius = 1f, Seconds = 3f, BiteEvery = 1f,
                         Blow = Blow(element, 2f, 0f, 1),
                     });
-                    FormFx.Lay(FormMark.Disc, Ground(at) + Vector3.up * 0.03f, 2f, FormKit.Lit(colour, 1.4f, 0.7f), 3f);
+                    if (!art) FormFx.Lay(FormMark.Disc, Ground(at) + Vector3.up * 0.03f, 2f, FormKit.Lit(colour, 1.4f, 0.7f), 3f);
                     // Nine Times Refined (simplest version): the cut itself lays six doses on what it struck.
                     if (deep) Cover(combat, print, Blow(element, 0f, 10f, 6), 0f);
                     break;
                 }
+            }
+            if (art)
+            {
+                int count = combat.CopyLastStruck(out var lastStruck);
+                StrikeArt.Play(element, print, first, lastStruck, count);
             }
         }
 
@@ -353,6 +363,7 @@ namespace Clover.Player
             Effect = ElementLook.HitEffect(element),
             Tinted = ElementLook.Tints(element),
             Tint = element.Colour,
+            Look = element,
         };
 
         // Strikes the footprint, reaching further by the metres given: an arc as a cone, a ring and a disc as circles, a lane and a path as lanes.

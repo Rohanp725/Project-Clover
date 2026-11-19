@@ -56,6 +56,9 @@ PLAYTEST RULES
   - A fall puts you back at the last fire you rested at with nothing lost.
   - Pause, then "Return to the Proving Ground", from any level.
   - Pause, then "Guide to effects", for every affliction, state and resource.
+  - F8 switches the elements' effects between the new look and the old one, so
+    you can compare them. This switch is temporary and will go once the new
+    look is settled. Every start begins with the new look.
 
 THE PROVING GROUND
   - The rest fire, in the middle. Rest to heal; its menu sets the Hand and opens

@@ -21,6 +21,11 @@ namespace Clover.Player.Forms
 
         private static readonly Color Petal = new Color(1f, 0.72f, 0.85f);
         private static readonly Color Ember = new Color(1f, 0.86f, 0.4f);
+        // The element art's fire has no pale gold in it: its second tongue is the deep red band.
+        private static readonly Color FireRed = new Color(0.85f, 0.16f, 0.04f);
+        private static readonly Color BoltViolet = new Color(0.45f, 0.2f, 1f);
+        private static readonly Color WindPale = new Color(0.82f, 0.84f, 0.78f);
+        private static readonly Color DryLeaf = new Color(0.5f, 0.42f, 0.16f);
 
         public override int Cast(in SpellCast cast)
         {
@@ -91,7 +96,8 @@ namespace Clover.Player.Forms
         {
             var cast = run.Cast;
             int hits = cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, cast.Blow(cast.Damage, cast.Stagger));
-            if (cast.Caster != null) cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
+            // The element art has no arc of light on the ground: fire is flame, never a glow.
+            if (cast.Caster != null && !ElementArt.Ready) cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
             run.T1 = 0.8f;
             return hits;
         }
@@ -114,7 +120,7 @@ namespace Clover.Player.Forms
                         Vector3 way = Quaternion.Euler(0f, FormRules.InFan(k, count, cast.Spec.Arc * 0.85f), 0f) * run.B;
                         Vector3 at = run.A + way * (run.T1 + Random.Range(-0.2f, 0.2f));
                         FormFx.Erupt(FormMesh.Flame, at, Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.75f, 1.1f + Random.value * 1f, 0.75f),
-                            k % 3 == 1 ? Ember : cast.Colour, 0.06f, 0.3f + Random.value * 0.35f, 0.25f);
+                            k % 3 == 1 ? (ElementArt.Ready ? FireRed : Ember) : cast.Colour, 0.06f, 0.3f + Random.value * 0.35f, 0.25f);
                     }
                     run.T1 += 0.7f;
                 }
@@ -125,6 +131,17 @@ namespace Clover.Player.Forms
                     patches[i] = run.A + run.B * (cast.Reach * (0.35f + 0.3f * i));
                     Clover.World.Hazards.Lay(cast.Ground(patches[i], 1f, burns, 0.5f, cast.Linger(2f)));
                 }
+                if (ElementArt.Ready)
+                {
+                    // The front rears up as hooded tongues, cobra-flared, leaning in; rolling smoke over the carpet.
+                    float yaw = ElementArt.Turn(run.B, 180f);
+                    // At the one it reaches (or the cone's end): the front rears where it lands.
+                    Vector3 toAim = run.C - run.A;
+                    toAim.y = 0f;
+                    float far = Mathf.Clamp(Vector3.Dot(toAim, run.B), 1.5f, cast.Reach);
+                    ElementArt.Erupt(ElementArt.Piece("fire_hoods_spell"), run.A + run.B * far, Quaternion.Euler(0f, yaw, 0f), Vector3.one * 1.35f, 0.08f, 0.7f, 0.3f);
+                    for (int i = 0; i < 3; i++) ElementArt.Sheet(ElementArt.SheetOf("fire_smoke_puff"), patches[i] + Vector3.up * (2.2f + 0.4f * i), 2.4f, 1.4f);
+                }
             }
             // What is left keeps licking upward until it has burned out.
             run.T2 -= deltaTime;
@@ -134,7 +151,9 @@ namespace Clover.Player.Forms
                 Vector2 off = Random.insideUnitCircle * 0.9f;
                 float left = 1f - (run.Age - spread) / burns;
                 FormFx.Erupt(FormMesh.Flame, patches[Random.Range(0, 3)] + new Vector3(off.x, 0f, off.y), Quaternion.Euler(0f, Random.value * 360f, 0f),
-                    new Vector3(0.5f, (0.5f + Random.value * 0.8f) * (0.4f + 0.6f * left), 0.5f), Random.value < 0.3f ? Ember : cast.Colour, 0.08f, 0.18f, 0.2f, 0.03f);
+                    new Vector3(0.5f, (0.5f + Random.value * 0.8f) * (0.4f + 0.6f * left), 0.5f), Random.value < 0.3f ? (ElementArt.Ready ? FireRed : Ember) : cast.Colour, 0.08f, 0.18f, 0.2f, 0.03f);
+                // Smoke keeps rolling off what burns.
+                if (ElementArt.Ready && Random.value < 0.06f) ElementArt.Sheet(ElementArt.SheetOf("fire_smoke_puff"), patches[Random.Range(0, 3)] + Vector3.up * 2f, 2f, 1.3f);
             }
             return run.Age < spread + burns;
         }
@@ -163,13 +182,24 @@ namespace Clover.Player.Forms
             run.Done = links;
             int hits = cast.Combat.StrikeChain(cast.Reach, cast.Blow(cast.Damage, cast.Stagger), cast.Spec.Count, cast.Spec.Radius, cast.Element);
             Color white = ElementSubstance.Pale(cast.Colour);
+            bool art = ElementArt.Ready;
             for (int i = 0; i < links * 2 && i < solids.Length; i++)
             {
-                solids[i] = FormFx.Hold(FormMesh.Bolt, i % 2 == 0 ? white : cast.Colour, 0.02f);
+                // The element art's bolts: a white-cyan core beside a violet edge, inked indigo.
+                solids[i] = FormFx.Hold(FormMesh.Bolt, i % 2 == 0 ? white : art ? BoltViolet : cast.Colour, 0.02f);
                 FormFx.Heat(solids[i], 0.55f);
             }
             for (int i = 1; i <= links; i++)
             {
+                if (art)
+                {
+                    // The strike sheet where each link lands, a Lichtenberg fern burnt under it, the stepped leader over the first.
+                    Vector3 foot = points[i] - Vector3.up * 1.1f;
+                    ElementArt.Sheet(ElementArt.SheetOf("lightning_bolt_strike"), points[i] + Vector3.up * 0.5f, 3.2f, 0.55f);
+                    ElementArt.Floor(ElementArt.Piece("lightning_fern_spell"), foot, i * 70f, 0.8f, 1f, 2f, 0.1f, true);
+                    if (i == 1) ElementArt.Stand(ElementArt.Piece("lightning_leader_spell"), foot, 180f, 1f, 0.16f);
+                    continue;
+                }
                 FormFx.Face(FormMark.Star, points[i], 2.2f, FormKit.Lit(cast.Colour, 4f), 0.09f, 3f, i * 40f);
                 Vfx.Play(VfxKind.Shock, points[i], Vector3.up, 1f);
             }
@@ -219,6 +249,12 @@ namespace Clover.Player.Forms
             run.T3 = 0f;
             Vfx.Play(VfxKind.Dust, run.A + run.B * 0.6f, run.B, 2f);
             Vfx.Play(VfxKind.Dust, middle, run.B, 3f);
+            if (ElementArt.Ready)
+            {
+                // Grass flattened in a band ahead of it, the gust's streaks and curl sweeping across.
+                ElementArt.Stand(ElementArt.Piece("wind_grass_spell"), middle, ElementArt.Turn(run.B), 1f, 1.1f);
+                ElementArt.Sheet(ElementArt.SheetOf("wind_gust"), middle + Vector3.up * 0.8f, 4.5f, 0.6f);
+            }
             TickWind(ref run, 0.1f);
             return hits;
         }
@@ -247,11 +283,11 @@ namespace Clover.Player.Forms
                 if (run.Done % 4 == 0)
                 {
                     // A leaf torn along with it, tumbling upward.
-                    FormFx.Fly(FormMesh.Leaf, from, from + run.B * 4.5f + Vector3.up * Random.Range(0.5f, 2f), Random.rotation, Vector3.one * 0.5f, new Color(0.5f, 0.78f, 0.3f), 0.4f, 0.02f);
+                    FormFx.Fly(FormMesh.Leaf, from, from + run.B * 4.5f + Vector3.up * Random.Range(0.5f, 2f), Random.rotation, Vector3.one * 0.5f, ElementArt.Ready ? DryLeaf : new Color(0.5f, 0.78f, 0.3f), 0.4f, 0.02f);
                     continue;
                 }
                 FormFx.Fly(FormMesh.Gust, from, from + run.B * 3.6f, Quaternion.LookRotation(run.B) * Quaternion.Euler(0f, 0f, Random.value * 360f),
-                    new Vector3(4f, 4f, 2.2f + Random.value * 2.2f), run.Done % 3 == 0 ? Color.white : ElementSubstance.Pale(cast.Colour), 0.26f, 0.03f);
+                    new Vector3(4f, 4f, 2.2f + Random.value * 2.2f), ElementArt.Ready ? WindPale : run.Done % 3 == 0 ? Color.white : ElementSubstance.Pale(cast.Colour), 0.26f, 0.03f);
             }
             return run.Age < blows || run.T3 < 1f;
         }
@@ -277,11 +313,18 @@ namespace Clover.Player.Forms
                     Vector3 way = Quaternion.Euler(0f, FormRules.InFan(i, rows[row], cast.Spec.Arc * 0.8f) + (Hash(k) - 0.5f) * 10f, 0f) * run.B;
                     points[k] = run.A + way * (out_ + (Hash(k + 40) - 0.5f) * 0.5f);
                     times[k] = 0.3f * (row / (float)rows.Length) + 0.02f * i;
-                    solids[k] = FormFx.Hold(FormMesh.Crystal, k % 3 == 0 ? Color.white : cast.Colour);
+                    solids[k] = FormFx.Hold(FormMesh.Crystal, k % 3 == 0 && !ElementArt.Ready ? Color.white : cast.Colour);
                     FormFx.Place(solids[k], points[k], Quaternion.identity, Vector3.one * 0.001f);
                 }
             }
-            FormFx.Lay(FormMark.Crack, run.A + run.B * (cast.Reach * 0.5f), cast.Reach * 1.3f, FormKit.Lit(cast.Colour, 1.6f), 1.2f, -1f, 0f, Quaternion.LookRotation(run.B).eulerAngles.y);
+            if (ElementArt.Ready)
+            {
+                // Runic straight cuts etched round it, and the frost creeping out in hard steps.
+                Vector3 middle = run.A + run.B * (cast.Reach * 0.5f);
+                ElementArt.Floor(ElementArt.Piece("ice_runes_spell"), middle, ElementArt.Turn(run.B), 1f, 1f, Mathf.Max(1f, cast.Spec.Seconds), 0.3f, true);
+                ElementArt.Sheet(ElementArt.SheetOf("ice_frost_creep"), middle + Vector3.up * 0.6f, 3.4f, 0.9f);
+            }
+            else FormFx.Lay(FormMark.Crack, run.A + run.B * (cast.Reach * 0.5f), cast.Reach * 1.3f, FormKit.Lit(cast.Colour, 1.6f), 1.2f, -1f, 0f, Quaternion.LookRotation(run.B).eulerAngles.y);
             return 0;
         }
 
@@ -313,8 +356,17 @@ namespace Clover.Player.Forms
                 }
                 Vector3 middle = run.A + run.B * (cast.Reach * 0.55f);
                 cast.Combat.StrikeArea(middle, cast.Reach * 0.6f, cast.Blow(5f, 8f, 1));
-                FormFx.Face(FormMark.Star, middle + Vector3.up, 4f, FormKit.Lit(cast.Colour, 3.6f), 0.1f, 5.5f);
-                FormFx.Lay(FormMark.Ring, middle, 1f, FormKit.Lit(cast.Colour, 3f), 0.3f, cast.Reach * 1.4f);
+                if (ElementArt.Ready)
+                {
+                    // Held dead still, then broken all at once: the crack-web, and the shatter's chips.
+                    ElementArt.Stand(ElementArt.Piece("ice_crackweb_hit"), middle, 180f, 1.4f, 0.3f);
+                    ElementArt.Sheet(ElementArt.SheetOf("ice_frost_creep"), middle + Vector3.up * 0.8f, 4f, 0.6f);
+                }
+                else
+                {
+                    FormFx.Face(FormMark.Star, middle + Vector3.up, 4f, FormKit.Lit(cast.Colour, 3.6f), 0.1f, 5.5f);
+                    FormFx.Lay(FormMark.Ring, middle, 1f, FormKit.Lit(cast.Colour, 3f), 0.3f, cast.Reach * 1.4f);
+                }
                 if (cast.Upgrades != null) cast.Upgrades.Jolt(0.04f, 0.16f, 0.2f);
                 return false;
             }
@@ -349,9 +401,14 @@ namespace Clover.Player.Forms
             for (int i = 0; i < run.Done && i < left.Length; i++) left[i] = -1f;
             run.T1 = Mathf.Max(cast.Reach, TideRules.BreaksAt);
             Vector3 rises = run.A + run.B * run.T1;
-            // The way it will come, drawn on the ground from where it rises to where it breaks.
-            FormFx.Run(FormMark.Lane, rises, -run.B, run.T1 - TideRules.BreaksAt, TideRules.HalfWidth * 1.7f, FormKit.Lit(cast.Colour, 1.5f, 0.7f), 0.75f);
-            FormFx.Lay(FormMark.Ring, rises, 1f, FormKit.Lit(cast.Colour, 2.4f), 0.35f, TideRules.HalfWidth * 2f);
+            // The element art: the shark-tooth crest rides the wave's lip; no lane or ring of light.
+            solids[4] = ElementArt.Ready ? ElementArt.Hold(ElementArt.Piece("water_teeth_spell")) : -1;
+            if (solids[4] < 0)
+            {
+                // The way it will come, drawn on the ground from where it rises to where it breaks.
+                FormFx.Run(FormMark.Lane, rises, -run.B, run.T1 - TideRules.BreaksAt, TideRules.HalfWidth * 1.7f, FormKit.Lit(cast.Colour, 1.5f, 0.7f), 0.75f);
+                FormFx.Lay(FormMark.Ring, rises, 1f, FormKit.Lit(cast.Colour, 2.4f), 0.35f, TideRules.HalfWidth * 2f);
+            }
             TickWater(ref run, 0f);
             return 0;
         }
@@ -408,6 +465,9 @@ namespace Clover.Player.Forms
             float trail = Mathf.Clamp(Mathf.Max(cast.Reach, TideRules.BreaksAt) - front + 0.6f, 0.6f, 3.2f);
             FormFx.Place(solids[2], at + run.B * (1.2f + trail * 0.5f) + Vector3.up * 0.02f, facing, new Vector3(TideRules.HalfWidth * 1.9f, 0.5f * Mathf.Max(0.05f, risen + broken), trail));
             FormFx.Place(solids[3], at - run.B * (0.42f * long_) + Vector3.up * 0.03f, facing, new Vector3(TideRules.HalfWidth * 1.9f, 2.4f * Mathf.Max(0.05f, risen + broken * 0.5f), 0.7f + 1.6f * broken));
+            // The crest's teeth hang off the lip toward the camera, the longest in the middle.
+            float teeth = TideRules.HalfWidth * 2.1f / 4.6f * Mathf.Max(0.02f, risen);
+            FormFx.Place(solids[4], at - run.B * 0.9f + Vector3.up * (tall * 0.72f), Quaternion.Euler(0f, ElementArt.Turn(-run.B, 0f), 0f), Vector3.one * teeth);
 
             run.T2 -= deltaTime;
             if (run.T2 <= 0f && run.Phase == 0)
@@ -443,10 +503,19 @@ namespace Clover.Player.Forms
                     FormFx.Erupt(FormMesh.Cloud, lip + side * FormRules.InRow(i, 5, 0.95f) + Vector3.up * 0.3f, Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(1.5f, 0.9f + 0.5f * Random.value, 1.2f), Color.white, 0.08f, 0.1f, 0.35f, 0.01f);
                 for (int i = 0; i < 4; i++)
                     FormFx.Erupt(FormMesh.Spout, lip + side * FormRules.InRow(i, 4, 1.2f), Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.7f, 1.3f + Random.value, 0.7f), ElementSubstance.Pale(cast.Colour), 0.07f, 0.06f, 0.3f, 0.015f);
-                FormFx.Lay(FormMark.Ring, lip, 1.2f, FormKit.Lit(Color.white, 1.6f, 0.8f), 0.5f, TideRules.HalfWidth * 2.4f);
+                if (ElementArt.Ready)
+                {
+                    // It slaps down: crowns along the lip, and the floor left wet with foam lace draining in rings.
+                    for (int i = 0; i < 3; i++) ElementArt.Sheet(ElementArt.SheetOf("water_splash"), lip + side * FormRules.InRow(i, 3, 1.3f) + Vector3.up * 0.8f, 3f, 0.75f);
+                    ElementArt.Floor(ElementArt.Piece("water_wet_affliction"), lip, 0f, 1.3f, 1.5f, 1.6f);
+                }
+                else
+                {
+                    FormFx.Lay(FormMark.Ring, lip, 1.2f, FormKit.Lit(Color.white, 1.6f, 0.8f), 0.5f, TideRules.HalfWidth * 2.4f);
+                    FormFx.Lay(FormMark.Disc, lip, TideRules.HalfWidth * 1.7f, FormKit.Lit(ElementSubstance.Pale(cast.Colour), 0.8f, 0.3f), 1.3f, TideRules.HalfWidth * 2.1f);
+                }
                 // The stone is left wet: dark, with a sheen that dries off it.
                 FormFx.Lay(FormMark.Scorch, lip, TideRules.HalfWidth * 2.4f, FormKit.Stain(cast.Colour, 0.5f), 2.6f);
-                FormFx.Lay(FormMark.Disc, lip, TideRules.HalfWidth * 1.7f, FormKit.Lit(ElementSubstance.Pale(cast.Colour), 0.8f, 0.3f), 1.3f, TideRules.HalfWidth * 2.1f);
                 if (cast.Upgrades != null) cast.Upgrades.Jolt(0.03f, 0.14f, 0.18f);
             }
             return run.Phase == 0 || run.Age - run.T3 < 0.3f;
@@ -471,7 +540,13 @@ namespace Clover.Player.Forms
                 solids[k] = FormFx.Hold(vine ? FormMesh.Vine : FormMesh.Flower, vine ? (k % 2 == 0 ? cast.Colour : new Color(0.25f, 0.6f, 0.22f)) : Petal);
                 FormFx.Place(solids[k], points[k], Quaternion.identity, Vector3.one * 0.001f);
             }
-            FormFx.Lay(FormMark.Ring, run.C, 0.5f, FormKit.Lit(cast.Colour, 2.4f), 0.35f, cast.Spec.Radius * 2f);
+            if (ElementArt.Ready)
+            {
+                // Runner vines go out first, and roots crack the floor; the bed blooms over them.
+                ElementArt.Erupt(ElementArt.Piece("life_runners_spell"), run.C, Quaternion.Euler(0f, ElementArt.Turn(run.B), 0f), Vector3.one * 0.9f, 0.4f, Mathf.Max(0.1f, Mathf.Max(0.5f, cast.Spec.Seconds) - 0.7f), 0.3f);
+                ElementArt.Sheet(ElementArt.SheetOf("life_bloom"), run.C + Vector3.up * 0.8f, 3.2f, 1.1f);
+            }
+            else FormFx.Lay(FormMark.Ring, run.C, 0.5f, FormKit.Lit(cast.Colour, 2.4f), 0.35f, cast.Spec.Radius * 2f);
             run.T1 = 0.3f;
             run.T3 = -1f;
             return 0;
@@ -553,7 +628,13 @@ namespace Clover.Player.Forms
                     Vector3 to = run.C + way * Random.Range(1.6f, 3f) + Vector3.up * Random.Range(0.1f, 1.6f);
                     FormFx.Fly(FormMesh.Pebble, from, to, Random.rotation, Vector3.one * Random.Range(0.4f, 0.8f), cast.Colour, 0.45f);
                 }
-                FormFx.Lay(FormMark.Crack, run.C, 4.6f, FormKit.Lit(cast.Colour, 2f), 2.2f, -1f, 0f, Random.value * 360f);
+                if (ElementArt.Ready)
+                {
+                    // Standing stones thrust up round it with overshoot, the ground broken, a heavy ring of dust.
+                    ElementArt.Erupt(ElementArt.Piece("earth_stones_spell"), run.C, Quaternion.Euler(0f, 180f, 0f), Vector3.one * 0.85f, 0.07f, stands - 0.5f, 0.4f);
+                    ElementArt.Sheet(ElementArt.SheetOf("earth_dust_burst"), run.C + Vector3.up * 0.9f, 4.4f, 0.9f);
+                }
+                else FormFx.Lay(FormMark.Crack, run.C, 4.6f, FormKit.Lit(cast.Colour, 2f), 2.2f, -1f, 0f, Random.value * 360f);
                 FormFx.Lay(FormMark.Scorch, run.C, 3f, FormKit.Stain(cast.Colour), 4f);
                 Vfx.Play(VfxKind.Dust, run.C + Vector3.up * 0.2f, Vector3.up, 3f);
                 if (cast.Upgrades != null) cast.Upgrades.Jolt(0.05f, 0.24f, 0.25f);
@@ -575,8 +656,11 @@ namespace Clover.Player.Forms
         {
             var cast = run.Cast;
             run.Victim = FormKit.Victim(cast);
-            SpellWorks.Solids(run)[0] = FormFx.Hold(FormMesh.Blade, cast.Colour, 0.04f);
-            SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Cross, FormKit.Lit(cast.Colour, 3f));
+            // The element art: a xiphos with a chrome stripe, and no sign of light over the one it stands in.
+            int xiphos = ElementArt.Ready ? ElementArt.Hold(ElementArt.Piece("metal_xiphos_spell")) : -1;
+            run.Flag2 = xiphos >= 0;
+            SpellWorks.Solids(run)[0] = xiphos >= 0 ? xiphos : FormFx.Hold(FormMesh.Blade, cast.Colour, 0.04f);
+            SpellWorks.Marks(run)[0] = xiphos >= 0 ? -1 : FormFx.HoldMark(FormMark.Cross, FormKit.Lit(cast.Colour, 3f));
             run.C = run.Victim != null ? run.Victim.transform.position + Vector3.up * 1.1f : run.A + run.B * Mathf.Min(cast.Reach, 5f) + Vector3.up * 0.3f;
             run.T0 = Mathf.Clamp((run.C - Hand(run)).magnitude / 32f, 0.07f, 0.2f);
             TickMetal(ref run);
@@ -595,13 +679,20 @@ namespace Clover.Player.Forms
                 if (alive) run.C = run.Victim.transform.position + Vector3.up * 1.1f;
                 float t = Mathf.Clamp01(run.Age / run.T0);
                 Vector3 way = (run.C - hand).normalized;
-                FormFx.Place(blade, Vector3.Lerp(hand, run.C - way * 0.9f, t), Quaternion.LookRotation(way), Vector3.one * 1.5f);
+                FormFx.Place(blade, Vector3.Lerp(hand, run.C - way * 0.9f, t), Blade(run, Quaternion.LookRotation(way)), Vector3.one * BladeSize(run, 1.5f));
                 FormFx.PlaceMarkFacing(sign, run.C, 0.01f);
                 if (t < 1f) return true;
                 run.Phase = 1;
                 run.T1 = run.Age;
                 // It bites as it lands, lightly: the weight of it comes when it is driven in.
                 if (alive) cast.Combat.StrikeOne(run.Victim, cast.Blow(cast.Damage * 0.25f, 0f, 0), run.A);
+                if (run.Flag2)
+                {
+                    // It rings: the clang, and sparks off it in a forward fan that fork as they go.
+                    ElementArt.Sheet(ElementArt.SheetOf("metal_clang_v2"), run.C, 2.8f, 0.5f);
+                    ElementArt.Stand(ElementArt.Piece("metal_sparks_spell"), new Vector3(run.C.x, run.A.y, run.C.z) - way * 1.2f, ElementArt.Turn(way), 1f, 0.2f);
+                    return true;
+                }
                 Vfx.Play(VfxKind.Clang, run.C, -way, 1f);
                 FormFx.Cut(Vector3.Lerp(hand, run.C, 0.5f), way, (run.C - hand).magnitude, 0.3f, FormKit.Lit(cast.Colour, 3f), 0.14f);
                 return true;
@@ -617,21 +708,22 @@ namespace Clover.Player.Forms
                     run.C = run.Victim.transform.position + Vector3.up * 1.1f;
                     // It stands in them, its grip toward the one who threw it, and shivers for a moment.
                     float shiver = Mathf.Sin(stuck * 60f) * 9f * Mathf.Exp(-stuck * 6f);
-                    FormFx.Place(blade, run.C - way * 1.5f + Vector3.up * 0.75f, Quaternion.LookRotation(way + Vector3.down * 0.5f) * Quaternion.Euler(shiver, shiver, 0f), Vector3.one * 1.9f);
+                    FormFx.Place(blade, run.C - way * 1.5f + Vector3.up * 0.75f, Blade(run, Quaternion.LookRotation(way + Vector3.down * 0.5f) * Quaternion.Euler(shiver, shiver, 0f)), Vector3.one * BladeSize(run, 1.9f));
                     FormFx.PlaceMarkFacing(sign, run.C + Vector3.up * 1.7f, 0.8f * (1f + 0.12f * Mathf.Sin(run.Age * 9f)));
                     if (run.Flag)
                     {
                         Vector3 foot = run.Victim.transform.position;
                         cast.Combat.StrikeArea(foot, cast.Spec.Radius, cast.Blow(cast.Damage, cast.Stagger));
                         FormKit.Impact(cast, foot, cast.Spec.Radius * 0.75f, 1.1f);
-                        FormFx.Face(FormMark.Cross, run.C, 3f, FormKit.Lit(cast.Colour, 3.6f), 0.14f, 4.4f, 30f);
+                        if (run.Flag2) ElementArt.Sheet(ElementArt.SheetOf("metal_clang_v2"), run.C, 3.6f, 0.55f);
+                        else FormFx.Face(FormMark.Cross, run.C, 3f, FormKit.Lit(cast.Colour, 3.6f), 0.14f, 4.4f, 30f);
                     }
                     else if (stuck < Mathf.Max(0.5f, cast.Spec.Seconds)) return true;
                 }
                 else if (run.Victim == null && stuck < 0.45f)
                 {
                     // No one was faced: it stands in the ground a moment before it comes back.
-                    FormFx.Place(blade, run.C + Vector3.up * 0.35f - way * 0.3f, Quaternion.LookRotation(way + Vector3.down * 1.2f), Vector3.one * 1.5f);
+                    FormFx.Place(blade, run.C + Vector3.up * 0.35f - way * 0.3f, Blade(run, Quaternion.LookRotation(way + Vector3.down * 1.2f)), Vector3.one * BladeSize(run, 1.5f));
                     return true;
                 }
                 run.Phase = 2;
@@ -644,18 +736,24 @@ namespace Clover.Player.Forms
                 Vector3 from = run.C;
                 from.y = run.A.y;
                 cast.Combat.StrikeLane(from, home, home.magnitude, 0.7f, cast.Blow(cast.Damage * 0.35f, 0f, 0), SpellWorks.Once(run));
-                FormFx.Cut(Vector3.Lerp(run.C, cast.Player.transform.position + Vector3.up * 1.1f, 0.5f), home, home.magnitude, 0.35f, FormKit.Lit(cast.Colour, 3f), 0.2f);
+                if (!run.Flag2) FormFx.Cut(Vector3.Lerp(run.C, cast.Player.transform.position + Vector3.up * 1.1f, 0.5f), home, home.magnitude, 0.35f, FormKit.Lit(cast.Colour, 3f), 0.2f);
                 return true;
             }
             float back = Mathf.Clamp01((run.Age - run.T1) / 0.2f);
             Vector3 to = cast.Player.transform.position + Vector3.up * 1.1f;
             Vector3 flight = to - run.C;
             // End over end all the way home.
-            FormFx.Place(blade, Vector3.Lerp(run.C, to, back * back), Quaternion.LookRotation(flight.sqrMagnitude > 0.01f ? flight.normalized : run.B) * Quaternion.Euler(run.Age * 1800f, 0f, 0f), Vector3.one * 1.5f);
+            FormFx.Place(blade, Vector3.Lerp(run.C, to, back * back), Blade(run, Quaternion.LookRotation(flight.sqrMagnitude > 0.01f ? flight.normalized : run.B) * Quaternion.Euler(run.Age * 1800f, 0f, 0f)), Vector3.one * BladeSize(run, 1.5f));
             if (back < 1f) return true;
             Vfx.Play(VfxKind.GuardSpark, to, Vector3.up, 0.6f);
             return false;
         }
+
+        // The kit's xiphos was drawn pointing about 236 degrees round from +Z, at its own length: turned to lie along +Z
+        // as the built blade does, and not scaled up as that one is.
+        private static Quaternion Blade(in SpellRun run, Quaternion along) => run.Flag2 ? along * Quaternion.Euler(0f, -236f, 0f) : along;
+
+        private static float BladeSize(in SpellRun run, float built) => run.Flag2 ? built * 0.62f : built;
 
         // ---- Light: Glare. A ray from the hand, narrow and straight, with a flare where it starts and on everything it crosses; what it crosses is marked, and the mark is seen.
 
@@ -675,6 +773,24 @@ namespace Clover.Player.Forms
             run.Done = n;
             Vector3 hand = Hand(run);
             Color light = FormKit.Lit(cast.Colour, 3.4f);
+            if (ElementArt.Ready)
+            {
+                // A beam from a glint at the hand, a jali star lattice printed along its footprint, and the shadow of
+                // everything it crosses thrown four metres back, away from the light.
+                FormFx.Run(FormMark.Beam, hand - Vector3.up * 0.1f, run.B, length, 1.3f, FormKit.Lit(new Color(1f, 0.82f, 0.4f), 1.15f), 0.4f, 0.4f);
+                float yaw = ElementArt.Turn(run.B, 233f);
+                ElementArt.Floor(ElementArt.Piece("light_jali_spell"), ElementArt.Anchor(run.A + run.B * 0.6f, yaw, new Vector3(2.3f, 0f, 1.7f)), yaw, 1f, 1f, 1.2f, 0.12f, true);
+                ElementArt.Sheet(ElementArt.SheetOf("light_flash_v2"), hand, 2.2f, 0.45f);
+                for (int i = 0; i < n; i++)
+                {
+                    Vector3 feet = SigKit.Foot(things[i], run.A.y);
+                    ElementArt.Shadow(feet, feet - run.A, 4f, 1f, 1.2f, 0.1f);
+                }
+                Color glare = Color.Lerp(Color.white, cast.Colour, 0.4f);
+                glare.a = 0.14f;
+                ScreenFlash.Flash(glare, 0.07f);
+                return hits;
+            }
             FormFx.Run(FormMark.Beam, hand - Vector3.up * 0.1f, run.B, length, 1.2f, light, 0.3f, 0.05f);
             FormFx.Run(FormMark.Streak, run.A + run.B * 0.5f, run.B, length, 0.6f, FormKit.Lit(cast.Colour, 1.6f, 0.7f), 1.1f, 0.05f);
             FormFx.Fly(FormMesh.Ray, hand, hand, Quaternion.LookRotation(run.B), new Vector3(3.2f, 3.2f, length), Color.white, 0.32f, 0.01f);
@@ -724,8 +840,20 @@ namespace Clover.Player.Forms
             var cast = run.Cast;
             run.Victim = FormKit.Victim(cast);
             if (run.Victim == null) run.C = run.A + run.B * Mathf.Min(cast.Reach, 4f);
-            SpellWorks.Solids(run)[0] = FormFx.Hold(FormMesh.Orb, Black, 0.06f);
-            SpellWorks.Solids(run)[1] = FormFx.Hold(FormMesh.Disc, cast.Colour, 0.02f);
+            // The element art: a travelling hole in the floor with a pale horizon, not a ball.
+            run.Flag2 = ElementArt.Ready;
+            if (run.Flag2)
+            {
+                SpellWorks.Marks(run)[0] = ElementArt.HoldFloor(ElementArt.Piece("dark_drain_spell"));
+                SpellWorks.Marks(run)[1] = ElementArt.HoldFloor(ElementArt.Piece("dark_streaks_spell"));
+                SpellWorks.Marks(run)[2] = ElementArt.HoldFloor(ElementArt.Piece("dark_hole_spell"));
+                SpellWorks.Marks(run)[3] = ElementArt.HoldFloor(ElementArt.Piece("dark_horizon_spell"));
+            }
+            else
+            {
+                SpellWorks.Solids(run)[0] = FormFx.Hold(FormMesh.Orb, Black, 0.06f);
+                SpellWorks.Solids(run)[1] = FormFx.Hold(FormMesh.Disc, cast.Colour, 0.02f);
+            }
             Vector3 to = run.Victim != null ? run.Victim.transform.position : run.C;
             // Slow: it can be watched all the way there.
             run.T0 = Mathf.Max(0.3f, (to - run.A).magnitude / 6.5f);
@@ -748,24 +876,37 @@ namespace Clover.Player.Forms
                 float size = (0.3f + 0.3f * t) * (1f + 0.1f * Mathf.Sin(run.Age * 7f));
                 FormFx.Place(solids[0], at, Quaternion.Euler(run.Age * 40f, run.Age * 70f, 0f), Vector3.one * size);
                 FormFx.Place(solids[1], at, Quaternion.Euler(20f, run.Age * -200f, 0f), new Vector3(size * 2.1f, size * 0.5f, size * 2.1f));
+                if (run.Flag2) PlaceHole(run, ground, 0.7f + 0.5f * t, run.Age * -40f);
                 cast.Combat.Displace(ground, 2.6f, 3.2f * deltaTime, true);
                 run.T2 -= deltaTime;
                 if (run.T2 <= 0f)
                 {
                     run.T2 = 0.1f;
-                    // Rings close on it along the ground and smoke falls into it from all round.
-                    FormFx.Lay(FormMark.Ring, ground, 3.6f, FormKit.Lit(cast.Colour, 1.8f), 0.24f, 0.4f);
-                    Vector3 from = at + Random.onUnitSphere * 1.7f;
-                    FormFx.Fly(FormMesh.Cloud, from, at, Random.rotation, Vector3.one * 0.6f, ElementSubstance.Shade(cast.Colour), 0.24f, 0.02f);
+                    if (run.Flag2) ElementArt.Stand(ElementArt.Piece("dark_streaksair_spell"), ground, Random.value * 360f, 0.9f, 0.12f);
+                    else
+                    {
+                        // Rings close on it along the ground and smoke falls into it from all round.
+                        FormFx.Lay(FormMark.Ring, ground, 3.6f, FormKit.Lit(cast.Colour, 1.8f), 0.24f, 0.4f);
+                        Vector3 from = at + Random.onUnitSphere * 1.7f;
+                        FormFx.Fly(FormMesh.Cloud, from, at, Random.rotation, Vector3.one * 0.6f, ElementSubstance.Shade(cast.Colour), 0.24f, 0.02f);
+                    }
                 }
                 if (t < 1f) return true;
                 run.Phase = 1;
                 run.T1 = run.Age;
                 run.C = ground;
                 cast.Combat.StrikeArea(ground, 1.7f, cast.Blow(cast.Damage, cast.Stagger));
-                FormFx.Lay(FormMark.Ring, ground, 5f, FormKit.Lit(cast.Colour, 2.6f), 0.2f, 0.3f);
-                FormFx.Lay(FormMark.Scorch, ground, 3.4f, FormKit.Stain(cast.Colour, 0.8f), 3f);
-                FormFx.Face(FormMark.Star, at, 2.4f, FormKit.Lit(cast.Colour, 2.4f), 0.1f, 0.6f);
+                if (run.Flag2)
+                {
+                    // The snap: one inverted frame, then the hole closes like an iris.
+                    ElementArt.Sheet(ElementArt.SheetOf("dark_hole_close_v2"), at, 3f, 0.6f);
+                }
+                else
+                {
+                    FormFx.Lay(FormMark.Ring, ground, 5f, FormKit.Lit(cast.Colour, 2.6f), 0.2f, 0.3f);
+                    FormFx.Lay(FormMark.Scorch, ground, 3.4f, FormKit.Stain(cast.Colour, 0.8f), 3f);
+                    FormFx.Face(FormMark.Star, at, 2.4f, FormKit.Lit(cast.Colour, 2.4f), 0.1f, 0.6f);
+                }
                 if (cast.Upgrades != null) cast.Upgrades.Jolt(0.05f, 0.14f, 0.2f);
                 // What it has hold of comes back with it: dragged to a sword's length from the caster.
                 int held = SigKit.Gather(run, ground, 2f, 5);
@@ -785,28 +926,75 @@ namespace Clover.Player.Forms
             float left = 0.6f * (1f - back * 0.7f);
             FormFx.Place(solids[0], now, Quaternion.identity, Vector3.one * left);
             FormFx.Place(solids[1], now, Quaternion.Euler(20f, run.Age * -200f, 0f), new Vector3(left * 2.1f, left * 0.5f, left * 2.1f));
+            // The hole drags what it holds home, closing as it comes.
+            if (run.Flag2) PlaceHole(run, new Vector3(now.x, run.A.y, now.z), 1.2f * (1f - back * 0.85f), run.Age * -40f);
             run.T2 -= deltaTime;
-            if (run.T2 <= 0f)
+            if (run.T2 <= 0f && !run.Flag2)
             {
                 run.T2 = 0.04f;
                 FormFx.Fly(FormMesh.Cloud, now, new Vector3(now.x, run.A.y, now.z), Random.rotation, new Vector3(0.7f, 0.45f, 0.7f), ElementSubstance.Shade(cast.Colour), 0.5f, 0.02f);
             }
             if (back < 1f) return true;
-            FormFx.Lay(FormMark.Scorch, feet, 2f, FormKit.Stain(cast.Colour, 0.7f), 2f);
+            if (!run.Flag2) FormFx.Lay(FormMark.Scorch, feet, 2f, FormKit.Stain(cast.Colour, 0.7f), 2f);
             return false;
+        }
+
+        // The element art's Grasp: the drained floor and the streaks pulled in about it, the hole and its pale horizon.
+        private static void PlaceHole(in SpellRun run, Vector3 ground, float size, float swirl)
+        {
+            var marks = SpellWorks.Marks(run);
+            ElementArt.PlaceFloor(marks[0], ElementArt.Piece("dark_drain_spell"), ground, 0f, size);
+            ElementArt.PlaceFloor(marks[1], ElementArt.Piece("dark_streaks_spell"), ground, swirl, size * (0.9f + 0.1f * Mathf.Sin(run.Age * 9f)));
+            ElementArt.PlaceFloor(marks[2], ElementArt.Piece("dark_hole_spell"), ground, 0f, size);
+            ElementArt.PlaceFloor(marks[3], ElementArt.Piece("dark_horizon_spell"), ground, swirl * 2f, size);
         }
 
         // ---- Poison: Miasma. A low cloud that hangs, creeps after the nearest enemy and doses whatever stands in it once a second; bubbles rise through it and it leaves a stain.
 
         private const int Clouds = 8;
 
+        private static string Lip(int k) => k == 0 ? "poison_lip_spell" : k == 1 ? "poison_lip_spell_1" : "poison_lip_spell_2";
+        private static string Gas(int k) => k == 0 ? "poison_gas_spell" : k == 1 ? "poison_gas_spell_1" : "poison_gas_spell_2";
+        private static string Ruyi(int k) => k % 3 == 0 ? "poison_ruyi_spell" : k % 3 == 1 ? "poison_ruyi_spell_1" : "poison_ruyi_spell_2";
+        private static string Pits(int k) => k % 3 == 0 ? "poison_pits_spell" : k % 3 == 1 ? "poison_pits_spell_1" : "poison_pits_spell_2";
+
+        // The element art's Miasma: three terraces crawling the way it creeps, each a little behind and above the one
+        // before, bobbing out of step, over their see-through gas.
+        private static void PlaceGas(ref SpellRun run, float spread, float deltaTime)
+        {
+            var solids = SpellWorks.Solids(run);
+            var marks = SpellWorks.Marks(run);
+            float yaw = ElementArt.Turn(run.B);
+            var turn = Quaternion.Euler(0f, yaw, 0f);
+            float grown = Mathf.Max(0.02f, spread);
+            for (int k = 0; k < 3; k++)
+            {
+                Vector3 at = run.C - run.B * (0.55f * k) + Vector3.up * (0.04f * k + 0.03f * Mathf.Sin(run.Age * 1.7f + k * 2.1f));
+                FormFx.Place(solids[k], at, turn, new Vector3(grown, grown * (1f + 0.08f * Mathf.Sin(run.Age * 2.3f + k)), grown));
+                ElementArt.PlaceFloor(marks[k], ElementArt.Piece(Gas(k)), at, yaw, grown);
+            }
+        }
+
         private static int BeginPoison(ref SpellRun run)
         {
             var cast = run.Cast;
             var solids = SpellWorks.Solids(run);
             Color murk = Color.Lerp(cast.Colour, new Color(0.2f, 0.3f, 0.1f), 0.6f), fume = Color.Lerp(cast.Colour, new Color(0.2f, 0.3f, 0.1f), 0.25f);
-            for (int k = 0; k < Clouds; k++) solids[k] = FormFx.Hold(FormMesh.Cloud, k % 2 == 0 ? fume : murk, 0.015f);
-            SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Disc, FormKit.Lit(cast.Colour, 1.2f, 0.7f));
+            run.Flag2 = ElementArt.Ready;
+            if (run.Flag2)
+            {
+                // The element art: a heavy gas front in three terraces of inked lobes over see-through layers.
+                for (int k = 0; k < 3; k++)
+                {
+                    solids[k] = ElementArt.Hold(ElementArt.Piece(Lip(k)));
+                    SpellWorks.Marks(run)[k] = ElementArt.HoldFloor(ElementArt.Piece(Gas(k)));
+                }
+            }
+            else
+            {
+                for (int k = 0; k < Clouds; k++) solids[k] = FormFx.Hold(FormMesh.Cloud, k % 2 == 0 ? fume : murk, 0.015f);
+                SpellWorks.Marks(run)[0] = FormFx.HoldMark(FormMark.Disc, FormKit.Lit(cast.Colour, 1.2f, 0.7f));
+            }
             run.Victim = FormKit.Victim(cast);
             run.T1 = 0.4f;
             TickPoison(ref run, 0f);
@@ -827,7 +1015,8 @@ namespace Clover.Player.Forms
                 if (toward.magnitude > 0.2f) run.C += toward.normalized * (0.8f * deltaTime);
             }
             float spread = Mathf.Clamp01(run.Age / 0.45f) * Mathf.Clamp01((hangs - run.Age) / 0.5f);
-            for (int k = 0; k < Clouds; k++)
+            if (run.Flag2) PlaceGas(ref run, spread, deltaTime);
+            else for (int k = 0; k < Clouds; k++)
             {
                 float angle = (k * 47f + run.Age * (10f + k * 3f)) * Mathf.Deg2Rad;
                 float out_ = radius * (0.2f + 0.65f * Hash(k + 1)) * spread;
@@ -836,11 +1025,17 @@ namespace Clover.Player.Forms
                 FormFx.Place(solids[k], at, Quaternion.Euler(0f, k * 70f + run.Age * 14f, 0f), new Vector3(size, size * 0.5f, size));
             }
             float across = radius * 2f * spread;
-            FormFx.PlaceMark(SpellWorks.Marks(run)[0], run.C, Quaternion.identity, new Vector3(across, 1f, across));
+            if (!run.Flag2) FormFx.PlaceMark(SpellWorks.Marks(run)[0], run.C, Quaternion.identity, new Vector3(across, 1f, across));
             if (run.Age >= hangs)
             {
                 // What has seeped into the ground stays a while.
-                FormFx.Lay(FormMark.Scorch, run.C, radius * 2.4f, FormKit.Stain(cast.Colour, 0.7f), 3f);
+                if (run.Flag2)
+                {
+                    float yaw = ElementArt.Turn(run.B);
+                    ElementArt.Floor(ElementArt.Piece("poison_stain_spell"), run.C, yaw, 0.8f, 0.9f, 3f, 0.4f, true);
+                    ElementArt.Floor(ElementArt.Piece("poison_stainrim_spell"), run.C, yaw, 0.8f, 0.9f, 3f, 0.4f, true);
+                }
+                else FormFx.Lay(FormMark.Scorch, run.C, radius * 2.4f, FormKit.Stain(cast.Colour, 0.7f), 3f);
                 return false;
             }
             run.T2 -= deltaTime;
@@ -854,7 +1049,15 @@ namespace Clover.Player.Forms
             if (run.Age < run.T1) return true;
             run.T1 += Mathf.Max(0.1f, cast.Spec.Interval);
             cast.Combat.StrikeArea(run.C, radius, cast.Blow(cast.Spec.LingerDamage, 0f));
-            FormFx.Lay(FormMark.Ring, run.C, radius * 0.4f, FormKit.Lit(cast.Colour, 1.8f), 0.4f, radius * 2f);
+            if (run.Flag2)
+            {
+                // Hooked fumes rise off the front and bend back; pits open just ahead of it.
+                float yaw = ElementArt.Turn(run.B);
+                Vector3 top = run.C + Vector3.up * 0.3f + FormRules.OnRing(0, 1, radius * 0.6f, run.Age * 97f);
+                ElementArt.Fly(ElementArt.Piece(Ruyi(Mathf.FloorToInt(run.Age))), top, top + Vector3.up * 0.8f, Quaternion.Euler(0f, yaw, 0f), 1f, 1.1f);
+                ElementArt.Floor(ElementArt.Piece(Pits(Mathf.FloorToInt(run.Age))), run.C + run.B * (radius * 0.9f), yaw, 1.3f, 1.3f, 2.5f);
+            }
+            else FormFx.Lay(FormMark.Ring, run.C, radius * 0.4f, FormKit.Lit(cast.Colour, 1.8f), 0.4f, radius * 2f);
             // It follows whoever is nearest now.
             if (SigKit.Gather(run, run.C, 5f, 1) > 0) run.Victim = SpellWorks.Things(run)[0];
             return true;

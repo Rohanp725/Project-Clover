@@ -1,0 +1,116 @@
+// The elements' drawn sheets (Art/VFX/<Element>/*_flipbook.png): 4x4 frames rendered from the game camera in hard cel
+// bands with ink, read left to right then top to bottom. Unlit: the bands are already in the picture, so nothing in the
+// scene lights it and nothing here softens it. Alpha is cut hard at _Cutoff (an edge stays an edge, as the ink does),
+// then multiplied by _Opacity and the tint's alpha so a sheet can be seen through (Poison's gas) or fade at its end.
+// The frame comes from one of two places: a particle system's texture sheet animation writes it into the UVs (leave
+// _Frame below 0), or a quad held by code sets _Frame through a property block. With no texture the shader is a flat
+// unlit colour, which is what beams, shafts and see-through gas layers from the kits are drawn in.
+Shader "Clover/Flipbook"
+{
+    Properties
+    {
+        _MainTex ("Sheet", 2D) = "white" {}
+        [HDR] _Color ("Tint (rgb x HDR, alpha fades)", Color) = (1, 1, 1, 1)
+        _Columns ("Columns", Float) = 4
+        _Rows ("Rows", Float) = 4
+        _Frame ("Frame (below 0: the UVs already pick it)", Float) = -1
+        _Cutoff ("Alpha cut", Range(0, 1)) = 0.35
+        _Opacity ("Opacity after the cut", Range(0, 1)) = 1
+        _Bands ("Value bands (0: as drawn)", Float) = 0
+        [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Source blend", Float) = 5
+        [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Destination blend", Float) = 10
+    }
+
+    SubShader
+    {
+        Tags { "RenderType" = "Transparent" "RenderPipeline" = "UniversalPipeline" "Queue" = "Transparent" "IgnoreProjector" = "True" "PreviewType" = "Plane" }
+
+        Pass
+        {
+            Name "Flipbook"
+            Tags { "LightMode" = "UniversalForward" }
+            Blend [_SrcBlend] [_DstBlend]
+            ZWrite Off
+            ZTest LEqual
+            Cull Off
+
+            HLSLPROGRAM
+            #pragma vertex Vert
+            #pragma fragment Frag
+            #pragma multi_compile_instancing
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
+
+            TEXTURE2D(_MainTex);
+            SAMPLER(sampler_MainTex);
+
+            CBUFFER_START(UnityPerMaterial)
+                float4 _MainTex_ST;
+                half4 _Color;
+                float _Columns;
+                float _Rows;
+                float _Frame;
+                half _Cutoff;
+                half _Opacity;
+                half _Bands;
+                half _SrcBlend;
+                half _DstBlend;
+            CBUFFER_END
+
+            struct Attributes
+            {
+                float4 positionOS : POSITION;
+                float2 uv : TEXCOORD0;
+                // A particle's own colour (start colour, colour over life); white on a plain mesh.
+                half4 color : COLOR;
+                UNITY_VERTEX_INPUT_INSTANCE_ID
+            };
+
+            struct Varyings
+            {
+                float4 positionCS : SV_POSITION;
+                float2 uv : TEXCOORD0;
+                half4 color : TEXCOORD1;
+            };
+
+            Varyings Vert(Attributes input)
+            {
+                Varyings output;
+                UNITY_SETUP_INSTANCE_ID(input);
+                output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
+                float2 uv = input.uv;
+                if (_Frame >= 0)
+                {
+                    // Frame 0 is the top left; the texture's v runs upward, so rows are counted down from the top.
+                    float columns = max(1, _Columns), rows = max(1, _Rows);
+                    float frame = fmod(floor(_Frame), columns * rows);
+                    float column = fmod(frame, columns);
+                    float row = floor(frame / columns);
+                    uv = float2((uv.x + column) / columns, (uv.y + rows - 1 - row) / rows);
+                }
+                output.uv = uv * _MainTex_ST.xy + _MainTex_ST.zw;
+                output.color = input.color;
+                return output;
+            }
+
+            half4 Frag(Varyings input) : SV_Target
+            {
+                half4 sheet = SAMPLE_TEXTURE2D(_MainTex, sampler_MainTex, input.uv);
+                half3 colour = sheet.rgb;
+                if (_Bands > 0.5)
+                {
+                    // Snap the value to a few steps: a tint never smears the drawn bands into a gradient.
+                    half value = max(colour.r, max(colour.g, colour.b));
+                    half stepped = ceil(value * _Bands) / _Bands;
+                    colour *= value > 0.001 ? stepped / value : 0;
+                }
+                half alpha = step(_Cutoff, sheet.a) * _Opacity * _Color.a * input.color.a;
+                clip(alpha - 0.004);
+                colour *= _Color.rgb * input.color.rgb;
+                // Added light carries its own strength in the colour; laid paint carries it in the alpha.
+                colour *= _DstBlend < 1.5 ? alpha : 1.0;
+                return half4(colour, alpha);
+            }
+            ENDHLSL
+        }
+    }
+}
