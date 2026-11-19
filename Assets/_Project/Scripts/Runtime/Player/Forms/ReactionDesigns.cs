@@ -73,6 +73,13 @@ namespace Clover.Player.Forms
 
         public static bool IsDirected(string key) => System.Array.IndexOf(Directed, key) >= 0;
 
+        /// <summary>
+        /// The way from the look-dev's player through the enemy, as a yaw in a directed look's recipe space: 220 degrees
+        /// (the player stood toward +X, +Z) for most. Capsize's foam fan runs out along 270 and its grass lies toward
+        /// 90, so it is laid by that way, or the owner saw it "all over the place" (2026-11-19).
+        /// </summary>
+        public static float AwayYaw(string key) => key == "wind_water" ? 270f : 220f;
+
         // ---- The composed looks: each element's own piece on a body, and its ground mark if it has one.
 
         // Pieces that sit at a body's feet in the kit: Fire's globs bursting into tongues, Lightning's arcs crawling on the

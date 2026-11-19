@@ -134,6 +134,26 @@ namespace Clover.Player.Forms
 
         private const byte A = M.Arrive, I = M.Impact, F = M.Aftermath;
 
+        /// <summary>How much slower the looks the owner found too fast to judge are played (Shut in the Dark, Fire Medicine).</summary>
+        public const float SlowPace = 1.8f;
+
+        /// <summary>How much slower than the others a look is played: <see cref="SlowPace"/> for the two slowed, else 1.</summary>
+        public static float Pace(string key) => key == "poison_fire" || key == "dark_poison" ? SlowPace : 1f;
+
+        // A timeline played slower: every step's start, motion and life drawn out by the factor, its staggers too.
+        private static Timeline Slower(Timeline timeline, float factor)
+        {
+            for (int i = 0; i < timeline.Steps.Length; i++)
+            {
+                ref var step = ref timeline.Steps[i];
+                step.Cue.Delay *= factor;
+                step.Cue.Move *= factor;
+                step.Cue.Seconds *= factor;
+                step.Stagger *= factor;
+            }
+            return timeline;
+        }
+
         public static readonly Timeline[] Designed =
         {
             T("fire_ice", "frost tiers crust the legs; the coal crack-web flares and ice chips and shards burst; steam and embers drift off as the char spreads",
@@ -143,17 +163,21 @@ namespace Clover.Player.Forms
                 S("debris", M.Burst, I, 0.28f, 0.22f, 0.7f, 0f, 0, true),
                 S("vapour", M.Drift, F, 0.4f, 0.15f, 1f, 1f),
                 S("mark", M.Spread, F, 0.3f, 0.35f, 1.1f, 0.45f)),
-            T("fire_lightning", "violet static crawls the limbs; the tongues climb in threes; embers and smoke rise as the char spreads",
-                S("static", M.Flicker, A, 0f, 0.3f, 0.55f, 0f, 4, true),
-                S("flame", M.Lick, I, 0.22f, 0.18f, 0.85f, 0f, 0, false, 0.1f),
+            // The owner's review (2026-11-19): the lightning comes down from the sky, strobing, and the orange climbing
+            // flame is gone (the builder leaves it out), so the violet tongues are the fire.
+            T("fire_lightning", "a bolt falls out of the sky, strobing; violet static crawls the limbs; the violet tongues climb in threes; embers and smoke rise as the char spreads",
+                S("strike", M.Fall, A, 0f, 0.18f, 0.6f, 6f, 3, true),
+                S("static", M.Flicker, I, 0.18f, 0.3f, 0.55f, 0f, 4, true),
+                S("flame", M.Lick, I, 0.24f, 0.18f, 0.85f, 0f, 0, false, 0.1f),
                 S("vapour", M.Drift, F, 0.5f, 0.15f, 0.9f, 1f),
                 S("mark", M.Spread, F, 0.3f, 0.35f, 1.1f, 0.4f)),
-            T("poison_fire", "the fumes hang and the fuse and pits show; the bang: the lobed ring pulses, flames lick and sparks burst; steam and embers rise",
+            // Slowed by Slower: the owner could not judge it at its first pace (2026-11-19).
+            Slower(T("poison_fire", "the fumes hang and the fuse and pits show; the bang: the lobed ring pulses, flames lick and sparks burst; steam and embers rise",
                 S("vapour", M.Drift, A, 0f, 0.15f, 1.2f, 0.6f),
                 S("mark", M.Spread, A, 0f, 0.45f, 1.4f, 0.3f),
                 S("ring", M.Pulse, I, 0.3f, 0.08f, 0.8f, 2f),
                 S("flame", M.Lick, I, 0.32f, 0.15f, 0.85f, 0f, 0, false, 0.06f),
-                S("debris", M.Burst, I, 0.3f, 0.2f, 0.7f)),
+                S("debris", M.Burst, I, 0.3f, 0.2f, 0.7f)), SlowPace),
             T("lightning_ice", "frost crusts the body and static crackles over it; a bolt falls; pellets and chips burst; the glass fern spreads",
                 S("growth", M.Rise, A, 0f, 0.25f, 1f),
                 S("static", M.Flicker, A, 0.1f, 0.3f, 0.6f, 0f, 3, true),
@@ -170,21 +194,28 @@ namespace Clover.Player.Forms
                 // The wheel and the shadow bands on the ground show where the shaft lands (0.38 s).
                 S("still", M.Pop, I, 0.38f, 0.1f, 0.9f),
                 S("mark", M.Spread, F, 0.38f, 0.4f, 1f, 0.3f)),
-            T("dark_lightning", "the ash knot gathers over the head with pale streaks drawn in; cyan crawls in it; the black bolt strikes; the black fern spreads",
-                S("swirl", M.Spin, A, 0f, 0.4f, 0.9f, 240f),
-                S("static", M.Flicker, A, 0.15f, 0.3f, 0.8f, 0f, 3, true),
-                S("strike", M.Fall, I, 0.45f, 0.14f, 0.55f, 3.5f, 2),
-                S("mark", M.Spread, F, 0.55f, 0.3f, 0.85f, 0.4f)),
+            // The owner's review (2026-11-19): nothing of the lightning is seen held still before the strike, only the
+            // cyan crawling in the cloud (redrawn and turned every few frames); the cloud churns slowly, so the bolt's top
+            // stays in it, and the black bolt is drawn down out of the cloud to the head, joined to both. The violet static
+            // on the body comes with the strike.
+            T("dark_lightning", "the ash knot gathers over the head with pale streaks drawn in; cyan crawls in it; the black bolt is drawn down out of it to the head; static runs on the body; the black fern spreads",
+                S("swirl", M.Spin, A, 0f, 0.4f, 1.05f, 50f),
+                S("knotcrawl", M.Flicker, A, 0.12f, 0.42f, 0.45f, 137f, 9, true),
+                S("crawl", M.Flicker, I, 0.62f, 0.3f, 0.5f, 0f, 3, true),
+                S("strike", M.Extend, I, 0.5f, 0.12f, 0.55f, 0f, 2, true),
+                S("mark", M.Spread, F, 0.6f, 0.3f, 0.85f, 0.4f)),
             T("wind_water", "the grass flattens in from the windward side; the after-splash rises and drops fly; the foam combs out downwind",
                 S("wind", M.Sweep, A, 0f, 0.3f, 0.7f, 2.5f),
                 S("wave", M.Rise, I, 0.28f, 0.22f, 0.7f),
                 S("debris", M.Burst, I, 0.32f, 0.22f, 0.6f),
                 S("mark", M.Spread, F, 0.3f, 0.4f, 1f, 0.35f)),
-            T("wind_ice", "wind streaks sweep in; rime grows on the near side; chips blow out of the far side; fog drifts and the feathers fan out",
+            // The owner's review (2026-11-19): the crystals are seen blown on down the way the blow went, and the fog
+            // with them (the builder lays the fan along that way too).
+            T("wind_ice", "wind streaks sweep in; rime grows on the near side; chips blow out of the far side and on down the wind; fog is carried after them and the feathers fan out",
                 S("wind", M.Sweep, A, 0f, 0.3f, 0.7f, 2.5f),
                 S("growth", M.Rise, I, 0.22f, 0.25f, 1f),
-                S("debris", M.Burst, I, 0.35f, 0.25f, 0.7f, 0f, 0, true),
-                S("vapour", M.Drift, F, 0.4f, 0.2f, 0.9f, 0.4f),
+                S("debris", M.Blow, I, 0.35f, 0.2f, 0.95f, 2.6f, 0, true),
+                S("vapour", M.Blow, F, 0.4f, 0.2f, 1f, 1.4f),
                 S("mark", M.Spread, F, 0.35f, 0.4f, 1f, 0.3f)),
             T("water_light", "the shaft falls on the first body; the crown splashes up and glints flash on the water; the net spreads across the pool",
                 S("strike", M.Fall, A, 0f, 0.2f, 0.7f, 5f, 0, true),
@@ -206,19 +237,24 @@ namespace Clover.Player.Forms
                 S("mark", M.Spread, A, 0.05f, 0.6f, 1.4f, 0.3f),
                 S("ring", M.Pulse, I, 0.3f, 0.08f, 0.9f, 3f),
                 S("vapour", M.Drift, F, 0.4f, 0.15f, 0.9f, 0.7f)),
-            T("dark_poison", "the mites spiral in and the black mouth spreads; the lobed front laps and bursts; fumes hook inward",
+            Slower(T("dark_poison", "the mites spiral in and the black mouth spreads; the lobed front laps and bursts; fumes hook inward",
                 S("swirl", M.Spin, A, 0f, 0.45f, 0.9f, -260f),
                 S("mark", M.Spread, A, 0.05f, 0.4f, 1.3f, 0.35f),
                 S("ring", M.Pulse, I, 0.35f, 0.08f, 0.8f, 2f),
-                S("vapour", M.Drift, F, 0.45f, 0.15f, 0.85f, 0.5f)),
-            T("poison_lightning", "jagged nerve lines strobe up out of the body and static crawls; the burst rings jolt; the green fern spreads",
+                S("vapour", M.Drift, F, 0.45f, 0.15f, 0.85f, 0.5f)), SlowPace),
+            // The owner's review (2026-11-19): no big burst (the builder leaves its rings out); small jolts over the body
+            // here, and again at every bite of the poison (AfflictionArt.Jolt).
+            T("poison_lightning", "jagged nerve lines strobe up out of the body; static jolts over it; the green fern spreads",
                 S("nerveruyi", M.Rise, A, 0f, 0.2f, 0.8f, 0f, 3),
-                S("static", M.Flicker, A, 0.08f, 0.3f, 0.6f, 0f, 3, true),
+                S("static", M.Flicker, I, 0.2f, 0.3f, 0.6f, 120f, 4, true),
                 S("ring", M.Pulse, I, 0.28f, 0.06f, 0.8f, 4f),
                 S("mark", M.Spread, F, 0.3f, 0.35f, 1f, 0.4f)),
-            T("water_earth", "the slabs drop and tip in round the pit; the funnel and collar open; water seeps up in rings",
+            // The owner's review (2026-11-19): the ground needs a splash outward to feel like water: Water's approved
+            // after-splash and crown, borrowed by the builder, rise round the pit as the slabs land.
+            T("water_earth", "the slabs drop and tip in round the pit; water splashes up and out round it; the funnel and collar open; water seeps up in rings",
                 // Held a metre up so the drop is seen from the game's camera (0.45 m read as standing still).
                 S("growth", M.Sink, A, 0f, 0.4f, 1.1f, 1f),
+                S("wave", M.Rise, I, 0.3f, 0.22f, 0.9f),
                 S("mark", M.Spread, I, 0.25f, 0.5f, 1.15f, 0.3f),
                 S("ring", M.Pulse, F, 0.45f, 0.1f, 0.8f, 2f)),
             T("wind_earth", "wind sweeps in from the side; the rut ring heaves up and dust bursts; the comb spreads",
@@ -226,7 +262,10 @@ namespace Clover.Player.Forms
                 S("growth", M.Rise, I, 0.25f, 0.25f, 0.9f),
                 S("debris", M.Burst, I, 0.3f, 0.22f, 0.65f),
                 S("mark", M.Spread, F, 0.25f, 0.4f, 1f, 0.35f)),
-            T("earth_metal", "the ground heaves at its back; the plates clang with a white-hot notch; shards and dust fly; the clang rings spread",
+            // The owner's review (2026-11-19): the anvil springs up out of the ground (from 1.2 m under it) in the middle
+            // of the look, under the one struck (the builder centres it).
+            T("earth_metal", "the anvil springs up out of the ground under it and the ground heaves; the plates clang with a white-hot notch; shards and dust fly; the clang rings spread",
+                S("anvil", M.Rise, A, 0f, 0.3f, 1.1f, 1.2f),
                 S("growth", M.Rise, A, 0f, 0.28f, 1f),
                 S("ring", M.Pulse, I, 0.26f, 0.06f, 0.85f, 3f, 0, true),
                 S("debris", M.Burst, I, 0.28f, 0.22f, 0.7f, 0f, 0, true),
@@ -237,10 +276,12 @@ namespace Clover.Player.Forms
                 S("growth", M.Rise, A, 0.05f, 0.28f, 1f),
                 S("ring", M.Pulse, I, 0.22f, 0.06f, 0.8f, 2f, 0, true),
                 S("debris", M.Burst, F, 0.35f, 0.25f, 0.7f)),
-            T("life_dark", "black fig roots grip the floor; briars and vines climb; pale coils wind up the body; leaves fall away",
+            // The owner's review (2026-11-19): the coils turning round the body and the pale streaks on the floor read as
+            // wind round the black roots; the streaks are left out and the coils grow up the body without turning.
+            T("life_dark", "black fig roots grip the floor; briars and vines climb; pale coils grow up round the body; leaves fall away",
                 S("mark", M.Spread, A, 0f, 0.45f, 1.3f, 0.3f),
                 S("growth", M.Rise, A, 0.08f, 0.3f, 1f),
-                S("swirl", M.Spin, I, 0.28f, 0.3f, 0.9f, 300f),
+                S("coils", M.Rise, I, 0.28f, 0.3f, 0.9f),
                 S("debris", M.Burst, F, 0.4f, 0.25f, 0.7f)),
             T("fire_water", "flame stubs flicker on the body; the water lands and the soot ring spreads; the splash rises; steam billows up and thins",
                 S("flame", M.Lick, A, 0f, 0.15f, 0.45f),

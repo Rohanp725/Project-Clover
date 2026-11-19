@@ -203,7 +203,8 @@ namespace Clover.Tests
                 Assert.IsTrue(ReactionTimelines.HasArrivalAndImpact(timeline.Steps), timeline.Key);
                 Assert.IsFalse(string.IsNullOrEmpty(timeline.Story), timeline.Key);
                 float end = timeline.Steps.Max(step => step.Cue.End);
-                Assert.That(end, Is.InRange(0.6f, 1.6f), $"{timeline.Key} plays in about a second");
+                // The two the owner found too fast to judge are played slower (2026-11-19).
+                Assert.That(end, Is.InRange(0.6f, 1.6f * ReactionTimelines.Pace(timeline.Key)), $"{timeline.Key} plays in about a second");
                 foreach (var step in timeline.Steps)
                 {
                     Assert.Greater(step.Cue.Seconds, step.Cue.Move, $"{timeline.Key} {step.Match}: it holds a while after it moves");

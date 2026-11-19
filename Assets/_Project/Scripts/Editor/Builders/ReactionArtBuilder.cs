@@ -70,6 +70,91 @@ namespace Clover.EditorTools
             ["earth_metal"] = new[] { "c2_earth_metal_combo_anvilstone" },
         };
 
+        // ---- The owner's review of the GIFs (docs/design/feedback/2026-11-19_effects_review.md), as changes to the
+        // recipe that need no new art: pieces left out, pieces moved, and approved pieces borrowed from other looks.
+
+        /// <summary>
+        /// Recipe pieces each look leaves out, by "kit object" (a prefix, so a group's ".001" copies go too) or
+        /// "kit object|material": Flashover's orange climbing flame and its lightning lying along the floor (its bolt now
+        /// falls from the sky), Rime's pale concentric arcs on the player's side, Nerve Fire's big bursting rings (it
+        /// jolts at each bite instead), and Girdled's pale floor streaks, which read as wind round the black roots.
+        /// </summary>
+        public static readonly Dictionary<string, string[]> LeftOut = new Dictionary<string, string[]>
+        {
+            ["fire_lightning"] = new[] { "vfx2_fire_climb_affliction", "vfx3c_vfx_lightning_arc", "vfx3c_vfx_lightning_flash" },
+            ["wind_ice"] = new[] { "vfx2_wind_comb_infused|m2_wind_pale" },
+            ["poison_lightning"] = new[] { "vfx2_poison_burst_affliction" },
+            ["life_dark"] = new[] { "vfx2_dark_streaks_hit" },
+        };
+
+        /// <summary>
+        /// Recipe pieces moved, by "pair|kit object" (a prefix; for a piece taken from the source, its name less
+        /// "c2_&lt;pair&gt;_"): turned by a yaw about the body, then moved, in the recipe's space (+Z is toward the game's
+        /// camera once a look is turned to it). Rime's frost fan turned onto the blow's way; Capsize's splash, crown,
+        /// drops and wind gathered onto the body; Anvil Stone's anvil set in the middle, under the one struck, sunk so
+        /// it springs up round its legs; The Bolt Runs True's bolt run down its own line to the ground, through the body
+        /// as the camera sees it, where it stopped short over the head before.
+        /// </summary>
+        public static readonly Dictionary<string, (float yaw, Vector3 move)> Moved = new Dictionary<string, (float, Vector3)>
+        {
+            ["wind_ice|vfx2_wind_comb_infused"] = (-52.5f, Vector3.zero),
+            ["wind_water|vfx2_water_aftersplash_hit"] = (0f, new Vector3(0.89f, 0f, -0.31f)),
+            ["wind_water|vfx3c_vfx_water_crown"] = (0f, new Vector3(0.73f, 0f, -1.41f)),
+            ["wind_water|vfx3c_vfx_water_drop"] = (0f, new Vector3(0.17f, 0f, -2f)),
+            ["wind_water|vfx3c_vfx_wind_streak"] = (0f, new Vector3(0f, 0f, -1.3f)),
+            ["wind_water|vfx3c_vfx_wind_curl"] = (0f, new Vector3(0f, 0f, -1.1f)),
+            ["earth_metal|combo_anvilstone"] = (0f, new Vector3(0.74f, -1.3f, 1.04f)),
+            ["light_lightning|vfx2c_light_lightning_truebolt"] = (0f, new Vector3(0f, -1.9f, 0.94f)),
+        };
+
+        /// <summary>An approved piece one look borrows from another's recipe, put where this look wants it.</summary>
+        public struct Borrowed
+        {
+            public string Into, From, KitObject;
+            public int Instance;
+            public Vector3 Position, Scale;
+            public bool OnGround;
+        }
+
+        /// <summary>
+        /// Flashover's bolt out of the sky is Earthed's (the owner praised Lightning's whole set); The Ground Gives'
+        /// splash outward round the pit is Water's after-splash and crown, as Capsize wears them.
+        /// </summary>
+        public static readonly Borrowed[] Borrowings =
+        {
+            new Borrowed { Into = "fire_lightning", From = "lightning_earth", KitObject = "vfx3c_vfx_lightning_bolt_a", Instance = 0, Position = new Vector3(0f, -0.06f, 0f), Scale = new Vector3(1.4f, 1.9f, 1f) },
+            new Borrowed { Into = "water_earth", From = "wind_water", KitObject = "vfx2_water_aftersplash_hit", Instance = 0, Position = new Vector3(0f, -0.02f, 0f), Scale = Vector3.one * 2f, OnGround = true },
+            new Borrowed { Into = "water_earth", From = "wind_water", KitObject = "vfx3c_vfx_water_crown", Instance = 0, Position = Vector3.zero, Scale = new Vector3(1.5f, 1.1f, 1.5f), OnGround = true },
+        };
+
+        /// <summary>True when the look leaves this recipe group out.</summary>
+        public static bool IsLeftOut(string pair, string kitObject, string material)
+        {
+            if (!LeftOut.TryGetValue(pair, out var list)) return false;
+            foreach (string entry in list)
+            {
+                int bar = entry.IndexOf('|');
+                string prefix = bar < 0 ? entry : entry.Substring(0, bar);
+                if (kitObject.StartsWith(prefix) && (bar < 0 || entry.Substring(bar + 1) == material)) return true;
+            }
+            return false;
+        }
+
+        /// <summary>The move a piece of this look takes (<see cref="Moved"/>), as a matrix in the recipe's space; identity for none.</summary>
+        public static Matrix4x4 MoveOf(string pair, string kitObject)
+        {
+            foreach (var entry in Moved)
+            {
+                int bar = entry.Key.IndexOf('|');
+                if (entry.Key.Substring(0, bar) == pair && kitObject.StartsWith(entry.Key.Substring(bar + 1)))
+                    return Matrix4x4.Translate(entry.Value.move) * Matrix4x4.Rotate(Quaternion.Euler(0f, entry.Value.yaw, 0f));
+            }
+            return Matrix4x4.identity;
+        }
+
+        // The recipe being built, for borrowing from other looks.
+        private static ReactionRecipe building;
+
         /// <summary>A piece whose top is no higher than this lies on the ground (the recipe's own rule for its placement).</summary>
         private const float GroundTop = 0.15f;
 
@@ -314,6 +399,8 @@ namespace Clover.EditorTools
             public readonly List<string> Missing = new List<string>();
             public readonly HashSet<string> Grey = new HashSet<string>();
             public int FlatPieces;
+            /// <summary>Recipe pieces left out and pieces borrowed from other looks (the owner's review, 2026-11-19).</summary>
+            public int LeftOut, Borrowed;
             /// <summary>Groups folded into others to keep within the part budget.</summary>
             public readonly List<string> Folded = new List<string>();
 
@@ -371,6 +458,7 @@ namespace Clover.EditorTools
                 Debug.LogError($"[Clover.Build] The reaction recipe at {RecipePath} could not be read: {problem.Message}");
                 return;
             }
+            building = recipe;
 
             BuildKit.EnsureFolder(Folder);
             var set = Set();
@@ -605,6 +693,7 @@ namespace Clover.EditorTools
                 case ReactionMotion.Spread:
                     return new Vector3(middle.x, bounds.min.y, middle.z);
                 case ReactionMotion.Burst:
+                case ReactionMotion.Blow:
                     return offAxis < NearBody ? new Vector3(0f, Mathf.Clamp(middle.y, 0.3f, 1.6f), 0f) : middle;
                 case ReactionMotion.Spin:
                     return offAxis < NearBody ? new Vector3(0f, middle.y, 0f) : middle;
@@ -633,22 +722,43 @@ namespace Clover.EditorTools
             var gathered = new Gathered();
             foreach (var group in combo.Groups)
             {
-                if (!kits.TryGetValue(group.Kit, out var kit))
+                if (IsLeftOut(combo.Pair, group.KitObject, group.Material))
                 {
-                    var asset = AssetDatabase.LoadAssetAtPath<GameObject>(KitPath(group.Kit));
-                    var pieces = new Dictionary<string, MeshFilter>();
-                    if (asset != null)
-                        foreach (var filter in asset.GetComponentsInChildren<MeshFilter>(true)) pieces[filter.name] = filter;
-                    else Debug.LogError($"[Clover.Build] Reaction art: no kit at {KitPath(group.Kit)}.");
-                    kit = (asset != null ? asset.transform : null, pieces);
-                    kits[group.Kit] = kit;
+                    gathered.LeftOut += group.Instances.Count;
+                    continue;
                 }
+                var kit = KitOf(group.Kit, kits);
                 if (!kit.pieces.TryGetValue(group.KitObject, out var piece) || piece.sharedMesh == null)
                 {
                     gathered.Missing.Add($"{group.KitObject} ({group.Kit}) x{group.Instances.Count}");
                     continue;
                 }
                 foreach (var instance in group.Instances) AddPiece(combo, group, instance, piece, kit.root, gathered, source, split);
+            }
+            foreach (var borrowed in Borrowings)
+            {
+                if (borrowed.Into != combo.Pair || building == null) continue;
+                var donor = building.Combos.Find(other => other.Pair == borrowed.From);
+                var group = donor?.Groups.Find(other => other.KitObject == borrowed.KitObject);
+                if (group == null || borrowed.Instance >= group.Instances.Count)
+                {
+                    gathered.Missing.Add($"{borrowed.KitObject} borrowed from {borrowed.From} (not in the recipe)");
+                    continue;
+                }
+                var kit = KitOf(group.Kit, kits);
+                if (!kit.pieces.TryGetValue(group.KitObject, out var piece) || piece.sharedMesh == null)
+                {
+                    gathered.Missing.Add($"{group.KitObject} ({group.Kit}) borrowed from {borrowed.From}");
+                    continue;
+                }
+                var instance = group.Instances[borrowed.Instance];
+                // In the donor's own bands (read from the source as it wears them there), placed where this look wants it.
+                var toKit = kit.root.worldToLocalMatrix * piece.transform.localToWorldMatrix;
+                toKit.SetColumn(3, new Vector4(0f, 0f, 0f, 1f));
+                if (group.Kit.StartsWith("vfx_combo_")) toKit = ComboKitTurn * toKit;
+                var place = Matrix4x4.TRS(borrowed.Position, Quaternion.Euler(instance.Rotation), borrowed.Scale) * toKit;
+                AddMesh(combo.Pair, group.KitObject, piece.sharedMesh, place, Worn(donor, group, instance, piece, source), borrowed.OnGround, group.Material, gathered, split);
+                gathered.Borrowed++;
             }
             if (source != null && LeftOutOfRecipe.TryGetValue(combo.Pair, out var leftOut) && source.Places.TryGetValue("enemy~" + combo.Pair, out var body))
             {
@@ -677,6 +787,14 @@ namespace Clover.EditorTools
                     // holds Wind's word "comb", which made the jar's lacquer ring and the anvil sweep in like wind.
                     string prefix = "c2_" + combo.Pair + "_";
                     string kitObject = name.StartsWith(prefix) ? name.Substring(prefix.Length) : name;
+                    var moved = MoveOf(combo.Pair, kitObject);
+                    if (!moved.isIdentity)
+                    {
+                        // Where it lies on the body or the ground is judged where the look-dev put it, not where it is moved to.
+                        AddMesh(combo.Pair, kitObject, mesh, moved * place, worn.ToArray(), top <= GroundTop, worn.Count > 0 ? worn[0] : null, gathered, split);
+                        source.Added++;
+                        continue;
+                    }
                     AddMesh(combo.Pair, kitObject, mesh, place, worn.ToArray(), top <= GroundTop, worn.Count > 0 ? worn[0] : null, gathered, split);
                     source.Added++;
                 }
@@ -687,8 +805,23 @@ namespace Clover.EditorTools
         private static void AddPiece(ReactionRecipe.Combo combo, ReactionRecipe.Group group, ReactionRecipe.Instance instance, MeshFilter filter, Transform kitRoot,
             Gathered gathered, Source source, bool split)
         {
-            AddMesh(combo.Pair, group.KitObject, filter.sharedMesh, Placement(group, instance, filter, kitRoot), Worn(combo, group, instance, filter, source), instance.OnGround,
+            var place = MoveOf(combo.Pair, group.KitObject) * Placement(group, instance, filter, kitRoot);
+            AddMesh(combo.Pair, group.KitObject, filter.sharedMesh, place, Worn(combo, group, instance, filter, source), instance.OnGround,
                 group.Material, gathered, split);
+        }
+
+        // A kit's pieces by name, loaded once a build.
+        private static (Transform root, Dictionary<string, MeshFilter> pieces) KitOf(string kitName, Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)> kits)
+        {
+            if (kits.TryGetValue(kitName, out var kit)) return kit;
+            var asset = AssetDatabase.LoadAssetAtPath<GameObject>(KitPath(kitName));
+            var pieces = new Dictionary<string, MeshFilter>();
+            if (asset != null)
+                foreach (var filter in asset.GetComponentsInChildren<MeshFilter>(true)) pieces[filter.name] = filter;
+            else Debug.LogError($"[Clover.Build] Reaction art: no kit at {KitPath(kitName)}.");
+            kit = (asset != null ? asset.transform : null, pieces);
+            kits[kitName] = kit;
+            return kit;
         }
 
         /// <summary>
@@ -1164,7 +1297,9 @@ namespace Clover.EditorTools
                 notes.Add("grey (no paint): " + string.Join(", ", gathered.Grey));
                 Debug.LogWarning($"[Clover.Build] Reaction art: {combo.Name} has no paint for {string.Join(", ", gathered.Grey)}; drawn grey.");
             }
-            if (look.Directed) notes.Add("laid along the blow");
+            if (look.Directed) notes.Add($"laid along the blow (its way {ReactionDesigns.AwayYaw(combo.Pair):0} degrees in the recipe)");
+            if (gathered.LeftOut > 0) notes.Add($"{gathered.LeftOut} recipe pieces left out (owner's review)");
+            if (gathered.Borrowed > 0) notes.Add($"{gathered.Borrowed} pieces borrowed from other looks (owner's review)");
             if (look.PartCount > PartBudget) notes.Add($"OVER {PartBudget} parts");
             if (gathered.Folded.Count > 0) notes.Add("folded to fit: " + string.Join(", ", gathered.Folded));
             Report.AppendLine($"| {combo.Name} ({combo.Pair}) | {AfflictionPairs.Name(look.Pair)} | {look.Pieces} ({gathered.FlatPieces} flat) | {look.PartCount} ({solids}, {glows}, {marks}) | {look.Triangles} | {lampsKept} of {lampsInRecipe} | {look.ImpactAt:0.00} s, {look.Seconds:0.00} s | {string.Join("; ", notes)} |");

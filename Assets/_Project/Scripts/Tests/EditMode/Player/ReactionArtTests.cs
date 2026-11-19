@@ -308,7 +308,8 @@ namespace Clover.Tests
                 Assert.LessOrEqual(look.PartCount, ReactionArtBuilder.PartBudget, $"{look.Name}: its parts are renderers the crowd's pool must find");
                 Assert.LessOrEqual(look.LampCount, ReactionDesigns.MostLampsPerLook, look.Name);
                 Assert.LessOrEqual(look.Triangles, ReactionArtBuilder.TriangleBudget, look.Name);
-                Assert.That(look.Seconds, Is.InRange(0.6f, 1.7f), $"{look.Name} plays in about a second");
+                // The two the owner found too fast to judge are played slower (2026-11-19).
+                Assert.That(look.Seconds, Is.InRange(0.6f, 1.7f * ReactionTimelines.Pace(look.Key)), $"{look.Name} plays in about a second");
                 Assert.That(look.ImpactAt, Is.InRange(0f, look.Seconds), look.Name);
                 Assert.IsFalse(string.IsNullOrEmpty(look.Story), $"{look.Name} has its timeline");
                 bool arrives = false, lands = false;

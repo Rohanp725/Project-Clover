@@ -1,32 +1,32 @@
 # Reaction art
 
-24 designed looks from Assets/_Project/Art/VFX/Combos/combos_recipe.json, 148 parts (at most 10 a look, budget 10), 28 lamps, 33 floor masks. Materials: per triangle as Assets/_Project/Art/Source/vfx_combos_v2.blend has them; 1024 pieces found there, 137 of them banded again from it, 0 that could not be matched; 5 pieces the recipe left out taken from it as they lie there. A look over 8000 triangles is marked OVER. Lamps: intensity = W / (4 pi^2), range sqrt(2 I) held to 1.5-5 m, at most 2 a look, lit at the impact.
+24 designed looks from Assets/_Project/Art/VFX/Combos/combos_recipe.json, 149 parts (at most 10 a look, budget 10), 28 lamps, 32 floor masks. Materials: per triangle as Assets/_Project/Art/Source/vfx_combos_v2.blend has them; 1010 pieces found there, 128 of them banded again from it, 0 that could not be matched; 5 pieces the recipe left out taken from it as they lie there. A look over 8000 triangles is marked OVER. Lamps: intensity = W / (4 pi^2), range sqrt(2 I) held to 1.5-5 m, at most 2 a look, lit at the impact.
 
 | Reaction (recipe) | Game name | Pieces | Parts (solid, glow, marks) | Triangles | Lamps kept of | Impact, length | Notes |
 |---|---|---|---|---|---|---|---|
 | Thermal Shock (fire_ice) | Thermal Shock | 80 (3 flat) | 8 (7, 0, 1) | 5610 | 2 of 3 | 0.25 s, 1.40 s | lamps left out: c2_fire_ice_cold 200 W |
-| Flashover (fire_lightning) | Flashover | 56 (3 flat) | 8 (7, 0, 1) | 5876 | 2 of 2 | 0.20 s, 1.40 s |  |
-| Fire Medicine (poison_fire) | Fire Medicine | 84 (7 flat) | 10 (7, 1, 2) | 7266 | 2 of 3 | 0.30 s, 1.50 s | lamps left out: c2_poison_fire_heart 150 W |
+| Flashover (fire_lightning) | Flashover | 56 (3 flat) | 8 (7, 0, 1) | 4896 | 2 of 2 | 0.18 s, 1.40 s | 11 recipe pieces left out (owner's review); 1 pieces borrowed from other looks (owner's review) |
+| Fire Medicine (poison_fire) | Fire Medicine | 84 (7 flat) | 10 (7, 1, 2) | 7266 | 2 of 3 | 0.54 s, 2.62 s | lamps left out: c2_poison_fire_heart 150 W |
 | Sleet Charge (lightning_ice) | Sleet Charge | 88 (2 flat) | 7 (6, 0, 1) | 2818 | 2 of 2 | 0.50 s, 1.40 s |  |
 | Diamond Ring (light_dark) | Diamond Ring | 11 (7 flat) | 6 (3, 1, 2) | 416 | 1 of 1 | 0.38 s, 1.48 s |  |
-| The Grudge (dark_lightning) | The Grudge | 8 (2 flat) | 4 (3, 0, 1) | 664 | 1 of 1 | 0.59 s, 1.40 s |  |
-| Capsize (wind_water) | Capsize | 39 (4 flat) | 4 (3, 0, 1) | 2679 | 1 of 1 | 0.32 s, 1.30 s | laid along the blow |
-| Rime (wind_ice) | Rime | 85 (3 flat) | 6 (3, 1, 2) | 3002 | 1 of 1 | 0.35 s, 1.45 s | laid along the blow |
+| The Grudge (dark_lightning) | The Grudge | 8 (2 flat) | 5 (4, 0, 1) | 664 | 1 of 1 | 0.62 s, 1.45 s |  |
+| Capsize (wind_water) | Capsize | 39 (4 flat) | 4 (3, 0, 1) | 2679 | 1 of 1 | 0.32 s, 1.30 s | laid along the blow (its way 270 degrees in the recipe) |
+| Rime (wind_ice) | Rime | 85 (2 flat) | 5 (3, 1, 1) | 3002 | 1 of 1 | 0.35 s, 1.40 s | laid along the blow (its way 220 degrees in the recipe); 1 recipe pieces left out (owner's review) |
 | Caught Light (water_light) | Caught Light | 22 (8 flat) | 6 (3, 1, 2) | 2144 | 1 of 1 | 0.22 s, 1.40 s |  |
 | Burnt Mound (earth_fire) | Burnt Mound | 59 (8 flat) | 9 (8, 0, 1) | 3176 | 2 of 5 | 0.45 s, 1.35 s | lamps left out: c2_earth_fire_stone0 180 W, c2_earth_fire_stone1 180 W, c2_earth_fire_stone2 180 W |
 | Fish Poison (poison_water) | Fish Poison | 35 (10 flat) | 5 (3, 0, 2) | 2710 | 1 of 1 | 0.30 s, 1.55 s |  |
-| The Sealed Jar (dark_poison) | Shut in the Dark | 98 (2 flat) | 7 (6, 0, 1) | 6044 | 1 of 1 | 0.35 s, 1.35 s |  |
-| Nerve Fire (poison_lightning) | Nerve Fire | 10 (4 flat) | 4 (3, 0, 1) | 498 | 1 of 1 | 0.28 s, 1.30 s |  |
-| The Ground Gives (water_earth) | The Ground Gives | 35 (5 flat) | 6 (4, 0, 2) | 2312 | 0 of 0 | 0.20 s, 1.50 s |  |
-| Logan Stone (wind_earth) | Logan Stone | 33 (2 flat) | 6 (4, 0, 2) | 1966 | 0 of 0 | 0.30 s, 1.35 s | laid along the blow |
-| Anvil Stone (earth_metal) | Anvil Stone | 27 (3 flat) | 5 (4, 0, 1) | 3925 | 1 of 1 | 0.26 s, 1.30 s |  |
+| The Sealed Jar (dark_poison) | Shut in the Dark | 98 (2 flat) | 7 (6, 0, 1) | 6044 | 1 of 1 | 0.63 s, 2.43 s |  |
+| Nerve Fire (poison_lightning) | Nerve Fire | 10 (4 flat) | 3 (2, 0, 1) | 366 | 1 of 1 | 0.20 s, 1.30 s | 4 recipe pieces left out (owner's review) |
+| The Ground Gives (water_earth) | The Ground Gives | 35 (5 flat) | 7 (5, 0, 2) | 2923 | 0 of 0 | 0.20 s, 1.50 s | 2 pieces borrowed from other looks (owner's review) |
+| Logan Stone (wind_earth) | Logan Stone | 33 (2 flat) | 6 (4, 0, 2) | 1966 | 0 of 0 | 0.30 s, 1.35 s | laid along the blow (its way 220 degrees in the recipe) |
+| Anvil Stone (earth_metal) | Anvil Stone | 27 (3 flat) | 6 (5, 0, 1) | 3925 | 1 of 1 | 0.26 s, 1.30 s |  |
 | Iron Thorns (life_metal) | Iron Thorns | 46 (2 flat) | 6 (5, 0, 1) | 2008 | 1 of 1 | 0.22 s, 1.20 s |  |
-| Girdled (life_dark) | Girdled | 31 (4 flat) | 4 (3, 0, 1) | 5766 | 0 of 0 | 0.28 s, 1.30 s |  |
+| Girdled (life_dark) | Girdled | 31 (3 flat) | 4 (3, 0, 1) | 5766 | 0 of 0 | 0.58 s, 1.30 s | 1 recipe pieces left out (owner's review) |
 | Steam (fire_water) | Steam | 53 (3 flat) | 6 (5, 0, 1) | 7397 | 2 of 2 | 0.18 s, 1.40 s |  |
 | Glint (metal_light) | Glint | 13 (4 flat) | 7 (4, 1, 2) | 743 | 1 of 1 | 0.16 s, 1.45 s |  |
 | Firebloom (fire_life) | Firebloom | 48 (7 flat) | 8 (7, 0, 1) | 3140 | 2 of 4 | 0.30 s, 1.35 s | lamps left out: c2_fire_life_lily1 150 W, c2_fire_life_lily2 150 W |
 | Earthed (lightning_earth) | Earthed | 35 (2 flat) | 7 (6, 0, 1) | 4746 | 2 of 2 | 0.20 s, 1.25 s |  |
-| Stolen Warmth (dark_ice) | Stolen Warmth | 22 (5 flat) | 5 (4, 0, 1) | 1136 | 0 of 0 | 0.63 s, 1.30 s | laid along the blow |
+| Stolen Warmth (dark_ice) | Stolen Warmth | 22 (5 flat) | 5 (4, 0, 1) | 1136 | 0 of 0 | 0.63 s, 1.30 s | laid along the blow (its way 220 degrees in the recipe) |
 | The Bolt Runs True (light_lightning) | The Bolt Runs True | 6 (4 flat) | 4 (2, 0, 2) | 156 | 1 of 1 | 0.26 s, 1.20 s |  |
 
 ## Motion
@@ -50,16 +50,16 @@ frost tiers crust the legs; the coal crack-web flares and ice chips and shards b
 
 ### Flashover (Flashover)
 
-violet static crawls the limbs; the tongues climb in threes; embers and smoke rise as the char spreads.
+a bolt falls out of the sky, strobing; violet static crawls the limbs; the violet tongues climb in threes; embers and smoke rise as the char spreads.
 
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|
-| fire_lightning body fire flame fire tongue a | lick | impact | 0.32 to 1.17 | 5 | 880 |
-| fire_lightning body fire flame fire tongue b | lick | impact | 0.42 to 1.27 | 5 | 880 |
-| fire_lightning body fire flame fire tongue c | lick | impact | 0.52 to 1.37 | 7 | 1232 |
+| fire_lightning body fire flame fire tongue a | lick | impact | 0.24 to 1.09 | 5 | 880 |
+| fire_lightning body fire flame fire tongue b | lick | impact | 0.34 to 1.19 | 5 | 880 |
+| fire_lightning body fire flame fire tongue c | lick | impact | 0.44 to 1.29 | 7 | 1232 |
 | fire_lightning body fire vapour | drift | aftermath | 0.50 to 1.40 | 17 | 1068 |
-| fire_lightning body lightning static | flicker (4 strobes), flash | arrive | 0.00 to 0.55 | 17 | 1302 |
-| fire_lightning body lightning flame fire climb affliction | lick | impact | 0.22 to 1.07 | 1 | 416 |
+| fire_lightning body lightning strike | fall (3 strobes), flash | arrive | 0.00 to 0.60 | 1 | 156 |
+| fire_lightning body lightning static | flicker (4 strobes), flash | impact | 0.18 to 0.73 | 7 | 582 |
 | fire_lightning ground lightning still | pop | impact | 0.20 to 1.10 | 1 | 98 |
 | fire_lightning mark 0 | spread | aftermath | 0.30 to 1.40 | 3 | 2 |
 
@@ -69,16 +69,16 @@ the fumes hang and the fuse and pits show; the bang: the lobed ring pulses, flam
 
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|
-| poison_fire body fire flame | lick | impact | 0.32 to 1.17 | 18 | 3408 |
-| poison_fire body fire vapour | drift | arrive | 0.00 to 1.20 | 21 | 498 |
-| poison_fire body fire ring | pulse | impact | 0.30 to 1.10 | 3 | 1136 |
-| poison_fire body metal debris | burst | impact | 0.30 to 1.00 | 28 | 448 |
-| poison_fire body poison vapour | drift | arrive | 0.00 to 1.20 | 2 | 800 |
-| poison_fire body poison ring | pulse | impact | 0.30 to 1.10 | 1 | 16 |
-| poison_fire body water vapour | drift | arrive | 0.00 to 1.20 | 3 | 900 |
-| poison_fire body glow vapour | drift | arrive | 0.00 to 1.20 | 1 | 60 |
-| poison_fire mark 0 | spread | arrive | 0.00 to 1.40 | 7 | 2 |
-| poison_fire mark 1 | spread | arrive | 0.10 to 1.50 | 7 | 2 |
+| poison_fire body fire flame | lick | impact | 0.58 to 2.11 | 18 | 3408 |
+| poison_fire body fire vapour | drift | arrive | 0.00 to 2.16 | 21 | 498 |
+| poison_fire body fire ring | pulse | impact | 0.54 to 1.98 | 3 | 1136 |
+| poison_fire body metal debris | burst | impact | 0.54 to 1.80 | 28 | 448 |
+| poison_fire body poison vapour | drift | arrive | 0.00 to 2.16 | 2 | 800 |
+| poison_fire body poison ring | pulse | impact | 0.54 to 1.98 | 1 | 16 |
+| poison_fire body water vapour | drift | arrive | 0.00 to 2.16 | 3 | 900 |
+| poison_fire body glow vapour | drift | arrive | 0.00 to 2.16 | 1 | 60 |
+| poison_fire mark 0 | spread | arrive | 0.00 to 2.52 | 7 | 2 |
+| poison_fire mark 1 | spread | arrive | 0.10 to 2.62 | 7 | 2 |
 
 ### Sleet Charge (Sleet Charge)
 
@@ -109,14 +109,15 @@ dark's streaks wheel in; the slatted shaft lands; the eclipse ring and its bead 
 
 ### The Grudge (The Grudge)
 
-the ash knot gathers over the head with pale streaks drawn in; cyan crawls in it; the black bolt strikes; the black fern spreads.
+the ash knot gathers over the head with pale streaks drawn in; cyan crawls in it; the black bolt is drawn down out of it to the head; static runs on the body; the black fern spreads.
 
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|
-| dark_lightning body dark strike | fall (2 strobes) | impact | 0.45 to 1.00 | 2 | 24 |
-| dark_lightning body dark swirl | spin | arrive | 0.00 to 0.90 | 2 | 394 |
-| dark_lightning body lightning static | flicker (3 strobes), flash | arrive | 0.15 to 0.95 | 2 | 246 |
-| dark_lightning mark 0 | spread | aftermath | 0.55 to 1.40 | 2 | 2 |
+| dark_lightning body dark strike | extend (2 strobes) | impact | 0.50 to 1.05 | 2 | 24 |
+| dark_lightning body dark swirl | spin | arrive | 0.00 to 1.05 | 2 | 394 |
+| dark_lightning body lightning static knotcrawl | flicker (9 strobes), flash | arrive | 0.12 to 0.57 | 1 | 96 |
+| dark_lightning body lightning static crawl | flicker (3 strobes), flash | impact | 0.62 to 1.12 | 1 | 150 |
+| dark_lightning mark 0 | spread | aftermath | 0.60 to 1.45 | 2 | 2 |
 
 ### Capsize (Capsize)
 
@@ -131,16 +132,15 @@ the grass flattens in from the windward side; the after-splash rises and drops f
 
 ### Rime (Rime)
 
-wind streaks sweep in; rime grows on the near side; chips blow out of the far side; fog drifts and the feathers fan out.
+wind streaks sweep in; rime grows on the near side; chips blow out of the far side and on down the wind; fog is carried after them and the feathers fan out.
 
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|
-| wind_ice body ice debris | burst, flash | impact | 0.35 to 1.05 | 24 | 48 |
+| wind_ice body ice debris | blow, flash | impact | 0.35 to 1.30 | 24 | 48 |
 | wind_ice body ice growth | rise | impact | 0.22 to 1.22 | 42 | 1670 |
 | wind_ice body ice wind | sweep | arrive | 0.00 to 0.70 | 13 | 624 |
-| wind_ice body glow vapour | drift | aftermath | 0.40 to 1.30 | 3 | 660 |
-| wind_ice mark 0 | spread | aftermath | 0.35 to 1.35 | 3 | 2 |
-| wind_ice mark 1 | spread | aftermath | 0.45 to 1.45 | 3 | 2 |
+| wind_ice body glow vapour | blow | aftermath | 0.40 to 1.40 | 3 | 660 |
+| wind_ice mark 0 | spread | aftermath | 0.35 to 1.35 | 2 | 2 |
 
 ### Caught Light (Caught Light)
 
@@ -189,34 +189,34 @@ the mites spiral in and the black mouth spreads; the lobed front laps and bursts
 
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|
-| dark_poison body dark vapour | drift | aftermath | 0.45 to 1.30 | 2 | 640 |
-| dark_poison body dark swirl | spin | arrive | 0.00 to 0.90 | 15 | 540 |
-| dark_poison body poison vapour | drift | aftermath | 0.45 to 1.30 | 7 | 1336 |
-| dark_poison body poison ring | pulse | impact | 0.35 to 1.15 | 7 | 932 |
-| dark_poison ground dark ring | pulse | impact | 0.35 to 1.15 | 1 | 256 |
-| dark_poison ground dark swirl | spin | arrive | 0.00 to 0.90 | 65 | 2340 |
-| dark_poison mark 0 | spread | arrive | 0.05 to 1.35 | 2 | 2 |
+| dark_poison body dark vapour | drift | aftermath | 0.81 to 2.34 | 2 | 640 |
+| dark_poison body dark swirl | spin | arrive | 0.00 to 1.62 | 15 | 540 |
+| dark_poison body poison vapour | drift | aftermath | 0.81 to 2.34 | 7 | 1336 |
+| dark_poison body poison ring | pulse | impact | 0.63 to 2.07 | 7 | 932 |
+| dark_poison ground dark ring | pulse | impact | 0.63 to 2.07 | 1 | 256 |
+| dark_poison ground dark swirl | spin | arrive | 0.00 to 1.62 | 65 | 2340 |
+| dark_poison mark 0 | spread | arrive | 0.09 to 2.43 | 2 | 2 |
 
 ### Nerve Fire (Nerve Fire)
 
-jagged nerve lines strobe up out of the body and static crawls; the burst rings jolt; the green fern spreads.
+jagged nerve lines strobe up out of the body; static jolts over it; the green fern spreads.
 
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|
-| poison_lightning body lightning static | flicker (3 strobes), flash | arrive | 0.08 to 0.68 | 1 | 150 |
+| poison_lightning body lightning static | flicker (4 strobes), flash | impact | 0.20 to 0.80 | 1 | 150 |
 | poison_lightning body poison static nerveruyi | rise (3 strobes) | arrive | 0.00 to 0.80 | 1 | 216 |
-| poison_lightning body poison ring | pulse | impact | 0.28 to 1.08 | 4 | 132 |
 | poison_lightning mark 0 | spread | aftermath | 0.30 to 1.30 | 4 | 2 |
 
 ### The Ground Gives (The Ground Gives)
 
-the slabs drop and tip in round the pit; the funnel and collar open; water seeps up in rings.
+the slabs drop and tip in round the pit; water splashes up and out round it; the funnel and collar open; water seeps up in rings.
 
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|
 | water_earth body earth growth | sink | arrive | 0.00 to 1.10 | 13 | 312 |
 | water_earth body water ring | pulse | aftermath | 0.45 to 1.25 | 14 | 1680 |
 | water_earth ground earth still | pop | impact | 0.20 to 1.10 | 1 | 80 |
+| water_earth ground water wave | rise | impact | 0.30 to 1.20 | 2 | 611 |
 | water_earth ground water ring | pulse | aftermath | 0.45 to 1.25 | 2 | 240 |
 | water_earth mark 0 | spread | impact | 0.25 to 1.40 | 5 | 2 |
 | water_earth mark 1 | spread | impact | 0.35 to 1.50 | 5 | 2 |
@@ -236,12 +236,13 @@ wind sweeps in from the side; the rut ring heaves up and dust bursts; the comb s
 
 ### Anvil Stone (Anvil Stone)
 
-the ground heaves at its back; the plates clang with a white-hot notch; shards and dust fly; the clang rings spread.
+the anvil springs up out of the ground under it and the ground heaves; the plates clang with a white-hot notch; shards and dust fly; the clang rings spread.
 
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|
 | earth_metal body earth debris | burst | impact | 0.28 to 0.98 | 10 | 2600 |
-| earth_metal body earth growth | rise | arrive | 0.00 to 1.00 | 2 | 596 |
+| earth_metal body earth growth | rise | arrive | 0.00 to 1.00 | 1 | 560 |
+| earth_metal body earth growth anvil | rise | arrive | 0.00 to 1.10 | 1 | 36 |
 | earth_metal body metal debris | burst, flash | impact | 0.28 to 0.98 | 7 | 178 |
 | earth_metal body metal ring | pulse, flash | impact | 0.26 to 1.11 | 6 | 551 |
 | earth_metal mark 0 | spread | aftermath | 0.30 to 1.30 | 3 | 2 |
@@ -261,14 +262,14 @@ iron roots creep out and vines rise; the plates clang; steel thorns burst out of
 
 ### Girdled (Girdled)
 
-black fig roots grip the floor; briars and vines climb; pale coils wind up the body; leaves fall away.
+black fig roots grip the floor; briars and vines climb; pale coils grow up round the body; leaves fall away.
 
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|
 | life_dark body dark growth | rise | arrive | 0.08 to 1.08 | 20 | 5518 |
-| life_dark body dark swirl | spin | impact | 0.28 to 1.18 | 1 | 224 |
+| life_dark body dark swirl coils | rise | impact | 0.28 to 1.18 | 1 | 224 |
 | life_dark body life debris | burst | aftermath | 0.40 to 1.10 | 6 | 24 |
-| life_dark mark 0 | spread | arrive | 0.00 to 1.30 | 4 | 2 |
+| life_dark mark 0 | spread | arrive | 0.00 to 1.30 | 3 | 2 |
 
 ### Steam (Steam)
 

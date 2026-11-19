@@ -264,7 +264,7 @@ namespace Clover.Player.Forms
         private void Show(int look, Vector3 at, Transform body, Vector3 away)
         {
             ref var info = ref set.Looks[look];
-            int showing = Begin(at, body, away, Quaternion.Euler(0f, Yaw(info.Directed, away), 0f));
+            int showing = Begin(at, body, away, Quaternion.Euler(0f, Yaw(info.Directed, away, ReactionDesigns.AwayYaw(info.Key)), 0f));
             ref var one = ref showings[showing];
             one.Look = look;
             one.Parts = Mathf.Min(info.PartCount, mostParts);
@@ -342,10 +342,10 @@ namespace Clover.Player.Forms
 
         // The camera's yaw plus the turn that shows the look as its frame was drawn; or, for a look with a way to it, the
         // turn that lays its way along the blow's.
-        private float Yaw(bool directed, Vector3 away)
+        private float Yaw(bool directed, Vector3 away, float awayInRecipe = -1f)
         {
             away.y = 0f;
-            if (directed && away.sqrMagnitude > 0.0001f) return Mathf.Atan2(away.x, away.z) * Mathf.Rad2Deg - AwayInRecipe;
+            if (directed && away.sqrMagnitude > 0.0001f) return Mathf.Atan2(away.x, away.z) * Mathf.Rad2Deg - (awayInRecipe >= 0f ? awayInRecipe : AwayInRecipe);
             float cameraYaw = 0f;
             if (viewer != null)
             {
@@ -606,6 +606,12 @@ namespace Clover.Player.Forms
                 {
                     axis = one.Away;
                     path = -one.Away * part.Motion.Amount;
+                }
+                else if (verb == ReactionMotion.Blow)
+                {
+                    // On down the way the blow went, from where it burst.
+                    axis = one.Away;
+                    path = one.Away * part.Motion.Amount;
                 }
                 else if (verb == ReactionMotion.Extend && part.Axis.sqrMagnitude > 0.0001f)
                 {

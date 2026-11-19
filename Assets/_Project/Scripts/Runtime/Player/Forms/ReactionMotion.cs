@@ -19,9 +19,9 @@ namespace Clover.Player.Forms
     public static class ReactionMotion
     {
         /// <summary>The verbs. Pop is the look as first built: it pops in, holds and goes.</summary>
-        public const byte Pop = 0, Fall = 1, Rise = 2, Sink = 3, Sweep = 4, Extend = 5, Spread = 6, Spin = 7, Flicker = 8, Drift = 9, Lick = 10, Pulse = 11, Burst = 12;
+        public const byte Pop = 0, Fall = 1, Rise = 2, Sink = 3, Sweep = 4, Extend = 5, Spread = 6, Spin = 7, Flicker = 8, Drift = 9, Lick = 10, Pulse = 11, Burst = 12, Blow = 13;
 
-        public static readonly string[] VerbNames = { "pop", "fall", "rise", "sink", "sweep", "extend", "spread", "spin", "flicker", "drift", "lick", "pulse", "burst" };
+        public static readonly string[] VerbNames = { "pop", "fall", "rise", "sink", "sweep", "extend", "spread", "spin", "flicker", "drift", "lick", "pulse", "burst", "blow" };
 
         /// <summary>The three beats of a look: the cause arrives, the impact, the aftermath (the first to go under load).</summary>
         public const byte Arrive = 0, Impact = 1, Aftermath = 2;
@@ -49,7 +49,11 @@ namespace Clover.Player.Forms
             public float Move;
             /// <summary>Seconds from its start until it is gone.</summary>
             public float Seconds;
-            /// <summary>The verb's size: metres fallen, swept or drifted; degrees spun; beats pulsed; a spread's first share.</summary>
+            /// <summary>
+            /// The verb's size: metres fallen, swept, blown or drifted; degrees spun; beats pulsed; a spread's first share;
+            /// metres a rise springs up from under the ground (none: it grows where it stands); degrees a flicker is
+            /// turned at each redraw (none: it is redrawn where it was).
+            /// </summary>
             public float Amount;
             /// <summary>How many times it is redrawn on and off over its motion (lightning); none for a steady part.</summary>
             public byte Strobes;
@@ -137,6 +141,14 @@ namespace Clover.Player.Forms
                     }
                     break;
                 case Rise:
+                    if (cue.Amount > 0f)
+                    {
+                        // Shoved up whole out of the ground from below, past its place and back (the owner's anvil
+                        // "springs up from the ground"): the floor hides what is still under it.
+                        pose.Lift = cue.Amount * (Overshoot(p, 0.22f) - 1f);
+                        pose.Along = Mathf.Lerp(0.85f, 1f, EaseOut(p));
+                        break;
+                    }
                     // Up out of the ground past its height and back: it lands as a shape, not as a growth.
                     pose.Along = Overshoot(p, 0.25f);
                     pose.Across = Mathf.Lerp(0.7f, 1f, EaseOut(p));
@@ -216,6 +228,15 @@ namespace Clover.Player.Forms
                     pose.Size = Mathf.Lerp(0.08f, 1f, EaseOut(p)) * (1f + 0.12f * Mathf.Clamp01(after / rest));
                     break;
                 }
+                case Blow:
+                {
+                    // Out from the body as a burst, then carried on down the wind all its life, drawn long while it
+                    // flies: the blow's way is the caller's (Rime's ice blown out of the far side).
+                    pose.Size = Mathf.Lerp(0.3f, 1f, EaseOut(p));
+                    pose.Travel = EaseOut(Mathf.Clamp01(local / Mathf.Max(0.01f, cue.Seconds)));
+                    pose.Along = 1f + 0.35f * (1f - pose.Travel);
+                    break;
+                }
                 default:
                     pose.Size = Grow(p);
                     break;
@@ -230,6 +251,8 @@ namespace Clover.Player.Forms
             {
                 pose.Shown = Strobe(local, move, 2, out pose.Redraw);
             }
+            // Static that crawls: each redraw turned on from the last, so it is never seen held in one shape.
+            if (cue.Verb == Flicker && cue.Amount != 0f) pose.Spin = pose.Redraw * cue.Amount;
 
             if (cue.Flash)
             {
