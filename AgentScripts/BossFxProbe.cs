@@ -226,7 +226,8 @@ public class BossFxProbeRunner : MonoBehaviour
             Go(stand, Vector3.right);
             combat.Mana.Gain(200f);
             yield return new WaitForSeconds(0.3f);
-            Keys(Key.K);
+            // The weapon skill has its own button since Phase 1 (Q on the keys), no longer the heavy held to full.
+            Keys(Key.Q);
             yield return new WaitForSeconds(combat.Weapon.Combo.SkillChargeTime + 0.15f);
             Keys();
             yield return Until(() => combat.WeaponAway, 1.5f);
