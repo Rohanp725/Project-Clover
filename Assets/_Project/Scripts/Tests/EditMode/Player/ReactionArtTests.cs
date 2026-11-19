@@ -208,15 +208,24 @@ namespace Clover.Tests
             foreach (var look in set.Looks)
             {
                 Assert.Greater(look.PartCount, 0, look.Name);
+                Assert.LessOrEqual(look.PartCount, ReactionArtBuilder.PartBudget, $"{look.Name}: its parts are renderers the crowd's pool must find");
                 Assert.LessOrEqual(look.LampCount, ReactionDesigns.MostLampsPerLook, look.Name);
                 Assert.LessOrEqual(look.Triangles, ReactionArtBuilder.TriangleBudget, look.Name);
+                Assert.That(look.Seconds, Is.InRange(0.6f, 1.7f), $"{look.Name} plays in about a second");
+                Assert.That(look.ImpactAt, Is.InRange(0f, look.Seconds), look.Name);
+                Assert.IsFalse(string.IsNullOrEmpty(look.Story), $"{look.Name} has its timeline");
+                bool arrives = false, lands = false;
                 for (int i = look.FirstPart; i < look.FirstPart + look.PartCount; i++)
                 {
                     var part = set.Parts[i];
                     Assert.IsNotNull(part.Material, part.Name);
                     if (part.Kind != ReactionArtSet.Decal) Assert.IsNotNull(part.Mesh, part.Name);
                     else Assert.Greater(part.Size.x * part.Size.z, 0f, part.Name);
+                    Assert.IsTrue(part.Motion.Set, $"{part.Name} has its cue");
+                    arrives |= part.Motion.Beat == ReactionMotion.Arrive;
+                    lands |= part.Motion.Beat == ReactionMotion.Impact;
                 }
+                Assert.IsTrue(arrives && lands, $"{look.Name}: the cause arrives and lands (arrival {arrives}, impact {lands})");
                 for (int i = look.FirstLamp; i < look.FirstLamp + look.LampCount; i++)
                 {
                     Assert.Greater(set.Lamps[i].Intensity, 0f, look.Name);

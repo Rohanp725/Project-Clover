@@ -14,11 +14,15 @@ namespace Clover.EditorTools
     /// (Art/VFX/Combos/combos_recipe.json) and the kits it names (the eleven element kits in Art/VFX/&lt;Element&gt;/ and
     /// the two combo kits in Art/VFX/Combos/). Each recipe piece is taken from its kit in its own axes, placed by the
     /// recipe's position, rotation and scale about the main body's feet, and painted in its bands:
-    /// - solid pieces are merged into one mesh for each place (on the body, on the ground) and element, drawn in that
-    ///   element's inked solid material from the element art (m_element_solid_&lt;element&gt;), with the smoothed normals
-    ///   the ink needs;
-    /// - see-through pieces (beams, fog, a gas layer held up) into one glow mesh for each place, in the element art's
-    ///   glow material;
+    /// - solid pieces are merged into one mesh for each place (on the body, on the ground), element and motion role
+    ///   (<see cref="ReactionTimelines.RoleOf"/>: a bolt, tongues, steam, chips, a splash...; tongues split one kit
+    ///   object to a part when the timeline staggers them and the budget allows), drawn in that element's inked solid
+    ///   material from the element art (m_element_solid_&lt;element&gt;), with the smoothed normals the ink needs;
+    /// - see-through pieces (beams, fog, a gas layer held up) into glow meshes the same way, in the element art's glow
+    ///   material;
+    /// - each part takes its cue from the look's timeline (<see cref="ReactionTimelines.StepFor"/>) and its mesh is
+    ///   moved to the pivot that cue moves it about (<see cref="PivotOf"/>); a look over <see cref="PartBudget"/> parts
+    ///   first keeps tongues together, then folds its smallest groups into the biggest of the same place and element;
     /// - flat pieces lying low (thinner than 6 cm once placed and no higher than 0.3 m: char, rosettes, fern, rings, the
     ///   drained disc, the eclipse) are rasterised from
     ///   above into the look's floor masks, up to four colours to a mask, lowest first, each drawn by its own
@@ -51,6 +55,10 @@ namespace Clover.EditorTools
         public const int TriangleBudget = 8000;
         /// <summary>A mask's colours: one to a channel.</summary>
         public const int ColoursPerMask = 4;
+        /// <summary>The most parts a look is built into: each is a renderer the crowd's pool must find.</summary>
+        public const int PartBudget = 10;
+        /// <summary>A burst or a spin centred this close to the body's axis turns about the body itself.</summary>
+        private const float NearBody = 1.2f;
 
         /// <summary>A material's look as the builder paints it: linear colour (alpha: how see-through), Clover/Spell's flag, glow or not.</summary>
         public struct Paint
@@ -127,6 +135,7 @@ namespace Clover.EditorTools
         };
 
         private static readonly StringBuilder Report = new StringBuilder();
+        private static readonly StringBuilder Motion = new StringBuilder();
 
         /// <summary>A material's paint: the combos' table, then the element art's; false (drawn grey) for one neither names.</summary>
         public static bool TryPaint(string material, out Paint paint)
@@ -173,16 +182,31 @@ namespace Clover.EditorTools
 
         // ---- Building.
 
-        // What one place-and-element of a look gathers before it becomes a mesh.
+        // What one place, element and motion role of a look gathers before it becomes a mesh.
         private sealed class Merge
         {
             public string Element;
-            public byte Kind, Place;
+            public byte Kind, Place, Role;
+            /// <summary>The timeline step it follows (-1: its role's default) and, for a staggered step, the kit object it holds.</summary>
+            public int Step;
+            public string Sub = "";
+            public ReactionTimelines.Step Follows;
             public readonly List<Vector3> Vertices = new List<Vector3>();
             public readonly List<Vector3> Normals = new List<Vector3>();
             public readonly List<Color> Colours = new List<Color>();
             public readonly List<int> Triangles = new List<int>();
             public int Pieces;
+
+            // Another merge's pieces join this one's (it keeps its own role and cue).
+            public void Take(Merge other)
+            {
+                int first = Vertices.Count;
+                Vertices.AddRange(other.Vertices);
+                Normals.AddRange(other.Normals);
+                Colours.AddRange(other.Colours);
+                foreach (int index in other.Triangles) Triangles.Add(first + index);
+                Pieces += other.Pieces;
+            }
         }
 
         private struct Flat
@@ -201,12 +225,16 @@ namespace Clover.EditorTools
             public readonly List<string> Missing = new List<string>();
             public readonly HashSet<string> Grey = new HashSet<string>();
             public int FlatPieces;
+            /// <summary>Groups folded into others to keep within the part budget.</summary>
+            public readonly List<string> Folded = new List<string>();
 
-            public Merge MergeFor(byte place, byte kind, string element)
+            public int MaskCount => (FlatColours.Count + ColoursPerMask - 1) / ColoursPerMask;
+
+            public Merge MergeFor(byte place, byte kind, string element, byte role, int step, ReactionTimelines.Step follows, string sub)
             {
                 foreach (var merge in Merges)
-                    if (merge.Place == place && merge.Kind == kind && merge.Element == element) return merge;
-                var made = new Merge { Place = place, Kind = kind, Element = element };
+                    if (merge.Place == place && merge.Kind == kind && merge.Element == element && merge.Role == role && merge.Step == step && merge.Sub == sub) return merge;
+                var made = new Merge { Place = place, Kind = kind, Element = element, Role = role, Step = step, Follows = follows, Sub = sub };
                 Merges.Add(made);
                 return made;
             }
@@ -229,6 +257,7 @@ namespace Clover.EditorTools
         public static void Build()
         {
             Report.Clear();
+            Motion.Clear();
             var recipeAsset = RecipeAsset();
             if (recipeAsset == null)
             {
@@ -287,22 +316,26 @@ namespace Clover.EditorTools
                         Debug.LogError($"[Clover.Build] Reaction art: the recipe's '{combo.Pair}' ({combo.Name}) names no pair; left out.");
                         continue;
                     }
-                    var gathered = Gather(combo, kits);
+                    var gathered = Grouped(combo, kits);
+                    ReactionTimelines.TryGet(combo.Pair, out var timeline);
                     var look = new ReactionArtSet.Look
                     {
                         Pair = pair, Key = combo.Pair, Name = combo.Name, Directed = ReactionDesigns.IsDirected(combo.Pair),
-                        FirstPart = parts.Count, FirstLamp = lamps.Count, Pieces = combo.PieceCount,
+                        FirstPart = parts.Count, FirstLamp = lamps.Count, Pieces = combo.PieceCount, Story = timeline.Story ?? "",
                     };
                     // Body first, then ground; solids before glows; marks last, so they are drawn over in that order.
-                    gathered.Merges.Sort((x, y) => x.Place != y.Place ? x.Place.CompareTo(y.Place) : x.Kind != y.Kind ? x.Kind.CompareTo(y.Kind) : string.CompareOrdinal(x.Element, y.Element));
+                    gathered.Merges.Sort((x, y) => x.Place != y.Place ? x.Place.CompareTo(y.Place) : x.Kind != y.Kind ? x.Kind.CompareTo(y.Kind)
+                        : x.Element != y.Element ? string.CompareOrdinal(x.Element, y.Element) : x.Role != y.Role ? x.Role.CompareTo(y.Role) : string.CompareOrdinal(x.Sub, y.Sub));
                     foreach (var merge in gathered.Merges)
                     {
-                        var part = MakePart(set, combo.Pair, merge, merge.Kind == ReactionArtSet.Glow ? glow : elementArt.Solids[ReactionDesigns.RingIndex(merge.Element)]);
+                        var part = MakePart(set, combo.Pair, merge, merge.Kind == ReactionArtSet.Glow ? glow : elementArt.Solids[ReactionDesigns.RingIndex(merge.Element)],
+                            CueOf(merge, gathered.Merges));
                         look.Triangles += part.Triangles;
                         parts.Add(part);
                     }
                     MakeMasks(combo.Pair, gathered, parts, masks, written);
                     look.PartCount = parts.Count - look.FirstPart;
+                    Timing(ref look, parts);
 
                     var watts = new float[combo.Lamps.Count];
                     for (int i = 0; i < watts.Length; i++) watts[i] = combo.Lamps[i].Watts;
@@ -367,19 +400,133 @@ namespace Clover.EditorTools
             {
                 if (looks.Exists(look => look.Pair == pair)) continue;
                 ReactionDesigns.Composed(pair, out string first, out string second, out string mark, out _);
-                composed.AppendLine($"| {AfflictionPairs.Name(pair)} | {first} | {second} | {mark ?? "-"} |");
+                ReactionTimelines.Composed(pair, out var arrives, out var answers, out var spreads);
+                composed.AppendLine($"| {AfflictionPairs.Name(pair)} | {first} ({arrives}) | {second} ({answers}) | {(mark != null ? $"{mark} ({spreads})" : "-")} |");
             }
+            int mostParts = 0;
+            foreach (var look in looks) mostParts = Mathf.Max(mostParts, look.PartCount);
             File.WriteAllText(ReportPath,
-                $"# Reaction art\n\n{designed} designed looks from {RecipePath}, {parts.Count} parts, {lamps.Count} lamps, {masks.Count} floor masks. " +
+                $"# Reaction art\n\n{designed} designed looks from {RecipePath}, {parts.Count} parts (at most {mostParts} a look, budget {PartBudget}), {lamps.Count} lamps, {masks.Count} floor masks. " +
                 $"A look over {TriangleBudget} triangles is marked OVER. Lamps: intensity = W / (4 pi^2), range sqrt(2 I) held to " +
-                $"{ReactionDesigns.LeastLampRange}-{ReactionDesigns.MostLampRange} m, at most {ReactionDesigns.MostLampsPerLook} a look.\n\n" +
-                "| Reaction (recipe) | Game name | Pieces | Parts (solid, glow, marks) | Triangles | Lamps kept of | Notes |\n|---|---|---|---|---|---|---|\n" + Report +
-                $"\n## Composed ({AfflictionPairs.Count - designed})\n\n| Reaction | First parent's piece | Second parent's piece | Ground mark |\n|---|---|---|---|\n" + composed);
-            Debug.Log($"[Clover.Build] Reaction art: {designed} looks, {parts.Count} parts, {lamps.Count} lamps, {masks.Count} masks, {AfflictionPairs.Count - designed} composed; {ReportPath}");
+                $"{ReactionDesigns.LeastLampRange}-{ReactionDesigns.MostLampRange} m, at most {ReactionDesigns.MostLampsPerLook} a look, lit at the impact.\n\n" +
+                "| Reaction (recipe) | Game name | Pieces | Parts (solid, glow, marks) | Triangles | Lamps kept of | Impact, length | Notes |\n|---|---|---|---|---|---|---|---|\n" + Report +
+                "\n## Motion\n\nEach part's verb, beat and time (ReactionTimelines; ReactionMotion).\n\n" + Motion +
+                $"\n## Composed ({AfflictionPairs.Count - designed})\n\n| Reaction | First parent's piece (arrives) | Second parent's piece (answers) | Ground mark (spreads) |\n|---|---|---|---|\n" + composed);
+            Debug.Log($"[Clover.Build] Reaction art: {designed} looks, {parts.Count} parts (at most {mostParts} a look), {lamps.Count} lamps, {masks.Count} masks, {AfflictionPairs.Count - designed} composed; {ReportPath}");
         }
 
-        // Every piece of a combo, placed and sorted into merges and flat triangles.
-        private static Gathered Gather(ReactionRecipe.Combo combo, Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)> kits)
+        // A combo's pieces grouped by motion within the part budget: staggered pieces split one kit object to a part if
+        // that fits, else kept together; then, while still over, the smallest group is folded into the biggest of the
+        // same place, kind and element (it moves with that one).
+        private static Gathered Grouped(ReactionRecipe.Combo combo, Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)> kits)
+        {
+            var gathered = Gather(combo, kits, true);
+            if (gathered.Merges.Count + gathered.MaskCount > PartBudget) gathered = Gather(combo, kits, false);
+            while (gathered.Merges.Count + gathered.MaskCount > PartBudget)
+            {
+                Merge smallest = null, into = null;
+                foreach (var merge in gathered.Merges)
+                {
+                    Merge biggest = null;
+                    foreach (var other in gathered.Merges)
+                        if (other != merge && other.Place == merge.Place && other.Kind == merge.Kind && other.Element == merge.Element &&
+                            (biggest == null || other.Triangles.Count > biggest.Triangles.Count)) biggest = other;
+                    if (biggest == null || biggest.Triangles.Count < merge.Triangles.Count) continue;
+                    if (smallest == null || merge.Triangles.Count < smallest.Triangles.Count)
+                    {
+                        smallest = merge;
+                        into = biggest;
+                    }
+                }
+                if (smallest == null)
+                {
+                    Debug.LogWarning($"[Clover.Build] Reaction art: {combo.Name} has {gathered.Merges.Count + gathered.MaskCount} parts, over its budget of {PartBudget}, and nothing left to fold.");
+                    break;
+                }
+                into.Take(smallest);
+                gathered.Merges.Remove(smallest);
+                gathered.Folded.Add($"{ReactionTimelines.RoleNames[smallest.Role]} into {ReactionTimelines.RoleNames[into.Role]} ({smallest.Element})");
+            }
+            return gathered;
+        }
+
+        // A part's cue: its step's, later by the stagger for each kit object of the same step before it, flashing white
+        // only where a cold hard thing lands in a solid.
+        private static ReactionMotion.Cue CueOf(Merge merge, List<Merge> all)
+        {
+            var cue = merge.Follows.Cue;
+            if (merge.Follows.Stagger > 0f && merge.Sub.Length > 0)
+            {
+                int before = 0;
+                foreach (var other in all)
+                    if (other.Step == merge.Step && other.Role == merge.Role && other.Sub.Length > 0 && string.CompareOrdinal(other.Sub, merge.Sub) < 0) before++;
+                cue.Delay += before * merge.Follows.Stagger;
+            }
+            cue.Flash = cue.Flash && merge.Kind == ReactionArtSet.Solid && ReactionTimelines.Flashes(merge.Element);
+            return cue;
+        }
+
+        // When a look's impact lands (the first impact part to land; a quarter second in for a look with none) and when its last part is gone.
+        private static void Timing(ref ReactionArtSet.Look look, List<ReactionArtSet.Part> parts)
+        {
+            float impact = float.MaxValue, end = 0f;
+            for (int i = look.FirstPart; i < look.FirstPart + look.PartCount; i++)
+            {
+                var cue = parts[i].Motion;
+                if (cue.Beat == ReactionMotion.Impact) impact = Mathf.Min(impact, cue.LandsAt);
+                end = Mathf.Max(end, cue.End);
+            }
+            look.ImpactAt = impact < float.MaxValue ? impact : 0.25f;
+            look.Seconds = end;
+        }
+
+        /// <summary>
+        /// The point a part moves about, in the recipe's space, for its verb: the base of what falls, rises, sinks, licks
+        /// or spreads; the body's axis (at the part's height) for a burst or a spin round the body, else its own middle;
+        /// the top of a bolt drawn down (<paramref name="axis"/> down), the end nearest the body of any other ray
+        /// (<paramref name="axis"/> toward its far end); the middle of the rest. <paramref name="axis"/> is zero but for a ray.
+        /// </summary>
+        public static Vector3 PivotOf(byte verb, byte role, IList<Vector3> vertices, out Vector3 axis)
+        {
+            axis = Vector3.zero;
+            if (vertices == null || vertices.Count == 0) return Vector3.zero;
+            var bounds = new Bounds(vertices[0], Vector3.zero);
+            foreach (var v in vertices) bounds.Encapsulate(v);
+            Vector3 middle = bounds.center;
+            float offAxis = new Vector2(middle.x, middle.z).magnitude;
+            switch (verb)
+            {
+                case ReactionMotion.Fall:
+                case ReactionMotion.Rise:
+                case ReactionMotion.Sink:
+                case ReactionMotion.Lick:
+                case ReactionMotion.Spread:
+                    return new Vector3(middle.x, bounds.min.y, middle.z);
+                case ReactionMotion.Burst:
+                    return offAxis < NearBody ? new Vector3(0f, Mathf.Clamp(middle.y, 0.3f, 1.6f), 0f) : middle;
+                case ReactionMotion.Spin:
+                    return offAxis < NearBody ? new Vector3(0f, middle.y, 0f) : middle;
+                case ReactionMotion.Extend:
+                {
+                    if (role == ReactionTimelines.Strike)
+                    {
+                        axis = Vector3.down;
+                        return new Vector3(middle.x, bounds.max.y, middle.z);
+                    }
+                    Vector3 root = vertices[0];
+                    foreach (var v in vertices)
+                        if (v.x * v.x + v.z * v.z < root.x * root.x + root.z * root.z) root = v;
+                    Vector3 reach = middle - root;
+                    axis = reach.sqrMagnitude > 0.0025f ? reach.normalized : Vector3.up;
+                    return root;
+                }
+                default:
+                    return middle;
+            }
+        }
+
+        // Every piece of a combo, placed and sorted into merges and flat triangles; staggered steps split by kit object when asked.
+        private static Gathered Gather(ReactionRecipe.Combo combo, Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)> kits, bool split)
         {
             var gathered = new Gathered();
             foreach (var group in combo.Groups)
@@ -399,13 +546,13 @@ namespace Clover.EditorTools
                     gathered.Missing.Add($"{group.KitObject} ({group.Kit}) x{group.Instances.Count}");
                     continue;
                 }
-                foreach (var instance in group.Instances) AddPiece(combo, group, instance, piece, kit.root, gathered);
+                foreach (var instance in group.Instances) AddPiece(combo, group, instance, piece, kit.root, gathered, split);
             }
             return gathered;
         }
 
         private static void AddPiece(ReactionRecipe.Combo combo, ReactionRecipe.Group group, ReactionRecipe.Instance instance, MeshFilter filter, Transform kitRoot,
-            Gathered gathered)
+            Gathered gathered, bool split)
         {
             var source = filter.sharedMesh;
             // The piece in its own axes (Unity's), at its own origin wherever it lies in the kit file, then where the recipe puts it.
@@ -453,8 +600,12 @@ namespace Clover.EditorTools
 
             // A piece with nothing opaque (a gas layer held up off the floor) is seen through, as a glow is.
             bool seeThrough = allGlow || !anyOpaque;
+            // Pieces that move alike go together: by what the piece is (its role) and the timeline's step for it.
+            byte role = ReactionTimelines.RoleOf(group.KitObject);
+            int step = ReactionTimelines.StepFor(combo.Pair, group.KitObject, role, out var follows);
+            string sub = split && follows.Stagger > 0f ? group.KitObject : "";
             var merge = gathered.MergeFor(instance.OnGround ? ReactionArtSet.OnGround : ReactionArtSet.OnBody, seeThrough ? ReactionArtSet.Glow : ReactionArtSet.Solid,
-                seeThrough ? "glow" : ElementOf(group.Material, combo.Pair));
+                seeThrough ? "glow" : ElementOf(group.Material, combo.Pair), role, step, follows, sub);
             int first = merge.Vertices.Count;
             merge.Vertices.AddRange(vertices);
             for (int i = 0; i < vertices.Length; i++) merge.Normals.Add(i < normals.Length ? normals[i] : Vector3.up);
@@ -484,21 +635,30 @@ namespace Clover.EditorTools
 
         private static Vector2 Ground(Vector3 v) => new Vector2(v.x, v.z);
 
-        private static ReactionArtSet.Part MakePart(ReactionArtSet set, string pair, Merge merge, Material material)
+        private static ReactionArtSet.Part MakePart(ReactionArtSet set, string pair, Merge merge, Material material, ReactionMotion.Cue cue)
         {
             string place = merge.Place == ReactionArtSet.OnBody ? "body" : "ground";
-            var mesh = new Mesh { name = $"mesh_{pair}_{place}_{merge.Element}" };
-            if (merge.Vertices.Count > 65000) mesh.indexFormat = IndexFormat.UInt32;
-            mesh.SetVertices(merge.Vertices);
+            string role = ReactionTimelines.RoleNames[merge.Role];
+            // A step named for a word of the pieces' names ("stone", "thorn") is told apart from the role's own step.
+            string sub = merge.Sub.Length > 0 ? "_" + ReactionTimelines.Plain(merge.Sub)
+                : merge.Step >= 0 && merge.Follows.Match != role ? "_" + merge.Follows.Match : "";
+            // The mesh is kept about the point it moves about, so scaling and turning it move it as its verb says.
+            var pivot = PivotOf(cue.Verb, merge.Role, merge.Vertices, out var axis);
+            var vertices = merge.Vertices.ToArray();
+            for (int i = 0; i < vertices.Length; i++) vertices[i] -= pivot;
+            var mesh = new Mesh { name = $"mesh_{pair}_{place}_{merge.Element}_{role}{sub}" };
+            if (vertices.Length > 65000) mesh.indexFormat = IndexFormat.UInt32;
+            mesh.SetVertices(vertices);
             mesh.SetNormals(merge.Normals);
             mesh.SetColors(merge.Colours);
             mesh.SetTriangles(merge.Triangles, 0);
-            mesh.SetUVs(1, ElementArtBuilder.SmoothNormals(merge.Vertices.ToArray(), merge.Normals.ToArray()));
+            mesh.SetUVs(1, ElementArtBuilder.SmoothNormals(vertices, merge.Normals.ToArray()));
             mesh.RecalculateBounds();
             AssetDatabase.AddObjectToAsset(mesh, set);
             return new ReactionArtSet.Part
             {
-                Name = $"{pair} {place} {merge.Element}", Kind = merge.Kind, Place = merge.Place, Mesh = mesh, Material = material,
+                Name = $"{pair} {place} {merge.Element} {role}{sub.Replace('_', ' ')}", Kind = merge.Kind, Place = merge.Place, Role = merge.Role, Mesh = mesh, Material = material,
+                Motion = cue, Pivot = pivot, Axis = axis,
                 Centre = Vector3.zero, Size = mesh.bounds.size, Triangles = merge.Triangles.Count / 3, Pieces = merge.Pieces,
             };
         }
@@ -507,6 +667,8 @@ namespace Clover.EditorTools
         private static void MakeMasks(string pair, Gathered gathered, List<ReactionArtSet.Part> parts, List<(string, Texture2D, int, Color[])> masks, HashSet<string> written)
         {
             if (gathered.Flats.Count == 0) return;
+            // The ground spreads by the look's step for its marks, the upper layer a moment after the lower.
+            ReactionTimelines.StepFor(pair, "", ReactionTimelines.Mark, out var follows);
             var order = new List<int>();
             for (int i = 0; i < gathered.FlatColours.Count; i++) order.Add(i);
             order.Sort((x, y) => gathered.FlatHeights[x].CompareTo(gathered.FlatHeights[y]));
@@ -536,11 +698,19 @@ namespace Clover.EditorTools
                 written.Add($"{Folder}/m_reaction_decal_{name}.mat");
                 parts.Add(new ReactionArtSet.Part
                 {
-                    Name = $"{pair} mark {layer}", Kind = ReactionArtSet.Decal, Place = ReactionArtSet.OnGround,
+                    Name = $"{pair} mark {layer}", Kind = ReactionArtSet.Decal, Place = ReactionArtSet.OnGround, Role = ReactionTimelines.Mark,
+                    Motion = Layered(follows.Cue, layer),
                     Centre = new Vector3(centre.x, gathered.FlatHeights[order[layer * ColoursPerMask]], centre.y), Size = new Vector3(sizeX, 0f, sizeZ),
                     Triangles = 2, Pieces = gathered.FlatPieces,
                 });
             }
+        }
+
+        private static ReactionMotion.Cue Layered(ReactionMotion.Cue cue, int layer)
+        {
+            cue.Delay += layer * 0.1f;
+            cue.Flash = false;
+            return cue;
         }
 
         /// <summary>
@@ -666,7 +836,18 @@ namespace Clover.EditorTools
                 Debug.LogWarning($"[Clover.Build] Reaction art: {combo.Name} has no paint for {string.Join(", ", gathered.Grey)}; drawn grey.");
             }
             if (look.Directed) notes.Add("laid along the blow");
-            Report.AppendLine($"| {combo.Name} ({combo.Pair}) | {AfflictionPairs.Name(look.Pair)} | {look.Pieces} ({gathered.FlatPieces} flat) | {look.PartCount} ({solids}, {glows}, {marks}) | {look.Triangles} | {lampsKept} of {lampsInRecipe} | {string.Join("; ", notes)} |");
+            if (look.PartCount > PartBudget) notes.Add($"OVER {PartBudget} parts");
+            if (gathered.Folded.Count > 0) notes.Add("folded to fit: " + string.Join(", ", gathered.Folded));
+            Report.AppendLine($"| {combo.Name} ({combo.Pair}) | {AfflictionPairs.Name(look.Pair)} | {look.Pieces} ({gathered.FlatPieces} flat) | {look.PartCount} ({solids}, {glows}, {marks}) | {look.Triangles} | {lampsKept} of {lampsInRecipe} | {look.ImpactAt:0.00} s, {look.Seconds:0.00} s | {string.Join("; ", notes)} |");
+
+            Motion.AppendLine($"### {combo.Name} ({AfflictionPairs.Name(look.Pair)})\n\n{look.Story}.\n\n| Part | Verb | Beat | Seconds | Pieces | Triangles |\n|---|---|---|---|---|---|");
+            for (int i = look.FirstPart; i < look.FirstPart + look.PartCount; i++)
+            {
+                var cue = parts[i].Motion;
+                Motion.AppendLine($"| {parts[i].Name} | {ReactionMotion.VerbNames[cue.Verb]}{(cue.Strobes > 0 ? $" ({cue.Strobes} strobes)" : "")}{(cue.Flash ? ", flash" : "")} | " +
+                    $"{ReactionMotion.BeatNames[cue.Beat]} | {cue.Delay:0.00} to {cue.End:0.00} | {parts[i].Pieces} | {parts[i].Triangles} |");
+            }
+            Motion.AppendLine();
         }
     }
 }

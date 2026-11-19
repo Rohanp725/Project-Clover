@@ -25,7 +25,7 @@ namespace Clover.Player
             if (pair < 0 || pair >= AfflictionPairs.Count) return;
             if (Forms.ElementArt.Ready)
             {
-                if (!Forms.ReactionArt.Play(pair, at, body, away)) Forms.ReactionArt.Compose(pair, at, away);
+                if (!Forms.ReactionArt.Play(pair, at, body, away)) Forms.ReactionArt.Compose(pair, at, body, away);
                 return;
             }
             Vfx.Play(VfxKind.TintPuff, at + Vector3.up * 1.3f, Vector3.up, 1.1f, Colour(pair));

@@ -86,5 +86,45 @@ namespace Clover.Tests
             Assert.AreEqual(0, ReactionArt.LampsShown);
             Assert.AreEqual(ended + 1, ReactionArt.Ended, "a look that ran its time is not counted as cut short");
         }
+
+        // A look of two parts with cues: one falls from above as the look starts, one waits its turn and then rises.
+        [UnityTest]
+        public IEnumerator PartsMoveByTheirCuesAndWaitTheirTurn()
+        {
+            mesh = new Mesh { vertices = new[] { Vector3.zero, Vector3.up, Vector3.right }, triangles = new[] { 0, 1, 2 } };
+            set = ScriptableObject.CreateInstance<ReactionArtSet>();
+            var falls = Part(ReactionArtSet.Solid, ReactionArtSet.OnGround, mesh);
+            falls.Motion = ReactionMotion.Cue.Of(ReactionMotion.Fall, ReactionMotion.Arrive, 0f, 0.4f, 0.8f, 4f);
+            var rises = Part(ReactionArtSet.Solid, ReactionArtSet.OnGround, mesh);
+            rises.Motion = ReactionMotion.Cue.Of(ReactionMotion.Rise, ReactionMotion.Impact, 0.3f, 0.1f, 0.4f);
+            set.Parts = new[] { falls, rises };
+            set.Looks = new[] { new ReactionArtSet.Look { Pair = 0, Key = "test_a", Name = "A", FirstPart = 0, PartCount = 2, ImpactAt = 0.4f, Seconds = 0.8f } };
+
+            holder = new GameObject("Reaction Art Motion Test");
+            var art = holder.AddComponent<ReactionArt>();
+            art.MostLooks = 2;
+            art.Configure(set);
+            var shown = new Matrix4x4[16];
+            Assert.IsTrue(ReactionArt.Play(0, Vector3.zero, null, Vector3.forward));
+            Assert.AreEqual(2, ReactionArt.PartsShown, "both parts hold a renderer from the start");
+            ReactionArt.ShownMatrices(shown);
+            float startHeight = shown[0].GetColumn(3).y;
+            Assert.Greater(startHeight, 3f, "the falling part starts high above the feet");
+            Assert.AreEqual(default(Matrix4x4), shown[1], "the rising part is not drawn before its turn");
+
+            yield return new WaitForSeconds(0.2f);
+            ReactionArt.ShownMatrices(shown);
+            float midHeight = shown[0].GetColumn(3).y;
+            Assert.Less(midHeight, startHeight - 0.2f, "it has come down");
+            Assert.Greater(midHeight, 0.01f, "but not landed yet");
+
+            yield return new WaitForSeconds(0.3f);
+            ReactionArt.ShownMatrices(shown);
+            Assert.AreEqual(0f, shown[0].GetColumn(3).y, 0.001f, "landed on its place");
+            Assert.AreNotEqual(default(Matrix4x4), shown[1], "the second part is drawn once its turn has come");
+
+            yield return new WaitForSeconds(0.6f);
+            Assert.AreEqual(0, ReactionArt.PartsShown, "every renderer is back once both have run their time");
+        }
     }
 }
