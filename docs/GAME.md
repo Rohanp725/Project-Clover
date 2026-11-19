@@ -1569,12 +1569,13 @@ changed. The old playtest stays with its players until the first few phases of t
   - Other spell forms and worn spells still use `ElementLook`'s old puffs and sparks.
 - **Verified**: see the report of the run (EditMode suite, `FxProbe`, regressions, profiler).
 
-### Reaction effects in the game (2026-11-19; the owner's approved combos pass 2, written without the editor; Claude's defaults in the placing, not yet seen in play by the owner)
+### Reaction effects in the game (2026-11-19; the owner's approved combos pass 2; Claude's defaults in the placing, not yet seen in play by the owner)
 
-- **To bring in** (asset-intake, approved files only): `vfx_combo_kit_v2.fbx` and `vfx_combo_kit_v3.fbx` into
+- **Brought in** (asset-intake, approved files only): `vfx_combo_kit_v2.fbx` and `vfx_combo_kit_v3.fbx` in
   `Art/VFX/Combos/`, the recipe `combos_recipe.json` beside them (a text asset), and the source as
-  `Art/Source/vfx_combos_v2.blend` (a copy of `vfx_v2_combos.blend`). `AssetImportRules` bakes the axis turn into the
-  combo kits (the recipe assumes it) and imports the reactions' masks in `Generated/Vfx/Reaction` as linear data.
+  `Art/Source/vfx_combos_v2.blend` (a copy of `vfx_v2_combos.blend`; Unity imports it through Blender in about 30 s).
+  `AssetImportRules` bakes the axis turn into the combo kits and imports the reactions' masks in
+  `Generated/Vfx/Reaction` as linear data.
 - **Built** by `Clover > Build > Reaction Art` (`ReactionArtBuilder`, after Element Art) into
   `Generated/Vfx/Reaction/reaction_art.asset` (`ReactionArtSet`). Each of the 24 recipe combos is rebuilt from its
   pieces (1,024 in all) in the recipe's places:
@@ -1584,8 +1585,24 @@ changed. The old playtest stays with its players until the first few phases of t
   - flat pieces rasterised into one or two floor masks a look (up to four colours to a mask, lowest first), each its
     own `Clover/Decal` material, drawn on outward from the feet;
   - three to seven parts a look, about 160 to 7,400 triangles; the build writes `review/checks/reaction_art.md`.
-  - A re-coloured piece wears the recipe's material in its first slot and its kit's in the rest.
-  - The first-pass materials only the combos use are painted from the notes' bands.
+  - What each triangle wears comes from the source .blend, object by object. The recipe names one material a piece,
+    and the v3 kit keeps one material an object, so without it a bolt's violet edge, cyan band and white core were
+    one violet, and a spark, a scorch, a vine or a lily lost its second colour. 137 pieces are banded again by
+    matching their corners to the source's. Without the source in the project, a piece wearing one of its kit's own
+    materials keeps the kit's, and any other re-colours the whole piece (the source does that, as on Rime's frost
+    drift).
+  - The combo kits' pieces are turned half round about up before the recipe places them: baking the axes leaves
+    them facing the other way from the recipe's assumption. With the turn every recipe piece lies within 2 cm of its
+    object in the source; without it every asymmetric one (bolts, lips, glints, the jar's lid) faced the wrong way.
+  - Five pieces the look-dev's frames show are in no kit and not in the recipe, so they are taken from the source as
+    they lie: Caught Light's two gold caustic nets and its ink pool, The Sealed Jar's red lacquer ring, Anvil
+    Stone's anvil. (Poison and Lightning's jolt ghost is left out too; it is an after-image, not built.)
+  - Floor marks hold their colours in linear: `Clover/Decal`'s colours are HDR, which Unity passes on unconverted,
+    so colours given as the eye sees them came out washed pale (a navy pool showed sky blue). Colours lying at one
+    height go the larger under the smaller, so a lip shows as the rim of its scorch.
+  - The first-pass materials only the combos use are painted from the notes' bands. Four have no number in the
+    notes and are Claude's: a spark's tail orange (1, 0.45, 0.08), a thorn yellow-green (0.5, 0.8, 0.15), pollen
+    (0.95, 0.8, 0.2), the lacquer red (0.32, 0.03, 0.02).
 - **Lamps**: Blender's point lamps become URP point lights without shadows. Intensity = watts / (4 pi^2), so 395 W is
   10. Range is sqrt(2 x intensity), held to 1.5 to 5 m. A look has at most two; the dimmer ones are left out (Thermal
   Shock's cold lamp, Fire Medicine's green heart, Burnt Mound's three stone lamps, two of Firebloom's lily lamps). They
@@ -1611,8 +1628,15 @@ changed. The old playtest stays with its players until the first few phases of t
     - the bodies' recolours (bleach, pallor, frost) and the after-image ghosts;
     - the states that last (Diamond Ring's disc, the jar, the anvil, the net), which show for a moment only;
     - pieces moving within a look (every combo is one held frame).
-- **Verified**: offline compile only. The editor run (build, EditMode suite, `ReactionArtProbe` frames and burst) is
-  owed.
+- **Verified** (in the editor, 2026-11-19): the build reports 24 looks, 99 parts, 28 lamps and 33 masks, with nothing
+  grey, missing or over budget (heaviest Steam, 7,397 triangles). EditMode suite 637 of 637, `ReactionArtPoolTests`
+  passed. `ReactionArtProbe` 92 OK, 0 WRONG; its burst of 17 reactions a second has a p95 frame of 5.5 ms (quiet
+  5.7). `CrowdProbe` 6 of 6, p95 6.9 ms. `ReactionLookShots` frames each designed look alone; compared with the
+  look-dev's frames, none of the 24 is mirrored or back to front, and 15 checked closely match in their parts and colours.
+  - Still different from the frames: the camera crops the tall parts (The Grudge's cloud, the beams, the anvil's
+    top), and Firebloom's lilies are white where the frames show them yellow from the two orange lamps left out.
+  - The element art's own floor marks (`ElementArtBuilder.DecalMaterial`) give their colours the same way the
+    reactions' did before this fix, so they may be as washed out. This has not been checked or changed.
 
 ## Credits (decided 2026-11-18)
 
