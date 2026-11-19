@@ -43,6 +43,8 @@ namespace Clover.Core
             if (string.IsNullOrEmpty(sceneName)) return false;
             string scene = Resolve(sceneName);
             LastAsked = scene;
+            // Leaving a scene is a save point (IMPLEMENTATION.md 5.1).
+            Save.SavePoints.SceneChanging(scene);
             if (Application.CanStreamedLevelBeLoaded(scene))
             {
                 SceneManager.LoadScene(scene);
