@@ -46,13 +46,13 @@ Title: Chill and Frozen
 Group: Afflictions
 **What it is.** Ice's affliction. Each stack of Chill slows an enemy. At full depth it is Frozen: held still in ice until it thaws or a heavy blow shatters it.
 
-**The numbers.** Up to 5 stacks, 6 s. Each stack slows it by 7%. At 5 it freezes for 2.5 s. Elites and gods thaw after 1 s, and some great forms cannot be frozen. A heavy blow on a frozen enemy shatters it for 45 more damage. A thaw or a shatter ends the Chill. Nothing can chill a frozen enemy further.
+**The numbers.** Up to 5 stacks, 6 s. Each stack slows it by 7%. At 5 it freezes for 2.5 s. Elites thaw after 1 s. A god thaws sooner still: as a man after 0.75 s, in its godly form after 0.3 s, a hitch in whatever it was doing, which then carries on where it was. After a god thaws it cannot be frozen or held again for 3 s (as a man) or 5 s (in its godly form); its Chill still builds, and the next cold after that freezes it. A heavy blow on a frozen enemy shatters it for 45 more damage. A thaw or a shatter ends the Chill. Nothing can chill a frozen enemy further.
 
 **What sets it off.** Hoarfrost lays two stacks, and a weapon blow among its crystals breaks them for one more. With Ice's root mark learned, every weapon blow adds a stack. During Glaze, every weapon blow adds one more.
 
 **How to use it.** Freeze a dangerous enemy to buy time, then shatter it with a heavy blow. Soaked spreads Chill to everyone close by.
 
-**How it looks.** Frost crystals grow at the enemy's feet. Frozen, it glows a steady pale blue inside a cage of tall white crystals, and its diamond turns white and grows.
+**How it looks.** Frost crystals grow at the enemy's feet. Frozen, it glows a steady pale blue inside a cage of tall white crystals, and its diamond turns white and grows. A god's godly form glows the same blue for its moment, and the crystals burst where it was last struck.
 
 ## soaked
 Title: Soaked
@@ -514,7 +514,7 @@ Title: Split Rock (Life and Earth)
 Group: Reactions
 **What it is.** Seeded meets Tremor. Roots wedge into the shaken ground and hold the enemy, and a heavy splits the floor.
 
-**The numbers.** Held 2 s (an elite 0.8 s; a god is not held). A heavy blow while it is held splits the floor: 10 damage, a Tremor and a Seeded to everything within 3 m. Rests 4 s.
+**The numbers.** Held 2 s (an elite 0.8 s; a god as a man 0.6 s, in its godly form 0.24 s, and not at all while its guard lasts). A heavy blow while it is held splits the floor: 10 damage, a Tremor and a Seeded to everything within 3 m. Rests 4 s.
 
 **What sets it off.** A seed landing on a shaken enemy, or Tremor on a Seeded one.
 
@@ -748,7 +748,7 @@ Title: Seized (Lightning and Water)
 Group: Reactions
 **What it is.** A Soaked enemy carrying two Static or more. The current locks its muscles, and the water runs off it live.
 
-**The numbers.** Held 1 s (an elite 0.4 s; a god is not held). The water runs into a live film 2.5 m round its feet for 3 s, giving one Static every half second to whoever stands in it. Its own Static is not spent. Rests 6 s.
+**The numbers.** Held 1 s (an elite 0.4 s; a god as a man 0.3 s, in its godly form 0.12 s, and not at all while its guard lasts). The water runs into a live film 2.5 m round its feet for 3 s, giving one Static every half second to whoever stands in it. Its own Static is not spent. Rests 6 s.
 
 **What sets it off.** A second Static on a Soaked enemy, or Water on one already carrying two. One Static is not enough, and nothing rests until there are two.
 
@@ -943,7 +943,7 @@ Title: Girdled (Life and Dark)
 Group: Reactions
 **What it is.** Seeded meets Cursed. Black fig roots coil round the enemy and tighten with each blow.
 
-**The numbers.** One coil at once: 25% slower (a god is not slowed), and it takes 6% more from your weapon. Each of your weapon blows draws the roots a coil tighter (6% more each) and mends you 1. At four coils (the third blow) it is girdled: held 1.5 s while the roots crush, 20 damage and 40 stagger, and you heal 4. The roots wait 8 s for your blows. Rests 6 s.
+**The numbers.** One coil at once: 25% slower (a god is not slowed), and it takes 6% more from your weapon. Each of your weapon blows draws the roots a coil tighter (6% more each) and mends you 1. At four coils (the third blow) it is girdled: held 1.5 s while the roots crush (an elite 0.6 s; a god as a man 0.45 s, in its godly form 0.18 s, and not at all while its guard lasts), 20 damage and 40 stagger, and you heal 4. The roots wait 8 s for your blows. Rests 6 s.
 
 **What sets it off.** A seed landing on a Cursed enemy, or a curse on a Seeded one.
 
