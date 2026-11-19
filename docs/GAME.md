@@ -238,6 +238,11 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   - **Decided (user, 2026-11-19)**: it is the war the last land holds frozen. The opening is played on that field in
     its last minutes, and in the last land the player finds the empty place in a frozen rank where they stood
     (`docs/design/seat_levels.md` 4.4).
+  - **Decided (user, 2026-11-19)**: the player falls not to the god of Light and Dark (already fallen at the seat by
+    then) but to **the last champion**, cutting his way across the field toward the seat. The player stands in his
+    path, duels him and falls; as his blow lands the sponsor freezes the war and takes the player out of it. The
+    player sees only a glimpse (his weapon, a gleam, the eclipse beginning), no face and no name; the last land makes
+    it plain. The final boss is the one who killed the player, and the last land is a return to that moment.
 - **Leaning**: the gods are corrupted, and the corruption spreads. Ordinary enemies are infected with their god's
   element: it shows on their bodies, it is in their attacks, and it has driven them mad.
 - **Decided for now**: the sponsor is only a voice. Its form and name wait until the story is more settled.
