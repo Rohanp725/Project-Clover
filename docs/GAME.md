@@ -315,6 +315,16 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   symmetric longbow, so each bow gets its own grip and nock points in code; scabbards and the war fan's closed state
   are shown in the game (the draw comes out of the scabbard at the hip; the fan closes for strikes and opens for
   sweeps), built with the Way's moves in Phase 5.
+- **Way props and god-move effects (owner, 2026-11-19)**: the Way props in `staging/blender/2026-11-19_wayprops/` are
+  approved except the yumi-yari (its blade must be fitted the way a real bow-spear's is) and the Harvest's sheaves
+  (redone as small bound bundles hanging from a rope on the haft); the banner's glyphs are redrawn from an
+  open-licence font. All 18 god moves in `staging/blender/2026-11-19_godfx/` are approved, the weakest (the Giant's
+  Throw, the Wild Hunt, Bare-Handed King, Drive the Nail) to be pushed bigger before intake. The Wild Hunt's riders
+  and the Cauldron Call's beasts are effect creatures (rigid spectral stags and hounds swapping three gallop poses);
+  the Drum Ring's drums are solid lacquered taiko in cloud; the plain Massive Sword gets parrying hooks
+  (Parierhaken); the kozuka sits in its pocket on the scabbard. The Cross bough's head (the crossbar or a jumonji
+  yari) waits for a side-by-side picture. Every effect is a timeline, never a still (the owner's word on the
+  reactions, 2026-11-19).
   - **In the game since 2026-11-19**: see "Elemental effects in the game (2026-11-19)" under Vertical slice. F8 in the
     playtest switches back to the old effects to compare; the switch is temporary.
 
