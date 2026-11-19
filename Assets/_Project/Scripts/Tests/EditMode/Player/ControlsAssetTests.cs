@@ -18,12 +18,29 @@ namespace Clover.Tests
             Assert.IsNotNull(controls, $"no input actions at {PlayerBuilder.ControlsPath}");
             var map = controls.FindActionMap("Player");
             Assert.IsNotNull(map, "no Player action map");
-            foreach (string action in new[] { "Move", "Dodge", "LightAttack", "HeavyAttack", "Guard", "Flask", "Spell", "Surge", "Interact", "Pause" })
+            foreach (string action in new[] { "Move", "Dodge", "LightAttack", "HeavyAttack", "Guard", "Flask", "WeaponSkill", "Surge", "Interact", "Pause" })
             {
                 var found = map.FindAction(action);
                 Assert.IsNotNull(found, $"no {action} action");
                 Assert.Greater(found.bindings.Count, 0, $"{action} has no bindings");
             }
+            Assert.IsNull(map.FindAction("Spell"), "the spell button became the weapon skill (renamed, so saved bindings keep its id)");
+            Assert.AreEqual("5a1f0b52-6c1d-4f0e-9a51-1c0f7d2a1008", map.FindAction("WeaponSkill").id.ToString(), "WeaponSkill keeps the old Spell action's id");
+        }
+
+        [Test]
+        public void ControlsHaveTheSpellsMapWithTheLayerAndFourSlots()
+        {
+            var controls = AssetDatabase.LoadAssetAtPath<InputActionAsset>(PlayerBuilder.ControlsPath);
+            var map = controls.FindActionMap("Spells");
+            Assert.IsNotNull(map, "no Spells action map");
+            foreach (string action in new[] { "SpellLayer", "SpellWest", "SpellNorth", "SpellEast", "SpellSouth" })
+            {
+                var found = map.FindAction(action);
+                Assert.IsNotNull(found, $"no {action} action");
+                Assert.AreEqual(2, found.bindings.Count, $"{action} has a pad and a keys binding");
+            }
+            foreach (string action in LayeredButtons.SlotActions) Assert.IsNotNull(map.FindAction(action), action);
         }
 
         [Test]

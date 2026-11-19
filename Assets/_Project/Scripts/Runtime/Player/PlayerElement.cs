@@ -7,10 +7,11 @@ using UnityEngine.InputSystem;
 namespace Clover.Player
 {
     /// <summary>
-    /// The player's element: casts its spell and its surge, and shows them. The rules and numbers are in
-    /// <see cref="ElementKit"/>; the spell itself is thrown by a <see cref="ISpellForm"/>, the same way the spells
-    /// the tree teaches are. Like the weapon and the guard it has no Update of its own for the rules:
-    /// <see cref="PlayerController"/> calls <see cref="Advance"/> so everything is settled in one order.
+    /// The player's element: its base spell (cast from a spell slot by <see cref="PlayerSpells"/>, through
+    /// <see cref="CastBase"/>) and its surge, and how they show. The rules and numbers are in <see cref="ElementKit"/>;
+    /// the spell itself is thrown by a <see cref="ISpellForm"/>, the same way the spells the tree teaches are. Like the
+    /// weapon and the guard it has no Update of its own for the rules: <see cref="PlayerController"/> calls
+    /// <see cref="Advance"/> so everything is settled in one order.
     /// </summary>
     [RequireComponent(typeof(PlayerController))]
     public class PlayerElement : MonoBehaviour
@@ -28,14 +29,12 @@ namespace Clover.Player
         public bool StartsWithNone;
         /// <summary>False while the player holds no element at all.</summary>
         public bool HasElement { get; private set; } = true;
-        /// <summary>Seconds a spell or surge press is remembered while the player is busy.</summary>
+        /// <summary>Seconds a surge press is remembered while the player is busy.</summary>
         public float PressBufferTime = 0.25f;
         public float GlowWhenCasting = 9f;
         public float GlowWhenSurging = 2.6f;
         /// <summary>Seconds between the sparks or embers that fall from the player while the surge lasts.</summary>
         public float EmberInterval = 0.12f;
-        /// <summary>With a spell worn: holding the spell button this long casts the worn spell; a shorter press casts the element's own.</summary>
-        public float SpecialHoldSeconds = 0.3f;
 
         public ElementKit Kit { get; private set; }
         /// <summary>What is fixed about the element held: its place on the ring, its colour, its affliction.</summary>
@@ -51,13 +50,10 @@ namespace Clover.Player
         private PlayerCombat combat;
         private PlayerDefence defence;
         private PlayerUpgrades upgrades;
+        // Looked up when first wanted: the controller adds the slots to a player built before they existed, perhaps after this Awake.
+        private PlayerSpells spellsFound;
+        private PlayerSpells spells => spellsFound != null ? spellsFound : (spellsFound = GetComponent<PlayerSpells>());
         private readonly SpellSpec baseSpell = new SpellSpec();
-        private bool spellHolding;
-        private float spellHeldFor;
-        private float specialBuffered;
-        private InputAction spellAction;
-        private InputAction surgeAction;
-        private float spellBuffered;
         private float surgeBuffered;
         private float surgeHeldShown;
         private float glowLevel;
@@ -82,11 +78,6 @@ namespace Clover.Player
             if (glow != null) glow.intensity = 0f;
         }
 
-        private void Start()
-        {
-            spellAction = player.FindAction("Spell");
-            surgeAction = player.FindAction("Surge");
-        }
 
         // Holding nothing. A kit is kept so that nothing that reads one finds a hole, but it is never cast from:
         // the buttons do nothing, the colour is the plain grey of a blow with no element in it, and nothing is laid.
@@ -125,7 +116,9 @@ namespace Clover.Player
             if (defence != null) defence.ClearWards();
             if (surging && upgrades != null) upgrades.OnSurgeEnd();
             // The base spell's numbers, as its form reads them.
-            baseSpell.Cost = kit.SpellCost;
+            // The base spell runs on its slot's cooldown and costs no mana (STEEL_AND_ELEMENT.md 3.1).
+            baseSpell.Cost = 0f;
+            baseSpell.Cooldown = Magic.SpellTimings.Base(kit.Name).Cooldown;
             baseSpell.Damage = kit.SpellDamage;
             baseSpell.Stagger = kit.SpellStagger;
             baseSpell.Reach = kit.SpellReach;
@@ -145,21 +138,32 @@ namespace Clover.Player
                 baseSpell.Count = kit.SpellCount;
             }
             // Nothing asked of the old element is carried into the new one.
-            spellBuffered = surgeBuffered = specialBuffered = 0f;
-            spellHolding = false;
+            surgeBuffered = 0f;
             glowLevel = 0f;
             untilEmber = 0f;
             surgeHealOwed = 0f;
         }
 
-        /// <summary>Forgets a button being held, as when a menu or a leap takes the buttons away part-way through a hold.</summary>
-        /// <summary>True while the spell button is down: for a spell that lasts as long as it is held.</summary>
-        public bool SpellHeld => spellAction != null && spellAction.IsPressed();
+        /// <summary>True while the button of the slot the last spell was cast from is down: for a spell that lasts as long as it is held.</summary>
+        public bool SpellHeld => spells != null && spells.CastButtonHeld;
 
+        /// <summary>Forgets a button being held, as when a menu or a leap takes the buttons away part-way through a hold.</summary>
         public void DropHolds()
         {
-            spellHolding = false;
-            spellBuffered = surgeBuffered = specialBuffered = 0f;
+            surgeBuffered = 0f;
+            if (spells != null) spells.DropHolds();
+        }
+
+        /// <summary>
+        /// Begins the element's base spell, as its slot asks: it costs no mana (its slot's cooldown is its price), roots the
+        /// player for its short cast and leaves the hand part-way through. False with no element, or mid-cast.
+        /// </summary>
+        public bool CastBase()
+        {
+            if (!HasElement || Kit == null || combat == null || Kit.IsCasting) return false;
+            if (!Kit.TryCast(combat.Mana, 0f)) return false;
+            BeginCast();
+            return true;
         }
 
         /// <summary>A blow or a dodge breaks a cast in progress.</summary>
@@ -207,41 +211,12 @@ namespace Clover.Player
         /// <summary>Runs one frame. <paramref name="free"/> is false while the player is rolling, attacking, flinching or drinking.</summary>
         public void Advance(float deltaTime, bool free)
         {
-            if (spellAction == null || surgeAction == null) return;
-            // With no element the spell and surge buttons do nothing at all.
+            var buttons = player.Buttons;
+            if (buttons == null) return;
+            // With no element the surge button does nothing at all.
             if (!HasElement) return;
-            if (spellAction.WasPressedThisFrame())
-            {
-                if (upgrades != null && upgrades.HasSpecial)
-                {
-                    spellHolding = true;
-                    spellHeldFor = 0f;
-                }
-                else spellBuffered = PressBufferTime;
-            }
-            if (spellHolding)
-            {
-                spellHeldFor += deltaTime;
-                if (!spellAction.IsPressed())
-                {
-                    spellHolding = false;
-                    spellBuffered = PressBufferTime;
-                }
-                else if (spellHeldFor >= SpecialHoldSeconds)
-                {
-                    spellHolding = false;
-                    specialBuffered = PressBufferTime;
-                }
-            }
-            if (specialBuffered > 0f && free && !Kit.IsCasting)
-            {
-                specialBuffered = 0f;
-                // A spell goes where the player faces; with the mouse in use, that is toward the cursor.
-                player.FacePointer();
-                if (!upgrades.TrySpecial() && defence != null) defence.Callout("No mana");
-            }
-            if (specialBuffered > 0f) specialBuffered -= deltaTime;
-            if (surgeAction.WasPressedThisFrame()) surgeBuffered = PressBufferTime;
+            // F on the keys, or a tap of L2 on the pad.
+            if (buttons.Pressed(PlayerButton.Surge)) surgeBuffered = PressBufferTime;
 
             var stats = upgrades != null ? upgrades.Stats : null;
             // The surge is instant and never roots the player, so it can be lit at any free moment.
@@ -253,22 +228,6 @@ namespace Clover.Player
                 else if (Kit.TrySurge(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SurgeCost) : 1f, stats != null ? stats.Multiplier(PlayerStat.SurgeSeconds) : 1f)) BeginSurge();
                 else if (defence != null) defence.Callout("No mana");
             }
-            if (spellBuffered > 0f && free && !Kit.IsCasting)
-            {
-                spellBuffered = 0f;
-                player.FacePointer();
-                // With the mark for it, mana that is missing is paid in health.
-                if (upgrades != null) upgrades.CoverWithHealth(Kit.SpellCost * stats.Multiplier(PlayerStat.SpellCost) * stats.Multiplier(PlayerStat.BaseSpellCost));
-                // Spring Tide: the spell grows with all the mana held, and takes it all.
-                bool tide = upgrades != null && upgrades.TideRises(Kit.SpellCost * stats.Multiplier(PlayerStat.SpellCost) * stats.Multiplier(PlayerStat.BaseSpellCost));
-                if (Kit.TryCast(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SpellCost) * stats.Multiplier(PlayerStat.BaseSpellCost) : 1f))
-                {
-                    if (tide) upgrades.TideSpent();
-                    BeginCast();
-                }
-                else if (defence != null) defence.Callout("No mana");
-            }
-            if (spellBuffered > 0f) spellBuffered -= deltaTime;
             if (surgeBuffered > 0f) surgeBuffered -= deltaTime;
 
             if (Kit.TickCast(deltaTime)) Release();

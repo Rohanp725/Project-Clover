@@ -90,12 +90,22 @@ namespace Clover.Player
         public PlayerStats Stats { get; } = new PlayerStats();
         public int Points => RunState.Points;
         public int Bought { get; private set; }
-        /// <summary>The learned spell worn in the hold-spell slot, or null.</summary>
-        public Upgrade Worn { get; private set; }
-        /// <summary>True when holding the spell button does something of its own: a spell is worn.</summary>
+        /// <summary>
+        /// The spell in the North slot (Triangle, 2), or null. The old "worn spell" is retired: spells sit in the four
+        /// slots of <see cref="PlayerSpells"/>. Kept for older probes, which wore a spell and cast it with a held button.
+        /// </summary>
+        public Upgrade Worn => spells != null ? spells.MarkIn(1) : null;
         public bool HasSpecial => Worn != null;
-        /// <summary>A spell lent from outside the trees, to be tried: while one is lent it is the spell worn.</summary>
+        /// <summary>A spell lent from outside the trees, to be tried: while one is lent it sits in the North slot.</summary>
         public Upgrade Lent { get; private set; }
+        /// <summary>The learned spells in force now, in the chart's order: what the slots may hold and fill from.</summary>
+        public IReadOnlyList<string> SpellsInForce => spellsInForce;
+        /// <summary>Goes up whenever what is in force (or lent) may have changed; the slots look again then.</summary>
+        public int SpellsVersion { get; private set; }
+        private readonly List<string> spellsInForce = new List<string>();
+        // Looked up when first wanted: the controller adds the slots to a player built before they existed, perhaps after this Awake.
+        private PlayerSpells spellsFound;
+        private PlayerSpells spells => spellsFound != null ? spellsFound : (spellsFound = GetComponent<PlayerSpells>());
         /// <summary>True while a perfect guard's charge waits on the next blow.</summary>
         public bool ChargeStored => combat != null && combat.NextBlowDamage > 1f;
         public bool ShowsHeat => hasHeat;
@@ -409,8 +419,7 @@ namespace Clover.Player
             RunState.Points -= upgrade.Cost;
             RunState.Unlocked.Add(upgrade.Id);
             Bought++;
-            // The first spell learned is worn at once; later ones are worn by choosing them on the chart.
-            if (upgrade.IsSpell && Worn == null) RunState.WornSpell = upgrade.Id;
+            // A spell learned goes into an empty slot, if there is one, when the slots next look (PlayerSpells).
             Refresh(true);
             return true;
         }
@@ -423,19 +432,30 @@ namespace Clover.Player
         {
             if (gift == null || RunState.Unlocked.Contains(gift.Id)) return false;
             RunState.Unlocked.Add(gift.Id);
-            if (gift.IsSpell) RunState.WornSpell = gift.Id;
             Refresh(true);
+            // A gift that is a spell is put in a slot at once: the first empty one, else the North slot.
+            if (gift.IsSpell && spells != null) spells.Place(gift.Id);
             return true;
         }
 
-        /// <summary>Wears a learned spell in the hold-spell slot. False when it is not a spell the player has.</summary>
+        /// <summary>
+        /// Puts a learned spell in the North slot (Triangle, 2). False when it is not a spell the player has. For older
+        /// probes that wore a spell; the chart puts spells in the next slot round (<see cref="PutInNextSlot"/>).
+        /// </summary>
         public bool Wear(string id)
         {
             var upgrade = Upgrade.ById(id);
-            if (upgrade == null || !upgrade.IsSpell || !Has(id)) return false;
-            RunState.WornSpell = id;
-            Worn = upgrade;
+            if (upgrade == null || !upgrade.IsSpell || !Has(id) || spells == null) return false;
+            spells.SetSlot(1, id);
             return true;
+        }
+
+        /// <summary>The chart's stopgap until the Hand exists: a learned spell goes into the next slot round. The slot, or -1.</summary>
+        public int PutInNextSlot(string id)
+        {
+            var upgrade = Upgrade.ById(id);
+            if (upgrade == null || !upgrade.IsSpell || !Has(id) || spells == null) return -1;
+            return spells.PutInNext(id);
         }
 
         /// <summary>
@@ -446,6 +466,7 @@ namespace Clover.Player
         {
             Lent = spell != null && spell.Spell != null ? spell : null;
             Refresh(true);
+            if (Lent != null && spells != null) spells.SetSlot(1, Lent.Id);
         }
 
         /// <summary>Embers from the fallen; the upgrades may make them count for more.</summary>
@@ -468,7 +489,6 @@ namespace Clover.Player
         public void Forget()
         {
             RunState.Unlocked.Clear();
-            RunState.WornSpell = "";
             Heat.Reset();
             if (combat != null)
             {
@@ -496,7 +516,7 @@ namespace Clover.Player
             for (int i = 0; i < byTrigger.Length; i++) byTrigger[i].Clear();
             Stats.ClearLearned();
             int weaponStacks = 0;
-            Upgrade worn = null, firstSpell = null;
+            spellsInForce.Clear();
             tallied.Clear();
             hasRoot = false;
             for (int i = 0; i < has.Length; i++)
@@ -518,13 +538,10 @@ namespace Clover.Player
                 foreach (var mod in upgrade.Stats) Stats.AddLearned(mod);
                 foreach (var effect in upgrade.Effects) byTrigger[(int)effect.On].Add(effect);
                 weaponStacks += upgrade.WeaponStacks;
-                if (!upgrade.IsSpell) continue;
-                if (firstSpell == null) firstSpell = upgrade;
-                if (upgrade.Id == RunState.WornSpell) worn = upgrade;
+                if (upgrade.IsSpell) spellsInForce.Add(upgrade.Id);
             }
-            // A worn spell that is no longer the player's gives way to one that is.
-            RunState.WornSpell = (worn ?? firstSpell) != null ? (worn ?? firstSpell).Id : "";
-            Worn = Lent ?? worn ?? firstSpell;
+            // The slots look again: a spell no longer in force leaves its slot, a new one fills an empty slot.
+            SpellsVersion++;
 
             hasHeat = On(Upgrade.Heat);
             // Poison's beat as the marks in force make it, and the two states of the dead.
@@ -1932,23 +1949,35 @@ namespace Clover.Player
             Trigger(UpgradeTrigger.FlaskThrown, enemy != null ? enemy.GetComponentInParent<IDamageable>() as Component : null, at);
         }
 
-        /// <summary>The spell button was held: casts the worn spell. False when the mana is not there.</summary>
-        public bool TrySpecial()
+        /// <summary>Casts the spell in the North slot, whatever its clock says: for older probes. Returns what <see cref="Cast"/> does.</summary>
+        public bool TrySpecial() => Worn != null && Cast(Worn);
+
+        /// <summary>The mana a spell asks now: its price (larger spells only) as the marks make it.</summary>
+        public float PriceOf(Upgrade mark) => mark == null || mark.Spell == null ? 0f : mark.Spell.Cost * Stats.Multiplier(PlayerStat.SpellCost);
+
+        /// <summary>
+        /// Casts a learned (or lent) spell from a slot, through its form: the one path every slot spell takes
+        /// (IMPLEMENTATION.md 3.1). Basic spells cost no mana (their slot's clock is their price, kept by
+        /// <see cref="PlayerSpells"/>); a larger spell pays its mana; a spell may also ask health. False when it could
+        /// not be cast now (no mana, no health to give, or its form can do nothing here).
+        /// </summary>
+        public bool Cast(Upgrade mark)
         {
-            if (Worn == null || Worn.Spell == null) return false;
-            var form = SpellForms.Get(Worn.Form);
+            if (mark == null || mark.Spell == null) return false;
+            var form = SpellForms.Get(mark.Form);
             if (form == null) return false;
             // A spell may ask health in place of mana, or as well: it is left grey, to be won back.
-            float blood = Worn.Spell.HealthCost * Stats.Multiplier(PlayerStat.HealthPrices);
-            var cast = element.NewCast(Worn.Spell, Worn.Name, Worn);
+            float blood = mark.Spell.HealthCost * Stats.Multiplier(PlayerStat.HealthPrices);
+            var cast = element.NewCast(mark.Spell, mark.Name, mark);
             // A form that can do nothing just now says so before anything is paid.
             if (form is ISpellGate gate && !gate.CanCast(cast)) return false;
-            CoverWithHealth(Worn.Spell.Cost * Stats.Multiplier(PlayerStat.SpellCost));
+            float price = PriceOf(mark);
+            CoverWithHealth(price);
             if (blood > 0f && (defence == null || defence.Health.Current <= blood)) return false;
             // Spring Tide: the spell is made greater by all the mana held before its numbers are read, and takes it all.
-            float price = Worn.Spell.Cost * Stats.Multiplier(PlayerStat.SpellCost);
+            // Only a spell with a price can rise: basic spells cost none now (the mark is inert on them).
             bool tide = TideRises(price);
-            if (tide) cast = element.NewCast(Worn.Spell, Worn.Name, Worn);
+            if (tide) cast = element.NewCast(mark.Spell, mark.Name, mark);
             if (!combat.Mana.TrySpend(price)) return false;
             if (tide) TideSpent();
             if (blood > 0f) defence.Health.Chip(blood);
@@ -1971,9 +2000,9 @@ namespace Clover.Player
                     cast.Forward = transform.forward;
                 }
             }
-            castSource = Worn;
+            castSource = mark;
             form.Cast(cast);
-            castSource = Worn;
+            castSource = mark;
             Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);
             castSource = null;
             return true;

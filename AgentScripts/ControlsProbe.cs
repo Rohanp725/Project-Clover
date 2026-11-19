@@ -70,7 +70,7 @@ public static class ControlsProbe
     private static string Kept()
     {
         string key = ControlBindings.Key;
-        return $"key {key} held {PlayerPrefs.HasKey(key)}; flask pad {Binding("Flask", true)}, spell pad {Binding("Spell", true)}, spell keys {Binding("Spell", false)}, "
+        return $"key {key} held {PlayerPrefs.HasKey(key)}; flask pad {Binding("Flask", true)}, spell pad {Binding("WeaponSkill", true)}, spell keys {Binding("WeaponSkill", false)}, "
             + $"real key held {PlayerPrefs.HasKey(ControlBindings.PrefsKey)}";
     }
 
@@ -289,8 +289,8 @@ public class ControlsProbeRunner : ControlsProbeBase
         yield return Shot("controls_rebind_pad");
         yield return Tap(pad.buttonNorth);
         yield return Until(() => !page.Busy, 3f);
-        Say($"4 after Y: '{page.Message}'; flask pad {ControlsProbe.Binding("Flask", true)}, spell pad {ControlsProbe.Binding("Spell", true)}, kept {PlayerPrefs.HasKey(ControlBindings.Key)} "
-            + $"{(ControlsProbe.Binding("Flask", true) == "<Gamepad>/buttonNorth" && ControlsProbe.Binding("Spell", true) == "<Gamepad>/buttonWest" ? "OK" : "WRONG")}");
+        Say($"4 after Y: '{page.Message}'; flask pad {ControlsProbe.Binding("Flask", true)}, spell pad {ControlsProbe.Binding("WeaponSkill", true)}, kept {PlayerPrefs.HasKey(ControlBindings.Key)} "
+            + $"{(ControlsProbe.Binding("Flask", true) == "<Gamepad>/buttonNorth" && ControlsProbe.Binding("WeaponSkill", true) == "<Gamepad>/buttonWest" ? "OK" : "WRONG")}");
 
         // 5. A keys rebind asked for with the pad; the key itself comes from the script's simulate_key T.
         yield return Tap(pad.dpad.down);
@@ -301,7 +301,7 @@ public class ControlsProbeRunner : ControlsProbeBase
         yield return Shot("controls_rebind_listening");
         Say($"5 listening keys {page.Listening}");
         yield return Until(() => !page.Busy, 20f);
-        Say($"5 after the key: '{page.Message}'; spell keys {ControlsProbe.Binding("Spell", false)} {(ControlsProbe.Binding("Spell", false) == "<Keyboard>/t" ? "OK" : "WRONG")}");
+        Say($"5 after the key: '{page.Message}'; spell keys {ControlsProbe.Binding("WeaponSkill", false)} {(ControlsProbe.Binding("WeaponSkill", false) == "<Keyboard>/t" ? "OK" : "WRONG")}");
         yield return Tap(pad.dpad.down);
         yield return Shot("controls_rebound");
         Say($"5 the page now: spell {PageText(9)}; flask {PageText(8)}");
@@ -384,8 +384,8 @@ public class ControlsProbeReset : ControlsProbeBase
         page.Pick();
         yield return null;
         yield return Shot("controls_reset_done");
-        Say($"reset: asked first {asked}; '{page.Message}'; kept {PlayerPrefs.HasKey(ControlBindings.Key)}; flask pad {ControlsProbe.Binding("Flask", true)}, spell keys {ControlsProbe.Binding("Spell", false)} "
-            + $"{(asked && !PlayerPrefs.HasKey(ControlBindings.Key) && ControlsProbe.Binding("Flask", true) == "<Gamepad>/buttonWest" && ControlsProbe.Binding("Spell", false) == "<Keyboard>/q" ? "OK" : "WRONG")}");
+        Say($"reset: asked first {asked}; '{page.Message}'; kept {PlayerPrefs.HasKey(ControlBindings.Key)}; flask pad {ControlsProbe.Binding("Flask", true)}, spell keys {ControlsProbe.Binding("WeaponSkill", false)} "
+            + $"{(asked && !PlayerPrefs.HasKey(ControlBindings.Key) && ControlsProbe.Binding("Flask", true) == "<Gamepad>/buttonWest" && ControlsProbe.Binding("WeaponSkill", false) == "<Keyboard>/q" ? "OK" : "WRONG")}");
         menu.Close();
         Say("reset done");
         Destroy(gameObject);

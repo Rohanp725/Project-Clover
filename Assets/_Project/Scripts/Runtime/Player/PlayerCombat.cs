@@ -116,6 +116,14 @@ namespace Clover.Player
         /// <summary>The stagger a counter adds to what it throws back, on top of the blow's own: what a perfect guard would have rebuffed.</summary>
         public float CounterStagger = 55f;
 
+        /// <summary>
+        /// A move landed on something that pays back (once per move, however many it struck), and a finisher landed:
+        /// the spells' clocks are cut by each (STEEL_AND_ELEMENT.md 3.1). A finisher is told as a finisher only.
+        /// </summary>
+        public event System.Action<AttackStep> BlowLanded;
+        public event System.Action Finished;
+        private bool cutGiven;
+
         private PlayerController player;
         private PlayerDefence defence;
         private PlayerUpgrades upgrades;
@@ -198,7 +206,9 @@ namespace Clover.Player
             arrows = GetComponent<PlantedArrows>();
             // A weapon carried over from the last scene of the run takes the place of the scene's own.
             Equip(Weapons.ByName(string.IsNullOrEmpty(RunState.Weapon) ? StartingWeapon : RunState.Weapon));
+            // Every scene starts at half: mana now pays only for the big moves, and the player never starts a fight empty.
             Mana.Empty();
+            Mana.AtLeast(Mana.SettleLevel);
         }
 
         private void Start()
@@ -216,6 +226,8 @@ namespace Clover.Player
             Weapon = weapon;
             RunState.Weapon = weapon.Name;
             Weapon.Combo.Reset();
+            // The skill is on its own button (Triangle, Y, Q); a held heavy is the charged heavy.
+            Weapon.Combo.SkillOnButton = true;
             // Whatever was thrown belongs to the weapon put down.
             if (WeaponAway && shots != null) shots.Release(awayShot);
             WeaponAway = false;
@@ -352,15 +364,26 @@ namespace Clover.Player
             Tether(deltaTime);
             Combo.EnderAlways = boundTo != null;
             // With the weapon out of the hand there is nothing to attack with; behind a raised guard the light press is the guard's own thrust.
-            if (lightAction.WasPressedThisFrame() && !WeaponAway)
+            var buttons = player.Buttons;
+            if ((buttons != null ? buttons.Pressed(PlayerButton.LightAttack) : lightAction.WasPressedThisFrame()) && !WeaponAway)
                 Combo.Press(defence != null && defence.IsGuarding, player != null && player.Dodge.IsRolling && player.Dodge.Progress >= 0.5f);
-            if (heavyAction.WasPressedThisFrame() && !WeaponAway)
+            if ((buttons != null ? buttons.Pressed(PlayerButton.HeavyAttack) : heavyAction.WasPressedThisFrame()) && !WeaponAway)
             {
                 // Looked for on the press only, not every frame: a staggered enemy in reach turns the heavy into the finisher.
                 finisherTarget = FindEnemy(transform.forward, 360f, FinisherRange, true);
                 Combo.PressHeavy(finisherTarget != null);
             }
             if (!heavyAction.IsPressed()) Combo.ReleaseHeavy();
+            if (buttons != null && buttons.Pressed(PlayerButton.WeaponSkill) && !WeaponAway && Combo.Skill != null)
+            {
+                // A counter's stance is raised whatever the mana (it says so when braced); a released skill asks for its price first.
+                if (!Combo.SkillIsCounter && !Combo.CanPaySkill(player.Stamina, Mana))
+                {
+                    if (defence != null) defence.Callout(Mana.Current < Combo.SkillPrice ? "No mana" : "No stamina");
+                }
+                else Combo.PressSkill();
+            }
+            if (buttons == null || !buttons.SkillHeld) Combo.ReleaseSkill();
             Away(deltaTime);
             if (unavailable)
             {
@@ -390,6 +413,7 @@ namespace Clover.Player
                 stageForward = transform.forward;
                 stageOrigin = transform.position;
                 recoilLeft = Combo.Current.Recoil;
+                cutGiven = false;
                 if (Combo.Current == Combo.DashAttack) DashAttacks++;
                 if (Combo.Current == Combo.Skill) SkillsUsed++;
                 else
@@ -1307,6 +1331,7 @@ namespace Clover.Player
             int already = struck.Count;
             bool finisher = false;
             bool clean = false;
+            bool paidBlow = false;
             Vector3 finished = transform.position;
             Color arcColour = empowered ? empoweredColour : Weapon.ElementColoured ? new Color(EffectColour.r * 2f, EffectColour.g * 2f, EffectColour.b * 2f, 0.9f) : Weapon.SlashColour;
             if (fresh && arcs != null)
@@ -1480,6 +1505,7 @@ namespace Clover.Player
                     }
                 }
                 if (upgrades != null && pays) upgrades.OnBlow(step, target, outcome, wasAfflicted);
+                if (pays && outcome != HitOutcome.Blocked) paidBlow = true;
                 // Spells that wait on the weapon (a brand, a copy of the player, blades at the shoulder) are told; they answer on their own next step.
                 if (outcome != HitOutcome.Blocked && pays)
                 {
@@ -1525,6 +1551,16 @@ namespace Clover.Player
                 counterStagger = 0f;
             }
             if (struck.Count == already) return;
+            if (paidBlow)
+            {
+                // The spells' clocks: a finisher takes its own, larger cut; any other move cuts once however many it struck.
+                if (finisher) Finished?.Invoke();
+                else if (!cutGiven)
+                {
+                    cutGiven = true;
+                    BlowLanded?.Invoke(step);
+                }
+            }
             if (clean && (NextBlowDamage != 1f || NextBlowStagger != 1f))
             {
                 // The stored charge is spent on the blow that lands, not on one turned aside.

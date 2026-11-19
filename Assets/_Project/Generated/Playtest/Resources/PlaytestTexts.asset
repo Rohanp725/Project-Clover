@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24d13becfb3100d4d8970a3eb64c00bc, type: 3}
   m_Name: PlaytestTexts
   m_EditorClassIdentifier: Clover.Runtime::Clover.UI.PlaytestTexts
-  Version: Combat Playtest 0.1 (unreleased)
-  WhatsNew: "<color=#E8C77A>What this playtest is</color>\n\nA testbed for the combat. It grows with each update as the fighting is reworked. Everything is open: try anything, and tell us what felt good, what felt wrong and what you did not understand.\n\n<color=#E8C77A>New in 0.1</color>\n\n\u2022  <b>The Proving Ground</b>, where the playtest begins: a rest fire, a rack of every weapon (the Storm Katana and the Sun-Spear among them), altars for every element, training dummies (one still, one that fights back with red and pale blows, and one carrying each element's affliction), pens to let out the castle's soldiers and the Fire land's people, gates to Narukami and Khepharu, and doors to the Castle, the Summit, Sun City and the Sun Court.\n\u2022  <b>Playtest rules.</b> Resting gives unlimited Shards, so every mark can be bought, the gods' gifts included. The chart can be walked into every tree and branch. A fall puts you back at the last fire with nothing lost.\n\u2022  <b>Back to the Proving Ground</b> from any level: pause, then Return to the Proving Ground.\n\u2022  <b>The guide to effects</b>, from the pause menu and from the chart: every affliction, state and resource, with its numbers, what sets it off, how to use it and how it looks.\n\u2022  <b>Details for the high-level marks</b> on the chart: what a mark does, when, the numbers, what it works with and an example. Written in full for the Fire and Lightning trees and their mixes; the other trees show what their data says for now.\n\u2022  <b>Not built yet</b>: empty slots on the rack and on the chart show where the gods' weapons and boughs still to come will be.\n\u2022  This title, with the version and what is new."
+  Version: Combat Playtest 0.2 (unreleased)
+  WhatsNew: "<color=#E8C77A>What this playtest is</color>\n\nA testbed for the combat. It grows with each update as the fighting is reworked. Everything is open: try anything, and tell us what felt good, what felt wrong and what you did not understand.\n\n<color=#E8C77A>New in 0.2 (phase 1, first half: spells on cooldowns and mana for big moves)</color>\n\n\u2022  <b>Four spell slots on the L2 layer.</b> Hold L2 (LT) and press Square, Triangle, Circle or Cross (X, Y, B, A) to cast the spell in that slot. On the keyboard, 1, 2, 3 and 4 cast them directly. While L2 is held the face buttons are spells only: no flask, skill, dodge or use.\n\u2022  <b>The surge is a tap of L2.</b> Tap it and let go quickly. On the keyboard it stays on F.\n\u2022  <b>The weapon skill has its own button:</b> Triangle (Y), or Q. Holding the heavy button now gives the charged heavy only.\n\u2022  <b>Basic spells cost no mana.</b> Each slot waits 6 to 12 s after a cast instead. Fighting with the weapon brings spells back sooner: a light blow that lands takes 0.3 s off every waiting slot, a heavy blow 0.6 s, a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s.\n\u2022  <b>Mana is for the big moves:</b> the surge, the weapon skill and each element's one larger spell (Meteor Leap, Seven Flashes, Sky Dance, Winter Wall, Poured Blade, Elder Tree, Grave of Swords, Daybreak, One by One; the built duo spells too). You enter each area at half. Out of a fight mana rises to half and stops there; above half it is kept. A fight always starts with at least half.\n\u2022  <b>Filling the slots.</b> Your element's own spell starts in West, and each spell you learn fills the next empty slot. At a rest fire, choose a learned spell on the chart and press use to put it in the next slot round. The Hand screen comes in the next update.\n\u2022  <b>The spell line</b> under your weapon's name shows each slot's button, its spell, and the seconds it still waits or its mana.\n\u2022  <b>Controls:</b> the pause menu's controls page has rows for the spell layer and the four slots, on the pad and on the keys.\n\u2022  <b>Not yet:</b> the charged blade, the infused strikes (L2 with R1 or R2) and the spell diamond on the screen come in the second half of this phase. Marks that only made the base spell cheaper do nothing for now; the trees are reshaped later.\n\n<color=#E8C77A>New in 0.1</color>\n\n\u2022  <b>The Proving Ground</b>, where the playtest begins: a rest fire, a rack of every weapon (the Storm Katana and the Sun-Spear among them), altars for every element, training dummies (one still, one that fights back with red and pale blows, and one carrying each element's affliction), pens to let out the castle's soldiers and the Fire land's people, gates to Narukami and Khepharu, and doors to the Castle, the Summit, Sun City and the Sun Court.\n\u2022  <b>Playtest rules.</b> Resting gives unlimited Shards, so every mark can be bought, the gods' gifts included. The chart can be walked into every tree and branch. A fall puts you back at the last fire with nothing lost.\n\u2022  <b>Back to the Proving Ground</b> from any level: pause, then Return to the Proving Ground.\n\u2022  <b>The guide to effects</b>, from the pause menu and from the chart: every affliction, state and resource, with its numbers, what sets it off, how to use it and how it looks.\n\u2022  <b>Details for the high-level marks</b> on the chart: what a mark does, when, the numbers, what it works with and an example. Written in full for the Fire and Lightning trees and their mixes; the other trees show what their data says for now.\n\u2022  <b>Not built yet</b>: empty slots on the rack and on the chart show where the gods' weapons and boughs still to come will be.\n\u2022  This title, with the version and what is new."
   Effects:
   - Id: burn
     Title: Burn
@@ -370,19 +370,51 @@ MonoBehaviour:
   - Id: mana
     Title: Mana
     Group: Resources
-    Body: '<b>What it is.</b> The power behind your spells, your surge and your weapon skill. It comes only from fighting.
+    Body: '<b>What it is.</b> The power behind your big moves: the surge, each element''s one larger spell, the built duo spells and your weapon skill. Basic spells never cost mana: they run on cooldowns instead (see Spell cooldowns).
 
 
-      <b>The numbers.</b> Up to 100, and empty when you enter an area. Weapon blows that land give 3 to 16, depending on the move. A perfect guard gives 15, a perfect dodge 12 and a finisher 15. A Marked enemy gives 2 more for each blow. Blocked blows give nothing. Tap spells cost 20 to 25, surges 30 to 40 (Hunger costs health instead), and weapon skills 25 to 35.
+      <b>The numbers.</b> Up to 100. You enter every area at half (50). Out of a fight, mana below half rises by 5 a second until it reaches half; mana above half stays where it is. A fight always starts with at least half: if you have less when an enemy notices you, it is raised to 50 at once. A fight ends when no enemy within 12 m has been aware of you for 8 s. Weapon blows that land give 3 to 16, depending on the move. A perfect guard gives 15, a perfect dodge 12 and a finisher 15. A Marked enemy gives 2 more for each blow. Blocked blows give nothing. Surges cost 30 to 40 (Hunger costs health instead), weapon skills 25 to 35, and the larger spells 30 to 50 (the built duo spells 40 to 60).
 
 
-      <b>What sets it off.</b> Landing blows and timing guards and dodges well. The spell button, the surge and a full hold of the heavy button spend it.
+      <b>What sets it off.</b> Landing blows and timing guards and dodges well earn it. The surge, the weapon skill and a larger spell spend it.
 
 
-      <b>How to use it.</b> Weave steel and spells: hit, earn mana, cast, then hit again. Perfect guards and perfect dodges fill it fastest.
+      <b>How to use it.</b> Basic spells are free, so cast them whenever their clock is ready. Save mana for the surge or your element''s larger spell; what you earn above half in one fight is still there in the next. Perfect guards and perfect dodges fill it fastest.
 
 
-      <b>How it looks.</b> The bar under your stamina, in the colour of the element you hold (grey with none).'
+      <b>How it looks.</b> The bar under your stamina, in the colour of the element you hold (grey with none). A slot whose spell costs more mana than you hold says "(short)" on the spell line.'
+  - Id: spell-slots
+    Title: Spell slots and the spell layer
+    Group: Spells and cooldowns
+    Body: '<b>What it is.</b> You carry four spells, one in each slot: West, North, East and South, laid out like the pad''s face buttons. Hold L2 (LT) and press a face button to cast that slot''s spell. On the keyboard, 1, 2, 3 and 4 cast them directly. While L2 is held, the face buttons are spells only: the flask, the weapon skill, the dodge and use wait until you let go. A quick tap of L2 on its own lights the surge.
+
+
+      <b>The numbers.</b> A tap of L2 counts if it is let go within 0.25 s and no spell was cast while it was held; the surge is lit as you let go. Held longer, letting go does nothing. On the keyboard the surge stays on F and Left Ctrl is the layer (for the infused strikes to come).
+
+
+      <b>What sets it off.</b> Your element''s own spell sits in West at the start. Each spell you learn fills the next empty slot. At a rest fire, choose a learned spell on the chart and press use: it goes into the next slot round (West, North, East, South, then West again). The playtest''s Hand screen arrives in phase 2.
+
+
+      <b>How to use it.</b> Keep spells of different jobs in your four slots: one to open a fight, one to break a guard, one to finish, one to escape. A spell slot can be rebound in the pause menu''s controls, on the pad and on the keys.
+
+
+      <b>How it looks.</b> The line under your weapon''s name lists each slot: its button, its spell, and the seconds it still waits or the mana it costs.'
+  - Id: cooldowns
+    Title: Spell cooldowns
+    Group: Spells and cooldowns
+    Body: '<b>What it is.</b> Basic spells cost no mana. After a spell is cast, its slot waits a few seconds before it can be cast again. Fighting with your weapon shortens the wait of every slot that is waiting.
+
+
+      <b>The numbers.</b> Basic spells wait 6 to 12 s (the tree spells 7 to 12 s, each element''s own spell 6 to 9 s, the spare mixed spells 12 s). Each element''s one larger spell costs mana instead and has no wait: Meteor Leap 45, Seven Flashes 45, Sky Dance 45, Winter Wall 35, Poured Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50. Pawned Heart is paid in health and waits 40 s. Earth''s larger spell (Cairn) is not built yet. The built duo spells (Ball Lightning, Eye of the Storm and the others) cost 40 to 60 mana. Weapon play takes time off every waiting slot: a light blow that lands 0.3 s, a heavy blow 0.6 s (once per move, however many it strikes), a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s. Resting at a fire ends every wait.
+
+
+      <b>What sets it off.</b> Casting a spell starts its slot''s wait. Landing blows, perfect guards, perfect dodges and finishers shorten it. A slot pressed while it waits says "Not ready".
+
+
+      <b>How to use it.</b> Weave: cast, fight with the weapon until the spell is back, cast again. Perfect guards and dodges bring spells back fastest. Marks that only made a basic spell cheaper do nothing now; the trees are reshaped in a later phase.
+
+
+      <b>How it looks.</b> The spell line counts down each waiting slot in whole seconds.'
   - Id: flasks
     Title: Flasks
     Group: Resources

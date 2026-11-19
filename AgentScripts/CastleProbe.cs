@@ -107,12 +107,12 @@ public class CastleProbeRunner : MonoBehaviour
         yield return Until(() => !combat.IsAttacking, 1.5f);
         Say($"A fists: {names}blows {combat.BlowsLanded - blows} soldier health {healthBefore:0} -> {soldier.Health.Current:0} stagger {soldier.Stagger.Value:0} state {soldier.Brain.State} mana {combat.Mana.Current:0}");
 
-        // B: the spell.
+        // B: the spell: the West slot holds the base spell, cast with 1 (a cooldown, no mana).
         combat.Mana.Gain(100f);
         StandBefore(soldier, 2.5f);
         yield return null;
         healthBefore = soldier.Health.Current;
-        yield return TapWhenFree(Key.Q, () => element.SpellsCast > 0);
+        yield return TapWhenFree(Key.Digit1, () => element.SpellsCast > 0);
         yield return new WaitForSeconds(0.5f);
         Say($"B spell: cast {element.SpellsCast} hits {element.SpellHits} burning {soldier.Burn.IsBurning} soldier health {healthBefore:0} -> {soldier.Health.Current:0} mana {combat.Mana.Current:0}");
 

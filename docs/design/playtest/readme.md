@@ -16,12 +16,14 @@ TO START
 CONTROLS          Keys and mouse       PlayStation   Xbox
   Move            W A S D              Left stick    Left stick
   Light blow      Left mouse  (or J)   R1            RB
-  Heavy blow      Right mouse (or K)   R2            RT     (hold: charge, then the weapon's skill)
+  Heavy blow      Right mouse (or K)   R2            RT     (hold: the charged heavy, on weapons that have one)
+  Weapon skill    Q                    Triangle      Y      (costs mana)
   Guard           Left Shift  (or L)   L1            LB     (at the last instant: perfect guard)
   Dodge           Space                Circle        B
   Flask (heal)    R                    Square        X
-  Element spell   Q (hold: worn spell) Triangle      Y
-  Element surge   F                    L2            LT
+  Four spells     1 2 3 4              hold L2, then Square Triangle Circle Cross
+                                                     hold LT, then X Y B A
+  Element surge   F                    L2 (tap)      LT (tap)
   Use / read on   E                    Cross         A
   Pause           Esc                  Options       Menu
   With the mouse, blows and spells go toward the cursor. On-screen prompts name
@@ -29,7 +31,8 @@ CONTROLS          Keys and mouse       PlayStation   Xbox
   then Controls.
 
 ON THE UPGRADE CHART (rest at a fire)
-  Move from mark to mark, E / Cross / A to learn (or to wear a spell), R2 or
+  Move from mark to mark, E / Cross / A to learn (or, on a spell you have, to
+  put it in the next spell slot), R2 or
   right mouse for the whole chart, Q / Triangle / Y for a mark's details,
   Shift / L1 / LB and left mouse / R1 / RB for the tree before and after,
   R / Square / X for the guide to effects, Space / Circle / B to leave.
@@ -81,8 +84,9 @@ NOT BUILT YET
   - The Alchemist's Hooks, the hook swords, a form of the Twin Knives (the alchemist)
   - The Champion's Arms, his own version of every weapon (the last champion)
   Also to come, in later updates:
-  - Spells on cooldowns, mana for the big moves, the charged blade, infused
-    strikes and four spells on the L2 layer (next update).
+  - The charged blade, infused strikes and the spell diamond on the screen
+    (spells on cooldowns, mana for the big moves and the four spells on the
+    L2 layer arrived in 0.2).
   - Two elements at once and the Hand, the build screen at a rest fire.
   - Reactions when two elements' afflictions meet on one enemy.
   - The trees reshaped into spell branches.

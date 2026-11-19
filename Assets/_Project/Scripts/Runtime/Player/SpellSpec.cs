@@ -6,8 +6,10 @@ namespace Clover.Player
     /// </summary>
     public class SpellSpec
     {
-        /// <summary>Mana it costs.</summary>
+        /// <summary>Mana it costs: only an element's larger spells (and the built duo spells) cost any; basic spells run on <see cref="Cooldown"/> instead (Magic/SpellTimings).</summary>
         public float Cost = 30f;
+        /// <summary>Seconds its slot waits after a cast before it can be cast again; zero for a spell paid in mana.</summary>
+        public float Cooldown;
         public float Damage = 20f;
         public float Stagger = 20f;
         /// <summary>How far it reaches from the player.</summary>

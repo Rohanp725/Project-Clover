@@ -106,7 +106,41 @@ namespace Clover.Player
                 return Part(action, group, "up") + " " + Part(action, group, "left") + " " + Part(action, group, "down") + " " + Part(action, group, "right");
             }
             int index = ControlBindings.IndexOf(action, group);
+            if (index < 0 && pad && action.name == "Surge")
+            {
+                // On a pad the surge is a tap of the spell layer's button (L2), which has no binding of its own.
+                var layer = action.actionMap != null && action.actionMap.asset != null ? action.actionMap.asset.FindAction("SpellLayer") : null;
+                string layerName = Of(layer, style);
+                return layerName.Length > 0 ? layerName + " tap" : "";
+            }
             return index < 0 ? "" : OfPath(action.bindings[index].effectivePath, style);
+        }
+
+        private static readonly string[] SlotWords = { "West", "North", "East", "South" };
+
+        /// <summary>A spell slot's place in the diamond: West, North, East or South.</summary>
+        public static string SlotWord(int slot) => slot >= 0 && slot < SlotWords.Length ? SlotWords[slot] : "";
+
+        /// <summary>What casts a spell slot on the device in use: "L2+Square" on a pad, "1" on the keys.</summary>
+        public static string Slot(int slot) => Slot(slot, ControlDevices.Current);
+
+        public static string Slot(int slot, ControlDevice style, InputActionAsset controls = null)
+        {
+            if (slot < 0 || slot >= LayeredButtons.SlotActions.Length) return "";
+            string button = Of(LayeredButtons.SlotActions[slot], style, controls);
+            if (style == ControlDevice.Keys) return button;
+            string layer = Of("SpellLayer", style, controls);
+            return layer.Length > 0 ? layer + "+" + button : button;
+        }
+
+        /// <summary>The four spells' buttons together, for prompts: "L2 + Square, Triangle, Circle, Cross" or "1 2 3 4".</summary>
+        public static string Spells(ControlDevice style, InputActionAsset controls = null)
+        {
+            if (style == ControlDevice.Keys)
+                return Of(LayeredButtons.SlotActions[0], style, controls) + " " + Of(LayeredButtons.SlotActions[1], style, controls) + " "
+                    + Of(LayeredButtons.SlotActions[2], style, controls) + " " + Of(LayeredButtons.SlotActions[3], style, controls);
+            return Of("SpellLayer", style, controls) + " + " + Of(LayeredButtons.SlotActions[0], style, controls) + ", " + Of(LayeredButtons.SlotActions[1], style, controls)
+                + ", " + Of(LayeredButtons.SlotActions[2], style, controls) + ", " + Of(LayeredButtons.SlotActions[3], style, controls);
         }
 
         private static string Part(InputAction action, string group, string part)
@@ -139,7 +173,8 @@ namespace Clover.Player
                 }
                 built.Append(template, at, open - at);
                 string name = template.Substring(open + 1, close - open - 1);
-                string named = Of(name, style, controls);
+                // "{Spell}" in older words (a scene built before the L2 layer) means the four spells' buttons now.
+                string named = name == "Spell" || name == "Spells" ? Spells(style, controls) : Of(name, style, controls);
                 built.Append(string.IsNullOrEmpty(named) ? name : named);
                 at = close + 1;
             }

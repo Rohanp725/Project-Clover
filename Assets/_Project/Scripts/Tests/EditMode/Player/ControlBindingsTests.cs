@@ -45,7 +45,9 @@ namespace Clover.Tests
             return device;
         }
 
-        private static readonly string[] Actions = { "Move", "Dodge", "LightAttack", "HeavyAttack", "Guard", "Flask", "Spell", "Surge", "Interact", "Pause" };
+        // Every action a pad reaches by a binding of its own. The surge has none on the pad: it is a tap of the spell layer.
+        private static readonly string[] Actions = { "Move", "Dodge", "LightAttack", "HeavyAttack", "Guard", "Flask", "WeaponSkill", "Interact", "Pause",
+            "SpellLayer", "SpellWest", "SpellNorth", "SpellEast", "SpellSouth" };
 
         // Every action has a pad binding that finds a control on this pad.
         private void EveryActionReaches(InputDevice pad)
@@ -139,8 +141,13 @@ namespace Clover.Tests
             Keys("Guard", null, 0, "<Keyboard>/leftShift");
             Keys("Dodge", null, 0, "<Keyboard>/space");
             Keys("Flask", null, 0, "<Keyboard>/r");
-            Keys("Spell", null, 0, "<Keyboard>/q");
+            Keys("WeaponSkill", null, 0, "<Keyboard>/q");
             Keys("Surge", null, 0, "<Keyboard>/f");
+            Keys("SpellLayer", null, 0, "<Keyboard>/leftCtrl");
+            Keys("SpellWest", null, 0, "<Keyboard>/1");
+            Keys("SpellNorth", null, 0, "<Keyboard>/2");
+            Keys("SpellEast", null, 0, "<Keyboard>/3");
+            Keys("SpellSouth", null, 0, "<Keyboard>/4");
             Keys("Interact", null, 0, "<Keyboard>/e");
             Keys("Pause", null, 0, "<Keyboard>/escape");
             // The second, keys-only set for playing without a mouse.
@@ -152,14 +159,63 @@ namespace Clover.Tests
         [Test]
         public void NoTwoActionsShareAButtonByDefault()
         {
-            var map = controls.FindActionMap("Player");
-            foreach (var action in map.actions)
-                for (int i = 0; i < action.bindings.Count; i++)
-                {
-                    if (action.bindings[i].isComposite) continue;
-                    Assert.IsFalse(ControlBindings.FindClash(map, action, i, out var other, out _),
-                        $"{action.name} {action.bindings[i].effectivePath} is also {other?.name}'s");
-                }
+            foreach (var map in controls.actionMaps)
+                foreach (var action in map.actions)
+                    for (int i = 0; i < action.bindings.Count; i++)
+                    {
+                        if (action.bindings[i].isComposite) continue;
+                        Assert.IsFalse(ControlBindings.FindClash(controls, action, i, out var other, out _),
+                            $"{action.name} {action.bindings[i].effectivePath} is also {other?.name}'s");
+                    }
+        }
+
+        [Test]
+        public void TheSlotsShareTheFaceButtonsOnThePadButNeverAKey()
+        {
+            var west = controls.FindAction("SpellWest");
+            var flask = controls.FindAction("Flask");
+            int westPad = ControlBindings.IndexOf(west, ControlBindings.PadGroup);
+            Assert.AreEqual(flask.bindings[ControlBindings.IndexOf(flask, ControlBindings.PadGroup)].effectivePath, west.bindings[westPad].effectivePath,
+                "Square is the flask and, under L2, the West spell");
+            Assert.IsFalse(ControlBindings.FindClash(controls, west, westPad, out _, out _), "sharing across maps on the pad is meant");
+
+            // On the keys a spell given the flask's key swaps with it: a key does one thing.
+            int westKeys = ControlBindings.IndexOf(west, ControlBindings.KeysGroup);
+            int flaskKeys = ControlBindings.IndexOf(flask, ControlBindings.KeysGroup);
+            west.ApplyBindingOverride(westKeys, "<Keyboard>/r");
+            Assert.AreEqual(ControlBindings.Settled.Swapped, ControlBindings.Settle(controls, west, westKeys, "<Keyboard>/1", out var other, out _));
+            Assert.AreEqual(flask, other);
+            Assert.AreEqual("<Keyboard>/1", flask.bindings[flaskKeys].effectivePath);
+
+            // Two slots never share, on the pad either: East given West's button swaps.
+            var east = controls.FindAction("SpellEast");
+            int eastPad = ControlBindings.IndexOf(east, ControlBindings.PadGroup);
+            east.ApplyBindingOverride(eastPad, "<Gamepad>/buttonWest");
+            Assert.AreEqual(ControlBindings.Settled.Swapped, ControlBindings.Settle(controls, east, eastPad, "<Gamepad>/buttonEast", out other, out _));
+            Assert.AreEqual(west, other);
+            Assert.AreEqual("<Gamepad>/buttonEast", west.bindings[westPad].effectivePath);
+
+            // The layer's own button is never shared: Guard given L2 swaps with the layer.
+            var guard = controls.FindAction("Guard");
+            var layer = controls.FindAction("SpellLayer");
+            int guardPad = ControlBindings.IndexOf(guard, ControlBindings.PadGroup);
+            guard.ApplyBindingOverride(guardPad, "<Gamepad>/leftTrigger");
+            Assert.AreEqual(ControlBindings.Settled.Swapped, ControlBindings.Settle(controls, guard, guardPad, "<Gamepad>/leftShoulder", out other, out _));
+            Assert.AreEqual(layer, other);
+            Assert.AreEqual("<Gamepad>/leftShoulder", layer.bindings[ControlBindings.IndexOf(layer, ControlBindings.PadGroup)].effectivePath);
+        }
+
+        [Test]
+        public void TheSurgeAndTheSlotsAreNamedForThePad()
+        {
+            Assert.AreEqual("L2 tap", ControlNames.Of(controls.FindAction("Surge"), ControlDevice.PlayStation));
+            Assert.AreEqual("LT tap", ControlNames.Of(controls.FindAction("Surge"), ControlDevice.Xbox));
+            Assert.AreEqual("F", ControlNames.Of(controls.FindAction("Surge"), ControlDevice.Keys));
+            Assert.AreEqual("L2+Square", ControlNames.Slot(0, ControlDevice.PlayStation, controls));
+            Assert.AreEqual("LT+A", ControlNames.Slot(3, ControlDevice.Xbox, controls));
+            Assert.AreEqual("2", ControlNames.Slot(1, ControlDevice.Keys, controls));
+            Assert.AreEqual("Y", ControlNames.Of(controls.FindAction("WeaponSkill"), ControlDevice.Xbox));
+            StringAssert.Contains("1 2 3 4", ControlNames.Expand("{Spells}", ControlDevice.Keys, controls));
         }
 
         [Test]
@@ -167,7 +223,7 @@ namespace Clover.Tests
         {
             var move = controls.FindAction("Move");
             Assert.AreEqual("<Gamepad>/leftStick", move.bindings[ControlBindings.IndexOf(move, ControlBindings.PadGroup)].path, "the d-pad is not offered for rebinding");
-            Assert.AreEqual(-1, ControlBindings.IndexOf(controls.FindAction("Spell"), ControlBindings.KeysGroup, null, 1), "Spell has no second keys binding");
+            Assert.AreEqual(-1, ControlBindings.IndexOf(controls.FindAction("WeaponSkill"), ControlBindings.KeysGroup, null, 1), "WeaponSkill has no second keys binding");
         }
 
         [Test]
@@ -175,7 +231,7 @@ namespace Clover.Tests
         {
             var map = controls.FindActionMap("Player");
             var light = controls.FindAction("LightAttack");
-            var spell = controls.FindAction("Spell");
+            var spell = controls.FindAction("WeaponSkill");
             int lightKeys = ControlBindings.IndexOf(light, ControlBindings.KeysGroup);
             int spellKeys = ControlBindings.IndexOf(spell, ControlBindings.KeysGroup);
             light.ApplyBindingOverride(lightKeys, "<Keyboard>/q");

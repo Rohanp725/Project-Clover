@@ -97,6 +97,34 @@ namespace Clover.Player
         /// <summary>While true the heavy button gives the chain's heavy from a standing start too: the Chain Sickle with an enemy bound.</summary>
         [NonSerialized] public bool EnderAlways;
 
+        /// <summary>
+        /// The skill has its own button (Triangle, Y, Q: STEEL_AND_ELEMENT.md 3.5), pressed through <see cref="PressSkill"/>.
+        /// A held heavy then charges only toward the charged heavy and never releases the skill; a weapon with no charged
+        /// heavy swings its heavy at once. A counter's stance is raised by holding either button. The player sets it;
+        /// left false, the combo keeps the old rule (the skill from a full charge).
+        /// </summary>
+        [NonSerialized] public bool SkillOnButton;
+
+        /// <summary>True when the skill could be started now with this mana and stamina.</summary>
+        public bool CanPaySkill(StaminaPool stamina, ManaPool mana) =>
+            Skill != null && mana != null && mana.Current >= SkillPrice && stamina != null && stamina.Current >= Skill.StaminaCost * StaminaScale;
+
+        /// <summary>The skill button went down: the skill starts from idle or from a recovery, if it can be paid for.</summary>
+        public void PressSkill()
+        {
+            if (Skill == null) return;
+            skillBuffered = BufferTime;
+            skillHeld = true;
+        }
+
+        public void ReleaseSkill() => skillHeld = false;
+
+        private bool Held => heavyHeld || skillHeld;
+        private float skillBuffered;
+        private bool skillHeld;
+        // The heavy button alone is worth holding: there is a charged heavy, a counter's stance, or (the old rule) the skill.
+        private bool ChargeWorthHolding => !SkillOnButton || ChargedHeavy != null || SkillIsCounter;
+
         public void Reset()
         {
             EnderAlways = false;
@@ -108,6 +136,8 @@ namespace Clover.Player
             buffered = 0f;
             heavyBuffered = 0f;
             heavyHeld = false;
+            skillBuffered = 0f;
+            skillHeld = false;
             finisherWanted = false;
             guardWanted = false;
             dashWanted = false;
@@ -180,6 +210,7 @@ namespace Clover.Player
             // A press made before the cancel was meant for the attack being abandoned, not for after the dodge.
             buffered = 0f;
             heavyBuffered = 0f;
+            skillBuffered = 0f;
             dashWanted = false;
             EndAttack();
         }
@@ -193,6 +224,7 @@ namespace Clover.Player
             if (!IsAttacking && sinceEnd < float.MaxValue) sinceEnd += deltaTime;
             if (buffered > 0f) buffered -= deltaTime;
             if (heavyBuffered > 0f) heavyBuffered -= deltaTime;
+            if (skillBuffered > 0f) skillBuffered -= deltaTime;
         }
 
         public ComboEvents Tick(float deltaTime, StaminaPool stamina, ManaPool mana = null)
@@ -204,7 +236,22 @@ namespace Clover.Player
             {
                 if (sinceEnd < float.MaxValue) sinceEnd += deltaTime;
                 if (sinceEnd > ChainGrace) nextIndex = 0;
-                if (heavyBuffered > 0f)
+                if (skillBuffered > 0f && SkillOnButton && Skill != null)
+                {
+                    if (SkillIsCounter)
+                    {
+                        // A counter is a stance: the skill button raises it as a held heavy does.
+                        skillBuffered = 0f;
+                        if (stamina.Current >= Heavy.StaminaCost * StaminaScale) BeginCharge();
+                    }
+                    else if (CanPaySkill(stamina, mana))
+                    {
+                        mana.TrySpend(SkillPrice);
+                        if (StartHeavy(Skill, stamina)) events |= ComboEvents.Started;
+                    }
+                    else skillBuffered = 0f;
+                }
+                else if (heavyBuffered > 0f)
                 {
                     if (finisherWanted)
                     {
@@ -214,21 +261,14 @@ namespace Clover.Player
                     {
                         if (StartHeavy(nextIndex > 0 ? Ender(nextIndex) : ChainHeavy, stamina)) events |= ComboEvents.Started;
                     }
-                    else if (!heavyHeld)
+                    else if (!heavyHeld || !ChargeWorthHolding)
                     {
-                        // Pressed and let go while something else was happening: there is nothing left to charge.
+                        // Pressed and let go while something else was happening, or nothing to charge toward: the heavy at once.
                         if (StartHeavy(Heavy, stamina)) events |= ComboEvents.Started;
                     }
                     else if (stamina.Current >= Heavy.StaminaCost * StaminaScale)
                     {
-                        heavyBuffered = 0f;
-                        buffered = 0f;
-                        Phase = AttackPhase.Charge;
-                        Current = null;
-                        StepIndex = -1;
-                        elapsed = 0f;
-                        chargeAnnounced = false;
-                        skillAnnounced = false;
+                        BeginCharge();
                     }
                     else
                     {
@@ -254,14 +294,15 @@ namespace Clover.Player
             {
                 elapsed += deltaTime;
                 bool ready = elapsed >= ChargeTime;
-                bool canPay = Skill != null && mana != null && mana.Current >= SkillPrice && stamina.Current >= Skill.StaminaCost * StaminaScale;
+                // With the skill on its own button a charge never releases it (a counter's stance still answers a blow).
+                bool canPay = (!SkillOnButton || SkillIsCounter) && CanPaySkill(stamina, mana);
                 if (ChargedHeavy != null)
                 {
                     // Two tiers: the charged heavy for nothing, then the skill for mana. A counter's skill is never
                     // released: it waits for a blow, and lets go by itself when it has been held too long.
                     bool skillReady = !SkillIsCounter && (elapsed >= SkillAt || SkillAtOnce) && canPay;
                     bool spent = SkillIsCounter && elapsed >= ChargeTime + CounterHoldMax;
-                    if (!heavyHeld || spent || (SkillAtOnce && skillReady))
+                    if (!Held || spent || (SkillAtOnce && skillReady))
                     {
                         bool started;
                         if (skillReady)
@@ -287,7 +328,7 @@ namespace Clover.Player
                         }
                     }
                 }
-                else if (!heavyHeld || (SkillAtOnce && canPay))
+                else if (!Held || (SkillAtOnce && canPay))
                 {
                     bool started;
                     if ((ready || SkillAtOnce) && canPay)
@@ -337,6 +378,7 @@ namespace Clover.Player
                     bool open = elapsed >= step.Windup + step.Active + ChainDelay;
                     bool chainOpen = currentIsLight && open;
                     if (heavyBuffered > 0f && finisherWanted && open && StartHeavy(Finisher, stamina)) events |= ComboEvents.Started;
+                    else if (skillBuffered > 0f && SkillOnButton && !SkillIsCounter && open && CanPaySkill(stamina, mana) && mana.TrySpend(SkillPrice) && StartHeavy(Skill, stamina)) events |= ComboEvents.Started;
                     else if (heavyBuffered > 0f && !finisherWanted && chainOpen && StartHeavy(Ender(nextIndex), stamina)) events |= ComboEvents.Started;
                     else if (buffered > 0f && guardWanted && open && step == GuardAttack && StartHeavy(GuardAttack, stamina)) events |= ComboEvents.Started;
                     else if (buffered > 0f && chainOpen && nextIndex < Steps.Count && StartLight(stamina)) events |= ComboEvents.Started;
@@ -346,7 +388,21 @@ namespace Clover.Player
 
             if (buffered > 0f) buffered -= deltaTime;
             if (heavyBuffered > 0f) heavyBuffered -= deltaTime;
+            if (skillBuffered > 0f) skillBuffered -= deltaTime;
             return events;
+        }
+
+        private void BeginCharge()
+        {
+            heavyBuffered = 0f;
+            skillBuffered = 0f;
+            buffered = 0f;
+            Phase = AttackPhase.Charge;
+            Current = null;
+            StepIndex = -1;
+            elapsed = 0f;
+            chargeAnnounced = false;
+            skillAnnounced = false;
         }
 
         private bool StartLight(StaminaPool stamina)
@@ -374,6 +430,7 @@ namespace Clover.Player
         {
             buffered = 0f;
             heavyBuffered = 0f;
+            skillBuffered = 0f;
             finisherWanted = false;
             guardWanted = false;
             dashWanted = false;

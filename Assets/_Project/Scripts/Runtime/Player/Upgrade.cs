@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Clover.Player.Magic;
 using Clover.Player.Trees;
 using UnityEngine;
 
@@ -134,6 +135,8 @@ namespace Clover.Player
             {
                 upgrade.Index = place++;
                 if (upgrade.Cost == 0) upgrade.Cost = UsualCost(upgrade.Kind);
+                // Basic spells run on cooldowns and the larger ones cost mana, by the one table of the shared rules.
+                SpellTimings.Apply(upgrade);
                 index[upgrade.Id] = upgrade;
                 foreach (var effect in upgrade.Effects)
                 {

@@ -18,6 +18,8 @@ namespace Clover.Player
         public float Stagger = 12f;
         public float StaminaCost = 12f;
         public float ManaGain = 6f;
+        /// <summary>Seconds this move takes off every running spell cooldown when it lands; zero for the usual (0.3 light, 0.6 heavy).</summary>
+        public float CooldownCut;
         /// <summary>Metres the player steps forward during the wind-up.</summary>
         public float Lunge = 0.6f;
         /// <summary>Metres from the player's centre the swing reaches.</summary>

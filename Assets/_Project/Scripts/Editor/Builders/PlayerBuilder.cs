@@ -261,6 +261,7 @@ namespace Clover.EditorTools
             player.AddComponent<PlayerInteraction>();
             var element = player.AddComponent<PlayerElement>();
             element.Configure(glow, arcs, follow);
+            player.AddComponent<PlayerSpells>();
             player.AddComponent<PlayerUpgrades>();
 
             var modelAsset = AssetDatabase.LoadAssetAtPath<GameObject>(PlayerModelPath);
@@ -948,8 +949,7 @@ namespace Clover.EditorTools
             var controls = Page("Controls", panel);
             var gold = new Color(1f, 0.8f, 0.45f, 1f);
             var pale = new Color(0.95f, 0.93f, 0.9f, 1f);
-            var holds = Column("Holds", controls, 840f, 440f, gold,
-                "Heavy held: the weapon's skill, costs mana\nHeavy on a staggered enemy: finisher\nFlask held: throw it, once learned\nSpell held: the element's own move, once learned");
+            var holds = Column("Holds", controls, 840f, 440f, gold, Clover.UI.ControlsPage.HoldsWords);
             holds.rectTransform.anchoredPosition = new Vector2(840f, -430f);
             var fight = Column("Fight", controls, 840f, 440f, pale,
                 "Guard turns blows from the front.\n\nA guard raised at the last instant is a perfect guard. It costs the enemy its balance.\n\nRed attacks cannot be guarded.\n\nBreak an enemy's balance, then finish it with a heavy blow.\n\nShards are spent at rest fires.");

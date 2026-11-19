@@ -163,8 +163,8 @@ namespace Clover.Tests
                 {
                     Assert.IsNotNull(SpellForms.Get(upgrade.Form), upgrade.Id + " names a form that does not exist: " + upgrade.Form);
                     Assert.IsNotNull(upgrade.Spell, upgrade.Id + " has a form and no numbers");
-                    // A spell is paid for: in mana, or in health where its words say so.
-                    Assert.Greater(upgrade.Spell.Cost + upgrade.Spell.HealthCost, 0f, upgrade.Id);
+                    // A spell is paid for: by its cooldown (basic spells), in mana (larger spells), or in health where its words say so.
+                    Assert.Greater(upgrade.Spell.Cooldown + upgrade.Spell.Cost + upgrade.Spell.HealthCost, 0f, upgrade.Id);
                 }
                 foreach (var effect in upgrade.Effects)
                 {

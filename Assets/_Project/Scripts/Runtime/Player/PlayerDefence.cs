@@ -87,6 +87,10 @@ namespace Clover.Player
         public int PerfectDodges { get; private set; }
         public int Deaths { get; private set; }
 
+        /// <summary>A perfect guard (a spell's own parry counts) and a perfect dodge: the spells' clocks are cut by each.</summary>
+        public event System.Action PerfectGuarded;
+        public event System.Action PerfectDodged;
+
         private PlayerController player;
         private PlayerCombat combat;
         private PlayerElement element;
@@ -218,7 +222,8 @@ namespace Clover.Player
                 Guard.Press(!IsHelpless && !IsDrinking);
                 guardPressBuffered = PressBufferTime;
             }
-            if (flaskAction.WasPressedThisFrame())
+            // Under the L2 layer the flask's button is a spell, and nothing is drunk.
+            if (player.Buttons != null ? player.Buttons.Pressed(PlayerButton.Flask) : flaskAction.WasPressedThisFrame())
             {
                 if (HoldToThrow)
                 {
@@ -362,6 +367,7 @@ namespace Clover.Player
                 Vfx.Play(VfxKind.PerfectGuard, GuardPoint(), transform.forward);
                 Vfx.Play(VfxKind.Impact, GuardPoint());
                 if (hitStop != null) hitStop.Freeze(PerfectGuardHitStop);
+                PerfectGuarded?.Invoke();
                 return HitOutcome.PerfectGuard;
             }
             // A wall of the element between the blow and the player takes it.
@@ -376,6 +382,7 @@ namespace Clover.Player
                     if (hitStop != null) hitStop.Slow(PerfectDodgeSlowSeconds, PerfectDodgeSlowScale);
                     Callout("Perfect dodge");
                     if (upgrades != null) upgrades.OnPerfectDodge(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
+                    PerfectDodged?.Invoke();
                     return HitOutcome.PerfectDodge;
                 }
                 Dodges++;
@@ -416,6 +423,7 @@ namespace Clover.Player
                     Callout("Perfect guard");
                     if (combat != null) combat.PerfectGuarded(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
                     if (upgrades != null) upgrades.OnPerfectGuard(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
+                    PerfectGuarded?.Invoke();
                     return HitOutcome.PerfectGuard;
                 case GuardResult.Blocked:
                     Blocks++;

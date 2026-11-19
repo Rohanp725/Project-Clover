@@ -71,11 +71,13 @@ namespace Clover.Player
         private PlayerCombat combat;
         private PlayerDefence defence;
         private PlayerElement element;
+        private PlayerSpells spells;
         private PlayerUpgrades upgrades;
         private Vector3 leapFrom, leapTo;
         private float leapSeconds, leapElapsed, leapHeight;
         private InputActionAsset ownControls;
         private InputActionMap playerMap;
+        private InputActionMap spellsMap;
         private InputAction moveAction;
         private InputAction dodgeAction;
         private float fallSpeed;
@@ -145,8 +147,14 @@ namespace Clover.Player
             cameraTransform = cameraToFollow;
         }
 
-        /// <summary>One of the player's input actions by name; null when the controls are missing. Valid from Start on.</summary>
-        public InputAction FindAction(string actionName) => playerMap?.FindAction(actionName, true);
+        /// <summary>One of the player's input actions by name, from the Player map or the Spells map; null when there is none. Valid from Start on.</summary>
+        public InputAction FindAction(string actionName) => playerMap?.FindAction(actionName) ?? spellsMap?.FindAction(actionName);
+
+        /// <summary>
+        /// The buttons with the L2 layer settled: what the player's parts ask instead of reading an action, so a face
+        /// button held under L2 is a spell and not also a flask or a dodge. Valid from Awake on.
+        /// </summary>
+        public LayeredButtons Buttons { get; private set; }
 
         private void Awake()
         {
@@ -154,6 +162,9 @@ namespace Clover.Player
             combat = GetComponent<PlayerCombat>();
             defence = GetComponent<PlayerDefence>();
             element = GetComponent<PlayerElement>();
+            spells = GetComponent<PlayerSpells>();
+            // A player built before the four slots existed gets them here, so no scene needs rebuilding for them.
+            if (spells == null) spells = gameObject.AddComponent<PlayerSpells>();
             upgrades = GetComponent<PlayerUpgrades>();
             if (controls == null)
             {
@@ -166,9 +177,13 @@ namespace Clover.Player
             // The player's own bindings go on before anything can read a button.
             ControlBindings.Use(ownControls);
             playerMap = ownControls.FindActionMap("Player", true);
+            // Controls saved before the spell layer existed have no Spells map: the player still walks and fights.
+            spellsMap = ownControls.FindActionMap("Spells");
             moveAction = playerMap.FindAction("Move", true);
             dodgeAction = playerMap.FindAction("Dodge", true);
             playerMap.actionTriggered += NoticeDevice;
+            if (spellsMap != null) spellsMap.actionTriggered += NoticeDevice;
+            Buttons = new LayeredButtons(playerMap, spellsMap);
             if (cameraTransform != null) aimCamera = cameraTransform.GetComponent<Camera>();
             Stamina.Fill();
             Dodge.Reset();
@@ -176,14 +191,21 @@ namespace Clover.Player
 
         private void OnEnable()
         {
-            if (!inputHeld) playerMap?.Enable();
+            if (inputHeld) return;
+            playerMap?.Enable();
+            spellsMap?.Enable();
         }
 
-        private void OnDisable() => playerMap?.Disable();
+        private void OnDisable()
+        {
+            playerMap?.Disable();
+            spellsMap?.Disable();
+        }
 
         private void OnDestroy()
         {
             if (playerMap != null) playerMap.actionTriggered -= NoticeDevice;
+            if (spellsMap != null) spellsMap.actionTriggered -= NoticeDevice;
             ControlBindings.Forget(ownControls);
             if (ownControls != null) Destroy(ownControls);
         }
@@ -203,8 +225,17 @@ namespace Clover.Player
         {
             inputHeld = held;
             if (playerMap == null) return;
-            if (held) playerMap.Disable();
-            else if (isActiveAndEnabled) playerMap.Enable();
+            if (held)
+            {
+                playerMap.Disable();
+                spellsMap?.Disable();
+                Buttons?.Drop();
+            }
+            else if (isActiveAndEnabled)
+            {
+                playerMap.Enable();
+                spellsMap?.Enable();
+            }
         }
 
         /// <summary>The player's copy of the controls, with their own bindings on it: what the controls page rebinds.</summary>
@@ -253,6 +284,7 @@ namespace Clover.Player
                 dodgeBuffered = 0f;
                 if (defence != null) defence.DropHolds();
                 if (element != null) element.DropHolds();
+                Buttons?.Drop();
                 return;
             }
             float deltaTime = Time.deltaTime;
@@ -265,7 +297,7 @@ namespace Clover.Player
                     PlanarSpeed = 0f;
                     dodgeBuffered = 0f;
                     if (struggleAction == null) struggleAction = playerMap.FindAction("LightAttack", true);
-                    if (dodgeAction.WasPressedThisFrame() || struggleAction.WasPressedThisFrame()) heldBy.Press();
+                    if (Buttons.Pressed(PlayerButton.Dodge) || struggleAction.WasPressedThisFrame()) heldBy.Press();
                     if (defence != null)
                     {
                         defence.DropHolds();
@@ -295,7 +327,7 @@ namespace Clover.Player
 
             // The dodge is settled before the weapon runs this frame, so it wins over an attack pressed with it. It may
             // interrupt an attack's recovery or a charge, never a wind-up or the swing itself; pressed early, it waits.
-            if (dodgeAction.WasPressedThisFrame()) dodgeBuffered = DodgeBufferTime;
+            if (Buttons.Pressed(PlayerButton.Dodge)) dodgeBuffered = DodgeBufferTime;
             // A cast can be rolled out of at any point; the mana is not given back.
             if (dodgeBuffered > 0f && !helpless && (!attacking || combat.CanBeCancelled))
             {
@@ -327,6 +359,8 @@ namespace Clover.Player
             if (element != null)
             {
                 element.Advance(deltaTime, !busy && (combat == null || !combat.IsAttacking));
+                // The four slots, their cooldowns and the fight's clock, right after the element in the one order.
+                if (spells != null) spells.Advance(deltaTime, !busy && (combat == null || !combat.IsAttacking));
                 casting = element.IsCasting;
             }
             if (combat != null)
@@ -489,7 +523,7 @@ namespace Clover.Player
 
         private void AdvanceFormHold(float deltaTime)
         {
-            if (FormCancellable && dodgeAction.WasPressedThisFrame())
+            if (FormCancellable && Buttons.Pressed(PlayerButton.Dodge))
             {
                 // The roll itself is settled next frame, in the usual order.
                 dodgeBuffered = DodgeBufferTime;

@@ -14,7 +14,8 @@ namespace Clover.UI
     /// choice; the heavy-attack button pulls the view back to show the whole ring, and returns. Each mark is a framed
     /// picture joined by a thin line to what it grows from; its frame says what kind of mark it is. The world stops
     /// while the chart is open and the player reads at their own pace: the stick moves from mark to mark, the use
-    /// button learns (or, on a spell already learned, wears it), the dodge button leaves.
+    /// button learns (or, on a spell already learned, puts it in the next spell slot round: the stopgap until the Hand
+    /// exists), the dodge button leaves.
     /// </summary>
     public class UpgradeMenu : MonoBehaviour
     {
@@ -109,7 +110,10 @@ namespace Clover.UI
         private string viewed;
         private bool slotsDrawn;
         private int hintVersion = -1;
-        private RectTransform wornBadge;
+        // A ring round each spell that sits in a slot, one for each of the four.
+        private readonly RectTransform[] slotBadges = new RectTransform[Clover.Player.Magic.SpellSlots.Count];
+        private PlayerSpells spellsFound;
+        private PlayerSpells Spells => spellsFound != null ? spellsFound : (spellsFound = player != null ? player.GetComponent<PlayerSpells>() : null);
         private int openedOnFrame;
         private bool releasePlayer;
         private float untilRepeat;
@@ -162,7 +166,8 @@ namespace Clover.UI
             interactAction = player.FindAction("Interact");
             dodgeAction = player.FindAction("Dodge");
             heavyAction = player.FindAction("HeavyAttack");
-            spellAction = player.FindAction("Spell");
+            // The details are on the weapon skill's button (Triangle, Y, Q), which was the spell's before the L2 layer.
+            spellAction = player.FindAction("WeaponSkill");
             flaskAction = player.FindAction("Flask");
             guardAction = player.FindAction("Guard");
             lightAction = player.FindAction("LightAttack");
@@ -194,7 +199,7 @@ namespace Clover.UI
             mixLabels.Clear();
             feet.Clear();
             upright.Clear();
-            wornBadge = null;
+            for (int i = 0; i < slotBadges.Length; i++) slotBadges[i] = null;
             heldShown = null;
             Build();
         }
@@ -289,11 +294,14 @@ namespace Clover.UI
                 if (mark.Upgrade.Signature && mark.Upgrade.Icon != UpgradeIcons.Crown)
                     Picture("Crown", crown, mark.Frame.transform, new Vector2(0f, mark.Size * 0.62f), mark.Size * 0.42f).color = new Color(1f, 0.85f, 0.45f, 1f);
             }
-            // The ring round the spell that is worn; it is moved to whichever that is.
-            var badge = Picture("Worn", frames.Length > 0 ? frames[frames.Length - 1] : null, chart, Vector2.zero, StepPixels);
-            badge.color = new Color(1f, 0.85f, 0.45f, 0.95f);
-            wornBadge = badge.rectTransform;
-            wornBadge.gameObject.SetActive(false);
+            // The rings round the spells in the four slots; each is moved to whichever spell sits in its slot.
+            for (int i = 0; i < slotBadges.Length; i++)
+            {
+                var badge = Picture("Slot " + i, frames.Length > 0 ? frames[frames.Length - 1] : null, chart, Vector2.zero, StepPixels);
+                badge.color = new Color(1f, 0.85f, 0.45f, 0.95f);
+                slotBadges[i] = badge.rectTransform;
+                slotBadges[i].gameObject.SetActive(false);
+            }
             if (cursor != null) cursor.SetAsLastSibling();
         }
 
@@ -461,7 +469,8 @@ namespace Clover.UI
             var chosen = Chosen;
             if (!IsOpen || chosen == null) return false;
             bool learned = upgrades.TryBuy(chosen);
-            if (!learned && chosen.IsSpell && upgrades.Has(chosen.Id)) upgrades.Wear(chosen.Id);
+            // A spell already learned goes into the next spell slot round (West, North, East, South): the stopgap until the Hand.
+            if (!learned && chosen.IsSpell && upgrades.Has(chosen.Id)) upgrades.PutInNextSlot(chosen.Id);
             Show();
             return learned;
         }
@@ -610,6 +619,17 @@ namespace Clover.UI
             }
         }
 
+        // Where a learned spell sits, what it costs, and where the use button would put it.
+        private static string SlotState(Upgrade spell, PlayerSpells spells)
+        {
+            string price = spell.Spell == null ? "" : spell.Spell.Cost > 0f ? $" {spell.Spell.Cost:0} mana." : spell.Spell.Cooldown > 0f ? $" {spell.Spell.Cooldown:0} s cooldown." : "";
+            if (spells == null) return "Learned." + price;
+            int slot = spells.Slots.SlotOf(spell.Id);
+            int next = spells.Slots.Next;
+            if (slot >= 0) return $"In the {ControlNames.SlotWord(slot)} slot ({ControlNames.Slot(slot)}).{price} Learn again: to the {ControlNames.SlotWord(next)} slot.";
+            return $"Learned.{price} Press learn to put it in the {ControlNames.SlotWord(next)} slot ({ControlNames.Slot(next)}).";
+        }
+
         private void ShowHint()
         {
             hintVersion = ControlDevices.Version;
@@ -620,13 +640,13 @@ namespace Clover.UI
                 // Two lines in the playtest: the chart's own buttons, then the playtest's.
                 hint.text = IsWide
                     ? ControlNames.Expand("{HeavyAttack}: back to the tree     {Flask}: guide to effects     {Dodge}: leave")
-                    : move + ControlNames.Expand(": move     {Interact}: learn, or wear a spell     {HeavyAttack}: the whole chart     {Dodge}: leave\n"
-                        + "{Spell}: details     {Guard} / {LightAttack}: tree before / next     {Flask}: guide to effects");
+                    : move + ControlNames.Expand(": move     {Interact}: learn, or put a spell in the next slot     {HeavyAttack}: the whole chart     {Dodge}: leave\n"
+                        + "{WeaponSkill}: details     {Guard} / {LightAttack}: tree before / next     {Flask}: guide to effects");
                 return;
             }
             hint.text = IsWide
                 ? ControlNames.Expand("{HeavyAttack}: back to your tree     {Dodge}: leave")
-                : move + ControlNames.Expand(": move along the tree     {Interact}: learn, or wear a spell     {HeavyAttack}: the whole chart     {Dodge}: leave");
+                : move + ControlNames.Expand(": move along the tree     {Interact}: learn, or put a spell in the next slot     {HeavyAttack}: the whole chart     {Dodge}: leave");
         }
 
         private static string KindWords(Upgrade upgrade)
@@ -662,8 +682,8 @@ namespace Clover.UI
                 emblems[i].color = colour;
                 emblemIcons[i].color = ours ? Color.white : new Color(1f, 1f, 1f, 0.75f);
             }
-            Upgrade worn = upgrades.Worn;
-            bool wornShown = false;
+            var spells = Spells;
+            int badgesShown = 0;
             foreach (var mark in marks)
             {
                 var upgrade = mark.Upgrade;
@@ -707,14 +727,19 @@ namespace Clover.UI
                     line.a = !ours ? (IsWide ? WideTrees : OtherTrees) * 0.7f : owned ? 0.95f : 0.6f;
                     lines[mark.FirstLine + i].color = line;
                 }
-                if (worn != null && upgrade == worn && wornBadge != null)
+                int slot = spells != null && upgrade.IsSpell ? spells.Slots.SlotOf(upgrade.Id) : -1;
+                if (slot >= 0 && slotBadges[slot] != null)
                 {
-                    wornShown = true;
-                    wornBadge.anchoredPosition = mark.Place;
-                    wornBadge.sizeDelta = new Vector2(mark.Size + 20f, mark.Size + 20f);
+                    badgesShown |= 1 << slot;
+                    slotBadges[slot].anchoredPosition = mark.Place;
+                    slotBadges[slot].sizeDelta = new Vector2(mark.Size + 20f, mark.Size + 20f);
                 }
             }
-            if (wornBadge != null && wornBadge.gameObject.activeSelf != wornShown) wornBadge.gameObject.SetActive(wornShown);
+            for (int i = 0; i < slotBadges.Length; i++)
+            {
+                bool on = (badgesShown & (1 << i)) != 0;
+                if (slotBadges[i] != null && slotBadges[i].gameObject.activeSelf != on) slotBadges[i].gameObject.SetActive(on);
+            }
 
             var chosen = Chosen;
             if (chosen == null) return;
@@ -740,13 +765,13 @@ namespace Clover.UI
                 }
                 else if (chosen.Signature && PlaytestMode.On) state = owned ? "Learned (a playtest unlock)." : "Playtest unlock: learn it here. " + NotBuiltYet.GiftSource(chosen.Element);
                 else if (chosen.Signature) state = owned ? "Left to you by a god." : "Only a god's fall gives this.";
-                else if (owned && chosen.IsSpell) state = worn == chosen ? "Worn. Hold the spell button to cast it." : "Learned. Press learn to wear it.";
+                else if (owned && chosen.IsSpell) state = SlotState(chosen, spells);
                 else if (owned && PlaytestMode.On && !upgrades.Has(chosen.Id)) state = "Learned. In force while you hold " + (chosen.IsMix ? chosen.Element + " or " + chosen.Element2 : chosen.Element) + (string.IsNullOrEmpty(chosen.Weapon) ? "." : ", with the " + chosen.Weapon + ".");
                 else if (owned) state = "Learned.";
                 else if (!upgrades.Open(chosen)) state = $"Sealed. Hold or consume {(chosen.Element == held ? chosen.Element2 : chosen.Element)} in this run to open it.";
                 else if (!UpgradeTree.Reachable(chosen, RunState.Unlocked)) state = "Grows from " + Parents(chosen) + ".";
                 else state = upgrades.Points >= chosen.Cost ? "Can be learned." : $"You carry {upgrades.Points}.";
-                if (PlaytestMode.On && MarkDetails.HasDetails(chosen)) state += "\n" + ControlNames.Expand("{Spell}: details");
+                if (PlaytestMode.On && MarkDetails.HasDetails(chosen)) state += "\n" + ControlNames.Expand("{WeaponSkill}: details");
                 chosenState.text = kind + cost + "\n" + state;
             }
             if (description != null)

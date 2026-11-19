@@ -26,8 +26,8 @@ namespace Clover.Core
         public static readonly HashSet<string> ElementsHeld = new HashSet<string>();
         /// <summary>The names of the elements whose gods were consumed in this run. With those held, they decide which mixed branches are open.</summary>
         public static readonly HashSet<string> ElementsConsumed = new HashSet<string>();
-        /// <summary>The id of the learned spell worn in the hold-spell slot, or empty for none.</summary>
-        public static string WornSpell = "";
+        /// <summary>What sits in the four spell slots (West, North, East, South), by mark id or base id; empty for none.</summary>
+        public static readonly string[] SpellSlots = { "", "", "", "" };
         /// <summary>Counts some marks keep for the whole run (folds of a blade), by the mark's id.</summary>
         public static readonly Dictionary<string, int> Tallies = new Dictionary<string, int>();
         /// <summary>How many runs have ended in this play session.</summary>
@@ -67,7 +67,7 @@ namespace Clover.Core
             Unlocked.Clear();
             ElementsHeld.Clear();
             ElementsConsumed.Clear();
-            WornSpell = "";
+            for (int i = 0; i < SpellSlots.Length; i++) SpellSlots[i] = "";
             Tallies.Clear();
         }
     }

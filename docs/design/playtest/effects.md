@@ -291,15 +291,41 @@ Group: Resources
 ## mana
 Title: Mana
 Group: Resources
-**What it is.** The power behind your spells, your surge and your weapon skill. It comes only from fighting.
+**What it is.** The power behind your big moves: the surge, each element's one larger spell, the built duo spells and your weapon skill. Basic spells never cost mana: they run on cooldowns instead (see Spell cooldowns).
 
-**The numbers.** Up to 100, and empty when you enter an area. Weapon blows that land give 3 to 16, depending on the move. A perfect guard gives 15, a perfect dodge 12 and a finisher 15. A Marked enemy gives 2 more for each blow. Blocked blows give nothing. Tap spells cost 20 to 25, surges 30 to 40 (Hunger costs health instead), and weapon skills 25 to 35.
+**The numbers.** Up to 100. You enter every area at half (50). Out of a fight, mana below half rises by 5 a second until it reaches half; mana above half stays where it is. A fight always starts with at least half: if you have less when an enemy notices you, it is raised to 50 at once. A fight ends when no enemy within 12 m has been aware of you for 8 s. Weapon blows that land give 3 to 16, depending on the move. A perfect guard gives 15, a perfect dodge 12 and a finisher 15. A Marked enemy gives 2 more for each blow. Blocked blows give nothing. Surges cost 30 to 40 (Hunger costs health instead), weapon skills 25 to 35, and the larger spells 30 to 50 (the built duo spells 40 to 60).
 
-**What sets it off.** Landing blows and timing guards and dodges well. The spell button, the surge and a full hold of the heavy button spend it.
+**What sets it off.** Landing blows and timing guards and dodges well earn it. The surge, the weapon skill and a larger spell spend it.
 
-**How to use it.** Weave steel and spells: hit, earn mana, cast, then hit again. Perfect guards and perfect dodges fill it fastest.
+**How to use it.** Basic spells are free, so cast them whenever their clock is ready. Save mana for the surge or your element's larger spell; what you earn above half in one fight is still there in the next. Perfect guards and perfect dodges fill it fastest.
 
-**How it looks.** The bar under your stamina, in the colour of the element you hold (grey with none).
+**How it looks.** The bar under your stamina, in the colour of the element you hold (grey with none). A slot whose spell costs more mana than you hold says "(short)" on the spell line.
+
+## spell-slots
+Title: Spell slots and the spell layer
+Group: Spells and cooldowns
+**What it is.** You carry four spells, one in each slot: West, North, East and South, laid out like the pad's face buttons. Hold L2 (LT) and press a face button to cast that slot's spell. On the keyboard, 1, 2, 3 and 4 cast them directly. While L2 is held, the face buttons are spells only: the flask, the weapon skill, the dodge and use wait until you let go. A quick tap of L2 on its own lights the surge.
+
+**The numbers.** A tap of L2 counts if it is let go within 0.25 s and no spell was cast while it was held; the surge is lit as you let go. Held longer, letting go does nothing. On the keyboard the surge stays on F and Left Ctrl is the layer (for the infused strikes to come).
+
+**What sets it off.** Your element's own spell sits in West at the start. Each spell you learn fills the next empty slot. At a rest fire, choose a learned spell on the chart and press use: it goes into the next slot round (West, North, East, South, then West again). The playtest's Hand screen arrives in phase 2.
+
+**How to use it.** Keep spells of different jobs in your four slots: one to open a fight, one to break a guard, one to finish, one to escape. A spell slot can be rebound in the pause menu's controls, on the pad and on the keys.
+
+**How it looks.** The line under your weapon's name lists each slot: its button, its spell, and the seconds it still waits or the mana it costs.
+
+## cooldowns
+Title: Spell cooldowns
+Group: Spells and cooldowns
+**What it is.** Basic spells cost no mana. After a spell is cast, its slot waits a few seconds before it can be cast again. Fighting with your weapon shortens the wait of every slot that is waiting.
+
+**The numbers.** Basic spells wait 6 to 12 s (the tree spells 7 to 12 s, each element's own spell 6 to 9 s, the spare mixed spells 12 s). Each element's one larger spell costs mana instead and has no wait: Meteor Leap 45, Seven Flashes 45, Sky Dance 45, Winter Wall 35, Poured Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50. Pawned Heart is paid in health and waits 40 s. Earth's larger spell (Cairn) is not built yet. The built duo spells (Ball Lightning, Eye of the Storm and the others) cost 40 to 60 mana. Weapon play takes time off every waiting slot: a light blow that lands 0.3 s, a heavy blow 0.6 s (once per move, however many it strikes), a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s. Resting at a fire ends every wait.
+
+**What sets it off.** Casting a spell starts its slot's wait. Landing blows, perfect guards, perfect dodges and finishers shorten it. A slot pressed while it waits says "Not ready".
+
+**How to use it.** Weave: cast, fight with the weapon until the spell is back, cast again. Perfect guards and dodges bring spells back fastest. Marks that only made a basic spell cheaper do nothing now; the trees are reshaped in a later phase.
+
+**How it looks.** The spell line counts down each waiting slot in whole seconds.
 
 ## flasks
 Title: Flasks

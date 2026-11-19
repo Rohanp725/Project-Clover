@@ -6,7 +6,8 @@ namespace Clover.Player
     /// </summary>
     public static class TriggerWords
     {
-        public static string SpellButton => ControlNames.Of("Spell");
+        /// <summary>The four spell slots' buttons ("L2 + Square, Triangle, Circle, Cross", or "1 2 3 4").</summary>
+        public static string SpellButton => ControlNames.Spells(ControlDevices.Current);
         public static string SurgeButton => ControlNames.Of("Surge");
 
         /// <summary>How a mark is set going: a worn spell is cast, a mark with an effect waits for its moment, the rest are always on.</summary>
@@ -15,8 +16,8 @@ namespace Clover.Player
             if (mark == null) return "";
             if (mark.IsSpell && mark.Spell != null)
             {
-                string price = mark.Spell.Cost > 0f ? $" {mark.Spell.Cost:0} mana." : "";
-                return $"Hold {SpellButton} to cast.{price}";
+                string price = mark.Spell.Cost > 0f ? $" {mark.Spell.Cost:0} mana." : mark.Spell.Cooldown > 0f ? $" {mark.Spell.Cooldown:0} s cooldown." : "";
+                return $"Put it in a spell slot at a rest, then cast it with that slot ({SpellButton}).{price}";
             }
             UpgradeEffect first = null;
             foreach (var effect in mark.Effects)

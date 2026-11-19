@@ -33,17 +33,17 @@ this section), and the prompts follow the rebinding.
 | Move | Left stick or d-pad | Left stick or d-pad | W A S D | W A S D | Attacks turn toward the nearest enemy in the stick's direction; with the mouse in use, toward the nearest enemy near the cursor. There is no lock-on. |
 | Light attack | R1 | RB | Left mouse | J | Press again during an attack to chain. The press is remembered. |
 | Heavy attack | R2 (tap) | RT (tap) | Right mouse (tap) | K (tap) | After one or more lights it is the weapon's chain heavy: quicker, harder, ends the chain. |
-| Charged heavy | R2 (hold, let go at the white flash) | RT (hold) | Right mouse (hold) | K (hold) | Massive Sword, Great Spear, Great Hammer and Armament only. Costs no mana. While charging, the stick (or the cursor) picks where the cut goes. |
-| Weapon skill | R2 (hold to full, let go) | RT (hold to full) | Right mouse (hold to full) | K (hold to full) | Costs mana (25 to 35 by weapon). Hold time is in each weapon's table. Without the mana the hold gives the heavy or charged heavy. |
+| Charged heavy | R2 (hold, let go at the white flash) | RT (hold) | Right mouse (hold) | K (hold) | Massive Sword, Great Spear, Great Hammer, Great Bow and Armament only. Costs no mana. While charging, the stick (or the cursor) picks where the cut goes. On a weapon with no charged heavy, a held heavy swings the plain heavy at once. A held heavy never gives the skill now. |
+| Weapon skill | Triangle | Y | Q | Q | Costs mana (25 to 35 by weapon). Starts at once from standing, or from a light attack's recovery to end the chain. Without the mana it says "No mana" and nothing starts. The Armament's skill is a counter stance: hold Triangle (or the heavy) to brace, and a blow taken is thrown back. |
 | Finisher | R2 with a staggered enemy within 5 m | RT | Right mouse | K | A staggered enemy pulses gold and carries a gold broken ring. Replaces the heavy. |
 | Guard | L1 (hold) | LB (hold) | Left Shift (hold) | L (hold) | Blocks from the front. Turns you to the nearest enemy. You walk slowly while guarding. |
 | Perfect guard | L1 just before the blow lands | LB | Left Shift | L | Usually within 0.18 s. Pressing guard again within 0.4 s gives no perfect window. |
 | Dodge | Circle | B | Space | Space | Costs stamina. Can cut short an attack's recovery, never its wind-up or swing. |
-| Flask | Square (tap) | X (tap) | R (tap) | R | Heals. With Fire's Firebomb Flask learned, holding 0.3 s throws it instead. |
-| Element spell | Triangle (tap) | Y (tap) | Q (tap) | Q | The held element's own spell. With the mouse in use, the player turns to the cursor as it is cast. |
-| Worn spell | Triangle (hold 0.3 s) | Y (hold) | Q (hold) | Q (hold) | The spell learned on the chart and worn. With no spell worn, any press is the tap spell. A held beam or a Sky Dance turns with the stick, or with the cursor. |
-| Surge | L2 | LT | F | F | The element's self buff. One press; it is not held. Pressed while it runs, it starts over at full length and is paid for again. |
-| Surge again | L2 while the surge runs | LT | F | F | Only with a gift that listens for it (Falling Sun, The World Holds Still, The Sea Rises, First Spring). The second press triggers the gift and does not relight the surge. |
+| Flask | Square (tap) | X (tap) | R (tap) | R | Heals. With Fire's Firebomb Flask learned, holding 0.3 s throws it instead. Not while L2 is held: then Square is a spell. |
+| Spell West, North, East, South | Hold L2, then Square, Triangle, Circle or Cross | Hold LT, then X, Y, B or A | 1, 2, 3, 4 | 1, 2, 3, 4 | Casts the spell in that slot (see "The four spell slots" below). While L2 is held the face buttons are spells only: no flask, skill, dodge or use. On the keys no layer is needed. With the mouse in use, the player turns to the cursor as it is cast. A spell held for longer (a beam, the Eye of the Storm) is held on its slot's button. |
+| Surge | L2 (tap) | LT (tap) | F | F | The element's self buff. A tap of L2 let go within 0.25 s with no spell cast while it was down lights it as it is let go; a longer hold lights nothing. Pressed while it runs, it starts over at full length and is paid for again. |
+| Surge again | Tap L2 while the surge runs | Tap LT | F | F | Only with a gift that listens for it (Falling Sun, The World Holds Still, The Sea Rises, First Spring). The second press triggers the gift and does not relight the surge. |
+| Spell layer | L2 (hold) | LT (hold) | Left Ctrl (hold) | Left Ctrl | Turns the face buttons into the four spells. With R1 or R2 it will give the infused strikes (not built yet; until then R1 and R2 under L2 are plain attacks). |
 | Use | Cross | A | E | E | Rest fires, weapon stands, braziers, stones, doors, the next line of speech (a left click also reads on). |
 | Pause | Options | Menu | Esc | Esc | Resume, controls, fullscreen, give up the run (castle and summit), forget everything saved (hub), quit. Esc and Start (Options, Menu) always pause, whatever Pause is rebound to. |
 
@@ -65,11 +65,36 @@ touched; pressing keys does not end it, touching a pad does.
 | Action | PlayStation | Xbox | Keys and mouse |
 |---|---|---|---|
 | Move from mark to mark | Left stick or d-pad | Left stick or d-pad | W A S D |
-| Learn the chosen mark; on a spell already learned, wear it | Cross | A | E |
+| Learn the chosen mark; on a spell already learned, put it in the next spell slot (West, North, East, South, round again) | Cross | A | E |
 | Whole-ring view, and back to your tree | R2 | RT | Right mouse (or K) |
 | Leave | Circle | B | Space |
 
-The chart is not yet clickable with the mouse.
+The chart is not yet clickable with the mouse. A gold ring marks each spell that sits in a slot, and the words under a
+learned spell say which slot it is in, what it costs (seconds of cooldown or mana) and where use would put it.
+
+### The four spell slots
+
+You carry four spells, one in each slot (West, North, East, South, laid out like the face buttons). Until the Hand
+screen arrives (playtest phase 2) the slots fill themselves: the element's own spell in West, then each learned spell of
+the element held, in the chart's order, into the next empty slot. A spell a god gives goes into the first empty slot, or
+North when all four are full. At a rest fire, choosing a learned spell on the chart and pressing use puts it in the next
+slot round. Taking another element puts its own spell where the old element's was and drops the old element's spells.
+The element's own spell is not on the chart, so once the next-slot round has pushed it out it stays out until
+another element is taken (or an empty slot opens); the Hand will let it be placed like any other.
+The slots go with the player from scene to scene in a run. A line under the weapon's name shows each slot's button, its
+spell and the seconds it still waits (or its price in mana).
+
+- **Cooldowns.** Basic spells cost no mana. Casting starts the slot's wait: each element's own spell 6 to 9 s, the
+  tree spells 7 to 12 s, the spare mixed spells 12 s (the table is `Runtime/Player/Magic/SpellTimings.cs`, from
+  `docs/design/steel/elements_a.md` and `elements_b.md`). Weapon play takes time off every waiting slot: a light blow
+  that lands 0.3 s, a heavy one 0.6 s (once per move, however many it strikes), a perfect guard 2 s, a perfect dodge
+  1.5 s, a finisher 3 s. A slot pressed while it waits says "Not ready". A rest ends every wait.
+- **Larger spells** cost mana and have no wait: Meteor Leap 45, Seven Flashes 45, Sky Dance 45, Winter Wall 35, Poured
+  Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50, and the eleven built duo spells 40 to 60.
+  Pawned Heart is paid in health and waits 40 s. Earth has no larger spell yet (its Cairn is not built).
+- **Marks that only made the base spell cheaper** (Short Breath, Quick Clap, Easy Breath, Thin Ice, Low Water, Ready
+  Soil, Near to Hand, Ready Steel, Ready Light, Ready Poison) are still on the chart and do nothing now; Spring Tide
+  works only on a spell that costs mana. The trees are reshaped in a later phase.
 
 ### Rebinding
 
@@ -78,7 +103,11 @@ the keys and mouse, and the keys-only set. Choose a cell with the stick, the d-p
 (or click it): the cell says "press...", and the next button of that column's kind becomes the binding. Esc (keys) or
 Start (pad) leaves it as it was; so does waiting eight seconds.
 
-- A clash is swapped: give the light attack Q and the spell takes the left mouse button, and the page says so.
+- A clash is swapped: give the light attack Q and the weapon skill takes the left mouse button, and the page says so.
+- The Spells rows (the layer and the four slots) are a second group under Pause. On the pad the four slots share the face
+  buttons with the flask, the skill, the dodge and use on purpose (L2 decides which), so no clash is found there; two
+  slots never share a button, and the layer's own button is never shared. On the keys a key does one thing in every
+  row: give a slot R and the flask takes the slot's old key.
 - Esc and Start are kept for the pause menu and cannot be given to anything. Pause itself can be given another key or
   button, but Esc and Start go on pausing, so no binding can lock the player out of the menu. If giving Pause a key
   would hand Esc or Start to another action, the change is refused and the page says why.
@@ -92,7 +121,10 @@ Start (pad) leaves it as it was; so does waiting eight seconds.
 **Not yet**
 
 - No hard lock-on. No way to choose whom the guard faces when several enemies are near.
-- The four-spell L2 layer and the infused strikes of `docs/design/STEEL_AND_ELEMENT.md` 3.5 are not built.
+- The infused strikes (L2 with R1 or R2) and the technique chord (R1 and R2) of `docs/design/STEEL_AND_ELEMENT.md` 3.5
+  are not built. Neither is the spell diamond on the HUD: a plain line stands in for it.
+- The Hand screen (choosing the four spells and the surge at a rest) is playtest phase 2; the chart's "next slot" stands
+  in for it.
 - The chart cannot be clicked; the pause menu and the controls page can.
 - Text names only; there are no button pictures.
 
@@ -102,7 +134,7 @@ Start (pad) leaves it as it was; so does waiting eight seconds.
 
 - **Health** is 100. A blow taken unguarded makes you flinch for 0.35 s and pushes you back. In a run, falling ends the run and wakes you in the hub with bare hands, Fire, no Shards and nothing learned.
 - **Stamina** is 100. Attacks, dodges and blocked blows spend it. It refills at 30 a second after 0.8 s of spending nothing.
-- **Mana** is 100 at most and comes only from fighting: each weapon blow that lands (4 to 16 by move), a perfect guard (15), a perfect dodge (12), a finisher (15). It pays for the tap spell, the worn spell, the surge and the weapon skill.
+- **Mana** is 100 at most and comes only from fighting: each weapon blow that lands (4 to 16 by move), a perfect guard (15), a perfect dodge (12), a finisher (15). It pays only for the big moves: the surge, the weapon skill, each element's one larger spell and the built duo spells. Basic spells run on cooldowns instead (section 1, "The four spell slots"). Every area is entered at half (50). Out of a fight, mana below half rises by 5 a second to half and stops; above half it stays. A fight starts with at least half: if less is held when an enemy within 12 m becomes aware of you, it is raised to 50. The fight ends once no enemy within 12 m has been aware of you for 8 s (or a rest).
 - **Guard** blocks the front arc (200 degrees for most weapons). A block costs stamina (0.9 per point of damage for most weapons), and 35% of the damage comes through as grey health. A blow the stamina cannot pay for breaks the guard: full damage and a long flinch.
 - **Grey health** is health you can win back: 0.6 per point of damage you deal. It starts fading 2.5 s after the last block or hit. An unguarded blow removes it. Guarding alone cannot kill you.
 - **Perfect guard** costs nothing, gives 15 mana, and throws a large amount of stagger back on the attacker. **Red attacks** go through a held guard: dodge them or perfect-guard them.

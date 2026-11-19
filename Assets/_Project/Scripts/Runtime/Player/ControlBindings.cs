@@ -137,6 +137,7 @@ namespace Clover.Player
             var binding = action.bindings[bindingIndex];
             string path = binding.effectivePath;
             string group = InGroup(binding, PadGroup) ? PadGroup : KeysGroup;
+            if (map == null) return false;
             foreach (var candidate in map.actions)
             {
                 var bindings = candidate.bindings;
@@ -152,6 +153,47 @@ namespace Clover.Player
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// The clash of a new binding across the whole controls (IMPLEMENTATION.md 3.5): within its own map always; with
+        /// the other map on the keys always (a key does one thing), but on the pad only where the spell layer's own
+        /// button is concerned, since the four slots share the face buttons with the Player map on purpose (L2 decides).
+        /// </summary>
+        public static bool FindClash(InputActionAsset controls, InputAction action, int bindingIndex, out InputAction other, out int otherIndex)
+        {
+            other = null;
+            otherIndex = -1;
+            if (action == null) return false;
+            if (FindClash(action.actionMap, action, bindingIndex, out other, out otherIndex)) return true;
+            if (controls == null) return false;
+            bool pad = InGroup(action.bindings[bindingIndex], PadGroup);
+            foreach (var map in controls.actionMaps)
+            {
+                if (map == action.actionMap) continue;
+                if (!FindClash(map, action, bindingIndex, out var found, out int foundIndex)) continue;
+                if (pad && action.name != LayerAction && found.name != LayerAction) continue;
+                other = found;
+                otherIndex = foundIndex;
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>The spell layer's action: held, it turns the pad's face buttons into the four spells.</summary>
+        public const string LayerAction = "SpellLayer";
+
+        /// <summary>Settles a new binding against the whole controls, as <see cref="FindClash(InputActionAsset, InputAction, int, out InputAction, out int)"/> finds clashes.</summary>
+        public static Settled Settle(InputActionAsset controls, InputAction action, int bindingIndex, string oldPath, out InputAction other, out int otherIndex)
+        {
+            if (!FindClash(controls, action, bindingIndex, out other, out otherIndex)) return Settled.Clear;
+            if (IsReserved(oldPath))
+            {
+                Restore(action, bindingIndex, oldPath);
+                return Settled.Refused;
+            }
+            Restore(other, otherIndex, oldPath);
+            return Settled.Swapped;
         }
 
         /// <summary>What became of a new binding once a clash was looked for.</summary>

@@ -15,8 +15,8 @@ namespace Clover.UI
 
         /// <summary>The practice yard's fuller line.</summary>
         public const string FightTemplate =
-            "{LightAttack} light   {HeavyAttack} heavy   {Guard} guard   {Dodge} dodge   {Flask} flask   {Spell} spell   {Surge} surge   {Interact} use   {Pause} pause\n"
-            + "Heavy held: the weapon's skill, costs mana.   Heavy on a staggered enemy: finisher.   Flask or spell held: their second use, once learned.";
+            "{LightAttack} light   {HeavyAttack} heavy   {Guard} guard   {Dodge} dodge   {Flask} flask   {WeaponSkill} skill   {Surge} surge   {Interact} use   {Pause} pause\n"
+            + "Spells: {Spells}.   The weapon's skill costs mana.   Heavy held: the charged heavy.   Heavy on a staggered enemy: finisher.";
 
         [SerializeField] private Text text;
         [SerializeField] private string template;

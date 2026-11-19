@@ -50,6 +50,9 @@ namespace Clover.World
             Vfx.Play(VfxKind.Heal, who.transform.position + Vector3.up * 0.6f);
             if (director != null) director.Rest(returnPoint != null ? returnPoint : transform);
             if (who.Defence != null) who.Defence.Callout("Rested");
+            // A rest ends every spell's clock and any fight.
+            var spells = who.GetComponent<Clover.Player.PlayerSpells>();
+            if (spells != null) spells.Rested();
             // The playtest's rule: a rest gives as many Shards as the whole chart could ask for.
             RunState.Points = PlaytestMode.ShardsAfterRest(RunState.Points);
             // By the fire is where the embers are spent.

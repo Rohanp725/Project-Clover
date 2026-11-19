@@ -1364,6 +1364,39 @@ changed. The old playtest stays with its players until the first few phases of t
   Proving Ground, Castle, Summit, Sun City, Sun Court; product name "Project Clover Combat Playtest" for the length of
   the build so its saves never mix with the demo's; READ ME from `docs/design/playtest/readme.md`.
 
+### Phase 1, first half, as built (2026-11-18; tasks 1.1 to 1.4 of `docs/design/steel/IMPLEMENTATION.md`; Claude's defaults where the plan left a choice, not yet played by the owner)
+
+- **Rules** (plain classes in `Runtime/Player/Magic/`, each with EditMode tests): `SpellCooldowns` (four slots and two
+  strike timers; cut, reset, instant next, frozen), `CooldownCuts` (light blow 0.3 s, heavy 0.6 s or the move's own
+  `AttackStep.CooldownCut`, perfect guard 2 s, perfect dodge 1.5 s, finisher 3 s; one cut per move however many it
+  strikes; a finisher takes its own cut, not the blow's too), `FightClock` (an aware enemy within 12 m starts a fight;
+  8 s with none ends it), `SpellLayerRules` (the L2 layer; strikes wait behind `StrikesOn` until task 1.6), `ChordRules`
+  (written and tested, not wired until the techniques), `SpellSlots`, and the table `SpellTimings`.
+- **Controls**: `Spell` renamed `WeaponSkill` (same id, so saved bindings survive; Triangle, Y, Q); the pad's Surge
+  binding removed (a tap of L2, lit on release within 0.25 s with nothing cast meanwhile; F on the keys); a `Spells`
+  map with `SpellLayer` (L2, Left Ctrl) and `SpellWest/North/East/South` (face buttons, 1 to 4). `LayeredButtons`
+  reads both maps once a frame and swallows the pad's face presses under L2; the dodge, flask, use, attacks and skill
+  ask it. Clashes: within a map always; across maps on the keys always, on the pad only for the layer's own button.
+  The controls page has the five Spells rows.
+- **The weapon skill** starts from its own button (from standing or a light's recovery); a held heavy charges only
+  toward the charged heavy, or swings the heavy at once on a weapon without one; the Armament's counter stance is held
+  on either button (`WeaponCombo.SkillOnButton`).
+- **Four slots** (`PlayerSpells`, added to the player at run time so no scene was rebuilt): the element's base spell is
+  the id `<element>.base` (no catalogue mark; the plan's hidden marks wait for the `Tree` field of task 4.1), then the
+  learned spells in force in the chart's order fill empty slots; a gift spell takes the first empty slot or North; a
+  lent spell takes North; the chart's use on a learned spell puts it in the next slot round (the plan's stopgap; it
+  works in and out of the playtest). The old tap and worn split, `SpecialHoldSeconds` and `RunState.WornSpell` are gone
+  (`RunState.SpellSlots` carries the slots); `PlayerUpgrades.Wear`, `Worn` and `TrySpecial` stay as thin shims on the
+  North slot for older probes. A rest ends every cooldown. A plain spell line under the status line stands in for
+  the spell diamond (task 1.7).
+- **Prices** (`SpellTimings`, applied to every spell mark as the catalogue is gathered): the rosters' cooldowns where a
+  spell is listed, a role-based one where it is not; each element's larger spell in mana (Earth has none built; Dark's
+  Pawned Heart keeps health and a 40 s wait); the eleven built ring-mix duo spells in mana as built; the twelve spare
+  ring-mix spells 12 s. The base spells 6 to 9 s and free (the kits' `SpellCost` numbers are kept, unused).
+- **Mana**: `ManaPool.Settle` (out of a fight, below half rises 5 a second to half; above half stays) and `AtLeast`;
+  each scene starts at half and each fight's start raises it to half. Marks that only lowered the base spell's cost
+  (ten minors) are kept and inert; Spring Tide works only on mana spells.
+
 ## Credits (decided 2026-11-18)
 
 - **Decided (user)**: the published game has a credits section. It thanks **_dnen**, **parvar11** and **nairarj000**,

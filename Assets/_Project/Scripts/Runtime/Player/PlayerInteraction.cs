@@ -45,7 +45,9 @@ namespace Clover.Player
                 untilLook = LookEvery;
                 Current = Nearest();
             }
-            if (Current == null || interactAction == null || !interactAction.WasPressedThisFrame()) return;
+            if (Current == null || interactAction == null) return;
+            // Under the L2 layer the use button is a spell.
+            if (!(Controller.Buttons != null ? Controller.Buttons.Pressed(PlayerButton.Interact) : interactAction.WasPressedThisFrame())) return;
             // Not in the middle of a fight's motions, and not when fallen.
             if (Defence != null && Defence.IsHelpless) return;
             if (Combat != null && Combat.IsAttacking) return;

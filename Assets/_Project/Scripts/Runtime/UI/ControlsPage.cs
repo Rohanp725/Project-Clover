@@ -36,17 +36,29 @@ namespace Clover.UI
             new Row("Guard", "Guard"),
             new Row("Dodge", "Dodge"),
             new Row("Flask", "Flask"),
-            new Row("Spell", "Spell"),
+            new Row("Weapon skill", "WeaponSkill"),
             new Row("Surge", "Surge"),
             new Row("Use", "Interact"),
             new Row("Pause", "Pause"),
+            // The Spells map: the layer (L2 held, or Left Ctrl) and the four slots (with the layer on a pad; alone on the keys).
+            new Row("Spell layer", "SpellLayer"),
+            new Row("Spell West", "SpellWest"),
+            new Row("Spell North", "SpellNorth"),
+            new Row("Spell East", "SpellEast"),
+            new Row("Spell South", "SpellSouth"),
         };
+
+        /// <summary>The held and layered buttons, in words that hold for every device (the table names the buttons).</summary>
+        public const string HoldsWords =
+            "Spell layer held: the four spells on the face buttons (keys: 1 to 4)\nSpell layer tapped on a pad: the surge\nHeavy held: the charged heavy\n"
+            + "Heavy on a staggered enemy: finisher\nWeapon skill: costs mana\nFlask held: throw it, once learned";
 
         private const int Columns = 3;
         private static readonly float[] ColumnLeft = { 286f, 466f, 676f };
         private static readonly float[] ColumnWidth = { 170f, 200f, 118f };
         private const float Top = -112f;
-        private const float RowHeight = 35f;
+        // Eighteen rows and the reset fit the page at this height.
+        private const float RowHeight = 29f;
         /// <summary>The row under the actions that puts every binding back.</summary>
         public static int ResetRow => Rows.Length;
 
@@ -116,8 +128,8 @@ namespace Clover.UI
             {
                 holds.horizontalOverflow = HorizontalWrapMode.Wrap;
                 holds.fontSize = Mathf.RoundToInt(style.fontSize * 0.8f);
-                // Scenes built before the skill's price became per weapon still say thirty for all of them.
-                holds.text = holds.text.Replace("the weapon's skill, 30 mana", "the weapon's skill, costs mana");
+                // Scenes built before the L2 layer say the skill is a held heavy: the words are the page's own now.
+                holds.text = HoldsWords;
             }
 
             var cursorObject = new GameObject("Cell Cursor", typeof(RectTransform));
@@ -212,7 +224,13 @@ namespace Clover.UI
         /// <summary>What a cell says now, in the names of its column's device.</summary>
         public string CellText(int row, int column)
         {
-            if (!Target(row, column, out InputAction action, out int index)) return "";
+            if (!Target(row, column, out InputAction action, out int index))
+            {
+                // The pad's surge is a tap of the spell layer: named here, rebound with the layer.
+                if (column == 0 && row >= 0 && row < Rows.Length && Rows[row].Action == "Surge" && Controls != null)
+                    return ControlNames.Of(Controls.FindAction("Surge"), ControlDevices.Pad);
+                return "";
+            }
             var style = column == 0 ? ControlDevices.Pad : ControlDevice.Keys;
             return ControlNames.OfPath(action.bindings[index].effectivePath, style);
         }
@@ -406,7 +424,7 @@ namespace Clover.UI
             else
             {
                 string now = listenAction.bindings[listenIndex].effectivePath;
-                var settled = ControlBindings.Settle(listenAction.actionMap, listenAction, listenIndex, listenOld, out InputAction other, out int otherIndex);
+                var settled = ControlBindings.Settle(Controls, listenAction, listenIndex, listenOld, out InputAction other, out int otherIndex);
                 string named = ControlNames.OfPath(now, style);
                 switch (settled)
                 {
