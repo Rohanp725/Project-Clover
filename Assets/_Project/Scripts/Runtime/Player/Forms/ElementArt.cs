@@ -152,6 +152,13 @@ namespace Clover.Player.Forms
 
         private static bool Valid(int piece) => instance != null && instance.set != null && piece >= 0 && piece < instance.set.Pieces.Length;
 
+        /// <summary>A piece's mesh, material, kind and footprint, for <see cref="ReactionArt"/> to draw in its own pool; false for none.</summary>
+        public static bool TryPiece(int piece, out ElementArtSet.Piece data)
+        {
+            data = Valid(piece) ? instance.set.Pieces[piece] : default;
+            return Valid(piece);
+        }
+
         /// <summary>The size of a piece's footprint, in metres.</summary>
         public static Vector3 SizeOf(int piece) => Valid(piece) ? instance.set.Pieces[piece].Size : Vector3.one;
 

@@ -16,13 +16,17 @@ using UnityEngine.SceneManagement;
 
 // The reactions' looks in the Proving Ground (docs/GAME.md, "Reaction effects in the game"). Read through the guide,
 // then on a copy of the still dummy (the player 3 m south of it) each of the 55 reactions is set off in turn by laying
-// its two afflictions: a designed one must show its look (parts in the pool in use, a frame captured to
-// review/shots/current/reactart_<name>.png), and every part and lamp must be back in the pool once it has run; one with
-// no design must draw the composed look from its parents' art (frame reactart_composed_<name>.png). Then F8's switch
-// off shows the old puff and no parts. Then a burst: a dozen dummies, about 17 reactions a second of every pair for 6 s
-// against 3 s of quiet before it, reporting frame time, the GC counter (editor included), the most parts and lamps in
-// use, and looks ended early to make room; the pool must be empty 3 s after. Every judged line ends OK or WRONG.
-// The copies are made in play and gone with it; progress stays sandboxed (runprobe.sh).
+// its two afflictions. Each look is filmed as a strip of five frames across its timeline (0.05, 0.2, 0.4, 0.65 and
+// 0.95 s in, the game paused for each) to review/shots/current/reactart_<name>_strip.png (composed ones
+// reactart_composed_<name>_strip.png), with the 0.4 s frame, about the impact, kept whole as reactart_<name>.png to set
+// beside the look-dev's still. A designed look must show its parts; a composed one must draw from its parents' art in
+// the pool; both must MOVE: the pool's part poses are read at each frame, and parts must have changed place, size or
+// turn (or come and gone) in at least three of the four gaps, two parts or more; and every part and lamp must be back
+// in the pool once it has run. Then F8's switch off shows the old puff and no parts. Then a burst: a dozen dummies,
+// about 17 reactions a second of every pair for 6 s against 3 s of quiet before it, reporting frame time, the GC
+// counter (editor included), the most parts and lamps in use, looks ended early to make room and aftermath parts left
+// out; the pool must be empty 3 s after. Every judged line ends OK or WRONG. The copies are made in play and gone with
+// it; progress stays sandboxed (runprobe.sh).
 // bash AgentScripts/runprobe.sh ProvingGround ReactionArtProbe 200
 public static class ReactionArtProbe
 {
@@ -51,6 +55,11 @@ public class ReactionArtProbeRunner : MonoBehaviour
     private InputSettings.EditorInputBehaviorInPlayMode editorWas;
 
     private static readonly Vector3 Middle = new Vector3(25f, 0f, 6f);
+
+    // The strip's frames, in seconds after the reaction, and which of them is kept whole (about the impact).
+    private static readonly float[] StripTimes = { 0.05f, 0.2f, 0.4f, 0.65f, 0.95f };
+    private const int ImpactFrame = 2;
+    private const int StripWidth = 384, StripHeight = 216;
 
     private void Update()
     {
@@ -198,24 +207,81 @@ public class ReactionArtProbeRunner : MonoBehaviour
         Lay(host, second);
         yield return Until(() => reactions.TimesShown(pair) > shown, 1.5f);
         bool came = reactions.TimesShown(pair) > shown;
-        if (ReactionArt.IsDesigned(pair))
-        {
-            // Past the pop, every part stands.
-            yield return Real(0.15f);
-            int parts = ReactionArt.PartsShown, lamps = ReactionArt.LampsShown;
-            Judge($"{name}: its designed look is shown", came && ReactionArt.Played > played && parts > 0, $"reacted {came}, parts {parts}, lamps {lamps}");
-            yield return Shot("reactart_" + FileWord(pair));
-            yield return Until(() => ReactionArt.PartsShown == 0 && ReactionArt.LampsShown == 0, 3f);
-            Judge($"{name}: every part and lamp is back in the pool after", ReactionArt.PartsShown == 0 && ReactionArt.LampsShown == 0,
-                $"parts {ReactionArt.PartsShown}, lamps {ReactionArt.LampsShown}");
-        }
+        float start = Time.time;
+        bool designed = ReactionArt.IsDesigned(pair);
+        var poses = new Matrix4x4[StripTimes.Length][];
+        var parts = new int[StripTimes.Length];
+        var lamps = new int[StripTimes.Length];
+        yield return Strip((designed ? "reactart_" : "reactart_composed_") + FileWord(pair), start, poses, parts, lamps);
+        int most = parts.Max();
+        if (designed)
+            Judge($"{name}: its designed look is shown", came && ReactionArt.Played > played && most > 0, $"reacted {came}, parts by frame {string.Join("/", parts)}, lamps by frame {string.Join("/", lamps)}");
         else
+            Judge($"{name}: no design, so a look composed from its parents in the pool", came && ReactionArt.ComposedCount > composed && most > 0,
+                $"reacted {came}, composed {ReactionArt.ComposedCount - composed}, parts by frame {string.Join("/", parts)}");
+        Judge($"{name}: it moves across its timeline", Moved(poses, out string how), how);
+        yield return Until(() => ReactionArt.PartsShown == 0 && ReactionArt.LampsShown == 0, 3f);
+        Judge($"{name}: every part and lamp is back in the pool after", ReactionArt.PartsShown == 0 && ReactionArt.LampsShown == 0,
+            $"parts {ReactionArt.PartsShown}, lamps {ReactionArt.LampsShown}");
+    }
+
+    // Films a look: at each of the strip's times the game is paused, the pool's part poses are read and the frame is
+    // shrunk into its place in the strip; the frame about the impact is also kept whole.
+    private IEnumerator Strip(string file, float start, Matrix4x4[][] poses, int[] parts, int[] lamps)
+    {
+        var strip = new Texture2D(StripWidth * StripTimes.Length, StripHeight, TextureFormat.RGB24, false);
+        for (int i = 0; i < StripTimes.Length; i++)
         {
-            yield return Real(0.15f);
-            Judge($"{name}: no design, so a look composed from its parents", came && ReactionArt.ComposedCount > composed && ReactionArt.PartsShown == 0,
-                $"reacted {came}, composed {ReactionArt.ComposedCount - composed}, designed parts {ReactionArt.PartsShown}");
-            yield return Shot("reactart_composed_" + FileWord(pair));
+            while (Time.time - start < StripTimes[i]) yield return null;
+            Time.timeScale = 0f;
+            yield return new WaitForEndOfFrame();
+            poses[i] = new Matrix4x4[1024];
+            ReactionArt.ShownMatrices(poses[i]);
+            parts[i] = ReactionArt.PartsShown;
+            lamps[i] = ReactionArt.LampsShown;
+            var frame = ScreenCapture.CaptureScreenshotAsTexture();
+            if (i == ImpactFrame) System.IO.File.WriteAllBytes("review/shots/current/" + file + ".png", frame.EncodeToPNG());
+            for (int y = 0; y < StripHeight; y++)
+                for (int x = 0; x < StripWidth; x++)
+                    strip.SetPixel(i * StripWidth + x, y, frame.GetPixelBilinear((x + 0.5f) / StripWidth, (y + 0.5f) / StripHeight));
+            // A thin dark rule between frames.
+            for (int y = 0; y < StripHeight; y++) strip.SetPixel(i * StripWidth, y, Color.black);
+            Destroy(frame);
+            Time.timeScale = 1f;
+            yield return null;
         }
+        strip.Apply();
+        System.IO.File.WriteAllBytes("review/shots/current/" + file + "_strip.png", strip.EncodeToPNG());
+        Destroy(strip);
+    }
+
+    // Parts moved when, between two frames, a part's pose changed by more than a centimetre (or a hundredth of its
+    // size or turn), or it came or went. A look that moves does so in at least three of the four gaps, two parts or more.
+    private static bool Moved(Matrix4x4[][] poses, out string how)
+    {
+        int gapsMoving = 0;
+        var movers = new HashSet<int>();
+        var perGap = new List<int>();
+        for (int i = 1; i < poses.Length; i++)
+        {
+            int changed = 0;
+            for (int slot = 0; slot < poses[i].Length; slot++)
+            {
+                var a = poses[i - 1][slot];
+                var b = poses[i][slot];
+                bool wasThere = a != default(Matrix4x4), isThere = b != default(Matrix4x4);
+                if (!wasThere && !isThere) continue;
+                bool differs = wasThere != isThere;
+                for (int e = 0; e < 16 && !differs; e++) differs = Mathf.Abs(a[e] - b[e]) > 0.01f;
+                if (!differs) continue;
+                changed++;
+                movers.Add(slot);
+            }
+            perGap.Add(changed);
+            if (changed > 0) gapsMoving++;
+        }
+        how = $"parts changed by gap {string.Join("/", perGap)}, {movers.Count} parts moved in all";
+        return gapsMoving >= 3 && movers.Count >= 2;
     }
 
     // F8 off: the reaction shows the old puff, no designed parts and nothing composed; on again, the look is back.
@@ -266,7 +332,7 @@ public class ReactionArtProbeRunner : MonoBehaviour
         }
 
         var busy = new float[8000];
-        int busyCount = 0, mostParts = 0, mostLamps = 0, played = ReactionArt.Played, composed = ReactionArt.ComposedCount, ended = ReactionArt.Ended;
+        int busyCount = 0, mostParts = 0, mostLamps = 0, played = ReactionArt.Played, composed = ReactionArt.ComposedCount, ended = ReactionArt.Ended, dropped = ReactionArt.Dropped;
         long busyGarbage = 0;
         var random = new System.Random(23);
         float owed = 0f;
@@ -299,7 +365,7 @@ public class ReactionArtProbeRunner : MonoBehaviour
         int looks = ReactionArt.Played - played + ReactionArt.ComposedCount - composed;
         Say($"perf quiet: {quietCount} frames, ms mean {quietSorted.Average():0.0} p95 {quietP95:0.0} worst {quietSorted[quietSorted.Length - 1]:0.0}, garbage {quietPerFrame} bytes a frame (editor included)");
         Say($"perf burst: {busyCount} frames, ms mean {busySorted.Average():0.0} p95 {busyP95:0.0} worst {busySorted[busySorted.Length - 1]:0.0}, garbage {busyPerFrame} bytes a frame (editor included); " +
-            $"{ReactionArt.Played - played} designed and {ReactionArt.ComposedCount - composed} composed looks ({looks / BurstSeconds:0.0} a second), most parts {mostParts}, most lamps {mostLamps}, ended early {ReactionArt.Ended - ended}");
+            $"{ReactionArt.Played - played} designed and {ReactionArt.ComposedCount - composed} composed looks ({looks / BurstSeconds:0.0} a second), most parts {mostParts}, most lamps {mostLamps}, ended early {ReactionArt.Ended - ended}, aftermath parts left out {ReactionArt.Dropped - dropped}");
         Judge("the burst keeps the frame under 16.6 ms at the 95th percentile", busyP95 < 16.6f, $"p95 {busyP95:0.0} ms (quiet {quietP95:0.0})");
         Judge("the burst adds no garbage of its own (within 1 KB a frame of the quiet, the editor's own included)", busyPerFrame - quietPerFrame < 1024, $"{busyPerFrame} against {quietPerFrame} bytes a frame");
         Judge("about 17 looks a second were drawn", looks > BurstSeconds * ReactionsASecond * 0.8f, $"{looks} in {BurstSeconds} s");
