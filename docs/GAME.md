@@ -1578,29 +1578,126 @@ changed. The old playtest stays with its players until the first few phases of t
 - **Built** by `Clover > Build > Reaction Art` (`ReactionArtBuilder`, after Element Art) into
   `Generated/Vfx/Reaction/reaction_art.asset` (`ReactionArtSet`). Each of the 24 recipe combos is rebuilt from its
   pieces (1,024 in all) in the recipe's places:
-  - solid pieces merged into one mesh for each place (on the body, on the ground) and element, painted in their bands
-    and drawn in that element's inked solid material from the element art;
-  - see-through pieces (beams, fog) merged into one glow mesh;
+  - solid pieces merged into one mesh for each place (on the body, on the ground), element and motion role (see
+    "Motion" below), painted in their bands and drawn in that element's inked solid material from the element art;
+  - see-through pieces (beams, fog) merged into glow meshes the same way;
   - flat pieces rasterised into one or two floor masks a look (up to four colours to a mask, lowest first), each its
     own `Clover/Decal` material, drawn on outward from the feet;
-  - three to seven parts a look, about 160 to 7,400 triangles; the build writes `review/checks/reaction_art.md`.
+  - each part's mesh is kept about the point it moves about, with its cue (verb, beat, delay, times);
+  - at most 10 parts a look (estimated 3 to 10 from the recipe, about 136 in all), about 160 to 7,400 triangles; the
+    build writes `review/checks/reaction_art.md` with every part's verb, beat and time.
   - A re-coloured piece wears the recipe's material in its first slot and its kit's in the rest.
   - The first-pass materials only the combos use are painted from the notes' bands.
 - **Lamps**: Blender's point lamps become URP point lights without shadows. Intensity = watts / (4 pi^2), so 395 W is
   10. Range is sqrt(2 x intensity), held to 1.5 to 5 m. A look has at most two; the dimmer ones are left out (Thermal
   Shock's cold lamp, Fire Medicine's green heart, Burnt Mound's three stone lamps, two of Firebloom's lily lamps). They
-  fade over 0.45 s.
+  light at the look's impact and fade over 0.45 s.
 - **In play** (`ReactionArt`, added beside the element art by `ElementArt`, so no scene was rebuilt):
-  - A designed look pops in over 0.1 s. Its body parts ride on the struck enemy, and its ground parts stay where it
-    stood.
-  - Solids close to nothing over the last third of 0.85 s (body) or 1.1 s (ground). Marks fade over the last third
-    of 1.8 s.
-  - The pool is 120 renderers and 6 lamps, made once, for up to 16 looks at a time. A new look when the pool is full
-    ends the oldest.
-  - The other 31 reactions are composed from the element art: each parent's own piece bursts up at the feet, and the
-    second parent's ground mark (else the first's) is laid. The list is in `ReactionDesigns` and the build's report.
+  - Every look plays as a timeline (see "Motion" below). Its body parts ride on the struck enemy, and its ground parts
+    stay where it stood.
+  - Solids close to nothing about their pivot over the last third of their time. Glows and marks fade over it.
+  - The pool is 160 renderers and 6 lamps, made once, for up to 32 looks at a time (the crowd's 17 a second keep
+    about 22 alive). Each renderer hangs under a frame
+    that can be stretched along any way, so only transforms and property blocks change in play, and nothing is
+    allocated.
+  - Under load (more than 70% of the pool in use) a new look leaves out its aftermath parts. A look short of
+    renderers takes the oldest look's aftermath first, and only then ends the oldest look.
+  - The other 31 reactions are composed from the element art in the same pool (see "Motion"). The pieces are in
+    `ReactionDesigns` and the build's report.
   - F8 switches the reactions too. With the old effects on, a reaction shows the old puff.
   - Gameplay is unchanged.
+- **Motion** (2026-11-19, after the owner saw the effects "appear and then disappear" with no motion; Claude's
+  defaults, not yet seen in play by the owner):
+  - Each look plays in three beats over 0.6 to 1.5 s: the cause arrives, the impact, the aftermath.
+  - A piece's motion role comes from its kit object's name (`ReactionTimelines.RoleOf`):
+    - strike (bolt, pencil shaft);
+    - ray (beam, breath, fuse);
+    - static (crackle, crawl, arcs);
+    - flame (tongues, climb);
+    - vapour (steam, smoke, fog, fumes, embers, flakes);
+    - debris (chips, shards, sparks, pellets, drops, dust);
+    - wave (splash, crown, curtain);
+    - growth (thorns, vines, roots, tiers, rime, lilies, stones, slabs, heave);
+    - wind (streaks, combs, curls, grass);
+    - ring (clang, stars, glints, beads, plates, burst rings);
+    - swirl (mites, coils, the ash knot, Dark's streaks drawn in);
+    - mark (the flat pieces).
+  - The verbs (`ReactionMotion`):
+    - Fall: in from 3 to 5 m up on a slant toward the camera's right, accelerating, drawn long, squashed where it
+      lands.
+    - Rise: up out of the ground past its height and back.
+    - Sink: held up and wide, it drops and tips in.
+    - Sweep: in from the player's side along the blow, stretched while fast.
+    - Extend: drawn out from its root (a beam to the next body, the breath to the player, a bolt drawn down from its
+      top).
+    - Spread: out from the middle, a mark drawn on as it grows.
+    - Spin: turning and drawn in.
+    - Flicker: strobing, then holding with short blinks.
+    - Drift: up, wider and thinning.
+    - Lick: up, then never still, each tongue out of step.
+    - Pulse: out with a bang, then beating smaller.
+    - Burst: flying out from the body.
+    - Any verb can strobe (lightning: two to four redraws, each a few centimetres off the last).
+    - Lightning, ice, metal and light solids flash white for 0.06 s where they land. Fire, stone, leaf, smoke and
+      water never do.
+  - Each designed look's timeline is in `ReactionTimelines.Designed`. A step names a role or a word of the piece's
+    name; a piece follows the step naming its word, else its role, else the role's default:
+    - Thermal Shock: frost tiers crust the legs; the coal crack-web flares and ice chips and shards burst; steam and
+      embers drift off as the char spreads.
+    - Flashover: violet static crawls the limbs; the tongues climb in threes (0.1 s apart); embers and smoke rise as
+      the char spreads.
+    - Fire Medicine: the fumes hang and the fuse and pits show; the bang: the lobed ring pulses, flames lick and
+      sparks burst; steam and embers rise.
+    - Sleet Charge: frost crusts the body and static crackles over it; a bolt falls; pellets and chips burst; the
+      glass fern spreads.
+    - Diamond Ring: Dark's streaks wheel in; the slatted shaft lands; the eclipse ring and its bead flare; the corona
+      and shadow bands spread.
+    - The Grudge: the ash knot gathers over the head with pale streaks drawn in; cyan crawls in it; the black bolt
+      strikes; the black fern spreads.
+    - Capsize: the grass flattens in from the windward side; the after-splash rises and drops fly; the foam combs out
+      downwind.
+    - Rime: wind streaks sweep in; rime grows on the near side; chips blow out of the far side; fog drifts and the
+      feathers fan out.
+    - Caught Light: the shaft falls on the first body; the crown splashes up and glints flash on the water; the net
+      spreads across the pool.
+    - Burnt Mound: the heave ring rises and chips fly; three stones fall back hot; sparks and flames flare on them;
+      smoke and flakes rise as the char spreads.
+    - Fish Poison: fouled water runs off the body and the slick spreads; bubbles burst in rings; fumes rise.
+    - Shut in the Dark: the mites spiral in and the black mouth spreads; the lobed front laps and bursts; fumes hook
+      inward.
+    - Nerve Fire: jagged nerve lines strobe up out of the body and static crawls; the burst rings jolt; the green fern
+      spreads.
+    - The Ground Gives: the slabs drop and tip in round the pit; the funnel and collar open; water seeps up in rings.
+    - Logan Stone: wind sweeps in from the side; the rut ring heaves up and dust bursts; the comb spreads.
+    - Anvil Stone: the ground heaves at its back; the plates clang with a white-hot notch; shards and dust fly; the
+      clang rings spread.
+    - Iron Thorns: iron roots creep out and vines rise; the plates clang; steel thorns burst out of them; leaves and
+      sparks fly.
+    - Girdled: black fig roots grip the floor; briars and vines climb; pale coils wind up the body; leaves fall away.
+    - Steam: flame stubs flicker on the body; the water lands and the soot ring spreads; the splash rises; steam
+      billows up and thins.
+    - Glint: the slatted shaft strikes down; the plates clang and glint and sparks fork; the split beam runs to the
+      next body; the jali print and shadow spread.
+    - Firebloom: the sprout and vines rise; the lilies open; flames lick up through them in turn; coal pellets burst;
+      embers and flakes rise as the ash rings spread.
+    - Earthed: bolts fall and strobe and static crawls on every body; the burnt fern spreads; cubes jump off it and the
+      heave ring rises; dust bursts.
+    - Stolen Warmth: frost crusts the body and chips spring off; the breath draws out toward you puff by puff to the
+      warmth ring; the rosettes spread along the chain.
+    - The Bolt Runs True: the gold rings spread; the straight bolt draws down from its top with two strobe redraws;
+      static crawls; the straight scorch is left.
+  - Grouping and budget:
+    - Pieces are grouped by place, element, role and step. Staggered tongues split one kit object to a part when the
+      look stays within 10 parts.
+    - A look still over 10 folds its smallest group into the biggest of the same place and element.
+    - Masks spread by the look's mark step, the upper layer 0.1 s after the lower.
+  - The 31 composed looks (`ReactionTimelines.Composed`), drawn in the same pool:
+    - The first parent's own piece arrives by its element's nature: Lightning falls and strobes, Wind sweeps in from
+      the player, Water, Earth and Life rise, Fire licks, Poison and Dark spread, Light sweeps in as a ray, Ice crusts
+      (spreads), Metal clangs (pulses).
+    - The second parent's piece answers in its own way at the impact, smaller and turned away. The impact is when
+      the first lands, or 0.22 s in for one that grows where it is.
+    - The ground mark spreads 0.08 s later.
 - **Claude's defaults**:
   - The look-dev's camera looked the other way to the game's, so a look is turned 180 degrees past the camera's yaw
     and is seen as its frame was. The recipe says its camera looked along +Z, but its frames show -Z.
@@ -1610,9 +1707,12 @@ changed. The old playtest stays with its players until the first few phases of t
   - Not built:
     - the bodies' recolours (bleach, pallor, frost) and the after-image ghosts;
     - the states that last (Diamond Ring's disc, the jar, the anvil, the net), which show for a moment only;
-    - pieces moving within a look (every combo is one held frame).
-- **Verified**: offline compile only. The editor run (build, EditMode suite, `ReactionArtProbe` frames and burst) is
-  owed.
+    - pieces moving one by one inside a merged group (a group moves as one; tongues are the exception, split by kit
+      object).
+- **Verified**:
+  - Offline compile of the four assemblies and the probe.
+  - The motion's EditMode tests (`ReactionMotionTests`) passed in a harness outside Unity.
+  - The editor run is owed: the rebuild, the EditMode and PlayMode suites, and `ReactionArtProbe`'s strips and burst.
 
 ## Credits (decided 2026-11-18)
 
