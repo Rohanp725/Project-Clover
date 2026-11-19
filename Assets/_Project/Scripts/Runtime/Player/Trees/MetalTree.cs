@@ -152,10 +152,10 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = TrueFlight, Name = "True Flight", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { BuriedBlades }, X = 0.78f, Y = 3.52f, Icon = UpgradeIcons.Arrow,
                 Description = "Conjured blades strike harder.",
                 Stats = new[] { new StatMod(PlayerStat.SpellDamage, 0.15f) } });
-            // The stat makes every spell cheaper, not the base spell alone.
+            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
             to.Add(new Upgrade { Id = ReadySteel, Name = "Ready Steel", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { BuriedBlades }, X = 1.93f, Y = 3.22f, Icon = UpgradeIcons.Gem,
-                Description = "Flung Blade costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
+                Description = "Flung Blade waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // The arc strikes its first target again and does not weaken as it leaps.
             to.Add(new Upgrade { Id = Ricochet, Name = "Ricochet", Element = E, Kind = UpgradeKind.Major, Requires = new[] { BuriedBlades }, X = 1.61f, Y = 4.2f, Icon = UpgradeIcons.Chain,
                 Description = "A spell that strikes an enemy sends a blade through it that springs on to the next enemy near, and then the next, notching each.",

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Clover.Player.Magic
@@ -144,6 +145,24 @@ namespace Clover.Player.Magic
         /// <summary>The element's base spell's timing.</summary>
         public static SpellTiming Base(string element) =>
             element != null && bases.TryGetValue(SpellSlots.BaseId(element), out var found) ? found : Cd(DefaultCooldown, SpellRole.Opener);
+
+        /// <summary>
+        /// What one mark takes off the wait of <paramref name="element"/>'s base spell (stat
+        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Ice second, Thin Ice
+        /// shortens Hoarfrost and not the first element's spell.
+        /// </summary>
+        public static float BaseCooldownShare(Upgrade mark, string element)
+        {
+            if (mark == null || mark.Stats == null || string.IsNullOrEmpty(element) || mark.IsMix || mark.Element != element) return 0f;
+            float share = 0f;
+            foreach (var mod in mark.Stats)
+                if (mod.Stat == PlayerStat.BaseSpellCooldown && mod.When == StatWhen.Always && mod.Against == Clover.Gameplay.AfflictionKind.None) share += mod.Amount;
+            return share;
+        }
+
+        /// <summary>The element's base spell's wait with its marks' share taken off; never less than a tenth of the table's.</summary>
+        public static float BaseCooldown(string element, float share) =>
+            Base(element).Cooldown * Math.Max(PlayerStats.LeastMultiplier, 1f + share);
 
         /// <summary>Gives a gathered spell mark the table's cooldown and price. Health prices are left as written.</summary>
         public static void Apply(Upgrade mark)

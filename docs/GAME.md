@@ -1221,6 +1221,9 @@ of what was decided and when.
   alone.
 - **Decided (user, 2026-11-19)**: a mixed branch's marks are the exception: their blows lay both elements'
   afflictions, as their text says (Biting Wind, Wet Seed, Hammer and Anvil, Root Grip and the rest).
+- **Decided (user, 2026-11-19)**: the ten minors that made a base spell cost less mana (Thin Ice and the rest) now make
+  their own element's base spell wait a fifth less between casts (stat `BaseSpellCooldown`, which replaces
+  `BaseSpellCost`).
 
 The user's direction: the element is as strong a part of the game as close combat, so fights use both kinds of
 technique; and there is a weapon tree that specialises and upgrades the weapon, with health, stamina and the like.

@@ -104,10 +104,10 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = Conductor, Name = "Conductor", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Static }, X = 0.74f, Y = 3.87f, Icon = UpgradeIcons.Bolt,
                 Description = "Thunderclap leaves Static two deep on all it strikes, and sets off an enemy already at five.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 2 }, new UpgradeEffect { On = UpgradeTrigger.SpellHit, Needs = AfflictionKind.Static, NeedsFull = true, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Cooldown = 0.2f } } });
-            // The cost is the stat for every spell, the base one and whatever is worn.
+            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
             to.Add(new Upgrade { Id = QuickClap, Name = "Quick Clap", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Conductor }, X = 0.21f, Y = 5.04f, Icon = UpgradeIcons.Gem,
-                Description = "Thunderclap costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
+                Description = "Thunderclap waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             to.Add(new Upgrade { Id = ThirdLeap, Name = "Third Leap", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Conductor }, X = -0.14f, Y = 4.18f, Icon = UpgradeIcons.Chain,
                 Description = "Thunderclap leaps to one more enemy.",
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellCount, 1f) } });

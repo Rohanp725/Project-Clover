@@ -158,10 +158,10 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 3 },
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Push, At = EffectAt.Self, Radius = 4f, Amount = 3f },
                 } });
-            // The cost is the stat for every spell, the base one and whatever is worn.
+            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
             to.Add(new Upgrade { Id = EasyBreath, Name = "Easy Breath", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { AgainstTheWall }, X = 2.27f, Y = 4.45f, Icon = UpgradeIcons.Gem,
-                Description = "Gust costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.25f) } });
+                Description = "Gust waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // PushDistance: the Push action and what spell forms shove.
             to.Add(new Upgrade { Id = StrongArm, Name = "Strong Arm", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { TurnedAside }, X = 1.08f, Y = 6.89f, Icon = UpgradeIcons.Fist,
                 Description = "Your pushes throw enemies further.",

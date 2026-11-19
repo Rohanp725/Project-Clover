@@ -104,8 +104,8 @@ namespace Clover.Player.Trees
                 Description = "Briar Patch covers more ground.",
                 Stats = new[] { new StatMod(PlayerStat.SpellReach, 0.15f) } });
             to.Add(new Upgrade { Id = ReadySoil, Name = "Ready Soil", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Sapling }, X = 0.68f, Y = 6.63f, Icon = UpgradeIcons.Gem,
-                Description = "Briar Patch costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.25f) } });
+                Description = "Briar Patch waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // NEAREST: the nova is the call; everything grown bursts and mends. The seeds in enemies do not burst yet.
             to.Add(new Upgrade { Id = ReapWhatIsSown, Name = "Reap What Is Sown", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Sapling }, X = 0.82f, Y = 7.78f, Icon = UpgradeIcons.Burst,
                 Description = "Hold the spell button to call in the harvest. The ground bursts round you and everything you have grown bursts with it, each grown thing mending you. 30 mana.",

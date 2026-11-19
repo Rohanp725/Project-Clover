@@ -165,10 +165,10 @@ namespace Clover.Player.Trees
                 Description = "Hold the spell button to plant a lantern of light. Enemies in its glow are struck lightly and Marked again and again. 35 mana.",
                 Form = SpellForms.Rod,
                 Spell = new SpellSpec { Cost = 35f, Reach = 2.5f, Radius = 5f, Seconds = 10f, Interval = 2.5f, Damage = 2f, Stagger = 0f, Delay = 0.2f, Stacks = 1 } });
-            // The stat makes every spell cheaper, not the base spell alone.
+            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
             to.Add(new Upgrade { Id = ReadyLight, Name = "Ready Light", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { StandingLight }, X = 3.09f, Y = 7.44f, Icon = UpgradeIcons.Gem,
-                Description = "Glare costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
+                Description = "Glare waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // BESPOKE: the first hold begins gathering; each blow landed adds a ring to the blade, up to eight; a second hold (or 7 s) looses a beam 12 m long and 1.6 m wide
             // for 8 damage and 6 stagger a ring. Until then: the beam at once, at the strength of six rings over its four bites.
             to.Add(new Upgrade { Id = Daybreak, Name = "Daybreak", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { StandingLight }, X = 2.03f, Y = 7.88f, Icon = UpgradeIcons.Beam,

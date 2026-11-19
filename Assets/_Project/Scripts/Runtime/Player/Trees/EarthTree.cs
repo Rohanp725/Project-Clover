@@ -154,10 +154,10 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = HardStone, Name = "Hard Stone", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { StandingStones }, X = 0.78f, Y = 3.5f, Icon = UpgradeIcons.Rock,
                 Description = "Pillars and their shards strike harder.",
                 Stats = new[] { new StatMod(PlayerStat.SpellDamage, 0.15f) } });
-            // The stat makes every spell cheaper, not the base spell alone.
+            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
             to.Add(new Upgrade { Id = NearToHand, Name = "Near to Hand", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { StandingStones }, X = 1.92f, Y = 3.21f, Icon = UpgradeIcons.Gem,
-                Description = "Stone Rise costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
+                Description = "Stone Rise waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // NEEDS: pillars that stand, and a condition "one is within 4 m". Here every perfect guard brings stone down on the attacker.
             to.Add(new Upgrade { Id = Toppling, Name = "Toppling", Element = E, Kind = UpgradeKind.Major, Requires = new[] { StandingStones }, X = 1.61f, Y = 4.2f, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard brings a pillar of stone down on the one who struck, and shakes it.",

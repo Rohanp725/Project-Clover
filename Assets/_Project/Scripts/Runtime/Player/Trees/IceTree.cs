@@ -144,8 +144,8 @@ namespace Clover.Player.Trees
                 Description = "Hoarfrost leaves a sheet of ice on the ground. Enemies standing on it grow colder.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, BaseSpell = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Line, Count = 4, Reach = 4.5f, Radius = 1.1f, Seconds = 4f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Chill, Stacks = 1, Cooldown = 1f } } });
             to.Add(new Upgrade { Id = ThinIce, Name = "Thin Ice", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { BlackIce }, X = 0.39f, Y = 2.36f, Icon = UpgradeIcons.Gem,
-                Description = "Hoarfrost costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
+                Description = "Hoarfrost waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             to.Add(new Upgrade { Id = LongFrost, Name = "Long Frost", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { BlackIce }, X = 1.71f, Y = 2.46f, Icon = UpgradeIcons.Arrow,
                 Description = "Hoarfrost reaches further.",
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellReach, 0.33f) } });

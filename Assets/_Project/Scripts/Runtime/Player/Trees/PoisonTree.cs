@@ -177,10 +177,10 @@ namespace Clover.Player.Trees
                 Description = "Hold the spell button to set a smoking censer swinging round you on its chain. It doses whatever it passes. 35 mana.",
                 Form = FormDiscs,
                 Spell = new SpellSpec { Cost = 35f, Count = 1, Radius = 3f, Seconds = 8f, Interval = 1.2f, Damage = 4f, Stagger = 4f, Stacks = 1 } });
-            // It makes every spell cheaper by half as much, not the base spell alone.
+            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
             to.Add(new Upgrade { Id = ReadyPoison, Name = "Ready Poison", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { SwingingCenser }, X = 2.91f, Y = 6.74f, Icon = UpgradeIcons.Gem,
-                Description = "Miasma costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
+                Description = "Miasma waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // It doses everyone passed two deep; it does not yet raise them all to the depth of the sickest.
             to.Add(new Upgrade { Id = ShareAlike, Name = "Share Alike", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { SwingingCenser }, X = 2.4f, Y = 7.8f, Icon = UpgradeIcons.Comet,
                 Description = "Hold the spell button to rush through everything before you, untouchable. Every enemy you pass is struck and poisoned two deep. 40 mana.",

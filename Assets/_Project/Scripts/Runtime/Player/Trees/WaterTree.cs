@@ -59,8 +59,8 @@ namespace Clover.Player.Trees
                 Description = "Riptide reaches further.",
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellReach, 0.3f) } });
             to.Add(new Upgrade { Id = LowWater, Name = "Low Water", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Undertow }, X = -0.88f, Y = 4.24f, Icon = UpgradeIcons.Gem,
-                Description = "Riptide costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.25f) } });
+                Description = "Riptide waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // The dragon form carries what it meets away along its line; the design's serpent comes back and brings the first enemy to the player's feet.
             to.Add(new Upgrade { Id = RiverSerpent, Name = "River Serpent", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Undertow }, X = -2f, Y = 3.54f, Icon = UpgradeIcons.Claw,
                 Description = "Hold the spell button to send a serpent of water down a lane ahead. It carries what it meets along a little, and its jaws close at the end and leave all it struck Soaked. 30 mana.",

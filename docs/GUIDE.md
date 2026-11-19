@@ -121,8 +121,9 @@ PlayStation or keys) and the player's rebinding.
 - **Larger spells** cost mana and have no wait: Meteor Leap 45, Seven Flashes 45, Sky Dance 45, Winter Wall 35, Poured
   Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50, and the eleven built duo spells 40 to 60.
   Pawned Heart is paid in health and waits 40 s. Earth has no larger spell yet (its Cairn is not built).
-- **Marks that only made the base spell cheaper** (Short Breath, Quick Clap, Easy Breath, Thin Ice, Low Water, Ready
-  Soil, Near to Hand, Ready Steel, Ready Light, Ready Poison) are still on the chart and do nothing now; Spring Tide
+- **Marks that once made the base spell cheaper** (Short Breath, Quick Clap, Easy Breath, Thin Ice, Low Water, Ready
+  Soil, Near to Hand, Ready Steel, Ready Light, Ready Poison) now make their own element's base spell wait a fifth
+  less between casts (Hoarfrost 5.6 s where it waits 7), whether that element is carried first or second; Spring Tide
   works only on a spell that costs mana. The trees are reshaped in a later phase.
 
 ### The charged blade and infused strikes
@@ -701,7 +702,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Struck Flint** | Minor | 1 | A perfect guard gives more mana. | Always on once it is yours. |
 | **Kindling** | Minor | 1 | The moment in which a guard is perfect lasts a little longer. | Always on once it is yours. |
 | **Banked Coals** | Minor | 1 | Heat cools more slowly between blows. | Always on once it is yours. |
-| **Short Breath** | Minor | 1 | Flame Wave costs less mana. | Always on once it is yours. |
+| **Short Breath** | Minor | 1 | Flame Wave waits a fifth less between casts. | Always on once it is yours. |
 | **Furnace Breath** | Minor | 1 | Backdraft breaks balance harder. | Always on once it is yours. |
 | **Broad Wave** | Minor | 1 | Flame Wave reaches further. | Always on once it is yours. |
 | **Stoked** | Minor | 1 | Heat rises on fewer blows. | Always on once it is yours. |
@@ -742,7 +743,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Blink** | Major | 3 | Each dodge sends a line of lightning down its path that shocks whatever it crosses. | Always on once it is yours. |
 | **Open Seam** | Minor | 1 | Blows on an enemy carrying Static are critical more often. | Always on once it is yours. |
 | **Forked Step** | Minor | 1 | Blink shocks a wider path. | Always on once it is yours. |
-| **Quick Clap** | Minor | 1 | Thunderclap costs less mana. | Always on once it is yours. |
+| **Quick Clap** | Minor | 1 | Thunderclap waits a fifth less between casts. | Always on once it is yours. |
 | **Delayed Cuts** | Major | 3 | The Iaido Slash passes through. Its cuts land a moment later, all at once, when the blade is home. | Always on once it is yours. |
 | **Biting Step** | Minor | 1 | Blink shocks harder. | Always on once it is yours. |
 | **Keen Edge** | Minor | 1 | Critical blows cut deeper. | Always on once it is yours. |
@@ -782,7 +783,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Thin Air** | Minor | 1 | The dodge is safe a moment longer. | Always on once it is yours. |
 | **Off Balance** | Minor | 1 | Unsteady lasts longer. | Always on once it is yours. |
 | **Loose Footing** | Minor | 1 | Heavy blows leave an enemy two deeper in Unsteady. | Happens when a heavy blow lands. |
-| **Easy Breath** | Minor | 1 | Gust costs less mana. | Always on once it is yours. |
+| **Easy Breath** | Minor | 1 | Gust waits a fifth less between casts. | Always on once it is yours. |
 | **Passing Cut** | Major | 3 | Where a dodge ends, a cut of wind strikes everything close to you and leaves it Unsteady. | Happens when a dodge ends. |
 | **Light Feet** | Minor | 1 | The dodge costs less stamina. | Always on once it is yours. |
 | **Wide Gust** | Minor | 1 | Gust spreads wider and reaches further. | Always on once it is yours. |
@@ -811,7 +812,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 |---|---|---|---|---|
 | **Chill** | Root | 2 | Blows chill an enemy, up to five. Each slows it. At five it is Frozen, and a heavy blow shatters it. | Always on once it is yours. |
 | **Black Ice** | Major | 3 | Hoarfrost leaves a sheet of ice on the ground. Enemies standing on it grow colder. | Happens when you cast a spell (Triangle (U)). |
-| **Thin Ice** | Minor | 1 | Hoarfrost costs less mana. | Always on once it is yours. |
+| **Thin Ice** | Minor | 1 | Hoarfrost waits a fifth less between casts. | Always on once it is yours. |
 | **Long Frost** | Minor | 1 | Hoarfrost reaches further. | Always on once it is yours. |
 | **Cold Read** | Major | 3 | A perfect guard chills the one who struck, two deep. | Happens when you guard at the last moment (a perfect guard). |
 | **Splinter Ward** | Major | 3 | When Glaze breaks, it bursts round you and gives the mana of a perfect guard. | Happens when a ward turns a blow. |
@@ -853,7 +854,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **River Serpent** | Spell | 4 | Hold the spell button to send a serpent of water down a lane ahead. It carries what it meets along a little, and its jaws close at the end and leave all it struck Soaked. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
 | **Ebb and Flood** | Major | 3 | A perfect guard brings the Flood: a splash soaks the attacker and those beside it, and for five seconds your blows strike 15% harder. A heavy blow that lands brings the Ebb: for four seconds your guard and dodge cost half the stamina and the moment of your perfect guard is longer. | Happens when you guard at the last moment (a perfect guard). |
 | **Broken Gourd** | Major | 3 | Hold the flask button to throw it. Where it breaks it strikes and soaks everyone near and leaves a pool that keeps what stands in it Soaked for six seconds. The throw mends you 20 at once. | Happens when you throw a flask (hold the flask button). |
-| **Low Water** | Minor | 1 | Riptide costs less mana. | Always on once it is yours. |
+| **Low Water** | Minor | 1 | Riptide waits a fifth less between casts. | Always on once it is yours. |
 | **Still Pool** | Minor | 1 | Pools and other ground you leave last longer. | Always on once it is yours. |
 | **Long Riptide** | Minor | 1 | Riptide reaches further. | Always on once it is yours. |
 | **Wading** | Minor | 1 | You move faster with your guard up. | Always on once it is yours. |
@@ -902,7 +903,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Green Wood** | Minor | 1 | Grey health waits longer before it fades. | Always on once it is yours. |
 | **Sapling** | Major | 3 | A perfect guard plants a sapling at your feet, up to three. Each lashes every enemy within its reach and seeds it. | Happens when you guard at the last moment (a perfect guard). |
 | **Bitter Rind** | Major | 3 | A plain guard seeds the attacker. A perfect guard roots it where it stands for a moment. | Happens when you block a blow. |
-| **Ready Soil** | Minor | 1 | Briar Patch costs less mana. | Always on once it is yours. |
+| **Ready Soil** | Minor | 1 | Briar Patch waits a fifth less between casts. | Always on once it is yours. |
 | **Crowded Bed** | Minor | 1 | You may keep one more sapling. | Always on once it is yours. |
 | **Shade** | Major | 3 | Standing near anything you have grown, you mend slowly and your stamina returns faster. | Happens when an enemy is near, every few seconds. |
 | **Spreading Briar** | Minor | 1 | Briar Patch covers more ground. | Always on once it is yours. |
@@ -921,7 +922,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Rooted** | Major | 3 | Fight without rolling for a few breaths and you are Rooted. Rooted, you take less harm and your guard costs less. A roll ends it. | Always on once it is yours. |
 | **Standing Stones** | Major | 3 | When a spell of yours strikes an enemy, a pillar of stone strikes it again a moment after and shakes it. Once every second and a half. | Happens when a spell of yours strikes an enemy. |
 | **Heavy Hand** | Major | 3 | Your heavy blows are not stopped by being struck. You take less from that blow, and yours still lands. | Always on once it is yours. |
-| **Near to Hand** | Minor | 1 | Stone Rise costs less mana. | Always on once it is yours. |
+| **Near to Hand** | Minor | 1 | Stone Rise waits a fifth less between casts. | Always on once it is yours. |
 | **Thick Hide** | Minor | 1 | Rooted, you take less from every blow. | Always on once it is yours. |
 | **Deep Footing** | Minor | 1 | You become Rooted sooner. | Always on once it is yours. |
 | **Hard Stone** | Minor | 1 | Pillars and their shards strike harder. | Always on once it is yours. |
@@ -957,7 +958,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Forged Answer** | Major | 3 | A perfect guard forges a blade from the blow it turned. Up to three hang at your shoulder. Your next heavy blow sends them all. | Happens when you guard at the last moment (a perfect guard). |
 | **Buried Blades** | Major | 3 | A heavy blow on notched armour strikes a second time, harder, and notches it again. Once a second at most. | Happens when a heavy blow lands. |
 | **Counter Cut** | Major | 3 | A blow that lands while an enemy is showing its own attack is critical. | Always on once it is yours. |
-| **Ready Steel** | Minor | 1 | Flung Blade costs less mana. | Always on once it is yours. |
+| **Ready Steel** | Minor | 1 | Flung Blade waits a fifth less between casts. | Always on once it is yours. |
 | **Bright Sparks** | Minor | 1 | Perfect guards give more mana. | Always on once it is yours. |
 | **Practised Wrist** | Minor | 1 | The moment for a perfect guard is a little longer. | Always on once it is yours. |
 | **True Flight** | Minor | 1 | Conjured blades strike harder. | Always on once it is yours. |
@@ -1009,7 +1010,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Rich Mark** | Minor | 1 | Blows on Marked enemies give still more mana. | Always on once it is yours. |
 | **Step Into Light** | Spell | 4 | Hold the spell button to step through the enemy you face in a line of light, cutting and Marking it. If the cut lands, your next heavy blow in the moment after is critical. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
 | **Ring of Spears** | Spell | 4 | Hold the spell button. Six spears of light stand in the air round the enemy you face, wait a breath, and drive in together. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **Ready Light** | Minor | 1 | Glare costs less mana. | Always on once it is yours. |
+| **Ready Light** | Minor | 1 | Glare waits a fifth less between casts. | Always on once it is yours. |
 | **Long Clarity** | Minor | 1 | Clarity lasts longer. | Always on once it is yours. |
 | **Daybreak** | Spell | 4 | Hold the spell button to brace and loose a beam of light down one long line. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
 | **Unblemished** | Keystone | 6 | Fight a while without a wound and every blow you land is critical. A wound ends it, and until it returns you take more from every blow. | Always on once it is yours. |
@@ -1079,7 +1080,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Lance the Wound** | Major | 3 | A perfect guard makes the attacker's poison bite at once, and with it the poison in everyone near. | Happens when you guard at the last moment (a perfect guard). |
 | **Swinging Censer** | Spell | 4 | Hold the spell button to set a smoking censer swinging round you on its chain. It doses whatever it passes. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
 | **Blister** | Spell | 4 | Hold the spell button to raise a blister on the enemy you face. Your next blow on it breaks it in a wide burst that poisons deeply. Wait too long and it withers. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **Ready Poison** | Minor | 1 | Miasma costs less mana. | Always on once it is yours. |
+| **Ready Poison** | Minor | 1 | Miasma waits a fifth less between casts. | Always on once it is yours. |
 | **Calm Pulse** | Minor | 1 | Holding your guard costs less stamina. | Always on once it is yours. |
 | **Waiting Game** | Minor | 1 | Perfect guards give more mana. | Always on once it is yours. |
 | **Spent Venom** | Minor | 1 | Blows on poisoned enemies give more mana. | Always on once it is yours. |

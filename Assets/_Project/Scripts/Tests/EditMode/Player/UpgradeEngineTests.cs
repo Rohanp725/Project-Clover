@@ -99,7 +99,7 @@ namespace Clover.Tests
         [Test]
         public void TheSplitStatsAreSharesAndTheNewFlatOnesAreFlat()
         {
-            foreach (var stat in new[] { PlayerStat.AttackStamina, PlayerStat.GuardStamina, PlayerStat.DodgeStamina, PlayerStat.BaseSpellCost,
+            foreach (var stat in new[] { PlayerStat.AttackStamina, PlayerStat.GuardStamina, PlayerStat.DodgeStamina, PlayerStat.BaseSpellCooldown,
                 PlayerStat.BaseSpellReach, PlayerStat.BaseSpellDamage, PlayerStat.BurstReach, PlayerStat.BurstDamage, PlayerStat.FlaskEarn })
                 Assert.IsFalse(PlayerStats.IsFlat(stat), stat.ToString());
             Assert.IsTrue(PlayerStats.IsFlat(PlayerStat.AfflictionDepth));

@@ -596,7 +596,8 @@ affliction are in force at once.
 |---|---|---|
 | `AttackStamina` | share | stamina of the weapon's own blows |
 | `GuardStamina` / `DodgeStamina` | share | stamina of a blocked blow alone / of the dodge alone (each on top of `StaminaCost`) |
-| `BaseSpellCost` / `BaseSpellReach` / `BaseSpellDamage` / `BaseSpellArc` | share | the base spell alone (on top of the stats for every spell) |
+| `BaseSpellReach` / `BaseSpellDamage` / `BaseSpellArc` | share | the base spell alone (on top of the stats for every spell) |
+| `BaseSpellCooldown` | share | the wait of the base spell of the mark's own element alone (-0.2 is a fifth shorter; on top of `SpellCooldown`) |
 | `BaseSpellCount` | flat, whole | one more leap, blade or pillar of the base spell |
 | `AfflictionDepth` | flat, whole | how much deeper the held element's affliction can be laid ("full" then means the deeper depth) |
 | `BurstReach` / `BurstDamage` | share | bursts afflictions make: `SetOff`, and the burst of a death |

@@ -71,8 +71,8 @@ namespace Clover.Player
         GuardStamina,
         /// <summary>Share. Stamina of the dodge alone (on top of StaminaCost).</summary>
         DodgeStamina,
-        /// <summary>Share. Mana of the element's base spell alone (on top of SpellCost).</summary>
-        BaseSpellCost,
+        /// <summary>Share. How long the base spell waits between casts: -0.2 makes the wait a fifth shorter. Counted for the base spell of the mark's own element only (SpellTimings.BaseCooldownShare), on top of SpellCooldown.</summary>
+        BaseSpellCooldown,
         /// <summary>Share. Reach of the base spell alone (on top of SpellReach).</summary>
         BaseSpellReach,
         /// <summary>Share. Damage of the base spell alone (on top of SpellDamage).</summary>

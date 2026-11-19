@@ -509,6 +509,19 @@ namespace Clover.Player
             RunState.Points += whole;
         }
 
+        /// <summary>
+        /// What the marks in force take off the wait of an element's base spell (stat BaseSpellCooldown): that element's
+        /// own marks only. Asked once a cast, so the catalogue is read here rather than kept summed.
+        /// </summary>
+        public float BaseCooldownShare(string elementName)
+        {
+            if (catalogue == null || has == null || string.IsNullOrEmpty(elementName)) return 0f;
+            float share = 0f;
+            for (int i = 0; i < has.Length && i < catalogue.Count; i++)
+                if (has[i]) share += Magic.SpellTimings.BaseCooldownShare(catalogue[i], elementName);
+            return share;
+        }
+
         /// <summary>Embers given back as they were spent, ember for ember.</summary>
         public void Refund(int points)
         {

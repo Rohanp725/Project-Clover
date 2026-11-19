@@ -144,10 +144,10 @@ namespace Clover.Player.Trees
                 Description = "Hold the spell button to leap out of the fight and come down on the enemy faced, leaving a burning crater. 50 mana.",
                 Form = SpellForms.Leap,
                 Spell = new SpellSpec { Cost = 50f, Reach = 9f, Seconds = 0.62f, Height = 3.4f, Damage = 46f, Stagger = 55f, Radius = 3.2f, LingerDamage = 5f, Stacks = 0 } });
-            // The cost is the stat for every spell, the base one and whatever is worn.
+            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
             to.Add(new Upgrade { Id = ShortBreath, Name = "Short Breath", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.FirebombFlask }, X = 2.34f, Y = 4.73f, Icon = UpgradeIcons.Gem,
-                Description = "Flame Wave costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
+                Description = "Flame Wave waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // BESPOKE (built): SunspotForm. Light blows feed it, a heavy blow sets it off; left alone it bursts at half.
             to.Add(new Upgrade { Id = Sunspot, Name = "Sunspot", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.MeteorLeap }, X = 2.46f, Y = 7.87f, Icon = UpgradeIcons.Target,
                 Description = "Hold the spell button to brand the enemy faced. Each blow you land feeds the brand, up to six. A heavy blow sets it off. 35 mana.",
