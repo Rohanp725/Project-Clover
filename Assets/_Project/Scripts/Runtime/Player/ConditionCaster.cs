@@ -8,7 +8,8 @@ namespace Clover.Player
     /// The action <see cref="UpgradeAction.Condition"/>: sets an enemy condition on the trigger's enemy, or on those near
     /// it, and lays what the effect names on each that takes it (IMPLEMENTATION.md 3.7). What resists being held resists
     /// a condition that holds, knocks flat or slows the same way: an elite takes half the slowing (and lies or is rooted
-    /// half the time), and what cannot be frozen (a god's form) takes no such condition at all. Kept out of
+    /// half the time), what cannot be frozen (a god's form) takes no such condition at all, and no god is knocked flat,
+    /// whatever its body. Kept out of
     /// <see cref="PlayerUpgrades"/>, which only calls it.
     /// </summary>
     public static class ConditionCaster
@@ -52,10 +53,12 @@ namespace Clover.Player
             return true;
         }
 
-        /// <summary>False when the enemy cannot take this condition: one that roots, knocks flat or slows, on what cannot be frozen.</summary>
+        /// <summary>False when the enemy cannot take this condition: one that roots, knocks flat or slows, on what cannot be frozen; one that knocks flat, on a god.</summary>
         public static bool Takes(ConditionSpec spec, AfflictionSet set)
         {
             if (spec == null || set == null) return false;
+            // A god only staggers (Capsize: "the great only stagger"); one in a body ice can hold is still never thrown down.
+            if ((spec.Flags & ConditionFlags.Down) != 0 && set.Rank == EnemyRank.God) return false;
             bool holds = (spec.Flags & (ConditionFlags.Rooted | ConditionFlags.Down)) != 0 || spec.Pace < 1f;
             return !holds || set.CanFreeze;
         }

@@ -12,6 +12,11 @@ namespace Clover.Gameplay
         /// <summary>Bosses cannot be frozen for long, and some things not at all.</summary>
         public bool CanFreeze = true;
         public float FreezeScale = 1f;
+        /// <summary>
+        /// True for a god in an ordinary enemy's body (Narukami, Khepharu as a man), which can be frozen for a breath and
+        /// so would read as an elite: every god ranks as a god (the owner's decision of 2026-11-19). Set by its body.
+        /// </summary>
+        public bool IsGod;
 
         public BurnStatus Burn { get; } = new BurnStatus();
         public bool IsFrozen { get; private set; }
@@ -93,8 +98,12 @@ namespace Clover.Gameplay
         /// <summary>The reaction engine this set reports to; none given means <see cref="ReactionEngine.Shared"/>. Tests give their own.</summary>
         public ReactionEngine Reactions { get; set; }
 
-        /// <summary>How hard it is to hold, read from what decides holding: what cannot be frozen is a god, what is frozen for less an elite.</summary>
-        public EnemyRank Rank => !CanFreeze ? EnemyRank.God : FreezeScale < 1f ? EnemyRank.Elite : EnemyRank.Plain;
+        /// <summary>How hard it is to hold: a god is a god, however its body holds; otherwise read from what decides holding: what cannot be frozen is a god, what is frozen for less an elite.</summary>
+        public EnemyRank Rank => RankOf(IsGod, CanFreeze, FreezeScale);
+
+        /// <summary>The rank from its parts, for <see cref="Rank"/> and for tests.</summary>
+        public static EnemyRank RankOf(bool isGod, bool canFreeze, float freezeScale) =>
+            isGod || !canFreeze ? EnemyRank.God : freezeScale < 1f ? EnemyRank.Elite : EnemyRank.Plain;
 
         public AfflictionSet() => Clear();
 

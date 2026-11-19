@@ -49,6 +49,8 @@ namespace Clover.Gameplay
         public string Title = "";
         /// <summary>An elite stands between the ordinary enemies and a boss: its name is shown over its own bars while it fights.</summary>
         public bool IsElite;
+        /// <summary>A god fighting in this body (Narukami; Khepharu as a man): it ranks as a god for the reactions, though ice holds it for a breath (AfflictionSet.IsGod).</summary>
+        public bool IsGod;
         /// <summary>What a chain feels on the end of it: a soldier is 1. At 2 and over it is not dragged; whoever pulls goes to it.</summary>
         public float Weight => IsBoss ? 4f : IsElite ? 2f : 1f;
         /// <summary>Embers it gives up the first time it dies in a run.</summary>
@@ -221,6 +223,7 @@ namespace Clover.Gameplay
             Model = "boss_narukami",
             Scale = 1.22f,
             IsBoss = true,
+            IsGod = true,
             Embers = 5,
             Health = 620f,
             StaggerMaximum = 190f,

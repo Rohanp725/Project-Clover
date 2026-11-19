@@ -1224,6 +1224,9 @@ of what was decided and when.
 - **Decided (user, 2026-11-19)**: the ten minors that made a base spell cost less mana (Thin Ice and the rest) now make
   their own element's base spell wait a fifth less between casts (stat `BaseSpellCooldown`, which replaces
   `BaseSpellCost`).
+- **Decided (user, 2026-11-19)**: every god ranks as a god for the reactions' numbers, Narukami and Khepharu as a man
+  included, though they fight in bodies ice holds for a breath (`EnemyKind.IsGod`, `AfflictionSet.IsGod`). Holds,
+  roots and freezes still go by the body (an elite's share); no god is ever knocked flat.
 
 The user's direction: the element is as strong a part of the game as close combat, so fights use both kinds of
 technique; and there is a weapon tree that specialises and upgrades the weapon, with health, stamina and the like.

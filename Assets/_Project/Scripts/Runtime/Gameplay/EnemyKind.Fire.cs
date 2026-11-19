@@ -59,6 +59,7 @@ namespace Clover.Gameplay
             Model = "boss_sunking",
             Scale = 1.25f,
             IsBoss = true,
+            IsGod = true,
             Embers = 0,
             DrawsStorm = false,
             Ashen = true,

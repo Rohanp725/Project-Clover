@@ -4,9 +4,10 @@ namespace Clover.Gameplay
 {
     /// <summary>
     /// How hard an enemy is to hold (<see cref="AfflictionSet.Rank"/>), for the reactions that give elites and gods their
-    /// own numbers (Supercooled's 3 Chill for an elite, Capsize's stagger for a god). Read from what already decides
-    /// holding: what cannot be frozen is a god, what is frozen for less than the whole time an elite. An effect asking
-    /// for none of them answers all three.
+    /// own numbers (Supercooled's 3 Chill for an elite, Capsize's stagger for a god). A god is a god whatever its body
+    /// (AfflictionSet.IsGod: Narukami and Khepharu fight in bodies ice holds for a breath); otherwise it is read from
+    /// what already decides holding: what cannot be frozen is a god, what is frozen for less than the whole time an
+    /// elite. An effect asking for none of them answers all three.
     /// </summary>
     [Flags]
     public enum EnemyRank

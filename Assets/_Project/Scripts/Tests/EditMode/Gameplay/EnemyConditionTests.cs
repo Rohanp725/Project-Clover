@@ -295,6 +295,28 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void EveryGodRanksAsAGodAndIsNeverKnockedFlatWhateverItsBody()
+        {
+            // The owner's decision of 2026-11-19: Narukami and Khepharu as a man fight in bodies ice holds for a breath, and still rank as gods.
+            Assert.IsTrue(EnemyKind.Narukami().IsGod, "Narukami");
+            Assert.IsTrue(EnemyKind.SunKing().IsGod, "Khepharu as a man");
+            Assert.IsFalse(EnemyKind.Captain().IsGod, "an elite is no god");
+            Assert.IsFalse(EnemyKind.Soldier().IsGod);
+
+            var godInABody = new AfflictionSet { FreezeScale = 0.4f, IsGod = true };
+            Assert.AreEqual(EnemyRank.God, godInABody.Rank, "a god whom ice holds for a breath is still a god");
+            Assert.AreEqual(EnemyRank.Elite, new AfflictionSet { FreezeScale = 0.4f }.Rank, "the freeze rule stands for the rest");
+            Assert.AreEqual(EnemyRank.God, AfflictionSet.RankOf(false, false, 1f));
+            Assert.AreEqual(EnemyRank.God, AfflictionSet.RankOf(true, true, 1f));
+            Assert.AreEqual(EnemyRank.Plain, AfflictionSet.RankOf(false, true, 1f));
+
+            Assert.IsFalse(ConditionCaster.Takes(Fall(1.2f), godInABody), "no god is knocked flat");
+            Assert.IsTrue(ConditionCaster.Takes(new ConditionSpec { Id = "test.root", Seconds = 2f, Flags = ConditionFlags.Rooted }, godInABody),
+                "a root is a hold: ice holds this body for a breath, so roots do too, for half the time");
+            Assert.AreEqual(0.5f, ConditionCaster.ShareOf(godInABody), 0.001f);
+        }
+
+        [Test]
         public void KnockedFlatItLosesItsBlowLiesBeginningNothingAndGetsUp()
         {
             var enemy = NewEnemy();
