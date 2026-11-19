@@ -91,7 +91,7 @@ brought together once the user has confirmed the open points.
 | Land | Ride out | Status |
 |---|---|---|
 | Fire | The sunset (see Fire) | Decided; replaces the solar barque |
-| Water | A voyaging canoe | Decided; where it comes from is open |
+| Water | A voyaging canoe | Decided: the fisher's own, on the beach |
 | Metal | A bronze chariot pulled by bronze horses | Decided |
 | Ice | A longship that rises through the broken lake; the player rides alone | Decided |
 | Poison | A crane | Decided; replaces the paper lantern boat |
@@ -202,6 +202,86 @@ brought together once the user has confirmed the open points.
   the god murdered there before the usurper came.
 - This replaces the run-based decisions in `docs/GAME.md` ("run-based, and every run includes all the bosses", the
   hub waking after every fall) once the user confirms it.
+
+### Level design rules for every land (decided 2026-11-18, evening)
+
+Fire's land is planned room by room in `docs/design/fire_levels.md`; these rules carry that work to the other lands.
+- **Decided (user)**: each land's map takes its shape from the land's rule, not from Fire's straight march.
+  - Water: islands round a lagoon, joined by causeways that open at low tide.
+  - Metal: a ring road along the giant's round, with the labyrinth in the middle.
+  - Ice: a funnel climbing from the harbour through the forest to the giant's bones.
+  - Poison: a city with a ground deck and a rooftop deck for the miasma hours.
+  - Lightning and Wind: the two criss-crossing stairs.
+  - Earth and Life: the fork already decided.
+- **Decided (user)**: rest fires follow Fire's rhythm.
+  - About one every 6 to 8 minutes of a new player's walk, and always one at the god's door.
+  - Every district opens one shortcut loop back to its fire.
+  - Roughly 5 to 7 fires per land, more in the duo lands.
+- **Decided (user)**: two kinds of optional discovery in every land.
+  - **See it, then find the way**: a reward or place shown from the main path but out of reach, and reached later by
+    a route the player finds. This is the main kind, and it holds the land's plain weapon and lore.
+  - **One optional trial arena**: a harder mix of the land's enemies, or a lone mini-elite, guarding a Memory or a
+    Body piece.
+  - Hidden walls and side-quest people were not chosen as standard parts of a land.
+- **Decided (user)**: each district has up to three walkable levels.
+  - The levels are joined by ramps, stairs and ladders that can be seen from above.
+  - Nothing walkable lies under a roof; roofs and overhangs only fade. This is the lesson of Sun City's playtest.
+- **Decided (user)**: the four lands with a clock each get their own verb, so none of them is "wait for the cycle".
+  - **Fire, dash for shade**: the heat is places, not times. Sun-struck zones are crossed from shade to shade. This
+    replaces the "times of high heat" leaning.
+  - **Poison, climb**: the one true clock. The gongs ring the hours and the player climbs above the miasma.
+  - **Metal, watch**: the giant is always in sight, so the player times a crossing by where it is.
+  - **Water, turn**: the player turns the tide at tide stones, reshaping the map as a puzzle.
+- **Decided (user)**: the three lands where something sweeps open ground each get their own verb.
+  - **Ice, stealth and sight lines**: the player breaks the huntress's line of sight, and can strike back; a hit
+    makes her fall back.
+  - **Lightning and Wind, rhythm**: the rivals' race passes on a drumbeat heard coming. A well-timed dodge through it
+    is rewarded, not only sheltering under a gate.
+  - **Earth and Life, route-finding**: the Wild Hunt is one set piece of choosing which standing stones to run
+    between.
+- **Decided (user)**: Metal's labyrinth shifts on the giant's footsteps.
+  - Each time its round passes overhead, the tread shakes the maze into its next layout.
+  - There are a few fixed layouts, all shown on a bronze map plaque in each hub room, so the cycle can be learned.
+- **Decided (user)**: the huntress's arrows on the walk are heavy but always warned.
+  - About a second ahead, a glint on a ridge and a thin line on the ground show where the arrow will land.
+  - A hit deals heavy damage and pins the player for a moment, so the pack catches up.
+- **Decided (user)**: Water's tide stones flip the whole lagoon between two states, low and high.
+  - Low opens the reef paths and wrecks, and the bait does best in the shallows.
+  - High raises the drowned, floats the player over walls and up to high ledges.
+  - Stones stand only at certain places, so a chosen tide holds until the next stone.
+- **Decided (user)**: in the Poison land the player climbs at marked points.
+  - Fixed ladders, stairs, carts and drainpipes, each marked by a red lantern so it reads from above.
+  - There are enough of them that one is always 15 to 20 seconds away when the first gong warns.
+  - No new climbing system is needed.
+- **Decided (user)**: in Earth and Life's land, the barrows age the wild in both directions.
+  - Going through one way ages Life's side a year; going back the other way makes it a year younger.
+  - No path is ever lost for good.
+- **Decided (user)**: the hub and the gods' council are two different places.
+  - The hub is the sponsor's own place.
+  - The council belongs only to the last land, so its first sight stays fresh.
+- **Decided (user)**: the hub is a shore where every ride out ends.
+  - Each ride stays moored there as a trophy: the canoe, the chariot, the longship, the crane on its post, the storm
+    cloud overhead, the sunset that never finishes.
+  - The sea there never moves and the waves stand still mid-break, a quiet clue that the sponsor is Time.
+- **Leaning (user)**: the hub is where the sponsor collects the elements, so that it can consume them properly, along
+  with the player's body. **Proposal** for joining this to the shore:
+  - What each ride brings in is the element the player carries, laid up in the hub, and not only a trophy.
+  - The hub fills as a store, not as a home: each element taken gets its vessel, or its place in a growing pattern
+    on the shore.
+  - At the centre is a place made for one body, the vessel being prepared. Early on it reads as a shrine for the
+    player; late, it reads as an altar.
+- **Decided (user)**: it reads as a shrine at first and turns into an altar.
+  - Each element brought is set in its place, glowing, as if in the player's honour.
+  - As the climb goes on, small things turn: the pattern plainly needs a body at its centre, the vessels lean inward,
+    and the sponsor's words about the player shift from "champion" to "vessel".
+  - Careful players see it coming; everyone else gets the turn at the end.
+- **Decided (user)**: the Water god's voyaging canoe is his own, waiting on the beach where the fight began. He lets
+  the player take it as his last act. This also avoids repeating the Ice land's longship rising.
+- **Decided (user)**: each land's optional trial is different, invented for that land (a duel in one, a survival
+  wave in another, a race in the Lightning land, and so on).
+- **Decided (user)**: in Earth and Life's land the gods' brawl is felt everywhere and seen only at the seats.
+  - Everywhere: distant thunder of stone, the roar of the wild, birds lifting in flocks, and now and then a tremor.
+  - The fight itself is seen only from the two seats and on the last walk.
 
 ## The gods
 
@@ -398,8 +478,8 @@ brought together once the user has confirmed the open points.
   - Grab and drag under.
   - In the whirlpool: arms push through the spinning walls as columns of water that harden into arms; wrecks on the
     seabed are cover; the beak at the centre is the big damage window.
-- **Decided (user)**: the ride out is the voyaging canoe. **Open**: whether it rises from the whirlpool when the
-  octopus falls, or waits on the beach as the fisher's own canoe.
+- **Decided (user)**: the ride out is the voyaging canoe. **Decided (user, 2026-11-18)**: it is the fisher's own
+  canoe, waiting on the beach; he lets the player take it as his last act.
 
 ### Metal's land: the lame smith (Greek)
 
@@ -702,7 +782,8 @@ almost twice the size of an ordinary land.
 - **Decided (user)**, the Wild Hunt: a horn sounds and the Hunt rides across the plain with Carnwyn's herd and the dead.
   It cannot pass stone, so the player runs from standing stone to standing stone. Caught in the open, the player is
   not killed: the Hunt carries them back to the plain's edge, hurt.
-- **Open**: whether the distant brawl can still be heard elsewhere in the land; whether the mounds' ageing only goes
+- **Decided (2026-11-18)**: the brawl is felt everywhere and seen only at the seats; the mounds age both ways (see the
+  level design rules). Formerly open: whether the distant brawl can still be heard elsewhere in the land; whether the mounds' ageing only goes
   one way or can be pushed back.
 
 #### The enemies
@@ -859,7 +940,8 @@ This replaces the Persian proposal for Light and Dark (2026-11-17, afternoon).
   last crescent of sun burns over the frozen land until his chakram covers it at the end of phase 1.
 - **Decided (user)**: the domain in phase 2 is a split arena, half the floor in blazing day and half in night.
   **Proposal**: the line between them sweeps round like a clock hand.
-- **Open**: whether the council and the hub (where the sponsor is fought) are the same place.
+- **Decided (user, 2026-11-18)**: the council and the hub are two places; the hub is the sponsor's own (see the level
+  design rules above).
 
 #### Phase 1: the champion as a man
 
@@ -1055,14 +1137,14 @@ the one thing it cannot undo.
     - "You consumed the smith. You hungered too. We are not so different."
     - "I have watched this end a thousand ways. Every one of them ends with me."
     - At the final rewind: "No. Not that one."
-- **Open**: the sponsor's form beyond the clone, if any; whether the council and the hub are one place.
+- **Open**: the sponsor's form beyond the clone, if any. (The council and the hub are two places: decided 2026-11-18.)
 
 ## Still open (as of 2026-11-17, afternoon)
 
 - Lightning and Wind (the dry storm rework) has not been worked on. Earth and Life was worked through on the night
   of 2026-11-17 (see its land above); its open points are listed there.
 - The two endings were not revisited.
-- Whether the council is the hub.
-- Where the Water god's canoe comes from.
+- ~~Whether the council is the hub.~~ Decided 2026-11-18: two places.
+- ~~Where the Water god's canoe comes from.~~ Decided 2026-11-18: his own, on the beach.
 - How the Super Form works mechanically.
 - The names Savyan, Suparn and Vrishan are leaning, not final.
