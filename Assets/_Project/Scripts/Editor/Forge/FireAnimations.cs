@@ -47,7 +47,7 @@ namespace Clover.EditorTools.Forge
             foreach (var clip in Gilded(EnemyKind.Gilded(3)))
             {
                 string rest = clip.Name.Substring("gilded".Length);
-                if (rest != "_idle_loop" && rest != "_walk_loop" && rest != "_hurt" && rest != "_stagger" && rest != "_death") continue;
+                if (rest != "_idle_loop" && rest != "_walk_loop" && rest != "_hurt" && rest != "_stagger" && rest != "_death" && !IsDownClip(rest)) continue;
                 clip.Name = "champion" + rest;
                 yield return clip;
             }
@@ -82,9 +82,12 @@ namespace Clover.EditorTools.Forge
         private static EnemyAttack Named(EnemyKind kind, string name) => kind.Brain.Attacks.Find(a => a.Name == name);
         private static ForgeClip Attack(EnemyKind kind, string name, out float hit, out float done) => EnemyAnimations.AttackClip(Named(kind, name), out hit, out done);
 
-        // The flinch and the broken balance are the shared ones, made from each kind's own stance; the rest is written here.
+        // The flinch, the broken balance and being knocked flat are the shared ones, made from each kind's own stance; the
+        // rest is written here.
         private static IEnumerable<ForgeClip> HurtAndStagger(string prefix, Func<ForgePose> ready, ForgePose kneel) =>
-            EnemyAnimations.CommonClips(prefix, ready, 0.2f, 1f, kneel).Where(clip => clip.Name.EndsWith("_hurt") || clip.Name.EndsWith("_stagger"));
+            EnemyAnimations.CommonClips(prefix, ready, 0.2f, 1f, kneel).Where(clip => clip.Name.EndsWith("_hurt") || clip.Name.EndsWith("_stagger") || IsDownClip(clip.Name));
+
+        private static bool IsDownClip(string name) => name.EndsWith("_knockdown") || name.EndsWith("_down_loop") || name.EndsWith("_getup");
 
         // Down on both knees, sitting back on the heels.
         private static ForgePose OnKnees(ForgePose from)

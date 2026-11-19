@@ -78,7 +78,9 @@ namespace Clover.Player
         ConditionBeat,
         /// <summary>A blow landed on an enemy carrying a condition this effect's mark set (<see cref="UpgradeEffect.By"/> says which blows). Target: that enemy; the blow's damage is carried.</summary>
         ConditionStruck,
-        /// <summary>A condition this effect's mark set ran out. Target: the enemy that carried it.</summary>
+        /// <summary>A condition this effect's mark set ran out. Target: the enemy that carried it. Carries the weapon blows it took (for PerStack).</summary>
         ConditionEnded,
+        /// <summary>An enemy died while carrying a condition this effect's mark set. Target: where it fell; what it carried of Needs is carried (for PerStack).</summary>
+        ConditionDied,
     }
 }

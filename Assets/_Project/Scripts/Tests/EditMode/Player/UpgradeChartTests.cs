@@ -182,12 +182,18 @@ namespace Clover.Tests
             Assert.AreEqual(Upgrade.All.SelectMany(upgrade => upgrade.Effects).Select(effect => effect.Slot).Distinct().Count(), Upgrade.EffectCount);
         }
 
+        // README.md ("Names and moved spells") frees the names of the plain minors the drafts cut, and the pair files reuse
+        // one for a reaction. The minor stays until its tree is reshaped (Phase 4), so until then the two share it.
+        private static readonly Dictionary<string, string> NamesFreedForAReaction = new Dictionary<string, string> { ["Quickening"] = "react.quickening" };
+
         [Test]
         public void NoTwoMarksShareAName()
         {
             var names = new Dictionary<string, string>();
             foreach (var upgrade in Upgrade.All)
             {
+                // The reaction named for a freed minor is the one mark let share it.
+                if (NamesFreedForAReaction.TryGetValue(upgrade.Name, out string reaction) && upgrade.Id == reaction) continue;
                 Assert.IsFalse(names.TryGetValue(upgrade.Name, out string other), $"{upgrade.Id} and {other} are both called {upgrade.Name}");
                 names[upgrade.Name] = upgrade.Id;
             }

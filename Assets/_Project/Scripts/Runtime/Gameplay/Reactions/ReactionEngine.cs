@@ -31,6 +31,9 @@ namespace Clover.Gameplay
         private readonly Action<Component, int, AfflictionKind> report;
         private readonly Func<int> clock;
         private readonly float[] rests = new float[AfflictionPairs.Count];
+        // A pair that waits for depth (Seized and The Grudge: "two Static or more") reacts only once this kind lies this deep.
+        private readonly AfflictionKind[] deepKind = new AfflictionKind[AfflictionPairs.Count];
+        private readonly int[] deepAt = new int[AfflictionPairs.Count];
 
         private int frame;
         private bool started;
@@ -62,6 +65,23 @@ namespace Clover.Gameplay
         public void SetRest(int pair, float seconds) => rests[pair] = Math.Max(0f, seconds);
 
         /// <summary>
+        /// Makes a pair wait until <paramref name="kind"/> lies at least <paramref name="depth"/> deep on the enemy before it
+        /// reacts, in whichever order the two came (Seized: "when a Soaked enemy carries two Static or more"). Until then
+        /// nothing reacts and nothing rests, so the next stack can set it off. A depth of 1 or less asks for nothing.
+        /// </summary>
+        public void SetDepth(int pair, AfflictionKind kind, int depth)
+        {
+            deepKind[pair] = depth > 1 ? kind : AfflictionKind.None;
+            deepAt[pair] = depth > 1 ? depth : 0;
+        }
+
+        /// <summary>The kind and depth a pair waits for; None when it waits for nothing.</summary>
+        public AfflictionKind DepthKind(int pair) => deepKind[pair];
+        public int DepthFor(int pair) => deepAt[pair];
+
+        private bool DeepEnough(AfflictionSet set, int pair) => deepAt[pair] <= 1 || set.Stacks(deepKind[pair]) >= deepAt[pair];
+
+        /// <summary>
         /// An affliction of <paramref name="laid"/> has landed on <paramref name="set"/>, which carried the kinds in
         /// <paramref name="carried"/> (a <see cref="AfflictionSet.PresentMask"/> read before the laying). Each other
         /// kind carried makes a pair; each pair not resting there reacts. Returns how many reacted, counting those
@@ -77,20 +97,20 @@ namespace Clover.Gameplay
             {
                 if ((partners & (1 << kind)) == 0) continue;
                 int pair = AfflictionPairs.Index(laid, (AfflictionKind)kind);
-                if (pair < 0 || set.ReactionRest(pair) > 0f) continue;
+                if (pair < 0 || set.ReactionRest(pair) > 0f || !DeepEnough(set, pair)) continue;
                 if (Emit(set, who, pair, laid)) reacted++;
             }
             return reacted;
         }
 
         /// <summary>
-        /// Sets a pair off on <paramref name="set"/> whether or not it rests there (a forced reaction: the action
+        /// Sets a pair off on <paramref name="set"/> whether or not it rests there, though never short of the depth it waits for (a forced reaction: the action
         /// ForceReaction), within the frame's budget like any other, and rests it again from now. True when it was
         /// reported or waits to be.
         /// </summary>
         public bool Force(AfflictionSet set, Component who, int pair, AfflictionKind laid)
         {
-            if (set == null || pair < 0 || pair >= rests.Length) return false;
+            if (set == null || pair < 0 || pair >= rests.Length || !DeepEnough(set, pair)) return false;
             CatchUp();
             return Emit(set, who, pair, laid);
         }

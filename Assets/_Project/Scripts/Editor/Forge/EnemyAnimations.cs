@@ -233,6 +233,141 @@ namespace Clover.EditorTools.Forge
             yield return new ForgeClip(prefix + "_death", 0.8f) { SheetMoments = new[] { 0f, 0.14f, 0.3f, 0.5f, 0.62f, 0.76f, 0.9f, 1f } }
                 .Key(0f, ready()).Key(0.14f, reel, Ease.Snap).Key(0.3f, lurch, Ease.InOut).Key(0.5f, knees, Ease.In).Key(0.62f, slump, Ease.Out)
                 .Key(0.9f, down, Ease.In).Key(0.95f, bounce, Ease.Out).Key(1f, down, Ease.In);
+
+            foreach (var clip in DownClips(prefix, ready, kneel)) yield return clip;
+        }
+
+        /// <summary>
+        /// Knocked flat (Phase 3 task 3.7, the condition flag Down): the feet go out from under it and it lands on its
+        /// back (<c>_knockdown</c>), lies there breathing and dazed (<c>_down_loop</c>), and gets up by sitting, then the
+        /// kind's own kneel, then its stance (<c>_getup</c>). Made from each kind's ready stance and kneel, to the lengths
+        /// <see cref="EnemyBrain"/> plays them at. It lies slantwise, arms flung wide, so from above it reads as a body
+        /// laid out on its back, not the face-down sprawl of a death.
+        /// </summary>
+        public static IEnumerable<ForgeClip> DownClips(string prefix, Func<ForgePose> ready, ForgePose kneel)
+        {
+            var stand = ready();
+            // Flat on its back, turned a little to its right, the knees up and fallen out, the weapon on the floor by it.
+            var flat = new ForgePose
+            {
+                Hips = new Vector3(0.04f, -0.84f, -0.22f),
+                HipLean = -84f,
+                HipYaw = 18f,
+                HipRoll = 4f,
+                WaistLean = 4f,
+                HeadLean = 8f,
+                HeadYaw = -20f,
+                FootL = new Vector3(0.15f, 0.05f, 0.56f),
+                FootR = new Vector3(0.43f, 0.05f, 0.47f),
+                FootLTurn = 10f,
+                FootRTurn = 40f,
+                FootLTip = -55f,
+                FootRTip = -50f,
+                KneeL = new Vector3(-0.4f, 1f, 0.2f),
+                KneeR = new Vector3(0.5f, 1f, 0.3f),
+                HandL = new Vector3(-0.78f, 0.06f, -0.5f),
+                HandR = new Vector3(0.6f, 0.06f, -0.45f),
+                ElbowL = new Vector3(-0.6f, -0.5f, 0.5f),
+                ElbowR = new Vector3(0.6f, -0.5f, 0.5f),
+                AimBlade = stand.AimBlade,
+                Blade = new Vector3(0.5f, -0.04f, 0.86f),
+            };
+
+            // The slip: one foot kicked up and forward, the body thrown back over its heels, the arms flung up.
+            var slip = stand.Copy();
+            slip.Hips += new Vector3(0f, -0.12f, -0.14f);
+            slip.HipLean -= 18f;
+            slip.WaistLean -= 22f;
+            slip.HeadLean = -20f;
+            slip.FootL = new Vector3(stand.FootL.x, 0.16f, stand.FootL.z + 0.34f);
+            slip.FootLTip = -30f;
+            slip.TwoHanded = false;
+            slip.HandL = new Vector3(-0.62f, 1.5f, 0.1f);
+            slip.ElbowL = new Vector3(-1f, -0.3f, -0.3f);
+            slip.HandR = stand.HandR + new Vector3(0.12f, 0.32f, -0.12f);
+            slip.ShoulderLUp = 20f;
+            slip.ShoulderRUp = 16f;
+            // Sat down hard: the seat strikes the floor first, the trunk still going back, the hands behind to catch it.
+            var sat = new ForgePose
+            {
+                Hips = new Vector3(0.02f, -0.78f, -0.12f),
+                HipLean = -46f,
+                HipYaw = 10f,
+                WaistLean = -10f,
+                HeadLean = 22f,
+                FootL = new Vector3(-0.16f, 0.05f, 0.58f),
+                FootR = new Vector3(0.24f, 0.12f, 0.46f),
+                FootLTip = -40f,
+                FootRTip = -30f,
+                KneeL = new Vector3(-0.3f, 1f, 0.3f),
+                KneeR = new Vector3(0.3f, 1f, 0.3f),
+                HandL = new Vector3(-0.48f, 0.26f, -0.46f),
+                HandR = new Vector3(0.52f, 0.32f, -0.3f),
+                ElbowL = new Vector3(-1f, 0f, -0.4f),
+                ElbowR = new Vector3(1f, 0f, -0.4f),
+                AimBlade = stand.AimBlade,
+                Blade = new Vector3(0.6f, 0.3f, 0.74f),
+            };
+            // The back meets the floor: the head and hands come up off it once and fall back.
+            var jolt = flat.Copy();
+            jolt.Hips = new Vector3(0.04f, -0.82f, -0.22f);
+            jolt.HipLean = -79f;
+            jolt.HeadLean = 26f;
+            jolt.HandL += new Vector3(0f, 0.08f, 0f);
+            jolt.HandR += new Vector3(0f, 0.08f, 0f);
+            jolt.FootLTip = -70f;
+            yield return new ForgeClip(prefix + "_knockdown", EnemyBrain.FallSeconds)
+            {
+                KeepsAboveFloor = true,
+                Wind = t => new Vector3(0f, t < 0.8f ? 4f : 0f, t < 0.8f ? 5f : 0f),
+                SheetMoments = new[] { 0f, 0.12f, 0.24f, 0.38f, 0.52f, 0.68f, 0.84f, 1f },
+            }
+                .Key(0f, stand).Key(0.24f, slip, Ease.Snap).Key(0.52f, sat, Ease.In).Key(0.8f, flat, Ease.In).Key(0.9f, jolt, Ease.Out).Key(1f, flat, Ease.In);
+
+            // Lying there: the chest rises and falls, the head rolls from side to side, a hand stirs on the floor.
+            yield return new ForgeClip(prefix + "_down_loop", EnemyBrain.DownBreathSeconds, true) { KeepsAboveFloor = true }.From(t =>
+            {
+                float breath = Mathf.Sin(t * Mathf.PI * 2f), slow = Mathf.Sin(t * Mathf.PI * 2f + 1f);
+                var p = flat.Copy();
+                p.Hips += new Vector3(0f, 0.006f * breath, 0f);
+                p.WaistLean += 3f * breath;
+                p.ShoulderLUp += 3f * breath;
+                p.ShoulderRUp += 3f * breath;
+                p.HeadYaw += 12f * slow;
+                p.HeadLean += 4f * Mathf.Max(0f, slow);
+                p.HandL += new Vector3(0.02f * slow, 0.03f * Mathf.Max(0f, Mathf.Sin(t * Mathf.PI * 4f)), 0f);
+                return p;
+            });
+
+            // Getting up: the head lifts, it sits up on its hands, draws its feet in, comes up through its kneel to its stance.
+            var look = flat.Copy();
+            look.HeadLean = 34f;
+            look.WaistLean = 12f;
+            var sitUp = new ForgePose
+            {
+                Hips = new Vector3(0.02f, -0.76f, -0.1f),
+                HipLean = -10f,
+                HipYaw = 8f,
+                WaistLean = 26f,
+                HeadLean = 10f,
+                FootL = new Vector3(-0.16f, 0f, 0.36f),
+                FootR = new Vector3(0.2f, 0f, 0.24f),
+                FootLTip = -10f,
+                KneeL = new Vector3(-0.3f, 1f, 0.6f),
+                KneeR = new Vector3(0.3f, 1f, 0.6f),
+                HandL = new Vector3(-0.4f, 0.06f, -0.16f),
+                HandR = new Vector3(0.42f, 0.06f, -0.06f),
+                ElbowL = new Vector3(-0.5f, 0f, -1f),
+                ElbowR = new Vector3(0.5f, 0f, -1f),
+                AimBlade = stand.AimBlade,
+                Blade = new Vector3(0.4f, 0.1f, 0.9f),
+            };
+            yield return new ForgeClip(prefix + "_getup", EnemyBrain.GetUpSeconds)
+            {
+                KeepsAboveFloor = true,
+                SheetMoments = new[] { 0f, 0.14f, 0.28f, 0.42f, 0.56f, 0.7f, 0.85f, 1f },
+            }
+                .Key(0f, flat).Key(0.14f, look, Ease.Out).Key(0.4f, sitUp, Ease.InOut).Key(0.7f, kneel.Copy(), Ease.InOut).Key(1f, ready(), Ease.InOut);
         }
 
         // ------------------------------------------------------------------ temple soldier

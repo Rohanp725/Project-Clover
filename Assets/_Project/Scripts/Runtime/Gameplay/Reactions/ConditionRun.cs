@@ -12,6 +12,8 @@ namespace Clover.Gameplay
         public float BeatClock;
         /// <summary>Beats come so far.</summary>
         public int Count;
+        /// <summary>Weapon blows taken so far.</summary>
+        public int Blows;
         /// <summary>The place in the catalogue of the mark that set it, or -1.</summary>
         public int Mark;
         public ConditionFlags Flags;
@@ -19,8 +21,15 @@ namespace Clover.Gameplay
         public float Scale;
         public float Sight;
         public Component Link;
-        /// <summary>True when the mark that set it has something to do when it is struck, or when it ends.</summary>
+        /// <summary>True when the mark that set it has something to do when it is struck, when it ends, or when the enemy dies with it.</summary>
         public bool AnswersStruck;
         public bool AnswersEnd;
+        public bool AnswersDeath;
+        /// <summary>The afflictions it keeps from fading, and those it lasts only while, as bits at <c>1 &lt;&lt; (int)kind</c>.</summary>
+        public int KeepsMask;
+        public int WhileMask;
+        public bool OnBite;
+        public ConditionBlow EndsWith;
+        public int BlowLimit;
     }
 }

@@ -14,7 +14,7 @@ namespace Clover.Player
         Cone,
         /// <summary>Ground that bites what stands on it, for a while. Reads: Shape, Damage (each bite), Stagger, Radius (1) of each patch, Seconds (3), Interval (0.5) between bites, Count (4) patches for a line or ring, Reach (4): the line's length or the ring's radius, Delay, Affliction, Stacks, At.</summary>
         Hazard,
-        /// <summary>An arc that strikes the target and leaps on to others near. Reads: Damage, Stagger, Count (2) leaps, Reach (5) of each leap, Affliction, Stacks.</summary>
+        /// <summary>An arc that strikes the target and leaps on to others near. Reads: Damage, Stagger, Count (2) leaps, Reach (5) of each leap, Affliction, Stacks; LeapsTo or FromTarget: it starts from the target without striking it.</summary>
         Arc,
         /// <summary>Something thrown that strikes each enemy it passes once. Reads: Flight, Damage, Stagger, Radius (0.9), Speed (10), Seconds (1.2) in the air, Count (1) thrown in a fan, Affliction, Stacks.</summary>
         Projectile,
@@ -32,9 +32,9 @@ namespace Clover.Player
         Ward,
         /// <summary>A short step through the air to the target. Reads: Reach (8), the furthest it goes; Amount: metres beyond the target to land (0 stops in front of it).</summary>
         Step,
-        /// <summary>Drags enemies toward a point. Reads: Radius (5), Amount (3) metres, At.</summary>
+        /// <summary>Drags enemies toward a point. Reads: Radius (5), Amount (3) metres, At. Shape Downwind: the target alone, toward the player.</summary>
         Pull,
-        /// <summary>Throws enemies away from a point. Reads: Radius (5), Amount (3) metres, At.</summary>
+        /// <summary>Throws enemies away from a point. Reads: Radius (5), Amount (3) metres, At. Shape Downwind: the target alone, straight away from the player (Thunder Gust).</summary>
         Push,
         /// <summary>Slows time for everything but the player. Reads: Seconds (2), Amount (0.35): the share of its speed the world keeps.</summary>
         SlowTime,
@@ -72,7 +72,7 @@ namespace Clover.Player
         Flinch,
         /// <summary>Sets an enemy condition (<see cref="Clover.Gameplay.EnemyConditions"/>) on the target, or with a Radius on the enemies near it (State.ToOthers: not on the target, each joined to it). Reads: State, Radius, Count (all within the radius), Affliction and Stacks laid on each that takes it.</summary>
         Condition,
-        /// <summary>Takes stacks of an affliction off the target with no burst; the next effects of the same mark may count them (DamagePerSpent). Reads: Affliction, Share (0: all; else that share, rounded up), Count (the most).</summary>
+        /// <summary>Takes stacks of an affliction off the target with no burst; the next effects of the same mark may count them (DamagePerSpent, PerStack). Reads: Affliction, Share (0: all; else that share, rounded up), Count (the most), CountOnly (count them and take none).</summary>
         Spend,
     }
 }

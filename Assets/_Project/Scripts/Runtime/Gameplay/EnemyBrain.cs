@@ -76,12 +76,29 @@ namespace Clover.Gameplay
         public float BusyProgress => State == EnemyState.Busy && busyFor > 0f && busyFor < float.MaxValue ? Math.Min(1f, stateElapsed / busyFor) : 0f;
 
         /// <summary>
+        /// Seconds the fall onto its back takes, one breath while it lies there, and getting up again (task 3.7). The
+        /// Forge makes the <c>_knockdown</c>, <c>_down_loop</c> and <c>_getup</c> clips to these lengths.
+        /// </summary>
+        public const float FallSeconds = 0.45f;
+        public const float DownBreathSeconds = 2.4f;
+        public const float GetUpSeconds = 0.6f;
+        /// <summary>True while it is knocked flat: falling, lying, or getting up.</summary>
+        public bool IsDown => State == EnemyState.Down;
+        /// <summary>True once its Down condition is over and it is getting to its feet.</summary>
+        public bool IsGettingUp => State == EnemyState.Down && gettingUp >= 0f;
+        /// <summary>How far through getting up, from 0 to 1.</summary>
+        public float GetUpProgress => IsGettingUp ? Math.Min(1f, gettingUp / GetUpSeconds) : 0f;
+
+        // Seconds into getting up, or below nought while it still lies (or is not down at all).
+        private float gettingUp = -1f;
+
+        /// <summary>
         /// Takes it up with something that is not an attack for this many seconds, or until <see cref="EndBusy"/>.
         /// Blows do not make it flinch out of it; a broken balance and death do end it. False when it is dead or staggered.
         /// </summary>
         public bool Occupy(float seconds = float.MaxValue)
         {
-            if (State == EnemyState.Dead || State == EnemyState.Staggered) return false;
+            if (State == EnemyState.Dead || State == EnemyState.Staggered || State == EnemyState.Down) return false;
             Current = null;
             Enter(EnemyState.Busy);
             busyFor = seconds;
@@ -109,6 +126,7 @@ namespace Clover.Gameplay
             provokedLeft = 0f;
             IsWaiting = false;
             Phase = 0;
+            gettingUp = -1f;
             cooldowns = new float[Attacks.Count];
         }
 
@@ -126,12 +144,21 @@ namespace Clover.Gameplay
             bool noAttack = (held & ConditionFlags.BeginsNoAttack) != 0;
             float windup = (held & ConditionFlags.WindupSlowed) != 0 ? Conditions.WindupPace : 1f;
             bool unseen = (held & ConditionFlags.SightShort) != 0 && distance > Conditions.Sight;
-            bool struck = Step(deltaTime, distance, roll, mayAttack, targetOnGround, windup, unseen, noAttack || unseen);
+            // Knocked flat it goes down out of whatever it was doing, the blow it had begun included; one getting up
+            // goes down again. A broken balance is left to run (it is as helpless), and it goes down after if there is time.
+            bool down = (held & ConditionFlags.Down) != 0;
+            if (down && !(State == EnemyState.Down && gettingUp < 0f) && State != EnemyState.Dead && State != EnemyState.Staggered)
+            {
+                Current = null;
+                counter = false;
+                Enter(EnemyState.Down);
+            }
+            bool struck = Step(deltaTime, distance, roll, mayAttack, targetOnGround, windup, unseen, noAttack || unseen, down);
             if (rooted || unseen) MoveWish = 0;
             return struck;
         }
 
-        private bool Step(float deltaTime, float distance, float roll, bool mayAttack, bool targetOnGround, float windup, bool unseen, bool holdsOff)
+        private bool Step(float deltaTime, float distance, float roll, bool mayAttack, bool targetOnGround, float windup, bool unseen, bool holdsOff, bool down)
         {
             IsWaiting = false;
             stateElapsed += deltaTime;
@@ -221,6 +248,18 @@ namespace Clover.Gameplay
                     if (stateElapsed >= busyFor) EndBusy();
                     return false;
 
+                case EnemyState.Down:
+                    // It lies for as long as the condition lasts, and never less than its fall; then it gets up and is
+                    // back in the fight, with a moment's rest before its first attack.
+                    if (down || stateElapsed < FallSeconds) return false;
+                    gettingUp = (gettingUp < 0f ? 0f : gettingUp) + deltaTime;
+                    if (gettingUp >= GetUpSeconds)
+                    {
+                        Enter(EnemyState.Stalk);
+                        rest = Math.Max(rest, 0.4f);
+                    }
+                    return false;
+
                 case EnemyState.Flinch:
                     if (stateElapsed >= flinchFor)
                     {
@@ -240,7 +279,7 @@ namespace Clover.Gameplay
         /// </summary>
         public bool Flinch(bool heavy, float seconds = 0f)
         {
-            if (State == EnemyState.Dead || State == EnemyState.Staggered || State == EnemyState.Strike || State == EnemyState.Busy) return false;
+            if (State == EnemyState.Dead || State == EnemyState.Staggered || State == EnemyState.Strike || State == EnemyState.Busy || State == EnemyState.Down) return false;
             if (State == EnemyState.Telegraph && !heavy) return false;
             if (State == EnemyState.Idle) rest = 0f;
             Current = null;
@@ -260,10 +299,10 @@ namespace Clover.Gameplay
             Alert();
         }
 
-        /// <summary>Begins the named attack at once, whatever the enemy was doing, unless it is dead or staggered.</summary>
+        /// <summary>Begins the named attack at once, whatever the enemy was doing, unless it is dead, staggered or knocked flat.</summary>
         public bool Force(string attackName)
         {
-            if (State == EnemyState.Dead || State == EnemyState.Staggered) return false;
+            if (State == EnemyState.Dead || State == EnemyState.Staggered || State == EnemyState.Down) return false;
             var attack = Named(attackName);
             if (attack == null) return false;
             Begin(attack);
@@ -314,6 +353,7 @@ namespace Clover.Gameplay
             State = state;
             stateElapsed = 0f;
             MoveWish = 0;
+            gettingUp = -1f;
         }
 
         private void Begin(EnemyAttack attack)

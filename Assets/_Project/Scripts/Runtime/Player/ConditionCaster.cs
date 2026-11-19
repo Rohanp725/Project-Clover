@@ -7,8 +7,9 @@ namespace Clover.Player
     /// <summary>
     /// The action <see cref="UpgradeAction.Condition"/>: sets an enemy condition on the trigger's enemy, or on those near
     /// it, and lays what the effect names on each that takes it (IMPLEMENTATION.md 3.7). What resists being held resists
-    /// a condition that holds or slows the same way: an elite takes half the slowing, and what cannot be frozen (a god's
-    /// form) takes no such condition at all. Kept out of <see cref="PlayerUpgrades"/>, which only calls it.
+    /// a condition that holds, knocks flat or slows the same way: an elite takes half the slowing (and lies or is rooted
+    /// half the time), and what cannot be frozen (a god's form) takes no such condition at all. Kept out of
+    /// <see cref="PlayerUpgrades"/>, which only calls it.
     /// </summary>
     public static class ConditionCaster
     {
@@ -17,9 +18,9 @@ namespace Clover.Player
         {
             var spec = effect != null ? effect.State : null;
             if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null) return 0;
-            AnswersOf(effect, spec.Id, out bool struck, out bool ended);
+            AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died);
             int mark = effect.Owner != null ? effect.Owner.Index : -1;
-            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, combat, source) ? 1 : 0;
+            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, combat, source) ? 1 : 0;
 
             // Round the trigger's enemy: the nearest first, as many as the effect allows (all within the radius when it names none).
             scratch.Clear();
@@ -32,36 +33,50 @@ namespace Clover.Player
                 var near = combat.EnemyNear(centre, radius, scratch);
                 if (!(near is IDamageable one)) break;
                 scratch.Add(one);
-                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, combat, source)) set++;
+                // Only those carrying what the effect seeks (Chokedamp's damp runs to the shaken alone).
+                if (effect.LeapsTo != AfflictionKind.None && !(near is IAfflictable seeker && seeker.Afflictions.Has(effect.LeapsTo))) continue;
+                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, combat, source)) set++;
             }
             scratch.Clear();
             return set;
         }
 
-        private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, PlayerCombat combat, LaySource source)
+        private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, bool died, PlayerCombat combat, LaySource source)
         {
             if (!(who is IAfflictable afflictable)) return false;
             var set = afflictable.Afflictions;
-            bool holds = (spec.Flags & ConditionFlags.Rooted) != 0 || spec.Pace < 1f;
-            if (holds && !set.CanFreeze) return false;
-            float slowShare = set.FreezeScale < 1f ? 0.5f : 1f;
-            if (set.Conditions.Set(spec, who, mark, link, struck, ended, slowShare) < 0) return false;
+            if (!Takes(spec, set)) return false;
+            if (set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died) < 0) return false;
             if (effect.Affliction != AfflictionKind.None && effect.Stacks > 0)
                 CombatEvents.Report(who, effect.Affliction, effect.Stacks, set.Lay(effect.Affliction, effect.Stacks + combat.ExtraStacks, 0f, combat.AfflictionPower, source, who));
             return true;
         }
 
-        // Whether the mark has anything to do when a blow lands on the condition, or when it ends: only then is it told.
-        private static void AnswersOf(UpgradeEffect effect, string id, out bool struck, out bool ended)
+        /// <summary>False when the enemy cannot take this condition: one that roots, knocks flat or slows, on what cannot be frozen.</summary>
+        public static bool Takes(ConditionSpec spec, AfflictionSet set)
+        {
+            if (spec == null || set == null) return false;
+            bool holds = (spec.Flags & (ConditionFlags.Rooted | ConditionFlags.Down)) != 0 || spec.Pace < 1f;
+            return !holds || set.CanFreeze;
+        }
+
+        /// <summary>How much of a slowing, a root's time and a fall's time takes on this enemy: half on an elite, all on the rest.</summary>
+        public static float ShareOf(AfflictionSet set) => set != null && set.FreezeScale < 1f ? 0.5f : 1f;
+
+        // Whether the mark has anything to do when a blow lands on the condition, when it ends, or when the enemy dies with
+        // it: only then is it told.
+        private static void AnswersOf(UpgradeEffect effect, string id, out bool struck, out bool ended, out bool died)
         {
             struck = false;
             ended = false;
+            died = false;
             if (effect.Owner == null) return;
             foreach (var answer in effect.Owner.Effects)
             {
                 if (answer.Condition != id) continue;
                 if (answer.On == UpgradeTrigger.ConditionStruck) struck = true;
                 if (answer.On == UpgradeTrigger.ConditionEnded) ended = true;
+                if (answer.On == UpgradeTrigger.ConditionDied) died = true;
             }
         }
     }

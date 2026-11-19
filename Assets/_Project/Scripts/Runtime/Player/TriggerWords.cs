@@ -75,6 +75,7 @@ namespace Clover.Player
                 case UpgradeTrigger.ConditionBeat: return "a state this laid on an enemy comes to its beat";
                 case UpgradeTrigger.ConditionStruck: return "you strike an enemy in a state this laid";
                 case UpgradeTrigger.ConditionEnded: return "a state this laid on an enemy ends";
+                case UpgradeTrigger.ConditionDied: return "an enemy dies in a state this laid";
                 default: return "its moment comes";
             }
         }

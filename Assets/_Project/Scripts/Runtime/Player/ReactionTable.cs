@@ -18,7 +18,7 @@ namespace Clover.Player
         private static readonly Dictionary<string, float> entryRests = new Dictionary<string, float>
         {
             ["Shut in the Dark"] = 8f, ["Burning Sap"] = 6f, ["The Grudge"] = 8f,
-            ["Steam"] = 3f, ["Logan Stone"] = 6f, ["Cold Short"] = 5f, ["Caught Light"] = 6f, ["Girdled"] = 6f,
+            ["Steam"] = 3f, ["Logan Stone"] = 6f, ["Cold Short"] = 5f, ["Caught Light"] = 6f, ["Girdled"] = 6f, ["Chokedamp"] = 6f,
             ["Red Hot"] = 5f, ["The Bolt Runs True"] = 5f, ["Breath Taken"] = 6f,
             ["Burnt Mound"] = 6f, ["Stolen Warmth"] = 6f, ["Fish Poison"] = 6f,
         };
@@ -84,11 +84,20 @@ namespace Clover.Player
             return entryRests.TryGetValue(AfflictionPairs.Name(pair), out float rest) ? rest : AfflictionPairs.Rest(pair);
         }
 
-        /// <summary>Gives the engine every pair's rest (the shared engine is made new each play, so the player's reactions do this as they wake).</summary>
+        /// <summary>
+        /// Gives the engine every pair's rest and the depth it waits for (the shared engine is made new each play, so the
+        /// player's reactions do this as they wake).
+        /// </summary>
         public static void ApplyRests(ReactionEngine engine)
         {
             if (engine == null) return;
-            for (int pair = 0; pair < AfflictionPairs.Count; pair++) engine.SetRest(pair, RestFor(pair));
+            for (int pair = 0; pair < AfflictionPairs.Count; pair++)
+            {
+                engine.SetRest(pair, RestFor(pair));
+                var mark = MarkFor(pair);
+                var def = mark != null ? mark.Reaction : null;
+                engine.SetDepth(pair, def != null ? def.DepthOf : AfflictionKind.None, def != null ? def.Depth : 0);
+            }
         }
 
         private static void Read()
