@@ -197,6 +197,43 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void APairThatWaitsForDepthReactsOnlyOnceItLiesThatDeepInEitherOrder()
+        {
+            // Seized: "when a Soaked enemy carries two Static or more" (task 3.4).
+            int seized = AfflictionPairs.Index(AfflictionKind.Static, AfflictionKind.Soaked);
+            engine.SetDepth(seized, AfflictionKind.Static, 2);
+            Assert.AreEqual(AfflictionKind.Static, engine.DepthKind(seized));
+            Assert.AreEqual(2, engine.DepthFor(seized));
+
+            var enemy = NewEnemy();
+            Lay(enemy, AfflictionKind.Soaked);
+            Lay(enemy, AfflictionKind.Static);
+            Assert.AreEqual(0, reported.Count, "one Static on the wet body is not enough");
+            Assert.AreEqual(0f, enemy.ReactionRest(seized), "and nothing rests, so the next Static can set it off");
+            Assert.IsFalse(engine.Force(enemy, null, seized, AfflictionKind.Static), "forced, it still waits for the depth");
+            Lay(enemy, AfflictionKind.Static);
+            Assert.AreEqual(1, reported.Count, "the second Static sets it off");
+            Assert.AreEqual(seized, reported[0].Pair);
+            Assert.Greater(enemy.ReactionRest(seized), 0f);
+
+            var charged = NewEnemy();
+            charged.Lay(AfflictionKind.Static, 2, 0f, 1f, LaySource.Weapon);
+            Lay(charged, AfflictionKind.Soaked);
+            Assert.AreEqual(2, reported.Count, "already two deep, the water sets it off");
+            var shallow = NewEnemy();
+            Lay(shallow, AfflictionKind.Static);
+            Lay(shallow, AfflictionKind.Soaked);
+            Assert.AreEqual(2, reported.Count, "one deep, the water does not");
+
+            engine.SetDepth(seized, AfflictionKind.Static, 1);
+            Assert.AreEqual(AfflictionKind.None, engine.DepthKind(seized), "a depth of one asks for nothing");
+            var plain = NewEnemy();
+            Lay(plain, AfflictionKind.Static);
+            Lay(plain, AfflictionKind.Soaked);
+            Assert.AreEqual(3, reported.Count);
+        }
+
+        [Test]
         public void RemovingTheLastStackClearsTheMask()
         {
             var enemy = NewEnemy();

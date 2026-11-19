@@ -12,6 +12,8 @@ namespace Clover.Player
     /// over the enemy), its plain mark's effects go into the effect runner with the enemy as target and their laying
     /// counted as the reaction's (so they start nothing), and the marks in force that answer it are fired. A condition's
     /// beat, blow and end run the answers of the mark that set it; a linked condition passes its host's poison bites on.
+    /// When an enemy dies carrying a condition whose mark answers its death, those answers are queued at once, while
+    /// what it carried can still be read (as the Kill trigger reads it); the runner does them on its next step.
     /// It also pumps the engine once a frame, so a reaction deferred by the frame's budget is not kept waiting.
     /// </summary>
     [RequireComponent(typeof(PlayerUpgrades))]
@@ -73,6 +75,7 @@ namespace Clover.Player
             CombatEvents.Reacted += OnReacted;
             CombatEvents.Condition += OnCondition;
             CombatEvents.PoisonBit += OnPoisonBit;
+            CombatEvents.Died += OnDied;
         }
 
         private void OnDisable()
@@ -80,6 +83,7 @@ namespace Clover.Player
             CombatEvents.Reacted -= OnReacted;
             CombatEvents.Condition -= OnCondition;
             CombatEvents.PoisonBit -= OnPoisonBit;
+            CombatEvents.Died -= OnDied;
             reactedCount = conditionCount = bitCount = 0;
             Array.Clear(reactedWho, 0, reactedWho.Length);
             Array.Clear(conditionWho, 0, conditionWho.Length);
@@ -131,6 +135,27 @@ namespace Clover.Player
             bitHost[bitCount] = who;
             bitDamage[bitCount] = damage;
             bitCount++;
+        }
+
+        // Queued, not done: the set is cleared as soon as this returns, so its depth is read now (Smoulder's flare, the jar's break).
+        private void OnDied(Component who, AfflictionSet afflictions)
+        {
+            if (who == null || afflictions == null || upgrades == null || !afflictions.Conditions.Any) return;
+            var all = Upgrade.All;
+            Vector3 at = who.transform.position;
+            for (int slot = 0; slot < EnemyConditions.Slots; slot++)
+            {
+                var run = afflictions.Conditions.Run(slot);
+                if (!run.Active || !run.AnswersDeath || run.Mark < 0 || run.Mark >= all.Count) continue;
+                var mark = all[run.Mark];
+                var source = mark.Kind == UpgradeKind.Reaction ? LaySource.Reaction : LaySource.Effect;
+                foreach (var effect in mark.Effects)
+                {
+                    if (effect.On != UpgradeTrigger.ConditionDied || effect.Condition != run.Id) continue;
+                    upgrades.Fire(effect, who, at, source, 0f, run.Blows, afflictions);
+                    ConditionAnswers++;
+                }
+            }
         }
 
         // ---- Acted on once the frame's blows are done.
@@ -200,11 +225,14 @@ namespace Clover.Player
             var source = mark.Kind == UpgradeKind.Reaction ? LaySource.Reaction : LaySource.Effect;
             Vector3 at = who.transform.position;
             bool any = false;
+            // An end carries the weapon blows the condition took (Burning Sap's weals), for what it does per blow.
+            int spent = trigger == UpgradeTrigger.ConditionEnded ? news.Blows : 0;
             foreach (var effect in mark.Effects)
             {
                 if (effect.On != trigger || effect.Condition != news.Id) continue;
                 if (trigger == UpgradeTrigger.ConditionStruck && !Answers(effect.By, news)) continue;
-                upgrades.Fire(effect, who, at, source, news.Damage);
+                if (effect.AtCount > 0 && effect.AtCount != (trigger == UpgradeTrigger.ConditionBeat ? news.Count : news.Blows)) continue;
+                upgrades.Fire(effect, who, at, source, news.Damage, spent);
                 ConditionAnswers++;
                 any = true;
             }

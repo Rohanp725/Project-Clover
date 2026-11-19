@@ -29,11 +29,20 @@ namespace Clover.Player
         public AfflictionKind Needs2 = AfflictionKind.None;
         /// <summary>The affliction named in <see cref="Needs"/> must be at its full depth.</summary>
         public bool NeedsFull;
+        /// <summary>The affliction named in <see cref="Needs"/> must lie at least this deep (Fish Poison's four doses). Zero asks only that it is there.</summary>
+        public int NeedsAtLeast;
+        /// <summary>Only on enemies of these ranks (an elite's or a god's own numbers in a reaction). None set: on all.</summary>
+        public Clover.Gameplay.EnemyRank Ranks;
         /// <summary>The target must be in the air (or reeling).</summary>
         public bool NeedsAirborne;
         /// <summary>Only while the player's health is below this share of the whole. Zero: at any health.</summary>
         public float HealthBelow;
-        /// <summary>Damage, stagger and stacks are multiplied by the stacks the trigger carried: what was spent by a set-off, or what the dead enemy carried of <see cref="Needs"/>.</summary>
+        /// <summary>
+        /// Damage, stagger and stacks are multiplied by the stacks the trigger carried: what was spent by a set-off, or what
+        /// the dead enemy carried of <see cref="Needs"/>. When the trigger carried none, by what the Spend effect before it
+        /// (in the same mark, on the same enemy) took or counted; with a <see cref="Share"/>, by that share of it, rounded
+        /// up. A ground effect laid in a shape (a ring, a line) is multiplied in its patches instead (Firebloom's lilies).
+        /// </summary>
         public bool PerStack;
         /// <summary>The stacks it lays are as many as the trigger carried: what the dead enemy bore of <see cref="Needs"/>, or what a set-off spent.</summary>
         public bool CarriesDepth;
@@ -66,6 +75,8 @@ namespace Clover.Player
         public string Condition = "";
         /// <summary>For ConditionStruck: which blows it answers.</summary>
         public StruckBy By;
+        /// <summary>For ConditionStruck: only the condition's Nth weapon blow (Logan Stone's third). For ConditionBeat: only its Nth beat. Zero: every one.</summary>
+        public int AtCount;
 
         // Numbers.
         /// <summary>The affliction laid or set off. None means the element's own.</summary>
@@ -94,12 +105,19 @@ namespace Clover.Player
         public SpellSpec Spell;
         /// <summary>For <see cref="UpgradeAction.Condition"/>: the condition set.</summary>
         public ConditionSpec State;
-        /// <summary>For <see cref="UpgradeAction.Spend"/>: the share of the stacks taken, rounded up (0: all).</summary>
+        /// <summary>For <see cref="UpgradeAction.Spend"/>: the share of the stacks taken, rounded up (0: all). With <see cref="PerStack"/>: the share of the count used.</summary>
         public float Share;
+        /// <summary>For Spend: the stacks are only counted, for the effects after it, and none is taken.</summary>
+        public bool CountOnly;
         /// <summary>Damage added for each stack the Spend effect before it (in the same mark) took.</summary>
         public float DamagePerSpent;
-        /// <summary>For an Arc: it leaps only to enemies carrying this, from the target without striking it again (Live Iron). None: an arc as usual.</summary>
+        /// <summary>
+        /// For an Arc: it leaps only to enemies carrying this, from the target without striking it again (Live Iron). None:
+        /// an arc as usual. For a Condition with a Radius: only the enemies carrying this take it (Chokedamp's shaken).
+        /// </summary>
         public AfflictionKind LeapsTo = AfflictionKind.None;
+        /// <summary>For an Arc: it starts from the target without striking it and leaps to whoever is nearest, carrying anything (Glint's ray).</summary>
+        public bool FromTarget;
 
         /// <summary>Its place among all the effects in the catalogue; set when the catalogue is gathered.</summary>
         public int Slot { get; internal set; } = -1;

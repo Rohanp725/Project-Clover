@@ -14,11 +14,24 @@ namespace Clover.Gameplay
         public ConditionFlags Flags;
         /// <summary>The share of its speed it keeps while this lasts: 1 unchanged, 0.5 half as fast. Elites take half the slowing, gods none.</summary>
         public float Pace = 1f;
-        /// <summary>The run's one number, read by whichever flag needs one: the wind-up's pace, the share of damage taken or dealt, or the share a link passes on.</summary>
+        /// <summary>The run's one number, read by whichever flag needs one: the wind-up's pace, the share of damage or stagger taken or dealt, or the share a link passes on.</summary>
         public float Scale = 1f;
         /// <summary>For <see cref="ConditionFlags.SightShort"/>: how far it sees, in metres.</summary>
         public float Sight;
         /// <summary>Set on the enemies near the trigger's enemy, not on it; each is joined to it (Rot Roots).</summary>
         public bool ToOthers;
+
+        // Shared by the reactions of task 3.4 (docs/design/steel/content_open.tsv says which use each).
+        /// <summary>While it runs, this affliction on the enemy neither fades nor is spent by blows (doses that stop fading, notches that stay).</summary>
+        public AfflictionKind Keeps = AfflictionKind.None;
+        /// <summary>It lasts only while the enemy carries this (and <see cref="While2"/>): once one is gone it ends, and its end is told ("while both last").</summary>
+        public AfflictionKind While = AfflictionKind.None;
+        public AfflictionKind While2 = AfflictionKind.None;
+        /// <summary>Its beat is the poison biting the enemy, not a clock ("each bite jolts it").</summary>
+        public bool OnBite;
+        /// <summary>The blow that spends it: answered, then it ends without its end being told ("the next heavy blow").</summary>
+        public ConditionBlow EndsWith;
+        /// <summary>It ends once it has taken this many weapon blows, after answering the last (Logan Stone's third); 0 for no limit.</summary>
+        public int Blows;
     }
 }

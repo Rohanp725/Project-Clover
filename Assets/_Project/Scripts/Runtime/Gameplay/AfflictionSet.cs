@@ -93,6 +93,9 @@ namespace Clover.Gameplay
         /// <summary>The reaction engine this set reports to; none given means <see cref="ReactionEngine.Shared"/>. Tests give their own.</summary>
         public ReactionEngine Reactions { get; set; }
 
+        /// <summary>How hard it is to hold, read from what decides holding: what cannot be frozen is a god, what is frozen for less an elite.</summary>
+        public EnemyRank Rank => !CanFreeze ? EnemyRank.God : FreezeScale < 1f ? EnemyRank.Elite : EnemyRank.Plain;
+
         public AfflictionSet() => Clear();
 
         /// <summary>
@@ -302,6 +305,8 @@ namespace Clover.Gameplay
             for (int i = 2; i < stacks.Length; i++)
             {
                 if (stacks[i] <= 0 || blowsLeft[i] <= 0) continue;
+                // A condition that keeps it (Diamond Ring's mark) keeps it from being spent too.
+                if (Conditions.KeepsKind((AfflictionKind)i)) continue;
                 if (--blowsLeft[i] <= 0) End(i);
             }
         }
@@ -365,6 +370,8 @@ namespace Clover.Gameplay
             BitThisTick = false;
             LandedThisTick = false;
             Conditions.Tick(deltaTime);
+            // A condition that lasts only while afflictions are carried ends once one is gone.
+            if (Conditions.Any) Conditions.Keep(PresentMask);
             if (sinceBite < float.MaxValue) sinceBite += deltaTime;
             if (restLongest > 0f)
             {
@@ -391,6 +398,8 @@ namespace Clover.Gameplay
                     reeling = false;
                 }
             }
+            // Kept from fading (Smoulder): the burn's time is given back before it is spent, so it bites on and never runs down.
+            if (Burn.IsBurning && Conditions.KeepsKind(AfflictionKind.Burn)) Burn.Ignite(Burn.SecondsLeft + deltaTime);
             float damage = Burn.Tick(deltaTime) * strength[(int)AfflictionKind.Burn];
             if (!Burn.IsBurning) strength[(int)AfflictionKind.Burn] = 1f;
             if (HeldLeft > 0f) HeldLeft = Math.Max(0f, HeldLeft - deltaTime);
@@ -447,12 +456,15 @@ namespace Clover.Gameplay
                             sinceBite = 0f;
                             BitDepth = stacks[i];
                             BitDamage = bite;
+                            // The conditions that beat on the bite (Nerve Fire, Venom Rime) come to their beat.
+                            Conditions.Bitten();
                         }
                         damage += bite;
                         BitThisTick = true;
                     }
                 }
                 if (poison && (Afflictions.PoisonKeeps || cursed)) continue;
+                if (Conditions.KeepsKind((AfflictionKind)i)) continue;
                 left[i] -= deltaTime;
                 if (left[i] <= 0f) End(i);
             }
@@ -506,12 +518,14 @@ namespace Clover.Gameplay
                 var spec = Afflictions.Spec((AfflictionKind)i);
                 more += (spell ? spec.SpellDamageTakenPerStack : spec.WeaponDamageTakenPerStack) * stacks[i] * strength[i];
             }
-            return (1f + more) * (!spell && BrittleLeft > 0f ? 1f + Afflictions.BrittleShare : 1f) * Conditions.TakenScale;
+            return (1f + more) * (!spell && BrittleLeft > 0f ? 1f + Afflictions.BrittleShare : 1f) * Conditions.TakenScale
+                * (spell ? Conditions.SpellTakenScale : Conditions.WeaponTakenScale);
         }
 
         public float StaggerTakenMultiplier => (1f + Sum(spec => spec.StaggerTakenPerStack))
             * (BrittleLeft > 0f ? 1f + Afflictions.BrittleShare : 1f)
-            * (Afflictions.BuckledShare > 0f && stacks[(int)AfflictionKind.Tremor] > 0 && stacks[(int)AfflictionKind.Sundered] > 0 ? 1f + Afflictions.BuckledShare : 1f);
+            * (Afflictions.BuckledShare > 0f && stacks[(int)AfflictionKind.Tremor] > 0 && stacks[(int)AfflictionKind.Sundered] > 0 ? 1f + Afflictions.BuckledShare : 1f)
+            * Conditions.StaggerScale;
         public float ShoveMultiplier => 1f + Sum(spec => spec.ShovePerStack);
         public float TurnMultiplier => HeldLeft > 0f || IsLifted ? 0f : Math.Max(0.3f, 1f - Sum(spec => spec.TurnSlowPerStack));
         public float DamageDealtMultiplier => Math.Max(0.3f, 1f - Sum(spec => spec.DealsLessPerStack)) * Conditions.DealtScale;
@@ -533,6 +547,7 @@ namespace Clover.Gameplay
         {
             get
             {
+                if (Conditions.Has(ConditionFlags.TakesCritical)) return true;
                 for (int i = 2; i < stacks.Length; i++)
                     if (stacks[i] > 0 && Afflictions.Spec((AfflictionKind)i).MakesBlowsCritical) return true;
                 return false;

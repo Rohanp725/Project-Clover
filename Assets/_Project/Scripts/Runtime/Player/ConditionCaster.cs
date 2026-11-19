@@ -17,9 +17,9 @@ namespace Clover.Player
         {
             var spec = effect != null ? effect.State : null;
             if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null) return 0;
-            AnswersOf(effect, spec.Id, out bool struck, out bool ended);
+            AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died);
             int mark = effect.Owner != null ? effect.Owner.Index : -1;
-            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, combat, source) ? 1 : 0;
+            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, combat, source) ? 1 : 0;
 
             // Round the trigger's enemy: the nearest first, as many as the effect allows (all within the radius when it names none).
             scratch.Clear();
@@ -32,36 +32,41 @@ namespace Clover.Player
                 var near = combat.EnemyNear(centre, radius, scratch);
                 if (!(near is IDamageable one)) break;
                 scratch.Add(one);
-                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, combat, source)) set++;
+                // Only those carrying what the effect seeks (Chokedamp's damp runs to the shaken alone).
+                if (effect.LeapsTo != AfflictionKind.None && !(near is IAfflictable seeker && seeker.Afflictions.Has(effect.LeapsTo))) continue;
+                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, combat, source)) set++;
             }
             scratch.Clear();
             return set;
         }
 
-        private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, PlayerCombat combat, LaySource source)
+        private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, bool died, PlayerCombat combat, LaySource source)
         {
             if (!(who is IAfflictable afflictable)) return false;
             var set = afflictable.Afflictions;
             bool holds = (spec.Flags & ConditionFlags.Rooted) != 0 || spec.Pace < 1f;
             if (holds && !set.CanFreeze) return false;
             float slowShare = set.FreezeScale < 1f ? 0.5f : 1f;
-            if (set.Conditions.Set(spec, who, mark, link, struck, ended, slowShare) < 0) return false;
+            if (set.Conditions.Set(spec, who, mark, link, struck, ended, slowShare, died) < 0) return false;
             if (effect.Affliction != AfflictionKind.None && effect.Stacks > 0)
                 CombatEvents.Report(who, effect.Affliction, effect.Stacks, set.Lay(effect.Affliction, effect.Stacks + combat.ExtraStacks, 0f, combat.AfflictionPower, source, who));
             return true;
         }
 
-        // Whether the mark has anything to do when a blow lands on the condition, or when it ends: only then is it told.
-        private static void AnswersOf(UpgradeEffect effect, string id, out bool struck, out bool ended)
+        // Whether the mark has anything to do when a blow lands on the condition, when it ends, or when the enemy dies with
+        // it: only then is it told.
+        private static void AnswersOf(UpgradeEffect effect, string id, out bool struck, out bool ended, out bool died)
         {
             struck = false;
             ended = false;
+            died = false;
             if (effect.Owner == null) return;
             foreach (var answer in effect.Owner.Effects)
             {
                 if (answer.Condition != id) continue;
                 if (answer.On == UpgradeTrigger.ConditionStruck) struck = true;
                 if (answer.On == UpgradeTrigger.ConditionEnded) ended = true;
+                if (answer.On == UpgradeTrigger.ConditionDied) died = true;
             }
         }
     }

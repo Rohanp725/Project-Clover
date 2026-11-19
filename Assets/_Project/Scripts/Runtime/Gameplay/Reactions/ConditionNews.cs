@@ -12,6 +12,8 @@ namespace Clover.Gameplay
         public int Mark;
         /// <summary>How many beats have come, this one included.</summary>
         public int Count;
+        /// <summary>How many weapon blows it has taken, this one included.</summary>
+        public int Blows;
         public ConditionFlags Flags;
         /// <summary>The run's one number (see <see cref="ConditionSpec.Scale"/>).</summary>
         public float Scale;

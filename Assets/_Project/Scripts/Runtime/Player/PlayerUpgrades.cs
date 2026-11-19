@@ -976,12 +976,14 @@ namespace Clover.Player
 
         /// <summary>
         /// Puts one effect in the runner's line, whether or not its mark is learned: how a reaction's plain mark (always in
-        /// force) and a condition's answers are run. <paramref name="power"/> is what the trigger carried (a blow's damage).
+        /// force) and a condition's answers are run. <paramref name="power"/> is what the trigger carried (a blow's damage),
+        /// <paramref name="spent"/> its count (for PerStack), and <paramref name="dead"/> what a dead enemy carried, read
+        /// now, before it is cleared, as the Kill trigger reads it.
         /// </summary>
-        public void Fire(UpgradeEffect effect, Component target, Vector3 at, LaySource source, float power = 0f)
+        public void Fire(UpgradeEffect effect, Component target, Vector3 at, LaySource source, float power = 0f, int spent = 0, AfflictionSet dead = null)
         {
             if (effect == null) return;
-            Consider(effect, target, at, true, 0, null, source == LaySource.Reaction && effect.Cascades ? LaySource.Effect : source, power);
+            Consider(effect, target, at, true, spent, dead, source == LaySource.Reaction && effect.Cascades ? LaySource.Effect : source, power);
         }
 
         /// <summary>Does what waits in the runner's line now, rather than on its next step. Never inside a blow.</summary>
@@ -1019,10 +1021,13 @@ namespace Clover.Player
                 {
                     if (!carried.Has(effect.Needs)) return;
                     if (effect.NeedsFull && carried.Stacks(effect.Needs) < Afflictions.Depth(effect.Needs)) return;
+                    if (effect.NeedsAtLeast > 0 && carried.Stacks(effect.Needs) < effect.NeedsAtLeast) return;
                     if (dead != null) spent = carried.Stacks(effect.Needs);
                 }
                 if (effect.Needs2 != AfflictionKind.None && !carried.Has(effect.Needs2)) return;
             }
+            // A reaction's own numbers for an elite or a god (the ranks are read from what decides holding).
+            if (effect.Ranks != EnemyRank.Any && !(target is IAfflictable ranked && (ranked.Afflictions.Rank & effect.Ranks) != 0)) return;
             // Weapon blows lay only the first element's affliction (the owner's rule of 2026-11-18): an effect that lays
             // another element's on a blow is not done. The second element comes from spells, the charged blade and
             // infused strikes, so reactions come from weaving weapon and spell.
@@ -1050,6 +1055,8 @@ namespace Clover.Player
                 tallyDirty = true;
                 spent = price;
             }
+            // Asked again here for what came with no trigger to filter it (a condition's weals, a dead enemy's depth).
+            if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) return;
             // Things that can set themselves off again are held to a few times a second at most.
             float least = effect.On == UpgradeTrigger.AfflictionFull || effect.On == UpgradeTrigger.Kill ? 0.2f : 0f;
             readyAt[effect.Slot] = Time.time + Mathf.Max(effect.Cooldown, least);
@@ -1158,10 +1165,14 @@ namespace Clover.Player
             toward.y = 0f;
             Vector3 aim = toward.sqrMagnitude > 0.04f ? toward.normalized : transform.forward;
 
-            // What the trigger carried multiplies what is done: how many are thrown or fall, or how hard it strikes.
-            int per = effect.PerStack ? Mathf.Max(1, pending.Spent) : 1;
-            bool byCount = effect.Do == UpgradeAction.Projectile || effect.Do == UpgradeAction.Falling || effect.Do == UpgradeAction.Ward;
-            int spentHere = effect.DamagePerSpent > 0f && spentBy == effect.Owner && spentOn == pending.Target ? lastSpent : 0;
+            // What the trigger carried multiplies what is done: how many are thrown or fall, or how hard it strikes. With
+            // nothing carried, what this mark's Spend just took or counted on the same enemy stands in (a reaction's depth).
+            int counted = spentBy == effect.Owner && spentOn == pending.Target ? lastSpent : 0;
+            int per = effect.PerStack ? Mathf.Max(1, pending.Spent > 0 ? pending.Spent : counted) : 1;
+            if (effect.PerStack && effect.Share > 0f && effect.Do != UpgradeAction.Spend) per = Mathf.Max(1, Mathf.CeilToInt(per * effect.Share - 0.0001f));
+            bool byCount = effect.Do == UpgradeAction.Projectile || effect.Do == UpgradeAction.Falling || effect.Do == UpgradeAction.Ward
+                || (effect.Do == UpgradeAction.Hazard && effect.PerStack && effect.Shape != HazardShape.Patch);
+            int spentHere = effect.DamagePerSpent > 0f ? counted : 0;
             float eDamage = (byCount ? effect.Damage : effect.Damage * per) + effect.DamagePerSpent * spentHere;
             float eStagger = byCount ? effect.Stagger : effect.Stagger * per;
             float eAmount = effect.Amount * per;
@@ -1238,7 +1249,7 @@ namespace Clover.Player
                 {
                     if (target == null) target = combat.EnemyAhead(FightRange);
                     if (target == null) break;
-                    if (effect.LeapsTo != AfflictionKind.None)
+                    if (effect.LeapsTo != AfflictionKind.None || effect.FromTarget)
                     {
                         // From the one struck, never back into it: only to those carrying what the arc seeks (iron to iron).
                         // Answering a blow, it carries a share of that blow (Amount); else its own Damage.
@@ -1350,6 +1361,14 @@ namespace Clover.Player
                 }
                 case UpgradeAction.Pull:
                 case UpgradeAction.Push:
+                    if (effect.Shape == HazardShape.Downwind)
+                    {
+                        // The target alone, along the player's line to it: thrown straight away from them, or drawn in.
+                        if (subject is IShovable shoved)
+                            shoved.Push((effect.Do == UpgradeAction.Pull ? -aim : aim * combat.StatPush) * Or(eAmount, 3f));
+                        ElementLook.Ring(look, centre + Vector3.up * 0.2f);
+                        break;
+                    }
                     combat.Displace(centre, Or(effect.Radius, 5f), Or(effect.Amount, 3f), effect.Do == UpgradeAction.Pull);
                     ElementLook.Ring(held, centre + Vector3.up * 0.2f);
                     break;
@@ -1481,7 +1500,7 @@ namespace Clover.Player
                     int carried = spender.Afflictions.Stacks(kind);
                     int take = effect.Share > 0f ? Mathf.CeilToInt(carried * effect.Share - 0.0001f) : carried;
                     if (effect.Count > 0) take = Mathf.Min(take, effect.Count);
-                    lastSpent = spender.Afflictions.Spend(kind, take);
+                    lastSpent = effect.CountOnly ? Mathf.Min(take, carried) : spender.Afflictions.Spend(kind, take);
                     break;
                 }
                 case UpgradeAction.ForceReaction:

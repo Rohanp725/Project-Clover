@@ -26,5 +26,13 @@ namespace Clover.Gameplay
         SightShort = 1 << 6,
         /// <summary>It is joined to another enemy (the run's Link); what passes along the link is the setting mark's to say.</summary>
         Linked = 1 << 7,
+        /// <summary>The stagger it takes is multiplied by the run's Scale (Breath Taken, Logan Stone, Turned to Stone).</summary>
+        StaggerTakenShare = 1 << 8,
+        /// <summary>The damage it takes from weapon blows only is multiplied by the run's Scale (Cold Short, Drowned Weight, Girdled).</summary>
+        WeaponTakenShare = 1 << 9,
+        /// <summary>The damage it takes from spells only is multiplied by the run's Scale (Turned to Stone).</summary>
+        SpellTakenShare = 1 << 10,
+        /// <summary>Every blow on it is critical, as a mark of light makes it (Fish Poison's float).</summary>
+        TakesCritical = 1 << 11,
     }
 }
