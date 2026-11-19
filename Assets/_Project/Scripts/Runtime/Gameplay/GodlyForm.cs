@@ -27,6 +27,8 @@ namespace Clover.Gameplay
         /// <summary>The piece that falls when its balance breaks, and can be finished.</summary>
         public abstract ColossusPart HeadPart { get; }
         public float HealthFraction => Health.Fraction;
+        /// <summary>False while a condition on it says it begins no attack (Breath Taken and the like): its chooser waits. What is asked from outside still goes.</summary>
+        protected bool MayBeginAttack => !Afflictions.Conditions.Has(ConditionFlags.BeginsNoAttack);
         public float BalanceFraction => IsStaggered ? 1f : Stagger.Fraction;
 
         /// <summary>Raised once, when it has fallen and gone.</summary>

@@ -78,26 +78,41 @@ namespace Clover.Gameplay
                 if ((partners & (1 << kind)) == 0) continue;
                 int pair = AfflictionPairs.Index(laid, (AfflictionKind)kind);
                 if (pair < 0 || set.ReactionRest(pair) > 0f) continue;
-                if (reportedThisFrame < MostPerFrame)
-                {
-                    set.RestReaction(pair, rests[pair]);
-                    reportedThisFrame++;
-                    reacted++;
-                    report(who, pair, laid);
-                }
-                else if (waitingCount < MostWaiting)
-                {
-                    // Rested now, so the same pair on the same enemy is not found twice while it waits.
-                    set.RestReaction(pair, rests[pair]);
-                    int slot = (waitingFirst + waitingCount) % MostWaiting;
-                    waitingWho[slot] = who;
-                    waitingPair[slot] = pair;
-                    waitingLaid[slot] = laid;
-                    waitingCount++;
-                    reacted++;
-                }
+                if (Emit(set, who, pair, laid)) reacted++;
             }
             return reacted;
+        }
+
+        /// <summary>
+        /// Sets a pair off on <paramref name="set"/> whether or not it rests there (a forced reaction: the action
+        /// ForceReaction), within the frame's budget like any other, and rests it again from now. True when it was
+        /// reported or waits to be.
+        /// </summary>
+        public bool Force(AfflictionSet set, Component who, int pair, AfflictionKind laid)
+        {
+            if (set == null || pair < 0 || pair >= rests.Length) return false;
+            CatchUp();
+            return Emit(set, who, pair, laid);
+        }
+
+        // Rested now in either case, so the same pair on the same enemy is not found twice while it waits.
+        private bool Emit(AfflictionSet set, Component who, int pair, AfflictionKind laid)
+        {
+            if (reportedThisFrame < MostPerFrame)
+            {
+                set.RestReaction(pair, rests[pair]);
+                reportedThisFrame++;
+                report(who, pair, laid);
+                return true;
+            }
+            if (waitingCount >= MostWaiting) return false;
+            set.RestReaction(pair, rests[pair]);
+            int slot = (waitingFirst + waitingCount) % MostWaiting;
+            waitingWho[slot] = who;
+            waitingPair[slot] = pair;
+            waitingLaid[slot] = laid;
+            waitingCount++;
+            return true;
         }
 
         /// <summary>

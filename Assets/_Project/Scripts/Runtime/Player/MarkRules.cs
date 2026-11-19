@@ -11,7 +11,8 @@ namespace Clover.Player
         /// <summary>True when the mark is on a tree or branch open now: the element held, a mix of it with an element held or consumed, or, in the playtest, any.</summary>
         public static bool Open(Upgrade upgrade, string held, ICollection<string> everHeld, ICollection<string> consumed, bool playtest)
         {
-            if (upgrade == null) return false;
+            // A hidden mark (a reaction) is on no tree, so no tree opens it.
+            if (upgrade == null || upgrade.IsHidden) return false;
             if (playtest) return true;
             if (upgrade.IsMix) return UpgradeTree.MixOpen(upgrade, held, everHeld, consumed);
             return upgrade.Element == held;
@@ -24,7 +25,7 @@ namespace Clover.Player
         /// </summary>
         public static bool CanBuy(Upgrade upgrade, ICollection<string> unlocked, int points, bool open, bool playtest)
         {
-            if (upgrade == null || NotBuiltYet.IsSlot(upgrade) || !open) return false;
+            if (upgrade == null || upgrade.IsHidden || NotBuiltYet.IsSlot(upgrade) || !open) return false;
             if (upgrade.Signature && !playtest) return false;
             if (unlocked.Contains(upgrade.Id) || points < upgrade.Cost) return false;
             return upgrade.Signature || UpgradeTree.Reachable(upgrade, unlocked);

@@ -29,5 +29,7 @@ namespace Clover.Player
         public VfxKind Effect;
         public bool Tinted;
         public Color Tint;
+        /// <summary>A reaction dealt it: what it lays starts no reaction (<see cref="Hit.FromReaction"/>).</summary>
+        public bool FromReaction;
     }
 }

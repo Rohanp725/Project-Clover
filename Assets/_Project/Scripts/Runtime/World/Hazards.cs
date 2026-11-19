@@ -227,6 +227,12 @@ namespace Clover.World
                 Burst = spec.Burst,
             };
             instance.zones[i].Spec.BiteEvery = Mathf.Max(0.05f, spec.BiteEvery);
+            // Ground a reaction left bites as the reaction's own: what it lays starts nothing.
+            if (spec.FromReaction || spec.Blow.FromReaction)
+            {
+                instance.zones[i].Spec.FromReaction = true;
+                instance.zones[i].Spec.Blow.FromReaction = true;
+            }
             if (spec.Kind == HazardKind.Fire && !spec.Once && spec.Velocity.sqrMagnitude < 0.01f) instance.zones[i].Left = spec.Seconds * FireSecondsScale;
             if (grown)
             {

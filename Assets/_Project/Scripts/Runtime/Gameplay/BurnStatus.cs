@@ -36,6 +36,9 @@ namespace Clover.Gameplay
             Stacks = Math.Min(MaximumStacks, Stacks + Math.Max(0, stacks));
         }
 
+        /// <summary>Makes the burn shallower by this many stacks; it keeps burning for the time it has.</summary>
+        public void Lessen(int stacks) => Stacks = Math.Max(0, Stacks - Math.Max(0, stacks));
+
         /// <summary>Sets the burn off: it ends, and the damage it had left to give in depth is returned at once.</summary>
         public float Detonate()
         {

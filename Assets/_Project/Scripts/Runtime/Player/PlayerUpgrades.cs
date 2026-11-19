@@ -145,7 +145,17 @@ namespace Clover.Player
             public int Spent;
             // Stacks the root already lays with the same blow, not to be laid twice.
             public int Less;
+            // What lays what it lays: a reaction's effects start no reaction (IMPLEMENTATION.md 3.7).
+            public LaySource Source;
         }
+
+        // The source of whatever the effect being done lays, and what the last Spend took (read by DamagePerSpent).
+        private LaySource laying = LaySource.Effect;
+        private int lastSpent;
+        // Whose Spend it was and on whom: only a later effect of the same mark on the same enemy counts it.
+        private Upgrade spentBy;
+        private Component spentOn;
+        private readonly HashSet<IDamageable> conditionScratch = new HashSet<IDamageable>();
 
         private const int QueueCapacity = 64;
         private static readonly int TriggerCount = System.Enum.GetValues(typeof(UpgradeTrigger)).Length;
@@ -934,8 +944,12 @@ namespace Clover.Player
 
         // ---- The runner: effects wait in a line and are done on this component's own step, never in the middle of the blow that caused them.
 
-        private void Trigger(UpgradeTrigger trigger, Component target, Vector3 at, bool hasAt = true, int spent = 0, AfflictionSet dead = null, AfflictionKind what = AfflictionKind.None)
+        private void Trigger(UpgradeTrigger trigger, Component target, Vector3 at, bool hasAt = true, int spent = 0, AfflictionSet dead = null, AfflictionKind what = AfflictionKind.None,
+            string reaction = "", LaySource source = LaySource.Effect)
         {
+            // Raised while a reaction's effect is being done (a kill, a full affliction, a shatter it caused): what answers
+            // is the reaction's too, and starts nothing.
+            if (source == LaySource.Effect) source = laying;
             var list = byTrigger[(int)trigger];
             for (int i = 0; i < list.Count; i++)
             {
@@ -944,15 +958,41 @@ namespace Clover.Player
                 if (effect.OwnSpell && effect.Owner != castSource) continue;
                 if (effect.BaseSpell && castSource != null) continue;
                 if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) continue;
-                Consider(effect, target, at, hasAt, spent, dead);
+                // A mark that deepens one reaction answers that one only.
+                if (trigger == UpgradeTrigger.Reacted && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
+                Consider(effect, target, at, hasAt, spent, dead, source != LaySource.Reaction || !effect.Cascades ? source : LaySource.Effect);
             }
         }
+
+        // ---- Hooks for the reactions' adapter (PlayerReactions): small and public, the behaviour is theirs.
+
+        /// <summary>
+        /// Fires a trigger for the marks in force (a lift, a duo mark that deepens a reaction), as the player's own systems
+        /// do, with what their effects lay counted as <paramref name="source"/>. For <see cref="UpgradeTrigger.Reacted"/>,
+        /// <paramref name="reaction"/> is the reaction's id. Done on this component's next step, or at <see cref="FlushNow"/>.
+        /// </summary>
+        public void Fire(UpgradeTrigger trigger, Component target, Vector3 at, string reaction = "", LaySource source = LaySource.Effect) =>
+            Trigger(trigger, target, at, true, 0, null, AfflictionKind.None, reaction ?? "", source);
+
+        /// <summary>
+        /// Puts one effect in the runner's line, whether or not its mark is learned: how a reaction's plain mark (always in
+        /// force) and a condition's answers are run. <paramref name="power"/> is what the trigger carried (a blow's damage).
+        /// </summary>
+        public void Fire(UpgradeEffect effect, Component target, Vector3 at, LaySource source, float power = 0f)
+        {
+            if (effect == null) return;
+            Consider(effect, target, at, true, 0, null, source == LaySource.Reaction && effect.Cascades ? LaySource.Effect : source, power);
+        }
+
+        /// <summary>Does what waits in the runner's line now, rather than on its next step. Never inside a blow.</summary>
+        public void FlushNow() => Flush();
 
         private static bool IsBlow(UpgradeTrigger trigger) =>
             trigger == UpgradeTrigger.AnyHit || trigger == UpgradeTrigger.LightHit || trigger == UpgradeTrigger.HeavyHit || trigger == UpgradeTrigger.FinisherHit
             || trigger == UpgradeTrigger.SkillHit || trigger == UpgradeTrigger.AfflictedHit || trigger == UpgradeTrigger.CritHit || trigger == UpgradeTrigger.ChainEnd;
 
-        private void Consider(UpgradeEffect effect, Component target, Vector3 at, bool hasAt, int spent = 0, AfflictionSet dead = null)
+        private void Consider(UpgradeEffect effect, Component target, Vector3 at, bool hasAt, int spent = 0, AfflictionSet dead = null,
+            LaySource source = LaySource.Effect, float power = 0f)
         {
             if (effect.Slot < 0 || effect.Slot >= readyAt.Length) return;
             if (Time.time < readyAt[effect.Slot]) return;
@@ -1013,7 +1053,7 @@ namespace Clover.Player
             // Things that can set themselves off again are held to a few times a second at most.
             float least = effect.On == UpgradeTrigger.AfflictionFull || effect.On == UpgradeTrigger.Kill ? 0.2f : 0f;
             readyAt[effect.Slot] = Time.time + Mathf.Max(effect.Cooldown, least);
-            Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less });
+            Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power });
         }
 
         private void Enqueue(in Pending pending)
@@ -1026,15 +1066,22 @@ namespace Clover.Player
         {
             if (flushing || queued == 0) return;
             flushing = true;
-            // What is done here may put more in the line; those are done too, as far as the line has room.
-            for (int i = 0; i < queued; i++)
+            try
             {
-                var pending = queue[i];
-                queue[i] = default;
-                Execute(pending);
+                // What is done here may put more in the line; those are done too, as far as the line has room.
+                for (int i = 0; i < queued; i++)
+                {
+                    var pending = queue[i];
+                    queue[i] = default;
+                    Execute(pending);
+                }
             }
-            queued = 0;
-            flushing = false;
+            finally
+            {
+                // One effect that throws must not leave the runner stopped for the rest of the play.
+                queued = 0;
+                flushing = false;
+            }
             if (tallyDirty) ApplyTallies();
         }
 
@@ -1047,7 +1094,21 @@ namespace Clover.Player
             Effect = ElementLook.HitEffect(look),
             Tinted = ElementLook.Tints(look),
             Tint = look.Colour,
+            // What a reaction's effect strikes with starts no reaction of its own.
+            FromReaction = laying == LaySource.Reaction,
         };
+
+        // Where the patches of a ground or burst effect go: one, a line ahead, a ring, or a row carried downwind past the target.
+        private static Vector3 PatchAt(UpgradeEffect effect, int index, int patches, Vector3 centre, Vector3 self, Vector3 aim, float reach)
+        {
+            switch (effect.Shape)
+            {
+                case HazardShape.Line: return self + aim * (reach * (index + 0.5f) / patches);
+                case HazardShape.Ring: return centre + Quaternion.Euler(0f, index * 360f / patches, 0f) * Vector3.forward * reach;
+                case HazardShape.Downwind: return centre + aim * (reach + (index - (patches - 1) * 0.5f) * Or(effect.Amount, 1f));
+                default: return centre;
+            }
+        }
 
         // A mark's own element (a duo mark's first); the first attunement's for an effect with no mark.
         private ElementInfo OwnElement(Upgrade owner) => element != null ? element.ElementOf(owner) : Elements.None;
@@ -1055,7 +1116,15 @@ namespace Clover.Player
         private static float Or(float value, float usual) => value > 0f ? value : usual;
         private static int Or(int value, int usual) => value > 0 ? value : usual;
 
+        // The source is held for the length of one effect, so every blow, patch and laying it makes is counted as it.
         private void Execute(in Pending pending)
+        {
+            laying = pending.Source;
+            try { Do(pending); }
+            finally { laying = LaySource.Effect; }
+        }
+
+        private void Do(in Pending pending)
         {
             if (combat == null || element == null) return;
             if (pending.Special == Special.DeathBurst)
@@ -1067,7 +1136,7 @@ namespace Clover.Player
             }
             if (pending.Special == Special.Carry)
             {
-                combat.AfflictArea(pending.At, pending.Radius, pending.Kind, pending.Stacks, pending.Target);
+                combat.AfflictArea(pending.At, pending.Radius, pending.Kind, pending.Stacks, pending.Target, laying);
                 ElementLook.Ring(lookOf[(int)pending.Kind], pending.At + Vector3.up * 0.2f);
                 return;
             }
@@ -1092,7 +1161,8 @@ namespace Clover.Player
             // What the trigger carried multiplies what is done: how many are thrown or fall, or how hard it strikes.
             int per = effect.PerStack ? Mathf.Max(1, pending.Spent) : 1;
             bool byCount = effect.Do == UpgradeAction.Projectile || effect.Do == UpgradeAction.Falling || effect.Do == UpgradeAction.Ward;
-            float eDamage = byCount ? effect.Damage : effect.Damage * per;
+            int spentHere = effect.DamagePerSpent > 0f && spentBy == effect.Owner && spentOn == pending.Target ? lastSpent : 0;
+            float eDamage = (byCount ? effect.Damage : effect.Damage * per) + effect.DamagePerSpent * spentHere;
             float eStagger = byCount ? effect.Stagger : effect.Stagger * per;
             float eAmount = effect.Amount * per;
             int eCount = byCount && effect.PerStack ? Or(effect.Count, 1) * per : effect.Count;
@@ -1109,24 +1179,31 @@ namespace Clover.Player
                     int stacks = eStacks;
                     if (effect.Radius > 0f)
                     {
-                        combat.AfflictArea(centre, effect.Radius, kind, stacks);
+                        combat.AfflictArea(centre, effect.Radius, kind, stacks, null, laying);
                         ElementLook.Ring(look, centre + Vector3.up * 0.2f);
                     }
                     else if (subject is IAfflictable afflictable)
                     {
                         float seconds = combat.AfflictionSeconds != 1f ? Afflictions.Spec(kind).Seconds * combat.AfflictionSeconds : 0f;
-                        CombatEvents.Report(subject, kind, stacks, afflictable.Afflictions.Apply(kind, stacks + combat.ExtraStacks, seconds, combat.AfflictionPower));
+                        CombatEvents.Report(subject, kind, stacks, afflictable.Afflictions.Lay(kind, stacks + combat.ExtraStacks, seconds, combat.AfflictionPower, laying, subject));
                         ElementLook.Puff(look, centre + Vector3.up * 1.2f, Vector3.up, 0.6f);
                     }
                     break;
                 }
                 case UpgradeAction.Burst:
                 {
-                    Hazards.Lay(new HazardSpec
+                    var burst = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2.5f), Seconds = 0.12f, BiteEvery = 0.1f,
-                        Once = true, Burst = true, Delay = effect.Delay, Blow = Blow(look, kind, eDamage, eStagger, eStacks),
-                    });
+                        Once = true, Burst = true, Delay = effect.Delay, Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
+                    };
+                    // One burst, or one where each patch of a shape would fall.
+                    int bursts = effect.Shape == HazardShape.Patch ? 1 : Or(eCount, 3);
+                    for (int i = 0; i < bursts; i++)
+                    {
+                        burst.Position = PatchAt(effect, i, bursts, centre, self, aim, Or(effect.Reach, 4f));
+                        Hazards.Lay(burst);
+                    }
                     break;
                 }
                 case UpgradeAction.Cone:
@@ -1147,14 +1224,12 @@ namespace Clover.Player
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = Or(effect.Radius, 1f) * Stats.Multiplier(PlayerStat.GroundSize), Seconds = Or(effect.Seconds, 3f) * Stats.Multiplier(PlayerStat.GroundSeconds), BiteEvery = Or(effect.Interval, 0.5f),
                         Grown = effect.Grown, Family = effect.Slot + 1, Limit = effect.Grown && effect.Limit > 0 ? effect.Limit + Mathf.Max(0, Stats.Whole(PlayerStat.GrownLimit)) : 0,
-                        Blow = Blow(look, kind, eDamage, eStagger, eStacks),
+                        Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
                     };
                     for (int i = 0; i < patches; i++)
                     {
-                        spec.Position = effect.Shape == HazardShape.Line ? self + aim * (reach * (i + 0.5f) / patches)
-                            : effect.Shape == HazardShape.Ring ? centre + Quaternion.Euler(0f, i * 360f / patches, 0f) * Vector3.forward * reach
-                            : centre;
-                        spec.Delay = effect.Delay + (effect.Shape == HazardShape.Line ? i * 0.06f : 0f);
+                        spec.Position = PatchAt(effect, i, patches, centre, self, aim, reach);
+                        spec.Delay = effect.Delay + (effect.Shape == HazardShape.Line || effect.Shape == HazardShape.Downwind ? i * 0.06f : 0f);
                         Hazards.Lay(spec);
                     }
                     break;
@@ -1163,6 +1238,15 @@ namespace Clover.Player
                 {
                     if (target == null) target = combat.EnemyAhead(FightRange);
                     if (target == null) break;
+                    if (effect.LeapsTo != AfflictionKind.None)
+                    {
+                        // From the one struck, never back into it: only to those carrying what the arc seeks (iron to iron).
+                        // Answering a blow, it carries a share of that blow (Amount); else its own Damage.
+                        float arcDamage = effect.Amount > 0f && pending.Power > 0f ? pending.Power * effect.Amount : eDamage;
+                        ArcsLeapt += combat.StrikeChainFrom(target, Blow(look, kind, arcDamage, eStagger, eStacks), Or(eCount, 2),
+                            Or(effect.Reach, 5f) * Stats.Multiplier(PlayerStat.LeapReach), look, effect.LeapsTo);
+                        break;
+                    }
                     combat.StrikeChain(0f, Blow(look, kind, eDamage, eStagger, eStacks), Or(eCount, 2), Or(effect.Reach, 5f) * Stats.Multiplier(PlayerStat.LeapReach), look, target);
                     break;
                 }
@@ -1306,7 +1390,7 @@ namespace Clover.Player
                     var next = combat.EnemyNear(centre, Or(effect.Reach, 4f) * Stats.Multiplier(PlayerStat.LeapReach), passExcept);
                     if (next is IAfflictable taker)
                     {
-                        CombatEvents.Report(next, kind, eStacks, taker.Afflictions.Apply(kind, Mathf.Max(1, eStacks), 0f, combat.AfflictionPower));
+                        CombatEvents.Report(next, kind, eStacks, taker.Afflictions.Lay(kind, Mathf.Max(1, eStacks), 0f, combat.AfflictionPower, laying, next));
                         ElementLook.Sparks(look, centre + Vector3.up * 1.2f, (next.transform.position - centre).normalized, 1f);
                         ElementLook.Puff(look, next.transform.position + Vector3.up * 1.2f, Vector3.up, 0.6f);
                         Passed++;
@@ -1331,7 +1415,7 @@ namespace Clover.Player
                     combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0));
                     ElementLook.Strike(look, centre, 0.3f);
                     // Whatever waits on an affliction being spent is told, with how deep it was.
-                    Trigger(UpgradeTrigger.SetOff, subject, centre, true, depth, null, kind);
+                    Trigger(UpgradeTrigger.SetOff, subject, centre, true, depth, null, kind, "", laying);
                     break;
                 }
                 case UpgradeAction.Hold:
@@ -1356,7 +1440,7 @@ namespace Clover.Player
                     else break;
                     ElementLook.Ring(look, centre + Vector3.up * 0.2f);
                     ElementLook.Puff(look, centre + Vector3.up * 0.6f, Vector3.up, 1.2f);
-                    Trigger(UpgradeTrigger.Lifted, subject, centre);
+                    Trigger(UpgradeTrigger.Lifted, subject, centre, true, 0, null, AfflictionKind.None, "", laying);
                     break;
                 }
                 case UpgradeAction.Drop:
@@ -1388,8 +1472,38 @@ namespace Clover.Player
                 case UpgradeAction.Leech:
                     if (defence != null) defence.Heal(combat.LastBlowDamage * Or(eAmount, 0.1f), false);
                     break;
+                case UpgradeAction.Spend:
+                {
+                    lastSpent = 0;
+                    spentBy = effect.Owner;
+                    spentOn = pending.Target;
+                    if (!(subject is IAfflictable spender)) break;
+                    int carried = spender.Afflictions.Stacks(kind);
+                    int take = effect.Share > 0f ? Mathf.CeilToInt(carried * effect.Share - 0.0001f) : carried;
+                    if (effect.Count > 0) take = Mathf.Min(take, effect.Count);
+                    lastSpent = spender.Afflictions.Spend(kind, take);
+                    break;
+                }
+                case UpgradeAction.ForceReaction:
+                {
+                    int pair = ReactionTable.PairOf(effect.Reaction);
+                    if (subject is IAfflictable forced && forced.Afflictions.ForceReaction(pair, subject)) ForcedReactions++;
+                    break;
+                }
+                case UpgradeAction.Flinch:
+                    if (subject is IFlinchable flinching && flinching.Flinch(Or(effect.Seconds, 0.4f))) Flinches++;
+                    break;
+                case UpgradeAction.Condition:
+                    ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch);
+                    break;
             }
         }
+
+        /// <summary>Counts for probes: reactions forced, flinches given, conditions set and arcs that leapt from iron to iron.</summary>
+        public int ForcedReactions { get; private set; }
+        public int Flinches { get; private set; }
+        public int ConditionsSet { get; private set; }
+        public int ArcsLeapt { get; private set; }
 
         // ---- What the enemies say of themselves.
 
@@ -1401,7 +1515,7 @@ namespace Clover.Player
             if (hollowStrength && Risen) riseStilledUntil = Time.time + StilledSeconds;
             // Seeded, it bursts into thorns; cursed, its death feeds the one who killed it.
             float burst = afflictions.DeathBurst(out float radius);
-            if (burst > 0f) Enqueue(new Pending { Special = Special.DeathBurst, At = at, HasAt = true, Power = burst * Stats.Multiplier(PlayerStat.BurstDamage), Radius = radius * Stats.Multiplier(PlayerStat.BurstReach) });
+            if (burst > 0f) Enqueue(new Pending { Special = Special.DeathBurst, Source = laying, At = at, HasAt = true, Power = burst * Stats.Multiplier(PlayerStat.BurstDamage), Radius = radius * Stats.Multiplier(PlayerStat.BurstReach) });
             float fed = afflictions.HealOnKill;
             if (fed > 0f && defence != null) defence.Heal(fed);
             Trigger(UpgradeTrigger.Kill, null, at, true, 0, afflictions);
@@ -1443,7 +1557,8 @@ namespace Clover.Player
         private void OnCarried(Component who, AfflictionKind kind, int stacks)
         {
             if (who == null) return;
-            Enqueue(new Pending { Special = Special.Carry, Target = who, At = who.transform.position, HasAt = true, Kind = kind, Stacks = stacks,
+            // Carried by what a reaction laid, it is the reaction's still.
+            Enqueue(new Pending { Special = Special.Carry, Source = laying, Target = who, At = who.transform.position, HasAt = true, Kind = kind, Stacks = stacks,
                 Radius = Afflictions.Spec(AfflictionKind.Soaked).CarryRadius });
         }
 
@@ -1496,7 +1611,7 @@ namespace Clover.Player
             // A light blow builds Static only while Lightning is the first element; second, its Static comes from spells.
             if (!staticLays) return;
             float seconds = combat.AfflictionSeconds != 1f ? Afflictions.Spec(AfflictionKind.Static).Seconds * combat.AfflictionSeconds : 0f;
-            CombatEvents.Report(struck, AfflictionKind.Static, 1, afflictable.Afflictions.Apply(AfflictionKind.Static, 1 + combat.ExtraStacks, seconds, combat.AfflictionPower));
+            CombatEvents.Report(struck, AfflictionKind.Static, 1, afflictable.Afflictions.Lay(AfflictionKind.Static, 1 + combat.ExtraStacks, seconds, combat.AfflictionPower, LaySource.Weapon, struck));
             Vfx.Play(VfxKind.Shock, at + Vector3.up * 1.3f, Vector3.up, 0.15f + 0.08f * stacks);
         }
 
@@ -1807,7 +1922,7 @@ namespace Clover.Player
                 Vfx.Play(VfxKind.Embers, at + Vector3.up * 1.4f, Vector3.up, 1.6f);
                 Vfx.Play(VfxKind.TintRing, at + Vector3.up * 0.3f, Vector3.up, 1.4f, fire);
                 if (body.gameObject.activeInHierarchy && FurnaceKeeps > 0)
-                    CombatEvents.Report(body, AfflictionKind.Burn, FurnaceKeeps, carrier.Afflictions.Apply(AfflictionKind.Burn, FurnaceKeeps, 0f, combat.AfflictionPower));
+                    CombatEvents.Report(body, AfflictionKind.Burn, FurnaceKeeps, carrier.Afflictions.Lay(AfflictionKind.Burn, FurnaceKeeps, 0f, combat.AfflictionPower, LaySource.Effect, body));
                 Trigger(UpgradeTrigger.SetOff, body, at, true, Mathf.Max(1, depth), null, AfflictionKind.Burn);
             }
             furnaceList.Clear();

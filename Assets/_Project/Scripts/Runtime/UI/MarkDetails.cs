@@ -43,6 +43,7 @@ namespace Clover.UI
         public static string Heading(Upgrade mark)
         {
             if (NotBuiltYet.IsSlot(mark)) return $"{NotBuiltYet.Label}  ·  beside the {mark.Element} tree";
+            if (mark.Kind == UpgradeKind.Reaction) return $"Reaction  ·  {mark.Element} and {mark.Element2}  ·  always in force, never sold";
             string tree = mark.IsMix ? $"{Elements.MixName(mark.Element, mark.Element2)} ({mark.Element} and {mark.Element2})" : mark.Element + " tree";
             string price = mark.Signature ? "a god's gift, never sold (a playtest unlock here)" : mark.Cost == 1 ? "1 Shard" : mark.Cost + " Shards";
             return $"{KindName(mark)}  ·  {tree}  ·  {price}";

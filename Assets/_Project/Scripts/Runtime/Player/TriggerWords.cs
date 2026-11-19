@@ -71,6 +71,10 @@ namespace Clover.Player
                 case UpgradeTrigger.PoisonBite: return "poison bites an enemy";
                 case UpgradeTrigger.ChargedBlow: return "a blow of your charged blade lands";
                 case UpgradeTrigger.ChargedBlowThird: return "the third blow of your charged blade lands";
+                case UpgradeTrigger.Reacted: return "two afflictions react on an enemy";
+                case UpgradeTrigger.ConditionBeat: return "a state this laid on an enemy comes to its beat";
+                case UpgradeTrigger.ConditionStruck: return "you strike an enemy in a state this laid";
+                case UpgradeTrigger.ConditionEnded: return "a state this laid on an enemy ends";
                 default: return "its moment comes";
             }
         }

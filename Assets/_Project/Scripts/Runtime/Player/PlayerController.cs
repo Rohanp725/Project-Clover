@@ -170,6 +170,8 @@ namespace Clover.Player
             // The build (the Hand and the attunements), added the same way.
             if (GetComponent<PlayerBuild>() == null) gameObject.AddComponent<PlayerBuild>();
             upgrades = GetComponent<PlayerUpgrades>();
+            // The reactions' adapter (it needs the upgrades' runner), added the same way.
+            if (upgrades != null && GetComponent<PlayerReactions>() == null) gameObject.AddComponent<PlayerReactions>();
             if (controls == null)
             {
                 Debug.LogError("[Clover.Player] The controls asset is missing; the player cannot be driven.");

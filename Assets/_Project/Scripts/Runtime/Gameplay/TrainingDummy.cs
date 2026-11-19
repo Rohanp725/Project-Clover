@@ -96,7 +96,7 @@ namespace Clover.Gameplay
             sinceHit = 0f;
             float detonated = hit.Detonate ? Burn.Detonate() : 0f;
             if (detonated > 0f) Health.Damage(detonated);
-            Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
+            Afflictions.IgniteFrom(hit, this);
             if (hit.Heavy && Afflictions.IsFrozen)
             {
                 Health.Damage(Afflictions.Shatter());

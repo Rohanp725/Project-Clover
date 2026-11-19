@@ -1,8 +1,16 @@
-# Combat Playtest 0.3 (unreleased)
+# Combat Playtest 0.4 (unreleased)
 
 ## What this playtest is
 
 A testbed for the combat. It grows with each update as the fighting is reworked. Everything is open: try anything, and tell us what felt good, what felt wrong and what you did not understand.
+
+## New in 0.4 (phase 3 begun: reactions)
+
+- **Reactions.** When an affliction lands on an enemy that already carries another element's, the two react. Six pairs react in this update: **Flashover** (Fire and Lightning: the Static discharges through the flame), **Steam** (Fire and Water: a scalding puff), **Carried Embers** (Fire and Wind: embers carried on past the enemy, away from you), **The Ground Gives** (Water and Earth: it sinks, slowed, and heavy blows pin it), **Live Iron** (Metal and Lightning: your blows on it arc to other notched enemies) and **Rot Roots** (Life and Poison: its poison bites its neighbours too). The guide to effects has an entry for each, with its numbers.
+- **How they come.** A reaction comes once, then rests on that enemy for a few seconds (most 4 s, Steam 3 s). What a reaction lays starts no reaction of its own. Anything can set one off: your weapon, spells, marks, the charged blade, strikes, even an enemy wet from the river.
+- **You see the name.** A reaction's name rises over the enemy for a moment. Each reaction's own look comes later: for now there is a puff in its two colours and whatever it does (a discharge, a burst, small fires).
+- **Weave to react.** Carry two elements: your weapon lays the first and your spells, the charged blade and the R2 strike lay the second.
+- **Not yet:** the other 49 pairs do nothing yet; they come in the next updates, with the duo branches' shapes that change a reaction. Some of the six are simpler than their full design (Flashover's live flame does not yet draw other discharges into it; the sinking sand does not yet stop dodges or slow others who wade in).
 
 ## New in 0.3 (phase 2: two elements and the Hand)
 

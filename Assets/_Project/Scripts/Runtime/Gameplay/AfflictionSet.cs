@@ -66,7 +66,10 @@ namespace Clover.Gameplay
         /// <summary>How many blows have held it up in this lift.</summary>
         public int AirBlows { get; private set; }
         /// <summary>True when anything here runs on time, so its owner must tick it. A resting reaction counts: its rest must run out even after the afflictions have gone.</summary>
-        public bool Runs => Any || HeldLeft > 0f || AirLeft > 0f || restLongest > 0f;
+        public bool Runs => Any || HeldLeft > 0f || AirLeft > 0f || restLongest > 0f || Conditions.Any;
+
+        /// <summary>The timed states reactions and marks set on it (six slots), ticked and cleared with the rest.</summary>
+        public EnemyConditions Conditions { get; } = new EnemyConditions();
         /// <summary>How far off the ground it is now: up quickly, hanging, down quickly.</summary>
         public float AirHeight => !IsLifted ? 0f : AirRise * Math.Min(1f, Math.Min(airFor / 0.18f, AirLeft / 0.18f));
 
@@ -108,19 +111,67 @@ namespace Clover.Gameplay
             if (seconds > restLongest) restLongest = seconds;
         }
 
+        /// <summary>What laid what a blow carries: its own flag first, then spell or weapon.</summary>
+        public static LaySource SourceOf(in Hit hit) => hit.FromReaction ? LaySource.Reaction : hit.Spell ? LaySource.Spell : LaySource.Weapon;
+
         /// <summary>
         /// Lays what a blow carries, both its afflictions, and reports each to <see cref="CombatEvents"/> as laid on
-        /// <paramref name="who"/>: the one helper every <c>TakeHit</c> calls (IMPLEMENTATION.md 1, 3.7). The burn given
-        /// in seconds (<see cref="Hit.BurnSeconds"/>) is still lit by the caller where its order matters, so it does
-        /// not pass through <see cref="Lay"/>: it can be a partner but does not itself set a reaction off.
+        /// <paramref name="who"/>: the one helper every <c>TakeHit</c> calls (IMPLEMENTATION.md 1, 3.7). Then the
+        /// conditions that answer a blow are told of it, unless a reaction dealt it. The burn given in seconds
+        /// (<see cref="Hit.BurnSeconds"/>) is lit by the caller where its order matters, through <see cref="IgniteFrom"/>.
         /// </summary>
         public void TakeFrom(in Hit hit, UnityEngine.Component who)
         {
-            var source = hit.Spell ? LaySource.Spell : LaySource.Weapon;
+            var source = SourceOf(hit);
             if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
                 CombatEvents.Report(who, hit.Affliction, hit.AfflictionStacks, Lay(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower, source, who));
             if (hit.Affliction2 != AfflictionKind.None && hit.Affliction2Stacks > 0)
                 CombatEvents.Report(who, hit.Affliction2, hit.Affliction2Stacks, Lay(hit.Affliction2, hit.Affliction2Stacks, hit.Affliction2Seconds, hit.AfflictionPower, source, who));
+            if (!hit.FromReaction && hit.Damage > 0f) Conditions.Struck(hit.Damage, hit.Heavy, hit.Spell);
+        }
+
+        /// <summary>Lights the burn a blow gives in seconds (<see cref="Hit.BurnSeconds"/>), through the laying rules, so a weapon's fire reacts like any affliction.</summary>
+        public void IgniteFrom(in Hit hit, UnityEngine.Component who) => Ignite(hit.BurnSeconds, hit.BurnStacks, SourceOf(hit), who);
+
+        /// <summary>
+        /// Sets it burning for the seconds given (topped up, never shortened) and deepens the burn by the stacks given,
+        /// which may be none: the burn's own entry, beside <see cref="Lay"/>, for fire given in seconds. It tells the
+        /// reaction engine as <see cref="Lay"/> does.
+        /// </summary>
+        public void Ignite(float seconds, int stacks, LaySource source, UnityEngine.Component who = null)
+        {
+            if (seconds <= 0f) return;
+            int carried = PresentMask;
+            Burn.Ignite(seconds, stacks);
+            if (source != LaySource.Reaction && (carried & ~(1 << (int)AfflictionKind.Burn)) != 0)
+                (Reactions ?? ReactionEngine.Shared).Laid(this, who, AfflictionKind.Burn, carried);
+        }
+
+        /// <summary>
+        /// Sets a pair's reaction off now, through its rest (Lit Fuse, Plasma Lance and the like: the action
+        /// ForceReaction), when it carries both of the pair. It rests again from now. False when a partner is missing.
+        /// </summary>
+        public bool ForceReaction(int pair, UnityEngine.Component who)
+        {
+            if (pair < 0 || pair >= AfflictionPairs.Count) return false;
+            if (!Has(AfflictionPairs.First(pair)) || !Has(AfflictionPairs.Second(pair))) return false;
+            return (Reactions ?? ReactionEngine.Shared).Force(this, who, pair, AfflictionPairs.Second(pair));
+        }
+
+        /// <summary>Takes up to this many stacks of an affliction away, with no burst, and says how many went. A burn with no depth counts as one.</summary>
+        public int Spend(AfflictionKind kind, int count)
+        {
+            int had = Stacks(kind);
+            if (had <= 0 || count <= 0) return 0;
+            int spent = Math.Min(had, count);
+            if (spent >= had)
+            {
+                Consume(kind);
+                return spent;
+            }
+            if (kind == AfflictionKind.Burn) Burn.Lessen(spent);
+            else stacks[(int)kind] -= spent;
+            return spent;
         }
 
         /// <summary>
@@ -143,6 +194,7 @@ namespace Clover.Gameplay
         {
             owedSeconds = 0f;
             present = 0;
+            Conditions.Clear();
             Array.Clear(reactionRest, 0, reactionRest.Length);
             restLongest = 0f;
             for (int i = 0; i < stacks.Length; i++)
@@ -312,6 +364,7 @@ namespace Clover.Gameplay
         {
             BitThisTick = false;
             LandedThisTick = false;
+            Conditions.Tick(deltaTime);
             if (sinceBite < float.MaxValue) sinceBite += deltaTime;
             if (restLongest > 0f)
             {
@@ -439,7 +492,7 @@ namespace Clover.Gameplay
                     if (stacks[i] <= 0 || (Afflictions.ChillSlowOff && i == (int)AfflictionKind.Chill)) continue;
                     slow += Afflictions.Spec((AfflictionKind)i).SlowPerStack * stacks[i] * strength[i];
                 }
-                return Math.Max(0.3f, 1f - slow);
+                return Math.Max(0.3f, 1f - slow) * Conditions.Pace;
             }
         }
 
@@ -453,7 +506,7 @@ namespace Clover.Gameplay
                 var spec = Afflictions.Spec((AfflictionKind)i);
                 more += (spell ? spec.SpellDamageTakenPerStack : spec.WeaponDamageTakenPerStack) * stacks[i] * strength[i];
             }
-            return (1f + more) * (!spell && BrittleLeft > 0f ? 1f + Afflictions.BrittleShare : 1f);
+            return (1f + more) * (!spell && BrittleLeft > 0f ? 1f + Afflictions.BrittleShare : 1f) * Conditions.TakenScale;
         }
 
         public float StaggerTakenMultiplier => (1f + Sum(spec => spec.StaggerTakenPerStack))
@@ -461,7 +514,7 @@ namespace Clover.Gameplay
             * (Afflictions.BuckledShare > 0f && stacks[(int)AfflictionKind.Tremor] > 0 && stacks[(int)AfflictionKind.Sundered] > 0 ? 1f + Afflictions.BuckledShare : 1f);
         public float ShoveMultiplier => 1f + Sum(spec => spec.ShovePerStack);
         public float TurnMultiplier => HeldLeft > 0f || IsLifted ? 0f : Math.Max(0.3f, 1f - Sum(spec => spec.TurnSlowPerStack));
-        public float DamageDealtMultiplier => Math.Max(0.3f, 1f - Sum(spec => spec.DealsLessPerStack));
+        public float DamageDealtMultiplier => Math.Max(0.3f, 1f - Sum(spec => spec.DealsLessPerStack)) * Conditions.DealtScale;
         public float HealOnBlow => Sum(spec => spec.HealOnBlowPerStack);
         public float ManaOnBlow => Sum(spec => spec.ManaPerStack);
         public float HealOnKill => Sum(spec => spec.HealOnKillPerStack);

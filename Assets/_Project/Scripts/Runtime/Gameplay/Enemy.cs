@@ -11,7 +11,7 @@ namespace Clover.Gameplay
     /// the storm charges it for a while, making it faster and harder-hitting.
     /// </summary>
     [RequireComponent(typeof(CharacterController))]
-    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable, IBoss, IWeighted
+    public class Enemy : MonoBehaviour, IDamageable, IStaggerable, IBurnable, IAfflictable, IShovable, IBoss, IWeighted, IFlinchable
     {
         [SerializeField] private string kindName = EnemyKind.SoldierName;
         [SerializeField] private Transform target;
@@ -378,6 +378,8 @@ namespace Clover.Gameplay
             targetController = target != null ? target.GetComponent<Clover.Player.PlayerController>() : null;
             targetDefence = target != null ? target.GetComponent<Clover.Player.PlayerDefence>() : null;
             basePreferred = Brain.PreferredRange;
+            // The brain reads the conditions on this body once a step.
+            Brain.Conditions = Afflictions.Conditions;
             Grip.Seconds = Kind.HoldSeconds;
             Grip.BiteEvery = Kind.HoldBiteEvery;
             Grip.BiteDamage = Kind.HoldBiteDamage;
@@ -559,7 +561,7 @@ namespace Clover.Gameplay
                 Vfx.Play(VfxKind.Fire, transform.position + Vector3.up * 1.2f, Vector3.up, 2f);
                 Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.4f, Vector3.up, 2f);
             }
-            Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
+            Afflictions.IgniteFrom(hit, this);
             // Ice breaks under a heavy blow, and what it held takes the breaking.
             if (hit.Heavy && Afflictions.IsFrozen)
             {
@@ -576,7 +578,7 @@ namespace Clover.Gameplay
             Afflictions.TakeFrom(hit, this);
 
             // Its guard: a light blow from the front, while it stands ready, is turned on its weapon.
-            if (Kind.Guards && GuardOpenFor <= 0f && (!hit.Heavy || Kind.HeavyGuardedDamage < 1f) && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)
+            if (Kind.Guards && GuardOpenFor <= 0f && !Afflictions.Conditions.Has(ConditionFlags.CannotGuard) && (!hit.Heavy || Kind.HeavyGuardedDamage < 1f) && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)
                 && Vector3.Angle(transform.forward, -hit.Direction) < 75f)
             {
                 BlowsGuarded++;
@@ -679,6 +681,18 @@ namespace Clover.Gameplay
             if (IsDead) return;
             impulse.y = 0f;
             shove += impulse * (Kind.IsBoss ? 0.3f : Kind.IsElite ? 0.6f : 1f);
+        }
+
+        /// <summary>Times an effect (a reaction) has made it flinch, for probes.</summary>
+        public int EffectFlinches { get; private set; }
+
+        /// <summary>Made to flinch by an effect, not a blow: what it had begun is broken, unless it is steadfast.</summary>
+        public bool Flinch(float seconds)
+        {
+            if (IsDead || asleep) return false;
+            if (!Brain.Flinch(!Kind.Steadfast, seconds)) return false;
+            EffectFlinches++;
+            return true;
         }
 
         private void Update()
@@ -955,8 +969,11 @@ namespace Clover.Gameplay
                 lunging = driving;
                 if (driving) step += transform.forward * (attack.Lunge * deltaTime * pace / (until - from));
             }
+            // Rooted, its feet go nowhere, by its own will, a lunge or a shove; it still turns and strikes.
+            bool rooted = Afflictions.Conditions.Has(ConditionFlags.Rooted);
+            if (rooted) step = Vector3.zero;
             // Ice holds it where it stands, whatever shoves.
-            if (!Afflictions.IsFrozen) step += shove * (deltaTime * 6f);
+            if (!Afflictions.IsFrozen && !rooted) step += shove * (deltaTime * 6f);
             shove = Vector3.Lerp(shove, Vector3.zero, 1f - Mathf.Exp(-9f * deltaTime));
             if (Afflictions.IsLifted)
             {
@@ -979,7 +996,7 @@ namespace Clover.Gameplay
             if (body.enabled) body.Move(step);
 
             // Its guard is up only while it stands ready and knows the player is there: the band going out is the opening.
-            if (guardArc != null) guardArc.Show(Kind.Guards && Brain.State == EnemyState.Stalk);
+            if (guardArc != null) guardArc.Show(Kind.Guards && Brain.State == EnemyState.Stalk && !Afflictions.Conditions.Has(ConditionFlags.CannotGuard));
             ShowAttack(attack);
             Animate(deltaTime, Kind.WalkSpeed > 0f ? walked / Kind.WalkSpeed : 0f);
             Paint(deltaTime);

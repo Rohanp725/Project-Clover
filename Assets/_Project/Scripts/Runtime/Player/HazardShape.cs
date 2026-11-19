@@ -9,5 +9,7 @@ namespace Clover.Player
         Line,
         /// <summary>Circles set round a middle.</summary>
         Ring,
+        /// <summary>A row of circles beyond the target, carried away from the player along their line to it (downwind): Reach is how far the middle one lands, Amount the gap between them (1).</summary>
+        Downwind,
     }
 }

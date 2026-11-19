@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24d13becfb3100d4d8970a3eb64c00bc, type: 3}
   m_Name: PlaytestTexts
   m_EditorClassIdentifier: Clover.Runtime::Clover.UI.PlaytestTexts
-  Version: Combat Playtest 0.3 (unreleased)
-  WhatsNew: "<color=#E8C77A>What this playtest is</color>\n\nA testbed for the combat. It grows with each update as the fighting is reworked. Everything is open: try anything, and tell us what felt good, what felt wrong and what you did not understand.\n\n<color=#E8C77A>New in 0.3 (phase 2: two elements and the Hand)</color>\n\n\u2022  <b>Two elements at once.</b> Carry a first and a second element (the same one twice is all in). Each spell is cast in its own element, lays its own affliction and is drawn in its own colour and stuff.\n\u2022  <b>The altars set both.</b> Carrying one element, use another altar to carry its element as your second; use the altar of the element you carry to go all in. Carrying two (or all in), an altar starts again with its element alone. Before you press, the altar's prompt says which it will do (\"Carry Lightning as second\", \"Carry Fire all in\", \"Carry Ice alone\"). You arrive carrying Fire.\n\u2022  <b>Your weapon lays the first element only.</b> Weapon blows lay the first element's affliction, even with the second's root mark learned. The second comes from your spells, the charged blade and the R2 strike, so two afflictions meet on an enemy when you weave weapon and spell.\n\u2022  <b>The charged blade takes the landed spell's element.</b> Flame Wave charges it with Fire, Thunderclap with Lightning; only that cast's own first landing counts. A duo spell charges it with the first of its pair.\n\u2022  <b>Strikes for each element.</b> L2 with R1 (RB) is the first element's strike, L2 with R2 (RT) the second's, and neither costs mana. Carrying one element, or all in, R2 is the deep strike for 20 mana as before.\n\u2022  <b>The rest menu.</b> A rest fire now opens a menu: Set the Hand, The chart, Leave the fire. Closing the chart brings you back to it.\n\u2022  <b>The Hand.</b> Your four spells in a diamond laid out like the buttons, the surge in the middle. Choose a slot to see only what can go there, grouped by element with each spell's role and one line; the weapon skill button shows the numbers. Pick the surge from either element. Suggested Hand fills it for you; three saved Hands keep a Hand for each kind of fight (use wears one, the heavy attack keeps yours there). Once you set a Hand the slots stop filling themselves. The Hand never changes which elements you carry.\n\u2022  <b>The spell diamond</b> colours each slot by its own spell's element and names the R2 strike for the second element.\n\u2022  <b>Duo branches</b> (Plasma and the other mixes) are in force only while both of their elements are carried; a duo spell sits in a slot like any other.\n\u2022  <b>Slots open as you go, outside the playtest.</b> In the full game you start with two slots (West and North) and the surge; East opens when the Champion of the Gate falls and South when the Fire god falls, and they stay open from then on. The Hand shows a shut slot and says what opens it. In the playtest every slot is open.\n\u2022  <b>Not yet:</b> in the full game the second element is still chosen nowhere (the hub's braziers give one element); it comes when the hub's choice is reworked. Duo surges, shapes and the designed starter Hands for each element come with the reshaped trees.\n\n<color=#E8C77A>New in 0.2 (phase 1: spells on cooldowns, mana for big moves, the charged blade, infused strikes and the spell diamond)</color>\n\n\u2022  <b>The charged blade.</b> A spell from one of your four slots that lands charges your weapon with its element. Your next three blows that land carry it: each hits 20% harder and lays the element's affliction, and the third does one thing more (Fire leaves the ground burning, Light throws a ray, Poison makes the poison bite at once, and so on). You see it on the weapon: flame and embers along the edge for Fire, lightning crackling along it, frost for Ice. Three pips beside the spell diamond count the blows left. A new spell that lands gives three fresh blows.\n\u2022  <b>Infused strikes.</b> Hold L2 (LT) and press R1 (RB): your weapon's own move with your element on it, shaped by the weapon (the Katana's drawing cut throws Burning Edge along its arc, the Hammer's drop lays it in a circle, the Spear's thrust in a line). L2 with R2 (RT) is the deep strike, the heavier version, for 20 mana. Each button waits 8 s, and fighting with the weapon shortens the wait as it does a spell's. A strike counts as a weapon blow (mana, shorter spell waits) but never charges the blade. On the keyboard: hold Left Ctrl and click the left or right mouse button. Every element has its own pair; the guide to effects lists them.\n\u2022  <b>The spell diamond</b> in the bottom-right corner replaces the spell line: your four slots laid out like the face buttons, each with its picture, its button and a shade that sweeps back as its wait runs out, the surge in the middle, the two strikes under it. It is small at all times and grows while L2 is held, with each spell's name. Buttons are named for the pad or keys you use last, and follow your rebinding.\n\u2022  <b>Hunger</b> (Dark's surge, paid in health) now waits 25 s after it ends before it can be lit again.\n\n\u2022  <b>Four spell slots on the L2 layer.</b> Hold L2 (LT) and press Square, Triangle, Circle or Cross (X, Y, B, A) to cast the spell in that slot. On the keyboard, 1, 2, 3 and 4 cast them directly. While L2 is held the face buttons are spells only: no flask, skill, dodge or use.\n\u2022  <b>The surge is a tap of L2.</b> Tap it and let go quickly. On the keyboard it stays on F.\n\u2022  <b>The weapon skill has its own button:</b> Triangle (Y), or Q. Holding the heavy button now gives the charged heavy only.\n\u2022  <b>Basic spells cost no mana.</b> Each slot waits 6 to 12 s after a cast instead. Fighting with the weapon brings spells back sooner: a light blow that lands takes 0.3 s off every waiting slot, a heavy blow 0.6 s, a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s.\n\u2022  <b>Mana is for the big moves:</b> the surge, the weapon skill and each element's one larger spell (Meteor Leap, Seven Flashes, Sky Dance, Winter Wall, Poured Blade, Elder Tree, Grave of Swords, Daybreak, One by One; the built duo spells too). You enter each area at half. Out of a fight mana rises to half and stops there; above half it is kept. A fight always starts with at least half.\n\u2022  <b>Filling the slots.</b> Your element's own spell starts in West, and each spell you learn fills the next empty slot. At a rest fire, choose a learned spell on the chart and press use to put it in the next slot round. The Hand screen comes in the next update.\n\u2022  <b>Controls:</b> the pause menu's controls page has rows for the spell layer and the four slots, on the pad and on the keys.\n\u2022  <b>Not yet:</b> marks that only made the base spell cheaper do nothing for now, and some spell details on the chart still describe the old way of casting; the trees are reshaped later. Two elements at once and the Hand screen come in the next update.\n\n<color=#E8C77A>New in 0.1</color>\n\n\u2022  <b>The Proving Ground</b>, where the playtest begins: a rest fire, a rack of every weapon (the Storm Katana and the Sun-Spear among them), altars for every element, training dummies (one still, one that fights back with red and pale blows, and one carrying each element's affliction), pens to let out the castle's soldiers and the Fire land's people, gates to Narukami and Khepharu, and doors to the Castle, the Summit, Sun City and the Sun Court.\n\u2022  <b>Playtest rules.</b> Resting gives unlimited Shards, so every mark can be bought, the gods' gifts included. The chart can be walked into every tree and branch. A fall puts you back at the last fire with nothing lost.\n\u2022  <b>Back to the Proving Ground</b> from any level: pause, then Return to the Proving Ground.\n\u2022  <b>The guide to effects</b>, from the pause menu and from the chart: every affliction, state and resource, with its numbers, what sets it off, how to use it and how it looks.\n\u2022  <b>Details for the high-level marks</b> on the chart: what a mark does, when, the numbers, what it works with and an example. Written in full for the Fire and Lightning trees and their mixes; the other trees show what their data says for now.\n\u2022  <b>Not built yet</b>: empty slots on the rack and on the chart show where the gods' weapons and boughs still to come will be.\n\u2022  This title, with the version and what is new."
+  Version: Combat Playtest 0.4 (unreleased)
+  WhatsNew: "<color=#E8C77A>What this playtest is</color>\n\nA testbed for the combat. It grows with each update as the fighting is reworked. Everything is open: try anything, and tell us what felt good, what felt wrong and what you did not understand.\n\n<color=#E8C77A>New in 0.4 (phase 3 begun: reactions)</color>\n\n\u2022  <b>Reactions.</b> When an affliction lands on an enemy that already carries another element's, the two react. Six pairs react in this update: <b>Flashover</b> (Fire and Lightning: the Static discharges through the flame), <b>Steam</b> (Fire and Water: a scalding puff), <b>Carried Embers</b> (Fire and Wind: embers carried on past the enemy, away from you), <b>The Ground Gives</b> (Water and Earth: it sinks, slowed, and heavy blows pin it), <b>Live Iron</b> (Metal and Lightning: your blows on it arc to other notched enemies) and <b>Rot Roots</b> (Life and Poison: its poison bites its neighbours too). The guide to effects has an entry for each, with its numbers.\n\u2022  <b>How they come.</b> A reaction comes once, then rests on that enemy for a few seconds (most 4 s, Steam 3 s). What a reaction lays starts no reaction of its own. Anything can set one off: your weapon, spells, marks, the charged blade, strikes, even an enemy wet from the river.\n\u2022  <b>You see the name.</b> A reaction's name rises over the enemy for a moment. Each reaction's own look comes later: for now there is a puff in its two colours and whatever it does (a discharge, a burst, small fires).\n\u2022  <b>Weave to react.</b> Carry two elements: your weapon lays the first and your spells, the charged blade and the R2 strike lay the second.\n\u2022  <b>Not yet:</b> the other 49 pairs do nothing yet; they come in the next updates, with the duo branches' shapes that change a reaction. Some of the six are simpler than their full design (Flashover's live flame does not yet draw other discharges into it; the sinking sand does not yet stop dodges or slow others who wade in).\n\n<color=#E8C77A>New in 0.3 (phase 2: two elements and the Hand)</color>\n\n\u2022  <b>Two elements at once.</b> Carry a first and a second element (the same one twice is all in). Each spell is cast in its own element, lays its own affliction and is drawn in its own colour and stuff.\n\u2022  <b>The altars set both.</b> Carrying one element, use another altar to carry its element as your second; use the altar of the element you carry to go all in. Carrying two (or all in), an altar starts again with its element alone. Before you press, the altar's prompt says which it will do (\"Carry Lightning as second\", \"Carry Fire all in\", \"Carry Ice alone\"). You arrive carrying Fire.\n\u2022  <b>Your weapon lays the first element only.</b> Weapon blows lay the first element's affliction, even with the second's root mark learned. The second comes from your spells, the charged blade and the R2 strike, so two afflictions meet on an enemy when you weave weapon and spell.\n\u2022  <b>The charged blade takes the landed spell's element.</b> Flame Wave charges it with Fire, Thunderclap with Lightning; only that cast's own first landing counts. A duo spell charges it with the first of its pair.\n\u2022  <b>Strikes for each element.</b> L2 with R1 (RB) is the first element's strike, L2 with R2 (RT) the second's, and neither costs mana. Carrying one element, or all in, R2 is the deep strike for 20 mana as before.\n\u2022  <b>The rest menu.</b> A rest fire now opens a menu: Set the Hand, The chart, Leave the fire. Closing the chart brings you back to it.\n\u2022  <b>The Hand.</b> Your four spells in a diamond laid out like the buttons, the surge in the middle. Choose a slot to see only what can go there, grouped by element with each spell's role and one line; the weapon skill button shows the numbers. Pick the surge from either element. Suggested Hand fills it for you; three saved Hands keep a Hand for each kind of fight (use wears one, the heavy attack keeps yours there). Once you set a Hand the slots stop filling themselves. The Hand never changes which elements you carry.\n\u2022  <b>The spell diamond</b> colours each slot by its own spell's element and names the R2 strike for the second element.\n\u2022  <b>Duo branches</b> (Plasma and the other mixes) are in force only while both of their elements are carried; a duo spell sits in a slot like any other.\n\u2022  <b>Slots open as you go, outside the playtest.</b> In the full game you start with two slots (West and North) and the surge; East opens when the Champion of the Gate falls and South when the Fire god falls, and they stay open from then on. The Hand shows a shut slot and says what opens it. In the playtest every slot is open.\n\u2022  <b>Not yet:</b> in the full game the second element is still chosen nowhere (the hub's braziers give one element); it comes when the hub's choice is reworked. Duo surges, shapes and the designed starter Hands for each element come with the reshaped trees.\n\n<color=#E8C77A>New in 0.2 (phase 1: spells on cooldowns, mana for big moves, the charged blade, infused strikes and the spell diamond)</color>\n\n\u2022  <b>The charged blade.</b> A spell from one of your four slots that lands charges your weapon with its element. Your next three blows that land carry it: each hits 20% harder and lays the element's affliction, and the third does one thing more (Fire leaves the ground burning, Light throws a ray, Poison makes the poison bite at once, and so on). You see it on the weapon: flame and embers along the edge for Fire, lightning crackling along it, frost for Ice. Three pips beside the spell diamond count the blows left. A new spell that lands gives three fresh blows.\n\u2022  <b>Infused strikes.</b> Hold L2 (LT) and press R1 (RB): your weapon's own move with your element on it, shaped by the weapon (the Katana's drawing cut throws Burning Edge along its arc, the Hammer's drop lays it in a circle, the Spear's thrust in a line). L2 with R2 (RT) is the deep strike, the heavier version, for 20 mana. Each button waits 8 s, and fighting with the weapon shortens the wait as it does a spell's. A strike counts as a weapon blow (mana, shorter spell waits) but never charges the blade. On the keyboard: hold Left Ctrl and click the left or right mouse button. Every element has its own pair; the guide to effects lists them.\n\u2022  <b>The spell diamond</b> in the bottom-right corner replaces the spell line: your four slots laid out like the face buttons, each with its picture, its button and a shade that sweeps back as its wait runs out, the surge in the middle, the two strikes under it. It is small at all times and grows while L2 is held, with each spell's name. Buttons are named for the pad or keys you use last, and follow your rebinding.\n\u2022  <b>Hunger</b> (Dark's surge, paid in health) now waits 25 s after it ends before it can be lit again.\n\n\u2022  <b>Four spell slots on the L2 layer.</b> Hold L2 (LT) and press Square, Triangle, Circle or Cross (X, Y, B, A) to cast the spell in that slot. On the keyboard, 1, 2, 3 and 4 cast them directly. While L2 is held the face buttons are spells only: no flask, skill, dodge or use.\n\u2022  <b>The surge is a tap of L2.</b> Tap it and let go quickly. On the keyboard it stays on F.\n\u2022  <b>The weapon skill has its own button:</b> Triangle (Y), or Q. Holding the heavy button now gives the charged heavy only.\n\u2022  <b>Basic spells cost no mana.</b> Each slot waits 6 to 12 s after a cast instead. Fighting with the weapon brings spells back sooner: a light blow that lands takes 0.3 s off every waiting slot, a heavy blow 0.6 s, a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s.\n\u2022  <b>Mana is for the big moves:</b> the surge, the weapon skill and each element's one larger spell (Meteor Leap, Seven Flashes, Sky Dance, Winter Wall, Poured Blade, Elder Tree, Grave of Swords, Daybreak, One by One; the built duo spells too). You enter each area at half. Out of a fight mana rises to half and stops there; above half it is kept. A fight always starts with at least half.\n\u2022  <b>Filling the slots.</b> Your element's own spell starts in West, and each spell you learn fills the next empty slot. At a rest fire, choose a learned spell on the chart and press use to put it in the next slot round. The Hand screen comes in the next update.\n\u2022  <b>Controls:</b> the pause menu's controls page has rows for the spell layer and the four slots, on the pad and on the keys.\n\u2022  <b>Not yet:</b> marks that only made the base spell cheaper do nothing for now, and some spell details on the chart still describe the old way of casting; the trees are reshaped later. Two elements at once and the Hand screen come in the next update.\n\n<color=#E8C77A>New in 0.1</color>\n\n\u2022  <b>The Proving Ground</b>, where the playtest begins: a rest fire, a rack of every weapon (the Storm Katana and the Sun-Spear among them), altars for every element, training dummies (one still, one that fights back with red and pale blows, and one carrying each element's affliction), pens to let out the castle's soldiers and the Fire land's people, gates to Narukami and Khepharu, and doors to the Castle, the Summit, Sun City and the Sun Court.\n\u2022  <b>Playtest rules.</b> Resting gives unlimited Shards, so every mark can be bought, the gods' gifts included. The chart can be walked into every tree and branch. A fall puts you back at the last fire with nothing lost.\n\u2022  <b>Back to the Proving Ground</b> from any level: pause, then Return to the Proving Ground.\n\u2022  <b>The guide to effects</b>, from the pause menu and from the chart: every affliction, state and resource, with its numbers, what sets it off, how to use it and how it looks.\n\u2022  <b>Details for the high-level marks</b> on the chart: what a mark does, when, the numbers, what it works with and an example. Written in full for the Fire and Lightning trees and their mixes; the other trees show what their data says for now.\n\u2022  <b>Not built yet</b>: empty slots on the rack and on the chart show where the gods' weapons and boughs still to come will be.\n\u2022  This title, with the version and what is new."
   Effects:
   - Id: burn
     Title: Burn
@@ -544,21 +544,117 @@ MonoBehaviour:
 
       <b>How it looks.</b> Not shown yet.'
   - Id: reactions
-    Title: Reactions (not built yet)
+    Title: Reactions
     Group: Reactions
-    Body: '<b>What it is.</b> When two elements'' afflictions meet on one enemy, they will react, and each pair of elements will do something of its own. Reactions are not built yet.
+    Body: '<b>What it is.</b> When an affliction lands on an enemy that already carries another element''s, the two react, and each pair of elements does something of its own. Six of the 55 pairs react in this update (the entries below). The other pairs do nothing yet.
 
 
-      <b>The numbers.</b> None yet. Reactions arrive in a later phase of the playtest (phase 3), and this part of the guide will fill then, with one entry for each reaction.
+      <b>The numbers.</b> A reaction comes once, then rests on that enemy before it can come again: 4 s for most, 3 s for Steam, 6 s for the pairs three apart on the ring. The rest is kept for each enemy and each pair, so a crowd can react one after another. What a reaction lays starts no reaction of its own.
 
 
-      <b>What sets it off.</b> Two different afflictions lying on the same enemy at once. You can already lay two: carry two elements, and your weapon lays the first while your spells, the charged blade and the R2 strike lay the second.
+      <b>What sets it off.</b> The second affliction landing, laid by anything: a weapon blow, a spell, a mark, the charged blade, a strike, or the world (an enemy wet from the river reacts to your fire). For these six the order does not matter.
 
 
-      <b>How to use it.</b> For now, afflictions only add up. Soaked spreads Static and Chill. Unsteady adds stagger and Tremor stops it fading. Sundered and Marked both make weapon blows hit harder.
+      <b>How to use it.</b> Carry two elements. Your weapon lays the first and your spells, the charged blade and the R2 strike lay the second, so weave blade and spell on the same enemy. Wait out the rest, or turn to another enemy.
 
 
-      <b>How it looks.</b> Not shown yet. Today each affliction shows as its own diamond under the enemy''s bars.'
+      <b>How it looks.</b> The reaction''s name rises over the enemy for a moment, with a puff in its two elements'' colours. Each reaction''s own look comes in a later update.'
+  - Id: reaction-flashover
+    Title: Flashover (Fire and Lightning)
+    Group: Reactions
+    Body: '<b>What it is.</b> Static meets Burn. Flame carries current: the fire on the enemy goes live and its Static discharges through it at once.
+
+
+      <b>The numbers.</b> The Static is spent: 7 damage for each stack to everyone within 3 m, and 4 stagger for each stack (20 at full charge). The enemy flinches for 0.4 s, which breaks a wind-up (not a steadfast enemy''s). The Burn is not spent and keeps burning. Rests 4 s.
+
+
+      <b>What sets it off.</b> Burn landing on a charged enemy, or Static on a burning one.
+
+
+      <b>How to use it.</b> Burn first with your blade, then charge it with a spell, or the other way round: the discharge comes without a heavy blow and leaves the fire burning. Catch a wind-up with it.
+
+
+      <b>How it looks.</b> Its name over the enemy and a discharge where it stands. Not yet: the live flame that draws other discharges near into it.'
+  - Id: reaction-steam
+    Title: Steam (Fire and Water)
+    Group: Reactions
+    Body: '<b>What it is.</b> Burn meets Soaked. The water on the burning body flashes off in a scalding puff.
+
+
+      <b>The numbers.</b> The Soaked is spent and half the Burn with it (rounded up). The puff deals 8 damage, and 4 more for each Burn it took, with 15 stagger, to everyone within 2.5 m. Rests 3 s, the shortest of all.
+
+
+      <b>What sets it off.</b> Fire on a Soaked enemy (from your Water, or the world''s water), or Water on a burning one.
+
+
+      <b>How to use it.</b> Deep Burn makes a bigger puff, but takes half of it. Soak a crowd and set them steaming one by one. Its short rest means it comes back often.
+
+
+      <b>How it looks.</b> Its name over the enemy and a burst of water where it stands.'
+  - Id: reaction-carried-embers
+    Title: Carried Embers (Fire and Wind)
+    Group: Reactions
+    Body: '<b>What it is.</b> Burn meets Unsteady. The wind strips three embers off the enemy and carries them on, away from you.
+
+
+      <b>The numbers.</b> The embers land 4, 5 and 6 m past the enemy, on your line to it, and burn there as small fires for 3 s (1 m across, 3 damage and 1 Burn a bite, two bites a second). Anything within 1.5 m of a landing is set alight as they land. The fire they lay starts nothing more. Rests 4 s.
+
+
+      <b>What sets it off.</b> Burn landing on an Unsteady enemy, or Unsteady on a burning one.
+
+
+      <b>How to use it.</b> You aim it by where you stand: put the enemy between you and the ones behind it, and the fire lands among them.
+
+
+      <b>How it looks.</b> Its name over the enemy, then three small fires springing up beyond it.'
+  - Id: reaction-the-ground-gives
+    Title: The Ground Gives (Water and Earth)
+    Group: Reactions
+    Body: '<b>What it is.</b> Tremor meets Soaked. Shaken wet ground turns to sand and the enemy sinks to the knees.
+
+
+      <b>The numbers.</b> For 4 s it moves and acts at half speed (an elite three quarters; a god is not sunk). A heavy blow while it is sunk holds it fast for 0.5 s. Rests 4 s.
+
+
+      <b>What sets it off.</b> Tremor landing on a Soaked enemy, or Water on a shaken one.
+
+
+      <b>How to use it.</b> Sink it, then come in with heavy blows: each one pins it for a moment. Not yet: sunk, it should be unable to dodge, leap or step back, and others wading in should slow too.
+
+
+      <b>How it looks.</b> Its name over the enemy. Not yet: the wet ring of sand round its feet.'
+  - Id: reaction-live-iron
+    Title: Live Iron (Metal and Lightning)
+    Group: Reactions
+    Body: '<b>What it is.</b> Sundered meets Static. The enemy''s broken armour goes live, and a blow on it arcs only from iron to iron.
+
+
+      <b>The numbers.</b> For 6 s, each of your weapon blows on it throws an arc to the nearest other Sundered enemy within 8 m (never to a clean one) for 35% of the blow, laying a notch of Sundered where it lands; from there it leaps once more to another notched enemy. At most one arc every 0.3 s. Spells do not arc. Rests 4 s.
+
+
+      <b>What sets it off.</b> Static landing on a Sundered enemy, or Sundered on a charged one.
+
+
+      <b>How to use it.</b> Notch the crowd first, then make one of them live and fight it: every blow reaches the others. The arc''s notches lay the wire for the next.
+
+
+      <b>How it looks.</b> Its name over the enemy and a strike where each arc lands.'
+  - Id: reaction-rot-roots
+    Title: Rot Roots (Life and Poison)
+    Group: Reactions
+    Body: '<b>What it is.</b> Seeded meets Poisoned. Roots run from the enemy''s feet to its neighbours, and its poison runs down them.
+
+
+      <b>The numbers.</b> Up to three other enemies within 5 m (the nearest) are joined for 6 s, each Seeded once as the roots reach it. Every bite of poison on the first enemy bites each joined one for half. Rests 4 s.
+
+
+      <b>What sets it off.</b> Poison landing on a Seeded enemy, or Seeded on a poisoned one.
+
+
+      <b>How to use it.</b> Poison one enemy deep, then seed it in a crowd: one body''s poison hurts four. The joined ones carry Seeded, ready for Life''s own marks.
+
+
+      <b>How it looks.</b> Its name over the enemy and a poison puff on each joined one at every bite. Not yet: the pale roots on the floor.'
   Marks:
   - Id: fire.cinder
     Title: Cinder

@@ -523,7 +523,7 @@ namespace Clover.Gameplay
             bool finisher = part.IsHead && IsStaggered && hit.Heavy;
             // The head stuck after a bite is only a head: it is the broken one that takes more, and can be finished.
             float share = !part.IsHead ? HandDamage : IsStaggered ? HeadDamage : BiteHeadDamage;
-            Afflictions.Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
+            Afflictions.IgniteFrom(hit, part);
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
             float unsteadies = Afflictions.StaggerTakenMultiplier;
             Afflictions.TakeFrom(hit, part);
@@ -629,7 +629,7 @@ namespace Clover.Gameplay
                     FaceTarget(deltaTime, 0f);
                     Stagger.Tick(deltaTime);
                     rest -= deltaTime * Pace;
-                    if (rest <= 0f) Choose();
+                    if (rest <= 0f && MayBeginAttack) Choose();
                     break;
                 case Mode.Slam:
                     AdvanceSlam(deltaTime);

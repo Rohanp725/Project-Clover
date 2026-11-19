@@ -17,5 +17,7 @@ namespace Clover.Player
         Mix,
         /// <summary>What a god leaves. Never sold. The largest, with a crown.</summary>
         Signature,
+        /// <summary>A pair's plain reaction (IMPLEMENTATION.md 2.4): one hidden mark per pair, never drawn or sold, always in force; its effects ride <see cref="UpgradeTrigger.Reacted"/>.</summary>
+        Reaction,
     }
 }

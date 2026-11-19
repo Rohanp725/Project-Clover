@@ -31,9 +31,10 @@ namespace Clover.Gameplay
             // Chill is laid one short of freezing, so a blow of Ice is what freezes it.
             int depth = Kind == AfflictionKind.Chill ? Afflictions.Depth(Kind) - 1 : Afflictions.Depth(Kind);
             int want = depth - dummy.Afflictions.Stacks(Kind);
-            // Laid to its depth, or once more to start its time over; Chill only ever up to one short.
-            if (want > 0) dummy.Afflictions.Apply(Kind, want, Kind == AfflictionKind.Burn ? 6f : 0f);
-            else if (Kind != AfflictionKind.Chill) dummy.Afflictions.Apply(Kind, 1, Kind == AfflictionKind.Burn ? 6f : 0f);
+            // Laid to its depth, or once more to start its time over; Chill only ever up to one short. Laid as the world's,
+            // so what the player lays on it reacts with it, as on an enemy wet from the river.
+            int count = want > 0 ? want : Kind != AfflictionKind.Chill ? 1 : 0;
+            if (count > 0) dummy.Afflictions.Lay(Kind, count, Kind == AfflictionKind.Burn ? 6f : 0f, 1f, LaySource.World, dummy);
         }
     }
 }

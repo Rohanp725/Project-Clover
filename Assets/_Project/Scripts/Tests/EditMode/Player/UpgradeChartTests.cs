@@ -142,9 +142,11 @@ namespace Clover.Tests
                 Assert.AreSame(upgrade, Upgrade.ById(upgrade.Id));
                 Assert.IsNotNull(Elements.ByName(upgrade.Element), upgrade.Id + " names no element");
                 Assert.GreaterOrEqual(UpgradeIcons.IndexOf(upgrade.Icon), 0, upgrade.Id + " names a picture that does not exist: " + upgrade.Icon);
-                if (upgrade.IsMix)
+                // A reaction is any pair's, on no tree: ReactionCatalogueTests checks its two elements.
+                if (upgrade.IsMix && !upgrade.IsHidden)
                     Assert.AreEqual(upgrade.Element2, Elements.ByName(upgrade.Element).MixWith, upgrade.Id + ": a mix names the earlier element first and its neighbour second");
-                Assert.AreEqual(upgrade.Kind == UpgradeKind.Mix || (upgrade.Signature && upgrade.IsMix), upgrade.IsMix, upgrade.Id + ": only mix marks and a mix's own gift have a second element");
+                if (!upgrade.IsHidden)
+                    Assert.AreEqual(upgrade.Kind == UpgradeKind.Mix || (upgrade.Signature && upgrade.IsMix), upgrade.IsMix, upgrade.Id + ": only mix marks and a mix's own gift have a second element");
                 foreach (string id in upgrade.Requires)
                 {
                     var parent = Upgrade.ById(id);
@@ -321,7 +323,8 @@ namespace Clover.Tests
         [Test]
         public void EveryMarkSitsInsideItsWedgeAndNoTwoMarksAnywhereSitTooNear()
         {
-            var all = Upgrade.All;
+            // Hidden marks (the reactions) are never drawn, so they have no place.
+            var all = Upgrade.All.Where(upgrade => !upgrade.IsHidden).ToList();
             foreach (var upgrade in all)
             {
                 if (upgrade.IsMix)

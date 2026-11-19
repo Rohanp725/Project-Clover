@@ -66,6 +66,8 @@ namespace Clover.UI
         private int shownWards;
         /// <summary>The four spell slots, the surge, the strikes and the charged blade, in the bottom-right corner (task 1.7).</summary>
         public SpellDiamondHud Diamond { get; private set; }
+        /// <summary>A reaction's name over the enemy it happened on (task 3.2).</summary>
+        public ReactionWords Reactions { get; private set; }
         private int shownTallies = -1;
         private int shownFlasks;
 
@@ -113,6 +115,7 @@ namespace Clover.UI
             // Built at play beside the status line (drawn with the HUD, under the menus), so no scene needs rebuilding.
             if (player != null && player.GetComponent<PlayerSpells>() != null && status != null)
                 Diamond = SpellDiamondHud.Make(status.transform.parent, status, player);
+            if (player != null && status != null) Reactions = ReactionWords.Make(status.transform.parent, status, player);
         }
 
         private void LateUpdate()

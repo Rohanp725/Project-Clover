@@ -432,14 +432,92 @@ Group: Resources
 **How it looks.** Not shown yet.
 
 ## reactions
-Title: Reactions (not built yet)
+Title: Reactions
 Group: Reactions
-**What it is.** When two elements' afflictions meet on one enemy, they will react, and each pair of elements will do something of its own. Reactions are not built yet.
+**What it is.** When an affliction lands on an enemy that already carries another element's, the two react, and each pair of elements does something of its own. Six of the 55 pairs react in this update (the entries below). The other pairs do nothing yet.
 
-**The numbers.** None yet. Reactions arrive in a later phase of the playtest (phase 3), and this part of the guide will fill then, with one entry for each reaction.
+**The numbers.** A reaction comes once, then rests on that enemy before it can come again: 4 s for most, 3 s for Steam, 6 s for the pairs three apart on the ring. The rest is kept for each enemy and each pair, so a crowd can react one after another. What a reaction lays starts no reaction of its own.
 
-**What sets it off.** Two different afflictions lying on the same enemy at once. You can already lay two: carry two elements, and your weapon lays the first while your spells, the charged blade and the R2 strike lay the second.
+**What sets it off.** The second affliction landing, laid by anything: a weapon blow, a spell, a mark, the charged blade, a strike, or the world (an enemy wet from the river reacts to your fire). For these six the order does not matter.
 
-**How to use it.** For now, afflictions only add up. Soaked spreads Static and Chill. Unsteady adds stagger and Tremor stops it fading. Sundered and Marked both make weapon blows hit harder.
+**How to use it.** Carry two elements. Your weapon lays the first and your spells, the charged blade and the R2 strike lay the second, so weave blade and spell on the same enemy. Wait out the rest, or turn to another enemy.
 
-**How it looks.** Not shown yet. Today each affliction shows as its own diamond under the enemy's bars.
+**How it looks.** The reaction's name rises over the enemy for a moment, with a puff in its two elements' colours. Each reaction's own look comes in a later update.
+
+## reaction-flashover
+Title: Flashover (Fire and Lightning)
+Group: Reactions
+**What it is.** Static meets Burn. Flame carries current: the fire on the enemy goes live and its Static discharges through it at once.
+
+**The numbers.** The Static is spent: 7 damage for each stack to everyone within 3 m, and 4 stagger for each stack (20 at full charge). The enemy flinches for 0.4 s, which breaks a wind-up (not a steadfast enemy's). The Burn is not spent and keeps burning. Rests 4 s.
+
+**What sets it off.** Burn landing on a charged enemy, or Static on a burning one.
+
+**How to use it.** Burn first with your blade, then charge it with a spell, or the other way round: the discharge comes without a heavy blow and leaves the fire burning. Catch a wind-up with it.
+
+**How it looks.** Its name over the enemy and a discharge where it stands. Not yet: the live flame that draws other discharges near into it.
+
+## reaction-steam
+Title: Steam (Fire and Water)
+Group: Reactions
+**What it is.** Burn meets Soaked. The water on the burning body flashes off in a scalding puff.
+
+**The numbers.** The Soaked is spent and half the Burn with it (rounded up). The puff deals 8 damage, and 4 more for each Burn it took, with 15 stagger, to everyone within 2.5 m. Rests 3 s, the shortest of all.
+
+**What sets it off.** Fire on a Soaked enemy (from your Water, or the world's water), or Water on a burning one.
+
+**How to use it.** Deep Burn makes a bigger puff, but takes half of it. Soak a crowd and set them steaming one by one. Its short rest means it comes back often.
+
+**How it looks.** Its name over the enemy and a burst of water where it stands.
+
+## reaction-carried-embers
+Title: Carried Embers (Fire and Wind)
+Group: Reactions
+**What it is.** Burn meets Unsteady. The wind strips three embers off the enemy and carries them on, away from you.
+
+**The numbers.** The embers land 4, 5 and 6 m past the enemy, on your line to it, and burn there as small fires for 3 s (1 m across, 3 damage and 1 Burn a bite, two bites a second). Anything within 1.5 m of a landing is set alight as they land. The fire they lay starts nothing more. Rests 4 s.
+
+**What sets it off.** Burn landing on an Unsteady enemy, or Unsteady on a burning one.
+
+**How to use it.** You aim it by where you stand: put the enemy between you and the ones behind it, and the fire lands among them.
+
+**How it looks.** Its name over the enemy, then three small fires springing up beyond it.
+
+## reaction-the-ground-gives
+Title: The Ground Gives (Water and Earth)
+Group: Reactions
+**What it is.** Tremor meets Soaked. Shaken wet ground turns to sand and the enemy sinks to the knees.
+
+**The numbers.** For 4 s it moves and acts at half speed (an elite three quarters; a god is not sunk). A heavy blow while it is sunk holds it fast for 0.5 s. Rests 4 s.
+
+**What sets it off.** Tremor landing on a Soaked enemy, or Water on a shaken one.
+
+**How to use it.** Sink it, then come in with heavy blows: each one pins it for a moment. Not yet: sunk, it should be unable to dodge, leap or step back, and others wading in should slow too.
+
+**How it looks.** Its name over the enemy. Not yet: the wet ring of sand round its feet.
+
+## reaction-live-iron
+Title: Live Iron (Metal and Lightning)
+Group: Reactions
+**What it is.** Sundered meets Static. The enemy's broken armour goes live, and a blow on it arcs only from iron to iron.
+
+**The numbers.** For 6 s, each of your weapon blows on it throws an arc to the nearest other Sundered enemy within 8 m (never to a clean one) for 35% of the blow, laying a notch of Sundered where it lands; from there it leaps once more to another notched enemy. At most one arc every 0.3 s. Spells do not arc. Rests 4 s.
+
+**What sets it off.** Static landing on a Sundered enemy, or Sundered on a charged one.
+
+**How to use it.** Notch the crowd first, then make one of them live and fight it: every blow reaches the others. The arc's notches lay the wire for the next.
+
+**How it looks.** Its name over the enemy and a strike where each arc lands.
+
+## reaction-rot-roots
+Title: Rot Roots (Life and Poison)
+Group: Reactions
+**What it is.** Seeded meets Poisoned. Roots run from the enemy's feet to its neighbours, and its poison runs down them.
+
+**The numbers.** Up to three other enemies within 5 m (the nearest) are joined for 6 s, each Seeded once as the roots reach it. Every bite of poison on the first enemy bites each joined one for half. Rests 4 s.
+
+**What sets it off.** Poison landing on a Seeded enemy, or Seeded on a poisoned one.
+
+**How to use it.** Poison one enemy deep, then seed it in a crowd: one body's poison hurts four. The joined ones carry Seeded, ready for Life's own marks.
+
+**How it looks.** Its name over the enemy and a poison puff on each joined one at every bite. Not yet: the pale roots on the floor.

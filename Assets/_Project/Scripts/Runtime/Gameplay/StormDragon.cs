@@ -773,7 +773,7 @@ namespace Clover.Gameplay
             bool finisher = isHead && IsStaggered && hit.Heavy;
             // The head stuck after a bite or spent after a beam is only a head: it is the broken one that takes more, and can be finished.
             float share = isHead ? (IsStaggered ? HeadDamage : OpenHeadDamage) : part == tailPart ? TailDamage : ClawDamage;
-            Afflictions.Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
+            Afflictions.IgniteFrom(hit, part);
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
             float unsteadies = Afflictions.StaggerTakenMultiplier;
             Afflictions.TakeFrom(hit, part);
@@ -929,7 +929,7 @@ namespace Clover.Gameplay
                     Stagger.Tick(deltaTime);
                     rest -= deltaTime * Pace;
                     // What has been decided from outside does not wait for his rest, and nor does the storm his fury opens with.
-                    if (rest <= 0f || Queued != DragonAttack.None || stormOwed) Choose();
+                    if ((rest <= 0f && MayBeginAttack) || Queued != DragonAttack.None || stormOwed) Choose();
                     break;
                 case Mode.Beam:
                     AdvanceBeam(deltaTime);

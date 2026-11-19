@@ -244,6 +244,8 @@ namespace Clover.UI
             var byId = new Dictionary<string, Mark>();
             foreach (var upgrade in Upgrade.All)
             {
+                // Hidden marks (the reactions) are on no chart.
+                if (upgrade.IsHidden) continue;
                 var mark = new Mark { Upgrade = upgrade, Place = UpgradeTree.OnChart(upgrade) * StepPixels, Size = SizeOf(upgrade), Colour = ColourOf(upgrade) };
                 marks.Add(mark);
                 byId[upgrade.Id] = mark;

@@ -45,6 +45,10 @@ namespace Clover.Player
         public SpellSpec Spell;
         /// <summary>A count the mark keeps for its effects to bank and spend, or null.</summary>
         public TallySpec Tally;
+        /// <summary>Which chart it is drawn on (IMPLEMENTATION.md 2.1). <see cref="MarkTree.Hidden"/> marks are never drawn and never sold.</summary>
+        public MarkTree Tree = MarkTree.Element;
+        /// <summary>For a reaction mark: its rest and what else the pair says; null for every other mark.</summary>
+        public ReactionDef Reaction;
         /// <summary>Its place in <see cref="All"/>.</summary>
         public int Index { get; internal set; }
 
@@ -55,8 +59,11 @@ namespace Clover.Player
         /// <summary>True when it teaches a spell that can be worn.</summary>
         public bool IsSpell => !string.IsNullOrEmpty(Form);
 
-        /// <summary>True when it is on the tree of this element, or on a mixed branch this element shares.</summary>
-        public bool BelongsTo(string element) => Element == element || (IsMix && Element2 == element);
+        /// <summary>True for a mark on no chart (a reaction): never drawn, opened or sold.</summary>
+        public bool IsHidden => Tree == MarkTree.Hidden;
+
+        /// <summary>True when it is on the tree of this element, or on a mixed branch this element shares. A hidden mark is on no tree.</summary>
+        public bool BelongsTo(string element) => !IsHidden && (Element == element || (IsMix && Element2 == element));
 
         // Fire: pressure and momentum.
         public const string Heat = "fire.heat";

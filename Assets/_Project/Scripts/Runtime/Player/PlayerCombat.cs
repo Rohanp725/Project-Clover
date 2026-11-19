@@ -860,13 +860,13 @@ namespace Clover.Player
                 // A burn is given in seconds, with or without depth.
                 float seconds = (blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds : Clover.Gameplay.Afflictions.Spec(AfflictionKind.Burn).Seconds) * AfflictionSeconds;
                 return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, seconds, blow.Stacks > 0 ? blow.Stacks + ExtraStacks : 0, blow.Detonate,
-                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell);
+                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell, fromReaction: blow.FromReaction);
             }
             bool lays = blow.Affliction != AfflictionKind.None && blow.Stacks > 0;
             float lasts = !lays ? 0f : blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds * AfflictionSeconds
                 : AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(blow.Affliction).Seconds * AfflictionSeconds : 0f;
             return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, 0f, 0, blow.Detonate,
-                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell);
+                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell, fromReaction: blow.FromReaction);
         }
 
         // What every spell's blow does once it has landed: its effect, what it earns, and word to the upgrades.
@@ -1077,7 +1077,7 @@ namespace Clover.Player
             return bitten;
         }
 
-        public int AfflictArea(Vector3 centre, float radius, AfflictionKind kind, int stacks, Component except = null)
+        public int AfflictArea(Vector3 centre, float radius, AfflictionKind kind, int stacks, Component except = null, LaySource source = LaySource.Effect)
         {
             spellStruck.Clear();
             int count = Overlap(centre + Vector3.up, radius + 0.5f);
@@ -1092,7 +1092,7 @@ namespace Clover.Player
                 if (offset.magnitude > radius) continue;
                 spellStruck.Add(target);
                 // Carried, not struck: it is not carried on again from here, so two Soaked enemies cannot pass it back and forth.
-                afflictable.Afflictions.Apply(kind, stacks + ExtraStacks, 0f, AfflictionPower);
+                afflictable.Afflictions.Lay(kind, stacks + ExtraStacks, 0f, AfflictionPower, source, (Component)target);
             }
             return spellStruck.Count;
         }
@@ -1240,7 +1240,44 @@ namespace Clover.Player
         }
 
         // The nearest enemy to a point that the current strike has not yet touched.
-        private Transform NextUnstruck(Vector3 from, float range, HashSet<IDamageable> struck)
+        /// <summary>
+        /// An arc from <paramref name="from"/> that never strikes it: it leaps to the nearest other enemy within reach
+        /// that carries <paramref name="seeks"/>, then on from there, up to <paramref name="leaps"/> times (Live Iron's
+        /// iron to iron). Returns how many it struck.
+        /// </summary>
+        public int StrikeChainFrom(Transform from, in SpellBlow blow, int leaps, float leapRange, ElementInfo look, AfflictionKind seeks)
+        {
+            var struck = spellStruck;
+            struck.Clear();
+            if (from == null) return 0;
+            var origin = from.GetComponentInParent<IDamageable>();
+            if (origin != null) struck.Add(origin);
+            Vector3 at = from.position;
+            int hits = 0;
+            for (int leap = 0; leap < leaps; leap++)
+            {
+                var next = NextUnstruck(at, leapRange, struck, seeks);
+                if (next == null) break;
+                var target = next.GetComponentInParent<IDamageable>();
+                if (target == null) break;
+                struck.Add(target);
+                Vector3 direction = next.position - at;
+                direction.y = 0f;
+                bool wasAfflicted = target is IAfflictable afflictable && afflictable.Afflictions.Any;
+                var outcome = target.TakeHit(Make(blow, target, direction.sqrMagnitude > 0.01f ? direction.normalized : transform.forward, at));
+                ElementLook.Strike(look, next.position, 0.2f);
+                if (outcome != HitOutcome.Missed)
+                {
+                    hits++;
+                    if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
+                    if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
+                }
+                at = next.position;
+            }
+            return hits;
+        }
+
+        private Transform NextUnstruck(Vector3 from, float range, HashSet<IDamageable> struck, AfflictionKind seeks = AfflictionKind.None)
         {
             Transform found = null;
             float best = float.MaxValue;
@@ -1251,6 +1288,7 @@ namespace Clover.Player
                 if (other.transform.root == transform.root) continue;
                 var target = other.GetComponentInParent<IDamageable>();
                 if (target == null || struck.Contains(target)) continue;
+                if (seeks != AfflictionKind.None && !(target is IAfflictable carrier && carrier.Afflictions.Has(seeks))) continue;
                 float distance = (((Component)target).transform.position - from).sqrMagnitude;
                 if (distance >= best) continue;
                 best = distance;

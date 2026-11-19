@@ -30,6 +30,7 @@ namespace Clover.Gameplay
             Landed = null;
             PoisonBit = null;
             Reacted = null;
+            Condition = null;
         }
 
         /// <summary>
@@ -39,6 +40,14 @@ namespace Clover.Gameplay
         public static event Action<Component, int, AfflictionKind> Reacted;
 
         public static void RaiseReacted(Component who, int pair, AfflictionKind laid) => Reacted?.Invoke(who, pair, laid);
+
+        /// <summary>
+        /// An enemy condition began, beat, was struck or ended (<see cref="EnemyConditions"/>): on whom, and what. The
+        /// listener runs the answers of the mark that set it, on its own step.
+        /// </summary>
+        public static event Action<Component, ConditionNews> Condition;
+
+        public static void RaiseCondition(Component who, ConditionNews news) => Condition?.Invoke(who, news);
 
         /// <summary>Poison bit something on its beat (or was made to): who, how deep it was, and what the bite dealt.</summary>
         public static event Action<Component, int, float> PoisonBit;

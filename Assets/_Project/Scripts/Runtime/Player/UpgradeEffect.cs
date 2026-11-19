@@ -58,6 +58,14 @@ namespace Clover.Player
         public int Spends;
         /// <summary>It happens only if its mark's count holds any, spends them all, and carries how many were spent (for <see cref="PerStack"/>).</summary>
         public bool SpendsAll;
+        /// <summary>For the Reacted trigger: only for this reaction (its id, "react.steam"). For ForceReaction: the reaction forced. Empty: any.</summary>
+        public string Reaction = "";
+        /// <summary>For an effect a reaction runs: what it lays may set off reactions of its own (Sea Ice, Breakers and the like); otherwise it starts none.</summary>
+        public bool Cascades;
+        /// <summary>For the ConditionBeat, ConditionStruck and ConditionEnded triggers: the condition answered (its <see cref="ConditionSpec.Id"/>).</summary>
+        public string Condition = "";
+        /// <summary>For ConditionStruck: which blows it answers.</summary>
+        public StruckBy By;
 
         // Numbers.
         /// <summary>The affliction laid or set off. None means the element's own.</summary>
@@ -84,6 +92,14 @@ namespace Clover.Player
         /// <summary>For <see cref="UpgradeAction.Form"/>: the form cast, by its name in <see cref="SpellForms"/>, and the numbers it reads.</summary>
         public string Form = "";
         public SpellSpec Spell;
+        /// <summary>For <see cref="UpgradeAction.Condition"/>: the condition set.</summary>
+        public ConditionSpec State;
+        /// <summary>For <see cref="UpgradeAction.Spend"/>: the share of the stacks taken, rounded up (0: all).</summary>
+        public float Share;
+        /// <summary>Damage added for each stack the Spend effect before it (in the same mark) took.</summary>
+        public float DamagePerSpent;
+        /// <summary>For an Arc: it leaps only to enemies carrying this, from the target without striking it again (Live Iron). None: an arc as usual.</summary>
+        public AfflictionKind LeapsTo = AfflictionKind.None;
 
         /// <summary>Its place among all the effects in the catalogue; set when the catalogue is gathered.</summary>
         public int Slot { get; internal set; } = -1;

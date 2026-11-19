@@ -40,6 +40,8 @@ namespace Clover.Gameplay
         /// <summary>Set by the enemy each frame: whether the target is found standing in the sun, and how many flasks it carries.</summary>
         [NonSerialized] public bool TargetLit;
         [NonSerialized] public int TargetFlasks;
+        /// <summary>The conditions on the body this brain drives (its afflictions' own), read once at the top of each step; none for a brain with no body.</summary>
+        [NonSerialized] public EnemyConditions Conditions;
 
         public EnemyState State { get; private set; }
         public EnemyAttack Current { get; private set; }
@@ -48,7 +50,7 @@ namespace Clover.Gameplay
         public float AttackProgress => IsAttacking && Current.Total > 0f ? Math.Min(1f, attackElapsed / Current.Total) : 0f;
         public float TelegraphProgress => State == EnemyState.Telegraph && Current.Telegraph > 0f ? Math.Min(1f, attackElapsed / Current.Telegraph) : 0f;
         /// <summary>How far through a flinch, from 0 to 1.</summary>
-        public float FlinchProgress => State == EnemyState.Flinch && FlinchSeconds > 0f ? Math.Min(1f, stateElapsed / FlinchSeconds) : 0f;
+        public float FlinchProgress => State == EnemyState.Flinch && flinchFor > 0f ? Math.Min(1f, stateElapsed / flinchFor) : 0f;
         /// <summary>Seconds spent in the current state.</summary>
         public float StateSeconds => stateElapsed;
         /// <summary>+1 to walk toward the target, -1 to back away, 0 to stand.</summary>
@@ -67,6 +69,7 @@ namespace Clover.Gameplay
         private float offGround;
         private float provokedLeft;
         private float busyFor;
+        private float flinchFor;
         private float[] cooldowns = new float[0];
 
         /// <summary>How far through whatever it is busy with, from 0 to 1; 0 when the time was left open.</summary>
@@ -116,6 +119,20 @@ namespace Clover.Gameplay
         /// </summary>
         public bool Tick(float deltaTime, float distance, float roll, bool mayAttack = true, bool targetOnGround = true)
         {
+            // The conditions on it, read once (IMPLEMENTATION.md 3.7): rooted it walks nowhere, breathless it begins no
+            // attack, its wind-ups may drag, and with its sight cut short whoever stands farther off is lost to it.
+            var held = Conditions != null ? Conditions.Flags : ConditionFlags.None;
+            bool rooted = (held & ConditionFlags.Rooted) != 0;
+            bool noAttack = (held & ConditionFlags.BeginsNoAttack) != 0;
+            float windup = (held & ConditionFlags.WindupSlowed) != 0 ? Conditions.WindupPace : 1f;
+            bool unseen = (held & ConditionFlags.SightShort) != 0 && distance > Conditions.Sight;
+            bool struck = Step(deltaTime, distance, roll, mayAttack, targetOnGround, windup, unseen, noAttack || unseen);
+            if (rooted || unseen) MoveWish = 0;
+            return struck;
+        }
+
+        private bool Step(float deltaTime, float distance, float roll, bool mayAttack, bool targetOnGround, float windup, bool unseen, bool holdsOff)
+        {
             IsWaiting = false;
             stateElapsed += deltaTime;
             if (provokedLeft > 0f) provokedLeft -= deltaTime;
@@ -130,7 +147,7 @@ namespace Clover.Gameplay
             switch (State)
             {
                 case EnemyState.Idle:
-                    if (distance <= AggroRange && mayChase) Enter(EnemyState.Stalk);
+                    if (distance <= AggroRange && mayChase && !unseen) Enter(EnemyState.Stalk);
                     return false;
 
                 case EnemyState.Stalk:
@@ -157,7 +174,7 @@ namespace Clover.Gameplay
                         else if (distance < ring - 0.6f) MoveWish = -1;
                         return false;
                     }
-                    if (rest <= 0f || counter)
+                    if ((rest <= 0f || counter) && !holdsOff)
                     {
                         // Its answer to blows turned is the one it keeps for that, when the target is close enough for it.
                         var answer = counter ? Named(CounterAttack) : null;
@@ -174,7 +191,7 @@ namespace Clover.Gameplay
                     return false;
 
                 case EnemyState.Telegraph:
-                    attackElapsed += deltaTime;
+                    attackElapsed += deltaTime * windup;
                     if (attackElapsed < Current.Telegraph) return false;
                     State = EnemyState.Strike;
                     stateElapsed = 0f;
@@ -205,7 +222,7 @@ namespace Clover.Gameplay
                     return false;
 
                 case EnemyState.Flinch:
-                    if (stateElapsed >= FlinchSeconds)
+                    if (stateElapsed >= flinchFor)
                     {
                         Enter(EnemyState.Stalk);
                         rest = Math.Max(rest, 0.15f);
@@ -221,13 +238,15 @@ namespace Clover.Gameplay
         /// A blow landed on the enemy. It is knocked out of walking, resting and recovering by anything, and out of an
         /// attack it is still showing only by a heavy blow. A blow already struck is never taken back.
         /// </summary>
-        public bool Flinch(bool heavy)
+        public bool Flinch(bool heavy, float seconds = 0f)
         {
             if (State == EnemyState.Dead || State == EnemyState.Staggered || State == EnemyState.Strike || State == EnemyState.Busy) return false;
             if (State == EnemyState.Telegraph && !heavy) return false;
             if (State == EnemyState.Idle) rest = 0f;
             Current = null;
             Enter(EnemyState.Flinch);
+            // A flinch of an effect's own length (a reaction's); a blow's is the brain's usual.
+            flinchFor = seconds > 0f ? seconds : FlinchSeconds;
             return true;
         }
 

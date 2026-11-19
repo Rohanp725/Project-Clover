@@ -140,6 +140,19 @@ public class P2ProbeRunner : MonoBehaviour
         yield return null;
     }
 
+    // Flashovers shown so far, and whether one came on the still dummy since a count was taken (Phase 3's reactions).
+    private int Flashovers()
+    {
+        var reactions = player.GetComponent<PlayerReactions>();
+        return reactions != null ? reactions.TimesShown(AfflictionPairs.Index(AfflictionKind.Burn, AfflictionKind.Static)) : 0;
+    }
+
+    private bool FlashedOnStill(int before)
+    {
+        var reactions = player.GetComponent<PlayerReactions>();
+        return reactions != null && Flashovers() > before && reactions.LastOn == still;
+    }
+
     private static T Find<T>(Func<T, bool> which) where T : UnityEngine.Object =>
         FindObjectsByType<T>(FindObjectsInactive.Include).FirstOrDefault(which);
 
@@ -362,11 +375,14 @@ public class P2ProbeRunner : MonoBehaviour
         yield return AtDummy();
         still.Afflictions.Clear();
         int landed = combat.BlowsLanded;
+        int flashed = Flashovers();
         yield return Tap(Key.J);
         yield return Until(() => combat.BlowsLanded > landed, 1.5f);
         yield return null;
-        Judge("a blow charged with Lightning lays Fire (the root) and Static (the blade)", combat.BlowsLanded > landed && still.Afflictions.Burn.IsBurning && still.Afflictions.Stacks(AfflictionKind.Static) > 0,
-            $"burn {still.Afflictions.Burn.IsBurning}, static {still.Afflictions.Stacks(AfflictionKind.Static)}" + Diag());
+        yield return null;
+        // Since Phase 3, Static laid beside Burn sets off Flashover, which spends the Static: either shows it was laid.
+        Judge("a blow charged with Lightning lays Fire (the root) and Static (the blade)", combat.BlowsLanded > landed && still.Afflictions.Burn.IsBurning && (still.Afflictions.Stacks(AfflictionKind.Static) > 0 || FlashedOnStill(flashed)),
+            $"burn {still.Afflictions.Burn.IsBurning}, static {still.Afflictions.Stacks(AfflictionKind.Static)}, flashover {Flashovers() - flashed}" + Diag());
         yield return WhenFree();
 
         // 4. Plain weapon blows lay only Fire's, though Static's root is learned.
@@ -403,12 +419,13 @@ public class P2ProbeRunner : MonoBehaviour
         still.Afflictions.Clear();
         float paid = spells.StrikeManaPaid;
         strikes = combat.InfusedStrikes;
+        flashed = Flashovers();
         yield return PadStrike(pad.rightTrigger);
         yield return Until(() => combat.InfusedNow && combat.Combo.Phase == AttackPhase.Active, 1f);
         yield return Still("p2_strike_lightning");
         yield return Real(0.5f);
-        Judge("L2 + RT is Lightning's Flash Cut, not the deep strike, and costs nothing", combat.InfusedStrikes == strikes + 1 && combat.DeepStrikes == deep && spells.StrikeManaPaid == paid && still.Afflictions.Stacks(AfflictionKind.Static) > 0,
-            $"static x{still.Afflictions.Stacks(AfflictionKind.Static)}, paid {spells.StrikeManaPaid - paid:0}");
+        Judge("L2 + RT is Lightning's Flash Cut, not the deep strike, and costs nothing", combat.InfusedStrikes == strikes + 1 && combat.DeepStrikes == deep && spells.StrikeManaPaid == paid && (still.Afflictions.Stacks(AfflictionKind.Static) > 0 || FlashedOnStill(flashed)),
+            $"static x{still.Afflictions.Stacks(AfflictionKind.Static)}, flashover {Flashovers() - flashed}, paid {spells.StrikeManaPaid - paid:0}");
         Judge("neither strike charged the blade", !combat.Blade.Charged);
         yield return WhenFree();
         Set(pad.leftTrigger, 1f);

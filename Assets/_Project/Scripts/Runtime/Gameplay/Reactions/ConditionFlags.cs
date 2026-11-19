@@ -1,0 +1,30 @@
+using System;
+
+namespace Clover.Gameplay
+{
+    /// <summary>
+    /// The states an enemy condition can put an enemy in (IMPLEMENTATION.md 3.7, README "Enemy states"). The brain, the
+    /// enemy's body and the gods' choosers each read them in one place; the afflictions' numbers read the shares.
+    /// </summary>
+    [Flags]
+    public enum ConditionFlags
+    {
+        None = 0,
+        /// <summary>It cannot walk or be shoved, but it can still attack what comes into reach.</summary>
+        Rooted = 1 << 0,
+        /// <summary>It begins no attack; it still moves, and a blow already begun is finished.</summary>
+        BeginsNoAttack = 1 << 1,
+        /// <summary>It cannot raise its guard.</summary>
+        CannotGuard = 1 << 2,
+        /// <summary>Its wind-ups are shown slower, by the run's Scale (0.5: twice as long).</summary>
+        WindupSlowed = 1 << 3,
+        /// <summary>The damage it takes is multiplied by the run's Scale.</summary>
+        DamageTakenShare = 1 << 4,
+        /// <summary>The damage it deals is multiplied by the run's Scale.</summary>
+        DamageDealtShare = 1 << 5,
+        /// <summary>It sees only as far as the run's Sight: one farther off is lost to it.</summary>
+        SightShort = 1 << 6,
+        /// <summary>It is joined to another enemy (the run's Link); what passes along the link is the setting mark's to say.</summary>
+        Linked = 1 << 7,
+    }
+}

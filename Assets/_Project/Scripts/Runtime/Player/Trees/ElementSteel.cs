@@ -128,7 +128,7 @@ namespace Clover.Player
                     // NEEDS: the shadow cut loose (an enemy state). For now the third sinks smoke at its feet and Curses twice more.
                     if (blow.Third && target is IAfflictable cursed)
                     {
-                        cursed.Afflictions.Apply(AfflictionKind.Cursed, 2);
+                        cursed.Afflictions.Lay(AfflictionKind.Cursed, 2, 0f, 1f, LaySource.Weapon, target);
                         Vfx.Play(VfxKind.TintPuff, Ground(at) + Vector3.up * 0.3f, Vector3.down, 1.4f, ElementSubstance.Shade(element.Colour));
                     }
                     break;
@@ -233,7 +233,7 @@ namespace Clover.Player
                         FormFx.Erupt(FormMesh.Crystal, Ground(at), Quaternion.Euler(0f, Random.Range(0f, 360f), 0f), new Vector3(0.7f, 2.4f, 0.7f), colour, 0.08f, 0.7f, 0.3f);
                         // Ice Through: frozen at once when it already carries three Chill or more.
                         if (deep && one is IAfflictable cold && cold.Afflictions.Stacks(AfflictionKind.Chill) >= 3)
-                            cold.Afflictions.Apply(AfflictionKind.Chill, Afflictions.Depth(AfflictionKind.Chill));
+                            cold.Afflictions.Lay(AfflictionKind.Chill, Afflictions.Depth(AfflictionKind.Chill), 0f, 1f, LaySource.Weapon, one);
                     }
                     Vfx.Play(VfxKind.TintPuff, Ground(print.Centre) + Vector3.up * 0.4f, Vector3.up, 1.4f, ElementSubstance.Pale(colour));
                     // NEEDS: the next blow breaking the spike for 15 damage in 2 m.

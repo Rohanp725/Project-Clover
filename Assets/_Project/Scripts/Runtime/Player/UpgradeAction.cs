@@ -66,5 +66,13 @@ namespace Clover.Player
         Bite,
         /// <summary>Lays stacks on the nearest other enemy within reach of the target, and nothing on the target itself: a dose that leaps. Reads: Affliction, Stacks (1), Reach (4; longer with LeapReach).</summary>
         Pass,
+        /// <summary>Sets a pair's reaction off on the target now, through its rest, when the target carries both. Reads: Reaction (the reaction's id).</summary>
+        ForceReaction,
+        /// <summary>Makes the target flinch: what it had begun is broken, unless it is steadfast. Reads: Seconds (0.4).</summary>
+        Flinch,
+        /// <summary>Sets an enemy condition (<see cref="Clover.Gameplay.EnemyConditions"/>) on the target, or with a Radius on the enemies near it (State.ToOthers: not on the target, each joined to it). Reads: State, Radius, Count (all within the radius), Affliction and Stacks laid on each that takes it.</summary>
+        Condition,
+        /// <summary>Takes stacks of an affliction off the target with no burst; the next effects of the same mark may count them (DamagePerSpent). Reads: Affliction, Share (0: all; else that share, rounded up), Count (the most).</summary>
+        Spend,
     }
 }

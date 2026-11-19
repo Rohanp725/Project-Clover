@@ -39,13 +39,20 @@ namespace Clover.Gameplay
         public readonly AfflictionKind Affliction2;
         public readonly int Affliction2Stacks;
         public readonly float Affliction2Seconds;
+        /// <summary>
+        /// True for a blow a reaction dealt (or the ground it left): what it lays starts no reaction, and no condition
+        /// answers it, so a reaction never feeds on itself (IMPLEMENTATION.md 3.7).
+        /// </summary>
+        public readonly bool FromReaction;
 
         public Hit(float damage, float stagger, Vector3 direction, bool heavy = false, bool unblockable = false, Vector3? origin = null,
             float burnSeconds = 0f, int burnStacks = 0, bool detonate = false,
             AfflictionKind affliction = AfflictionKind.None, int afflictionStacks = 0, float afflictionSeconds = 0f, float afflictionPower = 1f,
             bool spell = false, bool critical = false,
-            AfflictionKind affliction2 = AfflictionKind.None, int affliction2Stacks = 0, float affliction2Seconds = 0f)
+            AfflictionKind affliction2 = AfflictionKind.None, int affliction2Stacks = 0, float affliction2Seconds = 0f,
+            bool fromReaction = false)
         {
+            FromReaction = fromReaction;
             Damage = damage;
             Stagger = stagger;
             Direction = direction;

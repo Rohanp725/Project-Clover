@@ -624,7 +624,7 @@ namespace Clover.Gameplay
             // Without its sun in its hold (shoved away in the Ricochet, planted for the Flares) the shell is cool and takes blows in full.
             bool open = mode == Mode.Exposed || IsStaggered || (isHead && headOpen) || shellCool;
             float share = IsStaggered ? (isHead ? HeadDamage : 1f) : open ? 1f : HotShellShare;
-            Afflictions.Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
+            Afflictions.IgniteFrom(hit, part);
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
             float unsteadies = Afflictions.StaggerTakenMultiplier;
             Afflictions.TakeFrom(hit, part);
@@ -1181,7 +1181,7 @@ namespace Clover.Gameplay
                 return;
             }
             if (OnlyWhenAsked && Queued == SunBearerAttack.None && !zenithOwed) return;
-            if (rest <= 0f || Queued != SunBearerAttack.None || zenithOwed) Choose();
+            if ((rest <= 0f && MayBeginAttack) || Queued != SunBearerAttack.None || zenithOwed) Choose();
         }
 
         // The falcon rides round the north of the court, high up, and its shadow goes round the floor under it.

@@ -72,5 +72,13 @@ namespace Clover.Player
         ChargedBlow,
         /// <summary>The third and last blow of a charged blade landed. Target: that enemy.</summary>
         ChargedBlowThird,
+        /// <summary>Two afflictions reacted on an enemy (IMPLEMENTATION.md 3.7); an effect with a <see cref="UpgradeEffect.Reaction"/> answers only that one. Target: that enemy.</summary>
+        Reacted,
+        /// <summary>A condition this effect's mark set came to its beat (<see cref="UpgradeEffect.Condition"/> names which). Target: the enemy carrying it.</summary>
+        ConditionBeat,
+        /// <summary>A blow landed on an enemy carrying a condition this effect's mark set (<see cref="UpgradeEffect.By"/> says which blows). Target: that enemy; the blow's damage is carried.</summary>
+        ConditionStruck,
+        /// <summary>A condition this effect's mark set ran out. Target: the enemy that carried it.</summary>
+        ConditionEnded,
     }
 }
