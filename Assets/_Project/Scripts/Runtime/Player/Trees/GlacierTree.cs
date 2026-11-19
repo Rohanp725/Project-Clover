@@ -23,7 +23,7 @@ namespace Clover.Player.Trees
             // The first element is the one whose mix this is: the earlier of the two round the ring.
             const string A = Elements.Ice, B = Elements.Water;
 
-            // With the held element's own root learned as well, that element's affliction is laid twice by each blow.
+            // Both afflictions on every blow, the second element's too (the owner's of 2026-11-19); with the first element's root learned, the root's stack is that element's share and is not laid twice.
             to.Add(new Upgrade { Id = ColdWater, Name = "Cold Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, X = 0f, Y = 1f, Icon = UpgradeIcons.Drop,
                 Description = "Your blows lay Chill and Soaked together.",
                 Effects = new[]

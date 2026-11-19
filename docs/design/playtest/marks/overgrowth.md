@@ -3,15 +3,15 @@
 The long explanation the chart shows for every mark on Overgrowth, the branch Life and Earth share.
 
 ## overgrowth.rootgrip
-**What it does.** A heavy blow on an enemy that carries both Tremor and Seeded sends roots up its legs and holds it where it stands. Your heavy blows also add your first element's affliction. As built, a weapon blow lays only the affliction of the first element you carry, so the second one must come from your spells, the charged blade or the R2 strike.
+**What it does.** A heavy blow on an enemy that carries both Tremor and Seeded sends roots up its legs and holds it where it stands. Your heavy blows also lay Tremor and Seeded together, whichever of the two you carry first.
 
 **When it happens.** Every heavy blow or finisher that lands. The hold comes when the enemy already carries both, at most once every 3 seconds.
 
-**The numbers.** Mix, 3 Shards. Without the first element's root mark, a heavy blow lays one stack of its affliction (Seeded with Life first, Tremor with Earth first); with that root learned it adds nothing beyond the root's own. Held still for 1.2 seconds (elites and gods for less; a few great forms cannot be held).
+**The numbers.** Mix, 3 Shards. A heavy blow lays one stack of Tremor and one of Seeded. Your first element's own is not laid twice: once its root is learned, the root's stack is the one a heavy blow lays. Held still for 1.2 seconds (elites and gods for less; a few great forms cannot be held).
 
-**Works with.** Seeded or Tremor, Briar Patch or Stone Rise for the second affliction, the charged blade, Living Rampart (its perfect guard lays Tremor), Ripening, The Ground Wakes.
+**Works with.** Seeded or Tremor, Briar Patch or Stone Rise for more of either, the charged blade, Living Rampart (its perfect guard lays Tremor), Ripening, The Ground Wakes.
 
-**Example.** Life first: seed a brute with your blade, hit it with Stone Rise for Tremor, then a heavy blow roots it for a light chain that mends you with every cut.
+**Example.** Life first: a heavy blow seeds and shakes a brute, and the next one roots it for a light chain that mends you with every cut.
 
 ## overgrowth.moss
 **What it does.** Stand your ground and the ground feeds you. While you fight without rolling, you mend slowly, and thorns grow on you that cut and seed whoever strikes you.

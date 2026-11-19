@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Clover.Gameplay;
 
 namespace Clover.Player
 {
@@ -56,6 +57,25 @@ namespace Clover.Player
         {
             if (mark == null || loadout == null) return false;
             return string.IsNullOrEmpty(mark.Weapon) || string.IsNullOrEmpty(loadout.Weapon) || loadout.Weapon.Contains(mark.Weapon);
+        }
+
+        /// <summary>True when the trigger is a blow of the weapon (or its skill), the triggers the first-element rule asks about.</summary>
+        public static bool IsBlow(UpgradeTrigger trigger) =>
+            trigger == UpgradeTrigger.AnyHit || trigger == UpgradeTrigger.LightHit || trigger == UpgradeTrigger.HeavyHit || trigger == UpgradeTrigger.FinisherHit
+            || trigger == UpgradeTrigger.SkillHit || trigger == UpgradeTrigger.AfflictedHit || trigger == UpgradeTrigger.CritHit || trigger == UpgradeTrigger.ChainEnd;
+
+        /// <summary>
+        /// True when an effect of <paramref name="owner"/> on <paramref name="trigger"/> may lay <paramref name="laid"/>,
+        /// with <paramref name="weapon"/> the affliction the weapon lays (the first element's). Weapon blows lay only the
+        /// first element's affliction (the owner's rule of 2026-11-18), so the second element comes from spells, the
+        /// charged blade and infused strikes, and reactions come from weaving weapon and spell. A mark on a mixed branch
+        /// is the exception (the owner's of 2026-11-19): it says its blows lay both elements' afflictions, and they do.
+        /// </summary>
+        public static bool BlowMayLay(Upgrade owner, UpgradeTrigger trigger, AfflictionKind laid, AfflictionKind weapon)
+        {
+            if (laid == AfflictionKind.None || !IsBlow(trigger)) return true;
+            if (owner != null && owner.Kind == UpgradeKind.Mix) return true;
+            return laid == weapon;
         }
 
         /// <summary>True when the mark's element is attuned; for a duo branch's mark, both of its elements.</summary>

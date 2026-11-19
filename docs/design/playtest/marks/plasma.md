@@ -3,15 +3,15 @@
 The long explanation the chart shows for every mark on Plasma, the branch Fire and Lightning share.
 
 ## plasma.embers
-**What it does.** A heavy blow on an enemy carrying Static sets the Static off, as Lightning's root would, whichever of the two is your first element. Your weapon lays only your first element's affliction, so of the two the blows lay only that one: Burn with Fire first, Static with Lightning first, and nothing more once that element's root (Cinder or Static) is learned, since the root lays it already. The other comes from your spells, the charged blade and the R2 strike.
+**What it does.** A heavy blow on an enemy carrying Static sets the Static off, as Lightning's root would, whichever of the two is your first element. Your blows also lay Burn and Static together, whichever of the two you carry first: every blow a Burn, every light blow a Static. Once your first element's root (Cinder or Static) is learned, that element's own is the root's, not laid twice.
 
-**When it happens.** A heavy blow or finisher on an enemy carrying Static sets it off. Without your first element's root: with Fire first every blow that lands lays a Burn, with Lightning first every light blow lays a Static.
+**When it happens.** A heavy blow or finisher on an enemy carrying Static sets it off. Every blow that lands lays a Burn, and every light blow a Static.
 
-**The numbers.** Mix, 3 Shards. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most about three times a second. Without the root, one stack a blow.
+**The numbers.** Mix, 3 Shards. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most about three times a second. One stack a blow of each; of your first element's, none beyond its root's.
 
-**Works with.** Thunderclap or Flame Wave in a slot (the other element's affliction), the charged blade and the R2 strike, Arc Fire, Twin Break, Meltdown, Chain Reaction, Plasma, and the Flashover reaction when Burn and Static meet.
+**Works with.** Thunderclap or Flame Wave in a slot (more of either), the charged blade and the R2 strike, Arc Fire, Twin Break, Meltdown, Chain Reaction, Plasma, and the Flashover reaction when Burn and Static meet.
 
-**Example.** Carrying Fire first and Lightning second: your blows burn a soldier, a Thunderclap leaves it Static, and the heavy blow that ends your chain sets the Static off into the pack.
+**Example.** Carrying Fire first and Lightning second: your light blows burn a soldier and leave it Static, and the heavy blow that ends your chain sets the Static off into the pack.
 
 ## plasma.arcfire
 **What it does.** A discharge of Static carries Burn to everyone it reaches. A burn set off leaves Static on everyone it reaches. Each element's burst plants the other.

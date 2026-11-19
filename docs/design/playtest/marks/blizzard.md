@@ -3,15 +3,15 @@
 The long explanation the chart shows for every mark on Blizzard, the branch Wind and Ice share.
 
 ## blizzard.biting
-**What it does.** Your weapon blows lay your first element's affliction, Unsteady or Chill, even before you learn its root. As built it adds nothing once that root is learned: your weapon lays only the first element's affliction, and the other one comes from your spells, the charged blade and your R2 strike.
+**What it does.** Your weapon blows lay Unsteady and Chill together, whichever of the two you carry first. A mixed branch's marks are the exception to the rule that weapon blows lay only your first element's affliction.
 
 **When it happens.** Every weapon blow that lands, while you carry both Wind and Ice.
 
-**The numbers.** Mix, 3 Shards. One stack a blow of Unsteady (Wind first) or Chill (Ice first), none beyond what the root already lays. Unsteady: 6% more stagger, 15% longer shoves and 8% slower turning a stack. Chill: 7% slower a stack, Frozen at five.
+**The numbers.** Mix, 3 Shards. One stack of Unsteady and one of Chill a blow. Your first element's own is not laid twice: once its root is learned, the root's stack is the one a blow lays. Unsteady: 6% more stagger, 15% longer shoves and 8% slower turning a stack. Chill: 7% slower a stack, Frozen at five.
 
-**Works with.** Windchill, Sliding Ice, Gust or Hoarfrost from a slot for the other affliction, the charged blade.
+**Works with.** Windchill (it needs both, and your blows lay both), Sliding Ice, Gust or Hoarfrost from a slot for more of either, the charged blade.
 
-**Example.** Wind first, root not yet learned: four blows leave a soldier four deep in Unsteady; one Hoarfrost adds the Chill that Windchill needs.
+**Example.** Wind first: four blows leave a soldier four deep in Unsteady and Chill, and with Windchill it goes on growing colder by itself until it freezes.
 
 ## blizzard.windchill
 **What it does.** The enemy you face, while it is both Unsteady and chilled, grows colder by itself, a stack at a time, until it freezes. As built only the enemy you face grows colder.

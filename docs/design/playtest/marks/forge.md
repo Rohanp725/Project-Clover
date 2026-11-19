@@ -3,11 +3,11 @@
 The long explanation the chart shows for every mark on Forge, the branch Earth and Metal share.
 
 ## forge.hammeranvil
-**What it does.** A heavy blow on a shaken enemy strikes twice: once from your weapon, and once more a moment later as the stone answers. Heavy blows also lay your first element's affliction. As built, the second strike asks for Tremor on the enemy, not stone at its back, and it bursts round you rather than behind the enemy.
+**What it does.** A heavy blow on a shaken enemy strikes twice: once from your weapon, and once more a moment later as the stone answers. Heavy blows also lay Tremor and Sundered together, whichever of the two you carry first. As built, the second strike asks for Tremor on the enemy, not stone at its back, and it bursts round you rather than behind the enemy.
 
 **When it happens.** Every heavy blow that lands. The second strike needs the enemy to carry Tremor already.
 
-**The numbers.** Mix, 3 Shards. The second strike lands 0.15 seconds later, 2.3 metres round you: 60% of the heavy blow's damage and 20 stagger, at most twice a second. Weapon blows lay only your first element's affliction, so each heavy blow adds a stack of Tremor (Earth first) or a notch of Sundered (Metal first), and nothing more when that element's root already lays it with heavy blows.
+**The numbers.** Mix, 3 Shards. The second strike lands 0.15 seconds later, 2.3 metres round you: 60% of the heavy blow's damage and 20 stagger, at most twice a second. Each heavy blow also adds a stack of Tremor and a notch of Sundered; your first element's own is not laid twice when its root already lays it with heavy blows.
 
 **Works with.** Tremor, Heavy Hand, Buckled, Mountain Stance and Quake Step (Tremor to start it), Metal's root.
 

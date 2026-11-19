@@ -3,15 +3,15 @@
 The long explanation the chart shows for every mark on Tempest, the branch Lightning and Wind share.
 
 ## tempest.charged
-**What it does.** A heavy blow on an enemy carrying Static sets the Static off, as Lightning's root would, whichever of the two is your first element. Your weapon lays only your first element's affliction, so of the two the blows lay only that one: Static with Lightning first, Unsteady with Wind first, and nothing more once that element's root (Static or Unsteady) is learned, since the root lays it already. The other comes from your spells, the charged blade and the R2 strike.
+**What it does.** A heavy blow on an enemy carrying Static sets the Static off, as Lightning's root would, whichever of the two is your first element. Your blows also lay Static and Unsteady together, whichever of the two you carry first: every light blow a Static, every blow an Unsteady. Once your first element's root (Static or Unsteady) is learned, that element's own is the root's, not laid twice.
 
-**When it happens.** A heavy blow or finisher on an enemy carrying Static sets it off. Without your first element's root: with Lightning first every light blow lays a Static, with Wind first every blow that lands lays an Unsteady.
+**When it happens.** A heavy blow or finisher on an enemy carrying Static sets it off. Every light blow lays a Static, and every blow that lands an Unsteady.
 
-**The numbers.** Mix, 3 Shards. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most about three times a second. Without the root, one stack a blow. Unsteady makes an enemy take 6% more stagger, be shoved 15% further and turn 8% slower for each stack, up to five.
+**The numbers.** Mix, 3 Shards. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most about three times a second. One stack a blow of each; of your first element's, none beyond its root's. Unsteady makes an enemy take 6% more stagger, be shoved 15% further and turn 8% slower for each stack, up to five.
 
-**Works with.** Thunderclap or Gust in a slot (the other element's affliction), the charged blade and the R2 strike, Thunder Lift, Slip Current, The Sky Finds Them, Falling Thunder.
+**Works with.** Thunderclap or Gust in a slot (more of either), the charged blade and the R2 strike, Thunder Lift, Slip Current, The Sky Finds Them, Falling Thunder.
 
-**Example.** Carrying Wind first and Lightning second: your blows build Unsteady on a soldier, a Thunderclap leaves it Static, and the heavy blow that ends your chain sets the Static off into its neighbours.
+**Example.** Carrying Wind first and Lightning second: your light blows build Unsteady and Static on a soldier, and the heavy blow that ends your chain sets the Static off into its neighbours.
 
 ## tempest.lift
 **What it does.** A discharge of five Static or more throws its enemy into the air. What is too heavy to leave the ground reels where it stands instead.

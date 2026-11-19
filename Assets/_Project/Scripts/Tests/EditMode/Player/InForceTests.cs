@@ -1,5 +1,8 @@
+using System.Linq;
+using Clover.Gameplay;
 using Clover.Player;
 using Clover.Player.Build;
+using Clover.Player.Trees;
 using NUnit.Framework;
 
 namespace Clover.Tests
@@ -79,6 +82,40 @@ namespace Clover.Tests
             Assert.IsTrue(Hand(Elements.Ice, Elements.Water).Mixed);
             Assert.IsFalse(Hand(Elements.Ice, "").AllIn);
             Assert.IsFalse(Hand("", "").AllIn, "two empty attunements are not all in");
+        }
+
+        [Test]
+        public void WeaponBlowsLayOnlyTheFirstElementsAfflictionExceptFromAMixedBranch()
+        {
+            // The owner's rules: of 2026-11-18 (blows lay only the first element's affliction) and 2026-11-19 (a mix mark's blows lay both).
+            Assert.IsTrue(MarkRules.BlowMayLay(FireMark, UpgradeTrigger.AnyHit, AfflictionKind.Burn, AfflictionKind.Burn), "the first element's own affliction");
+            Assert.IsFalse(MarkRules.BlowMayLay(FireMark, UpgradeTrigger.AnyHit, AfflictionKind.Burn, AfflictionKind.Static), "Fire carried second lays no Burn with the weapon");
+            Assert.IsFalse(MarkRules.BlowMayLay(FireMark, UpgradeTrigger.HeavyHit, AfflictionKind.Burn, AfflictionKind.Static), "nor with a heavy blow");
+            Assert.IsFalse(MarkRules.BlowMayLay(FireGift, UpgradeTrigger.ChainEnd, AfflictionKind.Burn, AfflictionKind.Static), "nor a god's gift's");
+            Assert.IsTrue(MarkRules.BlowMayLay(FireMark, UpgradeTrigger.SpellHit, AfflictionKind.Burn, AfflictionKind.Static), "a spell lays the second element's");
+            Assert.IsTrue(MarkRules.BlowMayLay(FireMark, UpgradeTrigger.PerfectGuard, AfflictionKind.Burn, AfflictionKind.Static), "a guard is not a blow");
+            Assert.IsTrue(MarkRules.BlowMayLay(FireMark, UpgradeTrigger.AnyHit, AfflictionKind.None, AfflictionKind.Static), "laying nothing is never stopped");
+            Assert.IsTrue(MarkRules.BlowMayLay(PlasmaMark, UpgradeTrigger.AnyHit, AfflictionKind.Burn, AfflictionKind.Burn), "a mix mark's first affliction");
+            Assert.IsTrue(MarkRules.BlowMayLay(PlasmaMark, UpgradeTrigger.LightHit, AfflictionKind.Static, AfflictionKind.Burn), "a mix mark's second affliction too");
+            Assert.IsTrue(MarkRules.BlowMayLay(PlasmaMark, UpgradeTrigger.AnyHit, AfflictionKind.Burn, AfflictionKind.Static), "either way round");
+        }
+
+        [Test]
+        public void EveryMixedBranchsFirstMarkLaysBothAfflictionsWithTheWeapon()
+        {
+            // Each first mark that says its blows lay two afflictions, with either of its elements first.
+            string[] firstMarks = { BlizzardTree.BitingWind, BloomTree.WetSeed, ForgeTree.HammerAndAnvil, GlacierTree.ColdWater, OvergrowthTree.RootGrip, BlightTree.Wither, PyreTree.Fuel, PlasmaTree.ChargedEmbers, TempestTree.ChargedAir, EclipseTree.Twilight };
+            foreach (string id in firstMarks)
+            {
+                var mark = Upgrade.ById(id);
+                Assert.IsNotNull(mark, id);
+                Assert.AreEqual(UpgradeKind.Mix, mark.Kind, id);
+                var laid = mark.Effects.Where(effect => effect.Do == UpgradeAction.Afflict && MarkRules.IsBlow(effect.On)).ToArray();
+                Assert.AreEqual(2, laid.Select(effect => effect.Affliction).Distinct().Count(), id + " lays two afflictions with its blows");
+                foreach (var weapon in laid.Select(effect => effect.Affliction))
+                    foreach (var effect in laid)
+                        Assert.IsTrue(MarkRules.BlowMayLay(mark, effect.On, effect.Affliction, weapon), $"{id} lays {effect.Affliction} when the weapon lays {weapon}");
+            }
         }
     }
 }

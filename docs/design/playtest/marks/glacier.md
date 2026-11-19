@@ -7,11 +7,11 @@ The long explanation the chart shows for every mark on Glacier, the branch Ice a
 
 **When it happens.** Every weapon blow that lands, light or heavy. It needs Ice and Water both carried.
 
-**The numbers.** Mix, 3 Shards. One stack of Chill and Soaked on each blow, on top of what your root lays: with Ice first and Chill learned, each blow lays two Chill. Soaked lasts 8 seconds and makes spells deal the enemy 25% more damage.
+**The numbers.** Mix, 3 Shards. One stack of Chill and one of Soaked on each blow, whichever of the two you carry first. Your first element's own is not laid twice: with Ice first and Chill learned, a blow lays the root's one Chill and this mark's Soaked. Soaked lasts 8 seconds and makes spells deal the enemy 25% more damage.
 
 **Works with.** Chill or Soaked, Flash Freeze, Cold in the Bones, Icebreaker, Creeping Ice, The Wave Stands Still, Riptide.
 
-**Example.** Holding Ice first, two blows on a soldier in a pack leave it four deep, and the Chill has run into the two beside it as well.
+**Example.** Holding Ice first, two blows on a soldier in a pack leave it two deep in Chill and Soaked, and the Chill has run into the two beside it as well.
 
 ## glacier.flash
 **What it does.** A Soaked enemy freezes at three Chill, not five. The water goes into the ice: the freeze spends the Soaked.

@@ -25,11 +25,11 @@ The long explanation the chart shows for every mark on Halo, the branch Metal an
 **Example.** Land three critical blows on a Marked soldier, then perfect-guard the brute behind it: three blades fly into the brute.
 
 ## halo.answeringdraw
-**What it does.** After any perfect guard, every blow you land for a moment is critical. The Iaido Slash is also meant to Mark what it cuts and notch its armour, but as built it lays at most your first element's affliction of the two (see the numbers).
+**What it does.** After any perfect guard, every blow you land for a moment is critical. The Iaido Slash also Marks what it cuts and notches its armour.
 
 **When it happens.** The mark and notch when the Iaido Slash, the Katana's weapon skill (Q, Triangle or Y), strikes. It needs the Katana. The critical moment opens with each perfect guard.
 
-**The numbers.** Mix, 4 Shards. One stack of Marked and one notch of Sundered from the slash. For 1.5 seconds after a perfect guard, every weapon blow is critical (one and a half times damage). As built a weapon blow lays only your first element's affliction, so the slash lays only that one of the two, and none when your first element's root mark is learned, since the root is counted as laying it.
+**The numbers.** Mix, 4 Shards. One stack of Marked and one notch of Sundered from the slash. For 1.5 seconds after a perfect guard, every weapon blow is critical (one and a half times damage). Where your first element's root mark already lays its own with the slash, that one is not laid twice.
 
 **Works with.** Master's Answer (after a perfect guard the slash comes at once, free, and critical), Halo of Blades, Bright Steel, Counter Cut, Clean Edge.
 
