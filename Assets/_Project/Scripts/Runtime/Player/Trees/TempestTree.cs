@@ -50,12 +50,12 @@ namespace Clover.Player.Trees
             // BESPOKE: a cloud that follows the player and answers each dodge beneath it with a bolt where they stood, three for a
             // perfect dodge. Until then the rain form: bolts fall for a while round the place it was cast.
             to.Add(new Upgrade { Id = StormOverhead, Name = "Storm Overhead", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { SlipCurrent }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Comet,
-                Description = "Hold the spell button to call a storm over the ground before you. For ten seconds bolts fall inside its circle, one every 0.8 seconds. 40 mana.",
+                Description = "You call a storm over the ground before you. For ten seconds bolts fall inside its circle, one every 0.8 seconds.",
                 Form = "rain",
                 Spell = new SpellSpec { Cost = 40f, Reach = 1f, Radius = 3f, Seconds = 10f, Interval = 0.8f, Damage = 14f, Stagger = 20f, Stacks = 1 } });
             // BESPOKE (built): EyeForm. Each bite lays the affliction of the element held, not one of each.
             to.Add(new Upgrade { Id = EyeOfTheStorm, Name = "Eye of the Storm", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ThunderLift }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button to become the storm: a turning column of wind and lightning that drags enemies in and carries the light ones round. Let go and it throws them out, and a bolt meets each where it lands. 50 mana.",
+                Description = "While you keep the spell's button held you are the storm: a turning column of wind and lightning that drags enemies in and carries the light ones round. Let go and it throws them out, and a bolt meets each where it lands. 50 mana.",
                 Form = SpellForms.Eye,
                 Spell = new SpellSpec { Cost = 50f, Reach = 5f, Radius = 3.5f, Seconds = 2.5f, Interval = 0.4f, Damage = 6f, Stagger = 20f, LingerDamage = 12f, Stacks = 1 } });
 

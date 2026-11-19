@@ -3,22 +3,22 @@
 The long explanation the chart shows for every mark on Bloom, the branch Water and Life share.
 
 ## bloom.wetseed
-**What it does.** Meant to make your blows lay Soaked and Seeded together. As built, a weapon blow lays only your first element's affliction, so Wet Seed lays just that one: Soaked with Water first, Seeded with Life first. If you have already learned that element's root mark, it adds nothing to your blows. The other affliction comes from your spells, the charged blade and the R2 strike.
+**What it does.** Your blows lay Soaked and Seeded together, whichever of the two you carry first. A mixed branch's marks are the exception to the rule that weapon blows lay only your first element's affliction.
 
 **When it happens.** Every weapon blow that lands, while you carry both Water and Life.
 
-**The numbers.** Mix, 3 Shards. One stack of your first element's affliction a blow. Soaked lasts 8 seconds; Seeded holds up to three stacks for 8 seconds, and each of your weapon blows on it heals you 1 a stack.
+**The numbers.** Mix, 3 Shards. One stack of Soaked and one of Seeded a blow. Your first element's own is not laid twice: once its root is learned, the root's stack is the one a blow lays. Soaked lasts 8 seconds; Seeded holds up to three stacks for 8 seconds, and each of your weapon blows on it heals you 1 a stack.
 
-**Works with.** Flowering and Drowned Roots (they need Seeded, and Soaked as well), Riptide and Briar Patch to lay the other one, Strangling Vine, Great Lotus.
+**Works with.** Flowering and Drowned Roots (they need Seeded, and Soaked as well), Riptide and Briar Patch for more of either, Strangling Vine, Great Lotus.
 
-**Example.** Carrying Life first without Seeded learned, every blow seeds; Riptide then soaks the same enemies for Drowned Roots.
+**Example.** Carrying Life first, every blow seeds and soaks, so a perfect guard soon binds the enemy for Drowned Roots.
 
 ## bloom.flower
-**What it does.** A heavy blow on a Seeded enemy bursts its seed: you are mended, and everyone near it takes a burst of thorns and is Seeded. With Water as your first element, they are also Soaked. It can happen once every seven seconds. As built no flower is shown and the burst comes at once.
+**What it does.** A heavy blow on a Seeded enemy bursts its seed: you are mended, and everyone near it takes a burst of thorns and is Seeded and Soaked. It can happen once every seven seconds. As built no flower is shown and the burst comes at once.
 
 **When it happens.** A heavy blow or finisher that lands on an enemy carrying Seeded, at most once every 7 seconds.
 
-**The numbers.** Mix, 3 Shards. You mend 12. Everything within 3.5 metres of the one struck takes 12 damage, no stagger, and a stack of Seeded. Soaked on everything within 3.5 metres too, but only while Water is your first element. The enemy's own Seeded stays.
+**The numbers.** Mix, 3 Shards. You mend 12. Everything within 3.5 metres of the one struck takes 12 damage, no stagger, and a stack of Seeded. Soaked on everything within 3.5 metres too, whichever element you carry first. The enemy's own Seeded stays.
 
 **Works with.** Wet Seed, Briar Patch, Seeded's own burst of thorns when a seeded enemy dies, Drowned Roots, Strangling Vine.
 

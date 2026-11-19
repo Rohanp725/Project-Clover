@@ -50,7 +50,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Projectile, Flight = Flight.Straight, Damage = 20f, Stagger = 30f, Speed = 18f, Seconds = 1.5f, Affliction = Mark, Stacks = 1 } } });
             // The discs form orbits and strikes. NEEDS: the perfect guard that sends both wheels out through the attacker and back.
             to.Add(new Upgrade { Id = SunWheels, Name = "Sun Wheels", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { HaloOfBlades }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button and two wheels of bright steel turn round you for a while, cutting what they pass. 40 mana.",
+                Description = "Two wheels of bright steel turn round you for a while, cutting what they pass.",
                 Form = "discs",
                 Spell = new SpellSpec { Cost = 40f, Count = 2, Radius = 2.5f, Seconds = 9f, Interval = 0.5f, Damage = 5f, Stagger = 4f, Stacks = 1 } });
             // NEAREST: everyone within six metres is held for a moment (they cannot begin an attack, nor move), not only those in the cone ahead.
@@ -61,7 +61,7 @@ namespace Clover.Player.Trees
 
             // BESPOKE (built): MirrorsForm.
             to.Add(new Upgrade { Id = SixMirrors, Name = "Six Mirrors", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
-                Description = "Hold the spell button and six mirrors of steel stand in a ring round the enemy you face. You pass through it from each one in turn, faster than can be followed. The cuts land when you are back where you began. 60 mana.",
+                Description = "Six mirrors of steel stand in a ring round the enemy you face. You pass through it from each one in turn, faster than can be followed. The cuts land when you are back where you began. 60 mana.",
                 Form = SpellForms.Mirrors,
                 Spell = new SpellSpec { Cost = 60f, Reach = 8f, Radius = 3f, Count = 6, Interval = 0.13f, Delay = 0.3f, Damage = 14f, Stagger = 12f, Stacks = 1 } });
         }

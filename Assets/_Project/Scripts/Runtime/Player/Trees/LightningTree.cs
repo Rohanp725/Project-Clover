@@ -82,7 +82,7 @@ namespace Clover.Player.Trees
                 Description = "A stored charge breaks balance harder.",
                 Stats = new[] { new StatMod(PlayerStat.ChargeStagger, 0.25f) } });
             to.Add(new Upgrade { Id = WaitingThunder, Name = "Waiting Thunder", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { FullDischarge }, X = -2.69f, Y = 6.93f, Icon = UpgradeIcons.Spike,
-                Description = "Hold the spell button to hang five bolts at your shoulder. Each blow you land sends one down with it. A heavy blow sends all that are left. 35 mana.",
+                Description = "You hang five bolts at your shoulder. Each blow you land sends one down with it. A heavy blow sends all that are left.",
                 Form = SpellForms.Waiting,
                 Spell = new SpellSpec { Cost = 35f, Count = 5, Seconds = 10f, Reach = 8f, Damage = 8f, Stagger = 6f, Stacks = 1, Speed = 18f } });
             // It took the id and name the first slice gave a mark of critical chance; it is critical damage now, as designed.
@@ -104,17 +104,17 @@ namespace Clover.Player.Trees
             to.Add(new Upgrade { Id = Conductor, Name = "Conductor", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Static }, X = 0.74f, Y = 3.87f, Icon = UpgradeIcons.Bolt,
                 Description = "Thunderclap leaves Static two deep on all it strikes, and sets off an enemy already at five.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 2 }, new UpgradeEffect { On = UpgradeTrigger.SpellHit, Needs = AfflictionKind.Static, NeedsFull = true, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Cooldown = 0.2f } } });
-            // The cost is the stat for every spell, the base one and whatever is worn.
+            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
             to.Add(new Upgrade { Id = QuickClap, Name = "Quick Clap", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Conductor }, X = 0.21f, Y = 5.04f, Icon = UpgradeIcons.Gem,
-                Description = "Thunderclap costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
+                Description = "Thunderclap waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             to.Add(new Upgrade { Id = ThirdLeap, Name = "Third Leap", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Conductor }, X = -0.14f, Y = 4.18f, Icon = UpgradeIcons.Chain,
                 Description = "Thunderclap leaps to one more enemy.",
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellCount, 1f) } });
             // BESPOKE: holding the spell button again while the rod stands should step the player to it with a shock, and spend it.
             // It used to grow straight from Static.
             to.Add(new Upgrade { Id = Upgrade.LightningRod, Name = "Lightning Rod", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Conductor }, X = 0.58f, Y = 6.85f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button to plant a rod two metres ahead. For eight seconds bolts fall inside a circle round it, each laying Static. 40 mana.",
+                Description = "You plant a rod two metres ahead. For eight seconds bolts fall inside a circle round it, each laying Static.",
                 Form = SpellForms.Rod,
                 Spell = new SpellSpec { Cost = 40f, Reach = 2f, Radius = 3.5f, Seconds = 8f, Interval = 0.9f, Damage = 12f, Stagger = 12f, Delay = 0.2f, Stacks = 1 } });
             // Kept from the first slice; not in the design.
@@ -134,7 +134,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.15f) } });
             // BESPOKE (built): LodestoneForm. The pull grows with each stack of Static and the burst sets all of it off.
             to.Add(new Upgrade { Id = Lodestone, Name = "Lodestone", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { LiveWire }, X = -0.22f, Y = 9.14f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button to drag every enemy near toward you, further for each Static on it, then set all of it off at once. 45 mana.",
+                Description = "You drag every enemy near toward you, further for each Static on it, then set all of it off at once.",
                 Form = SpellForms.Lodestone,
                 Spell = new SpellSpec { Cost = 45f, Reach = 1.5f, Radius = 7f, Delay = 0.3f, Damage = 14f, Stagger = 30f, Stacks = 0 } });
             // BESPOKE (as built): the breath that opens Overdrive. The breath each perfect guard or dodge adds, and the dearer surge, are data.
@@ -149,7 +149,7 @@ namespace Clover.Player.Trees
                 } });
             // Kept from the first slice; not in the design. It sits beyond Overclock because a mark may not lie inward of what it grows from.
             to.Add(new Upgrade { Id = ChainLance, Name = "Chain Lance", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.Overclock, Capacitor }, X = 0.38f, Y = 10.3f, Icon = UpgradeIcons.Beam,
-                Description = "Hold the spell button to throw a bolt that leaps through four more and leaves Static on each. 35 mana.",
+                Description = "You throw a bolt that leaps through four more and leaves Static on each.",
                 Form = SpellForms.Bolt,
                 Spell = new SpellSpec { Cost = 35f, Reach = 12f, Damage = 26f, Stagger = 30f, Count = 4, Radius = 5f, Stacks = 2 } });
 
@@ -172,7 +172,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.BlinkWidth, 0.8f) } });
             // BESPOKE (built): FlashesForm.
             to.Add(new Upgrade { Id = SevenFlashes, Name = "Seven Flashes", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.Afterimage }, X = 3.33f, Y = 8.5f, Icon = UpgradeIcons.Star,
-                Description = "Hold the spell button to cut through up to seven enemies in one breath and return to where you stood. The cuts land together when you are still. 45 mana.",
+                Description = "You cut through up to seven enemies in one breath and return to where you stood. The cuts land together when you are still. 45 mana.",
                 Form = SpellForms.Flashes,
                 Spell = new SpellSpec { Cost = 45f, Count = 7, Interval = 0.1f, Delay = 0.5f, Damage = 9f, Stagger = 8f, Stacks = 1, Reach = 8f } });
             // Kept from the first slice; not in the design.

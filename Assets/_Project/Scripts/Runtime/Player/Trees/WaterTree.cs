@@ -59,11 +59,11 @@ namespace Clover.Player.Trees
                 Description = "Riptide reaches further.",
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellReach, 0.3f) } });
             to.Add(new Upgrade { Id = LowWater, Name = "Low Water", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Undertow }, X = -0.88f, Y = 4.24f, Icon = UpgradeIcons.Gem,
-                Description = "Riptide costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.25f) } });
+                Description = "Riptide waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // The dragon form carries what it meets away along its line; the design's serpent comes back and brings the first enemy to the player's feet.
             to.Add(new Upgrade { Id = RiverSerpent, Name = "River Serpent", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Undertow }, X = -2f, Y = 3.54f, Icon = UpgradeIcons.Claw,
-                Description = "Hold the spell button to send a serpent of water down a lane ahead. It carries what it meets along a little, and its jaws close at the end and leave all it struck Soaked. 30 mana.",
+                Description = "You send a serpent of water down a lane ahead. It carries what it meets along a little, and its jaws close at the end and leave all it struck Soaked.",
                 Form = "dragon",
                 Spell = new SpellSpec { Cost = 30f, Reach = 8f, Radius = 1.2f, Damage = 12f, Stagger = 30f, Stacks = 1, Speed = 16f } });
             // NEAREST: an enemy's recovery cannot be changed, so blows on a Soaked enemy break its balance sooner for a while.
@@ -78,12 +78,12 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.3f) } });
             // The field form bites and soaks; it does not yet draw enemies to its middle.
             to.Add(new Upgrade { Id = Whirlpool, Name = "Whirlpool", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { HeavyWater }, X = -2.85f, Y = 6.95f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button to open a whirlpool where the enemy faced stands. For five seconds it bites everything standing in it and keeps it Soaked. 35 mana.",
+                Description = "You open a whirlpool where the enemy faced stands. For five seconds it bites everything standing in it and keeps it Soaked.",
                 Form = "field",
                 Spell = new SpellSpec { Cost = 35f, Reach = 6f, Radius = 4f, Seconds = 5f, Interval = 0.5f, LingerDamage = 3f, Stacks = 1 } });
             // The rain form soaks what its drops strike; the extra mana from blows inside it is not in it yet.
             to.Add(new Upgrade { Id = StandingRain, Name = "Standing Rain", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Whirlpool }, X = -1.44f, Y = 7.77f, Icon = UpgradeIcons.Drop,
-                Description = "Hold the spell button to call rain over the ground you stand on for ten seconds. Its drops strike enemies in it and leave them Soaked. 40 mana.",
+                Description = "You call rain over the ground you stand on for ten seconds. Its drops strike enemies in it and leave them Soaked.",
                 Form = "rain",
                 Spell = new SpellSpec { Cost = 40f, Reach = 0.5f, Radius = 7f, Seconds = 10f, Interval = 0.6f, Damage = 3f, Stagger = 0f, Stacks = 1 } });
             // Built by hand (PlayerUpgrades.TideRises): every spell needs its usual cost and takes all the mana held; its damage grows by
@@ -136,7 +136,7 @@ namespace Clover.Player.Trees
                 } });
             // The parry form turns one blow and answers; the design's stance turns every blow for 10 mana each and stores up to five for the answer.
             to.Add(new Upgrade { Id = MoonOnWater, Name = "Moon on Water", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { UnbrokenChain }, X = 1.49f, Y = 8.76f, Icon = UpgradeIcons.Ring,
-                Description = "Hold the spell button to stand open for up to three seconds. The first blow that comes is turned and answered with one wide cut that leaves those it strikes Soaked. If no blow comes, the mana is lost. 10 mana.",
+                Description = "You stand open for up to three seconds. The first blow that comes is turned and answered with one wide cut that leaves those it strikes Soaked. If no blow comes, it is wasted.",
                 Form = "parry",
                 Spell = new SpellSpec { Cost = 10f, Seconds = 3f, Reach = 4f, Arc = 200f, Damage = 30f, Stagger = 45f, Stacks = 1 } });
             // BESPOKE: the light chain's last blow runs into its first, quicker each time round. Until then: a quicker, softer weapon.
@@ -186,7 +186,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.SurgeSeconds, 0.33f) } });
             // NEEDS FORM: a timed boon paid with a flask (longer reach, each blow mends, the chain's last blow throws a wave). The clone is the nearest: it adds to every blow for as long.
             to.Add(new Upgrade { Id = PouredBlade, Name = "Poured Blade", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { CatchTheRain }, X = 3.03f, Y = 7.17f, Icon = UpgradeIcons.Blade,
-                Description = "Hold the spell button to call a copy of yourself in water to your side for twelve seconds. It lands each of your blows again a beat late, at 30% of its strength. 20 mana.",
+                Description = "You call a copy of yourself in water to your side for twelve seconds. It lands each of your blows again a beat late, at 30% of its strength. 30 mana.",
                 Form = "clone",
                 Spell = new SpellSpec { Cost = 20f, Seconds = 12f, Damage = 30f, Stacks = 1 } });
             // Built by hand (PlayerUpgrades.OnFlaskDrunk and Update): a flask adds 70 to a well of 140 at most, kept as the mark's count;

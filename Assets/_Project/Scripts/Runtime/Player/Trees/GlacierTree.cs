@@ -23,7 +23,7 @@ namespace Clover.Player.Trees
             // The first element is the one whose mix this is: the earlier of the two round the ring.
             const string A = Elements.Ice, B = Elements.Water;
 
-            // With the held element's own root learned as well, that element's affliction is laid twice by each blow.
+            // Both afflictions on every blow, the second element's too (the owner's of 2026-11-19); with the first element's root learned, the root's stack is that element's share and is not laid twice.
             to.Add(new Upgrade { Id = ColdWater, Name = "Cold Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, X = 0f, Y = 1f, Icon = UpgradeIcons.Drop,
                 Description = "Your blows lay Chill and Soaked together.",
                 Effects = new[]
@@ -37,7 +37,7 @@ namespace Clover.Player.Trees
                 Stats = new StatMod[0] });
             // The spikes form gives the line of ice; holding enemies by the feet is not in it yet.
             to.Add(new Upgrade { Id = CreepingIce, Name = "Creeping Ice", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { ColdWater }, X = 0.5f, Y = 2.36f, Icon = UpgradeIcons.Spike,
-                Description = "Hold the spell button to send a line of ice spikes eight metres along the ground. Each enemy on the line is struck once. 35 mana.",
+                Description = "You send a line of ice spikes eight metres along the ground. Each enemy on the line is struck once.",
                 Form = "spikes",
                 Spell = new SpellSpec { Cost = 35f, Reach = 8f, Speed = 20f, Count = 1, Radius = 0.6f, Damage = 8f, Stagger = 10f, Stacks = 2 } });
             to.Add(new Upgrade { Id = Icebreaker, Name = "Icebreaker", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { FlashFreeze }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Hammer,
@@ -49,7 +49,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictedHit, Do = UpgradeAction.Boon, Needs = AfflictionKind.Soaked, Stat = PlayerStat.PerfectGuardWindow, Amount = 0.25f, Seconds = 4f, Cooldown = 0.5f } } });
             // BESPOKE (built): FrozenWaveForm.
             to.Add(new Upgrade { Id = TheWaveStandsStill, Name = "The Wave Stands Still", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ColdInTheBones }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Wave,
-                Description = "Hold the spell button to throw a great wave. Let go, and it freezes where it stands with everything in it. One heavy blow shatters the wall and all it holds. 50 mana.",
+                Description = "You throw a great wave that rolls on while you keep the spell's button held. Let go, and it freezes where it stands with everything in it. One heavy blow shatters the wall and all it holds. 50 mana.",
                 Form = SpellForms.FrozenWave,
                 Spell = new SpellSpec { Cost = 50f, Reach = 9f, Speed = 6f, Arc = 6f, LingerDamage = 10f, Seconds = 4f, Damage = 45f, Stagger = 60f, Stacks = 5 } });
 

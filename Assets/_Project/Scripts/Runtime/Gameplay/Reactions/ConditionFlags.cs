@@ -37,7 +37,8 @@ namespace Clover.Gameplay
         /// <summary>
         /// Knocked flat (task 3.7): it falls on its back and lies there for the run's time, beginning nothing, unable to
         /// guard or be made to flinch, and then gets up (<see cref="EnemyState.Down"/>). What resists a root resists this
-        /// the same way: an elite lies half the time, and what cannot be frozen (a god's form) never goes down.
+        /// the same way: an elite lies half the time, and a god never goes down (what cannot be frozen, or a god in an
+        /// ordinary body: AfflictionSet.Rank).
         /// </summary>
         Down = 1 << 12,
     }

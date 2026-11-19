@@ -409,6 +409,8 @@ namespace Clover.Gameplay
             homeRotation = transform.rotation;
             // The great are held by ice only for a breath.
             if (Kind.IsBoss || Kind.IsElite) Afflictions.FreezeScale = 0.4f;
+            // A god in this body ranks as a god, not by how briefly ice holds it.
+            Afflictions.IsGod = Kind.IsGod;
 
             locomotionHash = Animator.StringToHash("locomotion");
             hurtHash = Animator.StringToHash(Kind.Prefix + "_hurt");

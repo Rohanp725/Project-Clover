@@ -476,7 +476,8 @@ namespace Clover.Player
                     // A spell goes where the player faces; with the mouse in use, that is toward the cursor.
                     player.FacePointer();
                     if (!element.CastBase(castIn)) return false;
-                    seconds = SpellTimings.Base(castIn).Cooldown;
+                    // Its own element's marks may shorten the wait (Thin Ice for Hoarfrost); every spell's rate is applied below.
+                    seconds = SpellTimings.BaseCooldown(castIn, upgrades != null ? upgrades.BaseCooldownShare(castIn) : 0f);
                 }
                 else
                 {

@@ -3,15 +3,15 @@
 The long explanation the chart shows for every mark on Pyre, the branch Poison and Fire share.
 
 ## pyre.fuel
-**What it does.** Heavy blows lay more of your first element's affliction. Your weapon lays only your first element's affliction, so of the two this mark lays only that one: poison with Poison first, Burn with Fire first. The other comes from your spells, the charged blade and the R2 strike.
+**What it does.** Heavy blows both poison and burn, whichever of the two you carry first. A mixed branch's marks are the exception to the rule that weapon blows lay only your first element's affliction.
 
 **When it happens.** Every heavy blow or finisher that lands.
 
-**The numbers.** Mix, 3 Shards. With Poison first: two doses a heavy blow, or one once Venom is learned (Venom's own heavy-blow dose counts against it). With Fire first: one stack of Burn a heavy blow, and nothing once Cinder is learned. Poison holds up to eight doses for 6 seconds and bites for 2 a dose every 2 seconds; set off, it deals 6 a dose.
+**The numbers.** Mix, 3 Shards. Two doses of poison and one stack of Burn a heavy blow. Your first element's root counts against its own: with Poison first and Venom learned, one dose beyond Venom's; with Fire first and Cinder learned, no Burn beyond Cinder's. Poison holds up to eight doses for 6 seconds and bites for 2 a dose every 2 seconds; set off, it deals 6 a dose.
 
-**Works with.** Venom or Cinder, Miasma or Flame Wave in a slot (the other element's affliction), the charged blade and the R2 strike, Goes Up, Funeral Fire, Light the Pyres.
+**Works with.** Venom or Cinder, Miasma or Flame Wave in a slot (more of either), the charged blade and the R2 strike, Goes Up, Funeral Fire, Light the Pyres.
 
-**Example.** Carrying Poison first and Fire second: a chain ending in a heavy blow leaves a soldier deep in poison, and a Flame Wave sets it burning beside it.
+**Example.** Carrying Poison first and Fire second: a chain ending in a heavy blow leaves a soldier deep in poison and burning with it.
 
 ## pyre.flashpoint
 **What it does.** When a burning enemy's poison reaches its full depth, it goes up. The poison explodes and sets alight everyone near.

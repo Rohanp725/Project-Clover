@@ -27,7 +27,7 @@ namespace Clover.Player.Trees
             // The foot of the branch: it grows from no mark (the design's "earth.tremor or metal.sunder" cannot be written, a mix may only grow from its own branch).
             // NEEDS: a condition "the target stands within 1.5 m of a wall or pillar". Here the second strike comes on an enemy already shaken.
             to.Add(new Upgrade { Id = HammerAndAnvil, Name = "Hammer and Anvil", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, X = 0f, Y = 1f, Icon = UpgradeIcons.Hammer,
-                Description = "A heavy blow on an enemy with stone at its back strikes twice: once from your weapon, once from the stone.",
+                Description = "A heavy blow on an enemy with stone at its back strikes twice: once from your weapon, once from the stone. Heavy blows lay Tremor and Sundered together.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = Tremor, Do = UpgradeAction.Echo, Amount = 0.6f, Delay = 0.15f, Radius = 2.3f, Stagger = 20f, Cooldown = 0.5f },
@@ -48,13 +48,13 @@ namespace Clover.Player.Trees
                 Stats = new StatMod[0] });
             // The sword form is the one great thing that falls after a delay. NEEDS: the timing check that doubles the hammer and a heavy blow landing together.
             to.Add(new Upgrade { Id = TripHammer, Name = "Trip Hammer", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { StruckOre }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Hammer,
-                Description = "Hold the spell button and a great hammer forms above the enemy you face, and falls after a moment. It leaves a crack in the ground that bites for a second. 40 mana.",
+                Description = "A great hammer forms above the enemy you face, and falls after a moment. It leaves a crack in the ground that bites for a second.",
                 Form = "sword",
                 Spell = new SpellSpec { Cost = 40f, Reach = 10f, Delay = 1f, Radius = 2.5f, Damage = 30f, Stagger = 50f, Stacks = 1, Seconds = 1f, LingerDamage = 2f } });
             // BESPOKE: a held pose draws a sword of stone and iron twice the player's height; for three swings (or 10 s) the weapon is replaced: each a heavy blow over 180 degrees
             // to 4 m for 40 damage, 60 stagger, Tremor 1 and a notch, through any guard; the third throws shards 6 m. Until then: one such swing, as a wave.
             to.Add(new Upgrade { Id = DrawnFromStone, Name = "Drawn From Stone", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { TripHammer }, X = 0f, Y = 5.72f, Icon = UpgradeIcons.Blade,
-                Description = "Hold the spell button to draw a sword of stone and iron from the ground and give one great swing, a half circle before you. 50 mana.",
+                Description = "You draw a sword of stone and iron from the ground and give one great swing, a half circle before you. 50 mana.",
                 Form = SpellForms.Wave,
                 Spell = new SpellSpec { Cost = 50f, Reach = 4f, Arc = 180f, Damage = 40f, Stagger = 60f, Stacks = 1 } });
             to.Add(new Upgrade { Id = FoldedSteel, Name = "Folded Steel", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { Buckled }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Blade,

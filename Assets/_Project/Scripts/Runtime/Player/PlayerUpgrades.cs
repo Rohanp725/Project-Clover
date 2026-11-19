@@ -509,6 +509,19 @@ namespace Clover.Player
             RunState.Points += whole;
         }
 
+        /// <summary>
+        /// What the marks in force take off the wait of an element's base spell (stat BaseSpellCooldown): that element's
+        /// own marks only. Asked once a cast, so the catalogue is read here rather than kept summed.
+        /// </summary>
+        public float BaseCooldownShare(string elementName)
+        {
+            if (catalogue == null || has == null || string.IsNullOrEmpty(elementName)) return 0f;
+            float share = 0f;
+            for (int i = 0; i < has.Length && i < catalogue.Count; i++)
+                if (has[i]) share += Magic.SpellTimings.BaseCooldownShare(catalogue[i], elementName);
+            return share;
+        }
+
         /// <summary>Embers given back as they were spent, ember for ember.</summary>
         public void Refund(int points)
         {
@@ -989,9 +1002,7 @@ namespace Clover.Player
         /// <summary>Does what waits in the runner's line now, rather than on its next step. Never inside a blow.</summary>
         public void FlushNow() => Flush();
 
-        private static bool IsBlow(UpgradeTrigger trigger) =>
-            trigger == UpgradeTrigger.AnyHit || trigger == UpgradeTrigger.LightHit || trigger == UpgradeTrigger.HeavyHit || trigger == UpgradeTrigger.FinisherHit
-            || trigger == UpgradeTrigger.SkillHit || trigger == UpgradeTrigger.AfflictedHit || trigger == UpgradeTrigger.CritHit || trigger == UpgradeTrigger.ChainEnd;
+        private static bool IsBlow(UpgradeTrigger trigger) => MarkRules.IsBlow(trigger);
 
         private void Consider(UpgradeEffect effect, Component target, Vector3 at, bool hasAt, int spent = 0, AfflictionSet dead = null,
             LaySource source = LaySource.Effect, float power = 0f)
@@ -1028,11 +1039,10 @@ namespace Clover.Player
             }
             // A reaction's own numbers for an elite or a god (the ranks are read from what decides holding).
             if (effect.Ranks != EnemyRank.Any && !(target is IAfflictable ranked && (ranked.Afflictions.Rank & effect.Ranks) != 0)) return;
-            // Weapon blows lay only the first element's affliction (the owner's rule of 2026-11-18): an effect that lays
-            // another element's on a blow is not done. The second element comes from spells, the charged blade and
-            // infused strikes, so reactions come from weaving weapon and spell.
+            // Weapon blows lay only the first element's affliction, except from a mark on a mixed branch (MarkRules.BlowMayLay
+            // keeps the rule): an effect that lays another element's on a blow is not done.
             var laid = effect.Do == UpgradeAction.Afflict ? (effect.Affliction != AfflictionKind.None ? effect.Affliction : OwnElement(effect.Owner).Affliction) : AfflictionKind.None;
-            if (laid != AfflictionKind.None && IsBlow(effect.On) && combat != null && laid != combat.WeaponAffliction) return;
+            if (combat != null && !MarkRules.BlowMayLay(effect.Owner, effect.On, laid, combat.WeaponAffliction)) return;
             // A mark on a mixed branch lays both its elements' afflictions with a blow or a perfect guard. The root of
             // the first element lays that element's own already, so of it the branch lays only what it lays beyond the root.
             int less = 0;

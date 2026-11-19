@@ -1,5 +1,6 @@
 using Clover.Player;
 using Clover.Player.Magic;
+using Clover.Player.Trees;
 using NUnit.Framework;
 
 namespace Clover.Tests
@@ -130,6 +131,41 @@ namespace Clover.Tests
             for (int i = 0; i < 3; i++) clocks.Cut(cuts.ForBlow(0f, false));
             clocks.Cut(cuts.ForPerfectGuard);
             Assert.AreEqual(10f - 0.9f - 2f, clocks.Remaining(0), 1e-4f);
+        }
+
+        [Test]
+        public void TheTenReadyMinorsMakeTheirOwnBaseSpellWaitAFifthLess()
+        {
+            // The owner's decision of 2026-11-19: what once cost less mana now waits less, for its own element's base spell alone.
+            var minors = new (string Id, string Element)[]
+            {
+                (EarthTree.NearToHand, Elements.Earth), (FireTree.ShortBreath, Elements.Fire), (IceTree.ThinIce, Elements.Ice),
+                (LifeTree.ReadySoil, Elements.Life), (LightningTree.QuickClap, Elements.Lightning), (LightTree.ReadyLight, Elements.Light),
+                (MetalTree.ReadySteel, Elements.Metal), (PoisonTree.ReadyPoison, Elements.Poison), (WaterTree.LowWater, Elements.Water),
+                (WindTree.EasyBreath, Elements.Wind),
+            };
+            foreach (var (id, element) in minors)
+            {
+                var mark = Upgrade.ById(id);
+                Assert.IsNotNull(mark, id);
+                float share = SpellTimings.BaseCooldownShare(mark, element);
+                Assert.AreEqual(-0.2f, share, 1e-4f, id);
+                Assert.AreEqual(SpellTimings.Base(element).Cooldown * 0.8f, SpellTimings.BaseCooldown(element, share), 1e-4f, id + " shortens its own base spell");
+                string other = element == Elements.Fire ? Elements.Ice : Elements.Fire;
+                Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(mark, other), id + " leaves the other element's base spell alone");
+                StringAssert.Contains("waits a fifth less between casts", mark.Description, id);
+                StringAssert.DoesNotContain("mana", mark.Description, id);
+            }
+        }
+
+        [Test]
+        public void ABaseSpellsWaitIsItsTablesWithoutAShareAndNeverBelowATenth()
+        {
+            Assert.AreEqual(7f, SpellTimings.BaseCooldown(Elements.Ice, 0f), 1e-4f, "Hoarfrost waits 7 s as the table has it");
+            Assert.AreEqual(5.6f, SpellTimings.BaseCooldown(Elements.Ice, -0.2f), 1e-4f);
+            Assert.AreEqual(0.7f, SpellTimings.BaseCooldown(Elements.Ice, -5f), 1e-4f, "no share takes the wait below a tenth");
+            Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(null, Elements.Ice));
+            Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(Upgrade.ById(IceTree.ThinIce), ""));
         }
     }
 }

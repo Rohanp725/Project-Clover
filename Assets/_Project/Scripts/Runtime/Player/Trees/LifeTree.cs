@@ -74,7 +74,7 @@ namespace Clover.Player.Trees
             // the end if the price was won back). The clone is the nearest: half again on every blow for as long. A
             // spell must cost some mana to pass the test, so it costs 1.
             to.Add(new Upgrade { Id = RedHarvest, Name = "Red Harvest", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { ThinBlood }, X = -1.48f, Y = 5.43f, Icon = UpgradeIcons.Eye,
-                Description = "Hold the spell button to give 25 health and call a copy of yourself to your side for eight seconds. It lands each of your blows again a beat late, at half its strength. No mana.",
+                Description = "You give 25 health and call a copy of yourself to your side for eight seconds. It lands each of your blows again a beat late, at half its strength.",
                 Form = "clone",
                 Spell = new SpellSpec { Cost = 0f, HealthCost = 25f, Seconds = 8f, Damage = 50f, Stacks = 1 } });
             // Built by hand (ManaPool.Instead, PlayerUpgrades.PayInHealth): every mana price is 1 health for 2 mana, left grey and never
@@ -104,11 +104,11 @@ namespace Clover.Player.Trees
                 Description = "Briar Patch covers more ground.",
                 Stats = new[] { new StatMod(PlayerStat.SpellReach, 0.15f) } });
             to.Add(new Upgrade { Id = ReadySoil, Name = "Ready Soil", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Sapling }, X = 0.68f, Y = 6.63f, Icon = UpgradeIcons.Gem,
-                Description = "Briar Patch costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.25f) } });
+                Description = "Briar Patch waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // NEAREST: the nova is the call; everything grown bursts and mends. The seeds in enemies do not burst yet.
             to.Add(new Upgrade { Id = ReapWhatIsSown, Name = "Reap What Is Sown", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Sapling }, X = 0.82f, Y = 7.78f, Icon = UpgradeIcons.Burst,
-                Description = "Hold the spell button to call in the harvest. The ground bursts round you and everything you have grown bursts with it, each grown thing mending you. 30 mana.",
+                Description = "You call in the harvest. The ground bursts round you and everything you have grown bursts with it, each grown thing mending you.",
                 Form = "nova",
                 Spell = new SpellSpec { Cost = 30f, Radius = 6f, Delay = 0.2f, Damage = 16f, Stagger = 25f, Stacks = 1 }, Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnSpell = true, Do = UpgradeAction.BurstGrown, Damage = 16f, Stagger = 25f, Radius = 3f, Amount = 5f } } });
             to.Add(new Upgrade { Id = Shade, Name = "Shade", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Sapling }, X = -2.21f, Y = 7.16f, Icon = UpgradeIcons.Leaf,
@@ -116,7 +116,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, While = StatWhen.NearGrown, Do = UpgradeAction.Heal, Amount = 2f }, new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, While = StatWhen.NearGrown, Do = UpgradeAction.Stamina, Amount = 5f } } });
             // The rod is the planted totem. It does not yet grow in three shapes, take blows while it grows, or mend the player beneath it.
             to.Add(new Upgrade { Id = ElderTree, Name = "Elder Tree", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Shade }, X = -2.14f, Y = 8.65f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button to plant a tree a little ahead. For fifteen seconds its roots strike everything in a circle round it, every three seconds. 45 mana.",
+                Description = "You plant a tree a little ahead. For fifteen seconds its roots strike everything in a circle round it, every three seconds. 40 mana.",
                 Form = SpellForms.Rod,
                 Spell = new SpellSpec { Cost = 45f, Reach = 2.5f, Radius = 3f, Seconds = 15f, Interval = 3f, Damage = 16f, Stagger = 30f, Delay = 3f, Stacks = 1 } });
             // NEAREST: grown things stand three times as long (not for ever) and three more of each may stand (not twice as many). Far from them blows are weaker, as designed.
@@ -160,7 +160,7 @@ namespace Clover.Player.Trees
                 Description = "A plain guard seeds the attacker. A perfect guard roots it where it stands for a moment.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 1 }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Hold, Seconds = 1f } } });
             to.Add(new Upgrade { Id = ThornRing, Name = "Thorn Ring", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { BitterRind }, X = 3.03f, Y = 7.66f, Icon = UpgradeIcons.Ring,
-                Description = "Hold the spell button to raise a ring of thorns round you and the enemy faced. Nothing walks through it until it falls, you included, and enemies that touch it are cut. 40 mana.",
+                Description = "You raise a ring of thorns round you and the enemy faced. Nothing walks through it until it falls, you included, and enemies that touch it are cut.",
                 Form = "ring",
                 Spell = new SpellSpec { Cost = 40f, Reach = 5f, Radius = 4.5f, Seconds = 7f, LingerDamage = 8f, Stacks = 1 } });
             // BESPOKE: a third of each wound is taken off the player and split among Seeded enemies within 8 m, and Seeded

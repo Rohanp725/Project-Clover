@@ -3,15 +3,15 @@
 The long explanation the chart shows for every mark on Blight, the branch Dark and Poison share.
 
 ## blight.wither
-**What it does.** Poison bites a quarter harder on a Cursed enemy, and does not fade from it while the curse lasts. Your heavy blows also lay a Curse and poison, but a weapon blow lays only your first element's affliction, so they lay the one of the two you carry first.
+**What it does.** Poison bites a quarter harder on a Cursed enemy, and does not fade from it while the curse lasts. Your heavy blows also lay a Curse and poison together, whichever of the two you carry first.
 
 **When it happens.** Always on once learned, while you carry both Dark and Poison. The heavy-blow laying comes with every heavy blow or finisher that lands.
 
-**The numbers.** Mix, 3 Shards. Poison on a Cursed enemy bites 25% harder and keeps its doses for as long as the curse holds. A heavy blow lays a Curse (Dark first) or two doses of poison (Poison first); with your first element's root learned, it adds only what goes beyond the root's own stack, so a Curse, one deep at most, adds nothing and the poison adds one dose. The other affliction comes from your spells, the charged blade and your strike.
+**The numbers.** Mix, 3 Shards. Poison on a Cursed enemy bites 25% harder and keeps its doses for as long as the curse holds. A heavy blow lays a Curse and two doses of poison. Of your first element's affliction, once its root is learned, it adds only what goes beyond the root's own stack: with Dark first the Curse, one deep at most, adds nothing; with Poison first the poison adds one dose. A mixed branch's marks are the exception to the rule that weapon blows lay only your first element's affliction.
 
 **Works with.** Curse or Venom, Feeding Rot, Carrion Flies, The Reaping, Grasp and Miasma, and the infused strikes (R2 lays the second element).
 
-**Example.** Poison first: lay eight doses with blade and heavy blows, then Grasp the soldier. While it stays Cursed the poison never runs out and bites for 20 at a time.
+**Example.** Poison first: lay eight doses with blade and heavy blows; the heavy blows Curse the soldier as they go. While it stays Cursed the poison never runs out and bites for 20 at a time.
 
 ## blight.feedingrot
 **What it does.** Each time poison bites a Cursed enemy, a little of it comes back to you as health.

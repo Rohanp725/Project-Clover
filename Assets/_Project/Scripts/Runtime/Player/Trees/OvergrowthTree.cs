@@ -34,12 +34,12 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 3f, Seconds = 6f, Interval = 1f, Damage = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1, Cooldown = 1f }, new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 3f, Seconds = 6f, Interval = 2f, Damage = 0f, Affliction = AfflictionKind.Tremor, Stacks = 1, Cooldown = 1f } } });
             // The wall form does not cut what touches it, and a spell lays only the affliction of the element held.
             to.Add(new Upgrade { Id = ThornWall, Name = "Thorn Wall", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { MossOnStone }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Wall,
-                Description = "Hold the spell button to raise a hedge of stone and briar before you. It blocks the way for eight seconds, then bursts into thorns, or sooner if you strike it with a heavy blow. 35 mana.",
+                Description = "You raise a hedge of stone and briar before you. It blocks the way for eight seconds, then bursts into thorns, or sooner if you strike it with a heavy blow.",
                 Form = "wall",
                 Spell = new SpellSpec { Cost = 35f, Reach = 2.5f, Arc = 5f, Delay = 0.2f, Seconds = 8f, Radius = 5f, Damage = 20f, Stagger = 25f, Stacks = 1 } });
             // The rod form is the planted totem. NEEDS: a totem that grows with blows landed near it, heals in its shade and blocks the way. Here it strikes as the young tree from the start.
             to.Add(new Upgrade { Id = StoneOak, Name = "Stone Oak", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ThornWall }, X = 0f, Y = 5.72f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button to plant a stone oak a little ahead. For twenty seconds its roots strike everything in a circle round it, every two seconds. 45 mana.",
+                Description = "You plant a stone oak a little ahead. For twenty seconds its roots strike everything in a circle round it, every two seconds. 45 mana.",
                 Form = SpellForms.Rod,
                 Spell = new SpellSpec { Cost = 45f, Reach = 2f, Radius = 5f, Seconds = 20f, Interval = 2f, Damage = 10f, Stagger = 15f, Delay = 0.5f, Stacks = 1 } });
             to.Add(new Upgrade { Id = LivingRampart, Name = "Living Rampart", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BriarPatch }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Shield,

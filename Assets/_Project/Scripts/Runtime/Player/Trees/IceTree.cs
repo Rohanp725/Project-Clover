@@ -79,7 +79,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.GuardGrey, -0.2f) } });
             // NEEDS FORM: a statue that draws enemies, bursts when they strike it and bursts forward for the player's heavy blow. The wall is the nearest.
             to.Add(new Upgrade { Id = HollowStatue, Name = "Hollow Statue", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { GatheringFrost }, X = -2.37f, Y = 6.79f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button to raise a block of ice just ahead of you for six seconds. Nothing walks through it. When its time ends, or when you strike it with a heavy blow, it bursts and chills everything near. 30 mana.",
+                Description = "You raise a block of ice just ahead of you for six seconds. Nothing walks through it. When its time ends, or when you strike it with a heavy blow, it bursts and chills everything near.",
                 Form = "wall",
                 Spell = new SpellSpec { Cost = 30f, Reach = 1.5f, Arc = 1.5f, Delay = 0.1f, Seconds = 6f, Radius = 3.5f, Damage = 20f, Stagger = 30f, Stacks = 3 } });
             // Built (PlayerCombat.HeavyUnbroken, StatWhen.HeavySwing): nothing interrupts a heavy blow while it is wound up or swung, the red blows too, and blows taken then do half.
@@ -126,11 +126,11 @@ namespace Clover.Player.Trees
                 Description = "Shatter an enemy with less than a fifth of its life left and nothing is left of it. The gods are spared." });
             // The sword form carries the blade; the triple shatter of a Frozen target is not in it yet.
             to.Add(new Upgrade { Id = HangingIce, Name = "Hanging Ice", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Brittle }, X = -1.13f, Y = 6.95f, Icon = UpgradeIcons.Comet,
-                Description = "Hold the spell button to hang a great blade of ice over the enemy faced. It falls after three seconds as a heavy blow that chills what it strikes, and leaves cracked ground that bites for a moment. 40 mana.",
+                Description = "You hang a great blade of ice over the enemy faced. It falls after three seconds as a heavy blow that chills what it strikes, and leaves cracked ground that bites for a moment.",
                 Form = "sword",
                 Spell = new SpellSpec { Cost = 40f, Reach = 7f, Delay = 3f, Radius = 2f, Damage = 30f, Stagger = 40f, Stacks = 3, Seconds = 2f, LingerDamage = 2f } });
             to.Add(new Upgrade { Id = EightPoints, Name = "Eight Points", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { HangingIce }, X = -1.58f, Y = 8.3f, Icon = UpgradeIcons.Target,
-                Description = "Hold the spell button to set eight shards in a ring round the enemy faced. They close on it together. 45 mana.",
+                Description = "You set eight shards in a ring round the enemy faced. They close on it together.",
                 Form = "bullets",
                 Spell = new SpellSpec { Cost = 45f, Reach = 6f, Count = 8, Radius = 3.5f, Delay = 1.2f, Damage = 5f, Stagger = 4f, Stacks = 1 } });
             // Built: the shatter itself is tripled (ShatterDamage) and Chill slows no one (Afflictions.ChillSlowOff); it still freezes at five.
@@ -144,8 +144,8 @@ namespace Clover.Player.Trees
                 Description = "Hoarfrost leaves a sheet of ice on the ground. Enemies standing on it grow colder.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, BaseSpell = true, Do = UpgradeAction.Hazard, Shape = HazardShape.Line, Count = 4, Reach = 4.5f, Radius = 1.1f, Seconds = 4f, Interval = 1f, Damage = 1f, Affliction = AfflictionKind.Chill, Stacks = 1, Cooldown = 1f } } });
             to.Add(new Upgrade { Id = ThinIce, Name = "Thin Ice", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { BlackIce }, X = 0.39f, Y = 2.36f, Icon = UpgradeIcons.Gem,
-                Description = "Hoarfrost costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCost, -0.2f) } });
+                Description = "Hoarfrost waits a fifth less between casts.",
+                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             to.Add(new Upgrade { Id = LongFrost, Name = "Long Frost", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { BlackIce }, X = 1.71f, Y = 2.46f, Icon = UpgradeIcons.Arrow,
                 Description = "Hoarfrost reaches further.",
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellReach, 0.33f) } });
@@ -163,7 +163,7 @@ namespace Clover.Player.Trees
                 Description = "Spells strike chilled enemies harder.",
                 Stats = new[] { new StatMod(PlayerStat.SpellDamage, 0.2f, AfflictionKind.Chill) } });
             to.Add(new Upgrade { Id = WinterWall, Name = "Winter Wall", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { SplinterWard }, X = 2.32f, Y = 4.66f, Icon = UpgradeIcons.Wall,
-                Description = "Hold the spell button to raise a wall of ice before you. It stops blows and chills what touches it. Your heavy blow bursts it forward. 35 mana.",
+                Description = "You raise a wall of ice before you. It stops blows and chills what touches it. Your heavy blow bursts it forward. 35 mana.",
                 Form = "wall",
                 Spell = new SpellSpec { Cost = 35f, Reach = 2f, Arc = 5f, Delay = 0.2f, Seconds = 6f, Radius = 4f, Damage = 20f, Stagger = 30f, Stacks = 3 } });
             // BESPOKE: the shell regrows by itself and the surge button breaks it by choice. Until then: a ward every

@@ -84,7 +84,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.AttackStamina, -0.15f, StatWhen.GreyHeld) } });
             // The burst does not yet grow as health falls.
             to.Add(new Upgrade { Id = DebtsCalled, Name = "Debts Called", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { BorrowedStrength }, X = -2.0f, Y = 6.0f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button. Everything near is dragged to a point before you, and then thrown back by a burst. 40 mana.",
+                Description = "Everything near is dragged to a point before you, and then thrown back by a burst.",
                 Form = FormReverse,
                 Spell = new SpellSpec { Cost = 40f, Reach = 1f, Radius = 4.5f, Delay = 0.5f, Damage = 18f, Stagger = 35f, Stacks = 1 } });
             to.Add(new Upgrade { Id = BitterHarvest, Name = "Bitter Harvest", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { DebtsCalled }, X = -2.88f, Y = 6.74f, Icon = UpgradeIcons.Gem,
@@ -92,7 +92,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.25f, StatWhen.HalfHealth) } });
             // BESPOKE: the heart set down, health held at one, the ring that closes. Until then it costs thirty health (left grey) and no mana, and a shade of the player doubles most of every blow for ten seconds.
             to.Add(new Upgrade { Id = PawnedHeart, Name = "Pawned Heart", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { DebtsCalled }, X = -2.4f, Y = 7.8f, Icon = UpgradeIcons.Heart,
-                Description = "Hold the spell button to tear out your heart and set it down. While it beats there you stand one blow from death, and strike as you never have. Come back for it in time and it returns with what your blows have earned. No mana.",
+                Description = "You tear out your heart and set it down. While it beats there you stand one blow from death, and strike as you never have. Come back for it in time and it returns with what your blows have earned.",
                 // BESPOKE (built): HeartForm. The form takes the health itself; the price of one point only says that one who has nothing to pawn cannot cast it.
                 Form = SpellForms.Heart,
                 Spell = new SpellSpec { Cost = 0f, HealthCost = 1f, Seconds = 10f, Damage = 60f, Count = 30, Radius = 3f, Stacks = 0 } });
@@ -139,7 +139,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.DamageToAfflicted, 0.08f) } });
             // The feeding is the Maw's own (OwnSpell on SpellHit). The swallow of a kill or a staggered enemy is not built, and the words do not promise it.
             to.Add(new Upgrade { Id = DevouringMaw, Name = "Devouring Maw", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Dread }, X = 0f, Y = 8.3f, Icon = UpgradeIcons.Fang,
-                Description = "Hold the spell button and a great jaw rises out of your shadow and bites what stands before you. Each Cursed enemy it bites feeds you. 40 mana.",
+                Description = "A great jaw rises out of your shadow and bites what stands before you. Each Cursed enemy it bites feeds you.",
                 Form = FormDragon,
                 Spell = new SpellSpec { Cost = 40f, Reach = 5f, Radius = 1.6f, Damage = 30f, Stagger = 30f, Stacks = 1, Speed = 14f },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Heal, Needs = AfflictionKind.Cursed, Amount = 5f } } });
@@ -181,7 +181,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.Risen, Do = UpgradeAction.Heal, Amount = 1f, Cooldown = 0.2f } } });
             // BESPOKE: the second hold that changes places with the shadow. The shadow itself is the clone form.
             to.Add(new Upgrade { Id = SecondShadow, Name = "Second Shadow", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { HollowStrength }, X = 2.0f, Y = 6.0f, Icon = UpgradeIcons.Moon,
-                Description = "Hold the spell button and your shadow stands at your shoulder for a while. It repeats every blow you land a beat late, for half its damage. 45 mana.",
+                Description = "Your shadow stands at your shoulder for a while. It repeats every blow you land a beat late, for half its damage.",
                 Form = FormClone,
                 Spell = new SpellSpec { Cost = 45f, Seconds = 8f, Damage = 50f, Stacks = 1 } });
             to.Add(new Upgrade { Id = LongShadows, Name = "Long Shadows", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { SecondShadow }, X = 2.9f, Y = 6.72f, Icon = UpgradeIcons.Orb,
@@ -189,7 +189,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.SpellDamage, 0.15f) } });
             // The shades rise beside the player, not where the dead fell, and need no dead to rise.
             to.Add(new Upgrade { Id = TheDeadStand, Name = "The Dead Stand", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { SecondShadow }, X = 2.4f, Y = 7.8f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button and three shades rise beside you. Each runs at an enemy, strikes a few times for you and is gone. 40 mana.",
+                Description = "Three shades rise beside you. Each runs at an enemy, strikes a few times for you and is gone.",
                 Form = FormMinions,
                 Spell = new SpellSpec { Cost = 40f, Count = 3, Seconds = 5f, Interval = 1.6f, Damage = 12f, Stagger = 12f, Stacks = 1 } });
             // Built in PlayerUpgrades: Risen for good (StatWhen.Risen always holds), two points of health a second while an enemy is within twelve metres, never the last point, and Rise() refuses.
