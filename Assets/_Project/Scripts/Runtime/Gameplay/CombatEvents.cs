@@ -29,7 +29,16 @@ namespace Clover.Gameplay
             Shattered = null;
             Landed = null;
             PoisonBit = null;
+            Reacted = null;
         }
+
+        /// <summary>
+        /// Two afflictions reacted on something: who, the pair (numbered as in <see cref="AfflictionPairs"/>), and the
+        /// kind whose laying set it off (the partner is the pair's other kind). Raised by <see cref="ReactionEngine"/>.
+        /// </summary>
+        public static event Action<Component, int, AfflictionKind> Reacted;
+
+        public static void RaiseReacted(Component who, int pair, AfflictionKind laid) => Reacted?.Invoke(who, pair, laid);
 
         /// <summary>Poison bit something on its beat (or was made to): who, how deep it was, and what the bite dealt.</summary>
         public static event Action<Component, int, float> PoisonBit;
