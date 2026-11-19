@@ -41,5 +41,7 @@ namespace Clover.World
         /// <summary>For a grown thing: which kind it is (things of one kind share a limit) and how many of that kind may stand; one more takes the place of the one nearest its end. Zero: no limit.</summary>
         public int Family;
         public int Limit;
+        /// <summary>True when a reaction laid it: what its bites lay starts no reaction of its own (IMPLEMENTATION.md 3.7).</summary>
+        public bool FromReaction;
     }
 }
