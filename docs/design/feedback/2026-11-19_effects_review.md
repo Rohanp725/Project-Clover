@@ -33,6 +33,25 @@ being read. The triage at the end says who acts on each.
   Earthed, Lightning's whole set, Gust, Stone Rise's shove, Riptide's wave, Water's landing splash, Struck Plate's
   after effect, Light's Marked, Glare and Ray Along the Edge, Dark's Grasp and blade blows.
 
+## Added for the end of Phase 3 (the owner, 2026-11-19, in chat)
+
+- **The element braziers must contain their element, not show flames of its colour.** This applies to every brazier
+  that stands for an element (the Proving Ground's altars and any other). Each holds its element in the pass-2
+  language, animated and alive:
+  - Fire: flames.
+  - Lightning: a crackling caged storm.
+  - Wind: a small turning vortex with leaves.
+  - Ice: frost crystals and cold mist.
+  - Water: a turning basin of water.
+  - Life: a living plant that sways and blooms.
+  - Earth: shifting stones.
+  - Metal: a molten glow and an ingot.
+  - Light: a radiant core and rays.
+  - Dark: a black hole that drinks light.
+  - Poison: a bubbling green brew and fumes.
+
+  Design them in Blender, then build them in Unity.
+
 ## Comments, by picture
 
 ### Flashover
