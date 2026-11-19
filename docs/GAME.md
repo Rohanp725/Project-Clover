@@ -289,6 +289,15 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   judged by the user.
 - Fidelity targets: not decided; they depend on the camera.
 - Performance budget: default 1080p at 16.6 ms and 0 B GC per frame on the user's RTX 3080, until changed.
+- **Elemental effects (approved by the user, 2026-11-18)**: the second look-dev pass of the eleven elements in
+  `staging/blender/2026-11-18_vfx/`, files marked `v2_`, from `notes.md` "Pass 2" and `research.md`.
+  - Each element owns a shape family that reads with the colour taken away.
+  - Light reads by what it casts. Dark reads as flat black holes that pull inward.
+  - Metal has chrome bands, clang arcs and forking sparks. Poison is a low, lobed gas front.
+  - Life is approved as it is.
+  - Earth, Water's crest, Fire's hoods at small size, and Poison's Fever and Venom Flick are to be fixed in a third
+    pass before import.
+  - The combos come after the elements.
 
 ## Sound
 
