@@ -7,10 +7,11 @@ not change since the frame shown before left transparent (as reaction_gifs.py do
 NEAR (summed over red, green and blue) as none: a flame's flicker of a shade or two costs a third of the file and is not
 seen. A GIF over 4.9 MB is made again smaller
 (0.8, 0.65, then 0.5 of 960x540) until it fits. Then review/gifs/elements/contact_sheet.png: the peak frame of each
-clip (info.txt's peak_frame), a row per element in the ring's order and a column per moment, each labelled.
+clip (info.txt's peak_frame; for the blows, the frame most unlike the first), a row per element in the ring's order and a column per moment, each labelled.
 
 Run as plain `python AgentScripts/element_gifs.py </dev/null` (Pillow and numpy are the user's packages, so not -I).
-Optional arguments: folder names (fire_spell) to assemble only those; the sheet is always made of every folder.
+Optional arguments: folder names (fire_spell) to assemble only those, or `sheet` for the sheet alone; the sheet is
+always made of every folder.
 """
 import os
 import sys
@@ -27,6 +28,8 @@ NEAR = 24
 MOST_BYTES = 4.9e6
 SCALES = (1.0, 0.8, 0.65, 0.5)
 MOMENTS = ["affliction", "spell", "hit", "charged", "infused", "surge"]
+# The infused strike keeps the probe's frame: its element's own art comes after the carrier's brighter blow.
+STRONGEST = ("hit", "charged")
 
 
 def info_of(folder):
@@ -111,6 +114,19 @@ def label_font(size):
     return ImageFont.load_default()
 
 
+def strongest(paths):
+    # The frame that differs most from the first (the clean floor before the moment): for the blows, whose strongest
+    # moment the probe can only guess at.
+    first = numpy.asarray(Image.open(paths[0]).convert("RGB").resize((240, 135)), dtype=numpy.int32)
+    best, best_index = -1, 0
+    for index, path in enumerate(paths):
+        frame = numpy.asarray(Image.open(path).convert("RGB").resize((240, 135)), dtype=numpy.int32)
+        changed = int((numpy.abs(frame - first).sum(axis=2) > 60).sum())
+        if changed > best:
+            best, best_index = changed, index
+    return best_index
+
+
 def contact_sheet(entries, out_path):
     # A row an element, a column a moment.
     elements = []
@@ -128,7 +144,10 @@ def contact_sheet(entries, out_path):
         paths = frame_paths(folder)
         if not paths or info.get("moment") not in MOMENTS:
             continue
-        index = min(int(info.get("peak_frame", "0")), len(paths) - 1)
+        if info.get("moment") in STRONGEST:
+            index = strongest(paths)
+        else:
+            index = min(int(info.get("peak_frame", "0")), len(paths) - 1)
         thumb = Image.open(paths[index]).convert("RGB").resize((thumb_w, thumb_h), Image.LANCZOS)
         row = elements.index(info.get("element"))
         column = MOMENTS.index(info.get("moment"))
@@ -142,7 +161,7 @@ def contact_sheet(entries, out_path):
 
 
 def main():
-    only = set(sys.argv[1:])
+    only = set(name for name in sys.argv[1:] if name != "sheet")
     names = [name for name in os.listdir(FRAMES) if os.path.isdir(os.path.join(FRAMES, name))]
     entries = []
     for name in names:
@@ -153,7 +172,7 @@ def main():
             entries.append((name, folder, info))
     entries.sort(key=lambda entry: int(entry[2].get("order", "9999")))
     for name, folder, info in entries:
-        if only and name not in only:
+        if (only or "sheet" in sys.argv[1:]) and name not in only:
             continue
         out_path = os.path.join(ROOT, f"elem_{name}.gif")
         made = make_gif(folder, out_path)
