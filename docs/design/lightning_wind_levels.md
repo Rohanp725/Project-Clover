@@ -22,27 +22,28 @@ footing of the great torii in the surf.
 | Decided | Source | How this plan uses it |
 |---|---|---|
 | The map is the two criss-crossing stairs | `WORLD.md`, level design rules, 2026-11-18 evening | The two stairs braid up the mountain's face in diagonal legs and cross **at grade** five times; between crossings they enclose four **diamonds** (1.1, 2). Nothing passes over or under anything else |
-| The verb is *rhythm*: the rivals' race passes on a drumbeat heard coming; a well-timed dodge through it is rewarded, not only sheltering under a gate | same | The race is a count of eight beats with the strike on the ninth, sounded by the gates the racers pass; shelter is a gate's sill; a perfect dodge through it gives each racer's own reward (1.2) |
+| The verb is *rhythm*: the rivals' race passes on a drumbeat heard coming; a well-timed dodge through it is rewarded, not only sheltering under a gate | same | The race is a count of eight beats with the strike on the ninth, sounded by the gates the racers pass; shelter is a gate's sill; a perfect dodge through it gives one shared reward, the same for both racers (1.2; Decided, owner, 2026-11-19, answer 1) |
 | Every so often Narukami and Kazehaya streak past up the stairs; a lightning strike and a gust sweep the steps; the player dodges or shelters under a gate; at each crossing a small shrine lets the player rest or change stairs | `WORLD.md`, "the rivals on the stairs" | Every crossing is a rest fire and the one calm place on the mountain (1.2, 2). The race never sweeps a crossing |
-| The stairs: scorched gates on one, wind-split gates on the other, swapping the lead at each crossing (**Proposal** in `WORLD.md`) | `WORLD.md`; `LOOKS.md` 8 | Used. The swap of lead is heard: the leader's stair strikes on the beat, the trailer's half a beat later (1.2, question 2) |
+| The stairs: scorched gates on one, wind-split gates on the other, swapping the lead at each crossing (**Proposal** in `WORLD.md`) | `WORLD.md`; `LOOKS.md` 8 | Used. The swap of lead is heard: the leader's stair strikes on the beat, the trailer's half a beat later (1.2; Decided, owner, 2026-11-19, answer 2) |
 | The shore is the drowned shrine of the two murdered first gods, a great torii standing in the surf as the first gate of the stair, a wind-scoured shrine town falling into the sea | `WORLD.md` | District 1. The player wakes under the great torii and the race starts there |
 | The mountain is full of life by height: shore town; bamboo and cedar foothills with a village and dry terraced fields; maple and pine slopes with temples, lantern graveyards, waterfalls and rope bridges; high crags with pagodas and wind-bent pines into the cloud (the heights are **Proposal** in `WORLD.md`) | `WORLD.md`, "the mountain is not barren" | One band per diamond, a settlement at every crossing (village, temple, pagoda, the summit's gate), life kept off the racecourse and made useful as warnings (1.4) |
 | The split summit: one great hall in two mirrored halves, equal; the castle half with a drum tower and an armour hall; the monastery half with a court of wind bells and a hall of fans | `WORLD.md`; `LOOKS.md` 8 | District 4, two halves of equal size, height and weight (3.4) |
 | The elites, one in each half, taken in either order: the Last Retainer (Katana, armour hall) and the Hermit of the Pass (War Fan, court of wind bells) | `WORLD.md`; `LOOKS.md` 8 | Section 6. Their techniques are the drafts Before the Thunder and Turn the Spear (`steel/weapons.md`) |
-| The screen room where the halves meet: the two first gods painted as one storm, the last quiet room before the roof; then the stairs to the roof and phase 1 | `WORLD.md`; `LOOKS.md` 8 | Section 7.1; question 6 asks how its roof is drawn |
+| The screen room where the halves meet: the two first gods painted as one storm, the last quiet room before the roof; then the stairs to the roof and phase 1 | `WORLD.md`; `LOOKS.md` 8 | Section 7.1; its roof is never drawn while the player is inside (Decided, owner, 2026-11-19, answer 6) |
 | The fight is a race to the player; the summit's top breaks away between the transformations; the beasts on the clouds | `WORLD.md`, "the fight" | Section 7 gives the rooms, not the fight, which belongs to `lw_land.md` |
 | The ride out is a storm cloud, a mix of both; the first rain falls behind it | `WORLD.md`, rides out; `LOOKS.md` 8 | Section 7.5 |
 | The ordinary enemies by area: Heike crabs and ship-ghosts on the shore; the messengers (raiju against crow-tengu runners) and fox-masked shrine guards that wake as the player passes on the stairs; samurai in lightning-struck armour and taiko drummers whose beats call down bolts in the castle half; yamabushi with conch and staff and crow-tengu with feather fans in the monastery half | `WORLD.md` | Section 1.6, each with a mechanic of its own (the owner's bar: no reskins) |
-| Two plain weapons on side paths, one for each god's weapon; **Proposal**: a plain Katana in a wreck on the shore, a plain War Fan in a hermit's cave off the stairs | `WORLD.md` | Both used (3.1, 3.3; question 7) |
+| Two plain weapons on side paths, one for each god's weapon; **Proposal**: a plain Katana in a wreck on the shore, a plain War Fan in a hermit's cave off the stairs | `WORLD.md` | Both used, in this land's make, the meditating hermit kept (3.1, 3.3; Decided, owner, 2026-11-19, answer 7) |
 | Rest fires in Fire's rhythm: about one every 6 to 8 minutes, always one at the god's door, one shortcut loop per district back to its fire, roughly 5 to 7 fires, more in the duo lands | level design rules | Nine fires: five of them crossing shrines (decided), one at each elite's door, one at the god's door (2, 8) |
-| Two kinds of optional discovery: "see it, then find the way" (holding the plain weapons and lore), and one optional trial invented for this land; the owner's own example: "a race in the Lightning land" | level design rules | The wreck, the hermit's cave, the old straight way's stretches, the lantern graveyard; the trial: three options, the Messengers' Course proposed (section 4, question 5) |
+| Two kinds of optional discovery: "see it, then find the way" (holding the plain weapons and lore), and one optional trial invented for this land; the owner's own example: "a race in the Lightning land" | level design rules | The wreck, the hermit's cave, the old straight way's stretches, the lantern graveyard; the trial: the Messengers' Course (section 4; Decided, owner, 2026-11-19, answer 5) |
 | Up to three walkable levels per district, joined by ramps, stairs and ladders seen from above; nothing walkable under a roof; roofs and overhangs only fade | level design rules | 1.1: the racecourse, the terrace below its parapet and the terrace above its face; every hall on the walk is roofless or shut |
 | Dry storm night, no rain; the cloud lit from inside as the land's main light, ground bolts rare; lightning cyan-violet; wind as pale streaming dust; shrine vermilion the accent; floors combed by the wind | `LOOKS.md` 8 and question 7 (Decided 2026-11-18) | The race's lanes are a branching scorch and a strip of flattened grass; the crossing shrines are the only whole vermilion gates bar the great torii |
 | Lightning and Wind is tier 4, a duo land: 55 to 70 minutes for a new player on a clean pass (Proposal in `WORLD.md`) | `WORLD.md`, "How a climb is structured" | Section 9: 60 minutes |
 
 The owner's answers to the earlier plans carry over where they are rules of the game and not of one land: no swimming
-(deep water throws the player back, `water_levels.md` 9); marks in the world over HUD marks; three held camera shots per
-land; small rewards for beating a land's sweeping threat, not big ones (`ice_levels.md` 9, answer 3).
+(deep water throws the player back, `water_levels.md` 9); marks in the world over HUD marks; at most one held camera
+shot per district, rides out not counted (`kit_list.md` Q1, Decided 2026-11-19); small rewards for beating a land's
+sweeping threat, not big ones (`ice_levels.md` 9, answer 3).
 
 ---
 
@@ -108,7 +109,8 @@ Nothing walkable lies under a roof:
   burned gate, the armour hall and the hall of fans are roofless; every thatch, tile and bark roof that stands fades
   (`Fadeable`) and has no walkable floor under it.
 - **The pagoda** is never entered; it fades as the player nears its foot.
-- **The screen room** is the one interior. Its roof is never drawn while the player is inside (question 6).
+- **The screen room** is the one interior. Its roof is never drawn while the player is inside (Decided, owner,
+  2026-11-19, answer 6).
 - **Rope bridges** span ravines whose floors are not walkable (white water, or cloud with `FallCatch`).
 
 ### 1.2 The race
@@ -151,7 +153,7 @@ On the stair whose racer leads in that diamond, the strike falls **on** the nint
 half a near beat later, **on the "and"**. The trailer's gates sound on the off-beats, so the two counts interleave (boom-
 knock, boom-knock) and the player follows their own stair's sound. Narukami leads in diamonds 1 and 3, Kazehaya in 2 and
 4, every race. Near the crossings, where both stairs are in frame, both sweeps are seen half a beat apart: a scorch, then a
-gust. (Question 2 offers the simpler form with both on the beat.)
+gust. (Decided, owner, 2026-11-19, answer 2: the count of eight, the half-beat lead and the tempo rising by district.)
 
 **The two sweeps.** Each racer's own, as the two gods are their own:
 
@@ -171,21 +173,17 @@ such), and anywhere off the legs.
 
 **The perfect dodge through the race.** The sweep is unguardable, like a red attack. A roll whose first 0.2 s contains the
 front's passing is a **perfect dodge through the race** (the window is wider than an enemy's 0.13 s because the count
-tells the player exactly when; question 1). A roll whose later invulnerable part (to 0.25 s, `DodgeRoll`) contains it
-avoids the sweep with no reward. What a perfect dodge gives (question 1):
-- **Keeping pace** (both racers): for 4 s the player moves 30% faster and rolls 1 m farther; 20 mana (the perfect dodge's 12
-  and 8 more); and the perfect dodge's third of a second of slowed time, in which the racer is seen inside the streak for
-  a frame (Narukami's face in the bolt, Kazehaya's in the dust), the only sight of them before the summit.
-- **Charged** (through the bolt): the next three blows within 5 s each throw a fork, 12 lightning damage and 25 stagger to
-  the enemy struck and one more within 3 m. The weapon crackles cyan until they are spent.
-- **Carried** (through the gust, if the dodge is held): the gust lifts the player and carries them 8 m up the lane in 0.5 s,
-  invulnerable, over an enemy or a gap of up to 2 m, landing with a shove ring 1.5 m round (enemies pushed 1.5 m). Let go
-  of the dodge and the player stays where they rolled. Riding a gust is the Wind God's Fan's own glide
-  (`steel/weapons.md`), met first on the stairs.
+tells the player exactly when). A roll whose later invulnerable part (to 0.25 s, `DodgeRoll`) contains it avoids the
+sweep with no reward. What a perfect dodge gives is **one shared gift, the same through the bolt and through the gust**
+(Decided, owner, 2026-11-19, answer 1; no racer gives a gift of its own):
+- **The ordinary perfect dodge**: its 12 mana and its third of a second of slowed time, in which the racer is seen inside
+  the streak for a frame (Narukami's face in the bolt, Kazehaya's in the dust), the only sight of them before the summit.
+- **Keeping Pace**: for 4 s the player moves 30% faster and rolls 1 m farther.
 
-So the scorched stair rewards fighting and the wind stair rewards moving, and choosing a stair at a crossing is choosing a
-racer's rhythm and gift. The land teaches the dodge twice without words: a crow-tengu runner is seen riding a gust in
-diamond 1 (3.2), and the first perfect dodge shows a status line once ("You kept pace with the storm.").
+So the two stairs differ in their sweeps (the bolt stuns where it strikes, the gust shoves the player back down the leg),
+not in their gifts, and choosing a stair at a crossing is choosing which racer's rhythm to read. The land teaches the
+dodge twice without words: a crow-tengu runner is seen running inside a gust in diamond 1 (3.2), and the first perfect
+dodge shows a status line once ("You kept pace with the storm.").
 
 **The first race** is placed: it starts as the player wakes (the racers burst out of the great torii above them and up the
 corridor line; the player stands on the torii's footing, under its beam: shelter taught by being given it). The first race
@@ -255,7 +253,7 @@ From 12 m above, life can easily become clutter that hides the lanes the race ne
 | A turn | 14 by 14 m, the great gate across it | A small room at the face's edge, and the door to a flank |
 | A crossing | 20 by 14 m, level, calm: the wind drops, the grass stands up, the shrine's lantern burns still | Rest and the choice of stair |
 | The count | 1.2 table | |
-| Perfect dodge through the race | 0.2 s window | 1.2, question 1 |
+| Perfect dodge through the race | 0.2 s window; the ordinary perfect dodge and Keeping Pace | 1.2 (the gift Decided, owner, 2026-11-19, answer 1) |
 | A rise that reads; a drop; a step; stairs fought on; ramps | 1.5 m; 2 m; 0.3 m; 27 to 32 degrees; 8 degrees fought on, 15 walked | As Fire |
 | A group fight | 12 to 16 m across, 10 to 12 m deep | As Fire (the summit's courts, the shore's streets) |
 | The surf's wash (shore) | A wave every 7 s: 4 s breaking and washing to a wet line, 3 s drawing back; walking in the wash 20% slower | The shore's own rhythm, the land's first count (1.6, the crabs) |
@@ -333,7 +331,7 @@ All are **Decided** as kinds (`WORLD.md`); how each fights is **Proposal**, each
 - **Crow-tengu with feather fans**, lighter than the runners. They perch on bell frames, screens and walls at most 1 m up, flap
   twice, and **swoop**: a pale lane 6 m long, 10 m downwind in a conch wind, landing behind the player with a fan cut. From a
   perch they throw a **fan crescent** (a wind blade, 10 m, guardable, shoves 1 m). In a conch wind they drift twice as far as
-  anyone else, and anything that shoves them (a gust, a carried landing, a War Fan) sends them twice as far.
+  anyone else, and anything that shoves them (a gust, a War Fan) sends them twice as far.
 
 ---
 
@@ -446,7 +444,8 @@ storm cloud.
 | V9 | The central court's north end, (0, 76, 397) | 10 by 3 m | North | The screen room's doors and their two seals (the frame `lw_split_summit`) |
 | V10 | The roof walk's south end (`StormRoof`) | 12 by 3 m | North | The ridge walk, the finials, the two gods at its far end |
 
-**Three held shots** (as the owner chose for Water, one per act):
+**Three held shots**, two in the land and the ride (`kit_list.md` Q1, Decided 2026-11-19: at most one per district,
+rides out not counted; this plan keeps the two it had and the ride):
 1. *The start* (V1): as the player wakes, the camera eases back to 25 m and up, the great torii's beam in frame for the only
    time, and the first race bursts out of the gate over the player, a bolt and a gust running north up the corridor line, over
    the drowned shrine and up the two stairs into the cloud. 6 s.
@@ -489,9 +488,10 @@ waterfront (y -0.4 to 0.4); the stage and the corridors (y 1.5); the upper town 
 ```
 
 **The water.** South of z -26 the sea is deep (thrown back to firm ground, 1.2 s, 10 damage, `water_levels.md` 1.2). From z -26
-to the shore the surf is knee-deep over grey rippled sand (y -0.4), walkable, slow (20%), ghost water. The deep channel west of
-the spit and under the broken corridor (y -1.5, 1 m deeper than the surf) is not walkable. The **wash**: every 7 s a wave breaks
-across the waterfront's paving to its wet line and draws back (1.5 table).
+to the shore the surf is knee-deep over grey rippled sand (y -0.4), walkable, ghost water; it is wading by Water's one depth rule
+(4 m/s, rolls 3 m; `kit_list.md` Q6, Decided 2026-11-19), where this plan first had it 20% slow. The deep channel west of the
+spit and under the broken corridor (y -1.5, 1 m deeper than the surf) is not walkable. The **wash**, kept as this land's own
+named surface (20% slower; Q6): every 7 s a wave breaks across the waterfront's paving to its wet line and draws back (1.5 table).
 
 #### 1A. The great torii (x -7 to 7, z -15 to -9, y 0)
 - *Shape:* the torii's footing, a platform of dressed stone just above the surf, the two great posts at (-5, -12) and (5, -12)
@@ -594,7 +594,7 @@ across the waterfront's paving to its wet line and draws back (1.5 table).
   (roofless). The sandbar round it is wash and crab ground.
 - *Enemies:* a crab swarm (six small, two large) from the hold; two ship-ghosts in the channel on the sandbar's east side.
 - *The prize:* **the plain Katana** (`WeaponPickup`) in the stern, across the knees of an empty suit of armour seated against the
-  rail, in this land's make: a plain uchigatana in a salt-whitened black scabbard (question 7).
+  rail, in this land's make: a plain uchigatana in a salt-whitened black scabbard (Decided, owner, 2026-11-19, answer 7).
 - *Lore:* **L3** on the deckhouse's lintel. Words (Claude's, new): "We prayed to the storm to carry us home. It answered in two
   voices, and they argued, and we sank between them."
 - *Home:* the stage is 26 m east across the deep channel and cannot be reached; the way home is back up the fishermen's stair
@@ -656,7 +656,7 @@ leg, whole; no enemy on the leg below its platform.
   73).
   - **E2.1w** a lone **crow-tengu runner** coming down the leg from the gate above P1w: run-through, turn, back up. On a stair it
     runs farther downhill than up: let it pass going down, strike it as it climbs. The first time the player meets a race on this
-    side, the runner is seen **riding the gust** up the leg from below and past them (the teaching of Carried).
+    side, the runner is seen **running inside the gust** up the leg from below and past them (its own rule, 1.6).
 - *E1, the turn* (x 26 to 40, z 82 to 96, y 14): the great gate, a charcoal kiln and its woodpile at the east corner, a burner's
   hut (shut). **V4** looks west across the fields. No enemies.
 - *Upper leg, E1 to X1:* **P2w** (18, 18, 106). **E2.2w** a **fox pair** at P2w's gate.
@@ -853,7 +853,8 @@ on the crags between races (not on the legs). Uphill faces are cliffs of 3 to 6 
   south of the player: the camera sees through it as a moving veil) to the cave.
 - *The cave* (x -70 to -58, z 232 to 240, y 52; open to the sky through a split in the rock, so no roof over its floor): a calm
   hollow, the uncombed dust lying smooth, the waterfall's noise suddenly far. The **hermit** sits on a stone facing the ravine, a
-  man who sat down in meditation here and did not get up again, long ago, the fan across his knees (question 7).
+  man who sat down in meditation here and did not get up again, long ago, the fan across his knees (Decided, owner,
+  2026-11-19, answer 7: the hermit is kept).
 - *Enemies:* the ledge behind the fall has a **crow-tengu runner** (a ledge 3 m wide: its run-through cannot be sidestepped; the
   fall's curtain is cover for one stride at the ledge's middle, where the rock steps back 1.5 m). The cave itself is quiet.
 - *The prize:* **the plain War Fan** (`WeaponPickup`), a plain iron-ribbed folding war fan (tessen) with a paper leaf gone brown,
@@ -904,7 +905,7 @@ bolts, the monastery's conches turn the wind and its bells ring the gusts. **Lev
   half raked gravel the wind keeps raking; the seam is a straight line of pale stone down its middle. The castle's gate opens in its
   west wall at (-8, 76, 362); the monastery's in its east wall at (8, 76, 362). At its north end a stair (2 m) to the **screen room's
   doors** (z 402), carrying two **seals**: a bronze drum disc on the left leaf, a knotted cord of a wind bag on the right. Each
-  elite's fall breaks one (question 4).
+  elite's fall breaks one, and both must fall before the doors open (Decided, owner, 2026-11-19, answer 4).
 - *Vista:* **V9** at its north end.
 - *Light:* the west half strobes, the east half glows steadily; standing on the seam, the player is lit by both.
 - *Enemies:* none. A calm corridor between the two halves' beats.
@@ -967,9 +968,10 @@ west wall at (24, 80, 394) is **S4m**.
 ## 4. The trial
 
 **Decided**: each land's trial is different and invented for it; the owner's own example for this land is "a race"
-(`WORLD.md`). Three options; (a) is proposed (question 5).
+(`WORLD.md`). **Decided** (owner, 2026-11-19, answer 5): the trial is the Messengers' Course; the course and its rules
+below are **Proposal (Claude)**. The two options not taken are kept after it for the record.
 
-### 4.1 Proposed: (a) the Messengers' Course (the east flank of diamond 4)
+### 4.1 The Messengers' Course (the east flank of diamond 4)
 
 - *Seen first:* from X3, east along the ledge: at the foot of the east crag a **start bell** in a frame at (48, 60, 280), and a
   straight stair going up the crag's spine, gates on it alternating charred and silver, and at the top, against the cloud, a second
@@ -982,9 +984,9 @@ west wall at (24, 80, 394) is **S4m**.
   roof's tempo (2.75 s from the first beat), alternating a bolt count and a gust count, every 8 s. The champions race each other and
   the player: they attack the player and each other by the messengers' rule (paths shown, the shorter lands, crossing paths crash),
   each is immune to its own racer's sweep and struck by the other's. Whoever rings the finish bell first wins.
-- *How the player wins:* by the verb. A player who only shelters loses: the champions do not stop. Perfect dodges carry the player
-  8 m (gust) or charge the next blows (bolt), and Keeping Pace makes the player 30% faster for 4 s; chain them and the player can
-  outrun both. Or fight: shove a champion into the other racer's lane on the beat, bait them across each other, and climb while they
+- *How the player wins:* by the verb. A player who only shelters loses: the champions do not stop. Every perfect dodge, through
+  either sweep, gives Keeping Pace (30% faster for 4 s, rolls 1 m longer) and the perfect dodge's 12 mana; chain them and the player
+  can outrun both. Or fight: shove a champion into the other racer's lane on the beat, bait them across each other, and climb while they
   lie staggered.
 - *Lose:* a champion rings the bell; both bow mockingly; the course resets (the player walks down or drops into X4).
 - *The prize:* a **Memory** (or a Body piece, `WORLD.md`) hung on the finish bell's frame. Won once; then the champions are gone and
@@ -994,14 +996,14 @@ west wall at (24, 80, 394) is **S4m**.
   through its levels: a player who understands the beat already knows when to move (sources).
 - *Minutes:* 3 to 5.
 
-### 4.2 Option (b): the Thunder Hunt (the lantern graveyard)
+### 4.2 Not taken: option (b), the Thunder Hunt (the lantern graveyard)
 - A raiju of the old storm, larger and pale, loose in the lantern graveyard, blinking lantern to lantern on a steady beat. The
   villagers once went thunder-hunting to where lightning had struck (*kaminari-gari*, sources). The player has 3 minutes to catch it:
   it can be struck only on the ground, and it comes down only onto a lantern the player is standing beside, on the beat after the
   lantern glows; read the order (it follows the rows, one lantern a beat) and be under the next one. Two graveyard raiju harry.
 - Strong and readable; it is a chase, not a race, and its rhythm is the raiju's alone, not the race's.
 
-### 4.3 Option (c): the Waterfall Austerity (the ravine's foot)
+### 4.3 Not taken: option (c), the Waterfall Austerity (the ravine's foot)
 - A yamabushi master stands under the waterfall in the ravine's pool (*takigyō*, the ascetics' practice), a lone mini-elite on a
   floor of wet rock. Standing in the fall halves anyone's stamina regeneration and doubles their poise; he fights from in it and
   lures the player in. A good duel; but Water's trial is already a duel, and it does not use the race.
@@ -1050,7 +1052,7 @@ along a thrust's lane to strike its bearer; the teacher does it to every lane th
   pass begins with a wind-up (Before the Thunder breaks it). A player carrying the Katana who beats the Retainer first, or one
   carrying the War Fan who beats the Hermit first, has a new answer for the second. Both plain weapons are found in this land, so the
   answer is there for whoever looks.
-- **Two seals** on the screen room's doors (question 4).
+- **Two seals** on the screen room's doors; both elites must fall (Decided, owner, 2026-11-19, answer 4).
 
 ### 6.1 The armour hall (the Last Retainer)
 
@@ -1137,7 +1139,7 @@ lands; the screens as a low ring of folding screens opened in a zigzag round the
 toward the camera, the polished dark floor reflecting their gold; the dragon and the tiger on the two end panels; one lamp; the
 doors shut, nothing moving but the flame (`WORLD.md`; `LOOKS.md`).
 - *Shape:* a room 24 by 20 m, its walls dark wood with high paper windows the storm glows through, its roof never drawn while the
-  player is inside (question 6). The ring of screens, twelve panels in a zigzag (the stairs' braid again) round a clear centre 8 m
+  player is inside (Decided, owner, 2026-11-19, answer 6). The ring of screens, twelve panels in a zigzag (the stairs' braid again) round a clear centre 8 m
   across; a gap at the south and north for the doors' line.
 - *The screens* (the composition is the famous screens' nod, not their painting: the thunder and the wind across a gold field,
   sources): on the west panels the thunder in cyan-violet ink with his drums, on the east the wind in the pale of dust with his bag,
@@ -1248,7 +1250,7 @@ parameters; sizes are the defaults the plan uses.
 | | What | Where it is used |
 |---|---|---|
 | C1 | **The race** (`RivalsRace`): a clock per district (interval, tempos, lead per diamond); the count sounded at the gates (positional, from below), the lane's pulse and the gates' answer on the near beats; the two sweeps along each stair's legs (the lane's polygon per leg, excluding crossings, bridges, ladders and chains); the shelter test against M24; damage, stun, the gust's shove along the leg; enemies struck; the first races placed; `Hold` until a trigger; restart at fires; the near-count rule for enemies (1.3 rule 1) | Every leg; the shore's corridor; the roof approach; the trial's course (its own clock) |
-| C2 | **Through the race**: the 0.2 s perfect window against the front's passing; Keeping Pace; Charged; Carried (the held dodge's glide); the frame's glimpse; the once-only status line. Builds on `PlayerDefence`'s perfect dodge | Everywhere C1 runs |
+| C2 | **Through the race**: the 0.2 s perfect window against the front's passing; one shared gift for both racers, the ordinary perfect dodge (12 mana, slowed time) and Keeping Pace, with no per-racer gift (Decided, owner, 2026-11-19, answer 1); the frame's glimpse; the once-only status line. Builds on `PlayerDefence`'s perfect dodge | Everywhere C1 runs |
 | C3 | **The wash**: the 7 s wave, its wet line, the 20% slow; the crabs' clamp and scuttle keyed to it | The waterfront, the sandbar |
 | C4 | **Heike crabs**: sideways lines and turning, the pinch, clamp and flip, the general's sword lane, the slow count away from the wash | The shore |
 | C5 | **Ship-ghosts**: water-bound, the scoop lane, soak levels and sunk, drain on dry ground and at fires, the bottomless ladle and peace | The shore |
@@ -1311,7 +1313,7 @@ group a little less each), with each race met counted in, on one side of each di
 | The storehouse yard, the general | 1.0 | 0.5 | Peak (small) | Flip it three times |
 | The Upper Street, the fox pair, F2 | 1.0 | 0.4 | Rising, rest | The double has no shadow; the race shows the real one |
 | **District 1** | **8.0** | **3.5** | | |
-| Diamond 1, either side (first race, a raiju or a runner, a fox pair) | 3.3 | 1.4 | Rising | **The count, the sill, the dodge on the beat**; perches; the run-through; Carried seen |
+| Diamond 1, either side (first race, a raiju or a runner, a fox pair) | 3.3 | 1.4 | Rising | **The count, the sill, the dodge on the beat**; perches; the run-through; the runner inside the gust |
 | The village, F3 | 0.5 | 0.2 | Rest | |
 | Diamond 2, either side (a messenger pair, the turn's mix, the broken run) | 4.0 | 1.8 | Peak | **The messengers race to you**; a shut sill; the off-beat |
 | The temple crossing, F4 | 0.3 | 0.1 | Rest | |
@@ -1363,7 +1365,24 @@ each a read and a choice.
 
 ## 10. Questions for the owner
 
-Each has two or three options, the recommended one first. The rest of the plan stays Proposal (Claude) until the owner walks it.
+**Answered (owner, 2026-11-19).**
+
+1. **A perfect dodge through the race** gives one shared gift, the same for both racers: the ordinary perfect dodge
+   (12 mana, slowed time) and Keeping Pace. This is option (b), not the recommendation: there is no Charged, no Carried
+   and no extra mana.
+2. **The count** is eight sounds from the player's own stair's gates with the strike on the ninth; the trailing stair
+   strikes half a beat late; the tempo rises by district.
+3. **Both sides of every diamond** are fully built, each with its own encounters.
+4. **Both elites** must fall before the screen room opens: two seals, either order.
+5. **The trial** is the Messengers' Course.
+6. **The screen room's roof** is never drawn while the player is inside.
+7. **The plain weapons** are the uchigatana in the wreck and the iron-ribbed tessen on the knees of the meditating
+   hermit, who is kept.
+
+The body of the plan has been brought into line with these answers (2026-11-19). The rest of the plan stays Proposal
+(Claude) until the owner walks it.
+
+Each has two or three options, the recommended one first.
 
 1. **What does a perfect dodge through the race give?** (Decided: it is rewarded, not only sheltering.)
    - **(a) Each racer its own gift, on top of a shared one.** Shared: Keeping Pace (4 s faster, longer rolls), 20 mana and a

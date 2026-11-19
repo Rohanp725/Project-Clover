@@ -26,15 +26,19 @@ shadow reaches out onto the path. The player wakes at (0, 0, 0).
 | The owner is wary of imagery too close to Mount Olympus | `WORLD.md`; `LOOKS.md` 10 "Avoid" | No colonnades, no cloud floors, no thrones in a row. Seats are small stepped shrine-towers; the gnomon is an Indian stair-sundial (5.2) |
 | The frozen world is grey and the bubble round the player brings colour back; the council's seats each in their element's colour | `LOOKS.md` 10 and question 5 (Decided, 2026-11-17 evening) | The thaw is the land's readable shape (1.2); the council is the first place with colour of its own |
 | Rest fires in Fire's rhythm: one every 6 to 8 minutes of a new player's walk, always one at the god's door, a shortcut loop per district back to its fire | `WORLD.md`, level design rules | Four fires and three shortcuts for a land of about 18 minutes (section 2). The usual 5 to 7 is for lands twice this long |
-| Two kinds of optional discovery: "see it, then find the way" holding lore, and one optional trial invented per land | same | The champion's chariot and the Stutter (section 4); the trial is offered as a question (4.3 and question 4): the owner gave no steer for this land |
+| Two kinds of optional discovery: "see it, then find the way" holding lore, and one optional trial invented per land | same | The champion's chariot, the Stutter and the player's empty place in a frozen rank (section 4; the empty place Decided, owner, 2026-11-19, answer 5); the trial is the Chakravyuha (4.3; Decided, owner, 2026-11-19, answer 4) |
 | Up to three walkable levels per district, joined by ramps, stairs and ladders seen from above; nothing walkable under a roof | same | Each district names its three levels. Nothing hanging in the frozen air is walkable or roofs a floor (1.1) |
 | The hub and the council are two places; the hub is the sponsor's shore | same | The council belongs only to this land. Rest fires still reach the hub, as everywhere |
 | No ride out of this land | `WORLD.md`, the rides table | The land ends with the fight and the champion's last words |
 | Clean pass for a new player: 15 to 20 minutes before the last champion; the final area a bit shorter, the weight on the last fight | `WORLD.md`, "How a climb is structured" (the 15 to 20 is a Proposal there, used as the target) | Section 8: 18.3 minutes to the champion |
 
 The owner's answers to earlier plans carry over where they are rules of the game and not of one land: the world's own
-marks over HUD marks and three held camera shots per land (`water_levels.md` 9), noise drawn as rings
-(`ice_levels.md` 9), and the clock's state kept honest after a fall.
+marks over HUD marks (`water_levels.md` 9), at most one held camera shot per district, rides out not counted
+(`kit_list.md` Q1, Decided 2026-11-19), noise drawn as rings (`ice_levels.md` 9), and the clock's state kept honest
+after a fall. The other cross-land answers of `kit_list.md` section 5 (Decided 2026-11-19) change this plan in four
+places: the walk's arrows are pale with the standard perfect window (Q3, 1.3); the frozen Hunt uses Earth and Life's
+rules (Q4, 3B); the frozen bolts are the shared strike piece, a ring here (Q5, 3A); and the storm host's people are the
+Lightning and Wind plan's own (Q9, 1.6 and 3A).
 
 ---
 
@@ -53,7 +57,7 @@ at the player with no navmesh; ranged attackers stay in frame. What this land ch
    This is for the thaw: a 5 m circle round the player then almost fits the frame, with 3 m of grey world beyond it
    to the north and nearly 4 m to each side, which is the band where the player reads what is about to wake (1.2).
    LOOKS asks that "a game-camera frame always shows frozen grey world all round it"; at Fire's 1.0 the north margin
-   is only 2.2 m. Question 1.
+   is only 2.2 m. (Decided, owner, 2026-11-19, answer 1: 5 m, and 1.15 times for the whole land.)
 2. **Nothing in the frozen air is a floor or a roof.** Arrows, dust, debris, a breaking wave's crest and rearing
    elephants hang over walkable ground. None is walkable (the player's own thaw would set it moving under them) and
    none is dense enough to hide the floor: hanging things above 2.5 m within 4 m south of the player dither out, as
@@ -94,8 +98,8 @@ all Proposal:
 | **The figure on the bed of arrows** | Takes colour | Awake, grey, moving (2C) |
 
 So there are three speeds and each looks different: the player and the bearers at full speed and full colour; the war
-in slow motion and full colour; everything beyond, still and grey. Only full-speed things hunt. **Question 2** asks
-whether this is the right split.
+in slow motion and full colour; everything beyond, still and grey. Only full-speed things hunt. (Decided, owner,
+2026-11-19, answer 2: these three speeds.)
 
 **The bubble from above** (the decided shape of `LOOKS.md` 10, sized here):
 - **Radius 5 m.** The colour and motion rise across an **edge band 1 m wide** (4.5 to 5.5 m), not a line: dust
@@ -130,7 +134,7 @@ wakes one man at a time; seen from its middle, it wakes whole. A volley crossed 
 rolled through, it comes all at once. The thaw is how a one-way path still holds choices: every section offers a line
 close to the war's edge and a line away from it, and each has its own price.
 
-**Clinging, and why** (Question 3). A bearer that is fighting the player stays inside the bubble, so it never freezes
+**Clinging, and why** (Decided, owner, 2026-11-19, answer 3). A bearer that is fighting the player stays inside the bubble, so it never freezes
 mid-fight. Clinging matters only to the player who walks away: a crowd can be shed by outwalking it (most bearers are
 slower than 6 m/s), and each one freezes 4 s later where it stood. It comes back to life when the player returns. That
 is a tool and a debt, not an escape: the path is single, and what is left frozen behind is met again after a fall.
@@ -158,7 +162,9 @@ lanes. The rules (Proposal):
   out or land in about 2 s and the bubble is quiet. Walking brings new ones in at the leading edge; rolling brings many
   at once. Walk slowly through a volley and it comes a few at a time. This is Superhot's "time moves only when you move"
   made spatial: the war moves only *where* the player goes.
-- **A hit** is 12 damage and a flinch of 0.25 s. Arrows are guardable from the front (they read pale).
+- **A hit** is 12 damage and a flinch of 0.25 s. Arrows are guardable from the front (they read pale), with the
+  standard perfect window of 0.18 s, not Ice's 0.10 s (`kit_list.md` Q3, Decided 2026-11-19: one warned-arrow piece,
+  its guard rule per source).
 - **The perfect guard reflects.** A perfect guard sends the arrow back up its line at full speed: it is the player's now,
   it does not freeze, and it strikes the first bearer in its way (40 damage) or wakes a frozen one (its small thaw).
   This is the walk's rehearsal for the champion's last phase, where perfect guards against his arrows crack the
@@ -206,7 +212,7 @@ player on, or the hazards in the way.
 | The stir | 8 m | Bearers within the frame's north edge (8.2 m) show colour before they wake |
 | Waking; waking again; clinging | 1.2 s; 0.4 s; 4 s | 1.2 |
 | The slow | About a tenth of real speed; arrows 5 m/s; falls land 1.6 s after they start (Metal's stone throw is 1.6 s from shadow to landing) | Slow enough to read, quick enough to matter |
-| A thawed arrow | Tremble 0.5 s, 5 m/s, 12 damage, a 0.25 s flinch; guardable; the perfect guard reflects | 1.3 |
+| A thawed arrow | Tremble 0.5 s, 5 m/s, 12 damage, a 0.25 s flinch; guardable (pale), perfect window 0.18 s; the perfect guard reflects | 1.3 |
 | A thawed fall (stone, crest, foot, bolt) | Shadow or cracked mark on the floor from the moment it trembles; lands 1.6 s later; 30 to 40 and a knockdown | Every fall is marked on the floor before it lands |
 | The path | 10 to 18 m wide between the frozen ranks; narrowest 8 m | Wider than the bubble's diameter at its widest, so there is always a line away from one edge |
 | A group fight | 12 to 16 m across, 10 to 12 m deep | As Fire |
@@ -215,7 +221,8 @@ player on, or the hazards in the way.
 ### 1.6 Each land's people, as the rooms use them
 
 The recap reuses each land's people with **their own mechanics unchanged**, as their land's plan specifies them, plus
-the thaw. Nothing is reskinned and no land is rebuilt: each section is that land's host, camped where it stood when the
+the thaw (Decided, owner, 2026-11-19, answer 6: four sections in the order of the tiers, each with its lands' own
+people and one piece of their rule caught mid-event). Nothing is reskinned and no land is rebuilt: each section is that land's host, camped where it stood when the
 war froze, with a few pieces of its kit and one piece of its land's rule caught mid-event. Two or three of each land's
 people appear, chosen for how their mechanic meets the thaw:
 
@@ -226,11 +233,11 @@ people appear, chosen for how their mechanic meets the thaw:
 | Metal | A wheeler and a mender on a rail (break the repairer first), a chained (the reach circle round its cart) | A crucible frozen mid-pour; the bronze lands and pools only in the thaw | 1D |
 | Ice | The pack (runners, the howler, the pincer), brittle (the shatter, the chain), a buried (the moving line, drawn to noise) | Snow hangs in the air; missed arrows are noise; brittle stand among frozen mortals and look like them | 2A |
 | Poison | A clay formation (the lock, the officer, the volley comb), a vessel (the heavy cloud flowing downhill) | The formation wakes only where the thaw touches it: wake the front and the officer behind stays frozen and cannot close the gap | 2B |
-| Lightning and Wind | A storm samurai, a fox-masked shrine guard (it wakes as the player passes, its own rule), a crow-tengu with a feather fan (its gust) | Lightning frozen mid-strike stands along the road; the bolts strike as the thaw reaches them | 3A |
-| Earth and Life | The King's Men (they move only while the player is not facing them), a Green Man (roots and heals) | The Wild Hunt frozen mid-ride across the path; riders thawed gallop on, and cannot pass stone (Decided for their land) | 3B |
+| Lightning and Wind | A struck samurai (light blows at 25% on its armour; a bolt within 2 m charges it for 4 s, then the armour bursts and it is stunned 2 s), a fox pair (one real guard and a fox-fire double that casts no shadow; they wake when the player passes through their gate), a crow-tengu with a feather fan (the swoop, and the fan crescent that shoves 1 m) | Lightning frozen mid-strike stands along the road; the bolts strike as the thaw reaches them | 3A |
+| Earth and Life | The King's Men (they move only while the player is not facing them), a Green Man (roots and heals) | The Wild Hunt frozen mid-ride across the path; riders thawed gallop on, cannot pass stone (Decided for their land), and keep their land's rules: the ring of untouched heather round each stone as shelter, 25 damage that cannot kill, the carry west | 3B |
 
-Lightning and Wind and Earth and Life have no level plans yet; their people are used here as `WORLD.md` decides them,
-and their numbers will follow those plans when they are written. The gu (Poison) and the bait (Water) are left out:
+Lightning and Wind's and Earth and Life's people follow their own plans, written after this one
+(`lightning_wind_levels.md` 1.6, `earth_life_levels.md` 1.7 and 3.5; `kit_list.md` Q4 and Q9, Decided 2026-11-19). The gu (Poison) and the bait (Water) are left out:
 the gu's crawl needs a living host within 12 m and the bait's lure needs water at low tide, and neither reads in a
 moment in a land with no time to teach it again.
 
@@ -238,7 +245,9 @@ moment in a land with no time to teach it again.
 god sent its host to the field below the council to take what was left, and this land's mortal army met them. Time
 froze the war so that its champion could cross the field and take Light and Dark (Decided: "The sponsor froze a great
 war in time so that the champion could consume Light and Dark"). The bearers are each land's corrupted; the grey
-army round them is mortal. Question 5 asks how this war joins the game's opening.
+army round them is mortal. **Decided** (owner, 2026-11-19, answer 5): this is the war of the game's opening, which is
+played on this field in its last minutes; on the path the player finds the one empty place in a frozen rank, where they
+stood when the sponsor took them out of time (4.4).
 
 ---
 
@@ -311,7 +320,8 @@ volley; the crest; the processional (F4); the line; the champion.
 - SP2, the Stutter (see it from Bhishma's hill; reach it from the storm's file): the scar of the champion's rebellion;
   its rope ladder climbs back to F3.
 - S3 (D3): a banyan let fall across the west ravine: the moor to F3 without the storm's file.
-- The trial (if the owner wants one: question 4), the Chakravyuha, east of the clay square.
+- SP3, the empty place in a frozen rank, beside winter's edge (4.4; Decided, owner, 2026-11-19, answer 5).
+- The trial, the Chakravyuha, east of the clay square (Decided, owner, 2026-11-19, answer 4).
 
 **Vista zones and held shots** (`LandZones`; the look may point any way, as in Water's W19). A vista opens only while no
 bearer is awake within 12 m. Every vista toward the north shows, at its top edge, the council as a small ring of
@@ -326,7 +336,8 @@ view that `LOOKS.md` rule 8 asks for, held back from its full reveal until the c
 | V4 | The last rise's foot, (0, 8, 382) | 12 by 3 m | North | His volley hanging in five lanes up the rise, the tortoises of shields, the crest |
 | V5 | F4, (0, 13, 428) | 12 by 3 m | North | The top flight, Time's shadow lying down the steps, the champion seated in it between the two broken seats, the coloured seats beyond |
 
-**Three held shots** (one per district, as the owner chose for Water):
+**Three held shots** (one per district, as the owner chose for Water and then for every land, `kit_list.md` Q1,
+2026-11-19):
 1. *The stopped war* (V1, on waking): the camera rises to 30 m for 6 s and shows the war standing still to the edge of
    sight in every direction, arrows hanging in sheets, and one circle of colour in it with the player at the centre
    (`LOOKS.md` frame `ch_thaw`). Then it comes down to the land's camera.
@@ -606,7 +617,7 @@ where the champion's own volley hangs. **Levels**: the ravine and the Stutter's 
 366   (G) Green Man (4,8,366)            <- the frozen Hunt riding W, band z 352..378
 360   stones . . . . . . (row 1)
 346   ==== A5 the canopy z 336..346 at 4.5 m ====
-338   (t)tengu (-3)          (f)fox guard (7)
+338   (t)tengu (-3)          (f)fox pair (7)
 322   bolt(-4,320)   (s)samurai (1,8,322)   bolt(6,326)
 308   bolt(-4,308)   bolt(6,314)
 300   [S3: ravine W, banyan at (-16,8,342); lane x -24..-20 S to (-18,8,296)]
@@ -619,18 +630,28 @@ where the champion's own volley hangs. **Levels**: the ravine and the Stutter's 
   lightning caught mid-strike, a jagged column from the sky to a scorch ring on the floor, grey, each flickering cyan
   at 8 m (the stir). Five of them, staggered: (-4, 8, 308), (6, 8, 314), (-4, 8, 320), (6, 8, 326), (-4, 8, 332).
 - *Bolts in the thaw:* tremble 0.5 s, then the strike: a ring 2 m round the scorch, 35 damage. Then the bolt is gone
-  and its scorch ring stays. Walking the road's centre line (x 1), each bolt is 5 m off as the player passes it: the
+  and its scorch ring stays. The bolt is the shared strike piece with its own shape and numbers, a ring because this
+  is not a race, and the one look of lightning, the cyan fork of `LOOKS.md` 8 (`kit_list.md` Q5, Decided 2026-11-19). Walking the road's centre line (x 1), each bolt is 5 m off as the player passes it: the
   bolts strike **one after another in time with the walk**, a drumbeat on either side, and miss. Lightning and Wind's
   own verb is rhythm (Decided); this is its echo. They are dangerous only to a player pushed sideways.
 - *Enemies:*
   - **E3.1 a samurai** frozen mid-charge south down the centre line at (1, 8, 322), between the bolts at z 320 and 326:
-    a duel in a lane whose sides strike. Its mechanic follows the Lightning and Wind plan when written; as a first
-    guess, a fast draw and a charge, and a perfect guard that staggers it.
-  - **E3.2 a fox-masked shrine guard** at (7, 8, 336) on the road's edge. Its own rule (Decided: they wake as the player
-    passes) is the thaw already; here it is the one bearer that wakes **at the stir** (8 m), not at the bubble's edge.
-    A guard that does not wait for the thaw is the surprise of the section.
-  - **E3.3 a crow-tengu** with a feather fan at (-3, 8, 338). Its gust shoves the player 3 m: into a bolt's ring, or under
-    the canopy's falling rows. Kill it first, or keep it between the player and the bolts.
+    a duel in a lane whose sides strike. Its mechanic is the struck samurai's own (`lightning_wind_levels.md` 1.6;
+    `kit_list.md` Q9): the armour takes light blows at 25% and no stagger; a bolt landing within 2 m charges it for 4 s
+    (a third faster, its guarded cuts cost double stamina), then the armour bursts and it is stunned 2 s. The frozen
+    bolts stand 5 m off the centre line, so the way to open it is to bring it near one as the thaw sets it off, and
+    outlast the four seconds.
+  - **E3.2 a fox pair** at (7, 8, 336) on the road's edge: one real guard and its fox-fire double, which casts no
+    shadow (`lightning_wind_levels.md` 1.6; `kit_list.md` Q9). They stand as statues flanking a gate and wake when the
+    player passes through it or strikes one, their own rule over the thaw's, as the King's Men keep theirs; then the
+    four-count bell and the echo blow as in their land, and the double goes out when the real one dies. No race runs
+    here, so the real guard shuts no sill; the long crescent shadows tell the two apart. The gate (one of the storm
+    host's, at the road's edge) is to be placed at build.
+  - **E3.3 a crow-tengu** with a feather fan at (-3, 8, 338). Its own mechanic (`lightning_wind_levels.md` 1.6;
+    `kit_list.md` Q9): the swoop, a pale lane 6 m long that lands it behind the player with a fan cut, and the fan
+    crescent, a wind blade of 10 m, guardable, that shoves 1 m, toward a bolt's ring or under the canopy's falling rows.
+    Whether a 1 m shove is enough to matter beside the bolts is to be checked at build. Kill it first, or keep it
+    between the player and the bolts.
 - *A5, the canopy:* over z 336 to 346, a lattice of arrows frozen at 4.5 m, rows 1.5 m apart, its shadow a grid on the
   floor with small crescents of light in its gaps. Thawed, the rows over the bubble drop one at a time (1.6 s each, the
   row's shadow line darkening first): a preview of his canopy, dropped in rows (Proposal in `WORLD.md`).
@@ -643,11 +664,16 @@ where the champion's own volley hangs. **Levels**: the ravine and the Stutter's 
   the path, at z 360 and z 370, stones 1.4 m wide every 6 m, the rows staggered. Across the whole moor, a band of
   **the Wild Hunt** frozen mid-ride from east to west (z 352 to 378): riders, hounds and Carnwyn's herd hanging in the
   middle of their leaps, a churned band of hoofprints under them.
-- *The Hunt in the thaw:* riders within 5 m gallop west at 9 m/s (bearers: full speed), across the path, and freeze again
-  beyond the bubble's west edge. **They cannot pass stone** (Decided for their land): a rider meeting a stone parts round
-  it, and the 2 m west of every stone is shelter. Caught in the open: 20 damage and carried 4 m south (in their land the
-  Hunt carries the player back to the plain's edge, hurt, Decided). Walk slowly from stone to stone and the riders come
-  a few at a time, from the east edge of the bubble, 1 s of warning each.
+- *The Hunt in the thaw:* riders within 5 m gallop west (bearers: full speed), across the path, and freeze again beyond
+  the bubble's west edge. They keep Earth and Life's pieces and rules (`earth_life_levels.md` 3.5; `kit_list.md` Q4,
+  Decided 2026-11-19), scaled to the thaw. **They cannot pass stone** (Decided for their land): a rider meeting a stone
+  parts round it, and the shelter is the ring of untouched heather round each stone (r 2 to 3, as for that land's
+  standing stones). Caught in the open: 25 damage that cannot take the last point of health, knocked down 1 s, and
+  carried west along the riders' line, as in their land; where on the moor's west side the player is set down (the S3
+  ravine lies there) is to be set at build, on firm ground with a way back onto the path. Walk slowly from stone to
+  stone and the riders come a few at a time, from the east edge of the bubble, 1 s of warning each; their speed is to
+  be set at build to keep that second (Earth and Life's front runs at 16 m/s, which from the bubble's edge would give
+  about a third of a second).
 - *Enemies:*
   - **E3.4 three King's Men** frozen mid-march among the stones at (-8, 8, 376), (2, 8, 380), (10, 8, 374). Their own
     rule (Decided): they move only while the player is not facing them. The thaw's addition: in the thaw they keep
@@ -720,12 +746,12 @@ where the champion's own volley hangs. **Levels**: the ravine and the Stutter's 
 - *The way home:* a rope ladder up the crater's east lip to the hill's west edge, beside V3: 8 m from F3.
 - *Minutes:* 2.5 for a new player.
 
-### 4.3 The trial (Question 4)
+### 4.3 The trial: the Chakravyuha
 
-The owner gave no steer for this land, and it is the shortest land. Both are argued here; the plan's recommendation
-is a short trial.
+**Decided** (owner, 2026-11-19, answer 4): the land has a short trial, the Chakravyuha. The room and its rules below
+are **Proposal (Claude)**; the case against a trial is kept after it for the record.
 
-**For one, the Chakravyuha** (Proposal). In the Mahabharata the chakravyuha is a battle formation of rings like a wheel
+**The Chakravyuha** (Proposal). In the Mahabharata the chakravyuha is a battle formation of rings like a wheel
 or a spiral; the champion's son knew how to break into it and not how to get out, and was killed inside (Abhimanyu; a
 carving at Halebidu shows it as a labyrinth). Here: east of the clay square, x 30 to 74, z 220 to 264, y 5, reached by a
 gap in the square's east ranks.
@@ -744,10 +770,22 @@ gap in the square's east ranks.
   heart is the champion's son is the owner's (it is heavy, and it is the best answer to why the champion is as he is).
 - *Minutes:* 4 for a new player.
 
-**Against one.** The land is 18 minutes before the last fight and the weight is on that fight (Decided). A trial spends a
+**Against one** (not taken). The land is 18 minutes before the last fight and the weight is on that fight (Decided). A trial spends a
 new player's flasks and attention on the way in, and a short land has less room to hide it: the Chakravyuha's gap in the
 ranks would sit on the main path's edge. Dark Souls' Kiln of the First Flame is a short ash path, a few knights, and the
 end; players remember it as right for an ending, though no developer has said why it is short.
+
+### 4.4 SP3: the empty place (see it, then find the way)
+
+**Decided** (owner, 2026-11-19, answer 5): this is the war of the game's opening (`docs/GAME.md`, "Story and setting":
+the battlefield where a mortal army's assault on the gods is destroyed and the player, one nameless soldier in it,
+falls). The opening is played on this field in its last minutes. On the path the player finds **the one empty place in a
+frozen rank**, where they stood when the sponsor took them out of time, as a "see it, then find the way" beside
+winter's edge (2A).
+- *What it holds to:* it is a gap in a rank of the mortal army, so nothing in it wakes; it shows the player's past a
+  place without saying what that past was (the past stays Open in `docs/GAME.md`).
+- *To be set at build:* which rank, where on the main path it is seen from, the way to it, any lore or gift, and its
+  minutes.
 
 ---
 
@@ -792,7 +830,8 @@ at Fire's bowl): he rises.
   between the seats; the south opening, between Light's and Dark's seats, is the only way in.
 - **The twelve places** (Proposal in `WORLD.md`: a mandala of twelve seats facing outward like a temple's ring of
   planetary shrines; a clock face with Time as the twelfth). Each place is 30 degrees round a circle of radius 25, just
-  outside the floor's rim. **The twelfth place, Time's, is the south opening itself** (6 o'clock): a bare stone 3 m
+  outside the floor's rim. **The twelfth place, Time's, is the south opening itself** (6 o'clock; Decided, owner,
+  2026-11-19, answer 7): a bare stone 3 m
   square and 0.6 m high with nothing built on it, because Time ruled nothing and only watched (Proposal, "The story
   behind it"); it sat at the centre instead, where the gnomon stands. **Light and Dark**, Time's siblings (Decided), sit
   either side of its place, at 5 and 7 o'clock, in front (Decided), ruined and burnt grey by the breaking. The other
@@ -887,7 +926,7 @@ kit and another land's enemy code, placed frozen.
 | Z10 | **The council** | The plateau and its 6 m faces; the mandala disc 44 m with its parapet; eleven stepped seats and Time's bare stone; the gnomon; the hour channel; the processional | Section 5 |
 | Z11 | **The domain** | The phase 2 floor and light swap on the same disc: a hard line through the centre, day east and night west at start, turning | 5.4; `LOOKS.md` frame `ch_day_night` |
 | Z12 | **Land framing and vistas** | The land-wide camera framing (1.15) and the vistas and held shots with a direction | 1.1 item 1; V1 to V5; three held shots |
-| Z13 | **The Chakravyuha** (if wanted) | Three rings of frozen soldiers with hulls, the lane, the heart | 4.3 |
+| Z13 | **The Chakravyuha** (Decided, answer 4) | Three rings of frozen soldiers with hulls, the lane, the heart | 4.3 |
 
 ### 7.2 New behaviour the rooms rely on (for the code worker)
 
@@ -897,7 +936,7 @@ kit and another land's enemy code, placed frozen.
 | C2 | **The stir**: bearers within 8 m show their element's thread (each land's own effect at low strength) | Everywhere |
 | C3 | **Volley flight**: tremble, 5 m/s along the heading, stick or refreeze; 12 damage and a flinch; guardable; the perfect guard sends it back at full speed as the player's; held tremble so no arrow lands within 1.2 s of a red attack | A1 to A6 |
 | C4 | **Frozen falls and let it fall** (Z4, Z5) | 1B, 1C, 1D, 2B, 3A, S1, S3 |
-| C5 | **Each land's people, unchanged, started frozen**: wick, gilded levy and `ShieldWall`, `AshenBurst`; hooked harpooner, drowned; wheeler, mender, chained; pack runner and howler, brittle, buried; clay ji-bearer, crossbowman, officer, vessel; storm samurai, fox guard, crow-tengu; King's Man, Green Man; the Hunt's riders (a crossing band that stones block). Each one's code from its land; this land adds only C1's time scale and C2 | Sections 3.1 to 3.3 |
+| C5 | **Each land's people, unchanged, started frozen**: wick, gilded levy and `ShieldWall`, `AshenBurst`; hooked harpooner, drowned; wheeler, mender, chained; pack runner and howler, brittle, buried; clay ji-bearer, crossbowman, officer, vessel; struck samurai, fox pair and its double, crow-tengu with a fan (as `lightning_wind_levels.md` 1.6); King's Man, Green Man; the Hunt's riders (a crossing band that stones block, with Earth and Life's heather rings, damage and carry). Each one's code from its land; this land adds only C1's time scale and C2 | Sections 3.1 to 3.3 |
 | C6 | **The formation woken in part**: the officer's gap-closing and the lock work only among members awake; a frozen officer closes nothing | 2B |
 | C7 | **Noise from arrows** (Ice's noise rings) heard by the buried only inside the thaw | 2A |
 | C8 | **The fall resets**: on a fall, every bearer to its first pose and frozen, every volley and frozen fall reset, let-it-fall keys kept | Everywhere |
@@ -960,7 +999,7 @@ one 45 s, a group a little less each), with the volleys and frozen falls counted
 | **To the champion** | **18.3** | **7.4** | | |
 | The last champion (three phases) | 14 | 9 | Climax | (his fight, later) |
 | **Clean pass** | **32.3** | **16.4** | | |
-| Side paths: the chariot 2, the Stutter 2.5; the Chakravyuha 4 if built | + 4.5 (+ 4) | + 2 (+ 2) | | |
+| Side paths: the chariot 2, the Stutter 2.5, the trial (the Chakravyuha) 4; the empty place (minutes set at build) | + 8.5 | + 4 | | |
 
 That is within `WORLD.md`'s 15 to 20 before the champion, with the weight on the fight (Decided: "the final area is a
 bit shorter"). Levers if play runs long, in order: the chained in 1D (0.4), the Green Man in 3B (0.5), the drowned in 1C
@@ -972,9 +1011,9 @@ bit shorter"). Levers if play runs long, in order: the chained in 1D (0.4), the 
 |---|---|---|
 | D1 | 2 wicks, 3 gilded levies, 1 hooked harpooner, 1 drowned, 1 wheeler, 1 mender, 1 chained | 10 |
 | D2 | 2 runners and a howler, 2 brittle, 1 buried, 5 clay (officer, 2 ji-bearers, 2 crossbowmen), 1 vessel | 12 |
-| D3 | 1 samurai, 1 fox guard, 1 crow-tengu, 3 King's Men, 1 Green Man | 7 |
+| D3 | 1 samurai, 1 fox pair (counted as one, as in its land), 1 crow-tengu, 3 King's Men, 1 Green Man | 7 |
 | Hazards, not counted | The hanging burst, the wave, the pour, the elephant, five bolts, the Hunt's riders, A1 to A6 | |
-| Side paths | None (the trial's rings, if built: about 12) | 0 |
+| Side paths | None on SP1 to SP3; the trial's rings about 12 | about 12 |
 | **All** | | **29 on the main path, and the champion** (Fire 40 in 41 minutes) |
 
 About one and a half a minute, more than Fire's one, because most can be met one at a time or left frozen by the line
@@ -984,8 +1023,20 @@ the player walks: an experienced player who reads the thaw fights perhaps 18 of 
 
 ## 9. Questions for the owner
 
-Each has two or three options, the recommended one first. The rest of the plan stays Proposal (Claude) until the owner
-walks it.
+**Answered (owner, 2026-11-19): the recommended option (a) in all seven.**
+1. The thaw is 5 m, with the camera eased back to 1.15 times for the whole land.
+2. Three speeds: the corrupted wake at full speed and hunt; the mortal war resumes at a tenth of speed and never aims
+   at the player; arrows and falls move at the slow along their lines and hurt what they hit.
+3. Woken enemies freeze again after clinging 4 s outside the thaw, and wake again in 0.4 s.
+4. The land has a short trial, the Chakravyuha.
+5. Yes: this is the war of the game's opening, and the player finds their own empty place in a frozen rank.
+6. The climb is recapped in four sections in the order of the tiers.
+7. Time's place is the ring's opening, a bare stone, with the gnomon at the centre where Time sat.
+
+The body of the plan has been brought into line with these answers (2026-11-19), and with the cross-land answers of
+`kit_list.md` section 5 (Q1, Q3, Q4, Q5, Q9). The rest of the plan stays Proposal (Claude) until the owner walks it.
+
+Each has two or three options, the recommended one first.
 
 1. **How big is the thaw, and does the camera change for it?**
    - **(a) 5 m, with the camera eased back to 1.15 times for the whole land, so the circle almost fits the frame with

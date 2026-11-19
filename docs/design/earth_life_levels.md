@@ -19,18 +19,18 @@ are two. The player wakes at (0, 0.5, 0) in `StoneGrove`, on the plank road.
 
 | Decided | Source | How this plan uses it |
 |---|---|---|
-| The map's shape is the fork: the bog, then Earth's branch and Life's branch taken in either order, then the plain and the meeting ground | `WORLD.md`, level design rules and "The land" | The Fork (section 2) is a knoll at the bog's head with three ways: west (Earth), east (Life) and north (the barrow road to the plain, sealed from its far end). Each branch ends at its seat; each seat's barrow comes out on the plain. The two branches are built to the same length and pressure (section 11), so neither order is the wrong one |
+| The map's shape is the fork: the bog, then Earth's branch and Life's branch taken in either order, then the plain and the meeting ground | `WORLD.md`, level design rules and "The land" | The Fork (section 2) is a knoll at the bog's head with three ways: west (Earth), east (Life) and north (the barrow road to the plain, sealed from its far end). Each branch ends at its seat; each seat's barrow comes out on the plain. The two branches are built to the same length and pressure (section 11), so neither order is the wrong one; the second branch does not change because the first is done (Decided, owner, 2026-11-19, answer 8) |
 | Rest fires in Fire's rhythm: one every 6 to 8 minutes of a new player's walk, always one at the god's door, one shortcut loop per district back to its fire; more fires in the duo lands | same | **Eight fires** (Fire six); five shortcuts, one of them the barrow road home between branches, and the two seats' barrows (section 4) |
-| "See it, then find the way" side paths hold the plain weapons and lore; one optional trial invented for the land (no steer from the owner) | same | Section 8 (the stag's hollow and the plain Scythe, the eagle's lintel and the plain Massive Sword, the crannog, the owl, the salmon and the oath stone); section 7 offers three trials and proposes one |
+| "See it, then find the way" side paths hold the plain weapons and lore; one optional trial invented for the land (no steer from the owner) | same | Section 8 (the stag's hollow and the plain Scythe, the eagle's lintel and the plain Massive Sword, the crannog, the owl, the salmon and the oath stone); section 7: the trial is the Whispering Knights (Decided, owner, 2026-11-19, answer 5) |
 | Up to three walkable levels per district, joined by ramps, stairs and ladders seen from above; nothing walkable under a roof; roofs and overhangs only fade | same | Every district names its levels. Barrow passages are walked with their mound **never drawn** above the player (1.1), as Metal's culvert fades and Poison's tomb vault is never drawn |
 | The verb for the Wild Hunt is **route-finding**: one set piece of choosing which standing stones to run between | same | Section 3.5: three bands, two routes through the middle one, a horn clock, rings of untouched heather |
 | The barrows age Life's side a year going one way and make it a year younger going back; no path is ever lost for good | same | Section 1.3: four years, read from flat entrance stones with cup marks and a spiral's turn, and from a year hazel at every mouth |
-| The gods' brawl is felt everywhere (distant thunder of stone, the roar of the wild, birds lifting in flocks, now and then a tremor) and seen only from the two seats and on the last walk | same; `WORLD.md`, "The land" | Section 1.4 (the felt beats) and section 9 (three held shots for the brawl: sitting in each empty seat, and the brow of the rise; an arrival shot besides is question 6) |
+| The gods' brawl is felt everywhere (distant thunder of stone, the roar of the wild, birds lifting in flocks, now and then a tremor) and seen only from the two seats and on the last walk | same; `WORLD.md`, "The land" | Section 1.4 (the felt beats) and section 9 (three held shots for the brawl: sitting in each empty seat, and the brow of the rise; and the arrival shot besides, four in all, Decided, owner, 2026-11-19, answer 6) |
 | Stone remembers, wood forgets: on Earth's side what is broken stays broken; on Life's side cut paths and broken things grow back at each rest | `WORLD.md`, "The land" | Section 1.2: what persists, what regrows, and the rooms that teach each |
 | The dead take root: corpses on Earth's side set into stone, on Life's side they sprout thorns; respawned enemies climb out of their own stone or thicket | same | Section 1.2 |
 | The mounds turn the years; the Hunt is one set piece on the plain before the meeting ground; teaching order: Earth's side, Life's side, the bog, the mounds, the Hunt | same | Read as the order in which the *rules* are layered. The bog shows each rule once in small (stone first, then wood, then its own dead), the mounds are first used in earnest in Life's village, the Hunt comes last (section 2) |
 | The areas: the border bog crossed by an oak plank road; Earth's branch (the King's Men's hill, then the Giant's Dance, Brannoch's seat, with its elite); Life's branch (the wildwood village, then the sacred grove, Carnwyn's seat, with its elite); the barrows under the hills linking the land; the Wild Hunt's plain; the meeting ground | same | Sections 3 to 6 |
-| The Hunt: a horn sounds, the Hunt rides across the plain with Carnwyn's herd and the dead; it cannot pass stone, so the player runs from standing stone to standing stone; caught in the open, the player is not killed but carried back to the plain's edge, hurt | same | Section 3.5; where it carries the player is question 2 |
+| The Hunt: a horn sounds, the Hunt rides across the plain with Carnwyn's herd and the dead; it cannot pass stone, so the player runs from standing stone to standing stone; caught in the open, the player is not killed but carried back to the plain's edge, hurt | same | Section 3.5; it carries the player west along its line and sets them down behind the plain's west wall (Decided, owner, 2026-11-19, answer 2) |
 | Earth's people: the King's Men (move only while the player is not facing them), the countless (cairns that rebuild unless the one stone that differs is struck), the boar's litter (led by Grugyn Silver-bristle; they root up the ground), the haulers (kill them and the stone rolls back) | `WORLD.md`, "The enemies" | Section 1.7, each with a mechanic of its own (the owner's bar: no reskins) |
 | Life's people: the Green Men (root and heal when hurt; strike them uprooted or cut the roots), the mute reborn (no sound, no telegraph noise; a cauldron in their district brings them back until it is broken from inside), the wicker (walking cages with a living person inside; the wicker tries to regrow round them), the overgrown herd (a charge that tangles so the player cannot roll; shed antlers take root as thorns) | same | Section 1.7 |
 | Two elites: the Bargain at the Giant's Dance (the beheading game, his axe previews Brannoch's blade; teaches The Return Blow) and the Wicker Man in the sacred grove (its health is its captives; it regrows; burning it is not a choice; teaches Over the Shoulder) | `WORLD.md`, "The two elites"; `steel/weapons.md` 14 | Section 5 |
@@ -41,7 +41,8 @@ are two. The player wakes at (0, 0.5, 0) in `StoneGrove`, on the plank road.
 
 The owner's answers to the earlier lands carry over where they are rules of the game, not of one land: no swimming (deep
 bog water throws the player back to firm ground, `water_levels.md` 1.2), the world's own marks over HUD marks, the
-world's state kept honest after a fall (the year holds, as the tide holds), and three held camera shots per land.
+world's state kept honest after a fall (the year holds, as the tide holds), and at most one held camera shot per
+district, rides out not counted (`kit_list.md` Q1, Decided 2026-11-19), which gives this land of four districts four.
 
 ---
 
@@ -74,7 +75,7 @@ as written there. What this land changes:
    heather slopes of 35 degrees. Light inside comes only from behind the player and from the far mouth (`LOOKS.md`).
 3. **The far brawl is a set the game camera can never reach.** The meeting ground, the two gods and the plumes over them
    are built 200 to 300 m from the seats as a low-detail far set on its own layer, drawn only by the three held shots
-   (section 9). From anywhere else the camera's 7 m reach means it is not merely hidden but out of the world the
+   of the brawl (H1 to H3, section 9). From anywhere else the camera's 7 m reach means it is not merely hidden but out of the world the
    picture covers, so "seen only from the seats and the last walk" (Decided) is true by construction.
 4. **Long south legs are avoided.** As Metal found in its maze, a player walking south sees 4.3 m ahead. The branches
    climb north; the only south-going walks are the barrow road home (a cutaway passage with nothing in it) and the
@@ -117,7 +118,8 @@ Rules for the rooms:
 other way makes it a year younger; no path is ever lost for good. "Each trip under ages Life's side by a year, so some
 paths close and roots bridge others" (`WORLD.md`, "The land").
 
-**Four years** (Proposal; question 3). The land's year is one number for the whole of Life's side, I to IV, held across
+**Four years** (Decided, owner, 2026-11-19, answer 3: four, starting at the thicket, sleeping at the ends; what each
+year holds is Proposal). The land's year is one number for the whole of Life's side, I to IV, held across
 falls, rests and sittings (progress key `earthlife.year`), as the Water land holds its tide. The land starts at **II**,
 so the first barrow a player walks can go either way.
 
@@ -138,9 +140,9 @@ Earth's side, the plain and the meeting ground are the same in every year (stone
 
 **A barrow passage.** Each has two mouths and one direction: walked in at one mouth, the year goes up by one when the
 player comes out of the other; walked the other way, it goes down by one. At the ends of the scale the passage *sleeps*:
-it can be walked, and the year does not change (question 3 asks about a wheel instead).
+it can be walked, and the year does not change (Decided, owner, 2026-11-19, answer 3: the years do not wrap).
 
-**Reading it from above** (question 4). Every mouth has an **entrance stone** lying flat at its foot, as Newgrange's lies
+**Reading it from above** (Decided, owner, 2026-11-19, answer 4: in the world, no HUD mark). Every mouth has an **entrance stone** lying flat at its foot, as Newgrange's lies
 across its entrance: 2.5 by 1 m, its top fully in the camera's view as the player walks up to the mouth.
 - On it, a carved **spiral**. At the mouth where walking in **ages** the wood the spiral turns **sunwise** (clockwise
   from above, the way the sun goes, the Gaelic *deiseal*); at the mouth where walking in **turns the year back** it
@@ -201,7 +203,7 @@ everywhere. **Proposal** for how:
 | What | Measure | Why |
 |---|---|---|
 | Walk, roll, step, rises, stairs, ramps, group fight | As Fire: 6 m/s, roll 4.5 m; a step 0.3 m; a rise that reads 1.5 m, a drop 2 m; stairs 27 to 32 degrees; ramps 8 degrees fought on, 15 walked; 12 to 16 by 10 to 12 m | `fire_levels.md` 1.2 |
-| The plank road | 3.2 m wide (Corlea's oak planks are 3 to 3.5 m long, laid across runners), y 0.5; sunk stretches 0.3 m under water: wading 4 m/s, roll 3 m | One-on-one; the bog either side is not a floor |
+| The plank road | 3.2 m wide (Corlea's oak planks are 3 to 3.5 m long, laid across runners), y 0.5; sunk stretches a little deeper than 0.3 m under water (the depth to be set at build), so they are plainly wading by Water's one depth rule (`kit_list.md` Q6, Decided 2026-11-19): 4 m/s, roll 3 m | One-on-one; the bog either side is not a floor |
 | A lynchet (the boar fields) | A field terrace 2 to 2.5 m high, facing south, climbed by cart ways (ramps 4 m wide, 14 degrees) | Reads as "up"; the boars cannot plough up it |
 | A field wall | 1.2 m, dry stone, in sections 4 m long; a section breaks for good when a boar ploughs into it | Under the south-side rule; cover that can be spent |
 | A hollow way | 6 to 8 m wide between banks 2.5 m | The haulers' track; a lane a rolling stone fills |
@@ -209,7 +211,7 @@ everywhere. **Proposal** for how:
 | A barrow passage | 2.4 m wide, walls 2.2 m, corbelled; chambers 5 to 7 m across | One at a time; nothing fights in a passage |
 | The Hunt's stones | Rings of untouched heather r 1.5 (small), 2 to 3 (standing stones), 4 (great stones, the Cove), the Last Ring's whole inside (r 6) | Small rings hold the player alone; great rings hold a fight |
 | The Hunt's clock | Band A every 12 s, band B 10 s, band C 8 s; first horn 5 s before, second 1.5 s before; the front 16 m/s, 6 m deep | 3.5 |
-| Caught by the Hunt | 25 damage (cannot kill), knocked down 1 s, set down behind the plain's west wall at the same latitude | Question 2 |
+| Caught by the Hunt | 25 damage (cannot kill), knocked down 1 s, set down behind the plain's west wall at the same latitude | Decided, owner, 2026-11-19, answer 2 |
 
 ### 1.7 The land's people, as the rooms use them
 
@@ -343,7 +345,7 @@ brawl seen), the gate (F8), the meeting ground.
 **Life first** is the same with the branches swapped: the grove barrow brings the player to the quiet plain, the barrow
 road home, Earth's branch, the Dance barrow to the Hunt.
 
-**Why the plain is quiet between the seals** (question 1). The gods' seals are on the meeting ground's gate (Proposal
+**Why the plain is quiet between the seals** (Decided, owner, 2026-11-19, answer 1). The gods' seals are on the meeting ground's gate (Proposal
 in `WORLD.md`); the Hunt is Carnwyn's herd and the dead, shut in the meeting ground with the gods while either seal
 holds. When the second breaks, the gate stands open and the Hunt rides out. So a player between branches may walk the
 plain, learn its stones in peace, climb the rise and see the gate with one seal broken: the goal shown early, earned
@@ -408,7 +410,7 @@ the pools are never entered), the roads (y 0.4 to 0.8), the cutters' banks and t
 - *Shape:* a dry knoll of heather at the bog's south edge where the road begins. The player wakes on the first planks
   looking north along the road into the mist, the low sun a pale disc dead ahead (`LOOKS.md`).
 - *Rest:* **F1** at (-4, 1, 6), by a sunk post with **the blackbird** on it (section 8).
-- *The arrival shot* (H0, question 6): the first time only, the camera starts high and far behind the player and holds
+- *The arrival shot* (H0; Decided, owner, 2026-11-19, answer 6): the first time only, the camera starts high and far behind the player and holds
   6 s on the land in one image (`LOOKS.md` frame `el_plank_road`): the road winding north, the stone circle on its hill
   to the left, the great oak over the forest to the right, a rise between them hiding the meeting ground. It settles to
   the game camera as the sponsor speaks.
@@ -416,8 +418,8 @@ the pools are never entered), the roads (y 0.4 to 0.8), the cutters' banks and t
 
 #### 1B. The plank road (z 12 to 52)
 - *Shape:* the road, 3.2 m wide, y 0.5, winds north-north-west then north-east between black pools and small peat
-  islands (y 0, walkable, joined to the road by a plank or two). At z 26 to 32 it has **sunk**: 0.3 m of black water over
-  the planks, wading (1.6). Bog cotton, bones half out of the peat.
+  islands (y 0, walkable, joined to the road by a plank or two). At z 26 to 32 it has **sunk**: a little more than 0.3 m
+  of black water over the planks (set at build), plainly wading (1.6). Bog cotton, bones half out of the peat.
 - *Lore:* **L1**, a body in the peat beside the road at (5, 0, 22), a hand still on the stake he was pinned with.
 - *Enemies:* E1.1 a **countless** on a peat island west of the road at (-8, 0, 38) (the island 8 by 6 m): the first
   scatter, the ochre stone among the grey, and the low cairn it leaves for good when struck. E1.2 a **Green Man** rooted
@@ -805,15 +807,15 @@ fight; fight in the open and the next wave takes both.
    clock from its first two notes.
 
 #### Caught
-**Proposal** (question 2): the wave carries a player caught in the open **west along its line** and sets them down
+**Decided** (owner, 2026-11-19, answer 2): the wave carries a player caught in the open **west along its line** and sets them down
 behind the plain's west wall at the **same latitude**, 25 damage (never the last point of health), knocked down 1 s. The
 Welsh Hunt set the people it swept up down far away; here, at the far edge, not back at the start.
 - The west edge is a wall of field stones grown over with briar so thick that the Hunt cannot pass (x -56, z 360 to
   480), with three **pens** behind it (x -66 to -56), one per band, each with a gate back onto the plain at z 382, 424
   and 462. A set-down player walks out of their pen's gate onto the band they were in.
 - The pens do not connect to each other or to the lane behind them (S5), so being caught is never a way round.
-- The decided words "carried back to the plain's edge" are kept; whether the edge is the far side (this proposal) or the
-  plain's start is question 2.
+- The decided words "carried back to the plain's edge" are kept; the owner chose the far side, not the plain's start
+  (answer 2). The wall, the pens and their gates are Proposal.
 
 #### After a fall or a rest
 The clock starts again: no wave comes sooner than 12 s after the player steps off the terrace. The stags graze again;
@@ -1005,9 +1007,10 @@ there the sun set for the first time in ages, here it rises.
 ## 7. The optional trial
 
 **Decided**: one optional trial per land, invented for it, guarding a Memory or a Body piece; the owner gave no steer for
-this land. Three options (question 5), the first proposed.
+this land. **Decided** (owner, 2026-11-19, answer 5): the trial is the Whispering Knights; the room and its rules below
+are **Proposal (Claude)**. The two options not taken are kept after it for the record.
 
-### 7.1 The Whispering Knights (proposed)
+### 7.1 The Whispering Knights
 
 **The nod.** At Rollright the Whispering Knights stand apart from the King's Men: four leaning stones of a burial
 chamber, said to be knights who drew aside to plot against their king and were turned to stone mid-whisper.
@@ -1032,7 +1035,7 @@ looking east over the Hollow Hills toward the wildwood.
 - **The prize:** a Body piece (or a Memory) on the fallen capstone. Beaten, the knights stay down for good.
 - *Minutes:* 5.
 
-### 7.2 The Turning Barrow
+### 7.2 Not taken: the Turning Barrow
 
 A round chamber 16 m across off the owl's chamber's east recess, behind a door that opens once both seats are empty. Inside,
 its own year turns every 25 s (I, II, III, IV, and round), whatever the land's year: saplings (many small Green Men),
@@ -1041,7 +1044,7 @@ thicket (briar walls cutting the floor into lanes), high wood (root bridges over
 fight, as Dishonored 2's *A Crack in the Slab* made its two times one place to fight in. Weaker because it turns the years
 from a slow puzzle into a fast hazard, and every year's arena must be tuned against every wave.
 
-### 7.3 Count the Stones
+### 7.3 Not taken: Count the Stones
 
 On the cairn field, a ring of twelve cairns, and on the King Stone a number of strokes. Countless rise from the ring; each
 broken without its ochre stone stands again and wakes another. The player must strike down the ring until the number left
@@ -1071,7 +1074,7 @@ land's own years.
 | The eagle | The south lintel of the Dance (-100, 27, 324) | From inside the ring, near its south side (a lintel 5 m up is in frame from 2 to 6 m north of it) | After the Bargain: a fallen upright leans from the ring's floor at (-115, 22, 342) up to the lintels (15 degrees); walk the lintel ring (1.2 m wide) round to the south | "I pecked the stars from the top of a stone. Now it is a hand high. I am not old. Ask the salmon." | **The plain Massive Sword** |
 | The salmon | The pool under nine hazels (18, 18, 496) | From the rise | The shelf path from (8, 18, 494) | "I remember them. Two, at the stone above the water. Follow." | Leads to the oath stone |
 
-- **The plain weapons** (question 7). The plain Scythe in this land's make: an iron blade on an ash snath bound with
+- **The plain weapons** (Decided, owner, 2026-11-19, answer 7: in this land's make). The plain Scythe in this land's make: an iron blade on an ash snath bound with
   bronze, hung in the hawthorn over the stag. The plain Massive Sword: a slab of a fallen stone knapped to an edge, its
   grip bound in hide, lying on the eagle's lintel. Each plays exactly as the plain weapon; the look changes, as the owner
   chose for the Chain Sickle, the Great Bow and the Twin Knives. Carnwyn's golden scythe and Brannoch's standing-stone
@@ -1111,8 +1114,9 @@ never while an enemy has noticed the player or, on the plain, during a horn's wa
 | V6 | A3's ring (-4, 11, 398) | Its ring | Both routes through band B, the mere between |
 | V7 | The Cove's ring (-4, 13, 456) | Its ring | Band C and the Last Ring |
 
-**Held shots** (question 6). The owner chose three held shots for the Water land, one per district. The brawl alone needs
-three here (Decided: seen from the two seats and on the last walk), so this plan proposes those three and the arrival.
+**Held shots** (Decided, owner, 2026-11-19, answer 6: four, the arrival, the two seats and the brow; one per district, as
+`kit_list.md` Q1 settles for every land). The brawl alone needs three here (Decided: seen from the two seats and on the
+last walk), and the arrival is the fourth.
 Each is skippable, plays only with no enemy near, and can be played again.
 
 | | Trigger | Camera | Shows |
@@ -1136,7 +1140,7 @@ Each piece names its parameters; sizes are the defaults the plan uses.
 
 | | Piece | What it is | Dimensions and parameters |
 |---|---|---|---|
-| G1 | **Plank road** | Oak planks laid across two runners on pegs over black water; sunk stretches with the planks 0.3 m under water (wading); a peat island joined by a plank | 3.2 m wide, y 0.5; sunk z 26 to 32; Corlea's planks 3 to 3.5 m long |
+| G1 | **Plank road** | Oak planks laid across two runners on pegs over black water; sunk stretches with the planks a little deeper than 0.3 m under water (set at build), plainly wading; a peat island joined by a plank | 3.2 m wide, y 0.5; sunk z 26 to 32; Corlea's planks 3 to 3.5 m long |
 | G2 | **Bog** | Black pools (deep: throw-back), peat islands, bog cotton, cut faces of peat (1.25 m, layered), turf stacks (1.2 m) | Section 3.1 |
 | G3 | **Stone causeway** | Slabs on a bank with body shapes worn into them; a cracked slab that breaks for good | 4 to 5 m wide |
 | G4 | **Hurdle way and briar** | Woven hazel hurdles; briar as a **Grown** thing (cut: three blows a metre; grows back at every rest) | 3 m; briar patches 4 to 6 m |
@@ -1281,8 +1285,23 @@ huntress carried theirs.
 
 ## 12. Questions for the owner
 
-Each has two or three options, the recommended one first. The rest of the plan stays Proposal (Claude) until the owner
-walks it.
+**Answered (owner, 2026-11-19): the recommended option (a) in all eight.**
+1. The plain is open and quiet after the first seal; the Hunt rides out when the second breaks.
+2. The Hunt carries a caught player west and sets them down behind the plain's west wall: 25 damage, never the last
+   point of health, a gate back onto the same band.
+3. Four years, starting at the thicket; they do not wrap, and at either end a passage sleeps.
+4. The year is read in the world: entrance stones with the spiral and the cups, year hazels, a status line on coming
+   out. No HUD mark.
+5. The trial is the Whispering Knights.
+6. Four held shots: the arrival, the two seats and the brow.
+7. The plain Scythe and the plain Massive Sword in this land's make.
+8. The second branch does not change because the first is done; the second elite acknowledges the first seal in a line.
+
+The body of the plan has been brought into line with these answers (2026-11-19), and with the cross-land answers of
+`kit_list.md` section 5 (the sunk plank stretches set a little deeper than 0.3 m, Q6). The rest of the plan stays
+Proposal (Claude) until the owner walks it.
+
+Each has two or three options, the recommended one first.
 
 1. **What is the plain between the two seals?**
    - **(a) Open and quiet after the first seal: the Hunt is shut in the meeting ground with the gods and rides out when

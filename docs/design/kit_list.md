@@ -1,14 +1,15 @@
 # Cross-land kit list
 
 Written by Claude on 2026-11-19 from the eight level plans, so that builders reuse one piece where several lands need the
-same thing. **Nothing here is decided.** It lists what the plans already ask for, what of it exists in the code today,
-and a suggested single way to build each shared piece. Where two plans want different versions of the same piece, the
-difference is a question for the owner in section 5, with a recommendation; it is not settled here.
+same thing. It lists what the plans already ask for, what of it exists in the code today, and a suggested single way
+to build each shared piece. Where two plans wanted different versions of the same piece, the difference was put to the
+owner in section 5; **the owner answered all nine on 2026-11-19** (option (a) each time), and the pieces those answers
+touch are marked Decided below. Everything else here is still a suggestion, not decided.
 
 **Read for this list.** The level plans and their build lists: `fire_levels.md` (second pass, 2026-11-17; built, no
 questions section), `water_levels.md`, `metal_levels.md`, `ice_levels.md`, `poison_levels.md` (each with the owner's
 answers, which win over the plan's body), `lightning_wind_levels.md`, `earth_life_levels.md`, `seat_levels.md` (their
-questions are still open). The code: `Assets/_Project/Scripts/Editor/Builders/` (`BuildKit`, `SceneBuild`,
+questions were answered by the owner on 2026-11-19 and their bodies brought into line). The code: `Assets/_Project/Scripts/Editor/Builders/` (`BuildKit`, `SceneBuild`,
 `SunCityGround`, `SunCityKit`, `SunCityBuilder`, `FireMechanicsKit`, `ProvingGroundBuilder` and the other builders) and the
 runtime components the builders place (`Runtime/World`, `Runtime/Gameplay`).
 
@@ -146,7 +147,7 @@ land; L&W's war doors (barred, but opened when the elite falls) are K7's conditi
 
 **K7. Seal kept by an elite.** A way that opens when named keepers fall, and stays open. Fire's Gate of Noon after the
 champion; Metal's heart reached only after the handmaiden (by the sluice); L&W's two seals on the screen room (a drum
-and a knotted cord, one per elite, either order; its question 4 is open) and its war doors; E&L's gate barrow with two
+and a knotted cord, one per elite, either order, both needed: its answer 4, 2026-11-19) and its war doors; E&L's gate barrow with two
 seals and the seat barrows that open as each elite falls (C16). Today: `SealedWay` (one keeper, or all enemies dead;
 stays broken after a rest) and `GateOfNoon`. Suggested: let `SealedWay` take several keepers, any order, a progress key
 each, and show each broken seal in the world.
@@ -156,8 +157,9 @@ roofs' north edge); Water (Cut 2's ledge, 1.4 m); Ice (the west ice at the press
 m, landing within 10 m of a climb point); L&W (every upper platform into the diamond, 2 to 2.5 m, landing within 30 m
 of a stair up); E&L (the grove terrace's two 3 m drops; every drop 2 to 4 m and within 30 m of a way back). Today:
 plain geometry, no piece. Suggested: a `Drop(edge, height, landing)` that cuts the rim's gap and **records the drop and
-its landing**, so an editor check can test each land's never-stranded rule (the rules differ by land; see question
-Q7).
+its landing**, so an editor check can test each land's never-stranded rule. **Decided (owner, 2026-11-19, Q7)**: one
+drop piece taking its height (1.4 to 4 m), with each land's own landing rule checked in the editor from the recorded
+landings.
 
 **K9. Keyed opener from one side.** The shortcut family: a thing used once from one side that changes the world and
 keeps it changed (a progress key). Every land has several.
@@ -192,7 +194,8 @@ models on one behaviour.
 | Seat | The banyan fallen across the west ravine |
 
 Today: none. Suggested: one `Span(from, to, width, sag, rails, style)` mesh and collider, opened by K9 where it is a
-shortcut, with the shadow-only-from-below mode kept as an option that only Poison sets (question Q2).
+shortcut, with the shadow-only-from-below mode kept as an option that only Poison sets (Decided, owner, 2026-11-19,
+Q2).
 
 **K11. Wreck deck.** A hull lying heeled, its deck a tipped floor, a rail only on the side away from the camera. Fire's
 barque (deck heeled 8 degrees, gangplank, prow drop); Water's wrecked double canoe on the reef (W16, the mast fallen as a
@@ -215,9 +218,10 @@ distance, pitch and look-ahead for the whole land, never while the player is not
 - a framing and a direction **per zone** (Water's W19, Metal's table in its section 13, Ice, Poison P21, L&W M23, Seat);
 - extra conditions: L&W only between races, Ice only while the huntress is unaware or fallen back, E&L never during a
   horn's warning;
-- a framing for **a whole land** (Seat: 1.15 times, its question 1) or **a whole area held** (E&L's plain: 1.3 times);
-- **held shots**: a scripted camera move, skippable, replayable, played once per trigger or per state (three in Water,
-  Poison, L&W and Seat, four proposed in E&L, scripted glimpses in Ice and Metal; question Q1).
+- a framing for **a whole land** (Seat: 1.15 times, its answer 1) or **a whole area held** (E&L's plain: 1.3 times);
+- **held shots**: a scripted camera move, skippable, replayable, played once per trigger or per state. **Decided
+  (owner, 2026-11-19, Q1)**: one per district, rides out not counted: Water 3, E&L 4 (its answer 6), Seat 3; Poison
+  and L&W keep the two each they planned inside the land, besides their rides; scripted glimpses in Ice and Metal.
 Suggested: extend `LandZones` with a per-zone framing record and a condition hook, and add one held-shot player beside it.
 The camera side is S17.
 
@@ -292,7 +296,7 @@ on its deck with it (Water's C5), and a line follower that drives it; floats add
 awnings, colonnades and roofs; Metal's lee behind walls from the giant's light, and the stelae in the hub courts; Ice's
 lee behind hard cover from each perch; Poison's herb ring at every fire and the islands above the mist; L&W's pale gate
 sills 1.6 m deep, the great gates' 3 m sills and the stone-lantern alcoves; E&L's rings of untouched heather round the
-Hunt's stones (r 1.5 to 6); Seat's rings of thaw at the fires. Today: `Sunlight` shade rectangles registered through
+Hunt's stones (r 1.5 to 6), which Seat's frozen Hunt uses too (Decided, Q4); Seat's rings of thaw at the fires. Today: `Sunlight` shade rectangles registered through
 `SunlightZones` and `ShadeRoof` (private). Suggested: each shelter piece registers its own shape in the scene's shelter
 list as it is built (Fire's B12 and L&W's M24 say exactly this).
 
@@ -317,7 +321,7 @@ What only one land needs (each plan's build list has the full parameters).
 | Poison | The miasma (P1); walkable roofs (P4); kerb strips under eaves (P5); humpback bridge (P6); lashed boats (P7); city walls with walks (P8); drain grates (P12); pit trenches (P13); mercury (P14); shaft cascades and the pour (P15, P16); the emperor's island (P18); the stair of long life and the tower top (P19); the jar (P20) |
 | L&W | Racecourse legs with their lanes (M1); torii in five forms and the great torii (M2); platforms, turns and crossing precincts (M3 to M5); the shrine on piles (M7); surf and wash (M8); the drowned town (M9); the village (M10); cedars, maples, pines, bamboo bands (M11); the temple (M12); the lantern graveyard (M13); the pagoda (M15); crags (M16); the split summit (M17); the screen room (M18); `StormRoof` and the cloud islands (M19); the hermit's cave (M21); the Messengers' Course (M22) |
 | E&L | The bog (G2); the stone causeway (G3); hurdle ways and briar (G4); barrows with entrance stones (G5); the hollow way (G7); standing stones, King's Men, the Hunt's stones (G8); the Giant's Dance (G9); roundhouses with trees (G10); year-variant living things (G11); the Feast Yard and cauldron (G13); the sacred grove (G15); the plain (G16); the rise and the bowl (G17); the far set (G18); the Whispering Knights' platform (G19); the crannog (G20) |
-| Seat | The thaw look (Z1); frozen ranks, instanced (Z2); volleys as data (Z3); the wave (Z6); the bed of arrows (Z8); the Stutter (Z9); the council (Z10); the domain (Z11); the Chakravyuha if wanted (Z13) |
+| Seat | The thaw look (Z1); frozen ranks, instanced (Z2); volleys as data (Z3); the wave (Z6); the bed of arrows (Z8); the Stutter (Z9); the council (Z10); the domain (Z11); the Chakravyuha (Z13, its answer 4) |
 
 ---
 
@@ -335,7 +339,7 @@ What only one land needs (each plan's build list has the full parameters).
 | # | Behaviour | What it must do | Lands | Today |
 |---|---|---|---|---|
 | S3 | **Land clock** | A rhythm with phases (calm, warning, event, falling), a rate per district, first events placed or forced by a trigger, a restart at a rest with a quiet start, and events others listen to | Fire (heat swell); Poison (the hours: calm, first gong, rising, held, drum, falling; yellow every third in D2); L&W (the race: interval, far and near beats, lead per diamond); E&L (the Hunt's horns by band; the brawl beats every 45 to 75 s); Ice (spindrift every 18 s); Metal (the giant's 150 s lap and the Tread; bellows on every second footfall; the ladle's pour); Water (the gill's breath every 8 s); L&W (the surf's 7 s wash) | `HeatSchedule` (plain numbers: first, every, warning, swell), `NoonHeat`, `LandZones` districts and forced rectangles. Poison says build its clock on `HeatSchedule`; L&W proposes its own `RivalsRace`. Suggested: one clock type for all |
-| S4 | **Warned strike** | A shape on the floor (lane, ring, strip, comb, front) drawn before it lands, a warning time, the strike, a damage profile (damage, pin, stun, shove along a line, knockdown, carry), what blocks it (cover, shelter), whether it also hits enemies, and a guard rule per source (pale, red, perfect only) with its own perfect window and reward | Ice (her arrows: a fixed crimson line, 1.0 s); Metal (the giant's stone: a growing shadow 1.6 s; footprints 0.8 s; the birds' feathers 0.8 s); L&W (the two sweeps up a lane on the beat); E&L (the Hunt's front at 16 m/s); Seat (thawed arrows; frozen falls marked 1.6 s); Poison (volley combs; trap crossbows); Water (the harpoon's 12 m lane); Fire (the champion's spear lane) | `GroundMark` (an outline and a growing fill), `AreaDirector`'s storm strikes (warning, radius, damage), `SpearRay` and `SpearCast` lanes, `LightningBolts` (the look) |
+| S4 | **Warned strike** | A shape on the floor (lane, ring, strip, comb, front) drawn before it lands, a warning time, the strike, a damage profile (damage, pin, stun, shove along a line, knockdown, carry), what blocks it (cover, shelter), whether it also hits enemies, and a guard rule per source (pale, red, perfect only) with its own perfect window and reward. **Decided (owner, 2026-11-19)**: one warned-arrow piece, the guard rule and window per source: Ice's arrows red, perfect guard only, 0.10 s; Seat's walk arrows and Metal's feathers pale, the standard 0.18 s (Q3). One lightning strike on this piece, shape and numbers per use and one look, the cyan fork of `LOOKS.md` 8; Seat's stays a ring (Q5). The race's reward is the shared one only, the same for both racers: the ordinary perfect dodge (12 mana, slowed time) and Keeping Pace (L&W answer 1) | Ice (her arrows: a fixed crimson line, 1.0 s); Metal (the giant's stone: a growing shadow 1.6 s; footprints 0.8 s; the birds' feathers 0.8 s); L&W (the two sweeps up a lane on the beat); E&L (the Hunt's front at 16 m/s); Seat (thawed arrows; frozen falls marked 1.6 s); Poison (volley combs; trap crossbows); Water (the harpoon's 12 m lane); Fire (the champion's spear lane) | `GroundMark` (an outline and a growing fill), `AreaDirector`'s storm strikes (warning, radius, damage), `SpearRay` and `SpearCast` lanes, `LightningBolts` (the look) |
 | S5 | **Shelter and quiet areas** | One list per scene, filled by the pieces that make shelter (K22, K14), read by every threat: "is this point safe from this threat now" | Fire (shade); Metal (lee from the light; no throws near fires, in the elite's hall or during the Tread); Ice (lee from each perch; no perch sees near fires; never hunts a shortcut); Poison (above the mist; the herb ring); L&W (sills, alcoves, crossings, calm zones C17); E&L (stone rings; the brawl never in an arena); Seat (fire rings) | `Sunlight` and `SunlightZones` (Fire's shade) |
 | S6 | **One red at a time, narrow footing, quiet waking** | A land's sweeping threat takes the same attack token the enemies use, so two unguardable things never land within about 1.2 s of each other; nothing sweeps a ladder, chain, rope bridge or rib top; a quiet span after waking | Ice (her arrow takes the pack's token; no arrow on a climb; unaware 10 s after a fall); L&W (the near count belongs to the race; no race on narrow footing; first race 20 s after a fire); Seat (arrows hold their tremble near a red attack; no volley over a ladder); E&L (no brawl beat during a red attack); Poison (first gong at least 60 s after waking) | `EnemyTurns` (how many may attack at once); hazards do not take its token |
 | S7 | **Sound from a bearing** | Play a cue placed in stereo from a point or a bearing, even far off screen, at a volume that grows as it nears; muffle it underground | Metal (footfalls every 2.4 s, the anvil); Ice (her draw's creak from her side, each howl from its howler); L&W (the count from the gates below); E&L (brawl beats from the meeting ground; the horns); Poison (the gong everywhere, muffled in the tomb; the watchman's clapper) | None (`Runtime/Audio` is empty) |
@@ -345,9 +349,9 @@ What only one land needs (each plan's build list has the full parameters).
 
 | # | Behaviour | What it must do | Lands | Today |
 |---|---|---|---|---|
-| S9 | **Level volume and depth** | A surface whose height moves between levels by region and by clock or state, with a bright edge where it meets the floor; a query "how deep is it here now" used by the player, enemies and floats; a bite or slow from the depth | Water (the lagoon at y 0 or y 2.0 over 6 s; the depth table); Poison (the mist's top by district and hour; the tomb's pour filling to a brim); E&L and L&W use the depth query on still water (the bog, the surf) | None |
-| S10 | **Throw-back** | Stepping, rolling or being dragged into deep liquid puts the player back on the last firm ground after 1.2 s, with damage and no Shards lost; enemies that fall in are taken and count as killed, unless at home there | Water (10 damage; the drowned and the reef-grown are at home); Poison (deep mercury, 12 damage); L&W (the sea); E&L (bog pools and the mere, 10) | `FallCatch` (puts the player back on the last firm ground, no damage) |
-| S11 | **Surface tags** | A tag on every floor setting walk speed, roll length, noise and footstep sound | Ice (deep snow 4.5 m/s, roll 3.5 m, loud; hard ground silent); Water (wading 4 m/s, roll 3 m); E&L (the plank road's sunk stretches, wading); Poison (shallow mercury: 70% speed, rolls slide 1 m further); L&W (the wash, 20% slower) | None |
+| S9 | **Level volume and depth** | A surface whose height moves between levels by region and by clock or state, with a bright edge where it meets the floor; a query "how deep is it here now" used by the player, enemies and floats; a bite or slow from the depth. **Decided (owner, 2026-11-19, Q6)**: one depth rule, Water's, for all water: under 0.3 m as on land, 0.3 to 1.0 m wading (4 m/s, roll 3 m) | Water (the lagoon at y 0 or y 2.0 over 6 s; the depth table); Poison (the mist's top by district and hour; the tomb's pour filling to a brim); E&L and L&W use the depth query on still water (the bog, the surf) | None |
+| S10 | **Throw-back** | Stepping, rolling or being dragged into deep liquid puts the player back on the last firm ground after 1.2 s, with damage and no Shards lost; enemies that fall in are taken and count as killed, unless at home there | Water (10 damage; the drowned and the reef-grown are at home); Poison (deep mercury, 12 damage); L&W (the sea, 10); E&L (bog pools and the mere, 10). Decided (Q6): 10 for water, 12 for mercury | `FallCatch` (puts the player back on the last firm ground, no damage) |
+| S11 | **Surface tags** | A tag on every floor setting walk speed, roll length, noise and footstep sound | Ice (deep snow 4.5 m/s, roll 3.5 m, loud; hard ground silent); Water (wading 4 m/s, roll 3 m); E&L (the plank road's sunk stretches, set a little deeper than 0.3 m so they plainly wade, Q6); Poison (shallow mercury: 70% speed, rolls slide 1 m further, its own surface, Q6); L&W (the wash, 20% slower, kept as its own named surface, Q6; the knee-deep surf is wading) | None |
 | S12 | **Noise rings** | Noise events with radii, heard by listening enemies and drawn as faint rings on the floor | Ice (decided: the owner's answer 4); Seat (carried over: missed arrows are noise to the buried inside the thaw) | None |
 | S13 | **Floor fluids** | Something poured or burst that spreads, runs downhill, fills low places and bites or slows | Fire (gold runs, molten floor); Metal (slag pours, the Runs, the wheeler's tip); Poison (the vessel's heavy cloud flowing downhill and off edges; the pour; mercury beads rolling in grooves); Seat (the crucible's pour) | `MoltenFloor`, `GoldRuns`, `ScorchedGround`, `FlameField` (Fire) |
 
@@ -362,7 +366,7 @@ What only one land needs (each plan's build list has the full parameters).
 
 | # | Behaviour | What it must do | Lands | Today |
 |---|---|---|---|---|
-| S16 | **Fade rules beyond the occlusion line** | Besides fading what stands between camera and player: fade by nearness (canopies within 6 m); cut away the band of a wall within a few metres south of the player, keeping its top as an ink line; hide a shell or roof while the player is inside it; draw a thing only as its shadow while the player's floor is below it; dither things hanging above a height | Metal (maze walls cut away above 1.2 m within 5 m south; the giant dithers above its shins; the culvert's deck); E&L (the barrow's mound shell, passage walls with inked tops); Ice and L&W (canopies within 6 m); L&W (gate beams within 4 m south or overhead; the screen room's roof, its question 6); Poison (the planks from below; the tomb's vault; the jar's south arc); Seat (hanging things above 2.5 m within 4 m south) | `Fadeable` and `OcclusionFader` (the camera-to-player line); `ShadowCastingMode.ShadowsOnly` used in `SunCityBuilder` |
+| S16 | **Fade rules beyond the occlusion line** | Besides fading what stands between camera and player: fade by nearness (canopies within 6 m); cut away the band of a wall within a few metres south of the player, keeping its top as an ink line; hide a shell or roof while the player is inside it; draw a thing only as its shadow while the player's floor is below it; dither things hanging above a height. **Decided (owner, 2026-11-19, Q2)**: fading is the default everywhere; shadow-only only where the owner has allowed it (Poison's planks) | Metal (maze walls cut away above 1.2 m within 5 m south; the giant dithers above its shins; the culvert's deck); E&L (the barrow's mound shell, passage walls with inked tops); Ice and L&W (canopies within 6 m); L&W (gate beams within 4 m south or overhead; the screen room's roof, never drawn while the player is inside, its answer 6); Poison (the planks from below; the tomb's vault; the jar's south arc); Seat (hanging things above 2.5 m within 4 m south) | `Fadeable` and `OcclusionFader` (the camera-to-player line); `ShadowCastingMode.ShadowsOnly` used in `SunCityBuilder` |
 | S17 | **Framing and held shots** | The camera side of K13: per-zone framing and direction, conditions, a land-wide or area-wide framing, scripted held shots | all 8 | `TopDownCamera.SetFraming`/`ClearFraming` |
 
 ### F. Enemies
@@ -373,7 +377,7 @@ What only one land needs (each plan's build list has the full parameters).
 | S19 | **Per-enemy local time** | Each enemy reads its own time scale (frozen, slow, full), not `Time.deltaTime` | Seat (the thaw: 0, 0.1 or 1 per object; its plan calls this the land's main engineering cost); L&W's Overclock already slows enemies | `WorldClock.EnemyScale`, one value for all enemies, applied in `Enemy` and the bosses. About 22 scripts in `Runtime/Gameplay` read `Time.deltaTime` directly, among them `AshenBurst`, `BuriedMound`, `ShieldWall`, `WickFlame`, `ThirstDrinker`, `SpearCast`, `GoldRuns`, `MoltenFloor` |
 | S20 | **Route followers** | Enemies and threats that move on a route the builder lays down, with no navmesh | Metal (the rail graph for wheelers, menders and carts; the giant's round); Poison (the clay's watch routes and formations; the roof islands' stair feet); E&L (the haulers' track; the Hunt's front); L&W (the racers' lanes; the messengers' paths) | None (`Enemy` walks straight at the player) |
 | S21 | **Formation lock** | Neighbours lock and move in step; an officer closes gaps | Fire (levies); Poison (the clay, wheeling 30 degrees a second); Seat (a formation woken in part) | `ShieldWall`, `FireMechanicsKit.WallOfShields` |
-| S22 | **Watcher sight** | A watcher above the player sees along a line, blocked by cover, and finds the player only after unbroken sight for a moment; the lee behind cover can be checked at build time | Metal (the giant's gaze: lit for 0.5 s is seen); Ice (the huntress: 1.0 s unaware, 0.6 s searching; the build-time lee map C2); E&L (the King's Men read the player's facing instead, 110 degrees, 15 m) | `SunSense` (Fire's sun-blind priest finds someone lit without a break for a moment) |
+| S22 | **Watcher sight** | A watcher above the player sees along a line, blocked by cover, and finds the player only after unbroken sight for a moment; the lee behind cover can be checked at build time. **Decided (owner, 2026-11-19, Q8)**: one line test and one build-time lee check for Metal and Ice; Metal's light stays real and is made to agree with the test | Metal (the giant's gaze: lit for 0.5 s is seen); Ice (the huntress: 1.0 s unaware, 0.6 s searching; the build-time lee map C2); E&L (the King's Men read the player's facing instead, 110 degrees, 15 m) | `SunSense` (Fire's sun-blind priest finds someone lit without a break for a moment) |
 | S23 | **Lines out and back** | A thrown thing that travels a lane and comes back, or a line staked between thrower and target that can be cut | Fire (the champion's spear and recall; spearmen); Water (the harpoon and reel; the hooked's yank along a line, cut the line; the hook brother); Metal (the chained's lash to the circle's edge); Seat (the hooked harpooner, reused) | `SpearCast`, `SpearRay` (enemy side); `ChainThrow`, `ChainLine` (player side) |
 
 ---
@@ -419,7 +423,8 @@ The per-enemy time hook (step 2) is cheap now and costly later; it is worth doin
 
 ## 5. Where plans differ: questions for the owner
 
-Each gives what differs, then a recommendation. None is decided here.
+**Answered (owner, 2026-11-19): the recommended option (a) in all nine.** Each question keeps what differed and its
+options for the record, with the answer after it.
 
 **Q1. How many held shots does a land get?** The owner chose three for Water (its answer 6, "one per district"). Poison,
 L&W and Seat carry "three per land" as a rule of the game. E&L proposes four (its question 6: the arrival, both seats and
@@ -429,6 +434,7 @@ L&W are rides out (the crane, the storm cloud), and Ice adds a 60 s held ride do
   planned. **Recommended**: it keeps the owner's own reason and settles E&L without a special case.
 - (b) Three per land at most, rides included. E&L drops one; Poison and L&W keep one shot inside the land.
 - (c) Three per land, rides not counted. E&L drops one.
+- **Decided (owner, 2026-11-19): (a).** One held shot per district; rides out are not counted.
 
 **Q2. Roofs over walkable floors: shadow-only or fading?** Fire's second pass (2026-11-17, built) draws a roof the player
 walks under shadow-only: the hall, the colonnades (B11), the bridge-house over the Lamp Street with the roof walk above it
@@ -440,6 +446,9 @@ overhead piece cannot have one behaviour for both.
   next revised. **Recommended**: the later rule wins, and Fire's shade mechanic can still use fading roofs, since the
   shade test reads rectangles, not the drawing.
 - (b) Fire's shadow-only overheads stay as an exception for Fire, as Poison's planks are for Poison.
+- **Decided (owner, 2026-11-19): (a).** Roofs fade everywhere; shadow-only only where the owner has allowed it
+  (Poison's planks). Fire's hall, colonnades and bridge-house are to be checked against the rule when Fire is next
+  revised.
 
 **Q3. Warned arrows: one piece, three guard rules.** Ice's arrows are red: only a perfect guard stops one, its window
 0.10 s against a blade's 0.18 s (the owner: not easy, several to fill her bar); 40 damage and a 1.0 s pin; the line laid
@@ -451,6 +460,8 @@ stated; 12 damage and a flinch. Metal's feathers are called "the huntress's warn
   is the gongs, not the guard. **Recommended**.
 - (b) Every arrow in the game uses Ice's rule (red, 0.10 s). One rule to learn; Seat's walk and Metal's trial become far
   harder.
+- **Decided (owner, 2026-11-19): (a).** One warned-arrow piece with rules per source: Ice as decided; Seat's walk arrows
+  and Metal's feathers pale, with the standard 0.18 s window.
 
 **Q4. The Wild Hunt in two plans.** E&L (its section 3.5): a front 6 m deep sweeping at 16 m/s on a horn clock; shelter is
 a ring of untouched heather round each stone (r 1.5 to 6); caught, 25 damage that cannot kill and set down behind the
@@ -460,6 +471,8 @@ bubble; shelter is the 2 m west of each stone; caught, 20 damage and carried 4 m
   to the thaw: the riders still come a few at a time from the bubble's edge. **Recommended**: the recap reuses each land's
   people "with their own mechanics unchanged" (Seat 1.6).
 - (b) Seat keeps its own lighter version, as a different moment of the same Hunt.
+- **Decided (owner, 2026-11-19): (a).** Seat's 3B now uses E&L's heather rings, its 25 damage that cannot kill and its
+  carry west; the riders' speed in the thaw and where the carry sets the player down are to be set at build.
 
 **Q5. A lightning strike, three ways.** L&W's bolt sweeps a lane up a leg: 28 damage and a 0.5 s stun. Seat's frozen
 bolts strike a ring 2 m round a scorch: 35 damage, after a 0.5 s tremble. The storm strikes already built for the castle
@@ -467,6 +480,7 @@ and summit (`AreaDirector`) strike a ring 2.8 m round: 18 damage after a 1.3 s w
 - (a) One strike piece (S4) with the shape and numbers per use, and one look (the cyan fork of `LOOKS.md` 8); Seat's ring
   stays a ring because it is not a race. **Recommended**.
 - (b) Seat's bolts sweep a short lane, as L&W's do, so the echo of the race reads as the race.
+- **Decided (owner, 2026-11-19): (a).** One strike piece, shape and numbers per use, one look; Seat's stays a ring.
 
 **Q6. Slow water.** Water: under 0.3 m is as on land; 0.3 to 1.0 m is wading (4 m/s, roll 3 m). E&L's sunk plank
 stretches are 0.3 m under water and called wading, exactly on Water's boundary. L&W's surf is "knee-deep, slow" with
@@ -475,6 +489,9 @@ E&L, 12 in mercury, and is not given for L&W.
 - (a) One depth rule from Water for all water; E&L's sunk stretches set a little deeper so they are plainly wading; L&W's
   wash kept as its own named surface; mercury its own; the throw-back 10 for water, 12 for mercury. **Recommended**.
 - (b) Each land keeps its own numbers.
+- **Decided (owner, 2026-11-19): (a).** Water's depth rule for all water; E&L's sunk stretches a little deeper than
+  0.3 m (the depth set at build); L&W's wash and Poison's mercury their own named surfaces; the throw-back 10 for water
+  and 12 for mercury.
 
 **Q7. Drops: how high, and where they must land.** Every plan's measures repeat Fire's "a drop 2 m". Water's Cut 2 drop
 is 1.4 m; Poison and E&L allow 2 to 4 m; L&W 2 to 2.5 m and at most 3. The landing rules differ: Poison wants a climb
@@ -483,6 +500,8 @@ none.
 - (a) One drop piece taking its height (1.4 to 4 m) and each land's landing rule checked in the editor from the recorded
   landings. **Recommended**: the plans already agree on facing south and on never stranding; only the numbers differ.
 - (b) One height (2 to 3 m) for every land, and one landing rule (a way back within 30 m).
+- **Decided (owner, 2026-11-19): (a).** One drop piece, 1.4 to 4 m, each land's landing rule checked from the recorded
+  landings.
 
 **Q8. Watcher sight: a light or a ray.** Metal: the giant's sight is a real shadowed spot light, and what is lit is what
 is seen (the owner's answer 3). Ice: her sight is a line test from her eye to the player's chest against cover, with a lee
@@ -492,6 +511,7 @@ map worked out at build time from each perch, and the snow's shadows laid to agr
   with the test (the light and the ray start at the same point, as Metal's plan already says). **Recommended**: one tested
   system, and Metal keeps the owner's light.
 - (b) Each land keeps its own: Metal tests by the light's shadow, Ice by rays.
+- **Decided (owner, 2026-11-19): (a).** One line test and one build-time lee check; Metal's light is made to agree.
 
 **Q9. Seat's people from lands planned after it.** Seat was written before the L&W and E&L plans and guessed their
 people. Besides the Hunt (Q4): its storm samurai is "a fast draw and a charge", where L&W's struck samurai are armour
@@ -500,23 +520,26 @@ with a double and wake through a gate; its crow-tengu's gust shoves 3 m, where L
 - (a) Bring Seat's three L&W people and its E&L people into line with their own plans, as its own section 1.6 intends.
   **Recommended**.
 - (b) Keep Seat's simpler versions for a short recap.
+- **Decided (owner, 2026-11-19): (a).** Seat's storm samurai, fox guard and crow-tengu are now L&W's struck samurai,
+  fox pair with its double, and fan-bearing crow-tengu (its 1.6 and 3A), and its Hunt follows E&L (Q4).
 
-### 5.1 Open owner questions in the plans that change a shared piece
+### 5.1 Owner questions in the plans that changed a shared piece
 
-These are already asked in their plans; they are listed here because a shared piece waits on them.
+These were asked in their plans and held a shared piece back. The owner answered all of them on 2026-11-19; every
+answer but L&W 1 was the plan's recommended option (a).
 
-| Plan, question | Shared piece it changes |
-|---|---|
-| L&W 1 (what a perfect dodge through the race gives) | S4's per-source reward |
-| L&W 2 (the count and the half-beat lead) | S3, S7 |
-| L&W 4 (both elites before the screen room) | K7 (several keepers) |
-| L&W 6 (the screen room's roof) | S16 (hide a roof while inside) |
-| E&L 2 (where the Hunt sets the player down) | S4's carry; Q4 |
-| E&L 3 and 4 (how many years, how they read) | S2 (the number of states and whether they wrap) |
-| E&L 6 (held shots) | K13; Q1 |
-| Seat 1 (the land-wide framing) | K13, S17 |
-| Seat 2 and 3 (what moves in the thaw; whether woken enemies freeze again) | S19 |
-| Seat 4 (the Chakravyuha) | Seat's frozen ranks with hulls (unique) |
+| Plan, question | Shared piece it changes | The answer and what it settles |
+|---|---|---|
+| L&W 1 (what a perfect dodge through the race gives) | S4's per-source reward | (b), not the recommendation: one shared gift for both racers, the ordinary perfect dodge (12 mana, slowed time) and Keeping Pace. S4's reward for the race is that shared reward only: no Charged, no Carried, no extra mana |
+| L&W 2 (the count and the half-beat lead) | S3, S7 | (a): eight sounds from the player's own stair, the trailer half a beat late, the tempo rising by district. S3 carries a lead per diamond; S7 plays the count from the gates below |
+| L&W 4 (both elites before the screen room) | K7 (several keepers) | (a): two seals, both needed, either order. K7 takes several keepers |
+| L&W 6 (the screen room's roof) | S16 (hide a roof while inside) | (a): never drawn while the player is inside. S16 needs the hide-while-inside mode |
+| E&L 2 (where the Hunt sets the player down) | S4's carry; Q4 | (a): carried west along its line, set down behind the plain's west wall at the same latitude, 25 damage that cannot kill. Seat's Hunt uses the same carry (Q4) |
+| E&L 3 and 4 (how many years, how they read) | S2 (the number of states and whether they wrap) | (a) and (a): four states that do not wrap (the ends sleep), read from marks in the world. S2 holds four states with stopping ends |
+| E&L 6 (held shots) | K13; Q1 | (a): four held shots, one per district, as Q1 settles |
+| Seat 1 (the land-wide framing) | K13, S17 | (a): 1.15 times for the whole land, with a 5 m thaw. S17 needs the land-wide framing |
+| Seat 2 and 3 (what moves in the thaw; whether woken enemies freeze again) | S19 | (a) and (a): three time scales per object (0, 0.1, 1); woken bearers freeze again after clinging 4 s and wake again in 0.4 s |
+| Seat 4 (the Chakravyuha) | Seat's frozen ranks with hulls (unique) | (a): the trial is built (Z13), so the ranks with hulls are needed for its rings |
 
 ### 5.2 Where an owner's answer and a plan's body still disagree
 
@@ -524,3 +547,9 @@ Not questions: the answers win, and these lines are to be brought into line when
 - **Metal**: the owner chose Ariadne's thread (answer 2), but the build list still says "G6 Ariadne's thread (if chosen)".
   The owner replaced the bronze bulls with the bronze birds (answer 1), but 15.3's new kit still lists `bronze_bull`,
   and the enemy count in section 16 still counts "2 bulls, 6 sown men".
+- **Fire**: the hall, the colonnades (B11), the bridge-house (B16) and the gatehouse arch are drawn shadow-only over a
+  walkable floor, against Q2's answer; they are to be checked against the roof rule when Fire is next revised.
+- **The answers of section 5 in the other plans**: L&W, E&L and Seat were brought into line on 2026-11-19. Water, Metal,
+  Ice and Poison were not touched for them: Poison's section 0 still says "three held camera shots per land" (its
+  count stands under Q1; only the wording is old), Metal's feathers do not yet say they are pale with the 0.18 s window (Q3), and Metal's and Ice's sight
+  sections do not yet name the shared line test (Q8).

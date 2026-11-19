@@ -282,6 +282,20 @@ Fire's land is planned room by room in `docs/design/fire_levels.md`; these rules
 - **Decided (user)**: in Earth and Life's land the gods' brawl is felt everywhere and seen only at the seats.
   - Everywhere: distant thunder of stone, the roar of the wild, birds lifting in flocks, and now and then a tremor.
   - The fight itself is seen only from the two seats and on the last walk.
+- **Decided (user, 2026-11-19)**: land-wide rules from the cross-land kit list (`docs/design/kit_list.md` section 5).
+  - **Held shots**: one per district; rides out are not counted.
+  - **Roofs fade everywhere.** Shadow-only is kept only where the user has allowed it (Poison's plank bridges). Fire's
+    hall, colonnades and bridge-house are to be checked against this when Fire is next revised.
+  - **Warned arrows are one piece with rules per source**: the huntress's are red, perfect guard only, with a 0.10 s
+    window; the last land's arrows on the walk and Metal's bronze feathers are pale, with the standard 0.18 s window.
+  - **One sight test for watchers above the player**: a line test against cover with a lee check at build time, for
+    the huntress and for the giant; the giant's light stays real and is made to agree with it.
+  - **One depth rule for water**, the Water land's: under 0.3 m is as on land, 0.3 to 1.0 m is wading. Lightning and
+    Wind's wash and Poison's mercury stay their own surfaces; the throw-back costs 10 in water and 12 in mercury.
+  - **One drop piece** of 1.4 to 4 m, with each land's own landing rule checked in the editor from the recorded
+    landings.
+  - Also settled there: one lightning strike piece with one look, its shape per use; the last land's frozen Hunt and
+    storm people use Earth and Life's and Lightning and Wind's own rules.
 
 ## The gods
 
@@ -920,6 +934,9 @@ This replaces the Persian proposal for Light and Dark (2026-11-17, afternoon).
   - The final fight is in the area between all the gods' seats, and the godly fight turns the arena into a separate
     domain.
   - The user is wary of imagery too close to Mount Olympus.
+- **Decided (user, 2026-11-19)**: the frozen war is the war of the game's opening (`docs/GAME.md`, "Story and
+  setting"). The opening is played on this field in its last minutes, and on the path the player finds the one empty
+  place in a frozen rank, where they stood when the sponsor took them out of time (`docs/design/seat_levels.md` 4.4).
 - **Proposal**, the path:
   - The thaw bubble: time cannot fully hold the player, who carries elements, so a small radius around them moves
     while the rest stays stopped. Enemies thaw inside it, so the path's edge is dangerous. Frozen arrows in the air
