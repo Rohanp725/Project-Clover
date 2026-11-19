@@ -104,7 +104,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.GuardStamina, -0.167f) } });
             // BESPOKE: the hold that coils through three fangs, and the release that passes through a blow. Until then: the step through the enemy at the strength of two fangs.
             to.Add(new Upgrade { Id = CoiledStrike, Name = "Coiled Strike", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { LanceTheWound }, X = -2.4f, Y = 7.8f, Icon = UpgradeIcons.Arrow,
-                Description = "Hold the spell button to strike through the enemy you face, cutting it and poisoning it deeply. If the cut lands, your next heavy blow in the moment after is critical. 35 mana.",
+                Description = "You strike through the enemy you face, cutting it and poisoning it deeply. If the cut lands, your next heavy blow in the moment after is critical.",
                 Form = FormStep,
                 Spell = new SpellSpec { Cost = 35f, Reach = 6f, Damage = 24f, Stagger = 25f, Stacks = 4, Seconds = 3f } });
             // Poison goes twelve deeper (not without limit) and does not fade (Afflictions.PoisonKeeps). Nothing closes Volatile to one who holds this.
@@ -135,7 +135,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.BurstStagger, 0.4f) } });
             // The blister is the brand form: the next blow of the weapon breaks it, light or heavy, at one size.
             to.Add(new Upgrade { Id = Blister, Name = "Blister", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { RottenFruit }, X = 0f, Y = 6.5f, Icon = UpgradeIcons.Orb,
-                Description = "Hold the spell button to raise a blister on the enemy you face. Your next blow on it breaks it in a wide burst that poisons deeply. Wait too long and it withers. 40 mana.",
+                Description = "You raise a blister on the enemy you face. Your next blow on it breaks it in a wide burst that poisons deeply. Wait too long and it withers.",
                 Form = FormBrand,
                 Spell = new SpellSpec { Cost = 40f, Reach = 8f, Seconds = 12f, Count = 1, Radius = 3f, Damage = 40f, Stagger = 30f, Stacks = 4 } });
             to.Add(new Upgrade { Id = SpentVenom, Name = "Spent Venom", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Blister }, X = 1.04f, Y = 7.1f, Icon = UpgradeIcons.Gem,
@@ -143,7 +143,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.2f, AfflictionKind.Poison) } });
             // BESPOKE: the raised hand, the line from enemy to enemy, each burst passing its depth to the next. Until then a burst rises under every enemy near.
             to.Add(new Upgrade { Id = OneByOne, Name = "One by One", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Blister }, X = 0f, Y = 8.3f, Icon = UpgradeIcons.Chain,
-                Description = "Hold the spell button and a burst rises under each of the six nearest enemies in turn, throwing them into the air. 50 mana.",
+                Description = "A burst rises under each of the six nearest enemies in turn, throwing them into the air. 50 mana.",
                 Form = FormPillars,
                 Spell = new SpellSpec { Cost = 50f, Count = 6, Reach = 10f, Radius = 2.5f, Damage = 30f, Stagger = 20f, Stacks = 0, Delay = 0.5f } });
             // The beat is stilled (Afflictions.PoisonBeatOff); what is full is set off. Nothing closes Slow Death to one who holds this.
@@ -174,7 +174,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.LeapReach, 0.5f) } });
             // The censer leaves no smoke behind it yet.
             to.Add(new Upgrade { Id = SwingingCenser, Name = "Swinging Censer", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { OneSickness }, X = 2.0f, Y = 6.0f, Icon = UpgradeIcons.Ring,
-                Description = "Hold the spell button to set a smoking censer swinging round you on its chain. It doses whatever it passes. 35 mana.",
+                Description = "You set a smoking censer swinging round you on its chain. It doses whatever it passes.",
                 Form = FormDiscs,
                 Spell = new SpellSpec { Cost = 35f, Count = 1, Radius = 3f, Seconds = 8f, Interval = 1.2f, Damage = 4f, Stagger = 4f, Stacks = 1 } });
             // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
@@ -183,7 +183,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // It doses everyone passed two deep; it does not yet raise them all to the depth of the sickest.
             to.Add(new Upgrade { Id = ShareAlike, Name = "Share Alike", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { SwingingCenser }, X = 2.4f, Y = 7.8f, Icon = UpgradeIcons.Comet,
-                Description = "Hold the spell button to rush through everything before you, untouchable. Every enemy you pass is struck and poisoned two deep. 40 mana.",
+                Description = "You rush through everything before you, untouchable. Every enemy you pass is struck and poisoned two deep.",
                 Form = FormDrill,
                 Spell = new SpellSpec { Cost = 40f, Reach = 7f, Radius = 1f, Count = 1, Damage = 10f, Stagger = 10f, Stacks = 2, Speed = 20f } });
             // The words say what the number does.

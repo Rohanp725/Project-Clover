@@ -84,7 +84,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.SurgeSeconds, 0.3f) } });
             // The parry form answers with a cone, not a pillar under the attacker, and gives no mana back when nothing strikes.
             to.Add(new Upgrade { Id = MountainStance, Name = "Mountain Stance", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Aftershock }, X = -2.4f, Y = 7.8f, Icon = UpgradeIcons.Fist,
-                Description = "Hold the spell button to stand as stone for a moment. The first blow to land on you is turned and answered with a burst of rock thrown at the one who struck, shaking it. If no blow comes, the mana is lost. 35 mana.",
+                Description = "You stand as stone for a moment. The first blow to land on you is turned and answered with a burst of rock thrown at the one who struck, shaking it. If no blow comes, it is wasted.",
                 Form = "parry",
                 Spell = new SpellSpec { Cost = 35f, Seconds = 1.5f, Reach = 4f, Arc = 90f, Damage = 30f, Stagger = 60f, Stacks = 2 } });
             // BESPOKE: the dodge button becomes a brace that moves nowhere; its first 0.2 s is a perfect guard against any blow, red ones too; Rooted never ends.
@@ -127,7 +127,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.5f) } });
             // The nova does not yet give double stagger to an enemy showing an attack, nor break that attack.
             to.Add(new Upgrade { Id = QuakeStep, Name = "Quake Step", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Landslide }, X = 0f, Y = 6.5f, Icon = UpgradeIcons.Boot,
-                Description = "Hold the spell button to raise a foot and bring it down. The ground heaves all round you and shakes everyone it strikes. 35 mana.",
+                Description = "You raise a foot and bring it down. The ground heaves all round you and shakes everyone it strikes.",
                 Form = "nova",
                 Spell = new SpellSpec { Cost = 35f, Radius = 5f, Delay = 0.45f, Damage = 16f, Stagger = 30f, Stacks = 2 } });
             // NEAREST: the stamina of every blow, not of heavy blows alone, so the share is smaller.
@@ -137,7 +137,7 @@ namespace Clover.Player.Trees
             // BESPOKE: a held charge in three stages (0.5, 1.2, 2.0 s) released as one overhead heavy blow down a drawn lane: 30 / 55 / 90 damage, 40 / 70 / 120 stagger,
             // Tremor 1 / 2 / 3; no flinch and half damage while holding. Until then: the great falling sword at its middle stage, with the crack it leaves.
             to.Add(new Upgrade { Id = MountainCleaver, Name = "Mountain Cleaver", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { QuakeStep }, X = 0f, Y = 8.3f, Icon = UpgradeIcons.Blade,
-                Description = "Hold the spell button to call a great blade of stone down on the enemy faced. It falls after a moment and leaves a crack in the ground that bites for three seconds. 45 mana.",
+                Description = "You call a great blade of stone down on the enemy faced. It falls after a moment and leaves a crack in the ground that bites for three seconds.",
                 Form = "sword",
                 Spell = new SpellSpec { Cost = 45f, Reach = 5f, Delay = 1.2f, Radius = 3f, Damage = 55f, Stagger = 70f, Stacks = 2, Seconds = 3f, LingerDamage = 4f } });
             // BESPOKE in part: every blow is slower and dearer and light blows far stronger, as designed. Light blows do not yet count as heavy: no guard is passed, no flinch forced, and heavy-blow triggers do not fire.
@@ -167,7 +167,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.SpellReach, 0.25f) } });
             // The spikes do not yet hold what they catch, nor stand as a wall after.
             to.Add(new Upgrade { Id = Fissure, Name = "Fissure", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Toppling }, X = 2.0f, Y = 6.0f, Icon = UpgradeIcons.Spike,
-                Description = "Hold the spell button to drive your weapon into the ground. A crack runs ahead and breaks open in a row of spikes that strike and shake what they catch. 40 mana.",
+                Description = "You drive your weapon into the ground. A crack runs ahead and breaks open in a row of spikes that strike and shake what they catch.",
                 Form = "spikes",
                 Spell = new SpellSpec { Cost = 40f, Reach = 8f, Speed = 20f, Count = 1, Radius = 1f, Damage = 28f, Stagger = 35f, Stacks = 1 } });
             // NEEDS: a stat for how long what a spell leaves lasts. A little spell damage stands in.
@@ -176,7 +176,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.SpellDamage, 0.06f) } });
             // The wall form bursts when its time ends as well as when struck; the design has it crumble for nothing.
             to.Add(new Upgrade { Id = Rampart, Name = "Rampart", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Fissure }, X = 2.4f, Y = 7.8f, Icon = UpgradeIcons.Wall,
-                Description = "Hold the spell button to raise a wall before you. It blocks the way and shots for eight seconds, then bursts, or sooner if you strike it with a heavy blow. 40 mana.",
+                Description = "You raise a wall before you. It blocks the way and shots for eight seconds, then bursts, or sooner if you strike it with a heavy blow.",
                 Form = "wall",
                 Spell = new SpellSpec { Cost = 40f, Reach = 2.5f, Arc = 5f, Delay = 0.2f, Seconds = 8f, Radius = 4f, Damage = 34f, Stagger = 50f, Stacks = 2 } });
             // BESPOKE: the surge raises eight stones in a circle 12 m across round the player and the enemy faced; nothing walks, rolls or is thrown across it while the surge lasts;

@@ -84,7 +84,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.ManaFromDodges, 0.42f) } });
             // The step form gives a critical heavy blow after it lands; the design's finisher-strength blow for a cast timed as a perfect dodge is not in it yet.
             to.Add(new Upgrade { Id = StepIntoLight, Name = "Step Into Light", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Dazzle }, X = -2.51f, Y = 6.57f, Icon = UpgradeIcons.Wing,
-                Description = "Hold the spell button to step through the enemy you face in a line of light, cutting and Marking it. If the cut lands, your next heavy blow in the moment after is critical. 35 mana.",
+                Description = "You step through the enemy you face in a line of light, cutting and Marking it. If the cut lands, your next heavy blow in the moment after is critical.",
                 Form = "step",
                 Spell = new SpellSpec { Cost = 35f, Reach = 7f, Damage = 10f, Stagger = 10f, Stacks = 1, Seconds = 1.5f } });
             to.Add(new Upgrade { Id = LongClarity, Name = "Long Clarity", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { StepIntoLight }, X = -1.71f, Y = 7.52f, Icon = UpgradeIcons.Hourglass,
@@ -115,7 +115,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.StaggerDealt, 0.2f, StatWhen.CriticalBlow) } });
             // The bullets form does not yet hold its target still.
             to.Add(new Upgrade { Id = RingOfSpears, Name = "Ring of Spears", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Sentence }, X = 1.33f, Y = 6.78f, Icon = UpgradeIcons.Ring,
-                Description = "Hold the spell button. Six spears of light stand in the air round the enemy you face, wait a breath, and drive in together. 40 mana.",
+                Description = "Six spears of light stand in the air round the enemy you face, wait a breath, and drive in together.",
                 Form = "bullets",
                 Spell = new SpellSpec { Cost = 40f, Count = 6, Radius = 3f, Delay = 0.6f, Damage = 6f, Stagger = 5f, Stacks = 1, Reach = 10f } });
             // NEEDS: a tally kept on an enemy that another effect spends. Here each wound marks the one who gave it, which deepens Sentence.
@@ -125,7 +125,7 @@ namespace Clover.Player.Trees
             // BESPOKE: a seal on the enemy faced counts all weapon damage dealt to it for 6 s, then deals half of the count again in one burst (150 at most) with 40 stagger;
             // if the enemy dies first it breaks on the nearest at half strength. Until then: the brand form, where each of the next six blows sets off its own small burst.
             to.Add(new Upgrade { Id = Reckoning, Name = "Reckoning", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { WhatItOwes }, X = -0.28f, Y = 9.4f, Icon = UpgradeIcons.Hourglass,
-                Description = "Hold the spell button to set a seal on the enemy you face. Each of your next six blows on it sets off a burst of light that Marks all near. 45 mana.",
+                Description = "You set a seal on the enemy you face. Each of your next six blows on it sets off a burst of light that Marks all near.",
                 Form = "brand",
                 Spell = new SpellSpec { Cost = 45f, Reach = 10f, Seconds = 6f, Count = 6, Radius = 2f, Damage = 12f, Stagger = 7f, Stacks = 1 } });
             // Spell damage does not reach Sentence or The Scales, which are effects. NEEDS: effect damage that a stat can raise.
@@ -162,7 +162,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.SpellReach, 0.25f) } });
             // The rod form is the planted totem. The burst from a perfect guard inside its glow is not in it yet.
             to.Add(new Upgrade { Id = StandingLight, Name = "Standing Light", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { ReturningLight }, X = 2.74f, Y = 6.32f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button to plant a lantern of light. Enemies in its glow are struck lightly and Marked again and again. 35 mana.",
+                Description = "You plant a lantern of light. Enemies in its glow are struck lightly and Marked again and again.",
                 Form = SpellForms.Rod,
                 Spell = new SpellSpec { Cost = 35f, Reach = 2.5f, Radius = 5f, Seconds = 10f, Interval = 2.5f, Damage = 2f, Stagger = 0f, Delay = 0.2f, Stacks = 1 } });
             // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
@@ -172,7 +172,7 @@ namespace Clover.Player.Trees
             // BESPOKE: the first hold begins gathering; each blow landed adds a ring to the blade, up to eight; a second hold (or 7 s) looses a beam 12 m long and 1.6 m wide
             // for 8 damage and 6 stagger a ring. Until then: the beam at once, at the strength of six rings over its four bites.
             to.Add(new Upgrade { Id = Daybreak, Name = "Daybreak", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { StandingLight }, X = 2.03f, Y = 7.88f, Icon = UpgradeIcons.Beam,
-                Description = "Hold the spell button to brace and loose a beam of light down one long line. 45 mana.",
+                Description = "You brace and loose a beam of light down one long line. 45 mana.",
                 Form = "beam",
                 Spell = new SpellSpec { Cost = 45f, Reach = 12f, Radius = 0.8f, Seconds = 0.4f, Interval = 0.1f, Damage = 12f, Stagger = 9f, Stacks = 1 } });
             // NEEDS: an action that casts the last spell again from the far side of the enemy at a share of its damage. Here each enemy a spell strikes is struck again by light a moment later.

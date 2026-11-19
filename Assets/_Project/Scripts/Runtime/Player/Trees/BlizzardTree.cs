@@ -54,12 +54,12 @@ namespace Clover.Player.Trees
                 } });
             // The rain form gives the snow and its bite. Losing sight of the player, the slow turn and blows from behind being critical are not in it yet.
             to.Add(new Upgrade { Id = Whiteout, Name = "Whiteout", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { Windchill }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button to call down driving snow in a wide circle for eight seconds. Shards fall inside it again and again, each a small bite. 40 mana.",
+                Description = "You call down driving snow in a wide circle for eight seconds. Shards fall inside it again and again, each a small bite.",
                 Form = "rain",
                 Spell = new SpellSpec { Cost = 40f, Reach = 0.5f, Radius = 7f, Seconds = 8f, Interval = 0.6f, Damage = 3f, Stagger = 4f, Stacks = 1 } });
             // The dragon form carries what it meets along its line, as the rolling snow does; it does not bury them Frozen where it stops.
             to.Add(new Upgrade { Id = Avalanche, Name = "Avalanche", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { SlidingIce }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Wave,
-                Description = "Hold the spell button to send a great head of snow down a lane nine metres long. It strikes what it passes and carries it along, then bites hard where it stops. 50 mana.",
+                Description = "You send a great head of snow down a lane nine metres long. It strikes what it passes and carries it along, then bites hard where it stops. 50 mana.",
                 Form = "dragon",
                 Spell = new SpellSpec { Cost = 50f, Reach = 9f, Radius = 2f, Speed = 4.5f, Damage = 25f, Stagger = 30f, Stacks = 4 } });
 

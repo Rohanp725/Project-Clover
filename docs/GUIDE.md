@@ -709,10 +709,10 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Burn and Detonate** | Major | 3 | A perfect guard against a burning enemy sets all of its burn off at once. | Always on once it is yours. |
 | **Burning Crescent** | Major | 3 | The Iaido Slash throws a slow arc of flame that travels on after the cut. | Always on once it is yours. |
 | **Flame Trail** | Major | 3 | The dodge leaves a line of fire behind it that burns what follows. | Always on once it is yours. |
-| **Meteor Leap** | Spell | 4 | Hold the spell button to leap out of the fight and come down on the enemy faced, leaving a burning crater. 50 mana. | Hold Triangle (U) to cast. 50 mana. |
+| **Meteor Leap** | Spell | 4 | You leap out of the fight and come down on the enemy faced, leaving a burning crater. 45 mana. | Put it in a spell slot at a rest, then cast it with that slot. 45 mana. |
 | **Long Embers** | Minor | 1 | Flame Trail burns longer on the ground. | Always on once it is yours. |
-| **Cinder Fan** | Spell | 4 | Hold the spell button to throw fire in a wide fan, close in. What it touches burns two deep. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
-| **Kiln Stance** | Spell | 4 | Hold the spell button to stand ready in flame. The first blow that reaches you, red or not, is turned and answered with a pillar of fire. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
+| **Cinder Fan** | Spell | 4 | You throw fire in a wide fan, close in. What it touches burns two deep. | Put it in a spell slot at a rest, then cast it with that slot. 7 s cooldown. |
+| **Kiln Stance** | Spell | 4 | You stand ready in flame. The first blow that reaches you, red or not, is turned and answered with a pillar of fire. | Put it in a spell slot at a rest, then cast it with that slot. 9 s cooldown. |
 | **Wide Hearth** | Minor | 1 | Backdraft and the detonation reach further. | Always on once it is yours. |
 | **Long Kindle** | Minor | 1 | Kindle lasts longer. | Always on once it is yours. |
 | **Hot Coals** | Minor | 1 | Spells strike burning enemies harder. | Always on once it is yours. |
@@ -720,11 +720,11 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Flashpoint** | Major | 3 | After a perfect dodge, your next blow within three seconds sets a burn three deep at once. | Happens when you dodge at the last moment (a perfect dodge). |
 | **Hot Footing** | Minor | 1 | Flame Trail bites harder. | Always on once it is yours. |
 | **Searing Edge** | Minor | 1 | Burns bite harder. | Always on once it is yours. |
-| **Sunspot** | Spell | 4 | Hold the spell button to brand the enemy faced. Each blow you land feeds the brand, up to six. A heavy blow sets it off. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Sunspot** | Spell | 4 | You brand the enemy faced. Each blow you land feeds the brand, up to six. A heavy blow sets it off. | Put it in a spell slot at a rest, then cast it with that slot. 11 s cooldown. |
 | **Open Furnace** | Keystone | 6 | A perfect guard sets off every burning enemy near you, not only the one who struck, and leaves each still alight. A plain guard lets more of the blow through. | Always on once it is yours. |
 | **Slow Fuse** | Minor | 1 | Burns last longer. | Always on once it is yours. |
 | **Dry Tinder** | Minor | 1 | Your weapon cuts deeper into a burning enemy. | Always on once it is yours. |
-| **Wildfire Rush** | Spell | 4 | Hold the spell button to drive through the enemies ahead in a line of fire. Each one passed is set burning and raises your Heat. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Wildfire Rush** | Spell | 4 | You drive through the enemies ahead in a line of fire. Each one passed is set burning and raises your Heat. | Put it in a spell slot at a rest, then cast it with that slot. 8 s cooldown. |
 | **Scorched Earth** | Keystone | 6 | Fire you leave on the ground burns twice as long. While you stand in it Kindle does not run down and your blows give more mana. Your spells cost more. | Always on once it is yours. |
 | **White Heat** | Keystone | 6 | Heat rises to eight, and above five your blows come faster. Struck above five, you burn. | Always on once it is yours. |
 | **Falling Sun** | Signature | gift | Light Kindle and the sun begins its road. At dawn it is rolled along the ground to the enemy you face, and the ground it crosses burns. At noon it is carried up, and every burn near you deepens by itself. When Kindle ends, or when you press the surge button again, it sets on the enemy below it, heavier for every burn it finds. A blow taken sends it under, to rise again. | Happens when you light the surge (press L2 (I)). |
@@ -752,8 +752,8 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Grounding** | Major | 3 | A perfect guard sends an arc through the one who struck and on to two more. | Happens when you guard at the last moment (a perfect guard). |
 | **Quick Hands** | Minor | 1 | The weapon is swung a little faster. | Always on once it is yours. |
 | **Full Discharge** | Major | 3 | A discharge of five Static holds its enemy still for a moment and gives mana. | Happens when you set off an affliction. |
-| **Lightning Rod** | Spell | 4 | Hold the spell button to plant a rod two metres ahead. For eight seconds bolts fall inside a circle round it, each laying Static. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **Waiting Thunder** | Spell | 4 | Hold the spell button to hang five bolts at your shoulder. Each blow you land sends one down with it. A heavy blow sends all that are left. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Lightning Rod** | Spell | 4 | You plant a rod two metres ahead. For eight seconds bolts fall inside a circle round it, each laying Static. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
+| **Waiting Thunder** | Spell | 4 | You hang five bolts at your shoulder. Each blow you land sends one down with it. A heavy blow sends all that are left. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
 | **Afterimage** | Major | 3 | A dodge at the last moment leaves a copy of you that strikes where you stood. | Always on once it is yours. |
 | **Bright Echo** | Minor | 1 | The copy left by Afterimage strikes harder. | Always on once it is yours. |
 | **Live Wire** | Major | 3 | Casting any spell lays a line of lightning on the ground eight metres ahead of you for four seconds. Enemies standing on it are shocked and gather Static. This can happen once every six seconds. | Happens when you cast a spell (Triangle (U)). |
@@ -761,13 +761,13 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Capacitor** | Minor | 1 | A perfect guard gives more mana. | Always on once it is yours. |
 | **Charged Step** | Minor | 1 | A perfect dodge gives more mana. | Always on once it is yours. |
 | **Single Stroke** | Keystone | 6 | Static builds to ten. A discharge no longer arcs: all of it lands on the one struck, twice as hard. | Always on once it is yours. |
-| **Seven Flashes** | Spell | 4 | Hold the spell button to cut through up to seven enemies in one breath and return to where you stood. The cuts land together when you are still. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Seven Flashes** | Spell | 4 | You cut through up to seven enemies in one breath and return to where you stood. The cuts land together when you are still. 45 mana. | Put it in a spell slot at a rest, then cast it with that slot. 45 mana. |
 | **Long Overdrive** | Minor | 1 | Overdrive lasts longer. | Always on once it is yours. |
 | **Slipstream** | Major | 3 | A dodge at the last moment quickens your feet and your weapon for a while. | Happens when you dodge at the last moment (a perfect dodge). |
-| **Lodestone** | Spell | 4 | Hold the spell button to drag every enemy near toward you, further for each Static on it, then set all of it off at once. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Lodestone** | Spell | 4 | You drag every enemy near toward you, further for each Static on it, then set all of it off at once. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
 | **Never There** | Keystone | 6 | Every dodge carries further and a perfect dodge costs nothing. A blow held on your guard costs twice the stamina. | Happens when you dodge at the last moment (a perfect dodge). |
 | **Overclock** | Keystone | 6 | Overdrive opens with a breath in which everything but you is slowed. Each perfect guard or perfect dodge while it lasts opens another. Overdrive costs more mana. | Happens when you guard at the last moment (a perfect guard), while the surge lasts (press L2 (I)). |
-| **Chain Lance** | Spell | 4 | Hold the spell button to throw a bolt that leaps through four more and leaves Static on each. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Chain Lance** | Spell | 4 | You throw a bolt that leaps through four more and leaves Static on each. | Put it in a spell slot at a rest, then cast it with that slot. 7 s cooldown. |
 | **Storm Step** | Signature | gift | While Overdrive lasts, every dodge costs nothing and shocks what it passes through. | Always on once it is yours. |
 
 #### Wind (31)
@@ -795,12 +795,12 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Open Air** | Minor | 1 | Blows strike an enemy in the air harder. | Always on once it is yours. |
 | **Fair Wind** | Minor | 1 | Tailwind costs less mana. | Always on once it is yours. |
 | **Strong Arm** | Minor | 1 | Your pushes throw enemies further. | Always on once it is yours. |
-| **Lifting Wind** | Spell | 4 | Hold the spell button to raise a column of wind under the enemy faced. It goes up whatever its footing. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
+| **Lifting Wind** | Spell | 4 | You raise a column of wind under the enemy faced. It goes up whatever its footing. | Put it in a spell slot at a rest, then cast it with that slot. 9 s cooldown. |
 | **Running Start** | Minor | 1 | You move faster while Tailwind lasts. | Always on once it is yours. |
 | **Drawing Wind** | Major | 3 | When the Iaido Slash lands, everything within six metres is pulled toward you and left Unsteady. | Happens when the weapon skill lands. |
-| **Closing Circle** | Spell | 4 | Hold the spell button to run a ring round the enemy faced. When the ring closes, the wind inside it rises and takes everything off the ground. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
-| **Indrawn Breath** | Spell | 4 | Hold the spell button to drag everything near into one place before you, then burst it apart. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
-| **Sky Dance** | Spell | 4 | Hold the spell button to throw the enemy faced into the air and go up beside it. Press the light attack as each of five rings closes for a harder cut. Then the stick chooses where it is thrown down, and it bursts harder for each cut in time. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Closing Circle** | Spell | 4 | You run a ring round the enemy faced. When the ring closes, the wind inside it rises and takes everything off the ground. | Put it in a spell slot at a rest, then cast it with that slot. 9 s cooldown. |
+| **Indrawn Breath** | Spell | 4 | You drag everything near into one place before you, then burst it apart. | Put it in a spell slot at a rest, then cast it with that slot. 11 s cooldown. |
+| **Sky Dance** | Spell | 4 | You throw the enemy faced into the air and go up beside it. Press the light attack as each of five rings closes for a harder cut. Then the stick chooses where it is thrown down, and it bursts harder for each cut in time. 45 mana. | Put it in a spell slot at a rest, then cast it with that slot. 45 mana. |
 | **Leaf on the Wind** | Keystone | 6 | The dodge costs no stamina. It spends a breath of wind instead: you hold three, and time and blows win them back. With none you cannot dodge. You are easier to wound. | Always on once it is yours. |
 | **Storm Front** | Keystone | 6 | Every heavy blow that lands throws a Gust with it at no cost. Your blows give less mana. | Always on once it is yours. |
 | **Nothing Beneath** | Keystone | 6 | An enemy in the air stays there for as long as you keep striking it, and each blow up there gives double mana. Your blows on an enemy that is not Unsteady are weaker. | Always on once it is yours. |
@@ -822,7 +822,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Thick Glaze** | Minor | 1 | Glaze lasts longer. | Always on once it is yours. |
 | **Flying Shards** | Major | 3 | A shattered enemy throws its ice wide. Everyone it reaches is chilled two deep. | Happens when a frozen enemy is shattered. |
 | **Clear Ice** | Minor | 1 | Glaze costs less mana. | Always on once it is yours. |
-| **Winter Wall** | Spell | 4 | Hold the spell button to raise a wall of ice before you. It stops blows and chills what touches it. Your heavy blow bursts it forward. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Winter Wall** | Spell | 4 | You raise a wall of ice before you. It stops blows and chills what touches it. Your heavy blow bursts it forward. 35 mana. | Put it in a spell slot at a rest, then cast it with that slot. 35 mana. |
 | **Gathering Frost** | Major | 3 | A blow held on the guard leaves your blows a fifth harder for four seconds. A perfect guard leaves them two fifths harder, and one stack colder. | Happens when you block a blow. |
 | **Cold Iron** | Minor | 1 | Heavy blows chill two deep. | Happens when a heavy blow lands. |
 | **Long Winter** | Minor | 1 | Chill lasts longer. | Always on once it is yours. |
@@ -832,13 +832,13 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Heavy Snow** | Minor | 1 | Heavy blows break balance harder. | Always on once it is yours. |
 | **Second Skin** | Keystone | 6 | Every twelve seconds with an enemy near, a layer of Glaze forms on you at no cost, up to three. You have 25 less health. | Happens when an enemy is near, every few seconds. |
 | **Brittle** | Major | 3 | An enemy that thaws or is shattered stays brittle for a while. Blows on it cut deeper and break its balance sooner. | Always on once it is yours. |
-| **Hollow Statue** | Spell | 4 | Hold the spell button to raise a block of ice just ahead of you for six seconds. Nothing walks through it. When its time ends, or when you strike it with a heavy blow, it bursts and chills everything near. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
+| **Hollow Statue** | Spell | 4 | You raise a block of ice just ahead of you for six seconds. Nothing walks through it. When its time ends, or when you strike it with a heavy blow, it bursts and chills everything near. | Put it in a spell slot at a rest, then cast it with that slot. 9 s cooldown. |
 | **Clean Break** | Major | 3 | Shatter an enemy with less than a fifth of its life left and nothing is left of it. The gods are spared. | Always on once it is yours. |
-| **Hanging Ice** | Spell | 4 | Hold the spell button to hang a great blade of ice over the enemy faced. It falls after three seconds as a heavy blow that chills what it strikes, and leaves cracked ground that bites for a moment. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Hanging Ice** | Spell | 4 | You hang a great blade of ice over the enemy faced. It falls after three seconds as a heavy blow that chills what it strikes, and leaves cracked ground that bites for a moment. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
 | **Held Fast** | Minor | 1 | Frozen enemies stay Frozen longer. | Always on once it is yours. |
 | **Sharp Break** | Minor | 1 | Shattering strikes harder. | Always on once it is yours. |
 | **Unmoved** | Keystone | 6 | Nothing breaks your heavy blows, and a blow that lands on you while you swing one does half. Your dodge is short and costs more. | Always on once it is yours. |
-| **Eight Points** | Spell | 4 | Hold the spell button to set eight shards in a ring round the enemy faced. They close on it together. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Eight Points** | Spell | 4 | You set eight shards in a ring round the enemy faced. They close on it together. | Put it in a spell slot at a rest, then cast it with that slot. 11 s cooldown. |
 | **All at Once** | Keystone | 6 | Shattering strikes three times as hard. Chill no longer slows anyone. | Always on once it is yours. |
 | **The World Holds Still** | Signature | gift | With Glaze standing, press the surge button again to break it outward. Everything it crosses is Frozen where it stands. Shatter one and its ice shatters the next. | Happens when you light the surge (press L2 (I)). |
 
@@ -851,7 +851,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Earned Water** | Minor | 1 | An empty gourd is won back with fewer blows. | Always on once it is yours. |
 | **Clear Water** | Minor | 1 | Flasks mend more. | Always on once it is yours. |
 | **Undertow** | Major | 3 | A heavy blow drags every enemy near a step toward you. | Happens when a heavy blow lands. |
-| **River Serpent** | Spell | 4 | Hold the spell button to send a serpent of water down a lane ahead. It carries what it meets along a little, and its jaws close at the end and leave all it struck Soaked. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
+| **River Serpent** | Spell | 4 | You send a serpent of water down a lane ahead. It carries what it meets along a little, and its jaws close at the end and leave all it struck Soaked. | Put it in a spell slot at a rest, then cast it with that slot. 9 s cooldown. |
 | **Ebb and Flood** | Major | 3 | A perfect guard brings the Flood: a splash soaks the attacker and those beside it, and for five seconds your blows strike 15% harder. A heavy blow that lands brings the Ebb: for four seconds your guard and dodge cost half the stamina and the moment of your perfect guard is longer. | Happens when you guard at the last moment (a perfect guard). |
 | **Broken Gourd** | Major | 3 | Hold the flask button to throw it. Where it breaks it strikes and soaks everyone near and leaves a pool that keeps what stands in it Soaked for six seconds. The throw mends you 20 at once. | Happens when you throw a flask (hold the flask button). |
 | **Low Water** | Minor | 1 | Riptide waits a fifth less between casts. | Always on once it is yours. |
@@ -867,14 +867,14 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Long Flood** | Minor | 1 | The moment of your perfect guard is longer. | Always on once it is yours. |
 | **Soaked Through** | Minor | 1 | Soaked lasts longer. | Always on once it is yours. |
 | **Second Gourd** | Minor | 1 | You carry one more flask. | Always on once it is yours. |
-| **Whirlpool** | Spell | 4 | Hold the spell button to open a whirlpool where the enemy faced stands. For five seconds it bites everything standing in it and keeps it Soaked. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Whirlpool** | Spell | 4 | You open a whirlpool where the enemy faced stands. For five seconds it bites everything standing in it and keeps it Soaked. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
 | **Grey Tide** | Minor | 1 | Grey health fades more slowly. | Always on once it is yours. |
-| **Poured Blade** | Spell | 4 | Hold the spell button to call a copy of yourself in water to your side for twelve seconds. It lands each of your blows again a beat late, at 30% of its strength. 20 mana. | Hold Triangle (U) to cast. 20 mana. |
+| **Poured Blade** | Spell | 4 | You call a copy of yourself in water to your side for twelve seconds. It lands each of your blows again a beat late, at 30% of its strength. 30 mana. | Put it in a spell slot at a rest, then cast it with that slot. 30 mana. |
 | **Unbroken Chain** | Major | 3 | A dodge, a guard or a perfect guard quickens your swings by a fifth for a moment. | Happens when a dodge ends. |
-| **Standing Rain** | Spell | 4 | Hold the spell button to call rain over the ground you stand on for ten seconds. Its drops strike enemies in it and leave them Soaked. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Standing Rain** | Spell | 4 | You call rain over the ground you stand on for ten seconds. Its drops strike enemies in it and leave them Soaked. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
 | **Spring Tide** | Keystone | 6 | Every spell spends all the mana you hold, and is as great as what it spends. | Always on once it is yours. |
 | **Deep Well** | Keystone | 6 | You carry one more flask. A flask no longer mends you at once: it fills a well that mends you only while you are landing blows. | Always on once it is yours. |
-| **Moon on Water** | Spell | 4 | Hold the spell button to stand open for up to three seconds. The first blow that comes is turned and answered with one wide cut that leaves those it strikes Soaked. If no blow comes, the mana is lost. 10 mana. | Hold Triangle (U) to cast. 10 mana. |
+| **Moon on Water** | Spell | 4 | You stand open for up to three seconds. The first blow that comes is turned and answered with one wide cut that leaves those it strikes Soaked. If no blow comes, it is wasted. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
 | **River Without End** | Keystone | 6 | You swing 15% faster. Each blow strikes 12% softer. | Always on once it is yours. |
 | **The Sea Rises** | Signature | gift | While Wellspring lasts, press the surge button again to flood the ground. One flask. For six seconds everything in the flood is Soaked and your blows run out across the water as waves. Then the sea draws back to you and breaks where you face. | Happens when you light the surge (press L2 (I)). |
 
@@ -897,7 +897,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Briar Coat** | Major | 3 | An enemy that strikes you, or whose blow you guard, is cut by thorns and Seeded. | Happens when you are struck. |
 | **Quickening** | Minor | 1 | Regrowth costs less mana. | Always on once it is yours. |
 | **Bark** | Minor | 1 | Wounds take less while Regrowth lasts. | Always on once it is yours. |
-| **Red Harvest** | Spell | 4 | Hold the spell button to give 25 health and call a copy of yourself to your side for eight seconds. It lands each of your blows again a beat late, at half its strength. No mana. | Hold Triangle (U) to cast. |
+| **Red Harvest** | Spell | 4 | You give 25 health and call a copy of yourself to your side for eight seconds. It lands each of your blows again a beat late, at half its strength. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Long Regrowth** | Minor | 1 | Regrowth lasts longer. | Always on once it is yours. |
 | **Heartwood** | Keystone | 6 | You have no mana. Spells and skills are paid for in health, and everything that gave mana mends you instead. | Always on once it is yours. |
 | **Green Wood** | Minor | 1 | Grey health waits longer before it fades. | Always on once it is yours. |
@@ -907,9 +907,9 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Crowded Bed** | Minor | 1 | You may keep one more sapling. | Always on once it is yours. |
 | **Shade** | Major | 3 | Standing near anything you have grown, you mend slowly and your stamina returns faster. | Happens when an enemy is near, every few seconds. |
 | **Spreading Briar** | Minor | 1 | Briar Patch covers more ground. | Always on once it is yours. |
-| **Thorn Ring** | Spell | 4 | Hold the spell button to raise a ring of thorns round you and the enemy faced. Nothing walks through it until it falls, you included, and enemies that touch it are cut. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **Reap What Is Sown** | Spell | 4 | Hold the spell button to call in the harvest. The ground bursts round you and everything you have grown bursts with it, each grown thing mending you. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
-| **Elder Tree** | Spell | 4 | Hold the spell button to plant a tree a little ahead. For fifteen seconds its roots strike everything in a circle round it, every three seconds. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Thorn Ring** | Spell | 4 | You raise a ring of thorns round you and the enemy faced. Nothing walks through it until it falls, you included, and enemies that touch it are cut. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
+| **Reap What Is Sown** | Spell | 4 | You call in the harvest. The ground bursts round you and everything you have grown bursts with it, each grown thing mending you. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
+| **Elder Tree** | Spell | 4 | You plant a tree a little ahead. For fifteen seconds its roots strike everything in a circle round it, every three seconds. 40 mana. | Put it in a spell slot at a rest, then cast it with that slot. 40 mana. |
 | **Shared Roots** | Keystone | 6 | Wounds take a fifth less from you, and each blow that lands on you cuts every enemy near. Seeded mends you half as much. | Happens when you are struck. |
 | **Wildwood** | Keystone | 6 | What you grow stands three times as long, and you may keep three more of each kind. Far from your garden, your blows are a fifth weaker. | Always on once it is yours. |
 | **First Spring** | Signature | gift | While Regrowth lasts, press the surge button again and give half your health to the ground. A forest comes up through everything Seeded and holds it. Strike what it holds and the health returns. | Happens when you light the surge (press L2 (I)). |
@@ -936,15 +936,15 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Long Tremor** | Minor | 1 | Tremor lasts longer. | Always on once it is yours. |
 | **Shaken Ground** | Minor | 1 | Shaken enemies take more from your weapon. | Always on once it is yours. |
 | **Aftershock** | Major | 3 | A plate that breaks bursts outward and shakes everyone near. | Happens when a ward turns a blow. |
-| **Fissure** | Spell | 4 | Hold the spell button to drive your weapon into the ground. A crack runs ahead and breaks open in a row of spikes that strike and shake what they catch. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Fissure** | Spell | 4 | You drive your weapon into the ground. A crack runs ahead and breaks open in a row of spikes that strike and shake what they catch. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
 | **Steady Arm** | Minor | 1 | Holding your guard costs less stamina. | Always on once it is yours. |
-| **Quake Step** | Spell | 4 | Hold the spell button to raise a foot and bring it down. The ground heaves all round you and shakes everyone it strikes. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Quake Step** | Spell | 4 | You raise a foot and bring it down. The ground heaves all round you and shakes everyone it strikes. | Put it in a spell slot at a rest, then cast it with that slot. 9 s cooldown. |
 | **Deep Bedrock** | Minor | 1 | Bedrock lasts longer. | Always on once it is yours. |
 | **Old Stones** | Minor | 1 | Your spells strike a little harder. | Always on once it is yours. |
 | **Easy Burden** | Minor | 1 | Blows of the weapon cost less stamina. | Always on once it is yours. |
-| **Mountain Stance** | Spell | 4 | Hold the spell button to stand as stone for a moment. The first blow to land on you is turned and answered with a burst of rock thrown at the one who struck, shaking it. If no blow comes, the mana is lost. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
-| **Rampart** | Spell | 4 | Hold the spell button to raise a wall before you. It blocks the way and shots for eight seconds, then bursts, or sooner if you strike it with a heavy blow. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **Mountain Cleaver** | Spell | 4 | Hold the spell button to call a great blade of stone down on the enemy faced. It falls after a moment and leaves a crack in the ground that bites for three seconds. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Mountain Stance** | Spell | 4 | You stand as stone for a moment. The first blow to land on you is turned and answered with a burst of rock thrown at the one who struck, shaking it. If no blow comes, it is wasted. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
+| **Rampart** | Spell | 4 | You raise a wall before you. It blocks the way and shots for eight seconds, then bursts, or sooner if you strike it with a heavy blow. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
+| **Mountain Cleaver** | Spell | 4 | You call a great blade of stone down on the enemy faced. It falls after a moment and leaves a crack in the ground that bites for three seconds. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
 | **The Closed Ring** | Keystone | 6 | Bedrock raises eight stones in a ring round you for ten seconds. They strike and shake what stands among them, and you take a little less harm. Bedrock costs a quarter more mana. | Happens when you light the surge (press L2 (I)). |
 | **Immovable** | Keystone | 6 | Your roll hardly moves you. You take 16% less harm, your guard and dodge cost 30% less stamina, and the moment of your perfect guard is longer. | Always on once it is yours. |
 | **The Slow Hand** | Keystone | 6 | Every swing is slower and costs more stamina, and every blow shakes its target. Your light blows strike 35% harder and break balance 60% sooner. | Always on once it is yours. |
@@ -971,15 +971,15 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Long Throw** | Minor | 1 | Blades fly further and spring further. | Always on once it is yours. |
 | **Hard Return** | Minor | 1 | Every blow of your weapon breaks a little more balance. | Always on once it is yours. |
 | **Clean Edge** | Minor | 1 | Critical blows cut deeper. | Always on once it is yours. |
-| **Circle of Steel** | Spell | 4 | Hold the spell button and stand with your blade raised for a breath. The first blow from any side is turned for nothing and answered with a cut all round you that notches. If nothing strikes, the mana is lost. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **Returning Edge** | Spell | 4 | Hold the spell button and a great head of steel lunges down a line before you. It carries along what it passes and bites hard where it ends. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Circle of Steel** | Spell | 4 | You stand with your blade raised for a breath. The first blow from any side is turned for nothing and answered with a cut all round you that notches. If nothing strikes, it is wasted. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
+| **Returning Edge** | Spell | 4 | A great head of steel lunges down a line before you. It carries along what it passes and bites hard where it ends. | Put it in a spell slot at a rest, then cast it with that slot. 9 s cooldown. |
 | **Shatter Point** | Major | 3 | A finisher on notched armour strikes a second time and notches it three deep. | Happens when a finisher lands (heavy on a staggered enemy). |
 | **Paid in Blows** | Minor | 1 | Blows on notched armour give more mana. | Always on once it is yours. |
 | **Long Temper** | Minor | 1 | Temper lasts longer. | Always on once it is yours. |
 | **Slow Mending** | Minor | 1 | Notched armour takes longer to mend. | Always on once it is yours. |
 | **Edge Guard** | Keystone | 6 | The perfect guard's moment is half again as long, and each one cuts the attacker and notches its armour. The dodge and a blow held on a plain guard cost half again as much stamina. | Happens when you guard at the last moment (a perfect guard). |
-| **Grave of Swords** | Spell | 4 | Hold the spell button and twelve blades hang behind your shoulders. One after another they fly at the nearest enemy, and a heavy blow that lands sends all that remain at the one it struck. 50 mana. | Hold Triangle (U) to cast. 50 mana. |
-| **Hone** | Spell | 4 | Hold the spell button to set a sign on the enemy you face. Each of your next five blows on it sets off a small burst that notches. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
+| **Grave of Swords** | Spell | 4 | Twelve blades hang behind your shoulders. One after another they fly at the nearest enemy, and a heavy blow that lands sends all that remain at the one it struck. 50 mana. | Put it in a spell slot at a rest, then cast it with that slot. 50 mana. |
+| **Hone** | Spell | 4 | You set a sign on the enemy you face. Each of your next five blows on it sets off a small burst that notches. | Put it in a spell slot at a rest, then cast it with that slot. 9 s cooldown. |
 | **All Blades Home** | Keystone | 6 | Beginning Temper throws five blades out in a fan and calls them back, and they cut and notch what they pass. Temper costs more and lasts a little longer. | Happens when you light the surge (press L2 (I)). |
 | **Master's Answer** | Keystone | 6 | After a perfect guard, your weapon's skill is free and comes at once, with no time to charge. At any other time it costs more. | Always on once it is yours. |
 | **Balanced Blade** | Minor | 1 | Swings cost less stamina. | Always on once it is yours. |
@@ -1006,17 +1006,17 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Bowed Head** | Minor | 1 | Critical blows break balance sooner. | Always on once it is yours. |
 | **Long Rays** | Minor | 1 | Waves, rays and lanterns reach further. | Always on once it is yours. |
 | **Narrow Escape** | Minor | 1 | The moment for a perfect dodge is a little longer. | Always on once it is yours. |
-| **Standing Light** | Spell | 4 | Hold the spell button to plant a lantern of light. Enemies in its glow are struck lightly and Marked again and again. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Standing Light** | Spell | 4 | You plant a lantern of light. Enemies in its glow are struck lightly and Marked again and again. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Rich Mark** | Minor | 1 | Blows on Marked enemies give still more mana. | Always on once it is yours. |
-| **Step Into Light** | Spell | 4 | Hold the spell button to step through the enemy you face in a line of light, cutting and Marking it. If the cut lands, your next heavy blow in the moment after is critical. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
-| **Ring of Spears** | Spell | 4 | Hold the spell button. Six spears of light stand in the air round the enemy you face, wait a breath, and drive in together. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Step Into Light** | Spell | 4 | You step through the enemy you face in a line of light, cutting and Marking it. If the cut lands, your next heavy blow in the moment after is critical. | Put it in a spell slot at a rest, then cast it with that slot. 8 s cooldown. |
+| **Ring of Spears** | Spell | 4 | Six spears of light stand in the air round the enemy you face, wait a breath, and drive in together. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
 | **Ready Light** | Minor | 1 | Glare waits a fifth less between casts. | Always on once it is yours. |
 | **Long Clarity** | Minor | 1 | Clarity lasts longer. | Always on once it is yours. |
-| **Daybreak** | Spell | 4 | Hold the spell button to brace and loose a beam of light down one long line. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Daybreak** | Spell | 4 | You brace and loose a beam of light down one long line. 45 mana. | Put it in a spell slot at a rest, then cast it with that slot. 45 mana. |
 | **Unblemished** | Keystone | 6 | Fight a while without a wound and every blow you land is critical. A wound ends it, and until it returns you take more from every blow. | Always on once it is yours. |
 | **What It Owes** | Major | 3 | An enemy that wounds you is Marked. | Happens when you are struck. |
 | **Two Suns** | Keystone | 6 | Each enemy your spell strikes is struck again by a burst of light a moment later, and Marked. Spells cost a quarter more. | Happens when a spell of yours strikes an enemy. |
-| **Reckoning** | Spell | 4 | Hold the spell button to set a seal on the enemy you face. Each of your next six blows on it sets off a burst of light that Marks all near. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Reckoning** | Spell | 4 | You set a seal on the enemy you face. Each of your next six blows on it sets off a burst of light that Marks all near. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Heavy Verdict** | Minor | 1 | Your spells strike 10% harder. | Always on once it is yours. |
 | **Condemned** | Keystone | 6 | When an affliction on an enemy reaches its full depth, its balance takes a great blow. Your weapon deals less to enemies that bear nothing. | Happens when an affliction on an enemy reaches its full depth. |
 | **The Scales** | Signature | gift | While Clarity lasts, the wounds you deal and the wounds you take are weighed. If yours are the heavier when it ends, a sword of light falls on every Marked enemy. If not, the light leaves you, and your mana with it. | Happens when you light the surge (press L2 (I)). |
@@ -1042,15 +1042,15 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Fat of the Kill** | Minor | 1 | Killing a Cursed enemy heals more. | Happens when an enemy dies. |
 | **Slow Rot** | Minor | 1 | Risen, your health drains more slowly. | Always on once it is yours. |
 | **More to Spend** | Minor | 1 | You have more health to spend. | Always on once it is yours. |
-| **Debts Called** | Spell | 4 | Hold the spell button. Everything near is dragged to a point before you, and then thrown back by a burst. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **Second Shadow** | Spell | 4 | Hold the spell button and your shadow stands at your shoulder for a while. It repeats every blow you land a beat late, for half its damage. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Debts Called** | Spell | 4 | Everything near is dragged to a point before you, and then thrown back by a burst. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
+| **Second Shadow** | Spell | 4 | Your shadow stands at your shoulder for a while. It repeats every blow you land a beat late, for half its damage. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Dread** | Major | 3 | When a Cursed enemy dies, every enemy near it loses heart and its balance buckles. | Happens when an enemy dies. |
 | **Long Shadows** | Minor | 1 | Your spells strike 15% harder. | Always on once it is yours. |
 | **Bitter Harvest** | Minor | 1 | Below half your health, blows give more mana. | Always on once it is yours. |
 | **Easy Prey** | Minor | 1 | Cursed enemies take more from your weapon. | Always on once it is yours. |
-| **Pawned Heart** | Spell | 4 | Hold the spell button to tear out your heart and set it down. While it beats there you stand one blow from death, and strike as you never have. Come back for it in time and it returns with what your blows have earned. No mana. | Hold Triangle (U) to cast. |
-| **The Dead Stand** | Spell | 4 | Hold the spell button and three shades rise beside you. Each runs at an enemy, strikes a few times for you and is gone. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **Devouring Maw** | Spell | 4 | Hold the spell button and a great jaw rises out of your shadow and bites what stands before you. Each Cursed enemy it bites feeds you. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Pawned Heart** | Spell | 4 | You tear out your heart and set it down. While it beats there you stand one blow from death, and strike as you never have. Come back for it in time and it returns with what your blows have earned. | Put it in a spell slot at a rest, then cast it with that slot. 40 s cooldown. |
+| **The Dead Stand** | Spell | 4 | Three shades rise beside you. Each runs at an enemy, strikes a few times for you and is gone. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
+| **Devouring Maw** | Spell | 4 | A great jaw rises out of your shadow and bites what stands before you. Each Cursed enemy it bites feeds you. | Put it in a spell slot at a rest, then cast it with that slot. 11 s cooldown. |
 | **Unpaid** | Keystone | 6 | Grey health lingers twice as long, and every blow you land wins a little health back. Flasks heal half as much. | Happens when any weapon blow lands. |
 | **Long Hunger** | Minor | 1 | Hunger lasts longer. | Always on once it is yours. |
 | **Dead Already** | Keystone | 6 | You do not wait to die. You are Risen from now on: in every fight your health drains to its last point, and dealing damage feeds you. You strike far harder. There is no second rising. | Always on once it is yours. |
@@ -1078,15 +1078,15 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Lingering** | Minor | 1 | Poison stays longer before it fades. | Always on once it is yours. |
 | **Buckling** | Minor | 1 | Bursting poison breaks balance sooner. | Always on once it is yours. |
 | **Lance the Wound** | Major | 3 | A perfect guard makes the attacker's poison bite at once, and with it the poison in everyone near. | Happens when you guard at the last moment (a perfect guard). |
-| **Swinging Censer** | Spell | 4 | Hold the spell button to set a smoking censer swinging round you on its chain. It doses whatever it passes. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
-| **Blister** | Spell | 4 | Hold the spell button to raise a blister on the enemy you face. Your next blow on it breaks it in a wide burst that poisons deeply. Wait too long and it withers. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Swinging Censer** | Spell | 4 | You set a smoking censer swinging round you on its chain. It doses whatever it passes. | Put it in a spell slot at a rest, then cast it with that slot. 8 s cooldown. |
+| **Blister** | Spell | 4 | You raise a blister on the enemy you face. Your next blow on it breaks it in a wide burst that poisons deeply. Wait too long and it withers. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
 | **Ready Poison** | Minor | 1 | Miasma waits a fifth less between casts. | Always on once it is yours. |
 | **Calm Pulse** | Minor | 1 | Holding your guard costs less stamina. | Always on once it is yours. |
 | **Waiting Game** | Minor | 1 | Perfect guards give more mana. | Always on once it is yours. |
 | **Spent Venom** | Minor | 1 | Blows on poisoned enemies give more mana. | Always on once it is yours. |
-| **Coiled Strike** | Spell | 4 | Hold the spell button to strike through the enemy you face, cutting it and poisoning it deeply. If the cut lands, your next heavy blow in the moment after is critical. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
-| **Share Alike** | Spell | 4 | Hold the spell button to rush through everything before you, untouchable. Every enemy you pass is struck and poisoned two deep. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **One by One** | Spell | 4 | Hold the spell button and a burst rises under each of the six nearest enemies in turn, throwing them into the air. 50 mana. | Hold Triangle (U) to cast. 50 mana. |
+| **Coiled Strike** | Spell | 4 | You strike through the enemy you face, cutting it and poisoning it deeply. If the cut lands, your next heavy blow in the moment after is critical. | Put it in a spell slot at a rest, then cast it with that slot. 10 s cooldown. |
+| **Share Alike** | Spell | 4 | You rush through everything before you, untouchable. Every enemy you pass is struck and poisoned two deep. | Put it in a spell slot at a rest, then cast it with that slot. 9 s cooldown. |
+| **One by One** | Spell | 4 | A burst rises under each of the six nearest enemies in turn, throwing them into the air. 50 mana. | Put it in a spell slot at a rest, then cast it with that slot. 50 mana. |
 | **Sweet Fever** | Minor | 1 | Fever lasts longer. | Always on once it is yours. |
 | **Slow Death** | Keystone | 6 | Your weapon wounds far less. Your poison goes twelve doses deeper, and it does not fade while its bearer lives. | Always on once it is yours. |
 | **Plague Bearer** | Keystone | 6 | You carry the sickness. Enemies near you are poisoned without a blow, deeper the longer they stay. Your flasks heal less. | Happens when an enemy is near, every few seconds. |
@@ -1100,12 +1100,12 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Charged Embers** | Mix | 3 | Your blows lay Burn and Static together. | Happens when any weapon blow lands. |
 | **Arc Fire** | Mix | 3 | A discharge of Static carries Burn to everyone it reaches. A burn set off leaves Static on everyone it reaches. | Happens when you set off an affliction. |
 | **Twin Break** | Mix | 4 | A perfect guard sets off Burn and Static together on the one who struck. Set off together, they strike half again as hard and stop it where it stands. | Happens when you guard at the last moment (a perfect guard). |
-| **Ball Lightning** | Mix | 4 | Hold the spell button to loose a slow ball of white fire. Strike it to send it where the blow points, larger each time, up to three. It bursts on the first enemy it meets. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Ball Lightning** | Mix | 4 | You loose a slow ball of white fire. Strike it to send it where the blow points, larger each time, up to three. It bursts on the first enemy it meets. 40 mana. | Put it in a spell slot at a rest, then cast it with that slot. 40 mana. |
 | **Chain Reaction** | Mix | 4 | An enemy that dies carrying both Burn and Static bursts, and passes both on at full depth. | Happens when an enemy dies. |
 | **Ionised Air** | Mix | 3 | When an affliction on an enemy reaches full depth, an arc leaps from it through three more. | Happens when an affliction on an enemy reaches its full depth. |
 | **Meltdown** | Mix | 5 | An enemy at five Burn and five Static begins to shake with light. A few moments later it bursts, far harder than either alone. Nothing stops it. | Always on once it is yours. |
 | **Fused Core** | Mix | 4 | Spells hit harder, and leave both a burn and Static on what they strike. | Happens when a spell of yours strikes an enemy. |
-| **Plasma Lance** | Mix | 5 | Hold the spell button to throw a bolt of plasma that leaps through three more. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Plasma Lance** | Mix | 5 | You throw a bolt of plasma that leaps through three more. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Plasma** | Signature | gift | A heavy blow or a finisher on a burning enemy bursts, and sets alight everyone near. | Always on once it is yours. |
 
 #### Tempest (Lightning + Wind) (7)
@@ -1116,8 +1116,8 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Thunder Lift** | Mix | 4 | A discharge of five Static throws its enemy into the air. | Happens when you set off an affliction. |
 | **Slip Current** | Mix | 3 | Where a dodge ends, every enemy close to you is left one deeper in Static and Unsteady. | Happens when a dodge ends. |
 | **The Sky Finds Them** | Mix | 3 | An enemy in the air is struck by a bolt at the top of its rise. | Happens when you throw an enemy into the air. |
-| **Eye of the Storm** | Mix | 5 | Hold the spell button to become the storm: a turning column of wind and lightning that drags enemies in and carries the light ones round. Let go and it throws them out, and a bolt meets each where it lands. 50 mana. | Hold Triangle (U) to cast. 50 mana. |
-| **Storm Overhead** | Mix | 4 | Hold the spell button to call a storm over the ground before you. For ten seconds bolts fall inside its circle, one every 0.8 seconds. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Eye of the Storm** | Mix | 5 | While you keep the spell's button held you are the storm: a turning column of wind and lightning that drags enemies in and carries the light ones round. Let go and it throws them out, and a bolt meets each where it lands. 50 mana. | Put it in a spell slot at a rest, then cast it with that slot. 50 mana. |
+| **Storm Overhead** | Mix | 4 | You call a storm over the ground before you. For ten seconds bolts fall inside its circle, one every 0.8 seconds. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Falling Thunder** | Signature | gift | After your finisher lands you throw the enemy skyward, vanish, and come down on it as a bolt. Where you land, everything near is shocked and thrown back. | Happens when a finisher lands (heavy on a staggered enemy). |
 
 #### Blizzard (Wind + Ice) (7)
@@ -1128,8 +1128,8 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Windchill** | Mix | 3 | The enemy you face, if it is both Unsteady and chilled, grows colder by itself. | Happens when an enemy is near, every few seconds. |
 | **Cold Front** | Mix | 3 | A perfect dodge leaves a gust of ice behind you. It throws the attacker back, two deeper in Chill and Unsteady. | Happens when you dodge at the last moment (a perfect dodge). |
 | **Sliding Ice** | Mix | 4 | A light blow on a chilled enemy throws everything close to you back, and half a second later ice bursts round the one struck. | Happens when a light blow lands. |
-| **Whiteout** | Mix | 4 | Hold the spell button to call down driving snow in a wide circle for eight seconds. Shards fall inside it again and again, each a small bite. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
-| **Avalanche** | Mix | 5 | Hold the spell button to send a great head of snow down a lane nine metres long. It strikes what it passes and carries it along, then bites hard where it stops. 50 mana. | Hold Triangle (U) to cast. 50 mana. |
+| **Whiteout** | Mix | 4 | You call down driving snow in a wide circle for eight seconds. Shards fall inside it again and again, each a small bite. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
+| **Avalanche** | Mix | 5 | You send a great head of snow down a lane nine metres long. It strikes what it passes and carries it along, then bites hard where it stops. 50 mana. | Put it in a spell slot at a rest, then cast it with that slot. 50 mana. |
 | **Diamond Dust** | Signature | gift | Shards from a shattered enemy do not fall. They hang round you, four from each, up to twelve, and your next dodge throws them down its path. | Happens when a frozen enemy is shattered. |
 
 #### Glacier (Ice + Water) (7)
@@ -1138,10 +1138,10 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 |---|---|---|---|---|
 | **Cold Water** | Mix | 3 | Your blows lay Chill and Soaked together. | Happens when any weapon blow lands. |
 | **Flash Freeze** | Mix | 3 | A Soaked enemy freezes at three Chill, not five. | Always on once it is yours. |
-| **Creeping Ice** | Mix | 4 | Hold the spell button to send a line of ice spikes eight metres along the ground. Each enemy on the line is struck once. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Creeping Ice** | Mix | 4 | You send a line of ice spikes eight metres along the ground. Each enemy on the line is struck once. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Cold in the Bones** | Mix | 4 | For four seconds after you strike a Soaked enemy, the moment for a perfect guard is a quarter longer. | Happens when you strike an enemy that already carries an affliction. |
 | **Icebreaker** | Mix | 3 | Shattering an enemy gives mana and fills a little of an empty gourd. | Happens when a frozen enemy is shattered. |
-| **The Wave Stands Still** | Mix | 5 | Hold the spell button to throw a great wave. Let go, and it freezes where it stands with everything in it. One heavy blow shatters the wall and all it holds. 50 mana. | Hold Triangle (U) to cast. 50 mana. |
+| **The Wave Stands Still** | Mix | 5 | You throw a great wave that rolls on while you keep the spell's button held. Let go, and it freezes where it stands with everything in it. One heavy blow shatters the wall and all it holds. 50 mana. | Put it in a spell slot at a rest, then cast it with that slot. 50 mana. |
 | **Weight of Ice** | Signature | gift | Each blow you guard lays a plate of ice on you, up to five. A perfect guard lays two. Plates turn a little of every wound. Your next heavy blow spends them all in one great edge of ice. | Happens when you block a blow. |
 
 #### Bloom (Water + Life) (7)
@@ -1152,8 +1152,8 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Flowering** | Mix | 3 | A heavy blow on a Seeded enemy bursts its seed: you are mended and everyone near is Seeded and Soaked. It can happen once every seven seconds. | Happens when a heavy blow lands. |
 | **Drowned Roots** | Mix | 3 | A perfect guard against an enemy both Soaked and Seeded binds it in roots for a moment. | Happens when you guard at the last moment (a perfect guard). |
 | **Morning Dew** | Mix | 4 | Drinking a flask gives you a ward that turns aside one blow, up to three held. Your blows throw a blade of water that soaks what it passes, once every moment or so. | Happens when you drink a flask. |
-| **Strangling Vine** | Mix | 5 | Hold the spell button to raise a great vine under the nearest enemy. It strikes hard and throws the enemy into the air for a moment. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
-| **Lotus Step** | Mix | 4 | Hold the spell button to open a lotus on the ground just ahead. For twelve seconds it cuts every enemy standing on it, once a second. 30 mana. | Hold Triangle (U) to cast. 30 mana. |
+| **Strangling Vine** | Mix | 5 | A great vine bursts up under the nearest enemy. It strikes hard and throws the enemy into the air for a moment. 45 mana. | Put it in a spell slot at a rest, then cast it with that slot. 45 mana. |
+| **Lotus Step** | Mix | 4 | You open a lotus on the ground just ahead. For twelve seconds it cuts every enemy standing on it, once a second. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Great Lotus** | Signature | gift | A flask drunk while your surge lasts opens a great lotus under you. Inside it you mend and enemies are Soaked and Seeded. Each perfect guard inside closes a petal on the attacker and holds it, up to five. When the last petal closes, or its ten seconds are done, the lotus bursts. | Happens when you drink a flask, while the surge lasts (press L2 (I)). |
 
 #### Overgrowth (Life + Earth) (7)
@@ -1163,9 +1163,9 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Root Grip** | Mix | 3 | Heavy blows lay both Tremor and Seed. A heavy blow on an enemy that bears both sends roots up its legs and holds it where it stands. | Happens when a heavy blow lands. |
 | **Moss on Stone** | Mix | 3 | While you fight without rolling you heal slowly, and thorns grow on you that cut whoever strikes you. | Happens when an enemy is near, every few seconds. |
 | **Briar Patch** | Mix | 3 | The thorns of a Seeded enemy's death take root where they fall. The patch slows what walks in it and seeds it. | Happens when an enemy dies. |
-| **Thorn Wall** | Mix | 4 | Hold the spell button to raise a hedge of stone and briar before you. It blocks the way for eight seconds, then bursts into thorns, or sooner if you strike it with a heavy blow. 35 mana. | Hold Triangle (U) to cast. 35 mana. |
+| **Thorn Wall** | Mix | 4 | You raise a hedge of stone and briar before you. It blocks the way for eight seconds, then bursts into thorns, or sooner if you strike it with a heavy blow. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Living Rampart** | Mix | 5 | Your guard is alive. Every blow held on it heals you a little and seeds the one who struck. A perfect guard roots the attacker where it stands. Guarding costs more stamina. | Happens when you block a blow. |
-| **Stone Oak** | Mix | 5 | Hold the spell button to plant a stone oak a little ahead. For twenty seconds its roots strike everything in a circle round it, every two seconds. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Stone Oak** | Mix | 5 | You plant a stone oak a little ahead. For twenty seconds its roots strike everything in a circle round it, every two seconds. 45 mana. | Put it in a spell slot at a rest, then cast it with that slot. 45 mana. |
 | **The Ground Wakes** | Signature | gift | When your surge begins, the ground rises round you in a ring of root and stone and holds every enemy inside it. Then it flowers, and you are healed for each one held. | Happens when you light the surge (press L2 (I)). |
 
 #### Forge (Earth + Metal) (7)
@@ -1175,9 +1175,9 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Hammer and Anvil** | Mix | 3 | A heavy blow on an enemy with stone at its back strikes twice: once from your weapon, once from the stone. | Happens when a heavy blow lands. |
 | **Struck Ore** | Mix | 3 | A perfect guard strikes a spike of ore from the ground under the attacker and shakes it, and three blades fly from you that notch what they pass. | Happens when you guard at the last moment (a perfect guard). |
 | **Buckled** | Mix | 3 | An enemy both shaken and notched loses its balance far sooner. | Always on once it is yours. |
-| **Trip Hammer** | Mix | 4 | Hold the spell button and a great hammer forms above the enemy you face, and falls after a moment. It leaves a crack in the ground that bites for a second. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Trip Hammer** | Mix | 4 | A great hammer forms above the enemy you face, and falls after a moment. It leaves a crack in the ground that bites for a second. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Folded Steel** | Mix | 5 | Every finisher folds your blade once more, up to ten. Each fold adds to every blow for the rest of the run. Each fold makes it heavier in the hand. | Happens when a finisher lands (heavy on a staggered enemy). |
-| **Drawn From Stone** | Mix | 5 | Hold the spell button to draw a sword of stone and iron from the ground and give one great swing, a half circle before you. 50 mana. | Hold Triangle (U) to cast. 50 mana. |
+| **Drawn From Stone** | Mix | 5 | You draw a sword of stone and iron from the ground and give one great swing, a half circle before you. 50 mana. | Put it in a spell slot at a rest, then cast it with that slot. 50 mana. |
 | **World Anvil** | Signature | gift | Your finisher is struck on an anvil that rises out of the ground. Its ring breaks the armour of everyone near and shakes them, and a blade is forged for each one it reaches, up to six. They fly with your next heavy blow. | Happens when a finisher lands (heavy on a staggered enemy). |
 
 #### Halo (Metal + Light) (7)
@@ -1188,9 +1188,9 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Halo of Blades** | Mix | 4 | Each critical blow forges a blade of light in a ring behind your shoulders, up to six. A perfect guard looses them all at the one who struck. | Happens when a critical blow lands. |
 | **Answering Draw** | Mix | 4 | Needs the Katana. The Iaido Slash Marks what it cuts and notches its armour. After a perfect guard, every blow you land for a moment is critical. | Happens when the weapon skill lands. |
 | **Mirror Edge** | Mix | 3 | A perfect guard throws a bolt of light straight back at the attacker. It strikes hard and Marks what it hits. | Happens when you guard at the last moment (a perfect guard). |
-| **Sun Wheels** | Mix | 4 | Hold the spell button and two wheels of bright steel turn round you for a while, cutting what they pass. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Sun Wheels** | Mix | 4 | Two wheels of bright steel turn round you for a while, cutting what they pass. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Blinding Guard** | Mix | 5 | A perfect guard blinds those before you: they are Marked and their balance shaken. Everyone within six metres, on any side, is held still for a breath. A blow held on a plain guard costs a fifth more stamina. | Happens when you guard at the last moment (a perfect guard). |
-| **Six Mirrors** | Signature | gift | Hold the spell button and six mirrors of steel stand in a ring round the enemy you face. You pass through it from each one in turn, faster than can be followed. The cuts land when you are back where you began. 60 mana. | Hold Triangle (U) to cast. 60 mana. |
+| **Six Mirrors** | Signature | gift | Six mirrors of steel stand in a ring round the enemy you face. You pass through it from each one in turn, faster than can be followed. The cuts land when you are back where you began. 60 mana. | Put it in a spell slot at a rest, then cast it with that slot. 60 mana. |
 
 #### Eclipse (Light + Dark) (7)
 
@@ -1198,9 +1198,9 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 |---|---|---|---|---|
 | **Twilight** | Mix | 3 | The blow that ends a chain both Marks and Curses. Critical blows on an enemy that bears both feed you. | Happens when the last blow of a chain lands. |
 | **Day and Night** | Mix | 4 | A perfect dodge heals a little. For a while after a perfect dodge, a perfect guard gives double mana, and for a while after a perfect guard, a perfect dodge gives double mana. | Happens when you dodge at the last moment (a perfect dodge). |
-| **Dusk and Dawn** | Mix | 4 | Hold the spell button to step through the enemy you face and cut it in passing. If the cut lands, your next heavy blow in the moment after is critical. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Dusk and Dawn** | Mix | 4 | You step through the enemy you face and cut it in passing. If the cut lands, your next heavy blow in the moment after is critical. 45 mana. | Put it in a spell slot at a rest, then cast it with that slot. 45 mana. |
 | **Low Sun** | Mix | 3 | Every blow gives a fifth more mana. Each time your health falls below a third, blows give far more for a while. | Happens when your health falls below a third. |
-| **Black Sun** | Mix | 4 | Hold the spell button to hang a black sun before you. For three seconds it draws everything near it inward, then it bursts. 50 mana. | Hold Triangle (U) to cast. 50 mana. |
+| **Black Sun** | Mix | 4 | You hang a black sun before you. For three seconds it draws everything near it inward, then it bursts. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **The Dividing Line** | Mix | 5 | At half your health or more, your critical blows strike a fifth harder and blows give a fifth more mana. Below half, every blow Curses and feeds you. Each time your health falls below a third, a burst round you Curses all it strikes. | Happens when any weapon blow lands. |
 | **Totality** | Signature | gift | When your surge begins, the sun is covered. While the dark lasts every enemy is Marked and Cursed and every blow you land is critical and feeds you. When the light returns, it strikes all you wounded. | Happens when you light the surge (press L2 (I)). |
 
@@ -1210,9 +1210,9 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 |---|---|---|---|---|
 | **Wither** | Mix | 3 | Heavy blows both Curse and poison. Poison bites harder on the Cursed, and does not fade from them while the curse lasts. | Happens when a heavy blow lands. |
 | **Feeding Rot** | Mix | 3 | Each time poison bites a Cursed enemy, a little of it comes back to you as health. | Happens when poison bites an enemy. |
-| **Wasting Grip** | Mix | 4 | Hold the spell button to brace and pour a short stream of rot at what stands before you. It bites again and again, and striking a poisoned enemy with a spell feeds you. A blow that lands on you breaks it. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Wasting Grip** | Mix | 4 | You brace and pour a short stream of rot at what stands before you. It bites again and again, and striking a poisoned enemy with a spell feeds you. A blow that lands on you breaks it. 40 mana. | Put it in a spell slot at a rest, then cast it with that slot. 40 mana. |
 | **Carrion Flies** | Mix | 3 | An enemy that dies Cursed and poisoned bursts a moment later. Everyone near takes the doses it carried, and a curse. | Happens when an enemy dies. |
-| **Grave Soil** | Mix | 4 | Hold the spell button to foul the ground round you. What stands on it is bitten every two seconds and takes the affliction of the element you hold. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Grave Soil** | Mix | 4 | You foul the ground round you. What stands on it is bitten every two seconds and takes the affliction of the element you hold. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **One Death Feeds** | Mix | 5 | When a Cursed enemy dies, the poison in every other enemy near it bites at once, and you are fed for each one bitten. | Happens when an enemy dies. |
 | **The Reaping** | Signature | gift | Your finisher on a Cursed, poisoned enemy reaps the field. All the poison in it and in every enemy near lands at once, and half of it is yours. | Happens when a finisher lands (heavy on a staggered enemy). |
 
@@ -1222,11 +1222,11 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 |---|---|---|---|---|
 | **Fuel** | Mix | 3 | Heavy blows both poison and burn. | Happens when a heavy blow lands. |
 | **Goes Up** | Mix | 4 | When a burning enemy's poison reaches its full depth, it goes up. The poison explodes and sets alight everyone near. | Happens when an affliction on an enemy reaches its full depth. |
-| **Fire Eater** | Mix | 4 | Hold the spell button to brace and breathe out a stream of green fire for two seconds, turning slowly as it burns. It lays the affliction of the element you hold on all it sweeps across. 40 mana. | Hold Triangle (U) to cast. 40 mana. |
+| **Fire Eater** | Mix | 4 | You brace and breathe out a stream of green fire for two seconds, turning slowly as it burns. It lays the affliction of the element you hold on all it sweeps across. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Funeral Fire** | Mix | 3 | An enemy that dies poisoned and burning explodes, and leaves the ground burning where it fell. | Happens when an enemy dies. |
-| **Lit Fuse** | Mix | 5 | Hold the spell button to set a fuse on the enemy you face. Your next blow on it within five seconds sets off a great blast. 45 mana. | Hold Triangle (U) to cast. 45 mana. |
+| **Lit Fuse** | Mix | 5 | You set a fuse on the enemy you face. Your next blow on it within five seconds sets off a great blast. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Slow Burn** | Mix | 5 | Burn and poison both work harder. | Always on once it is yours. |
-| **Light the Pyres** | Signature | gift | Hold the spell button and drive your weapon into the ground. A line of fire runs to every poisoned or burning enemy near. Stand through three breaths, and a pillar of flame rises under each. 60 mana. | Hold Triangle (U) to cast. 60 mana. |
+| **Light the Pyres** | Signature | gift | You drive your weapon into the ground. A line of fire runs to every poisoned or burning enemy near. Stand through three breaths, and a pillar of flame rises under each. 60 mana. | Put it in a spell slot at a rest, then cast it with that slot. 60 mana. |
 
 ---
 

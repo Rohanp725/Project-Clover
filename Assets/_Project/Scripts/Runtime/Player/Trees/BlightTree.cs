@@ -42,7 +42,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Do = UpgradeAction.Heal, Needs = Cursed, PerStack = true, Amount = 0.5f } } });
             // BESPOKE: the grip that holds an enemy, drinks its poison and throws it. Until then a short held stream bites what stands before the player, and spells that strike the poisoned feed.
             to.Add(new Upgrade { Id = WastingGrip, Name = "Wasting Grip", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { Wither }, X = 0.5f, Y = 2.36f, Icon = UpgradeIcons.Claw,
-                Description = "Hold the spell button to brace and pour a short stream of rot at what stands before you. It bites again and again, and striking a poisoned enemy with a spell feeds you. A blow that lands on you breaks it. 40 mana.",
+                Description = "You brace and pour a short stream of rot at what stands before you. It bites again and again, and striking a poisoned enemy with a spell feeds you. A blow that lands on you breaks it. 40 mana.",
                 Form = FormBeam,
                 Spell = new SpellSpec { Cost = 40f, Reach = 2.5f, Radius = 0.6f, Seconds = 2.5f, Interval = 0.5f, Damage = 8f, Stagger = 6f, Stacks = 1 },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Heal, Needs = Poisoned, Amount = 5f, Cooldown = 1f } } });
@@ -52,7 +52,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Poison, Needs2 = AfflictionKind.Cursed, Do = UpgradeAction.Burst, Affliction = AfflictionKind.Poison, Damage = 3f, Radius = 5f, Delay = 0.8f, Stacks = 1, CarriesDepth = true, Cooldown = 0.5f }, new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Poison, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1, Radius = 5f, Cooldown = 0.5f } } });
             // The ground lays only the affliction of the element held, and does not hurry the beat.
             to.Add(new Upgrade { Id = GraveSoil, Name = "Grave Soil", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { FeedingRot }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Spike,
-                Description = "Hold the spell button to foul the ground round you. What stands on it is bitten every two seconds and takes the affliction of the element you hold. 40 mana.",
+                Description = "You foul the ground round you. What stands on it is bitten every two seconds and takes the affliction of the element you hold.",
                 Form = FormField,
                 Spell = new SpellSpec { Cost = 40f, Reach = 0.5f, Radius = 5f, Seconds = 8f, Interval = 2f, LingerDamage = 3f, Stacks = 1 } });
             // Built on the beat (UpgradeAction.Bite): every poisoned enemy within twelve metres of the dead one bites on the next step, and each one bitten feeds four points.

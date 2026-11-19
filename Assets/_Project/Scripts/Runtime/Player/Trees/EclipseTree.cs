@@ -41,7 +41,7 @@ namespace Clover.Player.Trees
                 } });
             // BESPOKE: the stored cut of light that lands with the heavy blow, and the line wiped by a blow taken. The step form gives the cut through and the critical heavy blow that answers it.
             to.Add(new Upgrade { Id = DuskAndDawn, Name = "Dusk and Dawn", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { Twilight }, X = 0.5f, Y = 2.36f, Icon = UpgradeIcons.Blade,
-                Description = "Hold the spell button to step through the enemy you face and cut it in passing. If the cut lands, your next heavy blow in the moment after is critical. 45 mana.",
+                Description = "You step through the enemy you face and cut it in passing. If the cut lands, your next heavy blow in the moment after is critical. 45 mana.",
                 Form = FormStep,
                 Spell = new SpellSpec { Cost = 45f, Reach = 5f, Damage = 10f, Stagger = 10f, Stacks = 1, Seconds = 3f } });
             // Blows give more mana always, and far more for a while each time health falls below a third; it does not yet rise evenly as health falls.
@@ -51,7 +51,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.LowHealth, Do = UpgradeAction.Boon, Stat = PlayerStat.ManaFromBlows, Amount = 0.6f, Seconds = 12f } } });
             // The sun pulls and then bursts at one strength; it does not yet grow with the blows landed under it.
             to.Add(new Upgrade { Id = BlackSun, Name = "Black Sun", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { DayAndNight }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Orb,
-                Description = "Hold the spell button to hang a black sun before you. For three seconds it draws everything near it inward, then it bursts. 50 mana.",
+                Description = "You hang a black sun before you. For three seconds it draws everything near it inward, then it bursts.",
                 Form = FormReverse,
                 Spell = new SpellSpec { Cost = 50f, Reach = 5f, Radius = 5f, Delay = 3f, Damage = 40f, Stagger = 40f, Stacks = 1 } });
             // NEAREST: the day and night halves are as designed. The burst comes only on falling below a third, not on crossing the half either way.

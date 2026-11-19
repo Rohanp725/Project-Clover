@@ -84,7 +84,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.GuardGrey, -0.25f) } });
             // The parry form turns the first blow only, not four, and its answer is a cone all round; it does not count as a perfect guard for other marks.
             to.Add(new Upgrade { Id = CircleOfSteel, Name = "Circle of Steel", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { OpenLine }, X = -2.0f, Y = 6.0f, Icon = UpgradeIcons.Ring,
-                Description = "Hold the spell button and stand with your blade raised for a breath. The first blow from any side is turned for nothing and answered with a cut all round you that notches. If nothing strikes, the mana is lost. 40 mana.",
+                Description = "You stand with your blade raised for a breath. The first blow from any side is turned for nothing and answered with a cut all round you that notches. If nothing strikes, it is wasted.",
                 Form = "parry",
                 Spell = new SpellSpec { Cost = 40f, Seconds = 1.2f, Reach = 3.5f, Arc = 360f, Damage = 18f, Stagger = 40f, Stacks = 1 } });
             to.Add(new Upgrade { Id = LongTemper, Name = "Long Temper", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { CircleOfSteel }, X = -2.48f, Y = 7.11f, Icon = UpgradeIcons.Hourglass,
@@ -132,7 +132,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.5f) } });
             // NEEDS: a spell that is a boon on the player counted in blows, and blows that pass a guard. Here the brand form sets the five blows on the enemy faced.
             to.Add(new Upgrade { Id = Hone, Name = "Hone", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { ShatterPoint }, X = 0f, Y = 8.3f, Icon = UpgradeIcons.Blade,
-                Description = "Hold the spell button to set a sign on the enemy you face. Each of your next five blows on it sets off a small burst that notches. 30 mana.",
+                Description = "You set a sign on the enemy you face. Each of your next five blows on it sets off a small burst that notches.",
                 Form = "brand",
                 Spell = new SpellSpec { Cost = 30f, Reach = 8f, Seconds = 12f, Count = 5, Radius = 1.5f, Damage = 6f, Stagger = 6f, Stacks = 1 } });
             to.Add(new Upgrade { Id = BalancedBlade, Name = "Balanced Blade", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Hone }, X = 0.88f, Y = 9.08f, Icon = UpgradeIcons.Wing,
@@ -166,7 +166,7 @@ namespace Clover.Player.Trees
             // BESPOKE: a great blade thrown 8 m out and back (12 damage, 10 stagger each way, a notch on the first pass); a guard in the perfect window as it returns sends it
             // out again faster and half again as hard, three times at most. Until then: the lunging form down the same lane, struck once for both passes.
             to.Add(new Upgrade { Id = ReturningEdge, Name = "Returning Edge", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Ricochet }, X = 2.0f, Y = 6.0f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button and a great head of steel lunges down a line before you. It carries along what it passes and bites hard where it ends. 35 mana.",
+                Description = "A great head of steel lunges down a line before you. It carries along what it passes and bites hard where it ends.",
                 Form = "dragon",
                 Spell = new SpellSpec { Cost = 35f, Reach = 8f, Radius = 0.75f, Damage = 24f, Stagger = 20f, Stacks = 1, Speed = 14f } });
             to.Add(new Upgrade { Id = PaidInBlows, Name = "Paid in Blows", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { ReturningEdge }, X = 2.92f, Y = 6.75f, Icon = UpgradeIcons.Gem,
@@ -174,7 +174,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.25f, AfflictionKind.Sundered) } });
             // The phalanx form hangs the twelve at the shoulders, not in a ring in the ground, and they do not fall first.
             to.Add(new Upgrade { Id = GraveOfSwords, Name = "Grave of Swords", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { ReturningEdge }, X = 2.4f, Y = 7.8f, Icon = UpgradeIcons.Blade,
-                Description = "Hold the spell button and twelve blades hang behind your shoulders. One after another they fly at the nearest enemy, and a heavy blow that lands sends all that remain at the one it struck. 50 mana.",
+                Description = "Twelve blades hang behind your shoulders. One after another they fly at the nearest enemy, and a heavy blow that lands sends all that remain at the one it struck. 50 mana.",
                 Form = "phalanx",
                 Spell = new SpellSpec { Cost = 50f, Count = 12, Seconds = 12f, Reach = 6f, Damage = 9f, Stagger = 6f, Stacks = 1, Speed = 16f } });
             // BESPOKE: conjured blades never fade (sixteen at most); lighting the surge calls every one home in a straight line through whatever stands between: 12 damage,

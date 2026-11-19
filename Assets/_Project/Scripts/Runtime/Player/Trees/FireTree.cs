@@ -73,7 +73,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.2f) } });
             // BESPOKE (built): DrillForm leaves the line burning and raises Heat a level for each enemy passed.
             to.Add(new Upgrade { Id = WildfireRush, Name = "Wildfire Rush", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { CatchingFire }, X = 1.34f, Y = 8.65f, Icon = UpgradeIcons.Arrow,
-                Description = "Hold the spell button to drive through the enemies ahead in a line of fire. Each one passed is set burning and raises your Heat. 35 mana.",
+                Description = "You drive through the enemies ahead in a line of fire. Each one passed is set burning and raises your Heat.",
                 Form = "drill",
                 Spell = new SpellSpec { Cost = 35f, Reach = 7f, Radius = 1f, Count = 1, Damage = 14f, Stagger = 20f, Stacks = 2, Speed = 20f, Seconds = 2.6f, LingerDamage = 4f } });
             to.Add(new Upgrade { Id = SlowFuse, Name = "Slow Fuse", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { CatchingFire }, X = 0.24f, Y = 8.21f, Icon = UpgradeIcons.Hourglass,
@@ -105,7 +105,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.BackdraftStagger, 0.55f) } });
             // BESPOKE (built): ParryForm answers Fire's caught blow with a pillar under the attacker and counts it as a perfect guard.
             to.Add(new Upgrade { Id = KilnStance, Name = "Kiln Stance", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.BurnAndDetonate }, X = -1.96f, Y = 6.49f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button to stand ready in flame. The first blow that reaches you, red or not, is turned and answered with a pillar of fire. 30 mana.",
+                Description = "You stand ready in flame. The first blow that reaches you, red or not, is turned and answered with a pillar of fire.",
                 Form = "parry",
                 Spell = new SpellSpec { Cost = 30f, Seconds = 1.2f, Reach = 4f, Arc = 90f, Damage = 30f, Stagger = 50f, Stacks = 3 } });
             // UntilBlow: the first swing that lands within three seconds has it, and no other.
@@ -141,7 +141,7 @@ namespace Clover.Player.Trees
                 Description = "Flame Wave reaches further.",
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellReach, 0.27f) } });
             to.Add(new Upgrade { Id = Upgrade.MeteorLeap, Name = "Meteor Leap", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.FirebombFlask }, X = 2.37f, Y = 5.74f, Icon = UpgradeIcons.Comet,
-                Description = "Hold the spell button to leap out of the fight and come down on the enemy faced, leaving a burning crater. 50 mana.",
+                Description = "You leap out of the fight and come down on the enemy faced, leaving a burning crater. 45 mana.",
                 Form = SpellForms.Leap,
                 Spell = new SpellSpec { Cost = 50f, Reach = 9f, Seconds = 0.62f, Height = 3.4f, Damage = 46f, Stagger = 55f, Radius = 3.2f, LingerDamage = 5f, Stacks = 0 } });
             // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
@@ -150,7 +150,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
             // BESPOKE (built): SunspotForm. Light blows feed it, a heavy blow sets it off; left alone it bursts at half.
             to.Add(new Upgrade { Id = Sunspot, Name = "Sunspot", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.MeteorLeap }, X = 2.46f, Y = 7.87f, Icon = UpgradeIcons.Target,
-                Description = "Hold the spell button to brand the enemy faced. Each blow you land feeds the brand, up to six. A heavy blow sets it off. 35 mana.",
+                Description = "You brand the enemy faced. Each blow you land feeds the brand, up to six. A heavy blow sets it off.",
                 Form = SpellForms.Sunspot,
                 Spell = new SpellSpec { Cost = 35f, Reach = 6f, Seconds = 7f, Count = 6, Radius = 3f, Damage = 12f, Stagger = 10f, Stacks = 1 } });
             // There is no number for spells on burning enemies alone: half the share, on every enemy.
@@ -170,7 +170,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 2.2f, Seconds = 4f, Damage = 5f, Interval = 0.5f, Affliction = AfflictionKind.Burn, Stacks = 1 } } });
             // Kept from the first slice; not in the design.
             to.Add(new Upgrade { Id = CinderFan, Name = "Cinder Fan", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.MeteorLeap }, X = 1.14f, Y = 6.32f, Icon = UpgradeIcons.Wave,
-                Description = "Hold the spell button to throw fire in a wide fan, close in. What it touches burns two deep. 30 mana.",
+                Description = "You throw fire in a wide fan, close in. What it touches burns two deep.",
                 Form = SpellForms.Wave,
                 Spell = new SpellSpec { Cost = 30f, Reach = 4.5f, Arc = 140f, Damage = 22f, Stagger = 20f, Stacks = 2 } });
 

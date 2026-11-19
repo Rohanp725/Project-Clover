@@ -58,7 +58,7 @@ namespace Clover.Player.Trees
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Burn, Needs2 = AfflictionKind.Static, Do = UpgradeAction.Burst, Damage = 18f, Radius = 4f, Affliction = AfflictionKind.Burn, Stacks = 1, CarriesDepth = true, Cooldown = 0.3f }, new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Static, Needs2 = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1, CarriesDepth = true, Radius = 4f, Cooldown = 0.3f } } });
             // BESPOKE (built): BallForm.
             to.Add(new Upgrade { Id = BallLightning, Name = "Ball Lightning", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { ArcFire }, X = 0f, Y = 2.86f, Icon = UpgradeIcons.Orb,
-                Description = "Hold the spell button to loose a slow ball of white fire. Strike it to send it where the blow points, larger each time, up to three. It bursts on the first enemy it meets. 40 mana.",
+                Description = "You loose a slow ball of white fire. Strike it to send it where the blow points, larger each time, up to three. It bursts on the first enemy it meets. 40 mana.",
                 Form = SpellForms.Ball,
                 Spell = new SpellSpec { Cost = 40f, Speed = 2f, Seconds = 8f, Radius = 2.5f, Damage = 16f, Stagger = 20f, Stacks = 2, LingerDamage = 12f } });
             // Kept from the first slice; not in the design.
@@ -76,7 +76,7 @@ namespace Clover.Player.Trees
                 Description = "An enemy at five Burn and five Static begins to shake with light. A few moments later it bursts, far harder than either alone. Nothing stops it." });
             // Kept from the first slice; not in the design.
             to.Add(new Upgrade { Id = PlasmaLance, Name = "Plasma Lance", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { FusedCore }, X = 0f, Y = 6.22f, Icon = UpgradeIcons.Beam,
-                Description = "Hold the spell button to throw a bolt of plasma that leaps through three more. 35 mana.",
+                Description = "You throw a bolt of plasma that leaps through three more.",
                 Form = SpellForms.Bolt,
                 Spell = new SpellSpec { Cost = 35f, Reach = 11f, Damage = 30f, Stagger = 26f, Count = 3, Radius = 5f, Stacks = 2 } });
 

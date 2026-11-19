@@ -130,6 +130,20 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void NoMarkTellsOfTheOldSpellButtonOrAPriceItDoesNotAsk()
+        {
+            // Spells are cast from the four slots and most wait on a cooldown; a price is named only where mana is paid, and it is the table's.
+            foreach (var upgrade in Upgrade.All)
+            {
+                StringAssert.DoesNotContain("spell button", upgrade.Description, upgrade.Id);
+                var price = System.Text.RegularExpressions.Regex.Match(upgrade.Description, @"(\d+) mana\.$");
+                if (!price.Success) continue;
+                Assert.IsTrue(upgrade.IsSpell && upgrade.Spell != null, upgrade.Id + " names a price but is no spell");
+                Assert.AreEqual(float.Parse(price.Groups[1].Value), upgrade.Spell.Cost, 1e-3f, upgrade.Id + " names a price it does not ask");
+            }
+        }
+
+        [Test]
         public void EveryMarkIsWholeItsOwnIdItsWordsAPictureThatExistsAndWhatItGrowsFrom()
         {
             var ids = new HashSet<string>();

@@ -96,7 +96,7 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.DamageToAfflicted, 0.08f) } });
             // BESPOKE (built): CircleForm. The player cannot be touched for the whole run; the design asks for the first half only.
             to.Add(new Upgrade { Id = ClosingCircle, Name = "Closing Circle", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { EmptyAir }, X = -2.14f, Y = 7.49f, Icon = UpgradeIcons.Ring,
-                Description = "Hold the spell button to run a ring round the enemy faced. When the ring closes, the wind inside it rises and takes everything off the ground. 35 mana.",
+                Description = "You run a ring round the enemy faced. When the ring closes, the wind inside it rises and takes everything off the ground.",
                 Form = SpellForms.Circle,
                 Spell = new SpellSpec { Cost = 35f, Reach = 5f, Radius = 3f, Seconds = 1.2f, Damage = 6f, Stagger = 10f, Stacks = 5 } });
             // Built by hand (DodgeRoll.PayInstead, PlayerUpgrades.SpendBreath): three breaths kept as the mark's count, one back every
@@ -128,12 +128,12 @@ namespace Clover.Player.Trees
                 Description = "Blows strike an enemy in the air harder.",
                 Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.2f, StatWhen.AirborneBlow) } });
             to.Add(new Upgrade { Id = LiftingWind, Name = "Lifting Wind", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { HammerDown }, X = -0.09f, Y = 7.11f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button to raise a column of wind under the enemy faced. It goes up whatever its footing. 30 mana.",
+                Description = "You raise a column of wind under the enemy faced. It goes up whatever its footing.",
                 Form = "pillars",
                 Spell = new SpellSpec { Cost = 30f, Count = 1, Reach = 5f, Radius = 2f, Damage = 8f, Stagger = 25f, Stacks = 1, Delay = 0.35f } });
             // BESPOKE (built): SkyDanceForm.
             to.Add(new Upgrade { Id = SkyDance, Name = "Sky Dance", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { LiftingWind }, X = -0.92f, Y = 8.29f, Icon = UpgradeIcons.Wing,
-                Description = "Hold the spell button to throw the enemy faced into the air and go up beside it. Press the light attack as each of five rings closes for a harder cut. Then the stick chooses where it is thrown down, and it bursts harder for each cut in time. 45 mana.",
+                Description = "You throw the enemy faced into the air and go up beside it. Press the light attack as each of five rings closes for a harder cut. Then the stick chooses where it is thrown down, and it bursts harder for each cut in time. 45 mana.",
                 Form = SpellForms.SkyDance,
                 Spell = new SpellSpec { Cost = 45f, Count = 5, Interval = 0.34f, Damage = 10f, Stagger = 60f, Stacks = 1, Reach = 6f, Radius = 3f, LingerDamage = 6f } });
             to.Add(new Upgrade { Id = NothingBeneath, Name = "Nothing Beneath", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SkyDance }, X = -1.32f, Y = 9.77f, Icon = UpgradeIcons.Spiral,
@@ -167,7 +167,7 @@ namespace Clover.Player.Trees
                 Description = "Your pushes throw enemies further.",
                 Stats = new[] { new StatMod(PlayerStat.PushDistance, 0.3f) } });
             to.Add(new Upgrade { Id = IndrawnBreath, Name = "Indrawn Breath", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { TurnedAside }, X = 1.06f, Y = 8.07f, Icon = UpgradeIcons.Spiral,
-                Description = "Hold the spell button to drag everything near into one place before you, then burst it apart. 35 mana.",
+                Description = "You drag everything near into one place before you, then burst it apart.",
                 Form = "reverse",
                 Spell = new SpellSpec { Cost = 35f, Reach = 2f, Radius = 7f, Delay = 0.5f, Damage = 10f, Stagger = 25f, Stacks = 2 } });
             to.Add(new Upgrade { Id = FairWind, Name = "Fair Wind", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { TurnedAside }, X = 2.81f, Y = 6.4f, Icon = UpgradeIcons.Gem,

@@ -55,12 +55,12 @@ namespace Clover.Player.Trees
                 } });
             // NEEDS FORM: for a while each dodge leaves a lotus that mends the player who steps on it and cuts an enemy who does. The field is the nearest: one patch that cuts.
             to.Add(new Upgrade { Id = LotusStep, Name = "Lotus Step", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { DrownedRoots }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Boot,
-                Description = "Hold the spell button to open a lotus on the ground just ahead. For twelve seconds it cuts every enemy standing on it, once a second. 30 mana.",
+                Description = "You open a lotus on the ground just ahead. For twelve seconds it cuts every enemy standing on it, once a second.",
                 Form = "field",
                 Spell = new SpellSpec { Cost = 30f, Reach = 2f, Radius = 1.5f, Seconds = 12f, Interval = 1f, LingerDamage = 10f, Stacks = 1 } });
             // The pillars form lifts what it strikes for a moment; the three-second hold and the tripled mending are not in it yet.
             to.Add(new Upgrade { Id = StranglingVine, Name = "Strangling Vine", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { Flowering }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Tower,
-                Description = "Hold the spell button to raise a great vine under the nearest enemy. It strikes hard and throws the enemy into the air for a moment. 45 mana.",
+                Description = "A great vine bursts up under the nearest enemy. It strikes hard and throws the enemy into the air for a moment. 45 mana.",
                 Form = "pillars",
                 Spell = new SpellSpec { Cost = 45f, Count = 1, Reach = 5f, Radius = 3f, Damage = 20f, Stagger = 50f, Stacks = 1, Delay = 0.5f } });
 
