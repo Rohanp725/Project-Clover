@@ -869,9 +869,22 @@ namespace Clover.EditorTools
             var sword = BuildKit.Group("Katana", group);
             sword.localPosition = new Vector3(0f, 0.55f, 0f);
             sword.localRotation = Quaternion.Euler(0f, 30f, 8f);
-            BuildKit.Shape(PrimitiveType.Cube, "Blade", sword, new Vector3(0f, 0.45f, 0f), new Vector3(0.05f, 0.95f, 0.012f), steel);
-            BuildKit.Shape(PrimitiveType.Cube, "Guard", sword, new Vector3(0f, 0.94f, 0f), new Vector3(0.14f, 0.025f, 0.1f), iron);
-            BuildKit.Shape(PrimitiveType.Cube, "Grip", sword, new Vector3(0f, 1.1f, 0f), new Vector3(0.045f, 0.3f, 0.035f), cloth);
+            var model = WeaponBuilder.Prefab(Weapon.KatanaCarry);
+            if (model != null)
+            {
+                // The sword's own model, point down: its grip (the origin) 0.95 up the group, so the point is a hand's
+                // breadth into the stone and the tsuba stands where the old guard was.
+                var shown = (GameObject)PrefabUtility.InstantiatePrefab(model, sword);
+                shown.name = "Katana Model";
+                shown.transform.localPosition = new Vector3(0f, 0.95f, 0f);
+                shown.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
+            }
+            else
+            {
+                BuildKit.Shape(PrimitiveType.Cube, "Blade", sword, new Vector3(0f, 0.45f, 0f), new Vector3(0.05f, 0.95f, 0.012f), steel);
+                BuildKit.Shape(PrimitiveType.Cube, "Guard", sword, new Vector3(0f, 0.94f, 0f), new Vector3(0.14f, 0.025f, 0.1f), iron);
+                BuildKit.Shape(PrimitiveType.Cube, "Grip", sword, new Vector3(0f, 1.1f, 0f), new Vector3(0.045f, 0.3f, 0.035f), cloth);
+            }
 
             var glowObject = new GameObject("Sword Light");
             glowObject.transform.SetParent(sword, false);

@@ -377,9 +377,20 @@ namespace Clover.EditorTools
                 BuildKit.Shape(PrimitiveType.Cube, "Fork", shown, new Vector3(side * 0.5f, 1.34f, -0.07f), new Vector3(0.1f, 0.16f, 0.05f), wood);
             }
             BuildKit.Shape(PrimitiveType.Cube, "Rail", shown, new Vector3(0f, 0.5f, 0f), new Vector3(1.1f, 0.08f, 0.1f), wood);
-            BuildKit.Shape(PrimitiveType.Cube, "Blade", shown, new Vector3(0.14f, 1.32f, 0f), new Vector3(1.05f, 0.05f, 0.016f), steel, new Vector3(0f, 0f, 3f));
-            BuildKit.Shape(PrimitiveType.Cube, "Guard", shown, new Vector3(-0.4f, 1.3f, 0f), new Vector3(0.03f, 0.13f, 0.1f), gold);
-            BuildKit.Shape(PrimitiveType.Cube, "Grip", shown, new Vector3(-0.58f, 1.29f, 0f), new Vector3(0.34f, 0.045f, 0.04f), dark, new Vector3(0f, 0f, 3f));
+            var model = WeaponBuilder.Prefab(Weapon.KatanaCarry);
+            if (model == null)
+            {
+                BuildKit.Shape(PrimitiveType.Cube, "Blade", shown, new Vector3(0.14f, 1.32f, 0f), new Vector3(1.05f, 0.05f, 0.016f), steel, new Vector3(0f, 0f, 3f));
+                BuildKit.Shape(PrimitiveType.Cube, "Guard", shown, new Vector3(-0.4f, 1.3f, 0f), new Vector3(0.03f, 0.13f, 0.1f), gold);
+                BuildKit.Shape(PrimitiveType.Cube, "Grip", shown, new Vector3(-0.58f, 1.29f, 0f), new Vector3(0.34f, 0.045f, 0.04f), dark, new Vector3(0f, 0f, 3f));
+                return;
+            }
+            // The sword's own model: the grip in the left fork, the point out past the right one, edge up (its -Y turned
+            // over to the sky), a little raised toward the point.
+            var sword = (GameObject)PrefabUtility.InstantiatePrefab(model, shown);
+            sword.name = "Katana";
+            sword.transform.localPosition = new Vector3(-0.42f, 1.33f, 0f);
+            sword.transform.localRotation = Quaternion.Euler(0f, 0f, 3f) * Quaternion.Euler(0f, 90f, 180f);
         }
 
         // A brazier for an element: lit with its fire once the element has been won.

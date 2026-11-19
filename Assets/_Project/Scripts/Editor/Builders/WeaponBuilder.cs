@@ -19,6 +19,8 @@ namespace Clover.EditorTools
     /// axes (grip at the origin, business end along +Z, edge toward -Y) and the same slot names, so the approved
     /// file takes its place with no other change. Clover > Weapons > Intake Staged Models brings the staged files in
     /// and writes their manifest rows; it is for the user's word. The sword and scythe came in that way on 2026-11-16, pending approval.
+    /// The approved plain pass of 2026-11-19 (staging/blender/2026-11-19_plainweapons) gave the Katana, the hammer, the
+    /// knife and the chain sickle their models; its land makes are in Art/Models/Weapons but no Spec uses them yet.
     ///
     /// To add a weapon: one <see cref="Spec"/> in <see cref="Specs"/>. Nothing else here changes.
     /// </summary>
@@ -32,8 +34,18 @@ namespace Clover.EditorTools
         {
             /// <summary>The name <see cref="Weapon.Carry"/> uses, and the prefab's.</summary>
             public string Carry;
-            /// <summary>The staged model file, or null for a weapon with none (the Armament).</summary>
+            /// <summary>The model file under Art/Models/Weapons, or null for a weapon with none (the Armament).</summary>
             public string ModelFile;
+            /// <summary>
+            /// The objects of the model file this prefab is made of, when the file holds more than the one thing (the
+            /// Katana's scabbard, the chain sickle's weight and link). Null: the whole file.
+            /// </summary>
+            public string[] ModelObjects;
+            /// <summary>
+            /// True for the Katana: PlayerAnimator moves it between sheath and hand itself, so it has a prefab but no set
+            /// on the rack. <see cref="Hang"/> puts it in the right hand in place of the stick the character's file carries.
+            /// </summary>
+            public bool ShownByAnimator;
             public string Notes;
             /// <summary>Builds the stand-in under a root, in the model's own axes.</summary>
             public Action<Transform> StandIn;
@@ -116,7 +128,9 @@ namespace Clover.EditorTools
             new Spec
             {
                 Carry = "hammer", ModelFile = "hammer.fbx", StandIn = HammerStandIn,
-                Notes = "Great Hammer: 496 triangles, slots head wood wrap accent inlay; origin at the swinging grip 0.9 m under the head, head along +Z, striking face toward -Y",
+                Notes = "Great Hammer (hammer_v2 of 2026-11-19): 1026 triangles, slots head blade wood wrap grip accent inlay; origin at the swinging grip 0.9 m under the head, head along +Z, striking face toward -Y",
+                // staging/blender/2026-11-19_plainweapons/notes.md 9: the rope and the leather grip are its own; the rest is the shared steel and wood.
+                OwnColours = { { "wrap", Linear(0.36f, 0.29f, 0.19f) }, { "grip", Linear(0.09f, 0.06f, 0.05f) } },
                 // Head up behind the right shoulder, the head lying across the back.
                 RestPosition = new Vector3(0.08f, -0.2f, -0.24f), RestAlong = new Vector3(0.3f, 0.95f, 0f), RestUp = new Vector3(0.95f, -0.3f, 0f),
                 // Stood on its butt, the head seen from the side.
@@ -125,7 +139,9 @@ namespace Clover.EditorTools
             new Spec
             {
                 Carry = "knife", ModelFile = "knife.fbx", StandIn = KnifeStandIn,
-                Notes = "Twin Knives: one knife, 370 triangles, carried twice; slots blade guard grip accent inlay; origin at the middle of the grip, point along +Z, edge toward -Y",
+                Notes = "Twin Knives (knife_v2 of 2026-11-19): one knife, 690 triangles, carried twice; slots blade edge guard grip wrap accent inlay; origin at the middle of the grip, point along +Z, edge toward -Y",
+                // notes.md 11: a bright cutting edge above the shared steel, and a dark leather grip.
+                OwnColours = { { "edge", Linear(0.80f, 0.84f, 0.90f) }, { "grip", Linear(0.09f, 0.06f, 0.05f) } },
                 // Crossed at the small of the back under the belt, hilts out to either side (the second lies mirrored).
                 RestSocket = WeaponRack.Hip,
                 RestPosition = new Vector3(0.12f, 0.04f, -0.15f), RestAlong = new Vector3(-0.85f, -0.5f, 0f), RestUp = new Vector3(0f, 0f, -1f),
@@ -152,8 +168,10 @@ namespace Clover.EditorTools
             },
             new Spec
             {
-                Carry = "sickle", ModelFile = "chain_sickle.fbx", StandIn = SickleStandIn,
-                Notes = "Chain Sickle: three objects (sickle 382 triangles, weight 200, one link 80), slots blade guard wood accent inlay; origin on the haft under the blade's collar, haft along Z (top +0.17, butt ring -0.43), the blade leaving the top toward -Y",
+                Carry = "sickle", ModelFile = "chain_sickle.fbx", ModelObjects = new[] { "chain_sickle_v2" }, StandIn = SickleStandIn,
+                Notes = "Chain Sickle (chain_sickle_v2 of 2026-11-19): three objects (sickle 878 triangles, weight 252, one link 120), slots blade edge guard wood grip accent inlay; origin on the haft under the blade's collar, haft along Z (top +0.17, butt eye -0.43), the blade leaving the top toward -Y",
+                // notes.md 12: a bright concave edge, and a dark leather grip.
+                OwnColours = { { "edge", Linear(0.80f, 0.84f, 0.90f) }, { "grip", Linear(0.09f, 0.06f, 0.05f) } },
                 // Thrust through the back of the belt, haft upright, blade to the right.
                 RestSocket = WeaponRack.Hip,
                 RestPosition = new Vector3(0.06f, 0.08f, -0.16f), RestAlong = new Vector3(0.1f, 1f, 0f), RestUp = new Vector3(-1f, 0.1f, 0f),
@@ -162,8 +180,24 @@ namespace Clover.EditorTools
             },
             new Spec
             {
-                Carry = "weight", StandIn = WeightStandIn, PropOnly = true,
-                Notes = "Chain Sickle's weight: a stand-in for the chain_weight object of chain_sickle.fbx; origin where the chain joins it, body toward +Z",
+                Carry = "weight", ModelFile = "chain_sickle.fbx", ModelObjects = new[] { "chain_weight_v2" }, StandIn = WeightStandIn, PropOnly = true,
+                Notes = "Chain Sickle's weight: the chain_weight_v2 object of chain_sickle.fbx (252 triangles), slots guard inlay; origin at its eye where the chain joins it, body toward +Z",
+                // The chain itself is still drawn as a line (ChainLine); the file's chain_link_v2 waits for a chain made of links.
+            },
+            new Spec
+            {
+                Carry = Weapon.KatanaCarry, ModelFile = "katana.fbx", ModelObjects = new[] { "katana" }, StandIn = KatanaStandIn, ShownByAnimator = true,
+                Notes = "Katana (katana of 2026-11-19): 814 triangles; the file's katana_scabbard (520) is not shown yet; slots blade edge inlay guard grip wrap head accent; origin on the grip 0.115 m behind the tsuba, point along +Z, edge toward -Y",
+                // notes.md 1: a darker body above a bright edge, the hamon line as the inlay, dark iron, dark rayskin
+                // under pale ito, copper habaki and menuki; the red cord is the shared accent.
+                OwnColours =
+                {
+                    { "blade", Linear(0.45f, 0.50f, 0.60f) }, { "edge", Linear(0.80f, 0.84f, 0.90f) }, { "guard", Linear(0.09f, 0.095f, 0.11f) },
+                    { "grip", Linear(0.025f, 0.03f, 0.05f) }, { "wrap", Linear(0.66f, 0.63f, 0.55f) }, { "head", Linear(0.55f, 0.24f, 0.10f) },
+                    { "wood", Linear(0.03f, 0.03f, 0.036f) },
+                },
+                // Point down in its stand like the Massive Sword, the flat toward whoever walks up.
+                DisplayPosition = new Vector3(0f, 1.3f, 0f), DisplayEuler = new Vector3(90f, 90f, 0f),
             },
             new Spec
             {
@@ -184,6 +218,9 @@ namespace Clover.EditorTools
         };
 
         public static Spec SpecFor(string carry) => Specs.FirstOrDefault(spec => spec.Carry == carry);
+
+        /// <summary>The name of the Katana in the hand: the stick in the character's file, then the model put in its place.</summary>
+        public const string KatanaDrawn = "katana_drawn";
 
         [MenuItem("Clover/Weapons/Build Weapon Prefabs")]
         public static void BuildAll()
@@ -207,13 +244,20 @@ namespace Clover.EditorTools
 
             BuildKit.EnsureFolder(folder);
             var root = new GameObject(carry);
-            var approved = spec.ModelFile != null ? AssetDatabase.LoadAssetAtPath<GameObject>($"{ModelFolder}/{carry}.fbx") : null;
+            var approved = spec.ModelFile != null ? AssetDatabase.LoadAssetAtPath<GameObject>($"{ModelFolder}/{spec.ModelFile}") : null;
             if (approved != null)
             {
                 // The approved model: each of its materials only carries a slot name, and is replaced by the toon one.
                 var model = (GameObject)PrefabUtility.InstantiatePrefab(approved);
                 model.name = "Model";
                 model.transform.SetParent(root.transform, false);
+                if (spec.ModelObjects != null)
+                {
+                    // Only some of the file's objects are this thing: the link to the file is let go so the rest can be removed.
+                    PrefabUtility.UnpackPrefabInstance(model, PrefabUnpackMode.Completely, InteractionMode.AutomatedAction);
+                    foreach (Transform part in model.transform.Cast<Transform>().ToArray())
+                        if (!spec.ModelObjects.Contains(part.name)) UnityEngine.Object.DestroyImmediate(part.gameObject);
+                }
                 // As imported the file's business end lies along -Z (the exporter's forward is Unity's back): turned
                 // about so the point is along +Z, as the stand-ins and every pose take it to be. The edge stays toward -Y.
                 model.transform.localRotation = Quaternion.Euler(0f, 180f, 0f) * model.transform.localRotation;
@@ -232,14 +276,24 @@ namespace Clover.EditorTools
             return prefab;
         }
 
-        // "blade.001", "m_weapon_blade", "Blade Tip (blade)": the slot is the known name the text ends with or carries.
+        // "blade.001", "m_weapon_blade", "Blade Tip (blade)", "m_weapon_hammer_v2_head": the slot is the known name the
+        // text ends with, or else one it carries. The last word is tried first so a weapon or land name that happens to
+        // hold a slot word cannot win over the slot itself.
         private static string SlotOf(string name)
         {
             string lower = name.ToLowerInvariant();
+            int cut = lower.LastIndexOfAny(new[] { '_', ' ', '(' });
+            string last = (cut >= 0 ? lower.Substring(cut + 1) : lower).TrimEnd(')');
+            int dot = last.IndexOf('.');
+            if (dot >= 0) last = last.Substring(0, dot);
+            if (SlotColours.ContainsKey(last)) return last;
             foreach (string slot in SlotColours.Keys)
                 if (lower.Contains(slot)) return slot;
             return "guard";
         }
+
+        // The Blender notes give colours as light values (linear); the materials store them as the eye sees them.
+        private static Color Linear(float r, float g, float b) => new Color(r, g, b).gamma;
 
         /// <summary>The toon material of a slot, the weapon's own when it has its own colour for it.</summary>
         public static Material SlotMaterial(Spec spec, string slot)
@@ -247,8 +301,10 @@ namespace Clover.EditorTools
             bool own = spec != null && spec.OwnColours.ContainsKey(slot);
             Color colour = own ? spec.OwnColours[slot] : SlotColours[slot];
             var material = BuildKit.Toon(Folder, own ? $"m_weapon_{spec.Carry}_{slot}" : $"m_weapon_{slot}", colour).Ink(0.028f, BuildKit.CharacterInk);
-            // Steel catches the light; everything else is as muted as the world.
-            if (slot == "blade" || slot == "edge") material.Lit(own ? new Color(0.5f, 0.56f, 0.72f) : new Color(0.9f, 1.05f, 1.35f), own ? 0.28f : 0.4f);
+            // Steel catches the light; everything else is as muted as the world. Bright steel catches it most, dark iron
+            // (the Massive Sword's flat, the Katana's body above its hamon) less.
+            bool bright = colour.maxColorComponent > 0.8f;
+            if (slot == "blade" || slot == "edge") material.Lit(bright ? new Color(0.9f, 1.05f, 1.35f) : new Color(0.5f, 0.56f, 0.72f), bright ? 0.4f : 0.28f);
             return material;
         }
 
@@ -280,10 +336,22 @@ namespace Clover.EditorTools
             var back = Socket(model, "chest", WeaponRack.Back, Vector3.zero, Quaternion.Inverse(chestRest));
             var hip = Socket(model, "hips", WeaponRack.Hip, Vector3.zero, Quaternion.Inverse(hipsRest));
 
+            // The Katana's model takes the place of the stick the character's file carries in its hand, under the stick's
+            // name, so PlayerAnimator and the Forge find it as before. The stick stays in the file, hidden, under another name.
+            var katana = Prefab(Weapon.KatanaCarry);
+            var stick = BuildKit.FindDeep(model.transform, KatanaDrawn);
+            if (katana != null && handR != null && stick != null)
+            {
+                var sword = Place(katana, handR, KatanaDrawn, Vector3.zero, Quaternion.identity);
+                sword.SetActive(stick.gameObject.activeSelf);
+                stick.name = KatanaDrawn + "_stick";
+                stick.gameObject.SetActive(false);
+            }
+
             var sets = new List<WeaponRack.Set>();
             foreach (var spec in Specs)
             {
-                if (spec.PropOnly) continue;
+                if (spec.PropOnly || spec.ShownByAnimator) continue;
                 var inHand = new List<GameObject>();
                 var atRest = new List<GameObject>();
                 if (spec.Worn != null)
@@ -381,30 +449,18 @@ namespace Clover.EditorTools
             var spec = SpecFor(carry);
             if (spec == null)
             {
-                // The Katana lives inside the character's own model and bare hands are no object at all, so neither
-                // has a prefab: each is set out from a few boxes so its stand is not left empty.
-                var made = BuildKit.Group((carry == Weapon.KatanaCarry ? "katana" : "fists") + " display", parent);
+                // Bare hands are no object at all, so they have no prefab: a striking post with two wrapped fists hung
+                // from its arm stands for them, so their stand is not left empty.
+                var made = BuildKit.Group("fists display", parent);
                 var wood = SlotMaterial(null, "wood");
-                if (carry == Weapon.KatanaCarry)
+                var wrap = SlotMaterial(null, "wrap");
+                BuildKit.Shape(PrimitiveType.Cube, "Post", made, new Vector3(0f, 0.75f, 0f), new Vector3(0.12f, 1f, 0.12f), wood);
+                BuildKit.Shape(PrimitiveType.Cube, "Arm", made, new Vector3(0f, 1.25f, 0f), new Vector3(0.9f, 0.1f, 0.1f), wood);
+                foreach (float side in new[] { -1f, 1f })
                 {
-                    // Point down in its stand like the Massive Sword, the flat toward whoever walks up.
-                    BuildKit.Shape(PrimitiveType.Cube, "Blade (blade)", made, new Vector3(0f, 0.72f, 0f), new Vector3(0.07f, 1.05f, 0.018f), SlotMaterial(null, "blade"), new Vector3(0f, 0f, 2f));
-                    BuildKit.Shape(PrimitiveType.Cube, "Guard (guard)", made, new Vector3(0.02f, 1.27f, 0f), new Vector3(0.16f, 0.03f, 0.1f), SlotMaterial(null, "guard"));
-                    BuildKit.Shape(PrimitiveType.Cube, "Grip (grip)", made, new Vector3(0.025f, 1.46f, 0f), new Vector3(0.05f, 0.36f, 0.045f), SlotMaterial(null, "grip"), new Vector3(0f, 0f, 2f));
-                    BuildKit.Shape(PrimitiveType.Cube, "Tassel (accent)", made, new Vector3(0.08f, 1.52f, 0f), new Vector3(0.03f, 0.22f, 0.03f), SlotMaterial(null, "accent"), new Vector3(0f, 0f, -24f));
-                }
-                else
-                {
-                    // A striking post with two wrapped fists hung from its arm.
-                    var wrap = SlotMaterial(null, "wrap");
-                    BuildKit.Shape(PrimitiveType.Cube, "Post", made, new Vector3(0f, 0.75f, 0f), new Vector3(0.12f, 1f, 0.12f), wood);
-                    BuildKit.Shape(PrimitiveType.Cube, "Arm", made, new Vector3(0f, 1.25f, 0f), new Vector3(0.9f, 0.1f, 0.1f), wood);
-                    foreach (float side in new[] { -1f, 1f })
-                    {
-                        BuildKit.Shape(PrimitiveType.Cube, "Wrist (wrap)", made, new Vector3(side * 0.4f, 1.08f, 0f), new Vector3(0.11f, 0.26f, 0.11f), wrap);
-                        BuildKit.Shape(PrimitiveType.Cube, "Fist (wrap)", made, new Vector3(side * 0.4f, 0.86f, 0f), new Vector3(0.2f, 0.2f, 0.2f), wrap, new Vector3(0f, 45f, 0f));
-                        BuildKit.Shape(PrimitiveType.Cube, "Band (accent)", made, new Vector3(side * 0.4f, 0.97f, 0f), new Vector3(0.13f, 0.04f, 0.13f), SlotMaterial(null, "accent"));
-                    }
+                    BuildKit.Shape(PrimitiveType.Cube, "Wrist (wrap)", made, new Vector3(side * 0.4f, 1.08f, 0f), new Vector3(0.11f, 0.26f, 0.11f), wrap);
+                    BuildKit.Shape(PrimitiveType.Cube, "Fist (wrap)", made, new Vector3(side * 0.4f, 0.86f, 0f), new Vector3(0.2f, 0.2f, 0.2f), wrap, new Vector3(0f, 45f, 0f));
+                    BuildKit.Shape(PrimitiveType.Cube, "Band (accent)", made, new Vector3(side * 0.4f, 0.97f, 0f), new Vector3(0.13f, 0.04f, 0.13f), SlotMaterial(null, "accent"));
                 }
                 return made.gameObject;
             }
@@ -433,7 +489,7 @@ namespace Clover.EditorTools
         }
 
         /// <summary>
-        /// The asset-intake procedure for the staged weapon models: copies each from staging to Art/Models/Weapons,
+        /// The asset-intake procedure for the 2026-11-16 staged weapon models: copies each not yet in Art/Models/Weapons from staging,
         /// writes its manifest row with approved_by "pending", and rebuilds the prefabs from them. For the user's
         /// word only: nothing enters Art before they have looked at the staging renders.
         /// </summary>
@@ -448,7 +504,9 @@ namespace Clover.EditorTools
             foreach (var spec in Specs)
             {
                 if (spec.ModelFile == null) continue;
-                string source = $"{StagingFolder}/{spec.ModelFile}", target = $"{ModelFolder}/{spec.Carry}.fbx";
+                string source = $"{StagingFolder}/{spec.ModelFile}", target = $"{ModelFolder}/{spec.ModelFile}";
+                // A model already brought in (the approved passes of 2026-11-19 among them) is never written over by a 11-16 file.
+                if (File.Exists(target)) continue;
                 if (!File.Exists(source))
                 {
                     Debug.LogWarning($"[Clover.Build] No staged model at {source}.");
@@ -685,6 +743,17 @@ namespace Clover.EditorTools
                 Span(root, "inlay", "Inner " + i, from + normal * width * 0.5f, to + normal * width * 0.5f, 0.026f, 0.03f);
                 Span(root, "guard", "Spine " + i, from - normal * width * 0.5f, to - normal * width * 0.5f, 0.036f, 0.024f);
             }
+        }
+
+        // The Katana to the model's size, for when the file is missing: the grip 0.115 m behind the tsuba, the point 0.99 ahead.
+        private static void KatanaStandIn(Transform root)
+        {
+            Box(root, "grip", "Grip", new Vector3(0f, 0f, -0.03f), new Vector3(0.034f, 0.04f, 0.27f));
+            Box(root, "accent", "Cord", new Vector3(0f, -0.03f, -0.2f), new Vector3(0.012f, 0.06f, 0.03f));
+            Box(root, "guard", "Tsuba", new Vector3(0f, 0f, 0.115f), new Vector3(0.11f, 0.11f, 0.012f));
+            Box(root, "blade", "Blade", new Vector3(0f, 0f, 0.53f), new Vector3(0.012f, 0.04f, 0.82f));
+            Box(root, "edge", "Edge", new Vector3(0f, -0.024f, 0.53f), new Vector3(0.008f, 0.01f, 0.82f));
+            Box(root, "blade", "Kissaki", new Vector3(0f, 0f, 0.96f), new Vector3(0.011f, 0.03f, 0.06f), new Vector3(30f, 0f, 0f));
         }
 
         // The weight on the end of the chain: an iron teardrop with a band round its belly, the chain joining at the origin.

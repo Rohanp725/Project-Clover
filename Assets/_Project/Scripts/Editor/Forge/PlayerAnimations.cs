@@ -82,7 +82,7 @@ namespace Clover.EditorTools.Forge
         private static string CarryOf(string clip)
         {
             foreach (var spec in WeaponBuilder.Specs)
-                if (clip.EndsWith("_" + spec.Carry) || clip.Contains("_" + spec.Carry + "_")) return spec.Carry;
+                if (!spec.ShownByAnimator && (clip.EndsWith("_" + spec.Carry) || clip.Contains("_" + spec.Carry + "_"))) return spec.Carry;
             return null;
         }
 

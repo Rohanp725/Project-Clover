@@ -286,7 +286,10 @@ namespace Clover.EditorTools
             animator.runtimeAnimatorController = AnimatorController(modelAsset);
             animator.applyRootMotion = false;
             animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-            var drawnSword = BuildKit.FindDeep(model.transform, "katana_drawn");
+            // Every other weapon is a prefab hung on the skeleton's sockets, in the hand and at rest; the Katana's model
+            // goes into the hand in place of the file's stick, under its name, so it is hung first.
+            var rack = WeaponBuilder.Hang(model, modelAsset);
+            var drawnSword = BuildKit.FindDeep(model.transform, WeaponBuilder.KatanaDrawn);
             var sheathedHilt = BuildKit.FindDeep(model.transform, "katana_hilt");
             if (drawnSword == null || sheathedHilt == null)
                 Debug.LogWarning("[Clover.Build] The character model has no katana_drawn or katana_hilt object; the sword will not move between sheath and hand.");
@@ -302,8 +305,7 @@ namespace Clover.EditorTools
             shown.Configure(controller, combat, defence, element, animator,
                 drawnSword != null ? drawnSword.gameObject : null, sheathedHilt != null ? sheathedHilt.gameObject : null,
                 sheath != null ? sheath.gameObject : null);
-            // Every other weapon is a prefab hung on the skeleton's sockets, in the hand and at rest.
-            shown.ConfigureRack(WeaponBuilder.Hang(model, modelAsset));
+            shown.ConfigureRack(rack);
             // What weapons throw and raise: a crescent of light, spikes out of the ground.
             var shots = player.AddComponent<WeaponShots>();
             shots.Configure(VfxBuilder.SlashMaterial());
