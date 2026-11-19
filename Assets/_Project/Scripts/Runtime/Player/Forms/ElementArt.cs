@@ -58,6 +58,13 @@ namespace Clover.Player.Forms
             for (int i = 0; i < set.Pieces.Length; i++) pieces[set.Pieces[i].Name] = i;
             for (int i = 0; i < set.Sheets.Length; i++) sheets[set.Sheets[i].Name] = i;
             MakeLabel();
+            // The reactions' looks come with the art, so every scene that has it draws them without being rebuilt.
+            if (set.Reactions != null)
+            {
+                var reactions = GetComponent<ReactionArt>();
+                if (reactions == null) reactions = gameObject.AddComponent<ReactionArt>();
+                reactions.Configure(set.Reactions);
+            }
         }
 
         private void OnEnable() => instance = this;

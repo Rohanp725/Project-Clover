@@ -22,14 +22,16 @@ namespace Clover.EditorTools
         public const string CharactersDir = ModelsDir + "Characters/";
         public const string WeaponsDir = ModelsDir + "Weapons/";
         public const string VfxDir = ArtDir + "VFX/";
+        public const string VfxCombosDir = VfxDir + "Combos/";
         public const string VfxMasksDir = "Assets/_Project/Generated/Vfx/Element/";
+        public const string ReactionMasksDir = "Assets/_Project/Generated/Vfx/Reaction/";
         public const string AudioDir = "Assets/_Project/Audio/";
         public const int MaxTextureSize = 2048;
         public const int MaxUiTextureSize = 1024;
 
         private void OnPreprocessTexture()
         {
-            if (assetPath.StartsWith(VfxDir) || assetPath.StartsWith(VfxMasksDir))
+            if (assetPath.StartsWith(VfxDir) || assetPath.StartsWith(VfxMasksDir) || assetPath.StartsWith(ReactionMasksDir))
             {
                 PreprocessEffectTexture((TextureImporter)assetImporter);
                 return;
@@ -115,6 +117,9 @@ namespace Clover.EditorTools
                 kit.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
                 kit.materialLocation = ModelImporterMaterialLocation.InPrefab;
                 kit.generateSecondaryUV = false;
+                // The reactions' kits are placed by a recipe written in Unity's axes on the assumption that each piece's
+                // own axes are Unity's (combos_recipe.json, "axes"): the axis turn is baked into the meshes.
+                kit.bakeAxisConversion = assetPath.StartsWith(VfxCombosDir);
                 return;
             }
             if (!assetPath.StartsWith(ModelsDir)) return;

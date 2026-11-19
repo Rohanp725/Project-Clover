@@ -46,5 +46,7 @@ namespace Clover.Player.Forms
         public Material ShadowFigure;
         /// <summary>The font of the line that says which effects are shown after the switch is pressed.</summary>
         public Font Label;
+        /// <summary>The reactions' designed looks (Clover > Build > Reaction Art); with them here the art draws the reactions too.</summary>
+        public ReactionArtSet Reactions;
     }
 }
