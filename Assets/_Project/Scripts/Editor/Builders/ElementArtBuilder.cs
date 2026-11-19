@@ -274,6 +274,9 @@ namespace Clover.EditorTools
             set.Solids = solids;
             set.ShadowFigure = shadow;
             set.Label = UiArt.Font();
+            // The reactions' looks ride on this set; a set made new finds them again.
+            var reactions = AssetDatabase.LoadAssetAtPath<ReactionArtSet>(ReactionArtBuilder.SetPath);
+            if (reactions != null) set.Reactions = reactions;
             EditorUtility.SetDirty(set);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -336,6 +339,21 @@ namespace Clover.EditorTools
             int dot = name.LastIndexOf('.');
             if (dot > 0 && int.TryParse(name.Substring(dot + 1), out int number)) name = name.Substring(0, dot) + "_" + number;
             return name;
+        }
+
+        /// <summary>
+        /// A Blender material's band as the notes give it, for builders that paint the same kits (the reactions' looks):
+        /// its linear colour (alpha: how see-through), the paint flag Clover/Spell reads (1 plain, 0.7 chrome, 0.3 foam),
+        /// and whether it is drawn as a see-through glow. False for a slot the notes do not name.
+        /// </summary>
+        public static bool TryBand(string slot, out Color colour, out float flag, out bool glow)
+        {
+            Band band = default;
+            bool known = slot != null && Bands.TryGetValue(slot, out band);
+            colour = known ? band.Colour : Color.grey;
+            flag = known ? band.Flag : 1f;
+            glow = known && band.Glow;
+            return known;
         }
 
         private static Band BandOf(string slot)
@@ -429,7 +447,7 @@ namespace Clover.EditorTools
         }
 
         // The ink line is pushed out along normals averaged over every face meeting at a point, so it stays closed at corners.
-        private static List<Vector3> SmoothNormals(Vector3[] vertices, Vector3[] normals)
+        internal static List<Vector3> SmoothNormals(Vector3[] vertices, Vector3[] normals)
         {
             var sums = new Dictionary<Vector3Int, Vector3>();
             var keys = new Vector3Int[vertices.Length];

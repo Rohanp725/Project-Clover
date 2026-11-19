@@ -1569,6 +1569,51 @@ changed. The old playtest stays with its players until the first few phases of t
   - Other spell forms and worn spells still use `ElementLook`'s old puffs and sparks.
 - **Verified**: see the report of the run (EditMode suite, `FxProbe`, regressions, profiler).
 
+### Reaction effects in the game (2026-11-19; the owner's approved combos pass 2, written without the editor; Claude's defaults in the placing, not yet seen in play by the owner)
+
+- **To bring in** (asset-intake, approved files only): `vfx_combo_kit_v2.fbx` and `vfx_combo_kit_v3.fbx` into
+  `Art/VFX/Combos/`, the recipe `combos_recipe.json` beside them (a text asset), and the source as
+  `Art/Source/vfx_combos_v2.blend` (a copy of `vfx_v2_combos.blend`). `AssetImportRules` bakes the axis turn into the
+  combo kits (the recipe assumes it) and imports the reactions' masks in `Generated/Vfx/Reaction` as linear data.
+- **Built** by `Clover > Build > Reaction Art` (`ReactionArtBuilder`, after Element Art) into
+  `Generated/Vfx/Reaction/reaction_art.asset` (`ReactionArtSet`). Each of the 24 recipe combos is rebuilt from its
+  pieces (1,024 in all) in the recipe's places:
+  - solid pieces merged into one mesh for each place (on the body, on the ground) and element, painted in their bands
+    and drawn in that element's inked solid material from the element art;
+  - see-through pieces (beams, fog) merged into one glow mesh;
+  - flat pieces rasterised into one or two floor masks a look (up to four colours to a mask, lowest first), each its
+    own `Clover/Decal` material, drawn on outward from the feet;
+  - three to seven parts a look, about 160 to 7,400 triangles; the build writes `review/checks/reaction_art.md`.
+  - A re-coloured piece wears the recipe's material in its first slot and its kit's in the rest.
+  - The first-pass materials only the combos use are painted from the notes' bands.
+- **Lamps**: Blender's point lamps become URP point lights without shadows. Intensity = watts / (4 pi^2), so 395 W is
+  10. Range is sqrt(2 x intensity), held to 1.5 to 5 m. A look has at most two; the dimmer ones are left out (Thermal
+  Shock's cold lamp, Fire Medicine's green heart, Burnt Mound's three stone lamps, two of Firebloom's lily lamps). They
+  fade over 0.45 s.
+- **In play** (`ReactionArt`, added beside the element art by `ElementArt`, so no scene was rebuilt):
+  - A designed look pops in over 0.1 s. Its body parts ride on the struck enemy, and its ground parts stay where it
+    stood.
+  - Solids close to nothing over the last third of 0.85 s (body) or 1.1 s (ground). Marks fade over the last third
+    of 1.8 s.
+  - The pool is 120 renderers and 6 lamps, made once, for up to 16 looks at a time. A new look when the pool is full
+    ends the oldest.
+  - The other 31 reactions are composed from the element art: each parent's own piece bursts up at the feet, and the
+    second parent's ground mark (else the first's) is laid. The list is in `ReactionDesigns` and the build's report.
+  - F8 switches the reactions too. With the old effects on, a reaction shows the old puff.
+  - Gameplay is unchanged.
+- **Claude's defaults**:
+  - The look-dev's camera looked the other way to the game's, so a look is turned 180 degrees past the camera's yaw
+    and is seen as its frame was. The recipe says its camera looked along +Z, but its frames show -Z.
+  - Rime, Capsize, Logan Stone and Stolen Warmth are laid along the blow instead, from the player through the
+    enemy, with the look-dev player's side (220 degrees in the recipe) put on the player's.
+  - The recipe's "The Sealed Jar" is drawn for the game's Shut in the Dark.
+  - Not built:
+    - the bodies' recolours (bleach, pallor, frost) and the after-image ghosts;
+    - the states that last (Diamond Ring's disc, the jar, the anvil, the net), which show for a moment only;
+    - pieces moving within a look (every combo is one held frame).
+- **Verified**: offline compile only. The editor run (build, EditMode suite, `ReactionArtProbe` frames and burst) is
+  owed.
+
 ## Credits (decided 2026-11-18)
 
 - **Decided (user)**: the published game has a credits section. It thanks **_dnen**, **parvar11** and **nairarj000**,

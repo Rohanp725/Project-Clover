@@ -5,20 +5,28 @@ using UnityEngine;
 namespace Clover.Player
 {
     /// <summary>
-    /// How a reaction is seen: the one place its look is made, so the real effects (the Blender look-dev, not yet
-    /// approved) drop in here later. For now a placeholder: one puff in the two afflictions' colours together. The
-    /// reaction's name over the enemy is the HUD's (<see cref="PlayerReactions.Shown"/>).
+    /// How a reaction is seen: the one place its look is made. With the element art on, the 24 reactions the look-dev
+    /// designed show their approved look (<see cref="Forms.ReactionArt"/>) and the other 31 a look composed from their two
+    /// parents' element art; with it off (F8) or absent, the old placeholder: one puff in the two afflictions' colours.
+    /// The reaction's name over the enemy is the HUD's (<see cref="PlayerReactions.Shown"/>).
     /// </summary>
     public static class ReactionLook
     {
-        public static void Play(int pair, Vector3 at)
+        /// <summary>The pair's look at a body whose feet are at <paramref name="at"/>, not followed, turned to the camera.</summary>
+        public static void Play(int pair, Vector3 at) => Play(pair, at, null, Vector3.zero);
+
+        /// <summary>
+        /// The pair's look at a body whose feet are at <paramref name="at"/>. Its body parts ride on
+        /// <paramref name="body"/> while it stands; <paramref name="away"/> is the way the blow carried (from the player
+        /// through the enemy), which lays a look with a way to it (Rime, Capsize, Logan Stone, Stolen Warmth) along it.
+        /// </summary>
+        public static void Play(int pair, Vector3 at, Transform body, Vector3 away)
         {
             if (pair < 0 || pair >= AfflictionPairs.Count) return;
-            // Until the combos are approved, the element art shows the pair's two parents landing together.
             if (Forms.ElementArt.Ready)
             {
-                Forms.HitArt.Play(Forms.HitArt.ElementOf(AfflictionPairs.First(pair)), at + Vector3.up * 1.1f, Vector3.forward);
-                Forms.HitArt.Play(Forms.HitArt.ElementOf(AfflictionPairs.Second(pair)), at + Vector3.up * 1.15f, Vector3.back);
+                if (!Forms.ReactionArt.Play(pair, at, body, away)) Forms.ReactionArt.Compose(pair, at, away);
+                return;
             }
             Vfx.Play(VfxKind.TintPuff, at + Vector3.up * 1.3f, Vector3.up, 1.1f, Colour(pair));
         }

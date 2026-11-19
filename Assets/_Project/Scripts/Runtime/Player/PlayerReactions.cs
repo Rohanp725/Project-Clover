@@ -199,7 +199,8 @@ namespace Clover.Player
                 return false;
             }
             Vector3 at = who.transform.position;
-            ReactionLook.Play(pair, at);
+            // Its look rides on the enemy, and one with a way to it lies along the way from the player through the enemy.
+            ReactionLook.Play(pair, at, who.transform, at - transform.position);
             ShownCount++;
             shownByPair[pair]++;
             LastShown = mark.Name;
