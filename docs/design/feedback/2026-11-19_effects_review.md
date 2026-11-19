@@ -27,6 +27,8 @@ being read. The triage at the end says who acts on each.
   filmed on real enemies (the castle soldiers) that react: they flinch, freeze, fall and get thrown. Wherever an
   effect reaches more than one target (chains, areas, carried afflictions, bolts that pass through), a group of 3 to
   5 enemies is spread out to show its reach. The camera and placement must keep the floor marks in view.
+- **The 18 god moves (the gods' weapons):** the owner likes the concept and the visualisation of all of them
+  (2026-11-19, said in chat). Keep their ideas and looks as they are when they are built in Phase 5.
 - **Praised; these set the bar:** Diamond Ring, Iron Thorns, Sleet Charge, Thermal Shock (concept), Firebloom,
   Earthed, Lightning's whole set, Gust, Stone Rise's shove, Riptide's wave, Water's landing splash, Struck Plate's
   after effect, Light's Marked, Glare and Ray Along the Edge, Dark's Grasp and blade blows.
