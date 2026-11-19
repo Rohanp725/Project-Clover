@@ -442,7 +442,7 @@ Group: Reactions
 
 **How to use it.** Carry two elements. Your weapon lays the first and your spells, the charged blade and the R2 strike lay the second, so weave blade and spell on the same enemy. Many reactions then leave a state on the enemy for a few seconds (a crust, a crack, coils) that your next blow, its time running out, or its death sets off: a heavy to break or split it, a few quick blows to rock or coil it. Wait out the rest, or turn to another enemy.
 
-**How it looks.** The reaction's name rises over the enemy for a moment, with a puff in its two elements' colours. Each reaction's own look comes in a later update.
+**How it looks.** The reaction's name rises over the enemy for a moment. Twenty-four reactions have a look of their own, drawn in both elements' stuff on the enemy and on the ground at its feet for about a second. The rest show each element's own burst together, with a mark on the ground, until theirs is drawn.
 
 ## reaction-flashover
 Title: Flashover (Fire and Lightning)
@@ -559,7 +559,7 @@ Group: Reactions
 
 **How to use it.** Curse a Marked enemy, then strike it again and again while the ring holds.
 
-**How it looks.** Its name over the enemy and a burst on it. Not yet: the black disc with one burning point.
+**How it looks.** Its name over the enemy, and for a moment the black disc ringed in gold with one burning bead at its rim. Not yet: the disc staying for the 4 s.
 
 ## reaction-shut-in-the-dark
 Title: Shut in the Dark (Dark and Poison)
@@ -650,7 +650,7 @@ Group: Reactions
 
 **How to use it.** Sink it, then come in with heavy blows: each one pins it for a moment. Not yet: sunk, it should be unable to dodge, leap or step back, and others wading in should slow too.
 
-**How it looks.** Its name over the enemy. Not yet: the wet ring of sand round its feet.
+**How it looks.** Its name over the enemy, and for a moment the floor tipping into a pit round it, wet at the rim. Not yet: the ring of sand staying round its feet.
 
 ## reaction-iron-thorns
 Title: Iron Thorns (Life and Metal)
