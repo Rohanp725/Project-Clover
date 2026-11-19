@@ -26,7 +26,9 @@ namespace Clover.World
     /// </summary>
     public class Hazards : MonoBehaviour
     {
-        public int Capacity = 48;
+        // Set from the crowd probe (Phase 3.6): twelve enemies with about seventeen reactions a second kept 40 alive at the
+        // peak, near the old 48, so there is room to spare. Not serialized, so a prefab built with 48 does not keep it.
+        [System.NonSerialized] public int Capacity = 96;
         /// <summary>Seconds between the puffs of effect that show a patch is there, and between those of one that moves.</summary>
         public float ShowEvery = 0.11f;
         public float ShowMovingEvery = 0.035f;
