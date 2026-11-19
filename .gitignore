@@ -53,6 +53,8 @@ Thumbs.db
 # Review outputs that are rebuilt by the tools; golden frames and reports are kept
 /review/shots/current/
 /review/audit/*.csv
+# Filmed frames and the GIFs made from them (AgentScripts/ReactionGifFrames.cs, reaction_gifs.py): gigabytes, rebuilt
+/review/gifs/
 
 # Compiled leftovers from script run / method reload
 /AgentScripts/**/*.dll
