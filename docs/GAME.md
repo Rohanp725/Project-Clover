@@ -322,8 +322,10 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   Throw, the Wild Hunt, Bare-Handed King, Drive the Nail) to be pushed bigger before intake. The Wild Hunt's riders
   and the Cauldron Call's beasts are effect creatures (rigid spectral stags and hounds swapping three gallop poses);
   the Drum Ring's drums are solid lacquered taiko in cloud; the plain Massive Sword gets parrying hooks
-  (Parierhaken); the kozuka sits in its pocket on the scabbard. The Cross bough's head (the crossbar or a jumonji
-  yari) waits for a side-by-side picture. Every effect is a timeline, never a still (the owner's word on the
+  (Parierhaken); the kozuka sits in its pocket on the scabbard. After the redos the owner approved all of it, the
+  yumi-yari, the hanging sheaves, the hooked plain Massive Sword, the kozuka scabbard, the hand-built banner glyphs
+  and the four pushed god moves included; and chose the **jumonji yari** (a true cross head) for the Cross bough,
+  the other boughs keeping spear v2. Every effect is a timeline, never a still (the owner's word on the
   reactions, 2026-11-19).
   - **In the game since 2026-11-19**: see "Elemental effects in the game (2026-11-19)" under Vertical slice. F8 in the
     playtest switches back to the old effects to compare; the switch is temporary.
