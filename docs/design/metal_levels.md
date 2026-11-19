@@ -502,7 +502,7 @@ moves the walls.
 #### 2A. The East Stair and the Court of the Dial (H1)
 - *The stair:* in R1 east, x 37 to 42, from the head at (39.5, 8, -27) down north to (39.5, 0, -9): 18 m, 24 degrees,
   a balustrade 0.6 m on its west side over the drop to R2. Walking north, down into the maze, the court opening below.
-- *The clew:* a skeleton at the stair's foot, (40, 0, -7), holding the blue thread (if chosen, 4.4.7).
+- *The clew:* a skeleton at the stair's foot, (40, 0, -7), holding the blue thread (decided by the owner, 4.4.7).
 - *Shape:* the court, x 24 to 42, z -9 to 9. In its middle **the Cyclops' Eye**, a round iron grate 12 m across at
   (33, 0, 0), glowing from beneath: through it, 6 m down, an anvil with a plain hammer on it and someone sitting by
   it (5.4.3). The plaque P1 on its dais at the north-west, (27, 1.5, 7). A watchdog on the dais.
@@ -971,15 +971,15 @@ zone) are reused as named; where Fire's pieces are not yet in code, they are bui
 |---|---|---|
 | G1 | **The round**: the giant walking the square on a clock (150 s), corners, cradle stops, footfall events (sound, tremor, footprints on the Round), the nudge rule (forward only, unseen, at most 40 s), dithering when between camera and player | Everywhere |
 | G2 | **The gaze**: one real-time shadowed spot light from the visor, sweeping; the seen test as a ray from the same point; the bell, the hold, the spot | Everywhere in range |
-| G3 | **Stones**: carried count, throw, growing-shadow mark, landing damage to all, stay (open ground, six at most) or shatter (maze), stagger bulls, derail carts | Everywhere in range |
+| G3 | **Stones**: carried count, throw, growing-shadow mark, landing damage to all, stay (open ground, six at most) or shatter (maze), derail carts | Everywhere in range |
 | G4 | **The Tread and the layouts**: the anvil, the stamps, the leaf moves, the layout table, the plaque state, the stamp stagger near the west rampart; the EditMode test of 4.3 | The labyrinth |
 | G5 | **Watchdogs**: look at the giant; stand and glow within 40 m | Every hub, corner and stretch of the main path |
-| G6 | **Ariadne's thread** (if chosen): a line on the floor behind the player inside the maze, cut by rising leaves | The labyrinth |
+| G6 | **Ariadne's thread** (decided by the owner): a line on the floor behind the player inside the maze, cut by rising leaves | The labyrinth |
 | G7 | **Traps**: the binding (chest and throne), jaw plate, pit plate, net, biting jar; the mender's re-arm | Section 9 |
 | G8 | **Forge rhythms**: bellows on every second footfall; the ladle's pour cycle | The Bellows Hall, the Casting Floor |
 | C1 | The chained (section 11) | Quarries, maze, Rocks |
 | C2 | The wheeler and the mender, moving on the rail graph | Everywhere but the Rocks |
-| C3 | The bronze-veined (nail side, turning, drain, heat, embrace, quench) | The forge; the sown men; Kedalion |
+| C3 | The bronze-veined (nail side, turning, drain, heat, embrace, quench) | The forge; Kedalion |
 | C4 | The handmaiden's memory and parry | Section 6 |
 | C5 | The bronze birds (circling shadows, warned feather volleys, grounded by a gong), the lead bird (two gongs at once) | Section 8 |
 | C6 | Kedalion and his shoulder mender | 5.4.3 |
@@ -990,7 +990,7 @@ zone) are reused as named; where Fire's pieces are not yet in code, they are bui
   `Rubble`, `Solid`, `Carving`, `Rest`), Fire's B-pieces above, `TopDownCamera.SetFraming`, `HoldGround`, progress keys,
   `AreaDirector.OnRevived` for return to the last fire. Fire's shade list and heat schedule are not used.
 - **New kit models** (through staging and the owner's approval, as every asset): the giant (Decided: new, detailed,
-  Greek), `watchdog`, `wheeler`, `mender`, `chained`, `bronze_veined`, `handmaiden`, `bronze_bull`, `ore_cart`,
+  Greek), `watchdog`, `wheeler`, `mender`, `chained`, `bronze_veined`, `handmaiden`, `bronze_bird`, `lead_bird`, `ore_cart`,
   `cradle`, `leaf`, `maze_wall` tops with Greek key, `plaque_table`, `crane`, `bellows`, `crucible`, `ladle_gantry`,
   `anvil`, `forge_furnace`, `cyclops_furnace_mouth`, `greek_ship`, `pithos`, `bronze_chest`, `golden_throne`,
   `tripod_brazier` (Metal's rest fire), `chariot` and `bronze_horse`.
@@ -1044,7 +1044,7 @@ chained moved into the pit (0.4). With all of them, 40.1.
 | D1 | 7 chained, 2 wheelers, 1 mender | 10 |
 | D2 | One way per leg, so it varies by layout: Axe 3 chained, 5 wheelers, 2 menders; Bull 2, 7 (2 of them wrecks), 3; Wing 3, 5, 3 | 10 to 12 |
 | D3 | 7 bronze-veined, 1 wheeler, 1 mender | 9 |
-| Side paths and the trial | 2 chained (the Rocks), Kedalion and his mender, 2 bulls, 6 sown men | 11 |
+| Side paths and the trial | 2 chained (the Rocks), Kedalion and his mender, 12 bronze birds and the lead bird | 16 |
 | **All** | | **40 to 42, the handmaiden and the god** (Fire: 46) |
 
 29 to 31 on the main path (Fire: 40). Fewer bodies because the giant is a constant extra threat and its throws stand
