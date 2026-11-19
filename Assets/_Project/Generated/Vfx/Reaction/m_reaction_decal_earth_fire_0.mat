@@ -38,8 +38,8 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _ColorA: {r: 0, g: 0, b: 0, a: 0}
-    - _ColorB: {r: 0, g: 0, b: 0, a: 0}
-    - _ColorG: {r: 0.17184407, g: 0.14282566, b: 0.11207492, a: 0.95}
-    - _ColorR: {r: 0.23479503, g: 0.1600776, b: 0.1333515, a: 0.92}
+    - _ColorB: {r: 1, g: 0.24, b: 0.02, a: 1}
+    - _ColorG: {r: 0.025, g: 0.018, b: 0.012, a: 0.95}
+    - _ColorR: {r: 0.045, g: 0.022, b: 0.016, a: 0.92}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

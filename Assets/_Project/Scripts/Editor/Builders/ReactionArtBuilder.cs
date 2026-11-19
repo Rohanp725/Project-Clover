@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Clover.Gameplay;
 using Clover.Player.Forms;
@@ -25,7 +26,10 @@ namespace Clover.EditorTools
     ///   Clover/Decal material;
     /// - the recipe's point lamps become at most two URP lamps (<see cref="ReactionDesigns.LampIntensity"/>), the
     ///   dimmest left out.
-    /// A re-coloured piece wears the recipe's material in its first slot and its kit's own in the rest. The bodies (and
+    /// What each triangle wears is read from the source .blend the recipe was written from (Art/Source/vfx_combos_v2.blend,
+    /// as Unity imports it): the kits lost some of it (the v3 kit keeps one material an object, so a bolt's edge, cyan
+    /// and core bands are one), and the recipe names one material a piece. Without the source, a piece wearing one of
+    /// its kit's own materials keeps the kit's, and any other material re-colours the whole piece. The bodies (and
     /// their recolours: bleach, pallor, frost, the after-image ghosts) are the game's own enemies, not built here.
     /// Everything lands under Generated/Vfx/Reaction/ under stable names; the set keeps its GUID across rebuilds and is
     /// handed to the element art's set, which every scene with the art already holds. Run Clover > Build > Element Art
@@ -39,6 +43,31 @@ namespace Clover.EditorTools
         public const string RecipePath = CombosFolder + "/combos_recipe.json";
         private const string KitRoot = "Assets/_Project/Art/VFX";
         private const string ReportPath = "review/checks/reaction_art.md";
+        /// <summary>The look-dev's file the recipe was written from; Unity imports it through Blender.</summary>
+        public const string SourcePath = "Assets/_Project/Art/Source/vfx_combos_v2.blend";
+
+        /// <summary>
+        /// The combo kits are imported with their axes baked, which leaves each of their pieces turned half round about
+        /// up from the way the recipe takes it. Checked against the source .blend: with this turn every recipe piece lies
+        /// within 2 cm of its object there; without it every asymmetric combo-kit piece faces the wrong way.
+        /// </summary>
+        public static readonly Matrix4x4 ComboKitTurn = Matrix4x4.Rotate(Quaternion.Euler(0f, 180f, 0f));
+
+        /// <summary>
+        /// Pieces the look-dev's frames show that the recipe lists nowhere (its pass-2 selection missed them; they are in
+        /// no kit either), taken from the source .blend as they lie there about the combo's body: Caught Light's gold
+        /// caustic nets and its ink pool, The Sealed Jar's lacquer ring, Anvil Stone's anvil. Poison and Lightning's jolt
+        /// ghost is left out too, but it is an after-image, which the game does not build.
+        /// </summary>
+        public static readonly Dictionary<string, string[]> LeftOutOfRecipe = new Dictionary<string, string[]>
+        {
+            ["water_light"] = new[] { "c2_water_light_combo_caustic", "c2_water_light_combo_caustic.001", "c2_water_light_water_ink" },
+            ["dark_poison"] = new[] { "c2_dark_poison_combo_lacquer_ring" },
+            ["earth_metal"] = new[] { "c2_earth_metal_combo_anvilstone" },
+        };
+
+        /// <summary>A piece whose top is no higher than this lies on the ground (the recipe's own rule for its placement).</summary>
+        private const float GroundTop = 0.15f;
 
         /// <summary>Thinner than this once placed, a piece is a mark on the floor (as the element art judges its flat pieces).</summary>
         public const float FlatHeight = 0.06f;
@@ -77,6 +106,8 @@ namespace Clover.EditorTools
             ["m_vfx_fire_star"] = new Paint(1f, 0.35f, 0.03f),
             ["m_vfx_fire_char"] = new Paint(0.045f, 0.022f, 0.016f, 0.92f),
             ["m_vfx_fire_smoke"] = new Paint(0.09f, 0.05f, 0.04f, 0.85f),
+            // The char's ember cracks ("cools from orange cracks to black"): Fire's orange band.
+            ["m_vfx_fire_crack"] = new Paint(1f, 0.24f, 0.02f),
             // The combos' own: coal seams, plasma flame (flame bands with a violet heart), slag, frost white, steam,
             // the slick's yellow-green sheen, the white flash, Fire Medicine's green heart.
             ["m_vfx_combo_coal"] = new Paint(1f, 0.3f, 0.03f),
@@ -97,6 +128,9 @@ namespace Clover.EditorTools
             ["m_vfx_water_ink"] = new Paint(0.01f, 0.05f, 0.1f),
             // Lightning's violet edge; Wind's off-white and dry leaf.
             ["m_vfx_lightning_edge"] = new Paint(0.28f, 0.08f, 0.75f),
+            // A bolt is a white core inside a cyan band inside the violet edge.
+            ["m_vfx_lightning_cyan"] = new Paint(0.25f, 0.8f, 1f),
+            ["m_vfx_lightning_core"] = new Paint(0.95f, 0.97f, 1f),
             ["m_vfx_wind_air"] = new Paint(0.82f, 0.84f, 0.78f),
             ["m_vfx_wind_leaf"] = new Paint(0.5f, 0.42f, 0.16f),
             // Earth: ochre dust, the ochre crack's lip, near-black cracks, and pass 2's dark upturned dust.
@@ -106,6 +140,11 @@ namespace Clover.EditorTools
             ["m2_earth_dust"] = new Paint(0.12f, 0.07f, 0.035f),
             // Metal: spark heads, steel, a pale burr.
             ["m_vfx_metal_sparkhead"] = new Paint(1f, 0.8f, 0.35f),
+            // Caught Light's caustic net is gold; The Sealed Jar's lacquer ring is red lacquer.
+            ["m_vfx_light_flat"] = new Paint(0.9f, 0.62f, 0.14f),
+            ["m_vfx_combo_lacquer"] = new Paint(0.32f, 0.03f, 0.02f),
+            // A spark's short tail behind its bright head is orange (no number in the notes; between head and cherry).
+            ["m_vfx_metal_sparktail"] = new Paint(1f, 0.45f, 0.08f),
             ["m_vfx_metal_steel"] = new Paint(0.45f, 0.47f, 0.5f),
             ["m2_metal_burr"] = new Paint(0.62f, 0.62f, 0.64f),
             // Poison: blue-green venom and bile, never white.
@@ -114,6 +153,9 @@ namespace Clover.EditorTools
             // Life: leaf green and the dark green of stems.
             ["m_vfx_life_leaf"] = new Paint(0.12f, 0.5f, 0.08f),
             ["m_vfx_life_stem"] = new Paint(0.05f, 0.2f, 0.04f),
+            // Thorns in the new-growth yellow-green, and pollen yellow (the notes give no number for either).
+            ["m_vfx_life_thorn"] = new Paint(0.5f, 0.8f, 0.15f),
+            ["m_vfx_life_pollen"] = new Paint(0.95f, 0.8f, 0.2f),
             ["m2_life_dark"] = new Paint(0.03f, 0.14f, 0.03f),
             // Dark: ink black-violet.
             ["m_vfx_dark_body"] = new Paint(0.02f, 0.005f, 0.03f),
@@ -191,6 +233,29 @@ namespace Clover.EditorTools
             public int Colour;
         }
 
+        // The source .blend's objects by name, and the bands worked out for kit pieces that lost theirs.
+        private sealed class Source
+        {
+            public readonly Dictionary<string, MeshRenderer> Objects = new Dictionary<string, MeshRenderer>();
+            public readonly Dictionary<string, int[]> Bands = new Dictionary<string, int[]>();
+            public readonly Dictionary<string, Transform> Places = new Dictionary<string, Transform>();
+            public Transform Root;
+            public int Matched, Rebanded, Unmatched, Added;
+
+            public static Source Load()
+            {
+                var root = AssetDatabase.LoadAssetAtPath<GameObject>(SourcePath);
+                if (root == null) return null;
+                var source = new Source { Root = root.transform };
+                foreach (var place in root.GetComponentsInChildren<Transform>(true))
+                    if (!source.Places.ContainsKey(place.name)) source.Places[place.name] = place;
+                foreach (var renderer in root.GetComponentsInChildren<MeshRenderer>(true))
+                    if (!source.Objects.ContainsKey(renderer.name) && renderer.GetComponent<MeshFilter>() != null && renderer.GetComponent<MeshFilter>().sharedMesh != null)
+                        source.Objects[renderer.name] = renderer;
+                return source;
+            }
+        }
+
         // Everything one combo gathers.
         private sealed class Gathered
         {
@@ -198,6 +263,8 @@ namespace Clover.EditorTools
             public readonly List<Flat> Flats = new List<Flat>();
             public readonly List<Color> FlatColours = new List<Color>();
             public readonly List<float> FlatHeights = new List<float>();
+            /// <summary>How much floor each flat colour covers, square metres.</summary>
+            public readonly List<float> FlatAreas = new List<float>();
             public readonly List<string> Missing = new List<string>();
             public readonly HashSet<string> Grey = new HashSet<string>();
             public int FlatPieces;
@@ -218,6 +285,7 @@ namespace Clover.EditorTools
                 {
                     FlatColours.Add(colour);
                     FlatHeights.Add(height);
+                    FlatAreas.Add(0f);
                     return FlatColours.Count - 1;
                 }
                 FlatHeights[found] = Mathf.Min(FlatHeights[found], height);
@@ -269,6 +337,7 @@ namespace Clover.EditorTools
                 }
 
             var kits = new Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)>();
+            var source = Source.Load();
             var looks = new List<ReactionArtSet.Look>();
             var parts = new List<ReactionArtSet.Part>();
             var lamps = new List<ReactionArtSet.Lamp>();
@@ -287,7 +356,7 @@ namespace Clover.EditorTools
                         Debug.LogError($"[Clover.Build] Reaction art: the recipe's '{combo.Pair}' ({combo.Name}) names no pair; left out.");
                         continue;
                     }
-                    var gathered = Gather(combo, kits);
+                    var gathered = Gather(combo, kits, source);
                     var look = new ReactionArtSet.Look
                     {
                         Pair = pair, Key = combo.Pair, Name = combo.Name, Directed = ReactionDesigns.IsDirected(combo.Pair),
@@ -369,8 +438,13 @@ namespace Clover.EditorTools
                 ReactionDesigns.Composed(pair, out string first, out string second, out string mark, out _);
                 composed.AppendLine($"| {AfflictionPairs.Name(pair)} | {first} | {second} | {mark ?? "-"} |");
             }
+            string worn = source == null
+                ? $"Materials: {SourcePath} is not in the project (or Blender could not import it), so each piece wears the recipe's material or its kit's own. "
+                : $"Materials: per triangle as {SourcePath} has them; {source.Matched} pieces found there, {source.Rebanded} of them banded again from it, " +
+                  $"{source.Unmatched} that could not be matched{(source.Unmatched > 0 ? " (UNMATCHED: they wear the recipe's material or the kit's)" : "")}; " +
+                  $"{source.Added} pieces the recipe left out taken from it as they lie there. ";
             File.WriteAllText(ReportPath,
-                $"# Reaction art\n\n{designed} designed looks from {RecipePath}, {parts.Count} parts, {lamps.Count} lamps, {masks.Count} floor masks. " +
+                $"# Reaction art\n\n{designed} designed looks from {RecipePath}, {parts.Count} parts, {lamps.Count} lamps, {masks.Count} floor masks. " + worn +
                 $"A look over {TriangleBudget} triangles is marked OVER. Lamps: intensity = W / (4 pi^2), range sqrt(2 I) held to " +
                 $"{ReactionDesigns.LeastLampRange}-{ReactionDesigns.MostLampRange} m, at most {ReactionDesigns.MostLampsPerLook} a look.\n\n" +
                 "| Reaction (recipe) | Game name | Pieces | Parts (solid, glow, marks) | Triangles | Lamps kept of | Notes |\n|---|---|---|---|---|---|---|\n" + Report +
@@ -379,7 +453,7 @@ namespace Clover.EditorTools
         }
 
         // Every piece of a combo, placed and sorted into merges and flat triangles.
-        private static Gathered Gather(ReactionRecipe.Combo combo, Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)> kits)
+        private static Gathered Gather(ReactionRecipe.Combo combo, Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)> kits, Source source)
         {
             var gathered = new Gathered();
             foreach (var group in combo.Groups)
@@ -399,22 +473,65 @@ namespace Clover.EditorTools
                     gathered.Missing.Add($"{group.KitObject} ({group.Kit}) x{group.Instances.Count}");
                     continue;
                 }
-                foreach (var instance in group.Instances) AddPiece(combo, group, instance, piece, kit.root, gathered);
+                foreach (var instance in group.Instances) AddPiece(combo, group, instance, piece, kit.root, gathered, source);
+            }
+            if (source != null && LeftOutOfRecipe.TryGetValue(combo.Pair, out var leftOut) && source.Places.TryGetValue("enemy~" + combo.Pair, out var body))
+            {
+                // The recipe's origin: the main body's feet on the ground, in the same axes as the source's import.
+                var origin = source.Root.InverseTransformPoint(body.position);
+                origin.y = 0f;
+                foreach (string name in leftOut)
+                {
+                    if (!source.Objects.TryGetValue(name, out var renderer))
+                    {
+                        gathered.Missing.Add($"{name} (left out of the recipe; not in {SourcePath})");
+                        continue;
+                    }
+                    var mesh = renderer.GetComponent<MeshFilter>().sharedMesh;
+                    var place = Matrix4x4.Translate(-origin) * source.Root.worldToLocalMatrix * renderer.transform.localToWorldMatrix;
+                    var slots = renderer.sharedMaterials;
+                    var worn = new List<string>();
+                    for (int s = 0; s < mesh.subMeshCount; s++)
+                    {
+                        string material = s < slots.Length && slots[s] != null ? slots[s].name : null;
+                        for (int k = 0; k < (int)mesh.GetIndexCount(s) / 3; k++) worn.Add(material);
+                    }
+                    float top = float.MinValue;
+                    foreach (var corner in mesh.vertices) top = Mathf.Max(top, place.MultiplyPoint3x4(corner).y);
+                    AddMesh(combo.Pair, mesh, place, worn.ToArray(), top <= GroundTop, worn.Count > 0 ? worn[0] : null, gathered);
+                    source.Added++;
+                }
             }
             return gathered;
         }
 
         private static void AddPiece(ReactionRecipe.Combo combo, ReactionRecipe.Group group, ReactionRecipe.Instance instance, MeshFilter filter, Transform kitRoot,
-            Gathered gathered)
+            Gathered gathered, Source source)
         {
-            var source = filter.sharedMesh;
-            // The piece in its own axes (Unity's), at its own origin wherever it lies in the kit file, then where the recipe puts it.
+            AddMesh(combo.Pair, filter.sharedMesh, Placement(group, instance, filter, kitRoot), Worn(combo, group, instance, filter, source), instance.OnGround,
+                group.Material, gathered);
+        }
+
+        /// <summary>
+        /// Where a recipe piece's kit mesh goes, about the main body's feet: the piece in its own axes (Unity's, a combo
+        /// kit's turned by <see cref="ComboKitTurn"/>), at its own origin wherever it lies in the kit file, then where the
+        /// recipe puts it.
+        /// </summary>
+        public static Matrix4x4 Placement(ReactionRecipe.Group group, ReactionRecipe.Instance instance, MeshFilter filter, Transform kitRoot)
+        {
             var toKit = kitRoot.worldToLocalMatrix * filter.transform.localToWorldMatrix;
             toKit.SetColumn(3, new Vector4(0f, 0f, 0f, 1f));
-            var place = instance.Matrix * toKit;
+            if (group.Kit.StartsWith("vfx_combo_")) toKit = ComboKitTurn * toKit;
+            return instance.Matrix * toKit;
+        }
+
+        // One placed piece: a floor mark's triangles into the flats, anything else into its merge, each triangle in the
+        // paint of what it wears.
+        private static void AddMesh(string pair, Mesh mesh, Matrix4x4 place, string[] worn, bool onGround, string inkFallback, Gathered gathered)
+        {
             var turnNormals = place.inverse.transpose;
-            var vertices = source.vertices;
-            var normals = source.normals;
+            var vertices = mesh.vertices;
+            var normals = mesh.normals;
             for (int i = 0; i < vertices.Length; i++)
             {
                 vertices[i] = place.MultiplyPoint3x4(vertices[i]);
@@ -423,17 +540,22 @@ namespace Clover.EditorTools
             var bounds = new Bounds(vertices.Length > 0 ? vertices[0] : Vector3.zero, Vector3.zero);
             foreach (var v in vertices) bounds.Encapsulate(v);
 
-            var renderer = filter.GetComponent<MeshRenderer>();
-            var slots = renderer != null ? renderer.sharedMaterials : new Material[0];
-            var paints = new Paint[source.subMeshCount];
+            var triangles = new List<int>();
+            for (int s = 0; s < mesh.subMeshCount; s++) triangles.AddRange(mesh.GetTriangles(s));
+            var paints = new Paint[worn.Length];
+            var known = new Dictionary<string, Paint>();
             bool allGlow = true, anyOpaque = false;
-            for (int s = 0; s < paints.Length; s++)
+            for (int t = 0; t < worn.Length; t++)
             {
-                // The recipe's material is the one the piece wears in its first slot (a re-colour swaps that slot only).
-                string name = s == 0 ? group.Material : s < slots.Length && slots[s] != null ? slots[s].name : null;
-                if (!TryPaint(name, out paints[s])) gathered.Grey.Add(name ?? "(none)");
-                allGlow &= paints[s].Glow;
-                anyOpaque |= paints[s].Colour.a >= 0.8f;
+                string name = worn[t] ?? "(none)";
+                if (!known.TryGetValue(name, out var paint))
+                {
+                    if (!TryPaint(worn[t], out paint)) gathered.Grey.Add(name);
+                    known[name] = paint;
+                }
+                paints[t] = paint;
+                allGlow &= paint.Glow;
+                anyOpaque |= paint.Colour.a >= 0.8f;
             }
 
             // A flat piece lying low is a floor mark; one held up (Logan Stone's arcs over the head, a leaf in the air)
@@ -441,45 +563,216 @@ namespace Clover.EditorTools
             if (bounds.size.y < FlatHeight && bounds.max.y <= MarkHeight && !allGlow)
             {
                 gathered.FlatPieces++;
-                for (int s = 0; s < source.subMeshCount; s++)
+                // Each colour lies as low as its own triangles do, so a line drawn a hair over its fill stays on top of it.
+                var lowest = new Dictionary<Color, float>();
+                for (int t = 0; t < paints.Length; t++)
                 {
-                    int colour = gathered.ColourFor(paints[s].Colour, bounds.min.y);
-                    var tris = source.GetTriangles(s);
-                    for (int t = 0; t + 2 < tris.Length; t += 3)
-                        gathered.Flats.Add(new Flat { A = Ground(vertices[tris[t]]), B = Ground(vertices[tris[t + 1]]), C = Ground(vertices[tris[t + 2]]), Colour = colour });
+                    float low = Mathf.Min(vertices[triangles[3 * t]].y, Mathf.Min(vertices[triangles[3 * t + 1]].y, vertices[triangles[3 * t + 2]].y));
+                    lowest[paints[t].Colour] = lowest.TryGetValue(paints[t].Colour, out float was) ? Mathf.Min(was, low) : low;
+                }
+                for (int t = 0; t < paints.Length; t++)
+                {
+                    int colour = gathered.ColourFor(paints[t].Colour, lowest[paints[t].Colour]);
+                    var flat = new Flat
+                    {
+                        A = Ground(vertices[triangles[3 * t]]), B = Ground(vertices[triangles[3 * t + 1]]), C = Ground(vertices[triangles[3 * t + 2]]), Colour = colour,
+                    };
+                    gathered.Flats.Add(flat);
+                    gathered.FlatAreas[colour] += Mathf.Abs(Edge(flat.A, flat.B, flat.C)) * 0.5f;
                 }
                 return;
             }
 
             // A piece with nothing opaque (a gas layer held up off the floor) is seen through, as a glow is.
             bool seeThrough = allGlow || !anyOpaque;
-            var merge = gathered.MergeFor(instance.OnGround ? ReactionArtSet.OnGround : ReactionArtSet.OnBody, seeThrough ? ReactionArtSet.Glow : ReactionArtSet.Solid,
-                seeThrough ? "glow" : ElementOf(group.Material, combo.Pair));
-            int first = merge.Vertices.Count;
-            merge.Vertices.AddRange(vertices);
-            for (int i = 0; i < vertices.Length; i++) merge.Normals.Add(i < normals.Length ? normals[i] : Vector3.up);
-            var paint = new Color[vertices.Length];
-            for (int i = 0; i < paint.Length; i++) paint[i] = Color.white;
+            string ink = worn.Length > 0 && worn.All(name => name == worn[0]) ? worn[0] : inkFallback;
+            var merge = gathered.MergeFor(onGround ? ReactionArtSet.OnGround : ReactionArtSet.OnBody, seeThrough ? ReactionArtSet.Glow : ReactionArtSet.Solid,
+                seeThrough ? "glow" : ElementOf(ink, pair));
+            // A corner shared by triangles of two colours is made twice, once in each, so a band's edge stays sharp.
+            var made = new Dictionary<(int, Color), int>();
             // A mirrored placing turns the faces inside out unless their corners are taken the other way round.
             bool mirrored = place.determinant < 0f;
-            for (int s = 0; s < source.subMeshCount; s++)
+            for (int t = 0; t < paints.Length; t++)
             {
-                var band = paints[s];
+                var band = paints[t];
                 // A see-through wash inside a solid piece cannot be drawn by the solid material; it is left out, as the element art does.
                 if (!seeThrough && band.Colour.a < 0.8f) continue;
                 var colour = band.Colour;
                 colour.a = seeThrough ? band.Colour.a : band.Flag;
-                var tris = source.GetTriangles(s);
-                for (int t = 0; t + 2 < tris.Length; t += 3)
+                for (int corner = 0; corner < 3; corner++)
                 {
-                    paint[tris[t]] = paint[tris[t + 1]] = paint[tris[t + 2]] = colour;
-                    merge.Triangles.Add(first + tris[t]);
-                    merge.Triangles.Add(first + (mirrored ? tris[t + 2] : tris[t + 1]));
-                    merge.Triangles.Add(first + (mirrored ? tris[t + 1] : tris[t + 2]));
+                    int index = triangles[3 * t + (mirrored && corner > 0 ? 3 - corner : corner)];
+                    if (!made.TryGetValue((index, colour), out int at))
+                    {
+                        at = merge.Vertices.Count;
+                        merge.Vertices.Add(vertices[index]);
+                        merge.Normals.Add(index < normals.Length ? normals[index] : Vector3.up);
+                        merge.Colours.Add(colour);
+                        made[(index, colour)] = at;
+                    }
+                    merge.Triangles.Add(at);
                 }
             }
-            merge.Colours.AddRange(paint);
             merge.Pieces++;
+        }
+
+        /// <summary>
+        /// What each of the kit piece's triangles (submesh by submesh) wears: as the source .blend's object of the same
+        /// name has it when the source is in the project, else the recipe's material over the whole piece unless it is one
+        /// of the kit piece's own, which then keeps the kit's.
+        /// </summary>
+        private static string[] Worn(ReactionRecipe.Combo combo, ReactionRecipe.Group group, ReactionRecipe.Instance instance, MeshFilter filter, Source source)
+        {
+            var mesh = filter.sharedMesh;
+            var counts = new int[mesh.subMeshCount];
+            for (int s = 0; s < counts.Length; s++) counts[s] = (int)mesh.GetIndexCount(s) / 3;
+            var worn = new string[counts.Sum()];
+            var renderer = filter.GetComponent<MeshRenderer>();
+            var slots = renderer != null ? renderer.sharedMaterials : new Material[0];
+
+            if (source != null && source.Objects.TryGetValue(ReactionRecipe.FullName(combo, group, instance), out var from))
+            {
+                source.Matched++;
+                var fromMesh = from.GetComponent<MeshFilter>().sharedMesh;
+                var fromSlots = from.sharedMaterials.Select(material => material != null ? material.name : null).ToArray();
+                if (fromSlots.Length == 1)
+                {
+                    for (int t = 0; t < worn.Length; t++) worn[t] = fromSlots[0];
+                    return worn;
+                }
+                if (fromMesh.subMeshCount == mesh.subMeshCount && fromSlots.Length == counts.Length)
+                {
+                    for (int s = 0, t = 0; s < counts.Length; s++)
+                        for (int k = 0; k < counts[s]; k++) worn[t++] = fromSlots[s];
+                    return worn;
+                }
+                string key = $"{AssetDatabase.GetAssetPath(mesh)}|{mesh.name}|{fromMesh.name}";
+                if (!source.Bands.TryGetValue(key, out var bands))
+                {
+                    bands = Bands(mesh, fromMesh);
+                    source.Bands[key] = bands;
+                }
+                if (bands != null && bands.Length == worn.Length)
+                {
+                    source.Rebanded++;
+                    for (int t = 0; t < worn.Length; t++) worn[t] = bands[t] < fromSlots.Length ? fromSlots[bands[t]] : null;
+                    return worn;
+                }
+                source.Unmatched++;
+            }
+
+            bool own = slots.Any(material => material != null && material.name == group.Material);
+            for (int s = 0, t = 0; s < counts.Length; s++)
+            {
+                string name = own ? (s < slots.Length && slots[s] != null ? slots[s].name : null) : group.Material;
+                for (int k = 0; k < counts[s]; k++) worn[t++] = name;
+            }
+            return worn;
+        }
+
+        /// <summary>
+        /// The source band (submesh) of each of the kit mesh's triangles, for a kit mesh whose bands were merged on export:
+        /// both meshes are the same corners in axes that differ by a quarter or half turn or a mirror, so each is centred
+        /// and scaled by its bounds, the source is put through whichever of the 48 axis turns and mirrors fits best, and
+        /// each kit triangle takes the band its three corners share in the source (the files may cut a quad along
+        /// different diagonals, so triangles are matched by their corners, not their middles). Null when they do not fit.
+        /// </summary>
+        private static int[] Bands(Mesh kitMesh, Mesh sourceMesh)
+        {
+            var kit = Normalised(kitMesh.vertices);
+            var from = Normalised(sourceMesh.vertices);
+            if (kit.Length == 0 || from.Length == 0 || sourceMesh.subMeshCount > 30) return null;
+            Matrix4x4 best = Matrix4x4.identity;
+            float fit = float.MaxValue;
+            int step = Mathf.Max(1, kit.Length / 60);
+            foreach (var turn in AxisTurns())
+            {
+                float sum = 0f;
+                int n = 0;
+                for (int i = 0; i < kit.Length; i += step)
+                {
+                    float near = float.MaxValue;
+                    foreach (var q in from) near = Mathf.Min(near, (turn.MultiplyVector(q) - kit[i]).sqrMagnitude);
+                    sum += Mathf.Sqrt(near);
+                    n++;
+                }
+                if (sum / n < fit) { fit = sum / n; best = turn; }
+            }
+            if (fit > 1e-4f) return null;
+            for (int i = 0; i < from.Length; i++) from[i] = best.MultiplyVector(from[i]);
+
+            var cornerBands = new int[from.Length];
+            var middles = new List<Vector3>();
+            var middleBands = new List<int>();
+            for (int s = 0; s < sourceMesh.subMeshCount; s++)
+            {
+                var t = sourceMesh.GetTriangles(s);
+                foreach (int index in t) cornerBands[index] |= 1 << s;
+                for (int k = 0; k + 2 < t.Length; k += 3)
+                {
+                    middles.Add((from[t[k]] + from[t[k + 1]] + from[t[k + 2]]) / 3f);
+                    middleBands.Add(s);
+                }
+            }
+            var kitCornerBands = new int[kit.Length];
+            for (int i = 0; i < kit.Length; i++)
+            {
+                float near = float.MaxValue;
+                for (int j = 0; j < from.Length; j++) near = Mathf.Min(near, (from[j] - kit[i]).sqrMagnitude);
+                if (near > 1e-8f) return null;
+                for (int j = 0; j < from.Length; j++)
+                    if ((from[j] - kit[i]).sqrMagnitude <= near + 1e-10f) kitCornerBands[i] |= cornerBands[j];
+            }
+            var kitTriangles = kitMesh.triangles;
+            var bands = new int[kitTriangles.Length / 3];
+            for (int t = 0; t < bands.Length; t++)
+            {
+                int a = kitTriangles[3 * t], b = kitTriangles[3 * t + 1], c = kitTriangles[3 * t + 2];
+                int common = kitCornerBands[a] & kitCornerBands[b] & kitCornerBands[c];
+                if (common != 0 && (common & (common - 1)) == 0)
+                {
+                    int band = 0;
+                    while ((common >> band) != 1) band++;
+                    bands[t] = band;
+                    continue;
+                }
+                // Corners on the line between two bands: the nearest source triangle among the bands they share.
+                var middle = (kit[a] + kit[b] + kit[c]) / 3f;
+                float closest = float.MaxValue;
+                for (int j = 0; j < middles.Count; j++)
+                {
+                    if (common != 0 && (common & (1 << middleBands[j])) == 0) continue;
+                    float d = (middles[j] - middle).sqrMagnitude;
+                    if (d < closest) { closest = d; bands[t] = middleBands[j]; }
+                }
+            }
+            return bands;
+        }
+
+        // Corners moved to their bounds' middle and scaled so the bounds' diagonal is one.
+        private static Vector3[] Normalised(Vector3[] corners)
+        {
+            if (corners.Length == 0) return corners;
+            var bounds = new Bounds(corners[0], Vector3.zero);
+            foreach (var corner in corners) bounds.Encapsulate(corner);
+            float size = Mathf.Max(1e-6f, bounds.size.magnitude);
+            var moved = new Vector3[corners.Length];
+            for (int i = 0; i < corners.Length; i++) moved[i] = (corners[i] - bounds.center) / size;
+            return moved;
+        }
+
+        // The 48 ways of turning and mirroring the axes onto one another.
+        private static IEnumerable<Matrix4x4> AxisTurns()
+        {
+            int[][] orders = { new[] { 0, 1, 2 }, new[] { 0, 2, 1 }, new[] { 1, 0, 2 }, new[] { 1, 2, 0 }, new[] { 2, 0, 1 }, new[] { 2, 1, 0 } };
+            foreach (var order in orders)
+                for (int signs = 0; signs < 8; signs++)
+                {
+                    var turn = Matrix4x4.zero;
+                    for (int row = 0; row < 3; row++) turn[row, order[row]] = (signs & (1 << row)) != 0 ? -1f : 1f;
+                    turn[3, 3] = 1f;
+                    yield return turn;
+                }
         }
 
         private static Vector2 Ground(Vector3 v) => new Vector2(v.x, v.z);
@@ -509,7 +802,9 @@ namespace Clover.EditorTools
             if (gathered.Flats.Count == 0) return;
             var order = new List<int>();
             for (int i = 0; i < gathered.FlatColours.Count; i++) order.Add(i);
-            order.Sort((x, y) => gathered.FlatHeights[x].CompareTo(gathered.FlatHeights[y]));
+            // Lowest first. Colours lying at one height (to a fifth of a millimetre) go the larger under the smaller, so a
+            // lip cut a little wider than its scorch (The Bolt Runs True) shows as its rim, as in the look-dev's frames.
+            order = order.OrderBy(index => Mathf.Round(gathered.FlatHeights[index] / 0.0002f)).ThenByDescending(index => gathered.FlatAreas[index]).ThenBy(index => index).ToList();
             for (int layer = 0; layer * ColoursPerMask < order.Count; layer++)
             {
                 var channelOf = new Dictionary<int, int>();
@@ -600,11 +895,10 @@ namespace Clover.EditorTools
             string[] slots = { "_ColorR", "_ColorG", "_ColorB", "_ColorA" };
             for (int k = 0; k < slots.Length; k++)
             {
-                var linear = k < colours.Length ? colours[k] : Color.clear;
-                // Material colours are given as the eye sees them; the bands are linear.
-                var shown = linear.gamma;
-                shown.a = linear.a;
-                material.SetColor(slots[k], shown);
+                // Clover/Decal's part colours are [HDR], which Unity hands to the shader as they are, with no turn from
+                // sRGB to linear: the bands go in linear. (Given as the eye sees them they came out washed pale, a navy
+                // ink pool sky blue; checked by sampling a rendered mark.)
+                material.SetColor(slots[k], k < colours.Length ? colours[k] : Color.clear);
             }
             material.SetColor("_Color", Color.white);
             material.SetFloat("_Opacity", 1f);

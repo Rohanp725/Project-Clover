@@ -198,6 +198,85 @@ namespace Clover.Tests
             Assert.That(missing, Is.Empty, "Not in Generated/Vfx/Element/element_art.asset");
         }
 
+        // Every combo-kit piece, placed as the builder places it, against its object in the look-dev's .blend (as Unity
+        // imports it) about the same body's feet: within 2 cm on average. Without the kits' half turn about up, every
+        // asymmetric one (a bolt, a lip, a glint) faced the wrong way.
+        [Test]
+        public void TheComboKitPiecesLieAsTheSourceHasThem()
+        {
+            var asset = ReactionArtBuilder.RecipeAsset();
+            var blend = AssetDatabase.LoadAssetAtPath<GameObject>(ReactionArtBuilder.SourcePath);
+            if (asset == null || blend == null) Assert.Ignore($"The recipe or {ReactionArtBuilder.SourcePath} is not in the project (the .blend needs Blender to import).");
+            var recipe = ReactionRecipe.Parse(asset.text);
+            var objects = new Dictionary<string, Transform>();
+            foreach (var place in blend.GetComponentsInChildren<Transform>(true))
+                if (!objects.ContainsKey(place.name)) objects[place.name] = place;
+            var far = new List<string>();
+            int checkedPieces = 0;
+            foreach (var combo in recipe.Combos)
+            {
+                Assert.IsTrue(objects.TryGetValue("enemy~" + combo.Pair, out var body), combo.Pair);
+                var origin = blend.transform.InverseTransformPoint(body.position);
+                origin.y = 0f;
+                foreach (var group in combo.Groups.Where(group => group.Kit.StartsWith("vfx_combo_")))
+                {
+                    var kit = AssetDatabase.LoadAssetAtPath<GameObject>(ReactionArtBuilder.KitPath(group.Kit));
+                    var filter = kit.GetComponentsInChildren<MeshFilter>(true).First(piece => piece.name == group.KitObject);
+                    var instance = group.Instances[0];
+                    if (!objects.TryGetValue(ReactionRecipe.FullName(combo, group, instance), out var source)) continue;
+                    var place = ReactionArtBuilder.Placement(group, instance, filter, kit.transform);
+                    var fromSource = blend.transform.worldToLocalMatrix * source.localToWorldMatrix;
+                    var theirs = source.GetComponent<MeshFilter>().sharedMesh.vertices.Select(v => fromSource.MultiplyPoint3x4(v) - origin).ToArray();
+                    var ours = filter.sharedMesh.vertices;
+                    float sum = 0f;
+                    int count = 0;
+                    for (int i = 0; i < ours.Length; i += Mathf.Max(1, ours.Length / 40))
+                    {
+                        var at = place.MultiplyPoint3x4(ours[i]);
+                        sum += Mathf.Sqrt(theirs.Min(v => (v - at).sqrMagnitude));
+                        count++;
+                    }
+                    checkedPieces++;
+                    if (sum / count > 0.02f) far.Add($"{combo.Pair} {group.KitObject}: {sum / count:F3} m");
+                }
+            }
+            Assert.Greater(checkedPieces, 50);
+            Assert.That(far, Is.Empty, "combo-kit pieces not lying where the source has them");
+        }
+
+        // The v3 kit keeps one material an object; the build takes each triangle's band back from the source, so Sleet
+        // Charge's bolts are a white core in a cyan band in their violet edge, not violet all through.
+        [Test]
+        public void TheBoltsKeepTheirBands()
+        {
+            var set = ReactionArtBuilder.Set();
+            if (set == null || AssetDatabase.LoadAssetAtPath<GameObject>(ReactionArtBuilder.SourcePath) == null)
+                Assert.Ignore("The reaction art has not been built from the source .blend yet; run Clover > Build > Reaction Art.");
+            var look = set.Looks.First(each => each.Key == "lightning_ice");
+            var colours = new List<Color>();
+            for (int i = look.FirstPart; i < look.FirstPart + look.PartCount; i++)
+                if (set.Parts[i].Mesh != null) colours.AddRange(set.Parts[i].Mesh.colors);
+            foreach (string band in new[] { "m_vfx_lightning_edge", "m_vfx_lightning_cyan", "m_vfx_lightning_core" })
+            {
+                Assert.IsTrue(ReactionArtBuilder.TryPaint(band, out var paint), band);
+                Assert.IsTrue(colours.Any(colour => Mathf.Abs(colour.r - paint.Colour.r) < 0.01f && Mathf.Abs(colour.g - paint.Colour.g) < 0.01f && Mathf.Abs(colour.b - paint.Colour.b) < 0.01f),
+                    $"Sleet Charge has no triangle in {band}");
+            }
+        }
+
+        // Clover/Decal's colours are [HDR], which Unity hands to the shader unconverted: a mark's colours are stored
+        // linear, as the paints are (stored as the eye sees them, Caught Light's navy ink pool showed sky blue).
+        [Test]
+        public void TheFloorMarksHoldTheirPaintsInLinear()
+        {
+            var material = AssetDatabase.LoadAssetAtPath<Material>(ReactionArtBuilder.Folder + "/m_reaction_decal_water_light_0.mat");
+            if (material == null) Assert.Ignore("The reaction art has not been built yet; run Clover > Build > Reaction Art.");
+            Assert.IsTrue(ReactionArtBuilder.TryPaint("m_vfx_water_ink", out var ink));
+            var held = new[] { "_ColorR", "_ColorG", "_ColorB", "_ColorA" }.Select(material.GetColor).ToArray();
+            Assert.IsTrue(held.Any(colour => Mathf.Abs(colour.r - ink.Colour.r) < 0.002f && Mathf.Abs(colour.g - ink.Colour.g) < 0.002f && Mathf.Abs(colour.b - ink.Colour.b) < 0.002f),
+                "the ink pool's colour is not held linear: " + string.Join(", ", held));
+        }
+
         [Test]
         public void TheBuiltSetHoldsEveryDesignedLook()
         {

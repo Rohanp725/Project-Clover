@@ -37,9 +37,9 @@ Material:
     - _SrcBlend: 5
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _ColorA: {r: 0.8962438, g: 0.8860039, b: 0.9260748, a: 1}
+    - _ColorA: {r: 0.78, g: 0.76, b: 0.84, a: 1}
     - _ColorB: {r: 0, g: 0, b: 0, a: 1}
-    - _ColorG: {r: 0, g: 0, b: 0.06100852, a: 0.45}
-    - _ColorR: {r: 0.93574095, g: 0.9260748, b: 0.95468706, a: 1}
+    - _ColorG: {r: 0.86, g: 0.84, b: 0.9, a: 1}
+    - _ColorR: {r: 0, g: 0, b: 0.005, a: 0.45}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
