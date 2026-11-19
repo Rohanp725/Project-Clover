@@ -639,9 +639,12 @@ namespace Clover.Player
         // The chain takes hold of something: it is held still if it can be, and the heavy button now hauls on it.
         private void Bind(Component target, float seconds)
         {
-            bool held = target is IAfflictable afflictable && afflictable.Afflictions.Hold(seconds);
+            var set = target is IAfflictable afflictable ? afflictable.Afflictions : null;
+            set?.Hold(seconds);
             boundTo = target;
-            boundLeft = held ? seconds : GodBindSeconds;
+            // How long the chain binds is the chain's: what can be held at all is bound the whole time, even when a
+            // god's guard or the shortness of its hold lets it go sooner; a godly form, held only for a hitch, the short time.
+            boundLeft = set != null && set.CanFreeze ? seconds : GodBindSeconds;
             Bindings++;
             Vfx.Play(VfxKind.TintRing, target.transform.position + Vector3.up * 0.2f, Vector3.up, 1.2f, Weapon.SlashColour);
             if (defence != null) defence.Callout("Bound");

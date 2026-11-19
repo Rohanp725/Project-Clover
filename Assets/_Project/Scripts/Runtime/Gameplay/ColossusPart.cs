@@ -56,6 +56,8 @@ namespace Clover.Gameplay
         {
             if (!Vulnerable || owner == null) return HitOutcome.Missed;
             BlowsTaken++;
+            // What is only a thing to strike is no place to show the form's ice.
+            if (!Inert) owner.NoteStruck(this);
             return owner.TakePartHit(this, hit);
         }
     }

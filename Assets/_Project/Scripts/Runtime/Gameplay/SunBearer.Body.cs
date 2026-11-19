@@ -324,7 +324,7 @@ namespace Clover.Gameplay
 
         private void AdvanceShellBurst(float deltaTime)
         {
-            float shake = Mathf.Sin(Time.time * 47f);
+            float shake = Mathf.Sin(FormTime * 47f);
             if (!struck)
             {
                 // The shell glows to its brightest and the cases lift as a pale ring fills round it: guard, or get out.
