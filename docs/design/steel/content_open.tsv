@@ -4,7 +4,6 @@ ground-states	Ground that keeps acting on whatever stands in it, by condition or
 looks	The reaction's own look beyond the placeholder puff (task 3.5 and the approved effects): the hidden flame, the roots on the floor, the jar's black ring, the scorched fern, the mock suns turning with the enemy	Smoulder, Rot Roots, Shut in the Dark, Earthed, Mock Suns
 per-enemy-cooldowns	A cooldown kept per enemy rather than one clock per effect for all enemies (an elite's flinch once every 4 s, a bite once every half second, a heal of 8 a second)	Nerve Fire, Quicksilver, Stolen Warmth
 standing-things	Standing things that block movement and shots and can be struck: the iron-faced anvil stone (also "stone at its back" for Hammer and Anvil), the rimed mound of 1.5 m, the hollow trunk left where a girdled enemy dies	Anvil Stone, Frost Heave, Girdled
-knocked-down	Knocked down: a timed fall with its own clip and brain state (task 3.7); a hold of the same length stands in	Capsize, Logan Stone
 side-of-blow	The side of the enemy a blow comes from (the face it showed the player, or its flanks)	Rime, Mock Suns
 freeze-moment	An enemy freezing as a moment the reactions can answer ("at once if it freezes", "when it freezes")	Sleet Charge, Stolen Warmth
 pickups	Pickups: things on the floor the player picks up by walking over them (heal, a critical next blow, a charged blow); then they do not flower	Shining Herb, Firebloom

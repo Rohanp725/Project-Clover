@@ -624,7 +624,7 @@ Group: Reactions
 
 **How to use it.** Free blows: bring your heaviest.
 
-**How it looks.** Its name over the enemy. Not yet: the fall flat on its back (for now it is held where it stands).
+**How it looks.** Its name over the enemy, and it falls flat on its back, lies there, and gets up when its time is over.
 
 ## reaction-winter-seed
 Title: Winter Seed (Ice and Life)
@@ -910,7 +910,7 @@ Group: Reactions
 
 **How to use it.** Three blows inside 3 s: the weapon fells it.
 
-**How it looks.** Its name over the enemy, then the fall. Not yet: lying flat (for now it is held where it stands).
+**How it looks.** Its name over the enemy, then the fall: it lies flat on its back, and gets up when its time is over.
 
 ## reaction-cold-short
 Title: Cold Short (Ice and Metal)

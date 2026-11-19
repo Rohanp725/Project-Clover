@@ -13,7 +13,7 @@ A testbed for the combat. It grows with each update as the fighting is reworked.
 - **The great resist.** What holds or slows an enemy takes half on an elite and nothing on a god; some reactions give elites and gods their own numbers instead (each entry says).
 - **You see the name.** A reaction's name rises over the enemy for a moment. Each reaction's own look comes later: for now there is a puff in its two colours and whatever it does (a discharge, a burst, fires, a slick).
 - **Weave to react.** Carry two elements: your weapon lays the first and your spells, the charged blade and the R2 strike lay the second.
-- **Not yet:** the duo branches' shapes that change a reaction come in a later update. Many reactions are simpler than their full design, and each entry in the guide says what is still to come under "Not yet": knocked down (Capsize and Logan Stone hold the enemy where it stands for now), the side a blow comes from (Rime, Mock Suns), things to pick up (Shining Herb, Firebloom), standing stones and trunks (Anvil Stone, Frost Heave, Girdled), The Grudge's cloud answering the enemy's blow, Black Chain's shared wounds, and others.
+- **Not yet:** the duo branches' shapes that change a reaction come in a later update. Many reactions are simpler than their full design, and each entry in the guide says what is still to come under "Not yet": the side a blow comes from (Rime, Mock Suns), things to pick up (Shining Herb, Firebloom), standing stones and trunks (Anvil Stone, Frost Heave, Girdled), The Grudge's cloud answering the enemy's blow, Black Chain's shared wounds, and others.
 
 ## New in 0.3 (phase 2: two elements and the Hand)
 
