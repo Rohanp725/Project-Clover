@@ -16,20 +16,24 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.XInput;
 
 // Frames for a GIF of each of the eleven elements' own moments, one element carried alone and no reaction, filmed in
-// the game with the new effects on (F8 is checked and put on the new if it is not): a copy of the still dummy on the
-// open floor at (28, 0, 0), the player west of it facing east, the guide read through first; the floor's painted
-// words, the afflicted row (its afflictions are drawn all the time), the sparring dummy (its swing's wedge) and the
-// HUD on the screen hidden.
+// the game with the new effects on (F8 is checked and put on the new if it is not), on REAL enemies (the owner's comment
+// of 2026-11-19: the dummy hid floor marks, never reacted and stood alone): the castle's pen and a Fire land spearman let
+// out, the main one stood on the open floor at (28, 0, 0) and, for the spell and the infused strike (which reach past
+// the one faced), four more spread round it 1.5 to 3 m off. They are kept alive (healed), cannot guard, and neither
+// chase nor strike (aggro range zero, leash a step, their home made the spot), but flinch, stagger, freeze and are
+// thrown as the game makes them; what a moment lays on them is left 1.5 s and then cleared, so the clip ends with its
+// own moment. The player west of them facing east, the guide read through first; the floor's painted words, the
+// training dummies, the afflicted row, the sparring dummy and the HUD on the screen hidden.
 // For each element (attuned alone through PlayerBuild.Attune) six clips, each moment set off through the game's code:
-//   affliction  the element's affliction laid three deep on the clean dummy for 3 s, until it wears off by itself;
-//   spell       the base spell cast from its slot (PlayerSpells.TryCast) at the dummy 3 m away, flight and landing,
+//   affliction  the element's affliction laid three deep on the clean enemy for 3 s, until it wears off by itself;
+//   spell       the base spell cast from its slot (PlayerSpells.TryCast) at the enemy 3 m away, flight and landing,
 //               with its landing kept from charging the blade (that is the next clip);
-//   hit         the blade charged with the element and its three charged blows landing on the dummy until spent;
-//   charged     the blade charged and swung three times at the air, turned away from the dummy 8 m behind, then let
+//   hit         the blade charged with the element and its three charged blows landing on the enemy until spent;
+//   charged     the blade charged and swung three times at the air, turned away from the enemy 8 m behind, then let
 //               go plain (the blade only spends a charge on a blow that lands, so it is cleared as a spent one is);
-//   infused     the infused strike, L2 + RB on a virtual pad, on the dummy;
+//   infused     the infused strike, L2 + RB on a virtual pad, on the enemy;
 //   surge       the surge on F, shortened to 4 s so its lighting, holding and going out fit one GIF.
-// In every clip but the affliction's, what the moment lays on the dummy is cleared at once, so each clip shows its own
+// In every clip but the affliction's, what the moment lays is cleared 1.5 s on, so each clip shows its own
 // moment and the affliction has its own clip. Before each clip it waits until nothing is left from the one before
 // (the pools and particles back to what the idle floor shows, no spell running, no hazard, no charge, no surge) and
 // a second more.
@@ -42,7 +46,7 @@ using UnityEngine.InputSystem.XInput;
 // and was set off).
 // Set the game view to 1920x1080 first (AgentScripts/GameViewSize.cs) and back to free after. Assemble with
 // AgentScripts/element_gifs.py. AgentScripts/element_gif_only.txt may hold "fire" or "fire_spell" entries, comma
-// separated, to film only those. Progress is sandboxed by runprobe.sh; the dummy and the pad are gone after.
+// separated, to film only those. Progress is sandboxed by runprobe.sh; the enemy and the pad are gone after.
 // bash AgentScripts/runprobe.sh ProvingGround ElementGifFrames 1200
 public static class ElementGifFrames
 {
@@ -70,7 +74,15 @@ public class ElementGifFramesRunner : MonoBehaviour
     private PlayerElement element;
     private PlayerSpells spells;
     private PlayerBuild build;
-    private TrainingDummy host;
+    // The enemies filmed on: the main one ("host") at the middle, the group about it for the moments that reach far.
+    private Enemy host;
+    private readonly List<Enemy> cast = new List<Enemy>();
+    private readonly List<EnemyPen> pens = new List<EnemyPen>();
+    private static readonly Vector3[] Spread = { new Vector3(1.7f, 0f, 1.5f), new Vector3(1.9f, 0f, -1.4f), new Vector3(-0.4f, 0f, 2.2f), new Vector3(2.9f, 0f, 0.1f) };
+    // A moment's afflictions are left on the enemies this long (so they freeze, slow and stagger as the game makes them),
+    // then cleared so the clip ends with its own moment; the affliction has its own clip.
+    private const float AfflictionsKept = 1.5f;
+    private float suppressFrom = float.MaxValue;
     private TopDownCamera view;
     private Transform anchor;
     private XInputControllerWindows pad;
@@ -89,19 +101,72 @@ public class ElementGifFramesRunner : MonoBehaviour
     private string folder;
     private RectInt window;
 
+    private static readonly System.Reflection.FieldInfo SinceHurt = typeof(Enemy).GetField("sinceHurt", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+    private static readonly System.Reflection.FieldInfo BarsCalled = typeof(Enemy).GetField("barsCalled", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
     private static void Say(string text) => Debug.Log("[Probe] " + text);
     private static void Keys(params Key[] held) => InputSystem.QueueStateEvent(Keyboard.current, new KeyboardState(held));
 
+    // Everyone kept alive; no enemy guards, chases or strikes.
     private void Update()
     {
         if (defence != null && !defence.IsDead) defence.Health.Heal(100f);
+        foreach (var enemy in cast)
+        {
+            if (enemy == null || enemy.IsDead || !enemy.gameObject.activeSelf) continue;
+            if (enemy.Health.Fraction < 0.4f) enemy.Health.Fill();
+            enemy.GuardOpenFor = 5f;
+            enemy.Brain.AggroRange = 0f;
+            enemy.Brain.LeashRange = 0.5f;
+            // In a fight its bars are up, and with them what it carries is drawn on its body: kept up here, as the
+            // enemy stands still and is never hurt into showing them.
+            SinceHurt.SetValue(enemy, 0f);
+            BarsCalled.SetValue(enemy, true);
+        }
     }
 
-    // What a moment lays on the dummy goes at once, so the clip is its own moment's; the affliction has its own clip.
+    // What a moment lays on the enemies goes after a while, so the clip ends with its own moment.
     private void LateUpdate()
     {
-        if (suppress && host != null && host.Afflictions.Any) host.Afflictions.Clear();
+        if (!suppress || Time.time < suppressFrom) return;
+        foreach (var enemy in cast)
+            if (enemy != null && enemy.gameObject.activeSelf && enemy.Afflictions.Any) enemy.Afflictions.Clear();
     }
+
+    private bool AnyAfflicted()
+    {
+        foreach (var enemy in cast)
+            if (enemy != null && enemy.gameObject.activeSelf && enemy.Afflictions.Any) return true;
+        return false;
+    }
+
+    // Puts every enemy back and stands the ones this clip wants: the main one at the middle, the group round it.
+    private void StandCast(int count)
+    {
+        var homeField = typeof(Enemy).GetField("home", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var homeTurnField = typeof(Enemy).GetField("homeRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        for (int i = 0; i < cast.Count; i++)
+        {
+            var enemy = cast[i];
+            if (i >= count)
+            {
+                enemy.Restore();
+                enemy.gameObject.SetActive(false);
+                continue;
+            }
+            Vector3 at = Middle + (i == 0 ? Vector3.zero : Spread[i - 1]);
+            at.y = 0.05f;
+            Vector3 look = Vector3.left;
+            homeField.SetValue(enemy, at);
+            homeTurnField?.SetValue(enemy, Quaternion.LookRotation(look, Vector3.up));
+            enemy.Restore();
+            enemy.Brain.AggroRange = 0f;
+            enemy.Brain.LeashRange = 0.5f;
+            enemy.WakeNow();
+        }
+    }
+
+    private int StoodCount;
 
     private IEnumerator Real(float seconds)
     {
@@ -146,7 +211,7 @@ public class ElementGifFramesRunner : MonoBehaviour
 
     private bool Busy() =>
         FormFx.SolidsShown > idleSolids || FormFx.MarksShown > idleMarks || SpellWorks.Running > idleRuns || Hazards.Alive > idleHazards
-        || element.IsCasting || combat.IsAttacking || element.SurgeActive || combat.Blade.Charged || host.Afflictions.Any || Particles() > 0;
+        || element.IsCasting || combat.IsAttacking || element.SurgeActive || combat.Blade.Charged || AnyAfflicted() || Particles() > 0;
 
     // Particles still alive outside the ones the idle floor always has (the frozen rain): a patch's flames and embers go
     // on a moment after the patch itself has ended.
@@ -159,7 +224,7 @@ public class ElementGifFramesRunner : MonoBehaviour
     }
 
     private string Why() =>
-        $"solids {FormFx.SolidsShown}/{idleSolids}, marks {FormFx.MarksShown}/{idleMarks}, runs {SpellWorks.Running}, hazards {Hazards.Alive}, particles {Particles()}, casting {element.IsCasting}, attacking {combat.IsAttacking}, surge {element.SurgeActive}, charged {combat.Blade.Charged}, afflicted {host.Afflictions.Any}";
+        $"solids {FormFx.SolidsShown}/{idleSolids}, marks {FormFx.MarksShown}/{idleMarks}, runs {SpellWorks.Running}, hazards {Hazards.Alive}, particles {Particles()}, casting {element.IsCasting}, attacking {combat.IsAttacking}, surge {element.SurgeActive}, charged {combat.Blade.Charged}, afflicted {AnyAfflicted()}";
 
     // Where the window sits in the 1920x1080 game view, centred on a point of the world, fixed for the clip: 960x540, or
     // a wider one for the spells, infused strikes and surges, which reach far (element_gifs.py brings it down to 960x540).
@@ -254,17 +319,34 @@ public class ElementGifFramesRunner : MonoBehaviour
             yield break;
         }
 
-        var still = FindObjectsByType<TrainingDummy>(FindObjectsInactive.Exclude).FirstOrDefault(dummy => dummy.name == "Training Dummy" && dummy.transform.position.x > 15f && dummy.transform.position.x < 25f && dummy.GetComponent<AfflictedDummy>() == null);
-        if (still == null)
+        // Real enemies, not the training dummy (the owner's comment of 2026-11-19): the castle's pen and one of the Fire
+        // land's spearmen, let out, kept alive and kept from chasing or striking.
+        foreach (var pen in FindObjectsByType<EnemyPen>(FindObjectsInactive.Include).OrderBy(pen => pen.Land == "The castle" ? 0 : 1))
         {
-            Say("WRONG: no still dummy");
+            if (cast.Count >= 5) break;
+            pens.Add(pen);
+            pen.Release(Enumerable.Range(0, pen.Enemies.Length).ToArray());
+            foreach (var enemy in pen.Enemies)
+            {
+                if (enemy == null) continue;
+                if (cast.Count < 5 && (pen.Land == "The castle" || enemy.name == "Gilded Spearman")) cast.Add(enemy);
+                else enemy.gameObject.SetActive(false);
+            }
+        }
+        if (cast.Count == 0)
+        {
+            Say("WRONG: no enemies in the pens");
             Finish();
             yield break;
         }
-        host = Instantiate(still.gameObject, Middle, still.transform.rotation).GetComponent<TrainingDummy>();
-        host.name = "Element Gif Host";
-        // The floor's painted words and the afflicted row (whose afflictions are drawn all the time) are not the moment.
+        host = cast[0];
+        StoodCount = 1;
+        StandCast(1);
+        Say($"cast: {string.Join(", ", cast.Select(enemy => enemy.name))}");
+        // The floor's painted words, the training dummies and the afflicted row (whose afflictions are drawn all the
+        // time) are not the moment.
         hidden.AddRange(FindObjectsByType<TextMesh>(FindObjectsInactive.Exclude).Where(text => (text.transform.position - Middle).magnitude < 12f).Select(text => text.gameObject));
+        hidden.AddRange(FindObjectsByType<TrainingDummy>(FindObjectsInactive.Exclude).Where(dummy => (dummy.transform.position - Middle).magnitude < 14f).Select(dummy => dummy.gameObject));
         hidden.AddRange(FindObjectsByType<AfflictedDummy>(FindObjectsInactive.Exclude).Select(dummy => dummy.gameObject));
         // The sparring dummy's swing is shown by a wedge on the floor that would come and go in the frame.
         hidden.AddRange(FindObjectsByType<DummyAttacker>(FindObjectsInactive.Exclude).Select(dummy => dummy.gameObject));
@@ -346,6 +428,7 @@ public class ElementGifFramesRunner : MonoBehaviour
         public string Label = "";
         public int Start, Peak, Frames;
         public bool Ended, CleanBefore, SetOff;
+        public int Enemies = 1;
         public string Dirty = "";
     }
 
@@ -353,10 +436,10 @@ public class ElementGifFramesRunner : MonoBehaviour
     private IEnumerator Ready(Vector3 stand, Vector3 facing)
     {
         suppress = false;
-        host.Afflictions.Clear();
+        StandCast(StoodCount);
         combat.Blade.Clear();
         yield return UntilReal(() => !Busy(), 15f);
-        host.Afflictions.Clear();
+        StandCast(StoodCount);
         player.Teleport(stand, Quaternion.LookRotation(facing, Vector3.up));
         yield return UntilReal(() => !combat.IsAttacking && !element.IsCasting && !player.Dodge.IsRolling && player.FormHold == 0 && !player.IsLeaping && !defence.IsDrinking, 6f);
         yield return UntilReal(() => !Busy(), 15f);
@@ -377,13 +460,16 @@ public class ElementGifFramesRunner : MonoBehaviour
         {
             case "hit": stand = Middle + Vector3.left * 1.6f; about = Middle + Vector3.left * 0.6f + chest; break;
             case "infused": stand = Middle + Vector3.left * 1.8f; about = Middle + Vector3.right * 0.4f + chest; break;
-            // Turned away from the dummy, far behind, so no blow can find it.
+            // Turned away from the enemy, far behind, so no blow can find it.
             case "charged": stand = Middle + Vector3.left * 8f; about = stand + Vector3.left * 1.2f + chest; facing = Vector3.left; break;
             // The surge spreads on the floor round the feet, so the window is about them.
             case "surge": stand = Middle + Vector3.left * 3f; about = Middle + Vector3.left * 2.4f + Vector3.up * 0.4f; break;
             case "spell": stand = Middle + Vector3.left * 3f; about = Middle + Vector3.left * 0.6f + chest; break;
             default: stand = Middle + Vector3.left * 3f; about = Middle + Vector3.left * 0.75f + Vector3.up * 1.4f; break;
         }
+        // A spell and an infused strike reach past the one faced: a group of five stands about it to show how far.
+        StoodCount = moment == "spell" || moment == "infused" ? Mathf.Min(5, cast.Count) : 1;
+        clip.Enemies = StoodCount;
         yield return Ready(stand, facing);
         clip.CleanBefore = !Busy();
         if (!clip.CleanBefore) clip.Dirty = Why();
@@ -413,6 +499,7 @@ public class ElementGifFramesRunner : MonoBehaviour
         yield return Until(() => frame >= Before, 20);
         clip.Start = frame;
         suppress = moment != "affliction";
+        suppressFrom = Time.time + AfflictionsKept;
 
         switch (moment)
         {
@@ -438,10 +525,10 @@ public class ElementGifFramesRunner : MonoBehaviour
                 int first = -1;
                 for (int press = 0; press < 8 && combat.Blade.Charged; press++)
                 {
-                    int hits = host.HitsTaken;
+                    float health = host.Health.Current;
                     yield return Tap(Key.J);
-                    yield return Until(() => host.HitsTaken > hits, 30);
-                    if (host.HitsTaken > hits && first < 0) first = frame;
+                    yield return Until(() => host.Health.Current < health, 30);
+                    if (host.Health.Current < health && first < 0) first = frame;
                     yield return Frames(3);
                 }
                 clip.SetOff = first >= 0 && !combat.Blade.Charged;
@@ -509,7 +596,7 @@ public class ElementGifFramesRunner : MonoBehaviour
         clip.Frames = frame;
         clip.Peak = Mathf.Clamp(clip.Peak, 0, Mathf.Max(0, frame - 1));
         System.IO.File.WriteAllText(folder + "/info.txt",
-            $"element={info.Name}\nmoment={moment}\nlabel={clip.Label}\nstart={clip.Start}\npeak_frame={clip.Peak}\nframes={clip.Frames}\nended={clip.Ended}\nclean_before={clip.CleanBefore}\nset_off={clip.SetOff}\norder={info.Index * Moments.Length + Array.IndexOf(Moments, moment)}\n");
+            $"element={info.Name}\nmoment={moment}\nlabel={clip.Label}\nstart={clip.Start}\npeak_frame={clip.Peak}\nframes={clip.Frames}\nended={clip.Ended}\nclean_before={clip.CleanBefore}\nset_off={clip.SetOff}\nenemies={clip.Enemies}\norder={info.Index * Moments.Length + Array.IndexOf(Moments, moment)}\n");
     }
 
     private void Finish()
@@ -518,7 +605,7 @@ public class ElementGifFramesRunner : MonoBehaviour
         suppress = false;
         Time.captureFramerate = 0;
         if (picture != null) Destroy(picture);
-        if (host != null) Destroy(host.gameObject);
+        foreach (var pen in pens) if (pen != null) pen.Clear();
         if (view != null && player != null) view.Configure(player.transform);
         if (anchor != null) Destroy(anchor.gameObject);
         foreach (var thing in hidden) if (thing != null) thing.SetActive(true);
