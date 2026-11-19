@@ -32,6 +32,10 @@ namespace Clover.Player
         public float Length { get; private set; }
         public float Furthest { get; set; }
 
+        /// <summary>The weight on the end of the chain and the sickle when it is thrown, as they are in the world (null until made).</summary>
+        public Transform WeightProp => weight;
+        public Transform SickleProp => sickle;
+
         public void Configure(GameObject weightModel, GameObject sickleModel, Material chainMaterial)
         {
             weightPrefab = weightModel;

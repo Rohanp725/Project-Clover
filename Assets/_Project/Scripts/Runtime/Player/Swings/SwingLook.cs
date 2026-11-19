@@ -1,0 +1,31 @@
+namespace Clover.Player.Swings
+{
+    /// <summary>
+    /// One element's look on a swung weapon (the owner's note of 2026-11-19: the element moving with the swing, not
+    /// pieces on the blade): the layers of its trail, the sheath along the edge while charged, what it sheds and how it
+    /// ends, and whether it draws its own landing in place of the hit art. Read from <see cref="SwingLooks"/>.
+    /// </summary>
+    public class SwingLook
+    {
+        /// <summary>The element's place on the ring (<see cref="Forms.ElementSubstance"/>), and its name.</summary>
+        public int Element;
+        public string Name = "";
+        /// <summary>The look in a line, for the guide and the tests.</summary>
+        public string Line = "";
+        public TrailLayer[] Layers = new TrailLayer[0];
+        public SheathStyle Sheath;
+        /// <summary>Thorns grown along the real edge of each weapon while charged: Life's, the one look that sits on the weapon.</summary>
+        public bool Thorns;
+        public SwingShed Shed;
+        /// <summary>Seconds between two sheds at the trail's head.</summary>
+        public float ShedEvery = 0.06f;
+        public SwingEnd End;
+        /// <summary>True when the charged blow's landing is drawn by the swing look and not by the hit art (Ice's crack-web, Earth's floating cubes).</summary>
+        public bool ReplacesHitArt;
+        /// <summary>
+        /// The file a later art pass is to draw the trail's texture as (Art/VFX/&lt;Element&gt;/), empty until it exists. The
+        /// trail is built to take one: U runs along the swing from tail to head, V across from the inner edge to the outer.
+        /// </summary>
+        public string RibbonTexture = "";
+    }
+}
