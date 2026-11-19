@@ -117,7 +117,8 @@ namespace Clover.Player
                     ChargeMoveFactor = 0.25f,
                 },
             };
-            return weapon.Named("gsword", true);
+            // The carrier of its infused strike: the rising cut, dragged up off the floor (steel/weapons.md).
+            return Carried(weapon, w => w.Combo.ChainHeavy).Named("gsword", true);
         }
 
         /// <summary>
@@ -168,7 +169,8 @@ namespace Clover.Player
             // The finisher is the one blow that does not care where the enemy kneels.
             weapon.Combo.Finisher.InnerDamage = 1f;
             weapon.Combo.Finisher.SweetDamage = 1f;
-            return weapon.Named("scythe", false);
+            // The carrier: the full turn, a circle at the tip.
+            return Carried(weapon, w => w.Combo.Steps[2]).Named("scythe", false);
         }
 
         // The spear's lane: too close, and it is the haft.
@@ -236,7 +238,8 @@ namespace Clover.Player
                     ChargeMoveFactor = 0.3f,
                 },
             };
-            return weapon.Named("spear", false);
+            // The carrier: the first thrust, a lane.
+            return Carried(weapon, w => w.Combo.Steps[0]).Named("spear", false);
         }
 
         /// <summary>
@@ -316,7 +319,8 @@ namespace Clover.Player
                     ChargeMoveFactor = 0.3f,
                 },
             };
-            return weapon.Named("hammer", true);
+            // The carrier: the drop, a disc a stride ahead.
+            return Carried(weapon, w => w.Combo.Steps[1]).Named("hammer", true);
         }
 
         /// <summary>
@@ -378,7 +382,8 @@ namespace Clover.Player
                     ChargeTime = 0.30f,
                 },
             };
-            return weapon.Named("knife", true);
+            // The carrier: the crossing, through the enemy and out behind it.
+            return Carried(weapon, w => w.Combo.Steps[4]).Named("knife", true);
         }
 
         /// <summary>
@@ -434,7 +439,8 @@ namespace Clover.Player
                     ChargeTime = 0.40f,
                 },
             };
-            return weapon.Named("sickle", false);
+            // The carrier: the weight snapped out along a lane.
+            return Carried(weapon, w => w.Combo.Steps[1]).Named("sickle", false);
         }
 
         // An arrow off the string: it stays in what it strikes, or stands in the ground where its flight ends.
@@ -497,7 +503,8 @@ namespace Clover.Player
                     ChargeMoveFactor = 0.35f,
                 },
             };
-            return weapon.Named("bow", false);
+            // The carrier: the shot, whose arrow stays.
+            return Carried(weapon, w => w.Combo.Heavy).Named("bow", false);
         }
 
         /// <summary>
@@ -563,7 +570,8 @@ namespace Clover.Player
             // The coat lays one stack of its element's affliction with every blow, and the burst two.
             foreach (var step in weapon.AllSteps()) step.ElementStacks = 1;
             weapon.Combo.ChainHeavies[4].ElementStacks = 2;
-            return weapon.Named("arm", false);
+            // The carrier: the fourth blow, the kick of the bare hands.
+            return Carried(weapon, w => w.Combo.Steps[3]).Named("arm", false);
         }
 
         /// <summary>
@@ -571,7 +579,7 @@ namespace Clover.Player
         /// great deal of stagger for its damage: fists open an enemy up for the finisher. Four lights (jab, cross, hook,
         /// kick), a lunging heavy, a rising chain heavy, and the Breaker: a charged straight that bursts the stagger meter.
         /// </summary>
-        public static Weapon Fists() => new Weapon
+        public static Weapon Fists() => Carried(new Weapon
         {
             Name = FistsName,
             LocomotionState = "locomotion_fist",
@@ -598,7 +606,7 @@ namespace Clover.Player
                 SkillManaCost = 30f,
                 ChargeTime = 0.4f,
             },
-        };
+        }, w => w.Combo.Steps[3]); // the carrier: the kick, the fourth blow
 
         /// <summary>
         /// Narukami's own sword, given only to one who takes his element: the Katana's moves, a little more of everything,
@@ -625,7 +633,7 @@ namespace Clover.Player
         /// draw. Light chain: a drawing cut, a return cut, a stepping finisher. Heavy: an overhead cut, quicker and
         /// harder when it ends a chain. Skill: the Iaido Slash, a long drawing cut released from the sheath.
         /// </summary>
-        public static Weapon Katana() => new Weapon
+        public static Weapon Katana() => Carried(new Weapon
         {
             Name = KatanaName,
             UsesSword = true,
@@ -646,6 +654,30 @@ namespace Clover.Player
                 SkillManaCost = 30f,
                 ChargeTime = 0.4f,
             },
-        };
+        }, w => w.Combo.Steps[0], DrawingCut);
+
+        // The Katana's carrier is the drawing cut made at once and wider (steel/weapons.md, the Katana's Way).
+        private static void DrawingCut(AttackStep step)
+        {
+            step.Windup = 0.18f;
+            step.Damage = 22f;
+            step.Stagger = 20f;
+            step.ArcDegrees = 170f;
+            step.Lunge = 1.6f;
+            step.Reach = 2.6f;
+        }
+
+        /// <summary>
+        /// Gives a weapon the carrier of its infused strike (IMPLEMENTATION.md 3.4): a copy of one of its own moves, so
+        /// what the strike changes never reaches the chain, and a god's weapon built on it scales the copy too.
+        /// </summary>
+        private static Weapon Carried(Weapon weapon, Func<Weapon, AttackStep> pick, Action<AttackStep> tune = null)
+        {
+            var from = pick(weapon);
+            if (from == null) return weapon;
+            weapon.Carrier = from.Clone();
+            tune?.Invoke(weapon.Carrier);
+            return weapon;
+        }
     }
 }

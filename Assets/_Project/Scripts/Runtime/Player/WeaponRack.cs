@@ -64,6 +64,24 @@ namespace Clover.Player
             return false;
         }
 
+        /// <summary>The part of the weapon shown now (in the hand or at rest), or null with none: where a charged blade is drawn. No allocation.</summary>
+        public GameObject ShownPart
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(shownCarry)) return null;
+                foreach (var set in sets)
+                {
+                    if (set.Carry != shownCarry) continue;
+                    var parts = shownState == 1 ? set.InHand : set.AtRest;
+                    if (parts == null) return null;
+                    foreach (var part in parts)
+                        if (part != null && part.activeInHierarchy) return part;
+                }
+                return null;
+            }
+        }
+
         /// <summary>Shows one weapon, in the hand or at rest, and hides the others. Cheap to call every frame: it acts only on a change.</summary>
         public void Show(string carry, bool inHand)
         {

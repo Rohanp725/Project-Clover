@@ -1,0 +1,54 @@
+      "message": "Found a running Unity Editor with the Pipeline package installed, but its Pipeline server isn't reachable:\n\n  1. Project Clover - C:\\Users\\rohan\\UnityProjects\\Project Clover\n\nThis can happen if the Editor just started, a domain reload is in progress, or the Pipeline package is too old. Check with unity pipeline editors."
+error: 'script eval' did not complete within its 30 s timeout. It may still be running and its effects may still land. Pass a larger --timeout (seconds).
+met: true
+result: probe started
+[Probe] start: scene ProvingGround, playtest mode True, sandboxed True, bindings key clover.controls.bindings.sandbox
+[Probe] the player has its four slots OK
+[Probe] Fire held and the Katana in hand: Fire, Katana OK
+[Probe] mana starts the scene at half: 50 OK
+[Probe] before anything is learned the base spell sits in West: 0:fire.base, 1:, 2:, 3: OK
+[Probe] the Fire tree is bought at the rest: 33 marks OK
+[Probe] the slots fill: base West, then the learned spells in the chart's order: 0:fire.base, 1:fire.rush, 2:fire.kiln, 3:fire.meteor OK
+[Probe] the chart puts Cinder Fan in the next slot (West): 0:fire.fan, 1:fire.rush, 2:fire.kiln, 3:fire.meteor OK
+[Probe] and Sunspot in the one after (North): 0:fire.fan, 1:fire.sunspot, 2:fire.kiln, 3:fire.meteor OK
+[Probe]   chart state: Spell     4 Shards\nIn the North slot (2). 11 s cooldown. Learn again: to the East slot.\nQ: details
+[Probe]   slots now 0:fire.base, 1:fire.fan, 2:fire.kiln, 3:fire.meteor; timings: base 7s, fan 7s, kiln 9s, meteor 45 mana
+[Probe] pad: L2 + buttonWest casts slot 0 (Flame Wave) and nothing else: casts 0->1, last 0, flasks 3->3, skills 0->0, dodges 0->0, uses 3->3, mana 100->100, wait 6.8s OK
+[Probe] pad: L2 + buttonNorth casts slot 1 (Cinder Fan) and nothing else: casts 1->2, last 1, flasks 3->3, skills 0->0, dodges 0->0, uses 3->3, mana 100->100, wait 6.8s OK
+[Probe] pad: L2 + buttonEast casts slot 2 (Kiln Stance) and nothing else: casts 2->3, last 2, flasks 3->3, skills 0->0, dodges 0->0, uses 3->3, mana 100->100, wait 8.8s OK
+[Probe] pad: L2 + buttonSouth casts slot 3 (Meteor Leap) and nothing else: casts 3->4, last 3, flasks 3->3, skills 0->0, dodges 0->0, uses 3->3, mana 100->47, wait 0.0s OK
+[Probe] Meteor Leap paid its 45 mana; the basic spells paid none: see the mana on each line above OK
+[Probe] keys: 1 casts slot 0 (Flame Wave): mana 100->100, cooldown 6.8s OK
+[Probe] keys: 2 casts slot 1 (Cinder Fan): mana 100->100, cooldown 6.8s OK
+[Probe] keys: 3 casts slot 2 (Kiln Stance): mana 100->100, cooldown 8.8s OK
+[Probe] keys: 4 casts slot 3 (Meteor Leap): mana 100->47, cooldown 0.0s OK
+[Probe] a slot pressed again while its clock runs is refused: left 6.4 of 7.0s OK
+[Probe] the clock runs with the game's time: 1.00s off in 1.00s OK
+[Probe] a landed light blow cuts 0.3 s: cut 0.30, clock fell 0.30s more than time OK
+[Probe] a landed heavy blow cuts 0.6 s: cut 0.60 OK
+[Probe] a perfect guard cuts 2 s: PerfectGuard, cut 2.00, clock fell 2.00s more than time OK
+[Probe] a perfect dodge cuts 1.5 s: PerfectDodge, cut 1.50 OK
+[Probe] a basic spell costs no mana OK
+[Probe] a tap of L2 lights the surge: surges 0->1, Kindle OK
+[Probe] a long hold of L2 lights no surge: surges 1->1 OK
+[Probe] F lights the surge on the keys: surges 1->2 OK
+[Probe] Triangle (Y) is the weapon skill: skills 0->1, mana 100->70 OK
+[Probe] Q is the weapon skill: skills 1->2 OK
+[Probe] a held heavy no longer gives the skill: skills 2->2 OK
+[Probe] Square without L2 is still the flask: flasks 3->2 OK
+[Probe] out of a fight mana 10 rises to 50 and stops: 3 s: 25.0, 10 s: 50.0, in fight False OK
+[Probe] mana above half stays: 80.0 OK
+[Probe] a fight's start brings mana up to half: in fight True, soldier aware True, mana 50.0 OK
+[Probe] in a fight nothing settles: mana 0.0 (blows may earn some) OK
+[Probe] still in the fight a moment after it is over (8 s of calm): calm 2.3s OK
+[Probe] eight calm seconds end the fight: calm 8.1s, mana 5.9 OK
+[Probe] the page listens for Spell West's key OK
+[Probe] Spell West is rebound to Z: 'Spell West: now Z.', kept under clover.controls.bindings.sandbox: True, the owner's key untouched OK
+[Probe] after the scene loads again Spell West is still Z: <Keyboard>/z OK
+[Probe] the slots came with the player: 0:fire.base, 1:fire.fan, 2:fire.kiln, 3:fire.meteor OK
+[Probe] Z casts West: casts 0->1 OK
+[Probe] 1 no longer casts OK
+[Probe] the sandbox bindings are cleared OK
+[Probe] tally: 44 OK, 0 WRONG
+[Probe] done
+counts: {"error":0,"warn":0,"log":49}

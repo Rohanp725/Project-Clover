@@ -60,13 +60,16 @@ namespace Clover.Player.Magic
         }
 
         /// <summary>Takes seconds off every running clock (a blow landed, a perfect guard). Returns which came to an end.</summary>
-        public int Cut(float seconds)
+        public int Cut(float seconds) => Cut(seconds, -1);
+
+        /// <summary>The same, leaving one clock alone: an infused strike's own blow does not shorten its own clock.</summary>
+        public int Cut(float seconds, int except)
         {
             if (seconds <= 0f) return 0;
             int done = 0;
             for (int i = 0; i < Count; i++)
             {
-                if (left[i] <= 0f) continue;
+                if (left[i] <= 0f || i == except) continue;
                 left[i] -= seconds;
                 if (left[i] > 0f) continue;
                 left[i] = 0f;

@@ -14,6 +14,12 @@ namespace Clover.Player
         /// <summary>What the screen calls it; empty means <see cref="Name"/>. The Armament's is its element's name and "Armament".</summary>
         public string HudName = "";
         public WeaponCombo Combo;
+        /// <summary>
+        /// The move an infused strike plays with the element on it (steel/weapons.md 0.4): the Katana's drawing cut, the
+        /// Hammer's drop. Null: the first light. Its shape (<see cref="Footprint"/>) is what each element's strike acts on.
+        /// </summary>
+        public AttackStep Carrier;
+        public AttackStep CarrierStep => Carrier ?? (Combo != null && Combo.Steps.Count > 0 ? Combo.Steps[0] : Combo?.Heavy);
         /// <summary>Which set of objects on the character is this weapon: a name the <see cref="WeaponRack"/> knows. Empty: nothing is shown.</summary>
         public string Carry = "";
         /// <summary>The prefix of its animation clips: <c>idle_p</c>, <c>attack_p_1</c>. Empty for the Katana, whose clips have no prefix.</summary>
@@ -84,6 +90,7 @@ namespace Clover.Player
             if (Combo.Skill != null) yield return Combo.Skill;
             if (Combo.Skill != null && Combo.Skill.FollowStep != null) yield return Combo.Skill.FollowStep;
             if (Combo.Finisher != null) yield return Combo.Finisher;
+            if (Carrier != null) yield return Carrier;
         }
 
         /// <summary>Sets the usual state names from the clip prefix: <c>locomotion_p</c>, <c>guard_p</c>, <c>roll_p</c> and the rest.</summary>

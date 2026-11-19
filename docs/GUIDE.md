@@ -43,7 +43,10 @@ this section), and the prompts follow the rebinding.
 | Spell West, North, East, South | Hold L2, then Square, Triangle, Circle or Cross | Hold LT, then X, Y, B or A | 1, 2, 3, 4 | 1, 2, 3, 4 | Casts the spell in that slot (see "The four spell slots" below). While L2 is held the face buttons are spells only: no flask, skill, dodge or use. On the keys no layer is needed. With the mouse in use, the player turns to the cursor as it is cast. A spell held for longer (a beam, the Eye of the Storm) is held on its slot's button. |
 | Surge | L2 (tap) | LT (tap) | F | F | The element's self buff. A tap of L2 let go within 0.25 s with no spell cast while it was down lights it as it is let go; a longer hold lights nothing. Pressed while it runs, it starts over at full length and is paid for again. |
 | Surge again | Tap L2 while the surge runs | Tap LT | F | F | Only with a gift that listens for it (Falling Sun, The World Holds Still, The Sea Rises, First Spring). The second press triggers the gift and does not relight the surge. |
-| Spell layer | L2 (hold) | LT (hold) | Left Ctrl (hold) | Left Ctrl | Turns the face buttons into the four spells. With R1 or R2 it will give the infused strikes (not built yet; until then R1 and R2 under L2 are plain attacks). |
+| Spell layer | L2 (hold) | LT (hold) | Left Ctrl (hold) | Left Ctrl | Turns the face buttons into the four spells and R1 and R2 into the infused strikes. Holding it also shows the spell diamond large. |
+| Infused strike | Hold L2, then R1 | Hold LT, then RB | Left Ctrl + left mouse | Left Ctrl + J | The weapon's carrier move with the element on it (see "The charged blade and infused strikes" below). Waits 8 s, cut by weapon play. Never charges the blade. |
+| Deep strike | Hold L2, then R2 | Hold LT, then RT | Left Ctrl + right mouse | Left Ctrl + K | The heavier strike: 20 mana and its own 8 s wait. With two elements (phase 2) R2 is the second element's strike and the deep strike is for a Hand all in on one. |
+| Technique chord | R1 and R2 together | RB and RT | Both mouse buttons | J and K | Ready for the gated techniques (none is learned yet, so today it is a light then a heavy). A heavy within 0.08 s of a light, while the light is in its first 0.08 s, cancels the light into the technique; the light is never held back to wait for it. |
 | Use | Cross | A | E | E | Rest fires, weapon stands, braziers, stones, doors, the next line of speech (a left click also reads on). |
 | Pause | Options | Menu | Esc | Esc | Resume, controls, fullscreen, give up the run (castle and summit), forget everything saved (hub), quit. Esc and Start (Options, Menu) always pause, whatever Pause is rebound to. |
 
@@ -81,8 +84,13 @@ North when all four are full. At a rest fire, choosing a learned spell on the ch
 slot round. Taking another element puts its own spell where the old element's was and drops the old element's spells.
 The element's own spell is not on the chart, so once the next-slot round has pushed it out it stays out until
 another element is taken (or an empty slot opens); the Hand will let it be placed like any other.
-The slots go with the player from scene to scene in a run. A line under the weapon's name shows each slot's button, its
-spell and the seconds it still waits (or its price in mana).
+The slots go with the player from scene to scene in a run. The **spell diamond** in the bottom-right corner shows them
+(`Runtime/UI/SpellDiamondHud.cs`, built at play beside the HUD): the four slots laid out like the face buttons, each with
+its spell's picture (or initials), its button, a shade that sweeps back as its wait runs out with the seconds in it, and
+its mana price (blue, red when short); the surge in the middle (bright while it burns, shaded while Hunger waits); the two
+infused strikes under it with their own rings and R2's 20 mana; the charged blade's three pips on its left. Small at all
+times; large while L2 or Left Ctrl is held, with the spells' names. Button names follow the device used last (Xbox,
+PlayStation or keys) and the player's rebinding.
 
 - **Cooldowns.** Basic spells cost no mana. Casting starts the slot's wait: each element's own spell 6 to 9 s, the
   tree spells 7 to 12 s, the spare mixed spells 12 s (the table is `Runtime/Player/Magic/SpellTimings.cs`, from
@@ -95,6 +103,32 @@ spell and the seconds it still waits (or its price in mana).
 - **Marks that only made the base spell cheaper** (Short Breath, Quick Clap, Easy Breath, Thin Ice, Low Water, Ready
   Soil, Near to Hand, Ready Steel, Ready Light, Ready Poison) are still on the chart and do nothing now; Spring Tide
   works only on a spell that costs mana. The trees are reshaped in a later phase.
+
+### The charged blade and infused strikes
+
+- **The charged blade** (`Runtime/Player/Magic/ChargedBlade.cs`; spent in `PlayerCombat`'s blow path; the look is
+  `BladeLook`). The first enemy a slot spell strikes, within 8 s of the cast, charges the weapon with the spell's element
+  (the playtest's one element). The next three moves that land carry it: 1.2 times the damage, and one stack of the
+  element's affliction (two of Poison) on top of what the blow lays, or beside it as the blow's second affliction. A move
+  counts once however many it strikes. A blow turned on a guard spends nothing. A new landed spell gives three fresh
+  blows; a rest ends it. The surge, infused strikes, ground and marks' effects never charge it. Each element adds one
+  thing (`Trees/ElementSteel.cs`): Fire's third leaves 1.5 m of ground burning 3 s; Lightning's each leap to one more
+  enemy within 4 m for half; Wind's each shove 1.5 m along the swing, the third 4 m; Ice's each shatter a Frozen enemy,
+  light or heavy; Water's each splash 1.5 m round for a fifth and soak; Life's third throws thorns (2 m); Earth's each
+  throw a 2 m spray of gravel; Metal's pass any guard; Light's third throws a 5 m ray that Marks; Dark's third Curses
+  twice more; Poison's third makes the poison bite at once. Seen on the weapon in the element's substance (flame and
+  embers for Fire, bolts for Lightning, rime for Ice), fewer pieces as the blows are spent, and as three pips by the
+  diamond.
+- **Infused strikes** (L2 with R1; L2 with R2 the deep strike). Each weapon's carrier (`Weapon.Carrier`, a copy of one
+  of its moves): Katana, the drawing cut made at once (0.18 s, 22 damage, 170 degrees, 1.6 m step); Massive Sword, the
+  rising cut; Scythe, the full turn; Great Spear and Sun-Spear, the first thrust; Great Hammer, the drop; Twin Knives, the
+  crossing; Great Bow, the shot; Chain Sickle, the snap; Fists and Armament, the kick. Once the carrier's blow is out, the
+  element acts on the ground it covered (its footprint: arc, lane, disc, ring or path). The eleven strikes and deep
+  strikes are listed in the guide to effects ("Infused strikes"); Lightning's Flash Cut turns the carrier into a 5 m
+  lunge at half again its damage. Each button waits 8 s, cut by weapon play like a spell (the strike's own blow cuts every
+  other wait but not its own). The deep strike costs 20 mana. A strike counts as a weapon blow (mana, cuts) and neither
+  charges nor spends the charged blade.
+- **Hunger** (Dark's surge) waits 25 s from when it ends; a rest ends the wait.
 
 ### Rebinding
 
@@ -121,8 +155,11 @@ Start (pad) leaves it as it was; so does waiting eight seconds.
 **Not yet**
 
 - No hard lock-on. No way to choose whom the guard faces when several enemies are near.
-- The infused strikes (L2 with R1 or R2) and the technique chord (R1 and R2) of `docs/design/STEEL_AND_ELEMENT.md` 3.5
-  are not built. Neither is the spell diamond on the HUD: a plain line stands in for it.
+- The technique chord is wired but has nothing to play until the gated techniques (phase 5). Infusion marks that bend
+  the carrier, and the second element's strike on R2, come with the Way (phase 5) and two elements (phase 2).
+- Some parts of the strikes and the charged blade wait on engine pieces and say so in `ElementSteel.cs` (`NEEDS`): the
+  lunge's untouchability, Wind's and Water's throws into walls, Life's saplings, Dark's shadow cut loose, Earth's
+  unstoppable wind-up, Ice's spike broken by the next blow.
 - The Hand screen (choosing the four spells and the surge at a rest) is playtest phase 2; the chart's "next slot" stands
   in for it.
 - The chart cannot be clicked; the pause menu and the controls page can.

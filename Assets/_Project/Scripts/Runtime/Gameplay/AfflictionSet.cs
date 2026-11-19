@@ -81,6 +81,19 @@ namespace Clover.Gameplay
 
         public AfflictionSet() => Clear();
 
+        /// <summary>
+        /// Lays what a blow carries, both its afflictions, and reports each to <see cref="CombatEvents"/> as laid on
+        /// <paramref name="who"/>: the one helper every <c>TakeHit</c> calls (IMPLEMENTATION.md 1, 3.7). The burn given
+        /// in seconds (<see cref="Hit.BurnSeconds"/>) is still lit by the caller where its order matters.
+        /// </summary>
+        public void TakeFrom(in Hit hit, UnityEngine.Component who)
+        {
+            if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
+                CombatEvents.Report(who, hit.Affliction, hit.AfflictionStacks, Apply(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower));
+            if (hit.Affliction2 != AfflictionKind.None && hit.Affliction2Stacks > 0)
+                CombatEvents.Report(who, hit.Affliction2, hit.Affliction2Stacks, Apply(hit.Affliction2, hit.Affliction2Stacks, hit.Affliction2Seconds, hit.AfflictionPower));
+        }
+
         public void Clear()
         {
             owedSeconds = 0f;

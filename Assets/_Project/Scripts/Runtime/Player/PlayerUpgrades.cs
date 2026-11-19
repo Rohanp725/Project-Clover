@@ -1527,6 +1527,15 @@ namespace Clover.Player
             if (wasAfflicted) Trigger(UpgradeTrigger.AfflictedHit, struck, at);
         }
 
+        /// <summary>A move carrying the charged blade landed on <paramref name="target"/>; <paramref name="third"/> for the charge's last.</summary>
+        public void OnChargedBlow(Component target, bool third)
+        {
+            if (target == null) return;
+            Vector3 at = target.transform.position;
+            Trigger(UpgradeTrigger.ChargedBlow, target, at);
+            if (third) Trigger(UpgradeTrigger.ChargedBlowThird, target, at);
+        }
+
         /// <summary>The element's own spell has left the hand.</summary>
         public void OnSpellCast() => Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);
 

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Clover.Core;
 using Clover.Gameplay;
 using Clover.Player.Forms;
+using Clover.Player.Magic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -124,6 +125,52 @@ namespace Clover.Player
         public event System.Action Finished;
         private bool cutGiven;
 
+        /// <summary>
+        /// The charged blade (IMPLEMENTATION.md 3.3): a slot spell that lands charges it (<see cref="PlayerSpells"/> does),
+        /// and the next three moves that land carry its element, 20% harder. Spent here, in the blow path.
+        /// </summary>
+        public ChargedBlade Blade = new ChargedBlade();
+        /// <summary>The technique chord, R1 and R2 together (IMPLEMENTATION.md 3.5). It cancels a light still in its first moment into <see cref="TechniqueStep"/>.</summary>
+        public ChordRules Chord = new ChordRules();
+        /// <summary>
+        /// What the chord plays. Null, as it is until the gated techniques exist (task 5.3): the chord is then not taken
+        /// and the heavy press goes on as a heavy, so nothing a player does today changes.
+        /// </summary>
+        [System.NonSerialized] public AttackStep TechniqueStep;
+        /// <summary>Seconds an infused strike's press is remembered while the player is busy.</summary>
+        public float StrikeBufferTime = 0.25f;
+        /// <summary>Counts for probes: moves that spent a charge, infused and deep strikes started, chords taken, strikes refused.</summary>
+        public int ChargedBlows { get; private set; }
+        public int InfusedStrikes { get; private set; }
+        public int DeepStrikes { get; private set; }
+        public int ChordsTaken { get; private set; }
+        public int StrikesRefused { get; private set; }
+        /// <summary>The ground the last infused strike's carrier covered.</summary>
+        public Footprint LastFootprint { get; private set; }
+        /// <summary>True while an infused strike's carrier is being made.</summary>
+        public bool InfusedNow => infusedStep != null && Combo.Current == infusedStep;
+        /// <summary>The strike clock a move belongs to (4 or 5) when it is an infused strike, else -1: its own blow does not cut its own clock.</summary>
+        public int StrikeClockOf(AttackStep step) => step != null && step == infusedStep ? StrikeRules.Clock(infusedSecond) : -1;
+        /// <summary>A spell's blow has landed on something (once for each thing): a slot spell's first one charges the blade.</summary>
+        public event System.Action<Component> SpellBlowLanded;
+        /// <summary>A move that carried the charge landed: which of the three, and its element.</summary>
+        public event System.Action<ChargedBlow> ChargedBlowLanded;
+
+        private PlayerSpells spells;
+        private AttackStep infusedStep;
+        private bool infusedDeep, infusedSecond, infusedPending;
+        private ElementInfo infusedElement;
+        private Component infusedFirst;
+        private float infusedDamage;
+        private int strikeBuffered = -1;
+        private float strikeBufferLeft;
+        private bool moveCharged, moveChargeSpent;
+        private ElementInfo moveElement;
+        private ChargedBlow chargedPending;
+        private Component chargedTarget;
+        private float chargedDamage;
+        private readonly Component[] gathered = new Component[32];
+
         private PlayerController player;
         private PlayerDefence defence;
         private PlayerUpgrades upgrades;
@@ -216,6 +263,7 @@ namespace Clover.Player
             lightAction = player.FindAction("LightAttack");
             heavyAction = player.FindAction("HeavyAttack");
             moveAction = player.FindAction("Move");
+            spells = GetComponent<PlayerSpells>();
             // The Armament wears whatever element is held, which is known only once the element has woken too.
             if (Weapon != null && Weapon.ElementColoured && element != null && element.Info != null) Equip(Weapons.Armament(element.Info.Name));
         }
@@ -235,6 +283,8 @@ namespace Clover.Player
             pendingShot = null;
             followFor = null;
             followStep = null;
+            infusedPending = false;
+            infusedStep = null;
             boundTo = null;
             pullSelfTo = null;
             Step = Vector3.zero;
@@ -361,17 +411,41 @@ namespace Clover.Player
             PassingThrough = false;
             if (HeavyCriticalLeft > 0f) HeavyCriticalLeft -= deltaTime;
             if (lightAction == null || heavyAction == null) return;
+            // The element's strike follows the carrier's blow once the swing is out (or was cut short).
+            if (infusedPending && (Combo.Current != infusedStep || Combo.Phase != AttackPhase.Active)) FireInfused();
             Tether(deltaTime);
             Combo.EnderAlways = boundTo != null;
+            Chord.Tick(deltaTime);
             // With the weapon out of the hand there is nothing to attack with; behind a raised guard the light press is the guard's own thrust.
             var buttons = player.Buttons;
-            if ((buttons != null ? buttons.Pressed(PlayerButton.LightAttack) : lightAction.WasPressedThisFrame()) && !WeaponAway)
-                Combo.Press(defence != null && defence.IsGuarding, player != null && player.Dodge.IsRolling && player.Dodge.Progress >= 0.5f);
-            if ((buttons != null ? buttons.Pressed(PlayerButton.HeavyAttack) : heavyAction.WasPressedThisFrame()) && !WeaponAway)
+            bool lightNow = (buttons != null ? buttons.Pressed(PlayerButton.LightAttack) : lightAction.WasPressedThisFrame()) && !WeaponAway;
+            bool heavyNow = (buttons != null ? buttons.Pressed(PlayerButton.HeavyAttack) : heavyAction.WasPressedThisFrame()) && !WeaponAway;
+            if (lightNow)
             {
-                // Looked for on the press only, not every frame: a staggered enemy in reach turns the heavy into the finisher.
-                finisherTarget = FindEnemy(transform.forward, 360f, FinisherRange, true);
-                Combo.PressHeavy(finisherTarget != null);
+                Chord.Light();
+                Combo.Press(defence != null && defence.IsGuarding, player != null && player.Dodge.IsRolling && player.Dodge.Progress >= 0.5f);
+            }
+            bool chordAfterTick = false, chordNow = false;
+            if (heavyNow)
+            {
+                // R1 and R2 together: the light starts at once as always, and a heavy close behind it cancels it into
+                // the technique, so no light is ever held back waiting to see whether a chord is coming.
+                if (TechniqueStep != null && Combo.LightWindingUp && Chord.Heavy(Combo.Elapsed)) chordNow = true;
+                else if (TechniqueStep != null && lightNow) chordAfterTick = true;
+                else PressHeavyNow();
+            }
+            if (buttons != null && !WeaponAway)
+            {
+                if (buttons.StrikeFirst)
+                {
+                    strikeBuffered = 0;
+                    strikeBufferLeft = StrikeBufferTime;
+                }
+                else if (buttons.StrikeSecond)
+                {
+                    strikeBuffered = 1;
+                    strikeBufferLeft = StrikeBufferTime;
+                }
             }
             if (!heavyAction.IsPressed()) Combo.ReleaseHeavy();
             if (buttons != null && buttons.Pressed(PlayerButton.WeaponSkill) && !WeaponAway && Combo.Skill != null)
@@ -385,13 +459,35 @@ namespace Clover.Player
             }
             if (buttons == null || !buttons.SkillHeld) Combo.ReleaseSkill();
             Away(deltaTime);
+            if (strikeBufferLeft > 0f)
+            {
+                strikeBufferLeft -= deltaTime;
+                if (strikeBufferLeft <= 0f) strikeBuffered = -1;
+            }
             if (unavailable)
             {
+                if (chordAfterTick || chordNow) PressHeavyNow();
                 Combo.Idle(deltaTime);
                 return;
             }
 
+            bool begun = chordNow && TakeChord();
+            // A chord that could not be paid for is the heavy it was pressed as.
+            if (chordNow && !begun) PressHeavyNow();
+            if (strikeBuffered >= 0 && !begun && !WeaponAway && Combo.Phase != AttackPhase.Windup && Combo.Phase != AttackPhase.Active)
+            {
+                bool second = strikeBuffered == 1;
+                strikeBuffered = -1;
+                begun = TryInfused(second);
+            }
             var events = Combo.Tick(deltaTime * SwingSpeed * StatSwing, player.Stamina, Mana);
+            if (chordAfterTick)
+            {
+                // Both pressed in one frame: the light has just started, and is taken at once.
+                if (Combo.LightWindingUp && Chord.Heavy(Combo.Elapsed) && TakeChord()) begun = true;
+                else PressHeavyNow();
+            }
+            if (begun) events |= ComboEvents.Started;
             if ((events & ComboEvents.Charged) != 0)
             {
                 // The first tier flashes white; a counter says what it is.
@@ -406,6 +502,11 @@ namespace Clover.Player
             if ((events & ComboEvents.Started) != 0)
             {
                 Aim();
+                // A charged blade rides on every move but an infused strike, which carries its own element.
+                moveCharged = Blade.Charged && Combo.Current != infusedStep;
+                moveElement = moveCharged ? Elements.ByName(Blade.Element) : null;
+                moveCharged &= moveElement != null;
+                moveChargeSpent = false;
                 beatsDone = 0;
                 holdDone = false;
                 passTurn = null;
@@ -772,6 +873,7 @@ namespace Clover.Player
             else Vfx.Play(blow.Effect, other.bounds.center, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
             if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
+            if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody);
         }
 
         /// <summary>
@@ -895,6 +997,7 @@ namespace Clover.Player
             else Vfx.Play(blow.Effect, at, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
             if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
+            if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody);
             return true;
         }
 
@@ -1125,6 +1228,7 @@ namespace Clover.Player
                     hits++;
                     if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
                     if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
+                    if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody);
                 }
                 from = at.position;
                 at = NextUnstruck(from, leapRange, struck);
@@ -1320,6 +1424,110 @@ namespace Clover.Player
             return (-transform.right * Mathf.Sign(step.Sweep) + transform.forward * 0.45f).normalized;
         }
 
+        private void PressHeavyNow()
+        {
+            // Looked for on the press only, not every frame: a staggered enemy in reach turns the heavy into the finisher.
+            finisherTarget = FindEnemy(transform.forward, 360f, FinisherRange, true);
+            Combo.PressHeavy(finisherTarget != null);
+        }
+
+        // The chord taken: the light in its first moment is dropped and the technique starts in its place.
+        private bool TakeChord()
+        {
+            if (TechniqueStep == null || !Combo.Replace(TechniqueStep, player.Stamina)) return false;
+            ChordsTaken++;
+            return true;
+        }
+
+        /// <summary>
+        /// L2 with R1 (or R2): the weapon's carrier, played with the element on it (IMPLEMENTATION.md 3.4). With one
+        /// element, R2 is the deep strike (the plan's answer for Phase 1). Its clock and price are <see cref="PlayerSpells"/>'s.
+        /// </summary>
+        private bool TryInfused(bool second)
+        {
+            if (spells == null) spells = GetComponent<PlayerSpells>();
+            if (spells == null || element == null || Weapon == null || Weapon.CarrierStep == null) return false;
+            var refusal = spells.CheckStrike(second, out bool deep);
+            if (refusal != StrikeRefusal.None)
+            {
+                StrikesRefused++;
+                if (defence != null && refusal != StrikeRefusal.NoElement) defence.Callout(refusal == StrikeRefusal.NoMana ? "No mana" : "Not ready");
+                return false;
+            }
+            var info = element.Info;
+            var step = Weapon.CarrierStep.Clone();
+            ElementSteel.Bend(step, info.Name, deep);
+            player.FacePointer();
+            if (!Combo.Follow(step, player.Stamina))
+            {
+                StrikesRefused++;
+                if (defence != null) defence.Callout("No stamina");
+                return false;
+            }
+            spells.BeginStrike(second, deep);
+            infusedStep = step;
+            infusedSecond = second;
+            infusedDeep = deep;
+            infusedElement = info;
+            infusedPending = false;
+            InfusedStrikes++;
+            if (deep) DeepStrikes++;
+            // The element gathers on the weapon as the carrier winds up.
+            ElementLook.Puff(info, transform.position + transform.forward * 0.6f + Vector3.up * 1.1f, transform.forward, 0.8f);
+            return true;
+        }
+
+        // The element's strike on the ground the carrier covered.
+        private void FireInfused()
+        {
+            infusedPending = false;
+            ElementSteel.Strike(this, infusedElement, LastFootprint, infusedDeep, infusedDamage, infusedFirst);
+            infusedFirst = null;
+        }
+
+        /// <summary>Draws a swing's arc from the player, for effects that follow a blow.</summary>
+        public void ShowArc(float reach, float arcDegrees, Color colour)
+        {
+            if (arcs != null) arcs.Show(transform.position, transform.forward, reach, arcDegrees, 0f, colour);
+        }
+
+        /// <summary>Whom the weapon's move in progress has struck.</summary>
+        public HashSet<IDamageable> Struck => struck;
+
+        /// <summary>Copies whom the last area, lane or cone strike landed on into a buffer of the player's own, so more strikes can follow without disturbing the list. Read at once.</summary>
+        public int CopyLastStruck(out Component[] into)
+        {
+            into = gathered;
+            int count = 0;
+            foreach (var one in spellStruck)
+            {
+                if (count >= gathered.Length) break;
+                if (one is Component body && body != null) gathered[count++] = body;
+            }
+            return count;
+        }
+
+        /// <summary>Every enemy within a circle, into the same buffer. Read at once.</summary>
+        public int Gather(Vector3 centre, float radius, out Component[] into)
+        {
+            into = gathered;
+            int found = 0;
+            int count = Overlap(centre + Vector3.up, radius + 0.5f);
+            for (int i = 0; i < count && found < gathered.Length; i++)
+            {
+                var other = overlaps[i];
+                if (other.transform.root == transform.root) continue;
+                if (!(other.GetComponentInParent<IDamageable>() is Component body)) continue;
+                bool seen = false;
+                for (int j = 0; j < found && !seen; j++) seen = gathered[j] == body;
+                if (seen) continue;
+                Vector3 offset = body.transform.position - centre;
+                offset.y = 0f;
+                if (offset.magnitude <= radius) gathered[found++] = body;
+            }
+            return found;
+        }
+
         // One blow of the weapon. A fresh blow starts a new list of who has been struck and shows its arc; one that is
         // not (a carried blow, struck again each frame) only looks for anyone new. Scale is for the repeats of a step.
         /// <summary>How far round the target the player must be for a blow to count as on its back: the dot of its facing with the way to the player, under this.</summary>
@@ -1333,7 +1541,19 @@ namespace Clover.Player
             bool clean = false;
             bool paidBlow = false;
             Vector3 finished = transform.position;
-            Color arcColour = empowered ? empoweredColour : Weapon.ElementColoured ? new Color(EffectColour.r * 2f, EffectColour.g * 2f, EffectColour.b * 2f, 0.9f) : Weapon.SlashColour;
+            bool infused = step == infusedStep && infusedElement != null;
+            if (infused && fresh)
+            {
+                // The carrier's blow is out: where it went is the footprint the element's strike acts on.
+                LastFootprint = Footprint.Of(step, transform.position, transform.forward);
+                infusedPending = true;
+                infusedFirst = null;
+                infusedDamage = step.Damage * scale * DamageMultiplier * UpgradeDamage * StatDamage;
+            }
+            // The element's own colour, lit, not its glow: Fire's glow passes into gold and white, and its strike must read as flame.
+            // A charged move cuts in its element's colour too, so the three blows can be told from plain ones.
+            var arcElement = infused ? infusedElement : moveCharged ? moveElement : null;
+            Color arcColour = arcElement != null ? new Color(arcElement.Colour.r * 1.9f, arcElement.Colour.g * 1.9f, arcElement.Colour.b * 1.9f, 0.95f) : empowered ? empoweredColour : Weapon.ElementColoured ? new Color(EffectColour.r * 2f, EffectColour.g * 2f, EffectColour.b * 2f, 0.9f) : Weapon.SlashColour;
             if (fresh && arcs != null)
             {
                 if (step.Radius > 0f) Vfx.Play(VfxKind.TintRing, transform.position + transform.forward * step.Reach + Vector3.up * 0.15f, Vector3.up, step.Radius * 0.6f, arcColour);
@@ -1436,14 +1656,53 @@ namespace Clover.Player
                     }
                     else if (kind == held.Affliction) stacks += step.ElementStacks;
                 }
+                // A charged blade: the element's affliction rides on the blow (one stack more of what it lays already,
+                // or a second affliction beside it), 20% harder, and Ice breaks what is Frozen with any blow.
+                var second = AfflictionKind.None;
+                int secondStacks = 0;
+                // The move's flag is set when it starts; the blade must still hold the charge (or this move already
+                // spent it), so a move that began without that event never carries a stale charge for free.
+                bool carries = moveCharged && moveElement != null && (moveChargeSpent || Blade.Charged);
+                if (carries)
+                {
+                    damage *= Blade.DamageShare;
+                    damage += ElementSteel.BeforeChargedBlow(moveElement.Name, afflictable, step.Heavy);
+                    var charged = moveElement.Affliction;
+                    int add = ElementSteel.Stacks(moveElement.Name);
+                    if (charged == kind && kind != AfflictionKind.None) stacks += add;
+                    else if (kind == AfflictionKind.None)
+                    {
+                        kind = charged;
+                        stacks = add + ExtraStacks;
+                    }
+                    else
+                    {
+                        second = charged;
+                        secondStacks = add + ExtraStacks;
+                    }
+                }
                 float lasts = kind != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(kind).Seconds * AfflictionSeconds : 0f;
+                float secondLasts = second != AfflictionKind.None && AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(second).Seconds * AfflictionSeconds : 0f;
                 float dealtStagger = (step.Stagger + (counter ? counterStagger : 0f) + StaggerOnHit) * NextBlowStagger * StatStagger * staggerShare * scale * step.BandStagger(distance);
                 if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
                 if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
-                var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, step.Heavy, false, transform.position,
-                    burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical));
+                var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, step.Heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
+                    burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical, second, secondStacks, secondLasts));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
+                if (infused && infusedFirst == null && outcome != HitOutcome.Blocked && target is Component firstBody) infusedFirst = firstBody;
+                if (carries && !moveChargeSpent && outcome != HitOutcome.Blocked && target is Component chargedBody)
+                {
+                    // One charge a move, however many it lands on; what the element adds is done once the move's own list is finished.
+                    moveChargeSpent = true;
+                    chargedPending = Blade.OnBlowLanded();
+                    if (chargedPending.Carried)
+                    {
+                        chargedTarget = chargedBody;
+                        chargedDamage = damage;
+                        ChargedBlows++;
+                    }
+                }
                 LastBlowDamage = damage;
                 if (fromBehind && outcome != HitOutcome.Blocked)
                 {
@@ -1539,6 +1798,14 @@ namespace Clover.Player
                 Mana.Gain(earned);
                 BlowsLanded++;
                 if (defence != null && pays) defence.DealtDamage(damage);
+            }
+            if (chargedTarget != null)
+            {
+                var chargedOne = chargedTarget;
+                chargedTarget = null;
+                ElementSteel.AfterChargedBlow(this, moveElement, chargedOne, chargedPending, chargedDamage);
+                if (upgrades != null) upgrades.OnChargedBlow(chargedOne, chargedPending.Third);
+                ChargedBlowLanded?.Invoke(chargedPending);
             }
             if (fresh)
             {

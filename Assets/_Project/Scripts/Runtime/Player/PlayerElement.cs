@@ -96,8 +96,10 @@ namespace Clover.Player
         {
             HasElement = true;
             bool surging = Kit != null && Kit.SurgeActive;
+            float wait = Kit != null && kit != null && Kit.Name == kit.Name ? Kit.SurgeWaitLeft : 0f;
             Kit = kit;
             Kit.Reset();
+            Kit.KeepWait(wait);
             Info = Elements.ByNameOrFire(kit.Name);
             // The old element's surge is not left on the body, and spells are made of the new one's stuff.
             if (surgeShown)
@@ -226,7 +228,7 @@ namespace Clover.Player
                 // A gift that waits on a second press takes it; the surge is not lit over itself.
                 if (Kit.SurgeActive && upgrades != null && upgrades.ListensForSurge) upgrades.HeardSurge();
                 else if (Kit.TrySurge(combat.Mana, stats != null ? stats.Multiplier(PlayerStat.SurgeCost) : 1f, stats != null ? stats.Multiplier(PlayerStat.SurgeSeconds) : 1f)) BeginSurge();
-                else if (defence != null) defence.Callout("No mana");
+                else if (defence != null) defence.Callout(Kit.SurgeWaiting ? "Not ready" : "No mana");
             }
             if (surgeBuffered > 0f) surgeBuffered -= deltaTime;
 

@@ -1,0 +1,55 @@
+opened
+met: true
+result: probe started
+[Probe] start: scene ProvingGround, playtest mode True, sandboxed True, bindings key clover.controls.bindings.sandbox, owner's bindings saved False
+[Probe] the diamond is built on the HUD OK
+[Probe] the blade's look is on the player OK
+[Probe] Fire held and the Katana in hand: Fire, Katana OK
+[Probe] the still dummy is found OK
+[Probe] small at rest: scale 0.70 OK
+[Probe] large while L2 is held: scale 1.00 OK
+[Probe] the pad's names: West is X, the strike RB: 'X', 'RB', device Xbox OK
+[Probe] small again when let go: scale 0.70 OK
+[Probe] Flame Wave lands and charges the blade with Fire: charged True Fire x3, charges 0->1 OK
+[Probe] the blade shows Fire on the weapon: Fire, 6 pieces OK
+[Probe] a swing at the air spends no charge (fire): 3->3 OK
+[Probe] Fire charged blow 1: 1.2 times and lays Burn: attack_light_2 13.20 (expected 13.20), Burn 0->1, charge 3->2 OK
+[Probe] Fire charged blow 2: 1.2 times and lays Burn: attack_light_1 12.00 (expected 12.00), Burn 0->1, charge 2->1 OK
+[Probe] Fire charged blow 3: 1.2 times and lays Burn: attack_light_1 12.00 (expected 12.00), Burn 0->1, charge 1->0 OK
+[Probe] Fire: the blade's look is gone after the third OK
+[Probe] Fire: the fourth blow is plain: attack_light_1 10.00 (expected 10.00), Burn 0->0 OK
+[Probe] L2 + RB plays the infused strike and it lands: strikes 0->1, dummy hits 20->22, footprint Arc 2.6 m OK
+[Probe] Burning Edge burns what it reaches (2 Burn and more): burn x2 OK
+[Probe] its clock is 8 s, and the strike's own blow did not cut it: 7.39 of 8.00 OK
+[Probe] it paid no mana and counted as a weapon blow (mana earned): mana 50->55 OK
+[Probe] a strike never charges the blade OK
+[Probe] pressed again while its clock runs it is refused: Not ready OK
+[Probe] a landed light blow cuts the strike's clock 0.3 s: fell 0.30 s more than time OK
+[Probe] L2 + RT is the deep strike, it lands and costs 20 mana: deep 0->1, paid 20, mana now 38, dummy last 30.0 OK
+[Probe] the deep strike runs its own 8 s clock: 7.3 OK
+[Probe] with 10 mana the deep strike is refused and nothing is paid: 'No mana', mana 11.2 (settling toward half out of a fight) OK
+[Probe] the diamond shows West's and the strike's clocks: West 0.72, R1 0.87, pips shown True OK
+[Probe] the light starts on its own frame, not held back for a chord: winding up True OK
+[Probe] a heavy within 0.08 s cancels the light into the technique: chords 0->1, now attack_heavy OK
+[Probe] with no technique (as now) the chord is not taken and the light goes on: now attack_light_1 OK
+[Probe] Ice held: Ice OK
+[Probe] Ice's spell lands and charges the blade with Ice: Ice x3 OK
+[Probe] the blade shows Ice on the weapon: Ice, 6 pieces OK
+[Probe] a swing at the air spends no charge (ice): 3->3 OK
+[Probe] Ice charged blow 1: 1.2 times and lays Chill: attack_light_2 13.20 (expected 13.20), Chill 0->2, charge 3->2 OK
+[Probe] Ice charged blow 2: 1.2 times and lays Chill: attack_light_1 12.00 (expected 12.00), Chill 0->1, charge 2->1 OK
+[Probe] Ice charged blow 3: 1.2 times and lays Chill: attack_light_1 12.00 (expected 12.00), Chill 0->1, charge 1->0 OK
+[Probe] Ice: the blade's look is gone after the third OK
+[Probe] Ice: the fourth blow is plain: attack_light_1 10.00 (expected 10.00), Chill 0->0 OK
+[Probe] Frost Bite lands: 2 Chill and held: chill x2, held 0.72s, frozen False OK
+[Probe] Ice Through freezes an enemy already three deep: frozen True, chill x5 OK
+[Probe] Hunger is lit: Hunger OK
+[Probe] when it ends it waits 25 s: 25.0 s OK
+[Probe] pressed while it waits it is not lit: 'Not ready' OK
+[Probe] the keys' names: West is 1, the strike Ctrl+LMB: '1', 'Ctrl+LMB', device Keys OK
+[Probe] after rebinding West to Z the diamond says Z: Z OK
+[Probe] and 1 again when it is undone: 1 OK
+[Probe] the owner's bindings key is as it was OK
+[Probe] tally: 48 OK, 0 WRONG
+[Probe] done
+counts: {"error":0,"warn":0,"log":51}

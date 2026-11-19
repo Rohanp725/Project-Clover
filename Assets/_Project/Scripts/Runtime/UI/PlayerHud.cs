@@ -64,14 +64,8 @@ namespace Clover.UI
         }
         private bool shownCharge;
         private int shownWards;
-        // The four spell slots, as a plain line under the status until the spell diamond is built (task 1.7).
-        private PlayerSpells spells;
-        private Text spellLine;
-        private readonly int[] shownWait = { -1, -1, -1, -1 };
-        private int shownSlots = -1;
-        private int shownDevice = -1;
-        private int shownAfford = -1;
-        private string shownSpellElement;
+        /// <summary>The four spell slots, the surge, the strikes and the charged blade, in the bottom-right corner (task 1.7).</summary>
+        public SpellDiamondHud Diamond { get; private set; }
         private int shownTallies = -1;
         private int shownFlasks;
 
@@ -116,68 +110,13 @@ namespace Clover.UI
                 var image = flaskFills[i] != null ? flaskFills[i].GetComponent<Image>() : null;
                 flaskImages[i] = image != null && image.type == Image.Type.Filled ? image : null;
             }
-            spells = player != null ? player.GetComponent<PlayerSpells>() : null;
-            if (spells != null && status != null)
-            {
-                // Made from the status line at play, so no scene needs rebuilding: the same type, one line lower.
-                var made = Instantiate(status.gameObject, status.transform.parent);
-                made.name = "Spell Slots";
-                // Drawn with the HUD, under the menus that come after it.
-                made.transform.SetSiblingIndex(status.transform.GetSiblingIndex() + 1);
-                spellLine = made.GetComponent<Text>();
-                spellLine.text = "";
-                var rect = spellLine.rectTransform;
-                // Below the row of the flasks' refills, which sits just under the status line.
-                rect.anchoredPosition = status.rectTransform.anchoredPosition + new Vector2(0f, -status.fontSize * 2.6f);
-                spellLine.horizontalOverflow = HorizontalWrapMode.Overflow;
-            }
-        }
-
-        // The spell line: each slot's button, its spell, the seconds it still waits or its price in mana. Rewritten only
-        // when a whole second, a slot, the device or what mana can pay for changes.
-        private void ShowSpells()
-        {
-            if (spellLine == null || spells == null || combat == null) return;
-            bool changed = spells.SlotsVersion != shownSlots || ControlDevices.Version != shownDevice;
-            string held = element != null && element.HasElement && element.Info != null ? element.Info.Name : "";
-            if (held != shownSpellElement) changed = true;
-            int afford = 0;
-            for (int i = 0; i < 4; i++)
-            {
-                int wait = Mathf.CeilToInt(spells.Cooldowns.Remaining(i));
-                if (wait != shownWait[i]) changed = true;
-                shownWait[i] = wait;
-                float mana = spells.ManaIn(i);
-                if (mana <= 0f || combat.Mana.Current >= mana) afford |= 1 << i;
-            }
-            if (afford != shownAfford) changed = true;
-            if (!changed) return;
-            shownSlots = spells.SlotsVersion;
-            shownDevice = ControlDevices.Version;
-            shownAfford = afford;
-            shownSpellElement = held;
-            if (held.Length == 0)
-            {
-                spellLine.text = "";
-                return;
-            }
-            var line = new System.Text.StringBuilder(160);
-            for (int i = 0; i < 4; i++)
-            {
-                string name = spells.NameIn(i);
-                if (name.Length == 0) continue;
-                if (line.Length > 0) line.Append("   ");
-                line.Append(ControlNames.Slot(i)).Append(' ').Append(name);
-                float mana = spells.ManaIn(i);
-                if (shownWait[i] > 0) line.Append(' ').Append(shownWait[i]).Append('s');
-                else if (mana > 0f) line.Append(' ').Append(Mathf.RoundToInt(mana)).Append(" mana").Append((afford & (1 << i)) == 0 ? " (short)" : "");
-            }
-            spellLine.text = line.ToString();
+            // Built at play beside the status line (drawn with the HUD, under the menus), so no scene needs rebuilding.
+            if (player != null && player.GetComponent<PlayerSpells>() != null && status != null)
+                Diamond = SpellDiamondHud.Make(status.transform.parent, status, player);
         }
 
         private void LateUpdate()
         {
-            ShowSpells();
             if (player != null && staminaFill != null) staminaFill.anchorMax = new Vector2(player.Stamina.Fraction, 1f);
             if (combat != null && manaFill != null) manaFill.anchorMax = new Vector2(combat.Mana.Fraction, 1f);
             if (defence == null) return;

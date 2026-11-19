@@ -57,6 +57,11 @@ namespace Clover.Player
         public float SpellPull;
         public float SurgeCost = 40f;
         public float SurgeSeconds = 10f;
+        /// <summary>
+        /// Seconds the surge cannot be lit again, counted from when it ends; zero for none. A surge paid in mana needs
+        /// none; Hunger, paid in health, waits 25 s (steel/elements_b.md, Dark) so it is lit two or three times in a long fight.
+        /// </summary>
+        public float SurgeCooldown;
         /// <summary>Weapon damage is multiplied by this during the surge.</summary>
         public float SurgeDamage = 1.3f;
         /// <summary>Seconds each weapon blow leaves its target burning during the surge.</summary>
@@ -217,7 +222,7 @@ namespace Clover.Player
         public static ElementKit Dark() => Plain(Elements.Dark, "Grasp", "Hunger", SpellShape.Bolt, 25f, 10f, 12f, 6f, 0f, 1, new ElementKit
         {
             // A hand of shadow to the enemy faced that drags it to the feet. Hunger asks no mana: its price is health.
-            SpellForm = SpellForms.Tap, SpellLeaps = 0, SurgeCost = 0f,
+            SpellForm = SpellForms.Tap, SpellLeaps = 0, SurgeCost = 0f, SurgeCooldown = 25f,
             SurgeDamage = 1.3f, SurgeStacks = 1, SurgeHealPerSecond = -3f, SurgeLeech = 0.3f,
         });
 
@@ -251,6 +256,10 @@ namespace Clover.Player
         public float SurgeLeft { get; private set; }
         public bool SurgeActive => SurgeLeft > 0f;
         public float SurgeFraction => surgeLength > 0f ? SurgeLeft / surgeLength : 0f;
+        /// <summary>Seconds before the surge may be lit again, and how much of that wait is left (1 just ended, 0 ready).</summary>
+        public float SurgeWaitLeft { get; private set; }
+        public float SurgeWaitFraction => SurgeCooldown > 0f && SurgeWaitLeft > 0f ? Math.Min(1f, SurgeWaitLeft / SurgeCooldown) : 0f;
+        public bool SurgeWaiting => SurgeWaitLeft > 0f;
 
         private float elapsed;
         private bool released;
@@ -262,7 +271,14 @@ namespace Clover.Player
             elapsed = 0f;
             released = false;
             SurgeLeft = 0f;
+            SurgeWaitLeft = 0f;
         }
+
+        /// <summary>The surge's wait is over at once, as a rest makes it.</summary>
+        public void EndSurgeWait() => SurgeWaitLeft = 0f;
+
+        /// <summary>Carries a wait over from the same element's kit taken again, so taking it anew is no way round the wait.</summary>
+        public void KeepWait(float seconds) => SurgeWaitLeft = Math.Max(SurgeWaitLeft, Math.Min(seconds, SurgeCooldown));
 
         /// <summary>Begins the cast if the mana is there. <paramref name="costScale"/> is what the player's upgrades make of the cost.</summary>
         public bool TryCast(ManaPool mana, float costScale = 1f)
@@ -277,7 +293,7 @@ namespace Clover.Player
         /// <summary>Starts the surge, or tops it back up to full if it is already running.</summary>
         public bool TrySurge(ManaPool mana, float costScale = 1f, float secondsScale = 1f)
         {
-            if (!mana.TrySpend(SurgeCost * costScale)) return false;
+            if (SurgeWaitLeft > 0f || !mana.TrySpend(SurgeCost * costScale)) return false;
             surgeLength = SurgeSeconds * secondsScale;
             SurgeLeft = surgeLength;
             return true;
@@ -304,9 +320,16 @@ namespace Clover.Player
         /// <summary>Advances the surge. Returns true on the tick it runs out.</summary>
         public bool TickSurge(float deltaTime)
         {
-            if (SurgeLeft <= 0f) return false;
+            if (SurgeLeft <= 0f)
+            {
+                if (SurgeWaitLeft > 0f) SurgeWaitLeft = Math.Max(0f, SurgeWaitLeft - deltaTime);
+                return false;
+            }
             SurgeLeft = Math.Max(0f, SurgeLeft - deltaTime);
-            return SurgeLeft <= 0f;
+            if (SurgeLeft > 0f) return false;
+            // The wait is counted from the moment it ends, not from when it was lit.
+            SurgeWaitLeft = SurgeCooldown;
+            return true;
         }
     }
 }

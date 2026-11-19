@@ -49,9 +49,9 @@ The long explanation the chart shows for each high-level mark of the Fire tree (
 ## fire.rush
 **What it does.** You become a point of fire and drive straight through every enemy in your path, coming out the far side facing back. Each enemy passed is struck, set burning and raises your Heat a level. Then a second cut lands on everyone on the line, and the line burns. Nothing can strike you while you drive; a wall, or something too big to shove, stops you.
 
-**When it happens.** When worn: hold the spell button.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, 35 mana. Up to 7 metres, along a lane 2 metres wide. Passing: 14 damage, 20 stagger and two stacks of Burn. The cut after: 14 damage, 20 stagger and two stacks more. The line burns 2.6 seconds, biting for 4 every half second. One Heat level for each enemy passed.
+**The numbers.** 4 Shards, no mana: it waits 8 seconds after a cast, less with weapon play. Up to 7 metres, along a lane 2 metres wide. Passing: 14 damage, 20 stagger and two stacks of Burn. The cut after: 14 damage, 20 stagger and two stacks more. The line burns 2.6 seconds, biting for 4 every half second. One Heat level for each enemy passed.
 
 **Works with.** Heat and White Heat, Cinder, Catching Fire, Burn and Detonate, Hot Coals.
 
@@ -104,9 +104,9 @@ The long explanation the chart shows for each high-level mark of the Fire tree (
 ## fire.kiln
 **What it does.** You stand ready in flame. The first blow that reaches you, from any side, red attack or not, is turned for nothing and answered with a pillar of fire under the one who struck. The caught blow counts as a perfect guard, so it gives that mana and sets off every mark that waits on one. If nothing comes, the stance goes out and the mana is lost. A dodge lets it go.
 
-**When it happens.** When worn: hold the spell button, then any blow in the next 1.2 seconds.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4), then any blow in the next 1.2 seconds.
 
-**The numbers.** 4 Shards, 30 mana. Ready for 1.2 seconds. The pillar is 1.7 metres in radius: 30 damage, 50 stagger, a heavy blow, three stacks of Burn.
+**The numbers.** 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play. Ready for 1.2 seconds. The pillar is 1.7 metres in radius: 30 damage, 50 stagger, a heavy blow, three stacks of Burn.
 
 **Works with.** Backdraft, Burn and Detonate, Open Furnace, Struck Flint, and Twin Break on the Plasma branch.
 
@@ -148,9 +148,9 @@ The long explanation the chart shows for each high-level mark of the Fire tree (
 ## fire.meteor
 **What it does.** You leap out of the fight and come down beside the enemy you face as a heavy blow, leaving a burning crater. Nothing can strike you in the air.
 
-**When it happens.** When worn: hold the spell button.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, 50 mana. It finds an enemy faced within 9 metres and lands you 1 metre short of it; with none, 5 metres ahead. The leap takes 0.62 seconds. The landing strikes everything within 3.2 metres for 46 damage and 55 stagger. The crater is about 2.6 metres in radius, burns for 4 seconds and bites for 5 every half second, keeping what stands in it alight.
+**The numbers.** 4 Shards, 45 mana. It finds an enemy faced within 9 metres and lands you 1 metre short of it; with none, 5 metres ahead. The leap takes 0.62 seconds. The landing strikes everything within 3.2 metres for 46 damage and 55 stagger. The crater is about 2.6 metres in radius, burns for 4 seconds and bites for 5 every half second, keeping what stands in it alight.
 
 **Works with.** Scorched Earth (the crater lasts twice as long), Hot Coals, Burn and Detonate, Catching Fire.
 
@@ -159,9 +159,9 @@ The long explanation the chart shows for each high-level mark of the Fire tree (
 ## fire.sunspot
 **What it does.** You brand the enemy you face with a spot of fire. Each light blow you land on it feeds the brand, up to six. A heavy blow sets it off in one burst, bigger for every blow fed, which also lays the branded enemy's own Burn on all it reaches. Left alone, it bursts at half when its time runs out. With no enemy faced the mana is lost.
 
-**When it happens.** When worn: hold the spell button. Then light blows feed it and a heavy blow on it sets it off.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Then light blows feed it and a heavy blow on it sets it off.
 
-**The numbers.** 4 Shards, 35 mana. An enemy within 6 metres; the brand lasts 7 seconds. The burst is 3 metres in radius: 12 damage and 10 stagger, plus 9 damage and 8 stagger for each blow fed (66 and 58 at six), and one stack of Burn.
+**The numbers.** 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play. An enemy within 6 metres; the brand lasts 7 seconds. The burst is 3 metres in radius: 12 damage and 10 stagger, plus 9 damage and 8 stagger for each blow fed (66 and 58 at six), and one stack of Burn.
 
 **Works with.** Cinder (the branded enemy's depth is passed on), Heat, Hot Coals, Catching Fire.
 
@@ -192,9 +192,9 @@ The long explanation the chart shows for each high-level mark of the Fire tree (
 ## fire.fan
 **What it does.** You throw fire in a wide fan close in front of you. What it touches burns two deep.
 
-**When it happens.** When worn: hold the spell button.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, 30 mana. A cone 4.5 metres long and 140 degrees wide. 22 damage, 20 stagger and two stacks of Burn to everything in it.
+**The numbers.** 4 Shards, no mana: it waits 7 seconds after a cast, less with weapon play. A cone 4.5 metres long and 140 degrees wide. 22 damage, 20 stagger and two stacks of Burn to everything in it.
 
 **Works with.** Hot Coals, Cinder, Burn and Detonate, Catching Fire.
 

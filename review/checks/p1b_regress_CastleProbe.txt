@@ -1,0 +1,19 @@
+opened
+met: true
+result: probe started
+[Probe] start: weapon Fists enemies 12 health 100
+[Probe] A fists: fist_1 fist_2 fist_3 fist_4 blows 4 soldier health 95 -> 59 stagger 57 state Strike mana 71
+[Probe] B spell: cast 1 hits 1 burning True soldier health 59 -> 32 mana 100
+[Probe] C surge: surges 1 active True damage x1.3 burn on hit 3.0 mana 60
+[Probe] D soldier strikes: taken +1 soldier blows 2 health 100 soldier state Strike
+[Probe] E finisher: staggered True move attack_fist_finisher finishers +1 soldier dead True health 0
+[Probe] E after: soldier active False enemies alive 11
+[Probe] F caster bolt: caster blows 1 taken +1 health 100
+[Probe] G storm strike: strikes 1 charged enemies 1
+[Probe] H pickup: prompt 'Draw the Katana from the stone' weapon Katana taken True
+[Probe] I rest: rests 1 lit True enemies alive 12 soldier active True health 100
+[Probe] I menu: opened True time 0 embers 1 closed True time 1
+[Probe] J sealed way: tries 1 says 'Sealed. The Gate Captain holds the way.'
+[Probe] K fall: dead True woke in Hub weapon Fists embers 0 runs ended 1
+[Probe] done: time scale 1.00
+counts: {"error":0,"warn":0,"log":15}

@@ -20,6 +20,10 @@ namespace Clover.Player
         public SpellCooldowns Cooldowns = new SpellCooldowns();
         public CooldownCuts Cuts = new CooldownCuts();
         public FightClock Fight = new FightClock();
+        /// <summary>The infused strikes' clocks (8 s each, slots 4 and 5 of <see cref="Cooldowns"/>) and the deep strike's price.</summary>
+        public StrikeRules Strikes = new StrikeRules();
+        /// <summary>Seconds after a cast in which its first landing still charges the blade: a spell that travels or waits lands late.</summary>
+        public float ChargeWindow = 8f;
         /// <summary>Seconds a slot press is remembered while the player is busy (mid-swing, rolling).</summary>
         public float PressBufferTime = 0.25f;
         /// <summary>Seconds between looks for an aware enemy near: four times a second, not every frame.</summary>
@@ -40,6 +44,12 @@ namespace Clover.Player
         /// <summary>A slot's spell was cast (the slot), and a slot came ready again (the slot). For the HUD.</summary>
         public event System.Action<int> SlotCast;
         public event System.Action<int> SlotReady;
+        /// <summary>A slot's spell landed on its first enemy (the slot, the enemy): the blade has been charged.</summary>
+        public event System.Action<int, Component> Landed;
+        /// <summary>Counts for probes: casts that charged the blade, strikes begun, mana paid for deep strikes.</summary>
+        public int BladeCharges { get; private set; }
+        public int StrikesBegun { get; private set; }
+        public float StrikeManaPaid { get; private set; }
 
         private PlayerController player;
         private PlayerElement element;
@@ -60,6 +70,10 @@ namespace Clover.Player
         private bool subscribed;
         private float regather = 5f;
         private System.Func<string, bool> stillTheirs;
+        private bool castWaiting;
+        private float castAt;
+        private int castSlot = -1;
+        private string castElement = "";
 
         private void Awake()
         {
@@ -99,6 +113,7 @@ namespace Clover.Player
             {
                 combat.BlowLanded += OnBlowLanded;
                 combat.Finished += OnFinished;
+                combat.SpellBlowLanded += OnSpellBlowLanded;
                 defence.PerfectGuarded += OnPerfectGuard;
                 defence.PerfectDodged += OnPerfectDodge;
             }
@@ -106,28 +121,93 @@ namespace Clover.Player
             {
                 combat.BlowLanded -= OnBlowLanded;
                 combat.Finished -= OnFinished;
+                combat.SpellBlowLanded -= OnSpellBlowLanded;
                 defence.PerfectGuarded -= OnPerfectGuard;
                 defence.PerfectDodged -= OnPerfectDodge;
             }
         }
 
-        private void OnBlowLanded(AttackStep step) => CutAll(Cuts.ForBlow(step));
-        private void OnFinished() => CutAll(Cuts.ForFinisher);
-        private void OnPerfectGuard() => CutAll(Cuts.ForPerfectGuard);
-        private void OnPerfectDodge() => CutAll(Cuts.ForPerfectDodge);
+        // An infused strike counts as a weapon blow and cuts every clock but its own.
+        private void OnBlowLanded(AttackStep step)
+        {
+            ReadStats();
+            CutAll(Cuts.ForBlow(step), combat != null ? combat.StrikeClockOf(step) : -1);
+        }
 
-        private void CutAll(float seconds)
+        private void OnFinished()
+        {
+            ReadStats();
+            CutAll(Cuts.ForFinisher);
+        }
+
+        private void OnPerfectGuard()
+        {
+            ReadStats();
+            CutAll(Cuts.ForPerfectGuard);
+        }
+
+        private void OnPerfectDodge()
+        {
+            ReadStats();
+            CutAll(Cuts.ForPerfectDodge);
+        }
+
+        // The marks' share of every cut (stat CooldownCut), read when a cut is made rather than every frame.
+        private void ReadStats() => Cuts.Share = upgrades != null && upgrades.Stats != null ? upgrades.Stats.Multiplier(PlayerStat.CooldownCut) : 1f;
+
+        /// <summary>How fast the clocks run out (stat SpellCooldown): 1 as written; a wait is divided by it.</summary>
+        public float CooldownRate => upgrades != null && upgrades.Stats != null ? upgrades.Stats.Multiplier(PlayerStat.SpellCooldown) : 1f;
+
+        private void CutAll(float seconds, int except = -1)
         {
             if (seconds <= 0f) return;
             CutsTaken++;
             SecondsCut += seconds;
-            Flash(Cooldowns.Cut(seconds));
+            Flash(Cooldowns.Cut(seconds, except));
+        }
+
+        // The first blow a slot spell lands, within a while of its cast, charges the blade with the spell's element.
+        // Infused strikes, reactions and effects deal no spell blows, so they never charge it.
+        private void OnSpellBlowLanded(Component target)
+        {
+            if (!castWaiting) return;
+            if (Time.time - castAt > ChargeWindow)
+            {
+                castWaiting = false;
+                return;
+            }
+            castWaiting = false;
+            if (combat == null || string.IsNullOrEmpty(castElement)) return;
+            combat.Blade.Charge(castElement);
+            BladeCharges++;
+            Landed?.Invoke(castSlot, target);
+        }
+
+        /// <summary>
+        /// Whether an infused strike may start: L2 with R1 (<paramref name="second"/> false) or R2. With one element, as
+        /// every Hand is in Phase 1, R2 is the deep strike (IMPLEMENTATION.md 8.5, question 3), so <paramref name="deep"/> is set.
+        /// </summary>
+        public StrikeRefusal CheckStrike(bool second, out bool deep)
+        {
+            deep = second;
+            float mana = combat != null ? combat.Mana.Current : 0f;
+            return Strikes.Check(Cooldowns, second, deep, mana, element != null && element.HasElement);
+        }
+
+        /// <summary>The strike has started: its price is paid and its clock runs.</summary>
+        public void BeginStrike(bool second, bool deep)
+        {
+            float price = Strikes.Price(deep);
+            if (price > 0f && combat != null && combat.Mana.TrySpend(price)) StrikeManaPaid += price;
+            Strikes.Begin(Cooldowns, second, CooldownRate);
+            StrikesBegun++;
+            SlotCast?.Invoke(StrikeRules.Clock(second));
         }
 
         private void Flash(int ready)
         {
             if (ready == 0) return;
-            for (int i = 0; i < SpellSlots.Count; i++)
+            for (int i = 0; i < SpellCooldowns.Count; i++)
             {
                 if ((ready & (1 << i)) == 0) continue;
                 ReadyFlashes++;
@@ -198,6 +278,9 @@ namespace Clover.Player
         {
             Cooldowns.ResetAll();
             Fight.Reset();
+            castWaiting = false;
+            if (combat != null) combat.Blade.Clear();
+            if (element != null && element.Kit != null) element.Kit.EndSurgeWait();
         }
 
         private void Changed()
@@ -350,9 +433,14 @@ namespace Clover.Player
                 // A spell from outside the table (a lent one) that asks no mana still waits.
                 seconds = mark.Spell.Cooldown > 0f ? mark.Spell.Cooldown : mark.Spell.Cost > 0f ? 0f : SpellTimings.DefaultCooldown;
             }
-            Cooldowns.Start(slot, seconds);
+            Cooldowns.Start(slot, seconds / Mathf.Max(0.1f, CooldownRate));
             Casts++;
             LastSlot = slot;
+            // The cast waits for its first landing to charge the blade with its element.
+            castWaiting = true;
+            castAt = Time.time;
+            castSlot = slot;
+            castElement = element.Info != null ? element.Info.Name : "";
             heldSlot = slot;
             SlotCast?.Invoke(slot);
             return true;

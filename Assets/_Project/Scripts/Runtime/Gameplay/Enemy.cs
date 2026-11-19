@@ -573,8 +573,7 @@ namespace Clover.Gameplay
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell) * harder;
             float unsteadies = Afflictions.StaggerTakenMultiplier * harder;
             float shoved = Afflictions.ShoveMultiplier;
-            if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
-                CombatEvents.Report(this, hit.Affliction, hit.AfflictionStacks, Afflictions.Apply(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower));
+            Afflictions.TakeFrom(hit, this);
 
             // Its guard: a light blow from the front, while it stands ready, is turned on its weapon.
             if (Kind.Guards && GuardOpenFor <= 0f && (!hit.Heavy || Kind.HeavyGuardedDamage < 1f) && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)

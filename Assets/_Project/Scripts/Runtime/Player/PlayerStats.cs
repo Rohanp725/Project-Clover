@@ -14,7 +14,7 @@ namespace Clover.Player
     /// </summary>
     public class PlayerStats
     {
-        public const int Count = (int)PlayerStat.BoonSeconds + 1;
+        public const int Count = (int)PlayerStat.SpellCooldown + 1;
         public const int WhenCount = (int)StatWhen.InOwnFire + 1;
         /// <summary>How many timed boons can run at once; a new one past that takes the place of the one nearest its end.</summary>
         public const int BoonCapacity = 16;

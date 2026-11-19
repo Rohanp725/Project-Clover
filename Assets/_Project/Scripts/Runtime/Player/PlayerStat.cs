@@ -154,5 +154,9 @@ namespace Clover.Player
         LeapReach,
         /// <summary>Share: how long the timed boons of the player's marks last.</summary>
         BoonSeconds,
+        /// <summary>Share: what weapon play takes off the spell and strike clocks (a landed blow, a perfect guard, a finisher).</summary>
+        CooldownCut,
+        /// <summary>Share: how fast the spell and strike clocks run out; 0.25 makes every wait a fifth shorter (it divides the wait by 1.25).</summary>
+        SpellCooldown,
     }
 }

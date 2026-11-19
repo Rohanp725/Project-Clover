@@ -69,6 +69,8 @@ namespace Clover.Player
                 case UpgradeTrigger.Lifted: return "you throw an enemy into the air";
                 case UpgradeTrigger.Landed: return "an enemy you threw comes down";
                 case UpgradeTrigger.PoisonBite: return "poison bites an enemy";
+                case UpgradeTrigger.ChargedBlow: return "a blow of your charged blade lands";
+                case UpgradeTrigger.ChargedBlowThird: return "the third blow of your charged blade lands";
                 default: return "its moment comes";
             }
         }

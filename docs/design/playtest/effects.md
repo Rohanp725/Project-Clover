@@ -293,39 +293,78 @@ Title: Mana
 Group: Resources
 **What it is.** The power behind your big moves: the surge, each element's one larger spell, the built duo spells and your weapon skill. Basic spells never cost mana: they run on cooldowns instead (see Spell cooldowns).
 
-**The numbers.** Up to 100. You enter every area at half (50). Out of a fight, mana below half rises by 5 a second until it reaches half; mana above half stays where it is. A fight always starts with at least half: if you have less when an enemy notices you, it is raised to 50 at once. A fight ends when no enemy within 12 m has been aware of you for 8 s. Weapon blows that land give 3 to 16, depending on the move. A perfect guard gives 15, a perfect dodge 12 and a finisher 15. A Marked enemy gives 2 more for each blow. Blocked blows give nothing. Surges cost 30 to 40 (Hunger costs health instead), weapon skills 25 to 35, and the larger spells 30 to 50 (the built duo spells 40 to 60).
+**The numbers.** Up to 100. You enter every area at half (50). Out of a fight, mana below half rises by 5 a second until it reaches half; mana above half stays where it is. A fight always starts with at least half: if you have less when an enemy notices you, it is raised to 50 at once. A fight ends when no enemy within 12 m has been aware of you for 8 s. Weapon blows that land give 3 to 16, depending on the move. A perfect guard gives 15, a perfect dodge 12 and a finisher 15. A Marked enemy gives 2 more for each blow. Blocked blows give nothing. Surges cost 30 to 40 (Hunger costs health instead, and waits 25 s after it ends), weapon skills 25 to 35, the deep strike 20, and the larger spells 30 to 50 (the built duo spells 40 to 60).
 
-**What sets it off.** Landing blows and timing guards and dodges well earn it. The surge, the weapon skill and a larger spell spend it.
+**What sets it off.** Landing blows and timing guards and dodges well earn it; an infused strike's blow earns it like any weapon blow. The surge, the weapon skill, the deep strike and a larger spell spend it.
 
 **How to use it.** Basic spells are free, so cast them whenever their clock is ready. Save mana for the surge or your element's larger spell; what you earn above half in one fight is still there in the next. Perfect guards and perfect dodges fill it fastest.
 
-**How it looks.** The bar under your stamina, in the colour of the element you hold (grey with none). A slot whose spell costs more mana than you hold says "(short)" on the spell line.
+**How it looks.** The bar under your stamina, in the colour of the element you hold (grey with none). On the spell diamond a price is written in blue under the slot that pays it, and turns red, with the slot dimmed, when you hold less.
 
 ## spell-slots
 Title: Spell slots and the spell layer
 Group: Spells and cooldowns
 **What it is.** You carry four spells, one in each slot: West, North, East and South, laid out like the pad's face buttons. Hold L2 (LT) and press a face button to cast that slot's spell. On the keyboard, 1, 2, 3 and 4 cast them directly. While L2 is held, the face buttons are spells only: the flask, the weapon skill, the dodge and use wait until you let go. A quick tap of L2 on its own lights the surge.
 
-**The numbers.** A tap of L2 counts if it is let go within 0.25 s and no spell was cast while it was held; the surge is lit as you let go. Held longer, letting go does nothing. On the keyboard the surge stays on F and Left Ctrl is the layer (for the infused strikes to come).
+**The numbers.** A tap of L2 counts if it is let go within 0.25 s and no spell was cast while it was held; the surge is lit as you let go. Held longer, letting go does nothing. On the keyboard the surge stays on F, and Left Ctrl is the layer for the infused strikes (Left Ctrl with a mouse button). With L2 held, R1 and R2 are the infused strikes, not attacks.
 
 **What sets it off.** Your element's own spell sits in West at the start. Each spell you learn fills the next empty slot. At a rest fire, choose a learned spell on the chart and press use: it goes into the next slot round (West, North, East, South, then West again). The playtest's Hand screen arrives in phase 2.
 
 **How to use it.** Keep spells of different jobs in your four slots: one to open a fight, one to break a guard, one to finish, one to escape. A spell slot can be rebound in the pause menu's controls, on the pad and on the keys.
 
-**How it looks.** The line under your weapon's name lists each slot: its button, its spell, and the seconds it still waits or the mana it costs.
+**How it looks.** The spell diamond in the bottom-right corner: four round slots laid out like the face buttons, each with its spell's picture (or its initials) and its button, the surge in the middle, the two infused strikes under it. It is small at all times and grows while L2 is held, with each spell's name. The buttons are named for the pad or keys you use, and follow your rebinding.
 
 ## cooldowns
 Title: Spell cooldowns
 Group: Spells and cooldowns
 **What it is.** Basic spells cost no mana. After a spell is cast, its slot waits a few seconds before it can be cast again. Fighting with your weapon shortens the wait of every slot that is waiting.
 
-**The numbers.** Basic spells wait 6 to 12 s (the tree spells 7 to 12 s, each element's own spell 6 to 9 s, the spare mixed spells 12 s). Each element's one larger spell costs mana instead and has no wait: Meteor Leap 45, Seven Flashes 45, Sky Dance 45, Winter Wall 35, Poured Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50. Pawned Heart is paid in health and waits 40 s. Earth's larger spell (Cairn) is not built yet. The built duo spells (Ball Lightning, Eye of the Storm and the others) cost 40 to 60 mana. Weapon play takes time off every waiting slot: a light blow that lands 0.3 s, a heavy blow 0.6 s (once per move, however many it strikes), a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s. Resting at a fire ends every wait.
+**The numbers.** Basic spells wait 6 to 12 s (the tree spells 7 to 12 s, each element's own spell 6 to 9 s, the spare mixed spells 12 s). Each element's one larger spell costs mana instead and has no wait: Meteor Leap 45, Seven Flashes 45, Sky Dance 45, Winter Wall 35, Poured Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50. Pawned Heart is paid in health and waits 40 s. Earth's larger spell (Cairn) is not built yet. The built duo spells (Ball Lightning, Eye of the Storm and the others) cost 40 to 60 mana. Weapon play takes time off every waiting slot: a light blow that lands 0.3 s, a heavy blow 0.6 s (once per move, however many it strikes), a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s. The two infused strikes wait 8 s each, cut by weapon play the same way (a strike's own blow cuts every other wait, not its own). Hunger, Dark's surge, waits 25 s from the moment it ends. Resting at a fire ends every wait.
 
 **What sets it off.** Casting a spell starts its slot's wait. Landing blows, perfect guards, perfect dodges and finishers shorten it. A slot pressed while it waits says "Not ready".
 
 **How to use it.** Weave: cast, fight with the weapon until the spell is back, cast again. Perfect guards and dodges bring spells back fastest. Marks that only made a basic spell cheaper do nothing now; the trees are reshaped in a later phase.
 
-**How it looks.** The spell line counts down each waiting slot in whole seconds.
+**How it looks.** On the spell diamond a waiting slot is shaded, and the shade sweeps back like a clock hand as the wait runs out, with the seconds left written in it. The slot's ring swells for a moment when it is ready again.
+
+## charged-blade
+Title: The charged blade
+Group: Spells and cooldowns
+**What it is.** Magic feeds the weapon. When one of your four spells lands on an enemy, it charges your weapon with its element. The next three moves of the weapon that land carry the element: each hits 20% harder and lays the element's affliction, and the third does one thing more, its element's own.
+
+**The numbers.** Three moves, each 1.2 times the damage. Each lays one stack of the element's affliction (two of Poison), on top of what the blow lays already, or beside it when that is another affliction. A move counts once however many it strikes, and carries the charge to all of them. A blow turned on a guard spends nothing. A new spell that lands replaces the charge with a fresh three. Resting ends it. What each element adds: Fire's third blow leaves the ground under the enemy burning for 3 s. Lightning's each leap on to one more enemy within 4 m for half the damage, with Static. Wind's each shove the enemy 1.5 m along the swing, the third 4 m. Ice's each shatter an enemy already Frozen, light blow or heavy. Water's each splash everything within 1.5 m for a fifth of the blow, and soak it. Life's third throws thorns round the enemy (2 m, Seeded). Earth's each throw a 2 m spray of gravel. Metal's pass any guard. Light's third throws a ray 5 m along the swing that Marks. Dark's third Curses twice more. Poison's third makes the poison bite at once.
+
+**What sets it off.** A spell from one of your four slots that lands on an enemy, within 8 s of being cast (the first thing it strikes). The surge, an infused strike, ground left burning and marks' effects never charge it.
+
+**How to use it.** Weave: cast, then strike three times, then cast again while the weapon brings the spell back. A spell on cooldown and a charged blade are the same fight seen from two sides.
+
+**How it looks.** The element runs along the weapon's edge: tongues of flame shedding embers for Fire, bolts that jump along it for Lightning, rime feathers and breath-fog for Ice, the element's own stuff in its colour for the rest. Fewer as the blows are spent. Three pips beside the spell diamond, lit in the element's colour, one put out with each charged blow.
+
+## infused-strikes
+Title: Infused strikes
+Group: Spells and cooldowns
+**What it is.** Hold L2 (LT) and press R1 (RB) for an infused strike: your weapon's own move, its carrier, played with your element on it. L2 with R2 (RT) is the deep strike, the heavier version, which also costs mana. On the keyboard, hold Left Ctrl and press the left or right mouse button.
+
+**The numbers.** Each strike button has its own 8 s wait, which weapon play shortens like a spell's (a light blow 0.3 s, a heavy 0.6 s, a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s). The deep strike costs 20 mana. A strike counts as a weapon blow: it gives mana and takes time off your spells, but it never charges the blade and does not spend a charge. The carriers: the Katana's drawing cut (made at once, 22 damage, 170 degrees), the Massive Sword's rising cut, the Scythe's full turn, the Great Spear's first thrust, the Great Hammer's drop, the Twin Knives' crossing, the Great Bow's shot, the Chain Sickle's snap, the Fists' and the Armament's kick. Each element's strike, then its deep strike: Fire, Burning Edge (a sheet of flame along the swing and 3 m beyond, 2 Burn on all it reaches, the ground burning 3 s), then Burnt Offering (a pillar of flame on the enemy struck: 30 damage and its burn set off). Lightning, Flash Cut (a 5 m lunge through enemies as a line of lightning, half again the blow, 2 Static), then Down the Channel (bolts come down the whole line 0.4 s later). Wind, Cutting Wind (a crescent out to 7 m, 60% of the blow, 2 Unsteady, a 1 m push), then Whirl Cut (the first enemy held in the air 1 s). Ice, Frost Bite (a spike of ice through each enemy struck: 2 Chill, held 0.8 s), then Ice Through (frozen at once if it carries three Chill). Water, Lash (a whip twice the weapon's reach, 80% of the blow, Soaked, pulled 1.5 m in), then Thrown on the Reef (thrown 5 m away). Life, Grown Into It (2 Seeded and a green shoot), then Briar Root (rooted 1 s). Earth, Broken Ground (four slabs heaved up in a 4 m line: 14 damage, 25 stagger, Tremor), then Mountain Cleaver (6.5 m, 55 damage, 70 stagger, Tremor 2). Metal, Struck Plate (a ripple 3 m round the one struck, 10 damage, Sundered), then Red Iron (half the blow again and two Sundered on it). Light, Ray Along the Edge (a ray 6 m out: 10 damage, 15 stagger, Marked), then The Sun on the Blade (the same cut at half strength on every Marked enemy within 8 m). Dark, Taken (everything struck dragged 2 m toward you: 12 damage, 20 stagger, Cursed), then Yama's Noose (40 damage and 50 stagger to the enemy you face within 8 m). Poison, Venom Flick (a string of venom 5 m ahead and a puddle that doses once a second for 3 s), then Nine Times Refined (six doses on what the cut struck).
+
+**What sets it off.** L2 with R1 or R2 (Left Ctrl with a mouse button). A strike pressed while its button waits says "Not ready"; a deep strike without 20 mana says "No mana".
+
+**How to use it.** The strike is your element at the weapon's reach and in the weapon's shape: a hammer's drop lays it in a circle, a spear's thrust in a line. Use it to open a fight or to lay your affliction on a crowd, and keep the deep strike for when the mana is there. With two elements (the next update), R1 is the first element's strike and R2 the second's; the deep strike is then for a Hand all in on one element.
+
+**How it looks.** The carrier's arc in the element's colour, then the element along what it covered: flame, lightning, wind, ice, water, vines, stone, ripples, a ray, shadow or venom. Under the spell diamond, two small rings, one for each button, with their waits.
+
+## spell-diamond
+Title: The spell diamond
+Group: Spells and cooldowns
+**What it is.** Your spells on the screen, in the bottom-right corner: the four slots laid out like the face buttons that cast them, the surge in the middle, the two infused strikes under them and the charged blade's pips beside them.
+
+**The numbers.** Small at all times, so the waits can be read in a fight; it grows to full size while L2 (or Left Ctrl) is held, with each spell's name, and shrinks back when you let go. Each slot shows its spell's picture or initials, its button, its wait and its mana price.
+
+**What sets it off.** Always shown while you hold an element. The buttons are named for whatever you used last: the pad's (Xbox or PlayStation) or the keys (1 to 4, and Ctrl with the mouse for the strikes). Rebind a slot in the controls and its new button shows at once.
+
+**How to use it.** Glance at it between blows: a clear slot is ready, a shaded one is waiting. Hold L2 to read the names before you cast.
+
+**How it looks.** Round dark buttons ringed in your element's colour. A waiting slot is shaded, the shade sweeping back as a clock hand. A ready slot's ring swells for a moment. Prices in blue, red when you hold too little. The surge's ring brightens while it burns and is shaded while it waits.
 
 ## flasks
 Title: Flasks

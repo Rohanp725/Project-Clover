@@ -24,6 +24,8 @@ CONTROLS          Keys and mouse       PlayStation   Xbox
   Four spells     1 2 3 4              hold L2, then Square Triangle Circle Cross
                                                      hold LT, then X Y B A
   Element surge   F                    L2 (tap)      LT (tap)
+  Infused strike  Left Ctrl + left     hold L2, R1   hold LT, RB
+  Deep strike     Left Ctrl + right    hold L2, R2   hold LT, RT   (20 mana)
   Use / read on   E                    Cross         A
   Pause           Esc                  Options       Menu
   With the mouse, blows and spells go toward the cursor. On-screen prompts name
@@ -84,9 +86,6 @@ NOT BUILT YET
   - The Alchemist's Hooks, the hook swords, a form of the Twin Knives (the alchemist)
   - The Champion's Arms, his own version of every weapon (the last champion)
   Also to come, in later updates:
-  - The charged blade, infused strikes and the spell diamond on the screen
-    (spells on cooldowns, mana for the big moves and the four spells on the
-    L2 layer arrived in 0.2).
   - Two elements at once and the Hand, the build screen at a rest fire.
   - Reactions when two elements' afflictions meet on one enemy.
   - The trees reshaped into spell branches.

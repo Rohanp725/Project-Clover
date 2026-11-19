@@ -190,6 +190,24 @@ namespace Clover.Player
         }
 
         /// <summary>
+        /// Puts another step in place of a light step still in its wind-up (the technique chord, IMPLEMENTATION.md 3.5):
+        /// the light is dropped where it is and the new step starts at once, so the chord never waits on the light.
+        /// Refused outside a light's wind-up. True when it started.
+        /// </summary>
+        public bool Replace(AttackStep step, StaminaPool stamina)
+        {
+            if (step == null || Phase != AttackPhase.Windup || !currentIsLight) return false;
+            int place = nextIndex;
+            if (!StartHeavy(step, stamina)) return false;
+            // The light's place in the chain is given back: the chord is not a link of it.
+            nextIndex = place > 0 ? place - 1 : 0;
+            return true;
+        }
+
+        /// <summary>True while the step in progress is a light of the chain, winding up: the chord may still take it.</summary>
+        public bool LightWindingUp => Phase == AttackPhase.Windup && currentIsLight;
+
+        /// <summary>
         /// The heavy button went down. With <paramref name="finisher"/> true (a staggered enemy is in reach) the press
         /// asks for the finisher instead: it starts at once, with no charge, from idle or from any recovery.
         /// </summary>

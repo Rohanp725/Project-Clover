@@ -776,8 +776,7 @@ namespace Clover.Gameplay
             Afflictions.Burn.Ignite(hit.BurnSeconds, hit.BurnStacks);
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
             float unsteadies = Afflictions.StaggerTakenMultiplier;
-            if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
-                CombatEvents.Report(part, hit.Affliction, hit.AfflictionStacks, Afflictions.Apply(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower));
+            Afflictions.TakeFrom(hit, part);
             float damage = finisher ? Mathf.Max(hit.Damage * 3f * takes, MaximumHealth * FinisherShare) : hit.Damage * share * takes;
             Health.Damage(damage);
             flashLeft = 0.09f;

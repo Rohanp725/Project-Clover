@@ -60,7 +60,7 @@ The long explanation the chart shows for every mark on Plasma, the branch Fire a
 ## plasma.ball
 **What it does.** You loose a slow ball of white fire that drifts after the nearest enemy. Strike it with a swing to send it fast along the swing and grow it a step, up to three. It bursts on the first enemy it meets with Burn and Static, harder for each strike. Left alone, it bursts small when its time is up.
 
-**When it happens.** When worn: hold the spell button, then swing at the ball.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4), then swing at the ball.
 
 **The numbers.** Mix, 4 Shards, 40 mana. It appears 1.5 metres ahead and drifts at 2 metres a second for 8 seconds; batted, it flies at 9. Burst: 2.5 metres in radius, 16 damage and 20 stagger, two stacks of Burn and of Static; each strike adds 0.7 metres, 12 damage, 10 stagger and a stack of each. At three strikes: 52 damage, 50 stagger and a heavy blow.
 
@@ -93,9 +93,9 @@ The long explanation the chart shows for every mark on Plasma, the branch Fire a
 ## plasma.lance
 **What it does.** You throw a bolt of plasma at the enemy you face that leaps on through three more.
 
-**When it happens.** When worn: hold the spell button.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** Mix, 5 Shards, 35 mana. Reaches 11 metres to the first enemy, then leaps up to 5 metres from one to the next, four enemies in all. 30 damage, 26 stagger and two stacks of your held element's affliction on each.
+**The numbers.** Mix, 5 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Reaches 11 metres to the first enemy, then leaps up to 5 metres from one to the next, four enemies in all. 30 damage, 26 stagger and two stacks of your held element's affliction on each.
 
 **Works with.** Fused Core (both afflictions on each), Conductor, Ionised Air, Hot Coals.
 

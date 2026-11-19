@@ -1397,6 +1397,44 @@ changed. The old playtest stays with its players until the first few phases of t
   each scene starts at half and each fight's start raises it to half. Marks that only lowered the base spell's cost
   (ten minors) are kept and inert; Spring Tide works only on mana spells.
 
+### Phase 1 as built (2026-11-18; tasks 1.5 to 1.8 of `docs/design/steel/IMPLEMENTATION.md` on top of the first half; Claude's defaults where the plan left a choice, not yet played by the owner)
+
+- **The charged blade** (`Magic/ChargedBlade.cs`, spent in `PlayerCombat`'s blow path; tests `ChargedBladeTests`). The
+  first enemy a slot spell strikes within 8 s of the cast charges the weapon with the spell's element; the next three
+  moves that land carry it at 1.2 times and lay one stack of its affliction (two of Poison), as one more stack of what
+  the blow lays or as the blow's new second affliction (`Hit.Affliction2`; the five `TakeHit`s now lay through one helper,
+  `AfflictionSet.TakeFrom`). Counted per move; a blow turned on a guard spends nothing; a fresh landing replaces the
+  charge; a rest ends it. Each element's extra is in `Trees/ElementSteel.cs` at its simplest version (lines marked `NEEDS`
+  wait on engine pieces). New triggers `ChargedBlow` and `ChargedBlowThird` reach the effect runner. `BladeLook` (added to
+  the player at play) draws it on the shown weapon part with `FormFx` pieces: flame tongues standing up off the edge with
+  embers and small tongues of flame for Fire (the scene's smoke puffs were too pale and large for an edge), bolts along the edge for Lightning, rime for Ice, the substance's splinter for the rest; the
+  sheathed Katana burns at its sheath. Claude's default: an infused strike neither charges nor spends the charge.
+- **Infused strikes** (`Magic/StrikeRules.cs`, `Footprint.cs`, `ElementSteel.Strike`; tests `InfusedStrikeTests`). L2 with
+  R1 (Left Ctrl with a mouse button on the keys) starts the weapon's carrier (`Weapon.Carrier`, a copy of one of its
+  moves per `steel/weapons.md`, started through `WeaponCombo.Follow`); once its blow is out the element acts on the
+  footprint it covered. L2 with R2 is the deep strike in Phase 1 (one element, the plan's 8.5 default): 20 mana. Each
+  button has its own 8 s clock (slots 4 and 5 of `SpellCooldowns`), cut by weapon play; a strike's own blow cuts every
+  other clock but its own. All eleven strikes and deep strikes are built with the existing pieces (cones, lanes, areas,
+  hazards, `FormFx` flame, crystals, slabs, rays); the bespoke looks wait for the staging work. Lightning's Flash Cut bends
+  the carrier into a 5 m lunge at 1.5 times. `HazardShape.Footprint` and `EffectAt.Footprint` (data effects on the
+  footprint) are not built: the pair strikes (Phase 6) need them.
+- **The chord** (`ChordRules`, wired in `PlayerCombat`): the light starts on its own frame; a heavy within 0.08 s while the
+  light is in its first 0.08 s cancels it through `WeaponCombo.Replace` into `PlayerCombat.TechniqueStep`. That is null
+  until the gated techniques (task 5.3), so today the chord is a light then a heavy.
+- **The spell diamond** (`UI/SpellDiamondHud.cs`, made at play beside the status line; the plain spell line is gone).
+  Bottom-right corner: four round slots as the face buttons with the spell's chart picture or initials, the button
+  (pad names or 1 to 4, after rebinding), a radial shade with whole seconds, the mana price (red when short), a swell when
+  ready; the surge in the middle (Hunger's wait shaded); the two strikes under it (R2's 20 mana); three pips for the
+  charged blade. Small (0.56) always, full size while L2 or Left Ctrl is held, with names. Fill amounts only per frame;
+  words only on change.
+- **Small additions**: Hunger waits 25 s after it ends (`ElementKit.SurgeCooldown`; a rest ends it); stats `CooldownCut`
+  (a share on every cut) and `SpellCooldown` (divides every wait), no mark uses them yet.
+- **Words**: `effects.md` gains The charged blade, Infused strikes and The spell diamond, and its mana, slots and
+  cooldowns entries are brought up to date; the Fire, Lightning and mix details no longer say "hold the spell button"
+  and show today's prices; `whats_new.md` is Combat Playtest 0.2 with Phase 1 complete; `docs/GUIDE.md` has the controls
+  and a section on the blade and strikes.
+- **Checked**: `P1bProbe` in the Proving Ground (playtest mode) with Fire and Ice; frames `review/shots/current/p1b_*.png`.
+
 ## Credits (decided 2026-11-18)
 
 - **Decided (user)**: the published game has a credits section. It thanks **_dnen**, **parvar11** and **nairarj000**,

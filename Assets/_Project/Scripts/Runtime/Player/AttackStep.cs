@@ -103,5 +103,8 @@ namespace Clover.Player
         public bool IsSweet(float distance) => SweetFrom > 0f && distance >= SweetFrom;
 
         public float Total => Windup + Active + Recovery;
+
+        /// <summary>A copy to change without touching the weapon's own step: an infused strike plays its carrier this way.</summary>
+        public AttackStep Clone() => (AttackStep)MemberwiseClone();
     }
 }

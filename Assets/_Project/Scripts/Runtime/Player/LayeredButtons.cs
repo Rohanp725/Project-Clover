@@ -35,6 +35,28 @@ namespace Clover.Player
             interact = player?.FindAction("Interact");
             layer = spells?.FindAction("SpellLayer");
             for (int i = 0; i < slots.Length; i++) slots[i] = spells?.FindAction(SlotActions[i]);
+            // The infused strikes are built (task 1.6): with the layer held, R1 and R2 are strikes, not attacks.
+            Rules.StrikesOn = true;
+        }
+
+        /// <summary>L2 with R1 (Left Ctrl with the left mouse button) this frame: the infused strike of the first element.</summary>
+        public bool StrikeFirst
+        {
+            get
+            {
+                Settle();
+                return Rules.StrikeFirst;
+            }
+        }
+
+        /// <summary>L2 with R2 (Left Ctrl with the right mouse button) this frame: the second element's strike, or the deep strike all in.</summary>
+        public bool StrikeSecond
+        {
+            get
+            {
+                Settle();
+                return Rules.StrikeSecond;
+            }
         }
 
         /// <summary>This frame's press of a Player-map button, unless the layer took it.</summary>

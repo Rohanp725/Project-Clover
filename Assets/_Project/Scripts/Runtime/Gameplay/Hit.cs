@@ -31,11 +31,20 @@ namespace Clover.Gameplay
         public readonly bool Spell;
         /// <summary>True for a critical blow; its damage already includes what that adds.</summary>
         public readonly bool Critical;
+        /// <summary>
+        /// A second affliction laid by the same blow, with its stacks and seconds (zero: its usual time); it shares the
+        /// first's strength. A charged blade's element rides here when it differs from what the blow lays already
+        /// (IMPLEMENTATION.md 3.3); a blow carrying two roots will too (Phase 2).
+        /// </summary>
+        public readonly AfflictionKind Affliction2;
+        public readonly int Affliction2Stacks;
+        public readonly float Affliction2Seconds;
 
         public Hit(float damage, float stagger, Vector3 direction, bool heavy = false, bool unblockable = false, Vector3? origin = null,
             float burnSeconds = 0f, int burnStacks = 0, bool detonate = false,
             AfflictionKind affliction = AfflictionKind.None, int afflictionStacks = 0, float afflictionSeconds = 0f, float afflictionPower = 1f,
-            bool spell = false, bool critical = false)
+            bool spell = false, bool critical = false,
+            AfflictionKind affliction2 = AfflictionKind.None, int affliction2Stacks = 0, float affliction2Seconds = 0f)
         {
             Damage = damage;
             Stagger = stagger;
@@ -53,6 +62,9 @@ namespace Clover.Gameplay
             AfflictionPower = afflictionPower;
             Spell = spell;
             Critical = critical;
+            Affliction2 = affliction2;
+            Affliction2Stacks = affliction2Stacks;
+            Affliction2Seconds = affliction2Seconds;
         }
     }
 }

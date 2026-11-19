@@ -204,6 +204,15 @@ namespace Clover.UI
             Build();
         }
 
+        /// <summary>A mark's picture by its <see cref="UpgradeIcons"/> name, for the HUD's spell diamond; null when there is none.</summary>
+        public Sprite IconSprite(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return null;
+            for (int i = 0; i < icons.Length && i < UpgradeIcons.All.Count; i++)
+                if (UpgradeIcons.All[i] == name) return icons[i];
+            return null;
+        }
+
         // The chart is drawn from the catalogue the first time it is opened, so a new upgrade needs no new scene.
         private void Build()
         {

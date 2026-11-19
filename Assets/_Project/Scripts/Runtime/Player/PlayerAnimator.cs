@@ -93,6 +93,17 @@ namespace Clover.Player
         /// <summary>Adds the weapons hung on the character's sockets, shown to suit the weapon in hand.</summary>
         public void ConfigureRack(WeaponRack rackToShow) => rack = rackToShow;
 
+        /// <summary>The weapon as it is seen now: the drawn sword, the sheath it waits in, or the rack's part. Null for bare hands.</summary>
+        public GameObject ShownWeapon
+        {
+            get
+            {
+                if (drawnSword != null && drawnSword.activeInHierarchy) return drawnSword;
+                if (sheath != null && sheath.activeInHierarchy) return sheath;
+                return rack != null ? rack.ShownPart : null;
+            }
+        }
+
         public void Configure(PlayerController playerToShow, PlayerCombat combatToShow, PlayerDefence defenceToShow,
             PlayerElement elementToShow, Animator animatorToDrive, GameObject drawnSwordObject, GameObject sheathedHiltObject,
             GameObject sheathObject)

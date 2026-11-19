@@ -27,9 +27,9 @@ The long explanation the chart shows for every mark on Pyre, the branch Poison a
 ## pyre.fireeater
 **What it does.** You brace and breathe out a stream of green fire for two seconds, turning slowly as it burns. It lays the affliction of the element you hold on everything it sweeps across. A dodge lets it go.
 
-**When it happens.** When worn: hold the spell button. While it pours, the stick or the cursor turns it.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). While it pours, the stick or the cursor turns it.
 
-**The numbers.** Mix, 4 Shards, 40 mana. A bar 5 metres long and 1.2 metres to each side, after a 0.3-second brace, for 2 seconds. It bites every quarter second for 4 damage, 3 stagger and one stack of your held element's affliction: eight bites on what stays in it.
+**The numbers.** Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. A bar 5 metres long and 1.2 metres to each side, after a 0.3-second brace, for 2 seconds. It bites every quarter second for 4 damage, 3 stagger and one stack of your held element's affliction: eight bites on what stays in it.
 
 **Works with.** Goes Up (eight doses fast), Fuel, Funeral Fire, Light the Pyres.
 
@@ -49,9 +49,9 @@ The long explanation the chart shows for every mark on Pyre, the branch Poison a
 ## pyre.slowfuse
 **What it does.** You set a fuse on the enemy you face. Your next weapon blow on it within five seconds sets off a great blast round it. With no enemy faced nothing is set and the mana is lost.
 
-**When it happens.** When worn: hold the spell button. Then land a blow on that enemy.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Then land a blow on that enemy.
 
-**The numbers.** Mix, 5 Shards, 45 mana. An enemy within 8 metres. The blast is 3.5 metres in radius: 40 damage, 40 stagger and two stacks of your held element's affliction.
+**The numbers.** Mix, 5 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. An enemy within 8 metres. The blast is 3.5 metres in radius: 40 damage, 40 stagger and two stacks of your held element's affliction.
 
 **Works with.** Fuel (make that blow a heavy one), Goes Up, Funeral Fire.
 
@@ -71,7 +71,7 @@ The long explanation the chart shows for every mark on Pyre, the branch Poison a
 ## pyre.lightthepyres
 **What it does.** You kneel and drive your weapon into the ground. A line of fire runs to every poisoned or burning enemy near and follows it. Stand through three breaths, and a pillar of flame rises under each, setting off its burn and its poison. A dodge or a blow taken breaks it. With no one alight, the mana comes back.
 
-**When it happens.** Hold the spell button and stay still.
+**When it happens.** Cast it from its spell slot (hold L2 and a face button, or 1 to 4) and stay still.
 
 **The numbers.** A god's gift, never sold; in the playtest it can be bought. 60 mana. Up to six enemies within 9 metres. The three breaths take 2.2 seconds. Each pillar is 2 metres in radius: 40 damage and 40 stagger, a heavy blow, two stacks of your held element's affliction, plus 6 a dose of poison and 10 and 10 a stack of Burn set off.
 

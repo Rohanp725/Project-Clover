@@ -165,6 +165,8 @@ namespace Clover.Player
             spells = GetComponent<PlayerSpells>();
             // A player built before the four slots existed gets them here, so no scene needs rebuilding for them.
             if (spells == null) spells = gameObject.AddComponent<PlayerSpells>();
+            // The charged blade's look on the weapon, added the same way so no scene is rebuilt.
+            if (GetComponent<BladeLook>() == null) gameObject.AddComponent<BladeLook>();
             upgrades = GetComponent<PlayerUpgrades>();
             if (controls == null)
             {

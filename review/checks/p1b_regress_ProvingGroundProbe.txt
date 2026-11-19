@@ -1,0 +1,44 @@
+opened
+met: true
+result: probe started
+[Probe] start: scene ProvingGround, playtest mode True
+[Probe] playtest mode is on in the Proving Ground OK
+[Probe] the title opens on arrival: \
+[Probe] the title is read through with the use button: time 1, suspended False OK
+[Probe] the Ice altar gives Ice: Ice OK
+[Probe] the rack gives the Great Hammer: Great Hammer OK
+[Probe] the rack gives the Storm Katana: Storm Katana OK
+[Probe] the rack gives the Sun-Spear: Sun-Spear OK
+[Probe] a stand of what is not built yet says so: Not built yet: The Smith's Hammer. OK
+[Probe] a post lets out one soldier: out 1 OK
+[Probe] a post lets out the castle's three together: out 3 OK
+[Probe] the Fire land's post lets out four of its people: out 4 OK
+[Probe] a penned soldier fights and is struck: health 95 to 82, aware True OK
+[Probe] the clear posts empty both pens: castle 0, fire 0 OK
+[Probe] the wick alone: out 1 OK
+[Probe] the still dummy takes blows: hits 0 to 2 OK
+[Probe] the dummy that fights back strikes: blows 2 OK
+[Probe] each afflicted dummy carries its affliction: 11 of 11 OK
+[Probe] the rest fire opens the chart with unlimited Shards: Shards 9999, viewing Ice OK
+[Probe] the held tree's root is bought: Chill OK
+[Probe] light attack walks the chart to the next tree: now Water, on Soaked OK
+[Probe] another tree's root is bought though Ice is held: Soaked OK
+[Probe] a god's gift is bought as a playtest unlock: The Sea Rises OK
+[Probe] the guard button walks back round every tree: Ice,Wind,Lightning,Fire,Poison,Dark,Light,Metal,Earth,Life,Water, OK
+[Probe] the spell button opens a mark's details: \
+[Probe] the details are read through and close, the chart still open OK
+[Probe] a tree without written words shows details from its data: Edge Guard OK
+[Probe] the flask button opens the guide to effects: 32 entries OK
+[Probe]   guide on \
+[Probe] the guide closes back to the chart OK
+[Probe] the chart closes and the world runs OK
+[Probe] the pause menu opens the guide: entries in the menu 6 OK
+[Probe] Esc closes the guide back to the pause menu OK
+[Probe] the player falls OK
+[Probe] a fall returns the player to the rest fire with nothing lost: 2.1 m from the fire, Shards 9995 to 9995, marks 3 to 3, Sun-Spear, Ice OK
+[Probe] the door leads into Sun City carrying the build: scene SunCity, Sun-Spear, Ice, marks 3 OK
+[Probe] Sun City's pause menu offers the way back: entries 7 OK
+[Probe] back in the Proving Ground with the build and no title again: scene ProvingGround, marks 3, Sun-Spear OK
+[Probe] tally: 36 OK, 0 WRONG
+[Probe] done
+counts: {"error":0,"warn":0,"log":40}

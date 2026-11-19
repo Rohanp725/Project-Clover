@@ -49,9 +49,9 @@ The long explanation the chart shows for every mark on Tempest, the branch Light
 ## tempest.cloud
 **What it does.** You call a storm over the ground before you. For ten seconds bolts fall inside its circle, each warned by a ring closing on the spot. Half of them fall where an enemy stands.
 
-**When it happens.** When worn: hold the spell button.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** Mix, 4 Shards, 40 mana. The circle is 3 metres in radius, 1 metre ahead of you, for 10 seconds. A bolt every 0.8 seconds, 0.34 seconds after its warning ring, 1.2 metres across in radius: 14 damage, 20 stagger and one stack of your held element's affliction.
+**The numbers.** Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. The circle is 3 metres in radius, 1 metre ahead of you, for 10 seconds. A bolt every 0.8 seconds, 0.34 seconds after its warning ring, 1.2 metres across in radius: 14 damage, 20 stagger and one stack of your held element's affliction.
 
 **Works with.** Charged Air, Static, Thunder Lift, Lodestone, Live Wire.
 
@@ -60,7 +60,7 @@ The long explanation the chart shows for every mark on Tempest, the branch Light
 ## tempest.eye
 **What it does.** You become the storm: a turning column of wind and lightning round you that drags enemies in and bites them, and carries the light ones round. While it turns you walk slower, take half damage and cannot be made to flinch. Let go and it throws them all out, and a bolt meets each where it lands.
 
-**When it happens.** When worn: hold the spell button, and keep holding it. Letting go ends it.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4), and keep holding it. Letting go ends it.
 
 **The numbers.** Mix, 5 Shards, 50 mana. Up to 2.5 seconds, at least half a second. The column is 3.5 metres in radius and holds up to eight. A bite every 0.4 seconds: 6 damage and one stack of your held element's affliction. Thrown out up to 5 metres; each bolt deals 12 damage and 20 stagger.
 

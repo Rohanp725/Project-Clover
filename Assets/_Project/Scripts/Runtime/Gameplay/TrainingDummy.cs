@@ -104,8 +104,7 @@ namespace Clover.Gameplay
             }
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
             float unsteadies = Afflictions.StaggerTakenMultiplier;
-            if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
-                CombatEvents.Report(this, hit.Affliction, hit.AfflictionStacks, Afflictions.Apply(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower));
+            Afflictions.TakeFrom(hit, this);
             bool finisher = Stagger.IsStaggered && hit.Heavy;
             float multiplier = finisher ? FinisherDamageMultiplier : Stagger.IsStaggered ? StaggeredDamageMultiplier : 1f;
             LastDamage = hit.Damage * multiplier * takes;

@@ -71,9 +71,9 @@ The long explanation the chart shows for each high-level mark of the Lightning t
 ## lightning.waiting
 **What it does.** Five bolts hang at your shoulder, crackling. Each light blow you land sends one down onto the enemy struck. A heavy blow sends every one that is left. Those not sent when the time runs out go out.
 
-**When it happens.** When worn: hold the spell button. Then your blows send the bolts.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Then your blows send the bolts.
 
-**The numbers.** 4 Shards, 35 mana. Five bolts, for 10 seconds. Each deals 8 damage and 6 stagger and lays one stack of Static.
+**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play. Five bolts, for 10 seconds. Each deals 8 damage and 6 stagger and lays one stack of Static.
 
 **Works with.** Static (the bolts build it as you cut), Full Discharge, Single Stroke, Overdrive.
 
@@ -104,9 +104,9 @@ The long explanation the chart shows for each high-level mark of the Lightning t
 ## lightning.rod
 **What it does.** You plant a rod a little ahead of you. For eight seconds bolts fall inside a circle round it, again and again, striking whatever stands there and laying Static.
 
-**When it happens.** When worn: hold the spell button.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, 40 mana. Planted 2 metres ahead; the circle is 3.5 metres in radius. It strikes 0.2 seconds after planting and then every 0.9 seconds for 8 seconds: 12 damage, 12 stagger and one stack of Static each time.
+**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play. Planted 2 metres ahead; the circle is 3.5 metres in radius. It strikes 0.2 seconds after planting and then every 0.9 seconds for 8 seconds: 12 damage, 12 stagger and one stack of Static each time.
 
 **Works with.** Static (heavy blows on enemies inside discharge it), Lodestone, Live Wire, Capacitor.
 
@@ -126,9 +126,9 @@ The long explanation the chart shows for each high-level mark of the Lightning t
 ## lightning.lodestone
 **What it does.** A line of lightning leaps from your hand to every enemy near, and each is dragged toward you, further for every Static it carries. Then everything close to you is struck, and all the Static on it is set off at once and added to the blow.
 
-**When it happens.** When worn: hold the spell button.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, 45 mana. Reaches enemies within 7 metres, eight at most. Each is dragged 1 metre, and 0.8 metres more for each stack of Static, never nearer than 1.3 metres. About 0.3 seconds later everything within 3.5 metres of you takes 14 damage and 30 stagger, plus 7 for each stack of Static it carried.
+**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play. Reaches enemies within 7 metres, eight at most. Each is dragged 1 metre, and 0.8 metres more for each stack of Static, never nearer than 1.3 metres. About 0.3 seconds later everything within 3.5 metres of you takes 14 damage and 30 stagger, plus 7 for each stack of Static it carried.
 
 **Works with.** Static, Lightning Rod, Live Wire, Conductor, Seven Flashes.
 
@@ -148,9 +148,9 @@ The long explanation the chart shows for each high-level mark of the Lightning t
 ## lightning.lance
 **What it does.** You throw a bolt at the enemy you face that leaps on through four more, leaving Static on each.
 
-**When it happens.** When worn: hold the spell button.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, 35 mana. Reaches 12 metres to the first enemy, then leaps up to 5 metres from one to the next, five enemies in all. 26 damage, 30 stagger and two stacks of Static to each.
+**The numbers.** 4 Shards, no mana: it waits 7 seconds after a cast, less with weapon play. Reaches 12 metres to the first enemy, then leaps up to 5 metres from one to the next, five enemies in all. 26 damage, 30 stagger and two stacks of Static to each.
 
 **Works with.** Conductor, Static, Live Wire, Lodestone.
 
@@ -181,7 +181,7 @@ The long explanation the chart shows for each high-level mark of the Lightning t
 ## lightning.flashes
 **What it does.** You vanish and cut from enemy to enemy in one breath, then stand again where you began with your back to the fight. The cuts land together once you are still, and any enemy left at full Static discharges. You cannot be struck while gone; if you are struck while standing still, the cuts land at half and nothing discharges.
 
-**When it happens.** When worn: hold the spell button.
+**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
 **The numbers.** 4 Shards, 45 mana. Seven cuts among enemies within 8 metres (against one enemy, seven from all sides), 0.1 seconds apart, then half a second still. Each cut deals 9 damage, 8 stagger and one stack of Static. A full enemy discharges for 7 damage and 5 stagger a stack within 4 metres.
 

@@ -68,5 +68,9 @@ namespace Clover.Player
         Landed,
         /// <summary>Poison bites an enemy, on its beat or made to. Target: that enemy. Carries the depth it bit at (for PerStack).</summary>
         PoisonBite,
+        /// <summary>A move that carried the charged blade's element landed (IMPLEMENTATION.md 3.3). Target: the first enemy it struck.</summary>
+        ChargedBlow,
+        /// <summary>The third and last blow of a charged blade landed. Target: that enemy.</summary>
+        ChargedBlowThird,
     }
 }
