@@ -359,9 +359,10 @@ public class ReactionProbe2Runner : MonoBehaviour
         Judge("Sleet Charge: the bolt discharges it all and chills A", Depth(host, AfflictionKind.Static) == 0 && a.HitsTaken > aHits && a.Afflictions.Has(AfflictionKind.Chill),
             $"static {Depth(host, AfflictionKind.Static)}, A hits {a.HitsTaken - aHits}, last {a.LastDamage:0.0}");
 
-        // Capsize: it goes down 1.2 s (held, until knocked down is built).
+        // Capsize: it is knocked flat 1.2 s (the Down condition; KnockdownProbe sees a soldier lie and stand).
         yield return Pair("Capsize", host, AfflictionKind.Soaked, 1, AfflictionKind.Unsteady, 1);
-        Judge("Capsize: it goes down for 1.2 s", host.Afflictions.IsHeld && host.Afflictions.HeldLeft > 0.9f, $"held {host.Afflictions.HeldLeft:0.00} s");
+        Judge("Capsize: it goes down for 1.2 s", Holds(host, R.Capsized) && host.Afflictions.Conditions.Has(ConditionFlags.Down) && host.Afflictions.Conditions.Left(R.Capsized) > 0.9f,
+            $"down {host.Afflictions.Conditions.Left(R.Capsized):0.00} s");
         yield return Rests("Capsize", host, AfflictionKind.Soaked);
 
         // Winter Seed: the seed sleeps while the Chill lasts; the Chill gone, thorns of 12 a seed (24) and you heal 3 a seed.
@@ -526,15 +527,15 @@ public class ReactionProbe2Runner : MonoBehaviour
         Judge("Lightning Flower: a bolt to the Seeded A, 8 and a Static, not to C", a.HitsTaken == aHits + 1 && Mathf.Abs(a.LastDamage - 8f) < 0.6f && a.Afflictions.Has(AfflictionKind.Static) && c.HitsTaken == cHits,
             $"A last {a.LastDamage:0.0}");
 
-        // Logan Stone: it rocks; blows break its balance harder; the third throws it down: held 1.8 s, 20 to A.
+        // Logan Stone: it rocks; blows break its balance harder; the third throws it down: flat 1.8 s, 20 to A.
         yield return Pair("Logan Stone", host, AfflictionKind.Unsteady, 1, AfflictionKind.Tremor, 1, () => aHits = a.HitsTaken);
         Judge("Logan Stone: it rocks, balance breaking at 1.25", Holds(host, R.Rocking) && Mathf.Abs(host.Afflictions.Conditions.StaggerScale - 1.25f) < 0.01f);
         yield return Strike(host, false, 0.2f);
         Judge("Logan Stone: then at 1.5", Mathf.Abs(host.Afflictions.Conditions.StaggerScale - 1.5f) < 0.01f, $"x{host.Afflictions.Conditions.StaggerScale:0.00}");
         yield return Strike(host, false, 0.2f);
         yield return Strike(host, false, 0.3f);
-        Judge("Logan Stone: the third throws it down hard: down 1.8 s, 20 and a Tremor to A", host.Afflictions.IsHeld && a.HitsTaken > aHits && Mathf.Abs(a.LastDamage - 20f) < 0.6f && !Holds(host, R.Rocking),
-            $"held {host.Afflictions.HeldLeft:0.00} s, A last {a.LastDamage:0.0}");
+        Judge("Logan Stone: the third throws it down hard: down 1.8 s, 20 and a Tremor to A", Holds(host, R.Felled) && a.HitsTaken > aHits && Mathf.Abs(a.LastDamage - 20f) < 0.6f && !Holds(host, R.Rocking),
+            $"down {host.Afflictions.Conditions.Left(R.Felled):0.00} s, A last {a.LastDamage:0.0}");
 
         // Cold Short: brittle, notches kept; the heavy cracks the plates off: 25% more from the weapon, notches stay.
         yield return Pair("Cold Short", host, AfflictionKind.Sundered, 1, AfflictionKind.Chill, 1);

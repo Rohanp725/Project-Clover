@@ -7,8 +7,9 @@ namespace Clover.Player
     /// <summary>
     /// The action <see cref="UpgradeAction.Condition"/>: sets an enemy condition on the trigger's enemy, or on those near
     /// it, and lays what the effect names on each that takes it (IMPLEMENTATION.md 3.7). What resists being held resists
-    /// a condition that holds or slows the same way: an elite takes half the slowing, and what cannot be frozen (a god's
-    /// form) takes no such condition at all. Kept out of <see cref="PlayerUpgrades"/>, which only calls it.
+    /// a condition that holds, knocks flat or slows the same way: an elite takes half the slowing (and lies or is rooted
+    /// half the time), and what cannot be frozen (a god's form) takes no such condition at all. Kept out of
+    /// <see cref="PlayerUpgrades"/>, which only calls it.
     /// </summary>
     public static class ConditionCaster
     {
@@ -44,14 +45,23 @@ namespace Clover.Player
         {
             if (!(who is IAfflictable afflictable)) return false;
             var set = afflictable.Afflictions;
-            bool holds = (spec.Flags & ConditionFlags.Rooted) != 0 || spec.Pace < 1f;
-            if (holds && !set.CanFreeze) return false;
-            float slowShare = set.FreezeScale < 1f ? 0.5f : 1f;
-            if (set.Conditions.Set(spec, who, mark, link, struck, ended, slowShare, died) < 0) return false;
+            if (!Takes(spec, set)) return false;
+            if (set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died) < 0) return false;
             if (effect.Affliction != AfflictionKind.None && effect.Stacks > 0)
                 CombatEvents.Report(who, effect.Affliction, effect.Stacks, set.Lay(effect.Affliction, effect.Stacks + combat.ExtraStacks, 0f, combat.AfflictionPower, source, who));
             return true;
         }
+
+        /// <summary>False when the enemy cannot take this condition: one that roots, knocks flat or slows, on what cannot be frozen.</summary>
+        public static bool Takes(ConditionSpec spec, AfflictionSet set)
+        {
+            if (spec == null || set == null) return false;
+            bool holds = (spec.Flags & (ConditionFlags.Rooted | ConditionFlags.Down)) != 0 || spec.Pace < 1f;
+            return !holds || set.CanFreeze;
+        }
+
+        /// <summary>How much of a slowing, a root's time and a fall's time takes on this enemy: half on an elite, all on the rest.</summary>
+        public static float ShareOf(AfflictionSet set) => set != null && set.FreezeScale < 1f ? 0.5f : 1f;
 
         // Whether the mark has anything to do when a blow lands on the condition, when it ends, or when the enemy dies with
         // it: only then is it told.

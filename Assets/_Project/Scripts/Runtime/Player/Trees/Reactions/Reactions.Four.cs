@@ -9,6 +9,7 @@ namespace Clover.Player.Trees
     {
         public const string Rocking = "loganstone.rocking";
         public const string Leaning = "loganstone.lean";
+        public const string Felled = "loganstone.felled";
         public const string Brittle = "coldshort.brittle";
         public const string PlatesOff = "coldshort.cracked";
         public const string Bare = "coldshort.bare";
@@ -47,7 +48,6 @@ namespace Clover.Player.Trees
             // Wind and Earth (36), rest 6 s. It rocks for 3 s: the first blow breaks its balance at 1.25 times, the next at
             // 1.5, and the third weapon blow throws it down hard: flat 1.8 s, and its fall strikes 20 damage, 30 stagger and
             // a Tremor in 3 m. An elite rocks and then reels (40 stagger); a god takes only the stagger.
-            // NEEDS: knocked down (task 3.7): held still for 1.8 s stands in for lying flat.
             to.Add(Reaction(AfflictionKind.Unsteady, AfflictionKind.Tremor,
                 "Unsteady meets Tremor: it rocks on its feet for 3 s and each blow breaks its balance harder. Your third weapon blow throws it down hard, 20 and a Tremor to all within 3 m.",
                 6f,
@@ -57,7 +57,8 @@ namespace Clover.Player.Trees
                 // Set again from the same mark it is refreshed with the new number and keeps its time.
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Rocking, By = StruckBy.Weapon, AtCount = 1, Do = UpgradeAction.Condition,
                     State = new ConditionSpec { Id = Leaning, Seconds = 2f, Flags = ConditionFlags.StaggerTakenShare, Scale = 1.5f } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Rocking, By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Hold, Seconds = 1.8f },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Rocking, By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition,
+                    State = new ConditionSpec { Id = Felled, Seconds = 1.8f, Flags = ConditionFlags.Down } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Rocking, By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Plain, Do = UpgradeAction.Burst, Radius = 3f,
                     Damage = 20f, Stagger = 30f, Affliction = AfflictionKind.Tremor, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Rocking, By = StruckBy.Weapon, AtCount = 3, Ranks = EnemyRank.Elite, Do = UpgradeAction.Burst, Radius = 0.5f,

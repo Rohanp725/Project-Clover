@@ -19,5 +19,7 @@ namespace Clover.Gameplay
         /// <summary>Taken up with something that is not an attack (drinking, holding, rising, searching) until it is over or it is broken out of it.</summary>
         Busy,
         Dead,
+        /// <summary>Knocked flat by a Down condition: it falls on its back, lies while the condition lasts, then gets up. It begins nothing, cannot guard and does not flinch.</summary>
+        Down,
     }
 }

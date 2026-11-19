@@ -92,8 +92,8 @@ namespace Clover.Gameplay
                 runs[slot] = new ConditionRun { Active = true, Id = spec.Id, Mark = mark, Link = link, BeatClock = spec.Beat };
             }
             ref var run = ref runs[slot];
-            // What resists a slowing resists a root the same way: an elite is rooted for half the time.
-            float seconds = (spec.Flags & ConditionFlags.Rooted) != 0 ? spec.Seconds * Mathf.Clamp01(slowShare) : spec.Seconds;
+            // What resists a slowing resists a root, and being knocked flat, the same way: an elite is held for half the time.
+            float seconds = (spec.Flags & (ConditionFlags.Rooted | ConditionFlags.Down)) != 0 ? spec.Seconds * Mathf.Clamp01(slowShare) : spec.Seconds;
             run.Left = Math.Max(fresh ? 0f : run.Left, seconds);
             run.Beat = spec.OnBite ? 0f : spec.Beat;
             run.Flags = spec.Flags;

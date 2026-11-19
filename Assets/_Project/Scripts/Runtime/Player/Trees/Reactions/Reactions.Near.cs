@@ -17,6 +17,7 @@ namespace Clover.Player.Trees
         public const string Disc = "diamondring.disc";
         public const string Jar = "shutinthedark.jar";
         public const string Charging = "sleetcharge.charging";
+        public const string Capsized = "capsize.down";
         public const string Asleep = "winterseed.asleep";
         public const string SunkInSand = "groundgives.sunk";
         public const string Thorns = "ironthorns.thorns";
@@ -169,11 +170,12 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Charging, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Charging, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Chill, Stacks = 1 }));
 
-            // Wind and Water (14). It slips and goes down for 1.2 s; an elite only staggers (25), a god takes 15 stagger.
-            // NEEDS: knocked down (task 3.7): held still for the 1.2 s stands in for lying flat on its back.
+            // Wind and Water (14). It slips and goes down on its back for 1.2 s; an elite only staggers (25), a god takes 15
+            // stagger.
             to.Add(Reaction(AfflictionKind.Unsteady, AfflictionKind.Soaked,
                 "Soaked meets Unsteady: it slips and goes down for 1.2 s. The great only stagger.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Plain, Do = UpgradeAction.Hold, Seconds = 1.2f },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Plain, Do = UpgradeAction.Condition,
+                    State = new ConditionSpec { Id = Capsized, Seconds = 1.2f, Flags = ConditionFlags.Down } },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.Elite, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 25f },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Ranks = EnemyRank.God, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 15f }));
 

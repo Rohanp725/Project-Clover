@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Clover.Gameplay;
+using Clover.Player;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -243,6 +244,148 @@ namespace Clover.Tests
             Run(brain, 1.5f, 5f);
             Assert.AreEqual(0, brain.MoveWish, "lost from sight it stops");
             Assert.IsNull(brain.Current, "and begins no attack at what it cannot see");
+        }
+
+        // ---- Knocked flat (task 3.7): the Down flag and the brain's Down state.
+
+        private static ConditionSpec Fall(float seconds) => new ConditionSpec { Id = "test.down", Seconds = seconds, Flags = ConditionFlags.Down };
+
+        // The body and its brain stepped together, as the enemy does; the blows its brain strikes are counted.
+        private static int Run(AfflictionSet body, EnemyBrain brain, float seconds, float distance)
+        {
+            int blows = 0;
+            for (float t = 0f; t < seconds; t += Frame)
+            {
+                body.Tick(Frame);
+                if (brain.Tick(Frame, distance, 0f)) blows++;
+            }
+            return blows;
+        }
+
+        [Test]
+        public void DownHoldsForItsTimeAndEnds()
+        {
+            var enemy = NewEnemy();
+            enemy.Conditions.Set(Fall(1.2f), null, 4, null, false, true);
+            Assert.IsTrue(enemy.Conditions.Has(ConditionFlags.Down));
+            Assert.AreEqual(1.2f, enemy.Conditions.Left("test.down"), 0.001f);
+            for (float t = 0f; t < 1.1f; t += Frame) enemy.Tick(Frame);
+            Assert.IsTrue(enemy.Conditions.Has(ConditionFlags.Down), "still down just before its time is up");
+            for (float t = 0f; t < 0.2f; t += Frame) enemy.Tick(Frame);
+            Assert.IsFalse(enemy.Conditions.Has(ConditionFlags.Down));
+            Assert.AreEqual(1, Count(ConditionMoment.Ended), "its end is told like any condition's");
+        }
+
+        [Test]
+        public void AnEliteLiesHalfTheTimeAndAGodNeverGoesDown()
+        {
+            var elite = new AfflictionSet { FreezeScale = 0.4f };
+            elite.Conditions.Report = (who, news) => heard.Add(news);
+            Assert.AreEqual(0.5f, ConditionCaster.ShareOf(elite), 0.001f, "what resists ice takes half");
+            Assert.AreEqual(1f, ConditionCaster.ShareOf(new AfflictionSet()), 0.001f);
+            elite.Conditions.Set(Fall(1.8f), null, -1, null, false, false, ConditionCaster.ShareOf(elite));
+            Assert.AreEqual(0.9f, elite.Conditions.Left("test.down"), 0.001f, "as a root, an elite lies for half the time");
+
+            var god = new AfflictionSet { CanFreeze = false };
+            Assert.IsFalse(ConditionCaster.Takes(Fall(1.2f), god), "what cannot be frozen is never knocked flat");
+            Assert.IsTrue(ConditionCaster.Takes(Fall(1.2f), elite));
+            Assert.IsTrue(ConditionCaster.Takes(Fall(1.2f), new AfflictionSet()));
+            Assert.IsTrue(ConditionCaster.Takes(new ConditionSpec { Id = "test.open", Seconds = 2f, Flags = ConditionFlags.CannotGuard }, god),
+                "a god still takes what does not hold it");
+        }
+
+        [Test]
+        public void KnockedFlatItLosesItsBlowLiesBeginningNothingAndGetsUp()
+        {
+            var enemy = NewEnemy();
+            var brain = Brain(enemy.Conditions);
+            Run(enemy, brain, 0.05f, 2f);
+            Assert.AreEqual(EnemyState.Telegraph, brain.State, "in reach it begins its attack");
+            enemy.Conditions.Set(Fall(1.2f), null);
+            Assert.AreEqual(0, Run(enemy, brain, Frame, 2f));
+            Assert.AreEqual(EnemyState.Down, brain.State, "it goes down out of the wind-up");
+            Assert.IsTrue(brain.IsDown);
+            Assert.IsNull(brain.Current, "the blow it had begun is lost");
+            Assert.IsFalse(brain.IsGettingUp);
+
+            Assert.AreEqual(0, Run(enemy, brain, 1f, 2f), "lying, it strikes nothing");
+            Assert.AreEqual(EnemyState.Down, brain.State);
+            Assert.AreEqual(0, brain.MoveWish, "it does not crawl");
+            Assert.IsFalse(brain.Tracks, "nor turn");
+            Assert.IsFalse(brain.Flinch(true), "a blow does not make it flinch");
+            Assert.IsFalse(brain.Force("near"), "nothing from outside stands it up to attack");
+            Assert.IsFalse(brain.Occupy(1f), "nor takes it up with anything else");
+            Assert.AreEqual(EnemyState.Down, brain.State);
+
+            // The condition runs out: it gets up, and only then is it back in the fight.
+            Run(enemy, brain, 0.25f, 2f);
+            Assert.IsFalse(enemy.Conditions.Has(ConditionFlags.Down));
+            Assert.IsTrue(brain.IsGettingUp, "its time up, it is getting to its feet");
+            Assert.Greater(brain.GetUpProgress, 0f);
+            Run(enemy, brain, EnemyBrain.GetUpSeconds, 2f);
+            Assert.IsFalse(brain.IsDown, "on its feet again");
+            Assert.AreEqual(1, Run(enemy, brain, 1.5f, 2f), "and it attacks again");
+        }
+
+        [Test]
+        public void ItLiesNoLessThanItsFallAndIsKnockedFlatAgainWhileGettingUp()
+        {
+            var enemy = NewEnemy();
+            var brain = Brain(enemy.Conditions);
+            enemy.Conditions.Set(Fall(0.1f), null);
+            Run(enemy, brain, 0.3f, 6f);
+            Assert.IsFalse(enemy.Conditions.Any);
+            Assert.IsTrue(brain.IsDown && !brain.IsGettingUp, "a fall is seen through before it gets up, however short the condition");
+            Run(enemy, brain, EnemyBrain.FallSeconds - 0.3f + 0.1f, 6f);
+            Assert.IsTrue(brain.IsGettingUp);
+            enemy.Conditions.Set(Fall(1f), null, 2);
+            Run(enemy, brain, Frame, 6f);
+            Assert.IsTrue(brain.IsDown && !brain.IsGettingUp, "knocked flat again as it rose, it goes down again");
+            Assert.AreEqual(Frame, brain.StateSeconds, 0.001f, "from the start of a new fall");
+        }
+
+        [Test]
+        public void ABrokenBalanceRunsItsCourseAndTheFallComesAfter()
+        {
+            var enemy = NewEnemy();
+            var brain = Brain(enemy.Conditions);
+            Run(enemy, brain, 0.05f, 6f);
+            brain.Stagger();
+            enemy.Conditions.Set(Fall(2f), null);
+            Run(enemy, brain, 0.3f, 6f);
+            Assert.AreEqual(EnemyState.Staggered, brain.State, "staggered, it is already helpless: the stagger is not cut short");
+            brain.EndStagger();
+            Run(enemy, brain, Frame, 6f);
+            Assert.AreEqual(EnemyState.Down, brain.State, "the stagger over and the condition still running, it goes down");
+            brain.Stagger();
+            Assert.AreEqual(EnemyState.Staggered, brain.State, "a lying enemy's balance can still be broken, and opened for the finisher");
+            brain.Die();
+            enemy.Conditions.Set(Fall(2f), null, 3);
+            Run(enemy, brain, Frame, 6f);
+            Assert.AreEqual(EnemyState.Dead, brain.State, "the dead do not fall again");
+        }
+
+        [Test]
+        public void CapsizeAndLoganStoneKnockFlatInsteadOfHolding()
+        {
+            int capsize = AfflictionPairs.Index(AfflictionKind.Soaked, AfflictionKind.Unsteady);
+            int logan = AfflictionPairs.Index(AfflictionKind.Unsteady, AfflictionKind.Tremor);
+            foreach (int pair in new[] { capsize, logan })
+            {
+                var mark = ReactionTable.MarkFor(pair);
+                Assert.IsNotNull(mark, AfflictionPairs.Name(pair));
+                bool down = false, held = false;
+                foreach (var effect in mark.Effects)
+                {
+                    if (effect.Do == UpgradeAction.Hold) held = true;
+                    if (effect.Do != UpgradeAction.Condition || effect.State == null || (effect.State.Flags & ConditionFlags.Down) == 0) continue;
+                    down = true;
+                    Assert.AreEqual(EnemyRank.Plain, effect.Ranks, AfflictionPairs.Name(pair) + ": only the plain go down; the great stagger");
+                    Assert.AreEqual(pair == capsize ? 1.2f : 1.8f, effect.State.Seconds, 0.001f, AfflictionPairs.Name(pair));
+                }
+                Assert.IsTrue(down, AfflictionPairs.Name(pair) + " knocks flat");
+                Assert.IsFalse(held, AfflictionPairs.Name(pair) + " no longer holds in its place");
+            }
         }
     }
 }

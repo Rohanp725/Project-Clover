@@ -126,6 +126,10 @@ namespace Clover.Gameplay
         private Clover.Player.PlayerDefence targetDefence;
         private int drinksSeen;
         private int drinkHash, holdHash, thrownHash, riseHash, dormantHash, searchHash;
+        // Knocked flat (task 3.7): the fall, the lying breath and getting up; whether the animator has them is learned
+        // the first time it goes down (0 not yet, 1 it has, -1 baked before they were made).
+        private int knockdownHash, downLoopHash, getUpHash, downClips;
+        private bool downDust;
         private Vector3 burnAt;
         private float burnLeft, burnRadius, burnDamage, burnEvery, untilBurnBite, untilBurnShow, untilHoldEmber;
         private static bool breakFreeSaid;
@@ -391,6 +395,9 @@ namespace Clover.Gameplay
             riseHash = Animator.StringToHash(Kind.Prefix + (dormantClip != null && dormantClip.EndsWith("_lie_loop") ? "_rise_lying" : "_rise"));
             dormantHash = Animator.StringToHash(string.IsNullOrEmpty(dormantClip) ? Kind.Prefix + "_dormant_loop" : dormantClip);
             searchHash = Animator.StringToHash(Kind.Prefix + "_search_loop");
+            knockdownHash = Animator.StringToHash(Kind.Prefix + "_knockdown");
+            downLoopHash = Animator.StringToHash(Kind.Prefix + "_down_loop");
+            getUpHash = Animator.StringToHash(Kind.Prefix + "_getup");
             // The Fire land's blows are drawn in its own two colours, not the storm's violet.
             if (Kind.Ashen) SlashColour = new Color(1.9f, 0.95f, 0.3f, 0.6f);
             if (bars != null)
@@ -755,7 +762,8 @@ namespace Clover.Gameplay
             // Cold and shaken ground slow everything it does; frozen, it does nothing at all.
             if (GuardOpenFor > 0f) GuardOpenFor -= deltaTime;
             float pace = SpeedScale * (IsCharged ? ChargedSpeed : 1f) * (Brain.Phase > 0 ? Kind.SecondPhasePace : 1f) * Afflictions.SpeedMultiplier;
-            if (Brain.Phase == 0 && Kind.SecondPhaseAt > 0f && Health.Fraction <= Kind.SecondPhaseAt && !IsStaggered)
+            // Knocked flat, the second phase waits for it to be on its feet.
+            if (Brain.Phase == 0 && Kind.SecondPhaseAt > 0f && Health.Fraction <= Kind.SecondPhaseAt && !IsStaggered && !Brain.IsDown)
             {
                 // Worn down to the mark: the second phase opens with its own attack.
                 Brain.Phase = 1;
@@ -839,6 +847,16 @@ namespace Clover.Gameplay
             if (sinceLightHit > 1.6f) lightHits = 0;
             bool mayAttack = turns == null || turns.MayAttack(this);
             bool struck = Brain.Tick(deltaTime * pace, brainDistance, Random.value, mayAttack, TargetOnGround);
+            // Knocked flat, the back meets the floor near the end of the fall: dust there, once each fall.
+            if (Brain.IsDown && !Brain.IsGettingUp)
+            {
+                if (!downDust && Brain.StateSeconds >= EnemyBrain.FallSeconds * 0.8f)
+                {
+                    downDust = true;
+                    Vfx.Play(VfxKind.Dust, transform.position, Vector3.up);
+                }
+            }
+            else downDust = false;
             if (!wasStriking && IsStriking && turns != null) turns.Began(this);
             var attack = Brain.Current;
             if (attack != null && attack != before && Brain.State == EnemyState.Telegraph)
@@ -1320,6 +1338,18 @@ namespace Clover.Gameplay
                     else if (busy == BusyThrown) animator.Play(thrownHash, 0, Mathf.Min(ClipEnd, Brain.BusyProgress));
                     else if (busy == BusyRise) animator.Play(riseHash, 0, Mathf.Min(ClipEnd, Brain.BusyProgress));
                     else if (busy == BusySip) animator.Play(drinkHash, 0, Mathf.Min(ClipEnd, Brain.BusyProgress));
+                    break;
+                case EnemyState.Down:
+                    if (downClips == 0) downClips = animator.HasState(0, knockdownHash) ? 1 : -1;
+                    if (downClips < 0)
+                    {
+                        // Baked before the Forge made the fall: the broken-balance kneel stands in, down and back up.
+                        float kneel = Brain.IsGettingUp ? 1f - Brain.GetUpProgress : Mathf.Min(1f, Brain.StateSeconds / EnemyBrain.FallSeconds);
+                        animator.Play(staggerHash, 0, Mathf.Min(ClipEnd, kneel));
+                    }
+                    else if (Brain.IsGettingUp) animator.Play(getUpHash, 0, Mathf.Min(ClipEnd, Brain.GetUpProgress));
+                    else if (Brain.StateSeconds < EnemyBrain.FallSeconds) animator.Play(knockdownHash, 0, Brain.StateSeconds / EnemyBrain.FallSeconds);
+                    else animator.Play(downLoopHash, 0, Mathf.Repeat((Brain.StateSeconds - EnemyBrain.FallSeconds) / EnemyBrain.DownBreathSeconds, 1f));
                     break;
                 case EnemyState.Telegraph:
                 case EnemyState.Strike:
