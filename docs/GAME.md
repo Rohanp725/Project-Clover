@@ -1348,7 +1348,8 @@ changed. The old playtest stays with its players until the first few phases of t
   staggered), and every high-level mark (majors, keystones, spells, gifts, Heresies, Evolutions, aspects) has a
   detailed explanation the player can open, so testers truly understand what is going on.
 - **Decided (user)**: testers type up notes and send them back; nothing in the build collects feedback.
-- **Decided (user)**: release after the first few phases. **Proposal** for the phases: 0, the testing ground and
+- **Decided (user, 2026-11-19, replacing "after the first few phases")**: the next playtest build is made after Phase 6,
+  with the whole combat system in it; no v0.4 after Phase 3. The phases: 0, the testing ground and
   playtest mode, the guide to effects and the detailed explanations, a version number and "What's new" on the title;
   1, spells on cooldowns, mana for big moves, the charged blade, infused strikes and the four-spell L2 layer; 2, two
   elements and the Hand; 3, reactions. Later updates: 4, trees reshaped into spell branches; 5, the Way, Memories and

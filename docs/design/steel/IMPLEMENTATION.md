@@ -818,7 +818,7 @@ files wait for Phase 0's commit; tasks marked "after Phase 0" below.
 | 3.6 | Performance | `CrowdProbe`; capacities (`Hazards.Capacity`, runner queue, `ReactionEngine.MostPerFrame`) set from the profile | Frame under 16.6 ms on the crowd; zero steady GC | 3.4 | E |
 | 3.7 | Knocked down | Enemy brain state and clip (Forge), `Condition` flag `Down` | Probe: Capsize knocks a soldier flat and it stands | 3.3 | E |
 
-Release after Phase 3 (the decided "first few phases").
+No release after Phase 3: the owner moved the next playtest build to after Phase 6 (2026-11-19).
 
 ### Phase 4: trees reshaped into spell branches (Fire and Lightning first, Devotion, the first new duo branch)
 
