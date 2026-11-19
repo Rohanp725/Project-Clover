@@ -1,3 +1,4 @@
+using Clover.Gameplay;
 using Clover.Player;
 using UnityEngine;
 
@@ -43,5 +44,12 @@ namespace Clover.World
         public int Limit;
         /// <summary>True when a reaction laid it: what its bites lay starts no reaction of its own (IMPLEMENTATION.md 3.7).</summary>
         public bool FromReaction;
+        /// <summary>
+        /// Nonzero for the parts of one shape laid together (from <see cref="Hazards.NewGroup"/>): with <see cref="Once"/>,
+        /// each enemy is struck once by the whole shape, however many of its parts it stands in.
+        /// </summary>
+        public int Group;
+        /// <summary>Left alone by its bites: the enemy it came out of (Ill Wind's plume does not dose the one that shed it).</summary>
+        public IDamageable Spares;
     }
 }

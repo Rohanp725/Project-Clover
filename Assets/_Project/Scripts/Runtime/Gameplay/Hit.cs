@@ -45,6 +45,12 @@ namespace Clover.Gameplay
         /// </summary>
         public readonly bool FromReaction;
 
+        /// <summary>
+        /// True for a bite that only lays an affliction (a soaking slick, a dosing patch): no damage, no balance, not
+        /// heavy, nothing set off. It is felt as the affliction, not as a blow: no shove, flinch, poise or guard.
+        /// </summary>
+        public bool OnlyLays => Damage <= 0f && Stagger <= 0f && !Heavy && !Detonate;
+
         public Hit(float damage, float stagger, Vector3 direction, bool heavy = false, bool unblockable = false, Vector3? origin = null,
             float burnSeconds = 0f, int burnStacks = 0, bool detonate = false,
             AfflictionKind affliction = AfflictionKind.None, int afflictionStacks = 0, float afflictionSeconds = 0f, float afflictionPower = 1f,

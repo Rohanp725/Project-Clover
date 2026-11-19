@@ -1211,6 +1211,8 @@ namespace Clover.Player
                     };
                     // One burst, or one where each patch of a shape would fall.
                     int bursts = effect.Shape == HazardShape.Patch ? 1 : Or(eCount, 3);
+                    // The parts of one burst are one blow: an enemy standing where two overlap is struck once.
+                    if (bursts > 1) burst.Group = Hazards.NewGroup();
                     for (int i = 0; i < bursts; i++)
                     {
                         burst.Position = PatchAt(effect, i, bursts, centre, self, aim, Or(effect.Reach, 4f));
@@ -1237,6 +1239,7 @@ namespace Clover.Player
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = Or(effect.Radius, 1f) * Stats.Multiplier(PlayerStat.GroundSize), Seconds = Or(effect.Seconds, 3f) * Stats.Multiplier(PlayerStat.GroundSeconds), BiteEvery = Or(effect.Interval, 0.5f),
                         Grown = effect.Grown, Family = effect.Slot + 1, Limit = effect.Grown && effect.Limit > 0 ? effect.Limit + Mathf.Max(0, Stats.Whole(PlayerStat.GrownLimit)) : 0,
                         Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
+                        Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
                     };
                     for (int i = 0; i < patches; i++)
                     {

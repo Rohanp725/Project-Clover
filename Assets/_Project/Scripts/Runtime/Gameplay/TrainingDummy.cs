@@ -105,6 +105,8 @@ namespace Clover.Gameplay
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
             float unsteadies = Afflictions.StaggerTakenMultiplier;
             Afflictions.TakeFrom(hit, this);
+            // As an enemy: ground that only lays an affliction is not a blow, so the last blow's numbers stay as they were.
+            if (hit.OnlyLays && detonated <= 0f) return HitOutcome.Landed;
             bool finisher = Stagger.IsStaggered && hit.Heavy;
             float multiplier = finisher ? FinisherDamageMultiplier : Stagger.IsStaggered ? StaggeredDamageMultiplier : 1f;
             LastDamage = hit.Damage * multiplier * takes;

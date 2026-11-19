@@ -50,6 +50,50 @@ namespace Clover.World
         private HashSet<IDamageable>[] bitten;
         private int next;
 
+        // The parts of one shape share who they have struck. A burst lasts a fraction of a second, so a few groups in
+        // turn are plenty; a group whose place has been taken by a newer one strikes as its parts would alone.
+        private const int Groups = 8;
+        private readonly HashSet<IDamageable>[] groupBitten =
+        {
+            new HashSet<IDamageable>(), new HashSet<IDamageable>(), new HashSet<IDamageable>(), new HashSet<IDamageable>(),
+            new HashSet<IDamageable>(), new HashSet<IDamageable>(), new HashSet<IDamageable>(), new HashSet<IDamageable>(),
+        };
+        private readonly int[] groupIds = new int[Groups];
+        private int lastGroup;
+
+        /// <summary>A new group for the parts of one shape (<see cref="HazardSpec.Group"/>); zero when there is no ground.</summary>
+        public static int NewGroup()
+        {
+            if (instance == null) return 0;
+            int id = ++instance.lastGroup;
+            int slot = id % Groups;
+            instance.groupIds[slot] = id;
+            instance.groupBitten[slot].Clear();
+            return id;
+        }
+
+        // Whom a bite must leave alone: those already struck by a once-only zone or its group, and the one it spares.
+        private HashSet<IDamageable> LeftAlone(int index, in Zone zone)
+        {
+            HashSet<IDamageable> set = null;
+            if (zone.Spec.Once)
+            {
+                int group = zone.Spec.Group, slot = group % Groups;
+                set = group != 0 && groupIds[slot] == group ? groupBitten[slot] : bitten[index];
+            }
+            if (zone.Spec.Spares != null)
+            {
+                if (set == null)
+                {
+                    // Bitten again and again: the zone's own set holds only the one spared.
+                    set = bitten[index];
+                    set.Clear();
+                }
+                set.Add(zone.Spec.Spares);
+            }
+            return set;
+        }
+
         /// <summary>How many patches are alive now, so probes can see them without the screen.</summary>
         public static int Alive
         {
@@ -320,7 +364,7 @@ namespace Clover.World
                 if (zone.UntilBite <= 0f && owner != null)
                 {
                     zone.UntilBite = zone.Spec.BiteEvery;
-                    int hits = owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, zone.Spec.Once ? bitten[i] : null);
+                    int hits = owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
                     zone.Bitten++;
                     // A standing storm drops a bolt somewhere in itself each time it bites, whether or not anyone is under it.
                     if (zone.Spec.Kind == HazardKind.Lightning && (hits > 0 || !zone.Spec.Once))

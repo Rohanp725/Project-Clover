@@ -111,6 +111,8 @@ namespace Clover.Player
         public bool CountOnly;
         /// <summary>Damage added for each stack the Spend effect before it (in the same mark) took.</summary>
         public float DamagePerSpent;
+        /// <summary>For Hazard: the ground it lays leaves the trigger's own enemy alone (Ill Wind's plume does not dose the one that shed it).</summary>
+        public bool SparesTarget;
         /// <summary>
         /// For an Arc: it leaps only to enemies carrying this, from the target without striking it again (Live Iron). None:
         /// an arc as usual. For a Condition with a Radius: only the enemies carrying this take it (Chokedamp's shaken).

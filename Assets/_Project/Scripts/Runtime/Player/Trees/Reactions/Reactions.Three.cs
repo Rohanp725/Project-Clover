@@ -147,7 +147,7 @@ namespace Clover.Player.Trees
                     State = new ConditionSpec { Id = LooseDust, Seconds = 30f, While = AfflictionKind.Poison, While2 = AfflictionKind.Unsteady } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LooseDust, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = LooseDust, By = StruckBy.Heavy, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 3,
-                    Reach = 2.2f, Amount = 1.2f, Radius = 0.6f, Seconds = 3f, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1 }));
+                    Reach = 2.2f, Amount = 1.2f, Radius = 0.6f, Seconds = 3f, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1, SparesTarget = true }));
         }
     }
 }

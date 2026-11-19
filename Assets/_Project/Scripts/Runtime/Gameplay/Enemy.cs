@@ -583,6 +583,8 @@ namespace Clover.Gameplay
             float unsteadies = Afflictions.StaggerTakenMultiplier * harder;
             float shoved = Afflictions.ShoveMultiplier;
             Afflictions.TakeFrom(hit, this);
+            // Ground that only lays an affliction is not a blow: it does not shove, flinch, wear poise or meet the guard.
+            if (hit.OnlyLays && detonated <= 0f) return HitOutcome.Landed;
 
             // Its guard: a light blow from the front, while it stands ready, is turned on its weapon.
             if (Kind.Guards && GuardOpenFor <= 0f && !Afflictions.Conditions.Has(ConditionFlags.CannotGuard) && (!hit.Heavy || Kind.HeavyGuardedDamage < 1f) && !hit.Unblockable && !IsStaggered && (Brain.State == EnemyState.Stalk || Brain.State == EnemyState.Idle)
@@ -623,7 +625,8 @@ namespace Clover.Gameplay
             flashLeft = 0.09f;
             Vector3 away = hit.Direction;
             away.y = 0f;
-            shove = away.normalized * (Shove * shoved * (finisher ? 2.2f : hit.Heavy ? 1.6f : 1f));
+            // Flat on its back it is not slid along the floor by the blows that follow the one that felled it.
+            shove = Brain.IsDown ? Vector3.zero : away.normalized * (Shove * shoved * (finisher ? 2.2f : hit.Heavy ? 1.6f : 1f));
 
             if (Health.IsDead)
             {
