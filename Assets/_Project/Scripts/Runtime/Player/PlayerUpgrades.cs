@@ -1612,7 +1612,11 @@ namespace Clover.Player
             if (step == combat.Combo.Skill) Trigger(UpgradeTrigger.SkillHit, struck, at);
             else if (step.Heavy || finisher) Trigger(UpgradeTrigger.HeavyHit, struck, at);
             // Storm Front: the heavy blow or finisher that lands is owed a Gust, thrown in the next step once the swing has been reckoned.
-            if ((step.Heavy || finisher) && Time.time >= stormFrontAt) stormFrontOwed = true;
+            // The Gust's own short wait must not turn a heavy blow into a light one for the marks.
+            if (step.Heavy || finisher)
+            {
+                if (Time.time >= stormFrontAt) stormFrontOwed = true;
+            }
             else Trigger(UpgradeTrigger.LightHit, struck, at);
             if (hasLeaf && ++leafBlows >= BreathBlows) GainBreath();
             sinceBlowLanded = 0f;
