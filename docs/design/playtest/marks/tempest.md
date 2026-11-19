@@ -3,15 +3,15 @@
 The long explanation the chart shows for every mark on Tempest, the branch Lightning and Wind share.
 
 ## tempest.charged
-**What it does.** Your blows lay Static and Unsteady together. Your root mark lays the affliction of the element you hold; this mark adds the other one. A heavy blow on an enemy carrying Static sets the Static off, as Lightning's root would.
+**What it does.** A heavy blow on an enemy carrying Static sets the Static off, as Lightning's root would, whichever of the two is your first element. Your weapon lays only your first element's affliction, so of the two the blows lay only that one: Static with Lightning first, Unsteady with Wind first, and nothing more once that element's root (Static or Unsteady) is learned, since the root lays it already. The other comes from your spells, the charged blade and the R2 strike.
 
-**When it happens.** Every weapon blow that lands lays Unsteady; every light blow lays Static; a heavy blow or finisher sets the Static off.
+**When it happens.** A heavy blow or finisher on an enemy carrying Static sets it off. Without your first element's root: with Lightning first every light blow lays a Static, with Wind first every blow that lands lays an Unsteady.
 
-**The numbers.** Mix, 3 Shards. One stack of each a blow. Unsteady makes an enemy take 6% more stagger, be shoved 15% further and turn 8% slower for each stack, up to five. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger.
+**The numbers.** Mix, 3 Shards. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most about three times a second. Without the root, one stack a blow. Unsteady makes an enemy take 6% more stagger, be shoved 15% further and turn 8% slower for each stack, up to five.
 
-**Works with.** Static or Wind's root, Thunder Lift, Slip Current, The Sky Finds Them, Falling Thunder.
+**Works with.** Thunderclap or Gust in a slot (the other element's affliction), the charged blade and the R2 strike, Thunder Lift, Slip Current, The Sky Finds Them, Falling Thunder.
 
-**Example.** Holding Wind, four light blows and a heavy: the soldier is four deep in Unsteady and the Static goes off into its neighbours.
+**Example.** Carrying Wind first and Lightning second: your blows build Unsteady on a soldier, a Thunderclap leaves it Static, and the heavy blow that ends your chain sets the Static off into its neighbours.
 
 ## tempest.lift
 **What it does.** A discharge of five Static or more throws its enemy into the air. What is too heavy to leave the ground reels where it stands instead.
@@ -51,7 +51,7 @@ The long explanation the chart shows for every mark on Tempest, the branch Light
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. The circle is 3 metres in radius, 1 metre ahead of you, for 10 seconds. A bolt every 0.8 seconds, 0.34 seconds after its warning ring, 1.2 metres across in radius: 14 damage, 20 stagger and one stack of your held element's affliction.
+**The numbers.** Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. The circle is 3 metres in radius, 1 metre ahead of you, for 10 seconds. A bolt every 0.8 seconds, 0.34 seconds after its warning ring, 1.2 metres across in radius: 14 damage, 20 stagger and one stack of Static (the branch's spells are made of Lightning, whichever element is first).
 
 **Works with.** Charged Air, Static, Thunder Lift, Lodestone, Live Wire.
 
@@ -62,7 +62,7 @@ The long explanation the chart shows for every mark on Tempest, the branch Light
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4), and keep holding it. Letting go ends it.
 
-**The numbers.** Mix, 5 Shards, 50 mana. Up to 2.5 seconds, at least half a second. The column is 3.5 metres in radius and holds up to eight. A bite every 0.4 seconds: 6 damage and one stack of your held element's affliction. Thrown out up to 5 metres; each bolt deals 12 damage and 20 stagger.
+**The numbers.** Mix, 5 Shards, 50 mana. Up to 2.5 seconds, at least half a second. The column is 3.5 metres in radius and holds up to eight. A bite every 0.4 seconds: 6 damage and one stack of Static (the branch's spells are made of Lightning, whichever element is first). Thrown out up to 5 metres; each bolt deals 12 damage and 20 stagger.
 
 **Works with.** Charged Air, Slip Current, Thunder Lift, Static.
 

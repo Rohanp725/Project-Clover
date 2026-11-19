@@ -5,7 +5,7 @@ The long explanation the chart shows for each high-level mark of the Lightning t
 ## lightning.static
 **What it does.** Light blows build Static on an enemy, a stack at a time, up to five. Static does nothing by itself: a heavy blow or a finisher discharges it all at once, into the one struck and everyone standing near it.
 
-**When it happens.** Always on once learned. Every light blow that lands adds a stack; a heavy blow or a finisher on an enemy carrying Static discharges it.
+**When it happens.** Always on once learned. While Lightning is your first element, every light blow that lands adds a stack. Carried as the second element, the weapon lays none; Static then comes from your Lightning spells, the charged blade and the R2 strike. Either way, a heavy blow or a finisher on an enemy carrying Static discharges it.
 
 **The numbers.** 2 Shards. One stack a light blow, five at most, lasting 6 seconds. A discharge deals 7 damage and 5 stagger for each stack to everything within 4 metres: 35 damage and 25 stagger at five.
 
@@ -38,7 +38,7 @@ The long explanation the chart shows for each high-level mark of the Lightning t
 ## lightning.cuts
 **What it does.** The Iaido Slash cuts twice. A moment after the slash, when the blade is home, its cut lands again all at once across the ground it covered.
 
-**When it happens.** Each time the Iaido Slash, the Katana's weapon skill (hold the heavy attack to full), strikes at least one enemy. It needs the Katana.
+**When it happens.** Each time the Iaido Slash, the Katana's weapon skill (Q, Triangle or Y), strikes at least one enemy. It needs the Katana.
 
 **The numbers.** 3 Shards. The second cut lands 0.55 seconds later, over a circle in front of you as wide as about two thirds of the slash's reach, for 60% of the slash's damage and 22 stagger.
 
@@ -115,7 +115,7 @@ The long explanation the chart shows for each high-level mark of the Lightning t
 ## lightning.wire
 **What it does.** Casting any spell lays a line of lightning on the ground ahead of you. Enemies standing on it are shocked again and again and gather Static.
 
-**When it happens.** Each time you cast a spell, Thunderclap or the worn spell, at most once every six seconds.
+**When it happens.** Each time you cast a spell from one of your four slots, an element's own spell or a learned one, at most once every six seconds.
 
 **The numbers.** 3 Shards. Five patches along a line 8 metres ahead, each 0.9 metres in radius, for 4 seconds. Each bites every half second for 5 damage and one stack of Static.
 

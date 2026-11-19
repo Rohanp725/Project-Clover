@@ -5,7 +5,7 @@ The long explanation the chart shows for each high-level mark of the Fire tree (
 ## fire.cinder
 **What it does.** Every blow of your weapon that lands sets the enemy burning and lays one stack of Burn. Each further blow adds another stack, up to five. A burning enemy takes damage every second, more for each stack.
 
-**When it happens.** Always on once learned: every weapon blow that lands, light or heavy.
+**When it happens.** Always on once learned, while Fire is your first element: every weapon blow that lands, light or heavy. Carried as the second element, it lays nothing with the weapon; Burn then comes from your Fire spells, the charged blade and the R2 strike.
 
 **The numbers.** 2 Shards. One stack a blow, five at most. A burn deals 5 damage a second and each stack adds 30%, so 12.5 a second at five. Each blow sets its clock back to 4 seconds; when it runs out the stacks go with it. A burn set off by another mark deals 10 damage and 10 more for each stack: 60 at five.
 
@@ -38,9 +38,9 @@ The long explanation the chart shows for each high-level mark of the Fire tree (
 ## fire.crescent
 **What it does.** The Iaido Slash throws a slow arc of flame ahead of you that travels on after the cut, striking and burning what it passes through.
 
-**When it happens.** Each time you perform the Iaido Slash, the Katana's weapon skill (hold the heavy attack to full). It needs the Katana.
+**When it happens.** Each time you perform the Iaido Slash, the Katana's weapon skill (Q, Triangle or Y). It needs the Katana.
 
-**The numbers.** 3 Shards. The arc starts 1.4 metres ahead of you, 1.5 metres in radius, and travels at 8 metres a second for 1.1 seconds, about 9 metres. It strikes each enemy once for 18 damage and 12 stagger and sets it burning for 3 seconds. The skill costs its usual mana.
+**The numbers.** 3 Shards. The arc starts 1.4 metres ahead of you, 1.5 metres in radius, and travels at 8 metres a second for 1.1 seconds, about 9 metres. It strikes each enemy once for 18 damage and 12 stagger and sets it burning for 3 seconds. The skill costs its usual 30 mana.
 
 **Works with.** Cinder and Heat on the cut itself, Catching Fire, and Burn and Detonate on what the arc leaves burning.
 
@@ -102,7 +102,7 @@ The long explanation the chart shows for each high-level mark of the Fire tree (
 **Example.** Roll back from a charging brute: it runs through all four patches to reach you and arrives burning.
 
 ## fire.kiln
-**What it does.** You stand ready in flame. The first blow that reaches you, from any side, red attack or not, is turned for nothing and answered with a pillar of fire under the one who struck. The caught blow counts as a perfect guard, so it gives that mana and sets off every mark that waits on one. If nothing comes, the stance goes out and the mana is lost. A dodge lets it go.
+**What it does.** You stand ready in flame. The first blow that reaches you, from any side, red attack or not, is turned for nothing and answered with a pillar of fire under the one who struck. The caught blow counts as a perfect guard, so it gives that mana and sets off every mark that waits on one. If nothing comes, the stance goes out and the cast is spent: the slot waits all the same. A dodge lets it go.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4), then any blow in the next 1.2 seconds.
 
@@ -157,7 +157,7 @@ The long explanation the chart shows for each high-level mark of the Fire tree (
 **Example.** An archer stands behind two shield-bearers: leap over them and land on it.
 
 ## fire.sunspot
-**What it does.** You brand the enemy you face with a spot of fire. Each light blow you land on it feeds the brand, up to six. A heavy blow sets it off in one burst, bigger for every blow fed, which also lays the branded enemy's own Burn on all it reaches. Left alone, it bursts at half when its time runs out. With no enemy faced the mana is lost.
+**What it does.** You brand the enemy you face with a spot of fire. Each light blow you land on it feeds the brand, up to six. A heavy blow sets it off in one burst, bigger for every blow fed, which also lays the branded enemy's own Burn on all it reaches. Left alone, it bursts at half when its time runs out. With no enemy faced nothing is branded, and the slot waits all the same.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Then light blows feed it and a heavy blow on it sets it off.
 
@@ -168,11 +168,11 @@ The long explanation the chart shows for each high-level mark of the Fire tree (
 **Example.** Brand a brute, land six light blows, then a heavy: its Burn spreads to all near.
 
 ## fire.scorched
-**What it does.** Fire you leave on the ground burns twice as long. While you stand in it, Kindle does not run down and your blows give more mana. The price: your spells cost more.
+**What it does.** Fire you leave on the ground burns twice as long. While you stand in it, Kindle does not run down and your blows give more mana. The price: spells paid in mana cost more.
 
 **When it happens.** Always on once learned. The Kindle and mana gifts hold for as long as you stand in fire you left.
 
-**The numbers.** 6 Shards. Twice as long for every fire you lay on the ground. Standing in it: Kindle's clock stops, and weapon blows give 50% more mana. Every worn spell costs 20% more.
+**The numbers.** 6 Shards. Twice as long for every fire you lay on the ground. Standing in it: Kindle's clock stops, and weapon blows give 50% more mana. Every spell paid in mana (Meteor Leap, the other larger spells, the duo spells) costs 20% more; spells on a cooldown cost no mana and are untouched.
 
 **Works with.** Flame Trail, Meteor Leap's crater, Firebomb Flask, Wildfire, Wildfire Rush, Falling Sun, Kindle, Long Kindle.
 

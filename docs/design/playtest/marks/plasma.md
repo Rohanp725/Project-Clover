@@ -3,15 +3,15 @@
 The long explanation the chart shows for every mark on Plasma, the branch Fire and Lightning share.
 
 ## plasma.embers
-**What it does.** Your blows lay Burn and Static together. Your root mark lays the affliction of the element you hold; this mark adds the other one. A heavy blow on an enemy carrying Static sets the Static off, as Lightning's root would.
+**What it does.** A heavy blow on an enemy carrying Static sets the Static off, as Lightning's root would, whichever of the two is your first element. Your weapon lays only your first element's affliction, so of the two the blows lay only that one: Burn with Fire first, Static with Lightning first, and nothing more once that element's root (Cinder or Static) is learned, since the root lays it already. The other comes from your spells, the charged blade and the R2 strike.
 
-**When it happens.** Every weapon blow that lands lays Burn; every light blow lays Static; a heavy blow or finisher sets the Static off.
+**When it happens.** A heavy blow or finisher on an enemy carrying Static sets it off. Without your first element's root: with Fire first every blow that lands lays a Burn, with Lightning first every light blow lays a Static.
 
-**The numbers.** Mix, 3 Shards. One stack of each a blow. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most a few times a second.
+**The numbers.** Mix, 3 Shards. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most about three times a second. Without the root, one stack a blow.
 
-**Works with.** Cinder or Static, Arc Fire, Twin Break, Meltdown, Chain Reaction, Plasma.
+**Works with.** Thunderclap or Flame Wave in a slot (the other element's affliction), the charged blade and the R2 strike, Arc Fire, Twin Break, Meltdown, Chain Reaction, Plasma, and the Flashover reaction when Burn and Static meet.
 
-**Example.** Holding Fire, five light blows leave a soldier five deep in Burn and five in Static, ready for Twin Break or Meltdown.
+**Example.** Carrying Fire first and Lightning second: your blows burn a soldier, a Thunderclap leaves it Static, and the heavy blow that ends your chain sets the Static off into the pack.
 
 ## plasma.arcfire
 **What it does.** A discharge of Static carries Burn to everyone it reaches. A burn set off leaves Static on everyone it reaches. Each element's burst plants the other.
@@ -95,7 +95,7 @@ The long explanation the chart shows for every mark on Plasma, the branch Fire a
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** Mix, 5 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Reaches 11 metres to the first enemy, then leaps up to 5 metres from one to the next, four enemies in all. 30 damage, 26 stagger and two stacks of your held element's affliction on each.
+**The numbers.** Mix, 5 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Reaches 11 metres to the first enemy, then leaps up to 5 metres from one to the next, four enemies in all. 30 damage, 26 stagger and two stacks of Burn on each, whichever element is first: the branch's spells are made of Fire, and one that lands charges the blade with Fire.
 
 **Works with.** Fused Core (both afflictions on each), Conductor, Ionised Air, Hot Coals.
 
