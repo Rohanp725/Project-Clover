@@ -1,0 +1,8033 @@
+{
+ "move": "stormofleaves",
+ "element": "wind",
+ "weapon": "fan",
+ "duration_s": 2.0,
+ "conventions": "Caster frame, Unity axes: x right, y up, z forward, metres, origin at the caster's feet when the move starts, z along the caster's facing. pos: the piece pivot at its key pose. fwd/up: the piece's own Unity forward (Blender local -Y) and up (Blender local +Z): rotation = casterRotation * LookRotation(fwd, up). scale: base local scale (Unity x, y, z). visible: [appear, vanish] seconds. offset_keys: [time, position added in the caster frame, easing into this key]. scale_keys: [time, multiplier on the base scale (Unity x, y, z), easing]. spin: degrees about axis (caster frame) through the piece pivot, applied before its base rotation. orbit: degrees about the caster-frame up axis through centre (positive turns +z toward +x), applied last. Easings: linear, out = 1-(1-x)^2, in = x^2, inout = smoothstep, outback = overshoot (c = 1.70158), step = jump at the key. Before the first key a channel holds its first value; after the last, its last. verb: the simple motion (fall, rise, sweep along a line, spread rings, spin/orbit, flicker/redraw, drift up and thin, lick/flare, ...). source: the kit FBX and object the piece is (paths under staging/blender/), or the stand-in it stands for.",
+ "caster": [],
+ "pieces": [
+  {
+   "name": "PW_stormofleaves_warfan_god_open",
+   "source": "2026-11-18_godweapons/warfan_god.fbx",
+   "pos": [
+    0.292,
+    1.641,
+    0.739
+   ],
+   "fwd": [
+    -0.0,
+    0.287,
+    0.958
+   ],
+   "up": [
+    0.838,
+    0.523,
+    -0.157
+   ],
+   "scale": [
+    1.5,
+    1.5,
+    1.5
+   ],
+   "inked": false,
+   "verb": "swept open overhead and down (clip)",
+   "note": "the fan swept open overhead and down: the tell is the overhead sweep, 1.2 s held",
+   "visible": [
+    0.0,
+    2.0
+   ]
+  },
+  {
+   "name": "g_enemy_husk.046",
+   "source": "enemy (stand-in, the struck enemy)",
+   "pos": [
+    -0.6,
+    0.0,
+    4.5
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "pushed back 2 m, flinching",
+   "note": "every enemy in the cone pushed back 2 m; thirty small cuts shared (2 each)",
+   "visible": [
+    0.0,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.535,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.335,
+     [
+      0.0,
+      0.0,
+      2.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "keys": [
+     [
+      0.535,
+      0.0,
+      "linear"
+     ],
+     [
+      0.735,
+      -12.0,
+      "out"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_enemy_husk.047",
+   "source": "enemy (stand-in, the struck enemy)",
+   "pos": [
+    0.9,
+    0.0,
+    6.0
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "pushed back 2 m, flinching",
+   "note": "every enemy in the cone pushed back 2 m; thirty small cuts shared (2 each)",
+   "visible": [
+    0.0,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.58,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.38,
+     [
+      0.0,
+      0.0,
+      2.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "keys": [
+     [
+      0.58,
+      0.0,
+      "linear"
+     ],
+     [
+      0.78,
+      -12.0,
+      "out"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_enemy_husk.048",
+   "source": "enemy (stand-in, the struck enemy)",
+   "pos": [
+    -0.3,
+    0.0,
+    7.2
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "pushed back 2 m, flinching",
+   "note": "every enemy in the cone pushed back 2 m; thirty small cuts shared (2 each)",
+   "visible": [
+    0.0,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.616,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.416,
+     [
+      0.0,
+      0.0,
+      2.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "keys": [
+     [
+      0.616,
+      0.0,
+      "linear"
+     ],
+     [
+      0.816,
+      -12.0,
+      "out"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.015",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.212,
+    1.565,
+    6.719
+   ],
+   "fwd": [
+    -0.603,
+    -0.129,
+    0.787
+   ],
+   "up": [
+    0.793,
+    0.01,
+    0.609
+   ],
+   "scale": [
+    4.228,
+    4.228,
+    4.228
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.297,
+    0.868
+   ],
+   "offset_keys": [
+    [
+     0.297,
+     [
+      0.212,
+      -0.265,
+      -5.919
+     ],
+     "linear"
+    ],
+    [
+     0.868,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.089,
+     -0.888,
+     -0.45
+    ],
+    "keys": [
+     [
+      0.297,
+      0.0,
+      "linear"
+     ],
+     [
+      0.868,
+      533.5,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_crescent",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_crescent",
+   "pos": [
+    1.033,
+    0.846,
+    7.3
+   ],
+   "fwd": [
+    -0.157,
+    0.0,
+    -0.988
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "sweep outward and thin",
+   "note": "pale hollow crescents of wind inside the cone",
+   "visible": [
+    0.3,
+    0.7
+   ],
+   "offset_keys": [
+    [
+     0.3,
+     [
+      -0.62,
+      -0.0,
+      -3.9
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.3,
+     [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      1.4,
+      1.0,
+      1.4
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.014",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -2.03,
+    0.277,
+    7.693
+   ],
+   "fwd": [
+    -0.669,
+    0.273,
+    0.691
+   ],
+   "up": [
+    0.401,
+    -0.65,
+    0.646
+   ],
+   "scale": [
+    3.26,
+    3.26,
+    3.26
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.317,
+    0.966
+   ],
+   "offset_keys": [
+    [
+     0.317,
+     [
+      2.03,
+      1.023,
+      -6.893
+     ],
+     "linear"
+    ],
+    [
+     0.966,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.606,
+     0.707,
+     -0.364
+    ],
+    "keys": [
+     [
+      0.317,
+      0.0,
+      "linear"
+     ],
+     [
+      0.966,
+      574.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.016",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.278,
+    0.819,
+    6.536
+   ],
+   "fwd": [
+    -0.974,
+    -0.175,
+    -0.145
+   ],
+   "up": [
+    -0.208,
+    0.429,
+    0.879
+   ],
+   "scale": [
+    4.084,
+    4.084,
+    4.084
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.338,
+    0.79
+   ],
+   "offset_keys": [
+    [
+     0.338,
+     [
+      -1.278,
+      0.481,
+      -5.736
+     ],
+     "linear"
+    ],
+    [
+     0.79,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.801,
+     0.035,
+     -0.598
+    ],
+    "keys": [
+     [
+      0.338,
+      0.0,
+      "linear"
+     ],
+     [
+      0.79,
+      696.5,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.018",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.209,
+    0.453,
+    8.807
+   ],
+   "fwd": [
+    -0.115,
+    0.947,
+    -0.301
+   ],
+   "up": [
+    0.613,
+    0.306,
+    0.728
+   ],
+   "scale": [
+    4.266,
+    4.266,
+    4.266
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.344,
+    0.901
+   ],
+   "offset_keys": [
+    [
+     0.344,
+     [
+      1.209,
+      0.847,
+      -8.007
+     ],
+     "linear"
+    ],
+    [
+     0.901,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.406,
+     -0.353,
+     0.843
+    ],
+    "keys": [
+     [
+      0.344,
+      0.0,
+      "linear"
+     ],
+     [
+      0.901,
+      -682.1,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx2_wind_grass_spell",
+   "source": "2026-11-18_vfx/vfx_wind_kit_v2.fbx:vfx2_wind_grass_spell",
+   "pos": [
+    0.0,
+    0.0,
+    4.0
+   ],
+   "fwd": [
+    -1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": false,
+   "verb": "flatten",
+   "note": "grass flattened in the cone",
+   "visible": [
+    0.35,
+    2.5
+   ],
+   "scale_keys": [
+    [
+     0.35,
+     [
+      1,
+      1.5,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.6,
+     [
+      1,
+      0.3,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.020",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.014,
+    0.619,
+    9.02
+   ],
+   "fwd": [
+    -0.971,
+    -0.16,
+    0.177
+   ],
+   "up": [
+    0.122,
+    0.306,
+    0.944
+   ],
+   "scale": [
+    3.256,
+    3.256,
+    3.256
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.358,
+    0.975
+   ],
+   "offset_keys": [
+    [
+     0.358,
+     [
+      1.014,
+      0.681,
+      -8.22
+     ],
+     "linear"
+    ],
+    [
+     0.975,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.706,
+     0.54,
+     0.459
+    ],
+    "keys": [
+     [
+      0.358,
+      0.0,
+      "linear"
+     ],
+     [
+      0.975,
+      -820.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.017",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.934,
+    0.899,
+    8.663
+   ],
+   "fwd": [
+    0.443,
+    0.593,
+    -0.672
+   ],
+   "up": [
+    -0.264,
+    0.803,
+    0.534
+   ],
+   "scale": [
+    4.018,
+    4.018,
+    4.018
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.37,
+    1.011
+   ],
+   "offset_keys": [
+    [
+     0.37,
+     [
+      -0.934,
+      0.401,
+      -7.863
+     ],
+     "linear"
+    ],
+    [
+     1.011,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.093,
+     -0.939,
+     0.331
+    ],
+    "keys": [
+     [
+      0.37,
+      0.0,
+      "linear"
+     ],
+     [
+      1.011,
+      851.6,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.019",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.295,
+    0.137,
+    6.42
+   ],
+   "fwd": [
+    -1.0,
+    0.0,
+    0.03
+   ],
+   "up": [
+    -0.03,
+    -0.1,
+    -0.995
+   ],
+   "scale": [
+    3.664,
+    3.664,
+    3.664
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.372,
+    0.93
+   ],
+   "offset_keys": [
+    [
+     0.372,
+     [
+      0.295,
+      1.163,
+      -5.62
+     ],
+     "linear"
+    ],
+    [
+     0.93,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.28,
+     -0.96,
+     -0.015
+    ],
+    "keys": [
+     [
+      0.372,
+      0.0,
+      "linear"
+     ],
+     [
+      0.93,
+      -637.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.021",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.89,
+    1.329,
+    7.847
+   ],
+   "fwd": [
+    0.061,
+    0.726,
+    0.685
+   ],
+   "up": [
+    0.761,
+    -0.478,
+    0.439
+   ],
+   "scale": [
+    3.465,
+    3.465,
+    3.465
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.4,
+    0.883
+   ],
+   "offset_keys": [
+    [
+     0.4,
+     [
+      1.89,
+      -0.029,
+      -7.047
+     ],
+     "linear"
+    ],
+    [
+     0.883,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.462,
+     -0.431,
+     -0.775
+    ],
+    "keys": [
+     [
+      0.4,
+      0.0,
+      "linear"
+     ],
+     [
+      0.883,
+      -532.7,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_dust.015",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_dust",
+   "pos": [
+    0.811,
+    0.0,
+    1.69
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    0.6,
+    1.0
+   ],
+   "inked": false,
+   "verb": "stream low and outward",
+   "note": "dust low along the floor",
+   "visible": [
+    0.413,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.413,
+     [
+      0.0,
+      -0.0,
+      -1.2
+     ],
+     "linear"
+    ],
+    [
+     2.0,
+     [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.413,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.713,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.024",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.484,
+    0.533,
+    6.637
+   ],
+   "fwd": [
+    0.66,
+    -0.662,
+    -0.355
+   ],
+   "up": [
+    -0.75,
+    -0.601,
+    -0.276
+   ],
+   "scale": [
+    3.396,
+    3.396,
+    3.396
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.422,
+    1.01
+   ],
+   "offset_keys": [
+    [
+     0.422,
+     [
+      0.484,
+      0.767,
+      -5.837
+     ],
+     "linear"
+    ],
+    [
+     1.01,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.917,
+     0.033,
+     -0.398
+    ],
+    "keys": [
+     [
+      0.422,
+      0.0,
+      "linear"
+     ],
+     [
+      1.01,
+      -834.7,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_crescent.001",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_crescent",
+   "pos": [
+    0.46,
+    0.793,
+    7.448
+   ],
+   "fwd": [
+    -0.069,
+    0.0,
+    -0.998
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "sweep outward and thin",
+   "note": "pale hollow crescents of wind inside the cone",
+   "visible": [
+    0.43,
+    0.83
+   ],
+   "offset_keys": [
+    [
+     0.43,
+     [
+      -0.276,
+      -0.0,
+      -3.989
+     ],
+     "linear"
+    ],
+    [
+     0.83,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.43,
+     [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "linear"
+    ],
+    [
+     0.83,
+     [
+      1.4,
+      1.0,
+      1.4
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.022",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.29,
+    1.587,
+    8.168
+   ],
+   "fwd": [
+    0.883,
+    -0.343,
+    -0.321
+   ],
+   "up": [
+    -0.422,
+    -0.28,
+    -0.862
+   ],
+   "scale": [
+    4.452,
+    4.452,
+    4.452
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.431,
+    1.075
+   ],
+   "offset_keys": [
+    [
+     0.431,
+     [
+      1.29,
+      -0.287,
+      -7.368
+     ],
+     "linear"
+    ],
+    [
+     1.075,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.855,
+     -0.495,
+     -0.157
+    ],
+    "keys": [
+     [
+      0.431,
+      0.0,
+      "linear"
+     ],
+     [
+      1.075,
+      500.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.023",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.292,
+    0.146,
+    8.733
+   ],
+   "fwd": [
+    0.062,
+    0.548,
+    0.834
+   ],
+   "up": [
+    -0.905,
+    -0.321,
+    0.279
+   ],
+   "scale": [
+    3.038,
+    3.038,
+    3.038
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.431,
+    1.046
+   ],
+   "offset_keys": [
+    [
+     0.431,
+     [
+      1.292,
+      1.154,
+      -7.933
+     ],
+     "linear"
+    ],
+    [
+     1.046,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.676,
+     -0.736,
+     0.04
+    ],
+    "keys": [
+     [
+      0.431,
+      0.0,
+      "linear"
+     ],
+     [
+      1.046,
+      650.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.026",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.726,
+    0.676,
+    8.238
+   ],
+   "fwd": [
+    -0.869,
+    -0.484,
+    -0.104
+   ],
+   "up": [
+    -0.368,
+    0.771,
+    -0.52
+   ],
+   "scale": [
+    4.273,
+    4.273,
+    4.273
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.453,
+    0.965
+   ],
+   "offset_keys": [
+    [
+     0.453,
+     [
+      -0.726,
+      0.624,
+      -7.438
+     ],
+     "linear"
+    ],
+    [
+     0.965,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.426,
+     0.705,
+     -0.566
+    ],
+    "keys": [
+     [
+      0.453,
+      0.0,
+      "linear"
+     ],
+     [
+      0.965,
+      624.6,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.027",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.767,
+    0.533,
+    7.718
+   ],
+   "fwd": [
+    0.562,
+    -0.212,
+    0.8
+   ],
+   "up": [
+    0.791,
+    0.421,
+    -0.444
+   ],
+   "scale": [
+    4.439,
+    4.439,
+    4.439
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.454,
+    0.908
+   ],
+   "offset_keys": [
+    [
+     0.454,
+     [
+      0.767,
+      0.767,
+      -6.919
+     ],
+     "linear"
+    ],
+    [
+     0.908,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.692,
+     -0.46,
+     -0.557
+    ],
+    "keys": [
+     [
+      0.454,
+      0.0,
+      "linear"
+     ],
+     [
+      0.908,
+      571.5,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.025",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.227,
+    0.38,
+    7.898
+   ],
+   "fwd": [
+    0.332,
+    0.919,
+    0.215
+   ],
+   "up": [
+    0.782,
+    -0.14,
+    -0.607
+   ],
+   "scale": [
+    4.296,
+    4.296,
+    4.296
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.47,
+    0.933
+   ],
+   "offset_keys": [
+    [
+     0.47,
+     [
+      1.227,
+      0.92,
+      -7.098
+     ],
+     "linear"
+    ],
+    [
+     0.933,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.24,
+     -0.01,
+     -0.971
+    ],
+    "keys": [
+     [
+      0.47,
+      0.0,
+      "linear"
+     ],
+     [
+      0.933,
+      -650.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_dust.014",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_dust",
+   "pos": [
+    0.48,
+    0.0,
+    3.83
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    0.6,
+    1.0
+   ],
+   "inked": false,
+   "verb": "stream low and outward",
+   "note": "dust low along the floor",
+   "visible": [
+    0.494,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.494,
+     [
+      0.0,
+      -0.0,
+      -1.2
+     ],
+     "linear"
+    ],
+    [
+     2.0,
+     [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.494,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.794,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_dust.011",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_dust",
+   "pos": [
+    1.176,
+    0.0,
+    4.007
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    0.6,
+    1.0
+   ],
+   "inked": false,
+   "verb": "stream low and outward",
+   "note": "dust low along the floor",
+   "visible": [
+    0.5,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      0.0,
+      -0.0,
+      -1.2
+     ],
+     "linear"
+    ],
+    [
+     2.0,
+     [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.5,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.8,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.028",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.386,
+    1.503,
+    8.909
+   ],
+   "fwd": [
+    0.942,
+    -0.292,
+    -0.164
+   ],
+   "up": [
+    -0.215,
+    -0.153,
+    -0.964
+   ],
+   "scale": [
+    3.819,
+    3.819,
+    3.819
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.513,
+    1.038
+   ],
+   "offset_keys": [
+    [
+     0.513,
+     [
+      0.386,
+      -0.203,
+      -8.109
+     ],
+     "linear"
+    ],
+    [
+     1.038,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.253,
+     -0.964,
+     0.087
+    ],
+    "keys": [
+     [
+      0.513,
+      0.0,
+      "linear"
+     ],
+     [
+      1.038,
+      -889.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_dust.010",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_dust",
+   "pos": [
+    0.011,
+    0.0,
+    4.504
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    0.6,
+    1.0
+   ],
+   "inked": false,
+   "verb": "stream low and outward",
+   "note": "dust low along the floor",
+   "visible": [
+    0.519,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.519,
+     [
+      0.0,
+      -0.0,
+      -1.2
+     ],
+     "linear"
+    ],
+    [
+     2.0,
+     [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.519,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.819,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.030",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.476,
+    1.53,
+    6.532
+   ],
+   "fwd": [
+    -0.924,
+    -0.13,
+    -0.359
+   ],
+   "up": [
+    0.355,
+    0.054,
+    -0.933
+   ],
+   "scale": [
+    3.527,
+    3.527,
+    3.527
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.519,
+    1.075
+   ],
+   "offset_keys": [
+    [
+     0.519,
+     [
+      0.476,
+      -0.23,
+      -5.732
+     ],
+     "linear"
+    ],
+    [
+     1.075,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.181,
+     0.638,
+     -0.749
+    ],
+    "keys": [
+     [
+      0.519,
+      0.0,
+      "linear"
+     ],
+     [
+      1.075,
+      763.4,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.031",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.524,
+    0.171,
+    7.051
+   ],
+   "fwd": [
+    -0.23,
+    -0.053,
+    -0.972
+   ],
+   "up": [
+    -0.681,
+    -0.705,
+    0.2
+   ],
+   "scale": [
+    4.056,
+    4.056,
+    4.056
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.52,
+    0.973
+   ],
+   "offset_keys": [
+    [
+     0.52,
+     [
+      1.524,
+      1.129,
+      -6.251
+     ],
+     "linear"
+    ],
+    [
+     0.973,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.09,
+     -0.252,
+     -0.963
+    ],
+    "keys": [
+     [
+      0.52,
+      0.0,
+      "linear"
+     ],
+     [
+      0.973,
+      830.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.029",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.138,
+    1.17,
+    6.942
+   ],
+   "fwd": [
+    -0.83,
+    0.352,
+    -0.433
+   ],
+   "up": [
+    0.38,
+    -0.213,
+    -0.9
+   ],
+   "scale": [
+    3.414,
+    3.414,
+    3.414
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.526,
+    1.117
+   ],
+   "offset_keys": [
+    [
+     0.526,
+     [
+      -0.138,
+      0.13,
+      -6.142
+     ],
+     "linear"
+    ],
+    [
+     1.117,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.844,
+     0.446,
+     -0.298
+    ],
+    "keys": [
+     [
+      0.526,
+      0.0,
+      "linear"
+     ],
+     [
+      1.117,
+      -711.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.032",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.474,
+    0.339,
+    7.429
+   ],
+   "fwd": [
+    -0.504,
+    0.857,
+    -0.105
+   ],
+   "up": [
+    0.86,
+    0.488,
+    -0.148
+   ],
+   "scale": [
+    3.28,
+    3.28,
+    3.28
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.527,
+    1.062
+   ],
+   "offset_keys": [
+    [
+     0.527,
+     [
+      -1.474,
+      0.961,
+      -6.629
+     ],
+     "linear"
+    ],
+    [
+     1.062,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.419,
+     0.21,
+     -0.884
+    ],
+    "keys": [
+     [
+      0.527,
+      0.0,
+      "linear"
+     ],
+     [
+      1.062,
+      -725.3,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx2_wind_pinned_affliction",
+   "source": "2026-11-18_vfx/vfx_wind_kit_v2.fbx:vfx2_wind_pinned_affliction",
+   "pos": [
+    -0.6,
+    0.5,
+    4.5
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "stream (cloth and leaves pinned)",
+   "note": "leaves pinned and strips streaming on the struck",
+   "visible": [
+    0.535,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.535,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.335,
+     [
+      0.0,
+      0.0,
+      2.0
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_dust.017",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_dust",
+   "pos": [
+    -1.154,
+    0.0,
+    5.014
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    0.6,
+    1.0
+   ],
+   "inked": false,
+   "verb": "stream low and outward",
+   "note": "dust low along the floor",
+   "visible": [
+    0.538,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.538,
+     [
+      0.0,
+      -0.0,
+      -1.2
+     ],
+     "linear"
+    ],
+    [
+     2.0,
+     [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.538,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.838,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.033",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.029,
+    0.926,
+    6.727
+   ],
+   "fwd": [
+    0.506,
+    0.73,
+    0.459
+   ],
+   "up": [
+    0.335,
+    0.323,
+    -0.885
+   ],
+   "scale": [
+    4.498,
+    4.498,
+    4.498
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.545,
+    1.073
+   ],
+   "offset_keys": [
+    [
+     0.545,
+     [
+      1.029,
+      0.374,
+      -5.927
+     ],
+     "linear"
+    ],
+    [
+     1.073,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.248,
+     -0.959,
+     0.138
+    ],
+    "keys": [
+     [
+      0.545,
+      0.0,
+      "linear"
+     ],
+     [
+      1.073,
+      -636.3,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_crescent.002",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_crescent",
+   "pos": [
+    0.615,
+    1.372,
+    4.073
+   ],
+   "fwd": [
+    -0.185,
+    0.0,
+    -0.983
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "sweep outward and thin",
+   "note": "pale hollow crescents of wind inside the cone",
+   "visible": [
+    0.56,
+    0.96
+   ],
+   "offset_keys": [
+    [
+     0.56,
+     [
+      -0.369,
+      -0.0,
+      -1.964
+     ],
+     "linear"
+    ],
+    [
+     0.96,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.56,
+     [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "linear"
+    ],
+    [
+     0.96,
+     [
+      1.4,
+      1.0,
+      1.4
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.034",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.809,
+    1.074,
+    7.96
+   ],
+   "fwd": [
+    0.758,
+    0.44,
+    -0.48
+   ],
+   "up": [
+    -0.494,
+    -0.093,
+    -0.865
+   ],
+   "scale": [
+    4.0,
+    4.0,
+    4.0
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.574,
+    1.112
+   ],
+   "offset_keys": [
+    [
+     0.574,
+     [
+      -1.809,
+      0.226,
+      -7.16
+     ],
+     "linear"
+    ],
+    [
+     1.112,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.822,
+     -0.17,
+     0.543
+    ],
+    "keys": [
+     [
+      0.574,
+      0.0,
+      "linear"
+     ],
+     [
+      1.112,
+      783.5,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx2_wind_pinned_affliction.001",
+   "source": "2026-11-18_vfx/vfx_wind_kit_v2.fbx:vfx2_wind_pinned_affliction",
+   "pos": [
+    0.9,
+    0.5,
+    6.0
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "stream (cloth and leaves pinned)",
+   "note": "leaves pinned and strips streaming on the struck",
+   "visible": [
+    0.58,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.58,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.38,
+     [
+      0.0,
+      0.0,
+      2.0
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.036",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.617,
+    0.313,
+    8.02
+   ],
+   "fwd": [
+    0.616,
+    -0.489,
+    0.618
+   ],
+   "up": [
+    -0.297,
+    0.582,
+    0.757
+   ],
+   "scale": [
+    3.73,
+    3.73,
+    3.73
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.581,
+    1.121
+   ],
+   "offset_keys": [
+    [
+     0.581,
+     [
+      -0.617,
+      0.987,
+      -7.22
+     ],
+     "linear"
+    ],
+    [
+     1.121,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.896,
+     -0.395,
+     -0.203
+    ],
+    "keys": [
+     [
+      0.581,
+      0.0,
+      "linear"
+     ],
+     [
+      1.121,
+      -749.4,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.037",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.7,
+    1.319,
+    9.024
+   ],
+   "fwd": [
+    0.744,
+    -0.318,
+    0.587
+   ],
+   "up": [
+    -0.645,
+    -0.569,
+    0.51
+   ],
+   "scale": [
+    4.25,
+    4.25,
+    4.25
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.59,
+    1.158
+   ],
+   "offset_keys": [
+    [
+     0.59,
+     [
+      1.7,
+      -0.019,
+      -8.224
+     ],
+     "linear"
+    ],
+    [
+     1.158,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.392,
+     0.462,
+     -0.796
+    ],
+    "keys": [
+     [
+      0.59,
+      0.0,
+      "linear"
+     ],
+     [
+      1.158,
+      858.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.038",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.623,
+    0.624,
+    8.461
+   ],
+   "fwd": [
+    0.264,
+    -0.318,
+    0.911
+   ],
+   "up": [
+    0.73,
+    0.683,
+    0.027
+   ],
+   "scale": [
+    3.611,
+    3.611,
+    3.611
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.602,
+    1.177
+   ],
+   "offset_keys": [
+    [
+     0.602,
+     [
+      -0.623,
+      0.676,
+      -7.661
+     ],
+     "linear"
+    ],
+    [
+     1.177,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.403,
+     -0.606,
+     0.686
+    ],
+    "keys": [
+     [
+      0.602,
+      0.0,
+      "linear"
+     ],
+     [
+      1.177,
+      859.7,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.035",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    2.128,
+    1.42,
+    7.86
+   ],
+   "fwd": [
+    -0.4,
+    0.041,
+    0.916
+   ],
+   "up": [
+    0.911,
+    -0.096,
+    0.402
+   ],
+   "scale": [
+    3.092,
+    3.092,
+    3.092
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.606,
+    1.14
+   ],
+   "offset_keys": [
+    [
+     0.606,
+     [
+      -2.128,
+      -0.12,
+      -7.06
+     ],
+     "linear"
+    ],
+    [
+     1.14,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.581,
+     0.812,
+     -0.05
+    ],
+    "keys": [
+     [
+      0.606,
+      0.0,
+      "linear"
+     ],
+     [
+      1.14,
+      509.4,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx2_wind_pinned_affliction.002",
+   "source": "2026-11-18_vfx/vfx_wind_kit_v2.fbx:vfx2_wind_pinned_affliction",
+   "pos": [
+    -0.3,
+    0.5,
+    7.2
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "stream (cloth and leaves pinned)",
+   "note": "leaves pinned and strips streaming on the struck",
+   "visible": [
+    0.616,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.616,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.416,
+     [
+      0.0,
+      0.0,
+      2.0
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_dust.013",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_dust",
+   "pos": [
+    1.156,
+    0.0,
+    7.145
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    0.6,
+    1.0
+   ],
+   "inked": false,
+   "verb": "stream low and outward",
+   "note": "dust low along the floor",
+   "visible": [
+    0.618,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.618,
+     [
+      0.0,
+      -0.0,
+      -1.2
+     ],
+     "linear"
+    ],
+    [
+     2.0,
+     [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.618,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.918,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_dust.016",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_dust",
+   "pos": [
+    -0.794,
+    0.0,
+    7.16
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    0.6,
+    1.0
+   ],
+   "inked": false,
+   "verb": "stream low and outward",
+   "note": "dust low along the floor",
+   "visible": [
+    0.619,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.619,
+     [
+      0.0,
+      -0.0,
+      -1.2
+     ],
+     "linear"
+    ],
+    [
+     2.0,
+     [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.619,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.919,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_dust.012",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_dust",
+   "pos": [
+    1.221,
+    0.0,
+    7.386
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    0.6,
+    1.0
+   ],
+   "inked": false,
+   "verb": "stream low and outward",
+   "note": "dust low along the floor",
+   "visible": [
+    0.627,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.627,
+     [
+      0.0,
+      -0.0,
+      -1.2
+     ],
+     "linear"
+    ],
+    [
+     2.0,
+     [
+      0.0,
+      0.0,
+      1.5
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.627,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.927,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.039",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.544,
+    1.372,
+    6.497
+   ],
+   "fwd": [
+    -0.255,
+    0.853,
+    -0.454
+   ],
+   "up": [
+    0.305,
+    0.517,
+    0.8
+   ],
+   "scale": [
+    3.177,
+    3.177,
+    3.177
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.628,
+    1.101
+   ],
+   "offset_keys": [
+    [
+     0.628,
+     [
+      -1.544,
+      -0.072,
+      -5.697
+     ],
+     "linear"
+    ],
+    [
+     1.101,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.098,
+     0.591,
+     -0.801
+    ],
+    "keys": [
+     [
+      0.628,
+      0.0,
+      "linear"
+     ],
+     [
+      1.101,
+      -782.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.041",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.422,
+    1.422,
+    9.122
+   ],
+   "fwd": [
+    -0.786,
+    0.268,
+    0.558
+   ],
+   "up": [
+    0.178,
+    -0.766,
+    0.618
+   ],
+   "scale": [
+    3.948,
+    3.948,
+    3.948
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.649,
+    1.105
+   ],
+   "offset_keys": [
+    [
+     0.649,
+     [
+      -1.422,
+      -0.122,
+      -8.322
+     ],
+     "linear"
+    ],
+    [
+     1.105,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.613,
+     -0.502,
+     0.61
+    ],
+    "keys": [
+     [
+      0.649,
+      0.0,
+      "linear"
+     ],
+     [
+      1.105,
+      -642.7,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.040",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.873,
+    0.827,
+    7.871
+   ],
+   "fwd": [
+    0.682,
+    0.44,
+    -0.584
+   ],
+   "up": [
+    0.617,
+    0.083,
+    0.783
+   ],
+   "scale": [
+    3.469,
+    3.469,
+    3.469
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.658,
+    1.109
+   ],
+   "offset_keys": [
+    [
+     0.658,
+     [
+      0.873,
+      0.473,
+      -7.071
+     ],
+     "linear"
+    ],
+    [
+     1.109,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.437,
+     -0.505,
+     -0.745
+    ],
+    "keys": [
+     [
+      0.658,
+      0.0,
+      "linear"
+     ],
+     [
+      1.109,
+      608.6,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.043",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.776,
+    0.7,
+    6.353
+   ],
+   "fwd": [
+    0.857,
+    -0.166,
+    0.488
+   ],
+   "up": [
+    0.499,
+    0.506,
+    -0.704
+   ],
+   "scale": [
+    3.933,
+    3.933,
+    3.933
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.686,
+    1.265
+   ],
+   "offset_keys": [
+    [
+     0.686,
+     [
+      -0.776,
+      0.6,
+      -5.553
+     ],
+     "linear"
+    ],
+    [
+     1.265,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.672,
+     -0.401,
+     -0.623
+    ],
+    "keys": [
+     [
+      0.686,
+      0.0,
+      "linear"
+     ],
+     [
+      1.265,
+      737.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.044",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.028,
+    0.303,
+    7.929
+   ],
+   "fwd": [
+    0.331,
+    0.356,
+    0.874
+   ],
+   "up": [
+    -0.08,
+    -0.912,
+    0.402
+   ],
+   "scale": [
+    3.809,
+    3.809,
+    3.809
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.687,
+    1.192
+   ],
+   "offset_keys": [
+    [
+     0.687,
+     [
+      -1.028,
+      0.997,
+      -7.129
+     ],
+     "linear"
+    ],
+    [
+     1.192,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.406,
+     -0.736,
+     0.541
+    ],
+    "keys": [
+     [
+      0.687,
+      0.0,
+      "linear"
+     ],
+     [
+      1.192,
+      -637.7,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_crescent.003",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_crescent",
+   "pos": [
+    -1.197,
+    0.378,
+    7.27
+   ],
+   "fwd": [
+    0.182,
+    0.0,
+    -0.983
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "sweep outward and thin",
+   "note": "pale hollow crescents of wind inside the cone",
+   "visible": [
+    0.69,
+    1.09
+   ],
+   "offset_keys": [
+    [
+     0.69,
+     [
+      0.718,
+      -0.0,
+      -3.882
+     ],
+     "linear"
+    ],
+    [
+     1.09,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.69,
+     [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "linear"
+    ],
+    [
+     1.09,
+     [
+      1.4,
+      1.0,
+      1.4
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.045",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -2.183,
+    0.415,
+    8.433
+   ],
+   "fwd": [
+    0.271,
+    -0.105,
+    0.957
+   ],
+   "up": [
+    -0.883,
+    -0.424,
+    0.204
+   ],
+   "scale": [
+    4.351,
+    4.351,
+    4.351
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.692,
+    1.165
+   ],
+   "offset_keys": [
+    [
+     0.692,
+     [
+      2.183,
+      0.885,
+      -7.633
+     ],
+     "linear"
+    ],
+    [
+     1.165,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.106,
+     0.156,
+     -0.982
+    ],
+    "keys": [
+     [
+      0.692,
+      0.0,
+      "linear"
+     ],
+     [
+      1.165,
+      -780.3,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.042",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.474,
+    1.159,
+    8.051
+   ],
+   "fwd": [
+    0.956,
+    0.289,
+    -0.055
+   ],
+   "up": [
+    0.267,
+    -0.774,
+    0.575
+   ],
+   "scale": [
+    4.261,
+    4.261,
+    4.261
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.694,
+    1.308
+   ],
+   "offset_keys": [
+    [
+     0.694,
+     [
+      -1.474,
+      0.141,
+      -7.251
+     ],
+     "linear"
+    ],
+    [
+     1.308,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.85,
+     -0.409,
+     -0.33
+    ],
+    "keys": [
+     [
+      0.694,
+      0.0,
+      "linear"
+     ],
+     [
+      1.308,
+      509.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.046",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.27,
+    0.603,
+    6.188
+   ],
+   "fwd": [
+    0.35,
+    0.818,
+    -0.457
+   ],
+   "up": [
+    0.846,
+    -0.485,
+    -0.221
+   ],
+   "scale": [
+    3.466,
+    3.466,
+    3.466
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.722,
+    1.299
+   ],
+   "offset_keys": [
+    [
+     0.722,
+     [
+      -1.27,
+      0.697,
+      -5.388
+     ],
+     "linear"
+    ],
+    [
+     1.299,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.478,
+     0.455,
+     0.752
+    ],
+    "keys": [
+     [
+      0.722,
+      0.0,
+      "linear"
+     ],
+     [
+      1.299,
+      747.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.047",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.528,
+    0.873,
+    7.705
+   ],
+   "fwd": [
+    -0.978,
+    0.021,
+    -0.208
+   ],
+   "up": [
+    0.202,
+    -0.149,
+    -0.968
+   ],
+   "scale": [
+    4.133,
+    4.133,
+    4.133
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.735,
+    1.257
+   ],
+   "offset_keys": [
+    [
+     0.735,
+     [
+      1.528,
+      0.427,
+      -6.905
+     ],
+     "linear"
+    ],
+    [
+     1.257,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.666,
+     -0.648,
+     0.369
+    ],
+    "keys": [
+     [
+      0.735,
+      0.0,
+      "linear"
+     ],
+     [
+      1.257,
+      831.5,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.049",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.623,
+    0.448,
+    6.469
+   ],
+   "fwd": [
+    0.453,
+    0.76,
+    -0.466
+   ],
+   "up": [
+    0.311,
+    0.355,
+    0.882
+   ],
+   "scale": [
+    3.814,
+    3.814,
+    3.814
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.776,
+    1.421
+   ],
+   "offset_keys": [
+    [
+     0.776,
+     [
+      -0.623,
+      0.852,
+      -5.669
+     ],
+     "linear"
+    ],
+    [
+     1.421,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.77,
+     0.638,
+     0.011
+    ],
+    "keys": [
+     [
+      0.776,
+      0.0,
+      "linear"
+     ],
+     [
+      1.421,
+      -662.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.048",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.432,
+    0.133,
+    8.918
+   ],
+   "fwd": [
+    0.089,
+    -0.446,
+    -0.891
+   ],
+   "up": [
+    -0.903,
+    -0.414,
+    0.117
+   ],
+   "scale": [
+    3.722,
+    3.722,
+    3.722
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.786,
+    1.244
+   ],
+   "offset_keys": [
+    [
+     0.786,
+     [
+      0.432,
+      1.167,
+      -8.118
+     ],
+     "linear"
+    ],
+    [
+     1.244,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.22,
+     0.639,
+     0.737
+    ],
+    "keys": [
+     [
+      0.786,
+      0.0,
+      "linear"
+     ],
+     [
+      1.244,
+      -767.3,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.051",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.023,
+    0.702,
+    8.642
+   ],
+   "fwd": [
+    0.098,
+    0.568,
+    0.817
+   ],
+   "up": [
+    -0.582,
+    -0.634,
+    0.51
+   ],
+   "scale": [
+    4.158,
+    4.158,
+    4.158
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.798,
+    1.443
+   ],
+   "offset_keys": [
+    [
+     0.798,
+     [
+      -1.023,
+      0.598,
+      -7.842
+     ],
+     "linear"
+    ],
+    [
+     1.443,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.867,
+     -0.437,
+     0.238
+    ],
+    "keys": [
+     [
+      0.798,
+      0.0,
+      "linear"
+     ],
+     [
+      1.443,
+      -865.5,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.050",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    2.243,
+    0.26,
+    8.181
+   ],
+   "fwd": [
+    -0.519,
+    -0.853,
+    0.057
+   ],
+   "up": [
+    0.847,
+    -0.522,
+    -0.096
+   ],
+   "scale": [
+    3.962,
+    3.962,
+    3.962
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.812,
+    1.412
+   ],
+   "offset_keys": [
+    [
+     0.812,
+     [
+      -2.243,
+      1.04,
+      -7.381
+     ],
+     "linear"
+    ],
+    [
+     1.412,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.233,
+     0.721,
+     -0.652
+    ],
+    "keys": [
+     [
+      0.812,
+      0.0,
+      "linear"
+     ],
+     [
+      1.412,
+      876.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.053",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.226,
+    0.701,
+    8.19
+   ],
+   "fwd": [
+    0.882,
+    0.442,
+    0.165
+   ],
+   "up": [
+    0.234,
+    -0.105,
+    -0.967
+   ],
+   "scale": [
+    4.326,
+    4.326,
+    4.326
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.817,
+    1.397
+   ],
+   "offset_keys": [
+    [
+     0.817,
+     [
+      0.226,
+      0.599,
+      -7.39
+     ],
+     "linear"
+    ],
+    [
+     1.397,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.346,
+     0.092,
+     -0.934
+    ],
+    "keys": [
+     [
+      0.817,
+      0.0,
+      "linear"
+     ],
+     [
+      1.397,
+      -718.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.052",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.317,
+    1.278,
+    7.427
+   ],
+   "fwd": [
+    0.41,
+    0.372,
+    0.833
+   ],
+   "up": [
+    0.824,
+    0.24,
+    -0.513
+   ],
+   "scale": [
+    4.375,
+    4.375,
+    4.375
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.818,
+    1.403
+   ],
+   "offset_keys": [
+    [
+     0.818,
+     [
+      -1.317,
+      0.022,
+      -6.627
+     ],
+     "linear"
+    ],
+    [
+     1.403,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.532,
+     -0.648,
+     -0.545
+    ],
+    "keys": [
+     [
+      0.818,
+      0.0,
+      "linear"
+     ],
+     [
+      1.403,
+      -626.6,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_crescent.004",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_crescent",
+   "pos": [
+    -1.001,
+    1.145,
+    7.427
+   ],
+   "fwd": [
+    0.149,
+    0.0,
+    -0.989
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "sweep outward and thin",
+   "note": "pale hollow crescents of wind inside the cone",
+   "visible": [
+    0.82,
+    1.22
+   ],
+   "offset_keys": [
+    [
+     0.82,
+     [
+      0.601,
+      -0.0,
+      -3.976
+     ],
+     "linear"
+    ],
+    [
+     1.22,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.82,
+     [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "linear"
+    ],
+    [
+     1.22,
+     [
+      1.4,
+      1.0,
+      1.4
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.054",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.016,
+    0.235,
+    6.377
+   ],
+   "fwd": [
+    -0.444,
+    0.678,
+    0.586
+   ],
+   "up": [
+    -0.633,
+    0.225,
+    -0.74
+   ],
+   "scale": [
+    3.385,
+    3.385,
+    3.385
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.829,
+    1.433
+   ],
+   "offset_keys": [
+    [
+     0.829,
+     [
+      -0.016,
+      1.065,
+      -5.577
+     ],
+     "linear"
+    ],
+    [
+     1.433,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.978,
+     0.101,
+     0.18
+    ],
+    "keys": [
+     [
+      0.829,
+      0.0,
+      "linear"
+     ],
+     [
+      1.433,
+      873.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.055",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.619,
+    1.405,
+    8.33
+   ],
+   "fwd": [
+    -0.172,
+    -0.508,
+    -0.844
+   ],
+   "up": [
+    0.985,
+    -0.112,
+    -0.134
+   ],
+   "scale": [
+    4.233,
+    4.233,
+    4.233
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.835,
+    1.395
+   ],
+   "offset_keys": [
+    [
+     0.835,
+     [
+      -1.619,
+      -0.105,
+      -7.53
+     ],
+     "linear"
+    ],
+    [
+     1.395,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.005,
+     0.691,
+     0.723
+    ],
+    "keys": [
+     [
+      0.835,
+      0.0,
+      "linear"
+     ],
+     [
+      1.395,
+      -507.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.056",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.806,
+    0.445,
+    6.666
+   ],
+   "fwd": [
+    -0.827,
+    0.116,
+    -0.55
+   ],
+   "up": [
+    0.537,
+    -0.126,
+    -0.834
+   ],
+   "scale": [
+    3.219,
+    3.219,
+    3.219
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.871,
+    1.516
+   ],
+   "offset_keys": [
+    [
+     0.871,
+     [
+      0.806,
+      0.855,
+      -5.866
+     ],
+     "linear"
+    ],
+    [
+     1.516,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.939,
+     -0.06,
+     -0.338
+    ],
+    "keys": [
+     [
+      0.871,
+      0.0,
+      "linear"
+     ],
+     [
+      1.516,
+      762.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.057",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.937,
+    0.378,
+    7.577
+   ],
+   "fwd": [
+    0.445,
+    -0.064,
+    -0.893
+   ],
+   "up": [
+    0.886,
+    0.174,
+    0.43
+   ],
+   "scale": [
+    3.195,
+    3.195,
+    3.195
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.9,
+    1.361
+   ],
+   "offset_keys": [
+    [
+     0.9,
+     [
+      -0.937,
+      0.922,
+      -6.777
+     ],
+     "linear"
+    ],
+    [
+     1.361,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.785,
+     0.603,
+     -0.141
+    ],
+    "keys": [
+     [
+      0.9,
+      0.0,
+      "linear"
+     ],
+     [
+      1.361,
+      669.4,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.058",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.356,
+    0.937,
+    6.684
+   ],
+   "fwd": [
+    0.825,
+    -0.402,
+    -0.397
+   ],
+   "up": [
+    0.44,
+    0.898,
+    0.004
+   ],
+   "scale": [
+    3.612,
+    3.612,
+    3.612
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.901,
+    1.375
+   ],
+   "offset_keys": [
+    [
+     0.901,
+     [
+      -1.356,
+      0.363,
+      -5.884
+     ],
+     "linear"
+    ],
+    [
+     1.375,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.2,
+     -0.902,
+     0.383
+    ],
+    "keys": [
+     [
+      0.901,
+      0.0,
+      "linear"
+     ],
+     [
+      1.375,
+      -817.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.060",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.41,
+    0.687,
+    8.324
+   ],
+   "fwd": [
+    0.339,
+    -0.107,
+    0.935
+   ],
+   "up": [
+    -0.892,
+    0.279,
+    0.356
+   ],
+   "scale": [
+    4.297,
+    4.297,
+    4.297
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.901,
+    1.361
+   ],
+   "offset_keys": [
+    [
+     0.901,
+     [
+      -0.41,
+      0.613,
+      -7.524
+     ],
+     "linear"
+    ],
+    [
+     1.361,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.849,
+     -0.496,
+     -0.184
+    ],
+    "keys": [
+     [
+      0.901,
+      0.0,
+      "linear"
+     ],
+     [
+      1.361,
+      -684.7,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.059",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.663,
+    0.565,
+    7.008
+   ],
+   "fwd": [
+    -0.031,
+    -0.816,
+    0.577
+   ],
+   "up": [
+    -0.9,
+    0.274,
+    0.339
+   ],
+   "scale": [
+    3.05,
+    3.05,
+    3.05
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.922,
+    1.459
+   ],
+   "offset_keys": [
+    [
+     0.922,
+     [
+      0.663,
+      0.735,
+      -6.208
+     ],
+     "linear"
+    ],
+    [
+     1.459,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.163,
+     -0.045,
+     -0.986
+    ],
+    "keys": [
+     [
+      0.922,
+      0.0,
+      "linear"
+     ],
+     [
+      1.459,
+      886.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.061",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.578,
+    0.83,
+    6.583
+   ],
+   "fwd": [
+    -0.6,
+    0.799,
+    0.037
+   ],
+   "up": [
+    0.329,
+    0.205,
+    0.922
+   ],
+   "scale": [
+    3.7,
+    3.7,
+    3.7
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.931,
+    1.388
+   ],
+   "offset_keys": [
+    [
+     0.931,
+     [
+      1.578,
+      0.47,
+      -5.783
+     ],
+     "linear"
+    ],
+    [
+     1.388,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.848,
+     -0.526,
+     -0.067
+    ],
+    "keys": [
+     [
+      0.931,
+      0.0,
+      "linear"
+     ],
+     [
+      1.388,
+      832.4,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_crescent.005",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_crescent",
+   "pos": [
+    -0.639,
+    1.014,
+    5.339
+   ],
+   "fwd": [
+    0.139,
+    0.0,
+    -0.99
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "sweep outward and thin",
+   "note": "pale hollow crescents of wind inside the cone",
+   "visible": [
+    0.95,
+    1.35
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.384,
+      -0.0,
+      -2.723
+     ],
+     "linear"
+    ],
+    [
+     1.35,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "linear"
+    ],
+    [
+     1.35,
+     [
+      1.4,
+      1.0,
+      1.4
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.063",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.553,
+    1.041,
+    8.776
+   ],
+   "fwd": [
+    0.549,
+    0.803,
+    -0.232
+   ],
+   "up": [
+    0.06,
+    0.239,
+    0.969
+   ],
+   "scale": [
+    4.151,
+    4.151,
+    4.151
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.957,
+    1.42
+   ],
+   "offset_keys": [
+    [
+     0.957,
+     [
+      0.553,
+      0.259,
+      -7.976
+     ],
+     "linear"
+    ],
+    [
+     1.42,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.702,
+     -0.699,
+     0.135
+    ],
+    "keys": [
+     [
+      0.957,
+      0.0,
+      "linear"
+     ],
+     [
+      1.42,
+      -691.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.064",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.772,
+    0.2,
+    7.138
+   ],
+   "fwd": [
+    -0.231,
+    0.222,
+    -0.947
+   ],
+   "up": [
+    -0.889,
+    -0.445,
+    0.113
+   ],
+   "scale": [
+    3.589,
+    3.589,
+    3.589
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.963,
+    1.579
+   ],
+   "offset_keys": [
+    [
+     0.963,
+     [
+      1.772,
+      1.1,
+      -6.338
+     ],
+     "linear"
+    ],
+    [
+     1.579,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.115,
+     -0.743,
+     -0.659
+    ],
+    "keys": [
+     [
+      0.963,
+      0.0,
+      "linear"
+     ],
+     [
+      1.579,
+      541.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.062",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.414,
+    1.116,
+    7.129
+   ],
+   "fwd": [
+    0.293,
+    0.942,
+    -0.163
+   ],
+   "up": [
+    0.16,
+    -0.217,
+    -0.963
+   ],
+   "scale": [
+    4.119,
+    4.119,
+    4.119
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.975,
+    1.563
+   ],
+   "offset_keys": [
+    [
+     0.975,
+     [
+      0.414,
+      0.184,
+      -6.329
+     ],
+     "linear"
+    ],
+    [
+     1.563,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.357,
+     0.497,
+     -0.791
+    ],
+    "keys": [
+     [
+      0.975,
+      0.0,
+      "linear"
+     ],
+     [
+      1.563,
+      625.4,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.065",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.047,
+    1.012,
+    7.91
+   ],
+   "fwd": [
+    0.187,
+    -0.013,
+    0.982
+   ],
+   "up": [
+    -0.922,
+    0.344,
+    0.18
+   ],
+   "scale": [
+    3.499,
+    3.499,
+    3.499
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    0.982,
+    1.625
+   ],
+   "offset_keys": [
+    [
+     0.982,
+     [
+      0.047,
+      0.288,
+      -7.11
+     ],
+     "linear"
+    ],
+    [
+     1.625,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.232,
+     0.973,
+     -0.019
+    ],
+    "keys": [
+     [
+      0.982,
+      0.0,
+      "linear"
+     ],
+     [
+      1.625,
+      838.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.067",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    2.283,
+    1.166,
+    8.63
+   ],
+   "fwd": [
+    -0.882,
+    0.393,
+    -0.26
+   ],
+   "up": [
+    0.461,
+    0.601,
+    -0.653
+   ],
+   "scale": [
+    4.259,
+    4.259,
+    4.259
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.002,
+    1.612
+   ],
+   "offset_keys": [
+    [
+     1.002,
+     [
+      -2.283,
+      0.134,
+      -7.83
+     ],
+     "linear"
+    ],
+    [
+     1.612,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.357,
+     -0.079,
+     0.931
+    ],
+    "keys": [
+     [
+      1.002,
+      0.0,
+      "linear"
+     ],
+     [
+      1.612,
+      -622.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.068",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.665,
+    0.731,
+    8.539
+   ],
+   "fwd": [
+    0.603,
+    -0.052,
+    -0.796
+   ],
+   "up": [
+    -0.796,
+    0.02,
+    -0.605
+   ],
+   "scale": [
+    4.293,
+    4.293,
+    4.293
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.024,
+    1.661
+   ],
+   "offset_keys": [
+    [
+     1.024,
+     [
+      -1.665,
+      0.569,
+      -7.739
+     ],
+     "linear"
+    ],
+    [
+     1.661,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.484,
+     -0.132,
+     0.865
+    ],
+    "keys": [
+     [
+      1.024,
+      0.0,
+      "linear"
+     ],
+     [
+      1.661,
+      808.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.066",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.319,
+    1.276,
+    7.409
+   ],
+   "fwd": [
+    0.44,
+    0.125,
+    -0.889
+   ],
+   "up": [
+    -0.875,
+    -0.164,
+    -0.456
+   ],
+   "scale": [
+    4.151,
+    4.151,
+    4.151
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.026,
+    1.574
+   ],
+   "offset_keys": [
+    [
+     1.026,
+     [
+      -1.319,
+      0.024,
+      -6.609
+     ],
+     "linear"
+    ],
+    [
+     1.574,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.414,
+     -0.507,
+     -0.756
+    ],
+    "keys": [
+     [
+      1.026,
+      0.0,
+      "linear"
+     ],
+     [
+      1.574,
+      -820.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.069",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.87,
+    0.379,
+    8.906
+   ],
+   "fwd": [
+    -0.952,
+    -0.275,
+    0.131
+   ],
+   "up": [
+    -0.279,
+    0.96,
+    -0.007
+   ],
+   "scale": [
+    4.112,
+    4.112,
+    4.112
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.034,
+    1.667
+   ],
+   "offset_keys": [
+    [
+     1.034,
+     [
+      1.87,
+      0.921,
+      -8.106
+     ],
+     "linear"
+    ],
+    [
+     1.667,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.038,
+     -0.736,
+     -0.676
+    ],
+    "keys": [
+     [
+      1.034,
+      0.0,
+      "linear"
+     ],
+     [
+      1.667,
+      524.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.072",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.189,
+    1.217,
+    8.638
+   ],
+   "fwd": [
+    0.294,
+    -0.227,
+    -0.928
+   ],
+   "up": [
+    -0.951,
+    0.024,
+    -0.307
+   ],
+   "scale": [
+    3.269,
+    3.269,
+    3.269
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.058,
+    1.547
+   ],
+   "offset_keys": [
+    [
+     1.058,
+     [
+      0.189,
+      0.083,
+      -7.838
+     ],
+     "linear"
+    ],
+    [
+     1.547,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.693,
+     -0.698,
+     0.18
+    ],
+    "keys": [
+     [
+      1.058,
+      0.0,
+      "linear"
+     ],
+     [
+      1.547,
+      721.4,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.070",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.246,
+    1.401,
+    6.928
+   ],
+   "fwd": [
+    0.705,
+    0.708,
+    -0.039
+   ],
+   "up": [
+    0.527,
+    -0.56,
+    -0.639
+   ],
+   "scale": [
+    3.239,
+    3.239,
+    3.239
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.06,
+    1.591
+   ],
+   "offset_keys": [
+    [
+     1.06,
+     [
+      -0.246,
+      -0.101,
+      -6.128
+     ],
+     "linear"
+    ],
+    [
+     1.591,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.351,
+     0.931,
+     -0.098
+    ],
+    "keys": [
+     [
+      1.06,
+      0.0,
+      "linear"
+     ],
+     [
+      1.591,
+      633.4,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.071",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.731,
+    0.809,
+    8.345
+   ],
+   "fwd": [
+    -0.228,
+    -0.604,
+    -0.763
+   ],
+   "up": [
+    -0.761,
+    0.6,
+    -0.248
+   ],
+   "scale": [
+    3.18,
+    3.18,
+    3.18
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.073,
+    1.614
+   ],
+   "offset_keys": [
+    [
+     1.073,
+     [
+      0.732,
+      0.491,
+      -7.545
+     ],
+     "linear"
+    ],
+    [
+     1.614,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.965,
+     0.219,
+     -0.146
+    ],
+    "keys": [
+     [
+      1.073,
+      0.0,
+      "linear"
+     ],
+     [
+      1.614,
+      873.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_crescent.006",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_crescent",
+   "pos": [
+    -0.758,
+    1.11,
+    4.54
+   ],
+   "fwd": [
+    0.199,
+    0.0,
+    -0.98
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "sweep outward and thin",
+   "note": "pale hollow crescents of wind inside the cone",
+   "visible": [
+    1.08,
+    1.48
+   ],
+   "offset_keys": [
+    [
+     1.08,
+     [
+      0.455,
+      -0.0,
+      -2.244
+     ],
+     "linear"
+    ],
+    [
+     1.48,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     1.08,
+     [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "linear"
+    ],
+    [
+     1.48,
+     [
+      1.4,
+      1.0,
+      1.4
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.073",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.574,
+    0.722,
+    8.667
+   ],
+   "fwd": [
+    -0.809,
+    0.537,
+    -0.241
+   ],
+   "up": [
+    -0.371,
+    -0.147,
+    0.917
+   ],
+   "scale": [
+    3.845,
+    3.845,
+    3.845
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.08,
+    1.725
+   ],
+   "offset_keys": [
+    [
+     1.08,
+     [
+      -1.574,
+      0.578,
+      -7.867
+     ],
+     "linear"
+    ],
+    [
+     1.725,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.48,
+     -0.728,
+     -0.49
+    ],
+    "keys": [
+     [
+      1.08,
+      0.0,
+      "linear"
+     ],
+     [
+      1.725,
+      637.6,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.074",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.606,
+    0.917,
+    8.646
+   ],
+   "fwd": [
+    -0.376,
+    -0.391,
+    0.84
+   ],
+   "up": [
+    0.927,
+    -0.165,
+    0.338
+   ],
+   "scale": [
+    3.517,
+    3.517,
+    3.517
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.103,
+    1.738
+   ],
+   "offset_keys": [
+    [
+     1.103,
+     [
+      -1.606,
+      0.383,
+      -7.846
+     ],
+     "linear"
+    ],
+    [
+     1.738,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.79,
+     -0.587,
+     0.177
+    ],
+    "keys": [
+     [
+      1.103,
+      0.0,
+      "linear"
+     ],
+     [
+      1.738,
+      -579.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.075",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.304,
+    0.39,
+    8.519
+   ],
+   "fwd": [
+    0.375,
+    0.138,
+    -0.917
+   ],
+   "up": [
+    0.917,
+    0.089,
+    0.388
+   ],
+   "scale": [
+    3.04,
+    3.04,
+    3.04
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.127,
+    1.706
+   ],
+   "offset_keys": [
+    [
+     1.127,
+     [
+      1.304,
+      0.91,
+      -7.719
+     ],
+     "linear"
+    ],
+    [
+     1.706,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.658,
+     0.492,
+     0.57
+    ],
+    "keys": [
+     [
+      1.127,
+      0.0,
+      "linear"
+     ],
+     [
+      1.706,
+      -816.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.076",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.659,
+    0.492,
+    8.773
+   ],
+   "fwd": [
+    0.003,
+    -0.78,
+    -0.625
+   ],
+   "up": [
+    -0.971,
+    -0.152,
+    0.185
+   ],
+   "scale": [
+    4.323,
+    4.323,
+    4.323
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.154,
+    1.607
+   ],
+   "offset_keys": [
+    [
+     1.154,
+     [
+      0.659,
+      0.808,
+      -7.973
+     ],
+     "linear"
+    ],
+    [
+     1.607,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.147,
+     -0.603,
+     0.784
+    ],
+    "keys": [
+     [
+      1.154,
+      0.0,
+      "linear"
+     ],
+     [
+      1.607,
+      804.3,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.077",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.095,
+    1.144,
+    7.556
+   ],
+   "fwd": [
+    -0.633,
+    -0.771,
+    0.069
+   ],
+   "up": [
+    -0.609,
+    0.441,
+    -0.66
+   ],
+   "scale": [
+    3.071,
+    3.071,
+    3.071
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.161,
+    1.685
+   ],
+   "offset_keys": [
+    [
+     1.161,
+     [
+      -0.095,
+      0.156,
+      -6.756
+     ],
+     "linear"
+    ],
+    [
+     1.685,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.991,
+     0.091,
+     0.103
+    ],
+    "keys": [
+     [
+      1.161,
+      0.0,
+      "linear"
+     ],
+     [
+      1.685,
+      834.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.079",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.674,
+    1.133,
+    7.553
+   ],
+   "fwd": [
+    0.351,
+    -0.521,
+    0.778
+   ],
+   "up": [
+    -0.335,
+    -0.846,
+    -0.415
+   ],
+   "scale": [
+    3.383,
+    3.383,
+    3.383
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.17,
+    1.807
+   ],
+   "offset_keys": [
+    [
+     1.17,
+     [
+      -1.674,
+      0.167,
+      -6.753
+     ],
+     "linear"
+    ],
+    [
+     1.807,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.431,
+     -0.664,
+     -0.61
+    ],
+    "keys": [
+     [
+      1.17,
+      0.0,
+      "linear"
+     ],
+     [
+      1.807,
+      -662.3,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.081",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.693,
+    0.57,
+    7.803
+   ],
+   "fwd": [
+    0.183,
+    -0.097,
+    0.978
+   ],
+   "up": [
+    -0.967,
+    0.161,
+    0.197
+   ],
+   "scale": [
+    4.3,
+    4.3,
+    4.3
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.176,
+    1.726
+   ],
+   "offset_keys": [
+    [
+     1.176,
+     [
+      1.693,
+      0.73,
+      -7.003
+     ],
+     "linear"
+    ],
+    [
+     1.726,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.322,
+     0.605,
+     -0.728
+    ],
+    "keys": [
+     [
+      1.176,
+      0.0,
+      "linear"
+     ],
+     [
+      1.726,
+      604.7,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.078",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.925,
+    1.083,
+    8.42
+   ],
+   "fwd": [
+    -0.974,
+    0.183,
+    -0.134
+   ],
+   "up": [
+    -0.194,
+    -0.362,
+    0.912
+   ],
+   "scale": [
+    4.103,
+    4.103,
+    4.103
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.187,
+    1.658
+   ],
+   "offset_keys": [
+    [
+     1.187,
+     [
+      0.926,
+      0.217,
+      -7.62
+     ],
+     "linear"
+    ],
+    [
+     1.658,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.948,
+     0.299,
+     0.104
+    ],
+    "keys": [
+     [
+      1.187,
+      0.0,
+      "linear"
+     ],
+     [
+      1.658,
+      619.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.080",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.913,
+    1.025,
+    7.754
+   ],
+   "fwd": [
+    0.38,
+    0.023,
+    0.925
+   ],
+   "up": [
+    -0.244,
+    0.967,
+    0.076
+   ],
+   "scale": [
+    4.156,
+    4.156,
+    4.156
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.208,
+    1.759
+   ],
+   "offset_keys": [
+    [
+     1.208,
+     [
+      -1.913,
+      0.275,
+      -6.954
+     ],
+     "linear"
+    ],
+    [
+     1.759,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.315,
+     -0.221,
+     -0.923
+    ],
+    "keys": [
+     [
+      1.208,
+      0.0,
+      "linear"
+     ],
+     [
+      1.759,
+      -661.7,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.082",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.628,
+    0.442,
+    7.765
+   ],
+   "fwd": [
+    -0.135,
+    0.079,
+    -0.988
+   ],
+   "up": [
+    0.95,
+    0.292,
+    -0.107
+   ],
+   "scale": [
+    3.507,
+    3.507,
+    3.507
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.208,
+    1.8
+   ],
+   "offset_keys": [
+    [
+     1.208,
+     [
+      1.628,
+      0.858,
+      -6.965
+     ],
+     "linear"
+    ],
+    [
+     1.8,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.011,
+     -0.614,
+     0.789
+    ],
+    "keys": [
+     [
+      1.208,
+      0.0,
+      "linear"
+     ],
+     [
+      1.8,
+      701.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_crescent.007",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_crescent",
+   "pos": [
+    0.277,
+    0.627,
+    2.821
+   ],
+   "fwd": [
+    -0.136,
+    0.0,
+    -0.991
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "sweep outward and thin",
+   "note": "pale hollow crescents of wind inside the cone",
+   "visible": [
+    1.21,
+    1.61
+   ],
+   "offset_keys": [
+    [
+     1.21,
+     [
+      -0.166,
+      -0.0,
+      -1.212
+     ],
+     "linear"
+    ],
+    [
+     1.61,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     1.21,
+     [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "linear"
+    ],
+    [
+     1.61,
+     [
+      1.4,
+      1.0,
+      1.4
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.084",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.336,
+    1.413,
+    8.034
+   ],
+   "fwd": [
+    0.687,
+    -0.509,
+    0.519
+   ],
+   "up": [
+    -0.213,
+    -0.824,
+    -0.526
+   ],
+   "scale": [
+    3.744,
+    3.744,
+    3.744
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.231,
+    1.751
+   ],
+   "offset_keys": [
+    [
+     1.231,
+     [
+      -0.336,
+      -0.113,
+      -7.234
+     ],
+     "linear"
+    ],
+    [
+     1.751,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.841,
+     0.365,
+     -0.399
+    ],
+    "keys": [
+     [
+      1.231,
+      0.0,
+      "linear"
+     ],
+     [
+      1.751,
+      -605.6,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.083",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -0.925,
+    1.427,
+    7.742
+   ],
+   "fwd": [
+    -0.656,
+    -0.017,
+    0.754
+   ],
+   "up": [
+    0.754,
+    0.026,
+    0.656
+   ],
+   "scale": [
+    3.86,
+    3.86,
+    3.86
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.248,
+    1.861
+   ],
+   "offset_keys": [
+    [
+     1.248,
+     [
+      0.925,
+      -0.127,
+      -6.943
+     ],
+     "linear"
+    ],
+    [
+     1.861,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.894,
+     0.385,
+     -0.23
+    ],
+    "keys": [
+     [
+      1.248,
+      0.0,
+      "linear"
+     ],
+     [
+      1.861,
+      -761.7,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.085",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    2.213,
+    1.017,
+    8.395
+   ],
+   "fwd": [
+    -0.428,
+    0.601,
+    -0.675
+   ],
+   "up": [
+    0.899,
+    0.359,
+    -0.251
+   ],
+   "scale": [
+    4.24,
+    4.24,
+    4.24
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.263,
+    1.721
+   ],
+   "offset_keys": [
+    [
+     1.263,
+     [
+      -2.213,
+      0.283,
+      -7.595
+     ],
+     "linear"
+    ],
+    [
+     1.721,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.701,
+     -0.632,
+     0.329
+    ],
+    "keys": [
+     [
+      1.263,
+      0.0,
+      "linear"
+     ],
+     [
+      1.721,
+      -841.3,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.086",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.869,
+    0.435,
+    8.765
+   ],
+   "fwd": [
+    -0.49,
+    -0.44,
+    0.753
+   ],
+   "up": [
+    0.832,
+    0.023,
+    0.554
+   ],
+   "scale": [
+    3.966,
+    3.966,
+    3.966
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.265,
+    1.811
+   ],
+   "offset_keys": [
+    [
+     1.265,
+     [
+      -0.869,
+      0.865,
+      -7.965
+     ],
+     "linear"
+    ],
+    [
+     1.811,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.059,
+     0.444,
+     -0.894
+    ],
+    "keys": [
+     [
+      1.265,
+      0.0,
+      "linear"
+     ],
+     [
+      1.811,
+      -573.5,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.088",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.297,
+    0.306,
+    8.883
+   ],
+   "fwd": [
+    -0.366,
+    0.393,
+    0.844
+   ],
+   "up": [
+    0.927,
+    0.233,
+    0.293
+   ],
+   "scale": [
+    3.51,
+    3.51,
+    3.51
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.291,
+    1.89
+   ],
+   "offset_keys": [
+    [
+     1.291,
+     [
+      -0.297,
+      0.994,
+      -8.083
+     ],
+     "linear"
+    ],
+    [
+     1.89,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.306,
+     -0.698,
+     -0.648
+    ],
+    "keys": [
+     [
+      1.291,
+      0.0,
+      "linear"
+     ],
+     [
+      1.89,
+      -631.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.087",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.097,
+    1.146,
+    8.446
+   ],
+   "fwd": [
+    0.097,
+    -0.626,
+    -0.774
+   ],
+   "up": [
+    0.66,
+    -0.541,
+    0.521
+   ],
+   "scale": [
+    4.378,
+    4.378,
+    4.378
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.303,
+    1.835
+   ],
+   "offset_keys": [
+    [
+     1.303,
+     [
+      -0.097,
+      0.154,
+      -7.646
+     ],
+     "linear"
+    ],
+    [
+     1.835,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.138,
+     0.743,
+     -0.655
+    ],
+    "keys": [
+     [
+      1.303,
+      0.0,
+      "linear"
+     ],
+     [
+      1.835,
+      583.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.090",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.351,
+    0.459,
+    6.808
+   ],
+   "fwd": [
+    0.272,
+    0.427,
+    -0.862
+   ],
+   "up": [
+    0.781,
+    0.426,
+    0.458
+   ],
+   "scale": [
+    3.184,
+    3.184,
+    3.184
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.313,
+    1.799
+   ],
+   "offset_keys": [
+    [
+     1.313,
+     [
+      -1.351,
+      0.841,
+      -6.008
+     ],
+     "linear"
+    ],
+    [
+     1.799,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.071,
+     0.405,
+     0.911
+    ],
+    "keys": [
+     [
+      1.313,
+      0.0,
+      "linear"
+     ],
+     [
+      1.799,
+      848.2,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.089",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.111,
+    0.139,
+    7.469
+   ],
+   "fwd": [
+    -0.172,
+    -0.231,
+    0.958
+   ],
+   "up": [
+    0.98,
+    0.056,
+    0.19
+   ],
+   "scale": [
+    3.447,
+    3.447,
+    3.447
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.315,
+    1.872
+   ],
+   "offset_keys": [
+    [
+     1.315,
+     [
+      -1.111,
+      1.161,
+      -6.669
+     ],
+     "linear"
+    ],
+    [
+     1.872,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.117,
+     0.711,
+     0.694
+    ],
+    "keys": [
+     [
+      1.315,
+      0.0,
+      "linear"
+     ],
+     [
+      1.872,
+      684.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.092",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.168,
+    0.293,
+    7.692
+   ],
+   "fwd": [
+    0.97,
+    0.213,
+    0.121
+   ],
+   "up": [
+    -0.112,
+    -0.052,
+    0.992
+   ],
+   "scale": [
+    3.225,
+    3.225,
+    3.225
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.339,
+    1.976
+   ],
+   "offset_keys": [
+    [
+     1.339,
+     [
+      -0.168,
+      1.007,
+      -6.892
+     ],
+     "linear"
+    ],
+    [
+     1.976,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.927,
+     -0.319,
+     -0.196
+    ],
+    "keys": [
+     [
+      1.339,
+      0.0,
+      "linear"
+     ],
+     [
+      1.976,
+      -834.5,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_crescent.008",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_crescent",
+   "pos": [
+    -0.594,
+    0.922,
+    6.72
+   ],
+   "fwd": [
+    0.1,
+    0.0,
+    -0.995
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "sweep outward and thin",
+   "note": "pale hollow crescents of wind inside the cone",
+   "visible": [
+    1.34,
+    1.74
+   ],
+   "offset_keys": [
+    [
+     1.34,
+     [
+      0.356,
+      -0.0,
+      -3.552
+     ],
+     "linear"
+    ],
+    [
+     1.74,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     1.34,
+     [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "linear"
+    ],
+    [
+     1.74,
+     [
+      1.4,
+      1.0,
+      1.4
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.091",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.276,
+    0.546,
+    8.154
+   ],
+   "fwd": [
+    -0.934,
+    0.021,
+    -0.356
+   ],
+   "up": [
+    0.296,
+    -0.507,
+    -0.809
+   ],
+   "scale": [
+    3.591,
+    3.591,
+    3.591
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.361,
+    1.955
+   ],
+   "offset_keys": [
+    [
+     1.361,
+     [
+      -0.276,
+      0.754,
+      -7.354
+     ],
+     "linear"
+    ],
+    [
+     1.955,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.445,
+     0.847,
+     0.292
+    ],
+    "keys": [
+     [
+      1.361,
+      0.0,
+      "linear"
+     ],
+     [
+      1.955,
+      -630.6,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.093",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.331,
+    0.908,
+    6.447
+   ],
+   "fwd": [
+    -0.55,
+    -0.768,
+    0.327
+   ],
+   "up": [
+    0.58,
+    -0.633,
+    -0.513
+   ],
+   "scale": [
+    4.288,
+    4.288,
+    4.288
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.377,
+    1.933
+   ],
+   "offset_keys": [
+    [
+     1.377,
+     [
+      -1.331,
+      0.392,
+      -5.647
+     ],
+     "linear"
+    ],
+    [
+     1.933,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.289,
+     -0.598,
+     -0.748
+    ],
+    "keys": [
+     [
+      1.377,
+      0.0,
+      "linear"
+     ],
+     [
+      1.933,
+      -747.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.095",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.741,
+    0.513,
+    7.48
+   ],
+   "fwd": [
+    -0.637,
+    -0.075,
+    0.767
+   ],
+   "up": [
+    0.771,
+    -0.088,
+    0.631
+   ],
+   "scale": [
+    3.888,
+    3.888,
+    3.888
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.38,
+    1.941
+   ],
+   "offset_keys": [
+    [
+     1.38,
+     [
+      -1.741,
+      0.787,
+      -6.68
+     ],
+     "linear"
+    ],
+    [
+     1.941,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.125,
+     -0.641,
+     -0.757
+    ],
+    "keys": [
+     [
+      1.38,
+      0.0,
+      "linear"
+     ],
+     [
+      1.941,
+      866.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.094",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.682,
+    0.355,
+    6.277
+   ],
+   "fwd": [
+    -0.265,
+    0.746,
+    -0.611
+   ],
+   "up": [
+    0.478,
+    0.652,
+    0.588
+   ],
+   "scale": [
+    3.181,
+    3.181,
+    3.181
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.387,
+    1.994
+   ],
+   "offset_keys": [
+    [
+     1.387,
+     [
+      -0.682,
+      0.945,
+      -5.477
+     ],
+     "linear"
+    ],
+    [
+     1.994,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.973,
+     0.104,
+     0.205
+    ],
+    "keys": [
+     [
+      1.387,
+      0.0,
+      "linear"
+     ],
+     [
+      1.994,
+      -656.8,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.097",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.343,
+    1.023,
+    6.309
+   ],
+   "fwd": [
+    0.025,
+    0.493,
+    0.87
+   ],
+   "up": [
+    0.083,
+    0.866,
+    -0.493
+   ],
+   "scale": [
+    3.4,
+    3.4,
+    3.4
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.42,
+    1.939
+   ],
+   "offset_keys": [
+    [
+     1.42,
+     [
+      1.343,
+      0.277,
+      -5.509
+     ],
+     "linear"
+    ],
+    [
+     1.939,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.893,
+     0.191,
+     0.408
+    ],
+    "keys": [
+     [
+      1.42,
+      0.0,
+      "linear"
+     ],
+     [
+      1.939,
+      644.1,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.096",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.902,
+    1.156,
+    7.199
+   ],
+   "fwd": [
+    0.994,
+    0.005,
+    0.113
+   ],
+   "up": [
+    -0.032,
+    -0.945,
+    0.325
+   ],
+   "scale": [
+    4.103,
+    4.103,
+    4.103
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.422,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     1.422,
+     [
+      1.902,
+      0.144,
+      -6.399
+     ],
+     "linear"
+    ],
+    [
+     2.0,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.925,
+     0.343,
+     -0.167
+    ],
+    "keys": [
+     [
+      1.422,
+      0.0,
+      "linear"
+     ],
+     [
+      2.0,
+      662.7,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.098",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.652,
+    1.151,
+    9.013
+   ],
+   "fwd": [
+    -0.167,
+    -0.982,
+    0.093
+   ],
+   "up": [
+    -0.039,
+    0.1,
+    0.994
+   ],
+   "scale": [
+    3.374,
+    3.374,
+    3.374
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.429,
+    1.885
+   ],
+   "offset_keys": [
+    [
+     1.429,
+     [
+      -1.652,
+      0.149,
+      -8.213
+     ],
+     "linear"
+    ],
+    [
+     1.885,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.55,
+     -0.799,
+     0.241
+    ],
+    "keys": [
+     [
+      1.429,
+      0.0,
+      "linear"
+     ],
+     [
+      1.885,
+      -742.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.100",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    -1.701,
+    0.531,
+    6.714
+   ],
+   "fwd": [
+    -0.17,
+    -0.983,
+    0.064
+   ],
+   "up": [
+    -0.975,
+    0.177,
+    0.132
+   ],
+   "scale": [
+    4.408,
+    4.408,
+    4.408
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.464,
+    1.922
+   ],
+   "offset_keys": [
+    [
+     1.464,
+     [
+      1.702,
+      0.769,
+      -5.914
+     ],
+     "linear"
+    ],
+    [
+     1.922,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.163,
+     -0.684,
+     -0.711
+    ],
+    "keys": [
+     [
+      1.464,
+      0.0,
+      "linear"
+     ],
+     [
+      1.922,
+      -684.4,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.099",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.701,
+    0.736,
+    7.263
+   ],
+   "fwd": [
+    -0.662,
+    0.029,
+    -0.749
+   ],
+   "up": [
+    -0.747,
+    0.05,
+    0.663
+   ],
+   "scale": [
+    3.32,
+    3.32,
+    3.32
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.466,
+    1.943
+   ],
+   "offset_keys": [
+    [
+     1.466,
+     [
+      -0.701,
+      0.564,
+      -6.463
+     ],
+     "linear"
+    ],
+    [
+     1.943,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.804,
+     -0.589,
+     -0.082
+    ],
+    "keys": [
+     [
+      1.466,
+      0.0,
+      "linear"
+     ],
+     [
+      1.943,
+      560.5,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_crescent.009",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_crescent",
+   "pos": [
+    -0.082,
+    1.021,
+    3.714
+   ],
+   "fwd": [
+    0.028,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "sweep outward and thin",
+   "note": "pale hollow crescents of wind inside the cone",
+   "visible": [
+    1.47,
+    1.87
+   ],
+   "offset_keys": [
+    [
+     1.47,
+     [
+      0.049,
+      -0.0,
+      -1.749
+     ],
+     "linear"
+    ],
+    [
+     1.87,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     1.47,
+     [
+      0.6,
+      0.6,
+      0.6
+     ],
+     "linear"
+    ],
+    [
+     1.87,
+     [
+      1.4,
+      1.0,
+      1.4
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_wind_leaf.103",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.649,
+    0.204,
+    7.608
+   ],
+   "fwd": [
+    0.699,
+    0.43,
+    0.571
+   ],
+   "up": [
+    -0.311,
+    0.902,
+    -0.299
+   ],
+   "scale": [
+    3.986,
+    3.986,
+    3.986
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.479,
+    2.084
+   ],
+   "offset_keys": [
+    [
+     1.479,
+     [
+      -0.649,
+      1.096,
+      -6.808
+     ],
+     "linear"
+    ],
+    [
+     2.084,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.323,
+     0.631,
+     -0.705
+    ],
+    "keys": [
+     [
+      1.479,
+      0.0,
+      "linear"
+     ],
+     [
+      2.084,
+      726.1,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.101",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    1.137,
+    1.219,
+    6.555
+   ],
+   "fwd": [
+    -0.003,
+    -0.804,
+    -0.594
+   ],
+   "up": [
+    -0.984,
+    -0.103,
+    0.144
+   ],
+   "scale": [
+    4.018,
+    4.018,
+    4.018
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.482,
+    2.077
+   ],
+   "offset_keys": [
+    [
+     1.482,
+     [
+      -1.137,
+      0.081,
+      -5.755
+     ],
+     "linear"
+    ],
+    [
+     2.077,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.012,
+     -0.423,
+     0.906
+    ],
+    "keys": [
+     [
+      1.482,
+      0.0,
+      "linear"
+     ],
+     [
+      2.077,
+      668.9,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_wind_leaf.102",
+   "source": "2026-11-18_vfx/vfx_wind_kit.fbx:vfx_wind_leaf",
+   "pos": [
+    0.98,
+    0.441,
+    8.578
+   ],
+   "fwd": [
+    0.55,
+    0.832,
+    -0.076
+   ],
+   "up": [
+    -0.712,
+    0.418,
+    -0.564
+   ],
+   "scale": [
+    4.071,
+    4.071,
+    4.071
+   ],
+   "inked": true,
+   "verb": "fly out in the cone, tumbling (each a small cut)",
+   "note": "a storm of cut leaves, red and gold, flung in a cone 8 m long for 1.5 s",
+   "visible": [
+    1.514,
+    2.107
+   ],
+   "offset_keys": [
+    [
+     1.514,
+     [
+      -0.98,
+      0.859,
+      -7.778
+     ],
+     "linear"
+    ],
+    [
+     2.107,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.379,
+     0.639,
+     -0.669
+    ],
+    "keys": [
+     [
+      1.514,
+      0.0,
+      "linear"
+     ],
+     [
+      2.107,
+      788.4,
+      "linear"
+     ]
+    ]
+   }
+  }
+ ]
+}

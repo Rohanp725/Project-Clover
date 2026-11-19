@@ -23,6 +23,8 @@ namespace Clover.EditorTools
         public const string WeaponsDir = ModelsDir + "Weapons/";
         public const string VfxDir = ArtDir + "VFX/";
         public const string VfxCombosDir = VfxDir + "Combos/";
+        public const string VfxGodsDir = VfxDir + "Gods/";
+        public const string PropsDir = ModelsDir + "Props/";
         public const string VfxMasksDir = "Assets/_Project/Generated/Vfx/Element/";
         public const string ReactionMasksDir = "Assets/_Project/Generated/Vfx/Reaction/";
         public const string AudioDir = "Assets/_Project/Audio/";
@@ -118,8 +120,9 @@ namespace Clover.EditorTools
                 kit.materialLocation = ModelImporterMaterialLocation.InPrefab;
                 kit.generateSecondaryUV = false;
                 // The reactions' kits are placed by a recipe written in Unity's axes on the assumption that each piece's
-                // own axes are Unity's (combos_recipe.json, "axes"): the axis turn is baked into the meshes.
-                kit.bakeAxisConversion = assetPath.StartsWith(VfxCombosDir);
+                // own axes are Unity's (combos_recipe.json, "axes"): the axis turn is baked into the meshes. The god moves'
+                // motion files (godfx_<move>_motion.json) pose their pieces the same way, in Unity's axes.
+                kit.bakeAxisConversion = assetPath.StartsWith(VfxCombosDir) || assetPath.StartsWith(VfxGodsDir);
                 return;
             }
             if (!assetPath.StartsWith(ModelsDir)) return;
@@ -142,6 +145,9 @@ namespace Clover.EditorTools
             // The weapon files are exported without Apply Transform: baking the axes keeps each one's business end along
             // +Z once WeaponBuilder has turned it about, as the stand-ins and every pose take it to be.
             if (assetPath.StartsWith(WeaponsDir)) importer.bakeAxisConversion = true;
+            // The Way props were exported the same way, and the god moves' motion files place them (the stones, the
+            // islet, the drums, the rivets) in Unity's axes: baked too, so each mesh's own axes are Unity's.
+            if (assetPath.StartsWith(PropsDir)) importer.bakeAxisConversion = true;
 
             if (!assetPath.StartsWith(CharactersDir)) return;
             importer.animationType = ModelImporterAnimationType.Generic;

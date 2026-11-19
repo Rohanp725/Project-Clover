@@ -1,0 +1,1708 @@
+{
+ "move": "lastelixir",
+ "element": "poison",
+ "weapon": "knives",
+ "duration_s": 1.8,
+ "conventions": "Caster frame, Unity axes: x right, y up, z forward, metres, origin at the caster's feet when the move starts, z along the caster's facing. pos: the piece pivot at its key pose. fwd/up: the piece's own Unity forward (Blender local -Y) and up (Blender local +Z): rotation = casterRotation * LookRotation(fwd, up). scale: base local scale (Unity x, y, z). visible: [appear, vanish] seconds. offset_keys: [time, position added in the caster frame, easing into this key]. scale_keys: [time, multiplier on the base scale (Unity x, y, z), easing]. spin: degrees about axis (caster frame) through the piece pivot, applied before its base rotation. orbit: degrees about the caster-frame up axis through centre (positive turns +z toward +x), applied last. Easings: linear, out = 1-(1-x)^2, in = x^2, inout = smoothstep, outback = overshoot (c = 1.70158), step = jump at the key. Before the first key a channel holds its first value; after the last, its last. verb: the simple motion (fall, rise, sweep along a line, spread rings, spin/orbit, flicker/redraw, drift up and thin, lick/flare, ...). source: the kit FBX and object the piece is (paths under staging/blender/), or the stand-in it stands for.",
+ "caster": [],
+ "pieces": [
+  {
+   "name": "vial_lastelixir",
+   "source": "2026-11-19_wayprops (alchemist_vial)",
+   "pos": [
+    -0.229,
+    1.908,
+    0.264
+   ],
+   "fwd": [
+    0.262,
+    -0.643,
+    -0.72
+   ],
+   "up": [
+    -0.22,
+    -0.766,
+    0.604
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": false,
+   "verb": "tipped to the mouth (clip)",
+   "note": "the last vial drunk",
+   "visible": [
+    0.0,
+    0.5
+   ]
+  },
+  {
+   "name": "vialfloor_lastelixir_0",
+   "source": "2026-11-19_wayprops (alchemist_vial)",
+   "pos": [
+    -0.795,
+    0.06,
+    0.136
+   ],
+   "fwd": [
+    0.022,
+    -0.999,
+    -0.027
+   ],
+   "up": [
+    0.64,
+    0.035,
+    -0.768
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "fall and bounce (ringing)",
+   "note": "each emptied vial dropped ringing on the floor",
+   "visible": [
+    0.0,
+    1.8
+   ],
+   "offset_keys": [
+    [
+     0.08,
+     [
+      0.795,
+      1.44,
+      -0.136
+     ],
+     "linear"
+    ],
+    [
+     0.28,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ],
+    [
+     0.35,
+     [
+      0.0,
+      0.12,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     0.42,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "vialfloor_lastelixir_1",
+   "source": "2026-11-19_wayprops (alchemist_vial)",
+   "pos": [
+    0.359,
+    0.06,
+    0.769
+   ],
+   "fwd": [
+    -0.035,
+    -0.999,
+    0.002
+   ],
+   "up": [
+    -0.998,
+    0.035,
+    0.053
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "fall and bounce (ringing)",
+   "note": "each emptied vial dropped ringing on the floor",
+   "visible": [
+    0.0,
+    1.8
+   ],
+   "offset_keys": [
+    [
+     0.2,
+     [
+      -0.359,
+      1.44,
+      -0.769
+     ],
+     "linear"
+    ],
+    [
+     0.4,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ],
+    [
+     0.47,
+     [
+      0.0,
+      0.12,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     0.54,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "vialfloor_lastelixir_2",
+   "source": "2026-11-19_wayprops (alchemist_vial)",
+   "pos": [
+    -0.008,
+    0.06,
+    -0.854
+   ],
+   "fwd": [
+    0.005,
+    -0.999,
+    0.035
+   ],
+   "up": [
+    0.142,
+    0.035,
+    0.989
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "fall and bounce (ringing)",
+   "note": "each emptied vial dropped ringing on the floor",
+   "visible": [
+    0.0,
+    1.8
+   ],
+   "offset_keys": [
+    [
+     0.32,
+     [
+      0.008,
+      1.44,
+      0.854
+     ],
+     "linear"
+    ],
+    [
+     0.52,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ],
+    [
+     0.59,
+     [
+      0.0,
+      0.12,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     0.66,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "vialfloor_lastelixir_3",
+   "source": "2026-11-19_wayprops (alchemist_vial)",
+   "pos": [
+    0.948,
+    0.06,
+    0.026
+   ],
+   "fwd": [
+    0.013,
+    -0.999,
+    0.032
+   ],
+   "up": [
+    0.38,
+    0.035,
+    0.924
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "fall and bounce (ringing)",
+   "note": "each emptied vial dropped ringing on the floor",
+   "visible": [
+    0.0,
+    1.8
+   ],
+   "offset_keys": [
+    [
+     0.44,
+     [
+      -0.948,
+      1.44,
+      -0.026
+     ],
+     "linear"
+    ],
+    [
+     0.64,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ],
+    [
+     0.71,
+     [
+      0.0,
+      0.12,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     0.78,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_band_surge.001",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_band_surge.001",
+   "pos": [
+    0.0,
+    0.005,
+    0.0
+   ],
+   "fwd": [
+    -0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.15,
+    1.15,
+    1.15
+   ],
+   "inked": false,
+   "verb": "spread (boil off the skin)",
+   "note": "green vapour boils off and pools round you (pass-2 poison_gasfront flipbook on the lips)",
+   "visible": [
+    0.5,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.5,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.85,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_bandlip_surge.001",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_bandlip_surge.001",
+   "pos": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fwd": [
+    -0.522,
+    0.0,
+    0.853
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.15,
+    1.15,
+    1.15
+   ],
+   "inked": true,
+   "verb": "spread (boil off the skin)",
+   "note": "green vapour boils off and pools round you (pass-2 poison_gasfront flipbook on the lips)",
+   "visible": [
+    0.5,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.5,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.85,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_ruyi_surge.001",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_ruyi_surge.001",
+   "pos": [
+    0.346,
+    1.45,
+    0.073
+   ],
+   "fwd": [
+    -0.841,
+    0.0,
+    0.54
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.5,
+    1.5,
+    1.5
+   ],
+   "inked": true,
+   "verb": "drift up and hook back (loop)",
+   "note": "ruyi fumes rise off the shoulders",
+   "visible": [
+    0.578,
+    2.2
+   ],
+   "offset_keys": [
+    [
+     0.578,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.178,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.0,
+      0.4,
+      0.0
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.578,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.078,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_ruyi_surge",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_ruyi_surge",
+   "pos": [
+    -0.295,
+    1.4,
+    -0.214
+   ],
+   "fwd": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "drift up and hook back (loop)",
+   "note": "ruyi fumes rise off the shoulders",
+   "visible": [
+    0.625,
+    2.2
+   ],
+   "offset_keys": [
+    [
+     0.625,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.225,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.0,
+      0.4,
+      0.0
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.625,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.125,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_ruyi_spell",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_ruyi_spell",
+   "pos": [
+    0.103,
+    1.7,
+    -0.282
+   ],
+   "fwd": [
+    -0.909,
+    0.0,
+    -0.416
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.3,
+    1.3
+   ],
+   "inked": true,
+   "verb": "drift up and hook back (loop)",
+   "note": "ruyi fumes rise off the shoulders",
+   "visible": [
+    0.643,
+    2.2
+   ],
+   "offset_keys": [
+    [
+     0.643,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.243,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.0,
+      0.4,
+      0.0
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.643,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.143,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_scorpion_infused",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_scorpion_infused",
+   "pos": [
+    0.051,
+    0.1,
+    -0.726
+   ],
+   "fwd": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    2.3,
+    2.3,
+    2.3
+   ],
+   "inked": true,
+   "verb": "rear up (flicker in the vapour)",
+   "note": "the scorpion's tail of mist arches over you",
+   "visible": [
+    0.7,
+    1.8
+   ],
+   "scale_keys": [
+    [
+     0.7,
+     [
+      0.3,
+      0.1,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.95,
+     [
+      1,
+      1,
+      1
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_centipede_charged",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_centipede_charged",
+   "pos": [
+    0.378,
+    1.053,
+    -0.061
+   ],
+   "fwd": [
+    0.8,
+    0.0,
+    -0.6
+   ],
+   "up": [
+    0.509,
+    0.53,
+    0.678
+   ],
+   "scale": [
+    0.35,
+    0.35,
+    0.35
+   ],
+   "inked": true,
+   "verb": "crawl along the arm",
+   "note": "centipede legs along the arms",
+   "visible": [
+    0.75,
+    1.8
+   ],
+   "scale_keys": [
+    [
+     0.75,
+     [
+      0.1,
+      0.1,
+      0.1
+     ],
+     "linear"
+    ],
+    [
+     0.95,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_centipede_charged.001",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_centipede_charged",
+   "pos": [
+    -0.277,
+    1.529,
+    0.037
+   ],
+   "fwd": [
+    0.857,
+    0.0,
+    0.515
+   ],
+   "up": [
+    0.191,
+    0.928,
+    -0.319
+   ],
+   "scale": [
+    0.35,
+    0.35,
+    0.35
+   ],
+   "inked": true,
+   "verb": "crawl along the arm",
+   "note": "centipede legs along the arms",
+   "visible": [
+    0.75,
+    1.8
+   ],
+   "scale_keys": [
+    [
+     0.75,
+     [
+      0.1,
+      0.1,
+      0.1
+     ],
+     "linear"
+    ],
+    [
+     0.95,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "lastelixir_beasts",
+   "source": "2026-11-19_godfx/vfx_god_knives_kit.fbx:vfxg_lastelixir_beasts",
+   "pos": [
+    -547.232,
+    0.0,
+    1503.508
+   ],
+   "fwd": [
+    -0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "flicker in the vapour",
+   "note": "snake, toad and gecko shapes in the low gas (each its own flicker in Unity)",
+   "visible": [
+    0.8,
+    1.8
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_lip_spell.001",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_lip_spell.002",
+   "pos": [
+    2.598,
+    0.0,
+    0.091
+   ],
+   "fwd": [
+    -0.999,
+    0.0,
+    -0.035
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.9,
+    1.6,
+    1.9
+   ],
+   "inked": true,
+   "verb": "creep outward",
+   "note": "five lobed fronts crawl outward, one for each poison",
+   "visible": [
+    0.9,
+    2.2
+   ],
+   "offset_keys": [
+    [
+     0.9,
+     [
+      -1.559,
+      -0.0,
+      -0.054
+     ],
+     "linear"
+    ],
+    [
+     1.8,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.9,
+     [
+      0.4,
+      0.4,
+      0.4
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_lip_spell.002",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_lip_spell.002",
+   "pos": [
+    0.889,
+    0.0,
+    -2.443
+   ],
+   "fwd": [
+    -0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.9,
+    1.6,
+    1.9
+   ],
+   "inked": true,
+   "verb": "creep outward",
+   "note": "five lobed fronts crawl outward, one for each poison",
+   "visible": [
+    0.9,
+    2.2
+   ],
+   "offset_keys": [
+    [
+     0.9,
+     [
+      -0.534,
+      -0.0,
+      1.466
+     ],
+     "linear"
+    ],
+    [
+     1.8,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.9,
+     [
+      0.4,
+      0.4,
+      0.4
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_lip_spell.003",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_lip_spell.002",
+   "pos": [
+    0.717,
+    0.0,
+    2.499
+   ],
+   "fwd": [
+    -0.276,
+    0.0,
+    -0.961
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.9,
+    1.6,
+    1.9
+   ],
+   "inked": true,
+   "verb": "creep outward",
+   "note": "five lobed fronts crawl outward, one for each poison",
+   "visible": [
+    0.9,
+    2.2
+   ],
+   "offset_keys": [
+    [
+     0.9,
+     [
+      -0.43,
+      -0.0,
+      -1.5
+     ],
+     "linear"
+    ],
+    [
+     1.8,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.9,
+     [
+      0.4,
+      0.4,
+      0.4
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_lip_spell.004",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_lip_spell.002",
+   "pos": [
+    -2.156,
+    0.0,
+    1.454
+   ],
+   "fwd": [
+    0.829,
+    0.0,
+    -0.559
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.9,
+    1.6,
+    1.9
+   ],
+   "inked": true,
+   "verb": "creep outward",
+   "note": "five lobed fronts crawl outward, one for each poison",
+   "visible": [
+    0.9,
+    2.2
+   ],
+   "offset_keys": [
+    [
+     0.9,
+     [
+      1.293,
+      -0.0,
+      -0.872
+     ],
+     "linear"
+    ],
+    [
+     1.8,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.9,
+     [
+      0.4,
+      0.4,
+      0.4
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_lip_spell.005",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_lip_spell.002",
+   "pos": [
+    -2.049,
+    0.0,
+    -1.601
+   ],
+   "fwd": [
+    0.788,
+    0.0,
+    0.616
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.9,
+    1.6,
+    1.9
+   ],
+   "inked": true,
+   "verb": "creep outward",
+   "note": "five lobed fronts crawl outward, one for each poison",
+   "visible": [
+    0.9,
+    2.2
+   ],
+   "offset_keys": [
+    [
+     0.9,
+     [
+      1.229,
+      -0.0,
+      0.96
+     ],
+     "linear"
+    ],
+    [
+     1.8,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.9,
+     [
+      0.4,
+      0.4,
+      0.4
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_bubbles_surge",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_bubbles_surge",
+   "pos": [
+    0.156,
+    0.05,
+    -0.256
+   ],
+   "fwd": [
+    -0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.25,
+    0.25,
+    0.25
+   ],
+   "inked": true,
+   "verb": "appear / pop",
+   "note": "pits stain the floor ahead of the fronts; bubbles swell and pop",
+   "visible": [
+    1.1,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_pits_spell",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_pits_spell",
+   "pos": [
+    1.197,
+    0.003,
+    -3.289
+   ],
+   "fwd": [
+    -0.94,
+    0.0,
+    -0.342
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.3,
+    1.3
+   ],
+   "inked": false,
+   "verb": "appear / pop",
+   "note": "pits stain the floor ahead of the fronts; bubbles swell and pop",
+   "visible": [
+    1.1,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_pits_spell.001",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_pits_spell",
+   "pos": [
+    3.498,
+    0.003,
+    0.122
+   ],
+   "fwd": [
+    0.035,
+    0.0,
+    -0.999
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.3,
+    1.3
+   ],
+   "inked": false,
+   "verb": "appear / pop",
+   "note": "pits stain the floor ahead of the fronts; bubbles swell and pop",
+   "visible": [
+    1.1,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_pits_spell.002",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_pits_spell",
+   "pos": [
+    0.965,
+    0.003,
+    3.364
+   ],
+   "fwd": [
+    0.961,
+    0.0,
+    -0.276
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.3,
+    1.3
+   ],
+   "inked": false,
+   "verb": "appear / pop",
+   "note": "pits stain the floor ahead of the fronts; bubbles swell and pop",
+   "visible": [
+    1.1,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_pits_spell.003",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_pits_spell",
+   "pos": [
+    -2.902,
+    0.003,
+    1.957
+   ],
+   "fwd": [
+    0.559,
+    0.0,
+    0.829
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.3,
+    1.3
+   ],
+   "inked": false,
+   "verb": "appear / pop",
+   "note": "pits stain the floor ahead of the fronts; bubbles swell and pop",
+   "visible": [
+    1.1,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_poison_pits_spell.004",
+   "source": "2026-11-18_vfx/vfx_poison_kit_v2.fbx:vfx2_poison_pits_spell",
+   "pos": [
+    -2.758,
+    0.003,
+    -2.155
+   ],
+   "fwd": [
+    -0.616,
+    0.0,
+    0.788
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.3,
+    1.3
+   ],
+   "inked": false,
+   "verb": "appear / pop",
+   "note": "pits stain the floor ahead of the fronts; bubbles swell and pop",
+   "visible": [
+    1.1,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_poison_pop",
+   "source": "2026-11-18_vfx/vfx_poison_kit.fbx:vfx_poison_pop",
+   "pos": [
+    0.312,
+    0.05,
+    0.647
+   ],
+   "fwd": [
+    -0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "inked": true,
+   "verb": "appear / pop",
+   "note": "pits stain the floor ahead of the fronts; bubbles swell and pop",
+   "visible": [
+    1.1,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_poison_pop.001",
+   "source": "2026-11-18_vfx/vfx_poison_kit.fbx:vfx_poison_pop",
+   "pos": [
+    0.476,
+    0.05,
+    -0.195
+   ],
+   "fwd": [
+    -0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "inked": true,
+   "verb": "appear / pop",
+   "note": "pits stain the floor ahead of the fronts; bubbles swell and pop",
+   "visible": [
+    1.1,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_poison_pop.002",
+   "source": "2026-11-18_vfx/vfx_poison_kit.fbx:vfx_poison_pop",
+   "pos": [
+    0.777,
+    0.05,
+    -0.62
+   ],
+   "fwd": [
+    -0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "inked": true,
+   "verb": "appear / pop",
+   "note": "pits stain the floor ahead of the fronts; bubbles swell and pop",
+   "visible": [
+    1.1,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_poison_pop.003",
+   "source": "2026-11-18_vfx/vfx_poison_kit.fbx:vfx_poison_pop",
+   "pos": [
+    0.538,
+    0.05,
+    0.783
+   ],
+   "fwd": [
+    -0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "inked": true,
+   "verb": "appear / pop",
+   "note": "pits stain the floor ahead of the fronts; bubbles swell and pop",
+   "visible": [
+    1.1,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  }
+ ]
+}

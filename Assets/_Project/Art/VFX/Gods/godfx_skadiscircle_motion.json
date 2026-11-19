@@ -1,0 +1,2049 @@
+{
+ "move": "skadiscircle",
+ "element": "ice",
+ "weapon": "bow",
+ "duration_s": 1.6,
+ "conventions": "Caster frame, Unity axes: x right, y up, z forward, metres, origin at the caster's feet when the move starts, z along the caster's facing. pos: the piece pivot at its key pose. fwd/up: the piece's own Unity forward (Blender local -Y) and up (Blender local +Z): rotation = casterRotation * LookRotation(fwd, up). scale: base local scale (Unity x, y, z). visible: [appear, vanish] seconds. offset_keys: [time, position added in the caster frame, easing into this key]. scale_keys: [time, multiplier on the base scale (Unity x, y, z), easing]. spin: degrees about axis (caster frame) through the piece pivot, applied before its base rotation. orbit: degrees about the caster-frame up axis through centre (positive turns +z toward +x), applied last. Easings: linear, out = 1-(1-x)^2, in = x^2, inout = smoothstep, outback = overshoot (c = 1.70158), step = jump at the key. Before the first key a channel holds its first value; after the last, its last. verb: the simple motion (fall, rise, sweep along a line, spread rings, spin/orbit, flicker/redraw, drift up and thin, lick/flare, ...). source: the kit FBX and object the piece is (paths under staging/blender/), or the stand-in it stands for.",
+ "caster": [
+  {
+   "name": "PR_skadiscircle",
+   "source": "player (caster)",
+   "pos": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "skate a full circle (orbit the quarry 4 m out)",
+   "note": "you skate round the quarry in 1 s and end where you began",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "orbit": {
+    "centre": [
+     0.0,
+     0.0,
+     4.0
+    ],
+    "keys": [
+     [
+      0.2,
+      -0.0,
+      "linear"
+     ],
+     [
+      1.2,
+      -360.0,
+      "inout"
+     ]
+    ]
+   }
+  }
+ ],
+ "pieces": [
+  {
+   "name": "PW_skadiscircle_bow_god",
+   "source": "2026-11-18_godweapons/bow_god.fbx",
+   "pos": [
+    -0.06,
+    1.512,
+    0.9
+   ],
+   "fwd": [
+    0.759,
+    -0.627,
+    0.178
+   ],
+   "up": [
+    -0.097,
+    0.161,
+    0.982
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "skate a full circle (orbit the quarry 4 m out)",
+   "note": "you skate round the quarry in 1 s and end where you began",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "orbit": {
+    "centre": [
+     0.0,
+     0.0,
+     4.0
+    ],
+    "keys": [
+     [
+      0.2,
+      -0.0,
+      "linear"
+     ],
+     [
+      1.2,
+      -360.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "skadiscircle_frost_0",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_0",
+   "pos": [
+    0.821,
+    0.015,
+    0.083
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.2,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.2,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.26,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     0.32,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_1",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_1",
+   "pos": [
+    2.272,
+    0.015,
+    0.735
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.211,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.211,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.271,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     0.331,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "arrow_skadiscircle_0",
+   "source": "2026-11-16_weapons/arrow.fbx",
+   "pos": [
+    0.235,
+    1.12,
+    3.677
+   ],
+   "fwd": [
+    -0.587,
+    -0.05,
+    0.808
+   ],
+   "up": [
+    -0.029,
+    0.999,
+    0.04
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fly along a line (inward), then stick",
+   "note": "rime-tipped arrows streak inward (16 each; the fifth 40, 60 stagger)",
+   "visible": [
+    0.228,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.228,
+     [
+      2.069,
+      0.176,
+      -2.848
+     ],
+     "linear"
+    ],
+    [
+     0.328,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_streak_0",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_streak_0",
+   "pos": [
+    2.351,
+    1.3,
+    0.764
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "sweep along a line, then fade",
+   "note": "frost streak behind each arrow",
+   "visible": [
+    0.228,
+    0.478
+   ],
+   "scale_keys": [
+    [
+     0.228,
+     [
+      0.05,
+      1,
+      0.05
+     ],
+     "linear"
+    ],
+    [
+     0.328,
+     [
+      1,
+      1,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_2",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_2",
+   "pos": [
+    3.384,
+    0.015,
+    1.802
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.243,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.243,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.303,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     0.363,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_3",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_3",
+   "pos": [
+    3.971,
+    0.015,
+    3.267
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.292,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.292,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.352,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     0.412,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_4",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_4",
+   "pos": [
+    3.936,
+    0.015,
+    4.809
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.356,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.356,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.416,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     0.476,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "arrow_skadiscircle_1",
+   "source": "2026-11-16_weapons/arrow.fbx",
+   "pos": [
+    0.38,
+    1.12,
+    4.123
+   ],
+   "fwd": [
+    -0.95,
+    -0.05,
+    -0.309
+   ],
+   "up": [
+    -0.047,
+    0.999,
+    -0.015
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fly along a line (inward), then stick",
+   "note": "rime-tipped arrows streak inward (16 each; the fifth 40, 60 stagger)",
+   "visible": [
+    0.416,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.416,
+     [
+      3.348,
+      0.176,
+      1.088
+     ],
+     "linear"
+    ],
+    [
+     0.516,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_streak_1",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_streak_1",
+   "pos": [
+    3.804,
+    1.3,
+    5.236
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "sweep along a line, then fade",
+   "note": "frost streak behind each arrow",
+   "visible": [
+    0.416,
+    0.666
+   ],
+   "scale_keys": [
+    [
+     0.416,
+     [
+      0.05,
+      1,
+      0.05
+     ],
+     "linear"
+    ],
+    [
+     0.516,
+     [
+      1,
+      1,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_5",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_5",
+   "pos": [
+    3.28,
+    0.015,
+    6.237
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.432,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.432,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.492,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     0.552,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_6",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_6",
+   "pos": [
+    2.206,
+    0.015,
+    7.333
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.516,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.516,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.576,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     0.636,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_7",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_7",
+   "pos": [
+    0.749,
+    0.015,
+    7.951
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.607,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.607,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.667,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     0.727,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "arrow_skadiscircle_2",
+   "source": "2026-11-16_weapons/arrow.fbx",
+   "pos": [
+    0.0,
+    1.12,
+    4.4
+   ],
+   "fwd": [
+    -0.0,
+    -0.05,
+    -0.999
+   ],
+   "up": [
+    -0.0,
+    0.999,
+    -0.05
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fly along a line (inward), then stick",
+   "note": "rime-tipped arrows streak inward (16 each; the fifth 40, 60 stagger)",
+   "visible": [
+    0.7,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.7,
+     [
+      0.0,
+      0.176,
+      3.52
+     ],
+     "linear"
+    ],
+    [
+     0.8,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_8",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_8",
+   "pos": [
+    -0.828,
+    0.015,
+    7.902
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.7,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.7,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.76,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     0.82,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_streak_2",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_streak_2",
+   "pos": [
+    0.0,
+    1.3,
+    8.0
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "sweep along a line, then fade",
+   "note": "frost streak behind each arrow",
+   "visible": [
+    0.7,
+    0.95
+   ],
+   "scale_keys": [
+    [
+     0.7,
+     [
+      0.05,
+      1,
+      0.05
+     ],
+     "linear"
+    ],
+    [
+     0.8,
+     [
+      1,
+      1,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_9",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_9",
+   "pos": [
+    -2.231,
+    0.015,
+    7.342
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.793,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.793,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.853,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     0.913,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_10",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_10",
+   "pos": [
+    -3.372,
+    0.015,
+    6.191
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.884,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.884,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.944,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     1.004,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_11",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_11",
+   "pos": [
+    -3.953,
+    0.015,
+    4.747
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    0.968,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.968,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.028,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     1.088,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "arrow_skadiscircle_3",
+   "source": "2026-11-16_weapons/arrow.fbx",
+   "pos": [
+    -0.38,
+    1.12,
+    4.123
+   ],
+   "fwd": [
+    0.95,
+    -0.05,
+    -0.309
+   ],
+   "up": [
+    0.047,
+    0.999,
+    -0.015
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fly along a line (inward), then stick",
+   "note": "rime-tipped arrows streak inward (16 each; the fifth 40, 60 stagger)",
+   "visible": [
+    0.984,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.984,
+     [
+      -3.348,
+      0.176,
+      1.088
+     ],
+     "linear"
+    ],
+    [
+     1.084,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_streak_3",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_streak_3",
+   "pos": [
+    -3.804,
+    1.3,
+    5.236
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "sweep along a line, then fade",
+   "note": "frost streak behind each arrow",
+   "visible": [
+    0.984,
+    1.234
+   ],
+   "scale_keys": [
+    [
+     0.984,
+     [
+      0.05,
+      1,
+      0.05
+     ],
+     "linear"
+    ],
+    [
+     1.084,
+     [
+      1,
+      1,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_12",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_12",
+   "pos": [
+    -3.91,
+    0.015,
+    3.188
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    1.044,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.044,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.104,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     1.164,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_13",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_13",
+   "pos": [
+    -3.307,
+    0.015,
+    1.741
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    1.108,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.108,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.168,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     1.228,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_14",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_14",
+   "pos": [
+    -2.183,
+    0.015,
+    0.648
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    1.157,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.157,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.217,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     1.277,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "arrow_skadiscircle_4",
+   "source": "2026-11-16_weapons/arrow.fbx",
+   "pos": [
+    -0.235,
+    1.12,
+    3.677
+   ],
+   "fwd": [
+    0.587,
+    -0.05,
+    0.808
+   ],
+   "up": [
+    0.029,
+    0.999,
+    0.04
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fly along a line (inward), then stick",
+   "note": "rime-tipped arrows streak inward (16 each; the fifth 40, 60 stagger)",
+   "visible": [
+    1.172,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     1.172,
+     [
+      -2.069,
+      0.176,
+      -2.848
+     ],
+     "linear"
+    ],
+    [
+     1.272,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_ice_shard",
+   "source": "2026-11-18_vfx/vfx_ice_kit.fbx:vfx_ice_shard",
+   "pos": [
+    -2.351,
+    0.0,
+    0.764
+   ],
+   "fwd": [
+    0.001,
+    0.067,
+    -0.998
+   ],
+   "up": [
+    0.022,
+    0.998,
+    0.067
+   ],
+   "scale": [
+    1.2,
+    0.6,
+    1.2
+   ],
+   "inked": true,
+   "verb": "grow in steps (ice trail)",
+   "note": "the fifth arrow trails ice",
+   "visible": [
+    1.172,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.172,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     1.232,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_streak_4",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_streak_4",
+   "pos": [
+    -2.351,
+    1.3,
+    0.764
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "sweep along a line, then fade",
+   "note": "frost streak behind each arrow",
+   "visible": [
+    1.172,
+    1.422
+   ],
+   "scale_keys": [
+    [
+     1.172,
+     [
+      0.05,
+      1,
+      0.05
+     ],
+     "linear"
+    ],
+    [
+     1.272,
+     [
+      1,
+      1,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_ice_shard.001",
+   "source": "2026-11-18_vfx/vfx_ice_kit.fbx:vfx_ice_shard",
+   "pos": [
+    -2.015,
+    0.0,
+    1.226
+   ],
+   "fwd": [
+    0.132,
+    -0.333,
+    -0.934
+   ],
+   "up": [
+    -0.345,
+    0.868,
+    -0.358
+   ],
+   "scale": [
+    1.2,
+    0.7,
+    1.2
+   ],
+   "inked": true,
+   "verb": "grow in steps (ice trail)",
+   "note": "the fifth arrow trails ice",
+   "visible": [
+    1.187,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.187,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     1.247,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "skadiscircle_frost_15",
+   "source": "2026-11-19_godfx/vfx_god_bow_kit.fbx:vfxg_skadiscircle_frost_15",
+   "pos": [
+    -0.735,
+    0.015,
+    0.061
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "grow in steps (frost scored behind the skate)",
+   "note": "a ring of frost scored on the floor at full speed (pass-2 frost_creep flipbook)",
+   "visible": [
+    1.189,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.189,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.249,
+     [
+      0.6,
+      1,
+      0.6
+     ],
+     "step"
+    ],
+    [
+     1.309,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_ice_shard.002",
+   "source": "2026-11-18_vfx/vfx_ice_kit.fbx:vfx_ice_shard",
+   "pos": [
+    -1.679,
+    0.0,
+    1.688
+   ],
+   "fwd": [
+    0.051,
+    -0.319,
+    -0.946
+   ],
+   "up": [
+    -0.15,
+    0.935,
+    -0.323
+   ],
+   "scale": [
+    1.2,
+    0.8,
+    1.2
+   ],
+   "inked": true,
+   "verb": "grow in steps (ice trail)",
+   "note": "the fifth arrow trails ice",
+   "visible": [
+    1.202,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.202,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     1.262,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_ice_shard.003",
+   "source": "2026-11-18_vfx/vfx_ice_kit.fbx:vfx_ice_shard",
+   "pos": [
+    -1.344,
+    0.0,
+    2.151
+   ],
+   "fwd": [
+    0.016,
+    0.045,
+    -0.999
+   ],
+   "up": [
+    0.342,
+    0.939,
+    0.048
+   ],
+   "scale": [
+    1.2,
+    0.9,
+    1.2
+   ],
+   "inked": true,
+   "verb": "grow in steps (ice trail)",
+   "note": "the fifth arrow trails ice",
+   "visible": [
+    1.217,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.217,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     1.277,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_ice_shard.004",
+   "source": "2026-11-18_vfx/vfx_ice_kit.fbx:vfx_ice_shard",
+   "pos": [
+    -1.008,
+    0.0,
+    2.613
+   ],
+   "fwd": [
+    0.017,
+    0.048,
+    -0.999
+   ],
+   "up": [
+    0.33,
+    0.943,
+    0.05
+   ],
+   "scale": [
+    1.2,
+    1.0,
+    1.2
+   ],
+   "inked": true,
+   "verb": "grow in steps (ice trail)",
+   "note": "the fifth arrow trails ice",
+   "visible": [
+    1.232,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.232,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     1.292,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_ice_shard.005",
+   "source": "2026-11-18_vfx/vfx_ice_kit.fbx:vfx_ice_shard",
+   "pos": [
+    -0.672,
+    0.0,
+    3.075
+   ],
+   "fwd": [
+    0.038,
+    -0.131,
+    -0.991
+   ],
+   "up": [
+    -0.276,
+    0.951,
+    -0.137
+   ],
+   "scale": [
+    1.2,
+    1.1,
+    1.2
+   ],
+   "inked": true,
+   "verb": "grow in steps (ice trail)",
+   "note": "the fifth arrow trails ice",
+   "visible": [
+    1.247,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.247,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     1.307,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_ice_shard.006",
+   "source": "2026-11-18_vfx/vfx_ice_kit.fbx:vfx_ice_shard",
+   "pos": [
+    -0.336,
+    0.0,
+    3.538
+   ],
+   "fwd": [
+    0.137,
+    -0.346,
+    -0.928
+   ],
+   "up": [
+    -0.341,
+    0.863,
+    -0.372
+   ],
+   "scale": [
+    1.2,
+    1.2,
+    1.2
+   ],
+   "inked": true,
+   "verb": "grow in steps (ice trail)",
+   "note": "the fifth arrow trails ice",
+   "visible": [
+    1.262,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.262,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     1.322,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_ice_crackweb_hit",
+   "source": "2026-11-18_vfx/vfx_ice_kit_v2.fbx:vfx2_ice_crackweb_hit",
+   "pos": [
+    0.0,
+    0.0,
+    4.0
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.2,
+    1.2,
+    1.2
+   ],
+   "inked": false,
+   "verb": "crack out",
+   "note": "hexagonal crack-web on the body and floor",
+   "visible": [
+    1.272,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.272,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.372,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_ice_cluster",
+   "source": "2026-11-18_vfx/vfx_ice_kit.fbx:vfx_ice_cluster",
+   "pos": [
+    0.0,
+    0.0,
+    4.0
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "grow in steps, hold",
+   "note": "the quarry crusted in ice",
+   "visible": [
+    1.272,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.272,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     1.332,
+     [
+      1,
+      0.6,
+      1
+     ],
+     "step"
+    ],
+    [
+     1.392,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  }
+ ]
+}

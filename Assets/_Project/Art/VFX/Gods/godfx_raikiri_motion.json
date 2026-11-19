@@ -1,0 +1,438 @@
+{
+ "move": "raikiri",
+ "element": "lightning",
+ "weapon": "katana",
+ "duration_s": 1.2,
+ "conventions": "Caster frame, Unity axes: x right, y up, z forward, metres, origin at the caster's feet when the move starts, z along the caster's facing. pos: the piece pivot at its key pose. fwd/up: the piece's own Unity forward (Blender local -Y) and up (Blender local +Z): rotation = casterRotation * LookRotation(fwd, up). scale: base local scale (Unity x, y, z). visible: [appear, vanish] seconds. offset_keys: [time, position added in the caster frame, easing into this key]. scale_keys: [time, multiplier on the base scale (Unity x, y, z), easing]. spin: degrees about axis (caster frame) through the piece pivot, applied before its base rotation. orbit: degrees about the caster-frame up axis through centre (positive turns +z toward +x), applied last. Easings: linear, out = 1-(1-x)^2, in = x^2, inout = smoothstep, outback = overshoot (c = 1.70158), step = jump at the key. Before the first key a channel holds its first value; after the last, its last. verb: the simple motion (fall, rise, sweep along a line, spread rings, spin/orbit, flicker/redraw, drift up and thin, lick/flare, ...). source: the kit FBX and object the piece is (paths under staging/blender/), or the stand-in it stands for.",
+ "caster": [],
+ "pieces": [
+  {
+   "name": "raikiri_column",
+   "source": "2026-11-19_godfx/vfx_god_katana_kit.fbx:vfxg_raikiri_column",
+   "pos": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fwd": [
+    0.866,
+    0.0,
+    -0.5
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "rise",
+   "note": "the tell: streamers rise round you while you hold",
+   "visible": [
+    0.0,
+    0.55
+   ],
+   "scale_keys": [
+    [
+     0.0,
+     [
+      1,
+      0.05,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.25,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_lightning_strike_a",
+   "source": "2026-11-18_vfx/vfx_lightning_kit.fbx:vfx_lightning_strike_a",
+   "pos": [
+    0.229,
+    3.328,
+    0.439
+   ],
+   "fwd": [
+    0.731,
+    0.616,
+    -0.295
+   ],
+   "up": [
+    -0.571,
+    0.788,
+    0.231
+   ],
+   "scale": [
+    0.35,
+    0.62,
+    0.6
+   ],
+   "inked": false,
+   "verb": "fall + flicker/redraw",
+   "note": "the sky bolt comes down onto the raised blade (leader 0.04 s), then is redrawn each frame",
+   "visible": [
+    0.3,
+    0.5
+   ],
+   "offset_keys": [
+    [
+     0.3,
+     [
+      -2.598,
+      9.0,
+      1.5
+     ],
+     "linear"
+    ],
+    [
+     0.34,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "raikiri_clapring",
+   "source": "2026-11-19_godfx/vfx_god_katana_kit.fbx:vfxg_raikiri_clapring",
+   "pos": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "fwd": [
+    0.866,
+    0.0,
+    -0.5
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "spread rings",
+   "note": "thunderclap ring at the strike",
+   "visible": [
+    0.32,
+    0.8
+   ],
+   "scale_keys": [
+    [
+     0.32,
+     [
+      0.25,
+      1,
+      0.25
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.8,
+     [
+      1.15,
+      1,
+      1.15
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "raikiri_lane",
+   "source": "2026-11-19_godfx/vfx_god_katana_kit.fbx:vfxg_raikiri_lane",
+   "pos": [
+    0.0,
+    0.0,
+    0.8
+   ],
+   "fwd": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "sweep along a line",
+   "note": "the cut throws the bolt down the 12 m lane in 0.1 s; redraw it every 2 frames while it lasts",
+   "visible": [
+    0.6,
+    1.0
+   ],
+   "scale_keys": [
+    [
+     0.6,
+     [
+      1,
+      1,
+      0.02
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_combo_fern",
+   "source": "2026-11-18_vfx/vfx_combo_kit_v3.fbx:vfx_combo_fern",
+   "pos": [
+    0.0,
+    0.005,
+    3.0
+   ],
+   "fwd": [
+    0.975,
+    0.0,
+    -0.222
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": false,
+   "verb": "spread (burn in)",
+   "note": "scorched ferns burn in along the lane; the lane stays scorched 2 s",
+   "visible": [
+    0.645,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.645,
+     [
+      0.15,
+      1,
+      0.15
+     ],
+     "linear"
+    ],
+    [
+     0.875,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_combo_fern.001",
+   "source": "2026-11-18_vfx/vfx_combo_kit_v3.fbx:vfx_combo_fern",
+   "pos": [
+    0.0,
+    0.005,
+    6.5
+   ],
+   "fwd": [
+    0.64,
+    0.0,
+    0.768
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.9,
+    1.9,
+    1.9
+   ],
+   "inked": false,
+   "verb": "spread (burn in)",
+   "note": "scorched ferns burn in along the lane; the lane stays scorched 2 s",
+   "visible": [
+    0.674,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.674,
+     [
+      0.15,
+      1,
+      0.15
+     ],
+     "linear"
+    ],
+    [
+     0.904,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_lightning_fork_hit",
+   "source": "2026-11-18_vfx/vfx_lightning_kit_v2.fbx:vfx2_lightning_fork_hit",
+   "pos": [
+    0.25,
+    0.0,
+    5.0
+   ],
+   "fwd": [
+    0.559,
+    0.0,
+    0.829
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.2,
+    1.2,
+    1.2
+   ],
+   "inked": false,
+   "verb": "flicker/redraw",
+   "note": "impact fork on each enemy on the lane, with the white body flash",
+   "visible": [
+    0.702,
+    0.902
+   ]
+  },
+  {
+   "name": "g_vfx_combo_fern.002",
+   "source": "2026-11-18_vfx/vfx_combo_kit_v3.fbx:vfx_combo_fern",
+   "pos": [
+    0.0,
+    0.005,
+    10.0
+   ],
+   "fwd": [
+    -0.105,
+    0.0,
+    0.994
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.7,
+    1.7,
+    1.7
+   ],
+   "inked": false,
+   "verb": "spread (burn in)",
+   "note": "scorched ferns burn in along the lane; the lane stays scorched 2 s",
+   "visible": [
+    0.703,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.703,
+     [
+      0.15,
+      1,
+      0.15
+     ],
+     "linear"
+    ],
+    [
+     0.933,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_lightning_fork_hit.001",
+   "source": "2026-11-18_vfx/vfx_lightning_kit_v2.fbx:vfx2_lightning_fork_hit",
+   "pos": [
+    -0.284,
+    0.0,
+    8.6
+   ],
+   "fwd": [
+    0.755,
+    0.0,
+    0.656
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.2,
+    1.2,
+    1.2
+   ],
+   "inked": false,
+   "verb": "flicker/redraw",
+   "note": "impact fork on each enemy on the lane, with the white body flash",
+   "visible": [
+    0.732,
+    0.932
+   ]
+  }
+ ]
+}

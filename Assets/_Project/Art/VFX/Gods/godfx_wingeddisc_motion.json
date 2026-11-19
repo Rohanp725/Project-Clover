@@ -1,0 +1,3347 @@
+{
+ "move": "wingeddisc",
+ "element": "fire",
+ "weapon": "spear",
+ "duration_s": 1.8,
+ "conventions": "Caster frame, Unity axes: x right, y up, z forward, metres, origin at the caster's feet when the move starts, z along the caster's facing. pos: the piece pivot at its key pose. fwd/up: the piece's own Unity forward (Blender local -Y) and up (Blender local +Z): rotation = casterRotation * LookRotation(fwd, up). scale: base local scale (Unity x, y, z). visible: [appear, vanish] seconds. offset_keys: [time, position added in the caster frame, easing into this key]. scale_keys: [time, multiplier on the base scale (Unity x, y, z), easing]. spin: degrees about axis (caster frame) through the piece pivot, applied before its base rotation. orbit: degrees about the caster-frame up axis through centre (positive turns +z toward +x), applied last. Easings: linear, out = 1-(1-x)^2, in = x^2, inout = smoothstep, outback = overshoot (c = 1.70158), step = jump at the key. Before the first key a channel holds its first value; after the last, its last. verb: the simple motion (fall, rise, sweep along a line, spread rings, spin/orbit, flicker/redraw, drift up and thin, lick/flare, ...). source: the kit FBX and object the piece is (paths under staging/blender/), or the stand-in it stands for.",
+ "caster": [],
+ "pieces": [
+  {
+   "name": "g_vfx_fire_ember.016",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    0.0,
+    1.315,
+    0.0
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.15,
+    0.75
+   ],
+   "offset_keys": [
+    [
+     0.15,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.75,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_sheet.001",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_sheet",
+   "pos": [
+    -2.0,
+    1.3,
+    11.0
+   ],
+   "fwd": [
+    0.963,
+    -0.233,
+    0.137
+   ],
+   "up": [
+    0.231,
+    0.972,
+    0.033
+   ],
+   "scale": [
+    1.2,
+    0.9,
+    1.0
+   ],
+   "inked": true,
+   "verb": "fly out along a line, then orbit the enemy, then home",
+   "note": "the Sun Throw flies 11 m, spinning flat with flame wings, circles the faced enemy once (4 m ring), then comes home as the ray",
+   "visible": [
+    0.15,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     0.15,
+     [
+      -8.76,
+      0.15,
+      -2.287
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.15,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.55,
+     [
+      2.0,
+      0.15,
+      -11.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     0.0,
+     0.0,
+     11.0
+    ],
+    "keys": [
+     [
+      0.55,
+      282.0,
+      "linear"
+     ],
+     [
+      1.15,
+      -0.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_fire_sheet.002",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_sheet",
+   "pos": [
+    -2.0,
+    1.3,
+    11.0
+   ],
+   "fwd": [
+    -0.963,
+    -0.233,
+    -0.137
+   ],
+   "up": [
+    -0.231,
+    0.972,
+    -0.033
+   ],
+   "scale": [
+    1.2,
+    0.9,
+    1.0
+   ],
+   "inked": true,
+   "verb": "fly out along a line, then orbit the enemy, then home",
+   "note": "the Sun Throw flies 11 m, spinning flat with flame wings, circles the faced enemy once (4 m ring), then comes home as the ray",
+   "visible": [
+    0.15,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     0.15,
+     [
+      -8.76,
+      0.15,
+      -2.287
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.15,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.55,
+     [
+      2.0,
+      0.15,
+      -11.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     0.0,
+     0.0,
+     11.0
+    ],
+    "keys": [
+     [
+      0.55,
+      282.0,
+      "linear"
+     ],
+     [
+      1.15,
+      -0.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_fire_sheet.003",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_sheet",
+   "pos": [
+    -2.0,
+    1.25,
+    11.0
+   ],
+   "fwd": [
+    0.206,
+    0.0,
+    0.979
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    0.15,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly out along a line, then orbit the enemy, then home",
+   "note": "the Sun Throw flies 11 m, spinning flat with flame wings, circles the faced enemy once (4 m ring), then comes home as the ray",
+   "visible": [
+    0.15,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     0.15,
+     [
+      -8.76,
+      0.15,
+      -2.287
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.15,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.55,
+     [
+      2.0,
+      0.15,
+      -11.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     0.0,
+     0.0,
+     11.0
+    ],
+    "keys": [
+     [
+      0.55,
+      282.0,
+      "linear"
+     ],
+     [
+      1.15,
+      -0.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_fire_sheet.004",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_sheet",
+   "pos": [
+    -2.0,
+    1.2,
+    11.0
+   ],
+   "fwd": [
+    -0.744,
+    0.0,
+    0.668
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.5,
+    0.15,
+    1.5
+   ],
+   "inked": true,
+   "verb": "fly out along a line, then orbit the enemy, then home",
+   "note": "the Sun Throw flies 11 m, spinning flat with flame wings, circles the faced enemy once (4 m ring), then comes home as the ray",
+   "visible": [
+    0.15,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     0.15,
+     [
+      -8.76,
+      0.15,
+      -2.287
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.15,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.55,
+     [
+      2.0,
+      0.15,
+      -11.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     0.0,
+     0.0,
+     11.0
+    ],
+    "keys": [
+     [
+      0.55,
+      282.0,
+      "linear"
+     ],
+     [
+      1.15,
+      -0.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_fire_sheet.005",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_sheet",
+   "pos": [
+    -2.0,
+    1.15,
+    11.0
+   ],
+   "fwd": [
+    -0.95,
+    0.0,
+    -0.311
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.2,
+    0.15,
+    1.2
+   ],
+   "inked": true,
+   "verb": "fly out along a line, then orbit the enemy, then home",
+   "note": "the Sun Throw flies 11 m, spinning flat with flame wings, circles the faced enemy once (4 m ring), then comes home as the ray",
+   "visible": [
+    0.15,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     0.15,
+     [
+      -8.76,
+      0.15,
+      -2.287
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.15,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.55,
+     [
+      2.0,
+      0.15,
+      -11.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     0.0,
+     0.0,
+     11.0
+    ],
+    "keys": [
+     [
+      0.55,
+      282.0,
+      "linear"
+     ],
+     [
+      1.15,
+      -0.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "spear_wingeddisc",
+   "source": "2026-11-18_godweapons/spear_god.fbx",
+   "pos": [
+    -2.594,
+    1.25,
+    10.915
+   ],
+   "fwd": [
+    0.99,
+    0.0,
+    0.141
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "fly out along a line, then orbit the enemy, then home",
+   "note": "the Sun Throw flies 11 m, spinning flat with flame wings, circles the faced enemy once (4 m ring), then comes home as the ray",
+   "visible": [
+    0.15,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     0.15,
+     [
+      -8.76,
+      0.15,
+      -2.287
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.15,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.55,
+     [
+      2.0,
+      0.15,
+      -11.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     0.0,
+     0.0,
+     11.0
+    ],
+    "keys": [
+     [
+      0.55,
+      282.0,
+      "linear"
+     ],
+     [
+      1.15,
+      -0.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_fire_ember.017",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.032,
+    1.419,
+    0.696
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.175,
+    0.775
+   ],
+   "offset_keys": [
+    [
+     0.175,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.775,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.018",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.064,
+    1.152,
+    1.391
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.201,
+    0.801
+   ],
+   "offset_keys": [
+    [
+     0.201,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.801,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_smoke.003",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_smoke",
+   "pos": [
+    -0.064,
+    0.852,
+    1.391
+   ],
+   "fwd": [
+    0.848,
+    0.0,
+    -0.53
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.5,
+    0.5,
+    0.5
+   ],
+   "inked": false,
+   "verb": "drift up and thin",
+   "note": "smoke behind the throw",
+   "visible": [
+    0.201,
+    1.101
+   ],
+   "offset_keys": [
+    [
+     0.201,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.101,
+     [
+      0.0,
+      0.9,
+      0.0
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.201,
+     [
+      0.4,
+      0.4,
+      0.4
+     ],
+     "linear"
+    ],
+    [
+     1.101,
+     [
+      1.3,
+      1.3,
+      1.3
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.019",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.096,
+    1.404,
+    2.087
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.226,
+    0.826
+   ],
+   "offset_keys": [
+    [
+     0.226,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.826,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.020",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.128,
+    1.215,
+    2.783
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.251,
+    0.851
+   ],
+   "offset_keys": [
+    [
+     0.251,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.851,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.021",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.16,
+    1.241,
+    3.478
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.277,
+    0.877
+   ],
+   "offset_keys": [
+    [
+     0.277,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.877,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.022",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.192,
+    1.32,
+    4.174
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.302,
+    0.902
+   ],
+   "offset_keys": [
+    [
+     0.302,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.902,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_smoke.004",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_smoke",
+   "pos": [
+    -0.192,
+    1.02,
+    4.174
+   ],
+   "fwd": [
+    0.848,
+    0.0,
+    -0.53
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.5,
+    0.5,
+    0.5
+   ],
+   "inked": false,
+   "verb": "drift up and thin",
+   "note": "smoke behind the throw",
+   "visible": [
+    0.302,
+    1.202
+   ],
+   "offset_keys": [
+    [
+     0.302,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.202,
+     [
+      0.0,
+      0.9,
+      0.0
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.302,
+     [
+      0.4,
+      0.4,
+      0.4
+     ],
+     "linear"
+    ],
+    [
+     1.202,
+     [
+      1.3,
+      1.3,
+      1.3
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.023",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.224,
+    1.448,
+    4.87
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.327,
+    0.927
+   ],
+   "offset_keys": [
+    [
+     0.327,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.927,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.024",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.256,
+    1.436,
+    5.565
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.353,
+    0.953
+   ],
+   "offset_keys": [
+    [
+     0.353,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.953,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.025",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.288,
+    1.355,
+    6.261
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.378,
+    0.978
+   ],
+   "offset_keys": [
+    [
+     0.378,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.978,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.026",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.32,
+    1.165,
+    6.957
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.403,
+    1.003
+   ],
+   "offset_keys": [
+    [
+     0.403,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.003,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_smoke.005",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_smoke",
+   "pos": [
+    -0.32,
+    0.865,
+    6.957
+   ],
+   "fwd": [
+    0.848,
+    0.0,
+    -0.53
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.5,
+    0.5,
+    0.5
+   ],
+   "inked": false,
+   "verb": "drift up and thin",
+   "note": "smoke behind the throw",
+   "visible": [
+    0.403,
+    1.303
+   ],
+   "offset_keys": [
+    [
+     0.403,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.303,
+     [
+      0.0,
+      0.9,
+      0.0
+     ],
+     "linear"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.403,
+     [
+      0.4,
+      0.4,
+      0.4
+     ],
+     "linear"
+    ],
+    [
+     1.303,
+     [
+      1.3,
+      1.3,
+      1.3
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.027",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.352,
+    1.278,
+    7.652
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.429,
+    1.029
+   ],
+   "offset_keys": [
+    [
+     0.429,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.029,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.028",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.384,
+    1.247,
+    8.348
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.454,
+    1.054
+   ],
+   "offset_keys": [
+    [
+     0.454,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.054,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_ember.029",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_ember",
+   "pos": [
+    -0.416,
+    1.252,
+    9.044
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    2.2,
+    2.2,
+    2.2
+   ],
+   "inked": false,
+   "verb": "shed and drift up",
+   "note": "embers shed along the outward flight",
+   "visible": [
+    0.479,
+    1.079
+   ],
+   "offset_keys": [
+    [
+     0.479,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.079,
+     [
+      0.0,
+      0.7,
+      0.0
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_b.005",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_b",
+   "pos": [
+    -0.094,
+    0.0,
+    9.002
+   ],
+   "fwd": [
+    -0.978,
+    0.0,
+    -0.209
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.567,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.571,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.571,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.671,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.005",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    0.231,
+    0.0,
+    9.013
+   ],
+   "fwd": [
+    -0.992,
+    0.0,
+    0.125
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.444,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.591,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.591,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.691,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "wingeddisc_char",
+   "source": "2026-11-19_godfx/vfx_god_spear_kit.fbx:vfxg_wingeddisc_char",
+   "pos": [
+    593.634,
+    0.0,
+    -365.944
+   ],
+   "fwd": [
+    0.848,
+    0.0,
+    -0.53
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "appear under the ring (UV wipe round)",
+   "note": "char under the fire ring",
+   "visible": [
+    0.6,
+    3.0
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.006",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    0.549,
+    0.0,
+    9.077
+   ],
+   "fwd": [
+    -0.961,
+    0.0,
+    -0.278
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.531,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.612,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.612,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.712,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_c.003",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_c",
+   "pos": [
+    0.853,
+    0.0,
+    9.191
+   ],
+   "fwd": [
+    -0.707,
+    0.0,
+    -0.707
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.538,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.633,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.633,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.733,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_b.006",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_b",
+   "pos": [
+    1.134,
+    0.0,
+    9.353
+   ],
+   "fwd": [
+    -0.886,
+    0.0,
+    -0.464
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.606,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.653,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.653,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.753,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.007",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    1.386,
+    0.0,
+    9.558
+   ],
+   "fwd": [
+    -0.659,
+    0.0,
+    -0.752
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.482,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.674,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.674,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.774,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_b.007",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_b",
+   "pos": [
+    1.601,
+    0.0,
+    9.801
+   ],
+   "fwd": [
+    -0.778,
+    0.0,
+    -0.629
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.624,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.695,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.695,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.795,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.008",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    1.774,
+    0.0,
+    10.076
+   ],
+   "fwd": [
+    -0.213,
+    0.0,
+    -0.977
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.58,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.716,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.716,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.816,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_b.008",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_b",
+   "pos": [
+    1.9,
+    0.0,
+    10.375
+   ],
+   "fwd": [
+    0.066,
+    0.0,
+    -0.998
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.725,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.736,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.736,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.836,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_c.004",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_c",
+   "pos": [
+    1.976,
+    0.0,
+    10.691
+   ],
+   "fwd": [
+    -0.072,
+    0.0,
+    -0.997
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.561,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.757,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.757,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.857,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.009",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    2.0,
+    0.0,
+    11.014
+   ],
+   "fwd": [
+    0.195,
+    0.0,
+    -0.981
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.627,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.778,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.778,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.878,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_c.005",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_c",
+   "pos": [
+    1.971,
+    0.0,
+    11.338
+   ],
+   "fwd": [
+    0.23,
+    0.0,
+    -0.973
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.669,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.798,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.798,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.898,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_b.009",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_b",
+   "pos": [
+    1.891,
+    0.0,
+    11.652
+   ],
+   "fwd": [
+    0.244,
+    0.0,
+    -0.97
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.689,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.819,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.819,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.919,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.010",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    1.76,
+    0.0,
+    11.95
+   ],
+   "fwd": [
+    0.172,
+    0.0,
+    -0.985
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.659,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.84,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.84,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.94,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.011",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    1.583,
+    0.0,
+    12.222
+   ],
+   "fwd": [
+    0.607,
+    0.0,
+    -0.795
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.744,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.86,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.86,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.96,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_c.006",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_c",
+   "pos": [
+    1.365,
+    0.0,
+    12.462
+   ],
+   "fwd": [
+    0.649,
+    0.0,
+    -0.761
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.8,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.881,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.881,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     0.981,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.012",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    1.11,
+    0.0,
+    12.663
+   ],
+   "fwd": [
+    0.882,
+    0.0,
+    -0.472
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.743,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.902,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.902,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.002,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.013",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    0.827,
+    0.0,
+    12.821
+   ],
+   "fwd": [
+    0.903,
+    0.0,
+    -0.431
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.838,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.922,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.922,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.022,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_b.010",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_b",
+   "pos": [
+    0.521,
+    0.0,
+    12.931
+   ],
+   "fwd": [
+    0.992,
+    0.0,
+    -0.125
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.795,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.943,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.943,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.043,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_c.007",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_c",
+   "pos": [
+    0.202,
+    0.0,
+    12.99
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.003
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.889,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.964,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.964,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.064,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_c.008",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_c",
+   "pos": [
+    -0.123,
+    0.0,
+    12.996
+   ],
+   "fwd": [
+    0.95,
+    0.0,
+    -0.314
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.934,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    0.984,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.984,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.084,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.014",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    -0.444,
+    0.0,
+    12.95
+   ],
+   "fwd": [
+    0.996,
+    0.0,
+    0.085
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.849,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    1.005,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.005,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.105,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_c.009",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_c",
+   "pos": [
+    -0.754,
+    0.0,
+    12.853
+   ],
+   "fwd": [
+    0.778,
+    0.0,
+    0.629
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.989,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    1.026,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.026,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.126,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.015",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    -1.043,
+    0.0,
+    12.706
+   ],
+   "fwd": [
+    0.966,
+    0.0,
+    0.26
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.901,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    1.047,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.047,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.147,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.016",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    -1.306,
+    0.0,
+    12.515
+   ],
+   "fwd": [
+    0.774,
+    0.0,
+    0.633
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.967,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    1.067,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.067,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.167,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_a.017",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_a",
+   "pos": [
+    -1.534,
+    0.0,
+    12.284
+   ],
+   "fwd": [
+    0.854,
+    0.0,
+    0.52
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    1.071,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    1.088,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.088,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.188,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_fire_sootring_hit",
+   "source": "2026-11-18_vfx/vfx_fire_kit_v2.fbx:vfx2_fire_sootring_hit",
+   "pos": [
+    0.0,
+    0.008,
+    11.0
+   ],
+   "fwd": [
+    0.848,
+    0.0,
+    -0.53
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.7,
+    0.7
+   ],
+   "inked": false,
+   "verb": "spread",
+   "note": "soot ring under the enemies",
+   "visible": [
+    1.1,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     1.1,
+     [
+      0.3,
+      1,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.3,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_c.010",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_c",
+   "pos": [
+    -1.721,
+    0.0,
+    12.019
+   ],
+   "fwd": [
+    0.273,
+    0.0,
+    0.962
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.997,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    1.109,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.109,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.209,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_b.011",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_b",
+   "pos": [
+    -1.863,
+    0.0,
+    11.727
+   ],
+   "fwd": [
+    0.499,
+    0.0,
+    0.867
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    1.102,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    1.129,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.129,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.229,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_b.004",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_b",
+   "pos": [
+    -0.416,
+    0.0,
+    9.044
+   ],
+   "fwd": [
+    -1.0,
+    0.0,
+    -0.029
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.452,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    1.15,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.15,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_fire_tongue_c.011",
+   "source": "2026-11-18_vfx/vfx_fire_kit.fbx:vfx_fire_tongue_c",
+   "pos": [
+    -1.956,
+    0.0,
+    11.416
+   ],
+   "fwd": [
+    0.111,
+    0.0,
+    0.994
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    1.094,
+    0.7
+   ],
+   "inked": true,
+   "verb": "lick/flare (ring drawn as the spear passes)",
+   "note": "a ring of fire 4 m across drawn round the enemy as the spear passes (18 to all it passes)",
+   "visible": [
+    1.15,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     1.15,
+     [
+      0.5,
+      0.1,
+      0.5
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      1,
+      1.3,
+      1
+     ],
+     "out"
+    ],
+    [
+     2.2,
+     [
+      0.8,
+      0.5,
+      0.8
+     ],
+     "linear"
+    ]
+   ]
+  }
+ ]
+}

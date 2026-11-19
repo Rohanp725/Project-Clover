@@ -1,0 +1,2870 @@
+{
+ "move": "giantsdance",
+ "element": "earth",
+ "weapon": "gsword",
+ "duration_s": 1.6,
+ "conventions": "Caster frame, Unity axes: x right, y up, z forward, metres, origin at the caster's feet when the move starts, z along the caster's facing. pos: the piece pivot at its key pose. fwd/up: the piece's own Unity forward (Blender local -Y) and up (Blender local +Z): rotation = casterRotation * LookRotation(fwd, up). scale: base local scale (Unity x, y, z). visible: [appear, vanish] seconds. offset_keys: [time, position added in the caster frame, easing into this key]. scale_keys: [time, multiplier on the base scale (Unity x, y, z), easing]. spin: degrees about axis (caster frame) through the piece pivot, applied before its base rotation. orbit: degrees about the caster-frame up axis through centre (positive turns +z toward +x), applied last. Easings: linear, out = 1-(1-x)^2, in = x^2, inout = smoothstep, outback = overshoot (c = 1.70158), step = jump at the key. Before the first key a channel holds its first value; after the last, its last. verb: the simple motion (fall, rise, sweep along a line, spread rings, spin/orbit, flicker/redraw, drift up and thin, lick/flare, ...). source: the kit FBX and object the piece is (paths under staging/blender/), or the stand-in it stands for.",
+ "caster": [],
+ "pieces": [
+  {
+   "name": "g_enemy_husk.002",
+   "source": "enemy (stand-in, the struck enemy)",
+   "pos": [
+    -0.237,
+    0.0,
+    -2.842
+   ],
+   "fwd": [
+    -0.998,
+    0.0,
+    0.07
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "struck, thrown back",
+   "note": "an enemy struck by a passing stone (30)",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "spin": {
+    "axis": [
+     0.998,
+     0.0,
+     -0.07
+    ],
+    "keys": [
+     [
+      1.0,
+      0.0,
+      "linear"
+     ],
+     [
+      1.15,
+      -30.0,
+      "out"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_enemy_husk.003",
+   "source": "enemy (stand-in, the struck enemy)",
+   "pos": [
+    4.54,
+    0.0,
+    3.086
+   ],
+   "fwd": [
+    0.488,
+    0.0,
+    -0.873
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "struck, thrown back",
+   "note": "an enemy struck by a passing stone (30)",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "spin": {
+    "axis": [
+     -0.488,
+     0.0,
+     0.873
+    ],
+    "keys": [
+     [
+      1.0,
+      0.0,
+      "linear"
+     ],
+     [
+      1.15,
+      -30.0,
+      "out"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "stone_giantsdance_2.4",
+   "source": "2026-11-19_wayprops (brannoch_stone)",
+   "pos": [
+    -2.397,
+    0.0,
+    0.668
+   ],
+   "fwd": [
+    -0.999,
+    -0.0,
+    0.049
+   ],
+   "up": [
+    0.007,
+    0.99,
+    0.139
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "rise, then orbit",
+   "note": "one of the three new stones heaved up round you, then it turns round you at its own distance",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     0.15,
+     [
+      0.0,
+      -1.4,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.38,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "stone_giantsdance_3.4",
+   "source": "2026-11-19_wayprops (brannoch_stone)",
+   "pos": [
+    -1.386,
+    0.0,
+    -2.555
+   ],
+   "fwd": [
+    -0.408,
+    0.0,
+    -0.913
+   ],
+   "up": [
+    -0.127,
+    0.99,
+    0.057
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "orbit",
+   "note": "a standing stone turns round you at its own distance (7 m at most), striking all it passes",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "stone_giantsdance_4.3",
+   "source": "2026-11-19_wayprops (brannoch_stone_cracked)",
+   "pos": [
+    2.704,
+    0.0,
+    -2.793
+   ],
+   "fwd": [
+    0.629,
+    0.0,
+    -0.777
+   ],
+   "up": [
+    -0.108,
+    0.99,
+    -0.088
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "orbit",
+   "note": "a standing stone turns round you at its own distance (7 m at most), striking all it passes",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "stone_giantsdance_5.2",
+   "source": "2026-11-19_wayprops (brannoch_stone)",
+   "pos": [
+    5.086,
+    0.0,
+    1.631
+   ],
+   "fwd": [
+    0.978,
+    -0.0,
+    0.208
+   ],
+   "up": [
+    0.029,
+    0.99,
+    -0.136
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "rise, then orbit",
+   "note": "one of the three new stones heaved up round you, then it turns round you at its own distance",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     0.15,
+     [
+      0.0,
+      -1.4,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.38,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "stone_giantsdance_6.0",
+   "source": "2026-11-19_wayprops (brannoch_stone)",
+   "pos": [
+    1.551,
+    0.0,
+    6.346
+   ],
+   "fwd": [
+    0.258,
+    -0.0,
+    0.966
+   ],
+   "up": [
+    0.134,
+    0.99,
+    -0.036
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "orbit",
+   "note": "a standing stone turns round you at its own distance (7 m at most), striking all it passes",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "stone_giantsdance_6.8",
+   "source": "2026-11-19_wayprops (brannoch_stone)",
+   "pos": [
+    -4.053,
+    0.0,
+    6.01
+   ],
+   "fwd": [
+    -0.596,
+    -0.0,
+    0.803
+   ],
+   "up": [
+    0.112,
+    0.99,
+    0.083
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "rise, then orbit",
+   "note": "one of the three new stones heaved up round you, then it turns round you at its own distance",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     0.15,
+     [
+      0.0,
+      -1.4,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.38,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "sword_giantsdance",
+   "source": "2026-11-18_godweapons/gsword_god.fbx",
+   "pos": [
+    -0.0,
+    1.15,
+    0.55
+   ],
+   "fwd": [
+    -0.0,
+    -1.0,
+    -0.0
+   ],
+   "up": [
+    -0.0,
+    -0.0,
+    1.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "drive down (clip)",
+   "note": "the sword driven into the earth; then the hilt turned like a capstan (clip)",
+   "visible": [
+    0.0,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     0.0,
+     [
+      0.0,
+      0.9,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.12,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "giantsdance_spiral",
+   "source": "2026-11-19_godfx/vfx_god_gsword_kit.fbx:vfxg_giantsdance_spiral",
+   "pos": [
+    -0.0,
+    0.0,
+    0.55
+   ],
+   "fwd": [
+    0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "spread (cracks run out)",
+   "note": "cracks spiral out from the sword as it goes in",
+   "visible": [
+    0.1,
+    2.5
+   ],
+   "scale_keys": [
+    [
+     0.1,
+     [
+      0.08,
+      1,
+      0.08
+     ],
+     "linear"
+    ],
+    [
+     0.4,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    -2.379,
+    0.0,
+    0.237
+   ],
+   "fwd": [
+    0.049,
+    0.0,
+    0.999
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.4,
+    1.6
+   ],
+   "inked": false,
+   "verb": "travel with the stone + billow",
+   "note": "dust and turf thrown up at the leading side (pass-2 earth_dust_burst flipbook in Unity)",
+   "visible": [
+    0.5,
+    1.6
+   ],
+   "scale_keys": [
+    [
+     0.5,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.8,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.6,
+     [
+      1.3,
+      0.6,
+      1.3
+     ],
+     "linear"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_dust.001",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    -0.808,
+    0.0,
+    -2.753
+   ],
+   "fwd": [
+    -0.913,
+    0.0,
+    0.408
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.4,
+    1.6
+   ],
+   "inked": false,
+   "verb": "travel with the stone + billow",
+   "note": "dust and turf thrown up at the leading side (pass-2 earth_dust_burst flipbook in Unity)",
+   "visible": [
+    0.5,
+    1.6
+   ],
+   "scale_keys": [
+    [
+     0.5,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.8,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.6,
+     [
+      1.3,
+      0.6,
+      1.3
+     ],
+     "linear"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_dust.002",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    3.259,
+    0.0,
+    -2.255
+   ],
+   "fwd": [
+    -0.777,
+    0.0,
+    -0.629
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.4,
+    1.6
+   ],
+   "inked": false,
+   "verb": "travel with the stone + billow",
+   "note": "dust and turf thrown up at the leading side (pass-2 earth_dust_burst flipbook in Unity)",
+   "visible": [
+    0.5,
+    1.6
+   ],
+   "scale_keys": [
+    [
+     0.5,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.8,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.6,
+     [
+      1.3,
+      0.6,
+      1.3
+     ],
+     "linear"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_dust.003",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    4.811,
+    0.0,
+    2.524
+   ],
+   "fwd": [
+    0.208,
+    0.0,
+    -0.978
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.4,
+    1.6
+   ],
+   "inked": false,
+   "verb": "travel with the stone + billow",
+   "note": "dust and turf thrown up at the leading side (pass-2 earth_dust_burst flipbook in Unity)",
+   "visible": [
+    0.5,
+    1.6
+   ],
+   "scale_keys": [
+    [
+     0.5,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.8,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.6,
+     [
+      1.3,
+      0.6,
+      1.3
+     ],
+     "linear"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_dust.004",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    0.488,
+    0.0,
+    6.53
+   ],
+   "fwd": [
+    0.966,
+    0.0,
+    -0.258
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.4,
+    1.6
+   ],
+   "inked": false,
+   "verb": "travel with the stone + billow",
+   "note": "dust and turf thrown up at the leading side (pass-2 earth_dust_burst flipbook in Unity)",
+   "visible": [
+    0.5,
+    1.6
+   ],
+   "scale_keys": [
+    [
+     0.5,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.8,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.6,
+     [
+      1.3,
+      0.6,
+      1.3
+     ],
+     "linear"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_dust.005",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    -4.965,
+    0.0,
+    5.196
+   ],
+   "fwd": [
+    0.803,
+    0.0,
+    0.596
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.4,
+    1.6
+   ],
+   "inked": false,
+   "verb": "travel with the stone + billow",
+   "note": "dust and turf thrown up at the leading side (pass-2 earth_dust_burst flipbook in Unity)",
+   "visible": [
+    0.5,
+    1.6
+   ],
+   "scale_keys": [
+    [
+     0.5,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.8,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.6,
+     [
+      1.3,
+      0.6,
+      1.3
+     ],
+     "linear"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "giantsdance_furrow_2.4",
+   "source": "2026-11-19_godfx/vfx_god_gsword_kit.fbx:vfxg_giantsdance_furrow_2.4",
+   "pos": [
+    -0.0,
+    0.0,
+    0.55
+   ],
+   "fwd": [
+    0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "trail behind the stone (wipe along its path)",
+   "note": "the furrow and upturned turf left behind each stone; in Unity a trail mesh or a UV-wipe decal following the stone",
+   "visible": [
+    0.55,
+    2.6
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "giantsdance_furrow_3.4",
+   "source": "2026-11-19_godfx/vfx_god_gsword_kit.fbx:vfxg_giantsdance_furrow_3.4",
+   "pos": [
+    -0.0,
+    0.0,
+    0.55
+   ],
+   "fwd": [
+    0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "trail behind the stone (wipe along its path)",
+   "note": "the furrow and upturned turf left behind each stone; in Unity a trail mesh or a UV-wipe decal following the stone",
+   "visible": [
+    0.55,
+    2.6
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "giantsdance_furrow_4.3",
+   "source": "2026-11-19_godfx/vfx_god_gsword_kit.fbx:vfxg_giantsdance_furrow_4.3",
+   "pos": [
+    -0.0,
+    0.0,
+    0.55
+   ],
+   "fwd": [
+    0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "trail behind the stone (wipe along its path)",
+   "note": "the furrow and upturned turf left behind each stone; in Unity a trail mesh or a UV-wipe decal following the stone",
+   "visible": [
+    0.55,
+    2.6
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "giantsdance_furrow_5.2",
+   "source": "2026-11-19_godfx/vfx_god_gsword_kit.fbx:vfxg_giantsdance_furrow_5.2",
+   "pos": [
+    -0.0,
+    0.0,
+    0.55
+   ],
+   "fwd": [
+    0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "trail behind the stone (wipe along its path)",
+   "note": "the furrow and upturned turf left behind each stone; in Unity a trail mesh or a UV-wipe decal following the stone",
+   "visible": [
+    0.55,
+    2.6
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "giantsdance_furrow_6.0",
+   "source": "2026-11-19_godfx/vfx_god_gsword_kit.fbx:vfxg_giantsdance_furrow_6.0",
+   "pos": [
+    -0.0,
+    0.0,
+    0.55
+   ],
+   "fwd": [
+    0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "trail behind the stone (wipe along its path)",
+   "note": "the furrow and upturned turf left behind each stone; in Unity a trail mesh or a UV-wipe decal following the stone",
+   "visible": [
+    0.55,
+    2.6
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "giantsdance_furrow_6.8",
+   "source": "2026-11-19_godfx/vfx_god_gsword_kit.fbx:vfxg_giantsdance_furrow_6.8",
+   "pos": [
+    -0.0,
+    0.0,
+    0.55
+   ],
+   "fwd": [
+    0.342,
+    0.0,
+    0.94
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "trail behind the stone (wipe along its path)",
+   "note": "the furrow and upturned turf left behind each stone; in Unity a trail mesh or a UV-wipe decal following the stone",
+   "visible": [
+    0.55,
+    2.6
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -2.179,
+    0.576,
+    0.171
+   ],
+   "fwd": [
+    -0.443,
+    -0.407,
+    0.799
+   ],
+   "up": [
+    -0.664,
+    0.748,
+    0.013
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.001",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -2.637,
+    0.437,
+    0.266
+   ],
+   "fwd": [
+    0.325,
+    0.734,
+    0.596
+   ],
+   "up": [
+    -0.882,
+    0.462,
+    -0.088
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.002",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -2.505,
+    0.771,
+    0.911
+   ],
+   "fwd": [
+    -0.033,
+    0.125,
+    0.992
+   ],
+   "up": [
+    -0.759,
+    -0.648,
+    0.057
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.003",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -0.697,
+    1.052,
+    -2.236
+   ],
+   "fwd": [
+    0.707,
+    -0.101,
+    -0.7
+   ],
+   "up": [
+    0.585,
+    -0.473,
+    0.659
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.004",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -1.203,
+    0.461,
+    -2.108
+   ],
+   "fwd": [
+    -0.963,
+    0.167,
+    -0.212
+   ],
+   "up": [
+    0.017,
+    -0.747,
+    -0.664
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.005",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -0.799,
+    0.416,
+    -2.911
+   ],
+   "fwd": [
+    0.658,
+    -0.225,
+    0.719
+   ],
+   "up": [
+    -0.748,
+    -0.085,
+    0.658
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.006",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    2.892,
+    1.007,
+    -2.283
+   ],
+   "fwd": [
+    0.328,
+    0.767,
+    0.552
+   ],
+   "up": [
+    -0.933,
+    0.355,
+    0.061
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.007",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    3.157,
+    1.133,
+    -1.893
+   ],
+   "fwd": [
+    -0.806,
+    0.247,
+    0.538
+   ],
+   "up": [
+    -0.575,
+    -0.108,
+    -0.811
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.008",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    2.535,
+    0.405,
+    -2.616
+   ],
+   "fwd": [
+    0.006,
+    -0.479,
+    0.878
+   ],
+   "up": [
+    -0.915,
+    0.351,
+    0.198
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.009",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    4.73,
+    0.878,
+    2.937
+   ],
+   "fwd": [
+    -0.944,
+    -0.311,
+    -0.112
+   ],
+   "up": [
+    0.021,
+    0.283,
+    -0.959
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.010",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    4.874,
+    0.894,
+    2.581
+   ],
+   "fwd": [
+    -0.222,
+    -0.646,
+    0.73
+   ],
+   "up": [
+    -0.768,
+    0.577,
+    0.277
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.011",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    5.195,
+    1.169,
+    2.782
+   ],
+   "fwd": [
+    -0.682,
+    0.078,
+    -0.727
+   ],
+   "up": [
+    0.436,
+    -0.754,
+    -0.491
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.012",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.576,
+    0.58,
+    6.432
+   ],
+   "fwd": [
+    0.196,
+    0.549,
+    0.812
+   ],
+   "up": [
+    -0.761,
+    0.608,
+    -0.227
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.013",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.254,
+    0.866,
+    7.231
+   ],
+   "fwd": [
+    -0.954,
+    0.216,
+    -0.209
+   ],
+   "up": [
+    -0.096,
+    -0.877,
+    -0.47
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.014",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.324,
+    0.448,
+    6.988
+   ],
+   "fwd": [
+    0.803,
+    0.158,
+    0.575
+   ],
+   "up": [
+    -0.596,
+    0.189,
+    0.78
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.015",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -4.695,
+    0.831,
+    4.548
+   ],
+   "fwd": [
+    -0.542,
+    0.453,
+    0.708
+   ],
+   "up": [
+    -0.831,
+    -0.163,
+    -0.532
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.016",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -4.82,
+    1.062,
+    5.682
+   ],
+   "fwd": [
+    -0.466,
+    -0.594,
+    0.656
+   ],
+   "up": [
+    -0.463,
+    0.796,
+    0.391
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.017",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -5.054,
+    0.539,
+    5.065
+   ],
+   "fwd": [
+    0.909,
+    -0.076,
+    -0.409
+   ],
+   "up": [
+    0.407,
+    -0.047,
+    0.912
+   ],
+   "scale": [
+    3.0,
+    3.0,
+    3.0
+   ],
+   "inked": true,
+   "verb": "fly out and fall",
+   "note": "chips kicked up",
+   "visible": [
+    0.6,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.6,
+     [
+      0.0,
+      -0.5,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.5,
+     [
+      0.0,
+      -1.2,
+      0.0
+     ],
+     "in"
+    ]
+   ],
+   "orbit": {
+    "centre": [
+     -0.0,
+     0.0,
+     0.55
+    ],
+    "keys": [
+     [
+      0.45,
+      140.0,
+      "linear"
+     ],
+     [
+      1.45,
+      -70.0,
+      "inout"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx2_earth_cubes_hit",
+   "source": "2026-11-18_vfx/vfx_earth_kit_v2.fbx:vfx2_earth_cubes_hit",
+   "pos": [
+    -0.237,
+    0.0,
+    -2.842
+   ],
+   "fwd": [
+    -0.998,
+    0.0,
+    0.07
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.7,
+    0.7
+   ],
+   "inked": true,
+   "verb": "burst",
+   "note": "impact slabs",
+   "visible": [
+    1.0,
+    1.5
+   ],
+   "scale_keys": [
+    [
+     1.0,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.12,
+     [
+      1,
+      1,
+      1
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_earth_cubes_hit.001",
+   "source": "2026-11-18_vfx/vfx_earth_kit_v2.fbx:vfx2_earth_cubes_hit",
+   "pos": [
+    4.54,
+    0.0,
+    3.086
+   ],
+   "fwd": [
+    0.488,
+    0.0,
+    -0.873
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.7,
+    0.7,
+    0.7
+   ],
+   "inked": true,
+   "verb": "burst",
+   "note": "impact slabs",
+   "visible": [
+    1.0,
+    1.5
+   ],
+   "scale_keys": [
+    [
+     1.0,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.12,
+     [
+      1,
+      1,
+      1
+     ],
+     "outback"
+    ]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,3019 @@
+{
+ "move": "giantsthrow",
+ "element": "earth",
+ "weapon": "gsword",
+ "duration_s": 1.5,
+ "conventions": "Caster frame, Unity axes: x right, y up, z forward, metres, origin at the caster's feet when the move starts, z along the caster's facing. pos: the piece pivot at its key pose. fwd/up: the piece's own Unity forward (Blender local -Y) and up (Blender local +Z): rotation = casterRotation * LookRotation(fwd, up). scale: base local scale (Unity x, y, z). visible: [appear, vanish] seconds. offset_keys: [time, position added in the caster frame, easing into this key]. scale_keys: [time, multiplier on the base scale (Unity x, y, z), easing]. spin: degrees about axis (caster frame) through the piece pivot, applied before its base rotation. orbit: degrees about the caster-frame up axis through centre (positive turns +z toward +x), applied last. Easings: linear, out = 1-(1-x)^2, in = x^2, inout = smoothstep, outback = overshoot (c = 1.70158), step = jump at the key. Before the first key a channel holds its first value; after the last, its last. verb: the simple motion (fall, rise, sweep along a line, spread rings, spin/orbit, flicker/redraw, drift up and thin, lick/flare, ...). source: the kit FBX and object the piece is (paths under staging/blender/), or the stand-in it stands for.",
+ "caster": [],
+ "pieces": [
+  {
+   "name": "g_enemy_husk.004",
+   "source": "enemy (stand-in, the struck enemy)",
+   "pos": [
+    0.243,
+    0.0,
+    14.186
+   ],
+   "fwd": [
+    0.111,
+    0.0,
+    0.994
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "knocked back",
+   "note": "struck (50, 70 stagger) on the 3 m disc",
+   "visible": [
+    0.0,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.15,
+     [
+      0.111,
+      0.0,
+      0.994
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -0.994,
+     0.0,
+     0.111
+    ],
+    "keys": [
+     [
+      0.95,
+      0.0,
+      "linear"
+     ],
+     [
+      1.1,
+      -35.0,
+      "out"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_enemy_husk.005",
+   "source": "enemy (stand-in, the struck enemy)",
+   "pos": [
+    -2.01,
+    0.0,
+    11.106
+   ],
+   "fwd": [
+    -0.914,
+    0.0,
+    -0.406
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "knocked back",
+   "note": "struck (50, 70 stagger) on the 3 m disc",
+   "visible": [
+    0.0,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.15,
+     [
+      -0.914,
+      0.0,
+      -0.406
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.406,
+     0.0,
+     -0.914
+    ],
+    "keys": [
+     [
+      0.95,
+      0.0,
+      "linear"
+     ],
+     [
+      1.1,
+      -35.0,
+      "out"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_enemy_husk.006",
+   "source": "enemy (stand-in, the struck enemy)",
+   "pos": [
+    1.327,
+    0.0,
+    10.245
+   ],
+   "fwd": [
+    0.603,
+    0.0,
+    -0.798
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "knocked back",
+   "note": "struck (50, 70 stagger) on the 3 m disc",
+   "visible": [
+    0.0,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.15,
+     [
+      0.603,
+      0.0,
+      -0.798
+     ],
+     "out"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     0.798,
+     0.0,
+     0.603
+    ],
+    "keys": [
+     [
+      0.95,
+      0.0,
+      "linear"
+     ],
+     [
+      1.1,
+      -35.0,
+      "out"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_crack2.001",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_crack2",
+   "pos": [
+    0.0,
+    0.01,
+    1.3
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "spread",
+   "note": "the torn ground where the blade scooped the stone",
+   "visible": [
+    0.0,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.0,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.2,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "stone_giantsthrow",
+   "source": "2026-11-19_wayprops (brannoch_stone)",
+   "pos": [
+    0.0,
+    0.0,
+    12.0
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    -0.011
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "scoop, arc (thrown 12 m), land and stand",
+   "note": "heaved up on the flat (0-0.25 s), flung in an arc tumbling (0.25-0.95 s), lands at 0.95 s and stands again where it lands",
+   "visible": [
+    0.0,
+    1.5
+   ],
+   "offset_keys": [
+    [
+     0.0,
+     [
+      0.0,
+      0.0,
+      -10.7
+     ],
+     "linear"
+    ],
+    [
+     0.25,
+     [
+      0.0,
+      1.4,
+      -10.7
+     ],
+     "out"
+    ],
+    [
+     0.35,
+     [
+      0.0,
+      2.767,
+      -9.171
+     ],
+     "linear"
+    ],
+    [
+     0.45,
+     [
+      -0.0,
+      3.612,
+      -7.643
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      0.0,
+      3.935,
+      -6.114
+     ],
+     "linear"
+    ],
+    [
+     0.65,
+     [
+      -0.0,
+      3.735,
+      -4.586
+     ],
+     "linear"
+    ],
+    [
+     0.75,
+     [
+      0.0,
+      3.012,
+      -3.057
+     ],
+     "linear"
+    ],
+    [
+     0.85,
+     [
+      -0.0,
+      1.767,
+      -1.529
+     ],
+     "linear"
+    ],
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ]
+   ],
+   "spin": {
+    "axis": [
+     -1.0,
+     0.0,
+     0.0
+    ],
+    "keys": [
+     [
+      0.25,
+      0.0,
+      "linear"
+     ],
+     [
+      0.95,
+      -540.0,
+      "linear"
+     ],
+     [
+      0.96,
+      0.0,
+      "step"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx_earth_chip.018",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.011,
+    1.838,
+    1.755
+   ],
+   "fwd": [
+    0.216,
+    0.427,
+    -0.878
+   ],
+   "up": [
+    0.972,
+    -0.177,
+    0.154
+   ],
+   "scale": [
+    1.712,
+    1.712,
+    1.712
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.292,
+    0.742
+   ],
+   "offset_keys": [
+    [
+     0.292,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.742,
+     [
+      0.0,
+      -1.788,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "giantsthrow_shadow",
+   "source": "2026-11-19_godfx/vfx_god_gsword_kit.fbx:vfxg_giantsthrow_shadow",
+   "pos": [
+    0.0,
+    0.0,
+    12.0
+   ],
+   "fwd": [
+    0.819,
+    0.0,
+    -0.574
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.7,
+    1.0,
+    1.7
+   ],
+   "inked": false,
+   "verb": "grow (the tell)",
+   "note": "its shadow on the floor tells where it falls; it grows and darkens for 0.6 s",
+   "visible": [
+    0.3,
+    0.97
+   ],
+   "scale_keys": [
+    [
+     0.3,
+     [
+      0.35,
+      1,
+      0.35
+     ],
+     "linear"
+    ],
+    [
+     0.95,
+     [
+      1.15,
+      1,
+      1.15
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.019",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -0.109,
+    2.152,
+    2.277
+   ],
+   "fwd": [
+    0.509,
+    0.259,
+    0.821
+   ],
+   "up": [
+    -0.622,
+    -0.548,
+    0.559
+   ],
+   "scale": [
+    1.737,
+    1.737,
+    1.737
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.315,
+    0.765
+   ],
+   "offset_keys": [
+    [
+     0.315,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.765,
+     [
+      0.0,
+      -2.102,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.020",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.019,
+    2.439,
+    2.655
+   ],
+   "fwd": [
+    0.262,
+    0.934,
+    -0.242
+   ],
+   "up": [
+    0.91,
+    -0.323,
+    -0.261
+   ],
+   "scale": [
+    1.62,
+    1.62,
+    1.62
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.339,
+    0.789
+   ],
+   "offset_keys": [
+    [
+     0.339,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.789,
+     [
+      0.0,
+      -2.389,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.021",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.1,
+    2.696,
+    3.103
+   ],
+   "fwd": [
+    0.951,
+    -0.307,
+    -0.03
+   ],
+   "up": [
+    0.174,
+    0.454,
+    0.874
+   ],
+   "scale": [
+    2.555,
+    2.555,
+    2.555
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.362,
+    0.812
+   ],
+   "offset_keys": [
+    [
+     0.362,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.812,
+     [
+      0.0,
+      -2.646,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.022",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.02,
+    2.926,
+    3.249
+   ],
+   "fwd": [
+    0.878,
+    0.07,
+    0.474
+   ],
+   "up": [
+    -0.476,
+    0.013,
+    0.879
+   ],
+   "scale": [
+    2.439,
+    2.439,
+    2.439
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.385,
+    0.835
+   ],
+   "offset_keys": [
+    [
+     0.385,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.835,
+     [
+      0.0,
+      -2.876,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.023",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.048,
+    3.126,
+    3.639
+   ],
+   "fwd": [
+    -0.751,
+    0.582,
+    0.311
+   ],
+   "up": [
+    0.443,
+    0.794,
+    -0.415
+   ],
+   "scale": [
+    2.335,
+    2.335,
+    2.335
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.409,
+    0.859
+   ],
+   "offset_keys": [
+    [
+     0.409,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.859,
+     [
+      0.0,
+      -3.076,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.024",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.026,
+    3.299,
+    4.199
+   ],
+   "fwd": [
+    0.41,
+    0.445,
+    0.796
+   ],
+   "up": [
+    -0.546,
+    -0.579,
+    0.605
+   ],
+   "scale": [
+    1.794,
+    1.794,
+    1.794
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.432,
+    0.882
+   ],
+   "offset_keys": [
+    [
+     0.432,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.882,
+     [
+      0.0,
+      -3.249,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.025",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.093,
+    3.443,
+    4.425
+   ],
+   "fwd": [
+    0.957,
+    -0.066,
+    0.282
+   ],
+   "up": [
+    -0.206,
+    0.529,
+    0.823
+   ],
+   "scale": [
+    1.996,
+    1.996,
+    1.996
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.455,
+    0.905
+   ],
+   "offset_keys": [
+    [
+     0.455,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.905,
+     [
+      0.0,
+      -3.393,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.026",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -0.057,
+    3.558,
+    4.889
+   ],
+   "fwd": [
+    0.73,
+    0.249,
+    -0.636
+   ],
+   "up": [
+    -0.04,
+    0.945,
+    0.324
+   ],
+   "scale": [
+    2.39,
+    2.39,
+    2.39
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.479,
+    0.929
+   ],
+   "offset_keys": [
+    [
+     0.479,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.929,
+     [
+      0.0,
+      -3.508,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.027",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.046,
+    3.645,
+    5.049
+   ],
+   "fwd": [
+    0.895,
+    0.064,
+    -0.442
+   ],
+   "up": [
+    0.442,
+    0.02,
+    0.897
+   ],
+   "scale": [
+    1.694,
+    1.694,
+    1.694
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.502,
+    0.952
+   ],
+   "offset_keys": [
+    [
+     0.502,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.952,
+     [
+      0.0,
+      -3.595,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.028",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -0.156,
+    3.704,
+    5.506
+   ],
+   "fwd": [
+    -0.489,
+    0.479,
+    -0.729
+   ],
+   "up": [
+    0.858,
+    0.114,
+    -0.5
+   ],
+   "scale": [
+    1.999,
+    1.999,
+    1.999
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.525,
+    0.975
+   ],
+   "offset_keys": [
+    [
+     0.525,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.975,
+     [
+      0.0,
+      -3.654,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.029",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.034,
+    3.734,
+    5.992
+   ],
+   "fwd": [
+    -0.656,
+    -0.138,
+    -0.742
+   ],
+   "up": [
+    0.497,
+    -0.819,
+    -0.287
+   ],
+   "scale": [
+    2.401,
+    2.401,
+    2.401
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.549,
+    0.999
+   ],
+   "offset_keys": [
+    [
+     0.549,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.999,
+     [
+      0.0,
+      -3.684,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_earth_heave_affliction",
+   "source": "2026-11-18_vfx/vfx_earth_kit_v2.fbx:vfx2_earth_heave_affliction",
+   "pos": [
+    0.0,
+    0.0,
+    12.0
+   ],
+   "fwd": [
+    0.952,
+    0.0,
+    -0.306
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.9,
+    1.2,
+    1.9
+   ],
+   "inked": true,
+   "verb": "bulge (the tell), then heave",
+   "note": "the ground ring of 3 m bulges before the fall and heaves on impact",
+   "visible": [
+    0.55,
+    2.0
+   ],
+   "scale_keys": [
+    [
+     0.55,
+     [
+      1,
+      0.05,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.93,
+     [
+      1,
+      0.35,
+      1
+     ],
+     "in"
+    ],
+    [
+     1.02,
+     [
+      1.1,
+      1.0,
+      1.1
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.030",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -0.081,
+    3.736,
+    6.258
+   ],
+   "fwd": [
+    -0.215,
+    -0.932,
+    -0.292
+   ],
+   "up": [
+    0.933,
+    -0.107,
+    -0.345
+   ],
+   "scale": [
+    2.583,
+    2.583,
+    2.583
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.572,
+    1.022
+   ],
+   "offset_keys": [
+    [
+     0.572,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.022,
+     [
+      0.0,
+      -3.686,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.031",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.01,
+    3.709,
+    6.432
+   ],
+   "fwd": [
+    0.461,
+    0.455,
+    0.761
+   ],
+   "up": [
+    -0.732,
+    -0.289,
+    0.617
+   ],
+   "scale": [
+    2.076,
+    2.076,
+    2.076
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.595,
+    1.045
+   ],
+   "offset_keys": [
+    [
+     0.595,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.045,
+     [
+      0.0,
+      -3.659,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.032",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    -0.071,
+    3.654,
+    6.984
+   ],
+   "fwd": [
+    0.853,
+    -0.325,
+    0.408
+   ],
+   "up": [
+    -0.319,
+    0.294,
+    0.901
+   ],
+   "scale": [
+    2.236,
+    2.236,
+    2.236
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.619,
+    1.069
+   ],
+   "offset_keys": [
+    [
+     0.619,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.069,
+     [
+      0.0,
+      -3.604,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_chip.033",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_chip",
+   "pos": [
+    0.016,
+    3.57,
+    7.112
+   ],
+   "fwd": [
+    0.423,
+    0.229,
+    0.877
+   ],
+   "up": [
+    -0.708,
+    -0.52,
+    0.477
+   ],
+   "scale": [
+    2.573,
+    2.573,
+    2.573
+   ],
+   "inked": true,
+   "verb": "shed and fall",
+   "note": "grit shed along the arc",
+   "visible": [
+    0.642,
+    1.092
+   ],
+   "offset_keys": [
+    [
+     0.642,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.092,
+     [
+      0.0,
+      -3.52,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_crack2",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_crack2",
+   "pos": [
+    0.0,
+    0.01,
+    12.0
+   ],
+   "fwd": [
+    0.819,
+    0.0,
+    -0.574
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    3.2,
+    3.2,
+    3.2
+   ],
+   "inked": false,
+   "verb": "spread",
+   "note": "crack in the floor",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.2,
+      1,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.006",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    0.0,
+    0.0,
+    12.0
+   ],
+   "fwd": [
+    0.819,
+    0.0,
+    -0.574
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    3.2,
+    1.3,
+    3.2
+   ],
+   "inked": false,
+   "verb": "spread ring and settle",
+   "note": "ring of dust on landing (pass-2 earth_dust_burst flipbook)",
+   "visible": [
+    0.95,
+    1.6
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.6,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.15,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.6,
+     [
+      1.3,
+      0.4,
+      1.3
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.007",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    0.803,
+    0.0,
+    13.147
+   ],
+   "fwd": [
+    0.819,
+    0.0,
+    -0.574
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      0.918,
+      0.0,
+      1.311
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.008",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    0.122,
+    0.0,
+    13.395
+   ],
+   "fwd": [
+    0.996,
+    0.0,
+    -0.087
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      0.139,
+      0.0,
+      1.594
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.009",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    -0.592,
+    0.0,
+    13.269
+   ],
+   "fwd": [
+    0.906,
+    0.0,
+    0.423
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      -0.676,
+      0.0,
+      1.45
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.010",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    -1.147,
+    0.0,
+    12.803
+   ],
+   "fwd": [
+    0.574,
+    0.0,
+    0.819
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      -1.311,
+      0.0,
+      0.918
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.011",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    -1.395,
+    0.0,
+    12.122
+   ],
+   "fwd": [
+    0.087,
+    0.0,
+    0.996
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      -1.594,
+      0.0,
+      0.139
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.012",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    -1.269,
+    0.0,
+    11.408
+   ],
+   "fwd": [
+    -0.423,
+    0.0,
+    0.906
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      -1.45,
+      0.0,
+      -0.676
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.013",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    -0.803,
+    0.0,
+    10.853
+   ],
+   "fwd": [
+    -0.819,
+    0.0,
+    0.574
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      -0.918,
+      0.0,
+      -1.311
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.014",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    -0.122,
+    0.0,
+    10.605
+   ],
+   "fwd": [
+    -0.996,
+    0.0,
+    0.087
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      -0.139,
+      0.0,
+      -1.594
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.015",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    0.592,
+    0.0,
+    10.731
+   ],
+   "fwd": [
+    -0.906,
+    0.0,
+    -0.423
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      0.676,
+      0.0,
+      -1.45
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.016",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    1.147,
+    0.0,
+    11.197
+   ],
+   "fwd": [
+    -0.574,
+    0.0,
+    -0.819
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      1.311,
+      0.0,
+      -0.918
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.017",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    1.395,
+    0.0,
+    11.878
+   ],
+   "fwd": [
+    -0.087,
+    0.0,
+    -0.996
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      1.594,
+      0.0,
+      -0.139
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_dust.018",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_dust",
+   "pos": [
+    1.269,
+    0.0,
+    12.592
+   ],
+   "fwd": [
+    0.423,
+    0.0,
+    -0.906
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.1,
+    1.3
+   ],
+   "inked": false,
+   "verb": "spread ring outward and settle",
+   "note": "the landing shock: a ring of dust thrown out round the 3 m disc",
+   "visible": [
+    0.95,
+    1.7
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.25,
+     [
+      1.45,
+      0.0,
+      0.676
+     ],
+     "out"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.95,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     1.1,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.7,
+     [
+      1.2,
+      0.3,
+      1.2
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_a",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_a",
+   "pos": [
+    0.174,
+    0.0,
+    13.992
+   ],
+   "fwd": [
+    0.996,
+    0.0,
+    -0.087
+   ],
+   "up": [
+    -0.05,
+    0.819,
+    -0.571
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_a.001",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_a",
+   "pos": [
+    -1.638,
+    0.0,
+    13.147
+   ],
+   "fwd": [
+    0.574,
+    -0.0,
+    0.819
+   ],
+   "up": [
+    0.47,
+    0.819,
+    -0.329
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_a.002",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_a",
+   "pos": [
+    -1.813,
+    0.0,
+    11.155
+   ],
+   "fwd": [
+    -0.423,
+    -0.0,
+    0.906
+   ],
+   "up": [
+    0.52,
+    0.819,
+    0.242
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_a.003",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_a",
+   "pos": [
+    -0.174,
+    0.0,
+    10.008
+   ],
+   "fwd": [
+    -0.996,
+    0.0,
+    0.087
+   ],
+   "up": [
+    0.05,
+    0.819,
+    0.571
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_a.004",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_a",
+   "pos": [
+    1.638,
+    0.0,
+    10.853
+   ],
+   "fwd": [
+    -0.574,
+    -0.0,
+    -0.819
+   ],
+   "up": [
+    -0.47,
+    0.819,
+    0.329
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_a.005",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_a",
+   "pos": [
+    1.813,
+    0.0,
+    12.845
+   ],
+   "fwd": [
+    0.423,
+    -0.0,
+    -0.906
+   ],
+   "up": [
+    -0.52,
+    0.819,
+    -0.242
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_b",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_b",
+   "pos": [
+    1.147,
+    0.0,
+    13.638
+   ],
+   "fwd": [
+    0.819,
+    0.0,
+    -0.574
+   ],
+   "up": [
+    -0.329,
+    0.819,
+    -0.47
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_b.001",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_b",
+   "pos": [
+    -0.845,
+    0.0,
+    13.813
+   ],
+   "fwd": [
+    0.906,
+    0.0,
+    0.423
+   ],
+   "up": [
+    0.242,
+    0.819,
+    -0.52
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_b.002",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_b",
+   "pos": [
+    -1.992,
+    0.0,
+    12.174
+   ],
+   "fwd": [
+    0.087,
+    -0.0,
+    0.996
+   ],
+   "up": [
+    0.571,
+    0.819,
+    -0.05
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_b.003",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_b",
+   "pos": [
+    -1.147,
+    0.0,
+    10.362
+   ],
+   "fwd": [
+    -0.819,
+    0.0,
+    0.574
+   ],
+   "up": [
+    0.329,
+    0.819,
+    0.47
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_b.004",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_b",
+   "pos": [
+    0.845,
+    0.0,
+    10.187
+   ],
+   "fwd": [
+    -0.906,
+    0.0,
+    -0.423
+   ],
+   "up": [
+    -0.242,
+    0.819,
+    0.52
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_earth_slab_b.005",
+   "source": "2026-11-18_vfx/vfx_earth_kit.fbx:vfx_earth_slab_b",
+   "pos": [
+    1.992,
+    0.0,
+    11.826
+   ],
+   "fwd": [
+    -0.087,
+    -0.0,
+    -0.996
+   ],
+   "up": [
+    -0.571,
+    0.819,
+    0.05
+   ],
+   "scale": [
+    0.9,
+    0.6,
+    0.9
+   ],
+   "inked": true,
+   "verb": "heave up (shock ring)",
+   "note": "slabs of floor heaved up in a ring by the landing",
+   "visible": [
+    0.95,
+    3.0
+   ],
+   "offset_keys": [
+    [
+     0.95,
+     [
+      0.0,
+      -0.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "outback"
+    ]
+   ]
+  }
+ ]
+}

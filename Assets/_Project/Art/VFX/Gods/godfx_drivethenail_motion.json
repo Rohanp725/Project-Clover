@@ -1,0 +1,3265 @@
+{
+ "move": "drivethenail",
+ "element": "metal",
+ "weapon": "hammer",
+ "duration_s": 1.2,
+ "conventions": "Caster frame, Unity axes: x right, y up, z forward, metres, origin at the caster's feet when the move starts, z along the caster's facing. pos: the piece pivot at its key pose. fwd/up: the piece's own Unity forward (Blender local -Y) and up (Blender local +Z): rotation = casterRotation * LookRotation(fwd, up). scale: base local scale (Unity x, y, z). visible: [appear, vanish] seconds. offset_keys: [time, position added in the caster frame, easing into this key]. scale_keys: [time, multiplier on the base scale (Unity x, y, z), easing]. spin: degrees about axis (caster frame) through the piece pivot, applied before its base rotation. orbit: degrees about the caster-frame up axis through centre (positive turns +z toward +x), applied last. Easings: linear, out = 1-(1-x)^2, in = x^2, inout = smoothstep, outback = overshoot (c = 1.70158), step = jump at the key. Before the first key a channel holds its first value; after the last, its last. verb: the simple motion (fall, rise, sweep along a line, spread rings, spin/orbit, flicker/redraw, drift up and thin, lick/flare, ...). source: the kit FBX and object the piece is (paths under staging/blender/), or the stand-in it stands for.",
+ "caster": [],
+ "pieces": [
+  {
+   "name": "g_enemy_husk.019",
+   "source": "enemy (stand-in, the struck enemy)",
+   "pos": [
+    -0.0,
+    0.0,
+    1.7
+   ],
+   "fwd": [
+    -0.0,
+    0.309,
+    -0.951
+   ],
+   "up": [
+    -0.0,
+    0.951,
+    0.309
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "staggered",
+   "note": "a light or middle enemy is staggered at once",
+   "visible": [
+    0.0,
+    1.2
+   ],
+   "spin": {
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "keys": [
+     [
+      0.46,
+      -18.0,
+      "linear"
+     ],
+     [
+      0.56,
+      -35.0,
+      "out"
+     ],
+     [
+      1.2,
+      -28.0,
+      "linear"
+     ]
+    ]
+   }
+  },
+  {
+   "name": "g_vfx2_metal_plate_affliction",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_plate_affliction",
+   "pos": [
+    -0.0,
+    0.9,
+    1.55
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "static",
+   "visible": [
+    0.0,
+    1.2
+   ]
+  },
+  {
+   "name": "g_vfx2_metal_plate_affliction.001",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_plate_affliction.001",
+   "pos": [
+    -0.1,
+    1.3,
+    1.55
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "static",
+   "visible": [
+    0.0,
+    1.2
+   ]
+  },
+  {
+   "name": "g_vfx2_metal_plate_affliction.002",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_plate_affliction.002",
+   "pos": [
+    0.15,
+    0.5,
+    1.55
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": true,
+   "verb": "static",
+   "visible": [
+    0.0,
+    1.2
+   ]
+  },
+  {
+   "name": "rivet_drivethenail",
+   "source": "2026-11-19_godfx/vfx_god_hammer_kit.fbx:vfxg_rivet_drivethenail",
+   "pos": [
+    -0.0,
+    1.15,
+    1.4
+   ],
+   "fwd": [
+    0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.6,
+    1.6,
+    1.6
+   ],
+   "inked": true,
+   "verb": "pulse (the tell), then driven home",
+   "note": "the rivet glows white-hot as you face it; the drive sinks it",
+   "visible": [
+    0.0,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.45,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     0.5,
+     [
+      0.0,
+      0.0,
+      0.18
+     ],
+     "in"
+    ]
+   ],
+   "scale_keys": [
+    [
+     0.0,
+     [
+      1,
+      1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.12,
+     [
+      1.25,
+      1.25,
+      1.25
+     ],
+     "out"
+    ],
+    [
+     0.24,
+     [
+      1,
+      1,
+      1
+     ],
+     "in"
+    ],
+    [
+     0.36,
+     [
+      1.25,
+      1.25,
+      1.25
+     ],
+     "out"
+    ],
+    [
+     0.45,
+     [
+      1,
+      1,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "rivet_drivethenail_-10",
+   "source": "2026-11-19_godfx/vfx_god_hammer_kit.fbx:vfxg_rivet_drivethenail_-10",
+   "pos": [
+    -2.895,
+    1.1,
+    -0.905
+   ],
+   "fwd": [
+    -0.954,
+    0.0,
+    -0.298
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "static",
+   "visible": [
+    0.0,
+    1.2
+   ]
+  },
+  {
+   "name": "rivet_drivethenail_-34",
+   "source": "2026-11-19_godfx/vfx_god_hammer_kit.fbx:vfxg_rivet_drivethenail_-34",
+   "pos": [
+    0.91,
+    1.1,
+    -3.093
+   ],
+   "fwd": [
+    0.282,
+    0.0,
+    -0.959
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "static",
+   "visible": [
+    0.0,
+    1.2
+   ]
+  },
+  {
+   "name": "rivet_drivethenail_30",
+   "source": "2026-11-19_godfx/vfx_god_hammer_kit.fbx:vfxg_rivet_drivethenail_30",
+   "pos": [
+    2.39,
+    1.1,
+    2.758
+   ],
+   "fwd": [
+    0.655,
+    0.0,
+    0.756
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "static",
+   "visible": [
+    0.0,
+    1.2
+   ]
+  },
+  {
+   "name": "g_vfx2_metal_clang_hit.002",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_clang_hit",
+   "pos": [
+    -0.0,
+    0.0,
+    1.7
+   ],
+   "fwd": [
+    0.0,
+    0.0,
+    -1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.2,
+    1.2,
+    1.2
+   ],
+   "inked": false,
+   "verb": "spread rings (tap, then drive)",
+   "note": "the tap rings (small arc), the drive rings (big arcs)",
+   "visible": [
+    0.3,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.3,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.34,
+     [
+      0.5,
+      0.5,
+      0.5
+     ],
+     "step"
+    ],
+    [
+     0.46,
+     [
+      0.8,
+      0.8,
+      0.8
+     ],
+     "step"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_metal_filings_affliction",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_filings_affliction",
+   "pos": [
+    -0.0,
+    0.01,
+    1.7
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.3,
+    1.3,
+    1.3
+   ],
+   "inked": false,
+   "verb": "snap into radial rows",
+   "note": "sparks and filings on the drive",
+   "visible": [
+    0.46,
+    1.5
+   ],
+   "scale_keys": [
+    [
+     0.46,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_metal_sparks_hit.001",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_sparks_hit",
+   "pos": [
+    -0.0,
+    0.0,
+    1.7
+   ],
+   "fwd": [
+    -0.0,
+    0.0,
+    1.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.2,
+    1.2,
+    1.2
+   ],
+   "inked": false,
+   "verb": "burst",
+   "note": "sparks and filings on the drive",
+   "visible": [
+    0.46,
+    1.5
+   ],
+   "scale_keys": [
+    [
+     0.46,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.010",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.037,
+    1.252,
+    1.954
+   ],
+   "fwd": [
+    -0.229,
+    -0.734,
+    0.639
+   ],
+   "up": [
+    -0.248,
+    0.679,
+    0.691
+   ],
+   "scale": [
+    2.56,
+    2.047,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.011",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.104,
+    1.24,
+    1.91
+   ],
+   "fwd": [
+    -0.519,
+    -0.801,
+    0.297
+   ],
+   "up": [
+    -0.695,
+    0.598,
+    0.398
+   ],
+   "scale": [
+    2.56,
+    2.191,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.012",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.121,
+    1.213,
+    1.912
+   ],
+   "fwd": [
+    0.374,
+    -0.908,
+    0.19
+   ],
+   "up": [
+    0.809,
+    0.419,
+    0.412
+   ],
+   "scale": [
+    2.56,
+    2.215,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.013",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.04,
+    1.261,
+    1.942
+   ],
+   "fwd": [
+    -0.298,
+    -0.669,
+    0.68
+   ],
+   "up": [
+    -0.269,
+    0.743,
+    0.613
+   ],
+   "scale": [
+    2.56,
+    1.269,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.014",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.013,
+    1.195,
+    1.992
+   ],
+   "fwd": [
+    0.027,
+    -0.953,
+    0.3
+   ],
+   "up": [
+    0.084,
+    0.302,
+    0.95
+   ],
+   "scale": [
+    2.56,
+    1.76,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.015",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.031,
+    1.153,
+    1.997
+   ],
+   "fwd": [
+    -0.003,
+    -1.0,
+    0.016
+   ],
+   "up": [
+    -0.208,
+    0.017,
+    0.978
+   ],
+   "scale": [
+    2.56,
+    1.387,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.016",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.057,
+    1.26,
+    1.934
+   ],
+   "fwd": [
+    0.41,
+    -0.679,
+    0.608
+   ],
+   "up": [
+    0.38,
+    0.734,
+    0.563
+   ],
+   "scale": [
+    2.56,
+    2.013,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.017",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.086,
+    1.248,
+    1.924
+   ],
+   "fwd": [
+    0.494,
+    -0.757,
+    0.427
+   ],
+   "up": [
+    0.573,
+    0.653,
+    0.495
+   ],
+   "scale": [
+    2.56,
+    1.298,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.018",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.048,
+    1.173,
+    1.99
+   ],
+   "fwd": [
+    -0.051,
+    -0.988,
+    0.148
+   ],
+   "up": [
+    -0.32,
+    0.157,
+    0.935
+   ],
+   "scale": [
+    2.56,
+    1.142,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.019",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.116,
+    1.182,
+    1.939
+   ],
+   "fwd": [
+    -0.172,
+    -0.976,
+    0.131
+   ],
+   "up": [
+    -0.776,
+    0.216,
+    0.592
+   ],
+   "scale": [
+    2.56,
+    1.386,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.020",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.102,
+    1.248,
+    1.9
+   ],
+   "fwd": [
+    -0.586,
+    -0.758,
+    0.284
+   ],
+   "up": [
+    -0.682,
+    0.652,
+    0.331
+   ],
+   "scale": [
+    2.56,
+    1.47,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.021",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.117,
+    1.221,
+    1.912
+   ],
+   "fwd": [
+    -0.419,
+    -0.881,
+    0.222
+   ],
+   "up": [
+    -0.778,
+    0.474,
+    0.412
+   ],
+   "scale": [
+    2.56,
+    1.913,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.022",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.071,
+    1.259,
+    1.925
+   ],
+   "fwd": [
+    0.501,
+    -0.689,
+    0.524
+   ],
+   "up": [
+    0.476,
+    0.725,
+    0.498
+   ],
+   "scale": [
+    2.56,
+    1.927,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.023",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.1,
+    1.25,
+    1.902
+   ],
+   "fwd": [
+    -0.59,
+    -0.747,
+    0.306
+   ],
+   "up": [
+    -0.664,
+    0.664,
+    0.344
+   ],
+   "scale": [
+    2.56,
+    1.481,
+    2.56
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60)",
+   "visible": [
+    0.47,
+    0.85
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.85,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.024",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.023,
+    1.28,
+    2.0
+   ],
+   "fwd": [
+    0.097,
+    -0.759,
+    0.644
+   ],
+   "up": [
+    0.113,
+    0.651,
+    0.751
+   ],
+   "scale": [
+    2.4,
+    1.947,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.025",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.017,
+    1.274,
+    2.006
+   ],
+   "fwd": [
+    0.067,
+    -0.783,
+    0.618
+   ],
+   "up": [
+    0.084,
+    0.622,
+    0.779
+   ],
+   "scale": [
+    2.4,
+    1.711,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.026",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.127,
+    1.261,
+    1.957
+   ],
+   "fwd": [
+    0.426,
+    -0.83,
+    0.359
+   ],
+   "up": [
+    0.635,
+    0.557,
+    0.535
+   ],
+   "scale": [
+    2.4,
+    1.741,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.027",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.143,
+    1.194,
+    1.983
+   ],
+   "fwd": [
+    -0.161,
+    -0.976,
+    0.15
+   ],
+   "up": [
+    -0.714,
+    0.219,
+    0.665
+   ],
+   "scale": [
+    2.4,
+    1.512,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.028",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.128,
+    1.286,
+    1.921
+   ],
+   "fwd": [
+    0.594,
+    -0.734,
+    0.329
+   ],
+   "up": [
+    0.642,
+    0.679,
+    0.356
+   ],
+   "scale": [
+    2.4,
+    1.785,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.029",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.125,
+    1.296,
+    1.905
+   ],
+   "fwd": [
+    0.667,
+    -0.685,
+    0.294
+   ],
+   "up": [
+    0.626,
+    0.729,
+    0.277
+   ],
+   "scale": [
+    2.4,
+    1.975,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.030",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.067,
+    1.283,
+    1.984
+   ],
+   "fwd": [
+    -0.298,
+    -0.749,
+    0.592
+   ],
+   "up": [
+    -0.337,
+    0.663,
+    0.669
+   ],
+   "scale": [
+    2.4,
+    1.41,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.031",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.159,
+    1.255,
+    1.911
+   ],
+   "fwd": [
+    0.488,
+    -0.853,
+    0.188
+   ],
+   "up": [
+    0.795,
+    0.523,
+    0.307
+   ],
+   "scale": [
+    2.4,
+    1.342,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.032",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.141,
+    1.221,
+    1.972
+   ],
+   "fwd": [
+    0.27,
+    -0.934,
+    0.233
+   ],
+   "up": [
+    0.707,
+    0.357,
+    0.61
+   ],
+   "scale": [
+    2.4,
+    1.321,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.033",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.018,
+    1.265,
+    2.012
+   ],
+   "fwd": [
+    0.065,
+    -0.817,
+    0.574
+   ],
+   "up": [
+    0.092,
+    0.577,
+    0.811
+   ],
+   "scale": [
+    2.4,
+    1.89,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.034",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.009,
+    1.289,
+    1.994
+   ],
+   "fwd": [
+    -0.042,
+    -0.72,
+    0.693
+   ],
+   "up": [
+    -0.043,
+    0.694,
+    0.718
+   ],
+   "scale": [
+    2.4,
+    1.65,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.035",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.078,
+    1.263,
+    1.995
+   ],
+   "fwd": [
+    -0.267,
+    -0.824,
+    0.5
+   ],
+   "up": [
+    -0.388,
+    0.567,
+    0.727
+   ],
+   "scale": [
+    2.4,
+    1.495,
+    2.4
+   ],
+   "inked": true,
+   "verb": "spray out (gold ichor)",
+   "note": "gold ichor sprays from the wound (60); in game the drive has a 3 to 5 frame hit-stop before the spray",
+   "visible": [
+    0.47,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.47,
+     [
+      1,
+      0.1,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.56,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.006",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.534,
+    1.004,
+    2.361
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.1,
+    1.1,
+    1.1
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      -0.428,
+      0.117,
+      -0.529
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.954,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.007",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.318,
+    0.547,
+    2.065
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.1,
+    1.1,
+    1.1
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      -0.254,
+      0.482,
+      -0.292
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.497,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.008",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    -0.285,
+    0.812,
+    2.003
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.1,
+    1.1,
+    1.1
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      0.228,
+      0.27,
+      -0.243
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.762,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.009",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    -0.51,
+    0.669,
+    2.31
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.1,
+    1.1,
+    1.1
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      0.408,
+      0.385,
+      -0.488
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.619,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.010",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.03,
+    0.445,
+    2.316
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.1,
+    1.1,
+    1.1
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      -0.024,
+      0.564,
+      -0.493
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.395,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.011",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    -0.76,
+    1.127,
+    2.057
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.1,
+    1.1,
+    1.1
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      0.608,
+      0.018,
+      -0.286
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -1.077,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.012",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    -0.552,
+    1.132,
+    2.75
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.1,
+    1.1,
+    1.1
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      0.441,
+      0.014,
+      -0.84
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -1.082,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.013",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.214,
+    0.571,
+    2.788
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.1,
+    1.1,
+    1.1
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      -0.171,
+      0.463,
+      -0.87
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.521,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.014",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.725,
+    0.969,
+    2.009
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.1,
+    1.1,
+    1.1
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      -0.58,
+      0.145,
+      -0.247
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.919,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.015",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    -1.19,
+    1.408,
+    3.597
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      0.952,
+      -0.207,
+      -1.757
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -1.358,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.016",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.443,
+    0.676,
+    3.191
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      -0.355,
+      0.38,
+      -1.433
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.626,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.017",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    1.031,
+    1.32,
+    2.605
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      -0.825,
+      -0.136,
+      -0.964
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -1.27,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.018",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    -0.832,
+    0.864,
+    2.761
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      0.665,
+      0.229,
+      -1.088
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.814,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.019",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    -0.834,
+    0.401,
+    3.541
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      0.667,
+      0.599,
+      -1.713
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.351,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.020",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    -0.985,
+    0.964,
+    2.494
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      0.788,
+      0.149,
+      -0.875
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.914,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.021",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.246,
+    0.488,
+    3.573
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      -0.197,
+      0.53,
+      -1.738
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.438,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.022",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    -0.668,
+    0.724,
+    3.081
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      0.535,
+      0.341,
+      -1.345
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.674,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.023",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.402,
+    1.557,
+    2.322
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      -0.321,
+      -0.326,
+      -0.738
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -1.507,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.024",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.917,
+    0.696,
+    3.261
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    1.8,
+    1.8
+   ],
+   "inked": true,
+   "verb": "fly and fall",
+   "note": "ichor drops",
+   "visible": [
+    0.5,
+    1.2
+   ],
+   "offset_keys": [
+    [
+     0.5,
+     [
+      -0.733,
+      0.363,
+      -1.489
+     ],
+     "linear"
+    ],
+    [
+     0.7,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ],
+    [
+     1.2,
+     [
+      0.0,
+      -0.646,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_splash.001",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_splash",
+   "pos": [
+    -0.0,
+    0.02,
+    2.6
+   ],
+   "fwd": [
+    1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.8,
+    0.3,
+    1.8
+   ],
+   "inked": true,
+   "verb": "spread (pool)",
+   "note": "a pool of gold ichor",
+   "visible": [
+    0.7,
+    2.0
+   ],
+   "scale_keys": [
+    [
+     0.7,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.9,
+     [
+      1,
+      0.25,
+      1
+     ],
+     "out"
+    ]
+   ]
+  }
+ ]
+}

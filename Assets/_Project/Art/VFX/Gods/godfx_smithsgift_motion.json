@@ -1,0 +1,1409 @@
+{
+ "move": "smithsgift",
+ "element": "metal",
+ "weapon": "hammer",
+ "duration_s": 2.0,
+ "conventions": "Caster frame, Unity axes: x right, y up, z forward, metres, origin at the caster's feet when the move starts, z along the caster's facing. pos: the piece pivot at its key pose. fwd/up: the piece's own Unity forward (Blender local -Y) and up (Blender local +Z): rotation = casterRotation * LookRotation(fwd, up). scale: base local scale (Unity x, y, z). visible: [appear, vanish] seconds. offset_keys: [time, position added in the caster frame, easing into this key]. scale_keys: [time, multiplier on the base scale (Unity x, y, z), easing]. spin: degrees about axis (caster frame) through the piece pivot, applied before its base rotation. orbit: degrees about the caster-frame up axis through centre (positive turns +z toward +x), applied last. Easings: linear, out = 1-(1-x)^2, in = x^2, inout = smoothstep, outback = overshoot (c = 1.70158), step = jump at the key. Before the first key a channel holds its first value; after the last, its last. verb: the simple motion (fall, rise, sweep along a line, spread rings, spin/orbit, flicker/redraw, drift up and thin, lick/flare, ...). source: the kit FBX and object the piece is (paths under staging/blender/), or the stand-in it stands for.",
+ "caster": [],
+ "pieces": [
+  {
+   "name": "g_vfx2_metal_clangrings_infused",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_clangrings_infused",
+   "pos": [
+    0.0,
+    0.012,
+    0.9
+   ],
+   "fwd": [
+    -0.259,
+    0.0,
+    0.966
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.45,
+    0.45,
+    0.45
+   ],
+   "inked": false,
+   "verb": "spread rings (stepped on beats)",
+   "note": "each stroke on the floor-anvil rings out: broken clang rings stepping out on 3 beats",
+   "visible": [
+    0.15,
+    0.65
+   ],
+   "scale_keys": [
+    [
+     0.15,
+     [
+      0.15,
+      1,
+      0.15
+     ],
+     "linear"
+    ],
+    [
+     0.19,
+     [
+      0.5,
+      1,
+      0.5
+     ],
+     "step"
+    ],
+    [
+     0.27,
+     [
+      0.8,
+      1,
+      0.8
+     ],
+     "step"
+    ],
+    [
+     0.37,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_metal_sparks_hit",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_sparks_hit",
+   "pos": [
+    0.0,
+    0.0,
+    0.9
+   ],
+   "fwd": [
+    -0.953,
+    0.0,
+    0.304
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": false,
+   "verb": "burst (forking sparks)",
+   "note": "sparks from the first stroke (pass-2 metal_clang flipbook)",
+   "visible": [
+    0.15,
+    0.45
+   ],
+   "scale_keys": [
+    [
+     0.15,
+     [
+      0.2,
+      0.2,
+      0.2
+     ],
+     "linear"
+    ],
+    [
+     0.22,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.45,
+     [
+      1.2,
+      0.6,
+      1.2
+     ],
+     "linear"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.501,
+    1.12,
+    1.258
+   ],
+   "fwd": [
+    0.713,
+    -0.482,
+    0.51
+   ],
+   "up": [
+    0.392,
+    0.876,
+    0.281
+   ],
+   "scale": [
+    1.2,
+    0.92,
+    1.2
+   ],
+   "inked": false,
+   "verb": "fly out ballistic, shorten",
+   "note": "spark streaks at each stroke",
+   "visible": [
+    0.15,
+    0.5
+   ],
+   "scale_keys": [
+    [
+     0.15,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.23,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.5,
+     [
+      1,
+      0.15,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.002",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.03,
+    0.175,
+    1.34
+   ],
+   "fwd": [
+    -0.025,
+    -0.929,
+    0.369
+   ],
+   "up": [
+    -0.063,
+    0.37,
+    0.927
+   ],
+   "scale": [
+    1.2,
+    0.714,
+    1.2
+   ],
+   "inked": false,
+   "verb": "fly out ballistic, shorten",
+   "note": "spark streaks at each stroke",
+   "visible": [
+    0.15,
+    0.5
+   ],
+   "scale_keys": [
+    [
+     0.15,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.23,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.5,
+     [
+      1,
+      0.15,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.006",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    1.155,
+    0.561,
+    1.504
+   ],
+   "fwd": [
+    0.35,
+    -0.919,
+    0.183
+   ],
+   "up": [
+    0.814,
+    0.395,
+    0.426
+   ],
+   "scale": [
+    1.2,
+    0.691,
+    1.2
+   ],
+   "inked": false,
+   "verb": "fly out ballistic, shorten",
+   "note": "spark streaks at each stroke",
+   "visible": [
+    0.15,
+    0.5
+   ],
+   "scale_keys": [
+    [
+     0.15,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.23,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.5,
+     [
+      1,
+      0.15,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.007",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.21,
+    1.004,
+    -0.121
+   ],
+   "fwd": [
+    0.139,
+    -0.72,
+    -0.679
+   ],
+   "up": [
+    0.145,
+    0.694,
+    -0.706
+   ],
+   "scale": [
+    1.2,
+    0.508,
+    1.2
+   ],
+   "inked": false,
+   "verb": "fly out ballistic, shorten",
+   "note": "spark streaks at each stroke",
+   "visible": [
+    0.15,
+    0.5
+   ],
+   "scale_keys": [
+    [
+     0.15,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.23,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.5,
+     [
+      1,
+      0.15,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.008",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.065,
+    0.772,
+    0.433
+   ],
+   "fwd": [
+    0.117,
+    -0.521,
+    -0.845
+   ],
+   "up": [
+    0.072,
+    0.853,
+    -0.516
+   ],
+   "scale": [
+    1.2,
+    0.548,
+    1.2
+   ],
+   "inked": false,
+   "verb": "fly out ballistic, shorten",
+   "note": "spark streaks at each stroke",
+   "visible": [
+    0.15,
+    0.5
+   ],
+   "scale_keys": [
+    [
+     0.15,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.23,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.5,
+     [
+      1,
+      0.15,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.009",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.441,
+    0.795,
+    0.977
+   ],
+   "fwd": [
+    -0.858,
+    -0.491,
+    0.15
+   ],
+   "up": [
+    -0.484,
+    0.871,
+    0.085
+   ],
+   "scale": [
+    1.2,
+    0.598,
+    1.2
+   ],
+   "inked": false,
+   "verb": "fly out ballistic, shorten",
+   "note": "spark streaks at each stroke",
+   "visible": [
+    0.15,
+    0.5
+   ],
+   "scale_keys": [
+    [
+     0.15,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.23,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.5,
+     [
+      1,
+      0.15,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_metal_clang_hit",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_clang_hit",
+   "pos": [
+    -3.157,
+    0.0,
+    0.189
+   ],
+   "fwd": [
+    -0.06,
+    0.0,
+    -0.998
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.6,
+    0.6,
+    0.6
+   ],
+   "inked": false,
+   "verb": "spread rings (ringing)",
+   "note": "nearby enemies ring",
+   "visible": [
+    0.4,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.4,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_metal_clang_hit.001",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_clang_hit",
+   "pos": [
+    2.977,
+    0.0,
+    -1.066
+   ],
+   "fwd": [
+    0.337,
+    0.0,
+    0.941
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.6,
+    0.6,
+    0.6
+   ],
+   "inked": false,
+   "verb": "spread rings (ringing)",
+   "note": "nearby enemies ring",
+   "visible": [
+    0.4,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.4,
+     [
+      0.3,
+      0.3,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.55,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_metal_clangrings_infused.002",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_clangrings_infused",
+   "pos": [
+    0.0,
+    0.008,
+    0.9
+   ],
+   "fwd": [
+    -0.873,
+    0.0,
+    0.487
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "spread rings (stepped on beats)",
+   "note": "each stroke on the floor-anvil rings out: broken clang rings stepping out on 3 beats",
+   "visible": [
+    0.4,
+    0.9
+   ],
+   "scale_keys": [
+    [
+     0.4,
+     [
+      0.15,
+      1,
+      0.15
+     ],
+     "linear"
+    ],
+    [
+     0.44,
+     [
+      0.5,
+      1,
+      0.5
+     ],
+     "step"
+    ],
+    [
+     0.52,
+     [
+      0.8,
+      1,
+      0.8
+     ],
+     "step"
+    ],
+    [
+     0.62,
+     [
+      1,
+      1,
+      1
+     ],
+     "step"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.001",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.935,
+    0.791,
+    0.135
+   ],
+   "fwd": [
+    0.424,
+    -0.837,
+    -0.347
+   ],
+   "up": [
+    0.648,
+    0.548,
+    -0.53
+   ],
+   "scale": [
+    1.2,
+    0.793,
+    1.2
+   ],
+   "inked": false,
+   "verb": "fly out ballistic, shorten",
+   "note": "spark streaks at each stroke",
+   "visible": [
+    0.4,
+    0.75
+   ],
+   "scale_keys": [
+    [
+     0.4,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.48,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.75,
+     [
+      1,
+      0.15,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.004",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.058,
+    0.233,
+    0.321
+   ],
+   "fwd": [
+    0.037,
+    -0.929,
+    -0.369
+   ],
+   "up": [
+    0.092,
+    0.371,
+    -0.924
+   ],
+   "scale": [
+    1.2,
+    0.592,
+    1.2
+   ],
+   "inked": false,
+   "verb": "fly out ballistic, shorten",
+   "note": "spark streaks at each stroke",
+   "visible": [
+    0.4,
+    0.75
+   ],
+   "scale_keys": [
+    [
+     0.4,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.48,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.75,
+     [
+      1,
+      0.15,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.005",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    -0.124,
+    0.896,
+    2.189
+   ],
+   "fwd": [
+    -0.054,
+    -0.822,
+    0.567
+   ],
+   "up": [
+    -0.079,
+    0.569,
+    0.819
+   ],
+   "scale": [
+    1.2,
+    0.509,
+    1.2
+   ],
+   "inked": false,
+   "verb": "fly out ballistic, shorten",
+   "note": "spark streaks at each stroke",
+   "visible": [
+    0.4,
+    0.75
+   ],
+   "scale_keys": [
+    [
+     0.4,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.48,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     0.75,
+     [
+      1,
+      0.15,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx2_metal_meander_surge",
+   "source": "2026-11-18_vfx/vfx_metal_kit_v2.fbx:vfx2_metal_meander_surge",
+   "pos": [
+    0.0,
+    0.015,
+    0.9
+   ],
+   "fwd": [
+    -0.259,
+    0.0,
+    0.966
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.75,
+    0.75,
+    0.75
+   ],
+   "inked": false,
+   "verb": "spread, then cool (white-hot to orange, straw, blue)",
+   "note": "the Greek-key seam of the anvil-floor, cooling (colour over time in Unity)",
+   "visible": [
+    0.65,
+    2.2
+   ],
+   "scale_keys": [
+    [
+     0.65,
+     [
+      0.3,
+      1,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.8,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_seam",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_seam",
+   "pos": [
+    0.0,
+    0.02,
+    0.9
+   ],
+   "fwd": [
+    -1.0,
+    0.0,
+    0.0
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    14.0,
+    1.0,
+    1.1
+   ],
+   "inked": false,
+   "verb": "appear",
+   "note": "the white-hot slot in the floor the blade is drawn from",
+   "visible": [
+    0.65,
+    1.6
+   ]
+  },
+  {
+   "name": "g_vfx_metal_spark.003",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_spark",
+   "pos": [
+    0.698,
+    0.677,
+    -0.078
+   ],
+   "fwd": [
+    0.285,
+    -0.871,
+    -0.4
+   ],
+   "up": [
+    0.506,
+    0.491,
+    -0.709
+   ],
+   "scale": [
+    1.2,
+    0.96,
+    1.2
+   ],
+   "inked": false,
+   "verb": "fly out ballistic, shorten",
+   "note": "spark streaks at each stroke",
+   "visible": [
+    0.65,
+    1.0
+   ],
+   "scale_keys": [
+    [
+     0.65,
+     [
+      1,
+      0.2,
+      1
+     ],
+     "linear"
+    ],
+    [
+     0.73,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.0,
+     [
+      1,
+      0.15,
+      1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "PW_smithsgift_forged_blade_hot",
+   "source": "2026-11-19_wayprops (forged_blade_hot)",
+   "pos": [
+    0.538,
+    1.797,
+    0.531
+   ],
+   "fwd": [
+    0.352,
+    0.553,
+    0.755
+   ],
+   "up": [
+    0.259,
+    0.717,
+    -0.647
+   ],
+   "scale": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "inked": false,
+   "verb": "drawn up out of the floor, cooling (lerp hot to bronze over 8 s)",
+   "note": "the blade lifted white-orange out of the floor: wayprops forged_blade_hot, fading to forged_blade",
+   "visible": [
+    0.78,
+    2.0
+   ],
+   "offset_keys": [
+    [
+     0.78,
+     [
+      0.0,
+      -1.6,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.05,
+     [
+      0.0,
+      0.0,
+      0.0
+     ],
+     "out"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_splash",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_splash",
+   "pos": [
+    0.0,
+    0.0,
+    0.9
+   ],
+   "fwd": [
+    -0.259,
+    0.0,
+    0.966
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    0.8,
+    0.8,
+    0.8
+   ],
+   "inked": true,
+   "verb": "rise (molten splash)",
+   "note": "molten bronze splashes up where the blade is drawn out",
+   "visible": [
+    0.78,
+    1.3
+   ],
+   "scale_keys": [
+    [
+     0.78,
+     [
+      0.3,
+      0.1,
+      0.3
+     ],
+     "linear"
+    ],
+    [
+     0.9,
+     [
+      1,
+      1,
+      1
+     ],
+     "out"
+    ],
+    [
+     1.3,
+     [
+      1.1,
+      0.2,
+      1.1
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.771,
+    1.66,
+    1.03
+   ],
+   "fwd": [
+    -0.259,
+    0.0,
+    0.966
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fall",
+   "note": "molten drops falling from the cooling blade",
+   "visible": [
+    1.0,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.6,
+     [
+      0.0,
+      -1.61,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.001",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.823,
+    1.702,
+    1.14
+   ],
+   "fwd": [
+    -0.259,
+    0.0,
+    0.966
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fall",
+   "note": "molten drops falling from the cooling blade",
+   "visible": [
+    1.0,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.6,
+     [
+      0.0,
+      -1.652,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.002",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.922,
+    2.207,
+    1.352
+   ],
+   "fwd": [
+    -0.259,
+    0.0,
+    0.966
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fall",
+   "note": "molten drops falling from the cooling blade",
+   "visible": [
+    1.0,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.6,
+     [
+      0.0,
+      -2.157,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.003",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.684,
+    1.333,
+    0.844
+   ],
+   "fwd": [
+    -0.259,
+    0.0,
+    0.966
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fall",
+   "note": "molten drops falling from the cooling blade",
+   "visible": [
+    1.0,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.6,
+     [
+      0.0,
+      -1.283,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.004",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    0.78,
+    1.874,
+    1.048
+   ],
+   "fwd": [
+    -0.259,
+    0.0,
+    0.966
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fall",
+   "note": "molten drops falling from the cooling blade",
+   "visible": [
+    1.0,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.6,
+     [
+      0.0,
+      -1.824,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  },
+  {
+   "name": "g_vfx_metal_drip.005",
+   "source": "2026-11-18_vfx/vfx_metal_kit.fbx:vfx_metal_drip",
+   "pos": [
+    1.065,
+    2.169,
+    1.659
+   ],
+   "fwd": [
+    -0.259,
+    0.0,
+    0.966
+   ],
+   "up": [
+    0.0,
+    1.0,
+    0.0
+   ],
+   "scale": [
+    1.4,
+    1.4,
+    1.4
+   ],
+   "inked": true,
+   "verb": "fall",
+   "note": "molten drops falling from the cooling blade",
+   "visible": [
+    1.0,
+    1.6
+   ],
+   "offset_keys": [
+    [
+     1.0,
+     [
+      0.0,
+      0.3,
+      0.0
+     ],
+     "linear"
+    ],
+    [
+     1.6,
+     [
+      0.0,
+      -2.119,
+      0.0
+     ],
+     "in"
+    ]
+   ]
+  }
+ ]
+}
