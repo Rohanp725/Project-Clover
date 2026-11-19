@@ -113,6 +113,8 @@ namespace Clover.Player
         public float DamagePerSpent;
         /// <summary>For Hazard: the ground it lays leaves the trigger's own enemy alone (Ill Wind's plume does not dose the one that shed it).</summary>
         public bool SparesTarget;
+        /// <summary>For Burst: it strikes without its flash on the ground, its look drawn elsewhere (Nerve Fire's jolts at each bite).</summary>
+        public bool Unseen;
         /// <summary>
         /// For an Arc: it leaps only to enemies carrying this, from the target without striking it again (Live Iron). None:
         /// an arc as usual. For a Condition with a Radius: only the enemies carrying this take it (Chokedamp's shaken).

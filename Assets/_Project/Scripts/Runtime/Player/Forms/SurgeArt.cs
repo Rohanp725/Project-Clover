@@ -4,12 +4,12 @@ namespace Clover.Player.Forms
 {
     /// <summary>
     /// Each element's surge in the approved look (the look-dev's "surge" panels), held round the player for as long as
-    /// it lasts, for <see cref="SurgeLook"/>. Kindle: a rearing flame-cobra behind them with heat bands stepping above.
-    /// Overdrive: Raijin's ring of drums. Tailwind: Fujin's bag-mouth spiral with a column of leaves. Glaze: a knotwork
-    /// frost ring. Wellspring: three rings rising, hanging and falling in turn. Regrowth: the triskele unfurling from
-    /// the feet. Bedrock: a circle of standing stones. Temper: eight blades standing edge-out round them over a Greek-key
-    /// seam. Clarity: a kolam drawn round them, a halo at their back, a slatted shaft from above. Hunger: an eclipse
-    /// under them, one burning crescent and its bead, streaks and motes pouring in. Fever: two terraced bile bands, ruyi
+    /// it lasts, for <see cref="SurgeLook"/>. Kindle: a char ring under the built flames. Overdrive: Raijin's ring of
+    /// drums. Tailwind: Fujin's bag-mouth spiral with a column of leaves. Glaze: a knotwork frost ring. Wellspring:
+    /// three rings rising, hanging and falling in turn. Regrowth and Bedrock: none (their built leaves and stones).
+    /// Temper: eight blades standing edge-out round them over a Greek-key seam. Clarity: a kolam drawn round them, a
+    /// halo at their back and a slatted shaft from above that go after a moment. Hunger: an eclipse under them, one
+    /// burning crescent and its bead, black streaks and motes pouring in. Fever: two terraced bile bands, ruyi
     /// fumes rising off them, bubbles drifting up. One player surges at a time, so the held pieces are kept here.
     /// </summary>
     public static class SurgeArt
@@ -42,9 +42,23 @@ namespace Clover.Player.Forms
             began = 0f;
         }
 
-        /// <summary>True for the elements whose built surge pieces (hanging blades, a crown of rays, smoke, bubbles) the art replaces outright.</summary>
+        /// <summary>
+        /// True for the elements whose built surge pieces (hanging blades, a crown of rays, smoke, bubbles, Wind's
+        /// spinning streaks and leaves) the art replaces outright. Wind's did not read as wind (the owner's review,
+        /// 2026-11-19): its bag-mouth spiral stands alone.
+        /// </summary>
         public static bool ReplacesBuilt(ElementInfo info) =>
-            info != null && (info.Index == ElementSubstance.Metal || info.Index == ElementSubstance.Light || info.Index == ElementSubstance.Dark || info.Index == ElementSubstance.Poison);
+            info != null && (info.Index == ElementSubstance.Metal || info.Index == ElementSubstance.Light || info.Index == ElementSubstance.Dark || info.Index == ElementSubstance.Poison
+                || info.Index == ElementSubstance.Wind);
+
+        /// <summary>Seconds since the surge's pieces were taken; long ago when none are held (the built pieces then show grown).</summary>
+        public static float Age(float time) => element >= 0 ? time - began : 1000f;
+
+        /// <summary>Seconds Clarity's shaft and halo stand at its start before they go; its drawn ground stays.</summary>
+        public const float RaysSeconds = 1.2f, RaysGo = 0.5f;
+
+        /// <summary>The ink Hunger's turning streaks and motes are drawn in: black, not white (the owner's review).</summary>
+        private static readonly Color HungerInk = new Color(0.04f, 0.015f, 0.06f, 1f);
 
         /// <summary>Takes the surge's pieces. False when the new effects are off or the scene has no art.</summary>
         public static bool Begin(ElementInfo info)
@@ -55,17 +69,16 @@ namespace Clover.Player.Forms
             began = Time.time;
             switch (element)
             {
-                case ElementSubstance.Fire:
-                    Solid(0, "fire_cobra_surge");
-                    Solid(1, "fire_shimmer_surge");
-                    Floor(0, "fire_charrings_affliction");
-                    break;
+                // The owner's review (2026-11-19): Kindle's cobra and its heat bands took the screen, and only the
+                // flames at the base were liked; Bedrock's outer ring of standing stones and Regrowth's great turning
+                // triskele go, leaving their built stones (turning on the ground) and leaves.
+                case ElementSubstance.Fire: Floor(0, "fire_charrings_affliction"); break;
                 case ElementSubstance.Lightning: Solid(0, "lightning_drums_surge"); break;
                 case ElementSubstance.Wind: Solid(0, "wind_bagspiral_surge"); break;
                 case ElementSubstance.Ice: Floor(0, "ice_knotring_surge"); break;
                 case ElementSubstance.Water: Solid(0, "water_rings_surge"); break;
-                case ElementSubstance.Life: Solid(0, "life_triskele_surge"); break;
-                case ElementSubstance.Earth: Solid(0, "earth_circle_surge"); break;
+                case ElementSubstance.Life:
+                case ElementSubstance.Earth: break;
                 case ElementSubstance.Metal:
                     for (int i = 0; i < 8; i++) Solid(i, "metal_crownblade_surge");
                     Floor(0, "metal_meander_surge");
@@ -82,6 +95,8 @@ namespace Clover.Player.Forms
                     Floor(2, "dark_bead_surge");
                     Floor(3, "dark_streaks_surge");
                     Floor(4, "dark_motes_surge");
+                    FormFx.TintMark(floors[3], HungerInk);
+                    FormFx.TintMark(floors[4], HungerInk);
                     break;
                 case ElementSubstance.Poison:
                     Floor(0, "poison_band_surge");
@@ -138,9 +153,6 @@ namespace Clover.Player.Forms
             switch (element)
             {
                 case ElementSubstance.Fire:
-                    // The cobra rears behind the player (away from the camera), its heat bands stepping over its head.
-                    FormFx.Place(solids[0], feet + new Vector3(0f, 0f, 0.7f), still, new Vector3(1.05f, 1.35f * grown, 1.05f));
-                    FormFx.Place(solids[1], feet + new Vector3(0f, 2.6f + 0.15f * Mathf.Sin(time * 3f), 0.8f), still, Vector3.one * (0.9f * grown));
                     ElementArt.PlaceFloor(floors[0], floorPieces[0], feet, time * 6f, 0.75f * grown);
                     break;
                 case ElementSubstance.Lightning:
@@ -159,13 +171,6 @@ namespace Clover.Player.Forms
                     FormFx.Place(solids[0], feet + Vector3.up * rise, Quaternion.Euler(0f, time * 30f, 0f), new Vector3(0.75f, 0.75f * grown, 0.75f));
                     break;
                 }
-                case ElementSubstance.Life:
-                    FormFx.Place(solids[0], feet, Quaternion.Euler(0f, 180f + time * 6f, 0f), Vector3.one * (0.75f * grown));
-                    break;
-                case ElementSubstance.Earth:
-                    // A beat of nothing, then the whole circle at once.
-                    FormFx.Place(solids[0], feet, still, new Vector3(0.8f, 0.8f * (age < 0.15f ? 0.02f : grown), 0.8f));
-                    break;
                 case ElementSubstance.Metal:
                     for (int i = 0; i < 8; i++)
                     {
@@ -177,11 +182,16 @@ namespace Clover.Player.Forms
                     ElementArt.PlaceFloor(floors[0], floorPieces[0], feet, 0f, 0.9f * grown);
                     break;
                 case ElementSubstance.Light:
-                    FormFx.Place(solids[0], feet + new Vector3(0f, 0.3f, 0.45f), still, Vector3.one * (0.8f * grown));
-                    FormFx.Place(solids[1], feet, still, new Vector3(1f, grown, 1f));
+                {
+                    // The halo and the shaft come with the surge and then go, narrowing away, so the rays are not there
+                    // the whole time; the drawn ground stays (the owner's review, 2026-11-19).
+                    float rays = grown * Mathf.Clamp01(1f - (age - RaysSeconds) / RaysGo);
+                    FormFx.Place(solids[0], feet + new Vector3(0f, 0.3f, 0.45f), still, Vector3.one * (0.8f * Mathf.Max(0.001f, rays)));
+                    FormFx.Place(solids[1], feet, still, new Vector3(Mathf.Max(0.001f, rays), grown, Mathf.Max(0.001f, rays)));
                     ElementArt.PlaceFloor(floors[0], floorPieces[0], feet, 0f, 0.8f * grown);
                     ElementArt.PlaceFloor(floors[1], floorPieces[1], feet, 0f, 0.8f * grown);
                     break;
+                }
                 case ElementSubstance.Dark:
                     ElementArt.PlaceFloor(floors[0], floorPieces[0], feet, 0f, 0.6f * grown);
                     ElementArt.PlaceFloor(floors[1], floorPieces[1], feet, 0f, 0.6f * grown);

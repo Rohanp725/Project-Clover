@@ -381,11 +381,14 @@ namespace Clover.Player.Forms
         }
 
         // One crystal: a six-sided shaft from its foot, cut to a point over its last quarter.
+        // Thick at its root and thin at its point, as ice grows out of the ground (the owner's review, 2026-11-19: it was
+        // drawn waisted to a point at the root, thick near the top): six sides narrowing a little up to a neck, then cut
+        // to the point.
         private static void Crystal(Maker made, Vector3 foot, Vector3 point, float radius)
         {
-            Vector3 neck = Vector3.Lerp(foot, point, 0.72f);
-            made.Cone(neck, point, radius, 6, 0f);
-            made.Cone(neck, foot, radius * 0.8f, 6, 0f);
+            Vector3 neck = Vector3.Lerp(foot, point, 0.62f);
+            made.Frustum(foot, neck, radius, radius * 0.78f, 6);
+            made.Cone(neck, point, radius * 0.78f, 6, 0f);
         }
 
         /// <summary>A flat square on the ground, one metre across, centred, facing up.</summary>
@@ -458,6 +461,27 @@ namespace Clover.Player.Forms
                     Vector3 second = foot + (across * Mathf.Cos(b) + other * Mathf.Sin(b)) * radius;
                     triangles.Add(point); triangles.Add(first); triangles.Add(second);
                     triangles.Add(foot); triangles.Add(first); triangles.Add(second);
+                }
+                Piece(triangles);
+            }
+
+            /// <summary>A column from a foot to a top, its rings square to the line between them, narrowing from one radius to the other.</summary>
+            public void Frustum(Vector3 foot, Vector3 top, float footRadius, float topRadius, int sides)
+            {
+                Vector3 axis = (top - foot).normalized;
+                Vector3 across = Vector3.Cross(axis, Mathf.Abs(axis.y) > 0.9f ? Vector3.forward : Vector3.up).normalized;
+                Vector3 other = Vector3.Cross(axis, across);
+                var triangles = new List<Vector3>();
+                for (int i = 0; i < sides; i++)
+                {
+                    float a = i * Mathf.PI * 2f / sides, b = (i + 1) * Mathf.PI * 2f / sides;
+                    Vector3 ringA = across * Mathf.Cos(a) + other * Mathf.Sin(a), ringB = across * Mathf.Cos(b) + other * Mathf.Sin(b);
+                    Vector3 lowA = foot + ringA * footRadius, lowB = foot + ringB * footRadius;
+                    Vector3 highA = top + ringA * topRadius, highB = top + ringB * topRadius;
+                    triangles.Add(lowA); triangles.Add(lowB); triangles.Add(highB);
+                    triangles.Add(lowA); triangles.Add(highB); triangles.Add(highA);
+                    triangles.Add(foot); triangles.Add(lowA); triangles.Add(lowB);
+                    triangles.Add(top); triangles.Add(highA); triangles.Add(highB);
                 }
                 Piece(triangles);
             }

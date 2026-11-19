@@ -70,11 +70,12 @@ namespace Clover.Player.Forms
                     break;
                 case ElementSubstance.Wind:
                     ElementArt.Fly(ElementArt.Piece("wind_debris_hit"), feet, feet + direction * 1.2f + Vector3.up * 0.4f, Quaternion.Euler(0f, along, 0f), 1f, 0.55f);
-                    ElementArt.Sheet(ElementArt.SheetOf("wind_gust"), at + direction * 0.6f, 2.6f, 0.55f);
+                    // The gust is carried on down its way and blows apart at its end, never cut off (the owner's review).
+                    ElementArt.BlowSheet(ElementArt.SheetOf("wind_gust"), at + direction * 0.6f, 2.6f, 0.95f, direction.normalized * 2.4f);
                     break;
                 case ElementSubstance.Ice:
-                    // The hold before the shatter: the crack-web on the body and the floor, still.
-                    ElementArt.Stand(ElementArt.Piece("ice_crackweb_hit"), feet, 180f, 1f, 0.45f);
+                    // The frost creeping out. The white crack-web that was held on the body covered everything and is
+                    // gone (the owner's review, 2026-11-19).
                     ElementArt.Sheet(ElementArt.SheetOf("ice_frost_creep"), at, 2.4f, 0.8f);
                     break;
                 case ElementSubstance.Water:
@@ -82,12 +83,21 @@ namespace Clover.Player.Forms
                     ElementArt.Sheet(ElementArt.SheetOf("water_splash"), at, 2.8f, 0.7f);
                     break;
                 case ElementSubstance.Life:
-                    ElementArt.Erupt(ElementArt.Piece("life_fiddle_hit"), at - direction * 0.3f + Vector3.down * 0.4f, Quaternion.Euler(0f, 180f, 0f), Vector3.one * 1.1f, 0.25f, 0.5f, 0.25f);
+                    // Growth out of the ground at its feet. The fiddlehead's green hoop read as a mystery shape and is gone
+                    // (the owner's review, 2026-11-19); the growing shoot was liked.
+                    ElementArt.Erupt(ElementArt.Piece("life_shoot_infused"), feet, Quaternion.Euler(0f, 180f, 0f), Vector3.one * 0.55f, 0.25f, 0.45f, 0.25f);
                     ElementArt.Sheet(ElementArt.SheetOf("life_bloom"), at, 2.2f, 0.9f);
                     break;
                 case ElementSubstance.Earth:
-                    // A beat of nothing, then all at once.
-                    ElementArt.Erupt(ElementArt.Piece("earth_cubes_hit"), feet, Quaternion.Euler(0f, along, 0f), Vector3.one * 0.8f, 0.05f, 0.5f, 0.3f);
+                    // Stones shoved up out of the ground at its feet, thrown up and out, falling back and settling: they
+                    // never hang in the air (the owner's review, 2026-11-19).
+                    ElementArt.Toss(ElementArt.Piece("earth_cubes_hit"), feet + Vector3.down * 0.15f, direction.normalized * 0.8f + Vector3.up * 3.2f, Quaternion.Euler(0f, along, 0f), 0.8f, 0.3f);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Vector3 out_ = Quaternion.Euler(0f, turn + i * 90f, 0f) * Vector3.forward;
+                        FormFx.Toss(FormMesh.Rock, feet + out_ * 0.4f + Vector3.up * 0.1f, out_ * 1.8f + direction.normalized * 0.6f + Vector3.up * (3.4f + 0.5f * i), Quaternion.Euler(i * 40f, turn + i * 70f, 0f),
+                            Vector3.one * 0.32f, new Color(0.36f, 0.3f, 0.22f), 0.3f, 0.035f);
+                    }
                     ElementArt.Sheet(ElementArt.SheetOf("earth_dust_burst"), feet + Vector3.up * 0.8f, 3f, 0.8f);
                     break;
                 case ElementSubstance.Metal:

@@ -92,6 +92,12 @@ namespace Clover.Player.Forms
 
         // ---- Fire: Flame Wave. It strikes the cone at once, then flame runs out along the ground row by row and three patches of it stay burning.
 
+        // Where Flame Wave's three burning patches lie in its cone: how far out (share of its reach) and how far round
+        // (share of its arc, either side of the middle), and how wide each is.
+        private static readonly float[] PatchOut = { 0.42f, 0.78f, 0.78f };
+        private static readonly float[] PatchTurn = { 0f, -0.28f, 0.28f };
+        private const float PatchRadius = 1.25f;
+
         private static int BeginFire(ref SpellRun run)
         {
             var cast = run.Cast;
@@ -126,10 +132,12 @@ namespace Clover.Player.Forms
                 }
                 if (run.Age < spread) return true;
                 run.Phase = 1;
+                // The burning ground lies over the cone the wave struck, near its middle and out to both sides at its
+                // far end, not in a line down the middle (the owner's review, 2026-11-19).
                 for (int i = 0; i < 3; i++)
                 {
-                    patches[i] = run.A + run.B * (cast.Reach * (0.35f + 0.3f * i));
-                    Clover.World.Hazards.Lay(cast.Ground(patches[i], 1f, burns, 0.5f, cast.Linger(2f)));
+                    patches[i] = run.A + Quaternion.Euler(0f, PatchTurn[i] * cast.Spec.Arc, 0f) * run.B * (cast.Reach * PatchOut[i]);
+                    Clover.World.Hazards.Lay(cast.Ground(patches[i], PatchRadius, burns, 0.5f, cast.Linger(2f)));
                 }
                 if (ElementArt.Ready)
                 {
@@ -143,12 +151,12 @@ namespace Clover.Player.Forms
                     for (int i = 0; i < 3; i++) ElementArt.Sheet(ElementArt.SheetOf("fire_smoke_puff"), patches[i] + Vector3.up * (2.2f + 0.4f * i), 2.4f, 1.4f);
                 }
             }
-            // What is left keeps licking upward until it has burned out.
+            // What is left keeps licking upward until it has burned out, anywhere over the patches.
             run.T2 -= deltaTime;
             if (run.T2 <= 0f)
             {
-                run.T2 = 0.06f;
-                Vector2 off = Random.insideUnitCircle * 0.9f;
+                run.T2 = 0.05f;
+                Vector2 off = Random.insideUnitCircle * PatchRadius;
                 float left = 1f - (run.Age - spread) / burns;
                 FormFx.Erupt(FormMesh.Flame, patches[Random.Range(0, 3)] + new Vector3(off.x, 0f, off.y), Quaternion.Euler(0f, Random.value * 360f, 0f),
                     new Vector3(0.5f, (0.5f + Random.value * 0.8f) * (0.4f + 0.6f * left), 0.5f), Random.value < 0.3f ? (ElementArt.Ready ? FireRed : Ember) : cast.Colour, 0.08f, 0.18f, 0.2f, 0.03f);
@@ -358,8 +366,8 @@ namespace Clover.Player.Forms
                 cast.Combat.StrikeArea(middle, cast.Reach * 0.6f, cast.Blow(5f, 8f, 1));
                 if (ElementArt.Ready)
                 {
-                    // Held dead still, then broken all at once: the crack-web, and the shatter's chips.
-                    ElementArt.Stand(ElementArt.Piece("ice_crackweb_hit"), middle, 180f, 1.4f, 0.3f);
+                    // Broken all at once: the shatter's chips and the frost. The white crack-web covered everything and
+                    // is gone (the owner's review, 2026-11-19).
                     ElementArt.Sheet(ElementArt.SheetOf("ice_frost_creep"), middle + Vector3.up * 0.8f, 4f, 0.6f);
                 }
                 else
@@ -401,9 +409,10 @@ namespace Clover.Player.Forms
             for (int i = 0; i < run.Done && i < left.Length; i++) left[i] = -1f;
             run.T1 = Mathf.Max(cast.Reach, TideRules.BreaksAt);
             Vector3 rises = run.A + run.B * run.T1;
-            // The element art: the shark-tooth crest rides the wave's lip; no lane or ring of light.
-            solids[4] = ElementArt.Ready ? ElementArt.Hold(ElementArt.Piece("water_teeth_spell")) : -1;
-            if (solids[4] < 0)
+            // The element art: the wave alone, with no lane or ring of light. Its shark-tooth crest read as random
+            // triangles on top of the wave and is left off (the owner's review, 2026-11-19).
+            solids[4] = -1;
+            if (!ElementArt.Ready)
             {
                 // The way it will come, drawn on the ground from where it rises to where it breaks.
                 FormFx.Run(FormMark.Lane, rises, -run.B, run.T1 - TideRules.BreaksAt, TideRules.HalfWidth * 1.7f, FormKit.Lit(cast.Colour, 1.5f, 0.7f), 0.75f);
@@ -542,8 +551,8 @@ namespace Clover.Player.Forms
             }
             if (ElementArt.Ready)
             {
-                // Runner vines go out first, and roots crack the floor; the bed blooms over them.
-                ElementArt.Erupt(ElementArt.Piece("life_runners_spell"), run.C, Quaternion.Euler(0f, ElementArt.Turn(run.B), 0f), Vector3.one * 0.9f, 0.4f, Mathf.Max(0.1f, Mathf.Max(0.5f, cast.Spec.Seconds) - 0.7f), 0.3f);
+                // The bed blooms. Its runner vines curving over the floor read as a mystery shape and are left off
+                // (the owner's review, 2026-11-19).
                 ElementArt.Sheet(ElementArt.SheetOf("life_bloom"), run.C + Vector3.up * 0.8f, 3.2f, 1.1f);
             }
             else FormFx.Lay(FormMark.Ring, run.C, 0.5f, FormKit.Lit(cast.Colour, 2.4f), 0.35f, cast.Spec.Radius * 2f);
@@ -678,8 +687,12 @@ namespace Clover.Player.Forms
             {
                 if (alive) run.C = run.Victim.transform.position + Vector3.up * 1.1f;
                 float t = Mathf.Clamp01(run.Age / run.T0);
-                Vector3 way = (run.C - hand).normalized;
-                FormFx.Place(blade, Vector3.Lerp(hand, run.C - way * 0.9f, t), Blade(run, Quaternion.LookRotation(way)), Vector3.one * BladeSize(run, 1.5f));
+                // Thrown to hang over the head of the one faced (the owner's review, 2026-11-19: it looked goofy stood
+                // in the body), turning to point down at it as it arrives.
+                Vector3 over = run.Victim != null ? run.C + Vector3.up * BladeHover : run.C;
+                Vector3 way = (over - hand).normalized;
+                Quaternion flying = Quaternion.Slerp(Quaternion.LookRotation(way), Quaternion.LookRotation(Vector3.down, way), t * t);
+                FormFx.Place(blade, Vector3.Lerp(hand, over, t), Blade(run, flying), Vector3.one * BladeSize(run, 1.5f));
                 FormFx.PlaceMarkFacing(sign, run.C, 0.01f);
                 if (t < 1f) return true;
                 run.Phase = 1;
@@ -706,9 +719,10 @@ namespace Clover.Player.Forms
                 if (alive)
                 {
                     run.C = run.Victim.transform.position + Vector3.up * 1.1f;
-                    // It stands in them, its grip toward the one who threw it, and shivers for a moment.
+                    // It hangs over them point down, bobbing and turning slowly, shivering a moment as it stops.
                     float shiver = Mathf.Sin(stuck * 60f) * 9f * Mathf.Exp(-stuck * 6f);
-                    FormFx.Place(blade, run.C - way * 1.5f + Vector3.up * 0.75f, Blade(run, Quaternion.LookRotation(way + Vector3.down * 0.5f) * Quaternion.Euler(shiver, shiver, 0f)), Vector3.one * BladeSize(run, 1.9f));
+                    Vector3 over = run.C + Vector3.up * (BladeHover + 0.06f * Mathf.Sin(stuck * 3.2f));
+                    FormFx.Place(blade, over, Blade(run, Quaternion.LookRotation(Vector3.down, way) * Quaternion.Euler(shiver, 0f, stuck * 50f)), Vector3.one * BladeSize(run, 1.9f));
                     FormFx.PlaceMarkFacing(sign, run.C + Vector3.up * 1.7f, 0.8f * (1f + 0.12f * Mathf.Sin(run.Age * 9f)));
                     if (run.Flag)
                     {
@@ -739,11 +753,23 @@ namespace Clover.Player.Forms
                 if (!run.Flag2) FormFx.Cut(Vector3.Lerp(run.C, cast.Player.transform.position + Vector3.up * 1.1f, 0.5f), home, home.magnitude, 0.35f, FormKit.Lit(cast.Colour, 3f), 0.2f);
                 return true;
             }
-            float back = Mathf.Clamp01((run.Age - run.T1) / 0.2f);
+            float sinceCalled = run.Age - run.T1;
+            if (run.Flag && sinceCalled < BladeDrop)
+            {
+                // Driven in: it falls point first from over the head into the body before it tears free.
+                float drop = sinceCalled / BladeDrop;
+                Vector3 downWay = run.C - cast.Player.transform.position;
+                downWay.y = 0f;
+                FormFx.Place(blade, Vector3.Lerp(run.C + Vector3.up * BladeHover, run.C - Vector3.up * 0.2f, drop * drop),
+                    Blade(run, Quaternion.LookRotation(Vector3.down, downWay.sqrMagnitude > 0.01f ? downWay.normalized : run.B)), Vector3.one * BladeSize(run, 1.9f));
+                return true;
+            }
+            float back = Mathf.Clamp01((sinceCalled - (run.Flag ? BladeDrop : 0f)) / 0.2f);
             Vector3 to = cast.Player.transform.position + Vector3.up * 1.1f;
             Vector3 flight = to - run.C;
-            // End over end all the way home.
-            FormFx.Place(blade, Vector3.Lerp(run.C, to, back * back), Blade(run, Quaternion.LookRotation(flight.sqrMagnitude > 0.01f ? flight.normalized : run.B) * Quaternion.Euler(run.Age * 1800f, 0f, 0f)), Vector3.one * BladeSize(run, 1.5f));
+            // End over end all the way home, from the body it was driven into or from over the head it hung over.
+            Vector3 leaves = !run.Flag && run.Victim != null ? run.C + Vector3.up * BladeHover : run.C;
+            FormFx.Place(blade, Vector3.Lerp(leaves, to, back * back), Blade(run, Quaternion.LookRotation(flight.sqrMagnitude > 0.01f ? flight.normalized : run.B) * Quaternion.Euler(run.Age * 1800f, 0f, 0f)), Vector3.one * BladeSize(run, 1.5f));
             if (back < 1f) return true;
             Vfx.Play(VfxKind.GuardSpark, to, Vector3.up, 0.6f);
             return false;
@@ -754,6 +780,9 @@ namespace Clover.Player.Forms
         private static Quaternion Blade(in SpellRun run, Quaternion along) => run.Flag2 ? along * Quaternion.Euler(0f, -236f, 0f) : along;
 
         private static float BladeSize(in SpellRun run, float built) => run.Flag2 ? built * 0.62f : built;
+
+        // Flung Blade hangs this far over the body's middle (about half a metre over the head), and is driven down into it over this long.
+        private const float BladeHover = 1.45f, BladeDrop = 0.1f;
 
         // ---- Light: Glare. A ray from the hand, narrow and straight, with a flare where it starts and on everything it crosses; what it crosses is marked, and the mark is seen.
 

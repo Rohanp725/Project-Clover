@@ -22,7 +22,7 @@ namespace Clover.Player.Forms
         public static int MarksShown => instance != null ? instance.marksShown : 0;
 
         private const byte Free = 0, Held = 1, Auto = 2;
-        private const int Erupting = 0, Dropping = 1, Flying = 2, Shrinking = 3, Standing = 4;
+        private const int Erupting = 0, Dropping = 1, Flying = 2, Shrinking = 3, Standing = 4, Tossing = 5;
 
         private struct Solid
         {
@@ -41,12 +41,20 @@ namespace Clover.Player.Forms
             public Color Colour;
             public bool Facing;
             public float Roll;
+            // Metres a second a drawn sheet is carried along while it plays (Wind's gust blown on as it breaks up).
+            public Vector3 Drift;
             // The element art's marks: a drawn sheet played through, a mark drawn on by degrees, one that never fades.
             public byte Extra;
             public float Rate;
         }
 
-        private const byte Sheet = 1, Loops = 2, Reveals = 4, Holds = 8;
+        private const byte Sheet = 1, Loops = 2, Reveals = 4, Holds = 8, Lingers = 16;
+
+        /// <summary>The share of a blown sheet's time its frames take; it is breaking up on its last frame after.</summary>
+        public const float LingerPlays = 0.6f;
+
+        /// <summary>Metres a second squared a tossed thing falls by: a little more than the world's, so it reads as heavy.</summary>
+        public const float TossGravity = 14f;
 
         private static readonly int ColourId = Shader.PropertyToID("_Color");
         private static readonly int HotId = Shader.PropertyToID("_Hot");
@@ -344,6 +352,26 @@ namespace Clover.Player.Forms
         public static void Drop(FormMesh mesh, Vector3 from, Vector3 to, Quaternion rotation, Vector3 scale, Color colour, float seconds, float stay, float sink, float ink = 0.035f) =>
             Thrown(mesh, colour, ink, Dropping, from, to, rotation, scale, seconds, stay, sink);
 
+        /// <summary>
+        /// Something thrown up and out from a point at a velocity, tumbling, that falls back under gravity to the height
+        /// it left, lies there a moment and shrinks away: rocks are shoved up and fall, never float.
+        /// </summary>
+        public static void Toss(FormMesh mesh, Vector3 from, Vector3 velocity, Quaternion rotation, Vector3 scale, Color colour, float settle = 0.25f, float ink = 0.035f) =>
+            Tossed(mesh, colour, ink, from, velocity, rotation, scale, settle);
+
+        public static void TossMesh(Mesh mesh, Material material, Vector3 from, Vector3 velocity, Quaternion rotation, Vector3 scale, Color colour, float settle = 0.25f, float ink = 0.03f)
+        {
+            if (Pending(mesh, material)) Tossed(FormMesh.Slab, colour, ink, from, velocity, rotation, scale, settle);
+            if (instance != null) instance.pendingMesh = null;
+        }
+
+        private static void Tossed(FormMesh mesh, Color colour, float ink, Vector3 from, Vector3 velocity, Quaternion rotation, Vector3 scale, float settle)
+        {
+            // In the air until it is back at the height it left (A), then settling (B); To carries the velocity.
+            float flight = Mathf.Max(0.08f, 2f * Mathf.Max(0f, velocity.y) / TossGravity);
+            Thrown(mesh, colour, ink, Tossing, from, velocity, rotation, scale, flight, settle, 0.01f);
+        }
+
         /// <summary>Something flies from one point to another, thinning as it goes, and is gone.</summary>
         public static void Fly(FormMesh mesh, Vector3 from, Vector3 to, Quaternion rotation, Vector3 scale, Color colour, float seconds, float ink = 0.035f) =>
             Thrown(mesh, colour, ink, Flying, from, to, rotation, scale, seconds, 0f, 0.01f);
@@ -397,6 +425,19 @@ namespace Clover.Player.Forms
                         at.localScale = one.Scale * left;
                         Paint(i, since < 0.06f && Flashes(i) ? 1f : 0f);
                     }
+                    break;
+                }
+                case Tossing:
+                {
+                    if (age >= one.A + one.B) { FreeSolid(i); return; }
+                    float t = Mathf.Min(age, one.A);
+                    Vector3 flown = one.From + one.To * t + Vector3.down * (0.5f * TossGravity * t * t);
+                    // Tumbling about the way it flies while in the air; still once it lands.
+                    Vector3 side = Vector3.Cross(Vector3.up, new Vector3(one.To.x, 0f, one.To.z));
+                    if (side.sqrMagnitude < 0.0001f) side = Vector3.right;
+                    at.SetPositionAndRotation(flown, Quaternion.AngleAxis(t * 540f, side.normalized) * one.Rotation);
+                    float since = age - one.A;
+                    at.localScale = since <= 0f ? one.Scale : one.Scale * Mathf.Max(0.02f, 1f - since / Mathf.Max(0.01f, one.B));
                     break;
                 }
                 case Standing:
@@ -571,6 +612,24 @@ namespace Clover.Player.Forms
             instance.Paint(i, one.Colour, 0f, 1f);
         }
 
+        /// <summary>
+        /// A drawn sheet played through once in the first <see cref="LingerPlays"/> of <paramref name="seconds"/>, carried
+        /// along at <paramref name="drift"/> metres a second and widening to <paramref name="spread"/> times its size the
+        /// whole while, then breaking up on its last frame until it is gone, rather than held and cut off: wind blown
+        /// apart. The material says how it breaks up (Clover/Flipbook's _Disperse).
+        /// </summary>
+        public static void BlowSheet(Material material, Vector3 at, float size, Color colour, float seconds, Vector3 drift, float spread = 1.3f, float roll = 0f)
+        {
+            if (material == null) return;
+            int i = Thrown(FormMark.Disc, at, Quaternion.identity, new Vector3(size, 1f, size), new Vector3(size * spread, 1f, size * spread), colour, seconds, 0f, true, roll, false, material);
+            if (i < 0) return;
+            ref var one = ref instance.flats[i];
+            one.Extra = (byte)(Sheet | Lingers);
+            one.Drift = drift;
+            instance.Turn(i);
+            instance.Paint(i, one.Colour, 0f, 1f);
+        }
+
         /// <summary>Takes a mark of the element art's own material, to be placed by the caller every frame until it is let go.</summary>
         public static int HoldDecal(Material material, Color colour) => instance != null && material != null ? instance.TakeMark(FormMark.Disc, colour, false, material) : -1;
 
@@ -655,16 +714,21 @@ namespace Clover.Player.Forms
                     continue;
                 }
                 float t = one.Age / one.Seconds;
+                bool lingers = (one.Extra & Lingers) != 0;
                 // Its size is reached early and held: it snaps to shape. It is whole for most of its time and gone quickly.
-                float grown = 1f - (1f - t) * (1f - t);
+                // A sheet blown apart widens steadily the whole while instead, and is carried on.
+                float grown = lingers ? t : 1f - (1f - t) * (1f - t);
                 flatAt[i].localScale = Vector3.Lerp(one.Scale, one.EndScale, grown);
                 if (one.Spin != 0f) flatAt[i].Rotate(0f, one.Spin * deltaTime, 0f, Space.Self);
+                if (lingers) flatAt[i].position += one.Drift * deltaTime;
                 var colour = one.Colour;
-                if ((one.Extra & Holds) == 0) colour.a *= t < 0.6f ? 1f : 1f - (t - 0.6f) / 0.4f;
+                if (lingers) colour.a *= t < LingerPlays ? 1f : 1f - (t - LingerPlays) / (1f - LingerPlays);
+                else if ((one.Extra & Holds) == 0) colour.a *= t < 0.6f ? 1f : 1f - (t - 0.6f) / 0.4f;
                 if (one.Extra != 0)
                 {
                     // A drawn sheet steps through its sixteen frames; a mark drawn on by degrees is revealed.
-                    float frame = (one.Extra & Loops) != 0 ? Mathf.Floor(one.Age * one.Rate) % 16f : Mathf.Min(15f, Mathf.Floor(t * 16f));
+                    float frame = (one.Extra & Loops) != 0 ? Mathf.Floor(one.Age * one.Rate) % 16f
+                        : Mathf.Min(15f, Mathf.Floor((lingers ? t / LingerPlays : t) * 16f));
                     float reveal = (one.Extra & Reveals) != 0 ? Mathf.Clamp01(one.Age / Mathf.Max(0.01f, one.Rate)) : 1f;
                     Paint(i, colour, frame, reveal);
                     continue;

@@ -97,11 +97,15 @@ namespace Clover.Player.Forms
                     }
                     case ElementSubstance.Ice:
                     {
-                        // A shell of crystals turning slowly, each leaning out from the body.
-                        float angle = time * 45f + k * 60f;
-                        at = feet + Ring(angle, 0.72f) + Vector3.up * (0.35f + 0.55f * (k % 2) + 0.06f * Mathf.Sin(time * 2f + k));
-                        turn = Quaternion.Euler(0f, angle, 0f) * Quaternion.Euler(22f, 0f, 0f);
-                        scale = Vector3.one * 0.62f;
+                        // A ring of crystals grown up out of the ground round the feet, each in turn, leaning out a
+                        // little; ice grows from the ground, it does not float (the owner's review, 2026-11-19).
+                        float angle = k * 60f + 15f * (k % 2);
+                        float t = Mathf.Clamp01((SurgeArt.Age(time) - 0.06f * k) / 0.22f);
+                        float grow = Mathf.Max(0.02f, 1f - (1f - t) * (1f - t) * (1f - t) + 0.2f * Mathf.Sin(t * Mathf.PI));
+                        at = feet + Ring(angle, 0.85f + 0.12f * (k % 2));
+                        turn = Quaternion.Euler(0f, angle, 0f) * Quaternion.Euler(14f + 6f * (k % 2), 0f, 0f);
+                        float tall = 0.7f + 0.25f * ((k * 5) % 3) / 2f;
+                        scale = new Vector3(0.6f, tall * grow * (1f + 0.03f * Mathf.Sin(time * 2f + k)), 0.6f);
                         break;
                     }
                     case ElementSubstance.Water:
@@ -133,10 +137,12 @@ namespace Clover.Player.Forms
                     }
                     case ElementSubstance.Earth:
                     {
+                        // A ring of stones turning round the feet on the ground, half sunk in it: earth lies on the
+                        // ground, it does not hang in the air (the owner's review, 2026-11-19).
                         float angle = time * 38f + k * 60f;
-                        at = feet + Ring(angle, 0.8f) + Vector3.up * (0.3f + 0.12f * Mathf.Sin(time * 1.6f + k * 2f));
-                        turn = Quaternion.Euler(time * 20f + k * 50f, angle, k * 35f);
-                        scale = Vector3.one * (k % 2 == 0 ? 0.36f : 0.5f);
+                        at = feet + Ring(angle, 1.05f) + Vector3.down * 0.06f;
+                        turn = Quaternion.Euler(0f, angle + k * 35f, 0f);
+                        scale = (k % 2 == 0 ? new Vector3(0.5f, 0.32f, 0.5f) : new Vector3(0.62f, 0.4f, 0.62f));
                         break;
                     }
                     case ElementSubstance.Metal:

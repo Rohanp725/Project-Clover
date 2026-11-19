@@ -268,9 +268,9 @@ namespace Clover.Player.Trees
                     State = new ConditionSpec { Id = Nerves, Seconds = 30f, OnBite = true, While = AfflictionKind.Poison, While2 = AfflictionKind.Static } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Nerves, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Static, Count = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Nerves, Ranks = EnemyRank.Plain | EnemyRank.Elite, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 7f, Stagger = 5f,
-                    Affliction = AfflictionKind.Static },
+                    Affliction = AfflictionKind.Static, Unseen = true },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Nerves, Ranks = EnemyRank.God, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 7f, Stagger = 11f,
-                    Affliction = AfflictionKind.Static },
+                    Affliction = AfflictionKind.Static, Unseen = true },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Nerves, Ranks = EnemyRank.Plain, Do = UpgradeAction.Flinch, Seconds = 0.3f },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Nerves, Ranks = EnemyRank.Elite, Cooldown = 4f, Do = UpgradeAction.Flinch, Seconds = 0.3f }));
         }

@@ -253,6 +253,12 @@ namespace Clover.Gameplay
         private Vector3 leapTo;
         private Vector3 shove;
         private Vector3 home;
+        // The model's place under the body, kept so a shaken body is put back exactly (Tremor's shake).
+        private Vector3 modelRest;
+        private bool shaking;
+
+        /// <summary>How far a body carrying Tremor is shaken, metres, and how fast (the owner's review, 2026-11-19: the enemy is seen shaken).</summary>
+        public const float TremorShake = 0.045f, TremorRate = 31f;
         private Quaternion homeRotation;
         private float fallSpeed;
         private bool inAir;
@@ -370,6 +376,24 @@ namespace Clover.Gameplay
             arcs = arcsToShow;
             turns = turnsToTake;
             guardArc = arcOfItsGuard;
+        }
+
+        // Shaken while it carries Tremor: the model only, side to side and a little up and down, never the body that
+        // moves and is struck, so nothing it does changes. Deeper Tremor shakes it harder.
+        private void LateUpdate()
+        {
+            if (animator == null || animator.transform == transform) return;
+            int tremor = IsDead ? 0 : Afflictions.Stacks(AfflictionKind.Tremor);
+            if (tremor <= 0)
+            {
+                if (shaking) animator.transform.localPosition = modelRest;
+                shaking = false;
+                return;
+            }
+            if (!shaking) modelRest = animator.transform.localPosition;
+            shaking = true;
+            float t = Time.time * TremorRate, size = TremorShake * (1f + 0.25f * (tremor - 1));
+            animator.transform.localPosition = modelRest + new Vector3(Mathf.Sin(t) * size, Mathf.Abs(Mathf.Sin(t * 1.7f + 1f)) * size * 0.5f, Mathf.Sin(t * 1.3f + 2f) * size * 0.6f);
         }
 
         private void Awake()

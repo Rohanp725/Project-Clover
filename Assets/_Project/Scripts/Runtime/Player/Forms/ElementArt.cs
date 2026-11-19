@@ -215,6 +215,22 @@ namespace Clover.Player.Forms
             FormFx.DropMesh(one.Mesh, one.Material, from, to, rotation, Vector3.one * scale, Color.white, seconds, stay, sink, Ink);
         }
 
+        /// <summary>A piece thrown up from a point at a velocity, tumbling, that falls back to the ground it left and settles away.</summary>
+        public static void Toss(int piece, Vector3 from, Vector3 velocity, Quaternion rotation, float scale, float settle)
+        {
+            if (!Valid(piece)) return;
+            ref var one = ref instance.set.Pieces[piece];
+            if (one.Kind == ElementArtSet.Decal) return;
+            FormFx.TossMesh(one.Mesh, one.Material, from, velocity, rotation, Vector3.one * scale, Color.white, settle, Ink);
+        }
+
+        /// <summary>A drawn sheet played through, carried along by <paramref name="drift"/> and breaking up at its end (<see cref="FormFx.BlowSheet"/>).</summary>
+        public static void BlowSheet(int sheet, Vector3 at, float size, float seconds, Vector3 drift, float spread = 1.3f)
+        {
+            if (instance == null || instance.set == null || sheet < 0 || sheet >= instance.set.Sheets.Length) return;
+            FormFx.BlowSheet(instance.set.Sheets[sheet].Material, at, size, Color.white, seconds, drift, spread);
+        }
+
         /// <summary>Takes a piece to be placed by the caller every frame (<see cref="FormFx.Place"/>); -1 when none can be had or it is a floor mark.</summary>
         public static int Hold(int piece)
         {

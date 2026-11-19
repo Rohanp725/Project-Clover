@@ -160,6 +160,9 @@ namespace Clover.EditorTools
             ("Poison/vfx_poison_gasfront_v2_flipbook.png", "poison_gasfront_v2", true, 0.08f, 0.75f),
         };
 
+        /// <summary>The share of Wind's gust frame worn away at its edges (Clover/Flipbook's _Disperse).</summary>
+        public const float DisperseEdge = 0.18f;
+
         private static readonly StringBuilder Report = new StringBuilder();
 
         [MenuItem("Clover/Build/Element Art")]
@@ -262,6 +265,9 @@ namespace Clover.EditorTools
                 material.SetFloat("_Frame", -1f);
                 material.SetFloat("_Cutoff", sheet.cutoff);
                 material.SetFloat("_Opacity", sheet.opacity);
+                // Wind's gust blows apart at its end and is worn away at its frame's edges, never cut off there (the
+                // owner's review, 2026-11-19); the rest fade or hold as before.
+                material.SetFloat("_Disperse", sheet.name == "wind_gust" ? DisperseEdge : 0f);
                 material.SetFloat("_SrcBlend", (float)BlendMode.SrcAlpha);
                 material.SetFloat("_DstBlend", (float)BlendMode.OneMinusSrcAlpha);
                 material.renderQueue = (int)RenderQueue.Transparent;

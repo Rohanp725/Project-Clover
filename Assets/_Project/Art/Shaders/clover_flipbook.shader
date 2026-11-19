@@ -5,6 +5,9 @@
 // The frame comes from one of two places: a particle system's texture sheet animation writes it into the UVs (leave
 // _Frame below 0), or a quad held by code sets _Frame through a property block. With no texture the shader is a flat
 // unlit colour, which is what beams, shafts and see-through gas layers from the kits are drawn in.
+// With _Disperse above 0 the sheet does not fade at its end: it breaks up into hard-edged flecks instead (the tint's
+// alpha is how much of it is left), first at the edges of its frame, which are worn away over that share of the frame
+// so nothing drawn is ever seen cut off by the quad (Wind's gust, the owner's review of 2026-11-19).
 Shader "Clover/Flipbook"
 {
     Properties
@@ -17,6 +20,7 @@ Shader "Clover/Flipbook"
         _Cutoff ("Alpha cut", Range(0, 1)) = 0.35
         _Opacity ("Opacity after the cut", Range(0, 1)) = 1
         _Bands ("Value bands (0: as drawn)", Float) = 0
+        _Disperse ("Disperse: edge share worn away (0: fade as usual)", Range(0, 0.5)) = 0
         [Enum(UnityEngine.Rendering.BlendMode)] _SrcBlend ("Source blend", Float) = 5
         [Enum(UnityEngine.Rendering.BlendMode)] _DstBlend ("Destination blend", Float) = 10
     }
@@ -52,6 +56,7 @@ Shader "Clover/Flipbook"
                 half _Cutoff;
                 half _Opacity;
                 half _Bands;
+                half _Disperse;
                 half _SrcBlend;
                 half _DstBlend;
             CBUFFER_END
@@ -70,6 +75,8 @@ Shader "Clover/Flipbook"
                 float4 positionCS : SV_POSITION;
                 float2 uv : TEXCOORD0;
                 half4 color : TEXCOORD1;
+                // Where in its own frame the point lies (0 to 1 each way), for the disperse.
+                float2 cell : TEXCOORD2;
             };
 
             Varyings Vert(Attributes input)
@@ -78,6 +85,7 @@ Shader "Clover/Flipbook"
                 UNITY_SETUP_INSTANCE_ID(input);
                 output.positionCS = TransformObjectToHClip(input.positionOS.xyz);
                 float2 uv = input.uv;
+                output.cell = input.uv;
                 if (_Frame >= 0)
                 {
                     // Frame 0 is the top left; the texture's v runs upward, so rows are counted down from the top.
@@ -104,6 +112,17 @@ Shader "Clover/Flipbook"
                     colour *= value > 0.001 ? stepped / value : 0;
                 }
                 half alpha = step(_Cutoff, sheet.a) * _Opacity * _Color.a * input.color.a;
+                if (_Disperse > 0.001)
+                {
+                    // Flecks a little longer than tall, each kept while the noise under it is below what is left,
+                    // and the less the nearer the frame's edge.
+                    float2 fleck = floor(input.cell * float2(40.0, 26.0));
+                    half noise = frac(sin(dot(fleck, float2(12.9898, 78.233))) * 43758.5453);
+                    float2 fromEdge = min(input.cell, 1.0 - input.cell);
+                    half edge = saturate(min(fromEdge.x, fromEdge.y) / _Disperse);
+                    half left = _Color.a * input.color.a * edge;
+                    alpha = step(_Cutoff, sheet.a) * _Opacity * step(noise, left);
+                }
                 clip(alpha - 0.004);
                 colour *= _Color.rgb * input.color.rgb;
                 // Added light carries its own strength in the colour; laid paint carries it in the alpha.

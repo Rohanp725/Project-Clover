@@ -226,6 +226,8 @@ namespace Clover.Player
             var source = mark.Kind == UpgradeKind.Reaction ? LaySource.Reaction : LaySource.Effect;
             Vector3 at = who.transform.position;
             bool any = false;
+            // Nerve Fire is seen at each bite as small jolts over the body, not as one big burst when it begins.
+            if (news.Moment == ConditionMoment.Beat && news.Id == Trees.Reactions.Nerves) Forms.AfflictionArt.Jolt(at, news.Count);
             // An end carries the weapon blows the condition took (Burning Sap's weals), for what it does per blow.
             int spent = trigger == UpgradeTrigger.ConditionEnded ? news.Blows : 0;
             foreach (var effect in mark.Effects)
