@@ -1622,6 +1622,9 @@ changed. The old playtest stays with its players until the first few phases of t
   10. Range is sqrt(2 x intensity), held to 1.5 to 5 m. A look has at most two; the dimmer ones are left out (Thermal
   Shock's cold lamp, Fire Medicine's green heart, Burnt Mound's three stone lamps, two of Firebloom's lily lamps). They
   light at the look's impact and fade over 0.45 s.
+  - Firebloom's lilies are white in the kit and were lit amber by the lamps left out, so the warmth is painted on
+    instead (`ReactionArtBuilder.LookRecolours`: amber 1.15, 0.62, 0.2, Claude's number). They are drawn in Fire's ink
+    and do not flash white.
 - **In play** (`ReactionArt`, added beside the element art by `ElementArt`, so no scene was rebuilt):
   - Every look plays as a timeline (see "Motion" below). Its body parts ride on the struck enemy, and its ground parts
     stay where it stood.
@@ -1678,10 +1681,10 @@ changed. The old playtest stays with its players until the first few phases of t
       the char spreads.
     - Fire Medicine: the fumes hang and the fuse and pits show; the bang: the lobed ring pulses, flames lick and
       sparks burst; steam and embers rise.
-    - Sleet Charge: frost crusts the body and static crackles over it; a bolt falls; pellets and chips burst; the
-      glass fern spreads.
-    - Diamond Ring: Dark's streaks wheel in; the slatted shaft lands; the eclipse ring and its bead flare; the corona
-      and shadow bands spread.
+    - Sleet Charge: frost crusts the body and static crackles over it; a bolt falls; where it lands the crack-web
+      flares, the scorch is burnt, pellets and chips burst and the glass fern spreads.
+    - Diamond Ring: Dark's streaks wheel in; the slatted shaft lands, and with it the wheel and shadow bands show;
+      the eclipse ring and its bead flare; the corona and shadow bands spread.
     - The Grudge: the ash knot gathers over the head with pale streaks drawn in; cyan crawls in it; the black bolt
       strikes; the black fern spreads.
     - Capsize: the grass flattens in from the windward side; the after-splash rises and drops fly; the foam combs out
@@ -1697,7 +1700,8 @@ changed. The old playtest stays with its players until the first few phases of t
       inward.
     - Nerve Fire: jagged nerve lines strobe up out of the body and static crawls; the burst rings jolt; the green fern
       spreads.
-    - The Ground Gives: the slabs drop and tip in round the pit; the funnel and collar open; water seeps up in rings.
+    - The Ground Gives: the slabs, held a metre up and a third wider, drop and gather in round the pit; the funnel and
+      collar open; water seeps up in rings.
     - Logan Stone: wind sweeps in from the side; the rut ring heaves up and dust bursts; the comb spreads.
     - Anvil Stone: the ground heaves at its back; the plates clang with a white-hot notch; shards and dust fly; the
       clang rings spread.
@@ -1744,7 +1748,30 @@ changed. The old playtest stays with its players until the first few phases of t
   `CrowdProbe` 6 of 6. None of the 24 mirrored or back to front against the look-dev's frames.
   - The element art's own floor marks (`ElementArtBuilder.DecalMaterial`) give their colours the same way the
     reactions' did before the decal fix, so they may be as washed out. This has not been checked or changed.
-- **Verified with motion**: owed (rebuild, suites, probe strips).
+- **Verified with motion** (in the editor, 2026-11-19, after joining the motion to the fixed look):
+  - Build: 24 looks, 148 parts (3 to 10 a look, none folded), 28 lamps, 33 masks. Nothing grey, missing, unmatched
+    or over budget; every part has its cue. Materials per triangle from the source .blend (1,024 pieces, 137 banded
+    again, 5 taken from it) survive the grouping: a part's colours are per corner.
+  - Fixed while looking: the five pieces taken from the .blend were given their roles by their whole names, whose
+    "combo" holds Wind's word "comb", so the jar's lacquer ring and the anvil swept in like wind; Sleet Charge's
+    crack-web and scorch and Diamond Ring's ground pieces went off before their strike landed; The Ground Gives'
+    slabs barely moved.
+  - Tests: EditMode suite 650 of 650 (`ReactionMotionTests` 12, `ReactionArtTests` 13). PlayMode
+    `ReactionArtPoolTests` 2 of 2.
+  - `ReactionArtProbe`: all 55 looks move across their timeline and leave the pool empty, F8 works, burst p95 6.3 ms
+    (quiet 5.9). Its garbage check failed in two of three runs (burst 10.4 to 10.7 KB a frame against a quiet 7.8 KB;
+    the other run 9.4 against 10.7). Measured directly, 240 `ReactionLook.Play` calls allocate 0 bytes, and frames
+    with the pool busy match quiet ones (7,789 against 7,787 bytes), so the swing is the editor's, not the looks'.
+  - `CrowdProbe` 6 of 6, p95 6.2 ms, 330 reactions.
+  - `ReactionPoseDump` films each look alone as six moments (`review/shots/current/reactpose_<name>.png`). The
+    owner's "a still that pops in and out" is gone: in each look the cause arrives, lands and leaves its aftermath.
+  - Still wrong or weak:
+    - The game's camera puts an enemy 3 m in front of the player near the top of the screen, so only about 2.8 m
+      above its feet is seen. The Grudge's ash cloud (3.6 m up) and the tops of the bolts and shafts are cut off.
+      Lowering them by a quarter would not bring them in, so they are left; it needs the camera to look further ahead,
+      or the looks turned up toward the camera.
+    - Glint's beam runs to where the look-dev's next body stood, not to a real neighbour: the look is not told one.
+    - The composed looks are small (one piece from each parent and a mark); Windthrow's sprout is barely seen.
 
 ## Credits (decided 2026-11-18)
 
