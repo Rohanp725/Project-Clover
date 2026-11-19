@@ -1773,6 +1773,81 @@ changed. The old playtest stays with its players until the first few phases of t
     - Glint's beam runs to where the look-dev's next body stood, not to a real neighbour: the look is not told one.
     - The composed looks are small (one piece from each parent and a mark); Windthrow's sprout is barely seen.
 
+### The owner's review of the effects, fixed in Unity (2026-11-19; Claude's changes, not yet seen by the owner)
+
+The owner's 114 comments are in `docs/design/feedback/2026-11-19_effects_review.md`. What could be fixed in code, data,
+timing or materials, without new art, was fixed; the rest waits for the Blender artist (listed at the end). The
+charged blade's and the infused strikes' visuals on the weapons are another piece of work (a swing-trail system) and
+were not touched.
+
+- **Reactions, designed looks** (`ReactionArtBuilder.LeftOut`, `Moved`, `Borrowings`; `ReactionTimelines`):
+  - Flashover: its bolt falls out of the sky, strobing three times (Earthed's bolt, borrowed). The orange climbing
+    flame and the lightning lying along the floor are left out; the violet tongues, then smoke and embers above stay.
+  - Rime: the frost fan is turned onto the blow's way (it lay 52 degrees off). The chips and fog are blown on down that
+    way (a new verb, Blow). The pale concentric arcs on the player's side are left out.
+  - Anvil Stone: the anvil is set in the middle under the one struck, sunk, and springs up 1.2 m out of the ground
+    past its place and back (Rise with a depth).
+  - Shut in the Dark and Fire Medicine play 1.8 times slower (about 2.4 and 2.6 s).
+  - Capsize: laid along its own way (270 degrees in its recipe, not 220); its splash, crown, drops and wind are
+    gathered onto the body.
+  - The Ground Gives: Water's after-splash and crown (as Capsize wears them) splash up and out round the pit.
+  - Nerve Fire: its big bursting rings are gone, and the bite's Static burst strikes without its ground flash (the new
+    `UpgradeEffect.Unseen`). At every bite, small jolts run over the body instead (`AfflictionArt.Jolt`: Lightning's
+    static three times, each smaller and turned on).
+  - The Grudge: before the strike only the cyan in the cloud is seen, crawling (redrawn and turned every frame or
+    two). The cloud churns slowly, so it stays joined to the bolt. The black bolt is drawn down out of the cloud to the
+    head. The violet static on the body comes with the strike.
+  - Girdled: the pale floor streaks are left out, and the coils grow up the body without turning; together they read
+    as wind round the roots.
+  - The Bolt Runs True: the bolt is run down its own line to the ground, over the body as the camera sees it. Before,
+    it stopped short of the head, 2.2 m behind the body. It strikes the one enemy; the discharge reaches the rest.
+- **Elements** (`AfflictionArt`, `HitArt`, `StrikeArt`, `SurgeArt`, `SurgeLook`, `TapForm`, `FormMeshes`, `FormFx`):
+  - Burn on an enemy: the kit's tongues are stood upright (they leaned 9 degrees and always showed up and to the
+    right), and each is turned more widely.
+  - Flame Wave: its three burning patches (and the ground that burns) lie over the cone, one near its middle and two
+    out at its sides, 1.25 m across.
+  - Kindle: the cobra and its heat bands are gone; the base flames and the char ring stay.
+  - Wind's charged blows landing and Cutting Wind: the gust sheet is carried on down its way and breaks up into hard
+    flecks at its end. Its frame's edges are worn away, so it is never cut off at a line (`FormFx.BlowSheet`,
+    `Clover/Flipbook`'s `_Disperse`). Cutting Wind's streaks fan out wider and longer.
+  - Tailwind: the built streaks and leaves spinning round the player are gone; the spiral stays.
+  - Ice (Hoarfrost, Glaze, every built crystal): thick at the root, thin at the point.
+  - Ice's white crack-web is gone from the charged blows landing (and so from Frost Bite) and from Hoarfrost's
+    shatter.
+  - Glaze: its crystals grow up out of the ground round the feet, one after another, instead of floating.
+  - Riptide: the shark-tooth crest (the triangles on the wave) is gone.
+  - Tremor on an enemy: the body is shaken (`Enemy`: the model only, about 5 cm, harder the deeper). Stones are
+    thrown up and out from the feet and fall (a new toss: up, out, under gravity, and settle). The heaved ring drops
+    back at once instead of closing in.
+  - Earth's charged blows landing: the cubes and four rocks are thrown up and fall back; nothing hangs.
+  - Bedrock: the outer ring of standing stones is gone; the stones turn round the feet on the ground, half sunk.
+  - Briar Patch: the runner vines curving over the floor are gone. Life's blows (and so Grown Into It): the
+    fiddlehead's green hoop is gone, and a small shoot grows from the feet. Regrowth: the great turning triskele is
+    gone; the leaves flying round and the flowers stay.
+  - Clarity: the halo and the shaft stand for 1.2 s and narrow away over 0.5 s; the drawn ground stays.
+  - Cursed on an enemy: the shadow reaching for the player and its hand are gone. A small dark mark sits centred
+    under it, inside the drained ground.
+  - Hunger: its turning streaks and motes are black.
+  - Flung Blade: it flies to hang point down about half a metre over the head of the one faced, bobbing and turning.
+    The next blow drives it down into the body, and then it flies home.
+- **Filming** (`AgentScripts/ReactionGifFrames.cs`, `ElementGifFrames.cs`): on the Proving Ground's real enemies, not
+  the dummy. These are the castle's pen (Temple Soldier, Knife Acolyte, Storm Caller, Gate Captain) and a Gilded
+  Spearman. They are kept alive and kept from chasing or striking, but flinch, freeze, fall and are thrown as the game
+  makes them. Reactions are set off for real by laying their two afflictions. A group of five stands for the reactions
+  that reach others and for the spells and infused strikes.
+- **Waits for new art (the Blender artist)**: shapes the kits do not have, or looks the owner asked to be redesigned.
+  - The 31 composed reactions, which are being redesigned. Among them: Thunder Gust's cyclone with bolts, Supercooled's
+    water freezing over, Quickening's seed growth, Glint's and the other Metal pairs' sword or needle through the
+    body, Carried Embers' and Ill Wind's coloured wind, Smoulder's black flame, Black Chain's chain, Turned to Stone's
+    climbing stone, Kindling Point's rays, Lightning Flower's flowers beside the body, Chokedamp's cracks and mist,
+    Breath Taken's black wind, Venom Rime's green ice, Mock Suns' ice prisms, Drowned Weight's black water, Rot
+    Roots' rotting roots and Golden Feathers' feathers.
+  - Designed looks: Burnt Mound as an eruption, Stolen Warmth made clearer, Fish Poison's poison more plainly poison,
+    Steam's water, Logan Stone's rocky ground and fall, and Caught Light with the reworked water.
+  - Elements: Overdrive's rings and buzzing, Unsteady and Chill (more identity), Soaked's water on the body,
+    Wellspring's flowing water, Broken Ground's stones, Sundered and Temper (blades), Seeded's spores, Regrowth's roots
+    over the legs, the curse coming off a Cursed enemy, Taken, and Miasma's and Fever's clouds.
+
 ## Credits (decided 2026-11-18)
 
 - **Decided (user)**: the published game has a credits section. It thanks **_dnen**, **parvar11** and **nairarj000**,
