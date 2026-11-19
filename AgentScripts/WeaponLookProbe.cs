@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.LowLevel;
 
-// The plain weapons of 2026-11-19 in the player's hands, in the Proving Ground: for the Katana, Great Hammer, Twin
+// The plain weapons of 2026-11-19 in the player's hands, in the Proving Ground: for the Massive Sword (with its parrying hooks), the Katana, Great Hammer, Twin
 // Knives, Chain Sickle and Great Spear in turn it equips the weapon, stands the player in the open facing east, and takes three
 // pictures with time stopped: the game camera at rest (the Katana held in its guard, since it is sheathed at rest),
 // the game camera at the light attack's wind-up, and a close camera of its own 3 m off the player's right-front.
@@ -139,7 +139,7 @@ public class WeaponLookProbeRunner : MonoBehaviour
         if (socket != null && drawn != null) Say($"new katana in the socket: {InSocket(socket, drawn)}");
 
         Vector3 at = player.transform.position;
-        foreach (var (name, tag) in new[] { (Weapons.KatanaName, "katana"), (Weapons.GreatHammerName, "hammer"), (Weapons.TwinKnivesName, "knives"), (Weapons.ChainSickleName, "sickle"), (Weapons.GreatSpearName, "spear") })
+        foreach (var (name, tag) in new[] { (Weapons.MassiveSwordName, "gsword_hooks"), (Weapons.KatanaName, "katana"), (Weapons.GreatHammerName, "hammer"), (Weapons.TwinKnivesName, "knives"), (Weapons.ChainSickleName, "sickle"), (Weapons.GreatSpearName, "spear") })
         {
             combat.Equip(Weapons.ByName(name));
             yield return Real(0.3f);

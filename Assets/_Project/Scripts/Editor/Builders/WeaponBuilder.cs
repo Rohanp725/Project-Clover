@@ -91,8 +91,10 @@ namespace Clover.EditorTools
         {
             new Spec
             {
-                Carry = "gsword", ModelFile = "gsword.fbx", StandIn = SwordStandIn,
-                Notes = "Massive Sword: 518 triangles, slots blade edge grip accent inlay; origin on the grip, point along +Z, edge toward -Y",
+                // The owner gave the plain sword parrying hooks on 2026-11-19 (staging/blender/2026-11-19_wayprops/notes.md,
+                // "Parierhaken"): the hooked file in place of the 11-16 gsword.fbx, which stays in Art for the record.
+                Carry = "gsword", ModelFile = "gsword_hooks.fbx", StandIn = SwordStandIn,
+                Notes = "Massive Sword with Parierhaken (gsword_hooks of 2026-11-19): 678 triangles, slots blade edge grip accent inlay; a pair of parrying lugs 0.26 m above the cross-guard in the blade slot; origin on the grip, point along +Z, edge toward -Y",
                 OwnColours = { { "blade", new Color(0.45f, 0.48f, 0.56f) } },
                 // Slanted from the right shoulder to behind the left heel, flat to the back.
                 RestPosition = new Vector3(0.3f, 0.3f, -0.17f), RestAlong = new Vector3(-0.42f, -0.9f, 0f), RestUp = new Vector3(0.9f, -0.42f, 0f),
@@ -246,6 +248,9 @@ namespace Clover.EditorTools
             { "bow.fbx", PlainBow },
             // The Ice make gripped a third of the way up was built on the plain bow's points.
             { "bow_ice.fbx", PlainBow },
+            // The Stave's bow-spear is the plain bow with a socketed head over its upper tip, the string seated in the
+            // socket's groove at the old nock (staging/blender/2026-11-19_wayprops/notes.md, "bow_yumiyari, rebuilt").
+            { "bow_yumiyari.fbx", PlainBow },
             // The true longbow: gripped in the middle, symmetric, its string 1.80 m long and 0.19 m toward the archer.
             { "bow_ice_true.fbx", new BowShape { Grip = Vector3.zero, NockUpper = new Vector3(0f, 0.19f, 0.90f), NockLower = new Vector3(0f, 0.19f, -0.90f) } },
         };

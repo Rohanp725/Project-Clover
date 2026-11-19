@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: NoonSwellProfile
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.VolumeProfile
   components:
-  - {fileID: 4160138805387141811}
-  - {fileID: 4568773194305232051}
---- !u!114 &4160138805387141811
+  - {fileID: 3923224742656278382}
+  - {fileID: 9122791527512150998}
+--- !u!114 &3923224742656278382
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -43,7 +43,7 @@ MonoBehaviour:
   saturation:
     m_OverrideState: 1
     m_Value: 12
---- !u!114 &4568773194305232051
+--- !u!114 &9122791527512150998
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
