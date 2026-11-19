@@ -112,8 +112,8 @@ namespace Clover.EditorTools
 
         public static List<string> StaleManifestRows()
         {
-            var files = new HashSet<string>(ManifestedFiles(), StringComparer.OrdinalIgnoreCase);
-            return ManifestPaths().Where(p => !files.Contains(p)).ToList();
+            // A row may list a file the unlisted-assets scan skips (a recipe .json beside its kits), so ask the disk.
+            return ManifestPaths().Where(p => !File.Exists(p)).ToList();
         }
 
         /// <summary>Runtime .cs files that use UnityEditor, legacy Input or Built-in RP camera hooks, as "file:line: what".</summary>
