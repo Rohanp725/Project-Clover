@@ -11654,6 +11654,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 39eedaa89fdcf70469747806deaffd89, type: 2}
   ShadowFigure: {fileID: 2100000, guid: c8fc5f68facdb7b42a829885d8e1527b, type: 2}
   Label: {fileID: 12800000, guid: 0f90ed25a62bce04bb8d284b8eb28981, type: 3}
+  Reactions: {fileID: 11400000, guid: 7c26f3efdc8b09b418c6a8ad99ea71c1, type: 2}
 --- !u!43 &35174312300242669
 Mesh:
   m_ObjectHideFlags: 0
