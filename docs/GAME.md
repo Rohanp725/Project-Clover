@@ -295,8 +295,8 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   - Light reads by what it casts. Dark reads as flat black holes that pull inward.
   - Metal has chrome bands, clang arcs and forking sparks. Poison is a low, lobed gas front.
   - Life is approved as it is.
-  - Earth, Water's crest, Fire's hoods at small size, and Poison's Fever and Venom Flick are to be fixed in a third
-    pass before import.
+  - A third pass on Earth, Water's crest, Fire's hoods and Poison's Fever and Venom Flick was made. **The owner
+    preferred pass 2 for everything (2026-11-19)**: pass 2 is final, and pass 3 is kept only as `v3discarded_*` files.
   - The combos come after the elements.
 
 ## Sound
