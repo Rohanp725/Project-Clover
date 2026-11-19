@@ -20,6 +20,7 @@ namespace Clover.EditorTools
         public const string TexturesDir = ArtDir + "Textures/";
         public const string ModelsDir = ArtDir + "Models/";
         public const string CharactersDir = ModelsDir + "Characters/";
+        public const string WeaponsDir = ModelsDir + "Weapons/";
         public const string VfxDir = ArtDir + "VFX/";
         public const string VfxMasksDir = "Assets/_Project/Generated/Vfx/Element/";
         public const string AudioDir = "Assets/_Project/Audio/";
@@ -133,6 +134,9 @@ namespace Clover.EditorTools
             importer.materialImportMode = ModelImporterMaterialImportMode.ImportStandard;
             importer.materialLocation = ModelImporterMaterialLocation.InPrefab;
             importer.generateSecondaryUV = false;
+            // The weapon files are exported without Apply Transform: baking the axes keeps each one's business end along
+            // +Z once WeaponBuilder has turned it about, as the stand-ins and every pose take it to be.
+            if (assetPath.StartsWith(WeaponsDir)) importer.bakeAxisConversion = true;
 
             if (!assetPath.StartsWith(CharactersDir)) return;
             importer.animationType = ModelImporterAnimationType.Generic;
