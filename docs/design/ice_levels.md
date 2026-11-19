@@ -18,15 +18,15 @@ height. The land scene is `HuntersFjord` and the god's lake is its own scene, `S
 | Decided | Source | How this plan uses it |
 |---|---|---|
 | The map is a funnel climbing from the harbour through the forest to the giant's bones | `WORLD.md`, level design rules, 2026-11-18 evening | The fjord is the funnel's mouth (60 m wide), the forest valley its throat (30 m), the ribcage a single climb, the neck a ridge 6 m wide (section 2). The shape is also the hunt's: the Norse mountains are full of reindeer drive systems, guide fences converging on a pit, and this land drives the player up into the skull |
-| The verb is *stealth and sight lines*: the player breaks the huntress's line of sight and can strike back; a hit makes her fall back | same | Section 1.2: her sight is a line from a perch to the player's chest; hard and soft cover break it; three ways to strike back; a hit empties the room of her |
-| Her arrows on the walk are heavy but always warned: about a second ahead, a glint on a ridge and a thin line on the ground show where the arrow will land; a hit deals heavy damage and pins the player so the pack catches up | same | Section 1.2 and 1.3. The camera never shows a ridge more than 6 m above the player (1.1), so the glint is read as drawn where her line meets the edge of the picture, joined to the ground line (question 1) |
+| The verb is *stealth and sight lines*: the player breaks the huntress's line of sight and can strike back; a hit makes her fall back | same | Section 1.2: her sight is a line from a perch to the player's chest; hard and soft cover break it; three ways to strike back (reach her perch unseen, shoot along the glint, fill her bar with perfect guards: the owner's answer 2, 2026-11-19); a hit empties the room of her and wins nothing else (answer 3) |
+| Her arrows on the walk are heavy but always warned: about a second ahead, a glint on a ridge and a thin line on the ground show where the arrow will land; a hit deals heavy damage and pins the player so the pack catches up | same | Section 1.2 and 1.3. The camera never shows a ridge more than 6 m above the player (1.1), so the glint is read as drawn where her line meets the edge of the picture, joined to the ground line, with a quiet mark of whether she has found the player (Decided, owner, 2026-11-19, answer 1) |
 | Rest fires in Fire's rhythm: one every 6 to 8 minutes of a new player's walk, always one at the god's door, a shortcut loop per district back to its fire, 5 to 7 fires | same | Six fires, three shortcuts and a side loop (sections 2 and 4) |
 | Two kinds of optional discovery: "see it, then find the way" (the main kind, holding the land's plain weapon and lore) and one optional trial invented for this land, each land's different | same | The jarl's ship (the plain Great Bow), the frozen heart; the trial is the Sleepers' Hollow, a stealth trial (3.4) |
 | Up to three walkable levels per district, joined by ramps, stairs and ladders seen from above; nothing walkable under a roof; roofs and overhangs only fade | same | Every district names its three levels; every perch is an open platform; the town's halls are roofless or shut |
 | Being hunted is the land's main rule; one pattern per district: the warning shot and arrows from the masts (harbour), herding with the pack toward snares a careful player can see (forest), the sight-line gauntlet from rib to rib (bones) | `WORLD.md`, "Ice's land", the land (the patterns are Proposal there; the districts' shapes follow them) | Sections 3.1 to 3.3, one pattern each |
 | The enemies: the pack (on all fours, in groups; one howls, the others flank), the brittle (ice flesh that shatters into shrapnel under heavy hits), the buried (seen only as a moving line of disturbed snow); the elite is the pack's alpha | `WORLD.md`, "Ice's land" | Section 1.5, each with a mechanic of its own (the owner's bar: no reskins) |
 | Tracks in the snow appear only in the wolf phase | `WORLD.md`, `LOOKS.md` | No enemy leaves footprints on the walk. Trodden paths, ski runs and the buried's moving line are not tracks |
-| The fight: through the horns of the skull to a frozen lake in a crater; she skates; the reflect; the wolf hidden in a blizzard; the lake cracks only once the blizzard has mostly thinned; the wolf crashes through and a longship rises; the player leaves on it alone | `WORLD.md`, "The fight"; "Rides out of each land" | Section 6 gives the approach, the lake as a room and the ship's place under the ice |
+| The fight: through the horns of the skull to a frozen lake in a crater; she skates; the reflect; the wolf hidden in a blizzard; the lake cracks only once the blizzard has mostly thinned; the wolf crashes through and a longship rises; the player leaves on it alone | `WORLD.md`, "The fight"; "Rides out of each land" | Section 6 gives the approach, the lake as a room, the ship's place under the ice, and the ride out down the fjord (Decided, owner, 2026-11-19, answer 7) |
 | The alpha teaches the Fists' gated technique, Bear Them Down: a pounce out of the pack and the snow, answered by a late dodge toward him | `steel/weapons.md` section 9 (Proposal, approved with the steel designs on 2026-11-18) | Section 5 |
 | The land's look: overcast mountain daylight softened by blowing snow; blood red for the hunt only, a deep crimson | `LOOKS.md` section 6 (Decided for the light; the rest Proposal) | Her line on the snow is the hunt's crimson, which is also the game's red for what cannot be guarded |
 | Ice is in tier 3; a clean pass about 45 minutes for a new player (Proposal) | `WORLD.md`, "The order of the climb", "How a climb is structured" | Section 8: 44.5 |
@@ -70,8 +70,12 @@ What follows from it, and is held to below:
    small cold star (ice cyan-white with a crimson fleck, the fletching) pinned to the frame's edge on her bearing, and
    from it the thin crimson line runs across the snow to where the arrow will strike. The eye goes from the star down
    the line to its end. Where the perch itself is in frame (a reached perch, a vista), the glint is drawn on her, in
-   the world. With it, the draw's creak comes from her side of the stereo field. (Question 1 asks whether to add a
-   quiet mark of her state at the same edge, as Metal Gear Solid V's suspicion arc does.)
+   the world. With it, the draw's creak comes from her side of the stereo field. **Her state's mark** (Decided, owner,
+   2026-11-19: a quiet mark showing whether she has found the player; the look is **Proposal (Claude)**, after Metal
+   Gear Solid V's suspicion arc): a thin open ring at the same edge, on her bearing, while she is in the room and has
+   not found the player; it fills as she finds them (over her 1.0 s or 0.6 s, 1.2) and stays full while she hunts; it
+   goes out when she falls back. It is the only thing of hers drawn at the edge between draws, and her guard bar is
+   carried on it (1.2, "Striking back").
 3. **The arrow itself is not the tell.** It crosses the picture in about a tenth of a second. The line is the warning.
 4. **Cover is north of the player.** The land rises north and her perches stand ahead and above, so what hides the
    player from her mostly stands north of them, where the camera sees it. The south-side rule therefore costs this
@@ -128,21 +132,42 @@ in it is struck: **40 damage (of 100) and pinned 1.0 s** (rooted, the guard can 
 0.6 s). If sight is lost before the loose, the draw is cancelled: the line goes out and the glint dims. Her arrow strikes
 whatever is in the zone: a pack member takes 40, a brittle shatters. A missed arrow stands in the snow (12 s).
 
-**Striking back** (question 2). Any of these is a hit, and a hit makes her **fall back**:
+**Striking back** (Decided, owner, 2026-11-19, answer 2: the three ways below; the numbers are **Proposal (Claude)**, to
+be tuned). Any of these is a hit, and a hit makes her **fall back**:
 1. **Reach her unseen.** Every district has one perch the player can climb to (P1a, P2b, P3b). Seen on the way, she
    leaves it for her next perch in the room (a move, not a fall back). Reached while she is unaware or searching, she
    is there, facing where she last saw the player: a blow lands.
-2. **Turn her arrow.** A perfect guard on her arrow (the standard 0.18 s window before it strikes) sends it back up the
-   line, and she has not moved yet (she holds the perch 1.2 s after loosing). While her line is on the player, raising
-   the guard turns them to her bearing, not to the nearest enemy. This is the second lesson of the reflect arc
-   (`WORLD.md`, Proposal: "Ice: reflecting the huntress's arrows back at her"), learned on the walk before her fight.
+2. **Fill her bar with perfect guards.** Each perfect guard of her arrow fills a part of a **bar on her**; when it is
+   full she falls back (Decided). Her arrows must not be easy to perfect guard, and it takes several (Decided). So
+   (**Proposal (Claude)**):
+   - **The window is 0.10 s**, against a blade's standard 0.18 s, at the very end of the draw: the thrum at 0.4 s before
+     the strike is the cue, and the guard must come in the last tenth of a second. A guard that is not perfect does not
+     stop her arrow (her line is red, the game's colour for what cannot be guarded).
+   - **Three perfect guards fill the bar.** With her rates (1.3, rule 1) that is at least 12 s of standing in her line in
+     the harbour, 10 s in the forest and 7 s in the gauntlet, and every miss in between costs 40 and a pin: a choice
+     for a confident player, never the easy way.
+   - **It drains slowly.** One part empties 20 s after the last perfect guard, so a missed arrow between two good ones
+     loses nothing, but hiding in a lee for a long while does. It empties when she leaves the room (by falling back or by
+     moving on), so each room's bar starts empty.
+   - **What the player sees.** Each perfect-guarded arrow is turned and flies back up her line, out of the frame toward
+     the glint, with a crack of split wood and her short cry from her side: the reflect, seen and heard. While her line
+     is on the player, raising the guard turns them to her bearing, not to the nearest enemy. This is the second lesson
+     of the reflect arc (`WORLD.md`, Proposal: "Ice: reflecting the huntress's arrows back at her"), learned on the walk
+     before her fight.
+   - **How the bar is shown, without clutter.** No bar over her and nothing on the HUD. The bar is three short ticks set
+     on her state's mark at the edge of the frame (1.1, point 2), round the outside of its ring: hidden until the first
+     perfect guard of the room, each tick lit ice white as it fills, a lit tick dimming over its last 2 s before it
+     drains. The third tick and the ring break together as she falls back. Where her perch is in frame (a reached perch),
+     the same three ticks are drawn as cracks in her bow's horn nock: in the world, not on the screen.
 3. **Shoot along the glint.** While the glint shows, it is a target at the frame's edge: a Great Bow shot or a spell
    that flies, loosed within 10 degrees of her bearing, strikes her at any range. Steel and element both answer her
    (pillar 2).
 
 **Falling back.** She cries out, the glint goes out, a pale ski line streaks off the far snow; no arrow comes for the
-rest of the room, and the pack's howls stop marking the player. Her arrow, broken, is left where she was struck (on the
-perch, or on the line's end after a reflect): picked up, 50 Shards (question 3).
+rest of the room, and the pack's howls stop marking the player. That is all a hit wins (Decided, owner, 2026-11-19,
+answer 3: she simply falls back). There is no reward on the plan. **Proposal (Claude)**, as a possible tuning only and
+not the plan: a token few Shards (about 5, a tenth of the 50 first proposed) from her broken arrow, if play shows the player needs a nudge
+to try striking back.
 
 **The pack is her eyes.** A howler that can see the player howls and **marks** them for 4 s: while marked, soft cover
 does not hide them from her. Kill the howler and the snow is the player's again.
@@ -173,6 +198,7 @@ The decided pin exists "so the pack catches up". These rules keep that a threat 
 | Deep snow | 4.5 m/s, roll 3.5 m, every step a noise | Hidden under the trees, but slow and heard: sight against sound (1.5, the buried) |
 | Hard ground | Trails, ski runs, ice, rock, timber, bone, frozen hides: 6 m/s, silent | |
 | Her shot | Draw 1.0 s; loose at -0.4 s; lead up to 4 m; zone 2 m by 1.2 m; 40 and a 1.0 s pin | 1.2 |
+| Her guard bar (**Proposal (Claude)**, to be tuned) | Perfect guard window 0.10 s (a blade's 0.18 s); three perfect guards fill it; one part drains 20 s after the last; empty when she leaves the room | Not easy, and several (the owner's answer 2) |
 | Her sight | Eye on the perch's platform + 1.6 m; gaze 70 degrees; range 45 m (forest 30 m); found after 1.0 s (unaware) or 0.6 s (searching) | So the earliest arrow is 1.6 to 2.0 s after the player steps into sight |
 | Open stretches where she hunts | **Up to 9 m**: safe if crossed without stopping (1.5 s). **10 to 16 m**: one arrow to read. **Over 16 m**: the gauntlet's, with the wind | From the line above |
 | Cover where she hunts | At least 2.4 m tall; a lee at least 3 by 3 m at the ranges used; no point of the walk more than 12 m from a lee, lees no more than 20 m apart | 1.6 s found and drawn is 9.6 m of running; a player in a fight needs about 2 s to break off |
@@ -181,7 +207,7 @@ The decided pin exists "so the pack catches up". These rules keep that a threat 
 | The howl | 1.2 s, heard; then the pincer: two lunges 0.4 s apart from opposite sides; and the mark | The one time two attack together, and it is announced |
 | The brittle's shatter | A ring of shrapnel 3 m: 18 to the player, 40 to the pack, shatters any brittle within 2 m | |
 | The buried | In deep snow only, 5 m/s toward the last noise; surfaces with a 0.6 s bulge (red); a blow on its line forces it up, stunned 2 s | |
-| Noise, heard by the buried and sleepers | A step in deep snow 6 m; a roll 8 m; a blow landed 10 m; an arrow strike 10 m; a shatter 14 m | Question 4 asks whether to draw these as rings |
+| Noise, heard by the buried and sleepers | A step in deep snow 6 m; a roll 8 m; a blow landed 10 m; an arrow strike 10 m; a shatter 14 m | Drawn as faint rings on the snow as far as each carries (Decided, owner, 2026-11-19, answer 4) |
 | A snare | Springs on a foot within 0.6 m of its noose; holds 1.5 s (the guard can be raised, a blow on the noose cuts it after 0.5 s); holds an enemy 3 s, hung and open to a finisher | |
 | A deadfall | Trip line across the trail; the log falls on a strip 1.5 m wide after 0.8 s: 35 to anyone under it | |
 | Spindrift (the bones) | Every 18 s; warned 2 s by the wind's rise and snow tearing off the rib tops; 4 s of soft cover over every trough | The wind is the player's ally here, the reverse of Fire's swell |
@@ -400,8 +426,7 @@ fish and weed, pressure ridges in broken lines, the sledge track and its marker 
 - *Striking back (the land's first lesson of it):* from H3's lee, she searches the lee. Leave it by its **west** end and
   the 13 m dash to the plank and the shrouds is outside her gaze (44 degrees off the lee's bearing); inside 4 m of the
   mast she cannot see the player at all. Climb, and she is there with her back turned: strike, and she falls back,
-  leaping to the west ice and skiing off north up the lead's far side (in frame from the platform). Her broken arrow lies
-  on the platform. Seen on the way, she drops from the mast before the player climbs and is next on P1c, unstruck.
+  leaping to the west ice and skiing off north up the lead's far side (in frame from the platform). Seen on the way, she drops from the mast before the player climbs and is next on P1c, unstruck.
 - *Vista:* **V2** on the Raven's platform, 3 by 3 m, looking west-south-west (`LandZones` with a direction, Water's W19):
   across the lead, the west ice, and the jarl's ship lying in it with a frozen archer at its stern, a bow in his hands
   catching the light. Out of reach: the lead is 5 m of black water. (See it, then find the way: 3.1, side path.)
@@ -470,7 +495,8 @@ fish and weed, pressure ridges in broken lines, the sledge track and its marker 
   fight in the open yard, where the pack flanks and she sees; or in the hall shell, where she cannot see, but its 6 m
   breadth and two doors make the howler's pincer come through both.
 - *Teaching the reflect:* R2 shows, cut in the stone, a man with a round shield turning an arrow back at a figure on a
-  mast. Words (Claude's, new): "Turn her arrow and it goes home."
+  mast, two broken arrows already at his feet. Words (Claude's, new): "Turn one arrow and she laughs. Turn three and
+  she goes home."
 - *Shortcut:* **S1**, the sledge run (section 4).
 - *Out:* the hunters' gate at the yard's north-east, (32, 7 to 9, 166 to 172): a timber gate in a palisade of sharpened
   logs, antlers nailed over it, a ramp 2 m over 8 m beyond.
@@ -488,7 +514,7 @@ fish and weed, pressure ridges in broken lines, the sledge track and its marker 
 - *The ship:* the jarl's longship at (-23, 0, 96), the largest in the fjord, upright, frozen with her crew. At her stern,
   the **frozen archer**, a brittle (dormant), holding the bow: struck, he shatters and the bow falls to the deck. **The
   plain Great Bow** (`WeaponPickup`), in this land's make: a plain yew longbow 1.9 m long after the Hedeby bow, horn
-  nocks, no carving (question 6). Two more brittle, dormant at the oars, wake when the archer shatters (his shrapnel
+  nocks, no carving (Decided, owner, 2026-11-19, answer 6). Two more brittle, dormant at the oars, wake when the archer shatters (his shrapnel
   reaches one of them if the player strikes from the wrong side).
 - *Lore:* **R3** on the ship's prow post. Words (Claude's, new): "The jarl tried to sail out. The fjord closed on him like
   a hand." / "She was already on the mast."
@@ -738,8 +764,8 @@ of bone 4 m tall standing every 8 m.
 
 ### 3.4 The trial: the Sleepers' Hollow (off the long run, x 31 to 53, z 223 to 241)
 
-**Proposal** (question 5 offers two others). Each land's trial is invented for it (Decided); the Water land's is a
-duel, so this one is not. Here the player is the hunter for once: **a stealth trial**, the land's verb turned round,
+**Decided** (owner, 2026-11-19, answer 5): the trial is the Sleepers' Hollow; the room and its rules below are
+**Proposal (Claude)**. Each land's trial is invented for it (Decided); the Water land's is a duel, so this one is not. Here the player is the hunter for once: **a stealth trial**, the land's verb turned round,
 which prepares the reversal of the god's second phase (she hunted the player all land; the player hunts the wolf)
 without spending its blizzard.
 
@@ -863,7 +889,29 @@ the ship comes up through the same hole (Decided: the wolf crashes through and a
 **After.** The snow blows off the huntress's body by the hole (Proposal); the choice is made over it (Decided); her skis
 stand in the snow beside her (`steel/depth_elements.md`: the Endless Slope is earned from them). The prompt: "Board the
 longship". The wind drops for the first time in the land; a low sun under the lifting cloud lays white-gold light along
-the lake and the frosted hull, the only warm light in the land (`LOOKS.md`). Where the ship goes is question 7.
+the lake and the frosted hull, the only warm light in the land (`LOOKS.md`).
+
+**The ride out.** **Decided** (owner, 2026-11-19, answer 7): the longship rises through the broken lake and sails out
+down the fjord, past the frozen ships, now thawing; it does not rise into the torn cloud. How, **Proposal (Claude)**: a
+held shot of about 60 s with no control, the player alone at the prow.
+1. *Off the lake* (`SkullLake`). The ship turns south on the keel line's water and sails across the thawing lake toward
+   the brow. Under the brow, at (0, 0, -8), the ice of the crater wall breaks open on a channel of blue ice through the
+   skull, where the lake's melt runs out; the ship goes in and the frame goes dark in the channel (about 15 s).
+2. *Into the fjord* (`HuntersFjord`, its thawed state, a progress key set as she falls). The ship comes out of a cave
+   behind the frozen falls, now running, through the falling water at (-22, 0, 152), into the head pool, and sails south
+   at about 4 m/s along a line from the head pool (-14, 0, 124) down the lead, which the thaw has opened across the
+   fjord into black water and turning floes, to (-12, 0, 40), over the broken pressure wall at (-14, 0, 26), and out of
+   the mouth past (0, 0, -10) to open water at (0, 0, -60), where the shot ends (about 45 s).
+3. *Past the fleet, thawing.* On the ship's left (east), in order: the Long Serpent in the head pool, ice cracking off its
+   mast; the Raven, 8 m off at (-8, 0, 98), the platform where she stood shedding its snow; the Wave, the Elk and the
+   Whale, their heeled hulls letting go of the ice and rolling slowly upright. On the right (west), the jarl's ship at
+   (-23, 0, 96), which tried to sail out, swinging free on the current at last. At the mouth, F1's fire still burns in
+   the lee of the overturned boat.
+4. *Camera.* As the ship leaves the lake the camera swings round behind it to look **south**, down the fjord (the only
+   time the land is seen facing the sea), its pitch eased from 55 to 40 degrees and its distance raised to 18 m, so the
+   fjord ahead fills the top of the frame and the hulls pass on both sides. The light is the lake's: the low white-gold
+   sun under the lifting cloud, now standing behind the camera's right shoulder (north-west), lighting the hulls'
+   thawing faces; the wind has dropped and the snow no longer streams.
 
 **Her ground:** `HoldGround(-34, 34, -10, 58)`: the lake inside the shore ring.
 
@@ -897,8 +945,9 @@ names its parameters; sizes are the defaults the plan uses.
 | I16 | **Neck drums and horns** | Six drums stepping 2 m with drift ramps; the skull's base; two horns curving up 18 m | Section 3.3, 3G |
 | I17 | **The alpha's ground** | The oval clearing with its ring of trunks and gaps, the fallen spruce, the boulder, the beds, the stake gate | Section 5 |
 | I18 | **The hollow** | A sunk floor with a root plate 7 m high, quiet ways laid across deep snow, the elk | Section 3.4 |
-| I19 | **The lake** | The crater with its rim and icefalls, the glassy ice with things under it, the keel line, the ship below, the brow and its stairs | Section 6 |
+| I19 | **The lake** | The crater with its rim and icefalls, the glassy ice with things under it, the keel line, the ship below, the brow and its stairs; the channel of blue ice under the brow that opens for the ride out | Section 6 |
 | I20 | **Cast and freed shortcuts** | The frozen sledge (S1), the log boom (S2), the climber's plug (S3), each opened from one side and kept by a progress key | Section 4 |
+| I21 | **The thawed fjord** (**Proposal (Claude)**, the ride out) | `HuntersFjord`'s thawed state: the lead opened across the fjord into black water with turning floes; the fleet's hulls shedding ice and the heeled ones rolling upright; the frozen falls running, with a cave behind them at water level; the pressure wall broken; open water south of the mouth | The ship's line from (-22, 0, 152) to (0, 0, -60); open water to z -60 |
 
 ### 7.2 New behaviour the rooms rely on (for the code worker)
 
@@ -907,9 +956,9 @@ names its parameters; sizes are the defaults the plan uses.
 | C1 | **Huntress**: one actor moving between perches by room; states (unaware, hunting, searching, fallen back); the gaze; the rate per district; the rules of 1.3 | Every room in section 2's perch table |
 | C2 | **Sight**: a line test from her eye to the player's chest against hard cover always and soft cover unless marked; the foot zone; the builder's lee map per perch (a 0.5 m grid cast at build time, checked against the plan's rectangles, flagging any that differ by more than 1 m) | Same |
 | C3 | **Her shot**: the edge glint, the fixed ground line with its lead, the loose, the strike zone, the pin; cancelled on lost sight; strikes enemies and brittle in the zone | Same |
-| C4 | **Striking back**: the reflect (guard turned to her bearing while her line is on the player), the glint as a target for flying shots and spells, the blow on a reached perch; the fall back | Same |
-| C5 | **Edge marker** (question 1): her glint pinned to the frame's edge on her bearing; optionally her state | Same |
-| C6 | **Noise**: events with radii (1.4), heard by the buried and sleepers; drawn or not (question 4) | The forest, the bones, the hollow |
+| C4 | **Striking back**: the guard bar (a perfect guard window of 0.10 s on her arrow, three to fill, one part draining 20 s after the last, empty when she leaves the room; the turned arrow flying back up her line), the guard turned to her bearing while her line is on the player, the glint as a target for flying shots and spells, the blow on a reached perch; the fall back, which gives no reward | Same |
+| C5 | **Edge marker** (answer 1): her glint pinned to the frame's edge on her bearing; her state's ring (open, filling, full, gone); the guard bar's three ticks on the ring, hidden until the first perfect guard | Same |
+| C6 | **Noise**: events with radii (1.4), heard by the buried and sleepers; drawn as faint rings on the snow (answer 4) | The forest, the bones, the hollow |
 | C7 | **The pack**: ring slots by Muro's two rules, straight-line steering, slots dropped when blocked, the attack token (shared with her shot), leaping under 1.5 m; the howler's howl, pincer and mark; the following pair that waits off screen and closes on a pin | Everywhere |
 | C8 | **The brittle**: chips, shatter by heavy, finisher or her arrow; the shrapnel ring and chains; dormant as hard cover | Harbour, ravine, bones |
 | C9 | **The buried**: deep-snow movement toward the last noise, the bulge and grab, forced up by a blow on its line, the edge lunge | Forest, bones |
@@ -917,6 +966,7 @@ names its parameters; sizes are the defaults the plan uses.
 | C11 | **Spindrift**: the 18 s cycle with its 2 s warning and 4 s veil over the troughs; the squall (the alpha's) | The bones; section 5 |
 | C12 | **Sleepers**: asleep, ears that twitch and wake, the silent kill from behind, the cut howl | The hollow |
 | C13 | **The alpha** | Section 5 |
+| C14 | **The ride out** (**Proposal (Claude)**): the ship on a fixed line with no control (Water's moving floors), the cut from `SkullLake` into `HuntersFjord`'s thawed state, the camera turned to look south with its pitch and distance eased, the hulls' thaw played as the ship passes | Section 6 |
 
 ### 7.3 What is reused
 
@@ -931,7 +981,7 @@ names its parameters; sizes are the defaults the plan uses.
 | `LandVoice` progress keys | S1 to S3, the trial's prize, the frozen archer |
 | `Enemy.MakeDormant`, `Enemy.HoldGround` | Dormant brittle, sleepers; the alpha's ground, her lake |
 | `DistrictMood` | The light by district (`LOOKS.md`): calm and flat on the fjord, dim and blue under the pines, bright and torn in the bones |
-| `SceneDoor` | The horns to `SkullLake` |
+| `SceneDoor` | The horns to `SkullLake`; the ride out's cut back into `HuntersFjord` |
 | `SunCityBuilder` helpers; Fire's `Plateau`, `Bank`, `Ramp`, `Stairs` | Every terrace, shore, trench floor, ramp and stair |
 
 ### 7.4 New kit (Blender, through the `blender-prop` skill)
@@ -976,7 +1026,7 @@ one 45 s, a group a little less each), with each arrow read and each wait for th
 | The neck | 1.0 | 0.6 | Dread, vista | She goes through the horns |
 | **District 3** | **9.3** | **4.2** | | |
 | The brow, F6, the stairs | 0.7 | 0.4 | Wonder | The lake and the ship under it |
-| The huntress (both phases, the lake and the ship) | 11 | 7 | Climax | (`ice_land.md`, later) |
+| The huntress (both phases, the lake, the ship and the ride out) | 11 | 7 | Climax | (`ice_land.md`, later) |
 | **Clean pass** | **44.5** | **21.9** | | |
 | Side paths: the jarl's ship 4, the frozen heart 2, the trial 4 to 6 | + 10 to 12 | + 5 | | |
 
@@ -1025,6 +1075,8 @@ Fewer than Fire's because she is the land's other opponent: about fifteen arrows
    thawing. It does not rise into the torn cloud.
 
 Where the plan below differs from these answers, the answers win; the plan is to be brought into line.
+
+The body of the plan has been brought into line with these answers (2026-11-19).
 
 
 

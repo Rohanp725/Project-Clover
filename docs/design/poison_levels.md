@@ -19,19 +19,19 @@ over the tomb's walkable floor, which the decided rules forbid. The player wakes
 
 | Decided | Source | How this plan uses it |
 |---|---|---|
-| The map is a city with a ground deck and a rooftop deck for the miasma hours | `WORLD.md`, level design rules, 2026-11-18 evening | Every district has a ground deck and a roof deck, and in the court a high deck above that (1.1). The roof deck is a chain of islands the player climbs onto when the gong rings |
+| The map is a city with a ground deck and a rooftop deck for the miasma hours | `WORLD.md`, level design rules, 2026-11-18 evening | Every district has a ground deck and a roof deck, and in the court a high deck above that (1.1). The roof deck is a chain of islands the player climbs onto when the gong rings, joined across three streets by narrow plank bridges (1.1 rule 3) |
 | Poison's verb is *climb*: the one true clock; gongs ring the hours and the player climbs above the miasma | same | The hour is the land's clock (1.2). It runs on time, not places, so its warning has to be heard and seen from anywhere |
 | The player climbs at marked points: fixed ladders, stairs, carts and drainpipes, each marked by a red lantern so it reads from above; enough of them that one is always 15 to 20 seconds away when the first gong warns; no new climbing system | same | Section 1.3. The plan keeps every point on the main path within 12 s of a climb point, to leave room to break off a fight. Ladders, drainpipes and carts use the existing `Ladder` climb |
 | The rule of the land: gongs mark the hours and the poisonous mist rises and falls with them, sending the player up to rooftops and high walls | `WORLD.md`, "Poison's land" | The mist rises from drains and water at the first gong, holds, and sinks at the drum |
 | Rest fires in Fire's rhythm: one every 6 to 8 minutes of a new player's walk, always one at the god's door, one shortcut loop per district back to its fire, 5 to 7 fires | level design rules | Six fires and four shortcuts, one of them a ferry (sections 2 and 4) |
 | Two kinds of optional discovery: "see it, then find the way" (the main kind, holding the plain weapon and lore), and one optional trial invented for this land | same | The lantern barge, the old god's herb garden (the plain weapon), the craftsmen's gallery; the trial is the Third Watch (3.2) |
-| Up to three walkable levels per district, joined by ramps, stairs and ladders seen from above; nothing walkable under a roof; roofs and overhangs only fade | same | Section 1.1. Roofs the player walks on are floors; nothing walkable lies under one, so the roof deck never crosses a street (question 3) |
+| Up to three walkable levels per district, joined by ramps, stairs and ladders seen from above; nothing walkable under a roof; roofs and overhangs only fade | same | Section 1.1. Roofs the player walks on are floors; nothing walkable lies under one. The roof deck crosses a street only by a narrow plank bridge drawn shadow-only from below, the owner's chosen exception for this land (Decided, owner, 2026-11-19, answer 3; 1.1 rule 3) |
 | The enemies: the vessels (bloated drinkers of elixir who burst into a toxic cloud when the player gets close), the gu (when one dies, the nearest absorbs it and grows, so the order of killing matters), the terracotta soldiers (not poison-based) | `WORLD.md`, "Poison's land" | Section 1.6, each with its own mechanic. The clay army's immunity and formations are WORLD.md's **Proposal**, used here |
 | The elite is the Undying Emperor, the puppet emperor before the alchemist | same | Section 5. His technique is the Scorpion's Tail (`steel/weapons.md` 14, Proposal) |
 | The god's second phase is five creatures in a gu jar; at each gong, gas fills the jar's bottom and the player climbs onto shelves (the gong part is a Proposal) | `WORLD.md`, "The fight" | Section 6 gives the room and the approach, not the fight |
 | The ride out is a crane | `WORLD.md`, rides out | Section 6. The hub keeps "the crane on its post" (Decided), so here the crane waits on a post |
-| Night, a sick moon in haze; black lacquer, grey tile, dark water; the miasma blue-green, bile-yellow at the deadliest hour; cinnabar small, flat and a step browner than the robe; lanterns amber paper | `LOOKS.md` section 7 and its question 11 (Decided, 2026-11-18) | The two colours are the two kinds of hour (1.2). The climb points' red lanterns are the one red lantern in the land (question 4) |
-| The Poison god's hook swords are the Twin Knives' god's bough; Consume gives the plain knives if the player has not found them | `steel/weapons.md` 0.1, 2026-11-18 | So the land's plain weapon is the plain Twin Knives (3.2, question 7) |
+| Night, a sick moon in haze; black lacquer, grey tile, dark water; the miasma blue-green, bile-yellow at the deadliest hour; cinnabar small, flat and a step browner than the robe; lanterns amber paper | `LOOKS.md` section 7 and its question 11 (Decided, 2026-11-18) | The two colours are the two kinds of hour (1.2). The climb points' red lanterns are the only red lanterns in the land, smaller and browner than the robe; every other lantern is amber (Decided, owner, 2026-11-19, answer 4) |
+| The Poison god's hook swords are the Twin Knives' god's bough; Consume gives the plain knives if the player has not found them | `steel/weapons.md` 0.1, 2026-11-18 | So the land's plain weapon is the plain Twin Knives, as bronze herb knives in the old god's herb garden (3.2; Decided, owner, 2026-11-19, answer 7) |
 | Poison is in tier 3, one of the last solo lands because it is the most chaotic; a clean pass for a new player about 45 minutes (Proposal in `WORLD.md`) | `WORLD.md`, "The order of the climb" and "How a climb is structured" | Section 8: 44 minutes |
 
 The owner's answers to Water (`water_levels.md` 9) carry over where they are rules of the game, not of the lagoon: no
@@ -66,11 +66,36 @@ fade" and Fire's rules 3 and 4):
    never walkable: they are landmarks and they fade.
 2. **No overhang over a walkable floor.** A walkable roof's eaves stand out at most 0.8 m, and the 0.8 m strip under
    them is a raised stone kerb 0.6 m high carrying planters, water jars and stalls: not a floor (the step offset is 0.3
-   m). Nothing walkable lies under any roof in the land.
-3. **The roof deck never crosses a street.** A bridge over a walkable street is a roof over that street. So roofs join
-   only across water (a canal, a moat), across closed light-wells too narrow and cluttered to walk, and along the
-   tops of thick walls. The roof deck is therefore a set of **islands**. Streets and courtyards are crossed in the calm
-   hours. (Question 3 asks whether the owner would allow narrow plank bridges drawn shadow-only from below.)
+   m). Nothing walkable lies under any roof in the land (a plank bridge is not drawn as a roof from below: rule 3).
+3. **The roof deck crosses a street only by a plank bridge.** **Decided** (owner, 2026-11-19, answer 3): the roof deck
+   may cross streets by narrow plank bridges, drawn shadow-only from below so the street stays visible; this is the
+   owner's chosen exception to the roof rule, for this land only. Otherwise roofs join only across water (a canal, a
+   moat), across closed light-wells too narrow and cluttered to walk, and along the tops of thick walls. The roof deck
+   is still a set of **islands**, joined by planks in three places where a plank makes a better route (PB1 to PB3, below);
+   streets and courtyards are otherwise crossed in the calm. **Proposal (Claude)** for the planks:
+   - *Where:* **PB1** over the alley between blocks EA and EB (x 15, z 30 to 33, y 4, 3 m long); **PB2** over the lane
+     between EB and EC (x 18, z 50 to 60, y 4, 10 m long), so the east row is one roof walk from L1 to EC; **PB3** from
+     store hall SH2's east edge to the Outer Court's east wall walk (z 202, x 6 to 10, y 10, 4 m long), so SH2 has a way
+     off besides its stair. Each joins a stair island to a ladder island or a wall walk: the plank is the way off a stair
+     head that is being lost (1C, 2B).
+   - *Size:* 1.5 m wide, at most 10 m long (a crossing under 2 s at a walk), level with the roofs it joins, a rope rail
+     0.6 m high along both sides (the parapet height of rule 5), so no roll and no push goes off it.
+   - *From above* (the player on a roof deck): bare grey boards with the grain across the walk, the rope rails as two
+     dark lines, iron cleats where they sit on the roof lips. No lantern (planks are not climb points). A character on a
+     plank casts its contact shadow on the boards, so the boards name the deck (cue 1 below).
+   - *From below* (the player's floor lower than the plank): the plank is not drawn; only its shadow lies across the
+     street, a soft moon-shadow band 1.5 m wide with the rails' two thin lines in it. The street under it, and anyone on
+     it, is seen whole, which is also how a plank keeps the south-side rule (rule 4). The shadow is the cue that a way
+     across runs overhead.
+   - *Enemies:* the clay never step onto a plank (too heavy, and no rank fits on it): they stop at its end in the
+     cut-off pose (cue 4 below), as at a ladder. Vessels do not wander onto planks; a vessel's cloud that reaches a plank
+     falls through it to the street below (it flows off edges, 1.6). A gu crawler crosses a plank when its straight line
+     runs along it; otherwise it drops to the street and crawls on.
+   - *Under fire:* a plank gives no cover. Crossbow bolts reach a player on it from either side, though the boards stop
+     bolts from straight below like any floor; a bolt's 0.5 m push is not applied on a plank. A crossing is timed
+     between volleys.
+   - *The mist:* the D1 planks (y 4) are above every hour; PB3 (y 10) is above the green and under the yellow, like the
+     wall walks.
 4. **The south-side rule, measured from the floor the player stands on.** On the ground: nothing more than 1.4 m
    above the street within 4 m south unless it fades, so the house fronts on an east-west street's south side fade
    (`Fadeable`). On a roof: nothing more than 1.4 m above that roof within 4 m south unless it fades, so a steep hall
@@ -83,7 +108,7 @@ fade" and Fire's rules 3 and 4):
 
 **Which deck an enemy is on.** The player always has four cues, and the plan never asks for a fifth:
 1. *Floors differ by deck*: the ground is dark wet stone in a grid; the roof deck grey tile in strong diagonal rows
-   (`LOOKS.md`); wall walks brick with a paved centre line; the high deck pale stone. Every character casts a contact
+   (`LOOKS.md`); wall walks brick with a paved centre line; plank bridges bare boards; the high deck pale stone. Every character casts a contact
    shadow on the floor it stands on, so the pattern under its shadow names its deck.
 2. *The mist separates the decks*: when it is up, everything in it is lit from below and loses its legs in the glow,
    and the clay army reads as dark silhouettes against it; everything above it is rimmed by the cold moon.
@@ -102,9 +127,9 @@ scene. The length of the hour is set by the district the player stands in, chang
 |---|---|---|---|
 | Calm | The streets are open; the people are out | D1 110 s, D2 70 s | (D2 only) 70 s |
 | **First gong** (one stroke) | The warning. Mist wells from every drain grate, canal and well; the climb lanterns flare and swing; the watchman's wooden clapper starts, every 2 s, then faster | Mist at the knee at **18 s**, full at 25 s | A deeper stroke, gong and great bell together; knee at **16 s**, full at 20 s |
-| **Second gong** (two strokes) | The mist at its full height; it bites wherever it is | Held 35 s (D1), 45 s (D2) | Held 55 s |
+| **Second gong** (two strokes) | The mist at its full height; it bites wherever it is | Held 35 s (D1), 45 s (D2) | Held 50 s |
 | **The drum** (three beats) | The mist sinks over 10 s; the streets are wet and shining | 10 s | 10 s |
-| The hour | | D1 180 s; D2 150 s | D2 155 s, every third hour |
+| The hour (Decided, owner, 2026-11-19, answer 1) | | D1 180 s; D2 150 s | D2 150 s, every third hour |
 
 **What is safe.** The mist bites a player whose floor is 0.5 m or more below the mist's top (it is over the knees):
 green 3 every 0.8 s, yellow 5 every 0.8 s (first guesses, Fire's `NoonHeat` numbers for green; a green hour fully in
@@ -158,7 +183,8 @@ immune and march through the mist):
 3. **Stairs break formations.** Clay climb stairs but never ladders, drainpipes or carts. A formation climbing a stair
    becomes a file, one soldier at a time, and the player fights each alone at the stair head. Whether an island has a
    stair is a choice the player makes when they climb: a ladder island is safe from the clay's feet, a stair island
-   can be held.
+   can be held, and where a plank joins the two (1.1 rule 3) the player can hold the stair head and still have a way
+   off.
 4. **Tip the vats.** Bronze fire vats stand on some roof and terrace edges (the palace's real fire vats stood in its
    courts). A heavy blow tips one: it falls 2 m out from the edge, cracks whatever it lands on and breaks a formation's
    lock for 3 s.
@@ -184,8 +210,9 @@ for each:
   that leads above the next hour's mist. That leaves 3 to 8 s inside the decided 15 to 20 s for breaking off a fight.
   Every room below names its climb points and the farthest walk to one.
 - In D2, every climb point onto a wall walk (y 10) is within 10 s of a stair up to the high deck (y 13), so a yellow
-  first gong can be answered from anywhere. The Ministry's two store halls are green-only islands: from their roofs the
-  yellow stain line is in view on the Middle Wall's face, above the player's head.
+  first gong can be answered from anywhere. The Ministry's two store halls are green-only refuges (SH2 joined by the
+  plank PB3 to the east wall walk, itself green-only): from their roofs the yellow stain line is in view on the Middle
+  Wall's face, above the player's head.
 - One-way drops are not climb points and carry no lantern.
 
 ### 1.4 Never stranded
@@ -211,6 +238,7 @@ for each:
 | A street | 6 m wide (quays 6 m, lanes 4 to 6 m) | Room to sidestep a volley comb (lanes 1.6 m apart); not room to circle a formation |
 | A roof island | at least 6 by 10 m where a fight is held | A stair head plus one soldier, and cover |
 | A wall walk | 4 m wide, parapets 0.6 m | One-on-one; a fight here is a duel |
+| A plank bridge (**Proposal (Claude)**) | 1.5 m wide, at most 10 m long, rope rails 0.6 m both sides; three in the land | Narrow (the owner's answer 3); crossed in under 2 s, so between volleys; too narrow to fight on, and the clay will not take it |
 | A formation's front | 2 or 3 shields abreast, 1.5 m apart | Fills a 6 m street; a gap is 1.5 m |
 | A volley comb | lanes 0.5 m wide every 1.6 m, 16 m long; the second rank's comb 1.2 s after, offset 0.8 m | Stand between lanes, then step half a lane |
 | Climb point spacing | at most 12 s of walking on the main path | 1.3 |
@@ -245,8 +273,8 @@ reskins) and each tied to the hours.
   the dead), in a small form, as the hook brother shows the fisher's moves.
 - **The terracotta soldiers** (the clay; not poison-based, Decided). Grey clay with flakes of their first paint
   (`LOOKS.md`).
-  - **They keep the hours** (1.2): statues between hours in the town and the outer courts; awake always near the
-    emperor.
+  - **They keep the hours** (1.2): breakable statues between hours in the town and the outer courts; awake always near
+    the emperor (Decided, owner, 2026-11-19, answer 2).
   - **They do not flinch.** Light blows chip them (damage, no stagger). A heavy blow cracks one (a dark seam); a cracked
     soldier shatters at the next blow of any kind.
   - **They march routes, not at the player.** A formation follows its watch route (a closed line of points set by the
@@ -341,9 +369,9 @@ about 640 m of walking.
 -52 SPIRIT RAMP y12 -> 0, arrival
 ```
 
-**Heights.** `LanternCity`: river and canal water y -1.5; boats -0.8; quays, streets and the market y 0; D1 roofs and the
-tea terrace 4; bridge crowns 3; Ladder Street's landings 2 and 4; the court's courtyards 6; wall walks and store hall
-roofs 10; throne tiers 8, 10.5, 13; gate pier tops, the drum platform and the watch terrace 13; the herb garden 2 to
+**Heights.** `LanternCity`: river and canal water y -1.5; boats -0.8; quays, streets and the market y 0; D1 roofs, the
+plank bridges PB1 and PB2, and the tea terrace 4; bridge crowns 3; Ladder Street's landings 2 and 4; the court's courtyards 6; wall walks, store hall
+roofs and the plank PB3 10; throne tiers 8, 10.5, 13; gate pier tops, the drum platform and the watch terrace 13; the herb garden 2 to
 9.5. `UndyingTomb`: trench floors and halls 0, pit walls and the river terrace 3, mercury surface -0.4, bridge crowns
 1.5, the island 1.5, the seat 4.5. `ImmortalTower`: garden 0, landings 6, 12, 18, top terrace and lid floor 24, jar
 floor 12, jar shelves 14.5.
@@ -421,8 +449,8 @@ only, 180 s long.
  80  L3 |  FLOATING MARKET boats y-0.8   (g)            |W quay| EC roof y4
  66     |  (g)            (g)       |                    |      | L2(14,0,60)
  60  ===+== south quay ============ +==== BRIDGE crown y3 (z54..58) ===
- 50      west row WA roof y4 | W quay | canal | E quay | EB roof y4, ST1 stair
- 31      clay post (c)(c)    |  x-9..-3 x-3..3  x3..9  | (v)(v)   alley z30..33
+ 50      west row WA roof y4 | W quay | canal | E quay | EB roof y4, ST1 stair, PB2 N to EC
+ 31      clay post (c)(c)    |  x-9..-3 x-3..3  x3..9  | (v)(v)   alley z30..33, PB1 over
   8                          |        |       |        | EA roof y4  L1(15,0,8)
   0                          river mouth    LANDING y0, wake (10,0,0), F1*(17,0,3)
 ```
@@ -437,15 +465,17 @@ only, 180 s long.
 - *Enemies:* none. *Lore:* the sponsor speaks on waking (its words are the owner's; a proposal: "When the gong sounds,
   climb.").
 - *Climb:* **L1**, ladder on the east row's block EA, (15, 0, 8), to its roof (y 4, x 9 to 21, z 8 to 30). Not needed;
-  there to be tried.
+  there to be tried. From EA's roof the plank PB1 leads on north (1B): a player who tries the ladder finds the first
+  plank, and the roofs as a way along the canal.
 - *See it:* 14 m out on the river at (2, -0.8, -20), a great lantern barge moored, dark, one lantern lit on its stern:
   out of reach (the side path below).
 - *Kit:* `censer` (F1), `lantern_boat` x3, `lantern_string` across the canal mouth, `shophouse` blocks.
 
 #### 1B. The lantern canal (east quay x 3 to 9, z 8 to 50, y 0)
 - *Shape:* a quay 6 m wide between the canal (x -3 to 3, water y -1.5, lantern boats moored) and the east row of
-  shophouses (x 9 to 21, roofs y 4): block EA (z 8 to 30), an alley east at z 30 to 33 (a gap in the roof deck), block EB
-  (z 33 to 50). Across the canal, 12 m away and in frame, the west quay and the west row. Strings of amber lanterns cross
+  shophouses (x 9 to 21, roofs y 4): block EA (z 8 to 30), an alley east at z 30 to 33, block EB (z 33 to 50). Over the
+  alley, **PB1**, a plank bridge 3 m long at x 14.25 to 15.75, joins EA's roof to EB's (**Proposal (Claude)**, 1.1 rule
+  3); from the quay the player sees only its shadow lying across the alley's mouth. Across the canal, 12 m away and in frame, the west quay and the west row. Strings of amber lanterns cross
   the canal every 8 m. The eave strip along the house fronts is a kerb of planters and jars (1.1 rule 2).
 - *Sees on entering:* a bloated figure at a jar on the quay's edge, drinking, its back turned.
 - *Enemies:*
@@ -454,32 +484,38 @@ only, 180 s long.
   - E1.2 two **vessels** at (5, 0, 40) and (7.5, 0, 44), 4.7 m apart: burst one and the other chains. The lesson of
     the cloud: it runs down off the quay's edge onto the water.
 - *Climb:* L1; **ST1** an outside stair along EB's west face, x 9 to 10.5, z 36 to 43 (y 0 to 4); farthest walk 14 m.
+  With PB1, L1 and ST1 reach one roof walk (EA and EB).
 - *Across the canal:* two **clay statues** at a watch hut on the west quay, (-6, 0, 28) and (-6, 0, 31), facing south;
   a gong rack beside the hut. Seen, not reached: the player walks past them on the other side.
 - *Lore:* P1 on EA's corner, the court's edict board: "By the Emperor's grace the Elixir of Long Life is given to
   every house. Drink at the hour." (Claude's, new.)
-- *Kit:* `shophouse` x6 with low-pitch roofs and ridge walks, `kerb_strip`, jars, `lantern_string`.
+- *Kit:* `shophouse` x6 with low-pitch roofs and ridge walks, `kerb_strip`, jars, `lantern_string`, `plank_bridge`
+  (PB1).
 
 #### 1C. The humpback bridge and the first hour (z 48 to 62)
 - *Shape:* the quay meets a humpback bridge crossing the canal west at z 54 to 58: 4 m wide, flights 5 m long from each
   quay (feet at x 7 and x -7) to a flat crown 4 m long (x -2 to 2) at **y 3**. North of the bridge's foot, block EC
   (x 9 to 21, z 60 to 98, roof y 4) with **L2**, a ladder on its south face at (14, 0, 60). A lane east at z 50 to 60
-  between EB and EC (a gap).
+  between EB and EC, crossed overhead by **PB2**, a plank bridge 10 m long at x 17.25 to 18.75 from EB's north edge to
+  EC's south edge (**Proposal (Claude)**, 1.1 rule 3). L2 stands 3 m west of the plank's shadow, clear of it, so the red
+  pool and the shadow band are read together from the quay: up here, and across there.
 - *The first hour* (placed): crossing z 48 on the quay rings the land's first gong, whatever the clock. Held shot 1. The
-  status line. Three refuges are in frame: ST1 (8 m back), the bridge crown (S, 6 m ahead), and L2 (14 m ahead).
+  status line. Three refuges are in frame: ST1 (8 m back), the bridge crown (S, 6 m ahead), and L2 (14 m ahead); and
+  PB2's shadow across the lane ahead shows that EB's roof and EC's are one walk.
 - *Enemies:* E1.3 the two **clay** across the canal wake at the gong and march their watch: north along the west quay,
   over the bridge, south down the east quay to z 12, and back the same way. Walking through the mist, dark against its
   glow. The lesson, by consequence:
   - On the **bridge crown** the player is above the mist but on the clay's route: two soldiers who do not flinch climb
     onto a 4 m crown.
   - On **EB's roof** (by ST1) the player is safe from the mist, but the clay passing below within 8 m of ST1's foot come
-    up the stair, one at a time.
-  - On **EC's roof** (by L2) the player watches them pass below and turn back. Ladders keep the clay's feet off.
-- *After the drum:* the clay walk back to the watch hut and set. A player may break them now (three heavies each, or a
+    up the stair, one at a time. The player can hold the stair head, or cross PB2 to EC when it goes badly: the clay
+    stop at the plank's end and ground their halberds, and must go back down ST1 to walk their watch.
+  - On **EC's roof** (by L2, or over PB2) the player watches them pass below and turn back. Ladders and planks keep the
+    clay's feet off.- *After the drum:* the clay walk back to the watch hut and set. A player may break them now (three heavies each, or a
   heavy and a blow) and the next hour's watch here is empty. The hut holds a broken statue lying beside its stand: one
   was broken before.
 - *Mist:* green top 2.5; the crown is safe by 0.5 m.
-- *Kit:* `humpback_bridge` (build list P6), `watch_hut`, `gong_rack`, `clay_soldier` x2.
+- *Kit:* `humpback_bridge` (build list P6), `watch_hut`, `gong_rack`, `clay_soldier` x2, `plank_bridge` (PB2, P22).
 
 #### 1D. The floating market (x -46 to -9, z 60 to 100)
 - *Shape:* west of the bridge, a basin (water x -40 to -12, z 66 to 94) filled with boats lashed side by side into a
@@ -574,7 +610,7 @@ high deck (y 13). Hours of 150 s; every third is yellow.
 242   gate (barred)| HR3                         HR4          | door (22,6,270)
 238   ===========|==Middle Wall y10 ===|Mid Gate|F3* pier y13========
 226              |    formation post (-21,6,226)  DP2(-40,6,234)
-214              |          [SH2 y10] vats ->                   |
+214              |          [SH2 y10] vats -> =PB3= (E walk)    |
 200     [SH1 y10]|   furnaces  (g)(g)   vats (v)(v)(v)          |
 176   L4(-59,6,176)  ST3 stair on SH2's west face               |
 170   S2 gate (-70,6,170)    OUTER COURT: MINISTRY OF ELIXIRS y6 |
@@ -598,7 +634,9 @@ high deck (y 13). Hours of 150 s; every third is yellow.
   (-24, 6, 206), three vats at (-30, 6, 186), (-40, 6, 210) and (-20, 6, 192), drain grates at (-32, 6, 200) and (-26, 6,
   214)), and two **store halls** with flat tiled roofs at y 10: SH1 west (x -66 to -52, z 176 to 200) and SH2 east (x -8
   to 6, z 190 to 214). Walled on all sides: walks at y 10 on the west (x -74 to -70), east (x 10 to 14) and north (the
-  Middle Wall, z 234 to 238).
+  Middle Wall, z 234 to 238). **PB3**, a plank bridge 4 m long, crosses the 4 m strip of court floor between SH2's east
+  edge and the east wall walk at z 201.25 to 202.75 (**Proposal (Claude)**, 1.1 rule 3); from the yard it is a shadow
+  band across that strip.
 - *Sees on entering:* through the gate, the furnaces' glow, officials drinking at the vats, the formation standing
   before the Middle Gate across the yard.
 - *Enemies:*
@@ -612,14 +650,17 @@ high deck (y 13). Hours of 150 s; every third is yellow.
 - *The hour here:* the player's choices are SH1 (a ladder: safe from the watch, far from its route), SH2 (a stair: the
   watch comes up it, but the route runs below its west edge, where **two bronze vats** stand at (-7, 10, 198) and
   (-7, 10, 206) to be tipped onto the formation), or the wall walks. From SH2's roof the officer, 6 m below and 5 m out,
-  is in reach of a spell; break him and the four who are left come at the stair one by one.
+  is in reach of a spell; break him and the four who are left come at the stair one by one. SH2 is no longer a dead end:
+  when the stair head is lost, PB3 takes the player off its east edge onto the east wall walk (the clay stop at the
+  plank), and the walk runs north to the Middle Wall's walk and F3's pier. The plank lies on the hall's far side from
+  the watch's route, so a crossing is out of their crossbows' frame unless they have come round to the east.
 - *Climb:* **L4**, SH1's south face (-59, 6, 176); **ST3**, a stair up SH2's west face (x -10 to -8, z 194 to 201);
   **DP2**, a drainpipe on the Middle Wall's south face (-40, 6, 234); **HR2**, a horse stair up the Middle Wall's south
   face (x -12 to -4, rising east). Farthest walk from the yard's middle: 38 m.
 - *Lore:* P4, the furnace recipe cut in the larger furnace's brick: "Cinnabar roasted gives mercury. Mercury and sulphur
   give cinnabar. Round and round: so the elixir does not end." (`LOOKS.md`: the cycle of cinnabar.)
 - *Shortcut:* **S2**, a barred gate in the west wall at (-70, 6, 170) (section 4).
-- *Kit:* `furnace` x2, `bronze_vat` x5, `store_hall` x2, `drain_grate`, `city_wall`.
+- *Kit:* `furnace` x2, `bronze_vat` x5, `store_hall` x2, `drain_grate`, `city_wall`, `plank_bridge` (PB3).
 
 #### 2C. The Middle Gate (F3) and the drum tower court (x -60 to 20, z 238 to 306, y 6)
 - *The gate:* the Middle Gate is a gap 6 m wide at x -24 to -18 with open-topped piers either side (x -30 to -24 and
@@ -672,7 +713,7 @@ high deck (y 13). Hours of 150 s; every third is yellow.
   (catching the crawler) and the other pair is still Hollow. One **vessel** drinks at the poison well.
 - *The plain weapon:* on the offering stone before the statue, (-88, 9.5, 292), **the plain Twin Knives** in the land's
   make: a pair of short bronze herb knives with green patina, their grips wound with cord, playing exactly as the plain
-  Twin Knives (question 7). They were the old god's gardener's knives, for cutting medicine.
+  Twin Knives (Decided, owner, 2026-11-19, answer 7). They were the old god's gardener's knives, for cutting medicine.
 - *Lore:* P6, the statue of the old god (a nod to Shennong; a placeholder name, "the Taster", is the owner's to change,
   and must not be a real deity's name): a man with a leaf at his lips, his chest carved open to show the plants working
   inside him (`LOOKS.md`). Words cut in the base (Claude's, new): "He tasted every leaf, so that no one else would die of
@@ -683,7 +724,8 @@ high deck (y 13). Hours of 150 s; every third is yellow.
 
 #### The trial: the Third Watch (the Watchmen's Yard, x 24 to 60, z 250 to 290)
 
-**Proposal** (question 5 offers two others). A **survival trial in which the player rings the hours**, which no other
+**Decided** (owner, 2026-11-19, answer 5): the trial is the Third Watch; the yard and its waves below are **Proposal
+(Claude)**. A **survival trial in which the player rings the hours**, which no other
 land's trial can be (`WORLD.md`: "a survival wave in another"). The god keeps the clock in his jar; here the player
 learns to fight through it first, as Water's trial gave the player the tide before the fisher took it.
 
@@ -999,6 +1041,7 @@ carries one. Sizes are the plan's defaults.
 | P19 | **Stair of long life and the tower top** | Section 6.1 and 6.2; the bronze immortal with the dew plate and the crane on it | `ImmortalTower` |
 | P20 | **The jar** | The lid floor that gives way, the jar's interior with three shelves and ladders, the lid on its chain, the south arc fading | Section 6.3 |
 | P21 | **Vistas with a direction** | Water's W19 | V1 to V7 |
+| P22 | **Plank bridge** (**Proposal (Claude)**; the exception is Decided, owner, 2026-11-19) | Bare boards across a street between two roofs or a roof and a wall walk, rope rails both sides, iron cleats on the lips; drawn whole while the player's floor is level with it or above, and only as its cast shadow (rails included) while the player's floor is below it; a floor for the player, an edge for the clay | 1.5 m wide, rails 0.6 m; PB1 3 m and PB2 10 m at y 4 (D1), PB3 4 m at y 10 (D2) |
 
 ### 7.2 New behaviour the rooms rely on (for the code worker)
 
@@ -1006,7 +1049,7 @@ carries one. Sizes are the plan's defaults.
 |---|---|---|
 | C1 | **GongClock**: the hour's phases (calm, first gong, rising, second gong, held, drum, falling), its length by district, yellow every third in D2, placed hours by trigger, a restart into the calm at a rest or a fall; events for each phase. Build it on `HeatSchedule` (which already has calm, warning and swell) by adding the falling phase and the yellow count | The whole land |
 | C2 | **Mist bite**: the knee rule (the top 0.5 m or more above the floor under the player), green and yellow doses, the herb ring at every `RestPoint`; built on `NoonHeat`'s burn | Everywhere |
-| C3 | **Roof islands**: islands and their stair feet as data from the builder; an enemy's two-leg way to a player on an island (to the stair foot, up, at the player); the edge stop and the cut-off pose; clay never take ladders, carts or drainpipes | D1, D2, the trial |
+| C3 | **Roof islands**: islands and their stair feet as data from the builder; an enemy's two-leg way to a player on an island (to the stair foot, up, at the player); the edge stop and the cut-off pose; clay never take ladders, carts, drainpipes or plank bridges. **Plank bridges** (**Proposal (Claude)**): islands joined by a plank are one for the player and stay two for the clay (they head for the stair foot of the island the player stands on, and stop at a plank's end); vessels keep off planks; clouds fall through them; a crawler crosses only along one; no bolt push on a plank | D1, D2, the trial |
 | C4 | **The vessel**: wander, drink (cloud +1 m per drink, three), the swell and burst, the heavy cloud flowing down slopes and off edges, the chain, going indoors at the first gong, bursting in the mist after 4 s. Check `AshenBurst` for the swell; the cloud is new | D1, D2, the trial |
 | C5 | **The gu**: three stages and their moves, the crawler (straight, 2.5 m/s, killed by one blow, sinking in water and mercury, drying with no host in 12 m), drains at the gong | Everywhere |
 | C6 | **The clay**: statues between hours (`Enemy.MakeDormant` that takes damage and cracks without waking), awake near the emperor; crack and shatter; formations on routes, the lock (from `ShieldWall`), the wheel at 30 degrees a second, the gap closed by the officer, the dissolve when he breaks; the volley combs, fired only from on screen; the officer's drum keeping ranks in step | Everywhere |
@@ -1028,7 +1071,7 @@ carries one. Sizes are the plan's defaults.
 | `ShieldWall` | The formation's lock only (C6) |
 | `AshenBurst`, `BuriedMound` | The vessel's swell (check before writing C4) |
 | `LandZones`, `TopDownCamera.SetFraming` | V1 to V7 and the held shots |
-| `Fadeable`, `OcclusionFader` | Every steep roof, house front and hall, the jar's south arc |
+| `Fadeable`, `OcclusionFader` | Every steep roof, house front and hall, the jar's south arc; the plank bridges' shadow-only draw from below (by the player's floor height, not by occlusion: check whether the fader can switch on that before writing new code) |
 | `RestPoint` | F1 to F6, as censers |
 | `WeaponPickup` | The plain Twin Knives |
 | `LandVoice` progress keys | S1 to S4, the garden's gate, broken statues until a rest |
@@ -1043,7 +1086,7 @@ carries one. Sizes are the plan's defaults.
 Shophouse blocks with low-pitch roofs and ridge walks; steep hall, gate and tower roofs with upturned eaves; the drum
 tower; the throne hall; moon gates and lattice screens; city wall sections and gate piers; the humpback bridge; lantern
 boats, the lantern barge and the punt; amber paper lanterns (frames and tassels in cinnabar) and the red climb lanterns;
-the censer; bronze vats and elixir vats; furnaces; drain grates; handcarts; clay downpipes; the clay soldiers (ji-bearer,
+the censer; plank bridges with rope rails and cleats; bronze vats and elixir vats; furnaces; drain grates; handcarts; clay downpipes; the clay soldiers (ji-bearer,
 crossbowmen kneeling and standing, officer with drum, civil official) with flakes of paint; the vessel, the gu host
 in three stages and the crawler; the emperor and his seat; the five basins; bronze waterfowl; the old god's statue;
 the bronze immortal with the dew plate; the crane; the jar and its lid. No Fire or Water kit carries over except as
@@ -1121,6 +1164,8 @@ island. A new player is in close combat with about 35. It is the most chaotic la
 
 Where the plan below differs from these answers (the plank bridges especially), the answers win; the plan is to be
 brought into line.
+
+The body of the plan has been brought into line with these answers (2026-11-19).
 
 
 
