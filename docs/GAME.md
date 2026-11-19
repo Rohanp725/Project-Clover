@@ -1581,6 +1581,50 @@ changed. The old playtest stays with its players until the first few phases of t
   - Other spell forms and worn spells still use `ElementLook`'s old puffs and sparks.
 - **Verified**: see the report of the run (EditMode suite, `FxProbe`, regressions, profiler).
 
+### Weapon swing effects (2026-11-19; built from the owner's effects review, written while the editor was held elsewhere, not yet compiled in the editor or seen in play)
+
+The owner's biggest note: the element was "stuck onto the weapon many times". Now it moves with the swing, along the path
+that weapon's own animation draws (`Runtime/Player/Swings`).
+
+- **Blade lines**: each weapon prefab carries a `BladeLine`, read off its model by the weapon builder
+  (`BladeLineFit`): the two furthest-apart vertices of its edge slot (base and tip), plus the bend for a crescent.
+  The hammer and the chain's weight run along the haft through the head's bounds. The bow's two limbs are measured
+  each by itself, and the arrow from its middle to its point. A measurement far from the model notes' line falls back
+  to the notes (`BladeLines.Defaults`). Bare hands and the Armament sweep with the body: forearm to knuckles, shin to toes.
+  The War Fan's line is kept for when it exists. `Clover > Weapons > Report Blade Lines` writes `review/checks/blade_lines.md`.
+- **Trails** (`SwingTrails`, added to the player at start like `BladeLook`): during a charged or infused move, from 60%
+  of the way through its wind-up to 0.14 s after its blow, every line in hand is sampled each frame. Points are added
+  between frames round the swinger's chest, so a fast swing stays an arc. The trail is a pooled ribbon mesh (allocation
+  free) drawn with copies of the slash arcs' `Clover/Glow` material. Its width comes from the line itself, it fades in
+  with the tip's speed, and each part lives its own seconds and fades smoothly to nothing (never cut). Thrusts, fists
+  and the weight draw a band about their point; an arrow or a thrown weapon in flight draws one too.
+- **Per weapon** (`SwingShapes`): a thin fast arc for the Katana; a broad slow sheet for the Massive Sword; the
+  Scythe's crescent from the haft out past the bend; the spear's line along each thrust; the hammer's heavy smear
+  down the haft and past the head, throwing the element on the ground where a slam lands; short paired slashes for the
+  knives; the bow's limbs, the arrow in the fist and the arrow in flight; the sickle's hook and the spiral of its
+  weight; stubs behind fists and feet.
+- **Per element** (`SwingLooks`; the line for each is in the code):
+  - Fire: a flame ribbon that licks up and cools to smoke, scorching the arc, and sheds embers.
+  - Lightning: its liked crackle, as jagged arcs crawling the sweep, plus a crack in the floor on a hit.
+  - Wind: an air-blade that blows on and comes apart.
+  - Ice: frost teeth that run along the edge (the chainsaw), and an arc that freezes, hangs and shatters into falling shards.
+  - Water: a flowing sheath, and an arc that falls and sprays its water off the end.
+  - Earth: dust and falling grit, and rocks thrown up on a hit that fall back.
+  - Metal: only a glint along the edge.
+  - Life: thorns fitted along each weapon's real edge (the one look on the weapon), with leaves and pollen.
+  - Light: a glowing edge and a clean, hard arc.
+  - Dark: a shade smear that lags and drains back.
+  - Poison: a sagging, dripping trail under a sinking mist.
+- **The charged edge between swings** is a thin sheath of the element fitted to the line and turned to the camera,
+  not pieces. An infused strike's element gathers along the edge through its wind-up.
+- **Replaced** under F8's new effects: `BladeLook`'s pieces on the edge and `BladeArt`'s per-swing pieces. Ice's
+  crack-web and Earth's floating cubes on a charged blow's landing are replaced too. With F8 on the old effects,
+  `BladeLook` draws the charged blade exactly as before. `StrikeArt` (the infused strikes' own ground art) is unchanged.
+- **Hooks**: `SwingTrails.UseMaterial` takes a per-element textured material from a later Blender pass (U along the
+  swing, V across). `SwingLook.RibbonTexture` names the file it will be.
+- **Filmed** by `AgentScripts/SwingLookProbe.cs` on three castle soldiers in the Proving Ground. It covers every weapon
+  with every element, 20 frames a second, and `swing_gifs.py` makes the GIFs and a weapons-by-elements contact sheet.
+
 ### Reaction effects in the game (2026-11-19; the owner's approved combos pass 2; Claude's defaults in the placing, not yet seen in play by the owner)
 
 - **Brought in** (asset-intake, approved files only): `vfx_combo_kit_v2.fbx` and `vfx_combo_kit_v3.fbx` in
