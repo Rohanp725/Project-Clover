@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Clover.EditorTools.Forge;
 using Clover.Player;
+using Clover.Player.Swings;
 using UnityEditor;
 using UnityEngine;
 
@@ -74,6 +75,15 @@ namespace Clover.EditorTools
             public bool PropOnly;
             /// <summary>What is added to the prefab once its model or stand-in is in place: lines, markers, parts that code moves.</summary>
             public Action<GameObject, Spec> Finish;
+            /// <summary>
+            /// The slots its blade line is measured from (<see cref="BladeLineFit"/>): the edge, the leaf, the head, the
+            /// limbs. Null: it has none (the Armament, which sweeps with the body).
+            /// </summary>
+            public string[] BladeSlots;
+            /// <summary>What sweeps: an edge, a point that thrusts, a head, a bow's limbs (measured each by itself).</summary>
+            public BladeKind BladeKind = BladeKind.Edge;
+            /// <summary>The share of the measured line from its base that is not swept with (the arrow's shaft behind its head).</summary>
+            public float BladeFrom;
         }
 
         // Slot colours as the eye sees them, from the Blender notes (staging/blender/2026-11-16_weapons/notes.md).
@@ -93,7 +103,7 @@ namespace Clover.EditorTools
             {
                 // The owner gave the plain sword parrying hooks on 2026-11-19 (staging/blender/2026-11-19_wayprops/notes.md,
                 // "Parierhaken"): the hooked file in place of the 11-16 gsword.fbx, which stays in Art for the record.
-                Carry = "gsword", ModelFile = "gsword_hooks.fbx", StandIn = SwordStandIn,
+                Carry = "gsword", ModelFile = "gsword_hooks.fbx", StandIn = SwordStandIn, BladeSlots = new[] { "edge" },
                 Notes = "Massive Sword with Parierhaken (gsword_hooks of 2026-11-19): 678 triangles, slots blade edge grip accent inlay; a pair of parrying lugs 0.26 m above the cross-guard in the blade slot; origin on the grip, point along +Z, edge toward -Y",
                 OwnColours = { { "blade", new Color(0.45f, 0.48f, 0.56f) } },
                 // Slanted from the right shoulder to behind the left heel, flat to the back.
@@ -103,7 +113,8 @@ namespace Clover.EditorTools
             },
             new Spec
             {
-                Carry = "scythe", ModelFile = "scythe.fbx", StandIn = ScytheStandIn,
+                // The crescent's cutting edge is its inlay band, inside the curve (the stand-in was made to the model's slots).
+                Carry = "scythe", ModelFile = "scythe.fbx", StandIn = ScytheStandIn, BladeSlots = new[] { "inlay" },
                 Notes = "Scythe: 510 triangles, slots blade guard wood accent inlay; origin on the haft 1.15 m from the butt, blade end along +Z, crescent toward -Y",
                 // Haft across the back from the left hip up past the right shoulder, the crescent behind the head pointing left.
                 RestPosition = new Vector3(0.12f, 0.1f, -0.19f), RestAlong = new Vector3(0.42f, 0.9f, 0f), RestUp = new Vector3(0.9f, -0.42f, 0f),
@@ -112,7 +123,7 @@ namespace Clover.EditorTools
             },
             new Spec
             {
-                Carry = "spear", ModelFile = "spear.fbx", StandIn = SpearStandIn,
+                Carry = "spear", ModelFile = "spear.fbx", StandIn = SpearStandIn, BladeSlots = new[] { "blade", "edge" }, BladeKind = BladeKind.Point,
                 Notes = "Great Spear (spear_v2 of 2026-11-19): 973 triangles, slots blade edge guard wood wrap grip accent inlay string; origin on the shaft 1.0 m from the butt, point along +Z, the leaf's broad faces toward +Y and -Y",
                 // notes.md 10 and its follow-up: bright bevels, a dark leather grip, and the off-white horsehair tails in
                 // the string slot; the red collar is the shared accent that takes the element's tint.
@@ -125,14 +136,14 @@ namespace Clover.EditorTools
             new Spec
             {
                 // No model of its own yet: built of the king's spear's parts as the court stands it in the floor.
-                Carry = "sunspear", ModelFile = null, StandIn = SunSpearStandIn, Finish = (root, _) => SunSpearFinish(root),
+                Carry = "sunspear", ModelFile = null, StandIn = SunSpearStandIn, Finish = (root, _) => SunSpearFinish(root), BladeSlots = new[] { "sun" }, BladeKind = BladeKind.Point,
                 Notes = "The Sun-Spear, Khepharu's own (fire_land.md 6.1): a gold shaft, the sun's disc under the blade, the blade white-hot; the Great Spear's grip and length, point along +Z",
                 RestPosition = new Vector3(0.2f, -0.3f, -0.19f), RestAlong = new Vector3(-0.42f, 0.9f, 0f), RestUp = new Vector3(0f, 0f, -1f),
                 DisplayPosition = new Vector3(0f, 1.2f, 0f), DisplayEuler = new Vector3(-90f, 0f, 0f),
             },
             new Spec
             {
-                Carry = "hammer", ModelFile = "hammer.fbx", StandIn = HammerStandIn,
+                Carry = "hammer", ModelFile = "hammer.fbx", StandIn = HammerStandIn, BladeSlots = new[] { "head" }, BladeKind = BladeKind.Head,
                 Notes = "Great Hammer (hammer_v2 of 2026-11-19): 1026 triangles, slots head blade wood wrap grip accent inlay; origin at the swinging grip 0.9 m under the head, head along +Z, striking face toward -Y",
                 // staging/blender/2026-11-19_plainweapons/notes.md 9: the rope and the leather grip are its own; the rest is the shared steel and wood.
                 OwnColours = { { "wrap", Linear(0.36f, 0.29f, 0.19f) }, { "grip", Linear(0.09f, 0.06f, 0.05f) } },
@@ -143,7 +154,7 @@ namespace Clover.EditorTools
             },
             new Spec
             {
-                Carry = "knife", ModelFile = "knife.fbx", StandIn = KnifeStandIn,
+                Carry = "knife", ModelFile = "knife.fbx", StandIn = KnifeStandIn, BladeSlots = new[] { "edge" },
                 Notes = "Twin Knives (knife_v2 of 2026-11-19): one knife, 690 triangles, carried twice; slots blade edge guard grip wrap accent inlay; origin at the middle of the grip, point along +Z, edge toward -Y",
                 // notes.md 11: a bright cutting edge above the shared steel, and a dark leather grip.
                 OwnColours = { { "edge", Linear(0.80f, 0.84f, 0.90f) }, { "grip", Linear(0.09f, 0.06f, 0.05f) } },
@@ -157,7 +168,7 @@ namespace Clover.EditorTools
             },
             new Spec
             {
-                Carry = "bow", ModelFile = "bow.fbx", StandIn = BowStandIn, Finish = BowFinish, LeftHanded = true,
+                Carry = "bow", ModelFile = "bow.fbx", StandIn = BowStandIn, Finish = BowFinish, LeftHanded = true, BladeSlots = new[] { "wood" }, BladeKind = BladeKind.Stave,
                 AlsoInRightHand = "arrow", AlsoPosition = new Vector3(0f, 0f, -0.2f),
                 Notes = "Great Bow: 360 triangles and a 12 triangle string, slots wood wrap grip accent inlay string; origin at the middle of the grip, upper limb along +Z, the back toward -Y (the target) and the string on +Y",
                 OwnColours = { { "wood", new Color(0.21f, 0.21f, 0.25f) } },
@@ -168,12 +179,12 @@ namespace Clover.EditorTools
             },
             new Spec
             {
-                Carry = "arrow", ModelFile = "arrow.fbx", StandIn = ArrowStandIn, PropOnly = true,
+                Carry = "arrow", ModelFile = "arrow.fbx", StandIn = ArrowStandIn, PropOnly = true, BladeSlots = new[] { "shaft", "blade" }, BladeKind = BladeKind.Point, BladeFrom = 0.5f,
                 Notes = "Great Bow's arrow: 84 triangles, slots shaft blade accent; origin at the nock, point along +Z",
             },
             new Spec
             {
-                Carry = "sickle", ModelFile = "chain_sickle.fbx", ModelObjects = new[] { "chain_sickle_v2" }, StandIn = SickleStandIn,
+                Carry = "sickle", ModelFile = "chain_sickle.fbx", ModelObjects = new[] { "chain_sickle_v2" }, StandIn = SickleStandIn, BladeSlots = new[] { "edge" },
                 Notes = "Chain Sickle (chain_sickle_v2 of 2026-11-19): three objects (sickle 878 triangles, weight 252, one link 120), slots blade edge guard wood grip accent inlay; origin on the haft under the blade's collar, haft along Z (top +0.17, butt eye -0.43), the blade leaving the top toward -Y",
                 // notes.md 12: a bright concave edge, and a dark leather grip.
                 OwnColours = { { "edge", Linear(0.80f, 0.84f, 0.90f) }, { "grip", Linear(0.09f, 0.06f, 0.05f) } },
@@ -185,13 +196,13 @@ namespace Clover.EditorTools
             },
             new Spec
             {
-                Carry = "weight", ModelFile = "chain_sickle.fbx", ModelObjects = new[] { "chain_weight_v2" }, StandIn = WeightStandIn, PropOnly = true,
+                Carry = "weight", ModelFile = "chain_sickle.fbx", ModelObjects = new[] { "chain_weight_v2" }, StandIn = WeightStandIn, PropOnly = true, BladeSlots = new[] { "guard", "inlay" }, BladeKind = BladeKind.Head,
                 Notes = "Chain Sickle's weight: the chain_weight_v2 object of chain_sickle.fbx (252 triangles), slots guard inlay; origin at its eye where the chain joins it, body toward +Z",
                 // The chain itself is still drawn as a line (ChainLine); the file's chain_link_v2 waits for a chain made of links.
             },
             new Spec
             {
-                Carry = Weapon.KatanaCarry, ModelFile = "katana.fbx", ModelObjects = new[] { "katana" }, StandIn = KatanaStandIn, ShownByAnimator = true,
+                Carry = Weapon.KatanaCarry, ModelFile = "katana.fbx", ModelObjects = new[] { "katana" }, StandIn = KatanaStandIn, ShownByAnimator = true, BladeSlots = new[] { "edge" },
                 Notes = "Katana (katana of 2026-11-19): 814 triangles; the file's katana_scabbard (520) is not shown yet; slots blade edge inlay guard grip wrap head accent; origin on the grip 0.115 m behind the tsuba, point along +Z, edge toward -Y",
                 // notes.md 1: a darker body above a bright edge, the hamon line as the inlay, dark iron, dark rayskin
                 // under pale ito, copper habaki and menuki; the red cord is the shared accent.
@@ -270,6 +281,7 @@ namespace Clover.EditorTools
                 if (spec.Worn == null && Prefab(spec.Carry, true) != null) built++;
             AssetDatabase.SaveAssets();
             Debug.Log($"[Clover.Build] Built {built} weapon prefabs under {Folder}.");
+            BladeLineFit.Report();
         }
 
         /// <summary>The weapon's prefab, built if it is not there (or again, when asked).</summary>
@@ -311,6 +323,10 @@ namespace Clover.EditorTools
                     renderer.sharedMaterial = SlotMaterial(spec, SlotOf(renderer.name));
             }
             spec.Finish?.Invoke(root, spec);
+            // The line its swings sweep, read off the model now that it is in place (the bow's moved to its grip).
+            var notes = new List<string>();
+            BladeLineFit.Write(root, spec, notes);
+            foreach (string note in notes) Debug.Log($"[Clover.Build] Blade line: {note}");
             var prefab = PrefabUtility.SaveAsPrefabAsset(root, path);
             UnityEngine.Object.DestroyImmediate(root);
             return prefab;

@@ -56,7 +56,8 @@ namespace Clover.Player.Forms
         /// <summary>What one swing of a charged blade leaves, from where the player stands, facing the way given.</summary>
         public static void Swing(ElementInfo element, Vector3 origin, Vector3 forward)
         {
-            if (!ElementArt.Ready || element == null) return;
+            // Drawn only as the old look under the owner's switch (Swings.SwingTrails draws the new), so the art is asked for whichever way the switch is.
+            if (!ElementArt.HasArt || element == null) return;
             forward.y = 0f;
             if (forward.sqrMagnitude < 0.0001f) return;
             forward.Normalize();

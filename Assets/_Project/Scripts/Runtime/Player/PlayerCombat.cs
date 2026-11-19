@@ -125,6 +125,8 @@ namespace Clover.Player
         public event System.Action Finished;
         /// <summary>A move was swung (struck or not): the charged blade's look draws its trail on it.</summary>
         public event System.Action<AttackStep> Swung;
+        /// <summary>A blow of the weapon met a body (not a guard): where on it, and the way the blow was going. The swing looks throw their element there.</summary>
+        public event System.Action<Vector3, Vector3> BladeMet;
         private bool cutGiven;
 
         /// <summary>
@@ -151,6 +153,15 @@ namespace Clover.Player
         public Footprint LastFootprint { get; private set; }
         /// <summary>True while an infused strike's carrier is being made.</summary>
         public bool InfusedNow => infusedStep != null && Combo.Current == infusedStep;
+
+        /// <summary>
+        /// The element the move in progress carries on the weapon: the infused strike's, or the charged blade's when the
+        /// move began with it charged (for the whole move, though its charge is spent on the way); null for a plain move.
+        /// </summary>
+        public ElementInfo SwingElement => Combo.Current == null ? null : InfusedNow && infusedElement != null ? infusedElement : moveCharged ? moveElement : null;
+
+        /// <summary>True when the move in progress is an infused strike's carrier.</summary>
+        public bool SwingInfused => InfusedNow && infusedElement != null;
         /// <summary>The strike clock a move belongs to (4 or 5) when it is an infused strike, else -1: its own blow does not cut its own clock.</summary>
         public int StrikeClockOf(AttackStep step) => step != null && step == infusedStep ? StrikeRules.Clock(infusedSecond) : -1;
         /// <summary>
@@ -1521,8 +1532,8 @@ namespace Clover.Player
             infusedPending = false;
             InfusedStrikes++;
             if (deep) DeepStrikes++;
-            // The element gathers on the weapon as the carrier winds up.
-            ElementLook.Puff(info, transform.position + transform.forward * 0.6f + Vector3.up * 1.1f, transform.forward, 0.8f);
+            // The element gathers on the weapon as the carrier winds up: along its edge (the swing looks), or as a puff in front (the old look).
+            if (!Clover.Player.Swings.SwingTrails.On) ElementLook.Puff(info, transform.position + transform.forward * 0.6f + Vector3.up * 1.1f, transform.forward, 0.8f);
             return true;
         }
 
@@ -1830,7 +1841,12 @@ namespace Clover.Player
                 finisher |= outcome == HitOutcome.Finisher;
                 if (outcome == HitOutcome.Finisher) finished = other.bounds.center;
                 clean |= outcome != HitOutcome.Blocked;
-                if (outcome != HitOutcome.Blocked) Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, other.ClosestPoint(origin), transform.forward);
+                if (outcome != HitOutcome.Blocked)
+                {
+                    Vector3 contact = other.ClosestPoint(origin);
+                    Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, contact, transform.forward);
+                    BladeMet?.Invoke(contact, transform.forward);
+                }
                 else
                 {
                     // Turned on the enemy's guard: steel on steel, and a jolt back up the arm.

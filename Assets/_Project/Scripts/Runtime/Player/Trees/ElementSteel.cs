@@ -71,8 +71,12 @@ namespace Clover.Player
             if (combat == null || element == null || target == null) return;
             Vector3 at = target.transform.position;
             Vector3 forward = combat.transform.forward;
-            // The element shows where the charge went in, whatever it adds.
-            if (!HitArt.Play(element, at + Vector3.up * 1.1f, forward)) ElementLook.Sparks(element, at + Vector3.up * 1.1f, forward, blow.Third ? 1.2f : 0.7f);
+            // The element shows where the charge went in, whatever it adds. Ice's crack-web and Earth's floating cubes gave
+            // way (the owner's notes of 2026-11-19) to the swing look's own landing: frost that bursts and splinters fall,
+            // rocks thrown up that fall back.
+            var swingLook = Swings.SwingLooks.For(element);
+            bool drawn = (Swings.SwingTrails.On && swingLook != null && swingLook.ReplacesHitArt) || HitArt.Play(element, at + Vector3.up * 1.1f, forward);
+            if (!drawn) ElementLook.Sparks(element, at + Vector3.up * 1.1f, forward, blow.Third ? 1.2f : 0.7f);
             switch (element.Name)
             {
                 case Elements.Fire:

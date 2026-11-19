@@ -22,7 +22,9 @@ namespace Clover.Player.Forms
         public static int MarksShown => instance != null ? instance.marksShown : 0;
 
         private const byte Free = 0, Held = 1, Auto = 2;
-        private const int Erupting = 0, Dropping = 1, Flying = 2, Shrinking = 3, Standing = 4;
+        private const int Erupting = 0, Dropping = 1, Flying = 2, Shrinking = 3, Standing = 4, Tossing = 5;
+        /// <summary>How fast a tossed thing falls, metres a second squared: a little more than the world's, so a toss reads at the game's pace.</summary>
+        public const float TossGravity = 14f;
 
         private struct Solid
         {
@@ -331,7 +333,8 @@ namespace Clover.Player.Forms
             if (instance == null) return -1;
             int i = instance.TakeSolid(mesh, colour, ink);
             if (i < 0) return -1;
-            instance.solids[i] = new Solid { State = Auto, Motion = motion, From = from, To = to, Rotation = rotation, Scale = scale, A = Mathf.Max(0.01f, a), B = b, C = Mathf.Max(0.01f, c) };
+            // A toss's first number is the ground's height, which may be anything; every other motion's is a time.
+            instance.solids[i] = new Solid { State = Auto, Motion = motion, From = from, To = to, Rotation = rotation, Scale = scale, A = motion == Tossing ? a : Mathf.Max(0.01f, a), B = b, C = Mathf.Max(0.01f, c) };
             instance.Advance(i, 0f);
             return i;
         }
@@ -347,6 +350,28 @@ namespace Clover.Player.Forms
         /// <summary>Something flies from one point to another, thinning as it goes, and is gone.</summary>
         public static void Fly(FormMesh mesh, Vector3 from, Vector3 to, Quaternion rotation, Vector3 scale, Color colour, float seconds, float ink = 0.035f) =>
             Thrown(mesh, colour, ink, Flying, from, to, rotation, scale, seconds, 0f, 0.01f);
+
+        /// <summary>
+        /// Something thrown from a point with a velocity: it tumbles up and falls under <see cref="TossGravity"/> to the
+        /// height <paramref name="groundY"/>, lies there <paramref name="rest"/> seconds and sinks away. Nothing tossed
+        /// ever hangs in the air (the owner's rule of 2026-11-19: rocks are thrown up, and fall).
+        /// </summary>
+        public static void Toss(FormMesh mesh, Vector3 from, Vector3 velocity, float groundY, Quaternion rotation, Vector3 scale, Color colour, float rest, float sink, float ink = 0.035f)
+        {
+            int i = Thrown(mesh, colour, ink, Tossing, from, velocity, rotation, scale, groundY, rest, sink);
+            if (i >= 0) instance.solids[i].A = groundY;
+        }
+
+        /// <summary>Seconds from a toss to its landing: when the fall from <paramref name="from"/> at <paramref name="velocity"/> reaches <paramref name="groundY"/>.</summary>
+        public static float TossLanding(Vector3 from, Vector3 velocity, float groundY)
+        {
+            float drop = Mathf.Max(0f, from.y - groundY);
+            return (velocity.y + Mathf.Sqrt(velocity.y * velocity.y + 2f * TossGravity * drop)) / TossGravity;
+        }
+
+        /// <summary>Where a toss is after some seconds of flight.</summary>
+        public static Vector3 TossAt(Vector3 from, Vector3 velocity, float seconds) =>
+            from + velocity * seconds + Vector3.down * (0.5f * TossGravity * seconds * seconds);
 
         private void Advance(int i, float deltaTime)
         {
@@ -397,6 +422,20 @@ namespace Clover.Player.Forms
                         at.localScale = one.Scale * left;
                         Paint(i, since < 0.06f && Flashes(i) ? 1f : 0f);
                     }
+                    break;
+                }
+                case Tossing:
+                {
+                    // From is where it left, To its velocity, A the ground's height, B its rest, C its sink.
+                    float landing = TossLanding(one.From, one.To, one.A);
+                    if (age >= landing + one.B + one.C) { FreeSolid(i); return; }
+                    float flight = Mathf.Min(age, landing);
+                    Vector3 where = TossAt(one.From, one.To, flight);
+                    where.y = Mathf.Max(where.y, one.A);
+                    // It tumbles while it flies and lies as it fell.
+                    at.SetPositionAndRotation(where, one.Rotation * Quaternion.Euler(flight * 420f, flight * 260f, 0f));
+                    float left = age < landing + one.B ? 1f : Mathf.Max(0.02f, 1f - (age - landing - one.B) / one.C);
+                    at.localScale = one.Scale * left;
                     break;
                 }
                 case Standing:

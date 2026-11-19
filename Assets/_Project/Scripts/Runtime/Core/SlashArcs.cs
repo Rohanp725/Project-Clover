@@ -32,6 +32,9 @@ namespace Clover.Core
 
         public void Configure(Material arcMaterial) => material = arcMaterial;
 
+        /// <summary>The material the arcs are drawn in (`Clover/Glow`), for effects that copy it.</summary>
+        public Material Material => material;
+
         private void Awake()
         {
             block = new MaterialPropertyBlock();

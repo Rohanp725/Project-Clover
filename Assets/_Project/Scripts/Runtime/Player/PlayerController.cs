@@ -167,6 +167,8 @@ namespace Clover.Player
             if (spells == null) spells = gameObject.AddComponent<PlayerSpells>();
             // The charged blade's look on the weapon, added the same way so no scene is rebuilt.
             if (GetComponent<BladeLook>() == null) gameObject.AddComponent<BladeLook>();
+            // The element on a swung weapon (the swing trails, the sheath, Life's thorns), added the same way.
+            if (GetComponent<Swings.SwingTrails>() == null) gameObject.AddComponent<Swings.SwingTrails>();
             // The build (the Hand and the attunements), added the same way.
             if (GetComponent<PlayerBuild>() == null) gameObject.AddComponent<PlayerBuild>();
             upgrades = GetComponent<PlayerUpgrades>();

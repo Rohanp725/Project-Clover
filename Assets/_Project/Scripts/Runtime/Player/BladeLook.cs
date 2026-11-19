@@ -1,5 +1,6 @@
 using Clover.Core;
 using Clover.Player.Forms;
+using Clover.Player.Swings;
 using UnityEngine;
 
 namespace Clover.Player
@@ -11,6 +12,10 @@ namespace Clover.Player
     /// crackle; Ice is rime feathers and breath-fog; the others are their element's substance (drops, leaves, grit,
     /// gilt, shade, venom) in its colour. Fewer and smaller as the three blows are spent. The blade is found from the
     /// weapon part shown (its longest axis, the end away from the hand being the tip); bare hands burn at the fists.
+    ///
+    /// Since 2026-11-19 this is the old look, kept for the owner's F8 switch: with the new effects on,
+    /// <see cref="SwingTrails"/> draws the element moving with each swing along the weapon's real edge instead, and this
+    /// draws nothing. With the old effects on it draws exactly what it drew before, the element art's edge pieces included.
     /// </summary>
     [RequireComponent(typeof(PlayerCombat))]
     public class BladeLook : MonoBehaviour
@@ -62,11 +67,18 @@ namespace Clover.Player
         // Each swing of a charged blade leaves the element art's trail.
         private void Swung(AttackStep step)
         {
+            if (SwingTrails.On) return;
             if (shown != null && taken > 0) BladeArt.Swing(shown, transform.position, transform.forward);
         }
 
         private void LateUpdate()
         {
+            if (SwingTrails.On)
+            {
+                // The new swing looks draw the charge; the old pieces are let go, and taken again if the switch goes back.
+                if (shown != null || taken > 0) Let();
+                return;
+            }
             var blade = combat.Blade;
             var element = blade.Charged ? Elements.ByName(blade.Element) : null;
             if (element != shown || (element != null && blade.Version != shownVersion))
@@ -105,7 +117,8 @@ namespace Clover.Player
             shape = ShapeOf(element);
             Color colour = element.Name == Elements.Dark ? ElementSubstance.Shade(element.Colour) : element.Name == Elements.Ice ? ElementSubstance.Pale(element.Colour) : element.Colour;
             int count = Mathf.Clamp(Mathf.CeilToInt(Pieces * Mathf.Max(1, left) / (float)Mathf.Max(1, blows)) + 1, 2, MostPieces);
-            string edge = ElementArt.Ready ? BladeArt.EdgePiece(element.Index) : null;
+            // The art's edge pieces were today's look when the swing looks came in: they stay the old look whichever way the switch is.
+            string edge = ElementArt.HasArt ? BladeArt.EdgePiece(element.Index) : null;
             artEdge = edge != null;
             artLength = artEdge ? BladeArt.EdgeLength(element.Index) : 1f;
             if (artEdge) count = Mathf.Min(count, 3);
@@ -200,7 +213,7 @@ namespace Clover.Player
             if (untilShed > 0f) return;
             untilShed = ShedEvery;
             // The element art sheds nothing of light: only fire's embers and lightning's crackle stay.
-            if (ElementArt.Ready && artEdge) return;
+            if (artEdge) return;
             switch (shown.Name)
             {
                 case Elements.Fire:

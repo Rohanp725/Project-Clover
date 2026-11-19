@@ -29,6 +29,9 @@ namespace Clover.Player.Forms
         /// <summary>True when the new effects are to be drawn: the switch is on and the scene has the art.</summary>
         public static bool Ready => On && instance != null && instance.set != null;
 
+        /// <summary>True when the scene has the art, whichever way the switch is: for the charged blade's old look, which was drawn with it.</summary>
+        public static bool HasArt => instance != null && instance.set != null;
+
         /// <summary>How many times the switch has been pressed this play, for probes.</summary>
         public static int Switched { get; private set; }
 

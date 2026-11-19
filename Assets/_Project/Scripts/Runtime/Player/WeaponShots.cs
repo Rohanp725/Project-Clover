@@ -81,6 +81,11 @@ namespace Clover.Player
         }
 
         /// <summary>True while the shot with this handle is anywhere in the world: flying, stuck, or coming back.</summary>
+        /// <summary>The weapon models that fly when thrown, one per carry name, made when the player starts (null where none was).</summary>
+        public int PropCount => props != null ? props.Length : 0;
+        public Transform PropAt(int index) => props != null && index >= 0 && index < props.Length ? props[index] : null;
+        public string PropName(int index) => propNames != null && index >= 0 && index < propNames.Length ? propNames[index] : "";
+
         public bool IsOut(int handle) => flying != null && handle >= 0 && handle < flying.Length && flying[handle].Live;
         public bool IsStuck(int handle) => IsOut(handle) && flying[handle].Stuck;
         public bool StuckInEnemy(int handle) => IsStuck(handle) && flying[handle].InEnemy;
