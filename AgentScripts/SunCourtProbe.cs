@@ -171,6 +171,8 @@ public class SunCourtProbeRunner : MonoBehaviour
         Go(rest.transform.position + new Vector3(0f, 0f, -1.6f), Vector3.forward);
         yield return new WaitForSeconds(0.3f);
         rest.Use(interaction);
+        // With an element carried the fire opens the rest menu (Phase 2), which stops the world: leave it at once.
+        if (RestMenu.Showing) RestMenu.Instance.Close();
         yield return new WaitForSeconds(0.4f);
         Say($"1 rest: lit {rest.IsLit} says '{defence.LastCallout}' return point {director.ReturnPoint.position:0.0}");
         yield return Shot("forecourt_2");

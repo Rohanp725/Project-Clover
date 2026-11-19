@@ -308,11 +308,37 @@ Group: Spells and cooldowns
 
 **The numbers.** A tap of L2 counts if it is let go within 0.25 s and no spell was cast while it was held; the surge is lit as you let go. Held longer, letting go does nothing. On the keyboard the surge stays on F, and Left Ctrl is the layer for the infused strikes (Left Ctrl with a mouse button). With L2 held, R1 and R2 are the infused strikes, not attacks.
 
-**What sets it off.** Your element's own spell sits in West at the start. Each spell you learn fills the next empty slot. At a rest fire, choose a learned spell on the chart and press use: it goes into the next slot round (West, North, East, South, then West again). The playtest's Hand screen arrives in phase 2.
+**What sets it off.** At a rest fire, Set the Hand: choose what sits in each slot from the spells of the elements you carry (see The Hand). Until you first set a Hand, the slots fill themselves: each carried element's own spell first, then each spell you learn in the next empty slot; choosing a learned spell on the chart and pressing use still puts it in the next slot round.
 
 **How to use it.** Keep spells of different jobs in your four slots: one to open a fight, one to break a guard, one to finish, one to escape. A spell slot can be rebound in the pause menu's controls, on the pad and on the keys.
 
 **How it looks.** The spell diamond in the bottom-right corner: four round slots laid out like the face buttons, each with its spell's picture (or its initials) and its button, the surge in the middle, the two infused strikes under it. It is small at all times and grows while L2 is held, with each spell's name. The buttons are named for the pad or keys you use, and follow your rebinding.
+
+## the-hand
+Title: The Hand and the rest menu
+Group: Spells and cooldowns
+**What it is.** Your build: the four spells in your slots and the surge a tap of L2 lights, chosen from the elements you carry. Resting at a fire opens the rest menu: Set the Hand, The chart (where Shards are spent) and Leave the fire.
+
+**The numbers.** Four slots and one surge. A slot takes any learned spell of an element you carry, or that element's own spell, or a duo spell while both of its elements are carried; nothing goes in two slots at once. The surge is either carried element's. Three saved Hands. In the full game the slots open as you go: West and North at the start, East when the Champion of the Gate falls, South when the Fire god falls, and each stays open from then on; a shut slot holds nothing, is shown shut on the Hand with what opens it, and is never filled. In the playtest every slot is open.
+
+**What sets it off.** Use a rest fire, then Set the Hand. Choose a slot and press use for its list, grouped by element, each spell with its role and one line; press use on one to wear it at once. The weapon skill button shows the numbers. On a saved Hand's row, use wears it and the heavy attack (or a right click) keeps the Hand you wear there. Suggested Hand fills the slots with each element's own spell and then your learned spells in order. The stick, the d-pad, W and S, the wheel and the mouse all choose; dodge (or Esc) backs out. The world is stopped meanwhile.
+
+**How to use it.** Read your Hand like a hand of cards: an opener, a breaker, a detonator, a counter, a way to move. Keep a saved Hand for each kind of fight and swap at the fire. The Hand never changes which elements you carry: that is chosen in the hub (in the playtest, at the altars).
+
+**How it looks.** The four slots in a diamond laid out like the face buttons, named by your own bindings, each ringed in its element's colour; the surge in the middle; the elements you carry along the top; the suggested and saved Hands on the right.
+
+## two-elements
+Title: Two elements
+Group: Spells and cooldowns
+**What it is.** You carry two elements at once, the first and the second; the same one twice is all in. Each spell is cast in its own element and lays its own affliction, in its own colour. Your weapon's blows lay only the first element's affliction: the second comes from your spells, the charged blade and the R2 strike, so mixing comes from weaving weapon and spell.
+
+**The numbers.** The weapon's blows lay the first element's affliction only, even with the second element's root mark learned (Lightning's Static is built by the weapon only while Lightning is first; a heavy blow still sets off Static laid another way). Marks of both elements are in force; a duo branch's marks need both elements carried, and a duo spell also needs a slot. The surge you wear strengthens the weapon while it burns; if it is the second element's surge, the blows still lay only the first element's affliction. R1 strikes with the first element, R2 with the second; all in or with one element, R2 is the deep strike for 20 mana. The mana bar takes the first element's colour.
+
+**What sets it off.** The elements you carry are picked in the hub; in the full game the hub's braziers still give only the first. In the playtest the altars round the rest fire set both: carrying one element, another altar carries its element as your second and the altar of the one you carry goes all in; carrying two (or all in), an altar starts again with its element alone. You arrive carrying Fire, and each altar's prompt says what it will do before you press. A Hand's spells of an element no longer carried leave their slots, and a surge of one falls back to the first element's.
+
+**How to use it.** Put the element you want on every blow first. Use the second's spells and strike to lay its affliction beside the first; a charged blade carries a spell's element on your next three blows beside your own. All in, you trade the mix for depth.
+
+**How it looks.** Each spell, ground and burst in its own element's stuff and colour. An enemy carrying two afflictions shows both diamonds under its bars.
 
 ## cooldowns
 Title: Spell cooldowns
@@ -334,7 +360,7 @@ Group: Spells and cooldowns
 
 **The numbers.** Three moves, each 1.2 times the damage. Each lays one stack of the element's affliction (two of Poison), on top of what the blow lays already, or beside it when that is another affliction. A move counts once however many it strikes, and carries the charge to all of them. A blow turned on a guard spends nothing. A new spell that lands replaces the charge with a fresh three. Resting ends it. What each element adds: Fire's third blow leaves the ground under the enemy burning for 3 s. Lightning's each leap on to one more enemy within 4 m for half the damage, with Static. Wind's each shove the enemy 1.5 m along the swing, the third 4 m. Ice's each shatter an enemy already Frozen, light blow or heavy. Water's each splash everything within 1.5 m for a fifth of the blow, and soak it. Life's third throws thorns round the enemy (2 m, Seeded). Earth's each throw a 2 m spray of gravel. Metal's pass any guard. Light's third throws a ray 5 m along the swing that Marks. Dark's third Curses twice more. Poison's third makes the poison bite at once.
 
-**What sets it off.** A spell from one of your four slots that lands on an enemy, within 8 s of being cast (the first thing it strikes). The surge, an infused strike, ground left burning and marks' effects never charge it.
+**What sets it off.** A spell from one of your four slots that lands on an enemy, within 8 s of being cast (the first thing that cast strikes), charges it with that spell's own element: with Fire and Lightning carried, Flame Wave charges it with Fire and Thunderclap with Lightning. A duo spell charges it with the first of its pair. Ground left burning by an earlier cast, the surge, an infused strike and marks' effects never charge it.
 
 **How to use it.** Weave: cast, then strike three times, then cast again while the weapon brings the spell back. A spell on cooldown and a charged blade are the same fight seen from two sides.
 
@@ -349,7 +375,7 @@ Group: Spells and cooldowns
 
 **What sets it off.** L2 with R1 or R2 (Left Ctrl with a mouse button). A strike pressed while its button waits says "Not ready"; a deep strike without 20 mana says "No mana".
 
-**How to use it.** The strike is your element at the weapon's reach and in the weapon's shape: a hammer's drop lays it in a circle, a spear's thrust in a line. Use it to open a fight or to lay your affliction on a crowd, and keep the deep strike for when the mana is there. With two elements (the next update), R1 is the first element's strike and R2 the second's; the deep strike is then for a Hand all in on one element.
+**How to use it.** The strike is your element at the weapon's reach and in the weapon's shape: a hammer's drop lays it in a circle, a spear's thrust in a line. Use it to open a fight or to lay your affliction on a crowd. With two elements, R1 (RB) is the first element's strike and R2 (RT) the second's, and neither costs mana: the strike is how your weapon lays the second element. Carrying one element, or the same one twice (all in), R2 is the first element's deep strike for 20 mana.
 
 **How it looks.** The carrier's arc in the element's colour, then the element along what it covered: flame, lightning, wind, ice, water, vines, stone, ripples, a ray, shadow or venom. Under the spell diamond, two small rings, one for each button, with their waits.
 
@@ -364,7 +390,7 @@ Group: Spells and cooldowns
 
 **How to use it.** Glance at it between blows: a clear slot is ready, a shaded one is waiting. Hold L2 to read the names before you cast.
 
-**How it looks.** Round dark buttons ringed in your element's colour. A waiting slot is shaded, the shade sweeping back as a clock hand. A ready slot's ring swells for a moment. Prices in blue, red when you hold too little. The surge's ring brightens while it burns and is shaded while it waits.
+**How it looks.** Round dark buttons, each ringed in the colour of its own spell's element (with two elements carried, a slot of each colour); the surge ringed in the colour of the surge you wear; the R2 strike named and coloured for the second element, or for the deep strike. A waiting slot is shaded, the shade sweeping back as a clock hand. A ready slot's ring swells for a moment. Prices in blue, red when you hold too little. The surge's ring brightens while it burns and is shaded while it waits.
 
 ## flasks
 Title: Flasks
@@ -412,7 +438,7 @@ Group: Reactions
 
 **The numbers.** None yet. Reactions arrive in a later phase of the playtest (phase 3), and this part of the guide will fill then, with one entry for each reaction.
 
-**What sets it off.** Two different afflictions lying on the same enemy at once. Playing two elements together arrives in phase 2, before reactions.
+**What sets it off.** Two different afflictions lying on the same enemy at once. You can already lay two: carry two elements, and your weapon lays the first while your spells, the charged blade and the R2 strike lay the second.
 
 **How to use it.** For now, afflictions only add up. Soaked spreads Static and Chill. Unsteady adds stagger and Tremor stops it fading. Sundered and Marked both make weapon blows hit harder.
 

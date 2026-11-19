@@ -77,6 +77,45 @@ public class P1aProbeRunner : MonoBehaviour
         while (Time.unscaledTime < end) yield return null;
     }
 
+    // A rest fire opens the rest menu first (Phase 2): "The chart" is chosen there with the keys, as a player would.
+    private IEnumerator ChartFromRest()
+    {
+        float until = Time.unscaledTime + 1.5f;
+        while (!Clover.UI.RestMenu.Showing && !(Clover.UI.UpgradeMenu.Instance != null && Clover.UI.UpgradeMenu.Instance.IsOpen) && Time.unscaledTime < until) yield return null;
+        if (!Clover.UI.RestMenu.Showing || Clover.UI.RestMenu.Instance.Away) yield break;
+        var restMenu = Clover.UI.RestMenu.Instance;
+        int chartAt = restMenu.Choices.IndexOf(Clover.UI.RestEntry.Chart);
+        for (int step = 0; step < 8 && restMenu.Choices.Selected != chartAt; step++) yield return Tap(Key.S);
+        yield return Tap(Key.E);
+        until = Time.unscaledTime + 1f;
+        while (!(Clover.UI.UpgradeMenu.Instance != null && Clover.UI.UpgradeMenu.Instance.IsOpen) && Time.unscaledTime < until) yield return null;
+    }
+
+    // Closing a chart opened from a fire brings the rest menu back; leaving it gives the world back.
+    private IEnumerator LeaveRest()
+    {
+        float until = Time.unscaledTime + 1.5f;
+        while (Clover.UI.RestMenu.Showing && Clover.UI.RestMenu.Instance.Away && Time.unscaledTime < until) yield return null;
+        if (!Clover.UI.RestMenu.Showing) yield break;
+        yield return null;
+        yield return Tap(Key.Space);
+        until = Time.unscaledTime + 1f;
+        while ((Clover.UI.RestMenu.Showing || Time.timeScale == 0f) && Time.unscaledTime < until) yield return null;
+        yield return null;
+    }
+
+    // An altar of the Proving Ground sets either attunement (Phase 2): carrying one element, another altar adds its
+    // element second and the same altar goes all in; used again it leaves its element alone. This uses it until its
+    // element is the only one carried, as a tester would (at most twice).
+    private IEnumerator HoldAlone(LoadoutChoice altar)
+    {
+        for (int use = 0; use < 3; use++)
+        {
+            if (element.HasElement && element.Info != null && element.Info.Name == altar.Choice && !element.Mixed && !element.AllIn && use > 0) break;
+            yield return Use(altar, 1.0f);
+        }
+    }
+
     private IEnumerator Tap(Key key)
     {
         Keys(key);
@@ -176,7 +215,7 @@ public class P1aProbeRunner : MonoBehaviour
 
         // 0. Fire from its altar and the Katana from the rack, then a rest that buys the Fire tree's spells.
         var fire = Find<LoadoutChoice>(choice => choice.IsElement && choice.Choice == Elements.Fire);
-        yield return Use(fire, 1.0f);
+        yield return HoldAlone(fire);
         var katana = Find<LoadoutChoice>(choice => !choice.IsElement && choice.Choice == Weapons.KatanaName);
         yield return Use(katana, 1.0f);
         Judge("Fire held and the Katana in hand", element.Kit.Name == Elements.Fire && combat.Weapon.Name == Weapons.KatanaName, $"{element.Kit.Name}, {combat.Weapon.Name}");
@@ -185,6 +224,7 @@ public class P1aProbeRunner : MonoBehaviour
 
         var rest = Find<RestPoint>(point => true);
         yield return Use(rest, 1.4f);
+        yield return ChartFromRest();
         var chart = UpgradeMenu.Instance;
         int bought = 0;
         for (int pass = 0; pass < 12; pass++)
@@ -205,6 +245,7 @@ public class P1aProbeRunner : MonoBehaviour
         yield return Shot("p1a_chart_slots");
         Say($"  chart state: {GameObject.Find("Upgrade Menu")?.GetComponentsInChildren<UnityEngine.UI.Text>().Select(t => t.text).FirstOrDefault(t => t.Contains("slot"))}");
         yield return Tap(Key.Space);
+        yield return LeaveRest();
         yield return Real(0.3f);
         // The order the rest of the probe casts in: the base spell, Wildfire Rush, Cinder Fan, Meteor Leap (mana).
         spells.SetSlot(0, "fire.base");

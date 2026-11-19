@@ -168,7 +168,7 @@ namespace Clover.UI
             // The weapon in hand and, while it lasts, the surge with its seconds. Rewritten only when it changes.
             if (status != null && combat != null && combat.Weapon != null)
             {
-                int surge = element != null && element.Kit.SurgeActive ? Mathf.CeilToInt(element.Kit.SurgeLeft) : 0;
+                int surge = element != null && element.SurgeActive ? Mathf.CeilToInt(element.SurgeKit.SurgeLeft) : 0;
                 bool charge = upgrades != null && upgrades.ChargeStored;
                 int wards = defence.Wards;
                 int tallies = upgrades != null ? upgrades.TallyVersion : 0;
@@ -179,7 +179,7 @@ namespace Clover.UI
                     shownCharge = charge;
                     shownWards = wards;
                     shownTallies = tallies;
-                    string text = surge > 0 ? $"{shownWeapon.ShownName}   {element.Kit.SurgeName} {surge}" : shownWeapon.ShownName;
+                    string text = surge > 0 ? $"{shownWeapon.ShownName}   {element.SurgeKit.SurgeName} {surge}" : shownWeapon.ShownName;
 
                     if (wards > 0) text += wards > 1 ? $"   Wards {wards}" : "   Ward";
                     // Counts the learned marks keep: plates, folds, swords waiting.

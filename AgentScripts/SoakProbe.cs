@@ -155,7 +155,8 @@ public class SoakProbeRunner : MonoBehaviour
         ForgetAll();
     }
 
-    private bool MenuOpen => UpgradeMenu.Instance != null && UpgradeMenu.Instance.IsOpen;
+    // The fire's own menus count: the rest menu (Phase 2) and the Hand opened from it, as well as the chart.
+    private bool MenuOpen => (UpgradeMenu.Instance != null && UpgradeMenu.Instance.IsOpen) || RestMenu.Showing || HandMenu.Showing;
     private bool BoxOpen => ReadingBox.Instance != null && ReadingBox.Instance.IsOpen;
 
     private void FindScene()

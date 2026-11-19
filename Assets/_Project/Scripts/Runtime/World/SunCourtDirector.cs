@@ -313,6 +313,8 @@ namespace Clover.World
             if (Felled) return;
             Felled = true;
             RunState.GodsFelled++;
+            // Kept from run to run: the Hand's fourth slot is open from now on (SlotSchedule).
+            Progress.Unlock(Clover.Player.Build.SlotSchedule.FireGodFlag);
             SetWall(false);
             if (hitStop != null) hitStop.Slow(1.8f, 0.2f);
             ScreenFlash.Flash(new Color(1f, 0.5f, 0.16f, 0.44f), 0.1f);

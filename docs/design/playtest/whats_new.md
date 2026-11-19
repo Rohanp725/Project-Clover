@@ -1,8 +1,22 @@
-# Combat Playtest 0.2 (unreleased)
+# Combat Playtest 0.3 (unreleased)
 
 ## What this playtest is
 
 A testbed for the combat. It grows with each update as the fighting is reworked. Everything is open: try anything, and tell us what felt good, what felt wrong and what you did not understand.
+
+## New in 0.3 (phase 2: two elements and the Hand)
+
+- **Two elements at once.** Carry a first and a second element (the same one twice is all in). Each spell is cast in its own element, lays its own affliction and is drawn in its own colour and stuff.
+- **The altars set both.** Carrying one element, use another altar to carry its element as your second; use the altar of the element you carry to go all in. Carrying two (or all in), an altar starts again with its element alone. Before you press, the altar's prompt says which it will do ("Carry Lightning as second", "Carry Fire all in", "Carry Ice alone"). You arrive carrying Fire.
+- **Your weapon lays the first element only.** Weapon blows lay the first element's affliction, even with the second's root mark learned. The second comes from your spells, the charged blade and the R2 strike, so two afflictions meet on an enemy when you weave weapon and spell.
+- **The charged blade takes the landed spell's element.** Flame Wave charges it with Fire, Thunderclap with Lightning; only that cast's own first landing counts. A duo spell charges it with the first of its pair.
+- **Strikes for each element.** L2 with R1 (RB) is the first element's strike, L2 with R2 (RT) the second's, and neither costs mana. Carrying one element, or all in, R2 is the deep strike for 20 mana as before.
+- **The rest menu.** A rest fire now opens a menu: Set the Hand, The chart, Leave the fire. Closing the chart brings you back to it.
+- **The Hand.** Your four spells in a diamond laid out like the buttons, the surge in the middle. Choose a slot to see only what can go there, grouped by element with each spell's role and one line; the weapon skill button shows the numbers. Pick the surge from either element. Suggested Hand fills it for you; three saved Hands keep a Hand for each kind of fight (use wears one, the heavy attack keeps yours there). Once you set a Hand the slots stop filling themselves. The Hand never changes which elements you carry.
+- **The spell diamond** colours each slot by its own spell's element and names the R2 strike for the second element.
+- **Duo branches** (Plasma and the other mixes) are in force only while both of their elements are carried; a duo spell sits in a slot like any other.
+- **Slots open as you go, outside the playtest.** In the full game you start with two slots (West and North) and the surge; East opens when the Champion of the Gate falls and South when the Fire god falls, and they stay open from then on. The Hand shows a shut slot and says what opens it. In the playtest every slot is open.
+- **Not yet:** in the full game the second element is still chosen nowhere (the hub's braziers give one element); it comes when the hub's choice is reworked. Duo surges, shapes and the designed starter Hands for each element come with the reshaped trees.
 
 ## New in 0.2 (phase 1: spells on cooldowns, mana for big moves, the charged blade, infused strikes and the spell diamond)
 

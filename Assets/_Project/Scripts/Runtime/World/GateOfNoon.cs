@@ -1,12 +1,15 @@
+using Clover.Core;
 using Clover.Gameplay;
 using Clover.Player;
+using Clover.Player.Build;
 
 namespace Clover.World
 {
     /// <summary>
     /// The door at the end of a land, kept by its elite. While the keeper stands it is sealed. Once the keeper has
     /// fallen it opens: it says so, and leads on to <see cref="LeadsTo"/> if that scene is among the scenes the game
-    /// can load; if it is not built yet, the words are all that happens.
+    /// can load; if it is not built yet, the words are all that happens. The keeper's fall is kept in progress
+    /// (<see cref="SlotSchedule.ChampionFlag"/>): from then on the Hand's third slot is open.
     /// </summary>
     public class GateOfNoon : Interactable
     {
@@ -48,7 +51,16 @@ namespace Clover.World
             if (director == null) return;
             foreach (var enemy in director.Enemies)
                 if (enemy != null && enemy.Kind != null && enemy.Kind.Name == KeeperName) keeper = enemy;
+            if (keeper != null) keeper.Died += OnKeeperDied;
         }
+
+        private void OnDestroy()
+        {
+            if (keeper != null) keeper.Died -= OnKeeperDied;
+        }
+
+        // The Champion of the Gate is the only keeper built; the Hand's schedule reads the flag (IMPLEMENTATION.md 3.6).
+        private void OnKeeperDied(Enemy who) => Progress.Unlock(SlotSchedule.ChampionFlag);
 
         public override void Use(PlayerInteraction who)
         {

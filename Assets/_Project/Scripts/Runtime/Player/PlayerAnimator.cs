@@ -220,7 +220,7 @@ namespace Clover.Player
             }
             else if (casting)
             {
-                animator.Play(CastHash, 0, Mathf.Min(ClipEnd, element.Kit.CastProgress));
+                animator.Play(CastHash, 0, Mathf.Min(ClipEnd, element.CastProgress));
             }
             else
             {
@@ -287,9 +287,9 @@ namespace Clover.Player
                 // A great weapon never leaves the hand except to drink or to cast, when it hangs at rest on the body.
                 rack.Show(weapon.UsesSword || combat.WeaponAway ? null : weapon.Carry,weapon.ElementColoured || !(drinking || casting || (helpless && defence.IsDead)));
                 bool lit = charging || (attacking && (combat.Combo.Current == combat.Combo.Skill || combat.IsFinishing));
-                bool surging = element != null && element.Kit != null && element.Kit.SurgeActive;
+                bool surging = element != null && element.SurgeActive;
                 float heat = lit ? InlaySkill : surging ? InlaySurge : InlayRest;
-                if (element != null && element.Info != null) rack.Tint(true, element.Info.Colour, heat);
+                if (element != null && element.Info != null) rack.Tint(true, surging && element.SurgeInfo != null ? element.SurgeInfo.Colour : element.Info.Colour, heat);
                 else rack.Tint(false, Color.black, 0f);
             }
         }

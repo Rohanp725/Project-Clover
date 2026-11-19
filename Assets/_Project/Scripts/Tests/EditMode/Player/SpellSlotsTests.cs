@@ -43,6 +43,23 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TwoElementsKeepBothBaseSpellsAndASetHandStopsTheFilling()
+        {
+            var slots = new SpellSlots();
+            var learned = new List<string> { "fire.rush", "lightning.lance", "fire.kiln" };
+            slots.Settle("fire.base", "lightning.base", learned.Contains, learned, true);
+            CollectionAssert.AreEqual(new[] { "fire.base", "lightning.base", "fire.rush", "lightning.lance" }, new[] { slots[0], slots[1], slots[2], slots[3] });
+
+            // A Hand set at a rest fire: an emptied slot stays empty, a base spell no longer carried leaves.
+            slots.Set(3, "");
+            Assert.IsTrue(slots.Settle("fire.base", "", learned.Contains, learned, false));
+            Assert.AreEqual("", slots[1], "Lightning is no longer carried");
+            Assert.AreEqual("", slots[3], "nothing fills an emptied slot once a Hand is set");
+            Assert.AreEqual("fire.base", slots[0]);
+            Assert.AreEqual("fire.rush", slots[2]);
+        }
+
+        [Test]
         public void PutInNextGoesRoundTheFourAndNeverDoublesASpell()
         {
             var slots = new SpellSlots();
@@ -92,6 +109,33 @@ namespace Clover.Tests
                 Assert.IsTrue(cooldown ^ mana, $"{mark.Name}: cooldown {mark.Spell.Cooldown}, mana {mark.Spell.Cost}");
             }
             foreach (string id in SpellTimings.Ids) Assert.IsNotNull(Upgrade.ById(id), $"the table names {id}, which no mark has");
+        }
+
+        [Test]
+        public void AShutSlotHoldsNothingAndIsNeverFilled()
+        {
+            // The Hand's schedule outside the playtest: West and North at the start (SlotSchedule).
+            var slots = new SpellSlots();
+            var learned = new List<string> { "fire.rush", "fire.kiln", "fire.meteor" };
+            slots.Settle("fire.base", learned.Contains, learned);
+            Assert.AreEqual("fire.kiln", slots[2]);
+            Assert.IsTrue(slots.Shut(2), "the spells in East and South leave");
+            Assert.AreEqual(2, slots.OpenCount);
+            Assert.AreEqual("", slots[2]);
+            Assert.AreEqual("", slots[3]);
+            slots.Settle("fire.base", "", learned.Contains, learned, true);
+            Assert.AreEqual("", slots[2], "settling does not fill a shut slot");
+            Assert.AreEqual(-1, slots.FirstEmpty());
+            slots.Set(3, "fire.meteor");
+            Assert.AreEqual("", slots[3], "nothing is put in a shut slot by hand either");
+            Assert.AreEqual(0, slots.PutInNext("fire.meteor"));
+            Assert.AreEqual(1, slots.PutInNext("fire.kiln"));
+            Assert.AreEqual(0, slots.PutInNext("fire.rush"), "the next slot goes round the open ones only");
+            // The Champion of the Gate opens East; the slots fill it while they still fill themselves.
+            Assert.IsFalse(slots.Shut(3));
+            slots.Settle("fire.base", "", learned.Contains, learned, true);
+            Assert.AreNotEqual("", slots[2], "the slot just opened is filled");
+            Assert.AreEqual("", slots[3]);
         }
 
         [Test]

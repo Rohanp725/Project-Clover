@@ -26,6 +26,11 @@ namespace Clover.UI
         public static ReadingBox Instance { get; private set; }
         public bool IsOpen { get; private set; }
         public int LinesRead { get; private set; }
+        /// <summary>
+        /// True while lines are shown, and in the frame the last was read: a menu open under the box (the rest menu at a
+        /// fire that also speaks) leaves the use button alone then, so reading is not also choosing.
+        /// </summary>
+        public static bool BusyThisFrame => Instance != null && (Instance.IsOpen || Instance.releasePlayer);
 
         private string[] lines;
         private int index;

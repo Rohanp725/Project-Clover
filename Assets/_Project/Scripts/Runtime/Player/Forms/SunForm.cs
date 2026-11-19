@@ -317,7 +317,7 @@ namespace Clover.Player.Forms
         {
             var cast = run.Cast;
             var solids = SpellWorks.Solids(run);
-            run.Flag2 = cast.Caster != null && cast.Caster.Kit != null && SunRules.RisesAgain(cast.Caster.Kit.SurgeLeft);
+            run.Flag2 = cast.Caster != null && cast.Caster.SurgeKit != null && SunRules.RisesAgain(cast.Caster.SurgeKit.SurgeLeft);
             cast.Defence.Callout("The sun goes under");
             for (int i = 0; i < 5; i++) ElementLook.Puff(cast.Element, sun + FormRules.OnRing(i, 5, 1f), Vector3.down, 1f);
             FormFx.Lay(FormMark.Ring, run.A, size * 4f, FormKit.Lit(cast.Colour, 2f), 0.4f, 0.4f);

@@ -100,8 +100,8 @@ namespace Clover.Player.Forms
                 }
                 cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, blow);
                 Vector3 chest = body.position + Vector3.up * 1.1f;
-                cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f);
-                cast.Caster.ShowArc(cast.Reach * 0.6f, cast.Spec.Arc, -1f);
+                cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
+                cast.Caster.ShowArc(cast.Reach * 0.6f, cast.Spec.Arc, -1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
                 int rays = 7;
                 for (int i = 0; i < rays; i++)
                 {

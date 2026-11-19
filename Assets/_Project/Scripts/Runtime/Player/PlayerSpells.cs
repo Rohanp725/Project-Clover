@@ -65,15 +65,21 @@ namespace Clover.Player
         private float sampled;
         private int heldSlot = -1;
         private int seenVersion = -1;
-        private string seenElement;
+        private int seenElement = -1;
+        private bool seenHandSet;
+        private int seenOpen = -1;
+        private PlayerBuild build;
+        private bool buildSought;
         private Upgrade seenLent;
         private bool subscribed;
         private float regather = 5f;
         private System.Func<string, bool> stillTheirs;
-        private bool castWaiting;
-        private float castAt;
-        private int castSlot = -1;
-        private string castElement = "";
+        // Each slot's last cast waits for its own first landing to charge the blade with its own element: the cast's
+        // number (carried by every blow it deals), when it was cast, and its element. 0 for none waiting.
+        private readonly int[] waitingCast = new int[SpellSlots.Count];
+        private readonly float[] waitingSince = new float[SpellSlots.Count];
+        private readonly string[] waitingElement = { "", "", "", "" };
+        private int castSerial;
 
         private void Awake()
         {
@@ -166,33 +172,40 @@ namespace Clover.Player
             Flash(Cooldowns.Cut(seconds, except));
         }
 
-        // The first blow a slot spell lands, within a while of its cast, charges the blade with the spell's element.
-        // Infused strikes, reactions and effects deal no spell blows, so they never charge it.
-        private void OnSpellBlowLanded(Component target)
+        // The first blow a slot cast lands, within a while of the cast, charges the blade with that spell's own element.
+        // Only a blow carrying that cast's number counts, so a spell still burning from an earlier cast, or another
+        // slot's, cannot charge it in this cast's name. Infused strikes, reactions and effects carry no cast's number,
+        // so they never charge it.
+        private void OnSpellBlowLanded(Component target, int cast)
         {
-            if (!castWaiting) return;
-            if (Time.time - castAt > ChargeWindow)
+            if (cast <= 0) return;
+            for (int slot = 0; slot < SpellSlots.Count; slot++)
             {
-                castWaiting = false;
+                if (waitingCast[slot] != cast) continue;
+                waitingCast[slot] = 0;
+                if (Time.time - waitingSince[slot] > ChargeWindow || combat == null || string.IsNullOrEmpty(waitingElement[slot])) return;
+                combat.Blade.Charge(waitingElement[slot]);
+                BladeCharges++;
+                Landed?.Invoke(slot, target);
                 return;
             }
-            castWaiting = false;
-            if (combat == null || string.IsNullOrEmpty(castElement)) return;
-            combat.Blade.Charge(castElement);
-            BladeCharges++;
-            Landed?.Invoke(castSlot, target);
         }
 
         /// <summary>
-        /// Whether an infused strike may start: L2 with R1 (<paramref name="second"/> false) or R2. With one element, as
-        /// every Hand is in Phase 1, R2 is the deep strike (IMPLEMENTATION.md 8.5, question 3), so <paramref name="deep"/> is set.
+        /// Whether an infused strike may start: L2 with R1 (<paramref name="second"/> false) or R2, and the element it
+        /// carries: R1 the first attunement's, R2 the second's. All in, or with one element (IMPLEMENTATION.md 8.5,
+        /// question 3), R2 is the first element's deep strike, so <paramref name="deep"/> is set.
         /// </summary>
-        public StrikeRefusal CheckStrike(bool second, out bool deep)
+        public StrikeRefusal CheckStrike(bool second, out bool deep, out ElementInfo strikeElement)
         {
-            deep = second;
+            deep = second && (element == null || !element.Mixed);
+            strikeElement = element == null ? null : second && !deep ? element.SecondInfo : element.Info;
             float mana = combat != null ? combat.Mana.Current : 0f;
-            return Strikes.Check(Cooldowns, second, deep, mana, element != null && element.HasElement);
+            return Strikes.Check(Cooldowns, second, deep, mana, element != null && element.HasElement && strikeElement != null);
         }
+
+        /// <summary>The same, for callers that only ask whether it is the deep strike.</summary>
+        public StrikeRefusal CheckStrike(bool second, out bool deep) => CheckStrike(second, out deep, out _);
 
         /// <summary>The strike has started: its price is paid and its clock runs.</summary>
         public void BeginStrike(bool second, bool deep)
@@ -229,7 +242,11 @@ namespace Clover.Player
         {
             string id = Slots[slot];
             if (string.IsNullOrEmpty(id)) return "";
-            if (SpellSlots.IsBase(id)) return element != null && element.Kit != null ? element.Kit.SpellName : "";
+            if (SpellSlots.IsBase(id))
+            {
+                var kit = element != null ? element.KitOf(Build.HandRules.ElementOfBase(id)) : null;
+                return kit != null ? kit.SpellName : "";
+            }
             var mark = MarkIn(slot);
             return mark != null ? mark.Name : "";
         }
@@ -257,6 +274,22 @@ namespace Clover.Player
             Changed();
         }
 
+        /// <summary>Puts the Hand's four spells in the slots at once (<see cref="PlayerBuild.Apply"/>).</summary>
+        public void SetAll(string[] ids)
+        {
+            for (int slot = 0; slot < SpellSlots.Count; slot++) Slots.Set(slot, ids != null && slot < ids.Length ? ids[slot] : "");
+            Changed();
+        }
+
+        /// <summary>The element a slot's spell is cast in: a base spell's element, a mark's own, or null for an empty slot.</summary>
+        public ElementInfo ElementIn(int slot)
+        {
+            string id = Slots[slot];
+            if (string.IsNullOrEmpty(id)) return null;
+            if (SpellSlots.IsBase(id)) return Elements.ByName(Build.HandRules.ElementOfBase(id));
+            return element != null ? element.ElementOf(MarkIn(slot)) : null;
+        }
+
         /// <summary>The chart's stopgap: the spell goes in the next slot round (West, North, East, South). Returns the slot.</summary>
         public int PutInNext(string id)
         {
@@ -278,9 +311,11 @@ namespace Clover.Player
         {
             Cooldowns.ResetAll();
             Fight.Reset();
-            castWaiting = false;
+            for (int slot = 0; slot < SpellSlots.Count; slot++) waitingCast[slot] = 0;
             if (combat != null) combat.Blade.Clear();
+            // Both kits: the surge worn may be the second element's.
             if (element != null && element.Kit != null) element.Kit.EndSurgeWait();
+            if (element != null && element.SecondKit != null) element.SecondKit.EndSurgeWait();
         }
 
         private void Changed()
@@ -300,19 +335,35 @@ namespace Clover.Player
             return false;
         }
 
-        // The slots look again when what is in force, the element or the lent spell has changed: never every frame.
+        // The slots look again when what is in force, the elements or the lent spell has changed: never every frame.
+        // Until a Hand is set at a rest fire the empty slots fill themselves (Phase 1's stopgap); after, only what is
+        // no longer theirs leaves its slot.
         private void Look()
         {
             if (upgrades == null || element == null) return;
             // Not before the marks have been read once: the slots carried from the last scene would all look stale.
             if (upgrades.SpellsVersion == 0) return;
-            string held = element.HasElement && element.Info != null ? element.Info.Name : "";
-            if (seenVersion == upgrades.SpellsVersion && held == seenElement && seenLent == upgrades.Lent) return;
+            // The controller adds the build in its own Awake, which may come after this one's: it is found once, when first
+            // wanted (every Awake has run by the time the marks are first read).
+            if (!buildSought)
+            {
+                buildSought = true;
+                build = GetComponent<PlayerBuild>();
+            }
+            // How many slots the schedule opens (all in the playtest): kept by the build until a flag changes.
+            int open = build != null ? build.Open.Slots : SpellSlots.Count;
+            if (seenVersion == upgrades.SpellsVersion && element.Version == seenElement && seenLent == upgrades.Lent && seenHandSet == RunState.HandSet && seenOpen == open) return;
             seenVersion = upgrades.SpellsVersion;
-            seenElement = held;
+            seenElement = element.Version;
+            seenHandSet = RunState.HandSet;
+            seenOpen = open;
+            // A shut slot holds nothing; a slot that has just opened is filled below while the slots still fill themselves.
+            Slots.Shut(open);
             if (upgrades.Lent != null && upgrades.Lent != seenLent) Slots.Set(1, upgrades.Lent.Id);
             seenLent = upgrades.Lent;
-            Slots.Settle(SpellSlots.BaseId(held), stillTheirs, upgrades.SpellsInForce);
+            string first = element.HasElement && element.Info != null ? element.Info.Name : "";
+            string second = element.Mixed ? element.SecondInfo.Name : "";
+            Slots.Settle(SpellSlots.BaseId(first), SpellSlots.BaseId(second), stillTheirs, upgrades.SpellsInForce, !RunState.HandSet);
             Changed();
         }
 
@@ -407,40 +458,58 @@ namespace Clover.Player
                 return false;
             }
             float seconds;
-            if (SpellSlots.IsBase(id))
+            string castIn;
+            // Every blow this cast deals carries its number, so its own first landing charges the blade.
+            int number = ++castSerial;
+            element.CastTag = number;
+            try
             {
-                if (element.IsCasting) return false;
-                // A spell goes where the player faces; with the mouse in use, that is toward the cursor.
-                player.FacePointer();
-                if (!element.CastBase()) return false;
-                seconds = SpellTimings.Base(element.Info.Name).Cooldown;
+                if (SpellSlots.IsBase(id))
+                {
+                    if (element.IsCasting) return false;
+                    castIn = Build.HandRules.ElementOfBase(id);
+                    if (!element.Carries(castIn))
+                    {
+                        Refuse("Not carried");
+                        return false;
+                    }
+                    // A spell goes where the player faces; with the mouse in use, that is toward the cursor.
+                    player.FacePointer();
+                    if (!element.CastBase(castIn)) return false;
+                    seconds = SpellTimings.Base(castIn).Cooldown;
+                }
+                else
+                {
+                    var mark = MarkIn(slot);
+                    if (mark == null || mark.Spell == null || upgrades == null) return false;
+                    if (upgrades.PriceOf(mark) > combat.Mana.Current && !combat.Mana.Sealed && upgrades.Stats.Sum(PlayerStat.BloodPrice) <= 0f)
+                    {
+                        Refuse("No mana");
+                        return false;
+                    }
+                    player.FacePointer();
+                    if (!upgrades.Cast(mark))
+                    {
+                        Refuse(mark.Spell.HealthCost > 0f ? "Not enough health" : "Cannot cast that here");
+                        return false;
+                    }
+                    // A duo spell charges with its first element (IMPLEMENTATION.md 8.5, question 2).
+                    castIn = element.ElementOf(mark).Name;
+                    // A spell from outside the table (a lent one) that asks no mana still waits.
+                    seconds = mark.Spell.Cooldown > 0f ? mark.Spell.Cooldown : mark.Spell.Cost > 0f ? 0f : SpellTimings.DefaultCooldown;
+                }
             }
-            else
+            finally
             {
-                var mark = MarkIn(slot);
-                if (mark == null || mark.Spell == null || upgrades == null) return false;
-                if (upgrades.PriceOf(mark) > combat.Mana.Current && !combat.Mana.Sealed && upgrades.Stats.Sum(PlayerStat.BloodPrice) <= 0f)
-                {
-                    Refuse("No mana");
-                    return false;
-                }
-                player.FacePointer();
-                if (!upgrades.Cast(mark))
-                {
-                    Refuse(mark.Spell.HealthCost > 0f ? "Not enough health" : "Cannot cast that here");
-                    return false;
-                }
-                // A spell from outside the table (a lent one) that asks no mana still waits.
-                seconds = mark.Spell.Cooldown > 0f ? mark.Spell.Cooldown : mark.Spell.Cost > 0f ? 0f : SpellTimings.DefaultCooldown;
+                element.CastTag = 0;
             }
             Cooldowns.Start(slot, seconds / Mathf.Max(0.1f, CooldownRate));
             Casts++;
             LastSlot = slot;
-            // The cast waits for its first landing to charge the blade with its element.
-            castWaiting = true;
-            castAt = Time.time;
-            castSlot = slot;
-            castElement = element.Info != null ? element.Info.Name : "";
+            // The cast waits for its own first landing to charge the blade with its own element.
+            waitingCast[slot] = number;
+            waitingSince[slot] = Time.time;
+            waitingElement[slot] = castIn ?? "";
             heldSlot = slot;
             SlotCast?.Invoke(slot);
             return true;

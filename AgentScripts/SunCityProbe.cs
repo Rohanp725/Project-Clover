@@ -181,6 +181,15 @@ public class SunCityProbeRunner : MonoBehaviour
         player.Teleport(fire.transform.position + new Vector3(0f, 0.1f, -1.5f), Quaternion.identity);
         yield return new WaitForSeconds(0.4f);
         yield return Tap(Key.E);
+        // A fire with something to feed opens the rest menu (Phase 2), which stops the world: leave it at once, or
+        // the scaled wait below would never end.
+        yield return null;
+        if (RestMenu.Showing)
+        {
+            yield return Tap(Key.Space);
+            float until = Time.unscaledTime + 1f;
+            while ((RestMenu.Showing || Time.timeScale == 0f) && Time.unscaledTime < until) yield return null;
+        }
         yield return new WaitForSeconds(0.3f);
         yield return Hear("at a fire");
     }

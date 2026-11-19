@@ -27,6 +27,9 @@ namespace Clover.Player.Forms
 
         private static int held = -1;
         private static Color heldColour;
+        // The second element carried (the Hand's second attunement): its spells are drawn in its own colour and stuff.
+        private static int heldSecond = -1;
+        private static Color heldSecondColour;
 
         // Domain reload is off: the element of the last play must not be kept.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -34,17 +37,29 @@ namespace Clover.Player.Forms
         {
             held = -1;
             heldColour = default;
+            heldSecond = -1;
+            heldSecondColour = default;
         }
 
         /// <summary>The player has taken an element: spells drawn in its colour are made of its stuff from now on.</summary>
-        public static void Hold(ElementInfo element)
+        public static void Hold(ElementInfo element) => Hold(element, null);
+
+        /// <summary>The player carries two elements: spells drawn in either's colour are made of that one's stuff.</summary>
+        public static void Hold(ElementInfo element, ElementInfo second)
         {
             held = element != null ? element.Index : -1;
             heldColour = element != null ? element.Colour : default;
+            heldSecond = second != null && second != element ? second.Index : -1;
+            heldSecondColour = heldSecond >= 0 ? second.Colour : default;
         }
 
-        /// <summary>Which element a colour is the held element's, at any brightness; -1 when it is some other colour.</summary>
-        public static int Of(Color colour) => held >= 0 && SameHue(colour, heldColour) ? held : -1;
+        /// <summary>Which carried element a colour is, at any brightness; -1 when it is some other colour.</summary>
+        public static int Of(Color colour)
+        {
+            if (held >= 0 && SameHue(colour, heldColour)) return held;
+            if (heldSecond >= 0 && SameHue(colour, heldSecondColour)) return heldSecond;
+            return -1;
+        }
 
         /// <summary>True when two colours are one hue at different brightness.</summary>
         public static bool SameHue(Color a, Color b)

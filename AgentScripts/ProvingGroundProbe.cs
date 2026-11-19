@@ -73,6 +73,45 @@ public class ProvingGroundProbeRunner : MonoBehaviour
         while (Time.unscaledTime < end) yield return null;
     }
 
+    // A rest fire opens the rest menu first (Phase 2): "The chart" is chosen there with the keys, as a player would.
+    private IEnumerator ChartFromRest()
+    {
+        float until = Time.unscaledTime + 1.5f;
+        while (!Clover.UI.RestMenu.Showing && !(Clover.UI.UpgradeMenu.Instance != null && Clover.UI.UpgradeMenu.Instance.IsOpen) && Time.unscaledTime < until) yield return null;
+        if (!Clover.UI.RestMenu.Showing || Clover.UI.RestMenu.Instance.Away) yield break;
+        var restMenu = Clover.UI.RestMenu.Instance;
+        int chartAt = restMenu.Choices.IndexOf(Clover.UI.RestEntry.Chart);
+        for (int step = 0; step < 8 && restMenu.Choices.Selected != chartAt; step++) yield return Tap(Key.S);
+        yield return Tap(Key.E);
+        until = Time.unscaledTime + 1f;
+        while (!(Clover.UI.UpgradeMenu.Instance != null && Clover.UI.UpgradeMenu.Instance.IsOpen) && Time.unscaledTime < until) yield return null;
+    }
+
+    // Closing a chart opened from a fire brings the rest menu back; leaving it gives the world back.
+    private IEnumerator LeaveRest()
+    {
+        float until = Time.unscaledTime + 1.5f;
+        while (Clover.UI.RestMenu.Showing && Clover.UI.RestMenu.Instance.Away && Time.unscaledTime < until) yield return null;
+        if (!Clover.UI.RestMenu.Showing) yield break;
+        yield return null;
+        yield return Tap(Key.Space);
+        until = Time.unscaledTime + 1f;
+        while ((Clover.UI.RestMenu.Showing || Time.timeScale == 0f) && Time.unscaledTime < until) yield return null;
+        yield return null;
+    }
+
+    // An altar of the Proving Ground sets either attunement (Phase 2): carrying one element, another altar adds its
+    // element second and the same altar goes all in; used again it leaves its element alone. This uses it until its
+    // element is the only one carried, as a tester would (at most twice).
+    private IEnumerator HoldAlone(LoadoutChoice altar)
+    {
+        for (int use = 0; use < 3; use++)
+        {
+            if (element.HasElement && element.Info != null && element.Info.Name == altar.Choice && !element.Mixed && !element.AllIn && use > 0) break;
+            yield return Use(altar, 1.0f);
+        }
+    }
+
     private IEnumerator Tap(Key key)
     {
         Keys(key);
@@ -141,8 +180,11 @@ public class ProvingGroundProbeRunner : MonoBehaviour
 
         // 3. An element at an altar.
         var ice = Find<LoadoutChoice>(choice => choice.IsElement && choice.Choice == Elements.Ice);
+        string heldBefore = element.HasElement ? element.Info.Name : "";
         yield return Use(ice, 1.0f);
-        Judge("the Ice altar gives Ice", element.Kit != null && element.Kit.Name == Elements.Ice, element.Kit != null ? element.Kit.Name : "none");
+        Judge("with one element carried the Ice altar carries Ice second", element.Mixed && element.Info.Name == heldBefore && element.SecondInfo.Name == Elements.Ice, $"{heldBefore} then {(element.SecondInfo != null ? element.SecondInfo.Name : "none")}");
+        yield return HoldAlone(ice);
+        Judge("used again it leaves Ice alone", element.Kit != null && element.Kit.Name == Elements.Ice && !element.Mixed && !element.AllIn, element.Kit != null ? element.Kit.Name : "none");
 
         // 4. Weapons from the rack: a plain one, the gods' two, and a stand of what is not built yet.
         foreach (string name in new[] { Weapons.GreatHammerName, Weapons.StormKatanaName, Weapons.SunSpearName })
@@ -204,7 +246,7 @@ public class ProvingGroundProbeRunner : MonoBehaviour
         int hits = still.HitsTaken;
         for (int i = 0; i < 3; i++) yield return Tap(Key.J);
         yield return Real(0.8f);
-        Judge("the still dummy takes blows", still.HitsTaken > hits, $"hits {hits} to {still.HitsTaken}");
+        Judge("the still dummy takes blows", still.HitsTaken > hits, $"hits {hits} to {still.HitsTaken} [weapon {combat.Weapon?.Name}, attacking {combat.IsAttacking}, landed {combat.BlowsLanded}, suspended {player.Suspended}, time {Time.timeScale}, layer {player.Buttons?.LayerHeld}, rest {RestMenu.Showing}, box {ReadingBox.Instance?.IsOpen}]");
         var fighter = Find<DummyAttacker>(dummy => true);
         player.Teleport(fighter.transform.position + Vector3.back * 2.2f, Quaternion.identity);
         yield return Real(4.5f);
@@ -219,8 +261,10 @@ public class ProvingGroundProbeRunner : MonoBehaviour
         // 7. A rest: unlimited Shards, marks bought, the chart walked into another tree, a god's gift.
         var rest = Find<RestPoint>(point => true);
         yield return Use(rest, 1.4f);
+        Judge("the rest fire opens the rest menu", RestMenu.Showing && !RestMenu.Instance.Away);
+        yield return ChartFromRest();
         var chart = UpgradeMenu.Instance;
-        Judge("the rest fire opens the chart with unlimited Shards", chart.IsOpen && upgrades.Points >= PlaytestMode.RestShards, $"Shards {upgrades.Points}, viewing {chart.Viewed}");
+        Judge("the rest menu's chart opens with unlimited Shards", chart.IsOpen && upgrades.Points >= PlaytestMode.RestShards, $"Shards {upgrades.Points}, viewing {chart.Viewed}");
         var iceRoot = chart.Chosen;
         yield return Tap(Key.E);
         Judge("the held tree's root is bought", iceRoot != null && upgrades.Owns(iceRoot.Id), iceRoot != null ? iceRoot.Name : "none");
@@ -274,7 +318,9 @@ public class ProvingGroundProbeRunner : MonoBehaviour
         Judge("the guide closes back to the chart", !GuidePage.Showing && chart.IsOpen);
         yield return Tap(Key.Space);
         yield return Real(0.3f);
-        Judge("the chart closes and the world runs", !chart.IsOpen && Time.timeScale > 0f && !player.Suspended);
+        Judge("the chart closes back to the rest menu", !chart.IsOpen && RestMenu.Showing && Time.timeScale == 0f);
+        yield return LeaveRest();
+        Judge("leaving the fire, the world runs", !RestMenu.Showing && Time.timeScale > 0f && !player.Suspended);
 
         // 9. The guide from the pause menu.
         yield return Tap(Key.Escape);

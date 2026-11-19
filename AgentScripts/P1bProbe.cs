@@ -90,6 +90,18 @@ public class P1bProbeRunner : MonoBehaviour
         while (Time.unscaledTime < end) yield return null;
     }
 
+    // An altar of the Proving Ground sets either attunement (Phase 2): carrying one element, another altar adds its
+    // element second and the same altar goes all in; used again it leaves its element alone. This uses it until its
+    // element is the only one carried, as a tester would (at most twice).
+    private IEnumerator HoldAlone(LoadoutChoice altar)
+    {
+        for (int use = 0; use < 3; use++)
+        {
+            if (element.HasElement && element.Info != null && element.Info.Name == altar.Choice && !element.Mixed && !element.AllIn && use > 0) break;
+            yield return Use(altar, 1.0f);
+        }
+    }
+
     private IEnumerator Tap(Key key)
     {
         Keys(key);
@@ -193,7 +205,7 @@ public class P1bProbeRunner : MonoBehaviour
         Judge("the blade's look is on the player", look != null);
 
         var fire = Find<LoadoutChoice>(choice => choice.IsElement && choice.Choice == Elements.Fire);
-        yield return Use(fire, 1.0f);
+        yield return HoldAlone(fire);
         var katana = Find<LoadoutChoice>(choice => !choice.IsElement && choice.Choice == Weapons.KatanaName);
         yield return Use(katana, 1.0f);
         Judge("Fire held and the Katana in hand", element.Kit.Name == Elements.Fire && combat.Weapon.Name == Weapons.KatanaName, $"{element.Kit.Name}, {combat.Weapon.Name}");
@@ -350,14 +362,17 @@ public class P1bProbeRunner : MonoBehaviour
 
         // 7. Ice: its altar, the charged blade, the strike and the deep strike.
         var ice = Find<LoadoutChoice>(choice => choice.IsElement && choice.Choice == Elements.Ice);
-        yield return Use(ice, 1.0f);
+        yield return HoldAlone(ice);
         Judge("Ice held", element.Kit.Name == Elements.Ice, element.Kit.Name);
         combat.Blade.Clear();
         still.Afflictions.Clear();
         spells.Cooldowns.ResetAll();
         yield return AtDummy(2.2f);
         charges = spells.BladeCharges;
-        yield return Tap(Key.Digit1);
+        // Taken through Fire and Ice (Phase 2's altars), Ice's own spell keeps the slot it had as the second: cast that one.
+        int iceSlot = Mathf.Max(0, spells.Slots.SlotOf("ice.base"));
+        Say($"  Ice's own spell sits in slot {iceSlot + 1} ({spells.Slots[0]}, {spells.Slots[1]}, {spells.Slots[2]}, {spells.Slots[3]})");
+        yield return Tap((Key)((int)Key.Digit1 + iceSlot));
         yield return Until(() => combat.Blade.Charged, 2.5f);
         Judge("Ice's spell lands and charges the blade with Ice", combat.Blade.Charged && combat.Blade.Element == Elements.Ice && spells.BladeCharges == charges + 1, $"{combat.Blade.Element} x{combat.Blade.Left}");
         yield return WhenFree();
@@ -392,7 +407,7 @@ public class P1bProbeRunner : MonoBehaviour
 
         // 8. Hunger's wait: Dark's surge, lit, run out, then refused for 25 s; the diamond's middle shades.
         var dark = Find<LoadoutChoice>(choice => choice.IsElement && choice.Choice == Elements.Dark);
-        yield return Use(dark, 1.0f);
+        yield return HoldAlone(dark);
         StandAtOpenGround();
         yield return WhenFree();
         int surges = element.Surges;

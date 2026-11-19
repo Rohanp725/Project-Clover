@@ -44,8 +44,8 @@ this section), and the prompts follow the rebinding.
 | Surge | L2 (tap) | LT (tap) | F | F | The element's self buff. A tap of L2 let go within 0.25 s with no spell cast while it was down lights it as it is let go; a longer hold lights nothing. Pressed while it runs, it starts over at full length and is paid for again. |
 | Surge again | Tap L2 while the surge runs | Tap LT | F | F | Only with a gift that listens for it (Falling Sun, The World Holds Still, The Sea Rises, First Spring). The second press triggers the gift and does not relight the surge. |
 | Spell layer | L2 (hold) | LT (hold) | Left Ctrl (hold) | Left Ctrl | Turns the face buttons into the four spells and R1 and R2 into the infused strikes. Holding it also shows the spell diamond large. |
-| Infused strike | Hold L2, then R1 | Hold LT, then RB | Left Ctrl + left mouse | Left Ctrl + J | The weapon's carrier move with the element on it (see "The charged blade and infused strikes" below). Waits 8 s, cut by weapon play. Never charges the blade. |
-| Deep strike | Hold L2, then R2 | Hold LT, then RT | Left Ctrl + right mouse | Left Ctrl + K | The heavier strike: 20 mana and its own 8 s wait. With two elements (phase 2) R2 is the second element's strike and the deep strike is for a Hand all in on one. |
+| Infused strike | Hold L2, then R1 | Hold LT, then RB | Left Ctrl + left mouse | Left Ctrl + J | The weapon's carrier move with the first element on it (see "The charged blade and infused strikes" below). Waits 8 s, cut by weapon play. Never charges the blade. |
+| Second strike or deep strike | Hold L2, then R2 | Hold LT, then RT | Left Ctrl + right mouse | Left Ctrl + K | With two elements carried, the carrier move with the second element on it, free, on its own 8 s wait. With one element, or all in, the deep strike: the heavier strike for 20 mana and its own 8 s wait. |
 | Technique chord | R1 and R2 together | RB and RT | Both mouse buttons | J and K | Ready for the gated techniques (none is learned yet, so today it is a light then a heavy). A heavy within 0.08 s of a light, while the light is in its first 0.08 s, cancels the light into the technique; the light is never held back to wait for it. |
 | Use | Cross | A | E | E | Rest fires, weapon stands, braziers, stones, doors, the next line of speech (a left click also reads on). |
 | Pause | Options | Menu | Esc | Esc | Resume, controls, fullscreen, give up the run (castle and summit), forget everything saved (hub), quit. Esc and Start (Options, Menu) always pause, whatever Pause is rebound to. |
@@ -63,7 +63,28 @@ touched; pressing keys does not end it, touching a pad does.
 | Back | Circle / B | Space |
 | Close the pause menu | Options / Menu | Esc |
 
-### On the upgrade chart (opened by using a rest fire)
+### At a rest fire: the rest menu and the Hand
+
+Using a rest fire opens the **rest menu** (`Runtime/UI/RestMenu.cs`, made at play under the HUD): **Set the Hand**,
+**The chart** and **Leave the fire**. The world stays stopped while it, or a screen opened from it, is open; closing the
+chart or the Hand comes back to it. The stick, the d-pad, W and S, the wheel or the mouse choose; use (or a click) acts;
+dodge, Esc or Start leaves. Words a fire speaks as it is lit are read first: the menu waits for them.
+
+**The Hand** (`Runtime/UI/HandMenu.cs`) is the build: the four spell slots in a diamond laid out like the face buttons,
+each named by its binding, the surge in the middle, the elements carried along the top, and on the right a Suggested
+Hand and three saved Hands. Use on a slot lists what can go there (only spells of the elements carried, a duo spell only
+with both, grouped by element, each with its role and one line); use on one wears it at once. The weapon skill button
+shows the numbers. On a saved Hand's row, use wears it and the heavy attack (or a right click) keeps the Hand worn now
+there. The Hand never changes which elements are carried. Its rules are `Player/Build/HandRules.cs`; the adapter is
+`Player/PlayerBuild.cs`.
+
+**The slots open as you go** outside the playtest (`Player/Build/SlotSchedule.cs`): West and North at the start, East
+when the Champion of the Gate falls (progress flag `elite.champion_gate`, set by the Gate of Noon when its keeper
+dies), South when the Fire god falls (`god.fire`, set by the Sun Court when the Sun-Bearer is felled). The flags are kept
+from run to run. A shut slot holds nothing, is never filled, is skipped by the chart's next-slot round and shows on the
+Hand as "Shut" with what opens it. In the playtest every slot is open.
+
+### On the upgrade chart (opened from a rest fire's menu)
 
 | Action | PlayStation | Xbox | Keys and mouse |
 |---|---|---|---|
@@ -77,13 +98,13 @@ learned spell say which slot it is in, what it costs (seconds of cooldown or man
 
 ### The four spell slots
 
-You carry four spells, one in each slot (West, North, East, South, laid out like the face buttons). Until the Hand
-screen arrives (playtest phase 2) the slots fill themselves: the element's own spell in West, then each learned spell of
-the element held, in the chart's order, into the next empty slot. A spell a god gives goes into the first empty slot, or
+You carry four spells, one in each slot (West, North, East, South, laid out like the face buttons). Until a Hand is set
+at a rest fire (see "At a rest fire" above) the slots fill themselves: each carried element's own spell first, then
+each learned spell in force, in the chart's order, into the next empty open slot. A spell a god gives goes into the first empty slot, or
 North when all four are full. At a rest fire, choosing a learned spell on the chart and pressing use puts it in the next
 slot round. Taking another element puts its own spell where the old element's was and drops the old element's spells.
 The element's own spell is not on the chart, so once the next-slot round has pushed it out it stays out until
-another element is taken (or an empty slot opens); the Hand will let it be placed like any other.
+another element is taken (or an empty slot opens); the Hand places it like any other.
 The slots go with the player from scene to scene in a run. The **spell diamond** in the bottom-right corner shows them
 (`Runtime/UI/SpellDiamondHud.cs`, built at play beside the HUD): the four slots laid out like the face buttons, each with
 its spell's picture (or initials), its button, a shade that sweeps back as its wait runs out with the seconds in it, and
@@ -178,7 +199,7 @@ Start (pad) leaves it as it was; so does waiting eight seconds.
 - **Perfect dodge**: a blow that passes through the first 0.13 s of a roll gives 12 mana and a third of a second of slowed time.
 - **Stagger**: blows (heavies most of all) and perfect guards fill an enemy's stagger meter. At 70% it flickers amber. Full, it kneels for about 3 s and pulses gold. Light blows on it then do one and a half times damage. Heavy within 5 m is the **finisher**: three times the finisher's damage, no stamina, 15 mana, and blows pass through you while it lasts.
 - **Shards** buy marks on the chart. Each enemy gives 1 the first time it is killed on a visit, the Gate Captain 3, a god 5.
-- **Resting** at a rest fire refills health and flasks, brings the area's enemies back (not their Shards) and opens the chart. **Flasks**: three, 45 health each, 0.8 s to drink with the heal at 0.4 s. With none left, 120 damage dealt earns one back.
+- **Resting** at a rest fire refills health and flasks, brings the area's enemies back (not their Shards) and opens the rest menu (the Hand, the chart, leave). **Flasks**: three, 45 health each, 0.8 s to drink with the heal at 0.4 s. With none left, 120 damage dealt earns one back.
 
 **Not yet**
 
@@ -614,7 +635,7 @@ Every form shows itself coming on the ground before it lands (never less than 0.
 
 ## 7. The upgrade chart
 
-**What it is.** One night sky holding every tree: 428 marks. Eleven element trees (30 to 36 marks each) stand round a ring in the order of section 4, each growing outward from its element's emblem. In the gap between each pair of neighbours grows the mixed branch they share (7 to 10 marks). The chart opens when you use a rest fire, and the world stops while it is open.
+**What it is.** One night sky holding every tree: 428 marks. Eleven element trees (30 to 36 marks each) stand round a ring in the order of section 4, each growing outward from its element's emblem. In the gap between each pair of neighbours grows the mixed branch they share (7 to 10 marks). The chart opens from a rest fire's menu, and the world stops while it is open.
 
 **How a tree is built.** One root at the foot. Three boughs grow from it, each a spine of majors with minors hanging off, each ending in a keystone. Four or five spells. The god's gift at the crown. A mixed branch ends in its own crown.
 
@@ -1229,7 +1250,9 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 Open `Assets/_Project/Scenes/ProvingGround.unity` and press Play (rebuilt by **Clover > Build > Proving Ground**). It
 is the combat playtest's start, and being there turns on the playtest's rules; **Clover > Play > Playtest Mode** turns
 them on for every other scene too. The title shows the version and what is new. The rest fire is in the middle with the
-eleven element altars round it; the rack is west (the gods' weapons and the "Not built yet" stands in its back row); the
+eleven element altars round it (you arrive carrying Fire; carrying one element, another altar carries its element
+as the second and the altar of the one carried goes all in; carrying two, an altar starts again with its element alone;
+the prompt says which before the press: `Player/Build/AltarChoice.cs`); the rack is west (the gods' weapons and the "Not built yet" stands in its back row); the
 dummies are east; the castle's and the Fire land's pens are north, each with a post per enemy, a post per group and a
 pale post that clears; the gates to Narukami and Khepharu and the doors to the Castle and Sun City are furthest north.
 
@@ -1272,7 +1295,7 @@ because the court is not in the build.
 
 ### The chart
 
-Rest at a rest fire in the Castle to open the chart. It stays on the tree of the element you hold; R2 or K shows the
+Rest at a rest fire in the Castle and choose The chart in its menu. It stays on the tree of the element you hold; R2 or K shows the
 whole ring.
 
 ---

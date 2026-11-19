@@ -151,8 +151,11 @@ namespace Clover.Player
         public bool InfusedNow => infusedStep != null && Combo.Current == infusedStep;
         /// <summary>The strike clock a move belongs to (4 or 5) when it is an infused strike, else -1: its own blow does not cut its own clock.</summary>
         public int StrikeClockOf(AttackStep step) => step != null && step == infusedStep ? StrikeRules.Clock(infusedSecond) : -1;
-        /// <summary>A spell's blow has landed on something (once for each thing): a slot spell's first one charges the blade.</summary>
-        public event System.Action<Component> SpellBlowLanded;
+        /// <summary>
+        /// A spell's blow has landed on something (once for each thing), with the number of the slot cast it came from
+        /// (<see cref="SpellBlow.Cast"/>, 0 for none): a slot cast's own first one charges the blade.
+        /// </summary>
+        public event System.Action<Component, int> SpellBlowLanded;
         /// <summary>A move that carried the charge landed: which of the three, and its element.</summary>
         public event System.Action<ChargedBlow> ChargedBlowLanded;
 
@@ -873,7 +876,7 @@ namespace Clover.Player
             else Vfx.Play(blow.Effect, other.bounds.center, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
             if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
-            if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody);
+            if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody, blow.Cast);
         }
 
         /// <summary>
@@ -997,7 +1000,7 @@ namespace Clover.Player
             else Vfx.Play(blow.Effect, at, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
             if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
-            if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody);
+            if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody, blow.Cast);
             return true;
         }
 
@@ -1228,7 +1231,7 @@ namespace Clover.Player
                     hits++;
                     if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);
                     if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
-                    if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody);
+                    if (blow.Spell && target is Component spellBody) SpellBlowLanded?.Invoke(spellBody, blow.Cast);
                 }
                 from = at.position;
                 at = NextUnstruck(from, leapRange, struck);
@@ -1440,21 +1443,21 @@ namespace Clover.Player
         }
 
         /// <summary>
-        /// L2 with R1 (or R2): the weapon's carrier, played with the element on it (IMPLEMENTATION.md 3.4). With one
-        /// element, R2 is the deep strike (the plan's answer for Phase 1). Its clock and price are <see cref="PlayerSpells"/>'s.
+        /// L2 with R1 (or R2): the weapon's carrier, played with an element on it (IMPLEMENTATION.md 3.4): R1 the first
+        /// attunement, R2 the second; all in or with one element, R2 is the first's deep strike. Its clock and price
+        /// are <see cref="PlayerSpells"/>'s.
         /// </summary>
         private bool TryInfused(bool second)
         {
             if (spells == null) spells = GetComponent<PlayerSpells>();
             if (spells == null || element == null || Weapon == null || Weapon.CarrierStep == null) return false;
-            var refusal = spells.CheckStrike(second, out bool deep);
+            var refusal = spells.CheckStrike(second, out bool deep, out var info);
             if (refusal != StrikeRefusal.None)
             {
                 StrikesRefused++;
                 if (defence != null && refusal != StrikeRefusal.NoElement) defence.Callout(refusal == StrikeRefusal.NoMana ? "No mana" : "Not ready");
                 return false;
             }
-            var info = element.Info;
             var step = Weapon.CarrierStep.Clone();
             ElementSteel.Bend(step, info.Name, deep);
             player.FacePointer();
@@ -1636,8 +1639,13 @@ namespace Clover.Player
                 bool wasAfflicted = afflictable != null && afflictable.Afflictions.Any;
                 if (wasAfflicted) damage *= StatAfflicted;
                 float burn = (BurnStacksOnHit > 0 ? Mathf.Max(BurnOnHit, StackBurnSeconds) : BurnOnHit) * AfflictionSeconds;
-                // What the root of the tree and the surge lay, together, in the element's own affliction.
-                int stacks = WeaponAfflictionStacks + EmpowerStacks;
+                // What the root of the tree and the surge lay, together, in the element's own affliction. The owner's rule
+                // (2026-11-18): weapon blows lay only the first element's affliction; the second comes from spells, the
+                // charged blade and infused strikes. So a worn surge of the second element still gives its damage and
+                // speed but adds no affliction to blows.
+                var first = held != null ? held.Affliction : WeaponAffliction;
+                bool surgeOwn = EmpowerStacks > 0 && EmpowerAffliction != AfflictionKind.None && EmpowerAffliction == first;
+                int stacks = WeaponAfflictionStacks + (surgeOwn ? EmpowerStacks : 0);
                 var kind = stacks <= 0 ? AfflictionKind.None : WeaponAfflictionStacks > 0 ? WeaponAffliction : EmpowerAffliction;
                 if (kind != AfflictionKind.None) stacks += ExtraStacks;
                 int burnStacks = BurnStacksOnHit > 0 ? BurnStacksOnHit + ExtraStacks : 0;

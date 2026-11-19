@@ -70,6 +70,33 @@ public class LoopProbeRunner : MonoBehaviour
         while (!condition() && Time.unscaledTime < end) yield return null;
     }
 
+    // A rest fire opens the rest menu first (Phase 2): "The chart" is chosen there with the keys, as a player would.
+    private IEnumerator ChartFromRest()
+    {
+        float until = Time.unscaledTime + 1.5f;
+        while (!Clover.UI.RestMenu.Showing && !(Clover.UI.UpgradeMenu.Instance != null && Clover.UI.UpgradeMenu.Instance.IsOpen) && Time.unscaledTime < until) yield return null;
+        if (!Clover.UI.RestMenu.Showing || Clover.UI.RestMenu.Instance.Away) yield break;
+        var restMenu = Clover.UI.RestMenu.Instance;
+        int chartAt = restMenu.Choices.IndexOf(Clover.UI.RestEntry.Chart);
+        for (int step = 0; step < 8 && restMenu.Choices.Selected != chartAt; step++) yield return Tap(Key.S);
+        yield return Tap(Key.E);
+        until = Time.unscaledTime + 1f;
+        while (!(Clover.UI.UpgradeMenu.Instance != null && Clover.UI.UpgradeMenu.Instance.IsOpen) && Time.unscaledTime < until) yield return null;
+    }
+
+    // Closing a chart opened from a fire brings the rest menu back; leaving it gives the world back.
+    private IEnumerator LeaveRest()
+    {
+        float until = Time.unscaledTime + 1.5f;
+        while (Clover.UI.RestMenu.Showing && Clover.UI.RestMenu.Instance.Away && Time.unscaledTime < until) yield return null;
+        if (!Clover.UI.RestMenu.Showing) yield break;
+        yield return null;
+        yield return Tap(Key.Space);
+        until = Time.unscaledTime + 1f;
+        while ((Clover.UI.RestMenu.Showing || Time.timeScale == 0f) && Time.unscaledTime < until) yield return null;
+        yield return null;
+    }
+
     private IEnumerator Tap(Key key)
     {
         Keys(key);
@@ -305,7 +332,8 @@ public class LoopProbeRunner : MonoBehaviour
         RestPoint fire = null;
         foreach (var rest in FindObjectsByType<RestPoint>(FindObjectsSortMode.None))
             if (rest.transform.position.y > 1f) fire = rest;
-        yield return Use(fire, new Vector3(1.5f, 0.1f, 0f), () => UpgradeMenu.Instance.IsOpen);
+        yield return Use(fire, new Vector3(1.5f, 0.1f, 0f), () => RestMenu.Showing || UpgradeMenu.Instance.IsOpen);
+        yield return ChartFromRest();
         bool opened = UpgradeMenu.Instance.IsOpen;
         for (int i = 0; i < 8; i++)
         {
@@ -314,6 +342,7 @@ public class LoopProbeRunner : MonoBehaviour
         }
         string bought = string.Join(",", RunState.Unlocked);
         yield return Tap(Key.Space);
+        yield return LeaveRest();
         yield return new WaitForSecondsRealtime(0.4f);
         Say($"4 rest fire: menu opened {opened} embers {earned} bought [{bought}] left {RunState.Points}; {State()}");
         Check(opened && !UpgradeMenu.Instance.IsOpen && Time.timeScale == 1f && !player.Suspended, "the fire's menu did not open and close cleanly");

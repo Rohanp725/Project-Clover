@@ -23,6 +23,8 @@ namespace Clover.Player
         public bool Detonate;
         /// <summary>True for the base spell and worn spells: these count as spells for Soaked, for spell damage, and for the spell-hit trigger.</summary>
         public bool Spell;
+        /// <summary>The slot cast it came from (<see cref="SpellCast.Cast"/>), so that cast's own landing charges the blade; 0 for none.</summary>
+        public int Cast;
         /// <summary>The effect thrown on each thing struck, and the colour it is thrown in when it is one of the tintable kinds.</summary>
         public VfxKind Effect;
         public bool Tinted;

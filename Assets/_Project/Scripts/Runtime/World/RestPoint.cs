@@ -63,7 +63,10 @@ namespace Clover.World
                 if (who.Defence != null) who.Defence.Callout(NothingToFeed);
                 return;
             }
-            if (Clover.UI.UpgradeMenu.Instance != null) Clover.UI.UpgradeMenu.Instance.Open();
+            // The fire's menu: the Hand, the chart, leave (IMPLEMENTATION.md 4.1). A scene with no HUD to build it under opens the chart as before.
+            var menu = Clover.UI.RestMenu.Ensure();
+            if (menu != null) menu.Open(this);
+            else if (Clover.UI.UpgradeMenu.Instance != null) Clover.UI.UpgradeMenu.Instance.Open();
         }
 
         private void Update()

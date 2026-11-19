@@ -15,8 +15,8 @@ namespace Clover.Player.Forms
             for (int i = 1; i <= 4; i++)
                 ElementLook.Puff(cast.Element, hand + cast.Forward * (cast.Reach * i / 4.5f), cast.Forward, 0.6f);
             ElementLook.Sparks(cast.Element, hand + cast.Forward * (cast.Reach * 0.6f), cast.Forward, 1.5f);
-            cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f);
-            cast.Caster.ShowArc(cast.Reach * 0.7f, cast.Spec.Arc, -1f);
+            cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
+            cast.Caster.ShowArc(cast.Reach * 0.7f, cast.Spec.Arc, -1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
             return hits;
         }
     }

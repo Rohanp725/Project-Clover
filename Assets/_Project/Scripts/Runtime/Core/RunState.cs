@@ -14,6 +14,14 @@ namespace Clover.Core
         public static string Weapon = "";
         /// <summary>The element's name, or empty for the scene's own.</summary>
         public static string Element = "";
+        /// <summary>The second attunement's name (the Hand's second element), or empty for one element carried.</summary>
+        public static string Element2 = "";
+        /// <summary>The surge the Hand wears (<c>fire.surge</c>), or empty for the first element's.</summary>
+        public static string Surge = "";
+        /// <summary>True once a Hand has been set at a rest fire: the slots then stop filling themselves.</summary>
+        public static bool HandSet;
+        /// <summary>The three saved Hands (only their Hand fields are ever swapped in); null for an empty one.</summary>
+        public static readonly Clover.Player.Build.Loadout[] SavedHands = new Clover.Player.Build.Loadout[3];
         /// <summary>True once the element has been strengthened by consuming a god.</summary>
         public static bool ElementConsumed;
         /// <summary>How many gods have fallen in this run.</summary>
@@ -61,6 +69,10 @@ namespace Clover.Core
         {
             Weapon = "";
             Element = "";
+            Element2 = "";
+            Surge = "";
+            HandSet = false;
+            for (int i = 0; i < SavedHands.Length; i++) SavedHands[i] = null;
             ElementConsumed = false;
             GodsFelled = 0;
             Points = 0;

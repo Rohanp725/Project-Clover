@@ -30,6 +30,8 @@ namespace Clover.Player
         public ElementInfo Element;
         public Color Colour;
         public AfflictionKind Affliction;
+        /// <summary>The number of the slot cast this is (<see cref="PlayerElement.CastTag"/>), carried by every blow it deals; 0 for a spell an effect throws.</summary>
+        public int Cast;
 
         /// <summary>The enemy the player faces within reach, or null; where the player stands and faces; and the point aimed at (the target, or as far ahead as the spell reaches).</summary>
         public Transform Target;
@@ -49,6 +51,7 @@ namespace Clover.Player
             Stacks = stacks >= 0 ? stacks : Spec != null ? Spec.Stacks : 0,
             AfflictionSeconds = Spec != null ? Spec.AfflictionSeconds : 0f,
             Spell = true,
+            Cast = Cast,
             Effect = ElementLook.HitEffect(Element),
             Tinted = ElementLook.Tints(Element),
             Tint = Colour,

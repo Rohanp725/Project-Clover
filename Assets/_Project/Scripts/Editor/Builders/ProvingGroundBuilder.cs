@@ -374,8 +374,9 @@ namespace Clover.EditorTools
             Words(world, "REST FIRE", new Vector3(0f, 0.06f, -1.0f), 0.05f, new Color(1f, 0.82f, 0.5f));
         }
 
-        // The eleven altars on the plaza's ring, in the ring's order from the south-west round to the south-east; using
-        // one makes its element the one held. The south, where the player arrives, is left open.
+        // The eleven altars on the plaza's ring, in the ring's order from the south-west round to the south-east. Using one
+        // carries its element: first with nothing carried, second with one carried (all in at the same altar again), and
+        // alone again with two carried. The south, where the player arrives, is left open.
         private static readonly float[] AltarBearings = { -150f, -130f, -110f, -70f, -50f, -30f, 30f, 50f, 70f, 110f, 130f };
 
         private static void Altars(Transform world, PlayerCombat combat, PlayerElement element)
@@ -388,8 +389,11 @@ namespace Clover.EditorTools
                 var flame = Load(HubFolder, flameName) ?? BuildKit.Flame(HubFolder, flameName, new Color(kind.Colour.r * 1.7f, kind.Colour.g * 1.7f, kind.Colour.b * 1.7f, 1f));
                 Vector3 at = Polar(AltarBearings[i], 8.3f);
                 var bowl = HubBuilder.Brazier(group, kind.Name, at, chosen, flame, kind.Colour, out Transform shown, 4.5f, 5f);
-                var choice = HubBuilder.Choice(bowl, true, kind.Name, true, shown.gameObject, $"Hold {kind.Name} (lays {Afflictions.Spec(kind.Affliction).Name})", "", "", combat, element);
+                var choice = HubBuilder.Choice(bowl, true, kind.Name, true, shown.gameObject, $"Carry {kind.Name} (lays {Afflictions.Spec(kind.Affliction).Name})", "", "", combat, element);
                 choice.Range = 1.8f;
+                // Phase 2: an altar sets either attunement, and its prompt says which (AltarChoice).
+                choice.SetsEitherAttunement = true;
+                choice.AltarNote = "lays " + Afflictions.Spec(kind.Affliction).Name;
                 things.Add(choice);
                 // Its name on the floor on the side toward the middle, so it reads from the fire.
                 Vector3 inward = -at.normalized;
@@ -707,9 +711,10 @@ namespace Clover.EditorTools
         {
             things.Add(HubBuilder.Sign(world, "Welcome Notice", new Vector3(3.6f, 0f, -8.6f), 180f,
                 "This is the Proving Ground, where the playtest begins. Everything here is open: try anything.",
-                "Rest at the fire to heal and open the chart. In the playtest a rest gives unlimited Shards, and the chart can be walked into every tree and branch.",
+                "Rest at the fire to heal. Its menu sets the Hand (your four spells and the surge) and opens the chart. In the playtest a rest gives unlimited Shards, and the chart can be walked into every tree and branch.",
                 "A fall puts you back at the last fire you rested at, with nothing lost.",
                 "West: the weapons. Round the fire: the elements. East: the training dummies. North: the pens, and beyond them the gates to the gods and the doors to the levels.",
+                "Use an altar to carry its element. With one carried, another altar carries its element as your second, and the same altar again carries it all in. With two carried, an altar starts again with its element alone. Each altar's prompt says which it will do.",
                 "{Pause} pauses. The guide to effects is there, and from any level the way back here."));
             things.Add(HubBuilder.Sign(world, "Rack Notice", new Vector3(-17.6f, 0f, -8.4f), 180f,
                 "Use a stand to take up its weapon. The front row is every weapon there is.",

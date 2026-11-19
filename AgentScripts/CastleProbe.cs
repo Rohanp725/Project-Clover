@@ -46,6 +46,33 @@ public class CastleProbeRunner : MonoBehaviour
         while (!condition() && Time.unscaledTime < end) yield return null;
     }
 
+    // A rest fire opens the rest menu first (Phase 2): "The chart" is chosen there with the keys, as a player would.
+    private IEnumerator ChartFromRest()
+    {
+        float until = Time.unscaledTime + 1.5f;
+        while (!Clover.UI.RestMenu.Showing && !(Clover.UI.UpgradeMenu.Instance != null && Clover.UI.UpgradeMenu.Instance.IsOpen) && Time.unscaledTime < until) yield return null;
+        if (!Clover.UI.RestMenu.Showing || Clover.UI.RestMenu.Instance.Away) yield break;
+        var restMenu = Clover.UI.RestMenu.Instance;
+        int chartAt = restMenu.Choices.IndexOf(Clover.UI.RestEntry.Chart);
+        for (int step = 0; step < 8 && restMenu.Choices.Selected != chartAt; step++) yield return Tap(Key.S);
+        yield return Tap(Key.E);
+        until = Time.unscaledTime + 1f;
+        while (!(Clover.UI.UpgradeMenu.Instance != null && Clover.UI.UpgradeMenu.Instance.IsOpen) && Time.unscaledTime < until) yield return null;
+    }
+
+    // Closing a chart opened from a fire brings the rest menu back; leaving it gives the world back.
+    private IEnumerator LeaveRest()
+    {
+        float until = Time.unscaledTime + 1.5f;
+        while (Clover.UI.RestMenu.Showing && Clover.UI.RestMenu.Instance.Away && Time.unscaledTime < until) yield return null;
+        if (!Clover.UI.RestMenu.Showing) yield break;
+        yield return null;
+        yield return Tap(Key.Space);
+        until = Time.unscaledTime + 1f;
+        while ((Clover.UI.RestMenu.Showing || Time.timeScale == 0f) && Time.unscaledTime < until) yield return null;
+        yield return null;
+    }
+
     private IEnumerator Tap(Key key)
     {
         Keys(key);
@@ -181,17 +208,19 @@ public class CastleProbeRunner : MonoBehaviour
         yield return TapWhenFree(Key.E, () => second.Rests > 0);
         Say($"I rest: rests {second.Rests} lit {second.IsLit} enemies alive {director.EnemiesAlive} soldier active {soldier.gameObject.activeSelf} health {defence.Health.Current:0}");
 
-        // The fire opens the element's tree and the world stops; the dodge button leaves it.
-        var menu = Clover.UI.UpgradeMenu.Instance;
+        // The fire opens the rest menu and the world stops; its "The chart" opens the element's tree; the dodge button
+        // leaves the chart (back to the rest menu) and then the fire.
         yield return null;
+        bool restOpened = Clover.UI.RestMenu.Showing;
+        yield return ChartFromRest();
+        var menu = Clover.UI.UpgradeMenu.Instance;
         bool opened = menu != null && menu.IsOpen;
         float stoppedAt = Time.timeScale;
         ScreenCapture.CaptureScreenshot("review/shots/current/castle_menu.png");
         yield return null;
         yield return Tap(Key.Space);
-        yield return null;
-        yield return null;
-        Say($"I menu: opened {opened} time {stoppedAt:0} embers {Clover.Core.RunState.Points} closed {!menu.IsOpen} time {Time.timeScale:0}");
+        yield return LeaveRest();
+        Say($"I menu: rest menu {restOpened} chart opened {opened} time {stoppedAt:0} embers {Clover.Core.RunState.Points} closed {!menu.IsOpen && !Clover.UI.RestMenu.Showing} time {Time.timeScale:0}");
 
         // J: the sealed door.
         var way = FindAnyObjectByType<SealedWay>();

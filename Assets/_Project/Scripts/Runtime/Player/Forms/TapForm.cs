@@ -91,7 +91,7 @@ namespace Clover.Player.Forms
         {
             var cast = run.Cast;
             int hits = cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, cast.Blow(cast.Damage, cast.Stagger));
-            if (cast.Caster != null) cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f);
+            if (cast.Caster != null) cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
             run.T1 = 0.8f;
             return hits;
         }

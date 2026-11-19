@@ -72,6 +72,33 @@ public class FallProbeRunner : MonoBehaviour
         while (!condition() && Time.unscaledTime < end) yield return null;
     }
 
+    // A rest fire opens the rest menu first (Phase 2): "The chart" is chosen there with the keys, as a player would.
+    private IEnumerator ChartFromRest()
+    {
+        float until = Time.unscaledTime + 1.5f;
+        while (!Clover.UI.RestMenu.Showing && !(Clover.UI.UpgradeMenu.Instance != null && Clover.UI.UpgradeMenu.Instance.IsOpen) && Time.unscaledTime < until) yield return null;
+        if (!Clover.UI.RestMenu.Showing || Clover.UI.RestMenu.Instance.Away) yield break;
+        var restMenu = Clover.UI.RestMenu.Instance;
+        int chartAt = restMenu.Choices.IndexOf(Clover.UI.RestEntry.Chart);
+        for (int step = 0; step < 8 && restMenu.Choices.Selected != chartAt; step++) yield return Tap(Key.S);
+        yield return Tap(Key.E);
+        until = Time.unscaledTime + 1f;
+        while (!(Clover.UI.UpgradeMenu.Instance != null && Clover.UI.UpgradeMenu.Instance.IsOpen) && Time.unscaledTime < until) yield return null;
+    }
+
+    // Closing a chart opened from a fire brings the rest menu back; leaving it gives the world back.
+    private IEnumerator LeaveRest()
+    {
+        float until = Time.unscaledTime + 1.5f;
+        while (Clover.UI.RestMenu.Showing && Clover.UI.RestMenu.Instance.Away && Time.unscaledTime < until) yield return null;
+        if (!Clover.UI.RestMenu.Showing) yield break;
+        yield return null;
+        yield return Tap(Key.Space);
+        until = Time.unscaledTime + 1f;
+        while ((Clover.UI.RestMenu.Showing || Time.timeScale == 0f) && Time.unscaledTime < until) yield return null;
+        yield return null;
+    }
+
     private IEnumerator Tap(Key key)
     {
         Keys(key);
@@ -162,7 +189,7 @@ public class FallProbeRunner : MonoBehaviour
         Check(combat.Weapon.Name == Weapons.FistsName, label + ": weapon in the hub is " + combat.Weapon.Name);
         Check(RunState.RunsEnded == runs + 1, label + $": runs ended went up by {RunState.RunsEnded - runs}");
         Check(Mathf.Abs(CamOff() - hubCam) < 0.6f && !View.HasFraming, $"{label}: camera {CamOff():0.00} against {hubCam:0.00}");
-        Check((Menu == null || !Menu.IsOpen) && (UpgradeMenu.Instance == null || !UpgradeMenu.Instance.IsOpen), label + ": a menu is open in the hub");
+        Check((Menu == null || !Menu.IsOpen) && (UpgradeMenu.Instance == null || !UpgradeMenu.Instance.IsOpen) && !RestMenu.Showing && !HandMenu.Showing, label + ": a menu is open in the hub");
         Check(Hud().EndsWith(" 0"), label + ": hud says '" + Hud() + "'");
     }
 
@@ -302,14 +329,15 @@ public class FallProbeRunner : MonoBehaviour
             RestPoint fire = null;
             foreach (var rest in FindObjectsByType<RestPoint>(FindObjectsSortMode.None))
                 if (rest.transform.position.y > 1f) fire = rest;
-            for (int attempt = 0; attempt < 5 && !UpgradeMenu.Instance.IsOpen; attempt++)
+            // The fire's menu is the rest menu now (Phase 2); the chart is opened from it.
+            for (int attempt = 0; attempt < 5 && !RestMenu.Showing && !UpgradeMenu.Instance.IsOpen; attempt++)
             {
                 player.Teleport(fire.transform.position + new Vector3(1.5f, 0.1f, 0f), Quaternion.identity);
                 yield return new WaitForSeconds(0.5f);
                 yield return Tap(Key.E);
                 yield return new WaitForSecondsRealtime(0.3f);
             }
-            bool menuOpen = UpgradeMenu.Instance.IsOpen;
+            bool menuOpen = RestMenu.Showing || UpgradeMenu.Instance.IsOpen;
             how = Kill() + $" with the fire's menu open {menuOpen} time {Time.timeScale:0.00}";
             yield return Woke("B fire menu open", how);
 

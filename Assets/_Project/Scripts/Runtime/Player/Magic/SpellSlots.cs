@@ -19,6 +19,12 @@ namespace Clover.Player.Magic
         private readonly string[] ids = { "", "", "", "" };
         private int next;
 
+        /// <summary>
+        /// How many slots are open, counted West, North, East, South (the Hand's schedule, <c>SlotSchedule</c>): a shut
+        /// slot holds nothing, is never filled and is skipped by the chart's "next slot". All four until told otherwise.
+        /// </summary>
+        public int OpenCount { get; private set; } = Count;
+
         public static string BaseId(string element) => string.IsNullOrEmpty(element) ? "" : element.ToLowerInvariant() + BaseSuffix;
         public static bool IsBase(string id) => !string.IsNullOrEmpty(id) && id.EndsWith(BaseSuffix, StringComparison.Ordinal);
 
@@ -38,7 +44,7 @@ namespace Clover.Player.Magic
         /// <summary>Puts a spell in one slot; if it sat in another it leaves that one, so no spell is in two slots.</summary>
         public void Set(int slot, string id)
         {
-            if (slot < 0 || slot >= Count) return;
+            if (slot < 0 || slot >= OpenCount) return;
             id ??= "";
             if (id.Length > 0)
                 for (int i = 0; i < Count; i++)
@@ -49,10 +55,26 @@ namespace Clover.Player.Magic
         /// <summary>The chart's stopgap: the spell goes in the next slot round (West, North, East, South, West again). Returns the slot.</summary>
         public int PutInNext(string id)
         {
+            if (next >= OpenCount) next = 0;
             int slot = next;
             Set(slot, id);
-            next = (next + 1) % Count;
+            next = (next + 1) % OpenCount;
             return slot;
+        }
+
+        /// <summary>Opens the first <paramref name="open"/> slots (1 to 4) and shuts the rest, emptying them. True when anything left a slot.</summary>
+        public bool Shut(int open)
+        {
+            OpenCount = open < 1 ? 1 : open > Count ? Count : open;
+            if (next >= OpenCount) next = 0;
+            bool changed = false;
+            for (int i = OpenCount; i < Count; i++)
+            {
+                if (ids[i].Length == 0) continue;
+                ids[i] = "";
+                changed = true;
+            }
+            return changed;
         }
 
         /// <summary>
@@ -61,17 +83,26 @@ namespace Clover.Player.Magic
         /// first empty slot when it is in none; then empty slots take <paramref name="offered"/> spells, in order, that sit
         /// in no slot yet. True when anything moved.
         /// </summary>
-        public bool Settle(string baseId, Func<string, bool> isValid, IReadOnlyList<string> offered)
+        public bool Settle(string baseId, Func<string, bool> isValid, IReadOnlyList<string> offered) => Settle(baseId, "", isValid, offered, true);
+
+        /// <summary>
+        /// The same with two elements carried (the Hand, phase 2): both base spells are kept, and with
+        /// <paramref name="fill"/> each is put in an empty slot when it is in none, then the offered spells. Without it
+        /// (once a Hand has been set at a rest fire) nothing is added: only what is no longer theirs leaves.
+        /// </summary>
+        public bool Settle(string baseId, string secondBaseId, Func<string, bool> isValid, IReadOnlyList<string> offered, bool fill)
         {
             baseId ??= "";
+            secondBaseId ??= "";
             bool changed = false;
             for (int i = 0; i < Count; i++)
             {
                 string id = ids[i];
-                if (id.Length == 0 || id == baseId) continue;
+                if (id.Length == 0 || id == baseId || (secondBaseId.Length > 0 && id == secondBaseId)) continue;
                 if (IsBase(id))
                 {
-                    ids[i] = baseId.Length > 0 && SlotOf(baseId) < 0 ? baseId : "";
+                    // Another element's base spell becomes this one's in the same slot, while the slots still fill themselves.
+                    ids[i] = fill && baseId.Length > 0 && SlotOf(baseId) < 0 ? baseId : fill && secondBaseId.Length > 0 && SlotOf(secondBaseId) < 0 ? secondBaseId : "";
                     changed = true;
                 }
                 else if (isValid == null || !isValid(id))
@@ -80,15 +111,9 @@ namespace Clover.Player.Magic
                     changed = true;
                 }
             }
-            if (baseId.Length > 0 && SlotOf(baseId) < 0)
-            {
-                int empty = FirstEmpty();
-                if (empty >= 0)
-                {
-                    ids[empty] = baseId;
-                    changed = true;
-                }
-            }
+            if (!fill) return changed;
+            changed |= PlaceIfMissing(baseId);
+            changed |= PlaceIfMissing(secondBaseId);
             if (offered != null)
                 for (int k = 0; k < offered.Count; k++)
                 {
@@ -102,9 +127,18 @@ namespace Clover.Player.Magic
             return changed;
         }
 
+        private bool PlaceIfMissing(string id)
+        {
+            if (id.Length == 0 || SlotOf(id) >= 0) return false;
+            int empty = FirstEmpty();
+            if (empty < 0) return false;
+            ids[empty] = id;
+            return true;
+        }
+
         public int FirstEmpty()
         {
-            for (int i = 0; i < Count; i++)
+            for (int i = 0; i < OpenCount; i++)
                 if (ids[i].Length == 0) return i;
             return -1;
         }

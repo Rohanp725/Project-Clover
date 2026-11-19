@@ -10,7 +10,7 @@ namespace Clover.Player.Forms
     public static class SigKit
     {
         /// <summary>True while the caster's surge lasts.</summary>
-        public static bool SurgeOn(in SpellCast cast) => cast.Caster != null && cast.Caster.Kit != null && cast.Caster.Kit.SurgeActive;
+        public static bool SurgeOn(in SpellCast cast) => cast.Caster != null && cast.Caster.SurgeActive;
 
         /// <summary>
         /// Writes the enemies within a radius of a point into the run's list of things, nearest first, from the place

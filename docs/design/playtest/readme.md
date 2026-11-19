@@ -24,15 +24,25 @@ CONTROLS          Keys and mouse       PlayStation   Xbox
   Four spells     1 2 3 4              hold L2, then Square Triangle Circle Cross
                                                      hold LT, then X Y B A
   Element surge   F                    L2 (tap)      LT (tap)
-  Infused strike  Left Ctrl + left     hold L2, R1   hold LT, RB
-  Deep strike     Left Ctrl + right    hold L2, R2   hold LT, RT   (20 mana)
+  First strike    Left Ctrl + left     hold L2, R1   hold LT, RB   (the first element)
+  Second strike   Left Ctrl + right    hold L2, R2   hold LT, RT   (the second element;
+                                                     with one element or all in, the
+                                                     deep strike, 20 mana)
   Use / read on   E                    Cross         A
   Pause           Esc                  Options       Menu
   With the mouse, blows and spells go toward the cursor. On-screen prompts name
   the buttons of whatever you used last. Every action can be rebound: pause,
   then Controls.
 
-ON THE UPGRADE CHART (rest at a fire)
+AT A REST FIRE
+  Resting opens the rest menu: Set the Hand, The chart, Leave the fire.
+  The Hand is your four spells in a diamond laid out like the buttons, with the
+  surge in the middle. Choose a slot (E / Cross / A) to list what can go there,
+  Q / Triangle / Y for the numbers, Space / Circle / B to go back. Below are the
+  Suggested Hand and three saved Hands: E / Cross / A wears one, the heavy blow
+  keeps the Hand you wear there.
+
+ON THE UPGRADE CHART (rest at a fire, then The chart)
   Move from mark to mark, E / Cross / A to learn (or, on a spell you have, to
   put it in the next spell slot), R2 or
   right mouse for the whole chart, Q / Triangle / Y for a mark's details,
@@ -48,10 +58,14 @@ PLAYTEST RULES
   - Pause, then "Guide to effects", for every affliction, state and resource.
 
 THE PROVING GROUND
-  - The rest fire, in the middle. Rest to heal and open the chart.
+  - The rest fire, in the middle. Rest to heal; its menu sets the Hand and opens
+    the chart.
   - West: the rack of weapons. Use a stand to take a weapon up. The two gods'
     weapons stand at its end; the empty stands are gods' weapons not built yet.
-  - The element altars, round the fire: use one to hold its element.
+  - The element altars, round the fire. You arrive carrying Fire. Carrying one
+    element, another altar adds its element as your second, and the altar of the
+    one you carry goes all in. Carrying two, an altar starts again with its
+    element alone. The prompt says which before you press.
   - East: training dummies. One stands still; one fights back (red blows cannot
     be guarded: roll); a row carries each element's affliction.
   - North: two pens. Use a post to let out an enemy or a group; the last post
@@ -86,7 +100,6 @@ NOT BUILT YET
   - The Alchemist's Hooks, the hook swords, a form of the Twin Knives (the alchemist)
   - The Champion's Arms, his own version of every weapon (the last champion)
   Also to come, in later updates:
-  - Two elements at once and the Hand, the build screen at a rest fire.
   - Reactions when two elements' afflictions meet on one enemy.
   - The trees reshaped into spell branches.
   - The Way (the weapon tree), its gods' boughs (slots on the chart), Memories

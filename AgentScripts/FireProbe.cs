@@ -265,7 +265,7 @@ public class FireProbeRunner : MonoBehaviour
         yield return Tap(Key.E);
         yield return new WaitForSeconds(0.3f);
         var menu = Clover.UI.UpgradeMenu.Instance;
-        Say($"0 rest fire: rests {rest.Rests} chart open {menu != null && menu.IsOpen} says '{defence.LastCallout}' time {Time.timeScale:0}");
+        Say($"0 rest fire: rests {rest.Rests} chart open {menu != null && menu.IsOpen} rest menu open {Clover.UI.RestMenu.Showing} says '{defence.LastCallout}' time {Time.timeScale:0}");
         yield return Shot("fire_city_1");
 
         // 1: the thirsting.

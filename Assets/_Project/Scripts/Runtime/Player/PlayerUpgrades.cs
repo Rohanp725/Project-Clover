@@ -161,6 +161,16 @@ namespace Clover.Player
         private Afterimage afterimage;
         private IReadOnlyList<Upgrade> catalogue;
         private bool[] has;
+        // Learned spells of the carried elements, which the slots may hold (a duo spell is in force only once slotted).
+        private bool[] offered;
+        // The first attunement as last refreshed: only its affliction lays with the weapon.
+        private string refreshedFirst;
+        // Static is built by the weapon only while Lightning is the first element; a heavy blow still sets it off.
+        private bool staticLays;
+        // The loadout is read from the player's build (added at play by the controller); without one, from the parts.
+        private PlayerBuild buildFound;
+        private PlayerBuild build => buildFound != null ? buildFound : (buildFound = GetComponent<PlayerBuild>());
+        private readonly Build.Loadout ownLoadout = new Build.Loadout();
         private float[] readyAt;
         private float[] sinceLast;
         private List<UpgradeEffect>[] byTrigger;
@@ -388,25 +398,35 @@ namespace Clover.Player
             return InForce(Upgrade.ById(id));
         }
 
-        private bool InForce(Upgrade upgrade)
-        {
-            if (upgrade == null) return false;
-            if (element != null && element.Kit != null && !upgrade.BelongsTo(element.Kit.Name)) return false;
-            // The god's sword counts as the Katana it is.
-            if (!string.IsNullOrEmpty(upgrade.Weapon) && combat != null && combat.Weapon != null && !combat.Weapon.Name.Contains(upgrade.Weapon)) return false;
-            return true;
-        }
+        // The loadout decides what is in force (IMPLEMENTATION.md 3.6): the attunements, the slots, the weapon kind.
+        private bool InForce(Upgrade upgrade) => MarkRules.InForce(upgrade, ReadLoadout());
+
+        private Build.Loadout ReadLoadout() => build != null ? build.Read() : PlayerBuild.Fill(ownLoadout, element, spells, combat);
+
+        /// <summary>Works out what is in force at once, as after the Hand or the attunements change at a rest fire.</summary>
+        public void RefreshNow() => Refresh(true);
 
         public bool Owns(string id) => RunState.Unlocked.Contains(id);
 
-        /// <summary>The name of the element whose tree the player can learn from now.</summary>
+        /// <summary>True when a learned spell may sit in a slot now: its element (both, for a duo spell) carried.</summary>
+        public bool CanSlot(string id)
+        {
+            var upgrade = Upgrade.ById(id);
+            return upgrade != null && Owns(id) && MarkRules.Slottable(upgrade, ReadLoadout());
+        }
+
+        /// <summary>The name of the element whose tree the player can learn from now: the first attunement's.</summary>
         public string ElementName => element != null && element.Kit != null ? element.Kit.Name : ElementKit.FireName;
 
-        /// <summary>True when the mark is on a tree or branch open to the player now: the element held, or a mix of it with an element held or consumed in this run.</summary>
+        /// <summary>
+        /// True when the mark is on a tree or branch open to the player now: a carried element's, or a mix of one with an
+        /// element held or consumed in this run.
+        /// </summary>
         public bool Open(Upgrade upgrade)
         {
             // The playtest's free chart: every tree and branch is open, whatever is held.
-            return MarkRules.Open(upgrade, ElementName, RunState.ElementsHeld, RunState.ElementsConsumed, PlaytestMode.On);
+            if (MarkRules.Open(upgrade, ElementName, RunState.ElementsHeld, RunState.ElementsConsumed, PlaytestMode.On)) return true;
+            return element != null && element.Mixed && MarkRules.Open(upgrade, element.SecondInfo.Name, RunState.ElementsHeld, RunState.ElementsConsumed, false);
         }
 
         /// <summary>True when the mark can be bought now. A god's gift is never sold, except in the playtest, where it is a playtest unlock.</summary>
@@ -445,7 +465,7 @@ namespace Clover.Player
         public bool Wear(string id)
         {
             var upgrade = Upgrade.ById(id);
-            if (upgrade == null || !upgrade.IsSpell || !Has(id) || spells == null) return false;
+            if (upgrade == null || !upgrade.IsSpell || !CanSlot(id) || spells == null) return false;
             spells.SetSlot(1, id);
             return true;
         }
@@ -454,7 +474,7 @@ namespace Clover.Player
         public int PutInNextSlot(string id)
         {
             var upgrade = Upgrade.ById(id);
-            if (upgrade == null || !upgrade.IsSpell || !Has(id) || spells == null) return -1;
+            if (upgrade == null || !upgrade.IsSpell || !CanSlot(id) || spells == null) return -1;
             return spells.PutInNext(id);
         }
 
@@ -504,19 +524,33 @@ namespace Clover.Player
         {
             untilRefresh = 0.25f;
             bool changed = force;
+            // What is in force is the loadout's to say (MarkRules.InForce): read once for the whole catalogue.
+            var loadout = ReadLoadout();
+            if (offered == null || offered.Length != has.Length) offered = new bool[has.Length];
             for (int i = 0; i < has.Length; i++)
             {
-                bool now = RunState.Unlocked.Contains(catalogue[i].Id) && InForce(catalogue[i]);
-                if (now == has[i]) continue;
+                var mark = catalogue[i];
+                bool learned = RunState.Unlocked.Contains(mark.Id);
+                bool now = learned && MarkRules.InForce(mark, loadout);
+                // A learned spell of the carried elements may sit in a slot even while it is not in force (a duo spell not slotted yet).
+                bool canSlot = learned && MarkRules.Slottable(mark, loadout);
+                if (now == has[i] && canSlot == offered[i]) continue;
                 has[i] = now;
+                offered[i] = canSlot;
                 changed = true;
             }
+            // Only the first element lays its affliction with the weapon: a change of which element is first changes that.
+            if (loadout.First != refreshedFirst) changed = true;
             if (!changed) return;
+            refreshedFirst = loadout.First;
+            string first = refreshedFirst;
 
             for (int i = 0; i < byTrigger.Length; i++) byTrigger[i].Clear();
             Stats.ClearLearned();
             int weaponStacks = 0;
             spellsInForce.Clear();
+            for (int i = 0; i < offered.Length; i++)
+                if (offered[i]) spellsInForce.Add(catalogue[i].Id);
             tallied.Clear();
             hasRoot = false;
             for (int i = 0; i < has.Length; i++)
@@ -528,7 +562,8 @@ namespace Clover.Player
                     continue;
                 }
                 var upgrade = catalogue[i];
-                if (upgrade.Kind == UpgradeKind.Root) hasRoot = true;
+                // The root that lays with the weapon is the first element's alone (the owner's rule of 2026-11-18).
+                if (upgrade.Kind == UpgradeKind.Root && upgrade.Element == first) hasRoot = true;
                 if (upgrade.Tally != null)
                 {
                     tallied.Add(i);
@@ -537,8 +572,8 @@ namespace Clover.Player
                 }
                 foreach (var mod in upgrade.Stats) Stats.AddLearned(mod);
                 foreach (var effect in upgrade.Effects) byTrigger[(int)effect.On].Add(effect);
-                weaponStacks += upgrade.WeaponStacks;
-                if (upgrade.IsSpell) spellsInForce.Add(upgrade.Id);
+                // Weapon blows lay only the first element's affliction: a second element's root lays nothing with the weapon.
+                if (!upgrade.IsMix && upgrade.Element == first) weaponStacks += upgrade.WeaponStacks;
             }
             // The slots look again: a spell no longer in force leaves its slot, a new one fills an empty slot.
             SpellsVersion++;
@@ -559,6 +594,7 @@ namespace Clover.Player
             hasCrescent = On(Upgrade.BurningCrescent);
             hasFirebomb = On(Upgrade.FirebombFlask);
             hasStatic = On(Upgrade.Static);
+            staticLays = hasStatic && first == Elements.Lightning;
             hasCharge = On(Upgrade.StoredCharge);
             var reserve = Upgrade.ById(Trees.LightningTree.DeepReserve);
             reserveIndex = hasCharge && reserve != null && On(Trees.LightningTree.DeepReserve) ? reserve.Index : -1;
@@ -668,7 +704,7 @@ namespace Clover.Player
         // The stats are pushed into the systems that use them, and only when a sum has changed.
         private void ApplyStats()
         {
-            bool surging = element != null && element.Kit != null && element.Kit.SurgeActive;
+            bool surging = element != null && element.SurgeActive;
             if (!basesRead || (Stats.Version == appliedVersion && surging == appliedSurge)) return;
             appliedVersion = Stats.Version;
             appliedSurge = surging;
@@ -811,10 +847,10 @@ namespace Clover.Player
                 if (element != null && Has(Trees.WindTree.StormFront))
                 {
                     stormFrontAt = Time.time + 0.4f;
-                    element.CastBaseFree();
+                    element.CastBaseFree(Elements.Wind);
                 }
             }
-            Stats.SetWhen(StatWhen.Surge, element != null && element.Kit != null && element.Kit.SurgeActive);
+            Stats.SetWhen(StatWhen.Surge, element != null && element.SurgeActive);
             Stats.SetWhen(StatWhen.Unhurt, sinceStruck >= UnhurtSeconds);
             Stats.SetWhen(StatWhen.Risen, Risen);
             Afflictions.TickBeat(deltaTime);
@@ -920,7 +956,7 @@ namespace Clover.Player
         {
             if (effect.Slot < 0 || effect.Slot >= readyAt.Length) return;
             if (Time.time < readyAt[effect.Slot]) return;
-            if (effect.WhileSurge && !(element != null && element.Kit.SurgeActive)) return;
+            if (effect.WhileSurge && !(element != null && element.SurgeActive)) return;
             if (effect.While != StatWhen.Always && !Stats.Holds(effect.While)) return;
             if (effect.NeedsAirborne && !(target is IAfflictable flying && flying.Afflictions.IsAirborne)) return;
             if (effect.OnBeat > 0f && !(target is IAfflictable beaten && beaten.Afflictions.NearBeat(effect.OnBeat))) return;
@@ -947,13 +983,17 @@ namespace Clover.Player
                 }
                 if (effect.Needs2 != AfflictionKind.None && !carried.Has(effect.Needs2)) return;
             }
+            // Weapon blows lay only the first element's affliction (the owner's rule of 2026-11-18): an effect that lays
+            // another element's on a blow is not done. The second element comes from spells, the charged blade and
+            // infused strikes, so reactions come from weaving weapon and spell.
+            var laid = effect.Do == UpgradeAction.Afflict ? (effect.Affliction != AfflictionKind.None ? effect.Affliction : OwnElement(effect.Owner).Affliction) : AfflictionKind.None;
+            if (laid != AfflictionKind.None && IsBlow(effect.On) && combat != null && laid != combat.WeaponAffliction) return;
             // A mark on a mixed branch lays both its elements' afflictions with a blow or a perfect guard. The root of
-            // the element held lays that element's own already, so the branch lays only the one not held, and of the
-            // held one only what it lays beyond the root.
+            // the first element lays that element's own already, so of it the branch lays only what it lays beyond the root.
             int less = 0;
             if (effect.Do == UpgradeAction.Afflict && effect.Radius <= 0f && effect.Owner != null && effect.Owner.IsMix && (IsBlow(effect.On) || effect.On == UpgradeTrigger.PerfectGuard)
                 && hasRoot && combat != null && element != null && element.Info != null
-                && (effect.Affliction == AfflictionKind.None || effect.Affliction == element.Info.Affliction))
+                && laid == element.Info.Affliction)
             {
                 less = Mathf.Max(1, combat.WeaponAfflictionStacks);
                 if (Or(effect.Stacks, 1) - less <= 0) return;
@@ -1009,6 +1049,9 @@ namespace Clover.Player
             Tint = look.Colour,
         };
 
+        // A mark's own element (a duo mark's first); the first attunement's for an effect with no mark.
+        private ElementInfo OwnElement(Upgrade owner) => element != null ? element.ElementOf(owner) : Elements.None;
+
         private static float Or(float value, float usual) => value > 0f ? value : usual;
         private static int Or(int value, int usual) => value > 0 ? value : usual;
 
@@ -1032,7 +1075,8 @@ namespace Clover.Player
             var effect = pending.Effect;
             if (effect == null) return;
             EffectsDone++;
-            var held = element.Info;
+            // An effect that names no affliction lays, and is seen in, its own mark's element (IMPLEMENTATION.md 3.6).
+            var held = OwnElement(effect.Owner);
             var kind = effect.Affliction != AfflictionKind.None ? effect.Affliction : held.Affliction;
             var look = lookOf[(int)kind] ?? held;
             Vector3 self = transform.position;
@@ -1164,10 +1208,12 @@ namespace Clover.Player
                     var form = SpellForms.Get(effect.Form);
                     if (form == null) break;
                     var cast = element.NewCast(effect.Spell ?? plainSpell, effect.Owner != null ? effect.Owner.Name : "", effect.Owner);
-                    // Seen and laid in the way of the affliction the effect names; with none, in the element held.
+                    // Seen and laid in the way of the affliction the effect names; with none, in its mark's element.
                     cast.Element = look;
                     cast.Colour = look.Colour;
                     cast.Affliction = kind;
+                    // An effect's spell is no slot cast: its blows never charge the blade.
+                    cast.Cast = 0;
                     if (target != null)
                     {
                         cast.Target = target;
@@ -1416,8 +1462,8 @@ namespace Clover.Player
                 if (Heat.Level == Heat.MaximumLevel && defence != null) defence.Callout("Heat");
             }
             // The hunger of some surges: a share of each blow comes back.
-            if (element != null && element.Kit.SurgeActive && element.Kit.SurgeLeech > 0f && defence != null)
-                defence.Heal(combat.LastBlowDamage * element.Kit.SurgeLeech, false);
+            if (element != null && element.SurgeActive && element.SurgeKit.SurgeLeech > 0f && defence != null)
+                defence.Heal(combat.LastBlowDamage * element.SurgeKit.SurgeLeech, false);
 
             // A share of every blow comes back, where a mark gives one.
             float leech = Stats.Sum(PlayerStat.Leech);
@@ -1447,6 +1493,8 @@ namespace Clover.Player
                 if (stacks > 0) toDischarge.Add(target);
                 return;
             }
+            // A light blow builds Static only while Lightning is the first element; second, its Static comes from spells.
+            if (!staticLays) return;
             float seconds = combat.AfflictionSeconds != 1f ? Afflictions.Spec(AfflictionKind.Static).Seconds * combat.AfflictionSeconds : 0f;
             CombatEvents.Report(struck, AfflictionKind.Static, 1, afflictable.Afflictions.Apply(AfflictionKind.Static, 1 + combat.ExtraStacks, seconds, combat.AfflictionPower));
             Vfx.Play(VfxKind.Shock, at + Vector3.up * 1.3f, Vector3.up, 0.15f + 0.08f * stacks);
@@ -1864,7 +1912,7 @@ namespace Clover.Player
                     Hazards.Lay(HazardKind.Fire, from + direction * (distance * (i + 0.5f) / 4.5f), 0.95f, TrailSeconds * Stats.Multiplier(PlayerStat.TrailSeconds), TrailDamage * Stats.Multiplier(PlayerStat.TrailDamage), 0f, 2f, 0.5f, false, seconds * i / 4f);
             }
             // The god's own step: while the surge lasts the dodge is free, and it shocks whether or not Blink was learned.
-            bool stormStep = hasStormStep && element != null && element.Kit.SurgeActive;
+            bool stormStep = hasStormStep && element != null && element.SurgeActive;
             if (stormStep)
             {
                 FreeDodges++;
@@ -1900,7 +1948,7 @@ namespace Clover.Player
         {
             Stats.ClearSurge();
             if (element != null)
-                foreach (var mod in element.Kit.SurgeMods) Stats.AddSurge(mod);
+                foreach (var mod in element.SurgeKit.SurgeMods) Stats.AddSurge(mod);
             if (hasHeat) Heat.Fill();
             if (hasOverclock)
             {

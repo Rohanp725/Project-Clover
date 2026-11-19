@@ -24,6 +24,8 @@ namespace Clover.Core
         public const string SandboxFlag = "clover.progress.sandbox";
 
         public static bool Sandboxed { get; private set; }
+        /// <summary>Goes up whenever a flag is set or forgotten, so what is read from the flags can be kept until it does.</summary>
+        public static int Version { get; private set; }
 
         private static readonly System.Collections.Generic.HashSet<string> sandbox = new System.Collections.Generic.HashSet<string>();
 
@@ -33,6 +35,7 @@ namespace Clover.Core
         {
             sandbox.Clear();
             Sandboxed = PlayerPrefs.GetInt(SandboxFlag, 0) == 1;
+            Version = 0;
         }
 
         public static bool Has(string key) => Sandboxed ? sandbox.Contains(key) : PlayerPrefs.GetInt(Prefix + key, 0) == 1;
@@ -41,10 +44,11 @@ namespace Clover.Core
         {
             if (Sandboxed)
             {
-                sandbox.Add(key);
+                if (sandbox.Add(key)) Version++;
                 return;
             }
             if (Has(key)) return;
+            Version++;
             PlayerPrefs.SetInt(Prefix + key, 1);
             PlayerPrefs.Save();
         }
@@ -54,9 +58,10 @@ namespace Clover.Core
         {
             if (Sandboxed)
             {
-                sandbox.Remove(key);
+                if (sandbox.Remove(key)) Version++;
                 return;
             }
+            Version++;
             PlayerPrefs.DeleteKey(Prefix + key);
             PlayerPrefs.Save();
         }

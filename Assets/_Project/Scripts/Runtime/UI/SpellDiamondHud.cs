@@ -64,7 +64,7 @@ namespace Clover.UI
         private Texture2D discTexture, ringTexture;
         private float scale;
         private int shownSlots = -1, shownDevice = -1, shownBlade = -1;
-        private string shownElement;
+        private int shownElement = -1;
         private bool shownLarge;
         private string layerLine = "", surgeLine = "";
         private int shownHas = -1;
@@ -139,7 +139,8 @@ namespace Clover.UI
             float strikeHalf = StrikeSize * 0.5f;
             strikeFirst = MakeButton("Strike R1", new Vector2(-500f, 130f), StrikeSize, new Vector2(0f, -strikeHalf - 13f), new Vector2(0f, -strikeHalf - 36f), TextAnchor.MiddleCenter, new Vector2(0f, strikeHalf + 12f));
             strikeSecond = MakeButton("Strike R2", new Vector2(-375f, 130f), StrikeSize, new Vector2(0f, -strikeHalf - 13f), new Vector2(0f, -strikeHalf - 36f), TextAnchor.MiddleCenter, new Vector2(0f, strikeHalf + 12f));
-            layerKey = Label("Layer", root, 22, TextAnchor.LowerCenter, Faint, middle + new Vector2(0f, Spread + half + 30f), new Vector2(420f, 28f));
+            // Above North's name (which reaches half + 30 over North's middle while large), so a spell there is not written over.
+            layerKey = Label("Layer", root, 22, TextAnchor.LowerCenter, Faint, middle + new Vector2(0f, Spread + half + 56f), new Vector2(420f, 28f));
 
             // The charged blade's pips, in the gap between West and North.
             pips = new Image[3];
@@ -228,8 +229,7 @@ namespace Clover.UI
                 strikeSecond.Name.gameObject.SetActive(large);
             }
 
-            string held = element.Info.Name;
-            if (spells.SlotsVersion != shownSlots || ControlDevices.Version != shownDevice || held != shownElement) Rewrite(held);
+            if (spells.SlotsVersion != shownSlots || ControlDevices.Version != shownDevice || element.Version != shownElement) Rewrite();
 
             var mana = combat.Mana.Current;
             for (int i = 0; i < Slots; i++)
@@ -239,13 +239,15 @@ namespace Clover.UI
                 Clocked(slot, spells.Cooldowns.Fraction(i), spells.Cooldowns.Remaining(i), price <= 0f || mana >= price);
             }
             Clocked(strikeFirst, spells.Cooldowns.Fraction(SpellCooldowns.StrikeFirst), spells.Cooldowns.Remaining(SpellCooldowns.StrikeFirst), true);
-            Clocked(strikeSecond, spells.Cooldowns.Fraction(SpellCooldowns.StrikeSecond), spells.Cooldowns.Remaining(SpellCooldowns.StrikeSecond), mana >= spells.Strikes.DeepMana);
+            // R2 asks mana only as the deep strike (all in, or one element); with two elements it is the second's own strike.
+            Clocked(strikeSecond, spells.Cooldowns.Fraction(SpellCooldowns.StrikeSecond), spells.Cooldowns.Remaining(SpellCooldowns.StrikeSecond), element.Mixed || mana >= spells.Strikes.DeepMana);
 
-            // The surge: its ring fills while it burns and shades while it waits to be lit again.
-            var kit = element.Kit;
+            // The surge the Hand wears: its ring fills while it burns and shades while it waits to be lit again.
+            var kit = element.SurgeKit;
+            var surgeInfo = element.SurgeInfo;
             float surgeShade = kit == null ? 0f : kit.SurgeWaiting ? kit.SurgeWaitFraction : 0f;
             Clocked(surge, surgeShade, kit != null ? kit.SurgeWaitLeft : 0f, kit == null || kit.SurgeCost <= 0f || kit.SurgeActive || mana >= kit.SurgeCost);
-            Color surgeRim = kit != null && kit.SurgeActive ? element.Info.Glow : element.Info.Colour;
+            Color surgeRim = kit != null && kit.SurgeActive ? surgeInfo.Glow : surgeInfo.Colour;
             if (surge.Rim.color != surgeRim) surge.Rim.color = surgeRim;
 
             ShowBlade();
@@ -305,13 +307,14 @@ namespace Clover.UI
             }
         }
 
-        // What every button says: its picture, key, price and name. Only when the slots, the device or the element change.
-        private void Rewrite(string held)
+        // What every button says: its picture, key, price and name, each in its own element's colour. Only when the
+        // slots, the device, the attunements or the surge change.
+        private void Rewrite()
         {
             Rewrites++;
             shownSlots = spells.SlotsVersion;
             shownDevice = ControlDevices.Version;
-            shownElement = held;
+            shownElement = element.Version;
             var info = element.Info;
             var device = ControlDevices.Current;
             bool keys = device == ControlDevice.Keys;
@@ -321,31 +324,36 @@ namespace Clover.UI
                 var slot = slots[i];
                 string name = spells.NameIn(i);
                 var mark = spells.MarkIn(i);
-                string icon = mark != null ? mark.Icon : SpellSlots.IsBase(spells.Slots[i]) ? info.Icon : "";
-                Dress(slot, name, menu != null ? menu.IconSprite(icon) : null, info.Colour);
+                var own = spells.ElementIn(i) ?? info;
+                string icon = mark != null ? mark.Icon : SpellSlots.IsBase(spells.Slots[i]) ? own.Icon : "";
+                Dress(slot, name, menu != null ? menu.IconSprite(icon) : null, own.Colour);
                 slot.Key.text = ControlNames.Of(LayeredButtons.SlotActions[i], device);
                 float price = spells.ManaIn(i);
                 slot.Price.text = price > 0f ? Mathf.RoundToInt(price) + " mana" : "";
                 slot.Name.text = name;
                 slot.Name.gameObject.SetActive(shownLarge && name.Length > 0);
             }
-            var kit = element.Kit;
+            var kit = element.SurgeKit;
+            var surgeInfo = element.SurgeInfo ?? info;
             string surgeName = kit != null ? kit.SurgeName : "";
-            Dress(surge, surgeName, null, info.Colour);
+            Dress(surge, surgeName, null, surgeInfo.Colour);
             string surgePrice = kit != null && kit.SurgeCost > 0f ? ", " + Mathf.RoundToInt(kit.SurgeCost) + " mana" : kit != null && kit.SurgeCooldown > 0f ? ", health" : "";
             surgeLine = surgeName.Length > 0 ? "Surge " + surgeName + ": " + ControlNames.Of("Surge", device) + surgePrice : "";
 
-            string first = ElementSteel.StrikeName(held, false), deep = ElementSteel.StrikeName(held, true);
+            // R1 is the first element's strike; R2 the second's, or the first's deep strike all in or with one element.
+            bool deepOnSecond = !element.Mixed;
+            var secondInfo = deepOnSecond ? info : element.SecondInfo;
+            string first = ElementSteel.StrikeName(info.Name, false), second = ElementSteel.StrikeName(secondInfo.Name, deepOnSecond);
             Dress(strikeFirst, first, null, info.Colour);
-            Dress(strikeSecond, deep, null, info.Colour);
+            Dress(strikeSecond, second, null, secondInfo.Colour);
             string layer = ControlNames.Of("SpellLayer", device);
             strikeFirst.Key.text = keys ? "Ctrl+" + ShortKey(ControlNames.Of("LightAttack", device)) : ControlNames.Of("LightAttack", device);
             strikeSecond.Key.text = keys ? "Ctrl+" + ShortKey(ControlNames.Of("HeavyAttack", device)) : ControlNames.Of("HeavyAttack", device);
             strikeFirst.Price.text = "";
-            strikeSecond.Price.text = Mathf.RoundToInt(spells.Strikes.DeepMana) + " mana";
+            strikeSecond.Price.text = deepOnSecond ? Mathf.RoundToInt(spells.Strikes.DeepMana) + " mana" : "";
             strikeFirst.Name.fontSize = strikeSecond.Name.fontSize = 17;
             strikeFirst.Name.text = first;
-            strikeSecond.Name.text = deep;
+            strikeSecond.Name.text = second;
             // On a pad the slots and strikes are under the held trigger; on the keys only the strikes are.
             layerLine = keys ? "Ctrl: strikes" : "Hold " + layer;
             layerKey.text = shownLarge && surgeLine.Length > 0 ? layerLine + "      " + surgeLine : layerLine;
