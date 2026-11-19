@@ -434,13 +434,13 @@ Group: Resources
 ## reactions
 Title: Reactions
 Group: Reactions
-**What it is.** When an affliction lands on an enemy that already carries another element's, the two react, and each pair of elements does something of its own. Six of the 55 pairs react in this update (the entries below). The other pairs do nothing yet.
+**What it is.** When an affliction lands on an enemy that already carries another element's, the two react, and each of the 55 pairs of elements does something of its own. The entries below go round the ring: neighbours first, then the pairs two apart, and so on to the farthest.
 
-**The numbers.** A reaction comes once, then rests on that enemy before it can come again: 4 s for most, 3 s for Steam, 6 s for the pairs three apart on the ring. The rest is kept for each enemy and each pair, so a crowd can react one after another. What a reaction lays starts no reaction of its own.
+**The numbers.** A reaction comes once, then rests on that enemy before it can come again: 4 s for most and 6 s for the pairs three apart on the ring, with some resting their own time (Steam 3 s; Cold Short, Red Hot and The Bolt Runs True 5 s; Shut in the Dark and The Grudge 8 s; each entry gives its own). The rest is kept for each enemy and each pair, so a crowd can react one after another. What a reaction lays starts no reaction of its own.
 
-**What sets it off.** The second affliction landing, laid by anything: a weapon blow, a spell, a mark, the charged blade, a strike, or the world (an enemy wet from the river reacts to your fire). For these six the order does not matter.
+**What sets it off.** The second affliction landing, laid by anything: a weapon blow, a spell, a mark, the charged blade, a strike, or the world (an enemy wet from the river reacts to your fire). The order does not matter, except that Seized and The Grudge need two Static or more on the enemy.
 
-**How to use it.** Carry two elements. Your weapon lays the first and your spells, the charged blade and the R2 strike lay the second, so weave blade and spell on the same enemy. Wait out the rest, or turn to another enemy.
+**How to use it.** Carry two elements. Your weapon lays the first and your spells, the charged blade and the R2 strike lay the second, so weave blade and spell on the same enemy. Many reactions then leave a state on the enemy for a few seconds (a crust, a crack, coils) that your next blow, its time running out, or its death sets off: a heavy to break or split it, a few quick blows to rock or coil it. Wait out the rest, or turn to another enemy.
 
 **How it looks.** The reaction's name rises over the enemy for a moment, with a puff in its two elements' colours. Each reaction's own look comes in a later update.
 
@@ -457,18 +457,135 @@ Group: Reactions
 
 **How it looks.** Its name over the enemy and a discharge where it stands. Not yet: the live flame that draws other discharges near into it.
 
-## reaction-steam
-Title: Steam (Fire and Water)
+## reaction-thunder-gust
+Title: Thunder Gust (Lightning and Wind)
 Group: Reactions
-**What it is.** Burn meets Soaked. The water on the burning body flashes off in a scalding puff.
+**What it is.** Static meets Unsteady. A crack of thunder and wind throws the enemy away from you, and its charge goes off where it lands.
 
-**The numbers.** The Soaked is spent and half the Burn with it (rounded up). The puff deals 8 damage, and 4 more for each Burn it took, with 15 stagger, to everyone within 2.5 m. Rests 3 s, the shortest of all.
+**The numbers.** Thrown 3 m straight away from you (the great move less, and what cannot be shoved stays). 0.4 s later its Static goes off as a heavy blow sets it off: 7 damage and 5 stagger for each stack to everyone within 4 m. Rests 4 s.
 
-**What sets it off.** Fire on a Soaked enemy (from your Water, or the world's water), or Water on a burning one.
+**What sets it off.** Static landing on a Unsteady enemy, or Unsteady on a charged one.
 
-**How to use it.** Deep Burn makes a bigger puff, but takes half of it. Soak a crowd and set them steaming one by one. Its short rest means it comes back often.
+**How to use it.** Charge it deep first, then stand so it is thrown into the crowd: the discharge lands among them.
 
-**How it looks.** Its name over the enemy and a burst of water where it stands.
+**How it looks.** Its name over the enemy and a discharge where it lands. Not yet: what it hits on the way taking the discharge first.
+
+## reaction-rime
+Title: Rime (Wind and Ice)
+Group: Reactions
+**What it is.** Chill meets Unsteady. A crust of rime grows on the enemy, and your heavy blow blows the ice out of its far side.
+
+**The numbers.** The crust lasts 5 s. Your next heavy blow on it breaks it: a fan of ice about 4 m long beyond the enemy, away from you, deals 10 damage, 2 Chill and 1 Unsteady to everything in it. A light blow does not break it. Rests 4 s.
+
+**What sets it off.** Chill landing on a Unsteady enemy, or Unsteady on a chilled one.
+
+**How to use it.** Put the enemy between you and the others, then bring the heavy: the ice lands on them.
+
+**How it looks.** Its name over the enemy, then a burst of ice beyond it. Not yet: the crust growing only on the side facing you, so that a heavy from behind wastes it.
+
+## reaction-supercooled
+Title: Supercooled (Ice and Water)
+Group: Reactions
+**What it is.** Chill meets Soaked. The water on the enemy goes still below freezing, and the next blow freezes it.
+
+**The numbers.** For 6 s, your next weapon blow on it freezes it outright, whatever its Chill, and spends the Soaked. An elite takes 3 Chill instead and a god 2. Rests 4 s.
+
+**What sets it off.** Chill landing on a Soaked enemy (your Water, or the river's), or Water on a chilled one.
+
+**How to use it.** One touch of cold on a wet enemy, then any blow: it freezes, ready for a heavy to shatter.
+
+**How it looks.** Its name over the enemy, then the freeze.
+
+## reaction-quickening
+Title: Quickening (Water and Life)
+Group: Reactions
+**What it is.** Soaked meets Seeded. The soaked seed splits its coat and flowers at once.
+
+**The numbers.** Its Seeded goes to full depth (3). For 4 s a flower opens on it, and a heavy blow bursts it: you heal 10, and everything within 3 m is Soaked and Seeded. Left alone, the flower withers. Rests 4 s.
+
+**What sets it off.** Water landing on a Seeded enemy, or a seed on a Soaked one.
+
+**How to use it.** Water a seeded enemy in a crowd, then heavy it: a heal, and the whole crowd wet and seeded.
+
+**How it looks.** Its name over the enemy. Not yet: the white flower on its back.
+
+## reaction-split-rock
+Title: Split Rock (Life and Earth)
+Group: Reactions
+**What it is.** Seeded meets Tremor. Roots wedge into the shaken ground and hold the enemy, and a heavy splits the floor.
+
+**The numbers.** Held 2 s (an elite 0.8 s; a god is not held). A heavy blow while it is held splits the floor: 10 damage, a Tremor and a Seeded to everything within 3 m. Rests 4 s.
+
+**What sets it off.** A seed landing on a shaken enemy, or Tremor on a Seeded one.
+
+**How to use it.** The hold is your window: bring the heavy before it ends.
+
+**How it looks.** Its name over the enemy, then a burst of earth when the floor splits.
+
+## reaction-anvil-stone
+Title: Anvil Stone (Earth and Metal)
+Group: Reactions
+**What it is.** Tremor meets Sundered. An anvil heaves up at the enemy's back, and your heavy drives it on.
+
+**The numbers.** For 5 s, your next heavy blow on it breaks its armour to full (three notches) and rings out sparks: 10 damage, 15 stagger and a notch to everything within 3 m. Rests 4 s.
+
+**What sets it off.** Tremor landing on a notched enemy, or a notch on a shaken one.
+
+**How to use it.** Shake a notched enemy, then heavy it: the whole crowd notched for your Metal.
+
+**How it looks.** Its name over the enemy, then a ring of sparks. Not yet: the stone itself standing at its back.
+
+## reaction-glint
+Title: Glint (Metal and Light)
+Group: Reactions
+**What it is.** Marked meets Sundered. The light catches in the broken armour and is thrown at the next enemy.
+
+**The numbers.** A ray to the nearest other enemy within 6 m: 10 damage, 15 stagger, a Mark and a notch. It never strikes the first. Rests 4 s.
+
+**What sets it off.** A notch landing on a Marked enemy, or a Mark on a notched one.
+
+**How to use it.** Mark a notched enemy to Mark the one beside it too, ready for your critical blows.
+
+**How it looks.** Its name over the enemy and a strike where the ray lands.
+
+## reaction-diamond-ring
+Title: Diamond Ring (Light and Dark)
+Group: Reactions
+**What it is.** Marked meets Cursed. Dark closes over the enemy and a bead of light breaks at the rim.
+
+**The numbers.** Half a second on, 16 damage and 30 stagger to it. For 4 s its Mark is not spent by your blows, so every blow in that time is critical. Rests 4 s.
+
+**What sets it off.** A Mark landing on a Cursed enemy, or a curse on a Marked one.
+
+**How to use it.** Curse a Marked enemy, then strike it again and again while the ring holds.
+
+**How it looks.** Its name over the enemy and a burst on it. Not yet: the black disc with one burning point.
+
+## reaction-shut-in-the-dark
+Title: Shut in the Dark (Dark and Poison)
+Group: Reactions
+**What it is.** Cursed meets Poisoned. A black ring seals the enemy as a jar.
+
+**The numbers.** For 8 s its doses stop fading. When the 8 s end, or it dies, the jar breaks: 5 damage for each dose to everyone within 3 m, and half its doses (rounded up) spill onto all it reaches. Rests 8 s.
+
+**What sets it off.** A curse landing on a poisoned enemy, or poison on a Cursed one.
+
+**How to use it.** Dose it deep before you curse it: the deeper, the bigger the break. Killing it breaks the jar at once.
+
+**How it looks.** Its name over the enemy, then a burst when the jar breaks. Not yet: the black ring on the floor, and the poisoned that die inside crawling to it to feed it.
+
+## reaction-fire-medicine
+Title: Fire Medicine (Poison and Fire)
+Group: Reactions
+**What it is.** Burn meets Poisoned. The poison catches like powder and bangs.
+
+**The numbers.** A fuse of 0.6 s, then the bang: 4 damage for each dose and 6 for each Burn stack to everyone within 2.5 m, with 30 stagger, and everyone reached is set burning. Half its doses (rounded up) are spent. Rests 4 s.
+
+**What sets it off.** Poison landing on a burning enemy, or Burn on a poisoned one.
+
+**How to use it.** Dose first, then light it: deep poison makes the biggest bang.
+
+**How it looks.** Its name over the enemy, then the bang a moment later.
 
 ## reaction-carried-embers
 Title: Carried Embers (Fire and Wind)
@@ -483,6 +600,45 @@ Group: Reactions
 
 **How it looks.** Its name over the enemy, then three small fires springing up beyond it.
 
+## reaction-sleet-charge
+Title: Sleet Charge (Lightning and Ice)
+Group: Reactions
+**What it is.** Static meets Chill. The frost on the enemy charges itself until a bolt falls.
+
+**The numbers.** For 3 s it gains one Static every half second (to full). Then a bolt discharges it all: 7 damage and 5 stagger for each stack to everyone within 4 m, and everything reached takes a Chill. A heavy blow sets the Static off early, as always. Rests 4 s.
+
+**What sets it off.** Static landing on a chilled enemy, or Chill on a charged one.
+
+**How to use it.** Wait out the 3 s for a full charge, or take it sooner with a heavy.
+
+**How it looks.** Its name over the enemy, then the discharge. Not yet: the bolt falling at once if it freezes.
+
+## reaction-capsize
+Title: Capsize (Wind and Water)
+Group: Reactions
+**What it is.** Soaked meets Unsteady. Wet and off balance, the enemy goes down.
+
+**The numbers.** It goes down for 1.2 s and can do nothing. An elite only staggers (25 stagger), and a god takes 15 stagger. Rests 4 s.
+
+**What sets it off.** Water landing on a Unsteady enemy, or Unsteady on a Soaked one.
+
+**How to use it.** Free blows: bring your heaviest.
+
+**How it looks.** Its name over the enemy. Not yet: the fall flat on its back (for now it is held where it stands).
+
+## reaction-winter-seed
+Title: Winter Seed (Ice and Life)
+Group: Reactions
+**What it is.** Chill meets Seeded. The seed sleeps under the frost and wakes as thorns at the thaw.
+
+**The numbers.** While the Chill lasts its Seeded stops fading. When the Chill ends (a freeze thawing or shattered ends it too) thorns burst from it: 12 damage for each Seeded stack (36 at most) to everyone within 2.5 m, seeding them, and you heal 3 for each stack. Rests 4 s.
+
+**What sets it off.** Chill landing on a Seeded enemy, or a seed on a chilled one.
+
+**How to use it.** Seed it deep, chill it, then shatter the freeze for the quickest waking.
+
+**How it looks.** Its name over the enemy, then a burst of thorns at the thaw.
+
 ## reaction-the-ground-gives
 Title: The Ground Gives (Water and Earth)
 Group: Reactions
@@ -495,6 +651,461 @@ Group: Reactions
 **How to use it.** Sink it, then come in with heavy blows: each one pins it for a moment. Not yet: sunk, it should be unable to dodge, leap or step back, and others wading in should slow too.
 
 **How it looks.** Its name over the enemy. Not yet: the wet ring of sand round its feet.
+
+## reaction-iron-thorns
+Title: Iron Thorns (Life and Metal)
+Group: Reactions
+**What it is.** Seeded meets Sundered. Iron thorns grow out through the broken armour and fly off with each blow.
+
+**The numbers.** For 6 s, each of your weapon blows on it snaps a thorn off at the nearest other enemy within 6 m: 6 damage, a Seeded and a notch. Three thorns. Rests 4 s.
+
+**What sets it off.** A seed landing on a notched enemy, or a notch on a Seeded one.
+
+**How to use it.** Fight the thorned one: the others around it take the thorns.
+
+**How it looks.** Its name over the enemy and a strike where each thorn lands. Not yet: one thorn for each notch it carried.
+
+## reaction-earthlight
+Title: Earthlight (Earth and Light)
+Group: Reactions
+**What it is.** Tremor meets Marked. Light breaks up through cracks in the floor under the enemy.
+
+**The numbers.** Its Mark is renewed (three more critical blows). Half a second on, 14 damage, 25 stagger and a Mark to everyone within 3 m. Rests 4 s.
+
+**What sets it off.** Tremor landing on a Marked enemy, or a Mark on a shaken one.
+
+**How to use it.** Shake a Marked enemy in a crowd: they are all Marked for your critical blows, and the first keeps its three.
+
+**How it looks.** Its name over the enemy, then light bursting up round it. Not yet: only those standing on the star of cracks struck (for now a circle).
+
+## reaction-black-chain
+Title: Black Chain (Metal and Dark)
+Group: Reactions
+**What it is.** Cursed meets Sundered. A black chain binds the enemy to the nearest other.
+
+**The numbers.** The nearest other enemy within 6 m is chained to it for 5 s. Rests 4 s.
+
+**What sets it off.** A notch landing on a Cursed enemy, or a curse on a notched one.
+
+**How to use it.** Not yet: what the chain does. It will pass 30% of your weapon damage on either to the other, and keep the two within 4 m of each other.
+
+**How it looks.** Its name over the enemy. Not yet: the chain between them.
+
+## reaction-burning-sap
+Title: Burning Sap (Light and Poison)
+Group: Reactions
+**What it is.** Marked meets Poisoned. The sun wakes the sap, and your critical blows raise weals that burst.
+
+**The numbers.** For 3 s each of your weapon blows on it (each critical, for it is Marked) raises a weal. At the end its poison bites at once, and each weal bursts, laying two doses on everyone within 2.5 m. Rests 6 s.
+
+**What sets it off.** A Mark landing on a poisoned enemy, or poison on a Marked one.
+
+**How to use it.** Land the Mark's three blows inside the 3 s for three weals.
+
+**How it looks.** Its name over the enemy, then a burst of poison at the end. Not yet: the poison holding back for the 3 s and landing doubled.
+
+## reaction-smoulder
+Title: Smoulder (Dark and Fire)
+Group: Reactions
+**What it is.** Cursed meets Burn. The fire sinks in out of sight and deepens, then flares.
+
+**The numbers.** While the curse lasts its Burn keeps biting, stops fading, and deepens by one every 2 s (a god's every 3 s), to full. When the curse ends, or it dies, it flares: 10 damage for each Burn stack to everyone within 3 m, setting them burning. Rests 4 s.
+
+**What sets it off.** A curse landing on a burning enemy, or Burn on a Cursed one.
+
+**How to use it.** Light it, curse it, and leave it: the longer the curse runs, the bigger the flare. Killing it flares it at once.
+
+**How it looks.** Its name over the enemy, then the flare. Not yet: the fire hidden as a dark glow until it flares.
+
+## reaction-nerve-fire
+Title: Nerve Fire (Poison and Lightning)
+Group: Reactions
+**What it is.** Poisoned meets Static. Each bite of poison jolts the enemy.
+
+**The numbers.** While both last, each bite of poison spends one Static and jolts it: 7 damage, 5 stagger and a 0.3 s flinch that breaks a wind-up (not a steadfast enemy's). An elite flinches once every 4 s; a god never flinches and takes 11 stagger instead. Rests 4 s.
+
+**What sets it off.** Poison landing on a charged enemy, or Static on a poisoned one.
+
+**How to use it.** Charge a poisoned enemy deep: five Static is five jolts, one at each bite.
+
+**How it looks.** Its name over the enemy and a jolt at each bite.
+
+## reaction-thermal-shock
+Title: Thermal Shock (Fire and Ice)
+Group: Reactions
+**What it is.** Burn meets Chill. The body cracks, and the next heavy splits it.
+
+**The numbers.** 14 damage at once, and it is Cracked for 5 s: your next heavy blow splits it for 30 damage and 40 stagger. Both afflictions stay. Rests 6 s.
+
+**What sets it off.** Burn landing on a chilled enemy, or Chill on a burning one.
+
+**How to use it.** Cold on a burning enemy, or fire on a chilled one, then a heavy inside the 5 s.
+
+**How it looks.** Its name over the enemy, a crack, then the split.
+
+## reaction-seized
+Title: Seized (Lightning and Water)
+Group: Reactions
+**What it is.** A Soaked enemy carrying two Static or more. The current locks its muscles, and the water runs off it live.
+
+**The numbers.** Held 1 s (an elite 0.4 s; a god is not held). The water runs into a live film 2.5 m round its feet for 3 s, giving one Static every half second to whoever stands in it. Its own Static is not spent. Rests 6 s.
+
+**What sets it off.** A second Static on a Soaked enemy, or Water on one already carrying two. One Static is not enough, and nothing rests until there are two.
+
+**How to use it.** Charge a wet enemy twice in a crowd: it is held, and the film charges everyone near for your Lightning.
+
+**How it looks.** Its name over the enemy and the film on the floor. Not yet: the film sparing the seized one (for now it charges it too).
+
+## reaction-windthrow
+Title: Windthrow (Wind and Life)
+Group: Reactions
+**What it is.** Unsteady meets Seeded. The seed roots the enemy, and the next heavy tears it out.
+
+**The numbers.** Rooted 2 s (an elite 1 s; a god not at all): it cannot walk or be shoved, but it can still turn and swing. Your heavy blow while it is rooted tears it out: 14 damage and 35 stagger, it is thrown 6 m away from you, and a torn pit 1.5 m across stays 5 s where it stood, seeding whatever walks in. The pit counts as a thing you grew. Rests 6 s.
+
+**What sets it off.** Unsteady landing on a Seeded enemy, or a seed on a Unsteady one.
+
+**How to use it.** Root it, step round so it is thrown where you want it, then heavy.
+
+**How it looks.** Its name over the enemy, then a burst of earth as it is torn out. Not yet: any shove (a Gust, a ram) tearing it out, not only a heavy.
+
+## reaction-frost-heave
+Title: Frost Heave (Ice and Earth)
+Group: Reactions
+**What it is.** Chill meets Tremor. The cold gets into the ground and heaves the enemy up.
+
+**The numbers.** 0.4 s on, the floor heaves up under it: 12 damage and 25 stagger, and it is thrown into the air for 1 s (an elite for less; a god only reels). Rests 6 s.
+
+**What sets it off.** Chill landing on a shaken enemy, or Tremor on a chilled one.
+
+**How to use it.** Strike it while it hangs in the air.
+
+**How it looks.** Its name over the enemy, then the heave. Not yet: the rimed mound left standing for 6 s.
+
+## reaction-rust
+Title: Rust (Water and Metal)
+Group: Reactions
+**What it is.** Soaked meets Sundered. The wet cuts rust, and the rust spreads.
+
+**The numbers.** While it is Soaked its notches do not fade and the rust adds a notch every 2 s. Once it is rusted through (three notches) a plate falls: for 6 s it takes 16% more from your weapon, wet or dry. Rests 6 s.
+
+**What sets it off.** Water landing on a notched enemy, or a notch on a Soaked one.
+
+**How to use it.** Keep it wet and let the rust work, then come in with the weapon.
+
+**How it looks.** Its name over the enemy. Not yet: notches past three (up to five), and the plate seen falling.
+
+## reaction-shining-herb
+Title: Shining Herb (Life and Light)
+Group: Reactions
+**What it is.** Seeded meets Marked. A shining herb springs up by the enemy.
+
+**The numbers.** The herb stands 6 s. Left alone, it flowers at the end and Marks and Seeds everyone within 3 m of the enemy. Rests 6 s.
+
+**What sets it off.** A seed landing on a Marked enemy, or a Mark on a Seeded one.
+
+**How to use it.** Let it flower in a crowd. Not yet: walking over the herb to pick it, for 8 health and a critical next blow.
+
+**How it looks.** Its name over the enemy, then a puff when it flowers. Not yet: the herb on the floor.
+
+## reaction-turned-to-stone
+Title: Turned to Stone (Earth and Dark)
+Group: Reactions
+**What it is.** Tremor meets Cursed. Stone climbs the enemy from the feet up.
+
+**The numbers.** Over 2 s it slows (30%, then 60%), then it stands as stone for 1.5 s: it neither walks nor begins an attack, takes double stagger and half damage from spells. A heavy blow breaks it out at once for 50 stagger. An elite is slowed half as much and stands half as long; a god is not turned. Rests 6 s.
+
+**What sets it off.** Tremor landing on a Cursed enemy, or a curse on a shaken one.
+
+**How to use it.** Wait for the stone, then heavy it: often enough to break its balance.
+
+**How it looks.** Its name over the enemy. Not yet: the stone climbing its legs.
+
+## reaction-quicksilver
+Title: Quicksilver (Metal and Poison)
+Group: Reactions
+**What it is.** Sundered meets Poisoned. Mercury runs into the cracks, and every blow makes the poison bite.
+
+**The numbers.** While it carries both, each of your weapon blows makes its poison bite at once, at its depth, besides its own beat (no more than once every half second). The doses are not spent. Rests 6 s.
+
+**What sets it off.** A notch landing on a poisoned enemy, or poison on a notched one.
+
+**How to use it.** Dose it deep and keep hitting: every blow is a bite.
+
+**How it looks.** Its name over the enemy and a bite at each blow.
+
+## reaction-kindling-point
+Title: Kindling Point (Light and Fire)
+Group: Reactions
+**What it is.** Marked meets Burn. The light gathers to one burning point.
+
+**The numbers.** Each of your weapon blows on it (critical, for it is Marked) deepens its Burn by one. The third sets it alight: all its Burn bursts out, 10 damage for each stack, and it burns on two deep. Rests 6 s.
+
+**What sets it off.** A Mark landing on a burning enemy, or Burn on a Marked one.
+
+**How to use it.** Three quick blows: the third is the payoff.
+
+**How it looks.** Its name over the enemy, then the flame bursting out at the third blow.
+
+## reaction-the-grudge
+Title: The Grudge (Dark and Lightning)
+Group: Reactions
+**What it is.** A Cursed enemy carrying two Static or more. A black cloud gathers over its head.
+
+**The numbers.** The cloud waits over it for 8 s. Rests 8 s.
+
+**What sets it off.** A second Static on a Cursed enemy, or a curse on one already carrying two. One Static is not enough, and nothing rests until there are two.
+
+**How to use it.** Not yet: what the cloud does. It will answer the next blow the enemy lands on you or your guard with a black bolt (its Static at double, and a stop), and drift to the next enemy if it dies first.
+
+**How it looks.** Its name over the enemy. Not yet: the cloud itself.
+
+## reaction-ill-wind
+Title: Ill Wind (Poison and Wind)
+Group: Reactions
+**What it is.** Poisoned meets Unsteady. Its poison goes loose like dust.
+
+**The numbers.** While it carries both, your heavy blow on it shoves it and it sheds all its poison at once in a plume behind it, away from you: grit 1.2 m wide that lies 3 s and doses everyone in it once a second. Rests 6 s.
+
+**What sets it off.** Poison landing on a Unsteady enemy, or Unsteady on a poisoned one.
+
+**How to use it.** Stand so the plume lands on the others, then heavy.
+
+**How it looks.** Its name over the enemy, then the plume on the floor. Not yet: every shove and throw shedding it, the plume laid along its path, and the doses shared among those it settles on.
+
+## reaction-steam
+Title: Steam (Fire and Water)
+Group: Reactions
+**What it is.** Burn meets Soaked. The water on the burning body flashes off in a scalding puff.
+
+**The numbers.** The Soaked is spent and half the Burn with it (rounded up). The puff deals 8 damage, and 4 more for each Burn it took, with 15 stagger, to everyone within 2.5 m. Rests 3 s, the shortest of all.
+
+**What sets it off.** Fire on a Soaked enemy (from your Water, or the world's water), or Water on a burning one.
+
+**How to use it.** Deep Burn makes a bigger puff, but takes half of it. Soak a crowd and set them steaming one by one. Its short rest means it comes back often.
+
+**How it looks.** Its name over the enemy and a burst of water where it stands.
+
+## reaction-lightning-flower
+Title: Lightning Flower (Lightning and Life)
+Group: Reactions
+**What it is.** Static meets Seeded. A red fern of lightning flowers on its skin.
+
+**The numbers.** The fern throws a bolt to the nearest other Seeded enemy within 8 m: 8 damage, 10 stagger and a Static. The enemy keeps both afflictions. Rests 4 s.
+
+**What sets it off.** Static landing on a Seeded enemy, or a seed on a charged one.
+
+**How to use it.** Seed two enemies, then charge one.
+
+**How it looks.** Its name over the enemy and a strike where the bolt lands. Not yet: your grown things (briars, saplings, lilies) throwing bolts into it.
+
+## reaction-logan-stone
+Title: Logan Stone (Wind and Earth)
+Group: Reactions
+**What it is.** Unsteady meets Tremor. It rocks on its feet like a balanced stone, and your third blow throws it down.
+
+**The numbers.** For 3 s it rocks: your blows break its balance harder (the first at 1.25 times, the next at 1.5). The third weapon blow throws it down hard for 1.8 s, and its fall strikes 20 damage, 30 stagger and a Tremor in 3 m. An elite rocks and then reels (40 stagger); a god takes only the harder stagger. Rests 6 s.
+
+**What sets it off.** Unsteady landing on a shaken enemy, or Tremor on a Unsteady one.
+
+**How to use it.** Three blows inside 3 s: the weapon fells it.
+
+**How it looks.** Its name over the enemy, then the fall. Not yet: lying flat (for now it is held where it stands).
+
+## reaction-cold-short
+Title: Cold Short (Ice and Metal)
+Group: Reactions
+**What it is.** Chill meets Sundered. Frost fills the notches and the armour goes brittle.
+
+**The numbers.** Brittle 5 s: its notches do not fade. Your next heavy blow cracks the plates off: for 6 s it takes 25% more from your weapon, and its notches stay (for two minutes, for now). Rests 5 s.
+
+**What sets it off.** Chill landing on a notched enemy, or a notch on a chilled one.
+
+**How to use it.** Chill a notched enemy, then heavy it, then fight it.
+
+**How it looks.** Its name over the enemy. Not yet: the plates dropping away.
+
+## reaction-caught-light
+Title: Caught Light (Water and Light)
+Group: Reactions
+**What it is.** Soaked meets Marked. A net of light lies on the wet floor.
+
+**The numbers.** For 4 s the net lies 3 m round the enemy: everyone in it is Marked, and everyone standing in it as it falls moves a quarter slower for the 4 s (a god is not slowed). The Mark that made it is not spent. Rests 6 s.
+
+**What sets it off.** Water landing on a Marked enemy, or a Mark on a Soaked one.
+
+**How to use it.** Wet the crowd, Mark one: all of them Marked for your critical blows, and slowed.
+
+**How it looks.** Its name over the enemy and the net on the floor. Not yet: enemies walking onto the net later slowed too.
+
+## reaction-girdled
+Title: Girdled (Life and Dark)
+Group: Reactions
+**What it is.** Seeded meets Cursed. Black fig roots coil round the enemy and tighten with each blow.
+
+**The numbers.** One coil at once: 25% slower (a god is not slowed), and it takes 6% more from your weapon. Each of your weapon blows draws the roots a coil tighter (6% more each) and mends you 1. At four coils (the third blow) it is girdled: held 1.5 s while the roots crush, 20 damage and 40 stagger, and you heal 4. The roots wait 8 s for your blows. Rests 6 s.
+
+**What sets it off.** A seed landing on a Cursed enemy, or a curse on a Seeded one.
+
+**How to use it.** Three blows: each one opens it more and mends you, and the third crushes it.
+
+**How it looks.** Its name over the enemy, then the crush. Not yet: no dodge or leap while it is coiled, and the hollow trunk left where it dies girdled.
+
+## reaction-chokedamp
+Title: Chokedamp (Earth and Poison)
+Group: Reactions
+**What it is.** Tremor meets Poisoned. The cracked ground breathes out a heavy damp that runs to the other shaken.
+
+**The numbers.** The damp pools under it and runs to up to three other shaken enemies within 7 m. For 5 s each one in it takes a dose every second and moves 20% slower (a god is not slowed). Rests 6 s.
+
+**What sets it off.** Tremor landing on a poisoned enemy, or poison on a shaken one.
+
+**How to use it.** Shake the crowd first, then poison one: the damp finds them all.
+
+**How it looks.** Its name over the enemy. Not yet: the pools staying on the floor where they settle.
+
+## reaction-red-hot
+Title: Red Hot (Metal and Fire)
+Group: Reactions
+**What it is.** Sundered meets Burn. The notched armour heats red.
+
+**The numbers.** For 5 s each heavy blow on it throws sparks out of its far side, away from you, in a cone about 3 m long: 6 damage and a Burn to each enemy in it. Rests 5 s.
+
+**What sets it off.** A notch landing on a burning enemy, or Burn on a notched one.
+
+**How to use it.** Put it between you and the others and heavy it: each heavy lights them.
+
+**How it looks.** Its name over the enemy, then sparks beyond it at each heavy. Not yet: its burns biting twice as hard while it glows.
+
+## reaction-the-bolt-runs-true
+Title: The Bolt Runs True (Light and Lightning)
+Group: Reactions
+**What it is.** Marked meets Static. A thread of light stands from the enemy and a straight bolt comes down it.
+
+**The numbers.** Half a second on: 20 damage and 35 stagger to it, and its Static discharges at full (7 damage and 5 stagger for each stack to everyone within 4 m). The Mark is not spent. Rests 5 s.
+
+**What sets it off.** A Mark landing on a charged enemy, or Static on a Marked one.
+
+**How to use it.** Charge it deep before you Mark it, or Mark it before you charge it: the bolt sets the charge off for you.
+
+**How it looks.** Its name over the enemy, then the bolt and the discharge.
+
+## reaction-breath-taken
+Title: Breath Taken (Dark and Wind)
+Group: Reactions
+**What it is.** Cursed meets Unsteady. A black gust draws the enemy's breath out.
+
+**The numbers.** Winded for 1.5 s (an elite 0.6 s): it begins no attack (one already swung is finished) and takes 30% more stagger. Rests 6 s.
+
+**What sets it off.** A curse landing on a Unsteady enemy, or Unsteady on a Cursed one.
+
+**How to use it.** Wind it, then break its balance while it cannot answer.
+
+**How it looks.** Its name over the enemy. Not yet: the breath torn away on the wind.
+
+## reaction-venom-rime
+Title: Venom Rime (Poison and Ice)
+Group: Reactions
+**What it is.** Poisoned meets Chill. The poison will not fade, and each bite chills it toward a freeze.
+
+**The numbers.** While both lie on it, its poison does not fade and each bite lays a Chill, until it freezes. Rests 4 s.
+
+**What sets it off.** Poison landing on a chilled enemy, or Chill on a poisoned one.
+
+**How to use it.** Dose it and chill it once: the poison freezes it for you.
+
+**How it looks.** Its name over the enemy and a Chill at each bite.
+
+## reaction-firebloom
+Title: Firebloom (Fire and Life)
+Group: Reactions
+**What it is.** Burn meets Seeded. The heat splits the seeds and they grow into flame lilies.
+
+**The numbers.** The Seeded is spent: one lily for each stack (one to three) springs up 2.5 m round the enemy and stands 5 s, burning whatever is within 1 m (3 damage and a Burn every half second). They count as things you grew. Its Burn stays. Rests 4 s.
+
+**What sets it off.** Burn landing on a Seeded enemy, or a seed on a burning one.
+
+**How to use it.** Seed it deep before you light it: more seeds, more lilies.
+
+**How it looks.** Its name over the enemy and the lilies round it. Not yet: walking past a lily to pick its fire up.
+
+## reaction-earthed
+Title: Earthed (Lightning and Earth)
+Group: Reactions
+**What it is.** Static meets Tremor. The charge runs to ground as a burnt fern.
+
+**The numbers.** All its Static runs into the floor at once: 5 damage and 3 stagger for each stack to everyone within 4 m, and a Tremor. It is rooted 1 s (an elite half that; a god not at all). Rests 4 s.
+
+**What sets it off.** Static landing on a shaken enemy, or Tremor on a charged one.
+
+**How to use it.** Charge it deep in a crowd, then shake it: the charge goes to everyone near.
+
+**How it looks.** Its name over the enemy and a burst round it. Not yet: the fern on the floor, and sparing the grounded one (for now it takes its own).
+
+## reaction-sickle-wind
+Title: Sickle Wind (Wind and Metal)
+Group: Reactions
+**What it is.** Unsteady meets Sundered. The wind tears its loose plates off and whirls them round it.
+
+**The numbers.** For 3 s the plates whirl 1.5 m round it, cutting everything they pass, the enemy too: 3 damage for each shard (one for each notch, plus one) and 4 stagger every 0.4 s. Rests 4 s.
+
+**What sets it off.** Unsteady landing on a notched enemy, or a notch on a Unsteady one.
+
+**How to use it.** Notch it deep first: more notches, more blades. Keep clear of the whirl, or fight inside it.
+
+**How it looks.** Its name over the enemy and the whirl round it.
+
+## reaction-mock-suns
+Title: Mock Suns (Ice and Light)
+Group: Reactions
+**What it is.** Chill meets Marked. Two mock suns hang beside the enemy.
+
+**The numbers.** For 4 s your weapon blows on it lay two Chill and do not spend its Mark, so they stay critical. Rests 4 s.
+
+**What sets it off.** Chill landing on a Marked enemy, or a Mark on a chilled one.
+
+**How to use it.** Strike as often as you can inside the 4 s: each blow is critical and chills it.
+
+**How it looks.** Its name over the enemy. Not yet: the suns turning with it, and only blows from its flanks counting.
+
+## reaction-drowned-weight
+Title: Drowned Weight (Water and Dark)
+Group: Reactions
+**What it is.** Soaked meets Cursed. The curse turns the water black and heavy, and the enemy swells.
+
+**The numbers.** Swollen 5 s: 20% slower (a god is not slowed) and 15% more from your weapon. When it dies, or a heavy blow lands while it is swollen, it bursts in black water: 14 damage and 20 stagger, Soaked and Cursed, to everyone within 4 m. Rests 4 s.
+
+**What sets it off.** Water landing on a Cursed enemy, or a curse on a Soaked one.
+
+**How to use it.** Kill it in a crowd, or heavy it there: the black water spreads the pair to the rest.
+
+**How it looks.** Its name over the enemy, then the burst. Not yet: only a finisher bursting it (for now any heavy blow).
+
+## reaction-rot-roots
+Title: Rot Roots (Life and Poison)
+Group: Reactions
+**What it is.** Seeded meets Poisoned. Roots run from the enemy's feet to its neighbours, and its poison runs down them.
+
+**The numbers.** Up to three other enemies within 5 m (the nearest) are joined for 6 s, each Seeded once as the roots reach it. Every bite of poison on the first enemy bites each joined one for half. Rests 4 s.
+
+**What sets it off.** Poison landing on a Seeded enemy, or Seeded on a poisoned one.
+
+**How to use it.** Poison one enemy deep, then seed it in a crowd: one body's poison hurts four. The joined ones carry Seeded, ready for Life's own marks.
+
+**How it looks.** Its name over the enemy and a poison puff on each joined one at every bite. Not yet: the pale roots on the floor.
+
+## reaction-burnt-mound
+Title: Burnt Mound (Earth and Fire)
+Group: Reactions
+**What it is.** Tremor meets Burn. The shaken floor throws up three stones and its fire heats them red.
+
+**The numbers.** Three hot stones lie 1.5 m round the enemy for 6 s and burn whatever touches them (3 damage and a Burn each half second). Rests 6 s.
+
+**What sets it off.** Tremor landing on a burning enemy, or Burn on a shaken one.
+
+**How to use it.** Fight it among its stones: what steps on them burns.
+
+**How it looks.** Its name over the enemy and the stones round it. Not yet: batting the stones with your weapon into the crowd.
 
 ## reaction-live-iron
 Title: Live Iron (Metal and Lightning)
@@ -509,15 +1120,41 @@ Group: Reactions
 
 **How it looks.** Its name over the enemy and a strike where each arc lands.
 
-## reaction-rot-roots
-Title: Rot Roots (Life and Poison)
+## reaction-golden-feathers
+Title: Golden Feathers (Light and Wind)
 Group: Reactions
-**What it is.** Seeded meets Poisoned. Roots run from the enemy's feet to its neighbours, and its poison runs down them.
+**What it is.** Marked meets Unsteady. Its Mark breaks into golden feathers that ride the wind.
 
-**The numbers.** Up to three other enemies within 5 m (the nearest) are joined for 6 s, each Seeded once as the roots reach it. Every bite of poison on the first enemy bites each joined one for half. Rests 4 s.
+**The numbers.** Three feathers ride 6 m on past the enemy, away from you; each Marks what it touches and makes it Unsteady. The first enemy keeps its Mark. Rests 4 s.
 
-**What sets it off.** Poison landing on a Seeded enemy, or Seeded on a poisoned one.
+**What sets it off.** A Mark landing on a Unsteady enemy, or Unsteady on a Marked one.
 
-**How to use it.** Poison one enemy deep, then seed it in a crowd: one body's poison hurts four. The joined ones carry Seeded, ready for Life's own marks.
+**How to use it.** Stand so the others are behind it: they are Marked for your critical blows.
 
-**How it looks.** Its name over the enemy and a poison puff on each joined one at every bite. Not yet: the pale roots on the floor.
+**How it looks.** Its name over the enemy, then the feathers landing beyond it. Not yet: the feathers fanned across 40 degrees, each stopping at the first it touches.
+
+## reaction-stolen-warmth
+Title: Stolen Warmth (Dark and Ice)
+Group: Reactions
+**What it is.** Cursed meets Chill. The curse takes its warmth, and each blow draws it into you.
+
+**The numbers.** While both last, its Chill does not fade, and each of your weapon blows lays a Chill and draws 2 health into you (8 a second at most; a god gives half). Rests 6 s.
+
+**What sets it off.** A curse landing on a chilled enemy, or Chill on a Cursed one.
+
+**How to use it.** Keep hitting: every blow heals you and chills it toward a freeze.
+
+**How it looks.** Its name over the enemy. Not yet: the last warmth torn out of it when it freezes.
+
+## reaction-fish-poison
+Title: Fish Poison (Poison and Water)
+Group: Reactions
+**What it is.** Soaked meets Poisoned. The water runs off it fouled, and the heavily dosed float up stunned.
+
+**The numbers.** A fouled slick 3 m across lies 5 s and Soaks whoever stands in it. If the enemy carries four doses or more as it reacts, it floats up stunned: lifted and held 1.5 s (an elite 0.5 s; a god takes 30 stagger instead), and your next weapon blow on it is critical and spends two doses for 6 damage each. Rests 6 s.
+
+**What sets it off.** Poison landing on a Soaked enemy, or Water on a poisoned one.
+
+**How to use it.** Dose it four deep before you wet it, then be ready with the blade.
+
+**How it looks.** Its name over the enemy and the slick on the floor. Not yet: others in the slick floating as they reach four doses.
