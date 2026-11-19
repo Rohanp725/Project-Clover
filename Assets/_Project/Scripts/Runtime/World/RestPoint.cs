@@ -55,6 +55,8 @@ namespace Clover.World
             if (spells != null) spells.Rested();
             // The playtest's rule: a rest gives as many Shards as the whole chart could ask for.
             RunState.Points = PlaytestMode.ShardsAfterRest(RunState.Points);
+            // Resting is a save point (IMPLEMENTATION.md 5.1), after the rest has given what it gives.
+            Clover.Core.Save.SavePoints.Rested();
             // By the fire is where the embers are spent.
             var held = who.GetComponent<PlayerElement>();
             if (held != null && !held.HasElement && !PlaytestMode.On)

@@ -103,6 +103,8 @@ namespace Clover.World
             if (who.Defence != null) who.Defence.Restore();
             if (director != null) director.Chose(this);
             if (court != null) court.Chose(this);
+            // A god taken or consumed is a save point (IMPLEMENTATION.md 5.1).
+            Clover.Core.Save.SavePoints.GodRewarded();
         }
     }
 }

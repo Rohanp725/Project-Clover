@@ -11,33 +11,33 @@ namespace Clover.Core
     public static class RunState
     {
         /// <summary>The weapon's name, or empty to use whatever the scene gives the player.</summary>
-        public static string Weapon = "";
+        public static string Weapon = ""; // moves in Phase 5: SaveData.Current.Weapon
         /// <summary>The element's name, or empty for the scene's own.</summary>
-        public static string Element = "";
+        public static string Element = ""; // moves in Phase 5: SaveData.Current.Attunements[0]
         /// <summary>The second attunement's name (the Hand's second element), or empty for one element carried.</summary>
-        public static string Element2 = "";
+        public static string Element2 = ""; // moves in Phase 5: SaveData.Current.Attunements[1]
         /// <summary>The surge the Hand wears (<c>fire.surge</c>), or empty for the first element's.</summary>
-        public static string Surge = "";
+        public static string Surge = ""; // moves in Phase 5: SaveData.Current.Surge
         /// <summary>True once a Hand has been set at a rest fire: the slots then stop filling themselves.</summary>
-        public static bool HandSet;
+        public static bool HandSet; // moves in Phase 5: with the Hand into SaveData.Current
         /// <summary>The three saved Hands (only their Hand fields are ever swapped in); null for an empty one.</summary>
-        public static readonly Clover.Player.Build.Loadout[] SavedHands = new Clover.Player.Build.Loadout[3];
+        public static readonly Clover.Player.Build.Loadout[] SavedHands = new Clover.Player.Build.Loadout[3]; // moves in Phase 5: SaveData.SavedHands
         /// <summary>True once the element has been strengthened by consuming a god.</summary>
-        public static bool ElementConsumed;
+        public static bool ElementConsumed; // moves in Phase 5: retired, not saved (IMPLEMENTATION.md 5.1)
         /// <summary>How many gods have fallen in this run.</summary>
-        public static int GodsFelled;
+        public static int GodsFelled; // moves in Phase 5: SaveData.GodsFelled
         /// <summary>Embers taken from the fallen and not yet spent.</summary>
-        public static int Points;
+        public static int Points; // moves in Phase 5: SaveData.Wallet.Shards (task 5.1)
         /// <summary>The ids of the upgrades learned in this run.</summary>
-        public static readonly HashSet<string> Unlocked = new HashSet<string>();
+        public static readonly HashSet<string> Unlocked = new HashSet<string>(); // moves in Phase 5: SaveData.Learned
         /// <summary>The names of every element that has been in the player's hands in this run, the one held now among them.</summary>
-        public static readonly HashSet<string> ElementsHeld = new HashSet<string>();
+        public static readonly HashSet<string> ElementsHeld = new HashSet<string>(); // moves in Phase 5: retired, not saved (IMPLEMENTATION.md 5.1)
         /// <summary>The names of the elements whose gods were consumed in this run. With those held, they decide which mixed branches are open.</summary>
-        public static readonly HashSet<string> ElementsConsumed = new HashSet<string>();
+        public static readonly HashSet<string> ElementsConsumed = new HashSet<string>(); // moves in Phase 5: the plan names no field; settled with Take and Consume (task L.2)
         /// <summary>What sits in the four spell slots (West, North, East, South), by mark id or base id; empty for none.</summary>
-        public static readonly string[] SpellSlots = { "", "", "", "" };
+        public static readonly string[] SpellSlots = { "", "", "", "" }; // moves in Phase 5: SaveData.Current.Slots
         /// <summary>Counts some marks keep for the whole run (folds of a blade), by the mark's id.</summary>
-        public static readonly Dictionary<string, int> Tallies = new Dictionary<string, int>();
+        public static readonly Dictionary<string, int> Tallies = new Dictionary<string, int>(); // moves in Phase 5: SaveData.Tallies
         /// <summary>How many runs have ended in this play session.</summary>
         public static int RunsEnded;
         /// <summary>How the last run ended: true if the player fell, false if they came back by their own road.</summary>
