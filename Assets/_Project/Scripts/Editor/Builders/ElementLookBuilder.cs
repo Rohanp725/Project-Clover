@@ -314,6 +314,9 @@ namespace Clover.EditorTools
             ["sickle_wind|m2_metal_whitehot"] = new ReactionArtBuilder.Paint(1f, 0.5f, 0.12f),
             ["cold_short|m2_metal_whitehot"] = new ReactionArtBuilder.Paint(1f, 0.5f, 0.12f),
             ["sickle_wind|m3_wind_ribbon"] = new ReactionArtBuilder.Paint(0.36f, 0.4f, 0.37f),
+            // Earthlight's and Sun-Sap's shafts of light stacked to a cream near white over the bloom: a deeper gold.
+            ["earthlight|r4_light_ray"] = new ReactionArtBuilder.Paint(1f, 0.66f, 0.24f, 0.14f, 1f, true),
+            ["sun_sap|r4_light_ray"] = new ReactionArtBuilder.Paint(1f, 0.66f, 0.24f, 0.14f, 1f, true),
             ["sickle_wind|r4_wind_inner"] = new ReactionArtBuilder.Paint(0.27f, 0.3f, 0.28f),
             ["sickle_wind|m3_wind_dust"] = new ReactionArtBuilder.Paint(0.42f, 0.38f, 0.3f),
             ["earthlight|m_vfx_earth_rock"] = new ReactionArtBuilder.Paint(0.3f, 0.23f, 0.16f),
@@ -369,6 +372,9 @@ namespace Clover.EditorTools
             // Tremor's cracks and dust were 2.3 m and 1.7 m across under one body: kept to about the body's own ground.
             ["earth_tremor|vfx3c_vfx_earth_crack2"] = 0.5f,
             ["earth_tremor|vfx3c_vfx_earth_dust"] = 0.5f,
+            // Stolen Warmth's wisp was a single orange dot at the game camera (the Blender worker's notes: "small at 12 m"):
+            // half as large again (twice was a ball over the player), still one wisp a blow so the screen stays quiet.
+            ["stolen_warmth|vfxr4_orb"] = 1.5f,
             // The Grudge's cloud, lifted clear of the health bar, is made broader so it reads as a cloud over the enemy.
             ["the_grudge|vfxe2_cloud_a"] = 1.35f,
             ["the_grudge|vfxe2_cloud_b"] = 1.35f,
