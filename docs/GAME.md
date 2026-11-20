@@ -1902,6 +1902,14 @@ were not touched.
   - Hunger: its turning streaks and motes are black.
   - Flung Blade: it flies to hang point down about half a metre over the head of the one faced, bobbing and turning.
     The next blow drives it down into the body, and then it flies home.
+- **A landed blow under an element: "Tint and soften"** (the owner's choice, 2026-11-19; `StruckLook`, `CutMarks`,
+  `SwingLook.Tint`): when the weapon carries an element (the charged blade, the infused strike, and what the element's
+  strike and its burning ground then hit), the white flash on the struck body and the white cut streak covered most of
+  the swing trail on contact. Both now take the colour the element's trail is drawn in, softened: the streak at half
+  its brightness and half its cover (`StruckLook.TintStrength`, 0.5), the body's flash at half the white's brightness
+  (`StruckLook.FlashStrength`, 0.5), so the trail shows through. Enemies, the Colossus, the Storm Dragon, the Sun-Bearer and the training dummy all
+  flash this way. A plain weapon keeps the white flash and the white streak exactly as before. The yellow finishing
+  ring is a gameplay signal and is unchanged.
 - **Filming** (`AgentScripts/ReactionGifFrames.cs`, `ElementGifFrames.cs`): on the Proving Ground's real enemies, not
   the dummy. These are the castle's pen (Temple Soldier, Knife Acolyte, Storm Caller, Gate Captain) and a Gilded
   Spearman. They are kept alive and kept from chasing or striking, but flinch, freeze, fall and are thrown as the game
@@ -1942,6 +1950,8 @@ were not touched.
 
 | date | decision | why |
 |---|---|---|
+| 2026-11-19 | ComfyUI with TRELLIS.2 becomes the route for organic models (enemies, the player and the outfits), always with a style pass into the game's look: input pictures made from renders of the approved designs, clean joint topology, flat palette slots, outline check. The player's generated bodies bind to the existing skeleton, so every animation (still written as code in the Forge) carries over unchanged; animations do not move to Blender or to AI | the owner liked the pilot ("it just needs to be in style with the game"); the moves are already independent of the mesh |
+| 2026-11-19 | "Tint and soften": when the weapon carries an element, a landed blow's flash and cut streak take the element's trail colour at about half strength; plain weapons keep white, and the yellow finishing ring stays | the owner: the white flash and streak covered most of the element's swing trail on contact |
 | 2026-11-19 | Four redrawn reactions take new looks: Split Rock becomes Root Snare (roots bind, a heavy blow rips them up in a 3 m burst of Seeded and Tremor); Burning Sap becomes Sun-Sap (gold-green sap pools at the feet, spurts on critical blows, and the pool flashes to dose everyone standing in it, a small rule change); Windthrow becomes Seed Storm (seeds blown away from the player, briars bursting up within 6 m to root what they catch); Sickle Wind becomes a tornado of wind and steel shards centred on the struck enemy, not a cone | the owner, choosing among the Blender concept alternatives; on Sickle Wind: "It should be the shrapnel squall but instead of in a cone, it should be a tornado of blade and wind centered around the effected enemy" |
 | 2026-11-18 | The element is weighted equally with close combat (pillar 2 rewritten); spells on cooldowns that weapon play shortens, mana for big moves; four spells on an L2 layer; two elements at once; a duo branch for every pair | the user: the game is more fun when fights use both kinds of technique, and any two elements should be able to mix |
 | 2026-11-18 | A credits section thanking _dnen, parvar11 and nairarj000 | the user: they helped with ideas and gave criticism on the gameplay and story |
