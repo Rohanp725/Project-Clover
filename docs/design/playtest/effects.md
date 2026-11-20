@@ -783,6 +783,8 @@ Group: Reactions
 
 **What sets it off.** Burn landing on a chilled enemy, or Chill on a burning one.
 
+**Its shapes.** With the Shape mark of Fire and Ice's duo branch (Thermal Shock: Hot Shards or Crazing, 3 Shards, in the heart of the chart) and both carried, Thermal Shock wears the shape chosen at a rest fire instead. Hot Shards: the split also throws shards 3 m round, 8, a Burn and a Chill, which on purpose may crack them too. Crazing: no heavy blow needed; while it carries both it splits every 1.5 s, 10 and 12 stagger.
+
 **How to use it.** Cold on a burning enemy, or fire on a chilled one, then a heavy inside the 5 s.
 
 **How it looks.** Its name over the enemy, a crack, then the split.

@@ -42,6 +42,7 @@ namespace Clover.Player.Trees
             Duo.BurningSapDuo.Add(to);
             Duo.SmoulderDuo.Add(to);
             Duo.NerveFireDuo.Add(to);
+            Duo.ThermalShockDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }
