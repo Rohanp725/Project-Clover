@@ -98,6 +98,9 @@ namespace Clover.Player.Forms
         }
 
         public Look[] Looks = new Look[0];
+        /// <summary>Glaze's crystal, stood on its base with its length up, and the ice it is drawn in (none in a set without it).</summary>
+        public Mesh Crystal;
+        public Material CrystalMaterial;
         public Part[] Parts = new Part[0];
         public Key[] Keys = new Key[0];
 
@@ -157,6 +160,31 @@ namespace Clover.Player.Forms
             float span = Keys[last].Time - Keys[last - 1].Time;
             float rate = span > 0.0001f ? (Keys[last].Value.x - Keys[last - 1].Value.x) / span : 0f;
             return Keys[last].Value.x + rate * (time - Keys[last].Time);
+        }
+
+        /// <summary>
+        /// A part's pose about its look's anchor at its own time <paramref name=t/> (spins and orbits at
+        /// <paramref name=angleTime/>): its keyed path, scale, spin, the turn a spark is redrawn in (<paramref name=seed/>
+        /// keeps two sparks from turning alike) and its orbit, in the look's own axes, before it is turned or sized.
+        /// </summary>
+        public void LocalPose(in Part part, float t, float angleTime, int seed, out Vector3 position, out Quaternion rotation, out Vector3 scale)
+        {
+            position = part.Position + Sample(part.PathFirst, part.PathCount, t, Vector3.zero);
+            scale = Vector3.Scale(part.Scale, Sample(part.ScaleFirst, part.ScaleCount, t, Vector3.one));
+            rotation = part.Rotation;
+            if (part.SpinCount > 0) rotation = Quaternion.AngleAxis(SampleOnward(part.SpinFirst, part.SpinCount, angleTime), part.SpinAxis) * rotation;
+            if (part.Redraw)
+            {
+                // Sparks are turned anew three times a second at most, not every frame (the owner: nothing flickery).
+                int redraw = Mathf.FloorToInt(t * 3f) + seed * 7;
+                rotation = Quaternion.AngleAxis(ElementSubstance.Hash(redraw) * 360f, Vector3.up) * rotation;
+            }
+            if (part.OrbitCount > 0)
+            {
+                var round = Quaternion.AngleAxis(SampleOnward(part.OrbitFirst, part.OrbitCount, angleTime), Vector3.up);
+                position = part.OrbitCentre + round * (position - part.OrbitCentre);
+                rotation = round * rotation;
+            }
         }
 
         /// <summary>

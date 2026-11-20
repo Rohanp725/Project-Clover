@@ -110,9 +110,9 @@ namespace Clover.EditorTools
                 stood++;
             }
 
-            var fireBowl = Brazier(world, "Fire", new Vector3(5.7f, 0f, -0.9f), chosen, fire, new Color(1f, 0.55f, 0.2f), out Transform fireShown);
+            var fireBowl = Brazier(world, "Fire", new Vector3(5.7f, 0f, -0.9f), chosen, fire, new Color(1f, 0.55f, 0.2f), out Transform fireShown, contents: ContentsOf(Elements.Fire));
             things.Add(Choice(fireBowl, true, ElementKit.FireName, true, fireShown.gameObject, "Carry Fire", "", "", combat, element));
-            var stormBowl = Brazier(world, "Lightning", new Vector3(4.1f, 0f, -5.2f), chosen, spark, new Color(0.45f, 0.7f, 1f), out Transform stormShown);
+            var stormBowl = Brazier(world, "Lightning", new Vector3(4.1f, 0f, -5.2f), chosen, spark, new Color(0.45f, 0.7f, 1f), out Transform stormShown, contents: ContentsOf(Elements.Lightning));
             things.Add(Choice(stormBowl, true, ElementKit.LightningName, false, stormShown.gameObject, "Carry Lightning", "A cold brazier", "Take it from its god first", combat, element));
             // The other nine stand in an arc along the eastern rim behind those two, in the order of the ring, each
             // burning in its own colour. They have no gods yet to be won from, so for now every one of them is lit.
@@ -121,7 +121,7 @@ namespace Clover.EditorTools
             {
                 if (kind.Name == Elements.Fire || kind.Name == Elements.Lightning) continue;
                 var flame = BuildKit.Flame(Folder, "m_hub_flame_" + kind.Name.ToLowerInvariant(), new Color(kind.Colour.r * kind.Colour.r * 1.7f, kind.Colour.g * kind.Colour.g * 1.7f, kind.Colour.b * kind.Colour.b * 1.7f, 1f));
-                var bowl = Brazier(world, kind.Name, Polar(OuterBraziersFrom + placed * OuterBraziersStep, OuterBraziersRadius), chosen, flame, kind.Colour, out Transform bowlShown, 4.5f, 5f);
+                var bowl = Brazier(world, kind.Name, Polar(OuterBraziersFrom + placed * OuterBraziersStep, OuterBraziersRadius), chosen, flame, kind.Colour, out Transform bowlShown, 4.5f, 5f, ContentsOf(kind.Name));
                 things.Add(Choice(bowl, true, kind.Name, true, bowlShown.gameObject, "Carry " + kind.Name, "", "", combat, element));
                 placed++;
             }
@@ -398,8 +398,15 @@ namespace Clover.EditorTools
         private const float OuterBraziersStep = 13.5f;
         private const float OuterBraziersRadius = 8.7f;
 
+        /// <summary>
+        /// The brazier that holds an element: its contents loop (Clover > Build > Brazier Looks, the Blender worker's
+        /// eleven) when there is one by that name, in place of flame in the element's colour (the owner, 2026-11-19: "The
+        /// element braziers must contain their element, not show flames of its colour"). Fire burns in the flame field.
+        /// </summary>
+        internal static string ContentsOf(string element) => "brazier_" + element.ToLowerInvariant();
+
         internal static GameObject Brazier(Transform world, string name, Vector3 at, Material chosenRing, Material flame, Color lightColour, out Transform shown,
-            float lightRange = 8f, float lightIntensity = 8f)
+            float lightRange = 8f, float lightIntensity = 8f, string contents = null)
         {
             var root = new GameObject(name + " Brazier");
             root.transform.SetParent(world, false);
@@ -413,7 +420,13 @@ namespace Clover.EditorTools
             collider.height = 2.2f;
             collider.center = new Vector3(0f, 1.1f, 0f);
             shown = BuildKit.Group("Shown", root.transform);
-            Flame(shown, new Vector3(0f, 1.3f, 0f), flame, 0.7f, 11f);
+            var looks = contents != null ? AssetDatabase.LoadAssetAtPath<Clover.Player.Forms.ElementLookSet>(ElementLookBuilder.BrazierSetPath) : null;
+            if (looks != null && looks.Find(contents) >= 0)
+            {
+                var art = ElementArtBuilder.Set();
+                shown.gameObject.AddComponent<BrazierLook>().Configure(looks, contents, contents == ContentsOf(Elements.Fire) && art != null ? art.BodyFlame : null);
+            }
+            else Flame(shown, new Vector3(0f, 1.3f, 0f), flame, 0.7f, 11f);
             var lightObject = new GameObject("Brazier Light");
             lightObject.transform.SetParent(shown, false);
             lightObject.transform.localPosition = new Vector3(0f, 2f, 0f);

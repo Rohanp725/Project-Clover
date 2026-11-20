@@ -26,6 +26,10 @@ namespace Clover.EditorTools
         public const string SetPath = ElementArtBuilder.Folder + "/element_looks.asset";
         private const string Mockup = "unity_shader_mockup";
         private const string E2Kit = "vfx_elements_kit_e2.fbx";
+        /// <summary>The Blender worker's eleven brazier loops (staging/blender/2026-11-20_braziers) and where they are built.</summary>
+        public const string BrazierRecipePath = ReactionArtBuilder.CombosFolder + "/braziers_recipe.json";
+        public const string BrazierSetPath = ElementArtBuilder.Folder + "/brazier_looks.asset";
+        private const string BrazierKit = "vfx_brazier_kit.fbx";
 
         /// <summary>
         /// The colours of the batches' own materials (m3_*), linear: from notes.md where it gives them (the rust palette,
@@ -76,6 +80,28 @@ namespace Clover.EditorTools
             ["m3_wind_comb"] = new ReactionArtBuilder.Paint(0.74f, 0.74f, 0.64f),
             ["m3_grass_gold"] = new ReactionArtBuilder.Paint(0.85f, 0.68f, 0.16f),
             ["m3_leaf_ochre"] = new ReactionArtBuilder.Paint(0.86f, 0.45f, 0.08f),
+            // The braziers' own materials (r4_*), matched by eye to the Blender worker's renders (all_braziers.png); no white.
+            ["r4_ember_bed"] = new ReactionArtBuilder.Paint(0.8f, 0.2f, 0.03f),
+            // The ball a see-through violet-blue cage round a bright cyan heart, so the arcs inside it show.
+            ["r4_bolt_ball"] = new ReactionArtBuilder.Paint(0.24f, 0.36f, 1f, 0.45f, 1f, true),
+            ["r4_bolt_heart"] = new ReactionArtBuilder.Paint(0.12f, 0.85f, 1f),
+            ["r4_wind_inner"] = new ReactionArtBuilder.Paint(0.36f, 0.62f, 0.56f),
+            ["r4_frost_bed"] = new ReactionArtBuilder.Paint(0.45f, 0.68f, 0.95f),
+            ["r4_ice_glint"] = new ReactionArtBuilder.Paint(0.55f, 0.82f, 1f),
+            ["r4_cold_mist"] = new ReactionArtBuilder.Paint(0.45f, 0.65f, 0.9f, 0.4f, 1f, true),
+            ["r4_water_surface"] = new ReactionArtBuilder.Paint(0.04f, 0.34f, 0.6f),
+            ["r4_moss"] = new ReactionArtBuilder.Paint(0.18f, 0.42f, 0.1f),
+            // Metal's melt read dark orange (notes.md): a hot liquid orange with the ingot hotter still.
+            ["r4_molten"] = new ReactionArtBuilder.Paint(1f, 0.42f, 0.06f),
+            ["r4_ingot"] = new ReactionArtBuilder.Paint(1f, 0.72f, 0.24f),
+            ["r4_ingot_shine"] = new ReactionArtBuilder.Paint(0.95f, 0.85f, 0.62f),
+            ["r4_light_orb"] = new ReactionArtBuilder.Paint(1f, 0.72f, 0.26f),
+            // Light's rays read as a spiky sun (notes.md): soft see-through beams instead of solid blades.
+            ["r4_light_ray"] = new ReactionArtBuilder.Paint(1f, 0.82f, 0.45f, 0.16f, 1f, true),
+            ["r4_violet_mote"] = new ReactionArtBuilder.Paint(0.5f, 0.26f, 0.95f),
+            ["r4_dark_rim"] = new ReactionArtBuilder.Paint(0.42f, 0.14f, 0.85f),
+            ["r4_brew"] = new ReactionArtBuilder.Paint(0.28f, 0.52f, 0.1f),
+            ["m_vfx_lightning_scorch"] = new ReactionArtBuilder.Paint(0.05f, 0.05f, 0.09f),
         };
 
         /// <summary>
@@ -99,6 +125,19 @@ namespace Clover.EditorTools
             ["dark_hunger|m_vfx_combo_violetedge"] = new ReactionArtBuilder.Paint(0.09f, 0.02f, 0.22f, 1f, 1f, true),
             ["poison_fever|m3_fever"] = new ReactionArtBuilder.Paint(0.4f, 0.52f, 0.06f),
             ["life_seeded|m3_spore"] = new ReactionArtBuilder.Paint(0.36f, 0.44f, 0.16f),
+            // Light's rays read as a spiky sun (notes.md): faint see-through beams (the gilded bed keeps its own gold).
+            ["brazier_light|m3_light_gold"] = new ReactionArtBuilder.Paint(1f, 0.7f, 0.24f, 0.2f, 1f, true),
+            // Life's spores a dusty green, not pale cream; Metal's melt a deep molten red-orange under a hotter ingot.
+            ["brazier_life|m3_spore"] = new ReactionArtBuilder.Paint(0.5f, 0.6f, 0.22f),
+            ["brazier_metal|r4_molten"] = new ReactionArtBuilder.Paint(0.72f, 0.1f, 0.02f),
+            // Chill's crystals a deeper blue in their facets, so the ice is not near white (the coordinator, 2026-11-20).
+            ["ice_chill|m_vfx_ice"] = new ReactionArtBuilder.Paint(0.15f, 0.45f, 1f),
+            // Chill's frost rosettes on the floor, its glints and its mist: pale blue, not white (the snowflakes read white).
+            ["ice_chill|m_vfx_ice_frost"] = new ReactionArtBuilder.Paint(0.22f, 0.5f, 0.9f, 0.6f, 1f, true),
+            ["ice_chill|m2_light_white"] = new ReactionArtBuilder.Paint(0.45f, 0.7f, 1f),
+            ["ice_chill|m_vfx_ice_fog"] = new ReactionArtBuilder.Paint(0.35f, 0.55f, 0.85f, 0.3f, 1f, true),
+            ["brazier_ice|m_vfx_ice_frost"] = new ReactionArtBuilder.Paint(0.22f, 0.5f, 0.9f, 0.6f, 1f, true),
+            ["brazier_ice|m_vfx_ice"] = new ReactionArtBuilder.Paint(0.15f, 0.45f, 1f),
             ["light_clarity|m2_light_white"] = new ReactionArtBuilder.Paint(1f, 0.74f, 0.28f),
             // The films of the rebuild (2026-11-20): Wellspring's pool read pale grey (water, not foam: a deep see-through
             // teal), Hunger's burning crescent and bead white (a hot violet), Temper's glints white (a pale steel).
@@ -121,6 +160,8 @@ namespace Clover.EditorTools
             // Unsteady's caught leaves were small at the game camera (notes.md): big enough to see as leaves.
             ["wind_unsteady|vfx3c_vfx_wind_leaf"] = 1.6f,
             ["wind_strike|vfx3c_vfx_earth_chip"] = 0.6f,
+            // Light's rays shorter, so they are beams round the orb, not the points of a star.
+            ["brazier_light|vfxr4_softray"] = 0.8f,
             // Tremor's cracks and dust were 2.3 m and 1.7 m across under one body: kept to about the body's own ground.
             ["earth_tremor|vfx3c_vfx_earth_crack2"] = 0.5f,
             ["earth_tremor|vfx3c_vfx_earth_dust"] = 0.5f,
@@ -138,6 +179,9 @@ namespace Clover.EditorTools
             ["wind_strike|m3_wind_comb"] = 2f,
             ["lightning_static|m3_bolt"] = 1.3f,
             ["lightning_overdrive|m3_bolt"] = 1.3f,
+            // The brazier's crackling ball: its arcs thicker, so the storm reads at the game camera (notes.md: "the arcs ...
+            // are thin at 12 m").
+            ["brazier_lightning|m3_bolt"] = 1.5f,
         };
 
         /// <summary>A ribbon's ink by its material: wind's mint rim, lightning's violet fringe; the rest the element's own.</summary>
@@ -187,6 +231,24 @@ namespace Clover.EditorTools
             "flicker", "churn", "bobbing", "fly round", "orbit and tumble", "turn the other way", "then glow", "open inside it", "pour in, turning", "fall in (black motes)",
         };
 
+        /// <summary>
+        /// Wind's caught leaves read as gold diamonds (the coordinator, 2026-11-20): the kit's leaf is drawn as a leaf, a
+        /// pointed oval with a darker midrib and a fold along it, in a muted ochre or olive by the paint it wore.
+        /// </summary>
+        public const string LeafPiece = "vfx3c_vfx_wind_leaf";
+        public static readonly Dictionary<string, Color> LeafColours = new Dictionary<string, Color>
+        {
+            ["m3_grass_gold"] = new Color(0.56f, 0.6f, 0.2f),
+            ["m3_leaf_ochre"] = new Color(0.78f, 0.5f, 0.15f),
+        };
+
+        /// <summary>Glaze's crystal (the elements2 kit's hexagonal crystal), kept in the built looks for the player's ice.</summary>
+        public const string CrystalPiece = "vfxe2_crystal";
+
+        /// <summary>The brazier kit's bed disc (water, frost, moss, melt, brew...), which every brazier's look lays on its coals.</summary>
+        public const string BedPiece = "vfxr4_disc";
+        public static readonly ReactionArtBuilder.Paint GlazeCrystalPaint = new ReactionArtBuilder.Paint(0.15f, 0.45f, 1f);
+
         /// <summary>Soaked: seconds the water takes to run down the body, and the most its puddle spans, metres.</summary>
         public const float WetRunsDown = 0.45f, SoakedPuddle = 1.15f;
 
@@ -212,6 +274,14 @@ namespace Clover.EditorTools
         [MenuItem("Clover/Build/Element Looks")]
         public static void BuildMenu() => Build();
 
+        [MenuItem("Clover/Build/Brazier Looks")]
+        public static void BuildBraziersMenu() => BuildBraziers();
+
+        public static string Build() => BuildSet(RecipePath, SetPath, "review/checks/element_looks.md", "Element looks (batches 1 and 2)", true);
+
+        /// <summary>The eleven brazier loops (the recipe's lineup, all eleven together, is only a picture and is left out).</summary>
+        public static string BuildBraziers() => BuildSet(BrazierRecipePath, BrazierSetPath, "review/checks/brazier_looks.md", "Brazier looks", false);
+
         private class Lists
         {
             public readonly List<ElementLookSet.Look> Looks = new List<ElementLookSet.Look>();
@@ -220,25 +290,26 @@ namespace Clover.EditorTools
             public readonly List<string> Missing = new List<string>();
             public readonly Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)> Kits = new Dictionary<string, (Transform, Dictionary<string, MeshFilter>)>();
             public int Ribbons;
+            public ElementLookSet Target;
         }
 
-        public static string Build()
+        private static string BuildSet(string recipePath, string setPath, string reportPath, string title, bool elementLooks)
         {
-            var recipe = AssetDatabase.LoadAssetAtPath<TextAsset>(RecipePath);
-            if (recipe == null) return $"no recipe at {RecipePath}";
+            var recipe = AssetDatabase.LoadAssetAtPath<TextAsset>(recipePath);
+            if (recipe == null) return $"no recipe at {recipePath}";
             var elementArt = ElementArtBuilder.Set();
             if (elementArt == null) return "no element art built";
             var glow = AssetDatabase.LoadAssetAtPath<Material>(ElementArtBuilder.Folder + "/m_element_glow.mat");
             var root = (Dictionary<string, object>)ReactionRecipe.ReadJson(recipe.text);
             var looks = (List<object>)root["looks"];
 
-            var set = AssetDatabase.LoadAssetAtPath<ElementLookSet>(SetPath);
+            var set = AssetDatabase.LoadAssetAtPath<ElementLookSet>(setPath);
             if (set == null)
             {
                 set = ScriptableObject.CreateInstance<ElementLookSet>();
-                AssetDatabase.CreateAsset(set, SetPath);
+                AssetDatabase.CreateAsset(set, setPath);
             }
-            foreach (var old in AssetDatabase.LoadAllAssetsAtPath(SetPath))
+            foreach (var old in AssetDatabase.LoadAllAssetsAtPath(setPath))
                 if (old is Mesh)
                 {
                     AssetDatabase.RemoveObjectFromAsset(old);
@@ -247,10 +318,11 @@ namespace Clover.EditorTools
 
             Report.Clear();
             Unknown.Clear();
-            var lists = new Lists();
+            var lists = new Lists { Target = set };
             foreach (Dictionary<string, object> look in looks)
             {
                 string slug = Text(look, "slug");
+                if (slug == "brazier_lineup") continue;
                 var bodies = (List<object>)look["bodies"];
                 var bodyAt = new List<Vector3>();
                 foreach (Dictionary<string, object> body in bodies) bodyAt.Add(Vec(body["position"], Vector3.zero));
@@ -265,17 +337,21 @@ namespace Clover.EditorTools
             set.Looks = lists.Looks.ToArray();
             set.Parts = lists.Parts.ToArray();
             set.Keys = lists.Keys.ToArray();
+            if (elementLooks) BakeCrystal(set, lists, elementArt);
             EditorUtility.SetDirty(set);
-            elementArt.Looks = set;
-            EditorUtility.SetDirty(elementArt);
+            if (elementLooks)
+            {
+                elementArt.Looks = set;
+                EditorUtility.SetDirty(elementArt);
+            }
             AssetDatabase.SaveAssets();
             Directory.CreateDirectory("review/checks");
-            File.WriteAllText("review/checks/element_looks.md",
-                $"# Element looks (batches 1 and 2)\n\n{lists.Looks.Count} looks, {lists.Parts.Count} parts ({lists.Ribbons} ribbons), {lists.Keys.Count} keys, from {RecipePath}.\n\n" +
+            File.WriteAllText(reportPath,
+                $"# {title}\n\n{lists.Looks.Count} looks, {lists.Parts.Count} parts ({lists.Ribbons} ribbons), {lists.Keys.Count} keys, from {recipePath}.\n\n" +
                 "| Look | Length | On | Parts | Ribbons | Repeats from | Shell |\n|---|---|---|---|---|---|---|\n" + Report +
                 (lists.Missing.Count > 0 ? "\n## Not found in the kits\n\n" + string.Join("\n", lists.Missing.Select(m => "- " + m)) + "\n" : "") +
                 (Unknown.Count > 0 ? "\n## Materials with no paint (drawn grey)\n\n" + string.Join("\n", Unknown.OrderBy(m => m).Select(m => "- " + m)) + "\n" : ""));
-            string line = $"[Clover.Build] Element looks: {lists.Looks.Count} looks, {lists.Parts.Count} parts, {lists.Ribbons} ribbons, {lists.Missing.Count} pieces missing, {Unknown.Count} unpainted; review/checks/element_looks.md";
+            string line = $"[Clover.Build] {title}: {lists.Looks.Count} looks, {lists.Parts.Count} parts, {lists.Ribbons} ribbons, {lists.Missing.Count} pieces missing, {Unknown.Count} unpainted; {reportPath}";
             Debug.Log(line);
             return line;
         }
@@ -292,7 +368,7 @@ namespace Clover.EditorTools
         }
 
         private static int CentreBody(string centre) =>
-            centre.StartsWith("body ") && int.TryParse(centre.Substring(5), out int n) ? n : -1;
+            centre == "station" ? 0 : centre.StartsWith("body ") && int.TryParse(centre.Substring(5), out int n) ? n : -1;
 
         private static Vector2 Window(Dictionary<string, object> motion)
         {
@@ -334,7 +410,8 @@ namespace Clover.EditorTools
                         judged = Vec(orbitAt["centre"], position);
                     if (motion.TryGetValue("follow_body", out var follow) && follow is double followed && (int)followed != onBody) continue;
                     // A group of one is a single piece (a rust segment, "rust1"): its number is not a body's.
-                    if (!onPlayer && (instances.Count > 1 ? BodyOf(instance[0] as string, bodyAt, judged) : Nearest(bodyAt, judged)) != onBody) continue;
+                    // A look with no bodies (a brazier's) keeps every piece.
+                    if (!onPlayer && bodyAt.Count > 0 && (instances.Count > 1 ? BodyOf(instance[0] as string, bodyAt, judged) : Nearest(bodyAt, judged)) != onBody) continue;
                     var window = Window(motion);
                     float show = window.x - shift, hide = window.y >= 9f ? 9f : window.y - shift;
                     if (onBody != 0) position -= bodyFrom;
@@ -371,7 +448,7 @@ namespace Clover.EditorTools
                     if (LookPaints.ContainsKey(slug + "|" + material)) material = slug + "|" + material;
                     string placement = instance.Count > 4 ? instance[4] as string : "b";
                     string verb = Text(motion, "verb");
-                    var mesh = Bake(key, lists.Parts.Count - made.FirstPart, filter, comboTurn, material, element, scale, placement == "g", out byte kind, out Material wears, elementArt, glow);
+                    var mesh = Bake(key, lists.Parts.Count - made.FirstPart, filter, comboTurn, material, element, scale, placement == "g", out byte kind, out Material wears, elementArt, glow, lists.Target);
                     bool held = hide >= 9f;
                     var part = new ElementLookSet.Part
                     {
@@ -440,7 +517,7 @@ namespace Clover.EditorTools
                     float through = jagged ? 1f : 0.45f;
                     var paint = PaintOf(material);
                     var mesh = RibbonMesh($"look_{key}_{lists.Parts.Count - made.FirstPart:00}_{Text(ribbon, "object")}", points, width, Text(ribbon, "radius_profile"), taper, jagged, through, paint.Colour);
-                    AssetDatabase.AddObjectToAsset(mesh, AssetDatabase.LoadAssetAtPath<ElementLookSet>(SetPath));
+                    AssetDatabase.AddObjectToAsset(mesh, lists.Target);
                     string owner = ReactionArtBuilder.ElementOf(material, element + "_" + element);
                     int ring = ReactionDesigns.RingIndex(owner);
                     bool inked = !(ribbon.TryGetValue("ink", out var inkValue) && inkValue is bool ink && !ink);
@@ -549,7 +626,7 @@ namespace Clover.EditorTools
                 Vector3 up = Vector3.Cross(tangent, side).normalized;
                 Vector3 wide = lying ? side : up, thin = lying ? up : side;
                 float u = along[i] / total;
-                float shape = profile == "needle" ? Mathf.Pow(Mathf.Max(0f, Mathf.Sin(Mathf.PI * u)), 0.6f) : Mathf.Lerp(taper.x, taper.y, u);
+                float shape = profile == "needle" ? Mathf.Pow(Mathf.Max(0f, Mathf.Sin(Mathf.PI * u)), 0.6f) : profile == "flat" ? 1f : Mathf.Lerp(taper.x, taper.y, u);
                 float closed = cap > 0f ? Mathf.Sqrt(Mathf.Clamp01(Mathf.Min(along[i], total - along[i]) / cap)) : 1f;
                 float radius = 0.5f * width * Mathf.Max(0f, shape) * closed;
                 for (int s = 0; s < RibbonSides; s++)
@@ -662,7 +739,7 @@ namespace Clover.EditorTools
                     kitObject = "vfx2c_" + kitObject.Substring("vfxc3_c2_".Length);
                 }
             }
-            string path = kit == E2Kit ? ReactionArtBuilder.CombosFolder + "/" + E2Kit : ReactionArtBuilder.KitPath(kit);
+            string path = kit == E2Kit || kit == BrazierKit ? ReactionArtBuilder.CombosFolder + "/" + kit : ReactionArtBuilder.KitPath(kit);
             comboTurn = path.StartsWith(ReactionArtBuilder.CombosFolder);
             if (!kits.TryGetValue(path, out var loaded))
             {
@@ -681,8 +758,15 @@ namespace Clover.EditorTools
         // render re-colours shared meshes per piece), or a colour a slot for the batch's own many-slot pieces (the sword),
         // or a flame's bands by height.
         private static Mesh Bake(string slug, int index, MeshFilter filter, bool comboTurn, string material, string element, Vector3 scale, bool onGround,
-            out byte kind, out Material wears, ElementArtSet elementArt, Material glow)
+            out byte kind, out Material wears, ElementArtSet elementArt, Material glow, Object into)
         {
+            string bare = material.Substring(material.IndexOf('|') + 1);
+            // A brazier's bed is drawn in its own colour, flat (the solid's bright top facet turned the beds grey), and
+            // keeps its own paint where the look repaints other pieces of the same material (Light's gilded bed).
+            bool bed = filter.name == BedPiece;
+            if (bed) material = bare;
+            if (filter.name == LeafPiece && LeafColours.TryGetValue(bare, out var leafColour))
+                return BakeLeaf(slug, index, filter, comboTurn, element, leafColour, out kind, out wears, elementArt, into);
             var source = filter.sharedMesh;
             var kitRoot = filter.transform.root;
             var toKit = kitRoot.worldToLocalMatrix * filter.transform.localToWorldMatrix;
@@ -708,7 +792,7 @@ namespace Clover.EditorTools
                 var paint = perSlot && s < slots.Length && slots[s] != null ? PaintOf(slots[s].name) : mainPaint;
                 var subTriangles = source.GetTriangles(s);
                 // A solid's alpha is Clover/Spell's flag (below a half is foam); a see-through piece's is how much shows.
-                float alpha = mainPaint.Glow || (onGround && FlatAfter(source, toKit, scale)) ? paint.Colour.a : paint.Flag;
+                float alpha = mainPaint.Glow || bed || (onGround && FlatAfter(source, toKit, scale)) ? paint.Colour.a : paint.Flag;
                 foreach (int v in subTriangles) colours[v] = new Color(paint.Colour.r, paint.Colour.g, paint.Colour.b, alpha);
                 triangles.AddRange(subTriangles);
             }
@@ -732,7 +816,7 @@ namespace Clover.EditorTools
             }
             var bounds = new Bounds(vertices.Length > 0 ? Vector3.Scale(vertices[0], scale) : Vector3.zero, Vector3.zero);
             foreach (var v in vertices) bounds.Encapsulate(Vector3.Scale(v, scale));
-            bool flat = (onGround && bounds.size.y < FlatHeight) || mainPaint.Glow;
+            bool flat = (onGround && bounds.size.y < FlatHeight) || mainPaint.Glow || bed;
             kind = flat ? ElementLookSet.Flat : ElementLookSet.Solid;
             if (flat) wears = glow;
             else
@@ -748,8 +832,131 @@ namespace Clover.EditorTools
             mesh.SetTriangles(triangles, 0);
             mesh.SetUVs(1, ElementArtBuilder.SmoothNormals(vertices, normals));
             mesh.RecalculateBounds();
-            AssetDatabase.AddObjectToAsset(mesh, AssetDatabase.LoadAssetAtPath<ElementLookSet>(SetPath));
+            AssetDatabase.AddObjectToAsset(mesh, into);
             return mesh;
+        }
+
+        // The kit piece's own axes, as Bake turns them: its vertices in the kit's frame about its pivot.
+        private static Vector3[] KitVertices(MeshFilter filter, bool comboTurn)
+        {
+            var kitRoot = filter.transform.root;
+            var toKit = kitRoot.worldToLocalMatrix * filter.transform.localToWorldMatrix;
+            toKit.SetColumn(3, new Vector4(0f, 0f, 0f, 1f));
+            if (comboTurn) toKit = ReactionArtBuilder.ComboKitTurn * toKit;
+            var vertices = filter.sharedMesh.vertices;
+            for (int i = 0; i < vertices.Length; i++) vertices[i] = toKit.MultiplyPoint3x4(vertices[i]);
+            return vertices;
+        }
+
+        /// <summary>
+        /// A leaf as long and as wide as the kit's leaf, lying the way it lay (so the recipe's turns still fit): a pointed
+        /// oval, folded a little along a darker midrib that runs from the stalk to the tip, drawn from both sides.
+        /// </summary>
+        public static Mesh LeafMesh(string name, Vector3 low, Vector3 high, int along, int across, int through, Color colour)
+        {
+            const int Stations = 9;
+            Vector3 size = high - low;
+            float length = size[along], width = size[across];
+            float centreAcross = (low[across] + high[across]) * 0.5f, centreThrough = (low[through] + high[through]) * 0.5f;
+            var rib = colour * 0.5f;
+            rib.a = 1f;
+            var vertices = new List<Vector3>();
+            var colours = new List<Color>();
+            var triangles = new List<int>();
+            // Each station across the leaf: edge, rib's near side (leaf colour), rib (dark) twice, rib's far side, far edge.
+            float[] spans = { -1f, -0.07f, -0.07f, 0.07f, 0.07f, 1f };
+            for (int s = 0; s < Stations; s++)
+            {
+                float u = s / (float)(Stations - 1);
+                // Rounder toward the stalk, drawn out to a point at the tip.
+                float half = 0.5f * width * Mathf.Pow(Mathf.Max(0f, Mathf.Sin(Mathf.PI * Mathf.Pow(u, 0.8f))), 0.75f);
+                for (int k = 0; k < spans.Length; k++)
+                {
+                    float sideways = Mathf.Abs(spans[k]) < 0.5f ? spans[k] * width : spans[k] * half;
+                    // The fold: the rib a little raised, the edges level.
+                    float fold = Mathf.Abs(spans[k]) < 0.5f ? 0.08f * width : 0f;
+                    var v = new Vector3();
+                    v[along] = low[along] + u * length;
+                    v[across] = centreAcross + sideways;
+                    v[through] = centreThrough + fold;
+                    vertices.Add(v);
+                    colours.Add(k == 2 || k == 3 ? rib : new Color(colour.r, colour.g, colour.b, 1f));
+                }
+            }
+            for (int s = 0; s < Stations - 1; s++)
+                for (int k = 0; k < spans.Length - 1; k += 2)
+                {
+                    int a = s * spans.Length + k, b = a + 1, c = a + spans.Length, d = b + spans.Length;
+                    triangles.AddRange(new[] { a, c, b, b, c, d });
+                }
+            var mesh = new Mesh { name = name };
+            mesh.SetVertices(vertices);
+            mesh.SetColors(colours);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateNormals();
+            var normals = new List<Vector3>();
+            mesh.GetNormals(normals);
+            mesh.SetUVs(1, normals);
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        private static Mesh BakeLeaf(string slug, int index, MeshFilter filter, bool comboTurn, string element, Color colour,
+            out byte kind, out Material wears, ElementArtSet elementArt, Object into)
+        {
+            var vertices = KitVertices(filter, comboTurn);
+            var bounds = new Bounds(vertices[0], Vector3.zero);
+            foreach (var v in vertices) bounds.Encapsulate(v);
+            var size = bounds.size;
+            int along = size.x >= size.y && size.x >= size.z ? 0 : size.y >= size.z ? 1 : 2;
+            int through = size.x <= size.y && size.x <= size.z ? 0 : size.y <= size.z ? 1 : 2;
+            if (through == along) through = (along + 1) % 3;
+            int across = 3 - along - through;
+            var mesh = LeafMesh($"look_{slug}_{index:00}_{filter.name}_leaf", bounds.min, bounds.max, along, across, through, colour);
+            AssetDatabase.AddObjectToAsset(mesh, into);
+            kind = ElementLookSet.Solid;
+            int ring = ReactionDesigns.RingIndex(element);
+            wears = ring >= 0 && ring < elementArt.Solids.Length ? elementArt.Solids[ring] : elementArt.Solids[0];
+            return mesh;
+        }
+
+        // Glaze's crystal: the kit's hexagonal crystal stood up on its base (its long axis up, the base at its origin),
+        // in a clear blue, deeper in its facets, and the ice solid it is drawn in.
+        private static void BakeCrystal(ElementLookSet set, Lists lists, ElementArtSet elementArt)
+        {
+            set.Crystal = null;
+            if (!TryKitPiece(E2Kit, CrystalPiece, lists.Kits, out var filter, out bool comboTurn)) return;
+            var vertices = KitVertices(filter, comboTurn);
+            var bounds = new Bounds(vertices[0], Vector3.zero);
+            foreach (var v in vertices) bounds.Encapsulate(v);
+            var size = bounds.size;
+            int along = size.x >= size.y && size.x >= size.z ? 0 : size.y >= size.z ? 1 : 2;
+            var up = Vector3.zero;
+            up[along] = 1f;
+            var stand = Quaternion.FromToRotation(up, Vector3.up);
+            float foot = float.MaxValue;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i] = stand * (vertices[i] - bounds.center);
+                foot = Mathf.Min(foot, vertices[i].y);
+            }
+            var colours = new Color[vertices.Length];
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                vertices[i].y -= foot;
+                colours[i] = new Color(GlazeCrystalPaint.Colour.r, GlazeCrystalPaint.Colour.g, GlazeCrystalPaint.Colour.b, GlazeCrystalPaint.Flag);
+            }
+            var mesh = new Mesh { name = "glaze_crystal" };
+            mesh.SetVertices(vertices);
+            mesh.SetColors(colours);
+            mesh.SetTriangles(filter.sharedMesh.triangles, 0);
+            mesh.RecalculateNormals();
+            mesh.SetUVs(1, ElementArtBuilder.SmoothNormals(vertices, mesh.normals));
+            mesh.RecalculateBounds();
+            AssetDatabase.AddObjectToAsset(mesh, set);
+            set.Crystal = mesh;
+            int ring = ReactionDesigns.RingIndex("ice");
+            set.CrystalMaterial = ring >= 0 && ring < elementArt.Solids.Length ? elementArt.Solids[ring] : null;
         }
 
         /// <summary>

@@ -114,6 +114,14 @@ namespace Clover.Player.Forms
         /// <summary>A look by its slug ("water_soaked"); -1 when the scene has none.</summary>
         public static int Find(string key) => Ready ? instance.set.Find(key) : -1;
 
+        /// <summary>Glaze's crystal and the ice it is drawn in, from the built looks; false when the scene has none.</summary>
+        public static bool TryCrystal(out Mesh crystal, out Material ice)
+        {
+            crystal = Ready ? instance.set.Crystal : null;
+            ice = Ready ? instance.set.CrystalMaterial : null;
+            return crystal != null && ice != null;
+        }
+
         /// <summary>A look's data, for the shells (Temper's steel) that the body draws itself.</summary>
         public static bool TryLook(int look, out ElementLookSet.Look data)
         {
@@ -333,25 +341,10 @@ namespace Clover.Player.Forms
 
         private void Pose(in ElementLookSet.Part part, float t, float angleTime, Vector3 anchor, Quaternion turn, float size, float shrink, int slot, Transform frame)
         {
-            Vector3 position = part.Position + set.Sample(part.PathFirst, part.PathCount, t, Vector3.zero);
-            Vector3 scaleKey = set.Sample(part.ScaleFirst, part.ScaleCount, t, Vector3.one);
-            Quaternion rotation = part.Rotation;
-            if (part.SpinCount > 0) rotation = Quaternion.AngleAxis(set.SampleOnward(part.SpinFirst, part.SpinCount, angleTime), part.SpinAxis) * rotation;
-            if (part.Redraw)
-            {
-                // Sparks are turned anew three times a second at most, not every frame (the owner: nothing flickery).
-                int redraw = Mathf.FloorToInt(t * 3f) + slot * 7;
-                rotation = Quaternion.AngleAxis(ElementSubstance.Hash(redraw) * 360f, Vector3.up) * rotation;
-            }
-            if (part.OrbitCount > 0)
-            {
-                var round = Quaternion.AngleAxis(set.SampleOnward(part.OrbitFirst, part.OrbitCount, angleTime), Vector3.up);
-                position = part.OrbitCentre + round * (position - part.OrbitCentre);
-                rotation = round * rotation;
-            }
+            set.LocalPose(part, t, angleTime, slot, out Vector3 position, out Quaternion rotation, out Vector3 scale);
             if (part.Kind == ElementLookSet.Flat) position.y += FlatLift;
             frame.SetPositionAndRotation(anchor + turn * (position * size), turn * rotation);
-            frame.localScale = Vector3.Scale(part.Scale, scaleKey) * (shrink * size);
+            frame.localScale = scale * (shrink * size);
         }
     }
 }

@@ -388,7 +388,7 @@ namespace Clover.EditorTools
                 string flameName = kind.Name == Elements.Fire ? "m_hub_flame" : kind.Name == Elements.Lightning ? "m_hub_flame_storm" : "m_hub_flame_" + kind.Name.ToLowerInvariant();
                 var flame = Load(HubFolder, flameName) ?? BuildKit.Flame(HubFolder, flameName, new Color(kind.Colour.r * 1.7f, kind.Colour.g * 1.7f, kind.Colour.b * 1.7f, 1f));
                 Vector3 at = Polar(AltarBearings[i], 8.3f);
-                var bowl = HubBuilder.Brazier(group, kind.Name, at, chosen, flame, kind.Colour, out Transform shown, 4.5f, 5f);
+                var bowl = HubBuilder.Brazier(group, kind.Name, at, chosen, flame, kind.Colour, out Transform shown, 4.5f, 5f, HubBuilder.ContentsOf(kind.Name));
                 var choice = HubBuilder.Choice(bowl, true, kind.Name, true, shown.gameObject, $"Carry {kind.Name} (lays {Afflictions.Spec(kind.Affliction).Name})", "", "", combat, element);
                 choice.Range = 1.8f;
                 // Phase 2: an altar sets either attunement, and its prompt says which (AltarChoice).
