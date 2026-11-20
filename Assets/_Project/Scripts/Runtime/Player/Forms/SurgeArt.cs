@@ -46,6 +46,7 @@ namespace Clover.Player.Forms
             arcBeat = 0;
             look = -1;
             wearer = null;
+            OverdriveStyle = DefaultOverdriveStyle;
         }
 
         /// <summary>
@@ -65,6 +66,9 @@ namespace Clover.Player.Forms
         {
             switch (element)
             {
+                case ElementSubstance.Lightning: return OverdriveStyle != AfflictionArt.CodeLook ? "lightning_overdrive" : null;
+                // Clarity: the Blender worker's gold lotus of light replaces the kolam (the owner, 2026-11-20).
+                case ElementSubstance.Light: return "light_clarity";
                 case ElementSubstance.Water: return "water_wellspring";
                 case ElementSubstance.Metal: return "metal_temper";
                 case ElementSubstance.Poison: return "poison_fever";
@@ -73,6 +77,15 @@ namespace Clover.Player.Forms
                 default: return null;
             }
         }
+
+        /// <summary>
+        /// Overdrive drawn by the code's arcs, the Blender worker's keyed arcs (<see cref="AfflictionArt.KitLook"/>), or
+        /// both. Filmed side by side (2026-11-20), the Blender worker's arcs won: cyan zigzags with a violet rim snapping
+        /// across the body and down to the floor, no white, where the code's forks burst as white stars. A tuning point a
+        /// probe may set; put back each play.
+        /// </summary>
+        public static byte OverdriveStyle = DefaultOverdriveStyle;
+        public const byte DefaultOverdriveStyle = AfflictionArt.KitLook;
 
         // The surge's look while it plays, and the player it is on.
         private static int look = -1;
@@ -112,6 +125,9 @@ namespace Clover.Player.Forms
         public const float RaysSeconds = 1.2f, RaysGo = 0.5f;
 
         /// <summary>The ink Hunger's turning streaks and motes are drawn in: black, not white (the owner's review).</summary>
+        /// <summary>Tailwind's spiral tint: wind's pale dust, a little lighter than its pieces so the spiral still reads.</summary>
+        public static readonly Color TailwindDust = new Color(0.72f, 0.76f, 0.66f, 1f);
+
         private static readonly Color HungerInk = new Color(0.04f, 0.015f, 0.06f, 1f);
 
         /// <summary>
@@ -138,7 +154,8 @@ namespace Clover.Player.Forms
                 case ElementSubstance.Fire: Floor(0, "fire_charrings_affliction"); break;
                 // Overdrive's arcs are thrown in Place; nothing is held (no drums, no rings).
                 case ElementSubstance.Lightning: break;
-                case ElementSubstance.Wind: Solid(0, "wind_bagspiral_surge"); break;
+                // Tailwind's spiral (liked, 2026-11-19) in wind's pale dust: it read white on film (2026-11-20).
+                case ElementSubstance.Wind: solids[0] = ElementArt.Hold(ElementArt.Piece("wind_bagspiral_surge"), TailwindDust); break;
                 case ElementSubstance.Ice: Floor(0, "ice_knotring_surge"); break;
                 case ElementSubstance.Water: Solid(0, "water_rings_surge"); break;
                 case ElementSubstance.Life:
@@ -253,6 +270,7 @@ namespace Clover.Player.Forms
             if (look >= 0)
             {
                 if (wearer != null) ElementLooks.Keep(look, wearer);
+                if (element == ElementSubstance.Lightning && OverdriveStyle == AfflictionArt.BothLooks) ThrowArcs(feet, time);
                 return;
             }
             float age = time - began;

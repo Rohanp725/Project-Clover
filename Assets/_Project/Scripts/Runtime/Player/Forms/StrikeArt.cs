@@ -23,6 +23,9 @@ namespace Clover.Player.Forms
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => Played = 0;
 
+        /// <summary>Wind's strike, the Blender worker's keyed look (elements2_recipe.json).</summary>
+        public const string WindStrikeLook = "wind_strike";
+
         private static readonly Color FireOrange = new Color(1f, 0.34f, 0.04f);
         private static readonly Color FireRed = new Color(0.85f, 0.16f, 0.04f);
 
@@ -69,6 +72,14 @@ namespace Clover.Player.Forms
                     break;
                 }
                 case ElementSubstance.Wind:
+                {
+                    // The Blender worker's strike (design B of the wind research): a needle-tipped crescent of air drawn on
+                    // with the blow and eroding from its tail, parting round the one struck and blowing on past the arc
+                    // in curls, the floor combed along it; turned to the strike's way and fitted to how far the one struck
+                    // stood (the recipe's stood 1.7 m off). Nothing white, nothing cut off.
+                    float off = first != null ? Vector3.Distance(origin, target) : reach;
+                    if (ElementLooks.PlayAt(ElementLooks.Find(WindStrikeLook), origin, Mathf.Atan2(forward.x, forward.z) * Mathf.Rad2Deg, Mathf.Clamp(off / 1.7f, 0.85f, 1.6f)))
+                        break;
                     ElementArt.Floor(ElementArt.Piece("wind_comb_infused"), origin + forward * (reach * 0.8f), ElementArt.Turn(forward, 180f), 0.8f, 0.9f, 1.4f, 0.15f, true);
                     // The crescent's gust is carried on past the reach and blows apart there, never cut off at a line;
                     // the streaks fan out and are gone over a longer way (the owner's review, 2026-11-19).
@@ -80,6 +91,7 @@ namespace Clover.Player.Forms
                         FormFx.Fly(FormMesh.Gust, from, from + way * 7.5f + Vector3.up * (0.3f * (i - 2)), Quaternion.LookRotation(way), new Vector3(4f, 4f, 3f), new Color(0.82f, 0.84f, 0.78f), 0.5f, 0.03f);
                     }
                     break;
+                }
                 case ElementSubstance.Ice:
                     // A spike up through each one struck, in three hard steps.
                     for (int i = 0; i < count; i++)

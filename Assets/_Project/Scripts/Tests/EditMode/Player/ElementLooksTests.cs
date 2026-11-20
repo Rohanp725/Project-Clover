@@ -9,10 +9,12 @@ using L = Clover.Player.Forms.ElementLookSet;
 namespace Clover.Tests
 {
     /// <summary>
-    /// The elements' second-pass looks (the Blender worker's batch 1): the keys ease as the recipe says, the shells climb
-    /// band by band in the look-dev's times (Chill snaps on and holds, Rime builds slowly, Temper climbs behind its front),
-    /// and once built every look the game asks for is there, within the pool's size, with no rings round the player in
-    /// Temper (the shader draws its front).
+    /// The elements' second-pass looks (the Blender worker's batches 1 and 2): the keys ease as the recipe says, the
+    /// shells climb band by band in the look-dev's times (Chill snaps on and holds, Rime builds slowly, Temper climbs
+    /// behind its front), a repeating part whose window runs past the end is taken whole into the next loop, held parts
+    /// that keep moving go on moving, ribbons are tubes drawn tail to head, and once built every look the game asks for
+    /// is there, within the pool's size, with no rings round the player in Temper (the shader draws its front), wind
+    /// never white and the choices made between the two makers' Burn, Static and Overdrive.
     /// </summary>
     public class ElementLooksTests
     {
@@ -63,12 +65,15 @@ namespace Clover.Tests
         {
             var set = ElementLookBuilder.Set();
             if (set == null) Assert.Ignore("The element looks have not been built; run Clover > Build > Element Looks.");
-            Assert.AreEqual(14, set.Looks.Length, "the fourteen looks of batch 1");
+            Assert.AreEqual(23, set.Looks.Length, "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks");
             foreach (AfflictionKind kind in System.Enum.GetValues(typeof(AfflictionKind)))
-            {
-                string key = AfflictionArt.LookOf(kind);
-                if (key != null) Assert.GreaterOrEqual(set.Find(key), 0, $"{kind} wears {key}");
-            }
+                for (int depth = 1; depth <= 6; depth++)
+                {
+                    string key = AfflictionArt.LookOf(kind, depth);
+                    if (key != null) Assert.GreaterOrEqual(set.Find(key), 0, $"{kind} at {depth} wears {key}");
+                }
+            Assert.GreaterOrEqual(set.Find(StrikeArt.WindStrikeLook), 0, "wind's strike");
+            Assert.GreaterOrEqual(set.Find(AfflictionArt.BurnKitLook), 0, "the Blender worker's Burn, kept to be chosen");
             for (int element = 0; element < 11; element++)
             {
                 string key = SurgeArt.LookOf(element);
@@ -95,6 +100,130 @@ namespace Clover.Tests
             Assert.AreEqual(L.Ice, set.Looks[set.Find("ice_chill")].Shell);
             Assert.AreEqual(L.Rime, set.Looks[set.Find("ice_rime")].Shell);
             Assert.IsTrue(set.Looks.Where(look => look.Key.StartsWith("water_wellspring") || look.Key.StartsWith("poison_fever") || look.Key.StartsWith("life_regrowth") || look.Key.StartsWith("dark_hunger")).All(look => look.OnPlayer), "the surges are on the player");
+            Assert.IsTrue(set.Looks.Where(look => look.Key == "lightning_overdrive" || look.Key == "light_clarity" || look.Key == "wind_strike").All(look => look.OnPlayer), "Overdrive, Clarity and the wind strike are the player's");
+        }
+
+        [Test]
+        public void ARepeatingPartPastTheEndIsTakenWholeIntoTheNextLoop()
+        {
+            var look = new L.Look { Seconds = 2.6f, LoopFrom = 0.22f };
+            // A curl drawn on at the end of the loop (2.02 s to 2.82 s), and one in the middle.
+            var late = new L.Part { Repeats = true, Show = 2.02f, Hide = 2.82f };
+            var middle = new L.Part { Repeats = true, Show = 0.82f, Hide = 1.62f };
+            float span = 2.6f - 0.22f;
+            Assert.AreEqual(2.4f, L.PartTime(look, late, 2.4f, false), 1e-4f, "the first time through, the look's own time");
+            float justAfter = L.PartTime(look, late, 2.7f, false);
+            Assert.AreEqual(2.7f, justAfter, 1e-3f, "past the end it is not cut: it goes on to its own end");
+            Assert.AreEqual(1.0f, L.PartTime(look, middle, 2.6f + (1.0f - 0.22f), false), 1e-3f, "the middle one plays again in the loop");
+            for (float age = 2.61f; age < 2.6f + 3f * span; age += 0.01f)
+            {
+                float t = L.PartTime(look, late, age, false);
+                bool seen = t >= late.Show && t < late.Hide;
+                float into = Mathf.Repeat(age - 2.6f, span) + 0.22f;
+                bool shouldBe = (into >= 2.02f && into < 2.82f) || (into + span >= 2.02f && into + span < 2.82f);
+                Assert.AreEqual(shouldBe, seen, $"at {age:0.00} s it is seen exactly in its window, every loop");
+            }
+            var held = new L.Part { Show = 0.1f, Hide = 9f };
+            Assert.AreEqual(2.601f, L.PartTime(look, held, 30f, false), 1e-3f, "a held part holds its last pose");
+            var flame = new L.Part { Show = 0.1f, Hide = 9f, Cycles = true };
+            float a = L.PartTime(look, flame, 10f, false), b = L.PartTime(look, flame, 10.3f, false);
+            Assert.That(a, Is.InRange(2.6f - L.CycleSeconds, 2.6f), "a flickering flame goes round its last stretch");
+            Assert.AreNotEqual(a, b, "and keeps moving");
+        }
+
+        [Test]
+        public void TurningPartsTurnOnAtTheirLastRate()
+        {
+            var set = ScriptableObject.CreateInstance<L>();
+            set.Keys = new[]
+            {
+                new L.Key { Time = 0.2f, Value = Vector3.zero, Ease = L.Linear },
+                new L.Key { Time = 2.2f, Value = new Vector3(-600f, 0f, 0f), Ease = L.Linear },
+            };
+            Assert.AreEqual(-300f, set.SampleOnward(0, 2, 1.2f), 1e-3f, "inside its keys, the keys");
+            Assert.AreEqual(-900f, set.SampleOnward(0, 2, 3.2f), 1e-3f, "past them, on at 300 degrees a second");
+            Assert.AreEqual(0f, set.SampleOnward(0, 0, 3f), "no keys, no turn");
+            Object.DestroyImmediate(set);
+        }
+
+        [Test]
+        public void ARibbonIsATubeDrawnFromTailToHead()
+        {
+            var points = new System.Collections.Generic.List<Vector3> { new Vector3(0.4f, 0.6f, 0.5f), new Vector3(0f, 0.5f, 0.65f), new Vector3(-0.6f, 0.45f, 0.1f), new Vector3(-0.2f, 0.57f, -0.4f) };
+            foreach (string profile in new[] { "taper", "needle" })
+            {
+                var mesh = ElementLookBuilder.RibbonMesh("test", points, 0.26f, profile, new Vector2(0.2f, 1f), false, 0.45f, Color.grey);
+                var uvs = new System.Collections.Generic.List<Vector2>();
+                mesh.GetUVs(0, uvs);
+                Assert.AreEqual(0f, uvs.Min(uv => uv.x), 1e-5f, $"{profile}: u starts at the tail");
+                Assert.AreEqual(1f, uvs.Max(uv => uv.x), 1e-5f, $"{profile}: and ends at the head");
+                Assert.IsTrue(mesh.vertices.All(v => !float.IsNaN(v.x) && !float.IsNaN(v.y) && !float.IsNaN(v.z)), $"{profile}: no broken vertices (the needle's head once went NaN)");
+                Assert.Less(mesh.bounds.size.y, 0.6f, $"{profile}: a band, not a wall");
+                var normals = mesh.normals;
+                var triangles = mesh.triangles;
+                var vertices = mesh.vertices;
+                int outward = 0, inward = 0;
+                for (int i = 0; i < triangles.Length; i += 3)
+                {
+                    var face = Vector3.Cross(vertices[triangles[i + 1]] - vertices[triangles[i]], vertices[triangles[i + 2]] - vertices[triangles[i]]);
+                    if (face.sqrMagnitude < 1e-12f) continue;
+                    if (Vector3.Dot(face, normals[triangles[i]]) > 0f) outward++;
+                    else inward++;
+                }
+                Assert.Greater(outward, inward * 10, $"{profile}: its faces turn out, so the ink stays behind it");
+                Object.DestroyImmediate(mesh);
+            }
+        }
+
+        [Test]
+        public void RibbonsAreDrawnAndWindIsNeverWhite()
+        {
+            var set = ElementLookBuilder.Set();
+            if (set == null) Assert.Ignore("The element looks have not been built; run Clover > Build > Element Looks.");
+            foreach (string key in new[] { "lightning_static", "lightning_overdrive", "wind_unsteady", "wind_unsteady_1", "wind_unsteady_5", "wind_strike" })
+            {
+                var look = set.Looks[set.Find(key)];
+                int ribbons = 0;
+                for (int k = 0; k < look.PartCount; k++)
+                {
+                    var part = set.Parts[look.FirstPart + k];
+                    if (part.Kind != L.Ribbon) continue;
+                    ribbons++;
+                    Assert.Greater(part.DrawCount, 0, $"{key}: a ribbon is drawn on");
+                    Assert.LessOrEqual(part.DrawFirst + part.DrawCount, set.Keys.Length);
+                    Assert.AreEqual("Clover/Spell", part.Material.shader.name, $"{key}: the spell shader clips it along its length");
+                    if (!key.StartsWith("wind")) continue;
+                    // What the screen shows at its brightest: the paint through the wind solid's grey and the shader's
+                    // bright facet (a quarter more), never white.
+                    var paint = part.Mesh.colors[0];
+                    var solid = part.Material.GetColor("_Color");
+                    float brightest = Mathf.Max(paint.r * solid.r, paint.g * solid.g, paint.b * solid.b) * 1.25f + part.Material.GetFloat("_Sheen");
+                    Assert.Less(brightest, 0.9f, $"{key}: pale dust, not white");
+                    Assert.Greater(part.InkColour.g, part.InkColour.r, $"{key}: a mint rim");
+                }
+                Assert.Greater(ribbons, 0, key);
+            }
+            var unsteady = set.Looks[set.Find("wind_unsteady")];
+            var five = set.Looks[set.Find("wind_unsteady_5")];
+            var one = set.Looks[set.Find("wind_unsteady_1")];
+            Assert.Less(one.PartCount, unsteady.PartCount, "one stack: fewer curls and leaves than three");
+            Assert.Less(unsteady.PartCount, five.PartCount, "five stacks: more than three");
+        }
+
+        [Test]
+        public void TheChosenMakersLooksArePlayed()
+        {
+            Assert.AreEqual(AfflictionArt.CodeLook, AfflictionArt.DefaultBurnStyle, "Burn: the flame field, filmed beside the Blender tongues");
+            Assert.AreEqual(AfflictionArt.BothLooks, AfflictionArt.DefaultStaticStyle, "Static: the code's crawl with the Blender worker's arcs");
+            Assert.AreEqual(AfflictionArt.KitLook, SurgeArt.DefaultOverdriveStyle, "Overdrive: the Blender worker's arcs, no white forks");
+            Assert.AreEqual("lightning_overdrive", SurgeArt.LookOf(ElementSubstance.Lightning));
+            Assert.AreEqual("light_clarity", SurgeArt.LookOf(ElementSubstance.Light), "Clarity's gold lotus replaces the kolam");
+            Assert.AreEqual("earth_tremor", AfflictionArt.LookOf(AfflictionKind.Tremor), "Tremor: cracks in steps, dust and pebbles, no ring");
+            Assert.AreEqual("wind_unsteady_1", AfflictionArt.LookOf(AfflictionKind.Unsteady, 1));
+            Assert.AreEqual("wind_unsteady", AfflictionArt.LookOf(AfflictionKind.Unsteady, 3));
+            Assert.AreEqual("wind_unsteady_5", AfflictionArt.LookOf(AfflictionKind.Unsteady, 5));
+            string hit = System.IO.File.ReadAllText("Assets/_Project/Scripts/Runtime/Player/Forms/HitArt.cs");
+            StringAssert.DoesNotContain("\"wind_debris_hit\"", hit, "a wind blow throws no flat white cards");
         }
     }
 }

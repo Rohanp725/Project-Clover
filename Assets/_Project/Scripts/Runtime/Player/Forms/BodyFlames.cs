@@ -118,6 +118,8 @@ namespace Clover.Player.Forms
         public static bool Keep(Transform body, int depth)
         {
             if (!Ready || body == null) return false;
+            // The Blender worker's flame tongues (fire_burn), when they are the Burn chosen (AfflictionArt.BurnStyle).
+            if (AfflictionArt.BurnStyle == AfflictionArt.KitLook) return ElementLooks.Keep(ElementLooks.Find(AfflictionArt.BurnKitLook), body);
             return instance.KeepBody(body, depth);
         }
 

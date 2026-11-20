@@ -40,10 +40,33 @@ namespace Clover.Player.Forms
         public static readonly Color CurseInk = new Color(0.012f, 0.004f, 0.02f), CurseDeep = new Color(0.03f, 0.008f, 0.05f);
 
         /// <summary>
-        /// The second-pass look an affliction wears (the Blender worker's batch 1, <see cref="ElementLooks"/>); null for
-        /// one that has none yet.
+        /// Where Unity and the Blender worker each made a look, which is drawn: the code's (Burn's real flame field,
+        /// Static's crawl and jumping arcs), the Blender worker's keyed look, or both at once.
         /// </summary>
-        public static string LookOf(AfflictionKind kind)
+        public const byte CodeLook = 0, KitLook = 1, BothLooks = 2;
+
+        /// <summary>
+        /// Filmed side by side on the same group of five (2026-11-20). Burn: the flame field (<see cref="BodyFlames"/>),
+        /// thin licking tongues banded red to yellow, read as real flickering flame where the Blender worker's tongues read
+        /// as large pale cones, so the flame field is kept. Static: both, the code's crawl round and over the body (which
+        /// the owner called decent) with the Blender worker's cyan arcs jumping off it to the floor and the air (the
+        /// addition the owner asked for) in place of the code's near-white jump arcs. Tuning points a probe may set; put
+        /// back each play.
+        /// </summary>
+        public static byte BurnStyle = DefaultBurnStyle, StaticStyle = DefaultStaticStyle;
+        public const byte DefaultBurnStyle = CodeLook, DefaultStaticStyle = BothLooks;
+
+        /// <summary>The Blender worker's Burn (flame tongues ringing the body), drawn when <see cref="BurnStyle"/> asks for it.</summary>
+        public const string BurnKitLook = "fire_burn";
+
+        /// <summary>
+        /// The second-pass look an affliction wears (the Blender worker's batches 1 and 2, <see cref="ElementLooks"/>);
+        /// null for one that has none (Burn's is BodyFlames', Marked keeps its own).
+        /// </summary>
+        public static string LookOf(AfflictionKind kind) => LookOf(kind, 3);
+
+        /// <summary>The same, for a depth: Unsteady's look has its curls and leaves by stacks (one, three, five).</summary>
+        public static string LookOf(AfflictionKind kind, int depth)
         {
             switch (kind)
             {
@@ -53,6 +76,9 @@ namespace Clover.Player.Forms
                 case AfflictionKind.Seeded: return "life_seeded";
                 case AfflictionKind.Cursed: return "dark_cursed";
                 case AfflictionKind.Chill: return "ice_chill";
+                case AfflictionKind.Tremor: return "earth_tremor";
+                case AfflictionKind.Static: return StaticStyle != CodeLook ? "lightning_static" : null;
+                case AfflictionKind.Unsteady: return depth <= 2 ? "wind_unsteady_1" : depth >= 5 ? "wind_unsteady_5" : "wind_unsteady";
                 default: return null;
             }
         }
@@ -60,6 +86,7 @@ namespace Clover.Player.Forms
         private static readonly AfflictionKind[] Looked =
         {
             AfflictionKind.Soaked, AfflictionKind.Sundered, AfflictionKind.Poison, AfflictionKind.Seeded, AfflictionKind.Cursed, AfflictionKind.Chill,
+            AfflictionKind.Tremor, AfflictionKind.Static, AfflictionKind.Unsteady,
         };
 
         /// <summary>
@@ -73,9 +100,10 @@ namespace Clover.Player.Forms
             for (int i = 0; i < Looked.Length; i++)
             {
                 var kind = Looked[i];
-                if (afflictions.Stacks(kind) <= 0) continue;
+                int depth = afflictions.Stacks(kind);
+                if (depth <= 0) continue;
                 if (kind == AfflictionKind.Soaked && (afflictions.Stacks(AfflictionKind.Static) >= SeizedStatic || afflictions.Stacks(AfflictionKind.Sundered) > 0)) continue;
-                ElementLooks.Keep(ElementLooks.Find(LookOf(kind)), body);
+                ElementLooks.Keep(ElementLooks.Find(LookOf(kind, depth)), body);
             }
         }
 
@@ -108,6 +136,8 @@ namespace Clover.Player.Forms
         {
             System.Array.Clear(shown, 0, shown.Length);
             Jolts = 0;
+            BurnStyle = DefaultBurnStyle;
+            StaticStyle = DefaultStaticStyle;
         }
 
         /// <summary>Puts down one beat of an affliction's look. False when the new effects are off or the scene has no art.</summary>
@@ -115,8 +145,9 @@ namespace Clover.Player.Forms
         {
             if (!ElementArt.Ready) return false;
             if ((int)kind >= 0 && (int)kind < shown.Length) shown[(int)kind]++;
-            // An affliction with a second-pass look is drawn by it (KeepLooks), not by pieces thrown a few times a second.
-            if (ElementLooks.Find(LookOf(kind)) >= 0) return true;
+            // An affliction with a second-pass look is drawn by it (KeepLooks), not by pieces thrown a few times a second;
+            // Static drawn both ways keeps its crawl and jumping arcs under the look's.
+            if (ElementLooks.Find(LookOf(kind, depth)) >= 0 && !(kind == AfflictionKind.Static && StaticStyle == BothLooks)) return true;
             float jitter = (ElementSubstance.Hash(beat) - 0.5f) * 40f;
             float more = 1f + 0.08f * depth;
             switch (kind)
@@ -140,7 +171,9 @@ namespace Clover.Player.Forms
                     ElementArt.Stand(ElementArt.Piece("lightning_crawl_affliction"), feet, ElementSubstance.Hash(beat + 1) * 360f, 1f, hold);
                     ElementArt.Stand(ElementArt.Piece("lightning_crawl_affliction"), feet, ElementSubstance.Hash(beat + 7) * 360f, 0.9f, hold * 0.9f);
                     // A bolt jumps off the body outward and is gone (the owner, 2026-11-20: "the bolts static off the
-                    // enemy not just around them"): rooted at the body's side, reaching away, shrinking as it goes.
+                    // enemy not just around them"): rooted at the body's side, reaching away, shrinking as it goes. With
+                    // the Blender worker's arcs drawn too, theirs jump off instead: these read near white on film.
+                    if (StaticStyle == CodeLook)
                     {
                         float yaw = ElementSubstance.Hash(beat + 11) * 360f;
                         Vector3 outward = Quaternion.Euler(0f, yaw, 0f) * Vector3.forward;

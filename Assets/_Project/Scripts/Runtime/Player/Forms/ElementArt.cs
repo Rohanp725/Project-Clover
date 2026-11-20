@@ -252,12 +252,15 @@ namespace Clover.Player.Forms
         }
 
         /// <summary>Takes a piece to be placed by the caller every frame (<see cref="FormFx.Place"/>); -1 when none can be had or it is a floor mark.</summary>
-        public static int Hold(int piece)
+        public static int Hold(int piece) => Hold(piece, Color.white);
+
+        /// <summary>The same, drawn in a tint over its own colours (Tailwind's spiral in wind's pale dust, never white).</summary>
+        public static int Hold(int piece, Color tint)
         {
             if (!Valid(piece)) return -1;
             ref var one = ref instance.set.Pieces[piece];
             if (one.Kind == ElementArtSet.Decal) return -1;
-            return FormFx.HoldMesh(one.Mesh, one.Material, Color.white, Ink);
+            return FormFx.HoldMesh(one.Mesh, one.Material, tint, Ink);
         }
 
         /// <summary>

@@ -15,6 +15,9 @@ namespace Clover.Player.Forms
     /// </summary>
     public static class HitArt
     {
+        /// <summary>The leaves a wind blow tears up: Unsteady's gold and ochre, never white.</summary>
+        public static readonly Color WindLeafGold = new Color(0.62f, 0.5f, 0.12f), WindLeafOchre = new Color(0.62f, 0.33f, 0.06f);
+
         private const int Remembered = 8;
         private static readonly Vector3[] lastAt = new Vector3[Remembered];
         private static readonly float[] lastTime = new float[Remembered];
@@ -69,7 +72,15 @@ namespace Clover.Player.Forms
                     ElementArt.Sheet(ElementArt.SheetOf("lightning_bolt_strike"), at + Vector3.up * 0.4f, 2.8f, 0.45f);
                     break;
                 case ElementSubstance.Wind:
-                    ElementArt.Fly(ElementArt.Piece("wind_debris_hit"), feet, feet + direction * 1.2f + Vector3.up * 0.4f, Quaternion.Euler(0f, along, 0f), 1f, 0.55f);
+                    // The debris piece's flat pale cards read as "random white shapes" (the owner, 2026-11-20): the blow
+                    // tears up three leaves in the wind look's gold and ochre instead, carried on down its way.
+                    for (int leaf = 0; leaf < 3; leaf++)
+                    {
+                        Vector3 way = Quaternion.Euler(0f, (leaf - 1) * 22f, 0f) * direction;
+                        Vector3 from = feet + Vector3.up * (0.3f + 0.25f * leaf);
+                        FormFx.Fly(FormMesh.Leaf, from, from + way * 1.6f + Vector3.up * 0.5f, Quaternion.LookRotation(way.sqrMagnitude > 0.0001f ? way : Vector3.forward),
+                            Vector3.one * 0.55f, leaf == 1 ? WindLeafOchre : WindLeafGold, 0.55f, 0.03f);
+                    }
                     // The gust is carried on down its way and blows apart at its end, never cut off (the owner's review).
                     ElementArt.BlowSheet(ElementArt.SheetOf("wind_gust"), at + direction * 0.6f, 2.6f, 0.95f, direction.normalized * 2.4f, 1.3f, ElementSubstance.WindDust);
                     break;
