@@ -133,6 +133,7 @@ namespace Clover.Player.Magic
             ["sleetcharge.glassstorm"] = Cd(14f, SpellRole.Opener),
             ["carriedembers.breathesin"] = Cd(16f, SpellRole.Opener),
             ["capsize.squall"] = Cd(9f, SpellRole.Movement),
+            ["winterseed.green"] = Cd(14f, SpellRole.Detonator),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };

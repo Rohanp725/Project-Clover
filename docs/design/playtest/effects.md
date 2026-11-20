@@ -663,6 +663,8 @@ Group: Reactions
 
 **What sets it off.** Chill landing on a Seeded enemy, or a seed on a chilled one.
 
+**Its shapes.** With the Shape mark of Ice and Life's duo branch (Winter Seed: Hard Spring or Heart Under Ice, 3 Shards, in the heart of the chart) and both carried, Winter Seed wears the shape chosen at a rest fire instead. Both sleep as before. Hard Spring: the waking is twice as hard, 24 a seed in 2.5 m, seeding all it reaches to full. Heart Under Ice: the waking mends, 6 a seed to enemies, 5 health a seed to you, and a ward.
+
 **How to use it.** Seed it deep, chill it, then shatter the freeze for the quickest waking.
 
 **How it looks.** Its name over the enemy, then a burst of thorns at the thaw.
