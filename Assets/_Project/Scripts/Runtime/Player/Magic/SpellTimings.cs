@@ -131,6 +131,27 @@ namespace Clover.Player.Magic
             // The new duo branches' duo spells (pairs_d1_d2.md to pairs_d5.md, task 4.5 on): basic spells of the pair, on a
             // duo spell's cooldown of 12 to 16 s, each its own.
             ["sleetcharge.glassstorm"] = Cd(14f, SpellRole.Opener),
+            ["carriedembers.breathesin"] = Cd(16f, SpellRole.Opener),
+            ["capsize.squall"] = Cd(9f, SpellRole.Movement),
+            ["winterseed.green"] = Cd(14f, SpellRole.Detonator),
+            ["thegroundgives.island"] = Cd(15f, SpellRole.Breaker),
+            ["ironthorns.sownmen"] = Mana(45f, SpellRole.Opener),
+            ["earthlight.stone"] = Cd(16f, SpellRole.Opener),
+            ["blackchain.net"] = Cd(16f, SpellRole.Opener),
+            ["burningsap.bared"] = Cd(13f, SpellRole.Opener),
+            ["smoulder.lake"] = Cd(16f, SpellRole.Opener),
+            ["nervefire.seal"] = Cd(13f, SpellRole.Detonator),
+            ["thermalshock.firesetting"] = Cd(12f, SpellRole.Detonator),
+            ["seized.flashing"] = Cd(10f, SpellRole.Opener),
+            ["windthrow.thistledown"] = Cd(9f, SpellRole.Movement),
+            ["frostheave.hagsstaff"] = Cd(12f, SpellRole.Breaker),
+            ["rust.seatakesit"] = Cd(13f, SpellRole.Breaker),
+            ["shiningherb.turnedtosun"] = Cd(11f, SpellRole.Opener),
+            ["turnedtostone.underfoot"] = Cd(10f, SpellRole.Movement),
+            ["quicksilver.ichor"] = Cd(11f, SpellRole.Counter),
+            ["kindlingpoint.hands"] = Cd(12f, SpellRole.Opener),
+            ["thegrudge.exilesgrudge"] = Cd(12f, SpellRole.Counter),
+            ["illwind.yellowgale"] = Cd(12f, SpellRole.Detonator),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };

@@ -618,6 +618,8 @@ Group: Reactions
 
 **What sets it off.** Burn landing on an Unsteady enemy, or Unsteady on a burning one.
 
+**Its shapes.** With the Shape mark of Fire and Wind's duo branch (Carried Embers: Fire Whirl or Hot Wind, 3 Shards, in the heart of the chart) and both carried, Carried Embers wears the shape chosen at a rest fire instead. Fire Whirl: for 3 s, once a second, every enemy within 3 m is drawn 1 m toward it and everything within 2 m takes a Burn. Hot Wind: a lane 8 m long downwind lays a Burn on all in it, and the enemy is shoved 2 m.
+
 **How to use it.** You aim it by where you stand: put the enemy between you and the ones behind it, and the fire lands among them.
 
 **How it looks.** Its name over the enemy, then three small fires springing up beyond it.
@@ -646,6 +648,8 @@ Group: Reactions
 
 **What sets it off.** Water landing on a Unsteady enemy, or Unsteady on a Soaked one.
 
+**Its shapes.** With the Shape mark of Wind and Water's duo branch (Capsize: Waterspout or Breakers, 3 Shards, in the heart of the chart) and both carried, Capsize wears the shape chosen at a rest fire instead. Waterspout: lifted in spray for 1.2 s instead of going down. Breakers: down as before, and spray thrown 4 m behind it Soaks and gives 2 Unsteady to what stands there, which on purpose may capsize it in turn.
+
 **How to use it.** Free blows: bring your heaviest.
 
 **How it looks.** Its name over the enemy, and it falls flat on its back, lies there, and gets up when its time is over.
@@ -658,6 +662,8 @@ Group: Reactions
 **The numbers.** While the Chill lasts its Seeded stops fading. When the Chill ends (a freeze thawing or shattered ends it too) thorns burst from it: 12 damage for each Seeded stack (36 at most) to everyone within 2.5 m, seeding them, and you heal 3 for each stack. Rests 4 s.
 
 **What sets it off.** Chill landing on a Seeded enemy, or a seed on a chilled one.
+
+**Its shapes.** With the Shape mark of Ice and Life's duo branch (Winter Seed: Hard Spring or Heart Under Ice, 3 Shards, in the heart of the chart) and both carried, Winter Seed wears the shape chosen at a rest fire instead. Both sleep as before. Hard Spring: the waking is twice as hard, 24 a seed in 2.5 m, seeding all it reaches to full. Heart Under Ice: the waking mends, 6 a seed to enemies, 5 health a seed to you, and a ward.
 
 **How to use it.** Seed it deep, chill it, then shatter the freeze for the quickest waking.
 
@@ -672,6 +678,8 @@ Group: Reactions
 
 **What sets it off.** Tremor landing on a Soaked enemy, or Water on a shaken one.
 
+**Its shapes.** With the Shape mark of Water and Earth's duo branch (The Ground Gives: Quicksand or Sand Boil, 3 Shards, in the heart of the chart) and both carried, The Ground Gives wears the shape chosen at a rest fire instead. Quicksand: sunk 4 s, and once a second everything within 1.5 m is drawn 1 m toward it. Sand Boil: sunk 1.2 s, then lifted 1 s, and everything within 3 m takes 12, a Soaked and a Tremor.
+
 **How to use it.** Sink it, then come in with heavy blows: each one pins it for a moment. Not yet: sunk, it should be unable to dodge, leap or step back, and others wading in should slow too.
 
 **How it looks.** Its name over the enemy, and for a moment the floor tipping into a pit round it, wet at the rim. Not yet: the ring of sand staying round its feet.
@@ -684,6 +692,8 @@ Group: Reactions
 **The numbers.** For 6 s, each of your weapon blows on it snaps a thorn off at the nearest other enemy within 6 m: 6 damage, a Seeded and a notch. Three thorns. Rests 4 s.
 
 **What sets it off.** A seed landing on a notched enemy, or a notch on a Seeded one.
+
+**Its shapes.** With Graft, the Shape mark of Life and Metal's duo branch (Iron Thorns: Pruning Hook or Iron Harvest, 3 Shards, in the heart of the chart) and both carried, Iron Thorns wears the shape chosen at a rest fire instead. Pruning Hook: your first three weapon blows on it prune a thorn each and heal you 4. Iron Harvest: none is thrown; when it dies or the 6 s end, a ring of blades to 3 m, 8 and a notch on each.
 
 **How to use it.** Fight the thorned one: the others around it take the thorns.
 
@@ -698,6 +708,8 @@ Group: Reactions
 
 **What sets it off.** Tremor landing on a Marked enemy, or a Mark on a shaken one.
 
+**Its shapes.** With Lit Stone, the Shape mark of Earth and Light's duo branch (Earthlight: Down the Passage or Lit Seam, 3 Shards, in the heart of the chart) and both carried, Earthlight wears the shape chosen at a rest fire instead. Both renew its Mark. Down the Passage: a line 8 m long beyond it, 12 and a Mark on all on it. Lit Seam: the light breaks up as before, and for 5 s each heavy blow on it flashes 10 and 15 stagger on all within 3 m.
+
 **How to use it.** Shake a Marked enemy in a crowd: they are all Marked for your critical blows, and the first keeps its three.
 
 **How it looks.** Its name over the enemy, then light bursting up round it. Not yet: only those standing on the star of cracks struck (for now a circle).
@@ -710,6 +722,8 @@ Group: Reactions
 **The numbers.** The nearest other enemy within 6 m is chained to it for 5 s. Rests 4 s.
 
 **What sets it off.** A notch landing on a Cursed enemy, or a curse on a notched one.
+
+**Its shapes.** With Hidden Chain, the Shape mark of Metal and Dark's duo branch (Black Chain: Drawn Tight or Shared Wound, 3 Shards, in the heart of the chart) and both carried, Black Chain wears the shape chosen at a rest fire instead. Drawn Tight: the chain snaps taut at once, 12 and 25 stagger to it and to the nearest other enemy within 6 m, and falls away. Shared Wound: no leash, but the chain holds 8 s and half of every blow is shared.
 
 **How to use it.** Not yet: what the chain does. It will pass 30% of your weapon damage on either to the other, and keep the two within 4 m of each other.
 
@@ -724,6 +738,8 @@ Group: Reactions
 
 **What sets it off.** A Mark landing on a poisoned enemy, or poison on a Marked one.
 
+**Its shapes.** With Lit Veins, the Shape mark of Light and Poison's duo branch (Burning Sap: The Light Finds Them or Blistered, 3 Shards, in the heart of the chart) and both carried, Burning Sap wears the shape chosen at a rest fire instead. The Light Finds Them: as before, and every enemy within 8 m is Marked as well. Blistered: for 3 s each weapon blow on it splashes two doses on all within 2.5 m at once; at the end the poison bites.
+
 **How to use it.** Land the Mark's three blows inside the 3 s for three weals.
 
 **How it looks.** Its name over the enemy, then a burst of poison at the end. Not yet: the poison holding back for the 3 s and landing doubled.
@@ -736,6 +752,8 @@ Group: Reactions
 **The numbers.** While the curse lasts its Burn keeps biting, stops fading, and deepens by one every 2 s (a god's every 3 s), to full. When the curse ends, or it dies, it flares: 10 damage for each Burn stack to everyone within 3 m, setting them burning. Rests 4 s.
 
 **What sets it off.** A curse landing on a burning enemy, or Burn on a Cursed one.
+
+**Its shapes.** With Banked Coals, the Shape mark of Dark and Fire's duo branch (Smoulder: Night Sun or Coal Seam, 3 Shards, in the heart of the chart) and both carried, Smoulder wears the shape chosen at a rest fire instead. Night Sun: as before, and each of your blows on it heals you 3. Coal Seam: the fire goes into the floor, a patch 2.5 m across for 8 s that Curses what stands on it, so the burning ones smoulder.
 
 **How to use it.** Light it, curse it, and leave it: the longer the curse runs, the bigger the flare. Killing it flares it at once.
 
@@ -750,6 +768,8 @@ Group: Reactions
 
 **What sets it off.** Poison landing on a charged enemy, or Static on a poisoned one.
 
+**Its shapes.** With Struck Nerve, the Shape mark of Poison and Lightning's duo branch (Nerve Fire: Ozone or Lockjaw, 3 Shards, in the heart of the chart) and both carried, Nerve Fire wears the shape chosen at a rest fire instead. Both jolt as before. Ozone: each jolt also lays a dose and a Static on everything within 1 m. Lockjaw: the third jolt holds it 1.2 s.
+
 **How to use it.** Charge a poisoned enemy deep: five Static is five jolts, one at each bite.
 
 **How it looks.** Its name over the enemy and a jolt at each bite.
@@ -762,6 +782,8 @@ Group: Reactions
 **The numbers.** 14 damage at once, and it is Cracked for 5 s: your next heavy blow splits it for 30 damage and 40 stagger. Both afflictions stay. Rests 6 s.
 
 **What sets it off.** Burn landing on a chilled enemy, or Chill on a burning one.
+
+**Its shapes.** With the Shape mark of Fire and Ice's duo branch (Thermal Shock: Hot Shards or Crazing, 3 Shards, in the heart of the chart) and both carried, Thermal Shock wears the shape chosen at a rest fire instead. Hot Shards: the split also throws shards 3 m round, 8, a Burn and a Chill, which on purpose may crack them too. Crazing: no heavy blow needed; while it carries both it splits every 1.5 s, 10 and 12 stagger.
 
 **How to use it.** Cold on a burning enemy, or fire on a chilled one, then a heavy inside the 5 s.
 
@@ -776,6 +798,8 @@ Group: Reactions
 
 **What sets it off.** A second Static on a Soaked enemy, or Water on one already carrying two. One Static is not enough, and nothing rests until there are two.
 
+**Its shapes.** With the Shape mark of Lightning and Water's duo branch (Seized: Can't Let Go or Running Water, 3 Shards, in the heart of the chart) and both carried, Seized wears the shape chosen at a rest fire instead. Can't Let Go: held 1 s, no film, and for 3 s each weapon blow holds it 0.3 s longer. Running Water: no hold; everything within 7 m is seized 0.5 s and given a Static.
+
 **How to use it.** Charge a wet enemy twice in a crowd: it is held, and the film charges everyone near for your Lightning.
 
 **How it looks.** Its name over the enemy and the film on the floor. Not yet: the film sparing the seized one (for now it charges it too).
@@ -788,6 +812,8 @@ Group: Reactions
 **The numbers.** Rooted 2 s (an elite 1 s; a god not at all): it cannot walk or be shoved, but it can still turn and swing. Your heavy blow while it is rooted tears it out: 14 damage and 35 stagger, it is thrown 6 m away from you, and a torn pit 1.5 m across stays 5 s where it stood, seeding whatever walks in. The pit counts as a thing you grew. Rests 6 s.
 
 **What sets it off.** Unsteady landing on a Seeded enemy, or a seed on a Unsteady one.
+
+**Its shapes.** With the Shape mark of Wind and Life's duo branch (Windthrow: Blown Seed or Deep Roots, 3 Shards, in the heart of the chart) and both carried, Windthrow wears the shape chosen at a rest fire instead. Blown Seed: rooted 2 s; your heavy blow blows its seeds 6 m downwind, two Seeded on all they reach, which on purpose may root them. Deep Roots: rooted 4 s, each blow heals you 2, and tearing it out deals 60 stagger.
 
 **How to use it.** Root it, step round so it is thrown where you want it, then heavy.
 
@@ -802,6 +828,8 @@ Group: Reactions
 
 **What sets it off.** Chill landing on a shaken enemy, or Tremor on a chilled one.
 
+**Its shapes.** With the Shape mark of Ice and Earth's duo branch (Frost Heave: Sorted Stones or Pingo, 3 Shards, in the heart of the chart) and both carried, Frost Heave wears the shape chosen at a rest fire instead. Both heave it as before. Sorted Stones: everything else within 3 m is pushed 3 m out. Pingo: 2 s later the mound bursts, 24 and two Chill within 2.5 m.
+
 **How to use it.** Strike it while it hangs in the air.
 
 **How it looks.** Its name over the enemy, then the heave. Not yet: the rimed mound left standing for 6 s.
@@ -814,6 +842,8 @@ Group: Reactions
 **The numbers.** While it is Soaked its notches do not fade and the rust adds a notch every 2 s. Once it is rusted through (three notches) a plate falls: for 6 s it takes 16% more from your weapon, wet or dry. Rests 6 s.
 
 **What sets it off.** Water landing on a notched enemy, or a notch on a Soaked one.
+
+**Its shapes.** With the Shape mark of Water and Metal's duo branch (Rust: Seized Joints or Flaking, 3 Shards, in the heart of the chart) and both carried, Rust wears the shape chosen at a rest fire instead. Both rust as before. Seized Joints: it moves a fifth slower while it rusts. Flaking: each heavy blow spends its notches, 6 for each on everything within 3 m, with a notch and a Soaked.
 
 **How to use it.** Keep it wet and let the rust work, then come in with the weapon.
 
@@ -828,6 +858,8 @@ Group: Reactions
 
 **What sets it off.** A seed landing on a Marked enemy, or a Mark on a Seeded one.
 
+**Its shapes.** With the Shape mark of Life and Light's duo branch (Shining Herb: Bitter Leaf or Seed of Light, 3 Shards, in the heart of the chart) and both carried, Shining Herb wears the shape chosen at a rest fire instead. Bitter Leaf: for 6 s your next weapon blow on it picks the herb and heals you 8. Seed of Light: for 6 s your next weapon blow on it bursts a flare that Marks and Seeds all within 4 m.
+
 **How to use it.** Let it flower in a crowd. Not yet: walking over the herb to pick it, for 8 health and a critical next blow.
 
 **How it looks.** Its name over the enemy, then a puff when it flowers. Not yet: the herb on the floor.
@@ -840,6 +872,8 @@ Group: Reactions
 **The numbers.** Over 2 s it slows (30%, then 60%), then it stands as stone for 1.5 s: it neither walks nor begins an attack, takes double stagger and half damage from spells. A heavy blow breaks it out at once for 50 stagger. An elite is slowed half as much and stands half as long; a god is not turned. Rests 6 s.
 
 **What sets it off.** Tremor landing on a Cursed enemy, or a curse on a shaken one.
+
+**Its shapes.** With the Shape mark of Earth and Dark's duo branch (Turned to Stone: The King's Men or Grave Marker, 3 Shards, in the heart of the chart) and both carried, Turned to Stone wears the shape chosen at a rest fire instead. Both turn it to stone as before. The King's Men: when your heavy blow breaks it out, a Curse and a Tremor leap to the nearest enemy within 5 m. Grave Marker: if it dies as stone, a patch stands 10 s and Curses what stands in it every 2 s.
 
 **How to use it.** Wait for the stone, then heavy it: often enough to break its balance.
 
@@ -854,6 +888,8 @@ Group: Reactions
 
 **What sets it off.** A notch landing on a poisoned enemy, or poison on a notched one.
 
+**Its shapes.** With the Shape mark of Metal and Poison's duo branch (Quicksilver: Heavy Silver or Running Silver, 3 Shards, in the heart of the chart) and both carried, Quicksilver wears the shape chosen at a rest fire instead. Both keep the bites on each blow. Heavy Silver: it moves 30% slower, and a silver puddle 1.5 m across stands 6 s, dosing and notching what steps in. Running Silver: when it dies, four doses and two notches run to the nearest enemy within 6 m.
+
 **How to use it.** Dose it deep and keep hitting: every blow is a bite.
 
 **How it looks.** Its name over the enemy and a bite at each blow.
@@ -866,6 +902,8 @@ Group: Reactions
 **The numbers.** Each of your weapon blows on it (critical, for it is Marked) deepens its Burn by one. The third sets it alight: all its Burn bursts out, 10 damage for each stack, and it burns on two deep. Rests 6 s.
 
 **What sets it off.** A Mark landing on a burning enemy, or Burn on a Marked one.
+
+**Its shapes.** With the Shape mark of Light and Fire's duo branch (Kindling Point: Burning Glass or The Fire Is Hungry, 3 Shards, in the heart of the chart) and both carried, Kindling Point wears the shape chosen at a rest fire instead. Burning Glass: after the burst the point stays 4 s, deepening its Burn each second. The Fire Is Hungry: the third blow's flame leaps to the nearest other enemy within 6 m, 10 a Burn, Marking it and burning it two deep.
 
 **How to use it.** Three quick blows: the third is the payoff.
 
@@ -880,6 +918,8 @@ Group: Reactions
 
 **What sets it off.** A second Static on a Cursed enemy, or a curse on one already carrying two. One Static is not enough, and nothing rests until there are two.
 
+**Its shapes.** With the Shape mark of Dark and Lightning's duo branch (The Grudge: First Strike or Ash Plume, 3 Shards, in the heart of the chart) and both carried, The Grudge wears the shape chosen at a rest fire instead. First Strike: your first heavy blow on it calls the cloud down, its Static discharged at double and the enemy held 0.6 s. Ash Plume: the cloud waits 6 s, then one bolt falls round it for each weapon blow you landed, 10 and a Static each, and its Static is discharged in 4 m.
+
 **How to use it.** Not yet: what the cloud does. It will answer the next blow the enemy lands on you or your guard with a black bolt (its Static at double, and a stop), and drift to the next enemy if it dies first.
 
 **How it looks.** Its name over the enemy. Not yet: the cloud itself.
@@ -892,6 +932,8 @@ Group: Reactions
 **The numbers.** While it carries both, your heavy blow on it shoves it and it sheds all its poison at once in a plume behind it, away from you: grit 1.2 m wide that lies 3 s and doses everyone in it once a second. Rests 6 s.
 
 **What sets it off.** Poison landing on a Unsteady enemy, or Unsteady on a poisoned one.
+
+**Its shapes.** With the Shape mark of Poison and Wind's duo branch (Ill Wind: Dust on the Blade or Dust Bank, 3 Shards, in the heart of the chart) and both carried, Ill Wind wears the shape chosen at a rest fire instead. Dust on the Blade: the heavy blow sheds no plume; your next three weapon blows on it each lay a dose and an Unsteady. Dust Bank: the plume as plain, and a line of dust 8 m long downwind that lies 4 s and makes Unsteady what stands in it.
 
 **How to use it.** Stand so the plume lands on the others, then heavy.
 

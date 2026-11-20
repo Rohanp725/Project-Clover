@@ -31,7 +31,28 @@ namespace Clover.Player.Trees
             PoisonTree.Add(to);
             PyreTree.Add(to);
             // The duo branches of pairs that are not neighbours, one file per pair under Trees/Duo/ (task 4.5 on), in pair order.
+            Duo.CarriedEmbersDuo.Add(to);
             Duo.SleetChargeDuo.Add(to);
+            Duo.CapsizeDuo.Add(to);
+            Duo.WinterSeedDuo.Add(to);
+            Duo.TheGroundGivesDuo.Add(to);
+            Duo.IronThornsDuo.Add(to);
+            Duo.EarthlightDuo.Add(to);
+            Duo.BlackChainDuo.Add(to);
+            Duo.BurningSapDuo.Add(to);
+            Duo.SmoulderDuo.Add(to);
+            Duo.NerveFireDuo.Add(to);
+            Duo.ThermalShockDuo.Add(to);
+            Duo.SeizedDuo.Add(to);
+            Duo.WindthrowDuo.Add(to);
+            Duo.FrostHeaveDuo.Add(to);
+            Duo.RustDuo.Add(to);
+            Duo.ShiningHerbDuo.Add(to);
+            Duo.TurnedToStoneDuo.Add(to);
+            Duo.QuicksilverDuo.Add(to);
+            Duo.KindlingPointDuo.Add(to);
+            Duo.TheGrudgeDuo.Add(to);
+            Duo.IllWindDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }

@@ -323,7 +323,11 @@ public class DuoProbeRunner : MonoBehaviour
         Judge("Plasma's marks are not shown with Ice", !menu.Choose(PlasmaTree.BallLightning));
         yield return Real(0.8f);
         yield return Shot("duo_heart_sleet");
-        Judge("the shoulder buttons' partner picker turns to Fire", menu.ViewPartner(1) && menu.HeartPartner == Elements.Fire && menu.HeartPair == Flashover, $"heart with '{menu.HeartPartner}'");
+        // Every pair at distance 1 and 2 is written now (tasks 4.5 and 4.15): the picker steps round them in ring order.
+        string next = HeartLayout.NextPartner(Elements.Lightning, Elements.Ice, 1, Upgrade.All);
+        Judge("the shoulder buttons' partner picker steps to the next written partner round the ring", menu.ViewPartner(1) && menu.HeartPartner == next && next != Elements.Ice,
+            $"heart with '{menu.HeartPartner}', expected '{next}'");
+        Judge("and it can be set to Fire by name", menu.ViewHeart(Elements.Fire) && menu.HeartPartner == Elements.Fire && menu.HeartPair == Flashover, $"heart with '{menu.HeartPartner}'");
         Judge("Ball Lightning can be chosen in the heart now", menu.Choose(PlasmaTree.BallLightning));
         Judge("and Glass Storm not", !menu.Choose(SleetChargeDuo.GlassStorm));
         yield return Real(0.8f);
@@ -336,7 +340,7 @@ public class DuoProbeRunner : MonoBehaviour
             left = menu.Chosen != null && !menu.Chosen.IsMix;
         }
         Judge("the stick walks out of the heart up into Lightning's tree", left, menu.Chosen?.Id);
-        Judge("on Fire's tree the heart turns to Fire's one built partner, Lightning", menu.View(Elements.Fire) && menu.HeartPartner == Elements.Lightning, $"'{menu.HeartPartner}'");
+        Judge("on Fire's tree the heart turns to Fire's first written partner round the ring, Lightning", menu.View(Elements.Fire) && menu.HeartPartner == Elements.Lightning, $"'{menu.HeartPartner}'");
         menu.Close();
         yield return Real(0.3f);
     }
