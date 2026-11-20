@@ -243,8 +243,10 @@ namespace Clover.Player.Forms
         private bool Flashes(int i)
         {
             if (solidPiece[i]) return false;
-            if (!ElementArt.Ready) return true;
             var shape = solidShape[i];
+            // Wind and leaves never land white, whichever effects are shown (the research brief of 2026-11-20).
+            if (shape == FormMesh.Gust || shape == FormMesh.Leaf) return false;
+            if (!ElementArt.Ready) return true;
             return shape == FormMesh.Bolt || shape == FormMesh.Crystal || shape == FormMesh.Shard || shape == FormMesh.Blade || shape == FormMesh.Sword || shape == FormMesh.Ray;
         }
 

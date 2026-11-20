@@ -28,12 +28,14 @@ Material:
     - _Bands4: 0
     - _Chrome: 0
     - _Cull: 0
+    - _DrawHead: 1
+    - _DrawTail: 0
     - _Hot: 0
     - _OutlineWidth: 0.025
-    - _Sheen: 0.08
+    - _Sheen: 0
     - _Thin: 0
     m_Colors:
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.66, g: 0.67, b: 0.66, a: 1}
     - _OutlineColor: {r: 0.34919015, g: 0.33183, b: 0.293372, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1

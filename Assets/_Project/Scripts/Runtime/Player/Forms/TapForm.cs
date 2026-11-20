@@ -24,7 +24,8 @@ namespace Clover.Player.Forms
         // The element art's fire has no pale gold in it: its second tongue is the deep red band.
         private static readonly Color FireRed = new Color(0.85f, 0.16f, 0.04f);
         private static readonly Color BoltViolet = new Color(0.45f, 0.2f, 1f);
-        private static readonly Color WindPale = new Color(0.82f, 0.84f, 0.78f);
+        // Wind is pale dust, never white, whether the art is loaded or not (the research brief of 2026-11-20).
+        private static readonly Color WindPale = ElementSubstance.WindDust;
         private static readonly Color DryLeaf = new Color(0.5f, 0.42f, 0.16f);
 
         public override int Cast(in SpellCast cast)
@@ -261,7 +262,7 @@ namespace Clover.Player.Forms
             {
                 // Grass flattened in a band ahead of it, the gust's streaks and curl sweeping across.
                 ElementArt.Stand(ElementArt.Piece("wind_grass_spell"), middle, ElementArt.Turn(run.B), 1f, 1.1f);
-                ElementArt.Sheet(ElementArt.SheetOf("wind_gust"), middle + Vector3.up * 0.8f, 4.5f, 0.6f);
+                ElementArt.Sheet(ElementArt.SheetOf("wind_gust"), middle + Vector3.up * 0.8f, 4.5f, 0.6f, ElementSubstance.WindDust);
             }
             TickWind(ref run, 0.1f);
             return hits;
@@ -295,7 +296,7 @@ namespace Clover.Player.Forms
                     continue;
                 }
                 FormFx.Fly(FormMesh.Gust, from, from + run.B * 3.6f, Quaternion.LookRotation(run.B) * Quaternion.Euler(0f, 0f, Random.value * 360f),
-                    new Vector3(4f, 4f, 2.2f + Random.value * 2.2f), ElementArt.Ready ? WindPale : run.Done % 3 == 0 ? Color.white : ElementSubstance.Pale(cast.Colour), 0.26f, 0.03f);
+                    new Vector3(4f, 4f, 2.2f + Random.value * 2.2f), WindPale, 0.26f, 0.03f);
             }
             return run.Age < blows || run.T3 < 1f;
         }

@@ -5,9 +5,11 @@
 // The frame comes from one of two places: a particle system's texture sheet animation writes it into the UVs (leave
 // _Frame below 0), or a quad held by code sets _Frame through a property block. With no texture the shader is a flat
 // unlit colour, which is what beams, shafts and see-through gas layers from the kits are drawn in.
-// With _Disperse above 0 the sheet does not fade at its end: it breaks up into hard-edged flecks instead (the tint's
-// alpha is how much of it is left), first at the edges of its frame, which are worn away over that share of the frame
-// so nothing drawn is ever seen cut off by the quad (Wind's gust, the owner's review of 2026-11-19).
+// With _Disperse above 0 the sheet does not fade at its end: it thins out into long streaks of air along its way (the
+// tint's alpha is how much of it is left), first at the edges of its frame, which are worn away over that share of the
+// frame so nothing drawn is ever seen cut off by the quad (Wind's gust, the owner's review of 2026-11-19). The streaks
+// are soft smooth noise drawn long across the sheet, not square flecks: hard flecks read as white shapes popping up
+// (the research brief of 2026-11-20).
 Shader "Clover/Flipbook"
 {
     Properties
@@ -114,14 +116,21 @@ Shader "Clover/Flipbook"
                 half alpha = step(_Cutoff, sheet.a) * _Opacity * _Color.a * input.color.a;
                 if (_Disperse > 0.001)
                 {
-                    // Flecks a little longer than tall, each kept while the noise under it is below what is left,
-                    // and the less the nearer the frame's edge.
-                    float2 fleck = floor(input.cell * float2(40.0, 26.0));
-                    half noise = frac(sin(dot(fleck, float2(12.9898, 78.233))) * 43758.5453);
+                    // Smooth noise stretched long across the sheet: streaks of air. Each point is kept while the noise
+                    // under it is below what is left, with a soft edge, and the less the nearer the frame's edge.
+                    float2 at = input.cell * float2(3.0, 16.0);
+                    float2 cell = floor(at);
+                    float2 f = frac(at);
+                    f = f * f * (3.0 - 2.0 * f);
+                    half n00 = frac(sin(dot(cell, float2(12.9898, 78.233))) * 43758.5453);
+                    half n10 = frac(sin(dot(cell + float2(1, 0), float2(12.9898, 78.233))) * 43758.5453);
+                    half n01 = frac(sin(dot(cell + float2(0, 1), float2(12.9898, 78.233))) * 43758.5453);
+                    half n11 = frac(sin(dot(cell + float2(1, 1), float2(12.9898, 78.233))) * 43758.5453);
+                    half noise = lerp(lerp(n00, n10, f.x), lerp(n01, n11, f.x), f.y);
                     float2 fromEdge = min(input.cell, 1.0 - input.cell);
                     half edge = saturate(min(fromEdge.x, fromEdge.y) / _Disperse);
                     half left = _Color.a * input.color.a * edge;
-                    alpha = step(_Cutoff, sheet.a) * _Opacity * step(noise, left);
+                    alpha = step(_Cutoff, sheet.a) * _Opacity * saturate((left - noise) * 6.0 + 0.5) * saturate(left * 4.0);
                 }
                 clip(alpha - 0.004);
                 colour *= _Color.rgb * input.color.rgb;

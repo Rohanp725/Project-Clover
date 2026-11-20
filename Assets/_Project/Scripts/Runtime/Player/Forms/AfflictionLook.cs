@@ -40,7 +40,8 @@ namespace Clover.Player.Forms
                 {
                     Vector3 along = Vector3.Cross(Vector3.up, round).normalized;
                     Vector3 at = feet + round * 1.5f + Vector3.up * 0.35f;
-                    FormFx.Fly(FormMesh.Gust, at, at + along * 1.1f, Quaternion.LookRotation(along), new Vector3(3f, 3f, 1.7f * more), ElementSubstance.Pale(colour), 0.4f, 0.03f);
+                    // Pale dust, not the element's colour taken toward white (no white shapes in wind, 2026-11-20).
+                    FormFx.Fly(FormMesh.Gust, at, at + along * 1.1f, Quaternion.LookRotation(along), new Vector3(3f, 3f, 1.7f * more), ElementSubstance.WindDust, 0.4f, 0.03f);
                     break;
                 }
                 case AfflictionKind.Chill:

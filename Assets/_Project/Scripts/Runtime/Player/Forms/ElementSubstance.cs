@@ -86,11 +86,16 @@ namespace Clover.Player.Forms
             switch (shape)
             {
                 case FormMesh.Cloud: return 0.06f;
+                // Moving air never shines white.
+                case FormMesh.Gust: return 0f;
                 case FormMesh.Crest:
                 case FormMesh.Droplet:
                 case FormMesh.Spout: return 0.1f;
                 case FormMesh.Vine:
                 case FormMesh.Leaf:
+                // Petals keep their colour: at the shine a pink flower turned white and grey (the owner on Regrowth,
+                // 2026-11-20: "the colors are too white and grey, keep the green and pink").
+                case FormMesh.Flower:
                 case FormMesh.Rock:
                 case FormMesh.Pebble: return 0.14f;
                 default: return 0.42f;
@@ -226,6 +231,13 @@ namespace Clover.Player.Forms
 
         /// <summary>The element's colour half-way to white: air, foam, the heart of a bolt.</summary>
         public static Color Pale(Color colour) => Color.Lerp(colour, Color.white, 0.55f);
+
+        /// <summary>
+        /// Wind's body: pale dust, never white (the research brief of 2026-11-20: "no piece in a wind look is pure
+        /// white"; the owner: "random white shapes pop up"). Its mint is only a thin rim, drawn by the art. In linear
+        /// terms, as the shaders take it: lit a quarter brighter by Clover/Spell it shows at about 85% on screen.
+        /// </summary>
+        public static readonly Color WindDust = new Color(0.55f, 0.58f, 0.5f);
 
         /// <summary>A number from 0 to 1 that is always the same for the same whole number.</summary>
         public static float Hash(int n)

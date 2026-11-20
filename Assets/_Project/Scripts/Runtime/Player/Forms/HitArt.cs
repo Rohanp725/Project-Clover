@@ -71,7 +71,7 @@ namespace Clover.Player.Forms
                 case ElementSubstance.Wind:
                     ElementArt.Fly(ElementArt.Piece("wind_debris_hit"), feet, feet + direction * 1.2f + Vector3.up * 0.4f, Quaternion.Euler(0f, along, 0f), 1f, 0.55f);
                     // The gust is carried on down its way and blows apart at its end, never cut off (the owner's review).
-                    ElementArt.BlowSheet(ElementArt.SheetOf("wind_gust"), at + direction * 0.6f, 2.6f, 0.95f, direction.normalized * 2.4f);
+                    ElementArt.BlowSheet(ElementArt.SheetOf("wind_gust"), at + direction * 0.6f, 2.6f, 0.95f, direction.normalized * 2.4f, 1.3f, ElementSubstance.WindDust);
                     break;
                 case ElementSubstance.Ice:
                     // The frost creeping out. The white crack-web that was held on the body covered everything and is

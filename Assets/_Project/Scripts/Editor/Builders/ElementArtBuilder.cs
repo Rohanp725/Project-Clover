@@ -283,6 +283,7 @@ namespace Clover.EditorTools
             // The reactions' looks ride on this set; a set made new finds them again.
             var reactions = AssetDatabase.LoadAssetAtPath<ReactionArtSet>(ReactionArtBuilder.SetPath);
             if (reactions != null) set.Reactions = reactions;
+            set.BodyFlame = BodyFlameMaterial();
             EditorUtility.SetDirty(set);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();
@@ -293,6 +294,38 @@ namespace Clover.EditorTools
                 $"# Element art\n\n{pieces.Count} pieces ({solidCount} solid, {glowCount} see-through, {masks.Count} floor marks), {sheets.Count} sheets.\n\n" +
                 "| Piece | Kind | Triangles | Footprint (m) |\n|---|---|---|---|\n" + Report);
             Debug.Log($"[Clover.Build] Element art: {pieces.Count} pieces ({solidCount} solid, {glowCount} see-through, {masks.Count} marks), {sheets.Count} sheets; review/checks/element_art.md");
+        }
+
+        /// <summary>
+        /// The real flame a burning body is drawn in (BodyFlames; the owner's review of 2026-11-20): the burning ground's
+        /// flame shader. Also run alone, to give a built set its flame without baking the kits again.
+        /// </summary>
+        public static Material BodyFlameMaterial()
+        {
+            BuildKit.EnsureFolder(Folder);
+            return BuildKit.FlameField(Folder, "m_element_body_flame");
+        }
+
+        /// <summary>Gives the built set its body flame material without baking the kits again.</summary>
+        public static string AttachBodyFlame()
+        {
+            var set = AssetDatabase.LoadAssetAtPath<ElementArtSet>(SetPath);
+            if (set == null) return "no element art set";
+            set.BodyFlame = BodyFlameMaterial();
+            EditorUtility.SetDirty(set);
+            AssetDatabase.SaveAssets();
+            return "body flame: " + AssetDatabase.GetAssetPath(set.BodyFlame);
+        }
+
+        /// <summary>Wind's solids are drawn through this: with its paint at pale dust their lit tone stays under white.</summary>
+        public static readonly Color WindBody = new Color(0.66f, 0.67f, 0.66f);
+
+        /// <summary>Sets every element's solid material again, without baking the kits (a change to how they are drawn).</summary>
+        public static string RefreshSolidMaterials()
+        {
+            for (int e = 0; e < Elements.Length; e++) SolidMaterial(e);
+            AssetDatabase.SaveAssets();
+            return $"{Elements.Length} solid materials set";
         }
 
         private static Material SolidMaterial(int element)
@@ -306,6 +339,13 @@ namespace Clover.EditorTools
             material.SetFloat("_Thin", 0f);
             material.SetFloat("_Bands4", Elements[element] == "ice" || Elements[element] == "light" ? 1f : 0f);
             material.SetFloat("_Chrome", Elements[element] == "metal" ? 1f : 0f);
+            if (Elements[element] == "wind")
+            {
+                // Wind is pale dust at most, never white (the research brief of 2026-11-20, the owner's "random white
+                // shapes"): no sheen, and its brightest tone, its own paint a quarter brighter, held to about 85%.
+                material.SetColor("_Color", WindBody);
+                material.SetFloat("_Sheen", 0f);
+            }
             // Many kit pieces are single sheets (flakes, streaks, petals): both faces are drawn, or one side shows only ink.
             material.SetFloat("_Cull", (float)CullMode.Off);
             material.enableInstancing = true;

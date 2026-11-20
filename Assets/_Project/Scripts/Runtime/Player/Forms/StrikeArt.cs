@@ -72,7 +72,7 @@ namespace Clover.Player.Forms
                     ElementArt.Floor(ElementArt.Piece("wind_comb_infused"), origin + forward * (reach * 0.8f), ElementArt.Turn(forward, 180f), 0.8f, 0.9f, 1.4f, 0.15f, true);
                     // The crescent's gust is carried on past the reach and blows apart there, never cut off at a line;
                     // the streaks fan out and are gone over a longer way (the owner's review, 2026-11-19).
-                    ElementArt.BlowSheet(ElementArt.SheetOf("wind_gust"), origin + forward * reach + Vector3.up * 0.8f, 4f, 1.05f, forward * 3f, 1.4f);
+                    ElementArt.BlowSheet(ElementArt.SheetOf("wind_gust"), origin + forward * reach + Vector3.up * 0.8f, 4f, 1.05f, forward * 3f, 1.4f, ElementSubstance.WindDust);
                     for (int i = 0; i < 5; i++)
                     {
                         Vector3 way = Quaternion.Euler(0f, (i - 2) * 24f, 0f) * forward;
