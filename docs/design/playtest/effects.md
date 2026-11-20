@@ -813,6 +813,8 @@ Group: Reactions
 
 **What sets it off.** Unsteady landing on a Seeded enemy, or a seed on a Unsteady one.
 
+**Its shapes.** With the Shape mark of Wind and Life's duo branch (Windthrow: Blown Seed or Deep Roots, 3 Shards, in the heart of the chart) and both carried, Windthrow wears the shape chosen at a rest fire instead. Blown Seed: rooted 2 s; your heavy blow blows its seeds 6 m downwind, two Seeded on all they reach, which on purpose may root them. Deep Roots: rooted 4 s, each blow heals you 2, and tearing it out deals 60 stagger.
+
 **How to use it.** Root it, step round so it is thrown where you want it, then heavy.
 
 **How it looks.** Its name over the enemy, then a burst of earth as it is torn out. Not yet: any shove (a Gust, a ram) tearing it out, not only a heavy.

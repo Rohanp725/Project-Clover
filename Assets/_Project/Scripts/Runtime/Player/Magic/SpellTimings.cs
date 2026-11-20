@@ -143,6 +143,7 @@ namespace Clover.Player.Magic
             ["nervefire.seal"] = Cd(13f, SpellRole.Detonator),
             ["thermalshock.firesetting"] = Cd(12f, SpellRole.Detonator),
             ["seized.flashing"] = Cd(10f, SpellRole.Opener),
+            ["windthrow.thistledown"] = Cd(9f, SpellRole.Movement),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };
