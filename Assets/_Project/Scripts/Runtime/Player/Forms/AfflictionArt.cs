@@ -1,3 +1,4 @@
+using Clover.Core;
 using Clover.Gameplay;
 using UnityEngine;
 
@@ -6,15 +7,15 @@ namespace Clover.Player.Forms
     /// <summary>
     /// How each affliction is seen on a body in the approved look (the look-dev's "affliction" panels), called where
     /// <see cref="AfflictionLook"/> is, a few times a second while it lasts; each call puts down pieces that look after
-    /// themselves. Burn: tongues climbing the body in threes over a char of stepped broken rings, smoke off the top.
-    /// Static: arcs crawling only along the edges and limbs, redrawn every few frames. Unsteady: a pinned leaf and
-    /// streaming strips. Chill: frost crust climbing the legs in stepped tiers. Soaked: a wet sheen, necking drips,
-    /// draining rings. Seeded: a sprout bursting from the shoulder in two pulses. Tremor: a heaved ring of ground and
-    /// stones thrown up out of it that fall (the body itself is shaken by <see cref="Clover.Gameplay.Enemy"/>).
-    /// Sundered: bronze plates on the body, a white-hot notch, the molten vein to an ankle stud, shake marks and filings.
-    /// Marked: a turning sun-wheel under it and a pencil shaft on its head. Cursed: the floor drained, a small dark mark
-    /// centred under it, ink rings sinking off it. Poison: pocked skin, bubbles bursting on
-    /// it, a pitted stain and a hooked fume.
+    /// themselves. Burn: the body burns in real flame (<see cref="BodyFlames"/>) over a char of stepped broken rings,
+    /// smoke off the top. Static: arcs crawling along the edges and limbs, held on until the next is drawn, and bolts
+    /// jumping off the body outward. Unsteady: a pinned leaf and streaming strips. Chill: frost crust climbing the legs
+    /// in stepped tiers. Soaked: a wet sheen, necking drips, draining rings. Seeded: a sprout bursting from the shoulder
+    /// in two pulses. Tremor: dust kicked up at the feet and grit hopping off the ground (the body itself is shaken by
+    /// <see cref="Clover.Gameplay.Enemy"/>). Sundered: bronze plates on the body, a white-hot notch, the molten vein to an
+    /// ankle stud, shake marks and filings. Marked: a turning sun-wheel under it and a pencil shaft on its head. Cursed:
+    /// a black hole at its feet, turning, and dark energy pulled off the body down into it. Poison: pocked skin, bubbles
+    /// bursting on it, a pitted stain and a hooked fume.
     /// </summary>
     public static class AfflictionArt
     {
@@ -25,6 +26,18 @@ namespace Clover.Player.Forms
 
         // The kit's climbing tongues lean (top over bottom, in the kit's own axes): this stands them upright.
         private static readonly Quaternion ClimbUpright = Quaternion.FromToRotation(new Vector3(-0.42f, 2.72f, 0.16f), Vector3.up);
+
+        /// <summary>
+        /// Seconds a Static crawl is held: a little past the next beat of its look (each affliction carried takes its
+        /// turn once in <see cref="AfflictionLook.Interval"/>), so the body never blinks dark between redraws.
+        /// </summary>
+        public static float StaticHold(int depth) => AfflictionLook.Interval(depth) * 1.12f;
+        /// <summary>A bolt jumping off a charged body: metres long, seconds before it is gone, and how far out from the body's middle it starts.</summary>
+        public const float ArcLength = 1.15f, ArcSeconds = 0.16f, BodyRadius = 0.28f;
+        // The kit's jump arc is about this long (metres) at scale one.
+        private const float JumpPieceLength = 3.2f;
+        /// <summary>The curse's dark: near-black purple, never bright (the owner, 2026-11-20).</summary>
+        public static readonly Color CurseInk = new Color(0.012f, 0.004f, 0.02f), CurseDeep = new Color(0.03f, 0.008f, 0.05f);
 
         /// <summary>Nerve Fire's jolts drawn this play, for probes.</summary>
         public static int Jolts { get; private set; }
@@ -64,19 +77,36 @@ namespace Clover.Player.Forms
             switch (kind)
             {
                 case AfflictionKind.Burn:
-                    // Each tongue lives a fraction of a second; the next is drawn turned and stretched a little differently,
-                    // stood upright first: the kit's tongues lean, and turned to the camera they always leaned up and to
-                    // the right (the owner's review, 2026-11-19).
-                    ElementArt.Erupt(ElementArt.Piece("fire_climb_affliction"), feet, Quaternion.Euler(0f, 180f + jitter * 2f, 0f) * ClimbUpright,
-                        new Vector3(more, (0.85f + 0.3f * ElementSubstance.Hash(beat + 3)) * more, more), 0.06f, 0.22f, 0.12f);
+                    // The flame itself is BodyFlames' real fire, kept by the burning body every frame (the owner's review,
+                    // 2026-11-20: no more stacked staircase of tongues). Only a scene without its material falls back on
+                    // the kit's tongues, stood upright (they leaned up and to the right, 2026-11-19).
+                    if (!BodyFlames.Ready)
+                        ElementArt.Erupt(ElementArt.Piece("fire_climb_affliction"), feet, Quaternion.Euler(0f, 180f + jitter * 2f, 0f) * ClimbUpright,
+                            new Vector3(more, (0.85f + 0.3f * ElementSubstance.Hash(beat + 3)) * more, more), 0.06f, 0.22f, 0.12f);
                     if (beat % 4 == 0) ElementArt.Floor(ElementArt.Piece("fire_charrings_affliction"), feet, beat * 37f, 0.85f, 1f, 1.8f, 0.35f, true);
                     if (beat % 5 == 1) ElementArt.Sheet(ElementArt.SheetOf("fire_smoke_puff"), feet + Vector3.up * 3.1f, 1.8f, 1.3f);
                     return true;
                 case AfflictionKind.Static:
-                    // There for a frame or two, redrawn in a new place: no tween.
-                    ElementArt.Stand(ElementArt.Piece("lightning_crawl_affliction"), feet, ElementSubstance.Hash(beat + 1) * 360f, 1f, 0.12f);
-                    ElementArt.Stand(ElementArt.Piece("lightning_crawl_affliction"), feet, ElementSubstance.Hash(beat + 7) * 360f, 0.9f, 0.08f);
+                {
+                    // Redrawn in a new place each beat and held on until the next is drawn, so it crackles without
+                    // blinking dark between (easy on the eyes, the owner's word on Seized, 2026-11-20).
+                    float hold = StaticHold(depth);
+                    ElementArt.Stand(ElementArt.Piece("lightning_crawl_affliction"), feet, ElementSubstance.Hash(beat + 1) * 360f, 1f, hold);
+                    ElementArt.Stand(ElementArt.Piece("lightning_crawl_affliction"), feet, ElementSubstance.Hash(beat + 7) * 360f, 0.9f, hold * 0.9f);
+                    // A bolt jumps off the body outward and is gone (the owner, 2026-11-20: "the bolts static off the
+                    // enemy not just around them"): rooted at the body's side, reaching away, shrinking as it goes.
+                    {
+                        float yaw = ElementSubstance.Hash(beat + 11) * 360f;
+                        Vector3 outward = Quaternion.Euler(0f, yaw, 0f) * Vector3.forward;
+                        float length = ArcLength * (0.8f + 0.4f * ElementSubstance.Hash(beat + 13)) * (0.9f + 0.1f * depth);
+                        Vector3 root = feet + outward * BodyRadius + Vector3.up * (0.7f + 0.8f * ElementSubstance.Hash(beat + 17));
+                        // The jump arc lies along its own length about its middle: its near end is put at the body's side.
+                        Vector3 middle = root + outward * (length * 0.5f) + Vector3.down * 0.15f;
+                        var lie = Quaternion.LookRotation(outward + Vector3.down * 0.25f, Vector3.up);
+                        ElementArt.Fly(ElementArt.Piece("lightning_jump_charged"), middle, middle + outward * 0.35f, lie, length / JumpPieceLength, ArcSeconds);
+                    }
                     return true;
+                }
                 case AfflictionKind.Unsteady:
                     ElementArt.Stand(ElementArt.Piece("wind_pinned_affliction"), feet, 180f + jitter * 0.5f, 1f, 0.36f);
                     if (beat % 3 == 0)
@@ -112,32 +142,36 @@ namespace Clover.Player.Forms
                     return true;
                 case AfflictionKind.Tremor:
                 {
-                    // The body is shaken (the enemy's own shake); the ground jolts and stones are thrown up and out from
-                    // its feet and fall, never drawn in toward it (the owner's review, 2026-11-19). The heaved ring
-                    // drops back at once, so it is not seen closing in on the body.
-                    if (beat % 2 == 0) ElementArt.Erupt(ElementArt.Piece("earth_heave_affliction"), feet, Quaternion.Euler(0f, beat * 45f, 0f), new Vector3(1f, more, 1f), 0.05f, 0.18f, 0.04f);
-                    for (int stone = 0; stone < 2; stone++)
+                    // The body is shaken (the enemy's own shake), and that is the look (the owner, 2026-11-20: "the
+                    // shaking is good, but the random flashing ring of stones is not great"): no heaved ring. The ground
+                    // under it answers: dust kicked up round the feet, and small grit hopping off the floor a hand high
+                    // and falling back, never drawn in toward the body.
+                    if (beat % 3 == 0)
                     {
-                        Vector3 out_ = FormRules.OnRing(0, 1, 1f, beat * 67f + stone * 160f);
-                        float up = 3f + 1.2f * ElementSubstance.Hash(beat * 3 + stone);
-                        FormFx.Toss(FormMesh.Pebble, feet + out_ * 0.45f + Vector3.up * 0.05f, out_ * (1.6f + 0.3f * depth) + Vector3.up * up,
-                            Quaternion.Euler(beat * 30f, beat * 50f + stone * 90f, 0f), Vector3.one * (0.4f + 0.06f * stone), new Color(0.3f, 0.27f, 0.23f), 0.2f, 0.03f);
+                        Vector3 side = FormRules.OnRing(0, 1, 0.35f, beat * 97f);
+                        Vfx.Play(VfxKind.Dust, feet + side + Vector3.up * 0.05f, Vector3.up, 0.35f + 0.05f * depth);
                     }
+                    Vector3 out_ = FormRules.OnRing(0, 1, 1f, beat * 67f);
+                    float hop = 1.6f + 0.6f * ElementSubstance.Hash(beat * 3);
+                    FormFx.Toss(FormMesh.Pebble, feet + out_ * (0.3f + 0.25f * ElementSubstance.Hash(beat + 5)) + Vector3.up * 0.03f, out_ * 0.5f + Vector3.up * hop,
+                        Quaternion.Euler(beat * 30f, beat * 50f, 0f), Vector3.one * 0.22f, new Color(0.3f, 0.27f, 0.23f), 0.15f, 0.03f);
                     return true;
                 }
                 case AfflictionKind.Sundered:
                 {
                     // Plates fitted to the body on the side the camera sees, the notch on the largest, the vein down
                     // the leg to a stud at the ankle; shake marks either side of the head show it ringing.
+                    // Sundered and Soaked at once is Rust (the caller says so through "frozen"): all of it is rust.
                     float hold = 0.45f;
-                    ElementArt.Stand(ElementArt.Piece("metal_plate_affliction"), feet + new Vector3(0.05f, 1.05f, -0.32f), 180f, 1f, hold);
-                    ElementArt.Stand(ElementArt.Piece("metal_plate_affliction_1"), feet + new Vector3(-0.28f, 1.35f, -0.25f), 160f, 1f, hold);
-                    ElementArt.Stand(ElementArt.Piece("metal_plate_affliction_2"), feet + new Vector3(0.18f, 0.55f, -0.28f), 200f, 1f, hold);
-                    ElementArt.Stand(ElementArt.Piece("metal_notch_affliction"), feet + new Vector3(0.05f, 1.25f, -0.42f), 180f, 1.3f, hold);
-                    ElementArt.Stand(ElementArt.Piece("metal_ichor_affliction"), feet + new Vector3(0.12f, 0.02f, -0.3f), 180f, 1f, hold);
-                    ElementArt.Stand(ElementArt.Piece("metal_stud_affliction"), feet + new Vector3(0.12f, 0.02f, -0.3f), 180f, 1.4f, hold);
-                    if (beat % 2 == 0) ElementArt.Stand(ElementArt.Piece("metal_ring_affliction"), feet + Vector3.up * 1.75f, 180f, 0.9f + 0.15f * ElementSubstance.Hash(beat), 0.12f);
-                    if (beat % 4 == 0) ElementArt.Floor(ElementArt.Piece("metal_filings_affliction"), feet, 0f, 0.9f, 1f, 1.8f);
+                    Color steel = frozen ? ReactionDesigns.RustColour : Color.white;
+                    ElementArt.Stand(ElementArt.Piece("metal_plate_affliction"), feet + new Vector3(0.05f, 1.05f, -0.32f), 180f, 1f, hold, steel);
+                    ElementArt.Stand(ElementArt.Piece("metal_plate_affliction_1"), feet + new Vector3(-0.28f, 1.35f, -0.25f), 160f, 1f, hold, steel);
+                    ElementArt.Stand(ElementArt.Piece("metal_plate_affliction_2"), feet + new Vector3(0.18f, 0.55f, -0.28f), 200f, 1f, hold, steel);
+                    ElementArt.Stand(ElementArt.Piece("metal_notch_affliction"), feet + new Vector3(0.05f, 1.25f, -0.42f), 180f, 1.3f, hold, steel);
+                    ElementArt.Stand(ElementArt.Piece("metal_ichor_affliction"), feet + new Vector3(0.12f, 0.02f, -0.3f), 180f, 1f, hold, steel);
+                    ElementArt.Stand(ElementArt.Piece("metal_stud_affliction"), feet + new Vector3(0.12f, 0.02f, -0.3f), 180f, 1.4f, hold, steel);
+                    if (beat % 2 == 0) ElementArt.Stand(ElementArt.Piece("metal_ring_affliction"), feet + Vector3.up * 1.75f, 180f, 0.9f + 0.15f * ElementSubstance.Hash(beat), 0.12f, steel);
+                    if (beat % 4 == 0) ElementArt.Floor(ElementArt.Piece("metal_filings_affliction"), feet, 0f, 0.9f, 1f, 1.8f, 0f, true, steel);
                     return true;
                 }
                 case AfflictionKind.Marked:
@@ -148,17 +182,27 @@ namespace Clover.Player.Forms
                     return true;
                 case AfflictionKind.Cursed:
                 {
-                    // The floor drained round it and a small dark mark centred under it, ink rings sinking off it. The
-                    // owner wanted the shadow reaching for the player (and its hand) gone, and a small centred mark under
-                    // the cursed one instead (2026-11-19).
+                    // A black hole at its feet, turning, and the dark energy pulled off the body down into it (the owner,
+                    // 2026-11-19 and 2026-11-20: "dark energy being sucked down into the black hole at the bottom", no
+                    // purple marks dropping). The drained floor and the hole are laid every third beat and overlap, so
+                    // they never go; a whirl of black streaks closes in on the hole as it turns.
                     if (beat % 3 == 0)
                     {
                         ElementArt.Floor(ElementArt.Piece("dark_drain_affliction"), feet, 0f, 1f, 1f, 1.4f, 0.2f, true);
-                        ElementArt.Floor(ElementArt.Piece("dark_hole_spell"), feet, beat * 20f, 0.42f, 0.45f, 1.4f, 0.15f, true);
+                        ElementArt.Floor(ElementArt.Piece("dark_hole_spell"), feet, beat * 20f, 0.72f, 0.8f, 1.4f, 0.15f, true, Color.white, 90f);
+                        ElementArt.Floor(ElementArt.Piece("dark_streaks_hit"), feet, beat * 37f, 0.5f, 0.08f, 0.9f, 0f, true, CurseInk, 260f);
                     }
-                    int ring = beat % 3;
-                    Vector3 from = feet + FormRules.OnRing(0, 1, 0.3f, beat * 83f) + Vector3.up * 1.3f;
-                    ElementArt.Drop(ElementArt.Piece(ring == 0 ? "dark_inkring_affliction" : ring == 1 ? "dark_inkring_affliction_1" : "dark_inkring_affliction_2"), from, from + Vector3.down * 1.1f, Quaternion.identity, 0.8f, 0.8f, 0.1f, 0.2f);
+                    // A wisp of near-black is torn off the body and drawn down into the hole, faster as it nears it,
+                    // stretched along its fall and gone into it.
+                    Vector3 into = feet + Vector3.up * 0.04f;
+                    for (int wisp = 0; wisp < 3; wisp++)
+                    {
+                        // Streaks of black drawn down along their own way into the hole, faster as they near it (a
+                        // streak, not a drop: no marks falling, the owner's word), each from its own side of the body.
+                        float round = beat * 83f + wisp * 120f;
+                        Vector3 from = feet + FormRules.OnRing(0, 1, 0.6f + 0.4f * ElementSubstance.Hash(beat * 3 + wisp), round) + Vector3.up * (0.6f + 1.1f * ElementSubstance.Hash(beat * 3 + wisp + 4));
+                        FormFx.Drop(FormMesh.Gust, from, into, Quaternion.LookRotation(into - from), new Vector3(1.1f, 1.1f, 0.9f), wisp == 1 ? CurseDeep : CurseInk, 0.4f, 0f, 0.06f, 0.02f);
+                    }
                     return true;
                 }
                 case AfflictionKind.Poison:

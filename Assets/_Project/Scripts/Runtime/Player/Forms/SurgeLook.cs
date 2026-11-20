@@ -13,7 +13,8 @@ namespace Clover.Player.Forms
     {
         public const int Pieces = 6;
 
-        private static readonly Color Petal = new Color(1f, 0.72f, 0.85f);
+        /// <summary>Regrowth's flowers and leaves: a true pink and a living green, not white and grey (the owner, 2026-11-20).</summary>
+        public static readonly Color Petal = new Color(0.95f, 0.36f, 0.62f), Leaf = new Color(0.26f, 0.74f, 0.2f);
         private static readonly Color Ember = new Color(1f, 0.86f, 0.4f);
 
         /// <summary>Takes the pieces for an element's surge. The handles are the caller's to keep and to hand back.</summary>
@@ -33,7 +34,7 @@ namespace Clover.Player.Forms
                     case ElementSubstance.Wind: handles[k] = FormFx.Hold(k < 4 ? FormMesh.Gust : FormMesh.Leaf, k < 4 ? ElementSubstance.Pale(colour) : new Color(0.5f, 0.78f, 0.3f), 0.02f); break;
                     case ElementSubstance.Ice: handles[k] = FormFx.Hold(FormMesh.Crystal, k % 2 == 0 ? colour : Color.white, 0.03f); break;
                     case ElementSubstance.Water: handles[k] = FormFx.Hold(FormMesh.Droplet, k % 2 == 0 ? colour : ElementSubstance.Pale(colour), 0.03f); break;
-                    case ElementSubstance.Life: handles[k] = FormFx.Hold(k < 3 ? FormMesh.Leaf : FormMesh.Flower, k < 3 ? colour : Petal, 0.03f); break;
+                    case ElementSubstance.Life: handles[k] = FormFx.Hold(k < 3 ? FormMesh.Leaf : FormMesh.Flower, k < 3 ? Leaf : Petal, 0.03f); break;
                     case ElementSubstance.Earth: handles[k] = FormFx.Hold(k % 2 == 0 ? FormMesh.Rock : FormMesh.Pebble, colour, 0.04f); break;
                     case ElementSubstance.Metal: handles[k] = k < 4 ? FormFx.Hold(FormMesh.Blade, colour, 0.035f) : -1; break;
                     case ElementSubstance.Light: handles[k] = FormFx.Hold(FormMesh.Ray, Color.Lerp(colour, Color.white, 0.4f), 0.015f); break;
@@ -125,7 +126,7 @@ namespace Clover.Player.Forms
                             float angle = time * 190f + k * 120f;
                             at = feet + Ring(angle, 0.5f) + Vector3.up * (climb * 1.9f);
                             turn = Quaternion.Euler(-25f, angle + 90f, time * 150f);
-                            scale = Vector3.one * (0.42f * Mathf.Sin(climb * Mathf.PI) + 0.08f);
+                            scale = Vector3.one * (0.62f * Mathf.Sin(climb * Mathf.PI) + 0.12f);
                         }
                         else
                         {

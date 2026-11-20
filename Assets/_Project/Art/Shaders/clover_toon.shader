@@ -28,6 +28,7 @@ Shader "Clover/Toon"
         [HDR] _BounceColor ("Warm light thrown up from a bright floor onto walls in shade", Color) = (0, 0, 0, 1)
         [Toggle] _VertexColour ("Multiply by the mesh's own vertex colours (merged scenery)", Float) = 0
         _Sway ("Sway in the wind (bend at a metre's height; below 0 hangs and swings from the top)", Range(-0.1, 0.1)) = 0
+        _Metal ("Turned to steel (Temper; set by the game, 0 leaves the material as it is)", Range(0, 1)) = 0
     }
 
     SubShader
@@ -62,7 +63,30 @@ Shader "Clover/Toon"
             half4 _BounceColor;
             half _Sway;
             half _VertexColour;
+            half _Metal;
         CBUFFER_END
+
+        // A body turned to steel (Metal's surge, Temper), kept in the toon look: the surface's own colour is kept only as
+        // a hint in a cool grey, and the shine is read from where the face points as the camera sees it, the way a
+        // matcap does, in three hard bands: a dark lower half (the floor reflected), a bright band across the upper
+        // middle (the sky reflected), a white glint high on the side toward the light. A hard specular spot where the
+        // main light catches and a cool rim all round finish it. Nothing here is per object, so every outfit takes it.
+        half3 Steel(half3 albedo, float3 normalWS, half3 viewWS, half3 lightDirection, half lit)
+        {
+            half value = dot(albedo, half3(0.3, 0.55, 0.15));
+            half3 grey = lerp(half3(0.34, 0.37, 0.42), half3(0.8, 0.83, 0.9), saturate(value * 1.4));
+            float3 normalVS = mul((float3x3)UNITY_MATRIX_V, normalWS);
+            half up = normalVS.y;
+            half band = up < -0.15 ? 0.42 : (up < 0.25 ? 0.7 : (up < 0.62 ? 1.12 : 0.82));
+            half3 colour = grey * band * lerp(0.75, 1.0, lit);
+            half3 halfway = normalize(lightDirection + viewWS);
+            colour += half3(1.25, 1.3, 1.4) * step(0.94, saturate(dot(normalWS, halfway)));
+            half glint = step(0.55, up) * step(0.35, normalVS.x * sign(dot(lightDirection, UNITY_MATRIX_V[0].xyz) + 0.0001));
+            colour = lerp(colour, half3(1.5, 1.55, 1.65), glint * 0.6);
+            half rim = 1.0 - saturate(dot(viewWS, normalWS));
+            colour += half3(0.55, 0.68, 0.9) * step(0.62, rim);
+            return colour;
+        }
 
         // A palm, a reed or a hanging cloth moving in the wind: bent by the square of its height over its own origin (or,
         // hanging, of its depth under it), leaning with a slow gust from the west and a flutter at its tips, each in its
@@ -198,6 +222,7 @@ Shader "Clover/Toon"
                 half rim = 1.0 - saturate(dot(viewWS, normalWS));
                 half rimBand = step(1.0 - _RimWidth, rim) * (0.35 + 0.65 * lit);
                 colour += _RimColor.rgb * rimBand;
+                if (_Metal > 0.001) colour = lerp(colour, Steel(albedo, normalWS, viewWS, light.direction, lit), _Metal);
 
                 colour += _EmissionColor.rgb;
                 colour = MixFog(colour, input.fogFactor);

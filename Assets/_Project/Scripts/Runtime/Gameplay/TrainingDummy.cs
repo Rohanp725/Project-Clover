@@ -182,11 +182,13 @@ namespace Clover.Gameplay
                     CombatEvents.RaisePoisonBit(this, Afflictions.BitDepth, Afflictions.BitDamage);
                 }
                 untilEmber -= deltaTime;
+                // The body burns in real flame (the owner's review, 2026-11-20); the old puffs only where it cannot.
+                bool realFlame = wasBurning && Clover.Player.Forms.BodyFlames.Keep(transform, Afflictions.Stacks(AfflictionKind.Burn));
                 if (wasBurning && untilEmber <= 0f)
                 {
                     untilEmber = 0.15f;
                     Clover.Core.Vfx.Play(Clover.Core.VfxKind.Embers, transform.position + Vector3.up * 1.3f, Vector3.up, 0.4f);
-                    Clover.Core.Vfx.Play(Clover.Core.VfxKind.Fire, transform.position + Vector3.up * 1.2f, Vector3.up, 0.12f);
+                    if (!realFlame) Clover.Core.Vfx.Play(Clover.Core.VfxKind.Fire, transform.position + Vector3.up * 1.2f, Vector3.up, 0.12f);
                 }
             }
             if (sinceHit >= RestoreAfter && Health.Current < Health.Maximum) Health.Fill();

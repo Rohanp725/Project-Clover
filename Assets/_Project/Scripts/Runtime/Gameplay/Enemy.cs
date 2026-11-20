@@ -819,10 +819,13 @@ namespace Clover.Gameplay
                 }
                 untilEmber -= deltaTime;
                 // A flame gone live (Flashover) is all its reaction's violet: no plain fire off the body beside it.
-                if (wasBurning && untilEmber <= 0f && !Afflictions.Conditions.Has(ConditionFlags.FlameLive))
+                bool plainFire = wasBurning && !Afflictions.Conditions.Has(ConditionFlags.FlameLive);
+                // The body burns in real flame (the owner's review, 2026-11-20); the old puffs only where it cannot.
+                bool realFlame = plainFire && Clover.Player.Forms.BodyFlames.Keep(transform, Afflictions.Stacks(AfflictionKind.Burn));
+                if (plainFire && untilEmber <= 0f)
                 {
                     untilEmber = 0.14f;
-                    Vfx.Play(VfxKind.Fire, transform.position + Vector3.up * 1.2f, Vector3.up, 0.12f);
+                    if (!realFlame) Vfx.Play(VfxKind.Fire, transform.position + Vector3.up * 1.2f, Vector3.up, 0.12f);
                     Vfx.Play(VfxKind.Embers, transform.position + Vector3.up * 1.4f, Vector3.up, 0.35f);
                 }
                 // The poison's bite is seen when it lands.

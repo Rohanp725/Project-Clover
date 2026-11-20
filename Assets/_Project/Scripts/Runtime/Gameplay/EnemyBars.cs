@@ -119,6 +119,13 @@ namespace Clover.Gameplay
             MakeRoom();
         }
 
+        // An affliction's second state, as its look is told it: Chill frozen, Sundered rusting (it is Soaked too: Rust).
+        private bool Second(AfflictionKind affliction) =>
+            affliction == AfflictionKind.Chill ? watched.IsFrozen : affliction == AfflictionKind.Sundered && watched.Stacks(AfflictionKind.Soaked) > 0;
+
+        /// <summary>The depth of Static at which a Soaked body is Seized (Reactions.Three: "two Static or more").</summary>
+        public const int SeizedStatic = 2;
+
         private float untilLook;
         private int lookKind, lookBeat;
 
@@ -127,6 +134,10 @@ namespace Clover.Gameplay
         private void ShowOnBody()
         {
             if (watched == null || PipsShown == 0 || transform.parent == null) return;
+            // A burning body burns in real flame every frame, not in pieces thrown a few times a second; a flame gone
+            // live (Flashover) is its reaction's alone.
+            int burn = watched.Stacks(AfflictionKind.Burn);
+            if (burn > 0 && !watched.Conditions.Has(ConditionFlags.FlameLive)) Clover.Player.Forms.BodyFlames.Keep(transform.parent, burn);
             untilLook -= Time.deltaTime;
             if (untilLook > 0f) return;
             for (int tried = 1; tried < Afflictions.Count; tried++)
@@ -137,9 +148,14 @@ namespace Clover.Gameplay
                 if (depth <= 0) continue;
                 // A flame gone live is drawn by its reaction alone, never as the plain Burn beside it.
                 if (affliction == AfflictionKind.Burn && watched.Conditions.Has(ConditionFlags.FlameLive)) continue;
+                // Soaked under two Static or more is Seized: its water has run off into the live film, so its wet look
+                // and the rings that drain off it are not drawn (the owner, 2026-11-20: "remove the circles").
+                if (affliction == AfflictionKind.Soaked && watched.Stacks(AfflictionKind.Static) >= SeizedStatic) continue;
+                // Soaked steel is Rust: the water has gone into the rust, so no wet rings over it (the owner: "rust coloured").
+                if (affliction == AfflictionKind.Soaked && watched.Stacks(AfflictionKind.Sundered) > 0) continue;
                 // Two pieces at a time, so there is always something of it on the body.
                 for (int piece = 0; piece < 2; piece++)
-                    Clover.Player.Forms.AfflictionLook.Show(affliction, depth, affliction == AfflictionKind.Chill && watched.IsFrozen, transform.parent.position, lookBeat++);
+                    Clover.Player.Forms.AfflictionLook.Show(affliction, depth, Second(affliction), transform.parent.position, lookBeat++);
                 untilLook = Mathf.Max(0.08f, Clover.Player.Forms.AfflictionLook.Interval(depth) / PipsShown);
                 return;
             }

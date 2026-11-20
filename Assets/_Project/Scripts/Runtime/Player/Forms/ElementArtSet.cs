@@ -48,5 +48,7 @@ namespace Clover.Player.Forms
         public Font Label;
         /// <summary>The reactions' designed looks (Clover > Build > Reaction Art); with them here the art draws the reactions too.</summary>
         public ReactionArtSet Reactions;
+        /// <summary>The real flame a burning body is drawn in (Clover/FlameField, <see cref="BodyFlames"/>).</summary>
+        public Material BodyFlame;
     }
 }

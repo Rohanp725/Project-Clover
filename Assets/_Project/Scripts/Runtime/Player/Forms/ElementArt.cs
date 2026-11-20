@@ -68,6 +68,13 @@ namespace Clover.Player.Forms
                 if (reactions == null) reactions = gameObject.AddComponent<ReactionArt>();
                 reactions.Configure(set.Reactions);
             }
+            // A burning body is drawn in real flame when the art has the flame's material.
+            if (set.BodyFlame != null)
+            {
+                var flames = GetComponent<BodyFlames>();
+                if (flames == null) flames = gameObject.AddComponent<BodyFlames>();
+                flames.Configure(set.BodyFlame);
+            }
         }
 
         private void OnEnable() => instance = this;
@@ -228,10 +235,13 @@ namespace Clover.Player.Forms
         }
 
         /// <summary>A drawn sheet played through, carried along by <paramref name="drift"/> and breaking up at its end (<see cref="FormFx.BlowSheet"/>).</summary>
-        public static void BlowSheet(int sheet, Vector3 at, float size, float seconds, Vector3 drift, float spread = 1.3f)
+        public static void BlowSheet(int sheet, Vector3 at, float size, float seconds, Vector3 drift, float spread = 1.3f) =>
+            BlowSheet(sheet, at, size, seconds, drift, spread, Color.white);
+
+        public static void BlowSheet(int sheet, Vector3 at, float size, float seconds, Vector3 drift, float spread, Color tint)
         {
             if (instance == null || instance.set == null || sheet < 0 || sheet >= instance.set.Sheets.Length) return;
-            FormFx.BlowSheet(instance.set.Sheets[sheet].Material, at, size, Color.white, seconds, drift, spread);
+            FormFx.BlowSheet(instance.set.Sheets[sheet].Material, at, size, tint, seconds, drift, spread);
         }
 
         /// <summary>Takes a piece to be placed by the caller every frame (<see cref="FormFx.Place"/>); -1 when none can be had or it is a floor mark.</summary>

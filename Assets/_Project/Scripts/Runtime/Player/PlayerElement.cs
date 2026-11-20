@@ -108,6 +108,8 @@ namespace Clover.Player
             combat = GetComponent<PlayerCombat>();
             defence = GetComponent<PlayerDefence>();
             upgrades = GetComponent<PlayerUpgrades>();
+            outfit = GetComponent<PlayerOutfit>();
+            sheen = new MetalSheen();
             if (Elements.StartsEmpty(StartsWithNone, RunState.Element)) TakeNone();
             else
             {
@@ -488,18 +490,32 @@ namespace Clover.Player
                 if (untilEmber <= 0f)
                 {
                     untilEmber = EmberInterval;
-                    ElementLook.Sparks(SurgeInfo, transform.position + Vector3.up * 1.1f, Vector3.up, 0.25f);
+                    // Overdrive's buzzing is the art's jagged arcs now, not the old shock sparks (the owner, 2026-11-19).
+                    bool arcs = SurgeInfo != null && SurgeInfo.Name == Elements.Lightning && ArtDrawsSurge(SurgeInfo);
+                    if (!arcs) ElementLook.Sparks(SurgeInfo, transform.position + Vector3.up * 1.1f, Vector3.up, 0.25f);
                 }
             }
         }
 
         private readonly int[] surgePieces = { -1, -1, -1, -1, -1, -1 };
         private bool surgeShown;
+        // Temper turns the body to steel; whatever outfit is worn, its body renderer is the one asked.
+        // Made in Awake: a property block may not be made while Unity constructs the component.
+        private MetalSheen sheen;
+        private PlayerOutfit outfit;
+
+        /// <summary>How far the body is turned to steel now (Temper), 0 to 1, for probes.</summary>
+        public float SteelLevel => sheen != null ? sheen.Level : 0f;
+
+        // True while the surge's own look is the element art's, which draws Overdrive's arcs in place of the old sparks.
+        private bool ArtDrawsSurge(ElementInfo info) => info != null && Forms.ElementArt.Ready && Forms.SurgeArt.ReplacesBuilt(info);
 
         private void OnDisable()
         {
             SurgeLook.End(surgePieces);
             surgeShown = false;
+            // No steel left on the body when the element goes (Temper's sheen is written only as it changes).
+            sheen?.Clear();
         }
 
         private void LateUpdate()
@@ -513,8 +529,10 @@ namespace Clover.Player
                 else SurgeLook.End(surgePieces);
             }
             if (surging) SurgeLook.Place(SurgeInfo, surgePieces, transform.position, Time.time);
+            if (outfit != null && sheen != null) sheen.Watch(outfit.Body);
+            sheen?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Metal && Forms.ElementArt.Ready, Time.deltaTime);
             if (glow == null) return;
-            float resting = surging ? GlowWhenSurging * (0.85f + 0.15f * Mathf.Sin(Time.time * 17f)) : 0f;
+            float resting = surging ? GlowWhenSurging * Forms.SurgeArt.Glow(SurgeInfo) * (0.85f + 0.15f * Mathf.Sin(Time.time * 17f)) : 0f;
             glowLevel = Mathf.MoveTowards(glowLevel, resting, Time.deltaTime * 30f);
             glow.intensity = glowLevel;
             glow.enabled = glowLevel > 0.01f;
@@ -608,9 +626,10 @@ namespace Clover.Player
             // The surge coats the weapon in its own element.
             combat.Empower(kit.SurgeDamage, kit.SurgeBurnSeconds, info.Glow, speed, kit.SurgeStagger, info.Affliction, kit.SurgeStacks);
             ElementLook.Puff(info, transform.position + Vector3.up, Vector3.up, 1.2f);
-            ElementLook.Ring(info, transform.position + Vector3.up * 0.2f);
+            // No ring on the floor for Overdrive (the owner, 2026-11-19: "I dont like the ring visuals at all").
+            if (!(info.Name == Elements.Lightning && ArtDrawsSurge(info))) ElementLook.Ring(info, transform.position + Vector3.up * 0.2f);
             if (info.Name == Elements.Lightning) Clover.World.LightningBolts.Strike(transform.position, 0.4f);
-            glowLevel = GlowWhenCasting;
+            glowLevel = GlowWhenCasting * Forms.SurgeArt.Glow(info);
             if (defence != null)
             {
                 defence.Callout(kit.SurgeName);

@@ -21,6 +21,8 @@ namespace Clover.Player
         /// <summary>Whether the last outfit put on needed its bones looked up by name, rather than taking the rig's as they were.</summary>
         public bool Rebound { get; private set; }
         public OutfitSet Set => outfits;
+        /// <summary>The body's renderer, which every outfit is worn on (Temper's steel is drawn on it).</summary>
+        public SkinnedMeshRenderer Body => body;
 
         private Dictionary<string, Transform> bonesByName;
 

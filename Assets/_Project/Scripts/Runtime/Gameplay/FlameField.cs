@@ -112,6 +112,33 @@ namespace Clover.Gameplay
             return Build("Flame Ring", feet, sizes, data);
         }
 
+        /// <summary>
+        /// Flames over a burning body (Burn on an enemy): <paramref name="count"/> tongues rooted all over a standing
+        /// cylinder of radius one and height one (the caller scales it to the body), from the shins to the shoulders,
+        /// the lower ones taller so the fire climbs the body and licks over the head. Each tongue's "edge" is a share
+        /// drawn at random, so a body burning less (less heat) has fewer tongues alight, scattered, not a ring.
+        /// </summary>
+        public static Mesh Body(int count, int seed)
+        {
+            var random = new System.Random(seed);
+            var feet = new Vector3[count];
+            var sizes = new Vector2[count];
+            var data = new Color[count];
+            for (int i = 0; i < count; i++)
+            {
+                // Round the body evenly (a golden-angle walk), up it in strata, each jittered.
+                float turn = i * 2.39996f + (float)random.NextDouble() * 0.5f;
+                float up = Mathf.Clamp01((i + (float)random.NextDouble()) / count * 0.85f + 0.05f);
+                float radius = 0.8f + 0.25f * (float)random.NextDouble();
+                feet[i] = new Vector3(Mathf.Sin(turn) * radius, up, Mathf.Cos(turn) * radius);
+                float tall = Mathf.Lerp(1.15f, 0.55f, up) * Mathf.Lerp(0.75f, 1.2f, (float)random.NextDouble());
+                if (random.NextDouble() < 0.1) tall *= 1.4f;
+                sizes[i] = new Vector2(tall, Mathf.Lerp(0.65f, 1.15f, (float)random.NextDouble()));
+                data[i] = new Color((float)random.NextDouble(), Mathf.Lerp(0.05f, 0.9f, (float)random.NextDouble()), (float)random.NextDouble(), 0f);
+            }
+            return Build("Flame Body", feet, sizes, data);
+        }
+
         private static Mesh Build(string name, Vector3[] feet, Vector2[] sizes, Color[] data)
         {
             int count = feet.Length;

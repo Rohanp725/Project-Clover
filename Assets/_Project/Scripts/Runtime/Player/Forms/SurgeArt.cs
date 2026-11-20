@@ -4,10 +4,11 @@ namespace Clover.Player.Forms
 {
     /// <summary>
     /// Each element's surge in the approved look (the look-dev's "surge" panels), held round the player for as long as
-    /// it lasts, for <see cref="SurgeLook"/>. Kindle: a char ring under the built flames. Overdrive: Raijin's ring of
-    /// drums. Tailwind: Fujin's bag-mouth spiral with a column of leaves. Glaze: a knotwork frost ring. Wellspring:
-    /// three rings rising, hanging and falling in turn. Regrowth and Bedrock: none (their built leaves and stones).
-    /// Temper: eight blades standing edge-out round them over a Greek-key seam. Clarity: a kolam drawn round them, a
+    /// it lasts, for <see cref="SurgeLook"/>. Kindle: a char ring under the built flames. Overdrive: no rings (the owner,
+    /// 2026-11-19 and 2026-11-20): jagged, branching arcs of the lightning kit jumping on and off the body and gone in a
+    /// blink, a few at a time. Tailwind: Fujin's bag-mouth spiral with a column of leaves. Glaze: a knotwork frost ring.
+    /// Wellspring: three rings rising, hanging and falling in turn. Regrowth and Bedrock: none (their built leaves and
+    /// stones). Temper: no pieces at all: the player turns to steel (<see cref="MetalSheen"/>). Clarity: a kolam drawn round them, a
     /// halo at their back and a slatted shaft from above that go after a moment. Hunger: an eclipse under them, one
     /// burning crescent and its bead, black streaks and motes pouring in. Fever: two terraced bile bands, ruyi
     /// fumes rising off them, bubbles drifting up. One player surges at a time, so the held pieces are kept here.
@@ -40,6 +41,8 @@ namespace Clover.Player.Forms
             }
             element = -1;
             began = 0f;
+            nextArc = 0f;
+            arcBeat = 0;
         }
 
         /// <summary>
@@ -49,7 +52,28 @@ namespace Clover.Player.Forms
         /// </summary>
         public static bool ReplacesBuilt(ElementInfo info) =>
             info != null && (info.Index == ElementSubstance.Metal || info.Index == ElementSubstance.Light || info.Index == ElementSubstance.Dark || info.Index == ElementSubstance.Poison
-                || info.Index == ElementSubstance.Wind);
+                || info.Index == ElementSubstance.Wind || info.Index == ElementSubstance.Lightning);
+
+        /// <summary>
+        /// True for the surges drawn by thrown pieces or by the body itself rather than held ones: Overdrive's arcs and
+        /// Temper's steel. They hold nothing and still replace the built look.
+        /// </summary>
+        public static bool DrawnWithoutHolding(int element) => element == ElementSubstance.Lightning || element == ElementSubstance.Metal;
+
+        /// <summary>
+        /// How much of the player's surge light an element's surge lights (1 all of it). Dark lights none: its light
+        /// lay a bright purple disc on the floor in the middle of Hunger (the owner, 2026-11-20: "The middle is still too
+        /// bright purple instead of a much darker almost black purple"); darkness gives off no light.
+        /// </summary>
+        public static float Glow(ElementInfo info) =>
+            info == null ? 1f : info.Index == ElementSubstance.Dark ? 0f
+            // Overdrive's light kept low, so the floor under the player shows no ring of it (the owner: no rings).
+            : info.Index == ElementSubstance.Lightning ? 0.45f : 1f;
+
+        /// <summary>Overdrive: arcs thrown a second, how long each is seen, and how far off the body's middle they reach.</summary>
+        public const float ArcsPerSecond = 16f, ArcSeconds = 0.12f, ArcReach = 0.55f;
+        private static float nextArc;
+        private static int arcBeat;
 
         /// <summary>Seconds since the surge's pieces were taken; long ago when none are held (the built pieces then show grown).</summary>
         public static float Age(float time) => element >= 0 ? time - began : 1000f;
@@ -59,6 +83,13 @@ namespace Clover.Player.Forms
 
         /// <summary>The ink Hunger's turning streaks and motes are drawn in: black, not white (the owner's review).</summary>
         private static readonly Color HungerInk = new Color(0.04f, 0.015f, 0.06f, 1f);
+
+        /// <summary>
+        /// The tint over Hunger's eclipse, its middle. The eclipse's own colour is dark only in linear terms (0.09), which
+        /// the screen shows as a 33% purple, lighter than the floor: "too bright purple" (the owner, 2026-11-20). This
+        /// takes it to about a tenth of that, a near-black purple on screen.
+        /// </summary>
+        public static readonly Color HungerHeart = new Color(0.12f, 0.08f, 0.14f, 1f);
 
         /// <summary>Takes the surge's pieces. False when the new effects are off or the scene has no art.</summary>
         public static bool Begin(ElementInfo info)
@@ -73,16 +104,17 @@ namespace Clover.Player.Forms
                 // flames at the base were liked; Bedrock's outer ring of standing stones and Regrowth's great turning
                 // triskele go, leaving their built stones (turning on the ground) and leaves.
                 case ElementSubstance.Fire: Floor(0, "fire_charrings_affliction"); break;
-                case ElementSubstance.Lightning: Solid(0, "lightning_drums_surge"); break;
+                // Overdrive's arcs are thrown in Place; nothing is held (no drums, no rings).
+                case ElementSubstance.Lightning: break;
                 case ElementSubstance.Wind: Solid(0, "wind_bagspiral_surge"); break;
                 case ElementSubstance.Ice: Floor(0, "ice_knotring_surge"); break;
                 case ElementSubstance.Water: Solid(0, "water_rings_surge"); break;
                 case ElementSubstance.Life:
                 case ElementSubstance.Earth: break;
-                case ElementSubstance.Metal:
-                    for (int i = 0; i < 8; i++) Solid(i, "metal_crownblade_surge");
-                    Floor(0, "metal_meander_surge");
-                    break;
+                // Temper is the player turned to steel (MetalSheen, driven by PlayerElement): no blades round them and no
+                // seam on the floor (the owner, 2026-11-19: "the swords around you look super bad"; 2026-11-20: "a
+                // visible metallic sheen essentially turning metal yourself").
+                case ElementSubstance.Metal: break;
                 case ElementSubstance.Light:
                     Solid(0, "light_backhalo_surge");
                     Solid(1, "light_shaft_surge");
@@ -95,6 +127,7 @@ namespace Clover.Player.Forms
                     Floor(2, "dark_bead_surge");
                     Floor(3, "dark_streaks_surge");
                     Floor(4, "dark_motes_surge");
+                    FormFx.TintMark(floors[0], HungerHeart);
                     FormFx.TintMark(floors[3], HungerInk);
                     FormFx.TintMark(floors[4], HungerInk);
                     break;
@@ -111,11 +144,42 @@ namespace Clover.Player.Forms
             bool any = false;
             for (int i = 0; i < MostSolids; i++) any |= solids[i] >= 0;
             for (int i = 0; i < MostFloors; i++) any |= floors[i] >= 0;
+            any |= DrawnWithoutHolding(element);
+            nextArc = 0f;
             if (!any) End();
             return any;
         }
 
         private static void Solid(int slot, string piece) => solids[slot] = ElementArt.Hold(ElementArt.Piece(piece));
+
+        // Overdrive's buzzing as real electricity (the owner, 2026-11-19: "the buzzing electricity, doesnt look like
+        // electricity"): the kit's branching fork bursts on the body and its long jagged arcs jump off it, each seen for a
+        // tenth of a second and shrinking away as it goes, a new one every ninety milliseconds somewhere else, turned
+        // anew. Nothing wobbles; nothing stays.
+        private static void ThrowArcs(Vector3 feet, float time)
+        {
+            if (time < nextArc) return;
+            nextArc = time + 1f / ArcsPerSecond;
+            int beat = ++arcBeat;
+            float yaw = ElementSubstance.Hash(beat * 7) * 360f;
+            Vector3 outward = Quaternion.Euler(0f, yaw, 0f) * Vector3.forward;
+            float height = 0.45f + 1.15f * ElementSubstance.Hash(beat * 7 + 1);
+            if (beat % 3 != 0)
+            {
+                // A branching fork bursting on the body: its five jagged branches reach out from one point.
+                Vector3 at = feet + outward * 0.12f + Vector3.up * height;
+                var tilt = Quaternion.Euler(-60f + 120f * ElementSubstance.Hash(beat * 7 + 2), yaw, 90f * ElementSubstance.Hash(beat * 7 + 3));
+                ElementArt.Fly(ElementArt.Piece("lightning_fork_hit"), at, at + outward * 0.15f, tilt, 0.85f + 0.35f * ElementSubstance.Hash(beat * 7 + 4), ArcSeconds);
+            }
+            else
+            {
+                // A long jagged arc jumping off the body to the air beside it.
+                float length = 1.7f + 0.9f * ElementSubstance.Hash(beat * 7 + 5);
+                Vector3 middle = feet + outward * (ArcReach * 0.4f + length * 0.5f) + Vector3.up * height;
+                var lie = Quaternion.LookRotation(outward + Vector3.up * (ElementSubstance.Hash(beat * 7 + 6) - 0.5f), Vector3.up);
+                ElementArt.Fly(ElementArt.Piece("lightning_jump_charged"), middle, middle + outward * 0.3f, lie, length / 3.2f, ArcSeconds * 1.3f);
+            }
+        }
 
         private static void Floor(int slot, string piece)
         {
@@ -156,7 +220,7 @@ namespace Clover.Player.Forms
                     ElementArt.PlaceFloor(floors[0], floorPieces[0], feet, time * 6f, 0.75f * grown);
                     break;
                 case ElementSubstance.Lightning:
-                    FormFx.Place(solids[0], feet, Quaternion.Euler(0f, time * 25f, 0f), Vector3.one * (0.85f * grown));
+                    ThrowArcs(feet, time);
                     break;
                 case ElementSubstance.Wind:
                     FormFx.Place(solids[0], feet, Quaternion.Euler(0f, time * -240f, 0f), new Vector3(0.8f, 0.8f * grown, 0.8f));
@@ -172,14 +236,6 @@ namespace Clover.Player.Forms
                     break;
                 }
                 case ElementSubstance.Metal:
-                    for (int i = 0; i < 8; i++)
-                    {
-                        float angle = i * 45f;
-                        Vector3 round = Quaternion.Euler(0f, angle, 0f) * Vector3.forward;
-                        // Edge-out: each blade's flat faces round the circle; one is turned to catch the light.
-                        FormFx.Place(solids[i], feet + round * 1.25f, Quaternion.Euler(0f, angle + (i == 2 ? 50f : 90f), 0f), new Vector3(0.85f, 0.85f * grown, 0.85f));
-                    }
-                    ElementArt.PlaceFloor(floors[0], floorPieces[0], feet, 0f, 0.9f * grown);
                     break;
                 case ElementSubstance.Light:
                 {
