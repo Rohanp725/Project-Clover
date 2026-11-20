@@ -768,6 +768,8 @@ Group: Reactions
 
 **What sets it off.** Poison landing on a charged enemy, or Static on a poisoned one.
 
+**Its shapes.** With Struck Nerve, the Shape mark of Poison and Lightning's duo branch (Nerve Fire: Ozone or Lockjaw, 3 Shards, in the heart of the chart) and both carried, Nerve Fire wears the shape chosen at a rest fire instead. Both jolt as before. Ozone: each jolt also lays a dose and a Static on everything within 1 m. Lockjaw: the third jolt holds it 1.2 s.
+
 **How to use it.** Charge a poisoned enemy deep: five Static is five jolts, one at each bite.
 
 **How it looks.** Its name over the enemy and a jolt at each bite.
