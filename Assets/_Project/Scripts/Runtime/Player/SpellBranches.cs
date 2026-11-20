@@ -41,6 +41,30 @@ namespace Clover.Player
             return shapeMark.Shapes[choice];
         }
 
+        /// <summary>Writes a spell's choice of shape (0 or 1, by its branch's Learn id) into a loadout's list of choices: changed in place, or added.</summary>
+        public static void Choose(List<IdChoice> shapes, string branch, int choice)
+        {
+            if (shapes == null || string.IsNullOrEmpty(branch)) return;
+            choice = choice == 1 ? 1 : 0;
+            for (int i = 0; i < shapes.Count; i++)
+            {
+                if (shapes[i] == null || shapes[i].Id != branch) continue;
+                shapes[i] = new IdChoice(branch, choice);
+                return;
+            }
+            shapes.Add(new IdChoice(branch, choice));
+        }
+
+        /// <summary>Copies a list of choices into another (cleared first), sharing nothing.</summary>
+        public static void CopyChoices(List<IdChoice> from, List<IdChoice> into)
+        {
+            if (into == null || ReferenceEquals(from, into)) return;
+            into.Clear();
+            if (from == null) return;
+            foreach (var choice in from)
+                if (choice != null) into.Add(new IdChoice(choice.Id, choice.Choice));
+        }
+
         /// <summary>The shape the branch's spell wears now: none until its Shape mark is learned.</summary>
         public static ShapeDef WornShape(string branch, ICollection<string> learned, Loadout loadout)
         {

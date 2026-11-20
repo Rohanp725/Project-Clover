@@ -205,6 +205,8 @@ namespace Clover.Player
                     if (deep)
                     {
                         // Down the Channel: 0.4 s later a bolt comes down along the whole line and discharges every enemy on it.
+                        // NEEDS: the discharge itself (checked in task 4.3): the bolt strikes and lays Static; a blow's Detonate sets
+                        // off Burn only, so what lies on the line waits for a heavy blow to go off.
                         for (int i = 0; i < 4; i++)
                         {
                             Vector3 at = print.Origin + print.Forward * (print.Reach * (i + 0.5f) / 4f);

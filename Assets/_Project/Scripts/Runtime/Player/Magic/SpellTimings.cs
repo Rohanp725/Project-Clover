@@ -46,12 +46,12 @@ namespace Clover.Player.Magic
             ["fire.meteor"] = Mana(45f, SpellRole.Breaker),          // Fire's larger spell
             ["fire.kiln"] = Cd(9f, SpellRole.Counter),
             ["fire.pitch"] = Cd(11f, SpellRole.Detonator),
-            // Lightning
-            ["lightning.waiting"] = Cd(10f, SpellRole.Breaker),
-            ["lightning.rod"] = Cd(10f, SpellRole.Movement),
-            ["lightning.lodestone"] = Cd(10f, SpellRole.Breaker),   // not in the roster
+            // Lightning, reshaped (Phase 4): Thunderclap is the base spell; Lodestone is retired into Lightning Rod's shape.
             ["lightning.lance"] = Cd(7f, SpellRole.Opener),
+            ["lightning.waiting"] = Cd(10f, SpellRole.Breaker),
             ["lightning.flashes"] = Mana(45f, SpellRole.Detonator), // Lightning's larger spell
+            ["lightning.rod"] = Cd(10f, SpellRole.Movement),
+            ["lightning.drums"] = Cd(10f, SpellRole.Counter),
             // Wind
             ["wind.circle"] = Cd(9f, SpellRole.Movement),
             ["wind.lifting"] = Cd(9f, SpellRole.Breaker),

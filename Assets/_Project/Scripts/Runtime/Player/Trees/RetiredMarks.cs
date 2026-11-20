@@ -29,12 +29,28 @@ namespace Clover.Player
             new RetiredMark("fire.furnace", 6), new RetiredMark("fire.scorched", 6),
             // Sunspot is replaced by Black Pitch; Cinder Fan is folded into Flame Wave as a shape.
             new RetiredMark("fire.sunspot", 4), new RetiredMark("fire.fan", 4),
+
+            // Lightning: the plain minors and the dead "costs less" minor, the majors not kept, Overclock, and Lodestone
+            // folded into Lightning Rod as a shape.
+            new RetiredMark("lightning.bitingstep", 1), new RetiredMark("lightning.forked", 1), new RetiredMark("lightning.return", 1),
+            new RetiredMark("lightning.echo", 1), new RetiredMark("lightning.chargedstep", 1), new RetiredMark("lightning.heavyair", 1),
+            new RetiredMark("lightning.longarc", 1), new RetiredMark("lightning.hardcharge", 1), new RetiredMark("lightning.keen", 1),
+            new RetiredMark("lightning.seam", 1), new RetiredMark("lightning.quickclap", 1), new RetiredMark("lightning.thirdleap", 1),
+            new RetiredMark("lightning.longdrive", 1), new RetiredMark("lightning.current", 1), new RetiredMark("lightning.quick", 1),
+            new RetiredMark("lightning.capacitor", 1),
+            // Deep Reserve is folded into Stored Charge, which keeps its id.
+            new RetiredMark("lightning.reserve", 3),
+            new RetiredMark("lightning.fulldischarge", 3), new RetiredMark("lightning.conductor", 3), new RetiredMark("lightning.wire", 3),
+            new RetiredMark("lightning.grounding", 3), new RetiredMark("lightning.slipstream", 3),
+            new RetiredMark("lightning.overclock", 6),
+            new RetiredMark("lightning.lodestone", 4),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
         private static readonly RetiredMark[] moving =
         {
             new RetiredMark(Upgrade.BurningCrescent, 3),
+            new RetiredMark(Upgrade.DelayedCuts, 3),
         };
 
         /// <summary>The marks cut, with their prices: a save that holds one is refunded.</summary>

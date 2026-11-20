@@ -4,205 +4,228 @@ using Clover.Gameplay;
 namespace Clover.Player.Trees
 {
     /// <summary>
-    /// Lightning: speed and the single right moment. Quick cuts load an enemy with Static and one heavy blow spends it.
-    /// Three boughs from Static: on the left Charge (perfect guards banked and spent), in the middle Thunder (bolts,
-    /// the rod and Overdrive), on the right Flicker (the dodge). The seven first marks and the god's Storm Step are
-    /// done by hand in <see cref="PlayerUpgrades"/> under their ids; the rest are data.
+    /// Lightning: the single right moment, written as spell branches (docs/design/steel/elements_a.md, Lightning; Phase 4).
+    /// Six spells of four marks each and nine passives on the pattern of <see cref="BranchPattern"/>: in the middle Thunder
+    /// (the lift Strikes Twice, Chain Lance and Waiting Thunder, and Devotion above them), on the left Charge (Stored Charge,
+    /// Thunderclap and Ring of Drums, Single Stroke at the crown), on the right Flicker (Blink and Lightning Rod, Afterimage
+    /// and Seven Flashes, Never There at the crown). Thunderclap is the base spell: it comes with Lightning, its Learn is
+    /// never bought, and it grows from the root.
+    ///
+    /// Marks the design keeps keep their ids; the cut ones are in <see cref="RetiredMarks"/>. Static, Stored Charge, Blink,
+    /// Afterimage, Single Stroke and Storm Step are done by hand in <see cref="PlayerUpgrades"/> under their ids; the rest
+    /// are data. What the data cannot say yet is the nearest working version with a <c>NEEDS</c> line, gathered in
+    /// docs/design/steel/content_open.tsv.
     /// </summary>
     public static class LightningTree
     {
-        // Flicker.
-        public const string BitingStep = "lightning.bitingstep";
-        public const string ForkedStep = "lightning.forked";
-        public const string QuickReturn = "lightning.return";
-        public const string BrightEcho = "lightning.echo";
-        public const string ChargedStep = "lightning.chargedstep";
-        public const string SevenFlashes = "lightning.flashes";
-        public const string NeverThere = "lightning.neverthere";
-        // Charge.
-        public const string HeavyAir = "lightning.heavyair";
-        public const string LongArc = "lightning.longarc";
-        public const string DeepReserve = "lightning.reserve";
-        public const string HardCharge = "lightning.hardcharge";
-        public const string KeenEdge = "lightning.keen";
-        public const string OpenSeam = "lightning.seam";
-        public const string FullDischarge = "lightning.fulldischarge";
-        public const string WaitingThunder = "lightning.waiting";
+        public const string StrikesTwice = "lightning.lift";
+        public const string InOneBreath = "lightning.devotion";
         public const string SingleStroke = "lightning.stroke";
-        // Thunder.
-        public const string Conductor = "lightning.conductor";
-        public const string QuickClap = "lightning.quickclap";
-        public const string ThirdLeap = "lightning.thirdleap";
-        public const string LiveWire = "lightning.wire";
-        public const string LongOverdrive = "lightning.longdrive";
-        public const string RunningCurrent = "lightning.current";
-        public const string Lodestone = "lightning.lodestone";
-        // Kept from the first slice; not in the design.
-        public const string QuickHands = "lightning.quick";
-        public const string Capacitor = "lightning.capacitor";
-        public const string Grounding = "lightning.grounding";
-        public const string Slipstream = "lightning.slipstream";
+        public const string NeverThere = "lightning.neverthere";
+        // The spells: each is its branch's Learn mark and the branch's id.
+        public const string Thunderclap = "lightning.base";
         public const string ChainLance = "lightning.lance";
+        public const string WaitingThunder = "lightning.waiting";
+        public const string SevenFlashes = "lightning.flashes";
+        public const string RingOfDrums = "lightning.drums";
 
         public static void Add(List<Upgrade> to)
         {
             const string E = Elements.Lightning;
 
             // BESPOKE (as built): light blows build Static and a heavy blow discharges it, done by hand. No WeaponStacks: that would lay it twice.
-            to.Add(new Upgrade { Id = Upgrade.Static, Name = "Static", Element = E, Kind = UpgradeKind.Root, X = 0f, Y = 1.2f, Icon = UpgradeIcons.Bolt,
-                Description = "Blows build Static on an enemy, up to five. A heavy blow or a finisher discharges it, and it arcs to everyone near." });
+            to.Add(BranchPattern.Put(new Upgrade { Id = Upgrade.Static, Name = "Static", Element = E, Kind = UpgradeKind.Root, Icon = UpgradeIcons.Bolt,
+                Description = "Blows build Static on an enemy, up to five. A heavy blow or a finisher discharges it, and it arcs to everyone near." },
+                BranchPattern.Root));
 
-            // Left bough: Charge. Bank it and spend it.
-            // BESPOKE (as built). Still to add: the charged blow is critical.
-            to.Add(new Upgrade { Id = Upgrade.StoredCharge, Name = "Stored Charge", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Static }, X = -0.98f, Y = 2.91f, Icon = UpgradeIcons.Shield,
-                Description = "A perfect guard banks a charge. The next blow spends it for double damage and stagger." });
-            to.Add(new Upgrade { Id = HeavyAir, Name = "Heavy Air", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.StoredCharge }, X = -1.95f, Y = 3.34f, Icon = UpgradeIcons.Hourglass,
-                Description = "Static stays longer on an enemy.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.5f) } });
-            to.Add(new Upgrade { Id = DeepReserve, Name = "Deep Reserve", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.StoredCharge }, X = -1.39f, Y = 4.31f, Icon = UpgradeIcons.Gem,
-                // BESPOKE (built): PlayerUpgrades banks a charge with each perfect guard (the count, shown on the HUD) and makes the next ready when a blow spends one.
-                Description = "Perfect guards bank up to three charges. Each blow spends one.",
-                Tally = new TallySpec { Name = "Charge", Cap = 3 } });
-            // BESPOKE (as built): the cuts that land when the blade is home. It keeps its foot on Stored Charge and moves aside for Deep Reserve.
-            to.Add(new Upgrade { Id = Upgrade.DelayedCuts, Name = "Delayed Cuts", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.StoredCharge }, X = -0.77f, Y = 5.19f, Icon = UpgradeIcons.Blade, Weapon = Weapons.KatanaName,
-                Description = "The Iaido Slash passes through. Its cuts land a moment later, all at once, when the blade is home." });
-            to.Add(new Upgrade { Id = LongArc, Name = "Long Arc", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.StoredCharge }, X = 0.04f, Y = 3.24f, Icon = UpgradeIcons.Chain,
-                Description = "A discharge arcs further.",
-                Stats = new[] { new StatMod(PlayerStat.DischargeReach, 0.375f) } });
-            // There is no trigger for "an affliction at full depth is set off" and nothing holds an enemy still: this answers
-            // Static reaching five, with mana and a jolt to its balance.
-            to.Add(new Upgrade { Id = FullDischarge, Name = "Full Discharge", Element = E, Kind = UpgradeKind.Major, Requires = new[] { DeepReserve }, X = -1.21f, Y = 6.41f, Icon = UpgradeIcons.Burst,
-                Description = "A discharge of five Static holds its enemy still for a moment and gives mana.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Static, SpentAtLeast = 5, Do = UpgradeAction.Hold, Seconds = 0.8f }, new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Static, SpentAtLeast = 5, Do = UpgradeAction.Mana, Amount = 10f } } });
-            // Kept from the first slice; not in the design.
-            to.Add(new Upgrade { Id = Grounding, Name = "Grounding", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.DelayedCuts, Upgrade.StoredCharge }, X = -0.03f, Y = 5.95f, Icon = UpgradeIcons.Chain,
-                Description = "A perfect guard sends an arc through the one who struck and on to two more.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Arc, Damage = 12f, Stagger = 20f, Count = 2, Reach = 5f } } });
-            to.Add(new Upgrade { Id = HardCharge, Name = "Hard Charge", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { DeepReserve }, X = -2.62f, Y = 5.68f, Icon = UpgradeIcons.Hammer,
-                Description = "A stored charge breaks balance harder.",
-                Stats = new[] { new StatMod(PlayerStat.ChargeStagger, 0.25f) } });
-            to.Add(new Upgrade { Id = WaitingThunder, Name = "Waiting Thunder", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { FullDischarge }, X = -2.69f, Y = 6.93f, Icon = UpgradeIcons.Spike,
-                Description = "You hang five bolts at your shoulder. Each blow you land sends one down with it. A heavy blow sends all that are left.",
-                Form = SpellForms.Waiting,
-                Spell = new SpellSpec { Cost = 35f, Count = 5, Seconds = 10f, Reach = 8f, Damage = 8f, Stagger = 6f, Stacks = 1, Speed = 18f } });
-            // It took the id and name the first slice gave a mark of critical chance; it is critical damage now, as designed.
-            to.Add(new Upgrade { Id = KeenEdge, Name = "Keen Edge", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { DeepReserve }, X = -1.71f, Y = 5.46f, Icon = UpgradeIcons.Eye,
-                Description = "Critical blows cut deeper.",
-                Stats = new[] { new StatMod(PlayerStat.CritDamage, 0.2f) } });
-            // There is no chance against enemies with Static alone: half the chance, on every enemy.
-            to.Add(new Upgrade { Id = OpenSeam, Name = "Open Seam", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { DeepReserve }, X = -2.32f, Y = 4.61f, Icon = UpgradeIcons.Target,
-                Description = "Blows on an enemy carrying Static are critical more often.",
-                Stats = new[] { new StatMod(PlayerStat.CritChance, 0.08f, AfflictionKind.Static) } });
+            // ---- The middle bough: Thunder.
+            // NEEDS: the reaction itself struck again at half strength where it happened. Until then a bolt falls there.
+            to.Add(BranchPattern.Put(new Upgrade { Id = StrikesTwice, Name = "Strikes Twice", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { Upgrade.Static }, Icon = UpgradeIcons.Burst,
+                Description = "Every reaction with Static in it strikes again half a second later where it happened, as lightning comes back down its own channel.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Static, Do = UpgradeAction.Burst, Delay = 0.5f, Damage = 10f, Stagger = 10f, Radius = 2f, Affliction = AfflictionKind.Static, Stacks = 1 } } },
+                BranchPattern.MiddleFoot));
+
+            SpellBranch.Add(to, E, ChainLance, "Chain Lance", SpellRole.Opener, BranchPattern.MiddleA, StrikesTwice, SpellForms.Bolt,
+                new SpellSpec { Reach = 12f, Damage = 10f, Stagger = 15f, Count = 5, Radius = 5f, Stacks = 2 },
+                "You throw a bolt ahead that leaps through up to five enemies: 10 damage and two Static on each.",
+                UpgradeIcons.Beam,
+                new Empower { Cooldown = 5.5f, Count = 6 },
+                "Chain Lance waits 5.5 seconds, not 7, and leaps six times.",
+                // NEEDS: the path steered with the stick while you fight, and the heavy blow calling the return stroke.
+                new ShapeDef { Name = "Stepped Leader", Form = SpellForms.Spikes,
+                    Description = "The lance is not thrown. A bolt steps out from your blade, one bright step of a metre and a half at a time, up to twelve metres, laying Static on what is near. Then the return stroke lights the whole path at once.",
+                    Spell = new SpellSpec { Reach = 12f, Speed = 10f, Count = 8, Radius = 1.5f, Damage = 4f, Stagger = 4f, Stacks = 1 },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 12f, Count = 8, Radius = 0.75f, Seconds = 0.2f, Interval = 0.2f, Delay = 1.2f, Damage = 14f, Stagger = 10f, Affliction = AfflictionKind.Static, Stacks = 1 } } },
+                // NEEDS: the blade charged for five blows, not three.
+                new ShapeDef { Name = "Return Stroke",
+                    Description = "After its last leap it comes back along the same path to your blade, striking each enemy again for half. Throw, then fight.",
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Delay = 0.6f, Damage = 5f, Stagger = 5f, Radius = 0.8f } } },
+                "Opens two shapes of Chain Lance, chosen at any rest fire: Stepped Leader, a path you draw, or Return Stroke, a bolt that comes back.",
+                // NEEDS: only when the lance is thrown within 0.5 s after the finisher. Until then a finisher sends the arc itself.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Arc, Damage = 10f, Stagger = 10f, Count = 8, Reach = 12f, Affliction = AfflictionKind.Static, Stacks = 2, Cooldown = 7f } },
+                "Thrown within half a second after a finisher, it leaps to every enemy within twelve metres.");
+
+            SpellBranch.Add(to, E, WaitingThunder, "Waiting Thunder", SpellRole.Breaker, BranchPattern.MiddleB, StrikesTwice, SpellForms.Waiting,
+                new SpellSpec { Count = 5, Seconds = 10f, Reach = 8f, Damage = 8f, Stagger = 6f, Stacks = 1, Speed = 18f },
+                "Five bolts hang behind your shoulders for ten seconds. Each light blow sends one down with it, and a heavy blow sends all that are left before it discharges.",
+                UpgradeIcons.Spike,
+                new Empower { Cooldown = 8f, Count = 7 },
+                "Waiting Thunder waits 8 seconds, not 10, and hangs seven bolts.",
+                // NEEDS: the bolts falling on the enemy faced whenever you strike anyone, not by themselves.
+                new ShapeDef { Name = "Hanging Cloud", Form = SpellForms.Rain,
+                    Description = "The bolts hang in a small black cloud over the enemy faced, not over you, and fall on it while you fight. Cut the soldier and drop the bolts on the archer.",
+                    Spell = new SpellSpec { Reach = 8f, Radius = 1.5f, Seconds = 10f, Interval = 0.9f, Damage = 8f, Stagger = 6f, Stacks = 1 } },
+                // NEEDS: light blows sending nothing; only the heavy brings the bolt.
+                new ShapeDef { Name = "Hammer Fall", Form = SpellForms.Brand,
+                    Description = "Light blows send nothing. Your heavy blow brings all of them as one bolt in a three-metre circle: five times a bolt's damage and 60 stagger. Save it for the heavy.",
+                    Spell = new SpellSpec { Reach = 8f, Seconds = 10f, Count = 1, Radius = 3f, Damage = 40f, Stagger = 60f, Stacks = 2 } },
+                "Opens two shapes of Waiting Thunder, chosen at any rest fire: Hanging Cloud over the enemy faced, or Hammer Fall, all of it in one heavy blow.",
+                // NEEDS: only within a second of the last bolt falling with a light blow.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Falling, Count = 5, Damage = 8f, Stagger = 6f, Radius = 1.5f, Delay = 0.3f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 10f } },
+                "Land the heavy blow within a second of the last bolt falling with a light blow, and all five come back for a second round.");
+
+            // NEEDS: no cooldown at all for 2.5 s after a perfect guard or dodge (task 4.4, SpellCooldowns.Frozen). Until then
+            // every running wait ends at once.
+            to.Add(BranchPattern.Put(new Upgrade { Id = InOneBreath, Name = "In One Breath", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { StrikesTwice }, Icon = UpgradeIcons.Hourglass,
+                Description = "All in on Lightning only. After a perfect guard or a perfect dodge, your spells have no cooldown for a breath. Cast everything you hold in it; then the cooldowns start from full.",
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.CutCooldowns, Amount = 30f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.CutCooldowns, Amount = 30f },
+                } },
+                BranchPattern.MiddleCrown));
+
+            // ---- The left bough: Charge.
+            // BESPOKE (as built): banked by hand in PlayerUpgrades (the count shown on the HUD); Deep Reserve is folded in, so
+            // the count of three is this mark's own.
+            to.Add(BranchPattern.Put(new Upgrade { Id = Upgrade.StoredCharge, Name = "Stored Charge", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Static }, Icon = UpgradeIcons.Shield,
+                Description = "Perfect guards bank charges, up to three. Each blow spends one for double damage and stagger.",
+                Tally = new TallySpec { Name = "Charge", Cap = 3 } },
+                BranchPattern.LeftFoot));
+
+            // Thunderclap, the base spell: cast by Lightning's kit, so its Learn carries no form; its shapes cast their own.
+            SpellBranch.Add(to, E, Thunderclap, "Thunderclap", SpellRole.Breaker, BranchPattern.LeftA, Upgrade.Static, "", null,
+                "Lightning's own spell, given with the element. A bolt falls on the enemy faced, up to ten metres away: 16 damage and 45 stagger, forking to two more.",
+                UpgradeIcons.Bolt,
+                // NEEDS: the 55 stagger. The base spell is cast by its kit, which takes only the Empower's wait.
+                new Empower { Cooldown = 7f, Stagger = 55f },
+                "Thunderclap waits 7 seconds, not 9, and breaks balance harder.",
+                new ShapeDef { Name = "Rolling Thunder", Form = SpellForms.Spikes,
+                    Description = "Three claps march out in a line, three metres apart, a quarter of a second each.",
+                    Spell = new SpellSpec { Reach = 9f, Speed = 12f, Count = 3, Radius = 1.5f, Damage = 16f, Stagger = 30f, Stacks = 1 } },
+                // NEEDS: the held press (SpellSpec.HoldForm), the clap growing with the hold. Until then it is the full hold.
+                new ShapeDef { Name = "Held Thunder", Form = SpellForms.Bolt,
+                    Description = "Hold for up to a second, then one huge clap with no forks: 90 stagger at the full hold.",
+                    Spell = new SpellSpec { Reach = 10f, Damage = 20f, Stagger = 90f, Count = 0, Radius = 0.5f, Stacks = 1 } },
+                "Opens two shapes of Thunderclap, chosen at any rest fire: Rolling Thunder, claps in a line, or Held Thunder, one great clap.",
+                // NEEDS: no wind-up on the instant cast.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.InstantNext },
+                },
+                "A perfect guard makes the next Thunderclap instant and ends its wait.");
+
+            // NEEDS: the ring standing 8 s (the drums go with it), and the third beat's great clap in 4 m (30 damage, 60
+            // stagger) that discharges everything in it. Until then a cast strikes up three drums that wait to be beaten.
+            SpellBranch.Add(to, E, RingOfDrums, "Ring of Drums", SpellRole.Counter, BranchPattern.LeftB, Upgrade.StoredCharge, SpellForms.Nova,
+                new SpellSpec { Radius = 1.5f, Damage = 0f, Stagger = 0f, Stacks = 0 },
+                "Three drums of cloud and lightning turn behind your shoulders. Each perfect guard or perfect dodge beats one, and a bolt falls on the attacker: 18 damage, 35 stagger and two Static.",
+                UpgradeIcons.Ring,
+                // NEEDS: the ring standing 10 s.
+                new Empower { Cooldown = 8f },
+                "Ring of Drums waits 8 seconds, not 10, and the ring stands longer.",
+                // NEEDS: a perfect guard beating two at once.
+                new ShapeDef { Name = "Drum Roll",
+                    Description = "Plain guards beat them too, for a small clap, 8 damage and 15 stagger. For a player who guards rather than dodges.",
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Burst, Damage = 8f, Stagger = 15f, Radius = 1.5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.5f } } },
+                // NEEDS: the beats banked, nothing falling, and the next heavy carrying them all (30% damage and 20 stagger each).
+                new ShapeDef { Name = "Silent Drum",
+                    Description = "Nothing falls on a beat; each beat is banked, and your next heavy blow carries all of them.",
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Burst, Damage = 18f, Stagger = 40f, Radius = 1.2f, Affliction = AfflictionKind.Static, Stacks = 2, Cooldown = 3f } } },
+                "Opens two shapes of Ring of Drums, chosen at any rest fire: Drum Roll, beaten by plain guards too, or Silent Drum, beats saved for a heavy blow.",
+                // NEEDS: all three beaten within 3 s keeping the ring another round. Until then a perfect dodge beats one more.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Falling, Damage = 18f, Stagger = 35f, Radius = 1.2f, Delay = 0.15f, Affliction = AfflictionKind.Static, Stacks = 2, Cooldown = 9f } },
+                "Beat all three within three seconds and the ring stays for another round.",
+                tally: new TallySpec { Name = "Drums", Cap = 3 },
+                learnEffects: new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Bank, Count = 3 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, Do = UpgradeAction.Falling, Damage = 18f, Stagger = 35f, Radius = 1.2f, Delay = 0.15f, Affliction = AfflictionKind.Static, Stacks = 2 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Spends = 1, Do = UpgradeAction.Falling, Damage = 18f, Stagger = 35f, Radius = 1.2f, Delay = 0.15f, Affliction = AfflictionKind.Static, Stacks = 2 },
+                });
+
             // Built by hand (the discharge in PlayerUpgrades.OnSwing): Static to ten deep with Lightning held, and a discharge
             // that does not arc and lands twice as hard on the one struck.
-            to.Add(new Upgrade { Id = SingleStroke, Name = "Single Stroke", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { WaitingThunder }, X = -3.21f, Y = 8.27f, Icon = UpgradeIcons.Blade,
+            to.Add(BranchPattern.Put(new Upgrade { Id = SingleStroke, Name = "Single Stroke", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { RingOfDrums }, Icon = UpgradeIcons.Blade,
                 Description = "Static builds to ten. A discharge no longer arcs: all of it lands on the one struck, twice as hard.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionDepth, 5f) } });
+                Stats = new[] { new StatMod(PlayerStat.AfflictionDepth, 5f) } }, BranchPattern.LeftCrown));
 
-            // Middle bough: Thunder. The sky and the surge.
-            // A bolt that sets off an enemy already at five is still to be written by hand.
-            to.Add(new Upgrade { Id = Conductor, Name = "Conductor", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Static }, X = 0.74f, Y = 3.87f, Icon = UpgradeIcons.Bolt,
-                Description = "Thunderclap leaves Static two deep on all it strikes, and sets off an enemy already at five.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 2 }, new UpgradeEffect { On = UpgradeTrigger.SpellHit, Needs = AfflictionKind.Static, NeedsFull = true, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Cooldown = 0.2f } } });
-            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
-            to.Add(new Upgrade { Id = QuickClap, Name = "Quick Clap", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Conductor }, X = 0.21f, Y = 5.04f, Icon = UpgradeIcons.Gem,
-                Description = "Thunderclap waits a fifth less between casts.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
-            to.Add(new Upgrade { Id = ThirdLeap, Name = "Third Leap", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Conductor }, X = -0.14f, Y = 4.18f, Icon = UpgradeIcons.Chain,
-                Description = "Thunderclap leaps to one more enemy.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCount, 1f) } });
-            // BESPOKE: holding the spell button again while the rod stands should step the player to it with a shock, and spend it.
-            // It used to grow straight from Static.
-            to.Add(new Upgrade { Id = Upgrade.LightningRod, Name = "Lightning Rod", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Conductor }, X = 0.58f, Y = 6.85f, Icon = UpgradeIcons.Tower,
-                Description = "You plant a rod two metres ahead. For eight seconds bolts fall inside a circle round it, each laying Static.",
-                Form = SpellForms.Rod,
-                Spell = new SpellSpec { Cost = 40f, Reach = 2f, Radius = 3.5f, Seconds = 8f, Interval = 0.9f, Damage = 12f, Stagger = 12f, Delay = 0.2f, Stacks = 1 } });
-            // Kept from the first slice; not in the design.
-            to.Add(new Upgrade { Id = Capacitor, Name = "Capacitor", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.LightningRod }, X = 0.36f, Y = 8.13f, Icon = UpgradeIcons.Gem,
-                Description = "A perfect guard gives more mana.",
-                Stats = new[] { new StatMod(PlayerStat.ManaFromGuards, 0.3f) } });
-            // BESPOKE: a line of ground whose far end follows the player, from the rod, while it stands. Until then any spell cast
-            // lays a line of lightning ahead of the player for a while.
-            to.Add(new Upgrade { Id = LiveWire, Name = "Live Wire", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.LightningRod }, X = -0.94f, Y = 7.67f, Icon = UpgradeIcons.Beam,
-                Description = "Casting any spell lays a line of lightning on the ground eight metres ahead of you for four seconds. Enemies standing on it are shocked and gather Static. This can happen once every six seconds.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.Hazard, Shape = HazardShape.Line, Count = 5, Reach = 8f, Radius = 0.9f, Seconds = 4f, Interval = 0.5f, Damage = 5f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 6f } } });
-            to.Add(new Upgrade { Id = LongOverdrive, Name = "Long Overdrive", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { LiveWire }, X = -1.37f, Y = 8.8f, Icon = UpgradeIcons.Hourglass,
-                Description = "Overdrive lasts longer.",
-                Stats = new[] { new StatMod(PlayerStat.SurgeSeconds, 0.3f) } });
-            to.Add(new Upgrade { Id = RunningCurrent, Name = "Running Current", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { LiveWire }, X = -2.09f, Y = 7.98f, Icon = UpgradeIcons.Gem,
-                Description = "Your blows give more mana.",
-                Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.15f) } });
-            // BESPOKE (built): LodestoneForm. The pull grows with each stack of Static and the burst sets all of it off.
-            to.Add(new Upgrade { Id = Lodestone, Name = "Lodestone", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { LiveWire }, X = -0.22f, Y = 9.14f, Icon = UpgradeIcons.Spiral,
-                Description = "You drag every enemy near toward you, further for each Static on it, then set all of it off at once.",
-                Form = SpellForms.Lodestone,
-                Spell = new SpellSpec { Cost = 45f, Reach = 1.5f, Radius = 7f, Delay = 0.3f, Damage = 14f, Stagger = 30f, Stacks = 0 } });
-            // BESPOKE (as built): the breath that opens Overdrive. The breath each perfect guard or dodge adds, and the dearer surge, are data.
-            // It used to grow from Lightning Rod.
-            to.Add(new Upgrade { Id = Upgrade.Overclock, Name = "Overclock", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { Lodestone }, X = -1.2f, Y = 10f, Icon = UpgradeIcons.Hourglass,
-                Description = "Overdrive opens with a breath in which everything but you is slowed. Each perfect guard or perfect dodge while it lasts opens another. Overdrive costs more mana.",
-                Stats = new[] { new StatMod(PlayerStat.SurgeCost, 0.375f) },
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, WhileSurge = true, Do = UpgradeAction.SlowTime, Seconds = 1f, Amount = 0.35f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, WhileSurge = true, Do = UpgradeAction.SlowTime, Seconds = 1f, Amount = 0.35f },
-                } });
-            // Kept from the first slice; not in the design. It sits beyond Overclock because a mark may not lie inward of what it grows from.
-            to.Add(new Upgrade { Id = ChainLance, Name = "Chain Lance", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.Overclock, Capacitor }, X = 0.38f, Y = 10.3f, Icon = UpgradeIcons.Beam,
-                Description = "You throw a bolt that leaps through four more and leaves Static on each.",
-                Form = SpellForms.Bolt,
-                Spell = new SpellSpec { Cost = 35f, Reach = 12f, Damage = 26f, Stagger = 30f, Count = 4, Radius = 5f, Stacks = 2 } });
-
-            // Right bough: Flicker. The dodge.
+            // ---- The right bough: Flicker.
             // BESPOKE (as built). Still to add: the player is gone for the first tenth of a second and passes through enemies.
-            to.Add(new Upgrade { Id = Upgrade.Blink, Name = "Blink", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Static }, X = 1.58f, Y = 4.51f, Icon = UpgradeIcons.Boot,
-                Description = "Each dodge sends a line of lightning down its path that shocks whatever it crosses." });
-            to.Add(new Upgrade { Id = BitingStep, Name = "Biting Step", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Blink }, X = 1.08f, Y = 5.39f, Icon = UpgradeIcons.Fang,
-                Description = "Blink shocks harder.",
-                Stats = new[] { new StatMod(PlayerStat.BlinkPower, 0.4f) } });
+            to.Add(BranchPattern.Put(new Upgrade { Id = Upgrade.Blink, Name = "Blink", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Static }, Icon = UpgradeIcons.Boot,
+                Description = "Each dodge sends a line of lightning down its path that shocks whatever it crosses." }, BranchPattern.RightFoot));
+
+            // NEEDS: a second press while the rod stands stepping you to it in a flash (a 2.5 m shock, 14 damage, 20
+            // stagger), the rod spent. Until then the rod strikes round itself.
+            SpellBranch.Add(to, E, Upgrade.LightningRod, "Lightning Rod", SpellRole.Movement, BranchPattern.RightA, Upgrade.Blink, SpellForms.Rod,
+                new SpellSpec { Reach = 2f, Radius = 3.5f, Seconds = 8f, Interval = 0.9f, Damage = 12f, Stagger = 12f, Delay = 0.2f, Stacks = 1 },
+                "You plant a sword point-up two metres ahead, and for eight seconds bolts fall on enemies near it, each laying Static.",
+                UpgradeIcons.Tower,
+                new Empower { Cooldown = 8f, Radius = 4.5f },
+                "Lightning Rod waits 8 seconds, not 10, and strikes further round itself.",
+                // NEEDS: the pull toward the rod, not toward you.
+                new ShapeDef { Name = "Lodestone", Form = SpellForms.Lodestone,
+                    Description = "The rod draws every enemy within seven metres toward it, further for each Static they carry, then discharges all of them. There is no step.",
+                    Spell = new SpellSpec { Reach = 2f, Radius = 7f, Delay = 0.3f, Damage = 14f, Stagger = 30f, Stacks = 0 } },
+                new ShapeDef { Name = "Thrown Rod",
+                    Description = "The rod is thrown up to ten metres, into a far enemy or the ground, so the step goes that far.",
+                    Change = new SpellChange { Reach = 10f } },
+                "Opens two shapes of Lightning Rod, chosen at any rest fire: Lodestone, a rod that pulls, or Thrown Rod, a rod planted far.",
+                // NEEDS: the shared movement rule's timing (cast as a blow would land), and the rod not spent by the step.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
+                },
+                "Cast in the instant a blow would land on you, it counts as a perfect dodge, and the rod is not spent by the step.");
+
             // BESPOKE (as built). Still to add: the copy repeats the player's last blow and lays its Static.
-            to.Add(new Upgrade { Id = Upgrade.Afterimage, Name = "Afterimage", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Blink }, X = 2.07f, Y = 7.01f, Icon = UpgradeIcons.Eye,
-                Description = "A dodge at the last moment leaves a copy of you that strikes where you stood." });
-            // There is no stamina cost for a dodge out of a recovery alone: a quarter of the saving, on every dodge.
-            to.Add(new Upgrade { Id = QuickReturn, Name = "Quick Return", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Blink }, X = 2.52f, Y = 5.92f, Icon = UpgradeIcons.Arrow,
-                Description = "The dodge and a blow held on the guard cost a tenth less stamina.",
-                Stats = new[] { new StatMod(PlayerStat.StaminaCost, -0.1f) } });
-            to.Add(new Upgrade { Id = ForkedStep, Name = "Forked Step", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Blink }, X = 2.41f, Y = 4.98f, Icon = UpgradeIcons.Boot,
-                Description = "Blink shocks a wider path.",
-                Stats = new[] { new StatMod(PlayerStat.BlinkWidth, 0.8f) } });
+            to.Add(BranchPattern.Put(new Upgrade { Id = Upgrade.Afterimage, Name = "Afterimage", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Blink }, Icon = UpgradeIcons.Eye,
+                Description = "A dodge at the last moment leaves a copy of you that strikes where you stood." }, BranchPattern.RightMiddle));
+
             // BESPOKE (built): FlashesForm.
-            to.Add(new Upgrade { Id = SevenFlashes, Name = "Seven Flashes", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Upgrade.Afterimage }, X = 3.33f, Y = 8.5f, Icon = UpgradeIcons.Star,
-                Description = "You cut through up to seven enemies in one breath and return to where you stood. The cuts land together when you are still. 45 mana.",
-                Form = SpellForms.Flashes,
-                Spell = new SpellSpec { Cost = 45f, Count = 7, Interval = 0.1f, Delay = 0.5f, Damage = 9f, Stagger = 8f, Stacks = 1, Reach = 8f } });
-            // Kept from the first slice; not in the design.
-            to.Add(new Upgrade { Id = QuickHands, Name = "Quick Hands", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Blink }, X = 1.43f, Y = 6.25f, Icon = UpgradeIcons.Fist,
-                Description = "The weapon is swung a little faster.",
-                Stats = new[] { new StatMod(PlayerStat.SwingSpeed, 0.05f) } });
-            to.Add(new Upgrade { Id = ChargedStep, Name = "Charged Step", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Afterimage }, X = 2.18f, Y = 8.17f, Icon = UpgradeIcons.Gem,
-                Description = "A perfect dodge gives more mana.",
-                Stats = new[] { new StatMod(PlayerStat.ManaFromDodges, 0.5f) } });
+            SpellBranch.Add(to, E, SevenFlashes, "Seven Flashes", SpellRole.Detonator, BranchPattern.RightB, Upgrade.Afterimage, SpellForms.Flashes,
+                new SpellSpec { Count = 7, Interval = 0.1f, Delay = 0.5f, Damage = 9f, Stagger = 8f, Stacks = 1, Reach = 8f },
+                "You vanish, seven cuts are drawn from enemy to enemy, and you stand still on the spot you left with your back turned while they land together. Any enemy at full Static discharges. 45 mana.",
+                UpgradeIcons.Star,
+                new Empower { Mana = 35f, Damage = 11f },
+                "Seven Flashes costs 35 mana, not 45, and each cut is heavier.",
+                // NEEDS: all seven cuts on one line through the enemy faced, as one blow of seven.
+                new ShapeDef { Name = "One Flash",
+                    Description = "Against the enemy faced only. All seven cuts land as one blow, and its Static discharges twice.",
+                    Change = new SpellChange { Reach = 3f },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Static, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Damage = 4f, Cooldown = 0.5f } } },
+                // NEEDS: ending behind the last enemy cut, and the still shape of light left on the starting spot to be struck.
+                new ShapeDef { Name = "Left Behind",
+                    Description = "You do not return. You end behind the last enemy cut, and a shape of light takes the still pose on the starting spot and is what can be struck.",
+                    Change = new SpellChange { Delay = 0.1f } },
+                "Opens two shapes of Seven Flashes, chosen at any rest fire: One Flash on the one faced, or Left Behind, ending in the crowd.",
+                // NEEDS: the cast within 0.3 s of a perfect dodge not standing still afterwards. Nothing in the data says it yet.
+                null,
+                "Cast within a third of a second of a perfect dodge, and you do not stand still afterwards: the cuts land at once.");
+
             // BESPOKE: a guard that costs twice the stamina for each point caught. Until then the price is a shorter perfect guard.
             // The stamina given back is the dodge's usual 25.
-            to.Add(new Upgrade { Id = NeverThere, Name = "Never There", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SevenFlashes }, X = 2.96f, Y = 9.94f, Icon = UpgradeIcons.Wing,
+            to.Add(BranchPattern.Put(new Upgrade { Id = NeverThere, Name = "Never There", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { Upgrade.Afterimage }, Icon = UpgradeIcons.Wing,
                 Description = "Every dodge carries further and a perfect dodge costs nothing. A blow held on your guard costs twice the stamina.",
                 Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.3f), new StatMod(PlayerStat.GuardStamina, 1f) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Stamina, Amount = 25f } } });
-            to.Add(new Upgrade { Id = BrightEcho, Name = "Bright Echo", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Upgrade.Afterimage }, X = 3.08f, Y = 7.37f, Icon = UpgradeIcons.Eye,
-                Description = "The copy left by Afterimage strikes harder.",
-                Stats = new[] { new StatMod(PlayerStat.AfterimagePower, 0.3f) } });
-            // Kept from the first slice; not in the design.
-            to.Add(new Upgrade { Id = Slipstream, Name = "Slipstream", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Afterimage }, X = 1.26f, Y = 8.87f, Icon = UpgradeIcons.Wing,
-                Description = "A dodge at the last moment quickens your feet and your weapon for a while.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Boon, Stat = PlayerStat.MoveSpeed, Amount = 0.25f, Seconds = 6f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Boon, Stat = PlayerStat.SwingSpeed, Amount = 0.15f, Seconds = 6f },
-                } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Stamina, Amount = 25f } } },
+                BranchPattern.RightCrown));
 
             // BESPOKE (as built): Storm Step, done by hand.
-            to.Add(new Upgrade { Id = Upgrade.StormStep, Name = "Storm Step", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
-                Description = "While Overdrive lasts, every dodge costs nothing and shocks what it passes through." });
+            to.Add(BranchPattern.Put(new Upgrade { Id = Upgrade.StormStep, Name = "Storm Step", Element = E, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Description = "While Overdrive lasts, every dodge costs nothing and shocks what it passes through." }, BranchPattern.Gift));
         }
     }
 }

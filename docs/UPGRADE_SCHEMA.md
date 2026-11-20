@@ -1045,7 +1045,8 @@ slot, and a `Devotion` only all in. A Shape mark adds the stats and effects of t
 so a cast allocates nothing after the first) gives its form and numbers: the Learn's, then the worn shape's whole spec
 or change, then the Empower's change; the slot's wait is that spec's cooldown. A base spell cast by its kit takes only
 its Empower's wait (`SpellBranches.BaseCooldown`): its other numbers are the kit's, a `NEEDS` until base spells are cast
-through their marks.
+through their marks. A shape is chosen with `PlayerBuild.ChooseShape(branch, choice, atRestFire)` and kept for the run
+(`RunState.Shapes`); the Hand screen has no control for it yet.
 
 ### 20.6 Retired marks
 

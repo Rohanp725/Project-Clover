@@ -641,8 +641,9 @@ namespace Clover.Player
             hasStatic = On(Upgrade.Static);
             staticLays = hasStatic && first == Elements.Lightning;
             hasCharge = On(Upgrade.StoredCharge);
-            var reserve = Upgrade.ById(Trees.LightningTree.DeepReserve);
-            reserveIndex = hasCharge && reserve != null && On(Trees.LightningTree.DeepReserve) ? reserve.Index : -1;
+            // Deep Reserve is folded into Stored Charge, which keeps the count of three charges itself.
+            var reserve = Upgrade.ById(Upgrade.StoredCharge);
+            reserveIndex = hasCharge && reserve != null && reserve.Tally != null ? reserve.Index : -1;
             hasBlink = On(Upgrade.Blink);
             hasAfterimage = On(Upgrade.Afterimage);
             hasCuts = On(Upgrade.DelayedCuts);
