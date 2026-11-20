@@ -948,6 +948,8 @@ Group: Reactions
 
 **What sets it off.** Fire on a Soaked enemy (from your Water, or the world's water), or Water on a burning one.
 
+**Its shapes.** With the Shape mark of Fire and Water's duo branch (Two Sisters: Blind Steam or Scald, 3 Shards, in the heart of the chart) and both carried, Steam wears the shape chosen at a rest fire instead. Blind Steam: the plume lies 3 m round it for 4 s, stinging 3 a second; enemies in it as it forms see only 2 m and swing a fifth slower. Scald: no cloud and the Burn kept; a burst of 14 and 6 for each Burn, 30 stagger, that throws everything within 2.5 m 1.5 m.
+
 **How to use it.** Deep Burn makes a bigger puff, but takes half of it. Soak a crowd and set them steaming one by one. Its short rest means it comes back often.
 
 **How it looks.** Its name over the enemy and a burst of water where it stands.
@@ -960,6 +962,8 @@ Group: Reactions
 **The numbers.** The fern throws a bolt to the nearest other Seeded enemy within 8 m: 8 damage, 10 stagger and a Static. The enemy keeps both afflictions. Rests 4 s.
 
 **What sets it off.** Static landing on a Seeded enemy, or a seed on a charged one.
+
+**Its shapes.** With the Shape mark of Lightning and Life's duo branch (Field or Oak: The Rice Wakes or Struck Oak, 3 Shards, in the heart of the chart) and both carried, Lightning Flower wears the shape chosen at a rest fire instead. The Rice Wakes: the fern's bolt as plain, and a field of shoots 3 m round it for 6 s that lays a Static each second on what stands in it. Struck Oak: no fern; a burst of 16 and 5 for each Static and Seed it carried, in 3 m, spending both.
 
 **How to use it.** Seed two enemies, then charge one.
 
@@ -974,6 +978,8 @@ Group: Reactions
 
 **What sets it off.** Unsteady landing on a shaken enemy, or Tremor on a Unsteady one.
 
+**Its shapes.** With the Shape mark of Wind and Earth's duo branch (Grit or Drift: Sandblast or Drifted Over, 3 Shards, in the heart of the chart) and both carried, Logan Stone wears the shape chosen at a rest fire instead. Both rock it and fell it on your third blow as plain. Sandblast: the fall's dust thrown on away from you, 6, 15 stagger and an Unsteady to those behind it, which may set them rocking. Drifted Over: it lies 1 s longer, and enemies within 2 m wade at 60% speed.
+
 **How to use it.** Three blows inside 3 s: the weapon fells it.
 
 **How it looks.** Its name over the enemy, then the fall: it lies flat on its back, and gets up when its time is over.
@@ -986,6 +992,8 @@ Group: Reactions
 **The numbers.** Brittle 5 s: its notches do not fade. Your next heavy blow cracks the plates off: for 6 s it takes 25% more from your weapon, and its notches stay (for two minutes, for now). Rests 5 s.
 
 **What sets it off.** Chill landing on a notched enemy, or a notch on a chilled one.
+
+**Its shapes.** With the Shape mark of Ice and Metal's duo branch (Plate or Snap: Shed Plate or Snapped Blade, 3 Shards, in the heart of the chart) and both carried, Cold Short wears the shape chosen at a rest fire instead. Shed Plate: brittle and cracked as plain, and the cracked plate falls as black ice 2 m across for 4 s; those within 1.2 m slip flat 0.6 s. Snapped Blade: the armour does not crack; for 5 s its notches stay and its own blows deal half.
 
 **How to use it.** Chill a notched enemy, then heavy it, then fight it.
 
@@ -1000,6 +1008,8 @@ Group: Reactions
 
 **What sets it off.** Water landing on a Marked enemy, or a Mark on a Soaked one.
 
+**Its shapes.** With the Shape mark of Water and Light's duo branch (Net or Eye: Thrown Wide or The Fish's Eye, 3 Shards, in the heart of the chart) and both carried, Caught Light wears the shape chosen at a rest fire instead. Thrown Wide: the net 5 m across for 4 s, and at its end everything within 2.5 m is hauled 2 m toward its enemy. The Fish's Eye: no net; your next weapon blow on it within 6 s is critical at three times the damage, spends the Mark and strikes 12 behind it.
+
 **How to use it.** Wet the crowd, Mark one: all of them Marked for your critical blows, and slowed.
 
 **How it looks.** Its name over the enemy and the net on the floor. Not yet: enemies walking onto the net later slowed too.
@@ -1012,6 +1022,8 @@ Group: Reactions
 **The numbers.** One coil at once: 25% slower (a god is not slowed), and it takes 6% more from your weapon. Each of your weapon blows draws the roots a coil tighter (6% more each) and mends you 1. At four coils (the third blow) it is girdled: held 1.5 s while the roots crush (an elite 0.6 s; a god as a man 0.45 s, in its godly form 0.18 s, and not at all while its guard lasts), 20 damage and 40 stagger, and you heal 4. The roots wait 8 s for your blows. Rests 6 s.
 
 **What sets it off.** A seed landing on a Cursed enemy, or a curse on a Seeded one.
+
+**Its shapes.** With the Shape mark of Life and Dark's duo branch (Flowers or Fig: Corpse Flowers or Fig in the Crown, 3 Shards, in the heart of the chart) and both carried, Girdled wears the shape chosen at a rest fire instead. Both coil and crush as plain. Corpse Flowers: when the roots let go, three pale flowers stand where it stood for 8 s, grown things of yours. Fig in the Crown: an enemy that dies in the roots Seeds and Curses the nearest within 5 m, which may start to coil in turn.
 
 **How to use it.** Three blows: each one opens it more and mends you, and the third crushes it.
 
@@ -1026,6 +1038,8 @@ Group: Reactions
 
 **What sets it off.** Tremor landing on a poisoned enemy, or poison on a shaken one.
 
+**Its shapes.** With the Shape mark of Earth and Poison's duo branch (Damp or Ore: Blackdamp or Red Ore, 3 Shards, in the heart of the chart) and both carried, Chokedamp wears the shape chosen at a rest fire instead. Blackdamp: the damp does not run; a pool 3.5 m wide for 7 s doses each second what stands in it and slows those in it as it pools. Red Ore: no mist; your next heavy blow on it within 4 s bursts the ore in 3 m, 14 and 3 for each dose, three doses and 30 stagger.
+
 **How to use it.** Shake the crowd first, then poison one: the damp finds them all.
 
 **How it looks.** Its name over the enemy. Not yet: the pools staying on the floor where they settle.
@@ -1038,6 +1052,8 @@ Group: Reactions
 **The numbers.** For 5 s each heavy blow on it throws sparks out of its far side, away from you, in a cone about 3 m long: 6 damage and a Burn to each enemy in it. Rests 5 s.
 
 **What sets it off.** A notch landing on a burning enemy, or Burn on a notched one.
+
+**Its shapes.** With the Shape mark of Metal and Fire's duo branch (Slag or Shirt: Slag or The Burning Shirt, 3 Shards, in the heart of the chart) and both carried, Red Hot wears the shape chosen at a rest fire instead. Slag: for 5 s it drips a pool of slag each second, 0.8 m round, that burns 3 s, 3 and a Burn a second to all in it but its wearer. The Burning Shirt: no sparks; for 5 s it cannot guard and takes a Burn every 1.5 s.
 
 **How to use it.** Put it between you and the others and heavy it: each heavy lights them.
 
@@ -1052,6 +1068,8 @@ Group: Reactions
 
 **What sets it off.** A Mark landing on a charged enemy, or Static on a Marked one.
 
+**Its shapes.** With the Shape mark of Light and Lightning's duo branch (Flat or Again: Laid Flat or Struck Again, 3 Shards, in the heart of the chart) and both carried, The Bolt Runs True wears the shape chosen at a rest fire instead. Laid Flat: 0.5 s later 18 and two Static to it and to the nearest other Marked enemy within 10 m, then its Static discharges. Struck Again: no great bolt; while its Mark lasts each weapon blow on it calls a bolt of 9, 15 stagger and a Static.
+
 **How to use it.** Charge it deep before you Mark it, or Mark it before you charge it: the bolt sets the charge off for you. Stand so the others are behind it: the bolt runs on through them.
 
 **How it looks.** Its name over the enemy, the thread and the bolt on it, then the bolt coming down again and again as it runs away from you down the lane, and the discharge.
@@ -1064,6 +1082,8 @@ Group: Reactions
 **The numbers.** Winded for 1.5 s (an elite 0.6 s): it begins no attack (one already swung is finished) and takes 30% more stagger. Rests 6 s.
 
 **What sets it off.** A curse landing on a Unsteady enemy, or Unsteady on a Cursed one.
+
+**Its shapes.** With the Shape mark of Dark and Wind's duo branch (Storm or Breath: Black Storm or Second Wind, 3 Shards, in the heart of the chart) and both carried, Breath Taken wears the shape chosen at a rest fire instead. Both wind it as plain. Black Storm: the two nearest others within 6 m are winded too, Cursed and Unsteady. Second Wind: the breath comes to you, 25 stamina and 8 mana, and your dodges cost nothing for 3 s.
 
 **How to use it.** Wind it, then break its balance while it cannot answer.
 
@@ -1078,6 +1098,8 @@ Group: Reactions
 
 **What sets it off.** Poison landing on a chilled enemy, or Chill on a poisoned one.
 
+**Its shapes.** With the Shape mark of Poison and Ice's duo branch (Floor or Bone: Frost Over Frost or Cold Damage, 3 Shards, in the heart of the chart) and both carried, Venom Rime wears the shape chosen at a rest fire instead. Both keep the poison and lay a Chill at each bite as plain. Frost Over Frost: once it freezes, rime 3 m round it for 5 s lays a Chill and a dose each second. Cold Damage: while frozen each bite deals 2 more a dose, and a heavy blow on it frozen sets every dose off, 6 a dose.
+
 **How to use it.** Dose it and chill it once: the poison freezes it for you.
 
 **How it looks.** Its name over the enemy and a Chill at each bite.
@@ -1090,6 +1112,8 @@ Group: Reactions
 **The numbers.** The Seeded is spent: one lily for each stack (one to three) springs up 2.5 m round the enemy and stands 5 s, burning whatever is within 1 m (3 damage and a Burn every half second). They count as things you grew. Its Burn stays. Rests 4 s.
 
 **What sets it off.** Burn landing on a Seeded enemy, or a seed on a burning one.
+
+**Its shapes.** With the Shape mark of Fire and Life's duo branch (Firebloom: Between Two Fires or Ash Bed, 3 Shards, in the heart of the chart) and both carried, Firebloom wears the shape chosen at a rest fire instead. Between Two Fires: the Seeded is spent and a pair of lilies grows for each seed, 3 m apart across the enemy. Ash Bed: no lilies and nothing spent; while it is Seeded its Burn does not fade, and when it dies a bed of shoots 3 m across stands 6 s, Seeding what steps in.
 
 **How to use it.** Seed it deep before you light it: more seeds, more lilies.
 
@@ -1104,6 +1128,8 @@ Group: Reactions
 
 **What sets it off.** Static landing on a shaken enemy, or Tremor on a charged one.
 
+**Its shapes.** With the Shape mark of Lightning and Earth's duo branch (Earthed: Thunderstone or Step Current, 3 Shards, in the heart of the chart) and both carried, Earthed wears the shape chosen at a rest fire instead. Thunderstone: nothing is spent; its Static is held 6 s and your heavy blow on it throws all of it at everything within 6 m, 7 a stack and a Static each. Step Current: the figure spreads to 6 m and stays live 3 s, biting 4 and 6 stagger every half second.
+
 **How to use it.** Charge it deep in a crowd, then shake it: the charge goes to everyone near.
 
 **How it looks.** Its name over the enemy and a burst round it. Not yet: the fern on the floor, and sparing the grounded one (for now it takes its own).
@@ -1116,6 +1142,8 @@ Group: Reactions
 **The numbers.** For 3 s the plates whirl 1.5 m round it, cutting everything they pass, the enemy too: 3 damage for each shard (one for each notch, plus one) and 4 stagger every 0.4 s. Rests 4 s.
 
 **What sets it off.** Unsteady landing on a notched enemy, or a notch on a Unsteady one.
+
+**Its shapes.** With the Shape mark of Wind and Metal's duo branch (Sickle Wind: Sent Downwind or Cut Unfelt, 3 Shards, in the heart of the chart) and both carried, Sickle Wind wears the shape chosen at a rest fire instead. Sent Downwind: the whirl is laid as three patches on your line beyond it, cutting 3 and 4 stagger every 0.4 s for 3 s and notching each enemy there once. Cut Unfelt: nothing for 3 s, then 32 and 28 stagger in 1.5 m, and 6 more for each of your weapon blows on it meanwhile.
 
 **How to use it.** Notch it deep first: more notches, more blades. Keep clear of the whirl, or fight inside it.
 
@@ -1130,6 +1158,8 @@ Group: Reactions
 
 **What sets it off.** Chill landing on a Marked enemy, or a Mark on a chilled one.
 
+**Its shapes.** With the Shape mark of Ice and Light's duo branch (Mock Suns: Prism or Lens of Ice, 3 Shards, in the heart of the chart) and both carried, Mock Suns wears the shape chosen at a rest fire instead. Prism: no suns; for 4 s its Mark is not spent, and your next weapon blow on it throws three strikes on your line beyond it, 8, a Mark and a Chill each. Lens of Ice: while chilled and Marked its Mark is not spent, and a heavy blow on it at full Chill strikes 18 more and Marks every enemy within 4 m.
+
 **How to use it.** Strike as often as you can inside the 4 s: each blow is critical and chills it.
 
 **How it looks.** Its name over the enemy. Not yet: the suns turning with it, and only blows from its flanks counting.
@@ -1142,6 +1172,8 @@ Group: Reactions
 **The numbers.** Swollen 5 s: 20% slower (a god is not slowed) and 15% more from your weapon. When it dies, or a heavy blow lands while it is swollen, it bursts in black water: 14 damage and 20 stagger, Soaked and Cursed, to everyone within 4 m. Rests 4 s.
 
 **What sets it off.** Water landing on a Cursed enemy, or a curse on a Soaked one.
+
+**Its shapes.** With the Shape mark of Water and Dark's duo branch (Drowned Weight: Drawn Under or The Pull of Night, 3 Shards, in the heart of the chart) and both carried, Drowned Weight wears the shape chosen at a rest fire instead. Both swell it 5 s as plain. Drawn Under: it is held 1.5 s and everything within 3 m is drawn 2 m toward it, and it bursts as plain. The Pull of Night: no burst; each of your weapon blows on it draws everything within 5 m 1 m toward it.
 
 **How to use it.** Kill it in a crowd, or heavy it there: the black water spreads the pair to the rest.
 
@@ -1156,6 +1188,8 @@ Group: Reactions
 
 **What sets it off.** Poison landing on a Seeded enemy, or Seeded on a poisoned one.
 
+**Its shapes.** With the Shape mark of Life and Poison's duo branch (Rot Roots: Gathered In or Summer Grass, 3 Shards, in the heart of the chart) and both carried, Rot Roots wears the shape chosen at a rest fire instead. Gathered In: roots to three enemies within 5 m for 6 s, each Seeded; each bite on one of them takes a dose and passes it to the nearest other, most often the host. Summer Grass: no roots; if it dies within 20 s a puff of spores 4 m across follows 1.5 s later, three doses and a Seed on all in it, and 6 health to you.
+
 **How to use it.** Poison one enemy deep, then seed it in a crowd: one body's poison hurts four. The joined ones carry Seeded, ready for Life's own marks.
 
 **How it looks.** Its name over the enemy and a poison puff on each joined one at every bite. Not yet: the pale roots on the floor.
@@ -1168,6 +1202,8 @@ Group: Reactions
 **The numbers.** Three hot stones lie 1.5 m round the enemy for 6 s and burn whatever touches them (3 damage and a Burn each half second). Rests 6 s.
 
 **What sets it off.** Tremor landing on a burning enemy, or Burn on a shaken one.
+
+**Its shapes.** With the Shape mark of Earth and Fire's duo branch (Burnt Mound: Heaped Stones or Fire-Cracked, 3 Shards, in the heart of the chart) and both carried, Burnt Mound wears the shape chosen at a rest fire instead. Heaped Stones: one red-hot boulder beside it for 6 s, and your heavy blow on the enemy rolls it 8 m on away from you, 20, two Burn and two Tremor to each it crosses. Fire-Cracked: the three stones lie 6 s and bite 6 and a Burn once a second what stands within 1 m.
 
 **How to use it.** Fight it among its stones: what steps on them burns.
 
@@ -1182,6 +1218,8 @@ Group: Reactions
 
 **What sets it off.** Static landing on a Sundered enemy, or Sundered on a charged one.
 
+**Its shapes.** With the Shape mark of Metal and Lightning's duo branch (Live Iron: Drawn Iron or Forged Bolt, 3 Shards, in the heart of the chart) and both carried, Live Iron wears the shape chosen at a rest fire instead. Drawn Iron: the arcs as plain, and each blow also draws everything within 8 m 1.5 m toward the one struck. Forged Bolt: no arcs; its Static holds 6 s, and your heavy blow takes up to three and throws a bolt 10 m on, 12 for each, 20 stagger and two Static to all on the line.
+
 **How to use it.** Notch the crowd first, then make one of them live and fight it: every blow reaches the others. The arc's notches lay the wire for the next.
 
 **How it looks.** Its name over the enemy and a strike where each arc lands.
@@ -1194,6 +1232,8 @@ Group: Reactions
 **The numbers.** Three feathers ride 6 m on past the enemy, away from you; each Marks what it touches and makes it Unsteady. The first enemy keeps its Mark. Rests 4 s.
 
 **What sets it off.** A Mark landing on a Unsteady enemy, or Unsteady on a Marked one.
+
+**Its shapes.** With the Shape mark of Light and Wind's duo branch (Golden Feathers: Eagle's Sight or Wingbeat, 3 Shards, in the heart of the chart) and both carried, Golden Feathers wears the shape chosen at a rest fire instead. Eagle's Sight: no feathers; for 4 s your next weapon blow on it is critical and cuts 10 more. Wingbeat: no feathers fly; everything within 3 m of it is thrown 3 m away from it and Marked.
 
 **How to use it.** Stand so the others are behind it: they are Marked for your critical blows.
 
@@ -1208,6 +1248,8 @@ Group: Reactions
 
 **What sets it off.** A curse landing on a chilled enemy, or Chill on a Cursed one.
 
+**Its shapes.** With the Shape mark of Dark and Ice's duo branch (Stolen Warmth: Cold Shade or The Long Night, 3 Shards, in the heart of the chart) and both carried, Stolen Warmth wears the shape chosen at a rest fire instead. Cold Shade: the warmth drawn as plain, and when it dies a patch stays 4 s where it fell, chilling once a second all within 2.5 m. The Long Night: no health is drawn; its Chill holds and your blows chill it, and while it is frozen everything within 3 m takes a Chill each second.
+
 **How to use it.** Keep hitting: every blow heals you and chills it toward a freeze.
 
 **How it looks.** Its name over the enemy. Not yet: the last warmth torn out of it when it freezes.
@@ -1220,6 +1262,8 @@ Group: Reactions
 **The numbers.** A fouled slick 3 m across lies 5 s and Soaks whoever stands in it. If the enemy carries four doses or more as it reacts, it floats up stunned: lifted and held 1.5 s (an elite 0.5 s; a god takes 30 stagger instead), and your next weapon blow on it is critical and spends two doses for 6 damage each. Rests 6 s.
 
 **What sets it off.** Poison landing on a Soaked enemy, or Water on a poisoned one.
+
+**Its shapes.** With the Shape mark of Poison and Water's duo branch (Fish Poison: Rock Pool or The Ebb Takes It, 3 Shards, in the heart of the chart) and both carried, Fish Poison wears the shape chosen at a rest fire instead. Rock Pool: the slick is 1.5 m across and floats it at two doses. The Ebb Takes It: the slick runs 6 m on away from you as four patches 1.5 m across, and floats it at four doses as plain.
 
 **How to use it.** Dose it four deep before you wet it, then be ready with the blade.
 

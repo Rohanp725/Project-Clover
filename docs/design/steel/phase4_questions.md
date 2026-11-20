@@ -460,3 +460,80 @@ Thunder). None of it has been run in the editor yet.
 9. **Given Bones and The Exile Returns** answer any discharge of Static on a Cursed enemy, not only the Grudge's bolt, so
    Ash and Thunder's bolts and every other set-off of Static on the Cursed trigger them too (each at most every 0.3 s).
    Default: as built. Alternative: hold them back until the Grudge's bolt can be told apart.
+
+## Task 4.17: the duo branches of pairs_d4.md and pairs_d5.md
+
+Every one of the 55 pairs now has a duo branch in the heart. The eleven at distance 4 (Steam, Lightning Flower, Logan
+Stone, Cold Short, Caught Light, Girdled, Chokedamp, Red Hot, The Bolt Runs True, Breath Taken, Venom Rime) each have
+their Shape mark, two majors, a keystone and a duo spell, as pairs_d4.md lists them (no minor); Red Hot, The Bolt Runs
+True and Breath Taken also have their duo surges (Heated Bronze, The Net of Jewels, Wind From the Grave). The eleven at
+distance 5 (Firebloom, Earthed, Sickle Wind, Mock Suns, Drowned Weight, Rot Roots, Burnt Mound, Live Iron, Golden
+Feathers, Stolen Warmth, Fish Poison) each have their Shape mark, a major, a minor, a keystone and a duo spell; Earthed
+and Stolen Warmth also have their duo surges (When the Watch Sleeps, Three Winters). The owner's three decisions of
+2026-11-20 are followed in all 22: no god gives a duo spell, each is bought with 5 Shards once both elements are
+carried; marks waiting on an engine piece can be bought and say "Not built yet"; stand-ins with looser triggers are
+kept, each capped by a cooldown. Neither pair file moves a spare spell to a full roster, so no hidden mark was needed.
+None of it has been run in the editor yet; `AgentScripts/DuoProbeAll.cs` runs every branch's reaction plain and in
+each shape.
+
+1. **The eleven d5 minors do nothing yet.** Dry Pods, Deep Earth, Grit, Wide Fan, Deep Swell, Deep Threads, Hot Stones,
+   Bare Wire, Riding High, Deep Veins and Wide Slick each change their own reaction's numbers (ledger
+   `reaction-numbers`, which would finish all eleven, and the nine minors of tasks 4.15 and 4.16 with them). Default:
+   they can be bought and say "Not built yet". Alternative: build `reaction-numbers` before the playtest.
+2. **Where a d5 branch's minor stands.** pairs_d5.md gives each branch one major and one minor, so the minor takes the
+   second low place of the heart (beside the major, both growing from the Shape mark) and the keystone and the duo
+   spell grow from both. A player can reach the duo spell through a minor that does nothing yet. Default: as built.
+   Alternative: the minor above the major (as at distance 3), the keystone and duo spell from the major alone.
+3. **Keystones that are stand-ins.** Default: as built. Alternative: buyable but doing nothing until their pieces exist.
+   - Kettle: a Soaked enemy that dies burning bursts as the plain Steam at full, whatever shape is worn (`death-reaction`).
+   - The Prophecy Broken: an elite is thrown flat on one Logan Stone in three, at most once in 6 s, not after three
+     reels (`count-rules`); no god is ever thrown flat, because the condition refuses gods.
+   - Brittle to the Core: 30 damage and 40 stagger in place of a shatter (`shatter-made`).
+   - The Diamond Falls: one critical blow in three on a Marked enemy lays a Static, at most once in 5 s, rather than the
+     third critical calling the bolt (`count-rules`).
+   - The Burning Tree: a helper striking the enemy that bloomed with Burn, at most once in 30 s, for "the first lily of
+     each fight". The Ground Answers: a second burst on a shaken enemy's discharge, not rocks holding charge. The Host:
+     only while something grown stands within 4 m of you. Iron Calls the Storm: any spell striking a charged enemy, not
+     only thrown blades. No Summer: every health price set aside for 4 s after a shatter, not only Hunger's. Fast Water:
+     a second bite half a second after each bite on a Soaked enemy, at most twice a second for all.
+4. **A mark that answers another mark's condition** (new ledger line `condition-needs`). Strike Through Steam, New Face,
+   Glass Bell, Seen in the Water, The Lamp Goes Out, Strike While Hot, Red-Short, Short of Breath and The Last Breath set
+   their own copy of the reaction's condition when it fires, so they follow the plain reaction's timing even where a
+   shape changes it (New Face opens 1.8 s after the fall, even under Drifted Over, which keeps it down 2.8 s). Held
+   Under, Three Smiths, Hel's Half and The Debt Passes test the two afflictions instead of the condition. Default: as
+   built.
+5. **Snapped Blade** cannot answer your guard, since a shape answers only its reaction's own moments: the enemy deals
+   half damage for its 5 s of brittleness instead (`guard-made-perfect`). Default: as built.
+6. **Duo spells from the nearest forms.** Bullets (The Sisters' Quarrel), Wave (Sowing Thunder, Walking Dune, Sweep of
+   Wings), Brand (Cold Chisel, Ice in the Blood), Step (The Gods' Road, Three Weasels, Under the Black Water), Parry
+   (Death Turned Back, Blown Through, Sunstone), Minions (The Clay Rank), Phalanx (Tipped Crucible), Spikes (Diamond
+   Thunder), Field (Rime Over Rime, Need-Fire, Poison the Lagoon), Sword (The Capstone), Nova (The Stalks Rise), Wall
+   (Vitrified Wall) and Drill (Lightning Seeks Iron). Three Weasels is only its first press (`second-press`); Under the
+   Black Water steps you to the enemy without the two changing places; Blown Through's refund cuts every spell clock
+   4.5 s rather than half its own (`own-clock-share`). What each cannot do is a `// NEEDS:` and its "Not built yet".
+   Default: as built. Alternative: build the form pieces first (`form-pieces`).
+7. **Duo spell prices.** Every one takes the pair file's cooldown: The Gods' Road, Blown Through and Sweep of Wings 9 s; Sowing Thunder, Cold Chisel, Rime Over Rime, Three Weasels, Sunstone, Under the Black
+   Water and Lightning Seeks Iron 10 s; Diamond Thunder 11 s; The Sisters' Quarrel, Walking Dune, Death Turned Back,
+   Need-Fire, The Capstone, Vitrified Wall, Ice in the Blood and Poison the Lagoon 12 s; The Clay Rank and The Stalks
+   Rise 14 s. Tipped Crucible alone is paid in mana, 35, as pairs_d4.md says; its Phalanx form fires the four pours by
+   themselves or all at once on a heavy blow. Default: as built. Alternative: Tipped Crucible on a cooldown like the rest.
+8. **Duo surges ride any surge** (`duo-surge-slot`), as in 4.15 and 4.16: Heated Bronze, The Net of Jewels, Wind From
+   the Grave, When the Watch Sleeps and Three Winters answer any surge while both elements are carried, with no mana or
+   time of their own. The Net of Jewels charges every enemy within 12 m, not only the Marked; Heated Bronze's perfect
+   guard throws the attacker at once rather than holding it 1 s first.
+9. **The Stalks Rise** counts the doses and spends the seeds but leaves the doses: once one affliction is spent, an
+   enemy that carried both cannot be told from one that carried one. Default: as built. Alternative: spend both and
+   accept a burst on enemies that were only poisoned.
+10. **Bane of Serpents** answers every Golden Feathers whatever shape is worn, though Eagle's Sight and Wingbeat throw
+    no feathers. Default: as built. Alternative: hold it back until a mark can tell the shape worn.
+11. **Which element each branch names first.** Default: the ring's order, as the pair files name the pairs (Fire for
+    Steam and Firebloom, Lightning for Lightning Flower and Earthed, Wind for Logan Stone and Sickle Wind, Ice for Cold
+    Short and Mock Suns, Water for Caught Light and Drowned Weight, Life for Girdled and Rot Roots, Earth for Chokedamp
+    and Burnt Mound, Metal for Red Hot and Live Iron, Light for The Bolt Runs True and Golden Feathers, Dark for Breath
+    Taken and Stolen Warmth, Poison for Venom Rime and Fish Poison). The duo spell is cast in that element and charges
+    the blade with it.
+12. **Branches written before the decisions of 2026-11-20.** Halo's Six Mirrors and Pyre's Light the Pyres are still
+    gods' gifts (`UpgradeKind.Signature`) at the top of their branches, the twelve spare ring-mix spells are still cut
+    with refunds in RetiredMarks, and the 4.5 to 4.16 branch files still call their duo spell "the crown". The new
+    decisions say each top spell is bought with Shards and the spares are kept hidden for Evolutions. Default: left for
+    the step that applies those decisions on main. Alternative: change them on `phase4` before steps 2 and 3 go in.
