@@ -487,7 +487,7 @@ namespace Clover.Player
                         if (!upgrades.Cast(Upgrade.ById(id))) return false;
                     }
                     else if (!element.CastBase(castIn)) return false;
-                    // Its own element's marks may shorten the wait (Thin Ice for Hoarfrost), and its branch's Empower; every spell's rate is applied below.
+                    // Its own element's marks may shorten the wait (Near to Hand for Stone Rise), and its branch's Empower; every spell's rate is applied below.
                     seconds = SpellTimings.BaseCooldown(castIn, upgrades != null ? upgrades.BaseCooldownShare(castIn) : 0f);
                     if (upgrades != null) seconds = upgrades.BaseCooldownOf(id, seconds);
                 }

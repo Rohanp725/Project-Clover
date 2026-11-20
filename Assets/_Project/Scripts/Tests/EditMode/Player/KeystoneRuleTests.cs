@@ -130,7 +130,10 @@ namespace Clover.Tests
             var once = Upgrade.ById(IceTree.AllAtOnce);
             Assert.IsTrue(Has(once, PlayerStat.ShatterDamage, 2f), "All at Once triples the shatter.");
 
-            Assert.IsTrue(Has(Upgrade.ById(IceTree.Unmoved), PlayerStat.DamageTaken, -0.5f, StatWhen.HeavySwing));
+            // Unmoved, which was Earth's Heavy Hand word for word, is replaced by Sent Sliding in the reshaped Ice tree (Phase 4).
+            Assert.IsNull(Upgrade.ById(IceTree.Unmoved));
+            Assert.IsTrue(RetiredMarks.IsRetired(IceTree.Unmoved));
+            Assert.AreEqual(UpgradeKind.Keystone, Upgrade.ById(IceTree.SentSliding).Kind);
             Assert.IsTrue(Has(Upgrade.ById(EarthTree.HeavyHand), PlayerStat.DamageTaken, -0.35f, StatWhen.HeavySwing));
 
             var well = Upgrade.ById(WaterTree.DeepWell);

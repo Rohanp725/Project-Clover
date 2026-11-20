@@ -53,6 +53,17 @@ namespace Clover.Player
             new RetiredMark("wind.fairwind", 1), new RetiredMark("wind.runningstart", 1),
             new RetiredMark("wind.slip", 3), new RetiredMark("wind.emptyair", 3), new RetiredMark("wind.hammer", 3),
             new RetiredMark("wind.front", 6),
+
+            // Ice: the plain minors and the dead "costs less" minor (Thin Ice, whose name a shape of Ski Run takes), the majors
+            // not kept (Gathering Frost, Clean Break), Black Ice folded into Hoarfrost as a shape, Hollow Statue cut outright,
+            // Unmoved (replaced by Sent Sliding) and Second Skin, a keystone not carried over.
+            new RetiredMark("ice.patient", 1), new RetiredMark("ice.braced", 1), new RetiredMark("ice.snow", 1), new RetiredMark("ice.slowpulse", 1),
+            new RetiredMark("ice.deepcold", 1), new RetiredMark("ice.longwinter", 1), new RetiredMark("ice.coldiron", 1), new RetiredMark("ice.heldfast", 1),
+            new RetiredMark("ice.sharpbreak", 1), new RetiredMark("ice.thinice", 1), new RetiredMark("ice.longfrost", 1), new RetiredMark("ice.thick", 1),
+            new RetiredMark("ice.clearice", 1), new RetiredMark("ice.bitter", 1),
+            new RetiredMark("ice.gather", 3), new RetiredMark("ice.cleanbreak", 3), new RetiredMark("ice.blackice", 3),
+            new RetiredMark("ice.statue", 4),
+            new RetiredMark("ice.unmoved", 6), new RetiredMark("ice.skin", 6),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
@@ -62,6 +73,8 @@ namespace Clover.Player
             new RetiredMark(Upgrade.DelayedCuts, 3),
             // Wind's Drawing Wind, the Iaido Slash's pull.
             new RetiredMark("wind.drawing", 3),
+            // Ice's Winter Draw, the Iaido Slash's lane of ice.
+            new RetiredMark("ice.winterdraw", 3),
         };
 
         /// <summary>The marks cut, with their prices: a save that holds one is refunded.</summary>

@@ -58,11 +58,12 @@ namespace Clover.Player.Magic
             ["wind.circle"] = Cd(9f, SpellRole.Movement),
             ["wind.bag"] = Cd(10f, SpellRole.Counter),
             ["wind.skydance"] = Mana(45f, SpellRole.Breaker),       // Wind's larger spell
-            // Ice
-            ["ice.statue"] = Cd(9f, SpellRole.Counter),             // not in the roster
-            ["ice.hanging"] = Cd(10f, SpellRole.Breaker),
+            // Ice, reshaped (Phase 4): Hoarfrost is the base spell; Hollow Statue is retired; Rime Guard and Ski Run are new.
             ["ice.eight"] = Cd(11f, SpellRole.Detonator),
+            ["ice.hanging"] = Cd(10f, SpellRole.Breaker),
             ["ice.wall"] = Mana(35f, SpellRole.Breaker),            // Ice's larger spell
+            ["ice.rime"] = Cd(9f, SpellRole.Counter),
+            ["ice.ski"] = Cd(8f, SpellRole.Movement),
             // Water
             ["water.serpent"] = Cd(9f, SpellRole.Opener),           // not in the roster
             ["water.whirlpool"] = Cd(10f, SpellRole.Breaker),
@@ -150,8 +151,8 @@ namespace Clover.Player.Magic
 
         /// <summary>
         /// What one mark takes off the wait of <paramref name="element"/>'s base spell (stat
-        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Ice second, Thin Ice
-        /// shortens Hoarfrost and not the first element's spell.
+        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Earth second, Near to Hand
+        /// shortens Stone Rise and not the first element's spell.
         /// </summary>
         public static float BaseCooldownShare(Upgrade mark, string element)
         {

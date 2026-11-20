@@ -134,14 +134,15 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void TheSevenReadyMinorsLeftMakeTheirOwnBaseSpellWaitAFifthLess()
+        public void TheSixReadyMinorsLeftMakeTheirOwnBaseSpellWaitAFifthLess()
         {
             // The owner's decision of 2026-11-19: what once cost less mana now waits less, for its own element's base spell alone.
-            // Fire's Short Breath, Lightning's Quick Clap and Wind's Easy Breath went with their trees' reshaping (Phase 4): their
-            // Empower marks do it now.
+            // Fire's Short Breath, Lightning's Quick Clap, Wind's Easy Breath and Ice's Thin Ice went with their trees' reshaping
+            // (Phase 4): their Empower marks do it now.
+            Assert.IsTrue(RetiredMarks.IsRetired(IceTree.ThinIce));
             var minors = new (string Id, string Element)[]
             {
-                (EarthTree.NearToHand, Elements.Earth), (IceTree.ThinIce, Elements.Ice),
+                (EarthTree.NearToHand, Elements.Earth),
                 (LifeTree.ReadySoil, Elements.Life), (LightTree.ReadyLight, Elements.Light),
                 (MetalTree.ReadySteel, Elements.Metal), (PoisonTree.ReadyPoison, Elements.Poison), (WaterTree.LowWater, Elements.Water),
             };
@@ -166,7 +167,7 @@ namespace Clover.Tests
             Assert.AreEqual(5.6f, SpellTimings.BaseCooldown(Elements.Ice, -0.2f), 1e-4f);
             Assert.AreEqual(0.7f, SpellTimings.BaseCooldown(Elements.Ice, -5f), 1e-4f, "no share takes the wait below a tenth");
             Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(null, Elements.Ice));
-            Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(Upgrade.ById(IceTree.ThinIce), ""));
+            Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(Upgrade.ById(EarthTree.NearToHand), ""));
         }
     }
 }

@@ -38,3 +38,22 @@ Each was built with the default given here; every one is easy to change. Added t
    itself, which the data cannot say yet: for now each perfect guard or dodge lets a wind out at once, so keeping changes
    nothing. Default: the shape exists and its details say it does nothing yet (as Seven Flashes' Master, question 5).
    Alternatives: hide the Shape mark until the bag is built; or give Kept Wind a stand-in (its cones break harder).
+
+## Ice
+
+1. **The two built majors the passive table leaves out.** Ice's passive table keeps four majors (Cold Read, Flying
+   Shards, Brittle, Splinter Ward); the cut list does not name Gathering Frost or Clean Break. Default: both retired and
+   refunded (3 Shards each), so the tree is the design's 34 marks. Alternatives: keep Clean Break (a shatter ends what
+   has under a fifth of its health) in one of the two empty places on the right bough, at 35 marks; or fold it into All
+   at Once.
+2. **Sent Sliding takes a new id.** The design says Sent Sliding replaces Unmoved. Default: Unmoved (`ice.unmoved`) is
+   retired and refunded, and Sent Sliding is a new keystone, `ice.sliding`, because the two do different things.
+   Alternative: Sent Sliding keeps `ice.unmoved`, so a save that held Unmoved holds Sent Sliding without a refund.
+3. **Stand-ins that are stronger than their timing.** Until the cast windows exist, Winter Wall's Master freezes with
+   every burst (not only a heavy blow timed to an enemy's strike), and Rime Guard's Master freezes everything within
+   3 m on any perfect guard, once in nine seconds (not only in the fog's first second). Default: as written, with
+   **Not built yet** lines. Alternatives: give them nothing until the windows are built (as Seven Flashes' Master); or
+   keep them and lengthen their limits.
+4. **Cracked Wall on a clock.** The shape bursts 1.5 s after an enemy first strikes the wall, which needs a wall that
+   knows it was struck. Default: it bursts by itself 3 s after it rises. Alternatives: a shape that does nothing yet,
+   as Kept Wind (Wind, question 2); or the burst at once when an enemy first comes within its reach.

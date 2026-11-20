@@ -200,7 +200,12 @@ namespace Clover.Tests
             Assert.IsTrue(Upgrade.ById(BlightTree.FeedingRot).Effects.Any(e => e.On == UpgradeTrigger.PoisonBite && e.Needs == AfflictionKind.Cursed && e.PerStack));
             Assert.IsTrue(Upgrade.ById(BlightTree.OneDeathFeeds).Effects.Any(e => e.On == UpgradeTrigger.Kill && e.Do == UpgradeAction.Bite));
             Assert.IsTrue(Upgrade.ById(DarkTree.DevouringMaw).Effects.All(e => e.OwnSpell));
-            Assert.IsTrue(Upgrade.ById(IceTree.BlackIce).Effects.All(e => e.BaseSpell));
+            // Black Ice, the one mark that answered the base spell alone, is Hoarfrost's shape now (Phase 4): a sheet cast in
+            // the crystals' place.
+            Assert.IsTrue(RetiredMarks.IsRetired(IceTree.BlackIce));
+            var blackIce = Upgrade.ById(SpellBranch.ShapeId(IceTree.Hoarfrost)).Shapes[0];
+            Assert.AreEqual("Black Ice", blackIce.Name);
+            Assert.AreEqual(SpellForms.Field, blackIce.Form);
         }
 
         [Test]
@@ -208,7 +213,9 @@ namespace Clover.Tests
         {
             var probe = new Upgrade { Id = "test.words", Name = "Words", Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Do = UpgradeAction.Heal, Amount = 1f } } };
             StringAssert.Contains("poison bites", TriggerWords.HowTo(probe));
-            var named = new[] { PlayerStat.PushDistance, PlayerStat.GuardGrey, PlayerStat.FreezeSeconds, PlayerStat.ShatterDamage, PlayerStat.BurstStagger, PlayerStat.GroundSeconds, PlayerStat.LeapReach, PlayerStat.BoonSeconds };
+            // Strong Arm, Following Draft and Held Fast, which gave PushDistance, BoonSeconds and FreezeSeconds, were retired with
+            // Wind's and Ice's reshaping (Phase 4); those stats wait for the Empowers and Bonds that will give them again.
+            var named = new[] { PlayerStat.GuardGrey, PlayerStat.ShatterDamage, PlayerStat.BurstStagger, PlayerStat.GroundSeconds, PlayerStat.LeapReach };
             foreach (var stat in named)
                 Assert.IsTrue(Upgrade.All.Any(mark => mark.Stats.Any(mod => mod.Stat == stat)), $"No mark gives {stat}.");
             var stats = new PlayerStats();
