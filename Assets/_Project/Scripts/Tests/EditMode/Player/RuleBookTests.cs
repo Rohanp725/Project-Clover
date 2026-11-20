@@ -325,8 +325,8 @@ namespace Clover.Tests
             var clocks = new SpellCooldowns();
             clocks.Breathe(2.5f);
             clocks.Tick(2f);
-            Assert.AreEqual(0, clocks.Breathe(1f), "nothing was waiting");
-            Assert.AreEqual(0.5f, clocks.BreathLeft, 1e-4f, "the longer of the two");
+            Assert.AreEqual(0, clocks.Breathe(0.25f), "nothing was waiting");
+            Assert.AreEqual(0.5f, clocks.BreathLeft, 1e-4f, "the longer of the two: a shorter breath does not cut the one running");
             clocks.Breathe(2.5f);
             Assert.AreEqual(2.5f, clocks.BreathLeft, 1e-4f);
             clocks.Start(0, 7f);
