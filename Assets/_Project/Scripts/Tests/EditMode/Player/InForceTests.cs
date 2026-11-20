@@ -10,8 +10,9 @@ namespace Clover.Tests
     /// <summary>
     /// What is in force under a loadout (IMPLEMENTATION.md 3.6), table-driven: an element's marks while it is attuned,
     /// first or second; a duo branch's marks with both elements; a duo spell only in a slot; a weapon's marks with that
-    /// weapon kind, a god's weapon counting as its kind; nothing with no element. The rules for Devotion, spell
-    /// branches, shapes, reactions, the Way, Heresies, Bond and Evolutions are added with their fields (phases 3 to 6).
+    /// weapon kind, a god's weapon counting as its kind; nothing with no element; a spell branch's Empower, Shape and
+    /// Master only while its spell is slotted; a Devotion only all in (Phase 4). The rules for reactions, the Way,
+    /// Heresies, Bond and Evolutions are added with their fields (phases 3 to 6).
     /// </summary>
     public class InForceTests
     {
@@ -21,6 +22,13 @@ namespace Clover.Tests
         private static readonly Upgrade PlasmaMark = new Upgrade { Id = "t.plasma", Element = Elements.Fire, Element2 = Elements.Lightning, Kind = UpgradeKind.Mix };
         private static readonly Upgrade PlasmaSpell = new Upgrade { Id = "t.ball", Element = Elements.Fire, Element2 = Elements.Lightning, Kind = UpgradeKind.Mix, Form = "ball", Spell = new SpellSpec() };
         private static readonly Upgrade KatanaFireMark = new Upgrade { Id = "t.crescent", Element = Elements.Fire, Kind = UpgradeKind.Major, Weapon = Weapons.KatanaName };
+        // A spell branch's marks (Phase 4) and an all-in passive.
+        private static readonly Upgrade RushLearn = new Upgrade { Id = "t.rush", Element = Elements.Fire, Kind = UpgradeKind.Spell, Part = BranchPart.Learn, Branch = "t.rush", Form = "drill", Spell = new SpellSpec() };
+        private static readonly Upgrade RushEmpower = new Upgrade { Id = "t.rush.empower", Element = Elements.Fire, Kind = UpgradeKind.Minor, Part = BranchPart.Empower, Branch = "t.rush" };
+        private static readonly Upgrade RushShape = new Upgrade { Id = "t.rush.shape", Element = Elements.Fire, Kind = UpgradeKind.Major, Part = BranchPart.Shape, Branch = "t.rush" };
+        private static readonly Upgrade RushMaster = new Upgrade { Id = "t.rush.master", Element = Elements.Fire, Kind = UpgradeKind.Major, Part = BranchPart.Master, Branch = "t.rush" };
+        private static readonly Upgrade BaseMaster = new Upgrade { Id = "fire.base.master", Element = Elements.Fire, Kind = UpgradeKind.Major, Part = BranchPart.Master, Branch = "fire.base" };
+        private static readonly Upgrade FireDevotion = new Upgrade { Id = "t.devotion", Element = Elements.Fire, Kind = UpgradeKind.Devotion };
 
         private static Loadout Hand(string first, string second, string weapon = "", string slotted = "")
         {
@@ -52,6 +60,19 @@ namespace Clover.Tests
             new object[] { KatanaFireMark, Elements.Fire, "", Weapons.StormKatanaName, "", true, "the god's sword counts as the Katana" },
             new object[] { KatanaFireMark, Elements.Fire, "", Weapons.GreatSpearName, "", false, "a weapon's mark with another weapon" },
             new object[] { KatanaFireMark, Elements.Lightning, "", Weapons.KatanaName, "", false, "a weapon's mark with its element not carried" },
+            new object[] { RushLearn, Elements.Fire, "", "", "", true, "a branch's Learn need not be slotted" },
+            new object[] { RushEmpower, Elements.Fire, "", "", "t.rush", true, "a branch's Empower with its spell slotted" },
+            new object[] { RushEmpower, Elements.Fire, "", "", "", false, "a branch's Empower with its spell in no slot" },
+            new object[] { RushShape, Elements.Lightning, Elements.Fire, "", "t.rush", true, "a branch's Shape with its spell slotted, its element second" },
+            new object[] { RushShape, Elements.Fire, "", "", "t.other", false, "a branch's Shape with another spell slotted" },
+            new object[] { RushMaster, Elements.Fire, "", "", "t.rush", true, "a branch's Master with its spell slotted" },
+            new object[] { RushMaster, Elements.Ice, "", "", "t.rush", false, "a branch's Master with its element not carried" },
+            new object[] { BaseMaster, Elements.Fire, "", "", "fire.base", true, "a base spell's Master with the base spell slotted" },
+            new object[] { BaseMaster, Elements.Fire, "", "", "", false, "a base spell's Master with the base spell in no slot" },
+            new object[] { FireDevotion, Elements.Fire, Elements.Fire, "", "", true, "a Devotion all in" },
+            new object[] { FireDevotion, Elements.Fire, "", "", "", false, "a Devotion with its element once" },
+            new object[] { FireDevotion, Elements.Fire, Elements.Lightning, "", "", false, "a Devotion in a mix" },
+            new object[] { FireDevotion, Elements.Lightning, Elements.Lightning, "", "", false, "a Devotion all in on another element" },
         };
 
         [TestCaseSource(nameof(Cases))]

@@ -45,7 +45,9 @@ namespace Clover.UI
             if (NotBuiltYet.IsSlot(mark)) return $"{NotBuiltYet.Label}  ·  beside the {mark.Element} tree";
             if (mark.Kind == UpgradeKind.Reaction) return $"Reaction  ·  {mark.Element} and {mark.Element2}  ·  always in force, never sold";
             string tree = mark.IsMix ? $"{Elements.MixName(mark.Element, mark.Element2)} ({mark.Element} and {mark.Element2})" : mark.Element + " tree";
-            string price = mark.Signature ? "a god's gift, never sold (a playtest unlock here)" : mark.Cost == 1 ? "1 Shard" : mark.Cost + " Shards";
+            string price = mark.Signature ? "a god's gift, never sold (a playtest unlock here)"
+                : mark.Currency == Currency.None ? "comes with " + mark.Element + ", never sold"
+                : mark.Cost == 1 ? "1 Shard" : mark.Cost + " Shards";
             return $"{KindName(mark)}  ·  {tree}  ·  {price}";
         }
 
@@ -53,6 +55,16 @@ namespace Clover.UI
         {
             if (mark.Signature) return mark.IsMix ? "Mix crown" : "God's gift";
             if (mark.IsMix) return mark.IsSpell ? "Mix spell" : "Mix";
+            // A spell branch's marks say their place in it (Phase 4).
+            switch (mark.Part)
+            {
+                case BranchPart.Learn: return "Spell";
+                case BranchPart.Empower: return "Empower";
+                case BranchPart.Shape: return "Shape";
+                case BranchPart.Master: return "Master";
+            }
+            if (!string.IsNullOrEmpty(mark.Lifts)) return "Reaction lift";
+            if (mark.Kind == UpgradeKind.Devotion) return "Devotion (all in)";
             switch (mark.Kind)
             {
                 case UpgradeKind.Root: return "Root";

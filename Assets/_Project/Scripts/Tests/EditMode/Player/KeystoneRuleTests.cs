@@ -121,9 +121,8 @@ namespace Clover.Tests
         [Test]
         public void TheKeystonesStandOnTheirRulesAndNotOnStandIns()
         {
-            var furnace = Upgrade.ById(FireTree.OpenFurnace);
-            Assert.IsTrue(Has(furnace, PlayerStat.GuardGrey, 0.71f), "Open Furnace lets more of a guarded blow through as grey.");
-            Assert.IsTrue(furnace.Effects == null || furnace.Effects.Length == 0, "Its detonation is written by hand, not a burst round the player.");
+            // Open Furnace was not carried over into the reshaped Fire tree (Phase 4).
+            Assert.IsNull(Upgrade.ById(FireTree.OpenFurnace));
 
             var stroke = Upgrade.ById(LightningTree.SingleStroke);
             Assert.IsTrue(Has(stroke, PlayerStat.AfflictionDepth, 5f), "Single Stroke lets Static lie ten deep.");
@@ -131,7 +130,10 @@ namespace Clover.Tests
             var once = Upgrade.ById(IceTree.AllAtOnce);
             Assert.IsTrue(Has(once, PlayerStat.ShatterDamage, 2f), "All at Once triples the shatter.");
 
-            Assert.IsTrue(Has(Upgrade.ById(IceTree.Unmoved), PlayerStat.DamageTaken, -0.5f, StatWhen.HeavySwing));
+            // Unmoved, which was Earth's Heavy Hand word for word, is replaced by Sent Sliding in the reshaped Ice tree (Phase 4).
+            Assert.IsNull(Upgrade.ById(IceTree.Unmoved));
+            Assert.IsTrue(RetiredMarks.IsRetired(IceTree.Unmoved));
+            Assert.AreEqual(UpgradeKind.Keystone, Upgrade.ById(IceTree.SentSliding).Kind);
             Assert.IsTrue(Has(Upgrade.ById(EarthTree.HeavyHand), PlayerStat.DamageTaken, -0.35f, StatWhen.HeavySwing));
 
             var well = Upgrade.ById(WaterTree.DeepWell);
@@ -139,11 +141,15 @@ namespace Clover.Tests
             Assert.AreEqual(140, well.Tally.Cap);
             Assert.IsTrue(Has(well, PlayerStat.FlaskCount, 1f));
             Assert.AreEqual(3, Upgrade.ById(WindTree.LeafOnTheWind).Tally.Cap, "Three breaths.");
-            Assert.AreEqual(0, Upgrade.ById(WaterTree.SpringTide).Stats.Length, "Spring Tide's growth is worked at the cast, not a standing stat.");
+            // Spring Tide was not carried over into the reshaped Water tree (Phase 4): every spell spending all the mana is broken by cooldowns.
+            Assert.IsNull(Upgrade.ById(WaterTree.SpringTide));
+            Assert.IsTrue(RetiredMarks.IsRetired(WaterTree.SpringTide));
             Assert.AreEqual(0, Upgrade.ById(MetalTree.MastersAnswer).Effects.Length, "Master's Answer changes the skill's price, and gives no mana.");
 
-            var heart = Upgrade.ById(LifeTree.Heartwood);
-            Assert.IsTrue(heart.Effects == null || heart.Effects.Length == 0, "Heartwood's mending comes from the mana it turns aside.");
+            // Heartwood was cut with Life's reshaping (Phase 4): with spells on cooldowns it has nothing to pay for, and Drawn
+            // From the Wood's Feed the Ground carries health as the price now.
+            Assert.IsNull(Upgrade.ById(LifeTree.Heartwood));
+            Assert.IsTrue(RetiredMarks.IsRetired(LifeTree.Heartwood));
         }
 
         [Test]

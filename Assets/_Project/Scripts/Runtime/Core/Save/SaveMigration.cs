@@ -16,10 +16,11 @@ namespace Clover.Core.Save
         public const string PrefsPrefix = "clover.progress.";
 
         /// <summary>
-        /// Marks cut from the trees after a save may have learned them, with what each cost. Empty: none has been cut.
-        /// A cut mark's id is added here and never used again (8.6).
+        /// Marks cut from the trees after a save may have learned them, with what each cost: the one list in
+        /// <c>Player/Trees/RetiredMarks.cs</c> (Phase 4 cut Fire's and Lightning's). A cut mark's id is added there and never
+        /// used again (8.6).
         /// </summary>
-        public static readonly IReadOnlyList<RetiredMark> RetiredMarks = Array.Empty<RetiredMark>();
+        public static IReadOnlyList<RetiredMark> RetiredMarks => Clover.Player.RetiredMarks.All;
 
         /// <summary>
         /// The flags the game is known to have set in PlayerPrefs: a flag for every weapon and element (so the owned lists
@@ -102,7 +103,11 @@ namespace Clover.Core.Save
             }
         }
 
-        /// <summary>Takes every retired mark out of <see cref="SaveData.Learned"/> and pays its price back in Shards. Returns the Shards paid.</summary>
+        /// <summary>
+        /// Takes every retired mark out of <see cref="SaveData.Learned"/> and pays its price back in Shards; a retired spell
+        /// also leaves any slot of the Hand carried or the kept Hands, and its shape choice is forgotten. Returns the Shards
+        /// paid.
+        /// </summary>
         public static int RemoveRetired(SaveData data, IReadOnlyList<RetiredMark> retired)
         {
             if (data == null || retired == null || retired.Count == 0) return 0;
@@ -111,9 +116,22 @@ namespace Clover.Core.Save
             {
                 var mark = retired[i];
                 while (data.Learned.Remove(mark.Id)) refunded += mark.Price;
+                ClearFromHand(data.Current, mark.Id);
+                if (data.SavedHands != null)
+                    foreach (var hand in data.SavedHands) ClearFromHand(hand, mark.Id);
             }
             data.Wallet.Shards += refunded;
             return refunded;
+        }
+
+        private static void ClearFromHand(Loadout hand, string id)
+        {
+            if (hand == null) return;
+            if (hand.Slots != null)
+                for (int i = 0; i < hand.Slots.Length; i++)
+                    if (hand.Slots[i] == id) hand.Slots[i] = "";
+            hand.Shapes?.RemoveAll(choice => choice != null && choice.Id == id);
+            hand.UseEvolved?.RemoveAll(choice => choice != null && choice.Id == id);
         }
     }
 }

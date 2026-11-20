@@ -153,13 +153,13 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void EachElementHasAtMostOneLargerSpellAndAllButEarthHaveOne()
+        public void EachElementHasOneLargerSpellPaidInManaButDark()
         {
             foreach (string element in Elements.All.Select(info => info.Name))
             {
                 int larger = Upgrade.All.Count(mark => mark.IsSpell && !mark.IsMix && mark.Element == element && SpellTimings.For(mark.Id).IsLarger);
-                // Earth's larger spell is the new Cairn, not built yet; Dark's is Pawned Heart, paid in health.
-                int expected = element == Elements.Earth || element == Elements.Dark ? 0 : 1;
+                // Earth's larger spell is the new Cairn (Phase 4); Dark's is Pawned Heart, paid in health.
+                int expected = element == Elements.Dark ? 0 : 1;
                 Assert.AreEqual(expected, larger, element);
             }
         }

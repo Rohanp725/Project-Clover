@@ -261,6 +261,12 @@ namespace Clover.Player
         /// <summary>True while the button of the slot the last spell came from is held: a spell held for longer (Eye of the Storm) reads it.</summary>
         public bool CastButtonHeld => heldSlot >= 0 && player != null && player.Buttons != null && player.Buttons.SlotHeld(heldSlot);
 
+        /// <summary>
+        /// A mark's action on the spell clocks (CutCooldowns, ResetCooldown, InstantNext: Magic/BranchCooldowns), done for
+        /// the effect runner. Returns the slot acted on, or -1.
+        /// </summary>
+        public int Answer(UpgradeEffect effect) => BranchCooldowns.Answer(effect, Cooldowns, Slots);
+
         public void DropHolds()
         {
             buffered = -1;
@@ -475,9 +481,15 @@ namespace Clover.Player
                     }
                     // A spell goes where the player faces; with the mouse in use, that is toward the cursor.
                     player.FacePointer();
-                    if (!element.CastBase(castIn)) return false;
-                    // Its own element's marks may shorten the wait (Thin Ice for Hoarfrost); every spell's rate is applied below.
+                    // A base spell wearing a shape of its own (Cinder Fan) is cast through its Learn mark, not by its kit.
+                    if (upgrades != null && upgrades.BaseCastsThroughMark(id))
+                    {
+                        if (!upgrades.Cast(Upgrade.ById(id))) return false;
+                    }
+                    else if (!element.CastBase(castIn)) return false;
+                    // Its own element's marks may shorten the wait (Near to Hand for Stone Rise), and its branch's Empower; every spell's rate is applied below.
                     seconds = SpellTimings.BaseCooldown(castIn, upgrades != null ? upgrades.BaseCooldownShare(castIn) : 0f);
+                    if (upgrades != null) seconds = upgrades.BaseCooldownOf(id, seconds);
                 }
                 else
                 {
@@ -496,8 +508,10 @@ namespace Clover.Player
                     }
                     // A duo spell charges with its first element (IMPLEMENTATION.md 8.5, question 2).
                     castIn = element.ElementOf(mark).Name;
-                    // A spell from outside the table (a lent one) that asks no mana still waits.
-                    seconds = mark.Spell.Cooldown > 0f ? mark.Spell.Cooldown : mark.Spell.Cost > 0f ? 0f : SpellTimings.DefaultCooldown;
+                    // The wait as its branch makes it (the Empower's is shorter). A spell from outside the table (a lent
+                    // one) that asks no mana still waits.
+                    float wait = upgrades.CooldownOf(mark);
+                    seconds = wait > 0f ? wait : upgrades.PriceOf(mark) > 0f ? 0f : SpellTimings.DefaultCooldown;
                 }
             }
             finally

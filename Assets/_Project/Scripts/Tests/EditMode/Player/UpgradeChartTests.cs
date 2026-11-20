@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using Clover.Gameplay;
 using Clover.Player;
+using Clover.Player.Magic;
 using Clover.Player.Trees;
 using NUnit.Framework;
 using UnityEngine;
@@ -169,12 +170,13 @@ namespace Clover.Tests
                     Assert.IsTrue(parent.Element == upgrade.Element && parent.Element2 == upgrade.Element2, upgrade.Id + " grows from a mark on another tree");
                     Assert.Greater(upgrade.Y, parent.Y - 0.01f, upgrade.Id + " lies inward of " + id);
                 }
-                // What it costs: nothing for a god's gift, its kind's cost for the rest, three to five for a mix.
-                if (upgrade.Signature) Assert.AreEqual(0, upgrade.Cost, upgrade.Id);
+                // What it costs: nothing for a god's gift or a given mark, its kind's cost for the rest, three to five for a mix.
+                if (upgrade.Signature || upgrade.Currency == Currency.None) Assert.AreEqual(0, upgrade.Cost, upgrade.Id);
                 else if (upgrade.Kind == UpgradeKind.Mix) Assert.That(upgrade.Cost, Is.InRange(3, 5), upgrade.Id);
                 else Assert.AreEqual(Upgrade.UsualCost(upgrade.Kind), upgrade.Cost, upgrade.Id);
-                // A spell names a form that exists and carries its numbers.
-                if (upgrade.Kind == UpgradeKind.Spell) Assert.IsTrue(upgrade.IsSpell, upgrade.Id + " is a spell with no form");
+                // A spell names a form that exists and carries its numbers; an element's base spell is cast by its kit instead.
+                if (upgrade.Kind == UpgradeKind.Spell && !upgrade.IsBaseSpell) Assert.IsTrue(upgrade.IsSpell, upgrade.Id + " is a spell with no form");
+                if (upgrade.IsBaseSpell) Assert.IsFalse(upgrade.IsSpell, upgrade.Id + ": a base spell's Learn is cast by its kit, not a form of its own");
                 if (upgrade.IsSpell)
                 {
                     Assert.IsNotNull(SpellForms.Get(upgrade.Form), upgrade.Id + " names a form that does not exist: " + upgrade.Form);
@@ -192,8 +194,13 @@ namespace Clover.Tests
                     Assert.That(effect.Chance, Is.InRange(0.01f, 1f), upgrade.Id);
                 }
             }
-            Assert.AreEqual(Upgrade.All.SelectMany(upgrade => upgrade.Effects).Count(), Upgrade.EffectCount);
-            Assert.AreEqual(Upgrade.All.SelectMany(upgrade => upgrade.Effects).Select(effect => effect.Slot).Distinct().Count(), Upgrade.EffectCount);
+            // A Shape mark's two shapes carry effects of their own, each with its slot and its Shape mark as owner.
+            var every = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes.SelectMany(shape => shape.Effects))).ToList();
+            foreach (var upgrade in Upgrade.All)
+                foreach (var effect in upgrade.Shapes.SelectMany(shape => shape.Effects))
+                    Assert.AreSame(upgrade, effect.Owner, upgrade.Id + "'s shape");
+            Assert.AreEqual(every.Count, Upgrade.EffectCount);
+            Assert.AreEqual(every.Select(effect => effect.Slot).Distinct().Count(), Upgrade.EffectCount);
         }
 
         // README.md ("Names and moved spells") frees the names of the plain minors the drafts cut, and the pair files reuse
@@ -275,26 +282,37 @@ namespace Clover.Tests
                 int whole = sold.Sum(upgrade => upgrade.Cost);
                 Assert.Greater(whole, run * 3, element.Name + ": the whole tree is far more than a run pays, so a path is chosen");
                 var keystones = sold.Where(upgrade => upgrade.Kind == UpgradeKind.Keystone).ToList();
-                Assert.AreEqual(3, keystones.Count, element.Name + " ends its three boughs in three keystones");
+                // A tree reshaped into spell branches keeps one or two keystones beside its Devotion (elements_a.md, "What to cut", 10).
+                bool reshaped = sold.Any(upgrade => upgrade.Part != BranchPart.None);
+                if (reshaped) Assert.That(keystones.Count, Is.InRange(1, 2), element.Name + " keeps one or two keystones beside its Devotion");
+                else Assert.AreEqual(3, keystones.Count, element.Name + " ends its three boughs in three keystones");
                 int nearest = keystones.Min(keystone => CheapestRoad(keystone, roads));
                 Assert.LessOrEqual(nearest, run + 3, $"{element.Name}: the cheapest road to a keystone costs {nearest}, within reach of about one area and its god");
                 // And no run pays for two of them.
+                if (keystones.Count < 2) continue;
                 int two = keystones.Select(keystone => CheapestRoad(keystone, roads)).OrderBy(c => c).Take(2).Sum() - Upgrade.UsualCost(UpgradeKind.Root);
                 Assert.Greater(two, run, element.Name + ": two keystones are beyond one run");
             }
         }
 
         [Test]
-        public void TheFirstSixteenKeepTheirIdsAndNames()
+        public void TheFirstSixteenKeepTheirIdsOrAreRetiredOrMoving()
         {
+            // Phase 4 kept every mark the design keeps under its id (Backdraft is Breath of the Lioness now), retired the cut
+            // ones (Burn and Detonate, folded into it; Overclock) and sent the Katana's two to its Way.
             var first = new Dictionary<string, string>
             {
-                { "fire.heat", "Heat" }, { "fire.detonate", "Burn and Detonate" }, { "fire.backdraft", "Backdraft" }, { "fire.trail", "Flame Trail" },
-                { "fire.crescent", "Burning Crescent" }, { "fire.firebomb", "Firebomb Flask" }, { "fire.meteor", "Meteor Leap" },
+                { "fire.heat", "Heat" }, { "fire.backdraft", "Breath of the Lioness" }, { "fire.trail", "Flame Trail" },
+                { "fire.firebomb", "Firebomb Flask" }, { "fire.meteor", "Meteor Leap" },
                 { "lightning.static", "Static" }, { "lightning.charge", "Stored Charge" }, { "lightning.blink", "Blink" }, { "lightning.afterimage", "Afterimage" },
-                { "lightning.cuts", "Delayed Cuts" }, { "lightning.rod", "Lightning Rod" }, { "lightning.overclock", "Overclock" },
-                { "lightning.stormstep", "Storm Step" }, { "fire.plasma", "Plasma" },
+                { "lightning.rod", "Lightning Rod" }, { "lightning.stormstep", "Storm Step" }, { "fire.plasma", "Plasma" },
             };
+            Assert.IsTrue(RetiredMarks.IsRetired(Upgrade.BurnAndDetonate));
+            Assert.IsTrue(RetiredMarks.IsRetired(Upgrade.Overclock));
+            Assert.IsTrue(RetiredMarks.IsMoving(Upgrade.BurningCrescent));
+            Assert.IsTrue(RetiredMarks.IsMoving(Upgrade.DelayedCuts));
+            foreach (string gone in new[] { Upgrade.BurnAndDetonate, Upgrade.Overclock, Upgrade.BurningCrescent, Upgrade.DelayedCuts })
+                Assert.IsNull(Upgrade.ById(gone), gone);
             foreach (var pair in first)
             {
                 var upgrade = Upgrade.ById(pair.Key);
@@ -334,9 +352,9 @@ namespace Clover.Tests
                 Assert.Greater(sold.Sum(upgrade => upgrade.Cost), 19, element.Name);
                 Assert.LessOrEqual(tree.Count(upgrade => upgrade.Signature), 1, element.Name + " has one god's gift at most");
             }
-            // The two trees of the slice are there, grown by six marks each, and the branch they share.
-            Assert.AreEqual(33, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.Signature));
-            Assert.AreEqual(35, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Lightning && !upgrade.IsMix && !upgrade.Signature));
+            // The two trees reshaped into spell branches (Phase 4): six branches of four and their passives, and the branch they share.
+            Assert.AreEqual(33, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
+            Assert.AreEqual(32, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Lightning && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
             Assert.AreEqual(9, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
         }
 
@@ -425,6 +443,222 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheSpellBranchPatternFillsAllElevenElementsAndEveryMixWithoutACrowdAndTheStickReachesAll()
+        {
+            // The worked layout of docs/UPGRADE_SCHEMA.md 20.4: three boughs, two stalks of four on each, passives on the boughs and trunk.
+            var pattern = BranchPattern.All;
+            Assert.AreEqual(36, pattern.Count);
+            Assert.AreEqual(pattern.Count, pattern.Select(place => place.Name).Distinct().Count());
+            foreach (var place in pattern)
+            {
+                Assert.LessOrEqual(Mathf.Abs(place.X), UpgradeTree.HalfWidth(place.Y) * 0.9f + 0.001f, place.Name + " is too near its tree's edge");
+                Assert.That(place.Y, Is.InRange(1f, UpgradeTree.TreeHeight), place.Name);
+                if (place.From.Length == 0) continue;
+                var parent = BranchPattern.Of(place.From);
+                Assert.Greater(place.Y, parent.Y - 0.01f, place.Name + " lies inward of what it grows from");
+            }
+            foreach (string stalk in new[] { BranchPattern.LeftA, BranchPattern.LeftB, BranchPattern.MiddleA, BranchPattern.MiddleB, BranchPattern.RightA, BranchPattern.RightB })
+            {
+                var four = BranchPattern.Stalk(stalk);
+                for (int i = 1; i < 4; i++) Assert.Greater(four[i].Y, four[i - 1].Y, stalk + " grows outward in order");
+            }
+            var chart = new List<(string name, string element, string element2, Vector2 place)>();
+            foreach (var element in Elements.All)
+            {
+                foreach (var place in pattern)
+                    chart.Add((element.Name + "." + place.Name, element.Name, "", UpgradeTree.OnChart(element.Name, place.X, place.Y)));
+                foreach (var (slot, x, y) in PatternMix)
+                    chart.Add((element.MixName + "." + slot, element.Name, element.MixWith, UpgradeTree.OnChart(Elements.MixBearing(element.Name, element.MixWith), UpgradeTree.MixDistance, x, y)));
+            }
+            for (int i = 0; i < chart.Count; i++)
+                for (int j = i + 1; j < chart.Count; j++)
+                    Assert.GreaterOrEqual((chart[i].place - chart[j].place).magnitude, UpgradeTree.LeastSpacing, chart[i].name + " and " + chart[j].name);
+            foreach (var element in Elements.All)
+            {
+                var places = chart.Where(mark => mark.element == element.Name || mark.element2 == element.Name)
+                    .Select(mark => UpgradeTree.Upright(mark.place, element.Bearing)).ToList();
+                Assert.AreEqual(36 + 8 + 8, places.Count);
+                Assert.IsTrue(Walkable(places, 0, out int reached), $"{element.Name}: the stick reaches {reached} of {places.Count}");
+            }
+        }
+
+        // The trees written as spell branches (Phase 4), with how many passives each design gives (its root, majors,
+        // keystones, Devotion, lift and gift). A tree is added here when it is reshaped.
+        private static readonly Dictionary<string, int> ReshapedPassives = new Dictionary<string, int>
+        {
+            [Elements.Fire] = 10,
+            [Elements.Lightning] = 9,
+            [Elements.Wind] = 10,
+            [Elements.Ice] = 10,
+            [Elements.Water] = 10,
+            [Elements.Life] = 10,
+            // Earth's table gives three keystones; it keeps two beside its Devotion, as the cut list asks of every tree.
+            [Elements.Earth] = 9,
+        };
+
+        [Test]
+        public void EveryTreeWithSpellBranchesIsListedAsReshaped()
+        {
+            foreach (var element in Elements.All)
+            {
+                bool branches = Upgrade.All.Any(mark => mark.Element == element.Name && !mark.IsMix && mark.Part != BranchPart.None);
+                Assert.AreEqual(branches, ReshapedPassives.ContainsKey(element.Name), element.Name + ": a reshaped tree is listed in ReshapedPassives, and only one");
+            }
+        }
+
+        [Test]
+        public void TheReshapedTreesSitOnThePatternEachMarkInAPlaceOfItsOwn()
+        {
+            foreach (string element in ReshapedPassives.Keys)
+            {
+                var tree = Upgrade.All.Where(mark => mark.Element == element && !mark.IsMix && !mark.IsHidden).ToList();
+                var taken = new HashSet<string>();
+                foreach (var mark in tree)
+                {
+                    var place = BranchPattern.All.FirstOrDefault(p => Mathf.Abs(p.X - mark.X) < 0.001f && Mathf.Abs(p.Y - mark.Y) < 0.001f);
+                    Assert.IsNotNull(place.Name, mark.Id + " sits on no place of the pattern");
+                    Assert.IsTrue(taken.Add(place.Name), mark.Id + " shares the place " + place.Name);
+                }
+            }
+        }
+
+        [Test]
+        public void NewKindsHaveTheSharedPricesAndAGivenMarkCostsNothing()
+        {
+            // steel/README.md, "Mark prices", and IMPLEMENTATION.md 2.1.
+            Assert.AreEqual(6, Upgrade.UsualCost(UpgradeKind.Devotion));
+            Assert.AreEqual(5, Upgrade.UsualCost(UpgradeKind.Evolution));
+            Assert.AreEqual(8, Upgrade.UsualCost(UpgradeKind.Heresy));
+            Assert.AreEqual(2, Upgrade.UsualCost(UpgradeKind.Aspect));
+            Assert.AreEqual(2, Upgrade.UsualCost(UpgradeKind.Technique));
+            Assert.AreEqual(1, Upgrade.UsualCost(UpgradeKind.Temper));
+            Assert.AreEqual(0, Upgrade.UsualCost(UpgradeKind.Bond));
+            Assert.AreEqual(0, Upgrade.UsualCost(UpgradeKind.Reaction));
+            Assert.AreEqual(0, Upgrade.UsualCost(new Upgrade { Kind = UpgradeKind.Spell, Currency = Currency.None }));
+            Assert.AreEqual(4, Upgrade.UsualCost(new Upgrade { Kind = UpgradeKind.Spell }));
+            // A branch is 11 Shards, Learn 4, Empower 1, Shape 3, Master 3; a base spell's Learn is given.
+            var rush = BranchOf(FireTree.WildfireRush);
+            CollectionAssert.AreEqual(new[] { 4, 1, 3, 3 }, rush.Select(mark => mark.Cost).ToArray());
+            CollectionAssert.AreEqual(new[] { 0, 1, 3, 3 }, BranchOf(FireTree.FlameWave).Select(mark => mark.Cost).ToArray());
+            Assert.AreEqual(Currency.None, Upgrade.ById(FireTree.FlameWave).Currency);
+            Assert.IsFalse(MarkRules.CanBuy(Upgrade.ById(FireTree.FlameWave), new HashSet<string>(), 999, true, true), "a base spell is never sold, in the playtest either");
+            Assert.AreEqual(6, Upgrade.ById(FireTree.FireWithoutEnd).Cost);
+            Assert.AreEqual(3, Upgrade.ById(FireTree.FuelToIt).Cost, "a reaction lift is a major");
+        }
+
+        // A branch's four marks, Learn first.
+        private static List<Upgrade> BranchOf(string learn) => new List<Upgrade>
+        {
+            Upgrade.ById(learn), Upgrade.ById(SpellBranch.EmpowerId(learn)), Upgrade.ById(SpellBranch.ShapeId(learn)), Upgrade.ById(SpellBranch.MasterId(learn)),
+        };
+
+        [Test]
+        public void EverySpellBranchIsFourMarksThatShareItAndGrowInOrder()
+        {
+            var learns = Upgrade.All.Where(mark => mark.Part == BranchPart.Learn).ToList();
+            Assert.GreaterOrEqual(learns.Count, 12, "Fire's and Lightning's six each");
+            var parts = new[] { BranchPart.Learn, BranchPart.Empower, BranchPart.Shape, BranchPart.Master };
+            var kinds = new[] { UpgradeKind.Spell, UpgradeKind.Minor, UpgradeKind.Major, UpgradeKind.Major };
+            foreach (var learn in learns)
+            {
+                var branch = BranchOf(learn.Id);
+                for (int i = 0; i < 4; i++)
+                {
+                    var mark = branch[i];
+                    Assert.IsNotNull(mark, learn.Id + " lacks its " + parts[i]);
+                    Assert.AreEqual(learn.Id, mark.Branch, mark.Id);
+                    Assert.AreEqual(parts[i], mark.Part, mark.Id);
+                    Assert.AreEqual(kinds[i], mark.Kind, mark.Id);
+                    Assert.AreEqual(learn.Element, mark.Element, mark.Id);
+                    Assert.IsNotEmpty(mark.Description, mark.Id);
+                    if (i > 0)
+                    {
+                        CollectionAssert.AreEqual(new[] { branch[i - 1].Id }, mark.Requires, mark.Id + " grows from the mark before it");
+                        Assert.Greater(mark.Y, branch[i - 1].Y, mark.Id + " lies outward of the mark before it");
+                    }
+                }
+                Assert.AreNotEqual(SpellRole.None, learn.Role, learn.Id + " has a role icon for the Hand");
+                Assert.AreEqual(learn.IsBaseSpell, learn.Currency == Currency.None, learn.Id + ": only a base spell's Learn is given");
+                Assert.IsTrue(learn.IsBaseSpell || learn.IsSpell, learn.Id);
+                var empower = branch[1].Empower;
+                Assert.IsNotNull(empower, learn.Id);
+                Assert.Greater(empower.Cooldown + empower.Mana, 0f, learn.Id + ": Empower is always a shorter cooldown or a lower price");
+                var shapes = branch[2].Shapes;
+                Assert.AreEqual(2, shapes.Length, learn.Id + " has two shapes");
+                foreach (var shape in shapes)
+                {
+                    Assert.IsNotEmpty(shape.Name, learn.Id);
+                    Assert.IsNotEmpty(shape.Description, learn.Id + "'s " + shape.Name);
+                    if (!string.IsNullOrEmpty(shape.Form)) Assert.IsNotNull(SpellForms.Get(shape.Form), learn.Id + "'s " + shape.Name + " names a form that does not exist");
+                    if (shape.Spell != null) Assert.IsFalse(string.IsNullOrEmpty(shape.Form) && learn.IsBaseSpell, learn.Id + "'s " + shape.Name + ": a base spell's shape with numbers needs a form to cast");
+                    foreach (var effect in shape.Effects) Assert.AreSame(branch[2], effect.Owner);
+                }
+                Assert.AreNotEqual(shapes[0].Name, shapes[1].Name, learn.Id);
+                // Only a branch's own marks answer OwnBranch.
+                foreach (var mark in branch)
+                    foreach (var effect in mark.Effects.Concat(mark.Shapes.SelectMany(shape => shape.Effects)))
+                        if (effect.OwnBranch) Assert.IsNotEmpty(effect.Owner.Branch, mark.Id);
+            }
+            // A passive answers no branch.
+            foreach (var mark in Upgrade.All.Where(mark => mark.Part == BranchPart.None))
+            {
+                Assert.IsEmpty(mark.Branch, mark.Id);
+                Assert.IsEmpty(mark.Shapes, mark.Id);
+                Assert.IsNull(mark.Empower, mark.Id);
+                foreach (var effect in mark.Effects) Assert.IsFalse(effect.OwnBranch, mark.Id + " answers its own branch and is on none");
+            }
+        }
+
+        [Test]
+        public void EveryReshapedTreeIsSixBranchesADevotionALiftAndItsPassives()
+        {
+            foreach (string element in ReshapedPassives.Keys)
+            {
+                var tree = Upgrade.All.Where(mark => mark.Element == element && !mark.IsMix && !mark.IsHidden).ToList();
+                Assert.AreEqual(6, tree.Count(mark => mark.Part == BranchPart.Learn), element);
+                Assert.AreEqual(24, tree.Count(mark => mark.Part != BranchPart.None), element);
+                Assert.AreEqual(1, tree.Count(mark => mark.IsBaseSpell), element + "'s base spell is one of its six");
+                Assert.AreEqual(SpellSlots.BaseId(element), tree.Single(mark => mark.IsBaseSpell).Id);
+                Assert.AreEqual(1, tree.Count(mark => mark.Kind == UpgradeKind.Devotion), element);
+                Assert.AreEqual(1, tree.Count(mark => mark.Lifts == element), element + " has one reaction lift");
+                // One larger spell paid in mana (steel/README.md); Dark's is paid in health instead (Pawned Heart).
+                Assert.LessOrEqual(tree.Count(mark => mark.Kind == UpgradeKind.Spell && SpellTimings.For(mark.Id).IsLarger), 1, element + " has one larger spell paid in mana at most");
+                Assert.GreaterOrEqual(tree.Count(mark => mark.Kind == UpgradeKind.Spell && (SpellTimings.For(mark.Id).IsLarger || (mark.Spell != null && mark.Spell.HealthCost > 0f))), 1, element + " has its larger spell");
+                Assert.IsTrue(tree.All(mark => mark.Currency != Currency.Memories), element + "'s tree is bought with Shards");
+            }
+            // Each design's passives, with its Devotion, its lift and its gift.
+            foreach (var pair in ReshapedPassives)
+                Assert.AreEqual(pair.Value, Upgrade.All.Count(mark => mark.Element == pair.Key && !mark.IsMix && !mark.IsHidden && mark.Part == BranchPart.None), pair.Key);
+        }
+
+        [Test]
+        public void HiddenMarksAreNeverDrawnAndTheRingLayoutPlacesAsTheTreeDoes()
+        {
+            var ring = RingLayout.Instance;
+            foreach (var mark in Upgrade.All)
+            {
+                Assert.AreEqual(!mark.IsHidden && (mark.Tree == MarkTree.Element || mark.Tree == MarkTree.Duo), ring.Draws(mark), mark.Id);
+                if (!ring.Draws(mark)) continue;
+                Assert.AreEqual(UpgradeTree.OnChart(mark), ring.Place(mark), mark.Id);
+                // The ring's trees and branches are bought with Shards, or given.
+                Assert.AreNotEqual(Currency.Memories, mark.Currency, mark.Id);
+            }
+            Assert.IsFalse(ring.Draws(null));
+            Assert.AreEqual(UpgradeTree.Emblem(Elements.Fire), ring.Foot(Upgrade.ById(FireTree.Cinder)));
+            Assert.AreEqual(UpgradeTree.MixFoot(Elements.Fire, Elements.Lightning), ring.Foot(Upgrade.ById(PlasmaTree.IonisedAir)));
+        }
+
+        [Test]
+        public void NoRetiredIdIsUsedAgain()
+        {
+            foreach (var mark in Upgrade.All)
+            {
+                Assert.IsFalse(RetiredMarks.IsRetired(mark.Id), mark.Id + " was retired and must not be used again");
+                Assert.IsFalse(RetiredMarks.IsMoving(mark.Id), mark.Id + " waits for a weapon's Way");
+            }
+        }
+
+        [Test]
         public void AMarkIsReachableOnceAnyOneOfWhatItGrowsFromIsLearned()
         {
             var learned = new HashSet<string>();
@@ -432,13 +666,17 @@ namespace Clover.Tests
             Assert.IsFalse(UpgradeTree.Reachable(Upgrade.ById(Upgrade.Backdraft), learned));
             learned.Add(FireTree.Cinder);
             Assert.IsTrue(UpgradeTree.Reachable(Upgrade.ById(Upgrade.Backdraft), learned));
-            Assert.IsFalse(UpgradeTree.Reachable(Upgrade.ById(Upgrade.BurnAndDetonate), learned));
-            // Chain Lance grows from Overclock or from Capacitor: either opens it.
+            Assert.IsFalse(UpgradeTree.Reachable(Upgrade.ById(FireTree.KilnStance), learned));
+            learned.Add(Upgrade.Backdraft);
+            Assert.IsTrue(UpgradeTree.Reachable(Upgrade.ById(FireTree.KilnStance), learned));
+            // Chain Lance grows from the lift on its bough.
             var lance = Upgrade.ById(LightningTree.ChainLance);
-            Assert.AreEqual(2, lance.Requires.Length);
+            CollectionAssert.AreEqual(new[] { LightningTree.StrikesTwice }, lance.Requires);
             Assert.IsFalse(UpgradeTree.Reachable(lance, learned));
-            learned.Add(LightningTree.Capacitor);
+            learned.Add(LightningTree.StrikesTwice);
             Assert.IsTrue(UpgradeTree.Reachable(lance, learned));
+            // A base spell comes with its element: its branch's Empower is open with nothing learned.
+            Assert.IsTrue(UpgradeTree.Reachable(Upgrade.ById(SpellBranch.EmpowerId(FireTree.FlameWave)), new HashSet<string>()));
             Assert.IsFalse(UpgradeTree.Reachable(null, learned));
         }
 

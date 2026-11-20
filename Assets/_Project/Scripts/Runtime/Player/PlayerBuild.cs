@@ -56,6 +56,25 @@ namespace Clover.Player
             combat = GetComponent<PlayerCombat>();
             upgrades = GetComponent<PlayerUpgrades>();
             keepLent = KeepLent;
+            // The shapes chosen at a fire are kept for the run, as the slots are.
+            SpellBranches.CopyChoices(RunState.Shapes, Current.Shapes);
+        }
+
+        /// <summary>
+        /// Chooses which of its two shapes a spell wears (0 or 1; IMPLEMENTATION.md 2.2), by its branch's Learn id, at a
+        /// rest fire only; kept for the run. What is in force is worked out again at once. False away from a fire.
+        /// </summary>
+        public bool ChooseShape(string branch, int choice, bool atRestFire)
+        {
+            if (string.IsNullOrEmpty(branch) || !HandRules.CanChangeHere(atRestFire))
+            {
+                HandsRefused++;
+                return false;
+            }
+            SpellBranches.Choose(Current.Shapes, branch, choice);
+            SpellBranches.CopyChoices(Current.Shapes, RunState.Shapes);
+            Push();
+            return true;
         }
 
         /// <summary>
@@ -113,6 +132,9 @@ namespace Clover.Player
             }
             Read();
             Current.CopyHandFrom(hand);
+            // A Hand that says nothing of shapes (one kept before shapes were bought) keeps the shapes chosen; one that does sets them.
+            if (hand.Shapes == null || hand.Shapes.Count == 0) SpellBranches.CopyChoices(RunState.Shapes, Current.Shapes);
+            else SpellBranches.CopyChoices(Current.Shapes, RunState.Shapes);
             Rules.Validate(Current, RunState.Unlocked, keepLent);
             // A slot the schedule keeps shut holds nothing.
             var open = Open;

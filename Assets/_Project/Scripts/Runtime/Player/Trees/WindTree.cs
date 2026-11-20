@@ -4,196 +4,280 @@ using Clover.Gameplay;
 namespace Clover.Player.Trees
 {
     /// <summary>
-    /// Wind: fighting in motion. The dodge is a weapon, the enemy is pushed, turned round and thrown into the air.
-    /// Three boughs from Unsteady: on the left Slipstream (the dodge as a weapon), in the middle Updraft (launch and
-    /// juggle), on the right Gale (push and pull, and the perfect guard that throws).
+    /// Wind: fighting in motion, written as spell branches (docs/design/steel/elements_a.md, Wind; Phase 4). Six spells of
+    /// four marks each and ten passives on the pattern of <see cref="BranchPattern"/>: in the middle Updraft (Rising Cut,
+    /// Lifting Wind and Sky Dance, the lift Carried Far, Nothing Beneath and Devotion above it), on the left Slipstream
+    /// (Passing Cut and Closing Circle, Turned Aside and the Bag of Winds, Leaf on the Wind at the crown), on the right Gale
+    /// (Against the Wall, Gust and Indrawn Breath). Gust is the base spell: it comes with Wind, its Learn is never bought,
+    /// and it grows from the root.
+    ///
+    /// Marks the design keeps keep their ids; the cut ones are in <see cref="RetiredMarks"/>, and Drawing Wind waits for the
+    /// Katana's Way there. Leaf on the Wind is done by hand in <see cref="PlayerUpgrades"/> under its id; the rest are data.
+    /// What the data cannot say yet is the nearest working version with a <c>NEEDS</c> line, gathered in
+    /// docs/design/steel/content_open.tsv.
     /// </summary>
     public static class WindTree
     {
         public const string Unsteady = "wind.unsteady";
-        // Slipstream.
-        public const string Slipstream = "wind.slip";
-        public const string LongStride = "wind.stride";
-        public const string ThinAir = "wind.thinair";
-        public const string FollowingDraft = "wind.draft";
-        public const string PassingCut = "wind.passing";
-        public const string CleanPass = "wind.cleanpass";
-        public const string LightFeet = "wind.lightfeet";
-        public const string EmptyAir = "wind.emptyair";
-        public const string ClosingCircle = "wind.circle";
-        public const string LeafOnTheWind = "wind.leaf";
-        // Updraft.
         public const string RisingCut = "wind.rising";
-        public const string LooseFooting = "wind.loose";
-        public const string OffBalance = "wind.offbalance";
-        public const string HammerDown = "wind.hammer";
-        public const string HangTime = "wind.hang";
-        public const string OpenAir = "wind.openair";
+        public const string PassingCut = "wind.passing";
+        public const string TurnedAside = "wind.turned";
+        public const string AgainstTheWall = "wind.wall";
+        public const string LeafOnTheWind = "wind.leaf";
+        public const string NothingBeneath = "wind.nothing";
+        public const string CarriedFar = "wind.lift";
+        public const string OnTheWind = "wind.devotion";
+        // The spells: each is its branch's Learn mark and the branch's id.
+        public const string Gust = "wind.base";
         public const string LiftingWind = "wind.lifting";
         public const string SkyDance = "wind.skydance";
-        public const string NothingBeneath = "wind.nothing";
-        // Gale.
-        public const string AgainstTheWall = "wind.wall";
-        public const string WideGust = "wind.widegust";
-        public const string EasyBreath = "wind.easybreath";
-        public const string TurnedAside = "wind.turned";
-        public const string StrongArm = "wind.strongarm";
-        public const string FairWind = "wind.fairwind";
-        public const string RunningStart = "wind.runningstart";
-        public const string DrawingWind = "wind.drawing";
+        public const string ClosingCircle = "wind.circle";
+        public const string BagOfWinds = "wind.bag";
         public const string IndrawnBreath = "wind.indrawn";
-        public const string StormFront = "wind.front";
         // The god's gift.
         public const string TheWindRemembers = "wind.remembers";
+        // Conditions the branches set on enemies.
+        public const string TurnedAbout = "wind.lifting.about";
+
+        // Retired in Phase 4 (RetiredMarks): kept as a name because code still asks for it.
+        public const string StormFront = "wind.front";
 
         public static void Add(List<Upgrade> to)
         {
             const string E = Elements.Wind;
 
             // The words say five; Unsteady is three deep at most in Afflictions today.
-            to.Add(new Upgrade { Id = Unsteady, Name = "Unsteady", Element = E, Kind = UpgradeKind.Root, X = 0f, Y = 1.2f, Icon = UpgradeIcons.Gust,
+            to.Add(BranchPattern.Put(new Upgrade { Id = Unsteady, Name = "Unsteady", Element = E, Kind = UpgradeKind.Root, Icon = UpgradeIcons.Gust,
                 Description = "Blows knock an enemy Unsteady, up to five. It is pushed further, turns slower and loses its balance sooner.",
-                WeaponStacks = 1 });
+                WeaponStacks = 1 }, BranchPattern.Root));
 
-            // Left bough: Slipstream. The dodge as a weapon.
-            // The boons last their 1.2 seconds: every blow in that time is harder, not only the first.
-            to.Add(new Upgrade { Id = Slipstream, Name = "Rushing Wake", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Unsteady }, X = -0.94f, Y = 2.51f, Icon = UpgradeIcons.Boot,
-                Description = "The first blow that lands soon after any dodge strikes harder and leaves its enemy more Unsteady.",
+            // ---- The middle bough: Updraft. Launch and juggle.
+            to.Add(BranchPattern.Put(new Upgrade { Id = RisingCut, Name = "Rising Cut", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Unsteady }, Icon = UpgradeIcons.Arrow,
+                Description = "A heavy blow on an enemy five deep in Unsteady throws it into the air. It hangs there helpless, and each blow holds it up a little longer, up to three.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.3f, Seconds = 1.2f, UntilBlow = true },
-                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Boon, Stat = PlayerStat.AfflictionStacks, Amount = 2f, Seconds = 1.2f, UntilBlow = true },
-                } });
-            to.Add(new Upgrade { Id = LongStride, Name = "Long Stride", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Slipstream }, X = -0.72f, Y = 3.42f, Icon = UpgradeIcons.Boot,
-                Description = "The dodge carries further.",
-                Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.2f) } });
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Unsteady, NeedsFull = true, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Unsteady, Damage = 0f, Stagger = 0f, Radius = 1f, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Unsteady, NeedsFull = true, Do = UpgradeAction.Lift, Seconds = 1f, Cooldown = 0.5f },
+                } },
+                BranchPattern.MiddleFoot));
+
+            // NEEDS: the column hanging its enemy 1.0 s (1.3 s with the Empower); the pillars' lift is the form's own 0.8 s.
+            SpellBranch.Add(to, E, LiftingWind, "Lifting Wind", SpellRole.Breaker, BranchPattern.MiddleA, RisingCut, SpellForms.Pillars,
+                new SpellSpec { Count = 1, Reach = 5f, Radius = 2f, Damage = 8f, Stagger = 40f, Stacks = 1, Delay = 0.35f },
+                "A circle is drawn under the enemy faced, up to five metres away, and a column of wind rises from it: 8 damage and 40 stagger, and it goes into the air whatever its footing.",
+                UpgradeIcons.Tower,
+                new Empower { Cooldown = 7f, Seconds = 1.3f },
+                "Lifting Wind waits 7 seconds, not 9, and its enemy hangs longer.",
+                // NEEDS: one column that wanders after enemies for 3 s. Until then two columns rise, under the two nearest.
+                new ShapeDef { Name = "Dust Devil",
+                    Description = "The column wanders after enemies for three seconds, lifting the first it reaches and then the next.",
+                    Change = new SpellChange { Count = 2, Delay = 0.6f } },
+                // NEEDS: the column not lifting, the enemy swung round to face away (0.5 s for an elite; a god's next attack
+                // swings wide). Until then it is lifted as well, and for 1.2 s it begins nothing and the first blow on it is critical.
+                new ShapeDef { Name = "Turned About",
+                    Description = "The column does not lift; it spins. The enemy is swung round to face away from you for a moment and loses its balance, and your first blow on its back is critical. For what cannot be lifted.",
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = TurnedAbout, Seconds = 1.2f, Flags = ConditionFlags.BeginsNoAttack | ConditionFlags.TakesCritical, EndsWith = ConditionBlow.Weapon } } } },
+                "Opens two shapes of Lifting Wind, chosen at any rest fire: Dust Devil, a column that wanders, or Turned About, a column that spins its enemy round.",
+                // NEEDS: only on the enemy a perfect dodge has just taken you past. Until then a perfect dodge's next column
+                // starts no wait, and what it takes hangs twice as long.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.InstantNext, Seconds = 1f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Lift, Seconds = 1.6f, Cooldown = 1f },
+                },
+                "Cast it on the enemy a perfect dodge has just taken you past, and it hangs twice as long.");
+
+            // BESPOKE (built): SkyDanceForm.
+            SpellBranch.Add(to, E, SkyDance, "Sky Dance", SpellRole.Breaker, BranchPattern.MiddleB, RisingCut, SpellForms.SkyDance,
+                new SpellSpec { Count = 5, Interval = 0.34f, Damage = 10f, Stagger = 60f, Stacks = 1, Reach = 6f, Radius = 3f, LingerDamage = 6f },
+                "You throw the enemy faced into the air and go up beside it. Press the light attack as each of five rings closes for a harder cut. Then the stick chooses where it is thrown down, and it bursts harder for each cut in time. 45 mana.",
+                UpgradeIcons.Wing,
+                new Empower { Mana = 35f, Count = 6 },
+                "Sky Dance costs 35 mana, not 45, and closes six rings.",
+                // NEEDS: no throw: the enemy carried down the lane and dropped on another, both taking the burst. Until then
+                // it is thrown further.
+                new ShapeDef { Name = "Carried Off",
+                    Description = "There is no throw. You carry it down the lane with you, up to eight metres, and drop it on another enemy, and both take the burst.",
+                    Change = new SpellChange { Reach = 8f } },
+                // NEEDS: the nearest other enemy taken up beside it, the rings taking turns between them. Until then the first
+                // cut throws up whatever stands near.
+                new ShapeDef { Name = "Two Rise",
+                    Description = "The enemy faced and the nearest other both go up, and the rings take turns between them.",
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Lift, Radius = 3f, Seconds = 1.5f, Cooldown = 3f } } },
+                "Opens two shapes of Sky Dance, chosen at any rest fire: Carried Off, an enemy dropped on another, or Two Rise, two dancing at once.",
+                // NEEDS: only when all five cuts were in time, and Tailwind itself lit for 4 s. Until then the dance gives
+                // Tailwind's longer, safer dodge and quicker feet for 4 s.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.DodgeDistance, Amount = 0.3f, Seconds = 4f, Cooldown = 4f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.DodgeSafeTime, Amount = 0.25f, Seconds = 4f, Cooldown = 4f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.MoveSpeed, Amount = 0.15f, Seconds = 4f, Cooldown = 4f },
+                },
+                "Land all five cuts in time, and you come down with Tailwind lit for four seconds at no cost.");
+
+            // NEEDS: every reaction with Unsteady in it reaching half again as far (a reaction-reach stat). The throw is data.
+            to.Add(BranchPattern.Put(new Upgrade { Id = CarriedFar, Name = "Carried Far", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { RisingCut }, Icon = UpgradeIcons.Gust,
+                Description = "Every reaction with Unsteady in it reaches half again as far and throws what it strikes a metre and a half out from where it happened.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Unsteady, Do = UpgradeAction.Push, Radius = 2.5f, Amount = 1.5f } } },
+                BranchPattern.MiddleCrown));
+            to.Add(BranchPattern.Put(new Upgrade { Id = NothingBeneath, Name = "Nothing Beneath", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CarriedFar }, Icon = UpgradeIcons.Spiral,
+                Description = "An enemy in the air stays there for as long as you keep striking it, and each blow up there gives double mana. Your blows on an enemy that is not Unsteady are weaker.",
+                Stats = new[] { new StatMod(PlayerStat.AirBlows, 20f), new StatMod(PlayerStat.ManaFromBlows, 1f, StatWhen.AirborneBlow), new StatMod(PlayerStat.WeaponDamage, -0.15f), new StatMod(PlayerStat.WeaponDamage, 0.15f, AfflictionKind.Unsteady) } },
+                BranchPattern.TrunkLeft));
+            // NEEDS: spells with no wind-up, cast in the middle of a dodge or a swing without ending it, and a spell cast in a
+            // dodge carrying it 2 m further (task 4.4, the RuleBook). Until then every dodge carries further.
+            to.Add(BranchPattern.Put(new Upgrade { Id = OnTheWind, Name = "On the Wind", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { CarriedFar }, Icon = UpgradeIcons.Wing,
+                Description = "All in on Wind only. Your spells have no wind-up, and can be cast in the middle of a dodge or a swing without ending it. A spell cast in a dodge carries you two metres further along it. Nearly all of the fight is spent in motion.",
+                Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.3f) } },
+                BranchPattern.TrunkRight));
+
+            // ---- The left bough: Slipstream. The dodge and the guard as weapons.
             // BESPOKE: the dodge should pass through enemies, cut each one passed, and leave it unable to turn for a moment.
             // Until then the end of every dodge cuts whatever stands close by.
-            to.Add(new Upgrade { Id = PassingCut, Name = "Passing Cut", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Slipstream }, X = -1.44f, Y = 4.47f, Icon = UpgradeIcons.Blade,
+            to.Add(BranchPattern.Put(new Upgrade { Id = PassingCut, Name = "Passing Cut", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Unsteady }, Icon = UpgradeIcons.Blade,
                 Description = "Where a dodge ends, a cut of wind strikes everything close to you and leaves it Unsteady.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 2.2f, Damage = 10f, Stagger = 8f, Affliction = AfflictionKind.Unsteady, Stacks = 1, Cooldown = 0.5f } } });
-            // BoonSeconds lengthens every timed boon of the marks, Rushing Wake's wait among them (1.2 s to 2 s); the words say so.
-            to.Add(new Upgrade { Id = FollowingDraft, Name = "Following Draft", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Slipstream }, X = -1.82f, Y = 2.84f, Icon = UpgradeIcons.Hourglass,
-                Description = "Rushing Wake waits longer for its blow, and every other timed gift of your marks lasts longer too.",
-                Stats = new[] { new StatMod(PlayerStat.BoonSeconds, 0.67f) } });
-            to.Add(new Upgrade { Id = ThinAir, Name = "Thin Air", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Slipstream }, X = -2.05f, Y = 3.75f, Icon = UpgradeIcons.Wing,
-                Description = "The dodge is safe a moment longer.",
-                Stats = new[] { new StatMod(PlayerStat.DodgeSafeTime, 0.15f) } });
-            // The perfect dodge names its attacker now. The stamina is the dodge's usual 25.
-            to.Add(new Upgrade { Id = EmptyAir, Name = "Empty Air", Element = E, Kind = UpgradeKind.Major, Requires = new[] { PassingCut }, X = -2.02f, Y = 6.14f, Icon = UpgradeIcons.Eye,
-                Description = "A perfect dodge gives back its stamina and leaves the one who struck three deeper in Unsteady.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Stamina, Amount = 25f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 3 },
-                } });
-            to.Add(new Upgrade { Id = LightFeet, Name = "Light Feet", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { PassingCut }, X = -2.42f, Y = 5.05f, Icon = UpgradeIcons.Wing,
-                Description = "The dodge costs less stamina.",
-                Stats = new[] { new StatMod(PlayerStat.StaminaCost, -0.2f) } });
-            // BESPOKE: Passing Cut's own damage should rise by half. Until then blows on an enemy carrying anything cut deeper.
-            to.Add(new Upgrade { Id = CleanPass, Name = "Clean Pass", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { PassingCut }, X = -1.12f, Y = 5.36f, Icon = UpgradeIcons.Blade,
-                Description = "Everything you do cuts deeper into an enemy that carries an affliction.",
-                Stats = new[] { new StatMod(PlayerStat.DamageToAfflicted, 0.08f) } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 2.2f, Damage = 10f, Stagger = 8f, Affliction = AfflictionKind.Unsteady, Stacks = 1, Cooldown = 0.5f } } },
+                BranchPattern.LeftFoot));
+
             // BESPOKE (built): CircleForm. The player cannot be touched for the whole run; the design asks for the first half only.
-            to.Add(new Upgrade { Id = ClosingCircle, Name = "Closing Circle", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { EmptyAir }, X = -2.14f, Y = 7.49f, Icon = UpgradeIcons.Ring,
-                Description = "You run a ring round the enemy faced. When the ring closes, the wind inside it rises and takes everything off the ground.",
-                Form = SpellForms.Circle,
-                Spell = new SpellSpec { Cost = 35f, Reach = 5f, Radius = 3f, Seconds = 1.2f, Damage = 6f, Stagger = 10f, Stacks = 5 } });
-            // Built by hand (DodgeRoll.PayInstead, PlayerUpgrades.SpendBreath): three breaths kept as the mark's count, one back every
-            // two seconds and one for every three blows landed. With none, no dodge.
-            to.Add(new Upgrade { Id = LeafOnTheWind, Name = "Leaf on the Wind", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { ClosingCircle }, X = -2.91f, Y = 8.83f, Icon = UpgradeIcons.Leaf,
-                Description = "The dodge costs no stamina. It spends a breath of wind instead: you hold three, and time and blows win them back. With none you cannot dodge. You are easier to wound.",
-                Tally = new TallySpec { Name = "Breath", Cap = 3 },
-                Stats = new[] { new StatMod(PlayerStat.DamageTaken, 0.2f) } });
+            SpellBranch.Add(to, E, ClosingCircle, "Closing Circle", SpellRole.Movement, BranchPattern.LeftA, PassingCut, SpellForms.Circle,
+                new SpellSpec { Reach = 5f, Radius = 3f, Seconds = 1.2f, Damage = 6f, Stagger = 10f, Stacks = 5 },
+                "You run a ring round the enemy faced. When the ring closes, the wind inside it rises and takes everything off the ground, five deep in Unsteady.",
+                UpgradeIcons.Ring,
+                new Empower { Cooldown = 7f, Seconds = 1.5f },
+                "Closing Circle waits 7 seconds, not 9, and what it lifts hangs longer.",
+                // NEEDS: half the ring run, ending on the enemy's far side. Until then a step through it, and the first blow
+                // after is critical.
+                new ShapeDef { Name = "Half Circle", Form = SpellForms.Step,
+                    Description = "You run only half the ring and end on its far side, behind it. Nothing is lifted, and your first blow on its back is critical.",
+                    Spell = new SpellSpec { Reach = 5f, Damage = 6f, Stagger = 10f, Stacks = 1, Seconds = 1.5f },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.CritChance, Amount = 1f, Seconds = 1.5f, UntilBlow = true } } },
+                // NEEDS: the Empower's longer hang reaching this shape too (an Empower sets its numbers after the shape's).
+                new ShapeDef { Name = "Wide Circle",
+                    Description = "You run round a group up to six metres across. The column takes everyone inside, but lifts each for only a moment.",
+                    Change = new SpellChange { Reach = 7f, Radius = 4f, Seconds = 0.6f } },
+                "Opens two shapes of Closing Circle, chosen at any rest fire: Half Circle, ending behind it, or Wide Circle, a ring round a group.",
+                // NEEDS: the shared movement rule's timing (started as a blow would land, their-blow-moment), and the ring run
+                // round the attacker wherever it stands within 8 m. Until then the cast gives what a perfect dodge gives.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 12f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f },
+                },
+                "Started in the instant a blow would land on you, it counts as a perfect dodge, and the ring is run round the attacker wherever it stands within eight metres.");
 
-            // Middle bough: Updraft. Launch and juggle.
-            to.Add(new Upgrade { Id = RisingCut, Name = "Rising Cut", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Unsteady }, X = 0.28f, Y = 3.08f, Icon = UpgradeIcons.Arrow,
-                Description = "A heavy blow on an enemy five deep in Unsteady throws it into the air. It hangs there helpless, and each blow holds it up a little longer, up to three.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Unsteady, NeedsFull = true, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Unsteady, Damage = 0f, Stagger = 0f, Radius = 1f, Cooldown = 0.5f }, new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Unsteady, NeedsFull = true, Do = UpgradeAction.Lift, Seconds = 1f, Cooldown = 0.5f } } });
-            // A minor with an effect, because the effect is exactly what the words say.
-            to.Add(new Upgrade { Id = LooseFooting, Name = "Loose Footing", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { RisingCut }, X = -0.27f, Y = 4.26f, Icon = UpgradeIcons.Boot,
-                Description = "Heavy blows leave an enemy two deeper in Unsteady.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 1 } } });
-            to.Add(new Upgrade { Id = OffBalance, Name = "Off Balance", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { RisingCut }, X = 0.71f, Y = 4.18f, Icon = UpgradeIcons.Hourglass,
-                Description = "Unsteady lasts longer.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.5f) } });
-            // NEAREST: a heavy blow on an enemy in the air drives it down and bursts where it lands. The blow itself is not yet half again as hard.
-            to.Add(new Upgrade { Id = HammerDown, Name = "Hammer Down", Element = E, Kind = UpgradeKind.Major, Requires = new[] { RisingCut }, X = 0.05f, Y = 5.19f, Icon = UpgradeIcons.Hammer,
-                Description = "A heavy blow on an enemy in the air drives it into the ground. The landing bursts.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, NeedsAirborne = true, Do = UpgradeAction.Drop }, new UpgradeEffect { On = UpgradeTrigger.HeavyHit, NeedsAirborne = true, Do = UpgradeAction.Burst, Damage = 14f, Stagger = 30f, Radius = 3f }, new UpgradeEffect { On = UpgradeTrigger.HeavyHit, NeedsAirborne = true, Do = UpgradeAction.Push, Radius = 3f, Amount = 2f } } });
-            to.Add(new Upgrade { Id = HangTime, Name = "Hang Time", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { HammerDown }, X = 0.6f, Y = 6.04f, Icon = UpgradeIcons.Hourglass,
-                Description = "Enemies thrown into the air hang longer.",
-                Stats = new[] { new StatMod(PlayerStat.AirSeconds, 0.4f) } });
-            to.Add(new Upgrade { Id = OpenAir, Name = "Open Air", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { HammerDown }, X = -0.59f, Y = 6.2f, Icon = UpgradeIcons.Fist,
-                Description = "Blows strike an enemy in the air harder.",
-                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.2f, StatWhen.AirborneBlow) } });
-            to.Add(new Upgrade { Id = LiftingWind, Name = "Lifting Wind", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { HammerDown }, X = -0.09f, Y = 7.11f, Icon = UpgradeIcons.Tower,
-                Description = "You raise a column of wind under the enemy faced. It goes up whatever its footing.",
-                Form = "pillars",
-                Spell = new SpellSpec { Cost = 30f, Count = 1, Reach = 5f, Radius = 2f, Damage = 8f, Stagger = 25f, Stacks = 1, Delay = 0.35f } });
-            // BESPOKE (built): SkyDanceForm.
-            to.Add(new Upgrade { Id = SkyDance, Name = "Sky Dance", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { LiftingWind }, X = -0.92f, Y = 8.29f, Icon = UpgradeIcons.Wing,
-                Description = "You throw the enemy faced into the air and go up beside it. Press the light attack as each of five rings closes for a harder cut. Then the stick chooses where it is thrown down, and it bursts harder for each cut in time. 45 mana.",
-                Form = SpellForms.SkyDance,
-                Spell = new SpellSpec { Cost = 45f, Count = 5, Interval = 0.34f, Damage = 10f, Stagger = 60f, Stacks = 1, Reach = 6f, Radius = 3f, LingerDamage = 6f } });
-            to.Add(new Upgrade { Id = NothingBeneath, Name = "Nothing Beneath", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SkyDance }, X = -1.32f, Y = 9.77f, Icon = UpgradeIcons.Spiral,
-                Description = "An enemy in the air stays there for as long as you keep striking it, and each blow up there gives double mana. Your blows on an enemy that is not Unsteady are weaker.",
-                Stats = new[] { new StatMod(PlayerStat.AirBlows, 20f), new StatMod(PlayerStat.ManaFromBlows, 1f, StatWhen.AirborneBlow), new StatMod(PlayerStat.WeaponDamage, -0.15f), new StatMod(PlayerStat.WeaponDamage, 0.15f, AfflictionKind.Unsteady) } });
-
-            // Right bough: Gale. Push and pull.
-            // BESPOKE: a pushed enemy that meets a wall or another enemy should stop there and both be hurt. Until then every
-            // enemy a spell strikes (Gust is the push) is shaken where it stands, and so is whoever is beside it.
-            to.Add(new Upgrade { Id = AgainstTheWall, Name = "Against the Wall", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Unsteady }, X = 1.46f, Y = 3.62f, Icon = UpgradeIcons.Wall,
-                Description = "Each enemy your spells strike is hit by a small burst of wind that shakes it and anything beside it and leaves them Unsteady.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Burst, Damage = 6f, Stagger = 15f, Radius = 1.6f, Affliction = AfflictionKind.Unsteady, Stacks = 1 } } });
-            // The reach is the stat for every spell; the wider cone is still to be written by hand.
-            to.Add(new Upgrade { Id = WideGust, Name = "Wide Gust", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { AgainstTheWall }, X = 1.25f, Y = 5.05f, Icon = UpgradeIcons.Gust,
-                Description = "Gust spreads wider and reaches further.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellArc, 0.43f), new StatMod(PlayerStat.BaseSpellReach, 0.2f) } });
             // A thrown attack sent back to its thrower is still to be written by hand.
-            to.Add(new Upgrade { Id = TurnedAside, Name = "Turned Aside", Element = E, Kind = UpgradeKind.Major, Requires = new[] { AgainstTheWall }, X = 1.9f, Y = 6.06f, Icon = UpgradeIcons.Shield,
+            to.Add(BranchPattern.Put(new Upgrade { Id = TurnedAside, Name = "Turned Aside", Element = E, Kind = UpgradeKind.Major, Requires = new[] { PassingCut }, Icon = UpgradeIcons.Shield,
                 Description = "A perfect guard throws everyone near you back and leaves the attacker three deeper in Unsteady.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 3 },
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Push, At = EffectAt.Self, Radius = 4f, Amount = 3f },
-                } });
-            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
-            to.Add(new Upgrade { Id = EasyBreath, Name = "Easy Breath", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { AgainstTheWall }, X = 2.27f, Y = 4.45f, Icon = UpgradeIcons.Gem,
-                Description = "Gust waits a fifth less between casts.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
-            // PushDistance: the Push action and what spell forms shove.
-            to.Add(new Upgrade { Id = StrongArm, Name = "Strong Arm", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { TurnedAside }, X = 1.08f, Y = 6.89f, Icon = UpgradeIcons.Fist,
-                Description = "Your pushes throw enemies further.",
-                Stats = new[] { new StatMod(PlayerStat.PushDistance, 0.3f) } });
-            to.Add(new Upgrade { Id = IndrawnBreath, Name = "Indrawn Breath", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { TurnedAside }, X = 1.06f, Y = 8.07f, Icon = UpgradeIcons.Spiral,
-                Description = "You drag everything near into one place before you, then burst it apart.",
-                Form = "reverse",
-                Spell = new SpellSpec { Cost = 35f, Reach = 2f, Radius = 7f, Delay = 0.5f, Damage = 10f, Stagger = 25f, Stacks = 2 } });
-            to.Add(new Upgrade { Id = FairWind, Name = "Fair Wind", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { TurnedAside }, X = 2.81f, Y = 6.4f, Icon = UpgradeIcons.Gem,
-                Description = "Tailwind costs less mana.",
-                Stats = new[] { new StatMod(PlayerStat.SurgeCost, -0.2f) } });
-            to.Add(new Upgrade { Id = RunningStart, Name = "Running Start", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { TurnedAside }, X = 3.06f, Y = 7.38f, Icon = UpgradeIcons.Wing,
-                Description = "You move faster while Tailwind lasts.",
-                Stats = new[] { new StatMod(PlayerStat.SurgeSpeed, 0.1f) } });
-            // BESPOKE (built): PlayerUpgrades throws the base spell free through PlayerElement.CastBaseFree on each heavy blow or finisher that lands.
-            to.Add(new Upgrade { Id = StormFront, Name = "Storm Front", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { IndrawnBreath }, X = 2.44f, Y = 8.86f, Icon = UpgradeIcons.Wave,
-                Description = "Every heavy blow that lands throws a Gust with it at no cost. Your blows give less mana.",
-                Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, -0.25f) } });
-            // BESPOKE: the pull should come as the draw is released, before the cut lands, and only from the cone ahead.
-            // Until then the slash that lands drags everything near onto the player and leaves it Unsteady.
-            to.Add(new Upgrade { Id = DrawingWind, Name = "Drawing Wind", Element = E, Kind = UpgradeKind.Major, Requires = new[] { TurnedAside }, X = 2.09f, Y = 7.43f, Icon = UpgradeIcons.Blade, Weapon = Weapons.KatanaName,
-                Description = "When the Iaido Slash lands, everything within six metres is pulled toward you and left Unsteady.",
-                Effects = new[]
+                } },
+                BranchPattern.LeftMiddle));
+
+            // NEEDS: the bag as designed: open 8 s, each perfect guard or perfect dodge in that time catching the attacker's
+            // wind (thrown back 2 m), thrown things within 2 m caught too, and a second press or the time's end opening it as
+            // one cone of 7 m, 12 damage and 25 stagger for each wind held, the thrown things flying back. Until then the cast
+            // unties a bag of three winds, and each perfect guard or perfect dodge lets one out at once as that cone.
+            SpellBranch.Add(to, E, BagOfWinds, "Bag of Winds", SpellRole.Counter, BranchPattern.LeftB, TurnedAside, SpellForms.Nova,
+                new SpellSpec { Radius = 1.5f, Damage = 0f, Stagger = 0f, Stacks = 0 },
+                "You untie a bag of wind at your hip. Each blow you perfect-guard or perfect-dodge is caught in it, three at most, and thrown things that come near are caught too. Press again, and it opens: a cone of seven metres that strikes harder for each wind held, and every thrown thing flies back at its thrower.",
+                UpgradeIcons.Orb,
+                // NEEDS: a fourth wind in the bag (the count's cap is the Learn's).
+                new Empower { Cooldown = 8f },
+                "Bag of Winds waits 8 seconds, not 10, and holds four winds.",
+                // NEEDS: the bag kept 20 s, opened only when you choose. Until then it is the bag as above.
+                new ShapeDef { Name = "Kept Wind",
+                    Description = "The bag does not open by itself. It keeps its winds for twenty seconds, to be opened when you choose, such as on a staggered enemy." },
+                // NEEDS: the gust thrown toward the enemy you next face, not the one caught.
+                new ShapeDef { Name = "Loose Neck",
+                    Description = "Nothing is kept. Each wind leaves at once as a free Gust toward the enemy you next face.",
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Cone, Reach = 5f, Arc = 70f, Damage = 8f, Stagger = 20f, Affliction = AfflictionKind.Unsteady, Stacks = 2 },
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f },
+                        new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Cone, Reach = 5f, Arc = 70f, Damage = 8f, Stagger = 20f, Affliction = AfflictionKind.Unsteady, Stacks = 2 },
+                    } },
+                "Opens two shapes of Bag of Winds, chosen at any rest fire: Kept Wind, a bag opened when you choose, or Loose Neck, every wind let out at once.",
+                // NEEDS: only when three winds are caught within 3 s. Until then a perfect dodge raises the whirlwind, once in ten seconds.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.Lift, At = EffectAt.Self, Radius = 6f, Seconds = 1f, Cooldown = 10f } },
+                "Catch three winds within three seconds, and the bag bursts by itself as a whirlwind: everything within six metres goes into the air.",
+                tally: new TallySpec { Name = "Winds", Cap = 3 },
+                learnEffects: new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.SkillHit, Do = UpgradeAction.Pull, At = EffectAt.Self, Radius = 6f, Amount = 2.5f, Cooldown = 1f },
-                    new UpgradeEffect { On = UpgradeTrigger.SkillHit, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 6f, Affliction = AfflictionKind.Unsteady, Stacks = 2, Cooldown = 1f },
-                } });
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Bank, Count = 3 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Spends = 1, Do = UpgradeAction.Cone, Reach = 7f, Arc = 60f, Damage = 12f, Stagger = 25f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Spends = 1, Do = UpgradeAction.Cone, Reach = 7f, Arc = 60f, Damage = 12f, Stagger = 25f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
+                });
+
+            // Built by hand (DodgeRoll.PayInstead, PlayerUpgrades.SpendBreath): three breaths kept as the mark's count, one back every
+            // two seconds and one for every three blows landed. With none, no dodge.
+            to.Add(BranchPattern.Put(new Upgrade { Id = LeafOnTheWind, Name = "Leaf on the Wind", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { TurnedAside }, Icon = UpgradeIcons.Leaf,
+                Description = "The dodge costs no stamina. It spends a breath of wind instead: you hold three, and time and blows win them back. With none you cannot dodge. You are easier to wound.",
+                Tally = new TallySpec { Name = "Breath", Cap = 3 },
+                Stats = new[] { new StatMod(PlayerStat.DamageTaken, 0.2f) } },
+                BranchPattern.LeftCrown));
+
+            // ---- The right bough: Gale. Push and throw.
+            // NEEDS: a thrown enemy meeting a wall, a pillar or another enemy (the wall collision): 15 damage and 6 more for each
+            // Unsteady, 30 stagger, both bodies when two meet. Until then every enemy a spell strikes is shaken where it
+            // stands, and so is whoever is beside it.
+            to.Add(BranchPattern.Put(new Upgrade { Id = AgainstTheWall, Name = "Against the Wall", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Unsteady }, Icon = UpgradeIcons.Wall,
+                Description = "Any enemy you throw that meets a wall, a pillar or another enemy takes 15 damage, 6 more for each Unsteady it carries, and 30 stagger. When two bodies meet, both do.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Burst, Damage = 6f, Stagger = 15f, Radius = 1.6f, Affliction = AfflictionKind.Unsteady, Stacks = 1 } } },
+                BranchPattern.RightFoot));
+
+            // Gust, the base spell: cast by Wind's kit, so its Learn carries no form; its shapes cast their own.
+            SpellBranch.Add(to, E, Gust, "Gust", SpellRole.Opener, BranchPattern.RightA, Unsteady, "", null,
+                "Wind's own spell, given with the element. A rush of air five metres ahead: 8 damage, 20 stagger and Unsteady two deep, and everything in it is thrown three metres straight down the wind.",
+                UpgradeIcons.Gust,
+                // NEEDS: Unsteady three deep. The base spell is cast by its kit, which takes only the Empower's wait.
+                new Empower { Cooldown = 4.5f, Stacks = 3 },
+                "Gust waits 4.5 seconds, not 6, and leaves its enemies three deep in Unsteady.",
+                // NEEDS: the wind coming down on a point up to 6 m away. Until then it comes down on you, and throws everything
+                // in 3 m outward.
+                new ShapeDef { Name = "Downburst", Form = SpellForms.Nova,
+                    Description = "The wind comes down from above and spreads as a ring. Everything within three metres is thrown two and a half metres outward. Aim it at your own feet to clear a ring round you.",
+                    Spell = new SpellSpec { Radius = 3f, Delay = 0.15f, Damage = 8f, Stagger = 20f, Stacks = 2 },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 2.5f } } },
+                new ShapeDef { Name = "Long Gust", Form = SpellForms.Spikes,
+                    Description = "A narrow lane two metres wide and ten long that throws what it takes five metres. For throwing one enemy into a wall, a pit or its friends.",
+                    Spell = new SpellSpec { Reach = 10f, Speed = 25f, Count = 1, Radius = 1f, Damage = 8f, Stagger = 20f, Stacks = 2 },
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 5f } } },
+                "Opens two shapes of Gust, chosen at any rest fire: Downburst, a ring thrown outward, or Long Gust, one long lane.",
+                // NEEDS: only in the instant an enemy's attack mark shows (enemy-begins-attack), elites' blows coming 0.4 s late
+                // and gods not turned. Until then each enemy it strikes flinches out of what it had begun.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Flinch, Seconds = 0.4f } },
+                "Cast it in the instant an enemy's attack mark shows, and the gust turns its blow aside into empty air.");
+
+            // Re-aimed as the detonator: the burst spends each enemy's Unsteady.
+            SpellBranch.Add(to, E, IndrawnBreath, "Indrawn Breath", SpellRole.Detonator, BranchPattern.RightB, AgainstTheWall, SpellForms.Reverse,
+                new SpellSpec { Reach = 2f, Radius = 7f, Delay = 0.5f, Damage = 10f, Stagger = 25f, Stacks = 2 },
+                "You drag everything near into one place before you, then burst it apart. The burst spends each enemy's Unsteady, harder for every stack.",
+                UpgradeIcons.Spiral,
+                new Empower { Cooldown = 9f, Radius = 8.5f },
+                "Indrawn Breath waits 9 seconds, not 11, and draws from further.",
+                // NEEDS: the held press (the draw lasting while held) and the point walking with you. Until then it is the full hold.
+                new ShapeDef { Name = "Held Breath",
+                    Description = "The draw lasts as long as the button is held, up to two seconds, and the point walks with you. Let go to burst.",
+                    Change = new SpellChange { Delay = 2f } },
+                // NEEDS: the burst not scattering them first.
+                new ShapeDef { Name = "All One Way",
+                    Description = "The burst does not scatter them. All of them are thrown together five metres the way you face. Gather a crowd, then throw it into a wall.",
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 5f } } },
+                "Opens two shapes of Indrawn Breath, chosen at any rest fire: Held Breath, a draw that walks with you, or All One Way, a crowd thrown together.",
+                // NEEDS: a spell cast in the middle of a dodge (spell-windows), the point riding with you, and the burst
+                // spending nothing. Until then each enemy it strikes is given two Unsteady back.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 2 } },
+                "Cast it in the middle of a dodge: the draw's point rides with you to where the dodge ends, and the burst spends no Unsteady, so every stack stays for the next blow.",
+                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Unsteady, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Unsteady, Damage = 6f, Stagger = 8f, Radius = 0.8f } });
 
             // BESPOKE (built): RememberForm.
-            to.Add(new Upgrade { Id = TheWindRemembers, Name = "The Wind Remembers", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
+            to.Add(BranchPattern.Put(new Upgrade { Id = TheWindRemembers, Name = "The Wind Remembers", Element = E, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
                 Description = "While Tailwind lasts, every blow you land hangs in the air where it fell, up to sixteen. When Tailwind ends, all of them fall again at once, each half as hard as the blow it remembers.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Remember, Spell = new SpellSpec { Cost = 0f, Damage = 50f, Stagger = 10f, Stacks = 1 } } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.Remember, Spell = new SpellSpec { Cost = 0f, Damage = 50f, Stagger = 10f, Stacks = 1 } } } },
+                BranchPattern.Gift));
         }
     }
 }

@@ -134,15 +134,22 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void TheTenReadyMinorsMakeTheirOwnBaseSpellWaitAFifthLess()
+        public void TheReadyMinorsLeftMakeTheirOwnBaseSpellWaitAFifthLess()
         {
             // The owner's decision of 2026-11-19: what once cost less mana now waits less, for its own element's base spell alone.
+            // Fire's Short Breath, Lightning's Quick Clap, Wind's Easy Breath, Ice's Thin Ice, Water's Low Water, Life's Ready
+            // Soil and Earth's Near to Hand went with their trees' reshaping (Phase 4): their Empower marks do it now.
+            Assert.IsTrue(RetiredMarks.IsRetired(IceTree.ThinIce));
+            Assert.IsTrue(RetiredMarks.IsRetired(WaterTree.LowWater));
+            Assert.IsNull(Upgrade.ById(WaterTree.LowWater));
+            Assert.IsTrue(RetiredMarks.IsRetired(LifeTree.ReadySoil));
+            Assert.IsNull(Upgrade.ById(LifeTree.ReadySoil));
+            Assert.IsTrue(RetiredMarks.IsRetired(EarthTree.NearToHand));
+            Assert.IsNull(Upgrade.ById(EarthTree.NearToHand));
             var minors = new (string Id, string Element)[]
             {
-                (EarthTree.NearToHand, Elements.Earth), (FireTree.ShortBreath, Elements.Fire), (IceTree.ThinIce, Elements.Ice),
-                (LifeTree.ReadySoil, Elements.Life), (LightningTree.QuickClap, Elements.Lightning), (LightTree.ReadyLight, Elements.Light),
-                (MetalTree.ReadySteel, Elements.Metal), (PoisonTree.ReadyPoison, Elements.Poison), (WaterTree.LowWater, Elements.Water),
-                (WindTree.EasyBreath, Elements.Wind),
+                (LightTree.ReadyLight, Elements.Light),
+                (MetalTree.ReadySteel, Elements.Metal), (PoisonTree.ReadyPoison, Elements.Poison),
             };
             foreach (var (id, element) in minors)
             {
@@ -165,7 +172,7 @@ namespace Clover.Tests
             Assert.AreEqual(5.6f, SpellTimings.BaseCooldown(Elements.Ice, -0.2f), 1e-4f);
             Assert.AreEqual(0.7f, SpellTimings.BaseCooldown(Elements.Ice, -5f), 1e-4f, "no share takes the wait below a tenth");
             Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(null, Elements.Ice));
-            Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(Upgrade.ById(IceTree.ThinIce), ""));
+            Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(Upgrade.ById(LightTree.ReadyLight), ""));
         }
     }
 }

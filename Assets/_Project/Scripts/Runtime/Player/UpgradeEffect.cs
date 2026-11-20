@@ -67,6 +67,13 @@ namespace Clover.Player
         public int Spends;
         /// <summary>It happens only if its mark's count holds any, spends them all, and carries how many were spent (for <see cref="PerStack"/>).</summary>
         public bool SpendsAll;
+        /// <summary>
+        /// For the SpellCast and SpellHit triggers: only when the spell is its own branch's (a Master's timing, a shape's
+        /// rule). Its mark's <see cref="Upgrade.Branch"/> names the branch.
+        /// </summary>
+        public bool OwnBranch;
+        /// <summary>For CutCooldowns, ResetCooldown and InstantNext: the branch (its Learn id) whose slot it acts on. Empty: its own mark's branch.</summary>
+        public string Branch = "";
         /// <summary>For the Reacted trigger: only for this reaction (its id, "react.steam"). For ForceReaction: the reaction forced. Empty: any.</summary>
         public string Reaction = "";
         /// <summary>For an effect a reaction runs: what it lays may set off reactions of its own (Sea Ice, Breakers and the like); otherwise it starts none.</summary>

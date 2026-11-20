@@ -25,7 +25,7 @@ The long explanation the chart shows for every mark on Overgrowth, the branch Li
 **Example.** Hold a doorway with your guard and never roll: the soldiers that get a blow through are seeded for your answer.
 
 ## overgrowth.briarpatch
-**What it does.** The thorns of a Seeded enemy's death take root where they fall. The patch shakes the ground and seeds whatever walks in it. Not to be confused with Life's own spell of the same name.
+**What it does.** The thorns of a Seeded enemy's death take root where they fall. The patch shakes the ground and seeds whatever walks in it. Called Briar Patch until Life's own spell, a mark now, took that name.
 
 **When it happens.** Whenever an enemy carrying Seeded dies, at most once a second.
 

@@ -180,6 +180,8 @@ namespace Clover.Player
             switch (element.Name)
             {
                 case Elements.Fire:
+                    // Checked against elements_a.md when Fire was reshaped (task 4.2): the third blow's patch above, Burning
+                    // Edge and Burnt Offering here are the design's numbers.
                     // Burning Edge: a sheet of flame along the arc and 3 m beyond, 2 Burn on all it reaches, the arc's ground burning 3 s.
                     Cover(combat, print, Blow(element, blowDamage * 0.25f, 8f, 2), 3f);
                     if (!art) Show(combat, element, print, 3f);
@@ -203,6 +205,8 @@ namespace Clover.Player
                     if (deep)
                     {
                         // Down the Channel: 0.4 s later a bolt comes down along the whole line and discharges every enemy on it.
+                        // NEEDS: the discharge itself (checked in task 4.3): the bolt strikes and lays Static; a blow's Detonate sets
+                        // off Burn only, so what lies on the line waits for a heavy blow to go off.
                         for (int i = 0; i < 4; i++)
                         {
                             Vector3 at = print.Origin + print.Forward * (print.Reach * (i + 0.5f) / 4f);

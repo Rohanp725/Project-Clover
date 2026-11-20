@@ -103,6 +103,8 @@ namespace Clover.Player
         /// <summary>Goes up whenever what is in force (or lent) may have changed; the slots look again then.</summary>
         public int SpellsVersion { get; private set; }
         private readonly List<string> spellsInForce = new List<string>();
+        // What a spell branch makes of its spell (the shape worn, the Empower): asked as each spell is cast (Phase 4).
+        private readonly SpellBranches branches = new SpellBranches();
         // Looked up when first wanted: the controller adds the slots to a player built before they existed, perhaps after this Awake.
         private PlayerSpells spellsFound;
         private PlayerSpells spells => spellsFound != null ? spellsFound : (spellsFound = GetComponent<PlayerSpells>());
@@ -416,7 +418,19 @@ namespace Clover.Player
         /// <summary>Works out what is in force at once, as after the Hand or the attunements change at a rest fire.</summary>
         public void RefreshNow() => Refresh(true);
 
-        public bool Owns(string id) => RunState.Unlocked.Contains(id);
+        /// <summary>True when the mark is learned; an element's base spell (<c>fire.base</c>) is owned while its element is carried.</summary>
+        public bool Owns(string id) =>
+            RunState.Unlocked.Contains(id) || (Magic.SpellSlots.IsBase(id) && element != null && element.Carries(Build.HandRules.ElementOfBase(id)));
+
+        /// <summary>The number of seconds a slot waits after this spell now, its branch's shape and Empower counted (PlayerSpells starts the clock).</summary>
+        public float CooldownOf(Upgrade mark) => branches.CooldownOf(mark, RunState.Unlocked, ReadLoadout());
+
+        /// <summary>The wait of an element's base spell cast by its kit, from <paramref name="usual"/>, with its branch's Empower.</summary>
+        public float BaseCooldownOf(string baseId, float usual) => SpellBranches.BaseCooldown(baseId, usual, RunState.Unlocked);
+
+        /// <summary>True when a base spell is cast through its Learn mark (its worn shape casts its own form), not by its element's kit.</summary>
+        public bool BaseCastsThroughMark(string baseId) =>
+            SpellBranches.CastsThroughMark(Upgrade.ById(baseId), RunState.Unlocked, ReadLoadout());
 
         /// <summary>True when a learned spell may sit in a slot now: its element (both, for a duo spell) carried.</summary>
         public bool CanSlot(string id)
@@ -595,6 +609,13 @@ namespace Clover.Player
                 }
                 foreach (var mod in upgrade.Stats) Stats.AddLearned(mod);
                 foreach (var effect in upgrade.Effects) byTrigger[(int)effect.On].Add(effect);
+                // A Shape mark adds the rule of the shape its spell wears, and only that one.
+                var worn = SpellBranches.Worn(upgrade, loadout);
+                if (worn != null)
+                {
+                    foreach (var mod in worn.Stats) Stats.AddLearned(mod);
+                    foreach (var effect in worn.Effects) byTrigger[(int)effect.On].Add(effect);
+                }
                 // Weapon blows lay only the first element's affliction: a second element's root lays nothing with the weapon.
                 if (!upgrade.IsMix && upgrade.Element == first) weaponStacks += upgrade.WeaponStacks;
             }
@@ -611,7 +632,8 @@ namespace Clover.Player
             Afflictions.SharedBeatShare = 0.15f;
             deadAlready = Has(Trees.DarkTree.DeadAlready);
             hollowStrength = Has(Trees.DarkTree.HollowStrength);
-            hasDetonate = On(Upgrade.BurnAndDetonate);
+            // Burn and Detonate is folded into Breath of the Lioness (once Backdraft, the same id): the guard's cone sets a burn off too.
+            hasDetonate = On(Upgrade.BurnAndDetonate) || On(Upgrade.Backdraft);
             hasBackdraft = On(Upgrade.Backdraft);
             hasTrail = On(Upgrade.FlameTrail);
             hasCrescent = On(Upgrade.BurningCrescent);
@@ -619,8 +641,9 @@ namespace Clover.Player
             hasStatic = On(Upgrade.Static);
             staticLays = hasStatic && first == Elements.Lightning;
             hasCharge = On(Upgrade.StoredCharge);
-            var reserve = Upgrade.ById(Trees.LightningTree.DeepReserve);
-            reserveIndex = hasCharge && reserve != null && On(Trees.LightningTree.DeepReserve) ? reserve.Index : -1;
+            // Deep Reserve is folded into Stored Charge, which keeps the count of three charges itself.
+            var reserve = Upgrade.ById(Upgrade.StoredCharge);
+            reserveIndex = hasCharge && reserve != null && reserve.Tally != null ? reserve.Index : -1;
             hasBlink = On(Upgrade.Blink);
             hasAfterimage = On(Upgrade.Afterimage);
             hasCuts = On(Upgrade.DelayedCuts);
@@ -969,7 +992,9 @@ namespace Clover.Player
                 var effect = list[i];
                 if (effect.Spent != AfflictionKind.None && effect.Spent != what) continue;
                 if (effect.OwnSpell && effect.Owner != castSource) continue;
-                if (effect.BaseSpell && castSource != null) continue;
+                // A base spell cast through its Learn mark (its shape) is still the base spell.
+                if (effect.BaseSpell && castSource != null && !castSource.IsBaseSpell) continue;
+                if (effect.OwnBranch && !SpellBranches.OwnBranch(effect.Owner, castSource)) continue;
                 if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) continue;
                 // A mark that deepens one reaction answers that one only.
                 if (trigger == UpgradeTrigger.Reacted && !string.IsNullOrEmpty(effect.Reaction) && effect.Reaction != reaction) continue;
@@ -1578,6 +1603,12 @@ namespace Clover.Player
                     break;
                 case UpgradeAction.Condition:
                     ConditionsSet += ConditionCaster.Cast(effect, subject, centre, combat, laying, conditionScratch);
+                    break;
+                case UpgradeAction.CutCooldowns:
+                case UpgradeAction.ResetCooldown:
+                case UpgradeAction.InstantNext:
+                    // The spell clocks are the slots' (Magic/BranchCooldowns): a Master's reward for its timing.
+                    if (spells != null) spells.Answer(effect);
                     break;
             }
         }
@@ -2215,7 +2246,12 @@ namespace Clover.Player
         public bool TrySpecial() => Worn != null && Cast(Worn);
 
         /// <summary>The mana a spell asks now: its price (larger spells only) as the marks make it.</summary>
-        public float PriceOf(Upgrade mark) => mark == null || mark.Spell == null ? 0f : mark.Spell.Cost * Stats.Multiplier(PlayerStat.SpellCost);
+        public float PriceOf(Upgrade mark)
+        {
+            // The branch's Empower may make a larger spell cheaper (Meteor Leap 45 to 35).
+            var spec = mark != null ? branches.SpecOf(mark, RunState.Unlocked, ReadLoadout()) : null;
+            return spec == null ? 0f : spec.Cost * Stats.Multiplier(PlayerStat.SpellCost);
+        }
 
         /// <summary>
         /// Casts a learned (or lent) spell from a slot, through its form: the one path every slot spell takes
@@ -2225,12 +2261,16 @@ namespace Clover.Player
         /// </summary>
         public bool Cast(Upgrade mark)
         {
-            if (mark == null || mark.Spell == null) return false;
-            var form = SpellForms.Get(mark.Form);
+            if (mark == null) return false;
+            // The spell as its branch makes it now: the shape worn (its form and numbers) and the Empower.
+            var loadout = ReadLoadout();
+            var spec = branches.SpecOf(mark, RunState.Unlocked, loadout);
+            if (spec == null) return false;
+            var form = SpellForms.Get(SpellBranches.FormOf(mark, RunState.Unlocked, loadout));
             if (form == null) return false;
             // A spell may ask health in place of mana, or as well: it is left grey, to be won back.
-            float blood = mark.Spell.HealthCost * Stats.Multiplier(PlayerStat.HealthPrices);
-            var cast = element.NewCast(mark.Spell, mark.Name, mark);
+            float blood = spec.HealthCost * Stats.Multiplier(PlayerStat.HealthPrices);
+            var cast = element.NewCast(spec, mark.Name, mark);
             // A form that can do nothing just now says so before anything is paid.
             if (form is ISpellGate gate && !gate.CanCast(cast)) return false;
             float price = PriceOf(mark);
@@ -2239,7 +2279,7 @@ namespace Clover.Player
             // Spring Tide: the spell is made greater by all the mana held before its numbers are read, and takes it all.
             // Only a spell with a price can rise: basic spells cost none now (the mark is inert on them).
             bool tide = TideRises(price);
-            if (tide) cast = element.NewCast(mark.Spell, mark.Name, mark);
+            if (tide) cast = element.NewCast(spec, mark.Name, mark);
             if (!combat.Mana.TrySpend(price)) return false;
             if (tide) TideSpent();
             if (blood > 0f) defence.Health.Chip(blood);

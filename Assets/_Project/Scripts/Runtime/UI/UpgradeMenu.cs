@@ -178,9 +178,29 @@ namespace Clover.UI
 
         private float SizeOf(Upgrade upgrade)
         {
-            int kind = (int)upgrade.Kind;
+            int kind = (int)FrameKind(upgrade);
             return (kind < MarkSteps.Length ? MarkSteps[kind] : 0.7f) * StepPixels;
         }
+
+        /// <summary>The frame a mark is drawn in: the kinds added for the reshaped trees borrow the frames there are (a Devotion a keystone's).</summary>
+        private static UpgradeKind FrameKind(Upgrade upgrade)
+        {
+            switch (upgrade.Kind)
+            {
+                case UpgradeKind.Devotion: return UpgradeKind.Keystone;
+                case UpgradeKind.Heresy:
+                case UpgradeKind.Bond: return UpgradeKind.Signature;
+                case UpgradeKind.Evolution: return UpgradeKind.Spell;
+                case UpgradeKind.Aspect:
+                case UpgradeKind.Temper:
+                case UpgradeKind.Technique:
+                case UpgradeKind.Reaction: return UpgradeKind.Major;
+                default: return upgrade.Kind;
+            }
+        }
+
+        // Where the marks lie: the ring, with the trees made of spell branches drawn in their pattern (IMPLEMENTATION.md 4.2).
+        private readonly IChartLayout layout = RingLayout.Instance;
 
         /// <summary>Draws the chart again from the catalogue, as after a probe has added marks to it.</summary>
         public void Rebuild()
@@ -244,9 +264,9 @@ namespace Clover.UI
             var byId = new Dictionary<string, Mark>();
             foreach (var upgrade in Upgrade.All)
             {
-                // Hidden marks (the reactions) are on no chart.
-                if (upgrade.IsHidden) continue;
-                var mark = new Mark { Upgrade = upgrade, Place = UpgradeTree.OnChart(upgrade) * StepPixels, Size = SizeOf(upgrade), Colour = ColourOf(upgrade) };
+                // Hidden marks (the reactions) are on no chart; the layout says what this one draws.
+                if (!layout.Draws(upgrade)) continue;
+                var mark = new Mark { Upgrade = upgrade, Place = layout.Place(upgrade) * StepPixels, Size = SizeOf(upgrade), Colour = ColourOf(upgrade) };
                 marks.Add(mark);
                 byId[upgrade.Id] = mark;
             }
@@ -254,7 +274,7 @@ namespace Clover.UI
             slotsDrawn = PlaytestMode.On;
             if (slotsDrawn)
                 foreach (var slot in NotBuiltYet.ChartSlots)
-                    marks.Add(new Mark { Upgrade = slot, Place = UpgradeTree.OnChart(slot) * StepPixels, Size = SizeOf(slot) * 0.8f, Colour = NotBuiltColour });
+                    marks.Add(new Mark { Upgrade = slot, Place = layout.Place(slot) * StepPixels, Size = SizeOf(slot) * 0.8f, Colour = NotBuiltColour });
             // Lines first, so every mark lies over the lines that reach it.
             foreach (var mark in marks)
             {
@@ -269,7 +289,7 @@ namespace Clover.UI
                     any = true;
                 }
                 if (!any)
-                    lines.Add(Line((upgrade.IsMix ? UpgradeTree.MixFoot(upgrade.Element, upgrade.Element2) : UpgradeTree.Emblem(upgrade.Element)) * StepPixels, mark.Place, 3f));
+                    lines.Add(Line(layout.Foot(upgrade) * StepPixels, mark.Place, 3f));
                 mark.LineCount = lines.Count - mark.FirstLine;
             }
             foreach (var element in Elements.All)
@@ -296,7 +316,7 @@ namespace Clover.UI
             iconByName.TryGetValue(UpgradeIcons.Crown, out crown);
             foreach (var mark in marks)
             {
-                int kind = (int)mark.Upgrade.Kind;
+                int kind = (int)FrameKind(mark.Upgrade);
                 mark.Frame = Picture(mark.Upgrade.Name, kind < frames.Length ? frames[kind] : null, chart, mark.Place, mark.Size);
                 upright.Add(mark.Frame.rectTransform);
                 iconByName.TryGetValue(mark.Upgrade.Icon, out var picture);
@@ -664,8 +684,18 @@ namespace Clover.UI
         {
             if (upgrade.Signature) return "A god's gift";
             if (upgrade.IsMix) return Elements.MixName(upgrade.Element, upgrade.Element2) + (upgrade.IsSpell ? " spell" : " mix");
+            // A spell branch's marks say their place in it; a reaction lift and a Devotion say what they are.
+            switch (upgrade.Part)
+            {
+                case BranchPart.Learn: return upgrade.IsBaseSpell ? "Spell (comes with " + upgrade.Element + ")" : "Spell";
+                case BranchPart.Empower: return "Empower";
+                case BranchPart.Shape: return "Shape";
+                case BranchPart.Master: return "Master";
+            }
+            if (!string.IsNullOrEmpty(upgrade.Lifts)) return "Reaction lift";
             switch (upgrade.Kind)
             {
+                case UpgradeKind.Devotion: return "Devotion (all in)";
                 case UpgradeKind.Root: return "Root";
                 case UpgradeKind.Minor: return "Minor";
                 case UpgradeKind.Major: return "Major";

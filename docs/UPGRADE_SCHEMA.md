@@ -931,3 +931,133 @@ Riptide's carry is now a debt: when the wave's face takes a body it is owed `Tid
 to where the wave breaks, less `Knock`, the 0.45 m the blow itself moves it) and is paid that as the wave comes in,
 kept in the run's `Times`. Gust gathers what stands within reach and pushes it over the 0.45 s it blows
 (`GustRules.Impulse` 4.5, which is 3 m of travel), so the blow's own flinch no longer swallows the throw.
+
+## 20. Spell branches (Phase 4, 2026-11-20)
+
+The trees are being reshaped into spell branches (`docs/design/steel/IMPLEMENTATION.md` 2.1, 2.2, task 4.1; the
+designs are `docs/design/steel/elements_a.md` and `elements_b.md`). Fire, Lightning, Wind, Ice, Water, Life and Earth are
+written this way; the other four keep the shape of sections 9 to 19 until their turn (tasks 4.6 to 4.14). Everything in sections 1 to 19 still
+holds: a branch's marks are ordinary marks with a few more fields.
+
+### 20.1 The shape of a tree
+
+About 34 marks: **six spells of four marks each** (24) and **about ten passives**: the root, majors, one or two
+keystones, the **Devotion**, the **reaction lift** and the god's gift. One spell per element is its larger spell, paid
+in mana (`Magic/SpellTimings.cs`); the rest run on cooldowns. One of the six is the element's **base spell**, which
+comes with the element.
+
+| Part | Kind | Price | What it is |
+|---|---|---|---|
+| Learn | `Spell` | 4 Shards (the base spell's: given) | The spell, cast from a slot. Its id is the branch's id (`fire.rush`). |
+| Empower | `Minor` | 1 | "Stronger, shorter cooldown": an `Empower` record of the numbers it changes. |
+| Shape | `Major` | 3 | Opens two `ShapeDef`s; the loadout says which one the spell wears (`Loadout.Shapes`, keyed by the Learn id), changed at a rest fire. Before it is bought the base spell is cast. |
+| Master | `Major` | 3 | A reward for timing the spell well: effects with `OwnBranch` and the clock actions. |
+| Devotion | `Devotion` | 6 | In force only all in (the same element in both attunements). Drawn as a keystone. |
+| Reaction lift | `Major` with `Lifts` set | 3 | Its effects ride `Reacted`, with `Needs` the element's affliction (true for every reaction it is in). |
+
+### 20.2 New fields
+
+| Field | Type | Meaning |
+|---|---|---|
+| `Upgrade.Currency` | `Currency`: `Shards` (default), `Memories`, `None` | What it is bought with. `None`: given, never sold, costs 0 (the base spell's Learn). |
+| `Upgrade.Branch` | string | A branch mark's Learn id; empty for a passive. |
+| `Upgrade.Part` | `BranchPart`: `None`, `Learn`, `Empower`, `Shape`, `Master` | Its place in the branch. |
+| `Upgrade.Shapes` | `ShapeDef[]` | On a Shape mark, its two shapes. |
+| `Upgrade.Empower` | `Empower` | On an Empower mark, the numbers it sets. |
+| `Upgrade.Role` | `SpellRole` | On a Learn: the role icon in the Hand. |
+| `Upgrade.Lifts` | string (element) | On a reaction lift: the element whose reactions it lifts. |
+| `Upgrade.Aspect`, `Gate`, `Seen` | string | For the Way (phase 5) and Heresies (phase 6); read by nothing yet. |
+| `UpgradeEffect.OwnBranch` | bool | For `SpellCast` and `SpellHit`: only when the spell is this branch's own. A base spell cast by its kit counts as every base spell's branch (the element of a kit's cast is not known yet: a `NEEDS`). |
+| `UpgradeEffect.Branch` | string | For the clock actions: the branch whose slot is acted on; empty for its own mark's. |
+
+`Upgrade.IsBaseSpell` is true for a Learn whose id is a base id (`fire.base`); `UpgradeTree.Reachable` counts a base id as
+learned, so a base spell's Empower is open at once. New kinds and their usual prices: `Devotion` 6, `Evolution` 5,
+`Heresy` 8, `Aspect` 2, `Technique` 2, `Temper` 1 (the dearer ranks write their own), `Bond` 0.
+
+`ShapeDef`: `Name`, `Description`, `Form` (a form cast in place of the base spell's; empty keeps it), `Spell` (a whole
+spec in place of the base spell's numbers, which keeps the Learn's cooldown and price), `Change` (a `SpellChange` of
+numbers set on the base spell or on `Spell`), `Stats` and `Effects` (in force only while that shape is worn; each
+effect's owner is the Shape mark, so a `Bank` or `Spends` there needs a count on the Shape mark, not the Learn).
+
+`SpellChange` and `Empower`: `Cooldown`, `Mana`, `Damage`, `Stagger`, `Reach`, `Radius`, `Arc`, `Seconds`, `Interval`,
+`Count`, `Stacks`, `Delay`, `Speed`, `LingerDamage`, `AfflictionSeconds`. A field left at zero leaves the spell's number
+alone, so no number can be changed to zero this way: a shape that needs a zero gives a whole `Spell`.
+
+### 20.3 New actions
+
+| Action | Reads | What it does |
+|---|---|---|
+| `CutCooldowns` | `Amount` (seconds) | Takes seconds off every running spell and strike clock, as a landed blow does. |
+| `ResetCooldown` | `Branch` | Ends the clock of the branch's slot (its own, or the one named). Nothing when that spell is in no slot. |
+| `InstantNext` | `Branch`, `Seconds` | The next cast of the branch's slot starts no clock. With `Seconds`, only within that window, and a running clock is left running ("cast in the same instant as..." asks that it was ready); without, until it is cast, and the clock is ended now. |
+
+They are done by `Magic/BranchCooldowns.cs` on the slots' own clocks (`PlayerSpells.Answer`).
+
+### 20.4 Writing a branch, and the pattern
+
+`Trees/SpellBranch.cs` writes the four marks in one call; `Trees/BranchPattern.cs` gives the places. A writer never
+does arithmetic: name a stalk for a branch and a place for a passive.
+
+```csharp
+SpellBranch.Add(to, E, "fire.rush", "Wildfire Rush", SpellRole.Movement, BranchPattern.LeftB, Upgrade.FlameTrail, SpellForms.Drill,
+    new SpellSpec { Reach = 7f, Damage = 14f, Stagger = 20f, Stacks = 2, Speed = 20f, Seconds = 2.6f, LingerDamage = 4f },
+    "You drive seven metres through the enemies ahead...", UpgradeIcons.Arrow,
+    new Empower { Cooldown = 6f, Seconds = 4f }, "Wildfire Rush waits 6 seconds, not 8...",
+    new ShapeDef { Name = "Fire Front", Description = "...", Change = new SpellChange { Reach = 5f, Radius = 2f, Speed = 7f } },
+    new ShapeDef { Name = "Smoke Road", Description = "...", Change = new SpellChange { Reach = 6f } },
+    "Opens two shapes of Wildfire Rush...",
+    new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.CutCooldowns, Amount = 1.5f } },
+    "Started in the instant a blow would land on you, it counts as a perfect dodge...");
+to.Add(BranchPattern.Put(new Upgrade { Id = Upgrade.FlameTrail, ... , Requires = new[] { Upgrade.Backdraft } }, BranchPattern.LeftMiddle));
+```
+
+The ids: the Learn keeps the spell's own id; the others are `<id>.empower`, `<id>.shape`, `<id>.master`. A base spell's
+branch is written the same way with the base id (`fire.base`), an empty form and a null spec: its kit casts it, and a
+shape with a form of its own is cast through the mark instead (`SpellBranches.CastsThroughMark`). Optional arguments:
+`weapon`, `tally` and `learnEffects` (on the Learn: Ring of Drums keeps its drums there), `masterStats`.
+
+The pattern, upright (X across, Y outward), 36 places for a tree's 34 marks, proved for all eleven elements beside every
+mixed branch by `UpgradeChartTests.TheSpellBranchPatternFillsAllElevenElementsAndEveryMixWithoutACrowdAndTheStickReachesAll`:
+
+| Place | X, Y | Grows from | Used for |
+|---|---|---|---|
+| `root` | 0, 1.2 | | the root |
+| `M.foot` | 0, 2.5 | root | the middle bough's first passive |
+| `M.a`, `M.b` | -0.48 and 0.48; 3.45, 4.4, 5.35, 6.3 | M.foot | two branches |
+| `M.crown` | 0, 7.35 | M.foot | a passive up the trunk (the lift, a Devotion) |
+| `T.1`, `T.2` | -0.62 and 0.62, 8.5 | M.crown | the top of the trunk (a keystone, a Devotion) |
+| `L.foot`, `R.foot` | -1.55 and 1.55, 2.55 | root | each side bough's first passive |
+| `L.a`, `R.a` | -1.38 to -1.6 (mirrored), 3.6 to 6.4 | its foot | a branch; also the base spell's, grown from the root (its line passes clear) |
+| `L.mid`, `R.mid` | -2.45 and 2.45, 6.0 | its foot | the side bough's middle passive |
+| `L.b`, `R.b` | -2.6 to -3.05 (mirrored), 7.0 to 9.85 | its middle | a branch; may grow from its foot when the middle is empty |
+| `L.crown`, `R.crown` | -1.6 and 1.6, 8.6 | its middle | a keystone |
+| `gift` | 0, 12 | | the god's gift |
+
+A writer may grow a mark from another place than the table's as long as it lies further out than its parent and its
+line misses every other mark by 0.4 steps (Lightning's Single Stroke grows from Ring of Drums' Learn). The chart takes its
+places from an `IChartLayout` (`RingLayout`, the ring as it is; the heart and the Way come with tasks 4.5 and 5.5).
+
+### 20.5 What is in force, and what is cast
+
+`MarkRules.InForce` adds two rules: a branch's Empower, Shape and Master are in force only while its Learn sits in a
+slot, and a `Devotion` only all in. A Shape mark adds the stats and effects of the shape worn and no other
+(`SpellBranches.Worn`). As a spell is cast, `SpellBranches` (one instance on `PlayerUpgrades`, one spec kept per spell,
+so a cast allocates nothing after the first) gives its form and numbers: the Learn's, then the worn shape's whole spec
+or change, then the Empower's change; the slot's wait is that spec's cooldown. A base spell cast by its kit takes only
+its Empower's wait (`SpellBranches.BaseCooldown`): its other numbers are the kit's, a `NEEDS` until base spells are cast
+through their marks. A shape is chosen with `PlayerBuild.ChooseShape(branch, choice, atRestFire)` and kept for the run
+(`RunState.Shapes`); the Hand screen has no control for it yet.
+
+### 20.6 Retired marks
+
+A mark the design cuts is deleted from its tree file and listed in `Trees/RetiredMarks.cs` with what it cost; a save that
+holds one is refunded and the id leaves the Hand's slots, the kept Hands and the shape choices
+(`SaveMigration.RemoveRetired`, every load). A retired id is never used again (`UpgradeChartTests.NoRetiredIdIsUsedAgain`).
+The Katana-bound marks that leave the element trees for the Katana's Way (Burning Crescent, Delayed Cuts) are listed
+apart, in `RetiredMarks.Moving`: a save keeps them and nothing is refunded, because the Way will take the same ids.
+Kept marks keep their ids, even renamed (`fire.backdraft` is Breath of the Lioness).
+
+### 20.7 What the data cannot say yet
+
+Each such piece is written at its nearest working version with a `// NEEDS:` line beside it and a line in
+`docs/design/steel/content_open.tsv`, as the reactions are.

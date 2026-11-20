@@ -63,27 +63,32 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void StormFrontCarriesNoStandInConeOrPushAnyMore()
+        public void StormFrontIsRetiredAndItsFreeGustAsksForAMarkNoneHas()
         {
-            var mark = Upgrade.ById(WindTree.StormFront);
-            Assert.IsEmpty(mark.Effects, "The free Gust is thrown by hand now; the cone and the push that stood in for it are gone.");
-            Assert.IsTrue(mark.Stats.Any(mod => mod.Stat == PlayerStat.ManaFromBlows && mod.Amount < 0f), "Its price is less mana from blows.");
+            // Phase 4 retired Storm Front with Wind's reshaping (elements_a.md, "What to cut", 10): the free Gust its hand-written
+            // code throws asks for an id no mark has, so it is never thrown.
+            Assert.IsNull(Upgrade.ById(WindTree.StormFront));
+            Assert.IsTrue(RetiredMarks.IsRetired(WindTree.StormFront));
         }
 
         [Test]
-        public void DeepReserveKeepsACountOfThreeAndNoBoon()
+        public void StoredChargeKeepsDeepReservesCountOfThreeAndNoBoon()
         {
-            var mark = Upgrade.ById(LightningTree.DeepReserve);
-            Assert.IsNotNull(mark.Tally, "Deep Reserve's charges are a count the HUD can show.");
+            // Phase 4 folded Deep Reserve into Stored Charge: the count of three is Stored Charge's own.
+            var mark = Upgrade.ById(Upgrade.StoredCharge);
+            Assert.IsNotNull(mark.Tally, "Stored Charge's charges are a count the HUD can show.");
             Assert.AreEqual(PlayerUpgrades.ReserveMost, mark.Tally.Cap);
             Assert.IsEmpty(mark.Effects, "The four seconds of harder blows that stood in for the charges are gone.");
+            Assert.IsNull(Upgrade.ById("lightning.reserve"));
+            Assert.IsTrue(RetiredMarks.IsRetired("lightning.reserve"));
         }
 
         [Test]
         public void TheMarksBuiltWearTheirOwnForms()
         {
-            Assert.AreEqual(SpellForms.Sunspot, Upgrade.ById(FireTree.Sunspot).Form);
-            Assert.AreEqual(SpellForms.Lodestone, Upgrade.ById("lightning.lodestone").Form);
+            // Sunspot and Lodestone are retired (Phase 4); Lodestone lives on as a shape of Lightning Rod.
+            var rodShape = Upgrade.ById(SpellBranch.ShapeId(Upgrade.LightningRod));
+            Assert.AreEqual(SpellForms.Lodestone, rodShape.Shapes[0].Form);
             Assert.AreEqual(SpellForms.Waiting, Upgrade.ById("lightning.waiting").Form);
             foreach (string id in new[] { SpellForms.Sunspot, SpellForms.Lodestone, SpellForms.Waiting })
                 Assert.IsNotNull(SpellForms.Get(id), $"The form '{id}' is not registered.");
@@ -92,12 +97,12 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void ScorchedEarthGivesItsManaOnlyInOwnFireAndMakesSpellsDearer()
+        public void ScorchedEarthIsRetiredWithTheKeystonesNotCarriedOver()
         {
-            var mark = Upgrade.ById(FireTree.ScorchedEarth);
-            Assert.IsTrue(mark.Stats.Any(mod => mod.Stat == PlayerStat.ManaFromBlows && mod.When == StatWhen.InOwnFire && Math.Abs(mod.Amount - 0.5f) < 1e-4f));
-            Assert.IsTrue(mark.Stats.Any(mod => mod.Stat == PlayerStat.SpellCost && mod.When == StatWhen.Always && Math.Abs(mod.Amount - 0.2f) < 1e-4f));
-            Assert.IsFalse(mark.Stats.Any(mod => mod.Stat == PlayerStat.SurgeSeconds), "Kindle is not longer; its clock stops in the fire.");
+            // elements_a.md, "What to cut": its "spells cost more" means nothing once basic spells run on cooldowns.
+            Assert.IsNull(Upgrade.ById(FireTree.ScorchedEarth));
+            Assert.IsTrue(RetiredMarks.IsRetired(FireTree.ScorchedEarth));
+            Assert.IsTrue(RetiredMarks.IsRetired(FireTree.OpenFurnace));
             Assert.AreEqual(Enum.GetValues(typeof(StatWhen)).Length, PlayerStats.WhenCount, "Every state a number may wait on has its place.");
         }
     }

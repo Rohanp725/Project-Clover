@@ -21,6 +21,8 @@ namespace Clover.Player.Magic
         private readonly float[] left = new float[Count];
         private readonly float[] length = new float[Count];
         private readonly bool[] instant = new bool[Count];
+        // Seconds an instant promise still keeps; zero keeps it until the slot is cast.
+        private readonly float[] instantLeft = new float[Count];
 
         /// <summary>Starts a clock of this many seconds, unless the next cast of that slot was promised free.</summary>
         public void Start(int slot, float seconds)
@@ -29,6 +31,7 @@ namespace Clover.Player.Magic
             if (instant[slot])
             {
                 instant[slot] = false;
+                instantLeft[slot] = 0f;
                 return;
             }
             if (Frozen || seconds <= 0f)
@@ -50,6 +53,16 @@ namespace Clover.Player.Magic
             int done = 0;
             for (int i = 0; i < Count; i++)
             {
+                // A promise with a window lapses with it (a Master's "cast in the same instant").
+                if (instant[i] && instantLeft[i] > 0f)
+                {
+                    instantLeft[i] -= Math.Max(0f, deltaTime);
+                    if (instantLeft[i] <= 0f)
+                    {
+                        instantLeft[i] = 0f;
+                        instant[i] = false;
+                    }
+                }
                 if (left[i] <= 0f) continue;
                 left[i] -= step;
                 if (left[i] > 0f) continue;
@@ -91,15 +104,24 @@ namespace Clover.Player.Magic
             {
                 left[i] = 0f;
                 instant[i] = false;
+                instantLeft[i] = 0f;
             }
         }
 
         /// <summary>The next cast of this slot starts no clock: a Master's promise.</summary>
-        public void InstantNext(int slot)
+        public void InstantNext(int slot) => InstantNext(slot, 0f);
+
+        /// <summary>
+        /// The same, kept only for <paramref name="seconds"/> (0: until the slot is cast, and its clock is ended now). With a
+        /// window the clock is left running: "cast in the same instant as the blow lands, and its cooldown does not start"
+        /// asks that the spell was ready.
+        /// </summary>
+        public void InstantNext(int slot, float seconds)
         {
             if (!Valid(slot)) return;
             instant[slot] = true;
-            left[slot] = 0f;
+            instantLeft[slot] = Math.Max(0f, seconds);
+            if (seconds <= 0f) left[slot] = 0f;
         }
 
         public bool IsInstant(int slot) => Valid(slot) && instant[slot];

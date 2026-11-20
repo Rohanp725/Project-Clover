@@ -10,7 +10,7 @@ namespace Clover.Player.Magic
     /// become Evolutions later, take a duo spell's cooldown. Numbers come from the rosters in elements_a.md and
     /// elements_b.md where the spell is listed there, and from its role where it is not (marked "not in the roster").
     /// Applied to the catalogue as it is gathered (<see cref="Apply"/>), so a spell's <see cref="SpellSpec.Cooldown"/>
-    /// and <see cref="SpellSpec.Cost"/> are the table's. Earth has no larger spell yet: the design gives it the new Cairn.
+    /// and <see cref="SpellSpec.Cost"/> are the table's. Earth's larger spell is the new Cairn.
     /// </summary>
     public static class SpellTimings
     {
@@ -39,45 +39,52 @@ namespace Clover.Player.Magic
 
         private static readonly Dictionary<string, SpellTiming> spells = new Dictionary<string, SpellTiming>
         {
-            // Fire
+            // Fire, reshaped into spell branches (Phase 4): the roster of elements_a.md, Flame Wave being the base spell.
+            // Sunspot and Cinder Fan are retired (Black Pitch and a shape of Flame Wave took their places).
+            ["fire.uraeus"] = Cd(10f, SpellRole.Opener),
             ["fire.rush"] = Cd(8f, SpellRole.Movement),
-            ["fire.kiln"] = Cd(9f, SpellRole.Counter),
             ["fire.meteor"] = Mana(45f, SpellRole.Breaker),          // Fire's larger spell
-            ["fire.sunspot"] = Cd(11f, SpellRole.Detonator),        // Black Pitch's place in the roster
-            ["fire.fan"] = Cd(7f, SpellRole.Opener),                // Flame Wave's Cinder Fan shape
-            // Lightning
-            ["lightning.waiting"] = Cd(10f, SpellRole.Breaker),
-            ["lightning.rod"] = Cd(10f, SpellRole.Movement),
-            ["lightning.lodestone"] = Cd(10f, SpellRole.Breaker),   // not in the roster
+            ["fire.kiln"] = Cd(9f, SpellRole.Counter),
+            ["fire.pitch"] = Cd(11f, SpellRole.Detonator),
+            // Lightning, reshaped (Phase 4): Thunderclap is the base spell; Lodestone is retired into Lightning Rod's shape.
             ["lightning.lance"] = Cd(7f, SpellRole.Opener),
+            ["lightning.waiting"] = Cd(10f, SpellRole.Breaker),
             ["lightning.flashes"] = Mana(45f, SpellRole.Detonator), // Lightning's larger spell
-            // Wind
-            ["wind.circle"] = Cd(9f, SpellRole.Movement),
+            ["lightning.rod"] = Cd(10f, SpellRole.Movement),
+            ["lightning.drums"] = Cd(10f, SpellRole.Counter),
+            // Wind, reshaped (Phase 4): Gust is the base spell; the Bag of Winds is new.
             ["wind.lifting"] = Cd(9f, SpellRole.Breaker),
-            ["wind.skydance"] = Mana(45f, SpellRole.Breaker),       // Wind's larger spell
             ["wind.indrawn"] = Cd(11f, SpellRole.Detonator),
-            // Ice
-            ["ice.statue"] = Cd(9f, SpellRole.Counter),             // not in the roster
-            ["ice.hanging"] = Cd(10f, SpellRole.Breaker),
+            ["wind.circle"] = Cd(9f, SpellRole.Movement),
+            ["wind.bag"] = Cd(10f, SpellRole.Counter),
+            ["wind.skydance"] = Mana(45f, SpellRole.Breaker),       // Wind's larger spell
+            // Ice, reshaped (Phase 4): Hoarfrost is the base spell; Hollow Statue is retired; Rime Guard and Ski Run are new.
             ["ice.eight"] = Cd(11f, SpellRole.Detonator),
+            ["ice.hanging"] = Cd(10f, SpellRole.Breaker),
             ["ice.wall"] = Mana(35f, SpellRole.Breaker),            // Ice's larger spell
-            // Water
-            ["water.serpent"] = Cd(9f, SpellRole.Opener),           // not in the roster
+            ["ice.rime"] = Cd(9f, SpellRole.Counter),
+            ["ice.ski"] = Cd(8f, SpellRole.Movement),
+            // Water, reshaped (Phase 4): Riptide is the base spell; River Serpent is retired into its shape, Standing Rain
+            // and Moon on Water are cut; The Tide Turns, Blowhole and Deep Crack are new.
+            ["water.tide"] = Cd(8f, SpellRole.Movement),
+            ["water.blowhole"] = Cd(10f, SpellRole.Counter),
             ["water.whirlpool"] = Cd(10f, SpellRole.Breaker),
-            ["water.rain"] = Cd(10f, SpellRole.Detonator),          // not in the roster
-            ["water.moon"] = Cd(10f, SpellRole.Counter),            // Blowhole's place in the roster
+            ["water.crack"] = Cd(11f, SpellRole.Detonator),
             ["water.poured"] = Mana(30f, SpellRole.Breaker),        // Water's larger spell
-            // Life
-            ["life.harvest"] = Cd(12f, SpellRole.Breaker),          // Drawn From the Wood; also paid in health
+            // Life, reshaped (Phase 4): Briar Patch is the base spell; Thorn Ring is cut (Burrs took its shape slot); Sapling,
+            // once a major, is a spell; Red Harvest is rebuilt as Drawn From the Wood under its id; Root Walk is new.
+            ["life.sapling"] = Cd(9f, SpellRole.Counter),
+            ["life.walk"] = Cd(8f, SpellRole.Movement),
             ["life.reap"] = Cd(12f, SpellRole.Detonator),
             ["life.tree"] = Mana(40f, SpellRole.Breaker),           // Life's larger spell
-            ["life.ring"] = Cd(10f, SpellRole.Counter),             // not in the roster
-            // Earth (its larger spell, Cairn, is not built)
-            ["earth.stance"] = Cd(10f, SpellRole.Counter),
-            ["earth.quakestep"] = Cd(9f, SpellRole.Breaker),
-            ["earth.cleaver"] = Cd(10f, SpellRole.Breaker),         // not in the roster
+            ["life.harvest"] = Cd(12f, SpellRole.Breaker),          // Drawn From the Wood; its Feed the Ground shape is paid in health too
+            // Earth, reshaped (Phase 4): Stone Rise is the base spell; Mountain Cleaver moved to the all-in infused strike and
+            // Rampart is cut; Under the Mound and Cairn are new.
             ["earth.fissure"] = Cd(10f, SpellRole.Breaker),
-            ["earth.rampart"] = Cd(10f, SpellRole.Counter),         // not in the roster
+            ["earth.quakestep"] = Cd(9f, SpellRole.Breaker),
+            ["earth.stance"] = Cd(10f, SpellRole.Counter),
+            ["earth.mound"] = Cd(9f, SpellRole.Movement),
+            ["earth.cairn"] = Mana(40f, SpellRole.Detonator),       // Earth's larger spell
             // Metal
             ["metal.circle"] = Cd(10f, SpellRole.Counter),
             ["metal.hone"] = Cd(9f, SpellRole.Breaker),             // not in the roster
@@ -148,8 +155,8 @@ namespace Clover.Player.Magic
 
         /// <summary>
         /// What one mark takes off the wait of <paramref name="element"/>'s base spell (stat
-        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Ice second, Thin Ice
-        /// shortens Hoarfrost and not the first element's spell.
+        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Metal second, Ready Steel
+        /// shortens Flung Blade and not the first element's spell.
         /// </summary>
         public static float BaseCooldownShare(Upgrade mark, string element)
         {

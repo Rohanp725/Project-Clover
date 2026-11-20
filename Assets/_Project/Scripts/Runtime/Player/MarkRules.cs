@@ -27,6 +27,8 @@ namespace Clover.Player
         public static bool CanBuy(Upgrade upgrade, ICollection<string> unlocked, int points, bool open, bool playtest)
         {
             if (upgrade == null || upgrade.IsHidden || NotBuiltYet.IsSlot(upgrade) || !open) return false;
+            // A given mark (a base spell's Learn, which comes with its element) is never sold, in the playtest either.
+            if (upgrade.Currency == Currency.None && !upgrade.Signature) return false;
             if (upgrade.Signature && !playtest) return false;
             if (unlocked.Contains(upgrade.Id) || points < upgrade.Cost) return false;
             return upgrade.Signature || UpgradeTree.Reachable(upgrade, unlocked);
@@ -37,16 +39,24 @@ namespace Clover.Player
         /// read by <see cref="PlayerUpgrades"/>. An element's mark (its gift too) while its element is attuned; a duo
         /// branch's mark while both its elements are; a duo spell only while it also sits in a slot; a mark that names a
         /// weapon only while that weapon kind is carried (a god's weapon counts as its kind: the Storm Katana is a
-        /// Katana). The rules for Devotion, spell branches, shapes, reactions, the Way, Heresies, Bond and Evolutions join
-        /// here as their fields are added (phases 3 to 6).
+        /// Katana). A spell branch's Empower, Shape and Master only while its spell sits in a slot (the shape's own effects
+        /// only for the shape worn: <see cref="SpellBranches.Worn"/>); a Devotion only all in. The rules for reactions,
+        /// the Way, Heresies, Bond and Evolutions join here as their fields are added (phases 3 to 6).
         /// </summary>
         public static bool InForce(Upgrade mark, Build.Loadout loadout)
         {
             if (mark == null || loadout == null) return false;
             if (!WeaponCarried(mark, loadout) || !Carried(mark, loadout)) return false;
             if (mark.IsMix && mark.IsSpell && !loadout.Slotted(mark.Id)) return false;
+            if (BranchNeedsSlot(mark) && !loadout.Slotted(mark.Branch)) return false;
+            // The all-in passive (STEEL_AND_ELEMENT.md 5.6): the same element in both attunements.
+            if (mark.Kind == UpgradeKind.Devotion && !(loadout.AllIn && loadout.First == mark.Element)) return false;
             return true;
         }
+
+        /// <summary>True for a spell branch's Empower, Shape or Master: in force only while the branch's spell is slotted.</summary>
+        public static bool BranchNeedsSlot(Upgrade mark) =>
+            mark != null && !string.IsNullOrEmpty(mark.Branch) && (mark.Part == BranchPart.Empower || mark.Part == BranchPart.Shape || mark.Part == BranchPart.Master);
 
         /// <summary>True when a spell mark may sit in a slot under the loadout: its elements and its weapon (if it names one) carried. Learning is asked elsewhere.</summary>
         public static bool Slottable(Upgrade mark, Build.Loadout loadout) =>
