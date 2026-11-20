@@ -49,6 +49,7 @@ namespace Clover.Player.Trees
             Duo.RustDuo.Add(to);
             Duo.ShiningHerbDuo.Add(to);
             Duo.TurnedToStoneDuo.Add(to);
+            Duo.QuicksilverDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }

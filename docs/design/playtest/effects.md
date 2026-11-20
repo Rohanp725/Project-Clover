@@ -888,6 +888,8 @@ Group: Reactions
 
 **What sets it off.** A notch landing on a poisoned enemy, or poison on a notched one.
 
+**Its shapes.** With the Shape mark of Metal and Poison's duo branch (Quicksilver: Heavy Silver or Running Silver, 3 Shards, in the heart of the chart) and both carried, Quicksilver wears the shape chosen at a rest fire instead. Both keep the bites on each blow. Heavy Silver: it moves 30% slower, and a silver puddle 1.5 m across stands 6 s, dosing and notching what steps in. Running Silver: when it dies, four doses and two notches run to the nearest enemy within 6 m.
+
 **How to use it.** Dose it deep and keep hitting: every blow is a bite.
 
 **How it looks.** Its name over the enemy and a bite at each blow.
