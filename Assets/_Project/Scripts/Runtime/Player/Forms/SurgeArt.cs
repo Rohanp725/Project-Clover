@@ -42,7 +42,10 @@ namespace Clover.Player.Forms
             element = -1;
             began = 0f;
             nextArc = 0f;
+            nextCrawl = 0f;
             arcBeat = 0;
+            look = -1;
+            wearer = null;
         }
 
         /// <summary>
@@ -52,7 +55,31 @@ namespace Clover.Player.Forms
         /// </summary>
         public static bool ReplacesBuilt(ElementInfo info) =>
             info != null && (info.Index == ElementSubstance.Metal || info.Index == ElementSubstance.Light || info.Index == ElementSubstance.Dark || info.Index == ElementSubstance.Poison
-                || info.Index == ElementSubstance.Wind || info.Index == ElementSubstance.Lightning);
+                || info.Index == ElementSubstance.Wind || info.Index == ElementSubstance.Lightning || (LookOf(info.Index) != null && ElementLooks.Find(LookOf(info.Index)) >= 0));
+
+        /// <summary>
+        /// The second-pass look a surge wears (the Blender worker's batch 1, <see cref="ElementLooks"/>): Wellspring's
+        /// pool, Temper's glints over the steel, Fever's clouds, Regrowth's roots and flowers, Hunger's eclipse.
+        /// </summary>
+        public static string LookOf(int element)
+        {
+            switch (element)
+            {
+                case ElementSubstance.Water: return "water_wellspring";
+                case ElementSubstance.Metal: return "metal_temper";
+                case ElementSubstance.Poison: return "poison_fever";
+                case ElementSubstance.Life: return "life_regrowth";
+                case ElementSubstance.Dark: return "dark_hunger";
+                default: return null;
+            }
+        }
+
+        // The surge's look while it plays, and the player it is on.
+        private static int look = -1;
+        private static Transform wearer;
+
+        /// <summary>The player the surge is drawn on (its second-pass look follows them).</summary>
+        public static void Wear(Transform player) => wearer = player;
 
         /// <summary>
         /// True for the surges drawn by thrown pieces or by the body itself rather than held ones: Overdrive's arcs and
@@ -71,7 +98,10 @@ namespace Clover.Player.Forms
             : info.Index == ElementSubstance.Lightning ? 0.45f : 1f;
 
         /// <summary>Overdrive: arcs thrown a second, how long each is seen, and how far off the body's middle they reach.</summary>
-        public const float ArcsPerSecond = 16f, ArcSeconds = 0.12f, ArcReach = 0.55f;
+        public const float ArcsPerSecond = 14f, ArcSeconds = 0.2f, ArcReach = 0.55f;
+        /// <summary>Overdrive: a crawl held close on the body, redrawn this often (never dark between).</summary>
+        public const float CrawlEvery = 0.16f;
+        private static float nextCrawl;
         private static float nextArc;
         private static int arcBeat;
 
@@ -98,6 +128,8 @@ namespace Clover.Player.Forms
             if (!ElementArt.Ready || info == null) return false;
             element = info.Index;
             began = Time.time;
+            look = ElementLooks.Find(LookOf(element));
+            if (look >= 0) return true;
             switch (element)
             {
                 // The owner's review (2026-11-19): Kindle's cobra and its heat bands took the screen, and only the
@@ -158,13 +190,22 @@ namespace Clover.Player.Forms
         // anew. Nothing wobbles; nothing stays.
         private static void ThrowArcs(Vector3 feet, float time)
         {
+            // A steady crackle while it lasts: a crawl always on the body, redrawn turned on and held past the next, so
+            // with the arcs two or three are alive at any moment and no frame is empty or white.
+            if (time >= nextCrawl)
+            {
+                nextCrawl = time + CrawlEvery;
+                int crawlBeat = Mathf.FloorToInt(time / CrawlEvery);
+                ElementArt.Stand(ElementArt.Piece("lightning_crawl_affliction"), feet, ElementSubstance.Hash(crawlBeat * 5) * 360f, 0.95f, CrawlEvery * 1.3f);
+            }
             if (time < nextArc) return;
             nextArc = time + 1f / ArcsPerSecond;
             int beat = ++arcBeat;
             float yaw = ElementSubstance.Hash(beat * 7) * 360f;
             Vector3 outward = Quaternion.Euler(0f, yaw, 0f) * Vector3.forward;
             float height = 0.45f + 1.15f * ElementSubstance.Hash(beat * 7 + 1);
-            if (beat % 3 != 0)
+            // Half the arcs stay close round the body (forks on it), half jump off it.
+            if (beat % 2 == 0)
             {
                 // A branching fork bursting on the body: its five jagged branches reach out from one point.
                 Vector3 at = feet + outward * 0.12f + Vector3.up * height;
@@ -202,12 +243,18 @@ namespace Clover.Player.Forms
                 floorPieces[i] = -1;
             }
             element = -1;
+            look = -1;
         }
 
         /// <summary>Places the pieces round the player's feet.</summary>
         public static void Place(Vector3 feet, float time)
         {
             if (element < 0) return;
+            if (look >= 0)
+            {
+                if (wearer != null) ElementLooks.Keep(look, wearer);
+                return;
+            }
             float age = time - began;
             // Everything opens out over its first half second rather than appearing.
             float open = Mathf.Clamp01(age / 0.5f);

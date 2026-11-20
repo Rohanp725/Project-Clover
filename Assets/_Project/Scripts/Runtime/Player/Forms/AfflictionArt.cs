@@ -39,6 +39,49 @@ namespace Clover.Player.Forms
         /// <summary>The curse's dark: near-black purple, never bright (the owner, 2026-11-20).</summary>
         public static readonly Color CurseInk = new Color(0.012f, 0.004f, 0.02f), CurseDeep = new Color(0.03f, 0.008f, 0.05f);
 
+        /// <summary>
+        /// The second-pass look an affliction wears (the Blender worker's batch 1, <see cref="ElementLooks"/>); null for
+        /// one that has none yet.
+        /// </summary>
+        public static string LookOf(AfflictionKind kind)
+        {
+            switch (kind)
+            {
+                case AfflictionKind.Soaked: return "water_soaked";
+                case AfflictionKind.Sundered: return "metal_sundered";
+                case AfflictionKind.Poison: return "poison_poisoned";
+                case AfflictionKind.Seeded: return "life_seeded";
+                case AfflictionKind.Cursed: return "dark_cursed";
+                case AfflictionKind.Chill: return "ice_chill";
+                default: return null;
+            }
+        }
+
+        private static readonly AfflictionKind[] Looked =
+        {
+            AfflictionKind.Soaked, AfflictionKind.Sundered, AfflictionKind.Poison, AfflictionKind.Seeded, AfflictionKind.Cursed, AfflictionKind.Chill,
+        };
+
+        /// <summary>
+        /// Keeps the second-pass looks of what a body carries playing on it this frame. Soaked is not drawn on a body that
+        /// is Seized (two Static or more: its water has run off into the film) or rusting (Sundered too: the water has
+        /// gone into the rust), as the owner had the rings over those taken away (2026-11-20).
+        /// </summary>
+        public static void KeepLooks(AfflictionSet afflictions, Transform body)
+        {
+            if (afflictions == null || body == null || !ElementLooks.Ready) return;
+            for (int i = 0; i < Looked.Length; i++)
+            {
+                var kind = Looked[i];
+                if (afflictions.Stacks(kind) <= 0) continue;
+                if (kind == AfflictionKind.Soaked && (afflictions.Stacks(AfflictionKind.Static) >= SeizedStatic || afflictions.Stacks(AfflictionKind.Sundered) > 0)) continue;
+                ElementLooks.Keep(ElementLooks.Find(LookOf(kind)), body);
+            }
+        }
+
+        /// <summary>The depth of Static at which a Soaked body is Seized (Reactions.Three: "two Static or more").</summary>
+        public const int SeizedStatic = 2;
+
         /// <summary>Nerve Fire's jolts drawn this play, for probes.</summary>
         public static int Jolts { get; private set; }
 
@@ -72,6 +115,8 @@ namespace Clover.Player.Forms
         {
             if (!ElementArt.Ready) return false;
             if ((int)kind >= 0 && (int)kind < shown.Length) shown[(int)kind]++;
+            // An affliction with a second-pass look is drawn by it (KeepLooks), not by pieces thrown a few times a second.
+            if (ElementLooks.Find(LookOf(kind)) >= 0) return true;
             float jitter = (ElementSubstance.Hash(beat) - 0.5f) * 40f;
             float more = 1f + 0.08f * depth;
             switch (kind)
@@ -83,7 +128,8 @@ namespace Clover.Player.Forms
                     if (!BodyFlames.Ready)
                         ElementArt.Erupt(ElementArt.Piece("fire_climb_affliction"), feet, Quaternion.Euler(0f, 180f + jitter * 2f, 0f) * ClimbUpright,
                             new Vector3(more, (0.85f + 0.3f * ElementSubstance.Hash(beat + 3)) * more, more), 0.06f, 0.22f, 0.12f);
-                    if (beat % 4 == 0) ElementArt.Floor(ElementArt.Piece("fire_charrings_affliction"), feet, beat * 37f, 0.85f, 1f, 1.8f, 0.35f, true);
+                    // The stepped char rings fought the real flame (the coordinator's check, 2026-11-20): only the old tongues keep them.
+                    if (!BodyFlames.Ready && beat % 4 == 0) ElementArt.Floor(ElementArt.Piece("fire_charrings_affliction"), feet, beat * 37f, 0.85f, 1f, 1.8f, 0.35f, true);
                     if (beat % 5 == 1) ElementArt.Sheet(ElementArt.SheetOf("fire_smoke_puff"), feet + Vector3.up * 3.1f, 1.8f, 1.3f);
                     return true;
                 case AfflictionKind.Static:

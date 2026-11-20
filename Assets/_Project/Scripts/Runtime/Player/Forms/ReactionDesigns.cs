@@ -133,6 +133,9 @@ namespace Clover.Player.Forms
         public static readonly int Seized = AfflictionPairs.Index(AfflictionKind.Static, AfflictionKind.Soaked);
         public static readonly int Rust = AfflictionPairs.Index(AfflictionKind.Soaked, AfflictionKind.Sundered);
 
+        /// <summary>The second-pass looks a metal reaction plays: the forged sword through the body, and Rust's creeping rust.</summary>
+        public const string SwordLook = "metal_sword", RustLook = "metal_rust";
+
         /// <summary>Rust's colour: iron oxide, a deep orange-brown, not the steel's grey (the owner, 2026-11-20: "The rust is not a rusty color at all").</summary>
         public static readonly Color RustColour = new Color(0.62f, 0.25f, 0.08f);
 

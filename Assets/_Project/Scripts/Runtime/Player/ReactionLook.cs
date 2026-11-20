@@ -26,10 +26,16 @@ namespace Clover.Player
             if (Forms.ElementArt.Ready)
             {
                 if (!Forms.ReactionArt.Play(pair, at, body, away)) Forms.ReactionArt.Compose(pair, at, body, away);
+                // Rime's crust builds up slowly over the body, layer on layer, and its feathers grow into the wind (the
+                // owner, 2026-11-20: "the rime instantly all appears instead of slowly building").
+                if (pair == Rime && body != null) Forms.ElementLooks.Play(Forms.ElementLooks.Find("ice_rime"), body);
                 return;
             }
             Vfx.Play(VfxKind.TintPuff, at + Vector3.up * 1.3f, Vector3.up, 1.1f, Colour(pair));
         }
+
+        /// <summary>Rime: Unsteady and Chill.</summary>
+        public static readonly int Rime = AfflictionPairs.Index(AfflictionKind.Unsteady, AfflictionKind.Chill);
 
         /// <summary>The pair's two colours, half and half: the colour its name is written in.</summary>
         public static Color Colour(int pair) =>

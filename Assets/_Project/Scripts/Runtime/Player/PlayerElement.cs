@@ -528,9 +528,13 @@ namespace Clover.Player
                 if (surging) SurgeLook.Begin(SurgeInfo, surgePieces);
                 else SurgeLook.End(surgePieces);
             }
-            if (surging) SurgeLook.Place(SurgeInfo, surgePieces, transform.position, Time.time);
+            if (surging)
+            {
+                Forms.SurgeArt.Wear(transform);
+                SurgeLook.Place(SurgeInfo, surgePieces, transform.position, Time.time);
+            }
             if (outfit != null && sheen != null) sheen.Watch(outfit.Body);
-            sheen?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Metal && Forms.ElementArt.Ready, Time.deltaTime);
+            sheen?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Metal && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
             if (glow == null) return;
             float resting = surging ? GlowWhenSurging * Forms.SurgeArt.Glow(SurgeInfo) * (0.85f + 0.15f * Mathf.Sin(Time.time * 17f)) : 0f;
             glowLevel = Mathf.MoveTowards(glowLevel, resting, Time.deltaTime * 30f);
@@ -625,9 +629,10 @@ namespace Clover.Player
             float speed = kit.SurgeSpeed;
             // The surge coats the weapon in its own element.
             combat.Empower(kit.SurgeDamage, kit.SurgeBurnSeconds, info.Glow, speed, kit.SurgeStagger, info.Affliction, kit.SurgeStacks);
-            ElementLook.Puff(info, transform.position + Vector3.up, Vector3.up, 1.2f);
-            // No ring on the floor for Overdrive (the owner, 2026-11-19: "I dont like the ring visuals at all").
-            if (!(info.Name == Elements.Lightning && ArtDrawsSurge(info))) ElementLook.Ring(info, transform.position + Vector3.up * 0.2f);
+            if (!ArtDrawsSurge(info)) ElementLook.Puff(info, transform.position + Vector3.up, Vector3.up, 1.2f);
+            // No ring or puff of white for a surge the art draws: Overdrive's arcs (the owner, 2026-11-19: "I dont like the
+            // ring visuals at all"), Temper's steel climbing the body (no white half-dome, 2026-11-20), and the rest.
+            if (!ArtDrawsSurge(info)) ElementLook.Ring(info, transform.position + Vector3.up * 0.2f);
             if (info.Name == Elements.Lightning) Clover.World.LightningBolts.Strike(transform.position, 0.4f);
             glowLevel = GlowWhenCasting * Forms.SurgeArt.Glow(info);
             if (defence != null)

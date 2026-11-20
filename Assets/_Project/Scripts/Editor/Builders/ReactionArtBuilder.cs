@@ -82,7 +82,9 @@ namespace Clover.EditorTools
         public static readonly Dictionary<string, string[]> LeftOut = new Dictionary<string, string[]>
         {
             ["fire_lightning"] = new[] { "vfx2_fire_climb_affliction", "vfx3c_vfx_lightning_arc", "vfx3c_vfx_lightning_flash" },
-            ["wind_ice"] = new[] { "vfx2_wind_comb_infused|m2_wind_pale" },
+            // Rime's ice that appeared all at once (the owner, 2026-11-20): its crust, tiers and clusters are left out, and
+            // the second-pass look builds them slowly on the body instead (ReactionLook plays "ice_rime").
+            ["wind_ice"] = new[] { "vfx2_wind_comb_infused|m2_wind_pale", "vfx3c_vfx_ice_rime", "vfx2_ice_tiers_affliction", "vfx3c_vfx_ice_cluster" },
             ["poison_lightning"] = new[] { "vfx2_poison_burst_affliction" },
             ["life_dark"] = new[] { "vfx2_dark_streaks_hit" },
         };

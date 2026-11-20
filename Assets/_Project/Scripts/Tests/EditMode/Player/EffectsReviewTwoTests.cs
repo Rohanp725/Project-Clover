@@ -197,8 +197,11 @@ namespace Clover.Tests
                     Assert.AreEqual(toon, material.shader, $"{outfit.Id}: {material.name} must be Clover/Toon to take Temper's steel");
 
             var sheen = new MetalSheen();
-            for (int frame = 0; frame < 30; frame++) sheen.Tick(true, 1f / 60f);
-            Assert.AreEqual(1f, sheen.Level, 1e-4f, "all steel within a third of a second and a little");
+            for (int frame = 0; frame < 60; frame++) sheen.Tick(true, 1f / 60f);
+            Assert.AreEqual(1f, sheen.Level, 1e-4f, "all steel within a second: five bands from the feet up, the last at 0.69 s");
+            var early = new MetalSheen();
+            for (int frame = 0; frame < 24; frame++) early.Tick(true, 1f / 60f);
+            Assert.That(early.Level, Is.InRange(0.01f, 0.5f), "at 0.4 s only the lower bands are steel: it climbs, it does not pop on");
             long before = System.GC.GetAllocatedBytesForCurrentThread();
             for (int frame = 0; frame < 600; frame++) sheen.Tick(frame < 300, 1f / 60f);
             Assert.AreEqual(0, System.GC.GetAllocatedBytesForCurrentThread() - before, "nothing allocated a frame");

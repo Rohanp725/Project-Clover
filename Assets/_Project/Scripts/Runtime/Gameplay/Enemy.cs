@@ -822,6 +822,8 @@ namespace Clover.Gameplay
                 bool plainFire = wasBurning && !Afflictions.Conditions.Has(ConditionFlags.FlameLive);
                 // The body burns in real flame (the owner's review, 2026-11-20); the old puffs only where it cannot.
                 bool realFlame = plainFire && Clover.Player.Forms.BodyFlames.Keep(transform, Afflictions.Stacks(AfflictionKind.Burn));
+                // What else it carries plays its second-pass look on it (Soaked's drop, Sundered's dagger, Chill's ice...).
+                Clover.Player.Forms.AfflictionArt.KeepLooks(Afflictions, transform);
                 if (plainFire && untilEmber <= 0f)
                 {
                     untilEmber = 0.14f;
@@ -1498,8 +1500,31 @@ namespace Clover.Gameplay
             // Close to losing its balance, it flickers amber: one or two more blows will open it.
             else if (!IsDead && !IsStaggered && Stagger.Fraction >= 0.7f && Mathf.Repeat(Time.unscaledTime * 8f, 1f) < 0.35f) glow = 4;
             flashLeft -= Time.unscaledDeltaTime;
-            if (glow != shownGlow) SetGlow(glow);
+            // Chill's ice (and Rime's frost) climbing the body band by band, from its look (Clover/Toon's _Ice).
+            float ice = 0f, iceReveal = 1f;
+            byte shell = 0;
+            if (!IsDead && Clover.Player.Forms.ElementLooks.ShellOn(transform, out shell, out float reveal, out float amount)
+                && (shell == Clover.Player.Forms.ElementLookSet.Ice || shell == Clover.Player.Forms.ElementLookSet.Rime))
+            {
+                ice = amount;
+                iceReveal = reveal;
+            }
+            bool iceMoved = Mathf.Abs(ice - shownIce) > 0.004f || Mathf.Abs(iceReveal - shownIceReveal) > 0.004f;
+            if (glow != shownGlow || iceMoved)
+            {
+                shownIce = ice;
+                shownIceReveal = iceReveal;
+                shownFrost = shell == Clover.Player.Forms.ElementLookSet.Rime ? 1f : 0f;
+                SetGlow(glow);
+            }
         }
+
+        private float shownIce, shownIceReveal = 1f, shownFrost;
+        private static readonly int IceId = Shader.PropertyToID("_Ice");
+        private static readonly int IceRevealId = Shader.PropertyToID("_IceReveal");
+        private static readonly int IceFrostId = Shader.PropertyToID("_IceFrost");
+        private static readonly int RevealBaseId = Shader.PropertyToID("_RevealBase");
+        private static readonly int RevealHeightId = Shader.PropertyToID("_RevealHeight");
 
         private void SetGlow(int glow)
         {
@@ -1507,13 +1532,23 @@ namespace Clover.Gameplay
             foreach (var bodyRenderer in bodyRenderers)
             {
                 if (bodyRenderer == null) continue;
-                if (glow == 0)
+                if (glow == 0 && shownIce <= 0f)
                 {
                     bodyRenderer.SetPropertyBlock(null);
                     continue;
                 }
                 block.Clear();
-                block.SetColor(Emission, glow == 1 ? flashColour : glow == 2 ? new Color(0.9f, 0.62f, 0.12f) : glow == 3 ? new Color(0.1f, 0.24f, 0.7f) : glow == 5 ? FrozenGlow : new Color(0.7f, 0.3f, 0.03f));
+                if (glow != 0)
+                    block.SetColor(Emission, glow == 1 ? flashColour : glow == 2 ? new Color(0.9f, 0.62f, 0.12f) : glow == 3 ? new Color(0.1f, 0.24f, 0.7f) : glow == 5 ? FrozenGlow : new Color(0.7f, 0.3f, 0.03f));
+                if (shownIce > 0f)
+                {
+                    float feet = transform.position.y;
+                    block.SetFloat(IceId, shownIce);
+                    block.SetFloat(IceRevealId, shownIceReveal);
+                    block.SetFloat(IceFrostId, shownFrost);
+                    block.SetFloat(RevealBaseId, feet);
+                    block.SetFloat(RevealHeightId, Mathf.Max(0.8f, bodyRenderer.bounds.max.y - feet));
+                }
                 bodyRenderer.SetPropertyBlock(block);
             }
         }

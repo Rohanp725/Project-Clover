@@ -34,6 +34,9 @@ namespace Clover.Tests
             var set = ElementArtBuilder.Set();
             if (set == null) Assert.Ignore("The element art has not been built yet; run Clover > Build > Element Art.");
             var known = new HashSet<string>(set.Pieces.Select(piece => piece.Name).Concat(set.Sheets.Select(sheet => sheet.Name)));
+            // The second-pass looks are asked for by their slugs ("water_soaked"): they are built into element_looks.asset.
+            var looks = ElementLookBuilder.Set();
+            if (looks != null) known.UnionWith(looks.Looks.Select(look => look.Key));
             var missing = new List<string>();
             int names = 0;
             foreach (string file in Drawers)

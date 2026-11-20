@@ -1,6 +1,6 @@
 # Reaction art
 
-24 designed looks from Assets/_Project/Art/VFX/Combos/combos_recipe.json, 149 parts (at most 10 a look, budget 10), 28 lamps, 32 floor masks. Materials: per triangle as Assets/_Project/Art/Source/vfx_combos_v2.blend has them; 1010 pieces found there, 128 of them banded again from it, 0 that could not be matched; 5 pieces the recipe left out taken from it as they lie there. A look over 8000 triangles is marked OVER. Lamps: intensity = W / (4 pi^2), range sqrt(2 I) held to 1.5-5 m, at most 2 a look, lit at the impact.
+24 designed looks from Assets/_Project/Art/VFX/Combos/combos_recipe.json, 148 parts (at most 10 a look, budget 10), 28 lamps, 32 floor masks. Materials: per triangle as Assets/_Project/Art/Source/vfx_combos_v2.blend has them; 968 pieces found there, 128 of them banded again from it, 0 that could not be matched; 5 pieces the recipe left out taken from it as they lie there. A look over 8000 triangles is marked OVER. Lamps: intensity = W / (4 pi^2), range sqrt(2 I) held to 1.5-5 m, at most 2 a look, lit at the impact.
 
 | Reaction (recipe) | Game name | Pieces | Parts (solid, glow, marks) | Triangles | Lamps kept of | Impact, length | Notes |
 |---|---|---|---|---|---|---|---|
@@ -11,7 +11,7 @@
 | Diamond Ring (light_dark) | Diamond Ring | 11 (7 flat) | 6 (3, 1, 2) | 416 | 1 of 1 | 0.38 s, 1.48 s |  |
 | The Grudge (dark_lightning) | The Grudge | 8 (2 flat) | 5 (4, 0, 1) | 664 | 1 of 1 | 0.62 s, 1.45 s |  |
 | Capsize (wind_water) | Capsize | 39 (4 flat) | 4 (3, 0, 1) | 2679 | 1 of 1 | 0.32 s, 1.30 s | laid along the blow (its way 270 degrees in the recipe) |
-| Rime (wind_ice) | Rime | 85 (2 flat) | 5 (3, 1, 1) | 3002 | 1 of 1 | 0.35 s, 1.40 s | laid along the blow (its way 220 degrees in the recipe); 1 recipe pieces left out (owner's review) |
+| Rime (wind_ice) | Rime | 85 (2 flat) | 4 (2, 1, 1) | 1332 | 1 of 1 | 0.35 s, 1.40 s | laid along the blow (its way 220 degrees in the recipe); 43 recipe pieces left out (owner's review) |
 | Caught Light (water_light) | Caught Light | 22 (8 flat) | 6 (3, 1, 2) | 2144 | 1 of 1 | 0.22 s, 1.40 s |  |
 | Burnt Mound (earth_fire) | Burnt Mound | 59 (8 flat) | 9 (8, 0, 1) | 3176 | 2 of 5 | 0.45 s, 1.35 s | lamps left out: c2_earth_fire_stone0 180 W, c2_earth_fire_stone1 180 W, c2_earth_fire_stone2 180 W |
 | Fish Poison (poison_water) | Fish Poison | 35 (10 flat) | 5 (3, 0, 2) | 2710 | 1 of 1 | 0.30 s, 1.55 s |  |
@@ -137,7 +137,6 @@ wind streaks sweep in; rime grows on the near side; chips blow out of the far si
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|
 | wind_ice body ice debris | blow, flash | impact | 0.35 to 1.30 | 24 | 48 |
-| wind_ice body ice growth | rise | impact | 0.22 to 1.22 | 42 | 1670 |
 | wind_ice body ice wind | sweep | arrive | 0.00 to 0.70 | 13 | 624 |
 | wind_ice body glow vapour | blow | aftermath | 0.40 to 1.40 | 3 | 660 |
 | wind_ice mark 0 | spread | aftermath | 0.35 to 1.35 | 2 | 2 |

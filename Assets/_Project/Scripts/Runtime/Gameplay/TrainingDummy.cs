@@ -184,6 +184,7 @@ namespace Clover.Gameplay
                 untilEmber -= deltaTime;
                 // The body burns in real flame (the owner's review, 2026-11-20); the old puffs only where it cannot.
                 bool realFlame = wasBurning && Clover.Player.Forms.BodyFlames.Keep(transform, Afflictions.Stacks(AfflictionKind.Burn));
+                Clover.Player.Forms.AfflictionArt.KeepLooks(Afflictions, transform);
                 if (wasBurning && untilEmber <= 0f)
                 {
                     untilEmber = 0.15f;

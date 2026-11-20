@@ -748,6 +748,20 @@ namespace Clover.Player.Forms
             if (!ElementArt.Ready || pair < 0 || pair >= AfflictionPairs.Count) return false;
             ReactionDesigns.Composed(pair, out string first, out string second, out string mark, out int markElement);
             int a = ReactionDesigns.RingIndex(AfflictionPairs.First(pair)), b = ReactionDesigns.RingIndex(AfflictionPairs.Second(pair));
+            // Rust is the second-pass look: the forged sword through it, one mega drop, rust creeping from the wet wound
+            // (the owner, 2026-11-20: "The rust is not a rusty color at all").
+            if (pair == ReactionDesigns.Rust && body != null && ElementLooks.Play(ElementLooks.Find(ReactionDesigns.RustLook), body))
+            {
+                ComposedCount++;
+                return true;
+            }
+            // Metal in a reaction is a well-forged short sword through the body (the owner, 2026-11-20), not its clang.
+            int metal = ReactionDesigns.RingIndex("metal");
+            if ((a == metal || b == metal) && body != null && ElementLooks.Play(ElementLooks.Find(ReactionDesigns.SwordLook), body))
+            {
+                if (a == metal) first = null;
+                if (b == metal) second = null;
+            }
             if (Ready) instance.ShowComposed(pair, at, body, away, first, a, second, b, mark, markElement);
             else
             {

@@ -29,6 +29,13 @@ Shader "Clover/Toon"
         [Toggle] _VertexColour ("Multiply by the mesh's own vertex colours (merged scenery)", Float) = 0
         _Sway ("Sway in the wind (bend at a metre's height; below 0 hangs and swings from the top)", Range(-0.1, 0.1)) = 0
         _Metal ("Turned to steel (Temper; set by the game, 0 leaves the material as it is)", Range(0, 1)) = 0
+        _MetalReveal ("Steel up to this share of the body's height", Range(0, 1)) = 1
+        _MetalLine ("The bright front climbing the body, as a share of its height (below 0: none)", Float) = -1
+        _Ice ("Frozen over (Chill, Rime; set by the game)", Range(0, 1)) = 0
+        _IceReveal ("Ice up to this share of the body's height", Range(0, 1)) = 1
+        _IceFrost ("Rime's white frost rather than clear ice", Range(0, 1)) = 0
+        _RevealBase ("The body's feet, world height (the reveals count up from here)", Float) = 0
+        _RevealHeight ("The body's height, metres (0: no reveal, all of it at once)", Float) = 0
     }
 
     SubShader
@@ -64,7 +71,39 @@ Shader "Clover/Toon"
             half _Sway;
             half _VertexColour;
             half _Metal;
+            half _MetalReveal;
+            half _MetalLine;
+            half _Ice;
+            half _IceReveal;
+            half _IceFrost;
+            float _RevealBase;
+            float _RevealHeight;
         CBUFFER_END
+
+        // A body frozen over (Chill, the owner of 2026-11-20: "ice should freeze and crystalize and then hold"), in the
+        // toon's hard bands: clear pale ice read from the facing, brighter toward the edge as thick ice is, a hard glint
+        // where the light catches, the body's own colour only a faint shadow inside. Rime is whiter and grainy.
+        half3 IceShell(half3 albedo, float3 normalWS, half3 viewWS, half3 lightDirection, half lit, float3 positionWS)
+        {
+            half rim = 1.0 - saturate(dot(viewWS, normalWS));
+            half3 colour = rim > 0.55 ? half3(0.86, 0.95, 1.0) : (rim > 0.22 ? half3(0.6, 0.82, 0.96) : half3(0.4, 0.63, 0.84));
+            colour = lerp(colour, colour * (albedo * 0.6 + 0.4), 0.18) * lerp(0.82, 1.0, lit);
+            half3 halfway = normalize(lightDirection + viewWS);
+            colour += half3(1.2, 1.28, 1.35) * step(0.95, saturate(dot(normalWS, halfway)));
+            if (_IceFrost > 0.001)
+            {
+                float grain = frac(sin(dot(floor(positionWS * 38.0), float3(12.9898, 78.233, 37.719))) * 43758.5453);
+                half3 frost = lerp(half3(0.78, 0.86, 0.93), half3(0.92, 0.96, 1.0), step(0.55, grain)) * lerp(0.85, 1.0, lit);
+                colour = lerp(colour, frost, _IceFrost);
+            }
+            return colour;
+        }
+
+        // How far up the body a point is, as a share of its height: 0 when no reveal is set (all of it at once).
+        half RevealShare(float3 positionWS)
+        {
+            return _RevealHeight > 0.001 ? (positionWS.y - _RevealBase) / _RevealHeight : 0.0;
+        }
 
         // A body turned to steel (Metal's surge, Temper), kept in the toon look: the surface's own colour is kept only as
         // a hint in a cool grey, and the shine is read from where the face points as the camera sees it, the way a
@@ -222,7 +261,11 @@ Shader "Clover/Toon"
                 half rim = 1.0 - saturate(dot(viewWS, normalWS));
                 half rimBand = step(1.0 - _RimWidth, rim) * (0.35 + 0.65 * lit);
                 colour += _RimColor.rgb * rimBand;
-                if (_Metal > 0.001) colour = lerp(colour, Steel(albedo, normalWS, viewWS, light.direction, lit), _Metal);
+                half share = RevealShare(input.positionWS);
+                // Steel climbs the body band by band behind a bright front (Temper, the Blender worker's timings).
+                if (_Metal > 0.001) colour = lerp(colour, Steel(albedo, normalWS, viewWS, light.direction, lit), _Metal * step(share, _MetalReveal + 0.0001));
+                if (_MetalLine >= 0.0) colour = lerp(colour, half3(1.45, 1.5, 1.6), step(abs(share - _MetalLine), 0.025) * saturate(_Metal * 4.0));
+                if (_Ice > 0.001) colour = lerp(colour, IceShell(albedo, normalWS, viewWS, light.direction, lit, input.positionWS), _Ice * step(share, _IceReveal + 0.0001));
 
                 colour += _EmissionColor.rgb;
                 colour = MixFog(colour, input.fogFactor);
