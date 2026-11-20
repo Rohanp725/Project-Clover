@@ -145,3 +145,127 @@ Each was built with the default given here; every one is easy to change. Added t
    driven into one is hurt and breaks it); nothing yet stands on the field. Default: it keeps its built pillar on what a
    spell strikes, with its built words, and the design's in its details. Alternative: the design's words now, as
    Stone Remembers has, with the pillar as the stand-in.
+
+## Metal
+
+1. **Three keystones in the table, two kept.** Metal's passive table gives Edge Guard, Master's Answer and All Blades
+   Home; the cut list says each tree keeps two beside its Devotion. Default: Edge Guard and Master's Answer kept (both
+   answer the perfect guard, Metal's own timing), All Blades Home retired and refunded (6 Shards): its blades that never
+   fade need standing blades nothing has yet, and To the Blade and Grave of Swords now call blades home. Alternatives:
+   keep All Blades Home and cut Master's Answer (the one that changes the weapon's skill, which the Way may own now); or
+   keep it as a major (3 Shards) in the empty place at the top of the trunk.
+2. **Four Empowers with no shorter wait in the roster.** Flung Blade's, Circle of Steel's, Returning Edge's and Poured
+   Bronze's Empowers give only stronger numbers, but every Empower is "stronger, shorter cooldown" and the chart tests ask
+   for one. Default: each waits a second less (5, 9, 8 and 11 seconds), as Earth's Mountain Stance. Alternative: keep
+   their waits and let the test allow an Empower that only strengthens.
+3. **Returning Edge before a turning blade exists.** No form flies out and back to the hand yet. Default: a lane of
+   spikes broken open along the ground for the outward pass (12, 10, a notch), and each enemy it struck cut again a
+   second later for the way home. Alternatives: a returning projectile from the mark alone (it would not count as the
+   spell striking, so its shapes and the charged blade would not answer it); or keep the built lunging head until the
+   form is built.
+4. **Shapes that reach more than the design's enemies.** Poured Bronze's Set and Red-Hot crust every enemy the pour's
+   eight metres reached, not only the notched ones poured into (the shape answers after the pour has spent the notches);
+   The Golden Chair answers with a 90-degree cone at the attacker and binds everything the cone strikes. Default: as
+   written, with **Not built yet** lines. Alternatives: give those shapes nothing until the pieces are built; or narrow
+   them (Set and Red-Hot answering only a heavy blow's or a weapon blow's own enemy within two seconds of the pour).
+5. **Stand-ins that are stronger than their timing.** Until the moments exist, Flung Blade's Master ends its wait on
+   every perfect guard (as Thunderclap's does); Returning Edge's Master on any perfect guard once in 9 s; Bat It Home
+   throws a blade out and back on any perfect guard once in 2 s; Circle of Steel's Master gives its mana and reset for any
+   blow turned once in 20 s; Grave of Swords' Master gives 20 mana for any heavy blow on an enemy near the cast, once a
+   cast. Default: as written. Alternatives: give them nothing until the pieces are built; or lengthen their limits.
+6. **The Guard Holds before a guard that cannot break.** Default: your guard costs half the stamina (so it breaks far
+   later), you take 15% less, and each blow held on it notches and sparks the attacker. Alternative: no stamina change
+   until the unbreakable guard is built.
+7. **Two readings of the roster.** The Nail's "a pool of 3 m": default 3 m across (1.5 m round). The Tripods' "four
+   blades on each, cutting twice a second": default three helpers that cut for 6 s. Alternatives: a pool 3 m round; four
+   cuts each (2 s), then the tripod is spent.
+
+## Light
+
+1. **Three keystones in the table, two kept.** Light's passive table gives Unblemished, Two Suns and Condemned; the cut
+   list says each tree keeps two beside its Devotion. Default: Unblemished and Condemned kept (the clean fight and the
+   judgement on the marked, Light's own substance), Two Suns retired and refunded (6 Shards): its price, spells costing a
+   quarter more, is broken by cooldowns (only Daybreak pays mana now), and a figure of light casting your spells again
+   is close to Halo's mirrors. Alternatives: keep Two Suns and cut Condemned (its finish-at-any-balance is not built
+   either); or keep Two Suns as a major (3 Shards) in the empty place at the top of the trunk, with a new price (spells
+   wait a fifth longer).
+2. **Three Empowers with no shorter wait in the roster.** Ring of Spears', Standing Light's and Reckoning's Empowers
+   give only stronger numbers. Default: each waits a second less (9, 11 and 11 seconds), as Metal's. Alternative: keep
+   their waits and let the test allow an Empower that only strengthens.
+3. **Daybreak's Empower has no price in the roster.** It gives "10 damage a ring", and the shared rule asks a larger
+   spell's Empower for a lower price. Default: 40 mana, not 45, and the 10 a ring left for later (set here it would be
+   set on Red Before the Sun's and High Noon's own numbers too). Alternative: 45 mana kept, and the 10 a ring only.
+4. **Stand-ins that are stronger or wider than their timing.** Until the moments exist: Glare's Master holds and Marks on
+   every perfect dodge once in 6 s (Dazzle as built, a little longer), whether or not Glare is cast; Step Into Light's
+   Master ends its wait on any step that cuts, once in 16 s; Ring of Spears' Master answers any weapon blow while the
+   spears hang, not only a critical one; Standing Light's burst comes on the three perfect guards after each lamp,
+   anywhere, and its Master resets every Light spell on any perfect guard once in 12 s; Daybreak's Master gives a ward
+   on every cast. Default: as written, with **Not built yet** lines. Alternatives: give them nothing until the pieces
+   are built; or lengthen their limits.
+5. **Reckoning's count before a damage count exists.** Default: 8 damage for each weapon blow landed on the sealed enemy
+   in its six seconds, and 40 stagger, so quick weapons fill it as heavy ones would by damage. Alternatives: 12 a blow
+   with heavy blows counted twice; or the built brand (each of six blows sets off its own burst) until the count is built.
+6. **The Drawn Line before a line on the floor exists.** Default: the spears still drive in, then stand five seconds in
+   the floor in their ring round the enemy, Marking and jarring what is inside. Alternative: the wall form (Red Before the Sun's) laid six
+   metres across your front (nothing crosses it, and a heavy blow bursts it), nearer the picture but blocking where the
+   design holds.
+
+## Dark
+
+1. **The Rise stays with the gift for now.** The design moves the Rise to Dark's root and leaves the gift the finisher
+   that buys it back. As built, `PlayerUpgrades.Rise` asks for the gift's id, its cast is the gift's (RiseForm ends the
+   Rise when that mark is not held), and RiseForm's buy-back is part of the same form: moving it is three lines in two
+   files, not data or one hook. Default: the gift, A Life for a Life, keeps giving the Rise and its buy-back as built,
+   and the root only curses (a NEEDS, `rise-on-root`). Alternative: allow the hook now (Rise asks for the root, the cast
+   names the root, RiseForm's buy-back asks for the gift), after main's PlayerUpgrades work tonight.
+2. **Pawned Heart's Empower has no shorter wait in the roster.** It gives 70% and a ring of 12 seconds; the shared rule
+   asks an Empower for a shorter wait or a lower price, and the heart is paid in health. Default: it waits 36 seconds,
+   not 40, beside the roster's numbers. Alternative: keep 40 and let the test allow an Empower that only strengthens a
+   spell paid in health.
+3. **Blood Price before a cast on cooldown exists.** Default: it keeps its built rule (the mana a spell lacks paid in
+   health, grey), which touches only duo spells and another element's larger spell now. Alternative: hold the mark out
+   of the tree (an empty place) until the cast on cooldown is built.
+4. **Stand-ins that are wider than their timing.** Until the moments exist: Grasp's Master answers any blow of yours on
+   the attacker within a second of being struck; Devouring Maw's Master breaks what every bitten enemy began and resets
+   once in 16 s; Gone to Ash's Master answers any blow scattered, once in 20 s; Second Shadow's Master gives a ward on
+   every cast; Pawned Heart's Master heals 10 on any perfect dodge, once in 3 s; Debts Called's Master and its Learn's
+   step strengthen every spell for the second after the cast, not only the burst. Default: as written, with **Not built
+   yet** lines. Alternatives: give them nothing until the pieces are built; or lengthen their limits.
+5. **Pawned Heart's shapes before the heart can be set elsewhere.** Default: both still set the heart behind you;
+   Buried Heart lays a ring of ash that Curses for the heart's 10 s, Hung From the Tree keeps the enemy faced Cursed for
+   them. Alternative: leave both shapes doing nothing beyond the plain heart until `heart-places` is built.
+6. **Devouring Maw's jaw no longer Curses.** The built jaw Cursed what it struck, so every bite would find a Curse to
+   spend; the roster's "on a Cursed enemy it spends the Curse" asks that it was Cursed before. Default: the jaw lays no
+   Curse. Alternative: it Curses after the spend, so a second bite in the same fight feeds.
+
+## Poison
+
+1. **Three keystones in the table, two kept.** Poison's passive table gives Slow Death, Volatile and Plague Bearer; the
+   cut list says each tree keeps two beside its Devotion. Default: Slow Death and Volatile kept (both change the beat,
+   Poison's own timing, and PlayerUpgrades already keeps their rules), Plague Bearer retired and refunded (6 Shards):
+   its aura of doses overlaps Miasma's Censer and the Devotion's fighting in the mist. Alternatives: keep Plague Bearer
+   and cut Volatile or Slow Death; or keep it as a major (3 Shards) in the empty place at the top of the trunk.
+2. **Four Empowers with no shorter wait in the roster, and One by One's with no price.** Five Needles', Coiled
+   Strike's, Blister's and Share Alike's Empowers give only stronger numbers or reach. Default: each waits a second less
+   (8, 9, 9 and 8 seconds), as Metal's and Light's. One by One's gives "7 damage a dose": default 45 mana, not 50, with
+   the 7 a dose left for later (it is a number of the Learn's own burst, which an Empower cannot reach yet).
+   Alternatives: keep their waits and let the test allow an Empower that only strengthens; 50 mana kept for One by One.
+3. **The beat Masters test each enemy as it is struck.** A cast cannot be tested against the beat yet (a cast has no
+   enemy of its own). Default: Miasma's, One by One's and Share Alike's Masters answer each enemy struck within a fifth
+   of a second of its own bite, not the cast made on the beat of any enemy near. Alternatives: give them nothing until
+   the cast can be tested; or test the enemy faced at the cast.
+4. **Stand-ins wider than their timing.** Until the moments exist: Coiled Strike's Master ends its wait on any perfect
+   dodge, once in 10 s; Shed Skin blinds the enemies near where you stood on every cast, not only a let-go in the
+   perfect window; Tasted Every Herb heals 2 a second and adds a dose to every lay in every fight, not only in a cloud.
+   Default: as written, with **Not built yet** lines. Alternatives: give them nothing until the pieces are built; or
+   halve the Devotion's healing until clouds can be stood in.
+5. **Five Needles as one fan.** No form throws five separate needles yet. Default: one narrow cone with the five
+   needles' worth (15 damage, 50 stagger, five doses), and the first enemy struck pinned, once a cast. Alternative: the
+   bullets form (five things closing on the enemy faced from a ring), which strikes five times but from all sides.
+6. **Three readings of the roster.** Centipede's Run's "a bite on each": default a strike on each, 14 damage and 15
+   stagger (one fang's), two doses. Shed Tail's "every 0.5 s for 3 doses": default three doses at each lash. Low Mist's
+   sheet: default a row of six patches, each 2.5 m across. Alternatives: a bite of the poison on each; three doses over
+   the tail's whole time; one long patch.
+7. **Fever's new healing is not a mark.** The design raises Fever's healing to 40% of poison's and doubles its beat
+   now the root heals. Default: Fever unchanged here (it is the kit's surge, not part of the tree); the root's tenth is
+   built. Alternative: change the kit's Fever numbers in the same pass as the other surges.

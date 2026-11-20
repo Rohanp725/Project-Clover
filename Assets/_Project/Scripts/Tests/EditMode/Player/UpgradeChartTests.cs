@@ -494,6 +494,14 @@ namespace Clover.Tests
             [Elements.Life] = 10,
             // Earth's table gives three keystones; it keeps two beside its Devotion, as the cut list asks of every tree.
             [Elements.Earth] = 9,
+            // Metal's table gives three keystones too; it keeps Edge Guard and Master's Answer beside its Devotion.
+            [Elements.Metal] = 9,
+            // Light's table gives three keystones as well; it keeps Unblemished and Condemned beside its Devotion.
+            [Elements.Light] = 9,
+            // Dark's table gives two keystones, Never Sated and Dead Already, and four majors.
+            [Elements.Dark] = 10,
+            // Poison's table gives three keystones; it keeps Slow Death and Volatile beside its Devotion.
+            [Elements.Poison] = 9,
         };
 
         [Test]

@@ -195,11 +195,23 @@ namespace Clover.Tests
         public void TheMarksOfTheBeatStandOnIt()
         {
             Assert.IsTrue(Upgrade.ById(PoisonTree.Catching).Effects.Any(e => e.On == UpgradeTrigger.PoisonBite && e.Do == UpgradeAction.Pass));
-            Assert.IsTrue(Upgrade.ById(PoisonTree.LanceTheWound).Effects.Any(e => e.On == UpgradeTrigger.PerfectGuard && e.Do == UpgradeAction.Bite && e.Radius > 0f));
             Assert.IsTrue(Upgrade.ById(PoisonTree.InTime).Effects.All(e => e.OnBeat > 0f));
+            // Poison's self-heal is its root's now (Phase 4): each bite gives back a share of its depth.
+            Assert.IsTrue(Upgrade.ById(PoisonTree.Venom).Effects.Any(e => e.On == UpgradeTrigger.PoisonBite && e.Do == UpgradeAction.Heal && e.PerStack));
+            // Lance the Wound was cut with Poison's reshaping (Phase 4), and Left to Ripen and One Sickness with it (their
+            // beats are tested above through the switches alone). A bite called out of turn is Five Needles' Spread now.
+            foreach (string gone in new[] { PoisonTree.LanceTheWound, PoisonTree.LeftToRipen, PoisonTree.OneSickness })
+            {
+                Assert.IsTrue(RetiredMarks.IsRetired(gone), gone);
+                Assert.IsNull(Upgrade.ById(gone), gone);
+            }
+            var spread = Upgrade.ById(SpellBranch.ShapeId(PoisonTree.FiveNeedles)).Shapes[0];
+            Assert.AreEqual("Spread", spread.Name);
+            Assert.IsTrue(spread.Effects.Any(e => e.On == UpgradeTrigger.SpellHit && e.OwnBranch && e.Do == UpgradeAction.Bite));
             Assert.IsTrue(Upgrade.ById(BlightTree.FeedingRot).Effects.Any(e => e.On == UpgradeTrigger.PoisonBite && e.Needs == AfflictionKind.Cursed && e.PerStack));
             Assert.IsTrue(Upgrade.ById(BlightTree.OneDeathFeeds).Effects.Any(e => e.On == UpgradeTrigger.Kill && e.Do == UpgradeAction.Bite));
-            Assert.IsTrue(Upgrade.ById(DarkTree.DevouringMaw).Effects.All(e => e.OwnSpell));
+            // Devouring Maw is a spell branch now (Phase 4): its feeding answers its own branch's bites.
+            Assert.IsTrue(Upgrade.ById(DarkTree.DevouringMaw).Effects.All(e => e.OwnBranch));
             // Black Ice, the one mark that answered the base spell alone, is Hoarfrost's shape now (Phase 4): a sheet cast in
             // the crystals' place.
             Assert.IsTrue(RetiredMarks.IsRetired(IceTree.BlackIce));
@@ -214,8 +226,10 @@ namespace Clover.Tests
             var probe = new Upgrade { Id = "test.words", Name = "Words", Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Do = UpgradeAction.Heal, Amount = 1f } } };
             StringAssert.Contains("poison bites", TriggerWords.HowTo(probe));
             // Strong Arm, Following Draft and Held Fast, which gave PushDistance, BoonSeconds and FreezeSeconds, were retired with
-            // Wind's and Ice's reshaping (Phase 4); those stats wait for the Empowers and Bonds that will give them again.
-            var named = new[] { PlayerStat.GuardGrey, PlayerStat.ShatterDamage, PlayerStat.BurstStagger, PlayerStat.GroundSeconds, PlayerStat.LeapReach };
+            // Wind's and Ice's reshaping (Phase 4), Braced Frame, which gave GuardGrey, with Metal's, and Buckling and Long Leap,
+            // which gave BurstStagger and LeapReach, with Poison's; those stats wait for the Empowers and Bonds that will give
+            // them again.
+            var named = new[] { PlayerStat.ShatterDamage, PlayerStat.GroundSeconds };
             foreach (var stat in named)
                 Assert.IsTrue(Upgrade.All.Any(mark => mark.Stats.Any(mod => mod.Stat == stat)), $"No mark gives {stat}.");
             var stats = new PlayerStats();

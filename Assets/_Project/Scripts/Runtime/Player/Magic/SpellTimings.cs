@@ -85,29 +85,33 @@ namespace Clover.Player.Magic
             ["earth.stance"] = Cd(10f, SpellRole.Counter),
             ["earth.mound"] = Cd(9f, SpellRole.Movement),
             ["earth.cairn"] = Mana(40f, SpellRole.Detonator),       // Earth's larger spell
-            // Metal
+            // Metal, reshaped (Phase 4): Flung Blade is the base spell; Hone is cut (the charged blade does what it did);
+            // Returning Edge is rebuilt as the turning blade; Poured Bronze and To the Blade are new.
             ["metal.circle"] = Cd(10f, SpellRole.Counter),
-            ["metal.hone"] = Cd(9f, SpellRole.Breaker),             // not in the roster
             ["metal.returningedge"] = Cd(9f, SpellRole.Breaker),
+            ["metal.bronze"] = Cd(12f, SpellRole.Detonator),
+            ["metal.toblade"] = Cd(8f, SpellRole.Movement),
             ["metal.graveofswords"] = Mana(50f, SpellRole.Breaker), // Metal's larger spell
-            // Light
+            // Light, reshaped (Phase 4): Glare is the base spell; the five other built spells keep their ids and the roster's waits.
             ["light.step"] = Cd(8f, SpellRole.Movement),
             ["light.spears"] = Cd(10f, SpellRole.Breaker),
             ["light.reckoning"] = Cd(12f, SpellRole.Detonator),
             ["light.lantern"] = Cd(12f, SpellRole.Counter),
             ["light.daybreak"] = Mana(45f, SpellRole.Detonator),    // Light's larger spell
-            // Dark (its larger spell, Pawned Heart, is paid in health and keeps a long cooldown)
+            // Dark, reshaped (Phase 4): Grasp is the base spell; The Dead Stand is folded into the Devotion; Gone to Ash is new.
+            // Its larger spell, Pawned Heart, is paid in health, not mana, and keeps a long cooldown.
             ["dark.debtscalled"] = Cd(10f, SpellRole.Breaker),
-            ["dark.pawnedheart"] = Cd(40f, SpellRole.Breaker),
+            ["dark.pawnedheart"] = Cd(40f, SpellRole.Breaker),      // Dark's larger spell, paid in health
             ["dark.maw"] = Cd(11f, SpellRole.Detonator),
+            ["dark.ash"] = Cd(10f, SpellRole.Counter),
             ["dark.secondshadow"] = Cd(12f, SpellRole.Movement),
-            ["dark.deadstand"] = Cd(12f, SpellRole.Breaker),        // not in the roster
-            // Poison
+            // Poison, reshaped (Phase 4): Miasma is the base spell; Swinging Censer is folded into its Censer shape; Five
+            // Needles is new.
+            ["poison.needles"] = Cd(9f, SpellRole.Breaker),
             ["poison.coiled"] = Cd(10f, SpellRole.Counter),
             ["poison.blister"] = Cd(10f, SpellRole.Detonator),
-            ["poison.onebyone"] = Mana(50f, SpellRole.Detonator),   // Poison's larger spell
-            ["poison.censer"] = Cd(8f, SpellRole.Opener),           // folded into Miasma's Censer shape
             ["poison.sharealike"] = Cd(9f, SpellRole.Movement),
+            ["poison.onebyone"] = Mana(50f, SpellRole.Detonator),   // Poison's larger spell
 
             // The eleven built ring-mix duo spells: their pair's larger spell, paid in mana as built.
             ["plasma.ball"] = Mana(40f, SpellRole.Detonator),
@@ -155,8 +159,9 @@ namespace Clover.Player.Magic
 
         /// <summary>
         /// What one mark takes off the wait of <paramref name="element"/>'s base spell (stat
-        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Metal second, Ready Steel
-        /// shortens Flung Blade and not the first element's spell.
+        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so a mark of Poison's carried second
+        /// would shorten Miasma and not the first element's spell. The ready minors that gave it were all retired with their
+        /// trees' reshaping (Phase 4); the rule waits for the Empowers and Bonds that may give it again.
         /// </summary>
         public static float BaseCooldownShare(Upgrade mark, string element)
         {

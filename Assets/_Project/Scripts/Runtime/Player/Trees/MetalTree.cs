@@ -4,46 +4,51 @@ using Clover.Gameplay;
 namespace Clover.Player.Trees
 {
     /// <summary>
-    /// Metal: the weapon and the guard and nothing else. Three boughs from Sunder: on the left Guard (the perfect
-    /// guard forges something), in the middle Edge (the weapon itself), on the right Arsenal (blades conjured,
-    /// thrown and called back). The marks named BESPOKE do the nearest thing data can do until their code is written.
+    /// Metal: meet the blow exactly, and drive steel in, written as spell branches (docs/design/steel/elements_b.md, Metal;
+    /// Phase 4). Six spells of four marks each and nine passives on the pattern of <see cref="BranchPattern"/>: in the
+    /// middle Edge (Counter Cut, Poured Bronze and Grave of Swords, Master's Answer at the crown), on the left Guard (Open
+    /// Line, Returning Edge and Circle of Steel, Edge Guard at the crown, grown from the circle), on the right Arsenal
+    /// (Forged Answer, Flung Blade, the lift Every Crack Rings, To the Blade, and the Devotion The Guard Holds at the
+    /// crown). Flung Blade is the base spell: it comes with Metal, its Learn is never bought, and it grows from the root.
+    ///
+    /// Marks the design keeps keep their ids; the cut ones are in <see cref="RetiredMarks"/> (Buried Blades lives on in
+    /// Flung Blade's Empower, Hone in the charged blade, and Returning Edge is rebuilt under its id as the turning blade of
+    /// trees_b.md). Counter Cut and Master's Answer are done by hand in <see cref="PlayerUpgrades"/> under their ids; the
+    /// rest are data. What the data cannot say yet is the nearest working version with a <c>NEEDS</c> line, gathered in
+    /// docs/design/steel/content_open.tsv.
     /// </summary>
     public static class MetalTree
     {
         public const string Root = "metal.sunder";
-        // Guard.
         public const string ForgedAnswer = "metal.forgedanswer";
-        public const string PractisedWrist = "metal.practisedwrist";
-        public const string BrightSparks = "metal.brightsparks";
         public const string OpenLine = "metal.openline";
-        public const string HardReturn = "metal.hardreturn";
-        public const string BracedFrame = "metal.bracedframe";
-        public const string CircleOfSteel = "metal.circle";
-        public const string LongTemper = "metal.longtemper";
         public const string EdgeGuard = "metal.edgeguard";
-        // Edge.
         public const string CounterCut = "metal.countercut";
-        public const string DeepBite = "metal.deepbite";
-        public const string FinishingEdge = "metal.finishingedge";
-        public const string Splinter = "metal.splinter";
-        public const string CleanEdge = "metal.cleanedge";
-        public const string ShatterPoint = "metal.shatterpoint";
-        public const string SlowMending = "metal.slowmending";
-        public const string Hone = "metal.hone";
-        public const string BalancedBlade = "metal.balancedblade";
         public const string MastersAnswer = "metal.mastersanswer";
-        // Arsenal.
-        public const string BuriedBlades = "metal.buriedblades";
-        public const string TrueFlight = "metal.trueflight";
-        public const string ReadySteel = "metal.readysteel";
-        public const string Ricochet = "metal.ricochet";
-        public const string LongThrow = "metal.longthrow";
+        public const string EveryCrackRings = "metal.lift";
+        public const string TheGuardHolds = "metal.devotion";
+        // The spells: each is its branch's Learn mark and the branch's id.
+        public const string FlungBlade = "metal.base";
+        public const string CircleOfSteel = "metal.circle";
         public const string ReturningEdge = "metal.returningedge";
-        public const string PaidInBlows = "metal.paidinblows";
+        public const string PouredBronze = "metal.bronze";
+        public const string ToTheBlade = "metal.toblade";
         public const string GraveOfSwords = "metal.graveofswords";
-        public const string AllBladesHome = "metal.allbladeshome";
         // The god's gift.
         public const string HangingSwords = "metal.hangingswords";
+        // Conditions the branches set on enemies.
+        public const string CherryRed = "metal.base.red";
+        public const string Nailed = "metal.base.nail";
+        public const string Kneeling = "metal.base.kneel";
+        public const string GoldenChair = "metal.circle.chair";
+        public const string OnTheLine = "metal.returningedge.line";
+        public const string Crusted = "metal.bronze.crust";
+        public const string Molten = "metal.bronze.molten";
+        public const string Ringing = "metal.graveofswords.ringing";
+        public const string InTheGrave = "metal.graveofswords.grave";
+
+        // Retired in Phase 4 (RetiredMarks): kept as a name because code still asks for it.
+        public const string ReadySteel = "metal.readysteel";
 
         public static void Add(List<Upgrade> to)
         {
@@ -51,148 +56,293 @@ namespace Clover.Player.Trees
             const AfflictionKind S = AfflictionKind.Sundered;
 
             // The design notches with heavy blows only; a root lays its affliction with every blow, as the schema asks.
-            to.Add(new Upgrade { Id = Root, Name = "Sunder", Element = E, Kind = UpgradeKind.Root, X = 0f, Y = 1.2f, Icon = UpgradeIcons.Anvil,
+            to.Add(BranchPattern.Put(new Upgrade { Id = Root, Name = "Sunder", Element = E, Kind = UpgradeKind.Root, Icon = UpgradeIcons.Anvil,
                 Description = "Heavy blows and perfect guards notch an enemy's armour, up to three, and a finisher notches it three deep at once. Each notch lets your weapon bite deeper.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 3 },
-                } });
+                } },
+                BranchPattern.Root));
 
-            // Left bough: Guard.
-            to.Add(new Upgrade { Id = ForgedAnswer, Name = "Forged Answer", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Root }, X = -1.21f, Y = 2.4f, Icon = UpgradeIcons.Blade,
-                Description = "A perfect guard forges a blade from the blow it turned. Up to three hang at your shoulder. Your next heavy blow sends them all.",
-                Tally = new TallySpec { Name = "Blades", Cap = 3 }, Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Bank, Count = 1 }, new UpgradeEffect { On = UpgradeTrigger.HeavyHit, SpendsAll = true, PerStack = true, Do = UpgradeAction.Projectile, Flight = Flight.Homing, Count = 1, Damage = 10f, Stagger = 12f, Speed = 16f, Affliction = AfflictionKind.Sundered, Stacks = 0 } } });
-            to.Add(new Upgrade { Id = PractisedWrist, Name = "Practised Wrist", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { ForgedAnswer }, X = -0.77f, Y = 3.49f, Icon = UpgradeIcons.Hourglass,
-                Description = "The moment for a perfect guard is a little longer.",
-                Stats = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 0.17f) } });
-            to.Add(new Upgrade { Id = BrightSparks, Name = "Bright Sparks", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { ForgedAnswer }, X = -1.94f, Y = 3.26f, Icon = UpgradeIcons.Gem,
-                Description = "Perfect guards give more mana.",
-                Stats = new[] { new StatMod(PlayerStat.ManaFromGuards, 0.33f) } });
+            // ---- The middle bough: Edge. The weapon itself, and what it drives into the notches.
+            // Built (PlayerCombat.CounterCut): a blow that lands on an enemy winding up or striking is critical. The design's 25% more stagger is not in it.
+            to.Add(BranchPattern.Put(new Upgrade { Id = CounterCut, Name = "Counter Cut", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Root }, Icon = UpgradeIcons.Eye,
+                Description = "A blow that lands while an enemy is showing its own attack is critical.",
+                Stats = new StatMod[0] },
+                BranchPattern.MiddleFoot));
+
+            // The detonator: a nova that strikes for nothing; each notched enemy it reaches has bronze poured into its cracks
+            // for each notch, is held, and its notches are spent. The count comes first and the spend last, so the pour is
+            // counted before the notches go. NEEDS: the hold as 0.4 s a notch (count-from-depth); a lip of bronze tipping
+            // over each enemy and a crust cooling on it (form-pieces).
+            SpellBranch.Add(to, E, PouredBronze, "Poured Bronze", SpellRole.Detonator, BranchPattern.MiddleA, CounterCut, SpellForms.Nova,
+                new SpellSpec { Radius = 8f, Delay = 0.4f, Damage = 0f, Stagger = 0f, Stacks = 0 },
+                "You raise a hand. Over every notched enemy within eight metres a lip of molten bronze tips in the air, then pours into its cracks: 10 damage, and 12 damage and 15 stagger for each notch. The notches are spent. The bronze sets, and the enemy is held under a crust cooling from cherry red to black, longer for each notch it carried.",
+                UpgradeIcons.Anvil,
+                // NEEDS: 15 a notch (an Empower that changes its Learn's effects, empower-effects).
+                new Empower { Cooldown = 11f },
+                "Poured Bronze waits 11 seconds, not 12, and pours 15 damage a notch.",
+                // NEEDS: only the enemies poured into crusted (shape-before-learn: the shape answers after the Learn has
+                // spent the notches it would test). Until then every enemy the pour's reach takes is crusted.
+                new ShapeDef { Name = "Set",
+                    Description = "The crust stays four seconds. A heavy blow on a crusted enemy shatters it for 20 more and throws bronze splinters three metres out behind it, notching what they hit. Pour, then break.",
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Crusted, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crusted, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 1f, Damage = 20f, Stagger = 15f, Stacks = 0 },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Crusted, By = StruckBy.Heavy, Do = UpgradeAction.Lane, Reach = 3f, Radius = 0.8f, Damage = 8f, Stagger = 8f, Affliction = S, Stacks = 1 },
+                    } },
+                // NEEDS: no hold while it is worn (shape-sets-aside), 6 more a notch spent (count-from-depth), and only the
+                // enemies poured into (shape-before-learn). Until then the hold still comes, and each blow spits two notches' worth.
+                new ShapeDef { Name = "Red-Hot",
+                    Description = "The bronze stays molten in the cracks for four seconds. There is no hold, but every weapon blow on that enemy spits sparks and deals 6 more for each notch that was spent. Pour, then press.",
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Molten, Seconds = 4f } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Molten, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 12f, Stagger = 0f, Stacks = 0 },
+                    } },
+                "Opens two shapes of Poured Bronze, chosen at any rest fire: Set, a crust your heavy blow shatters, or Red-Hot, bronze that burns under every blow.",
+                // NEEDS: the attacker's pour doubled (spell-windows). The reset is data: a pour cast within a second of a
+                // perfect guard starts no wait.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.InstantNext, Seconds = 1f } },
+                "Cast it within a second after a perfect guard, and the attacker's pour is doubled and Poured Bronze is ready again.",
+                learnEffects: new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Spend, Affliction = S, CountOnly = true },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Burst, PerStack = true, Radius = 0.6f, Damage = 12f, Stagger = 15f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Burst, Unseen = true, Radius = 0.6f, Damage = 10f, Stagger = 0f, Stacks = 0 },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Hold, Seconds = 0.8f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = S, Do = UpgradeAction.Spend, Affliction = S },
+                });
+
+            // The larger spell, as built: the phalanx hangs the blades at the shoulders, and they fly by themselves at the
+            // nearest enemy; a heavy blow sends all that remain. NEEDS: the twelve falling in a ring 4.5 m round you (8 damage
+            // under each) and standing, a light blow calling the nearest through its enemy, a notch every three (form-pieces,
+            // count-rules). Until then every blade notches.
+            SpellBranch.Add(to, E, GraveOfSwords, "Grave of Swords", SpellRole.Breaker, BranchPattern.MiddleB, CounterCut, SpellForms.Phalanx,
+                new SpellSpec { Count = 12, Seconds = 12f, Reach = 6f, Damage = 9f, Stagger = 6f, Stacks = 1, Speed = 16f },
+                "Twelve blades fall in a ring four and a half metres round you, 8 damage under each, and stand twelve seconds. Each light blow you land calls the nearest one through that enemy, 9 damage and 6 stagger, and a heavy blow calls all that remain. Every three add a notch. 50 mana.",
+                UpgradeIcons.Blade,
+                new Empower { Mana = 45f, Count = 16 },
+                "Grave of Swords costs 45 mana, not 50, and sixteen blades fall.",
+                // NEEDS: the blades standing in their ring and ringing in place of flying (form-pieces, shape-sets-aside).
+                // Until then the enemies within eight metres as it is cast ring for its twelve seconds under your blows.
+                new ShapeDef { Name = "Clashing Bronze",
+                    Description = "The blades do not fly; they ring. Each light blow you land makes the nearest standing blade ring, a sharp ripple three metres from it: 8 damage, 15 stagger and a notch to all it reaches. A heavy blow rings them all at once, and they fall. Every blow rings.",
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, Radius = 8f, State = new ConditionSpec { Id = Ringing, Seconds = 12f } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ringing, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 3f, Damage = 8f, Stagger = 15f, Affliction = S, Stacks = 1, Cooldown = 0.2f },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Ringing, By = StruckBy.Heavy, Do = UpgradeAction.Burst, At = EffectAt.Self, Radius = 4.5f, Damage = 16f, Stagger = 30f, Affliction = S, Stacks = 1, Cooldown = 1f },
+                    } },
+                // NEEDS: going to notched enemies first, a notch every third cut, and a heavy blow calling each home through
+                // what it passes (form-pieces, count-rules). Until then three helpers cut the nearest, and every cut notches.
+                new ShapeDef { Name = "The Tripods", Form = SpellForms.Minions,
+                    Description = "Three bronze tripods roll out, four blades on each, and go to notched enemies first, cutting twice a second: 9 damage, and a notch every third cut. A heavy blow you land calls each one back to you, and it throws its remaining blades through whatever it passes on the way.",
+                    Spell = new SpellSpec { Count = 3, Seconds = 6f, Interval = 0.5f, Damage = 9f, Stagger = 6f, Stacks = 1 } },
+                "Opens two shapes of Grave of Swords, chosen at any rest fire: Clashing Bronze, blades that ring under every blow, or The Tripods, bronze helpers that cut for you.",
+                // NEEDS: a finisher as the moment (finisher-only), only while the blades stand (while-spell-stands). Until
+                // then a heavy blow on an enemy that was within eight metres as it was cast gives the mana, once a cast.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, Radius = 8f, State = new ConditionSpec { Id = InTheGrave, Seconds = 12f } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = InTheGrave, By = StruckBy.Heavy, Do = UpgradeAction.Mana, Amount = 20f, Cooldown = 12f },
+                },
+                "A finisher looses every blade left, and 20 mana comes back to you.");
+
+            // Built by hand (WeaponCombo.SkillCostScale and SkillAtOnce, kept by PlayerUpgrades): for two seconds after a perfect guard the
+            // skill costs no mana and a press of heavy releases it at once; at any other time it costs half again as much.
+            to.Add(BranchPattern.Put(new Upgrade { Id = MastersAnswer, Name = "Master's Answer", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CounterCut }, Icon = UpgradeIcons.Star,
+                Description = "After a perfect guard, your weapon's skill is free and comes at once, with no time to charge. At any other time it costs more.",
+                Stats = new StatMod[0] },
+                BranchPattern.MiddleCrown));
+
+            // ---- The left bough: Guard. Meet the blow exactly.
             // NEAREST: the attacker is held for a moment (it cannot turn, nor move or strike) and blows on it are a little harder. Blows do not count as from behind.
-            to.Add(new Upgrade { Id = OpenLine, Name = "Open Line", Element = E, Kind = UpgradeKind.Major, Requires = new[] { ForgedAnswer }, X = -1.61f, Y = 4.2f, Icon = UpgradeIcons.Arrow,
+            to.Add(BranchPattern.Put(new Upgrade { Id = OpenLine, Name = "Open Line", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Root }, Icon = UpgradeIcons.Arrow,
                 Description = "A perfect guard throws the attacker's weapon wide. It is held still for a moment, and for that moment your weapon strikes 15% harder.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Hold, Seconds = 1.2f }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.15f, Seconds = 1.5f } } });
-            // NEEDS: a stat for the stagger a perfect guard throws back. A share of the weapon's stagger stands in.
-            to.Add(new Upgrade { Id = HardReturn, Name = "Hard Return", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { OpenLine }, X = -1.03f, Y = 5.78f, Icon = UpgradeIcons.Shield,
-                Description = "Every blow of your weapon breaks a little more balance.",
-                Stats = new[] { new StatMod(PlayerStat.StaggerDealt, 0.06f) } });
-            // GuardGrey: the grey share of a guarded blow.
-            to.Add(new Upgrade { Id = BracedFrame, Name = "Braced Frame", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { OpenLine }, X = -2.39f, Y = 5f, Icon = UpgradeIcons.Heart,
-                Description = "A blow held on your guard lets less through.",
-                Stats = new[] { new StatMod(PlayerStat.GuardGrey, -0.25f) } });
-            // The parry form turns the first blow only, not four, and its answer is a cone all round; it does not count as a perfect guard for other marks.
-            to.Add(new Upgrade { Id = CircleOfSteel, Name = "Circle of Steel", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { OpenLine }, X = -2.0f, Y = 6.0f, Icon = UpgradeIcons.Ring,
-                Description = "You stand with your blade raised for a breath. The first blow from any side is turned for nothing and answered with a cut all round you that notches. If nothing strikes, it is wasted.",
-                Form = "parry",
-                Spell = new SpellSpec { Cost = 40f, Seconds = 1.2f, Reach = 3.5f, Arc = 360f, Damage = 18f, Stagger = 40f, Stacks = 1 } });
-            to.Add(new Upgrade { Id = LongTemper, Name = "Long Temper", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { CircleOfSteel }, X = -2.48f, Y = 7.11f, Icon = UpgradeIcons.Hourglass,
-                Description = "Temper lasts longer.",
-                Stats = new[] { new StatMod(PlayerStat.SurgeSeconds, 0.3f) } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Hold, Seconds = 1.2f }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.15f, Seconds = 1.5f } } },
+                BranchPattern.LeftFoot));
+
+            // Rebuilt to its trees_b design (the built one, a lunging head of steel, was Devouring Maw again): the spikes form
+            // runs the blade's lane out along the ground, and what it struck going is struck again as it comes home. NEEDS: a
+            // turning blade drawn flying out and back to the hand (returning-blade).
+            SpellBranch.Add(to, E, ReturningEdge, "Returning Edge", SpellRole.Breaker, BranchPattern.LeftA, OpenLine, SpellForms.Spikes,
+                new SpellSpec { Reach = 8f, Speed = 16f, Count = 1, Radius = 0.75f, Damage = 12f, Stagger = 10f, Stacks = 1 },
+                "A turning blade a metre and a half across flies eight metres along your facing and back to your hand, drawing its lane on the ground: 12 damage and 10 stagger to each enemy it passes each way, and a notch on the first pass.",
+                UpgradeIcons.Spiral,
+                // NEEDS: 16 and 14 on the way home as well (empower-effects).
+                new Empower { Cooldown = 8f, Damage = 16f, Stagger = 14f },
+                "Returning Edge waits 8 seconds, not 9, and strikes for 16 damage and 14 stagger each way.",
+                // NEEDS: the blade's arrival as the moment the guard meets, three times at most (returning-blade). Until then a
+                // perfect guard throws a blade out and back, faster and harder, once in two seconds.
+                new ShapeDef { Name = "Bat It Home",
+                    Description = "Guard inside the perfect window as it arrives, and it goes out again faster and harder, at 1.4 times the speed and one and a half times the damage. Three times at most.",
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Projectile, Flight = Flight.Returning, Count = 1, Radius = 0.75f, Speed = 22f, Seconds = 0.7f, Damage = 18f, Stagger = 15f, Stacks = 0, Cooldown = 2f } } },
+                // NEEDS: the blade stopped 8 m out and called home by your next dodge, cutting everything between
+                // (returning-blade), and not coming back by itself (shape-sets-aside). Until then it spins where it stops, and
+                // comes home through what it struck going when its three seconds are up.
+                new ShapeDef { Name = "Through the Line",
+                    Description = "It does not come back by itself. It stops eight metres out and spins in place for three seconds, 8 damage to what touches it every 0.3 seconds. Your next dodge calls it home along the line, cutting everything between: 20 damage, 30 stagger and a notch. Put them between you and the blade.",
+                    Effects = new[]
+                    {
+                        // A line of one patch lies at the middle of its length: sixteen metres puts it eight out.
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 16f, Count = 1, Radius = 0.9f, Seconds = 3f, Interval = 0.3f, Damage = 8f, Stagger = 0f, Stacks = 0 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = OnTheLine, Seconds = 3f } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = OnTheLine, Do = UpgradeAction.Burst, Radius = 0.9f, Damage = 20f, Stagger = 30f, Affliction = S, Stacks = 1 },
+                    } },
+                "Opens two shapes of Returning Edge, chosen at any rest fire: Bat It Home, a blade your perfect guard sends out again, or Through the Line, a blade that waits out there for your dodge to call it home.",
+                // NEEDS: the catch as the moment (returning-blade). Until then a perfect guard ends its wait, once in nine seconds.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown, Cooldown = 9f } },
+                "Catch it on a perfect guard as it comes home, and Returning Edge is ready again at once.",
+                learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Radius = 0.75f, Delay = 1f, Damage = 12f, Stagger = 10f, Stacks = 0 } });
+
+            // The counter: the parry form turns the first blow and answers with a cut all round. NEEDS: the 5 s wait when nothing
+            // struck (missed-counter), and two blows turned with the Empower (parry-count).
+            SpellBranch.Add(to, E, CircleOfSteel, "Circle of Steel", SpellRole.Counter, BranchPattern.LeftB, OpenLine, SpellForms.Parry,
+                new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 360f, Damage = 14f, Stagger = 20f, Stacks = 1 },
+                "You raise the blade for a breath, unable to move. The first blow from any side is turned for nothing and answered with a cut all round you, three metres: 14 damage, 20 stagger and a notch. If nothing strikes, it waits only half as long.",
+                UpgradeIcons.Ring,
+                new Empower { Cooldown = 9f, Damage = 16f },
+                "Circle of Steel waits 9 seconds, not 10, turns two blows, and its answer strikes for 16.",
+                // NEEDS: the cut all round kept and only the attacker bound (attacker-of-turned-blow). Until then the answer is a
+                // cone at the one who struck, and what it strikes is bound; "passes any guard" is that it cannot raise one.
+                new ShapeDef { Name = "The Golden Chair", Form = SpellForms.Parry,
+                    Description = "A blow turned closes bands of gold round the attacker, a faint shimmer that turns bright as they lock. It is held two seconds, less for a god or an elite, notched twice, and your blows on it pass any guard.",
+                    Spell = new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 90f, Damage = 14f, Stagger = 20f, Stacks = 1 },
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Hold, Seconds = 2f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = GoldenChair, Seconds = 2f, Flags = ConditionFlags.CannotGuard } },
+                    } },
+                // NEEDS: every blow turned in 1.5 s ringing, four at most, each ring wider than the last (parry-count). Until then
+                // the first blow turned rings once.
+                new ShapeDef { Name = "Ringing Plate", Form = SpellForms.Parry,
+                    Description = "You stand as a struck plate. Every blow turned in a second and a half, four at most, rings: a sharp ripple to four metres, 8 damage, 20 stagger and a notch on all, each ring wider than the last. The more of them strike you, the better.",
+                    Spell = new SpellSpec { Seconds = 1.5f, Reach = 4f, Arc = 360f, Damage = 8f, Stagger = 20f, Stacks = 1 } },
+                "Opens two shapes of Circle of Steel, chosen at any rest fire: The Golden Chair, bands that bind the one who struck, or Ringing Plate, a ring for every blow turned.",
+                // NEEDS: a red attack as the blow turned (red-attack). Until then any blow turned gives the mana and ends its
+                // wait, once in twenty seconds.
+                new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.ResetCooldown, Cooldown = 20f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Mana, Amount = 15f, Cooldown = 20f },
+                },
+                "Turn a red attack, and 15 mana comes back to you and Circle of Steel is ready again at once.");
+
             // BESPOKE: a held guard blocks nothing; the perfect window is 0.28 s and may be pressed again after 0.2 s; each perfect guard deals a light blow to the attacker
-            // and counts as a blow landed. Until then: the longer window, a dearer plain guard, and a cut on the attacker with each perfect guard.
-            to.Add(new Upgrade { Id = EdgeGuard, Name = "Edge Guard", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CircleOfSteel }, X = -1.22f, Y = 7.29f, Icon = UpgradeIcons.Shield,
+            // and counts as a blow landed. Until then: the longer window, a dearer plain guard, and a cut on the attacker with each perfect guard. It grows from
+            // Circle of Steel's Learn, whose line passes clear, as the old tree had it.
+            to.Add(BranchPattern.Put(new Upgrade { Id = EdgeGuard, Name = "Edge Guard", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CircleOfSteel }, Icon = UpgradeIcons.Shield,
                 Description = "The perfect guard's moment is half again as long, and each one cuts the attacker and notches its armour. The dodge and a blow held on a plain guard cost half again as much stamina.",
                 Stats = new[]
                 {
                     new StatMod(PlayerStat.PerfectGuardWindow, 0.55f),
                     new StatMod(PlayerStat.StaminaCost, 0.5f),
                 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 12f, Stagger = 10f, Affliction = S, Stacks = 1 } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 12f, Stagger = 10f, Affliction = S, Stacks = 1 } } },
+                BranchPattern.LeftCrown));
 
-            // Middle bough: Edge.
-            // Built (PlayerCombat.CounterCut): a blow that lands on an enemy winding up or striking is critical. The design's 25% more stagger is not in it.
-            to.Add(new Upgrade { Id = CounterCut, Name = "Counter Cut", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Root }, X = 0f, Y = 2.9f, Icon = UpgradeIcons.Eye,
-                Description = "A blow that lands while an enemy is showing its own attack is critical.",
-                Stats = new StatMod[0] });
-            to.Add(new Upgrade { Id = DeepBite, Name = "Deep Bite", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { CounterCut }, X = 0.92f, Y = 4.86f, Icon = UpgradeIcons.Fang,
-                Description = "Each notch lets your weapon bite deeper still.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionPower, 0.25f) } });
-            to.Add(new Upgrade { Id = FinishingEdge, Name = "Finishing Edge", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { CounterCut }, X = -0.92f, Y = 4.85f, Icon = UpgradeIcons.Fist,
-                Description = "The last blow of a chain cuts deeper.",
-                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.12f, StatWhen.ChainEndBlow) } });
-            // NEAREST: the cone is thrown from the player through the target, not from the target.
-            to.Add(new Upgrade { Id = Splinter, Name = "Splinter", Element = E, Kind = UpgradeKind.Major, Requires = new[] { CounterCut }, X = 0f, Y = 4.7f, Icon = UpgradeIcons.Spike,
-                Description = "A blow on armour notched three deep throws splinters from you through it, and they cut and notch whoever stands behind.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Sundered, NeedsFull = true, Do = UpgradeAction.Cone, Reach = 5f, Arc = 60f, Damage = 8f, Stagger = 8f, Affliction = AfflictionKind.Sundered, Stacks = 1, Cooldown = 0.6f } } });
-            to.Add(new Upgrade { Id = CleanEdge, Name = "Clean Edge", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Splinter }, X = 0.75f, Y = 5.82f, Icon = UpgradeIcons.Eye,
-                Description = "Critical blows cut deeper.",
-                Stats = new[] { new StatMod(PlayerStat.CritDamage, 0.15f) } });
-            // NEEDS: an affliction that can be made to last for an enemy's life, and damage by the depth it carries. Here the finisher strikes again and notches to full.
-            to.Add(new Upgrade { Id = ShatterPoint, Name = "Shatter Point", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Splinter }, X = 0f, Y = 6.5f, Icon = UpgradeIcons.Burst,
-                Description = "A finisher on notched armour strikes a second time and notches it three deep.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Needs = S, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 20f, Stagger = 0f },
-                    new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Needs = S, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 3 },
-                } });
-            to.Add(new Upgrade { Id = SlowMending, Name = "Slow Mending", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { ShatterPoint }, X = 0.98f, Y = 7.2f, Icon = UpgradeIcons.Hourglass,
-                Description = "Notched armour takes longer to mend.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 0.5f) } });
-            // NEEDS: a spell that is a boon on the player counted in blows, and blows that pass a guard. Here the brand form sets the five blows on the enemy faced.
-            to.Add(new Upgrade { Id = Hone, Name = "Hone", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { ShatterPoint }, X = 0f, Y = 8.3f, Icon = UpgradeIcons.Blade,
-                Description = "You set a sign on the enemy you face. Each of your next five blows on it sets off a small burst that notches.",
-                Form = "brand",
-                Spell = new SpellSpec { Cost = 30f, Reach = 8f, Seconds = 12f, Count = 5, Radius = 1.5f, Damage = 6f, Stagger = 6f, Stacks = 1 } });
-            to.Add(new Upgrade { Id = BalancedBlade, Name = "Balanced Blade", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Hone }, X = 0.88f, Y = 9.08f, Icon = UpgradeIcons.Wing,
-                Description = "Swings cost less stamina.",
-                Stats = new[] { new StatMod(PlayerStat.AttackStamina, -0.1f) } });
-            // Built by hand (WeaponCombo.SkillCostScale and SkillAtOnce, kept by PlayerUpgrades): for two seconds after a perfect guard the
-            // skill costs no mana and a press of heavy releases it at once; at any other time it costs half again as much.
-            to.Add(new Upgrade { Id = MastersAnswer, Name = "Master's Answer", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { Hone }, X = -1.21f, Y = 8.99f, Icon = UpgradeIcons.Star,
-                Description = "After a perfect guard, your weapon's skill is free and comes at once, with no time to charge. At any other time it costs more.",
-                Stats = new StatMod[0] });
+            // ---- The right bough: Arsenal. Steel thrown, planted and called back.
+            to.Add(BranchPattern.Put(new Upgrade { Id = ForgedAnswer, Name = "Forged Answer", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Root }, Icon = UpgradeIcons.Blade,
+                Description = "A perfect guard forges a blade from the blow it turned. Up to three hang at your shoulder. Your next heavy blow sends them all.",
+                Tally = new TallySpec { Name = "Blades", Cap = 3 },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Bank, Count = 1 }, new UpgradeEffect { On = UpgradeTrigger.HeavyHit, SpendsAll = true, PerStack = true, Do = UpgradeAction.Projectile, Flight = Flight.Homing, Count = 1, Damage = 10f, Stagger = 12f, Speed = 16f, Affliction = S, Stacks = 0 } } },
+                BranchPattern.RightFoot));
 
-            // Right bough: Arsenal.
-            // NEEDS: thrown blades that stand in an enemy and a trigger that drives them. Here a heavy blow on notched armour strikes a second time.
-            to.Add(new Upgrade { Id = BuriedBlades, Name = "Buried Blades", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Root }, X = 1.21f, Y = 2.4f, Icon = UpgradeIcons.Target,
-                Description = "A heavy blow on notched armour strikes a second time, harder, and notches it again. Once a second at most.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = S, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 24f, Stagger = 30f, Affliction = S, Stacks = 1, Cooldown = 1f } } });
-            to.Add(new Upgrade { Id = TrueFlight, Name = "True Flight", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { BuriedBlades }, X = 0.78f, Y = 3.52f, Icon = UpgradeIcons.Arrow,
-                Description = "Conjured blades strike harder.",
-                Stats = new[] { new StatMod(PlayerStat.SpellDamage, 0.15f) } });
-            // The wait of this element's own base spell alone (SpellTimings.BaseCooldownShare), carried first or second.
-            to.Add(new Upgrade { Id = ReadySteel, Name = "Ready Steel", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { BuriedBlades }, X = 1.93f, Y = 3.22f, Icon = UpgradeIcons.Gem,
-                Description = "Flung Blade waits a fifth less between casts.",
-                Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) } });
-            // The arc strikes its first target again and does not weaken as it leaps.
-            to.Add(new Upgrade { Id = Ricochet, Name = "Ricochet", Element = E, Kind = UpgradeKind.Major, Requires = new[] { BuriedBlades }, X = 1.61f, Y = 4.2f, Icon = UpgradeIcons.Chain,
-                Description = "A spell that strikes an enemy sends a blade through it that springs on to the next enemy near, and then the next, notching each.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Arc, Damage = 9f, Stagger = 6f, Count = 2, Reach = 6f, Affliction = S, Stacks = 1, Cooldown = 0.3f } } });
-            to.Add(new Upgrade { Id = LongThrow, Name = "Long Throw", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { Ricochet }, X = 2.42f, Y = 5.01f, Icon = UpgradeIcons.Arrow,
-                Description = "Blades fly further and spring further.",
-                Stats = new[] { new StatMod(PlayerStat.SpellReach, 0.25f) } });
-            // BESPOKE: a great blade thrown 8 m out and back (12 damage, 10 stagger each way, a notch on the first pass); a guard in the perfect window as it returns sends it
-            // out again faster and half again as hard, three times at most. Until then: the lunging form down the same lane, struck once for both passes.
-            to.Add(new Upgrade { Id = ReturningEdge, Name = "Returning Edge", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { Ricochet }, X = 2.0f, Y = 6.0f, Icon = UpgradeIcons.Spiral,
-                Description = "A great head of steel lunges down a line before you. It carries along what it passes and bites hard where it ends.",
-                Form = "dragon",
-                Spell = new SpellSpec { Cost = 35f, Reach = 8f, Radius = 0.75f, Damage = 24f, Stagger = 20f, Stacks = 1, Speed = 14f } });
-            to.Add(new Upgrade { Id = PaidInBlows, Name = "Paid in Blows", Element = E, Kind = UpgradeKind.Minor, Requires = new[] { ReturningEdge }, X = 2.92f, Y = 6.75f, Icon = UpgradeIcons.Gem,
-                Description = "Blows on notched armour give more mana.",
-                Stats = new[] { new StatMod(PlayerStat.ManaFromBlows, 0.25f, AfflictionKind.Sundered) } });
-            // The phalanx form hangs the twelve at the shoulders, not in a ring in the ground, and they do not fall first.
-            to.Add(new Upgrade { Id = GraveOfSwords, Name = "Grave of Swords", Element = E, Kind = UpgradeKind.Spell, Requires = new[] { ReturningEdge }, X = 2.4f, Y = 7.8f, Icon = UpgradeIcons.Blade,
-                Description = "Twelve blades hang behind your shoulders. One after another they fly at the nearest enemy, and a heavy blow that lands sends all that remain at the one it struck. 50 mana.",
-                Form = "phalanx",
-                Spell = new SpellSpec { Cost = 50f, Count = 12, Seconds = 12f, Reach = 6f, Damage = 9f, Stagger = 6f, Stacks = 1, Speed = 16f } });
-            // BESPOKE: conjured blades never fade (sixteen at most); lighting the surge calls every one home in a straight line through whatever stands between: 12 damage,
-            // 8 stagger and a notch each, and each that arrives adds 0.4 s to the surge. Until then: lighting the surge throws a fan of blades out and back, and the surge costs more and lasts a little longer.
-            to.Add(new Upgrade { Id = AllBladesHome, Name = "All Blades Home", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { GraveOfSwords }, X = 3.48f, Y = 8.78f, Icon = UpgradeIcons.Spiral,
-                Description = "Beginning Temper throws five blades out in a fan and calls them back, and they cut and notch what they pass. Temper costs more and lasts a little longer.",
-                Stats = new[]
+            // Flung Blade, the base spell: cast by Metal's kit, so its Learn carries no form; its shapes add to the kit's blade.
+            SpellBranch.Add(to, E, FlungBlade, "Flung Blade", SpellRole.Opener, BranchPattern.RightA, Root, "", null,
+                "Metal's own spell, given with the element. A blade flies into the enemy faced within nine metres, 4 damage, and stands in it six seconds. Your next weapon blow on that enemy drives it in: 12 damage, 15 stagger, a notch and a burst of sparks, and it flies back to your hand, cutting the lane for a third as much.",
+                UpgradeIcons.Blade,
+                // Buried Blades, once a major, folded in here. NEEDS: 16 when driven, up to three blades standing in one enemy
+                // and a heavy blow driving them all (base-spell-marks, planted-blades). The base spell is cast by its kit,
+                // which takes only the Empower's wait.
+                new Empower { Cooldown = 5f, Damage = 16f },
+                "Flung Blade waits 5 seconds, not 6, and drives in for 16. Up to three blades may stand in one enemy, and a heavy blow drives them all.",
+                // NEEDS: three blades each standing in a different enemy, glowing as they cool (planted-blades). Until then two
+                // more blades fly in a fan beside the kit's and cut what they pass, and the kit's blade driven within 2 s
+                // strikes a second time.
+                new ShapeDef { Name = "Cherry Red",
+                    Description = "Three red-hot blades fly in a fan, each standing in a different enemy. They glow cherry red and cool to black over six seconds, and one driven while still red, in its first two seconds, strikes double. You throw wide and then hurry.",
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Projectile, Flight = Flight.Straight, Count = 2, Radius = 0.6f, Speed = 18f, Seconds = 0.5f, Damage = 4f, Stagger = 0f, Affliction = S, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = CherryRed, Seconds = 2f, EndsWith = ConditionBlow.Weapon } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = CherryRed, By = StruckBy.Weapon, Do = UpgradeAction.Burst, Radius = 1f, Damage = 12f, Stagger = 15f, Stacks = 0 },
+                    } },
+                // NEEDS: the nail staying and driven deeper by each heavy blow, 12, 16 and 24 (planted-blades), and the third
+                // counted among heavy blows alone (count-rules). Until then the kit's blade flies, every heavy blow on the nailed
+                // enemy drives for 16, and a third weapon blow that is heavy brings it to its knees.
+                new ShapeDef { Name = "The Nail",
+                    Description = "One long bronze nail is driven low into the enemy, and it does not come back. Each heavy blow on that enemy drives it deeper: 12, then 16, then 24. At the third it kneels for a second and a half, less for a god or an elite, and golden ichor runs out round it, a pool three metres across for four seconds that bites for 3 and notches. Three heavies on one enemy.",
+                    Effects = new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Nailed, Seconds = 10f } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Nailed, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 16f, Stagger = 15f, Affliction = S, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Nailed, By = StruckBy.Heavy, AtCount = 3, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Kneeling, Seconds = 1.5f, Flags = ConditionFlags.Down } },
+                        new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Nailed, By = StruckBy.Heavy, AtCount = 3, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 4f, Interval = 1f, Damage = 3f, Stagger = 0f, Affliction = S, Stacks = 1 },
+                    } },
+                "Opens two shapes of Flung Blade, chosen at any rest fire: Cherry Red, a fan of blades to drive while they glow, or The Nail, one nail three heavy blows drive home.",
+                // NEEDS: only the blades standing in the attacker driven (planted-blades). Until then a perfect guard on a
+                // notched attacker drives one blade's worth into it.
+                new[]
                 {
-                    new StatMod(PlayerStat.SurgeCost, 0.375f),
-                    new StatMod(PlayerStat.SurgeSeconds, 0.2f),
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = S, Do = UpgradeAction.Burst, Radius = 0.8f, Damage = 12f, Stagger = 15f, Affliction = S, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.ResetCooldown },
                 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Projectile, Flight = Flight.Returning, Count = 5, Damage = 12f, Stagger = 8f, Speed = 14f, Seconds = 1.2f, Affliction = S, Stacks = 1 } } });
+                "A perfect guard drives every blade standing in the attacker at once, and Flung Blade is ready again.");
+
+            // NEEDS: every reaction with Sundered in it striking 25% harder on the notched (reaction-stats), and the notch laid
+            // on what the reaction struck rather than three metres round it (reaction-struck).
+            to.Add(BranchPattern.Put(new Upgrade { Id = EveryCrackRings, Name = "Every Crack Rings", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { ForgedAnswer }, Icon = UpgradeIcons.Burst,
+                Description = "Every reaction Sundered takes part in rings out like struck plate. It notches everything it reaches, and strikes 25% harder on the notched.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = S, Do = UpgradeAction.Afflict, Affliction = S, Stacks = 1, Radius = 3f } } },
+                BranchPattern.RightMiddle));
+
+            // The movement spell: the drill form carries you through what lies on the line and strikes it. NEEDS: flying to a
+            // blade of yours within 12 m (a Flung Blade standing in an enemy or the ground, a blade of Grave of Swords),
+            // untouchable for the flight, and driving that blade as you arrive (planted-blades). Until then it is the throw
+            // with no blade out: six metres ahead.
+            SpellBranch.Add(to, E, ToTheBlade, "To the Blade", SpellRole.Movement, BranchPattern.RightB, EveryCrackRings, SpellForms.Drill,
+                new SpellSpec { Reach = 6f, Radius = 1f, Count = 1, Damage = 10f, Stagger = 15f, Stacks = 1, Speed = 24f },
+                "You fly along a line of sparks to a blade of yours within twelve metres, a Flung Blade standing in an enemy or the ground or a blade of Grave of Swords, untouchable for the quarter second of the flight. What lies between is cut, 10 damage, 15 stagger and a notch, and you arrive driving that blade. With no blade out, you throw one six metres ahead into the ground and go to it.",
+                UpgradeIcons.Arrow,
+                // NEEDS: fourteen metres to a blade (planted-blades).
+                new Empower { Cooldown = 7f },
+                "To the Blade waits 7 seconds, not 8, and reaches a blade fourteen metres off.",
+                // NEEDS: tripped as a fall, a knock-down for each crossing (ground-states). Until then the chain is ground along
+                // your path that notches and staggers what stands on it.
+                new ShapeDef { Name = "Chain",
+                    Description = "A bronze chain stays stretched along the line you flew for three seconds. An enemy that crosses it is notched and tripped, 20 stagger. Your path becomes a tripwire.",
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Line, Reach = 6f, Count = 5, Radius = 0.6f, Seconds = 3f, Interval = 1f, Damage = 0f, Stagger = 20f, Affliction = S, Stacks = 1 } } },
+                // NEEDS: the flight back as a second press within 2 s of arriving (second-press). Until then what the flight cut
+                // is cut again a second later.
+                new ShapeDef { Name = "There and Back",
+                    Description = "Within two seconds of arriving, press again to fly back along the same line, cutting it a second time. In and out.",
+                    Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Radius = 0.8f, Delay = 1f, Damage = 10f, Stagger = 15f, Affliction = S, Stacks = 1 } } },
+                "Opens two shapes of To the Blade, chosen at any rest fire: Chain, a tripwire left along your flight, or There and Back, a flight out and home again.",
+                // NEEDS: the shared movement rule's timing, cast as a blow would land and untouchable from the press
+                // (their-blow-moment). Until then a cast within a second after a perfect dodge starts no wait.
+                new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.InstantNext, Seconds = 1f } },
+                "Cast it in the perfect dodge's moment, and you are untouchable from the press and To the Blade is ready again.");
+
+            // NEEDS: a guard that never breaks, what the stamina cannot pay coming through as grey health (guard-holds). Until
+            // then the guard costs half the stamina; you take 15% less, and every blow held on the guard notches and sparks.
+            to.Add(BranchPattern.Put(new Upgrade { Id = TheGuardHolds, Name = "The Guard Holds", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { EveryCrackRings }, Icon = UpgradeIcons.Shield,
+                Description = "All in on Metal only. Your guard never breaks: a blow your stamina cannot pay for is held anyway, and what it cannot pay comes through as grey health. Every blow held on your guard notches the attacker and throws sparks into it. You take 15% less from everything. Red attacks still need a dodge or a perfect guard.",
+                Stats = new[] { new StatMod(PlayerStat.DamageTaken, -0.15f), new StatMod(PlayerStat.GuardStamina, -0.5f) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 4f, Stagger = 0f, Affliction = S, Stacks = 1, Cooldown = 0.2f } } },
+                BranchPattern.RightCrown));
 
             // BESPOKE (built): HangingSwordsForm; the held guard is perfect through the window made as long as the surge.
-            to.Add(new Upgrade { Id = HangingSwords, Name = "Hanging Swords", Element = E, Kind = UpgradeKind.Signature, X = 0f, Y = 12f, Icon = UpgradeIcons.Crown,
+            to.Add(BranchPattern.Put(new Upgrade { Id = HangingSwords, Name = "Hanging Swords", Element = E, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
                 Description = "While Temper lasts, every blow you hold on your guard is a perfect guard, and a sword is forged above the one who struck, up to eight. When Temper ends, they fall.",
                 Stats = new[] { new StatMod(PlayerStat.PerfectGuardWindow, 200f, StatWhen.Surge) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, While = StatWhen.Surge, Do = UpgradeAction.Mana, Amount = 5f, Cooldown = 0.3f }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.Surge, Do = UpgradeAction.Mana, Amount = 5f, Cooldown = 0.3f }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.HangingSwords, Spell = new SpellSpec { Cost = 0f, Count = 8, Damage = 16f, Stagger = 20f, Radius = 1.5f, Stacks = 1 } } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, While = StatWhen.Surge, Do = UpgradeAction.Mana, Amount = 5f, Cooldown = 0.3f }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, While = StatWhen.Surge, Do = UpgradeAction.Mana, Amount = 5f, Cooldown = 0.3f }, new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.HangingSwords, Spell = new SpellSpec { Cost = 0f, Count = 8, Damage = 16f, Stagger = 20f, Radius = 1.5f, Stacks = 1 } } } },
+                BranchPattern.Gift));
         }
     }
 }
