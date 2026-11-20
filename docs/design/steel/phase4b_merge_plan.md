@@ -23,6 +23,8 @@ named marks and pieces in the third column went from about 928 to about 880.
 | `4ec7497` | 3 | Adds the duo-surge slot (`DuoSurge`, `Upgrade.Surge`, `PlayerElement.WearDuoSurge`, `HandRules.CanWear`) and the nine duo surges. |
 | `2b52de6` | 4 | Adds the form pieces: second presses (`Upgrade.Presses`), `SwapPlaces`, `StepBack`, `Untouchable` and `ClearCount`. Finishes Three Weasels and Under the Black Water. |
 | `83dde33` | review | Fixes from a code review, and adds `AgentScripts/Phase4bProbe.cs`. |
+| `b8e7c17` | docs | This plan, and the pass recorded in `phase4_progress.md`. |
+| `a38e6db` | 6 | Indrawn Breath and Ski Run grow from Hammer Down and Clean Break, so the ring check passes (RING OK). |
 
 ## Before merging
 
