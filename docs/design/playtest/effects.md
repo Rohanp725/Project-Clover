@@ -1233,6 +1233,8 @@ Group: Reactions
 
 **What sets it off.** A Mark landing on a Unsteady enemy, or Unsteady on a Marked one.
 
+**Its shapes.** With the Shape mark of Light and Wind's duo branch (Golden Feathers: Eagle's Sight or Wingbeat, 3 Shards, in the heart of the chart) and both carried, Golden Feathers wears the shape chosen at a rest fire instead. Eagle's Sight: no feathers; for 4 s your next weapon blow on it is critical and cuts 10 more. Wingbeat: no feathers fly; everything within 3 m of it is thrown 3 m away from it and Marked.
+
 **How to use it.** Stand so the others are behind it: they are Marked for your critical blows.
 
 **How it looks.** Its name over the enemy, then the feathers landing beyond it. Not yet: the feathers fanned across 40 degrees, each stopping at the first it touches.
