@@ -281,6 +281,29 @@ namespace Clover.Tests
             if (checkedPrefabs == 0) Assert.Ignore("No weapon prefab has been built yet; run Clover > Weapons > Build Weapon Prefabs.");
         }
 
+        [Test]
+        public void ABuiltPointOrHeadRunsAlongItsHaft()
+        {
+            // A thrust follows the shaft: a line across a spear's flat leaf or the sunspear's disc zigzags the trail.
+            int checkedLines = 0;
+            foreach (var spec in WeaponBuilder.Specs)
+            {
+                if (spec.Worn != null || (spec.BladeKind != BladeKind.Point && spec.BladeKind != BladeKind.Head)) continue;
+                var prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{WeaponBuilder.Folder}/{spec.Carry}/{spec.Carry}.prefab");
+                if (prefab == null) continue;
+                foreach (var line in prefab.GetComponents<BladeLine>())
+                {
+                    checkedLines++;
+                    var points = line.Spec.Points;
+                    Vector3 along = points[points.Length - 1] - points[0];
+                    Assert.Greater(along.z, along.magnitude * 0.98f, $"{spec.Carry}: its line {points[0]} to {points[points.Length - 1]} runs along +Z");
+                    foreach (var point in points)
+                        Assert.Less(new Vector2(point.x - points[0].x, point.y - points[0].y).magnitude, 0.02f, $"{spec.Carry}: {point} is off the line's axis");
+                }
+            }
+            if (checkedLines == 0) Assert.Ignore("No weapon prefab has been built yet; run Clover > Weapons > Build Weapon Prefabs.");
+        }
+
         // ---- The looks.
 
         [Test]

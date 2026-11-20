@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-5717039021023927575
+--- !u!114 &-3170144307557046845
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -28,7 +28,7 @@ MonoBehaviour:
   saturation:
     m_OverrideState: 1
     m_Value: 4
---- !u!114 &-2482247190603693171
+--- !u!114 &-2849307664139640523
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}
@@ -63,10 +63,10 @@ MonoBehaviour:
   m_Name: SunsetProfile
   m_EditorClassIdentifier: Unity.RenderPipelines.Core.Runtime::UnityEngine.Rendering.VolumeProfile
   components:
-  - {fileID: -5717039021023927575}
-  - {fileID: -2482247190603693171}
-  - {fileID: 1867291467925596002}
---- !u!114 &1867291467925596002
+  - {fileID: -3170144307557046845}
+  - {fileID: -2849307664139640523}
+  - {fileID: 7766031340636999929}
+--- !u!114 &7766031340636999929
 MonoBehaviour:
   m_ObjectHideFlags: 3
   m_CorrespondingSourceObject: {fileID: 0}

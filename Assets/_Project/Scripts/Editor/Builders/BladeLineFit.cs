@@ -33,6 +33,11 @@ namespace Clover.EditorTools
                 // The head is the slot's mass at the far end: a butt cap in the same slot at the other end is no part of it.
                 float far = cloud.Max(point => point.z);
                 cloud = cloud.Where(point => point.z >= far - 0.6f).ToList();
+                // Nor is the collar where it meets the haft: the head is what stands out wide of the axis (the hammer's
+                // block is 0.18 m out, its socket 0.03 m), so only the points out past half the widest are kept.
+                float widest = cloud.Max(point => Mathf.Max(Mathf.Abs(point.x), Mathf.Abs(point.y)));
+                var wide = cloud.Where(point => Mathf.Max(Mathf.Abs(point.x), Mathf.Abs(point.y)) >= widest * 0.5f).ToList();
+                if (wide.Count >= 2) cloud = wide;
             }
             if (spec.BladeKind == BladeKind.Stave)
             {
@@ -59,7 +64,9 @@ namespace Clover.EditorTools
             bool hasNotes = BladeLines.TryGet(spec.Carry, nth, out var noted);
             var points = new Vector3[3];
             int count = 0;
-            if (spec.BladeKind == BladeKind.Head)
+            // A head and a point run along the haft through their middle: corner to corner would lie across a hammer's
+            // block, a spear's flat leaf or the sunspear's disc, not along the thrust.
+            if (spec.BladeKind == BladeKind.Head || spec.BladeKind == BladeKind.Point)
             {
                 if (cloud.Count > 0)
                 {
@@ -110,7 +117,9 @@ namespace Clover.EditorTools
             var cloud = new List<Vector3>();
             foreach (var renderer in root.GetComponentsInChildren<Renderer>(true))
             {
-                Mesh mesh = renderer is SkinnedMeshRenderer skinned ? skinned.sharedMesh : renderer.GetComponent<MeshFilter>()?.sharedMesh;
+                // A line renderer (the bow's drawn string) has no mesh to measure; Unity's stand-in null defeats ?. on GetComponent.
+                Mesh mesh = renderer is SkinnedMeshRenderer skinned ? skinned.sharedMesh
+                    : renderer.TryGetComponent<MeshFilter>(out var filter) ? filter.sharedMesh : null;
                 if (mesh == null) continue;
                 var materials = renderer.sharedMaterials;
                 var vertices = mesh.vertices;

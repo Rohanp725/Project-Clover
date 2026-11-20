@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 179187134486424773}
+  - component: {fileID: 2983238702852241281}
   m_Layer: 0
   m_Name: hammer
   m_TagString: Untagged
@@ -32,6 +33,27 @@ Transform:
   - {fileID: 3450555462224798027}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2983238702852241281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482617376879964685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55ebd3ed328a99b48a84fa97e363ec94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Swings.BladeLine
+  line:
+    Carry: hammer
+    Part: head
+    Kind: 2
+    Points:
+    - {x: 0.00000008940697, y: 0.02000013, z: 0.89999986}
+    - {x: 0.00000008940697, y: 0.02000013, z: 1.26}
+    EdgeSide: {x: 0, y: -1, z: 0}
+    Thickness: 0.21
 --- !u!1001 &2911696543164401312
 PrefabInstance:
   m_ObjectHideFlags: 0

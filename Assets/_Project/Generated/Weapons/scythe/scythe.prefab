@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4467905055773735316}
+  - component: {fileID: 6548509242110986490}
   m_Layer: 0
   m_Name: scythe
   m_TagString: Untagged
@@ -32,6 +33,28 @@ Transform:
   - {fileID: 229849581669897913}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6548509242110986490
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4343695909695140957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55ebd3ed328a99b48a84fa97e363ec94, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Clover.Runtime::Clover.Player.Swings.BladeLine
+  line:
+    Carry: scythe
+    Part: edge
+    Kind: 0
+    Points:
+    - {x: -0.007999943, y: 0.11035949, z: 0.6582224}
+    - {x: -0.007999959, y: -0.5581751, z: 0.47176298}
+    - {x: 0.007999998, y: -0.8942057, z: -0.02891618}
+    EdgeSide: {x: 0, y: 0.53, z: -0.85}
+    Thickness: 0.12
 --- !u!1001 &340636980658942290
 PrefabInstance:
   m_ObjectHideFlags: 0
