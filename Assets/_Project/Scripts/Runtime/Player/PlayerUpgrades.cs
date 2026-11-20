@@ -1144,10 +1144,20 @@ namespace Clover.Player
         // A blow drawn by its reaction's own look throws no hit art of its element (Sickle Wind's whirl threw a wind strike's
         // white crescents at every enemy every bite, the film of 2026-11-20), and the body it lands on flashes in the
         // element's own hue at the softer strength, not the plain blow's white (its seven bites flashed four soldiers white).
+        private static readonly Color SteelFlash = new Color(0.3f, 0.45f, 0.8f);
+
         private static SpellBlow Unseen(SpellBlow blow, bool unseen)
         {
             blow.Unseen |= unseen;
-            if (unseen && blow.Struck.a <= 0f) blow.Struck = new Color(blow.Tint.r, blow.Tint.g, blow.Tint.b, 1f);
+            if (unseen && blow.Struck.a <= 0f)
+            {
+                // A grey element (Sundered's steel, 0.78, 0.8, 0.88) lit to the flash's brightness is white: Sickle Wind's
+                // seven bites flashed five soldiers white again and again. A grey tint flashes a steel blue instead.
+                Color tint = blow.Tint;
+                float most = Mathf.Max(tint.r, Mathf.Max(tint.g, tint.b)), least = Mathf.Min(tint.r, Mathf.Min(tint.g, tint.b));
+                if (most - least < 0.2f) tint = SteelFlash;
+                blow.Struck = new Color(tint.r, tint.g, tint.b, 1f);
+            }
             return blow;
         }
 
