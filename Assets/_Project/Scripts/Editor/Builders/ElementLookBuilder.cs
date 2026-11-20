@@ -46,7 +46,40 @@ namespace Clover.EditorTools
         {
             ["turned_to_stone"] = 3.5f,
             ["venom_rime"] = 4.5f,
+            // Black Chain binds the two for 5 s (Reactions.Near): the chain stays drawn between them as long.
+            ["black_chain"] = 5f,
         };
+
+        /// <summary>Reactions whose hold keeps their look on every body it reaches, not only the one struck: both ends of Black Chain's chain.</summary>
+        public static readonly HashSet<string> HeldOnEveryBody = new HashSet<string> { "black_chain" };
+
+        /// <summary>
+        /// Ribbons drawn as a chain of links instead of a smooth tube, by "slug|material": Black Chain's chain (the owner,
+        /// 2026-11-19: "I dont see the black chain at all in the gif, it should be a chain in pure black binding two enemies
+        /// together"). Links big enough to read from the game camera: length, width and the thickness of the iron, metres.
+        /// </summary>
+        public static readonly Dictionary<string, Vector3> ChainLinks = new Dictionary<string, Vector3>
+        {
+            ["black_chain|r4_chain"] = new Vector3(0.34f, 0.2f, 0.045f),
+        };
+
+        /// <summary>
+        /// Kit pieces one look leaves out, by "slug|kit object", where the builder draws them its own way: Black Chain's
+        /// straight kit chain, 1 m of thin links aimed from the wound, which ran behind the struck enemy's health bar
+        /// (its film of 2026-11-20); the chain is drawn instead as a span of links between the two bodies (<see cref="ChainSpans"/>).
+        /// </summary>
+        public static readonly HashSet<string> LeftOut = new HashSet<string> { "black_chain|vfxr4_chain" };
+
+        /// <summary>
+        /// Chains drawn from the struck body to another, by slug: (the other body's index, the height its ends wrap the
+        /// bodies at, how far its middle arcs up above them, when it whips out and when it has reached). The ends sit at
+        /// chest height, inside the recipe's wraps; the span arcs up between the two, where no health bar stands.
+        /// </summary>
+        public static readonly Dictionary<string, (int body, float height, float arc, float from, float reached)> ChainSpans =
+            new Dictionary<string, (int, float, float, float, float)>
+            {
+                ["black_chain"] = (1, 1.12f, 0.75f, 0.3f, 0.5f),
+            };
 
         /// <summary>The reactions built from combos 4: all 55, each in its own bespoke look (groups A to F of the recipe).</summary>
         public static readonly string[] ReactionsBuilt =
@@ -672,7 +705,7 @@ namespace Clover.EditorTools
             // Where this look's body stood from the main body's (or the player's), for the game to find the real one there.
             if (lists.Reactions && bodyAt.Count > 0) made.FromMain = bodyFrom - bodyAt[0];
             // A reaction whose doing outlasts its look keeps it standing on the body struck as long (ReactionHolds).
-            if (lists.Reactions && onBody == 0 && ReactionHolds.TryGetValue(slug, out float hold)) made.Hold = hold;
+            if (lists.Reactions && (onBody == 0 || onBody > 0 && HeldOnEveryBody.Contains(slug)) && ReactionHolds.TryGetValue(slug, out float hold)) made.Hold = hold;
             // The way the recipe's player faced: toward the main body.
             if (look.TryGetValue("player", out var playerValue) && playerValue is Dictionary<string, object> player && bodyAt.Count > 0)
             {
@@ -694,6 +727,10 @@ namespace Clover.EditorTools
                     bool onPlayer = motion.TryGetValue("on_player", out var flag) && flag is bool yes && yes;
                     string placementHere = instance.Count > 4 ? instance[4] as string : "b";
                     Vector3 position = Vec(instance[1], Vector3.zero);
+                    Vector3 turned = Vec(instance[2], Vector3.zero);
+                    string pieceName = instance[0] as string ?? "";
+                    if (LeftOut.Contains(slug + "|" + kitObject)) continue;
+                    int restagedBody = Restage(slug, pieceName, bodyAt.Count > 0 ? bodyAt[0] - playerAt : Vector3.forward, ref position, ref turned, ref motion);
                     if (lists.Reactions)
                     {
                         // A reaction's piece belongs to the player's look or a body's, never to both.
@@ -709,7 +746,8 @@ namespace Clover.EditorTools
                     if (motion.TryGetValue("follow_body", out var follow) && follow is double followed && (int)followed != onBody) continue;
                     // A group of one is a single piece (a rust segment, "rust1"): its number is not a body's.
                     // A look with no bodies (a brazier's) keeps every piece.
-                    if (!onPlayer && bodyAt.Count > 0 && (instances.Count > 1 ? BodyOf(instance[0] as string, bodyAt, judged) : Nearest(bodyAt, judged)) != onBody) continue;
+                    int pieceBody = restagedBody >= 0 ? restagedBody : instances.Count > 1 ? BodyOf(pieceName, bodyAt, judged) : Nearest(bodyAt, judged);
+                    if (!onPlayer && bodyAt.Count > 0 && pieceBody != onBody) continue;
                     var window = Window(motion);
                     float show = window.x - shift, hide = window.y >= 9f ? 9f : window.y - shift;
                     // The piece about its own anchor: the player for the player's look, else its body.
@@ -753,7 +791,7 @@ namespace Clover.EditorTools
                         lists.Missing.Add($"{slug}: {kitObject} ({kit})");
                         continue;
                     }
-                    var rotation = Quaternion.Euler(Vec(instance[2], Vector3.zero));
+                    var rotation = Quaternion.Euler(turned);
                     var scale = Vec(instance[3], Vector3.one);
                     if (LookScales.TryGetValue(slug + "|" + kitObject, out float resize)) scale *= resize;
                     if (LookLifts.TryGetValue(slug + "|" + kitObject, out float lift)) position.y += lift;
@@ -804,7 +842,9 @@ namespace Clover.EditorTools
                 }
             }
 
-            if (look.TryGetValue("ribbons", out var ribbonValue) && ribbonValue is List<object> ribbons)
+            var ribbons = new List<object>();
+            if (look.TryGetValue("ribbons", out var ribbonValue) && ribbonValue is List<object> recipeRibbons) ribbons.AddRange(recipeRibbons);
+            if (lists.Reactions && ChainSpans.TryGetValue(slug, out var span) && span.body < bodyAt.Count) ribbons.Add(ChainSpan(slug, span, bodyAt));
             {
                 foreach (Dictionary<string, object> ribbon in ribbons)
                 {
@@ -849,7 +889,10 @@ namespace Clover.EditorTools
                     float through = jagged ? 1f : 0.45f;
                     // A look's own paint for the ribbon's material where it has one (The Bolt Runs True's bolt).
                     var paint = PaintOf(LookPaints.ContainsKey(slug + "|" + material) ? slug + "|" + material : material);
-                    var mesh = RibbonMesh($"look_{key}_{lists.Parts.Count - made.FirstPart:00}_{Text(ribbon, "object")}", points, width, Text(ribbon, "radius_profile"), taper, jagged, through, paint.Colour);
+                    string meshName = $"look_{key}_{lists.Parts.Count - made.FirstPart:00}_{Text(ribbon, "object")}";
+                    var mesh = ChainLinks.TryGetValue(slug + "|" + material, out var link)
+                        ? ChainMesh(meshName, points, link.x, link.y, link.z, paint.Colour)
+                        : RibbonMesh(meshName, points, width, Text(ribbon, "radius_profile"), taper, jagged, through, paint.Colour);
                     AssetDatabase.AddObjectToAsset(mesh, lists.Target);
                     // The solid a ribbon is drawn in, as for pieces: SolidOf first (the curse's chain in the dark solid).
                     string owner = SolidOf.TryGetValue(material, out string ribbonSolid) ? ribbonSolid : ReactionArtBuilder.ElementOf(material, element + "_" + element);
@@ -1012,6 +1055,186 @@ namespace Clover.EditorTools
         {
             float t2 = t * t, t3 = t2 * t;
             return 0.5f * (2f * p1 + (p2 - p0) * t + (2f * p0 - 5f * p1 + 4f * p2 - p3) * t2 + (3f * p1 - p0 - 3f * p2 + p3) * t3);
+        }
+
+        /// <summary>
+        /// A chain's span from the struck body (its look's anchor) to another as a ribbon of the recipe's shape, so it is
+        /// built, drawn on and inked as the recipe's ribbons are: its ends at chest height just inside the wraps, its middle
+        /// arced up between the two bodies, whipping out from the struck one and staying while the look is kept.
+        /// </summary>
+        private static Dictionary<string, object> ChainSpan(string slug, (int body, float height, float arc, float from, float reached) span, List<Vector3> bodyAt)
+        {
+            Vector3 to = bodyAt[span.body] - bodyAt[0];
+            to.y = 0f;
+            Vector3 way = to.sqrMagnitude > 0.0001f ? to.normalized : Vector3.forward;
+            // The recipe's wraps lie about 0.36 m round each chest: the span starts and ends just inside them.
+            Vector3 start = way * 0.3f + Vector3.up * span.height, end = to - way * 0.3f + Vector3.up * span.height;
+            var points = new List<object>();
+            const int Count = 14;
+            for (int i = 0; i <= Count; i++)
+            {
+                float t = i / (float)Count;
+                Vector3 p = Vector3.Lerp(start, end, t) + Vector3.up * (span.arc * 4f * t * (1f - t));
+                points.Add(new List<object> { (double)p.x, (double)p.y, (double)p.z });
+            }
+            return new Dictionary<string, object>
+            {
+                ["object"] = slug + "_span", ["kind"] = "procedural_ribbon", ["centre"] = "body 0", ["width_m"] = 0.2,
+                ["radius_profile"] = "flat", ["material"] = "r4_chain", ["ink"] = true, ["points"] = points,
+                ["motion"] = new Dictionary<string, object>
+                {
+                    ["verb"] = "ribbon_draw", ["note"] = "the chain whips out of the struck one to the other and binds them",
+                    ["visible"] = new List<object> { (double)span.from, 9.0 },
+                    ["draw_on"] = new List<object> { new List<object> { (double)span.from, 0.0, "linear" }, new List<object> { (double)span.reached, 1.0, "out" } },
+                    ["erase"] = new List<object>(),
+                },
+            };
+        }
+
+        /// <summary>
+        /// A chain of oval links along a ribbon's points (metres about its centre), each link turned a quarter about the
+        /// line from the one before, as iron links hang: <paramref name="length"/> and <paramref name="width"/> the link's
+        /// outside, <paramref name="iron"/> the thickness of its bar. Laid out as a ribbon is (u from the tail, 0, to the
+        /// head, 1, by length, for Clover/Spell's draw clip; uv1 the normals the ink is pushed along), so it whips out and
+        /// carries its rim as the recipe's ribbons do.
+        /// </summary>
+        public static Mesh ChainMesh(string name, List<Vector3> points, float length, float width, float iron, Color colour)
+        {
+            if (points.Count < 2) points = new List<Vector3> { Vector3.zero, Vector3.up * 0.1f };
+            var line = new List<Vector3>();
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                Vector3 p0 = points[Mathf.Max(0, i - 1)], p1 = points[i], p2 = points[i + 1], p3 = points[Mathf.Min(points.Count - 1, i + 2)];
+                for (int s = 0; s < RibbonSteps * 2; s++) line.Add(CatmullRom(p0, p1, p2, p3, s / (float)(RibbonSteps * 2)));
+            }
+            line.Add(points[points.Count - 1]);
+            var along = new float[line.Count];
+            for (int i = 1; i < line.Count; i++) along[i] = along[i - 1] + Vector3.Distance(line[i - 1], line[i]);
+            float total = Mathf.Max(0.0001f, along[line.Count - 1]);
+            // Links overlap by their bar at each end, as a chain's do.
+            float pitch = Mathf.Max(0.05f, length - 2f * iron);
+            int links = Mathf.Max(2, Mathf.RoundToInt(total / pitch));
+            float step = total / links;
+            float halfLong = length * 0.5f - iron, halfWide = width * 0.5f - iron;
+            const int Around = 14;
+
+            var vertices = new List<Vector3>(links * Around * RibbonSides);
+            var normals = new List<Vector3>(vertices.Capacity);
+            var uvs = new List<Vector2>(vertices.Capacity);
+            var colours = new List<Color>(vertices.Capacity);
+            var triangles = new List<int>(links * Around * RibbonSides * 6);
+            int segment = 0;
+            for (int k = 0; k < links; k++)
+            {
+                float at = (k + 0.5f) * step;
+                while (segment < line.Count - 2 && along[segment + 1] < at) segment++;
+                float share = Mathf.InverseLerp(along[segment], along[segment + 1], at);
+                Vector3 centre = Vector3.Lerp(line[segment], line[segment + 1], share);
+                Vector3 tangent = (line[segment + 1] - line[segment]).normalized;
+                if (tangent.sqrMagnitude < 0.5f) tangent = Vector3.forward;
+                Vector3 side = Vector3.Cross(Vector3.up, tangent);
+                if (side.sqrMagnitude < 0.0001f) side = Vector3.Cross(Vector3.forward, tangent);
+                side.Normalize();
+                Vector3 up = Vector3.Cross(tangent, side).normalized;
+                // Every other link stands across the one before it.
+                Vector3 wide = k % 2 == 0 ? side : up;
+                Vector3 facing = Vector3.Cross(tangent, wide).normalized;
+                int first = vertices.Count;
+                for (int j = 0; j < Around; j++)
+                {
+                    float angle = j * Mathf.PI * 2f / Around;
+                    float c = Mathf.Cos(angle), n = Mathf.Sin(angle);
+                    Vector3 onBar = centre + tangent * (halfLong * c) + wide * (halfWide * n);
+                    Vector3 barWay = (tangent * (-halfLong * n) + wide * (halfWide * c)).normalized;
+                    Vector3 outward = Vector3.Cross(barWay, facing).normalized;
+                    for (int s = 0; s < RibbonSides; s++)
+                    {
+                        float turn = s * Mathf.PI * 2f / RibbonSides;
+                        Vector3 normal = (outward * Mathf.Cos(turn) + facing * Mathf.Sin(turn)).normalized;
+                        Vector3 vertex = onBar + normal * iron;
+                        vertices.Add(vertex);
+                        normals.Add(normal);
+                        uvs.Add(new Vector2(Mathf.Clamp01((at + Vector3.Dot(vertex - centre, tangent)) / total), s / (float)RibbonSides));
+                        colours.Add(new Color(colour.r, colour.g, colour.b, 1f));
+                    }
+                }
+                for (int j = 0; j < Around; j++)
+                    for (int s = 0; s < RibbonSides; s++)
+                    {
+                        int a = first + j * RibbonSides + s, b = first + j * RibbonSides + (s + 1) % RibbonSides;
+                        int c = first + (j + 1) % Around * RibbonSides + s, d = first + (j + 1) % Around * RibbonSides + (s + 1) % RibbonSides;
+                        triangles.Add(a); triangles.Add(c); triangles.Add(b);
+                        triangles.Add(b); triangles.Add(c); triangles.Add(d);
+                    }
+            }
+            // Faces turned out, as a ribbon's are, so the ink's back faces are inside.
+            int probe = 0;
+            for (int t = 0; t < triangles.Count; t += 3)
+            {
+                Vector3 face = Vector3.Cross(vertices[triangles[t + 1]] - vertices[triangles[t]], vertices[triangles[t + 2]] - vertices[triangles[t]]);
+                if (face.sqrMagnitude < 1e-12f) continue;
+                probe = Vector3.Dot(face, normals[triangles[t]]) >= 0f ? 1 : -1;
+                break;
+            }
+            if (probe < 0)
+                for (int t = 0; t < triangles.Count; t += 3)
+                    (triangles[t + 1], triangles[t + 2]) = (triangles[t + 2], triangles[t + 1]);
+            var mesh = new Mesh { name = name };
+            mesh.SetVertices(vertices);
+            mesh.SetNormals(normals);
+            mesh.SetColors(colours);
+            mesh.SetUVs(0, uvs);
+            mesh.SetUVs(1, normals);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        /// <summary>
+        /// Anvil Stone (the owner, 2026-11-19: "it just appears out of nowhere, it is better to have it spring up from the
+        /// ground, and have the anvil in the center of the effect not one side"): the recipe heaved the anvil up 0.78 m
+        /// behind the enemy in 0.2 s, its length along the player's line, while the cracks and dust stayed under the
+        /// enemy's feet. Here the anvil stands across the line, right at the enemy's back (<see cref="AnvilBack"/>), so the
+        /// enemy stands against its middle; it heaves up from under the floor in two jolts; and the cracks, the dust, the
+        /// thrown stones and the ring of sparks all spread from it. Its pieces are the struck body's (the names' numbers,
+        /// "spark15", "heavechip4", are not bodies: read as such, all but one spark and one stone went astray).
+        /// </summary>
+        public const float AnvilBack = 0.5f, AnvilWasBack = 0.78f, AnvilSink = 0.95f;
+
+        // A piece moved, turned or timed anew for its look, in the recipe's space (away: from the recipe's player through
+        // the struck body); the body it belongs to, or -1 to find it as for any piece.
+        private static int Restage(string slug, string piece, Vector3 away, ref Vector3 position, ref Vector3 turned, ref Dictionary<string, object> motion)
+        {
+            if (slug != "anvil_stone") return -1;
+            away.y = 0f;
+            away = away.sqrMagnitude > 0.0001f ? away.normalized : Vector3.forward;
+            Vector3 anvil = away * AnvilBack;
+            if (piece.EndsWith("_anvil"))
+            {
+                position = new Vector3(anvil.x, -AnvilSink, anvil.z);
+                turned.y += 90f;
+                List<object> Rise(double time, double up, string ease) => new List<object> { time, new List<object> { 0.0, up, 0.0 }, ease };
+                // Its top breaks the floor and catches, then the whole stone heaves out, overshoots and settles.
+                motion = new Dictionary<string, object>(motion)
+                {
+                    ["path"] = new List<object>
+                    {
+                        Rise(0.18, 0.0, "linear"), Rise(0.3, 0.42, "out"), Rise(0.38, 0.4, "inout"), Rise(0.52, AnvilSink + 0.12, "out"), Rise(0.6, AnvilSink, "inout"),
+                    },
+                };
+                return 0;
+            }
+            if (piece.Contains("heavechip"))
+            {
+                position += anvil - away * AnvilWasBack;
+                return 0;
+            }
+            if (piece.Contains("crack") || piece.Contains("dustheave") || piece.Contains("spark"))
+            {
+                position = new Vector3(anvil.x, position.y, anvil.z);
+                return 0;
+            }
+            return -1;
         }
 
         // Which body a piece is on: its name says ("..._wisp0_3", "..._hole1": the number after the piece's word), else

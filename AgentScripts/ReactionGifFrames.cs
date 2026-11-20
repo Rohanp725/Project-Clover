@@ -45,7 +45,16 @@ public static class ReactionGifFrames
 public class ReactionGifFramesRunner : MonoBehaviour
 {
     private static string[] Only = { };
-    private static readonly Vector3 Middle = new Vector3(28f, 0f, 0f), Stand = new Vector3(-3f, 0f, 0f), Away = Vector3.right;
+    private static readonly Vector3 Middle = new Vector3(28f, 0f, 0f);
+    // Where the player stands from the main enemy and the way it faces: 3 m west, facing east, unless the film turns it.
+    private Vector3 Stand = new Vector3(-3f, 0f, 0f), Away = Vector3.right;
+    // Films whose player faces another way (degrees from north), so what the recipe stood to the player's side stands to
+    // the side on screen, where no health bar covers what runs between the bodies: Black Chain's second enemy stood 2.6 m
+    // to the player's left, which from the game camera (looking north while the player faced east) was straight behind
+    // the struck one, and its chain ran behind that one's bar (the owner, 2026-11-19: "I dont see the black chain at
+    // all"). Facing 150 degrees puts that enemy 3 m east of the struck one, level with it on screen, and the window is
+    // centred between the two.
+    private static readonly Dictionary<string, float> Facings = new Dictionary<string, float> { ["Black Chain"] = 150f };
     // Where the group stands about the main enemy: spread round it, mostly beyond it from the player.
     private static readonly Vector3[] Spread = { new Vector3(1.7f, 0f, 1.5f), new Vector3(1.9f, 0f, -1.4f), new Vector3(-0.4f, 0f, 2.2f), new Vector3(2.9f, 0f, 0.1f) };
     // The reactions that reach more than the one struck (effects.md: everyone within, the nearest other, carried, chained).
@@ -220,26 +229,31 @@ public class ReactionGifFramesRunner : MonoBehaviour
                     foreach (Dictionary<string, object> body in (List<object>)look["bodies"]) bodies.Add(Vec(body["position"]));
                     Vector3 player = Vec(((Dictionary<string, object>)look["player"])["position"]);
                     if (bodies.Count == 0) continue;
+                    // Kept turned so the recipe's player faces north; turned to this film's way when stood.
                     Vector3 toward = bodies[0] - player;
                     float facing = Mathf.Atan2(toward.x, toward.z) * Mathf.Rad2Deg;
-                    var turn = Quaternion.Euler(0f, Mathf.Atan2(Away.x, Away.z) * Mathf.Rad2Deg - facing, 0f);
+                    var turn = Quaternion.Euler(0f, -facing, 0f);
                     var placed = new List<Vector3>();
-                    for (int i = 0; i < bodies.Count; i++)
-                    {
-                        Vector3 at = turn * (bodies[i] - bodies[0]);
-                        // A body stood between the game camera and the main one hides it on film (Earthlight's Gate
-                        // Captain, 2026-11-20): moved clear, no further than the game's look still finds it (1.6 m).
-                        if (i > 0 && at.z < -0.4f && Mathf.Abs(at.x) < 1.4f)
-                        {
-                            if (at.magnitude < 1.5f) at.x = (at.x < 0f ? -1f : 1f) * 1.4f;
-                            else if (at.z > -2.5f) at.z = Mathf.Max(-2.5f, at.z - 1.2f);
-                        }
-                        placed.Add(at);
-                    }
+                    for (int i = 0; i < bodies.Count; i++) placed.Add(turn * (bodies[i] - bodies[0]));
                     recipeLayouts[(string)look["slug"]] = placed;
                 }
         }
-        return recipeLayouts.TryGetValue(slug, out var found) ? found : null;
+        if (!recipeLayouts.TryGetValue(slug, out var found)) return null;
+        var toFilm = Quaternion.Euler(0f, Mathf.Atan2(Away.x, Away.z) * Mathf.Rad2Deg, 0f);
+        var stood = new List<Vector3>();
+        for (int i = 0; i < found.Count; i++)
+        {
+            Vector3 at = toFilm * found[i];
+            // A body stood between the game camera and the main one hides it on film (Earthlight's Gate Captain,
+            // 2026-11-20): moved clear, no further than the game's look still finds it (1.6 m).
+            if (i > 0 && at.z < -0.4f && Mathf.Abs(at.x) < 1.4f)
+            {
+                if (at.magnitude < 1.5f) at.x = (at.x < 0f ? -1f : 1f) * 1.4f;
+                else if (at.z > -2.5f) at.z = Mathf.Max(-2.5f, at.z - 1.2f);
+            }
+            stood.Add(at);
+        }
+        return stood;
     }
 
     private static Vector3 Vec(object value)
@@ -356,6 +370,8 @@ public class ReactionGifFramesRunner : MonoBehaviour
             // A bespoke look is filmed on the bodies as its recipe stood them, all of them (those it reaches and those
             // it leaves alone), so its reach shows as it was drawn.
             layout.Clear();
+            Away = Facings.TryGetValue(look, out float facingWay) ? Quaternion.Euler(0f, facingWay, 0f) * Vector3.forward : Vector3.right;
+            Stand = -3f * Away;
             var recipeLayout = bespoke ? RecipeLayout(ReactionLook.SlugOf(pair)) : null;
             if (recipeLayout != null && recipeLayout.Count > 1)
             {
@@ -388,7 +404,10 @@ public class ReactionGifFramesRunner : MonoBehaviour
             yield return Real(1f);
             var main = cast[0];
 
-            var window = Window(main.transform.position + (lane ? Away * 2.4f : Vector3.zero));
+            // A film turned toward the screen's right edge has the spell slots' corner in its window: put away while filming.
+            var slots = Facings.ContainsKey(look) && SpellDiamondHud.Instance != null ? SpellDiamondHud.Instance.gameObject : null;
+            if (slots != null) slots.SetActive(false);
+            var window = Window(main.transform.position + (lane ? Away * 2.4f : Facings.ContainsKey(look) && recipeLayout != null && recipeLayout.Count > 1 ? recipeLayout[1] * 0.5f : Vector3.zero));
             Time.captureFramerate = Rate;
             int frame = 0;
             for (; frame < Before; frame++)
@@ -424,6 +443,7 @@ public class ReactionGifFramesRunner : MonoBehaviour
                 yield return null;
             }
             Time.captureFramerate = 0;
+            if (slots != null) slots.SetActive(true);
             int lookStart = shownAt >= 0 ? shownAt - 1 : start;
             int impactFrame = lookStart + Mathf.RoundToInt(Mathf.Max(0f, impact) * Rate);
             bool wentOff = shownAt >= 0;

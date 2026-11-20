@@ -1,6 +1,6 @@
 # Element looks (batches 1 and 2)
 
-214 looks, 2598 parts (911 ribbons), 14340 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+213 looks, 2613 parts (912 ribbons), 14408 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
@@ -35,10 +35,10 @@
 | root_snare@3 | 1.6 s | body | 8 | 0 | 1.60 s | - |
 | root_snare@4 | 1.6 s | body | 6 | 0 | 1.60 s | - |
 | anvil_stone@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| anvil_stone | 1.6 s | body | 10 | 0 | 0.32 s | - |
-| anvil_stone@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| anvil_stone@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| anvil_stone@3 | 1.6 s | body | 2 | 0 | 1.60 s | - |
+| anvil_stone | 1.6 s | body | 31 | 0 | 0.32 s | - |
+| anvil_stone@1 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| anvil_stone@2 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| anvil_stone@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | glint@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
 | glint | 1.6 s | body | 5 | 1 | 0.35 s | - |
 | glint@1 | 1.6 s | body | 3 | 0 | 0.50 s | - |
@@ -92,7 +92,7 @@
 | earthlight@3 | 1.6 s | body | 3 | 0 | 1.60 s | - |
 | earthlight@4 | 1.6 s | body | 3 | 0 | 1.60 s | - |
 | black_chain@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| black_chain | 1.6 s | body | 9 | 3 | -0.25 s | - |
+| black_chain | 1.6 s | body | 9 | 4 | -0.25 s | - |
 | black_chain@1 | 1.6 s | body | 4 | 1 | 0.56 s | - |
 | black_chain@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | sun_sap@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
