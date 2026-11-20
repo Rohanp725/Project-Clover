@@ -488,6 +488,7 @@ namespace Clover.Tests
         {
             [Elements.Fire] = 10,
             [Elements.Lightning] = 9,
+            [Elements.Wind] = 10,
         };
 
         [Test]

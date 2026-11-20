@@ -44,6 +44,15 @@ namespace Clover.Player
             new RetiredMark("lightning.grounding", 3), new RetiredMark("lightning.slipstream", 3),
             new RetiredMark("lightning.overclock", 6),
             new RetiredMark("lightning.lodestone", 4),
+
+            // Wind: the plain minors and the dead "costs less" minor (Easy Breath), the majors not kept (Rushing Wake, Empty
+            // Air, Hammer Down), and Storm Front, a keystone not carried over.
+            new RetiredMark("wind.stride", 1), new RetiredMark("wind.thinair", 1), new RetiredMark("wind.draft", 1), new RetiredMark("wind.cleanpass", 1),
+            new RetiredMark("wind.lightfeet", 1), new RetiredMark("wind.loose", 1), new RetiredMark("wind.offbalance", 1), new RetiredMark("wind.hang", 1),
+            new RetiredMark("wind.openair", 1), new RetiredMark("wind.widegust", 1), new RetiredMark("wind.easybreath", 1), new RetiredMark("wind.strongarm", 1),
+            new RetiredMark("wind.fairwind", 1), new RetiredMark("wind.runningstart", 1),
+            new RetiredMark("wind.slip", 3), new RetiredMark("wind.emptyair", 3), new RetiredMark("wind.hammer", 3),
+            new RetiredMark("wind.front", 6),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
@@ -51,6 +60,8 @@ namespace Clover.Player
         {
             new RetiredMark(Upgrade.BurningCrescent, 3),
             new RetiredMark(Upgrade.DelayedCuts, 3),
+            // Wind's Drawing Wind, the Iaido Slash's pull.
+            new RetiredMark("wind.drawing", 3),
         };
 
         /// <summary>The marks cut, with their prices: a save that holds one is refunded.</summary>

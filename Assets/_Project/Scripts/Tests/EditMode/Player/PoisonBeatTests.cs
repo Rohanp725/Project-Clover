@@ -184,8 +184,11 @@ namespace Clover.Tests
             Assert.IsFalse(stats.EndBoon(PlayerStat.WeaponDamage, 0.3f), "It was ended twice.");
             stats.Tick(3f);
             Assert.AreEqual(1f, stats.Multiplier(PlayerStat.WeaponDamage), 0.001f, "Its time running out took it away a second time.");
-            // Flashpoint, the first boon for one blow, was retired with Fire's reshaping (Phase 4); Rushing Wake is one too.
-            Assert.IsTrue(Upgrade.ById(WindTree.Slipstream).Effects.All(e => e.UntilBlow));
+            // Flashpoint and Rushing Wake, the first boons for one blow, were retired with Fire's and Wind's reshaping (Phase 4);
+            // Closing Circle's Half Circle carries one now: the first blow after the run is critical, and only that one.
+            var halfCircle = Upgrade.ById(SpellBranch.ShapeId(WindTree.ClosingCircle)).Shapes[0];
+            Assert.AreEqual("Half Circle", halfCircle.Name);
+            Assert.IsTrue(halfCircle.Effects.All(e => e.Do == UpgradeAction.Boon && e.UntilBlow));
         }
 
         [Test]

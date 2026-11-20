@@ -52,11 +52,12 @@ namespace Clover.Player.Magic
             ["lightning.flashes"] = Mana(45f, SpellRole.Detonator), // Lightning's larger spell
             ["lightning.rod"] = Cd(10f, SpellRole.Movement),
             ["lightning.drums"] = Cd(10f, SpellRole.Counter),
-            // Wind
-            ["wind.circle"] = Cd(9f, SpellRole.Movement),
+            // Wind, reshaped (Phase 4): Gust is the base spell; the Bag of Winds is new.
             ["wind.lifting"] = Cd(9f, SpellRole.Breaker),
-            ["wind.skydance"] = Mana(45f, SpellRole.Breaker),       // Wind's larger spell
             ["wind.indrawn"] = Cd(11f, SpellRole.Detonator),
+            ["wind.circle"] = Cd(9f, SpellRole.Movement),
+            ["wind.bag"] = Cd(10f, SpellRole.Counter),
+            ["wind.skydance"] = Mana(45f, SpellRole.Breaker),       // Wind's larger spell
             // Ice
             ["ice.statue"] = Cd(9f, SpellRole.Counter),             // not in the roster
             ["ice.hanging"] = Cd(10f, SpellRole.Breaker),

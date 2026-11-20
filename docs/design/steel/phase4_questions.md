@@ -26,3 +26,15 @@ Each was built with the default given here; every one is easy to change. Added t
 6. **A saved Hand with no shapes.** Shapes are chosen at a rest fire and kept for the run. Default: applying a Hand
    that says nothing of shapes (one kept before any Shape was bought) keeps the shapes already chosen. Alternative: a
    Hand always sets the shapes, and one with none puts every spell back to its first shape.
+
+## Task 4.x: Wind
+
+1. **The three built majors the passive table leaves out.** Wind's passive table keeps four majors (Rising Cut, Passing
+   Cut, Turned Aside, Against the Wall); the cut list does not name Rushing Wake, Empty Air or Hammer Down. Default: all
+   three retired and refunded (3 Shards each), so the tree is the design's 34 marks. Alternatives: keep Hammer Down (the
+   heavy blow that drives an airborne enemy down, the end of the Updraft juggle) in one of the two empty places, at 35
+   marks; or fold its slam into Rising Cut.
+2. **A shape that does nothing yet.** Bag of Winds' Kept Wind (the bag kept 20 s, opened when you choose) needs the bag
+   itself, which the data cannot say yet: for now each perfect guard or dodge lets a wind out at once, so keeping changes
+   nothing. Default: the shape exists and its details say it does nothing yet (as Seven Flashes' Master, question 5).
+   Alternatives: hide the Shape mark until the bag is built; or give Kept Wind a stand-in (its cones break harder).

@@ -63,11 +63,12 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void StormFrontCarriesNoStandInConeOrPushAnyMore()
+        public void StormFrontIsRetiredAndItsFreeGustAsksForAMarkNoneHas()
         {
-            var mark = Upgrade.ById(WindTree.StormFront);
-            Assert.IsEmpty(mark.Effects, "The free Gust is thrown by hand now; the cone and the push that stood in for it are gone.");
-            Assert.IsTrue(mark.Stats.Any(mod => mod.Stat == PlayerStat.ManaFromBlows && mod.Amount < 0f), "Its price is less mana from blows.");
+            // Phase 4 retired Storm Front with Wind's reshaping (elements_a.md, "What to cut", 10): the free Gust its hand-written
+            // code throws asks for an id no mark has, so it is never thrown.
+            Assert.IsNull(Upgrade.ById(WindTree.StormFront));
+            Assert.IsTrue(RetiredMarks.IsRetired(WindTree.StormFront));
         }
 
         [Test]
