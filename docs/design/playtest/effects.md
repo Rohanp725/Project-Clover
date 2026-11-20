@@ -723,6 +723,8 @@ Group: Reactions
 
 **What sets it off.** A notch landing on a Cursed enemy, or a curse on a notched one.
 
+**Its shapes.** With Hidden Chain, the Shape mark of Metal and Dark's duo branch (Black Chain: Drawn Tight or Shared Wound, 3 Shards, in the heart of the chart) and both carried, Black Chain wears the shape chosen at a rest fire instead. Drawn Tight: the chain snaps taut at once, 12 and 25 stagger to it and to the nearest other enemy within 6 m, and falls away. Shared Wound: no leash, but the chain holds 8 s and half of every blow is shared.
+
 **How to use it.** Not yet: what the chain does. It will pass 30% of your weapon damage on either to the other, and keep the two within 4 m of each other.
 
 **How it looks.** Its name over the enemy. Not yet: the chain between them.
