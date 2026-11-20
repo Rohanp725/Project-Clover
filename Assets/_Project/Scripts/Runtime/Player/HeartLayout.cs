@@ -49,8 +49,9 @@ namespace Clover.Player
         public static bool Built(int pair, IReadOnlyList<Upgrade> marks)
         {
             if (pair < 0 || marks == null) return false;
-            foreach (var mark in marks)
-                if (Instance.Shows(mark, pair)) return true;
+            // Indexed, not foreach over the interface, so asking allocates nothing.
+            for (int i = 0; i < marks.Count; i++)
+                if (Instance.Shows(marks[i], pair)) return true;
             return false;
         }
 

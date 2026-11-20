@@ -15,7 +15,9 @@ namespace Clover.UI
     /// picture joined by a thin line to what it grows from; its frame says what kind of mark it is. The world stops
     /// while the chart is open and the player reads at their own pace: the stick moves from mark to mark, the use
     /// button learns (or, on a spell already learned, puts it in the next spell slot round: the stopgap until the Hand
-    /// exists), the dodge button leaves.
+    /// exists), the dodge button leaves. In the ring's middle, the heart (task 4.5, <see cref="HeartLayout"/>) shows one
+    /// duo branch at a time, upright whatever tree is: the pair carried, or in the playtest the pair picked with the
+    /// shoulder buttons while the choice is in the heart.
     /// </summary>
     public class UpgradeMenu : MonoBehaviour
     {
@@ -86,6 +88,9 @@ namespace Clover.UI
             public Image Icon;
             public int FirstLine, LineCount;
             public Color Colour;
+            /// <summary>True for a duo branch's mark, drawn in the heart: <see cref="HeartPlace"/> is its place there, and <see cref="Place"/> follows the heart as it turns.</summary>
+            public bool InHeart;
+            public Vector2 HeartPlace;
         }
 
         private readonly List<Mark> marks = new List<Mark>();
@@ -124,6 +129,20 @@ namespace Clover.UI
         private float labelZoom = -1f;
         private Vector2 treeMiddle;
         private string heldShown;
+        // The heart: its own turned layer of the chart, the words over it, and the pair it shows.
+        private RectTransform heart;
+        private Text heartTitle;
+        private int heartPair = -1;
+        private string heartPartner = "";
+        // The partner picked in the playtest with the shoulder buttons, kept while the menu lives.
+        private string heartPicked = "";
+        private PlayerBuild buildFound;
+        private PlayerBuild Builder => buildFound != null ? buildFound : (buildFound = player != null ? player.GetComponent<PlayerBuild>() : null);
+        /// <summary>The pair the heart shows now (<see cref="Clover.Gameplay.AfflictionPairs"/>), -1 for none; and its partner of the tree looked at.</summary>
+        public int HeartPair => heartPair;
+        public string HeartPartner => heartPartner;
+        // The spokes start outside the heart, so its marks are drawn on clear sky.
+        private static float SpokeFrom => (HeartPattern.Radius + 1.3f) / UpgradeTree.EmblemDistance;
 
         // Domain reload is off: the menu of the last play must not be kept.
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
@@ -201,6 +220,8 @@ namespace Clover.UI
 
         // Where the marks lie: the ring, with the trees made of spell branches drawn in their pattern (IMPLEMENTATION.md 4.2).
         private readonly IChartLayout layout = RingLayout.Instance;
+        // The duo branches in the ring's middle (task 4.5).
+        private readonly HeartLayout heartLayout = HeartLayout.Instance;
 
         /// <summary>Draws the chart again from the catalogue, as after a probe has added marks to it.</summary>
         public void Rebuild()
@@ -221,6 +242,8 @@ namespace Clover.UI
             upright.Clear();
             for (int i = 0; i < slotBadges.Length; i++) slotBadges[i] = null;
             heldShown = null;
+            heart = null;
+            heartTitle = null;
             Build();
         }
 
@@ -252,8 +275,10 @@ namespace Clover.UI
             foreach (var element in Elements.All)
             {
                 Vector2 foot = UpgradeTree.Emblem(element.Name) * StepPixels;
-                Line(foot * 0.12f, foot * 0.92f, 4f).color = Guide;
-                // The branch it shares with the next element round: a line from each of the two to the branch's foot.
+                Line(foot * SpokeFrom, foot * 0.92f, 4f).color = Guide;
+                // The branch it shares with the next element round: a line from each of the two to the branch's foot. A branch
+                // reshaped into the heart leaves its gap empty.
+                if (InHeart(element)) continue;
                 Vector2 mixFoot = UpgradeTree.MixFoot(element.Name, element.MixWith) * StepPixels;
                 Color shared = Color.Lerp(element.Colour, Elements.Colour(element.MixWith), 0.5f);
                 shared.a = 0.3f;
@@ -261,12 +286,25 @@ namespace Clover.UI
                 Line(UpgradeTree.Emblem(element.MixWith) * StepPixels, mixFoot, 3f).color = shared;
             }
 
+            // The heart: a layer of its own, turned against the chart so its branch stands upright whatever tree does.
+            heart = (RectTransform)new GameObject("Heart", typeof(RectTransform)).transform;
+            heart.SetParent(chart, false);
+            heart.anchorMin = heart.anchorMax = heart.pivot = new Vector2(0.5f, 0.5f);
+            heart.anchoredPosition = Vector2.zero;
+            heart.sizeDelta = Vector2.zero;
+            var heartKnot = Picture("Heart foot", emblemSprite, heart, HeartLayout.FootPlace * StepPixels, StepPixels * 0.5f);
+            heartKnot.color = new Color(Guide.r, Guide.g, Guide.b, 0.6f);
+            heartTitle = Label("", HeartLayout.TitlePlace * StepPixels, new Color(0.92f, 0.88f, 0.8f, 0.9f), heart);
+            labels.Add(heartTitle);
+
             var byId = new Dictionary<string, Mark>();
             foreach (var upgrade in Upgrade.All)
             {
-                // Hidden marks (the reactions) are on no chart; the layout says what this one draws.
-                if (!layout.Draws(upgrade)) continue;
-                var mark = new Mark { Upgrade = upgrade, Place = layout.Place(upgrade) * StepPixels, Size = SizeOf(upgrade), Colour = ColourOf(upgrade) };
+                // Hidden marks (the reactions) are on no chart; the ring and the heart each say what they draw.
+                bool inHeart = heartLayout.Draws(upgrade);
+                if (!inHeart && !layout.Draws(upgrade)) continue;
+                Vector2 at = (inHeart ? heartLayout.Place(upgrade) : layout.Place(upgrade)) * StepPixels;
+                var mark = new Mark { Upgrade = upgrade, Place = at, HeartPlace = at, InHeart = inHeart, Size = SizeOf(upgrade), Colour = ColourOf(upgrade) };
                 marks.Add(mark);
                 byId[upgrade.Id] = mark;
             }
@@ -282,14 +320,16 @@ namespace Clover.UI
                 var upgrade = mark.Upgrade;
                 if (upgrade.Signature) continue;
                 bool any = false;
+                // A heart mark's lines are drawn in the heart, from its places there.
+                Transform parentLayer = mark.InHeart ? heart : chart;
                 foreach (string id in upgrade.Requires)
                 {
                     if (!byId.TryGetValue(id, out var parent)) continue;
-                    lines.Add(Line(parent.Place, mark.Place, 3f));
+                    lines.Add(Line(Drawn(parent), Drawn(mark), 3f, parentLayer));
                     any = true;
                 }
                 if (!any)
-                    lines.Add(Line(layout.Foot(upgrade) * StepPixels, mark.Place, 3f));
+                    lines.Add(Line((mark.InHeart ? heartLayout.Foot(upgrade) : layout.Foot(upgrade)) * StepPixels, Drawn(mark), 3f, parentLayer));
                 mark.LineCount = lines.Count - mark.FirstLine;
             }
             foreach (var element in Elements.All)
@@ -304,6 +344,7 @@ namespace Clover.UI
                 // Its name, on the inner side of its emblem; and the name of the branch it shares, at that branch's foot.
                 // Every other name stands a little further in, so neighbours do not run into each other when the view is pulled back.
                 labels.Add(Label(element.Name, UpgradeTree.OnChart(element.Name, 0f, element.Index % 2 == 0 ? -2.2f : -3.5f) * StepPixels, element.Colour));
+                if (InHeart(element)) continue;
                 Vector2 mixFoot = UpgradeTree.MixFoot(element.Name, element.MixWith) * StepPixels;
                 Color shared = Color.Lerp(element.Colour, Elements.Colour(element.MixWith), 0.5f);
                 var knot = Picture("Mix " + element.MixName, emblemSprite, chart, mixFoot, StepPixels * 0.5f);
@@ -317,8 +358,9 @@ namespace Clover.UI
             foreach (var mark in marks)
             {
                 int kind = (int)FrameKind(mark.Upgrade);
-                mark.Frame = Picture(mark.Upgrade.Name, kind < frames.Length ? frames[kind] : null, chart, mark.Place, mark.Size);
-                upright.Add(mark.Frame.rectTransform);
+                mark.Frame = Picture(mark.Upgrade.Name, kind < frames.Length ? frames[kind] : null, mark.InHeart ? heart : chart, Drawn(mark), mark.Size);
+                // The heart's layer is turned upright itself.
+                if (!mark.InHeart) upright.Add(mark.Frame.rectTransform);
                 iconByName.TryGetValue(mark.Upgrade.Icon, out var picture);
                 mark.Icon = Picture("Picture", picture, mark.Frame.transform, Vector2.zero, mark.Size * (mark.Upgrade.Kind == UpgradeKind.Spell ? 0.5f : 0.56f));
                 // What a god leaves wears a crown over its frame.
@@ -334,7 +376,14 @@ namespace Clover.UI
                 slotBadges[i].gameObject.SetActive(false);
             }
             if (cursor != null) cursor.SetAsLastSibling();
+            if (viewed != null) PlaceHeart();
         }
+
+        // Where a mark is drawn in its own layer: a heart mark in the heart, the rest on the chart.
+        private static Vector2 Drawn(Mark mark) => mark.InHeart ? mark.HeartPlace : mark.Place;
+
+        // True when the branch an element shares with the next round the ring is drawn in the heart now.
+        private static bool InHeart(ElementInfo element) => HeartLayout.Built(HeartLayout.PairOf(element.Name, element.MixWith), Upgrade.All);
 
         private Image Picture(string name, Sprite sprite, Transform parent, Vector2 at, float size)
         {
@@ -351,9 +400,9 @@ namespace Clover.UI
             return image;
         }
 
-        private Image Line(Vector2 from, Vector2 to, float thickness)
+        private Image Line(Vector2 from, Vector2 to, float thickness, Transform parent = null)
         {
-            var image = Picture("Line", null, chart, from, thickness);
+            var image = Picture("Line", null, parent != null ? parent : chart, from, thickness);
             image.enabled = true;
             var rect = image.rectTransform;
             rect.pivot = new Vector2(0f, 0.5f);
@@ -362,11 +411,11 @@ namespace Clover.UI
             return image;
         }
 
-        private Text Label(string text, Vector2 at, Color colour)
+        private Text Label(string text, Vector2 at, Color colour, RectTransform parent = null)
         {
             var made = new GameObject("Label " + text, typeof(RectTransform));
             var rect = (RectTransform)made.transform;
-            rect.SetParent(chart, false);
+            rect.SetParent(parent != null ? parent : chart, false);
             rect.anchorMin = rect.anchorMax = rect.pivot = new Vector2(0.5f, 0.5f);
             rect.anchoredPosition = at;
             rect.sizeDelta = new Vector2(600f, 80f);
@@ -380,7 +429,8 @@ namespace Clover.UI
             label.raycastTarget = false;
             label.text = text;
             label.color = colour;
-            upright.Add(rect);
+            // A label in the heart is upright with it.
+            if (parent == null) upright.Add(rect);
             return label;
         }
 
@@ -414,6 +464,45 @@ namespace Clover.UI
         {
             if (!IsOpen || !PlaytestMode.On || Elements.ByName(element) == null) return false;
             ShowTree(element);
+            Show();
+            return true;
+        }
+
+        /// <summary>
+        /// The playtest's pair picker: the heart shows the next partner round the ring (by 1) or the one before (by -1)
+        /// whose branch with the tree looked at is built. The choice moves to the same place on the new branch, or its foot.
+        /// </summary>
+        public bool ViewPartner(int by)
+        {
+            if (!IsOpen || !PlaytestMode.On || viewed == null) return false;
+            string next = HeartLayout.NextPartner(viewed, heartPartner, by, Upgrade.All);
+            if (string.IsNullOrEmpty(next) || next == heartPartner) return false;
+            return ViewHeart(next);
+        }
+
+        /// <summary>The playtest's pair picker, by name: the heart shows the branch of the tree looked at and this partner. True when it does.</summary>
+        public bool ViewHeart(string partner)
+        {
+            if (!IsOpen || !PlaytestMode.On || viewed == null || !HeartLayout.Built(HeartLayout.PairOf(viewed, partner), Upgrade.All)) return false;
+            var was = Chosen;
+            Vector2 wasAt = was != null && heartLayout.Draws(was) ? heartLayout.Place(was) : HeartLayout.FootPlace;
+            heartPicked = partner;
+            ShowTree(viewed);
+            // The same place on the new branch, or the nearest to it.
+            int best = -1;
+            float nearest = float.MaxValue;
+            for (int i = 0; i < shown.Count; i++)
+            {
+                var upgrade = marks[shown[i]].Upgrade;
+                if (!marks[shown[i]].InHeart) continue;
+                float distance = (heartLayout.Place(upgrade) - wasAt).sqrMagnitude;
+                if (distance < nearest)
+                {
+                    nearest = distance;
+                    best = i;
+                }
+            }
+            if (best >= 0) Selected = best;
             Show();
             return true;
         }
@@ -458,6 +547,10 @@ namespace Clover.UI
             treeMiddle = new Vector2(0f, (UpgradeTree.EmblemDistance + 5.2f) * StepPixels);
             // The choice moves among the marks of the held tree and of the two branches it shares, as they lie once the tree stands upright.
             string was = heldShown == held && Chosen != null ? Chosen.Id : null;
+            // The heart shows the pair carried, or in the playtest the pair picked (HeartLayout.PartnerFor).
+            heartPartner = HeartLayout.PartnerFor(held, Builder != null ? Builder.Read() : null, PlaytestMode.On, heartPicked, Upgrade.All);
+            heartPair = string.IsNullOrEmpty(heartPartner) ? -1 : HeartLayout.PairOf(held, heartPartner);
+            PlaceHeart();
             shown.Clear();
             places.Clear();
             int root = 0;
@@ -466,9 +559,11 @@ namespace Clover.UI
                 var upgrade = marks[i].Upgrade;
                 if (!upgrade.BelongsTo(held)) continue;
                 if (NotBuiltYet.IsSlot(upgrade) && !PlaytestMode.On) continue;
+                if (marks[i].InHeart && HeartLayout.PairOf(upgrade) != heartPair) continue;
                 if (upgrade.Id == was || (was == null && upgrade.Kind == UpgradeKind.Root && !upgrade.IsMix)) root = shown.Count;
                 shown.Add(i);
-                places.Add(UpgradeTree.Upright(marks[i].Place, bearing));
+                // Where it is seen: a heart mark is upright in the heart already.
+                places.Add(marks[i].InHeart ? marks[i].HeartPlace : UpgradeTree.Upright(marks[i].Place, bearing));
             }
             Selected = Mathf.Clamp(root, 0, Mathf.Max(0, shown.Count - 1));
             heldShown = held;
@@ -478,6 +573,29 @@ namespace Clover.UI
                 var level = Quaternion.Euler(0f, 0f, -bearing);
                 for (int i = 0; i < upright.Count; i++) upright[i].localRotation = level;
             }
+        }
+
+        // Turns the heart against the chart so its branch stands upright, shows only the marks of the pair it shows, writes
+        // their names over it, and moves each heart mark's place on the chart (where the cursor and the slot rings go) with it.
+        private void PlaceHeart()
+        {
+            if (heart == null) return;
+            heart.localRotation = Quaternion.Euler(0f, 0f, -bearing);
+            for (int i = 0; i < marks.Count; i++)
+            {
+                var mark = marks[i];
+                if (!mark.InHeart || mark.Frame == null) continue;
+                bool on = heartPair >= 0 && HeartLayout.PairOf(mark.Upgrade) == heartPair;
+                if (mark.Frame.gameObject.activeSelf != on) mark.Frame.gameObject.SetActive(on);
+                for (int line = 0; line < mark.LineCount; line++)
+                {
+                    var drawn = lines[mark.FirstLine + line].gameObject;
+                    if (drawn.activeSelf != on) drawn.SetActive(on);
+                }
+                mark.Place = UpgradeTree.Upright(mark.HeartPlace, -bearing);
+            }
+            if (heartTitle != null)
+                heartTitle.text = heartPair < 0 ? "" : HeartLayout.Title(viewed, heartPartner) + (HeartLayout.Built(heartPair, Upgrade.All) ? "" : "   (its branch is still to come)");
         }
 
         public void Close()
@@ -558,7 +676,9 @@ namespace Clover.UI
             Vector2 chosen = Selected < places.Count ? places[Selected] : treeMiddle;
             // A narrow screen has no room to keep the tree clear of the words; a wide one has room to spare.
             Vector2 centre = new Vector2(ViewCentre.x * Mathf.Clamp01(ScreenSize().x / 1920f), ViewCentre.y);
-            return centre - Vector2.Lerp(treeMiddle, chosen, FollowChoice) * atZoom;
+            // In the heart the view leans from the ring's middle, so the whole branch is seen, not from the tree far above it.
+            Vector2 middle = InHeartNow() ? Vector2.zero : treeMiddle;
+            return centre - Vector2.Lerp(middle, chosen, FollowChoice) * atZoom;
         }
 
         // Moves the view a share of the way to where it should be; 1 puts it there at once.
@@ -645,10 +765,13 @@ namespace Clover.UI
             {
                 if (spellAction != null && spellAction.WasPressedThisFrame()) OpenDetails();
                 else if (flaskAction != null && flaskAction.WasPressedThisFrame()) OpenGuide();
-                else if (!IsWide && lightAction != null && lightAction.WasPressedThisFrame()) ViewNext(1);
-                else if (!IsWide && guardAction != null && guardAction.WasPressedThisFrame()) ViewNext(-1);
+                // In the heart, the shoulder buttons pick the partner; elsewhere, the tree.
+                else if (!IsWide && lightAction != null && lightAction.WasPressedThisFrame()) { if (!InHeartNow() || !ViewPartner(1)) ViewNext(1); }
+                else if (!IsWide && guardAction != null && guardAction.WasPressedThisFrame()) { if (!InHeartNow() || !ViewPartner(-1)) ViewNext(-1); }
             }
         }
+
+        private bool InHeartNow() => Selected < shown.Count && marks[shown[Selected]].InHeart;
 
         // Where a learned spell sits, what it costs, and where the use button would put it.
         private static string SlotState(Upgrade spell, PlayerSpells spells)
@@ -672,7 +795,7 @@ namespace Clover.UI
                 hint.text = IsWide
                     ? ControlNames.Expand("{HeavyAttack}: back to the tree     {Flask}: guide to effects     {Dodge}: leave")
                     : move + ControlNames.Expand(": move     {Interact}: learn, or put a spell in the next slot     {HeavyAttack}: the whole chart     {Dodge}: leave\n"
-                        + "{WeaponSkill}: details     {Guard} / {LightAttack}: tree before / next     {Flask}: guide to effects");
+                        + "{WeaponSkill}: details     {Guard} / {LightAttack}: tree before / next (in the heart: partner)     {Flask}: guide to effects");
                 return;
             }
             hint.text = IsWide
@@ -683,7 +806,8 @@ namespace Clover.UI
         private static string KindWords(Upgrade upgrade)
         {
             if (upgrade.Signature) return "A god's gift";
-            if (upgrade.IsMix) return Elements.MixName(upgrade.Element, upgrade.Element2) + (upgrade.IsSpell ? " spell" : " mix");
+            if (upgrade.IsMix && ReactionTable.IsReactionShape(upgrade)) return HeartLayout.BranchName(upgrade.Element, upgrade.Element2) + ": reaction shape";
+            if (upgrade.IsMix) return HeartLayout.BranchName(upgrade.Element, upgrade.Element2) + (upgrade.IsSpell ? " duo spell" : " mix");
             // A spell branch's marks say their place in it; a reaction lift and a Devotion say what they are.
             switch (upgrade.Part)
             {
@@ -768,7 +892,7 @@ namespace Clover.UI
                     line.a = !ours ? (IsWide ? WideTrees : OtherTrees) * 0.7f : owned ? 0.95f : 0.6f;
                     lines[mark.FirstLine + i].color = line;
                 }
-                int slot = spells != null && upgrade.IsSpell ? spells.Slots.SlotOf(upgrade.Id) : -1;
+                int slot = spells != null && upgrade.IsSpell && mark.Frame.gameObject.activeSelf ? spells.Slots.SlotOf(upgrade.Id) : -1;
                 if (slot >= 0 && slotBadges[slot] != null)
                 {
                     badgesShown |= 1 << slot;
@@ -809,6 +933,7 @@ namespace Clover.UI
                 else if (owned && chosen.IsSpell) state = SlotState(chosen, spells);
                 else if (owned && PlaytestMode.On && !upgrades.Has(chosen.Id)) state = "Learned. In force while you hold " + (chosen.IsMix ? chosen.Element + " or " + chosen.Element2 : chosen.Element) + (string.IsNullOrEmpty(chosen.Weapon) ? "." : ", with the " + chosen.Weapon + ".");
                 else if (owned) state = "Learned.";
+                else if (!upgrades.Open(chosen) && chosen.Tree == MarkTree.Duo) state = $"Sealed. Carry {chosen.Element} and {chosen.Element2} together to open it.";
                 else if (!upgrades.Open(chosen)) state = $"Sealed. Hold or consume {(chosen.Element == held ? chosen.Element2 : chosen.Element)} in this run to open it.";
                 else if (!UpgradeTree.Reachable(chosen, RunState.Unlocked)) state = "Grows from " + Parents(chosen) + ".";
                 else state = upgrades.Points >= chosen.Cost ? "Can be learned." : $"You carry {upgrades.Points}.";
