@@ -372,6 +372,10 @@ namespace Clover.EditorTools
             // Tremor's cracks and dust were 2.3 m and 1.7 m across under one body: kept to about the body's own ground.
             ["earth_tremor|vfx3c_vfx_earth_crack2"] = 0.5f,
             ["earth_tremor|vfx3c_vfx_earth_dust"] = 0.5f,
+            // Iron Thorns' iron roots and the thorns through the armour read as thin grey wires from the game camera (its
+            // film of 2026-11-20): larger, so the iron growth is what is seen.
+            ["iron_thorns|vfxr4_vfx2c_life_metal_ironroots"] = 1.4f,
+            ["iron_thorns|vfxr4_vfx2c_life_metal_ironthorns"] = 1.4f,
             // Stolen Warmth's wisp was a single orange dot at the game camera (the Blender worker's notes: "small at 12 m"):
             // half as large again (twice was a ball over the player), still one wisp a blow so the screen stays quiet.
             ["stolen_warmth|vfxr4_orb"] = 1.5f,
