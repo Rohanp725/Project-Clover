@@ -13,12 +13,15 @@ namespace Clover.Player.Forms
     /// </summary>
     public class ElementLooks : MonoBehaviour
     {
-        /// <summary>Pieces drawn at once over every look; looks past that go without their later pieces.</summary>
-        public const int PoolSize = 240;
+        /// <summary>
+        /// Pieces drawn at once over every look; looks past that go without their later pieces. Twelve afflicted enemies
+        /// with two looks each and a surge drew 293 at most (the crowd profile of 2026-11-20).
+        /// </summary>
+        public const int PoolSize = 384;
         /// <summary>Looks playing at once.</summary>
         public const int MostShowings = 48;
-        /// <summary>The most pieces one look has.</summary>
-        public const int MostParts = 32;
+        /// <summary>The most pieces one look has (Overdrive's arcs are seventy ribbons, each seen a tenth of a second).</summary>
+        public const int MostParts = 96;
         /// <summary>Seconds a kept look waits unkept before it goes, and how long it takes to go.</summary>
         public const float Linger = 0.25f, Going = 0.25f;
         private const float FlatLift = 0.035f;
@@ -32,7 +35,18 @@ namespace Clover.Player.Forms
             public Vector3 Ground;
             public float Age, KeptAt, Gone;
             public bool Once, Ending;
+            /// <summary>Played where it began and not on a body (a strike's look): it never goes for want of a body.</summary>
+            public bool Fixed;
+            /// <summary>How the look is turned about its anchor, and its size (a strike's look turned to the strike's way and reach).</summary>
+            public Quaternion Turn;
+            public float Size;
         }
+
+        private static readonly int HeadId = Shader.PropertyToID("_DrawHead");
+        private static readonly int TailId = Shader.PropertyToID("_DrawTail");
+        private static readonly int InkId = Shader.PropertyToID("_OutlineWidth");
+        private static readonly int InkColourId = Shader.PropertyToID("_OutlineColor");
+        private static readonly int ThinId = Shader.PropertyToID("_Thin");
 
         private static ElementLooks instance;
 
@@ -48,7 +62,13 @@ namespace Clover.Player.Forms
         private MeshFilter[] meshes;
         private MeshRenderer[] shown;
         private bool[] taken;
+        // A pooled renderer carrying a ribbon's property block, which a piece taken after it must not keep.
+        private bool[] blocked;
+        private MaterialPropertyBlock block;
         private int used, playing;
+        // Where the search for a free pooled renderer starts: just past the last one taken, so a burst of new pieces does
+        // not walk the taken ones from the start each time.
+        private int searchFrom;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetStatics() => instance = null;
@@ -65,6 +85,8 @@ namespace Clover.Player.Forms
             meshes = new MeshFilter[PoolSize];
             shown = new MeshRenderer[PoolSize];
             taken = new bool[PoolSize];
+            blocked = new bool[PoolSize];
+            block = new MaterialPropertyBlock();
             for (int i = 0; i < PoolSize; i++)
             {
                 var part = new GameObject("Element Look Part");
@@ -115,6 +137,25 @@ namespace Clover.Player.Forms
             int showing = instance.Begin(look, body);
             if (showing < 0) return false;
             instance.showings[showing].Once = true;
+            return true;
+        }
+
+        /// <summary>
+        /// Plays a look once where it stands, not on a body, turned to <paramref name="yaw"/> degrees (the recipe's player
+        /// faced the main body; the look is turned so that way becomes this one) and drawn <paramref name="size"/> times
+        /// as large (a strike's look fitted to its reach). False when it cannot be shown.
+        /// </summary>
+        public static bool PlayAt(int look, Vector3 at, float yaw, float size = 1f)
+        {
+            if (!Ready || look < 0 || look >= instance.set.Looks.Length) return false;
+            int showing = instance.Begin(look, null);
+            if (showing < 0) return false;
+            ref var one = ref instance.showings[showing];
+            one.Once = true;
+            one.Fixed = true;
+            one.Ground = at;
+            one.Turn = Quaternion.Euler(0f, yaw - instance.set.Looks[look].FacingYaw, 0f);
+            one.Size = Mathf.Max(0.1f, size);
             return true;
         }
 
@@ -176,7 +217,8 @@ namespace Clover.Player.Forms
             }
             showings[free] = new Showing
             {
-                Active = true, Look = look, Body = body, Ground = body.position, Age = 0f, KeptAt = Time.time,
+                Active = true, Look = look, Body = body, Ground = body != null ? body.position : Vector3.zero, Age = 0f, KeptAt = Time.time,
+                Turn = Quaternion.identity, Size = 1f,
             };
             playing++;
             return free;
@@ -204,14 +246,21 @@ namespace Clover.Player.Forms
         private int Take(int slot, in ElementLookSet.Part part)
         {
             if (slots[slot] >= 0) return slots[slot];
-            for (int i = 0; i < PoolSize; i++)
+            for (int n = 0; n < PoolSize; n++)
             {
+                int i = (searchFrom + n) % PoolSize;
                 if (taken[i]) continue;
+                searchFrom = (i + 1) % PoolSize;
                 taken[i] = true;
                 used++;
                 slots[slot] = i;
                 meshes[i].sharedMesh = part.Mesh;
                 shown[i].sharedMaterial = part.Material;
+                if (blocked[i] && part.Kind != ElementLookSet.Ribbon)
+                {
+                    shown[i].SetPropertyBlock(null);
+                    blocked[i] = false;
+                }
                 return i;
             }
             return -1;
@@ -228,7 +277,7 @@ namespace Clover.Player.Forms
                 ref var one = ref showings[i];
                 if (!one.Active) continue;
                 ref var look = ref set.Looks[one.Look];
-                bool bodyGone = one.Body == null || !one.Body.gameObject.activeInHierarchy;
+                bool bodyGone = !one.Fixed && (one.Body == null || !one.Body.gameObject.activeInHierarchy);
                 one.Age += deltaTime;
                 if (!one.Ending)
                 {
@@ -244,13 +293,13 @@ namespace Clover.Player.Forms
                         continue;
                     }
                 }
-                Vector3 feet = bodyGone ? one.Ground : one.Body.position;
+                Vector3 feet = one.Fixed || bodyGone ? one.Ground : one.Body.position;
                 float shrink = one.Ending ? Mathf.Max(0.001f, 1f - one.Gone / Going) : 1f;
                 for (int k = 0; k < look.PartCount && k < MostParts; k++)
                 {
                     int slot = i * MostParts + k;
                     ref var part = ref set.Parts[look.FirstPart + k];
-                    float t = PartTime(look, part, one.Age, one.Once);
+                    float t = ElementLookSet.PartTime(look, part, one.Age, one.Once);
                     bool visible = t >= part.Show && (part.Hide >= 9f || t < part.Hide);
                     if (!visible)
                     {
@@ -259,27 +308,35 @@ namespace Clover.Player.Forms
                     }
                     int pooled = Take(slot, part);
                     if (pooled < 0) continue;
-                    Pose(part, t, part.Follows ? feet : one.Ground, shrink, slot, at[pooled]);
+                    // Spins and orbits of a part that keeps moving run on with the look's own age.
+                    float angleTime = part.RunsOn && !one.Once ? one.Age : t;
+                    Pose(part, t, angleTime, part.Follows ? feet : one.Ground, one.Turn, one.Size, shrink, slot, at[pooled]);
+                    if (part.Kind == ElementLookSet.Ribbon) Draw(part, t, pooled);
                     if (!shown[pooled].enabled) shown[pooled].enabled = true;
                 }
             }
         }
 
-        // The part's own time: the look's, held at its end, or for a repeating part round and round its loop.
-        private static float PartTime(in ElementLookSet.Look look, in ElementLookSet.Part part, float age, bool once)
+        // A ribbon's drawn length: on from its tail to the head's share, wiped off from the tail to the tail's share.
+        private void Draw(in ElementLookSet.Part part, float t, int pooled)
         {
-            if (age <= look.Seconds || once) return Mathf.Min(age, look.Seconds + 0.001f);
-            if (!part.Repeats) return look.Seconds + 0.001f;
-            float span = Mathf.Max(0.1f, look.Seconds - look.LoopFrom);
-            return look.LoopFrom + Mathf.Repeat(age - look.Seconds, span);
+            float head = part.DrawCount > 0 ? Mathf.Clamp01(set.Sample(part.DrawFirst, part.DrawCount, t, Vector3.one).x) : 1f;
+            float tail = part.EraseCount > 0 ? Mathf.Clamp01(set.Sample(part.EraseFirst, part.EraseCount, t, Vector3.zero).x) : 0f;
+            block.SetFloat(HeadId, head);
+            block.SetFloat(TailId, tail);
+            block.SetFloat(InkId, part.InkWidth);
+            block.SetColor(InkColourId, part.InkColour);
+            block.SetFloat(ThinId, part.Thin);
+            shown[pooled].SetPropertyBlock(block);
+            blocked[pooled] = true;
         }
 
-        private void Pose(in ElementLookSet.Part part, float t, Vector3 anchor, float shrink, int slot, Transform frame)
+        private void Pose(in ElementLookSet.Part part, float t, float angleTime, Vector3 anchor, Quaternion turn, float size, float shrink, int slot, Transform frame)
         {
             Vector3 position = part.Position + set.Sample(part.PathFirst, part.PathCount, t, Vector3.zero);
             Vector3 scaleKey = set.Sample(part.ScaleFirst, part.ScaleCount, t, Vector3.one);
             Quaternion rotation = part.Rotation;
-            if (part.SpinCount > 0) rotation = Quaternion.AngleAxis(set.Sample(part.SpinFirst, part.SpinCount, t, Vector3.zero).x, part.SpinAxis) * rotation;
+            if (part.SpinCount > 0) rotation = Quaternion.AngleAxis(set.SampleOnward(part.SpinFirst, part.SpinCount, angleTime), part.SpinAxis) * rotation;
             if (part.Redraw)
             {
                 // Sparks are turned anew three times a second at most, not every frame (the owner: nothing flickery).
@@ -288,13 +345,13 @@ namespace Clover.Player.Forms
             }
             if (part.OrbitCount > 0)
             {
-                var round = Quaternion.AngleAxis(set.Sample(part.OrbitFirst, part.OrbitCount, t, Vector3.zero).x, Vector3.up);
+                var round = Quaternion.AngleAxis(set.SampleOnward(part.OrbitFirst, part.OrbitCount, angleTime), Vector3.up);
                 position = part.OrbitCentre + round * (position - part.OrbitCentre);
                 rotation = round * rotation;
             }
             if (part.Kind == ElementLookSet.Flat) position.y += FlatLift;
-            frame.SetPositionAndRotation(anchor + position, rotation);
-            frame.localScale = Vector3.Scale(part.Scale, scaleKey) * shrink;
+            frame.SetPositionAndRotation(anchor + turn * (position * size), turn * rotation);
+            frame.localScale = Vector3.Scale(part.Scale, scaleKey) * (shrink * size);
         }
     }
 }

@@ -10,11 +10,13 @@ using UnityEngine;
 namespace Clover.EditorTools
 {
     /// <summary>
-    /// Builds the elements' second-pass looks (the Blender worker's batch 1, staging/blender/2026-11-20_elements) from
-    /// their recipe (Art/VFX/Combos/elements2_recipe.json) into Generated/Vfx/Element/element_looks.asset, and hangs them
-    /// on the element art so every scene that has the art plays them. Each piece the main body (or the player) wears
+    /// Builds the elements' second-pass looks (the Blender worker's batches 1 and 2, staging/blender/2026-11-20_elements)
+    /// from their recipe (Art/VFX/Combos/elements2_recipe.json) into Generated/Vfx/Element/element_looks.asset, and hangs
+    /// them on the element art so every scene that has the art plays them. Each piece the main body (or the player) wears
     /// becomes a part: its kit mesh baked in the colour it wears in the render (solid pieces inked in their element's
     /// material, flat ones see-through on the floor), its key pose, and its keyed path, scale, spin, orbit and window.
+    /// Each ribbon (wind's curls, lightning's arcs, the floor's combed lanes) becomes a tube along its points, its u
+    /// running tail to head, drawn on and wiped off by its keys through Clover/Spell's _DrawHead and _DrawTail.
     /// The groups the recipe marks as shader mock-ups (Temper's steel, Chill's and Rime's ice) are not meshes: their
     /// bands' times are kept for the body's own material to draw.
     /// </summary>
@@ -26,14 +28,19 @@ namespace Clover.EditorTools
         private const string E2Kit = "vfx_elements_kit_e2.fbx";
 
         /// <summary>
-        /// The colours of the batch's own materials (m3_*), linear: from notes.md where it gives them (the rust palette,
-        /// the void purple), else matched by eye to the batch's renders. The rest are the earlier tables'.
+        /// The colours of the batches' own materials (m3_*), linear: from notes.md where it gives them (the rust palette,
+        /// the void purple, the water rings, the fire bands), else matched by eye to the batches' renders. The rest are
+        /// the earlier tables'.
         /// </summary>
         public static readonly Dictionary<string, ReactionArtBuilder.Paint> Paints = new Dictionary<string, ReactionArtBuilder.Paint>
         {
             ["m3_water_drop"] = new ReactionArtBuilder.Paint(0.1f, 0.62f, 0.78f),
             ["m3_steel"] = new ReactionArtBuilder.Paint(0.5f, 0.53f, 0.58f),
             ["m3_steel_dark"] = new ReactionArtBuilder.Paint(0.08f, 0.085f, 0.1f),
+            // Sundered's dagger (a brighter steel than the sword's, notes.md) and the dark wound it stands in; both were
+            // drawn grey until 2026-11-20's rebuild listed them.
+            ["m3_steel_dagger"] = new ReactionArtBuilder.Paint(0.6f, 0.63f, 0.68f),
+            ["m3_wound"] = new ReactionArtBuilder.Paint(0.16f, 0.025f, 0.03f),
             ["m3_grip_leather"] = new ReactionArtBuilder.Paint(0.22f, 0.1f, 0.04f),
             ["m3_rust"] = new ReactionArtBuilder.Paint(0.58f, 0.24f, 0.07f),
             ["m3_rust_flake"] = new ReactionArtBuilder.Paint(0.76f, 0.40f, 0.13f),
@@ -50,13 +57,32 @@ namespace Clover.EditorTools
             ["m3_rime"] = new ReactionArtBuilder.Paint(0.7f, 0.86f, 0.95f),
             ["m_vfx_combo_violetedge"] = new ReactionArtBuilder.Paint(0.28f, 0.08f, 0.75f),
             ["m_vfx_ice"] = new ReactionArtBuilder.Paint(0.55f, 0.85f, 1f),
+            // Batch 1's water rings, as notes.md gives them: deep blue and cyan, see-through on the floor, never white.
+            ["m3_water_ring"] = new ReactionArtBuilder.Paint(0.03f, 0.32f, 0.55f, 0.7f, 1f, true),
+            ["m3_water_rimlight"] = new ReactionArtBuilder.Paint(0.18f, 0.62f, 0.78f, 0.7f, 1f, true),
+            // Batch 2. Lightning: cyan arcs (the ink is the violet fringe), a dark scorch where one lands.
+            ["m3_bolt"] = new ReactionArtBuilder.Paint(0.3f, 0.8f, 1f),
+            ["m3_scorch"] = new ReactionArtBuilder.Paint(0.035f, 0.03f, 0.05f, 0.55f, 1f, true),
+            // Fire: the flame's own foot-to-tip bands are baked by height (FlameBands); this is its middle.
+            ["m3_flame"] = new ReactionArtBuilder.Paint(1f, 0.2f, 0.013f),
+            ["m3_flame_core"] = new ReactionArtBuilder.Paint(1f, 0.88f, 0.43f),
+            ["m3_earth_dust"] = new ReactionArtBuilder.Paint(0.46f, 0.38f, 0.27f),
+            // Light: the lotus of light, gold and a paler gold, lying see-through on the floor.
+            ["m3_light_gold"] = new ReactionArtBuilder.Paint(1f, 0.6f, 0.1f, 0.8f, 1f, true),
+            ["m3_light_pale"] = new ReactionArtBuilder.Paint(1f, 0.82f, 0.42f, 0.65f, 1f, true),
+            // Wind: pale dust (its mint rim is the ink), never white: the wind solid's grey takes these to about 0.85 at most.
+            ["m3_wind_ribbon"] = new ReactionArtBuilder.Paint(0.86f, 0.9f, 0.8f),
+            ["m3_wind_dust"] = new ReactionArtBuilder.Paint(0.78f, 0.74f, 0.62f),
+            ["m3_wind_comb"] = new ReactionArtBuilder.Paint(0.74f, 0.74f, 0.64f),
+            ["m3_grass_gold"] = new ReactionArtBuilder.Paint(0.85f, 0.68f, 0.16f),
+            ["m3_leaf_ochre"] = new ReactionArtBuilder.Paint(0.86f, 0.45f, 0.08f),
         };
 
         /// <summary>
         /// Paints one look wears differently, by "slug|material", from the films of 2026-11-20: nothing white (the owner:
         /// "random white shapes ... look terrible"; the coordinator's check: no white rings or discs). Water's foam sheets
         /// and rings become see-through teal, Sundered's clang rings steel, Hunger's rim a deep violet, Fever's bile
-        /// greener, Seeded's spores a dusty green.
+        /// greener, Seeded's spores a dusty green, Clarity's white motes pale gold.
         /// </summary>
         public static readonly Dictionary<string, ReactionArtBuilder.Paint> LookPaints = new Dictionary<string, ReactionArtBuilder.Paint>
         {
@@ -73,6 +99,17 @@ namespace Clover.EditorTools
             ["dark_hunger|m_vfx_combo_violetedge"] = new ReactionArtBuilder.Paint(0.09f, 0.02f, 0.22f, 1f, 1f, true),
             ["poison_fever|m3_fever"] = new ReactionArtBuilder.Paint(0.4f, 0.52f, 0.06f),
             ["life_seeded|m3_spore"] = new ReactionArtBuilder.Paint(0.36f, 0.44f, 0.16f),
+            ["light_clarity|m2_light_white"] = new ReactionArtBuilder.Paint(1f, 0.74f, 0.28f),
+            // The films of the rebuild (2026-11-20): Wellspring's pool read pale grey (water, not foam: a deep see-through
+            // teal), Hunger's burning crescent and bead white (a hot violet), Temper's glints white (a pale steel).
+            ["water_wellspring|m_vfx_water_ink"] = new ReactionArtBuilder.Paint(0.03f, 0.3f, 0.42f, 0.6f, 1f, true),
+            ["dark_hunger|m2_dark_rim"] = new ReactionArtBuilder.Paint(0.55f, 0.18f, 0.95f),
+            ["metal_temper|m2_light_white"] = new ReactionArtBuilder.Paint(0.62f, 0.68f, 0.78f),
+            ["light_clarity|m2_light_beam"] = new ReactionArtBuilder.Paint(1f, 0.78f, 0.36f, 0.55f, 1f, true),
+            // Tremor on the game's darker floors: the cracks a deeper ochre and see-through, the dust a thin see-through puff
+            // (the render's pale floor let them read lighter; on the Proving Ground they were bright tan starbursts).
+            ["earth_tremor|m_vfx_earth_ochrecrack"] = new ReactionArtBuilder.Paint(0.3f, 0.16f, 0.05f, 0.8f, 1f, true),
+            ["earth_tremor|m3_earth_dust"] = new ReactionArtBuilder.Paint(0.4f, 0.33f, 0.24f, 0.4f, 1f, true),
         };
 
         /// <summary>Pieces one look draws at another size, by "slug|kit object": Seeded's seeds were large for a castle soldier (notes.md).</summary>
@@ -81,16 +118,73 @@ namespace Clover.EditorTools
             ["life_seeded|vfxe2_seed"] = 0.65f,
             // Soaked's drips while it lasts: small, so they read as drips off the body, not blobs beside it.
             ["water_soaked|vfx3c_vfx_water_drop"] = 0.6f,
+            // Unsteady's caught leaves were small at the game camera (notes.md): big enough to see as leaves.
+            ["wind_unsteady|vfx3c_vfx_wind_leaf"] = 1.6f,
+            ["wind_strike|vfx3c_vfx_earth_chip"] = 0.6f,
+            // Tremor's cracks and dust were 2.3 m and 1.7 m across under one body: kept to about the body's own ground.
+            ["earth_tremor|vfx3c_vfx_earth_crack2"] = 0.5f,
+            ["earth_tremor|vfx3c_vfx_earth_dust"] = 0.5f,
+        };
+
+        /// <summary>
+        /// Ribbons one look draws wider, by "slug|material": Unsteady's curls were 13 cm at 12 m and read thin (notes.md),
+        /// the wind strike's crescent and lanes likewise, and Overdrive's arcs were "thin at 12 m".
+        /// </summary>
+        public static readonly Dictionary<string, float> RibbonWidths = new Dictionary<string, float>
+        {
+            ["wind_unsteady|m3_wind_ribbon"] = 2f,
+            ["wind_unsteady|m3_wind_dust"] = 1.8f,
+            ["wind_strike|m3_wind_ribbon"] = 1.2f,
+            ["wind_strike|m3_wind_comb"] = 2f,
+            ["lightning_static|m3_bolt"] = 1.3f,
+            ["lightning_overdrive|m3_bolt"] = 1.3f,
+        };
+
+        /// <summary>A ribbon's ink by its material: wind's mint rim, lightning's violet fringe; the rest the element's own.</summary>
+        public static readonly Dictionary<string, Color> RibbonInks = new Dictionary<string, Color>
+        {
+            ["m3_wind_ribbon"] = new Color(0.27f, 0.62f, 0.5f),
+            ["m3_wind_dust"] = new Color(0.4f, 0.5f, 0.42f),
+            ["m3_wind_comb"] = new Color(0.4f, 0.5f, 0.42f),
+            ["m3_bolt"] = new Color(0.42f, 0.2f, 0.95f),
+        };
+
+        /// <summary>Ribbons of dust and combed floor are stippled thin (air, not a solid band).</summary>
+        public static readonly Dictionary<string, float> RibbonThin = new Dictionary<string, float>
+        {
+            ["m3_wind_dust"] = 0.35f,
+            ["m3_wind_comb"] = 0.3f,
+        };
+
+        /// <summary>
+        /// Looks built once per body, as stacks: Unsteady's three bodies carry one, three and five stacks (one curl and
+        /// one leaf; two curls and three; three curls faster and five), so each becomes a look of its own, moved onto its
+        /// body and back to its own start. The first stays under the recipe's slug.
+        /// </summary>
+        public static readonly Dictionary<string, string[]> PerBody = new Dictionary<string, string[]>
+        {
+            ["wind_unsteady"] = new[] { "wind_unsteady", "wind_unsteady_1", "wind_unsteady_5" },
         };
 
         /// <summary>
         /// Words of a piece's verb that make it repeat while its look is kept past its end: what happens again and again
-        /// while an affliction lasts or a surge holds (drips, puffs, wisps, glints, mist, spores, petals, streaks).
+        /// while an affliction lasts or a surge holds (drips, puffs, wisps, glints, mist, spores, petals, streaks, dust
+        /// and pebbles at each jolt, licks and embers off a flame, scorches where an arc lands).
         /// </summary>
         public static readonly string[] Repeating =
         {
             "while", "loop", "pop off", "peel off", "slide in along", "glint", "sink", "drift round", "drift outward",
-            "drip", "drift up and away", "pour in", "sweep up",
+            "drip", "drift up and away", "pour in", "sweep up", "kick up", "hop up", "tear off", "rise (embers)",
+            "rise off the lotus", "mark the floor where", "scorch the floor", "buzz",
+        };
+
+        /// <summary>Words of a held piece's verb that keep its scale and path going round (a flame, a churning cloud, a bobbing spore, an orbiting leaf).</summary>
+        public static readonly string[] CyclingWords = { "flicker", "churn", "bobbing", "fly round", "orbit and tumble", "crawl" };
+
+        /// <summary>Words of a held piece's verb that keep its spin and orbit turning on (the above, a lotus, Hunger's pouring lines).</summary>
+        public static readonly string[] TurningWords =
+        {
+            "flicker", "churn", "bobbing", "fly round", "orbit and tumble", "turn the other way", "then glow", "open inside it", "pour in, turning", "fall in (black motes)",
         };
 
         /// <summary>Soaked: seconds the water takes to run down the body, and the most its puddle spans, metres.</summary>
@@ -99,10 +193,34 @@ namespace Clover.EditorTools
         /// <summary>A piece thinner than this once placed, lying on the ground, is drawn flat and see-through on the floor.</summary>
         public const float FlatHeight = 0.06f;
 
+        /// <summary>Sides round a ribbon's tube, and the pieces each span of a smooth ribbon is cut into.</summary>
+        public const int RibbonSides = 6, RibbonSteps = 4;
+
+        /// <summary>
+        /// A flame's bands from its foot to its tip, hottest at the foot (notes.md, linear from FFF2B0, FFC93C, FF7A1E and
+        /// D8401A), and the share of its height where each next band begins.
+        /// </summary>
+        public static readonly Color[] FlameBands =
+        {
+            new Color(1f, 0.888f, 0.434f), new Color(1f, 0.584f, 0.045f), new Color(1f, 0.195f, 0.013f), new Color(0.687f, 0.051f, 0.01f),
+        };
+        public static readonly float[] FlameBandFrom = { 0f, 0.24f, 0.5f, 0.78f };
+
         private static readonly StringBuilder Report = new StringBuilder();
+        private static readonly HashSet<string> Unknown = new HashSet<string>();
 
         [MenuItem("Clover/Build/Element Looks")]
         public static void BuildMenu() => Build();
+
+        private class Lists
+        {
+            public readonly List<ElementLookSet.Look> Looks = new List<ElementLookSet.Look>();
+            public readonly List<ElementLookSet.Part> Parts = new List<ElementLookSet.Part>();
+            public readonly List<ElementLookSet.Key> Keys = new List<ElementLookSet.Key>();
+            public readonly List<string> Missing = new List<string>();
+            public readonly Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)> Kits = new Dictionary<string, (Transform, Dictionary<string, MeshFilter>)>();
+            public int Ribbons;
+        }
 
         public static string Build()
         {
@@ -128,142 +246,361 @@ namespace Clover.EditorTools
                 }
 
             Report.Clear();
-            var kits = new Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)>();
-            var outLooks = new List<ElementLookSet.Look>();
-            var outParts = new List<ElementLookSet.Part>();
-            var outKeys = new List<ElementLookSet.Key>();
-            var missing = new List<string>();
+            Unknown.Clear();
+            var lists = new Lists();
             foreach (Dictionary<string, object> look in looks)
             {
                 string slug = Text(look, "slug");
-                string element = Text(look, "element");
-                float seconds = Number(look, "duration_s", 2f);
                 var bodies = (List<object>)look["bodies"];
                 var bodyAt = new List<Vector3>();
                 foreach (Dictionary<string, object> body in bodies) bodyAt.Add(Vec(body["position"], Vector3.zero));
-                var made = new ElementLookSet.Look { Key = slug, Seconds = seconds, FirstPart = outParts.Count, LoopFrom = seconds };
-                var shellTimes = new List<(float start, float grow)>();
-                foreach (Dictionary<string, object> group in (List<object>)look["groups"])
+                if (PerBody.TryGetValue(slug, out var variants))
                 {
-                    string kit = Text(group, "kit"), kitObject = Text(group, "kit_object"), material = Text(group, "material");
-                    var instances = (List<object>)group["instances"];
-                    var motions = (List<object>)group["motion"];
-                    for (int n = 0; n < instances.Count; n++)
-                    {
-                        var instance = (List<object>)instances[n];
-                        var motion = (Dictionary<string, object>)motions[n];
-                        bool onPlayer = motion.TryGetValue("on_player", out var flag) && flag is bool yes && yes;
-                        made.OnPlayer |= onPlayer;
-                        Vector3 position = Vec(instance[1], Vector3.zero);
-                        // The main body's pieces only (or the player's): the other two bodies show the same timeline again.
-                        Vector3 judged = position;
-                        if (motion.TryGetValue("orbit", out var orbitValue) && orbitValue is Dictionary<string, object> orbitAt && orbitAt.ContainsKey("centre"))
-                            judged = Vec(orbitAt["centre"], position);
-                        if (motion.TryGetValue("follow_body", out var follow) && follow is double followed && (int)followed != 0) continue;
-                        // A group of one is a single piece (a rust segment, "rust1"): its number is not a body's.
-                        if (!onPlayer && (instances.Count > 1 ? BodyOf(instance[0] as string, bodyAt, judged) : Nearest(bodyAt, judged)) != 0) continue;
-                        var visible = (List<object>)motion["visible"];
-                        float show = (float)(double)visible[0], hide = (float)(double)visible[1];
-                        // Soaked (the coordinator's check of 2026-11-20: the sheets and puddles grew to 3 m and buried the
-                        // group): the water running down the body is a wet sheen on the body itself, drawn by its own
-                        // material from the head down; the foam ring stacks are left out.
-                        if (slug == "water_soaked" && kitObject.Contains("wet_affliction"))
-                        {
-                            made.Shell = ElementLookSet.Wet;
-                            shellTimes.Add((show, WetRunsDown));
-                            continue;
-                        }
-                        if (slug == "water_soaked" && kitObject.Contains("water_ripple")) continue;
-                        if (kit == Mockup)
-                        {
-                            // The shell's band: its window opens when the band snaps on; the scale keys say how long it grows.
-                            float grow = 0.1f;
-                            if (motion.TryGetValue("scale_keys", out var growKeys) && growKeys is List<object> keyList && keyList.Count >= 2)
-                                grow = (float)((double)((List<object>)keyList[keyList.Count - 1])[0] - (double)((List<object>)keyList[0])[0]);
-                            shellTimes.Add((show, grow));
-                            made.Shell = slug.StartsWith("metal") ? ElementLookSet.Steel : slug.Contains("rime") ? ElementLookSet.Rime : ElementLookSet.Ice;
-                            continue;
-                        }
-                        // Temper's climbing ring and clang are the shader's bright front on the body now (no rings round the player).
-                        if (slug == "metal_temper" && (kitObject.Contains("metal_ring") || kitObject.Contains("clang"))) continue;
-                        if (!TryKitPiece(kit, kitObject, kits, out var filter, out bool comboTurn))
-                        {
-                            missing.Add($"{slug}: {kitObject} ({kit})");
-                            continue;
-                        }
-                        var rotation = Quaternion.Euler(Vec(instance[2], Vector3.zero));
-                        var scale = Vec(instance[3], Vector3.one);
-                        if (LookScales.TryGetValue(slug + "|" + kitObject, out float resize)) scale *= resize;
-                        if (LookPaints.ContainsKey(slug + "|" + material)) material = slug + "|" + material;
-                        string placement = instance.Count > 4 ? instance[4] as string : "b";
-                        string verb = Text(motion, "verb");
-                        var mesh = Bake(slug, outParts.Count - made.FirstPart, filter, comboTurn, material, element, scale, placement == "g", out byte kind, out Material wears, elementArt, glow);
-                        var part = new ElementLookSet.Part
-                        {
-                            Mesh = mesh, Material = wears, Kind = kind,
-                            Follows = placement != "g" || onPlayer,
-                            Repeats = Repeating.Any(word => verb.Contains(word)) && hide < 9f,
-                            Redraw = motion.ContainsKey("redraw") || verb.StartsWith("flicker"),
-                            Position = position, Rotation = rotation, Scale = scale, Show = show, Hide = hide,
-                        };
-                        part.PathFirst = outKeys.Count;
-                        part.PathCount = AddKeys(motion, "path", outKeys, false);
-                        part.ScaleFirst = outKeys.Count;
-                        part.ScaleCount = AddKeys(motion, "scale_keys", outKeys, false);
-                        if (motion.TryGetValue("spin", out var spin) && spin is Dictionary<string, object> spinning)
-                        {
-                            part.SpinAxis = Vec(spinning["axis"], Vector3.up);
-                            part.SpinFirst = outKeys.Count;
-                            part.SpinCount = AddKeys(spinning, "keys", outKeys, true);
-                        }
-                        if (orbitValue is Dictionary<string, object> orbiting)
-                        {
-                            part.OrbitCentre = Vec(orbiting["centre"], Vector3.zero);
-                            part.OrbitFirst = outKeys.Count;
-                            part.OrbitCount = AddKeys(orbiting, "keys", outKeys, true);
-                        }
-                        if (part.Repeats) made.LoopFrom = Mathf.Min(made.LoopFrom, show);
-                        // Soaked's puddle stays small and low round the feet, whatever size the render gave it.
-                        if (slug == "water_soaked" && kind == ElementLookSet.Flat)
-                        {
-                            float grown = 1f;
-                            for (int k = part.ScaleFirst; k < part.ScaleFirst + part.ScaleCount; k++)
-                                grown = Mathf.Max(grown, Mathf.Max(outKeys[k].Value.x, outKeys[k].Value.z));
-                            float across = Mathf.Max(mesh.bounds.size.x * part.Scale.x, mesh.bounds.size.z * part.Scale.z) * grown;
-                            if (across > SoakedPuddle) part.Scale *= SoakedPuddle / across;
-                        }
-                        outParts.Add(part);
-                        if (outParts.Count - made.FirstPart >= ElementLooks.MostParts) break;
-                    }
+                    float firstOn = Onset(look, 0);
+                    for (int b = 0; b < variants.Length && b < bodyAt.Count; b++)
+                        BuildLook(look, slug, variants[b], b, bodyAt, Mathf.Max(0f, Onset(look, b) - firstOn), lists, elementArt, glow);
                 }
-                made.PartCount = outParts.Count - made.FirstPart;
-                if (shellTimes.Count > 0)
-                {
-                    shellTimes.Sort((a, b) => a.start.CompareTo(b.start));
-                    made.ShellBands = shellTimes.Count;
-                    made.ShellStart = shellTimes[0].start;
-                    made.ShellStep = shellTimes.Count > 1 ? (shellTimes[shellTimes.Count - 1].start - shellTimes[0].start) / (shellTimes.Count - 1) : 0.1f;
-                    made.ShellGrow = shellTimes[0].grow;
-                }
-                outLooks.Add(made);
-                Report.AppendLine($"| {slug} | {made.Seconds:0.0} s | {(made.OnPlayer ? "player" : "body")} | {made.PartCount} | {made.LoopFrom:0.00} s | " +
-                    $"{(made.Shell == ElementLookSet.NoShell ? "-" : $"{made.ShellBands} bands from {made.ShellStart:0.00} s, every {made.ShellStep:0.00} s, {made.ShellGrow:0.00} s each")} |");
+                else BuildLook(look, slug, slug, 0, bodyAt, 0f, lists, elementArt, glow);
             }
-            set.Looks = outLooks.ToArray();
-            set.Parts = outParts.ToArray();
-            set.Keys = outKeys.ToArray();
+            set.Looks = lists.Looks.ToArray();
+            set.Parts = lists.Parts.ToArray();
+            set.Keys = lists.Keys.ToArray();
             EditorUtility.SetDirty(set);
             elementArt.Looks = set;
             EditorUtility.SetDirty(elementArt);
             AssetDatabase.SaveAssets();
             Directory.CreateDirectory("review/checks");
             File.WriteAllText("review/checks/element_looks.md",
-                $"# Element looks (batch 1)\n\n{outLooks.Count} looks, {outParts.Count} parts, {outKeys.Count} keys, from {RecipePath}.\n\n" +
-                "| Look | Length | On | Parts | Repeats from | Shell |\n|---|---|---|---|---|---|\n" + Report +
-                (missing.Count > 0 ? "\n## Not found in the kits\n\n" + string.Join("\n", missing.Select(m => "- " + m)) + "\n" : ""));
-            string line = $"[Clover.Build] Element looks: {outLooks.Count} looks, {outParts.Count} parts, {missing.Count} pieces missing; review/checks/element_looks.md";
+                $"# Element looks (batches 1 and 2)\n\n{lists.Looks.Count} looks, {lists.Parts.Count} parts ({lists.Ribbons} ribbons), {lists.Keys.Count} keys, from {RecipePath}.\n\n" +
+                "| Look | Length | On | Parts | Ribbons | Repeats from | Shell |\n|---|---|---|---|---|---|---|\n" + Report +
+                (lists.Missing.Count > 0 ? "\n## Not found in the kits\n\n" + string.Join("\n", lists.Missing.Select(m => "- " + m)) + "\n" : "") +
+                (Unknown.Count > 0 ? "\n## Materials with no paint (drawn grey)\n\n" + string.Join("\n", Unknown.OrderBy(m => m).Select(m => "- " + m)) + "\n" : ""));
+            string line = $"[Clover.Build] Element looks: {lists.Looks.Count} looks, {lists.Parts.Count} parts, {lists.Ribbons} ribbons, {lists.Missing.Count} pieces missing, {Unknown.Count} unpainted; review/checks/element_looks.md";
             Debug.Log(line);
             return line;
+        }
+
+        // When a body's part of a look begins: its first ribbon or piece seen.
+        private static float Onset(Dictionary<string, object> look, int body)
+        {
+            float first = float.MaxValue;
+            if (look.TryGetValue("ribbons", out var value) && value is List<object> ribbons)
+                foreach (Dictionary<string, object> ribbon in ribbons)
+                    if (CentreBody(Text(ribbon, "centre")) == body)
+                        first = Mathf.Min(first, Window((Dictionary<string, object>)ribbon["motion"]).x);
+            return first == float.MaxValue ? 0f : first;
+        }
+
+        private static int CentreBody(string centre) =>
+            centre.StartsWith("body ") && int.TryParse(centre.Substring(5), out int n) ? n : -1;
+
+        private static Vector2 Window(Dictionary<string, object> motion)
+        {
+            var visible = (List<object>)motion["visible"];
+            return new Vector2((float)(double)visible[0], (float)(double)visible[1]);
+        }
+
+        private static void BuildLook(Dictionary<string, object> look, string slug, string key, int onBody, List<Vector3> bodyAt, float shift,
+            Lists lists, ElementArtSet elementArt, Material glow)
+        {
+            string element = Text(look, "element");
+            float seconds = Number(look, "duration_s", 2f) - shift;
+            Vector3 bodyFrom = onBody < bodyAt.Count ? bodyAt[onBody] : Vector3.zero;
+            var made = new ElementLookSet.Look { Key = key, Seconds = seconds, FirstPart = lists.Parts.Count, LoopFrom = seconds };
+            // The way the recipe's player faced: toward the main body.
+            if (look.TryGetValue("player", out var playerValue) && playerValue is Dictionary<string, object> player && bodyAt.Count > 0)
+            {
+                Vector3 toward = bodyAt[0] - Vec(player["position"], Vector3.zero);
+                made.FacingYaw = Mathf.Atan2(toward.x, toward.z) * Mathf.Rad2Deg;
+            }
+            var shellTimes = new List<(float start, float grow)>();
+            int ribbonsMade = 0;
+            foreach (Dictionary<string, object> group in (List<object>)look["groups"])
+            {
+                string kit = Text(group, "kit"), kitObject = Text(group, "kit_object"), material = Text(group, "material");
+                var instances = (List<object>)group["instances"];
+                var motions = (List<object>)group["motion"];
+                for (int n = 0; n < instances.Count; n++)
+                {
+                    if (lists.Parts.Count - made.FirstPart >= ElementLooks.MostParts) break;
+                    var instance = (List<object>)instances[n];
+                    var motion = (Dictionary<string, object>)motions[n];
+                    bool onPlayer = motion.TryGetValue("on_player", out var flag) && flag is bool yes && yes;
+                    made.OnPlayer |= onPlayer;
+                    Vector3 position = Vec(instance[1], Vector3.zero);
+                    // The main body's pieces only (or the player's): the other two bodies show the same timeline again.
+                    Vector3 judged = position;
+                    if (motion.TryGetValue("orbit", out var orbitValue) && orbitValue is Dictionary<string, object> orbitAt && orbitAt.ContainsKey("centre"))
+                        judged = Vec(orbitAt["centre"], position);
+                    if (motion.TryGetValue("follow_body", out var follow) && follow is double followed && (int)followed != onBody) continue;
+                    // A group of one is a single piece (a rust segment, "rust1"): its number is not a body's.
+                    if (!onPlayer && (instances.Count > 1 ? BodyOf(instance[0] as string, bodyAt, judged) : Nearest(bodyAt, judged)) != onBody) continue;
+                    var window = Window(motion);
+                    float show = window.x - shift, hide = window.y >= 9f ? 9f : window.y - shift;
+                    if (onBody != 0) position -= bodyFrom;
+                    // Soaked (the coordinator's check of 2026-11-20: the sheets and puddles grew to 3 m and buried the
+                    // group): the water running down the body is a wet sheen on the body itself, drawn by its own
+                    // material from the head down; the foam ring stacks are left out.
+                    if (slug == "water_soaked" && kitObject.Contains("wet_affliction"))
+                    {
+                        made.Shell = ElementLookSet.Wet;
+                        shellTimes.Add((show, WetRunsDown));
+                        continue;
+                    }
+                    if (slug == "water_soaked" && kitObject.Contains("water_ripple")) continue;
+                    if (kit == Mockup)
+                    {
+                        // The shell's band: its window opens when the band snaps on; the scale keys say how long it grows.
+                        float grow = 0.1f;
+                        if (motion.TryGetValue("scale_keys", out var growKeys) && growKeys is List<object> keyList && keyList.Count >= 2)
+                            grow = (float)((double)((List<object>)keyList[keyList.Count - 1])[0] - (double)((List<object>)keyList[0])[0]);
+                        shellTimes.Add((show, grow));
+                        made.Shell = slug.StartsWith("metal") ? ElementLookSet.Steel : slug.Contains("rime") ? ElementLookSet.Rime : ElementLookSet.Ice;
+                        continue;
+                    }
+                    // Temper's climbing ring and clang are the shader's bright front on the body now (no rings round the player).
+                    if (slug == "metal_temper" && (kitObject.Contains("metal_ring") || kitObject.Contains("clang"))) continue;
+                    if (!TryKitPiece(kit, kitObject, lists.Kits, out var filter, out bool comboTurn))
+                    {
+                        lists.Missing.Add($"{slug}: {kitObject} ({kit})");
+                        continue;
+                    }
+                    var rotation = Quaternion.Euler(Vec(instance[2], Vector3.zero));
+                    var scale = Vec(instance[3], Vector3.one);
+                    if (LookScales.TryGetValue(slug + "|" + kitObject, out float resize)) scale *= resize;
+                    if (LookPaints.ContainsKey(slug + "|" + material)) material = slug + "|" + material;
+                    string placement = instance.Count > 4 ? instance[4] as string : "b";
+                    string verb = Text(motion, "verb");
+                    var mesh = Bake(key, lists.Parts.Count - made.FirstPart, filter, comboTurn, material, element, scale, placement == "g", out byte kind, out Material wears, elementArt, glow);
+                    bool held = hide >= 9f;
+                    var part = new ElementLookSet.Part
+                    {
+                        Mesh = mesh, Material = wears, Kind = kind,
+                        Follows = placement != "g" || onPlayer,
+                        Repeats = Repeating.Any(word => verb.Contains(word)) && !held,
+                        Cycles = held && CyclingWords.Any(word => verb.Contains(word)),
+                        RunsOn = held && TurningWords.Any(word => verb.Contains(word)),
+                        Redraw = motion.ContainsKey("redraw") || verb.StartsWith("flicker ("),
+                        Position = position, Rotation = rotation, Scale = scale, Show = show, Hide = hide,
+                    };
+                    part.PathFirst = lists.Keys.Count;
+                    part.PathCount = AddKeys(motion, "path", lists.Keys, false, shift);
+                    part.ScaleFirst = lists.Keys.Count;
+                    part.ScaleCount = AddKeys(motion, "scale_keys", lists.Keys, false, shift);
+                    if (motion.TryGetValue("spin", out var spin) && spin is Dictionary<string, object> spinning)
+                    {
+                        part.SpinAxis = Vec(spinning["axis"], Vector3.up);
+                        part.SpinFirst = lists.Keys.Count;
+                        part.SpinCount = AddKeys(spinning, "keys", lists.Keys, true, shift);
+                    }
+                    if (orbitValue is Dictionary<string, object> orbiting)
+                    {
+                        part.OrbitCentre = Vec(orbiting["centre"], Vector3.zero);
+                        // A piece of another body orbits that body (the recipe gives every leaf the main body's centre).
+                        if (onBody != 0) part.OrbitCentre = Vector3.zero;
+                        part.OrbitFirst = lists.Keys.Count;
+                        part.OrbitCount = AddKeys(orbiting, "keys", lists.Keys, true, shift);
+                    }
+                    if (part.Repeats) made.LoopFrom = Mathf.Min(made.LoopFrom, show);
+                    // Soaked's puddle stays small and low round the feet, whatever size the render gave it.
+                    if (slug == "water_soaked" && kind == ElementLookSet.Flat)
+                    {
+                        float grown = 1f;
+                        for (int k = part.ScaleFirst; k < part.ScaleFirst + part.ScaleCount; k++)
+                            grown = Mathf.Max(grown, Mathf.Max(lists.Keys[k].Value.x, lists.Keys[k].Value.z));
+                        float across = Mathf.Max(mesh.bounds.size.x * part.Scale.x, mesh.bounds.size.z * part.Scale.z) * grown;
+                        if (across > SoakedPuddle) part.Scale *= SoakedPuddle / across;
+                    }
+                    lists.Parts.Add(part);
+                }
+            }
+
+            if (look.TryGetValue("ribbons", out var ribbonValue) && ribbonValue is List<object> ribbons)
+            {
+                foreach (Dictionary<string, object> ribbon in ribbons)
+                {
+                    if (lists.Parts.Count - made.FirstPart >= ElementLooks.MostParts) break;
+                    string centre = Text(ribbon, "centre");
+                    // A ribbon round the player belongs to the player's look; round a body, to that body's.
+                    if (centre != "player" && CentreBody(centre) != onBody) continue;
+                    if (centre == "player") made.OnPlayer = true;
+                    var motion = (Dictionary<string, object>)ribbon["motion"];
+                    var window = Window(motion);
+                    float show = window.x - shift, hide = window.y >= 9f ? 9f : window.y - shift;
+                    string material = Text(ribbon, "material");
+                    string note = Text(motion, "note");
+                    var points = new List<Vector3>();
+                    foreach (var point in (List<object>)ribbon["points"]) points.Add(Vec(point, Vector3.zero));
+                    float width = Number(ribbon, "width_m", 0.1f) * (RibbonWidths.TryGetValue(slug + "|" + material, out float wider) ? wider : 1f);
+                    var taper = new Vector2(1f, 1f);
+                    if (ribbon.TryGetValue("taper_tail_head", out var taperValue) && taperValue is List<object> taperList && taperList.Count >= 2)
+                        taper = new Vector2((float)(double)taperList[0], (float)(double)taperList[1]);
+                    bool jagged = material.Contains("bolt");
+                    // Wind is a band of air (wide across, thin through); a bolt is round.
+                    float through = jagged ? 1f : 0.45f;
+                    var paint = PaintOf(material);
+                    var mesh = RibbonMesh($"look_{key}_{lists.Parts.Count - made.FirstPart:00}_{Text(ribbon, "object")}", points, width, Text(ribbon, "radius_profile"), taper, jagged, through, paint.Colour);
+                    AssetDatabase.AddObjectToAsset(mesh, AssetDatabase.LoadAssetAtPath<ElementLookSet>(SetPath));
+                    string owner = ReactionArtBuilder.ElementOf(material, element + "_" + element);
+                    int ring = ReactionDesigns.RingIndex(owner);
+                    bool inked = !(ribbon.TryGetValue("ink", out var inkValue) && inkValue is bool ink && !ink);
+                    var part = new ElementLookSet.Part
+                    {
+                        Mesh = mesh, Material = ring >= 0 && ring < elementArt.Solids.Length ? elementArt.Solids[ring] : elementArt.Solids[0],
+                        Kind = ElementLookSet.Ribbon, Follows = true,
+                        // What comes again and again while the look is kept: the curls, the arcs; not the wind arriving,
+                        // nor a strike's own shapes (played once).
+                        Repeats = hide < 9f && !note.Contains("comes in from the blow") && slug != "wind_strike",
+                        Position = Vector3.zero, Rotation = Quaternion.identity, Scale = Vector3.one, Show = show, Hide = hide,
+                        InkColour = RibbonInks.TryGetValue(material, out var inkColour) ? inkColour : elementArt.Solids[Mathf.Max(0, ring)].GetColor("_OutlineColor"),
+                        InkWidth = inked ? Mathf.Clamp(width * 0.16f, 0.008f, 0.025f) : 0f,
+                        Thin = RibbonThin.TryGetValue(material, out float thin) ? thin : 0f,
+                    };
+                    part.PathFirst = lists.Keys.Count;
+                    part.PathCount = AddKeys(motion, "path", lists.Keys, false, shift);
+                    part.DrawFirst = lists.Keys.Count;
+                    part.DrawCount = AddKeys(motion, "draw_on", lists.Keys, false, shift);
+                    part.EraseFirst = lists.Keys.Count;
+                    part.EraseCount = AddKeys(motion, "erase", lists.Keys, false, shift);
+                    if (motion.TryGetValue("orbit", out var orbitValue) && orbitValue is Dictionary<string, object> orbit)
+                    {
+                        // Its points lie about its centre, so it turns about its own origin: degrees from its start on,
+                        // a steady rate (Unity's sense, as the recipe's angles are); a rise climbs it as it turns.
+                        float start = Number(orbit, "start", show + shift) - shift;
+                        float end = hide >= 9f ? seconds : hide;
+                        float degrees = 360f * Number(orbit, "turns_per_second", 0f) * Mathf.Max(0.01f, end - start);
+                        part.OrbitCentre = Vector3.zero;
+                        part.OrbitFirst = lists.Keys.Count;
+                        lists.Keys.Add(new ElementLookSet.Key { Time = start, Value = Vector3.zero, Ease = ElementLookSet.Linear });
+                        lists.Keys.Add(new ElementLookSet.Key { Time = end, Value = new Vector3(degrees, 0f, 0f), Ease = ElementLookSet.Linear });
+                        part.OrbitCount = 2;
+                        part.RunsOn = hide >= 9f;
+                        float rise = Number(orbit, "rise", 0f);
+                        if (rise != 0f && part.PathCount == 0)
+                        {
+                            part.PathFirst = lists.Keys.Count;
+                            lists.Keys.Add(new ElementLookSet.Key { Time = start, Value = Vector3.zero, Ease = ElementLookSet.Linear });
+                            lists.Keys.Add(new ElementLookSet.Key { Time = end, Value = Vector3.up * (rise * (end - start)), Ease = ElementLookSet.Linear });
+                            part.PathCount = 2;
+                        }
+                    }
+                    if (part.Repeats) made.LoopFrom = Mathf.Min(made.LoopFrom, show);
+                    lists.Parts.Add(part);
+                    lists.Ribbons++;
+                    ribbonsMade++;
+                }
+            }
+
+            made.PartCount = lists.Parts.Count - made.FirstPart;
+            if (shellTimes.Count > 0)
+            {
+                shellTimes.Sort((a, b) => a.start.CompareTo(b.start));
+                made.ShellBands = shellTimes.Count;
+                made.ShellStart = shellTimes[0].start;
+                made.ShellStep = shellTimes.Count > 1 ? (shellTimes[shellTimes.Count - 1].start - shellTimes[0].start) / (shellTimes.Count - 1) : 0.1f;
+                made.ShellGrow = shellTimes[0].grow;
+            }
+            lists.Looks.Add(made);
+            Report.AppendLine($"| {key} | {made.Seconds:0.0} s | {(made.OnPlayer ? "player" : "body")} | {made.PartCount} | {ribbonsMade} | {made.LoopFrom:0.00} s | " +
+                $"{(made.Shell == ElementLookSet.NoShell ? "-" : $"{made.ShellBands} bands from {made.ShellStart:0.00} s, every {made.ShellStep:0.00} s, {made.ShellGrow:0.00} s each")} |");
+        }
+
+        /// <summary>
+        /// A ribbon's tube along its points (metres about its centre): smoothed through its points (a bolt keeps its hard
+        /// corners), <paramref name="width"/> across at its widest, <paramref name="through"/> of that through it (a band
+        /// of wind stands up across its way; one lying on the floor lies flat), narrowing by its profile (taper: from the
+        /// tail's share to the head's; needle: thin at both ends) and closed at both ends. Its u runs from the tail, 0, to
+        /// the head, 1, by length, for Clover/Spell's draw clip; uv1 carries the normals the ink is pushed along.
+        /// </summary>
+        public static Mesh RibbonMesh(string name, List<Vector3> points, float width, string profile, Vector2 taper, bool jagged, float through, Color colour)
+        {
+            var line = new List<Vector3>();
+            if (points.Count < 2) points = new List<Vector3> { Vector3.zero, Vector3.up * 0.1f };
+            if (jagged) line.AddRange(points);
+            else
+            {
+                for (int i = 0; i < points.Count - 1; i++)
+                {
+                    Vector3 p0 = points[Mathf.Max(0, i - 1)], p1 = points[i], p2 = points[i + 1], p3 = points[Mathf.Min(points.Count - 1, i + 2)];
+                    for (int s = 0; s < RibbonSteps; s++) line.Add(CatmullRom(p0, p1, p2, p3, s / (float)RibbonSteps));
+                }
+                line.Add(points[points.Count - 1]);
+            }
+            int count = line.Count;
+            var along = new float[count];
+            for (int i = 1; i < count; i++) along[i] = along[i - 1] + Vector3.Distance(line[i - 1], line[i]);
+            float total = Mathf.Max(0.0001f, along[count - 1]);
+            bool lying = true;
+            foreach (var p in line) lying &= p.y < 0.12f;
+            float cap = Mathf.Min(width * 0.6f, total * 0.2f);
+
+            var vertices = new List<Vector3>(count * RibbonSides);
+            var normals = new List<Vector3>(count * RibbonSides);
+            var uvs = new List<Vector2>(count * RibbonSides);
+            var colours = new List<Color>(count * RibbonSides);
+            for (int i = 0; i < count; i++)
+            {
+                Vector3 tangent = (line[Mathf.Min(count - 1, i + 1)] - line[Mathf.Max(0, i - 1)]).normalized;
+                if (tangent.sqrMagnitude < 0.5f) tangent = Vector3.forward;
+                // Across: up (a standing band), or flat along the floor for one lying on it.
+                Vector3 side = Vector3.Cross(Vector3.up, tangent);
+                if (side.sqrMagnitude < 0.0001f) side = Vector3.Cross(Vector3.forward, tangent);
+                side.Normalize();
+                Vector3 up = Vector3.Cross(tangent, side).normalized;
+                Vector3 wide = lying ? side : up, thin = lying ? up : side;
+                float u = along[i] / total;
+                float shape = profile == "needle" ? Mathf.Pow(Mathf.Max(0f, Mathf.Sin(Mathf.PI * u)), 0.6f) : Mathf.Lerp(taper.x, taper.y, u);
+                float closed = cap > 0f ? Mathf.Sqrt(Mathf.Clamp01(Mathf.Min(along[i], total - along[i]) / cap)) : 1f;
+                float radius = 0.5f * width * Mathf.Max(0f, shape) * closed;
+                for (int s = 0; s < RibbonSides; s++)
+                {
+                    float angle = s * Mathf.PI * 2f / RibbonSides;
+                    float c = Mathf.Cos(angle), n = Mathf.Sin(angle);
+                    vertices.Add(line[i] + wide * (c * radius) + thin * (n * radius * through));
+                    normals.Add((wide * (c * through) + thin * n).normalized);
+                    uvs.Add(new Vector2(u, s / (float)RibbonSides));
+                    colours.Add(new Color(colour.r, colour.g, colour.b, 1f));
+                }
+            }
+            var triangles = new List<int>((count - 1) * RibbonSides * 6);
+            for (int i = 0; i < count - 1; i++)
+                for (int s = 0; s < RibbonSides; s++)
+                {
+                    int a = i * RibbonSides + s, b = i * RibbonSides + (s + 1) % RibbonSides, c = a + RibbonSides, d = b + RibbonSides;
+                    triangles.Add(a); triangles.Add(c); triangles.Add(b);
+                    triangles.Add(b); triangles.Add(c); triangles.Add(d);
+                }
+            // Faces turned out (Unity's front is the side the winding's normal points to), so the ink's back faces are inside.
+            int probe = 0;
+            for (int t = 0; t < triangles.Count; t += 3)
+            {
+                Vector3 face = Vector3.Cross(vertices[triangles[t + 1]] - vertices[triangles[t]], vertices[triangles[t + 2]] - vertices[triangles[t]]);
+                if (face.sqrMagnitude < 1e-12f) continue;
+                probe = Vector3.Dot(face, normals[triangles[t]]) >= 0f ? 1 : -1;
+                break;
+            }
+            if (probe < 0)
+                for (int t = 0; t < triangles.Count; t += 3)
+                {
+                    int keep = triangles[t + 1];
+                    triangles[t + 1] = triangles[t + 2];
+                    triangles[t + 2] = keep;
+                }
+            var mesh = new Mesh { name = name };
+            mesh.SetVertices(vertices);
+            mesh.SetNormals(normals);
+            mesh.SetColors(colours);
+            mesh.SetUVs(0, uvs);
+            mesh.SetUVs(1, normals);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        private static Vector3 CatmullRom(Vector3 p0, Vector3 p1, Vector3 p2, Vector3 p3, float t)
+        {
+            float t2 = t * t, t3 = t2 * t;
+            return 0.5f * (2f * p1 + (p2 - p0) * t + (2f * p0 - 5f * p1 + 4f * p2 - p3) * t2 + (3f * p1 - p0 - 3f * p2 + p3) * t3);
         }
 
         // Which body a piece is on: its name says ("..._wisp0_3", "..._hole1": the number after the piece's word), else
@@ -341,7 +678,8 @@ namespace Clover.EditorTools
         }
 
         // The kit mesh in its own axes about its pivot, painted in what it wears: one colour for the whole piece (the
-        // render re-colours shared meshes per piece), or a colour a slot for the batch's own many-slot pieces (the sword).
+        // render re-colours shared meshes per piece), or a colour a slot for the batch's own many-slot pieces (the sword),
+        // or a flame's bands by height.
         private static Mesh Bake(string slug, int index, MeshFilter filter, bool comboTurn, string material, string element, Vector3 scale, bool onGround,
             out byte kind, out Material wears, ElementArtSet elementArt, Material glow)
         {
@@ -363,7 +701,7 @@ namespace Clover.EditorTools
             var slots = filter.GetComponent<MeshRenderer>() != null ? filter.GetComponent<MeshRenderer>().sharedMaterials : new Material[0];
             var colours = new Color[vertices.Length];
             var triangles = new List<int>();
-            bool perSlot = source.subMeshCount > 1 && material.Substring(material.IndexOf('|') + 1).StartsWith("m3_");
+            bool perSlot = source.subMeshCount > 1 && filter.sharedMesh.name.StartsWith("vfxe2_") && material.Substring(material.IndexOf('|') + 1).StartsWith("m3_");
             var mainPaint = PaintOf(material);
             for (int s = 0; s < source.subMeshCount; s++)
             {
@@ -373,6 +711,24 @@ namespace Clover.EditorTools
                 float alpha = mainPaint.Glow || (onGround && FlatAfter(source, toKit, scale)) ? paint.Colour.a : paint.Flag;
                 foreach (int v in subTriangles) colours[v] = new Color(paint.Colour.r, paint.Colour.g, paint.Colour.b, alpha);
                 triangles.AddRange(subTriangles);
+            }
+            // A flame tongue or lick is banded from its foot up, hottest at the foot (notes.md, "Fire: Burn").
+            if ((filter.name == "vfxe2_flame" || filter.name == "vfxe2_flame_lick") && vertices.Length > 0)
+            {
+                float low = float.MaxValue, high = float.MinValue;
+                foreach (var v in vertices)
+                {
+                    low = Mathf.Min(low, v.y);
+                    high = Mathf.Max(high, v.y);
+                }
+                for (int i = 0; i < vertices.Length; i++)
+                {
+                    float share = (vertices[i].y - low) / Mathf.Max(0.0001f, high - low);
+                    int band = 0;
+                    for (int b = 0; b < FlameBandFrom.Length; b++)
+                        if (share >= FlameBandFrom[b]) band = b;
+                    colours[i] = new Color(FlameBands[band].r, FlameBands[band].g, FlameBands[band].b, colours[i].a);
+                }
             }
             var bounds = new Bounds(vertices.Length > 0 ? Vector3.Scale(vertices[0], scale) : Vector3.zero, Vector3.zero);
             foreach (var v in vertices) bounds.Encapsulate(Vector3.Scale(v, scale));
@@ -463,18 +819,20 @@ namespace Clover.EditorTools
             if (material != null && LookPaints.TryGetValue(material, out var paint)) return paint;
             if (material != null && Paints.TryGetValue(material, out paint)) return paint;
             if (ReactionArtBuilder.TryPaint(material, out paint)) return paint;
+            if (material != null) Unknown.Add(material);
             return new ReactionArtBuilder.Paint(0.5f, 0.5f, 0.5f);
         }
 
-        // A channel's keys: [[t, value, easing], ...]; a value is a vector, or degrees for a spin or an orbit.
-        private static int AddKeys(Dictionary<string, object> from, string name, List<ElementLookSet.Key> keys, bool degrees)
+        // A channel's keys: [[t, value, easing], ...]; a value is a vector, a share, or degrees for a spin or an orbit;
+        // its times moved back by shift (a body's own look begun at its own start).
+        private static int AddKeys(Dictionary<string, object> from, string name, List<ElementLookSet.Key> keys, bool degrees, float shift = 0f)
         {
             if (!from.TryGetValue(name, out var value) || !(value is List<object> list)) return 0;
             int added = 0;
             foreach (var entry in list)
             {
                 if (!(entry is List<object> key) || key.Count < 2) continue;
-                float time = (float)(double)key[0];
+                float time = (float)(double)key[0] - shift;
                 Vector3 v = degrees ? new Vector3(key[1] is double d ? (float)d : 0f, 0f, 0f) : Vec(key[1], Vector3.zero);
                 keys.Add(new ElementLookSet.Key { Time = time, Value = v, Ease = EaseOf(key.Count > 2 ? key[2] as string : "linear") });
                 added++;

@@ -11,8 +11,12 @@ namespace Clover.Player.Forms
     /// </summary>
     public class ElementLookSet : ScriptableObject
     {
-        /// <summary>How a part is drawn: an inked solid in its element's material, or a flat see-through mark lying on the floor.</summary>
-        public const byte Solid = 0, Flat = 1;
+        /// <summary>
+        /// How a part is drawn: an inked solid in its element's material, a flat see-through mark lying on the floor, or a
+        /// ribbon (a tube along the recipe's points, its u running tail 0 to head 1) drawn on head first and wiped off tail
+        /// first by Clover/Spell's _DrawHead and _DrawTail.
+        /// </summary>
+        public const byte Solid = 0, Flat = 1, Ribbon = 2;
 
         /// <summary>A body's shell the look asks the body's own material for: none, steel (Temper), ice (Chill), rime (Rime).</summary>
         public const byte NoShell = 0, Steel = 1, Ice = 2, Rime = 3, Wet = 4;
@@ -38,6 +42,11 @@ namespace Clover.Player.Forms
             public byte Shell;
             public float ShellStart, ShellStep, ShellGrow;
             public int ShellBands;
+            /// <summary>
+            /// Degrees of yaw the recipe's player faced (toward the main body): a look played turned to a strike's way
+            /// (<see cref="ElementLooks.PlayAt"/>) is turned by the strike's yaw less this.
+            /// </summary>
+            public float FacingYaw;
         }
 
         [Serializable]
@@ -52,6 +61,13 @@ namespace Clover.Player.Forms
             public bool Repeats;
             /// <summary>Turned anew every few frames (sparks).</summary>
             public bool Redraw;
+            /// <summary>
+            /// Stays while the look is kept but keeps moving (a flame flickering, a cloud churning, a leaf orbiting): its
+            /// scale and path go round its last <see cref="CycleSeconds"/>.
+            /// </summary>
+            public bool Cycles;
+            /// <summary>Stays while the look is kept and its spin and orbit run on at their last rate (a lotus turning, a leaf orbiting).</summary>
+            public bool RunsOn;
             /// <summary>The key pose about the body's feet (or the player's): world-aligned, Unity axes.</summary>
             public Vector3 Position;
             public Quaternion Rotation;
@@ -61,7 +77,15 @@ namespace Clover.Player.Forms
             public int PathFirst, PathCount, ScaleFirst, ScaleCount, SpinFirst, SpinCount, OrbitFirst, OrbitCount;
             public Vector3 SpinAxis;
             public Vector3 OrbitCentre;
+            /// <summary>A ribbon's keys: the share of it drawn on from its tail (x), and the share wiped off from its tail (x).</summary>
+            public int DrawFirst, DrawCount, EraseFirst, EraseCount;
+            /// <summary>A ribbon's ink: its colour and width in metres (none: no ink), and how much of it is stippled away (dust).</summary>
+            public Color InkColour;
+            public float InkWidth, Thin;
         }
+
+        /// <summary>The most seconds a cycling part's scale and path go round at the end of its look.</summary>
+        public const float CycleSeconds = 1.2f;
 
         [Serializable]
         public struct Key
@@ -119,6 +143,44 @@ namespace Clover.Player.Forms
                 return Vector3.LerpUnclamped(Keys[k].Value, Keys[k + 1].Value, Ease(Keys[k + 1].Ease, (time - Keys[k].Time) / span));
             }
             return Keys[last].Value;
+        }
+
+        /// <summary>
+        /// An angle channel's degrees (x) at a time, running on past its last key at the rate of its last two keys (a
+        /// lotus still turning, a leaf still orbiting while the look is kept).
+        /// </summary>
+        public float SampleOnward(int first, int count, float time)
+        {
+            if (count <= 0) return 0f;
+            int last = first + count - 1;
+            if (count < 2 || time <= Keys[last].Time) return Sample(first, count, time, Vector3.zero).x;
+            float span = Keys[last].Time - Keys[last - 1].Time;
+            float rate = span > 0.0001f ? (Keys[last].Value.x - Keys[last - 1].Value.x) / span : 0f;
+            return Keys[last].Value.x + rate * (time - Keys[last].Time);
+        }
+
+        /// <summary>
+        /// A part's own time <paramref name="age"/> seconds into its look: the look's, held at its end; for a repeating
+        /// part round and round the loop from <see cref="Look.LoopFrom"/> to the end, taken one loop on when its window
+        /// reaches past the end (a curl drawn on at the end of the loop is wiped off at the start of the next, never cut);
+        /// for a cycling part round its last stretch.
+        /// </summary>
+        public static float PartTime(in Look look, in Part part, float age, bool once)
+        {
+            if (age <= look.Seconds || once) return Mathf.Min(age, look.Seconds + 0.001f);
+            if (part.Repeats)
+            {
+                float span = Mathf.Max(0.1f, look.Seconds - look.LoopFrom);
+                float t = look.LoopFrom + Mathf.Repeat(age - look.Seconds, span);
+                if (t < part.Show && t + span < part.Hide) t += span;
+                return t;
+            }
+            if (part.Cycles)
+            {
+                float cycle = Mathf.Clamp(look.Seconds - part.Show - 0.4f, 0.2f, CycleSeconds);
+                return look.Seconds - cycle + Mathf.Repeat(age - look.Seconds, cycle);
+            }
+            return look.Seconds + 0.001f;
         }
 
         /// <summary>
