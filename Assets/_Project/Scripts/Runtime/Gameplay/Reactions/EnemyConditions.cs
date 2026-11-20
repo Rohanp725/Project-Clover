@@ -170,7 +170,7 @@ namespace Clover.Gameplay
         /// each the blow spends, or that has had its last blow, ends without its end being told. A reaction's own blow is
         /// not one (the caller keeps those out).
         /// </summary>
-        public void Struck(float damage, bool heavy, bool spell)
+        public void Struck(float damage, bool heavy, bool spell, bool shattered = false)
         {
             if (Count == 0) return;
             bool spentAny = false;
@@ -179,7 +179,7 @@ namespace Clover.Gameplay
                 if (!runs[i].Active) continue;
                 ref var run = ref runs[i];
                 if (!spell) run.Blows++;
-                if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell);
+                if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell, shattered);
                 if (!SpentBy(in run, heavy, spell)) continue;
                 runs[i] = default;
                 spentAny = true;
@@ -287,12 +287,12 @@ namespace Clover.Gameplay
             Sight = sight;
         }
 
-        private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell)
+        private void Tell(ConditionMoment moment, in ConditionRun run, float damage, bool heavy, bool spell, bool shattered = false)
         {
             var news = new ConditionNews
             {
                 Moment = moment, Id = run.Id, Mark = run.Mark, Count = run.Count, Blows = run.Blows, Flags = run.Flags, Scale = run.Scale, Link = run.Link,
-                Damage = damage, Heavy = heavy, Spell = spell,
+                Damage = damage, Heavy = heavy, Spell = spell, Shattered = shattered,
             };
             if (Report != null) Report(Who, news);
             else CombatEvents.RaiseCondition(Who, news);

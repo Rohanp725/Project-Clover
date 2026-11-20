@@ -624,7 +624,8 @@ namespace Clover.Gameplay
             }
             Afflictions.IgniteFrom(hit, this);
             // Ice breaks under a heavy blow, and what it held takes the breaking.
-            if (hit.Heavy && Afflictions.IsFrozen)
+            bool shattered = hit.Heavy && Afflictions.IsFrozen;
+            if (shattered)
             {
                 detonated += Afflictions.Shatter();
                 CombatEvents.RaiseShattered(this);
@@ -636,7 +637,7 @@ namespace Clover.Gameplay
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell) * harder;
             float unsteadies = Afflictions.StaggerTakenMultiplier * harder;
             float shoved = Afflictions.ShoveMultiplier;
-            Afflictions.TakeFrom(hit, this);
+            Afflictions.TakeFrom(hit, this, shattered);
             // Ground that only lays an affliction is not a blow: it does not shove, flinch, wear poise or meet the guard.
             if (hit.OnlyLays && detonated <= 0f) return HitOutcome.Landed;
 

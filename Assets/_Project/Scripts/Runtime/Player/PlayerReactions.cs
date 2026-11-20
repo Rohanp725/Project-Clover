@@ -277,7 +277,7 @@ namespace Clover.Player
         }
 
         private static bool Answers(StruckBy by, in ConditionNews news) =>
-            by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy);
+            by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy) || (by == StruckBy.Shatter && news.Shattered);
 
         // A host's poison bit: each enemy joined to it takes its share, as a reaction's blow (it starts nothing).
         private bool PassBite(Component host, float damage)

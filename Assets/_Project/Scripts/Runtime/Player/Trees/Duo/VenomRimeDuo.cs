@@ -26,9 +26,9 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Poison, B = Elements.Ice;
 
             // NEEDS: an enemy freezing as a moment (freeze-moment): Frost Over Frost's rime spread as it freezes, now the first
-            // bite on it while frozen (at most once in 5 s); Cold Damage's doses going off as it is shattered, now a heavy blow
-            // on it while frozen (the shatter's own blow). Poison biting harder on one enemy while frozen (bite-share): Cold
-            // Damage's bites twice as hard; now each bite while frozen adds 2 a dose.
+            // bite on it while frozen (at most once in 5 s). Cold Damage's doses go off on the blow that shatters it
+            // (StruckBy.Shatter: the shatter has ended the Chill before the answer, so Needs cannot ask for it). Poison biting
+            // harder on one enemy while frozen (bite-share): Cold Damage's bites twice as hard; now each bite while frozen adds 2 a dose.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Venom Rime: Frost Over Frost or Cold Damage", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -56,8 +56,8 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = ColdDamage, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison, CountOnly = true },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = ColdDamage, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Burst, Radius = 0.4f, DamagePerSpent = 2f,
                                 Affliction = AfflictionKind.Poison, Unseen = true },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = ColdDamage, By = StruckBy.Heavy, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = ColdDamage, By = StruckBy.Heavy, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Burst, Radius = 1f, DamagePerSpent = 6f,
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = ColdDamage, By = StruckBy.Shatter, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = ColdDamage, By = StruckBy.Shatter, Do = UpgradeAction.Burst, Radius = 1f, DamagePerSpent = 6f,
                                 Affliction = AfflictionKind.Poison },
                         }),
                     },
@@ -83,7 +83,8 @@ namespace Clover.Player.Trees.Duo
                 Description = "Each bite on a frozen enemy keeps it frozen 0.3 s longer.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Needs = AfflictionKind.Chill, NeedsFull = true, Cooldown = 0.3f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
+                    // A Chill laid on a frozen enemy does nothing (the freeze is full), so the bite keeps it frozen itself.
+                    new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Needs = AfflictionKind.Chill, NeedsFull = true, Cooldown = 0.3f, Do = UpgradeAction.KeepFrozen, Seconds = 0.3f },
                 },
             }, HeartPattern.RightLow));
 

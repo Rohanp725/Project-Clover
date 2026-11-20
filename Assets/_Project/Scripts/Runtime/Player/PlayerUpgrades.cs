@@ -1569,6 +1569,9 @@ namespace Clover.Player
                     }
                     break;
                 }
+                case UpgradeAction.KeepFrozen:
+                    if (subject is IAfflictable frozen && frozen.Afflictions.KeepFrozen(effect.Seconds)) FreezesKept++;
+                    break;
                 case UpgradeAction.Lift:
                 {
                     float seconds = Or(effect.Seconds, 1f) + Stats.Sum(PlayerStat.AirSeconds);
@@ -1652,6 +1655,8 @@ namespace Clover.Player
         public int Flinches { get; private set; }
         public int ConditionsSet { get; private set; }
         public int ArcsLeapt { get; private set; }
+        /// <summary>Counts for probes: freezes made to last longer (Six Levels Down).</summary>
+        public int FreezesKept { get; private set; }
 
         // ---- What the enemies say of themselves.
 

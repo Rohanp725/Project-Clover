@@ -171,6 +171,14 @@ public class DuoProbeAllRunner : MonoBehaviour
             {
                 shownShape = reactions.LastShape;
                 shownOnHost = reactions.LastOn == host;
+                // Another pair may react on the same host in the same frame (ground left by an earlier pair), and LastShape is
+                // then that one's: the pair's own shape is the table's, which is what Act ran it in.
+                string own = ReactionTable.MarkFor(pair)?.Name ?? "";
+                if (reactions.LastShown != own)
+                {
+                    shownShape = ReactionTable.WornShape(pair, build.Read(), RunState.Unlocked)?.Name ?? "";
+                    Say($"  (then {reactions.LastShown} was shown on it in the same frame; {own}'s shape read from the table)");
+                }
                 if (order == 1) Say($"  ({AfflictionPairs.Name(pair)} reacted only with {second} laid before {first})");
                 yield break;
             }
@@ -205,8 +213,13 @@ public class DuoProbeAllRunner : MonoBehaviour
         if (still == null) { Finish(); yield break; }
         neighbour = Copy("Probe Neighbour", Middle + new Vector3(-2f, 0f, 0f));
 
+        // PlayerPrefs "clover.probe.duoall.only" (reaction names, comma separated) runs only those pairs; empty runs all.
+        string only = PlayerPrefs.GetString("clover.probe.duoall.only", "");
         for (int pair = 0; pair < AfflictionPairs.Count; pair++)
+        {
+            if (only.Length > 0 && !only.Split(',').Contains(AfflictionPairs.Name(pair))) continue;
             yield return OnePair(pair);
+        }
         Finish();
     }
 

@@ -39,6 +39,13 @@ namespace Clover.Gameplay
         private bool started;
         private int reportedThisFrame;
 
+        // The reactions found this frame, so a forced one on the same enemy (a mark that lays the pair's second affliction
+        // and then forces it) is not shown a second time. Fixed arrays: finding allocates nothing.
+        private const int MostTracked = 128;
+        private readonly AfflictionSet[] foundSet = new AfflictionSet[MostTracked];
+        private readonly int[] foundPair = new int[MostTracked];
+        private int foundCount;
+
         // A ring of the reactions waiting for a later frame, kept in arrays so waiting allocates nothing.
         private readonly Component[] waitingWho = new Component[MostWaiting];
         private readonly int[] waitingPair = new int[MostWaiting];
@@ -112,12 +119,27 @@ namespace Clover.Gameplay
         {
             if (set == null || pair < 0 || pair >= rests.Length || !DeepEnough(set, pair)) return false;
             CatchUp();
+            // Already found on this enemy this frame: it reacts once, not twice.
+            if (FoundThisFrame(set, pair)) return true;
             return Emit(set, who, pair, laid);
+        }
+
+        private bool FoundThisFrame(AfflictionSet set, int pair)
+        {
+            for (int i = 0; i < foundCount; i++)
+                if (foundPair[i] == pair && ReferenceEquals(foundSet[i], set)) return true;
+            return false;
         }
 
         // Rested now in either case, so the same pair on the same enemy is not found twice while it waits.
         private bool Emit(AfflictionSet set, Component who, int pair, AfflictionKind laid)
         {
+            if (foundCount < MostTracked)
+            {
+                foundSet[foundCount] = set;
+                foundPair[foundCount] = pair;
+                foundCount++;
+            }
             if (reportedThisFrame < MostPerFrame)
             {
                 set.RestReaction(pair, rests[pair]);
@@ -148,6 +170,9 @@ namespace Clover.Gameplay
             started = true;
             frame = now;
             reportedThisFrame = 0;
+            // Let go of last frame's enemies, so the list keeps no destroyed one alive.
+            Array.Clear(foundSet, 0, foundCount);
+            foundCount = 0;
             while (waitingCount > 0 && reportedThisFrame < MostPerFrame)
             {
                 var who = waitingWho[waitingFirst];

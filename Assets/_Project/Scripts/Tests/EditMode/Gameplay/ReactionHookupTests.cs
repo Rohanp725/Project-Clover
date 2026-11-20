@@ -69,6 +69,9 @@ namespace Clover.Tests
             Assert.AreEqual(1, reported.Count);
             Assert.Greater(enemy.ReactionRest(Flashover), 0f);
             Assert.IsTrue(enemy.ForceReaction(Flashover, null));
+            Assert.AreEqual(1, reported.Count, "forced in the frame it reacted, it is not shown twice");
+            frame++;
+            Assert.IsTrue(enemy.ForceReaction(Flashover, null));
             Assert.AreEqual(2, reported.Count, "forced through the rest");
             Assert.AreEqual(engine.RestFor(Flashover), enemy.ReactionRest(Flashover), 0.001f, "and it rests again from now");
         }

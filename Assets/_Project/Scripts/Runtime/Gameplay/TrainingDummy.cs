@@ -102,14 +102,15 @@ namespace Clover.Gameplay
             float detonated = hit.Detonate ? Burn.Detonate() : 0f;
             if (detonated > 0f) Health.Damage(detonated);
             Afflictions.IgniteFrom(hit, this);
-            if (hit.Heavy && Afflictions.IsFrozen)
+            bool shattered = hit.Heavy && Afflictions.IsFrozen;
+            if (shattered)
             {
                 Health.Damage(Afflictions.Shatter());
                 CombatEvents.RaiseShattered(this);
             }
             float takes = Afflictions.DamageTakenMultiplier(hit.Spell);
             float unsteadies = Afflictions.StaggerTakenMultiplier;
-            Afflictions.TakeFrom(hit, this);
+            Afflictions.TakeFrom(hit, this, shattered);
             // As an enemy: ground that only lays an affliction is not a blow, so the last blow's numbers stay as they were.
             if (hit.OnlyLays && detonated <= 0f) return HitOutcome.Landed;
             bool finisher = Stagger.IsStaggered && hit.Heavy;

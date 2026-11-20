@@ -152,14 +152,14 @@ namespace Clover.Gameplay
         /// conditions that answer a blow are told of it, unless a reaction dealt it. The burn given in seconds
         /// (<see cref="Hit.BurnSeconds"/>) is lit by the caller where its order matters, through <see cref="IgniteFrom"/>.
         /// </summary>
-        public void TakeFrom(in Hit hit, UnityEngine.Component who)
+        public void TakeFrom(in Hit hit, UnityEngine.Component who, bool shattered = false)
         {
             var source = SourceOf(hit);
             if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
                 CombatEvents.Report(who, hit.Affliction, hit.AfflictionStacks, Lay(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower, source, who), source);
             if (hit.Affliction2 != AfflictionKind.None && hit.Affliction2Stacks > 0)
                 CombatEvents.Report(who, hit.Affliction2, hit.Affliction2Stacks, Lay(hit.Affliction2, hit.Affliction2Stacks, hit.Affliction2Seconds, hit.AfflictionPower, source, who), source);
-            if (!hit.FromReaction && hit.Damage > 0f) Conditions.Struck(hit.Damage, hit.Heavy, hit.Spell);
+            if (!hit.FromReaction && hit.Damage > 0f) Conditions.Struck(hit.Damage, hit.Heavy, hit.Spell, shattered);
         }
 
         /// <summary>Lights the burn a blow gives in seconds (<see cref="Hit.BurnSeconds"/>), through the laying rules, so a weapon's fire reacts like any affliction.</summary>
@@ -681,6 +681,19 @@ namespace Clover.Gameplay
             for (int i = 2; i < stacks.Length; i++)
                 if (stacks[i] > 0) total += perStack(Afflictions.Spec((AfflictionKind)i)) * stacks[i] * strength[i];
             return total;
+        }
+
+        /// <summary>
+        /// Keeps a frozen enemy frozen for longer (Six Levels Down): a Chill laid on it does nothing, since the freeze is
+        /// already full. True when it was frozen.
+        /// </summary>
+        public bool KeepFrozen(float seconds)
+        {
+            if (!IsFrozen || seconds <= 0f) return false;
+            FrozenLeft += seconds;
+            int index = (int)AfflictionKind.Chill;
+            left[index] = Math.Max(left[index], FrozenLeft);
+            return true;
         }
 
         /// <summary>A heavy blow on something frozen breaks the ice: the freeze and the chill end, and the damage is returned.</summary>

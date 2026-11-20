@@ -87,5 +87,7 @@ namespace Clover.Player
         ResetCooldown,
         /// <summary>The next cast of a branch's slot starts no clock (its own branch's, or Branch's), within Seconds (0: until it is cast). Reads: Branch, Seconds.</summary>
         InstantNext,
+        /// <summary>Keeps the target frozen Seconds longer; nothing on one that is not frozen. Reads: Seconds.</summary>
+        KeepFrozen,
     }
 }

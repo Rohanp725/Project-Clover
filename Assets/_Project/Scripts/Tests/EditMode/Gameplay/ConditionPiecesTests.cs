@@ -210,5 +210,39 @@ namespace Clover.Tests
             Assert.AreEqual(weapon, enemy.DamageTakenMultiplier(false), 0.001f);
             Assert.AreEqual(stagger, enemy.StaggerTakenMultiplier, 0.001f);
         }
+
+        [Test]
+        public void TheBlowThatShattersIsToldSoItsAnswerNeedNotAskForTheChillItEnded()
+        {
+            // Cold Damage (Venom Rime): its doses go off on the blow that shatters, which has ended the Chill by then.
+            var enemy = NewEnemy();
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.bone", Seconds = 10f }, null, 1, null, true);
+            enemy.Apply(AfflictionKind.Chill, 5);
+            Assert.IsTrue(enemy.IsFrozen);
+            // As Enemy and TrainingDummy do: the ice breaks first, then the blow is told.
+            bool shattered = enemy.Shatter() > 0f;
+            enemy.TakeFrom(new Hit(5f, 0f, Vector3.forward, heavy: true), null, shattered);
+            Assert.IsTrue(Last(ConditionMoment.Struck).Shattered, "the blow that broke the ice says so");
+            Assert.IsFalse(enemy.Has(AfflictionKind.Chill), "and the Chill is gone before anyone answers it");
+            enemy.TakeFrom(new Hit(5f, 0f, Vector3.forward, heavy: true), null);
+            Assert.IsFalse(Last(ConditionMoment.Struck).Shattered, "a heavy blow on nothing frozen breaks nothing");
+        }
+
+        [Test]
+        public void AFrozenEnemyIsKeptFrozenLongerAndOneNotFrozenIsNot()
+        {
+            // Six Levels Down: a Chill laid on a frozen enemy does nothing, so the bite keeps the freeze itself.
+            var enemy = NewEnemy();
+            Assert.IsFalse(enemy.KeepFrozen(0.3f), "nothing frozen, nothing kept");
+            enemy.Apply(AfflictionKind.Chill, 5);
+            float left = enemy.FrozenLeft;
+            Assert.IsTrue(enemy.KeepFrozen(0.3f));
+            Assert.AreEqual(left + 0.3f, enemy.FrozenLeft, 0.0001f);
+            Run(enemy, left + 0.1f);
+            Assert.IsTrue(enemy.IsFrozen, "still frozen past its own time");
+            Run(enemy, 0.3f);
+            Assert.IsFalse(enemy.IsFrozen, "and thawed once the kept time is done");
+            Assert.AreEqual(0, enemy.Stacks(AfflictionKind.Chill));
+        }
     }
 }
