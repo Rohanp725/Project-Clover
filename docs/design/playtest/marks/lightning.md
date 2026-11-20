@@ -107,13 +107,11 @@ design yet, its **Not built yet** line says what is missing.
 ## lightning.devotion
 **What it does.** In One Breath, Lightning's Devotion: all in on Lightning only. After a perfect guard or a perfect dodge, your spells have no cooldown for a breath. Cast everything you hold in it; then the cooldowns start from full.
 
-**When it happens.** Only while Lightning is carried twice (all in). Every perfect guard and perfect dodge.
+**When it happens.** Only while Lightning is carried twice (all in), once bought. Every perfect guard and perfect dodge.
 
-**The numbers.** 6 Shards. For now a perfect guard or dodge ends every running cooldown at once. All in, L2 with R2 is the deep strike, Down the Channel.
+**The numbers.** 6 Shards. For 2.5 seconds after the perfect guard or dodge, all four slots are ready whatever their cooldowns say. A spell cast in the breath starts no cooldown then; when the breath ends its whole cooldown starts. The cooldowns of spells you did not cast run on beneath the breath. The L2 strikes keep their own clocks, and spells paid in mana still cost their mana. A perfect guard or dodge inside the breath makes it last 2.5 seconds from then. All in, L2 with R2 is the deep strike, Down the Channel: 20 mana on its own 8-second clock.
 
 **Works with.** Ring of Drums and Thunderclap's Master, which also live on the perfect guard.
-
-**Not built yet.** No cooldown at all for 2.5 seconds after the perfect guard or dodge (the first rule switch, in the next task).
 
 **Example.** Wait for the brute's swing, guard it perfectly, and spend the whole Hand on it.
 

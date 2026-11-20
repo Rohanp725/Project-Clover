@@ -22,6 +22,9 @@ namespace Clover.Player.Trees
         public const string WhiteHeat = "fire.whiteheat";
         public const string FuelToIt = "fire.lift";
         public const string FireWithoutEnd = "fire.devotion";
+        /// <summary>Fire Without End: a burn left alone deepens by one this often, up to this depth.</summary>
+        public const float DevotionDeepensEvery = 4f;
+        public const int DevotionDeepensTo = 5;
         // The spells: each is its branch's Learn mark and the branch's id.
         public const string FlameWave = "fire.base";
         public const string Uraeus = "fire.uraeus";
@@ -101,11 +104,16 @@ namespace Clover.Player.Trees
             to.Add(BranchPattern.Put(new Upgrade { Id = WhiteHeat, Name = "White Heat", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { FuelToIt }, Icon = UpgradeIcons.Star,
                 Description = "Heat rises to eight, and above five your blows come faster. Struck above five, you burn.",
                 Stats = new[] { new StatMod(PlayerStat.HeatCap, 3f) } }, BranchPattern.TrunkLeft));
-            // NEEDS: burns that never go out by themselves (task 4.4, AfflictionKeeps), deepening every burn near, not the one faced.
+            // The RuleBook's affliction rules (task 4.4), read by every enemy's set: no burn goes out by itself, and each one left
+            // alone (nothing new laid on it) deepens by one every 4 s, up to five. Only death, a burn set off, or water (Steam
+            // takes half) ends one.
             to.Add(BranchPattern.Put(new Upgrade { Id = FireWithoutEnd, Name = "Fire Without End", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { FuelToIt }, Icon = UpgradeIcons.Sun,
-                Description = "All in on Fire only. Burns last twice as long, and a burn left alone deepens by one every four seconds, up to five. Light everything once, then fight the one in front of you while the rest of the room cooks.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 1f) },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 4f, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 } } },
+                Description = "All in on Fire only. Burns never go out by themselves; only death or water ends them. A burn left alone deepens by one every four seconds, up to five. Light everything once, then fight the one in front of you while the rest of the room cooks.",
+                Rules = book =>
+                {
+                    book.Afflictions.Keep(AfflictionKind.Burn);
+                    book.Afflictions.Deepen(AfflictionKind.Burn, DevotionDeepensEvery, DevotionDeepensTo);
+                } },
                 BranchPattern.TrunkRight));
 
             // ---- The left bough: Answer.

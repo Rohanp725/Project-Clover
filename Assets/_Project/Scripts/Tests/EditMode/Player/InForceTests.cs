@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.Linq;
 using Clover.Gameplay;
 using Clover.Player;
 using Clover.Player.Build;
+using Clover.Player.Magic;
 using Clover.Player.Trees;
 using NUnit.Framework;
 
@@ -11,7 +13,8 @@ namespace Clover.Tests
     /// What is in force under a loadout (IMPLEMENTATION.md 3.6), table-driven: an element's marks while it is attuned,
     /// first or second; a duo branch's marks with both elements; a duo spell only in a slot; a weapon's marks with that
     /// weapon kind, a god's weapon counting as its kind; nothing with no element; a spell branch's Empower, Shape and
-    /// Master only while its spell is slotted; a Devotion only all in (Phase 4). The rules for reactions, the Way,
+    /// Master only while its spell is slotted; a Devotion only bought and all in on its element, where L2 with R2 is the
+    /// deep strike (Phase 4, task 4.4). The rules for reactions, the Way,
     /// Heresies, Bond and Evolutions are added with their fields (phases 3 to 6).
     /// </summary>
     public class InForceTests
@@ -79,6 +82,83 @@ namespace Clover.Tests
         public void InForceFollowsTheLoadout(Upgrade mark, string first, string second, string weapon, string slotted, bool expected, string why)
         {
             Assert.AreEqual(expected, MarkRules.InForce(mark, Hand(first, second, weapon, slotted)), why);
+        }
+
+        // All in (task 4.4): the real Devotions of the two trees probed first, bought or not, under each way of carrying.
+        private static readonly object[] AllInCases =
+        {
+            // Devotion, first, second, bought, in force, why
+            new object[] { FireTree.FireWithoutEnd, Elements.Fire, Elements.Fire, true, true, "bought, all in on Fire" },
+            new object[] { FireTree.FireWithoutEnd, Elements.Fire, Elements.Fire, false, false, "all in on Fire, not bought" },
+            new object[] { FireTree.FireWithoutEnd, Elements.Fire, "", true, false, "bought, Fire carried once" },
+            new object[] { FireTree.FireWithoutEnd, Elements.Fire, Elements.Lightning, true, false, "bought, Fire first in a mix" },
+            new object[] { FireTree.FireWithoutEnd, Elements.Lightning, Elements.Fire, true, false, "bought, Fire second in a mix" },
+            new object[] { FireTree.FireWithoutEnd, Elements.Lightning, Elements.Lightning, true, false, "bought, all in on Lightning" },
+            new object[] { FireTree.FireWithoutEnd, "", "", true, false, "bought, nothing carried" },
+            new object[] { LightningTree.InOneBreath, Elements.Lightning, Elements.Lightning, true, true, "bought, all in on Lightning" },
+            new object[] { LightningTree.InOneBreath, Elements.Lightning, Elements.Lightning, false, false, "all in on Lightning, not bought" },
+            new object[] { LightningTree.InOneBreath, Elements.Lightning, "", true, false, "bought, Lightning carried once" },
+            new object[] { LightningTree.InOneBreath, Elements.Fire, Elements.Lightning, true, false, "bought, Lightning second in a mix" },
+            new object[] { LightningTree.InOneBreath, Elements.Fire, Elements.Fire, true, false, "bought, all in on Fire" },
+        };
+
+        [TestCaseSource(nameof(AllInCases))]
+        public void ADevotionIsInForceOnlyBoughtAndAllInOnItsElement(string id, string first, string second, bool bought, bool expected, string why)
+        {
+            var mark = Upgrade.ById(id);
+            Assert.IsNotNull(mark, id);
+            Assert.AreEqual(UpgradeKind.Devotion, mark.Kind, id);
+            var learned = new HashSet<string>();
+            if (bought) learned.Add(id);
+            Assert.AreEqual(expected, MarkRules.InForce(mark, Hand(first, second), learned), why);
+        }
+
+        [Test]
+        public void EveryElementsOneDevotionIsInForceAllInOnItAndOnNoOther()
+        {
+            foreach (var element in Elements.All)
+            {
+                var devotions = Upgrade.All.Where(mark => mark.Kind == UpgradeKind.Devotion && mark.Element == element.Name).ToArray();
+                Assert.AreEqual(1, devotions.Length, element.Name + " has one Devotion");
+                var devotion = devotions[0];
+                var learned = new HashSet<string> { devotion.Id };
+                Assert.IsTrue(MarkRules.InForce(devotion, Hand(element.Name, element.Name), learned), devotion.Id + " all in");
+                Assert.IsFalse(MarkRules.InForce(devotion, Hand(element.Name, ""), learned), devotion.Id + " with its element once");
+                foreach (var other in Elements.All)
+                {
+                    if (other == element) continue;
+                    Assert.IsFalse(MarkRules.InForce(devotion, Hand(other.Name, other.Name), learned), devotion.Id + " all in on " + other.Name);
+                    Assert.IsFalse(MarkRules.InForce(devotion, Hand(element.Name, other.Name), learned), devotion.Id + " mixed with " + other.Name);
+                }
+            }
+        }
+
+        [Test]
+        public void ALearnedMarkIsInForceOnlyWhenBought()
+        {
+            var learned = new HashSet<string>();
+            Assert.IsFalse(MarkRules.InForce(FireMark, Hand(Elements.Fire, ""), learned), "not bought");
+            learned.Add(FireMark.Id);
+            Assert.IsTrue(MarkRules.InForce(FireMark, Hand(Elements.Fire, ""), learned));
+            Assert.IsFalse(MarkRules.InForce(FireMark, Hand(Elements.Fire, ""), null), "nothing learned at all");
+        }
+
+        [Test]
+        public void AllInTheSecondStrikeIsTheDeepStrike()
+        {
+            // L2 with R2: the deep strike all in (and with one element, Phase 1's rule), the second element's strike in a mix.
+            Assert.IsTrue(StrikeRules.IsDeep(true, Hand(Elements.Fire, Elements.Fire).Mixed), "all in on Fire: Burnt Offering");
+            Assert.IsTrue(StrikeRules.IsDeep(true, Hand(Elements.Lightning, Elements.Lightning).Mixed), "all in on Lightning: Down the Channel");
+            Assert.IsTrue(StrikeRules.IsDeep(true, Hand(Elements.Fire, "").Mixed), "one element carried");
+            Assert.IsFalse(StrikeRules.IsDeep(true, Hand(Elements.Fire, Elements.Lightning).Mixed), "a mix: Lightning's Flash Cut");
+            Assert.IsFalse(StrikeRules.IsDeep(false, Hand(Elements.Fire, Elements.Fire).Mixed), "R1 is never the deep strike");
+            Assert.AreEqual("Burnt Offering", ElementSteel.StrikeName(Elements.Fire, true));
+            Assert.AreEqual("Down the Channel", ElementSteel.StrikeName(Elements.Lightning, true));
+            var rules = new StrikeRules();
+            Assert.AreEqual(20f, rules.Price(true), "the deep strike costs 20 mana");
+            Assert.AreEqual(0f, rules.Price(false));
+            Assert.AreEqual(StrikeRefusal.NoMana, rules.Check(new SpellCooldowns(), true, true, 19f, true));
+            Assert.AreEqual(StrikeRefusal.None, rules.Check(new SpellCooldowns(), true, true, 20f, true));
         }
 
         [Test]

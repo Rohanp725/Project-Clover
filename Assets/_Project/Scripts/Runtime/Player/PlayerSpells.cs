@@ -212,7 +212,7 @@ namespace Clover.Player
         /// </summary>
         public StrikeRefusal CheckStrike(bool second, out bool deep, out ElementInfo strikeElement)
         {
-            deep = second && (element == null || !element.Mixed);
+            deep = StrikeRules.IsDeep(second, element != null && element.Mixed);
             strikeElement = element == null ? null : second && !deep ? element.SecondInfo : element.Info;
             float mana = combat != null ? combat.Mana.Current : 0f;
             return Strikes.Check(Cooldowns, second, deep, mana, element != null && element.HasElement && strikeElement != null);

@@ -20,6 +20,8 @@ namespace Clover.Player.Trees
     {
         public const string StrikesTwice = "lightning.lift";
         public const string InOneBreath = "lightning.devotion";
+        /// <summary>In One Breath: seconds with no spell cooldown after a perfect guard or a perfect dodge.</summary>
+        public const float BreathSeconds = 2.5f;
         public const string SingleStroke = "lightning.stroke";
         public const string NeverThere = "lightning.neverthere";
         // The spells: each is its branch's Learn mark and the branch's id.
@@ -84,15 +86,11 @@ namespace Clover.Player.Trees
                 new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Do = UpgradeAction.Falling, Count = 5, Damage = 8f, Stagger = 6f, Radius = 1.5f, Delay = 0.3f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 10f } },
                 "Land the heavy blow within a second of the last bolt falling with a light blow, and all five come back for a second round.");
 
-            // NEEDS: no cooldown at all for 2.5 s after a perfect guard or dodge (task 4.4, SpellCooldowns.Frozen). Until then
-            // every running wait ends at once.
+            // The RuleBook's breath (task 4.4), read by PlayerSpells: after a perfect guard or dodge the four spell slots have no
+            // cooldown for 2.5 s (SpellCooldowns.Breathe); what is cast in it waits its whole time once the breath is over.
             to.Add(BranchPattern.Put(new Upgrade { Id = InOneBreath, Name = "In One Breath", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { StrikesTwice }, Icon = UpgradeIcons.Hourglass,
                 Description = "All in on Lightning only. After a perfect guard or a perfect dodge, your spells have no cooldown for a breath. Cast everything you hold in it; then the cooldowns start from full.",
-                Effects = new[]
-                {
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.CutCooldowns, Amount = 30f },
-                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.CutCooldowns, Amount = 30f },
-                } },
+                Rules = book => book.BreathAfterPerfect = BreathSeconds },
                 BranchPattern.MiddleCrown));
 
             // ---- The left bough: Charge.

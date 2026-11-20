@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using Clover.Gameplay;
 using Clover.Player;
+using Clover.Player.Build;
 using Clover.Player.Growth;
 using Clover.Player.Magic;
+using Clover.Player.Trees;
 using NUnit.Framework;
 
 namespace Clover.Tests
@@ -77,6 +80,76 @@ namespace Clover.Tests
             book.Reset();
             book.Publish();
             Assert.IsFalse(Afflictions.Rules.Any, "a Devotion no longer in force stops keeping anything");
+        }
+
+        // ---- The Devotions that write into it.
+
+        // The book as PlayerUpgrades rebuilds it: every mark in force under the loadout, the bought ones only.
+        private static RuleBook BookFor(string first, string second, params string[] bought)
+        {
+            var loadout = new Loadout();
+            loadout.Attune(first, second);
+            var learned = new HashSet<string>(bought);
+            var book = new RuleBook();
+            foreach (var mark in Upgrade.All)
+                if (MarkRules.InForce(mark, loadout, learned)) book.Apply(mark);
+            return book;
+        }
+
+        [Test]
+        public void FireWithoutEndKeepsEveryBurnAndDeepensOneLeftAlone()
+        {
+            var book = new RuleBook();
+            Assert.IsTrue(book.Apply(Upgrade.ById(FireTree.FireWithoutEnd)));
+            Assert.IsTrue(book.Afflictions.Keeps(AfflictionKind.Burn), "burns never go out by themselves");
+            Assert.AreEqual(4f, book.Afflictions.DeepensEvery(AfflictionKind.Burn), "a burn left alone deepens every four seconds");
+            Assert.AreEqual(5, book.Afflictions.DeepensTo(AfflictionKind.Burn), "up to five");
+            Assert.IsFalse(book.Afflictions.Keeps(AfflictionKind.Static));
+            Assert.AreEqual(0f, book.BreathAfterPerfect);
+            Assert.AreEqual(GuardMode.Normal, book.Guard);
+            var mark = Upgrade.ById(FireTree.FireWithoutEnd);
+            Assert.IsEmpty(mark.Stats, "the stand-in of burns lasting twice as long is gone");
+            Assert.IsEmpty(mark.Effects, "the stand-in deepening of the one faced is gone");
+        }
+
+        [Test]
+        public void InOneBreathGivesTwoAndAHalfSecondsWithNoCooldown()
+        {
+            var book = new RuleBook();
+            Assert.IsTrue(book.Apply(Upgrade.ById(LightningTree.InOneBreath)));
+            Assert.AreEqual(2.5f, book.BreathAfterPerfect);
+            Assert.AreEqual(CooldownMode.Normal, book.Cooldowns, "the clocks still run outside the breath");
+            Assert.IsFalse(book.Afflictions.Any);
+            Assert.IsEmpty(Upgrade.ById(LightningTree.InOneBreath).Effects, "the stand-in that ended every running wait is gone");
+        }
+
+        [Test]
+        public void ADevotionWritesIntoTheBookOnlyBoughtAndAllIn()
+        {
+            string[] both = { FireTree.FireWithoutEnd, LightningTree.InOneBreath };
+            var fire = BookFor(Elements.Fire, Elements.Fire, both);
+            Assert.IsTrue(fire.Afflictions.Keeps(AfflictionKind.Burn), "all in on Fire");
+            Assert.AreEqual(0f, fire.BreathAfterPerfect, "Lightning's Devotion is not in force all in on Fire");
+
+            var lightning = BookFor(Elements.Lightning, Elements.Lightning, both);
+            Assert.AreEqual(2.5f, lightning.BreathAfterPerfect, "all in on Lightning");
+            Assert.IsFalse(lightning.Afflictions.Keeps(AfflictionKind.Burn));
+
+            Assert.IsTrue(BookFor(Elements.Fire, Elements.Lightning, both).IsStandard, "a mix: neither Devotion");
+            Assert.IsTrue(BookFor(Elements.Fire, "", both).IsStandard, "Fire carried once");
+            Assert.IsTrue(BookFor(Elements.Fire, Elements.Fire).IsStandard, "all in, but the Devotion not bought");
+        }
+
+        [Test]
+        public void UnderFireWithoutEndTheRoomCooks()
+        {
+            // The rule as the enemies read it: lit once, a soldier left alone burns on and deepens to five.
+            BookFor(Elements.Fire, Elements.Fire, FireTree.FireWithoutEnd).Publish();
+            var set = new AfflictionSet();
+            set.Apply(AfflictionKind.Burn, 1);
+            Run(set, 21f);
+            Assert.IsTrue(set.Burn.IsBurning);
+            Assert.AreEqual(5, set.Burn.Stacks);
         }
 
         // ---- The affliction rules on an enemy.
