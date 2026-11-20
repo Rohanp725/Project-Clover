@@ -77,11 +77,11 @@ namespace Clover.Player.Trees.Duo
 
             // NEEDS: an answer to an enemy in a condition another mark set (condition-needs): the felled enemy; now New Face
             // counts the rocking's weapon blows itself from each Logan Stone, and after the third (the fall) the next weapon blow
-            // on a plain enemy within 1.8 s is critical and gives 6 mana.
+            // on a plain enemy within 1.8 s is critical and gives you 6 mana back.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NewFace, Name = "New Face", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Star,
-                Description = "Your first blow on a felled enemy is critical and gives 6 mana.",
+                Description = "Your first blow on a felled enemy is critical and gives you 6 mana back.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Counted, Seconds = 3f, Blows = 3 } },

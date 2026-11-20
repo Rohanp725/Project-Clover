@@ -8001,13 +8001,13 @@ MonoBehaviour:
   - Id: loganstone.newface
     Title: New Face
     Group: 
-    Body: '<b>What it does.</b> Your first blow on a felled enemy is critical and gives 6 mana.
+    Body: '<b>What it does.</b> Your first blow on a felled enemy is critical and gives you 6 mana back.
 
 
       <b>When it happens.</b> After Logan Stone throws an enemy down, while Wind and Earth are both carried: your first weapon blow on it while it lies.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. The blow is critical and gives 6 mana, within 1.8 seconds of the fall. Elites, which only reel, give nothing.
+      <b>The numbers.</b> Mix, 3 Shards. The blow is critical and gives you 6 mana back, within 1.8 seconds of the fall. Elites, which only reel, give nothing.
 
 
       <b>Works with.</b> Logan Stone and its shapes, Grit in the Wind.

@@ -29,11 +29,11 @@ are both carried.
 **Example.** Shake it with a heavy, then a light blow sets it rocking.
 
 ## loganstone.newface
-**What it does.** Your first blow on a felled enemy is critical and gives 6 mana.
+**What it does.** Your first blow on a felled enemy is critical and gives you 6 mana back.
 
 **When it happens.** After Logan Stone throws an enemy down, while Wind and Earth are both carried: your first weapon blow on it while it lies.
 
-**The numbers.** Mix, 3 Shards. The blow is critical and gives 6 mana, within 1.8 seconds of the fall. Elites, which only reel, give nothing.
+**The numbers.** Mix, 3 Shards. The blow is critical and gives you 6 mana back, within 1.8 seconds of the fall. Elites, which only reel, give nothing.
 
 **Works with.** Logan Stone and its shapes, Grit in the Wind.
 

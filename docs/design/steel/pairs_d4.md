@@ -160,7 +160,7 @@ within 2 m of it wade at 60% speed.
 |---|---|---|---|
 | Grit in the Wind | Major | 3 | Your light blows on a shaken enemy leave it Unsteady; your heavy blows on an Unsteady enemy shake it. |
 | Grit or Drift | Shape | 3 | Opens the shapes of Logan Stone: Sandblast or Drifted Over. |
-| New Face | Major | 3 | Your first blow on a felled enemy is critical and gives 6 mana. |
+| New Face | Major | 3 | Your first blow on a felled enemy is critical and gives you 6 mana back. |
 | The Prophecy Broken | Keystone | 5 | Elites and gods can be felled: after three Logan Stones have only made one reel in a fight, the fourth throws it flat for 1 s. |
 
 **Duo spell: Walking Dune** (breaker). 12 s cooldown. A ridge of sand and grit 5 m wide heaps up before you and the
