@@ -56,7 +56,7 @@ Quickening does.
 
 **When it happens.** Drink a flask while Wellspring or Regrowth burns.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. The lotus is 3 metres in radius and lasts 10 seconds. Each second, Soaked and a stack of Seeded on every enemy in it, and 2 health to you while you stand in it. Five petals; each holds its enemy 3 seconds. The burst is about 5 metres in radius: 30 damage and 30% more for each petal closed (75 at five), 40 stagger and a stack of Seeded.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. The lotus is 3 metres in radius and lasts 10 seconds. Each second, Soaked and a stack of Seeded on every enemy in it, and 2 health to you while you stand in it. Five petals; each holds its enemy 3 seconds. The burst is about 5 metres in radius: 30 damage and 30% more for each petal closed (75 at five), 40 stagger and a stack of Seeded.
 
 **Works with.** Wellspring (the flask heals half again as much), Morning Dew (the flask's ward), Drowned Roots.
 

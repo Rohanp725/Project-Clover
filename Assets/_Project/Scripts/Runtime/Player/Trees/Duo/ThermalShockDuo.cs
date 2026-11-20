@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Fire and Ice (pairs_d3.md, "Fire and Ice", distance 3; task 4.16), named by its reaction, Thermal
     /// Shock. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark opens
     /// Hot Shards and Crazing; Spark and Rime and Hot Stone, Cold Water (majors), Neither Wins (a minor), the keystone Fire
-    /// Under the Ice, the duo spell Fire-Setting (the crown) and the duo surge The Yawning Gap. Fire is written first.
+    /// Under the Ice, the duo spell Fire-Setting and the duo surge The Yawning Gap. Fire is written first.
     /// </summary>
     public static class ThermalShockDuo
     {
@@ -95,7 +95,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Shatter, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Burn, Stacks = 2, Cooldown = 0.2f } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a detonator on a 12 s cooldown (SpellTimings). The brand form sets a fire against the
+            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 12 s cooldown (SpellTimings). The brand form sets a fire against the
             // enemy that blows set off; each landing lays rime as the quench.
             // NEEDS: a second press of a slot spell (the quench on the second press; now the brand's own set-off), the Burn
             // deepening each second while the fire is banked, and blows before the quench making it harder.

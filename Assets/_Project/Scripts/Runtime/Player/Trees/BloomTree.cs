@@ -104,7 +104,7 @@ namespace Clover.Player.Trees
             // NEEDS: a duo surge chosen in the Hand's surge slot (now it answers any surge while both are carried).
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = Gift, Name = "Great Lotus", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = Gift, Name = "Great Lotus", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { StranglingVine }, Icon = UpgradeIcons.Crown,
                 Description = "A flask drunk while your surge lasts opens a great lotus under you. Inside it you mend and enemies are Soaked and Seeded. Each perfect guard inside closes a petal on the attacker and holds it, up to five. When the last petal closes, or its ten seconds are done, the lotus bursts.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, Do = UpgradeAction.Form, Form = SpellForms.Lotus, WhileSurge = true, Affliction = AfflictionKind.Seeded, Spell = new SpellSpec { Cost = 0f, Radius = 3f, Seconds = 10f, Damage = 30f, Stagger = 40f, Count = 5, LingerDamage = 2f, Stacks = 1 } } },
             }, HeartPattern.Crown));

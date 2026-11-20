@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Ice and Life (pairs_d1_d2.md, "Ice and Life", distance 2; task 4.15), named by its reaction, Winter
     /// Seed. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark, Thaw,
     /// opens Hard Spring and Heart Under Ice; Seed Under Snow and Late Frost, the keystone Hidden in the Tree, and the duo
-    /// spell Green Under the Ice, the crown. Ice is written first: the duo spell is cast in Ice.
+    /// spell Green Under the Ice. Ice is written first: the duo spell is cast in Ice.
     /// </summary>
     public static class WinterSeedDuo
     {
@@ -91,7 +91,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 6f, While = StatWhen.NearGrown, Do = UpgradeAction.Ward, Count = 1 } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a detonator on a 14 s cooldown (SpellTimings). A burst round you; on each enemy it
+            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 14 s cooldown (SpellTimings). A burst round you; on each enemy it
             // strikes that carries both, the Chill is spent, so its sleeping seed wakes at once (Winter Seed's or a shape's).
             // NEEDS: lines that reach only those carrying both (eight at most) and shatter any Frozen; half the cooldown back
             // with no one reached; one struck by your weapon in the last 2 s waking at one and a half times.

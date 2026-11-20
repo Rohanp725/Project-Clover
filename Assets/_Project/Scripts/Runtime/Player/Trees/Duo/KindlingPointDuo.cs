@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Light and Fire (pairs_d3.md, "Light and Fire", distance 3; task 4.16), named by its reaction,
     /// Kindling Point. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark
     /// opens Burning Glass and The Fire Is Hungry; The Sun Points and Noon Guard (majors), Clear Sky (a minor), the keystone
-    /// The Feast, and the duo spell Hands of the Sun, the crown. Light is written first, as the ring names the pair.
+    /// The Feast, and the duo spell Hands of the Sun. Light is written first, as the ring names the pair.
     /// </summary>
     public static class KindlingPointDuo
     {
@@ -96,7 +96,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: an opener on a 12 s cooldown (SpellTimings). The bolt form reaches four enemies; each
+            // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 12 s cooldown (SpellTimings). The bolt form reaches four enemies; each
             // is Marked (the branch's first element), burned two deep and held, so each carries a Kindling Point.
             // NEEDS: the four rays from one sun, and the hand letting go at your first blow, that blow critical and deepening
             // the Burn by two.

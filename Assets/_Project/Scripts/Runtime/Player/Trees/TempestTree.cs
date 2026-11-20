@@ -90,7 +90,7 @@ namespace Clover.Player.Trees
             // BESPOKE (built): ThunderForm. The branch's top mark, begun by a finisher.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = FallingThunder, Name = "Falling Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = FallingThunder, Name = "Falling Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { EyeOfTheStorm }, Icon = UpgradeIcons.Crown,
                 Description = "After your finisher lands you throw the enemy skyward, vanish, and come down on it as a bolt. Where you land, everything near is shocked and thrown back.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Thunder, Affliction = AfflictionKind.Static, Spell = new SpellSpec { Cost = 0f, Damage = 22f, Stagger = 40f, Radius = 4.5f, Stacks = 3 } } },
             }, HeartPattern.Crown));

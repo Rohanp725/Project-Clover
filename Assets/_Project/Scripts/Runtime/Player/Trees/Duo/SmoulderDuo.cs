@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Dark and Fire (pairs_d1_d2.md, "Dark and Fire", distance 2; task 4.15), named by its reaction,
     /// Smoulder. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark,
     /// Banked Coals, opens Night Sun and Coal Seam; Third Eye and Deep Coal, the keystone The Sun Goes Under, and the duo
-    /// spell The Burning Lake, the crown. Dark is written first, as the ring names the pair: the duo spell is cast in Dark.
+    /// spell The Burning Lake. Dark is written first, as the ring names the pair: the duo spell is cast in Dark.
     /// </summary>
     public static class SmoulderDuo
     {
@@ -78,7 +78,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, While = StatWhen.HalfHealth, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1, Cooldown = 1f } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a zone on a 16 s cooldown (SpellTimings). The field form lays a lake at the aim point;
+            // The duo spell, bought with Shards once both are carried (no god gives it): a zone on a 16 s cooldown (SpellTimings). The field form lays a lake at the aim point;
             // it Curses what stands in it (the branch's first element) and each bite lays a Burn, so all of them smoulder.
             // NEEDS: slowing what stands in it by a fifth; an enemy killed on it drawn under, the lake growing 0.5 m and
             // lasting 1 s longer; a finisher on it flaring every smoulder on the lake.

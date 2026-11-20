@@ -64,7 +64,7 @@ are both carried. Its reaction is Diamond Ring; its Shape mark lets you choose w
 
 **When it happens.** Light your surge with the surge button (either element's surge you wear); the light returns when it ends.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. Each second, Marked and Cursed on every enemy within 14 metres. Every weapon blow critical; each heals 1, at most five times a second. The returning column deals half of what that enemy lost to your weapon, 80 at most, with 30 stagger.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. Each second, Marked and Cursed on every enemy within 14 metres. Every weapon blow critical; each heals 1, at most five times a second. The returning column deals half of what that enemy lost to your weapon, 80 at most, with 30 stagger.
 
 **Works with.** Clarity (eight seconds of dark that also marks with every blow) or Hunger (feeding you while it drains), Diamond Ring's shapes, Weighed, Reckoning's Spoken Sentence, The Dividing Line.
 

@@ -108,7 +108,7 @@ namespace Clover.Player.Trees
             // BESPOKE (built): ReapingForm. The branch's top mark, begun by a finisher.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = TheReaping, Name = "The Reaping", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = TheReaping, Name = "The Reaping", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { WastingGrip }, Icon = UpgradeIcons.Crown,
                 Description = "Your finisher on a Cursed, poisoned enemy reaps the field. All the poison in it and in every enemy near lands at once, and half of it is yours.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Reaping, Needs = AfflictionKind.Cursed, Needs2 = AfflictionKind.Poison, Affliction = AfflictionKind.Poison, Spell = new SpellSpec { Cost = 0f, Radius = 9f, Damage = 3f, Stagger = 4f } } },
             }, HeartPattern.Crown));

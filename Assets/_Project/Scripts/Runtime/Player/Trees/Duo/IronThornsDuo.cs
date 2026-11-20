@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Life and Metal (pairs_d1_d2.md, "Life and Metal", distance 2; task 4.15), named by its reaction,
     /// Iron Thorns. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark,
     /// Graft, opens Pruning Hook and Iron Harvest; Sap of Iron and Ore in the Root (majors), Grafted Edge (a minor), and the
-    /// duo spell The Sown Men, the crown, its pair's larger spell paid in mana. Life is written first: the duo spell is cast
+    /// duo spell The Sown Men, its pair's larger spell paid in mana. Life is written first: the duo spell is cast
     /// in Life. The pair file gives this branch no keystone.
     /// </summary>
     public static class IronThornsDuo
@@ -82,7 +82,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Seeded, Needs2 = AfflictionKind.Sundered, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1, Cooldown = 0.5f } },
             }, HeartPattern.LeftHigh));
 
-            // The duo spell, the crown: its pair's larger spell, 45 mana (SpellTimings). The minions form sends helpers that
+            // The duo spell, bought with Shards once both are carried (no god gives it): its pair's larger spell, 45 mana (SpellTimings). The minions form sends helpers that
             // run at enemies and strike them; each strike seeds (the branch's first element), and one in three notches.
             // NEEDS: the teeth thrown in a fan and the warriors rising 0.8 s later; each heavy blow you land answered by every
             // sown man still standing on that same enemy (helpers-answer).

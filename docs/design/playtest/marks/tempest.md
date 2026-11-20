@@ -55,7 +55,7 @@ and Wind are both carried. Its reaction is Thunder Gust; its Shape mark lets you
 
 **When it happens.** Every finisher that lands (a heavy blow on a staggered enemy).
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. You land 0.34 seconds after the throw. Everything within 4.5 metres takes 22 damage, 40 stagger, three stacks of Static and three of Unsteady, and is pushed 3 metres.
+**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. You land 0.34 seconds after the throw. Everything within 4.5 metres takes 22 damage, 40 stagger, three stacks of Static and three of Unsteady, and is pushed 3 metres.
 
 **Works with.** Static, Thunder Gust's Thunderhead, Slip Current, Stored Charge.
 

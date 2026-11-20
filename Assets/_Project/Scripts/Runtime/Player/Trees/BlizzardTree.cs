@@ -103,7 +103,7 @@ namespace Clover.Player.Trees
             // BESPOKE (built): DustForm. The branch's top mark, begun by a shatter.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = Gift, Name = "Diamond Dust", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = Gift, Name = "Diamond Dust", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { Avalanche }, Icon = UpgradeIcons.Crown,
                 Description = "Shards from a shattered enemy do not fall. They hang round you, four from each, up to twelve, and your next dodge throws them down its path.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.Form, Form = SpellForms.Dust, Affliction = AfflictionKind.Chill, Spell = new SpellSpec { Cost = 0f, Count = 4, Damage = 6f, Stagger = 4f, Reach = 9f, Stacks = 1 } } },
             }, HeartPattern.Crown));

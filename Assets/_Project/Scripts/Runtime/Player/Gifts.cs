@@ -3,9 +3,10 @@ using System.Collections.Generic;
 namespace Clover.Player
 {
     /// <summary>
-    /// What a god leaves, by rule and not by list. Taking an element gives that element's Signature; consuming one
-    /// gives the crown of the branch it shares with the element held, when the two stand side by side on the ring.
-    /// A new tree or branch needs no line here: its Signature is found by where it sits.
+    /// What a god leaves, by rule and not by list. Taking an element gives that element's Signature. Consuming one
+    /// gives no duo crown (the owner's decision of 2026-11-20): it only strengthens an element already owned, and every
+    /// duo branch's top marks are bought with Shards once both elements are carried. A new tree needs no line here: its
+    /// Signature is found by where it sits.
     /// </summary>
     public static class Gifts
     {
@@ -16,17 +17,6 @@ namespace Clover.Player
         {
             for (int i = 0; i < marks.Count; i++)
                 if (marks[i].Signature && !marks[i].IsMix && marks[i].Element == element) return marks[i];
-            return null;
-        }
-
-        /// <summary>The Signature of the branch two elements share, in either order, or null when they are not neighbours.</summary>
-        public static Upgrade CrownOf(string held, string consumed) => CrownOf(held, consumed, Upgrade.All);
-
-        public static Upgrade CrownOf(string held, string consumed, IReadOnlyList<Upgrade> marks)
-        {
-            if (held == consumed || !Elements.AreNeighbours(held, consumed)) return null;
-            for (int i = 0; i < marks.Count; i++)
-                if (marks[i].Signature && marks[i].IsMix && marks[i].BelongsTo(held) && marks[i].BelongsTo(consumed)) return marks[i];
             return null;
         }
     }

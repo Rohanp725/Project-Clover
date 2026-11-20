@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Metal and Poison (pairs_d3.md, "Metal and Poison", distance 3; task 4.16), named by its reaction,
     /// Quicksilver. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark
     /// opens Heavy Silver and Running Silver; Envenomed Edge and The Nail Pulled (majors), Cinnabar (a minor), the keystone
-    /// The Undying Drink, and the duo spell Ichor, the crown. Metal is written first.
+    /// The Undying Drink, and the duo spell Ichor. Metal is written first.
     /// </summary>
     public static class QuicksilverDuo
     {
@@ -102,7 +102,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a counter on an 11 s cooldown (SpellTimings). The parry form turns the first blow and
+            // The duo spell, bought with Shards once both are carried (no god gives it): a counter on an 11 s cooldown (SpellTimings). The parry form turns the first blow and
             // answers it; the answer notches the attacker to full (the branch's first element), poisons it three deep and
             // makes its poison bite.
             // NEEDS: the bleeding 4 s (its poison biting every half second, then every dose at once), each weapon blow in it

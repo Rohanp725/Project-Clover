@@ -117,7 +117,7 @@ namespace Clover.Player.Trees
             // BESPOKE (built): AnvilForm. The branch's top mark, begun by a finisher.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = WorldAnvil, Name = "World Anvil", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = WorldAnvil, Name = "World Anvil", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DrawnFromStone }, Icon = UpgradeIcons.Crown,
                 Description = "Your finisher is struck on an anvil that rises out of the ground. Its ring breaks the armour of everyone near and shakes them, and a blade is forged for each one it reaches, up to six. They fly with your next heavy blow.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Anvil, Affliction = AfflictionKind.Tremor, Spell = new SpellSpec { Cost = 0f, Radius = 6f, Damage = 15f, Stagger = 30f, Stacks = 3, Count = 6, LingerDamage = 10f } } },
             }, HeartPattern.Crown));

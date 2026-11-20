@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Poison and Wind (pairs_d3.md, "Poison and Wind", distance 3; task 4.16), named by its reaction,
     /// Ill Wind. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark opens
     /// Dust on the Blade and Dust Bank; Spring Dust and Gust at the Heel (majors), Fine Dust (a minor), the keystone No Still
-    /// Air, and the duo spell The Yellow Gale, the crown. Poison is written first, as the ring names the pair.
+    /// Air, and the duo spell The Yellow Gale. Poison is written first, as the ring names the pair.
     /// </summary>
     public static class IllWindDuo
     {
@@ -110,7 +110,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a detonator on a 12 s cooldown (SpellTimings). The wave form throws the gale, a cone 9 m
+            // The duo spell, bought with Shards once both are carried (no god gives it): a detonator on a 12 s cooldown (SpellTimings). The wave form throws the gale, a cone 9 m
             // long and 60 degrees wide; it doses (the branch's first element), throws 4 m, unsteadies three deep and bites.
             // NEEDS: the held press drinking for 1.5 s (held-press), every cloud, trail and half of each poisoned enemy's doses
             // within 6 m drunk into a store and shared among those the gale strikes (depth-moved), and two more doses for each

@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Fire and Wind (pairs_d1_d2.md, "Fire and Wind", distance 2; task 4.15), named by its reaction,
     /// Carried Embers. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark
     /// opens Fire Whirl and Hot Wind; Fan the Flame and Long Embers, the keystone The Wind Carries It, and the duo spell The
-    /// Fire Breathes In, the crown. Fire is written first: the duo spell is cast in Fire.
+    /// Fire Breathes In. Fire is written first: the duo spell is cast in Fire.
     /// </summary>
     public static class CarriedEmbersDuo
     {
@@ -93,7 +93,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: an opener on a 16 s cooldown (SpellTimings). The reverse form draws enemies in to a
+            // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 16 s cooldown (SpellTimings). The reverse form draws enemies in to a
             // point and bursts there.
             // NEEDS: a ring of flame that stands 6 s and burns inside it every half second, Unsteady every 2 s on all within
             // 8 m, and heavy blows that throw toward it (pull-to-point); now a 3 s draw that bursts in fire.

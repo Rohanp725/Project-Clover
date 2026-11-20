@@ -1792,7 +1792,7 @@ MonoBehaviour:
       <b>When it happens.</b> Every finisher (a heavy blow on a staggered enemy) that lands on an enemy carrying both Curse and poison.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The sweep takes 0.42 seconds and reaches 9 metres round the finished enemy. Each poisoned enemy in it has its poison set off and spent: 9 damage a dose (72 at eight) and 4 stagger a dose. Half the total heals you.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. The sweep takes 0.42 seconds and reaches 9 metres round the finished enemy. Each poisoned enemy in it has its poison set off and spent: 9 damage a dose (72 at eight) and 4 stagger a dose. Half the total heals you.
 
 
       <b>Works with.</b> Wither, Shut in the Dark (spread the doses first), Devouring Maw, Miasma, Grasp, Never Sated.
@@ -1891,7 +1891,7 @@ MonoBehaviour:
       <b>When it happens.</b> Each time a frozen enemy is shattered, four shards join the ring round you. The next dodge throws them.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Four shards for each shatter, twelve at most; they wait up to 40 seconds after the last shatter. The dodge throws them down a lane 9 metres long and 1.1 metres to each side, in volleys of four: each volley deals 24 damage, 16 stagger and one stack of Chill to everything in the lane.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. Four shards for each shatter, twelve at most; they wait up to 40 seconds after the last shatter. The dodge throws them down a lane 9 metres long and 1.1 metres to each side, in volleys of four: each volley deals 24 damage, 16 stagger and one stack of Chill to everything in the lane.
 
 
       <b>Works with.</b> Windchill, Cold Front, Rime Tree, a heavy blow on a frozen enemy to shatter it, Ice''s charged blade (its blows shatter), Long Stride.
@@ -1974,7 +1974,7 @@ MonoBehaviour:
       <b>When it happens.</b> Drink a flask while Wellspring or Regrowth burns.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The lotus is 3 metres in radius and lasts 10 seconds. Each second, Soaked and a stack of Seeded on every enemy in it, and 2 health to you while you stand in it. Five petals; each holds its enemy 3 seconds. The burst is about 5 metres in radius: 30 damage and 30% more for each petal closed (75 at five), 40 stagger and a stack of Seeded.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. The lotus is 3 metres in radius and lasts 10 seconds. Each second, Soaked and a stack of Seeded on every enemy in it, and 2 health to you while you stand in it. Five petals; each holds its enemy 3 seconds. The burst is about 5 metres in radius: 30 damage and 30% more for each petal closed (75 at five), 40 stagger and a stack of Seeded.
 
 
       <b>Works with.</b> Wellspring (the flask heals half again as much), Morning Dew (the flask''s ward), Drowned Roots.
@@ -4173,7 +4173,7 @@ MonoBehaviour:
       <b>When it happens.</b> Light your surge with the surge button (either element''s surge you wear); the light returns when it ends.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Each second, Marked and Cursed on every enemy within 14 metres. Every weapon blow critical; each heals 1, at most five times a second. The returning column deals half of what that enemy lost to your weapon, 80 at most, with 30 stagger.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. Each second, Marked and Cursed on every enemy within 14 metres. Every weapon blow critical; each heals 1, at most five times a second. The returning column deals half of what that enemy lost to your weapon, 80 at most, with 30 stagger.
 
 
       <b>Works with.</b> Clarity (eight seconds of dark that also marks with every blow) or Hunger (feeding you while it drains), Diamond Ring''s shapes, Weighed, Reckoning''s Spoken Sentence, The Dividing Line.
@@ -4971,7 +4971,7 @@ MonoBehaviour:
       <b>When it happens.</b> Every finisher that lands. The blades wait for your next heavy swing.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The ring reaches 6 metres from the finished enemy: 15 damage, 30 stagger, three stacks of Tremor and three notches of Sundered to each other enemy in it. One blade for each enemy reached, six at most, kept up to 14 seconds. Each flies at an enemy within 10 metres for 10 damage, 12 stagger and one notch of Sundered.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. The ring reaches 6 metres from the finished enemy: 15 damage, 30 stagger, three stacks of Tremor and three notches of Sundered to each other enemy in it. One blade for each enemy reached, six at most, kept up to 14 seconds. Each flies at an enemy within 10 metres for 10 damage, 12 stagger and one notch of Sundered.
 
 
       <b>Works with.</b> Buckled (every enemy it reaches is left shaken and notched), Folded Steel, Hammer and Anvil.
@@ -5257,7 +5257,7 @@ MonoBehaviour:
       <b>When it happens.</b> Plates come with each blocked blow and each perfect guard. They are spent by your next heavy swing, whether or not it lands, or fall away 30 seconds after the last was laid.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Each plate takes 6% off the damage you take, 30% at five. The edge reaches 2.5 metres and 1.2 more a plate (8.5 at five), 1.3 metres to each side: 12 damage, 12 stagger and one stack of Chill a plate, as a heavy blow. Five plates: 60 damage, 60 stagger and five Chill, enough to freeze.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. Each plate takes 6% off the damage you take, 30% at five. The edge reaches 2.5 metres and 1.2 more a plate (8.5 at five), 1.3 metres to each side: 12 damage, 12 stagger and one stack of Chill a plate, as a heavy blow. Five plates: 60 damage, 60 stagger and five Chill, enough to freeze.
 
 
       <b>Works with.</b> Cold Read, Cold in the Bones, Chill.
@@ -5451,7 +5451,7 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. 60 mana. An enemy within 8 metres; the ring is 3 metres in radius. Six crossings 0.13 seconds apart, then 0.3 seconds still. Each cut deals 14 damage and 12 stagger to the enemy (84 and 72 in all), and half to anything else its line crossed. Then everything within 1.2 metres of the ring''s middle is Marked and notched three deep.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. 60 mana. An enemy within 8 metres; the ring is 3 metres in radius. Six crossings 0.13 seconds apart, then 0.3 seconds still. Each cut deals 14 damage and 12 stagger to the enemy (84 and 72 in all), and half to anything else its line crossed. Then everything within 1.2 metres of the ring''s middle is Marked and notched three deep.
 
 
       <b>Works with.</b> Bright Steel, Halo of Blades (the Marked blows after are critical), Sunder, Counter Cut, the charged blade (it charges your weapon with Metal).
@@ -8839,7 +8839,7 @@ MonoBehaviour:
       <b>When it happens.</b> Each time you light the surge with the surge button, whichever element''s surge you wear.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Everything within 7 metres of you is held for 2 seconds (elites and gods for less) and takes three stacks of Tremor and one of Seeded. When the hold ends, everything within 7 metres takes 15 damage and 20 stagger, and you mend 5 for each enemy held.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. Everything within 7 metres of you is held for 2 seconds (elites and gods for less) and takes three stacks of Tremor and one of Seeded. When the hold ends, everything within 7 metres takes 15 damage and 20 stagger, and you mend 5 for each enemy held.
 
 
       <b>Works with.</b> Split Rock, Seeded, Living Rampart.
@@ -8957,7 +8957,7 @@ MonoBehaviour:
       <b>When it happens.</b> Every heavy blow or finisher that lands on a burning enemy, while Fire and Lightning are both carried.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The burst is 3.2 metres in radius: 18 damage and 16 stagger. Each enemy in it that was burning takes its burn set off as well, 10 damage and 10 more a stack, and every enemy in it burns for 4 seconds afterward. Nothing of the first enemy''s Burn is spent.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. The burst is 3.2 metres in radius: 18 damage and 16 stagger. Each enemy in it that was burning takes its burn set off as well, 10 damage and 10 more a stack, and every enemy in it burns for 4 seconds afterward. Nothing of the first enemy''s Burn is spent.
 
 
       <b>Works with.</b> Cinder, Heat, Catching Fire, Flashover''s shapes, Ionised Air.
@@ -9557,7 +9557,7 @@ MonoBehaviour:
       <b>When it happens.</b> Cast it from its spell slot (hold L2 and a face button, or 1 to 4) and stay still.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. 60 mana. Up to six enemies within 9 metres. The three breaths take 2.2 seconds. Each pillar is 2 metres in radius: 40 damage and 40 stagger, a heavy blow, two doses of poison, plus 6 a dose of poison and 10 and 10 a stack of Burn set off.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. 60 mana. Up to six enemies within 9 metres. The three breaths take 2.2 seconds. Each pillar is 2 metres in radius: 40 damage and 40 stagger, a heavy blow, two doses of poison, plus 6 a dose of poison and 10 and 10 a stack of Burn set off.
 
 
       <b>Works with.</b> Goes Up, Fire Medicine, Cinder, Slow Burn.
@@ -10760,7 +10760,7 @@ MonoBehaviour:
       <b>When it happens.</b> Every finisher that lands (a heavy blow on a staggered enemy).
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. You land 0.34 seconds after the throw. Everything within 4.5 metres takes 22 damage, 40 stagger, three stacks of Static and three of Unsteady, and is pushed 3 metres.
+      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. You land 0.34 seconds after the throw. Everything within 4.5 metres takes 22 damage, 40 stagger, three stacks of Static and three of Unsteady, and is pushed 3 metres.
 
 
       <b>Works with.</b> Static, Thunder Gust''s Thunderhead, Slip Current, Stored Charge.

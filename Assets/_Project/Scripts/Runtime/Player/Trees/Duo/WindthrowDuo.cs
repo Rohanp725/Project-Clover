@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Wind and Life (pairs_d3.md, "Wind and Life", distance 3; task 4.16), named by its reaction,
     /// Windthrow. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark
     /// opens Blown Seed and Deep Roots; Seed on the Wind and Torn Up (majors), Green Wood (a minor), the keystone The Fairy
-    /// Wind, and the duo spell Thistledown, the crown. Wind is written first.
+    /// Wind, and the duo spell Thistledown. Wind is written first.
     /// </summary>
     public static class WindthrowDuo
     {
@@ -101,7 +101,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a movement on a 9 s cooldown (SpellTimings). The drill form carries you through
+            // The duo spell, bought with Shards once both are carried (no god gives it): a movement on a 9 s cooldown (SpellTimings). The drill form carries you through
             // enemies; each is unsteadied (the branch's first element) and seeded, so it roots as you go by.
             // NEEDS: untouchable for the drift; a ring of flowers where you form again, counting as grown and healing you; a
             // light blow within 1 s counting as a shove.

@@ -1181,6 +1181,12 @@ affliction of the element not held on top of what the held element's root alread
 the Signature of the element held; **CONSUME NEXT** marks the next element round the ring as consumed, which opens
 the branch between them and gives its crown. With the element stone that is every gift in the game, tried by hand.
 
+**Changed 2026-11-20 (the owner's decision): gods give no duo crowns.** Consuming a god only strengthens an element
+already owned (its Shards); it gives no branch's crown, and the summit gives a Fire holder no Plasma. The eleven old
+crowns (Plasma, Falling Thunder, Diamond Dust, Weight of Ice, Great Lotus, The Ground Wakes, World Anvil, Six Mirrors,
+Totality, The Reaping, Light the Pyres) are bought for 5 Shards on the chart's heart once both elements are carried,
+as every duo branch's duo spell is. CONSUME NEXT now gives the 4 Shards alone.
+
 **The engine grew to say what the marks say.** Stats that hold only in a state (guarding, the surge, low or high
 health, unhurt, planted, owing health, full mana, near something grown), on a kind of blow (heavy, light, critical,
 the last of a chain, on an enemy in the air) or against a named affliction; stamina split into attacks, guard and

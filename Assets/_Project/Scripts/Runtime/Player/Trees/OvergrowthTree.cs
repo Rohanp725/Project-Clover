@@ -92,7 +92,7 @@ namespace Clover.Player.Trees
             // NEEDS: a duo surge chosen in the Hand's surge slot (now it answers any surge while both are carried).
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = TheGroundWakes, Name = "The Ground Wakes", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = TheGroundWakes, Name = "The Ground Wakes", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { StoneOak }, Icon = UpgradeIcons.Crown,
                 Description = "When your surge begins, the ground rises round you in a ring of root and stone and holds every enemy inside it. Then it flowers, and you are healed for each one held.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Form, Form = SpellForms.GroundWakes, Affliction = AfflictionKind.Tremor, Spell = new SpellSpec { Cost = 0f, Radius = 7f, Seconds = 2f, Damage = 15f, Stagger = 20f, Stacks = 3, LingerDamage = 5f } } },
             }, HeartPattern.Crown));

@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Lightning and Water (pairs_d3.md, "Lightning and Water", distance 3; task 4.16), named by its
     /// reaction, Seized. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape
     /// mark opens Can't Let Go and Running Water; Wet Thread and Grounded (majors), Salt Water (a minor), the keystone The
-    /// Sea Finds Land, and the duo spell The Flashing, the crown. Lightning is written first.
+    /// Sea Finds Land, and the duo spell The Flashing. Lightning is written first.
     /// </summary>
     public static class SeizedDuo
     {
@@ -88,7 +88,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Needs = AfflictionKind.Static, NeedsFull = true, Needs2 = AfflictionKind.Soaked, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 8f, Stagger = 5f, Cooldown = 1f } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: an opener on a 10 s cooldown (SpellTimings). The bolt form leaps from enemy to enemy;
+            // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 10 s cooldown (SpellTimings). The bolt form leaps from enemy to enemy;
             // each it reaches is charged twice (the branch's first element) and Soaked, so it is seized at once.
             // NEEDS: a flash along the floor from the nearest Soaked enemy (aim-at-afflicted), the path staying wet 2 s, and
             // the next blow on the last reached discharging all the flash touched (the cast remembering its targets).

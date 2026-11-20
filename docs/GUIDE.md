@@ -10,7 +10,7 @@ Numbers are first values from the code and have not been tuned by play. Where th
 2. [How a fight works](#2-how-a-fight-works)
 3. [Weapons](#3-weapons)
 4. [Elements](#4-elements)
-5. [Gods' gifts and mix crowns](#5-gods-gifts-and-mix-crowns)
+5. [Gods' gifts and duo branch tops](#5-gods-gifts-and-duo-branch-tops)
 6. [Spell forms](#6-spell-forms)
 7. [The upgrade chart](#7-the-upgrade-chart)
 8. [Where to try things](#8-where-to-try-things)
@@ -511,13 +511,13 @@ Critical blows: none by chance to begin with; marks add a chance. A critical blo
 
 ### Taking and consuming
 
-When a god falls it leaves two things on the floor; walk up and use one. **Take**: your element and tree switch to the god's, the old tree is forgotten and the Shards spent on it are given back, you receive the god's own weapon and the **god's gift** at the crown of the new tree. **Consume**: you keep your element and gain 4 Shards; if the god's element is your neighbour on the ring you also receive the **crown** of the branch the two share, and a plain version of the god's weapon. Either choice restores you. A gift that is a spell is worn at once.
+When a god falls it leaves two things on the floor; walk up and use one. **Take**: your element and tree switch to the god's, the old tree is forgotten and the Shards spent on it are given back, you receive the god's own weapon and the **god's gift** at the crown of the new tree. **Consume**: you keep your element and gain 4 Shards, which only strengthen the element you already own, and a plain version of the god's weapon. No god gives a duo branch's spells: they are bought with Shards once both elements are carried. Either choice restores you. A gift that is a spell is worn at once.
 
 A **mixed branch** opens when you hold one of its two elements and have held or consumed the other in this run. Sealed, it is still drawn on the chart, and the words panel says which element opens it.
 
 **Not yet**
 
-- Only one god exists: Narukami, of Lightning. In play the choice is therefore Take (Lightning, the Storm Katana, Storm Step) or Consume (stay as you are, 4 Shards, a plain Katana; for a Fire holder also Plasma and a stronger Flame Wave and Kindle).
+- Only one god exists: Narukami, of Lightning. In play the choice is therefore Take (Lightning, the Storm Katana, Storm Step) or Consume (stay as you are, 4 Shards, a plain Katana; for a Fire holder also a stronger Flame Wave and Kindle).
 - The other nine elements have no gods. Their braziers in the hub are lit from the start as a stopgap. Lightning's stays cold until it has been taken once.
 - Gust and Riptide move everything within reach, not only what the cone touched. Stone Rise's pillar does not stand to be broken. Flung Blade deals nothing as it lands. Grasp does not drag you to what cannot be dragged.
 - Glaze, Wellspring, Bedrock, Temper, Clarity and Fever have only the plain halves listed above.
@@ -525,9 +525,9 @@ A **mixed branch** opens when you hold one of its two elements and have held or 
 
 ---
 
-## 5. Gods' gifts and mix crowns
+## 5. Gods' gifts and duo branch tops
 
-A gift is never bought. It sits at the crown of its tree, drawn as a crowned sun. Most cost nothing to use and are begun by something you already do. In the practice yard two debug shrines hand them out (section 8).
+A god's gift is never bought. It sits at the crown of its element's tree, drawn as a crowned sun. Most cost nothing to use and are begun by something you already do. In the practice yard a debug shrine hands them out (section 8). Gods give only single-element gifts: a duo branch's top marks are bought, not given.
 
 ### Gods' gifts: one per element
 
@@ -547,11 +547,11 @@ Given by **taking** the element from its god.
 | Dark | **A Life for a Life** | Be Risen (Dark's root stands you up once from a blow that would kill you, at half health, draining 4 a second down to a sliver). | Brackets and a sign mark the one that killed you. Land a finisher on it (on anyone, if it is gone) to stop the drain, return to half health, and earn the right to rise once more. |
 | Poison | **Clean Blade** | Light Fever (L2), then land weapon blows. | While Fever lasts poison on every enemy neither bites nor fades, and every blow doses twice. When Fever ends time slows, you flick the blade, and each poisoned enemy within 14 m takes every bite it was owed at once. |
 
-### Mix crowns: one per mixed branch
+### Duo branch tops: bought with Shards
 
-Given by **consuming** a god whose element is your neighbour on the ring.
+Each of the eleven reshaped branches keeps the mark that was once its crown. Since 2026-11-20 none is given by a god: each is bought for **5 Shards** on the chart's heart once both elements are carried, growing from the branch's duo spell (Six Mirrors and Light the Pyres are their branches' duo spells, growing from the branch's first two marks). Every other duo branch's duo spell is bought for 5 Shards the same way.
 
-| Branch | Crown | How you trigger it | What it does |
+| Branch | Top | How you trigger it | What it does |
 |---|---|---|---|
 | Plasma (Fire + Lightning) | **Plasma** | Land a heavy blow or a finisher on a burning enemy. | It bursts for 18 damage and 16 stagger in 3.2 m and sets alight everyone it reaches. |
 | Tempest (Lightning + Wind) | **Falling Thunder** | Land any finisher. | The enemy is thrown up, you vanish in a line of light, and 0.34 s later you land on it as a bolt: 22 damage in 4.5 m with Static and Unsteady three deep, everything pushed 3 m. You are untouchable throughout. |
@@ -1274,7 +1274,7 @@ that hits back stands to the west, for practising the guard and the dodge.
 | South wall | 24 stones, one for each spell form that has a sample, each named | Stand by one and a card shows what it does and how to cast it. Use it to wear the spell, then hold Triangle (U). Mana comes back by itself while a stone's spell is worn. |
 | In front of the stones, middle | ELEMENT stone | Use it to hold the next element round the ring. Its card says what you hold and what comes next. |
 | Left of the element stone | GOD GIFT shrine | Its card names the gift of the element you hold, what it does and what sets it going. Use it to be given that gift. |
-| Right of the element stone | CONSUME NEXT shrine | Its card names the crown of the branch your element shares with the next one. Use it to open that branch and be given the crown. |
+| Right of the element stone | CONSUME NEXT shrine | Consumes the next element round the ring: 4 Shards for the element you hold. No god gives a duo crown, so it gives none. |
 
 To try a particular god's gift: use the ELEMENT stone until you hold its element, read the GOD GIFT card, use the
 shrine, then do what the card says (most begin with the surge, L2 or I).

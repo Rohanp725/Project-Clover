@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Dark and Lightning (pairs_d3.md, "Dark and Lightning", distance 3; task 4.16), named by its
     /// reaction, The Grudge. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its
     /// Shape mark opens First Strike and Ash Plume; Grievance and The Exile Returns (majors), Long Memory (a minor), the
-    /// keystone Given Bones, the duo spell The Exile's Grudge (the crown) and the duo surge Ash and Thunder. Dark is written
+    /// keystone Given Bones, the duo spell The Exile's Grudge and the duo surge Ash and Thunder. Dark is written
     /// first, as the ring names the pair.
     /// </summary>
     public static class TheGrudgeDuo
@@ -99,7 +99,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a counter on a 12 s cooldown (SpellTimings). The parry form stands for 3 s and answers
+            // The duo spell, bought with Shards once both are carried (no god gives it): a counter on a 12 s cooldown (SpellTimings). The parry form stands for 3 s and answers
             // what strikes it; the answer Curses (the branch's first element) and charges three deep.
             // NEEDS: every attacker tied by a thread and paid back twice what it dealt (60 at most) when the cloud breaks, a
             // blow on the guard counting double (damage-tally).

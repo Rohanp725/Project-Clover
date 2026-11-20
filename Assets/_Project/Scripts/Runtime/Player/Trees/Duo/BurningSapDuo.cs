@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Light and Poison (pairs_d1_d2.md, "Light and Poison", distance 2; task 4.15), named by its
     /// reaction, Burning Sap. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its
     /// Shape mark, Lit Veins, opens The Light Finds Them and Blistered; Nectar After Poison and Seen Through (majors), Bright
-    /// Venom (a minor), and the duo spell Bared to the Sun, the crown. Light is written first: the duo spell is cast in
+    /// Venom (a minor), and the duo spell Bared to the Sun. Light is written first: the duo spell is cast in
     /// Light. The pair file gives this branch no keystone.
     /// </summary>
     public static class BurningSapDuo
@@ -91,7 +91,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 1 } },
             }, HeartPattern.RightHigh));
 
-            // The duo spell, the crown: an opener on a 13 s cooldown (SpellTimings). The field form lays a patch at the aim
+            // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 13 s cooldown (SpellTimings). The field form lays a patch at the aim
             // point; each poisoned enemy it bites is Marked (the branch's first element) and starts Burning Sap past its rest.
             // NEEDS: once each enemy (per-enemy cooldowns; now once a second for all); each weapon blow inside raising one
             // more weal on the one struck.

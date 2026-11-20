@@ -7,7 +7,7 @@ namespace Clover.Player.Trees.Duo
     /// The duo branch of Earth and Light (pairs_d1_d2.md, "Earth and Light", distance 2; task 4.15), named by its reaction,
     /// Earthlight. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark,
     /// Lit Stone, opens Down the Passage and Lit Seam; Keeping the Hour and Dawn Through the Door (majors), Quartz Vein (a
-    /// minor), and the duo spell The Stone Keeps the Hour, the crown. Earth is written first: the duo spell is cast in Earth.
+    /// minor), and the duo spell The Stone Keeps the Hour. Earth is written first: the duo spell is cast in Earth.
     /// The pair file gives this branch no keystone.
     /// </summary>
     public static class EarthlightDuo
@@ -91,7 +91,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Afflict, Radius = 3.5f, Affliction = AfflictionKind.Marked, Stacks = 1 } },
             }, HeartPattern.LeftHigh));
 
-            // The duo spell, the crown: an opener on a 16 s cooldown (SpellTimings). The rod form plants a stone that strikes
+            // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 16 s cooldown (SpellTimings). The rod form plants a stone that strikes
             // round it on a beat.
             // NEEDS: a line of sunlight sweeping round the stone like a dial's shadow, the stone blocking the way and counting
             // as stone at an enemy's back, and a weapon blow timed to the line critical (now the stone strikes all within 6 m

@@ -94,7 +94,7 @@ namespace Clover.Player.Trees
             // BESPOKE (built): PlatesForm. The branch's top mark, begun by the guard.
             to.Add(HeartPattern.Put(new Upgrade
             {
-                Id = Gift, Name = "Weight of Ice", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
+                Id = Gift, Name = "Weight of Ice", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { TheWaveStandsStill }, Icon = UpgradeIcons.Crown,
                 Description = "Each blow you guard lays a plate of ice on you, up to five. A perfect guard lays two. Plates turn a little of every wound. Your next heavy blow spends them all in one great edge of ice.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Form, Form = SpellForms.Plates, Affliction = AfflictionKind.Chill, Spell = new SpellSpec { Cost = 0f, Count = 1, Damage = 12f, Stagger = 12f, Reach = 1.2f, Radius = 1.3f, Stacks = 1 } }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Form, Form = SpellForms.Plates, Affliction = AfflictionKind.Chill, Spell = new SpellSpec { Cost = 0f, Count = 2, Damage = 12f, Stagger = 12f, Reach = 1.2f, Radius = 1.3f, Stacks = 1 } } },
             }, HeartPattern.Crown));

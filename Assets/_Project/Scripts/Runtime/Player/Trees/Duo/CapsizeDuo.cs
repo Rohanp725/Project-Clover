@@ -6,7 +6,7 @@ namespace Clover.Player.Trees.Duo
     /// <summary>
     /// The duo branch of Wind and Water (pairs_d1_d2.md, "Wind and Water", distance 2; task 4.15), named by its reaction,
     /// Capsize. Drawn in the chart's heart (<see cref="HeartPattern"/>) and open while both are carried. Its Shape mark opens
-    /// Waterspout and Breakers; Wake and Rolled In, the keystone Swamped, the duo spell Ride the Squall (the crown) and the duo
+    /// Waterspout and Breakers; Wake and Rolled In, the keystone Swamped, the duo spell Ride the Squall and the duo
     /// surge Open the Gourd. Wind is written first: the duo spell is cast in Wind.
     /// </summary>
     public static class CapsizeDuo
@@ -83,7 +83,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Unsteady, Do = UpgradeAction.Burst, Radius = 0.5f, Stagger = 10f, Cooldown = 0.2f } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, the crown: a movement on a 9 s cooldown (SpellTimings). The drill form carries the player along a
+            // The duo spell, bought with Shards once both are carried (no god gives it): a movement on a 9 s cooldown (SpellTimings). The drill form carries the player along a
             // line through everything on it.
             // NEEDS: untouchable for the ride; cast out of a perfect dodge it starts no cooldown and the first blow after it is
             // critical (spell-windows).
