@@ -266,7 +266,9 @@ public class DevotionProbeRunner : MonoBehaviour
         Judge("all in, L2 + RT is Burnt Offering for 20 mana", combat.DeepStrikes == deep + 1 && Mathf.Approximately(spells.StrikeManaPaid - paid, 20f),
             $"deep {deep}->{combat.DeepStrikes}, paid {spells.StrikeManaPaid - paid:0}");
 
-        // In a mix the Devotion leaves force, and a burn goes out again.
+        // In a mix the Devotion leaves force, and a burn goes out again. All in, an altar starts again with its element
+        // alone (AltarChoice), so Fire is carried alone first and Lightning taken beside it.
+        yield return Use(fireAltar);
         yield return Use(lightningAltar);
         Judge("Lightning taken beside Fire: a mix", element.Mixed, Carried());
         Judge("in a mix Fire Without End is out of force and the enemies' rules are clear", !upgrades.Has(FireTree.FireWithoutEnd) && !Afflictions.Rules.Any, Book());
