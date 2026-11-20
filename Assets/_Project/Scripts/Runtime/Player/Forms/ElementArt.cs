@@ -74,6 +74,10 @@ namespace Clover.Player.Forms
                 var looks = GetComponent<ElementLooks>();
                 if (looks == null) looks = gameObject.AddComponent<ElementLooks>();
                 looks.Configure(set.Looks);
+                // A reaction's chain drawn live between the two bodies the game bound (Black Chain).
+                var chains = GetComponent<BoundChains>();
+                if (chains == null) chains = gameObject.AddComponent<BoundChains>();
+                chains.Configure(set.Looks);
             }
             // A burning body is drawn in real flame when the art has the flame's material.
             if (set.BodyFlame != null)

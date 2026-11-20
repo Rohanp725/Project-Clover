@@ -85,7 +85,7 @@ namespace Clover.Tests
             Assert.GreaterOrEqual(set.Find(ReactionDesigns.RustLook), 0);
             foreach (var look in set.Looks)
             {
-                Assert.LessOrEqual(look.PartCount, ElementLooks.MostParts, look.Key);
+                Assert.Less(look.PartCount, ElementLooks.MostParts, $"{look.Key}: a look built at the cap has lost pieces");
                 Assert.Greater(look.PartCount, 0, look.Key);
                 for (int k = 0; k < look.PartCount; k++)
                 {
@@ -303,6 +303,143 @@ namespace Clover.Tests
             // The stone stands as long as the enemy is stone (3.5 s), not only the look's 1.6 s.
             Assert.AreEqual(3.5f, ElementLookSet.ShownFor(set.Looks[set.Find("turned_to_stone")]), 0.001f, "Turned to Stone holds while it stands as stone");
             Assert.AreEqual(set.Looks[set.Find("glint")].Seconds, ElementLookSet.ShownFor(set.Looks[set.Find("glint")]), 0.001f, "a look with no hold ends at its length");
+        }
+
+        /// <summary>
+        /// Across both recipes, every piece the recipe gives a body is built into that body's look and no other, and none
+        /// is dropped (the builder once read the numbers in piece names as bodies: "spark15", "heavechip4"). The body is
+        /// the recipe's own word: combos 4's motion.body, follow_body, an orbit's centre_is; an elements piece with none
+        /// of these is the body it stands nearest. A reaction's piece belongs to its look on that body ("slug", "slug@1");
+        /// an element look is built for its main body (Unsteady once per body), the others showing it again.
+        /// </summary>
+        [Test]
+        public void EveryPieceIsBuiltOnTheBodyTheRecipeGivesIt()
+        {
+            var set = ElementLookBuilder.Set();
+            var combos = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(ElementLookBuilder.ReactionRecipePath);
+            var elements = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(ElementLookBuilder.RecipePath);
+            if (set == null || combos == null || elements == null) Assert.Ignore("The recipes are not in the project, or the looks are not built.");
+            // Which looks each recipe piece was built into, by its name.
+            var builtInto = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<string>>();
+            foreach (var look in set.Looks)
+                for (int k = 0; k < look.PartCount; k++)
+                {
+                    string piece = ElementLookBuilder.PieceOf(set.Parts[look.FirstPart + k].Mesh);
+                    if (piece == null) continue;
+                    if (!builtInto.TryGetValue(piece, out var into)) builtInto[piece] = into = new System.Collections.Generic.List<string>();
+                    into.Add(look.Key);
+                }
+            var wrong = new System.Collections.Generic.List<string>();
+            int checkedPieces = 0;
+            foreach (bool reactions in new[] { true, false })
+            {
+                var root = (System.Collections.Generic.Dictionary<string, object>)ReactionRecipe.ReadJson((reactions ? combos : elements).text);
+                foreach (System.Collections.Generic.Dictionary<string, object> look in (System.Collections.Generic.List<object>)root["looks"])
+                {
+                    string slug = (string)look["slug"];
+                    var bodies = new System.Collections.Generic.List<Vector3>();
+                    foreach (System.Collections.Generic.Dictionary<string, object> body in (System.Collections.Generic.List<object>)look["bodies"]) bodies.Add(Vec(body["position"]));
+                    foreach (System.Collections.Generic.Dictionary<string, object> group in (System.Collections.Generic.List<object>)look["groups"])
+                    {
+                        var instances = (System.Collections.Generic.List<object>)group["instances"];
+                        var motions = (System.Collections.Generic.List<object>)group["motion"];
+                        string notAMesh = ElementLookBuilder.NotAMesh(slug, (string)group["kit"], (string)group["kit_object"]);
+                        for (int n = 0; n < instances.Count; n++)
+                        {
+                            var instance = (System.Collections.Generic.List<object>)instances[n];
+                            var motion = (System.Collections.Generic.Dictionary<string, object>)motions[n];
+                            string piece = (string)instance[0];
+                            bool onPlayer = motion.TryGetValue("on_player", out var flag) && flag is bool yes && yes || instance.Count > 4 && (string)instance[4] == "p";
+                            int body = onPlayer ? -1 : RecipeBody(motion, Vec(instance[1]), bodies, reactions, piece, wrong);
+                            string expected = reactions ? ElementLookBuilder.ReactionKey(slug, body)
+                                : ElementLookBuilder.PerBody.TryGetValue(slug, out var variants) ? (body < 0 ? variants[0] : body < variants.Length ? variants[body] : null)
+                                : body <= 0 ? slug : null;
+                            builtInto.TryGetValue(piece, out var into);
+                            checkedPieces++;
+                            if (notAMesh != null)
+                            {
+                                if (into != null) wrong.Add($"{piece}: built, though {notAMesh}");
+                                continue;
+                            }
+                            if (expected == null)
+                            {
+                                // An element look's other bodies show the main body's timeline again: their pieces are not built.
+                                if (into != null) wrong.Add($"{piece} (body {body}) is built into {string.Join(", ", into)}, where only the main body's are");
+                                continue;
+                            }
+                            if (into == null) wrong.Add($"{piece} (body {body}) is dropped: in no look, wanted in {expected}");
+                            else if (into.Any(key => key != expected) || !into.Contains(expected)) wrong.Add($"{piece} (body {body}) is built into {string.Join(", ", into)}, wanted in {expected}");
+                        }
+                    }
+                }
+            }
+            Assert.Greater(checkedPieces, 2500, "both recipes were read");
+            Assert.IsEmpty(wrong, $"{wrong.Count} pieces off their body:\n" + string.Join("\n", wrong.Take(40)));
+        }
+
+        // The body the recipe gives a piece, in its own words; combos 4 names every piece's body, and its body agrees with
+        // the piece's follow_body and orbit centre wherever it has them.
+        private static int RecipeBody(System.Collections.Generic.Dictionary<string, object> motion, Vector3 position, System.Collections.Generic.List<Vector3> bodies,
+            bool named, string piece, System.Collections.Generic.List<string> wrong)
+        {
+            int follow = motion.TryGetValue("follow_body", out var followValue) && followValue is double followed ? (int)followed : -1;
+            int centre = -1;
+            if (motion.TryGetValue("orbit", out var orbitValue) && orbitValue is System.Collections.Generic.Dictionary<string, object> orbit && orbit.TryGetValue("centre_is", out var centreIs)
+                && centreIs is string text && text.StartsWith("body ")) centre = int.Parse(text.Substring(5));
+            if (named)
+            {
+                if (!(motion.TryGetValue("body", out var bodyValue) && bodyValue is double given))
+                {
+                    wrong.Add($"{piece}: the recipe names no body");
+                    return 0;
+                }
+                if (follow >= 0 && follow != (int)given) wrong.Add($"{piece}: body {(int)given} but follows body {follow}");
+                if (centre >= 0 && centre != (int)given) wrong.Add($"{piece}: body {(int)given} but orbits body {centre}");
+                return (int)given;
+            }
+            if (follow >= 0) return follow;
+            if (centre >= 0) return centre;
+            int best = 0;
+            for (int i = 1; i < bodies.Count; i++)
+                if (new Vector2(bodies[i].x - position.x, bodies[i].z - position.z).sqrMagnitude < new Vector2(bodies[best].x - position.x, bodies[best].z - position.z).sqrMagnitude) best = i;
+            return best;
+        }
+
+        private static Vector3 Vec(object value)
+        {
+            var list = (System.Collections.Generic.List<object>)value;
+            return new Vector3((float)(double)list[0], (float)(double)list[1], (float)(double)list[2]);
+        }
+
+        /// <summary>
+        /// Black Chain's chain is drawn live between the two bodies the game bound (BoundChains), not baked toward the spot
+        /// the recipe stood the second: no ribbon of its look aims there, and its span carries the built chain's link,
+        /// solid and violet ink, timed to whip out and bound by the game's own chain condition.
+        /// </summary>
+        [Test]
+        public void BlackChainsChainIsDrawnLiveBetweenTheBoundBodies()
+        {
+            var set = ElementLookBuilder.Set();
+            if (set == null || set.Find("black_chain") < 0) Assert.Ignore("The looks are not built with combos 4.");
+            int at = set.FindSpan("black_chain");
+            Assert.GreaterOrEqual(at, 0, "Black Chain has its live span");
+            var span = set.Spans[at];
+            Assert.AreEqual(Clover.Player.Trees.Reactions.Chain, span.Condition, "bound by the game's chain condition");
+            Assert.AreEqual(1, span.Body, "the recipe's second body is the bound one");
+            Assert.IsNotNull(span.Link);
+            Assert.AreEqual(0.34f, span.Link.bounds.size.z, 0.01f, "one link as long as the built chain's");
+            Assert.AreEqual(0.2f, span.Link.bounds.size.x, 0.01f, "and as wide");
+            Assert.AreEqual("Clover/Spell", span.Material.shader.name);
+            Assert.Greater(span.InkWidth, 0f, "inked");
+            Assert.Greater(span.InkColour.b, span.InkColour.g, "a violet rim");
+            Assert.Greater(span.InkColour.r, span.InkColour.g, "a violet rim");
+            Assert.Less(span.Link.colors[0].maxColorComponent, 0.2f, "pure black iron");
+            Assert.Less(span.From, span.Reached, "it whips out, then reaches");
+            Assert.That(span.Pitch, Is.InRange(0.2f, 0.34f), "links overlap by their bar");
+            var look = set.Looks[set.Find("black_chain")];
+            for (int k = 0; k < look.PartCount; k++)
+                StringAssert.DoesNotContain("_span", set.Parts[look.FirstPart + k].Mesh.name, "no chain baked toward the recipe's spot");
+            Assert.AreEqual(5f, ElementLookSet.ShownFor(look), 0.001f, "its wraps stand the 5 s bind");
         }
 
         [Test]

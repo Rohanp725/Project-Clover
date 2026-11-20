@@ -116,6 +116,44 @@ namespace Clover.Player.Forms
             public byte Ease;
         }
 
+        /// <summary>
+        /// A chain a reaction stretches between the body it struck and the one it binds (Black Chain), drawn live by
+        /// <see cref="BoundChains"/> between the two real bodies for as long as the bind lasts, not baked toward the spot
+        /// the recipe stood the second one: one link mesh laid again and again along the span, in the look's own paint,
+        /// solid and ink.
+        /// </summary>
+        [Serializable]
+        public struct Span
+        {
+            /// <summary>The reaction's slug ("black_chain").</summary>
+            public string Key;
+            /// <summary>The recipe's body the chain binds to: its look ("slug@n") is played on the real bound one instead.</summary>
+            public int Body;
+            /// <summary>The condition the game sets on the bound one, joined to the struck one: the chain is drawn while it holds.</summary>
+            public string Condition;
+            /// <summary>One link, its length along z, lying flat across x; every other link is turned a quarter about z.</summary>
+            public Mesh Link;
+            public Material Material;
+            public Color InkColour;
+            public float InkWidth, Thin;
+            /// <summary>Metres from one link's middle to the next.</summary>
+            public float Pitch;
+            /// <summary>The height its ends wrap the bodies at, how far its middle arcs up, and how far in from each body its ends sit.</summary>
+            public float Height, Arc, Inset;
+            /// <summary>Seconds after the reaction when it whips out of the struck one, and when it has reached the other.</summary>
+            public float From, Reached;
+        }
+
+        public Span[] Spans = new Span[0];
+
+        /// <summary>The span a reaction draws live, by its slug; -1 for none.</summary>
+        public int FindSpan(string key)
+        {
+            for (int i = 0; i < Spans.Length; i++)
+                if (Spans[i].Key == key) return i;
+            return -1;
+        }
+
         public Look[] Looks = new Look[0];
         /// <summary>Glaze's crystal, stood on its base with its length up, and the ice it is drawn in (none in a set without it).</summary>
         public Mesh Crystal;

@@ -71,9 +71,12 @@ namespace Clover.EditorTools
         public static readonly HashSet<string> LeftOut = new HashSet<string> { "black_chain|vfxr4_chain" };
 
         /// <summary>
-        /// Chains drawn from the struck body to another, by slug: (the other body's index, the height its ends wrap the
-        /// bodies at, how far its middle arcs up above them, when it whips out and when it has reached). The ends sit at
-        /// chest height, inside the recipe's wraps; the span arcs up between the two, where no health bar stands.
+        /// Chains drawn from the struck body to another, by slug: (the recipe's other body, the height its ends wrap the
+        /// bodies at, how far its middle arcs up above them, when it whips out and when it has reached). Not baked into
+        /// the look: in a fight the game binds the nearest enemy within 6 m, wherever it stands, so the chain is built as a
+        /// <see cref="ElementLookSet.Span"/> (one link, the ribbon's paint, solid and ink) that <see cref="BoundChains"/>
+        /// lays between the two real bound bodies for as long as the bind lasts. The ends sit at chest height, inside the
+        /// recipe's wraps; the span arcs up between the two, where no health bar stands.
         /// </summary>
         public static readonly Dictionary<string, (int body, float height, float arc, float from, float reached)> ChainSpans =
             new Dictionary<string, (int, float, float, float, float)>
@@ -569,6 +572,22 @@ namespace Clover.EditorTools
         /// <summary>The key of a reaction's look on another body (n of the recipe's bodies), or on the player (n below nought).</summary>
         public static string ReactionKey(string slug, int body) => body == 0 ? slug : body < 0 ? slug + "@p" : slug + "@" + body;
 
+        /// <summary>
+        /// Why a recipe piece is built as no mesh of its look, or null when it is one: a piece the look draws its own way
+        /// (<see cref="LeftOut"/>), a shell or second skin the body's own material draws (the mock-ups, Soaked's sheet,
+        /// Turned to Stone's stone), Soaked's foam rings, Temper's rings and clang (its shader's front). Every other
+        /// piece the recipe gives a body is built on that body's look (ElementLooksTests).
+        /// </summary>
+        public static string NotAMesh(string slug, string kit, string kitObject)
+        {
+            if (LeftOut.Contains(slug + "|" + kitObject)) return "drawn by the look its own way";
+            if (kit == Mockup || kit == "enemy_model") return "a shell the body's own material draws";
+            if (slug == "water_soaked" && kitObject.Contains("wet_affliction")) return "Soaked's sheen, drawn by the body's own material";
+            if (slug == "water_soaked" && kitObject.Contains("water_ripple")) return "Soaked's foam rings, left out";
+            if (slug == "metal_temper" && (kitObject.Contains("metal_ring") || kitObject.Contains("clang"))) return "Temper's front, drawn by its shader";
+            return null;
+        }
+
         /// <summary>The eleven brazier loops (the recipe's lineup, all eleven together, is only a picture and is left out).</summary>
         public static string BuildBraziers() => BuildSet(BrazierRecipePath, BrazierSetPath, "review/checks/brazier_looks.md", "Brazier looks", false);
 
@@ -580,6 +599,7 @@ namespace Clover.EditorTools
             public readonly List<string> Missing = new List<string>();
             public readonly Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)> Kits = new Dictionary<string, (Transform, Dictionary<string, MeshFilter>)>();
             public int Ribbons;
+            public readonly List<ElementLookSet.Span> Spans = new List<ElementLookSet.Span>();
             public ElementLookSet Target;
             /// <summary>Building reactions: pieces split by the body they are on, the player's apart.</summary>
             public bool Reactions;
@@ -653,6 +673,7 @@ namespace Clover.EditorTools
             set.Looks = lists.Looks.ToArray();
             set.Parts = lists.Parts.ToArray();
             set.Keys = lists.Keys.ToArray();
+            if (elementLooks) set.Spans = lists.Spans.ToArray();
             if (elementLooks) BakeCrystal(set, lists, elementArt);
             EditorUtility.SetDirty(set);
             if (elementLooks)
@@ -730,7 +751,9 @@ namespace Clover.EditorTools
                     Vector3 turned = Vec(instance[2], Vector3.zero);
                     string pieceName = instance[0] as string ?? "";
                     if (LeftOut.Contains(slug + "|" + kitObject)) continue;
-                    int restagedBody = Restage(slug, pieceName, bodyAt.Count > 0 ? bodyAt[0] - playerAt : Vector3.forward, ref position, ref turned, ref motion);
+                    // The body the recipe gives the piece, read before it is restaged (its key pose says where it stood).
+                    int pieceBody = bodyAt.Count > 0 ? PieceBody(motion, position, bodyAt) : 0;
+                    if (pieceBody == 0) Restage(slug, pieceName, bodyAt.Count > 0 ? bodyAt[0] - playerAt : Vector3.forward, ref position, ref turned, ref motion);
                     if (lists.Reactions)
                     {
                         // A reaction's piece belongs to the player's look or a body's, never to both.
@@ -739,14 +762,9 @@ namespace Clover.EditorTools
                         if (playerVariant) onPlayer = true;
                     }
                     made.OnPlayer |= onPlayer;
-                    // The main body's pieces only (or the player's): the other two bodies show the same timeline again.
-                    Vector3 judged = position;
-                    if (motion.TryGetValue("orbit", out var orbitValue) && orbitValue is Dictionary<string, object> orbitAt && orbitAt.ContainsKey("centre"))
-                        judged = Vec(orbitAt["centre"], position);
-                    if (motion.TryGetValue("follow_body", out var follow) && follow is double followed && (int)followed != onBody) continue;
-                    // A group of one is a single piece (a rust segment, "rust1"): its number is not a body's.
-                    // A look with no bodies (a brazier's) keeps every piece.
-                    int pieceBody = restagedBody >= 0 ? restagedBody : instances.Count > 1 ? BodyOf(pieceName, bodyAt, judged) : Nearest(bodyAt, judged);
+                    // The look's own body's pieces only (or the player's): an element look's other two bodies show the same
+                    // timeline again. A look with no bodies (a brazier's) keeps every piece.
+                    motion.TryGetValue("orbit", out var orbitValue);
                     if (!onPlayer && bodyAt.Count > 0 && pieceBody != onBody) continue;
                     var window = Window(motion);
                     float show = window.x - shift, hide = window.y >= 9f ? 9f : window.y - shift;
@@ -798,7 +816,7 @@ namespace Clover.EditorTools
                     if (LookPaints.ContainsKey(slug + "|" + material)) material = slug + "|" + material;
                     string placement = instance.Count > 4 ? instance[4] as string : "b";
                     string verb = Text(motion, "verb");
-                    var mesh = Bake(key, lists.Parts.Count - made.FirstPart, filter, comboTurn, material, element, scale, placement == "g", out byte kind, out Material wears, elementArt, glow, lists.Target);
+                    var mesh = Bake(key, lists.Parts.Count - made.FirstPart, pieceName, filter, comboTurn, material, element, scale, placement == "g", out byte kind, out Material wears, elementArt, glow, lists.Target);
                     bool held = hide >= 9f;
                     var part = new ElementLookSet.Part
                     {
@@ -844,7 +862,7 @@ namespace Clover.EditorTools
 
             var ribbons = new List<object>();
             if (look.TryGetValue("ribbons", out var ribbonValue) && ribbonValue is List<object> recipeRibbons) ribbons.AddRange(recipeRibbons);
-            if (lists.Reactions && ChainSpans.TryGetValue(slug, out var span) && span.body < bodyAt.Count) ribbons.Add(ChainSpan(slug, span, bodyAt));
+            if (lists.Reactions && onBody == 0 && ChainSpans.TryGetValue(slug, out var span)) lists.Spans.Add(MakeSpan(slug, element, span, elementArt, lists.Target));
             {
                 foreach (Dictionary<string, object> ribbon in ribbons)
                 {
@@ -887,28 +905,22 @@ namespace Clover.EditorTools
                     bool jagged = material.Contains("bolt");
                     // Wind is a band of air (wide across, thin through); a bolt is round.
                     float through = jagged ? 1f : 0.45f;
-                    // A look's own paint for the ribbon's material where it has one (The Bolt Runs True's bolt).
-                    var paint = PaintOf(LookPaints.ContainsKey(slug + "|" + material) ? slug + "|" + material : material);
+                    bool inked = !(ribbon.TryGetValue("ink", out var inkValue) && inkValue is bool ink && !ink);
+                    var paint = RibbonDress(slug, material, element, width, inked, elementArt, out var solid, out var inkColour, out float inkWidth, out float thin);
                     string meshName = $"look_{key}_{lists.Parts.Count - made.FirstPart:00}_{Text(ribbon, "object")}";
                     var mesh = ChainLinks.TryGetValue(slug + "|" + material, out var link)
                         ? ChainMesh(meshName, points, link.x, link.y, link.z, paint.Colour)
                         : RibbonMesh(meshName, points, width, Text(ribbon, "radius_profile"), taper, jagged, through, paint.Colour);
                     AssetDatabase.AddObjectToAsset(mesh, lists.Target);
-                    // The solid a ribbon is drawn in, as for pieces: SolidOf first (the curse's chain in the dark solid).
-                    string owner = SolidOf.TryGetValue(material, out string ribbonSolid) ? ribbonSolid : ReactionArtBuilder.ElementOf(material, element + "_" + element);
-                    int ring = ReactionDesigns.RingIndex(owner);
-                    bool inked = !(ribbon.TryGetValue("ink", out var inkValue) && inkValue is bool ink && !ink);
                     var part = new ElementLookSet.Part
                     {
-                        Mesh = mesh, Material = ring >= 0 && ring < elementArt.Solids.Length ? elementArt.Solids[ring] : elementArt.Solids[0],
+                        Mesh = mesh, Material = solid,
                         Kind = ElementLookSet.Ribbon, Follows = true,
                         // What comes again and again while the look is kept: the curls, the arcs; not the wind arriving,
                         // nor a strike's own shapes (played once).
                         Repeats = hide < 9f && !note.Contains("comes in from the blow") && slug != "wind_strike",
                         Position = Vector3.zero, Rotation = Quaternion.identity, Scale = Vector3.one, Show = show, Hide = hide,
-                        InkColour = RibbonInks.TryGetValue(material, out var inkColour) ? inkColour : elementArt.Solids[Mathf.Max(0, ring)].GetColor("_OutlineColor"),
-                        InkWidth = inked ? Mathf.Clamp(width * 0.16f, 0.008f, 0.025f) : 0f,
-                        Thin = RibbonThin.TryGetValue(material, out float thin) ? thin : 0f,
+                        InkColour = inkColour, InkWidth = inkWidth, Thin = thin,
                     };
                     part.PathFirst = lists.Keys.Count;
                     part.PathCount = AddKeys(motion, "path", lists.Keys, false, shift);
@@ -1058,37 +1070,128 @@ namespace Clover.EditorTools
         }
 
         /// <summary>
-        /// A chain's span from the struck body (its look's anchor) to another as a ribbon of the recipe's shape, so it is
-        /// built, drawn on and inked as the recipe's ribbons are: its ends at chest height just inside the wraps, its middle
-        /// arced up between the two bodies, whipping out from the struck one and staying while the look is kept.
+        /// A ribbon's dress, the same for the recipe's ribbons and a live span: its paint (a look's own where it has one,
+        /// The Bolt Runs True's bolt), the solid it is drawn in (SolidOf first: the curse's chain in the dark solid), and
+        /// its ink's colour, width and stipple.
         /// </summary>
-        private static Dictionary<string, object> ChainSpan(string slug, (int body, float height, float arc, float from, float reached) span, List<Vector3> bodyAt)
+        private static ReactionArtBuilder.Paint RibbonDress(string slug, string material, string element, float width, bool inked, ElementArtSet elementArt,
+            out Material solid, out Color inkColour, out float inkWidth, out float thin)
         {
-            Vector3 to = bodyAt[span.body] - bodyAt[0];
-            to.y = 0f;
-            Vector3 way = to.sqrMagnitude > 0.0001f ? to.normalized : Vector3.forward;
-            // The recipe's wraps lie about 0.36 m round each chest: the span starts and ends just inside them.
-            Vector3 start = way * 0.3f + Vector3.up * span.height, end = to - way * 0.3f + Vector3.up * span.height;
-            var points = new List<object>();
-            const int Count = 14;
-            for (int i = 0; i <= Count; i++)
+            var paint = PaintOf(LookPaints.ContainsKey(slug + "|" + material) ? slug + "|" + material : material);
+            string owner = SolidOf.TryGetValue(material, out string ribbonSolid) ? ribbonSolid : ReactionArtBuilder.ElementOf(material, element + "_" + element);
+            int ring = ReactionDesigns.RingIndex(owner);
+            solid = ring >= 0 && ring < elementArt.Solids.Length ? elementArt.Solids[ring] : elementArt.Solids[0];
+            inkColour = RibbonInks.TryGetValue(material, out var colour) ? colour : elementArt.Solids[Mathf.Max(0, ring)].GetColor("_OutlineColor");
+            inkWidth = inked ? Mathf.Clamp(width * 0.16f, 0.008f, 0.025f) : 0f;
+            thin = RibbonThin.TryGetValue(material, out float stipple) ? stipple : 0f;
+            return paint;
+        }
+
+        /// <summary>The chain's material in the recipe (Black Chain's wraps wear it too), the width its ribbon was drawn at, and how far inside each body's wrap its ends sit.</summary>
+        public const string SpanMaterial = "r4_chain";
+        public const float SpanWidth = 0.2f, SpanInset = 0.3f;
+
+        /// <summary>
+        /// A reaction's live chain (<see cref="ChainSpans"/>): one link of the size its built chain had
+        /// (<see cref="ChainLinks"/>), in the chain ribbon's paint, solid and ink, and the span's shape and times.
+        /// </summary>
+        private static ElementLookSet.Span MakeSpan(string slug, string element, (int body, float height, float arc, float from, float reached) span, ElementArtSet elementArt, Object into)
+        {
+            var link = ChainLinks.TryGetValue(slug + "|" + SpanMaterial, out var size) ? size : new Vector3(0.34f, 0.2f, 0.045f);
+            var paint = RibbonDress(slug, SpanMaterial, element, SpanWidth, true, elementArt, out var solid, out var inkColour, out float inkWidth, out float thin);
+            var mesh = LinkMesh($"look_{slug}_span_link", link.x, link.y, link.z, paint.Colour);
+            AssetDatabase.AddObjectToAsset(mesh, into);
+            return new ElementLookSet.Span
             {
-                float t = i / (float)Count;
-                Vector3 p = Vector3.Lerp(start, end, t) + Vector3.up * (span.arc * 4f * t * (1f - t));
-                points.Add(new List<object> { (double)p.x, (double)p.y, (double)p.z });
-            }
-            return new Dictionary<string, object>
-            {
-                ["object"] = slug + "_span", ["kind"] = "procedural_ribbon", ["centre"] = "body 0", ["width_m"] = 0.2,
-                ["radius_profile"] = "flat", ["material"] = "r4_chain", ["ink"] = true, ["points"] = points,
-                ["motion"] = new Dictionary<string, object>
-                {
-                    ["verb"] = "ribbon_draw", ["note"] = "the chain whips out of the struck one to the other and binds them",
-                    ["visible"] = new List<object> { (double)span.from, 9.0 },
-                    ["draw_on"] = new List<object> { new List<object> { (double)span.from, 0.0, "linear" }, new List<object> { (double)span.reached, 1.0, "out" } },
-                    ["erase"] = new List<object>(),
-                },
+                Key = slug, Body = span.body, Condition = SpanConditions.TryGetValue(slug, out string condition) ? condition : "",
+                Link = mesh, Material = solid, InkColour = inkColour, InkWidth = inkWidth, Thin = thin,
+                // Links overlap by their bar at each end, as a chain's do (as ChainMesh lays them).
+                Pitch = Mathf.Max(0.05f, link.x - 2f * link.z), Height = span.height, Arc = span.arc, Inset = SpanInset, From = span.from, Reached = span.reached,
             };
+        }
+
+        /// <summary>The condition the game sets on the body a span binds (Reactions.Near: Black Chain's on the nearest enemy within 6 m), by slug.</summary>
+        public static readonly Dictionary<string, string> SpanConditions = new Dictionary<string, string>
+        {
+            ["black_chain"] = Clover.Player.Trees.Reactions.Chain,
+        };
+
+        /// <summary>
+        /// One oval link about its middle, its length along z and its width across x, lying flat (its face up y), as
+        /// <see cref="ChainMesh"/> draws each: u half way along for Clover/Spell's draw clip (a live link is drawn whole
+        /// or not at all), uv1 the normals the ink is pushed along.
+        /// </summary>
+        public static Mesh LinkMesh(string name, float length, float width, float iron, Color colour)
+        {
+            var vertices = new List<Vector3>();
+            var normals = new List<Vector3>();
+            var uvs = new List<Vector2>();
+            var colours = new List<Color>();
+            var triangles = new List<int>();
+            AddLink(vertices, normals, uvs, colours, triangles, Vector3.zero, Vector3.forward, Vector3.right, length, width, iron, colour, _ => 0.5f);
+            return FinishChain(name, vertices, normals, uvs, colours, triangles);
+        }
+
+        // One link's bar swept round its oval, appended: about its centre, its length along tangent, its width along
+        // wide; u for each vertex from where it lies.
+        private static void AddLink(List<Vector3> vertices, List<Vector3> normals, List<Vector2> uvs, List<Color> colours, List<int> triangles,
+            Vector3 centre, Vector3 tangent, Vector3 wide, float length, float width, float iron, Color colour, System.Func<Vector3, float> uOf)
+        {
+            const int Around = 14;
+            float halfLong = length * 0.5f - iron, halfWide = width * 0.5f - iron;
+            Vector3 facing = Vector3.Cross(tangent, wide).normalized;
+            int first = vertices.Count;
+            for (int j = 0; j < Around; j++)
+            {
+                float angle = j * Mathf.PI * 2f / Around;
+                float c = Mathf.Cos(angle), n = Mathf.Sin(angle);
+                Vector3 onBar = centre + tangent * (halfLong * c) + wide * (halfWide * n);
+                Vector3 barWay = (tangent * (-halfLong * n) + wide * (halfWide * c)).normalized;
+                Vector3 outward = Vector3.Cross(barWay, facing).normalized;
+                for (int s = 0; s < RibbonSides; s++)
+                {
+                    float turn = s * Mathf.PI * 2f / RibbonSides;
+                    Vector3 normal = (outward * Mathf.Cos(turn) + facing * Mathf.Sin(turn)).normalized;
+                    Vector3 vertex = onBar + normal * iron;
+                    vertices.Add(vertex);
+                    normals.Add(normal);
+                    uvs.Add(new Vector2(uOf(vertex), s / (float)RibbonSides));
+                    colours.Add(new Color(colour.r, colour.g, colour.b, 1f));
+                }
+            }
+            for (int j = 0; j < Around; j++)
+                for (int s = 0; s < RibbonSides; s++)
+                {
+                    int a = first + j * RibbonSides + s, b = first + j * RibbonSides + (s + 1) % RibbonSides;
+                    int c = first + (j + 1) % Around * RibbonSides + s, d = first + (j + 1) % Around * RibbonSides + (s + 1) % RibbonSides;
+                    triangles.Add(a); triangles.Add(c); triangles.Add(b);
+                    triangles.Add(b); triangles.Add(c); triangles.Add(d);
+                }
+        }
+
+        // Faces turned out, as a ribbon's are, so the ink's back faces are inside; then the mesh.
+        private static Mesh FinishChain(string name, List<Vector3> vertices, List<Vector3> normals, List<Vector2> uvs, List<Color> colours, List<int> triangles)
+        {
+            int probe = 0;
+            for (int t = 0; t < triangles.Count; t += 3)
+            {
+                Vector3 face = Vector3.Cross(vertices[triangles[t + 1]] - vertices[triangles[t]], vertices[triangles[t + 2]] - vertices[triangles[t]]);
+                if (face.sqrMagnitude < 1e-12f) continue;
+                probe = Vector3.Dot(face, normals[triangles[t]]) >= 0f ? 1 : -1;
+                break;
+            }
+            if (probe < 0)
+                for (int t = 0; t < triangles.Count; t += 3)
+                    (triangles[t + 1], triangles[t + 2]) = (triangles[t + 2], triangles[t + 1]);
+            var mesh = new Mesh { name = name };
+            mesh.SetVertices(vertices);
+            mesh.SetNormals(normals);
+            mesh.SetColors(colours);
+            mesh.SetUVs(0, uvs);
+            mesh.SetUVs(1, normals);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateBounds();
+            return mesh;
         }
 
         /// <summary>
@@ -1115,14 +1218,11 @@ namespace Clover.EditorTools
             float pitch = Mathf.Max(0.05f, length - 2f * iron);
             int links = Mathf.Max(2, Mathf.RoundToInt(total / pitch));
             float step = total / links;
-            float halfLong = length * 0.5f - iron, halfWide = width * 0.5f - iron;
-            const int Around = 14;
-
-            var vertices = new List<Vector3>(links * Around * RibbonSides);
+            var vertices = new List<Vector3>(links * 14 * RibbonSides);
             var normals = new List<Vector3>(vertices.Capacity);
             var uvs = new List<Vector2>(vertices.Capacity);
             var colours = new List<Color>(vertices.Capacity);
-            var triangles = new List<int>(links * Around * RibbonSides * 6);
+            var triangles = new List<int>(links * 14 * RibbonSides * 6);
             int segment = 0;
             for (int k = 0; k < links; k++)
             {
@@ -1138,56 +1238,10 @@ namespace Clover.EditorTools
                 Vector3 up = Vector3.Cross(tangent, side).normalized;
                 // Every other link stands across the one before it.
                 Vector3 wide = k % 2 == 0 ? side : up;
-                Vector3 facing = Vector3.Cross(tangent, wide).normalized;
-                int first = vertices.Count;
-                for (int j = 0; j < Around; j++)
-                {
-                    float angle = j * Mathf.PI * 2f / Around;
-                    float c = Mathf.Cos(angle), n = Mathf.Sin(angle);
-                    Vector3 onBar = centre + tangent * (halfLong * c) + wide * (halfWide * n);
-                    Vector3 barWay = (tangent * (-halfLong * n) + wide * (halfWide * c)).normalized;
-                    Vector3 outward = Vector3.Cross(barWay, facing).normalized;
-                    for (int s = 0; s < RibbonSides; s++)
-                    {
-                        float turn = s * Mathf.PI * 2f / RibbonSides;
-                        Vector3 normal = (outward * Mathf.Cos(turn) + facing * Mathf.Sin(turn)).normalized;
-                        Vector3 vertex = onBar + normal * iron;
-                        vertices.Add(vertex);
-                        normals.Add(normal);
-                        uvs.Add(new Vector2(Mathf.Clamp01((at + Vector3.Dot(vertex - centre, tangent)) / total), s / (float)RibbonSides));
-                        colours.Add(new Color(colour.r, colour.g, colour.b, 1f));
-                    }
-                }
-                for (int j = 0; j < Around; j++)
-                    for (int s = 0; s < RibbonSides; s++)
-                    {
-                        int a = first + j * RibbonSides + s, b = first + j * RibbonSides + (s + 1) % RibbonSides;
-                        int c = first + (j + 1) % Around * RibbonSides + s, d = first + (j + 1) % Around * RibbonSides + (s + 1) % RibbonSides;
-                        triangles.Add(a); triangles.Add(c); triangles.Add(b);
-                        triangles.Add(b); triangles.Add(c); triangles.Add(d);
-                    }
+                AddLink(vertices, normals, uvs, colours, triangles, centre, tangent, wide, length, width, iron, colour,
+                    vertex => Mathf.Clamp01((at + Vector3.Dot(vertex - centre, tangent)) / total));
             }
-            // Faces turned out, as a ribbon's are, so the ink's back faces are inside.
-            int probe = 0;
-            for (int t = 0; t < triangles.Count; t += 3)
-            {
-                Vector3 face = Vector3.Cross(vertices[triangles[t + 1]] - vertices[triangles[t]], vertices[triangles[t + 2]] - vertices[triangles[t]]);
-                if (face.sqrMagnitude < 1e-12f) continue;
-                probe = Vector3.Dot(face, normals[triangles[t]]) >= 0f ? 1 : -1;
-                break;
-            }
-            if (probe < 0)
-                for (int t = 0; t < triangles.Count; t += 3)
-                    (triangles[t + 1], triangles[t + 2]) = (triangles[t + 2], triangles[t + 1]);
-            var mesh = new Mesh { name = name };
-            mesh.SetVertices(vertices);
-            mesh.SetNormals(normals);
-            mesh.SetColors(colours);
-            mesh.SetUVs(0, uvs);
-            mesh.SetUVs(1, normals);
-            mesh.SetTriangles(triangles, 0);
-            mesh.RecalculateBounds();
-            return mesh;
+            return FinishChain(name, vertices, normals, uvs, colours, triangles);
         }
 
         /// <summary>
@@ -1201,11 +1255,11 @@ namespace Clover.EditorTools
         /// </summary>
         public const float AnvilBack = 0.5f, AnvilWasBack = 0.78f, AnvilSink = 0.95f;
 
-        // A piece moved, turned or timed anew for its look, in the recipe's space (away: from the recipe's player through
-        // the struck body); the body it belongs to, or -1 to find it as for any piece.
-        private static int Restage(string slug, string piece, Vector3 away, ref Vector3 position, ref Vector3 turned, ref Dictionary<string, object> motion)
+        // A piece of the struck body moved, turned or timed anew for its look, in the recipe's space (away: from the
+        // recipe's player through the struck body).
+        private static void Restage(string slug, string piece, Vector3 away, ref Vector3 position, ref Vector3 turned, ref Dictionary<string, object> motion)
         {
-            if (slug != "anvil_stone") return -1;
+            if (slug != "anvil_stone") return;
             away.y = 0f;
             away = away.sqrMagnitude > 0.0001f ? away.normalized : Vector3.forward;
             Vector3 anvil = away * AnvilBack;
@@ -1222,35 +1276,57 @@ namespace Clover.EditorTools
                         Rise(0.18, 0.0, "linear"), Rise(0.3, 0.42, "out"), Rise(0.38, 0.4, "inout"), Rise(0.52, AnvilSink + 0.12, "out"), Rise(0.6, AnvilSink, "inout"),
                     },
                 };
-                return 0;
+                return;
             }
             if (piece.Contains("heavechip"))
             {
                 position += anvil - away * AnvilWasBack;
-                return 0;
+                return;
             }
             if (piece.Contains("crack") || piece.Contains("dustheave") || piece.Contains("spark"))
             {
                 position = new Vector3(anvil.x, position.y, anvil.z);
-                return 0;
+                return;
             }
-            return -1;
         }
 
-        // Which body a piece is on: its name says ("..._wisp0_3", "..._hole1": the number after the piece's word), else
-        // the body it lies nearest.
-        private static int BodyOf(string name, List<Vector3> bodies, Vector3 at)
+        /// <summary>
+        /// A baked piece's mesh name: its look, its place in the look, its kit object and, after a tilde, the recipe's own
+        /// name for the piece, so a check can tell which piece went into which look (<see cref="PieceOf"/>).
+        /// </summary>
+        public static string PartName(string look, int index, string kitObject, string piece) =>
+            string.IsNullOrEmpty(piece) ? $"look_{look}_{index:00}_{kitObject}" : $"look_{look}_{index:00}_{kitObject}~{piece}";
+
+        /// <summary>The recipe's name for the piece a baked mesh was made from; null for a ribbon's or one named before.</summary>
+        public static string PieceOf(Mesh mesh)
         {
-            if (!string.IsNullOrEmpty(name))
+            if (mesh == null) return null;
+            int at = mesh.name.IndexOf('~');
+            return at >= 0 ? mesh.name.Substring(at + 1) : null;
+        }
+
+        /// <summary>
+        /// The body a recipe gives a piece (an index into its bodies, 0 the main one). The recipe says so outright: the
+        /// combos 4 recipe in motion.body (written from the Blender pass's own specs by AgentScripts/recipe_bodies.py),
+        /// either recipe in follow_body (the body whose motion it rides) and in its orbit's centre_is ("body 2"). A piece
+        /// with none of these (the elements recipe's still pieces) is the body's it stands nearest, by its orbit's centre
+        /// when it has one. The numbers in a piece's name are never read: "spark15", "heavechip4", "crystalring10_0" and
+        /// "blast60_3" are counts and angles, not bodies (read as bodies, they dropped pieces or put them on another enemy).
+        /// </summary>
+        public static int PieceBody(Dictionary<string, object> motion, Vector3 position, List<Vector3> bodies)
+        {
+            if (bodies == null || bodies.Count == 0) return 0;
+            if (motion != null)
             {
-                var tokens = name.Split('_');
-                for (int i = tokens.Length - 1; i >= 0; i--)
+                if (motion.TryGetValue("body", out var body) && body is double given) return (int)given;
+                if (motion.TryGetValue("follow_body", out var follow) && follow is double followed) return (int)followed;
+                if (motion.TryGetValue("orbit", out var orbitValue) && orbitValue is Dictionary<string, object> orbit)
                 {
-                    var match = System.Text.RegularExpressions.Regex.Match(tokens[i], "^[a-z]+([0-9]+)$");
-                    if (match.Success) return int.Parse(match.Groups[1].Value);
+                    if (orbit.TryGetValue("centre_is", out var centreIs) && centreIs is string named && CentreBody(named) >= 0) return CentreBody(named);
+                    if (orbit.TryGetValue("centre", out var centre)) position = Vec(centre, position);
                 }
             }
-            return Nearest(bodies, at);
+            return Nearest(bodies, position);
         }
 
         private static int Nearest(List<Vector3> bodies, Vector3 at)
@@ -1314,7 +1390,7 @@ namespace Clover.EditorTools
         // The kit mesh in its own axes about its pivot, painted in what it wears: one colour for the whole piece (the
         // render re-colours shared meshes per piece), or a colour a slot for the batch's own many-slot pieces (the sword),
         // or a flame's bands by height.
-        private static Mesh Bake(string slug, int index, MeshFilter filter, bool comboTurn, string material, string element, Vector3 scale, bool onGround,
+        private static Mesh Bake(string slug, int index, string piece, MeshFilter filter, bool comboTurn, string material, string element, Vector3 scale, bool onGround,
             out byte kind, out Material wears, ElementArtSet elementArt, Material glow, Object into)
         {
             string bare = material.Substring(material.IndexOf('|') + 1);
@@ -1323,7 +1399,7 @@ namespace Clover.EditorTools
             bool bed = filter.name == BedPiece;
             if (bed) material = bare;
             if (filter.name == LeafPiece && LeafColours.TryGetValue(bare, out var leafColour))
-                return BakeLeaf(slug, index, filter, comboTurn, element, leafColour, out kind, out wears, elementArt, into);
+                return BakeLeaf(slug, index, piece, filter, comboTurn, element, leafColour, out kind, out wears, elementArt, into);
             var source = filter.sharedMesh;
             var kitRoot = filter.transform.root;
             var toKit = kitRoot.worldToLocalMatrix * filter.transform.localToWorldMatrix;
@@ -1383,7 +1459,7 @@ namespace Clover.EditorTools
                 int ring = ReactionDesigns.RingIndex(owner);
                 wears = ring >= 0 && ring < elementArt.Solids.Length ? elementArt.Solids[ring] : elementArt.Solids[0];
             }
-            var mesh = new Mesh { name = $"look_{slug}_{index:00}_{filter.name}" };
+            var mesh = new Mesh { name = PartName(slug, index, filter.name, piece) };
             mesh.SetVertices(vertices);
             mesh.SetNormals(normals);
             mesh.SetColors(colours);
@@ -1459,7 +1535,7 @@ namespace Clover.EditorTools
             return mesh;
         }
 
-        private static Mesh BakeLeaf(string slug, int index, MeshFilter filter, bool comboTurn, string element, Color colour,
+        private static Mesh BakeLeaf(string slug, int index, string piece, MeshFilter filter, bool comboTurn, string element, Color colour,
             out byte kind, out Material wears, ElementArtSet elementArt, Object into)
         {
             var vertices = KitVertices(filter, comboTurn);
@@ -1470,7 +1546,7 @@ namespace Clover.EditorTools
             int through = size.x <= size.y && size.x <= size.z ? 0 : size.y <= size.z ? 1 : 2;
             if (through == along) through = (along + 1) % 3;
             int across = 3 - along - through;
-            var mesh = LeafMesh($"look_{slug}_{index:00}_{filter.name}_leaf", bounds.min, bounds.max, along, across, through, colour);
+            var mesh = LeafMesh(PartName(slug, index, filter.name + "_leaf", piece), bounds.min, bounds.max, along, across, through, colour);
             AssetDatabase.AddObjectToAsset(mesh, into);
             kind = ElementLookSet.Solid;
             int ring = ReactionDesigns.RingIndex(element);

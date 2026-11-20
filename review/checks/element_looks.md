@@ -1,199 +1,199 @@
 # Element looks (batches 1 and 2)
 
-213 looks, 2613 parts (912 ribbons), 14408 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+154 looks, 3173 parts (911 ribbons), 18635 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
 | flashover@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| flashover | 1.6 s | body | 19 | 13 | -0.30 s | - |
-| flashover@1 | 1.6 s | body | 8 | 5 | 0.50 s | - |
-| flashover@2 | 1.6 s | body | 7 | 4 | 0.58 s | - |
-| flashover@3 | 1.6 s | body | 3 | 0 | 0.72 s | - |
+| flashover | 1.6 s | body | 46 | 13 | -0.30 s | - |
+| flashover@1 | 1.6 s | body | 5 | 5 | 0.50 s | - |
+| flashover@2 | 1.6 s | body | 4 | 4 | 0.58 s | - |
+| flashover@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | thunder_gust@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| thunder_gust | 1.6 s | body | 109 | 105 | 0.00 s | - |
-| thunder_gust@1 | 1.6 s | body | 5 | 2 | 1.48 s | - |
-| thunder_gust@2 | 1.6 s | body | 5 | 2 | 1.51 s | - |
-| thunder_gust@3 | 1.6 s | body | 4 | 1 | 1.54 s | - |
+| thunder_gust | 1.6 s | body | 125 | 105 | 0.00 s | - |
+| thunder_gust@1 | 1.6 s | body | 2 | 2 | 1.48 s | - |
+| thunder_gust@2 | 1.6 s | body | 2 | 2 | 1.51 s | - |
+| thunder_gust@3 | 1.6 s | body | 1 | 1 | 1.54 s | - |
 | rime@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| rime | 1.6 s | body | 24 | 13 | -0.30 s | 4 bands from 0.05 s, every 0.21 s, 0.35 s each |
-| rime@1 | 1.6 s | body | 1 | 0 | 1.60 s | 2 bands from 1.25 s, every 0.04 s, 0.12 s each |
-| rime@2 | 1.6 s | body | 1 | 0 | 1.60 s | 2 bands from 1.30 s, every 0.04 s, 0.12 s each |
-| rime@3 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| rime | 1.6 s | body | 54 | 13 | -0.30 s | 5 bands from 0.05 s, every 0.16 s, 0.35 s each |
+| rime@1 | 1.6 s | body | 0 | 0 | 1.60 s | 2 bands from 1.25 s, every 0.04 s, 0.12 s each |
+| rime@2 | 1.6 s | body | 0 | 0 | 1.60 s | 2 bands from 1.30 s, every 0.04 s, 0.12 s each |
+| rime@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | supercooled@p | 1.5 s | player | 0 | 0 | 1.50 s | - |
-| supercooled | 1.5 s | body | 30 | 0 | 1.03 s | 5 bands from 0.78 s, every 0.06 s, 0.12 s each |
-| supercooled@1 | 1.5 s | body | 1 | 0 | 1.09 s | - |
-| supercooled@2 | 1.5 s | body | 1 | 0 | 1.15 s | - |
+| supercooled | 1.5 s | body | 33 | 0 | 1.03 s | 5 bands from 0.78 s, every 0.06 s, 0.12 s each |
+| supercooled@1 | 1.5 s | body | 0 | 0 | 1.50 s | - |
+| supercooled@2 | 1.5 s | body | 0 | 0 | 1.50 s | - |
 | quickening@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| quickening | 1.6 s | body | 24 | 0 | 1.60 s | - |
-| quickening@1 | 1.6 s | body | 11 | 0 | 1.60 s | - |
-| quickening@2 | 1.6 s | body | 11 | 0 | 1.60 s | - |
-| quickening@3 | 1.6 s | body | 6 | 0 | 1.60 s | - |
+| quickening | 1.6 s | body | 46 | 0 | 1.60 s | - |
+| quickening@1 | 1.6 s | body | 5 | 0 | 1.60 s | - |
+| quickening@2 | 1.6 s | body | 5 | 0 | 1.60 s | - |
+| quickening@3 | 1.6 s | body | 5 | 0 | 1.60 s | - |
 | root_snare@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| root_snare | 1.6 s | body | 23 | 8 | 0.00 s | - |
-| root_snare@1 | 1.6 s | body | 8 | 0 | 1.60 s | - |
-| root_snare@2 | 1.6 s | body | 8 | 0 | 1.60 s | - |
-| root_snare@3 | 1.6 s | body | 8 | 0 | 1.60 s | - |
-| root_snare@4 | 1.6 s | body | 6 | 0 | 1.60 s | - |
+| root_snare | 1.6 s | body | 52 | 8 | 0.00 s | - |
+| root_snare@1 | 1.6 s | body | 4 | 0 | 1.60 s | - |
+| root_snare@2 | 1.6 s | body | 4 | 0 | 1.60 s | - |
+| root_snare@3 | 1.6 s | body | 4 | 0 | 1.60 s | - |
+| root_snare@4 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | anvil_stone@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
 | anvil_stone | 1.6 s | body | 31 | 0 | 0.32 s | - |
 | anvil_stone@1 | 1.6 s | body | 1 | 0 | 1.60 s | - |
 | anvil_stone@2 | 1.6 s | body | 1 | 0 | 1.60 s | - |
 | anvil_stone@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | glint@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| glint | 1.6 s | body | 5 | 1 | 0.35 s | - |
-| glint@1 | 1.6 s | body | 3 | 0 | 0.50 s | - |
+| glint | 1.6 s | body | 7 | 1 | 0.35 s | - |
+| glint@1 | 1.6 s | body | 2 | 0 | 1.60 s | - |
 | glint@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | diamond_ring@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
 | diamond_ring | 1.6 s | body | 7 | 1 | -0.25 s | - |
 | diamond_ring@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | diamond_ring@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | shut_in_the_dark@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| shut_in_the_dark | 1.6 s | body | 21 | 12 | -0.25 s | - |
-| shut_in_the_dark@1 | 1.6 s | body | 5 | 0 | 1.30 s | - |
-| shut_in_the_dark@2 | 1.6 s | body | 5 | 0 | 1.30 s | - |
-| shut_in_the_dark@3 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| shut_in_the_dark | 1.6 s | body | 44 | 12 | -0.25 s | - |
+| shut_in_the_dark@1 | 1.6 s | body | 2 | 0 | 1.30 s | - |
+| shut_in_the_dark@2 | 1.6 s | body | 2 | 0 | 1.30 s | - |
+| shut_in_the_dark@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | fire_medicine@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| fire_medicine | 1.6 s | body | 34 | 0 | -0.30 s | - |
-| fire_medicine@1 | 1.6 s | body | 20 | 0 | 1.02 s | - |
-| fire_medicine@2 | 1.6 s | body | 6 | 0 | 1.60 s | - |
-| fire_medicine@3 | 1.6 s | body | 6 | 0 | 1.60 s | - |
+| fire_medicine | 1.6 s | body | 74 | 0 | -0.30 s | - |
+| fire_medicine@1 | 1.6 s | body | 14 | 0 | 1.02 s | - |
+| fire_medicine@2 | 1.6 s | body | 14 | 0 | 1.02 s | - |
+| fire_medicine@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | carried_embers@p | 1.5 s | player | 0 | 0 | 1.50 s | - |
-| carried_embers | 1.5 s | body | 157 | 130 | -0.05 s | - |
-| carried_embers@1 | 1.5 s | body | 21 | 0 | 0.62 s | - |
-| carried_embers@2 | 1.5 s | body | 8 | 0 | 0.76 s | - |
-| carried_embers@3 | 1.5 s | body | 4 | 0 | 0.90 s | - |
+| carried_embers | 1.5 s | body | 183 | 130 | -0.05 s | - |
+| carried_embers@1 | 1.5 s | body | 12 | 0 | 1.40 s | - |
+| carried_embers@2 | 1.5 s | body | 12 | 0 | 1.46 s | - |
+| carried_embers@3 | 1.5 s | body | 11 | 0 | 1.50 s | - |
 | sleet_charge@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| sleet_charge | 1.6 s | body | 26 | 23 | 0.10 s | 10 bands from -0.30 s, every 0.12 s, 0.12 s each |
-| sleet_charge@1 | 1.6 s | body | 1 | 0 | 1.60 s | 2 bands from 1.10 s, every 0.05 s, 0.12 s each |
-| sleet_charge@2 | 1.6 s | body | 1 | 0 | 1.60 s | 2 bands from 1.10 s, every 0.05 s, 0.12 s each |
-| sleet_charge@3 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| sleet_charge | 1.6 s | body | 39 | 23 | 0.10 s | 10 bands from -0.30 s, every 0.12 s, 0.12 s each |
+| sleet_charge@1 | 1.6 s | body | 0 | 0 | 1.60 s | 2 bands from 1.10 s, every 0.05 s, 0.12 s each |
+| sleet_charge@2 | 1.6 s | body | 0 | 0 | 1.60 s | 2 bands from 1.10 s, every 0.05 s, 0.12 s each |
+| sleet_charge@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | capsize@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| capsize | 1.6 s | body | 13 | 4 | -0.30 s | - |
-| capsize@1 | 1.6 s | body | 1 | 0 | 1.60 s | - |
-| capsize@2 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| capsize | 1.6 s | body | 20 | 4 | -0.30 s | - |
+| capsize@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| capsize@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | winter_seed@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| winter_seed | 1.6 s | body | 12 | 0 | 0.15 s | 5 bands from -0.30 s, every 0.00 s, 0.90 s each |
-| winter_seed@1 | 1.6 s | body | 7 | 0 | 0.22 s | - |
-| winter_seed@2 | 1.6 s | body | 7 | 0 | 0.29 s | - |
-| winter_seed@3 | 1.6 s | body | 4 | 0 | 0.36 s | - |
+| winter_seed | 1.6 s | body | 38 | 0 | 0.15 s | 5 bands from -0.30 s, every 0.00 s, 0.90 s each |
+| winter_seed@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| winter_seed@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| winter_seed@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | the_ground_gives@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| the_ground_gives | 1.6 s | body | 10 | 0 | 0.50 s | - |
-| the_ground_gives@1 | 1.6 s | body | 3 | 0 | 0.51 s | - |
-| the_ground_gives@2 | 1.6 s | body | 3 | 0 | 0.52 s | - |
+| the_ground_gives | 1.6 s | body | 27 | 0 | 0.50 s | - |
+| the_ground_gives@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| the_ground_gives@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | iron_thorns@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| iron_thorns | 1.6 s | body | 9 | 0 | 1.60 s | - |
-| iron_thorns@1 | 1.6 s | body | 2 | 0 | 1.60 s | - |
+| iron_thorns | 1.6 s | body | 13 | 0 | 1.60 s | - |
+| iron_thorns@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
 | iron_thorns@2 | 1.6 s | body | 1 | 0 | 1.60 s | - |
 | iron_thorns@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | earthlight@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| earthlight | 1.6 s | body | 14 | 10 | 0.45 s | - |
-| earthlight@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| earthlight@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| earthlight@3 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| earthlight@4 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| earthlight | 1.6 s | body | 23 | 10 | 0.45 s | - |
+| earthlight@1 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| earthlight@2 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| earthlight@3 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| earthlight@4 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | black_chain@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| black_chain | 1.6 s | body | 9 | 4 | -0.25 s | - |
+| black_chain | 1.6 s | body | 8 | 3 | -0.25 s | - |
 | black_chain@1 | 1.6 s | body | 4 | 1 | 0.56 s | - |
 | black_chain@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | sun_sap@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| sun_sap | 1.6 s | body | 12 | 0 | 0.15 s | - |
-| sun_sap@1 | 1.6 s | body | 8 | 0 | 0.32 s | - |
-| sun_sap@2 | 1.6 s | body | 8 | 0 | 0.49 s | - |
-| sun_sap@3 | 1.6 s | body | 4 | 0 | 0.66 s | - |
-| sun_sap@4 | 1.6 s | body | 3 | 0 | 0.83 s | - |
+| sun_sap | 1.6 s | body | 26 | 0 | 0.15 s | - |
+| sun_sap@1 | 1.6 s | body | 3 | 0 | 1.30 s | - |
+| sun_sap@2 | 1.6 s | body | 3 | 0 | 1.30 s | - |
+| sun_sap@3 | 1.6 s | body | 3 | 0 | 1.30 s | - |
+| sun_sap@4 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | smoulder@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| smoulder | 1.6 s | body | 6 | 0 | -0.30 s | - |
-| smoulder@1 | 1.6 s | body | 14 | 0 | 1.55 s | - |
-| smoulder@2 | 1.6 s | body | 2 | 0 | 1.60 s | - |
-| smoulder@3 | 1.6 s | body | 2 | 0 | 1.60 s | - |
+| smoulder | 1.6 s | body | 40 | 0 | -0.30 s | - |
+| smoulder@1 | 1.6 s | body | 12 | 0 | 1.55 s | - |
+| smoulder@2 | 1.6 s | body | 12 | 0 | 1.59 s | - |
+| smoulder@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | nerve_fire@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| nerve_fire | 1.6 s | body | 36 | 25 | -0.30 s | - |
-| nerve_fire@1 | 1.6 s | body | 2 | 0 | 0.65 s | - |
-| nerve_fire@2 | 1.6 s | body | 2 | 0 | 1.10 s | - |
+| nerve_fire | 1.6 s | body | 40 | 25 | -0.30 s | - |
+| nerve_fire@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| nerve_fire@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | thermal_shock@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| thermal_shock | 1.6 s | body | 24 | 1 | 0.30 s | 7 bands from 0.20 s, every 0.13 s, 0.12 s each |
-| thermal_shock@1 | 1.6 s | body | 3 | 0 | 1.60 s | 2 bands from 1.01 s, every 0.00 s, 0.10 s each |
-| thermal_shock@2 | 1.6 s | body | 3 | 0 | 1.60 s | 2 bands from 1.02 s, every 0.00 s, 0.10 s each |
+| thermal_shock | 1.6 s | body | 50 | 1 | 0.30 s | 15 bands from 0.20 s, every 0.06 s, 0.12 s each |
+| thermal_shock@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| thermal_shock@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | seized@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
 | seized | 1.6 s | body | 49 | 47 | -0.25 s | - |
 | seized@1 | 1.6 s | body | 4 | 4 | 0.66 s | - |
 | seized@2 | 1.6 s | body | 4 | 4 | 0.80 s | - |
 | seized@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | seed_storm@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| seed_storm | 1.6 s | body | 54 | 29 | -0.30 s | - |
-| seed_storm@1 | 1.6 s | body | 15 | 3 | 1.60 s | - |
-| seed_storm@2 | 1.6 s | body | 15 | 3 | 1.60 s | - |
-| seed_storm@3 | 1.6 s | body | 6 | 0 | 1.60 s | - |
+| seed_storm | 1.6 s | body | 84 | 29 | -0.30 s | - |
+| seed_storm@1 | 1.6 s | body | 9 | 3 | 1.60 s | - |
+| seed_storm@2 | 1.6 s | body | 9 | 3 | 1.60 s | - |
+| seed_storm@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | frost_heave@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| frost_heave | 1.6 s | body | 11 | 0 | 1.60 s | 2 bands from -0.30 s, every 0.00 s, 0.12 s each |
-| frost_heave@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| frost_heave@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| frost_heave | 1.6 s | body | 28 | 0 | 1.60 s | 2 bands from -0.30 s, every 0.00 s, 0.12 s each |
+| frost_heave@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| frost_heave@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | rust@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| rust | 1.6 s | body | 21 | 0 | 0.54 s | - |
-| rust@1 | 1.6 s | body | 3 | 0 | 0.62 s | - |
-| rust@2 | 1.6 s | body | 3 | 0 | 0.70 s | - |
+| rust | 1.6 s | body | 32 | 0 | 0.54 s | - |
+| rust@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| rust@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | shining_herb@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| shining_herb | 1.6 s | body | 16 | 5 | 0.55 s | - |
-| shining_herb@1 | 1.6 s | body | 5 | 0 | 0.80 s | - |
-| shining_herb@2 | 1.6 s | body | 4 | 0 | 1.60 s | - |
+| shining_herb | 1.6 s | body | 30 | 5 | 0.55 s | - |
+| shining_herb@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| shining_herb@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
 | turned_to_stone@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| turned_to_stone | 1.6 s | body | 26 | 16 | -0.25 s | 5 bands from 0.20 s, every 0.18 s, 0.14 s each |
-| turned_to_stone@1 | 1.6 s | body | 1 | 0 | 1.60 s | - |
-| turned_to_stone@2 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| turned_to_stone | 1.6 s | body | 34 | 16 | -0.25 s | 5 bands from 0.20 s, every 0.18 s, 0.14 s each |
+| turned_to_stone@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| turned_to_stone@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | quicksilver@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| quicksilver | 1.6 s | body | 19 | 0 | -0.20 s | - |
-| quicksilver@1 | 1.6 s | body | 2 | 0 | 1.60 s | - |
-| quicksilver@2 | 1.6 s | body | 2 | 0 | 1.60 s | - |
+| quicksilver | 1.6 s | body | 49 | 0 | -0.20 s | - |
+| quicksilver@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| quicksilver@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | kindling_point@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| kindling_point | 1.6 s | body | 42 | 0 | -0.05 s | - |
-| kindling_point@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| kindling_point@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| kindling_point | 1.6 s | body | 60 | 0 | -0.05 s | - |
+| kindling_point@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| kindling_point@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | the_grudge@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| the_grudge | 1.6 s | body | 17 | 14 | -0.30 s | - |
-| the_grudge@1 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| the_grudge | 1.6 s | body | 25 | 14 | -0.30 s | - |
+| the_grudge@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | the_grudge@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | ill_wind@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| ill_wind | 1.6 s | body | 34 | 30 | -0.30 s | - |
-| ill_wind@1 | 1.6 s | body | 4 | 0 | 0.90 s | - |
-| ill_wind@2 | 1.6 s | body | 3 | 0 | 1.00 s | - |
-| ill_wind@3 | 1.6 s | body | 3 | 0 | 1.10 s | - |
+| ill_wind | 1.6 s | body | 40 | 30 | -0.30 s | - |
+| ill_wind@1 | 1.6 s | body | 3 | 0 | 0.90 s | - |
+| ill_wind@2 | 1.6 s | body | 2 | 0 | 1.00 s | - |
+| ill_wind@3 | 1.6 s | body | 2 | 0 | 1.10 s | - |
 | steam@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| steam | 1.6 s | body | 12 | 0 | 1.60 s | - |
-| steam@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| steam@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| steam@3 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| steam | 1.6 s | body | 39 | 0 | 1.60 s | - |
+| steam@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| steam@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| steam@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | lightning_flower@p | 1.5 s | player | 0 | 0 | 1.50 s | - |
-| lightning_flower | 1.5 s | body | 23 | 15 | -0.20 s | - |
-| lightning_flower@1 | 1.5 s | body | 12 | 4 | 0.95 s | - |
-| lightning_flower@2 | 1.5 s | body | 2 | 0 | 1.50 s | - |
+| lightning_flower | 1.5 s | body | 29 | 15 | -0.20 s | - |
+| lightning_flower@1 | 1.5 s | body | 10 | 4 | 0.95 s | - |
+| lightning_flower@2 | 1.5 s | body | 0 | 0 | 1.50 s | - |
 | logan_stone@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| logan_stone | 1.6 s | body | 32 | 6 | -0.30 s | - |
-| logan_stone@1 | 1.6 s | body | 5 | 0 | 1.20 s | - |
-| logan_stone@2 | 1.6 s | body | 5 | 0 | 1.20 s | - |
-| logan_stone@3 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| logan_stone | 1.6 s | body | 43 | 6 | -0.30 s | - |
+| logan_stone@1 | 1.6 s | body | 4 | 0 | 1.20 s | - |
+| logan_stone@2 | 1.6 s | body | 4 | 0 | 1.20 s | - |
+| logan_stone@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | cold_short@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| cold_short | 1.6 s | body | 18 | 0 | 1.60 s | 3 bands from 0.45 s, every 0.10 s, 0.12 s each |
-| cold_short@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| cold_short@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| cold_short | 1.6 s | body | 41 | 0 | 1.60 s | 3 bands from 0.45 s, every 0.10 s, 0.12 s each |
+| cold_short@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| cold_short@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | caught_light@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| caught_light | 1.6 s | body | 26 | 14 | 0.92 s | - |
-| caught_light@1 | 1.6 s | body | 2 | 0 | 1.00 s | - |
-| caught_light@2 | 1.6 s | body | 2 | 0 | 1.08 s | - |
-| caught_light@3 | 1.6 s | body | 1 | 0 | 1.16 s | - |
+| caught_light | 1.6 s | body | 33 | 14 | 0.92 s | - |
+| caught_light@1 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| caught_light@2 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| caught_light@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | girdled@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| girdled | 1.6 s | body | 14 | 5 | 1.60 s | - |
-| girdled@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| girdled@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| girdled | 1.6 s | body | 25 | 5 | 1.60 s | - |
+| girdled@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| girdled@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | chokedamp@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| chokedamp | 1.6 s | body | 19 | 0 | -0.30 s | - |
-| chokedamp@1 | 1.6 s | body | 15 | 0 | 1.00 s | - |
-| chokedamp@2 | 1.6 s | body | 15 | 0 | 1.08 s | - |
+| chokedamp | 1.6 s | body | 31 | 0 | -0.30 s | - |
+| chokedamp@1 | 1.6 s | body | 10 | 0 | 1.00 s | - |
+| chokedamp@2 | 1.6 s | body | 10 | 0 | 1.08 s | - |
 | chokedamp@3 | 1.6 s | body | 10 | 0 | 1.16 s | - |
-| chokedamp@4 | 1.6 s | body | 2 | 0 | 1.60 s | - |
+| chokedamp@4 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | red_hot@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| red_hot | 1.6 s | body | 26 | 0 | -0.05 s | - |
+| red_hot | 1.6 s | body | 62 | 0 | -0.05 s | - |
 | red_hot@1 | 1.6 s | body | 15 | 0 | 1.15 s | - |
-| red_hot@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| red_hot@2 | 1.6 s | body | 15 | 0 | 1.19 s | - |
 | red_hot@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | the_bolt_runs_true@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
 | the_bolt_runs_true | 1.6 s | body | 48 | 47 | -0.30 s | - |
@@ -207,68 +207,68 @@
 | breath_taken@2 | 1.6 s | body | 19 | 10 | 0.80 s | - |
 | breath_taken@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | venom_rime@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| venom_rime | 1.6 s | body | 19 | 0 | -0.30 s | 5 bands from 1.05 s, every 0.05 s, 0.12 s each |
-| venom_rime@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| venom_rime@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| venom_rime | 1.6 s | body | 42 | 0 | -0.30 s | 5 bands from 1.05 s, every 0.05 s, 0.12 s each |
+| venom_rime@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| venom_rime@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | firebloom@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| firebloom | 1.6 s | body | 49 | 0 | -0.05 s | - |
-| firebloom@1 | 1.6 s | body | 4 | 0 | 1.60 s | - |
-| firebloom@2 | 1.6 s | body | 4 | 0 | 1.60 s | - |
+| firebloom | 1.6 s | body | 71 | 0 | -0.05 s | - |
+| firebloom@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| firebloom@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | earthed@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| earthed | 1.6 s | body | 49 | 43 | -0.30 s | - |
+| earthed | 1.6 s | body | 52 | 43 | -0.30 s | - |
 | earthed@1 | 1.6 s | body | 7 | 4 | 0.65 s | - |
 | earthed@2 | 1.6 s | body | 7 | 4 | 0.65 s | - |
 | earthed@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | sickle_wind@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| sickle_wind | 1.6 s | body | 14 | 9 | -0.30 s | - |
-| sickle_wind@1 | 1.6 s | body | 4 | 0 | 1.60 s | - |
-| sickle_wind@2 | 1.6 s | body | 4 | 0 | 1.60 s | - |
-| sickle_wind@3 | 1.6 s | body | 4 | 0 | 1.60 s | - |
-| sickle_wind@4 | 1.6 s | body | 2 | 0 | 1.60 s | - |
+| sickle_wind | 1.6 s | body | 29 | 9 | -0.30 s | - |
+| sickle_wind@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| sickle_wind@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| sickle_wind@3 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| sickle_wind@4 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | mock_suns@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| mock_suns | 1.6 s | body | 12 | 6 | 0.45 s | - |
-| mock_suns@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| mock_suns@2 | 1.6 s | body | 2 | 0 | 1.60 s | - |
+| mock_suns | 1.6 s | body | 23 | 6 | 0.45 s | - |
+| mock_suns@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| mock_suns@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | drowned_weight@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| drowned_weight | 1.6 s | body | 18 | 1 | -0.25 s | - |
-| drowned_weight@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| drowned_weight@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| drowned_weight@3 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| drowned_weight | 1.6 s | body | 32 | 1 | -0.25 s | - |
+| drowned_weight@1 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| drowned_weight@2 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| drowned_weight@3 | 1.6 s | body | 1 | 0 | 1.60 s | - |
 | rot_roots@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| rot_roots | 1.6 s | body | 37 | 9 | -0.30 s | - |
-| rot_roots@1 | 1.6 s | body | 21 | 3 | 0.55 s | - |
-| rot_roots@2 | 1.6 s | body | 21 | 3 | 0.70 s | - |
-| rot_roots@3 | 1.6 s | body | 12 | 3 | 0.85 s | - |
-| rot_roots@4 | 1.6 s | body | 1 | 0 | 1.00 s | - |
+| rot_roots | 1.6 s | body | 57 | 9 | -0.30 s | - |
+| rot_roots@1 | 1.6 s | body | 12 | 3 | 1.60 s | - |
+| rot_roots@2 | 1.6 s | body | 12 | 3 | 1.60 s | - |
+| rot_roots@3 | 1.6 s | body | 12 | 3 | 1.60 s | - |
+| rot_roots@4 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | burnt_mound@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| burnt_mound | 1.6 s | body | 36 | 0 | -0.05 s | - |
-| burnt_mound@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| burnt_mound@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| burnt_mound | 1.6 s | body | 62 | 0 | -0.05 s | - |
+| burnt_mound@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| burnt_mound@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | live_iron@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
 | live_iron | 1.6 s | body | 21 | 18 | -0.25 s | - |
-| live_iron@1 | 1.6 s | body | 7 | 5 | 0.52 s | - |
-| live_iron@2 | 1.6 s | body | 7 | 5 | 0.90 s | - |
+| live_iron@1 | 1.6 s | body | 8 | 5 | 0.52 s | - |
+| live_iron@2 | 1.6 s | body | 8 | 5 | 0.90 s | - |
 | live_iron@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | golden_feathers@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| golden_feathers | 1.6 s | body | 28 | 23 | -0.30 s | - |
-| golden_feathers@1 | 1.6 s | body | 6 | 2 | 1.05 s | - |
-| golden_feathers@2 | 1.6 s | body | 5 | 1 | 1.13 s | - |
-| golden_feathers@3 | 1.6 s | body | 5 | 1 | 1.21 s | - |
+| golden_feathers | 1.6 s | body | 40 | 23 | -0.30 s | - |
+| golden_feathers@1 | 1.6 s | body | 3 | 2 | 1.05 s | - |
+| golden_feathers@2 | 1.6 s | body | 2 | 1 | 1.13 s | - |
+| golden_feathers@3 | 1.6 s | body | 2 | 1 | 1.21 s | - |
 | stolen_warmth@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| stolen_warmth | 1.6 s | body | 9 | 4 | 0.33 s | 5 bands from -0.30 s, every 0.36 s, 0.10 s each |
-| stolen_warmth@1 | 1.6 s | body | 4 | 0 | 0.80 s | - |
-| stolen_warmth@2 | 1.6 s | body | 4 | 0 | 1.20 s | - |
+| stolen_warmth | 1.6 s | body | 17 | 4 | 0.33 s | 5 bands from -0.30 s, every 0.36 s, 0.10 s each |
+| stolen_warmth@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| stolen_warmth@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | fish_poison@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| fish_poison | 1.6 s | body | 21 | 0 | -0.30 s | - |
-| fish_poison@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| fish_poison@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
-| fish_poison@3 | 1.6 s | body | 2 | 0 | 1.60 s | - |
+| fish_poison | 1.6 s | body | 39 | 0 | -0.30 s | - |
+| fish_poison@1 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| fish_poison@2 | 1.6 s | body | 1 | 0 | 1.60 s | - |
+| fish_poison@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | water_soaked | 2.2 s | body | 13 | 0 | 1.02 s | 1 bands from 0.50 s, every 0.10 s, 0.45 s each |
 | water_wellspring | 2.0 s | player | 27 | 0 | 2.00 s | - |
 | metal_sundered | 2.0 s | body | 5 | 0 | 0.68 s | - |
 | metal_sword | 1.6 s | body | 4 | 0 | 1.60 s | - |
 | metal_temper | 1.8 s | player | 3 | 0 | 0.90 s | 5 bands from 0.25 s, every 0.11 s, 0.09 s each |
-| metal_rust | 2.2 s | body | 12 | 0 | 1.15 s | - |
+| metal_rust | 2.2 s | body | 18 | 0 | 1.15 s | - |
 | poison_poisoned | 2.2 s | body | 11 | 0 | 0.55 s | - |
 | poison_fever | 2.0 s | player | 22 | 0 | 0.60 s | - |
 | life_seeded | 2.2 s | body | 20 | 0 | 2.20 s | - |
@@ -276,7 +276,7 @@
 | dark_cursed | 2.2 s | body | 28 | 0 | 0.25 s | - |
 | dark_hunger | 2.0 s | player | 7 | 0 | 0.25 s | - |
 | ice_chill | 2.2 s | body | 15 | 0 | 0.85 s | 5 bands from 0.10 s, every 0.10 s, 0.09 s each |
-| ice_rime | 2.4 s | body | 11 | 0 | 2.40 s | 5 bands from 0.05 s, every 0.30 s, 0.45 s each |
+| ice_rime | 2.4 s | body | 15 | 0 | 2.40 s | 5 bands from 0.05 s, every 0.30 s, 0.45 s each |
 | earth_tremor | 2.4 s | body | 28 | 0 | 0.10 s | - |
 | lightning_static | 2.2 s | body | 13 | 7 | 0.25 s | - |
 | lightning_overdrive | 2.0 s | player | 91 | 71 | 0.12 s | - |

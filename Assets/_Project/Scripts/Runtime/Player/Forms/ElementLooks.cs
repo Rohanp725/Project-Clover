@@ -20,8 +20,12 @@ namespace Clover.Player.Forms
         public const int PoolSize = 448;
         /// <summary>Looks playing at once.</summary>
         public const int MostShowings = 48;
-        /// <summary>The most pieces one look has (Carried Embers' fire whirl and Thunder Gust's funnel are a hundred and more).</summary>
-        public const int MostParts = 160;
+        /// <summary>
+        /// The most pieces one look has (Carried Embers' fire whirl and Thunder Gust's funnel are a hundred and more;
+        /// Carried Embers is 183 once every piece the recipe gives its struck body is on it). A look built at the cap has
+        /// lost pieces, so none may reach it (ElementLooksTests).
+        /// </summary>
+        public const int MostParts = 200;
         /// <summary>Seconds a kept look waits unkept before it goes, and how long it takes to go.</summary>
         public const float Linger = 0.25f, Going = 0.25f;
         private const float FlatLift = 0.035f;
@@ -249,6 +253,9 @@ namespace Clover.Player.Forms
             {
                 int other = instance.set.FindVariant(slug, (char)('0' + n));
                 if (other < 0) break;
+                // The body a chain binds is not looked for where the recipe stood it: the game binds whoever is nearest
+                // (Black Chain), and the live chain plays this part on that one when the bind begins (BoundChains).
+                if (BoundChains.Binds(slug, n)) continue;
                 Vector3 wanted = body.position + turn * instance.set.Looks[other].FromMain;
                 var found = Nearest(wanted, 1.6f, taken);
                 if (found == null) continue;
