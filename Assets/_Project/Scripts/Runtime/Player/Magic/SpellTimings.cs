@@ -6,8 +6,8 @@ namespace Clover.Player.Magic
     /// <summary>
     /// How every built spell is paid for, by the shared rules of docs/design/steel/README.md: basic spells run on
     /// cooldowns of 6 to 12 s and never cost mana; each element has one larger spell paid in mana (35 to 50); the eleven
-    /// built ring-mix duo spells stay larger spells paid in mana (40 to 60); the eleven spare ring-mix spells, which
-    /// become Evolutions later, take a duo spell's cooldown. Numbers come from the rosters in elements_a.md and
+    /// built ring-mix duo spells stay larger spells paid in mana (40 to 60); the new duo branches' duo spells wait 12 to
+    /// 16 s, each its own (the twelve spare ring-mix spells are retired). Numbers come from the rosters in elements_a.md and
     /// elements_b.md where the spell is listed there, and from its role where it is not (marked "not in the roster").
     /// Applied to the catalogue as it is gathered (<see cref="Apply"/>), so a spell's <see cref="SpellSpec.Cooldown"/>
     /// and <see cref="SpellSpec.Cost"/> are the table's. Earth's larger spell is the new Cairn.
@@ -131,11 +131,8 @@ namespace Clover.Player.Magic
             // The new duo branches' duo spells (pairs_d1_d2.md to pairs_d5.md, task 4.5 on): basic spells of the pair, on a
             // duo spell's cooldown of 12 to 16 s, each its own.
             ["sleetcharge.glassstorm"] = Cd(14f, SpellRole.Opener),
-
-            // The eleven spare ring-mix spells (Evolutions to come): a duo spell's cooldown. Plasma Lance was cut with Plasma's
-            // reshaping (task 4.5).
-            ["pyre.fireeater"] = Cd(DuoCooldown, SpellRole.Breaker),
-            ["pyre.slowfuse"] = Cd(DuoCooldown, SpellRole.Detonator),
+            // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
+            // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };
 
         /// <summary>The ids the table names, for tests.</summary>

@@ -111,3 +111,5 @@ rest-fire-counts	A count a mark keeps that empties at a rest fire (a fight's gro
 pieces-at-nearest	Pieces thrown from an enemy at the nearest others, each its own (not an arc from one to the next)	Forge's Hammer Scale (four flakes; now an arc through four)
 arc-through-afflicted	An arc that leaps on only from enemies carrying a given affliction, its first leap to any	Halo's Mirror to Mirror (on from each struck that carries Sundered; now through four, whatever they carry)
 blow-made-critical	A blow made critical by a condition on the enemy struck	Halo's Burning Mirror (the next weapon blow critical with two notches; now two notches and a burst of 10)
+cone-from-enemy	A cone that leaves an enemy's far side, away from the player	Pyre's Fire Lance (now a lane 5 m by 2 m beyond it)
+reaction-numbers	A mark that changes a reaction's own numbers as it fires (twice as hard, nothing spent)	Goes Up (at full depth Fire Medicine twice as hard and spending nothing; now a second bang and the spent doses laid back)

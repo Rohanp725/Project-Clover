@@ -603,6 +603,8 @@ Group: Reactions
 
 **What sets it off.** Poison landing on a burning enemy, or Burn on a poisoned one.
 
+**Its shapes.** With Pyre's Shape mark (Fire Medicine: Fire Lance or Flying Fire, 3 Shards, in the heart of the chart) and both Poison and Fire carried, Fire Medicine wears the shape chosen at a rest fire instead. Fire Lance: after the fuse, a lane 5 m long beyond it takes 4 a dose and 6 a Burn stack, 30 stagger, a dose and a Burn. Flying Fire: five small fires land in a ring 3 m out for 3 s, burning and poisoning what walks in. Both spend half its doses.
+
 **How to use it.** Dose first, then light it: deep poison makes the biggest bang.
 
 **How it looks.** Its name over the enemy, then the bang a moment later.

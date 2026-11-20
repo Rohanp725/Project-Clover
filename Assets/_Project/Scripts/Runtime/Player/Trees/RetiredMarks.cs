@@ -188,6 +188,10 @@ namespace Clover.Player
             // Blight, the duo branch of Dark and Poison (pairs_d1_d2.md; task 4.15): Carrion Flies (now the Swarm shape) and Grave
             // Soil (offered to Dark's or Poison's tree, whose rosters are full).
             new RetiredMark("blight.carrionflies", 3), new RetiredMark("blight.gravesoil", 4),
+
+            // Pyre, the duo branch of Poison and Fire (pairs_d1_d2.md; task 4.15): Fuel (the Shape mark takes its place), and Fire
+            // Eater and Lit Fuse (offered to Poison's and Fire's trees, whose rosters are full).
+            new RetiredMark("pyre.fuel", 3), new RetiredMark("pyre.fireeater", 4), new RetiredMark("pyre.slowfuse", 5),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
