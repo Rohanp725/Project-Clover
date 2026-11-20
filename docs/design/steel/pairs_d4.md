@@ -367,8 +367,9 @@ beam. In India the thunderbolt and the diamond are one word, *vajra*, Indra's we
 *kongōsho* in the hands of the temple guardians. Light lays the road; lightning runs it straight.
 
 **Reaction: The Bolt Runs True.** Either order. A thread of light stands from the enemy into the sky; 0.5 s later a
-straight, unforked bolt comes down it: 20 damage, 35 stagger, and the enemy's Static discharges at full (7 damage and
-5 stagger a stack in 4 m). The mark is not spent. Once every 5 s on one enemy. Seen: from above, a bright point on the
+straight, unforked bolt comes down it and runs on down a lane from the enemy straight away from the player, 8 m long and
+1.2 m wide (the owner's word of 2026-11-20): 20 damage, 35 stagger and a Static to the enemy and to every enemy on the
+lane, each struck once; then the enemy's Static discharges at full (7 damage and 5 stagger a stack in 4 m). The mark is not spent. Once every 5 s on one enemy. Seen: from above, a bright point on the
 enemy with a ring spreading round it on the floor, then the bolt, thick and dead straight with no branches, unlike any
 other lightning in the game.
 

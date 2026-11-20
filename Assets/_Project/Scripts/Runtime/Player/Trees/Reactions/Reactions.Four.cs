@@ -135,13 +135,16 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Glowing, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2,
                     Reach = 1.9f, Amount = 1.1f, Radius = 0.8f, Damage = 6f, Affliction = AfflictionKind.Burn, Stacks = 1 }));
 
-            // Light and Lightning (42), rest 5 s. A thread of light, and 0.5 s later a straight bolt down it: 20 damage, 35
-            // stagger, and its Static discharges at full (7 damage and 5 stagger a stack in 4 m). The mark is not spent.
+            // Light and Lightning (42), rest 5 s. A thread of light, and 0.5 s later a straight bolt that runs down a lane
+            // from it, straight away from the player, 8 m long and 1.2 m wide (the owner's word of 2026-11-20): 20 damage,
+            // 35 stagger and a Static to it and to everyone on the lane; then its own Static discharges at full (7 damage
+            // and 5 stagger a stack in 4 m). The mark is not spent.
             to.Add(Reaction(AfflictionKind.Marked, AfflictionKind.Static,
-                "Marked meets Static: a thread of light stands from it and a straight bolt comes down it, 20 and 35 stagger, and its Static discharges, 7 a stack in 4 m.",
+                "Marked meets Static: a thread of light stands from it, then a straight bolt runs from it down an 8 m lane away from you: 20 and 35 stagger to everyone on it, and its Static discharges, 7 a stack in 4 m.",
                 5f,
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Thread, Seconds = 0.5f } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Thread, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 20f, Stagger = 35f, Affliction = AfflictionKind.Static },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Thread, Do = UpgradeAction.Lane, Reach = 8f, Radius = 0.6f, Damage = 20f, Stagger = 35f, Affliction = AfflictionKind.Static,
+                    Reaction = Clover.Gameplay.AfflictionPairs.Id(Clover.Gameplay.AfflictionPairs.Index(AfflictionKind.Marked, AfflictionKind.Static)) },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Thread, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f }));
 
             // Dark and Wind (43), rest 6 s. Winded 1.5 s (an elite 0.6 s): it begins no attack (one already swung is

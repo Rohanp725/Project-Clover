@@ -246,6 +246,20 @@ namespace Clover.Player.Forms
         }
 
         /// <summary>
+        /// Shows only the parts of the pair's designed look that play one motion role (<see cref="ReactionTimelines.RoleNames"/>:
+        /// "strike" for its bolt) on the ground at <paramref name="at"/>, after <paramref name="delay"/> seconds: the look's
+        /// own piece drawn again along a reach of the reaction's (The Bolt Runs True's lane). False when the pair has no
+        /// designed look here or no part of that role.
+        /// </summary>
+        public static bool PlayRole(int pair, Vector3 at, Vector3 away, string role, float delay = 0f)
+        {
+            if (!IsDesigned(pair)) return false;
+            int wanted = System.Array.IndexOf(ReactionTimelines.RoleNames, role);
+            if (wanted < 0) return false;
+            return instance.ShowRole(instance.lookOfPair[pair], at, away, (byte)wanted, delay);
+        }
+
+        /// <summary>
         /// For probes: the world matrix of every pool renderer drawn now, slot by slot in a fixed order (a look's part
         /// keeps its slot for its life), zero where a slot draws nothing this frame. Returns how many were written.
         /// </summary>
@@ -296,6 +310,35 @@ namespace Clover.Player.Forms
                 lamps[pooled].range = lamp.Range;
             }
             Place(showing);
+        }
+
+        // One role's parts of a look, with no body to follow and no lamps; a negative age holds them back for the delay.
+        private bool ShowRole(int look, Vector3 at, Vector3 away, byte role, float delay)
+        {
+            ref var info = ref set.Looks[look];
+            int found = 0;
+            for (int k = 0; k < Mathf.Min(info.PartCount, mostParts); k++)
+                if (set.Parts[info.FirstPart + k].Role == role) found++;
+            if (found == 0) return false;
+            int showing = Begin(at, null, away, Quaternion.Euler(0f, Yaw(info.Directed, away, ReactionDesigns.AwayYaw(info.Key)), 0f));
+            ref var one = ref showings[showing];
+            one.Look = look;
+            one.Parts = Mathf.Min(info.PartCount, mostParts);
+            one.Lamps = 0;
+            one.ImpactAt = info.ImpactAt;
+            one.Age = -Mathf.Max(0f, delay);
+            for (int k = 0; k < one.Parts; k++)
+            {
+                int slot = showing * mostParts + k;
+                live[slot] = set.Parts[info.FirstPart + k];
+                if (!live[slot].Motion.Set) live[slot].Motion = Unmoving(live[slot]);
+                liveYaw[slot] = 0f;
+                liveSize[slot] = 1f;
+                slots[slot] = -1;
+                if (live[slot].Role == role) Take(showing, k);
+            }
+            Place(showing);
+            return true;
         }
 
         // A set built before the motion: its parts pop in and hold for the times this one was given.

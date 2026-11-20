@@ -980,15 +980,15 @@ Group: Reactions
 ## reaction-the-bolt-runs-true
 Title: The Bolt Runs True (Light and Lightning)
 Group: Reactions
-**What it is.** Marked meets Static. A thread of light stands from the enemy and a straight bolt comes down it.
+**What it is.** Marked meets Static. A thread of light stands from the enemy, then a straight bolt runs from it down a lane straight away from you.
 
-**The numbers.** Half a second on: 20 damage and 35 stagger to it, and its Static discharges at full (7 damage and 5 stagger for each stack to everyone within 4 m). The Mark is not spent. Rests 5 s.
+**The numbers.** Half a second on, the lane: 8 m long and 1.2 m wide, starting at the enemy. 20 damage, 35 stagger and a Static to it and to every enemy on the lane, each struck once. Then its own Static discharges at full (7 damage and 5 stagger for each stack to everyone within 4 m). The Mark is not spent. Rests 5 s.
 
 **What sets it off.** A Mark landing on a charged enemy, or Static on a Marked one.
 
-**How to use it.** Charge it deep before you Mark it, or Mark it before you charge it: the bolt sets the charge off for you.
+**How to use it.** Charge it deep before you Mark it, or Mark it before you charge it: the bolt sets the charge off for you. Stand so the others are behind it: the bolt runs on through them.
 
-**How it looks.** Its name over the enemy, then the bolt and the discharge.
+**How it looks.** Its name over the enemy, the thread and the bolt on it, then the bolt coming down again and again as it runs away from you down the lane, and the discharge.
 
 ## reaction-breath-taken
 Title: Breath Taken (Dark and Wind)

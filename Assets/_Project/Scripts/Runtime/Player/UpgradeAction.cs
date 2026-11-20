@@ -74,5 +74,12 @@ namespace Clover.Player
         Condition,
         /// <summary>Takes stacks of an affliction off the target with no burst; the next effects of the same mark may count them (DamagePerSpent, PerStack). Reads: Affliction, Share (0: all; else that share, rounded up), Count (the most), CountOnly (count them and take none).</summary>
         Spend,
+        /// <summary>
+        /// A strike that runs down a lane from the target straight away from the player, patch by patch, as one blow: each
+        /// enemy on it is struck once. Reads: Damage, Stagger, Affliction, Stacks, Reach (8) its length, Radius (0.6) half
+        /// its width, Interval (0.03) seconds from one patch to the next, Delay; Reaction: the reaction whose designed
+        /// look's bolt is drawn down it.
+        /// </summary>
+        Lane,
     }
 }

@@ -1117,6 +1117,19 @@ namespace Clover.Player
         };
 
         // Where the patches of a ground or burst effect go: one, a line ahead, a ring, or a row carried downwind past the target.
+        /// <summary>How many bolts of a reaction's look are drawn down a lane (<see cref="UpgradeAction.Lane"/>), besides the one on the target.</summary>
+        public const int LaneBolts = 4;
+
+        /// <summary>
+        /// How many patches a lane of this length and half-width is laid as: one every two thirds of its width, so where
+        /// two meet they still cover most of it and a body on the lane is never missed between them.
+        /// </summary>
+        public static int LanePatches(float length, float half) => Mathf.Max(2, Mathf.CeilToInt(length / Mathf.Max(0.1f, half * 1.34f)) + 1);
+
+        /// <summary>Where a lane's patch lies: the first on the target, the last <paramref name="length"/> beyond it, away from the player.</summary>
+        public static Vector3 LanePatch(Vector3 from, Vector3 away, float length, int index, int patches) =>
+            from + away * (length * index / Mathf.Max(1, patches - 1));
+
         private static Vector3 PatchAt(UpgradeEffect effect, int index, int patches, Vector3 centre, Vector3 self, Vector3 aim, float reach)
         {
             switch (effect.Shape)
@@ -1228,6 +1241,33 @@ namespace Clover.Player
                         burst.Position = PatchAt(effect, i, bursts, centre, self, aim, Or(effect.Reach, 4f));
                         Hazards.Lay(burst);
                     }
+                    break;
+                }
+                case UpgradeAction.Lane:
+                {
+                    float length = Or(effect.Reach, 8f), half = Or(effect.Radius, 0.6f), every = Or(effect.Interval, 0.03f);
+                    int patches = LanePatches(length, half);
+                    var run = new HazardSpec
+                    {
+                        Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = half, Seconds = 0.12f, BiteEvery = 0.1f, Once = true,
+                        Burst = !effect.Unseen, Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
+                        // One blow down the whole lane: an enemy where two patches meet is struck once.
+                        Group = Hazards.NewGroup(),
+                    };
+                    for (int i = 0; i < patches; i++)
+                    {
+                        run.Position = LanePatch(centre, aim, length, i, patches);
+                        run.Delay = effect.Delay + i * every;
+                        Hazards.Lay(run);
+                    }
+                    // The reaction's own bolt comes down again and again along the lane, running away from the player.
+                    int pair = string.IsNullOrEmpty(effect.Reaction) ? -1 : ReactionTable.PairOf(effect.Reaction);
+                    if (pair >= 0)
+                        for (int bolt = 1; bolt <= LaneBolts; bolt++)
+                        {
+                            float share = bolt / (float)LaneBolts;
+                            Clover.Player.Forms.ReactionArt.PlayRole(pair, centre + aim * (length * share), aim, "strike", effect.Delay + share * (patches - 1) * every);
+                        }
                     break;
                 }
                 case UpgradeAction.Cone:
