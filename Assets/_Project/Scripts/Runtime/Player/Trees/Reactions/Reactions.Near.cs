@@ -251,11 +251,13 @@ namespace Clover.Player.Trees
                     State = new ConditionSpec { Id = Sunk, Seconds = 30f, Beat = 3f, While = AfflictionKind.Cursed, Keeps = AfflictionKind.Burn } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Sunk, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sunk, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Burn },
+                // The flare's burst is unseen (its hazard drew a plain orange fire, the coordinator's check of 2026-11-20):
+                // the body's own fire, burning black, is the flare, and those it reaches catch.
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sunk, Needs = AfflictionKind.Burn, Do = UpgradeAction.Burst, Radius = 3f, Damage = 10f, PerStack = true,
-                    Affliction = AfflictionKind.Burn },
+                    Affliction = AfflictionKind.Burn, Unseen = true },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Sunk, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Burn, Stacks = 1 },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Sunk, Needs = AfflictionKind.Burn, Do = UpgradeAction.Burst, Radius = 3f, Damage = 10f, PerStack = true,
-                    Affliction = AfflictionKind.Burn },
+                    Affliction = AfflictionKind.Burn, Unseen = true },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = Sunk, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Burn, Stacks = 1 }));
 
             // Poison and Lightning (22). While both last, each bite of poison spends one Static and jolts it: 7 damage, 5

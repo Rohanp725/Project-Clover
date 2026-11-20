@@ -58,6 +58,11 @@ namespace Clover.Player.Forms
         private float[] heat, wanted, keptAt;
         private float[] blackness;
         private bool[] blackWanted;
+        // Until when a body's fire stays black after the curse last kept it: the flare it ends in burns black too.
+        private float[] blackUntil;
+        private bool[] hiddenNow;
+        /// <summary>Seconds a fire the curse kept stays black after it is no longer kept so (Smoulder's flare).</summary>
+        public const float BlackLingers = 1.4f;
         private int burning;
         private MaterialPropertyBlock block;
 
@@ -81,6 +86,8 @@ namespace Clover.Player.Forms
             keptAt = new float[Most];
             blackWanted = new bool[Most];
             blackness = new float[Most];
+            blackUntil = new float[Most];
+            hiddenNow = new bool[Most];
             for (int i = 0; i < Most; i++)
             {
                 var part = new GameObject("Body Flames");
@@ -157,6 +164,10 @@ namespace Clover.Player.Forms
             }
             wanted[slot] = HeatOf(depth);
             blackWanted[slot] = black;
+            // A reaction's own look playing on it draws its fire (Smoulder's black tongues): the body's flame is kept, and
+            // remembers it was black, but is not drawn until that look is over.
+            hiddenNow[slot] = ElementLooks.Hides(body, (int)AfflictionKind.Burn);
+            if (black) blackUntil[slot] = Time.time + BlackLingers;
             keptAt[slot] = Time.time;
             return true;
         }
@@ -201,10 +212,11 @@ namespace Clover.Player.Forms
                 block.SetFloat(WidthId, FlameWidth);
                 block.SetFloat(WallId, Mathf.Clamp01((heat[i] - 0.8f) * 2.5f) * 0.6f);
                 block.SetFloat(RiseId, 1f);
-                blackness[i] = Mathf.MoveTowards(blackness[i], blackWanted[i] ? 1f : 0f, deltaTime / Blackens);
+                bool stillBlack = blackWanted[i] || now < blackUntil[i];
+                blackness[i] = Mathf.MoveTowards(blackness[i], stillBlack ? 1f : 0f, deltaTime / Blackens);
                 block.SetFloat(BlackId, blackness[i]);
                 shown[i].SetPropertyBlock(block);
-                if (!shown[i].enabled) shown[i].enabled = true;
+                if (shown[i].enabled == hiddenNow[i]) shown[i].enabled = !hiddenNow[i];
             }
         }
     }

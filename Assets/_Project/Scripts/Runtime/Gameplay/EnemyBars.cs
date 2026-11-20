@@ -148,6 +148,8 @@ namespace Clover.Gameplay
                 if (depth <= 0) continue;
                 // A flame gone live is drawn by its reaction alone, never as the plain Burn beside it.
                 if (affliction == AfflictionKind.Burn && watched.Conditions.Has(ConditionFlags.FlameLive)) continue;
+                // A reaction's own look is playing on it and shows what became of this one (Golden Feathers over Marked).
+                if (Clover.Player.Forms.ElementLooks.Hides(transform.parent, (int)affliction)) continue;
                 // Soaked under two Static or more is Seized: its water has run off into the live film, so its wet look
                 // and the rings that drain off it are not drawn (the owner, 2026-11-20: "remove the circles").
                 if (affliction == AfflictionKind.Soaked && watched.Stacks(AfflictionKind.Static) >= SeizedStatic) continue;

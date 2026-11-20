@@ -103,6 +103,8 @@ namespace Clover.Player.Forms
                 int depth = afflictions.Stacks(kind);
                 if (depth <= 0) continue;
                 if (kind == AfflictionKind.Soaked && (afflictions.Stacks(AfflictionKind.Static) >= SeizedStatic || afflictions.Stacks(AfflictionKind.Sundered) > 0)) continue;
+                // A reaction's own look is playing on it and shows what became of this one.
+                if (ElementLooks.Hides(body, (int)kind)) continue;
                 ElementLooks.Keep(ElementLooks.Find(LookOf(kind, depth)), body);
             }
         }

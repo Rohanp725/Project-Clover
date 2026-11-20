@@ -1243,13 +1243,14 @@ namespace Clover.Player
                     if (effect.Radius > 0f)
                     {
                         combat.AfflictArea(centre, effect.Radius, kind, stacks, null, laying);
-                        ElementLook.Ring(look, centre + Vector3.up * 0.2f);
+                        // A reaction with its own bespoke look shows what it lays in that look (Smoulder's black flare).
+                        if (!ReactionLook.HasBespoke(effect.Owner)) ElementLook.Ring(look, centre + Vector3.up * 0.2f);
                     }
                     else if (subject is IAfflictable afflictable)
                     {
                         float seconds = combat.AfflictionSeconds != 1f ? Afflictions.Spec(kind).Seconds * combat.AfflictionSeconds : 0f;
                         CombatEvents.Report(subject, kind, stacks, afflictable.Afflictions.Lay(kind, stacks + combat.ExtraStacks, seconds, combat.AfflictionPower, laying, subject), laying);
-                        ElementLook.Puff(look, centre + Vector3.up * 1.2f, Vector3.up, 0.6f);
+                        if (!ReactionLook.HasBespoke(effect.Owner)) ElementLook.Puff(look, centre + Vector3.up * 1.2f, Vector3.up, 0.6f);
                     }
                     break;
                 }
@@ -1258,7 +1259,7 @@ namespace Clover.Player
                     var burst = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2.5f), Seconds = 0.12f, BiteEvery = 0.1f,
-                        Once = true, Burst = !effect.Unseen, Delay = effect.Delay, Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
+                        Once = true, Burst = !effect.Unseen && !ReactionLook.HasBespoke(effect.Owner), Delay = effect.Delay, Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
                     };
                     // One burst, or one where each patch of a shape would fall.
                     int bursts = effect.Shape == HazardShape.Patch ? 1 : Or(eCount, 3);
@@ -1278,7 +1279,7 @@ namespace Clover.Player
                     var run = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = half, Seconds = 0.12f, BiteEvery = 0.1f, Once = true,
-                        Burst = !effect.Unseen, Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
+                        Burst = !effect.Unseen && !ReactionLook.HasBespoke(effect.Owner), Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
                         // One blow down the whole lane: an enemy where two patches meet is struck once.
                         Group = Hazards.NewGroup(),
                     };
