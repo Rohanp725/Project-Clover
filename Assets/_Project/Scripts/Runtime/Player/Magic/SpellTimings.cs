@@ -163,6 +163,7 @@ namespace Clover.Player.Magic
             ["boltrunstrue.diamondthunder"] = Cd(11f, SpellRole.Detonator),
             ["breathtaken.blownthrough"] = Cd(9f, SpellRole.Counter),
             ["venomrime.rimeoverrime"] = Cd(10f, SpellRole.Opener),
+            ["firebloom.needfire"] = Cd(12f, SpellRole.Opener),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };

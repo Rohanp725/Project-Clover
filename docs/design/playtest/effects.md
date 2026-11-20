@@ -1113,6 +1113,8 @@ Group: Reactions
 
 **What sets it off.** Burn landing on a Seeded enemy, or a seed on a burning one.
 
+**Its shapes.** With the Shape mark of Fire and Life's duo branch (Firebloom: Between Two Fires or Ash Bed, 3 Shards, in the heart of the chart) and both carried, Firebloom wears the shape chosen at a rest fire instead. Between Two Fires: the Seeded is spent and a pair of lilies grows for each seed, 3 m apart across the enemy. Ash Bed: no lilies and nothing spent; while it is Seeded its Burn does not fade, and when it dies a bed of shoots 3 m across stands 6 s, Seeding what steps in.
+
 **How to use it.** Seed it deep before you light it: more seeds, more lilies.
 
 **How it looks.** Its name over the enemy and the lilies round it. Not yet: walking past a lily to pick its fire up.
