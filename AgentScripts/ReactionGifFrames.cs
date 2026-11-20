@@ -142,7 +142,8 @@ public class ReactionGifFramesRunner : MonoBehaviour
         return impact;
     }
 
-    private bool PoolEmpty() => ReactionArt.PartsShown == 0 && ReactionArt.LampsShown == 0 && ActiveShowings() == 0;
+    // A bespoke reaction look (combos 4) plays once through the element looks' pool: it counts too.
+    private bool PoolEmpty() => ReactionArt.PartsShown == 0 && ReactionArt.LampsShown == 0 && ActiveShowings() == 0 && ElementLooks.PlayingOnce == 0;
 
     private RectInt Window(Vector3 host)
     {
@@ -280,6 +281,8 @@ public class ReactionGifFramesRunner : MonoBehaviour
             if (System.IO.Directory.Exists(folder)) System.IO.Directory.Delete(folder, true);
             System.IO.Directory.CreateDirectory(folder);
             bool designed = ReactionArt.IsDesigned(pair);
+            bool bespoke = ElementLooks.Find(ReactionLook.SlugOf(pair)) >= 0;
+            string kind = bespoke ? "bespoke" : designed ? "designed" : "composed";
             bool group = Reaching.Contains(look);
             int count = group ? Mathf.Min(cast.Count, 5) : 1;
 
@@ -335,10 +338,10 @@ public class ReactionGifFramesRunner : MonoBehaviour
             int impactFrame = lookStart + Mathf.RoundToInt(Mathf.Max(0f, impact) * Rate);
             bool wentOff = shownAt >= 0;
             System.IO.File.WriteAllText(folder + "/info.txt",
-                $"name={look}\nkind={(designed ? "designed" : "composed")}\nstart={start}\nshown_frame={lookStart}\nimpact={impact:0.000}\nimpact_frame={impactFrame}\nframes={frame}\nended={(tail >= 0)}\nclean_before={wasClean}\n" +
+                $"name={look}\nkind={kind}\nstart={start}\nshown_frame={lookStart}\nimpact={impact:0.000}\nimpact_frame={impactFrame}\nframes={frame}\nended={(tail >= 0)}\nclean_before={wasClean}\n" +
                 $"enemies={count}\nset_off={wentOff}\n");
             summary.AppendLine($"{name}: {frame} frames, {count} enemies, {(wentOff ? "set off" : "NOT SET OFF")}, impact {impact:0.00} s, {(tail >= 0 ? "ended" : "CUT at the cap")}{(wasClean ? "" : ", NOT clean before")}");
-            Say($"{name}: {(designed ? "designed" : "composed")}, {count} enemies, {frame} frames, impact {impact:0.00} s{(wentOff ? "" : ", WRONG: the reaction did not go off")}{(tail >= 0 ? "" : ", WRONG: cut at the cap")}{(wasClean ? "" : ", WRONG: pool not empty before")}");
+            Say($"{name}: {kind}, {count} enemies, {frame} frames, impact {impact:0.00} s{(wentOff ? "" : ", WRONG: the reaction did not go off")}{(tail >= 0 ? "" : ", WRONG: cut at the cap")}{(wasClean ? "" : ", WRONG: pool not empty before")}");
             filmed++;
             if (wentOff) setOff++;
             if (group) grouped++;
