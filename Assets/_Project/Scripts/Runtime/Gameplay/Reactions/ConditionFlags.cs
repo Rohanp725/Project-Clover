@@ -41,5 +41,10 @@ namespace Clover.Gameplay
         /// ordinary body: AfflictionSet.Rank).
         /// </summary>
         Down = 1 << 12,
+        /// <summary>
+        /// Its flame has gone live (Flashover): the reaction's violet flame is the only fire on it, so its Burn is not
+        /// drawn on the body as plain flame while this holds (the owner's word of 2026-11-20). The Burn still bites.
+        /// </summary>
+        FlameLive = 1 << 13,
     }
 }

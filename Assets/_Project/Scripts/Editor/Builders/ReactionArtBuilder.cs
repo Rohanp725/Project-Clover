@@ -271,6 +271,9 @@ namespace Clover.EditorTools
         public static readonly Dictionary<string, string> LookRecolours = new Dictionary<string, string>
         {
             ["fire_life|m_vfx_combo_whiteflash"] = "mc_firebloom_lily",
+            // Flashover's flame is all the violet plasma (the owner's word of 2026-11-20: "no regular flame ... all the
+            // flame should be that"): its orange embers burn violet too; its smoke stays smoke.
+            ["fire_lightning|m_vfx_fire_ember"] = "m_vfx_combo_plasmaflame",
         };
 
         private static string[] Recoloured(string pair, string[] worn)

@@ -50,7 +50,7 @@ frost tiers crust the legs; the coal crack-web flares and ice chips and shards b
 
 ### Flashover (Flashover)
 
-a bolt falls out of the sky, strobing; violet static crawls the limbs; the violet tongues climb in threes; embers and smoke rise as the char spreads.
+a bolt falls out of the sky, strobing; violet static crawls the limbs; the violet tongues climb in threes; violet embers and smoke rise as the char spreads.
 
 | Part | Verb | Beat | Seconds | Pieces | Triangles |
 |---|---|---|---|---|---|

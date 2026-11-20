@@ -813,7 +813,8 @@ namespace Clover.Gameplay
                     CombatEvents.RaiseLanded(this);
                 }
                 untilEmber -= deltaTime;
-                if (wasBurning && untilEmber <= 0f)
+                // A flame gone live (Flashover) is all its reaction's violet: no plain fire off the body beside it.
+                if (wasBurning && untilEmber <= 0f && !Afflictions.Conditions.Has(ConditionFlags.FlameLive))
                 {
                     untilEmber = 0.14f;
                     Vfx.Play(VfxKind.Fire, transform.position + Vector3.up * 1.2f, Vector3.up, 0.12f);

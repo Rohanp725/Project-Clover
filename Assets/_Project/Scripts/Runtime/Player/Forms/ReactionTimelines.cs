@@ -165,7 +165,8 @@ namespace Clover.Player.Forms
                 S("mark", M.Spread, F, 0.3f, 0.35f, 1.1f, 0.45f)),
             // The owner's review (2026-11-19): the lightning comes down from the sky, strobing, and the orange climbing
             // flame is gone (the builder leaves it out), so the violet tongues are the fire.
-            T("fire_lightning", "a bolt falls out of the sky, strobing; violet static crawls the limbs; the violet tongues climb in threes; embers and smoke rise as the char spreads",
+            // 2026-11-20: all its flame is violet, embers too, up at the strike and gone within about a second.
+            T("fire_lightning", "a bolt falls out of the sky, strobing; violet static crawls the limbs; the violet tongues climb in threes; violet embers and smoke rise as the char spreads",
                 S("strike", M.Fall, A, 0f, 0.18f, 0.6f, 6f, 3, true),
                 S("static", M.Flicker, I, 0.18f, 0.3f, 0.55f, 0f, 4, true),
                 S("flame", M.Lick, I, 0.24f, 0.18f, 0.85f, 0f, 0, false, 0.1f),

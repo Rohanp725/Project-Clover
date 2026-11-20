@@ -135,6 +135,8 @@ namespace Clover.Gameplay
                 var affliction = (AfflictionKind)lookKind;
                 int depth = watched.Stacks(affliction);
                 if (depth <= 0) continue;
+                // A flame gone live is drawn by its reaction alone, never as the plain Burn beside it.
+                if (affliction == AfflictionKind.Burn && watched.Conditions.Has(ConditionFlags.FlameLive)) continue;
                 // Two pieces at a time, so there is always something of it on the body.
                 for (int piece = 0; piece < 2; piece++)
                     Clover.Player.Forms.AfflictionLook.Show(affliction, depth, affliction == AfflictionKind.Chill && watched.IsFrozen, transform.parent.position, lookBeat++);

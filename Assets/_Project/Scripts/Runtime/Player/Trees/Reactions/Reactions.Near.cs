@@ -40,7 +40,7 @@ namespace Clover.Player.Trees
                 "Static meets Burn: the flame on it goes live and the Static discharges through it at once, 7 a stack in 3 m. The Burn is not spent.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 3f, Stagger = 4f },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Flinch, Seconds = 0.4f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LiveFlame, Seconds = 4f } }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = LiveFlame, Seconds = 4f, Flags = ConditionFlags.FlameLive } }));
 
             // Lightning and Wind (2). Thrown 3 m straight away from the player; where it stops (0.4 s on) its Static goes
             // off as a heavy blow sets it off: 7 damage and 5 stagger a stack in 4 m. What cannot be shoved is not thrown
