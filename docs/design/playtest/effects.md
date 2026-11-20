@@ -978,6 +978,8 @@ Group: Reactions
 
 **What sets it off.** Unsteady landing on a shaken enemy, or Tremor on a Unsteady one.
 
+**Its shapes.** With the Shape mark of Wind and Earth's duo branch (Grit or Drift: Sandblast or Drifted Over, 3 Shards, in the heart of the chart) and both carried, Logan Stone wears the shape chosen at a rest fire instead. Both rock it and fell it on your third blow as plain. Sandblast: the fall's dust thrown on away from you, 6, 15 stagger and an Unsteady to those behind it, which may set them rocking. Drifted Over: it lies 1 s longer, and enemies within 2 m wade at 60% speed.
+
 **How to use it.** Three blows inside 3 s: the weapon fells it.
 
 **How it looks.** Its name over the enemy, then the fall: it lies flat on its back, and gets up when its time is over.
