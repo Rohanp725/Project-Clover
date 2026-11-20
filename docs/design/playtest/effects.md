@@ -455,6 +455,8 @@ Group: Reactions
 
 **How to use it.** Burn first with your blade, then charge it with a spell, or the other way round: the discharge comes without a heavy blow and leaves the fire burning. Catch a wind-up with it.
 
+**Its shapes.** With Plasma's Shape mark (Flashover: Corona or Fulgurite, 3 Shards, in the heart of the chart) and both Fire and Lightning carried, Flashover wears the shape chosen at a rest fire instead. Corona: nothing is spent; violet flame crawls over it for 4 s and every 0.7 s an arc leaps to the nearest enemy within 5 m for 4, a Burn and a Static. Fulgurite: a scorched patch 2.5 m across under it for 4 s, biting 4 a second with a Burn and a Static.
+
 **How it looks.** Its name over the enemy and a discharge where it stands. Not yet: the live flame that draws other discharges near into it.
 
 ## reaction-thunder-gust

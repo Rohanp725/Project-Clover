@@ -1,113 +1,89 @@
 # Plasma: detailed explanations
 
-The long explanation the chart shows for every mark on Plasma, the branch Fire and Lightning share.
+The long explanation the chart shows for every mark on Plasma, the duo branch Fire and Lightning share. Reshaped in Phase 4
+(`docs/design/steel/pairs_d1_d2.md`, "Fire and Lightning") and drawn in the heart of the chart, the ring's middle, while
+Fire and Lightning are both carried (in the playtest, whenever you pick Lightning beside Fire or Fire beside Lightning). Its
+reaction is Flashover; its Shape mark lets you choose what Flashover does.
 
-## plasma.embers
-**What it does.** A heavy blow on an enemy carrying Static sets the Static off, as Lightning's root would, whichever of the two is your first element. Your blows also lay Burn and Static together, whichever of the two you carry first: every blow a Burn, every light blow a Static. Once your first element's root (Cinder or Static) is learned, that element's own is the root's, not laid twice.
+## plasma.shape
+**What it does.** Opens Flashover's two shapes. At a rest fire you choose which one your Flashover wears, and from then on it runs instead of the plain Flashover. **Corona**: nothing is spent; violet flame crawls over the enemy and throws small arcs at its neighbours. **Fulgurite**: the crack goes down instead of out; the ground under the enemy fuses into a scorched glassy patch that burns and shocks whoever stands in it.
 
-**When it happens.** A heavy blow or finisher on an enemy carrying Static sets it off. Every blow that lands lays a Burn, and every light blow a Static.
+**When it happens.** Every time Flashover fires (Static landing on a burning enemy, or Burn on a charged one) while Fire and Lightning are both carried. Before this mark is bought, or with only one of the two carried, the plain Flashover runs.
 
-**The numbers.** Mix, 3 Shards. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most about three times a second. One stack a blow of each; of your first element's, none beyond its root's.
+**The numbers.** Mix, 3 Shards. Corona: lasts 4 seconds; every 0.7 seconds an arc leaps from the enemy to the nearest other enemy within 5 metres for 4 damage, a Burn and a Static (about five arcs). Fulgurite: a patch 2.5 metres across for 4 seconds that bites once a second for 4 damage, a Burn and a Static. What either lays starts no reaction of its own. Flashover still rests 4 seconds on each enemy.
 
-**Works with.** Thunderclap or Flame Wave in a slot (more of either), the charged blade and the R2 strike, Arc Fire, Twin Break, Meltdown, Chain Reaction, Plasma, and the Flashover reaction when Burn and Static meet.
+**Works with.** Ionised Air (an arc leaps on through three more whatever the shape), Twin Break, Meltdown (Corona and Fulgurite both keep Burn and Static on everyone near), Plasma.
 
-**Example.** Carrying Fire first and Lightning second: your light blows burn a soldier and leave it Static, and the heavy blow that ends your chain sets the Static off into the pack.
+**Example.** A pack pressing in: wear Corona, and one burning soldier you charge keeps arcing into the two beside it for four seconds. Fighting one brute in a doorway: wear Fulgurite and fight on the patch it leaves.
 
-## plasma.arcfire
-**What it does.** A discharge of Static carries Burn to everyone it reaches. A burn set off leaves Static on everyone it reaches. Each element's burst plants the other.
-
-**When it happens.** Whenever you set off Static (a heavy blow on Static, Conductor) or a burn (Burn and Detonate, Open Furnace, Plasma).
-
-**The numbers.** Mix, 3 Shards. A Static discharge lays two stacks of Burn on everything within 4 metres of the one set off. A burn set off lays two stacks of Static on everything within 3.2 metres.
-
-**Works with.** Charged Embers, Static, Burn and Detonate, Open Furnace, Plasma, Chain Reaction.
-
-**Example.** Discharge a full soldier in the middle of a pack: everyone near it is now burning two deep as well as shocked.
+**Not built yet.** Corona's arcs leap from the enemy rather than drawing other discharges into its flame, and Fulgurite's patch is drawn as burning and crackling ground until the glassy look is made.
 
 ## plasma.twin
 **What it does.** A perfect guard sets off Burn and Static together on the one who struck. Spent together they strike half again as hard, and the blow is heavy, so it stops the enemy where it stands. If it carries only one of the two, that one is set off alone.
 
 **When it happens.** A perfect guard (press the guard button just before a blow lands) against an enemy carrying Burn, Static, or both.
 
-**The numbers.** Mix, 4 Shards. Together: 10 damage a Burn stack and 7 a Static stack, times 1.5, with 5 stagger a stack: 127.5 damage and 50 stagger at five and five. Alone, in 3 metres: Burn 10 plus 15 a stack, Static 10.5 a stack, 5 stagger a stack.
+**The numbers.** Mix, 3 Shards. Together: 10 damage a Burn stack and 7 a Static stack, times 1.5, with 5 stagger a stack: 127.5 damage and 50 stagger at five and five. Alone, in 3 metres: Burn 10 plus 15 a stack, Static 10.5 a stack, 5 stagger a stack.
 
-**Works with.** Charged Embers, Kiln Stance, Stored Charge, Meltdown. Burn and Detonate spends the burn first, so the two clash.
+**Works with.** Kiln Stance, Stored Charge, Meltdown, Ball Lightning (it grows from this or Ionised Air). Breath of the Lioness spends the burn first, so the two clash.
 
 **Example.** A burning, charged brute swings: guard it perfectly and it takes 127 and stops dead.
 
 ## plasma.ionised
-**What it does.** When any affliction on an enemy reaches its full depth, an arc leaps from that enemy through three more.
+**What it does.** Whenever Flashover fires, an arc leaps on from the burning enemy through three more, each struck and charged.
 
-**When it happens.** The moment an affliction on an enemy fills: five Burn, five Static, and so on.
+**When it happens.** Each time Flashover fires on an enemy, plain or in either shape, while Fire and Lightning are both carried.
 
-**The numbers.** Mix, 3 Shards. 10 damage and 8 stagger to the first and to each of three more, leaping up to 5 metres from one to the next. At most once a second.
+**The numbers.** Mix, 3 Shards. 10 damage, 8 stagger and a Static to each of up to three more enemies, leaping up to 5 metres from one to the next. Flashover itself rests 4 seconds on each enemy.
 
-**Works with.** Charged Embers (two afflictions to fill), Cinder, Static, Fused Core.
+**Works with.** Flashover's Shape mark (Corona or Fulgurite), Chain Reaction, which grows from it, and Static or Thunderclap to bring the charge.
 
-**Example.** Fill a soldier's Burn in a crowd and the arc jumps through three of its friends.
+**Example.** Burn a soldier in a crowd and Thunderclap it: Flashover goes off, and the arc runs on into three of its friends, leaving each charged for the next one.
 
 ## plasma.chain
 **What it does.** An enemy that dies carrying both Burn and Static bursts, and passes both on to everyone near at the depth it carried them.
 
 **When it happens.** The moment an enemy carrying both dies.
 
-**The numbers.** Mix, 4 Shards. The burst is 4 metres in radius: 18 damage, and as many Burn stacks as the dead one had. Everyone within 4 metres also takes as many Static stacks as it had. At most a few times a second.
+**The numbers.** Mix, 3 Shards. The burst is 4 metres in radius: 18 damage, and as many Burn stacks as the dead one had. Everyone within 4 metres also takes as many Static stacks as it had. At most a few times a second.
 
-**Works with.** Charged Embers, Arc Fire, Catching Fire, Meltdown.
+**Works with.** Ionised Air, which it grows from, Catching Fire, Meltdown.
 
 **Example.** Kill one soldier at five and five, and the three round it start at five and five too, one blow from Meltdown.
-
-## plasma.ball
-**What it does.** You loose a slow ball of white fire that drifts after the nearest enemy. Strike it with a swing to send it fast along the swing and grow it a step, up to three. It bursts on the first enemy it meets with Burn and Static, harder for each strike. Left alone, it bursts small when its time is up.
-
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4), then swing at the ball.
-
-**The numbers.** Mix, 4 Shards, 40 mana. It appears 1.5 metres ahead and drifts at 2 metres a second for 8 seconds; batted, it flies at 9. Burst: 2.5 metres in radius, 16 damage and 20 stagger, two stacks of Burn and of Static; each strike adds 0.7 metres, 12 damage, 10 stagger and a stack of each. At three strikes: 52 damage, 50 stagger and a heavy blow.
-
-**Works with.** Charged Embers, Meltdown, Fused Core, Hot Coals.
-
-**Example.** Bat it three times into an archer: 52 damage, and all near are five deep in both.
-
-## plasma.fused
-**What it does.** Your spells hit harder, and every enemy a spell strikes is left with a burn and Static.
-
-**When it happens.** Always on once learned; the afflictions come each time a spell of yours strikes an enemy.
-
-**The numbers.** Mix, 4 Shards. Spells deal 15% more damage. One stack of Burn and one of Static on each enemy a spell strikes.
-
-**Works with.** Flame Wave, Thunderclap, Ball Lightning, Plasma Lance, Ionised Air, Conductor.
-
-**Example.** A Thunderclap that forks to three enemies leaves all three burning and charged.
 
 ## plasma.meltdown
 **What it does.** An enemy near you carrying five Burn and five Static begins to shake with light. A few moments later it bursts, far harder than either alone, and the burst spends both. Nothing stops it, and it does not harm you.
 
-**When it happens.** Always on once learned. It looks a few times a second for an enemy within 14 metres at full depth in both; one enemy melts at a time.
+**When it happens.** Always on once learned, while Fire and Lightning are both carried. It looks a few times a second for an enemy within 14 metres at full depth in both; one enemy melts at a time.
 
-**The numbers.** Mix, 5 Shards. It shakes for 3 seconds, then bursts: 45 damage and 60 stagger to it as a heavy blow, and half of each to everything else within 5 metres. The same enemy cannot melt again for 10 seconds.
+**The numbers.** Mix, keystone, 5 Shards. It shakes for 3 seconds, then bursts: 45 damage and 60 stagger to it as a heavy blow, and half of each to everything else within 5 metres. The same enemy cannot melt again for 10 seconds.
 
-**Works with.** Charged Embers, Chain Reaction, Ball Lightning, Fused Core, Twin Break.
+**Works with.** Twin Break or Chain Reaction (it grows from either), Ball Lightning, Corona.
 
 **Example.** Fill a brute with both and roll away: three seconds later it goes up and staggers the pack around it.
 
-## plasma.lance
-**What it does.** You throw a bolt of plasma at the enemy you face that leaps on through three more.
+## plasma.ball
+**What it does.** You loose a slow ball of plasma, violet at its heart with real flame on its skin, that drifts after the nearest enemy. Strike it with a swing to send it fast along the swing and grow it a step, up to three. It bursts on the first enemy it meets with Burn and Static, harder for each strike. Left alone, it bursts small when its time is up.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
+**When it happens.** From a spell slot, while Fire and Lightning are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4), then swing at the ball. Its first landing charges your blade with Fire, the branch's first element.
 
-**The numbers.** Mix, 5 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Reaches 11 metres to the first enemy, then leaps up to 5 metres from one to the next, four enemies in all. 30 damage, 26 stagger and two stacks of Burn on each, whichever element is first: the branch's spells are made of Fire, and one that lands charges the blade with Fire.
+**The numbers.** Mix, duo spell, 5 Shards, 40 mana. It appears 1.5 metres ahead and drifts at 2 metres a second for 8 seconds; batted, it flies at 9. Burst: 2.5 metres in radius, 16 damage and 20 stagger, two stacks of Burn and of Static; each strike adds 0.7 metres, 12 damage, 10 stagger and a stack of each. At three strikes: 52 damage, 50 stagger and a heavy blow.
 
-**Works with.** Fused Core (both afflictions on each), Conductor, Ionised Air, Hot Coals.
+**Works with.** Twin Break or Ionised Air (it grows from either), Meltdown, and Flashover on whatever it leaves burning and charged.
 
-**Example.** Four soldiers in a loose line: one cast strikes all four for 30 each.
+**Example.** Bat it three times into an archer: 52 damage, and all near are five deep in both.
+
+**Not built yet.** The ball is still drawn in its first colours; the violet heart and the flame on its skin come with its look.
 
 ## fire.plasma
-**What it does.** A heavy blow or a finisher on a burning enemy bursts. The burst sets off the burn on everyone it reaches and then sets each of them alight again.
+**What it does.** The branch's top mark. A heavy blow or a finisher on a burning enemy bursts. The burst sets off the burn on everyone it reaches and then sets each of them alight again. If the enemy carries Static as well, Flashover goes off on it at once, whatever its rest, in the shape you wear.
 
-**When it happens.** Every heavy blow or finisher that lands on a burning enemy.
+**When it happens.** Every heavy blow or finisher that lands on a burning enemy, while Fire and Lightning are both carried.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. The burst is 3.2 metres in radius: 18 damage and 16 stagger. Each enemy in it that was burning takes its burn set off as well, 10 damage and 10 more a stack, and every enemy in it burns for 4 seconds afterward.
+**The numbers.** A god's gift, never sold; in the playtest it can be bought. The burst is 3.2 metres in radius: 18 damage and 16 stagger. Each enemy in it that was burning takes its burn set off as well, 10 damage and 10 more a stack, and every enemy in it burns for 4 seconds afterward. Nothing of the first enemy's Burn is spent.
 
-**Works with.** Cinder, Charged Embers, Arc Fire (each burst leaves Static), Heat, Kindle.
+**Works with.** Cinder, Heat, Catching Fire, Flashover's shapes, Ionised Air.
 
-**Example.** Three soldiers burning five deep: a heavy blow on one bursts over all three for 78 each, and leaves them burning.
+**Example.** Three soldiers burning five deep: a heavy blow on one bursts over all three for 78 each, and leaves them burning; if it was charged too, Flashover goes off on it at once.
+
+**Not built yet.** On an enemy with no Static the burst is still its own; the design makes it a Flashover that spends nothing.

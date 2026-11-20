@@ -6,7 +6,7 @@ namespace Clover.Player
     /// <summary>
     /// The worked layout of a duo branch in the chart's heart (IMPLEMENTATION.md 4.2, task 4.5): the ring's middle, inside
     /// the emblems, where the branch of the pair being looked at is drawn upright, one pair at a time. A branch's Shape mark
-    /// stands at the foot, two columns of passives rise from it, the keystone stands between them, the duo spell above it,
+    /// stands at the foot, two columns of passives rise from it, the keystone stands between them above the second row, the duo spell above it,
     /// two places beside the spell (a duo surge, a spare) and the top mark at the crown (Plasma's own). Ten places for the
     /// five to seven marks a branch has (pairs_d1_d2.md), so every one of the 55 branches is drawn alike.
     ///
@@ -37,10 +37,10 @@ namespace Clover.Player
             Slot(Foot, 0f, -3.6f),
             Slot(LeftLow, -1.3f, -2.4f, Foot), Slot(RightLow, 1.3f, -2.4f, Foot),
             Slot(LeftHigh, -1.95f, -0.95f, LeftLow), Slot(RightHigh, 1.95f, -0.95f, RightLow),
-            Slot(Keystone, 0f, -1.15f, LeftLow),
-            Slot(Spell, 0f, 0.45f, LeftLow),
-            Slot(LeftTop, -1.3f, 1.5f, LeftHigh), Slot(RightTop, 1.3f, 1.5f, RightHigh),
-            Slot(Crown, 0f, 2.55f, Spell),
+            Slot(Keystone, 0f, -0.55f, LeftLow),
+            Slot(Spell, 0f, 0.75f, LeftLow),
+            Slot(LeftTop, -1.3f, 1.75f, LeftHigh), Slot(RightTop, 1.3f, 1.75f, RightHigh),
+            Slot(Crown, 0f, 2.8f, Spell),
         };
 
         private static BranchPattern.Place Slot(string name, float x, float y, string from = "") => new BranchPattern.Place(name, x, y, from);

@@ -13,7 +13,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **The numbers.** 2 Shards. One stack a light blow, five at most, lasting 6 seconds. A discharge deals 7 damage and 5 stagger for each stack to everything within 4 metres: 35 damage and 25 stagger at five.
 
-**Works with.** Single Stroke, Waiting Thunder, Chain Lance, Seven Flashes, Overdrive's quicker swings, and Arc Fire or Thunder Lift on the mixed branches.
+**Works with.** Single Stroke, Waiting Thunder, Chain Lance, Seven Flashes, Overdrive's quicker swings, and Ionised Air or Thunder Lift on the mixed branches.
 
 **Example.** Four light blows on a soldier, then a heavy: 28 damage leaps out of it into the two beside it as well.
 

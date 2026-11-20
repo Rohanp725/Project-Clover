@@ -20,7 +20,7 @@ namespace Clover.Player
         /// <summary>Where the line to a branch's foot starts: a knot just under the Shape mark.</summary>
         public static readonly Vector2 FootPlace = new Vector2(0f, -4.55f);
         /// <summary>Where the pair's name and its reaction's are written, over the branch.</summary>
-        public static readonly Vector2 TitlePlace = new Vector2(0f, 3.45f);
+        public static readonly Vector2 TitlePlace = new Vector2(0f, 3.75f);
 
         /// <summary>Only the duo branches written into the heart (<see cref="MarkTree.Duo"/>): the ring keeps the mixes not reshaped yet.</summary>
         public bool Draws(Upgrade mark) => mark != null && !mark.IsHidden && mark.IsMix && mark.Tree == MarkTree.Duo;
