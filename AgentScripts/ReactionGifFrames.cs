@@ -360,6 +360,16 @@ public class ReactionGifFramesRunner : MonoBehaviour
             if (recipeLayout != null && recipeLayout.Count > 1)
             {
                 layout.AddRange(recipeLayout);
+                // The Gate Captain is the tallest of the cast: stood in front of the main one he hides it (Split Rock and
+                // Earthlight, 2026-11-20), so he takes the place furthest back and whoever had it takes his. The looks
+                // find whoever stands at each place, so the reach is the same.
+                int captain = cast.FindIndex(enemy => enemy != null && enemy.Kind.Name == "Gate Captain");
+                if (captain > 0 && captain < layout.Count && layout[captain].z < -0.4f)
+                {
+                    int back = captain;
+                    for (int i = 1; i < layout.Count; i++) if (layout[i].z > layout[back].z) back = i;
+                    (layout[captain], layout[back]) = (layout[back], layout[captain]);
+                }
                 count = Mathf.Min(cast.Count, recipeLayout.Count);
                 group = true;
             }
