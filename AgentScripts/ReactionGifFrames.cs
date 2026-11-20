@@ -53,7 +53,7 @@ public class ReactionGifFramesRunner : MonoBehaviour
         "Flashover", "Thunder Gust", "Rime", "Quickening", "Split Rock", "Anvil Stone", "Glint", "Shut in the Dark", "Fire Medicine", "Carried Embers",
         "Sleet Charge", "Winter Seed", "Iron Thorns", "Earthlight", "Black Chain", "Burning Sap", "Smoulder", "Seized", "Rust", "Shining Herb",
         "Quicksilver", "Ill Wind", "Steam", "Lightning Flower", "Caught Light", "Chokedamp", "Red Hot", "The Bolt Runs True", "Firebloom", "Earthed",
-        "Sickle Wind", "Drowned Weight", "Rot Roots", "Live Iron", "Fish Poison",
+        "Sickle Wind", "Drowned Weight", "Rot Roots", "Live Iron", "Fish Poison", "Windthrow",
     };
     // The reactions whose condition beats at the poison's bites: filmed long enough to see them.
     private static readonly string[] Biting = { "Nerve Fire", "Venom Rime" };
