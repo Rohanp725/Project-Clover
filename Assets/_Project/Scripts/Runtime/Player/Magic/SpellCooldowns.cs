@@ -150,7 +150,8 @@ namespace Clover.Player.Magic
                 left[i] -= seconds;
                 if (left[i] > 0f) continue;
                 left[i] = 0f;
-                done |= 1 << i;
+                // A spell slot the breath already shows ready does not flash again.
+                if (!Breathing(i)) done |= 1 << i;
             }
             return done;
         }
