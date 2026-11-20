@@ -64,11 +64,12 @@ namespace Clover.Player.Magic
             ["ice.wall"] = Mana(35f, SpellRole.Breaker),            // Ice's larger spell
             ["ice.rime"] = Cd(9f, SpellRole.Counter),
             ["ice.ski"] = Cd(8f, SpellRole.Movement),
-            // Water
-            ["water.serpent"] = Cd(9f, SpellRole.Opener),           // not in the roster
+            // Water, reshaped (Phase 4): Riptide is the base spell; River Serpent is retired into its shape, Standing Rain
+            // and Moon on Water are cut; The Tide Turns, Blowhole and Deep Crack are new.
+            ["water.tide"] = Cd(8f, SpellRole.Movement),
+            ["water.blowhole"] = Cd(10f, SpellRole.Counter),
             ["water.whirlpool"] = Cd(10f, SpellRole.Breaker),
-            ["water.rain"] = Cd(10f, SpellRole.Detonator),          // not in the roster
-            ["water.moon"] = Cd(10f, SpellRole.Counter),            // Blowhole's place in the roster
+            ["water.crack"] = Cd(11f, SpellRole.Detonator),
             ["water.poured"] = Mana(30f, SpellRole.Breaker),        // Water's larger spell
             // Life
             ["life.harvest"] = Cd(12f, SpellRole.Breaker),          // Drawn From the Wood; also paid in health

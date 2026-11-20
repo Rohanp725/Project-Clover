@@ -57,3 +57,29 @@ Each was built with the default given here; every one is easy to change. Added t
 4. **Cracked Wall on a clock.** The shape bursts 1.5 s after an enemy first strikes the wall, which needs a wall that
    knows it was struck. Default: it bursts by itself 3 s after it rises. Alternatives: a shape that does nothing yet,
    as Kept Wind (Wind, question 2); or the burst at once when an enemy first comes within its reach.
+
+## Water
+
+1. **Catch the Rain and Drawn From the Drowned.** The design says Drawn From the Drowned replaces Catch the Rain (a
+   perfect guard fills part of a flask; a Soaked death does now). Default: Catch the Rain (`water.catch`) is retired and
+   refunded, and Drawn From the Drowned is a new major, `water.drowned`, because the two answer different moments.
+   Alternative: Drawn From the Drowned keeps `water.catch`, so a save that held Catch the Rain holds it without a refund.
+2. **The three built majors the passive table leaves out.** Water's table keeps five majors; Flowing Guard, Unbroken
+   Chain and Spilled Water are not in it and not in the cut list. Default: all three retired and refunded (3 Shards each),
+   so the tree is the design's 34 marks; Spilled Water's ring on drinking lives on in Wellspring's The Flask Breaks
+   (in the ledger, not built). Alternative: keep Spilled Water in one of the two empty places until The Flask Breaks is built.
+3. **One keystone.** The passive table gives Water only Deep Well; the cut list says each tree keeps two. Default: one
+   keystone (the chart tests allow one or two), Spring Tide and River Without End retired. Alternative: keep Spring Tide
+   aimed at the larger spell and the surge alone, as the cut list offers, in the empty place at the top of the trunk.
+4. **Whirlpool's size.** The roster says "as built: ... 4 m across", but the built whirlpool is 4 m in radius (8 across).
+   Default: as built, 4 m in radius, and Maelstrom 2.5 m in radius. Alternative: 2 m in radius as the words say, and
+   Maelstrom 1.25 m.
+5. **Poured Blade's price.** The roster says 30 mana (Empower 25), under the shared rule's 35 to 50 for a larger spell.
+   Default: the roster's 30 (the tests allow 30 to 60). Alternative: 35, Empower 30, like Ice's Winter Wall.
+6. **Stand-ins that are stronger than their timing.** Until held presses and cast windows exist, Blowhole's Master
+   doubles every answer (it comes in the instant of the blow as built) and ends its own clock once in twenty seconds, and
+   The Sea Comes In makes the dodge half again as far and the clocks 30% faster everywhere, not only in your water.
+   Default: as written, with **Not built yet** lines. Alternatives: give them nothing until the pieces are built; or halve
+   the numbers.
+7. **Breaking Swell throws "down".** "Throwing everything in it down 3 m off". Default: thrown 3 m away and knocked down
+   for 0.6 s (King Tide's time). Alternative: thrown only, nothing knocked down.

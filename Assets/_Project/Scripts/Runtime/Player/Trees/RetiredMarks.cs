@@ -64,6 +64,18 @@ namespace Clover.Player
             new RetiredMark("ice.gather", 3), new RetiredMark("ice.cleanbreak", 3), new RetiredMark("ice.blackice", 3),
             new RetiredMark("ice.statue", 4),
             new RetiredMark("ice.unmoved", 6), new RetiredMark("ice.skin", 6),
+
+            // Water: the plain minors and the dead "costs less" minor (Low Water), the majors not kept (Flowing Guard,
+            // Unbroken Chain, Spilled Water, and Catch the Rain, replaced by Drawn From the Drowned), River Serpent folded into
+            // Riptide as a shape, Standing Rain and Moon on Water cut outright (Rip Current and Blowhole took their places),
+            // and Spring Tide and River Without End, keystones not carried over.
+            new RetiredMark("water.easy", 1), new RetiredMark("water.wading", 1), new RetiredMark("water.greytide", 1), new RetiredMark("water.longflood", 1),
+            new RetiredMark("water.longpull", 1), new RetiredMark("water.lowwater", 1), new RetiredMark("water.soakedthrough", 1), new RetiredMark("water.weight", 1),
+            new RetiredMark("water.clear", 1), new RetiredMark("water.earned", 1), new RetiredMark("water.stillpool", 1), new RetiredMark("water.second", 1),
+            new RetiredMark("water.longdraught", 1),
+            new RetiredMark("water.flowing", 3), new RetiredMark("water.unbroken", 3), new RetiredMark("water.spilled", 3), new RetiredMark("water.catch", 3),
+            new RetiredMark("water.serpent", 4), new RetiredMark("water.rain", 4), new RetiredMark("water.moon", 4),
+            new RetiredMark("water.spring", 6), new RetiredMark("water.river", 6),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

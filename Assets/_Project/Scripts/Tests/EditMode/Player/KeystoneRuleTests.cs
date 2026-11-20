@@ -141,7 +141,9 @@ namespace Clover.Tests
             Assert.AreEqual(140, well.Tally.Cap);
             Assert.IsTrue(Has(well, PlayerStat.FlaskCount, 1f));
             Assert.AreEqual(3, Upgrade.ById(WindTree.LeafOnTheWind).Tally.Cap, "Three breaths.");
-            Assert.AreEqual(0, Upgrade.ById(WaterTree.SpringTide).Stats.Length, "Spring Tide's growth is worked at the cast, not a standing stat.");
+            // Spring Tide was not carried over into the reshaped Water tree (Phase 4): every spell spending all the mana is broken by cooldowns.
+            Assert.IsNull(Upgrade.ById(WaterTree.SpringTide));
+            Assert.IsTrue(RetiredMarks.IsRetired(WaterTree.SpringTide));
             Assert.AreEqual(0, Upgrade.ById(MetalTree.MastersAnswer).Effects.Length, "Master's Answer changes the skill's price, and gives no mana.");
 
             var heart = Upgrade.ById(LifeTree.Heartwood);

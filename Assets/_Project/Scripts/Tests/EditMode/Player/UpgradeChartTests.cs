@@ -490,6 +490,7 @@ namespace Clover.Tests
             [Elements.Lightning] = 9,
             [Elements.Wind] = 10,
             [Elements.Ice] = 10,
+            [Elements.Water] = 10,
         };
 
         [Test]
