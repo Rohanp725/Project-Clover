@@ -2073,6 +2073,7 @@ the Proving Ground's real enemies, afflictions on the group of five and surges o
 
 | date | decision | why |
 |---|---|---|
+| 2026-11-20 | The swings are settled: keep the slash trails and the element-coloured highlight on each weapon; remove every element piece drawn on the blade itself (flame flags, icicles, stone spine, thorn vine, water skin, venom coat) | the owner, after the swing re-film: "As long as you take those out and keep the actual slashes how they are and the color highlights on the weapon it will be perfect" |
 | 2026-11-20 | Every stand-in gets a real solution in a later pass: the ledger's NEEDS lines (docs/design/steel/content_open.tsv) are worked down to zero, and no stand-in counts as finished | the owner: "make sure that all of those get a actual solution on a pass and not just left with the stand in" |
 | 2026-11-20 | All text a player reads (mark details, effects, the guide, the playtest texts, the menus) is written plainly enough for an eighth grader, with a full language pass over it once Phase 4b is merged | the owner: "it needs to be readable as if they were a 8th grader" |
 | 2026-11-20 | New keystones: Fire gets Into the Fire and The Blade Drinks Fire; Water gets High Water, Low Water and Drawn Back to Break; Life gets Shared Roots and In Its Season (docs/design/steel/keystones_fire_water_life.md) | the owner's picks |
