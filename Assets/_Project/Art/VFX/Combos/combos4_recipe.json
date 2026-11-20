@@ -211786,69 +211786,6 @@
        "object": "r4_the_bolt_runs_true_000_markm0"
       }
      ]
-    },
-    {
-     "mesh": "vfx2c_light_lightning_straightscorch",
-     "kit": "vfx_combo_kit_r4.fbx",
-     "kit_object": "vfxr4_vfx2c_light_lightning_straightscorch",
-     "material": "m2_dark_hole",
-     "pass": "reactions4",
-     "instances": [
-      [
-       "r4_the_bolt_runs_true_022_scorch",
-       [
-        -2.57,
-        0.012,
-        -3.064
-       ],
-       [
-        0,
-        -50,
-        0
-       ],
-       [
-        1.0,
-        1.0,
-        0.95
-       ],
-       "g"
-      ]
-     ],
-     "motion": [
-      {
-       "verb": "scorch the lane, 8 m by 1.2 m, as the bolt runs",
-       "visible": [
-        0.5,
-        9
-       ],
-       "delay": 0.5,
-       "duration": null,
-       "scale_keys": [
-        [
-         0.5,
-         [
-          1,
-          1,
-          0.05
-         ],
-         "linear"
-        ],
-        [
-         1.0,
-         [
-          1,
-          1,
-          1
-         ],
-         "linear"
-        ]
-       ],
-       "easing": [
-        "linear"
-       ],
-       "object": "r4_the_bolt_runs_true_022_scorch"
-      }
-     ]
     }
    ],
    "ribbons": [
@@ -213610,7 +213547,1327 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_023_boltdis0_0",
+     "object": "r4_the_bolt_runs_true_022_lanescorch_0_0",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -0.946,
+       0.015,
+       -0.194
+      ],
+      [
+       -1.0,
+       0.015,
+       -0.349
+      ],
+      [
+       -1.095,
+       0.015,
+       -0.47
+      ],
+      [
+       -1.235,
+       0.015,
+       -0.554
+      ],
+      [
+       -1.382,
+       0.015,
+       -0.631
+      ],
+      [
+       -1.492,
+       0.015,
+       -0.74
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.5148128812648988,
+       9
+      ],
+      "draw_on": [
+       [
+        0.5148128812648988,
+        0.0,
+        "linear"
+       ],
+       [
+        0.6948128812648988,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_023_lanescorch_0_1",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -1.582,
+       0.015,
+       -1.122
+      ],
+      [
+       -1.743,
+       0.015,
+       -1.32
+      ],
+      [
+       -1.948,
+       0.015,
+       -1.481
+      ],
+      [
+       -2.16,
+       0.015,
+       -1.637
+      ],
+      [
+       -2.335,
+       0.015,
+       -1.823
+      ],
+      [
+       -2.463,
+       0.015,
+       -2.049
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.5511765176285351,
+       9
+      ],
+      "draw_on": [
+       [
+        0.5511765176285351,
+        0.0,
+        "linear"
+       ],
+       [
+        0.7311765176285352,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_024_lanescorch_0_2",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -2.75,
+       0.015,
+       -2.443
+      ],
+      [
+       -2.894,
+       0.015,
+       -2.531
+      ],
+      [
+       -3.046,
+       0.015,
+       -2.614
+      ],
+      [
+       -3.159,
+       0.015,
+       -2.727
+      ],
+      [
+       -3.226,
+       0.015,
+       -2.881
+      ],
+      [
+       -3.279,
+       0.015,
+       -3.046
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.6084159192279505,
+       9
+      ],
+      "draw_on": [
+       [
+        0.6084159192279505,
+        0.0,
+        "linear"
+       ],
+       [
+        0.7884159192279505,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_025_lanescorch_0_3",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -3.681,
+       0.015,
+       -3.546
+      ],
+      [
+       -3.867,
+       0.015,
+       -3.67
+      ],
+      [
+       -4.016,
+       0.015,
+       -3.826
+      ],
+      [
+       -4.118,
+       0.015,
+       -4.022
+      ],
+      [
+       -4.207,
+       0.015,
+       -4.229
+      ],
+      [
+       -4.327,
+       0.015,
+       -4.409
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.6552640912755862,
+       9
+      ],
+      "draw_on": [
+       [
+        0.6552640912755862,
+        0.0,
+        "linear"
+       ],
+       [
+        0.8352640912755862,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_026_lanescorch_0_4",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -4.769,
+       0.015,
+       -4.668
+      ],
+      [
+       -4.906,
+       0.015,
+       -4.808
+      ],
+      [
+       -4.995,
+       0.015,
+       -4.988
+      ],
+      [
+       -5.07,
+       0.015,
+       -5.18
+      ],
+      [
+       -5.178,
+       0.015,
+       -5.344
+      ],
+      [
+       -5.334,
+       0.015,
+       -5.468
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.7058993946976366,
+       9
+      ],
+      "draw_on": [
+       [
+        0.7058993946976366,
+        0.0,
+        "linear"
+       ],
+       [
+        0.8858993946976366,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_027_lanescorch_1_0",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -0.42,
+       0.015,
+       -0.281
+      ],
+      [
+       -0.527,
+       0.015,
+       -0.416
+      ],
+      [
+       -0.679,
+       0.015,
+       -0.513
+      ],
+      [
+       -0.838,
+       0.015,
+       -0.605
+      ],
+      [
+       -0.959,
+       0.015,
+       -0.728
+      ],
+      [
+       -1.033,
+       0.015,
+       -0.89
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.5360064346947392,
+       9
+      ],
+      "draw_on": [
+       [
+        0.5360064346947392,
+        0.0,
+        "linear"
+       ],
+       [
+        0.7160064346947392,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_028_lanescorch_1_1",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -1.334,
+       0.015,
+       -1.456
+      ],
+      [
+       -1.498,
+       0.015,
+       -1.567
+      ],
+      [
+       -1.668,
+       0.015,
+       -1.672
+      ],
+      [
+       -1.801,
+       0.015,
+       -1.809
+      ],
+      [
+       -1.887,
+       0.015,
+       -1.985
+      ],
+      [
+       -1.959,
+       0.015,
+       -2.173
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.584304362893586,
+       9
+      ],
+      "draw_on": [
+       [
+        0.584304362893586,
+        0.0,
+        "linear"
+       ],
+       [
+        0.7643043628935859,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_029_lanescorch_1_2",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -2.371,
+       0.015,
+       -2.529
+      ],
+      [
+       -2.556,
+       0.015,
+       -2.652
+      ],
+      [
+       -2.704,
+       0.015,
+       -2.807
+      ],
+      [
+       -2.805,
+       0.015,
+       -3.001
+      ],
+      [
+       -2.892,
+       0.015,
+       -3.206
+      ],
+      [
+       -3.011,
+       0.015,
+       -3.385
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.6326432285916526,
+       9
+      ],
+      "draw_on": [
+       [
+        0.6326432285916526,
+        0.0,
+        "linear"
+       ],
+       [
+        0.8126432285916525,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_030_lanescorch_1_3",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -3.45,
+       0.015,
+       -3.795
+      ],
+      [
+       -3.628,
+       0.015,
+       -3.986
+      ],
+      [
+       -3.759,
+       0.015,
+       -4.216
+      ],
+      [
+       -3.877,
+       0.015,
+       -4.458
+      ],
+      [
+       -4.027,
+       0.015,
+       -4.673
+      ],
+      [
+       -4.225,
+       0.015,
+       -4.847
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.6866416173476964,
+       9
+      ],
+      "draw_on": [
+       [
+        0.6866416173476964,
+        0.0,
+        "linear"
+       ],
+       [
+        0.8666416173476963,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_031_lanescorch_1_4",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -4.741,
+       0.015,
+       -5.234
+      ],
+      [
+       -4.826,
+       0.015,
+       -5.409
+      ],
+      [
+       -4.897,
+       0.015,
+       -5.596
+      ],
+      [
+       -5.0,
+       0.015,
+       -5.755
+      ],
+      [
+       -5.152,
+       0.015,
+       -5.874
+      ],
+      [
+       -5.325,
+       0.015,
+       -5.975
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.7493817290138317,
+       9
+      ],
+      "draw_on": [
+       [
+        0.7493817290138317,
+        0.0,
+        "linear"
+       ],
+       [
+        0.9293817290138318,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_032_lanescorch_2_0",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -0.044,
+       0.015,
+       -0.462
+      ],
+      [
+       -0.241,
+       0.015,
+       -0.614
+      ],
+      [
+       -0.446,
+       0.015,
+       -0.761
+      ],
+      [
+       -0.614,
+       0.015,
+       -0.938
+      ],
+      [
+       -0.734,
+       0.015,
+       -1.156
+      ],
+      [
+       -0.841,
+       0.015,
+       -1.384
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.562661109234472,
+       9
+      ],
+      "draw_on": [
+       [
+        0.562661109234472,
+        0.0,
+        "linear"
+       ],
+       [
+        0.7426611092344719,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_033_lanescorch_2_1",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -1.066,
+       0.015,
+       -1.675
+      ],
+      [
+       -1.244,
+       0.015,
+       -1.789
+      ],
+      [
+       -1.385,
+       0.015,
+       -1.935
+      ],
+      [
+       -1.479,
+       0.015,
+       -2.121
+      ],
+      [
+       -1.559,
+       0.015,
+       -2.319
+      ],
+      [
+       -1.672,
+       0.015,
+       -2.489
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.6141539438783123,
+       9
+      ],
+      "draw_on": [
+       [
+        0.6141539438783123,
+        0.0,
+        "linear"
+       ],
+       [
+        0.7941539438783123,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_034_lanescorch_2_2",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -2.06,
+       0.015,
+       -2.684
+      ],
+      [
+       -2.236,
+       0.015,
+       -2.871
+      ],
+      [
+       -2.364,
+       0.015,
+       -3.098
+      ],
+      [
+       -2.478,
+       0.015,
+       -3.336
+      ],
+      [
+       -2.625,
+       0.015,
+       -3.547
+      ],
+      [
+       -2.82,
+       0.015,
+       -3.717
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.6600199523887921,
+       9
+      ],
+      "draw_on": [
+       [
+        0.6600199523887921,
+        0.0,
+        "linear"
+       ],
+       [
+        0.8400199523887921,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_035_lanescorch_2_3",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -3.115,
+       0.015,
+       -3.997
+      ],
+      [
+       -3.208,
+       0.015,
+       -4.182
+      ],
+      [
+       -3.288,
+       0.015,
+       -4.379
+      ],
+      [
+       -3.4,
+       0.015,
+       -4.548
+      ],
+      [
+       -3.56,
+       0.015,
+       -4.677
+      ],
+      [
+       -3.741,
+       0.015,
+       -4.788
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.714678928758808,
+       9
+      ],
+      "draw_on": [
+       [
+        0.714678928758808,
+        0.0,
+        "linear"
+       ],
+       [
+        0.894678928758808,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_036_lanescorch_2_4",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -4.074,
+       0.015,
+       -5.136
+      ],
+      [
+       -4.168,
+       0.015,
+       -5.35
+      ],
+      [
+       -4.295,
+       0.015,
+       -5.538
+      ],
+      [
+       -4.471,
+       0.015,
+       -5.684
+      ],
+      [
+       -4.667,
+       0.015,
+       -5.813
+      ],
+      [
+       -4.836,
+       0.015,
+       -5.965
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.7630252362883717,
+       9
+      ],
+      "draw_on": [
+       [
+        0.7630252362883717,
+        0.0,
+        "linear"
+       ],
+       [
+        0.9430252362883718,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_037_lanescorch_3_0",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -0.035,
+       0.015,
+       -0.99
+      ],
+      [
+       -0.221,
+       0.015,
+       -1.115
+      ],
+      [
+       -0.37,
+       0.015,
+       -1.27
+      ],
+      [
+       -0.472,
+       0.015,
+       -1.466
+      ],
+      [
+       -0.56,
+       0.015,
+       -1.673
+      ],
+      [
+       -0.681,
+       0.015,
+       -1.853
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.6056135913886178,
+       9
+      ],
+      "draw_on": [
+       [
+        0.6056135913886178,
+        0.0,
+        "linear"
+       ],
+       [
+        0.7856135913886177,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_038_lanescorch_3_1",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -1.069,
+       0.015,
+       -2.202
+      ],
+      [
+       -1.225,
+       0.015,
+       -2.367
+      ],
+      [
+       -1.335,
+       0.015,
+       -2.571
+      ],
+      [
+       -1.43,
+       0.015,
+       -2.787
+      ],
+      [
+       -1.558,
+       0.015,
+       -2.976
+      ],
+      [
+       -1.735,
+       0.015,
+       -3.123
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.6573435783751561,
+       9
+      ],
+      "draw_on": [
+       [
+        0.6573435783751561,
+        0.0,
+        "linear"
+       ],
+       [
+        0.8373435783751562,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_039_lanescorch_3_2",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -2.135,
+       0.015,
+       -3.373
+      ],
+      [
+       -2.227,
+       0.015,
+       -3.557
+      ],
+      [
+       -2.306,
+       0.015,
+       -3.753
+      ],
+      [
+       -2.416,
+       0.015,
+       -3.921
+      ],
+      [
+       -2.576,
+       0.015,
+       -4.048
+      ],
+      [
+       -2.756,
+       0.015,
+       -4.158
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.7087142058604481,
+       9
+      ],
+      "draw_on": [
+       [
+        0.7087142058604481,
+        0.0,
+        "linear"
+       ],
+       [
+        0.888714205860448,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_040_lanescorch_3_3",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -3.12,
+       0.015,
+       -4.699
+      ],
+      [
+       -3.179,
+       0.015,
+       -4.871
+      ],
+      [
+       -3.269,
+       0.015,
+       -5.015
+      ],
+      [
+       -3.409,
+       0.015,
+       -5.119
+      ],
+      [
+       -3.569,
+       0.015,
+       -5.205
+      ],
+      [
+       -3.702,
+       0.015,
+       -5.314
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.7622592572020185,
+       9
+      ],
+      "draw_on": [
+       [
+        0.7622592572020185,
+        0.0,
+        "linear"
+       ],
+       [
+        0.9422592572020185,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_041_lanescorch_3_4",
+     "kind": "procedural_ribbon",
+     "centre": "body 0",
+     "points": [
+      [
+       -4.001,
+       0.015,
+       -5.773
+      ],
+      [
+       -4.105,
+       0.015,
+       -5.933
+      ],
+      [
+       -4.258,
+       0.015,
+       -6.053
+      ],
+      [
+       -4.432,
+       0.015,
+       -6.156
+      ],
+      [
+       -4.579,
+       0.015,
+       -6.281
+      ],
+      [
+       -4.676,
+       0.015,
+       -6.448
+      ]
+     ],
+     "width_m": 0.06,
+     "radius_profile": "taper",
+     "taper_tail_head": [
+      0.25,
+      1.0
+     ],
+     "material": "m_vfx_lightning_scorch",
+     "ink": false,
+     "motion": {
+      "verb": "ribbon_draw",
+      "note": "ribbon_draw: the floor combed along the lane in short streaks",
+      "visible": [
+       0.8073217907729241,
+       9
+      ],
+      "draw_on": [
+       [
+        0.8073217907729241,
+        0.0,
+        "linear"
+       ],
+       [
+        0.9873217907729241,
+        1.0,
+        "out"
+       ]
+      ],
+      "erase": []
+     }
+    },
+    {
+     "object": "r4_the_bolt_runs_true_042_boltdis0_0",
      "kind": "procedural_ribbon",
      "centre": "body 0",
      "points": [
@@ -213702,7 +214959,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_024_boltdis0_1",
+     "object": "r4_the_bolt_runs_true_043_boltdis0_1",
      "kind": "procedural_ribbon",
      "centre": "body 0",
      "points": [
@@ -213774,7 +215031,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_025_boltdis0_2",
+     "object": "r4_the_bolt_runs_true_044_boltdis0_2",
      "kind": "procedural_ribbon",
      "centre": "body 0",
      "points": [
@@ -213846,7 +215103,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_026_boltdis20_0",
+     "object": "r4_the_bolt_runs_true_045_boltdis20_0",
      "kind": "procedural_ribbon",
      "centre": "body 0",
      "points": [
@@ -213938,7 +215195,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_027_boltdis20_1",
+     "object": "r4_the_bolt_runs_true_046_boltdis20_1",
      "kind": "procedural_ribbon",
      "centre": "body 0",
      "points": [
@@ -214010,7 +215267,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_028_boltdis20_2",
+     "object": "r4_the_bolt_runs_true_047_boltdis20_2",
      "kind": "procedural_ribbon",
      "centre": "body 0",
      "points": [
@@ -214082,7 +215339,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_029_boltcrawls00_1_0",
+     "object": "r4_the_bolt_runs_true_048_boltcrawls00_1_0",
      "kind": "procedural_ribbon",
      "centre": "body 1",
      "points": [
@@ -214164,7 +215421,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_030_boltcrawls01_1_0",
+     "object": "r4_the_bolt_runs_true_049_boltcrawls01_1_0",
      "kind": "procedural_ribbon",
      "centre": "body 1",
      "points": [
@@ -214246,7 +215503,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_031_boltcrawls02_1_0",
+     "object": "r4_the_bolt_runs_true_050_boltcrawls02_1_0",
      "kind": "procedural_ribbon",
      "centre": "body 1",
      "points": [
@@ -214328,7 +215585,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_032_boltcrawls03_1_0",
+     "object": "r4_the_bolt_runs_true_051_boltcrawls03_1_0",
      "kind": "procedural_ribbon",
      "centre": "body 1",
      "points": [
@@ -214410,7 +215667,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_033_boltcrawls10_2_0",
+     "object": "r4_the_bolt_runs_true_052_boltcrawls10_2_0",
      "kind": "procedural_ribbon",
      "centre": "body 2",
      "points": [
@@ -214492,7 +215749,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_034_boltcrawls11_2_0",
+     "object": "r4_the_bolt_runs_true_053_boltcrawls11_2_0",
      "kind": "procedural_ribbon",
      "centre": "body 2",
      "points": [
@@ -214574,7 +215831,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_035_boltcrawls12_2_0",
+     "object": "r4_the_bolt_runs_true_054_boltcrawls12_2_0",
      "kind": "procedural_ribbon",
      "centre": "body 2",
      "points": [
@@ -214656,7 +215913,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_036_boltcrawls13_2_0",
+     "object": "r4_the_bolt_runs_true_055_boltcrawls13_2_0",
      "kind": "procedural_ribbon",
      "centre": "body 2",
      "points": [
@@ -214738,7 +215995,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_037_boltcrawls20_3_0",
+     "object": "r4_the_bolt_runs_true_056_boltcrawls20_3_0",
      "kind": "procedural_ribbon",
      "centre": "body 3",
      "points": [
@@ -214820,7 +216077,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_038_boltcrawls21_3_0",
+     "object": "r4_the_bolt_runs_true_057_boltcrawls21_3_0",
      "kind": "procedural_ribbon",
      "centre": "body 3",
      "points": [
@@ -214902,7 +216159,7 @@
      }
     },
     {
-     "object": "r4_the_bolt_runs_true_039_boltcrawls22_3_0",
+     "object": "r4_the_bolt_runs_true_058_boltcrawls22_3_0",
      "kind": "procedural_ribbon",
      "centre": "body 3",
      "points": [
@@ -215006,13 +216263,11 @@
      "a scorched lane 8 m long"
     ]
    ],
-   "missing_from_kits": [
-    "vfxr4_vfx2c_light_lightning_straightscorch"
-   ],
+   "missing_from_kits": [],
    "counts": {
-    "pieces": 40,
-    "groups": 2,
-    "ribbons": 38,
+    "pieces": 59,
+    "groups": 1,
+    "ribbons": 58,
     "bodies": 5
    },
    "owner": "(2026-11-19) \"The straight down bolt needs to go all the way through enemies\"",

@@ -1,6 +1,6 @@
 # Element looks (batches 1 and 2)
 
-214 looks, 2579 parts (891 ribbons), 14302 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+214 looks, 2598 parts (911 ribbons), 14340 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
@@ -196,9 +196,9 @@
 | red_hot@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | red_hot@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | the_bolt_runs_true@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| the_bolt_runs_true | 1.6 s | body | 28 | 27 | -0.30 s | - |
+| the_bolt_runs_true | 1.6 s | body | 48 | 47 | -0.30 s | - |
 | the_bolt_runs_true@1 | 1.6 s | body | 4 | 4 | 0.67 s | - |
-| the_bolt_runs_true@2 | 1.6 s | body | 5 | 4 | 0.79 s | - |
+| the_bolt_runs_true@2 | 1.6 s | body | 4 | 4 | 0.79 s | - |
 | the_bolt_runs_true@3 | 1.6 s | body | 3 | 3 | 0.91 s | - |
 | the_bolt_runs_true@4 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | breath_taken@p | 1.6 s | player | 0 | 0 | 1.60 s | - |

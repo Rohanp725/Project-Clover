@@ -198,7 +198,7 @@ namespace Clover.EditorTools
             ["r4_feather_shaft"] = new ReactionArtBuilder.Paint(0.5f, 0.26f, 0.07f),
             ["r4_figroot"] = new ReactionArtBuilder.Paint(0.07f, 0.035f, 0.1f),
             ["r4_foulwater"] = new ReactionArtBuilder.Paint(0.15f, 0.35f, 0.12f),
-            ["r4_frost_steel"] = new ReactionArtBuilder.Paint(0.5f, 0.66f, 0.82f),
+            ["r4_frost_steel"] = new ReactionArtBuilder.Paint(0.36f, 0.5f, 0.68f),
             ["r4_grudgecloud"] = new ReactionArtBuilder.Paint(0.06f, 0.05f, 0.1f),
             ["r4_grudgelit"] = new ReactionArtBuilder.Paint(0.42f, 0.22f, 0.85f),
             ["r4_halo"] = new ReactionArtBuilder.Paint(1f, 0.72f, 0.3f, 0.6f, 1f, true),
@@ -277,6 +277,56 @@ namespace Clover.EditorTools
             // (the render's pale floor let them read lighter; on the Proving Ground they were bright tan starbursts).
             ["earth_tremor|m_vfx_earth_ochrecrack"] = new ReactionArtBuilder.Paint(0.3f, 0.16f, 0.05f, 0.8f, 1f, true),
             ["earth_tremor|m3_earth_dust"] = new ReactionArtBuilder.Paint(0.4f, 0.33f, 0.24f, 0.4f, 1f, true),
+            // The films of groups D, E and F on the castle soldiers (2026-11-20), against "nothing pure white": Anvil Stone's
+            // anvil read as a pale grey-white block (an iron-faced stone: a dark iron grey); Diamond Ring's corona and bead
+            // as a white ring and star (gold, as light is); Mock Suns' two suns as white balls (a deep gold); Iron Thorns'
+            // roots and thorns as white wires (dark iron); the white-hot sparks of Sickle Wind, Iron Thorns and Cold Short
+            // as white specks (a hot orange); Sickle Wind's tornado as bright white crescents (a dusty grey, the mint rim
+            // still on its curls); Earthlight's slabs as pale grey (earth); The Grudge's cloud, once lifted clear of the
+            // health bar, as a pale lilac puff (near black, carried by the dark solid's violet ink, its inner light a
+            // brighter violet); Fish Poison's and Caught Light's crowns as a
+            // white ring at the feet (a deeper blue).
+            ["anvil_stone|m_vfx_earth_rock"] = new ReactionArtBuilder.Paint(0.11f, 0.105f, 0.115f),
+            ["diamond_ring|m2_light_pale"] = new ReactionArtBuilder.Paint(1f, 0.62f, 0.18f),
+            ["diamond_ring|m2_light_white"] = new ReactionArtBuilder.Paint(1f, 0.7f, 0.26f),
+            ["mock_suns|r4_sunbead"] = new ReactionArtBuilder.Paint(0.95f, 0.5f, 0.1f),
+            ["iron_thorns|m2_metal_burr"] = new ReactionArtBuilder.Paint(0.17f, 0.16f, 0.17f),
+            ["iron_thorns|m_vfx_metal_steel"] = new ReactionArtBuilder.Paint(0.26f, 0.27f, 0.3f),
+            ["iron_thorns|m3_steel"] = new ReactionArtBuilder.Paint(0.3f, 0.32f, 0.36f),
+            ["iron_thorns|m2_metal_whitehot"] = new ReactionArtBuilder.Paint(1f, 0.5f, 0.12f),
+            ["sickle_wind|m2_metal_whitehot"] = new ReactionArtBuilder.Paint(1f, 0.5f, 0.12f),
+            ["cold_short|m2_metal_whitehot"] = new ReactionArtBuilder.Paint(1f, 0.5f, 0.12f),
+            ["sickle_wind|m3_wind_ribbon"] = new ReactionArtBuilder.Paint(0.36f, 0.4f, 0.37f),
+            ["sickle_wind|r4_wind_inner"] = new ReactionArtBuilder.Paint(0.27f, 0.3f, 0.28f),
+            ["sickle_wind|m3_wind_dust"] = new ReactionArtBuilder.Paint(0.42f, 0.38f, 0.3f),
+            ["earthlight|m_vfx_earth_rock"] = new ReactionArtBuilder.Paint(0.3f, 0.23f, 0.16f),
+            ["the_grudge|r4_grudgecloud"] = new ReactionArtBuilder.Paint(0.07f, 0.05f, 0.12f),
+            ["the_grudge|r4_grudgelit"] = new ReactionArtBuilder.Paint(0.55f, 0.3f, 1f),
+            ["fish_poison|r4_splash"] = new ReactionArtBuilder.Paint(0.05f, 0.34f, 0.5f),
+            ["caught_light|r4_splash"] = new ReactionArtBuilder.Paint(0.05f, 0.34f, 0.5f),
+            // The Bolt Runs True's straight bolt drew as a pure white slab across the frame: a pale violet-blue bolt.
+            ["the_bolt_runs_true|m3_bolt"] = new ReactionArtBuilder.Paint(0.42f, 0.5f, 1f),
+        };
+
+        /// <summary>
+        /// Pieces one look lifts, by "slug|kit object", metres: The Grudge's cloud hung at 2.3 m, right behind the enemy's
+        /// health bar, and was not seen at all from the game camera; it gathers higher, clear of the bar, and its bolts
+        /// are stretched up to reach it (<see cref="RibbonLifts"/>).
+        /// </summary>
+        public static readonly Dictionary<string, float> LookLifts = new Dictionary<string, float>
+        {
+            ["the_grudge|vfxe2_cloud_a"] = 0.75f,
+            ["the_grudge|vfxe2_cloud_b"] = 0.75f,
+        };
+
+        /// <summary>
+        /// Ribbons one look stretches upward, by slug: a ribbon reaching above the first height has its points lifted by up
+        /// to the second, nothing at its foot and all of it at its top, so a bolt still leaves the lifted cloud and still
+        /// lands on the body.
+        /// </summary>
+        public static readonly Dictionary<string, Vector2> RibbonLifts = new Dictionary<string, Vector2>
+        {
+            ["the_grudge"] = new Vector2(1.9f, 0.75f),
         };
 
         /// <summary>Pieces one look draws at another size, by "slug|kit object": Seeded's seeds were large for a castle soldier (notes.md).</summary>
@@ -298,6 +348,9 @@ namespace Clover.EditorTools
             // Tremor's cracks and dust were 2.3 m and 1.7 m across under one body: kept to about the body's own ground.
             ["earth_tremor|vfx3c_vfx_earth_crack2"] = 0.5f,
             ["earth_tremor|vfx3c_vfx_earth_dust"] = 0.5f,
+            // The Grudge's cloud, lifted clear of the health bar, is made broader so it reads as a cloud over the enemy.
+            ["the_grudge|vfxe2_cloud_a"] = 1.35f,
+            ["the_grudge|vfxe2_cloud_b"] = 1.35f,
         };
 
         /// <summary>
@@ -324,6 +377,11 @@ namespace Clover.EditorTools
             ["m3_wind_dust"] = new Color(0.4f, 0.5f, 0.42f),
             ["m3_wind_comb"] = new Color(0.4f, 0.5f, 0.42f),
             ["m3_bolt"] = new Color(0.42f, 0.2f, 0.95f),
+            // The curse's black chain, black bolt and fig roots vanished on the dark floors with a dark ink (Black Chain:
+            // "I dont see the black chain at all", 2026-11-19): a violet rim carries them, as in the Blender worker's films.
+            ["r4_chain"] = new Color(0.55f, 0.26f, 0.95f),
+            ["r4_blackbolt"] = new Color(0.55f, 0.26f, 0.95f),
+            ["r4_figroot"] = new Color(0.5f, 0.22f, 0.85f),
         };
 
         /// <summary>Ribbons of dust and combed floor are stippled thin (air, not a solid band).</summary>
@@ -392,6 +450,18 @@ namespace Clover.EditorTools
             // Winter Seed's thorns and Supercooled's ice: the ice solid prints every face turned straight up pure white
             // (its glint), which made the thorns a white star on the floor.
             ["r4_ice"] = "water",
+            // The curse's black pieces (Black Chain's chain, The Grudge's cloud, Girdled's fig roots) are drawn in the dark
+            // solid for its violet ink: in the metal or lightning solid's near-black ink they were lost on the dark floors.
+            ["r4_chain"] = "dark",
+            ["r4_grudgecloud"] = "dark",
+            ["r4_grudgelit"] = "dark",
+            ["r4_figroot"] = "dark",
+            // Venom Rime's crystals in the water solid's flatter shine too, as r4_ice is, so no face of them lights white.
+            ["r4_venom_ice"] = "water",
+            // Mock Suns' two suns and its light lanes: in the ice solid (the look's first element) the suns' faces lit
+            // pure white; gold light is drawn in fire's solid, which keeps its colour.
+            ["r4_sunbead"] = "fire",
+            ["r4_halo"] = "fire",
         };
 
         /// <summary>Soaked: seconds the water takes to run down the body, and the most its puddle spans, metres.</summary>
@@ -645,6 +715,7 @@ namespace Clover.EditorTools
                     var rotation = Quaternion.Euler(Vec(instance[2], Vector3.zero));
                     var scale = Vec(instance[3], Vector3.one);
                     if (LookScales.TryGetValue(slug + "|" + kitObject, out float resize)) scale *= resize;
+                    if (LookLifts.TryGetValue(slug + "|" + kitObject, out float lift)) position.y += lift;
                     if (LookPaints.ContainsKey(slug + "|" + material)) material = slug + "|" + material;
                     string placement = instance.Count > 4 ? instance[4] as string : "b";
                     string verb = Text(motion, "verb");
@@ -716,6 +787,18 @@ namespace Clover.EditorTools
                     string note = Text(motion, "note");
                     var points = new List<Vector3>();
                     foreach (var point in (List<object>)ribbon["points"]) points.Add(Vec(point, Vector3.zero));
+                    if (RibbonLifts.TryGetValue(slug, out var stretch) && points.Count > 1)
+                    {
+                        float low = float.MaxValue, high = float.MinValue;
+                        foreach (var point in points)
+                        {
+                            low = Mathf.Min(low, point.y);
+                            high = Mathf.Max(high, point.y);
+                        }
+                        if (high >= stretch.x && high - low > 0.01f)
+                            for (int p = 0; p < points.Count; p++)
+                                points[p] += Vector3.up * (stretch.y * (points[p].y - low) / (high - low));
+                    }
                     float width = Number(ribbon, "width_m", 0.1f) * (RibbonWidths.TryGetValue(slug + "|" + material, out float wider) ? wider : 1f);
                     var taper = new Vector2(1f, 1f);
                     if (ribbon.TryGetValue("taper_tail_head", out var taperValue) && taperValue is List<object> taperList && taperList.Count >= 2)
@@ -723,10 +806,12 @@ namespace Clover.EditorTools
                     bool jagged = material.Contains("bolt");
                     // Wind is a band of air (wide across, thin through); a bolt is round.
                     float through = jagged ? 1f : 0.45f;
-                    var paint = PaintOf(material);
+                    // A look's own paint for the ribbon's material where it has one (The Bolt Runs True's bolt).
+                    var paint = PaintOf(LookPaints.ContainsKey(slug + "|" + material) ? slug + "|" + material : material);
                     var mesh = RibbonMesh($"look_{key}_{lists.Parts.Count - made.FirstPart:00}_{Text(ribbon, "object")}", points, width, Text(ribbon, "radius_profile"), taper, jagged, through, paint.Colour);
                     AssetDatabase.AddObjectToAsset(mesh, lists.Target);
-                    string owner = ReactionArtBuilder.ElementOf(material, element + "_" + element);
+                    // The solid a ribbon is drawn in, as for pieces: SolidOf first (the curse's chain in the dark solid).
+                    string owner = SolidOf.TryGetValue(material, out string ribbonSolid) ? ribbonSolid : ReactionArtBuilder.ElementOf(material, element + "_" + element);
                     int ring = ReactionDesigns.RingIndex(owner);
                     bool inked = !(ribbon.TryGetValue("ink", out var inkValue) && inkValue is bool ink && !ink);
                     var part = new ElementLookSet.Part
