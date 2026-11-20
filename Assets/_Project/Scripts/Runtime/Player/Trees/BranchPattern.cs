@@ -6,8 +6,9 @@ namespace Clover.Player
     /// <summary>
     /// The worked layout of a tree made of spell branches (IMPLEMENTATION.md 2.2, task 4.1; docs/UPGRADE_SCHEMA.md 20.4):
     /// the root, three boughs each with a foot, a middle and a crown for passives, two spell branches of four marks on each
-    /// bough as short stalks, two places at the top of the trunk, and the god's gift at the crown. 36 places for the 34
-    /// marks of a tree, so a writer leaves two empty. Proved for all eleven elements at once, beside every mixed branch's
+    /// bough as short stalks, three places at the top of the trunk, and the god's gift at the crown. 37 places: the 34
+    /// marks of the design's tree and the three a tree may add (a third keystone, a kept major), so a writer leaves some
+    /// empty. Proved for all eleven elements at once, beside every mixed branch's
     /// pattern, by <c>UpgradeChartTests.TheSpellBranchPatternFillsAllElevenElementsAndEveryMixWithoutACrowdAndTheStickReachesAll</c>.
     ///
     /// Each place names the place its mark is meant to grow from (<see cref="Place.From"/>): the lines drawn that way miss
@@ -40,6 +41,11 @@ namespace Clover.Player
         public const string MiddleCrown = "M.crown";
         public const string TrunkLeft = "T.1";
         public const string TrunkRight = "T.2";
+        /// <summary>
+        /// The top of the trunk, above and between the two trunk places, growing from the middle bough's crown: added for the
+        /// marks the owner kept on 2026-11-20 (Spilled Water, Shade) on trees whose other places were full.
+        /// </summary>
+        public const string TrunkTop = "T.3";
         // The side boughs: a foot near the root, a middle on the outer side, a crown above.
         public const string LeftFoot = "L.foot";
         public const string LeftMiddle = "L.mid";
@@ -63,6 +69,7 @@ namespace Clover.Player
             Slot("M.b.1", 0.48f, 3.45f, MiddleFoot), Slot("M.b.2", 0.48f, 4.4f, "M.b.1"), Slot("M.b.3", 0.48f, 5.35f, "M.b.2"), Slot("M.b.4", 0.48f, 6.3f, "M.b.3"),
             Slot(MiddleCrown, 0f, 7.35f, MiddleFoot),
             Slot(TrunkLeft, -0.62f, 8.5f, MiddleCrown), Slot(TrunkRight, 0.62f, 8.5f, MiddleCrown),
+            Slot(TrunkTop, 0f, 9.75f, MiddleCrown),
             Slot(Gift, 0f, 12f),
             Slot(LeftFoot, -1.55f, 2.55f, Root),
             Slot("L.a.1", -1.38f, 3.6f, LeftFoot), Slot("L.a.2", -1.45f, 4.53f, "L.a.1"), Slot("L.a.3", -1.52f, 5.47f, "L.a.2"), Slot("L.a.4", -1.6f, 6.4f, "L.a.3"),

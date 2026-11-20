@@ -49,5 +49,7 @@ namespace Clover.Player
         HighWater,
         /// <summary>While the player's tide is low.</summary>
         LowWater,
+        /// <summary>On a heavy blow (finishers included) that lands on an enemy in the air (or reeling). Weapon damage and stagger only.</summary>
+        AirborneHeavyBlow,
     }
 }

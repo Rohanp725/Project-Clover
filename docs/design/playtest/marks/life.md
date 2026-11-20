@@ -380,3 +380,14 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 **Works with.** Root and Branch, which it grows from. Ripening, Reap What Is Sown, Fallen Seeds, and the reactions that use Seeded.
 
 **Example.** Plant seeds in three enemies, then fight a fourth for six seconds. Now reap: three ripe bursts and three thornbushes.
+
+## life.shade
+**What it does.** While you stand near anything you have grown, you heal slowly and your stamina comes back faster.
+
+**When it happens.** Every second, while something you grew stands within 4 metres of you and Life is carried.
+
+**The numbers.** Major, 3 Shards. 2 health and 5 stamina each second.
+
+**Works with.** Root and Branch, which it grows from. Briar Patch, Elder Tree, Sapling and Fallen Seeds, which grow things to stand by.
+
+**Example.** Fight beside your Elder Tree: each second you heal a little and your stamina refills for the next dodge.

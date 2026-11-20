@@ -497,7 +497,8 @@ namespace Clover.Tests
         {
             // The worked layout of docs/UPGRADE_SCHEMA.md 20.4: three boughs, two stalks of four on each, passives on the boughs and trunk.
             var pattern = BranchPattern.All;
-            Assert.AreEqual(36, pattern.Count);
+            // 36 places, and the top of the trunk added for the marks the owner kept on 2026-11-20.
+            Assert.AreEqual(37, pattern.Count);
             Assert.AreEqual(pattern.Count, pattern.Select(place => place.Name).Distinct().Count());
             foreach (var place in pattern)
             {
@@ -527,7 +528,7 @@ namespace Clover.Tests
             {
                 var places = chart.Where(mark => mark.element == element.Name || mark.element2 == element.Name)
                     .Select(mark => UpgradeTree.Upright(mark.place, element.Bearing)).ToList();
-                Assert.AreEqual(36 + 8 + 8, places.Count);
+                Assert.AreEqual(37 + 8 + 8, places.Count);
                 Assert.IsTrue(Walkable(places, 0, out int reached), $"{element.Name}: the stick reaches {reached} of {places.Count}");
             }
         }
@@ -539,10 +540,12 @@ namespace Clover.Tests
             // Fire, Water and Life have three keystones since the owner's picks of 2026-11-20 (keystones_fire_water_life.md).
             [Elements.Fire] = 12,
             [Elements.Lightning] = 9,
-            [Elements.Wind] = 10,
-            [Elements.Ice] = 10,
-            [Elements.Water] = 12,
-            [Elements.Life] = 12,
+            // Wind and Ice keep Hammer Down and Clean Break as marks (the owner's answer of 2026-11-20).
+            [Elements.Wind] = 11,
+            [Elements.Ice] = 11,
+            // Water and Life keep Spilled Water and Shade as marks too.
+            [Elements.Water] = 13,
+            [Elements.Life] = 13,
             // Earth's table gives three keystones, and it keeps all three since the owner allowed it (2026-11-20).
             [Elements.Earth] = 10,
             // Metal's table gives three keystones too: Edge Guard, Master's Answer and All Blades Home.
@@ -836,6 +839,43 @@ namespace Clover.Tests
                 Assert.IsFalse(RetiredMarks.IsRetired(mark.Id), mark.Id + " was retired and must not be used again");
                 Assert.IsFalse(RetiredMarks.IsMoving(mark.Id), mark.Id + " waits for a weapon's Way");
             }
+        }
+
+        [Test]
+        public void TheFourMarksTheOwnerKeptStandOnTheirTreesUnderTheirOldIds()
+        {
+            // The owner's answer of 2026-11-20: Hammer Down, Clean Break, Spilled Water and Shade are marks, not retired.
+            var kept = new (string id, string tree, string place, string from)[]
+            {
+                (WindTree.HammerDown, Elements.Wind, BranchPattern.RightMiddle, WindTree.AgainstTheWall),
+                (IceTree.CleanBreak, Elements.Ice, BranchPattern.RightMiddle, IceTree.Brittle),
+                (WaterTree.SpilledWater, Elements.Water, BranchPattern.TrunkTop, WaterTree.SpreadingWater),
+                (LifeTree.Shade, Elements.Life, BranchPattern.TrunkTop, LifeTree.RootAndBranch),
+            };
+            foreach (var (id, tree, place, from) in kept)
+            {
+                var mark = Upgrade.ById(id);
+                Assert.IsNotNull(mark, id + " is a mark again");
+                Assert.IsFalse(RetiredMarks.IsRetired(id), id + " is out of RetiredMarks, so a save keeps it and is refunded nothing");
+                Assert.AreEqual(UpgradeKind.Major, mark.Kind, id);
+                Assert.AreEqual(3, mark.Cost, id);
+                Assert.AreEqual(tree, mark.Element, id);
+                CollectionAssert.AreEqual(new[] { from }, mark.Requires, id);
+                var at = BranchPattern.Of(place);
+                Assert.AreEqual(at.X, mark.X, 0.001f, id + " stands at " + place);
+                Assert.AreEqual(at.Y, mark.Y, 0.001f, id + " stands at " + place);
+            }
+            // The spells beside the middle places still grow from the bough's foot, so keeping these changes no price.
+            CollectionAssert.Contains(Upgrade.ById(WindTree.IndrawnBreath).Requires, WindTree.AgainstTheWall);
+            CollectionAssert.Contains(Upgrade.ById(WindTree.IndrawnBreath).Requires, WindTree.HammerDown);
+            CollectionAssert.Contains(Upgrade.ById(IceTree.SkiRun).Requires, IceTree.Brittle);
+            CollectionAssert.Contains(Upgrade.ById(IceTree.SkiRun).Requires, IceTree.CleanBreak);
+            // Hammer Down's heavy blow on an enemy in the air strikes half again as hard.
+            var stats = new PlayerStats();
+            foreach (var mod in Upgrade.ById(WindTree.HammerDown).Stats) stats.AddLearned(mod);
+            Assert.AreEqual(0.5f, stats.InAirHeavy(PlayerStat.WeaponDamage), 0.001f);
+            Assert.AreEqual(0f, stats.InAir(PlayerStat.WeaponDamage), 0.001f, "a light blow in the air is not raised by it");
+            Assert.AreEqual(0f, stats.Blow(PlayerStat.WeaponDamage, true, false, false), 0.001f, "nor a heavy blow on the ground");
         }
 
         [Test]

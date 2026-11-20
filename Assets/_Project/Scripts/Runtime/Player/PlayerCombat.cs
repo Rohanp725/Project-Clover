@@ -1718,8 +1718,10 @@ namespace Clover.Player
                     var light = Combo.Steps;
                     bool endsChain = step == Combo.ChainHeavy || (light.Count > 0 && step == light[light.Count - 1]);
                     bool inAir = carried != null && carried.IsAirborne;
-                    damage *= Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.WeaponDamage, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.WeaponDamage, carried) + (inAir ? Stats.InAir(PlayerStat.WeaponDamage) : 0f));
-                    staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried) + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) : 0f));
+                    damage *= Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.WeaponDamage, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.WeaponDamage, carried)
+                        + (inAir ? Stats.InAir(PlayerStat.WeaponDamage) + (step.Heavy ? Stats.InAirHeavy(PlayerStat.WeaponDamage) : 0f) : 0f));
+                    staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried)
+                        + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) + (step.Heavy ? Stats.InAirHeavy(PlayerStat.StaggerDealt) : 0f) : 0f));
                 }
                 if (critical) damage *= CritMultiplier;
                 // A back is a back: the knives' blows count for more on it. The finisher has its own number.

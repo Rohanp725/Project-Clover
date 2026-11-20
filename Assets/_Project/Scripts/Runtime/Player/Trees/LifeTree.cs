@@ -30,6 +30,8 @@ namespace Clover.Player.Trees
         // new id, since life.roots was retired with its refund and a retired id is never used again.
         public const string SharedRoots = "life.sharedroots";
         public const string InItsSeason = "life.inseason";
+        /// <summary>Kept as a mark by the owner's answer of 2026-11-20, under its old id.</summary>
+        public const string Shade = "life.shade";
         /// <summary>In Its Season: seconds a seed lies alone before it is ripe, and what a ripe and an unripe seed's burst is multiplied by.</summary>
         public const float RipensAfter = 6f;
         public const float RipeShare = 3f;
@@ -148,6 +150,15 @@ namespace Clover.Player.Trees
                 Rules = book => book.Afflictions.Ripen(AfflictionKind.Seeded, RipensAfter, RipeShare, UnripeShare),
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.RipeBurst, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 4, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 } } },
                 BranchPattern.TrunkLeft));
+            // Kept as a mark (the owner's answer of 2026-11-20), at the top of the trunk, the one place left on this tree.
+            to.Add(BranchPattern.Put(new Upgrade { Id = Shade, Name = "Shade", Element = E, Kind = UpgradeKind.Major, Requires = new[] { RootAndBranch }, Icon = UpgradeIcons.Leaf,
+                Description = "While you stand near anything you have grown, you heal slowly and your stamina comes back faster.",
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, While = StatWhen.NearGrown, Do = UpgradeAction.Heal, Amount = 2f },
+                    new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, While = StatWhen.NearGrown, Do = UpgradeAction.Stamina, Amount = 5f },
+                } },
+                BranchPattern.TrunkTop));
             // NEEDS: whatever you grow growing back where it stood 6 s after it is spent, burst or cut down (grows-back).
             // Until then every spell that strikes sows a sapling where it lands, once in two seconds.
             to.Add(BranchPattern.Put(new Upgrade { Id = WoodGrowsBack, Name = "Wood Grows Back", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { RootAndBranch }, Icon = UpgradeIcons.Moon,

@@ -355,3 +355,14 @@ design yet, its **Not built yet** line says what is missing.
 **Works with.** Tailwind, Against the Wall (each falling cut is a spell striking), Nothing Beneath, Rising Cut.
 
 **Example.** Light Tailwind and cut a pack sixteen times: as it ends, sixteen cuts fall on them again at half strength.
+
+## wind.hammer
+**What it does.** A heavy blow on an enemy in the air drives it into the ground. The blow hits half again as hard, and where the enemy lands the ground bursts and throws back everyone near.
+
+**When it happens.** Each heavy blow (finishers too) that lands on an enemy in the air or reeling, while Wind is carried.
+
+**The numbers.** Major, 3 Shards. The heavy blow deals 50% more damage. The enemy drops at once. The burst deals 14 damage and 30 stagger to everything within 3 metres and throws them 2 metres back.
+
+**Works with.** Against the Wall, which it grows from, and its thrown enemies. Lifting Wind, Sky Dance, Rising Cut and anything that throws enemies up.
+
+**Example.** Throw a soldier up with Lifting Wind, then bring a heavy blow down on it: it slams into the ground and knocks its friends back.

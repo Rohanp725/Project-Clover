@@ -383,3 +383,14 @@ design yet, its **Not built yet** line says what is missing.
 **Works with.** Heavy Water, which it grows from. Undertow and The Tide Turns, which pull enemies back in after you. Anything that sets off Soaked.
 
 **Example.** Dodge back three times from a pack, then step in with one blow: three waves break, 36 damage and 60 stagger, and they are all thrown back and soaked.
+
+## water.spilled
+**What it does.** When you drink a flask, a ring of water bursts out from you. It soaks everyone near and pushes them back, so you get room to breathe.
+
+**When it happens.** Each time you drink a flask, while Water is carried.
+
+**The numbers.** Major, 3 Shards. The ring reaches 3.5 metres. Everything in it takes 1 damage and 15 stagger, is Soaked, and is pushed 2.5 metres away.
+
+**Works with.** Spreading Water, which it grows from. Everything that sets off Soaked. Deep Well and Broken Gourd, the other flask marks.
+
+**Example.** Surrounded and hurt, you drink: the ring throws the pack back and soaks them, ready for your next reaction.

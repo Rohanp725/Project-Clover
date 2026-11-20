@@ -355,3 +355,14 @@ design yet, its **Not built yet** line says what is missing.
 **Works with.** Glaze, Flying Shards (the shards fly at every link), All at Once, Brittle, Sent Sliding, Deep Winter.
 
 **Example.** Light Glaze in a crowd, break it outward, and shatter the nearest: the ice runs from one to the next until every frozen body has broken.
+
+## ice.cleanbreak
+**What it does.** Shatter an enemy that has less than a fifth of its health left, and nothing is left of it. Gods are spared; elites are not.
+
+**When it happens.** Each time you shatter a frozen enemy, while Ice is carried.
+
+**The numbers.** Major, 3 Shards. An enemy below 20% of its health when it is shattered dies a moment later. It never works on a god.
+
+**Works with.** Brittle, which it grows from. Every way to freeze and shatter: Hoarfrost, Hanging Ice, heavy blows on a frozen enemy, All at Once.
+
+**Example.** A knight is down to a sliver of health and frozen. One heavy blow shatters it, and it is gone.

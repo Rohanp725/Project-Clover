@@ -29,6 +29,8 @@ namespace Clover.Player.Trees
         public const string TheSeaComesIn = "water.devotion";
         // The two keystones the owner picked on 2026-11-20 (keystones_fire_water_life.md).
         public const string HighWaterLowWater = "water.highlow";
+        /// <summary>Kept as a mark by the owner's answer of 2026-11-20, under its old id.</summary>
+        public const string SpilledWater = "water.spilled";
         public const string DrawnBackToBreak = "water.drawnback";
         // The spells: each is its branch's Learn mark and the branch's id.
         public const string Riptide = "water.base";
@@ -167,6 +169,15 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.TurnTide, Cooldown = 0.3f },
                 } },
                 BranchPattern.TrunkLeft));
+            // Kept as a mark (the owner's answer of 2026-11-20), at the top of the trunk, the one place left on this tree.
+            to.Add(BranchPattern.Put(new Upgrade { Id = SpilledWater, Name = "Spilled Water", Element = E, Kind = UpgradeKind.Major, Requires = new[] { SpreadingWater }, Icon = UpgradeIcons.Ring,
+                Description = "When you drink a flask, a ring of water bursts out from you. It soaks everyone near and pushes them back.",
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, Do = UpgradeAction.Burst, At = EffectAt.Self, Damage = 1f, Stagger = 15f, Radius = 3.5f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, Do = UpgradeAction.Push, At = EffectAt.Self, Radius = 3.5f, Amount = 2.5f },
+                } },
+                BranchPattern.TrunkTop));
             // NEEDS: the pools four at most, enemies in them 15% slower, and the dodge and the clocks quicker only while you
             // stand in your own water (in-own-water, ground-states). Until then every spell that strikes leaves
             // a soaking pool where it lands, and the dodge and the clocks are quicker everywhere.
