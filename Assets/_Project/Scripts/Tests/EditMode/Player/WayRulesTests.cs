@@ -128,6 +128,9 @@ namespace Clover.Tests
             Assert.IsFalse(MarkRules.InForce(first, loadout));
             Assert.IsTrue(MarkRules.InForce(second, loadout));
             Assert.IsTrue(MarkRules.InForce(Technique, Carrying(Katana)), "a weapon taught once ignores the Fists' choice");
+            var katana = Carrying(Katana);
+            katana.Technique = second.Id;
+            Assert.IsTrue(MarkRules.InForce(Technique, katana), "a Fists' choice kept in the loadout never silences another weapon's technique");
         }
 
         [Test]

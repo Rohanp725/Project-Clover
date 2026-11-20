@@ -88,8 +88,8 @@ namespace Clover.Player.Way
             if (string.IsNullOrEmpty(kind) || kind != mark.Weapon) return false;
             // An element infusion mark (Burning Crescent) works while its element is carried.
             if (!string.IsNullOrEmpty(mark.Element) && !loadout.Carries(mark.Element)) return false;
-            // A weapon taught twice (the Fists) puts one technique on the chord; with none chosen, both wait on it.
-            if (mark.Kind == UpgradeKind.Technique && !string.IsNullOrEmpty(loadout.Technique) && loadout.Technique != mark.Id) return false;
+            // The one weapon taught twice (the Fists) puts one technique on the chord; with none chosen, both wait on it.
+            if (mark.Kind == UpgradeKind.Technique && kind == Weapons.FistsName && !string.IsNullOrEmpty(loadout.Technique) && loadout.Technique != mark.Id) return false;
             if (string.IsNullOrEmpty(mark.Aspect)) return true;
             if (ActiveAspect(loadout, kind) != mark.Aspect) return false;
             return !IsKeystone(mark) || loadout.KeystoneOf(mark.Aspect) == mark.Id;

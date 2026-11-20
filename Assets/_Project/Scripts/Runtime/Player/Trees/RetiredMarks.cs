@@ -9,8 +9,9 @@ namespace Clover.Player
     /// listed here is never used again by a new mark (<c>UpgradeChartTests</c> holds the catalogue to that).
     ///
     /// Two lists: <see cref="All"/>, the marks cut outright or folded into another mark (refunded); and <see cref="Moving"/>,
-    /// the weapon-bound marks that leave the element trees for the Katana's Way (steel/README.md, "Weapons and the Way"),
-    /// whose ids the Way will take back in phase 5, so a save keeps them and nothing is refunded.
+    /// the weapon-bound marks that left the element trees for the Katana's Way (steel/README.md, "Weapons and the Way"),
+    /// whose ids the Way took back in phase 5 (<see cref="Trees.Ways.KatanaWay"/>, as its element infusion marks), so a
+    /// save keeps them and nothing is refunded. A moving id is used again only by a mark of the Way.
     /// In namespace Clover.Player, not Trees, because it is no tree file.
     /// </summary>
     public static class RetiredMarks
@@ -190,7 +191,8 @@ namespace Clover.Player
             new RetiredMark("pyre.fuel", 3), new RetiredMark("pyre.fireeater", 4), new RetiredMark("pyre.slowfuse", 5),
         };
 
-        // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
+        // NEEDS: the owner's word on whether a Shards-bought mark that moved to the Way (paid in Memories) is refunded
+        // (phase4_questions.md 2, phase5_questions.md). Kept, unrefunded, and learned on the Way as it was on the tree.
         private static readonly RetiredMark[] moving =
         {
             new RetiredMark(Upgrade.BurningCrescent, 3),
@@ -206,7 +208,7 @@ namespace Clover.Player
         /// <summary>The marks cut, with their prices: a save that holds one is refunded.</summary>
         public static IReadOnlyList<RetiredMark> All => retired;
 
-        /// <summary>The marks leaving the element trees for a weapon's Way: kept in a save, not refunded, their ids waiting for the Way.</summary>
+        /// <summary>The marks that left the element trees for a weapon's Way: kept in a save, not refunded, their ids the Way's now.</summary>
         public static IReadOnlyList<RetiredMark> Moving => moving;
 
         /// <summary>True when the id was cut (refunded); a moving mark is not.</summary>
@@ -218,7 +220,7 @@ namespace Clover.Player
             return false;
         }
 
-        /// <summary>True when the id waits for a weapon's Way.</summary>
+        /// <summary>True when the id left an element tree for a weapon's Way.</summary>
         public static bool IsMoving(string id)
         {
             if (string.IsNullOrEmpty(id)) return false;

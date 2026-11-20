@@ -53,6 +53,8 @@ namespace Clover.Player.Trees
             Duo.KindlingPointDuo.Add(to);
             Duo.TheGrudgeDuo.Add(to);
             Duo.IllWindDuo.Add(to);
+            // The weapons' Ways (phase 5), one file per weapon under Trees/Ways/, after the element charts.
+            Ways.KatanaWay.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }

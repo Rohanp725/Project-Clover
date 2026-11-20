@@ -56,8 +56,9 @@ namespace Clover.World
                     if (!sameElement)
                     {
                         int spent = 0;
+                        // The Way and the Body are paid in Memories and kept for good: nothing of theirs is refunded or forgotten.
                         foreach (var upgrade in Upgrade.All)
-                            if (upgrades.Owns(upgrade.Id)) spent += upgrade.Cost;
+                            if (!upgrade.IsWay && upgrades.Owns(upgrade.Id)) spent += upgrade.Cost;
                         upgrades.Forget();
                         upgrades.Refund(spent);
                     }
