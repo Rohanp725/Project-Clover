@@ -1,6 +1,7 @@
 using System.Linq;
 using Clover.EditorTools;
 using Clover.Gameplay;
+using Clover.Player;
 using Clover.Player.Forms;
 using NUnit.Framework;
 using UnityEngine;
@@ -208,6 +209,60 @@ namespace Clover.Tests
             var one = set.Looks[set.Find("wind_unsteady_1")];
             Assert.Less(one.PartCount, unsteady.PartCount, "one stack: fewer curls and leaves than three");
             Assert.Less(unsteady.PartCount, five.PartCount, "five stacks: more than three");
+        }
+
+        [Test]
+        public void AWindLeafIsALeafWithAMidrib()
+        {
+            var mesh = ElementLookBuilder.LeafMesh("leaf", new Vector3(-0.05f, 0f, -0.1f), new Vector3(0.05f, 0.01f, 0.1f), 2, 0, 1, new Color(0.56f, 0.6f, 0.2f));
+            var bounds = mesh.bounds;
+            Assert.AreEqual(0.2f, bounds.size.z, 0.01f, "as long as the kit's leaf");
+            Assert.Less(bounds.size.x, 0.11f, "and no wider");
+            var vertices = mesh.vertices;
+            float widestNearTip = vertices.Where(v => v.z > 0.09f).Max(v => Mathf.Abs(v.x));
+            float widest = vertices.Max(v => Mathf.Abs(v.x));
+            Assert.Less(widestNearTip, widest * 0.2f, "it comes to a point at the tip, not a diamond's corner");
+            var colours = mesh.colors;
+            Assert.IsTrue(colours.Any(c => c.g < 0.35f), "a darker midrib runs along it");
+            Assert.IsTrue(colours.All(c => Mathf.Max(c.r, c.g, c.b) < 0.75f), "muted, never white or gold-bright");
+            Object.DestroyImmediate(mesh);
+        }
+
+        [Test]
+        public void GlazeGrowsOutOfTheBodyAndNothingFloats()
+        {
+            string surge = System.IO.File.ReadAllText("Assets/_Project/Scripts/Runtime/Player/Forms/SurgeArt.cs");
+            StringAssert.DoesNotContain("Floor(0, \"ice_knotring_surge\")", surge, "no white frost ring round Glaze");
+            Assert.IsTrue(SurgeArt.ReplacesBuilt(Elements.ByName(Elements.Ice)), "Glaze's built floating crystals are not drawn");
+            Assert.IsTrue(SurgeArt.DrawnWithoutHolding(ElementSubstance.Ice), "Glaze holds no pieces: the ice is on the body");
+            var set = ElementLookBuilder.Set();
+            if (set == null) Assert.Ignore("The element looks have not been built; run Clover > Build > Element Looks.");
+            Assert.IsNotNull(set.Crystal, "the crystal Glaze grows");
+            Assert.IsNotNull(set.CrystalMaterial);
+            Assert.AreEqual(0f, set.Crystal.bounds.min.y, 0.01f, "stood on its base, so it grows out from where it is rooted");
+            Assert.Greater(set.Crystal.bounds.size.y, set.Crystal.bounds.size.x, "its length up");
+            var paint = set.Crystal.colors[0];
+            Assert.Greater(paint.b, paint.r * 2f, "a clear blue, not white");
+        }
+
+        [Test]
+        public void EveryElementBrazierHoldsItsElement()
+        {
+            var set = UnityEditor.AssetDatabase.LoadAssetAtPath<L>(ElementLookBuilder.BrazierSetPath);
+            if (set == null) Assert.Ignore("The brazier looks have not been built; run Clover > Build > Brazier Looks.");
+            foreach (var info in Elements.All)
+            {
+                int look = set.Find("brazier_" + info.Name.ToLowerInvariant());
+                Assert.GreaterOrEqual(look, 0, $"{info.Name}'s brazier has its contents");
+                Assert.Greater(set.Looks[look].PartCount, 3, info.Name);
+                Assert.AreEqual(2.4f, set.Looks[look].Seconds, 0.01f, $"{info.Name}: one 2.4 s loop");
+            }
+            var light = set.Looks[set.Find("brazier_light")];
+            for (int k = 0; k < light.PartCount; k++)
+            {
+                var part = set.Parts[light.FirstPart + k];
+                if (part.Mesh.name.Contains("softray")) Assert.AreEqual(L.Flat, part.Kind, "Light's rays are soft see-through beams, not solid blades");
+            }
         }
 
         [Test]

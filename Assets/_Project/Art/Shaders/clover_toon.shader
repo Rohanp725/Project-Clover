@@ -103,10 +103,12 @@ Shader "Clover/Toon"
         half3 IceShell(half3 albedo, float3 normalWS, half3 viewWS, half3 lightDirection, half lit, float3 positionWS)
         {
             half rim = 1.0 - saturate(dot(viewWS, normalWS));
-            half3 colour = rim > 0.55 ? half3(0.86, 0.95, 1.0) : (rim > 0.22 ? half3(0.6, 0.82, 0.96) : half3(0.4, 0.63, 0.84));
+            // Clear blue ice, deeper blue in the faces turned to the camera, a pale blue only at the rim (the coordinator,
+            // 2026-11-20: Chill read near white); the glint where the light catches is a pale blue, not white.
+            half3 colour = rim > 0.55 ? half3(0.62, 0.84, 1.0) : (rim > 0.22 ? half3(0.36, 0.64, 0.96) : half3(0.16, 0.4, 0.8));
             colour = lerp(colour, colour * (albedo * 0.6 + 0.4), 0.18) * lerp(0.82, 1.0, lit);
             half3 halfway = normalize(lightDirection + viewWS);
-            colour += half3(1.2, 1.28, 1.35) * step(0.95, saturate(dot(normalWS, halfway)));
+            colour += half3(0.45, 0.62, 0.8) * step(0.95, saturate(dot(normalWS, halfway)));
             if (_IceFrost > 0.001)
             {
                 float grain = frac(sin(dot(floor(positionWS * 38.0), float3(12.9898, 78.233, 37.719))) * 43758.5453);

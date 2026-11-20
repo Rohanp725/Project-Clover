@@ -110,6 +110,7 @@ namespace Clover.Player
             upgrades = GetComponent<PlayerUpgrades>();
             outfit = GetComponent<PlayerOutfit>();
             sheen = new MetalSheen();
+            glaze = new GlazeIce();
             if (Elements.StartsEmpty(StartsWithNone, RunState.Element)) TakeNone();
             else
             {
@@ -492,7 +493,10 @@ namespace Clover.Player
                     untilEmber = EmberInterval;
                     // Overdrive's buzzing is the art's jagged arcs now, not the old shock sparks (the owner, 2026-11-19).
                     bool arcs = SurgeInfo != null && SurgeInfo.Name == Elements.Lightning && ArtDrawsSurge(SurgeInfo);
-                    if (!arcs) ElementLook.Sparks(SurgeInfo, transform.position + Vector3.up * 1.1f, Vector3.up, 0.25f);
+                    // Glaze's ice is grown on the body; the pale sparks thrown round it read as white streaks floating
+                    // round the player (the owner, 2026-11-19: "instead of floating around you").
+                    bool grown = SurgeInfo != null && SurgeInfo.Name == Elements.Ice && ArtDrawsSurge(SurgeInfo);
+                    if (!arcs && !grown) ElementLook.Sparks(SurgeInfo, transform.position + Vector3.up * 1.1f, Vector3.up, 0.25f);
                 }
             }
         }
@@ -502,10 +506,16 @@ namespace Clover.Player
         // Temper turns the body to steel; whatever outfit is worn, its body renderer is the one asked.
         // Made in Awake: a property block may not be made while Unity constructs the component.
         private MetalSheen sheen;
+        // Glaze grows ice out of the body (crystals on its bones, its material frozen over).
+        private GlazeIce glaze;
         private PlayerOutfit outfit;
 
         /// <summary>How far the body is turned to steel now (Temper), 0 to 1, for probes.</summary>
         public float SteelLevel => sheen != null ? sheen.Level : 0f;
+
+        /// <summary>How far the body is iced over now (Glaze), 0 to 1, and how many crystals stand out of it, for probes.</summary>
+        public float IceLevel => glaze != null ? glaze.Frost : 0f;
+        public int GlazeCrystals => glaze != null ? glaze.Standing : 0;
 
         // True while the surge's own look is the element art's, which draws Overdrive's arcs in place of the old sparks.
         private bool ArtDrawsSurge(ElementInfo info) => info != null && Forms.ElementArt.Ready && Forms.SurgeArt.ReplacesBuilt(info);
@@ -516,6 +526,7 @@ namespace Clover.Player
             surgeShown = false;
             // No steel left on the body when the element goes (Temper's sheen is written only as it changes).
             sheen?.Clear();
+            glaze?.Clear();
         }
 
         private void LateUpdate()
@@ -535,6 +546,8 @@ namespace Clover.Player
             }
             if (outfit != null && sheen != null) sheen.Watch(outfit.Body);
             sheen?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Metal && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
+            if (outfit != null && glaze != null) glaze.Watch(outfit.Body, transform);
+            glaze?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Ice && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
             if (glow == null) return;
             float resting = surging ? GlowWhenSurging * Forms.SurgeArt.Glow(SurgeInfo) * (0.85f + 0.15f * Mathf.Sin(Time.time * 17f)) : 0f;
             glowLevel = Mathf.MoveTowards(glowLevel, resting, Time.deltaTime * 30f);

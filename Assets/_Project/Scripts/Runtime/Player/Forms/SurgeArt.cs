@@ -6,7 +6,7 @@ namespace Clover.Player.Forms
     /// Each element's surge in the approved look (the look-dev's "surge" panels), held round the player for as long as
     /// it lasts, for <see cref="SurgeLook"/>. Kindle: a char ring under the built flames. Overdrive: no rings (the owner,
     /// 2026-11-19 and 2026-11-20): jagged, branching arcs of the lightning kit jumping on and off the body and gone in a
-    /// blink, a few at a time. Tailwind: Fujin's bag-mouth spiral with a column of leaves. Glaze: a knotwork frost ring.
+    /// blink, a few at a time. Tailwind: Fujin's bag-mouth spiral with a column of leaves. Glaze: no pieces: ice grows out of the player (GlazeIce).
     /// Wellspring: three rings rising, hanging and falling in turn. Regrowth and Bedrock: none (their built leaves and
     /// stones). Temper: no pieces at all: the player turns to steel (<see cref="MetalSheen"/>). Clarity: a kolam drawn round them, a
     /// halo at their back and a slatted shaft from above that go after a moment. Hunger: an eclipse under them, one
@@ -55,7 +55,7 @@ namespace Clover.Player.Forms
         /// 2026-11-19): its bag-mouth spiral stands alone.
         /// </summary>
         public static bool ReplacesBuilt(ElementInfo info) =>
-            info != null && (info.Index == ElementSubstance.Metal || info.Index == ElementSubstance.Light || info.Index == ElementSubstance.Dark || info.Index == ElementSubstance.Poison
+            info != null && (info.Index == ElementSubstance.Metal || info.Index == ElementSubstance.Ice || info.Index == ElementSubstance.Light || info.Index == ElementSubstance.Dark || info.Index == ElementSubstance.Poison
                 || info.Index == ElementSubstance.Wind || info.Index == ElementSubstance.Lightning || (LookOf(info.Index) != null && ElementLooks.Find(LookOf(info.Index)) >= 0));
 
         /// <summary>
@@ -98,7 +98,7 @@ namespace Clover.Player.Forms
         /// True for the surges drawn by thrown pieces or by the body itself rather than held ones: Overdrive's arcs and
         /// Temper's steel. They hold nothing and still replace the built look.
         /// </summary>
-        public static bool DrawnWithoutHolding(int element) => element == ElementSubstance.Lightning || element == ElementSubstance.Metal;
+        public static bool DrawnWithoutHolding(int element) => element == ElementSubstance.Lightning || element == ElementSubstance.Metal || element == ElementSubstance.Ice;
 
         /// <summary>
         /// How much of the player's surge light an element's surge lights (1 all of it). Dark lights none: its light
@@ -156,7 +156,10 @@ namespace Clover.Player.Forms
                 case ElementSubstance.Lightning: break;
                 // Tailwind's spiral (liked, 2026-11-19) in wind's pale dust: it read white on film (2026-11-20).
                 case ElementSubstance.Wind: solids[0] = ElementArt.Hold(ElementArt.Piece("wind_bagspiral_surge"), TailwindDust); break;
-                case ElementSubstance.Ice: Floor(0, "ice_knotring_surge"); break;
+                // Glaze is ice grown out of the player (GlazeIce, driven by PlayerElement): no knotwork frost ring on the
+                // floor and nothing floating round them (the owner, 2026-11-19: "should grow out of you instead of floating
+                // around you cause its ice").
+                case ElementSubstance.Ice: break;
                 case ElementSubstance.Water: Solid(0, "water_rings_surge"); break;
                 case ElementSubstance.Life:
                 case ElementSubstance.Earth: break;
@@ -291,7 +294,6 @@ namespace Clover.Player.Forms
                     FormFx.Place(solids[0], feet, Quaternion.Euler(0f, time * -240f, 0f), new Vector3(0.8f, 0.8f * grown, 0.8f));
                     break;
                 case ElementSubstance.Ice:
-                    ElementArt.PlaceFloor(floors[0], floorPieces[0], feet, 0f, 0.75f * grown);
                     break;
                 case ElementSubstance.Water:
                 {
