@@ -136,6 +136,7 @@ namespace Clover.Player.Magic
             ["winterseed.green"] = Cd(14f, SpellRole.Detonator),
             ["thegroundgives.island"] = Cd(15f, SpellRole.Breaker),
             ["ironthorns.sownmen"] = Mana(45f, SpellRole.Opener),
+            ["earthlight.stone"] = Cd(16f, SpellRole.Opener),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };

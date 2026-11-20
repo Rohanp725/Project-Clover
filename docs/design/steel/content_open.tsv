@@ -16,7 +16,7 @@ thrown-into	A thrown body that meets something on the way: what it hits takes th
 jar-deaths	Deaths inside a ring as a moment: poisoned enemies dying inside give the jar every dose (to twelve, past the usual eight) and each kill inside feeds the player 4	Shut in the Dark, Blight's Swarm (the swarm crawling to the nearest enemy to seal a new jar; now a leap of 2 doses and a Curse that may react) and Rot to the Bone (stagger by the dose on each bite, the meter not recovering; now 9 a second)
 links-pass-blows	Links that pass a share of weapon damage both ways, and a leash that keeps two enemies within 4 m (or one within 2 m of a spot); gods are never leashed	Black Chain, Grasp's Tethered (one enemy kept within 5 m of the player for 4 s)
 poison-held	Poison held back on one enemy: it stops biting for a time, then every bite held back lands at once, doubled	Burning Sap
-seams	A burst shaped as a star of cracks: only enemies standing on the seams are struck, not a disc	Earthlight
+seams	A burst shaped as a star of cracks: only enemies standing on the seams are struck, not a disc	Earthlight, Earthlight's Lit Seam (the seams lit 5 s for heavy blows to flash again; now round the one struck), Dawn Through the Door (a perfect guard made on the seams; now against any marked enemy)
 god-hold	A hold that reaches gods at 0.4 of its time (now what cannot be frozen is not held)	Seized
 sundered-past-three	Sundered past its usual three, up to five, so the plate falls at five	Rust
 fades-never	An affliction that stays for the rest of the fight (two minutes of keeping stand in)	Cold Short
@@ -110,9 +110,9 @@ duo-surge-slot	A duo surge worn in the Hand's surge slot while both elements are
 rest-fire-counts	A count a mark keeps that empties at a rest fire (a fight's growth), neither kept for the run nor lost while the mark stays in force	Folded Steel (its folds now lost only when the mark leaves force)
 pieces-at-nearest	Pieces thrown from an enemy at the nearest others, each its own (not an arc from one to the next)	Forge's Hammer Scale (four flakes; now an arc through four)
 arc-through-afflicted	An arc that leaps on only from enemies carrying a given affliction, its first leap to any	Halo's Mirror to Mirror (on from each struck that carries Sundered; now through four, whatever they carry)
-blow-made-critical	A blow made critical by a condition on the enemy struck	Halo's Burning Mirror (the next weapon blow critical with two notches; now two notches and a burst of 10)
+blow-made-critical	A blow made critical by a condition on the enemy struck	Halo's Burning Mirror (the next weapon blow critical with two notches; now two notches and a burst of 10), Keeping the Hour (the heavy blow on the hour; now 10 more damage), The Stone Keeps the Hour (a blow timed to its line)
 cone-from-enemy	A cone that leaves an enemy's far side, away from the player	Pyre's Fire Lance (now a lane 5 m by 2 m beyond it)
-reaction-numbers	A mark that changes a reaction's own numbers as it fires (twice as hard, nothing spent)	Goes Up (at full depth Fire Medicine twice as hard and spending nothing; now a second bang and the spent doses laid back), Long Embers (embers 2 m further and one more; now a fourth ember at 7 m)
+reaction-numbers	A mark that changes a reaction's own numbers as it fires (twice as hard, nothing spent)	Goes Up (at full depth Fire Medicine twice as hard and spending nothing; now a second bang and the spent doses laid back), Long Embers (embers 2 m further and one more; now a fourth ember at 7 m), Quartz Vein (Earthlight's star 0.5 m wider; now a Mark in 3.5 m)
 lane-shove	A lane that shoves everything in it along its line	Carried Embers' Hot Wind (now only the enemy is shoved)
 dodge-path	The path a dodge took, for ground laid along it	Wake (spray along the dodge; now a short line where it ends)
 stagger-on-condition	A share of stagger on blows against an enemy in a condition	Swamped (twice as fast on a capsized enemy; now 10 more on any soaked, unsteady one)
@@ -121,3 +121,5 @@ separate-pieces	Many pieces bursting from one enemy at once, each striking its o
 laying-answer	An answer to an affliction being laid (a notch laid on a Seeded enemy lays two)	Grafted Edge (now a notch more on blows against a seeded, notched enemy)
 helpers-answer	Helpers that answer the player's heavy blow on the same enemy, and that rise from the ground where thrown	The Sown Men (now five minions that seed, a notch one strike in three)
 death-in-condition	An answer to an enemy that dies while in a given condition (sunk, thorned)	Given to the Bog, Sap of Iron (now any death carrying both afflictions)
+sweeping-line	A line form sweeping round a planted stone that blocks the way and counts as stone at an enemy's back	The Stone Keeps the Hour (now a rod striking all within 6 m each second)
+fight-clock-dial	A fight's own clock shown as a dial at the player's feet	Keeping the Hour (now one heavy blow in 6 s)

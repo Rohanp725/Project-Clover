@@ -708,6 +708,8 @@ Group: Reactions
 
 **What sets it off.** Tremor landing on a Marked enemy, or a Mark on a shaken one.
 
+**Its shapes.** With Lit Stone, the Shape mark of Earth and Light's duo branch (Earthlight: Down the Passage or Lit Seam, 3 Shards, in the heart of the chart) and both carried, Earthlight wears the shape chosen at a rest fire instead. Both renew its Mark. Down the Passage: a line 8 m long beyond it, 12 and a Mark on all on it. Lit Seam: the light breaks up as before, and for 5 s each heavy blow on it flashes 10 and 15 stagger on all within 3 m.
+
 **How to use it.** Shake a Marked enemy in a crowd: they are all Marked for your critical blows, and the first keeps its three.
 
 **How it looks.** Its name over the enemy, then light bursting up round it. Not yet: only those standing on the star of cracks struck (for now a circle).
