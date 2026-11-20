@@ -1248,6 +1248,8 @@ Group: Reactions
 
 **What sets it off.** A curse landing on a chilled enemy, or Chill on a Cursed one.
 
+**Its shapes.** With the Shape mark of Dark and Ice's duo branch (Stolen Warmth: Cold Shade or The Long Night, 3 Shards, in the heart of the chart) and both carried, Stolen Warmth wears the shape chosen at a rest fire instead. Cold Shade: the warmth drawn as plain, and when it dies a patch stays 4 s where it fell, chilling once a second all within 2.5 m. The Long Night: no health is drawn; its Chill holds and your blows chill it, and while it is frozen everything within 3 m takes a Chill each second.
+
 **How to use it.** Keep hitting: every blow heals you and chills it toward a freeze.
 
 **How it looks.** Its name over the enemy. Not yet: the last warmth torn out of it when it freezes.
