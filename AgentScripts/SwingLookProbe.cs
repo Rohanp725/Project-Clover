@@ -24,7 +24,8 @@ using UnityEngine.InputSystem.XInput;
 // cleared and stood again. The guide is read through first; the new effects are put on with F8's switch if they are
 // not; the floor's painted words, the training dummies near the floor and the HUD are hidden.
 // For each weapon (the Katana, the Massive Sword, the Great Hammer and the Twin Knives first, then the Scythe, the Great
-// Spear, the Chain Sickle, the Great Bow, bare hands and the Armament; every one equipped through PlayerCombat.Equip)
+// Spear, the Chain Sickle, the Great Bow, bare hands, the Armament and last the War Fan, which has no moves yet and is
+// swung on the Katana's under its own carry, its prefab hung on the rack for the play; every one equipped through PlayerCombat.Equip)
 // and each element on the ring (attuned alone through PlayerBuild.Attune), one clip: the blade charged with the
 // element and the light chain pressed three times into the soldiers (the bow adds its shot, the arrow in flight),
 // then the infused strike (L2 + RB on a virtual pad), then the clip runs on until the trails, the sheath and the pools
@@ -60,8 +61,11 @@ public class SwingLookProbeRunner : MonoBehaviour
         (Weapons.KatanaName, "katana", 1.9f), (Weapons.MassiveSwordName, "gsword", 2.4f), (Weapons.GreatHammerName, "hammer", 1.9f),
         (Weapons.TwinKnivesName, "knives", 1.4f), (Weapons.ScytheName, "scythe", 2.4f), (Weapons.GreatSpearName, "spear", 2.6f),
         (Weapons.ChainSickleName, "sickle", 1.9f), (Weapons.GreatBowName, "bow", 1.8f), (Weapons.FistsName, "fists", 1.3f),
-        (Weapons.ArmamentName, "armament", 1.5f),
+        (Weapons.ArmamentName, "armament", 1.5f), (FanName, "fan", 1.9f),
     };
+    // The War Fan has its prefab and blade line but no Weapon and no moves yet: it is filmed on the Katana's moves
+    // (the nearest one-handed cuts) under its own carry, so the fan's line, shape and looks are what is seen.
+    private const string FanName = "War Fan";
     // The open floor the reaction GIFs are filmed on: the enemies north of it, the player south, facing north.
     private static readonly Vector3 Middle = new Vector3(28f, 0.05f, 0f);
     private const int CastCount = 3;
@@ -317,6 +321,12 @@ public class SwingLookProbeRunner : MonoBehaviour
                 order += Elements.All.Count;
                 continue;
             }
+            if (weaponName == FanName && !HangFan())
+            {
+                Say("WRONG: the War Fan's prefab could not be hung on the player; build it with Clover > Weapons > Build Weapon Prefabs");
+                order += Elements.All.Count;
+                continue;
+            }
             foreach (var info in Elements.All)
             {
                 string name = info.Name.ToLowerInvariant();
@@ -325,7 +335,7 @@ public class SwingLookProbeRunner : MonoBehaviour
                 build.Attune(info.Name, "");
                 yield return Real(0.2f);
                 // The Armament is made of the element held, so it is taken up after the element.
-                combat.Equip(weaponName == Weapons.ArmamentName ? Weapons.Armament(info.Name) : Weapons.ByName(weaponName));
+                combat.Equip(weaponName == Weapons.ArmamentName ? Weapons.Armament(info.Name) : weaponName == FanName ? FanOnKatanaMoves() : Weapons.ByName(weaponName));
                 yield return Real(0.2f);
                 if (combat.Weapon == null || combat.Weapon.Name != weaponName)
                 {
@@ -344,6 +354,64 @@ public class SwingLookProbeRunner : MonoBehaviour
         System.IO.File.WriteAllText(Root + "summary.txt", summary.ToString());
         Say($"filmed {filmed}, {whole} whole and set off");
         Finish();
+    }
+
+    // The Katana's light chain, heavy and infused strike under the fan's carry, so the rack shows the fan and the
+    // trails follow its line with its swing shape; the Katana's sheath and drawn sword stay hidden.
+    private static Weapon FanOnKatanaMoves()
+    {
+        var weapon = Weapons.Katana();
+        weapon.UsesSword = false;
+        weapon.Stowed = false;
+        weapon.Name = FanName;
+        weapon.Carry = BladeLines.FanCarry;
+        return weapon;
+    }
+
+    // A player built before the fan's Spec has no fan on its rack: its prefab is hung in the right hand as the builder
+    // would (WeaponBuilder.Hang), added to the rack's sets, and the trails look for lines again.
+    private bool HangFan()
+    {
+        var rack = player.GetComponentInChildren<WeaponRack>();
+        if (rack == null) return false;
+        if (rack.Has(BladeLines.FanCarry)) return true;
+        var prefab = UnityEditor.AssetDatabase.LoadAssetAtPath<GameObject>("Assets/_Project/Generated/Weapons/fan/fan.prefab");
+        var hand = WeaponRack.FindSocket(rack.transform, WeaponRack.HandRight);
+        if (prefab == null || hand == null) return false;
+        var fan = Instantiate(prefab, hand);
+        fan.name = "fan_hand";
+        fan.transform.localPosition = Vector3.zero;
+        fan.transform.localRotation = Quaternion.identity;
+        var tinted = new List<Renderer>();
+        var indices = new List<int>();
+        var glow = new List<float>();
+        var plain = new List<Color>();
+        foreach (var renderer in fan.GetComponentsInChildren<Renderer>(true))
+        {
+            var materials = renderer.sharedMaterials;
+            for (int i = 0; i < materials.Length; i++)
+            {
+                if (materials[i] == null) continue;
+                bool inlay = materials[i].name.EndsWith("_inlay"), accent = materials[i].name.EndsWith("_accent");
+                if (!inlay && !accent) continue;
+                tinted.Add(renderer);
+                indices.Add(i);
+                glow.Add(inlay ? 1f : 0f);
+                plain.Add(materials[i].GetColor("_BaseColor"));
+            }
+        }
+        fan.SetActive(false);
+        var setsField = typeof(WeaponRack).GetField("sets", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        var sets = ((WeaponRack.Set[])setsField.GetValue(rack)).ToList();
+        sets.Add(new WeaponRack.Set
+        {
+            Carry = BladeLines.FanCarry, InHand = new[] { fan }, AtRest = new GameObject[0],
+            Tinted = tinted.ToArray(), Index = indices.ToArray(), Glow = glow.ToArray(), Plain = plain.ToArray(),
+        });
+        rack.Configure(sets.ToArray());
+        typeof(SwingTrails).GetMethod("FindSources", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).Invoke(trails, null);
+        Say($"War Fan hung on the rack for this play; blade lines now {trails.SourcesTotal} ({trails.SourcesFitted} measured)");
+        return rack.Has(BladeLines.FanCarry);
     }
 
     private class Clip

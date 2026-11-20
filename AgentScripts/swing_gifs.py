@@ -11,7 +11,9 @@ and trails the probe counted; a clip not whole or not set off is labelled in red
 
 Run as plain `python AgentScripts/swing_gifs.py </dev/null` (Pillow and numpy are the user's packages, so not -I).
 Optional arguments: folder names (katana_fire) to assemble only those, or `sheet` for the sheet alone; the sheet is
-always made of every folder.
+always made of every folder. The argument `alone` reads the clips filmed with the enemies stood off
+(review/gifs/swings/alone/<weapon>_<element>/, AgentScripts/swing_gif_alone.txt) and writes their GIFs and sheet beside
+them, as review/gifs/swings/alone/swing_<weapon>_<element>.gif and review/gifs/swings/alone/contact_sheet.png.
 """
 import os
 import sys
@@ -19,18 +21,21 @@ import sys
 import numpy
 from PIL import Image, ImageDraw, ImageFont
 
-ROOT = "review/gifs/swings"
-FRAMES = os.path.join(ROOT, "frames")
+ALONE = "alone" in sys.argv[1:]
+ROOT = "review/gifs/swings/alone" if ALONE else "review/gifs/swings"
+FRAMES = ROOT if ALONE else os.path.join(ROOT, "frames")
 FRAME_MS = 50
 HOLD_MS = 600
 TRANSPARENT = 255
 NEAR = 24
 MOST_BYTES = 4.9e6
 SCALES = (1.0, 0.8, 0.65, 0.5)
-WEAPONS = ["katana", "gsword", "hammer", "knives", "scythe", "spear", "sickle", "bow", "fists", "armament"]
+WEAPONS = ["katana", "gsword", "hammer", "knives", "scythe", "spear", "sickle", "bow", "fists", "armament", "fan"]
 WEAPON_NAMES = {
     "katana": "Katana", "gsword": "Massive Sword", "hammer": "Great Hammer", "knives": "Twin Knives", "scythe": "Scythe",
     "spear": "Great Spear", "sickle": "Chain Sickle", "bow": "Great Bow", "fists": "Fists", "armament": "Armament",
+    # No moves of its own yet: swung on the Katana's.
+    "fan": "War Fan*",
 }
 ELEMENTS = ["Fire", "Lightning", "Wind", "Ice", "Water", "Life", "Earth", "Metal", "Light", "Dark", "Poison"]
 
@@ -163,7 +168,7 @@ def main():
     if not os.path.isdir(FRAMES):
         print(f"no frames under {FRAMES}: run SwingLookProbe first")
         return
-    only = set(name for name in sys.argv[1:] if name != "sheet")
+    only = set(name for name in sys.argv[1:] if name not in ("sheet", "alone"))
     names = [name for name in os.listdir(FRAMES) if os.path.isdir(os.path.join(FRAMES, name))]
     entries = []
     for name in names:
