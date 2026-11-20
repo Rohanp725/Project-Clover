@@ -645,7 +645,8 @@ namespace Clover.Tests
             var ring = RingLayout.Instance;
             foreach (var mark in Upgrade.All)
             {
-                Assert.AreEqual(!mark.IsHidden && (mark.Tree == MarkTree.Element || mark.Tree == MarkTree.Duo), ring.Draws(mark), mark.Id);
+                // The heart's duo branches are drawn by HeartLayout, not on the ring.
+                Assert.AreEqual(!mark.IsHidden && mark.Tree == MarkTree.Element, ring.Draws(mark), mark.Id);
                 if (!ring.Draws(mark)) continue;
                 Assert.AreEqual(UpgradeTree.OnChart(mark), ring.Place(mark), mark.Id);
                 // The ring's trees and branches are bought with Shards, or given.
@@ -654,6 +655,62 @@ namespace Clover.Tests
             Assert.IsFalse(ring.Draws(null));
             Assert.AreEqual(UpgradeTree.Emblem(Elements.Fire), ring.Foot(Upgrade.ById(FireTree.Cinder)));
             Assert.AreEqual(UpgradeTree.MixFoot(Elements.Fire, Elements.Lightning), ring.Foot(Upgrade.ById(PlasmaTree.IonisedAir)));
+        }
+
+        // How near, in steps, a line may pass another mark of its branch.
+        private const float LineClearance = 0.4f;
+
+        private static float SegmentDistance(Vector2 point, Vector2 from, Vector2 to)
+        {
+            Vector2 along = to - from;
+            float t = Mathf.Clamp01(Vector2.Dot(point - from, along) / along.sqrMagnitude);
+            return (point - (from + along * t)).magnitude;
+        }
+
+        [Test]
+        public void TheHeartPatternIsSpacedClearAndWalkedFromEveryTree()
+        {
+            // The heart (IMPLEMENTATION.md 4.2, task 4.5): one duo branch at a time in the ring's middle, upright on the screen.
+            var heart = HeartPattern.All;
+            Assert.AreEqual(10, heart.Count);
+            Assert.AreEqual(heart.Count, heart.Select(place => place.Name).Distinct().Count());
+            var at = heart.ToDictionary(place => place.Name, place => new Vector2(place.X, place.Y));
+            foreach (var place in heart)
+            {
+                Assert.LessOrEqual(at[place.Name].magnitude, HeartPattern.Radius + 0.001f, place.Name + " lies outside the heart");
+                if (place.From.Length == 0) continue;
+                Assert.Greater(place.Y, HeartPattern.Of(place.From).Y, place.Name + " lies below what it grows from");
+                foreach (var other in heart)
+                    if (other.Name != place.Name && other.Name != place.From)
+                        Assert.GreaterOrEqual(SegmentDistance(at[other.Name], at[place.From], at[place.Name]), LineClearance, $"the line {place.From} to {place.Name} passes {other.Name}");
+            }
+            for (int i = 0; i < heart.Count; i++)
+                for (int j = i + 1; j < heart.Count; j++)
+                    Assert.GreaterOrEqual((at[heart[i].Name] - at[heart[j].Name]).magnitude, 1.2f, heart[i].Name + " and " + heart[j].Name + " crowd each other");
+            // The foot's knot and the title stand clear of the branch, and the whole heart inside the emblems' ring.
+            foreach (var place in at.Values)
+            {
+                Assert.GreaterOrEqual((place - HeartLayout.FootPlace).magnitude, UpgradeTree.LeastSpacing);
+                Assert.GreaterOrEqual((place - HeartLayout.TitlePlace).magnitude, UpgradeTree.LeastSpacing);
+            }
+            Assert.Less(HeartPattern.Radius + 1f, UpgradeTree.EmblemDistance - 1f, "the heart keeps clear of the emblems");
+            // Every tree upright with both its ring branches and the heart's ten places below it: the stick reaches all from the root.
+            foreach (var element in Elements.All)
+            {
+                var places = BranchPattern.All.Select(place => UpgradeTree.Upright(UpgradeTree.OnChart(element.Name, place.X, place.Y), element.Bearing)).ToList();
+                var before = Elements.All[(element.Index + Elements.Count - 1) % Elements.Count];
+                foreach (var (_, x, y) in PatternMix)
+                {
+                    places.Add(UpgradeTree.Upright(UpgradeTree.OnChart(Elements.MixBearing(element.Name, element.MixWith), UpgradeTree.MixDistance, x, y), element.Bearing));
+                    places.Add(UpgradeTree.Upright(UpgradeTree.OnChart(Elements.MixBearing(before.Name, element.Name), UpgradeTree.MixDistance, x, y), element.Bearing));
+                }
+                int ring = places.Count;
+                places.AddRange(at.Values);
+                for (int i = ring; i < places.Count; i++)
+                    for (int j = 0; j < ring; j++)
+                        Assert.GreaterOrEqual((places[i] - places[j]).magnitude, UpgradeTree.LeastSpacing, element.Name + ": the heart crowds the ring");
+                Assert.IsTrue(Walkable(places, 0, out int reached), $"{element.Name}: the stick reaches {reached} of {places.Count}");
+            }
         }
 
         [Test]

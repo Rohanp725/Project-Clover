@@ -7,8 +7,14 @@ namespace Clover.Player
 {
     /// <summary>
     /// The reactions as the catalogue holds them (IMPLEMENTATION.md 2.4, 3.7): for each of the 55 pairs its plain reaction
-    /// mark (when it is built), the effects a reaction runs, and how long it rests on one enemy. Looked up from
-    /// <see cref="Upgrade.All"/> and made again whenever the catalogue is gathered again.
+    /// mark (when it is built), its duo branch's Shape mark (when that is built: the reaction's two shapes), the effects a
+    /// reaction runs under a loadout, and how long it rests on one enemy. Looked up from <see cref="Upgrade.All"/> and made
+    /// again whenever the catalogue is gathered again.
+    ///
+    /// A reaction's shape (task 4.5) is chosen at a rest fire like a spell's, kept in <c>Loadout.Shapes</c> under the
+    /// reaction's id (<c>react.flashover</c>, <see cref="ShapeKey"/>). While the Shape mark is learned and in force (both
+    /// elements carried), the shape worn runs <b>instead of</b> the plain reaction; before it is bought, or with the pair
+    /// broken, the plain one runs.
     /// </summary>
     public static class ReactionTable
     {
@@ -24,6 +30,7 @@ namespace Clover.Player
         };
 
         private static readonly Upgrade[] marks = new Upgrade[AfflictionPairs.Count];
+        private static readonly Upgrade[] shapeMarks = new Upgrade[AfflictionPairs.Count];
         private static readonly Dictionary<string, int> pairOf = new Dictionary<string, int>();
         private static IReadOnlyList<Upgrade> readFrom;
 
@@ -33,6 +40,7 @@ namespace Clover.Player
         {
             readFrom = null;
             Array.Clear(marks, 0, marks.Length);
+            Array.Clear(shapeMarks, 0, shapeMarks.Length);
             pairOf.Clear();
         }
 
@@ -66,14 +74,52 @@ namespace Clover.Player
             }
         }
 
-        /// <summary>
-        /// What a reaction of the pair runs under the loadout: its plain mark's effects. NEEDS (Phase 4): the duo branch's
-        /// Shape mark, when the loadout sets a shape for the pair, runs that shape's effects instead.
-        /// </summary>
+        /// <summary>The plain reaction of the pair: its mark's effects, whatever is learned. See the overload with what is learned for the shapes.</summary>
         public static IReadOnlyList<UpgradeEffect> EffectsFor(int pair, Build.Loadout loadout)
         {
             var mark = MarkFor(pair);
             return mark != null ? mark.Effects : Array.Empty<UpgradeEffect>();
+        }
+
+        /// <summary>
+        /// What a reaction of the pair runs under the loadout and what is learned: the shape worn, while the pair's Shape
+        /// mark is learned and in force, instead of the plain reaction; else the plain reaction.
+        /// </summary>
+        public static IReadOnlyList<UpgradeEffect> EffectsFor(int pair, Build.Loadout loadout, ICollection<string> learned)
+        {
+            var shape = WornShape(pair, loadout, learned);
+            return shape != null ? shape.Effects : EffectsFor(pair, loadout);
+        }
+
+        /// <summary>The pair's duo branch's Shape mark (the reaction's two shapes), or null while its branch is not built.</summary>
+        public static Upgrade ShapeMarkFor(int pair)
+        {
+            if (pair < 0 || pair >= AfflictionPairs.Count) return null;
+            Read();
+            return shapeMarks[pair];
+        }
+
+        /// <summary>The key a reaction's choice of shape is kept under in <c>Loadout.Shapes</c>: the reaction's own id.</summary>
+        public static string ShapeKey(int pair) => pair >= 0 && pair < AfflictionPairs.Count ? AfflictionPairs.Id(pair) : "";
+
+        /// <summary>
+        /// True for a duo branch's Shape mark: a reaction's two shapes, on no spell branch. Its shapes' effects run through
+        /// <see cref="EffectsFor(int, Build.Loadout, ICollection{string})"/> when the pair reacts, never as standing effects.
+        /// </summary>
+        public static bool IsReactionShape(Upgrade mark) =>
+            mark != null && mark.IsMix && mark.Part == BranchPart.Shape && string.IsNullOrEmpty(mark.Branch) && mark.Shapes != null && mark.Shapes.Length > 0;
+
+        /// <summary>
+        /// The shape the pair's reaction wears: the first unless the second was chosen (<see cref="ShapeKey"/>), and none while
+        /// the Shape mark is not learned or not in force (one of the two elements not carried).
+        /// </summary>
+        public static ShapeDef WornShape(int pair, Build.Loadout loadout, ICollection<string> learned)
+        {
+            var mark = ShapeMarkFor(pair);
+            if (mark == null || !MarkRules.InForce(mark, loadout, learned)) return null;
+            int choice = loadout.ShapeOf(ShapeKey(pair));
+            if (choice < 0 || choice >= mark.Shapes.Length) choice = 0;
+            return mark.Shapes[choice];
         }
 
         /// <summary>How long the pair rests on one enemy: its mark's own rest, its entry's, or the shared default.</summary>
@@ -106,8 +152,15 @@ namespace Clover.Player
             if (ReferenceEquals(all, readFrom)) return;
             readFrom = all;
             Array.Clear(marks, 0, marks.Length);
+            Array.Clear(shapeMarks, 0, shapeMarks.Length);
             foreach (var mark in all)
             {
+                if (IsReactionShape(mark))
+                {
+                    int shaped = HeartLayout.PairOf(mark);
+                    if (shaped >= 0) shapeMarks[shaped] = mark;
+                    continue;
+                }
                 if (mark.Kind != UpgradeKind.Reaction) continue;
                 int pair = PairOf(mark.Id);
                 if (pair >= 0) marks[pair] = mark;

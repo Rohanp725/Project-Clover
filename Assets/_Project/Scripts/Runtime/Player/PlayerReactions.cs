@@ -10,7 +10,9 @@ namespace Clover.Player
     /// each moment of an enemy condition, notes them, and acts on them after the frame's blows are done (in
     /// <see cref="LateUpdate"/>, never inside the blow that caused them): the reaction is shown (its look and its name
     /// over the enemy), its plain mark's effects go into the effect runner with the enemy as target and their laying
-    /// counted as the reaction's (so they start nothing), and the marks in force that answer it are fired. A condition's
+    /// counted as the reaction's (so they start nothing), and the marks in force that answer it are fired. While the pair's
+    /// duo Shape mark is learned and in force, the shape chosen at the rest fire runs instead of the plain reaction (task
+    /// 4.5, <see cref="ReactionTable.WornShape"/>), and what its conditions do is answered from that shape. A condition's
     /// beat, blow and end run the answers of the mark that set it; a linked condition passes its host's poison bites on.
     /// When an enemy dies carrying a condition whose mark answers its death, those answers are queued at once, while
     /// what it carried can still be read (as the Kill trigger reads it); the runner does them on its next step.
@@ -34,6 +36,9 @@ namespace Clover.Player
         /// <summary>Reactions heard whose mark is not built yet (task 3.4): they rest but do nothing.</summary>
         public int Unbuilt { get; private set; }
         public string LastShown { get; private set; } = "";
+        /// <summary>The shape the last reaction shown ran in ("" for the plain reaction), and how many ran shaped.</summary>
+        public string LastShape { get; private set; } = "";
+        public int ShapedCount { get; private set; }
         public Component LastOn { get; private set; }
         /// <summary>Poison bites passed along a link, and condition moments answered.</summary>
         public int BitesPassed { get; private set; }
@@ -148,15 +153,29 @@ namespace Clover.Player
                 var run = afflictions.Conditions.Run(slot);
                 if (!run.Active || !run.AnswersDeath || run.Mark < 0 || run.Mark >= all.Count) continue;
                 var mark = all[run.Mark];
-                var source = mark.Kind == UpgradeKind.Reaction ? LaySource.Reaction : LaySource.Effect;
-                foreach (var effect in mark.Effects)
-                {
-                    if (effect.On != UpgradeTrigger.ConditionDied || effect.Condition != run.Id) continue;
-                    upgrades.Fire(effect, who, at, source, 0f, run.Blows, afflictions);
-                    ConditionAnswers++;
-                }
+                var source = SourceOf(mark);
+                AnswerDeath(mark.Effects, run, who, at, source, afflictions);
+                // A reaction's shape sets conditions of its own; their answers are the shape's (each shape's ids are its own).
+                if (ReactionTable.IsReactionShape(mark))
+                    foreach (var shape in mark.Shapes)
+                        if (shape != null) AnswerDeath(shape.Effects, run, who, at, source, afflictions);
             }
         }
+
+        private void AnswerDeath(UpgradeEffect[] effects, in ConditionRun run, Component who, Vector3 at, LaySource source, AfflictionSet afflictions)
+        {
+            if (effects == null) return;
+            foreach (var effect in effects)
+            {
+                if (effect.On != UpgradeTrigger.ConditionDied || effect.Condition != run.Id) continue;
+                upgrades.Fire(effect, who, at, source, 0f, run.Blows, afflictions);
+                ConditionAnswers++;
+            }
+        }
+
+        // What a reaction lays starts nothing: its plain mark's and its shapes'.
+        private static LaySource SourceOf(Upgrade mark) =>
+            mark.Kind == UpgradeKind.Reaction || ReactionTable.IsReactionShape(mark) ? LaySource.Reaction : LaySource.Effect;
 
         // ---- Acted on once the frame's blows are done.
 
@@ -207,7 +226,11 @@ namespace Clover.Player
             LastOn = who;
             Shown?.Invoke(who, pair);
             if (upgrades == null) return false;
-            var effects = ReactionTable.EffectsFor(pair, Loadout());
+            // The shape chosen at the rest fire runs instead of the plain reaction, once its Shape mark is learned and in force.
+            var shape = ReactionTable.WornShape(pair, Loadout(), RunState.Unlocked);
+            LastShape = shape != null ? shape.Name : "";
+            if (shape != null) ShapedCount++;
+            var effects = shape != null ? shape.Effects : ReactionTable.EffectsFor(pair, Loadout());
             for (int i = 0; i < effects.Count; i++)
                 if (effects[i].On == UpgradeTrigger.Reacted) upgrades.Fire(effects[i], who, at, LaySource.Reaction);
             // The marks in force that answer this reaction (or any): lifts and duo marks.
@@ -223,14 +246,25 @@ namespace Clover.Player
             var mark = all[news.Mark];
             var trigger = news.Moment == ConditionMoment.Beat ? UpgradeTrigger.ConditionBeat
                 : news.Moment == ConditionMoment.Struck ? UpgradeTrigger.ConditionStruck : UpgradeTrigger.ConditionEnded;
-            var source = mark.Kind == UpgradeKind.Reaction ? LaySource.Reaction : LaySource.Effect;
+            var source = SourceOf(mark);
             Vector3 at = who.transform.position;
-            bool any = false;
             // Nerve Fire is seen at each bite as small jolts over the body, not as one big burst when it begins.
             if (news.Moment == ConditionMoment.Beat && news.Id == Trees.Reactions.Nerves) Forms.AfflictionArt.Jolt(at, news.Count);
             // An end carries the weapon blows the condition took (Burning Sap's weals), for what it does per blow.
             int spent = trigger == UpgradeTrigger.ConditionEnded ? news.Blows : 0;
-            foreach (var effect in mark.Effects)
+            bool any = AnswerFrom(mark.Effects, trigger, news, who, at, source, spent);
+            // A reaction's shape sets conditions of its own; their moments are answered from the shape.
+            if (ReactionTable.IsReactionShape(mark))
+                foreach (var shape in mark.Shapes)
+                    if (shape != null) any |= AnswerFrom(shape.Effects, trigger, news, who, at, source, spent);
+            return any;
+        }
+
+        private bool AnswerFrom(UpgradeEffect[] effects, UpgradeTrigger trigger, in ConditionNews news, Component who, Vector3 at, LaySource source, int spent)
+        {
+            if (effects == null) return false;
+            bool any = false;
+            foreach (var effect in effects)
             {
                 if (effect.On != trigger || effect.Condition != news.Id) continue;
                 if (trigger == UpgradeTrigger.ConditionStruck && !Answers(effect.By, news)) continue;

@@ -20,16 +20,17 @@ namespace Clover.Player
     }
 
     /// <summary>
-    /// The ring as it is: eleven trees round one middle, each mixed branch between its two elements
+    /// The ring as it is: eleven trees round one middle, each mixed branch not reshaped yet between its two elements
     /// (<see cref="UpgradeTree.OnChart(Upgrade)"/>). The trees written as spell branches are drawn on it too, in the
-    /// pattern of <see cref="BranchPattern"/>. Stateless, so one instance serves every menu.
+    /// pattern of <see cref="BranchPattern"/>. The duo branches written into the heart are not (<see cref="HeartLayout"/>):
+    /// their gap on the ring goes empty. Stateless, so one instance serves every menu.
     /// </summary>
     public sealed class RingLayout : IChartLayout
     {
         public static readonly RingLayout Instance = new RingLayout();
 
-        /// <summary>Hidden marks (the reactions) and the Way's and Body's marks are not on the ring.</summary>
-        public bool Draws(Upgrade mark) => mark != null && !mark.IsHidden && (mark.Tree == MarkTree.Element || mark.Tree == MarkTree.Duo);
+        /// <summary>Hidden marks (the reactions), the heart's duo branches and the Way's and Body's marks are not on the ring.</summary>
+        public bool Draws(Upgrade mark) => mark != null && !mark.IsHidden && mark.Tree == MarkTree.Element;
 
         public Vector2 Place(Upgrade mark) => UpgradeTree.OnChart(mark);
 
