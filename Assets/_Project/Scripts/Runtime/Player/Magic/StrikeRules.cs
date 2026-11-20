@@ -15,6 +15,14 @@ namespace Clover.Player.Magic
         public float Seconds = 8f;
         public float DeepMana = 20f;
 
+        /// <summary>
+        /// Whether a strike is the deep strike: L2 with R2 unless two different elements are carried. All in, R2 is the
+        /// element's deep strike (Burnt Offering, Down the Channel ...), given under its Devotion; with one element carried
+        /// it is too (IMPLEMENTATION.md 8.5, question 3), so a Hand with one element has both strikes. In a mix, R2 is the
+        /// second element's infused strike.
+        /// </summary>
+        public static bool IsDeep(bool second, bool mixed) => second && !mixed;
+
         /// <summary>The clock of a strike button: the first (R1) or the second (R2).</summary>
         public static int Clock(bool second) => second ? SpellCooldowns.StrikeSecond : SpellCooldowns.StrikeFirst;
 

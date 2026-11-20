@@ -325,13 +325,11 @@ the next blows on that enemy critical.
 ## light.devotion
 **What it does.** Full Daylight, Light's Devotion: all in on Light only. A mark is no longer spent by blows. Every weapon blow on a Marked enemy is critical until the mark fades, but no mark can be laid on that enemy again for a while after it fades. The fight becomes a rhythm: mark, spend the window in full, wait out the light.
 
-**When it happens.** Only while Light is carried twice (all in). Always on then.
+**When it happens.** Only while Light is carried twice (all in), once bought. Always on then.
 
-**The numbers.** 6 Shards. A mark carries 20 more critical blows (in practice, all of them) and fades in 6 seconds, where it lasted 8. All in, L2 with R2 is the deep strike, The Sun on the Blade.
+**The numbers.** 6 Shards. Blows no longer spend a mark: every weapon blow on a Marked enemy is critical until the mark fades, in 6 seconds where it lasted 8. Once it has faded, that enemy cannot be Marked again for 4 seconds; a mark set off or spent by a spell does not wait. All in, L2 with R2 is the deep strike, The Sun on the Blade.
 
 **Works with.** Seen Plainly, which it grows from, the root, Just Cut and Unblemished (critical blows harder still with Weighed), quick weapons, The Scales.
-
-**Not built yet.** The four seconds after a mark fades in which no mark can be laid on that enemy again: for now it can be Marked again at once.
 
 **Example.** Glare a captain, then cut it for six seconds: every one of a dozen blows lands critical.
 

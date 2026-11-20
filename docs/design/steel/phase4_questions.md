@@ -269,3 +269,46 @@ Each was built with the default given here; every one is easy to change. Added t
 7. **Fever's new healing is not a mark.** The design raises Fever's healing to 40% of poison's and doubles its beat
    now the root heals. Default: Fever unchanged here (it is the kit's surge, not part of the tree); the root's tenth is
    built. Alternative: change the kit's Fever numbers in the same pass as the other surges.
+
+## Task 4.4: Devotion and the RuleBook
+
+1. **R2 with one element carried.** All in, L2 with R2 is the deep strike (20 mana, its own 8 s clock), as the plan says.
+   With one element carried it is still the deep strike, the Phase 1 answer (IMPLEMENTATION.md 8.5, question 3) that
+   P2Probe checks. Default: kept, now named in one place (`StrikeRules.IsDeep`). Alternatives: the deep strike only all
+   in, and with one element R2 is the element's plain infused strike on its own clock; or R2 does nothing with one element.
+2. **Is the deep strike part of the Devotion?** The design lists it under each Devotion ("given under Devotion").
+   Default: all in is enough; the Devotion mark need not be bought. Alternative: the deep strike only once the element's
+   Devotion is bought, and R2 all in without it is the plain infused strike.
+3. **In One Breath's breath, read closely.** Default: for 2.5 s after a perfect guard or dodge the four spell slots are
+   ready; a spell cast in the breath starts its whole wait when the breath ends; the waits of spells not cast run on
+   beneath it (so a spell left alone may still be waiting after); the L2 strikes keep their clocks; spells paid in mana
+   still pay; a perfect guard inside a breath makes it last 2.5 s from then, not 2.5 s more. Alternatives: the breath
+   also frees the strikes; the clocks of spells not cast are paused, or ended, by the breath; a breath inside a breath adds
+   its time.
+4. **Fire Without End's "left alone".** Default: a burn deepens once it has had no Burn laid on it for 4 s, so the enemy
+   you are cutting deepens by your blows and the rest of the room by itself. The rule holds for every burn on every
+   enemy, whoever lit it (a brazier, an enemy's fire). A burn deepened to five by itself does not count as "filled"
+   for the marks that answer a full affliction (only a laying does). Alternatives: "left alone" as not struck by you for
+   4 s; only burns you lit; or a burn that deepens to five counting as filled.
+5. **Water and a burn that never goes out.** "Only death or water ends them": as built, Steam (Soaked meeting Burn)
+   takes half the Burn, as it does for any burn, and a burn set off is gone. Default: as built. Alternative: under Fire
+   Without End, Soaked puts the whole burn out.
+6. **Deep Winter and the thaw.** Chill never fades, but a freeze still spends the Chill as it thaws (and a shatter breaks
+   it), so a thawed enemy is clean. Default: as built. Alternative: a thaw under Deep Winter leaves four Chill behind.
+7. **Full Daylight's rest.** Default: the 4 s in which no mark can be laid come only after a mark fades by itself; a mark
+   spent by a spell or set off can be laid again at once. Its six seconds still come from the stat that shortens every
+   affliction you lay by a quarter (all in on Light that is the mark). Alternative: every way a mark ends starts the rest.
+8. **The Guard Holds: how much comes through.** Default: a blow the stamina cannot pay for is held; the stamina there is
+   goes, and the unpaid share of the blow comes through whole as grey health on top of the usual chip (35%), so with no
+   stamina left the whole blow is grey. Alternatives: only the usual chip whatever the stamina; or the unpaid share as red
+   health, not grey.
+9. **The Devotions still on stand-ins.** On the Wind (`cast-in-motion`: casting inside a dodge or a swing is best built
+   with the editor open, as it touches the controller's order), The Sea Comes In (`in-own-water`), Wood Grows Back
+   (`grows-back`), Stone Remembers (`standing-things`), Tasted Every Herb (`harmless-clouds`, `in-own-ground`) keep their
+   built nearest versions and **Not built yet** lines; Nothing Stays Buried was already its design in data. Default: as
+   they are until their pieces are built. Alternative: build On the Wind's switch next, as the RuleBook's third.
+10. **The RuleBook's other switches.** The book carries every switch IMPLEMENTATION.md 3.10 names (cooldown, mana, guard,
+   dodge, blade, health and stagger modes; perfect guard and dodge open, stamina used, flasks allowed, slot and attunement
+   counts) at their standard values; only the cooldown mode's None, the breath, the unbreakable guard and the affliction
+   rules are read yet. The death intercepts and The Hard Road's shares join with task 6.3. Heartwood's sealed mana bar stays
+   in `ManaPool.Instead` until a task touches it, as the plan allows.

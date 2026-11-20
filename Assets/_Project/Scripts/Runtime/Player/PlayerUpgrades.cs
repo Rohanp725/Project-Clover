@@ -88,6 +88,8 @@ namespace Clover.Player
 
         /// <summary>The player's numbers as the learned upgrades, the surge and timed boons make them.</summary>
         public PlayerStats Stats { get; } = new PlayerStats();
+        /// <summary>The standard rules as the marks in force switch them (IMPLEMENTATION.md 3.10), rebuilt with the stats.</summary>
+        public Growth.RuleBook Rules { get; } = new Growth.RuleBook();
         public int Points => RunState.Points;
         public int Bought { get; private set; }
         /// <summary>
@@ -568,7 +570,7 @@ namespace Clover.Player
             {
                 var mark = catalogue[i];
                 bool learned = RunState.Unlocked.Contains(mark.Id);
-                bool now = learned && MarkRules.InForce(mark, loadout);
+                bool now = MarkRules.InForce(mark, loadout, RunState.Unlocked);
                 // A learned spell of the carried elements may sit in a slot even while it is not in force (a duo spell not slotted yet).
                 bool canSlot = learned && MarkRules.Slottable(mark, loadout);
                 if (now == has[i] && canSlot == offered[i]) continue;
@@ -584,6 +586,7 @@ namespace Clover.Player
 
             for (int i = 0; i < byTrigger.Length; i++) byTrigger[i].Clear();
             Stats.ClearLearned();
+            Rules.Reset();
             int weaponStacks = 0;
             spellsInForce.Clear();
             for (int i = 0; i < offered.Length; i++)
@@ -609,6 +612,7 @@ namespace Clover.Player
                 }
                 foreach (var mod in upgrade.Stats) Stats.AddLearned(mod);
                 foreach (var effect in upgrade.Effects) byTrigger[(int)effect.On].Add(effect);
+                Rules.Apply(upgrade);
                 // A Shape mark adds the rule of the shape its spell wears, and only that one.
                 var worn = SpellBranches.Worn(upgrade, loadout);
                 if (worn != null)
@@ -619,6 +623,7 @@ namespace Clover.Player
                 // Weapon blows lay only the first element's affliction: a second element's root lays nothing with the weapon.
                 if (!upgrade.IsMix && upgrade.Element == first) weaponStacks += upgrade.WeaponStacks;
             }
+            Rules.Publish();
             // The slots look again: a spell no longer in force leaves its slot, a new one fills an empty slot.
             SpellsVersion++;
 

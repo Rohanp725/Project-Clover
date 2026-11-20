@@ -69,6 +69,12 @@ namespace Clover.Player
         public string Gate = "";
         /// <summary>One line for the body sign or look it brings (Heresies, phase 6); empty for none.</summary>
         public string Seen = "";
+        /// <summary>
+        /// The standard rules it switches while in force (a Devotion's now, a Heresy's from phase 6), written into the
+        /// player's <see cref="Growth.RuleBook"/> each time what is in force is worked out; null for none. Written as a
+        /// lambda that captures nothing, so calling it allocates nothing.
+        /// </summary>
+        public Action<Growth.RuleBook> Rules;
         /// <summary>Its place in <see cref="All"/>.</summary>
         public int Index { get; internal set; }
 

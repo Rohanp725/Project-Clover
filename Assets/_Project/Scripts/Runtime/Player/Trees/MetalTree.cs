@@ -329,11 +329,12 @@ namespace Clover.Player.Trees
                 new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.InstantNext, Seconds = 1f } },
                 "Cast it in the perfect dodge's moment, and you are untouchable from the press and To the Blade is ready again.");
 
-            // NEEDS: a guard that never breaks, what the stamina cannot pay coming through as grey health (guard-holds). Until
-            // then the guard costs half the stamina; you take 15% less, and every blow held on the guard notches and sparks.
+            // The RuleBook's guard (task 4.4), read by PlayerDefence: the guard never breaks, and what the stamina cannot pay
+            // comes through as grey health (Guard.Resolve). You take 15% less, and every blow held on the guard notches and sparks.
             to.Add(BranchPattern.Put(new Upgrade { Id = TheGuardHolds, Name = "The Guard Holds", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { EveryCrackRings }, Icon = UpgradeIcons.Shield,
                 Description = "All in on Metal only. Your guard never breaks: a blow your stamina cannot pay for is held anyway, and what it cannot pay comes through as grey health. Every blow held on your guard notches the attacker and throws sparks into it. You take 15% less from everything. Red attacks still need a dodge or a perfect guard.",
-                Stats = new[] { new StatMod(PlayerStat.DamageTaken, -0.15f), new StatMod(PlayerStat.GuardStamina, -0.5f) },
+                Stats = new[] { new StatMod(PlayerStat.DamageTaken, -0.15f) },
+                Rules = book => book.Guard = Growth.GuardMode.Unbreakable,
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Burst, Radius = 0.6f, Damage = 4f, Stagger = 0f, Affliction = S, Stacks = 1, Cooldown = 0.2f } } },
                 BranchPattern.RightCrown));
 

@@ -325,13 +325,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 ## metal.devotion
 **What it does.** The Guard Holds, Metal's Devotion (GAME.md's base buff for Metal, defence, at full strength): all in on Metal only. Your guard never breaks: a blow your stamina cannot pay for is held anyway, and what it cannot pay comes through as grey health. Every blow held on your guard notches the attacker and throws sparks into it. You take less from everything. Red attacks still need a dodge or a perfect guard.
 
-**When it happens.** Only while Metal is carried twice (all in). Always on then.
+**When it happens.** Only while Metal is carried twice (all in), once bought. Always on then.
 
-**The numbers.** 6 Shards. You take 15% less from everything. Each blow held on your guard strikes the attacker for 4 damage and a notch, at most five times a second. As built a blow held on the guard costs half the stamina it did. All in, L2 with R2 is the deep strike, Red Iron.
+**The numbers.** 6 Shards. You take 15% less from everything. A blow your stamina cannot pay for is held: the stamina you have goes, and the share of the blow it could not pay comes through whole as grey health, on top of the usual chip, so with no stamina at all the whole blow is grey. Each blow held on your guard strikes the attacker for 4 damage and a notch, at most five times a second. All in, L2 with R2 is the deep strike, Red Iron.
 
 **Works with.** Every Crack Rings, which it grows from, Sunder, Forged Answer, Hanging Swords (every held blow a perfect guard), Temper.
-
-**Not built yet.** The guard that never breaks, what the stamina cannot pay coming through as grey health: for now the guard costs half as much stamina, so it breaks far later.
 
 **Example.** Hold the guard up in the middle of a pack: every blow that lands on it notches its attacker, and the pour waits for all of them.
 

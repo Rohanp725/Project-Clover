@@ -125,7 +125,9 @@ namespace Clover.Player.Trees
                 Stats = new[] { new StatMod(PlayerStat.AirBlows, 20f), new StatMod(PlayerStat.ManaFromBlows, 1f, StatWhen.AirborneBlow), new StatMod(PlayerStat.WeaponDamage, -0.15f), new StatMod(PlayerStat.WeaponDamage, 0.15f, AfflictionKind.Unsteady) } },
                 BranchPattern.TrunkLeft));
             // NEEDS: spells with no wind-up, cast in the middle of a dodge or a swing without ending it, and a spell cast in a
-            // dodge carrying it 2 m further (task 4.4, the RuleBook). Until then every dodge carries further.
+            // dodge carrying it 2 m further (cast-in-motion: a RuleBook switch that PlayerController's order and PlayerSpells
+            // would read, and casts that leave the dodge and the swing running, which only play can prove). Until then every
+            // dodge carries further.
             to.Add(BranchPattern.Put(new Upgrade { Id = OnTheWind, Name = "On the Wind", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { CarriedFar }, Icon = UpgradeIcons.Wing,
                 Description = "All in on Wind only. Your spells have no wind-up, and can be cast in the middle of a dodge or a swing without ending it. A spell cast in a dodge carries you two metres further along it. Nearly all of the fight is spent in motion.",
                 Stats = new[] { new StatMod(PlayerStat.DodgeDistance, 0.3f) } },

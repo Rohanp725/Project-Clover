@@ -133,13 +133,11 @@ design yet, its **Not built yet** line says what is missing.
 ## ice.devotion
 **What it does.** Deep Winter, Ice's Devotion: all in on Ice only. Chill never fades, and lighting Glaze freezes every enemy within four metres at once. No Chill is ever wasted, so you can spread it over a whole room and come back for each in turn.
 
-**When it happens.** Only while Ice is carried twice (all in). The freeze comes each time Glaze is lit.
+**When it happens.** Only while Ice is carried twice (all in), once bought. The freeze comes each time Glaze is lit.
 
-**The numbers.** 6 Shards. Chill lasts three times as long (18 seconds where it lasted 6). Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. All in, L2 with R2 is the deep strike, Ice Through: the spike freezes the enemy at once if it carries three Chill or more.
+**The numbers.** 6 Shards. Chill no longer runs down on any enemy: it stays until a freeze thaws it away or a shatter breaks it. Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. All in, L2 with R2 is the deep strike, Ice Through: the spike freezes the enemy at once if it carries three Chill or more.
 
 **Works with.** Every spell of the tree; Splinter Ward and The World Holds Still, which answer Glaze too; Flying Shards, for the room frozen at once.
-
-**Not built yet.** Chill that never fades by itself: for now it lasts three times as long.
 
 **Example.** Chill four soldiers two deep each, step into the middle and light Glaze: all four are Frozen, and every heavy blow breaks one.
 

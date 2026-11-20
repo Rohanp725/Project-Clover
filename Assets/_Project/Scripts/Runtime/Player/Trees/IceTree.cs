@@ -124,10 +124,11 @@ namespace Clover.Player.Trees
                 Description = "Shattering strikes three times as hard. Chill no longer slows anyone.",
                 Stats = new[] { new StatMod(PlayerStat.ShatterDamage, 2f) } },
                 BranchPattern.TrunkLeft));
-            // NEEDS: Chill that never fades (fades-never, the RuleBook's switch of task 4.4). Until then it lasts three times as long.
+            // The RuleBook's affliction rules (task 4.4), read by every enemy's set: Chill never fades by itself (a freeze still
+            // spends it as it thaws, and a shatter). Lighting Glaze lays full Chill within 4 m, which freezes.
             to.Add(BranchPattern.Put(new Upgrade { Id = DeepWinter, Name = "Deep Winter", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { ColdSettles }, Icon = UpgradeIcons.Moon,
                 Description = "All in on Ice only. Chill never fades, and lighting Glaze freezes every enemy within four metres at once. No Chill is ever wasted: spread it over the whole room and come back for each in turn.",
-                Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, 2f) },
+                Rules = book => book.Afflictions.Keep(AfflictionKind.Chill),
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 4f, Affliction = AfflictionKind.Chill, Stacks = 5 } } },
                 BranchPattern.TrunkRight));
 

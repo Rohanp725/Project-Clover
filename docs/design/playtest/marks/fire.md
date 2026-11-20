@@ -166,15 +166,13 @@ design yet, its **Not built yet** line says what is missing.
 **Example.** Light Kindle at the start of a fight: you are at eight Heat straight away, swinging 15% faster for 48% more, as long as nothing touches you.
 
 ## fire.devotion
-**What it does.** Fire Without End, Fire's Devotion: all in on Fire only. Burns last far longer, and a burn left alone deepens by itself. Light everything once, then fight the one in front of you while the rest of the room cooks.
+**What it does.** Fire Without End, Fire's Devotion: all in on Fire only. Burns never go out by themselves; only death or water ends them. A burn left alone deepens by itself. Light everything once, then fight the one in front of you while the rest of the room cooks.
 
-**When it happens.** Only while Fire is carried twice (all in). Then always.
+**When it happens.** Only while Fire is carried twice (all in), once bought. Then always, on every burning enemy.
 
-**The numbers.** 6 Shards. Burns last twice as long. Every 4 seconds, the burning enemy you face gains a stack of Burn, up to five. All in, L2 with R2 is the deep strike, Burnt Offering.
+**The numbers.** 6 Shards. A burn's time no longer runs down. Every burning enemy that has had no Burn laid on it for 4 seconds gains a stack, and another 4 seconds later another, up to five. A burn set off still goes, and Steam (Soaked meeting Burn) still takes half of it. All in, L2 with R2 is the deep strike, Burnt Offering: 20 mana on its own 8-second clock.
 
-**Works with.** Cinder, Flame Wave, Catching Fire, and the deep strike.
-
-**Not built yet.** Burns that never go out by themselves, and every burn near you deepening, not only the one faced.
+**Works with.** Cinder, Flame Wave, Catching Fire, Breath of the Lioness, which sets a burn off, and the deep strike, whose pillar sets off the burn it lands on.
 
 **Example.** Flame Wave across a room, then a duel with one soldier: the rest are at five when you turn round.
 
