@@ -1,6 +1,6 @@
 # Element looks (batches 1 and 2)
 
-152 looks, 3060 parts (961 ribbons), 17326 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+199 looks, 3715 parts (1179 ribbons), 23675 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
@@ -24,7 +24,7 @@
 | supercooled@1 | 1.5 s | body | 0 | 0 | 1.50 s | - |
 | supercooled@2 | 1.5 s | body | 0 | 0 | 1.50 s | - |
 | quickening@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| quickening | 1.6 s | body | 38 | 0 | 1.60 s | - |
+| quickening | 1.6 s | body | 39 | 0 | 1.60 s | - |
 | quickening@1 | 1.6 s | body | 2 | 0 | 1.60 s | - |
 | quickening@2 | 1.6 s | body | 2 | 0 | 1.60 s | - |
 | quickening@3 | 1.6 s | body | 2 | 0 | 1.60 s | - |
@@ -72,7 +72,7 @@
 | capsize@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | capsize@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | winter_seed@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| winter_seed | 1.6 s | body | 33 | 0 | 0.15 s | 5 bands from -0.30 s, every 0.00 s, 0.01 s each |
+| winter_seed | 1.6 s | body | 33 | 0 | 0.15 s | - |
 | winter_seed@1 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | winter_seed@2 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | winter_seed@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
@@ -191,7 +191,7 @@
 | chokedamp@3 | 1.6 s | body | 10 | 0 | 1.16 s | - |
 | chokedamp@4 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | red_hot@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| red_hot | 1.6 s | body | 62 | 0 | -0.05 s | - |
+| red_hot | 1.6 s | body | 26 | 0 | -0.05 s | - |
 | red_hot@1 | 1.6 s | body | 15 | 0 | 1.15 s | - |
 | red_hot@2 | 1.6 s | body | 15 | 0 | 1.19 s | - |
 | red_hot@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
@@ -202,9 +202,9 @@
 | the_bolt_runs_true@3 | 1.6 s | body | 3 | 3 | 0.91 s | - |
 | the_bolt_runs_true@4 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | breath_taken@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
-| breath_taken | 1.6 s | body | 24 | 15 | 0.15 s | - |
-| breath_taken@1 | 1.6 s | body | 24 | 15 | 0.42 s | - |
-| breath_taken@2 | 1.6 s | body | 24 | 15 | 0.69 s | - |
+| breath_taken | 1.6 s | body | 29 | 22 | 0.15 s | - |
+| breath_taken@1 | 1.6 s | body | 29 | 22 | 0.42 s | - |
+| breath_taken@2 | 1.6 s | body | 29 | 22 | 0.69 s | - |
 | breath_taken@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | venom_rime@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
 | venom_rime | 1.6 s | body | 42 | 0 | -0.30 s | 5 bands from 1.05 s, every 0.05 s, 0.12 s each |
@@ -275,7 +275,7 @@
 | life_regrowth | 2.0 s | player | 29 | 0 | 0.70 s | - |
 | dark_cursed | 2.2 s | body | 28 | 0 | 0.25 s | - |
 | dark_hunger | 2.0 s | player | 7 | 0 | 0.25 s | - |
-| ice_chill | 2.2 s | body | 15 | 0 | 0.85 s | 5 bands from 0.10 s, every 0.10 s, 0.09 s each |
+| ice_chill | 2.2 s | body | 14 | 0 | 0.85 s | 5 bands from 0.10 s, every 0.10 s, 0.09 s each |
 | ice_rime | 2.4 s | body | 15 | 0 | 2.40 s | 5 bands from 0.05 s, every 0.30 s, 0.45 s each |
 | earth_tremor | 2.4 s | body | 28 | 0 | 0.10 s | - |
 | lightning_static | 2.2 s | body | 13 | 7 | 0.25 s | - |
@@ -286,3 +286,54 @@
 | wind_unsteady_1 | 2.2 s | body | 8 | 7 | 0.22 s | - |
 | wind_unsteady_5 | 1.8 s | body | 15 | 10 | 0.22 s | - |
 | wind_strike | 1.2 s | player | 17 | 12 | 1.20 s | - |
+| e3_fire_blade_hit1 | 0.6 s | body | 7 | 0 | 0.60 s | - |
+| e3_fire_blade_hit2 | 0.6 s | body | 7 | 0 | 0.60 s | - |
+| e3_fire_blade_hit3 | 0.6 s | body | 28 | 0 | 0.33 s | - |
+| e3_ice_blade_hit1 | 0.6 s | body | 8 | 3 | 0.60 s | - |
+| e3_ice_blade_hit2 | 0.6 s | body | 8 | 3 | 0.60 s | - |
+| e3_ice_blade_hit3 | 0.6 s | body | 10 | 0 | 0.60 s | - |
+| e3_water_blade_hit1 | 0.6 s | body | 10 | 2 | 0.05 s | - |
+| e3_water_blade_hit2 | 0.6 s | body | 9 | 2 | 0.05 s | - |
+| e3_water_blade_hit3 | 0.6 s | body | 9 | 2 | 0.05 s | - |
+| e3_metal_blade_hit1 | 0.6 s | body | 8 | 0 | 0.03 s | - |
+| e3_metal_blade_hit2 | 0.6 s | body | 8 | 0 | 0.03 s | - |
+| e3_metal_blade_hit3 | 0.6 s | body | 8 | 0 | 0.03 s | - |
+| e3_earth_blade_hit1 | 0.6 s | body | 10 | 0 | 0.60 s | - |
+| e3_earth_blade_hit2 | 0.6 s | body | 9 | 0 | 0.60 s | - |
+| e3_earth_blade_hit3 | 0.6 s | body | 14 | 0 | 0.60 s | - |
+| e3_life_blade_hit1 | 0.6 s | body | 4 | 0 | 0.60 s | - |
+| e3_life_blade_hit2 | 0.6 s | body | 6 | 0 | 0.60 s | - |
+| e3_life_blade_hit3 | 0.6 s | body | 14 | 0 | 0.60 s | - |
+| e3_light_blade_hit1 | 0.6 s | body | 7 | 2 | 0.03 s | - |
+| e3_light_blade_hit2 | 0.6 s | body | 7 | 2 | 0.03 s | - |
+| e3_light_blade_hit3 | 0.6 s | body | 8 | 3 | 0.03 s | - |
+| e3_dark_blade_hit1 | 0.6 s | body | 3 | 3 | 0.03 s | - |
+| e3_dark_blade_hit2 | 0.6 s | body | 3 | 3 | 0.03 s | - |
+| e3_dark_blade_hit3 | 0.6 s | body | 13 | 4 | 0.03 s | - |
+| e3_poison_blade_hit1 | 0.6 s | body | 4 | 0 | 0.60 s | - |
+| e3_poison_blade_hit2 | 0.6 s | body | 3 | 0 | 0.60 s | - |
+| e3_poison_blade_hit3 | 0.6 s | body | 15 | 0 | 0.23 s | - |
+| e3_wind_blade_hit1 | 0.6 s | body | 7 | 4 | -0.01 s | - |
+| e3_wind_blade_hit2 | 0.6 s | body | 7 | 4 | -0.04 s | - |
+| e3_wind_blade_hit3 | 0.6 s | body | 13 | 10 | 0.00 s | - |
+| e3_flame_wave | 1.4 s | body | 87 | 37 | 1.40 s | - |
+| e3_flame_wave@b | 1.3 s | body | 17 | 0 | 0.25 s | - |
+| e3_riptide | 1.5 s | body | 37 | 3 | 0.25 s | - |
+| e3_riptide@b | 0.3 s | body | 4 | 0 | 0.10 s | - |
+| e3_miasma | 1.5 s | body | 18 | 0 | 1.50 s | - |
+| e3_miasma@b | 0.8 s | body | 6 | 0 | 0.00 s | - |
+| e3_briar_patch | 1.5 s | body | 22 | 0 | 1.50 s | - |
+| e3_briar_patch@b | 1.1 s | body | 5 | 1 | 1.05 s | - |
+| e3_frost_bite | 1.5 s | body | 0 | 0 | 1.50 s | - |
+| e3_frost_bite@b | 1.4 s | body | 10 | 0 | 0.00 s | - |
+| e3_cutting_wind | 1.5 s | body | 41 | 41 | 0.07 s | - |
+| e3_cutting_wind@b | 1.4 s | body | 6 | 4 | 0.00 s | - |
+| e3_taken | 1.5 s | body | 9 | 9 | 0.05 s | - |
+| e3_taken@b | 1.4 s | body | 7 | 1 | 1.35 s | - |
+| e3_grown_into_it | 1.5 s | body | 0 | 0 | 1.50 s | - |
+| e3_grown_into_it@b | 1.4 s | body | 8 | 1 | 1.43 s | - |
+| e3_broken_ground | 1.5 s | body | 25 | 1 | 0.16 s | - |
+| e3_broken_ground@b | 1.5 s | body | 0 | 0 | 1.50 s | - |
+| e3_tailwind | 1.6 s | body | 20 | 15 | 0.00 s | - |
+| red_hot@+ | 1.5 s | body | 87 | 37 | 1.55 s | - |
+| blade sheaths | - | blade | 8 | - | - | - |
