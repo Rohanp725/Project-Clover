@@ -137,7 +137,7 @@ namespace Clover.Gameplay
             // A burning body burns in real flame every frame, not in pieces thrown a few times a second; a flame gone
             // live (Flashover) is its reaction's alone.
             int burn = watched.Stacks(AfflictionKind.Burn);
-            if (burn > 0 && !watched.Conditions.Has(ConditionFlags.FlameLive)) Clover.Player.Forms.BodyFlames.Keep(transform.parent, burn);
+            if (burn > 0 && !watched.Conditions.Has(ConditionFlags.FlameLive)) Clover.Player.Forms.BodyFlames.Keep(transform.parent, burn, watched.Conditions.KeepsKind(AfflictionKind.Burn));
             untilLook -= Time.deltaTime;
             if (untilLook > 0f) return;
             for (int tried = 1; tried < Afflictions.Count; tried++)

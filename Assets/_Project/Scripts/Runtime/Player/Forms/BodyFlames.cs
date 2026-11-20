@@ -47,12 +47,17 @@ namespace Clover.Player.Forms
         private static readonly int WidthId = Shader.PropertyToID("_FlameWidth");
         private static readonly int WallId = Shader.PropertyToID("_Wall");
         private static readonly int RiseId = Shader.PropertyToID("_Rise");
+        private static readonly int BlackId = Shader.PropertyToID("_Black");
+        /// <summary>Seconds a body's fire takes to turn black when the curse takes it (Smoulder), and back.</summary>
+        public const float Blackens = 0.5f;
 
         private Material material;
         private Mesh[] meshes;
         private MeshRenderer[] shown;
         private Transform[] bodies;
         private float[] heat, wanted, keptAt;
+        private float[] blackness;
+        private bool[] blackWanted;
         private int burning;
         private MaterialPropertyBlock block;
 
@@ -74,6 +79,8 @@ namespace Clover.Player.Forms
             heat = new float[Most];
             wanted = new float[Most];
             keptAt = new float[Most];
+            blackWanted = new bool[Most];
+            blackness = new float[Most];
             for (int i = 0; i < Most; i++)
             {
                 var part = new GameObject("Body Flames");
@@ -115,15 +122,21 @@ namespace Clover.Player.Forms
         /// Keeps a body burning this frame with a Burn <paramref name="depth"/> deep. False when burning bodies are not
         /// drawn this way (the caller draws its old fire).
         /// </summary>
-        public static bool Keep(Transform body, int depth)
+        public static bool Keep(Transform body, int depth) => Keep(body, depth, false);
+
+        /// <summary>
+        /// The same, burning black when <paramref name="black"/> (Smoulder, the owner's review of 2026-11-19 and 2026-11-20:
+        /// "the flames turning black but still burning"): the same flame, taken by the curse, as long as it is kept so.
+        /// </summary>
+        public static bool Keep(Transform body, int depth, bool black)
         {
             if (!Ready || body == null) return false;
             // The Blender worker's flame tongues (fire_burn), when they are the Burn chosen (AfflictionArt.BurnStyle).
             if (AfflictionArt.BurnStyle == AfflictionArt.KitLook) return ElementLooks.Keep(ElementLooks.Find(AfflictionArt.BurnKitLook), body);
-            return instance.KeepBody(body, depth);
+            return instance.KeepBody(body, depth, black);
         }
 
-        private bool KeepBody(Transform body, int depth)
+        private bool KeepBody(Transform body, int depth, bool black)
         {
             int slot = -1, free = -1, dimmest = -1;
             for (int i = 0; i < Most; i++)
@@ -140,8 +153,10 @@ namespace Clover.Player.Forms
                 if (ReferenceEquals(bodies[slot], null)) burning++;
                 bodies[slot] = body;
                 heat[slot] = 0f;
+                blackness[slot] = black ? 1f : 0f;
             }
             wanted[slot] = HeatOf(depth);
+            blackWanted[slot] = black;
             keptAt[slot] = Time.time;
             return true;
         }
@@ -186,6 +201,8 @@ namespace Clover.Player.Forms
                 block.SetFloat(WidthId, FlameWidth);
                 block.SetFloat(WallId, Mathf.Clamp01((heat[i] - 0.8f) * 2.5f) * 0.6f);
                 block.SetFloat(RiseId, 1f);
+                blackness[i] = Mathf.MoveTowards(blackness[i], blackWanted[i] ? 1f : 0f, deltaTime / Blackens);
+                block.SetFloat(BlackId, blackness[i]);
                 shown[i].SetPropertyBlock(block);
                 if (!shown[i].enabled) shown[i].enabled = true;
             }

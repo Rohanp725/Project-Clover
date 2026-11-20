@@ -821,7 +821,7 @@ namespace Clover.Gameplay
                 // A flame gone live (Flashover) is all its reaction's violet: no plain fire off the body beside it.
                 bool plainFire = wasBurning && !Afflictions.Conditions.Has(ConditionFlags.FlameLive);
                 // The body burns in real flame (the owner's review, 2026-11-20); the old puffs only where it cannot.
-                bool realFlame = plainFire && Clover.Player.Forms.BodyFlames.Keep(transform, Afflictions.Stacks(AfflictionKind.Burn));
+                bool realFlame = plainFire && Clover.Player.Forms.BodyFlames.Keep(transform, Afflictions.Stacks(AfflictionKind.Burn), Afflictions.Conditions.KeepsKind(AfflictionKind.Burn));
                 // What else it carries plays its second-pass look on it (Soaked's drop, Sundered's dagger, Chill's ice...).
                 Clover.Player.Forms.AfflictionArt.KeepLooks(Afflictions, transform);
                 if (plainFire && untilEmber <= 0f)

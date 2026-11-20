@@ -17,6 +17,7 @@ Shader "Clover/FlameField"
         _FlameWidth ("Flame width (metres)", Float) = 0.7
         _Wall ("Wall of flame", Float) = 0
         _Rise ("Risen (0 to 1)", Range(0, 1)) = 1
+        _Black ("Black flame (Smoulder: the curse has taken the fire)", Range(0, 1)) = 0
     }
 
     SubShader
@@ -46,6 +47,7 @@ Shader "Clover/FlameField"
                 float _FlameWidth;
                 half _Wall;
                 half _Rise;
+                half _Black;
             CBUFFER_END
 
             float4 _ScorchShade;
@@ -141,6 +143,10 @@ Shader "Clover/FlameField"
                 half b2 = smoothstep(0.5, 0.53, heat);
                 half b3 = smoothstep(lerp(0.84, 0.76, _Wall), lerp(0.87, 0.79, _Wall), heat);
                 half3 fire = lerp(lerp(lerp(half3(0.13, 0.06, 0.045), half3(1.0, 0.13, 0.025), b1), half3(2.0, 0.52, 0.06), b2), half3(2.5, 1.3, 0.26), b3);
+                // Black flame (Smoulder): the same tongues, licking and flickering, drawn near-black with a deep violet
+                // fringe and a violet heart, so the fire still reads as fire that the curse has taken.
+                half3 black = lerp(lerp(lerp(half3(0.02, 0.005, 0.03), half3(0.05, 0.012, 0.08), b1), half3(0.22, 0.05, 0.42), b2), half3(0.45, 0.14, 0.8), b3);
+                fire = lerp(fire, black, _Black);
                 half alpha = saturate(smoothstep(0.1, 0.14, heat) * lerp(0.7, 1.0, b1)) * _Fade;
                 clip(alpha - 0.01);
                 return half4(fire, alpha);
