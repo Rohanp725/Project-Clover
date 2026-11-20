@@ -17,11 +17,11 @@ namespace Clover.Player.Forms
         /// Pieces drawn at once over every look; looks past that go without their later pieces. Twelve afflicted enemies
         /// with two looks each and a surge drew 293 at most (the crowd profile of 2026-11-20).
         /// </summary>
-        public const int PoolSize = 384;
+        public const int PoolSize = 448;
         /// <summary>Looks playing at once.</summary>
         public const int MostShowings = 48;
-        /// <summary>The most pieces one look has (Overdrive's arcs are seventy ribbons, each seen a tenth of a second).</summary>
-        public const int MostParts = 96;
+        /// <summary>The most pieces one look has (Carried Embers' fire whirl and Thunder Gust's funnel are a hundred and more).</summary>
+        public const int MostParts = 160;
         /// <summary>Seconds a kept look waits unkept before it goes, and how long it takes to go.</summary>
         public const float Linger = 0.25f, Going = 0.25f;
         private const float FlatLift = 0.035f;
@@ -84,7 +84,16 @@ namespace Clover.Player.Forms
         private int searchFrom;
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetStatics() => instance = null;
+        private static void ResetStatics()
+        {
+            instance = null;
+            for (int i = 0; i < MostHidden; i++)
+            {
+                hiddenOn[i] = null;
+                hiddenKinds[i] = 0;
+                hiddenUntil[i] = 0f;
+            }
+        }
 
         /// <summary>The element art hands over the looks and the pool is made (once).</summary>
         public void Configure(ElementLookSet looks)
@@ -172,6 +181,35 @@ namespace Clover.Player.Forms
             return true;
         }
 
+        // Bodies whose afflictions' looks are hidden while a reaction's own look plays on them: the body, the kinds, until when.
+        private const int MostHidden = 16;
+        private static readonly Transform[] hiddenOn = new Transform[MostHidden];
+        private static readonly int[] hiddenKinds = new int[MostHidden];
+        private static readonly float[] hiddenUntil = new float[MostHidden];
+
+        private static void Hide(Transform body, int kinds, float seconds)
+        {
+            int slot = -1;
+            for (int i = 0; i < MostHidden; i++)
+            {
+                if (ReferenceEquals(hiddenOn[i], body)) { slot = i; break; }
+                if (slot < 0 && (hiddenOn[i] == null || Time.time >= hiddenUntil[i])) slot = i;
+            }
+            if (slot < 0) slot = 0;
+            hiddenOn[slot] = body;
+            hiddenKinds[slot] = kinds;
+            hiddenUntil[slot] = Time.time + seconds;
+        }
+
+        /// <summary>True while a reaction's own look hides this affliction's look on this body.</summary>
+        public static bool Hides(Transform body, int kind)
+        {
+            if (body == null) return false;
+            for (int i = 0; i < MostHidden; i++)
+                if (ReferenceEquals(hiddenOn[i], body)) return Time.time < hiddenUntil[i] && (hiddenKinds[i] & (1 << kind)) != 0;
+            return false;
+        }
+
         // What a reaction's look on another body may land on: enemies (and training dummies) found near where that body stood.
         private static readonly Collider[] Near = new Collider[24];
         private static readonly Transform[] Taken = new Transform[8];
@@ -183,11 +221,19 @@ namespace Clover.Player.Forms
         /// nearest where that body stood, when one stands within reach of it (a chain or an area reaching others). False
         /// when the reaction has no such look. Allocates nothing.
         /// </summary>
-        public static bool PlayReaction(string slug, Transform body, Vector3 away, Transform player)
+        public static bool PlayReaction(string slug, Transform body, Vector3 away, Transform player) => PlayReaction(slug, body, away, player, 0);
+
+        /// <summary>
+        /// The same, hiding on the body struck the looks of the afflictions the reaction spends (<paramref name="spends"/>,
+        /// one bit a kind) for as long as its own look plays: the reaction's look shows what became of them (the
+        /// coordinator, 2026-11-20: Seeded's pods sat over Quickening's bloom).
+        /// </summary>
+        public static bool PlayReaction(string slug, Transform body, Vector3 away, Transform player, int spends)
         {
             if (!Ready || body == null) return false;
             int main = instance.set.Find(slug);
             if (main < 0) return false;
+            if (spends != 0) Hide(body, spends, instance.set.Looks[main].Seconds);
             away.y = 0f;
             float yaw = away.sqrMagnitude > 0.0001f ? Mathf.Atan2(away.x, away.z) * Mathf.Rad2Deg : instance.set.Looks[main].FacingYaw;
             Play(main, body, yaw);

@@ -30,7 +30,8 @@ namespace Clover.Player
             {
                 // The bespoke look made for the pair (the Blender worker's combos 4, the owner's review of 2026-11-20: "breaking
                 // away from the copy paste effect concept"), where it has been built; else the earlier designed or composed look.
-                if (body != null && Forms.ElementLooks.PlayReaction(SlugOf(pair), body, away, player))
+                if (body != null && Forms.ElementLooks.PlayReaction(SlugOf(pair), body, away, player,
+                    (1 << (int)AfflictionPairs.First(pair)) | (1 << (int)AfflictionPairs.Second(pair))))
                 {
                     Bespoke++;
                     return;
@@ -42,6 +43,18 @@ namespace Clover.Player
                 return;
             }
             Vfx.Play(VfxKind.TintPuff, at + Vector3.up * 1.3f, Vector3.up, 1.1f, Colour(pair));
+        }
+
+        /// <summary>
+        /// True when a reaction mark's pair has a bespoke look built (combos 4): its own bursts and lanes are then drawn by
+        /// that look, not by a plain burst of its element (Fire Medicine's fireball, Smoulder's orange flare, 2026-11-20).
+        /// </summary>
+        public static bool HasBespoke(Upgrade owner)
+        {
+            if (owner == null || owner.Kind != UpgradeKind.Reaction || !Forms.ElementArt.Ready) return false;
+            for (int pair = 0; pair < AfflictionPairs.Count; pair++)
+                if (ReferenceEquals(owner.Id, AfflictionPairs.Id(pair)) || owner.Id == AfflictionPairs.Id(pair)) return Forms.ElementLooks.Find(SlugOf(pair)) >= 0;
+            return false;
         }
 
         /// <summary>Reactions drawn by their bespoke look this play, for probes.</summary>
@@ -64,10 +77,22 @@ namespace Clover.Player
                         if (char.IsLetterOrDigit(c)) text.Append(c);
                         else if (c == ' ' || c == '-') text.Append('_');
                     }
-                    slugs[i] = text.ToString();
+                    slugs[i] = Renamed(text.ToString());
                 }
             }
             return pair >= 0 && pair < slugs.Length ? slugs[pair] : "";
+        }
+
+        // Reactions the look-dev renamed (staging/blender/2026-11-19_combos3/notes.md): their looks are under the new names.
+        private static string Renamed(string slug)
+        {
+            switch (slug)
+            {
+                case "windthrow": return "seed_storm";
+                case "split_rock": return "root_snare";
+                case "burning_sap": return "sun_sap";
+                default: return slug;
+            }
         }
 
         // Domain reload is off: the count starts again each play (the slugs are fixed).

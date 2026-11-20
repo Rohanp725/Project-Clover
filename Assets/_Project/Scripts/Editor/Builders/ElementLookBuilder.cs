@@ -38,7 +38,12 @@ namespace Clover.EditorTools
         /// <summary>The reactions built from combos 4 so far; the rest keep their earlier looks. Thunder Gust and Carried Embers wait for their redo.</summary>
         public static readonly string[] ReactionsBuilt =
         {
-            "supercooled", "quickening", "drowned_weight", "winter_seed", "lightning_flower", "seized", "rust", "smoulder",
+            // Group A.
+            "thunder_gust", "carried_embers", "supercooled", "quickening", "drowned_weight", "winter_seed", "lightning_flower", "seized", "rust", "smoulder",
+            // Group B.
+            "seed_storm", "red_hot", "breath_taken", "live_iron", "golden_feathers", "rime", "flashover", "kindling_point", "quicksilver",
+            // Group C.
+            "chokedamp", "rot_roots", "fire_medicine", "nerve_fire", "shut_in_the_dark", "sleet_charge", "capsize", "the_ground_gives", "steam",
         };
         public const string BrazierSetPath = ElementArtBuilder.Folder + "/brazier_looks.asset";
         private const string BrazierKit = "vfx_brazier_kit.fbx";
@@ -137,6 +142,46 @@ namespace Clover.EditorTools
             ["r4_blackflame_core"] = new ReactionArtBuilder.Paint(0.3f, 0.08f, 0.55f),
             ["r4_blackflake"] = new ReactionArtBuilder.Paint(0.06f, 0.02f, 0.08f),
             ["r4_coalglow"] = new ReactionArtBuilder.Paint(0.55f, 0.08f, 0.04f, 0.7f, 1f, true),
+            // Combos 4, groups B and C and the redone Thunder Gust and Carried Embers, matched to the Blender worker's strips:
+            // nothing white (steam and breath a pale grey-blue, white-hot a hot yellow), smoke and soot near black.
+            ["r4_blackwind"] = new ReactionArtBuilder.Paint(0.07f, 0.05f, 0.1f),
+            ["r4_bolt_bright"] = new ReactionArtBuilder.Paint(0.42f, 0.85f, 1f),
+            ["r4_breath"] = new ReactionArtBuilder.Paint(0.58f, 0.63f, 0.7f, 0.6f, 1f, true),
+            ["r4_char_lane"] = new ReactionArtBuilder.Paint(0.12f, 0.05f, 0.03f),
+            ["r4_char_glow"] = new ReactionArtBuilder.Paint(0.85f, 0.26f, 0.05f),
+            ["r4_cloud_burning"] = new ReactionArtBuilder.Paint(0.92f, 0.36f, 0.06f),
+            ["r4_crack"] = new ReactionArtBuilder.Paint(0.08f, 0.06f, 0.05f, 0.85f, 1f, true),
+            ["r4_damp_stain"] = new ReactionArtBuilder.Paint(0.14f, 0.24f, 0.06f, 0.6f, 1f, true),
+            ["r4_dirt"] = new ReactionArtBuilder.Paint(0.36f, 0.24f, 0.13f),
+            ["r4_feather_gold"] = new ReactionArtBuilder.Paint(0.95f, 0.66f, 0.16f),
+            ["r4_feather_pale"] = new ReactionArtBuilder.Paint(0.86f, 0.76f, 0.5f),
+            ["r4_fire_ribbon"] = new ReactionArtBuilder.Paint(1f, 0.42f, 0.05f),
+            ["r4_fire_ribbon_red"] = new ReactionArtBuilder.Paint(0.85f, 0.12f, 0.03f),
+            ["r4_frost_streak"] = new ReactionArtBuilder.Paint(0.3f, 0.6f, 1f),
+            ["r4_jar"] = new ReactionArtBuilder.Paint(0.55f, 0.32f, 0.18f),
+            ["r4_livesteel"] = new ReactionArtBuilder.Paint(0.45f, 0.6f, 0.75f),
+            ["r4_mercury"] = new ReactionArtBuilder.Paint(0.62f, 0.65f, 0.7f),
+            ["r4_mudwater"] = new ReactionArtBuilder.Paint(0.3f, 0.24f, 0.14f),
+            ["r4_plasmacore"] = new ReactionArtBuilder.Paint(0.72f, 0.48f, 1f),
+            ["r4_plasmaflame"] = new ReactionArtBuilder.Paint(0.55f, 0.2f, 1f),
+            ["r4_redhot"] = new ReactionArtBuilder.Paint(1f, 0.32f, 0.05f),
+            ["r4_root"] = new ReactionArtBuilder.Paint(0.32f, 0.2f, 0.1f),
+            ["r4_rotroot"] = new ReactionArtBuilder.Paint(0.2f, 0.18f, 0.08f),
+            ["r4_scorch_violet"] = new ReactionArtBuilder.Paint(0.12f, 0.04f, 0.18f, 0.6f, 1f, true),
+            ["r4_smoke"] = new ReactionArtBuilder.Paint(0.16f, 0.14f, 0.14f),
+            ["r4_smoke_soft"] = new ReactionArtBuilder.Paint(0.28f, 0.25f, 0.24f, 0.5f, 1f, true),
+            ["r4_soot"] = new ReactionArtBuilder.Paint(0.05f, 0.04f, 0.04f),
+            ["r4_spark_cyan"] = new ReactionArtBuilder.Paint(0.3f, 0.9f, 1f),
+            ["r4_steam"] = new ReactionArtBuilder.Paint(0.58f, 0.64f, 0.72f, 0.5f, 1f, true),
+            ["r4_storm_lit"] = new ReactionArtBuilder.Paint(0.4f, 0.45f, 1f),
+            ["r4_stormband"] = new ReactionArtBuilder.Paint(0.45f, 0.5f, 0.64f),
+            ["r4_stormband_dark"] = new ReactionArtBuilder.Paint(0.18f, 0.2f, 0.32f),
+            ["r4_stormcloud"] = new ReactionArtBuilder.Paint(0.22f, 0.22f, 0.3f),
+            ["r4_sunbead"] = new ReactionArtBuilder.Paint(1f, 0.74f, 0.24f),
+            ["r4_venom_blade"] = new ReactionArtBuilder.Paint(0.4f, 0.75f, 0.15f),
+            ["r4_wetsand"] = new ReactionArtBuilder.Paint(0.42f, 0.34f, 0.2f),
+            ["r4_whirl_core"] = new ReactionArtBuilder.Paint(1f, 0.64f, 0.15f),
+            ["r4_whitehot"] = new ReactionArtBuilder.Paint(1f, 0.82f, 0.42f),
         };
 
         /// <summary>
@@ -176,6 +221,11 @@ namespace Clover.EditorTools
             ["supercooled|r4_frost_bed"] = new ReactionArtBuilder.Paint(0.12f, 0.36f, 0.8f, 0.45f, 1f, true),
             ["brazier_ice|m_vfx_ice_frost"] = new ReactionArtBuilder.Paint(0.22f, 0.5f, 0.9f, 0.6f, 1f, true),
             ["brazier_ice|m_vfx_ice"] = new ReactionArtBuilder.Paint(0.15f, 0.45f, 1f),
+            // Smoulder (the coordinator's check of its film, 2026-11-20): its flare at the end burned in plain fire colours
+            // over the black; every flame of it is the curse's black flame, the flare too.
+            ["smoulder|m3_flame"] = new ReactionArtBuilder.Paint(0.035f, 0.01f, 0.05f),
+            ["smoulder|m3_flame_core"] = new ReactionArtBuilder.Paint(0.3f, 0.08f, 0.55f),
+            ["smoulder|m_vfx_fire_ember"] = new ReactionArtBuilder.Paint(0.3f, 0.08f, 0.55f),
             ["light_clarity|m2_light_white"] = new ReactionArtBuilder.Paint(1f, 0.74f, 0.28f),
             // The films of the rebuild (2026-11-20): Wellspring's pool read pale grey (water, not foam: a deep see-through
             // teal), Hunger's burning crescent and bead white (a hot violet), Temper's glints white (a pale steel).
@@ -910,7 +960,7 @@ namespace Clover.EditorTools
             }
             // A flame tongue or lick is banded from its foot up, hottest at the foot (notes.md, "Fire: Burn").
             // (Only in fire's own paint: Smoulder's black flame keeps its black.)
-            if ((filter.name == "vfxe2_flame" || filter.name == "vfxe2_flame_lick") && bare.StartsWith("m3_flame") && vertices.Length > 0)
+            if ((filter.name == "vfxe2_flame" || filter.name == "vfxe2_flame_lick") && bare.StartsWith("m3_flame") && !material.Contains("|") && vertices.Length > 0)
             {
                 float low = float.MaxValue, high = float.MinValue;
                 foreach (var v in vertices)

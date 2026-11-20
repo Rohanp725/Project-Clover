@@ -290,6 +290,7 @@ namespace Clover.Tests
                 }
             }
             Assert.AreEqual("drowned_weight", ReactionLook.SlugOf(AfflictionPairs.Index(AfflictionKind.Soaked, AfflictionKind.Cursed)));
+            Assert.AreEqual("seed_storm", ReactionLook.SlugOf(AfflictionPairs.Index(AfflictionKind.Unsteady, AfflictionKind.Seeded)), "Windthrow's look is under its new name");
         }
 
         [Test]
