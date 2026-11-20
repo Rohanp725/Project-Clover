@@ -27,6 +27,20 @@ namespace Clover.Player.Swings
             U0 = 0.45f, U1 = 0.8f, V0 = 0f, V1 = 0.5f,
         };
 
+        // Flame across the whole strip: the churn and the licking tongues make its edges, not the slash's outline.
+        private static GlowStyle Ablaze(float noiseScale, Vector2 noiseSpeed)
+        {
+            var style = Burning(noiseScale, noiseSpeed);
+            // The arc is several times longer than it is wide: the churn is spread along it (U whole, V a quarter) so
+            // its blobs stand across the arc as tongues, not lie along it in stripes.
+            style.Shape = 3f;
+            style.U0 = 0f;
+            style.U1 = 1f;
+            style.V0 = 0f;
+            style.V1 = 0.25f;
+            return style;
+        }
+
         private static GlowStyle Broken(GlowStyle style, float noise, float scale, Vector2 speed)
         {
             style.Noise = noise;
@@ -49,10 +63,17 @@ namespace Clover.Player.Swings
         };
 
         // A bolt drawn along the strip (the shader draws it along V).
-        private static GlowStyle Bolt(Color colour) => new GlowStyle
+        private static GlowStyle Bolt(Color colour, float sharpness = 1.4f) => new GlowStyle
         {
-            Shape = 7f, Additive = true, Sharpness = 1.4f, Colour = colour, U0 = 0f, U1 = 1f, V0 = 0f, V1 = 1f, Swap = true,
+            Shape = 7f, Additive = true, Sharpness = sharpness, Colour = colour, U0 = 0f, U1 = 1f, V0 = 0f, V1 = 1f, Swap = true,
         };
+
+        private static TrailLayer Licking(TrailLayer layer, float lick, float every)
+        {
+            layer.Lick = lick;
+            layer.LickEvery = every;
+            return layer;
+        }
 
         private static readonly Color Whole = Color.white;
         private static Color Gone(float r = 1f, float g = 1f, float b = 1f) => new Color(r, g, b, 0f);
@@ -83,21 +104,25 @@ namespace Clover.Player.Swings
             Line = "a flame ribbon off the swing that licks upward once left, cools through red to smoke so the arc is scorched behind it, and sheds embers; a thin lick of flame along the edge while charged",
             Layers = new[]
             {
-                Moving(Sweep(0f, 1f, 0.42f, Burning(4.5f, new Vector2(-1.2f, -2.2f)), Whole, Gone()), rise: 0.9f, scatter: 0.1f, taper: 0.35f),
-                Moving(Sweep(0.7f, 1f, 0.2f, Burning(7f, new Vector2(-2f, -3f)), new Color(1.15f, 1.1f, 1f, 1f), Gone()), rise: 0.5f),
+                // Filmed 2026-11-20 the first cut read as a smooth orange band: finer churn, a longer life and tongues
+                // that climb off the outer edge make it burn and lick up as it is left.
+                Licking(Moving(Sweep(0f, 1f, 0.6f, Ablaze(9f, new Vector2(-1.4f, -3.4f)), Whole, Gone()), rise: 0.5f, scatter: 0.12f, taper: 0.15f), 5f, 6f),
+                Licking(Moving(Sweep(0.7f, 1f, 0.26f, Burning(13f, new Vector2(-2f, -4f)), new Color(1.15f, 1.1f, 1f, 1f), Gone()), rise: 0.5f), 2.5f, 4f),
             },
             Sheath = new SheathStyle { Shown = true, Style = Centred(Burning(9f, new Vector2(0f, -3.2f))), Width = 0.08f, Inside = 0.35f, Flicker = 0.15f },
         };
 
         public static readonly SwingLook Lightning = new SwingLook
         {
-            Element = 1, Name = Elements.Lightning, Shed = SwingShed.Crackle, ShedEvery = 0.06f,
+            Element = 1, Name = Elements.Lightning, Shed = SwingShed.Crackle, ShedEvery = 0.04f,
             Line = "the liked crackle kept: a hard blue-white rim on the cut and two jagged arcs that crawl along the sweep, taking a new shape twenty times a second; a bolt running the edge while charged; a crack in the floor where a blow lands",
             Layers = new[]
             {
-                Sweep(0.55f, 1f, 0.14f, Lit(new Color(0.9f, 1.3f, 2.6f), 2f, 2.2f), Seen(0.9f), Gone(0.6f, 0.7f, 1f)),
-                new TrailLayer { Form = TrailForm.Strand, At = 0.97f, Width = 0.34f, Seconds = 0.22f, Style = Bolt(new Color(0.8f, 1.1f, 2.6f)), Head = Whole, Tail = Gone(), Jitter = 0.05f },
-                new TrailLayer { Form = TrailForm.Strand, At = 0.6f, Width = 0.26f, Seconds = 0.18f, Style = Bolt(new Color(1f, 1.2f, 2.8f)), Head = Whole, Tail = Gone(), Jitter = 0.04f },
+                // Filmed 2026-11-20 the arcs were gone before they were seen from the game camera: wider, brighter and
+                // a little longer, still jumping twenty times a second.
+                Sweep(0.5f, 1f, 0.2f, Lit(new Color(1f, 1.4f, 2.9f), 2f, 2f), Whole, Gone(0.6f, 0.7f, 1f)),
+                new TrailLayer { Form = TrailForm.Strand, At = 0.97f, Width = 0.55f, Seconds = 0.32f, Style = Bolt(new Color(1.8f, 2.2f, 4.2f), 0.6f), Head = Whole, Tail = Gone(), Jitter = 0.08f },
+                new TrailLayer { Form = TrailForm.Strand, At = 0.6f, Width = 0.42f, Seconds = 0.26f, Style = Bolt(new Color(2f, 2.3f, 4.4f), 0.6f), Head = Whole, Tail = Gone(), Jitter = 0.06f },
             },
             Sheath = new SheathStyle { Shown = true, Style = Bolt(new Color(0.8f, 1.1f, 2.6f)), Width = 0.14f, Inside = 0.5f, Flicker = 0.45f, Rebolt = 18f },
         };
@@ -108,8 +133,9 @@ namespace Clover.Player.Swings
             Line = "an air-blade: a pale see-through sweep with a bright leading streak that, once left, blows on the way the blade went, spreads and comes apart in gusts until nothing is left (never cut off); a faint stream of air along the edge while charged",
             Layers = new[]
             {
-                Moving(Sweep(0f, 1f, 0.55f, Broken(Lit(new Color(0.85f, 0.95f, 0.9f)), 0.85f, 8f, new Vector2(-2.4f, 0.3f)), Seen(0.6f), Gone()), drift: 2.2f, scatter: 0.8f, taper: -0.6f),
-                Moving(Strand(1.02f, 0.07f, 0.35f, Broken(Streak(new Color(1.2f, 1.3f, 1.25f)), 0.6f, 12f, new Vector2(-3f, 0f)), Seen(0.8f), Gone()), drift: 3f, scatter: 1.4f, taper: -0.3f),
+                // 2026-11-20: a ghost from the game camera at first; more of it seen, longer, still blowing apart.
+                Moving(Sweep(0f, 1f, 0.7f, Broken(Lit(new Color(1.05f, 1.2f, 1.12f)), 0.7f, 8f, new Vector2(-2.4f, 0.3f)), Seen(0.9f), Gone()), drift: 2.2f, scatter: 0.8f, taper: -0.6f),
+                Moving(Strand(1.02f, 0.12f, 0.45f, Broken(Streak(new Color(1.5f, 1.6f, 1.55f)), 0.5f, 12f, new Vector2(-3f, 0f)), Whole, Gone()), drift: 3f, scatter: 1.4f, taper: -0.3f),
             },
             Sheath = new SheathStyle { Shown = true, Style = Centred(Broken(Lit(new Color(0.8f, 0.9f, 0.85f, 0.35f)), 0.6f, 10f, new Vector2(3f, 0f))), Width = 0.06f, Inside = 0.5f, Flicker = 0.1f },
         };
@@ -138,8 +164,8 @@ namespace Clover.Player.Swings
             Line = "a sheath of water flowing along the edge toward the point; the swing draws a water arc with a foam rim that falls as it is left, and throws its water off the end of the swing in a spray of drops (none dotted on the blade)",
             Layers = new[]
             {
-                Moving(Sweep(0f, 1f, 0.38f, CoreOf(Broken(Laid(new Color(0.18f, 0.62f, 0.9f, 0.9f)), 0.5f, 6f, new Vector2(-3f, 0f)), 0.92f), Seen(0.9f), Gone(0.6f, 0.85f, 1f)), rise: -0.5f, taper: 0.4f),
-                Moving(Sweep(0.85f, 1f, 0.24f, Broken(Lit(new Color(1.1f, 1.35f, 1.5f)), 0.7f, 10f, new Vector2(-4f, 0f)), Seen(0.8f), Gone()), rise: -0.6f),
+                Moving(Sweep(0f, 1f, 0.5f, CoreOf(Broken(Laid(new Color(0.18f, 0.62f, 0.9f, 0.9f)), 0.5f, 6f, new Vector2(-3f, 0f)), 0.92f), Seen(0.9f), Gone(0.6f, 0.85f, 1f)), rise: -0.5f, taper: 0.4f),
+                Moving(Sweep(0.8f, 1f, 0.32f, Broken(Lit(new Color(1.1f, 1.35f, 1.5f)), 0.7f, 10f, new Vector2(-4f, 0f)), Seen(0.9f), Gone()), rise: -0.6f),
             },
             Sheath = new SheathStyle { Shown = true, Style = Centred(CoreOf(Broken(Laid(new Color(0.2f, 0.65f, 0.95f, 0.85f)), 0.55f, 8f, new Vector2(4.5f, 0f)), 0.9f)), Width = 0.065f, Inside = 0.5f },
         };
@@ -150,7 +176,8 @@ namespace Clover.Player.Swings
             Line = "thorns grown along the real edge of each weapon while charged (the one look on the weapon, as the owner asked), a green sweep that sheds leaves, and pollen drifting off the point that rises and scatters",
             Layers = new[]
             {
-                Moving(Sweep(0.2f, 1f, 0.4f, Broken(Laid(new Color(0.32f, 0.78f, 0.24f, 0.8f)), 0.7f, 12f, new Vector2(-1f, 0.5f)), Seen(0.8f), Gone(0.7f, 0.9f, 0.4f)), rise: 0.15f, drift: 0.5f, scatter: 0.2f),
+                // 2026-11-20: a thin faint line from the game camera at first: fuller, greener and longer.
+                Moving(Sweep(0.1f, 1f, 0.55f, Broken(Laid(new Color(0.4f, 0.92f, 0.28f, 0.92f)), 0.55f, 12f, new Vector2(-1f, 0.5f)), Seen(0.95f), Gone(0.7f, 0.9f, 0.4f)), rise: 0.15f, drift: 0.5f, scatter: 0.2f),
                 Moving(Strand(1f, 0.3f, 0.7f, Broken(Streak(new Color(1.4f, 1.3f, 0.55f)), 0.92f, 24f, new Vector2(0f, 0.4f)), Seen(0.7f), Gone()), rise: 0.35f, drift: 0.4f, scatter: 0.45f, taper: -0.8f),
             },
             Sheath = new SheathStyle { Shown = true, Style = Centred(Broken(Laid(new Color(0.3f, 0.7f, 0.22f, 0.45f)), 0.5f, 14f, Vector2.zero)), Width = 0.04f, Inside = 0.5f },
@@ -162,7 +189,8 @@ namespace Clover.Player.Swings
             Line = "a dust trail that settles and spreads, with grit falling out of it; where a blow lands rocks are thrown up, fall, lie a moment and sink (never floating); grit along the edge while charged",
             Layers = new[]
             {
-                Moving(Sweep(0f, 1f, 0.6f, Broken(Laid(new Color(0.46f, 0.34f, 0.22f, 0.8f)), 0.9f, 9f, new Vector2(0f, -0.6f)), Seen(0.85f), Gone(0.8f, 0.75f, 0.7f)), rise: -0.35f, scatter: 0.25f, taper: -0.5f),
+                // 2026-11-20: lighter dust, so it shows on the dark stone, and longer before it settles.
+                Moving(Sweep(0f, 1f, 0.75f, Broken(Laid(new Color(0.66f, 0.5f, 0.32f, 0.92f)), 0.75f, 9f, new Vector2(0f, -0.6f)), Whole, Gone(0.8f, 0.75f, 0.7f)), rise: -0.35f, scatter: 0.25f, taper: -0.5f),
                 Moving(Strand(1f, 0.22f, 0.45f, Broken(Centred(Laid(new Color(0.24f, 0.17f, 0.11f, 0.95f))), 1f, 28f, Vector2.zero), Seen(0.9f), Gone()), rise: -1.3f, scatter: 0.3f),
             },
             Sheath = new SheathStyle { Shown = true, Style = Centred(Broken(Laid(new Color(0.32f, 0.24f, 0.16f, 0.7f)), 0.9f, 26f, Vector2.zero)), Width = 0.05f, Inside = 0.5f },
@@ -200,10 +228,12 @@ namespace Clover.Player.Swings
             Line = "a smear of shade that lags behind the blade and drains back into it as it sinks, with a violet rim; a shadow clinging along the edge while charged (no crystals, no symbols)",
             Layers = new[]
             {
-                new TrailLayer { Form = TrailForm.Sweep, From = 0f, To = 1f, Seconds = 0.5f, Lag = 0.07f, Drain = 0.85f, Rise = -0.2f, Head = Seen(0.92f), Tail = Gone(),
+                new TrailLayer { Form = TrailForm.Sweep, From = 0f, To = 1f, Seconds = 0.6f, Lag = 0.07f, Drain = 0.85f, Rise = -0.2f, Head = Seen(0.95f), Tail = Gone(),
                     Style = Broken(Laid(new Color(0.07f, 0.03f, 0.11f, 0.92f)), 0.6f, 7f, new Vector2(1.6f, 0f)) },
-                new TrailLayer { Form = TrailForm.Sweep, From = 0.82f, To = 1f, Seconds = 0.32f, Lag = 0.07f, Drain = 0.6f, Head = Seen(0.8f), Tail = Gone(),
-                    Style = Lit(new Color(0.6f, 0.26f, 1f)) },
+                // 2026-11-20: shade alone is lost on the night floor; its violet rim is wider and brighter, so the smear is
+                // read by its edge, and it lags as long as the shade.
+                new TrailLayer { Form = TrailForm.Sweep, From = 0.65f, To = 1f, Seconds = 0.45f, Lag = 0.07f, Drain = 0.6f, Head = Whole, Tail = Gone(),
+                    Style = Lit(new Color(1f, 0.42f, 1.7f)) },
             },
             Sheath = new SheathStyle { Shown = true, Style = Centred(Broken(Laid(new Color(0.06f, 0.02f, 0.1f, 0.75f)), 0.7f, 9f, new Vector2(-1.2f, 0f))), Width = 0.07f, Inside = 0.5f },
         };
@@ -214,7 +244,7 @@ namespace Clover.Player.Swings
             Line = "venom: a green trail that sags and drips as it is left, under a heavy mist that sinks off the arc; a coat of venom along the edge while charged that now and then drips off",
             Layers = new[]
             {
-                Moving(Sweep(0f, 1f, 0.5f, Broken(Laid(new Color(0.34f, 0.82f, 0.3f, 0.88f)), 0.6f, 9f, new Vector2(0f, 1f)), Seen(0.9f), Gone(0.6f, 0.8f, 0.4f)), rise: -0.7f, taper: -0.3f),
+                Moving(Sweep(0f, 1f, 0.62f, Broken(Laid(new Color(0.38f, 0.88f, 0.3f, 0.92f)), 0.6f, 9f, new Vector2(0f, 1f)), Seen(0.9f), Gone(0.6f, 0.8f, 0.4f)), rise: -0.7f, taper: -0.3f),
                 Moving(Sweep(0f, 0.7f, 0.95f, Broken(Centred(Laid(new Color(0.28f, 0.46f, 0.22f, 0.5f))), 0.85f, 4f, new Vector2(0f, 0.5f)), Seen(0.55f), Gone()), rise: -0.55f, scatter: 0.3f, taper: -0.9f),
             },
             Sheath = new SheathStyle { Shown = true, Style = Centred(Broken(Laid(new Color(0.32f, 0.78f, 0.28f, 0.8f)), 0.6f, 10f, new Vector2(0f, -1f))), Width = 0.06f, Inside = 0.5f },

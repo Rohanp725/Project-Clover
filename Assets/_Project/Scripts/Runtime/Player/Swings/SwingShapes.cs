@@ -28,7 +28,8 @@ namespace Clover.Player.Swings
 
         public static readonly SwingShape Spear = new SwingShape
         {
-            Weapon = Weapons.GreatSpearName, SweepFrom = 0.2f, SweepTo = 1.05f, Width = 1f, Life = 1f, LeastSpeed = 2.5f, FullSpeed = 9f, StrandWidth = 0.32f, GroundImpact = true,
+            Weapon = Weapons.GreatSpearName, SweepFrom = 0.2f, SweepTo = 1.05f, Width = 1f, Life = 1.3f, LeastSpeed = 2.5f, FullSpeed = 9f, StrandWidth = 0.6f, GroundImpact = true,
+            // Filmed 2026-11-20 a thrust straight up the screen left only a stub about the point: a wider band, kept longer.
             Note = "a line along each thrust drawn about the point, and a narrow arc for the sweep",
         };
 

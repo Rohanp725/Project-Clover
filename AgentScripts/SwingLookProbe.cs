@@ -16,11 +16,13 @@ using UnityEngine.InputSystem.LowLevel;
 using UnityEngine.InputSystem.XInput;
 
 // Frames for a GIF of each weapon swung with each element on it (the swing looks of 2026-11-19), filmed in the Proving
-// Ground on real enemies as the owner asked: the castle pen's soldier let out (KnockdownProbe's way) and copied twice,
-// the three stood in a spread arc in front of the player, healed, cleared and stood again before each clip, and kept
-// from striking back (a wind-up is turned into a moment's pause, so a soldier hit still flinches, freezes, falls and
-// is thrown, but the player's swings are never cut short). The guide is read through first; the new effects are put
-// on with F8's switch if they are not; the floor's painted words and the HUD are hidden.
+// Ground on real enemies as the owner asked, the reaction GIFs' rig (ReactionGifFrames): the pens' enemies let out, the
+// castle's first three (soldier, acolyte, caster) stood on the open floor at (28, 0, 0) in a spread arc in front of
+// the player, the rest put away. They are kept alive (healed), kept from chasing or striking (aggro range zero, leash
+// a step, their home made their spot so putting them back stands them there), can never guard, and keep their bars
+// up; they still flinch, freeze, fall and are thrown as the game makes them. Before each clip they are put back,
+// cleared and stood again. The guide is read through first; the new effects are put on with F8's switch if they are
+// not; the floor's painted words, the training dummies near the floor and the HUD are hidden.
 // For each weapon (the Katana, the Massive Sword, the Great Hammer and the Twin Knives first, then the Scythe, the Great
 // Spear, the Chain Sickle, the Great Bow, bare hands and the Armament; every one equipped through PlayerCombat.Equip)
 // and each element on the ring (attuned alone through PlayerBuild.Attune), one clip: the blade charged with the
@@ -50,7 +52,8 @@ public static class SwingLookProbe
 public class SwingLookProbeRunner : MonoBehaviour
 {
     private const int Rate = 20, Before = 3, After = 8, MostFrames = 260, Width = 960, Height = 540;
-    private const string Root = "review/gifs/swings/frames/";
+    // Clips with the enemies stood off (swing_gif_alone.txt) go to their own folder, so the grid on the enemies is kept.
+    private string Root => alone ? "review/gifs/swings/alone/" : "review/gifs/swings/frames/";
     // The weapons in the order they are filmed and set out on the sheet, with the name each folder takes.
     private static readonly (string weapon, string tag, float stand)[] Filmed =
     {
@@ -59,8 +62,13 @@ public class SwingLookProbeRunner : MonoBehaviour
         (Weapons.ChainSickleName, "sickle", 1.9f), (Weapons.GreatBowName, "bow", 1.8f), (Weapons.FistsName, "fists", 1.3f),
         (Weapons.ArmamentName, "armament", 1.5f),
     };
-    // The middle of the castle pen: the soldiers north of it, the player south, facing north.
-    private static readonly Vector3 Middle = new Vector3(-14f, 0.05f, 30f);
+    // The open floor the reaction GIFs are filmed on: the enemies north of it, the player south, facing north.
+    private static readonly Vector3 Middle = new Vector3(28f, 0.05f, 0f);
+    private const int CastCount = 3;
+    private static readonly System.Reflection.FieldInfo SinceHurt = typeof(Enemy).GetField("sinceHurt", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+    private static readonly System.Reflection.FieldInfo BarsCalled = typeof(Enemy).GetField("barsCalled", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+    private static readonly System.Reflection.FieldInfo HomeField = typeof(Enemy).GetField("home", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+    private static readonly System.Reflection.FieldInfo HomeTurnField = typeof(Enemy).GetField("homeRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
     private PlayerController player;
     private PlayerCombat combat;
@@ -69,9 +77,8 @@ public class SwingLookProbeRunner : MonoBehaviour
     private PlayerSpells spells;
     private PlayerBuild build;
     private SwingTrails trails;
-    private EnemyPen castle;
+    private readonly List<EnemyPen> pens = new List<EnemyPen>();
     private readonly List<Enemy> soldiers = new List<Enemy>();
-    private readonly List<Enemy> copies = new List<Enemy>();
     private TopDownCamera view;
     private Transform anchor;
     private XInputControllerWindows pad;
@@ -82,6 +89,8 @@ public class SwingLookProbeRunner : MonoBehaviour
     private readonly List<Canvas> screens = new List<Canvas>();
     private int idleSolids, idleMarks, idleHazards;
     private string[] only = new string[0];
+    // AgentScripts/swing_gif_alone.txt present: the enemies stand 30 m off, so the swing is seen with no blow landing.
+    private bool alone;
 
     private bool filming, keepCalm;
     private int frame;
@@ -99,7 +108,12 @@ public class SwingLookProbeRunner : MonoBehaviour
         {
             if (soldier == null || soldier.IsDead) continue;
             if (soldier.Health.Fraction < 0.6f) soldier.Health.Fill();
-            // A wind-up at the player is turned into a moment's pause: the soldiers take blows and never give them.
+            soldier.GuardOpenFor = 5f;
+            soldier.Brain.AggroRange = 0f;
+            soldier.Brain.LeashRange = 0.5f;
+            SinceHurt.SetValue(soldier, 0f);
+            BarsCalled.SetValue(soldier, true);
+            // Should a wind-up start all the same, it is turned into a moment's pause: the player's swings are never cut short.
             if (keepCalm && soldier.Brain.State == EnemyState.Telegraph) soldier.Brain.Occupy(0.35f);
         }
         if (filming && trails != null)
@@ -216,6 +230,7 @@ public class SwingLookProbeRunner : MonoBehaviour
         string onlyPath = "AgentScripts/swing_gif_only.txt";
         if (System.IO.File.Exists(onlyPath))
             only = System.IO.File.ReadAllText(onlyPath).Split(',').Select(part => part.Trim().ToLowerInvariant()).Where(part => part.Length > 0).ToArray();
+        alone = System.IO.File.Exists("AgentScripts/swing_gif_alone.txt");
         yield return null;
         backgroundWas = InputSystem.settings.backgroundBehavior;
         editorWas = InputSystem.settings.editorInputBehaviorInPlayMode;
@@ -243,34 +258,29 @@ public class SwingLookProbeRunner : MonoBehaviour
         if (!ElementArt.On) ElementArt.Flip();
         yield return Real(0.2f);
 
-        castle = FindObjectsByType<EnemyPen>(FindObjectsInactive.Include).FirstOrDefault(pen => pen.Land == "The castle");
-        if (castle == null)
+        // The castle's enemies first, as the reaction rig takes them; every other one let out is put away.
+        pens.AddRange(FindObjectsByType<EnemyPen>(FindObjectsInactive.Include).OrderBy(pen => pen.Land == "The castle" ? 0 : 1));
+        foreach (var pen in pens)
         {
-            Say("WRONG: no castle pen");
+            pen.Release(Enumerable.Range(0, pen.Enemies.Length).ToArray());
+            foreach (var enemy in pen.Enemies)
+            {
+                if (enemy == null) continue;
+                if (soldiers.Count < CastCount && pen.Land == "The castle") soldiers.Add(enemy);
+                else enemy.gameObject.SetActive(false);
+            }
+        }
+        if (soldiers.Count == 0)
+        {
+            Say("WRONG: no castle enemies in the pens");
             Finish();
             yield break;
-        }
-        castle.Release(new[] { 0 });
-        yield return Real(0.5f);
-        var first = castle.Enemies[0];
-        if (first == null || first.Kind.Name != EnemyKind.SoldierName)
-        {
-            Say($"WRONG: the castle pen's first enemy is not a soldier ({(first != null ? first.Kind.Name : "none")})");
-            Finish();
-            yield break;
-        }
-        soldiers.Add(first);
-        for (int i = 0; i < 2; i++)
-        {
-            var copy = Instantiate(first.gameObject, first.transform.position + Vector3.right * (i + 1), first.transform.rotation).GetComponent<Enemy>();
-            copy.name = "Swing Look Soldier " + (i + 2);
-            copies.Add(copy);
-            soldiers.Add(copy);
         }
         yield return Real(0.3f);
-        Say($"soldiers: {soldiers.Count(soldier => soldier != null && soldier.gameObject.activeInHierarchy)} standing");
+        Say($"cast: {string.Join(", ", soldiers.Select(soldier => soldier.Kind.Name))}");
 
         hidden.AddRange(FindObjectsByType<TextMesh>(FindObjectsInactive.Exclude).Where(text => (text.transform.position - Middle).magnitude < 14f).Select(text => text.gameObject));
+        hidden.AddRange(FindObjectsByType<TrainingDummy>(FindObjectsInactive.Exclude).Where(dummy => (dummy.transform.position - Middle).magnitude < 14f).Select(dummy => dummy.gameObject));
         foreach (var thing in hidden) thing.SetActive(false);
         foreach (var canvas in FindObjectsByType<Canvas>(FindObjectsInactive.Exclude))
             if (canvas.isRootCanvas && canvas.renderMode != RenderMode.WorldSpace && canvas.enabled)
@@ -355,11 +365,18 @@ public class SwingLookProbeRunner : MonoBehaviour
         {
             var soldier = soldiers[i];
             if (soldier == null) continue;
+            float angle = (i - 1) * 32f;
+            Vector3 spot = at + Quaternion.Euler(0f, angle, 0f) * Vector3.forward * stand + (alone ? Vector3.forward * 30f : Vector3.zero);
+            Vector3 look = at - spot;
+            look.y = 0f;
+            // Its home is made the spot, so putting it back stands it there and an idle enemy has nowhere to walk to.
+            HomeField.SetValue(soldier, spot);
+            HomeTurnField?.SetValue(soldier, Quaternion.LookRotation(look.normalized, Vector3.up));
             soldier.Restore();
             soldier.Afflictions.Clear();
-            float angle = (i - 1) * 32f;
-            Vector3 spot = at + Quaternion.Euler(0f, angle, 0f) * Vector3.forward * stand;
-            soldier.transform.SetPositionAndRotation(spot, Quaternion.LookRotation(at - spot, Vector3.up));
+            soldier.Brain.AggroRange = 0f;
+            soldier.Brain.LeashRange = 0.5f;
+            soldier.WakeNow();
         }
         yield return UntilReal(() => !Busy(), 8f);
         foreach (var soldier in soldiers) soldier?.Afflictions.Clear();
@@ -383,7 +400,7 @@ public class SwingLookProbeRunner : MonoBehaviour
         combat.Mana.Gain(100f);
         int swingsWere = trails.SwingsDrawn, landingsWere = trails.Landings, groundWere = trails.GroundBlows, blowsWere = combat.BlowsLanded, strikesWere = combat.InfusedStrikes;
         mostRibbons = mostSheaths = 0;
-        window = WindowAbout(standAt + Vector3.forward * (stand * 0.6f) + Vector3.up * 0.9f);
+        window = WindowAbout(standAt + Vector3.forward * (stand * 0.6f) + Vector3.up * 1.7f);
         Time.captureFramerate = Rate;
         frame = 0;
         filming = true;
@@ -456,8 +473,7 @@ public class SwingLookProbeRunner : MonoBehaviour
         keepCalm = false;
         Time.captureFramerate = 0;
         if (picture != null) Destroy(picture);
-        foreach (var copy in copies) if (copy != null) Destroy(copy.gameObject);
-        if (castle != null) castle.Clear();
+        foreach (var pen in pens) if (pen != null) pen.Clear();
         if (view != null && player != null) view.Configure(player.transform);
         if (anchor != null) Destroy(anchor.gameObject);
         foreach (var thing in hidden) if (thing != null) thing.SetActive(true);

@@ -346,6 +346,7 @@ namespace Clover.Tests
         public void EachElementMovesAsItsElement()
         {
             Assert.Greater(SwingLooks.Fire.Layers[0].Rise, 0f, "fire licks upward");
+            Assert.Greater(SwingLooks.Fire.Layers[0].Lick, 0f, "in tongues");
             Assert.IsTrue(SwingLooks.Fire.Layers[0].Style.Fire, "fire is drawn as flame, not light");
             Assert.AreEqual(SwingShed.Embers, SwingLooks.Fire.Shed);
             Assert.IsTrue(SwingLooks.Lightning.Layers.Any(layer => layer.Style.Shape == 7f && layer.Jitter > 0f), "lightning's arcs jump");
@@ -365,6 +366,21 @@ namespace Clover.Tests
             Assert.Less(SwingLooks.Poison.Layers[1].Rise, 0f, "the mist sinks");
             Assert.AreEqual(SwingShed.Drips, SwingLooks.Poison.Shed);
             Assert.IsTrue(SwingLooks.Light.Layers[0].Style.Additive && SwingLooks.Light.Layers[0].Style.Noise == 0f, "a clean arc of light");
+        }
+
+        [Test]
+        public void FlameTonguesRiseUnevenlyFromRootToPeak()
+        {
+            float lowest = 1f, highest = 0f;
+            for (int tongue = 0; tongue < 12; tongue++)
+            {
+                Assert.AreEqual(0f, RibbonMath.Tongue(tongue * 6, 6f), 1e-4f, "a tongue starts at its root");
+                float peak = RibbonMath.Tongue(tongue * 6 + 3, 6f);
+                lowest = Mathf.Min(lowest, peak);
+                highest = Mathf.Max(highest, peak);
+                Assert.Greater(peak, RibbonMath.Tongue(tongue * 6 + 1, 6f), "and stands tallest in its middle");
+            }
+            Assert.Greater(highest - lowest, 0.2f, "each tongue its own height");
         }
 
         [Test]

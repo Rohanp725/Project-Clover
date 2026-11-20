@@ -1616,6 +1616,13 @@ namespace Clover.Player
             Color arcColour = arcElement != null ? new Color(arcElement.Colour.r * 1.9f, arcElement.Colour.g * 1.9f, arcElement.Colour.b * 1.9f, 0.95f) : empowered ? empoweredColour : Weapon.ElementColoured ? new Color(EffectColour.r * 2f, EffectColour.g * 2f, EffectColour.b * 2f, 0.9f) : Weapon.SlashColour;
             // The element art cuts in the element's own band, never pushed past white: Fire's stays flame, Poison's never highlighter.
             if (arcElement != null && Clover.Player.Forms.ElementArt.Ready) arcColour = Clover.Player.Forms.BladeArt.ArcColour(arcElement.Index);
+            // With the swing looks on the element is drawn by the weapon's own trail; the reach arc keeps the weapon's
+            // plain colour, so no second, flat "element" stroke lies beside it (filmed 2026-11-20: a pink comet by the flame).
+            if (arcElement != null && Clover.Player.Swings.SwingTrails.On)
+            {
+                Color plain = Weapon.SlashColour;
+                arcColour = new Color(plain.r * 0.35f, plain.g * 0.35f, plain.b * 0.35f, plain.a * 0.2f);
+            }
             if (fresh && arcs != null)
             {
                 if (step.Radius > 0f) Vfx.Play(VfxKind.TintRing, transform.position + transform.forward * step.Reach + Vector3.up * 0.15f, Vector3.up, step.Radius * 0.6f, arcColour);

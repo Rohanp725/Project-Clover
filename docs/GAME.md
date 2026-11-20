@@ -1581,7 +1581,7 @@ changed. The old playtest stays with its players until the first few phases of t
   - Other spell forms and worn spells still use `ElementLook`'s old puffs and sparks.
 - **Verified**: see the report of the run (EditMode suite, `FxProbe`, regressions, profiler).
 
-### Weapon swing effects (2026-11-19; built from the owner's effects review, written while the editor was held elsewhere, not yet compiled in the editor or seen in play)
+### Weapon swing effects (2026-11-19; built from the owner's effects review; merged, filmed and tuned in the editor 2026-11-20, not yet seen by the owner)
 
 The owner's biggest note: the element was "stuck onto the weapon many times". Now it moves with the swing, along the path
 that weapon's own animation draws (`Runtime/Player/Swings`).
@@ -1592,6 +1592,10 @@ that weapon's own animation draws (`Runtime/Player/Swings`).
   each by itself, and the arrow from its middle to its point. A measurement far from the model notes' line falls back
   to the notes (`BladeLines.Defaults`). Bare hands and the Armament sweep with the body: forearm to knuckles, shin to toes.
   The War Fan's line is kept for when it exists. `Clover > Weapons > Report Blade Lines` writes `review/checks/blade_lines.md`.
+  Since 2026-11-20 a point (spear, sunspear, arrow) runs along the shaft through the middle of its slot, like a head: corner
+  to corner had crossed the spear's flat leaf and the sunspear's disc. A head keeps only what stands out wide of the haft,
+  so the hammer's line is its block (0.90 to 1.26 m), not the collar below it. The scythe's slot is `inlay`, checked on
+  the model: the inlay band runs along the concave inner side of the crescent, the cutting edge; the guard strip is the spine.
 - **Trails** (`SwingTrails`, added to the player at start like `BladeLook`): during a charged or infused move, from 60%
   of the way through its wind-up to 0.14 s after its blow, every line in hand is sampled each frame. Points are added
   between frames round the swinger's chest, so a fast swing stays an arc. The trail is a pooled ribbon mesh (allocation
@@ -1604,7 +1608,9 @@ that weapon's own animation draws (`Runtime/Player/Swings`).
   knives; the bow's limbs, the arrow in the fist and the arrow in flight; the sickle's hook and the spiral of its
   weight; stubs behind fists and feet.
 - **Per element** (`SwingLooks`; the line for each is in the code):
-  - Fire: a flame ribbon that licks up and cools to smoke, scorching the arc, and sheds embers.
+  - Fire: a flame ribbon that licks up and cools to smoke, scorching the arc, and sheds embers. Since 2026-11-20 the whole
+    strip burns (its churn spread along the arc, so blobs stand across it as tongues), and its outer edge climbs in
+    tongues of uneven height (`TrailLayer.Lick`, in the trail's own widths a second, for 0.3 s) so it licks up as it is left.
   - Lightning: its liked crackle, as jagged arcs crawling the sweep, plus a crack in the floor on a hit.
   - Wind: an air-blade that blows on and comes apart.
   - Ice: frost teeth that run along the edge (the chainsaw), and an arc that freezes, hangs and shatters into falling shards.
@@ -1622,8 +1628,18 @@ that weapon's own animation draws (`Runtime/Player/Swings`).
   `BladeLook` draws the charged blade exactly as before. `StrikeArt` (the infused strikes' own ground art) is unchanged.
 - **Hooks**: `SwingTrails.UseMaterial` takes a per-element textured material from a later Blender pass (U along the
   swing, V across). `SwingLook.RibbonTexture` names the file it will be.
-- **Filmed** by `AgentScripts/SwingLookProbe.cs` on three castle soldiers in the Proving Ground. It covers every weapon
-  with every element, 20 frames a second, and `swing_gifs.py` makes the GIFs and a weapons-by-elements contact sheet.
+- **Filmed** by `AgentScripts/SwingLookProbe.cs` in the Proving Ground on the reaction GIFs' rig: the castle pen's
+  first three (soldier, acolyte, caster) let out onto the open floor, held where they stand, healed, never guarding,
+  bars up. It covers every weapon with every element, 20 frames a second, and `swing_gifs.py` makes the GIFs and a
+  weapons-by-elements contact sheet. `AgentScripts/swing_gif_alone.txt` stands the enemies 30 m off and writes to
+  `review/gifs/swings/alone/`, to judge the trail with no hit flashes over it.
+- **Tuned 2026-11-20 from the filmed frames**: from the game camera Lightning, Wind, Life, Earth, Dark, Water and Poison
+  were too faint and gone too soon. Each now lasts about a third longer, with more alpha; Lightning's bolts are wider and
+  softer and it sheds bigger crackles more often; Earth's dust is lighter so it shows on dark stone; Dark is read by a
+  wider, brighter violet rim. The spear's band about its point is wider and lasts longer (still the weakest from above:
+  a thrust moves its point little). A charged or infused move's reach arc is drawn faint in the weapon's plain colour,
+  not the element's, so no second flat "element" stroke lies beside the trail. On real enemies the hit flashes, cut
+  marks and finish rings still cover much of the trail at the moment of a blow.
 
 ### Reaction effects in the game (2026-11-19; the owner's approved combos pass 2; Claude's defaults in the placing, not yet seen in play by the owner)
 
@@ -1827,6 +1843,10 @@ were not touched.
 - **Reactions, designed looks** (`ReactionArtBuilder.LeftOut`, `Moved`, `Borrowings`; `ReactionTimelines`):
   - Flashover: its bolt falls out of the sky, strobing three times (Earthed's bolt, borrowed). The orange climbing
     flame and the lightning lying along the floor are left out; the violet tongues, then smoke and embers above stay.
+    The owner's word of 2026-11-20 ("no regular flame ... all the flame should be that"): its embers are the violet
+    plasma too (`LookRecolours`), and while its flame is live (the condition's `ConditionFlags.FlameLive`) the enemy's
+    Burn is not drawn as plain flame on the body and the burning body throws off no plain fire. The violet flame is up
+    at the strike and gone within about a second; the Burn still bites.
   - Rime: the frost fan is turned onto the blow's way (it lay 52 degrees off). The chips and fog are blown on down that
     way (a new verb, Blow). The pale concentric arcs on the player's side are left out.
   - Anvil Stone: the anvil is set in the middle under the one struck, sunk, and springs up 1.2 m out of the ground
@@ -1845,6 +1865,11 @@ were not touched.
     as wind round the roots.
   - The Bolt Runs True: the bolt is run down its own line to the ground, over the body as the camera sees it. Before,
     it stopped short of the head, 2.2 m behind the body. It strikes the one enemy; the discharge reaches the rest.
+    The owner's word of 2026-11-20 makes it a lane (`UpgradeAction.Lane`): 0.5 s on, the bolt runs from the struck
+    enemy straight away from the player down a lane 8 m long and 1.2 m wide (Claude's numbers: the narrowest of the
+    charged blows' lanes in `ElementSteel`, which run 1.2 to 2.8 m wide and 4 to 6 m long, and a little longer), and every enemy on it takes the strike's 20 damage, 35 stagger
+    and a Static, once each. Its look's bolt comes down again four times along the lane, running away from the player
+    (`ReactionArt.PlayRole`). Its own Static still discharges as before.
 - **Elements** (`AfflictionArt`, `HitArt`, `StrikeArt`, `SurgeArt`, `SurgeLook`, `TapForm`, `FormMeshes`, `FormFx`):
   - Burn on an enemy: the kit's tongues are stood upright (they leaned 9 degrees and always showed up and to the
     right), and each is turned more widely.

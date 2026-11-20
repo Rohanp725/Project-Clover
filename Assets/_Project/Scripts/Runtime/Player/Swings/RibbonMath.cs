@@ -55,6 +55,21 @@ namespace Clover.Player.Swings
             return s - Mathf.Floor(s);
         }
 
+        /// <summary>
+        /// How tall a tongue of flame stands at a part of a trail, 0 to 1: a smooth rise and fall over every
+        /// <paramref name="every"/> parts, each tongue its own height, so a burning edge licks up unevenly.
+        /// </summary>
+        public static float Tongue(int part, float every)
+        {
+            float x = part / Mathf.Max(1f, every);
+            int n = Mathf.FloorToInt(x);
+            float f = x - n;
+            float height = Mathf.Lerp(0.35f, 1f, Hash(n * 7 + 3));
+            // Round at its root and pointed at its top: the tongue is a hump with a sharp peak.
+            float hump = Mathf.Sin(f * Mathf.PI);
+            return height * hump * hump;
+        }
+
         /// <summary>The sawtooth of the frost teeth: rising along each tooth from 0 to 1 and dropping at its back.</summary>
         public static float Tooth(float along) => along - Mathf.Floor(along);
     }

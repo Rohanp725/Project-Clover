@@ -145,6 +145,9 @@ namespace Clover.Player.Swings
         /// the layer says, U along the trail (head at the window's end) and V across it. Returns the vertices written
         /// (zero when fewer than two parts are to be seen).
         /// </summary>
+        /// <summary>How long a burning trail's tongues climb (<see cref="TrailLayer.Lick"/>) before they only fade.</summary>
+        public const float LickSeconds = 0.3f;
+
         public int Build(in TrailLayer layer, float now, Vector3[] vertices, Vector2[] uvs, Color[] colours, out Bounds bounds)
         {
             bounds = default;
@@ -191,6 +194,10 @@ namespace Clover.Player.Swings
                 if (layer.Jitter > 0f) shift += normal * ((RibbonMath.Hash(id[i] * 13 + beat * 7) * 2f - 1f) * layer.Jitter);
                 a += shift;
                 b += shift;
+                // Fire: the outer edge climbs in tongues as it is left, so the burning arc licks upward unevenly. It climbs
+                // in widths of its own trail, and only for a moment: a narrow trail seen edge on (the hammer's overhead)
+                // stretched by whole metres became a tall thin zigzag that read as lightning (filmed 2026-11-20).
+                if (layer.Lick > 0f) b += Vector3.up * (layer.Lick * Mathf.Min(moved, LickSeconds) * (0.15f + RibbonMath.Tongue(id[i], layer.LickEvery)) * across.magnitude);
 
                 Color colour = Color.Lerp(layer.Head, layer.Tail, t);
                 colour.a *= fade * gate[i];

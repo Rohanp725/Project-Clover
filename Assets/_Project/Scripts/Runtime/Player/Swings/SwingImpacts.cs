@@ -176,10 +176,10 @@ namespace Clover.Player.Swings
             switch (shed)
             {
                 case SwingShed.Embers:
-                    Vfx.Play(VfxKind.Embers, tip, Vector3.up, 0.22f * weight);
+                    Vfx.Play(VfxKind.Embers, tip, Vector3.up, 0.35f * weight);
                     break;
                 case SwingShed.Crackle:
-                    Vfx.Play(VfxKind.Shock, tip, way, 0.12f * weight);
+                    Vfx.Play(VfxKind.Shock, tip, way, 0.3f * weight);
                     break;
                 case SwingShed.FrostBreath:
                     Vfx.Play(VfxKind.TintPuff, tip, Vector3.down, 0.1f * weight, ElementSubstance.Pale(colour));

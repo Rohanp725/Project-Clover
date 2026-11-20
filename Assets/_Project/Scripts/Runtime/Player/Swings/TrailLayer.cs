@@ -37,5 +37,9 @@ namespace Clover.Player.Swings
         public float Jitter;
         /// <summary>How much thinner its tail is than its head, 0 to 1; below 0 it spreads as it goes (dust, mist, wind).</summary>
         public float Taper;
+        /// <summary>How fast its outer edge climbs once left, in its own widths a second (for <see cref="Ribbon.LickSeconds"/>), in tongues of flame each its own height (fire licking).</summary>
+        public float Lick;
+        /// <summary>How many parts of the trail one tongue of <see cref="Lick"/> spans.</summary>
+        public float LickEvery;
     }
 }
