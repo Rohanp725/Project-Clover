@@ -1218,6 +1218,8 @@ Group: Reactions
 
 **What sets it off.** Static landing on a Sundered enemy, or Sundered on a charged one.
 
+**Its shapes.** With the Shape mark of Metal and Lightning's duo branch (Live Iron: Drawn Iron or Forged Bolt, 3 Shards, in the heart of the chart) and both carried, Live Iron wears the shape chosen at a rest fire instead. Drawn Iron: the arcs as plain, and each blow also draws everything within 8 m 1.5 m toward the one struck. Forged Bolt: no arcs; its Static holds 6 s, and your heavy blow takes up to three and throws a bolt 10 m on, 12 for each, 20 stagger and two Static to all on the line.
+
 **How to use it.** Notch the crowd first, then make one of them live and fight it: every blow reaches the others. The arc's notches lay the wire for the next.
 
 **How it looks.** Its name over the enemy and a strike where each arc lands.

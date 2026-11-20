@@ -71,6 +71,7 @@ namespace Clover.Player.Trees
             Duo.DrownedWeightDuo.Add(to);
             Duo.RotRootsDuo.Add(to);
             Duo.BurntMoundDuo.Add(to);
+            Duo.LiveIronDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }
