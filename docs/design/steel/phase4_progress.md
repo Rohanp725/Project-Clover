@@ -229,3 +229,140 @@ reaction looks (`docs/design/feedback/2026-11-20_owed_audit.md`) can go first.
    other empty place, `L.mid`, would sit on the line from the left foot to the left bough's second spell.
 4. Decisions 2 to 6 (the spare mixes as hidden marks, the Rise on Dark's root, no duo crowns from gods, the shape screen,
    the enemy's-blow moment) wait for the reaction pass.
+
+## 2026-11-20 (evening): steps 5 and 6 merged, and the owner's decisions 2 to 6 built
+
+**Merged:** `9c0eaa8` (task 4.17: pairs_d4 and pairs_d5, twenty-two duo branches, DuoProbeAll, the 4.17 questions) with
+`--no-ff`. Merge commit: `b1b2a45`. There was one conflict, in `content_open.tsv`: both sides had added rows after
+`turn-to-face`. Both sides' rows were kept: phase4's longer `depth-passed` and `quickened-beat` rows, main's three keystone
+rows and phase4's seven new rows. Compile clean. Playtest Texts rebuilt (89 effects, 610 marks' details). The twenty-two
+`.meta` files are committed (`97a1647`). Every one of the 55 pairs now has its branch in the heart.
+
+**EditMode:** 793 run and 1 failed after the merge. New Face said "gives 6 mana." and the chart test read that as a price.
+It now says "gives you 6 mana back", as every mark that gives mana does (`9e54217`). After all the work below: **802 run,
+802 passed.**
+
+**DuoProbeAll** (ProvingGround, about eight minutes, read whole with `console get -- --tail 700`): **333 OK, 1 WRONG**
+after the merge.
+- The one WRONG was Red Hot in Slag, which read shape `''`. Slag's own condition was held on the host, so the shape had
+  run. Then Chokedamp's leftover poison ground made Fire Medicine react on the same host in the same frame, and the probe
+  read `LastShape` after that second reaction.
+- The probe now notes such a second reaction and reads its own pair's shape from the table. The PlayerPrefs key
+  `clover.probe.duoall.only` runs only the pairs named.
+- Re-run on Fire Medicine, Chokedamp, Red Hot and The Bolt Runs True: 28 OK, 0 WRONG.
+- Two pairs reacting on one body from one laying is real play, not a fault.
+- **After all six commits below, DuoProbeAll ran whole again: 334 OK, 0 WRONG.** Four lines noted a second pair shown on
+  the same host in the same frame, each from ground an earlier pair left.
+
+**ReactionProbe2: 336 OK, 0 WRONG** (heard 54, shown 54, dropped 0), after the merge and again after the Grudge change.
+**CrowdProbe: 6 OK, 0 WRONG** (p95 5.7 ms, mean 4.4 ms, 346 reactions shown, no runaway).
+
+**The watch items (merge plan item 8).** `WatchProbe` ends at 16 OK, 0 WRONG. Fixes are in `14ba73c`.
+- **Cold Damage never fired**, as the plan feared. The heavy blow's `Shatter()` ends the Chill inside `TakeHit`, and the
+  answer runs later, asking for `Needs = Chill, NeedsFull`.
+  - Fix: a blow that breaks the ice is now told as `Shattered` (in `ConditionNews`, `EnemyConditions.Struck` and
+    `AfflictionSet.TakeFrom`), and Cold Damage answers `StruckBy.Shatter`.
+  - In play: four doses were set off on the shatter (55 for the shatter and the blow, 79 in all). A heavy blow on the
+    enemy unfrozen set none off.
+- **Six Levels Down did nothing.** A Chill laid on a frozen enemy is refused, because the freeze is already full.
+  - Fix: a new action, `KeepFrozen` (`AfflictionSet.KeepFrozen`), keeps the freeze 0.3 s longer for each bite.
+  - In play: the freeze lasted 2.50 s without the mark and 2.80 s with it.
+- **A reaction laid and then forced in one frame was shown twice.** This is the pattern of The Sisters' Quarrel, Cold
+  Chisel, Held Down and Diamond Guard: `ReactionEngine.Force` went through the rest.
+  - Fix: the engine now remembers what it found this frame (in fixed arrays, so nothing is allocated). A force on the
+    same enemy and pair in that frame is the same single reaction. In a later frame a force goes through the rest as before.
+  - Tests: ReactionEngineTests, and ReactionHookupTests, whose same-frame force was moved a frame on.
+- **Fast Water** is bounded: its bite does not feed itself.
+  - Its 0.5 s cooldown is shared by every enemy. In the yard, where other dummies are poisoned and Soaked, it answered
+    the host's first bite but not its second.
+  - That is the ledger's stand-in ("once in half a second for all").
+- **Runaway cascades:** none seen in CrowdProbe or DuoProbeAll.
+
+## The owner's decisions 2 to 6
+
+| Decision | Commit | Proof |
+|---|---|---|
+| 2. Spare spells kept hidden for the Evolutions | `c2ee406` | SaveMigrationTests: a save keeps Plasma Lance and Fire Eater, refunds nothing and takes them out of its Hands; each of the twelve is hidden, never sold, never open, never slotted, never in force and never drawn. An InForceTests case. |
+| 3. Dark's Rise on the root | `9af1ed2` | RiseProbe (CombatTest): 9 OK, 0 WRONG |
+| 4. Gods give no duo crowns | `6c3b874` | UpgradeChartTests `EveryElementHasItsTreeAndItsGiftAndNoGodGivesADuoCrown` |
+| 5. The shape screen | `5667873` | ShapeChoicesTests, RestChoicesTests, ShapeProbe 15 OK, 0 WRONG; frames `review/shots/current/shape_screen.png` and `shape_screen_pad.png` |
+| 6. The enemy's-blow moment | `3f51389` | ConditionPiecesTests, GrudgeProbe 13 OK, 0 WRONG; ReactionProbe2 336 OK, 0 WRONG |
+
+### 2. Spare spells
+
+- The twelve are hidden marks in `Trees/SpareSpells.cs`, as they stood before the reshaping, with their timings: Plasma
+  Lance, Storm Overhead, Whiteout, Creeping Ice, Lotus Step, Thorn Wall, Trip Hammer, Sun Wheels, Black Sun, Grave Soil,
+  Fire Eater and Lit Fuse.
+- No d2 to d5 branch cut a spare spell; phase4_questions.md says so for each task.
+- `MarkRules.InForce` and `Slottable` refuse hidden marks.
+- The twelve are out of `RetiredMarks`, so a save keeps them with no refund. `SaveMigration.ClearHidden` takes them out
+  of the Hands, since they can sit in no slot.
+
+### 3. The Rise
+
+- `PlayerUpgrades.Rise` asks for Dark's root, Curse.
+- The Rise's cast names the root, so forgetting the root ends the Rise.
+- RiseForm's finisher buys the Rise back only with A Life for a Life. A Rise that is not bought back stays spent until a
+  real death.
+- Curse's words, the gift's words, dark.md, the guide and the ledger say so. The ledger row `rise-on-root` is taken out.
+
+### 4. No duo crowns
+
+- The eleven old crowns are `Mix` marks that cost 5 Shards and open once both elements are carried.
+  - Each grows from its branch's duo spell.
+  - Six Mirrors and Light the Pyres move to the duo spell's place and grow from their branch's first two marks. They still
+    cost 60 mana to cast.
+- `Gifts.CrownOf` is gone. A consumed god (`GodReward`) gives only the 4 Shards.
+- The CONSUME NEXT shrine gives the 4 Shards and no crown. Its prompt is set when it wakes, because the scene still holds
+  the old words.
+- "The crown" is gone from the duo branch files.
+- Texts updated:
+  - the details texts;
+  - GUIDE.md section 5, now "Gods' gifts and duo branch tops";
+  - a dated note under GAME.md's "Gifts are by rule".
+- "An element's base spell comes free with its element" holds. The same test now checks it: each base Learn is given and
+  never sold.
+
+### 5. The shape screen
+
+The screen is `UI/ShapeMenu.cs`, with `ShapeChoices.cs` and `ShapeRow.cs`. At the rest fire it is the **Shapes** entry,
+after Set the Hand.
+- **The list** shows every learned spell's Shape mark, then every learned reaction's, each with the shape worn.
+  - A line whose shape is kept but not in force says "(not in a slot)" or "(both elements not carried)".
+- **The right side** shows the chosen line's two shapes in full, with the worn one lit.
+- **The controls:**
+  - W S, the wheel, the stick or the d-pad choose a line.
+  - A D, left and right, use or a click wear the other shape, through `ChooseShape(key, i, atRestFire: true)`.
+  - Dodge, Esc or Start go back to the fire.
+- **ShapeProbe** drove the screen with the keys and with a pad (d-pad up to choose, south to wear, east to back out).
+  After leaving the fire, Steam ran as Scald.
+- **The frames** read well, and the hint names the pad's own buttons (A, B) when a pad is in hand.
+
+### 6. The enemy's-blow moment
+
+- There are two new moments:
+  - `UpgradeTrigger.TheirBlow`, for marks. Its target is the attacker.
+  - The condition moment `Attacked` (`UpgradeTrigger.ConditionAttacked`), with `ConditionBlow.TheirBlow` to spend a
+    condition on it.
+- Both are told whenever an enemy's blow lands, is guarded, is perfectly guarded or is turned by a ward.
+- **The plain Grudge's cloud** now waits for that blow, then strikes. The enemy's Static is discharged at double (with
+  3 Static it lost 42), the enemy is held 0.6 s, and the cloud is spent. A guarded blow and a warded blow do the same.
+- **Ash Plume's storm** falls on that blow, or when its 6 s run out.
+- **Left in the ledger row** `their-blow-moment`: the other marks there need the moment a blow is *about to* land, which
+  is a different piece. They are the shared movement rule, Coiled Strike and Daybreak's Master.
+
+## For the owner (this pass)
+
+1. **Fast Water's half-second is shared by all enemies.** In a crowd of poisoned, Soaked enemies it adds about two bites a
+   second in all, not "twice as often" on each. A cooldown kept for each enemy would match the words. It is left as the
+   ledger's stand-in.
+2. **Ash Plume and the cloud.** Ash Plume's storm is not capped at five flashes (it makes one per weapon blow on the
+   cloud). The cloud does not drift to the next enemy when its host dies. Both stay in the ledger.
+3. **The Exile Returns** still answers any discharge on a Cursed enemy, not only the Grudge's own bolt.
+4. **The rest menu has five rows.** Once the Way and the hub are built it will have six entries (the Hand, Shapes, the
+   chart, the Way, the hub and leave). `RestMenu.MostRows` and the note's place will need a sixth row then.
+5. **The CombatTest scene still holds the shrine's old prompt.** It is replaced when the shrine wakes. Rebuilding the scene
+   with its builder would store the new words; the scene was not rebuilt here.
+6. **Halo and Pyre in the heart** now have their duo spell at the spell's place and nothing at the crown. This has not been
+   looked at on the chart.
+7. **The Grudge's cloud has no look of its own yet** (effects.md: "Not yet: the cloud itself").
