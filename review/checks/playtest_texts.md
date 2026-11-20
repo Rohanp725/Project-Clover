@@ -19,9 +19,10 @@ Read by Clover > Build > Playtest Texts from `docs/design/playtest/`.
 - marks/lightning.md: 27 marks
 - marks/metal.md: 27 marks
 - marks/overgrowth.md: 7 marks
-- marks/plasma.md: 10 marks
+- marks/plasma.md: 7 marks
 - marks/poison.md: 27 marks
 - marks/pyre.md: 7 marks
+- marks/sleetcharge.md: 5 marks
 - marks/tempest.md: 7 marks
 - marks/water.md: 28 marks
 - marks/wind.md: 28 marks

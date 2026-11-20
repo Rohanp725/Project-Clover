@@ -574,6 +574,9 @@ MonoBehaviour:
       <b>How to use it.</b> Burn first with your blade, then charge it with a spell, or the other way round: the discharge comes without a heavy blow and leaves the fire burning. Catch a wind-up with it.
 
 
+      <b>Its shapes.</b> With Plasma''s Shape mark (Flashover: Corona or Fulgurite, 3 Shards, in the heart of the chart) and both Fire and Lightning carried, Flashover wears the shape chosen at a rest fire instead. Corona: nothing is spent; violet flame crawls over it for 4 s and every 0.7 s an arc leaps to the nearest enemy within 5 m for 4, a Burn and a Static. Fulgurite: a scorched patch 2.5 m across under it for 4 s, biting 4 a second with a Burn and a Static.
+
+
       <b>How it looks.</b> Its name over the enemy and a discharge where it stands. Not yet: the live flame that draws other discharges near into it.'
   - Id: reaction-thunder-gust
     Title: Thunder Gust (Lightning and Wind)
@@ -761,6 +764,9 @@ MonoBehaviour:
 
 
       <b>What sets it off.</b> Static landing on a chilled enemy, or Chill on a charged one.
+
+
+      <b>Its shapes.</b> With the Shape mark of Ice and Lightning''s duo branch (Sleet Charge: Thundersnow or Glass Spear, 3 Shards, in the heart of the chart) and both carried, Sleet Charge wears the shape chosen at a rest fire instead. Both charge the same way. Thundersnow: when the charge goes off, a bolt runs on to every chilled enemy within 6 m, 7 and a Static each. Glass Spear: when the charge goes off, the enemy is Frozen at once, whatever its Chill (an elite takes 3 Chill, a god 2).
 
 
       <b>How to use it.</b> Wait out the 3 s for a full charge, or take it sooner with a heavy.
@@ -5270,7 +5276,7 @@ MonoBehaviour:
       <b>The numbers.</b> 2 Shards. One stack a light blow, five at most, lasting 6 seconds. A discharge deals 7 damage and 5 stagger for each stack to everything within 4 metres: 35 damage and 25 stagger at five.
 
 
-      <b>Works with.</b> Single Stroke, Waiting Thunder, Chain Lance, Seven Flashes, Overdrive''s quicker swings, and Arc Fire or Thunder Lift on the mixed branches.
+      <b>Works with.</b> Single Stroke, Waiting Thunder, Chain Lance, Seven Flashes, Overdrive''s quicker swings, and Ionised Air or Thunder Lift on the mixed branches.
 
 
       <b>Example.</b> Four light blows on a soldier, then a heavy: 28 damage leaps out of it into the two beside it as well.'
@@ -6330,38 +6336,25 @@ MonoBehaviour:
 
 
       <b>Example.</b> Light Regrowth with four soldiers round you: all four stand held and shaken for two seconds, then you mend 20.'
-  - Id: plasma.embers
-    Title: Charged Embers
+  - Id: plasma.shape
+    Title: 'Flashover: Corona or Fulgurite'
     Group: 
-    Body: '<b>What it does.</b> A heavy blow on an enemy carrying Static sets the Static off, as Lightning''s root would, whichever of the two is your first element. Your blows also lay Burn and Static together, whichever of the two you carry first: every blow a Burn, every light blow a Static. Once your first element''s root (Cinder or Static) is learned, that element''s own is the root''s, not laid twice.
+    Body: '<b>What it does.</b> Opens Flashover''s two shapes. At a rest fire you choose which one your Flashover wears, and from then on it runs instead of the plain Flashover. <b>Corona</b>: nothing is spent; violet flame crawls over the enemy and throws small arcs at its neighbours. <b>Fulgurite</b>: the crack goes down instead of out; the ground under the enemy fuses into a scorched glassy patch that burns and shocks whoever stands in it.
 
 
-      <b>When it happens.</b> A heavy blow or finisher on an enemy carrying Static sets it off. Every blow that lands lays a Burn, and every light blow a Static.
+      <b>When it happens.</b> Every time Flashover fires (Static landing on a burning enemy, or Burn on a charged one) while Fire and Lightning are both carried. Before this mark is bought, or with only one of the two carried, the plain Flashover runs.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most about three times a second. One stack a blow of each; of your first element''s, none beyond its root''s.
+      <b>The numbers.</b> Mix, 3 Shards. Corona: lasts 4 seconds; every 0.7 seconds an arc leaps from the enemy to the nearest other enemy within 5 metres for 4 damage, a Burn and a Static (about five arcs). Fulgurite: a patch 2.5 metres across for 4 seconds that bites once a second for 4 damage, a Burn and a Static. What either lays starts no reaction of its own. Flashover still rests 4 seconds on each enemy.
 
 
-      <b>Works with.</b> Thunderclap or Flame Wave in a slot (more of either), the charged blade and the R2 strike, Arc Fire, Twin Break, Meltdown, Chain Reaction, Plasma, and the Flashover reaction when Burn and Static meet.
+      <b>Works with.</b> Ionised Air (an arc leaps on through three more whatever the shape), Twin Break, Meltdown (Corona and Fulgurite both keep Burn and Static on everyone near), Plasma.
 
 
-      <b>Example.</b> Carrying Fire first and Lightning second: your light blows burn a soldier and leave it Static, and the heavy blow that ends your chain sets the Static off into the pack.'
-  - Id: plasma.arcfire
-    Title: Arc Fire
-    Group: 
-    Body: '<b>What it does.</b> A discharge of Static carries Burn to everyone it reaches. A burn set off leaves Static on everyone it reaches. Each element''s burst plants the other.
+      <b>Example.</b> A pack pressing in: wear Corona, and one burning soldier you charge keeps arcing into the two beside it for four seconds. Fighting one brute in a doorway: wear Fulgurite and fight on the patch it leaves.
 
 
-      <b>When it happens.</b> Whenever you set off Static (a heavy blow on Static, Conductor) or a burn (Burn and Detonate, Open Furnace, Plasma).
-
-
-      <b>The numbers.</b> Mix, 3 Shards. A Static discharge lays two stacks of Burn on everything within 4 metres of the one set off. A burn set off lays two stacks of Static on everything within 3.2 metres.
-
-
-      <b>Works with.</b> Charged Embers, Static, Burn and Detonate, Open Furnace, Plasma, Chain Reaction.
-
-
-      <b>Example.</b> Discharge a full soldier in the middle of a pack: everyone near it is now burning two deep as well as shocked.'
+      <b>Not built yet.</b> Corona''s arcs leap from the enemy rather than drawing other discharges into its flame, and Fulgurite''s patch is drawn as burning and crackling ground until the glassy look is made.'
   - Id: plasma.twin
     Title: Twin Break
     Group: 
@@ -6371,29 +6364,29 @@ MonoBehaviour:
       <b>When it happens.</b> A perfect guard (press the guard button just before a blow lands) against an enemy carrying Burn, Static, or both.
 
 
-      <b>The numbers.</b> Mix, 4 Shards. Together: 10 damage a Burn stack and 7 a Static stack, times 1.5, with 5 stagger a stack: 127.5 damage and 50 stagger at five and five. Alone, in 3 metres: Burn 10 plus 15 a stack, Static 10.5 a stack, 5 stagger a stack.
+      <b>The numbers.</b> Mix, 3 Shards. Together: 10 damage a Burn stack and 7 a Static stack, times 1.5, with 5 stagger a stack: 127.5 damage and 50 stagger at five and five. Alone, in 3 metres: Burn 10 plus 15 a stack, Static 10.5 a stack, 5 stagger a stack.
 
 
-      <b>Works with.</b> Charged Embers, Kiln Stance, Stored Charge, Meltdown. Burn and Detonate spends the burn first, so the two clash.
+      <b>Works with.</b> Kiln Stance, Stored Charge, Meltdown, Ball Lightning (it grows from this or Ionised Air). Breath of the Lioness spends the burn first, so the two clash.
 
 
       <b>Example.</b> A burning, charged brute swings: guard it perfectly and it takes 127 and stops dead.'
   - Id: plasma.ionised
     Title: Ionised Air
     Group: 
-    Body: '<b>What it does.</b> When any affliction on an enemy reaches its full depth, an arc leaps from that enemy through three more.
+    Body: '<b>What it does.</b> Whenever Flashover fires, an arc leaps on from the burning enemy through three more, each struck and charged.
 
 
-      <b>When it happens.</b> The moment an affliction on an enemy fills: five Burn, five Static, and so on.
+      <b>When it happens.</b> Each time Flashover fires on an enemy, plain or in either shape, while Fire and Lightning are both carried.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. 10 damage and 8 stagger to the first and to each of three more, leaping up to 5 metres from one to the next. At most once a second.
+      <b>The numbers.</b> Mix, 3 Shards. 10 damage, 8 stagger and a Static to each of up to three more enemies, leaping up to 5 metres from one to the next. Flashover itself rests 4 seconds on each enemy.
 
 
-      <b>Works with.</b> Charged Embers (two afflictions to fill), Cinder, Static, Fused Core.
+      <b>Works with.</b> Flashover''s Shape mark (Corona or Fulgurite), Chain Reaction, which grows from it, and Static or Thunderclap to bring the charge.
 
 
-      <b>Example.</b> Fill a soldier''s Burn in a crowd and the arc jumps through three of its friends.'
+      <b>Example.</b> Burn a soldier in a crowd and Thunderclap it: Flashover goes off, and the arc runs on into three of its friends, leaving each charged for the next one.'
   - Id: plasma.chain
     Title: Chain Reaction
     Group: 
@@ -6403,93 +6396,67 @@ MonoBehaviour:
       <b>When it happens.</b> The moment an enemy carrying both dies.
 
 
-      <b>The numbers.</b> Mix, 4 Shards. The burst is 4 metres in radius: 18 damage, and as many Burn stacks as the dead one had. Everyone within 4 metres also takes as many Static stacks as it had. At most a few times a second.
+      <b>The numbers.</b> Mix, 3 Shards. The burst is 4 metres in radius: 18 damage, and as many Burn stacks as the dead one had. Everyone within 4 metres also takes as many Static stacks as it had. At most a few times a second.
 
 
-      <b>Works with.</b> Charged Embers, Arc Fire, Catching Fire, Meltdown.
+      <b>Works with.</b> Ionised Air, which it grows from, Catching Fire, Meltdown.
 
 
       <b>Example.</b> Kill one soldier at five and five, and the three round it start at five and five too, one blow from Meltdown.'
-  - Id: plasma.ball
-    Title: Ball Lightning
-    Group: 
-    Body: '<b>What it does.</b> You loose a slow ball of white fire that drifts after the nearest enemy. Strike it with a swing to send it fast along the swing and grow it a step, up to three. It bursts on the first enemy it meets with Burn and Static, harder for each strike. Left alone, it bursts small when its time is up.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4), then swing at the ball.
-
-
-      <b>The numbers.</b> Mix, 4 Shards, 40 mana. It appears 1.5 metres ahead and drifts at 2 metres a second for 8 seconds; batted, it flies at 9. Burst: 2.5 metres in radius, 16 damage and 20 stagger, two stacks of Burn and of Static; each strike adds 0.7 metres, 12 damage, 10 stagger and a stack of each. At three strikes: 52 damage, 50 stagger and a heavy blow.
-
-
-      <b>Works with.</b> Charged Embers, Meltdown, Fused Core, Hot Coals.
-
-
-      <b>Example.</b> Bat it three times into an archer: 52 damage, and all near are five deep in both.'
-  - Id: plasma.fused
-    Title: Fused Core
-    Group: 
-    Body: '<b>What it does.</b> Your spells hit harder, and every enemy a spell strikes is left with a burn and Static.
-
-
-      <b>When it happens.</b> Always on once learned; the afflictions come each time a spell of yours strikes an enemy.
-
-
-      <b>The numbers.</b> Mix, 4 Shards. Spells deal 15% more damage. One stack of Burn and one of Static on each enemy a spell strikes.
-
-
-      <b>Works with.</b> Flame Wave, Thunderclap, Ball Lightning, Plasma Lance, Ionised Air, Conductor.
-
-
-      <b>Example.</b> A Thunderclap that forks to three enemies leaves all three burning and charged.'
   - Id: plasma.meltdown
     Title: Meltdown
     Group: 
     Body: '<b>What it does.</b> An enemy near you carrying five Burn and five Static begins to shake with light. A few moments later it bursts, far harder than either alone, and the burst spends both. Nothing stops it, and it does not harm you.
 
 
-      <b>When it happens.</b> Always on once learned. It looks a few times a second for an enemy within 14 metres at full depth in both; one enemy melts at a time.
+      <b>When it happens.</b> Always on once learned, while Fire and Lightning are both carried. It looks a few times a second for an enemy within 14 metres at full depth in both; one enemy melts at a time.
 
 
-      <b>The numbers.</b> Mix, 5 Shards. It shakes for 3 seconds, then bursts: 45 damage and 60 stagger to it as a heavy blow, and half of each to everything else within 5 metres. The same enemy cannot melt again for 10 seconds.
+      <b>The numbers.</b> Mix, keystone, 5 Shards. It shakes for 3 seconds, then bursts: 45 damage and 60 stagger to it as a heavy blow, and half of each to everything else within 5 metres. The same enemy cannot melt again for 10 seconds.
 
 
-      <b>Works with.</b> Charged Embers, Chain Reaction, Ball Lightning, Fused Core, Twin Break.
+      <b>Works with.</b> Twin Break or Chain Reaction (it grows from either), Ball Lightning, Corona.
 
 
       <b>Example.</b> Fill a brute with both and roll away: three seconds later it goes up and staggers the pack around it.'
-  - Id: plasma.lance
-    Title: Plasma Lance
+  - Id: plasma.ball
+    Title: Ball Lightning
     Group: 
-    Body: '<b>What it does.</b> You throw a bolt of plasma at the enemy you face that leaps on through three more.
+    Body: '<b>What it does.</b> You loose a slow ball of plasma, violet at its heart with real flame on its skin, that drifts after the nearest enemy. Strike it with a swing to send it fast along the swing and grow it a step, up to three. It bursts on the first enemy it meets with Burn and Static, harder for each strike. Left alone, it bursts small when its time is up.
 
 
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
+      <b>When it happens.</b> From a spell slot, while Fire and Lightning are both carried: cast it with that slot''s button (hold L2 and a face button, or 1 to 4), then swing at the ball. Its first landing charges your blade with Fire, the branch''s first element.
 
 
-      <b>The numbers.</b> Mix, 5 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Reaches 11 metres to the first enemy, then leaps up to 5 metres from one to the next, four enemies in all. 30 damage, 26 stagger and two stacks of Burn on each, whichever element is first: the branch''s spells are made of Fire, and one that lands charges the blade with Fire.
+      <b>The numbers.</b> Mix, duo spell, 5 Shards, 40 mana. It appears 1.5 metres ahead and drifts at 2 metres a second for 8 seconds; batted, it flies at 9. Burst: 2.5 metres in radius, 16 damage and 20 stagger, two stacks of Burn and of Static; each strike adds 0.7 metres, 12 damage, 10 stagger and a stack of each. At three strikes: 52 damage, 50 stagger and a heavy blow.
 
 
-      <b>Works with.</b> Fused Core (both afflictions on each), Conductor, Ionised Air, Hot Coals.
+      <b>Works with.</b> Twin Break or Ionised Air (it grows from either), Meltdown, and Flashover on whatever it leaves burning and charged.
 
 
-      <b>Example.</b> Four soldiers in a loose line: one cast strikes all four for 30 each.'
+      <b>Example.</b> Bat it three times into an archer: 52 damage, and all near are five deep in both.
+
+
+      <b>Not built yet.</b> The ball is still drawn in its first colours; the violet heart and the flame on its skin come with its look.'
   - Id: fire.plasma
     Title: Plasma
     Group: 
-    Body: '<b>What it does.</b> A heavy blow or a finisher on a burning enemy bursts. The burst sets off the burn on everyone it reaches and then sets each of them alight again.
+    Body: '<b>What it does.</b> The branch''s top mark. A heavy blow or a finisher on a burning enemy bursts. The burst sets off the burn on everyone it reaches and then sets each of them alight again. If the enemy carries Static as well, Flashover goes off on it at once, whatever its rest, in the shape you wear.
 
 
-      <b>When it happens.</b> Every heavy blow or finisher that lands on a burning enemy.
+      <b>When it happens.</b> Every heavy blow or finisher that lands on a burning enemy, while Fire and Lightning are both carried.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The burst is 3.2 metres in radius: 18 damage and 16 stagger. Each enemy in it that was burning takes its burn set off as well, 10 damage and 10 more a stack, and every enemy in it burns for 4 seconds afterward.
+      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The burst is 3.2 metres in radius: 18 damage and 16 stagger. Each enemy in it that was burning takes its burn set off as well, 10 damage and 10 more a stack, and every enemy in it burns for 4 seconds afterward. Nothing of the first enemy''s Burn is spent.
 
 
-      <b>Works with.</b> Cinder, Charged Embers, Arc Fire (each burst leaves Static), Heat, Kindle.
+      <b>Works with.</b> Cinder, Heat, Catching Fire, Flashover''s shapes, Ionised Air.
 
 
-      <b>Example.</b> Three soldiers burning five deep: a heavy blow on one bursts over all three for 78 each, and leaves them burning.'
+      <b>Example.</b> Three soldiers burning five deep: a heavy blow on one bursts over all three for 78 each, and leaves them burning; if it was charged too, Flashover goes off on it at once.
+
+
+      <b>Not built yet.</b> On an enemy with no Static the burst is still its own; the design makes it a Flashover that spends nothing.'
   - Id: poison.venom
     Title: Venom
     Group: 
@@ -7097,6 +7064,101 @@ MonoBehaviour:
 
 
       <b>Example.</b> Fight until five enemies are burning, roll clear, and light the pyres.'
+  - Id: sleetcharge.shape
+    Title: 'Sleet Charge: Thundersnow or Glass Spear'
+    Group: 
+    Body: '<b>What it does.</b> Opens Sleet Charge''s two shapes. At a rest fire you choose which one your Sleet Charge wears, and from then on it runs instead of the plain one. Both keep the charging: the frost charges itself a Static every half second for 3 seconds. They change how it ends. <b>Thundersnow</b>: the bolt that ends it falls on every chilled enemy near. <b>Glass Spear</b>: the bolt freezes as it lands and the enemy is Frozen at once, whatever its Chill.
+
+
+      <b>When it happens.</b> Every time Sleet Charge fires (Static landing on a chilled enemy, or Chill on a charged one) while Ice and Lightning are both carried. Before this mark is bought, or with only one of the two carried, the plain Sleet Charge runs.
+
+
+      <b>The numbers.</b> Mix, 3 Shards. Both: a Static every 0.5 seconds for 3 seconds, then the Static goes off, 7 damage and 5 stagger a stack to everything within 4 metres. Thundersnow: then a bolt leaps on to every chilled enemy within 6 metres of the last, six at most, 7 damage, 5 stagger and a Static each. Glass Spear: then Chill to full on an ordinary enemy, which freezes it; an elite takes 3 Chill and a god 2. A heavy blow still sets the Static off early. Sleet Charge rests 4 seconds on each enemy.
+
+
+      <b>Works with.</b> Hoarfrost or Glass Storm to lay the Chill, Thunderclap or Static to lay the charge, Charged Hail (a Glass Spear''s frozen enemy is ready to shatter), Nothing Resists.
+
+
+      <b>Example.</b> A frozen line of soldiers: wear Thundersnow, charge one, and three seconds later the bolt runs through every chilled one near it. Against one brute: wear Glass Spear, and when the charge breaks it stands frozen for your heavy blow.
+
+
+      <b>Not built yet.</b> Thundersnow''s bolt leaps from one chilled enemy to the next rather than falling on each at once, and each is struck for 7 rather than discharging the Static it carries. Glass Spear freezes by filling the Chill, so it lasts the Chill''s own time rather than 1.5 seconds, and the spear of clear ice is not drawn yet.'
+  - Id: sleetcharge.hail
+    Title: Charged Hail
+    Group: 
+    Body: '<b>What it does.</b> Shattering an enemy that carried Static throws its charge into the shards: everything the shards strike takes a Static.
+
+
+      <b>When it happens.</b> Whenever a frozen enemy carrying Static shatters (a heavy blow or a finisher on a frozen enemy).
+
+
+      <b>The numbers.</b> Mix, 3 Shards. A Static on everything within 3 metres of the shattered enemy, at most five times a second.
+
+
+      <b>Works with.</b> Glass Spear (it freezes a charged enemy for you to shatter), Glass Storm, Nothing Resists, and Sleet Charge on whatever the shards chilled.
+
+
+      <b>Example.</b> Freeze a charged soldier and shatter it in a pack: the three round it are charged, and the chilled ones start their own Sleet Charge.
+
+
+      <b>Not built yet.</b> The charge is laid in a ring round the shattered enemy, not by each shard that strikes.'
+  - Id: sleetcharge.snap
+    Title: Cold Snap
+    Group: 
+    Body: '<b>What it does.</b> A perfect guard against a chilled enemy makes its Sleet Charge strike at once, with full Static.
+
+
+      <b>When it happens.</b> A perfect guard (press the guard button just before a blow lands) against an enemy carrying Chill.
+
+
+      <b>The numbers.</b> Mix, 3 Shards. The enemy is charged to full Static (five) and the charge goes off at once: 7 damage and 5 stagger a stack, 35 and 25 at full, to everything within 4 metres. Once a second at most.
+
+
+      <b>Works with.</b> Hoarfrost, Glass Storm, Thundersnow, Nothing Resists, the perfect guard''s own cooldown cut.
+
+
+      <b>Example.</b> A chilled brute swings: guard it perfectly and it takes 35 and its pack the same.
+
+
+      <b>Not built yet.</b> The Sleet Charge already running is not ended by it: the full charge goes off beside it, and a new Sleet Charge may begin from the Static laid.'
+  - Id: sleetcharge.resists
+    Title: Nothing Resists
+    Group: 
+    Body: '<b>What it does.</b> Cold carries lightning without loss: Static discharged from a chilled enemy runs on at full strength through the chilled enemies near.
+
+
+      <b>When it happens.</b> Whenever Static is set off on an enemy carrying Chill (a heavy blow, a Sleet Charge''s end, Cold Snap).
+
+
+      <b>The numbers.</b> Mix, keystone, 5 Shards. An arc runs on from the enemy through up to four chilled enemies, each within 5 metres of the last: 7 damage, 5 stagger and a Static each, at most twice a second.
+
+
+      <b>Works with.</b> Thundersnow, Cold Snap, Charged Hail, Hoarfrost and Glass Storm to keep the pack chilled.
+
+
+      <b>Example.</b> Glass Storm has chilled a pack of five: one heavy blow on a charged one, and the arc runs through the other four.
+
+
+      <b>Not built yet.</b> It answers a discharge, not every arc leaving a chilled enemy, and each arc after the first is its own 7 rather than the full strike carried on.'
+  - Id: sleetcharge.glassstorm
+    Title: Glass Storm
+    Group: 
+    Body: '<b>What it does.</b> Six shards of clear ice turn round you at 2 metres for 8 seconds, threads of lightning jumping between them. Each shard that passes through an enemy cuts it and lays a Chill, and half the passes a Static, so the ring sets up Sleet Charge on whatever presses in.
+
+
+      <b>When it happens.</b> From a spell slot, while Ice and Lightning are both carried: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Ice, the branch''s first element.
+
+
+      <b>The numbers.</b> Mix, duo spell, opener, 5 Shards. No mana: it waits 14 seconds after a cast, less with weapon play. Six shards for 8 seconds; each that passes through an enemy strikes it at most every half second for 4 damage, 4 stagger and a Chill, and half the time (by chance) a Static as well.
+
+
+      <b>Works with.</b> Sleet Charge and its shapes, Charged Hail, Nothing Resists, Cold Snap, and any heavy blow on a chilled, charged enemy.
+
+
+      <b>Example.</b> Cast it as a pack closes: everyone the ring cuts is chilled, half of them charged, and Sleet Charge starts going off round you.
+
+
+      <b>Not built yet.</b> The Static comes by chance on half the passes rather than on every other one. Your weapon blows do not fling the shards yet (each landed blow should fling the nearest into the enemy struck, 8 with a Chill and a Static, and a heavy blow all that are left), and the shards are drawn as the toothed discs until their glassy look is made.'
   - Id: tempest.charged
     Title: Charged Air
     Group: 
