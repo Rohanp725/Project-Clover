@@ -1984,6 +1984,48 @@ before-and-after strips in `review/gifs/strips/`.
   dark energy pulled down into the hole as a real vortex; the redrawn Seized's dark pool and Rust's blade turning ochre
   (the owner's comments on those two were on the redrawn timelines); Soaked's one mega drop; Smoulder's black flame.
 
+### The eleven element looks rebuilt from the Blender worker's batches 1 and 2 (2026-11-20, night; Claude's choices, not yet seen by the owner)
+
+The Blender worker's updated recipe and kit (`staging/blender/2026-11-20_elements`: 21 looks, 20 meshes, 125 ribbons) are
+in `Art/VFX/Combos/` and built by Clover > Build > Element Looks into 23 looks (`review/checks/element_looks.md`). Films on
+the Proving Ground's real enemies, afflictions on the group of five and surges on the player: `review/gifs/elements/`
+(`elem_<element>_affliction.gif`, `_surge.gif`, `elem_wind_infused.gif` for the wind strike), strips in
+`review/gifs/strips/elements/`, and the side-by-side films of the choices below in `review/gifs/elements/compare/`.
+
+- **Ribbons** (`ElementLookSet.Ribbon`): each recipe ribbon is a tube along its points (smoothed, a bolt keeping its hard
+  corners), as wide as its `width_m` with its taper or needle profile, u running tail to head, drawn on head first and wiped
+  off from the tail by its `draw_on` and `erase` keys through Clover/Spell's `_DrawHead` and `_DrawTail`, inked in its own
+  colour (wind a mint rim, lightning a violet fringe), dust and combed floor stippled thin, and orbiting by its `orbit`.
+- **Loops**: a repeating part whose window runs past the look's end is taken whole into the next loop instead of being cut,
+  and held parts that keep moving (a flame's flicker, a churning cloud, an orbiting leaf, a turning lotus) go on moving
+  while an affliction or surge lasts instead of freezing at the end of the timeline.
+- **Burn: the flame field is kept.** Filmed on the same group, `BodyFlames` (thin licking tongues banded red to yellow,
+  flickering) read as real flame; Blender's tongues read as large pale-yellow inked cones, close to the stacked look the
+  owner turned down. They stay built (`fire_burn`) behind `AfflictionArt.BurnStyle`.
+- **Static: both.** The code's crawl round and over the body (the owner: "decent") with Blender's cyan arcs jumping off it
+  to the floor and the air, the detail the owner asked for; the code's own jump arcs, near white on film, are dropped.
+- **Overdrive: Blender's arcs.** Cyan zigzags with a violet rim snapping across the body and down to the floor, no white
+  and no rings; the code's forks burst as white stars and are not drawn (`SurgeArt.OverdriveStyle`).
+- **Tremor**: Blender's look: cracks splitting under the feet a step at each jolt, see-through dust and hopping pebbles,
+  kept to about the body's own ground and a deeper ochre for the game's darker floors; the body's shake stays.
+- **Clarity**: Blender's gold lotus of light (and a paler inner lotus turning the other way) replaces the kolam; the shaft
+  pours down and draws back up; its motes are pale gold.
+- **Unsteady**: built per stack count from the recipe's three bodies (`wind_unsteady_1`, `wind_unsteady`, `wind_unsteady_5`:
+  one curl and leaf, two and three, three faster and five). Curls are drawn twice the recipe's width so they read at the
+  game camera, pale dust with a mint rim (never above about 0.85 on screen), dust combed round the feet, leaves 1.6 times
+  larger. Wind arrives from the blow's side and bends round the body.
+- **The wind strike**: Cutting Wind plays Blender's strike (`wind_strike`) turned to the strike's way and fitted to how far
+  the one struck stood: a needle crescent drawn on with the blade and eroding from its tail, parting round the enemy and
+  blowing on past the arc in curls, the floor combed. The weapon's own swing trail (SwingTrails) is kept as it was. A wind
+  hit no longer throws the flat pale debris cards ("random white shapes"): three gold and ochre leaves blow off instead.
+- **No white**: Tailwind's spiral is drawn in pale dust; Wellspring's pool is see-through teal (it read pale grey), its
+  rings blue and cyan; Hunger's burning crescent and bead a hot violet; Temper's glints a pale steel; Sundered's dagger and
+  wound have their own paints (they were grey).
+- **Crowd profile** (`AgentScripts/profile_afflicted.sh`, twelve enemies each carrying two of Burn, Static, Cursed,
+  Tremor, Unsteady and Poisoned, the player surging Temper then Overdrive): median 6.85 ms, p95 9.9 ms, one frame of 299
+  over 16.6 ms (the profiler starting); `ElementLooks` 0.23 ms a frame and no garbage; the pool (now 384 pieces) peaked at
+  318.
+
 ## Credits (decided 2026-11-18)
 
 - **Decided (user)**: the published game has a credits section. It thanks **_dnen**, **parvar11** and **nairarj000**,
