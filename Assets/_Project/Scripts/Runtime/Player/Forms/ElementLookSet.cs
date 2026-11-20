@@ -24,6 +24,9 @@ namespace Clover.Player.Forms
         /// </summary>
         public const byte NoShell = 0, Steel = 1, Ice = 2, Rime = 3, Wet = 4, Stone = 5, Venom = 6;
 
+        /// <summary>A look's body burning in the real flame field while it plays: not, in fire, in the curse's black fire.</summary>
+        public const byte NoFlame = 0, Fire = 1, BlackFlame = 2;
+
         /// <summary>Shells the body's ice draws (Clover/Toon's _Ice, in its frost, stone or venom colouring).</summary>
         public static bool IsIceShell(byte shell) => shell == Ice || shell == Rime || shell == Stone || shell == Venom;
 
@@ -48,6 +51,14 @@ namespace Clover.Player.Forms
             public byte Shell;
             public float ShellStart, ShellStep, ShellGrow;
             public int ShellBands;
+            /// <summary>Seconds into the look when its shell is broken off and gone (Rime's crust at the heavy); 0: it lasts the look.</summary>
+            public float ShellUntil;
+            /// <summary>
+            /// The body burns in the real flame field (<see cref="BodyFlames"/>) while this look plays, from
+            /// <see cref="BodyFlameFrom"/>: plain fire, or the curse's black fire (Smoulder). None: the look draws its own.
+            /// </summary>
+            public byte BodyFlame;
+            public float BodyFlameFrom;
             /// <summary>
             /// Degrees of yaw the recipe's player faced (toward the main body): a look played turned to a strike's way
             /// (<see cref="ElementLooks.PlayAt"/>) is turned by the strike's yaw less this.
@@ -265,7 +276,10 @@ namespace Clover.Player.Forms
         /// </summary>
         public static float PartTime(in Look look, in Part part, float age, bool once)
         {
-            if (age <= look.Seconds || once) return Mathf.Min(age, look.Seconds + 0.001f);
+            if (age <= look.Seconds) return age;
+            // A look played once and held past its end (a reaction's aftermath) keeps what stays moving: its flames
+            // flicker on and its clouds churn, never frozen mid-lick.
+            if (once) return part.Cycles ? CycleTime(look, part, age) : look.Seconds + 0.001f;
             if (part.Repeats)
             {
                 float span = Mathf.Max(0.1f, look.Seconds - look.LoopFrom);
@@ -273,12 +287,15 @@ namespace Clover.Player.Forms
                 if (t < part.Show && t + span < part.Hide) t += span;
                 return t;
             }
-            if (part.Cycles)
-            {
-                float cycle = Mathf.Clamp(look.Seconds - part.Show - 0.4f, 0.2f, CycleSeconds);
-                return look.Seconds - cycle + Mathf.Repeat(age - look.Seconds, cycle);
-            }
+            if (part.Cycles) return CycleTime(look, part, age);
             return look.Seconds + 0.001f;
+        }
+
+        // A cycling part's time past its look's end: round its last stretch.
+        private static float CycleTime(in Look look, in Part part, float age)
+        {
+            float cycle = Mathf.Clamp(look.Seconds - part.Show - 0.4f, 0.2f, CycleSeconds);
+            return look.Seconds - cycle + Mathf.Repeat(age - look.Seconds, cycle);
         }
 
         /// <summary>

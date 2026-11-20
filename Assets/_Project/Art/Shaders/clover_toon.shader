@@ -115,8 +115,11 @@ Shader "Clover/Toon"
             colour += half3(0.45, 0.62, 0.8) * step(0.95, saturate(dot(normalWS, halfway)));
             if (_IceFrost > 0.001)
             {
+                // A crust of pale blue frost grains with clear blue ice between, never white: the body went white all
+                // over in Rime's films (the audit of 2026-11-20; the rule: nothing pure white).
                 float grain = frac(sin(dot(floor(positionWS * 38.0), float3(12.9898, 78.233, 37.719))) * 43758.5453);
-                half3 frost = lerp(half3(0.78, 0.86, 0.93), half3(0.92, 0.96, 1.0), step(0.55, grain)) * lerp(0.85, 1.0, lit);
+                half3 frost = lerp(half3(0.4, 0.6, 0.86), half3(0.58, 0.76, 0.94), step(0.55, grain)) * lerp(0.85, 1.0, lit);
+                frost = grain < 0.3 ? colour : frost;
                 colour = lerp(colour, frost, _IceFrost);
             }
             // Venom Rime (the owner, 2026-11-19: "ice crystals ... greenish or yellowish because they are poisoned ice"):

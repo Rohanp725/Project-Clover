@@ -46,6 +46,8 @@ namespace Clover.Player.Forms
             // The element art's marks: a drawn sheet played through, a mark drawn on by degrees, one that never fades.
             public byte Extra;
             public float Rate;
+            // Seconds it takes to come in from nothing (0: there at once).
+            public float FadeIn;
         }
 
         private const byte Sheet = 1, Loops = 2, Reveals = 4, Holds = 8, Lingers = 16;
@@ -607,7 +609,7 @@ namespace Clover.Player.Forms
         /// Z, growing to <paramref name="endScale"/>. It may be drawn on over <paramref name="revealSeconds"/> (the
         /// material says how) and may hold to its end instead of fading.
         /// </summary>
-        public static void LayDecal(Material material, Vector3 at, Quaternion rotation, Vector3 scale, Vector3 endScale, Color colour, float seconds, float revealSeconds = 0f, bool fades = true, float spinDegrees = 0f)
+        public static void LayDecal(Material material, Vector3 at, Quaternion rotation, Vector3 scale, Vector3 endScale, Color colour, float seconds, float revealSeconds = 0f, bool fades = true, float spinDegrees = 0f, float fadeInSeconds = 0f)
         {
             if (material == null) return;
             int i = Thrown(FormMark.Disc, at, rotation, scale, endScale, colour, seconds, spinDegrees, false, 0f, true, material);
@@ -615,7 +617,34 @@ namespace Clover.Player.Forms
             ref var one = ref instance.flats[i];
             one.Extra = (byte)((revealSeconds > 0f ? Reveals : 0) | (fades ? 0 : Holds));
             one.Rate = revealSeconds;
-            instance.Paint(i, one.Colour, 0f, revealSeconds > 0f ? 0f : 1f);
+            one.FadeIn = fadeInSeconds;
+            var first = one.Colour;
+            if (fadeInSeconds > 0f) first.a = 0f;
+            instance.Paint(i, first, 0f, revealSeconds > 0f ? 0f : 1f);
+        }
+
+        /// <summary>
+        /// Fades out, over <paramref name="seconds"/>, every mark of the element art's <paramref name="material"/> lying within
+        /// <paramref name="radius"/> metres of a point (Marked's sun-wheel under a body a reaction's own look now plays on).
+        /// </summary>
+        public static void Hush(Material material, Vector3 at, float radius, float seconds)
+        {
+            if (instance == null || material == null) return;
+            seconds = Mathf.Max(0.02f, seconds);
+            for (int i = 0; i < instance.flats.Length; i++)
+            {
+                ref var one = ref instance.flats[i];
+                if (one.State != Auto || !ReferenceEquals(instance.flatShown[i].sharedMaterial, material)) continue;
+                Vector3 off = instance.flatAt[i].position - at;
+                off.y = 0f;
+                if (off.sqrMagnitude > radius * radius || one.Seconds - one.Age <= seconds) continue;
+                // Its fade is the last two fifths of its time: put it at the start of a fade that lasts the seconds given.
+                one.Scale = one.EndScale = instance.flatAt[i].localScale;
+                one.Extra = (byte)(one.Extra & ~Holds);
+                one.Seconds = seconds / 0.4f;
+                one.Age = one.Seconds * 0.6f;
+                one.FadeIn = 0f;
+            }
         }
 
         /// <summary>
@@ -744,6 +773,7 @@ namespace Clover.Player.Forms
                 if (one.Spin != 0f) flatAt[i].Rotate(0f, one.Spin * deltaTime, 0f, Space.Self);
                 if (lingers) flatAt[i].position += one.Drift * deltaTime;
                 var colour = one.Colour;
+                if (one.FadeIn > 0f) colour.a *= Mathf.Clamp01(one.Age / one.FadeIn);
                 if (lingers) colour.a *= t < LingerPlays ? 1f : 1f - (t - LingerPlays) / (1f - LingerPlays);
                 else if ((one.Extra & Holds) == 0) colour.a *= t < 0.6f ? 1f : 1f - (t - 0.6f) / 0.4f;
                 if (one.Extra != 0)

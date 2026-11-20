@@ -44,6 +44,74 @@ namespace Clover.Player.Forms
             /// <summary>How the look is turned about its anchor, and its size (a strike's look turned to the strike's way and reach).</summary>
             public Quaternion Turn;
             public float Size;
+            /// <summary>A reaction's look (played by <see cref="PlayReaction"/>): Marked's sun-wheel waits while it plays near.</summary>
+            public bool Reaction;
+            /// <summary>How much taller the body is than the recipe's stand-in (<see cref="StandIn"/>): the look is fitted to it.</summary>
+            public float Tall;
+        }
+
+        /// <summary>
+        /// The height of the clay stand-in the Blender worker drew the reactions on (its head at about 1.75 m), and the
+        /// most a look is grown for a taller body. The castle's soldiers stand 2 to 2.3 m and the Gate Captain near 3, so
+        /// the looks drawn round the stand-in came out small and low on them (the audit of 2026-11-20).
+        /// </summary>
+        public const float StandIn = 1.75f, MostTall = 1.45f;
+
+        /// <summary>
+        /// Metres out from the body within which a piece is moved out with the body's size; past it a piece moves only that
+        /// much further, so what reaches another enemy (a feather, a lane, a thorn) still lands where it was drawn to.
+        /// </summary>
+        public const float NearBody = 1.2f;
+
+        /// <summary>A ribbon reaching further than this from its body (an arc to another enemy, a lane) grows only upward.</summary>
+        public const float FarRibbon = 1.6f;
+
+        /// <summary>The Burn depth a reaction's body burns at in the real flame field while its look plays.</summary>
+        public const int BodyFlameDepth = 3;
+
+        /// <summary>How far from a reaction's body Marked's sun-wheel waits for it (<see cref="QuietAt"/>).</summary>
+        public const float QuietReach = 1.3f;
+
+        /// <summary>
+        /// Reactions whose burning bodies keep their own fire, drawn by the real flame field (<see cref="BodyFlames"/>),
+        /// instead of the recipe's rings of tongues stacked up the body, which read as the staircase the owner turned down
+        /// for Burn (2026-11-20; still in Steam and Kindling Point in the audit's films). Smoulder and Red Hot draw their own
+        /// (the black flame of the elements 3 redesign; the blast of tongues out through the enemy).
+        /// </summary>
+        private static readonly string[] BodyFlameReactions = { "steam", "kindling_point" };
+
+        /// <summary>True when a reaction leaves its burning bodies' fire to the real flame field (<see cref="BodyFlameReactions"/>).</summary>
+        public static bool KeepsBodyFlame(string slug)
+        {
+            for (int i = 0; i < BodyFlameReactions.Length; i++)
+                if (string.Equals(BodyFlameReactions[i], slug, System.StringComparison.Ordinal)) return true;
+            return false;
+        }
+
+        /// <summary>How much a reaction's look is grown on this body: its height over the stand-in's, never smaller.</summary>
+        public static float TallOf(Transform body)
+        {
+            if (body == null) return 1f;
+            var enemy = body.GetComponent<Clover.Gameplay.Enemy>();
+            return enemy != null ? Mathf.Clamp(enemy.BodyHeight / StandIn, 1f, MostTall) : 1f;
+        }
+
+        /// <summary>
+        /// True while a reaction's own look plays on a body standing within <see cref="QuietReach"/> of a point: what is
+        /// laid there plainly (Marked's sun-wheel) waits for it.
+        /// </summary>
+        public static bool QuietAt(Vector3 feet)
+        {
+            if (instance == null || instance.showings == null) return false;
+            for (int i = 0; i < instance.showings.Length; i++)
+            {
+                ref var one = ref instance.showings[i];
+                if (!one.Active || !one.Reaction || one.Ending || one.Body == null) continue;
+                Vector3 off = one.Body.position - feet;
+                off.y = 0f;
+                if (off.sqrMagnitude <= QuietReach * QuietReach) return true;
+            }
+            return false;
         }
 
         private static readonly int HeadId = Shader.PropertyToID("_DrawHead");
@@ -240,7 +308,7 @@ namespace Clover.Player.Forms
             if (spends != 0) Hide(body, spends, ElementLookSet.ShownFor(instance.set.Looks[main]));
             away.y = 0f;
             float yaw = away.sqrMagnitude > 0.0001f ? Mathf.Atan2(away.x, away.z) * Mathf.Rad2Deg : instance.set.Looks[main].FacingYaw;
-            Play(main, body, yaw);
+            PlayOnBody(main, body, yaw);
             var turn = Quaternion.Euler(0f, yaw - instance.set.Looks[main].FacingYaw, 0f);
             if (player != null)
             {
@@ -259,7 +327,7 @@ namespace Clover.Player.Forms
                 Vector3 wanted = body.position + turn * instance.set.Looks[other].FromMain;
                 var found = Nearest(wanted, 1.6f, taken);
                 if (found == null) continue;
-                Play(other, found, yaw);
+                PlayOnBody(other, found, yaw);
                 // The others it reaches show it in its own look too, not in the plain looks of what it lays on them
                 // (Caught Light's and Earthlight's films of 2026-11-20: every body it Marked rang a cream sun-wheel).
                 if (spends != 0) Hide(found, spends, ElementLookSet.ShownFor(instance.set.Looks[main]));
@@ -267,6 +335,21 @@ namespace Clover.Player.Forms
             }
             for (int i = 0; i < Taken.Length; i++) Taken[i] = null;
             return true;
+        }
+
+        // A reaction's look on one body: fitted to its height, and Marked's sun-wheel under it hushed while it plays.
+        private static void PlayOnBody(int look, Transform body, float yaw)
+        {
+            if (!Play(look, body, yaw)) return;
+            for (int i = 0; i < instance.showings.Length; i++)
+            {
+                ref var one = ref instance.showings[i];
+                if (!one.Active || !ReferenceEquals(one.Body, body) || one.Look != look || one.Age > 0f) continue;
+                one.Reaction = true;
+                one.Tall = TallOf(body);
+                break;
+            }
+            AfflictionArt.QuietMarks(body.position);
         }
 
         // The enemy or dummy standing nearest a point, within reach of it, that no part of this reaction is on yet.
@@ -340,6 +423,8 @@ namespace Clover.Player.Forms
                 shell = look.Shell;
                 reveal = ElementLookSet.ShellReveal(look, one.Age);
                 amount = one.Ending ? Mathf.Clamp01(1f - one.Gone / Going) : 1f;
+                // A shell broken off before the look ends (Rime's crust at the heavy) is gone in a fifth of a second.
+                if (look.ShellUntil > 0f && one.Age > look.ShellUntil) amount *= Mathf.Clamp01(1f - (one.Age - look.ShellUntil) / 0.2f);
                 return true;
             }
             return false;
@@ -376,7 +461,7 @@ namespace Clover.Player.Forms
             showings[free] = new Showing
             {
                 Active = true, Look = look, Body = body, Ground = body != null ? body.position : Vector3.zero, Age = 0f, KeptAt = Time.time,
-                Turn = Quaternion.identity, Size = 1f,
+                Turn = Quaternion.identity, Size = 1f, Tall = 1f,
             };
             playing++;
             return free;
@@ -452,6 +537,9 @@ namespace Clover.Player.Forms
                     }
                 }
                 Vector3 feet = one.Fixed || bodyGone ? one.Ground : one.Body.position;
+                // Its body burns in the real flame field while it plays (Smoulder's black fire, Steam's lower flame).
+                if (look.BodyFlame != ElementLookSet.NoFlame && !one.Ending && !bodyGone && one.Age >= look.BodyFlameFrom)
+                    BodyFlames.Keep(one.Body, BodyFlameDepth, look.BodyFlame == ElementLookSet.BlackFlame);
                 float shrink = one.Ending ? Mathf.Max(0.001f, 1f - one.Gone / Going) : 1f;
                 for (int k = 0; k < look.PartCount && k < MostParts; k++)
                 {
@@ -466,9 +554,10 @@ namespace Clover.Player.Forms
                     }
                     int pooled = Take(slot, part);
                     if (pooled < 0) continue;
-                    // Spins and orbits of a part that keeps moving run on with the look's own age.
-                    float angleTime = part.RunsOn && !one.Once ? one.Age : t;
-                    Pose(part, t, angleTime, part.Follows ? feet : one.Ground, one.Turn, one.Size, shrink, slot, at[pooled]);
+                    // Spins and orbits of a part that keeps moving run on with the look's own age (a reaction's held
+                    // aftermath too).
+                    float angleTime = part.RunsOn ? one.Age : t;
+                    Pose(part, t, angleTime, part.Follows ? feet : one.Ground, one.Turn, one.Size, one.Tall, shrink, slot, at[pooled]);
                     if (part.Kind == ElementLookSet.Ribbon) Draw(part, t, pooled);
                     if (!shown[pooled].enabled) shown[pooled].enabled = true;
                 }
@@ -489,12 +578,33 @@ namespace Clover.Player.Forms
             blocked[pooled] = true;
         }
 
-        private void Pose(in ElementLookSet.Part part, float t, float angleTime, Vector3 anchor, Quaternion turn, float size, float shrink, int slot, Transform frame)
+        private void Pose(in ElementLookSet.Part part, float t, float angleTime, Vector3 anchor, Quaternion turn, float size, float tall, float shrink, int slot, Transform frame)
         {
             set.LocalPose(part, t, angleTime, slot, out Vector3 position, out Quaternion rotation, out Vector3 scale);
+            Vector3 stretch = Vector3.one;
+            if (tall > 1.001f) Fit(part, tall, ref position, out stretch);
             if (part.Kind == ElementLookSet.Flat) position.y += FlatLift;
             frame.SetPositionAndRotation(anchor + turn * (position * size), turn * rotation);
-            frame.localScale = scale * (shrink * size);
+            frame.localScale = Vector3.Scale(scale, stretch) * (shrink * size);
+        }
+
+        // A reaction's part grown to a body taller than the stand-in: up the body by its height, out from it by as much
+        // near it but only a step more far out; a long ribbon reaching another body only upward, so it still lands there.
+        private static void Fit(in ElementLookSet.Part part, float tall, ref Vector3 position, out Vector3 stretch)
+        {
+            position.y *= tall;
+            float outward = Mathf.Sqrt(position.x * position.x + position.z * position.z);
+            if (outward > 0.0001f)
+            {
+                float grown = (outward + (tall - 1f) * Mathf.Min(outward, NearBody)) / outward;
+                position.x *= grown;
+                position.z *= grown;
+            }
+            stretch = new Vector3(tall, tall, tall);
+            if (part.Kind != ElementLookSet.Ribbon || part.Mesh == null) return;
+            var bounds = part.Mesh.bounds;
+            float reach = Mathf.Max(Mathf.Max(Mathf.Abs(bounds.min.x), Mathf.Abs(bounds.max.x)), Mathf.Max(Mathf.Abs(bounds.min.z), Mathf.Abs(bounds.max.z)));
+            if (reach > FarRibbon) stretch = new Vector3(1f, tall, 1f);
         }
     }
 }

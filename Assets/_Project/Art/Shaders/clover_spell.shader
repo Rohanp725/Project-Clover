@@ -118,7 +118,8 @@ Shader "Clover/Spell"
                     // Polished steel prints the world as hard stripes: near black, one white streak (never under 6 cm,
                     // so it survives the 12 m camera), mid steel, dark steel; turned a little by the facet's light.
                     half band = frac(dot(input.positionOS, float3(1.6, 1.0, 0.5)) + lit * 0.18);
-                    shown = band < 0.12 ? half3(1.9, 1.9, 1.95) : band < 0.42 ? half3(0.42, 0.44, 0.48) : band < 0.7 ? half3(0.12, 0.13, 0.15) : half3(0.03, 0.03, 0.035);
+                    // The one steel shine capped below white (the Blender worker capped m3_steel likewise, 2026-11-20).
+                    shown = band < 0.12 ? half3(0.84, 0.88, 0.94) : band < 0.42 ? half3(0.42, 0.44, 0.48) : band < 0.7 ? half3(0.12, 0.13, 0.15) : half3(0.03, 0.03, 0.035);
                 }
                 half3 foam = lit > -0.05 ? half3(0.96, 0.98, 1.0) : half3(0.6, 0.76, 0.92);
                 shown = input.paint.a < 0.5 ? foam : shown;

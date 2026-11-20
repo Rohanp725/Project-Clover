@@ -294,7 +294,9 @@ namespace Clover.Player
                     continue;
                 }
                 if (!(joined is IAfflictable carrier) || !carrier.Afflictions.Conditions.LinkedTo(host, out float share) || share <= 0f) continue;
-                var blow = new SpellBlow { Damage = damage * share, Effect = VfxKind.TintPuff, Tinted = true, Tint = colour, FromReaction = true };
+                // The joined body flashes poison's colour, not a plain blow's white (Rot Roots' film of 2026-11-20 at 2.1 s:
+                // three bodies lit pure white at the shared bite).
+                var blow = new SpellBlow { Damage = damage * share, Effect = VfxKind.TintPuff, Tinted = true, Tint = colour, Struck = colour, FromReaction = true };
                 if (combat.StrikeOne(joined, blow, host.transform.position))
                 {
                     BitesPassed++;

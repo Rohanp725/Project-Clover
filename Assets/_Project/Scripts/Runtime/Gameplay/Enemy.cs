@@ -84,6 +84,9 @@ namespace Clover.Gameplay
         public Color FrozenGlow = new Color(0.22f, 0.5f, 0.85f);
         /// <summary>The white flash of a plain blow landing.</summary>
         public static readonly Color StruckFlash = new Color(1.6f, 1.6f, 1.6f);
+
+        /// <summary>The hue an untinted reaction's blow flashes the body in (StruckLook softens it), so no reaction lights a body white.</summary>
+        public static readonly Color ReactionFlashTint = new Color(0.55f, 0.5f, 0.92f, 1f);
         /// <summary>The flash a landed blow gives the body: white for a plain one, the element's colour softened under one (<see cref="StruckLook"/>).</summary>
         public static Color FlashColour(Color tint) => StruckLook.Flash(StruckFlash, tint);
         public bool IsStaggered => Brain.State == EnemyState.Staggered;
@@ -458,8 +461,13 @@ namespace Clover.Gameplay
             if (markerOutline != null) outlineRenderer = markerOutline.GetComponent<Renderer>();
             if (markerFill != null) fillRenderer = markerFill.GetComponent<Renderer>();
             ReadOwnColours();
+            // The bars stand a hand over the head: the body's height, read once, for looks fitted to the body.
+            BodyHeight = bars != null ? Mathf.Max(1.2f, bars.localPosition.y - 0.3f) : 2f;
             Restore();
         }
+
+        /// <summary>Metres from the feet to the top of the head, from where the bars stand over it (2 before it wakes).</summary>
+        public float BodyHeight { get; private set; } = 2f;
 
         private void OnDestroy()
         {
@@ -653,7 +661,9 @@ namespace Clover.Gameplay
             float multiplier = finisher ? FinisherDamageMultiplier : IsStaggered || busy == BusyDrink ? StaggeredDamageMultiplier : 1f;
             // A god is not cut down by one blow, however good: a finisher takes a fixed share of him.
             Health.Damage(detonated + (finisher && Kind.FinisherHealthShare > 0f ? Mathf.Max(hit.Damage * multiplier * takes, Kind.Health * Kind.FinisherHealthShare) : hit.Damage * multiplier * takes));
-            Flash(FlashColour(hit.Tint));
+            // A reaction's blow that carries no element's tint flashes a soft lilac, not a plain blow's white (the films of
+            // 2026-11-20: Flashover's, Thunder Gust's, Glint's and The Bolt Runs True's strikes lit whole soldiers pure white).
+            Flash(FlashColour(hit.FromReaction && !StruckLook.Tinted(hit.Tint) ? ReactionFlashTint : hit.Tint));
             Vector3 away = hit.Direction;
             away.y = 0f;
             // Flat on its back it is not slid along the floor by the blows that follow the one that felled it.

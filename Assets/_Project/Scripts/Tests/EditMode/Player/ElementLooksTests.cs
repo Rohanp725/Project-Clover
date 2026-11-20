@@ -302,7 +302,11 @@ namespace Clover.Tests
             Assert.AreEqual(ElementLookSet.Venom, set.Looks[set.Find("venom_rime")].Shell, "Venom Rime's shell is poisoned ice");
             // The stone stands as long as the enemy is stone (3.5 s), not only the look's 1.6 s.
             Assert.AreEqual(3.5f, ElementLookSet.ShownFor(set.Looks[set.Find("turned_to_stone")]), 0.001f, "Turned to Stone holds while it stands as stone");
-            Assert.AreEqual(set.Looks[set.Find("glint")].Seconds, ElementLookSet.ShownFor(set.Looks[set.Find("glint")]), 0.001f, "a look with no hold ends at its length");
+            // Every other reaction keeps its aftermath standing (the crack, the grown plants, the waiting cloud), the
+            // afflictions it spent hidden under it, for the aftermath's hold; its player's part ends at its length.
+            Assert.AreEqual(ElementLookBuilder.AftermathHold, ElementLookSet.ShownFor(set.Looks[set.Find("glint")]), 0.001f, "a reaction's aftermath is held");
+            int onPlayer = set.FindVariant("glint", 'p');
+            if (onPlayer >= 0) Assert.AreEqual(set.Looks[onPlayer].Seconds, ElementLookSet.ShownFor(set.Looks[onPlayer]), 0.001f, "the player's part ends at its length");
         }
 
         /// <summary>
@@ -343,7 +347,6 @@ namespace Clover.Tests
                     {
                         var instances = (System.Collections.Generic.List<object>)group["instances"];
                         var motions = (System.Collections.Generic.List<object>)group["motion"];
-                        string notAMesh = ElementLookBuilder.NotAMesh(slug, (string)group["kit"], (string)group["kit_object"]);
                         for (int n = 0; n < instances.Count; n++)
                         {
                             var instance = (System.Collections.Generic.List<object>)instances[n];
@@ -351,6 +354,10 @@ namespace Clover.Tests
                             string piece = (string)instance[0];
                             bool onPlayer = motion.TryGetValue("on_player", out var flag) && flag is bool yes && yes || instance.Count > 4 && (string)instance[4] == "p";
                             int body = onPlayer ? -1 : RecipeBody(motion, Vec(instance[1]), bodies, reactions, piece, wrong);
+                            // A burning body's own tongues are its real flame (BodyFlames), by where the piece stands on its body.
+                            var fromItsBody = Vec(instance[1]) - (body >= 0 && body < bodies.Count ? bodies[body] : Vector3.zero);
+                            string notAMesh = ElementLookBuilder.NotAMesh(slug, (string)group["kit"], (string)group["kit_object"],
+                                reactions ? (string)group["material"] : null, fromItsBody);
                             string expected = reactions ? ElementLookBuilder.ReactionKey(slug, body)
                                 : ElementLookBuilder.PerBody.TryGetValue(slug, out var variants) ? (body < 0 ? variants[0] : body < variants.Length ? variants[body] : null)
                                 : body <= 0 ? slug : null;

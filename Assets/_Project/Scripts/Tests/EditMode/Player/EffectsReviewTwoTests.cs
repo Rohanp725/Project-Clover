@@ -279,7 +279,8 @@ namespace Clover.Tests
             Assert.AreEqual(BodyFlames.Tongues * 4, mesh.vertexCount, "four corners a tongue");
             foreach (var foot in mesh.vertices)
             {
-                Assert.That(foot.y, Is.InRange(0f, 1f), "rooted on the body, shins to shoulders");
+                // Rooted low and licking up, not stacked in rows up the body (the owner: "a overlayed staircase").
+                Assert.That(foot.y, Is.InRange(0f, 0.4f), "rooted low on the body, shins to hips");
                 Assert.LessOrEqual(new Vector2(foot.x, foot.z).magnitude, 1.06f, "round the body, not out on the floor");
             }
             Object.DestroyImmediate(mesh);

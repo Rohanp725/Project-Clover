@@ -109,6 +109,12 @@ namespace Clover.Player.Forms
             }
         }
 
+        /// <summary>Seconds Marked's sun-wheel takes to come in, so it fades back after a reaction's look instead of popping in.</summary>
+        public const float WheelFadeIn = 0.45f;
+
+        /// <summary>Marked's sun-wheels lying under a body fade out: a reaction's own look is starting there.</summary>
+        public static void QuietMarks(Vector3 feet) => ElementArt.Hush(ElementArt.Piece("light_wheel_affliction"), feet, ElementLooks.QuietReach, 0.2f);
+
         /// <summary>The depth of Static at which a Soaked body is Seized (Reactions.Three: "two Static or more").</summary>
         public const int SeizedStatic = 2;
 
@@ -256,8 +262,12 @@ namespace Clover.Player.Forms
                     return true;
                 }
                 case AfflictionKind.Marked:
+                    // A reaction's own look playing on or beside it is what is seen there (the audit of 2026-11-20: the
+                    // cream sun-wheel was the largest shape on screen in nine reactions): the wheel waits, then comes
+                    // back in softly.
+                    if (ElementLooks.QuietAt(feet)) return true;
                     // The wheel turns under it; the shaft lands on its head.
-                    if (beat % 3 == 0) ElementArt.Floor(ElementArt.Piece("light_wheel_affliction"), feet, beat * 15f, 1f, 1f, 1.5f, 0f, true, Color.white, 40f);
+                    if (beat % 3 == 0) ElementArt.Floor(ElementArt.Piece("light_wheel_affliction"), feet, beat * 15f, 1f, 1f, 1.5f, 0f, true, Color.white, 40f, WheelFadeIn);
                     ElementArt.Stand(ElementArt.Piece("light_pencil_affliction"), feet + Vector3.up * 1.9f, 180f, 1f, 0.4f);
                     ElementArt.Stand(ElementArt.Piece("light_glint_affliction"), feet + Vector3.up * 2.05f, 180f, 0.8f, 0.2f);
                     return true;
