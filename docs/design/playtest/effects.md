@@ -573,6 +573,8 @@ Group: Reactions
 
 **What sets it off.** A Mark landing on a Cursed enemy, or a curse on a Marked one.
 
+**Its shapes.** With Eclipse's Shape mark (Diamond Ring: Shadow Bands or Through the Throat, 3 Shards, in the heart of the chart) and both Light and Dark carried, Diamond Ring wears the shape chosen at a rest fire instead. Shadow Bands: the bead as before, and a Curse on everything within 5 m. Through the Throat: the light slips out of its far side as a line 6 m long, 12 and a Mark on all on it. Both keep its Mark from being spent for 4 s.
+
 **How to use it.** Curse a Marked enemy, then strike it again and again while the ring holds.
 
 **How it looks.** Its name over the enemy, and for a moment the black disc ringed in gold with one burning bead at its rim. Not yet: the disc staying for the 4 s.

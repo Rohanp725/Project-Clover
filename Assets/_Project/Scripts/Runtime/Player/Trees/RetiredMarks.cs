@@ -180,6 +180,10 @@ namespace Clover.Player
             // Halo, the duo branch of Metal and Light (pairs_d1_d2.md; task 4.15): Sun Wheels (offered to Metal's tree, whose
             // roster is full). Answering Draw moves to the Katana's Way (the list below).
             new RetiredMark("halo.sunwheels", 4),
+
+            // Eclipse, the duo branch of Light and Dark (pairs_d1_d2.md; task 4.15): Twilight (it only laid both; the Shape mark
+            // takes its place) and Black Sun (offered to Dark's tree, whose roster is full).
+            new RetiredMark("eclipse.twilight", 3), new RetiredMark("eclipse.blacksun", 4),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
