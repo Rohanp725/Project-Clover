@@ -498,6 +498,8 @@ namespace Clover.Tests
             [Elements.Metal] = 9,
             // Light's table gives three keystones as well; it keeps Unblemished and Condemned beside its Devotion.
             [Elements.Light] = 9,
+            // Dark's table gives two keystones, Never Sated and Dead Already, and four majors.
+            [Elements.Dark] = 10,
         };
 
         [Test]

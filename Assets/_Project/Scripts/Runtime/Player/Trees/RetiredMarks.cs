@@ -123,6 +123,17 @@ namespace Clover.Player
             new RetiredMark("light.longrays", 1), new RetiredMark("light.readylight", 1),
             new RetiredMark("light.dazzle", 3), new RetiredMark("light.sentence", 3), new RetiredMark("light.whatitowes", 3), new RetiredMark("light.returninglight", 3),
             new RetiredMark("light.twosuns", 6),
+
+            // Dark (elements_b.md, "What to cut from the built content"): the plain minors, Borrowed Strength, Feast and Glut
+            // cut outright, The Dead Stand folded into the Devotion, Nothing Stays Buried, and Unpaid, a keystone not carried
+            // over (the tree keeps Never Sated and Dead Already beside its Devotion).
+            new RetiredMark("dark.slowcollector", 1), new RetiredMark("dark.smallcuts", 1), new RetiredMark("dark.deepwell", 1), new RetiredMark("dark.recklessarm", 1),
+            new RetiredMark("dark.bitterharvest", 1), new RetiredMark("dark.longcurse", 1), new RetiredMark("dark.heavycurse", 1), new RetiredMark("dark.fatofthekill", 1),
+            new RetiredMark("dark.easyprey", 1), new RetiredMark("dark.longhunger", 1), new RetiredMark("dark.hardtobury", 1), new RetiredMark("dark.slowrot", 1),
+            new RetiredMark("dark.graveappetite", 1), new RetiredMark("dark.longshadows", 1),
+            new RetiredMark("dark.borrowed", 3), new RetiredMark("dark.feast", 3), new RetiredMark("dark.glut", 3),
+            new RetiredMark("dark.deadstand", 4),
+            new RetiredMark("dark.unpaid", 6),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

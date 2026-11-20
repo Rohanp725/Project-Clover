@@ -20,7 +20,7 @@ The long explanation the chart shows for every mark on Blight, the branch Dark a
 
 **The numbers.** Mix, 3 Shards. Half a point of health for each dose that bit: 4 at eight doses, every 2 seconds.
 
-**Works with.** Wither (the poison does not fade while the curse holds), Curse, Long Curse, One Death Feeds, Wasting Grip.
+**Works with.** Wither (the poison does not fade while the curse holds), Curse, Dread, One Death Feeds, Wasting Grip.
 
 **Example.** Three Cursed soldiers at eight doses each: every two seconds you heal 12 while you guard.
 
@@ -53,7 +53,7 @@ The long explanation the chart shows for every mark on Blight, the branch Dark a
 
 **The numbers.** Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. A circle 5 metres in radius, half a metre ahead of you, for 8 seconds. It bites 0.3 seconds after the cast and then every 2 seconds, four bites in all: 3 damage and a Curse each, with no stagger. It always lays Curse, whichever element you carry first, and does not hurry the poison's beat.
 
-**Works with.** Wither (poison never fades from what stands in it), Feeding Rot, Carrion Flies, One Death Feeds, Long Shadows.
+**Works with.** Wither (poison never fades from what stands in it), Feeding Rot, Carrion Flies, One Death Feeds, Dread.
 
 **Example.** Plant it where you mean to fight a pack: everyone who steps in is Cursed, so Wither keeps their poison running.
 
@@ -75,6 +75,6 @@ The long explanation the chart shows for every mark on Blight, the branch Dark a
 
 **The numbers.** A god's gift, never sold; in the playtest it can be bought. The sweep takes 0.42 seconds and reaches 9 metres round the finished enemy. Each poisoned enemy in it has its poison set off and spent: 9 damage a dose (72 at eight) and 4 stagger a dose. Half the total heals you.
 
-**Works with.** Wither, Carrion Flies (spread the doses first), Feast, Miasma, Grasp, Long Shadows.
+**Works with.** Wither, Carrion Flies (spread the doses first), Devouring Maw, Miasma, Grasp, Never Sated.
 
 **Example.** Four soldiers at eight doses round a Cursed brute: finish the brute and each takes 72 while you heal half of it.

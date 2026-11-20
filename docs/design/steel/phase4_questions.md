@@ -209,3 +209,31 @@ Each was built with the default given here; every one is easy to change. Added t
    the floor in their ring round the enemy, Marking and jarring what is inside. Alternative: the wall form (Red Before the Sun's) laid six
    metres across your front (nothing crosses it, and a heavy blow bursts it), nearer the picture but blocking where the
    design holds.
+
+## Dark
+
+1. **The Rise stays with the gift for now.** The design moves the Rise to Dark's root and leaves the gift the finisher
+   that buys it back. As built, `PlayerUpgrades.Rise` asks for the gift's id, its cast is the gift's (RiseForm ends the
+   Rise when that mark is not held), and RiseForm's buy-back is part of the same form: moving it is three lines in two
+   files, not data or one hook. Default: the gift, A Life for a Life, keeps giving the Rise and its buy-back as built,
+   and the root only curses (a NEEDS, `rise-on-root`). Alternative: allow the hook now (Rise asks for the root, the cast
+   names the root, RiseForm's buy-back asks for the gift), after main's PlayerUpgrades work tonight.
+2. **Pawned Heart's Empower has no shorter wait in the roster.** It gives 70% and a ring of 12 seconds; the shared rule
+   asks an Empower for a shorter wait or a lower price, and the heart is paid in health. Default: it waits 36 seconds,
+   not 40, beside the roster's numbers. Alternative: keep 40 and let the test allow an Empower that only strengthens a
+   spell paid in health.
+3. **Blood Price before a cast on cooldown exists.** Default: it keeps its built rule (the mana a spell lacks paid in
+   health, grey), which touches only duo spells and another element's larger spell now. Alternative: hold the mark out
+   of the tree (an empty place) until the cast on cooldown is built.
+4. **Stand-ins that are wider than their timing.** Until the moments exist: Grasp's Master answers any blow of yours on
+   the attacker within a second of being struck; Devouring Maw's Master breaks what every bitten enemy began and resets
+   once in 16 s; Gone to Ash's Master answers any blow scattered, once in 20 s; Second Shadow's Master gives a ward on
+   every cast; Pawned Heart's Master heals 10 on any perfect dodge, once in 3 s; Debts Called's Master and its Learn's
+   step strengthen every spell for the second after the cast, not only the burst. Default: as written, with **Not built
+   yet** lines. Alternatives: give them nothing until the pieces are built; or lengthen their limits.
+5. **Pawned Heart's shapes before the heart can be set elsewhere.** Default: both still set the heart behind you;
+   Buried Heart lays a ring of ash that Curses for the heart's 10 s, Hung From the Tree keeps the enemy faced Cursed for
+   them. Alternative: leave both shapes doing nothing beyond the plain heart until `heart-places` is built.
+6. **Devouring Maw's jaw no longer Curses.** The built jaw Cursed what it struck, so every bite would find a Curse to
+   spend; the roster's "on a Cursed enemy it spends the Curse" asks that it was Cursed before. Default: the jaw lays no
+   Curse. Alternative: it Curses after the spend, so a second bite in the same fight feeds.

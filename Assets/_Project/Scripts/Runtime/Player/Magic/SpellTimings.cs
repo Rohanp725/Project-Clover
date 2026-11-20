@@ -98,12 +98,13 @@ namespace Clover.Player.Magic
             ["light.reckoning"] = Cd(12f, SpellRole.Detonator),
             ["light.lantern"] = Cd(12f, SpellRole.Counter),
             ["light.daybreak"] = Mana(45f, SpellRole.Detonator),    // Light's larger spell
-            // Dark (its larger spell, Pawned Heart, is paid in health and keeps a long cooldown)
+            // Dark, reshaped (Phase 4): Grasp is the base spell; The Dead Stand is folded into the Devotion; Gone to Ash is new.
+            // Its larger spell, Pawned Heart, is paid in health, not mana, and keeps a long cooldown.
             ["dark.debtscalled"] = Cd(10f, SpellRole.Breaker),
-            ["dark.pawnedheart"] = Cd(40f, SpellRole.Breaker),
+            ["dark.pawnedheart"] = Cd(40f, SpellRole.Breaker),      // Dark's larger spell, paid in health
             ["dark.maw"] = Cd(11f, SpellRole.Detonator),
+            ["dark.ash"] = Cd(10f, SpellRole.Counter),
             ["dark.secondshadow"] = Cd(12f, SpellRole.Movement),
-            ["dark.deadstand"] = Cd(12f, SpellRole.Breaker),        // not in the roster
             // Poison
             ["poison.coiled"] = Cd(10f, SpellRole.Counter),
             ["poison.blister"] = Cd(10f, SpellRole.Detonator),

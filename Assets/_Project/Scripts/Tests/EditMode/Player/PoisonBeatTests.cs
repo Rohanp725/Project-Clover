@@ -199,7 +199,8 @@ namespace Clover.Tests
             Assert.IsTrue(Upgrade.ById(PoisonTree.InTime).Effects.All(e => e.OnBeat > 0f));
             Assert.IsTrue(Upgrade.ById(BlightTree.FeedingRot).Effects.Any(e => e.On == UpgradeTrigger.PoisonBite && e.Needs == AfflictionKind.Cursed && e.PerStack));
             Assert.IsTrue(Upgrade.ById(BlightTree.OneDeathFeeds).Effects.Any(e => e.On == UpgradeTrigger.Kill && e.Do == UpgradeAction.Bite));
-            Assert.IsTrue(Upgrade.ById(DarkTree.DevouringMaw).Effects.All(e => e.OwnSpell));
+            // Devouring Maw is a spell branch now (Phase 4): its feeding answers its own branch's bites.
+            Assert.IsTrue(Upgrade.ById(DarkTree.DevouringMaw).Effects.All(e => e.OwnBranch));
             // Black Ice, the one mark that answered the base spell alone, is Hoarfrost's shape now (Phase 4): a sheet cast in
             // the crystals' place.
             Assert.IsTrue(RetiredMarks.IsRetired(IceTree.BlackIce));
