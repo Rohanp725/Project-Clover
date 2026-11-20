@@ -19,9 +19,27 @@ namespace Clover.Player.Forms
     public static class ReactionMotion
     {
         /// <summary>The verbs. Pop is the look as first built: it pops in, holds and goes.</summary>
-        public const byte Pop = 0, Fall = 1, Rise = 2, Sink = 3, Sweep = 4, Extend = 5, Spread = 6, Spin = 7, Flicker = 8, Drift = 9, Lick = 10, Pulse = 11, Burst = 12, Blow = 13;
+        public const byte Pop = 0, Fall = 1, Rise = 2, Sink = 3, Sweep = 4, Extend = 5, Spread = 6, Spin = 7, Flicker = 8, Drift = 9, Lick = 10, Pulse = 11, Burst = 12, Blow = 13,
+            Orbit = 14, Spiral = 15, RibbonDraw = 16, Crackle = 17;
 
-        public static readonly string[] VerbNames = { "pop", "fall", "rise", "sink", "sweep", "extend", "spread", "spin", "flicker", "drift", "lick", "pulse", "burst", "blow" };
+        /// <summary>The verbs as the recipes name them (the Blender worker's recipes use these words exactly).</summary>
+        public static readonly string[] VerbNames = { "pop", "fall", "rise", "sink", "sweep", "extend", "spread", "spin", "flicker", "drift", "lick", "pulse", "burst", "blow",
+            "orbit", "spiral", "ribbon_draw", "crackle" };
+
+        /// <summary>A verb by its recipe name; <see cref="Pop"/> for a name that is none of them.</summary>
+        public static byte VerbOf(string name)
+        {
+            for (int i = 0; i < VerbNames.Length; i++)
+                if (VerbNames[i] == name) return (byte)i;
+            return Pop;
+        }
+
+        /// <summary>
+        /// The most times a second lightning that must be easy on the eyes (Seized; the owner, 2026-11-20: "make it
+        /// less flickery so it doesnt hurt peoples eyes") is redrawn: a crackle moves to a new shape this often and is
+        /// never dark between, so nothing on the screen flashes on and off.
+        /// </summary>
+        public const float CrackleRate = 3f;
 
         /// <summary>The three beats of a look: the cause arrives, the impact, the aftermath (the first to go under load).</summary>
         public const byte Arrive = 0, Impact = 1, Aftermath = 2;
@@ -59,6 +77,20 @@ namespace Clover.Player.Forms
             public byte Strobes;
             /// <summary>A white frame where it lands.</summary>
             public bool Flash;
+            /// <summary>Orbit, spiral (and a ribbon that orbits while it draws): metres from the centre it goes round.</summary>
+            public float Radius;
+            /// <summary>Orbit and spiral: whole turns a second about the up axis (below 0 the other way).</summary>
+            public float Turns;
+            /// <summary>Orbit and spiral: degrees round the centre where it starts.</summary>
+            public float Phase;
+            /// <summary>Spiral: metres a second it climbs.</summary>
+            public float Climb;
+            /// <summary>Spiral: metres a second its radius grows (below 0 it closes in).</summary>
+            public float Widen;
+            /// <summary>Ribbon draw: seconds its head takes to draw it on from its tail end to its tip.</summary>
+            public float DrawOn;
+            /// <summary>Ribbon draw: seconds at its end in which its tail wipes it off toward the tip.</summary>
+            public float Erase;
 
             /// <summary>Seconds after the look starts that it is gone.</summary>
             public float End => Delay + Seconds;
@@ -71,6 +103,22 @@ namespace Clover.Player.Forms
 
             public static Cue Of(byte verb, byte beat, float delay, float move, float seconds, float amount = 0f, byte strobes = 0, bool flash = false) =>
                 new Cue { Verb = verb, Beat = beat, Delay = delay, Move = move, Seconds = seconds, Amount = amount, Strobes = strobes, Flash = flash };
+
+            /// <summary>Round a centre at <paramref name="radius"/> metres, <paramref name="turns"/> times a second, from <paramref name="phase"/> degrees.</summary>
+            public static Cue OfOrbit(byte beat, float delay, float seconds, float radius, float turns, float phase = 0f, float grow = 0.15f) =>
+                new Cue { Verb = Orbit, Beat = beat, Delay = delay, Move = grow, Seconds = seconds, Radius = radius, Turns = turns, Phase = phase };
+
+            /// <summary>An orbit that climbs <paramref name="climb"/> metres a second and widens <paramref name="widen"/> metres a second.</summary>
+            public static Cue OfSpiral(byte beat, float delay, float seconds, float radius, float turns, float climb, float widen, float phase = 0f, float grow = 0.15f) =>
+                new Cue { Verb = Spiral, Beat = beat, Delay = delay, Move = grow, Seconds = seconds, Radius = radius, Turns = turns, Phase = phase, Climb = climb, Widen = widen };
+
+            /// <summary>A ribbon drawn on head first over <paramref name="drawOn"/> seconds and wiped off tail first over its last <paramref name="erase"/>; it may orbit as it goes.</summary>
+            public static Cue OfRibbon(byte beat, float delay, float seconds, float drawOn, float erase, float radius = 0f, float turns = 0f, float phase = 0f) =>
+                new Cue { Verb = RibbonDraw, Beat = beat, Delay = delay, Move = drawOn, Seconds = seconds, DrawOn = drawOn, Erase = erase, Radius = radius, Turns = turns, Phase = phase };
+
+            /// <summary>Lightning that moves without flashing: redrawn turned by <paramref name="turn"/> degrees <see cref="CrackleRate"/> times a second, never dark between.</summary>
+            public static Cue OfCrackle(byte beat, float delay, float grow, float seconds, float turn) =>
+                new Cue { Verb = Crackle, Beat = beat, Delay = delay, Move = grow, Seconds = seconds, Amount = turn };
 
             public override string ToString() =>
                 $"{VerbNames[Verb < VerbNames.Length ? Verb : 0]} {BeatNames[Beat < BeatNames.Length ? Beat : 0]} at {Delay:0.00} s for {Seconds:0.00} s" +
@@ -102,6 +150,12 @@ namespace Clover.Player.Forms
             public bool Shown;
             /// <summary>Which redraw of a strobe this is: each is drawn a little off the last.</summary>
             public int Redraw;
+            /// <summary>Where an orbit or a spiral has carried it from its centre, in metres across the ground (y is 0; its climb is <see cref="Lift"/>).</summary>
+            public Vector3 Offset;
+            /// <summary>A ribbon: how far along it (0 its tail end, 1 its tip) its head has drawn it on.</summary>
+            public float Head;
+            /// <summary>A ribbon: how far along it its tail has wiped it off (0 none, 1 all).</summary>
+            public float Tail;
         }
 
         /// <summary>True for the verbs whose impact comes at the end of their motion (they travel in and land).</summary>
@@ -113,7 +167,7 @@ namespace Clover.Player.Forms
         /// </summary>
         public static int Evaluate(in Cue cue, float age, int seed, out Pose pose)
         {
-            pose = new Pose { Along = 1f, Across = 1f, Size = 1f, Left = 1f, Reveal = 1f, Shown = true };
+            pose = new Pose { Along = 1f, Across = 1f, Size = 1f, Left = 1f, Reveal = 1f, Shown = true, Head = 1f };
             float local = age - cue.Delay;
             if (local < 0f) return Waiting;
             if (local >= cue.Seconds) return Over;
@@ -237,6 +291,35 @@ namespace Clover.Player.Forms
                     pose.Along = 1f + 0.35f * (1f - pose.Travel);
                     break;
                 }
+                case Orbit:
+                    // Round its centre all its life, turned to face along its way, grown out at its start.
+                    pose.Size = Grow(p);
+                    Round(cue, local, cue.Radius, ref pose);
+                    break;
+                case Spiral:
+                    // An orbit that climbs and opens out (or closes in, never past its centre).
+                    pose.Size = Grow(p);
+                    pose.Lift = cue.Climb * local;
+                    Round(cue, local, Mathf.Max(0f, cue.Radius + cue.Widen * local), ref pose);
+                    break;
+                case RibbonDraw:
+                {
+                    // Drawn on head first, wiped off tail first: it never pops in or out, and never fades, its erase is
+                    // its going. It goes round its centre while it is drawn when it is given a way round.
+                    pose.Head = Mathf.Clamp01(local / Mathf.Max(0.01f, cue.DrawOn));
+                    float eraseFrom = cue.Seconds - cue.Erase;
+                    pose.Tail = cue.Erase > 0f ? Mathf.Clamp01((local - eraseFrom) / cue.Erase) : 0f;
+                    pose.Left = 1f;
+                    if (cue.Turns != 0f || cue.Radius > 0f) Round(cue, local, cue.Radius, ref pose);
+                    break;
+                }
+                case Crackle:
+                    // Lightning easy on the eyes: grown in, then redrawn in a new turn a few times a second and never
+                    // dark between (no strobe, no flash), so it moves without flashing.
+                    pose.Size = Grow(p);
+                    pose.Redraw = Mathf.FloorToInt(local * CrackleRate);
+                    pose.Spin = pose.Redraw * cue.Amount;
+                    break;
                 default:
                     pose.Size = Grow(p);
                     break;
@@ -274,6 +357,18 @@ namespace Clover.Player.Forms
             redraw = Mathf.Min(flashes - 1, Mathf.FloorToInt(at));
             return at - Mathf.Floor(at) < 0.6f || local >= move;
         }
+
+        // Where a thing going round its centre is after some seconds, and the way it faces: along its way round.
+        private static void Round(in Cue cue, float local, float radius, ref Pose pose)
+        {
+            float degrees = cue.Phase + 360f * cue.Turns * local;
+            float angle = degrees * Mathf.Deg2Rad;
+            pose.Offset = new Vector3(Mathf.Sin(angle) * radius, 0f, Mathf.Cos(angle) * radius);
+            pose.Spin = degrees + (cue.Turns >= 0f ? 90f : -90f);
+        }
+
+        /// <summary>Degrees round its centre an orbit or a spiral has reached after <paramref name="local"/> seconds.</summary>
+        public static float AngleAt(in Cue cue, float local) => cue.Phase + 360f * cue.Turns * local;
 
         /// <summary>Whole until the last <see cref="OutShare"/> of its time, then down to nothing.</summary>
         public static float Left(float local, float seconds)

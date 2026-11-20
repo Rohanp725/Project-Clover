@@ -2,6 +2,8 @@
 // element's light, so nothing in the scene lights them: each facet is printed in one of three flat tones (a white-hot
 // face toward the form's own light, the element's colour, and a deep shade of it), with the same ink line round the
 // outside that characters carry. Colour and heat come per object through a property block.
+// A ribbon (a strip whose u runs from its tail end, 0, to its tip, 1) is drawn on head first and wiped off tail first by
+// _DrawHead and _DrawTail (ReactionMotion's ribbon_draw); at their defaults, 1 and 0, nothing is cut, whatever the uv.
 Shader "Clover/Spell"
 {
     Properties
@@ -14,6 +16,8 @@ Shader "Clover/Spell"
         _Thin ("Thinness (share of it stippled away: smoke, air)", Range(0, 1)) = 0
         _Bands4 ("Four bands: a white glint on the top facets (Ice, Light)", Range(0, 1)) = 0
         _Chrome ("Chrome stripes on painted chrome (Metal)", Range(0, 1)) = 0
+        _DrawHead ("A ribbon drawn on up to this share of its length (u)", Range(0, 1)) = 1
+        _DrawTail ("A ribbon wiped off up to this share of its length (u)", Range(0, 1)) = 0
         [Enum(UnityEngine.Rendering.CullMode)] _Cull ("Faces drawn (the kits' single sheets want both)", Float) = 2
     }
 
@@ -42,6 +46,8 @@ Shader "Clover/Spell"
                 half _Thin;
                 half _Bands4;
                 half _Chrome;
+                half _DrawHead;
+                half _DrawTail;
             CBUFFER_END
 
             // A fixed pattern over the screen, 0 to 1: thin stuff is drawn on only some of its pixels.
@@ -57,6 +63,7 @@ Shader "Clover/Spell"
                 // Paint laid on the shape itself: rgb tints the element's colour (deep water at a wave's foot, green
                 // where light comes through its top) and alpha below a half is foam, drawn white whatever the colour.
                 half4 color : COLOR;
+                float2 uv : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
@@ -67,6 +74,7 @@ Shader "Clover/Spell"
                 half3 viewWS : TEXCOORD1;
                 half4 paint : TEXCOORD2;
                 float3 positionOS : TEXCOORD3;
+                float along : TEXCOORD4;
             };
 
             Varyings Vert(Attributes input)
@@ -79,12 +87,14 @@ Shader "Clover/Spell"
                 output.viewWS = GetWorldSpaceNormalizeViewDir(positionWS);
                 output.paint = input.color;
                 output.positionOS = input.positionOS.xyz;
+                output.along = input.uv.x;
                 return output;
             }
 
             half4 Frag(Varyings input, bool front : SV_IsFrontFace) : SV_Target
             {
                 clip(Stipple(input.positionCS.xy) - _Thin);
+                if (_DrawHead < 0.999 || _DrawTail > 0.001) clip(min(_DrawHead - input.along, input.along - _DrawTail));
                 // A single sheet seen from behind is lit as its other side.
                 half3 normal = normalize(input.normalWS) * (front ? 1.0 : -1.0);
                 // The form's own light: from above and a little toward the camera's left, wherever the scene's sun is.
@@ -139,6 +149,8 @@ Shader "Clover/Spell"
                 half _Thin;
                 half _Bands4;
                 half _Chrome;
+                half _DrawHead;
+                half _DrawTail;
             CBUFFER_END
 
             // A fixed pattern over the screen, 0 to 1: thin stuff is drawn on only some of its pixels.
@@ -152,12 +164,14 @@ Shader "Clover/Spell"
                 float4 positionOS : POSITION;
                 // The faces are flat, so the line is pushed out along normals smoothed across each corner, kept here.
                 float3 smoothOS : TEXCOORD1;
+                float2 uv : TEXCOORD0;
                 UNITY_VERTEX_INPUT_INSTANCE_ID
             };
 
             struct Varyings
             {
                 float4 positionCS : SV_POSITION;
+                float along : TEXCOORD0;
             };
 
             Varyings Vert(Attributes input)
@@ -166,12 +180,14 @@ Shader "Clover/Spell"
                 UNITY_SETUP_INSTANCE_ID(input);
                 float3 positionWS = TransformObjectToWorld(input.positionOS.xyz) + normalize(TransformObjectToWorldDir(input.smoothOS)) * _OutlineWidth;
                 output.positionCS = TransformWorldToHClip(positionWS);
+                output.along = input.uv.x;
                 return output;
             }
 
             half4 Frag(Varyings input) : SV_Target
             {
                 clip(Stipple(input.positionCS.xy) - _Thin);
+                if (_DrawHead < 0.999 || _DrawTail > 0.001) clip(min(_DrawHead - input.along, input.along - _DrawTail));
                 // At full heat the whole shape is one white frame, line and all.
                 return half4(lerp(_OutlineColor.rgb, half3(2.3, 2.3, 2.3), step(0.95, _Hot)), 1);
             }
@@ -199,6 +215,8 @@ Shader "Clover/Spell"
                 half _Thin;
                 half _Bands4;
                 half _Chrome;
+                half _DrawHead;
+                half _DrawTail;
             CBUFFER_END
 
             // A fixed pattern over the screen, 0 to 1: thin stuff is drawn on only some of its pixels.
