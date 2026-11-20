@@ -69,6 +69,7 @@ namespace Clover.Player.Trees
             Duo.SickleWindDuo.Add(to);
             Duo.MockSunsDuo.Add(to);
             Duo.DrownedWeightDuo.Add(to);
+            Duo.RotRootsDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }

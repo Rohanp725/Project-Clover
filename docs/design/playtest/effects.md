@@ -1188,6 +1188,8 @@ Group: Reactions
 
 **What sets it off.** Poison landing on a Seeded enemy, or Seeded on a poisoned one.
 
+**Its shapes.** With the Shape mark of Life and Poison's duo branch (Rot Roots: Gathered In or Summer Grass, 3 Shards, in the heart of the chart) and both carried, Rot Roots wears the shape chosen at a rest fire instead. Gathered In: roots to three enemies within 5 m for 6 s, each Seeded; each bite on one of them takes a dose and passes it to the nearest other, most often the host. Summer Grass: no roots; if it dies within 20 s a puff of spores 4 m across follows 1.5 s later, three doses and a Seed on all in it, and 6 health to you.
+
 **How to use it.** Poison one enemy deep, then seed it in a crowd: one body's poison hurts four. The joined ones carry Seeded, ready for Life's own marks.
 
 **How it looks.** Its name over the enemy and a poison puff on each joined one at every bite. Not yet: the pale roots on the floor.
