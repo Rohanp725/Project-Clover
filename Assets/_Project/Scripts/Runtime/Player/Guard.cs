@@ -56,18 +56,31 @@ namespace Clover.Player
             if (sincePress < float.MaxValue) sincePress += deltaTime;
         }
 
-        /// <summary>Settles one blow. <paramref name="chip"/> is the damage that comes through a block.</summary>
-        public GuardResult Resolve(float damage, bool unblockable, StaminaPool stamina, out float chip)
+        /// <summary>
+        /// Settles one blow. <paramref name="chip"/> is the damage that comes through a block. An
+        /// <paramref name="unbreakable"/> guard (the RuleBook's <c>GuardMode.Unbreakable</c>: The Guard Holds) holds a blow the
+        /// stamina cannot pay for: what stamina there is goes, and the share of the blow it could not pay comes through
+        /// whole, as grey health, on top of the usual chip. A blow that cannot be blocked still lands.
+        /// </summary>
+        public GuardResult Resolve(float damage, bool unblockable, StaminaPool stamina, out float chip, bool unbreakable = false)
         {
             chip = 0f;
             if (!IsRaised) return GuardResult.NotGuarded;
             // A perfect guard turns even a blow that cannot be blocked.
             if (IsPerfect) return GuardResult.Perfect;
             if (unblockable) return GuardResult.NotGuarded;
-            if (!stamina.TrySpend(damage * StaminaPerDamage))
+            float cost = damage * StaminaPerDamage;
+            if (!stamina.TrySpend(cost))
             {
+                if (!unbreakable)
+                {
+                    stamina.Empty();
+                    return GuardResult.Broken;
+                }
+                float unpaid = cost > 0f ? Math.Max(0f, Math.Min(1f, 1f - stamina.Current / cost)) : 0f;
                 stamina.Empty();
-                return GuardResult.Broken;
+                chip = damage * (ChipFraction + (1f - ChipFraction) * unpaid);
+                return GuardResult.Blocked;
             }
             chip = damage * ChipFraction;
             return GuardResult.Blocked;

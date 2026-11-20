@@ -42,12 +42,19 @@ namespace Clover.Gameplay
         public static int MoreBlows { get; set; }
         /// <summary>While true, poison on every enemy neither bites nor fades; what it would have bitten is owed (<see cref="AfflictionSet.TakeOwed"/>). Poison's gift keeps this.</summary>
         public static bool PoisonWaits { get; set; }
+        /// <summary>
+        /// The player's switches over every enemy's afflictions (kept from fading, deepening when left alone, not spent by
+        /// blows, resting after fading), written by the player's RuleBook when what is in force changes.
+        /// </summary>
+        public static AfflictionRules Rules { get; } = new AfflictionRules();
 
         // Domain reload is off: a wait left standing by the last play must not hold this one's poison.
         [UnityEngine.RuntimeInitializeOnLoadMethod(UnityEngine.RuntimeInitializeLoadType.SubsystemRegistration)]
         private static void ResetWaits()
         {
             PoisonWaits = false;
+            // The last play's Devotion must not keep this play's burns alight.
+            Rules.Clear();
             PoisonBeatOff = false;
             PoisonKeeps = false;
             PoisonRipens = 0f;

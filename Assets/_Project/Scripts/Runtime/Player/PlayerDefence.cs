@@ -408,7 +408,9 @@ namespace Clover.Player
             fromAttacker.y = 0f;
             bool covered = fromAttacker.sqrMagnitude < 0.0001f || Guard.Covers(Vector3.Angle(transform.forward, fromAttacker));
             float chip = 0f;
-            switch (covered ? Guard.Resolve(hit.Damage, hit.Unblockable, player.Stamina, out chip) : GuardResult.NotGuarded)
+            // The RuleBook may hold the guard whatever the stamina (The Guard Holds).
+            bool unbreakable = upgrades != null && upgrades.Rules.Guard == Growth.GuardMode.Unbreakable;
+            switch (covered ? Guard.Resolve(hit.Damage, hit.Unblockable, player.Stamina, out chip, unbreakable) : GuardResult.NotGuarded)
             {
                 case GuardResult.Perfect:
                     PerfectGuards++;

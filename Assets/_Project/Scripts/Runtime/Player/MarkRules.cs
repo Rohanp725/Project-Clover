@@ -54,6 +54,13 @@ namespace Clover.Player
             return true;
         }
 
+        /// <summary>
+        /// The same, for a mark that must also be learned: what <see cref="PlayerUpgrades"/> asks of every mark. A Devotion is
+        /// in force only bought and all in on its element (task 4.4).
+        /// </summary>
+        public static bool InForce(Upgrade mark, Build.Loadout loadout, ICollection<string> learned) =>
+            mark != null && learned != null && learned.Contains(mark.Id) && InForce(mark, loadout);
+
         /// <summary>True for a spell branch's Empower, Shape or Master: in force only while the branch's spell is slotted.</summary>
         public static bool BranchNeedsSlot(Upgrade mark) =>
             mark != null && !string.IsNullOrEmpty(mark.Branch) && (mark.Part == BranchPart.Empower || mark.Part == BranchPart.Shape || mark.Part == BranchPart.Master);

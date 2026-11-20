@@ -150,12 +150,26 @@ namespace Clover.Player
         {
             ReadStats();
             CutAll(Cuts.ForPerfectGuard);
+            Breathe();
         }
 
         private void OnPerfectDodge()
         {
             ReadStats();
             CutAll(Cuts.ForPerfectDodge);
+            Breathe();
+        }
+
+        /// <summary>Breaths taken (In One Breath): for probes.</summary>
+        public int Breaths { get; private set; }
+
+        // In One Breath (the RuleBook's BreathAfterPerfect): after a perfect guard or dodge the spells have no cooldown for a breath.
+        private void Breathe()
+        {
+            float seconds = upgrades != null ? upgrades.Rules.BreathAfterPerfect : 0f;
+            if (seconds <= 0f) return;
+            Breaths++;
+            Flash(Cooldowns.Breathe(seconds));
         }
 
         // The marks' share of every cut (stat CooldownCut), read when a cut is made rather than every frame.
@@ -380,6 +394,8 @@ namespace Clover.Player
             // The slots look again here too, so a spell bought at a rest shows in its slot while the chart is still open.
             Look();
             float deltaTime = Time.deltaTime;
+            // The RuleBook says whether a clock starts at all (Given Fire, phase 6).
+            Cooldowns.Frozen = upgrades != null && upgrades.Rules.Cooldowns == Growth.CooldownMode.None;
             Flash(Cooldowns.Tick(deltaTime));
             AdvanceFight(deltaTime);
         }

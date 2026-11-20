@@ -101,6 +101,11 @@ namespace Clover.Gameplay
         private readonly float[] untilTick = new float[Afflictions.Count];
         private readonly float[] strength = new float[Afflictions.Count];
         private readonly int[] blowsLeft = new int[Afflictions.Count];
+        // For the player's affliction rules (Afflictions.Rules): seconds since each kind was last laid or deepened, and
+        // seconds each kind still rests after fading before it can be laid again, with one bit a resting kind.
+        private readonly float[] sinceLaid = new float[Afflictions.Count];
+        private readonly float[] restLeft = new float[Afflictions.Count];
+        private int resting;
 
         // One bit for each kind whose stacks are above nought, kept as they rise and fall. Burn keeps its own engine,
         // which can be lit or put out from outside, so its bit is read from it live (see PresentMask).
@@ -224,12 +229,15 @@ namespace Clover.Gameplay
             Conditions.Clear();
             Array.Clear(reactionRest, 0, reactionRest.Length);
             restLongest = 0f;
+            resting = 0;
             for (int i = 0; i < stacks.Length; i++)
             {
                 stacks[i] = 0;
                 left[i] = 0f;
                 untilTick[i] = 0f;
                 strength[i] = 1f;
+                sinceLaid[i] = 0f;
+                restLeft[i] = 0f;
             }
             Burn.Reset();
             IsFrozen = false;
@@ -273,16 +281,20 @@ namespace Clover.Gameplay
             if (kind == AfflictionKind.None || count <= 0) return default;
             var spec = Afflictions.Spec(kind);
             int index = (int)kind;
+            // Resting after it faded (Full Daylight's mark): it cannot be laid here again yet.
+            if ((resting & (1 << index)) != 0) return default;
             strength[index] = Math.Max(strength[index], power);
             bool carried = Carries(kind);
             if (kind == AfflictionKind.Burn)
             {
+                sinceLaid[index] = 0f;
                 int before = Burn.Stacks;
                 Burn.Ignite(seconds > 0f ? seconds : spec.Seconds, count);
                 return new AfflictionResult(true, before < Burn.MaximumStacks && Burn.Stacks >= Burn.MaximumStacks, carried);
             }
             // What is frozen cannot be chilled further; the ice must break or melt first.
             if (IsFrozen && spec.FreezesAtFull) return default;
+            sinceLaid[index] = 0f;
             int had = stacks[index];
             // A fresh dose: the poison is no longer left alone to ripen.
             if (kind == AfflictionKind.Poison) ripeBites = 0;
@@ -355,8 +367,8 @@ namespace Clover.Gameplay
             for (int i = 2; i < stacks.Length; i++)
             {
                 if (stacks[i] <= 0 || blowsLeft[i] <= 0) continue;
-                // A condition that keeps it (Diamond Ring's mark) keeps it from being spent too.
-                if (Conditions.KeepsKind((AfflictionKind)i)) continue;
+                // A condition that keeps it (Diamond Ring's mark) keeps it from being spent too, and so does a rule (Full Daylight).
+                if (Conditions.KeepsKind((AfflictionKind)i) || Afflictions.Rules.Unspent((AfflictionKind)i)) continue;
                 if (--blowsLeft[i] <= 0) End(i);
             }
         }
@@ -448,8 +460,12 @@ namespace Clover.Gameplay
                     reeling = false;
                 }
             }
-            // Kept from fading (Smoulder): the burn's time is given back before it is spent, so it bites on and never runs down.
-            if (Burn.IsBurning && Conditions.KeepsKind(AfflictionKind.Burn)) Burn.Ignite(Burn.SecondsLeft + deltaTime);
+            var rules = Afflictions.Rules;
+            // A rest runs out even after the rule that began it has left force.
+            if (rules.Any || resting != 0) FollowRules(rules, deltaTime);
+            // Kept from fading (Smoulder, or Fire Without End's rule): the burn's time is given back before it is spent, so it
+            // bites on and never runs down.
+            if (Burn.IsBurning && (Conditions.KeepsKind(AfflictionKind.Burn) || rules.Keeps(AfflictionKind.Burn))) Burn.Ignite(Burn.SecondsLeft + deltaTime);
             float damage = Burn.Tick(deltaTime) * strength[(int)AfflictionKind.Burn];
             if (!Burn.IsBurning) strength[(int)AfflictionKind.Burn] = 1f;
             // The guard is spent before a new one can begin on this step, so a guard always starts whole.
@@ -520,11 +536,58 @@ namespace Clover.Gameplay
                     }
                 }
                 if (poison && (Afflictions.PoisonKeeps || cursed)) continue;
-                if (Conditions.KeepsKind((AfflictionKind)i)) continue;
+                if (Conditions.KeepsKind((AfflictionKind)i) || rules.Keeps((AfflictionKind)i)) continue;
                 left[i] -= deltaTime;
-                if (left[i] <= 0f) End(i);
+                if (left[i] > 0f) continue;
+                End(i);
+                // Faded by itself: under a rule it rests before it can be laid here again.
+                float rest = rules.Any ? rules.RestsAfter((AfflictionKind)i) : 0f;
+                if (rest > 0f)
+                {
+                    restLeft[i] = rest;
+                    resting |= 1 << i;
+                }
             }
             return damage;
+        }
+
+        /// <summary>Seconds before the kind can be laid here again after fading under a rule; zero when it can be laid now.</summary>
+        public float RestLeft(AfflictionKind kind) => kind == AfflictionKind.None || (resting & (1 << (int)kind)) == 0 ? 0f : restLeft[(int)kind];
+
+        // The player's affliction rules, once a step: what rests counts down, and what is left alone deepens by itself
+        // (Fire Without End: a burn with nothing new laid on it gains a stack every few seconds, up to its depth).
+        private void FollowRules(AfflictionRules rules, float deltaTime)
+        {
+            for (int i = 1; i < Afflictions.Count; i++)
+            {
+                var kind = (AfflictionKind)i;
+                if ((resting & (1 << i)) != 0)
+                {
+                    restLeft[i] -= deltaTime;
+                    if (restLeft[i] <= 0f)
+                    {
+                        restLeft[i] = 0f;
+                        resting &= ~(1 << i);
+                    }
+                }
+                float every = rules.DeepensEvery(kind);
+                if (every <= 0f) continue;
+                bool burn = i == (int)AfflictionKind.Burn;
+                if (burn ? !Burn.IsBurning : stacks[i] <= 0)
+                {
+                    sinceLaid[i] = 0f;
+                    continue;
+                }
+                sinceLaid[i] += deltaTime;
+                if (sinceLaid[i] < every) continue;
+                sinceLaid[i] -= every;
+                int depth = rules.DeepensTo(kind);
+                if (burn)
+                {
+                    if (Burn.Stacks < depth) Burn.Ignite(Burn.SecondsLeft, 1);
+                }
+                else if (stacks[i] < Math.Min(depth, Afflictions.Depth(kind))) stacks[i]++;
+            }
         }
 
         private void End(int index)
