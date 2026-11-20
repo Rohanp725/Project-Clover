@@ -232,27 +232,29 @@ public class P1aProbeRunner : MonoBehaviour
                 if (upgrades.TryBuy(mark)) bought++;
         yield return Real(0.4f);
         Judge("the Fire tree is bought at the rest", upgrades.Has("fire.rush") && upgrades.Has("fire.kiln") && upgrades.Has("fire.meteor"), $"{bought} marks");
-        Judge("the slots fill: base West, then the learned spells in the chart's order", spells.Slots[0] == "fire.base" && spells.Slots[1] == "fire.rush" && spells.Slots[2] == "fire.kiln" && spells.Slots[3] == "fire.meteor", SlotsText());
+        // Phase 4: the Fire tree is six spell branches now, so which three learned spells follow the base is the chart's order of them.
+        Judge("the slots fill: base West, then three learned Fire spells", spells.Slots[0] == "fire.base" && Enumerable.Range(1, 3).All(i => Upgrade.ById(spells.Slots[i]) is Upgrade learned && learned.Element == Elements.Fire && learned.Part == BranchPart.Learn) && Enumerable.Range(0, 4).Select(i => spells.Slots[i]).Distinct().Count() == 4, SlotsText());
 
-        // The chart's stopgap: use on a learned spell puts it in the next slot round (West first).
-        chart.Choose("fire.fan");
+        // The chart's stopgap: use on a learned spell puts it in the next slot round (West first). Cinder Fan and Sunspot
+        // are retired in Phase 4 (Fan is a shape of Flame Wave, Sunspot is replaced by Black Pitch): Black Pitch and Uraeus.
+        chart.Choose("fire.pitch");
         yield return Tap(Key.E);
-        Judge("the chart puts Cinder Fan in the next slot (West)", spells.Slots[0] == "fire.fan", SlotsText());
-        chart.Choose("fire.sunspot");
+        Judge("the chart puts Black Pitch in the next slot (West)", spells.Slots[0] == "fire.pitch", SlotsText());
+        chart.Choose("fire.uraeus");
         yield return Tap(Key.E);
-        Judge("and Sunspot in the one after (North)", spells.Slots[1] == "fire.sunspot", SlotsText());
+        Judge("and Uraeus in the one after (North)", spells.Slots[1] == "fire.uraeus", SlotsText());
         yield return Real(0.3f);
         yield return Shot("p1a_chart_slots");
         Say($"  chart state: {GameObject.Find("Upgrade Menu")?.GetComponentsInChildren<UnityEngine.UI.Text>().Select(t => t.text).FirstOrDefault(t => t.Contains("slot"))}");
         yield return Tap(Key.Space);
         yield return LeaveRest();
         yield return Real(0.3f);
-        // The order the rest of the probe casts in: the base spell, Wildfire Rush, Cinder Fan, Meteor Leap (mana).
+        // The order the rest of the probe casts in: the base spell (worn as Cinder Fan, its first shape), Uraeus, Kiln Stance, Meteor Leap (mana).
         spells.SetSlot(0, "fire.base");
-        spells.SetSlot(1, "fire.fan");
+        spells.SetSlot(1, "fire.uraeus");
         spells.SetSlot(2, "fire.kiln");
         spells.SetSlot(3, "fire.meteor");
-        Say($"  slots now {SlotsText()}; timings: base {Clover.Player.Magic.SpellTimings.Base(Elements.Fire).Cooldown}s, fan {Upgrade.ById("fire.fan").Spell.Cooldown}s, kiln {Upgrade.ById("fire.kiln").Spell.Cooldown}s, meteor {Upgrade.ById("fire.meteor").Spell.Cost} mana");
+        Say($"  slots now {SlotsText()}; timings: base {Clover.Player.Magic.SpellTimings.Base(Elements.Fire).Cooldown}s, uraeus {Upgrade.ById("fire.uraeus").Spell.Cooldown}s, kiln {Upgrade.ById("fire.kiln").Spell.Cooldown}s, meteor {Upgrade.ById("fire.meteor").Spell.Cost} mana");
 
         // 1. A virtual pad: L2 held and each face button casts its slot, and the flask, skill, dodge and use do nothing.
         pad = InputSystem.AddDevice<XInputControllerWindows>();
@@ -369,7 +371,7 @@ public class P1aProbeRunner : MonoBehaviour
         Judge("a perfect dodge cuts 1.5 s", outcome == HitOutcome.PerfectDodge && defence.PerfectDodges == dodges + 1 && Mathf.Abs(spells.SecondsCut - cutBefore - 1.5f) < 0.01f,
             $"{outcome}, cut {spells.SecondsCut - cutBefore:0.00}");
         yield return WhenFree();
-        Judge("a basic spell costs no mana", Upgrade.ById("fire.fan").Spell.Cost == 0f && Upgrade.ById("fire.kiln").Spell.Cost == 0f);
+        Judge("a basic spell costs no mana", Upgrade.ById("fire.uraeus").Spell.Cost == 0f && Upgrade.ById("fire.kiln").Spell.Cost == 0f);
 
         // 4. The surge on a tap of L2; a long hold lights nothing.
         combat.Mana.Gain(100f);

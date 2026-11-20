@@ -238,9 +238,11 @@ public class MarksProbeRunner : MonoBehaviour
         }
         var moves = new List<(string name, Func<IEnumerator> play)>
         {
-            ("skydance", SkyDance), ("beat", Beat), ("lance", Lance), ("volatile", Volatile), ("dead", Dead), ("lotus", Lotus), ("flash", Flash),
-            ("circle", Circle), ("eye", Eye), ("furnace", Furnace), ("stroke", Stroke), ("allatonce", AllAtOnce), ("cleanbreak", CleanBreak), ("heartwood", Heartwood), ("unmoved", Unmoved), ("leaf", Leaf), ("tide", Tide), ("answer", Answer), ("well", WellMove),
-            ("rush", Rush), ("sunspot", Sunspot), ("scorched", Scorched), ("thunder", Thunder), ("lodestone", Lodestone), ("kiln", Kiln), ("twin", Twin), ("meltdown", Meltdown), ("front", Front), ("reserve", Reserve),
+            // Phase 4 retired Flashpoint, Open Furnace, Clean Break, Heartwood, Spring Tide, Scorched Earth and Storm Front (RetiredMarks): their moves
+            // are gone. Sunspot is replaced by Black Pitch, Deep Reserve folded into Stored Charge and Lodestone into Lightning Rod as a shape.
+            ("skydance", SkyDance), ("beat", Beat), ("lance", Lance), ("volatile", Volatile), ("dead", Dead), ("lotus", Lotus),
+            ("circle", Circle), ("eye", Eye), ("stroke", Stroke), ("allatonce", AllAtOnce), ("unmoved", Unmoved), ("leaf", Leaf), ("answer", Answer), ("well", WellMove),
+            ("rush", Rush), ("pitch", Pitch), ("thunder", Thunder), ("lodestone", Lodestone), ("kiln", Kiln), ("twin", Twin), ("meltdown", Meltdown), ("reserve", Reserve),
         };
         Say($"start: {SpellForms.All.Count} forms registered; works {(FindAnyObjectByType<SpellWorks>() != null)} fx {(FindAnyObjectByType<FormFx>() != null)}; scene {gameObject.scene.name}");
         yield return new WaitForSeconds(0.3f);
@@ -266,7 +268,7 @@ public class MarksProbeRunner : MonoBehaviour
             else
             {
                 toward = (real.transform.position - player.transform.position).normalized;
-                moves = moves.Where(move => move.name == "circle" || move.name == "eye" || move.name == "furnace" || move.name == "cleanbreak" || move.name == "rush" || move.name == "sunspot" || move.name == "lodestone").OrderBy(move => move.name == "cleanbreak").ToList();
+                moves = moves.Where(move => move.name == "circle" || move.name == "eye" || move.name == "rush" || move.name == "pitch" || move.name == "lodestone").ToList();
                 StartCoroutine(ClickThrough());
             }
         }
@@ -346,9 +348,10 @@ public class MarksProbeRunner : MonoBehaviour
         Say($"rush: the line burning 1.2 s on: {Lost()}");
     }
 
-    private IEnumerator Sunspot()
+    // Black Pitch replaced Sunspot in Phase 4: the jar brands the enemy faced, and blows on it splash fire over everyone near.
+    private IEnumerator Pitch()
     {
-        yield return Begin("sunspot", "Sunspot");
+        yield return Begin("pitch", "Black Pitch");
         Sets()[0].Apply(AfflictionKind.Burn, 3);
         bool cast = upgrades.TrySpecial();
         yield return new WaitForSeconds(0.5f);
@@ -356,41 +359,23 @@ public class MarksProbeRunner : MonoBehaviour
         Mark();
         yield return Blows(3, Key.J);
         yield return ShotAfter(0.1f);
-        Say($"sunspot: cast {cast}, runs {SpellWorks.RunningOf("sunspot")}, after three light blows (the brand itself has done nothing yet): {Lost()}");
+        Say($"pitch: cast {cast}, runs {SpellWorks.RunningOf(SpellForms.Brand)}, after three light blows on the coated: {Lost()}");
         Mark();
         yield return Blows(1, Key.K);
         yield return ShotAfter(0.03f);
         yield return ShotAfter(0.2f);
-        Say($"sunspot: set off by the heavy blow with three fed (the burst alone is 12 + 9 x 3 = 39, on top of the blow): runs {SpellWorks.RunningOf("sunspot")}; {Lost()}");
+        Say($"pitch: a heavy blow after: runs {SpellWorks.RunningOf(SpellForms.Brand)}; {Lost()}");
         // Left alone: it bursts at half when its time is up.
         if (real == null)
         {
-            yield return Begin("sunspot", "Sunspot");
+            yield return Begin("pitch", "Black Pitch");
+            float seconds = upgrades.Worn.Spell.Seconds;
             upgrades.Worn.Spell.Seconds = 1.2f;
             upgrades.TrySpecial();
             yield return new WaitForSeconds(1.7f);
-            upgrades.Worn.Spell.Seconds = 7f;
-            Say($"sunspot: left alone until its time ran out (half of 12 = 6): {Lost()}");
+            upgrades.Worn.Spell.Seconds = seconds;
+            Say($"pitch: left alone until its time ran out: runs {SpellWorks.RunningOf(SpellForms.Brand)}; {Lost()}");
         }
-    }
-
-    private IEnumerator Scorched()
-    {
-        yield return Begin("scorched", "Scorched Earth");
-        Vector3 fire = player.transform.position;
-        Clover.World.Hazards.Lay(Clover.World.HazardKind.Fire, fire, 1.6f, 4f, 1f, 0f, 2f);
-        yield return Surge(6f);
-        yield return null;
-        float lit = element.Kit.SurgeLeft;
-        yield return ShotAfter(2f);
-        Say($"scorched: stood in own fire 2 s: Kindle {lit:0.00} -> {element.Kit.SurgeLeft:0.00} s left, held {upgrades.SurgeHeld}, mana from blows x{upgrades.Stats.Multiplier(PlayerStat.ManaFromBlows):0.00}, spell cost x{upgrades.Stats.Multiplier(PlayerStat.SpellCost):0.00}, fire lasts x{Clover.World.Hazards.FireSecondsScale:0}");
-        yield return new WaitForSeconds(3f);
-        Say($"scorched: 5 s after a 4 s patch was laid, fire still under the feet {Clover.World.Hazards.FireUnder(player.transform.position)} (it burns twice as long)");
-        player.Teleport(fire - toward * 6f, Quaternion.LookRotation(toward));
-        float left = element.Kit.SurgeLeft;
-        yield return new WaitForSeconds(1f);
-        Say($"scorched: out of the fire 1 s: Kindle {left:0.00} -> {element.Kit.SurgeLeft:0.00}, held {upgrades.SurgeHeld}, mana from blows x{upgrades.Stats.Multiplier(PlayerStat.ManaFromBlows):0.00}");
-        yield return SurgeEnds();
     }
 
     private IEnumerator Thunder()
@@ -460,29 +445,12 @@ public class MarksProbeRunner : MonoBehaviour
         Say($"meltdown: at five and five: callout '{defence.LastCallout}', meltdowns {upgrades.Meltdowns} (45 to it, half to the rest, less whatever the burn did meanwhile): {Lost()}");
     }
 
-    private IEnumerator Front()
-    {
-        yield return Begin("front", "Storm Front");
-        yield return Near();
-        int[] shoves = group.Select(dummy => dummy.Shoves).ToArray();
-        float mana = combat.Mana.Current;
-        int casts = element.SpellsCast;
-        Mark();
-        yield return Blows(1, Key.K);
-        yield return ShotAfter(0.1f);
-        yield return ShotAfter(0.2f);
-        Say($"front: a heavy blow landed: free Gusts {element.FreeCasts}, spells counted as cast {element.SpellsCast - casts}, mana {mana:0} -> {combat.Mana.Current:0}, shoves {string.Join(", ", group.Select((dummy, i) => dummy.Shoves - shoves[i]))}; {Lost()}");
-        Mark();
-        yield return Blows(2, Key.J);
-        Say($"front: two light blows: free Gusts {element.FreeCasts} (no more)");
-    }
-
     private IEnumerator Reserve()
     {
-        yield return Begin("reserve", "Deep Reserve");
-        upgrades.Give(Upgrade.All.First(upgrade => upgrade.Id == Upgrade.StoredCharge));
+        // Deep Reserve is folded into Stored Charge in Phase 4, which keeps the count of three itself.
+        yield return Begin("reserve", "Stored Charge");
         yield return null;
-        string id = Upgrade.All.First(upgrade => upgrade.Name == "Deep Reserve").Id;
+        string id = Upgrade.StoredCharge;
         string banked = "";
         for (int i = 0; i < 4; i++)
         {
@@ -506,7 +474,11 @@ public class MarksProbeRunner : MonoBehaviour
 
     private IEnumerator Lodestone()
     {
-        yield return Begin("lodestone", "Lodestone");
+        // Lodestone is Lightning Rod's first shape in Phase 4: the rod is given with its Empower and Shape, and wears the first.
+        yield return Begin("lodestone", "Lightning Rod");
+        upgrades.Give(Upgrade.ById(SpellBranch.EmpowerId(Upgrade.LightningRod)));
+        upgrades.Give(Upgrade.ById(SpellBranch.ShapeId(Upgrade.LightningRod)));
+        yield return null;
         Sets()[0].Apply(AfflictionKind.Static, 4);
         if (real != null)
         {
@@ -536,7 +508,7 @@ public class MarksProbeRunner : MonoBehaviour
             yield return null;
         }
         string moved = real != null ? $"gap {gap:0.0} m before, nearest {nearest:0.0}, {Vector3.Distance(FirstAt, player.transform.position):0.0} half a second after" : "shoves " + string.Join(", ", group.Select((dummy, i) => dummy.Shoves - shoves[i]));
-        Say($"lodestone: cast {cast}: first carried Static x4 (owed 1 + 0.8 x 4 = 4.2 m, to sword reach at most), {moved}; Static left on first x{Sets()[0].Stacks(AfflictionKind.Static)}; {Lost()}");
+        Say($"lodestone: cast {cast} as {SpellBranches.FormOf(Upgrade.ById(Upgrade.LightningRod), RunState.Unlocked, player.GetComponent<PlayerBuild>().Current)}: first carried Static x4 (owed 1 + 0.8 x 4 = 4.2 m, to sword reach at most), {moved}; Static left on first x{Sets()[0].Stacks(AfflictionKind.Static)}; {Lost()}");
     }
 
     private IEnumerator Circle()
@@ -587,20 +559,6 @@ public class MarksProbeRunner : MonoBehaviour
         }
     }
 
-    private IEnumerator Furnace()
-    {
-        yield return Begin("furnace", "Open Furnace");
-        LayAll(AfflictionKind.Burn, 4);
-        yield return new WaitForSeconds(0.2f);
-        Mark();
-        int bursts = upgrades.FurnaceBursts;
-        yield return Guarded(true);
-        Shot();
-        yield return null;
-        Say($"furnace: perfect guard {lastGuard}: set off {upgrades.FurnaceBursts - bursts}; {Lost()}; grey of a plain guard x{upgrades.Stats.Multiplier(PlayerStat.GuardGrey):0.00}");
-        yield return ShotAfter(0.2f);
-    }
-
     private IEnumerator Stroke()
     {
         yield return Begin("stroke", "Single Stroke");
@@ -639,54 +597,9 @@ public class MarksProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.6f);
     }
 
-    // A real enemy only: a dummy has no life to end.
-    private IEnumerator CleanBreak()
-    {
-        if (real == null) { Say("cleanbreak: needs a real enemy; played in Castle"); yield break; }
-        yield return Begin("cleanbreak", "Clean Break", "Ice");
-        upgrades.Give(Upgrade.All.First(upgrade => upgrade.Element == "Ice" && upgrade.Kind == UpgradeKind.Root));
-        yield return new WaitForSeconds(0.5f);
-        real.Health.Damage(real.Health.Maximum * 0.9f);
-        Vector3 close = real.transform.position + (player.transform.position - real.transform.position).normalized * 1.5f;
-        player.Teleport(close, Quaternion.LookRotation(real.transform.position - close));
-        real.Afflictions.Apply(AfflictionKind.Chill, 5);
-        yield return null;
-        Say($"cleanbreak: frozen {real.Afflictions.IsFrozen}, life left {real.HealthFraction:0.00}");
-        int broke = upgrades.CleanBreaks;
-        yield return Tap(Key.K);
-        float give = Time.time + 2.5f;
-        while (upgrades.CleanBreaks == broke && Time.time < give) yield return null;
-        Shot();
-        yield return new WaitForSeconds(0.4f);
-        Say($"cleanbreak: blows landed {combat.BlowsLanded}, still frozen {real.Afflictions.IsFrozen}, brittle {real.Afflictions.IsBrittle}");
-        Say($"cleanbreak: lives ended {upgrades.CleanBreaks - broke}; dead {real.IsDead}, life left {real.HealthFraction:0.00}");
-    }
-
-    private IEnumerator Heartwood()
-    {
-        yield return Begin("heartwood", "Heartwood");
-        yield return new WaitForSeconds(0.6f);
-        float paid = upgrades.HealthPaid;
-        float health = defence.Health.Current;
-        Say($"heartwood: no mana {combat.Mana.Sealed}, the bar reads {combat.Mana.Fraction:0.00}, health {health:0}");
-        yield return Tap(Key.Q);
-        yield return ShotAfter(0.35f);
-        yield return new WaitForSeconds(0.4f);
-        Say($"heartwood: the base spell cast: health paid {upgrades.HealthPaid - paid:0.0} (grey {defence.Health.Grey:0.0}), health now {defence.Health.Current:0}; {Lost()}");
-        float mended = upgrades.HeartwoodMended;
-        float low = defence.Health.Current;
-        combat.Mana.Gain(30f);
-        yield return null;
-        yield return null;
-        Say($"heartwood: thirty mana gained mends {upgrades.HeartwoodMended - mended:0.0}; health {low:0} to {defence.Health.Current:0}");
-        upgrades.Forget();
-        yield return new WaitForSeconds(0.6f);
-        Say($"heartwood: forgotten: no mana {combat.Mana.Sealed}");
-    }
-
     private IEnumerator Unmoved()
     {
-        foreach (string name in new[] { "Unmoved", "Heavy Hand" })
+        foreach (string name in new[] { "Heavy Hand" })
         {
             yield return Begin("unmoved", name);
             yield return new WaitForSeconds(0.6f);
@@ -742,24 +655,6 @@ public class MarksProbeRunner : MonoBehaviour
         upgrades.Forget();
         yield return new WaitForSeconds(0.6f);
         Say($"leaf: forgotten: the dodge asks stamina again {player.Dodge.PayInstead == null}");
-    }
-
-    private IEnumerator Tide()
-    {
-        yield return Begin("tide", "Spring Tide");
-        yield return new WaitForSeconds(0.6f);
-        float held = combat.Mana.Current;
-        int tides = upgrades.Tides;
-        yield return Tap(Key.Q);
-        yield return ShotAfter(0.35f);
-        yield return new WaitForSeconds(0.7f);
-        Say($"tide: the base spell ({element.Kit.SpellName}, {element.Kit.SpellCost:0} mana, {element.Kit.SpellDamage:0} damage) cast with {held:0} held: tides {upgrades.Tides - tides}, x{upgrades.LastTide:0.00}, mana left {combat.Mana.Current:0}; {Lost()}");
-        yield return new WaitForSeconds(1f);
-        Mark();
-        combat.Mana.Gain(element.Kit.SpellCost + 0.5f);
-        yield return Tap(Key.Q);
-        yield return new WaitForSeconds(1.1f);
-        Say($"tide: cast again with only its cost held: x{upgrades.LastTide:0.00}, mana left {combat.Mana.Current:0}; {Lost()}");
     }
 
     private IEnumerator Answer()
@@ -930,28 +825,5 @@ public class MarksProbeRunner : MonoBehaviour
         yield return ShotAfter(0.25f);
         yield return new WaitForSeconds(0.5f);
         Say($"lotus: five guards [{outcomes}] in {Time.time - began:0.0} s; lotus still runs {SpellWorks.RunningOf("lotus")}; burst: {Lost()}");
-    }
-
-    private IEnumerator Flash()
-    {
-        yield return Begin("flash", "Flashpoint");
-        if (real == null) player.Teleport(group[0].transform.position - toward * 1.6f, Quaternion.LookRotation(toward));
-        yield return new WaitForSeconds(0.2f);
-        int dodges = defence.PerfectDodges;
-        Keys(Key.Space);
-        yield return null;
-        yield return null;
-        Keys();
-        float wait = Time.time + 0.3f;
-        while (!player.Dodge.IsInvulnerable && Time.time < wait) yield return null;
-        var outcome = defence.TakeHit(new Hit(20f, 0f, -toward, false, false, FirstAt));
-        yield return new WaitForSeconds(0.05f);
-        float held = upgrades.Stats.Sum(PlayerStat.AfflictionStacks);
-        float give = Time.time + 1.2f;
-        while (player.Dodge.IsRolling && Time.time < give) yield return null;
-        if (real == null) player.Teleport(group[0].transform.position - toward * 1.6f, Quaternion.LookRotation(toward));
-        yield return Blows(1, Key.J);
-        yield return new WaitForSeconds(0.15f);
-        Say($"flash: Flashpoint: dodge {outcome}, perfect dodges +{defence.PerfectDodges - dodges}, stacks boon held {held:0} then {upgrades.Stats.Sum(PlayerStat.AfflictionStacks):0} after one blow that landed; {Lost()}");
     }
 }

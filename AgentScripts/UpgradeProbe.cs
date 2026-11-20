@@ -155,7 +155,8 @@ public class UpgradeProbeRunner : MonoBehaviour
         Say($"A chart: {menu.MarkCount} marks; stopped {stopped} far end before its foot {early} root learned {heat} W moved to {selected}, learned {second}; W to {minor}; W to {above}, learned {third}, worn {wornNow}; A moved to {left}; whole ring {wide} at zoom {far:0.00} then back {!menu.IsWide} at {menu.Zoom:0.00}; sealed mix bought {sealedBought}; embers left {upgrades.Points} closed {!menu.IsOpen} time {Time.timeScale:0.0} moved {(player.transform.position - before).magnitude:0.00}");
 
         // B: Heat and the deepening burn, from blows of the sword.
-        Learn(FireTree.Cinder, Upgrade.Heat, Upgrade.BurnAndDetonate, Upgrade.Backdraft, Upgrade.FlameTrail, Upgrade.BurningCrescent, Upgrade.FirebombFlask, Upgrade.MeteorLeap);
+        // Phase 4: Burn and Detonate is folded into Breath of the Lioness (fire.backdraft); Burning Crescent moves to the Katana's Way.
+        Learn(FireTree.Cinder, Upgrade.Heat, Upgrade.Backdraft, Upgrade.FlameTrail, Upgrade.FirebombFlask, Upgrade.MeteorLeap);
         yield return new WaitForSeconds(0.4f);
         Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
         yield return null;
@@ -185,7 +186,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(1.2f);
         Say($"D trail: dummy lost {health - north.Health.Current:0} burning {north.Burn.IsBurning}");
 
-        // E: the Iaido throws a crescent of flame on ahead.
+        // E: the Iaido throws a crescent of flame on ahead (Burning Crescent moves to the Katana's Way in Phase 5: nothing is thrown until then).
         combat.Mana.Gain(100f);
         Place(new Vector3(0f, 0f, -3.5f), Vector3.forward);
         yield return null;
@@ -199,7 +200,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(0.45f);
         Shot("crescent");
         yield return new WaitForSeconds(0.8f);
-        Say($"E crescent: skill used {combat.SkillsUsed - skills} dummy (7.5 m away) lost {health - north.Health.Current:0}");
+        Say($"E crescent (moved to the Way, none expected): skill used {combat.SkillsUsed - skills} dummy (7.5 m away) lost {health - north.Health.Current:0}");
 
         // F: the flask, held, is thrown.
         Place(new Vector3(0f, 0f, -2f), Vector3.forward);
@@ -249,7 +250,8 @@ public class UpgradeProbeRunner : MonoBehaviour
         // I: Lightning. Static builds on light blows and a heavy sets it off.
         element.Take(ElementKit.Lightning());
         upgrades.Forget();
-        Learn(Upgrade.Static, Upgrade.StoredCharge, Upgrade.Blink, Upgrade.Afterimage, Upgrade.DelayedCuts, Upgrade.LightningRod, Upgrade.Overclock);
+        // Phase 4: Overclock is retired and Delayed Cuts moves to the Katana's Way.
+        Learn(Upgrade.Static, Upgrade.StoredCharge, Upgrade.Blink, Upgrade.Afterimage, Upgrade.LightningRod);
         yield return new WaitForSeconds(0.4f);
         Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
         yield return null;
@@ -280,7 +282,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return new WaitForSeconds(2f);
         Say($"K rod: mana {mana:0} -> {combat.Mana.Current:0} dummy lost {health - north.Health.Current:0} in 3.3 s");
 
-        // L: Overclock slows the enemies when the surge is lit; the blink shocks what the dodge passes.
+        // L: the blink shocks what the dodge passes. Overclock (enemies slowed in the surge) is retired in Phase 4.
         combat.Mana.Gain(100f);
         yield return Tap(Key.F);
         yield return Until(() => element.Surges > 0, 1f);
@@ -294,9 +296,9 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return null;
         Keys();
         yield return new WaitForSeconds(0.6f);
-        Say($"L overclock: enemy time x{scale:0.00} then x{WorldClock.EnemyScale:0.00}; blink through the dummy took {health - north.Health.Current:0}");
+        Say($"L (Overclock retired, x1.00 expected): enemy time x{scale:0.00} then x{WorldClock.EnemyScale:0.00}; blink through the dummy took {health - north.Health.Current:0}");
 
-        // M: the afterimage and the delayed cuts.
+        // M: the afterimage and the delayed cuts (Delayed Cuts moves to the Way in Phase 5: no cuts until then).
         Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
         yield return null;
         health = north.Health.Current;
@@ -446,7 +448,8 @@ public class UpgradeProbeRunner : MonoBehaviour
         element.Take(ElementKit.Fire());
         upgrades.Forget();
         float damageBefore = combat.StatDamage, windowBefore = defence.Guard.PerfectWindow, speedBefore = player.MoveSpeed;
-        Learn(FireTree.Cinder, Upgrade.Heat, Upgrade.Backdraft, Upgrade.BurningCrescent, "fire.kindling", "fire.stoked");
+        // Phase 4: Kindling and Stoked are retired, and no Fire mark changes these numbers now; the boons are what is shown.
+        Learn(FireTree.Cinder, Upgrade.Heat, Upgrade.Backdraft);
         yield return new WaitForSeconds(0.4f);
         float damageAfter = combat.StatDamage, windowAfter = defence.Guard.PerfectWindow;
         upgrades.Stats.AddBoon(PlayerStat.MoveSpeed, 0.25f, 0.6f);
@@ -457,10 +460,11 @@ public class UpgradeProbeRunner : MonoBehaviour
         float speedBoon = player.MoveSpeed, healthBoon = defence.Health.Maximum;
         int flasksBoon = defence.Flasks.Maximum;
         yield return new WaitForSeconds(0.8f);
-        Say($"Q stats: weapon damage x{damageBefore:0.00} -> x{damageAfter:0.00} with Stoked; perfect guard window {windowBefore:0.000} -> {windowAfter:0.000} with Kindling; a boon took speed {speedBefore:0.0} -> {speedBoon:0.0} -> {player.MoveSpeed:0.0}, health {healthBoon:0} -> {defence.Health.Maximum:0}, flasks {flasksBoon} -> {defence.Flasks.Maximum}");
+        Say($"Q stats: weapon damage x{damageBefore:0.00} -> x{damageAfter:0.00} (Stoked retired: no change expected); perfect guard window {windowBefore:0.000} -> {windowAfter:0.000} (Kindling retired: no change expected); a boon took speed {speedBefore:0.0} -> {speedBoon:0.0} -> {player.MoveSpeed:0.0}, health {healthBoon:0} -> {defence.Health.Maximum:0}, flasks {flasksBoon} -> {defence.Flasks.Maximum}");
 
-        // R: effects that are only data. Backdraft's burn is data now; Grounding arcs from a perfect guard; Slipstream quickens after a perfect dodge.
-        Learn(Upgrade.BurnAndDetonate);
+        // R: effects that are only data. Breath of the Lioness's burn is data (Burn and Detonate is folded into it in Phase 4);
+        // Grounding and Slipstream are retired, so R2 shows that a perfect guard and dodge do nothing more with Lightning's passives.
+        Learn(Upgrade.Backdraft);
         yield return new WaitForSeconds(0.4f);
         set.Clear();
         int done = upgrades.EffectsDone;
@@ -470,7 +474,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         Say($"R1 backdraft's burn as data: effects done +{upgrades.EffectsDone - done}; the dummy burns {north.Burn.IsBurning} {north.Burn.Stacks} deep");
         element.Take(ElementKit.Lightning());
         upgrades.Forget();
-        Learn(Upgrade.Static, Upgrade.StoredCharge, Upgrade.DelayedCuts, "lightning.grounding", Upgrade.Blink, Upgrade.Afterimage, "lightning.slipstream");
+        Learn(Upgrade.Static, Upgrade.StoredCharge, Upgrade.Blink, Upgrade.Afterimage);
         yield return new WaitForSeconds(0.4f);
         set.Clear();
         health = north.Health.Current;
@@ -484,18 +488,19 @@ public class UpgradeProbeRunner : MonoBehaviour
         upgrades.OnPerfectDodge();
         yield return null;
         yield return null;
-        Say($"R2 grounding: an arc from a perfect guard took {arc:0} (effects +{upgrades.EffectsDone - done}); slipstream: speed {speedBefore:0.0} -> {player.MoveSpeed:0.0}, swing x{combat.StatSwing:0.00}, boons running {upgrades.Stats.BoonsRunning}");
+        Say($"R2 (Grounding and Slipstream retired: no arc and no quickening expected): an arc from a perfect guard took {arc:0} (effects +{upgrades.EffectsDone - done}); slipstream: speed {speedBefore:0.0} -> {player.MoveSpeed:0.0}, swing x{combat.StatSwing:0.00}, boons running {upgrades.Stats.BoonsRunning}");
         yield return new WaitForSeconds(1f);
 
         // S: the worn spell. Two learned; the first is worn; choosing the other on the chart and pressing learn wears that one.
         element.Take(ElementKit.Fire());
         upgrades.Forget();
-        Learn(FireTree.Cinder, Upgrade.Heat, Upgrade.BurningCrescent, Upgrade.MeteorLeap, "fire.fan");
+        // Phase 4: Cinder Fan is a shape of Flame Wave now; Uraeus is the second spell.
+        Learn(FireTree.Cinder, Upgrade.Heat, Upgrade.MeteorLeap, FireTree.Uraeus);
         yield return new WaitForSeconds(0.4f);
         string wornFirst = upgrades.Worn != null ? upgrades.Worn.Name : "nothing";
         menu.Open();
         yield return null;
-        menu.Choose("fire.fan");
+        menu.Choose(FireTree.Uraeus);
         yield return Tap(Key.E);
         yield return new WaitForSecondsRealtime(0.5f);
         Shot("menu_worn");
@@ -513,7 +518,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         casts = element.SpellsCast;
         yield return Hold(Key.Q, 0.45f);
         yield return new WaitForSeconds(0.15f);
-        Shot("cinder_fan");
+        Shot("uraeus");
         yield return new WaitForSeconds(0.3f);
         float fanTook = health - north.Health.Current;
         int fanBurn = north.Burn.Stacks;
@@ -693,10 +698,10 @@ public class UpgradeProbeRunner : MonoBehaviour
         Vector3 secondHome = second2.transform.position;
         second2.transform.position = north.transform.position + new Vector3(2.5f, 0f, 0f);
         Physics.SyncTransforms();
-        // X1: a number that waits on a state (Life, Stubborn Root: less harm below a third).
+        // X1: a number that waits on a state (Life, Stubborn Root: less harm below a third; retired in Phase 4, so no change is expected).
         element.Take(ElementKit.ByName(Elements.Life, false));
         upgrades.Forget();
-        Learn(LifeTree.Root, "life.stubborn", "life.rind");
+        Learn(LifeTree.Root, LifeTree.BitterRind);
         defence.Restore();
         yield return new WaitForSeconds(0.4f);
         float takenFull = defence.DamageTaken;
@@ -711,12 +716,13 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return null;
         bool heldNow = set.IsHeld;
         float heldFor = set.HeldLeft;
-        Say($"X1 state: damage taken x{takenFull:0.00} at full health, x{takenLow:0.00} below a third (Stubborn Root). X2 hold: a perfect guard held the dummy {heldNow} for {heldFor:0.0} s (speed x{set.SpeedMultiplier:0.00}, holds +{upgrades.Holds - holds})");
+        Say($"X1 state: damage taken x{takenFull:0.00} at full health, x{takenLow:0.00} below a third (Stubborn Root retired: the same expected). X2 hold: a perfect guard held the dummy {heldNow} for {heldFor:0.0} s (speed x{set.SpeedMultiplier:0.00}, holds +{upgrades.Holds - holds})");
         defence.Restore();
         // X3: a number against an affliction, a base-spell-only cost, and a kill that knows what the dead carried (Fire).
         element.Take(ElementKit.Fire());
         upgrades.Forget();
-        Learn(FireTree.Cinder, "fire.tinder", "fire.shortbreath", "fire.catch");
+        // Phase 4: Dry Tinder and Short Breath are retired; the numbers are shown without them.
+        Learn(FireTree.Cinder, FireTree.CatchingFire);
         yield return new WaitForSeconds(0.4f);
         Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
         yield return null;
@@ -743,7 +749,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return null;
         int caught = second2.Burn.Stacks;
         CombatEvents.RaiseDied(north, new AfflictionSet());
-        Say($"X3 against: the same light blow took {onClean:0.0} from a clean dummy and {onBurning:0.0} from a burning one (Dry Tinder). Base spell alone: Flame Wave cost {baseCost:0} (Short Breath). Kill with what it carried: a death burning three deep left the dummy beside it burning {caught} deep (Catching Fire)");
+        Say($"X3 against: the same light blow took {onClean:0.0} from a clean dummy and {onBurning:0.0} from a burning one (Dry Tinder retired: the same expected). Base spell alone: Flame Wave cost {baseCost:0} (Short Breath retired). Kill with what it carried: a death burning three deep left the dummy beside it burning {caught} deep (Catching Fire)");
         // X4: a count banked and spent (Metal, Forged Answer), and the HUD's words for it.
         element.Take(ElementKit.ByName(Elements.Metal, false));
         upgrades.Forget();
@@ -761,7 +767,7 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return Tap(Key.K);
         yield return new WaitForSeconds(1.6f);
         Say($"X4 count: two perfect guards banked {banked} (HUD: '{words}'); the heavy blow spent them, left {upgrades.Tally("metal.forgedanswer")}, and with the blades took {health - north.Health.Current:0}; sundered {set.Stacks(AfflictionKind.Sundered)}");
-        // X5: health as a price (Dark, Blood Price) and a flask filled by parts (Water, Catch the Rain).
+        // X5: health as a price (Dark, Blood Price) and a flask filled by parts (Water, Drawn From the Drowned, which replaced Catch the Rain in Phase 4: a fifth of a flask for each Soaked death).
         element.Take(ElementKit.ByName(Elements.Dark, false));
         upgrades.Forget();
         Learn("dark.curse", "dark.bloodprice");
@@ -775,18 +781,20 @@ public class UpgradeProbeRunner : MonoBehaviour
         float paid = upgrades.HealthPaid, grey = defence.Health.Grey;
         element.Take(ElementKit.ByName(Elements.Water, false));
         upgrades.Forget();
-        Learn(WaterTree.Root, "water.catch");
+        Learn(WaterTree.Root, WaterTree.DrawnFromTheDrowned);
         defence.Restore();
         yield return new WaitForSeconds(0.4f);
         defence.Flasks.TryThrow();
         int flasksLow = defence.Flasks.Count;
-        for (int i = 0; i < 4; i++)
+        var soaked = new AfflictionSet();
+        soaked.Apply(AfflictionKind.Soaked, 3);
+        for (int i = 0; i < 5; i++)
         {
-            upgrades.OnPerfectGuard(north.transform.position);
-            yield return null;
-            yield return null;
+            CombatEvents.RaiseDied(north, soaked);
+            // A kill answers at most five times a second (PlayerUpgrades), so the deaths are spaced.
+            yield return new WaitForSeconds(0.25f);
         }
-        Say($"X5 health as a price: Grasp cast with 5 mana {element.SpellsCast - casts}, health paid {paid:0.0}, left grey {grey:0.0} (Blood Price). Flask by parts: {flasksLow} flasks, four perfect guards later {defence.Flasks.Count} (Catch the Rain)");
+        Say($"X5 health as a price: Grasp cast with 5 mana {element.SpellsCast - casts}, health paid {paid:0.0}, left grey {grey:0.0} (Blood Price). Flask by parts: {flasksLow} flasks, five Soaked deaths later {defence.Flasks.Count} (Drawn From the Drowned)");
         // X6: a shatter that is told (Ice, Shards), a set-off that carries its depth (Lightning, Full Discharge), the last blow of a chain (Light's root).
         element.Take(ElementKit.ByName(Elements.Ice, false));
         upgrades.Forget();
@@ -803,7 +811,8 @@ public class UpgradeProbeRunner : MonoBehaviour
         int shardChill = second2.Afflictions.Stacks(AfflictionKind.Chill);
         element.Take(ElementKit.Lightning());
         upgrades.Forget();
-        Learn(Upgrade.Static, "lightning.fulldischarge");
+        // Full Discharge is retired in Phase 4: the discharge is shown without it.
+        Learn(Upgrade.Static);
         yield return new WaitForSeconds(0.4f);
         set.Clear();
         north.TakeHit(Lay(AfflictionKind.Static, 5));
@@ -824,11 +833,11 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return Lights(combat.Combo.Steps.Count);
         int markedEnd = set.Stacks(AfflictionKind.Marked);
         int blowsLeft = set.BlowsLeft(AfflictionKind.Marked);
-        Say($"X6 shatter: frozen {wasFrozen}, the heavy blow broke it and the shards chilled the dummy beside it {shardChill} deep (Shards). Set-off: a discharge of five held the dummy {heldByDischarge} (Full Discharge). Chain end: marked after one light blow {markedEarly}, after a whole chain {markedEnd} with {blowsLeft} critical blows left (Light's root)");
-        // X7: the air (Wind, Rising Cut and Open Air), with the dummy five deep in Unsteady.
+        Say($"X6 shatter: frozen {wasFrozen}, the heavy blow broke it and the shards chilled the dummy beside it {shardChill} deep (Shards). Set-off: a discharge of five held the dummy {heldByDischarge} (Full Discharge retired: false expected). Chain end: marked after one light blow {markedEarly}, after a whole chain {markedEnd} with {blowsLeft} critical blows left (Light's root)");
+        // X7: the air (Wind, Rising Cut; Open Air and Hang Time are retired in Phase 4), with the dummy five deep in Unsteady.
         element.Take(ElementKit.ByName(Elements.Wind, false));
         upgrades.Forget();
-        Learn(WindTree.Unsteady, "wind.rising", "wind.openair", "wind.hang");
+        Learn(WindTree.Unsteady, "wind.rising");
         yield return new WaitForSeconds(0.4f);
         Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
         yield return null;
@@ -852,10 +861,11 @@ public class UpgradeProbeRunner : MonoBehaviour
         set.Clear();
         yield return Lights(1);
         Say($"X7 air: a heavy blow on five Unsteady threw the dummy up {up} (lifts +{upgrades.Lifts - lifts}) to hang {hangs:0.0} s, {rose:0.0} m off the ground; a light blow up there took {inAirBlow:0.0} and held it up ({heldUp} blows counted); the same blow on the ground took {north.LastDamage:0.0}; down again at {north.transform.position.y - floor:0.00} m, unsteady left {set.Stacks(AfflictionKind.Unsteady)}");
-        // X8: what is grown (Life: saplings to a limit, standing near them, the harvest) and a hand-written number changed (Fire, Stoked).
+        // X8: what is grown (Life: saplings to a limit, standing near them, the harvest) and a hand-written number changed (Fire, White Heat).
+        // Phase 4: Sapling and Reap What Is Sown are spells now, and Shade is retired (The Garden Holds You asks the same nearness).
         element.Take(ElementKit.ByName(Elements.Life, false));
         upgrades.Forget();
-        Learn(LifeTree.Root, "life.sapling", "life.shade", "life.reap");
+        Learn(LifeTree.Root, "life.sapling", LifeTree.TheGardenHoldsYou, "life.reap");
         defence.Restore();
         yield return new WaitForSeconds(0.4f);
         int grownBefore = Clover.World.Hazards.GrownCount;
@@ -883,9 +893,10 @@ public class UpgradeProbeRunner : MonoBehaviour
         defence.Restore();
         yield return new WaitForSeconds(0.3f);
         int blowsBefore = upgrades.Heat.BlowsPerLevel;
-        Learn(FireTree.Cinder, Upgrade.Heat, "fire.stoked", "fire.banked", FireTree.WhiteHeat);
+        // Stoked and Banked are retired in Phase 4.
+        Learn(FireTree.Cinder, Upgrade.Heat, FireTree.WhiteHeat);
         yield return new WaitForSeconds(0.4f);
-        Say($"X8 hand-written numbers: Heat rose every {blowsBefore} blows, with Stoked every {upgrades.Heat.BlowsPerLevel}; cools after {upgrades.Heat.CoolAfter:0.0} s with Banked; rises to {upgrades.Heat.MaximumLevel} with White Heat");
+        Say($"X8 hand-written numbers: Heat rose every {blowsBefore} blows, now every {upgrades.Heat.BlowsPerLevel} (Stoked retired); cools after {upgrades.Heat.CoolAfter:0.0} s (Banked retired); rises to {upgrades.Heat.MaximumLevel} with White Heat");
         second2.Afflictions.Clear();
         second2.transform.position = secondHome;
         Physics.SyncTransforms();
