@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Eclipse: the duo branch Light and Dark share, reshaped by pairs_d1_d2.md ("Light and Dark", task 4.15) and drawn in
     /// the chart's heart (<see cref="HeartPattern"/>). Its reaction is Diamond Ring; the Shape mark opens its two shapes,
-    /// Shadow Bands and Through the Throat. Twilight is cut (it only laid both; the Shape mark takes its place) and Black
-    /// Sun, offered to Dark's tree, is cut because that roster is full; both are in <see cref="RetiredMarks"/>. Kept: Day
+    /// Shadow Bands and Through the Throat. Twilight is cut (it only laid both; the Shape mark takes its place; <see cref="RetiredMarks"/>)
+    /// and Black Sun, offered to Dark's tree, whose roster is full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept: Day
     /// and Night, Low Sun, The Dividing Line (the keystone), Dusk and Dawn (the duo spell, re-aimed at the pair) and
     /// Totality, begun by the surge, the branch's duo surge and top mark. Open while both are carried.
     /// </summary>

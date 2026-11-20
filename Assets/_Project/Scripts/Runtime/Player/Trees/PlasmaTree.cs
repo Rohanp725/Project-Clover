@@ -8,8 +8,8 @@ namespace Clover.Player.Trees
     /// drawn in the chart's heart (<see cref="HeartPattern"/>). Its reaction is Flashover; the branch's Shape mark opens
     /// Flashover's two shapes, Corona and Fulgurite, chosen at a rest fire, and before it is bought the plain Flashover
     /// works. Charged Embers is cut (both afflictions are laid by carrying both; the Shape mark takes its place), Arc Fire
-    /// folds into Corona, Fused Core is cut as a plain number, Plasma Lance is cut (Lightning's roster is full at six);
-    /// all four are in <see cref="RetiredMarks"/>. Kept under their ids: Twin Break, Chain Reaction, Meltdown (the
+    /// folds into Corona, Fused Core is cut as a plain number, all three in <see cref="RetiredMarks"/>;
+    /// Plasma Lance (Lightning's roster is full at six) is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept under their ids: Twin Break, Chain Reaction, Meltdown (the
     /// keystone), Ionised Air (re-aimed at Flashover), Ball Lightning (the duo spell) and the crown, Plasma, the branch's
     /// top mark. Open while both are carried (<see cref="MarkRules.Open(Upgrade, Build.Loadout, bool)"/>).
     /// </summary>

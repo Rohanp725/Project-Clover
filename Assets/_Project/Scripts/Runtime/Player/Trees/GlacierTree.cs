@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Glacier: the duo branch Ice and Water share, reshaped by pairs_d1_d2.md ("Ice and Water", task 4.15) and drawn in the
     /// chart's heart (<see cref="HeartPattern"/>). Its reaction is Supercooled; the Shape mark opens its two shapes, Sea Ice
-    /// and Hard Water. Cold Water is cut (the Shape mark takes its place), Flash Freeze is now the reaction, and Creeping
-    /// Ice, offered to Ice's tree, is cut because that roster is full; all three are in <see cref="RetiredMarks"/>. Kept:
+    /// and Hard Water. Cold Water is cut (the Shape mark takes its place), Flash Freeze is now the reaction, both in
+    /// <see cref="RetiredMarks"/>, and Creeping Ice, offered to Ice's tree, whose roster is full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept:
     /// Icebreaker, Cold in the Bones, The Wave Stands Still (the duo spell) and Weight of Ice, begun by the guard, the
     /// branch's top mark. Open while both are carried.
     /// </summary>

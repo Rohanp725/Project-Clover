@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Pyre: the duo branch Poison and Fire share, reshaped by pairs_d1_d2.md ("Poison and Fire", task 4.15) and drawn in the
     /// chart's heart (<see cref="HeartPattern"/>). Its reaction is Fire Medicine; the Shape mark opens its two shapes, Fire
-    /// Lance and Flying Fire. Fuel is cut (the Shape mark takes its place), and Fire Eater and Lit Fuse, offered to Poison's
-    /// and Fire's trees, are cut because those rosters are full; all three are in <see cref="RetiredMarks"/>. Goes Up is
+    /// Lance and Flying Fire. Fuel is cut (the Shape mark takes its place; <see cref="RetiredMarks"/>), and Fire Eater and Lit
+    /// Fuse, offered to Poison's and Fire's trees, whose rosters are full, are kept hidden for the Evolutions (<see cref="SpareSpells"/>). Goes Up is
     /// re-aimed at the reaction. Kept: Funeral Fire, Slow Burn (the keystone) and Light the Pyres, the god's gift at the top
     /// that is also the branch's spell. Open while both are carried.
     /// </summary>

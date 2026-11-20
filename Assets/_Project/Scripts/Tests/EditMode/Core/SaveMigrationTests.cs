@@ -178,5 +178,38 @@ namespace Clover.Tests
             Assert.IsTrue(RetiredMarks.IsMoving(Upgrade.BurningCrescent));
             Assert.IsFalse(RetiredMarks.IsRetired(Upgrade.BurningCrescent));
         }
+
+        [Test]
+        public void ASaveHoldingASpareSpellKeepsItWithNoRefundButNotInAnySlot()
+        {
+            // The owner's decision of 2026-11-20: the spare spells are hidden marks kept for Phase 6's Evolutions.
+            Assert.AreEqual(12, Clover.Player.Trees.SpareSpells.All.Length);
+            var data = new SaveData();
+            data.Learned.Add(Clover.Player.Trees.SpareSpells.PlasmaLance);
+            data.Learned.Add(Clover.Player.Trees.SpareSpells.FireEater);
+            data.Current.Slots[0] = Clover.Player.Trees.SpareSpells.PlasmaLance;
+            data.SavedHands[1].Slots[2] = Clover.Player.Trees.SpareSpells.FireEater;
+
+            SaveMigration.Upgrade(data);
+            CollectionAssert.AreEquivalent(new[] { Clover.Player.Trees.SpareSpells.PlasmaLance, Clover.Player.Trees.SpareSpells.FireEater }, data.Learned, "kept");
+            Assert.AreEqual(0, data.Wallet.Shards, "nothing refunded");
+            Assert.AreEqual("", data.Current.SlotAt(0), "out of the Hand: it can sit in no slot");
+            Assert.AreEqual("", data.SavedHands[1].SlotAt(2));
+            foreach (string id in Clover.Player.Trees.SpareSpells.All)
+            {
+                Assert.IsFalse(RetiredMarks.IsRetired(id), id + " is not refunded");
+                var mark = Upgrade.ById(id);
+                Assert.IsNotNull(mark, id + " is a mark");
+                Assert.IsTrue(mark.IsHidden && mark.IsSpell && mark.IsMix, id + " is a hidden duo spell");
+                var both = new Loadout();
+                both.Attune(mark.Element, mark.Element2);
+                both.Slots[0] = id;
+                Assert.IsFalse(MarkRules.CanBuy(mark, new System.Collections.Generic.HashSet<string>(), 99, true, true), id + " is never sold, in the playtest either");
+                Assert.IsFalse(MarkRules.Open(mark, both, true), id + " is on no tree");
+                Assert.IsFalse(MarkRules.Slottable(mark, both), id + " sits in no slot");
+                Assert.IsFalse(MarkRules.InForce(mark, both, new System.Collections.Generic.HashSet<string> { id }), id + " is never in force");
+                Assert.IsFalse(new HeartLayout().Draws(mark), id + " is never drawn");
+            }
+        }
     }
 }

@@ -75,7 +75,9 @@ namespace Clover.Player.Trees
             Duo.GoldenFeathersDuo.Add(to);
             Duo.StolenWarmthDuo.Add(to);
             Duo.FishPoisonDuo.Add(to);
-            // The plain reactions, one hidden mark per pair, after every tree (they are on none).
+            // The spare spells kept hidden for Phase 6's Evolutions, and the plain reactions, one hidden mark per pair, after
+            // every tree (they are on none).
+            SpareSpells.Add(to);
             Reactions.Add(to);
         }
     }

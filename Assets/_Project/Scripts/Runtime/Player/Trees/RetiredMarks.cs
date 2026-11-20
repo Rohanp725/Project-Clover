@@ -143,51 +143,46 @@ namespace Clover.Player
             new RetiredMark("poison.ripen", 3), new RetiredMark("poison.lance", 3), new RetiredMark("poison.rottenfruit", 3), new RetiredMark("poison.onesickness", 3),
             new RetiredMark("poison.censer", 4),
 
+            // The spare spells of the reshaped branches (Plasma Lance, Storm Overhead, Whiteout, Creeping Ice, Lotus Step, Thorn
+            // Wall, Trip Hammer, Sun Wheels, Black Sun, Grave Soil, Fire Eater, Lit Fuse) are no longer here: the owner kept them
+            // as hidden marks for Phase 6's Evolutions (2026-11-20, Trees/SpareSpells), so a save keeps them with no refund.
+
             // Plasma, the duo branch of Fire and Lightning (pairs_d1_d2.md, "Fire and Lightning"; task 4.5): Charged Embers
             // (both afflictions are laid by carrying both; Flashover's Shape mark takes its place), Arc Fire folded into
-            // Corona, Fused Core cut as a plain number, and Plasma Lance, which no roster has room for.
+            // Corona and Fused Core cut as a plain number.
             new RetiredMark("plasma.embers", 3), new RetiredMark("plasma.arcfire", 3), new RetiredMark("plasma.fused", 4),
-            new RetiredMark("plasma.lance", 5),
 
             // Tempest, the duo branch of Lightning and Wind (pairs_d1_d2.md; task 4.15): Charged Air (the Shape mark takes its
-            // place), Thunder Lift (now the Thunderhead shape) and Storm Overhead (offered to Lightning's tree, whose roster is full).
-            new RetiredMark("tempest.charged", 3), new RetiredMark("tempest.lift", 4), new RetiredMark("tempest.cloud", 4),
+            // place) and Thunder Lift (now the Thunderhead shape).
+            new RetiredMark("tempest.charged", 3), new RetiredMark("tempest.lift", 4),
 
-            // Blizzard, the duo branch of Wind and Ice (pairs_d1_d2.md; task 4.15): Biting Wind (the Shape mark takes its place)
-            // and Whiteout (offered to Ice's or Wind's tree, whose rosters are full).
-            new RetiredMark("blizzard.biting", 3), new RetiredMark("blizzard.whiteout", 4),
+            // Blizzard, the duo branch of Wind and Ice (pairs_d1_d2.md; task 4.15): Biting Wind (the Shape mark takes its place).
+            new RetiredMark("blizzard.biting", 3),
 
             // Glacier, the duo branch of Ice and Water (pairs_d1_d2.md; task 4.15): Cold Water (the Shape mark takes its place),
-            // Flash Freeze (now the reaction, Supercooled) and Creeping Ice (offered to Ice's tree, whose roster is full).
-            new RetiredMark("glacier.coldwater", 3), new RetiredMark("glacier.flash", 3), new RetiredMark("glacier.creeping", 4),
+            // and Flash Freeze (now the reaction, Supercooled).
+            new RetiredMark("glacier.coldwater", 3), new RetiredMark("glacier.flash", 3),
 
             // Bloom, the duo branch of Water and Life (pairs_d1_d2.md; task 4.15): Wet Seed (the Shape mark takes its place),
-            // Flowering (now the reaction, Quickening, without its wait) and Lotus Step (offered to Water's tree, whose roster is full).
-            new RetiredMark("bloom.wetseed", 3), new RetiredMark("bloom.flower", 3), new RetiredMark("bloom.lotus", 4),
+            // and Flowering (now the reaction, Quickening, without its wait).
+            new RetiredMark("bloom.wetseed", 3), new RetiredMark("bloom.flower", 3),
 
             // Overgrowth, the duo branch of Life and Earth (pairs_d1_d2.md; task 4.15): Root Grip (now the reaction, Split Rock;
-            // the Shape mark takes its place) and Thorn Wall (offered to Earth's tree, whose roster is full).
-            new RetiredMark("overgrowth.rootgrip", 3), new RetiredMark("overgrowth.thornwall", 4),
+            // the Shape mark takes its place).
+            new RetiredMark("overgrowth.rootgrip", 3),
 
-            // Forge, the duo branch of Earth and Metal (pairs_d1_d2.md; task 4.15): Trip Hammer (offered to Earth's or Metal's tree,
-            // whose rosters are full).
-            new RetiredMark("forge.triphammer", 4),
-
-            // Halo, the duo branch of Metal and Light (pairs_d1_d2.md; task 4.15): Sun Wheels (offered to Metal's tree, whose
-            // roster is full). Answering Draw moves to the Katana's Way (the list below).
-            new RetiredMark("halo.sunwheels", 4),
+            // Halo, the duo branch of Metal and Light (pairs_d1_d2.md; task 4.15): Answering Draw moves to the Katana's Way
+            // (the list below). Forge cut nothing but its spare spell.
 
             // Eclipse, the duo branch of Light and Dark (pairs_d1_d2.md; task 4.15): Twilight (it only laid both; the Shape mark
-            // takes its place) and Black Sun (offered to Dark's tree, whose roster is full).
-            new RetiredMark("eclipse.twilight", 3), new RetiredMark("eclipse.blacksun", 4),
+            // takes its place).
+            new RetiredMark("eclipse.twilight", 3),
 
-            // Blight, the duo branch of Dark and Poison (pairs_d1_d2.md; task 4.15): Carrion Flies (now the Swarm shape) and Grave
-            // Soil (offered to Dark's or Poison's tree, whose rosters are full).
-            new RetiredMark("blight.carrionflies", 3), new RetiredMark("blight.gravesoil", 4),
+            // Blight, the duo branch of Dark and Poison (pairs_d1_d2.md; task 4.15): Carrion Flies (now the Swarm shape).
+            new RetiredMark("blight.carrionflies", 3),
 
-            // Pyre, the duo branch of Poison and Fire (pairs_d1_d2.md; task 4.15): Fuel (the Shape mark takes its place), and Fire
-            // Eater and Lit Fuse (offered to Poison's and Fire's trees, whose rosters are full).
-            new RetiredMark("pyre.fuel", 3), new RetiredMark("pyre.fireeater", 4), new RetiredMark("pyre.slowfuse", 5),
+            // Pyre, the duo branch of Poison and Fire (pairs_d1_d2.md; task 4.15): Fuel (the Shape mark takes its place).
+            new RetiredMark("pyre.fuel", 3),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

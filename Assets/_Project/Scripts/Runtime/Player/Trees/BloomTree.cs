@@ -7,8 +7,8 @@ namespace Clover.Player.Trees
     /// Bloom: the duo branch Water and Life share, reshaped by pairs_d1_d2.md ("Water and Life", task 4.15) and drawn in the
     /// chart's heart (<see cref="HeartPattern"/>). Its reaction is Quickening; the Shape mark opens its two shapes, Floating
     /// Flower and Rootlets. Wet Seed is cut (the Shape mark takes its place), Flowering is now the reaction without its wait,
-    /// and Lotus Step, offered to Water's tree, is cut because that roster is full; all three are in
-    /// <see cref="RetiredMarks"/>. Kept: Drowned Roots, Morning Dew, Strangling Vine (the duo spell, re-aimed at the flower)
+    /// both in <see cref="RetiredMarks"/>, and Lotus Step, offered to Water's tree, whose roster is full, is
+    /// kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept: Drowned Roots, Morning Dew, Strangling Vine (the duo spell, re-aimed at the flower)
     /// and Great Lotus, begun by a flask in the surge, the branch's duo surge and top mark. Open while both are carried.
     /// </summary>
     public static class BloomTree

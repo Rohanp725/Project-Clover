@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Forge: the duo branch Earth and Metal share, reshaped by pairs_d1_d2.md ("Earth and Metal", task 4.15) and drawn in
     /// the chart's heart (<see cref="HeartPattern"/>). Its reaction is Anvil Stone; a new Shape mark opens its two shapes,
-    /// Ringing Iron (the old plain reaction) and Hammer Scale. Trip Hammer, offered to Earth's or Metal's tree, is cut because
-    /// both rosters are full (<see cref="RetiredMarks"/>). Kept: Hammer and Anvil (the reaction's stone feeds it), Struck Ore,
+    /// Ringing Iron (the old plain reaction) and Hammer Scale. Trip Hammer, offered to Earth's or Metal's tree, whose rosters
+    /// are full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept: Hammer and Anvil (the reaction's stone feeds it), Struck Ore,
     /// Buckled (the standing rule while both are on), Folded Steel (its folds now a fight's growth, kept to the next rest
     /// fire), Drawn From Stone (the duo spell) and World Anvil, begun by a finisher, the branch's top mark.
     /// </summary>

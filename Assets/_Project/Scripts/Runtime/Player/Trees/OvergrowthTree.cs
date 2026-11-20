@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Overgrowth: the duo branch Life and Earth share, reshaped by pairs_d1_d2.md ("Life and Earth", task 4.15) and drawn
     /// in the chart's heart (<see cref="HeartPattern"/>). Its reaction is Split Rock; the Shape mark opens its two shapes,
-    /// Taking Root and Root Web. Root Grip is now the reaction (the Shape mark takes its place) and Thorn Wall, offered to
-    /// Earth's tree, is cut because that roster is full; both are in <see cref="RetiredMarks"/>. Kept: Moss on Stone, Thorns
+    /// Taking Root and Root Web. Root Grip is now the reaction (the Shape mark takes its place) (<see cref="RetiredMarks"/>) and
+    /// Thorn Wall, offered to Earth's tree, whose roster is full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept: Moss on Stone, Thorns
     /// Take Root (once Briar Patch), Living Rampart (the keystone), Stone Oak (the duo spell) and The Ground Wakes, begun by
     /// the surge, the branch's duo surge and top mark. Open while both are carried.
     /// </summary>

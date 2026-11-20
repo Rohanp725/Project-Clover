@@ -32,6 +32,7 @@ namespace Clover.Tests
         private static readonly Upgrade RushMaster = new Upgrade { Id = "t.rush.master", Element = Elements.Fire, Kind = UpgradeKind.Major, Part = BranchPart.Master, Branch = "t.rush" };
         private static readonly Upgrade BaseMaster = new Upgrade { Id = "fire.base.master", Element = Elements.Fire, Kind = UpgradeKind.Major, Part = BranchPart.Master, Branch = "fire.base" };
         private static readonly Upgrade FireDevotion = new Upgrade { Id = "t.devotion", Element = Elements.Fire, Kind = UpgradeKind.Devotion };
+        private static readonly Upgrade SpareSpell = new Upgrade { Id = "t.lance", Element = Elements.Fire, Element2 = Elements.Lightning, Kind = UpgradeKind.Mix, Tree = MarkTree.Hidden, Form = "bolt", Spell = new SpellSpec() };
 
         private static Loadout Hand(string first, string second, string weapon = "", string slotted = "")
         {
@@ -76,6 +77,7 @@ namespace Clover.Tests
             new object[] { FireDevotion, Elements.Fire, "", "", "", false, "a Devotion with its element once" },
             new object[] { FireDevotion, Elements.Fire, Elements.Lightning, "", "", false, "a Devotion in a mix" },
             new object[] { FireDevotion, Elements.Lightning, Elements.Lightning, "", "", false, "a Devotion all in on another element" },
+            new object[] { SpareSpell, Elements.Fire, Elements.Lightning, "", "t.lance", false, "a hidden spare spell, even with both carried and slotted" },
         };
 
         [TestCaseSource(nameof(Cases))]

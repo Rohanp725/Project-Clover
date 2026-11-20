@@ -363,7 +363,8 @@ namespace Clover.Tests
             // Ball Lightning, with Plasma at its top.
             Assert.AreEqual(33, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
             Assert.AreEqual(32, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Lightning && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
-            Assert.AreEqual(6, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
+            // Plasma Lance, the spare spell kept hidden for the Evolutions, is on no chart.
+            Assert.AreEqual(6, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && !upgrade.IsHidden && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
         }
 
         [Test]

@@ -6,8 +6,9 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Halo: the duo branch Metal and Light share, reshaped by pairs_d1_d2.md ("Metal and Light", task 4.15) and drawn in the
     /// chart's heart (<see cref="HeartPattern"/>). Its reaction is Glint; a new Shape mark opens its two shapes, Mirror to
-    /// Mirror and Burning Mirror. Sun Wheels, offered to Metal's tree, is cut because that roster is full; Answering Draw
-    /// needs the Katana and moves to the Katana's infusion marks on the Way (<see cref="RetiredMarks"/>: cut and moving).
+    /// Mirror and Burning Mirror. Sun Wheels, offered to Metal's tree, whose roster is full, is kept hidden for the
+    /// Evolutions (<see cref="SpareSpells"/>); Answering Draw needs the Katana and moves to the Katana's infusion marks on
+    /// the Way (<see cref="RetiredMarks.Moving"/>).
     /// Kept: Bright Steel, Halo of Blades, Mirror Edge, Blinding Guard (the keystone) and Six Mirrors, the god's gift at the
     /// top that is also the branch's spell. Open while both are carried.
     /// </summary>

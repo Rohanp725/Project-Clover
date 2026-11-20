@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Blight: the duo branch Dark and Poison share, reshaped by pairs_d1_d2.md ("Dark and Poison", task 4.15) and drawn in
     /// the chart's heart (<see cref="HeartPattern"/>). Its reaction is Shut in the Dark; the Shape mark opens its two shapes,
-    /// Swarm and Rot to the Bone. Carrion Flies is now Swarm and Grave Soil, offered to Dark's or Poison's tree, is cut
-    /// because both rosters are full; both are in <see cref="RetiredMarks"/>. Wither is re-aimed to a minor (the curse's half
+    /// Swarm and Rot to the Bone. Carrion Flies is now Swarm (<see cref="RetiredMarks"/>) and Grave Soil, offered to
+    /// Dark's or Poison's tree, whose rosters are full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Wither is re-aimed to a minor (the curse's half
     /// of it overlapped the jar). Kept: Feeding Rot, One Death Feeds (the keystone), Wasting Grip (the duo spell, re-aimed at
     /// the jar) and The Reaping, begun by a finisher, the branch's top mark. Open while both are carried.
     /// </summary>

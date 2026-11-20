@@ -6,8 +6,8 @@ namespace Clover.Player.Trees
     /// <summary>
     /// Blizzard: the duo branch Wind and Ice share, reshaped by pairs_d1_d2.md ("Wind and Ice", task 4.15) and drawn in the
     /// chart's heart (<see cref="HeartPattern"/>). Its reaction is Rime; the Shape mark opens its two shapes, Rime Tree and
-    /// Spindrift. Biting Wind is cut (the Shape mark takes its place) and Whiteout, offered to Ice's or Wind's tree, is cut
-    /// because both rosters are full; both are in <see cref="RetiredMarks"/>. Kept: Windchill, Cold Front, Sliding Ice,
+    /// Spindrift. Biting Wind is cut (the Shape mark takes its place; <see cref="RetiredMarks"/>) and Whiteout, offered to
+    /// Ice's or Wind's tree, whose rosters are full, is kept hidden for the Evolutions (<see cref="SpareSpells"/>). Kept: Windchill, Cold Front, Sliding Ice,
     /// Avalanche (the duo spell) and Diamond Dust, begun by a shatter, the branch's top mark. Open while both are carried.
     /// </summary>
     public static class BlizzardTree
