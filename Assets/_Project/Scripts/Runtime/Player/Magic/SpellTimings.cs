@@ -167,6 +167,7 @@ namespace Clover.Player.Magic
             ["earthed.capstone"] = Cd(12f, SpellRole.Breaker),
             ["sicklewind.weasels"] = Cd(10f, SpellRole.Movement),
             ["mocksuns.sunstone"] = Cd(10f, SpellRole.Counter),
+            ["drownedweight.blackwater"] = Cd(10f, SpellRole.Movement),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };

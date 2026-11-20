@@ -1173,6 +1173,8 @@ Group: Reactions
 
 **What sets it off.** Water landing on a Cursed enemy, or a curse on a Soaked one.
 
+**Its shapes.** With the Shape mark of Water and Dark's duo branch (Drowned Weight: Drawn Under or The Pull of Night, 3 Shards, in the heart of the chart) and both carried, Drowned Weight wears the shape chosen at a rest fire instead. Both swell it 5 s as plain. Drawn Under: it is held 1.5 s and everything within 3 m is drawn 2 m toward it, and it bursts as plain. The Pull of Night: no burst; each of your weapon blows on it draws everything within 5 m 1 m toward it.
+
 **How to use it.** Kill it in a crowd, or heavy it there: the black water spreads the pair to the rest.
 
 **How it looks.** Its name over the enemy, then the burst. Not yet: only a finisher bursting it (for now any heavy blow).
