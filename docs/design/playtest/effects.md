@@ -993,6 +993,8 @@ Group: Reactions
 
 **What sets it off.** Chill landing on a notched enemy, or a notch on a chilled one.
 
+**Its shapes.** With the Shape mark of Ice and Metal's duo branch (Plate or Snap: Shed Plate or Snapped Blade, 3 Shards, in the heart of the chart) and both carried, Cold Short wears the shape chosen at a rest fire instead. Shed Plate: brittle and cracked as plain, and the cracked plate falls as black ice 2 m across for 4 s; those within 1.2 m slip flat 0.6 s. Snapped Blade: the armour does not crack; for 5 s its notches stay and its own blows deal half.
+
 **How to use it.** Chill a notched enemy, then heavy it, then fight it.
 
 **How it looks.** Its name over the enemy. Not yet: the plates dropping away.
