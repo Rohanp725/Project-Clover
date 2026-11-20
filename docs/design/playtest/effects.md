@@ -1068,6 +1068,8 @@ Group: Reactions
 
 **What sets it off.** A Mark landing on a charged enemy, or Static on a Marked one.
 
+**Its shapes.** With the Shape mark of Light and Lightning's duo branch (Flat or Again: Laid Flat or Struck Again, 3 Shards, in the heart of the chart) and both carried, The Bolt Runs True wears the shape chosen at a rest fire instead. Laid Flat: 0.5 s later 18 and two Static to it and to the nearest other Marked enemy within 10 m, then its Static discharges. Struck Again: no great bolt; while its Mark lasts each weapon blow on it calls a bolt of 9, 15 stagger and a Static.
+
 **How to use it.** Charge it deep before you Mark it, or Mark it before you charge it: the bolt sets the charge off for you. Stand so the others are behind it: the bolt runs on through them.
 
 **How it looks.** Its name over the enemy, the thread and the bolt on it, then the bolt coming down again and again as it runs away from you down the lane, and the discharge.

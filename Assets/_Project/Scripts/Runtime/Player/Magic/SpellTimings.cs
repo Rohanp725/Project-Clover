@@ -160,6 +160,7 @@ namespace Clover.Player.Magic
             ["girdled.deathturnedback"] = Cd(12f, SpellRole.Counter),
             ["chokedamp.clayrank"] = Cd(14f, SpellRole.Opener),
             ["redhot.crucible"] = Mana(35f, SpellRole.Breaker),
+            ["boltrunstrue.diamondthunder"] = Cd(11f, SpellRole.Detonator),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };
