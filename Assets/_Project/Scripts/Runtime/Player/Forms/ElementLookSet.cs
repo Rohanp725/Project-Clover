@@ -74,6 +74,8 @@ namespace Clover.Player.Forms
             /// for as long as what the reaction does lasts (Turned to Stone stands as stone 3.5 s); 0 ends it at its length.
             /// </summary>
             public float Hold;
+            /// <summary>The body it plays on is not lit the frozen pale blue while it plays (Winter Seed's ice flower is what is seen).</summary>
+            public bool Thawed;
         }
 
         /// <summary>How long a look played once is shown: its own length, or its hold when that is longer.</summary>
@@ -112,6 +114,44 @@ namespace Clover.Player.Forms
             /// <summary>A ribbon's ink: its colour and width in metres (none: no ink), and how much of it is stippled away (dust).</summary>
             public Color InkColour;
             public float InkWidth, Thin;
+            /// <summary>
+            /// Metres the part is drawn toward the camera, flat across the floor, wherever the look is turned: The Grudge's
+            /// black bolt drops in front of the enemy's health bar instead of behind it.
+            /// </summary>
+            public float Facing;
+        }
+
+        /// <summary>How a charged blade's sheath moves on the blade: still, two flames flickering in turn, teeth running round, a glint running hilt to tip.</summary>
+        public const byte SheathStill = 0, SheathFlicker = 1, SheathTeeth = 2, SheathGlint = 3;
+
+        /// <summary>
+        /// An element's charged blade (the Blender worker's elements 3): what the element wears on the blade itself, in the
+        /// blade's own frame (its length along x from <see cref="From"/> at the guard to <see cref="To"/> at the tip, the
+        /// edge toward +y, the flat's face toward +z), so it is laid along the real blade line of whatever weapon is in
+        /// hand and scaled to it (<see cref="Clover.Player.Swings.SwingTrails"/>).
+        /// </summary>
+        [Serializable]
+        public struct BladeSheath
+        {
+            /// <summary>The element's place on the ring.</summary>
+            public int Element;
+            /// <summary>The sheath, and its second (Fire's other flicker, Ice's teeth on the other edge); null for none.</summary>
+            public Mesh Mesh, Second;
+            public Material Material;
+            public byte Motion;
+            public float From, To;
+            /// <summary>Metres the teeth step along the blade each twentieth of a second (a third of their spacing).</summary>
+            public float Step;
+        }
+
+        public BladeSheath[] Sheaths = new BladeSheath[0];
+
+        /// <summary>An element's blade sheath by its place on the ring; -1 for none.</summary>
+        public int FindSheath(int element)
+        {
+            for (int i = 0; i < Sheaths.Length; i++)
+                if (Sheaths[i].Element == element) return i;
+            return -1;
         }
 
         /// <summary>The most seconds a cycling part's scale and path go round at the end of its look.</summary>

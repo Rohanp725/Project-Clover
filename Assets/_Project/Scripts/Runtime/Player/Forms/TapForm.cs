@@ -103,6 +103,15 @@ namespace Clover.Player.Forms
         {
             var cast = run.Cast;
             int hits = cast.Combat.StrikeCone(cast.Reach, cast.Spec.Arc, cast.Blow(cast.Damage, cast.Stagger));
+            // The elements 3 Flame Wave: one rolling front of real flame out over the cone, every one in it catching, in
+            // place of the rows of tongues, the hoods and the smoke below (the owner: "the wave hits a cone shape, but the
+            // burn is only a straight line"; the coordinator: no rows of identical cones).
+            if (ElementArt.Ready && ElementMoves.PlaySpell(ElementSubstance.Fire, run.A, run.B, Mathf.Clamp(cast.Reach / 6f, 0.8f, 1.2f)) >= 0)
+            {
+                run.Flag2 = true;
+                int count = cast.Combat.CopyLastStruck(out var struck);
+                for (int i = 0; i < count; i++) ElementMoves.SpellReached(ElementSubstance.Fire, struck[i].transform, run.B);
+            }
             // The element art has no arc of light on the ground: fire is flame, never a glow.
             if (cast.Caster != null && !ElementArt.Ready) cast.Caster.ShowArc(cast.Reach, cast.Spec.Arc, 1f, cast.Element != null ? cast.Element.Glow : cast.Colour);
             run.T1 = 0.8f;
@@ -117,7 +126,7 @@ namespace Clover.Player.Forms
             if (run.Phase == 0)
             {
                 float front = cast.Reach * Mathf.Clamp01(run.Age / spread);
-                while (run.T1 <= front)
+                while (!run.Flag2 && run.T1 <= front)
                 {
                     // One row of tongues across the cone at this distance, wider the farther out.
                     float across = 2f * run.T1 * Mathf.Tan(cast.Spec.Arc * 0.5f * Mathf.Deg2Rad);
@@ -140,7 +149,7 @@ namespace Clover.Player.Forms
                     patches[i] = run.A + Quaternion.Euler(0f, PatchTurn[i] * cast.Spec.Arc, 0f) * run.B * (cast.Reach * PatchOut[i]);
                     Clover.World.Hazards.Lay(cast.Ground(patches[i], PatchRadius, burns, 0.5f, cast.Linger(2f)));
                 }
-                if (ElementArt.Ready)
+                if (ElementArt.Ready && !run.Flag2)
                 {
                     // The front rears up as hooded tongues, cobra-flared, leaning in; rolling smoke over the carpet.
                     float yaw = ElementArt.Turn(run.B, 180f);
@@ -154,7 +163,7 @@ namespace Clover.Player.Forms
             }
             // What is left keeps licking upward until it has burned out, anywhere over the patches.
             run.T2 -= deltaTime;
-            if (run.T2 <= 0f)
+            if (run.T2 <= 0f && !run.Flag2)
             {
                 run.T2 = 0.05f;
                 Vector2 off = Random.insideUnitCircle * PatchRadius;
@@ -402,13 +411,20 @@ namespace Clover.Player.Forms
             var cast = run.Cast;
             var solids = SpellWorks.Solids(run);
             run.Done = SigKit.Gather(run, run.A + run.B * (cast.Reach * 0.5f), cast.Reach * 0.5f + TideRules.HalfWidth, 12);
-            solids[0] = FormFx.Hold(FormMesh.Crest, Deep(cast.Colour, 0.86f), 0.03f);
-            solids[1] = FormFx.Hold(FormMesh.Crest, Deep(cast.Colour, 0.6f), 0.02f);
-            solids[2] = FormFx.Hold(FormMesh.Foam, Color.white, 0.012f);
-            solids[3] = FormFx.Hold(FormMesh.Foam, Color.white, 0.012f);
             var left = SpellWorks.Times(run);
             for (int i = 0; i < run.Done && i < left.Length; i++) left[i] = -1f;
             run.T1 = Mathf.Max(cast.Reach, TideRules.BreaksAt);
+            // The elements 3 Riptide: one clean curling breaker with no triangles on its crest, pitching forward into a
+            // splash crown at the break, no bubble rings and no ring round the caster. The recipe's wave rises 1.3 m
+            // ahead of its caster and rolls away; here it rises where the tide does and rolls back in to the caster.
+            run.Flag2 = ElementArt.Ready && ElementMoves.PlaySpell(ElementSubstance.Water, run.A + run.B * (run.T1 + 1.3f), -run.B) >= 0;
+            if (!run.Flag2)
+            {
+                solids[0] = FormFx.Hold(FormMesh.Crest, Deep(cast.Colour, 0.86f), 0.03f);
+                solids[1] = FormFx.Hold(FormMesh.Crest, Deep(cast.Colour, 0.6f), 0.02f);
+                solids[2] = FormFx.Hold(FormMesh.Foam, Color.white, 0.012f);
+                solids[3] = FormFx.Hold(FormMesh.Foam, Color.white, 0.012f);
+            }
             Vector3 rises = run.A + run.B * run.T1;
             // The element art: the wave alone, with no lane or ring of light. Its shark-tooth crest read as random
             // triangles on top of the wave and is left off (the owner's review, 2026-11-19).
@@ -447,7 +463,8 @@ namespace Clover.Player.Forms
                     // Struck from its far side, once, as the face of the wave takes it.
                     touched.Add(one);
                     cast.Combat.StrikeOne(thing, cast.Blow(cast.Damage, cast.Stagger), thing.transform.position + run.B * 2f);
-                    FormFx.Erupt(FormMesh.Spout, thing.transform.position, Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.7f, 1.8f, 0.7f), ElementSubstance.Pale(cast.Colour), 0.07f, 0.05f, 0.25f);
+                    if (run.Flag2) ElementMoves.SpellReached(ElementSubstance.Water, thing.transform, -run.B);
+                    else FormFx.Erupt(FormMesh.Spout, thing.transform.position, Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.7f, 1.8f, 0.7f), ElementSubstance.Pale(cast.Colour), 0.07f, 0.05f, 0.25f);
                 }
                 if (i >= left.Length) continue;
                 // Taken once, it is owed the way from where it stood to where the wave breaks, and is paid that as
@@ -480,7 +497,7 @@ namespace Clover.Player.Forms
             FormFx.Place(solids[4], at - run.B * 0.9f + Vector3.up * (tall * 0.72f), Quaternion.Euler(0f, ElementArt.Turn(-run.B, 0f), 0f), Vector3.one * teeth);
 
             run.T2 -= deltaTime;
-            if (run.T2 <= 0f && run.Phase == 0)
+            if (run.T2 <= 0f && run.Phase == 0 && !run.Flag2)
             {
                 // Spray torn off the lip: some thrown ahead of it, some left hanging behind.
                 run.T2 = 0.03f;
@@ -502,18 +519,19 @@ namespace Clover.Player.Forms
                 run.Phase = 1;
                 run.T3 = run.Age;
                 Vector3 lip = at - run.B * 1.1f;
-                for (int i = 0; i < 18; i++)
+                for (int i = 0; i < 18 && !run.Flag2; i++)
                 {
                     Vector3 from = lip + side * FormRules.InRow(i, 18, TideRules.HalfWidth * 1.8f / 18f) + Vector3.up * Random.Range(0.5f, 1.4f);
                     Vector3 to = from - run.B * Random.Range(0.8f, 2.4f) + Vector3.up * Random.Range(-0.3f, 1.2f);
                     FormFx.Fly(FormMesh.Droplet, from, to, Quaternion.LookRotation(to - from), Vector3.one * Random.Range(0.4f, 0.75f), i % 3 == 0 ? ElementSubstance.Pale(cast.Colour) : Color.white, 0.42f, 0.012f);
                 }
                 // The white of it going up where it lands, as mist, and the water thrown out of it.
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 5 && !run.Flag2; i++)
                     FormFx.Erupt(FormMesh.Cloud, lip + side * FormRules.InRow(i, 5, 0.95f) + Vector3.up * 0.3f, Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(1.5f, 0.9f + 0.5f * Random.value, 1.2f), Color.white, 0.08f, 0.1f, 0.35f, 0.01f);
-                for (int i = 0; i < 4; i++)
+                for (int i = 0; i < 4 && !run.Flag2; i++)
                     FormFx.Erupt(FormMesh.Spout, lip + side * FormRules.InRow(i, 4, 1.2f), Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.7f, 1.3f + Random.value, 0.7f), ElementSubstance.Pale(cast.Colour), 0.07f, 0.06f, 0.3f, 0.015f);
-                if (ElementArt.Ready)
+                if (run.Flag2) { }
+                else if (ElementArt.Ready)
                 {
                     // It slaps down: crowns along the lip, and the floor left wet with foam lace draining in rings.
                     for (int i = 0; i < 3; i++) ElementArt.Sheet(ElementArt.SheetOf("water_splash"), lip + side * FormRules.InRow(i, 3, 1.3f) + Vector3.up * 0.8f, 3f, 0.75f);
@@ -525,7 +543,7 @@ namespace Clover.Player.Forms
                     FormFx.Lay(FormMark.Disc, lip, TideRules.HalfWidth * 1.7f, FormKit.Lit(ElementSubstance.Pale(cast.Colour), 0.8f, 0.3f), 1.3f, TideRules.HalfWidth * 2.1f);
                 }
                 // The stone is left wet: dark, with a sheen that dries off it.
-                FormFx.Lay(FormMark.Scorch, lip, TideRules.HalfWidth * 2.4f, FormKit.Stain(cast.Colour, 0.5f), 2.6f);
+                if (!run.Flag2) FormFx.Lay(FormMark.Scorch, lip, TideRules.HalfWidth * 2.4f, FormKit.Stain(cast.Colour, 0.5f), 2.6f);
                 if (cast.Upgrades != null) cast.Upgrades.Jolt(0.03f, 0.14f, 0.18f);
             }
             return run.Phase == 0 || run.Age - run.T3 < 0.3f;
@@ -543,14 +561,18 @@ namespace Clover.Player.Forms
             var cast = run.Cast;
             var points = SpellWorks.Points(run);
             var solids = SpellWorks.Solids(run);
-            for (int k = 0; k < Vines + Flowers; k++)
+            // The elements 3 Briar Patch: seeds thrown and briars bursting up from the middle outward, winding up the legs
+            // of those inside, kept while the bed stands; no curved green thing on the ground and no white flash.
+            run.Flag2 = ElementArt.Ready && ElementMoves.PlaySpell(ElementSubstance.Life, run.C - run.B * ElementMoves.SpellAhead, run.B, 1f, Mathf.Max(0.5f, cast.Spec.Seconds)) >= 0;
+            for (int k = 0; k < Vines + Flowers && !run.Flag2; k++)
             {
                 bool vine = k < Vines;
                 points[k] = run.C + (vine ? FormRules.Scattered(k, Vines, cast.Spec.Radius * 0.9f) : FormRules.OnRing(k, Flowers, cast.Spec.Radius * 0.55f, 40f));
                 solids[k] = FormFx.Hold(vine ? FormMesh.Vine : FormMesh.Flower, vine ? (k % 2 == 0 ? cast.Colour : new Color(0.25f, 0.6f, 0.22f)) : Petal);
                 FormFx.Place(solids[k], points[k], Quaternion.identity, Vector3.one * 0.001f);
             }
-            if (ElementArt.Ready)
+            if (run.Flag2) { }
+            else if (ElementArt.Ready)
             {
                 // The bed blooms. Its runner vines curving over the floor read as a mystery shape and are left off
                 // (the owner's review, 2026-11-19).
@@ -590,6 +612,12 @@ namespace Clover.Player.Forms
             run.T1 += Mathf.Max(0.1f, cast.Spec.Interval);
             run.T3 = run.Age;
             cast.Combat.StrikeArea(run.C, cast.Spec.Radius, cast.Blow(cast.Spec.LingerDamage, 0f));
+            if (run.Flag2)
+            {
+                int count = cast.Combat.CopyLastStruck(out var struck);
+                for (int i = 0; i < count; i++) ElementMoves.SpellReached(ElementSubstance.Life, struck[i].transform, run.B);
+                return true;
+            }
             for (int i = 0; i < 3; i++)
             {
                 Vector3 from = run.C + FormRules.OnRing(i, 3, cast.Spec.Radius * 0.5f, Random.value * 120f) + Vector3.up * 0.8f;
@@ -1011,7 +1039,12 @@ namespace Clover.Player.Forms
             var solids = SpellWorks.Solids(run);
             Color murk = Color.Lerp(cast.Colour, new Color(0.2f, 0.3f, 0.1f), 0.6f), fume = Color.Lerp(cast.Colour, new Color(0.2f, 0.3f, 0.1f), 0.25f);
             run.Flag2 = ElementArt.Ready;
-            if (run.Flag2)
+            // The elements 3 Miasma: a glob of venom bursts and a low bank of lobed yellow-green clouds billows out and
+            // churns as it creeps (the owner: "it needs to be like a cloud"), in place of the terraces and the pits.
+            run.Look = run.Flag2 ? ElementMoves.PlaySpell(ElementSubstance.Poison, run.C - run.B * ElementMoves.SpellAhead, run.B, 1f, Mathf.Max(0.5f, cast.Spec.Seconds)) : -1;
+            run.Flag = run.Look >= 0;
+            if (run.Flag) { }
+            else if (run.Flag2)
             {
                 // The element art: a heavy gas front in three terraces of inked lobes over see-through layers.
                 for (int k = 0; k < 3; k++)
@@ -1045,7 +1078,8 @@ namespace Clover.Player.Forms
                 if (toward.magnitude > 0.2f) run.C += toward.normalized * (0.8f * deltaTime);
             }
             float spread = Mathf.Clamp01(run.Age / 0.45f) * Mathf.Clamp01((hangs - run.Age) / 0.5f);
-            if (run.Flag2) PlaceGas(ref run, spread, deltaTime);
+            if (run.Flag) ElementLooks.MoveHeld(run.Look, run.C - run.B * ElementMoves.SpellAhead);
+            else if (run.Flag2) PlaceGas(ref run, spread, deltaTime);
             else for (int k = 0; k < Clouds; k++)
             {
                 float angle = (k * 47f + run.Age * (10f + k * 3f)) * Mathf.Deg2Rad;
@@ -1059,7 +1093,8 @@ namespace Clover.Player.Forms
             if (run.Age >= hangs)
             {
                 // What has seeped into the ground stays a while.
-                if (run.Flag2)
+                if (run.Flag) { }
+                else if (run.Flag2)
                 {
                     float yaw = ElementArt.Turn(run.B);
                     ElementArt.Floor(ElementArt.Piece("poison_stain_spell"), run.C, yaw, 0.8f, 0.9f, 3f, 0.4f, true);
@@ -1069,7 +1104,7 @@ namespace Clover.Player.Forms
                 return false;
             }
             run.T2 -= deltaTime;
-            if (run.T2 <= 0f)
+            if (run.T2 <= 0f && !run.Flag)
             {
                 run.T2 = 0.08f;
                 Vector2 off = Random.insideUnitCircle * radius * 0.9f;
@@ -1079,7 +1114,13 @@ namespace Clover.Player.Forms
             if (run.Age < run.T1) return true;
             run.T1 += Mathf.Max(0.1f, cast.Spec.Interval);
             cast.Combat.StrikeArea(run.C, radius, cast.Blow(cast.Spec.LingerDamage, 0f));
-            if (run.Flag2)
+            if (run.Flag)
+            {
+                // Those inside double over, small puffs of poison popping off them.
+                int count = cast.Combat.CopyLastStruck(out var struck);
+                for (int i = 0; i < count; i++) ElementMoves.SpellReached(ElementSubstance.Poison, struck[i].transform, run.B);
+            }
+            else if (run.Flag2)
             {
                 // Hooked fumes rise off the front and bend back; pits open just ahead of it.
                 float yaw = ElementArt.Turn(run.B);

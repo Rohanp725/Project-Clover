@@ -127,6 +127,9 @@ namespace Clover.Player
         public event System.Action<AttackStep> Swung;
         /// <summary>A blow of the weapon met a body (not a guard): where on it, and the way the blow was going. The swing looks throw their element there.</summary>
         public event System.Action<Vector3, Vector3> BladeMet;
+
+        /// <summary>The colour of the star a blow's sweet spot throws.</summary>
+        public static readonly Color SweetStar = new Color(1f, 0.78f, 0.38f);
         private bool cutGiven;
 
         /// <summary>
@@ -1804,9 +1807,10 @@ namespace Clover.Player
                 LastBlowDistance = distance;
                 if (step.IsSweet(distance) && outcome != HitOutcome.Blocked)
                 {
-                    // The tip: a white star where it bit, so the right distance can be learned by eye.
+                    // The tip: a star where it bit, so the right distance can be learned by eye; a warm gold, never white
+                    // (the swing films of 2026-11-20: white stars on every heavy weapon's tip).
                     SweetBlows++;
-                    Vfx.Play(VfxKind.TintSpark, other.bounds.center, transform.forward, 1.2f, Color.white);
+                    Vfx.Play(VfxKind.TintSpark, other.bounds.center, transform.forward, 1.2f, SweetStar);
                 }
                 if (outcome != HitOutcome.Blocked && distance < nearestAt && target is Component nearBody)
                 {
@@ -1834,7 +1838,10 @@ namespace Clover.Player
                 if (Stats != null && afflictable != null) earned *= Mathf.Max(0.1f, 1f + Stats.Against(PlayerStat.ManaFromBlows, afflictable.Afflictions) + (afflictable.Afflictions.IsAirborne ? Stats.InAir(PlayerStat.ManaFromBlows) : 0f));
                 if (outcome != HitOutcome.Blocked && pays)
                 {
-                    if (critical || NextBlowDamage > 1f)
+                    // A charged blow of an element drawn in its elements 3 look lands in that look, not under a white star.
+                    var charge = SwingElement;
+                    bool chargeDrawn = !critical && charge != null && Clover.Player.Forms.ElementArt.Ready && Clover.Player.Forms.ElementMoves.HasBlade(charge.Index);
+                    if (critical || (NextBlowDamage > 1f && !chargeDrawn))
                     {
                         // The sign of a critical blow: a gold star with long points where it lands. A stored charge shows the same.
                         if (critical) Criticals++;
@@ -1868,7 +1875,12 @@ namespace Clover.Player
                 if (outcome != HitOutcome.Blocked)
                 {
                     Vector3 contact = other.ClosestPoint(origin);
-                    Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, contact, transform.forward);
+                    // A blow whose element lands in its own elements 3 look throws no white spark streak through the body
+                    // beside it (the owner, 2026-11-20: "Wind is a line through the enemy").
+                    var landing = SwingElement;
+                    bool drawnByLook = landing != null && Clover.Player.Forms.ElementArt.Ready
+                        && (SwingInfused ? Clover.Player.Forms.ElementMoves.HasStrike(landing.Index) : Clover.Player.Forms.ElementMoves.HasBlade(landing.Index));
+                    if (!drawnByLook) Vfx.Play(step.Heavy ? VfxKind.HeavySpark : VfxKind.HitSpark, contact, transform.forward);
                     BladeMet?.Invoke(contact, transform.forward);
                 }
                 else

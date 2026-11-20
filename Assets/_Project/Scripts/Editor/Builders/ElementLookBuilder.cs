@@ -20,7 +20,7 @@ namespace Clover.EditorTools
     /// The groups the recipe marks as shader mock-ups (Temper's steel, Chill's and Rime's ice) are not meshes: their
     /// bands' times are kept for the body's own material to draw.
     /// </summary>
-    public static class ElementLookBuilder
+    public static partial class ElementLookBuilder
     {
         public const string RecipePath = ReactionArtBuilder.CombosFolder + "/elements2_recipe.json";
         public const string SetPath = ElementArtBuilder.Folder + "/element_looks.asset";
@@ -134,6 +134,10 @@ namespace Clover.EditorTools
         public static readonly HashSet<string> LeftOut = new HashSet<string>
         {
             "black_chain|vfxr4_chain",
+            // Chill's frost rosettes lay as a white snowflake under the frozen body in the element films of 2026-11-20 (the
+            // owner of the ice hits: "The white spiderweb thing is really throwing off everything"; the elements 3 ice has no
+            // snowflake decal): the crystals and the shell are Chill's look.
+            "ice_chill|vfx3c_vfx_ice_rosette",
             // Seed Storm (the owner, 2026-11-20: "the wind throwing the enemy has a bunch of random stuff pop up at the uproot
             // location"): the solid brown pit disc and the ring of green turf chunks round it are gone; the crack and the
             // clods thrown up out of it stay.
@@ -429,12 +433,81 @@ namespace Clover.EditorTools
             ["e3_dark_trail"] = new ReactionArtBuilder.Paint(0.02f, 0f, 0.04f),
             ["e3_breath"] = new ReactionArtBuilder.Paint(0.34f, 0.37f, 0.44f, 0.6f, 1f, true),
             ["e3_dark_leaf"] = new ReactionArtBuilder.Paint(0.12f, 0.04f, 0.2f),
-            ["e3_black_comb"] = new ReactionArtBuilder.Paint(0.03f, 0.02f, 0.04f),
+            ["e3_black_comb"] = new ReactionArtBuilder.Paint(0.03f, 0.02f, 0.04f, 0.7f, 1f, true),
             ["e3_feather_vane"] = new ReactionArtBuilder.Paint(1f, 0.62f, 0.16f),
             ["e3_gold_mote"] = new ReactionArtBuilder.Paint(1f, 0.7f, 0.2f),
-            ["e3_wind"] = new ReactionArtBuilder.Paint(0.86f, 0.9f, 0.8f),
+            // Elements 3's wind a mint, its rim teal: the pale dust it was drawn in read as thin white lines in Golden Feathers' gust.
+            ["e3_wind"] = new ReactionArtBuilder.Paint(0.4f, 0.78f, 0.6f),
             // Floor combs short dark dashes, never pale lines (the scale notes).
-            ["e3_wind_comb"] = new ReactionArtBuilder.Paint(0.16f, 0.16f, 0.2f),
+            ["e3_wind_comb"] = new ReactionArtBuilder.Paint(0.16f, 0.16f, 0.2f, 0.55f, 1f, true),
+            // Elements 3's own moments (tools/e3mats.py, e3react.py, e3pass2.py): flat colours, and each emission ramp
+            // read a third of the way from its centre to its rim, the face the camera sees most of.
+            ["e3_bolt"] = new ReactionArtBuilder.Paint(0.340f, 0.725f, 1.000f),
+            ["e3_briar"] = new ReactionArtBuilder.Paint(0.130f, 0.329f, 0.051f),
+            ["e3_char"] = new ReactionArtBuilder.Paint(0.045f, 0.028f, 0.022f, 0.75f, 1f, true),
+            ["e3_crack"] = new ReactionArtBuilder.Paint(0.050f, 0.035f, 0.025f, 0.85f, 1f, true),
+            ["e3_dark_rim"] = new ReactionArtBuilder.Paint(0.450f, 0.150f, 0.850f),
+            ["e3_dk_b"] = new ReactionArtBuilder.Paint(0.020f, 0.004f, 0.035f),
+            ["e3_dk_v"] = new ReactionArtBuilder.Paint(0.360f, 0.090f, 0.720f),
+            ["e3_dust_d"] = new ReactionArtBuilder.Paint(0.200f, 0.130f, 0.070f),
+            ["e3_dust_l"] = new ReactionArtBuilder.Paint(0.600f, 0.470f, 0.290f),
+            ["e3_dust_m"] = new ReactionArtBuilder.Paint(0.400f, 0.290f, 0.160f),
+            ["e3_feather2_vane"] = new ReactionArtBuilder.Paint(1.000f, 0.600f, 0.120f),
+            ["e3_fire_o"] = new ReactionArtBuilder.Paint(1.000f, 0.400f, 0.040f),
+            ["e3_fire_r"] = new ReactionArtBuilder.Paint(0.820f, 0.140f, 0.020f),
+            ["e3_fire_y"] = new ReactionArtBuilder.Paint(1.000f, 0.680f, 0.140f),
+            ["e3_flameflag"] = new ReactionArtBuilder.Paint(0.989f, 0.421f, 0.049f),
+            ["e3_foam"] = new ReactionArtBuilder.Paint(0.500f, 0.840f, 0.940f),
+            ["e3_frost_mist"] = new ReactionArtBuilder.Paint(0.360f, 0.600f, 0.860f),
+            ["e3_glint"] = new ReactionArtBuilder.Paint(0.800f, 0.860f, 0.930f),
+            ["e3_gold_burn"] = new ReactionArtBuilder.Paint(0.420f, 0.200f, 0.020f, 0.7f, 1f, true),
+            ["e3_gold_d"] = new ReactionArtBuilder.Paint(0.620f, 0.250f, 0.020f),
+            ["e3_gold_edge"] = new ReactionArtBuilder.Paint(1.000f, 0.626f, 0.160f),
+            ["e3_gold_l"] = new ReactionArtBuilder.Paint(1.000f, 0.740f, 0.240f),
+            ["e3_gold_m"] = new ReactionArtBuilder.Paint(1.000f, 0.500f, 0.060f),
+            ["e3_gold_trail"] = new ReactionArtBuilder.Paint(1.000f, 0.573f, 0.124f),
+            ["e3_ice_d"] = new ReactionArtBuilder.Paint(0.040f, 0.200f, 0.580f),
+            ["e3_ice_l"] = new ReactionArtBuilder.Paint(0.360f, 0.740f, 0.970f),
+            ["e3_ice_m"] = new ReactionArtBuilder.Paint(0.090f, 0.460f, 0.900f),
+            ["e3_leaf"] = new ReactionArtBuilder.Paint(0.250f, 0.620f, 0.120f),
+            ["e3_leaf_d"] = new ReactionArtBuilder.Paint(0.050f, 0.250f, 0.040f),
+            ["e3_leaf_l"] = new ReactionArtBuilder.Paint(0.380f, 0.750f, 0.160f),
+            ["e3_leaf_m"] = new ReactionArtBuilder.Paint(0.150f, 0.500f, 0.080f),
+            ["e3_miasma"] = new ReactionArtBuilder.Paint(0.490f, 0.645f, 0.075f),
+            ["e3_miasma_dark"] = new ReactionArtBuilder.Paint(0.264f, 0.391f, 0.046f),
+            // The floor's marks lie see-through on it, never as a solid slab with a pale rim (the films of 2026-11-20: Riptide's
+            // and water's pools read as white rings, Miasma's stain as a lime slab).
+            ["e3_poison_stain"] = new ReactionArtBuilder.Paint(0.170f, 0.280f, 0.025f, 0.6f, 1f, true),
+            ["e3_spark"] = new ReactionArtBuilder.Paint(1.000f, 0.580f, 0.140f),
+            ["e3_spark_hot"] = new ReactionArtBuilder.Paint(1.000f, 0.800f, 0.400f),
+            ["e3_spike"] = new ReactionArtBuilder.Paint(0.188f, 0.555f, 0.910f),
+            ["e3_splash"] = new ReactionArtBuilder.Paint(0.053f, 0.371f, 0.738f),
+            ["e3_steel"] = new ReactionArtBuilder.Paint(0.660f, 0.708f, 0.782f),
+            ["e3_steel_trail"] = new ReactionArtBuilder.Paint(0.339f, 0.385f, 0.464f),
+            ["e3_stone"] = new ReactionArtBuilder.Paint(0.500f, 0.370f, 0.240f),
+            ["e3_storm"] = new ReactionArtBuilder.Paint(0.072f, 0.085f, 0.164f),
+            ["e3_storm_lit"] = new ReactionArtBuilder.Paint(0.295f, 0.505f, 0.965f),
+            ["e3_thorn"] = new ReactionArtBuilder.Paint(0.240f, 0.130f, 0.040f),
+            ["e3_ven_d"] = new ReactionArtBuilder.Paint(0.100f, 0.250f, 0.020f),
+            ["e3_ven_l"] = new ReactionArtBuilder.Paint(0.600f, 0.820f, 0.120f),
+            ["e3_ven_m"] = new ReactionArtBuilder.Paint(0.320f, 0.600f, 0.050f),
+            ["e3_venom"] = new ReactionArtBuilder.Paint(0.358f, 0.673f, 0.061f),
+            ["e3_vine"] = new ReactionArtBuilder.Paint(0.203f, 0.497f, 0.079f),
+            ["e3_wat_d"] = new ReactionArtBuilder.Paint(0.020f, 0.130f, 0.420f),
+            ["e3_wat_l"] = new ReactionArtBuilder.Paint(0.220f, 0.680f, 0.940f),
+            ["e3_wat_m"] = new ReactionArtBuilder.Paint(0.040f, 0.340f, 0.780f),
+            ["e3_water"] = new ReactionArtBuilder.Paint(0.044f, 0.322f, 0.749f),
+            ["e3_water_trail"] = new ReactionArtBuilder.Paint(0.058f, 0.360f, 0.774f),
+            ["e3_wave"] = new ReactionArtBuilder.Paint(0.023f, 0.171f, 0.458f),
+            ["e3_wet"] = new ReactionArtBuilder.Paint(0.03f, 0.1f, 0.2f, 0.55f, 1f, true),
+            ["e3_wn_l"] = new ReactionArtBuilder.Paint(0.500f, 0.860f, 0.660f),
+            ["e3_wn_m"] = new ReactionArtBuilder.Paint(0.220f, 0.700f, 0.500f),
+            ["e3_wn_t"] = new ReactionArtBuilder.Paint(0.060f, 0.340f, 0.300f),
+            ["e3_feather2_inner"] = new ReactionArtBuilder.Paint(1.000f, 0.820f, 0.420f),
+            ["e3_feather2_shaft"] = new ReactionArtBuilder.Paint(0.200f, 0.080f, 0.020f),
+            ["e3_feather2_edge"] = new ReactionArtBuilder.Paint(0.680f, 0.280f, 0.030f),
+            // The briar's buds (the elements 3 kit's copy of the life flower): its petals the render's bud pink.
+            ["m_vfx_life_petal"] = new ReactionArtBuilder.Paint(0.95f, 0.4f, 0.62f),
         };
 
         /// <summary>
@@ -458,6 +531,9 @@ namespace Clover.EditorTools
             ["dark_hunger|m_vfx_combo_violetedge"] = new ReactionArtBuilder.Paint(0.09f, 0.02f, 0.22f, 1f, 1f, true),
             ["poison_fever|m3_fever"] = new ReactionArtBuilder.Paint(0.4f, 0.52f, 0.06f),
             ["life_seeded|m3_spore"] = new ReactionArtBuilder.Paint(0.36f, 0.44f, 0.16f),
+            // Poisoned's stain lay as a flat teal square under the body after Miasma's cloud (its film of 2026-11-20; the
+            // audit: "a flat teal square pool"): a dark sick green, see-through.
+            ["poison_poisoned|m2_poison_stain"] = new ReactionArtBuilder.Paint(0.12f, 0.2f, 0.03f, 0.5f, 1f, true),
             // Light's rays read as a spiky sun (notes.md): faint see-through beams (the gilded bed keeps its own gold).
             ["brazier_light|m3_light_gold"] = new ReactionArtBuilder.Paint(1f, 0.7f, 0.24f, 0.2f, 1f, true),
             // Life's spores a dusty green, not pale cream; Metal's melt a deep molten red-orange under a hotter ingot.
@@ -583,8 +659,8 @@ namespace Clover.EditorTools
         /// </summary>
         public static readonly Dictionary<string, float> LookLifts = new Dictionary<string, float>
         {
-            ["the_grudge|vfxe2_cloud_a"] = 0.75f,
-            ["the_grudge|vfxe2_cloud_b"] = 0.75f,
+            ["the_grudge|vfxe2_cloud_a"] = 1.05f,
+            ["the_grudge|vfxe2_cloud_b"] = 1.05f,
         };
 
         /// <summary>
@@ -594,7 +670,7 @@ namespace Clover.EditorTools
         /// </summary>
         public static readonly Dictionary<string, Vector2> RibbonLifts = new Dictionary<string, Vector2>
         {
-            ["the_grudge"] = new Vector2(1.9f, 0.75f),
+            ["the_grudge"] = new Vector2(1.9f, 1.05f),
         };
 
         /// <summary>Pieces one look draws at another size, by "slug|kit object": Seeded's seeds were large for a castle soldier (notes.md).</summary>
@@ -676,7 +752,7 @@ namespace Clover.EditorTools
             ["thunder_gust|m3_bolt"] = 1.8f,
             ["thunder_gust|r4_bolt_bright"] = 1.8f,
             ["flashover|m3_bolt"] = 1.6f,
-            ["the_grudge|r4_blackbolt"] = 3f,
+            ["the_grudge|r4_blackbolt"] = 4.5f,
             ["earthlight|r4_light_ray"] = 3f,
             ["girdled|r4_figroot"] = 1.7f,
         };
@@ -698,7 +774,7 @@ namespace Clover.EditorTools
             ["r4_figroot"] = new Color(0.26f, 0.13f, 0.2f),
             ["e3_ice_trail"] = new Color(0.05f, 0.26f, 0.66f),
             ["e3_dark_trail"] = new Color(0.46f, 0.16f, 0.88f),
-            ["e3_wind"] = new Color(0.27f, 0.62f, 0.5f),
+            ["e3_wind"] = new Color(0.06f, 0.32f, 0.28f),
         };
 
         /// <summary>
@@ -708,7 +784,7 @@ namespace Clover.EditorTools
         /// </summary>
         public static readonly Dictionary<string, float> RibbonInkMost = new Dictionary<string, float>
         {
-            ["r4_blackbolt"] = 0.06f,
+            ["r4_blackbolt"] = 0.09f,
         };
 
         /// <summary>Ribbons of dust and combed floor are stippled thin (air, not a solid band).</summary>
@@ -797,6 +873,14 @@ namespace Clover.EditorTools
             // Quicksilver's mercury beads: round, they caught the metal solid's chrome glint whole and lit white; in
             // earth's matte solid they are grey beads.
             ["r4_mercury"] = "earth",
+            // Elements 3's ice in earth's matte solid: in the ice solid the tops of Frost Bite's chunks lit white, and in the
+            // water solid's shine its 2.4 m spikes read as white streaks through the bodies (the films of 2026-11-20).
+            ["e3_ice_tooth"] = "earth",
+            ["e3_spike"] = "earth",
+            ["e3_ice_d"] = "earth",
+            ["e3_ice_m"] = "earth",
+            ["e3_ice_l"] = "earth",
+            ["e3_ice_trail"] = "earth",
         };
 
         /// <summary>Soaked: seconds the water takes to run down the body, and the most its puddle spans, metres.</summary>
@@ -923,9 +1007,10 @@ namespace Clover.EditorTools
         /// Turned to Stone's stone), Soaked's foam rings, Temper's rings and clang (its shader's front). Every other
         /// piece the recipe gives a body is built on that body's look (ElementLooksTests).
         /// </summary>
-        public static string NotAMesh(string slug, string kit, string kitObject, string material = null, Vector3 fromItsBody = default)
+        public static string NotAMesh(string slug, string kit, string kitObject, string material = null, Vector3 fromItsBody = default, string piece = null)
         {
-            if (LeftOut.Contains(slug + "|" + kitObject)) return "drawn by the look its own way";
+            if (LeftOut.Contains(slug + "|" + kitObject) || LeftOutByName(slug, piece)) return "drawn by the look its own way";
+            if (kit == Mockup && material != null && ThawedReactions.Contains(slug)) return "a frost shell left off (it lit the body near white)";
             if (IsBodyFlame(slug, kitObject, material, fromItsBody)) return "the body's own real flame (BodyFlames) burns there";
             if (IsLodgedSeed(kitObject, material)) return "a lodged seed, read as a green hexagon chunk";
             if (material != null && RevisedReactions.Contains(slug) && AssetDatabase.LoadAssetAtPath<TextAsset>(RevisionRecipePath) != null)
@@ -952,6 +1037,8 @@ namespace Clover.EditorTools
             public ElementLookSet Target;
             /// <summary>Building reactions: pieces split by the body they are on, the player's apart.</summary>
             public bool Reactions;
+            /// <summary>Building the elements 3 moments: solids and ribbons in the reaction solids, without the white sheen.</summary>
+            public bool Flat;
         }
 
         private static string BuildSet(string recipePath, string setPath, string reportPath, string title, bool elementLooks)
@@ -1008,10 +1095,15 @@ namespace Clover.EditorTools
                     lists.Reactions = false;
                 }
             }
-            foreach (Dictionary<string, object> look in looks)
+            foreach (Dictionary<string, object> recipeLook in looks)
             {
+                var look = recipeLook;
                 string slug = Text(look, "slug");
                 if (slug == "brazier_lineup") continue;
+                // Lightning's brazier is the elements 3 caged storm (the owner: "a crackling caged storm").
+                if (!elementLooks && Elements3Brazier(slug) is Dictionary<string, object> caged) look = caged;
+                // Drawn as the Blender worker's flat bands, without the solid's sheen (its dark storm lit grey on film).
+                lists.Flat = !elementLooks && look != recipeLook;
                 var bodies = (List<object>)look["bodies"];
                 var bodyAt = new List<Vector3>();
                 foreach (Dictionary<string, object> body in bodies) bodyAt.Add(Vec(body["position"], Vector3.zero));
@@ -1023,9 +1115,12 @@ namespace Clover.EditorTools
                 }
                 else BuildLook(look, slug, slug, 0, bodyAt, 0f, lists, elementArt, glow);
             }
+            // Each element's own moments drawn by the elements 3 pass: the blades' blows, the spells, the strikes, Tailwind.
+            if (elementLooks) BuildElements3(lists, elementArt, glow);
             set.Looks = lists.Looks.ToArray();
             set.Parts = lists.Parts.ToArray();
             set.Keys = lists.Keys.ToArray();
+            if (elementLooks) set.Sheaths = BuildSheaths(lists, elementArt);
             if (elementLooks) set.Spans = lists.Spans.ToArray();
             if (elementLooks) BakeCrystal(set, lists, elementArt);
             EditorUtility.SetDirty(set);
@@ -1094,6 +1189,11 @@ namespace Clover.EditorTools
             foreach (Dictionary<string, object> group in (List<object>)look["groups"])
             {
                 string kit = Text(group, "kit"), kitObject = Text(group, "kit_object"), material = Text(group, "material");
+                // Marked in a reaction is a small gold flare on the body, not its sun-wheel (the Blender worker's scale notes:
+                // "The Marked mandala must not be a reaction's biggest shape"; Earthlight's film of 2026-11-20 rang a gold
+                // wheel round every head): the wheel's place and time, drawn as light's four-pointed glint.
+                bool markedFlare = lists.Reactions && kitObject == MarkedWheel && material == "m2_light_gold";
+                if (markedFlare) kitObject = MarkedFlare;
                 var instances = (List<object>)group["instances"];
                 var motions = (List<object>)group["motion"];
                 for (int n = 0; n < instances.Count; n++)
@@ -1106,7 +1206,7 @@ namespace Clover.EditorTools
                     Vector3 position = Vec(instance[1], Vector3.zero);
                     Vector3 turned = Vec(instance[2], Vector3.zero);
                     string pieceName = instance[0] as string ?? "";
-                    if (LeftOut.Contains(slug + "|" + kitObject)) continue;
+                    if (LeftOut.Contains(slug + "|" + kitObject) || LeftOutByName(slug, pieceName)) continue;
                     // The body the recipe gives the piece, read before it is restaged (its key pose says where it stood).
                     int pieceBody = bodyAt.Count > 0 ? PieceBody(motion, position, bodyAt) : 0;
                     if (lists.Reactions && IsLodgedSeed(kitObject, material)) continue;
@@ -1156,6 +1256,8 @@ namespace Clover.EditorTools
                         if (material != "r4_stone") lists.Missing.Add($"{slug}: {kitObject} (a second skin of the enemy model, drawn by the body's own material: not built yet)");
                         continue;
                     }
+                    // Winter Seed's frost crust lit the body a pale near white (its film of 2026-11-20): no shell.
+                    if (kit == Mockup && lists.Reactions && ThawedReactions.Contains(slug)) continue;
                     if (kit == Mockup)
                     {
                         // The shell's band: its window opens when the band snaps on; the scale keys say how long it grows.
@@ -1180,13 +1282,14 @@ namespace Clover.EditorTools
                     var rotation = Quaternion.Euler(turned);
                     var scale = Vec(instance[3], Vector3.one);
                     if (LookScales.TryGetValue(slug + "|" + kitObject, out float resize)) scale *= resize;
+                    if (markedFlare) scale *= MarkedFlareSize;
                     if (LookStretch.TryGetValue(slug + "|" + kitObject, out var stretched)) scale = Vector3.Scale(scale, stretched);
                     if (LookLifts.TryGetValue(slug + "|" + kitObject, out float lift)) position.y += lift;
                     if (LookPaints.ContainsKey(slug + "|" + material)) material = slug + "|" + material;
                     string placement = instance.Count > 4 ? instance[4] as string : "b";
                     string verb = Text(motion, "verb");
                     var mesh = Bake(key, lists.Parts.Count - made.FirstPart, pieceName, filter, comboTurn, material, element, scale, placement == "g", out byte kind, out Material wears, elementArt, glow, lists.Target);
-                    if (lists.Reactions && kind == ElementLookSet.Solid)
+                    if ((lists.Reactions || lists.Flat) && kind == ElementLookSet.Solid)
                         wears = SolidInks.TryGetValue(slug + "|" + material.Substring(material.IndexOf('|') + 1), out var ownInk) ? ReactionSolid(wears, ownInk) : ReactionSolid(wears);
                     bool held = hide >= 9f;
                     var part = new ElementLookSet.Part
@@ -1198,6 +1301,7 @@ namespace Clover.EditorTools
                         RunsOn = held && TurningWords.Any(word => verb.Contains(word)),
                         Redraw = motion.ContainsKey("redraw") || verb.StartsWith("flicker ("),
                         Position = position, Rotation = rotation, Scale = scale, Show = show, Hide = hide,
+                        Facing = RibbonFacing.TryGetValue(slug + "|" + Text(group, "material"), out float pieceFacing) ? pieceFacing : 0f,
                     };
                     part.PathFirst = lists.Keys.Count;
                     part.PathCount = AddKeys(motion, "path", lists.Keys, false, shift);
@@ -1257,6 +1361,9 @@ namespace Clover.EditorTools
                     string ribbonKey = slug + "|" + material;
                     if (LeftOutRibbons.Contains(ribbonKey)) continue;
                     string note = Text(motion, "note");
+                    // Unsteady's curl coming in from the blow lit as a white crescent beside the body it was laid on (Thunder
+                    // Gust's film of 2026-11-20, 0.05 to 0.10 s): drawn in the elements 3 wind's mint with its teal rim.
+                    if (material == "m3_wind_ribbon" && note.Contains("comes in from the blow")) material = "e3_wind";
                     var points = new List<Vector3>();
                     foreach (var point in (List<object>)ribbon["points"]) points.Add(Vec(point, Vector3.zero));
                     if (lists.Reactions) Reshape(ribbonKey, points);
@@ -1281,7 +1388,7 @@ namespace Clover.EditorTools
                     float through = jagged ? 1f : 0.45f;
                     bool inked = !(ribbon.TryGetValue("ink", out var inkValue) && inkValue is bool ink && !ink);
                     var paint = RibbonDress(slug, material, element, width, inked, elementArt, out var solid, out var inkColour, out float inkWidth, out float thin);
-                    if (lists.Reactions) solid = ReactionSolid(solid);
+                    if (lists.Reactions || lists.Flat) solid = ReactionSolid(solid);
                     string meshName = $"look_{key}_{lists.Parts.Count - made.FirstPart:00}_{Text(ribbon, "object")}";
                     var mesh = ChainLinks.TryGetValue(slug + "|" + material, out var link)
                         ? ChainMesh(meshName, points, link.x, link.y, link.z, paint.Colour)
@@ -1295,8 +1402,12 @@ namespace Clover.EditorTools
                         // What comes again and again while the look is kept: the curls, the arcs; not the wind arriving,
                         // nor a strike's own shapes (played once).
                         Repeats = hide < 9f && !note.Contains("comes in from the blow") && slug != "wind_strike",
-                        Position = Vector3.zero, Rotation = Quaternion.identity, Scale = Vector3.one, Show = show, Hide = hide,
+                        // A ribbon cut out of its look's frame (an elements 3 moment) keeps its points about its own centre,
+                        // set where that centre stood.
+                        Position = ribbon.TryGetValue("offset", out var offset) ? Vec(offset, Vector3.zero) : Vector3.zero,
+                        Rotation = Quaternion.identity, Scale = Vector3.one, Show = show, Hide = hide,
                         InkColour = inkColour, InkWidth = inkWidth, Thin = thin,
+                        Facing = RibbonFacing.TryGetValue(ribbonKey, out float facing) ? facing : 0f,
                     };
                     part.PathFirst = lists.Keys.Count;
                     part.PathCount = AddKeys(motion, "path", lists.Keys, false, shift);
@@ -1313,7 +1424,7 @@ namespace Clover.EditorTools
                         float start = Number(orbit, "start", show + shift) - shift;
                         float end = hide >= 9f ? seconds : hide;
                         float degrees = 360f * Number(orbit, "turns_per_second", 0f) * Mathf.Max(0.01f, end - start);
-                        part.OrbitCentre = Vector3.zero;
+                        part.OrbitCentre = part.Position;
                         part.OrbitFirst = lists.Keys.Count;
                         lists.Keys.Add(new ElementLookSet.Key { Time = start, Value = Vector3.zero, Ease = ElementLookSet.Linear });
                         lists.Keys.Add(new ElementLookSet.Key { Time = end, Value = new Vector3(degrees, 0f, 0f), Ease = ElementLookSet.Linear });
@@ -1335,7 +1446,9 @@ namespace Clover.EditorTools
                 }
             }
 
+            if (lists.Reactions && onBody == 0) AddHealPulse(slug, key, lists, made, glow);
             made.PartCount = lists.Parts.Count - made.FirstPart;
+            if (lists.Reactions && ThawedReactions.Contains(slug)) made.Thawed = true;
             if (bodyFlameFrom < float.MaxValue)
             {
                 made.BodyFlame = bodyFlameBlack ? ElementLookSet.BlackFlame : ElementLookSet.Fire;
@@ -1827,7 +1940,7 @@ namespace Clover.EditorTools
                 }
             }
             if (KitAliases.TryGetValue(kit + "|" + kitObject, out var alias)) (kit, kitObject) = alias;
-            string path = kit == E2Kit || kit == BrazierKit ? ReactionArtBuilder.CombosFolder + "/" + kit : ReactionArtBuilder.KitPath(kit);
+            string path = kit == E2Kit || kit == BrazierKit || kit == E3Kit ? ReactionArtBuilder.CombosFolder + "/" + kit : ReactionArtBuilder.KitPath(kit);
             comboTurn = path.StartsWith(ReactionArtBuilder.CombosFolder);
             if (!kits.TryGetValue(path, out var loaded))
             {
@@ -1885,7 +1998,9 @@ namespace Clover.EditorTools
             var slots = filter.GetComponent<MeshRenderer>() != null ? filter.GetComponent<MeshRenderer>().sharedMaterials : new Material[0];
             var colours = new Color[vertices.Length];
             var triangles = new List<int>();
-            bool perSlot = source.subMeshCount > 1 && filter.sharedMesh.name.StartsWith("vfxe2_") && material.Substring(material.IndexOf('|') + 1).StartsWith("m3_");
+            bool perSlot = source.subMeshCount > 1 && (filter.sharedMesh.name.StartsWith("vfxe2_") && material.Substring(material.IndexOf('|') + 1).StartsWith("m3_")
+                // The elements 3 pieces of several paints: the feather's vane, edge, inner band and shaft; the briar's thorns.
+                || filter.sharedMesh.name.StartsWith("vfxe3_"));
             var mainPaint = PaintOf(material);
             for (int s = 0; s < source.subMeshCount; s++)
             {

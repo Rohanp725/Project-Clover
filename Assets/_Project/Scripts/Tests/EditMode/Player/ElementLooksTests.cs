@@ -61,12 +61,43 @@ namespace Clover.Tests
             }
         }
 
+        /// <summary>
+        /// The elements 3 moments (staging/blender/2026-11-20_elements3): each charged blade but Lightning's lands in its
+        /// own three blows and wears a sheath on the blade (Wind's and Dark's air and smoke are the trails' own), each
+        /// reworked spell and infused strike has its look, Tailwind is the wind's surge, and Red Hot blasts on.
+        /// </summary>
+        [Test]
+        public void EveryElements3MomentIsBuilt()
+        {
+            var set = ElementLookBuilder.Set();
+            if (set == null || UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(ElementLookBuilder.RevisionRecipePath) == null)
+                Assert.Ignore("The elements 3 recipe is not in the project, or the looks are not built.");
+            for (int element = 0; element < 11; element++)
+            {
+                string blade = ElementMoves.BladeSlug(element);
+                if (blade == null) continue;
+                for (int blow = 1; blow <= 3; blow++) Assert.GreaterOrEqual(set.Find(ElementMoves.HitKey(element, blow)), 0, $"{blade}, blow {blow}");
+                bool airOrSmoke = element == ElementSubstance.Wind || element == ElementSubstance.Dark;
+                Assert.AreEqual(!airOrSmoke, set.FindSheath(element) >= 0, $"{blade}'s sheath");
+                string spell = ElementMoves.SpellKey(element, false), strike = ElementMoves.StrikeKey(element, false);
+                if (spell != null) Assert.GreaterOrEqual(set.Find(spell), 0, spell);
+                if (strike != null) Assert.IsTrue(set.Find(strike) >= 0 || set.Find(ElementMoves.StrikeKey(element, true)) >= 0, strike);
+            }
+            Assert.GreaterOrEqual(set.Find(ElementMoves.Tailwind), 0, "Tailwind");
+            Assert.GreaterOrEqual(set.FindVariant("red_hot", '+'), 0, "Red Hot's blast");
+            foreach (var sheath in set.Sheaths)
+            {
+                Assert.IsNotNull(sheath.Mesh, $"sheath {sheath.Element}");
+                Assert.IsNotNull(sheath.Material, $"sheath {sheath.Element}");
+            }
+        }
+
         [Test]
         public void EveryLookTheGameAsksForIsBuilt()
         {
             var set = ElementLookBuilder.Set();
             if (set == null) Assert.Ignore("The element looks have not been built; run Clover > Build > Element Looks.");
-            Assert.AreEqual(23, set.Looks.Count(look => !look.Key.Contains("@") && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
+            Assert.AreEqual(23, set.Looks.Count(look => !look.Key.Contains("@") && !look.Key.StartsWith(ElementMoves.Prefix) && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
                 "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks");
             foreach (AfflictionKind kind in System.Enum.GetValues(typeof(AfflictionKind)))
                 for (int depth = 1; depth <= 6; depth++)
@@ -357,7 +388,7 @@ namespace Clover.Tests
                             // A burning body's own tongues are its real flame (BodyFlames), by where the piece stands on its body.
                             var fromItsBody = Vec(instance[1]) - (body >= 0 && body < bodies.Count ? bodies[body] : Vector3.zero);
                             string notAMesh = ElementLookBuilder.NotAMesh(slug, (string)group["kit"], (string)group["kit_object"],
-                                reactions ? (string)group["material"] : null, fromItsBody);
+                                reactions ? (string)group["material"] : null, fromItsBody, piece);
                             string expected = reactions ? ElementLookBuilder.ReactionKey(slug, body)
                                 : ElementLookBuilder.PerBody.TryGetValue(slug, out var variants) ? (body < 0 ? variants[0] : body < variants.Length ? variants[body] : null)
                                 : body <= 0 ? slug : null;

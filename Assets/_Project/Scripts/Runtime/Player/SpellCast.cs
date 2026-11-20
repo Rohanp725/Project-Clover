@@ -56,6 +56,9 @@ namespace Clover.Player
             Tinted = ElementLook.Tints(Element),
             Tint = Colour,
             Look = Element,
+            // A spell's blow flashes the body in its element's hue, never white (the audit of 2026-11-20: Flame Wave's
+            // patches flashed the bodies standing in them pure white at each bite).
+            Struck = Element != null && Swings.SwingLooks.For(Element) != null ? Swings.SwingLooks.For(Element).Tint : default,
         };
 
         /// <summary>

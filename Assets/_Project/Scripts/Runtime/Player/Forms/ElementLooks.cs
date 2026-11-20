@@ -48,6 +48,9 @@ namespace Clover.Player.Forms
             public bool Reaction;
             /// <summary>How much taller the body is than the recipe's stand-in (<see cref="StandIn"/>): the look is fitted to it.</summary>
             public float Tall;
+            /// <summary>The least seconds a look played once stays (a spell's look kept while what it laid lasts), and its stamp for a handle.</summary>
+            public float Keep;
+            public int Stamp;
         }
 
         /// <summary>
@@ -151,6 +154,9 @@ namespace Clover.Player.Forms
         private bool[] blocked;
         private MaterialPropertyBlock block;
         private int used, playing;
+        // Each look begun takes the next stamp, so a handle to one that has ended does not move the one in its place.
+        private int stamps;
+        private Vector3 towardCamera = Vector3.back;
         // Where the search for a free pooled renderer starts: just past the last one taken, so a burst of new pieces does
         // not walk the taken ones from the start each time.
         private int searchFrom;
@@ -214,6 +220,45 @@ namespace Clover.Player.Forms
             crystal = Ready ? instance.set.Crystal : null;
             ice = Ready ? instance.set.CrystalMaterial : null;
             return crystal != null && ice != null;
+        }
+
+        /// <summary>An element's charged-blade sheath from the built looks; false when the scene has none for it.</summary>
+        public static bool TrySheath(int element, out ElementLookSet.BladeSheath sheath)
+        {
+            sheath = default;
+            if (!Ready) return false;
+            int found = instance.set.FindSheath(element);
+            if (found < 0) return false;
+            sheath = instance.set.Sheaths[found];
+            return sheath.Mesh != null && sheath.Material != null;
+        }
+
+        /// <summary>True while a reaction's look that keeps its body from glowing frozen plays on it (<see cref="ElementLookSet.Look.Thawed"/>).</summary>
+        /// <summary>Seconds a thawed reaction keeps Chill's frost off the body it froze.</summary>
+        public const float ThawSeconds = 6f;
+
+        public static bool Thawed(Transform body)
+        {
+            if (Hides(body, (int)Clover.Gameplay.AfflictionKind.Chill)) return true;
+            if (instance == null || instance.showings == null || instance.set == null || body == null) return false;
+            for (int i = 0; i < instance.showings.Length; i++)
+            {
+                ref var one = ref instance.showings[i];
+                if (one.Active && ReferenceEquals(one.Body, body) && instance.set.Looks[one.Look].Thawed) return true;
+            }
+            return false;
+        }
+
+        /// <summary>True while a look is playing (not yet going) on a body: a spell's look on the one it struck is not begun again on each bite.</summary>
+        public static bool IsPlaying(int look, Transform body)
+        {
+            if (instance == null || instance.showings == null || body == null) return false;
+            for (int i = 0; i < instance.showings.Length; i++)
+            {
+                ref var one = ref instance.showings[i];
+                if (one.Active && !one.Ending && one.Look == look && ReferenceEquals(one.Body, body)) return true;
+            }
+            return false;
         }
 
         /// <summary>A look's data, for the shells (Temper's steel) that the body draws itself.</summary>
@@ -305,10 +350,16 @@ namespace Clover.Player.Forms
             if (!Ready || body == null) return false;
             int main = instance.set.Find(slug);
             if (main < 0) return false;
-            if (spends != 0) Hide(body, spends, ElementLookSet.ShownFor(instance.set.Looks[main]));
+            // A thawed reaction (Winter Seed's ice flower) keeps Chill's frost and frozen glow off the body for as long as
+            // its freeze lasts, past its own look.
+            if (instance.set.Looks[main].Thawed) spends |= 1 << (int)Clover.Gameplay.AfflictionKind.Chill;
+            if (spends != 0) Hide(body, spends, Mathf.Max(ElementLookSet.ShownFor(instance.set.Looks[main]), instance.set.Looks[main].Thawed ? ThawSeconds : 0f));
             away.y = 0f;
             float yaw = away.sqrMagnitude > 0.0001f ? Mathf.Atan2(away.x, away.z) * Mathf.Rad2Deg : instance.set.Looks[main].FacingYaw;
             PlayOnBody(main, body, yaw);
+            // A blast the reaction throws on out of the body (Red Hot's fire through the enemy, "slug@+").
+            int blast = instance.set.FindVariant(slug, '+');
+            if (blast >= 0) PlayOnBody(blast, body, yaw);
             var turn = Quaternion.Euler(0f, yaw - instance.set.Looks[main].FacingYaw, 0f);
             if (player != null)
             {
@@ -386,10 +437,34 @@ namespace Clover.Player.Forms
         /// faced the main body; the look is turned so that way becomes this one) and drawn <paramref name="size"/> times
         /// as large (a strike's look fitted to its reach). False when it cannot be shown.
         /// </summary>
-        public static bool PlayAt(int look, Vector3 at, float yaw, float size = 1f)
+        public static bool PlayAt(int look, Vector3 at, float yaw, float size = 1f) => Held(look, at, yaw, size, 0f) >= 0;
+
+        /// <summary>
+        /// Plays a look once where it stands, as <see cref="PlayAt"/>, kept at least <paramref name="keep"/> seconds (its
+        /// held pieces standing, its flames and clouds moving on), and hands back a handle to move it by
+        /// (<see cref="MoveHeld"/>: Miasma's cloud creeps after the nearest enemy); -1 when it cannot be shown.
+        /// </summary>
+        public static int Held(int look, Vector3 at, float yaw, float size, float keep)
         {
+            if (!PlayAtShowing(look, at, yaw, size, out int showing)) return -1;
+            instance.showings[showing].Keep = keep;
+            return showing + MostShowings * instance.showings[showing].Stamp;
+        }
+
+        /// <summary>Moves a look played by <see cref="Held"/> to stand at <paramref name="at"/>; nothing once it has ended.</summary>
+        public static void MoveHeld(int handle, Vector3 at)
+        {
+            if (instance == null || instance.showings == null || handle < 0) return;
+            int showing = handle % MostShowings;
+            ref var one = ref instance.showings[showing];
+            if (one.Active && one.Fixed && one.Stamp == handle / MostShowings) one.Ground = at;
+        }
+
+        private static bool PlayAtShowing(int look, Vector3 at, float yaw, float size, out int showing)
+        {
+            showing = -1;
             if (!Ready || look < 0 || look >= instance.set.Looks.Length) return false;
-            int showing = instance.Begin(look, null);
+            showing = instance.Begin(look, null);
             if (showing < 0) return false;
             ref var one = ref instance.showings[showing];
             one.Once = true;
@@ -461,7 +536,7 @@ namespace Clover.Player.Forms
             showings[free] = new Showing
             {
                 Active = true, Look = look, Body = body, Ground = body != null ? body.position : Vector3.zero, Age = 0f, KeptAt = Time.time,
-                Turn = Quaternion.identity, Size = 1f, Tall = 1f,
+                Turn = Quaternion.identity, Size = 1f, Tall = 1f, Stamp = ++stamps,
             };
             playing++;
             return free;
@@ -515,6 +590,14 @@ namespace Clover.Player.Forms
             float deltaTime = Time.deltaTime;
             if (deltaTime <= 0f) return;
             float now = Time.time;
+            // The way to the camera along the floor, for the parts drawn in front of what stands between (Part.Facing).
+            var view = Camera.main;
+            if (view != null)
+            {
+                Vector3 back = -view.transform.forward;
+                back.y = 0f;
+                towardCamera = back.sqrMagnitude > 0.0001f ? back.normalized : Vector3.back;
+            }
             for (int i = 0; i < showings.Length; i++)
             {
                 ref var one = ref showings[i];
@@ -524,7 +607,7 @@ namespace Clover.Player.Forms
                 one.Age += deltaTime;
                 if (!one.Ending)
                 {
-                    bool over = one.Once ? one.Age >= ElementLookSet.ShownFor(look) : now - one.KeptAt > Linger;
+                    bool over = one.Once ? one.Age >= Mathf.Max(ElementLookSet.ShownFor(look), one.Keep) : now - one.KeptAt > Linger;
                     if (over || bodyGone) one.Ending = true;
                 }
                 if (one.Ending)
@@ -584,7 +667,9 @@ namespace Clover.Player.Forms
             Vector3 stretch = Vector3.one;
             if (tall > 1.001f) Fit(part, tall, ref position, out stretch);
             if (part.Kind == ElementLookSet.Flat) position.y += FlatLift;
-            frame.SetPositionAndRotation(anchor + turn * (position * size), turn * rotation);
+            Vector3 placed = anchor + turn * (position * size);
+            if (part.Facing != 0f) placed += towardCamera * part.Facing;
+            frame.SetPositionAndRotation(placed, turn * rotation);
             frame.localScale = Vector3.Scale(scale, stretch) * (shrink * size);
         }
 

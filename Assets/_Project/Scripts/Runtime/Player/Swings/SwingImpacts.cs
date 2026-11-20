@@ -17,6 +17,7 @@ namespace Clover.Player.Swings
         private static readonly Color Rockface = new Color(0.47f, 0.38f, 0.29f);
         private static readonly Color Venom = new Color(0.3f, 0.78f, 0.26f);
         private static readonly Color Gilt = new Color(1f, 0.78f, 0.35f);
+        private static readonly Color FrostMist = new Color(0.36f, 0.6f, 0.86f);
 
         private static Color ColourOf(int element)
         {
@@ -138,7 +139,7 @@ namespace Clover.Player.Swings
                         FormFx.Erupt(FormMesh.Crystal, feet + Outward(i, ring, flat, 0f) * (radius * 0.55f), Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(0.6f, 0.9f + 0.4f * Random.value, 0.6f) * weight, ElementSubstance.Pale(colour), 0.07f, 0.6f, 0.3f);
                     break;
                 case ElementSubstance.Water:
-                    FormFx.Lay(FormMark.Ring, feet, radius * 0.5f, FormKit.Lit(colour, 1.6f), 0.6f, radius * 2.4f);
+                    // No ring of light round the slam (the owner: no rings or circles, 2026-11-20): the water thrown out alone.
                     for (int i = 0; i < ring; i++) Spray(feet + Vector3.up * 0.2f, Outward(i, ring, flat, 0f), ground, 0.5f * weight, colour);
                     break;
                 case ElementSubstance.Life:
@@ -155,15 +156,17 @@ namespace Clover.Player.Swings
                     for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.GuardSpark, feet + Outward(i, 4, flat, 0f) * 0.4f + Vector3.up * 0.1f, Outward(i, 4, flat, 0f), 0.8f);
                     break;
                 case ElementSubstance.Light:
-                    FormFx.Lay(FormMark.Ring, feet, radius * 0.4f, FormKit.Lit(Gilt, 2.6f), 0.35f, radius * 2f);
-                    FormFx.Face(FormMark.Star, feet + Vector3.up * 0.4f, 1.6f * weight, FormKit.Lit(Gilt, 3f), 0.16f);
+                    // Gold flecks thrown up off the slam, cooling to burnt gold: no ring and no white-hot star (2026-11-20).
+                    Vfx.Play(VfxKind.TintSpark, feet + Vector3.up * 0.3f, Vector3.up, 1.2f * weight, Gilt);
+                    FormFx.Lay(FormMark.Scorch, feet, radius * 0.9f, FormKit.Stain(new Color(0.42f, 0.2f, 0.02f), 0.6f), 1.2f);
                     break;
                 case ElementSubstance.Dark:
                     FormFx.Lay(FormMark.Scorch, feet, radius * 1.5f, FormKit.Stain(colour, 0.85f), 1.4f, radius * 0.6f);
                     Vfx.Play(VfxKind.TintPuff, feet + Vector3.up * 0.3f, Vector3.down, 1.2f * weight, ElementSubstance.Shade(colour));
                     break;
                 case ElementSubstance.Poison:
-                    FormFx.Lay(FormMark.Disc, feet, radius * 1.2f, FormKit.Lit(Venom, 1.1f, 0.6f), 1.4f, radius * 1.6f);
+                    // A venom stain, not a lit disc (no circles, 2026-11-20).
+                    FormFx.Lay(FormMark.Scorch, feet, radius * 1.2f, FormKit.Stain(new Color(0.17f, 0.28f, 0.025f), 0.7f), 1.4f);
                     for (int i = 0; i < ring; i++) Spray(feet + Vector3.up * 0.2f, Outward(i, ring, flat, 0f), ground, 0.4f * weight, Venom);
                     break;
             }
@@ -182,7 +185,8 @@ namespace Clover.Player.Swings
                     Vfx.Play(VfxKind.Shock, tip, way, 0.3f * weight);
                     break;
                 case SwingShed.FrostBreath:
-                    Vfx.Play(VfxKind.TintPuff, tip, Vector3.down, 0.1f * weight, ElementSubstance.Pale(colour));
+                    // Cold breath in the elements 3 frost mist's blue: the pale of ice lit to a white dot on film (2026-11-20).
+                    Vfx.Play(VfxKind.TintPuff, tip, Vector3.down, 0.1f * weight, FrostMist);
                     break;
                 case SwingShed.Grit:
                     Vfx.Play(VfxKind.Dust, tip, Vector3.down, 0.25f * weight);

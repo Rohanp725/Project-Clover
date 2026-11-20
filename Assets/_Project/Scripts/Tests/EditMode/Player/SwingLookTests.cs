@@ -114,8 +114,13 @@ namespace Clover.Tests
             Assert.IsFalse(ribbon.Alive(0.75f));
         }
 
+        /// <summary>
+        /// The elements 3 trail (staging/blender/2026-11-20_elements3): flat toon steps of the element's own colours across
+        /// the sweep, whole from the blade to the tail, wiped off from the tail within a third of a second, never lit to
+        /// white (each colour channel at or under 1).
+        /// </summary>
         [Test]
-        public void ABuiltTrailIsWholeAtTheBladeAndFadesToItsTail()
+        public void ABuiltTrailIsAFlatStepWipedOffFromItsTail()
         {
             var ribbon = new Ribbon();
             var layer = SwingLooks.Fire.Layers[0];
@@ -130,46 +135,40 @@ namespace Clover.Tests
             var uvs = new Vector2[vertices.Length];
             var colours = new Color[vertices.Length];
             int count = ribbon.Build(layer, 0.3f, vertices, uvs, colours, out var bounds);
-            Assert.AreEqual(ribbon.Count * 2, count);
+            Assert.Greater(count, 4);
             Assert.Greater(colours[count - 1].a, 0.9f, "the newest part, at the blade, is whole");
-            Assert.Less(colours[0].a, colours[count - 1].a, "the oldest part has faded");
-            Assert.AreEqual(layer.Style.U1, uvs[count - 1].x, 1e-3f, "U runs to its head at the blade");
-            Assert.AreEqual(0.9f, (vertices[count - 1] - vertices[count - 2]).magnitude, 0.05f, "the newest pair spans the swept part of the line");
+            Assert.Less(colours[0].a, colours[count - 1].a, "its oldest part going as the tail is wiped off");
             Assert.IsTrue(bounds.Contains(vertices[count - 1]));
-            // Fire licks upward once left: the oldest part has risen.
-            Assert.Greater(vertices[0].y, vertices[count - 1].y);
+            ribbon.Stop(0.3f);
+            Assert.IsFalse(ribbon.Alive(0.3f + layer.Seconds + 0.05f), "wiped off from its tail within its seconds");
+            Assert.LessOrEqual(layer.Seconds, 0.5f);
+            foreach (var look in SwingLooks.All)
+                if (look.Element != ElementSubstance.Lightning)
+                    foreach (var step in look.Layers)
+                        Assert.IsTrue(step.Style.Colour.r <= 1f && step.Style.Colour.g <= 1f && step.Style.Colour.b <= 1f && !step.Style.Additive, $"{look.Name}: a flat step, never lit to white");
         }
 
         [Test]
-        public void AFrozenTrailIsWholeUntilItShatters()
+        public void TheIceTrailIsWipedOffNotHungAndShattered()
         {
+            Assert.AreNotEqual(SwingEnd.Shatter, SwingLooks.Ice.End, "no pale shards: the elements 3 ice trail is wiped off like the others");
             var layer = SwingLooks.Ice.Layers[0];
             var ribbon = new Ribbon();
             ribbon.Begin(layer.Seconds, layer.Lag, layer.Hold);
             for (int i = 0; i < 6; i++) ribbon.Push(Vector3.zero, new Vector3(i * 0.1f, 0f, 0.5f), new Vector3(i * 0.1f, 0f, 1.5f), Vector3.right, i * 0.02f, 1f);
             ribbon.Stop(0.12f);
-            var vertices = new Vector3[64];
-            var uvs = new Vector2[64];
-            var colours = new Color[64];
-            ribbon.Build(layer, 0.12f + layer.Seconds * layer.Hold * 0.9f, vertices, uvs, colours, out _);
-            Assert.Greater(colours[0].a, 0.8f, "the oldest part still hangs whole");
-            Assert.AreEqual(colours[0].a, colours[10].a, 1e-4f, "frozen all at once, not fading part by part");
             Assert.IsFalse(ribbon.Alive(0.12f + layer.Seconds + 0.01f));
         }
 
         [Test]
-        public void AShadeTrailLagsBehindTheBlade()
+        public void TheShadeTrailIsNearBlackWithAVioletRim()
         {
-            var layer = SwingLooks.Dark.Layers[0];
-            var ribbon = new Ribbon();
-            ribbon.Begin(layer.Seconds, layer.Lag, layer.Hold);
-            for (int i = 0; i < 10; i++) ribbon.Push(Vector3.zero, new Vector3(i * 0.1f, 0f, 0.5f), new Vector3(i * 0.1f, 0f, 1.5f), Vector3.right, i * 0.02f, 1f);
-            var vertices = new Vector3[64];
-            var uvs = new Vector2[64];
-            var colours = new Color[64];
-            int count = ribbon.Build(layer, 0.18f, vertices, uvs, colours, out _);
-            Assert.Less(count, ribbon.Count * 2, "the newest parts, younger than the lag, are not drawn yet");
-            Assert.Less(vertices[count - 2].x, 0.85f);
+            var dark = SwingLooks.Dark.Layers;
+            var shade = dark[0].Style.Colour;
+            Assert.Less(Mathf.Max(shade.r, Mathf.Max(shade.g, shade.b)), 0.06f, "near black");
+            var rim = dark[dark.Length - 1].Style.Colour;
+            Assert.IsTrue(rim.b > rim.r && rim.r > rim.g, "its outer edge violet");
+            Assert.Greater(dark[dark.Length - 1].From, 0.7f, "the violet only at the rim");
         }
 
         // ---- Blade lines.
@@ -356,8 +355,10 @@ namespace Clover.Tests
             var metal = SwingLooks.Metal;
             Assert.IsTrue(metal.Sheath.Glint, "Metal's charged edge is a glint");
             Assert.AreEqual(SwingShed.None, metal.Shed);
+            // One thin steel-shine arc off the tip (elements 3: "a glint and one steel shine"), never lit white.
             foreach (var layer in metal.Layers)
-                Assert.IsTrue(layer.Form == TrailForm.Strand && layer.Width <= 0.05f && layer.Seconds <= 0.1f, "Metal's swing leaves no more than the glint's streak");
+                Assert.IsTrue(layer.Form == TrailForm.Strand && layer.Width <= 0.08f && layer.Seconds <= 0.25f && layer.Style.Colour.maxColorComponent < 0.9f,
+                    "Metal's swing leaves no more than one thin steel arc");
             foreach (var look in SwingLooks.All)
                 if (look.Element != ElementSubstance.Metal) Assert.IsFalse(look.Sheath.Glint, look.Name);
         }
@@ -365,27 +366,21 @@ namespace Clover.Tests
         [Test]
         public void EachElementMovesAsItsElement()
         {
-            Assert.Greater(SwingLooks.Fire.Layers[0].Rise, 0f, "fire licks upward");
-            Assert.Greater(SwingLooks.Fire.Layers[0].Lick, 0f, "in tongues");
-            Assert.IsTrue(SwingLooks.Fire.Layers[0].Style.Fire, "fire is drawn as flame, not light");
+            // The elements 3 trails: each element's own steps from the sweep's inner edge to its outer.
+            var fire = SwingLooks.Fire.Layers;
+            Assert.AreEqual(4, fire.Length, "fire's four steps");
+            Assert.Greater(fire[2].Style.Colour.g, fire[0].Style.Colour.g, "red at the inner edge, yellow further out");
             Assert.AreEqual(SwingShed.Embers, SwingLooks.Fire.Shed);
-            Assert.IsTrue(SwingLooks.Lightning.Layers.Any(layer => layer.Style.Shape == 7f && layer.Jitter > 0f), "lightning's arcs jump");
+            Assert.IsTrue(SwingLooks.Lightning.Layers.Any(layer => layer.Style.Shape == 7f && layer.Jitter > 0f), "lightning's arcs jump (its look was called good)");
             var wind = SwingLooks.Wind.Layers[0];
-            Assert.Greater(wind.Drift, 0f, "wind blows on");
-            Assert.Greater(wind.Scatter, 0f, "wind comes apart");
-            Assert.AreEqual(0f, wind.Tail.a, "wind fades to nothing, never cut");
+            Assert.Greater(wind.Drift, 0f, "wind blows on past the end of the stroke");
+            Assert.Greater(wind.Scatter, 0f, "wind comes apart, never cut off");
             Assert.IsTrue(SwingLooks.Ice.Sheath.Teeth, "the chainsaw of ice");
-            Assert.Greater(SwingLooks.Ice.Layers[0].Hold, 0f, "ice freezes in the air");
-            Assert.AreEqual(SwingEnd.Shatter, SwingLooks.Ice.End);
-            Assert.AreEqual(SwingEnd.Spray, SwingLooks.Water.End);
-            Assert.Less(SwingLooks.Water.Layers[0].Rise, 0f, "water falls");
+            Assert.AreEqual(SwingEnd.Spray, SwingLooks.Water.End, "water is flung off the end of each stroke");
             Assert.IsTrue(SwingLooks.Earth.ReplacesHitArt && SwingLooks.Ice.ReplacesHitArt, "Earth's floating cubes and Ice's crack-web give way");
-            Assert.Less(SwingLooks.Earth.Layers[0].Rise, 0f, "dust settles");
-            Assert.Greater(SwingLooks.Dark.Layers[0].Lag, 0f, "shade lags");
-            Assert.Greater(SwingLooks.Dark.Layers[0].Drain, 0f, "shade drains");
-            Assert.Less(SwingLooks.Poison.Layers[1].Rise, 0f, "the mist sinks");
             Assert.AreEqual(SwingShed.Drips, SwingLooks.Poison.Shed);
-            Assert.IsTrue(SwingLooks.Light.Layers[0].Style.Additive && SwingLooks.Light.Layers[0].Style.Noise == 0f, "a clean arc of light");
+            Assert.Greater(SwingLooks.Water.Layers[0].Style.Colour.b, SwingLooks.Water.Layers[0].Style.Colour.r * 4f, "water a deep blue");
+            Assert.Greater(SwingLooks.Light.Layers[2].Style.Colour.r, SwingLooks.Light.Layers[2].Style.Colour.b * 3f, "light gold, not white");
         }
 
         [Test]

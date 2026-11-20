@@ -41,6 +41,9 @@ namespace Clover.Player.Forms
             Vector3 target = first != null ? Ground(first.transform.position) : Ground(print.Far);
             float yaw = ElementArt.Turn(forward);
             float reach = Mathf.Max(1.5f, print.Reach);
+            // The elements 3 strikes (Frost Bite's spike, Cutting Wind's crescent, Taken's hooks, Grown Into It's shoots,
+            // Broken Ground's slabs), about the player and on each one struck, in place of the pieces below.
+            if (ElementMoves.PlayStrike(element.Index, Ground(print.Origin) - Vector3.up * 0.05f, forward, struck, count)) return true;
             switch (element.Index)
             {
                 case ElementSubstance.Fire:

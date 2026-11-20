@@ -75,7 +75,10 @@ namespace Clover.Player
             // way (the owner's notes of 2026-11-19) to the swing look's own landing: frost that bursts and splinters fall,
             // rocks thrown up that fall back.
             var swingLook = Swings.SwingLooks.For(element);
-            bool drawn = (Swings.SwingTrails.On && swingLook != null && swingLook.ReplacesHitArt) || HitArt.Play(element, at + Vector3.up * 1.1f, forward);
+            // The elements 3 landing, on the body struck, its third with the element's extra (the Blender worker's blade
+            // timelines): in place of the old hit pieces, never beside them.
+            bool own = ElementArt.Ready && ElementMoves.PlayBladeHit(element.Index, target.transform, forward, blow.Third ? 3 : Mathf.Clamp(blow.Number, 1, 2));
+            bool drawn = own || (Swings.SwingTrails.On && swingLook != null && swingLook.ReplacesHitArt) || HitArt.Play(element, at + Vector3.up * 1.1f, forward);
             if (!drawn) ElementLook.Sparks(element, at + Vector3.up * 1.1f, forward, blow.Third ? 1.2f : 0.7f);
             switch (element.Name)
             {
@@ -98,7 +101,7 @@ namespace Clover.Player
                     // Each shoves its target along the swing, 1.5 m; the third throws it 4 m.
                     // NEEDS: the 20 damage and 30 stagger when what is thrown meets a wall or another enemy.
                     if (target is IShovable shoved) shoved.Push(forward * (blow.Third ? 4f : 1.5f) * combat.StatPush);
-                    Vfx.Play(VfxKind.Dust, Ground(at), forward, blow.Third ? 1.6f : 0.8f);
+                    if (!own) Vfx.Play(VfxKind.Dust, Ground(at), forward, blow.Third ? 1.6f : 0.8f);
                     break;
                 case Elements.Water:
                     // Each splashes everything within 1.5 m of its target for a fifth of the blow, and soaks it.
@@ -110,14 +113,14 @@ namespace Clover.Player
                     if (blow.Third)
                     {
                         combat.StrikeArea(at, 2f, Blow(element, 8f, 6f, 1));
-                        for (int i = 0; i < 3; i++)
+                        for (int i = 0; i < 3 && !own; i++)
                             FormFx.Erupt(FormMesh.Vine, Ground(at) + Quaternion.Euler(0f, i * 120f, 0f) * Vector3.forward * 0.9f, Quaternion.Euler(0f, i * 120f, 0f), new Vector3(0.5f, 1.2f, 0.5f), element.Colour, 0.12f, 0.5f, 0.4f);
                     }
                     break;
                 case Elements.Earth:
                     // Each throws a short spray of gravel: a 2 m cone, 4 damage. NEEDS: the wound-up blow that cannot be stopped.
                     combat.StrikeCone(2.6f, 60f, Blow(element, 4f, 4f, 0));
-                    Vfx.Play(VfxKind.Dust, Ground(at), forward, 1.2f);
+                    if (!own) Vfx.Play(VfxKind.Dust, Ground(at), forward, 1.2f);
                     break;
                 case Elements.Light:
                     // The third throws a ray 5 m along the swing that Marks everything on it.
@@ -275,7 +278,8 @@ namespace Clover.Player
                     // Broken Ground: four slabs in a 4 m line, 14 damage, 25 stagger, Tremor 1. Mountain Cleaver: 6.5 m, 55 and 70, Tremor 2.
                     float length = deep ? 6.5f : 4f;
                     combat.StrikeLane(print.Origin, print.Forward, length, deep ? 1.4f : 1f, Blow(element, deep ? 55f : 14f, deep ? 70f : 25f, deep ? 2 : 1, deep));
-                    int slabs = deep ? 5 : 4;
+                    // The elements 3 look heaves its own slabs up the crack (StrikeArt): these are the old look's.
+                    int slabs = art && !deep && ElementMoves.HasStrike(element.Index) ? 0 : deep ? 5 : 4;
                     for (int i = 0; i < slabs; i++)
                     {
                         Vector3 at = print.Origin + print.Forward * (1f + i * (length - 1f) / Mathf.Max(1, slabs - 1));

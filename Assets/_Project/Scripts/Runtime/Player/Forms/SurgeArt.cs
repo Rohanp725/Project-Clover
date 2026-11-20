@@ -74,6 +74,8 @@ namespace Clover.Player.Forms
                 case ElementSubstance.Poison: return "poison_fever";
                 case ElementSubstance.Life: return "life_regrowth";
                 case ElementSubstance.Dark: return "dark_hunger";
+                // Tailwind: the liked spiral in mint and pale dust, with curls peeling off behind (elements 3).
+                case ElementSubstance.Wind: return ElementMoves.Tailwind;
                 default: return null;
             }
         }

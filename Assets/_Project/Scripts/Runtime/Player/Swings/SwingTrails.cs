@@ -106,6 +106,14 @@ namespace Clover.Player.Swings
         private MeshRenderer[] sheathShown;
         private Mesh[] sheathMeshes;
 
+        // The elements 3 sheaths (ElementLookSet.BladeSheath): kit meshes laid along each blade line in hand, two a line.
+        private MeshFilter[] bladeFilters;
+        private MeshRenderer[] bladeShown;
+        private bool mirrored;
+
+        /// <summary>For probes: the elements 3 sheath pieces drawn on the weapon now.</summary>
+        public int BladeSheathsShown { get; private set; }
+
         private Vector3[] vertices;
         private Vector2[] uvs;
         private Color[] colours;
@@ -156,6 +164,9 @@ namespace Clover.Player.Swings
             if (sheathShown != null)
                 foreach (var shown in sheathShown)
                     if (shown != null) shown.enabled = false;
+            if (bladeShown != null)
+                foreach (var shown in bladeShown)
+                    if (shown != null) shown.enabled = false;
         }
 
         private void Start()
@@ -182,6 +193,9 @@ namespace Clover.Player.Swings
                     if (shown != null) Destroy(shown.gameObject);
             if (sheathShown != null)
                 foreach (var shown in sheathShown)
+                    if (shown != null) Destroy(shown.gameObject);
+            if (bladeShown != null)
+                foreach (var shown in bladeShown)
                     if (shown != null) Destroy(shown.gameObject);
             DestroyAll(ribbonMeshes);
             DestroyAll(sheathMeshes);
@@ -280,6 +294,17 @@ namespace Clover.Player.Swings
             sheathShown = new MeshRenderer[SheathPool];
             sheathMeshes = new Mesh[SheathPool];
             for (int s = 0; s < SheathPool; s++) Make("Blade Sheath", out sheathFilters[s], out sheathShown[s], out sheathMeshes[s]);
+            bladeFilters = new MeshFilter[SheathPool * 2];
+            bladeShown = new MeshRenderer[SheathPool * 2];
+            for (int s = 0; s < bladeShown.Length; s++)
+            {
+                var part = new GameObject("Blade Sheath Piece");
+                bladeFilters[s] = part.AddComponent<MeshFilter>();
+                bladeShown[s] = part.AddComponent<MeshRenderer>();
+                bladeShown[s].shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+                bladeShown[s].receiveShadows = false;
+                bladeShown[s].enabled = false;
+            }
 
             int most = Mathf.Max(Ribbon.Capacity * 2, Sheath.MostVertices);
             vertices = new Vector3[most];
@@ -711,6 +736,10 @@ namespace Clover.Player.Swings
             if (element == null || landedThisSwing >= LandingsPerSwing) return;
             landedThisSwing++;
             Landings++;
+            // A blow whose landing the elements 3 look draws on the body struck (ElementSteel, StrikeArt) throws nothing
+            // more here: the new look replaces the old, never stands beside it.
+            bool drawnByLook = combat.SwingInfused ? ElementMoves.HasStrike(element.Index) : ElementMoves.HasBlade(element.Index);
+            if (drawnByLook) return;
             SwingImpacts.Landing(element.Index, point, way, transform.position.y, combat.SwingInfused ? InfusedWeight : 1f);
         }
 
@@ -804,7 +833,12 @@ namespace Clover.Player.Swings
             }
             var look = On && element != null ? SwingLooks.For(element) : null;
             int shown = 0;
-            if (look != null && look.Sheath.Shown && sheathMaterials[look.Element] != null)
+            // The elements 3 sheath, laid on the real blade line of the weapon in hand, in place of the drawn sheath, Life's
+            // thorns and Metal's glint (the owner: "it needs a close look at the weapon", "nothing ... but a glint").
+            bool ownSheath = look != null && ElementLooks.TrySheath(look.Element, out var bladeSheath) && DrawBladeSheath(bladeSheath, strength, now);
+            if (!ownSheath) HideBladeSheath(0);
+            if (ownSheath) { }
+            else if (look != null && look.Sheath.Shown && sheathMaterials[look.Element] != null)
             {
                 float glintAt = -1f;
                 if (look.Sheath.Glint)
@@ -842,8 +876,93 @@ namespace Clover.Player.Swings
                 if (sheathShown[s].enabled) sheathShown[s].enabled = false;
             SheathsShown = shown;
 
-            if (look != null && look.Thorns) Thorns(look, now);
+            if (look != null && look.Thorns && !ownSheath) Thorns(look, now);
             else LetThorns();
+        }
+
+        /// <summary>Seconds each of Fire's two flames shows before the other takes its place on the blade.</summary>
+        public const float FlickerSeconds = 0.08f;
+
+        // The sheath's pieces along every blade line in hand: the blade's frame from the line (its base, its length, its
+        // edge), the sheath's own frame fitted to it, thinning as the blows are spent; Fire's flames trailing whichever way
+        // the blade moves, Ice's teeth stepping round, Metal's glint running hilt to tip as each swing starts.
+        private bool DrawBladeSheath(in ElementLookSet.BladeSheath sheath, float strength, float now)
+        {
+            var blade = combat.Blade;
+            float left = blade.Charged && blade.Length > 0 ? blade.Left / (float)blade.Length : 1f;
+            float thin = (0.55f + 0.45f * left) * Mathf.Lerp(0.7f, 1f, strength);
+            int used = 0;
+            for (int a = 0; a < activeCount && used + 1 < bladeShown.Length; a++)
+            {
+                ref var source = ref sources[active[a]];
+                if (source.Thrown || source.WorldCount < 2) continue;
+                Vector3 from = source.World[0], tip = source.World[source.WorldCount - 1];
+                Vector3 along = tip - from;
+                float length = along.magnitude;
+                if (length < 0.05f) continue;
+                along /= length;
+                Vector3 edge = Vector3.ProjectOnPlane(source.EdgeSide, along);
+                if (edge.sqrMagnitude < 1e-6f) edge = Vector3.ProjectOnPlane(Vector3.up, along);
+                edge.Normalize();
+                // The flame streams back off the edge away from the stroke: turned over when the blade cuts with its back.
+                if (sheath.Motion == ElementLookSet.SheathFlicker && source.Speed > 1.5f) mirrored = Vector3.Dot(source.Way, edge) < 0f;
+                Vector3 face = Vector3.Cross(along, edge);
+                var turn = Quaternion.LookRotation(face, edge);
+                float span = Mathf.Max(0.05f, sheath.To - sheath.From);
+                float stretch = length / span;
+                float wide = Mathf.Clamp(stretch, 0.7f, 1.4f) * thin;
+                Vector3 hilt = from - along * (sheath.From * stretch);
+                var size = new Vector3(stretch, wide * (mirrored && sheath.Motion == ElementLookSet.SheathFlicker ? -1f : 1f), wide);
+                switch (sheath.Motion)
+                {
+                    case ElementLookSet.SheathFlicker:
+                        Put(used++, Mathf.FloorToInt(now / FlickerSeconds) % 2 == 0 || sheath.Second == null ? sheath.Mesh : sheath.Second, sheath.Material, hilt, turn, size);
+                        break;
+                    case ElementLookSet.SheathTeeth:
+                    {
+                        // A third of the tooth spacing each twentieth of a second, the two edges running opposite ways.
+                        float step = (Mathf.FloorToInt(now * 20f) % 3) * sheath.Step * stretch;
+                        Put(used++, sheath.Mesh, sheath.Material, hilt + along * step, turn, size);
+                        if (sheath.Second != null) Put(used++, sheath.Second, sheath.Material, hilt - along * step, turn, size);
+                        break;
+                    }
+                    case ElementLookSet.SheathGlint:
+                    {
+                        float run = (now - glintFrom) / 0.28f;
+                        if (run < 0f || run > 1f) break;
+                        Vector3 at = Vector3.Lerp(from, tip, run * run * (3f - 2f * run));
+                        float glint = 0.3f * Mathf.Sin(Mathf.PI * run) * Mathf.Clamp(stretch, 0.6f, 1.3f);
+                        // The star turned to the camera, so it is seen whole whichever way the blade lies.
+                        var toCamera = viewer != null ? Quaternion.LookRotation(-viewer.forward, Vector3.up) : turn;
+                        Put(used++, sheath.Mesh, sheath.Material, at, toCamera, Vector3.one * Mathf.Max(0.01f, glint));
+                        break;
+                    }
+                    default:
+                        Put(used++, sheath.Mesh, sheath.Material, hilt, turn, size);
+                        break;
+                }
+            }
+            HideBladeSheath(used);
+            BladeSheathsShown = used;
+            return true;
+        }
+
+        private void Put(int slot, Mesh mesh, Material material, Vector3 at, Quaternion turn, Vector3 size)
+        {
+            var shown = bladeShown[slot];
+            if (bladeFilters[slot].sharedMesh != mesh) bladeFilters[slot].sharedMesh = mesh;
+            if (shown.sharedMaterial != material) shown.sharedMaterial = material;
+            shown.transform.SetPositionAndRotation(at, turn);
+            shown.transform.localScale = size;
+            if (!shown.enabled) shown.enabled = true;
+        }
+
+        private void HideBladeSheath(int from)
+        {
+            if (bladeShown == null) return;
+            for (int s = from; s < bladeShown.Length; s++)
+                if (bladeShown[s].enabled) bladeShown[s].enabled = false;
+            if (from == 0) BladeSheathsShown = 0;
         }
 
         // Thorns along the real edge of each line in hand: grown in from the base when the charge lands, leaning back
