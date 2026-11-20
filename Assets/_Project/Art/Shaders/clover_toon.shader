@@ -133,7 +133,7 @@ Shader "Clover/Toon"
             // space (about a hand across), the seams where two cells meet.
             if (_IceStone > 0.001)
             {
-                float3 cellAt = positionWS * 4.2;
+                float3 cellAt = positionWS * 3.2;
                 float3 base = floor(cellAt);
                 float nearest = 9.0, second = 9.0;
                 for (int x = -1; x <= 1; x++)
@@ -148,10 +148,12 @@ Shader "Clover/Toon"
                 }
                 float seam = second - nearest;
                 float fleck = frac(sin(dot(floor(positionWS * 30.0), float3(12.9898, 78.233, 37.719))) * 43758.5453);
-                half3 stone = lit > 0.6 ? half3(0.5, 0.46, 0.4) : (lit > 0.25 ? half3(0.38, 0.35, 0.31) : half3(0.25, 0.23, 0.22));
-                stone *= lerp(0.88, 1.06, step(0.6, fleck)) * lerp(1.0, 0.72, step(0.6, rim));
-                stone = seam < 0.06 ? half3(0.04, 0.02, 0.06) : stone;
-                stone = seam < 0.022 ? half3(0.22, 0.06, 0.36) : stone;
+                // Darker than it looks here: the film of 2026-11-20 showed the first values near white under the
+                // castle's lights and bloom, and the seams too fine to see from the game camera.
+                half3 stone = lit > 0.6 ? half3(0.27, 0.25, 0.22) : (lit > 0.25 ? half3(0.2, 0.185, 0.17) : half3(0.13, 0.12, 0.12));
+                stone *= lerp(0.85, 1.08, step(0.6, fleck)) * lerp(1.0, 0.72, step(0.6, rim));
+                stone = seam < 0.11 ? half3(0.02, 0.01, 0.03) : stone;
+                stone = seam < 0.04 ? half3(0.2, 0.05, 0.34) : stone;
                 colour = lerp(colour, stone, _IceStone);
             }
             return colour;

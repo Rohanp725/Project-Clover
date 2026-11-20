@@ -1492,14 +1492,6 @@ namespace Clover.Gameplay
         // The body's glow: white for an instant when struck (the element's colour, softened, under an element), a steady pale blue while frozen, a gold pulse while staggered, a blue one while charged.
         private void Paint(float deltaTime)
         {
-            int glow = 0;
-            if (flashLeft > 0f) glow = 1;
-            else if (Afflictions.IsFrozen && !IsDead) glow = 5;
-            else if (IsStaggered && Mathf.Repeat(Time.unscaledTime * 5f, 1f) < 0.5f) glow = 2;
-            else if (IsCharged && !IsDead && Mathf.Repeat(Time.unscaledTime * 3f, 1f) < 0.6f) glow = 3;
-            // Close to losing its balance, it flickers amber: one or two more blows will open it.
-            else if (!IsDead && !IsStaggered && Stagger.Fraction >= 0.7f && Mathf.Repeat(Time.unscaledTime * 8f, 1f) < 0.35f) glow = 4;
-            flashLeft -= Time.unscaledDeltaTime;
             // Chill's ice (and Rime's frost) climbing the body band by band, from its look (Clover/Toon's _Ice).
             float ice = 0f, iceReveal = 1f;
             byte shell = 0;
@@ -1508,6 +1500,15 @@ namespace Clover.Gameplay
                 ice = amount;
                 iceReveal = reveal;
             }
+            int glow = 0;
+            if (flashLeft > 0f) glow = 1;
+            // Held in stone (Turned to Stone) it does not glow the frozen pale blue: that lit the stone near white.
+            else if (Afflictions.IsFrozen && !IsDead && !(ice > 0f && shell == Clover.Player.Forms.ElementLookSet.Stone)) glow = 5;
+            else if (IsStaggered && Mathf.Repeat(Time.unscaledTime * 5f, 1f) < 0.5f) glow = 2;
+            else if (IsCharged && !IsDead && Mathf.Repeat(Time.unscaledTime * 3f, 1f) < 0.6f) glow = 3;
+            // Close to losing its balance, it flickers amber: one or two more blows will open it.
+            else if (!IsDead && !IsStaggered && Stagger.Fraction >= 0.7f && Mathf.Repeat(Time.unscaledTime * 8f, 1f) < 0.35f) glow = 4;
+            flashLeft -= Time.unscaledDeltaTime;
             // Soaked's water run down the body (a sheen on the body, not a sheet over it).
             float wet = 0f, wetReveal = 1f;
             if (!IsDead && Clover.Player.Forms.ElementLooks.ShellOn(transform, Clover.Player.Forms.ElementLookSet.Wet, out _, out float wetCovered, out float wetAmount))
