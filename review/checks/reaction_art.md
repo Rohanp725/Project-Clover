@@ -365,7 +365,7 @@ a thread of light: the gold rings spread; the straight bolt draws down it with t
 | Black Chain | metal_clang_hit (pulse arrive at 0.00 s for 0.75 s, flash) | dark_streaksair_hit (spread impact at 0.22 s for 0.77 s) | dark_drain_hit (spread aftermath at 0.30 s for 1.15 s) |
 | Burning Sap | light_prabhavali_hit (sweep arrive at 0.00 s for 0.70 s, flash) | poison_wound_hit (spread impact at 0.20 s for 0.77 s) | poison_stain_hit (spread aftermath at 0.28 s for 1.15 s) |
 | Smoulder | dark_streaksair_hit (spread arrive at 0.00 s for 0.85 s) | fire_globs_hit (lick impact at 0.30 s for 0.77 s) | fire_sootring_hit (spread aftermath at 0.38 s for 1.15 s) |
-| Seized | lightning_crawl_affliction (fall arrive at 0.00 s for 0.60 s, 2 strobes, flash) | water_aftersplash_hit (rise impact at 0.16 s for 0.72 s) | - |
+| Seized | lightning_crawl_affliction (crackle arrive at 0.00 s for 1.35 s) |  (rise impact at 0.16 s for 0.72 s) | - |
 | Windthrow | wind_debris_hit (sweep arrive at 0.00 s for 0.75 s) | life_sprout_affliction (rise impact at 0.30 s for 0.77 s) | - |
 | Frost Heave | ice_tiers_affliction (spread arrive at 0.00 s for 0.85 s, flash) | earth_cubes_hit (rise impact at 0.30 s for 0.77 s) | - |
 | Rust | water_aftersplash_hit (rise arrive at 0.00 s for 0.80 s) | metal_clang_hit (pulse impact at 0.22 s for 0.68 s, flash) | metal_filings_affliction (spread aftermath at 0.30 s for 1.15 s) |

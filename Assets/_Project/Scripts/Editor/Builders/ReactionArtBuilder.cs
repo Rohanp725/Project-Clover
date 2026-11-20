@@ -224,7 +224,8 @@ namespace Clover.EditorTools
             // A bolt is a white core inside a cyan band inside the violet edge.
             ["m_vfx_lightning_cyan"] = new Paint(0.25f, 0.8f, 1f),
             ["m_vfx_lightning_core"] = new Paint(0.95f, 0.97f, 1f),
-            ["m_vfx_wind_air"] = new Paint(0.82f, 0.84f, 0.78f),
+            // Pale dust, linear: about 85% on screen, never white (the research brief of 2026-11-20).
+            ["m_vfx_wind_air"] = new Paint(0.64f, 0.67f, 0.57f),
             ["m_vfx_wind_leaf"] = new Paint(0.5f, 0.42f, 0.16f),
             // Earth: ochre dust, the ochre crack's lip, near-black cracks, and pass 2's dark upturned dust.
             ["m_vfx_earth_dust"] = new Paint(0.42f, 0.36f, 0.26f),
@@ -274,6 +275,11 @@ namespace Clover.EditorTools
             // Flashover's flame is all the violet plasma (the owner's word of 2026-11-20: "no regular flame ... all the
             // flame should be that"): its orange embers burn violet too; its smoke stays smoke.
             ["fire_lightning|m_vfx_fire_ember"] = "m_vfx_combo_plasmaflame",
+            // And the veins of its scorch on the floor, which still glowed orange (the owner's word holds for all of its
+            // fire, 2026-11-20); the char they run through stays char.
+            ["fire_lightning|m_vfx_fire_crack"] = "m_vfx_combo_plasmaflame",
+            ["fire_lightning|m_vfx_fire_flame"] = "m_vfx_combo_plasmaflame",
+            ["fire_lightning|m_vfx_combo_coal"] = "m_vfx_combo_plasmaflame",
         };
 
         private static string[] Recoloured(string pair, string[] worn)

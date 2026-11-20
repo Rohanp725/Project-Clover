@@ -99,6 +99,8 @@ namespace Clover.Player.Forms
         private static readonly int HotId = Shader.PropertyToID("_Hot");
         private static readonly int InkId = Shader.PropertyToID("_OutlineWidth");
         private static readonly int RevealId = Shader.PropertyToID("_Reveal");
+        private static readonly int HeadId = Shader.PropertyToID("_DrawHead");
+        private static readonly int TailId = Shader.PropertyToID("_DrawTail");
 
         private bool built;
         private int[] lookOfPair;
@@ -108,13 +110,15 @@ namespace Clover.Player.Forms
         private ReactionArtSet.Part[] live;   // the same: what it draws (a designed part, or a composed one made here)
         private float[] liveYaw;   // the same: its turn past the look's
         private float[] liveSize;  // the same: its size (a composed look's second parent is drawn smaller)
+        private Color[] liveTint;  // the same: the colour it is drawn in over its own (white for its own; Rust's rust)
         private int[] lampSlots;   // showing * MostLampsPerLook + lamp: the pool lamp, or -1
         private Transform[] partAt;      // the frame, stretched along a way
         private Transform[] partShape;   // under it, the renderer, turned back to the look's turn
         private MeshFilter[] partMesh;
         private MeshRenderer[] partShown;
         private bool[] partUsed;
-        private float[] paintedAlpha, paintedHot, paintedReveal;
+        private float[] paintedAlpha, paintedHot, paintedReveal, paintedHead, paintedTail;
+        private Color[] paintedTint;
         private Light[] lamps;
         private bool[] lampUsed;
         private Mesh quad;
@@ -176,6 +180,7 @@ namespace Clover.Player.Forms
             live = new ReactionArtSet.Part[slots.Length];
             liveYaw = new float[slots.Length];
             liveSize = new float[slots.Length];
+            liveTint = new Color[slots.Length];
             lampSlots = new int[showings.Length * ReactionDesigns.MostLampsPerLook];
             for (int i = 0; i < slots.Length; i++) slots[i] = -1;
             for (int i = 0; i < lampSlots.Length; i++) lampSlots[i] = -1;
@@ -189,6 +194,9 @@ namespace Clover.Player.Forms
             paintedAlpha = new float[parts];
             paintedHot = new float[parts];
             paintedReveal = new float[parts];
+            paintedHead = new float[parts];
+            paintedTail = new float[parts];
+            paintedTint = new Color[parts];
             for (int i = 0; i < parts; i++)
             {
                 var frame = new GameObject("Reaction Part");
@@ -293,6 +301,7 @@ namespace Clover.Player.Forms
                 if (!live[slot].Motion.Set) live[slot].Motion = Unmoving(live[slot]);
                 liveYaw[slot] = 0f;
                 liveSize[slot] = 1f;
+                liveTint[slot] = Color.white;
                 if (lean && live[slot].Motion.Beat == ReactionMotion.Aftermath)
                 {
                     Dropped++;
@@ -334,6 +343,7 @@ namespace Clover.Player.Forms
                 if (!live[slot].Motion.Set) live[slot].Motion = Unmoving(live[slot]);
                 liveYaw[slot] = 0f;
                 liveSize[slot] = 1f;
+                liveTint[slot] = Color.white;
                 slots[slot] = -1;
                 if (live[slot].Role == role) Take(showing, k);
             }
@@ -629,7 +639,7 @@ namespace Clover.Player.Forms
             {
                 // A mark spreads from the feet to its place, and lies a hair above the one before it.
                 float spread = pose.Across * pose.Size;
-                Vector3 middle = anchor + turn * new Vector3(part.Centre.x * spread, 0f, part.Centre.z * spread);
+                Vector3 middle = anchor + turn * new Vector3(part.Centre.x * spread, 0f, part.Centre.z * spread) + turn * pose.Offset;
                 middle.y += MarkLift + k * 0.002f + showing * 0.0003f;
                 frame.SetPositionAndRotation(middle, Quaternion.identity);
                 frame.localScale = new Vector3(spread, 1f, spread);
@@ -660,7 +670,8 @@ namespace Clover.Player.Forms
                 {
                     axis = turn * part.Axis;
                 }
-                Vector3 position = anchor + turn * part.Pivot + path * pose.Travel;
+                // An orbit or a spiral carries it round its centre; the way round is the look's own.
+                Vector3 position = anchor + turn * part.Pivot + path * pose.Travel + turn * pose.Offset;
                 position.y += pose.Lift;
                 if (pose.Redraw > 0) position += Jitter(slot, pose.Redraw);
                 float size = pose.Size * liveSize[slot];
@@ -682,7 +693,7 @@ namespace Clover.Player.Forms
                 Quaternion shapeTurn = pose.Spin != 0f ? Quaternion.AngleAxis(pose.Spin, Vector3.up) * turn : turn;
                 partShape[pooled].localRotation = Quaternion.Inverse(along) * shapeTurn;
             }
-            Paint(pooled, part.Kind, alpha, pose.Hot, pose.Reveal);
+            Paint(pooled, part.Kind, alpha, pose.Hot, pose.Reveal, pose.Head, pose.Tail, liveTint[slot]);
             if (partShown[pooled].enabled != pose.Shown) partShown[pooled].enabled = pose.Shown;
         }
 
@@ -694,20 +705,27 @@ namespace Clover.Player.Forms
         }
 
         // A renderer's block, written only when what it carries has changed.
-        private void Paint(int pooled, byte kind, float alpha, float hot, float reveal)
+        private void Paint(int pooled, byte kind, float alpha, float hot, float reveal, float head, float tail, Color tint)
         {
             bool solid = kind == ReactionArtSet.Solid, decal = kind == ReactionArtSet.Decal;
             if (paintedAlpha[pooled] >= 0f && Mathf.Abs(paintedAlpha[pooled] - alpha) < 0.004f && (!solid || paintedHot[pooled] == hot) &&
-                (!decal || Mathf.Abs(paintedReveal[pooled] - reveal) < 0.004f)) return;
+                (!decal || Mathf.Abs(paintedReveal[pooled] - reveal) < 0.004f) && paintedTint[pooled] == tint &&
+                Mathf.Abs(paintedHead[pooled] - head) < 0.004f && Mathf.Abs(paintedTail[pooled] - tail) < 0.004f) return;
             paintedAlpha[pooled] = alpha;
             paintedHot[pooled] = hot;
             paintedReveal[pooled] = reveal;
+            paintedHead[pooled] = head;
+            paintedTail[pooled] = tail;
+            paintedTint[pooled] = tint;
             block.Clear();
-            block.SetColor(ColourId, new Color(1f, 1f, 1f, alpha));
+            block.SetColor(ColourId, new Color(tint.r, tint.g, tint.b, alpha));
             if (solid)
             {
                 block.SetFloat(HotId, hot);
                 block.SetFloat(InkId, Ink);
+                // A ribbon is drawn on head first and wiped off tail first along its length (Clover/Spell's clip).
+                block.SetFloat(HeadId, head);
+                block.SetFloat(TailId, tail);
             }
             if (decal) block.SetFloat(RevealId, reveal);
             partShown[pooled].SetPropertyBlock(block);
@@ -750,13 +768,13 @@ namespace Clover.Player.Forms
             int showing = Begin(at, body, away, Quaternion.Euler(0f, yaw, 0f));
             ReactionTimelines.Composed(pair, out var arrives, out var answers, out var spreads);
             showings[showing].ImpactAt = answers.Delay;
-            AddPiece(showing, first, a, arrives, 1f, 0f, yaw);
-            AddPiece(showing, second, b, answers, 0.85f, 150f, yaw);
-            if (mark != null) AddPiece(showing, mark, markElement, spreads, ReactionDesigns.MarkScale(markElement), 0f, yaw, ReactionArtSet.OnGround);
+            AddPiece(showing, first, a, arrives, 1f, 0f, yaw, ReactionArtSet.OnBody, ReactionDesigns.ComposedTint(pair, 0));
+            AddPiece(showing, second, b, answers, 0.85f, 150f, yaw, ReactionArtSet.OnBody, ReactionDesigns.ComposedTint(pair, 1));
+            if (mark != null) AddPiece(showing, mark, markElement, spreads, ReactionDesigns.MarkScale(markElement), 0f, yaw, ReactionArtSet.OnGround, ReactionDesigns.ComposedTint(pair, 2));
             Place(showing);
         }
 
-        private void AddPiece(int showing, string name, int element, in ReactionMotion.Cue cue, float scale, float turnBy, float yaw, byte place = ReactionArtSet.OnBody)
+        private void AddPiece(int showing, string name, int element, in ReactionMotion.Cue cue, float scale, float turnBy, float yaw, byte place, Color tint)
         {
             ref var one = ref showings[showing];
             if (name == null || one.Parts >= mostParts || !ElementArt.TryPiece(ElementArt.Piece(name), out var piece)) return;
@@ -767,13 +785,23 @@ namespace Clover.Player.Forms
             bool behind = element == LightElement && !decal;
             live[slot] = new ReactionArtSet.Part
             {
-                Kind = piece.Kind, Place = place, Mesh = piece.Mesh, Material = piece.Material, Motion = cue,
+                Kind = piece.Kind, Place = place, Mesh = piece.Mesh, Material = piece.Material, Motion = WithoutWindFlash(cue, element),
                 Pivot = behind ? new Vector3(0f, 0f, -0.35f) : Vector3.zero,
                 Centre = decal ? piece.Centre * scale : Vector3.zero, Size = decal ? piece.Size * scale : piece.Size,
             };
             liveYaw[slot] = behind ? 180f - yaw : turnBy;
             liveSize[slot] = decal ? 1f : behind ? 0.85f * scale : scale;
+            liveTint[slot] = tint;
             Take(showing, k);
+        }
+
+        private static readonly int WindElement = ReactionDesigns.RingIndex("wind");
+
+        // Wind never lands with a white frame (the research brief of 2026-11-20: no white shapes in a wind look).
+        private static ReactionMotion.Cue WithoutWindFlash(ReactionMotion.Cue cue, int element)
+        {
+            if (element == WindElement) cue.Flash = false;
+            return cue;
         }
 
         private static void Rise(string piece, int element, Vector3 feet, float yaw, float scale)

@@ -42,8 +42,10 @@ namespace Clover.Player.Trees
             to.Add(Reaction(AfflictionKind.Static, AfflictionKind.Soaked,
                 "Soaked and two Static or more: the current locks its muscles and holds it 1 s, and the water runs off it into a live film that charges all who stand in it for 3 s.",
                 new ReactionDef { DepthOf = AfflictionKind.Static, Depth = 2 },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Seconds = 1f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 3f, Interval = 0.5f, Affliction = AfflictionKind.Static, Stacks = 1 }));
+                // Unseen: drawn by Seized's own calm crackle, with no ring at the hold and no bolt from the sky at each of the
+                // film's bites (the owner, 2026-11-20: "remove the circles ... make it less flickery").
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Seconds = 1f, Unseen = true },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 3f, Interval = 0.5f, Affliction = AfflictionKind.Static, Stacks = 1, Unseen = true }));
 
             // Wind and Life (25). Rooted 2 s (it can turn and swing). The next heavy blow while rooted tears it out:
             // thrown 6 m (twice Thunder Gust's 3) away from the player, 14 damage, 35 stagger, and a torn pit 1.5 m

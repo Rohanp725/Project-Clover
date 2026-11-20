@@ -358,7 +358,7 @@ namespace Clover.World
                 zone.Position += zone.Velocity * deltaTime;
                 zone.Left -= deltaTime;
                 zone.UntilShow -= deltaTime;
-                if (zone.UntilShow <= 0f)
+                if (zone.UntilShow <= 0f && !zone.Spec.Quiet)
                 {
                     zone.UntilShow = moving ? ShowMovingEvery : ShowEvery;
                     Vector2 spot = Random.insideUnitCircle * (zone.Spec.Radius * (moving ? 0.35f : 0.8f));
@@ -371,7 +371,8 @@ namespace Clover.World
                     int hits = owner.StrikeArea(zone.Position, zone.Spec.Radius, zone.Spec.Blow, LeftAlone(i, zone));
                     zone.Bitten++;
                     // A standing storm drops a bolt somewhere in itself each time it bites, whether or not anyone is under it.
-                    if (zone.Spec.Kind == HazardKind.Lightning && (hits > 0 || !zone.Spec.Once))
+                    if (zone.Spec.Quiet) { }
+                    else if (zone.Spec.Kind == HazardKind.Lightning && (hits > 0 || !zone.Spec.Once))
                     {
                         Vector2 spot = zone.Spec.Once ? Vector2.zero : Random.insideUnitCircle * (zone.Spec.Radius * 0.7f);
                         LightningBolts.Strike(zone.Position + new Vector3(spot.x, 0f, spot.y), 0.2f);

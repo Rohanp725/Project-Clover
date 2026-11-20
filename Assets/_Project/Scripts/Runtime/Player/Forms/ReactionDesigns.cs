@@ -120,7 +120,28 @@ namespace Clover.Player.Forms
             second = BodyPiece(b);
             markElement = Mark(b) != null ? b : Mark(a) != null ? a : -1;
             mark = Mark(markElement);
+            // Seized is the lightning alone: the water's splash rings are gone (the owner, 2026-11-20: "remove the
+            // circles and just have the lightning").
+            if (pair == Seized)
+            {
+                if (a == RingIndex("water")) first = null;
+                if (b == RingIndex("water")) second = null;
+            }
         }
+
+        /// <summary>Seized (Lightning and Water) and Rust (Water and Metal), whose composed looks the owner changed.</summary>
+        public static readonly int Seized = AfflictionPairs.Index(AfflictionKind.Static, AfflictionKind.Soaked);
+        public static readonly int Rust = AfflictionPairs.Index(AfflictionKind.Soaked, AfflictionKind.Sundered);
+
+        /// <summary>Rust's colour: iron oxide, a deep orange-brown, not the steel's grey (the owner, 2026-11-20: "The rust is not a rusty color at all").</summary>
+        public static readonly Color RustColour = new Color(0.62f, 0.25f, 0.08f);
+
+        /// <summary>
+        /// The colour a composed look's part (0 the first parent's piece, 1 the second's, 2 the ground mark) is drawn in
+        /// over its own: white leaves it as it is. All of Rust is rust: the clang and the filings, and the water too, run
+        /// off rust-red, as water off rusting iron does.
+        /// </summary>
+        public static Color ComposedTint(int pair, int part) => pair == Rust && part >= 0 && part <= 2 ? RustColour : Color.white;
 
         // ---- The lamps.
 

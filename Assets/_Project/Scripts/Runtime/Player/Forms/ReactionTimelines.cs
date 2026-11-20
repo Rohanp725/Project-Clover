@@ -417,6 +417,19 @@ namespace Clover.Player.Forms
             second.Move *= 0.8f;
             second.Seconds *= 0.9f;
             mark = Cue.Of(M.Spread, M.Aftermath, impact + 0.08f, 0.35f, 1.15f, 0.7f);
+            // Seized's lightning crackles without flashing, so it does not hurt the eyes (the owner, 2026-11-20): no
+            // strobe, no white frame, a new shape three times a second, held on through.
+            if (pair == ReactionDesigns.Seized)
+            {
+                var calm = Cue.OfCrackle(M.Arrive, 0f, 0.14f, 1.35f, 72f);
+                if (a == ReactionDesigns.RingIndex("lightning")) first = calm;
+                else
+                {
+                    calm.Beat = M.Impact;
+                    calm.Delay = second.Delay;
+                    second = calm;
+                }
+            }
         }
     }
 }

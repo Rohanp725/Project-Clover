@@ -151,9 +151,9 @@ namespace Clover.Gameplay
         {
             var source = SourceOf(hit);
             if (hit.Affliction != AfflictionKind.None && hit.AfflictionStacks > 0)
-                CombatEvents.Report(who, hit.Affliction, hit.AfflictionStacks, Lay(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower, source, who));
+                CombatEvents.Report(who, hit.Affliction, hit.AfflictionStacks, Lay(hit.Affliction, hit.AfflictionStacks, hit.AfflictionSeconds, hit.AfflictionPower, source, who), source);
             if (hit.Affliction2 != AfflictionKind.None && hit.Affliction2Stacks > 0)
-                CombatEvents.Report(who, hit.Affliction2, hit.Affliction2Stacks, Lay(hit.Affliction2, hit.Affliction2Stacks, hit.Affliction2Seconds, hit.AfflictionPower, source, who));
+                CombatEvents.Report(who, hit.Affliction2, hit.Affliction2Stacks, Lay(hit.Affliction2, hit.Affliction2Stacks, hit.Affliction2Seconds, hit.AfflictionPower, source, who), source);
             if (!hit.FromReaction && hit.Damage > 0f) Conditions.Struck(hit.Damage, hit.Heavy, hit.Spell);
         }
 

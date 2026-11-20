@@ -902,8 +902,10 @@ namespace Clover.Player
         // What every spell's blow does once it has landed: its effect, what it earns, and word to the upgrades.
         private void Landed(in SpellBlow blow, IDamageable target, Collider other, Vector3 direction, bool wasAfflicted)
         {
-            // The element art's hit in place of the effect, unless the owner's switch has the old effects showing.
-            if (Clover.Player.Forms.HitArt.Play(blow.Look, other.bounds.center, direction)) { }
+            // The element art's hit in place of the effect, unless the owner's switch has the old effects showing; an
+            // unseen blow (ground its reaction draws) throws neither.
+            if (blow.Unseen) { }
+            else if (Clover.Player.Forms.HitArt.Play(blow.Look, other.bounds.center, direction)) { }
             else if (blow.Tinted) Vfx.Play(blow.Effect, other.bounds.center, direction, 1f, blow.Tint);
             else Vfx.Play(blow.Effect, other.bounds.center, direction);
             if (defence != null && PaysBack(target)) defence.DealtDamage(blow.Damage);

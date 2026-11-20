@@ -38,5 +38,10 @@ namespace Clover.Player
         /// (<see cref="Hit.Tint"/>, <see cref="Core.StruckLook"/>); clear for a spell's, a reaction's or an upgrade's.
         /// </summary>
         public Color Struck;
+        /// <summary>
+        /// Lands with no hit art or effect of its own: ground whose reaction draws it (Seized's film, whose bites threw a
+        /// white flash sheet on every enemy in it every half second; the owner, 2026-11-20: "less flickery").
+        /// </summary>
+        public bool Unseen;
     }
 }

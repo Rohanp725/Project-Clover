@@ -104,6 +104,12 @@ namespace Clover.Tests
                 if (ReactionDesigns.IsDesigned(pair)) continue;
                 composed++;
                 ReactionDesigns.Composed(pair, out string first, out string second, out string mark, out int markElement);
+                // Seized is the lightning alone: the owner had its water's rings taken out (2026-11-20).
+                if (pair == ReactionDesigns.Seized)
+                {
+                    Assert.IsTrue(first != null || second != null, "Seized keeps its lightning");
+                    continue;
+                }
                 Assert.IsNotNull(first, AfflictionPairs.Name(pair));
                 Assert.IsNotNull(second, AfflictionPairs.Name(pair));
                 Assert.AreNotEqual(first, second, AfflictionPairs.Name(pair));

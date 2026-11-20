@@ -51,5 +51,11 @@ namespace Clover.World
         public int Group;
         /// <summary>Left alone by its bites: the enemy it came out of (Ill Wind's plume does not dose the one that shed it).</summary>
         public IDamageable Spares;
+        /// <summary>
+        /// Drawn by its reaction's own look and nothing else: no bolt from the sky at each bite, no ring, no puffs. Seized's
+        /// live film bit every half second with a bolt, a white ring and a flash of the whole sky, which hurt the eyes
+        /// (the owner, 2026-11-20: "make it less flickery so it doesnt hurt peoples eyes").
+        /// </summary>
+        public bool Quiet;
     }
 }

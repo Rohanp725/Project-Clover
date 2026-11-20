@@ -1168,7 +1168,10 @@ namespace Clover.Player
             if (pending.Special == Special.Carry)
             {
                 combat.AfflictArea(pending.At, pending.Radius, pending.Kind, pending.Stacks, pending.Target, laying);
-                ElementLook.Ring(lookOf[(int)pending.Kind], pending.At + Vector3.up * 0.2f);
+                // What a reaction lays and the water carries on is seen in the reaction's own look: no ring each time
+                // (Seized's film laid Static every half second and rang a ring and a tinted ring each time, the
+                // owner's "remove the circles ... less flickery", 2026-11-20).
+                if (pending.Source != LaySource.Reaction) ElementLook.Ring(lookOf[(int)pending.Kind], pending.At + Vector3.up * 0.2f);
                 return;
             }
 
@@ -1290,7 +1293,10 @@ namespace Clover.Player
                         Grown = effect.Grown, Family = effect.Slot + 1, Limit = effect.Grown && effect.Limit > 0 ? effect.Limit + Mathf.Max(0, Stats.Whole(PlayerStat.GrownLimit)) : 0,
                         Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
+                        // Unseen ground is drawn by its reaction's look alone (Seized's film: no bolt at each bite).
+                        Burst = false, Quiet = effect.Unseen,
                     };
+                    spec.Blow.Unseen = effect.Unseen;
                     for (int i = 0; i < patches; i++)
                     {
                         spec.Position = PatchAt(effect, i, patches, centre, self, aim, reach);
@@ -1496,8 +1502,12 @@ namespace Clover.Player
                     float seconds = Or(effect.Seconds, 1.5f);
                     if (effect.Radius > 0f) Holds += combat.HoldArea(centre, effect.Radius, seconds);
                     else if (subject is IAfflictable gripped && gripped.Afflictions.Hold(seconds)) Holds++;
-                    ElementLook.Ring(look, centre + Vector3.up * 0.2f);
-                    ElementLook.Puff(look, centre + Vector3.up * 0.4f, Vector3.up, 0.8f);
+                    // An unseen hold is drawn by its reaction's look alone: no ring (Seized, the owner's "remove the circles").
+                    if (!effect.Unseen)
+                    {
+                        ElementLook.Ring(look, centre + Vector3.up * 0.2f);
+                        ElementLook.Puff(look, centre + Vector3.up * 0.4f, Vector3.up, 0.8f);
+                    }
                     break;
                 }
                 case UpgradeAction.Lift:
@@ -1630,8 +1640,9 @@ namespace Clover.Player
         private void OnCarried(Component who, AfflictionKind kind, int stacks)
         {
             if (who == null) return;
-            // Carried by what a reaction laid, it is the reaction's still.
-            Enqueue(new Pending { Special = Special.Carry, Source = laying, Target = who, At = who.transform.position, HasAt = true, Kind = kind, Stacks = stacks,
+            // Carried by what a reaction laid, it is the reaction's still (a reaction's blow says so itself).
+            var source = CombatEvents.CarriedSource == LaySource.Reaction ? LaySource.Reaction : laying;
+            Enqueue(new Pending { Special = Special.Carry, Source = source, Target = who, At = who.transform.position, HasAt = true, Kind = kind, Stacks = stacks,
                 Radius = Afflictions.Spec(AfflictionKind.Soaked).CarryRadius });
         }
 
