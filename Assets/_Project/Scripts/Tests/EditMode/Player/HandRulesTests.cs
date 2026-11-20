@@ -265,5 +265,32 @@ namespace Clover.Tests
             CollectionAssert.AreEqual(new[] { "fire.base", "lightning.base" }, choices.Select(choice => choice.Id).ToArray());
             Assert.AreEqual("Thunderclap", choices[1].Name);
         }
+
+        [Test]
+        public void ADuoSpellOfAPairTwoApartSitsInTheHandOnlyWhileBothAreCarried()
+        {
+            // Glass Storm, Ice and Lightning's duo spell (task 4.5): not neighbours on the ring, a duo spell all the same.
+            string glass = Clover.Player.Trees.Duo.SleetChargeDuo.GlassStorm;
+            var rules = new HandRules();
+            var learned = new HashSet<string> { glass };
+            var both = Hand(Elements.Lightning, Elements.Ice);
+            var choice = rules.ChoicesFor(0, both, learned).Single(offered => offered.Id == glass);
+            Assert.IsTrue(choice.IsDuo);
+            Assert.AreEqual(SpellRole.Opener, choice.Role);
+            Assert.AreEqual(14f, choice.Cooldown, 1e-4f, "a duo spell's own cooldown, no mana");
+            Assert.AreEqual(0f, choice.Mana, 1e-4f);
+            Assert.AreEqual(rules.ChoicesFor(0, both, learned).Count - 1, rules.ChoicesFor(0, both, learned).FindIndex(offered => offered.Id == glass), "after both elements' own spells");
+            Assert.IsTrue(rules.CanSlot(glass, Hand(Elements.Ice, Elements.Lightning), learned), "in either order");
+            Assert.IsFalse(rules.CanSlot(glass, both, new HashSet<string>()), "only once learned");
+            CollectionAssert.DoesNotContain(rules.ChoicesFor(0, Hand(Elements.Lightning, Elements.Fire), learned).Select(offered => offered.Id).ToList(), glass, "not with another partner");
+            CollectionAssert.DoesNotContain(rules.ChoicesFor(0, Hand(Elements.Ice, Elements.Ice), learned).Select(offered => offered.Id).ToList(), glass, "not all in");
+            // Slotted, it is dropped when the pair breaks at the next fire.
+            both.Surge = HandRules.SurgeId(Elements.Lightning);
+            both.Slots[1] = glass;
+            Assert.IsFalse(rules.Validate(both, learned), "it fits");
+            both.Attune(Elements.Lightning, Elements.Fire);
+            Assert.IsTrue(rules.Validate(both, learned));
+            Assert.AreEqual("", both.Slots[1]);
+        }
     }
 }

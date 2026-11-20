@@ -6,7 +6,7 @@ namespace Clover.Player.Magic
     /// <summary>
     /// How every built spell is paid for, by the shared rules of docs/design/steel/README.md: basic spells run on
     /// cooldowns of 6 to 12 s and never cost mana; each element has one larger spell paid in mana (35 to 50); the eleven
-    /// built ring-mix duo spells stay larger spells paid in mana (40 to 60); the twelve spare ring-mix spells, which
+    /// built ring-mix duo spells stay larger spells paid in mana (40 to 60); the eleven spare ring-mix spells, which
     /// become Evolutions later, take a duo spell's cooldown. Numbers come from the rosters in elements_a.md and
     /// elements_b.md where the spell is listed there, and from its role where it is not (marked "not in the roster").
     /// Applied to the catalogue as it is gathered (<see cref="Apply"/>), so a spell's <see cref="SpellSpec.Cooldown"/>
@@ -17,6 +17,8 @@ namespace Clover.Player.Magic
         /// <summary>A spell the table does not know (one lent by the old yard's rack, a probe's own): a middling cooldown.</summary>
         public const float DefaultCooldown = 10f;
         public const float DuoCooldown = 12f;
+        /// <summary>The longest wait a duo spell of the new branches may have (pairs_d1_d2.md: The Fire Breathes In waits 16 s).</summary>
+        public const float LongestDuoCooldown = 16f;
 
         private static SpellTiming Cd(float seconds, SpellRole role) => new SpellTiming(seconds, 0f, role);
         private static SpellTiming Mana(float mana, SpellRole role) => new SpellTiming(0f, mana, role);
@@ -126,8 +128,12 @@ namespace Clover.Player.Magic
             ["blight.wastinggrip"] = Mana(40f, SpellRole.Opener),
             ["pyre.lightthepyres"] = Mana(60f, SpellRole.Detonator),
 
-            // The twelve spare ring-mix spells (Evolutions to come): a duo spell's cooldown.
-            ["plasma.lance"] = Cd(DuoCooldown, SpellRole.Opener),
+            // The new duo branches' duo spells (pairs_d1_d2.md to pairs_d5.md, task 4.5 on): basic spells of the pair, on a
+            // duo spell's cooldown of 12 to 16 s, each its own.
+            ["sleetcharge.glassstorm"] = Cd(14f, SpellRole.Opener),
+
+            // The eleven spare ring-mix spells (Evolutions to come): a duo spell's cooldown. Plasma Lance was cut with Plasma's
+            // reshaping (task 4.5).
             ["tempest.cloud"] = Cd(DuoCooldown, SpellRole.Breaker),
             ["blizzard.whiteout"] = Cd(DuoCooldown, SpellRole.Breaker),
             ["glacier.creeping"] = Cd(DuoCooldown, SpellRole.Opener),

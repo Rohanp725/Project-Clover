@@ -158,7 +158,10 @@ namespace Clover.Tests
                 Assert.IsNotNull(Elements.ByName(upgrade.Element), upgrade.Id + " names no element");
                 Assert.GreaterOrEqual(UpgradeIcons.IndexOf(upgrade.Icon), 0, upgrade.Id + " names a picture that does not exist: " + upgrade.Icon);
                 // A reaction is any pair's, on no tree: ReactionCatalogueTests checks its two elements.
-                if (upgrade.IsMix && !upgrade.IsHidden)
+                // A duo branch in the heart is any pair's, in either order (task 4.5); a mix still on the ring is a neighbour's.
+                if (upgrade.IsMix && !upgrade.IsHidden && upgrade.Tree == MarkTree.Duo)
+                    Assert.GreaterOrEqual(HeartLayout.PairOf(upgrade), 0, upgrade.Id + ": a duo mark names two different elements");
+                else if (upgrade.IsMix && !upgrade.IsHidden)
                     Assert.AreEqual(upgrade.Element2, Elements.ByName(upgrade.Element).MixWith, upgrade.Id + ": a mix names the earlier element first and its neighbour second");
                 if (!upgrade.IsHidden)
                     Assert.AreEqual(upgrade.Kind == UpgradeKind.Mix || (upgrade.Signature && upgrade.IsMix), upgrade.IsMix, upgrade.Id + ": only mix marks and a mix's own gift have a second element");
@@ -352,17 +355,20 @@ namespace Clover.Tests
                 Assert.Greater(sold.Sum(upgrade => upgrade.Cost), 19, element.Name);
                 Assert.LessOrEqual(tree.Count(upgrade => upgrade.Signature), 1, element.Name + " has one god's gift at most");
             }
-            // The two trees reshaped into spell branches (Phase 4): six branches of four and their passives, and the branch they share.
+            // The two trees reshaped into spell branches (Phase 4): six branches of four and their passives, and the branch they
+            // share, reshaped as a duo branch (task 4.5): the Shape mark, Twin Break, Ionised Air, Chain Reaction, Meltdown and
+            // Ball Lightning, with Plasma at its top.
             Assert.AreEqual(33, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
             Assert.AreEqual(32, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Lightning && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
-            Assert.AreEqual(9, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
+            Assert.AreEqual(6, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
         }
 
         [Test]
         public void EveryMarkSitsInsideItsWedgeAndNoTwoMarksAnywhereSitTooNear()
         {
-            // Hidden marks (the reactions) are never drawn, so they have no place.
-            var all = Upgrade.All.Where(upgrade => !upgrade.IsHidden).ToList();
+            // Hidden marks (the reactions) are never drawn, so they have no place; the heart's duo branches are drawn one pair
+            // at a time in the ring's middle (TheHeartsBranchesSitOnItsPatternClearOfEachOther).
+            var all = Upgrade.All.Where(upgrade => !upgrade.IsHidden && upgrade.Tree != MarkTree.Duo).ToList();
             foreach (var upgrade in all)
             {
                 if (upgrade.IsMix)
@@ -386,12 +392,21 @@ namespace Clover.Tests
         {
             foreach (var element in Elements.All)
             {
-                // As the menu shows it: the element's own tree and the two branches it shares, with the tree upright.
-                var mine = Upgrade.All.Where(upgrade => upgrade.BelongsTo(element.Name)).ToList();
+                // As the menu shows it: the element's own tree and the ring's branches it shares, with the tree upright, and in
+                // the heart the duo branch of each partner built there, one at a time.
+                var mine = Upgrade.All.Where(upgrade => upgrade.BelongsTo(element.Name) && RingLayout.Instance.Draws(upgrade)).ToList();
                 if (mine.Count == 0) continue;
                 var places = mine.Select(upgrade => UpgradeTree.Upright(UpgradeTree.OnChart(upgrade), element.Bearing)).ToList();
                 int root = mine.FindIndex(upgrade => upgrade.Kind == UpgradeKind.Root && !upgrade.IsMix);
                 Assert.IsTrue(Walkable(places, Mathf.Max(0, root), out int reached), $"{element.Name}: the stick reaches {reached} of {places.Count}");
+                foreach (var partner in Elements.All)
+                {
+                    int pair = HeartLayout.PairOf(element.Name, partner.Name);
+                    var heart = Upgrade.All.Where(upgrade => HeartLayout.Instance.Shows(upgrade, pair)).ToList();
+                    if (heart.Count == 0) continue;
+                    var withHeart = places.Concat(heart.Select(upgrade => HeartLayout.Instance.Place(upgrade))).ToList();
+                    Assert.IsTrue(Walkable(withHeart, Mathf.Max(0, root), out int got), $"{element.Name} with {partner.Name}'s branch in the heart: the stick reaches {got} of {withHeart.Count}");
+                }
             }
         }
 
@@ -645,7 +660,8 @@ namespace Clover.Tests
             var ring = RingLayout.Instance;
             foreach (var mark in Upgrade.All)
             {
-                Assert.AreEqual(!mark.IsHidden && (mark.Tree == MarkTree.Element || mark.Tree == MarkTree.Duo), ring.Draws(mark), mark.Id);
+                // The heart's duo branches are drawn by HeartLayout, not on the ring.
+                Assert.AreEqual(!mark.IsHidden && mark.Tree == MarkTree.Element, ring.Draws(mark), mark.Id);
                 if (!ring.Draws(mark)) continue;
                 Assert.AreEqual(UpgradeTree.OnChart(mark), ring.Place(mark), mark.Id);
                 // The ring's trees and branches are bought with Shards, or given.
@@ -653,7 +669,119 @@ namespace Clover.Tests
             }
             Assert.IsFalse(ring.Draws(null));
             Assert.AreEqual(UpgradeTree.Emblem(Elements.Fire), ring.Foot(Upgrade.ById(FireTree.Cinder)));
-            Assert.AreEqual(UpgradeTree.MixFoot(Elements.Fire, Elements.Lightning), ring.Foot(Upgrade.ById(PlasmaTree.IonisedAir)));
+            Assert.AreEqual(UpgradeTree.MixFoot(Elements.Lightning, Elements.Wind), ring.Foot(Upgrade.ById(TempestTree.ChargedAir)), "a mix not reshaped yet grows from its ring gap");
+            Assert.IsFalse(ring.Draws(Upgrade.ById(PlasmaTree.IonisedAir)), "Plasma is in the heart now; its gap on the ring is empty");
+            Assert.AreEqual(HeartLayout.FootPlace, HeartLayout.Instance.Foot(Upgrade.ById(PlasmaTree.IonisedAir)));
+        }
+
+        [Test]
+        public void TheHeartsBranchesSitOnItsPatternClearOfEachOther()
+        {
+            var heart = HeartLayout.Instance;
+            var drawn = Upgrade.All.Where(heart.Draws).ToList();
+            Assert.IsNotEmpty(drawn, "Plasma at least is in the heart");
+            foreach (var group in drawn.GroupBy(HeartLayout.PairOf))
+            {
+                Assert.GreaterOrEqual(group.Key, 0, "every duo mark names a pair");
+                string name = AfflictionPairs.Name(group.Key);
+                var branch = group.ToList();
+                var taken = new HashSet<string>();
+                foreach (var mark in branch)
+                {
+                    var place = HeartPattern.All.FirstOrDefault(p => Mathf.Abs(p.X - mark.X) < 0.001f && Mathf.Abs(p.Y - mark.Y) < 0.001f);
+                    Assert.IsNotNull(place.Name, mark.Id + " sits on no place of the heart");
+                    Assert.IsTrue(taken.Add(place.Name), mark.Id + " shares the place " + place.Name);
+                    Assert.IsTrue(mark.Kind == UpgradeKind.Mix || mark.Signature, mark.Id + " is a duo mark");
+                    Assert.LessOrEqual(heart.Place(mark).magnitude, HeartPattern.Radius + 0.001f, mark.Id);
+                    // A branch grows within its pair, and its lines pass clear of the branch's other marks.
+                    foreach (string id in mark.Requires)
+                    {
+                        var parent = Upgrade.ById(id);
+                        Assert.AreEqual(group.Key, HeartLayout.PairOf(parent), mark.Id + " grows from another pair's branch");
+                        Assert.IsTrue(heart.Draws(parent), mark.Id + " grows from a mark not in the heart");
+                        foreach (var other in branch)
+                            if (other != mark && other != parent)
+                                Assert.GreaterOrEqual(SegmentDistance(heart.Place(other), heart.Place(parent), heart.Place(mark)), LineClearance, $"the line {id} to {mark.Id} passes {other.Id}");
+                    }
+                }
+                // One Shape mark, at the foot, with the reaction's two shapes; it grows from nothing on the chart.
+                var shapes = branch.Where(ReactionTable.IsReactionShape).ToList();
+                Assert.AreEqual(1, shapes.Count, name + " has one Shape mark");
+                Assert.AreSame(shapes[0], ReactionTable.ShapeMarkFor(group.Key), name);
+                Assert.AreEqual(HeartPattern.Of(HeartPattern.Foot).Y, shapes[0].Y, 1e-4f, name + ": the Shape mark stands at the foot");
+                Assert.IsEmpty(shapes[0].Requires);
+                Assert.AreEqual(2, shapes[0].Shapes.Length);
+                Assert.AreNotEqual(shapes[0].Shapes[0].Name, shapes[0].Shapes[1].Name);
+                foreach (var shape in shapes[0].Shapes)
+                {
+                    Assert.IsNotEmpty(shape.Description, name + ": " + shape.Name);
+                    Assert.IsTrue(shape.Effects.Any(effect => effect.On == UpgradeTrigger.Reacted), name + ": " + shape.Name + " does something when the pair reacts");
+                }
+                // The shared prices: Shape 3, Minor 1, Major 3, Keystone 5, the duo spell 5 (pairs_d1_d2.md).
+                Assert.AreEqual(3, shapes[0].Cost, name);
+                foreach (var mark in branch.Where(mark => mark.IsSpell)) Assert.AreEqual(5, mark.Cost, mark.Id + ": a duo spell costs 5");
+                Assert.LessOrEqual(branch.Count(mark => mark.IsSpell), 1, name + " has one duo spell at most");
+                Assert.IsTrue(branch.All(mark => mark.Cost == 0 || mark.Cost == 1 || mark.Cost == 3 || mark.Cost == 5), name + ": every price is a shared one");
+                // Every other mark of the branch grows from something in it.
+                foreach (var mark in branch.Where(mark => !ReactionTable.IsReactionShape(mark) && !mark.Signature))
+                    Assert.IsNotEmpty(mark.Requires, mark.Id + " grows from nothing");
+            }
+        }
+
+        // How near, in steps, a line may pass another mark of its branch.
+        private const float LineClearance = 0.4f;
+
+        private static float SegmentDistance(Vector2 point, Vector2 from, Vector2 to)
+        {
+            Vector2 along = to - from;
+            float t = Mathf.Clamp01(Vector2.Dot(point - from, along) / along.sqrMagnitude);
+            return (point - (from + along * t)).magnitude;
+        }
+
+        [Test]
+        public void TheHeartPatternIsSpacedClearAndWalkedFromEveryTree()
+        {
+            // The heart (IMPLEMENTATION.md 4.2, task 4.5): one duo branch at a time in the ring's middle, upright on the screen.
+            var heart = HeartPattern.All;
+            Assert.AreEqual(10, heart.Count);
+            Assert.AreEqual(heart.Count, heart.Select(place => place.Name).Distinct().Count());
+            var at = heart.ToDictionary(place => place.Name, place => new Vector2(place.X, place.Y));
+            foreach (var place in heart)
+            {
+                Assert.LessOrEqual(at[place.Name].magnitude, HeartPattern.Radius + 0.001f, place.Name + " lies outside the heart");
+                if (place.From.Length == 0) continue;
+                Assert.Greater(place.Y, HeartPattern.Of(place.From).Y, place.Name + " lies below what it grows from");
+                foreach (var other in heart)
+                    if (other.Name != place.Name && other.Name != place.From)
+                        Assert.GreaterOrEqual(SegmentDistance(at[other.Name], at[place.From], at[place.Name]), LineClearance, $"the line {place.From} to {place.Name} passes {other.Name}");
+            }
+            for (int i = 0; i < heart.Count; i++)
+                for (int j = i + 1; j < heart.Count; j++)
+                    Assert.GreaterOrEqual((at[heart[i].Name] - at[heart[j].Name]).magnitude, 1.2f, heart[i].Name + " and " + heart[j].Name + " crowd each other");
+            // The foot's knot and the title stand clear of the branch, and the whole heart inside the emblems' ring.
+            foreach (var place in at.Values)
+            {
+                Assert.GreaterOrEqual((place - HeartLayout.FootPlace).magnitude, UpgradeTree.LeastSpacing);
+                Assert.GreaterOrEqual((place - HeartLayout.TitlePlace).magnitude, UpgradeTree.LeastSpacing);
+            }
+            Assert.Less(HeartPattern.Radius + 1f, UpgradeTree.EmblemDistance - 1f, "the heart keeps clear of the emblems");
+            // Every tree upright with both its ring branches and the heart's ten places below it: the stick reaches all from the root.
+            foreach (var element in Elements.All)
+            {
+                var places = BranchPattern.All.Select(place => UpgradeTree.Upright(UpgradeTree.OnChart(element.Name, place.X, place.Y), element.Bearing)).ToList();
+                var before = Elements.All[(element.Index + Elements.Count - 1) % Elements.Count];
+                foreach (var (_, x, y) in PatternMix)
+                {
+                    places.Add(UpgradeTree.Upright(UpgradeTree.OnChart(Elements.MixBearing(element.Name, element.MixWith), UpgradeTree.MixDistance, x, y), element.Bearing));
+                    places.Add(UpgradeTree.Upright(UpgradeTree.OnChart(Elements.MixBearing(before.Name, element.Name), UpgradeTree.MixDistance, x, y), element.Bearing));
+                }
+                int ring = places.Count;
+                places.AddRange(at.Values);
+                for (int i = ring; i < places.Count; i++)
+                    for (int j = 0; j < ring; j++)
+                        Assert.GreaterOrEqual((places[i] - places[j]).magnitude, UpgradeTree.LeastSpacing, element.Name + ": the heart crowds the ring");
+                Assert.IsTrue(Walkable(places, 0, out int reached), $"{element.Name}: the stick reaches {reached} of {places.Count}");
+            }
         }
 
         [Test]
@@ -709,8 +837,11 @@ namespace Clover.Tests
         [Test]
         public void EveryTreeFileIsGatheredIntoTheCatalogue()
         {
+            // The trees, and the duo branches written one file to a pair under Trees/Duo/ (task 4.5).
+            string trees = typeof(UpgradeTrees).Namespace;
             var files = typeof(UpgradeTrees).Assembly.GetTypes()
-                .Where(type => type.Namespace == typeof(UpgradeTrees).Namespace && type != typeof(UpgradeTrees) && type.IsAbstract && type.IsSealed).ToList();
+                .Where(type => (type.Namespace == trees || type.Namespace == trees + ".Duo") && type != typeof(UpgradeTrees) && type.IsAbstract && type.IsSealed).ToList();
+            Assert.IsTrue(files.Contains(typeof(Clover.Player.Trees.Duo.SleetChargeDuo)));
             Assert.GreaterOrEqual(files.Count, 3);
             foreach (var file in files)
             {

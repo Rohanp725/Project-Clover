@@ -146,6 +146,12 @@ namespace Clover.Player
             new RetiredMark("poison.ripen", 3), new RetiredMark("poison.lance", 3), new RetiredMark("poison.rottenfruit", 3), new RetiredMark("poison.onesickness", 3),
             new RetiredMark("poison.censer", 4),
             new RetiredMark("poison.plaguebearer", 6),
+
+            // Plasma, the duo branch of Fire and Lightning (pairs_d1_d2.md, "Fire and Lightning"; task 4.5): Charged Embers
+            // (both afflictions are laid by carrying both; Flashover's Shape mark takes its place), Arc Fire folded into
+            // Corona, Fused Core cut as a plain number, and Plasma Lance, which no roster has room for.
+            new RetiredMark("plasma.embers", 3), new RetiredMark("plasma.arcfire", 3), new RetiredMark("plasma.fused", 4),
+            new RetiredMark("plasma.lance", 5),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

@@ -312,3 +312,56 @@ Each was built with the default given here; every one is easy to change. Added t
    counts) at their standard values; only the cooldown mode's None, the breath, the unbreakable guard and the affliction
    rules are read yet. The death intercepts and The Hard Road's shares join with task 6.3. Heartwood's sealed mana bar stays
    in `ManaPool.Instead` until a task touches it, as the plan allows.
+
+## Task 4.5: Duo branches and the heart
+
+1. **What opens a duo branch.** Default: a branch reshaped into the heart opens while both its elements are carried, any
+   pair, neighbours or not (`MarkRules.Open` over the loadout; in the playtest, always). The ten mixes still on the ring
+   keep the old rule (one element held and the other held or consumed in the run) until tasks 4.15 to 4.19 reshape them.
+   Alternative: switch all eleven to "both carried" now.
+2. **Which element a duo branch names first.** The ring names Lightning before Ice, but Ice and Lightning's branch is
+   written Ice first, because a duo branch's first element is the one its duo spell is cast in: Glass Storm is clear ice,
+   lays Chill with each pass and charges the blade with Ice. Plasma keeps Fire first (Ball Lightning charges with Fire).
+   Default: as written; the order means nothing else. Alternative: always the ring's order, with each duo spell laying
+   its affliction by an effect and charging the blade with the ring's first.
+3. **Where a duo spell grows from.** Default: from either of the branch's first two marks above the Shape mark, so Glass
+   Storm costs 3 + 3 + 5 = 11 Shards on the cheapest road (a spell branch's Learn, Empower and Shape cost the same) and
+   Ball Lightning grows from Twin Break or Ionised Air. Alternatives: from the keystone (the crown, last), 16 Shards; or
+   straight from the Shape mark, 8.
+4. **Plasma's prices moved to the shared ones.** Twin Break and Chain Reaction were 4 and are 3 (a Major); Ball Lightning
+   was 4 and is 5 (a duo spell). Default: a save that holds them keeps them, nothing refunded or charged. Alternative:
+   refund the 1 Shard each for the two that got cheaper.
+5. **Plasma Lance.** The pair file says it moves to Lightning's tree or is cut; Lightning's roster is full at six.
+   Default: retired and refunded (5 Shards), as Charged Embers (3), Arc Fire (3) and Fused Core (4) are. Alternative: keep
+   it for the Evolutions (Phase 6) as a hidden mark.
+6. **Plasma, the branch's top mark.** "Its burst a Flashover that spends nothing": a reaction cannot be forced on an
+   enemy that carries only Burn. Default: the built burst on a burning enemy is kept (it spends nothing), and when the
+   enemy carries Static as well, Flashover goes off at once whatever its rest, in the shape worn. Ledgered as
+   `forced-alone`. Alternative: the burst replaced outright by the Flashover's own effects when the piece is built.
+7. **Corona and the flinch.** The plain Flashover flinches the enemy 0.4 s; Corona's words do not say it does. Default:
+   no flinch in Corona or Fulgurite. Alternative: both keep the plain one's flinch.
+8. **Which pairs the heart shows.** Default: the heart shows the pair carried (outside the playtest, even when its branch
+   is not written: the reaction's name, "its branch is still to come"); in the playtest the shoulder buttons pick the
+   partner while the choice is in the heart, and they step only through pairs whose branch is written (two today), so
+   the other pairs cannot be picked until they are built. The playtest opens on the pair carried, or else the first
+   written partner round the ring. Alternatives: let the picker step through all ten partners, showing an empty heart
+   with the reaction's name; or put the picker on the d-pad.
+9. **The ring once a branch leaves it.** Default: the spokes now start outside the heart (at six tenths of the way to
+   the emblems), and a branch reshaped into the heart leaves its gap on the ring empty, with no knot or name there.
+   Alternative: keep the knot and name in the gap as a pointer to the heart.
+10. **No screen chooses a reaction's shape yet.** As with the spells' shapes (phase4_progress.md, "For the owner" 1),
+   `PlayerBuild.ChooseShape("react.flashover", 1, atRestFire: true)` works and is kept for the run, but nothing in the
+   rest menu calls it. A tester always gets the first shape (Corona, Thundersnow). Default: the Hand's screen, or a
+   "shape" line in the chart's details at a fire, chooses both kinds when it is built. Alternative: let the use button on
+   a learned Shape mark in the heart swap its shape at a rest fire now.
+11. **Glass Storm's Static.** "Every other pass a Static" needs a count of passes per enemy. Default: a Static on half
+   the passes, by chance (`Chance = 0.5`), its words say so. Alternative: a Static on every pass, or none until the count
+   is built.
+12. **Stand-ins on Sleet Charge's branch.** Until their pieces exist (ledger: `area-set-off`, `frozen-for`,
+   `shatter-shards`, `condition-ends-now`, `arc-leaves`, `orbit-fling`): Thundersnow's bolt leaps from chilled enemy to
+   chilled enemy (six at most) instead of falling on each; Glass Spear freezes by filling the Chill, so it lasts the
+   Chill's own time, not 1.5 s; Charged Hail lays its Static in 3 m round the shattered enemy; Cold Snap fills and sets off
+   the Static of any chilled attacker, charging or not, and the Static laid may start a new Sleet Charge; Nothing
+   Resists answers a discharge on a chilled enemy with an arc through four, 7 each; Glass Storm's shards only cut as they
+   pass (the blade does not fling them). Each has a **Not built yet** line. Default: as written. Alternative: give the
+   marks that differ most (Cold Snap, Nothing Resists) nothing until their pieces are built.

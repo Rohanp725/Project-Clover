@@ -142,10 +142,11 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return null;
         yield return Tap(Key.K);
         yield return new WaitForSecondsRealtime(0.7f);
-        // A mixed branch the player cannot open is there to be read, sealed.
-        menu.Choose("plasma.ionised");
+        // A mixed branch the player cannot open is there to be read, sealed. Pyre, on the ring beside Fire: Plasma has moved
+        // into the chart's heart (task 4.5), shown only while Lightning is carried beside Fire.
+        menu.Choose("pyre.flashpoint");
         yield return Tap(Key.E);
-        bool sealedBought = upgrades.Owns("plasma.ionised");
+        bool sealedBought = upgrades.Owns("pyre.flashpoint");
         yield return new WaitForSecondsRealtime(0.5f);
         Shot("menu_sealed");
         yield return null;
@@ -534,25 +535,26 @@ public class UpgradeProbeRunner : MonoBehaviour
         Say($"S slotted spell: worn before {wornFirst}, after choosing on the chart {wornSecond} (the chart no longer wears a spell); Uraeus from slot {uraeusSlot}: cast {uraeusCast} (+{slotted.Casts - slotCasts}), mana {mana:0} -> spent {mana - combat.Mana.Current:0}, dummy lost {fanTook:0}, burn {fanBurn} deep");
         yield return new WaitForSeconds(0.6f);
 
-        // T: a mix mark. Sealed to Fire alone; with the storm consumed it opens, is bought on the chart, and answers an affliction reaching full depth.
+        // T: a mix mark on the ring. Sealed to Fire alone; with Poison consumed it opens and is bought on the chart. Pyre's
+        // first mark, Fuel, now that Plasma's Charged Embers is retired (task 4.5; Plasma is in the chart's heart).
         upgrades.Forget();
         Learn(FireTree.Cinder);
         yield return new WaitForSeconds(0.4f);
-        var ionised = Upgrade.ById("plasma.embers");
+        var ionised = Upgrade.ById(PyreTree.Fuel);
         bool openBefore = upgrades.Open(ionised);
-        RunState.ElementsConsumed.Add(ElementKit.LightningName);
+        RunState.ElementsConsumed.Add(Elements.Poison);
         bool openAfter = upgrades.Open(ionised);
         upgrades.Earn(3);
         menu.Open();
         yield return null;
-        menu.Choose("plasma.embers");
+        menu.Choose(PyreTree.Fuel);
         yield return Tap(Key.E);
         yield return new WaitForSecondsRealtime(0.5f);
         Shot("menu_mix");
         yield return null;
         yield return Tap(Key.Space);
         yield return new WaitForSecondsRealtime(0.4f);
-        bool bought = upgrades.Has("plasma.embers");
+        bool bought = upgrades.Has(PyreTree.Fuel);
         Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
         yield return null;
         set.Clear();
@@ -560,8 +562,8 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return Lights(1);
         yield return null;
         yield return null;
-        // The branch's first mark lays both afflictions; Cinder has already laid the burn, so the branch lays only the Static.
-        Say($"T mix: open before the storm is consumed {openBefore} (true here: Lightning was held earlier in this play; step A shows it sealed); with Lightning consumed {openAfter}; bought on the chart {bought}; one light blow with Cinder and Charged Embers left burn {north.Burn.Stacks} deep (one, not two) and static {set.Stacks(AfflictionKind.Static)} (effects +{upgrades.EffectsDone - done})");
+        // Fuel lays both on heavy blows only: a light blow with Cinder leaves one burn and no poison.
+        Say($"T mix: open before Poison is consumed {openBefore}; with Poison consumed {openAfter}; bought on the chart {bought}; one light blow with Cinder and Fuel left burn {north.Burn.Stacks} deep (one) and poison {set.Stacks(AfflictionKind.Poison)} (none: Fuel answers heavy blows) (effects +{upgrades.EffectsDone - done})");
         RunState.ElementsConsumed.Clear();
 
         // U: the nine new elements. Each kit casts, lays its own affliction on the dummy, and lights its surge.

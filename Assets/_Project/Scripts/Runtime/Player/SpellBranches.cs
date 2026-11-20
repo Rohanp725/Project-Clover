@@ -31,11 +31,13 @@ namespace Clover.Player
 
         /// <summary>
         /// The shape a Shape mark's spell wears under the loadout: the first unless the second was chosen. Null when the
-        /// mark is no Shape mark.
+        /// mark is no spell branch's Shape mark: a duo branch's Shape mark shapes its pair's reaction, and its shapes run
+        /// only when the pair reacts (<see cref="ReactionTable.WornShape"/>), never as standing effects.
         /// </summary>
         public static ShapeDef Worn(Upgrade shapeMark, Loadout loadout)
         {
             if (shapeMark == null || shapeMark.Part != BranchPart.Shape || shapeMark.Shapes == null || shapeMark.Shapes.Length == 0) return null;
+            if (string.IsNullOrEmpty(shapeMark.Branch)) return null;
             int choice = loadout != null ? loadout.ShapeOf(shapeMark.Branch) : 0;
             if (choice < 0 || choice >= shapeMark.Shapes.Length) choice = 0;
             return shapeMark.Shapes[choice];

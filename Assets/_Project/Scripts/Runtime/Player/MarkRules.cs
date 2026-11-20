@@ -20,6 +20,19 @@ namespace Clover.Player
         }
 
         /// <summary>
+        /// True when the mark is on a tree or branch open under the loadout (IMPLEMENTATION.md 2.3, task 4.5): an element's
+        /// mark while its element is carried, a duo branch's mark of any pair, neighbours or not, while both its elements are
+        /// carried; in the playtest, any. What the heart's duo branches are opened by; the mixes still on the ring keep the
+        /// run's rule above until they are reshaped.
+        /// </summary>
+        public static bool Open(Upgrade upgrade, Build.Loadout loadout, bool playtest)
+        {
+            if (upgrade == null || upgrade.IsHidden) return false;
+            if (playtest) return true;
+            return loadout != null && Carried(upgrade, loadout);
+        }
+
+        /// <summary>
         /// True when the mark can be bought: open, not learned, reachable from what is learned, and paid for. A god's
         /// gift is never sold, except in the playtest, where it is a playtest unlock that needs no road to it. The
         /// playtest's "Not built yet" slots are never sold.

@@ -1061,3 +1061,43 @@ Kept marks keep their ids, even renamed (`fire.backdraft` is Breath of the Lione
 
 Each such piece is written at its nearest working version with a `// NEEDS:` line beside it and a line in
 `docs/design/steel/content_open.tsv`, as the reactions are.
+
+## 21. Duo branches and the heart (Phase 4, task 4.5, 2026-11-20)
+
+### 21.1 Where they are drawn
+
+A duo branch is any pair's, neighbours or not. It is drawn in the chart's **heart**, the ring's middle inside the
+emblems, one pair at a time and upright whatever tree is turned up (`HeartLayout`, an `IChartLayout`): the pair carried,
+or in the playtest the pair picked with the shoulder buttons while the choice is in the heart. Every branch uses the
+places of `HeartPattern` (ten, round the ring's middle: the foot, two rows of two, the keystone, the duo spell, two beside
+it, the crown), so all 55 look alike, and the pair's reaction is named over it. A mark is written into the heart with
+`HeartPattern.Put(new Upgrade { ... }, HeartPattern.Foot)`, which sets its place and `Tree = MarkTree.Duo`. The ring
+(`RingLayout`) no longer draws `Duo` marks, and a branch that has moved into the heart leaves its ring gap empty. The ten
+mixes not reshaped yet stay on the ring, with `Tree = Element`, until their tasks (4.15 to 4.19).
+
+Files: the built branches keep their files and ids (`PlasmaTree.cs`, `plasma.*`); a new branch is one file under
+`Trees/Duo/` in namespace `Clover.Player.Trees.Duo`, named by its reaction (`SleetChargeDuo.cs`, `sleetcharge.*`), and one
+line in `UpgradeTrees.AddAll` after the ring's trees. `UpgradeChartTests.TheHeartPatternIsSpacedClearAndWalkedFromEveryTree`
+proves the pattern; `TheHeartsBranchesSitOnItsPatternClearOfEachOther` holds every written branch to it.
+
+### 21.2 Open and in force
+
+`MarkRules.Open(mark, loadout, playtest)`: a duo branch's mark is open while both its elements are carried (in either
+order; in the playtest, always). In force by the same rule (`MarkRules.InForce`); a duo spell also only while it sits in a
+slot, where the Hand offers it after both elements' spells (`HandRules.ChoicesFor`) and drops it when the pair breaks.
+
+### 21.3 The reaction's shapes
+
+A branch's first mark is its **Shape mark**: `Kind = Mix`, `Part = Shape`, no `Branch`, two `ShapeDef`s whose effects ride
+the reaction's moments (`Reacted`, and the beats, blows, ends and deaths of the conditions they set; each shape's condition
+ids are its own). It does nothing of its own. While it is learned and in force, the shape chosen at a rest fire runs
+**instead of** the plain reaction: `ReactionTable.EffectsFor(pair, loadout, learned)` and `ReactionTable.WornShape`. The
+choice is kept in `Loadout.Shapes` under the reaction's id (`react.flashover`, `ReactionTable.ShapeKey`), set with
+`PlayerBuild.ChooseShape(id, choice, atRestFire)`. A reaction's shape is never a standing effect (`SpellBranches.Worn`
+returns null for it). What a shape lays starts nothing, as the plain reaction's.
+
+### 21.4 Prices
+
+Shape 3, Minor 1, Major 3, Keystone 5, the duo spell 5 and a duo surge 5 Shards (written as `Cost` on `Kind = Mix`). A
+duo spell of the new branches is a basic spell on its own cooldown of 12 to 16 s (`SpellTimings`); the built ones stay
+their pair's larger spell, paid in mana. A duo spell is cast in its branch's first element and charges the blade with it.

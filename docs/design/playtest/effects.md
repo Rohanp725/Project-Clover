@@ -455,6 +455,8 @@ Group: Reactions
 
 **How to use it.** Burn first with your blade, then charge it with a spell, or the other way round: the discharge comes without a heavy blow and leaves the fire burning. Catch a wind-up with it.
 
+**Its shapes.** With Plasma's Shape mark (Flashover: Corona or Fulgurite, 3 Shards, in the heart of the chart) and both Fire and Lightning carried, Flashover wears the shape chosen at a rest fire instead. Corona: nothing is spent; violet flame crawls over it for 4 s and every 0.7 s an arc leaps to the nearest enemy within 5 m for 4, a Burn and a Static. Fulgurite: a scorched patch 2.5 m across under it for 4 s, biting 4 a second with a Burn and a Static.
+
 **How it looks.** Its name over the enemy and a discharge where it stands. Not yet: the live flame that draws other discharges near into it.
 
 ## reaction-thunder-gust
@@ -608,6 +610,8 @@ Group: Reactions
 **The numbers.** For 3 s it gains one Static every half second (to full). Then a bolt discharges it all: 7 damage and 5 stagger for each stack to everyone within 4 m, and everything reached takes a Chill. A heavy blow sets the Static off early, as always. Rests 4 s.
 
 **What sets it off.** Static landing on a chilled enemy, or Chill on a charged one.
+
+**Its shapes.** With the Shape mark of Ice and Lightning's duo branch (Sleet Charge: Thundersnow or Glass Spear, 3 Shards, in the heart of the chart) and both carried, Sleet Charge wears the shape chosen at a rest fire instead. Both charge the same way. Thundersnow: when the charge goes off, a bolt runs on to every chilled enemy within 6 m, 7 and a Static each. Glass Spear: when the charge goes off, the enemy is Frozen at once, whatever its Chill (an elite takes 3 Chill, a god 2).
 
 **How to use it.** Wait out the 3 s for a full charge, or take it sooner with a heavy.
 

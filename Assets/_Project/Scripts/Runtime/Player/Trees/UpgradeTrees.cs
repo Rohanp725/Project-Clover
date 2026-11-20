@@ -30,6 +30,8 @@ namespace Clover.Player.Trees
             BlightTree.Add(to);
             PoisonTree.Add(to);
             PyreTree.Add(to);
+            // The duo branches of pairs that are not neighbours, one file per pair under Trees/Duo/ (task 4.5 on), in pair order.
+            Duo.SleetChargeDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }

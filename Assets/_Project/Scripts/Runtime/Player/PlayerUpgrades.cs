@@ -450,6 +450,8 @@ namespace Clover.Player
         /// </summary>
         public bool Open(Upgrade upgrade)
         {
+            // A duo branch in the chart's heart, of any pair: open while both its elements are carried (task 4.5).
+            if (upgrade != null && upgrade.Tree == MarkTree.Duo) return MarkRules.Open(upgrade, ReadLoadout(), PlaytestMode.On);
             // The playtest's free chart: every tree and branch is open, whatever is held.
             if (MarkRules.Open(upgrade, ElementName, RunState.ElementsHeld, RunState.ElementsConsumed, PlaytestMode.On)) return true;
             return element != null && element.Mixed && MarkRules.Open(upgrade, element.SecondInfo.Name, RunState.ElementsHeld, RunState.ElementsConsumed, false);
