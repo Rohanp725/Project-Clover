@@ -935,8 +935,8 @@ kept in the run's `Times`. Gust gathers what stands within reach and pushes it o
 ## 20. Spell branches (Phase 4, 2026-11-20)
 
 The trees are being reshaped into spell branches (`docs/design/steel/IMPLEMENTATION.md` 2.1, 2.2, task 4.1; the
-designs are `docs/design/steel/elements_a.md` and `elements_b.md`). Fire, Lightning, Wind, Ice, Water, Life, Earth and Metal are
-written this way; the other three keep the shape of sections 9 to 19 until their turn (tasks 4.6 to 4.14). Everything in sections 1 to 19 still
+designs are `docs/design/steel/elements_a.md` and `elements_b.md`). Fire, Lightning, Wind, Ice, Water, Life, Earth, Metal and Light are
+written this way; the other two keep the shape of sections 9 to 19 until their turn (tasks 4.6 to 4.14). Everything in sections 1 to 19 still
 holds: a branch's marks are ordinary marks with a few more fields.
 
 ### 20.1 The shape of a tree

@@ -179,3 +179,33 @@ Each was built with the default given here; every one is easy to change. Added t
 7. **Two readings of the roster.** The Nail's "a pool of 3 m": default 3 m across (1.5 m round). The Tripods' "four
    blades on each, cutting twice a second": default three helpers that cut for 6 s. Alternatives: a pool 3 m round; four
    cuts each (2 s), then the tripod is spent.
+
+## Light
+
+1. **Three keystones in the table, two kept.** Light's passive table gives Unblemished, Two Suns and Condemned; the cut
+   list says each tree keeps two beside its Devotion. Default: Unblemished and Condemned kept (the clean fight and the
+   judgement on the marked, Light's own substance), Two Suns retired and refunded (6 Shards): its price, spells costing a
+   quarter more, is broken by cooldowns (only Daybreak pays mana now), and a figure of light casting your spells again
+   is close to Halo's mirrors. Alternatives: keep Two Suns and cut Condemned (its finish-at-any-balance is not built
+   either); or keep Two Suns as a major (3 Shards) in the empty place at the top of the trunk, with a new price (spells
+   wait a fifth longer).
+2. **Three Empowers with no shorter wait in the roster.** Ring of Spears', Standing Light's and Reckoning's Empowers
+   give only stronger numbers. Default: each waits a second less (9, 11 and 11 seconds), as Metal's. Alternative: keep
+   their waits and let the test allow an Empower that only strengthens.
+3. **Daybreak's Empower has no price in the roster.** It gives "10 damage a ring", and the shared rule asks a larger
+   spell's Empower for a lower price. Default: 40 mana, not 45, and the 10 a ring left for later (set here it would be
+   set on Red Before the Sun's and High Noon's own numbers too). Alternative: 45 mana kept, and the 10 a ring only.
+4. **Stand-ins that are stronger or wider than their timing.** Until the moments exist: Glare's Master holds and Marks on
+   every perfect dodge once in 6 s (Dazzle as built, a little longer), whether or not Glare is cast; Step Into Light's
+   Master ends its wait on any step that cuts, once in 16 s; Ring of Spears' Master answers any weapon blow while the
+   spears hang, not only a critical one; Standing Light's burst comes on the three perfect guards after each lamp,
+   anywhere, and its Master resets every Light spell on any perfect guard once in 12 s; Daybreak's Master gives a ward
+   on every cast. Default: as written, with **Not built yet** lines. Alternatives: give them nothing until the pieces
+   are built; or lengthen their limits.
+5. **Reckoning's count before a damage count exists.** Default: 8 damage for each weapon blow landed on the sealed enemy
+   in its six seconds, and 40 stagger, so quick weapons fill it as heavy ones would by damage. Alternatives: 12 a blow
+   with heavy blows counted twice; or the built brand (each of six blows sets off its own burst) until the count is built.
+6. **The Drawn Line before a line on the floor exists.** Default: the spears still drive in, then stand five seconds in
+   the floor in their ring round the enemy, Marking and jarring what is inside. Alternative: the wall form (Red Before the Sun's) laid six
+   metres across your front (nothing crosses it, and a heavy blow bursts it), nearer the picture but blocking where the
+   design holds.

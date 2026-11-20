@@ -92,7 +92,7 @@ namespace Clover.Player.Magic
             ["metal.bronze"] = Cd(12f, SpellRole.Detonator),
             ["metal.toblade"] = Cd(8f, SpellRole.Movement),
             ["metal.graveofswords"] = Mana(50f, SpellRole.Breaker), // Metal's larger spell
-            // Light
+            // Light, reshaped (Phase 4): Glare is the base spell; the five other built spells keep their ids and the roster's waits.
             ["light.step"] = Cd(8f, SpellRole.Movement),
             ["light.spears"] = Cd(10f, SpellRole.Breaker),
             ["light.reckoning"] = Cd(12f, SpellRole.Detonator),
@@ -157,8 +157,8 @@ namespace Clover.Player.Magic
 
         /// <summary>
         /// What one mark takes off the wait of <paramref name="element"/>'s base spell (stat
-        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Light second, Ready Light
-        /// shortens Glare and not the first element's spell.
+        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Poison second, Ready Poison
+        /// shortens Miasma and not the first element's spell.
         /// </summary>
         public static float BaseCooldownShare(Upgrade mark, string element)
         {

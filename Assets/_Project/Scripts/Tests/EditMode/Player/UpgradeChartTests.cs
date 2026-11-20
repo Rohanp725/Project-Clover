@@ -496,6 +496,8 @@ namespace Clover.Tests
             [Elements.Earth] = 9,
             // Metal's table gives three keystones too; it keeps Edge Guard and Master's Answer beside its Devotion.
             [Elements.Metal] = 9,
+            // Light's table gives three keystones as well; it keeps Unblemished and Condemned beside its Devotion.
+            [Elements.Light] = 9,
         };
 
         [Test]

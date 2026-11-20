@@ -112,6 +112,17 @@ namespace Clover.Player
             new RetiredMark("metal.buriedblades", 3), new RetiredMark("metal.ricochet", 3), new RetiredMark("metal.splinter", 3), new RetiredMark("metal.shatterpoint", 3),
             new RetiredMark("metal.hone", 4),
             new RetiredMark("metal.allbladeshome", 6),
+
+            // Light (elements_b.md, "What to cut from the built content"): the plain minors and the dead "costs less" minor
+            // (Ready Light), Returning Light broken by cooldowns (spells it refunded no longer cost mana), Sentence and What It
+            // Owes folded into Reckoning's Spoken Sentence, Dazzle into Glare's Master, and Two Suns, a keystone not carried
+            // over (the tree keeps two beside its Devotion).
+            new RetiredMark("light.sharplight", 1), new RetiredMark("light.measuredguard", 1), new RetiredMark("light.narrowescape", 1), new RetiredMark("light.brightevasion", 1),
+            new RetiredMark("light.longclarity", 1), new RetiredMark("light.plainguilt", 1), new RetiredMark("light.lastingmark", 1), new RetiredMark("light.richmark", 1),
+            new RetiredMark("light.bowedhead", 1), new RetiredMark("light.heavyverdict", 1), new RetiredMark("light.gleaning", 1), new RetiredMark("light.hardlight", 1),
+            new RetiredMark("light.longrays", 1), new RetiredMark("light.readylight", 1),
+            new RetiredMark("light.dazzle", 3), new RetiredMark("light.sentence", 3), new RetiredMark("light.whatitowes", 3), new RetiredMark("light.returninglight", 3),
+            new RetiredMark("light.twosuns", 6),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
