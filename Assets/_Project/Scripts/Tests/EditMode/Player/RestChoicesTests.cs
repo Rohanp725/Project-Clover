@@ -3,17 +3,18 @@ using NUnit.Framework;
 
 namespace Clover.Tests
 {
-    /// <summary>What a rest fire offers (IMPLEMENTATION.md 4.1): the Hand first, the chart, the Way and the hub only once built, leave last.</summary>
+    /// <summary>What a rest fire offers (IMPLEMENTATION.md 4.1): the Hand first, the shapes, the chart, the Way and the hub only once built, leave last.</summary>
     public class RestChoicesTests
     {
         [Test]
-        public void TheFireOffersTheHandFirstThenTheChartAndLeaveLast()
+        public void TheFireOffersTheHandFirstThenTheShapesTheChartAndLeaveLast()
         {
             var choices = new RestChoices();
-            Assert.AreEqual(3, choices.Count);
+            Assert.AreEqual(4, choices.Count);
             Assert.AreEqual(RestEntry.Hand, choices.At(0));
-            Assert.AreEqual(RestEntry.Chart, choices.At(1));
-            Assert.AreEqual(RestEntry.Leave, choices.At(2));
+            Assert.AreEqual(RestEntry.Shapes, choices.At(1));
+            Assert.AreEqual(RestEntry.Chart, choices.At(2));
+            Assert.AreEqual(RestEntry.Leave, choices.At(3));
             Assert.AreEqual(-1, choices.IndexOf(RestEntry.Way), "the Way is not built yet");
             Assert.AreEqual(-1, choices.IndexOf(RestEntry.Hub), "nor the road to the hub");
         }
@@ -22,8 +23,8 @@ namespace Clover.Tests
         public void TheWayAndTheHubComeBeforeLeaveOnceBuilt()
         {
             var choices = new RestChoices(true, true);
-            CollectionAssert.AreEqual(new[] { RestEntry.Hand, RestEntry.Chart, RestEntry.Way, RestEntry.Hub, RestEntry.Leave },
-                new[] { choices.At(0), choices.At(1), choices.At(2), choices.At(3), choices.At(4) });
+            CollectionAssert.AreEqual(new[] { RestEntry.Hand, RestEntry.Shapes, RestEntry.Chart, RestEntry.Way, RestEntry.Hub, RestEntry.Leave },
+                new[] { choices.At(0), choices.At(1), choices.At(2), choices.At(3), choices.At(4), choices.At(5) });
         }
 
         [Test]
@@ -35,11 +36,11 @@ namespace Clover.Tests
             Assert.AreEqual(RestEntry.Leave, choices.Current);
             choices.Move(1);
             Assert.AreEqual(RestEntry.Hand, choices.Current);
-            choices.Move(4);
+            choices.Move(6);
             Assert.AreEqual(RestEntry.Chart, choices.Current);
-            Assert.IsTrue(choices.Choose(2));
+            Assert.IsTrue(choices.Choose(3));
             Assert.AreEqual(RestEntry.Leave, choices.Press());
-            Assert.IsFalse(choices.Choose(3));
+            Assert.IsFalse(choices.Choose(4));
             choices.Reset();
             Assert.AreEqual(RestEntry.Hand, choices.Current);
         }

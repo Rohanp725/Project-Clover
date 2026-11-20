@@ -66,8 +66,14 @@ touched; pressing keys does not end it, touching a pad does.
 ### At a rest fire: the rest menu and the Hand
 
 Using a rest fire opens the **rest menu** (`Runtime/UI/RestMenu.cs`, made at play under the HUD): **Set the Hand**,
-**The chart** and **Leave the fire**. The world stays stopped while it, or a screen opened from it, is open; closing the
-chart or the Hand comes back to it. The stick, the d-pad, W and S, the wheel or the mouse choose; use (or a click) acts;
+**Shapes**, **The chart** and **Leave the fire**. The world stays stopped while it, or a screen opened from it, is open;
+closing the chart, the Hand or the shapes comes back to it.
+
+**Shapes** (`Runtime/UI/ShapeMenu.cs`) lists every learned spell's Shape mark, then every learned reaction's, each with
+the shape worn, and shows the chosen line's two shapes in full on the right, the worn one lit. Up and down (W S, the
+wheel, the stick or the d-pad) choose a line; left and right (A D, the stick or the d-pad), use or a click wear the
+other shape; a click on a shape wears it. A spell's shape not in a slot, or a reaction's with one of its elements not
+carried, is kept for when it is. Shapes change only at a fire. The stick, the d-pad, W and S, the wheel or the mouse choose; use (or a click) acts;
 dodge, Esc or Start leaves. Words a fire speaks as it is lit are read first: the menu waits for them.
 
 **The Hand** (`Runtime/UI/HandMenu.cs`) is the build: the four spell slots in a diamond laid out like the face buttons,
