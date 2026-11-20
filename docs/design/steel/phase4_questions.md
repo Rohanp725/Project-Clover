@@ -365,3 +365,57 @@ Each was built with the default given here; every one is easy to change. Added t
    Resists answers a discharge on a chilled enemy with an arc through four, 7 each; Glass Storm's shards only cut as they
    pass (the blade does not fling them). Each has a **Not built yet** line. Default: as written. Alternative: give the
    marks that differ most (Cold Snap, Nothing Resists) nothing until their pieces are built.
+
+## Task 4.15: the other duo branches of pairs_d1_d2.md
+
+All 22 branches of the pairs at distance 1 and 2 are now in the heart: the ten built mixes reshaped (Tempest, Blizzard,
+Glacier, Bloom, Overgrowth, Forge, Halo, Eclipse, Blight, Pyre) and the nine other new ones (Carried Embers, Capsize,
+Winter Seed, The Ground Gives, Iron Thorns, Earthlight, Black Chain, Burning Sap, Smoulder, Nerve Fire). No mix is left
+on the ring.
+
+1. **The spare spells offered to full rosters.** Each built branch's spare spell "moves to" an element's tree, but every
+   roster is full at six, and the pair file says such a spell is then cut unless you swap it in. Default: all cut and
+   refunded (Storm Overhead, Whiteout, Creeping Ice, Lotus Step, Thorn Wall, Trip Hammer, Sun Wheels, Black Sun, Grave
+   Soil, Fire Eater, Lit Fuse; Plasma Lance in 4.5). Alternatives: keep some as hidden marks for the Evolutions (Phase 6);
+   or swap one into a roster in place of a spell you like less.
+2. **Six Mirrors and Light the Pyres.** The pair file makes each its branch's duo spell, but both are the god's gift at
+   the branch's crown (given by consuming a god, never sold). Default: kept as the gifts, so Halo and Pyre have no
+   bought duo spell (in the playtest they can be bought as playtest unlocks). Alternative: make each a duo spell sold for
+   5 Shards and leave the pair with no crown, which changes what consuming those gods gives.
+3. **A Shape mark where the pair file cuts no first mark.** Forge and Halo keep their first marks (Hammer and Anvil,
+   Bright Steel). Default: a new Shape mark in each (`forge.shape`, `halo.shape`). Alternative: Bright Steel becomes
+   Halo's Shape mark under its id ("one of the first marks becomes the Shape mark").
+4. **Answering Draw** needs the Katana and moves to its Way. Default: kept in a save under its id with no refund, as
+   Burning Crescent and Delayed Cuts are (`RetiredMarks.Moving`).
+5. **Prices moved to the shared ones.** Kept marks that cost 4 now cost 3 (a Major: Halo of Blades, Day and Night, Cold in
+   the Bones, Morning Dew, Sliding Ice, Goes Up), Dusk and Dawn 5 (a duo spell), and Wither 1 (re-aimed to a minor).
+   Default: a save keeps them, nothing refunded or charged. Alternative: refund the difference.
+6. **Wither as a minor.** Its curse's half overlapped the jar. Default: its heavy blows no longer lay a Curse and poison;
+   it keeps poison biting a quarter harder and not fading on the Cursed. Alternative: keep the poison laying too.
+7. **Duo surges.** Great Lotus, The Ground Wakes and Totality are named the branches' duo surges; Open the Gourd is a new
+   one, bought for 5. The Hand has no duo surge slot yet. Default: the three crowns stay gifts that answer any surge while
+   both elements are carried, and Open the Gourd answers any surge the same way (ledger `duo-surge-slot`).
+   Alternative: build the surge slot's duo surges next, as their own surges with their own mana and time.
+8. **Marks that do nothing yet.** Rust in the Curse (notches kept while the curse lasts) and Deep Coal (Burn two deeper
+   while smouldering) need an engine piece each. Default: the marks exist and say "Not built yet", as Seven Flashes'
+   Master did. Alternatives: hide them until built; or give each a stand-in (a notch a blow on the Cursed; a Burn a blow
+   on the smouldering).
+9. **Folded Steel's folds.** Settled: they last until the next rest fire. Default: as built, the folds are no longer kept
+   for the run but are lost when the mark leaves force; a rest fire does not empty them yet (ledger `rest-fire-counts`).
+10. **Which element each new branch names first.** Default: the ring's order (Fire for Carried Embers, Wind for Capsize,
+   Ice for Winter Seed, Water for The Ground Gives, Life for Iron Thorns, Earth for Earthlight, Metal for Black Chain,
+   Light for Burning Sap, Dark for Smoulder, Poison for Nerve Fire), and the duo spell is cast in that element and charges
+   the blade with it; each lays the other element's affliction by an effect. Sleet Charge alone names Ice first (task
+   4.5, question 2).
+11. **Duo spell cooldowns.** The pair file's numbers, 9 to 16 s (Ride the Squall 9 s, a movement). The chart test now
+   allows a duo spell 6 to 16 s where a basic spell is 6 to 12. The Sown Men is the pair's larger spell, 45 mana.
+12. **The many stand-ins.** Each mark or shape that does less than its design has a `// NEEDS:` line, a ledger line and
+   a **Not built yet** line in its details. The largest gaps: duo spells built from the nearest form (the reverse form for
+   The Fire Breathes In, drill for Ride the Squall, nova for Green Under the Ice, pillars for The Island Breathes,
+   minions for The Sown Men, rod for The Stone Keeps the Hour, bomb for The Smith's Net, field for Bared to the Sun and
+   The Burning Lake, brand for Paper Seal); and the answers to an enemy in a condition (sunk, thorned, chained, on the
+   seams) written as answers to an enemy carrying both afflictions. Default: as written. Alternative: hold back the duo
+   spells whose forms differ most until their forms are built.
+13. **UpgradeProbe's sealed mix.** With no mix left on the ring, its step "a sealed mix bought" asks the rules
+   (`TryBuy` on Pyre's Shape mark with Fire alone) instead of choosing it on the chart. In the playtest every branch is
+   open, so there it would buy it.
