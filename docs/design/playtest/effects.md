@@ -914,13 +914,13 @@ Title: The Grudge (Dark and Lightning)
 Group: Reactions
 **What it is.** A Cursed enemy carrying two Static or more. A black cloud gathers over its head.
 
-**The numbers.** The cloud waits over it for 8 s. Rests 8 s.
+**The numbers.** The cloud waits over it for 8 s. The enemy's next blow at you, landed, guarded or turned by a ward, calls it down: all its Static discharged at double, 14 a stack in 4 m, and the enemy held 0.6 s. Rests 8 s.
 
 **What sets it off.** A second Static on a Cursed enemy, or a curse on one already carrying two. One Static is not enough, and nothing rests until there are two.
 
-**Its shapes.** With the Shape mark of Dark and Lightning's duo branch (The Grudge: First Strike or Ash Plume, 3 Shards, in the heart of the chart) and both carried, The Grudge wears the shape chosen at a rest fire instead. First Strike: your first heavy blow on it calls the cloud down, its Static discharged at double and the enemy held 0.6 s. Ash Plume: the cloud waits 6 s, then one bolt falls round it for each weapon blow you landed, 10 and a Static each, and its Static is discharged in 4 m.
+**Its shapes.** With the Shape mark of Dark and Lightning's duo branch (The Grudge: First Strike or Ash Plume, 3 Shards, in the heart of the chart) and both carried, The Grudge wears the shape chosen at a rest fire instead. First Strike: your first heavy blow on it calls the cloud down, its Static discharged at double and the enemy held 0.6 s. Ash Plume: when the enemy next strikes at you, or its 6 s run out, one bolt falls round it for each weapon blow you landed, 10 and a Static each, and its Static is discharged in 4 m.
 
-**How to use it.** Not yet: what the cloud does. It will answer the next blow the enemy lands on you or your guard with a black bolt (its Static at double, and a stop), and drift to the next enemy if it dies first.
+**How to use it.** Charge a cursed enemy, then let it swing: guard the blow, or take it, and the cloud strikes it back. Not yet: the cloud drifting to the next enemy if its host dies first.
 
 **How it looks.** Its name over the enemy. Not yet: the cloud itself.
 

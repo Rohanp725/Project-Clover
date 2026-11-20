@@ -191,12 +191,17 @@ namespace Clover.Player
         public void ClearWards() => Wards = 0;
 
         // A ward is spent on a blow that was about to land: a pale ring, and the blow is gone.
-        private bool SpendWard()
+        private bool SpendWard(in Hit hit)
         {
             if (Wards <= 0) return false;
             Wards--;
             BlowsWarded++;
-            if (upgrades != null) upgrades.OnWardSpent();
+            if (upgrades != null)
+            {
+                upgrades.OnWardSpent();
+                // A blow turned by a ward is an enemy's blow turned, as a guard turns one.
+                upgrades.OnWarded(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
+            }
             Vfx.Play(VfxKind.TintRing, GuardPoint(), transform.forward, 1f, new Color(0.7f, 0.92f, 1f));
             Vfx.Play(VfxKind.TintSpark, GuardPoint(), transform.forward, 2f, new Color(0.7f, 0.92f, 1f));
             Vfx.Play(VfxKind.Clang, GuardPoint());
@@ -438,14 +443,14 @@ namespace Clover.Player
                     if (upgrades != null) upgrades.OnGuard(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);
                     return HitOutcome.Blocked;
                 case GuardResult.Broken:
-                    if (SpendWard()) return HitOutcome.Blocked;
+                    if (SpendWard(hit)) return HitOutcome.Blocked;
                     Callout("Guard broken");
                     if (guardArc != null) guardArc.Pulse(new Color(5f, 0.4f, 0.3f, 1f), 0.4f, 0.9f);
                     Vfx.Play(VfxKind.Danger, GuardPoint());
                     Land(hit, GuardBreakSeconds);
                     return HitOutcome.Landed;
                 default:
-                    if (SpendWard()) return HitOutcome.Blocked;
+                    if (SpendWard(hit)) return HitOutcome.Blocked;
                     Land(hit, HurtSeconds);
                     // The blow that kills teaches nothing.
                     if (!IsDead) Tips.UnguardedBlow();

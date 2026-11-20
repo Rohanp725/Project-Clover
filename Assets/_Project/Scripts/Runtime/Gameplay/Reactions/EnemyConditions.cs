@@ -73,7 +73,7 @@ namespace Clover.Gameplay
         /// takes (an elite's is half), and of a root's time likewise. Returns the slot, or -1 when nothing was asked.
         /// </summary>
         public int Set(ConditionSpec spec, Component who, int mark = -1, Component link = null, bool answersStruck = false, bool answersEnd = false, float slowShare = 1f,
-            bool answersDeath = false)
+            bool answersDeath = false, bool answersAttack = false)
         {
             if (spec == null || string.IsNullOrEmpty(spec.Id) || spec.Seconds <= 0f) return -1;
             if (who != null) Who = who;
@@ -103,6 +103,7 @@ namespace Clover.Gameplay
             run.AnswersStruck = answersStruck;
             run.AnswersEnd = answersEnd;
             run.AnswersDeath = answersDeath;
+            run.AnswersAttack = answersAttack;
             run.KeepsMask = Bit(spec.Keeps);
             run.WhileMask = Bit(spec.While) | Bit(spec.While2);
             run.OnBite = spec.OnBite;
@@ -181,6 +182,26 @@ namespace Clover.Gameplay
                 if (!spell) run.Blows++;
                 if (run.AnswersStruck) Tell(ConditionMoment.Struck, in run, damage, heavy, spell, shattered);
                 if (!SpentBy(in run, heavy, spell)) continue;
+                runs[i] = default;
+                spentAny = true;
+            }
+            if (spentAny) Recount();
+        }
+
+        /// <summary>
+        /// The enemy struck at the player and the blow landed or was turned: each condition that answers it is told, and
+        /// each that such a blow spends (<see cref="ConditionBlow.TheirBlow"/>) ends without its end being told.
+        /// </summary>
+        public void Attacked()
+        {
+            if (Count == 0) return;
+            bool spentAny = false;
+            for (int i = 0; i < Slots; i++)
+            {
+                if (!runs[i].Active) continue;
+                ref var run = ref runs[i];
+                if (run.AnswersAttack) Tell(ConditionMoment.Attacked, in run, 0f, false, false);
+                if (run.EndsWith != ConditionBlow.TheirBlow) continue;
                 runs[i] = default;
                 spentAny = true;
             }

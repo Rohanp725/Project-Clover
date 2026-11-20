@@ -25,6 +25,8 @@ namespace Clover.Gameplay
         public bool AnswersStruck;
         public bool AnswersEnd;
         public bool AnswersDeath;
+        /// <summary>True when the mark that set it has something to do when its carrier strikes at the player.</summary>
+        public bool AnswersAttack;
         /// <summary>The afflictions it keeps from fading, and those it lasts only while, as bits at <c>1 &lt;&lt; (int)kind</c>.</summary>
         public int KeepsMask;
         public int WhileMask;

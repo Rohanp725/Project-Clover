@@ -129,14 +129,15 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = BurningPoint, By = StruckBy.Weapon, AtCount = 3, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 2 }));
 
             // Dark and Lightning (32), rest 8 s, only once a Cursed enemy carries two Static or more (in either order).
-            // A black cloud gathers over it for 8 s.
-            // NEEDS: the enemy's blow landing on the player (or the guard) as a moment: it calls the cloud down, a black
-            // bolt that discharges all its Static at double and stops it for 0.6 s; and the cloud drifting to the
-            // nearest enemy within 6 m if it dies first.
+            // A black cloud gathers over it for 8 s, and the enemy's next blow at you, landing or turned (the their-blow
+            // moment), calls it down: a black bolt that discharges all its Static at double (14 a stack in 4 m) and stops
+            // it for 0.6 s. NEEDS: the cloud drifting to the nearest enemy within 6 m if it dies first.
             to.Add(Reaction(AfflictionKind.Cursed, AfflictionKind.Static,
-                "Cursed and two Static or more: a black cloud gathers over its head and waits for the next blow it lands on you.",
+                "Cursed and two Static or more: a black cloud gathers over its head and waits for the next blow it aims at you. Landed or guarded, the cloud strikes it: its Static discharges at double, and it is stopped for a moment.",
                 new ReactionDef { Rest = 8f, DepthOf = AfflictionKind.Static, Depth = 2 },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Cloud, Seconds = 8f } }));
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Cloud, Seconds = 8f, EndsWith = ConditionBlow.TheirBlow } },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = Cloud, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Damage = 7f, Stagger = 5f },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = Cloud, Do = UpgradeAction.Hold, Seconds = 0.6f }));
 
             // Poison and Wind (33). Its poison goes loose while it carries both. A heavy blow (which shoves) sheds all of
             // it at once in a plume along its path, away from the player: three patches 1.2 m wide that lie 3 s and dose

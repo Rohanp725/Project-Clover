@@ -229,6 +229,26 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheCarriersBlowAtThePlayerIsToldAndSpendsWhatItSpends()
+        {
+            // The their-blow moment: The Grudge's cloud answers the enemy's next blow at you, and that blow spends it.
+            var enemy = NewEnemy();
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.cloud", Seconds = 8f, EndsWith = ConditionBlow.TheirBlow }, null, 1, null, false, false, 1f, false, true);
+            enemy.Conditions.Set(new ConditionSpec { Id = "test.quiet", Seconds = 8f }, null, 2);
+            enemy.TakeFrom(new Hit(5f, 0f, Vector3.forward, heavy: true), null);
+            Assert.IsTrue(enemy.Conditions.Holds("test.cloud"), "no blow of the player's spends it");
+            Assert.AreEqual(0, Count(ConditionMoment.Attacked));
+            enemy.Conditions.Attacked();
+            Assert.AreEqual(1, Count(ConditionMoment.Attacked), "told once, and only for the one that answers it");
+            Assert.AreEqual("test.cloud", Last(ConditionMoment.Attacked).Id);
+            Assert.IsFalse(enemy.Conditions.Holds("test.cloud"), "its blow spends the cloud");
+            Assert.AreEqual(0, Count(ConditionMoment.Ended), "spent, not run out: no end is told");
+            Assert.IsTrue(enemy.Conditions.Holds("test.quiet"), "one that is not spent by it stays");
+            enemy.Conditions.Attacked();
+            Assert.AreEqual(1, Count(ConditionMoment.Attacked), "the next blow finds nothing to answer");
+        }
+
+        [Test]
         public void AFrozenEnemyIsKeptFrozenLongerAndOneNotFrozenIsNot()
         {
             // Six Levels Down: a Chill laid on a frozen enemy does nothing, so the bite keeps the freeze itself.

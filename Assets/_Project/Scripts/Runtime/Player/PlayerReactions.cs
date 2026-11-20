@@ -245,13 +245,15 @@ namespace Clover.Player
             if (news.Mark < 0 || news.Mark >= all.Count) return false;
             var mark = all[news.Mark];
             var trigger = news.Moment == ConditionMoment.Beat ? UpgradeTrigger.ConditionBeat
-                : news.Moment == ConditionMoment.Struck ? UpgradeTrigger.ConditionStruck : UpgradeTrigger.ConditionEnded;
+                : news.Moment == ConditionMoment.Struck ? UpgradeTrigger.ConditionStruck
+                : news.Moment == ConditionMoment.Attacked ? UpgradeTrigger.ConditionAttacked : UpgradeTrigger.ConditionEnded;
             var source = SourceOf(mark);
             Vector3 at = who.transform.position;
             // Nerve Fire is seen at each bite as small jolts over the body, not as one big burst when it begins.
             if (news.Moment == ConditionMoment.Beat && news.Id == Trees.Reactions.Nerves) Forms.AfflictionArt.Jolt(at, news.Count);
             // An end carries the weapon blows the condition took (Burning Sap's weals), for what it does per blow.
-            int spent = trigger == UpgradeTrigger.ConditionEnded ? news.Blows : 0;
+            // So does its carrier's blow on the player (Ash Plume's storm, a flash for each blow it took).
+            int spent = trigger == UpgradeTrigger.ConditionEnded || trigger == UpgradeTrigger.ConditionAttacked ? news.Blows : 0;
             bool any = AnswerFrom(mark.Effects, trigger, news, who, at, source, spent);
             // A reaction's shape sets conditions of its own; their moments are answered from the shape.
             if (ReactionTable.IsReactionShape(mark))

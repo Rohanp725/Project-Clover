@@ -9,13 +9,13 @@ Lightning are both carried.
 
 **When it happens.** Every time The Grudge fires (a second Static on a Cursed enemy, or a Curse on one carrying two) while Dark and Lightning are both carried. Before this mark is bought, or with only one of the two carried, the plain Grudge runs.
 
-**The numbers.** Mix, 3 Shards. First Strike: the cloud waits 8 seconds; your first heavy blow on it discharges all its Static at double, 14 for each in 4 metres, and holds it still 0.6 seconds. Ash Plume: the cloud waits 6 seconds, then one bolt falls round it for each weapon blow you landed on it, 10 damage and a Static each, and all its Static is discharged in 4 metres. The Grudge rests 8 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. First Strike: the cloud waits 8 seconds; your first heavy blow on it discharges all its Static at double, 14 for each in 4 metres, and holds it still 0.6 seconds. Ash Plume: the cloud waits up to 6 seconds, and when the enemy next strikes at you (landed, guarded or warded), or the time runs out, one bolt falls round it for each weapon blow you landed on it, 10 damage and a Static each, and all its Static is discharged in 4 metres. The Grudge rests 8 seconds on each enemy.
 
 **Works with.** Grievance to bring the Static, The Exile Returns, Given Bones, The Exile's Grudge.
 
 **Example.** A lone brute: First Strike, and end the cloud with a heavy. A pack round one cursed captain: Ash Plume, and keep hitting it for six seconds.
 
-**Not built yet.** Ash Plume's storm falls when the cloud runs out rather than on the enemy's blow, and its flashes are not yet capped at five. The cloud does not yet drift to the next enemy when its host dies.
+**Not built yet.** Ash Plume's flashes are not yet capped at five. The cloud does not yet drift to the next enemy when its host dies.
 
 ## thegrudge.grievance
 **What it does.** A blow held on your guard against a Cursed enemy lays two Static on it.

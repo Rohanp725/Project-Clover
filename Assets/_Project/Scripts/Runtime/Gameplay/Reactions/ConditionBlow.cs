@@ -14,5 +14,7 @@ namespace Clover.Gameplay
         Weapon,
         /// <summary>A heavy blow of the weapon (a finisher counts).</summary>
         Heavy,
+        /// <summary>No blow of the player's: the carrier's own blow aimed at the player, landing or turned (The Grudge's cloud).</summary>
+        TheirBlow,
     }
 }

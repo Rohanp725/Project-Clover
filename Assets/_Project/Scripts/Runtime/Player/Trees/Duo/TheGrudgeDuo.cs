@@ -27,9 +27,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Dark, B = Elements.Lightning;
 
-            // NEEDS: Ash Plume's storm called down by the enemy's own blow and its flashes capped at five (now it falls when
-            // its 6 s run out, one bolt for each weapon blow it took, as ConditionEnded carries them); the cloud drifting to
-            // the nearest enemy if its host dies (their-blow-moment covers the plain cloud's own call).
+            // Ash Plume's storm is called down by the enemy's own blow at you (the their-blow moment, ConditionAttacked), or
+            // falls when its 6 s run out, one bolt for each weapon blow it took. NEEDS: its flashes capped at five; the cloud
+            // drifting to the nearest enemy if its host dies.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "The Grudge: First Strike or Ash Plume", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -50,10 +50,12 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Ash Plume",
-                        Description = "The black cloud gathers over it for 6 s, and each of your weapon blows on it adds a flash inside. Then it falls as a storm: one bolt for each flash round it, 10 each and a Static, and its Static discharged in 4 m.",
+                        Description = "The black cloud gathers over it for 6 s, and each of your weapon blows on it adds a flash inside. When it next strikes at you, or its 6 s run out, it falls as a storm: one bolt for each flash round it, 10 each and a Static, and its Static discharged in 4 m.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = AshPlume, Seconds = 6f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = AshPlume, Seconds = 6f, EndsWith = ConditionBlow.TheirBlow } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = AshPlume, Do = UpgradeAction.Falling, PerStack = true, Count = 1, Radius = 1.5f, Delay = 0.3f, Damage = 10f, Stagger = 8f, Affliction = AfflictionKind.Static, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionAttacked, Condition = AshPlume, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = AshPlume, Do = UpgradeAction.Falling, PerStack = true, Count = 1, Radius = 1.5f, Delay = 0.3f, Damage = 10f, Stagger = 8f, Affliction = AfflictionKind.Static, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = AshPlume, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
                         },

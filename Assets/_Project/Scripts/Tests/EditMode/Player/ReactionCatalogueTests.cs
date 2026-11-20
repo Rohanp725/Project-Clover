@@ -74,7 +74,7 @@ namespace Clover.Tests
         [Test]
         public void EveryEffectRidesATriggerAReactionGivesAndNamesWhatExists()
         {
-            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied };
+            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied, UpgradeTrigger.ConditionAttacked };
             foreach (var mark in ReactionMarks)
             {
                 var set = new HashSet<string>(mark.Effects.Where(effect => effect.Do == UpgradeAction.Condition).Select(effect => effect.State != null ? effect.State.Id : ""));

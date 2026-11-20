@@ -82,5 +82,12 @@ namespace Clover.Player
         ConditionEnded,
         /// <summary>An enemy died while carrying a condition this effect's mark set. Target: where it fell; what it carried of Needs is carried (for PerStack).</summary>
         ConditionDied,
+        /// <summary>
+        /// An enemy's blow aimed at the player lands, or is turned: guarded, perfectly guarded or warded (the ledger's
+        /// their-blow-moment). Target: the attacker.
+        /// </summary>
+        TheirBlow,
+        /// <summary>The enemy carrying a condition this effect's mark set struck at the player, landing or turned. Target: that enemy; the weapon blows the condition took are carried (for PerStack).</summary>
+        ConditionAttacked,
     }
 }

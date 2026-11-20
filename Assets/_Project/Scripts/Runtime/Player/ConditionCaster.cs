@@ -19,9 +19,9 @@ namespace Clover.Player
         {
             var spec = effect != null ? effect.State : null;
             if (spec == null || string.IsNullOrEmpty(spec.Id) || combat == null) return 0;
-            AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died);
+            AnswersOf(effect, spec.Id, out bool struck, out bool ended, out bool died, out bool attacked);
             int mark = effect.Owner != null ? effect.Owner.Index : -1;
-            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, combat, source) ? 1 : 0;
+            if (!spec.ToOthers && effect.Radius <= 0f) return Set(effect, spec, subject, null, mark, struck, ended, died, attacked, combat, source) ? 1 : 0;
 
             // Round the trigger's enemy: the nearest first, as many as the effect allows (all within the radius when it names none).
             scratch.Clear();
@@ -36,18 +36,19 @@ namespace Clover.Player
                 scratch.Add(one);
                 // Only those carrying what the effect seeks (Chokedamp's damp runs to the shaken alone).
                 if (effect.LeapsTo != AfflictionKind.None && !(near is IAfflictable seeker && seeker.Afflictions.Has(effect.LeapsTo))) continue;
-                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, combat, source)) set++;
+                if (Set(effect, spec, near, spec.ToOthers ? subject : null, mark, struck, ended, died, attacked, combat, source)) set++;
             }
             scratch.Clear();
             return set;
         }
 
-        private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, bool died, PlayerCombat combat, LaySource source)
+        private static bool Set(UpgradeEffect effect, ConditionSpec spec, Component who, Component link, int mark, bool struck, bool ended, bool died, bool attacked,
+            PlayerCombat combat, LaySource source)
         {
             if (!(who is IAfflictable afflictable)) return false;
             var set = afflictable.Afflictions;
             if (!Takes(spec, set)) return false;
-            if (set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died) < 0) return false;
+            if (set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died, attacked) < 0) return false;
             if (effect.Affliction != AfflictionKind.None && effect.Stacks > 0)
                 CombatEvents.Report(who, effect.Affliction, effect.Stacks, set.Lay(effect.Affliction, effect.Stacks + combat.ExtraStacks, 0f, combat.AfflictionPower, source, who), source);
             return true;
@@ -68,19 +69,20 @@ namespace Clover.Player
 
         // Whether the mark has anything to do when a blow lands on the condition, when it ends, or when the enemy dies with
         // it: only then is it told. A reaction's Shape mark answers from its shapes (task 4.5); each shape's ids are its own.
-        private static void AnswersOf(UpgradeEffect effect, string id, out bool struck, out bool ended, out bool died)
+        private static void AnswersOf(UpgradeEffect effect, string id, out bool struck, out bool ended, out bool died, out bool attacked)
         {
             struck = false;
             ended = false;
             died = false;
+            attacked = false;
             if (effect.Owner == null) return;
-            Note(effect.Owner.Effects, id, ref struck, ref ended, ref died);
+            Note(effect.Owner.Effects, id, ref struck, ref ended, ref died, ref attacked);
             if (effect.Owner.Shapes == null) return;
             foreach (var shape in effect.Owner.Shapes)
-                if (shape != null) Note(shape.Effects, id, ref struck, ref ended, ref died);
+                if (shape != null) Note(shape.Effects, id, ref struck, ref ended, ref died, ref attacked);
         }
 
-        private static void Note(UpgradeEffect[] answers, string id, ref bool struck, ref bool ended, ref bool died)
+        private static void Note(UpgradeEffect[] answers, string id, ref bool struck, ref bool ended, ref bool died, ref bool attacked)
         {
             if (answers == null) return;
             foreach (var answer in answers)
@@ -89,6 +91,7 @@ namespace Clover.Player
                 if (answer.On == UpgradeTrigger.ConditionStruck) struck = true;
                 if (answer.On == UpgradeTrigger.ConditionEnded) ended = true;
                 if (answer.On == UpgradeTrigger.ConditionDied) died = true;
+                if (answer.On == UpgradeTrigger.ConditionAttacked) attacked = true;
             }
         }
     }

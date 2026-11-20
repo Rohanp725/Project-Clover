@@ -1867,7 +1867,25 @@ namespace Clover.Player
         {
             NoteGuard(attacker);
             Trigger(UpgradeTrigger.Guard, LastGuardEnemy, attacker);
+            TheirBlow(LastGuardEnemy, attacker);
         }
+
+        /// <summary>
+        /// An enemy's blow aimed at the player landed or was turned (the ledger's their-blow-moment): the conditions on the
+        /// attacker that answer it are told (The Grudge's cloud strikes), and the marks on <see cref="UpgradeTrigger.TheirBlow"/> answer.
+        /// </summary>
+        private void TheirBlow(Component attacker, Vector3 at)
+        {
+            TheirBlows++;
+            if (attacker is IAfflictable carrier) carrier.Afflictions.Conditions.Attacked();
+            Trigger(UpgradeTrigger.TheirBlow, attacker, at);
+        }
+
+        /// <summary>A ward turned a blow from the given place: an enemy's blow turned, as a guard turns one.</summary>
+        public void OnWarded(Vector3 attacker) => TheirBlow(combat != null ? combat.EnemyAt(attacker, 2.5f) : null, attacker);
+
+        /// <summary>Enemy blows aimed at the player that landed or were turned, counted for probes.</summary>
+        public int TheirBlows { get; private set; }
 
         /// <summary>Where the last blow caught on the guard came from, and who dealt it; for forms that answer a guard.</summary>
         public Vector3 LastGuardFrom { get; private set; }
@@ -1928,6 +1946,7 @@ namespace Clover.Player
             if (struckBy is IAfflictable both && both.Afflictions.Has(AfflictionKind.Burn) && both.Afflictions.Has(AfflictionKind.Static) && Has(Trees.PlasmaTree.TwinBreak))
                 TwinBreak(struckBy, both.Afflictions);
             Trigger(UpgradeTrigger.PerfectGuard, struckBy, attacker);
+            TheirBlow(struckBy, attacker);
         }
 
         /// <summary>How many times Twin Break has spent Burn and Static together, and how many enemies have melted down: for probes.</summary>
@@ -2215,7 +2234,9 @@ namespace Clover.Player
             }
             Heat.Struck();
             sinceStruck = 0f;
-            Trigger(UpgradeTrigger.Struck, combat != null ? combat.EnemyAt(attacker, 2.5f) : null, attacker);
+            var struckBy = combat != null ? combat.EnemyAt(attacker, 2.5f) : null;
+            Trigger(UpgradeTrigger.Struck, struckBy, attacker);
+            TheirBlow(struckBy, attacker);
         }
 
         /// <summary>The element's surge was lit.</summary>

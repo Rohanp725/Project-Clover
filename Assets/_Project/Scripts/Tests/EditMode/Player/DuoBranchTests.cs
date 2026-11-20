@@ -143,7 +143,7 @@ namespace Clover.Tests
         [Test]
         public void EveryReactionShapeRidesAReactionsMomentsAndAnswersOnlyTheConditionsItSets()
         {
-            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied };
+            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied, UpgradeTrigger.ConditionAttacked };
             var shapeMarks = Upgrade.All.Where(ReactionTable.IsReactionShape).ToList();
             Assert.GreaterOrEqual(shapeMarks.Count, 2, "Flashover's and Sleet Charge's at least");
             var conditionIds = new HashSet<string>();
