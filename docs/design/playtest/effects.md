@@ -933,6 +933,8 @@ Group: Reactions
 
 **What sets it off.** Poison landing on a Unsteady enemy, or Unsteady on a poisoned one.
 
+**Its shapes.** With the Shape mark of Poison and Wind's duo branch (Ill Wind: Dust on the Blade or Dust Bank, 3 Shards, in the heart of the chart) and both carried, Ill Wind wears the shape chosen at a rest fire instead. Dust on the Blade: the heavy blow sheds no plume; your next three weapon blows on it each lay a dose and an Unsteady. Dust Bank: the plume as plain, and a line of dust 8 m long downwind that lies 4 s and makes Unsteady what stands in it.
+
 **How to use it.** Stand so the plume lands on the others, then heavy.
 
 **How it looks.** Its name over the enemy, then the plume on the floor. Not yet: every shove and throw shedding it, the plume laid along its path, and the doses shared among those it settles on.
