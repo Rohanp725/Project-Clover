@@ -160,7 +160,7 @@ namespace Clover.EditorTools
             ["r4_damp_stain"] = new ReactionArtBuilder.Paint(0.14f, 0.24f, 0.06f, 0.6f, 1f, true),
             ["r4_dirt"] = new ReactionArtBuilder.Paint(0.36f, 0.24f, 0.13f),
             ["r4_feather_gold"] = new ReactionArtBuilder.Paint(0.95f, 0.66f, 0.16f),
-            ["r4_feather_pale"] = new ReactionArtBuilder.Paint(0.86f, 0.76f, 0.5f),
+            ["r4_feather_pale"] = new ReactionArtBuilder.Paint(0.92f, 0.62f, 0.26f),
             ["r4_fire_ribbon"] = new ReactionArtBuilder.Paint(1f, 0.42f, 0.05f),
             ["r4_fire_ribbon_red"] = new ReactionArtBuilder.Paint(0.85f, 0.12f, 0.03f),
             ["r4_frost_streak"] = new ReactionArtBuilder.Paint(0.3f, 0.6f, 1f),
@@ -259,6 +259,10 @@ namespace Clover.EditorTools
             // Winter Seed's and Supercooled's frost rosette on the floor: a see-through mid blue (it lay as a pale 5 m star).
             ["winter_seed|r4_frost_bed"] = new ReactionArtBuilder.Paint(0.12f, 0.36f, 0.8f, 0.45f, 1f, true),
             ["supercooled|r4_frost_bed"] = new ReactionArtBuilder.Paint(0.12f, 0.36f, 0.8f, 0.45f, 1f, true),
+            // Frost Heave's frost flower and Mock Suns' frosted sun-wheel lay as a pale near-white star 3 m across in
+            // their films (2026-11-20): the same see-through mid blue.
+            ["frost_heave|r4_frost_bed"] = new ReactionArtBuilder.Paint(0.12f, 0.36f, 0.8f, 0.45f, 1f, true),
+            ["mock_suns|r4_frost_bed"] = new ReactionArtBuilder.Paint(0.12f, 0.36f, 0.8f, 0.45f, 1f, true),
             ["brazier_ice|m_vfx_ice_frost"] = new ReactionArtBuilder.Paint(0.22f, 0.5f, 0.9f, 0.6f, 1f, true),
             ["brazier_ice|m_vfx_ice"] = new ReactionArtBuilder.Paint(0.15f, 0.45f, 1f),
             // Smoulder (the coordinator's check of its film, 2026-11-20): its flare at the end burned in plain fire colours
@@ -304,6 +308,10 @@ namespace Clover.EditorTools
             ["the_grudge|r4_grudgelit"] = new ReactionArtBuilder.Paint(0.55f, 0.3f, 1f),
             ["fish_poison|r4_splash"] = new ReactionArtBuilder.Paint(0.05f, 0.34f, 0.5f),
             ["caught_light|r4_splash"] = new ReactionArtBuilder.Paint(0.05f, 0.34f, 0.5f),
+            // The polished films (the 06:30 export): Quicksilver's mercury beads lit as white balls in the metal solid's
+            // shine (a darker quicksilver grey), Kindling Point's white-hot flare as a cream-white burst (a hot gold).
+            ["quicksilver|r4_mercury"] = new ReactionArtBuilder.Paint(0.4f, 0.43f, 0.48f),
+            ["kindling_point|r4_whitehot"] = new ReactionArtBuilder.Paint(1f, 0.6f, 0.16f),
             // The Bolt Runs True's straight bolt drew as a pure white slab across the frame: a pale violet-blue bolt.
             ["the_bolt_runs_true|m3_bolt"] = new ReactionArtBuilder.Paint(0.42f, 0.5f, 1f),
         };
@@ -462,6 +470,14 @@ namespace Clover.EditorTools
             // pure white; gold light is drawn in fire's solid, which keeps its colour.
             ["r4_sunbead"] = "fire",
             ["r4_halo"] = "fire",
+            // Golden Feathers' feathers: in the light solid the pale inner vane lit as a white blob half a metre long
+            // (its film of 2026-11-20); fire's solid keeps the gold.
+            ["r4_feather_gold"] = "fire",
+            ["r4_feather_pale"] = "fire",
+            ["r4_feather_shaft"] = "fire",
+            // Quicksilver's mercury beads: round, they caught the metal solid's chrome glint whole and lit white; in
+            // earth's matte solid they are grey beads.
+            ["r4_mercury"] = "earth",
         };
 
         /// <summary>Soaked: seconds the water takes to run down the body, and the most its puddle spans, metres.</summary>
