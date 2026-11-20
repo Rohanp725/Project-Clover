@@ -26,6 +26,8 @@ namespace Clover.Player.Trees
         public const string Condemned = "light.condemned";
         public const string SeenPlainly = "light.lift";
         public const string FullDaylight = "light.devotion";
+        /// <summary>Full Daylight: seconds after a mark fades before another can be laid on that enemy.</summary>
+        public const float DaylightRest = 4f;
         // The spells: each is its branch's Learn mark and the branch's id.
         public const string Glare = "light.base";
         public const string StepIntoLight = "light.step";
@@ -321,11 +323,17 @@ namespace Clover.Player.Trees
                 },
                 "Loose it within a fifth of a second of a blow landing on you, and the blow is turned and the beam is critical.");
 
-            // NEEDS: a mark not laid again on that enemy for four seconds after it fades (mark-rest). Until then a mark is not
-            // spent by twenty blows and fades in six seconds.
+            // The RuleBook's affliction rules (task 4.4), read by every enemy's set: a mark is not spent by blows, and once it
+            // has faded no mark can be laid on that enemy for 4 s. It fades in six seconds, not eight (the stat: every
+            // affliction you lay lasts a quarter less, and all in on Light that is the mark).
             to.Add(BranchPattern.Put(new Upgrade { Id = FullDaylight, Name = "Full Daylight", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { SeenPlainly }, Icon = UpgradeIcons.Sun,
                 Description = "All in on Light only. A mark is no longer spent by blows: every weapon blow on a Marked enemy is critical until the mark fades, in six seconds, but no mark can be laid on that enemy again for four seconds after. Mark, spend the window in full, wait out the light.",
-                Stats = new[] { new StatMod(PlayerStat.MarkBlows, 20f), new StatMod(PlayerStat.AfflictionSeconds, -0.25f) } },
+                Stats = new[] { new StatMod(PlayerStat.AfflictionSeconds, -0.25f) },
+                Rules = book =>
+                {
+                    book.Afflictions.NotSpentByBlows(AfflictionKind.Marked);
+                    book.Afflictions.RestAfterFading(AfflictionKind.Marked, DaylightRest);
+                } },
                 BranchPattern.RightCrown));
 
             // BESPOKE (built): ScalesForm. Found wanting, the mana is emptied.

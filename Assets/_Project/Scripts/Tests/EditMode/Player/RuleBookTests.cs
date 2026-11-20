@@ -141,6 +141,26 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void DeepWinterFullDaylightAndTheGuardHoldsSwitchTheirOwnRules()
+        {
+            var ice = BookFor(Elements.Ice, Elements.Ice, IceTree.DeepWinter);
+            Assert.IsTrue(ice.Afflictions.Keeps(AfflictionKind.Chill), "Deep Winter: Chill never fades");
+            Assert.IsEmpty(Upgrade.ById(IceTree.DeepWinter).Stats, "the stand-in of Chill lasting three times as long is gone");
+
+            var light = BookFor(Elements.Light, Elements.Light, LightTree.FullDaylight);
+            Assert.IsTrue(light.Afflictions.Unspent(AfflictionKind.Marked), "Full Daylight: a mark is not spent by blows");
+            Assert.AreEqual(4f, light.Afflictions.RestsAfter(AfflictionKind.Marked), "and rests four seconds after it fades");
+            Assert.IsFalse(light.Afflictions.Keeps(AfflictionKind.Marked), "it still fades");
+
+            var metal = BookFor(Elements.Metal, Elements.Metal, MetalTree.TheGuardHolds);
+            Assert.AreEqual(GuardMode.Unbreakable, metal.Guard, "The Guard Holds: the guard never breaks");
+            foreach (var mod in Upgrade.ById(MetalTree.TheGuardHolds).Stats)
+                Assert.AreNotEqual(PlayerStat.GuardStamina, mod.Stat, "the stand-in of a cheaper guard is gone");
+
+            Assert.IsTrue(BookFor(Elements.Metal, Elements.Ice, MetalTree.TheGuardHolds, IceTree.DeepWinter).IsStandard, "mixed, neither Devotion");
+        }
+
+        [Test]
         public void UnderFireWithoutEndTheRoomCooks()
         {
             // The rule as the enemies read it: lit once, a soldier left alone burns on and deepens to five.
