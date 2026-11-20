@@ -1023,6 +1023,8 @@ Group: Reactions
 
 **What sets it off.** A seed landing on a Cursed enemy, or a curse on a Seeded one.
 
+**Its shapes.** With the Shape mark of Life and Dark's duo branch (Flowers or Fig: Corpse Flowers or Fig in the Crown, 3 Shards, in the heart of the chart) and both carried, Girdled wears the shape chosen at a rest fire instead. Both coil and crush as plain. Corpse Flowers: when the roots let go, three pale flowers stand where it stood for 8 s, grown things of yours. Fig in the Crown: an enemy that dies in the roots Seeds and Curses the nearest within 5 m, which may start to coil in turn.
+
 **How to use it.** Three blows: each one opens it more and mends you, and the third crushes it.
 
 **How it looks.** Its name over the enemy, then the crush. Not yet: no dodge or leap while it is coiled, and the hollow trunk left where it dies girdled.
