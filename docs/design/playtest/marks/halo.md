@@ -1,6 +1,22 @@
 # Halo: detailed explanations
 
-The long explanation the chart shows for every mark on Halo, the branch Metal and Light share.
+The long explanation the chart shows for every mark on Halo, the duo branch Metal and Light share. Reshaped in Phase 4
+(`docs/design/steel/pairs_d1_d2.md`, "Metal and Light") and drawn in the heart of the chart while Metal and Light are both
+carried. Its reaction is Glint; its Shape mark lets you choose what Glint does. Answering Draw has moved to the Katana's
+infusion marks on its Way.
+
+## halo.shape
+**What it does.** Opens Glint's two shapes. At a rest fire you choose which one your Glint wears, and from then on it runs instead of the plain one. **Mirror to Mirror**: the ray goes on from enemy to enemy, drawing a zigzag of light across the room. **Burning Mirror**: no ray; the light gathers into the cracks as one white-hot point, and your next weapon blow on it strikes hard and notches it twice.
+
+**When it happens.** Every time Glint fires (Marked landing on a notched enemy, or Sundered on a marked one) while Metal and Light are both carried. Before this mark is bought, or with only one of the two carried, the plain Glint runs (one ray to the nearest other enemy within 6 metres).
+
+**The numbers.** Mix, 3 Shards. Mirror to Mirror: up to four enemies, each within 6 metres of the last, take 10 damage, 15 stagger and a Mark, and its notch is passed on. Burning Mirror: the point lasts 5 seconds; the next weapon blow on it lays two notches and 10 more damage. Glint rests 4 seconds on each enemy.
+
+**Works with.** Bright Steel (a perfect guard lays both), Halo of Blades, Counter Cut, Open Line.
+
+**Example.** A crowd of marked soldiers: Mirror to Mirror throws one flash through four of them. A duel: Burning Mirror, then a heavy blow.
+
+**Not built yet.** Mirror to Mirror's ray leaps on from every enemy it strikes, not only those carrying Sundered, and Burning Mirror's blow strikes 10 harder rather than being made critical.
 
 ## halo.brightsteel
 **What it does.** A perfect guard flashes off your blade. The attacker is Marked, and its armour is notched.
@@ -18,22 +34,11 @@ The long explanation the chart shows for every mark on Halo, the branch Metal an
 
 **When it happens.** Each critical weapon blow forges one; a perfect guard looses every one that hangs. The count shows on the screen as Blades.
 
-**The numbers.** Mix, 4 Shards. Six blades at most. Each flies at 16 metres a second, turning after the attacker, and strikes for 9 damage and 8 stagger with one notch of Sundered.
+**The numbers.** Mix, 3 Shards. Six blades at most. Each flies at 16 metres a second, turning after the attacker, and strikes for 9 damage and 8 stagger with one notch of Sundered.
 
-**Works with.** Bright Steel and Marked enemies (every blow on them is critical), Counter Cut, Answering Draw, Edge Guard, Blinding Guard.
+**Works with.** Bright Steel and Marked enemies (every blow on them is critical), Counter Cut, Edge Guard, Blinding Guard.
 
 **Example.** Land three critical blows on a Marked soldier, then perfect-guard the brute behind it: three blades fly into the brute.
-
-## halo.answeringdraw
-**What it does.** After any perfect guard, every blow you land for a moment is critical. The Iaido Slash also Marks what it cuts and notches its armour.
-
-**When it happens.** The mark and notch when the Iaido Slash, the Katana's weapon skill (Q, Triangle or Y), strikes. It needs the Katana. The critical moment opens with each perfect guard.
-
-**The numbers.** Mix, 4 Shards. One stack of Marked and one notch of Sundered from the slash. For 1.5 seconds after a perfect guard, every weapon blow is critical (one and a half times damage). Where your first element's root mark already lays its own with the slash, that one is not laid twice.
-
-**Works with.** Master's Answer (after a perfect guard the slash comes at once, free, and critical), Halo of Blades, Bright Steel, Counter Cut.
-
-**Example.** Perfect-guard a thrust and loose the Iaido Slash straight away: it lands critical on everything it cuts.
 
 ## halo.mirroredge
 **What it does.** A perfect guard throws a bolt of light straight back at the attacker. It strikes hard and Marks what it hits.
@@ -45,17 +50,6 @@ The long explanation the chart shows for every mark on Halo, the branch Metal an
 **Works with.** Bright Steel, Halo of Blades, Blinding Guard, Open Line, Edge Guard.
 
 **Example.** An archer looses and you perfect-guard the arrow: the bolt runs back down the line and Marks it.
-
-## halo.sunwheels
-**What it does.** Two wheels of bright steel turn round you for a while, cutting and notching whatever they pass.
-
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). As built the wheels do not yet fly out on a perfect guard.
-
-**The numbers.** Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Two wheels 2.5 metres out from you for 9 seconds. Every half second each strikes what is within a metre of it for 5 damage, 4 stagger and a notch of Sundered; an enemy is struck once in each half second however many wheels pass it.
-
-**Works with.** Sunder, Poured Bronze (it pours into the notches the wheels leave), the charged blade (it charges your weapon with Metal), Every Crack Rings.
-
-**Example.** Cast it before stepping into a ring of small enemies: nine seconds later each is notched three deep.
 
 ## halo.blindingguard
 **What it does.** A perfect guard blinds those before you: they are Marked and their balance is shaken. Everyone near you, on any side, is held still for a breath. The price: a blow held on a plain guard costs more stamina.

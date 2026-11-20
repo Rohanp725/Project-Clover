@@ -1,39 +1,22 @@
 # Glacier: detailed explanations
 
-The long explanation the chart shows for every mark on Glacier, the branch Ice and Water share.
+The long explanation the chart shows for every mark on Glacier, the duo branch Ice and Water share. Reshaped in Phase 4
+(`docs/design/steel/pairs_d1_d2.md`, "Ice and Water") and drawn in the heart of the chart while Ice and Water are both
+carried. Its reaction is Supercooled (which does what Flash Freeze did, and more); its Shape mark lets you choose what
+Supercooled does.
 
-## glacier.coldwater
-**What it does.** Your blows lay Chill and Soaked together. A Soaked enemy passes any Chill laid on it to everyone within 4 metres, so from the second blow on, your cold spreads through a crowd.
+## glacier.shape
+**What it does.** Opens Supercooled's two shapes. At a rest fire you choose which one your Supercooled wears, and from then on it runs instead of the plain one. **Sea Ice**: the next weapon blow freezes it outright as before, and the cold runs out through the floor in a web of frost that chills everything near, so a wet neighbour becomes Supercooled too. **Hard Water**: only a heavy blow freezes it.
 
-**When it happens.** Every weapon blow that lands, light or heavy. It needs Ice and Water both carried.
+**When it happens.** Every time Supercooled fires (Chill landing on a soaked enemy, or Soaked on a chilled one) while Ice and Water are both carried. Before this mark is bought, or with only one of the two carried, the plain Supercooled runs.
 
-**The numbers.** Mix, 3 Shards. One stack of Chill and one of Soaked on each blow, whichever of the two you carry first. Your first element's own is not laid twice: with Ice first and Chill learned, a blow lays the root's one Chill and this mark's Soaked. Soaked lasts 8 seconds and makes spells deal the enemy 25% more damage.
+**The numbers.** Mix, 3 Shards. Both: the water stays still for 6 seconds; the blow that ends it freezes an ordinary enemy outright (Chill to full), gives an elite 3 Chill and a god 2, and spends the Soaked. Sea Ice: that blow also lays 2 Chill on everything within 4 metres, and on purpose this may start another Supercooled. Hard Water: only a heavy blow ends it. Supercooled rests 4 seconds on each enemy.
 
-**Works with.** Chill or Soaked, Flash Freeze, Cold in the Bones, Icebreaker, Creeping Ice, The Wave Stands Still, Riptide.
+**Works with.** Icebreaker (mana and a flask's sip for each shatter), Riptide and Hoarfrost to bring the water and the cold, The Wave Stands Still.
 
-**Example.** Holding Ice first, two blows on a soldier in a pack leave it two deep in Chill and Soaked, and the Chill has run into the two beside it as well.
+**Example.** Riptide soaks a pack and Hoarfrost touches one: with Sea Ice, one blow freezes it and the frost runs through the wet ones beside it.
 
-## glacier.flash
-**What it does.** A Soaked enemy freezes at three Chill, not five. The water goes into the ice: the freeze spends the Soaked.
-
-**When it happens.** Always on once learned, the moment a Soaked enemy reaches three stacks of Chill.
-
-**The numbers.** Mix, 3 Shards. Frozen at three for the usual 2.5 seconds (elites and gods 1 second). A heavy blow then shatters it for 45 more damage, as always.
-
-**Works with.** Cold Water (both on every blow), Chill, Cold Read, Riptide, Icebreaker, All at Once, Brittle.
-
-**Example.** With Cold Water and Chill learned, a soldier is frozen after its second blow; the heavy blow that follows shatters it.
-
-## glacier.creeping
-**What it does.** You send a line of ice spikes along the ground ahead of you. Each enemy on the line is struck once and chilled.
-
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
-
-**The numbers.** Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. The spikes run 8 metres from 1.3 metres ahead of you, at 20 metres a second, each 0.6 metres in radius. 8 damage, 10 stagger and two stacks of Chill to each enemy. As built it does not hold enemies by the feet.
-
-**Works with.** Cold Water (Soaked enemies pass the Chill on), Flash Freeze (two stacks and one blow freeze a Soaked enemy), Bitter Cold, Chill.
-
-**Example.** Send it down a line of Soaked soldiers: each is two deep, and one more blow on any of them freezes it.
+**Not built yet.** Sea Ice's frost reaches every enemy within 4 metres, not only the soaked ones, and Hard Water's freeze is not yet held longer nor its shatter made harder.
 
 ## glacier.breaker
 **What it does.** Shattering an enemy gives you mana and fills part of a flask you have used.
@@ -42,7 +25,7 @@ The long explanation the chart shows for every mark on Glacier, the branch Ice a
 
 **The numbers.** Mix, 3 Shards. 12 mana and a third of a flask a shatter, while you carry fewer flasks than your most. Three shatters leave it a hair short; the fourth fills it.
 
-**Works with.** Flash Freeze, Cold Water, Flying Shards, All at Once, The Wave Stands Still (one heavy blow shatters all it holds), The World Holds Still.
+**Works with.** Supercooled's shapes, Flying Shards, All at Once, The Wave Stands Still (one heavy blow shatters all it holds), The World Holds Still.
 
 **Example.** Shatter four frozen soldiers in one fight and a spent flask is back on your belt.
 
@@ -51,9 +34,9 @@ The long explanation the chart shows for every mark on Glacier, the branch Ice a
 
 **When it happens.** Each time a weapon blow or a spell of yours strikes a Soaked enemy, at most twice a second.
 
-**The numbers.** Mix, 4 Shards. The perfect-guard moment is 25% longer for 4 seconds: about 0.23 seconds where it is 0.18. As built it lengthens your own moment to guard; it does not slow the enemy's wind-up.
+**The numbers.** Mix, 3 Shards. The perfect-guard moment is 25% longer for 4 seconds: about 0.23 seconds where it is 0.18. As built it lengthens your own moment to guard; it does not slow the enemy's wind-up.
 
-**Works with.** Cold Water (every blow soaks), Cold Read, Gathering Frost, Patient Guard, Weight of Ice.
+**Works with.** Riptide (it soaks), Cold Read, Weight of Ice.
 
 **Example.** Cut a Soaked duellist twice, then meet its answer with a perfect guard you would have missed.
 
@@ -75,6 +58,6 @@ The long explanation the chart shows for every mark on Glacier, the branch Ice a
 
 **The numbers.** A god's gift, never sold; in the playtest it can be bought. Each plate takes 6% off the damage you take, 30% at five. The edge reaches 2.5 metres and 1.2 more a plate (8.5 at five), 1.3 metres to each side: 12 damage, 12 stagger and one stack of Chill a plate, as a heavy blow. Five plates: 60 damage, 60 stagger and five Chill, enough to freeze.
 
-**Works with.** Cold Read, Gathering Frost, Cold in the Bones, Braced, Unmoved, Chill.
+**Works with.** Cold Read, Cold in the Bones, Chill.
 
 **Example.** Guard a brute's three-blow chain, the last perfectly: four plates. Your heavy blow throws an edge 7 metres long through it and the soldier behind.

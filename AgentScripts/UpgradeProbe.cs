@@ -142,11 +142,9 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return null;
         yield return Tap(Key.K);
         yield return new WaitForSecondsRealtime(0.7f);
-        // A mixed branch the player cannot open is there to be read, sealed. Pyre, on the ring beside Fire: Plasma has moved
-        // into the chart's heart (task 4.5), shown only while Lightning is carried beside Fire.
-        menu.Choose("pyre.flashpoint");
-        yield return Tap(Key.E);
-        bool sealedBought = upgrades.Owns("pyre.flashpoint");
+        // A duo branch the player cannot open is sealed: every mixed branch is in the chart's heart now (tasks 4.5 and 4.15),
+        // shown only while both of its elements are carried, so it is asked of the rules, not chosen on the chart.
+        bool sealedBought = upgrades.TryBuy(Upgrade.ById(PyreTree.Shape));
         yield return new WaitForSecondsRealtime(0.5f);
         Shot("menu_sealed");
         yield return null;
@@ -535,26 +533,27 @@ public class UpgradeProbeRunner : MonoBehaviour
         Say($"S slotted spell: worn before {wornFirst}, after choosing on the chart {wornSecond} (the chart no longer wears a spell); Uraeus from slot {uraeusSlot}: cast {uraeusCast} (+{slotted.Casts - slotCasts}), mana {mana:0} -> spent {mana - combat.Mana.Current:0}, dummy lost {fanTook:0}, burn {fanBurn} deep");
         yield return new WaitForSeconds(0.6f);
 
-        // T: a mix mark on the ring. Sealed to Fire alone; with Poison consumed it opens and is bought on the chart. Pyre's
-        // first mark, Fuel, now that Plasma's Charged Embers is retired (task 4.5; Plasma is in the chart's heart).
+        // T: a duo branch in the chart's heart (task 4.15). Pyre's Shape mark is sealed to Fire alone; with Poison carried
+        // beside Fire it opens, the heart shows Pyre, and it is bought there.
         upgrades.Forget();
         Learn(FireTree.Cinder);
         yield return new WaitForSeconds(0.4f);
-        var ionised = Upgrade.ById(PyreTree.Fuel);
+        var ionised = Upgrade.ById(PyreTree.Shape);
         bool openBefore = upgrades.Open(ionised);
-        RunState.ElementsConsumed.Add(Elements.Poison);
+        element.Attune(Elements.Fire, Elements.Poison);
+        upgrades.RefreshNow();
         bool openAfter = upgrades.Open(ionised);
         upgrades.Earn(3);
         menu.Open();
         yield return null;
-        menu.Choose(PyreTree.Fuel);
+        bool chosen = menu.Choose(PyreTree.Shape);
         yield return Tap(Key.E);
         yield return new WaitForSecondsRealtime(0.5f);
         Shot("menu_mix");
         yield return null;
         yield return Tap(Key.Space);
         yield return new WaitForSecondsRealtime(0.4f);
-        bool bought = upgrades.Has(PyreTree.Fuel);
+        bool bought = upgrades.Has(PyreTree.Shape) && chosen;
         Place(new Vector3(0f, 0f, 2.2f), Vector3.forward);
         yield return null;
         set.Clear();
@@ -562,9 +561,10 @@ public class UpgradeProbeRunner : MonoBehaviour
         yield return Lights(1);
         yield return null;
         yield return null;
-        // Fuel lays both on heavy blows only: a light blow with Cinder leaves one burn and no poison.
-        Say($"T mix: open before Poison is consumed {openBefore}; with Poison consumed {openAfter}; bought on the chart {bought}; one light blow with Cinder and Fuel left burn {north.Burn.Stacks} deep (one) and poison {set.Stacks(AfflictionKind.Poison)} (none: Fuel answers heavy blows) (effects +{upgrades.EffectsDone - done})");
-        RunState.ElementsConsumed.Clear();
+        // The Shape mark changes Fire Medicine and lays nothing itself: a light blow with Cinder leaves one burn and no poison.
+        Say($"T duo: open with Fire alone {openBefore}; with Poison carried beside it {openAfter}; chosen in the heart and bought {bought}; one light blow with Cinder left burn {north.Burn.Stacks} deep (one) and poison {set.Stacks(AfflictionKind.Poison)} (none) (effects +{upgrades.EffectsDone - done})");
+        element.Attune(Elements.Fire, "");
+        upgrades.RefreshNow();
 
         // U: the nine new elements. Each kit casts, lays its own affliction on the dummy, and lights its surge.
         string kits = "";
@@ -676,9 +676,8 @@ public class UpgradeProbeRunner : MonoBehaviour
             RunState.Points = 0;
             upgrades.Earn(10);
             yield return new WaitForSeconds(0.3f);
-            var foot = Upgrade.ById(GlacierTree.FlashFreeze);
-            foreach (var mark in Upgrade.All)
-                if (mark.Kind == UpgradeKind.Mix && mark.Element == Elements.Ice && mark.Requires.Length == 0) foot = mark;
+            // Glacier's foot is its Shape mark now, in the chart's heart (task 4.15): open only while Ice and Water are carried.
+            var foot = Upgrade.ById(GlacierTree.Shape);
             bool sealedFirst = !upgrades.Open(foot);
             giftShrine.Use(who);
             yield return null;

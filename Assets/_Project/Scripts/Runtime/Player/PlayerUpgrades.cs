@@ -664,7 +664,8 @@ namespace Clover.Player
             Afflictions.ChillSlowOff = On(Trees.IceTree.AllAtOnce);
             Afflictions.BrittleSeconds = On(Trees.IceTree.Brittle) ? 5f : 0f;
             Afflictions.BuckledShare = On(Trees.ForgeTree.Buckled) ? 0.4f : 0f;
-            Afflictions.FlashFreezeAt = On(Trees.GlacierTree.FlashFreeze) ? 3 : 0;
+            // Flash Freeze is retired (task 4.15): Supercooled freezes a soaked enemy now, so no mark lowers the freeze.
+            Afflictions.FlashFreezeAt = 0;
             hasAnswer = On(Trees.MetalTree.MastersAnswer);
             bool wellNow = On(Trees.WaterTree.DeepWell);
             if (wellNow != hasWell)

@@ -152,6 +152,46 @@ namespace Clover.Player
             // Corona, Fused Core cut as a plain number, and Plasma Lance, which no roster has room for.
             new RetiredMark("plasma.embers", 3), new RetiredMark("plasma.arcfire", 3), new RetiredMark("plasma.fused", 4),
             new RetiredMark("plasma.lance", 5),
+
+            // Tempest, the duo branch of Lightning and Wind (pairs_d1_d2.md; task 4.15): Charged Air (the Shape mark takes its
+            // place), Thunder Lift (now the Thunderhead shape) and Storm Overhead (offered to Lightning's tree, whose roster is full).
+            new RetiredMark("tempest.charged", 3), new RetiredMark("tempest.lift", 4), new RetiredMark("tempest.cloud", 4),
+
+            // Blizzard, the duo branch of Wind and Ice (pairs_d1_d2.md; task 4.15): Biting Wind (the Shape mark takes its place)
+            // and Whiteout (offered to Ice's or Wind's tree, whose rosters are full).
+            new RetiredMark("blizzard.biting", 3), new RetiredMark("blizzard.whiteout", 4),
+
+            // Glacier, the duo branch of Ice and Water (pairs_d1_d2.md; task 4.15): Cold Water (the Shape mark takes its place),
+            // Flash Freeze (now the reaction, Supercooled) and Creeping Ice (offered to Ice's tree, whose roster is full).
+            new RetiredMark("glacier.coldwater", 3), new RetiredMark("glacier.flash", 3), new RetiredMark("glacier.creeping", 4),
+
+            // Bloom, the duo branch of Water and Life (pairs_d1_d2.md; task 4.15): Wet Seed (the Shape mark takes its place),
+            // Flowering (now the reaction, Quickening, without its wait) and Lotus Step (offered to Water's tree, whose roster is full).
+            new RetiredMark("bloom.wetseed", 3), new RetiredMark("bloom.flower", 3), new RetiredMark("bloom.lotus", 4),
+
+            // Overgrowth, the duo branch of Life and Earth (pairs_d1_d2.md; task 4.15): Root Grip (now the reaction, Split Rock;
+            // the Shape mark takes its place) and Thorn Wall (offered to Earth's tree, whose roster is full).
+            new RetiredMark("overgrowth.rootgrip", 3), new RetiredMark("overgrowth.thornwall", 4),
+
+            // Forge, the duo branch of Earth and Metal (pairs_d1_d2.md; task 4.15): Trip Hammer (offered to Earth's or Metal's tree,
+            // whose rosters are full).
+            new RetiredMark("forge.triphammer", 4),
+
+            // Halo, the duo branch of Metal and Light (pairs_d1_d2.md; task 4.15): Sun Wheels (offered to Metal's tree, whose
+            // roster is full). Answering Draw moves to the Katana's Way (the list below).
+            new RetiredMark("halo.sunwheels", 4),
+
+            // Eclipse, the duo branch of Light and Dark (pairs_d1_d2.md; task 4.15): Twilight (it only laid both; the Shape mark
+            // takes its place) and Black Sun (offered to Dark's tree, whose roster is full).
+            new RetiredMark("eclipse.twilight", 3), new RetiredMark("eclipse.blacksun", 4),
+
+            // Blight, the duo branch of Dark and Poison (pairs_d1_d2.md; task 4.15): Carrion Flies (now the Swarm shape) and Grave
+            // Soil (offered to Dark's or Poison's tree, whose rosters are full).
+            new RetiredMark("blight.carrionflies", 3), new RetiredMark("blight.gravesoil", 4),
+
+            // Pyre, the duo branch of Poison and Fire (pairs_d1_d2.md; task 4.15): Fuel (the Shape mark takes its place), and Fire
+            // Eater and Lit Fuse (offered to Poison's and Fire's trees, whose rosters are full).
+            new RetiredMark("pyre.fuel", 3), new RetiredMark("pyre.fireeater", 4), new RetiredMark("pyre.slowfuse", 5),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
@@ -163,6 +203,8 @@ namespace Clover.Player
             new RetiredMark("wind.drawing", 3),
             // Ice's Winter Draw, the Iaido Slash's lane of ice.
             new RetiredMark("ice.winterdraw", 3),
+            // Halo's Answering Draw, the Iaido Slash's Mark and notch and the critical blows after a perfect guard (task 4.15).
+            new RetiredMark("halo.answeringdraw", 4),
         };
 
         /// <summary>The marks cut, with their prices: a save that holds one is refunded.</summary>

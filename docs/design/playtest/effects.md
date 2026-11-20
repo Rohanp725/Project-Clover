@@ -468,6 +468,8 @@ Group: Reactions
 
 **What sets it off.** Static landing on a Unsteady enemy, or Unsteady on a charged one.
 
+**Its shapes.** With Tempest's Shape mark (Thunder Gust: Thunderhead or Bolt from the Blue, 3 Shards, in the heart of the chart) and both Lightning and Wind carried, Thunder Gust wears the shape chosen at a rest fire instead. Thunderhead: thrown up for 1 s, and half a second in its Static is discharged over the heads of the rest, 7 and 5 stagger a stack in 4 m. Bolt from the Blue: nothing is thrown; its Static goes off where it stands and an arc runs on through up to three enemies, 14 and a Static each.
+
 **How to use it.** Charge it deep first, then stand so it is thrown into the crowd: the discharge lands among them.
 
 **How it looks.** Its name over the enemy and a discharge where it lands. Not yet: what it hits on the way taking the discharge first.
@@ -480,6 +482,8 @@ Group: Reactions
 **The numbers.** The crust lasts 5 s. Your next heavy blow on it breaks it: a fan of ice about 4 m long beyond the enemy, away from you, deals 10 damage, 2 Chill and 1 Unsteady to everything in it. A light blow does not break it. Rests 4 s.
 
 **What sets it off.** Chill landing on a Unsteady enemy, or Unsteady on a chilled one.
+
+**Its shapes.** With Blizzard's Shape mark (Rime: Rime Tree or Spindrift, 3 Shards, in the heart of the chart) and both Wind and Ice carried, Rime wears the shape chosen at a rest fire instead. Rime Tree: the crust never breaks, and for 5 s every blow on it adds a Chill. Spindrift: the ice blows out of its far side the moment Rime fires, at half damage (5, 2 Chill and 1 Unsteady), no heavy blow needed.
 
 **How to use it.** Put the enemy between you and the others, then bring the heavy: the ice lands on them.
 
@@ -494,6 +498,8 @@ Group: Reactions
 
 **What sets it off.** Chill landing on a Soaked enemy (your Water, or the river's), or Water on a chilled one.
 
+**Its shapes.** With Glacier's Shape mark (Supercooled: Sea Ice or Hard Water, 3 Shards, in the heart of the chart) and both Ice and Water carried, Supercooled wears the shape chosen at a rest fire instead. Sea Ice: the blow that freezes it also lays 2 Chill on everything within 4 m, and on purpose this may start another Supercooled. Hard Water: only a heavy blow freezes it.
+
 **How to use it.** One touch of cold on a wet enemy, then any blow: it freezes, ready for a heavy to shatter.
 
 **How it looks.** Its name over the enemy, then the freeze.
@@ -506,6 +512,8 @@ Group: Reactions
 **The numbers.** Its Seeded goes to full depth (3). For 4 s a flower opens on it, and a heavy blow bursts it: you heal 10, and everything within 3 m is Soaked and Seeded. Left alone, the flower withers. Rests 4 s.
 
 **What sets it off.** Water landing on a Seeded enemy, or a seed on a Soaked one.
+
+**Its shapes.** With Bloom's Shape mark (Quickening: Floating Flower or Rootlets, 3 Shards, in the heart of the chart) and both Water and Life carried, Quickening wears the shape chosen at a rest fire instead. Floating Flower: the flower drops to the ground as a lily 2 m across for 5 s that soaks what stands on it, and you mend 8 as it opens. Rootlets: every enemy within 5 m is seeded to full, and a heavy blow on the flowering one within 4 s still mends you 10.
 
 **How to use it.** Water a seeded enemy in a crowd, then heavy it: a heal, and the whole crowd wet and seeded.
 
@@ -520,6 +528,8 @@ Group: Reactions
 
 **What sets it off.** A seed landing on a shaken enemy, or Tremor on a Seeded one.
 
+**Its shapes.** With Overgrowth's Shape mark (Split Rock: Taking Root or Root Web, 3 Shards, in the heart of the chart) and both Life and Earth carried, Split Rock wears the shape chosen at a rest fire instead. Taking Root: held only 1 s, and a Tremor at once on everything within 2.5 m. Root Web: everything within 6 m is held 0.5 s and given a Tremor.
+
 **How to use it.** The hold is your window: bring the heavy before it ends.
 
 **How it looks.** Its name over the enemy, then a burst of earth when the floor splits.
@@ -532,6 +542,8 @@ Group: Reactions
 **The numbers.** For 5 s, your next heavy blow on it breaks its armour to full (three notches) and rings out sparks: 10 damage, 15 stagger and a notch to everything within 3 m. Rests 4 s.
 
 **What sets it off.** Tremor landing on a notched enemy, or a notch on a shaken one.
+
+**Its shapes.** With Forge's Shape mark (Anvil Stone: Ringing Iron or Hammer Scale, 3 Shards, in the heart of the chart) and both Earth and Metal carried, Anvil Stone wears the shape chosen at a rest fire instead. Ringing Iron: no stone, no heavy blow needed; its Sundered goes to full at once and sparks ring out 3 m, 10, 15 stagger and a notch each. Hammer Scale: no ring; up to four enemies within 6 m take 8, a notch and a Tremor.
 
 **How to use it.** Shake a notched enemy, then heavy it: the whole crowd notched for your Metal.
 
@@ -546,6 +558,8 @@ Group: Reactions
 
 **What sets it off.** A notch landing on a Marked enemy, or a Mark on a notched one.
 
+**Its shapes.** With Halo's Shape mark (Glint: Mirror to Mirror or Burning Mirror, 3 Shards, in the heart of the chart) and both Metal and Light carried, Glint wears the shape chosen at a rest fire instead. Mirror to Mirror: the ray runs on through up to four enemies within 6 m of each other, 10, 15 stagger and a Mark each. Burning Mirror: no ray; for 5 s the next weapon blow on it lays two notches and 10 more damage.
+
 **How to use it.** Mark a notched enemy to Mark the one beside it too, ready for your critical blows.
 
 **How it looks.** Its name over the enemy and a strike where the ray lands.
@@ -558,6 +572,8 @@ Group: Reactions
 **The numbers.** Half a second on, 16 damage and 30 stagger to it. For 4 s its Mark is not spent by your blows, so every blow in that time is critical. Rests 4 s.
 
 **What sets it off.** A Mark landing on a Cursed enemy, or a curse on a Marked one.
+
+**Its shapes.** With Eclipse's Shape mark (Diamond Ring: Shadow Bands or Through the Throat, 3 Shards, in the heart of the chart) and both Light and Dark carried, Diamond Ring wears the shape chosen at a rest fire instead. Shadow Bands: the bead as before, and a Curse on everything within 5 m. Through the Throat: the light slips out of its far side as a line 6 m long, 12 and a Mark on all on it. Both keep its Mark from being spent for 4 s.
 
 **How to use it.** Curse a Marked enemy, then strike it again and again while the ring holds.
 
@@ -572,6 +588,8 @@ Group: Reactions
 
 **What sets it off.** A curse landing on a poisoned enemy, or poison on a Cursed one.
 
+**Its shapes.** With Blight's Shape mark (Shut in the Dark: Swarm or Rot to the Bone, 3 Shards, in the heart of the chart) and both Dark and Poison carried, the jar wears the shape chosen at a rest fire instead. Both seal and break as the plain jar does. Swarm: as it breaks, 2 doses and a Curse leap to the nearest enemy within 8 m, which may seal a new jar there. Rot to the Bone: 9 stagger every second while it is sealed.
+
 **How to use it.** Dose it deep before you curse it: the deeper, the bigger the break. Killing it breaks the jar at once.
 
 **How it looks.** Its name over the enemy, then a burst when the jar breaks. Not yet: the black ring on the floor, and the poisoned that die inside crawling to it to feed it.
@@ -584,6 +602,8 @@ Group: Reactions
 **The numbers.** A fuse of 0.6 s, then the bang: 4 damage for each dose and 6 for each Burn stack to everyone within 2.5 m, with 30 stagger, and everyone reached is set burning. Half its doses (rounded up) are spent. Rests 4 s.
 
 **What sets it off.** Poison landing on a burning enemy, or Burn on a poisoned one.
+
+**Its shapes.** With Pyre's Shape mark (Fire Medicine: Fire Lance or Flying Fire, 3 Shards, in the heart of the chart) and both Poison and Fire carried, Fire Medicine wears the shape chosen at a rest fire instead. Fire Lance: after the fuse, a lane 5 m long beyond it takes 4 a dose and 6 a Burn stack, 30 stagger, a dose and a Burn. Flying Fire: five small fires land in a ring 3 m out for 3 s, burning and poisoning what walks in. Both spend half its doses.
 
 **How to use it.** Dose first, then light it: deep poison makes the biggest bang.
 
