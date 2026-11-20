@@ -26,7 +26,7 @@ namespace Clover.Gameplay
             Died = null;
             AfflictionFull = null;
             Carried = null;
-            CarriedSource = LaySource.Effect;
+            LaidBy = LaySource.Effect;
             Shattered = null;
             Landed = null;
             PoisonBit = null;
@@ -61,17 +61,16 @@ namespace Clover.Gameplay
 
         public static void RaiseDied(Component who, AfflictionSet afflictions) => Died?.Invoke(who, afflictions);
 
-        /// <summary>What laid the affliction a <see cref="Carried"/> listener is hearing of, while it hears.</summary>
-        public static LaySource CarriedSource { get; private set; }
+        /// <summary>What laid the affliction an <see cref="AfflictionFull"/> or <see cref="Carried"/> listener is hearing of, while it hears.</summary>
+        public static LaySource LaidBy { get; private set; }
 
         /// <summary>Tells the listeners what came of laying an affliction on something, and what laid it.</summary>
         public static void Report(Component who, AfflictionKind kind, int stacks, in AfflictionResult result, LaySource source = LaySource.Effect)
         {
+            LaidBy = source;
             if (result.ReachedFull) AfflictionFull?.Invoke(who, kind);
-            if (!result.Carried) return;
-            CarriedSource = source;
-            Carried?.Invoke(who, kind, stacks);
-            CarriedSource = LaySource.Effect;
+            if (result.Carried) Carried?.Invoke(who, kind, stacks);
+            LaidBy = LaySource.Effect;
         }
     }
 }

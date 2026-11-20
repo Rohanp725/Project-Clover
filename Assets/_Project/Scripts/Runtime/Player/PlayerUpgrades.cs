@@ -1223,7 +1223,7 @@ namespace Clover.Player
                     else if (subject is IAfflictable afflictable)
                     {
                         float seconds = combat.AfflictionSeconds != 1f ? Afflictions.Spec(kind).Seconds * combat.AfflictionSeconds : 0f;
-                        CombatEvents.Report(subject, kind, stacks, afflictable.Afflictions.Lay(kind, stacks + combat.ExtraStacks, seconds, combat.AfflictionPower, laying, subject));
+                        CombatEvents.Report(subject, kind, stacks, afflictable.Afflictions.Lay(kind, stacks + combat.ExtraStacks, seconds, combat.AfflictionPower, laying, subject), laying);
                         ElementLook.Puff(look, centre + Vector3.up * 1.2f, Vector3.up, 0.6f);
                     }
                     break;
@@ -1469,7 +1469,7 @@ namespace Clover.Player
                     var next = combat.EnemyNear(centre, Or(effect.Reach, 4f) * Stats.Multiplier(PlayerStat.LeapReach), passExcept);
                     if (next is IAfflictable taker)
                     {
-                        CombatEvents.Report(next, kind, eStacks, taker.Afflictions.Lay(kind, Mathf.Max(1, eStacks), 0f, combat.AfflictionPower, laying, next));
+                        CombatEvents.Report(next, kind, eStacks, taker.Afflictions.Lay(kind, Mathf.Max(1, eStacks), 0f, combat.AfflictionPower, laying, next), laying);
                         ElementLook.Sparks(look, centre + Vector3.up * 1.2f, (next.transform.position - centre).normalized, 1f);
                         ElementLook.Puff(look, next.transform.position + Vector3.up * 1.2f, Vector3.up, 0.6f);
                         Passed++;
@@ -1633,7 +1633,9 @@ namespace Clover.Player
         {
             if (who == null) return;
             Vector3 at = who.transform.position;
-            Vfx.Play(VfxKind.TintRing, at + Vector3.up * 0.3f, Vector3.up, 1f, Afflictions.Spec(kind).Colour);
+            // Filled by what a reaction laid (Seized's film, Rust), it is seen in the reaction's own look: no ring (the
+            // owner, 2026-11-20: "remove the circles").
+            if (CombatEvents.LaidBy != LaySource.Reaction) Vfx.Play(VfxKind.TintRing, at + Vector3.up * 0.3f, Vector3.up, 1f, Afflictions.Spec(kind).Colour);
             Trigger(UpgradeTrigger.AfflictionFull, who, at);
         }
 
@@ -1641,7 +1643,7 @@ namespace Clover.Player
         {
             if (who == null) return;
             // Carried by what a reaction laid, it is the reaction's still (a reaction's blow says so itself).
-            var source = CombatEvents.CarriedSource == LaySource.Reaction ? LaySource.Reaction : laying;
+            var source = CombatEvents.LaidBy == LaySource.Reaction ? LaySource.Reaction : laying;
             Enqueue(new Pending { Special = Special.Carry, Source = source, Target = who, At = who.transform.position, HasAt = true, Kind = kind, Stacks = stacks,
                 Radius = Afflictions.Spec(AfflictionKind.Soaked).CarryRadius });
         }

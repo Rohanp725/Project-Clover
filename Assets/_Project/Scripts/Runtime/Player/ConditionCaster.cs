@@ -49,7 +49,7 @@ namespace Clover.Player
             if (!Takes(spec, set)) return false;
             if (set.Conditions.Set(spec, who, mark, link, struck, ended, ShareOf(set), died) < 0) return false;
             if (effect.Affliction != AfflictionKind.None && effect.Stacks > 0)
-                CombatEvents.Report(who, effect.Affliction, effect.Stacks, set.Lay(effect.Affliction, effect.Stacks + combat.ExtraStacks, 0f, combat.AfflictionPower, source, who));
+                CombatEvents.Report(who, effect.Affliction, effect.Stacks, set.Lay(effect.Affliction, effect.Stacks + combat.ExtraStacks, 0f, combat.AfflictionPower, source, who), source);
             return true;
         }
 
