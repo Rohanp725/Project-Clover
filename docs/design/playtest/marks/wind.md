@@ -315,7 +315,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **The numbers.** 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 9, and it draws from 8.5 metres). The point is 2 metres ahead, or on an enemy that close. For 0.5 seconds everything within 7 metres of it is dragged most of the way in. Then the burst: 10 damage, 25 stagger, a heavy blow and two stacks of Unsteady to each, and each enemy's Unsteady goes off for 6 damage and 8 stagger a stack.
 
-**Works with.** Against the Wall, which it grows from; Closing Circle (five deep inside the ring), Rising Cut; Catching Fire with Fire carried, since it bunches a crowd.
+**Works with.** Hammer Down, which it grows from; Against the Wall; Closing Circle (five deep inside the ring), Rising Cut; Catching Fire with Fire carried, since it bunches a crowd.
 
 **Example.** Archers spread round a room, each a few deep: draw them all to one spot, and every stack they carry bursts at once.
 
@@ -363,6 +363,6 @@ design yet, its **Not built yet** line says what is missing.
 
 **The numbers.** Major, 3 Shards. The heavy blow deals 50% more damage. The enemy drops at once. The burst deals 14 damage and 30 stagger to everything within 3 metres and throws them 2 metres back.
 
-**Works with.** Against the Wall, which it grows from, and its thrown enemies. Lifting Wind, Sky Dance, Rising Cut and anything that throws enemies up.
+**Works with.** Against the Wall, which it grows from, and its thrown enemies. Indrawn Breath, which grows from it. Lifting Wind, Sky Dance, Rising Cut and anything that throws enemies up.
 
 **Example.** Throw a soldier up with Lifting Wind, then bring a heavy blow down on it: it slams into the ground and knocks its friends back.

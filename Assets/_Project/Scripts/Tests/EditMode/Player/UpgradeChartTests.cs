@@ -870,11 +870,10 @@ namespace Clover.Tests
                 Assert.AreEqual(at.X, mark.X, 0.001f, id + " stands at " + place);
                 Assert.AreEqual(at.Y, mark.Y, 0.001f, id + " stands at " + place);
             }
-            // The spells beside the middle places still grow from the bough's foot, so keeping these changes no price.
-            CollectionAssert.Contains(Upgrade.ById(WindTree.IndrawnBreath).Requires, WindTree.AgainstTheWall);
-            CollectionAssert.Contains(Upgrade.ById(WindTree.IndrawnBreath).Requires, WindTree.HammerDown);
-            CollectionAssert.Contains(Upgrade.ById(IceTree.SkiRun).Requires, IceTree.Brittle);
-            CollectionAssert.Contains(Upgrade.ById(IceTree.SkiRun).Requires, IceTree.CleanBreak);
+            // The stalk above each middle place grows from it, as the pattern grows its stalks: a line from the foot would
+            // run over the kept mark.
+            CollectionAssert.AreEqual(new[] { WindTree.HammerDown }, Upgrade.ById(WindTree.IndrawnBreath).Requires);
+            CollectionAssert.AreEqual(new[] { IceTree.CleanBreak }, Upgrade.ById(IceTree.SkiRun).Requires);
             // Hammer Down's heavy blow on an enemy in the air strikes half again as hard.
             var stats = new PlayerStats();
             foreach (var mod in Upgrade.ById(WindTree.HammerDown).Stats) stats.AddLearned(mod);

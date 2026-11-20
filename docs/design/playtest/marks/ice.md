@@ -263,7 +263,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **The numbers.** 3 Shards. For 5 seconds after its ice is gone the enemy takes 20% more damage from weapon blows and 20% more stagger from everything. Spells do not cut deeper.
 
-**Works with.** Chill, Flying Shards, All at Once, Ski Run, which grows from it, and the finisher: a shatter and a few brittle blows often stagger it.
+**Works with.** Chill, Flying Shards, All at Once, Clean Break, which grows from it (and Ski Run from that), and the finisher: a shatter and a few brittle blows often stagger it.
 
 **Example.** Shatter a brute, then keep cutting: for five seconds every blow bites a fifth harder and its balance bar fills fast.
 
@@ -313,7 +313,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **The numbers.** 4 Shards, no mana: it waits 8 seconds after a cast, less with weapon play (its Empower: 6, and a lane of 12 metres). You go 9 metres; each enemy passed takes 6 damage, 10 stagger and two stacks of Chill. The lane stays 5 seconds and bites what stands on it for 1 damage every half second. Nothing can strike you while you slide.
 
-**Works with.** Brittle, which it grows from; Chill; Hanging Ice and Eight Points on those you leave behind.
+**Works with.** Clean Break, which it grows from; Brittle; Chill; Hanging Ice and Eight Points on those you leave behind.
 
 **Not built yet.** The untouchable time only for the first 0.2 seconds (for now the whole slide), and a dodge along the lane carrying twice as far.
 
@@ -363,6 +363,6 @@ design yet, its **Not built yet** line says what is missing.
 
 **The numbers.** Major, 3 Shards. An enemy below 20% of its health when it is shattered dies a moment later. It never works on a god.
 
-**Works with.** Brittle, which it grows from. Every way to freeze and shatter: Hoarfrost, Hanging Ice, heavy blows on a frozen enemy, All at Once.
+**Works with.** Brittle, which it grows from, and Ski Run, which grows from it. Every way to freeze and shatter: Hoarfrost, Hanging Ice, heavy blows on a frozen enemy, All at Once.
 
 **Example.** A knight is down to a sliver of health and frozen. One heavy blow shatters it, and it is gone.

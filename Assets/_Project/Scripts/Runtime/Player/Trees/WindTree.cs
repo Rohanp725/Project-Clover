@@ -269,9 +269,9 @@ namespace Clover.Player.Trees
                 } },
                 BranchPattern.RightMiddle));
 
-            // Re-aimed as the detonator: the burst spends each enemy's Unsteady. It grows from Against the Wall, or from
-            // Hammer Down beside it, so keeping Hammer Down changes no price.
-            var grown = SpellBranch.Add(to, E, IndrawnBreath, "Indrawn Breath", SpellRole.Detonator, BranchPattern.RightB, AgainstTheWall, SpellForms.Reverse,
+            // Re-aimed as the detonator: the burst spends each enemy's Unsteady. It grows from Hammer Down in the bough's middle
+            // place, as the pattern grows its stalk (a line from the foot would run over Hammer Down's mark).
+            SpellBranch.Add(to, E, IndrawnBreath, "Indrawn Breath", SpellRole.Detonator, BranchPattern.RightB, HammerDown, SpellForms.Reverse,
                 new SpellSpec { Reach = 2f, Radius = 7f, Delay = 0.5f, Damage = 10f, Stagger = 25f, Stacks = 2 },
                 "You drag everything near into one place before you, then burst it apart. The burst spends each enemy's Unsteady, harder for every stack.",
                 UpgradeIcons.Spiral,
@@ -291,8 +291,6 @@ namespace Clover.Player.Trees
                 new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 2 } },
                 "Cast it in the middle of a dodge: the draw's point rides with you to where the dodge ends, and the burst spends no Unsteady, so every stack stays for the next blow.",
                 learnEffects: new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Unsteady, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Unsteady, Damage = 6f, Stagger = 8f, Radius = 0.8f } });
-
-            grown.Requires = new[] { AgainstTheWall, HammerDown };
 
             // BESPOKE (built): RememberForm.
             to.Add(BranchPattern.Put(new Upgrade { Id = TheWindRemembers, Name = "The Wind Remembers", Element = E, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,

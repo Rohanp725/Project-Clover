@@ -74,8 +74,8 @@ they need the editor, for example scenes, JSON and the input asset.
    uses. Does the smoke on a dodge away read?
 2. **The tide.** "High water" and "Low water" appear as callouts with a ring at the feet. There is no HUD sign yet (ledger
    `looks`).
-3. **The chart.** Check Wind's and Ice's right boughs with Hammer Down and Clean Break in the middle place. The spell above
-   grows from both the foot and the new mark, so two lines nearly overlap. Check Water and Life with the new top-of-the-trunk
-   place `T.3`.
+3. **The chart.** Check Wind's and Ice's right boughs with Hammer Down and Clean Break in the middle place. Indrawn Breath and
+   Ski Run now grow from them, as the pattern grows those stalks. Check Water and Life with the new top-of-the-trunk place
+   `T.3`. The ring check (`ring_check.py`) prints RING OK: 383 marks drawn, least spacing 0.912.
 4. **Under the Black Water** on a god or an elite: you should rise behind it and it should stay put.
 5. **The Hand's surge box** with a duo surge worn: its name, its two elements and its price.

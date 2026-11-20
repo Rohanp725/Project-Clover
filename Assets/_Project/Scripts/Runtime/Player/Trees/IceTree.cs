@@ -261,8 +261,9 @@ namespace Clover.Player.Trees
                 Description = "Shatter an enemy that has less than a fifth of its health left, and nothing is left of it. Gods are spared; elites are not." },
                 BranchPattern.RightMiddle));
 
-            // Ski Run grows from Brittle, or from Clean Break beside it, so keeping Clean Break changes no price.
-            var grown = SpellBranch.Add(to, E, SkiRun, "Ski Run", SpellRole.Movement, BranchPattern.RightB, Brittle, SpellForms.Drill,
+            // Ski Run grows from Clean Break in the bough's middle place, as the pattern grows its stalk (a line from the foot
+            // would run over Clean Break's mark).
+            SpellBranch.Add(to, E, SkiRun, "Ski Run", SpellRole.Movement, BranchPattern.RightB, CleanBreak, SpellForms.Drill,
                 new SpellSpec { Reach = 9f, Radius = 1f, Count = 1, Damage = 6f, Stagger = 10f, Stacks = 2, Speed = 18f, Seconds = 5f, LingerDamage = 1f },
                 "A lane of clear ice runs nine metres ahead and you slide down it at once, throwing snow, and nothing can touch you as you set off. Enemies on the lane are chilled two deep. The lane stays five seconds, and a dodge along it carries twice as far.",
                 UpgradeIcons.Boot,
@@ -294,8 +295,6 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Lane, Reach = 9f, Radius = 1f, Damage = 0f, Stagger = 0f, Affliction = AfflictionKind.Chill, Stacks = 5, Cooldown = 1f },
                 },
                 "Started in the instant a blow would land on you, it counts as a perfect dodge. Slide through an enemy in the moment it shatters, and the lane freezes everything standing on it.");
-
-            grown.Requires = new[] { Brittle, CleanBreak };
 
             // BESPOKE (built): StillWorldForm and ShatterChainForm.
             to.Add(BranchPattern.Put(new Upgrade { Id = Gift, Name = "The World Holds Still", Element = E, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,

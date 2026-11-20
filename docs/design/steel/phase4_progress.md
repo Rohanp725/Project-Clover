@@ -419,8 +419,10 @@ assemblies. The EditMode fixtures that run outside the editor pass: 708 in all, 
 
 ### Four marks kept (task 6)
 
-- Hammer Down and Clean Break are in the empty middle place of Wind's and Ice's right boughs. The spell above them grows from
-  either place, so no price changes. Hammer Down's heavy blow on an enemy in the air also hits half again as hard.
+- Hammer Down and Clean Break are in the empty middle place of Wind's and Ice's right boughs. Indrawn Breath and Ski Run now
+  grow from them, as the pattern grows those stalks: a line from the foot would run over the kept mark, and the ring check
+  refuses that. So those two spells are 3 Shards dearer to reach. Hammer Down's heavy blow on an enemy in the air also hits
+  half again as hard.
 - Spilled Water and Shade are at a new place, the top of the trunk (`T.3`). Water and Life had no empty place left after
   their keystones.
 
@@ -462,9 +464,9 @@ assemblies. The EditMode fixtures that run outside the editor pass: 708 in all, 
 1. **The top of the trunk.** Spilled Water and Shade are at a new place, `T.3`, at (0, 9.75). It grows from the middle
    bough's crown (Spreading Water, Root and Branch), because their trees had no empty place left after the new keystones.
    Alternatives: make one of them a minor somewhere else, or cut it again.
-2. **Two lines into one spell.** Indrawn Breath and Ski Run grow from the bough's foot or from Hammer Down or Clean Break,
-   so the lines to them nearly overlap. The other choice is to grow them from the new marks only, which makes each 3 Shards
-   dearer to reach.
+2. **Indrawn Breath and Ski Run are dearer.** They now grow from Hammer Down and Clean Break, so each is 3 Shards dearer
+   to reach. Growing them from the foot as well would draw a line over the kept mark, which the ring check refuses. The
+   other choice is to put Hammer Down and Clean Break somewhere else.
 3. **Readings of the rosters**, as built:
    - Grit: 6 a cut, not 3, and the whirl about 4 s.
    - Green Wood: torn pits stand 8 s, not 5.
