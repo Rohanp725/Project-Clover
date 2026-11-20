@@ -15,7 +15,9 @@ using UnityEngine.InputSystem.LowLevel;
 //   game   the game camera itself, the player stood 2.6 m off toward the plaza's middle, the 960x540 window round the bowl
 //          cut at 1:1 from the 1920x1080 game view.
 // The Fire brazier is filmed a third and fourth time with the Blender worker's flame tongues in place of the flame field
-// (fire_kit_close, fire_kit_game), to compare. The HUD is hidden. Frames to review/gifs/braziers/frames/<element>_<view>/.
+// (fire_kit_close, fire_kit_game), to compare. With "lineup" in brazier_gif_only.txt it instead stands all eleven in two
+// rows 2.2 m apart (six in front, five behind, the ring's order) on the open floor ahead of the player and films one loop
+// of the whole 1920x1080 game view (lineup/), then puts them back. The HUD is hidden. Frames to review/gifs/braziers/frames/<element>_<view>/.
 // Set the game view to 1920x1080 first (AgentScripts/GameViewSize.cs) and back to free after. Assemble with
 // AgentScripts/brazier_gifs.py.  bash AgentScripts/runprobe.sh ProvingGround BrazierGifFrames 400
 public static class BrazierGifFrames
@@ -72,6 +74,12 @@ public class BrazierGifFramesRunner : MonoBehaviour
         var only = System.IO.File.Exists("AgentScripts/brazier_gif_only.txt")
             ? System.IO.File.ReadAllText("AgentScripts/brazier_gif_only.txt").Split(',').Select(part => part.Trim()).Where(part => part.Length > 0).ToArray()
             : new string[0];
+        if (only.Contains("lineup"))
+        {
+            yield return Lineup(player, braziers);
+            only = only.Where(part => part != "lineup").ToArray();
+            if (only.Length == 0) braziers.Clear();
+        }
         foreach (var look in braziers)
         {
             string element = look.Key.Replace("brazier_", "");
@@ -104,6 +112,55 @@ public class BrazierGifFramesRunner : MonoBehaviour
         if (picture != null) Destroy(picture);
         Say("done");
         Destroy(gameObject);
+    }
+
+    // All eleven in two rows on the open floor at (28, 0, 0), the player south of them, filmed whole at the game camera.
+    private IEnumerator Lineup(PlayerController player, List<BrazierLook> braziers)
+    {
+        var order = new[] { "fire", "lightning", "wind", "ice", "water", "life", "earth", "metal", "light", "dark", "poison" };
+        var moved = new List<(Transform root, Vector3 at, Quaternion turn)>();
+        var middle = new Vector3(28f, 0f, 1.2f);
+        for (int i = 0; i < order.Length; i++)
+        {
+            var look = braziers.FirstOrDefault(one => one.Key == "brazier_" + order[i] && one.gameObject.activeInHierarchy);
+            if (look == null) continue;
+            // The brazier's root is the Shown group's parent.
+            var root = look.transform.parent;
+            moved.Add((root, root.position, root.rotation));
+            bool front = i < 6;
+            float x = front ? (i - 2.5f) * 2.2f : (i - 6 - 2f) * 2.2f;
+            root.SetPositionAndRotation(middle + new Vector3(x, 0f, front ? -1.1f : 1.1f), Quaternion.identity);
+        }
+        // The floor's words and the dummies in front of the rows are not the braziers: put away while filming.
+        var hidden = new List<GameObject>();
+        hidden.AddRange(FindObjectsByType<TextMesh>(FindObjectsInactive.Exclude).Where(text => (text.transform.position - middle).magnitude < 14f).Select(text => text.gameObject));
+        hidden.AddRange(FindObjectsByType<Clover.Gameplay.TrainingDummy>(FindObjectsInactive.Exclude).Where(dummy => (dummy.transform.position - middle).magnitude < 16f).Select(dummy => dummy.gameObject));
+        hidden.AddRange(FindObjectsByType<Clover.Gameplay.DummyAttacker>(FindObjectsInactive.Exclude).Select(dummy => dummy.gameObject));
+        foreach (var thing in hidden) thing.SetActive(false);
+        // Just south of the front row, in the gap between its two middle braziers, so both rows are in the game camera's frame.
+        player.Teleport(middle + new Vector3(0f, 0.05f, -1.9f), Quaternion.LookRotation(Vector3.forward, Vector3.up));
+        yield return new WaitForSecondsRealtime(1.5f);
+        string folder = Root + "lineup";
+        if (System.IO.Directory.Exists(folder)) System.IO.Directory.Delete(folder, true);
+        System.IO.Directory.CreateDirectory(folder);
+        var whole = new Texture2D(1920, 1080, TextureFormat.RGB24, false);
+        Time.captureFramerate = Rate;
+        yield return null;
+        for (int frame = 0; frame < Loop; frame++)
+        {
+            yield return new WaitForEndOfFrame();
+            var shot = ScreenCapture.CaptureScreenshotAsTexture();
+            whole.SetPixels(shot.GetPixels(0, 0, Mathf.Min(1920, shot.width), Mathf.Min(1080, shot.height)));
+            whole.Apply();
+            Destroy(shot);
+            System.IO.File.WriteAllBytes($"{folder}/{frame:000}.png", whole.EncodeToPNG());
+        }
+        Time.captureFramerate = 0;
+        Destroy(whole);
+        System.IO.File.WriteAllText(folder + "/info.txt", $"brazier=lineup\nview=game\nframes={Loop}\nbraziers={moved.Count}\n");
+        foreach (var (root, at, turn) in moved) root.SetPositionAndRotation(at, turn);
+        foreach (var thing in hidden) if (thing != null) thing.SetActive(true);
+        Say($"lineup: {moved.Count} braziers filmed in a row");
     }
 
     private IEnumerator Film(BrazierLook look, string name, bool close)

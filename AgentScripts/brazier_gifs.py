@@ -26,14 +26,19 @@ def frames_of(folder):
 def main():
     os.makedirs(STRIPS, exist_ok=True)
     names = sorted(name for name in os.listdir(FRAMES) if os.path.isdir(os.path.join(FRAMES, name)))
+    if sys.argv[1:]:
+        names = [name for name in names if any(name == wanted or name.startswith(wanted + "_") for wanted in sys.argv[1:])]
     for name in names:
         paths = frames_of(os.path.join(FRAMES, name))
         if not paths:
             continue
         images = [Image.open(path).convert("RGB") for path in paths]
+        # The lineup is the whole game view: brought down to the others' size.
+        if images[0].size != (960, 540):
+            images = [image.resize((960, 540), Image.LANCZOS) for image in images]
         size = write_gif(images, os.path.join(OUT, f"brazier_{name}.gif"))
         print(f"{name}: {len(images)} frames, {size / 1e6:.2f} MB")
-    elements = sorted({name.rsplit("_", 1)[0] for name in names})
+    elements = sorted({name.rsplit("_", 1)[0] for name in names if "_" in name})
     font, big = label_font(16), label_font(22)
     for element in elements:
         rows = [view for view in ("close", "game") if os.path.isdir(os.path.join(FRAMES, f"{element}_{view}"))]
