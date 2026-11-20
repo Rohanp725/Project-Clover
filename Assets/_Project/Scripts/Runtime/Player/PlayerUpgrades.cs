@@ -1721,6 +1721,56 @@ namespace Clover.Player
                 case UpgradeAction.TurnTide:
                     if (hasTideClock) TurnTide();
                     break;
+                case UpgradeAction.ClearCount:
+                {
+                    var owner = effect.Owner;
+                    if (owner != null && owner.Tally != null && owner.Index < tally.Length && tally[owner.Index] != 0)
+                    {
+                        tally[owner.Index] = 0;
+                        tallyDirty = true;
+                    }
+                    break;
+                }
+                case UpgradeAction.StepBack:
+                {
+                    Vector3 back = target != null ? -aim : -transform.forward;
+                    float far = Or(effect.Reach, 3f);
+                    if (afterimage != null) afterimage.Leave(0.3f);
+                    ElementLook.Sparks(held, self + Vector3.up, back, 1f);
+                    player.StepTo(self + back * far);
+                    break;
+                }
+                case UpgradeAction.Untouchable:
+                    if (defence != null) defence.UntouchableUntil = Mathf.Max(defence.UntouchableUntil, Time.time + Or(effect.Seconds, 0.3f));
+                    break;
+                case UpgradeAction.SwapPlaces:
+                {
+                    if (target == null || !(subject is IAfflictable placed)) break;
+                    Vector3 theirs = target.position;
+                    Vector3 mine = castOrigin;
+                    mine.y = theirs.y;
+                    ElementLook.Puff(held, theirs + Vector3.up * 0.4f, Vector3.up, 1.2f);
+                    ElementLook.Puff(held, mine + Vector3.up * 0.4f, Vector3.up, 1.2f);
+                    if (placed.Afflictions.Rank == EnemyRank.Plain)
+                    {
+                        // It rises out of your water, you out of its.
+                        PlaceBody(subject, mine);
+                        player.PassTo(theirs);
+                        PlacesSwapped++;
+                    }
+                    else
+                    {
+                        // What is too great to be moved stays: you come up behind it instead.
+                        Vector3 past = theirs - mine;
+                        past.y = 0f;
+                        player.PassTo(theirs + (past.sqrMagnitude > 0.01f ? past.normalized : transform.forward) * 1.5f);
+                    }
+                    // Face what you changed places with.
+                    Vector3 face = subject.transform.position - transform.position;
+                    face.y = 0f;
+                    if (face.sqrMagnitude > 0.01f) transform.rotation = Quaternion.LookRotation(face, Vector3.up);
+                    break;
+                }
                 case UpgradeAction.LengthenSurge:
                     if (element.SurgeActive) element.SurgeKit.Lengthen(effect.Amount, effect.Seconds);
                     break;
@@ -1810,6 +1860,36 @@ namespace Clover.Player
         public int Flinches { get; private set; }
         public int ConditionsSet { get; private set; }
         public int ArcsLeapt { get; private set; }
+        /// <summary>Counts for probes: places swapped (Under the Black Water) and later presses done (Three Weasels).</summary>
+        public int PlacesSwapped { get; private set; }
+        public int PressesDone { get; private set; }
+        // Where the player stood as the last spell was cast, for what is done where they were (a swap of places).
+        private Vector3 castOrigin;
+
+        // Puts an enemy's body at a spot at once: its controller is set aside for the move, as its own blinks do.
+        private static void PlaceBody(Component body, Vector3 to)
+        {
+            var controller = body.GetComponent<CharacterController>();
+            bool was = controller != null && controller.enabled;
+            if (was) controller.enabled = false;
+            body.transform.position = to;
+            if (was) controller.enabled = true;
+        }
+
+        /// <summary>
+        /// A later press of a spell of several presses (<see cref="Upgrade.Presses"/>): its effects are done now, aimed at the
+        /// enemy faced, as the spell's own. False when there is no such press.
+        /// </summary>
+        public bool Press(Upgrade mark, int index)
+        {
+            if (mark?.Presses == null || index < 0 || index >= mark.Presses.Length || mark.Presses[index] == null) return false;
+            castSource = mark;
+            foreach (var effect in mark.Presses[index]) Consider(effect, null, transform.position, false);
+            castSource = null;
+            PressesDone++;
+            return true;
+        }
+
         /// <summary>Counts for probes: freezes made to last longer (Six Levels Down).</summary>
         public int FreezesKept { get; private set; }
 
@@ -2653,6 +2733,7 @@ namespace Clover.Player
                 }
             }
             castSource = mark;
+            castOrigin = transform.position;
             form.Cast(cast);
             castSource = mark;
             Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);

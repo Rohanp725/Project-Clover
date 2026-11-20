@@ -54,6 +54,8 @@ namespace Clover.Player
         /// it returns how much was carried (nothing when no one is near to carry it). Set by the player's upgrades.
         /// </summary>
         [System.NonSerialized] public float WoundShare;
+        /// <summary>No blow lands until this time (the Untouchable action).</summary>
+        [System.NonSerialized] public float UntouchableUntil;
         [System.NonSerialized] public System.Func<float, float> ShareWound;
         /// <summary>The most wards that can be held at once.</summary>
         public int MaximumWards = 3;
@@ -368,6 +370,8 @@ namespace Clover.Player
             if (player.IsLeaping) return HitOutcome.Dodged;
             // Nor while a spell has made them something that cannot be struck.
             if (player.FormHold != 0 && player.FormUntouchable) return HitOutcome.Dodged;
+            // A spell's moment of being untouchable (Three Weasels' pass through its enemy).
+            if (Time.time < UntouchableUntil) return HitOutcome.Dodged;
             if (player.FormParrying)
             {
                 // The spell's own guard: the blow is turned for nothing and the form answers it.

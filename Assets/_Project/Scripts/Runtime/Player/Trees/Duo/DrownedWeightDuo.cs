@@ -111,11 +111,10 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.Keystone));
 
             // The duo spell, a movement on a 10 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The step
-            // form takes you to the enemy faced through the black water, soaking it (the branch's first element); it is Cursed
-            // and held knee-deep 1 s, and the water you rose from stays as a pool that soaks.
-            // NEEDS: the player and the enemy changing places (form-pieces: you rise where it stood and it where you stood,
-            // gods and elites unmoved with you behind them; now you step to it and it stays), the pool cursing as well as soaking,
-            // and the next weapon blow within 2 s dealing half again (now the next heavy blow is critical).
+            // form takes you through the black water to the enemy faced, soaking it (the branch's first element); then you and
+            // it change places (SwapPlaces): it rises where you stood as you cast, you where it stood, and a god or an elite is
+            // not moved, you rising behind it. It is Cursed and held knee-deep 1 s, the water you rose from stays 3 s as a pool
+            // that soaks and curses, and your next weapon blow within 2 s deals half again.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = UnderTheBlackWater, Name = "Under the Black Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Movement, Requires = new[] { HeldUnder, DeepSwell }, Icon = UpgradeIcons.Drop,
@@ -124,10 +123,14 @@ namespace Clover.Player.Trees.Duo
                 Spell = new SpellSpec { Reach = 9f, Damage = 8f, Stagger = 15f, Stacks = 1, Seconds = 2f },
                 Effects = new[]
                 {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.SwapPlaces, Cooldown = 0.5f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Hold, Seconds = 1f },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, At = EffectAt.Self, Do = UpgradeAction.Hazard, Radius = 1.25f, Seconds = 3f, Interval = 1f,
-                        Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                        Affliction = AfflictionKind.Soaked, Stacks = 1, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, At = EffectAt.Self, Do = UpgradeAction.Hazard, Radius = 1.25f, Seconds = 3f, Interval = 1f,
+                        Affliction = AfflictionKind.Cursed, Stacks = 1, Cooldown = 0.5f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Boon, Stat = PlayerStat.WeaponDamage, Amount = 0.5f, Seconds = 2f, UntilBlow = true, Cooldown = 0.5f },
                 },
             }, HeartPattern.Spell));
         }

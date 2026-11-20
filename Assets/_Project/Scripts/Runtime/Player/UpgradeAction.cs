@@ -95,5 +95,16 @@ namespace Clover.Player
         TurnTide,
         /// <summary>Makes the surge that burns last longer. Reads: Amount (seconds added), Seconds (the most it may last in all; 0 for no cap).</summary>
         LengthenSurge,
+        /// <summary>Empties the count its own mark keeps (a spell's first press starting its tally again). Reads: nothing.</summary>
+        ClearCount,
+        /// <summary>A short step straight away from the target, through nothing solid. Reads: Reach (3) metres.</summary>
+        StepBack,
+        /// <summary>No blow can land on the player for a moment. Reads: Seconds (0.3).</summary>
+        Untouchable,
+        /// <summary>
+        /// The player and the target change places: the target goes where the player stood as the spell was cast, the player
+        /// where the target stood. An elite or a god is not moved: the player comes up behind it instead. Reads: nothing.
+        /// </summary>
+        SwapPlaces,
     }
 }

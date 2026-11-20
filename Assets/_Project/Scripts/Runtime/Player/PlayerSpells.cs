@@ -220,6 +220,16 @@ namespace Clover.Player
             return Strikes.Check(Cooldowns, second, deep, mana, element != null && element.HasElement && strikeElement != null);
         }
 
+        // The spell of several presses waiting on its next press: its slot, its mark, which press comes next, and until when.
+        private int pressSlot = -1;
+        private Upgrade pressMark;
+        private int pressNext;
+        private float pressUntil;
+
+        /// <summary>The slot whose spell waits on a later press (Three Weasels), or -1; and which press comes next.</summary>
+        public int PressSlot => pressSlot >= 0 && Time.time < pressUntil ? pressSlot : -1;
+        public int PressNext => pressNext;
+
         /// <summary>True when R2 is the deep strike now: one element carried (or the same twice) and its Devotion bought.</summary>
         public bool DeepOnSecond => element != null && !element.Mixed && Devoted;
 
@@ -498,6 +508,18 @@ namespace Clover.Player
                 Refuse("Nothing in that slot");
                 return false;
             }
+            // A spell of several presses (Three Weasels): pressed again within its window it does its next press, waiting
+            // on no clock, rather than casting again.
+            if (pressSlot == slot && pressMark != null && Time.time < pressUntil && MarkIn(slot) == pressMark && upgrades != null)
+            {
+                if (upgrades.Press(pressMark, pressNext))
+                {
+                    pressNext++;
+                    if (pressNext >= pressMark.Presses.Length) pressSlot = -1;
+                    return true;
+                }
+                pressSlot = -1;
+            }
             if (!Cooldowns.Ready(slot))
             {
                 Refuse("Not ready");
@@ -548,6 +570,14 @@ namespace Clover.Player
                     }
                     // A duo spell charges with its first element (IMPLEMENTATION.md 8.5, question 2).
                     castIn = element.ElementOf(mark).Name;
+                    // A spell of several presses waits for its next press now.
+                    if (mark.Presses != null && mark.Presses.Length > 0)
+                    {
+                        pressSlot = slot;
+                        pressMark = mark;
+                        pressNext = 0;
+                        pressUntil = Time.time + mark.PressWindow;
+                    }
                     // The wait as its branch makes it (the Empower's is shorter). A spell from outside the table (a lent
                     // one) that asks no mana still waits.
                     float wait = upgrades.CooldownOf(mark);

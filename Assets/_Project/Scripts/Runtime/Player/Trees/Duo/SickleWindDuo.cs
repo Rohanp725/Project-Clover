@@ -93,21 +93,41 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.ChainEnd, Do = UpgradeAction.Cone, Reach = 5f, Arc = 30f, Damage = 6f, Stagger = 6f, Affliction = AfflictionKind.Unsteady, Stacks = 1 } },
             }, HeartPattern.Keystone));
 
-            // The duo spell, a movement on a 10 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The step
-            // form is the first weasel: a rush to the enemy faced that unsteadies it (the branch's first element) two deep and
-            // throws it 2 m; the second weasel's notch is laid with it.
-            // NEEDS: three presses within 4 s (second-press): the pass straight through it untouchable for 12 and a notch, then
-            // the step back that binds 2 health for each weapon blow landed since the first press, eight at most.
+            // The duo spell, a movement on a 10 s cooldown (SpellTimings), bought with 5 Shards once both are carried. Three
+            // presses within 4 s (Upgrade.Presses, second-press). The step form is the first weasel: a rush to the enemy faced
+            // that unsteadies it (the branch's first element) two deep and throws it 2 m, and starts the count of blows again.
+            // The second press is the pass straight through it, untouchable, for 12 and a notch; the third the step back that
+            // binds 2 health for each weapon blow landed since the first press, eight at most.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ThreeWeasels, Name = "Three Weasels", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Movement, Requires = new[] { Bellows, Grit }, Icon = UpgradeIcons.Wing,
                 Description = "Three presses within 4 s, as the three sickle weasels work together: a rush of wind to the enemy you face that throws it, a pass straight through it that notches its armour, and a step back out of reach that binds your wounds.",
                 Form = SpellForms.Step,
                 Spell = new SpellSpec { Reach = 5f, Damage = 6f, Stagger = 20f, Stacks = 2, Seconds = 2f },
+                Tally = new TallySpec { Name = "Wounds", Cap = 8 },
                 Effects = new[]
                 {
+                    new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnSpell = true, Do = UpgradeAction.ClearCount },
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 2f },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1 },
+                    // Each weapon blow landed counts toward the third weasel's binding, eight at most.
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Bank, Count = 1 },
+                },
+                PressWindow = 4f,
+                Presses = new[]
+                {
+                    // The second weasel: straight through the enemy faced to 3 m beyond, untouchable, 12 damage and a notch.
+                    new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.Untouchable, Seconds = 0.4f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.Burst, Radius = 1f, Damage = 12f, Stagger = 10f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.Step, Reach = 6f, Amount = 3f },
+                    },
+                    // The third: a step back out of reach that binds the wounds, 2 health for each weapon blow since the first.
+                    new[]
+                    {
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, Do = UpgradeAction.StepBack, Reach = 4f },
+                        new UpgradeEffect { On = UpgradeTrigger.SpellCast, SpendsAll = true, PerStack = true, Do = UpgradeAction.Heal, Amount = 2f },
+                    },
                 },
             }, HeartPattern.Spell));
         }

@@ -66,6 +66,14 @@ namespace Clover.Player
         public ReactionChange[] ReactionChanges;
         /// <summary>On a duo surge's mark: its own price and time in the Hand's surge slot (<see cref="DuoSurge"/>). Null otherwise.</summary>
         public DuoSurge Surge;
+        /// <summary>
+        /// On a spell of several presses (Three Weasels): what each press after the first does, in order. The slot's button
+        /// pressed again within <see cref="PressWindow"/> of the cast does the next press instead of casting again (the
+        /// ledger's second-press); the cast's own clock runs from the first. Null for a spell of one press.
+        /// </summary>
+        public UpgradeEffect[][] Presses;
+        /// <summary>Seconds after the cast in which the later presses may come.</summary>
+        public float PressWindow = 4f;
         /// <summary>On a Learn mark (and a duo spell): what the spell is for, the role icon in the Hand.</summary>
         public SpellRole Role = SpellRole.None;
         /// <summary>On a reaction lift: the element whose reactions it lifts (its effects ride <see cref="UpgradeTrigger.Reacted"/>). Empty otherwise.</summary>
@@ -207,6 +215,17 @@ namespace Clover.Player
                     effect.Slot = slots++;
                     effect.Owner = upgrade;
                 }
+                // A later press's effects are its spell's own, done when the press comes (PlayerUpgrades.Press).
+                if (upgrade.Presses != null)
+                    foreach (var press in upgrade.Presses)
+                    {
+                        if (press == null) continue;
+                        foreach (var effect in press)
+                        {
+                            effect.Slot = slots++;
+                            effect.Owner = upgrade;
+                        }
+                    }
                 // A shape's effects belong to its Shape mark: they run only while that shape is worn (SpellBranches.ShapeOf).
                 if (upgrade.Shapes != null)
                     foreach (var shape in upgrade.Shapes)

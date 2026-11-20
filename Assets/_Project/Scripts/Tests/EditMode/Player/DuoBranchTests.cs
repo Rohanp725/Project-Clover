@@ -300,5 +300,37 @@ namespace Clover.Tests
             }
             Assert.GreaterOrEqual(marks, 18, "the d5 minors and the 4.15 and 4.16 ones");
         }
+
+        [Test]
+        public void ThreeWeaselsIsThreePressesAndUnderTheBlackWaterChangesPlaces()
+        {
+            // second-press: the slot pressed again within 4 s does the next weasel, each press's effects in their own slots.
+            var weasels = Upgrade.ById(Clover.Player.Trees.Duo.SickleWindDuo.ThreeWeasels);
+            Assert.AreEqual(2, weasels.Presses.Length, "two presses after the cast: three weasels");
+            Assert.AreEqual(4f, weasels.PressWindow);
+            var second = weasels.Presses[0];
+            Assert.IsTrue(second.Any(effect => effect.Do == UpgradeAction.Untouchable), "the pass is untouchable");
+            Assert.IsTrue(second.Any(effect => effect.Do == UpgradeAction.Step && effect.Amount > 0f), "straight through the enemy");
+            var cut = second.Single(effect => effect.Do == UpgradeAction.Burst);
+            Assert.AreEqual(12f, cut.Damage);
+            Assert.AreEqual(AfflictionKind.Sundered, cut.Affliction);
+            var third = weasels.Presses[1];
+            Assert.IsTrue(third.Any(effect => effect.Do == UpgradeAction.StepBack), "a step back out of reach");
+            var bind = third.Single(effect => effect.Do == UpgradeAction.Heal);
+            Assert.IsTrue(bind.SpendsAll && bind.PerStack && bind.Amount == 2f, "2 health for each blow since the first press");
+            Assert.AreEqual(8, weasels.Tally.Cap, "eight at most");
+            Assert.IsTrue(weasels.Effects.Any(effect => effect.On == UpgradeTrigger.SpellCast && effect.Do == UpgradeAction.ClearCount), "the first press starts the count again");
+            Assert.IsTrue(weasels.Effects.Any(effect => effect.On == UpgradeTrigger.AnyHit && effect.Do == UpgradeAction.Bank));
+            foreach (var effect in weasels.Presses.SelectMany(press => press))
+            {
+                Assert.AreSame(weasels, effect.Owner);
+                Assert.GreaterOrEqual(effect.Slot, 0);
+            }
+            // place swaps: the enemy where you stood, you where it stood.
+            var water = Upgrade.ById(Clover.Player.Trees.Duo.DrownedWeightDuo.UnderTheBlackWater);
+            Assert.AreEqual(UpgradeAction.SwapPlaces, water.Effects[0].Do, "the change of places comes first, then what is done to it");
+            Assert.IsTrue(water.Effects.Any(effect => effect.Do == UpgradeAction.Hazard && effect.Affliction == AfflictionKind.Cursed), "the pool curses as well as soaks");
+            Assert.IsTrue(water.Effects.Any(effect => effect.Do == UpgradeAction.Boon && effect.Stat == PlayerStat.WeaponDamage && effect.Amount == 0.5f && effect.UntilBlow), "the next blow half again");
+        }
     }
 }

@@ -59,10 +59,8 @@ Dark are both carried.
 
 **When it happens.** From a spell slot, while Water and Dark are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Water.
 
-**The numbers.** Mix, duo spell, movement, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. Up to 9 metres: 8 damage, 15 stagger, Soaked and Cursed (so it swells), held 1 second (elites 0.4); a pool 2.5 metres across where you land, soaking once a second for 3 seconds; your next heavy blow within 2 seconds is critical.
+**The numbers.** Mix, duo spell, movement, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. Up to 9 metres: 8 damage, 15 stagger, Soaked and Cursed (so it swells), held 1 second (elites 0.4). You and the enemy change places: it ends up where you stood when you cast, and you where it stood. An elite or a god is too heavy to move, so you come up 1.5 metres behind it instead. The pool where you come up is 2.5 metres across and lasts 3 seconds; it soaks and curses once a second. Your next weapon blow within 2 seconds hits half again as hard, and your next heavy blow within 2 seconds is critical.
 
 **Works with.** Drowned Weight, Held Under, The Debt Passes.
 
 **Example.** Drop through to the archer and come up swinging.
-
-**Not built yet.** You do not yet change places: you step to the enemy and it stays where it was, and gods and elites are not yet passed behind. The pool soaks but does not curse, and the blow after it is a critical heavy blow rather than any blow at half again.
