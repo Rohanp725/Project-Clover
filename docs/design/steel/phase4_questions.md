@@ -119,3 +119,29 @@ Each was built with the default given here; every one is easy to change. Added t
    or knock-down guard yet).
 9. **How long burrs ride.** Burrs give no time. Default: 6 seconds (a tuft every 1.5 s, four tufts), six tufts at most.
    Alternative: as long as Seeded lasts (8 s).
+
+## Earth
+
+1. **Three keystones in the table, two kept.** Earth's passive table gives Immovable, The Slow Hand and The Closed Ring;
+   the cut list says each tree keeps two beside its Devotion, and the chart tests allow one or two. Default: Immovable
+   and The Slow Hand kept (they change how you fight), The Closed Ring retired and refunded (6 Shards), so the tree is
+   33 marks. Alternatives: keep The Closed Ring and cut one of the other two; or keep it as a major (3 Shards) in the
+   empty place at the top of the trunk.
+2. **Mountain Stance's Empower has no shorter wait.** The roster gives it "3 s; 25 stagger a blow turned", but every
+   Empower is "stronger, shorter cooldown" by the shared rule, and the chart tests ask for one. Default: it waits 9
+   seconds, not 10, as well. Alternative: keep 10 seconds and let the test allow an Empower that only lengthens the stance.
+3. **Cairn's "plus 10 more".** Each stone lands "for 12 damage and 15 stagger plus 10 more". Default: 10 more damage
+   once for the heap on each shaken enemy. Alternatives: 10 more stagger a stone; or nothing beyond 12 and 15 a stone.
+4. **The Slow Hand is the ring's cheapest keystone.** It grows from Heavy Hand on the middle bough, so it is reached for
+   11 Shards (Immovable, grown from Mountain Stance's Learn, for 15). Default: as placed; two keystones still cost more
+   than a run. Alternative: grow The Slow Hand from Cairn's or Under the Mound's Learn (15 Shards).
+5. **Stand-ins that are stronger than their timing.** Until the moments exist, Under the Mound's Master gives a perfect
+   dodge's reward and a stronger next blow on every cast; Quake Step's Master ends its wait on any stamp that lands, once
+   in 18 s; Mountain Stance's Master holds the attacker of any blow turned and ends its wait once in 20 s; Stone Rise's and
+   Cairn's Masters ask only that you are Rooted (three seconds without a dodge), not still for a second; Stone Remembers
+   strikes as if into stone on any heavy blow, once in 3 s. Default: as written, with **Not built yet** lines.
+   Alternatives: give them nothing until the pieces are built; or lengthen their limits.
+6. **Standing Stones before stones stand.** The design re-aims it (two of your stones stand at once, and an enemy
+   driven into one is hurt and breaks it); nothing yet stands on the field. Default: it keeps its built pillar on what a
+   spell strikes, with its built words, and the design's in its details. Alternative: the design's words now, as
+   Stone Remembers has, with the pillar as the stand-in.

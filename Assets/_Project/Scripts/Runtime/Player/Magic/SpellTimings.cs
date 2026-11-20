@@ -10,7 +10,7 @@ namespace Clover.Player.Magic
     /// become Evolutions later, take a duo spell's cooldown. Numbers come from the rosters in elements_a.md and
     /// elements_b.md where the spell is listed there, and from its role where it is not (marked "not in the roster").
     /// Applied to the catalogue as it is gathered (<see cref="Apply"/>), so a spell's <see cref="SpellSpec.Cooldown"/>
-    /// and <see cref="SpellSpec.Cost"/> are the table's. Earth has no larger spell yet: the design gives it the new Cairn.
+    /// and <see cref="SpellSpec.Cost"/> are the table's. Earth's larger spell is the new Cairn.
     /// </summary>
     public static class SpellTimings
     {
@@ -78,12 +78,13 @@ namespace Clover.Player.Magic
             ["life.reap"] = Cd(12f, SpellRole.Detonator),
             ["life.tree"] = Mana(40f, SpellRole.Breaker),           // Life's larger spell
             ["life.harvest"] = Cd(12f, SpellRole.Breaker),          // Drawn From the Wood; its Feed the Ground shape is paid in health too
-            // Earth (its larger spell, Cairn, is not built)
-            ["earth.stance"] = Cd(10f, SpellRole.Counter),
-            ["earth.quakestep"] = Cd(9f, SpellRole.Breaker),
-            ["earth.cleaver"] = Cd(10f, SpellRole.Breaker),         // not in the roster
+            // Earth, reshaped (Phase 4): Stone Rise is the base spell; Mountain Cleaver moved to the all-in infused strike and
+            // Rampart is cut; Under the Mound and Cairn are new.
             ["earth.fissure"] = Cd(10f, SpellRole.Breaker),
-            ["earth.rampart"] = Cd(10f, SpellRole.Counter),         // not in the roster
+            ["earth.quakestep"] = Cd(9f, SpellRole.Breaker),
+            ["earth.stance"] = Cd(10f, SpellRole.Counter),
+            ["earth.mound"] = Cd(9f, SpellRole.Movement),
+            ["earth.cairn"] = Mana(40f, SpellRole.Detonator),       // Earth's larger spell
             // Metal
             ["metal.circle"] = Cd(10f, SpellRole.Counter),
             ["metal.hone"] = Cd(9f, SpellRole.Breaker),             // not in the roster
@@ -154,8 +155,8 @@ namespace Clover.Player.Magic
 
         /// <summary>
         /// What one mark takes off the wait of <paramref name="element"/>'s base spell (stat
-        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Earth second, Near to Hand
-        /// shortens Stone Rise and not the first element's spell.
+        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Metal second, Ready Steel
+        /// shortens Flung Blade and not the first element's spell.
         /// </summary>
         public static float BaseCooldownShare(Upgrade mark, string element)
         {

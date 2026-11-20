@@ -88,6 +88,18 @@ namespace Clover.Player
             new RetiredMark("life.price", 3), new RetiredMark("life.thin", 3), new RetiredMark("life.shade", 3),
             new RetiredMark("life.ring", 4),
             new RetiredMark("life.heartwood", 6), new RetiredMark("life.roots", 6),
+
+            // Earth (elements_b.md, "What to cut from the built content"): the plain minors and the dead "costs less" minor
+            // (Near to Hand), Landslide cut outright, Stone Skin and Aftershock folded into Mountain Stance as a shape, Toppling
+            // folded into Stone Rise, Mountain Cleaver moved to Earth's all-in infused strike, Rampart cut as a repeat, and The
+            // Closed Ring, a keystone not carried over (the tree keeps two beside its Devotion).
+            new RetiredMark("earth.deepfooting", 1), new RetiredMark("earth.thickhide", 1), new RetiredMark("earth.steadyarm", 1), new RetiredMark("earth.oldgranite", 1),
+            new RetiredMark("earth.deepbedrock", 1), new RetiredMark("earth.breakingweight", 1), new RetiredMark("earth.fullswing", 1), new RetiredMark("earth.loosefooting", 1),
+            new RetiredMark("earth.longtremor", 1), new RetiredMark("earth.easyburden", 1), new RetiredMark("earth.hardstone", 1), new RetiredMark("earth.nearathand", 1),
+            new RetiredMark("earth.farroots", 1), new RetiredMark("earth.oldstones", 1),
+            new RetiredMark("earth.stoneskin", 3), new RetiredMark("earth.aftershock", 3), new RetiredMark("earth.landslide", 3), new RetiredMark("earth.toppling", 3),
+            new RetiredMark("earth.cleaver", 4), new RetiredMark("earth.rampart", 4),
+            new RetiredMark("earth.closedring", 6),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

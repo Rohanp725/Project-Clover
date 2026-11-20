@@ -492,6 +492,8 @@ namespace Clover.Tests
             [Elements.Ice] = 10,
             [Elements.Water] = 10,
             [Elements.Life] = 10,
+            // Earth's table gives three keystones; it keeps two beside its Devotion, as the cut list asks of every tree.
+            [Elements.Earth] = 9,
         };
 
         [Test]
