@@ -180,6 +180,8 @@ namespace Clover.Player
             switch (element.Name)
             {
                 case Elements.Fire:
+                    // Checked against elements_a.md when Fire was reshaped (task 4.2): the third blow's patch above, Burning
+                    // Edge and Burnt Offering here are the design's numbers.
                     // Burning Edge: a sheet of flame along the arc and 3 m beyond, 2 Burn on all it reaches, the arc's ground burning 3 s.
                     Cover(combat, print, Blow(element, blowDamage * 0.25f, 8f, 2), 3f);
                     if (!art) Show(combat, element, print, 3f);

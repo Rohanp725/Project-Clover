@@ -17,10 +17,24 @@ namespace Clover.Player
     {
         private static readonly RetiredMark[] retired =
         {
+            // Fire (elements_a.md, "What to cut from the built content"): the plain minors, the dead "costs less" minor,
+            // Flashpoint and Wildfire, the keystones not carried over, and the spells folded or replaced.
+            new RetiredMark("fire.stoked", 1), new RetiredMark("fire.banked", 1), new RetiredMark("fire.searing", 1), new RetiredMark("fire.fuse", 1),
+            new RetiredMark("fire.tinder", 1), new RetiredMark("fire.flint", 1), new RetiredMark("fire.breath", 1), new RetiredMark("fire.hearth", 1),
+            new RetiredMark("fire.embers", 1), new RetiredMark("fire.footing", 1), new RetiredMark("fire.broadwave", 1), new RetiredMark("fire.shortbreath", 1),
+            new RetiredMark("fire.coals", 1), new RetiredMark("fire.longkindle", 1), new RetiredMark("fire.kindling", 1),
+            new RetiredMark("fire.flash", 3), new RetiredMark("fire.wildfire", 3),
+            // Burn and Detonate is folded into Breath of the Lioness (once Backdraft), which keeps its id.
+            new RetiredMark("fire.detonate", 3),
+            new RetiredMark("fire.furnace", 6), new RetiredMark("fire.scorched", 6),
+            // Sunspot is replaced by Black Pitch; Cinder Fan is folded into Flame Wave as a shape.
+            new RetiredMark("fire.sunspot", 4), new RetiredMark("fire.fan", 4),
         };
 
+        // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
         private static readonly RetiredMark[] moving =
         {
+            new RetiredMark(Upgrade.BurningCrescent, 3),
         };
 
         /// <summary>The marks cut, with their prices: a save that holds one is refunded.</summary>

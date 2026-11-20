@@ -82,7 +82,8 @@ namespace Clover.Tests
         [Test]
         public void TheMarksBuiltWearTheirOwnForms()
         {
-            Assert.AreEqual(SpellForms.Sunspot, Upgrade.ById(FireTree.Sunspot).Form);
+            // Sunspot is retired (Phase 4): Black Pitch took its place.
+            Assert.IsNull(Upgrade.ById("fire.sunspot"));
             Assert.AreEqual(SpellForms.Lodestone, Upgrade.ById("lightning.lodestone").Form);
             Assert.AreEqual(SpellForms.Waiting, Upgrade.ById("lightning.waiting").Form);
             foreach (string id in new[] { SpellForms.Sunspot, SpellForms.Lodestone, SpellForms.Waiting })
@@ -92,12 +93,12 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void ScorchedEarthGivesItsManaOnlyInOwnFireAndMakesSpellsDearer()
+        public void ScorchedEarthIsRetiredWithTheKeystonesNotCarriedOver()
         {
-            var mark = Upgrade.ById(FireTree.ScorchedEarth);
-            Assert.IsTrue(mark.Stats.Any(mod => mod.Stat == PlayerStat.ManaFromBlows && mod.When == StatWhen.InOwnFire && Math.Abs(mod.Amount - 0.5f) < 1e-4f));
-            Assert.IsTrue(mark.Stats.Any(mod => mod.Stat == PlayerStat.SpellCost && mod.When == StatWhen.Always && Math.Abs(mod.Amount - 0.2f) < 1e-4f));
-            Assert.IsFalse(mark.Stats.Any(mod => mod.Stat == PlayerStat.SurgeSeconds), "Kindle is not longer; its clock stops in the fire.");
+            // elements_a.md, "What to cut": its "spells cost more" means nothing once basic spells run on cooldowns.
+            Assert.IsNull(Upgrade.ById(FireTree.ScorchedEarth));
+            Assert.IsTrue(RetiredMarks.IsRetired(FireTree.ScorchedEarth));
+            Assert.IsTrue(RetiredMarks.IsRetired(FireTree.OpenFurnace));
             Assert.AreEqual(Enum.GetValues(typeof(StatWhen)).Length, PlayerStats.WhenCount, "Every state a number may wait on has its place.");
         }
     }

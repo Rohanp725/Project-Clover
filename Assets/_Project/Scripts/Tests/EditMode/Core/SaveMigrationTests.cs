@@ -139,9 +139,44 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void NoMarkIsRetiredYet()
+        public void TheMarksCutFromFireAndLightningAreRetiredAndNoneIsInTheCatalogue()
         {
-            Assert.AreEqual(0, SaveMigration.RetiredMarks.Count);
+            // Phase 4 reshaped Fire and Lightning into spell branches; the cut marks are refunded through this one list.
+            Assert.AreSame(RetiredMarks.All, SaveMigration.RetiredMarks);
+            Assert.Greater(SaveMigration.RetiredMarks.Count, 20);
+            foreach (var mark in SaveMigration.RetiredMarks)
+            {
+                Assert.IsNull(Upgrade.ById(mark.Id), mark.Id + " is retired and still a mark");
+                Assert.That(mark.Price, Is.InRange(1, 6), mark.Id);
+            }
+            Assert.AreEqual(SaveMigration.RetiredMarks.Count, SaveMigration.RetiredMarks.Select(mark => mark.Id).Distinct().Count());
+            // Kept marks keep their ids.
+            foreach (string kept in new[] { "fire.cinder", "fire.heat", "fire.backdraft", "fire.kiln", "fire.meteor", "lightning.charge", "lightning.rod", "lightning.flashes" })
+                Assert.IsFalse(RetiredMarks.IsRetired(kept), kept);
+        }
+
+        [Test]
+        public void ASaveHoldingACutSpellIsRefundedAndTheSpellLeavesItsSlotsButAMovingMarkStays()
+        {
+            var data = new SaveData();
+            data.Learned.Add("fire.sunspot");
+            data.Learned.Add("fire.stoked");
+            data.Learned.Add(Upgrade.BurningCrescent);
+            data.Learned.Add("fire.kiln");
+            data.Current.Slots[0] = "fire.sunspot";
+            data.Current.Slots[1] = "fire.kiln";
+            data.Current.Shapes.Add(new IdChoice("fire.sunspot", 1));
+            data.SavedHands[1].Slots[2] = "fire.sunspot";
+
+            SaveMigration.Upgrade(data);
+            CollectionAssert.AreEquivalent(new[] { Upgrade.BurningCrescent, "fire.kiln" }, data.Learned, "a mark leaving for the Way is kept for it");
+            Assert.AreEqual(5, data.Wallet.Shards, "Sunspot's 4 and Stoked's 1 come back");
+            Assert.AreEqual("", data.Current.SlotAt(0));
+            Assert.AreEqual("fire.kiln", data.Current.SlotAt(1));
+            Assert.AreEqual(0, data.Current.Shapes.Count);
+            Assert.AreEqual("", data.SavedHands[1].SlotAt(2));
+            Assert.IsTrue(RetiredMarks.IsMoving(Upgrade.BurningCrescent));
+            Assert.IsFalse(RetiredMarks.IsRetired(Upgrade.BurningCrescent));
         }
     }
 }

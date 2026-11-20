@@ -39,12 +39,13 @@ namespace Clover.Player.Magic
 
         private static readonly Dictionary<string, SpellTiming> spells = new Dictionary<string, SpellTiming>
         {
-            // Fire
+            // Fire, reshaped into spell branches (Phase 4): the roster of elements_a.md, Flame Wave being the base spell.
+            // Sunspot and Cinder Fan are retired (Black Pitch and a shape of Flame Wave took their places).
+            ["fire.uraeus"] = Cd(10f, SpellRole.Opener),
             ["fire.rush"] = Cd(8f, SpellRole.Movement),
-            ["fire.kiln"] = Cd(9f, SpellRole.Counter),
             ["fire.meteor"] = Mana(45f, SpellRole.Breaker),          // Fire's larger spell
-            ["fire.sunspot"] = Cd(11f, SpellRole.Detonator),        // Black Pitch's place in the roster
-            ["fire.fan"] = Cd(7f, SpellRole.Opener),                // Flame Wave's Cinder Fan shape
+            ["fire.kiln"] = Cd(9f, SpellRole.Counter),
+            ["fire.pitch"] = Cd(11f, SpellRole.Detonator),
             // Lightning
             ["lightning.waiting"] = Cd(10f, SpellRole.Breaker),
             ["lightning.rod"] = Cd(10f, SpellRole.Movement),

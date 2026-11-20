@@ -184,7 +184,8 @@ namespace Clover.Tests
             Assert.IsFalse(stats.EndBoon(PlayerStat.WeaponDamage, 0.3f), "It was ended twice.");
             stats.Tick(3f);
             Assert.AreEqual(1f, stats.Multiplier(PlayerStat.WeaponDamage), 0.001f, "Its time running out took it away a second time.");
-            Assert.IsTrue(Upgrade.ById(FireTree.Flashpoint).Effects.All(e => e.UntilBlow));
+            // Flashpoint, the first boon for one blow, was retired with Fire's reshaping (Phase 4); Rushing Wake is one too.
+            Assert.IsTrue(Upgrade.ById(WindTree.Slipstream).Effects.All(e => e.UntilBlow));
         }
 
         [Test]

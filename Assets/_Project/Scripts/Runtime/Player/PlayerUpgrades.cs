@@ -632,7 +632,8 @@ namespace Clover.Player
             Afflictions.SharedBeatShare = 0.15f;
             deadAlready = Has(Trees.DarkTree.DeadAlready);
             hollowStrength = Has(Trees.DarkTree.HollowStrength);
-            hasDetonate = On(Upgrade.BurnAndDetonate);
+            // Burn and Detonate is folded into Breath of the Lioness (once Backdraft, the same id): the guard's cone sets a burn off too.
+            hasDetonate = On(Upgrade.BurnAndDetonate) || On(Upgrade.Backdraft);
             hasBackdraft = On(Upgrade.Backdraft);
             hasTrail = On(Upgrade.FlameTrail);
             hasCrescent = On(Upgrade.BurningCrescent);

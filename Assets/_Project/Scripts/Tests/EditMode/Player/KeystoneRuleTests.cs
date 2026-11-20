@@ -121,9 +121,8 @@ namespace Clover.Tests
         [Test]
         public void TheKeystonesStandOnTheirRulesAndNotOnStandIns()
         {
-            var furnace = Upgrade.ById(FireTree.OpenFurnace);
-            Assert.IsTrue(Has(furnace, PlayerStat.GuardGrey, 0.71f), "Open Furnace lets more of a guarded blow through as grey.");
-            Assert.IsTrue(furnace.Effects == null || furnace.Effects.Length == 0, "Its detonation is written by hand, not a burst round the player.");
+            // Open Furnace was not carried over into the reshaped Fire tree (Phase 4).
+            Assert.IsNull(Upgrade.ById(FireTree.OpenFurnace));
 
             var stroke = Upgrade.ById(LightningTree.SingleStroke);
             Assert.IsTrue(Has(stroke, PlayerStat.AfflictionDepth, 5f), "Single Stroke lets Static lie ten deep.");
