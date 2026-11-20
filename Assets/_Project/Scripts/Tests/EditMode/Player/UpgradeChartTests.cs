@@ -287,9 +287,10 @@ namespace Clover.Tests
                 int whole = sold.Sum(upgrade => upgrade.Cost);
                 Assert.Greater(whole, run * 3, element.Name + ": the whole tree is far more than a run pays, so a path is chosen");
                 var keystones = sold.Where(upgrade => upgrade.Kind == UpgradeKind.Keystone).ToList();
-                // A tree reshaped into spell branches keeps one or two keystones beside its Devotion (elements_a.md, "What to cut", 10).
+                // A tree reshaped into spell branches keeps one to three keystones beside its Devotion (elements_a.md, "What to
+                // cut", 10, widened by the owner's word of 2026-11-20 to allow three).
                 bool reshaped = sold.Any(upgrade => upgrade.Part != BranchPart.None);
-                if (reshaped) Assert.That(keystones.Count, Is.InRange(1, 2), element.Name + " keeps one or two keystones beside its Devotion");
+                if (reshaped) Assert.That(keystones.Count, Is.InRange(1, 3), element.Name + " keeps one to three keystones beside its Devotion");
                 else Assert.AreEqual(3, keystones.Count, element.Name + " ends its three boughs in three keystones");
                 int nearest = keystones.Min(keystone => CheapestRoad(keystone, roads));
                 Assert.LessOrEqual(nearest, run + 3, $"{element.Name}: the cheapest road to a keystone costs {nearest}, within reach of about one area and its god");
@@ -509,16 +510,16 @@ namespace Clover.Tests
             [Elements.Ice] = 10,
             [Elements.Water] = 10,
             [Elements.Life] = 10,
-            // Earth's table gives three keystones; it keeps two beside its Devotion, as the cut list asks of every tree.
-            [Elements.Earth] = 9,
-            // Metal's table gives three keystones too; it keeps Edge Guard and Master's Answer beside its Devotion.
-            [Elements.Metal] = 9,
-            // Light's table gives three keystones as well; it keeps Unblemished and Condemned beside its Devotion.
-            [Elements.Light] = 9,
+            // Earth's table gives three keystones, and it keeps all three since the owner allowed it (2026-11-20).
+            [Elements.Earth] = 10,
+            // Metal's table gives three keystones too: Edge Guard, Master's Answer and All Blades Home.
+            [Elements.Metal] = 10,
+            // Light's table gives three keystones as well: Unblemished, Condemned and Two Suns.
+            [Elements.Light] = 10,
             // Dark's table gives two keystones, Never Sated and Dead Already, and four majors.
             [Elements.Dark] = 10,
-            // Poison's table gives three keystones; it keeps Slow Death and Volatile beside its Devotion.
-            [Elements.Poison] = 9,
+            // Poison's table gives three keystones: Slow Death, Volatile and Plague Bearer.
+            [Elements.Poison] = 10,
         };
 
         [Test]

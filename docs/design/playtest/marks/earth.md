@@ -353,3 +353,16 @@ Rise's rocks, a pillar, a heap of rubble.
 **Works with.** Bedrock, Heavy Hand, The Slow Hand, Tremor, finishers.
 
 **Example.** Light Bedrock and finish a staggered soldier: the hand comes down on the finisher's spot and staggers the two behind it.
+
+## earth.closedring
+**What it does.** The Closed Ring, a keystone. Lighting Bedrock raises eight stones in a ring round you. For ten seconds they strike and shake whatever stands among them, and you take a little less harm. Bedrock costs a quarter more.
+
+**When it happens.** When you light Bedrock, the surge. Always on once learned while Earth is carried.
+
+**The numbers.** 6 Shards. Eight stones in a ring 12 metres across, each a metre wide, for 10 seconds; once a second each strikes what stands on it for 8 damage, 20 stagger and one stack of Tremor. 8% less damage taken for the same 10 seconds. Bedrock costs 25% more mana (50 in place of 40).
+
+**Works with.** Cairn, whose Master it grows from, Standing Stones and Left in Rubble (more stone round you), Rooted and Immovable (stand inside the ring and let them come), Hand of the Mountain.
+
+**Not built yet.** The ring as a wall: nothing walking, rolling or being thrown across it while it stands, an enemy driven into a stone hurt and staggered by it, and you Rooted inside it. For now the stones only strike what stands on them, and anything can pass between them.
+
+**Example.** Light Bedrock with two soldiers on you: the ring comes up round all three of you, and every second they stand in it they are shaken further toward a stagger.

@@ -32,6 +32,7 @@ namespace Clover.Player.Trees
         public const string Glare = "light.base";
         public const string StepIntoLight = "light.step";
         public const string RingOfSpears = "light.spears";
+        public const string TwoSuns = "light.twosuns";
         public const string StandingLight = "light.lantern";
         public const string Reckoning = "light.reckoning";
         public const string Daybreak = "light.daybreak";
@@ -162,6 +163,18 @@ namespace Clover.Player.Trees
                 },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Do = UpgradeAction.Burst, Radius = 1.2f, Damage = 0f, Stagger = 60f, Cooldown = 4f } } },
                 BranchPattern.MiddleCrown));
+
+            // The third keystone, back under its id (the owner's word of 2026-11-20: trees may keep three). It stands at the
+            // top of the trunk, grown from Ring of Spears' Master, the spell that comes at the enemy from every side. Its old
+            // price, spells costing a quarter more, means nothing now that spells wait on clocks: they wait a fifth longer
+            // instead (phase4_questions.md, Light 1).
+            // NEEDS: a figure of light that casts the spell again from the far side of the enemy faced, at a share of its
+            // damage (two-suns). Until then: each enemy a spell strikes is struck again by light a moment later, and Marked.
+            to.Add(BranchPattern.Put(new Upgrade { Id = TwoSuns, Name = "Two Suns", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SpellBranch.MasterId(RingOfSpears) }, Icon = UpgradeIcons.Sun,
+                Description = "Each enemy your spell strikes is struck again by a burst of light a moment later, and Marked. Your spells wait a fifth longer.",
+                Stats = new[] { new StatMod(PlayerStat.SpellCooldown, -1f / 6f) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, Do = UpgradeAction.Burst, Radius = 2.5f, Delay = 0.4f, Damage = 12f, Stagger = 10f, Affliction = M, Stacks = 1, Cooldown = 0.2f } } },
+                BranchPattern.TrunkRight));
 
             // ---- The left bough: Sight. The exact moment, and the fight without a wound.
             // BESPOKE: the next attack of a chain pressed within 0.08 s of the moment the current blow hits is critical and free of stamina; a white glint runs the blade.

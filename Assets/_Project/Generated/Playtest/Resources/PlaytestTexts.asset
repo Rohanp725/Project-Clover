@@ -3225,6 +3225,25 @@ MonoBehaviour:
 
 
       <b>Example.</b> Light Bedrock and finish a staggered soldier: the hand comes down on the finisher''s spot and staggers the two behind it.'
+  - Id: earth.closedring
+    Title: The Closed Ring
+    Group: 
+    Body: '<b>What it does.</b> The Closed Ring, a keystone. Lighting Bedrock raises eight stones in a ring round you. For ten seconds they strike and shake whatever stands among them, and you take a little less harm. Bedrock costs a quarter more.
+
+
+      <b>When it happens.</b> When you light Bedrock, the surge. Always on once learned while Earth is carried.
+
+
+      <b>The numbers.</b> 6 Shards. Eight stones in a ring 12 metres across, each a metre wide, for 10 seconds; once a second each strikes what stands on it for 8 damage, 20 stagger and one stack of Tremor. 8% less damage taken for the same 10 seconds. Bedrock costs 25% more mana (50 in place of 40).
+
+
+      <b>Works with.</b> Cairn, whose Master it grows from, Standing Stones and Left in Rubble (more stone round you), Rooted and Immovable (stand inside the ring and let them come), Hand of the Mountain.
+
+
+      <b>Not built yet.</b> The ring as a wall: nothing walking, rolling or being thrown across it while it stands, an enemy driven into a stone hurt and staggered by it, and you Rooted inside it. For now the stones only strike what stands on them, and anything can pass between them.
+
+
+      <b>Example.</b> Light Bedrock with two soldiers on you: the ring comes up round all three of you, and every second they stand in it they are shaken further toward a stagger.'
   - Id: earthlight.shape
     Title: 'Earthlight: Down the Passage or Lit Seam'
     Group: 
@@ -6145,6 +6164,25 @@ MonoBehaviour:
 
 
       <b>Example.</b> Light Clarity, guard and cut for eight seconds without being touched: 200 dealt to none taken, and a sword falls for 120 on every Marked enemy.'
+  - Id: light.twosuns
+    Title: Two Suns
+    Group: 
+    Body: '<b>What it does.</b> Two Suns, a keystone. Every enemy your spell strikes is struck again a moment later by a burst of light, and Marked. Your spells wait a fifth longer between casts.
+
+
+      <b>When it happens.</b> Whenever a spell of yours strikes an enemy, while Light is carried.
+
+
+      <b>The numbers.</b> 6 Shards. The second burst comes 0.4 seconds later, 2.5 metres across: 12 damage, 10 stagger and one Mark. At most once every 0.2 seconds. Every spell''s wait is 1.2 times as long.
+
+
+      <b>Works with.</b> Ring of Spears, whose Master it grows from, Reckoning, Weighed and Condemned (more Marks to finish with), Daybreak''s long line (every enemy on it struck twice).
+
+
+      <b>Not built yet.</b> A figure of light casting the spell itself again from the far side of the enemy you face. For now each enemy struck takes a second burst of light where it stands.
+
+
+      <b>Example.</b> Drive Ring of Spears into a soldier with two beside it: a moment later the light bursts over it again and all three are Marked for your next blows.'
   - Id: lightning.static
     Title: Static
     Group: 
@@ -7105,6 +7143,25 @@ MonoBehaviour:
 
 
       <b>Example.</b> Light Temper and stand in the middle of a pack with your guard up: every blow turns, and when Temper ends eight swords come down on them.'
+  - Id: metal.allbladeshome
+    Title: All Blades Home
+    Group: 
+    Body: '<b>What it does.</b> All Blades Home, a keystone. Lighting Temper throws five blades out round you in a fan, and they come back to you, cutting and notching everything they pass both ways. Temper costs more and lasts a little longer.
+
+
+      <b>When it happens.</b> When you light Temper, the surge. Always on once learned while Metal is carried.
+
+
+      <b>The numbers.</b> 6 Shards. Five blades at 14 metres a second, out and back over 1.2 seconds; each deals 12 damage and 8 stagger and lays one notch of Sundered on what it passes. Temper costs 37.5% more mana (55 in place of 40) and lasts 20% longer.
+
+
+      <b>Works with.</b> Grave of Swords, whose Master it grows from, To the Blade, Forged Answer, Every Crack Rings, Hanging Swords (Temper''s gift).
+
+
+      <b>Not built yet.</b> Your conjured blades never fading (sixteen at most), and lighting Temper calling every one of them home in a straight line through whatever stands between, each adding a moment to Temper. For now the surge throws its own five blades instead.
+
+
+      <b>Example.</b> Plant Grave of Swords, fight among the blades, then light Temper: five more fly out and back through the crowd and every enemy they cross is notched.'
   - Id: nervefire.shape
     Title: 'Nerve Fire: Ozone or Lockjaw'
     Group: 
@@ -7912,6 +7969,22 @@ MonoBehaviour:
 
 
       <b>Example.</b> Light Fever, dose a whole pack to eight while it waits, and let the surge run out: each takes 80 at once.'
+  - Id: poison.plaguebearer
+    Title: Plague Bearer
+    Group: 
+    Body: '<b>What it does.</b> Plague Bearer, a keystone. You carry the sickness: every enemy near you is poisoned without a blow, deeper the longer it stays. Your flasks heal less.
+
+
+      <b>When it happens.</b> Always on once learned while Poison is carried, every second and a half.
+
+
+      <b>The numbers.</b> 6 Shards. One dose of poison every 1.5 seconds on every enemy within 4 metres of you. Flasks heal 30% less.
+
+
+      <b>Works with.</b> One by One, whose Master it grows from, Venom, Catching (each bite leaps on), Volatile and Slow Death (the doses never stop coming), Rupture, Tasted Every Herb.
+
+
+      <b>Example.</b> Stand in the middle of three soldiers and guard: without landing a blow, each is five doses deep within eight seconds.'
   - Id: pyre.shape
     Title: 'Fire Medicine: Fire Lance or Flying Fire'
     Group: 

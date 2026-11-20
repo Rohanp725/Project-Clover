@@ -91,38 +91,35 @@ namespace Clover.Player
 
             // Earth (elements_b.md, "What to cut from the built content"): the plain minors and the dead "costs less" minor
             // (Near to Hand), Landslide cut outright, Stone Skin and Aftershock folded into Mountain Stance as a shape, Toppling
-            // folded into Stone Rise, Mountain Cleaver moved to Earth's all-in infused strike, Rampart cut as a repeat, and The
-            // Closed Ring, a keystone not carried over (the tree keeps two beside its Devotion).
+            // folded into Stone Rise, Mountain Cleaver moved to Earth's all-in infused strike, and Rampart cut as a repeat. (The
+            // Closed Ring was retired here too, and is a keystone again since the owner allowed three, 2026-11-20.)
             new RetiredMark("earth.deepfooting", 1), new RetiredMark("earth.thickhide", 1), new RetiredMark("earth.steadyarm", 1), new RetiredMark("earth.oldgranite", 1),
             new RetiredMark("earth.deepbedrock", 1), new RetiredMark("earth.breakingweight", 1), new RetiredMark("earth.fullswing", 1), new RetiredMark("earth.loosefooting", 1),
             new RetiredMark("earth.longtremor", 1), new RetiredMark("earth.easyburden", 1), new RetiredMark("earth.hardstone", 1), new RetiredMark("earth.nearathand", 1),
             new RetiredMark("earth.farroots", 1), new RetiredMark("earth.oldstones", 1),
             new RetiredMark("earth.stoneskin", 3), new RetiredMark("earth.aftershock", 3), new RetiredMark("earth.landslide", 3), new RetiredMark("earth.toppling", 3),
             new RetiredMark("earth.cleaver", 4), new RetiredMark("earth.rampart", 4),
-            new RetiredMark("earth.closedring", 6),
 
             // Metal (elements_b.md, "What to cut from the built content"): the plain minors and the dead "costs less" minor
             // (Ready Steel), Hone cut as a repeat of the charged blade, Buried Blades folded into Flung Blade's Empower,
-            // Ricochet, Splinter and Shatter Point cut outright, and All Blades Home, a keystone not carried over (the tree
-            // keeps two beside its Devotion).
+            // and Ricochet, Splinter and Shatter Point cut outright. (All Blades Home was retired here too, and is a keystone
+            // again since the owner allowed three, 2026-11-20.)
             new RetiredMark("metal.practisedwrist", 1), new RetiredMark("metal.brightsparks", 1), new RetiredMark("metal.hardreturn", 1), new RetiredMark("metal.bracedframe", 1),
             new RetiredMark("metal.longtemper", 1), new RetiredMark("metal.deepbite", 1), new RetiredMark("metal.finishingedge", 1), new RetiredMark("metal.cleanedge", 1),
             new RetiredMark("metal.slowmending", 1), new RetiredMark("metal.balancedblade", 1), new RetiredMark("metal.trueflight", 1), new RetiredMark("metal.readysteel", 1),
             new RetiredMark("metal.longthrow", 1), new RetiredMark("metal.paidinblows", 1),
             new RetiredMark("metal.buriedblades", 3), new RetiredMark("metal.ricochet", 3), new RetiredMark("metal.splinter", 3), new RetiredMark("metal.shatterpoint", 3),
             new RetiredMark("metal.hone", 4),
-            new RetiredMark("metal.allbladeshome", 6),
 
             // Light (elements_b.md, "What to cut from the built content"): the plain minors and the dead "costs less" minor
             // (Ready Light), Returning Light broken by cooldowns (spells it refunded no longer cost mana), Sentence and What It
-            // Owes folded into Reckoning's Spoken Sentence, Dazzle into Glare's Master, and Two Suns, a keystone not carried
-            // over (the tree keeps two beside its Devotion).
+            // Owes folded into Reckoning's Spoken Sentence, and Dazzle into Glare's Master. (Two Suns was retired here
+            // too, and is a keystone again since the owner allowed three, 2026-11-20.)
             new RetiredMark("light.sharplight", 1), new RetiredMark("light.measuredguard", 1), new RetiredMark("light.narrowescape", 1), new RetiredMark("light.brightevasion", 1),
             new RetiredMark("light.longclarity", 1), new RetiredMark("light.plainguilt", 1), new RetiredMark("light.lastingmark", 1), new RetiredMark("light.richmark", 1),
             new RetiredMark("light.bowedhead", 1), new RetiredMark("light.heavyverdict", 1), new RetiredMark("light.gleaning", 1), new RetiredMark("light.hardlight", 1),
             new RetiredMark("light.longrays", 1), new RetiredMark("light.readylight", 1),
             new RetiredMark("light.dazzle", 3), new RetiredMark("light.sentence", 3), new RetiredMark("light.whatitowes", 3), new RetiredMark("light.returninglight", 3),
-            new RetiredMark("light.twosuns", 6),
 
             // Dark (elements_b.md, "What to cut from the built content"): the plain minors, Borrowed Strength, Feast and Glut
             // cut outright, The Dead Stand folded into the Devotion, Nothing Stays Buried, and Unpaid, a keystone not carried
@@ -137,15 +134,14 @@ namespace Clover.Player
 
             // Poison (elements_b.md, "What to cut from the built content"): the plain minors and the dead "costs less" minor
             // (Ready Poison), Left to Ripen, One Sickness and Lance the Wound cut outright, Rotten Fruit cut as a repeat of
-            // Blight's Carrion Flies, Swinging Censer folded into Miasma as its Censer shape, and Plague Bearer, a keystone not
-            // carried over (the tree keeps Slow Death and Volatile beside its Devotion).
+            // Blight's Carrion Flies, and Swinging Censer folded into Miasma as its Censer shape. (Plague Bearer was retired here
+            // too, and is a keystone again since the owner allowed three, 2026-11-20.)
             new RetiredMark("poison.deeperdose", 1), new RetiredMark("poison.bitterdose", 1), new RetiredMark("poison.lingering", 1), new RetiredMark("poison.waitinggame", 1),
             new RetiredMark("poison.calmpulse", 1), new RetiredMark("poison.ripe", 1), new RetiredMark("poison.wideburst", 1), new RetiredMark("poison.buckling", 1),
             new RetiredMark("poison.spentvenom", 1), new RetiredMark("poison.stillair", 1), new RetiredMark("poison.widecloud", 1), new RetiredMark("poison.longleap", 1),
             new RetiredMark("poison.readypoison", 1), new RetiredMark("poison.sweetfever", 1),
             new RetiredMark("poison.ripen", 3), new RetiredMark("poison.lance", 3), new RetiredMark("poison.rottenfruit", 3), new RetiredMark("poison.onesickness", 3),
             new RetiredMark("poison.censer", 4),
-            new RetiredMark("poison.plaguebearer", 6),
 
             // Plasma, the duo branch of Fire and Lightning (pairs_d1_d2.md, "Fire and Lightning"; task 4.5): Charged Embers
             // (both afflictions are laid by carrying both; Flashover's Shape mark takes its place), Arc Fire folded into

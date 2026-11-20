@@ -1015,7 +1015,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Daybreak** | Spell | 4 | You brace and loose a beam of light down one long line. 45 mana. | Put it in a spell slot at a rest, then cast it with that slot. 45 mana. |
 | **Unblemished** | Keystone | 6 | Fight a while without a wound and every blow you land is critical. A wound ends it, and until it returns you take more from every blow. | Always on once it is yours. |
 | **What It Owes** | Major | 3 | An enemy that wounds you is Marked. | Happens when you are struck. |
-| **Two Suns** | Keystone | 6 | Each enemy your spell strikes is struck again by a burst of light a moment later, and Marked. Spells cost a quarter more. | Happens when a spell of yours strikes an enemy. |
+| **Two Suns** | Keystone | 6 | Each enemy your spell strikes is struck again by a burst of light a moment later, and Marked. Your spells wait a fifth longer. | Happens when a spell of yours strikes an enemy. |
 | **Reckoning** | Spell | 4 | You set a seal on the enemy you face. Each of your next six blows on it sets off a burst of light that Marks all near. | Put it in a spell slot at a rest, then cast it with that slot. 12 s cooldown. |
 | **Heavy Verdict** | Minor | 1 | Your spells strike 10% harder. | Always on once it is yours. |
 | **Condemned** | Keystone | 6 | When an affliction on an enemy reaches its full depth, its balance takes a great blow. Your weapon deals less to enemies that bear nothing. | Happens when an affliction on an enemy reaches its full depth. |

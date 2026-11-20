@@ -33,6 +33,7 @@ namespace Clover.Player.Trees
         public const string Blister = "poison.blister";
         public const string ShareAlike = "poison.sharealike";
         public const string OneByOne = "poison.onebyone";
+        public const string PlagueBearer = "poison.plaguebearer";
         // The god's gift.
         public const string CleanBlade = "poison.cleanblade";
         // Conditions the branches and passives set on enemies.
@@ -158,6 +159,14 @@ namespace Clover.Player.Trees
                 Description = "Your poison no longer bites on its beat. It builds until it is full, and then bursts by itself and begins again.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictionFull, Do = UpgradeAction.SetOff, Needs = P, Affliction = P, Damage = 1f, Stagger = 4f, Radius = 2.5f, Cooldown = 0.5f } } },
                 BranchPattern.MiddleCrown));
+
+            // The third keystone, back under its id (the owner's word of 2026-11-20: trees may keep three). It stands at the
+            // top of the trunk, grown from One by One's Master. Built as designed: an aura of doses, paid for in flasks.
+            to.Add(BranchPattern.Put(new Upgrade { Id = PlagueBearer, Name = "Plague Bearer", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SpellBranch.MasterId(OneByOne) }, Icon = UpgradeIcons.Fang,
+                Description = "You carry the sickness. Enemies near you are poisoned without a blow, deeper the longer they stay. Your flasks heal less.",
+                Stats = new[] { new StatMod(PlayerStat.FlaskHeal, -0.3f) },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1.5f, Do = UpgradeAction.Afflict, At = EffectAt.Self, Affliction = P, Stacks = 1, Radius = 4f } } },
+                BranchPattern.TrunkRight));
 
             // ---- The left bough: Patience. The beat, and the moment to strike.
             // Built on the beat (UpgradeEffect.OnBeat): a blow within a quarter of a second of the target's bite doses again and makes the blows of the next moment critical. The timed blow itself is not made critical.

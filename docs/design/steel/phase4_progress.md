@@ -154,3 +154,78 @@ It waits for the owner's permission.
 3. **Shapes without a form** (Cherry Red, The Nail, Gathered, Tethered, Low Mist) change the spell by their effects alone.
    A tester sees the same cast with something added, not a new shape on the floor. That is as built, from the design.
 4. The questions for Metal, Light, Dark and Poison in `phase4_questions.md` are still open, with their defaults in force.
+
+## 2026-11-20 (afternoon): Devotion and every phase4 step merged into main and proven in the editor
+
+The owner approved the whole merge. It was made in the order of `phase4_merge_plan.md`, each step `--no-ff` and proven before
+the next. Before every step Play Mode was stopped, the editor recompiled (0 errors, 0 warnings), Clover > Build > Playtest
+Texts was rebuilt, and the `.meta` files Unity wrote and the new `PlaytestTexts.asset` were committed. There were no
+conflicts in the text at any step. Main's bespoke reaction looks survive: `PlayerReactions.Act` still plays
+`ReactionLook.Play(pair, at, who, way, transform)` for every reaction, and a shaped reaction plays its plain reaction's look
+before its shape's effects.
+
+| Step | Merge commit | EditMode | Probes |
+|---|---|---|---|
+| 0: Devotion and the RuleBook (`7c5869b`) | `47f6fe0` | 783 run, 1 failed, fixed; then all pass | DevotionProbe 23 OK, 0 WRONG |
+| 1: the heart, reaction shapes, Plasma, Sleet Charge (`794a22a`) | `558fe63` | 792 passed | DuoProbe 41 OK, 0 WRONG; ReactionProbe2 336 OK, 0 WRONG (54 heard, 54 shown, 0 unbuilt, 0 dropped); UpgradeProbe and ChartScaleProbe ran clean |
+| 2: the ten mixes moved into the heart (`e714b07`) | `0a94abe` | 792 passed | ReactionProbe2 336/0; DuoProbe 41/0; UpgradeProbe (T: the duo mark chosen in the heart and bought); MarksProbe (no errors); the old-save check below |
+| 3 and 4: twenty-one new duo branches (`1da3626`) | `aa822fc` | 792 passed | DuoProbe 42/0; ReactionProbe2 336/0; the profiler pass below |
+
+**What was fixed on the way.**
+
+1. `RuleBookTests.ASecondBreathLastsTheLongerAndARestEndsIt` gave a second breath of 1 s over 0.5 s left and expected 0.5:
+   the code keeps the longer, as its summary says. The test now gives a shorter second breath (0.25 s) and expects the
+   0.5 s kept.
+2. `DevotionProbe` took Lightning while all in on Fire and expected a mix; an altar used all in starts again with its
+   element alone (`AltarChoice`). It now carries Fire alone first.
+3. `MarksProbe` carried one element for Great Lotus, Eye of the Storm, Twin Break and Meltdown, which are duo marks now and
+   in force only with both carried. It now carries both elements of a duo mark (all four then worked: Great Lotus's burst
+   75 on each, the Eye's 14 bites and 3 bolts, a twin break of 66, a Meltdown).
+
+**A save from before the merge.** No save file exists on this machine (the probes are sandboxed), so `OldSaveCheck` builds
+one: every mark id main's trees had before the merge (322 read from git, 258 of them marks) learned, 7 Shards, Plasma Lance
+in the Hand and Fire Eater in a kept Hand, written as JSON and read back through the real `SaveStore`. Shards 7 -> 160 (the
+153 owed for the 45 retired marks), no retired id left, no live mark lost, both retired spells taken out of the Hands. The
+64 old ids that are neither marks nor retired are all shape and condition names (`dark.ash.ashen`, `fire.torch` and the
+like), never learned. Forge's Folded Steel folds are a fight's growth now (`e762f14`); a save that had folds keeps none.
+
+**The profiler pass.** `HeartCrowdProbe` (`bash AgentScripts/profile_heart.sh`): the Proving Ground's twelve penned enemies
+round the player, two afflictions laid every half second, every duo branch's mark learned (188) and every reaction shape
+chosen (33), the carried pair turned every 6 s through The Grudge, Ill Wind, Kindling Point and Plasma. The p95 frame is
+6.0 ms without the profiler (8.6 with it) and the reaction queue peaked at 15 of 64, so no runaway cascade. Garbage is 8194 B
+a frame, the editor included, against 8051 B for this morning's `CrowdProbe` without the heart. In the 600-frame capture
+(`review/checks/heart_crowd.data`) every Clover marker allocates nothing except `SpellDiamondHud.LateUpdate` (169 B a frame on
+average, 2708 B at most), `PlayerReactions.LateUpdate` (4 B), `Hazards.Update` (3 B) and `LoadoutChoice.Update` (3 B).
+`SpellDiamondHud` was not changed by the merge; whether its share is the pair swaps rewriting the diamond or something every
+frame has not been looked at yet.
+
+**The heart on the chart** (`review/shots/current/duo_heart_sleet.png`, `duo_heart_plasma.png`) reads: a small upright
+diamond of five marks in the middle of the ring, the pair and its reaction named over it ("Lightning and Ice: Sleet
+Charge"), clear of every tree's spokes. With one element carried it is empty (`chart_fire_ring.png`).
+
+## 2026-11-20: the owner's decisions, begun
+
+**Decision 1, three keystones: done.** The Closed Ring, All Blades Home, Two Suns and Plague Bearer are keystones again under
+their old ids, taken out of `RetiredMarks`, so a save that had one keeps it and is refunded nothing. Each stands at the top
+of its trunk (`T.2`), grown from the Master of the middle bough's second spell (Cairn, Grave of Swords, Ring of Spears, One
+by One): the one empty place whose lines pass 0.55 steps or more from every mark, and none of them grows from another
+keystone. They are built as their old stand-ins were, with "Not built yet" in the details for the ring as a wall, the
+blades that never fade, and the figure of light. Two Suns' price is now "your spells wait a fifth longer" in place of the
+mana it used to cost (phase4_questions.md, Light 1). The chart test allows one to three keystones in a reshaped tree;
+Earth, Metal, Light and Poison have ten passives each. EditMode 792 passed; Playtest Texts 495 marks' details;
+`chart_earth_crown.png` shows The Closed Ring beside the Devotion, its line down to Cairn's Master.
+
+**Decisions 2 to 6 have not been started.** The coordinator stopped the work after decision 1 so that a pass on the
+reaction looks (`docs/design/feedback/2026-11-20_owed_audit.md`) can go first.
+
+## For the owner (this merge)
+
+1. **DuoProbe plays only Flashover and Sleet Charge.** The twenty-one distance 2 and 3 branches pass the chart and shape
+   tests and ran in the crowd without a runaway, but none has been played line by line, as the plan asks before
+   playtesters see them.
+2. **A shaped reaction plays its plain reaction's look.** Corona, Fulgurite, Thundersnow and Glass Spear draw their own
+   pieces on top, but no shape has a look of its own from the combos 4 pass.
+3. **Where the three new keystones stand** (top of the trunk, grown from a spell's Master) is the careful default. The
+   other empty place, `L.mid`, would sit on the line from the left foot to the left bough's second spell.
+4. Decisions 2 to 6 (the spare mixes as hidden marks, the Rise on Dark's root, no duo crowns from gods, the shape screen,
+   the enemy's-blow moment) wait for the reaction pass.

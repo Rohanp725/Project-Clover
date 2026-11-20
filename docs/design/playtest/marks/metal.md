@@ -343,3 +343,16 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 **Works with.** Temper (30% less damage taken, a notch more every blow), Sunder, Forged Answer, Open Line, Edge Guard, The Guard Holds, every Master that answers a perfect guard.
 
 **Example.** Light Temper and stand in the middle of a pack with your guard up: every blow turns, and when Temper ends eight swords come down on them.
+
+## metal.allbladeshome
+**What it does.** All Blades Home, a keystone. Lighting Temper throws five blades out round you in a fan, and they come back to you, cutting and notching everything they pass both ways. Temper costs more and lasts a little longer.
+
+**When it happens.** When you light Temper, the surge. Always on once learned while Metal is carried.
+
+**The numbers.** 6 Shards. Five blades at 14 metres a second, out and back over 1.2 seconds; each deals 12 damage and 8 stagger and lays one notch of Sundered on what it passes. Temper costs 37.5% more mana (55 in place of 40) and lasts 20% longer.
+
+**Works with.** Grave of Swords, whose Master it grows from, To the Blade, Forged Answer, Every Crack Rings, Hanging Swords (Temper's gift).
+
+**Not built yet.** Your conjured blades never fading (sixteen at most), and lighting Temper calling every one of them home in a straight line through whatever stands between, each adding a moment to Temper. For now the surge throws its own five blades instead.
+
+**Example.** Plant Grave of Swords, fight among the blades, then light Temper: five more fly out and back through the crowd and every enemy they cross is notched.

@@ -34,6 +34,7 @@ namespace Clover.Player.Trees
         public const string PouredBronze = "metal.bronze";
         public const string ToTheBlade = "metal.toblade";
         public const string GraveOfSwords = "metal.graveofswords";
+        public const string AllBladesHome = "metal.allbladeshome";
         // The god's gift.
         public const string HangingSwords = "metal.hangingswords";
         // Conditions the branches set on enemies.
@@ -158,6 +159,21 @@ namespace Clover.Player.Trees
                 Description = "After a perfect guard, your weapon's skill is free and comes at once, with no time to charge. At any other time it costs more.",
                 Stats = new StatMod[0] },
                 BranchPattern.MiddleCrown));
+
+            // The third keystone, back under its id (the owner's word of 2026-11-20: trees may keep three). It stands at the
+            // top of the trunk, grown from Grave of Swords' Master, the blades left standing.
+            // NEEDS: conjured blades that never fade (sixteen at most), and lighting the surge calling every one home in a
+            // straight line through whatever stands between, 12 damage, 8 stagger and a notch each, each adding 0.4 s to the
+            // surge (blades-home). Until then: lighting the surge throws five blades out in a fan and calls them back.
+            to.Add(BranchPattern.Put(new Upgrade { Id = AllBladesHome, Name = "All Blades Home", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SpellBranch.MasterId(GraveOfSwords) }, Icon = UpgradeIcons.Spiral,
+                Description = "Beginning Temper throws five blades out in a fan and calls them back, and they cut and notch what they pass. Temper costs more and lasts a little longer.",
+                Stats = new[]
+                {
+                    new StatMod(PlayerStat.SurgeCost, 0.375f),
+                    new StatMod(PlayerStat.SurgeSeconds, 0.2f),
+                },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Projectile, Flight = Flight.Returning, Count = 5, Damage = 12f, Stagger = 8f, Speed = 14f, Seconds = 1.2f, Affliction = S, Stacks = 1 } } },
+                BranchPattern.TrunkRight));
 
             // ---- The left bough: Guard. Meet the blow exactly.
             // NEAREST: the attacker is held for a moment (it cannot turn, nor move or strike) and blows on it are a little harder. Blows do not count as from behind.

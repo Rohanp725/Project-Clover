@@ -11,7 +11,7 @@ Read by Clover > Build > Playtest Texts from `docs/design/playtest/`.
 - marks/capsize.md: 6 marks
 - marks/carriedembers.md: 5 marks
 - marks/dark.md: 28 marks
-- marks/earth.md: 27 marks
+- marks/earth.md: 28 marks
 - marks/earthlight.md: 5 marks
 - marks/eclipse.md: 6 marks
 - marks/fire.md: 28 marks
@@ -24,13 +24,13 @@ Read by Clover > Build > Playtest Texts from `docs/design/playtest/`.
 - marks/ironthorns.md: 5 marks
 - marks/kindlingpoint.md: 6 marks
 - marks/life.md: 28 marks
-- marks/light.md: 27 marks
+- marks/light.md: 28 marks
 - marks/lightning.md: 27 marks
-- marks/metal.md: 27 marks
+- marks/metal.md: 28 marks
 - marks/nervefire.md: 5 marks
 - marks/overgrowth.md: 6 marks
 - marks/plasma.md: 7 marks
-- marks/poison.md: 27 marks
+- marks/poison.md: 28 marks
 - marks/pyre.md: 5 marks
 - marks/quicksilver.md: 6 marks
 - marks/rust.md: 6 marks

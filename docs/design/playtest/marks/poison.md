@@ -346,3 +346,14 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 **Works with.** Venom, Fever, Slow Death (a deeper bite), Share Alike and Miasma to dose a pack while it waits. In Time, Catching and the beat Masters wait on bites, and there are none while the poison waits.
 
 **Example.** Light Fever, dose a whole pack to eight while it waits, and let the surge run out: each takes 80 at once.
+
+## poison.plaguebearer
+**What it does.** Plague Bearer, a keystone. You carry the sickness: every enemy near you is poisoned without a blow, deeper the longer it stays. Your flasks heal less.
+
+**When it happens.** Always on once learned while Poison is carried, every second and a half.
+
+**The numbers.** 6 Shards. One dose of poison every 1.5 seconds on every enemy within 4 metres of you. Flasks heal 30% less.
+
+**Works with.** One by One, whose Master it grows from, Venom, Catching (each bite leaps on), Volatile and Slow Death (the doses never stop coming), Rupture, Tasted Every Herb.
+
+**Example.** Stand in the middle of three soldiers and guard: without landing a blow, each is five doses deep within eight seconds.

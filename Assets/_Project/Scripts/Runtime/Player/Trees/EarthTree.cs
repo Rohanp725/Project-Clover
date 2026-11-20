@@ -8,7 +8,8 @@ namespace Clover.Player.Trees
     /// Phase 4). Six spells of four marks each and nine passives on the pattern of <see cref="BranchPattern"/>: in the
     /// middle Weight (Heavy Hand, Under the Mound and Cairn, The Slow Hand at the crown), on the left Standing (Rooted,
     /// Quake Step and Mountain Stance, Immovable at the crown, grown from the stance), on the right Ground (Standing Stones,
-    /// Stone Rise, the lift Left in Rubble, Fissure, and the Devotion Stone Remembers at the crown). Stone Rise is the base
+    /// Stone Rise, the lift Left in Rubble, Fissure, and the Devotion Stone Remembers at the crown), and the third keystone,
+    /// The Closed Ring, at the top of the trunk grown from Cairn's Master (the owner allowed three keystones, 2026-11-20). Stone Rise is the base
     /// spell: it comes with Earth, its Learn is never bought, and it grows from the root.
     ///
     /// Marks the design keeps keep their ids; the cut ones are in <see cref="RetiredMarks"/> (Stone Skin lives on as a
@@ -24,6 +25,7 @@ namespace Clover.Player.Trees
         public const string StandingStones = "earth.standingstones";
         public const string Immovable = "earth.immovable";
         public const string TheSlowHand = "earth.slowhand";
+        public const string TheClosedRing = "earth.closedring";
         public const string LeftInRubble = "earth.lift";
         public const string StoneRemembers = "earth.devotion";
         // The spells: each is its branch's Learn mark and the branch's id.
@@ -146,6 +148,21 @@ namespace Clover.Player.Trees
                 WeaponStacks = 1,
                 Stats = new[] { new StatMod(PlayerStat.SwingSpeed, -0.22f), new StatMod(PlayerStat.AttackStamina, 0.2f), new StatMod(PlayerStat.WeaponDamage, 0.35f, StatWhen.LightBlow), new StatMod(PlayerStat.StaggerDealt, 0.6f, StatWhen.LightBlow) } },
                 BranchPattern.MiddleCrown));
+
+            // The third keystone, back under its id (the owner's word of 2026-11-20: trees may keep three). It stands at the
+            // top of the trunk, grown from Cairn's Master, the stones' own spell.
+            // NEEDS: the ring as a wall: nothing walks, rolls or is thrown across it while the surge lasts, an enemy driven into
+            // a stone takes 20 damage and 35 stagger, and inside it the player is Rooted (closed-ring). Until then: eight stones
+            // in a ring round the player that strike and shake what stands among them, and less harm taken.
+            to.Add(BranchPattern.Put(new Upgrade { Id = TheClosedRing, Name = "The Closed Ring", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SpellBranch.MasterId(Cairn) }, Icon = UpgradeIcons.Ring,
+                Description = "Bedrock raises eight stones in a ring round you for ten seconds. They strike and shake what stands among them, and you take a little less harm. Bedrock costs a quarter more mana.",
+                Stats = new[] { new StatMod(PlayerStat.SurgeCost, 0.25f) },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Hazard, At = EffectAt.Self, Shape = HazardShape.Ring, Reach = 6f, Count = 8, Radius = 1f, Seconds = 10f, Interval = 1f, Damage = 8f, Stagger = 20f, Affliction = T, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.SurgeStart, Do = UpgradeAction.Boon, Stat = PlayerStat.DamageTaken, Amount = -0.08f, Seconds = 10f },
+                } },
+                BranchPattern.TrunkRight));
 
             // ---- The left bough: Standing. Hold your ground and be paid for it.
             // NEAREST: Rooted is the planted state (no dodge begun for three seconds): less damage and a cheaper guard while it holds. Not built: nothing pushing you back.

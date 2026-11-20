@@ -343,3 +343,16 @@ the next blows on that enemy critical.
 **Works with.** Clarity (it marks with every blow and makes the perfect moments half again as long, so you take less), Unblemished, the root, Standing Light and Brimming to have them Marked when it ends.
 
 **Example.** Light Clarity, guard and cut for eight seconds without being touched: 200 dealt to none taken, and a sword falls for 120 on every Marked enemy.
+
+## light.twosuns
+**What it does.** Two Suns, a keystone. Every enemy your spell strikes is struck again a moment later by a burst of light, and Marked. Your spells wait a fifth longer between casts.
+
+**When it happens.** Whenever a spell of yours strikes an enemy, while Light is carried.
+
+**The numbers.** 6 Shards. The second burst comes 0.4 seconds later, 2.5 metres across: 12 damage, 10 stagger and one Mark. At most once every 0.2 seconds. Every spell's wait is 1.2 times as long.
+
+**Works with.** Ring of Spears, whose Master it grows from, Reckoning, Weighed and Condemned (more Marks to finish with), Daybreak's long line (every enemy on it struck twice).
+
+**Not built yet.** A figure of light casting the spell itself again from the far side of the enemy you face. For now each enemy struck takes a second burst of light where it stands.
+
+**Example.** Drive Ring of Spears into a soldier with two beside it: a moment later the light bursts over it again and all three are Marked for your next blows.
