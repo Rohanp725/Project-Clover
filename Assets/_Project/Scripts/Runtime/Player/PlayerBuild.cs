@@ -209,7 +209,13 @@ namespace Clover.Player
         private void Push()
         {
             if (spells != null) spells.SetAll(Current.Slots);
-            if (element != null) element.WearSurgeById(Current.Surge);
+            if (element != null)
+            {
+                element.WearSurgeById(Current.Surge);
+                // A duo surge that cannot be worn falls back to the first element's: the Hand says so too, so its marks are
+                // not in force for a surge that is not lit.
+                if (element.HasElement && element.SurgeId != Current.Surge) Current.Surge = element.SurgeId;
+            }
             RunState.Surge = Current.Surge;
             if (upgrades != null) upgrades.RefreshNow();
             Read();

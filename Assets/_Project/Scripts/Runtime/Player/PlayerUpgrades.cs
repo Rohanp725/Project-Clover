@@ -1747,7 +1747,8 @@ namespace Clover.Player
                 {
                     if (target == null || !(subject is IAfflictable placed)) break;
                     Vector3 theirs = target.position;
-                    Vector3 mine = castOrigin;
+                    // Where the player stood as the spell was cast; with no cast known, where they stand now.
+                    Vector3 mine = castOrigin.sqrMagnitude > 0.0001f ? castOrigin : self;
                     mine.y = theirs.y;
                     ElementLook.Puff(held, theirs + Vector3.up * 0.4f, Vector3.up, 1.2f);
                     ElementLook.Puff(held, mine + Vector3.up * 0.4f, Vector3.up, 1.2f);
@@ -1884,8 +1885,11 @@ namespace Clover.Player
         {
             if (mark?.Presses == null || index < 0 || index >= mark.Presses.Length || mark.Presses[index] == null) return false;
             castSource = mark;
+            castOrigin = transform.position;
+            int before = queued;
             foreach (var effect in mark.Presses[index]) Consider(effect, null, transform.position, false);
             castSource = null;
+            if (queued == before) return false;
             PressesDone++;
             return true;
         }
@@ -2472,8 +2476,9 @@ namespace Clover.Player
         {
             if (hasIntoFire && lastDodgeWay == DodgeWay.Toward && combat != null)
             {
-                // Into the Fire: everything the dodge passed through is set burning two deep, each once.
-                Vector3 path = transform.position - dodgeFrom;
+                // Into the Fire: everything the dodge passed through is set burning two deep, each once. The whole roll is
+                // reckoned, from where it began along its way: its last step is not yet applied when its end is told.
+                Vector3 path = LastDodgeDirection * player.Dodge.Distance;
                 path.y = 0f;
                 float length = path.magnitude;
                 if (length > 0.2f)
@@ -2540,8 +2545,9 @@ namespace Clover.Player
             var seed = AfflictionKind.Seeded;
             if (AfflictionPairs.First(pair) != seed && AfflictionPairs.Second(pair) != seed) return;
             bool ripeNow = set.IsRipe(seed);
-            ripeScale = set.RipeShare(seed);
+            float share = set.RipeShare(seed);
             if (ripeNow) RipeBurstAt(who, who.transform.position, set.Stacks(seed));
+            ripeScale = share;
         }
 
         /// <summary>The reaction's effects are in the line: what follows is no reaction's.</summary>
@@ -2558,9 +2564,16 @@ namespace Clover.Player
         // carry: the whole share when one is near, nothing when none is. They are struck on this component's next step.
         private float ShareWound(float share)
         {
-            if (combat == null || share <= 0f || sharerCount > 0) return 0f;
+            if (combat == null || share <= 0f) return 0f;
+            if (sharerCount > 0)
+            {
+                // A second wound before the first share is paid: the same Seeded carry it too.
+                sharedEach += share / sharerCount;
+                WoundsCarried += share;
+                return share;
+            }
             furnaceSeen.Clear();
-            while (sharerCount < MostSharers)
+            for (int looked = 0; sharerCount < MostSharers && looked < 24; looked++)
             {
                 var near = combat.EnemyNear(transform.position, SharedReach, furnaceSeen);
                 if (!(near is IDamageable one)) break;

@@ -179,8 +179,12 @@ namespace Clover.Tests
             Assert.AreEqual(2, seed.Stacks(AfflictionKind.Seeded), "a ripe seed stops fading (Seeded lasts 8 s)");
             seed.Apply(AfflictionKind.Seeded, 1);
             Assert.IsFalse(seed.IsRipe(AfflictionKind.Seeded), "a fresh seed starts the ripening over");
-            // Without the rule a seed fades and bursts as written.
+            for (int i = 0; i < 61; i++) seed.Tick(0.1f);
+            Assert.IsTrue(seed.IsRipe(AfflictionKind.Seeded), "ripe again after six seconds more");
+            // Without the rule a seed fades and bursts as written; one ripe when the mark leaves force fades again.
             Afflictions.Rules.Clear();
+            for (int i = 0; i < 90; i++) seed.Tick(0.1f);
+            Assert.IsFalse(seed.Has(AfflictionKind.Seeded), "a ripe seed fades once the mark is gone");
             var plain = new AfflictionSet();
             plain.Apply(AfflictionKind.Seeded, 2);
             Assert.AreEqual(1f, plain.RipeShare(AfflictionKind.Seeded), 0.001f);

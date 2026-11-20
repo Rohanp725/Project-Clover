@@ -512,6 +512,7 @@ namespace Clover.Player
             // on no clock, rather than casting again.
             if (pressSlot == slot && pressMark != null && Time.time < pressUntil && MarkIn(slot) == pressMark && upgrades != null)
             {
+                player.FacePointer();
                 if (upgrades.Press(pressMark, pressNext))
                 {
                     pressNext++;

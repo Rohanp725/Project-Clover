@@ -573,8 +573,12 @@ namespace Clover.Gameplay
                 }
                 if (poison && (Afflictions.PoisonKeeps || cursed)) continue;
                 if (Conditions.KeepsKind((AfflictionKind)i) || rules.Keeps((AfflictionKind)i)) continue;
-                // A ripe seed stops fading (In Its Season).
-                if ((ripe & (1 << i)) != 0) continue;
+                // A ripe seed stops fading (In Its Season); once the rule has left force it ripens no more and fades as written.
+                if ((ripe & (1 << i)) != 0)
+                {
+                    if (rules.RipensAfter((AfflictionKind)i) > 0f) continue;
+                    Unripen(i);
+                }
                 left[i] -= deltaTime * pace;
                 if (left[i] > 0f) continue;
                 End(i);

@@ -1733,6 +1733,8 @@ namespace Clover.Player
                     fromBehind = toMe.sqrMagnitude > 0.01f && Vector3.Dot(back.transform.forward, toMe.normalized) < BackDot;
                     if (fromBehind) damage *= Weapon.BackMultiplier;
                 }
+                // Read before the blade drinks: a burn that was the enemy's only affliction still counts it afflicted.
+                bool wasAfflicted = afflictable != null && afflictable.Afflictions.Any;
                 // The Blade Drinks Fire: the blow takes Burn off a burning enemy (one, three for a heavy blow, all for a
                 // finisher) and strikes harder for each Burn it drinks.
                 if (DrinksBurn > 0f && afflictable != null && afflictable.Afflictions.Burn.IsBurning)
@@ -1744,7 +1746,6 @@ namespace Clover.Player
                         BurnsDrunk += drunk;
                     }
                 }
-                bool wasAfflicted = afflictable != null && afflictable.Afflictions.Any;
                 if (wasAfflicted) damage *= StatAfflicted;
                 float burn = (BurnStacksOnHit > 0 ? Mathf.Max(BurnOnHit, StackBurnSeconds) : BurnOnHit) * AfflictionSeconds;
                 // What the root of the tree and the surge lay, together, in the element's own affliction. The owner's rule

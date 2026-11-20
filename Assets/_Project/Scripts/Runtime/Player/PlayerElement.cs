@@ -526,7 +526,7 @@ namespace Clover.Player
             // The other kits' surges cannot burn, but a wait they carry still runs down.
             var other = surgeKit == kits[0] ? kits[1] : kits[0];
             if (other != null && other != surgeKit && other.SurgeWaiting) other.TickSurge(deltaTime);
-            if (surgeIndex == DuoIndex && kits[0] != null && kits[0] != other && kits[0].SurgeWaiting) kits[0].TickSurge(deltaTime);
+            if (surgeIndex == DuoIndex && kits[1] != null && kits[1] != kits[0] && kits[1].SurgeWaiting) kits[1].TickSurge(deltaTime);
 
             if (surgeKit.SurgeActive)
             {

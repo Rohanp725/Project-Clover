@@ -65,9 +65,11 @@ namespace Clover.Player
             float scale = terms.CostScale > 0f ? terms.CostScale : 1f;
             if (PayInstead != null)
             {
+                // Paid in breath, a dearer roll still asks the stamina beyond the usual: asked first, so a breath is not
+                // spent on a roll that cannot be paid for.
+                if (scale > 1f && stamina.Current < StaminaCost * (scale - 1f)) return false;
                 if (!PayInstead()) return false;
-                // Paid in breath, a dearer roll still asks the stamina beyond the usual.
-                if (scale > 1f && !stamina.TrySpend(StaminaCost * (scale - 1f))) return false;
+                if (scale > 1f) stamina.TrySpend(StaminaCost * (scale - 1f));
             }
             else if (!stamina.TrySpend(StaminaCost * scale)) return false;
             Direction = direction.normalized;
