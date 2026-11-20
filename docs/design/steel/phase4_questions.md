@@ -83,3 +83,39 @@ Each was built with the default given here; every one is easy to change. Added t
    the numbers.
 7. **Breaking Swell throws "down".** "Throwing everything in it down 3 m off". Default: thrown 3 m away and knocked down
    for 0.6 s (King Tide's time). Alternative: thrown only, nothing knocked down.
+
+## Life
+
+1. **Two marks called Briar Patch.** Life's base spell is a mark now, and Overgrowth's mix major
+   (`overgrowth.briarpatch`) had the same name. Default: the mix mark is renamed Thorns Take Root (its id kept), so
+   the base spell keeps its kit's name. Alternative: another name for the mix mark, or the base spell's mark named
+   apart from its kit.
+2. **The built majors the passive table leaves out.** Thin Blood (replaced by The Garden Holds You, as the table says)
+   and Shade are not in the table. Default: both retired and refunded (3 Shards each), and The Garden Holds You is a new
+   major, `life.garden`, so the tree is the design's 34 marks. Alternative: keep Shade (mending near what you grew) in
+   one of the two empty places, now that Elder Tree mends inside its own ring.
+3. **One keystone.** The passive table gives Life only Wildwood; the cut list says each tree keeps two. Default: one
+   keystone (the chart tests allow one or two), Heartwood, Paid in Blood and Shared Roots retired. Alternative: keep
+   Paid in Blood aimed at the surge alone, as the cut list offers, in the empty place at the top of the trunk.
+4. **Shapes that cannot set their Learn aside yet.** Golden Sickle keeps the garden standing, Feed the Ground withers
+   nothing, and Strangler and Dodder come in place of the sapling; a shape cannot yet switch off its Learn's effects.
+   Default: as written, the Learn's burst, withering and saplings still happen beside the shape, with **Not built yet**
+   lines. Alternatives: give those shapes nothing until the piece is built (as Kept Wind); or build that piece (a shape
+   naming the Learn effects it sets aside) before Life is played.
+5. **Drawn From the Wood's window.** The design gives 1.5 s of green blood for each grown thing withered, 10 s at most;
+   nothing yet counts what a burst of the garden spent. Default: 6 s, given only when cast within 4 m of something you
+   grew. Alternatives: 4.5 s (three things' worth) or 10 s, given always.
+6. **Stand-ins that are stronger than their timing.** Until the windows and counts exist, Sapling's Master raises a
+   small Elder Tree on any perfect guard once in 15 s (not on the third sapling within 3 s), and Drawn From the Wood's
+   Master waives every health price for a second after any blow lands on you (Dark's prices too, while it is slotted).
+   Default: as written, with **Not built yet** lines. Alternatives: give them nothing until the pieces are built; or
+   lengthen their limits.
+7. **Where Elder Tree stands.** The roster does not say; the built tree was planted 2.5 m ahead. Default: at your feet,
+   so its ring of Seeded ground and the roots lie together (the ring is laid round the player). Alternative: 2.5 m ahead,
+   with the ring moved there once a hazard can be laid at a spell's own point.
+8. **The Garden Holds You before its footing exists.** The player's flinch is kept by hand in `PlayerUpgrades`
+   (`PlayerDefence.Unflinching`). Default: wounds take a fifth less within 4 m of something grown, no change to
+   `PlayerUpgrades`. Alternative: a one-line hook there that keeps the player unflinching near the garden (no throw, pull
+   or knock-down guard yet).
+9. **How long burrs ride.** Burrs give no time. Default: 6 seconds (a tuft every 1.5 s, four tufts), six tufts at most.
+   Alternative: as long as Seeded lasts (8 s).

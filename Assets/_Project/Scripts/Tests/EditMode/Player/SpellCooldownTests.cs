@@ -137,15 +137,17 @@ namespace Clover.Tests
         public void TheReadyMinorsLeftMakeTheirOwnBaseSpellWaitAFifthLess()
         {
             // The owner's decision of 2026-11-19: what once cost less mana now waits less, for its own element's base spell alone.
-            // Fire's Short Breath, Lightning's Quick Clap, Wind's Easy Breath, Ice's Thin Ice and Water's Low Water went with
-            // their trees' reshaping (Phase 4): their Empower marks do it now.
+            // Fire's Short Breath, Lightning's Quick Clap, Wind's Easy Breath, Ice's Thin Ice, Water's Low Water and Life's Ready
+            // Soil went with their trees' reshaping (Phase 4): their Empower marks do it now.
             Assert.IsTrue(RetiredMarks.IsRetired(IceTree.ThinIce));
             Assert.IsTrue(RetiredMarks.IsRetired(WaterTree.LowWater));
             Assert.IsNull(Upgrade.ById(WaterTree.LowWater));
+            Assert.IsTrue(RetiredMarks.IsRetired(LifeTree.ReadySoil));
+            Assert.IsNull(Upgrade.ById(LifeTree.ReadySoil));
             var minors = new (string Id, string Element)[]
             {
                 (EarthTree.NearToHand, Elements.Earth),
-                (LifeTree.ReadySoil, Elements.Life), (LightTree.ReadyLight, Elements.Light),
+                (LightTree.ReadyLight, Elements.Light),
                 (MetalTree.ReadySteel, Elements.Metal), (PoisonTree.ReadyPoison, Elements.Poison),
             };
             foreach (var (id, element) in minors)

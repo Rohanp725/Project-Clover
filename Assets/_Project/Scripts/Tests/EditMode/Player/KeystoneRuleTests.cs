@@ -146,8 +146,10 @@ namespace Clover.Tests
             Assert.IsTrue(RetiredMarks.IsRetired(WaterTree.SpringTide));
             Assert.AreEqual(0, Upgrade.ById(MetalTree.MastersAnswer).Effects.Length, "Master's Answer changes the skill's price, and gives no mana.");
 
-            var heart = Upgrade.ById(LifeTree.Heartwood);
-            Assert.IsTrue(heart.Effects == null || heart.Effects.Length == 0, "Heartwood's mending comes from the mana it turns aside.");
+            // Heartwood was cut with Life's reshaping (Phase 4): with spells on cooldowns it has nothing to pay for, and Drawn
+            // From the Wood's Feed the Ground carries health as the price now.
+            Assert.IsNull(Upgrade.ById(LifeTree.Heartwood));
+            Assert.IsTrue(RetiredMarks.IsRetired(LifeTree.Heartwood));
         }
 
         [Test]

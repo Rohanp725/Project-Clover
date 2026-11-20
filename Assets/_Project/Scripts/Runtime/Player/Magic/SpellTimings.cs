@@ -71,11 +71,13 @@ namespace Clover.Player.Magic
             ["water.whirlpool"] = Cd(10f, SpellRole.Breaker),
             ["water.crack"] = Cd(11f, SpellRole.Detonator),
             ["water.poured"] = Mana(30f, SpellRole.Breaker),        // Water's larger spell
-            // Life
-            ["life.harvest"] = Cd(12f, SpellRole.Breaker),          // Drawn From the Wood; also paid in health
+            // Life, reshaped (Phase 4): Briar Patch is the base spell; Thorn Ring is cut (Burrs took its shape slot); Sapling,
+            // once a major, is a spell; Red Harvest is rebuilt as Drawn From the Wood under its id; Root Walk is new.
+            ["life.sapling"] = Cd(9f, SpellRole.Counter),
+            ["life.walk"] = Cd(8f, SpellRole.Movement),
             ["life.reap"] = Cd(12f, SpellRole.Detonator),
             ["life.tree"] = Mana(40f, SpellRole.Breaker),           // Life's larger spell
-            ["life.ring"] = Cd(10f, SpellRole.Counter),             // not in the roster
+            ["life.harvest"] = Cd(12f, SpellRole.Breaker),          // Drawn From the Wood; its Feed the Ground shape is paid in health too
             // Earth (its larger spell, Cairn, is not built)
             ["earth.stance"] = Cd(10f, SpellRole.Counter),
             ["earth.quakestep"] = Cd(9f, SpellRole.Breaker),

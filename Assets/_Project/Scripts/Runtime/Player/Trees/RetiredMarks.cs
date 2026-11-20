@@ -76,6 +76,18 @@ namespace Clover.Player
             new RetiredMark("water.flowing", 3), new RetiredMark("water.unbroken", 3), new RetiredMark("water.spilled", 3), new RetiredMark("water.catch", 3),
             new RetiredMark("water.serpent", 4), new RetiredMark("water.rain", 4), new RetiredMark("water.moon", 4),
             new RetiredMark("water.spring", 6), new RetiredMark("water.river", 6),
+
+            // Life: the plain minors and the dead "costs less" minor (Ready Soil), Paid in Blood and Heartwood (both rest on
+            // spells costing mana; Feed the Ground carries health as the price now), the majors not kept (Thin Blood, which
+            // was Dark's Near the Grave, replaced by The Garden Holds You, and Shade), Thorn Ring cut outright (Burrs took its
+            // shape slot), and Shared Roots, a keystone not carried over.
+            new RetiredMark("life.deeproots", 1), new RetiredMark("life.sweetsap", 1), new RetiredMark("life.stubborn", 1), new RetiredMark("life.quickening", 1),
+            new RetiredMark("life.season", 1), new RetiredMark("life.sharp", 1), new RetiredMark("life.crowded", 1), new RetiredMark("life.spreading", 1),
+            new RetiredMark("life.soil", 1), new RetiredMark("life.deepseed", 1), new RetiredMark("life.wideburst", 1), new RetiredMark("life.bark", 1),
+            new RetiredMark("life.longgrowth", 1), new RetiredMark("life.greenwood", 1),
+            new RetiredMark("life.price", 3), new RetiredMark("life.thin", 3), new RetiredMark("life.shade", 3),
+            new RetiredMark("life.ring", 4),
+            new RetiredMark("life.heartwood", 6), new RetiredMark("life.roots", 6),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
