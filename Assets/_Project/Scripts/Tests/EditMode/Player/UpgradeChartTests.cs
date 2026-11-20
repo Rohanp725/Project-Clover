@@ -482,10 +482,28 @@ namespace Clover.Tests
             }
         }
 
+        // The trees written as spell branches (Phase 4), with how many passives each design gives (its root, majors,
+        // keystones, Devotion, lift and gift). A tree is added here when it is reshaped.
+        private static readonly Dictionary<string, int> ReshapedPassives = new Dictionary<string, int>
+        {
+            [Elements.Fire] = 10,
+            [Elements.Lightning] = 9,
+        };
+
+        [Test]
+        public void EveryTreeWithSpellBranchesIsListedAsReshaped()
+        {
+            foreach (var element in Elements.All)
+            {
+                bool branches = Upgrade.All.Any(mark => mark.Element == element.Name && !mark.IsMix && mark.Part != BranchPart.None);
+                Assert.AreEqual(branches, ReshapedPassives.ContainsKey(element.Name), element.Name + ": a reshaped tree is listed in ReshapedPassives, and only one");
+            }
+        }
+
         [Test]
         public void TheReshapedTreesSitOnThePatternEachMarkInAPlaceOfItsOwn()
         {
-            foreach (string element in new[] { Elements.Fire, Elements.Lightning })
+            foreach (string element in ReshapedPassives.Keys)
             {
                 var tree = Upgrade.All.Where(mark => mark.Element == element && !mark.IsMix && !mark.IsHidden).ToList();
                 var taken = new HashSet<string>();
@@ -586,9 +604,9 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void FireAndLightningAreSixBranchesADevotionALiftAndTheirPassives()
+        public void EveryReshapedTreeIsSixBranchesADevotionALiftAndItsPassives()
         {
-            foreach (string element in new[] { Elements.Fire, Elements.Lightning })
+            foreach (string element in ReshapedPassives.Keys)
             {
                 var tree = Upgrade.All.Where(mark => mark.Element == element && !mark.IsMix && !mark.IsHidden).ToList();
                 Assert.AreEqual(6, tree.Count(mark => mark.Part == BranchPart.Learn), element);
@@ -597,12 +615,14 @@ namespace Clover.Tests
                 Assert.AreEqual(SpellSlots.BaseId(element), tree.Single(mark => mark.IsBaseSpell).Id);
                 Assert.AreEqual(1, tree.Count(mark => mark.Kind == UpgradeKind.Devotion), element);
                 Assert.AreEqual(1, tree.Count(mark => mark.Lifts == element), element + " has one reaction lift");
-                Assert.AreEqual(1, tree.Count(mark => mark.Kind == UpgradeKind.Spell && SpellTimings.For(mark.Id).IsLarger), element + " has one larger spell paid in mana");
+                // One larger spell paid in mana (steel/README.md); Dark's is paid in health instead (Pawned Heart).
+                Assert.LessOrEqual(tree.Count(mark => mark.Kind == UpgradeKind.Spell && SpellTimings.For(mark.Id).IsLarger), 1, element + " has one larger spell paid in mana at most");
+                Assert.GreaterOrEqual(tree.Count(mark => mark.Kind == UpgradeKind.Spell && (SpellTimings.For(mark.Id).IsLarger || (mark.Spell != null && mark.Spell.HealthCost > 0f))), 1, element + " has its larger spell");
                 Assert.IsTrue(tree.All(mark => mark.Currency != Currency.Memories), element + "'s tree is bought with Shards");
             }
-            // The design's ten passives (with Devotion and the lift) and Lightning's nine.
-            Assert.AreEqual(10, Upgrade.All.Count(mark => mark.Element == Elements.Fire && !mark.IsMix && !mark.IsHidden && mark.Part == BranchPart.None));
-            Assert.AreEqual(9, Upgrade.All.Count(mark => mark.Element == Elements.Lightning && !mark.IsMix && !mark.IsHidden && mark.Part == BranchPart.None));
+            // Each design's passives, with its Devotion, its lift and its gift.
+            foreach (var pair in ReshapedPassives)
+                Assert.AreEqual(pair.Value, Upgrade.All.Count(mark => mark.Element == pair.Key && !mark.IsMix && !mark.IsHidden && mark.Part == BranchPart.None), pair.Key);
         }
 
         [Test]
