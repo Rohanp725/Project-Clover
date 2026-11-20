@@ -763,15 +763,23 @@ public class MarksProbeRunner : MonoBehaviour
         Say($"beat: In Time: a blow off the beat: poison {deep} -> {Sets()[0].Stacks(AfflictionKind.Poison)}; critical chance {upgrades.Stats.Sum(PlayerStat.CritChance):0.00}");
     }
 
+    // Lance the Wound was cut with Poison's reshaping (Phase 4, retired): a bite called out of turn is Five Needles'
+    // first shape now, Spread, whose needles call a bite on each enemy they hit. Five Needles is given with its Empower
+    // and Shape, wears Spread, and is cast at the group carrying four doses.
     private IEnumerator Lance()
     {
-        yield return Begin("lance", "Lance the Wound");
+        yield return Begin("lance", "Five Needles");
+        upgrades.Give(Upgrade.ById(SpellBranch.EmpowerId(Clover.Player.Trees.PoisonTree.FiveNeedles)));
+        upgrades.Give(Upgrade.ById(SpellBranch.ShapeId(Clover.Player.Trees.PoisonTree.FiveNeedles)));
+        yield return null;
         LayAll(AfflictionKind.Poison, 4);
         yield return new WaitForSeconds(0.3f);
+        int bites = upgrades.PoisonBites;
         Mark();
-        yield return Guarded(true);
+        bool cast = upgrades.TrySpecial();
+        yield return new WaitForSeconds(0.9f);
         Shot();
-        Say($"lance: perfect guard {lastGuard}: {Lost()} (a bite of four doses is 8)");
+        Say($"lance: Five Needles (Spread) cast {cast} as {SpellBranches.FormOf(Upgrade.ById(Clover.Player.Trees.PoisonTree.FiveNeedles), RunState.Unlocked, player.GetComponent<PlayerBuild>().Current)}: bites heard {upgrades.PoisonBites - bites} (one called on each enemy a needle hits); {Lost()}");
     }
 
     private IEnumerator Volatile()

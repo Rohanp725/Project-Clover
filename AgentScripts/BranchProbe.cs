@@ -18,7 +18,8 @@ using UnityEngine.SceneManagement;
 // keys, and the clocks read: the table's wait, the Empower's shorter one, a shape keeping its branch's wait, and each
 // Master's timing (Flame Wave: cast within half a second of the charged blade's third blow and no clock starts, later
 // and it does; Thunderclap: a perfect guard ends its wait and makes the next cast start none). The chart is filmed on
-// both trees. Frames: review/shots/current/branch_*.png. Every judged line ends OK or WRONG.
+// both trees. Then Metal's Flung Blade, Light's Glare, Dark's Grasp and Poison's Miasma (the base spells of the trees merged
+// at 17f73a0) are learned to their Masters in the same way, each Master cast once. Frames: review/shots/current/branch_*.png. Every judged line ends OK or WRONG.
 // bash AgentScripts/runprobe.sh ProvingGround BranchProbe 150
 public static class BranchProbe
 {
@@ -106,9 +107,15 @@ public class BranchProbeRunner : MonoBehaviour
     private static T Find<T>(Func<T, bool> which) where T : UnityEngine.Object =>
         FindObjectsByType<T>(FindObjectsInactive.Include).FirstOrDefault(which);
 
+    // Free to act: nothing swung, cast, rolled, held, leapt or drunk. Some spells hold the player longer than six seconds
+    // (a thrown blade until it is back, a held ray): how long it took is kept and said.
+    private float lastBusy;
     private IEnumerator WhenFree()
     {
-        yield return Until(() => !combat.IsAttacking && !element.IsCasting && !player.Dodge.IsRolling && player.FormHold == 0 && !player.IsLeaping && !defence.IsDrinking, 6f);
+        float from = Time.unscaledTime;
+        yield return Until(() => !combat.IsAttacking && !element.IsCasting && !player.Dodge.IsRolling && player.FormHold == 0 && !player.IsLeaping && !defence.IsDrinking, 15f);
+        lastBusy = Time.unscaledTime - from;
+        if (lastBusy > 3f) Say($"  (busy {lastBusy:0.0}s: casting {element.IsCasting}, attacking {combat.IsAttacking}, form hold {player.FormHold})");
         yield return Real(0.15f);
     }
 
@@ -217,6 +224,22 @@ public class BranchProbeRunner : MonoBehaviour
         RunState.Points = Math.Max(RunState.Points, 60);
         yield return Branch(Elements.Lightning, "lightning.base", 9f, 7f, LightningMaster);
 
+        // Phase 4's later trees (Metal, Light, Dark, Poison, merged at 17f73a0): each base spell's branch learned, empowered,
+        // shaped and mastered the same way, its waits read from the table and its Empower, and the Master cast once.
+        foreach (string later in new[] { Elements.Metal, Elements.Light, Elements.Dark, Elements.Poison })
+        {
+            // Fire and Lightning were taken at their altars above; these are carried through the build directly.
+            build.Attune(later, "");
+            yield return Real(0.3f);
+            Judge($"{later} alone", element.Kit.Name == later && !element.Mixed, $"{element.Kit.Name}, mixed {element.Mixed}");
+            RunState.Points = Math.Max(RunState.Points, 60);
+            string baseBranch = SpellSlots.BaseId(later);
+            float table = SpellTimings.For(baseBranch).Cooldown;
+            var empowerMark = Upgrade.ById(SpellBranch.EmpowerId(baseBranch));
+            float empowered = empowerMark?.Empower != null && empowerMark.Empower.Cooldown > 0f ? empowerMark.Empower.Cooldown : table;
+            yield return Branch(later, baseBranch, table, empowered, AnyMaster);
+        }
+
         // The chart, from a rest fire, on each tree with its base spell's Shape chosen.
         yield return Rest();
         yield return ChartFromRest();
@@ -237,6 +260,7 @@ public class BranchProbeRunner : MonoBehaviour
             chart.ToggleWide();
             yield return Real(0.8f);
             yield return Shot("branch_chart_wide");
+            Say($"  the whole ring: {chart.MarkCount} marks drawn");
             chart.ToggleWide();
             yield return Tap(Key.Space);
         }
@@ -269,9 +293,13 @@ public class BranchProbeRunner : MonoBehaviour
         var shapeMark = Upgrade.ById(shape);
         string first = shapeMark.Shapes[0].Name, second = shapeMark.Shapes[1].Name;
         yield return CastWest($"shape 0 ({first})");
-        Judge($"Shape: {first} is worn by default, cast through the mark in its own form, and keeps the Empower's wait",
-            lastCast && upgrades.BaseCastsThroughMark(branch) && SpellBranches.FormOf(Upgrade.ById(branch), RunState.Unlocked, build.Current) == shapeMark.Shapes[0].Form
-            && Mathf.Abs(lastLength - empowered) < 0.05f, $"{lastLength:0.00}s");
+        // A shape with a form of its own is cast through the mark in that form; one with no form (Gathered, Low Mist: its
+        // effects change the spell) is the kit's cast with the shape worn.
+        bool formed0 = !string.IsNullOrEmpty(shapeMark.Shapes[0].Form);
+        Judge($"Shape: {first} is worn by default, {(formed0 ? "cast through the mark in its own form" : "its effects on the kit's cast")}, and keeps the Empower's wait",
+            lastCast && SpellBranches.Worn(shapeMark, build.Current) == shapeMark.Shapes[0]
+            && (!formed0 || (upgrades.BaseCastsThroughMark(branch) && SpellBranches.FormOf(Upgrade.ById(branch), RunState.Unlocked, build.Current) == shapeMark.Shapes[0].Form))
+            && Mathf.Abs(lastLength - empowered) < 0.05f, $"{lastLength:0.00}s, form '{shapeMark.Shapes[0].Form}'");
 
         // Away from a fire the shape cannot change; at a rest fire it can.
         int refusedBefore = build.HandsRefused;
@@ -284,8 +312,10 @@ public class BranchProbeRunner : MonoBehaviour
         yield return Shot($"branch_{elementName.ToLowerInvariant()}_rest");
         yield return LeaveRest();
         yield return CastWest($"shape 1 ({second})");
-        Judge($"{second} casts in its own form with the same wait", lastCast && SpellBranches.FormOf(Upgrade.ById(branch), RunState.Unlocked, build.Current) == shapeMark.Shapes[1].Form
-            && Mathf.Abs(lastLength - empowered) < 0.05f, $"form {shapeMark.Shapes[1].Form}, {lastLength:0.00}s");
+        bool formed1 = !string.IsNullOrEmpty(shapeMark.Shapes[1].Form);
+        Judge($"{second} is worn and casts {(formed1 ? "in its own form" : "with its effects")} with the same wait", lastCast && SpellBranches.Worn(shapeMark, build.Current) == shapeMark.Shapes[1]
+            && (!formed1 || SpellBranches.FormOf(Upgrade.ById(branch), RunState.Unlocked, build.Current) == shapeMark.Shapes[1].Form)
+            && Mathf.Abs(lastLength - empowered) < 0.05f, $"form '{shapeMark.Shapes[1].Form}', {lastLength:0.00}s");
         yield return Shot($"branch_{elementName.ToLowerInvariant()}_shape");
 
         Judge("the Master is bought", Buy(masterId) && upgrades.Has(masterId));
@@ -300,6 +330,20 @@ public class BranchProbeRunner : MonoBehaviour
         bool inForce = MarkRules.InForce(Upgrade.ById(empower), build.Current) && MarkRules.InForce(shapeMark, build.Current) && MarkRules.InForce(Upgrade.ById(masterId), build.Current);
         Judge("unslotted, the Empower, Shape and Master are out of force; slotted, in", outOfForce && inForce && upgrades.Has(empower) && upgrades.Has(shape) && upgrades.Has(masterId), SlotsText());
         yield return null;
+    }
+
+    // A Master whose own timing is not judged here: bought, it is in force and the spell still casts through its mark,
+    // its clock no longer than the Empower's.
+    private IEnumerator AnyMaster(string branch)
+    {
+        var mark = Upgrade.ById(SpellBranch.MasterId(branch));
+        Say($"  {mark.Name}: {mark.Description}");
+        float empowered = Upgrade.ById(SpellBranch.EmpowerId(branch))?.Empower?.Cooldown ?? 0f;
+        if (empowered <= 0f) empowered = SpellTimings.For(branch).Cooldown;
+        yield return CastWest("Mastered");
+        Judge($"{mark.Name}: in force and the spell casts with a clock of at most {empowered}s",
+            upgrades.Has(mark.Id) && lastCast && lastLength <= empowered + 0.05f, $"{lastLength:0.00}s, through its mark {upgrades.BaseCastsThroughMark(branch)}");
+        yield return Shot($"branch_{branch.Replace('.', '_')}_master");
     }
 
     // Flame Wave's Master: cast in the same instant as the charged blade's third blow lands (a 0.5 s window) and the
