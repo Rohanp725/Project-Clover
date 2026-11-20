@@ -1053,6 +1053,8 @@ Group: Reactions
 
 **What sets it off.** A notch landing on a burning enemy, or Burn on a notched one.
 
+**Its shapes.** With the Shape mark of Metal and Fire's duo branch (Slag or Shirt: Slag or The Burning Shirt, 3 Shards, in the heart of the chart) and both carried, Red Hot wears the shape chosen at a rest fire instead. Slag: for 5 s it drips a pool of slag each second, 0.8 m round, that burns 3 s, 3 and a Burn a second to all in it but its wearer. The Burning Shirt: no sparks; for 5 s it cannot guard and takes a Burn every 1.5 s.
+
 **How to use it.** Put it between you and the others and heavy it: each heavy lights them.
 
 **How it looks.** Its name over the enemy, then sparks beyond it at each heavy. Not yet: its burns biting twice as hard while it glows.
