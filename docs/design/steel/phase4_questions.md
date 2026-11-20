@@ -419,3 +419,44 @@ on the ring.
 13. **UpgradeProbe's sealed mix.** With no mix left on the ring, its step "a sealed mix bought" asks the rules
    (`TryBuy` on Pyre's Shape mark with Fire alone) instead of choosing it on the chart. In the playtest every branch is
    open, so there it would buy it.
+
+## Task 4.16: the duo branches of pairs_d3.md
+
+All eleven pairs at distance 3 now have a duo branch in the heart (Thermal Shock, Seized, Windthrow, Frost Heave, Rust,
+Shining Herb, Turned to Stone, Quicksilver, Kindling Point, The Grudge, Ill Wind), each with its Shape mark, two majors,
+a minor, a keystone and a duo spell; Thermal Shock and The Grudge also have their duo surges (The Yawning Gap, Ash and
+Thunder). None of it has been run in the editor yet.
+
+1. **Marks that do nothing yet.** Eleven of the minors and keystones need an engine piece before they can do what they
+   say: Neither Wins, Green Wood, Permafrost, Brine, Long Day, Heavy Curse, Stone Does Not Forgive, Cinnabar, Clear Sky,
+   Long Memory and Fine Dust. Most ask for one affliction to last as long as another (ledger `fades-never`) or for a
+   reaction's own numbers to change (`reaction-numbers`). Default: they can be bought and their details say "Not built
+   yet", as in 4.15. Alternatives: hide them until built; or give each a stand-in effect.
+2. **Duo spells from the nearest forms.** No duo spell has its own form yet. Each is cast from the nearest built one:
+   Brand (Fire-Setting), Bolt (The Flashing, Hands of the Sun), Drill (Thistledown), Field (The Hag's Staff, Turned to
+   the Sun), Wave (The Sea Takes It, The Yellow Gale), Parry (Ichor, The Exile's Grudge), and a Step for Stone
+   Underfoot. What each form cannot do is written as a `// NEEDS:` and in its "Not built yet". Default: as built.
+   Alternative: build the form pieces first (ledger `form-pieces`).
+3. **Duo spell cooldowns.** The pair file gives some; the rest are set by role: 9 s to 13 s (Thistledown 9, The
+   Flashing and Stone Underfoot 10, Turned to the Sun and Ichor 11, Fire-Setting, The Hag's Staff, Hands of the Sun, The
+   Exile's Grudge and The Yellow Gale 12, The Sea Takes It 13). Default: as listed. Alternative: name others.
+4. **Duo surges ride any surge.** As in 4.15 question 7: The Yawning Gap and Ash and Thunder answer any surge while both
+   elements are carried, with no mana or time of their own (ledger `duo-surge-slot`). Ash and Thunder's bolt falls by
+   chance on one blow in three, on the enemy struck, not on every third blow at the nearest Cursed one.
+5. **Critical blows.** Kindling Point and its shapes count every weapon blow, not only critical ones (ledger
+   `blow-made-critical`). Default: as built. Alternative: count only heavy blows until criticals are built.
+6. **The enemy's own blow.** The Grudge's cloud waits for the enemy's next blow on you, which is not a moment yet (ledger
+   `their-blow-moment`). First Strike works (your heavy blow calls the cloud); the plain Grudge does nothing but gather,
+   and Ash Plume's storm falls when the cloud runs out, one bolt for each of your weapon blows on it, not capped at five.
+   Default: as built. Alternative: build the moment before the playtest, as it is the Grudge's whole point.
+7. **Shoves that shed.** Ill Wind sheds only on a heavy blow (ledger `shove-moment`), Dust on the Blade's coat stays on
+   the enemy shed rather than on your edge, and Dust Bank's trail is laid at once rather than drifting. Gust at the Heel
+   throws everything within 2.5 m of you, not only the attacker. Default: as built.
+8. **Which element each branch names first.** Default: the ring's order, as the pair file names the pairs (Fire for
+   Thermal Shock, Lightning for Seized, Wind for Windthrow, Ice for Frost Heave, Water for Rust, Life for Shining Herb,
+   Earth for Turned to Stone, Metal for Quicksilver, Light for Kindling Point, Dark for The Grudge, Poison for Ill Wind).
+   The duo spell is cast in that element and charges the blade with it, and lays the other element's affliction by an
+   effect.
+9. **Given Bones and The Exile Returns** answer any discharge of Static on a Cursed enemy, not only the Grudge's bolt, so
+   Ash and Thunder's bolts and every other set-off of Static on the Cursed trigger them too (each at most every 0.3 s).
+   Default: as built. Alternative: hold them back until the Grudge's bolt can be told apart.
