@@ -1263,6 +1263,8 @@ Group: Reactions
 
 **What sets it off.** Poison landing on a Soaked enemy, or Water on a poisoned one.
 
+**Its shapes.** With the Shape mark of Poison and Water's duo branch (Fish Poison: Rock Pool or The Ebb Takes It, 3 Shards, in the heart of the chart) and both carried, Fish Poison wears the shape chosen at a rest fire instead. Rock Pool: the slick is 1.5 m across and floats it at two doses. The Ebb Takes It: the slick runs 6 m on away from you as four patches 1.5 m across, and floats it at four doses as plain.
+
 **How to use it.** Dose it four deep before you wet it, then be ready with the blade.
 
 **How it looks.** Its name over the enemy and the slick on the floor. Not yet: others in the slick floating as they reach four doses.

@@ -74,6 +74,7 @@ namespace Clover.Player.Trees
             Duo.LiveIronDuo.Add(to);
             Duo.GoldenFeathersDuo.Add(to);
             Duo.StolenWarmthDuo.Add(to);
+            Duo.FishPoisonDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }
