@@ -224,7 +224,7 @@ namespace Clover.Player.Forms
         public static bool PlayReaction(string slug, Transform body, Vector3 away, Transform player) => PlayReaction(slug, body, away, player, 0);
 
         /// <summary>
-        /// The same, hiding on the body struck the looks of the afflictions the reaction spends (<paramref name="spends"/>,
+        /// The same, hiding on the body struck (and on each other body its look reaches) the looks of the afflictions the reaction spends (<paramref name="spends"/>,
         /// one bit a kind) for as long as its own look plays: the reaction's look shows what became of them (the
         /// coordinator, 2026-11-20: Seeded's pods sat over Quickening's bloom).
         /// </summary>
@@ -253,6 +253,9 @@ namespace Clover.Player.Forms
                 var found = Nearest(wanted, 1.6f, taken);
                 if (found == null) continue;
                 Play(other, found, yaw);
+                // The others it reaches show it in its own look too, not in the plain looks of what it lays on them
+                // (Caught Light's and Earthlight's films of 2026-11-20: every body it Marked rang a cream sun-wheel).
+                if (spends != 0) Hide(found, spends, instance.set.Looks[main].Seconds);
                 if (taken < Taken.Length) Taken[taken++] = found;
             }
             for (int i = 0; i < Taken.Length; i++) Taken[i] = null;

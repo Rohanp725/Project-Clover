@@ -1141,6 +1141,16 @@ namespace Clover.Player
             FromReaction = laying == LaySource.Reaction,
         };
 
+        // A blow drawn by its reaction's own look throws no hit art of its element (Sickle Wind's whirl threw a wind strike's
+        // white crescents at every enemy every bite, the film of 2026-11-20), and the body it lands on flashes in the
+        // element's own hue at the softer strength, not the plain blow's white (its seven bites flashed four soldiers white).
+        private static SpellBlow Unseen(SpellBlow blow, bool unseen)
+        {
+            blow.Unseen |= unseen;
+            if (unseen && blow.Struck.a <= 0f) blow.Struck = new Color(blow.Tint.r, blow.Tint.g, blow.Tint.b, 1f);
+            return blow;
+        }
+
         // Where the patches of a ground or burst effect go: one, a line ahead, a ring, or a row carried downwind past the target.
         /// <summary>How many bolts of a reaction's look are drawn down a lane (<see cref="UpgradeAction.Lane"/>), besides the one on the target.</summary>
         public const int LaneBolts = 4;
@@ -1234,6 +1244,10 @@ namespace Clover.Player
             // Who it is done to, when it must be someone: the trigger's own enemy, or the one faced.
             Component subject = pending.Target;
             if (subject == null && target != null) subject = target.GetComponentInParent<IAfflictable>() as Component;
+            // A reaction with its own bespoke look (combos 4) is seen in that look alone: its hazards bite quietly, with
+            // no ring, puffs, sparks or bolt from the sky (Sickle Wind's whirl rang white rings every bite and The Bolt
+            // Runs True dropped a white column of the sky's bolt over its own, the films of 2026-11-20).
+            bool bespoke = ReactionLook.HasBespoke(effect.Owner);
 
             switch (effect.Do)
             {
@@ -1244,13 +1258,13 @@ namespace Clover.Player
                     {
                         combat.AfflictArea(centre, effect.Radius, kind, stacks, null, laying);
                         // A reaction with its own bespoke look shows what it lays in that look (Smoulder's black flare).
-                        if (!ReactionLook.HasBespoke(effect.Owner)) ElementLook.Ring(look, centre + Vector3.up * 0.2f);
+                        if (!bespoke) ElementLook.Ring(look, centre + Vector3.up * 0.2f);
                     }
                     else if (subject is IAfflictable afflictable)
                     {
                         float seconds = combat.AfflictionSeconds != 1f ? Afflictions.Spec(kind).Seconds * combat.AfflictionSeconds : 0f;
                         CombatEvents.Report(subject, kind, stacks, afflictable.Afflictions.Lay(kind, stacks + combat.ExtraStacks, seconds, combat.AfflictionPower, laying, subject), laying);
-                        if (!ReactionLook.HasBespoke(effect.Owner)) ElementLook.Puff(look, centre + Vector3.up * 1.2f, Vector3.up, 0.6f);
+                        if (!bespoke) ElementLook.Puff(look, centre + Vector3.up * 1.2f, Vector3.up, 0.6f);
                     }
                     break;
                 }
@@ -1259,7 +1273,7 @@ namespace Clover.Player
                     var burst = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2.5f), Seconds = 0.12f, BiteEvery = 0.1f,
-                        Once = true, Burst = !effect.Unseen && !ReactionLook.HasBespoke(effect.Owner), Delay = effect.Delay, Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
+                        Once = true, Burst = !effect.Unseen && !bespoke, Quiet = bespoke, Delay = effect.Delay, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke), FromReaction = laying == LaySource.Reaction,
                     };
                     // One burst, or one where each patch of a shape would fall.
                     int bursts = effect.Shape == HazardShape.Patch ? 1 : Or(eCount, 3);
@@ -1279,7 +1293,7 @@ namespace Clover.Player
                     var run = new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = half, Seconds = 0.12f, BiteEvery = 0.1f, Once = true,
-                        Burst = !effect.Unseen && !ReactionLook.HasBespoke(effect.Owner), Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
+                        Burst = !effect.Unseen && !bespoke, Quiet = bespoke, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke), FromReaction = laying == LaySource.Reaction,
                         // One blow down the whole lane: an enemy where two patches meet is struck once.
                         Group = Hazards.NewGroup(),
                     };
@@ -1289,9 +1303,10 @@ namespace Clover.Player
                         run.Delay = effect.Delay + i * every;
                         Hazards.Lay(run);
                     }
-                    // The reaction's own bolt comes down again and again along the lane, running away from the player.
+                    // The reaction's own bolt comes down again and again along the lane, running away from the player:
+                    // the earlier art's bolt, unless the bespoke look draws its own (it drew a white column, 2026-11-20).
                     int pair = string.IsNullOrEmpty(effect.Reaction) ? -1 : ReactionTable.PairOf(effect.Reaction);
-                    if (pair >= 0)
+                    if (pair >= 0 && !bespoke)
                         for (int bolt = 1; bolt <= LaneBolts; bolt++)
                         {
                             float share = bolt / (float)LaneBolts;
@@ -1320,9 +1335,9 @@ namespace Clover.Player
                         Blow = Blow(look, kind, eDamage, eStagger, eStacks), FromReaction = laying == LaySource.Reaction,
                         Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
                         // Unseen ground is drawn by its reaction's look alone (Seized's film: no bolt at each bite).
-                        Burst = false, Quiet = effect.Unseen,
+                        Burst = false, Quiet = effect.Unseen || bespoke,
                     };
-                    spec.Blow.Unseen = effect.Unseen;
+                    spec.Blow.Unseen = effect.Unseen || bespoke;
                     for (int i = 0; i < patches; i++)
                     {
                         spec.Position = PatchAt(effect, i, patches, centre, self, aim, reach);
@@ -1372,8 +1387,8 @@ namespace Clover.Player
                     float radius = Or(effect.Radius, 2f);
                     var spec = new HazardSpec
                     {
-                        Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = radius, Seconds = 0.12f, BiteEvery = 0.1f, Once = true, Burst = true, Warn = true,
-                        Blow = Blow(look, kind, eDamage, eStagger, eStacks),
+                        Kind = ElementLook.Ground(look), Tint = look.Colour, Radius = radius, Seconds = 0.12f, BiteEvery = 0.1f, Once = true, Burst = !bespoke, Warn = !bespoke, Quiet = bespoke,
+                        Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke),
                     };
                     for (int i = 0; i < falling; i++)
                     {
@@ -1484,7 +1499,7 @@ namespace Clover.Player
                     Hazards.Lay(new HazardSpec
                     {
                         Kind = ElementLook.Ground(look), Tint = look.Colour, Position = centre, Radius = Or(effect.Radius, 2f), Seconds = strikes * interval + 0.2f, BiteEvery = interval,
-                        Bites = strikes, Burst = true, Follow = target != null, Target = target, Blow = Blow(look, kind, eDamage, eStagger, eStacks),
+                        Bites = strikes, Burst = !bespoke, Quiet = bespoke, Follow = target != null, Target = target, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke),
                     });
                     break;
                 }
