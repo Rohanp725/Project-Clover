@@ -10,7 +10,7 @@ namespace Clover.Player
         Afflict,
         /// <summary>A burst of damage and stagger in a circle. Reads: Damage, Stagger, Radius (2.5), Delay, Affliction, Stacks, At.</summary>
         Burst,
-        /// <summary>A cone thrown forward from the player, who turns to the target first. Reads: Damage, Stagger, Reach (4.5), Arc (90), Affliction, Stacks.</summary>
+        /// <summary>A cone thrown forward from the player, who turns to the target first. Reads: Damage, Stagger, Reach (4.5), Arc (90), Affliction, Stacks; Amount: each enemy struck thrown that many metres straight away from the player.</summary>
         Cone,
         /// <summary>Ground that bites what stands on it, for a while. Reads: Shape, Damage (each bite), Stagger, Radius (1) of each patch, Seconds (3), Interval (0.5) between bites, Count (4) patches for a line or ring, Reach (4): the line's length or the ring's radius, Delay, Affliction, Stacks, At.</summary>
         Hazard,
@@ -89,5 +89,9 @@ namespace Clover.Player
         InstantNext,
         /// <summary>Keeps the target frozen Seconds longer; nothing on one that is not frozen. Reads: Seconds.</summary>
         KeepFrozen,
+        /// <summary>Raises the player's Heat by levels, while Heat is learned. Reads: Count (1).</summary>
+        RaiseHeat,
+        /// <summary>Turns the player's tide at once, high to low or low to high, while a mark keeps the tide. Reads: nothing.</summary>
+        TurnTide,
     }
 }

@@ -361,3 +361,25 @@ design yet, its **Not built yet** line says what is missing.
 **Works with.** Wellspring, Soaked, Heavy Water, Drawn From the Drowned (for the flask), Deep Crack after the sea breaks, a second element's Static or Chill.
 
 **Example.** Flood a crowd, cut into the middle of it for six seconds, then roll clear and face them as the sea breaks.
+
+## water.highlow
+**What it does.** Your own tide turns back and forth. At high water your spells hit harder and your weapon softer. At low water it is the other way round. A perfect guard or a perfect dodge turns the tide at once.
+
+**When it happens.** Always on once learned, while Water is carried. The tide turns by itself every six seconds. "High water" or "Low water" shows when it turns.
+
+**The numbers.** Keystone, 6 Shards. High water: spells hit 33% harder, your weapon hits 20% softer. Low water: your weapon hits 33% harder, spells hit 20% softer. The tide starts high. A perfect guard or a perfect dodge turns it and starts the six seconds again.
+
+**Works with.** Spreading Water, which it grows from. Ebb and Flood. Every spell in your Hand, and a weapon you like to swing.
+
+**Example.** Cast your spells at high water. When it turns low, close in and use the blade. Need spells now? Make a perfect dodge to turn the tide back.
+
+## water.drawnback
+**What it does.** Each time you dodge away from the enemy you face, the sea comes back with you as a wave. Your next weapon blow that lands breaks all your waves at once in front of you. If you hold no wave, your blows are weaker.
+
+**When it happens.** A wave comes with each dodge away from the enemy you face, while Water is carried. The waves break on your next weapon blow that lands. "Waves" shows how many you hold, next to the weapon.
+
+**The numbers.** Keystone, 6 Shards. Three waves at most. For each wave, the break deals 12 damage and 20 stagger in front of you, out to 4 metres. Everything it hits is Soaked and thrown 2 metres back. With no wave held, your weapon hits 20% softer.
+
+**Works with.** Heavy Water, which it grows from. Undertow and The Tide Turns, which pull enemies back in after you. Anything that sets off Soaked.
+
+**Example.** Dodge back three times from a pack, then step in with one blow: three waves break, 36 damage and 60 stagger, and they are all thrown back and soaked.

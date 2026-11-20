@@ -45,5 +45,9 @@ namespace Clover.Player
         HeavySwing,
         /// <summary>While the player stands in fire they have left on the ground.</summary>
         InOwnFire,
+        /// <summary>While the player's tide is high (High Water, Low Water: the tide clock turns every few seconds).</summary>
+        HighWater,
+        /// <summary>While the player's tide is low.</summary>
+        LowWater,
     }
 }

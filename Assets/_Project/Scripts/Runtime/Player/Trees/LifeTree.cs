@@ -26,6 +26,14 @@ namespace Clover.Player.Trees
         public const string BriarCoat = "life.coat";
         public const string RootAndBranch = "life.lift";
         public const string WoodGrowsBack = "life.devotion";
+        // The two keystones the owner picked on 2026-11-20 (keystones_fire_water_life.md). Shared Roots comes back under a
+        // new id, since life.roots was retired with its refund and a retired id is never used again.
+        public const string SharedRoots = "life.sharedroots";
+        public const string InItsSeason = "life.inseason";
+        /// <summary>In Its Season: seconds a seed lies alone before it is ripe, and what a ripe and an unripe seed's burst is multiplied by.</summary>
+        public const float RipensAfter = 6f;
+        public const float RipeShare = 3f;
+        public const float UnripeShare = 0.5f;
         // The spells: each is its branch's Learn mark and the branch's id.
         public const string BriarPatch = "life.base";
         public const string Sapling = "life.sapling";
@@ -131,6 +139,15 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Seeded, Stacks = 1 },
                 } },
                 BranchPattern.MiddleCrown));
+            // The Garden bough's keystone (the owner's pick of 2026-11-20). The RuleBook's affliction rules ripen a seed left
+            // alone six seconds (AfflictionSet: it stops fading); a ripe seed's burst is three times as strong and an unripe
+            // one's half (set off, its bearer's death, a reaction), and a ripe burst is told as RipeBurst, where the thornbush
+            // grows.
+            to.Add(BranchPattern.Put(new Upgrade { Id = InItsSeason, Name = "In Its Season", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { RootAndBranch }, Icon = UpgradeIcons.Leaf,
+                Description = "A seed left alone for six seconds, with no new seed planted on it, ripens: it flowers and stops fading. When a ripe seed bursts, by your spells, its death or a reaction, it hits three times as hard and leaves a thornbush. A seed that bursts before it is ripe hits only half as hard.",
+                Rules = book => book.Afflictions.Ripen(AfflictionKind.Seeded, RipensAfter, RipeShare, UnripeShare),
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.RipeBurst, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Grown = true, Limit = 4, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Affliction = AfflictionKind.Seeded, Stacks = 1 } } },
+                BranchPattern.TrunkLeft));
             // NEEDS: whatever you grow growing back where it stood 6 s after it is spent, burst or cut down (grows-back).
             // Until then every spell that strikes sows a sapling where it lands, once in two seconds.
             to.Add(BranchPattern.Put(new Upgrade { Id = WoodGrowsBack, Name = "Wood Grows Back", Element = E, Kind = UpgradeKind.Devotion, Requires = new[] { RootAndBranch }, Icon = UpgradeIcons.Moon,
@@ -283,6 +300,13 @@ namespace Clover.Player.Trees
                     new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Burst, Damage = 8f, Radius = 1.2f, Affliction = AfflictionKind.Seeded, Stacks = 1, Cooldown = 0.5f },
                 } },
                 BranchPattern.RightMiddle));
+
+            // The Bramble bough's keystone (the owner's pick of 2026-11-20), as written in trees_a.md. Built by hand:
+            // PlayerDefence passes a third of each wound to the Seeded enemies within 8 m, split among them, and PlayerCombat's
+            // seed mending is switched off (wounds-shared, seed-mending-off; PlayerUpgrades.ShareWound).
+            to.Add(BranchPattern.Put(new Upgrade { Id = SharedRoots, Name = "Shared Roots", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { BriarCoat }, Icon = UpgradeIcons.Heart,
+                Description = "A third of every wound you take is taken instead by the Seeded enemies within 8 metres, split between them. In return, your seeds no longer heal you when you strike."
+            }, BranchPattern.RightCrown));
 
             // Sapling, once a major, is the counter: a still nova opens the window as a count of three, and each perfect guard
             // or perfect dodge spends one on a sapling at the attacker (on a dodge, the enemy faced). NEEDS: the window as 8 s

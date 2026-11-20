@@ -49,6 +49,12 @@ namespace Clover.Player
         public float ThrowHoldSeconds = 0.3f;
         /// <summary>What the damage of a blow that lands is multiplied by; the upgrades and the surge set it.</summary>
         public float DamageTaken = 1f;
+        /// <summary>
+        /// The share of each wound that others may carry for the player (Shared Roots), and who carries it: given the share,
+        /// it returns how much was carried (nothing when no one is near to carry it). Set by the player's upgrades.
+        /// </summary>
+        [System.NonSerialized] public float WoundShare;
+        [System.NonSerialized] public System.Func<float, float> ShareWound;
         /// <summary>The most wards that can be held at once.</summary>
         public int MaximumWards = 3;
         /// <summary>Wards held: each turns aside one blow that would otherwise have landed.</summary>
@@ -380,7 +386,8 @@ namespace Clover.Player
 
             if (player.Dodge.IsInvulnerable)
             {
-                if (player.Dodge.Elapsed <= PerfectDodgeWindow)
+                // A dodge away from the enemy under Into the Fire is never perfect.
+                if (player.Dodge.Elapsed <= PerfectDodgeWindow && !player.Dodge.NoPerfect)
                 {
                     PerfectDodges++;
                     if (combat != null) combat.Mana.Gain(PerfectDodgeMana);
@@ -461,7 +468,10 @@ namespace Clover.Player
         private void Land(in Hit hit, float seconds)
         {
             BlowsTaken++;
-            Health.Damage(hit.Damage * DamageTaken);
+            float wound = hit.Damage * DamageTaken;
+            // Shared Roots: a share of the wound is carried by the Seeded enemies near, as much as they can take of it.
+            if (WoundShare > 0f && ShareWound != null && wound > 0f) wound -= Mathf.Clamp(ShareWound(wound * WoundShare), 0f, wound);
+            Health.Damage(wound);
             // With Dark's gift the blow that kills is not the end, once.
             if (IsDead && upgrades != null && upgrades.Rise(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction)) Callout("Risen");
             if (upgrades != null) upgrades.OnStruck(hit.HasOrigin ? hit.Origin : transform.position - hit.Direction);

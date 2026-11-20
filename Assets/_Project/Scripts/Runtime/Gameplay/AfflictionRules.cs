@@ -17,6 +17,9 @@ namespace Clover.Gameplay
         private readonly float[] deepensEvery = new float[Afflictions.Count];
         private readonly int[] deepensTo = new int[Afflictions.Count];
         private readonly float[] restsAfter = new float[Afflictions.Count];
+        private readonly float[] ripensAfter = new float[Afflictions.Count];
+        private readonly float[] ripeShare = new float[Afflictions.Count];
+        private readonly float[] unripeShare = new float[Afflictions.Count];
 
         /// <summary>False while every affliction behaves as written: the sets then skip every rule here with one test.</summary>
         public bool Any { get; private set; }
@@ -35,6 +38,33 @@ namespace Clover.Gameplay
 
         /// <summary>Seconds after the kind fades from an enemy before it can be laid on that enemy again; zero for none.</summary>
         public float RestsAfter(AfflictionKind kind) => Valid(kind) ? restsAfter[(int)kind] : 0f;
+
+        /// <summary>
+        /// Seconds the kind must lie on an enemy with nothing new laid on it before it is ripe (In Its Season's seeds); zero
+        /// for a kind that never ripens. A ripe kind stops fading, and its burst is <see cref="RipeShare"/> as strong; an
+        /// unripe one's is <see cref="UnripeShare"/> as strong.
+        /// </summary>
+        public float RipensAfter(AfflictionKind kind) => Valid(kind) ? ripensAfter[(int)kind] : 0f;
+
+        /// <summary>What a ripe kind's burst is multiplied by (1 for a kind that never ripens).</summary>
+        public float RipeShare(AfflictionKind kind) => RipensAfter(kind) > 0f ? ripeShare[(int)kind] : 1f;
+
+        /// <summary>What an unripe kind's burst is multiplied by (1 for a kind that never ripens).</summary>
+        public float UnripeShare(AfflictionKind kind) => RipensAfter(kind) > 0f ? unripeShare[(int)kind] : 1f;
+
+        /// <summary>
+        /// The kind ripens: left alone <paramref name="seconds"/> on an enemy it is ripe and stops fading, and when it bursts
+        /// (set off, its bearer's death, a reaction) the burst is <paramref name="ripe"/> as strong, or <paramref name="unripe"/>
+        /// as strong before it is ripe.
+        /// </summary>
+        public void Ripen(AfflictionKind kind, float seconds, float ripe, float unripe)
+        {
+            if (!Valid(kind) || seconds <= 0f) return;
+            ripensAfter[(int)kind] = seconds;
+            ripeShare[(int)kind] = ripe;
+            unripeShare[(int)kind] = unripe;
+            Any = true;
+        }
 
         /// <summary>The kind never fades by itself.</summary>
         public void Keep(AfflictionKind kind)
@@ -77,6 +107,9 @@ namespace Clover.Gameplay
             Array.Clear(deepensEvery, 0, deepensEvery.Length);
             Array.Clear(deepensTo, 0, deepensTo.Length);
             Array.Clear(restsAfter, 0, restsAfter.Length);
+            Array.Clear(ripensAfter, 0, ripensAfter.Length);
+            Array.Clear(ripeShare, 0, ripeShare.Length);
+            Array.Clear(unripeShare, 0, unripeShare.Length);
             Any = false;
         }
 
@@ -93,6 +126,9 @@ namespace Clover.Gameplay
             Array.Copy(other.deepensEvery, deepensEvery, deepensEvery.Length);
             Array.Copy(other.deepensTo, deepensTo, deepensTo.Length);
             Array.Copy(other.restsAfter, restsAfter, restsAfter.Length);
+            Array.Copy(other.ripensAfter, ripensAfter, ripensAfter.Length);
+            Array.Copy(other.ripeShare, ripeShare, ripeShare.Length);
+            Array.Copy(other.unripeShare, unripeShare, unripeShare.Length);
             Any = other.Any;
         }
 

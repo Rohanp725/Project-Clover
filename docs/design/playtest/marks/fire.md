@@ -343,3 +343,25 @@ design yet, its **Not built yet** line says what is missing.
 **Works with.** Cinder, Heat.
 
 **Example.** Press again over a crowd at five Burn.
+
+## fire.intothefire
+**What it does.** Fire never backs off. When you dodge toward an enemy, you pass right through it without being hit, and everything you pass catches fire. Dodging away costs more and can never be perfect.
+
+**When it happens.** Every dodge, while Fire is carried. A dodge counts as toward the enemy you face when it goes within 60 degrees of the line to it, and as away when it goes within 60 degrees of the line away from it. A dodge to the side is a plain dodge.
+
+**The numbers.** Keystone, 6 Shards. Toward: you cannot be hit for the whole dodge, you go through bodies (walls still stop you), and every enemy along your path takes two Burn. A perfect dodge toward the enemy also raises your Heat by one level. Away: the dodge costs twice the stamina, and it is never a perfect dodge, so it gives no mana and nothing that needs a perfect dodge happens.
+
+**Works with.** Flame Trail, which it grows from. Heat, which the perfect dodge feeds. Wildfire Rush. Big and red attacks, which you now meet by going through them.
+
+**Example.** A brute winds up a huge swing. Roll into it: you come out behind it, it is burning, and you are already swinging.
+
+## fire.drinks
+**What it does.** Your weapon stops setting enemies on fire. Instead it drinks the fire that is already there. Each blow on a burning enemy takes Burn off it and hits harder for each Burn it takes. Burns no longer hurt enemies by themselves.
+
+**When it happens.** Every weapon blow on a burning enemy, while Fire is carried.
+
+**The numbers.** Keystone, 6 Shards. A light blow takes 1 Burn, a heavy blow takes 3, and a finisher takes all of them. Each Burn taken adds 6 damage to that blow. Cinder no longer adds Burn to your blows. A burn left on an enemy does no damage over time, but it still runs out at its usual pace.
+
+**Works with.** Catching Fire, which it grows from. Everything that sets fire without the weapon: Flame Wave, Uraeus, the Firebomb Flask, Fire's infused strike and reactions. Fire Without End, which keeps the fuel from running out.
+
+**Example.** Throw a Flame Wave over a crowd for two Burn each, then finish the one in front of you: the finisher takes both Burn and hits 12 harder.

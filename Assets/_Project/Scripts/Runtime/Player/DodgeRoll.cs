@@ -22,7 +22,13 @@ namespace Clover.Player
         public float Recovery = 0.1f;
 
         public bool IsRolling { get; private set; }
-        public bool IsInvulnerable => IsRolling && elapsed >= InvulnerableFrom && elapsed < InvulnerableUntil;
+        public bool IsInvulnerable => IsRolling && elapsed >= InvulnerableFrom && (elapsed < InvulnerableUntil || WholeSafe);
+        /// <summary>For this roll alone (Into the Fire, toward the enemy): safe for its whole length. Cleared as each roll starts.</summary>
+        [NonSerialized] public bool WholeSafe;
+        /// <summary>For this roll alone (Into the Fire, away from the enemy): never a perfect dodge. Cleared as each roll starts.</summary>
+        [NonSerialized] public bool NoPerfect;
+        /// <summary>For this roll alone (Into the Fire, toward the enemy): through bodies, stopping only at walls. Cleared as each roll starts.</summary>
+        [NonSerialized] public bool PassesBodies;
         public bool CanStart => !IsRolling && sinceEnd >= Recovery;
         public Vector3 Direction { get; private set; }
         /// <summary>How far through the roll's time the player is, from 0 to 1; 0 when not rolling.</summary>
@@ -49,18 +55,27 @@ namespace Clover.Player
             sinceEnd = 0f;
         }
 
-        public bool TryStart(Vector3 direction, StaminaPool stamina)
+        public bool TryStart(Vector3 direction, StaminaPool stamina) => TryStart(direction, stamina, DodgeTerms.Plain);
+
+        /// <summary>Starts a roll on the given terms (its cost, how it guards): false when it cannot be paid for or begun.</summary>
+        public bool TryStart(Vector3 direction, StaminaPool stamina, DodgeTerms terms)
         {
             direction.y = 0f;
             if (!CanStart || direction.sqrMagnitude < 0.0001f) return false;
+            float scale = terms.CostScale > 0f ? terms.CostScale : 1f;
             if (PayInstead != null)
             {
                 if (!PayInstead()) return false;
+                // Paid in breath, a dearer roll still asks the stamina beyond the usual.
+                if (scale > 1f && !stamina.TrySpend(StaminaCost * (scale - 1f))) return false;
             }
-            else if (!stamina.TrySpend(StaminaCost)) return false;
+            else if (!stamina.TrySpend(StaminaCost * scale)) return false;
             Direction = direction.normalized;
             IsRolling = true;
             elapsed = 0f;
+            WholeSafe = terms.WholeSafe;
+            NoPerfect = terms.NoPerfect;
+            PassesBodies = terms.PassesBodies;
             return true;
         }
 

@@ -231,8 +231,11 @@ namespace Clover.Player
             LastShape = shape != null ? shape.Name : "";
             if (shape != null) ShapedCount++;
             var effects = shape != null ? shape.Effects : ReactionTable.EffectsFor(pair, Loadout());
+            // A ripe seed in the pair makes the reaction's blows stronger, an unripe one softer (In Its Season).
+            upgrades.ReactingOn(who, pair);
             for (int i = 0; i < effects.Count; i++)
                 if (effects[i].On == UpgradeTrigger.Reacted) upgrades.Fire(effects[i], who, at, LaySource.Reaction);
+            upgrades.ReactedOn();
             // The marks in force that answer this reaction (or any): lifts and duo marks.
             upgrades.Fire(UpgradeTrigger.Reacted, who, at, mark.Id, LaySource.Reaction);
             return true;

@@ -358,3 +358,25 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 **Works with.** Seeded, Regrowth (4 health a second while it lasts), Briar Patch's Burrs and Seed Pods to seed a crowd, Root and Branch.
 
 **Example.** Seed a pack with Briar Patch, light Regrowth, press again: the whole pack stands held while you cut your health back out of them.
+
+## life.sharedroots
+**What it does.** Enemies with your seeds in them take part of your wounds for you. Thin roots run from your heels to each Seeded enemy near you. But your seeds no longer heal you when you hit.
+
+**When it happens.** Every blow that hurts you, while Life is carried, if a Seeded enemy is within 8 metres.
+
+**The numbers.** Keystone, 6 Shards. A third of each wound is taken off you and dealt to the Seeded enemies within 8 metres instead, split evenly between them (up to eight of them). With no Seeded enemy near, you take the whole wound. Blows on Seeded enemies no longer heal you.
+
+**Works with.** Briar Coat, which it grows from, and seeds the enemies that strike you. Briar Patch and Seeded, to plant seeds in a crowd.
+
+**Example.** Seed a whole pack with Briar Patch, then wade in: every blow you take is split between them.
+
+## life.inseason
+**What it does.** Your seeds ripen if you leave them alone. A ripe seed flowers and stops fading. When a ripe seed bursts, it hits three times as hard and leaves a thornbush behind. A seed that bursts before it is ripe hits only half as hard.
+
+**When it happens.** A seed ripens when it has stayed six seconds in an enemy with no new seed planted on it, while Life is carried. A seed bursts when you set it off (Ripening, Reap What Is Sown), when the enemy dies, or in a reaction.
+
+**The numbers.** Keystone, 6 Shards. Ripe after 6 seconds alone. A ripe seed does not fade until it bursts. Ripe burst: three times the damage, and a thornbush grows there that stands 8 seconds and bites what stands in it for 4 damage and a seed every half second (four bushes at most). Unripe burst: half the damage.
+
+**Works with.** Root and Branch, which it grows from. Ripening, Reap What Is Sown, Fallen Seeds, and the reactions that use Seeded.
+
+**Example.** Plant seeds in three enemies, then fight a fourth for six seconds. Now reap: three ripe bursts and three thornbushes.

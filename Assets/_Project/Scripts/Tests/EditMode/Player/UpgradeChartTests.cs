@@ -391,7 +391,8 @@ namespace Clover.Tests
             // The two trees reshaped into spell branches (Phase 4): six branches of four and their passives, and the branch they
             // share, reshaped as a duo branch (task 4.5): the Shape mark, Twin Break, Ionised Air, Chain Reaction, Meltdown and
             // Ball Lightning, with Plasma at its top.
-            Assert.AreEqual(33, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
+            // Fire has its two new keystones, Into the Fire and The Blade Drinks Fire (the owner's picks of 2026-11-20).
+            Assert.AreEqual(35, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
             Assert.AreEqual(32, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Lightning && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
             // Plasma Lance, the spare spell kept hidden for the Evolutions, is on no chart; Plasma itself is a duo mark now.
             Assert.AreEqual(7, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && !upgrade.IsHidden && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
@@ -535,12 +536,13 @@ namespace Clover.Tests
         // keystones, Devotion, lift and gift). A tree is added here when it is reshaped.
         private static readonly Dictionary<string, int> ReshapedPassives = new Dictionary<string, int>
         {
-            [Elements.Fire] = 10,
+            // Fire, Water and Life have three keystones since the owner's picks of 2026-11-20 (keystones_fire_water_life.md).
+            [Elements.Fire] = 12,
             [Elements.Lightning] = 9,
             [Elements.Wind] = 10,
             [Elements.Ice] = 10,
-            [Elements.Water] = 10,
-            [Elements.Life] = 10,
+            [Elements.Water] = 12,
+            [Elements.Life] = 12,
             // Earth's table gives three keystones, and it keeps all three since the owner allowed it (2026-11-20).
             [Elements.Earth] = 10,
             // Metal's table gives three keystones too: Edge Guard, Master's Answer and All Blades Home.
