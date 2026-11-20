@@ -1008,6 +1008,8 @@ Group: Reactions
 
 **What sets it off.** Water landing on a Marked enemy, or a Mark on a Soaked one.
 
+**Its shapes.** With the Shape mark of Water and Light's duo branch (Net or Eye: Thrown Wide or The Fish's Eye, 3 Shards, in the heart of the chart) and both carried, Caught Light wears the shape chosen at a rest fire instead. Thrown Wide: the net 5 m across for 4 s, and at its end everything within 2.5 m is hauled 2 m toward its enemy. The Fish's Eye: no net; your next weapon blow on it within 6 s is critical at three times the damage, spends the Mark and strikes 12 behind it.
+
 **How to use it.** Wet the crowd, Mark one: all of them Marked for your critical blows, and slowed.
 
 **How it looks.** Its name over the enemy and the net on the floor. Not yet: enemies walking onto the net later slowed too.

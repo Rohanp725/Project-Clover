@@ -57,6 +57,7 @@ namespace Clover.Player.Trees
             Duo.LightningFlowerDuo.Add(to);
             Duo.LoganStoneDuo.Add(to);
             Duo.ColdShortDuo.Add(to);
+            Duo.CaughtLightDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }
