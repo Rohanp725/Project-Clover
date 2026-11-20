@@ -40,6 +40,7 @@ namespace Clover.Player.Trees
             Duo.EarthlightDuo.Add(to);
             Duo.BlackChainDuo.Add(to);
             Duo.BurningSapDuo.Add(to);
+            Duo.SmoulderDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }

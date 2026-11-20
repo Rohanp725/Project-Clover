@@ -753,6 +753,8 @@ Group: Reactions
 
 **What sets it off.** A curse landing on a burning enemy, or Burn on a Cursed one.
 
+**Its shapes.** With Banked Coals, the Shape mark of Dark and Fire's duo branch (Smoulder: Night Sun or Coal Seam, 3 Shards, in the heart of the chart) and both carried, Smoulder wears the shape chosen at a rest fire instead. Night Sun: as before, and each of your blows on it heals you 3. Coal Seam: the fire goes into the floor, a patch 2.5 m across for 8 s that Curses what stands on it, so the burning ones smoulder.
+
 **How to use it.** Light it, curse it, and leave it: the longer the curse runs, the bigger the flare. Killing it flares it at once.
 
 **How it looks.** Its name over the enemy, then the flare. Not yet: the fire hidden as a dark glow until it flares.
