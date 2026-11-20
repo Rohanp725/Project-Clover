@@ -102,7 +102,7 @@ namespace Clover.Player.Trees.Duo
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = OpenTheGourd, Name = "Open the Gourd", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { RideTheSquall }, Icon = UpgradeIcons.Gust,
-                Description = "A duo surge. While your surge lasts a gourd of winds hangs at your hip: each dodge lets one out, a gust down the dodge's line that Soaks, unsteadies twice and shoves, and each capsize gives 6 mana.",
+                Description = "A duo surge. While your surge lasts a gourd of winds hangs at your hip: each dodge lets one out, a gust down the dodge's line that Soaks, unsteadies twice and shoves, and each capsize gives you 6 mana back.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, WhileSurge = true, Do = UpgradeAction.Lane, Reach = 6f, Radius = 1f, Affliction = AfflictionKind.Unsteady, Stacks = 2 },

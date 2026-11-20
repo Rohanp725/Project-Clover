@@ -63,7 +63,7 @@ namespace Clover.Player.Trees.Duo
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NectarAfterPoison, Name = "Nectar After Poison", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Flask,
-                Description = "An enemy that dies carrying both a Mark and poison gives up 6 health and 8 mana.",
+                Description = "An enemy that dies carrying both a Mark and poison gives up 8 mana and 6 health.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Marked, Needs2 = AfflictionKind.Poison, Do = UpgradeAction.Heal, Amount = 6f },
