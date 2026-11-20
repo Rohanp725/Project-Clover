@@ -1,6 +1,21 @@
 # Forge: detailed explanations
 
-The long explanation the chart shows for every mark on Forge, the branch Earth and Metal share.
+The long explanation the chart shows for every mark on Forge, the duo branch Earth and Metal share. Reshaped in Phase 4
+(`docs/design/steel/pairs_d1_d2.md`, "Earth and Metal") and drawn in the heart of the chart while Earth and Metal are both
+carried. Its reaction is Anvil Stone; its Shape mark lets you choose what Anvil Stone does.
+
+## forge.shape
+**What it does.** Opens Anvil Stone's two shapes. At a rest fire you choose which one your Anvil Stone wears, and from then on it runs instead of the plain one. **Ringing Iron**: no stone and no waiting for a heavy blow; the shaken armour rings like struck iron at once. **Hammer Scale**: no ring; flakes of glowing scale fly from it into the enemies near.
+
+**When it happens.** Every time Anvil Stone fires (Sundered landing on a shaken enemy, or Tremor on a notched one) while Earth and Metal are both carried. Before this mark is bought, or with only one of the two carried, the plain Anvil Stone runs (a stone at its back for 5 seconds; your next heavy blow drives it onto it).
+
+**The numbers.** Mix, 3 Shards. Ringing Iron: its Sundered to full at once, and a ring of sparks 3 metres round it, 10 damage, 15 stagger and a notch on each. Hammer Scale: up to four enemies, each within 6 metres of the last, take 8 damage, a notch and a Tremor. Anvil Stone rests 4 seconds on each enemy.
+
+**Works with.** Buckled (the shaken and notched lose their balance sooner), Hammer and Anvil, Stone Rise and Flung Blade to bring the two.
+
+**Example.** No time for a heavy blow: Ringing Iron breaks its armour the moment the two meet. A loose pack: Hammer Scale notches four at once.
+
+**Not built yet.** Hammer Scale's flakes leap from one enemy to the next as an arc rather than flying at each.
 
 ## forge.hammeranvil
 **What it does.** A heavy blow on a shaken enemy strikes twice: once from your weapon, and once more a moment later as the stone answers. Heavy blows also lay Tremor and Sundered together, whichever of the two you carry first. As built, the second strike asks for Tremor on the enemy, not stone at its back, and it bursts round you rather than behind the enemy.
@@ -20,7 +35,7 @@ The long explanation the chart shows for every mark on Forge, the branch Earth a
 
 **The numbers.** Mix, 3 Shards. The spike falls 0.2 seconds later, 1.2 metres in radius: 10 damage, 20 stagger and one stack of Tremor. The three blades fly in a narrow fan at 10 metres a second for 1.2 seconds; each strikes the first enemy it meets for 9 damage, 4 stagger and one notch of Sundered. As built the spike strikes and is gone; a pillar that stands to be broken is to come.
 
-**Works with.** Buckled (both afflictions from one guard), Toppling and Stone Skin on the Earth tree, Immovable, Hammer and Anvil.
+**Works with.** Buckled (both afflictions from one guard), Mountain Stance, Hammer and Anvil, Anvil Stone's shapes.
 
 **Example.** Perfect-guard a soldier's swing: it is shaken and notched at once, and the soldier behind it takes a blade too.
 
@@ -35,17 +50,6 @@ The long explanation the chart shows for every mark on Forge, the branch Earth a
 
 **Example.** Notch a brute with Metal blows, shake it with Quake Step, and its balance bar fills almost half again as fast.
 
-## forge.triphammer
-**What it does.** A great hammer forms over the enemy you face, follows it for a moment, then falls on it as a heavy blow and leaves a crack in the ground that bites for a second. As built it is a hammer that falls; landing a heavy blow of your own at the same instant does not yet double it.
-
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). With no enemy faced it falls 10 metres ahead, and the slot still waits.
-
-**The numbers.** Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. An enemy within 10 metres. It falls 1 second after the cast, 2.5 metres in radius: 30 damage, 50 stagger, a heavy blow, one stack of Tremor. The crack is about 1.9 metres in radius for 1 second, biting for 2 every half second with a stack of Tremor.
-
-**Works with.** Buckled, Hammer and Anvil (the Tremor it lays opens the second strike), Standing Stones. Landing it charges the blade with Earth.
-
-**Example.** Cast it on a brute, then close in: by the time you reach it the hammer has fallen and it is shaken for your heavy blow.
-
 ## forge.drawnfromstone
 **What it does.** You draw a sword of stone and iron from the ground and give one great swing through a half circle before you. As built it is that one swing; holding the great sword for three swings is to come.
 
@@ -53,12 +57,12 @@ The long explanation the chart shows for every mark on Forge, the branch Earth a
 
 **The numbers.** Mix, 5 Shards, 50 mana. A half circle 4 metres deep: 40 damage, 60 stagger and one stack of Tremor to everything in it.
 
-**Works with.** Buckled, Hammer and Anvil, Standing Stones, Hard Stone. Landing it charges the blade with Earth.
+**Works with.** Hammer and Anvil or Struck Ore (it grows from either), Buckled, Standing Stones. Landing it charges the blade with Earth.
 
 **Example.** Ringed by soldiers in front of you: one swing shakes them all and leaves each well on its way to staggered.
 
 ## forge.foldedsteel
-**What it does.** Every finisher you land folds your blade once more. Each fold makes every blow of the weapon a little harder, and a little heavier to swing. The count shows on the screen as Folds, and it is kept for the run.
+**What it does.** Every finisher you land folds your blade once more. Each fold makes every blow of the weapon a little harder, and a little heavier to swing. The count shows on the screen as Folds; the folds are a fight's growth, kept until your next rest fire, not the weapon's (the Way is what improves a weapon). As built they are kept while the mark is in force and lost with it, and a rest fire does not yet empty them.
 
 **When it happens.** Each finisher that lands (a heavy blow on a staggered enemy) adds a fold.
 

@@ -172,6 +172,10 @@ namespace Clover.Player
             // Overgrowth, the duo branch of Life and Earth (pairs_d1_d2.md; task 4.15): Root Grip (now the reaction, Split Rock;
             // the Shape mark takes its place) and Thorn Wall (offered to Earth's tree, whose roster is full).
             new RetiredMark("overgrowth.rootgrip", 3), new RetiredMark("overgrowth.thornwall", 4),
+
+            // Forge, the duo branch of Earth and Metal (pairs_d1_d2.md; task 4.15): Trip Hammer (offered to Earth's or Metal's tree,
+            // whose rosters are full).
+            new RetiredMark("forge.triphammer", 4),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

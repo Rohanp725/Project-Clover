@@ -107,3 +107,5 @@ soaked-only-web	An area laying that reaches only the enemies carrying a given af
 mending-ground	Ground that mends the player who stands on it, a share a second	Bloom's Floating Flower (a lily mending 3 a second; now 8 once as it opens)
 aim-at-afflicted	A form aimed at the nearest enemy carrying a given affliction, and an answer to a blow on a lifted enemy	Strangling Vine (rising under the nearest Soaked enemy; a heavy blow on it while lifted bursting the flower for twice the heal; now the nearest enemy, and the flower heals as usual)
 duo-surge-slot	A duo surge worn in the Hand's surge slot while both elements are carried (HandRules offers none yet)	Great Lotus (now begun by a flask drunk in any surge while Water and Life are carried)
+rest-fire-counts	A count a mark keeps that empties at a rest fire (a fight's growth), neither kept for the run nor lost while the mark stays in force	Folded Steel (its folds now lost only when the mark leaves force)
+pieces-at-nearest	Pieces thrown from an enemy at the nearest others, each its own (not an arc from one to the next)	Forge's Hammer Scale (four flakes; now an arc through four)

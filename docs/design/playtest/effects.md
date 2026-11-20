@@ -543,6 +543,8 @@ Group: Reactions
 
 **What sets it off.** Tremor landing on a notched enemy, or a notch on a shaken one.
 
+**Its shapes.** With Forge's Shape mark (Anvil Stone: Ringing Iron or Hammer Scale, 3 Shards, in the heart of the chart) and both Earth and Metal carried, Anvil Stone wears the shape chosen at a rest fire instead. Ringing Iron: no stone, no heavy blow needed; its Sundered goes to full at once and sparks ring out 3 m, 10, 15 stagger and a notch each. Hammer Scale: no ring; up to four enemies within 6 m take 8, a notch and a Tremor.
+
 **How to use it.** Shake a notched enemy, then heavy it: the whole crowd notched for your Metal.
 
 **How it looks.** Its name over the enemy, then a ring of sparks. Not yet: the stone itself standing at its back.
