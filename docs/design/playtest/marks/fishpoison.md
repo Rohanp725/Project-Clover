@@ -48,13 +48,11 @@ Water are both carried.
 
 **When it happens.** Always on once learned, while Poison and Water are both carried.
 
-**The numbers.** Mix, keystone, 5 Shards. As built: each bite of poison on a Soaked enemy bites again half a second later, at most every half second for all enemies together.
+**The numbers.** Mix, keystone, 5 Shards. Poison usually bites every 2 seconds and lasts 6. On a Soaked enemy it bites every second and lasts 3. Each enemy keeps its own pace, so one enemy getting wet does not change the others.
 
 **Works with.** Fish Poison, The Tide Brings It, Poison the Lagoon.
 
 **Example.** Soak a poisoned pack and the bites come fast.
-
-**Not built yet.** One enemy's beat is not yet quickened: a second bite follows each bite, at most every half second for all of them, and the doses do not yet fade faster.
 
 ## fishpoison.lagoon
 **What it does.** You crush the fish-poison seed on the floor ahead: a slick spreads in rings to 6 metres across and stands 6 seconds, soaking all in it. Each weapon blow on an enemy in it stirs the water, a dose to every other in it, and any that reaches four doses floats up as Fish Poison does.

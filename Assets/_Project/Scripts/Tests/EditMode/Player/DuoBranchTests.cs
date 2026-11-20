@@ -83,17 +83,22 @@ namespace Clover.Tests
             Assert.AreEqual(Elements.Water, HeartLayout.PartnerFor(Elements.Fire, Hand(Elements.Water, Elements.Fire), false, "", marks), "an unbuilt pair is still the pair carried");
             Assert.AreEqual("", HeartLayout.PartnerFor(Elements.Fire, Hand(Elements.Fire, ""), false, "", marks));
             Assert.AreEqual("", HeartLayout.PartnerFor(Elements.Wind, Hand(Elements.Fire, Elements.Lightning), false, "", marks), "a tree not carried");
-            // The playtest: the pick, when its branch is built; else the first built partner round the ring.
+            // The playtest: the pick, built or not; else the next partner round the ring (the owner's answer of 2026-11-20).
             Assert.AreEqual(Elements.Ice, HeartLayout.PartnerFor(Elements.Lightning, Hand(Elements.Fire, ""), true, Elements.Ice, marks));
-            Assert.AreEqual(Elements.Ice, HeartLayout.PartnerFor(Elements.Lightning, Hand(Elements.Fire, ""), true, "", marks), "Ice is the first built partner after Lightning");
-            Assert.AreEqual(Elements.Lightning, HeartLayout.PartnerFor(Elements.Fire, Hand(Elements.Fire, ""), true, Elements.Wind, marks), "a pick with nothing built falls back");
+            Assert.AreEqual(Elements.Wind, HeartLayout.PartnerFor(Elements.Lightning, Hand(Elements.Fire, ""), true, "", marks), "Wind is the next partner after Lightning");
+            Assert.AreEqual(Elements.Wind, HeartLayout.PartnerFor(Elements.Fire, Hand(Elements.Fire, ""), true, Elements.Wind, marks), "a pick is kept even with nothing built");
             Assert.AreEqual(Elements.Fire, HeartLayout.PartnerFor(Elements.Lightning, Hand(Elements.Lightning, Elements.Fire), true, "", marks), "with no pick, the pair carried");
-            // The shoulder buttons step round the built partners only.
-            Assert.AreEqual(Elements.Fire, HeartLayout.NextPartner(Elements.Lightning, Elements.Ice, 1, marks));
-            Assert.AreEqual(Elements.Ice, HeartLayout.NextPartner(Elements.Lightning, Elements.Fire, 1, marks));
-            Assert.AreEqual(Elements.Ice, HeartLayout.NextPartner(Elements.Lightning, Elements.Fire, -1, marks));
-            Assert.AreEqual(Elements.Lightning, HeartLayout.NextPartner(Elements.Fire, Elements.Lightning, 1, marks), "one built partner: it stays");
-            Assert.AreEqual("", HeartLayout.NextPartner(Elements.Wind, "", 1, marks), "Wind's only branch is still on the ring");
+            // The shoulder buttons step through all ten partners in turn, built or not.
+            Assert.AreEqual(Elements.Water, HeartLayout.NextPartner(Elements.Lightning, Elements.Ice, 1));
+            Assert.AreEqual(Elements.Wind, HeartLayout.NextPartner(Elements.Lightning, Elements.Fire, 1));
+            Assert.AreEqual(Elements.Poison, HeartLayout.NextPartner(Elements.Lightning, Elements.Fire, -1));
+            Assert.AreEqual(Elements.Ice, HeartLayout.NextPartner(Elements.Wind, "", 1));
+            var seen = new HashSet<string>();
+            string at = "";
+            for (int i = 0; i < 10; i++) seen.Add(at = HeartLayout.NextPartner(Elements.Fire, at, 1));
+            Assert.AreEqual(10, seen.Count, "ten presses meet all ten partners");
+            Assert.IsFalse(seen.Contains(Elements.Fire), "never the tree looked at");
+            Assert.AreEqual(Elements.Lightning, HeartLayout.NextPartner(Elements.Fire, at, 1), "the eleventh comes round again");
         }
 
         [Test]
@@ -190,6 +195,38 @@ namespace Clover.Tests
             Assert.IsTrue(spear.Any(effect => effect.On == UpgradeTrigger.ConditionEnded && effect.Affliction == AfflictionKind.Chill && effect.Stacks >= Afflictions.Depth(AfflictionKind.Chill)),
                 "Glass Spear freezes as the charge ends");
             Assert.AreEqual(0, storm.ShapeOf(ReactionTable.ShapeKey(flashover)), "each reaction keeps its own choice");
+        }
+
+        [Test]
+        public void TheExileReturnsAndGivenBonesAnswerOnlyTheGrudgesBoltAndAshPlumeFallsFiveAtMost()
+        {
+            // The owner's answers of 2026-11-20: the two answer the Grudge's own bolt, in whichever shape calls it, and no
+            // other discharge on a Cursed enemy; Ash Plume's storm is capped at five.
+            var bolts = new List<string> { Clover.Player.Trees.Reactions.Cloud, Clover.Player.Trees.Duo.TheGrudgeDuo.FirstStrike, Clover.Player.Trees.Duo.TheGrudgeDuo.AshPlume };
+            foreach (string id in new[] { Clover.Player.Trees.Duo.TheGrudgeDuo.TheExileReturns, Clover.Player.Trees.Duo.TheGrudgeDuo.GivenBones })
+            {
+                var mark = Upgrade.ById(id);
+                Assert.IsNotEmpty(mark.Effects, id);
+                foreach (var effect in mark.Effects)
+                {
+                    Assert.IsTrue(effect.AnyMark, id + " answers the cloud whoever set it");
+                    Assert.AreNotEqual(UpgradeTrigger.SetOff, effect.On, id + " no longer answers any discharge");
+                    Assert.Contains(effect.Condition, bolts, id + " answers the Grudge's bolt alone");
+                }
+                foreach (string bolt in bolts)
+                    Assert.IsTrue(mark.Effects.Any(effect => effect.Condition == bolt), id + " answers the bolt of " + bolt);
+                // First Strike's bolt is its heavy blow; the rest come on the enemy's blow or the storm's end.
+                Assert.IsTrue(mark.Effects.Where(effect => effect.Condition == Clover.Player.Trees.Duo.TheGrudgeDuo.FirstStrike).All(effect => effect.On == UpgradeTrigger.ConditionStruck && effect.By == StruckBy.Heavy));
+                // It counts the Static before the bolt spends it, and what follows the count is by it.
+                int count = System.Array.FindIndex(mark.Effects, effect => effect.Do == UpgradeAction.Spend);
+                Assert.IsTrue(count >= 0 && mark.Effects[count].CountOnly && mark.Effects[count].Affliction == AfflictionKind.Static, id);
+                Assert.IsTrue(mark.Effects[count + 1].PerStack, id + "'s answer after the count is by the Static counted");
+            }
+            Assert.AreEqual(14f, Upgrade.ById(Clover.Player.Trees.Duo.TheGrudgeDuo.GivenBones).Effects.First(effect => effect.Do == UpgradeAction.Burst).Damage, "twice as hard: another 14 a Static");
+            var plume = Upgrade.ById(Clover.Player.Trees.Duo.TheGrudgeDuo.Shape).Shapes.Single(shape => shape.Name == "Ash Plume");
+            var storms = plume.Effects.Where(effect => effect.Do == UpgradeAction.Falling).ToList();
+            Assert.AreEqual(2, storms.Count, "on the enemy's blow and at the end");
+            Assert.IsTrue(storms.All(effect => effect.PerStack && effect.PerMost == 5), "five bolts at most");
         }
     }
 }

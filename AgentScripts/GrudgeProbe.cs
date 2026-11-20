@@ -189,6 +189,33 @@ public class GrudgeProbeRunner : MonoBehaviour
         // Its Static is discharged first; each bolt of the storm then lays one Static of its own.
         Judge("the enemy's blow calls the storm down before its time, a bolt for each of your three blows", !Cloud(TheGrudgeDuo.AshPlume) && host.Health.Current <= healthBefore - 30f,
             $"health lost {healthBefore - host.Health.Current:0}, Static {host.Afflictions.Stacks(AfflictionKind.Static)}");
+
+        // Ash Plume's storm is five bolts at most (the owner's answer of 2026-11-20): seven blows on the cloud, five bolts
+        // of 10, after its three Static discharged (21).
+        yield return Clouded();
+        for (int i = 0; i < 7; i++)
+        {
+            host.TakeHit(new Hit(1f, 0f, Vector3.forward));
+            yield return Real(0.1f);
+        }
+        healthBefore = host.Health.Current;
+        TheirBlow();
+        yield return Real(1.2f);
+        float lost = healthBefore - host.Health.Current;
+        Judge("seven blows on the cloud call down five bolts, not seven", !Cloud(TheGrudgeDuo.AshPlume) && lost >= 60f && lost < 85f, $"health lost {lost:0} (five bolts and the discharge are about 71; seven would be about 91)");
+
+        // The Exile Returns answers the Grudge's bolt alone: at the storm, a second enemy 2 m from the host is Cursed.
+        upgrades.Give(Upgrade.ById(TheGrudgeDuo.TheExileReturns));
+        upgrades.RefreshNow();
+        yield return Clouded();
+        var near = Instantiate(still.gameObject, Middle + Vector3.right * 2f, still.transform.rotation).GetComponent<TrainingDummy>();
+        near.name = "Probe Neighbour";
+        yield return Real(0.2f);
+        Judge("before the bolt the neighbour carries no Curse", !near.Afflictions.Has(AfflictionKind.Cursed));
+        TheirBlow();
+        yield return Real(0.6f);
+        Judge("The Exile Returns: the Grudge's bolt Curses everything within 3 m", near.Afflictions.Has(AfflictionKind.Cursed), $"neighbour Cursed {near.Afflictions.Stacks(AfflictionKind.Cursed)}");
+        Destroy(near.gameObject);
         Finish();
     }
 
@@ -196,6 +223,7 @@ public class GrudgeProbeRunner : MonoBehaviour
     {
         if (host != null) Destroy(host.gameObject);
         RunState.Unlocked.Remove(TheGrudgeDuo.Shape);
+        RunState.Unlocked.Remove(TheGrudgeDuo.TheExileReturns);
         if (build != null) build.Attune(Elements.Fire, "");
         if (upgrades != null) upgrades.RefreshNow();
         if (defence != null) defence.ClearWards();

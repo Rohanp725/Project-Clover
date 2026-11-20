@@ -254,7 +254,10 @@ namespace Clover.Player
             // An end carries the weapon blows the condition took (Burning Sap's weals), for what it does per blow.
             // So does its carrier's blow on the player (Ash Plume's storm, a flash for each blow it took).
             int spent = trigger == UpgradeTrigger.ConditionEnded || trigger == UpgradeTrigger.ConditionAttacked ? news.Blows : 0;
-            bool any = AnswerFrom(mark.Effects, trigger, news, who, at, source, spent);
+            // The marks in force that answer this condition whoever set it go first, so they can count what the condition's
+            // own answers are about to spend (The Exile Returns counts the Static the Grudge's bolt discharges).
+            bool any = news.Moment != ConditionMoment.Beat && upgrades.FireCondition(trigger, news, who, at);
+            any |= AnswerFrom(mark.Effects, trigger, news, who, at, source, spent);
             // A reaction's shape sets conditions of its own; their moments are answered from the shape.
             if (ReactionTable.IsReactionShape(mark))
                 foreach (var shape in mark.Shapes)
@@ -278,7 +281,8 @@ namespace Clover.Player
             return any;
         }
 
-        private static bool Answers(StruckBy by, in ConditionNews news) =>
+        /// <summary>True when a condition's blow is one the answer asks for (<see cref="UpgradeEffect.By"/>).</summary>
+        internal static bool Answers(StruckBy by, in ConditionNews news) =>
             by == StruckBy.Any || (by == StruckBy.Weapon && !news.Spell) || (by == StruckBy.Heavy && news.Heavy) || (by == StruckBy.Shatter && news.Shattered);
 
         // A host's poison bit: each enemy joined to it takes its share, as a reaction's blow (it starts nothing).

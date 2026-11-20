@@ -324,8 +324,8 @@ public class DuoProbeRunner : MonoBehaviour
         yield return Real(0.8f);
         yield return Shot("duo_heart_sleet");
         // Every pair at distance 1 and 2 is written now (tasks 4.5 and 4.15): the picker steps round them in ring order.
-        string next = HeartLayout.NextPartner(Elements.Lightning, Elements.Ice, 1, Upgrade.All);
-        Judge("the shoulder buttons' partner picker steps to the next written partner round the ring", menu.ViewPartner(1) && menu.HeartPartner == next && next != Elements.Ice,
+        string next = HeartLayout.NextPartner(Elements.Lightning, Elements.Ice, 1);
+        Judge("the shoulder buttons' partner picker steps to the next partner round the ring, built or not", menu.ViewPartner(1) && menu.HeartPartner == next && next != Elements.Ice,
             $"heart with '{menu.HeartPartner}', expected '{next}'");
         Judge("and it can be set to Fire by name", menu.ViewHeart(Elements.Fire) && menu.HeartPartner == Elements.Fire && menu.HeartPair == Flashover, $"heart with '{menu.HeartPartner}'");
         Judge("Ball Lightning can be chosen in the heart now", menu.Choose(PlasmaTree.BallLightning));

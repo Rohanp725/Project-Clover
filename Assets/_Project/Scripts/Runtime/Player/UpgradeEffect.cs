@@ -84,6 +84,14 @@ namespace Clover.Player
         public StruckBy By;
         /// <summary>For ConditionStruck: only the condition's Nth weapon blow (Logan Stone's third). For ConditionBeat: only its Nth beat. Zero: every one.</summary>
         public int AtCount;
+        /// <summary>
+        /// For the condition triggers: it answers the condition named in <see cref="Condition"/> whoever set it (a reaction,
+        /// its shape), not only one its own mark set, while its own mark is in force (The Exile Returns at the Grudge's bolt).
+        /// Done before the answers of the mark that set the condition, so it can count what they are about to spend.
+        /// </summary>
+        public bool AnyMark;
+        /// <summary>With <see cref="PerStack"/>: the most it is multiplied by (Ash Plume's five flashes); zero for no cap.</summary>
+        public int PerMost;
 
         // Numbers.
         /// <summary>The affliction laid or set off. None means the element's own.</summary>

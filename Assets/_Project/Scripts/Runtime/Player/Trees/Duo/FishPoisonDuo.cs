@@ -71,13 +71,13 @@ namespace Clover.Player.Trees.Duo
 
             // A second bite half a second after each bite on a Soaked enemy. The bite it makes is itself a bite, so the effect's
             // cooldown is what keeps it from feeding itself.
-            // NEEDS: one enemy's poison beat quickened while it is Soaked, and its doses fading twice as fast (quickened-beat);
-            // now each bite on a Soaked enemy bites again half a second later, once in half a second for all.
+            // Built by hand (PlayerUpgrades.Refresh sets Afflictions.PoisonQuickWhenSoaked): each Soaked enemy's own poison
+            // clock runs at twice the pace, so its bites come twice as often and its doses fade twice as fast, enemy by enemy
+            // (the owner's answer of 2026-11-20, "Fast Water per enemy").
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = FastWater, Name = "Fast Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { TheTideBringsIt, WideSlick }, Icon = UpgradeIcons.Drop,
                 Description = "Poison on a Soaked enemy bites twice as often and fades twice as fast.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Bite, Delay = 0.5f, Cooldown = 0.5f } },
             }, HeartPattern.Keystone));
 
             // The duo spell, an opener on a 12 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The field

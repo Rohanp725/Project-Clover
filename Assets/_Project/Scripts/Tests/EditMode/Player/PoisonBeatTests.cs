@@ -17,6 +17,7 @@ namespace Clover.Tests
         {
             Afflictions.PoisonWaits = false;
             Afflictions.PoisonBeatOff = false;
+            Afflictions.PoisonQuickWhenSoaked = false;
             Afflictions.PoisonKeeps = false;
             Afflictions.PoisonRipens = 0f;
             Afflictions.PoisonOnCursed = 0f;
@@ -35,6 +36,35 @@ namespace Clover.Tests
             float dealt = 0f;
             for (float t = 0f; t < seconds - 0.0001f; t += 0.1f) dealt += set.Tick(0.1f);
             return dealt;
+        }
+
+        [Test]
+        public void FastWaterQuickensThePoisonOfEachSoakedEnemyByItself()
+        {
+            // Fast Water (the owner's answer of 2026-11-20: per enemy): a Soaked body's poison bites every second, not every
+            // two, and fades in 3 s, not 6; a dry body beside it keeps the usual beat.
+            var spec = Afflictions.Spec(P);
+            var wet = new AfflictionSet();
+            var dry = new AfflictionSet();
+            wet.Apply(P, 2);
+            wet.Apply(AfflictionKind.Soaked, 1);
+            dry.Apply(P, 2);
+            Afflictions.PoisonQuickWhenSoaked = true;
+            float wetDealt = Run(wet, 2.05f), dryDealt = Run(dry, 2.05f);
+            Assert.AreEqual(spec.DamagePerTick * 2f * 2f, wetDealt, 0.01f, "two bites in two seconds while Soaked");
+            Assert.AreEqual(spec.DamagePerTick * 2f, dryDealt, 0.01f, "one bite in two seconds when dry");
+            Run(wet, 1.1f);
+            Run(dry, 1.1f);
+            Assert.AreEqual(0, wet.Stacks(P), "the Soaked body's poison faded in half its 6 s");
+            Assert.AreEqual(2, dry.Stacks(P), "the dry body's poison lasts its whole 6 s");
+            // Without the mark, Soaked changes nothing.
+            Afflictions.PoisonQuickWhenSoaked = false;
+            var plain = new AfflictionSet();
+            plain.Apply(P, 2);
+            plain.Apply(AfflictionKind.Soaked, 1);
+            Assert.AreEqual(spec.DamagePerTick * 2f, Run(plain, 2.05f), 0.01f);
+            // The mark is built by hand and carries no stand-in effects.
+            Assert.IsEmpty(Upgrade.ById(Clover.Player.Trees.Duo.FishPoisonDuo.FastWater).Effects);
         }
 
         [Test]

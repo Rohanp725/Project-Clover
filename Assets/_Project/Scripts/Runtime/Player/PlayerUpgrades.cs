@@ -632,6 +632,7 @@ namespace Clover.Player
             hasHeat = On(Upgrade.Heat);
             // Poison's beat as the marks in force make it, and the two states of the dead.
             Afflictions.PoisonBeatOff = Has(Trees.PoisonTree.Volatile);
+            Afflictions.PoisonQuickWhenSoaked = Has(Trees.Duo.FishPoisonDuo.FastWater);
             Afflictions.PoisonKeeps = Has(Trees.PoisonTree.SlowDeath);
             Afflictions.PoisonRipens = Has(Trees.PoisonTree.LeftToRipen) ? 0.25f : 0f;
             Afflictions.PoisonOnCursed = Has(Trees.BlightTree.Wither) ? 0.25f : 0f;
@@ -1032,6 +1033,27 @@ namespace Clover.Player
             Consider(effect, target, at, true, spent, dead, source == LaySource.Reaction && effect.Cascades ? LaySource.Effect : source, power);
         }
 
+        /// <summary>
+        /// A condition's moment (its blow, its end, its carrier striking at you), told to the marks in force that answer
+        /// that condition whoever set it (<see cref="UpgradeEffect.AnyMark"/>): The Exile Returns and Given Bones answer the
+        /// Grudge's bolt in whichever shape calls it. Queued like any trigger; true when any was. Nothing they carry is
+        /// multiplied by the condition's blows: their own Spend counts what they need.
+        /// </summary>
+        public bool FireCondition(UpgradeTrigger trigger, in ConditionNews news, Component who, Vector3 at)
+        {
+            var list = byTrigger[(int)trigger];
+            bool any = false;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var effect = list[i];
+                if (!effect.AnyMark || effect.Condition != news.Id) continue;
+                if (trigger == UpgradeTrigger.ConditionStruck && !PlayerReactions.Answers(effect.By, news)) continue;
+                Consider(effect, who, at, true);
+                any = true;
+            }
+            return any;
+        }
+
         /// <summary>Does what waits in the runner's line now, rather than on its next step. Never inside a blow.</summary>
         public void FlushNow() => Flush();
 
@@ -1250,6 +1272,7 @@ namespace Clover.Player
             int counted = spentBy == effect.Owner && spentOn == pending.Target ? lastSpent : 0;
             int per = effect.PerStack ? Mathf.Max(1, pending.Spent > 0 ? pending.Spent : counted) : 1;
             if (effect.PerStack && effect.Share > 0f && effect.Do != UpgradeAction.Spend) per = Mathf.Max(1, Mathf.CeilToInt(per * effect.Share - 0.0001f));
+            if (effect.PerStack && effect.PerMost > 0) per = Mathf.Min(per, effect.PerMost);
             bool byCount = effect.Do == UpgradeAction.Projectile || effect.Do == UpgradeAction.Falling || effect.Do == UpgradeAction.Ward
                 || (effect.Do == UpgradeAction.Hazard && effect.PerStack && effect.Shape != HazardShape.Patch);
             int spentHere = effect.DamagePerSpent > 0f ? counted : 0;

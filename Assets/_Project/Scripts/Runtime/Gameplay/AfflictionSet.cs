@@ -494,6 +494,8 @@ namespace Clover.Gameplay
                 var spec = Afflictions.Spec((AfflictionKind)i);
                 bool poison = i == (int)AfflictionKind.Poison;
                 bool cursed = poison && Afflictions.PoisonOnCursed > 0f && stacks[(int)AfflictionKind.Cursed] > 0;
+                // Fast Water: in a Soaked body the poison's own clock runs at twice the pace, its beat and its fading both.
+                float pace = poison && Afflictions.PoisonQuickWhenSoaked && stacks[(int)AfflictionKind.Soaked] > 0 ? 2f : 1f;
                 if (spec.TickSeconds > 0f && spec.DamagePerTick > 0f)
                 {
                     bool bites;
@@ -501,7 +503,7 @@ namespace Clover.Gameplay
                     else if (poison && Afflictions.SharedBeat) bites = Afflictions.BeatNow;
                     else
                     {
-                        untilTick[i] -= deltaTime;
+                        untilTick[i] -= deltaTime * pace;
                         bites = untilTick[i] <= 0f;
                         if (bites) untilTick[i] += spec.TickSeconds;
                     }
@@ -537,7 +539,7 @@ namespace Clover.Gameplay
                 }
                 if (poison && (Afflictions.PoisonKeeps || cursed)) continue;
                 if (Conditions.KeepsKind((AfflictionKind)i) || rules.Keeps((AfflictionKind)i)) continue;
-                left[i] -= deltaTime;
+                left[i] -= deltaTime * pace;
                 if (left[i] > 0f) continue;
                 End(i);
                 // Faded by itself: under a rule it rests before it can be laid here again.
