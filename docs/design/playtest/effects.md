@@ -843,6 +843,8 @@ Group: Reactions
 
 **What sets it off.** Water landing on a notched enemy, or a notch on a Soaked one.
 
+**Its shapes.** With the Shape mark of Water and Metal's duo branch (Rust: Seized Joints or Flaking, 3 Shards, in the heart of the chart) and both carried, Rust wears the shape chosen at a rest fire instead. Both rust as before. Seized Joints: it moves a fifth slower while it rusts. Flaking: each heavy blow spends its notches, 6 for each on everything within 3 m, with a notch and a Soaked.
+
 **How to use it.** Keep it wet and let the rust work, then come in with the weapon.
 
 **How it looks.** Its name over the enemy. Not yet: notches past three (up to five), and the plate seen falling.

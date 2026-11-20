@@ -145,6 +145,7 @@ namespace Clover.Player.Magic
             ["seized.flashing"] = Cd(10f, SpellRole.Opener),
             ["windthrow.thistledown"] = Cd(9f, SpellRole.Movement),
             ["frostheave.hagsstaff"] = Cd(12f, SpellRole.Breaker),
+            ["rust.seatakesit"] = Cd(13f, SpellRole.Breaker),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };
