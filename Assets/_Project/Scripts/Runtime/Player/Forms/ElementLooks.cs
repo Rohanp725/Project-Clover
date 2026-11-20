@@ -326,7 +326,7 @@ namespace Clover.Player.Forms
                 if (!one.Active || !ReferenceEquals(one.Body, body)) continue;
                 ref var look = ref instance.set.Looks[one.Look];
                 if (look.Shell == ElementLookSet.NoShell) continue;
-                if (wanted != ElementLookSet.NoShell && look.Shell != wanted && !(wanted == ElementLookSet.Ice && look.Shell == ElementLookSet.Rime)) continue;
+                if (wanted != ElementLookSet.NoShell && look.Shell != wanted && !(wanted == ElementLookSet.Ice && ElementLookSet.IsIceShell(look.Shell))) continue;
                 shell = look.Shell;
                 reveal = ElementLookSet.ShellReveal(look, one.Age);
                 amount = one.Ending ? Mathf.Clamp01(1f - one.Gone / Going) : 1f;

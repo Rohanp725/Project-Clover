@@ -34,6 +34,8 @@ Shader "Clover/Toon"
         _Ice ("Frozen over (Chill, Rime; set by the game)", Range(0, 1)) = 0
         _IceReveal ("Ice up to this share of the body's height", Range(0, 1)) = 1
         _IceFrost ("Rime's white frost rather than clear ice", Range(0, 1)) = 0
+        _IceStone ("Stone bound by black seams rather than ice (Turned to Stone)", Range(0, 1)) = 0
+        _IceVenom ("Poisoned green-yellow ice rather than clear ice (Venom Rime)", Range(0, 1)) = 0
         _Wet ("Soaked (the water run down the body; set by the game)", Range(0, 1)) = 0
         _WetReveal ("Wet down from the top to this share of the body's height", Range(0, 1)) = 1
         _RevealBase ("The body's feet, world height (the reveals count up from here)", Float) = 0
@@ -78,6 +80,8 @@ Shader "Clover/Toon"
             half _Ice;
             half _IceReveal;
             half _IceFrost;
+            half _IceStone;
+            half _IceVenom;
             float _RevealBase;
             float _RevealHeight;
             half _Wet;
@@ -114,6 +118,41 @@ Shader "Clover/Toon"
                 float grain = frac(sin(dot(floor(positionWS * 38.0), float3(12.9898, 78.233, 37.719))) * 43758.5453);
                 half3 frost = lerp(half3(0.78, 0.86, 0.93), half3(0.92, 0.96, 1.0), step(0.55, grain)) * lerp(0.85, 1.0, lit);
                 colour = lerp(colour, frost, _IceFrost);
+            }
+            // Venom Rime (the owner, 2026-11-19: "ice crystals ... greenish or yellowish because they are poisoned ice"):
+            // the same clear bands and glint, in a sickly green going yellow at the rim.
+            if (_IceVenom > 0.001)
+            {
+                half3 venom = rim > 0.55 ? half3(0.78, 0.86, 0.3) : (rim > 0.22 ? half3(0.5, 0.72, 0.16) : half3(0.22, 0.42, 0.08));
+                venom = venom * lerp(0.82, 1.0, lit) + half3(0.4, 0.5, 0.15) * step(0.95, saturate(dot(normalWS, halfway)));
+                colour = lerp(colour, venom, _IceVenom);
+            }
+            // Turned to Stone (the owner, 2026-11-19: "a stone that climbs up a persons feet and has dark lines in it as
+            // the glue holding it together"): a grey-brown rock in the toon's hard bands, flecked, broken into blocks by
+            // near-black seams of the curse with a faint violet heart. The blocks are the cells of a jittered grid in world
+            // space (about a hand across), the seams where two cells meet.
+            if (_IceStone > 0.001)
+            {
+                float3 cellAt = positionWS * 4.2;
+                float3 base = floor(cellAt);
+                float nearest = 9.0, second = 9.0;
+                for (int x = -1; x <= 1; x++)
+                for (int y = -1; y <= 1; y++)
+                for (int z = -1; z <= 1; z++)
+                {
+                    float3 cell = base + float3(x, y, z);
+                    float3 jitter = frac(sin(float3(dot(cell, float3(127.1, 311.7, 74.7)), dot(cell, float3(269.5, 183.3, 246.1)), dot(cell, float3(113.5, 271.9, 124.6)))) * 43758.5453);
+                    float distance = length(cell + jitter - cellAt);
+                    if (distance < nearest) { second = nearest; nearest = distance; }
+                    else if (distance < second) second = distance;
+                }
+                float seam = second - nearest;
+                float fleck = frac(sin(dot(floor(positionWS * 30.0), float3(12.9898, 78.233, 37.719))) * 43758.5453);
+                half3 stone = lit > 0.6 ? half3(0.5, 0.46, 0.4) : (lit > 0.25 ? half3(0.38, 0.35, 0.31) : half3(0.25, 0.23, 0.22));
+                stone *= lerp(0.88, 1.06, step(0.6, fleck)) * lerp(1.0, 0.72, step(0.6, rim));
+                stone = seam < 0.06 ? half3(0.04, 0.02, 0.06) : stone;
+                stone = seam < 0.022 ? half3(0.22, 0.06, 0.36) : stone;
+                colour = lerp(colour, stone, _IceStone);
             }
             return colour;
         }

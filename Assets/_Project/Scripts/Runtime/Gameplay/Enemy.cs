@@ -1516,19 +1516,25 @@ namespace Clover.Gameplay
                 wetReveal = wetCovered;
             }
             bool iceMoved = Mathf.Abs(ice - shownIce) > 0.004f || Mathf.Abs(iceReveal - shownIceReveal) > 0.004f
-                || Mathf.Abs(wet - shownWet) > 0.004f || Mathf.Abs(wetReveal - shownWetReveal) > 0.004f;
+                || Mathf.Abs(wet - shownWet) > 0.004f || Mathf.Abs(wetReveal - shownWetReveal) > 0.004f || (ice > 0f && shell != shownShell);
             if (glow != shownGlow || iceMoved)
             {
                 shownWet = wet;
                 shownWetReveal = wetReveal;
                 shownIce = ice;
                 shownIceReveal = iceReveal;
+                shownShell = shell;
                 shownFrost = shell == Clover.Player.Forms.ElementLookSet.Rime ? 1f : 0f;
+                shownStone = shell == Clover.Player.Forms.ElementLookSet.Stone ? 1f : 0f;
+                shownVenom = shell == Clover.Player.Forms.ElementLookSet.Venom ? 1f : 0f;
                 SetGlow(glow);
             }
         }
 
-        private float shownIce, shownIceReveal = 1f, shownFrost, shownWet, shownWetReveal = 1f;
+        private float shownIce, shownIceReveal = 1f, shownFrost, shownStone, shownVenom, shownWet, shownWetReveal = 1f;
+        private byte shownShell;
+        private static readonly int IceStoneId = Shader.PropertyToID("_IceStone");
+        private static readonly int IceVenomId = Shader.PropertyToID("_IceVenom");
         private static readonly int WetId = Shader.PropertyToID("_Wet");
         private static readonly int WetRevealId = Shader.PropertyToID("_WetReveal");
         private static readonly int IceId = Shader.PropertyToID("_Ice");
@@ -1559,6 +1565,8 @@ namespace Clover.Gameplay
                     block.SetFloat(IceId, shownIce);
                     block.SetFloat(IceRevealId, shownIceReveal);
                     block.SetFloat(IceFrostId, shownFrost);
+                    block.SetFloat(IceStoneId, shownStone);
+                    block.SetFloat(IceVenomId, shownVenom);
                     block.SetFloat(RevealBaseId, feet);
                     block.SetFloat(RevealHeightId, Mathf.Max(0.8f, bodyRenderer.bounds.max.y - feet));
                 }

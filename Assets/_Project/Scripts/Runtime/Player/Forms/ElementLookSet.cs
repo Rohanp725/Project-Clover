@@ -18,8 +18,14 @@ namespace Clover.Player.Forms
         /// </summary>
         public const byte Solid = 0, Flat = 1, Ribbon = 2;
 
-        /// <summary>A body's shell the look asks the body's own material for: none, steel (Temper), ice (Chill), rime (Rime).</summary>
-        public const byte NoShell = 0, Steel = 1, Ice = 2, Rime = 3, Wet = 4;
+        /// <summary>
+        /// A body's shell the look asks the body's own material for: none, steel (Temper), ice (Chill), rime (Rime), wet
+        /// (Soaked), stone bound by black seams (Turned to Stone), poisoned green-yellow ice (Venom Rime).
+        /// </summary>
+        public const byte NoShell = 0, Steel = 1, Ice = 2, Rime = 3, Wet = 4, Stone = 5, Venom = 6;
+
+        /// <summary>Shells the body's ice draws (Clover/Toon's _Ice, in its frost, stone or venom colouring).</summary>
+        public static bool IsIceShell(byte shell) => shell == Ice || shell == Rime || shell == Stone || shell == Venom;
 
         /// <summary>Easings as the recipe names them: linear, out, in, inout, outback, step.</summary>
         public const byte Linear = 0, Out = 1, In = 2, InOut = 3, OutBack = 4, Step = 5;
