@@ -50,5 +50,7 @@ namespace Clover.Player.Forms
         public ReactionArtSet Reactions;
         /// <summary>The real flame a burning body is drawn in (Clover/FlameField, <see cref="BodyFlames"/>).</summary>
         public Material BodyFlame;
+        /// <summary>The elements' second-pass looks (Clover > Build > Element Looks); with them here the art plays them.</summary>
+        public ElementLookSet Looks;
     }
 }

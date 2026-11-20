@@ -68,6 +68,13 @@ namespace Clover.Player.Forms
                 if (reactions == null) reactions = gameObject.AddComponent<ReactionArt>();
                 reactions.Configure(set.Reactions);
             }
+            // The second-pass looks, when they have been built.
+            if (set.Looks != null)
+            {
+                var looks = GetComponent<ElementLooks>();
+                if (looks == null) looks = gameObject.AddComponent<ElementLooks>();
+                looks.Configure(set.Looks);
+            }
             // A burning body is drawn in real flame when the art has the flame's material.
             if (set.BodyFlame != null)
             {

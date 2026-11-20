@@ -167,6 +167,9 @@ namespace Clover.EditorTools
             return new Color(rgb.x, rgb.y, rgb.z, 1f);
         }
 
+        /// <summary>Plain JSON read as dictionaries, lists, strings, doubles, booleans and nulls (for the other recipes).</summary>
+        public static object ReadJson(string text) => Json.Parse(text);
+
         /// <summary>A small reader for plain JSON: objects, lists, strings, numbers, true, false and null.</summary>
         private sealed class Json
         {
