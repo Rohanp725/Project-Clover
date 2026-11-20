@@ -156,6 +156,10 @@ namespace Clover.Player
             // Tempest, the duo branch of Lightning and Wind (pairs_d1_d2.md; task 4.15): Charged Air (the Shape mark takes its
             // place), Thunder Lift (now the Thunderhead shape) and Storm Overhead (offered to Lightning's tree, whose roster is full).
             new RetiredMark("tempest.charged", 3), new RetiredMark("tempest.lift", 4), new RetiredMark("tempest.cloud", 4),
+
+            // Blizzard, the duo branch of Wind and Ice (pairs_d1_d2.md; task 4.15): Biting Wind (the Shape mark takes its place)
+            // and Whiteout (offered to Ice's or Wind's tree, whose rosters are full).
+            new RetiredMark("blizzard.biting", 3), new RetiredMark("blizzard.whiteout", 4),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

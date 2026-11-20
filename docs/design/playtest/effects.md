@@ -483,6 +483,8 @@ Group: Reactions
 
 **What sets it off.** Chill landing on a Unsteady enemy, or Unsteady on a chilled one.
 
+**Its shapes.** With Blizzard's Shape mark (Rime: Rime Tree or Spindrift, 3 Shards, in the heart of the chart) and both Wind and Ice carried, Rime wears the shape chosen at a rest fire instead. Rime Tree: the crust never breaks, and for 5 s every blow on it adds a Chill. Spindrift: the ice blows out of its far side the moment Rime fires, at half damage (5, 2 Chill and 1 Unsteady), no heavy blow needed.
+
 **How to use it.** Put the enemy between you and the others, then bring the heavy: the ice lands on them.
 
 **How it looks.** Its name over the enemy, then a burst of ice beyond it. Not yet: the crust growing only on the side facing you, so that a heavy from behind wastes it.
