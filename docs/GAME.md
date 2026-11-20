@@ -2025,6 +2025,25 @@ the Proving Ground's real enemies, afflictions on the group of five and surges o
   Tremor, Unsteady and Poisoned, the player surging Temper then Overdrive): median 6.85 ms, p95 9.9 ms, one frame of 299
   over 16.6 ms (the profiler starting); `ElementLooks` 0.23 ms a frame and no garbage; the pool (now 384 pieces) peaked at
   318.
+- **Glaze** (`GlazeIce`, driven by `PlayerElement`): the owner's comment of 2026-11-19 ("should grow out of you instead of
+  floating around you cause its ice") is answered. The player is frozen over from the feet up (Clover/Toon's `_Ice`, the
+  shell Chill puts on an enemy) over 0.3 s, and eleven hexagonal crystals (the elements2 kit's, `ElementLookSet.Crystal`)
+  snap out of the shoulders, upper arms, forearms and back one after another, rooted on the skeleton's bones so they move
+  with the body. They hold while Glaze lasts and break off and fall, shrinking, when it ends. The knotwork frost ring,
+  the old floating crystals and the pale sparks thrown round the player during Glaze are gone.
+- **Chill bluer**: the toon's ice is a clear blue, deeper in the faces turned to the camera and pale blue only at the rim,
+  with a pale-blue glint instead of white; Chill's crystals, floor frost, glints and mist are blue.
+- **Wind's leaves**: the kit's leaf, which read as a gold diamond, is drawn as a pointed oval with a darker midrib and a
+  fold, in muted olive and ochre (`ElementLookBuilder.LeafMesh`), in Unsteady, the wind strike and the wind brazier.
+- **The element braziers hold their element** (the owner, 2026-11-19: "must contain their element, not show flames of
+  its colour"): the Blender worker's eleven idle loops (`Art/VFX/Combos/braziers_recipe.json`, `vfx_brazier_kit.fbx`,
+  built by Clover > Build > Brazier Looks into `brazier_looks.asset`) play in every element brazier of the hub and the
+  Proving Ground's altars (`BrazierLook` on the brazier's Shown group, in place of the coloured flame), each at its own
+  place in the loop, not posed when far from the camera. Fire burns in the flame field (thin licking tongues over the
+  coal bed), kept over Blender's tongues, which read as tall pale cones from the game camera. Light's rays are faint
+  see-through beams instead of the spiky sun; Lightning's ball a see-through violet-blue cage round a cyan heart with
+  thicker arcs; Metal's ingot a hot yellow-orange in a deep red melt. Films: `review/gifs/braziers/`, strips in
+  `review/gifs/strips/braziers/`.
 
 ## Credits (decided 2026-11-18)
 
