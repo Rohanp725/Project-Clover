@@ -648,6 +648,8 @@ Group: Reactions
 
 **What sets it off.** Water landing on a Unsteady enemy, or Unsteady on a Soaked one.
 
+**Its shapes.** With the Shape mark of Wind and Water's duo branch (Capsize: Waterspout or Breakers, 3 Shards, in the heart of the chart) and both carried, Capsize wears the shape chosen at a rest fire instead. Waterspout: lifted in spray for 1.2 s instead of going down. Breakers: down as before, and spray thrown 4 m behind it Soaks and gives 2 Unsteady to what stands there, which on purpose may capsize it in turn.
+
 **How to use it.** Free blows: bring your heaviest.
 
 **How it looks.** Its name over the enemy, and it falls flat on its back, lies there, and gets up when its time is over.

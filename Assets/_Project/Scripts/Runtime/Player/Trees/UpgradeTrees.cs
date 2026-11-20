@@ -33,6 +33,7 @@ namespace Clover.Player.Trees
             // The duo branches of pairs that are not neighbours, one file per pair under Trees/Duo/ (task 4.5 on), in pair order.
             Duo.CarriedEmbersDuo.Add(to);
             Duo.SleetChargeDuo.Add(to);
+            Duo.CapsizeDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }
