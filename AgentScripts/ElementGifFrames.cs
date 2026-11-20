@@ -465,10 +465,11 @@ public class ElementGifFramesRunner : MonoBehaviour
             // The surge spreads on the floor round the feet, so the window is about them.
             case "surge": stand = Middle + Vector3.left * 3f; about = Middle + Vector3.left * 2.4f + Vector3.up * 0.4f; break;
             case "spell": stand = Middle + Vector3.left * 3f; about = Middle + Vector3.left * 0.6f + chest; break;
-            default: stand = Middle + Vector3.left * 3f; about = Middle + Vector3.left * 0.75f + Vector3.up * 1.4f; break;
+            default: stand = Middle + Vector3.left * 3f; about = Middle + Vector3.right * 0.3f + Vector3.up * 1.2f; break;
         }
-        // A spell and an infused strike reach past the one faced: a group of five stands about it to show how far.
-        StoodCount = moment == "spell" || moment == "infused" ? Mathf.Min(5, cast.Count) : 1;
+        // A spell and an infused strike reach past the one faced: a group of five stands about it to show how far. The
+        // affliction is laid on the whole group (the owner's review of 2026-11-20 is judged on real enemies in groups).
+        StoodCount = moment == "spell" || moment == "infused" || moment == "affliction" ? Mathf.Min(5, cast.Count) : 1;
         clip.Enemies = StoodCount;
         yield return Ready(stand, facing);
         clip.CleanBefore = !Busy();
@@ -491,7 +492,7 @@ public class ElementGifFramesRunner : MonoBehaviour
             anchor.position = player.transform.position;
             view.Configure(anchor);
         }
-        window = WindowAbout(about, moment == "infused" || moment == "spell" || moment == "surge" ? 1.25f : 1f);
+        window = WindowAbout(about, moment == "infused" || moment == "spell" || moment == "surge" || moment == "affliction" ? 1.25f : 1f);
         Time.captureFramerate = Rate;
         frame = 0;
         filming = true;
@@ -506,6 +507,9 @@ public class ElementGifFramesRunner : MonoBehaviour
             case "affliction":
                 clip.Label = info.Affliction.ToString();
                 clip.SetOff = host.Afflictions.Lay(info.Affliction, 3, AfflictionSeconds, 1f, LaySource.Spell, host).Applied;
+                // The rest of the group carries it too, one to three deep, so its depths are seen side by side.
+                for (int i = 1; i < StoodCount && i < cast.Count; i++)
+                    if (cast[i] != null && cast[i].gameObject.activeSelf) cast[i].Afflictions.Lay(info.Affliction, 1 + i % 3, AfflictionSeconds, 1f, LaySource.Spell, cast[i]);
                 clip.Peak = clip.Start + 26;
                 break;
             case "spell":
