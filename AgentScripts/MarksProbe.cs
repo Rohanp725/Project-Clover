@@ -125,7 +125,13 @@ public class MarksProbeRunner : MonoBehaviour
         while ((player.FormHold != 0 || player.IsLeaping || SpellWorks.Running > 0) && Time.unscaledTime < patience) yield return null;
         var mark = Upgrade.All.First(upgrade => upgrade.Name == markName);
         string held = hold ?? mark.Element;
-        element.Take(ElementKit.ByName(held, false));
+        // A duo branch's mark is in force only while both its elements are carried (task 4.5).
+        if (mark.IsMix)
+        {
+            element.Attune(mark.Element, mark.Element2);
+            held = mark.Element + " and " + mark.Element2;
+        }
+        else element.Attune(held, "");
         upgrades.Forget();
         upgrades.Give(mark);
         defence.DamageTaken = 0f;
