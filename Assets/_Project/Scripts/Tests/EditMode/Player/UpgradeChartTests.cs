@@ -639,7 +639,11 @@ namespace Clover.Tests
                 Assert.IsTrue(learn.IsBaseSpell || learn.IsSpell, learn.Id);
                 var empower = branch[1].Empower;
                 Assert.IsNotNull(empower, learn.Id);
-                Assert.Greater(empower.Cooldown + empower.Mana, 0f, learn.Id + ": Empower is always a shorter cooldown or a lower price");
+                // An Empower strengthens the spell or shortens its wait (or lowers its price), or both (the owner's answer of
+                // 2026-11-20). Standing Light's waits on its ledger piece (in-own-ground) and does nothing yet.
+                bool shortens = empower.Cooldown + empower.Mana > 0f;
+                if (learn.Id != LightTree.StandingLight)
+                    Assert.IsTrue(shortens || empower.Strengthens, learn.Id + ": an Empower makes the spell stronger or its wait shorter");
                 var shapes = branch[2].Shapes;
                 Assert.AreEqual(2, shapes.Length, learn.Id + " has two shapes");
                 foreach (var shape in shapes)

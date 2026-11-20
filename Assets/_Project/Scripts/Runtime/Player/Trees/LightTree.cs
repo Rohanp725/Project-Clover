@@ -75,9 +75,11 @@ namespace Clover.Player.Trees
                 new SpellSpec { Reach = 10f, Seconds = 6f, Count = 12, Radius = 0.6f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "You set a seal on the enemy you face: a ring like a clock face on the ground under it, one hand sweeping it in six seconds. On the last tick it breaks upward in a column of light, and half of all your weapon did to that enemy in the six seconds is done to it again at once, 150 at most, with 40 stagger.",
                 UpgradeIcons.Hourglass,
-                // NEEDS: 60% of the count, 180 at most (empower-effects, damage-tally).
-                new Empower { Cooldown = 11f },
-                "Reckoning waits 11 seconds, not 12, and pays back 60% of the count, 180 at most.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20). The count is the approved 8 for each weapon blow
+                // (the owner's "Reckoning: 8 per blow"); 60% for 50% is 10 a blow, and 180 at most is eighteen blows' worth, set
+                // on the Learn's own burst (empower-effects).
+                new Empower { Effects = new[] { new EffectChange { Index = 1, Damage = 10f, PerMost = 18 } } },
+                "Reckoning pays back 10 for each blow, not 8, up to 180.",
                 // NEEDS: the bearer's blows on you and your guard counted, 15 more for each turned with a perfect guard
                 // (seal-counts-bearer), and the Learn's own count set aside (shape-sets-aside). Until then a column falls on
                 // the sealed enemy for one blow's worth as the seal ends, beside the Learn's count.
@@ -121,8 +123,9 @@ namespace Clover.Player.Trees
                 new SpellSpec { Count = 6, Radius = 3f, Delay = 0.6f, Damage = 6f, Stagger = 5f, Stacks = 1, Reach = 10f },
                 "Six spears of beaten gold stand in the air in a ring three metres round the enemy you face, wait a breath, and drive in together: 6 damage each, 30 stagger in all, and Marked. It is held still a second and a half, less for a god or an elite.",
                 UpgradeIcons.Ring,
-                new Empower { Cooldown = 9f, Stagger = 6.7f },
-                "Ring of Spears waits 9 seconds, not 10, and its spears break 40 stagger in all.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
+                new Empower { Stagger = 6.7f },
+                "Its spears break 40 stagger in all.",
                 // NEEDS: a line six metres across your front that holds what crosses it and makes your blows across it critical,
                 // the spears not driving into the enemy (ground-states, form-pieces, shape-sets-aside). Until then the spears
                 // still drive in, and stand five seconds in the floor in their ring round it, Marking and jarring what is inside.
@@ -217,9 +220,11 @@ namespace Clover.Player.Trees
                 new SpellSpec { Reach = 2.5f, Radius = 5f, Seconds = 10f, Interval = 2.5f, Damage = 2f, Stagger = 0f, Delay = 0.2f, Stacks = 1 },
                 "You plant a lamp of brass. A shaft of light stands over it, dust turning in it, and a glow five metres round lies about it for ten seconds. Enemies in the glow are Marked every two and a half seconds, and a perfect guard made inside it bursts round you: 10 damage and 25 stagger within three and a half metres. No enemy cloud, flame or frost can lie inside the glow.",
                 UpgradeIcons.Tower,
-                // NEEDS: the longer windows inside the glow (in-own-ground, empower-effects).
-                new Empower { Cooldown = 11f },
-                "Standing Light waits 11 seconds, not 12, and inside its glow the moments of your perfect guard and perfect dodge are half again as long.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20): no shorter wait. NEEDS: the longer windows inside
+                // the glow (in-own-ground: standing inside one's own lamp's glow as a state the stats read). Until then it does
+                // nothing.
+                new Empower(),
+                "Inside its glow, the moments for a perfect guard and a perfect dodge are half again as long.",
                 // NEEDS: the enemies between two lamps, and the guard made in line with them (in-own-ground), the lamps drawn as
                 // three (form-pieces), and nothing laid between them (purify). Until then the lamp still stands, a row of light
                 // six metres ahead Marks what stands on it each second, and a perfect guard throws a ray along the attacker's line.
@@ -310,10 +315,10 @@ namespace Clover.Player.Trees
                 new SpellSpec { Reach = 12f, Radius = 0.8f, Seconds = 0.4f, Interval = 0.1f, Damage = 12f, Stagger = 9f, Stacks = 1 },
                 "Begin, and every blow you land adds a ring of light up the blade, eight at most. Press again to loose it all as a beam twelve metres long and a metre and a half wide: 8 damage and 6 stagger a ring, and it Marks. 45 mana.",
                 UpgradeIcons.Beam,
-                // NEEDS: 10 a ring, kept off the shapes' own numbers (empower-after-shape: a damage set here would be set on the
-                // wall's and the column's too).
-                new Empower { Mana = 40f },
-                "Daybreak costs 40 mana, not 45, and each ring strikes for 10.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20): 10 a ring, not 8, on the beam (four bites of 15
+                // for six rings), and the shapes' own wall and column left as they are (LearnOnly).
+                new Empower { Damage = 15f, LearnOnly = true },
+                "Each ring of the beam strikes for 10, not 8.",
                 // NEEDS: each blow it stops adding a ring, and the beam loosed by a second press (gathered-rings, second-press);
                 // stopping thrown attacks as well (form-pieces). Until then the wall form stands before you four seconds and
                 // bursts along its width when its time is up or your heavy blow breaks it.

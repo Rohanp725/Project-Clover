@@ -38,7 +38,7 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **Works with.** Fallen Seeds and Sapling (the things it bursts), Briar Patch, Seeded and Ripening, Wood Grows Back (the garden comes again), Wildwood (more to burst), and the charged blade: it charges your weapon with Life when it lands.
 
-**Not built yet.** Every Seeded enemy in the fight bursting, not only those within the call's 6 metres; the Empower's 7 mending a burst (for now 5).
+**Not built yet.** Every Seeded enemy in the fight bursting, not only those within the call's 6 metres.
 
 **Example.** Three saplings stand round you and a pack closes in: reap, and four bursts go off at once while you mend 20.
 
@@ -153,7 +153,7 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **Works with.** Fallen Seeds, Sapling, Briar Patch and Root Walk for the garden it spends; Wood Grows Back to have it again; Ripening, which it grows from; Seeded mending on top.
 
-**Not built yet.** The window as a second and a half for each grown thing withered, ten seconds at most, and only those within 12 metres; the half-second kneel; the Empower's 16-damage thorns (for now 12).
+**Not built yet.** The window as a second and a half for each grown thing withered, ten seconds at most, and only those within 12 metres; the half-second kneel.
 
 **Example.** Three bushes stand round a brute: draw them in, and cut it with six seconds of critical, mending blows.
 

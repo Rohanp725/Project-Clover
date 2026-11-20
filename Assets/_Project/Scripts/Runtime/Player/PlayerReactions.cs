@@ -154,7 +154,7 @@ namespace Clover.Player
                 if (!run.Active || !run.AnswersDeath || run.Mark < 0 || run.Mark >= all.Count) continue;
                 var mark = all[run.Mark];
                 var source = SourceOf(mark);
-                AnswerDeath(mark.Effects, run, who, at, source, afflictions);
+                AnswerDeath(upgrades.EffectsOf(mark), run, who, at, source, afflictions);
                 // A reaction's shape sets conditions of its own; their answers are the shape's (each shape's ids are its own).
                 if (ReactionTable.IsReactionShape(mark))
                     foreach (var shape in mark.Shapes)
@@ -257,7 +257,7 @@ namespace Clover.Player
             // The marks in force that answer this condition whoever set it go first, so they can count what the condition's
             // own answers are about to spend (The Exile Returns counts the Static the Grudge's bolt discharges).
             bool any = news.Moment != ConditionMoment.Beat && upgrades.FireCondition(trigger, news, who, at);
-            any |= AnswerFrom(mark.Effects, trigger, news, who, at, source, spent);
+            any |= AnswerFrom(upgrades.EffectsOf(mark), trigger, news, who, at, source, spent);
             // A reaction's shape sets conditions of its own; their moments are answered from the shape.
             if (ReactionTable.IsReactionShape(mark))
                 foreach (var shape in mark.Shapes)

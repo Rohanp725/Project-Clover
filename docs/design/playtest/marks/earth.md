@@ -79,7 +79,7 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **Works with.** Tremor and everything that lays it: heavy blows, finishers, Quake Step, The Slow Hand. Unbroken Cairn and your heavy blows, Rooted for its Master.
 
-**Not built yet.** The slow as 15% a stone (for now 30% whatever the depth), and the Empower's 14 a stone (for now 12).
+**Not built yet.** The slow as 15% a stone (for now 30% whatever the depth).
 
 **Example.** Three soldiers each shaken three deep: one stamp drops nine stones and leaves all three slowed and with their shaking spent.
 
@@ -179,7 +179,7 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4), then any blow while you stand.
 
-**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 3 seconds). As built it is the stance of stone: up to 2.5 seconds, and the first blow to land is turned for nothing and answered by a jar of stone 3 metres long and 120 degrees wide toward the one who struck: 6 damage, 10 stagger and two Tremor. Its wind-ups come at 0.7 of their pace for 3 seconds, and for 3.5 seconds your next blow that lands breaks 50% more balance.
+**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: you stand up to 3 seconds). As built it is the stance of stone: up to 2.5 seconds, and the first blow to land is turned for nothing and answered by a jar of stone 3 metres long and 120 degrees wide toward the one who struck: 6 damage, 10 stagger and two Tremor. Its wind-ups come at 0.7 of their pace for 3 seconds, and for 3.5 seconds your next blow that lands breaks 50% more balance.
 
 **Works with.** Rooted (stand, and it counts), Immovable, which grows from it, Heavy Hand, Cairn's Master, Buckled on the Forge branch.
 

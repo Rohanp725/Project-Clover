@@ -77,6 +77,9 @@ namespace Clover.Player
         public Action<Growth.RuleBook> Rules;
         /// <summary>Its place in <see cref="All"/>.</summary>
         public int Index { get; internal set; }
+        /// <summary>For a Learn mark whose Empower changes its effects: the Empower mark, and the Learn's effects as changed (same slots); null otherwise.</summary>
+        public Upgrade EmpowerMark { get; internal set; }
+        public UpgradeEffect[] EmpoweredEffects { get; internal set; }
 
         /// <summary>
         /// True for an element's base spell's Learn mark: its id is the base id (<c>fire.base</c>), it comes with its element
@@ -208,6 +211,24 @@ namespace Clover.Player
                             effect.Owner = upgrade;
                         }
                     }
+            }
+            // A Learn whose Empower changes its effects keeps a twin of each, with the Empower's numbers, in the same slots:
+            // the runner reads the twins while the Empower is in force (PlayerUpgrades.EffectsOf).
+            foreach (var upgrade in list)
+            {
+                upgrade.EmpowerMark = null;
+                upgrade.EmpoweredEffects = null;
+            }
+            foreach (var upgrade in list)
+            {
+                if (upgrade.Part != BranchPart.Empower || upgrade.Empower?.Effects == null) continue;
+                if (!index.TryGetValue(upgrade.Branch, out var learn) || learn.Effects.Length == 0) continue;
+                var twins = new UpgradeEffect[learn.Effects.Length];
+                for (int i = 0; i < twins.Length; i++) twins[i] = learn.Effects[i].Twin();
+                foreach (var change in upgrade.Empower.Effects)
+                    if (change != null && change.Index >= 0 && change.Index < twins.Length) change.ApplyTo(twins[change.Index]);
+                learn.EmpowerMark = upgrade;
+                learn.EmpoweredEffects = twins;
             }
             all = list;
             byId = index;

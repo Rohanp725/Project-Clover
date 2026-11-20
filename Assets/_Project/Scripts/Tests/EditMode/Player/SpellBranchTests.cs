@@ -43,6 +43,71 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void EmpowersTheRosterGaveOnlyStrongerNumbersKeepTheTablesWait()
+        {
+            // The owner's answer of 2026-11-20: the "a second less" defaults are undone; these keep the roster's numbers alone.
+            string[] stronger =
+            {
+                EarthTree.MountainStance, MetalTree.FlungBlade, MetalTree.CircleOfSteel, MetalTree.ReturningEdge, MetalTree.PouredBronze,
+                LightTree.RingOfSpears, LightTree.StandingLight, LightTree.Reckoning, LightTree.Daybreak, DarkTree.PawnedHeart,
+                PoisonTree.FiveNeedles, PoisonTree.CoiledStrike, PoisonTree.Blister, PoisonTree.ShareAlike, PoisonTree.OneByOne,
+            };
+            foreach (string id in stronger)
+            {
+                var empower = SpellBranches.EmpowerOf(id);
+                Assert.IsNotNull(empower, id);
+                Assert.AreEqual(0f, empower.Cooldown, id + " waits as the table says");
+                Assert.AreEqual(0f, empower.Mana, id + " costs what the table says");
+                var learn = Upgrade.ById(id);
+                Assert.AreEqual(SpellTimings.For(id).Cooldown, new SpellBranches().CooldownOf(learn, new HashSet<string> { id, SpellBranch.EmpowerId(id) }, Fire(id)), 1e-4f, id + "'s wait with its Empower");
+            }
+        }
+
+        [Test]
+        public void AnEmpowerChangesItsLearnsOwnEffectsThroughTwinsInTheSameSlots()
+        {
+            // Poured Bronze pours 15 a notch, not 12; One by One's bursts 7 a dose; Reckoning 10 a blow, 180 at most.
+            var bronze = Upgrade.ById(MetalTree.PouredBronze);
+            Assert.AreSame(Upgrade.ById(SpellBranch.EmpowerId(MetalTree.PouredBronze)), bronze.EmpowerMark);
+            Assert.AreEqual(bronze.Effects.Length, bronze.EmpoweredEffects.Length);
+            Assert.AreEqual(12f, bronze.Effects[1].Damage, "the Learn's own numbers are left as they are");
+            Assert.AreEqual(15f, bronze.EmpoweredEffects[1].Damage);
+            Assert.AreEqual(10f, bronze.EmpoweredEffects[2].Damage, "an effect the Empower does not name is copied whole");
+            for (int i = 0; i < bronze.Effects.Length; i++)
+            {
+                Assert.AreNotSame(bronze.Effects[i], bronze.EmpoweredEffects[i]);
+                Assert.AreEqual(bronze.Effects[i].Slot, bronze.EmpoweredEffects[i].Slot, "a twin shares its original's slot, so its cooldown is one");
+                Assert.AreSame(bronze, bronze.EmpoweredEffects[i].Owner);
+                Assert.AreEqual(bronze.Effects[i].On, bronze.EmpoweredEffects[i].On);
+                Assert.AreEqual(bronze.Effects[i].Do, bronze.EmpoweredEffects[i].Do);
+            }
+            Assert.AreEqual(1f, Upgrade.ById(PoisonTree.OneByOne).EmpoweredEffects[0].Damage);
+            var reckoning = Upgrade.ById(LightTree.Reckoning).EmpoweredEffects[1];
+            Assert.AreEqual(10f, reckoning.Damage);
+            Assert.AreEqual(18, reckoning.PerMost);
+            // A Learn whose Empower names no effects keeps none.
+            Assert.IsNull(Upgrade.ById(FireTree.WildfireRush).EmpoweredEffects);
+        }
+
+        [Test]
+        public void AnEmpowerForTheLearnAloneLeavesAShapesOwnSpellAsItIs()
+        {
+            // Daybreak's 10 a ring is the beam's; Red Before the Sun's wall keeps its own 48.
+            var branches = new SpellBranches();
+            var daybreak = Upgrade.ById(LightTree.Daybreak);
+            var learned = new HashSet<string> { LightTree.Daybreak, SpellBranch.EmpowerId(LightTree.Daybreak), SpellBranch.ShapeId(LightTree.Daybreak) };
+            var plain = new HashSet<string> { LightTree.Daybreak, SpellBranch.EmpowerId(LightTree.Daybreak) };
+            var light = new Loadout();
+            light.Attune(Elements.Light, "");
+            light.Slots[0] = LightTree.Daybreak;
+            Assert.AreEqual(15f, branches.SpecOf(daybreak, plain, light).Damage, 1e-4f, "the beam: four bites of 15 for six rings of 10");
+            light.Shapes.Add(new IdChoice(LightTree.Daybreak, 0));
+            var wall = branches.SpecOf(daybreak, learned, light);
+            Assert.AreEqual(48f, wall.Damage, 1e-4f, "the wall keeps its own numbers");
+            Assert.AreEqual(SpellTimings.For(LightTree.Daybreak).Mana, wall.Cost, 1e-4f);
+        }
+
+        [Test]
         public void TheEmpowerShortensTheWaitAndLowersThePriceOnlyOnceBought()
         {
             var branches = new SpellBranches();

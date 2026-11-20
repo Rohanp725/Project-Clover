@@ -66,8 +66,8 @@ namespace Clover.Player.Trees
                 new SpellSpec { Radius = 6f, Delay = 0.2f, Damage = 16f, Stagger = 25f, Stacks = 0 },
                 "You call in the harvest. Everything you have grown bursts where it stands, 16 damage and 25 stagger three metres round, and every Seeded enemy's thorns burst now and its seed is spent. You mend 5 for each burst.",
                 UpgradeIcons.Burst,
-                // NEEDS: mending 7 a burst (an Empower that changes its Learn's effects, empower-effects).
-                new Empower { Cooldown = 10f },
+                // Mending 7 a burst is the Learn's own mending, set by the Empower (empower-effects).
+                new Empower { Cooldown = 10f, Effects = new[] { new EffectChange { Index = 0, Amount = 7f }, new EffectChange { Index = 2, Amount = 7f } } },
                 "Reap What Is Sown waits 10 seconds, not 12, and you mend 7 a burst.",
                 // NEEDS: the garden kept standing (a shape that sets aside its Learn's burst, shape-sets-aside). Until then the
                 // gold sweep reaches eight metres all round, and the garden still bursts.
@@ -157,8 +157,8 @@ namespace Clover.Player.Trees
                 new SpellSpec { Radius = 1f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "You kneel, and every grown thing of yours within twelve metres withers into you. As each withers it bursts in thorns, 12 damage and Seeded, and gives a second and a half of green blood, ten seconds at most: every weapon blow is critical and mends a fifth of its damage. The garden you grew is the price.",
                 UpgradeIcons.Heart,
-                // NEEDS: the thorns doing 16 (an Empower that changes its Learn's effects, empower-effects).
-                new Empower { Cooldown = 10f },
+                // The thorns doing 16 are the Learn's own, set by the Empower (empower-effects).
+                new Empower { Cooldown = 10f, Effects = new[] { new EffectChange { Index = 2, Damage = 16f } } },
                 "Drawn From the Wood waits 10 seconds, not 12, and its thorns do 16.",
                 // NEEDS: the window held only while you stand in the ring (in-own-ground). Until then the ring is laid where you
                 // knelt and the window goes with you.

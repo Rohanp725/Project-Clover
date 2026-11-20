@@ -82,9 +82,9 @@ namespace Clover.Player.Trees
                 new SpellSpec { Radius = 8f, Delay = 0.4f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "You raise a hand. Over every notched enemy within eight metres a lip of molten bronze tips in the air, then pours into its cracks: 10 damage, and 12 damage and 15 stagger for each notch. The notches are spent. The bronze sets, and the enemy is held under a crust cooling from cherry red to black, longer for each notch it carried.",
                 UpgradeIcons.Anvil,
-                // NEEDS: 15 a notch (an Empower that changes its Learn's effects, empower-effects).
-                new Empower { Cooldown = 11f },
-                "Poured Bronze waits 11 seconds, not 12, and pours 15 damage a notch.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20): 15 a notch, set on the Learn's own pour.
+                new Empower { Effects = new[] { new EffectChange { Index = 1, Damage = 15f } } },
+                "It pours 15 damage for each notch, not 12.",
                 // NEEDS: only the enemies poured into crusted (shape-before-learn: the shape answers after the Learn has
                 // spent the notches it would test). Until then every enemy the pour's reach takes is crusted.
                 new ShapeDef { Name = "Set",
@@ -189,9 +189,10 @@ namespace Clover.Player.Trees
                 new SpellSpec { Reach = 8f, Speed = 16f, Count = 1, Radius = 0.75f, Damage = 12f, Stagger = 10f, Stacks = 1 },
                 "A turning blade a metre and a half across flies eight metres along your facing and back to your hand, drawing its lane on the ground: 12 damage and 10 stagger to each enemy it passes each way, and a notch on the first pass.",
                 UpgradeIcons.Spiral,
-                // NEEDS: 16 and 14 on the way home as well (empower-effects).
-                new Empower { Cooldown = 8f, Damage = 16f, Stagger = 14f },
-                "Returning Edge waits 8 seconds, not 9, and strikes for 16 damage and 14 stagger each way.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20): 16 and 14 going out, and on the cut home (the
+                // Learn's own second cut).
+                new Empower { Damage = 16f, Stagger = 14f, Effects = new[] { new EffectChange { Index = 0, Damage = 16f, Stagger = 14f } } },
+                "It strikes for 16 damage and 14 stagger each way.",
                 // NEEDS: the blade's arrival as the moment the guard meets, three times at most (returning-blade). Until then a
                 // perfect guard throws a blade out and back, faster and harder, once in two seconds.
                 new ShapeDef { Name = "Bat It Home",
@@ -221,8 +222,9 @@ namespace Clover.Player.Trees
                 new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 360f, Damage = 14f, Stagger = 20f, Stacks = 1 },
                 "You raise the blade for a breath, unable to move. The first blow from any side is turned for nothing and answered with a cut all round you, three metres: 14 damage, 20 stagger and a notch. If nothing strikes, it waits only half as long.",
                 UpgradeIcons.Ring,
-                new Empower { Cooldown = 9f, Damage = 16f },
-                "Circle of Steel waits 9 seconds, not 10, turns two blows, and its answer strikes for 16.",
+                // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
+                new Empower { Damage = 16f },
+                "It turns two blows, and its answer strikes for 16.",
                 // NEEDS: the cut all round kept and only the attacker bound (attacker-of-turned-blow). Until then the answer is a
                 // cone at the one who struck, and what it strikes is bound; "passes any guard" is that it cannot raise one.
                 new ShapeDef { Name = "The Golden Chair", Form = SpellForms.Parry,
@@ -276,8 +278,8 @@ namespace Clover.Player.Trees
                 // Buried Blades, once a major, folded in here. NEEDS: 16 when driven, up to three blades standing in one enemy
                 // and a heavy blow driving them all (base-spell-marks, planted-blades). The base spell is cast by its kit,
                 // which takes only the Empower's wait.
-                new Empower { Cooldown = 5f, Damage = 16f },
-                "Flung Blade waits 5 seconds, not 6, and drives in for 16. Up to three blades may stand in one enemy, and a heavy blow drives them all.",
+                new Empower { Damage = 16f },
+                "It drives in for 16. Up to three blades may stand in one enemy, and a heavy blow drives them all.",
                 // NEEDS: three blades each standing in a different enemy, glowing as they cool (planted-blades). Until then two
                 // more blades fly in a fan beside the kit's and cut what they pass, and the kit's blade driven within 2 s
                 // strikes a second time.

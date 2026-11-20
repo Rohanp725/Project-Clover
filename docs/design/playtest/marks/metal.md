@@ -34,11 +34,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Only enemies carrying Sundered are poured into.
 
-**The numbers.** 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 11, and 15 a notch). Every enemy within 8 metres is reached 0.4 seconds after the cast. On each notched one: 10 damage, and 12 damage and 15 stagger for each notch it carried (46 damage and 45 stagger at three). Its notches are spent, and it is held 0.8 seconds (a god or an elite 0.4 of that).
+**The numbers.** 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 15 damage for each notch). Every enemy within 8 metres is reached 0.4 seconds after the cast. On each notched one: 10 damage, and 12 damage and 15 stagger for each notch it carried (46 damage and 45 stagger at three). Its notches are spent, and it is held 0.8 seconds (a god or an elite 0.4 of that).
 
 **Works with.** Sunder, Open Line and Forged Answer (they notch on the perfect guard), Every Crack Rings, the charged blade (its charged blows notch), Grave of Swords and Returning Edge, which notch a crowd for it to pour into.
 
-**Not built yet.** The hold set by the notches, 0.4 seconds a notch (a quarter of that on a god or an elite): for now 0.8 seconds whatever the depth. The lip of bronze tipping over each enemy and the crust cooling on it. The Empower's 15 a notch: for now it only shortens the wait.
+**Not built yet.** The hold set by the notches, 0.4 seconds a notch (a quarter of that on a god or an elite): for now 0.8 seconds whatever the depth. The lip of bronze tipping over each enemy and the crust cooling on it.
 
 **Example.** Notch three soldiers to three with heavy blows and Grave of Swords, then pour: each takes 46 and stands held while you choose which to finish.
 
@@ -134,11 +134,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 8, and 16 damage and 14 stagger). It runs 8 metres at 16 metres a second, 0.75 metres to each side of its line. Going: 12 damage, 10 stagger and a notch to each enemy it passes; a second later, coming home: 12 damage and 10 stagger again to each it struck going.
+**The numbers.** 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 16 damage and 14 stagger, going out and coming home). It runs 8 metres at 16 metres a second, 0.75 metres to each side of its line. Going: 12 damage, 10 stagger and a notch to each enemy it passes; a second later, coming home: 12 damage and 10 stagger again to each it struck going.
 
 **Works with.** Open Line, which it grows from, Sunder, Poured Bronze on the line it notched, the charged blade (it charges your weapon with Metal).
 
-**Not built yet.** The turning blade itself, seen flying out and back to your hand: for now the lane breaks open along the ground as it runs, and what it struck is cut again a second later where it stands. The Empower's numbers on the way home (for now the return keeps 12 and 10).
+**Not built yet.** The turning blade itself, seen flying out and back to your hand: for now the lane breaks open along the ground as it runs, and what it struck is cut again a second later where it stands.
 
 **Example.** Four soldiers come down a corridor: the blade runs through them and back, and all four are notched for the pour.
 
@@ -173,7 +173,7 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4), then any blow in the next 1.2 seconds.
 
-**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, two blows turned, and 16 damage). The answer strikes everything within 3 metres, all the way round, for 14 damage, 20 stagger and one notch, a heavy blow. As built the caught blow is not a perfect guard for your marks: it gives no mana and sets off nothing that waits on one.
+**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: two blows turned, and 16 damage). The answer strikes everything within 3 metres, all the way round, for 14 damage, 20 stagger and one notch, a heavy blow. As built the caught blow is not a perfect guard for your marks: it gives no mana and sets off nothing that waits on one.
 
 **Works with.** Open Line, which it grows from, Edge Guard, which grows from it, Sunder, Poured Bronze on the ring it notched, the charged blade (the answer is a spell, so it charges your weapon with Metal).
 
@@ -236,11 +236,11 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Carrying Metal, it is always yours to put in a slot.
 
-**The numbers.** Given with Metal. No mana: it waits 6 seconds after a cast, less with weapon play; its Empower makes that 5. An enemy within 9 metres: 4 damage as it lands, and it stands 6 seconds. Driven by your next weapon blow: 12 damage, 15 stagger, a notch and a burst of sparks 1.5 metres round, and a third as much to what stands in the lane home.
+**The numbers.** Given with Metal. No mana: it waits 6 seconds after a cast, less with weapon play. Its Empower makes the drive hit for 16. An enemy within 9 metres: 4 damage as it lands, and it stands 6 seconds. Driven by your next weapon blow: 12 damage, 15 stagger, a notch and a burst of sparks 1.5 metres round, and a third as much to what stands in the lane home.
 
 **Works with.** Its Empower, its two shapes and its Master; Sunder, Poured Bronze, To the Blade (it is a blade to fly to), the charged blade, which its landing charges with Metal.
 
-**Not built yet.** The Empower's 16 when driven, and up to three blades standing in one enemy with a heavy blow driving them all (once Buried Blades): the base spell is cast by Metal's kit, which takes only the Empower's shorter wait.
+**Not built yet.** The Empower's 16 when driven, and up to three blades standing in one enemy with a heavy blow driving them all (once Buried Blades): the base spell is cast by Metal's kit, which does not read the Empower's numbers yet, so for now the Empower does nothing.
 
 **Example.** Throw the blade into the archer at the back, then close and cut it: the blade bursts out of it and flies home through the soldier between.
 

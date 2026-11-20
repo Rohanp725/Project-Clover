@@ -613,7 +613,7 @@ namespace Clover.Player
                     if (upgrade.Tally.Kept && tally[i] == 0 && RunState.Tallies.TryGetValue(upgrade.Id, out int kept)) tally[i] = kept;
                 }
                 foreach (var mod in upgrade.Stats) Stats.AddLearned(mod);
-                foreach (var effect in upgrade.Effects) byTrigger[(int)effect.On].Add(effect);
+                foreach (var effect in EffectsOf(upgrade)) byTrigger[(int)effect.On].Add(effect);
                 Rules.Apply(upgrade);
                 // A Shape mark adds the rule of the shape its spell wears, and only that one.
                 var worn = SpellBranches.Worn(upgrade, loadout);
@@ -740,6 +740,18 @@ namespace Clover.Player
             }
             TallyText = tallyWords.ToString();
             TallyVersion++;
+        }
+
+        /// <summary>
+        /// A mark's effects as they stand now: a Learn's twins with its Empower's numbers while that Empower is in force
+        /// (<see cref="Upgrade.EmpoweredEffects"/>), else its own. What a condition it set does is read through this too.
+        /// </summary>
+        public UpgradeEffect[] EffectsOf(Upgrade mark)
+        {
+            if (mark == null) return System.Array.Empty<UpgradeEffect>();
+            var empower = mark.EmpowerMark;
+            if (mark.EmpoweredEffects != null && empower != null && has != null && empower.Index < has.Length && has[empower.Index]) return mark.EmpoweredEffects;
+            return mark.Effects;
         }
 
         /// <summary>The count a mark keeps now; zero when it keeps none or is not in force.</summary>

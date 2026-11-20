@@ -138,6 +138,9 @@ namespace Clover.Player
         /// <summary>For an Arc: it starts from the target without striking it and leaps to whoever is nearest, carrying anything (Glint's ray).</summary>
         public bool FromTarget;
 
+        /// <summary>A copy with every number, its slot and its mark (an Empower's twin of its Learn's effect).</summary>
+        internal UpgradeEffect Twin() => (UpgradeEffect)MemberwiseClone();
+
         /// <summary>Its place among all the effects in the catalogue; set when the catalogue is gathered.</summary>
         public int Slot { get; internal set; } = -1;
         /// <summary>The mark this effect belongs to. Set when the catalogue is gathered.</summary>
