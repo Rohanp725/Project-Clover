@@ -1503,15 +1503,24 @@ namespace Clover.Gameplay
             // Chill's ice (and Rime's frost) climbing the body band by band, from its look (Clover/Toon's _Ice).
             float ice = 0f, iceReveal = 1f;
             byte shell = 0;
-            if (!IsDead && Clover.Player.Forms.ElementLooks.ShellOn(transform, out shell, out float reveal, out float amount)
-                && (shell == Clover.Player.Forms.ElementLookSet.Ice || shell == Clover.Player.Forms.ElementLookSet.Rime))
+            if (!IsDead && Clover.Player.Forms.ElementLooks.ShellOn(transform, Clover.Player.Forms.ElementLookSet.Ice, out shell, out float reveal, out float amount))
             {
                 ice = amount;
                 iceReveal = reveal;
             }
-            bool iceMoved = Mathf.Abs(ice - shownIce) > 0.004f || Mathf.Abs(iceReveal - shownIceReveal) > 0.004f;
+            // Soaked's water run down the body (a sheen on the body, not a sheet over it).
+            float wet = 0f, wetReveal = 1f;
+            if (!IsDead && Clover.Player.Forms.ElementLooks.ShellOn(transform, Clover.Player.Forms.ElementLookSet.Wet, out _, out float wetCovered, out float wetAmount))
+            {
+                wet = wetAmount;
+                wetReveal = wetCovered;
+            }
+            bool iceMoved = Mathf.Abs(ice - shownIce) > 0.004f || Mathf.Abs(iceReveal - shownIceReveal) > 0.004f
+                || Mathf.Abs(wet - shownWet) > 0.004f || Mathf.Abs(wetReveal - shownWetReveal) > 0.004f;
             if (glow != shownGlow || iceMoved)
             {
+                shownWet = wet;
+                shownWetReveal = wetReveal;
                 shownIce = ice;
                 shownIceReveal = iceReveal;
                 shownFrost = shell == Clover.Player.Forms.ElementLookSet.Rime ? 1f : 0f;
@@ -1519,7 +1528,9 @@ namespace Clover.Gameplay
             }
         }
 
-        private float shownIce, shownIceReveal = 1f, shownFrost;
+        private float shownIce, shownIceReveal = 1f, shownFrost, shownWet, shownWetReveal = 1f;
+        private static readonly int WetId = Shader.PropertyToID("_Wet");
+        private static readonly int WetRevealId = Shader.PropertyToID("_WetReveal");
         private static readonly int IceId = Shader.PropertyToID("_Ice");
         private static readonly int IceRevealId = Shader.PropertyToID("_IceReveal");
         private static readonly int IceFrostId = Shader.PropertyToID("_IceFrost");
@@ -1532,7 +1543,7 @@ namespace Clover.Gameplay
             foreach (var bodyRenderer in bodyRenderers)
             {
                 if (bodyRenderer == null) continue;
-                if (glow == 0 && shownIce <= 0f)
+                if (glow == 0 && shownIce <= 0f && shownWet <= 0f)
                 {
                     bodyRenderer.SetPropertyBlock(null);
                     continue;
@@ -1540,9 +1551,11 @@ namespace Clover.Gameplay
                 block.Clear();
                 if (glow != 0)
                     block.SetColor(Emission, glow == 1 ? flashColour : glow == 2 ? new Color(0.9f, 0.62f, 0.12f) : glow == 3 ? new Color(0.1f, 0.24f, 0.7f) : glow == 5 ? FrozenGlow : new Color(0.7f, 0.3f, 0.03f));
-                if (shownIce > 0f)
+                if (shownIce > 0f || shownWet > 0f)
                 {
                     float feet = transform.position.y;
+                    block.SetFloat(WetId, shownWet);
+                    block.SetFloat(WetRevealId, shownWetReveal);
                     block.SetFloat(IceId, shownIce);
                     block.SetFloat(IceRevealId, shownIceReveal);
                     block.SetFloat(IceFrostId, shownFrost);

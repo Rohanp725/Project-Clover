@@ -34,6 +34,8 @@ Shader "Clover/Toon"
         _Ice ("Frozen over (Chill, Rime; set by the game)", Range(0, 1)) = 0
         _IceReveal ("Ice up to this share of the body's height", Range(0, 1)) = 1
         _IceFrost ("Rime's white frost rather than clear ice", Range(0, 1)) = 0
+        _Wet ("Soaked (the water run down the body; set by the game)", Range(0, 1)) = 0
+        _WetReveal ("Wet down from the top to this share of the body's height", Range(0, 1)) = 1
         _RevealBase ("The body's feet, world height (the reveals count up from here)", Float) = 0
         _RevealHeight ("The body's height, metres (0: no reveal, all of it at once)", Float) = 0
     }
@@ -78,7 +80,22 @@ Shader "Clover/Toon"
             half _IceFrost;
             float _RevealBase;
             float _RevealHeight;
+            half _Wet;
+            half _WetReveal;
         CBUFFER_END
+
+        // A body the water has run down (Soaked, the coordinator's check of 2026-11-20: "a thin wet sheen on the body
+        // itself"): darker and a little cooler, as wet cloth and skin are, with a hard teal-white glint where the light
+        // catches and a thin teal rim. Never a sheet over it: the body's own colours stay readable.
+        half3 WetSheen(half3 colour, float3 normalWS, half3 viewWS, half3 lightDirection)
+        {
+            half3 wet = colour * half3(0.62, 0.7, 0.78);
+            half3 halfway = normalize(lightDirection + viewWS);
+            wet += half3(0.55, 0.85, 0.9) * step(0.93, saturate(dot(normalWS, halfway)));
+            half rim = 1.0 - saturate(dot(viewWS, normalWS));
+            wet += half3(0.1, 0.4, 0.45) * step(0.7, rim);
+            return wet;
+        }
 
         // A body frozen over (Chill, the owner of 2026-11-20: "ice should freeze and crystalize and then hold"), in the
         // toon's hard bands: clear pale ice read from the facing, brighter toward the edge as thick ice is, a hard glint
@@ -265,6 +282,8 @@ Shader "Clover/Toon"
                 // Steel climbs the body band by band behind a bright front (Temper, the Blender worker's timings).
                 if (_Metal > 0.001) colour = lerp(colour, Steel(albedo, normalWS, viewWS, light.direction, lit), _Metal * step(share, _MetalReveal + 0.0001));
                 if (_MetalLine >= 0.0) colour = lerp(colour, half3(1.45, 1.5, 1.6), step(abs(share - _MetalLine), 0.025) * saturate(_Metal * 4.0));
+                // Wet from the head down as the water runs off it.
+                if (_Wet > 0.001) colour = lerp(colour, WetSheen(colour, normalWS, viewWS, light.direction), _Wet * step(1.0 - _WetReveal - 0.0001, share));
                 if (_Ice > 0.001) colour = lerp(colour, IceShell(albedo, normalWS, viewWS, light.direction, lit, input.positionWS), _Ice * step(share, _IceReveal + 0.0001));
 
                 colour += _EmissionColor.rgb;

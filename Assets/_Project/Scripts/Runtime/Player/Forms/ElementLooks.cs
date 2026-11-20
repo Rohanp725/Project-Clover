@@ -122,7 +122,11 @@ namespace Clover.Player.Forms
         /// Seconds the look has played on this body and how far up it a shell covers (a share), when a look with a shell
         /// is on it now; false when none is. The body's own material draws the shell (<see cref="ElementLookSet.Shell"/>).
         /// </summary>
-        public static bool ShellOn(Transform body, out byte shell, out float reveal, out float amount)
+        public static bool ShellOn(Transform body, out byte shell, out float reveal, out float amount) =>
+            ShellOn(body, ElementLookSet.NoShell, out shell, out reveal, out amount);
+
+        /// <summary>The same, for one kind of shell only (<paramref name="wanted"/>; NoShell for any): a body may be wet and frozen at once.</summary>
+        public static bool ShellOn(Transform body, byte wanted, out byte shell, out float reveal, out float amount)
         {
             shell = ElementLookSet.NoShell;
             reveal = amount = 0f;
@@ -133,6 +137,7 @@ namespace Clover.Player.Forms
                 if (!one.Active || !ReferenceEquals(one.Body, body)) continue;
                 ref var look = ref instance.set.Looks[one.Look];
                 if (look.Shell == ElementLookSet.NoShell) continue;
+                if (wanted != ElementLookSet.NoShell && look.Shell != wanted && !(wanted == ElementLookSet.Ice && look.Shell == ElementLookSet.Rime)) continue;
                 shell = look.Shell;
                 reveal = ElementLookSet.ShellReveal(look, one.Age);
                 amount = one.Ending ? Mathf.Clamp01(1f - one.Gone / Going) : 1f;

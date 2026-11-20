@@ -62,6 +62,10 @@ namespace Clover.EditorTools
         {
             ["water_soaked|m2_water_foam"] = new ReactionArtBuilder.Paint(0.04f, 0.4f, 0.5f, 0.45f, 1f, true),
             ["water_soaked|m_vfx_water_foam"] = new ReactionArtBuilder.Paint(0.08f, 0.42f, 0.52f, 0.8f, 1f, true),
+            // The puddle under a soaked body: low and faint, so the enemy always reads clearly above it.
+            ["water_soaked|m_vfx_water_ink"] = new ReactionArtBuilder.Paint(0.03f, 0.22f, 0.3f, 0.35f, 1f, true),
+            // Wellspring's streams: see-through water, not solid blades.
+            ["water_wellspring|m2_water_teal"] = new ReactionArtBuilder.Paint(0.06f, 0.48f, 0.58f, 0.7f, 1f, true),
             ["water_wellspring|m_vfx_water_foam"] = new ReactionArtBuilder.Paint(0.08f, 0.42f, 0.52f, 0.8f, 1f, true),
             ["water_wellspring|m2_water_foam"] = new ReactionArtBuilder.Paint(0.08f, 0.42f, 0.52f, 0.8f, 1f, true),
             ["metal_rust|m2_water_foam"] = new ReactionArtBuilder.Paint(0.04f, 0.4f, 0.5f, 0.45f, 1f, true),
@@ -75,6 +79,8 @@ namespace Clover.EditorTools
         public static readonly Dictionary<string, float> LookScales = new Dictionary<string, float>
         {
             ["life_seeded|vfxe2_seed"] = 0.65f,
+            // Soaked's drips while it lasts: small, so they read as drips off the body, not blobs beside it.
+            ["water_soaked|vfx3c_vfx_water_drop"] = 0.6f,
         };
 
         /// <summary>
@@ -86,6 +92,9 @@ namespace Clover.EditorTools
             "while", "loop", "pop off", "peel off", "slide in along", "glint", "sink", "drift round", "drift outward",
             "drip", "drift up and away", "pour in", "sweep up",
         };
+
+        /// <summary>Soaked: seconds the water takes to run down the body, and the most its puddle spans, metres.</summary>
+        public const float WetRunsDown = 0.45f, SoakedPuddle = 1.15f;
 
         /// <summary>A piece thinner than this once placed, lying on the ground, is drawn flat and see-through on the floor.</summary>
         public const float FlatHeight = 0.06f;
@@ -155,6 +164,16 @@ namespace Clover.EditorTools
                         if (!onPlayer && (instances.Count > 1 ? BodyOf(instance[0] as string, bodyAt, judged) : Nearest(bodyAt, judged)) != 0) continue;
                         var visible = (List<object>)motion["visible"];
                         float show = (float)(double)visible[0], hide = (float)(double)visible[1];
+                        // Soaked (the coordinator's check of 2026-11-20: the sheets and puddles grew to 3 m and buried the
+                        // group): the water running down the body is a wet sheen on the body itself, drawn by its own
+                        // material from the head down; the foam ring stacks are left out.
+                        if (slug == "water_soaked" && kitObject.Contains("wet_affliction"))
+                        {
+                            made.Shell = ElementLookSet.Wet;
+                            shellTimes.Add((show, WetRunsDown));
+                            continue;
+                        }
+                        if (slug == "water_soaked" && kitObject.Contains("water_ripple")) continue;
                         if (kit == Mockup)
                         {
                             // The shell's band: its window opens when the band snaps on; the scale keys say how long it grows.
@@ -204,6 +223,15 @@ namespace Clover.EditorTools
                             part.OrbitCount = AddKeys(orbiting, "keys", outKeys, true);
                         }
                         if (part.Repeats) made.LoopFrom = Mathf.Min(made.LoopFrom, show);
+                        // Soaked's puddle stays small and low round the feet, whatever size the render gave it.
+                        if (slug == "water_soaked" && kind == ElementLookSet.Flat)
+                        {
+                            float grown = 1f;
+                            for (int k = part.ScaleFirst; k < part.ScaleFirst + part.ScaleCount; k++)
+                                grown = Mathf.Max(grown, Mathf.Max(outKeys[k].Value.x, outKeys[k].Value.z));
+                            float across = Mathf.Max(mesh.bounds.size.x * part.Scale.x, mesh.bounds.size.z * part.Scale.z) * grown;
+                            if (across > SoakedPuddle) part.Scale *= SoakedPuddle / across;
+                        }
                         outParts.Add(part);
                         if (outParts.Count - made.FirstPart >= ElementLooks.MostParts) break;
                     }
@@ -325,6 +353,8 @@ namespace Clover.EditorTools
             var normalTurn = toKit.inverse.transpose;
             var vertices = source.vertices;
             var normals = source.normals;
+            // Wellspring's flow tongues ended in points that read like blades: their ends are rounded off.
+            if (filter.name == "vfxe2_flow") RoundTip(vertices);
             for (int i = 0; i < vertices.Length; i++)
             {
                 vertices[i] = toKit.MultiplyPoint3x4(vertices[i]);
@@ -364,6 +394,55 @@ namespace Clover.EditorTools
             mesh.RecalculateBounds();
             AssetDatabase.AddObjectToAsset(mesh, AssetDatabase.LoadAssetAtPath<ElementLookSet>(SetPath));
             return mesh;
+        }
+
+        /// <summary>
+        /// Rounds a flat tongue's pointed end (in its own axes): the last two fifths of its length are drawn back into a
+        /// half-ellipse as wide as the tongue is there, so it ends in a rounded lick of water, not a point.
+        /// </summary>
+        public static void RoundTip(Vector3[] vertices)
+        {
+            if (vertices.Length < 3) return;
+            var bounds = new Bounds(vertices[0], Vector3.zero);
+            foreach (var v in vertices) bounds.Encapsulate(v);
+            var size = bounds.size;
+            int along = size.x >= size.y && size.x >= size.z ? 0 : size.y >= size.z ? 1 : 2;
+            int across = along == 0 ? (size.y >= size.z ? 1 : 2) : along == 1 ? (size.x >= size.z ? 0 : 2) : (size.x >= size.y ? 0 : 1);
+            float low = bounds.min[along], length = Mathf.Max(0.0001f, size[along]), middle = bounds.center[across];
+            // The tip is the narrower end.
+            float nearLow = 0f, nearHigh = 0f;
+            foreach (var v in vertices)
+            {
+                float s = (v[along] - low) / length;
+                if (s < 0.2f) nearLow = Mathf.Max(nearLow, Mathf.Abs(v[across] - middle));
+                if (s > 0.8f) nearHigh = Mathf.Max(nearHigh, Mathf.Abs(v[across] - middle));
+            }
+            bool tipHigh = nearHigh <= nearLow;
+            const float From = 0.6f;
+            float half = 0f;
+            foreach (var v in vertices)
+            {
+                float s = (v[along] - low) / length;
+                if (!tipHigh) s = 1f - s;
+                if (Mathf.Abs(s - From) < 0.2f) half = Mathf.Max(half, Mathf.Abs(v[across] - middle));
+            }
+            if (half <= 0f) return;
+            for (int i = 0; i < vertices.Length; i++)
+            {
+                var v = vertices[i];
+                float s = (v[along] - low) / length;
+                if (!tipHigh) s = 1f - s;
+                if (s <= From) continue;
+                float u = (s - From) / (1f - From);
+                // The end drawn back by a third, its width an ellipse's.
+                float back = From + (s - From) * 0.65f;
+                float width = half * Mathf.Sqrt(Mathf.Max(0f, 1f - u * u * 0.85f));
+                float side = Mathf.Sign(v[across] - middle);
+                if (Mathf.Abs(v[across] - middle) < 0.0001f) side = 0f;
+                v[across] = middle + side * Mathf.Max(Mathf.Abs(v[across] - middle), width);
+                v[along] = low + (tipHigh ? back : 1f - back) * length;
+                vertices[i] = v;
+            }
         }
 
         // True when the kit mesh, turned and scaled as placed, is flat enough to lie on the floor as a mark.

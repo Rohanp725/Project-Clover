@@ -1,10 +1,10 @@
 # Element looks (batch 1)
 
-14 looks, 199 parts, 935 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+14 looks, 197 parts, 931 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Repeats from | Shell |
 |---|---|---|---|---|---|
-| water_soaked | 2.2 s | body | 15 | 1.02 s | - |
+| water_soaked | 2.2 s | body | 13 | 1.02 s | 1 bands from 0.50 s, every 0.10 s, 0.45 s each |
 | water_wellspring | 2.0 s | player | 27 | 2.00 s | - |
 | metal_sundered | 2.0 s | body | 5 | 0.68 s | - |
 | metal_sword | 1.6 s | body | 4 | 1.60 s | - |

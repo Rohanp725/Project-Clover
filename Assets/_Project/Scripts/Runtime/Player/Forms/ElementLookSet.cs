@@ -15,7 +15,7 @@ namespace Clover.Player.Forms
         public const byte Solid = 0, Flat = 1;
 
         /// <summary>A body's shell the look asks the body's own material for: none, steel (Temper), ice (Chill), rime (Rime).</summary>
-        public const byte NoShell = 0, Steel = 1, Ice = 2, Rime = 3;
+        public const byte NoShell = 0, Steel = 1, Ice = 2, Rime = 3, Wet = 4;
 
         /// <summary>Easings as the recipe names them: linear, out, in, inout, outback, step.</summary>
         public const byte Linear = 0, Out = 1, In = 2, InOut = 3, OutBack = 4, Step = 5;
