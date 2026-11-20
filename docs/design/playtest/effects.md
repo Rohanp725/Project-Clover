@@ -918,6 +918,8 @@ Group: Reactions
 
 **What sets it off.** A second Static on a Cursed enemy, or a curse on one already carrying two. One Static is not enough, and nothing rests until there are two.
 
+**Its shapes.** With the Shape mark of Dark and Lightning's duo branch (The Grudge: First Strike or Ash Plume, 3 Shards, in the heart of the chart) and both carried, The Grudge wears the shape chosen at a rest fire instead. First Strike: your first heavy blow on it calls the cloud down, its Static discharged at double and the enemy held 0.6 s. Ash Plume: the cloud waits 6 s, then one bolt falls round it for each weapon blow you landed, 10 and a Static each, and its Static is discharged in 4 m.
+
 **How to use it.** Not yet: what the cloud does. It will answer the next blow the enemy lands on you or your guard with a black bolt (its Static at double, and a stop), and drift to the next enemy if it dies first.
 
 **How it looks.** Its name over the enemy. Not yet: the cloud itself.
