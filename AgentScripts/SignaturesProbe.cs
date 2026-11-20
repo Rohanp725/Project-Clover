@@ -501,6 +501,8 @@ public class SignaturesProbeRunner : MonoBehaviour
     private IEnumerator Dark()
     {
         yield return Begin("dark", "A Life for a Life");
+        // The Rise is the root's since 2026-11-20 (rise-on-root); the gift buys it back.
+        upgrades.Give(Upgrade.ById(Clover.Player.Trees.DarkTree.Curse));
         defence.DamageTaken = 1f;
         var outcome = defence.TakeHit(new Hit(100000f, 0f, -toward, false, true, FirstAt));
         yield return ShotAfter(0.3f);

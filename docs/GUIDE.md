@@ -521,7 +521,7 @@ A **mixed branch** opens when you hold one of its two elements and have held or 
 - The other nine elements have no gods. Their braziers in the hub are lit from the start as a stopgap. Lightning's stays cold until it has been taken once.
 - Gust and Riptide move everything within reach, not only what the cone touched. Stone Rise's pillar does not stand to be broken. Flung Blade deals nothing as it lands. Grasp does not drag you to what cannot be dragged.
 - Glaze, Wellspring, Bedrock, Temper, Clarity and Fever have only the plain halves listed above.
-- Dark's "one revive as a zombie" is not the surge; it exists only as the god's gift A Life for a Life (section 5).
+- Dark's "one revive as a zombie" is not the surge; it is the Rise, given by Dark's root, Curse, and bought back by the god's gift A Life for a Life (section 5).
 
 ---
 
@@ -544,7 +544,7 @@ Given by **taking** the element from its god.
 | Earth | **Hand of the Mountain** | Light Bedrock (L2), then land heavy blows. | A hand of stone hangs over your sword shoulder. Each heavy blow that lands, it goes over that enemy and half a second later comes down: 70% of the blow in 3 m, heavy, with Tremor. |
 | Metal | **Hanging Swords** | Light Temper (L2), then hold guard (L1). | While Temper lasts every blow held on your guard is a perfect guard, and a sword is forged above the attacker, eight at most. When Temper ends they fall in turn. |
 | Light | **The Scales** | Light Clarity (L2), then deal more than you take. | Two pans of light hang over you: gold for damage your weapon deals, red for health you lose. When Clarity ends: if you dealt more, a sword of light falls on every Marked enemy within 12 m for 60% of the difference (120 at most). If not, your mana is emptied. |
-| Dark | **A Life for a Life** | Take a blow that would kill you. | Once, you stand again at half health, and it drains 4 a second down to a sliver. Brackets and a sign mark the one that killed you. Land a finisher on it (on anyone, if it is gone) to stop the drain, return to half health, and earn the right to rise once more. |
+| Dark | **A Life for a Life** | Be Risen (Dark's root stands you up once from a blow that would kill you, at half health, draining 4 a second down to a sliver). | Brackets and a sign mark the one that killed you. Land a finisher on it (on anyone, if it is gone) to stop the drain, return to half health, and earn the right to rise once more. |
 | Poison | **Clean Blade** | Light Fever (L2), then land weapon blows. | While Fever lasts poison on every enemy neither bites nor fades, and every blow doses twice. When Fever ends time slows, you flick the blade, and each poisoned enemy within 14 m takes every bite it was owed at once. |
 
 ### Mix crowns: one per mixed branch
@@ -581,7 +581,7 @@ These are bought on the chart like any spell, then worn and cast with hold Trian
 
 - The design asked for "hold the surge button" on four gifts; as built it is "press the surge button again".
 - The Scales: the design's "no mana for five seconds" is "mana is emptied".
-- The Rise comes from A Life for a Life. Dark's keystone Dead Already makes you Risen for good in its place.
+- The Rise comes from Dark's root, Curse; A Life for a Life is the finisher that buys it back. Dark's keystone Dead Already makes you Risen for good in its place.
 - The Wave Stands Still soaks and freezes training dummies but does not carry them along.
 - Hanging Swords works by making the perfect-guard window very long during Temper.
 - None of the gifts has been played or tuned.
@@ -1025,7 +1025,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 
 | Mark | Kind | Shards | What it does | How it happens |
 |---|---|---|---|---|
-| **Curse** | Root | 2 | Blows of the weapon curse an enemy. A Cursed enemy deals less, and killing it heals you. | Always on once it is yours. |
+| **Curse** | Root | 2 | Blows of the weapon curse an enemy. A Cursed enemy deals less, and killing it heals you. Once, the blow that would kill you does not: you rise, Risen, your health draining away. | Always on once it is yours. |
 | **Blood Price** | Major | 3 | With too little mana for a spell, the rest is paid in health. Health paid this way is only owed: blows win it back. | Always on once it is yours. |
 | **Near the Grave** | Major | 3 | Below a third of your health you strike harder, and each kill wraps you in a shade that takes the next blow. | Happens when an enemy dies. |
 | **Feast** | Major | 3 | A finisher on a Cursed enemy feeds you. It heals, and heals more while Hunger lasts. | Happens when a finisher lands (heavy on a staggered enemy). |
@@ -1055,7 +1055,7 @@ its old words, is kept in `docs/design/marks_reworded.md` for building later.
 | **Long Hunger** | Minor | 1 | Hunger lasts longer. | Always on once it is yours. |
 | **Dead Already** | Keystone | 6 | You do not wait to die. You are Risen from now on: in every fight your health drains to its last point, and dealing damage feeds you. You strike far harder. There is no second rising. | Always on once it is yours. |
 | **Never Sated** | Keystone | 6 | You carry no flasks. Every blow you land feeds you a little, and every kill and finisher a great deal. | Happens when an enemy dies. |
-| **A Life for a Life** | Signature | gift | The blow that would kill you does not, once. You rise with half your health, and it drains away. A sigil marks the one that killed you: land a finisher on it and you live again, and may rise once more. | Always on once it is yours. |
+| **A Life for a Life** | Signature | gift | When you are Risen a sigil marks the one that killed you: land a finisher on it and you live again, with half your health back, and may rise once more. | Always on once it is yours. |
 
 #### Poison (31)
 

@@ -2436,19 +2436,21 @@ namespace Clover.Player
         private static readonly SpellSpec riseSpell = new SpellSpec { Cost = 0f, Damage = 4f, Count = 50 };
 
         /// <summary>
-        /// The blow that would have killed: with Dark's gift, and once until a finisher on the killer buys it back,
-        /// the player stands again instead, Risen. True when they rose.
+        /// The blow that would have killed: with Dark's root, Curse (the owner's decision of 2026-11-20, rise-on-root), and
+        /// once until a finisher on the killer buys it back (that is the gift's, A Life for a Life), the player stands
+        /// again instead, Risen. True when they rose.
         /// </summary>
         public bool Rise(Vector3 attacker)
         {
-            if (Risen || deadAlready || riseSpent || defence == null || element == null || combat == null || !Has(Trees.DarkTree.LifeForALife)) return false;
+            if (Risen || deadAlready || riseSpent || defence == null || element == null || combat == null || !Has(Trees.DarkTree.Curse)) return false;
             var form = SpellForms.Get(SpellForms.Rise);
             if (form == null) return false;
             riseSpent = true;
             Risen = true;
             defence.Health.Rise(defence.Health.Maximum * RiseHealth);
             var killer = combat.EnemyAt(attacker, 3f);
-            var cast = element.NewCast(riseSpell, "Risen", Upgrade.ById(Trees.DarkTree.LifeForALife));
+            // The cast names the root: the Rise lasts while the root is held, and ends with it.
+            var cast = element.NewCast(riseSpell, "Risen", Upgrade.ById(Trees.DarkTree.Curse));
             cast.Target = killer != null ? killer.transform : null;
             if (killer != null) cast.Aim = killer.transform.position;
             form.Cast(cast);

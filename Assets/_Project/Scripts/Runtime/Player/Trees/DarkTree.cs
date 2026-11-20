@@ -55,10 +55,10 @@ namespace Clover.Player.Trees
             const string E = Elements.Dark;
             const AfflictionKind C = AfflictionKind.Cursed;
 
-            // NEEDS: the Rise on the root (rise-on-root). PlayerUpgrades.Rise asks for the gift, and RiseForm's finisher that
-            // buys the Rise back is the gift's; moving it needs both told apart, not data. Until then the gift gives the Rise.
+            // BESPOKE (built): the Rise, in PlayerUpgrades.Rise and RiseForm, given by the root (the owner's decision of
+            // 2026-11-20, rise-on-root); the gift, A Life for a Life, is the finisher that buys it back.
             to.Add(BranchPattern.Put(new Upgrade { Id = Curse, Name = "Curse", Element = E, Kind = UpgradeKind.Root, Icon = UpgradeIcons.Moon,
-                Description = "Blows of the weapon curse an enemy. A Cursed enemy deals less, and killing it heals you.",
+                Description = "Blows of the weapon curse an enemy. A Cursed enemy deals less, and killing it heals you. Once, the blow that would kill you does not: you rise, Risen, your health draining away.",
                 WeaponStacks = 1 },
                 BranchPattern.Root));
 
@@ -333,9 +333,9 @@ namespace Clover.Player.Trees
                 new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Ward, Count = 1 } },
                 "Change places within a second of being struck, and the blow passes to the shadow, and the health it took comes back to you.");
 
-            // BESPOKE (built): the Rise, in PlayerUpgrades.Rise and RiseForm. This mark gives it until the root can (rise-on-root).
+            // BESPOKE (built): the finisher that buys the Rise back, in RiseForm (the Rise itself is the root's, rise-on-root).
             to.Add(BranchPattern.Put(new Upgrade { Id = LifeForALife, Name = "A Life for a Life", Element = E, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
-                Description = "The blow that would kill you does not, once. You rise with half your health, and it drains away. A sigil marks the one that killed you: land a finisher on it and you live again, and may rise once more.",
+                Description = "When you are Risen a sigil marks the one that killed you: land a finisher on it and you live again, with half your health back, and may rise once more.",
                 Effects = System.Array.Empty<UpgradeEffect>() },
                 BranchPattern.Gift));
         }

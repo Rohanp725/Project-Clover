@@ -3,10 +3,10 @@ using UnityEngine;
 namespace Clover.Player.Forms
 {
     /// <summary>
-    /// The Rise, and Dark's gift A Life for a Life. The player who would have died stands again with a share of their
-    /// health, and it drains away, down to a sliver; a sigil hangs on the one that killed them. A finisher on that
-    /// one (on anyone, if it is already gone) ends the draining and gives health back: they live again, and may rise
-    /// once more. <see cref="PlayerUpgrades.Rise"/> begins it.
+    /// The Rise, given by Dark's root, and Dark's gift A Life for a Life, which buys it back. The player who would have
+    /// died stands again with a share of their health, and it drains away, down to a sliver; a sigil hangs on the one that
+    /// killed them. With the gift, a finisher on that one (on anyone, if it is already gone) ends the draining and gives
+    /// health back: they live again, and may rise once more. <see cref="PlayerUpgrades.Rise"/> begins it.
     /// Reads: Damage (health drained each second), Count (percent of health given back by the finisher).
     /// </summary>
     public class RiseForm : RunningForm
@@ -51,7 +51,7 @@ namespace Clover.Player.Forms
             var marks = SpellWorks.Marks(run);
             Vector3 here = cast.Player.transform.position;
             if (cast.Upgrades == null || !cast.Upgrades.Risen) return false;
-            // The gift given up (another element taken, the marks forgotten): the Rise goes with it.
+            // The root given up (another element taken, the marks forgotten): the Rise goes with it.
             if (cast.Source != null && !cast.Upgrades.Has(cast.Source.Id)) return false;
             // The draining: a point at a time, never the last.
             run.T0 += Mathf.Max(0f, cast.Spec.Damage) * cast.Upgrades.RiseDrain * deltaTime;
@@ -88,6 +88,12 @@ namespace Clover.Player.Forms
             }
             if (run.Flag && run.Age > run.T3 + 3f) run.Flag = false;
             if (!run.Flag || !run.Flag2 || run.T2 < run.T3 - 0.1f) return true;
+            // Bought back only with the gift; without it the finisher is a finisher, and the Risen drain on.
+            if (!cast.Upgrades.Has(Trees.DarkTree.LifeForALife))
+            {
+                run.Flag = false;
+                return true;
+            }
             // A life for a life.
             cast.Upgrades.EndRise(true, cast.Spec.Count / 100f);
             FormFx.Lay(FormMark.Ring, here, 1f, FormKit.Lit(cast.Colour, 4f), 0.5f, 10f);
