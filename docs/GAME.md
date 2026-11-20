@@ -2073,6 +2073,12 @@ the Proving Ground's real enemies, afflictions on the group of five and surges o
 
 | date | decision | why |
 |---|---|---|
+| 2026-11-20 | New keystones: Fire gets Into the Fire and The Blade Drinks Fire; Water gets High Water, Low Water and Drawn Back to Break; Life gets Shared Roots and In Its Season (docs/design/steel/keystones_fire_water_life.md) | the owner's picks |
+| 2026-11-20 | Build before the playtest: the reaction-numbers piece (finishes about twenty minors), the duo spells' own form pieces, and a duo-surge slot in the Hand | the owner |
+| 2026-11-20 | Empowers stay flexible: an Empower may make the spell stronger or shorten its wait; it need not do both | the owner: "Keep it flexible" |
+| 2026-11-20 | Kept, not retired: Hammer Down (Wind), Clean Break (Ice), Spilled Water (Water), Shade (Life), each in an empty place on its tree | the owner |
+| 2026-11-20 | The deep strike (L2+R2 all in) needs the element's Devotion bought; without it R2 all in is the plain infused strike | the owner |
+| 2026-11-20 | Smaller answers: the heart's picker steps through all partners; Fast Water per enemy; The Exile Returns and Given Bones answer only the Grudge's bolt; Ash Plume capped at five; every other Phase 4 question keeps its default (phase4_questions.md, "Owner's answers") | the owner |
 | 2026-11-20 | Phase 4: merge Devotion and every step after it (the heart, the ten mixes, the duo branches), each tested in the editor before the next | the owner |
 | 2026-11-20 | An element's base spell (its branch's Learn) comes free with the element | the owner |
 | 2026-11-20 | Trees may have three keystones: The Closed Ring, All Blades Home, Two Suns and Plague Bearer come back as keystones; Fire, Water and Life (one each) are to be researched for more keystones | the owner: "Allow the three, and fire water and life might need to be researched and have more keystones" |

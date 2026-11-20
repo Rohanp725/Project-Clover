@@ -537,3 +537,42 @@ each shape.
     with refunds in RetiredMarks, and the 4.5 to 4.16 branch files still call their duo spell "the crown". The new
     decisions say each top spell is bought with Shards and the spares are kept hidden for Evolutions. Default: left for
     the step that applies those decisions on main. Alternative: change them on `phase4` before steps 2 and 3 go in.
+
+## Owner's answers (2026-11-20, afternoon)
+
+- **Keystones:**
+  - Fire: Into the Fire, The Blade Drinks Fire.
+  - Water: High Water, Low Water; Drawn Back to Break.
+  - Life: Shared Roots, In Its Season.
+- **Build before the playtest:**
+  - `reaction-numbers`;
+  - the duo spells' form pieces (`form-pieces`, `second-press`, place swaps);
+  - a duo-surge slot (`duo-surge-slot`).
+- **Empowers:** flexible. One may strengthen the spell or shorten its wait; it need not do both. Undo the "a second less" defaults where the roster gave only stronger numbers.
+- **Kept as marks, not retired:** Hammer Down, Clean Break, Spilled Water, Shade.
+- **Devotions:**
+  - The deep strike needs the element's Devotion bought.
+  - In One Breath, Fire Without End and The Guard Holds stay as built.
+- **The heart and the ring:**
+  - The heart's picker steps through all ten partners.
+  - The ring gap stays empty.
+  - Wither stays as built.
+- **Spells, all as built or as recommended:**
+  - Whirlpool: 4 m radius.
+  - Elder Tree: at your feet.
+  - Reckoning: 8 per blow.
+  - Five Needles: one fan.
+  - Devouring Maw lays no Curse.
+  - Returning Edge: the lane stand-in.
+  - Glass Storm: Static on half its passes.
+  - The Stalks Rise leaves the doses.
+  - Tipped Crucible is paid in mana.
+- **Changes:**
+  - Fast Water per enemy.
+  - The Exile Returns and Given Bones answer only the Grudge's bolt.
+  - Ash Plume capped at five.
+- **Plasma and Breaking Swell:**
+  - Plasma's top mark stays as built.
+  - Flashover's shapes don't flinch.
+  - Breaking Swell throws and knocks down for 0.6 s.
+- **Every other question in this file keeps its default (approved).**
