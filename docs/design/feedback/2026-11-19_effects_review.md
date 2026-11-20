@@ -395,3 +395,11 @@ being read. The triage at the end says who acts on each.
 
 ### Poison: Fever
 - (8b55c378-4c58) Its not great, make a cloud around you or something?
+
+## Later comments on the re-filmed GIFs (2026-11-20, about 00:06 UTC)
+
+### Flashover (re-filmed)
+- Ok so you didnt change the think I wanted, There is still the regular fire, the idea is that there will be no regular flame and instead it will be the purple flame, that pops up for a second and goes away. All the flame should be that
+
+### Thunder Gust (re-filmed)
+- This is still a bunch of static lines going through the guy and not a wind mixed in with electricity. The shock chaining between everyone is good though
