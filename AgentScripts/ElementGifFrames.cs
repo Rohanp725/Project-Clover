@@ -94,6 +94,7 @@ public class ElementGifFramesRunner : MonoBehaviour
     private readonly HashSet<ParticleSystem> idleParticles = new HashSet<ParticleSystem>();
     private int idleSolids, idleMarks, idleRuns, idleHazards;
     private string[] only = new string[0];
+    private string tag = "";
 
     // While filming.
     private bool filming, suppress;
@@ -282,6 +283,23 @@ public class ElementGifFramesRunner : MonoBehaviour
         string onlyPath = "AgentScripts/element_gif_only.txt";
         if (System.IO.File.Exists(onlyPath))
             only = System.IO.File.ReadAllText(onlyPath).Split(',').Select(part => part.Trim().ToLowerInvariant()).Where(part => part.Length > 0).ToArray();
+        // Which of two makers' looks to film where both made one (burn, static, overdrive: 0 the code's, 1 the Blender
+        // worker's, 2 both), and a tag put after each folder's name so the films can be set side by side.
+        string stylePath = "AgentScripts/element_gif_style.txt";
+        if (System.IO.File.Exists(stylePath))
+            foreach (var entry in System.IO.File.ReadAllText(stylePath).Split(new[] { ',', '\n', ' ' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                var pair = entry.Trim().Split('=');
+                if (pair.Length != 2) continue;
+                if (pair[0] == "tag") tag = pair[1];
+                else if (byte.TryParse(pair[1], out byte style))
+                {
+                    if (pair[0] == "burn") AfflictionArt.BurnStyle = style;
+                    if (pair[0] == "static") AfflictionArt.StaticStyle = style;
+                    if (pair[0] == "overdrive") SurgeArt.OverdriveStyle = style;
+                }
+            }
+        Say($"styles: burn {AfflictionArt.BurnStyle}, static {AfflictionArt.StaticStyle}, overdrive {SurgeArt.OverdriveStyle}, tag '{tag}'");
         yield return null;
         backgroundWas = InputSystem.settings.backgroundBehavior;
         editorWas = InputSystem.settings.editorInputBehaviorInPlayMode;
@@ -449,7 +467,7 @@ public class ElementGifFramesRunner : MonoBehaviour
     private IEnumerator Film(ElementInfo info, string moment, Clip clip)
     {
         string name = info.Name.ToLowerInvariant();
-        folder = Root + name + "_" + moment;
+        folder = Root + name + "_" + moment + tag;
         if (System.IO.Directory.Exists(folder)) System.IO.Directory.Delete(folder, true);
         System.IO.Directory.CreateDirectory(folder);
         Vector3 chest = Vector3.up * 1.2f;

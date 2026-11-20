@@ -15,7 +15,7 @@ unity status --until-ready --project-path "$P" >/dev/null 2>&1
 unity command job wait -- --condition '{"member":"UnityEngine.Time.frameCount","op":"changed"}' --timeout 10 2>&1 | grep -E "^met"
 unity command script run -- --file AgentScripts/AfflictedCrowdProbe.cs --entry AfflictedCrowdProbe.Run 2>&1 | grep -iE "error|started" | head -5
 for i in $(seq 1 20); do
-  if unity command console get -- --tail 40 2>/dev/null | grep -q "Probe\] beaming"; then break; fi
+  if unity command console get -- --tail 40 2>/dev/null | grep -q "Probe\] soak start"; then break; fi
   timeout 2 ping -n 2 127.0.0.1 >/dev/null
 done
 unity command diagnostics profiler_record -- --frames 300 --output-path review/checks/afflicted_crowd.data 2>&1 | tail -4

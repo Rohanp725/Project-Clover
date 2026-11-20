@@ -32,7 +32,11 @@ public static class AfflictedCrowdProbe
 public class AfflictedCrowdProbeRunner : MonoBehaviour
 {
     private const float SoakSeconds = 24f;
-    private static readonly AfflictionKind[] Changed = { AfflictionKind.Burn, AfflictionKind.Static, AfflictionKind.Cursed, AfflictionKind.Tremor };
+    // The looks of the second review and the rebuild from the Blender worker's batch 2: Burn's flame field, Static's arcs (ribbons),
+    // Cursed's pull, Tremor's cracks and pebbles, Unsteady's curls (ribbons) and Poisoned's clouds.
+    private static readonly AfflictionKind[] Changed = { AfflictionKind.Burn, AfflictionKind.Static, AfflictionKind.Cursed, AfflictionKind.Tremor, AfflictionKind.Unsteady, AfflictionKind.Poison };
+    // The crowd the budget is judged on (the overnight brief of 2026-11-20: twelve afflicted enemies).
+    private const int CrowdSize = 12;
 
     private PlayerDefence defence;
     private readonly List<Enemy> crowd = new List<Enemy>();
@@ -101,6 +105,9 @@ public class AfflictedCrowdProbeRunner : MonoBehaviour
             pen.Release(Enumerable.Range(0, pen.Enemies.Length).ToArray());
             crowd.AddRange(pen.Enemies.Where(enemy => enemy != null));
         }
+        // Exactly twelve: the rest are put away.
+        for (int i = CrowdSize; i < crowd.Count; i++) if (crowd[i] != null) crowd[i].gameObject.SetActive(false);
+        if (crowd.Count > CrowdSize) crowd.RemoveRange(CrowdSize, crowd.Count - CrowdSize);
         yield return new WaitForSecondsRealtime(0.5f);
         Vector3 centre = player.transform.position;
         for (int i = 0; i < crowd.Count; i++)
@@ -124,7 +131,7 @@ public class AfflictedCrowdProbeRunner : MonoBehaviour
 
         var allocated = ProfilerRecorder.StartNew(ProfilerCategory.Memory, "GC Allocated In Frame");
         var frames = new float[40000];
-        int count = 0, round = 1, burningPeak = 0;
+        int count = 0, round = 1, burningPeak = 0, partsPeak = 0, looksPeak = 0;
         long garbage = 0;
         float steelPeak = 0f;
         float end = Time.unscaledTime + SoakSeconds, nextLay = Time.unscaledTime + 2f, half = Time.unscaledTime + SoakSeconds * 0.5f;
@@ -148,12 +155,14 @@ public class AfflictedCrowdProbeRunner : MonoBehaviour
             if (count < frames.Length) frames[count++] = Time.unscaledDeltaTime * 1000f;
             garbage += allocated.LastValue;
             burningPeak = Mathf.Max(burningPeak, BodyFlames.Burning);
+            partsPeak = Mathf.Max(partsPeak, ElementLooks.Shown);
+            looksPeak = Mathf.Max(looksPeak, ElementLooks.Playing);
             steelPeak = Mathf.Max(steelPeak, element.SteelLevel);
         }
         allocated.Dispose();
         var sorted = frames.Take(count).OrderBy(ms => ms).ToArray();
         float mean = sorted.Average(), p95 = sorted[(int)(sorted.Length * 0.95f)], worst = sorted[sorted.Length - 1];
-        Say($"perf afflicted crowd: {count} frames in {SoakSeconds} s; frame ms mean {mean:0.00} p95 {p95:0.00} worst {worst:0.00}; garbage {garbage / Mathf.Max(1, count)} bytes a frame (editor included); bodies burning in real flame at most {burningPeak}; steel at most {steelPeak:0.00}; surging now {element.SurgeActive} in {element.SurgeInfo?.Name}");
+        Say($"perf afflicted crowd: {count} frames in {SoakSeconds} s; frame ms mean {mean:0.00} p95 {p95:0.00} worst {worst:0.00}; garbage {garbage / Mathf.Max(1, count)} bytes a frame (editor included); bodies burning in real flame at most {burningPeak}; element looks playing at most {looksPeak} with {partsPeak} of {ElementLooks.PoolSize} pieces drawn; steel at most {steelPeak:0.00}; surging now {element.SurgeActive} in {element.SurgeInfo?.Name}");
         foreach (var enemy in crowd) if (enemy != null) enemy.Afflictions.Clear();
         InputSystem.settings.backgroundBehavior = backgroundWas;
         InputSystem.settings.editorInputBehaviorInPlayMode = editorWas;
