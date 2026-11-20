@@ -873,6 +873,8 @@ Group: Reactions
 
 **What sets it off.** Tremor landing on a Cursed enemy, or a curse on a shaken one.
 
+**Its shapes.** With the Shape mark of Earth and Dark's duo branch (Turned to Stone: The King's Men or Grave Marker, 3 Shards, in the heart of the chart) and both carried, Turned to Stone wears the shape chosen at a rest fire instead. Both turn it to stone as before. The King's Men: when your heavy blow breaks it out, a Curse and a Tremor leap to the nearest enemy within 5 m. Grave Marker: if it dies as stone, a patch stands 10 s and Curses what stands in it every 2 s.
+
 **How to use it.** Wait for the stone, then heavy it: often enough to break its balance.
 
 **How it looks.** Its name over the enemy. Not yet: the stone climbing its legs.
