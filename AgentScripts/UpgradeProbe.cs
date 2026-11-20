@@ -514,17 +514,24 @@ public class UpgradeProbeRunner : MonoBehaviour
         combat.Mana.Gain(100f);
         mana = combat.Mana.Current;
         health = north.Health.Current;
-        int wornCasts = upgrades.WornCasts;
-        casts = element.SpellsCast;
-        yield return Hold(Key.Q, 0.45f);
-        yield return new WaitForSeconds(0.15f);
+        // Since Phase 1 Q is the weapon's skill and a learned spell is cast from its slot (keys 1 to 4), not held on Q as a
+        // worn spell: Uraeus is cast from the slot it fills.
+        var slotted = combat.GetComponent<Clover.Player.PlayerSpells>();
+        int uraeusSlot = slotted.Slots.SlotOf(FireTree.Uraeus);
+        if (uraeusSlot < 0)
+        {
+            slotted.SetSlot(1, FireTree.Uraeus);
+            uraeusSlot = 1;
+        }
+        slotted.Cooldowns.ResetAll();
+        int slotCasts = slotted.Casts;
+        bool uraeusCast = slotted.TryCast(uraeusSlot);
+        yield return new WaitForSeconds(0.45f);
         Shot("uraeus");
         yield return new WaitForSeconds(0.3f);
         float fanTook = health - north.Health.Current;
         int fanBurn = north.Burn.Stacks;
-        yield return Tap(Key.Q);
-        yield return Until(() => element.SpellsCast > casts, 1.5f);
-        Say($"S worn spell: first worn {wornFirst}; after choosing on the chart {wornSecond}; held: worn casts +{upgrades.WornCasts - wornCasts}, mana {mana:0} -> spent {mana - combat.Mana.Current:0} before the tap, dummy lost {fanTook:0}, burn {fanBurn} deep; a tap still cast the base spell {element.SpellsCast - casts}");
+        Say($"S slotted spell: worn before {wornFirst}, after choosing on the chart {wornSecond} (the chart no longer wears a spell); Uraeus from slot {uraeusSlot}: cast {uraeusCast} (+{slotted.Casts - slotCasts}), mana {mana:0} -> spent {mana - combat.Mana.Current:0}, dummy lost {fanTook:0}, burn {fanBurn} deep");
         yield return new WaitForSeconds(0.6f);
 
         // T: a mix mark. Sealed to Fire alone; with the storm consumed it opens, is bought on the chart, and answers an affliction reaching full depth.
@@ -629,12 +636,21 @@ public class UpgradeProbeRunner : MonoBehaviour
             int laidByBlows = set.Stacks(info.Affliction);
             combat.Mana.Gain(100f);
             health = north.Health.Current;
-            wornCasts = upgrades.WornCasts;
-            yield return Hold(Key.Q, 0.45f);
+            // The spell bought is cast from its slot (Q is the weapon's skill since Phase 1).
+            var treeSpells = combat.GetComponent<Clover.Player.PlayerSpells>();
+            int treeSlot = spell != null ? treeSpells.Slots.SlotOf(spell.Id) : -1;
+            if (spell != null && treeSlot < 0)
+            {
+                treeSpells.SetSlot(1, spell.Id);
+                treeSlot = 1;
+            }
+            treeSpells.Cooldowns.ResetAll();
+            int treeCasts = treeSpells.Casts;
+            bool treeCast = treeSlot >= 0 && treeSpells.TryCast(treeSlot);
             yield return new WaitForSeconds(0.5f);
             Shot("tree_" + name.ToLowerInvariant());
             yield return new WaitForSeconds(1.6f);
-            Say($"V {name}: bought {boughtCount} for {40 - upgrades.Points} embers ({boughtNames.TrimEnd(',', ' ')}); two lights and a heavy laid {info.Affliction} {laidByBlows}; worn {(upgrades.Worn != null ? upgrades.Worn.Name + " (" + upgrades.Worn.Form + ")" : "nothing")} cast +{upgrades.WornCasts - wornCasts}, dummy lost {health - north.Health.Current:0}; effects +{upgrades.EffectsDone - done}");
+            Say($"V {name}: bought {boughtCount} for {40 - upgrades.Points} embers ({boughtNames.TrimEnd(',', ' ')}); two lights and a heavy laid {info.Affliction} {laidByBlows}; {(spell != null ? spell.Name : "no spell")} ({(spell != null ? Clover.Player.SpellBranches.FormOf(spell, RunState.Unlocked, combat.GetComponent<PlayerBuild>().Current) : "")}) from slot {treeSlot}: cast {treeCast} (+{treeSpells.Casts - treeCasts}), dummy lost {health - north.Health.Current:0}; effects +{upgrades.EffectsDone - done}");
             yield return new WaitForSeconds(0.5f);
         }
 
