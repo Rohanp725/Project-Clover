@@ -1203,6 +1203,8 @@ Group: Reactions
 
 **What sets it off.** Tremor landing on a burning enemy, or Burn on a shaken one.
 
+**Its shapes.** With the Shape mark of Earth and Fire's duo branch (Burnt Mound: Heaped Stones or Fire-Cracked, 3 Shards, in the heart of the chart) and both carried, Burnt Mound wears the shape chosen at a rest fire instead. Heaped Stones: one red-hot boulder beside it for 6 s, and your heavy blow on the enemy rolls it 8 m on away from you, 20, two Burn and two Tremor to each it crosses. Fire-Cracked: the three stones lie 6 s and bite 6 and a Burn once a second what stands within 1 m.
+
 **How to use it.** Fight it among its stones: what steps on them burns.
 
 **How it looks.** Its name over the enemy and the stones round it. Not yet: batting the stones with your weapon into the crowd.
