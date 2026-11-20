@@ -99,7 +99,8 @@ namespace Clover.Tests
         [Test]
         public void AReactionWearsItsChosenShapeInsteadOfThePlainOnceTheShapeIsLearnedAndBothAreCarried()
         {
-            // A Shape mark for Steam (Fire and Water), whose duo branch is not built: the plain Steam is the game's.
+            // A test Shape mark for Steam (Fire and Water), gathered after the game's own Steam branch, so ReactionTable, which keeps
+            // the last Shape mark of a pair, takes it in the branch's place; the plain Steam is the game's.
             var first = new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 1f };
             var second = new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 2f };
             var shapeMark = HeartPattern.Put(new Upgrade

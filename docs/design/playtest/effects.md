@@ -948,6 +948,8 @@ Group: Reactions
 
 **What sets it off.** Fire on a Soaked enemy (from your Water, or the world's water), or Water on a burning one.
 
+**Its shapes.** With the Shape mark of Fire and Water's duo branch (Two Sisters: Blind Steam or Scald, 3 Shards, in the heart of the chart) and both carried, Steam wears the shape chosen at a rest fire instead. Blind Steam: the plume lies 3 m round it for 4 s, stinging 3 a second; enemies in it as it forms see only 2 m and swing a fifth slower. Scald: no cloud and the Burn kept; a burst of 14 and 6 for each Burn, 30 stagger, that throws everything within 2.5 m 1.5 m.
+
 **How to use it.** Deep Burn makes a bigger puff, but takes half of it. Soak a crowd and set them steaming one by one. Its short rest means it comes back often.
 
 **How it looks.** Its name over the enemy and a burst of water where it stands.
