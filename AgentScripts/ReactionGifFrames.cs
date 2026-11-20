@@ -49,12 +49,23 @@ public class ReactionGifFramesRunner : MonoBehaviour
     // Where the player stands from the main enemy and the way it faces: 3 m west, facing east, unless the film turns it.
     private Vector3 Stand = new Vector3(-3f, 0f, 0f), Away = Vector3.right;
     // Films whose player faces another way (degrees from north), so what the recipe stood to the player's side stands to
-    // the side on screen, where no health bar covers what runs between the bodies: Black Chain's second enemy stood 2.6 m
-    // to the player's left, which from the game camera (looking north while the player faced east) was straight behind
-    // the struck one, and its chain ran behind that one's bar (the owner, 2026-11-19: "I dont see the black chain at
-    // all"). Facing 150 degrees puts that enemy 3 m east of the struck one, level with it on screen, and the window is
-    // centred between the two.
-    private static readonly Dictionary<string, float> Facings = new Dictionary<string, float> { ["Black Chain"] = 150f };
+    // the side on screen, where no health bar covers what runs between the bodies. Black Chain was filmed facing 150
+    // degrees while its chain was baked toward the recipe's spot (straight behind the struck one from the game camera,
+    // behind its bar); its chain is now drawn live to whichever enemy the game binds (BoundChains), arcing up between
+    // the two, so it is filmed in normal play facing.
+    private static readonly Dictionary<string, float> Facings = new Dictionary<string, float>();
+    // Reactions that bind the nearest other enemy (Black Chain): the window is centred between the struck one and that
+    // one, so both ends of what runs between them are in it.
+    private static readonly string[] Binding = { "Black Chain" };
+
+    // Where the enemy nearest the main one stands from it, of the first count stood.
+    private Vector3 NearestOther(int count)
+    {
+        Vector3 best = Vector3.zero;
+        for (int i = 1; i < count && i < layout.Count; i++)
+            if (best == Vector3.zero || layout[i].sqrMagnitude < best.sqrMagnitude) best = layout[i];
+        return best;
+    }
     // Where the group stands about the main enemy: spread round it, mostly beyond it from the player.
     private static readonly Vector3[] Spread = { new Vector3(1.7f, 0f, 1.5f), new Vector3(1.9f, 0f, -1.4f), new Vector3(-0.4f, 0f, 2.2f), new Vector3(2.9f, 0f, 0.1f) };
     // The reactions that reach more than the one struck (effects.md: everyone within, the nearest other, carried, chained).
@@ -405,9 +416,10 @@ public class ReactionGifFramesRunner : MonoBehaviour
             var main = cast[0];
 
             // A film turned toward the screen's right edge has the spell slots' corner in its window: put away while filming.
-            var slots = Facings.ContainsKey(look) && SpellDiamondHud.Instance != null ? SpellDiamondHud.Instance.gameObject : null;
+            var slots = (Facings.ContainsKey(look) || Binding.Contains(look)) && SpellDiamondHud.Instance != null ? SpellDiamondHud.Instance.gameObject : null;
             if (slots != null) slots.SetActive(false);
-            var window = Window(main.transform.position + (lane ? Away * 2.4f : Facings.ContainsKey(look) && recipeLayout != null && recipeLayout.Count > 1 ? recipeLayout[1] * 0.5f : Vector3.zero));
+            var window = Window(main.transform.position + (lane ? Away * 2.4f : Binding.Contains(look) && layout.Count > 1 ? NearestOther(count) * 0.5f
+                : Facings.ContainsKey(look) && recipeLayout != null && recipeLayout.Count > 1 ? recipeLayout[1] * 0.5f : Vector3.zero));
             Time.captureFramerate = Rate;
             int frame = 0;
             for (; frame < Before; frame++)
