@@ -1468,7 +1468,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. Half a point of health for each dose that bit: 4 at eight doses, every 2 seconds.
 
 
-      <b>Works with.</b> Wither (the poison does not fade while the curse holds), Curse, Long Curse, One Death Feeds, Wasting Grip.
+      <b>Works with.</b> Wither (the poison does not fade while the curse holds), Curse, Dread, One Death Feeds, Wasting Grip.
 
 
       <b>Example.</b> Three Cursed soldiers at eight doses each: every two seconds you heal 12 while you guard.'
@@ -1516,7 +1516,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. A circle 5 metres in radius, half a metre ahead of you, for 8 seconds. It bites 0.3 seconds after the cast and then every 2 seconds, four bites in all: 3 damage and a Curse each, with no stagger. It always lays Curse, whichever element you carry first, and does not hurry the poison''s beat.
 
 
-      <b>Works with.</b> Wither (poison never fades from what stands in it), Feeding Rot, Carrion Flies, One Death Feeds, Long Shadows.
+      <b>Works with.</b> Wither (poison never fades from what stands in it), Feeding Rot, Carrion Flies, One Death Feeds, Dread.
 
 
       <b>Example.</b> Plant it where you mean to fight a pack: everyone who steps in is Cursed, so Wither keeps their poison running.'
@@ -1548,7 +1548,7 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The sweep takes 0.42 seconds and reaches 9 metres round the finished enemy. Each poisoned enemy in it has its poison set off and spent: 9 damage a dose (72 at eight) and 4 stagger a dose. Half the total heals you.
 
 
-      <b>Works with.</b> Wither, Carrion Flies (spread the doses first), Feast, Miasma, Grasp, Long Shadows.
+      <b>Works with.</b> Wither, Carrion Flies (spread the doses first), Devouring Maw, Miasma, Grasp, Never Sated.
 
 
       <b>Example.</b> Four soldiers at eight doses round a Cursed brute: finish the brute and each takes 72 while you heal half of it.'
@@ -1788,154 +1788,165 @@ MonoBehaviour:
       <b>The numbers.</b> 2 Shards. Cursed is one deep and lasts 8 seconds; each blow sets its clock back. A Cursed enemy deals 15% less damage, and killing it heals you 6.
 
 
-      <b>Works with.</b> Long Curse (it lasts half again as long), Heavy Curse (they hit weaker still), Feast, Dread, Fat of the Kill, Devouring Maw, Hunger (every blow curses while it burns), and Wither on the Blight branch.
+      <b>Works with.</b> Grasp and every Dark spell (each one Curses), Dread, Devouring Maw (it spends the Curse), Collected Twice, Nothing Stays Buried, Never Sated, Hunger (every blow curses while it burns), and the charged blade, Shadow Cut Loose.
+
+
+      <b>Not built yet.</b> The Rise on the root, so that every Dark player rises once: for now the god''s gift, A Life for a Life, gives it.
 
 
       <b>Example.</b> Cut the brute first: while it is Cursed every swing of its takes 15% less of your health, and when it falls you get 6 back.'
-  - Id: dark.bloodprice
-    Title: Blood Price
-    Group: 
-    Body: '<b>What it does.</b> When a spell asks more mana than you hold, the rest is paid in health. That health is not lost at once: it turns grey, and dealing damage wins it back like any grey health.
-
-
-      <b>When it happens.</b> Each time you cast a spell paid in mana with too little mana for it: an element''s larger spell or a duo spell. Basic spells run on cooldowns and cost no mana, and Dark''s own spells cost none, so it matters for the spells of your other element and for duo spells.
-
-
-      <b>The numbers.</b> 3 Shards. Each point of mana you lack costs half a point of health, taken as grey health. It never takes your last point: if the health is not there, the spell is not cast.
-
-
-      <b>Works with.</b> Borrowed Strength (the grey health it leaves makes you hit harder), Slow Collector (grey health lingers longer), Small Cuts (health prices 20% smaller), Unpaid, and Wasting Grip on the Blight branch.
-
-
-      <b>Example.</b> At 10 mana, cast Wasting Grip for 40: it goes off, 15 health turns grey, and the blows that follow win it back.'
-  - Id: dark.borrowed
-    Title: Borrowed Strength
-    Group: 
-    Body: '<b>What it does.</b> The more grey health you carry, the harder your weapon strikes.
-
-
-      <b>When it happens.</b> Always on once learned, for as long as any grey health remains: from blocked blows, Blood Price, Pawned Heart or anything else that leaves health owed.
-
-
-      <b>The numbers.</b> 3 Shards. Each point of grey health adds 0.75% weapon damage, up to 30% at 40 points.
-
-
-      <b>Works with.</b> Blood Price, Slow Collector and Unpaid (the grey stays longer), Reckless Arm (swings cost 15% less stamina while any is owed), and Pawned Heart (its stopped heart leaves grey health behind).
-
-
-      <b>Example.</b> Block a brute''s three-blow chain and carry 20 grey health: your answer strikes 15% harder, and each cut wins some of the grey back.'
-  - Id: dark.debtscalled
-    Title: Debts Called
-    Group: 
-    Body: '<b>What it does.</b> Everything near is dragged to a point just in front of you, and when it gets there a burst of shadow strikes it all at once as a heavy blow.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
-
-
-      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play. The point is 1 metre ahead of you. For half a second everything within 4.5 metres of it is drawn most of the way in; then everything within 4.5 metres takes 18 damage, 35 stagger and a Curse. As built the burst strikes but throws nothing back, and it does not yet grow as your health falls.
-
-
-      <b>Works with.</b> Curse, Dread, Feast, Easy Prey, Grasp, and the charged blade (it charges your weapon with Dark when it lands).
-
-
-      <b>Example.</b> Four soldiers spread round you: one cast draws them into a knot at your sword''s point, all Cursed, ready for a wide swing.'
-  - Id: dark.pawnedheart
-    Title: Pawned Heart
-    Group: 
-    Body: '<b>What it does.</b> You tear out your heart and set it down behind you. Your health drops to a single point, and while the heart beats your weapon strikes far harder and swings cost no stamina. Walk away from the heart and then back onto it, and all the health you pawned comes back with a share of the damage you dealt meanwhile. If its ring closes first, the heart stops: you keep one point, and half of what you pawned comes back only as grey health.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). It cannot be cast at one point of health.
-
-
-      <b>The numbers.</b> 4 Shards, no mana: the price is health, and it waits 40 seconds after a cast, less with weapon play. The heart lies 1.8 metres behind you and beats for 10 seconds. While it beats: 60% more weapon damage and swings free of stamina. You must step 2.6 metres from it, then come within 1 metre of it again: back come all the health pawned and 30% of the damage you dealt. A blow that lands on you while it beats can kill you.
-
-
-      <b>Works with.</b> Borrowed Strength (the grey health a stopped heart leaves), Unpaid, Near the Grave (you are below a third the whole time), Hunger, and Small Cuts.
-
-
-      <b>Example.</b> Pawn the heart beside a staggered brute, cut it down in five free swings, then step back onto the heart and stand up with more health than you pawned.'
-  - Id: dark.unpaid
-    Title: Unpaid
-    Group: 
-    Body: '<b>What it does.</b> Grey health lingers twice as long before it fades, and every blow you land heals you a little. The price: flasks heal half as much.
-
-
-      <b>When it happens.</b> Always on once learned. The healing comes with every weapon blow that lands.
-
-
-      <b>The numbers.</b> 6 Shards. Grey health fades at half its usual speed, 5 a second where it is 10. Each blow that lands heals 2, at most twice a second. A flask heals 22.5 where it healed 45. As built nothing is yet left wholly grey: every wound still takes health as it always did.
-
-
-      <b>Works with.</b> Borrowed Strength (the grey stays and keeps you strong), Blood Price, Slow Collector, Pawned Heart, Hunger.
-
-
-      <b>Example.</b> Block a long chain and keep cutting: the grey health waits longer for you to win it back, and each cut adds 2 besides.'
-  - Id: dark.feast
-    Title: Feast
-    Group: 
-    Body: '<b>What it does.</b> A finisher on a Cursed enemy feeds you: it heals, and heals more while Hunger burns.
-
-
-      <b>When it happens.</b> Every finisher (a heavy blow on a staggered enemy) that lands on a Cursed enemy.
-
-
-      <b>The numbers.</b> 3 Shards. Heals 12, and 6 more while Hunger lasts: 18 in all.
-
-
-      <b>Works with.</b> Curse, Grasp and Debts Called (to curse first), Hunger, Long Hunger, Never Sated (20 more on any finisher), and The Reaping on the Blight branch.
-
-
-      <b>Example.</b> Stagger a Cursed brute with Hunger lit and finish it: 18 health back, and 6 more when it dies.'
-  - Id: dark.glut
-    Title: Glut
-    Group: 
-    Body: '<b>What it does.</b> Drinking a flask wraps you in a shade that turns aside one blow. So does a kill, though not more than once in ten seconds.
-
-
-      <b>When it happens.</b> Every flask you drink, and any kill at most once every ten seconds.
-
-
-      <b>The numbers.</b> 3 Shards. One ward a flask or a kill, three at most. A kill gives one at most once in 10 seconds. Each ward takes a blow you did not guard, a red attack among them. As built it gives wards; health over a full bar is not yet kept.
-
-
-      <b>Works with.</b> Near the Grave (kills give wards below a third), Dread, Fat of the Kill (a Cursed kill heals 3 more). Never Sated takes your flasks, so only kills feed it then.
-
-
-      <b>Example.</b> Drink between two packs and the next soldier''s thrust breaks on the shade instead of on you.'
   - Id: dark.dread
     Title: Dread
     Group: 
-    Body: '<b>What it does.</b> When a Cursed enemy dies, every enemy near where it fell loses heart, and its balance buckles.
+    Body: '<b>What it does.</b> When a Cursed enemy dies, the other Cursed near it lose heart: their balance buckles and their guard falls.
 
 
       <b>When it happens.</b> Each time a Cursed enemy dies, whatever killed it; at most once a second.
 
 
-      <b>The numbers.</b> 3 Shards. 30 stagger to every enemy within 8 metres of where it fell. No damage.
+      <b>The numbers.</b> 3 Shards. 30 stagger to every enemy within 8 metres of where it fell, and every Cursed one among them cannot raise its guard for 3 seconds. No damage.
 
 
-      <b>Works with.</b> Curse, Debts Called (curse a knot of them), Easy Prey, Feast, Carrion Flies and One Death Feeds on the Blight branch, Unsteady (more stagger from each).
+      <b>Works with.</b> The root, Debts Called and Grasp''s The Pit (a knot of Cursed enemies), Devouring Maw and Gone to Ash, which grow from it, Collected Twice, Nothing Stays Buried (the dead stand up too).
 
 
-      <b>Example.</b> Kill a Cursed soldier at the front of a pack and the four behind it are 30 nearer a stagger before they reach you.'
+      <b>Not built yet.</b> The buckling for the Cursed alone: for now every enemy near where it fell takes the stagger. An attack it was showing dropped.
+
+
+      <b>Example.</b> Kill a Cursed soldier at the front of a pack and the Cursed four behind it are 30 nearer a stagger and open to your blows.'
   - Id: dark.maw
     Title: Devouring Maw
     Group: 
-    Body: '<b>What it does.</b> A great jaw of shadow rises at your shoulder and lunges down a lane before you, striking and carrying what it passes, then closes at the end of its reach. Each Cursed enemy it bites feeds you.
+    Body: '<b>What it does.</b> Devouring Maw, the detonator of the tree. A jaw twice your height rises out of your shadow and lunges down a lane before you. On a Cursed enemy it spends the Curse for more, and feeds you.
 
 
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play. It forms for 0.3 seconds and runs 5 metres along a lane 3.2 metres wide. What it passes takes 15 damage, 15 stagger and a Curse, and is shoved along with it. The jaws close 5 metres ahead: everything within 2.4 metres takes 30 damage and 30 stagger as a heavy blow, and a Curse. Each time it strikes an enemy that is Cursed you heal 5.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 10). It runs 5 metres along its lane: 24 damage and 30 stagger. Each Cursed enemy it bites loses its Curse, takes 20 damage more and heals you 12. The jaw itself lays no Curse: curse first, then bite.
 
 
-      <b>Works with.</b> Curse and Grasp (curse them first, so every strike feeds), Long Shadows (15% harder), Feast, Dread, Hunger, and the charged blade.
+      <b>Works with.</b> The root, Grasp and Debts Called (curse first), Dread, which it grows from, Never Sated, Hunger, and the charged blade.
 
 
-      <b>Example.</b> A row of Cursed soldiers in a corridor: the jaw drags them to its end and closes on all of them, and you heal for each.'
+      <b>Not built yet.</b> The Empower''s heal of 18: for now it only shortens the wait.
+
+
+      <b>Example.</b> Curse a row of soldiers in a corridor with Grasp, then loose the jaw down it: each one bitten takes 44 and gives you 12.'
+  - Id: dark.maw.shape
+    Title: 'Devouring Maw: Rahu or From Its Own Shadow'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Devouring Maw, chosen at any rest fire. <b>Rahu</b>, the head with no body that swallows the sun: an ordinary Cursed enemy is swallowed whole, and a moment later rolls out of the open throat at your feet, staggered, because there is nothing to hold it. A god or an elite is only bitten. <b>From Its Own Shadow</b>: the jaw rises out of the enemy''s own shadow instead, up to nine metres away, and closes on it from below. No lane: it reaches the one far off.
+
+
+      <b>When it happens.</b> Whenever you cast Devouring Maw, as the shape it wears. Before this is bought, the plain jaw is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Rahu: each ordinary enemy bitten is held still and cannot attack or guard for 1.5 seconds, then is dragged 5 metres toward you and takes 60 stagger. From Its Own Shadow: one jaw from below on the nearest enemy within 9 metres, 1.6 metres round, 24 damage and 30 stagger, a moment after the cast.
+
+
+      <b>Works with.</b> Rahu: a heavy weapon (the swallowed one comes out staggered at your feet for a finisher), Near the Grave. From Its Own Shadow: archers and casters at the back, Grasp''s Tethered.
+
+
+      <b>Not built yet.</b> Rahu taking only the Cursed: for now every ordinary enemy bitten is swallowed, because the bite spends the Curse first. The enemy hidden in the throat: for now it stands held where it was bitten. From Its Own Shadow drawn rising out of the enemy''s shadow, and aimed at the enemy you face: for now it rises under the nearest.
+
+
+      <b>Example.</b> Rahu on a Cursed soldier: it vanishes into the jaw and drops at your feet staggered, and your heavy blow finishes it.'
+  - Id: dark.maw.master
+    Title: 'Devouring Maw: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Bite an enemy in its wind-up, and its attack is swallowed and broken, and Devouring Maw is ready again.
+
+
+      <b>When it happens.</b> Each bite, with Devouring Maw in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now every enemy bitten has what it had begun broken (as a flinch, 0.4 seconds), and a bite ends Devouring Maw''s wait once in 16 seconds.
+
+
+      <b>Works with.</b> Reading the enemies'' wind-ups, Gone to Ash (another answer to an attack), Dread.
+
+
+      <b>Not built yet.</b> The enemy''s wind-up as the moment: for now every bite breaks what was begun, and the reset comes once in 16 seconds whatever it bit.
+
+
+      <b>Example.</b> A brute raises its club: the jaw takes it mid-swing, the blow never lands, and the jaw is ready to go again.'
+  - Id: dark.ash
+    Title: Gone to Ash
+    Group: 
+    Body: '<b>What it does.</b> Gone to Ash, Dark''s counter. You stand with arms crossed as grey ash runs over you. The first blow to land scatters you as a cloud of ash, and you take nothing. A moment later you stand again behind the attacker. It is Cursed, and your first blow on it within a second strikes as a heavy and heals you.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Then let them strike you.
+
+
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and it holds 1.5 seconds). It holds 1.2 seconds. The blow turned does nothing to you; the answer Curses what is in front of you within 2.5 metres, you step 1.5 metres past the attacker, and your first weapon blow within a second strikes twice as hard and heals 10.
+
+
+      <b>Works with.</b> The root, Dread, which it grows from, Devouring Maw (bite what you came out behind), Near the Grave, and a heavy weapon.
+
+
+      <b>Not built yet.</b> The wait of 5 seconds when nothing struck. The scattering into ash and standing again a moment later: for now you step at once. The blow struck as a heavy: for now it strikes twice as hard. The Empower''s heal of 15.
+
+
+      <b>Example.</b> A captain swings at you: you scatter, stand at its back, and your cut lands double and gives you 10.'
+  - Id: dark.ash.shape
+    Title: 'Gone to Ash: Ash on the Brow or Ash Hangs'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Gone to Ash, chosen at any rest fire. <b>Ash on the Brow</b>, the ash on Shiva''s brow: you stand again where you were, and the ash settles on the attacker''s brow as a grey smear. For six seconds it is Cursed, the next blow it lands on you scatters you for nothing once more, and your first blow on it is a heavy. The ash marks the one who struck. <b>Ash Hangs</b>: you stand again where you were, and the ash stays as a sinking cloud. Enemies inside it are Cursed, and an attack they begin inside goes where they already faced.
+
+
+      <b>When it happens.</b> Whenever you cast Gone to Ash, as the shape it wears. Before this is bought, the plain counter is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Ash on the Brow: the attacker''s Curse does not fade for 6 seconds, and you gain one ward that turns the next blow that would land. Ash Hangs: a cloud 3 metres across on the attacker for 3 seconds, Cursing what stands in it each second.
+
+
+      <b>Works with.</b> Ash on the Brow: a duel with one strong enemy, Dread, Collected Twice. Ash Hangs: a pack, Dread, Debts Called''s Collected.
+
+
+      <b>Not built yet.</b> Both shapes still step you behind the attacker: a shape cannot yet set aside its spell''s step. Ash on the Brow''s ward turns any blow, not only that attacker''s, and its grey stripe is not drawn. Ash Hangs'' attacks that cannot turn: for now they are only Cursed.
+
+
+      <b>Example.</b> Ash Hangs in a ring of soldiers: the one that struck and the two beside it come away Cursed.'
+  - Id: dark.ash.master
+    Title: 'Gone to Ash: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Scatter a red attack, and the attacker is staggered and Gone to Ash is ready again.
+
+
+      <b>When it happens.</b> Each blow Gone to Ash scatters, with it in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now any blow scattered gives the attacker 60 stagger and ends Gone to Ash''s wait, once in 20 seconds.
+
+
+      <b>Works with.</b> Gods and elites (their red attacks), Devouring Maw and Pawned Heart (the staggered one for a great blow).
+
+
+      <b>Not built yet.</b> A red attack as the blow scattered: for now any blow does it, once in 20 seconds.
+
+
+      <b>Example.</b> A god''s red overhead comes down on you: you scatter, it reels, and the counter is ready for its next one.'
+  - Id: dark.lift
+    Title: Collected Twice
+    Group: 
+    Body: '<b>What it does.</b> Collected Twice, Dark''s reaction lift. Every reaction the Curse takes part in leaves a black thumbprint on the brow of what it struck. The next weapon blow on it repeats the reaction''s damage. The debt is collected by the blade.
+
+
+      <b>When it happens.</b> Whenever a reaction with Cursed in it happens, on any enemy; the print lasts 4 seconds or until your next weapon blow on it.
+
+
+      <b>The numbers.</b> 3 Shards. A weapon blow on a printed enemy within 4 seconds strikes it for 15 more.
+
+
+      <b>Works with.</b> Every pair with Cursed in it (Dark''s reactions with its neighbours and the rest), the root, Dread, which it grows from, Never Sated and Nothing Stays Buried, which grow from it.
+
+
+      <b>Not built yet.</b> The reaction''s own damage repeated: for now 15, whatever the reaction did. The print on everything the reaction struck: for now only on the enemy it happened on. The black print drawn on the head.
+
+
+      <b>Example.</b> A Curse reaction fires on a soldier: your next cut on it lands with 15 more.'
   - Id: dark.neversated
     Title: Never Sated
     Group: 
@@ -1945,13 +1956,108 @@ MonoBehaviour:
       <b>When it happens.</b> Always on once learned: with every weapon blow that lands, every Cursed enemy killed and every finisher.
 
 
-      <b>The numbers.</b> 6 Shards. No flasks, and none are earned back. Each blow heals 6% of its damage. A Cursed kill heals 12, on top of Cursed''s own 6. A finisher heals 20.
+      <b>The numbers.</b> 6 Shards. One flask is left (the game keeps one at least), and none are earned back. Each blow heals 6% of its damage. A Cursed kill heals 12, on top of Cursed''s own 6. A finisher heals 20.
 
 
-      <b>Works with.</b> Curse, Feast (a Cursed finisher heals 32, 38 in Hunger), Hunger (its 30% and this 6% together), Fat of the Kill, Grave Appetite.
+      <b>Works with.</b> The root, Devouring Maw (it feeds as well), Hunger (its share and this one together), Collected Twice, which it grows from, Dead Already.
 
 
       <b>Example.</b> Against a long pack, never stop: each kill and finisher keeps you standing where a flask would have.'
+  - Id: dark.devotion
+    Title: Nothing Stays Buried
+    Group: 
+    Body: '<b>What it does.</b> Nothing Stays Buried, Dark''s Devotion: all in on Dark only. Every enemy that dies Cursed stands up again as your shade, ash-grey with violet eyes, and fights for you for a while. While you are Risen, every enemy that dies stands up, Cursed or not. The vetala riding the dead; The Dead Stand, once a spell of its own, lives on here.
+
+
+      <b>When it happens.</b> Only while Dark is carried twice (all in). Each Cursed death, and each death while you are Risen.
+
+
+      <b>The numbers.</b> 6 Shards. Each shade stands where its body fell for 6 seconds and strikes what is within 2.5 metres of it every 0.8 seconds: 12 damage, 12 stagger and a Curse each time. All in, L2 with R2 is the deep strike, Yama''s Noose.
+
+
+      <b>Works with.</b> The root and every Dark spell (Curse them before they die), Dread, Collected Twice, which it grows from, Dead Already (Risen for good, every death stands up), A Life for a Life.
+
+
+      <b>Not built yet.</b> Three shades at most: for now as many as die. Each shade walking to its own enemy: for now it fights where it fell. A Cursed death while you are Risen raises two shades, not one.
+
+
+      <b>Example.</b> Kill three Cursed soldiers in a knot: three grey shades stand up among the rest and keep cutting while you turn to the captain.'
+  - Id: dark.bloodprice
+    Title: Blood Price
+    Group: 
+    Body: '<b>What it does.</b> When a spell asks more mana than you hold, the rest is paid in health. That health is not lost at once: it turns grey, and dealing damage wins it back like any grey health.
+
+
+      <b>When it happens.</b> Each time you cast a spell paid in mana with too little mana for it: another element''s larger spell or a duo spell. Dark''s own spells cost no mana: they wait on cooldowns, and Pawned Heart is paid in health.
+
+
+      <b>The numbers.</b> 3 Shards. Each point of mana you lack costs half a point of health, taken as grey health. It never takes your last point: if the health is not there, the spell is not cast.
+
+
+      <b>Works with.</b> Near the Grave and Debts Called, which grow from it (they reward low health), Pawned Heart, duo spells.
+
+
+      <b>Not built yet.</b> Blood Price re-aimed at cooldowns, as its design asks: a spell still on its cooldown cast anyway, paid in health, 1 for each second left, as grey health owed, never the last point. For now it pays the mana a spell lacks.
+
+
+      <b>Example.</b> At 10 mana, cast a duo spell for 40: it goes off, 15 health turns grey, and the blows that follow win it back.'
+  - Id: dark.debtscalled
+    Title: Debts Called
+    Group: 
+    Body: '<b>What it does.</b> Debts Called, the breaker of the tree. Everything near is dragged in to a point just in front of you, and when it gets there a burst of shadow strikes it all at once. The nearer you are to death, the harder it strikes.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
+
+
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9). The point is 1 metre ahead of you. For half a second everything within 6 metres of it is drawn in; then it all takes 18 damage, 35 stagger and a Curse. Cast below half your health, spells strike half again as hard for the next second.
+
+
+      <b>Works with.</b> The root, Blood Price, which it grows from, Near the Grave and Pawned Heart (low health), Dread, Devouring Maw, and the charged blade.
+
+
+      <b>Not built yet.</b> The damage rising smoothly as your health falls, 36 at one point: for now a step at half your health. The burst throwing back what it struck. The Empower''s eight metres: for now it only shortens the wait.
+
+
+      <b>Example.</b> Four soldiers spread round you: one cast draws them into a knot at your sword''s point, all Cursed, ready for a wide swing.'
+  - Id: dark.debtscalled.shape
+    Title: 'Debts Called: The Black Buffalo or Collected'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Debts Called, chosen at any rest fire. <b>The Black Buffalo</b>, the buffalo Yama rides: no pull. A buffalo of sinking black smoke charges through the point before you, carrying everything Cursed on its horns to the far end and throwing it down. Follow the lane and cut what it threw: Dark''s one push. <b>Collected</b>: only the Cursed are called, from further, and each one that reaches you gives back health. There is no burst.
+
+
+      <b>When it happens.</b> Whenever you cast Debts Called, as the shape it wears. Before this is bought, the plain call is cast.
+
+
+      <b>The numbers.</b> 3 Shards. The Black Buffalo: a charge 8 metres down a lane about 2.4 metres wide, 18 damage, 35 stagger and a Curse to all it runs through. Collected: everything within 10 metres is drawn in and takes 20 stagger and no damage; each Cursed one heals you 4.
+
+
+      <b>Works with.</b> The Black Buffalo: a heavy weapon to follow the lane, Dread, Devouring Maw''s lane. Collected: the root and Grasp (Curse them first), Never Sated, Near the Grave.
+
+
+      <b>Not built yet.</b> The buffalo carrying only the Cursed and throwing them down at the far end, and drawn as a buffalo of smoke: for now a lunge down the lane in the jaw''s shape. Collected calling only the Cursed: for now it draws everything in, and only the Cursed heal you.
+
+
+      <b>Example.</b> Collected in a pack of five Cursed soldiers: they come to your feet reeling, and you are 20 health better.'
+  - Id: dark.debtscalled.master
+    Title: 'Debts Called: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Cast it below a third of your health, and the burst, or the buffalo, strikes twice as hard.
+
+
+      <b>When it happens.</b> Each cast below a third of your health, with Debts Called in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For the second after such a cast your spells deal twice their damage (two and a half times with the Learn''s own step below half health).
+
+
+      <b>Works with.</b> Near the Grave, Pawned Heart (one point of health the whole time), Blood Price, Dead Already.
+
+
+      <b>Not built yet.</b> Only the burst or the buffalo strengthened: for now every spell landing in that second is.
+
+
+      <b>Example.</b> Pawn the heart, then call: at one point of health the burst strikes four soldiers for 45 each.'
   - Id: dark.nearthegrave
     Title: Near the Grave
     Group: 
@@ -1964,58 +2070,64 @@ MonoBehaviour:
       <b>The numbers.</b> 3 Shards. Below a third: 20% more weapon damage. Each kill below a third gives one ward, three at most.
 
 
-      <b>Works with.</b> Hard to Bury (12% less damage taken down there), Pawned Heart (it puts you there), Hollow Strength, Glut, A Life for a Life.
+      <b>Works with.</b> Blood Price, which it grows from, Pawned Heart and Dead Already, which grow from it, Debts Called''s Master, Hollow Strength, A Life for a Life.
 
 
       <b>Example.</b> At 25 health in a pack: cut harder, and each soldier that falls leaves you a shade against the next one''s blow.'
-  - Id: dark.hollowstrength
-    Title: Hollow Strength
+  - Id: dark.pawnedheart
+    Title: Pawned Heart
     Group: 
-    Body: '<b>What it does.</b> While you are Risen, you strike harder and no blow makes you flinch. Each kill stills the draining of your health for a few breaths.
+    Body: '<b>What it does.</b> Pawned Heart, Dark''s larger spell, paid in health, not mana. Your health drops to one and the rest is set down behind you as a beating heart in a ring that closes. While it beats your weapon strikes far harder and swings cost little stamina. Walk away from the heart and then back onto it, and all the health you pawned comes back with a share of the damage you dealt meanwhile. If its ring closes first, the heart stops: you keep one point, and half of what you pawned comes back only as grey health.
 
 
-      <b>When it happens.</b> While Risen: after A Life for a Life stands you up, or for good with Dead Already.
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). It cannot be cast at one point of health.
 
 
-      <b>The numbers.</b> 3 Shards. Risen: 25% more weapon damage, and blows that land do not stop you. Each kill stops the drain for 3 seconds.
+      <b>The numbers.</b> 4 Shards, no mana: the price is health, and it waits 40 seconds after a cast, less with weapon play (its Empower: 36, 70% more and a ring of 12 seconds). The heart lies 1.8 metres behind you and beats for 10 seconds. While it beats: 60% more weapon damage. You must step 2.6 metres from it, then come within 1 metre of it again: back come all the health pawned and 30% of the damage you dealt. A blow that lands on you while it beats can kill you.
 
 
-      <b>Works with.</b> A Life for a Life, Dead Already, Slow Rot (the drain runs at 70%), Grave Appetite (each blow heals 1 more while Risen), Near the Grave.
+      <b>Works with.</b> Near the Grave, which it grows from (you are below a third the whole time), Debts Called''s Master, Dead Already, Hunger, and the wards of Near the Grave and Gone to Ash.
 
 
-      <b>Example.</b> Risen with a sliver of health: swing straight through the soldiers'' blows, and each one you kill gives you three seconds without the drain.'
-  - Id: dark.secondshadow
-    Title: Second Shadow
+      <b>Example.</b> Pawn the heart beside a staggered brute, cut it down in five strong swings, then step back onto the heart and stand up with more health than you pawned.'
+  - Id: dark.pawnedheart.shape
+    Title: 'Pawned Heart: Buried Heart or Hung From the Tree'
     Group: 
-    Body: '<b>What it does.</b> Your shadow stands at your shoulder for a while. Every weapon blow you land, it lands again a beat later, for half the damage, and curses.
+    Body: '<b>What it does.</b> Opens two shapes of Pawned Heart, chosen at any rest fire. <b>Buried Heart</b>: the heart sinks into the floor where you stand and beats under it, a dark pulse in a ring of ash. Your weapon is strong only while you stand near it; when the ring closes it rises whole. Stand your ground and cut. <b>Hung From the Tree</b>, the vetala''s tree: the heart hangs in the air over the enemy you face instead, and follows it. You must fight your way in under it to touch it. You go in, not out.
 
 
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Then every weapon blow that lands is echoed.
+      <b>When it happens.</b> Whenever you cast Pawned Heart, as the shape it wears. Before this is bought, the plain heart is set behind you.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. It stands for 8 seconds. Each echo lands 0.2 seconds after your blow, for 50% of its damage with no stagger, and lays a Curse. One shadow at a time.
+      <b>The numbers.</b> 3 Shards. For now both shapes still set the heart behind you as learned. Buried Heart: a ring of ash 3 metres round where you cast lies for 10 seconds, Cursing what stands in it each second. Hung From the Tree: the enemy you face keeps its Curse for the 10 seconds.
 
 
-      <b>Works with.</b> Curse, Pawned Heart (half of a much bigger blow), Borrowed Strength, Near the Grave, Hollow Strength, Hunger.
+      <b>Works with.</b> Buried Heart: a stand against a pack that comes to you, Gone to Ash. Hung From the Tree: a duel with one strong enemy, Grasp''s Tethered.
 
 
-      <b>Example.</b> Cast it as a brute kneels staggered: every cut of the finisher''s opening lands twice.'
-  - Id: dark.deadstand
-    Title: The Dead Stand
+      <b>Not built yet.</b> The heart under your feet, its strength only within 3 metres, and rising whole with 30% of the damage dealt when the ring closes. The heart hung over the enemy and following it. Both wait for the heart form to set its heart elsewhere.
+
+
+      <b>Example.</b> Buried Heart in a doorway: the soldiers that come through it stand in your ring of ash and come away Cursed.'
+  - Id: dark.pawnedheart.master
+    Title: 'Pawned Heart: Mastered'
     Group: 
-    Body: '<b>What it does.</b> Three shades rise beside you. Each runs at an enemy, a different one while there are enough, and jabs it for a while before going out. With no enemy near they keep at your side.
+    Body: '<b>What it does.</b> Touch the heart during a perfect dodge, and it returns 60% of the damage dealt, not 30%.
 
 
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
+      <b>When it happens.</b> For now each perfect dodge, with Pawned Heart in a slot.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Three shades for 5 seconds. Each finds an enemy within 16 metres; in reach, it jabs about half a second later and then every 1.6 seconds, for 12 damage, 12 stagger and a Curse each time. As built they rise beside you, not from the dead.
+      <b>The numbers.</b> 3 Shards. For now a perfect dodge heals you 10, once in 3 seconds.
 
 
-      <b>Works with.</b> Curse, Dread and Feast (the shades keep the pack Cursed), Long Shadows (15% harder), and the charged blade.
+      <b>Works with.</b> Clean dodging, Near the Grave (low health a heal matters at), Gone to Ash.
 
 
-      <b>Example.</b> Call them on three archers at the back while you hold the front: each archer is Cursed and pestered until you get there.'
+      <b>Not built yet.</b> The touch of the heart during a perfect dodge as the moment, and the 60%: for now any perfect dodge heals 10, heart or no heart.
+
+
+      <b>Example.</b> At one point of health with the heart beating, roll through a soldier''s thrust at the last moment: 10 health back while you work your way home.'
   - Id: dark.deadalready
     Title: Dead Already
     Group: 
@@ -2028,10 +2140,140 @@ MonoBehaviour:
       <b>The numbers.</b> 6 Shards. 25% more weapon damage, and 30% of each blow''s damage comes back as health. The drain takes 2 health a second, never the last point. Every mark that asks for you to be Risen is in force at all times. A Life for a Life can no longer stand you up.
 
 
-      <b>Works with.</b> Hollow Strength (another 25%, no flinch, and kills still the drain), Slow Rot (drain 70%), Grave Appetite, Hunger (another 30% back), Never Sated.
+      <b>Works with.</b> Near the Grave, which it grows from, Hollow Strength (another 25%, no flinch, and kills still the drain), Nothing Stays Buried (every death stands up), Hunger (another 30% back), Never Sated.
 
 
       <b>Example.</b> Fight without pause: every cut gives back far more than the drain takes, and the moment you stop to wait, it bleeds you down.'
+  - Id: dark.hollowstrength
+    Title: Hollow Strength
+    Group: 
+    Body: '<b>What it does.</b> While you are Risen, you strike harder and no blow makes you flinch. Each kill stills the draining of your health for a few breaths.
+
+
+      <b>When it happens.</b> While Risen: after A Life for a Life stands you up, or for good with Dead Already.
+
+
+      <b>The numbers.</b> 3 Shards. Risen: 25% more weapon damage, and blows that land do not stop you. Each kill stops the drain for 3 seconds.
+
+
+      <b>Works with.</b> A Life for a Life, Dead Already, Second Shadow, which grows from it, Nothing Stays Buried (Risen, every death stands up), Near the Grave.
+
+
+      <b>Example.</b> Risen with a sliver of health: swing straight through the soldiers'' blows, and each one you kill gives you three seconds without the drain.'
+  - Id: dark.base
+    Title: Grasp
+    Group: 
+    Body: '<b>What it does.</b> Grasp, Dark''s own spell, comes with the element and is never bought. A black ball crawls along the ground to the enemy you face, drawing in what it passes. Where it arrives it strikes and Curses, and what it has hold of is dragged to your feet.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Carrying Dark, it is always yours to put in a slot.
+
+
+      <b>The numbers.</b> Given with Dark. No mana: it waits 7 seconds after a cast, less with weapon play; its Empower makes that 6. It reaches the enemy you face within 6 metres: 10 damage, 12 stagger and Cursed to all within 1.7 metres of where it arrives.
+
+
+      <b>Works with.</b> Its Empower, its two shapes and its Master; the root, Dread, Devouring Maw and Debts Called''s Collected (Cursed enemies for them), the charged blade, which it charges with Dark.
+
+
+      <b>Not built yet.</b> The Empower''s 14 damage and eight metres: the base spell is cast by Dark''s kit, which takes only the Empower''s shorter wait.
+
+
+      <b>Example.</b> Grasp the archer at the back: it is dragged to your feet Cursed, and the jaw finishes it.'
+  - Id: dark.base.shape
+    Title: 'Grasp: Tethered or The Pit'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Grasp, chosen at any rest fire. <b>Tethered</b>, Yama''s noose: a rope of black is thrown instead and binds the enemy you face to you. It cannot go far from you, and your first heavy blow on it yanks it to your feet. You keep it close. <b>The Pit</b>: the ball stops at the point you aim and spreads into a pool of ink, dragging everything in it slowly to the middle and Cursing it. You gather them at a spot.
+
+
+      <b>When it happens.</b> Whenever you cast Grasp, as the shape it wears. Before this is bought, the plain ball is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Tethered: for 4 seconds after Grasp strikes an enemy, your first heavy blow on it drags it 4 metres toward you and gives it 20 stagger. The Pit: a pool 3 metres across, 6 metres ahead, for 4 seconds, biting for 2 and Cursing what stands in it each second.
+
+
+      <b>Works with.</b> Tethered: a duel, Devouring Maw''s From Its Own Shadow, a heavy weapon. The Pit: Dread, Debts Called, Ash Hangs, a pack.
+
+
+      <b>Not built yet.</b> Tethered''s rope thrown in place of the ball, and the enemy kept within 5 metres of you: for now the ball is cast and only the yank of the heavy blow is built. The Pit drawing everything to its middle: for now it only bites and Curses. With the Empower bought, The Pit takes its numbers too, eight metres ahead.
+
+
+      <b>Example.</b> The Pit under a pack in a doorway: all of it is Cursed in four seconds, and Dread is ready for the first death.'
+  - Id: dark.base.master
+    Title: 'Grasp: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Cast it within a second of being struck, and the one that struck you is dragged to your feet and Cursed twice. Dark answers when it is hurt.
+
+
+      <b>When it happens.</b> A blow landing on you, with Grasp in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For a second after a blow lands on you, the first blow of yours on the one that struck you, Grasp or any other, drags it 4 metres toward you and lays two Curses.
+
+
+      <b>Works with.</b> Pawned Heart and Near the Grave (being hurt is the plan), Gone to Ash, Dread.
+
+
+      <b>Not built yet.</b> Grasp''s own cast as the answer: for now any blow of yours on the attacker within the second does it.
+
+
+      <b>Example.</b> A spearman pokes you from its reach: answer at once, and it is at your feet and Cursed.'
+  - Id: dark.secondshadow
+    Title: Second Shadow
+    Group: 
+    Body: '<b>What it does.</b> Second Shadow, Dark''s movement spell. Leave your shadow where you stand: your shape in flat black with violet eyes, joined to you by a thin line on the ground. For a while it repeats every blow you land, a beat late, at half the damage, and Curses.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Then every weapon blow that lands is echoed.
+
+
+      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 10). It stands for 8 seconds. Each echo lands a moment after your blow, for 50% of its damage, and lays a Curse. One shadow at a time.
+
+
+      <b>Works with.</b> The root, Hollow Strength, which it grows from, Pawned Heart (half of a much bigger blow), Near the Grave, Hunger.
+
+
+      <b>Not built yet.</b> Pressing again to change places with the shadow, once. The Empower''s 60%: for now it only shortens the wait.
+
+
+      <b>Example.</b> Cast it as a brute kneels staggered: every cut of the finisher''s opening lands twice.'
+  - Id: dark.secondshadow.shape
+    Title: 'Second Shadow: Return to the Shadow or Long Shadow'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Second Shadow, chosen at any rest fire. <b>Return to the Shadow</b>: the shadow fights as learned, but the second press does not swap. Within its time, press again to sink into it and rise where it lies, and every wound taken since you left it comes back as grey health to win back. A rewind paid in position. <b>Long Shadow</b>: your shadow is thrown out along the floor ahead, long as an evening shadow. You sink into its foot and rise at its head a moment later, and everything it lay across is Cursed. No copy: just the road.
+
+
+      <b>When it happens.</b> Whenever you cast Second Shadow, as the shape it wears. Before this is bought, the plain shadow is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Return to the Shadow: for the shadow''s 8 seconds you take a quarter less from every blow. Long Shadow: you travel 8 metres ahead in about a third of a second, and everything within a metre of the road takes 2 damage and a Curse.
+
+
+      <b>Works with.</b> Return to the Shadow: Pawned Heart, Near the Grave, a fight you mean to stand in. Long Shadow: Debts Called and Grasp (a road into the pack, then the call), Dread.
+
+
+      <b>Not built yet.</b> Return to the Shadow''s second press, and the wounds given back as grey health: for now the quarter less stands in. Long Shadow sunk into the floor and unseen along the road: for now you are seen going.
+
+
+      <b>Example.</b> Long Shadow through a line of three soldiers: you rise behind them with all three Cursed.'
+  - Id: dark.secondshadow.master
+    Title: 'Second Shadow: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Change places within a second of being struck, and the blow passes to the shadow, and the health it took comes back to you.
+
+
+      <b>When it happens.</b> For now each cast, with Second Shadow in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now each cast gives one ward that turns the next blow that would land on you, three at most.
+
+
+      <b>Works with.</b> Near the Grave (wards too), Pawned Heart (one point of health, one blow turned), Gone to Ash.
+
+
+      <b>Not built yet.</b> Changing places within a second of being struck as the moment, the blow passed to the shadow and its health given back: for now the ward on each cast stands in.
+
+
+      <b>Example.</b> Cast the shadow before a brute''s chain: its first blow breaks on nothing.'
   - Id: dark.lifeforalife
     Title: A Life for a Life
     Group: 
@@ -2044,7 +2286,10 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. You rise at half your full health. It drains 4 a second, never the last point. The finisher gives back half your full health and readies the rising again. Without it you stay Risen, draining to one point, and a blow that kills you then is a fall; after a fall you may rise again. Dead Already turns it off.
 
 
-      <b>Works with.</b> Hollow Strength, Slow Rot, Grave Appetite, Near the Grave, Feast.
+      <b>Works with.</b> Hollow Strength, Nothing Stays Buried (Risen, every death stands up), Near the Grave, Never Sated, Hunger.
+
+
+      <b>Not built yet.</b> The design moves the Rise itself to the root, so every Dark player rises once, and leaves the gift the finisher that buys it back. For now the gift gives both.
 
 
       <b>Example.</b> A brute''s red overhead kills you: rise, break its balance, finish it, and stand with half your health and your rising ready again.'
@@ -2583,7 +2828,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 4 Shards. 5 health for each perfect dodge. Each window lasts 6 seconds. A perfect guard gives 30 mana in it, where it gives 15; a perfect dodge 24, where it gives 12. As built the dodge heals always, not only after a guard.
 
 
-      <b>Works with.</b> Clarity (perfect moments half again as long), Dazzle, Struck Flint and Bright Evasion (more mana from each), Low Sun, Daybreak and the deep strike to spend it.
+      <b>Works with.</b> Clarity (perfect moments half again as long), Glare''s Master (a perfect dodge that holds and Marks), Low Sun, Daybreak and the deep strike to spend it.
 
 
       <b>Example.</b> Dodge a duellist''s lunge at the last moment, then perfect-guard its next cut: 5 health and 42 mana from two blows.'
@@ -2599,7 +2844,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 4 Shards, 45 mana. Up to 5 metres: to 1.8 metres past the enemy faced, or about 4 metres ahead with none. The cut is 10 damage, 10 stagger and Marked on all on the line. The heavy blow after it is critical if it lands within 3 seconds.
 
 
-      <b>Works with.</b> Twilight (a critical heavy blow on a Marked and Cursed enemy heals you), Light''s root, Sentence, Hard Light, and the charged blade, which it charges with Light.
+      <b>Works with.</b> Twilight (a critical heavy blow on a Marked and Cursed enemy heals you), Light''s root, Reckoning''s Spoken Sentence, Weighed, and the charged blade, which it charges with Light.
 
 
       <b>Example.</b> Step through a captain''s guard, turn, and land a critical heavy blow in its back.'
@@ -2615,7 +2860,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. Weapon blows give 20% more mana. Falling below a third adds 60% more for 12 seconds, 80% in all. As built it does not yet rise steadily as your health falls.
 
 
-      <b>Works with.</b> The Dividing Line, Day and Night, Dark''s marks that are paid in health, Rich Mark and Gleaning, and the mana spells it pays for: Dusk and Dawn, Daybreak.
+      <b>Works with.</b> The Dividing Line, Day and Night, Dark''s marks that are paid in health, Brimming (mana kept full has a use), and the mana spells it pays for: Dusk and Dawn, Daybreak.
 
 
       <b>Example.</b> A brute''s blow leaves you at a quarter of your health: for twelve seconds every cut fills your mana nearly twice as fast, enough for Dusk and Dawn and a way out.'
@@ -2631,7 +2876,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. It hangs on an enemy within 5 metres, or 5 metres ahead. For 3 seconds it pulls everything within 5 metres most of the way to its middle. Then it bursts, 5 metres in radius: 40 damage and 40 stagger, a heavy blow, and Marked. As built it bursts at one strength; growing with the blows you land under it is still to come.
 
 
-      <b>Works with.</b> Light''s root and Sentence (all of them Marked at once), Twilight, Two Suns and Returning Light (a spell hit on each), Hard Light, and the charged blade, which it charges with Light.
+      <b>Works with.</b> Light''s root and Reckoning''s Spoken Sentence (all of them Marked at once), Twilight, Condemned, Seen Plainly, and the charged blade, which it charges with Light.
 
 
       <b>Example.</b> Hang it in the middle of a pack, guard on its edge while they are dragged together, then cut into the knot as it bursts.'
@@ -2663,7 +2908,7 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Each second, Marked and Cursed on every enemy within 14 metres. Every weapon blow critical; each heals 1, at most five times a second. The returning column deals half of what that enemy lost to your weapon, 80 at most, with 30 stagger.
 
 
-      <b>Works with.</b> Clarity (eight seconds of dark that also marks with every blow) or Hunger (feeding you while it drains), Twilight (critical blows on the Marked and Cursed heal you more), Weighed, Sentence, The Dividing Line.
+      <b>Works with.</b> Clarity (eight seconds of dark that also marks with every blow) or Hunger (feeding you while it drains), Twilight (critical blows on the Marked and Cursed heal you more), Weighed, Reckoning''s Spoken Sentence, The Dividing Line.
 
 
       <b>Example.</b> Light the surge among four soldiers, cut each of them hard while the dark lasts, and watch the light come back down on all four as it ends.'
@@ -3415,7 +3660,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 4 Shards. Six blades at most. Each flies at 16 metres a second, turning after the attacker, and strikes for 9 damage and 8 stagger with one notch of Sundered.
 
 
-      <b>Works with.</b> Bright Steel and Marked enemies (every blow on them is critical), Counter Cut, Answering Draw, Clean Edge, Edge Guard, Blinding Guard.
+      <b>Works with.</b> Bright Steel and Marked enemies (every blow on them is critical), Counter Cut, Answering Draw, Edge Guard, Blinding Guard.
 
 
       <b>Example.</b> Land three critical blows on a Marked soldier, then perfect-guard the brute behind it: three blades fly into the brute.'
@@ -3431,7 +3676,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 4 Shards. One stack of Marked and one notch of Sundered from the slash. For 1.5 seconds after a perfect guard, every weapon blow is critical (one and a half times damage). Where your first element''s root mark already lays its own with the slash, that one is not laid twice.
 
 
-      <b>Works with.</b> Master''s Answer (after a perfect guard the slash comes at once, free, and critical), Halo of Blades, Bright Steel, Counter Cut, Clean Edge.
+      <b>Works with.</b> Master''s Answer (after a perfect guard the slash comes at once, free, and critical), Halo of Blades, Bright Steel, Counter Cut.
 
 
       <b>Example.</b> Perfect-guard a thrust and loose the Iaido Slash straight away: it lands critical on everything it cuts.'
@@ -3463,7 +3708,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Two wheels 2.5 metres out from you for 9 seconds. Every half second each strikes what is within a metre of it for 5 damage, 4 stagger and a notch of Sundered; an enemy is struck once in each half second however many wheels pass it.
 
 
-      <b>Works with.</b> Ricochet (every strike is a spell striking), Sunder, the charged blade (it charges your weapon with Metal), True Flight.
+      <b>Works with.</b> Sunder, Poured Bronze (it pours into the notches the wheels leave), the charged blade (it charges your weapon with Metal), Every Crack Rings.
 
 
       <b>Example.</b> Cast it before stepping into a ring of small enemies: nine seconds later each is notched three deep.'
@@ -4533,80 +4778,16 @@ MonoBehaviour:
     Body: '<b>What it does.</b> The last blow of a chain, and every perfect guard, leave a mark of light on the enemy: it is Marked. Your next three weapon blows on a Marked enemy are critical and each gives more mana; then the mark is spent.
 
 
-      <b>When it happens.</b> Always on once learned. The last light blow of a chain, or the heavy blow that ends one, marks the enemy it lands on; a perfect guard marks the one who struck. It marks whether Light is your first element or your second, since it is the mark''s own doing and not the weapon''s.
+      <b>When it happens.</b> Always on once learned. The last light blow of a chain, or the heavy blow that ends one, marks the enemy it lands on; a perfect guard marks the one who struck. Like every root, it lays with the weapon only while Light is your first element (or your only one); the perfect guard''s mark comes either way, and carried second, Light''s marks come from your spells, the charged blade and the R2 strike.
 
 
       <b>The numbers.</b> 2 Shards. A mark lasts 8 seconds or three weapon blows, whichever ends first. Each of those blows is critical, one and a half times its damage, and gives 2 more mana. Marking again refills the three blows.
 
 
-      <b>Works with.</b> Glare, which marks what its ray strikes; Clarity, which marks with every blow; Lasting Mark (a fourth blow), Sharp Light (critical blows 15% harder), Plain Guilt, Rich Mark, Weighed and Sentence, and the charged blade, whose third Light blow throws a ray that marks.
+      <b>Works with.</b> Glare and every Light spell (each one Marks), Weighed (marks three deep), Just Cut and Unblemished (more critical blows), Condemned, Full Daylight (a mark not spent by blows), Clarity, and the charged blade, whose third Light blow throws a ray that Marks.
 
 
       <b>Example.</b> Three light blows on a soldier mark it with the third; a heavy blow, then two more light blows, all land critical.'
-  - Id: light.justcut
-    Title: Just Cut
-    Group: 
-    Body: '<b>What it does.</b> A blow that lands may flash. For a moment after a flash every blow you land is critical. A blow that lands may also give you a little stamina back.
-
-
-      <b>When it happens.</b> Any weapon blow that lands, one time in four, at most once every 1.5 seconds. The flash and the stamina are each their own roll. As built the flash comes by chance; a blow pressed at the exact moment the last one lands does not yet make it.
-
-
-      <b>The numbers.</b> 3 Shards. One chance in four of a flash: every blow critical for 0.8 seconds. One chance in four of 6 stamina back. Each can come at most once every 1.5 seconds.
-
-
-      <b>Works with.</b> Sharp Light (critical blows strike 15% harder), Bowed Head (critical blows break balance 20% sooner), Weighed, and quick weapons such as the Twin Knives, which fit more blows into the moment.
-
-
-      <b>Example.</b> In a flurry on a duellist, one cut flashes and the two after it land critical without a mark.'
-  - Id: light.dazzle
-    Title: Dazzle
-    Group: 
-    Body: '<b>What it does.</b> A perfect dodge flashes in the attacker''s eyes. It, and every enemy standing close to it, is Marked and held still for a moment.
-
-
-      <b>When it happens.</b> A perfect dodge: a blow passes through the very start of your roll.
-
-
-      <b>The numbers.</b> 3 Shards. Everything within 2 metres of the attacker is Marked and held still for 1 second (shorter on elites and gods, and not at all on what cannot be held).
-
-
-      <b>Works with.</b> Narrow Escape (the perfect moment 23% longer), Bright Evasion (perfect dodges give 42% more mana), Clarity (dodges safe half again as long), Step Into Light, and the root''s three critical blows.
-
-
-      <b>Example.</b> Roll through a brute''s swing at the last moment: it stands frozen and Marked while you turn and land three critical blows.'
-  - Id: light.step
-    Title: Step Into Light
-    Group: 
-    Body: '<b>What it does.</b> You step through the enemy you face in a line of light and come out on its far side, turned back toward it, cutting and Marking everything on the line. If the cut lands, your next heavy blow in the moment after is critical. Nothing can strike you in the step; a wall, or something too big to shove, stops you short.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). With no enemy faced you step ahead anyway, and the slot still waits.
-
-
-      <b>The numbers.</b> 4 Shards, no mana: it waits 8 seconds after a cast, less with weapon play. Up to 7 metres: to 1.8 metres past the enemy faced, or about 5 metres ahead with none. The cut is 10 damage, 10 stagger and Marked on all on the line. The heavy blow after it is critical if it lands within 1.5 seconds.
-
-
-      <b>Works with.</b> The root (the mark it lays gives the heavy blow and two more their critical), Sharp Light, Long Rays (the step reaches 25% further), Dazzle, and the charged blade: the cut is a spell, so it charges your weapon with Light for the next three moves.
-
-
-      <b>Example.</b> Step through an archer behind its shield-bearer, turn, and land a critical heavy blow in its back.'
-  - Id: light.unblemished
-    Title: Unblemished
-    Group: 
-    Body: '<b>What it does.</b> Fight a while without a wound and every weapon blow you land is critical, and gives more mana. A blow that lands on you ends it, and until you have gone a while unwounded again you take more from every blow.
-
-
-      <b>When it happens.</b> Always on once learned. You are unwounded once no blow has landed on you for 8 seconds; the gift lasts until the next one does.
-
-
-      <b>The numbers.</b> 6 Shards. Unwounded: every weapon blow critical, and 25% more mana from blows. After a wound, for 8 seconds or longer, you take 15% more damage. A blocked blow, a perfect guard or a perfect dodge is not a wound.
-
-
-      <b>Works with.</b> Sharp Light, Weighed (critical blows 30% harder), Bowed Head, Clarity''s longer perfect moments, Measured Guard and Narrow Escape: every blow you turn keeps you clean.
-
-
-      <b>Example.</b> Guard and dodge a duellist''s whole chain without a scratch, and every answer you give it lands critical.'
   - Id: light.weighed
     Title: Weighed
     Group: 
@@ -4619,94 +4800,293 @@ MonoBehaviour:
       <b>The numbers.</b> 3 Shards. Marked up to three deep, each mark laid adding one. A full affliction makes critical blows deal 1.8 times their damage, where they deal 1.5, for 6 seconds.
 
 
-      <b>Works with.</b> The root, Sentence (which needs three marks), Plain Guilt, Lasting Mark, Brimming and Two Suns (more marks laid), Unblemished and Just Cut (more critical blows to spend it on).
+      <b>Works with.</b> The root, Reckoning''s Spoken Sentence (12 more for each depth, once built), Ring of Spears and Brimming (marks laid fast), Condemned, which grows from it, Unblemished and Just Cut (more critical blows to spend it on).
+
+
+      <b>Not built yet.</b> Each depth making critical blows harder by itself: for now the harder critical comes when a mark fills.
 
 
       <b>Example.</b> End three chains on a brute: it is three deep, and for six seconds every critical blow hits for 1.8 times.'
-  - Id: light.sentence
-    Title: Sentence
+  - Id: light.reckoning
+    Title: Reckoning
     Group: 
-    Body: '<b>What it does.</b> A heavy blow on an enemy marked three deep passes sentence. Its marks are spent at once, and a moment later a blade of light falls on it, striking everything where it lands.
+    Body: '<b>What it does.</b> Reckoning, the detonator of the tree. You set a seal on the enemy you face: a ring like a clock face on the ground under it, one hand sweeping it in six seconds. On the last tick it breaks upward in a column of light, and what your weapon did to that enemy in the six seconds is done to it again in part, with a great blow to its balance.
 
 
-      <b>When it happens.</b> A heavy blow or finisher that lands on an enemy carrying Marked at full depth: three, with Weighed and Light as your first element; with Light second, any mark will do.
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). With no enemy faced nothing is sealed, and the slot still waits. Then fight that enemy for six seconds.
 
 
-      <b>The numbers.</b> 3 Shards. The blade falls 0.8 seconds later, warned by a ring, 1.8 metres in radius: 36 damage and 45 stagger. At most once a second.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 11). An enemy within 10 metres. The sign flashes, striking nothing, at each blow you land on it. When the six seconds end: 8 damage for each weapon blow that landed on it in that time, and 40 stagger.
 
 
-      <b>Works with.</b> Weighed, the root, Ring of Spears and Brimming to lay the marks fast, Bowed Head (the heavy blow itself is critical), and finishers: a finisher that passes sentence lands the blade on a kneeling enemy.
+      <b>Works with.</b> Quick weapons (more blows counted), the root and Just Cut (critical blows), Weighed, Condemned (the column''s stagger with a full mark''s), Ring of Spears (held still while you cut), the charged blade.
 
 
-      <b>Example.</b> Mark a captain three deep, land a heavy blow, and step back as the blade falls on it and the soldier at its side.'
+      <b>Not built yet.</b> Half of the damage your weapon did in the six seconds, 150 at most: for now 8 a blow, whatever the blow. The clock face drawn on the ground. The Empower''s 60% and 180 at most: for now it only shortens the wait.
+
+
+      <b>Example.</b> Seal a captain behind its guard, then cut it eight times in six seconds: the column takes 64 more and 40 stagger as the seal breaks.'
+  - Id: light.reckoning.shape
+    Title: 'Reckoning: Witnessed or Spoken Sentence'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Reckoning, chosen at any rest fire. <b>Witnessed</b>, Surya the eye that sees every deed: the seal counts the bearer''s deeds, not yours. Every blow it lands on you or your guard is scratched in gold on the clock''s rim, and on the last tick a column falls on it. Guard well and the sun judges for you. <b>Spoken Sentence</b>: no clock. The seal waits for your next heavy blow on its bearer, then a blade of beaten gold falls on every Marked enemy near. Many enemies, at the moment you choose.
+
+
+      <b>When it happens.</b> Whenever you cast Reckoning, as the shape it wears. Before this is bought, the plain seal is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Witnessed: a column on the sealed enemy as six seconds end, 30 damage, 40 stagger and Marked, 1.2 metres round. Spoken Sentence: for 8 seconds your next heavy blow on the sealed enemy drops a blade on every Marked enemy within 8 metres a moment later, 32 damage and 40 stagger 1.2 metres round each, and their marks are spent.
+
+
+      <b>Works with.</b> Witnessed: a counter build, perfect guards, Standing Light, the root (perfect guards mark the attacker). Spoken Sentence: Weighed (deep marks), Ring of Spears and Glare''s Seven Horses (many Marked at once), Brimming, heavy weapons.
+
+
+      <b>Not built yet.</b> Witnessed counting the bearer''s blows on you, 30 a blow and 15 more for each turned with a perfect guard: for now the column is one blow''s worth. Spoken Sentence''s 12 more for each depth of mark: for now 32 whatever the depth. Both shapes keep the plain seal''s count beside their own: a shape cannot yet set its spell''s own rule aside.
+
+
+      <b>Example.</b> Spoken Sentence on a captain with three Marked soldiers round it: one heavy blow, and four blades fall.'
+  - Id: light.reckoning.master
+    Title: 'Reckoning: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> A finisher on the sealed enemy pays the count twice.
+
+
+      <b>When it happens.</b> While the seal is on its enemy, the six seconds after a cast, with Reckoning in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now the first heavy blow on the sealed enemy strikes it again for 40 damage and 40 stagger, once a seal.
+
+
+      <b>Works with.</b> Heavy weapons, Condemned (the full mark''s stagger brings the finisher on), Ring of Spears (held still to be finished).
+
+
+      <b>Not built yet.</b> A finisher as the blow, apart from any heavy blow, and the count paid a second time: for now any heavy blow, for a fixed 40.
+
+
+      <b>Example.</b> Stagger the sealed brute with a full mark and finish it: the seal pays out at once, and again when it breaks.'
   - Id: light.spears
     Title: Ring of Spears
     Group: 
-    Body: '<b>What it does.</b> Six spears of light stand in the air round the enemy you face, wait a breath, and drive in together, Marking it.
+    Body: '<b>What it does.</b> Ring of Spears, the breaker. Six spears of beaten gold stand in the air in a ring round the enemy you face, wait a breath, and drive in together, Marking it and holding it still.
 
 
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). With no enemy faced they close on a spot ahead of you, and the slot still waits.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play. It finds an enemy within 10 metres. The ring is 3 metres in radius and closes after 0.6 seconds. Each spear deals 6 damage and 5 stagger and Marks: 36 damage and 30 stagger in all. As built the spears do not hold the enemy still while they wait.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 40 stagger in all). It finds an enemy within 10 metres. The ring is 3 metres in radius and closes after 0.6 seconds. Each spear deals 6 damage and 5 stagger and Marks: 36 damage and 30 stagger in all. What it strikes is held still 1.5 seconds (a god or an elite 0.4 of that).
 
 
-      <b>Works with.</b> Sentence and Weighed (each spear lays a mark), Returning Light and Two Suns (six spell hits), Heavy Verdict, Hard Light, and the charged blade, which it charges with Light.
+      <b>Works with.</b> Weighed (each spear lays a mark), Reckoning (held still while the seal counts), Condemned, Spoken Sentence, and the charged blade, which it charges with Light.
 
 
-      <b>Example.</b> Cast on a brute, land your three critical blows while the spears are still closing, then a heavy blow for Sentence.'
-  - Id: light.whatitowes
-    Title: What It Owes
+      <b>Example.</b> Cast on a brute, land your three critical blows while it is held, then a heavy blow while it is still Marked.'
+  - Id: light.spears.shape
+    Title: 'Ring of Spears: The Drawn Line or In Turn'
     Group: 
-    Body: '<b>What it does.</b> An enemy that wounds you is Marked.
+    Body: '<b>What it does.</b> Opens two shapes of Ring of Spears, chosen at any rest fire. <b>The Drawn Line</b>, the line drawn round Sita''s door that no one meaning harm could cross: the six spears drive into the floor in a row across your front and stand. An enemy that crosses it is held and Marked, and your blows across the line are critical. Fight across it. <b>In Turn</b>: the spears drive in one after another, and a spear that lands with one of your weapon blows strikes double and is critical. Six beats to meet.
 
 
-      <b>When it happens.</b> Each time a blow lands on you; the mark goes on the enemy that struck.
+      <b>When it happens.</b> Whenever you cast Ring of Spears, as the shape it wears. Before this is bought, the plain ring is cast.
 
 
-      <b>The numbers.</b> 3 Shards. One mark on the one who struck.
+      <b>The numbers.</b> 3 Shards. The Drawn Line: for now the spears still drive in, then stand 5 seconds in the floor in their ring 3 metres round the enemy, six spears each 0.7 metres round, Marking and jarring for 12 stagger once a second whatever stands at them. In Turn: six blades fall on the enemy one after another, 6 damage, 5 stagger and Marked each; for a second and a half after, each weapon blow on it strikes a spear''s worth more, 6 damage and 5 stagger, at most four times a second.
 
 
-      <b>Works with.</b> The root (the next three blows you return are critical), Weighed and Sentence, Reckoning, and Unblemished''s price: a wound marks your answer.
+      <b>Works with.</b> The Drawn Line: a doorway or a stair, ranged weapons and spears that strike across it, the root (Marked enemies take critical blows). In Turn: quick weapons, Just Cut, the charged blade.
 
 
-      <b>Example.</b> A soldier''s spear catches you: it is Marked, and the three blows you give back are all critical.'
-  - Id: light.reckoning
-    Title: Reckoning
+      <b>Not built yet.</b> The Drawn Line as a straight line six metres across your front that holds for a second what crosses it, with the spears not driving into the enemy. In Turn''s quarter second between spears (for now they fall quickly one after another), and a spear landing within a tenth of a second of a blow as the moment.
+
+
+      <b>Example.</b> The Drawn Line across a corridor: the pack comes on, each one Marked as it reaches the spears, and every cut you give across them lands critical.'
+  - Id: light.spears.master
+    Title: 'Ring of Spears: Mastered'
     Group: 
-    Body: '<b>What it does.</b> You set a seal on the enemy you face. Each of your next six weapon blows on it sets off a burst of light round it that strikes and Marks everything near. With no enemy faced nothing is sealed and the slot still waits.
+    Body: '<b>What it does.</b> Land a critical blow on the enemy while the spears hang, and they all drive in at once, critical, and Ring of Spears is ready again.
 
 
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Then land weapon blows on that enemy. As built it is a burst with each blow; the seal that counts every wound and pays it back at once is still to come.
+      <b>When it happens.</b> In the 0.6 seconds the spears hang over the enemy faced, with Ring of Spears in a slot.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. An enemy within 10 metres; the seal lasts 6 seconds or six bursts. Each burst is 2 metres in radius: 12 damage, 7 stagger and Marked.
+      <b>The numbers.</b> 3 Shards. For now the first weapon blow on that enemy in those 0.6 seconds strikes 1.5 metres round it for 18 damage, 15 stagger and Marked, and the wait ends at once.
 
 
-      <b>Works with.</b> The root and Lasting Mark (each burst marks again after the blow that spent it), Weighed and Sentence, Heavy Verdict and Hard Light (the bursts are spells), Returning Light, Two Suns, Condemned.
+      <b>Works with.</b> A Marked enemy (its blows are critical), Just Cut, Unblemished, quick weapons that can land a blow in the moment.
 
 
-      <b>Example.</b> Seal a captain in its guard and cut it six times: every burst marks it and the soldiers beside it, and every cut after the first lands critical.'
+      <b>Not built yet.</b> Only a critical blow counted, and the spears themselves driven in at once: for now any weapon blow, and a burst of half again their worth.
+
+
+      <b>Example.</b> Mark a duellist with a chain, cast, and cut it before the spears fall: they strike at once and the ring is ready for the next one.'
   - Id: light.condemned
     Title: Condemned
     Group: 
     Body: '<b>What it does.</b> When an affliction on an enemy reaches its full depth, its balance takes a great blow. The price: your weapon deals less to an enemy that carries nothing, though blows and spells on any afflicted enemy strike a little harder.
 
 
-      <b>When it happens.</b> Always on once learned. The blow to balance comes each time any affliction you lay fills on an enemy, a third mark among them. As built it breaks balance; finishing a marked enemy below a quarter of its health as if it were staggered is still to come.
+      <b>When it happens.</b> Always on once learned. The blow to balance comes each time any affliction you lay fills on an enemy, a third mark among them.
 
 
       <b>The numbers.</b> 6 Shards. A burst 1.2 metres round the enemy: no damage, 60 stagger, at most once every 4 seconds. Weapon damage 15% less; damage on an afflicted enemy 15% more, so against those the two nearly cancel.
 
 
-      <b>Works with.</b> Weighed, Sentence, Reckoning and Ring of Spears to fill marks, and a second element''s affliction, which fills on its own.
+      <b>Works with.</b> Weighed, which it grows from, Ring of Spears, Glare and Brimming to fill marks, Reckoning (the column''s stagger with it), and a second element''s affliction, which fills on its own.
+
+
+      <b>Not built yet.</b> An enemy marked three deep and under a quarter of its health (a tenth for a god or an elite) finished whatever its balance: for now the full mark breaks much of its balance.
 
 
       <b>Example.</b> Bring a brute''s mark to three: the burst all but staggers it, and a heavy blow finishes the work.'
+  - Id: light.justcut
+    Title: Just Cut
+    Group: 
+    Body: '<b>What it does.</b> A blow that lands may flash. For a moment after a flash every blow you land is critical. A blow that lands may also give you a little stamina back.
+
+
+      <b>When it happens.</b> Any weapon blow that lands, one time in four, at most once every 1.5 seconds. The flash and the stamina are each their own roll.
+
+
+      <b>The numbers.</b> 3 Shards. One chance in four of a flash: every blow critical for 0.8 seconds. One chance in four of 6 stamina back. Each can come at most once every 1.5 seconds.
+
+
+      <b>Works with.</b> Weighed (critical blows harder), Step Into Light and Standing Light, which grow from it, Ring of Spears'' Master, and quick weapons such as the Twin Knives, which fit more blows into the moment.
+
+
+      <b>Not built yet.</b> The flash for the next blow of a chain pressed at the very moment the last one lands, critical and free of stamina: for now it comes by chance.
+
+
+      <b>Example.</b> In a flurry on a duellist, one cut flashes and the two after it land critical without a mark.'
+  - Id: light.step
+    Title: Step Into Light
+    Group: 
+    Body: '<b>What it does.</b> Step Into Light, the movement spell. You step through the enemy you face on a line of gold dust and come out on its far side, turned back toward it, cutting and Marking everything on the line. If the cut lands, your next heavy blow in the moment after is critical. Nothing can strike you in the step; a wall, or something too big to shove, stops you short.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). With no enemy faced you step ahead anyway, and the slot still waits.
+
+
+      <b>The numbers.</b> 4 Shards, no mana: it waits 8 seconds after a cast, less with weapon play (its Empower: 7, and 9 metres). Up to 7 metres: to 1.8 metres past the enemy faced, or about 5 metres ahead with none. The cut is 10 damage, 10 stagger and Marked on all on the line. The heavy blow after it is critical if it lands within 1.5 seconds.
+
+
+      <b>Works with.</b> The root (the mark it lays gives the heavy blow and two more their critical), Just Cut, Weighed, and the charged blade: the cut is a spell, so it charges your weapon with Light for the next three moves.
+
+
+      <b>Example.</b> Step through an archer behind its shield-bearer, turn, and land a critical heavy blow in its back.'
+  - Id: light.step.shape
+    Title: 'Step Into Light: Aruna''s Road or Behind the Eye'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Step Into Light, chosen at any rest fire. <b>Aruna''s Road</b>, after the charioteer of dawn: the line you stepped stays a while as a road of gold dust that Marks whatever crosses it, and pressing again steps you back along it to where you began. Out and back. <b>Behind the Eye</b>: you step to behind the enemy, landing at its back, and your first blow after deals a finisher''s damage.
+
+
+      <b>When it happens.</b> Whenever you cast Step Into Light, as the shape it wears. Before this is bought, the plain step is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Aruna''s Road: five patches along 7 metres ahead of where you cast, each 0.7 metres round, Mark whatever stands in them once a second for 3 seconds. Behind the Eye: if the cut lands, your next weapon blow within a second deals three times its damage.
+
+
+      <b>Works with.</b> Aruna''s Road: a pack that follows you, the root, Weighed, Spoken Sentence. Behind the Eye: heavy weapons, the Learn''s critical heavy blow (the two multiply), Unblemished.
+
+
+      <b>Not built yet.</b> Aruna''s Road''s step back along the road, a second press within the three seconds.
+
+
+      <b>Example.</b> Behind the Eye on a captain: step, turn, and one heavy blow lands critical and three times as hard.'
+  - Id: light.step.master
+    Title: 'Step Into Light: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Cast it through two enemies standing in one line: both are cut and Marked, and Step Into Light is ready again. Light is straight.
+
+
+      <b>When it happens.</b> As the step cuts, with Step Into Light in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now a step that cuts anything ends its own wait, once in 16 seconds.
+
+
+      <b>Works with.</b> Corridors and stairs, a line of spearmen, Aruna''s Road (a second road at once).
+
+
+      <b>Not built yet.</b> Two enemies cut by one step as the moment: for now any step that cuts, at most once in 16 seconds.
+
+
+      <b>Example.</b> Two soldiers come up a stair in single file: step through both, and step again at once.'
+  - Id: light.lantern
+    Title: Standing Light
+    Group: 
+    Body: '<b>What it does.</b> Standing Light, the counter. You plant a lamp of brass a little ahead of you. A shaft of light stands over it, dust turning in it, and a glow lies round it while it stands. Enemies in the glow are struck lightly and Marked again and again, and a perfect guard bursts round you.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Then guard.
+
+
+      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 11). Planted 2.5 metres ahead; the glow is 5 metres in radius and lasts 10 seconds. It strikes 0.2 seconds after planting and then every 2.5 seconds: 2 damage and Marked each time. Each lamp gives three perfect-guard bursts, shown beside the weapon as Lamp: each is 10 damage and 25 stagger within 3.5 metres of you.
+
+
+      <b>Works with.</b> The root (a fresh mark, and three fresh critical blows, every 2.5 seconds), Unblemished, which grows from it, Clarity''s longer perfect moments, Reckoning''s Witnessed, Condemned.
+
+
+      <b>Not built yet.</b> The burst only for a perfect guard made inside the glow: for now the next three perfect guards after each lamp burst, wherever you stand. No enemy cloud, flame or frost lying inside the glow. The Empower''s longer perfect windows inside the glow: for now it only shortens the wait.
+
+
+      <b>Example.</b> Plant it in a doorway and fight on its edge: everything that comes through arrives Marked, and each perfect guard throws them back.'
+  - Id: light.lantern.shape
+    Title: 'Standing Light: Row of Lamps or Circled Lamp'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Standing Light, chosen at any rest fire. <b>Row of Lamps</b>, the rows of lamps at Diwali: three small lamps set in a line, every enemy between two of them Marked and kept clean of cloud, flame and frost, and a perfect guard made in line with them throws a ray down the row. The guard fires the row. <b>Circled Lamp</b>, the lamp waved before the god: a smaller lamp circles you, Marking what it passes and burning away any hazard you walk into. It goes where you go.
+
+
+      <b>When it happens.</b> Whenever you cast Standing Light, as the shape it wears. Before this is bought, the plain lamp is planted.
+
+
+      <b>The numbers.</b> 3 Shards. Row of Lamps: the lamp still stands, and three patches a metre round along 6 metres ahead of you Mark what stands in them once a second for 10 seconds; each perfect guard throws a ray 6 metres on from the attacker, 12 damage, 25 stagger and Marked, at most once a second. Circled Lamp: one lamp 2 metres out circles you for 8 seconds, striking what it passes for 2 damage and Marking it.
+
+
+      <b>Works with.</b> Row of Lamps: a counter build, Unblemished, perfect guards. Circled Lamp: a fight on the move, quick weapons, Brimming.
+
+
+      <b>Not built yet.</b> Row of Lamps: only the enemies between two lamps, only a guard made in line with them, the three lamps drawn, and nothing laid between them. Circled Lamp: hazards burned away, and the lamp drawn as a lamp (for now a disc of light).
+
+
+      <b>Example.</b> Row of Lamps across a hall: stand at one end and perfect-guard the brute that comes down it, and the ray runs back through the pack behind it.'
+  - Id: light.lantern.master
+    Title: 'Standing Light: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> The first perfect guard inside the glow makes every Light spell ready again, once a lamp.
+
+
+      <b>When it happens.</b> A perfect guard, with Standing Light in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. The waits of Glare, Step Into Light, Ring of Spears, Standing Light and Reckoning end at once, those that are in a slot; once in 12 seconds. Daybreak waits on no clock, so nothing changes for it.
+
+
+      <b>Works with.</b> A Hand full of Light spells, Unblemished, Just Cut, Clarity''s longer perfect moments.
+
+
+      <b>Not built yet.</b> Only a perfect guard made inside the glow: for now any perfect guard, once in 12 seconds.
+
+
+      <b>Example.</b> Cast everything, plant the lamp, perfect-guard one blow, and cast everything again.'
+  - Id: light.unblemished
+    Title: Unblemished
+    Group: 
+    Body: '<b>What it does.</b> Fight a while without a wound and every weapon blow you land is critical, and gives more mana. A blow that lands on you ends it, and until you have gone a while unwounded again you take more from every blow.
+
+
+      <b>When it happens.</b> Always on once learned. You are unwounded once no blow has landed on you for 8 seconds; the gift lasts until the next one does.
+
+
+      <b>The numbers.</b> 6 Shards. Unwounded: every weapon blow critical, and 25% more mana from blows. After a wound, for 8 seconds or longer, you take 15% more damage. A blocked blow, a perfect guard or a perfect dodge is not a wound.
+
+
+      <b>Works with.</b> Standing Light, which it grows from, Weighed (critical blows 30% harder), Clarity''s longer perfect moments, Just Cut: every blow you turn keeps you clean.
+
+
+      <b>Example.</b> Guard and dodge a duellist''s whole chain without a scratch, and every answer you give it lands critical.'
   - Id: light.brimming
     Title: Brimming
     Group: 
-    Body: '<b>What it does.</b> While your mana is full, every heavy blow throws a wave of light ahead of it that strikes and Marks everything in front of you.
+    Body: '<b>What it does.</b> While your mana is full, every heavy blow throws a wave of light ahead of it that strikes and Marks everything in front of you. Mana kept for the big spells has a use while it waits.
 
 
       <b>When it happens.</b> Each heavy blow or finisher that lands while your mana bar is full.
@@ -4715,74 +5095,162 @@ MonoBehaviour:
       <b>The numbers.</b> 3 Shards. A cone 5 metres long and 70 degrees wide: 12 damage, 12 stagger and Marked.
 
 
-      <b>Works with.</b> Gleaning (blows give 10% more mana), Rich Mark, Struck Flint and perfect guards to fill the bar, Weighed and Sentence, and the root. Spending mana on Daybreak or the surge ends it until the bar is full again.
+      <b>Works with.</b> Daybreak (the mana it waits for), Seen Plainly, which grows from it, Weighed, Condemned, Spoken Sentence, and perfect guards to fill the bar. Spending mana on Daybreak, the surge or a deep strike ends it until the bar is full again.
 
 
       <b>Example.</b> Full of mana before a pack: every heavy blow marks the three in front of you.'
-  - Id: light.returninglight
-    Title: Returning Light
+  - Id: light.base
+    Title: Glare
     Group: 
-    Body: '<b>What it does.</b> A spell that strikes a Marked enemy gives you mana back.
+    Body: '<b>What it does.</b> Glare, Light''s own spell, comes with the element and is never bought. A narrow ray from your hand along your facing, the dust lit along it, striking and Marking what it crosses. What it marks wears brackets of gold.
 
 
-      <b>When it happens.</b> Each time a spell from your slots strikes an enemy carrying Marked.
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Carrying Light, it is always yours to put in a slot.
 
 
-      <b>The numbers.</b> 3 Shards. 9 mana, at most once a second.
+      <b>The numbers.</b> Given with Light. No mana: it waits 6 seconds after a cast, less with weapon play; its Empower makes that 5. A ray 5.5 metres long and about 1.4 metres wide: 8 damage, 22 stagger and Marked to each enemy on it.
 
 
-      <b>Works with.</b> Glare and Ring of Spears (cast on a marked enemy), Standing Light (its glow marks, then strikes again), Reckoning, Two Suns. Basic spells cost no mana now, so the mana goes to Daybreak, Clarity or a deep strike.
+      <b>Works with.</b> Its Empower, its two shapes and its Master; the root, Weighed, Condemned, Spoken Sentence (Marked enemies for the blades), the charged blade, which its ray charges with Light.
 
 
-      <b>Example.</b> Mark a soldier with a chain, then Glare it: 9 mana back toward your Daybreak.'
-  - Id: light.lantern
-    Title: Standing Light
+      <b>Not built yet.</b> The Empower''s 12 damage and seven metres: the base spell is cast by Light''s kit, which takes only the Empower''s shorter wait.
+
+
+      <b>Example.</b> Glare the soldier in front of the captain: it is Marked and reeling, and your next three cuts on it land critical.'
+  - Id: light.base.shape
+    Title: 'Glare: Gathered or Seven Horses'
     Group: 
-    Body: '<b>What it does.</b> You plant a lantern of light a little ahead of you. Enemies in its glow are struck lightly and Marked again and again while it stands.
+    Body: '<b>What it does.</b> Opens two shapes of Glare, chosen at any rest fire. <b>Gathered</b>: hold, and the ray narrows, the dust in it drawn to a point on the enemy; let go for a ray that breaks balance far harder. A lens, for breaking one enemy. <b>Seven Horses</b>, Surya''s seven: the ray splits into seven thin rays in a fan, each striking lightly, and every enemy touched is Marked. Marking a crowd.
+
+
+      <b>When it happens.</b> Whenever you cast Glare, as the shape it wears. Before this is bought, the plain ray is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Gathered: for now every ray strikes as at a full hold, 38 more stagger on each enemy it crosses (60 in all). Seven Horses: a fan of 70 degrees, 6 metres long: 5 damage, 6 stagger and Marked to every enemy in it.
+
+
+      <b>Works with.</b> Gathered: Condemned, Reckoning, a heavy weapon to finish what it breaks. Seven Horses: Spoken Sentence, Weighed, Brimming, a pack.
+
+
+      <b>Not built yet.</b> Gathered''s hold of up to a second, the ray narrowing and the stagger rising with it: for now the full stagger at once. Seven Horses'' seven thin rays: for now one cone of the fan''s width. With the Empower bought, Seven Horses takes its numbers too, 12 damage and 7 metres.
+
+
+      <b>Example.</b> Seven Horses into a pack of five: all five Marked at once, and a Spoken Sentence drops five blades.'
+  - Id: light.base.master
+    Title: 'Glare: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Cast it in the perfect dodge''s moment, and the attacker is blinded and cannot turn for two seconds, one for a god or an elite. Dazzle, once a mark of its own, lives on here.
+
+
+      <b>When it happens.</b> A perfect dodge, with Glare in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now a perfect dodge holds the enemy faced, and every enemy within 2 metres of it, still for 2 seconds (a god or an elite 0.4 of that) and Marks them, once in 6 seconds.
+
+
+      <b>Works with.</b> Clarity (perfect moments half again as long), Step Into Light, Unblemished, the root''s three critical blows.
+
+
+      <b>Not built yet.</b> The cast in the perfect dodge''s window as the moment, and a blinding that stops only turning: for now the dodge alone holds them wholly, whether or not Glare is cast.
+
+
+      <b>Example.</b> Roll through a brute''s swing at the last moment: it stands still and Marked while you turn and land three critical blows.'
+  - Id: light.lift
+    Title: Seen Plainly
+    Group: 
+    Body: '<b>What it does.</b> Seen Plainly, Light''s reaction lift. Every reaction Marked takes part in is critical, and Marks everything it reaches.
+
+
+      <b>When it happens.</b> Whenever a reaction with Marked in it happens, on any enemy.
+
+
+      <b>The numbers.</b> 3 Shards. One mark on every enemy within 3 metres of where it happened.
+
+
+      <b>Works with.</b> Every pair with Marked in it (Light''s reactions with its neighbours and the rest), the root (each mark three critical blows), Weighed, Daybreak and Full Daylight, which grow from it.
+
+
+      <b>Not built yet.</b> The reaction itself critical: for now only the marks spread. The mark laid on what the reaction reached, not on everything 3 metres round it.
+
+
+      <b>Example.</b> A reaction fires on one Marked soldier in a pack: the two beside it come away Marked, and your next cuts on them all land critical.'
+  - Id: light.daybreak
+    Title: Daybreak
+    Group: 
+    Body: '<b>What it does.</b> Daybreak, Light''s larger spell, paid in mana. You brace and loose a beam of light down one long line. It bites everything in it four times and Marks it. The stick, or the cursor, turns it slowly while it burns.
 
 
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Planted 2.5 metres ahead; the glow is 5 metres in radius and lasts 10 seconds. It strikes 0.2 seconds after planting and then every 2.5 seconds: 2 damage and Marked each time. As built a perfect guard inside the glow does nothing more.
+      <b>The numbers.</b> 4 Shards, 45 mana (its Empower: 40). A brace, then a beam 12 metres long and 1.6 metres wide for 0.4 seconds. It bites every 0.1 seconds: 12 damage, 9 stagger and Marked each time, 48 damage and 36 stagger on what stays in it, six rings'' worth.
 
 
-      <b>Works with.</b> The root (a fresh mark, and three fresh critical blows, every 2.5 seconds), Returning Light and Two Suns (each strike is a spell hit), Weighed and Sentence, Condemned.
+      <b>Works with.</b> Brimming (mana kept full for it), Seen Plainly, which it grows from, Weighed, Condemned, Spoken Sentence, and the charged blade, which it charges with Light.
 
 
-      <b>Example.</b> Plant it in a doorway and fight on its edge: everything that comes through arrives Marked, and is Marked again as you spend it.'
-  - Id: light.daybreak
-    Title: Daybreak
-    Group: 
-    Body: '<b>What it does.</b> You brace and loose a beam of light down one long line. It bites everything in it four times and Marks it. The stick, or the cursor, turns it slowly while it burns.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). As built the beam is loosed at once; gathering it blow by blow before you loose it is still to come.
-
-
-      <b>The numbers.</b> 4 Shards, 45 mana. A 0.3-second brace, then a beam 12 metres long and 1.6 metres wide for 0.4 seconds. It bites every 0.1 seconds: 12 damage, 9 stagger and Marked each time, 48 damage on what stays in it.
-
-
-      <b>Works with.</b> Long Rays (25% further), Hard Light and Heavy Verdict, Returning Light, Two Suns, Weighed and Sentence, and the charged blade, which it charges with Light.
+      <b>Not built yet.</b> The rings gathered on the blade by the blows you land after beginning, eight at most, 8 damage and 6 stagger each, and loosed by a second press: for now the beam is loosed at once at six rings'' strength. The Empower''s 10 a ring: for now it only lowers the price.
 
 
       <b>Example.</b> A line of spearmen coming up a stair: one beam down the stair marks them all and leaves them reeling.'
-  - Id: light.twosuns
-    Title: Two Suns
+  - Id: light.daybreak.shape
+    Title: 'Daybreak: Red Before the Sun or High Noon'
     Group: 
-    Body: '<b>What it does.</b> Each enemy your spells strike is struck again by a burst of light a moment later, and Marked. The price: spells paid in mana cost a quarter more.
+    Body: '<b>What it does.</b> Opens two shapes of Daybreak, chosen at any rest fire. <b>Red Before the Sun</b>, Aruna riding before Surya to shield the world from his heat: the rings stand before you as a curved shield of red dawn that stops blows from the front, and then go as the beam. Light''s one shield, and still a beam at the end. <b>High Noon</b>: the light comes straight down on you as a column, burning away every enemy hazard inside, clearing every affliction on you and Marking all it strikes. The purifying version.
 
 
-      <b>When it happens.</b> Always on once learned: each time a spell from your slots strikes an enemy. As built it is a burst on each enemy struck; the second casting of your spell from the far side is still to come.
+      <b>When it happens.</b> Whenever you cast Daybreak, as the shape it wears. Before this is bought, the plain beam is cast.
 
 
-      <b>The numbers.</b> 6 Shards. A burst 2.5 metres in radius on the enemy struck, 0.4 seconds later: 12 damage, 10 stagger and Marked; at most five times a second. Daybreak costs 56 mana where it cost 45. Spells on a cooldown still cost nothing.
+      <b>The numbers.</b> 3 Shards, and the same 45 mana. Red Before the Sun: a wall 3 metres wide stands 1.5 metres before you for 4 seconds, and nothing walks through it nor reaches you from its far side; when its time is up, or a heavy blow of yours strikes it, it bursts along its width, 48 damage, 36 stagger and Marked. High Noon: a column 5 metres across on you a moment after the cast, 36 damage, 36 stagger and Marked to everything inside.
 
 
-      <b>Works with.</b> Ring of Spears, Reckoning, Standing Light, Daybreak and Glare, Weighed and Sentence, Condemned.
+      <b>Works with.</b> Red Before the Sun: archers and a charge coming at you, a counter build, Unblemished. High Noon: being surrounded, Weighed, Spoken Sentence.
 
 
-      <b>Example.</b> Glare a pack: the ray strikes three, and a burst follows on each, marking the ones beside them too.'
+      <b>Not built yet.</b> Red Before the Sun''s rings added by each blow it stops and the beam loosed by a second press: for now a burst at its own place. Its stopping thrown attacks as well. High Noon''s burning away of enemy clouds, flame, frost and hazards, and its clearing of the afflictions on you.
+
+
+      <b>Example.</b> High Noon in the middle of a pack: everything round you is Marked at once, and the cuts that follow are critical.'
+  - Id: light.daybreak.master
+    Title: 'Daybreak: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Loose it within a fifth of a second of a blow landing on you, and the blow is turned and the beam is critical.
+
+
+      <b>When it happens.</b> Each cast, with Daybreak in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now every cast gives a ward that turns the next blow that would land on you, and a beam loosed in the half second after a perfect guard strikes half again as hard (spells 50% harder for that half second).
+
+
+      <b>Works with.</b> Standing Light and perfect guards, Unblemished (a turned blow is no wound), Brimming.
+
+
+      <b>Not built yet.</b> The blow landing on you as the moment of the cast: for now the ward and the perfect guard stand in.
+
+
+      <b>Example.</b> A brute''s swing comes in as you loose the beam: it glances off, and the beam runs down the whole pack behind it.'
+  - Id: light.devotion
+    Title: Full Daylight
+    Group: 
+    Body: '<b>What it does.</b> Full Daylight, Light''s Devotion: all in on Light only. A mark is no longer spent by blows. Every weapon blow on a Marked enemy is critical until the mark fades, but no mark can be laid on that enemy again for a while after it fades. The fight becomes a rhythm: mark, spend the window in full, wait out the light.
+
+
+      <b>When it happens.</b> Only while Light is carried twice (all in). Always on then.
+
+
+      <b>The numbers.</b> 6 Shards. A mark carries 20 more critical blows (in practice, all of them) and fades in 6 seconds, where it lasted 8. All in, L2 with R2 is the deep strike, The Sun on the Blade.
+
+
+      <b>Works with.</b> Seen Plainly, which it grows from, the root, Just Cut and Unblemished (critical blows harder still with Weighed), quick weapons, The Scales.
+
+
+      <b>Not built yet.</b> The four seconds after a mark fades in which no mark can be laid on that enemy again: for now it can be Marked again at once.
+
+
+      <b>Example.</b> Glare a captain, then cut it for six seconds: every one of a dozen blows lands critical.'
   - Id: light.scales
     Title: The Scales
     Group: 
@@ -5276,80 +5744,16 @@ MonoBehaviour:
     Body: '<b>What it does.</b> Heavy blows and perfect guards notch an enemy''s armour, and a finisher notches it three deep at once. Each notch is a stack of Sundered, and each lets your weapon bite deeper.
 
 
-      <b>When it happens.</b> Always on once learned: every heavy blow that lands, every perfect guard (on the one who struck), every finisher. Light blows notch nothing. A weapon blow lays only your first element''s affliction, so the heavy blow''s and the finisher''s notches come only while Metal is your first element (or your only one); the perfect guard''s notch comes either way.
+      <b>When it happens.</b> Always on once learned: every heavy blow that lands, every perfect guard (on the one who struck), every finisher. Light blows notch nothing. Like every root, it lays with the weapon only while Metal is your first element (or your only one); the perfect guard''s notch comes either way, and carried second, Metal''s notches come from your spells, the charged blade and the R2 strike.
 
 
       <b>The numbers.</b> 2 Shards. One notch a heavy blow or perfect guard, three for a finisher, three at most. Sundered lasts 8 seconds; each notch adds 8% to your weapon''s damage on that enemy, 24% at three. Spells are not made stronger by it.
 
 
-      <b>Works with.</b> Deep Bite (each notch bites 25% harder), Slow Mending (notches last half again as long), Splinter, Buried Blades, Shatter Point, Counter Cut and critical blows (they multiply each other), Temper (one more notch every blow), Flung Blade, and Live Iron when Static meets the notches.
+      <b>Works with.</b> Counter Cut and critical blows (they multiply each other), Poured Bronze (it spends the notches for bronze), Every Crack Rings, Temper (one more notch every blow), Flung Blade, and Live Iron when Static meets the notches.
 
 
       <b>Example.</b> Two heavy blows on a shield-bearer and its armour is two deep: every cut after lands 16% harder for the next 8 seconds.'
-  - Id: metal.forgedanswer
-    Title: Forged Answer
-    Group: 
-    Body: '<b>What it does.</b> Each perfect guard forges a blade from the blow you turned, and it hangs at your shoulder. Up to three wait there. Your next heavy blow that lands sends every one of them at the enemy it struck.
-
-
-      <b>When it happens.</b> A perfect guard forges one; the next heavy blow that lands looses all that hang. The count shows on the screen as Blades.
-
-
-      <b>The numbers.</b> 3 Shards. Three blades at most. Each flies at 16 metres a second, turning after the enemy, and strikes for 10 damage and 12 stagger. As built the blades lay no notch of their own.
-
-
-      <b>Works with.</b> Sunder (the heavy blow that sends them notches as well), Practised Wrist and Edge Guard (easier perfect guards), Bright Sparks, Open Line, Buried Blades on the same heavy blow.
-
-
-      <b>Example.</b> Perfect-guard a duellist''s three-blow flurry, then answer with one heavy blow: three blades follow it in for 30 more damage and 36 stagger.'
-  - Id: metal.openline
-    Title: Open Line
-    Group: 
-    Body: '<b>What it does.</b> A perfect guard throws the attacker''s weapon wide. It is held still for a moment, and for a breath after the guard your weapon strikes harder.
-
-
-      <b>When it happens.</b> Every perfect guard: press the guard button just before a blow lands.
-
-
-      <b>The numbers.</b> 3 Shards. The attacker is held for 1.2 seconds (elites for less; what cannot be frozen, not at all). Your weapon deals 15% more damage for 1.5 seconds after the guard, on any enemy. As built the hold is the whole of it: blows on the held enemy do not count as from behind.
-
-
-      <b>Works with.</b> Sunder (a notch with the same guard), Forged Answer, Hard Return, Braced Frame, Counter Cut, Master''s Answer (the free skill comes in the same breath).
-
-
-      <b>Example.</b> Perfect-guard a brute''s swing and it stands frozen with its arm thrown wide: a heavy blow lands before it can move.'
-  - Id: metal.circle
-    Title: Circle of Steel
-    Group: 
-    Body: '<b>What it does.</b> You stand with your blade raised for a breath. The first blow that reaches you, from any side, red attack or not, is turned for nothing and answered with a cut all round you that notches everything near. If nothing comes, the stance goes out and the cast is spent all the same. A dodge lets it go.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4), then any blow in the next 1.2 seconds.
-
-
-      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play. Ready for 1.2 seconds. The answer strikes everything within 3.5 metres, all the way round, for 18 damage and 40 stagger, a heavy blow, and one notch of Sundered. As built the caught blow is not a perfect guard for your marks: it gives no mana and sets off nothing that waits on one.
-
-
-      <b>Works with.</b> Sunder, Splinter (the notches it lays), Buried Blades, the charged blade (the answer is a spell, so it charges your weapon with Metal), Long Temper.
-
-
-      <b>Example.</b> Ringed by three soldiers, cast it as the first lunges: the cut turns all three and notches each.'
-  - Id: metal.edgeguard
-    Title: Edge Guard
-    Group: 
-    Body: '<b>What it does.</b> The perfect guard''s moment is half again as long, and every perfect guard cuts the attacker and notches its armour. The price: the dodge and every blow held on a plain guard cost half again as much stamina.
-
-
-      <b>When it happens.</b> Always on once learned: the cut comes with every perfect guard, the price with every dodge and every blocked blow.
-
-
-      <b>The numbers.</b> 6 Shards. The perfect moment grows by 55%, from 0.18 seconds to about 0.28. Each perfect guard strikes everything within 1.2 metres of the attacker for 12 damage and 10 stagger, with one notch of Sundered. A dodge costs 37.5 stamina where it cost 25; a blocked blow costs 1.35 stamina a point of damage where it cost 0.9. As built a held guard still blocks as usual.
-
-
-      <b>Works with.</b> Sunder (two notches from one guard), Forged Answer, Open Line, Practised Wrist, Master''s Answer, Hanging Swords, Bright Steel and Halo of Blades on the Halo branch.
-
-
-      <b>Example.</b> Fight a fast duellist with the guard button alone: each of its blows met at the moment is turned, cut and notched.'
   - Id: metal.countercut
     Title: Counter Cut
     Group: 
@@ -5362,58 +5766,124 @@ MonoBehaviour:
       <b>The numbers.</b> 3 Shards. A critical blow deals one and a half times its damage. The design''s extra stagger is not in it yet.
 
 
-      <b>Works with.</b> Sunder (a critical blow and Sundered multiply each other), Clean Edge (critical blows 15% harder), Finishing Edge, Halo of Blades on the Halo branch (each critical blow forges a blade).
+      <b>Works with.</b> Sunder (a critical blow and Sundered multiply each other), Poured Bronze, Grave of Swords and Master''s Answer, which grow from it, Halo of Blades on the Halo branch (each critical blow forges a blade).
 
 
       <b>Example.</b> A brute raises its hammer: step in and land a heavy blow before it falls, for one and a half times the damage.'
-  - Id: metal.splinter
-    Title: Splinter
+  - Id: metal.bronze
+    Title: Poured Bronze
     Group: 
-    Body: '<b>What it does.</b> A blow on armour notched three deep throws splinters from you through it, and they cut and notch whoever stands behind.
+    Body: '<b>What it does.</b> Poured Bronze, the detonator of the tree. You raise a hand, and over every notched enemy near you a lip of molten bronze tips in the air and pours into its cracks. The more notches it carried, the harder it is struck. The notches are spent, and the bronze sets: the enemy is held under a crust that cools from cherry red to black.
 
 
-      <b>When it happens.</b> Any weapon blow that lands on an enemy carrying three notches of Sundered. As built the splinters fly from you through the one struck, not out of its back.
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Only enemies carrying Sundered are poured into.
 
 
-      <b>The numbers.</b> 3 Shards. A cone 5 metres long and 60 degrees wide toward the one struck: 8 damage, 8 stagger and one notch of Sundered to everything in it. At most once every 0.6 seconds.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 11, and 15 a notch). Every enemy within 8 metres is reached 0.4 seconds after the cast. On each notched one: 10 damage, and 12 damage and 15 stagger for each notch it carried (46 damage and 45 stagger at three). Its notches are spent, and it is held 0.8 seconds (a god or an elite 0.4 of that).
 
 
-      <b>Works with.</b> Sunder, Shatter Point (a finisher notches three deep at once), Circle of Steel, Slow Mending, Deep Bite.
+      <b>Works with.</b> Sunder, Open Line and Forged Answer (they notch on the perfect guard), Every Crack Rings, the charged blade (its charged blows notch), Grave of Swords and Returning Edge, which notch a crowd for it to pour into.
 
 
-      <b>Example.</b> Notch the front shield-bearer to three and keep cutting it: each cut sprays splinters into the line behind it.'
-  - Id: metal.shatterpoint
-    Title: Shatter Point
+      <b>Not built yet.</b> The hold set by the notches, 0.4 seconds a notch (a quarter of that on a god or an elite): for now 0.8 seconds whatever the depth. The lip of bronze tipping over each enemy and the crust cooling on it. The Empower''s 15 a notch: for now it only shortens the wait.
+
+
+      <b>Example.</b> Notch three soldiers to three with heavy blows and Grave of Swords, then pour: each takes 46 and stands held while you choose which to finish.'
+  - Id: metal.bronze.shape
+    Title: 'Poured Bronze: Set or Red-Hot'
     Group: 
-    Body: '<b>What it does.</b> A finisher on notched armour strikes a second time, and notches it three deep.
+    Body: '<b>What it does.</b> Opens two shapes of Poured Bronze, chosen at any rest fire. <b>Set</b>: the crust stays, and a heavy blow on a crusted enemy shatters it, throwing bronze splinters out behind it that notch what they hit. Pour, then break. <b>Red-Hot</b>, Talos heating himself: the bronze stays molten in the cracks. There is no hold, but every weapon blow on that enemy spits sparks and deals more for each notch that was spent. Pour, then press.
 
 
-      <b>When it happens.</b> Every finisher (a heavy blow on a staggered enemy) on an enemy carrying Sundered.
+      <b>When it happens.</b> Whenever you cast Poured Bronze, as the shape it wears. Before this is bought, the plain pour is cast.
 
 
-      <b>The numbers.</b> 3 Shards. The second strike is 20 damage, no stagger, to everything within 1.2 metres of the one finished. Three notches of Sundered on it, which Sunder''s finisher already lays; like Sunder''s, they come only while Metal is your first element.
+      <b>The numbers.</b> 3 Shards. Set: the crust stays 4 seconds; the next heavy blow on it shatters it, 20 damage and 15 stagger within 1 metre, and a lane of splinters 3 metres on behind it, away from you, 8 damage, 8 stagger and a notch to each it reaches. Red-Hot: for 4 seconds every weapon blow on it spits sparks for 12 more damage (two notches'' worth).
 
 
-      <b>Works with.</b> Sunder, Splinter, Buried Blades, Slow Mending, Counter Cut.
+      <b>Works with.</b> Set: heavy weapons, Counter Cut, a pack standing in a line behind the one poured into. Red-Hot: quick weapons, the charged blade, Open Line (a held enemy to press).
 
 
-      <b>Example.</b> Stagger a notched brute and finish it: the finisher lands, then the armour breaks again for 20 more.'
-  - Id: metal.hone
-    Title: Hone
+      <b>Not built yet.</b> Both shapes take every enemy the pour reached, not only the ones poured into: the shape answers after the pour has spent the notches it would test. Red-Hot''s 6 more for each notch spent (for now 12 whatever the depth), and its having no hold (for now the hold still comes).
+
+
+      <b>Example.</b> Set on a notched brute with two soldiers at its back: one heavy blow shatters the crust, and the splinters notch the two behind for the next pour.'
+  - Id: metal.bronze.master
+    Title: 'Poured Bronze: Mastered'
     Group: 
-    Body: '<b>What it does.</b> You set a sign on the enemy you face. Each of your next five weapon blows on it sets off a small burst round it that notches. With no enemy faced nothing is set and the cast is spent.
+    Body: '<b>What it does.</b> Cast it within a second after a perfect guard, and the attacker''s pour is doubled and Poured Bronze is ready again.
 
 
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Then any weapon blow that lands on that enemy, light or heavy.
+      <b>When it happens.</b> For now, a cast of Poured Bronze within 1 second after a perfect guard, while it is ready, starts no wait. Poured Bronze must be in a slot.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play. An enemy within 8 metres; the sign lasts 12 seconds or five bursts. Each burst is 1.5 metres in radius: 6 damage, 6 stagger and one notch of Sundered. As built it is a sign on the enemy, not a whetted edge on your blade.
+      <b>The numbers.</b> 3 Shards. The cast in that second starts no wait, so you may pour again at once.
 
 
-      <b>Works with.</b> Sunder (the burst notches with light blows as well), Splinter, the charged blade (the first burst charges your weapon with Metal), Balanced Blade, quick weapons.
+      <b>Works with.</b> Sunder, Open Line and Forged Answer (the same perfect guard notches, holds and forges), Edge Guard (the longer perfect moment), Master''s Answer.
 
 
-      <b>Example.</b> Sign the shield-bearer and land five quick light blows: it is three deep before your heavy blow.'
+      <b>Not built yet.</b> The attacker''s pour doubled: for now only the wait is saved.
+
+
+      <b>Example.</b> Perfect-guard a duellist''s thrust and pour at once: it is held under the bronze, and the pour is ready again for the next one.'
+  - Id: metal.graveofswords
+    Title: Grave of Swords
+    Group: 
+    Body: '<b>What it does.</b> Grave of Swords, Metal''s larger spell. Twelve blades fall in a ring round you and stand there. Each light blow you land calls the nearest one through that enemy, and a heavy blow calls all that remain. As built the blades hang behind your shoulders and fly by themselves, one after another, at the nearest enemy, and a heavy blow that lands sends all that remain at the one it struck.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). It is Metal''s larger spell, paid in mana.
+
+
+      <b>The numbers.</b> 4 Shards, 50 mana (its Empower: 45 mana, and sixteen blades). Twelve blades for 12 seconds. As built the first flies 0.6 seconds after the cast, then one every 0.55 seconds at the nearest enemy within 6 metres. Each strikes for 9 damage, 6 stagger and one notch of Sundered. Those not flown when the time is up go out.
+
+
+      <b>Works with.</b> Sunder, Forged Answer on the heavy blow that sends the rest, Poured Bronze (a crowd notched for it), To the Blade (its blades are blades to fly to), Every Crack Rings.
+
+
+      <b>Not built yet.</b> The twelve falling in a ring 4.5 metres round you, 8 damage under each, and standing there; a light blow calling the nearest one through its enemy, and a notch only every three blades (for now every blade notches).
+
+
+      <b>Example.</b> Cast it in a pack and fight on: the blades keep three notches on whoever is nearest, and a heavy blow on the brute sends the last five into it.'
+  - Id: metal.graveofswords.shape
+    Title: 'Grave of Swords: Clashing Bronze or The Tripods'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Grave of Swords, chosen at any rest fire. <b>Clashing Bronze</b>, the Kouretes clashing bronze round the infant Zeus: the blades do not fly, they ring. Each light blow you land makes the nearest standing blade ring, a sharp ripple on the floor that notches all it reaches; a heavy blow rings them all at once, and they fall. Every blow rings. <b>The Tripods</b>, the smith''s automata: three bronze tripods roll out, four blades on each, and go to notched enemies first, cutting; a heavy blow you land calls each home, throwing its blades through whatever it passes.
+
+
+      <b>When it happens.</b> Whenever you cast Grave of Swords, as the shape it wears. Before this is bought, the plain blades are cast.
+
+
+      <b>The numbers.</b> 3 Shards. Clashing Bronze: for 12 seconds, every weapon blow on an enemy that was within 8 metres when it was cast rings 3 metres round it, 8 damage, 15 stagger and a notch, at most five times a second; a heavy blow on one rings 4.5 metres round you as well, 16 damage, 30 stagger and a notch, once a second. The Tripods: three helpers for 6 seconds, each cutting the nearest enemy every half second for 9 damage, 6 stagger and a notch.
+
+
+      <b>Works with.</b> Clashing Bronze: quick weapons, Counter Cut, Poured Bronze on everything it rang. The Tripods: Poured Bronze, Open Line (the held enemy is cut for you).
+
+
+      <b>Not built yet.</b> Clashing Bronze''s blades standing in their ring and ringing in place of flying (for now they still fly, and the ringing answers your blows on the enemies near when it was cast). The Tripods going to notched enemies first, a notch only every third cut (for now every cut), and the heavy blow calling each home through what it passes.
+
+
+      <b>Example.</b> Clashing Bronze in a crowd: every light blow throws a ripple through the three round the one you struck.'
+  - Id: metal.graveofswords.master
+    Title: 'Grave of Swords: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> A finisher looses every blade left, and 20 mana comes back to you.
+
+
+      <b>When it happens.</b> For now, the first heavy blow (a finisher counts) that lands on an enemy that was within 8 metres when Grave of Swords was cast, within its 12 seconds; once a cast. Grave of Swords must be in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. 20 mana back. The heavy blow already sends every blade that remains.
+
+
+      <b>Works with.</b> Sunder (the finisher notches three deep), Counter Cut, Forged Answer, Temper (the mana for it).
+
+
+      <b>Not built yet.</b> The finisher alone as the moment: for now any heavy blow on an enemy that was near when it was cast.
+
+
+      <b>Example.</b> Cast it, stagger the brute and finish it: the last blades go in, and 20 mana comes back.'
   - Id: metal.mastersanswer
     Title: Master's Answer
     Group: 
@@ -5426,90 +5896,327 @@ MonoBehaviour:
       <b>The numbers.</b> 6 Shards. Two seconds of a free skill that needs no charging; outside them the skill costs 1.5 times its mana.
 
 
-      <b>Works with.</b> Open Line (the attacker is still held when the skill lands), Edge Guard, Practised Wrist, Bright Sparks, Forged Answer, and on the Katana the Iaido Slash and Answering Draw.
+      <b>Works with.</b> Counter Cut, which it grows from, Open Line (the attacker is still held when the skill lands), Edge Guard, Forged Answer, Poured Bronze''s Master, and on the Katana the Iaido Slash and Answering Draw.
 
 
       <b>Example.</b> With the Katana, perfect-guard a thrust and the Iaido Slash leaves the sheath at once, free.'
-  - Id: metal.buriedblades
-    Title: Buried Blades
+  - Id: metal.openline
+    Title: Open Line
     Group: 
-    Body: '<b>What it does.</b> A heavy blow on notched armour strikes a second time, harder, and notches it again.
+    Body: '<b>What it does.</b> A perfect guard throws the attacker''s weapon wide. It is held still for a moment, and for a breath after the guard your weapon strikes harder.
 
 
-      <b>When it happens.</b> A heavy blow that lands on an enemy carrying Sundered, once a second at most.
+      <b>When it happens.</b> Every perfect guard: press the guard button just before a blow lands.
 
 
-      <b>The numbers.</b> 3 Shards. The second strike is 24 damage and 30 stagger to everything within 1.2 metres of the one struck, with one notch of Sundered. As built there are no blades left standing in the enemy: the second strike is the whole of it.
+      <b>The numbers.</b> 3 Shards. The attacker is held for 1.2 seconds (elites for less; what cannot be frozen, not at all). Your weapon deals 15% more damage for 1.5 seconds after the guard, on any enemy. As built the hold is the whole of it: it can still raise its guard, and blows on the held enemy do not count as from behind.
 
 
-      <b>Works with.</b> Sunder (one heavy blow lays two notches), Forged Answer, Flung Blade, Splinter, Deep Bite.
+      <b>Works with.</b> Sunder (a notch with the same guard), Forged Answer, Counter Cut, Master''s Answer (the free skill comes in the same breath), Returning Edge and Circle of Steel, which grow from it.
 
 
-      <b>Example.</b> A notched soldier takes one heavy blow and is struck again for 24, two notches deeper.'
-  - Id: metal.ricochet
-    Title: Ricochet
-    Group: 
-    Body: '<b>What it does.</b> When a spell of yours strikes an enemy, a blade goes through it and springs on to the next enemy near, and then the next, notching each.
-
-
-      <b>When it happens.</b> Each time a spell of yours strikes an enemy, at most about three times a second.
-
-
-      <b>The numbers.</b> 3 Shards. 9 damage, 6 stagger and one notch of Sundered to the one struck, then to two more, leaping up to 6 metres from one to the next.
-
-
-      <b>Works with.</b> Flung Blade, Grave of Swords and Hone (spells that strike often), Returning Edge, Sun Wheels on the Halo branch, Sunder.
-
-
-      <b>Example.</b> Flung Blade into the front of a pack: the blade springs on through two more and all three carry a notch.'
+      <b>Example.</b> Perfect-guard a brute''s swing and it stands frozen with its arm thrown wide: a heavy blow lands before it can move.'
   - Id: metal.returningedge
     Title: Returning Edge
     Group: 
-    Body: '<b>What it does.</b> A great head of steel forms at your shoulder and lunges down a line before you. It strikes what it passes and carries it along, and its jaws close hard where the line ends. As built it does not fly back to you.
+    Body: '<b>What it does.</b> Returning Edge, a breaker. A turning blade a metre and a half across flies out along your facing and back to your hand, drawing its lane on the ground, and cuts every enemy it passes each way.
 
 
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play. It forms for 0.3 seconds, then runs 8 metres down a lane 1.5 metres wide. Each enemy passed takes 12 damage, 10 stagger and a notch of Sundered and is pushed along. Where it ends the jaws strike 1.1 metres round for 24 damage and 20 stagger, a heavy blow, and a notch.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 8, and 16 damage and 14 stagger). It runs 8 metres at 16 metres a second, 0.75 metres to each side of its line. Going: 12 damage, 10 stagger and a notch to each enemy it passes; a second later, coming home: 12 damage and 10 stagger again to each it struck going.
 
 
-      <b>Works with.</b> Ricochet, Sunder, Long Throw (it runs further), True Flight, the charged blade (it charges your weapon with Metal).
+      <b>Works with.</b> Open Line, which it grows from, Sunder, Poured Bronze on the line it notched, the charged blade (it charges your weapon with Metal).
 
 
-      <b>Example.</b> Four soldiers come down a corridor: the head runs through them and drags them together at its end.'
-  - Id: metal.graveofswords
-    Title: Grave of Swords
+      <b>Not built yet.</b> The turning blade itself, seen flying out and back to your hand: for now the lane breaks open along the ground as it runs, and what it struck is cut again a second later where it stands. The Empower''s numbers on the way home (for now the return keeps 12 and 10).
+
+
+      <b>Example.</b> Four soldiers come down a corridor: the blade runs through them and back, and all four are notched for the pour.'
+  - Id: metal.returningedge.shape
+    Title: 'Returning Edge: Bat It Home or Through the Line'
     Group: 
-    Body: '<b>What it does.</b> Twelve blades hang behind your shoulders. One after another they fly by themselves at the nearest enemy, and a heavy blow that lands sends all that remain at the one it struck.
+    Body: '<b>What it does.</b> Opens two shapes of Returning Edge, chosen at any rest fire. <b>Bat It Home</b>: guard inside the perfect window as the blade arrives, and it goes out again, faster and harder, three times at most. <b>Through the Line</b>: it does not come back by itself. It stops out at the end of its run and spins in place, and your next dodge calls it home along the line, cutting everything between. Put them between you and the blade.
 
 
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). It is Metal''s larger spell.
+      <b>When it happens.</b> Whenever you cast Returning Edge, as the shape it wears. Before this is bought, the plain blade is cast.
 
 
-      <b>The numbers.</b> 4 Shards, 50 mana. Twelve blades for 12 seconds. The first flies 0.6 seconds after the cast, then one every 0.55 seconds at the nearest enemy within 6 metres. Each strikes for 9 damage, 6 stagger and one notch of Sundered. Those not flown when the time is up go out.
+      <b>The numbers.</b> 3 Shards. Bat It Home: for now, a perfect guard throws a blade out and back at 22 metres a second, 18 damage and 15 stagger to each enemy it passes each way, at most once in 2 seconds. Through the Line: the blade spins 8 metres out for 3 seconds, 0.9 metres round it, biting every 0.3 seconds for 8 damage; for now, when the 3 seconds are up, each enemy it struck going is cut again for 20 damage, 30 stagger and a notch.
 
 
-      <b>Works with.</b> Ricochet (each blade that strikes springs on), Sunder, Buried Blades and Forged Answer on the heavy blow that sends the rest, All Blades Home, True Flight.
+      <b>Works with.</b> Bat It Home: Edge Guard and Open Line (the perfect guard), Forged Answer. Through the Line: a dodge-heavy fight, Poured Bronze on the line, Counter Cut.
 
 
-      <b>Example.</b> Cast it in a pack and fight on: the blades keep three notches on whoever is nearest, and a heavy blow on the brute sends the last five into it.'
-  - Id: metal.allbladeshome
-    Title: All Blades Home
+      <b>Not built yet.</b> The blade''s arrival as the moment the guard meets, and three times at most (for now any perfect guard throws one, once in 2 seconds). Through the Line''s blade called home by your dodge through everything between, and its not coming back by itself (for now the plain return still comes, and the home cut lands on the enemies it struck going, when its time is up).
+
+
+      <b>Example.</b> Through the Line down a corridor: let the soldiers walk into the spinning blade, then the line comes home through them.'
+  - Id: metal.returningedge.master
+    Title: 'Returning Edge: Mastered'
     Group: 
-    Body: '<b>What it does.</b> Lighting Temper throws five blades out from you in a fan, and they come back to you, cutting and notching what they pass both ways. Temper costs more and lasts a little longer.
+    Body: '<b>What it does.</b> Catch it on a perfect guard as it comes home, and Returning Edge is ready again at once.
 
 
-      <b>When it happens.</b> Each time you light Temper with the surge button. As built the blades are thrown out fresh; conjured blades do not wait to be called home.
+      <b>When it happens.</b> For now, any perfect guard while its wait is running, once in 9 seconds. Returning Edge must be in a slot.
 
 
-      <b>The numbers.</b> 6 Shards. Five blades, 14 degrees apart, flying at 14 metres a second; they turn for home after 0.6 seconds. Each strikes each enemy once going and once coming: 12 damage, 8 stagger and one notch of Sundered. Temper costs 55 mana where it cost 40, and lasts 12 seconds where it lasted 10.
+      <b>The numbers.</b> 3 Shards. The wait ends at once.
 
 
-      <b>Works with.</b> Temper, Long Temper, Hanging Swords, Sunder.
+      <b>Works with.</b> Edge Guard and Open Line, Bat It Home, Forged Answer (the same guard forges a blade).
 
 
-      <b>Example.</b> Light Temper facing a line of archers: the fan goes through them and back, and each is two notches deep.'
+      <b>Not built yet.</b> The catch itself as the moment: for now any perfect guard, once in 9 seconds.
+
+
+      <b>Example.</b> Throw it, perfect-guard the brute''s swing, and throw it again at once.'
+  - Id: metal.circle
+    Title: Circle of Steel
+    Group: 
+    Body: '<b>What it does.</b> Circle of Steel, the counter. You raise the blade for a breath, unable to move. The first blow that reaches you, from any side, red attack or not, is turned for nothing and answered with a cut all round you that notches everything near.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4), then any blow in the next 1.2 seconds.
+
+
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, two blows turned, and 16 damage). The answer strikes everything within 3 metres, all the way round, for 14 damage, 20 stagger and one notch, a heavy blow. As built the caught blow is not a perfect guard for your marks: it gives no mana and sets off nothing that waits on one.
+
+
+      <b>Works with.</b> Open Line, which it grows from, Edge Guard, which grows from it, Sunder, Poured Bronze on the ring it notched, the charged blade (the answer is a spell, so it charges your weapon with Metal).
+
+
+      <b>Not built yet.</b> The shorter wait, 5 seconds, when nothing struck; the Empower''s second blow turned.
+
+
+      <b>Example.</b> Ringed by three soldiers, cast it as the first lunges: the cut turns its blow and notches all three.'
+  - Id: metal.circle.shape
+    Title: 'Circle of Steel: The Golden Chair or Ringing Plate'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Circle of Steel, chosen at any rest fire. <b>The Golden Chair</b>, the smith''s chair that bound the queen of the gods: a blow turned closes bands of gold round the attacker, a faint shimmer that turns bright as they lock. It is held, notched twice, and your blows on it pass any guard. <b>Ringing Plate</b>: you stand as a struck plate. Every blow turned rings out in a sharp ripple on the floor, each ring wider than the last. The more of them strike you, the better.
+
+
+      <b>When it happens.</b> Whenever you cast Circle of Steel, as the shape it wears. Before this is bought, the plain circle is cast.
+
+
+      <b>The numbers.</b> 3 Shards. The Golden Chair: the answer is a cut 3 metres and 90 degrees at the one who struck, 14 damage, 20 stagger and a notch; what it strikes is held 2 seconds (a god or an elite 0.4 of that), notched once more, and cannot raise its guard for 2 seconds. Ringing Plate: ready for 1.5 seconds; the blow turned rings 4 metres all round, 8 damage, 20 stagger and a notch.
+
+
+      <b>Works with.</b> The Golden Chair: Open Line, Poured Bronze (two notches and a held enemy), Counter Cut. Ringing Plate: being surrounded, Every Crack Rings.
+
+
+      <b>Not built yet.</b> The Golden Chair''s bands on the attacker alone, with the cut all round kept (for now the answer is a cone at it, and all the cone strikes is bound). Ringing Plate''s every blow turned in its 1.5 seconds, four at most, each ring wider (for now the first blow turned rings once).
+
+
+      <b>Example.</b> The Golden Chair on a shield-bearer''s charge: it stands bound in gold with its shield down while you cut.'
+  - Id: metal.circle.master
+    Title: 'Circle of Steel: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Turn a red attack, and 15 mana comes back to you and Circle of Steel is ready again at once.
+
+
+      <b>When it happens.</b> For now, any blow the circle turns, once in 20 seconds. Circle of Steel must be in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. The wait ends at once, and 15 mana.
+
+
+      <b>Works with.</b> Edge Guard, Temper (the mana for it), Ringing Plate.
+
+
+      <b>Not built yet.</b> A red attack as the blow turned: for now any blow turned, once in 20 seconds.
+
+
+      <b>Example.</b> A god''s red sweep comes: raise the circle, turn it, and raise it again for the next.'
+  - Id: metal.edgeguard
+    Title: Edge Guard
+    Group: 
+    Body: '<b>What it does.</b> The perfect guard''s moment is half again as long, and every perfect guard cuts the attacker and notches its armour. The price: the dodge and every blow held on a plain guard cost half again as much stamina.
+
+
+      <b>When it happens.</b> Always on once learned: the cut comes with every perfect guard, the price with every dodge and every blocked blow.
+
+
+      <b>The numbers.</b> 6 Shards. The perfect moment grows by 55%, from 0.18 seconds to about 0.28. Each perfect guard strikes everything within 1.2 metres of the attacker for 12 damage and 10 stagger, with one notch of Sundered. A dodge costs 37.5 stamina where it cost 25; a blocked blow costs 1.35 stamina a point of damage where it cost 0.9. As built a held guard still blocks as usual.
+
+
+      <b>Works with.</b> Circle of Steel, which it grows from, Sunder (two notches from one guard), Forged Answer, Open Line, Master''s Answer, every Master that answers a perfect guard, Hanging Swords, Bright Steel and Halo of Blades on the Halo branch.
+
+
+      <b>Not built yet.</b> Only the perfect guard turning a blow (for now a held guard still blocks), and the guard pressed again after 0.2 seconds.
+
+
+      <b>Example.</b> Fight a fast duellist with the guard button alone: each of its blows met at the moment is turned, cut and notched.'
+  - Id: metal.forgedanswer
+    Title: Forged Answer
+    Group: 
+    Body: '<b>What it does.</b> Each perfect guard forges a blade from the blow you turned, and it hangs at your shoulder. Up to three wait there. Your next heavy blow that lands sends every one of them at the enemy it struck.
+
+
+      <b>When it happens.</b> A perfect guard forges one; the next heavy blow that lands looses all that hang. The count shows on the screen as Blades.
+
+
+      <b>The numbers.</b> 3 Shards. Three blades at most. Each flies at 16 metres a second, turning after the enemy, and strikes for 10 damage and 12 stagger. As built the blades lay no notch of their own.
+
+
+      <b>Works with.</b> Sunder (the heavy blow that sends them notches as well), Edge Guard (easier perfect guards), Open Line, Every Crack Rings, which grows from it, Flung Blade''s Master.
+
+
+      <b>Example.</b> Perfect-guard a duellist''s three-blow flurry, then answer with one heavy blow: three blades follow it in for 30 more damage and 36 stagger.'
+  - Id: metal.base
+    Title: Flung Blade
+    Group: 
+    Body: '<b>What it does.</b> Flung Blade, Metal''s own spell, comes with the element and is never bought. A blade flies into the enemy faced and stands in it. Your next weapon blow on that enemy drives it in with a burst of sparks, and it tears free and flies back to your hand, cutting the lane.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Carrying Metal, it is always yours to put in a slot.
+
+
+      <b>The numbers.</b> Given with Metal. No mana: it waits 6 seconds after a cast, less with weapon play; its Empower makes that 5. An enemy within 9 metres: 4 damage as it lands, and it stands 6 seconds. Driven by your next weapon blow: 12 damage, 15 stagger, a notch and a burst of sparks 1.5 metres round, and a third as much to what stands in the lane home.
+
+
+      <b>Works with.</b> Its Empower, its two shapes and its Master; Sunder, Poured Bronze, To the Blade (it is a blade to fly to), the charged blade, which its landing charges with Metal.
+
+
+      <b>Not built yet.</b> The Empower''s 16 when driven, and up to three blades standing in one enemy with a heavy blow driving them all (once Buried Blades): the base spell is cast by Metal''s kit, which takes only the Empower''s shorter wait.
+
+
+      <b>Example.</b> Throw the blade into the archer at the back, then close and cut it: the blade bursts out of it and flies home through the soldier between.'
+  - Id: metal.base.shape
+    Title: 'Flung Blade: Cherry Red or The Nail'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Flung Blade, chosen at any rest fire. <b>Cherry Red</b>: three red-hot blades fly in a fan, each standing in a different enemy. They glow cherry red and cool to black, and one driven while still red strikes double. You throw wide and then hurry. <b>The Nail</b>, the bronze nail at Talos''s ankle: one long nail driven low into the enemy, and it does not come back. Each heavy blow on that enemy drives it deeper, and at the third it kneels while golden ichor runs out round it. Three heavies on one enemy.
+
+
+      <b>When it happens.</b> Whenever you cast Flung Blade, as the shape it wears. Before this is bought, the plain blade is thrown.
+
+
+      <b>The numbers.</b> 3 Shards. Cherry Red: for now two more blades fly in a fan beside the kit''s, 4 damage and a notch to each enemy they pass; the kit''s blade driven within 2 seconds strikes again for 12 damage and 15 stagger. The Nail: for 10 seconds every heavy blow on the nailed enemy drives for 16 damage, 15 stagger and a notch; if its third weapon blow is heavy, it is knocked down for 1.5 seconds (an elite for half that, a god not at all), and a pool of ichor 1.5 metres round it lies 4 seconds, biting once a second for 3 damage and a notch.
+
+
+      <b>Works with.</b> Cherry Red: quick weapons, a pack spread wide, Poured Bronze. The Nail: heavy weapons, Counter Cut, Open Line (a held enemy to hammer).
+
+
+      <b>Not built yet.</b> Cherry Red''s three blades each standing in a different enemy, cooling over 6 seconds (for now the kit''s one blade stands, and the fan cuts and flies on). The Nail staying in its enemy and driven deeper, 12, then 16, then 24 (for now the kit''s blade still flies home, and each heavy blow drives for 16); the third counted among heavy blows alone (for now the third weapon blow, if it is heavy).
+
+
+      <b>Example.</b> The Nail in a brute: three heavy blows in a row, and it is down on one knee in a pool of gold.'
+  - Id: metal.base.master
+    Title: 'Flung Blade: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> A perfect guard drives every blade standing in the attacker at once, and Flung Blade is ready again.
+
+
+      <b>When it happens.</b> Every perfect guard while Flung Blade is in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. The wait ends at once. On a notched attacker, for now, one blade''s drive: 12 damage, 15 stagger and a notch within 0.8 metres of it.
+
+
+      <b>Works with.</b> Edge Guard and Open Line (the perfect guard), Forged Answer, Sunder.
+
+
+      <b>Not built yet.</b> Only the blades standing in the attacker driven: for now a notched attacker takes one blade''s worth, whatever stands in it.
+
+
+      <b>Example.</b> Throw the blade into a duellist and perfect-guard its lunge: the blade drives in, and the next is ready in your hand.'
+  - Id: metal.lift
+    Title: Every Crack Rings
+    Group: 
+    Body: '<b>What it does.</b> Every Crack Rings, Metal''s reaction lift. Every reaction Sundered takes part in rings out like struck plate: it notches everything round it, and strikes harder on the notched.
+
+
+      <b>When it happens.</b> Whenever a reaction with Sundered in it happens, on any enemy.
+
+
+      <b>The numbers.</b> 3 Shards. One notch on every enemy within 3 metres of where it happened.
+
+
+      <b>Works with.</b> Every pair with Sundered in it (Live Iron with Static, Rust with Soaked and the rest), Poured Bronze (the notches it spreads), To the Blade and The Guard Holds, which grow from it.
+
+
+      <b>Not built yet.</b> Every reaction with Sundered in it striking 25% harder on the notched; the notch laid on what the reaction reached, not on everything 3 metres round it.
+
+
+      <b>Example.</b> Static meets the notches in one soldier: Live Iron fires, and the two beside it come away notched for the pour.'
+  - Id: metal.toblade
+    Title: To the Blade
+    Group: 
+    Body: '<b>What it does.</b> To the Blade, the movement spell of the tree. You fly along a line of sparks to a blade of yours, untouchable for the flight, cutting what lies between, and arrive driving that blade. With no blade out, you throw one ahead into the ground and go to it.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
+
+
+      <b>The numbers.</b> 4 Shards, no mana: it waits 8 seconds after a cast, less with weapon play (its Empower: 7, and 14 metres). As built it is the throw with no blade out: you drive 6 metres ahead at 24 metres a second, a quarter of a second, and each enemy on the line, 1 metre to each side, is struck once for 10 damage, 15 stagger and a notch.
+
+
+      <b>Works with.</b> Flung Blade and Grave of Swords (the blades to fly to), Every Crack Rings, which it grows from, Sunder, Poured Bronze. Landing it charges the blade with Metal.
+
+
+      <b>Not built yet.</b> Flying to a blade of yours within 12 metres (a Flung Blade standing in an enemy or the ground, a blade of Grave of Swords), untouchable for the flight, and driving that blade as you arrive; the Empower''s 14 metres. For now it is always the throw ahead.
+
+
+      <b>Example.</b> Throw Flung Blade into the archer across the room, then fly to it through the two soldiers between.'
+  - Id: metal.toblade.shape
+    Title: 'To the Blade: Chain or There and Back'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of To the Blade, chosen at any rest fire. <b>Chain</b>: a bronze chain stays stretched along the line you flew, and an enemy that crosses it is notched and tripped. Your path becomes a tripwire. <b>There and Back</b>: within two seconds of arriving, press again to fly back along the same line, cutting it a second time. In and out.
+
+
+      <b>When it happens.</b> Whenever you cast To the Blade, as the shape it wears. Before this is bought, the plain flight is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Chain: a line of five patches 6 metres long from where you set off, 0.6 metres round each, for 3 seconds, biting once a second for 20 stagger and a notch. There and Back: for now each enemy the flight cut is cut again a second later, 10 damage, 15 stagger and a notch.
+
+
+      <b>Works with.</b> Chain: a doorway, Poured Bronze on what crossed it, Circle of Steel. There and Back: Sunder, Poured Bronze (two notches from one flight).
+
+
+      <b>Not built yet.</b> Chain''s trip as a fall (for now 20 stagger a bite). There and Back''s flight back as a second press within 2 seconds (for now the second cut comes by itself where they stand).
+
+
+      <b>Example.</b> Chain across a corridor mouth: the soldiers that follow you through it arrive notched and off balance.'
+  - Id: metal.toblade.master
+    Title: 'To the Blade: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Cast it in the perfect dodge''s moment, and you are untouchable from the press and To the Blade is ready again.
+
+
+      <b>When it happens.</b> For now, a cast of To the Blade within 1 second after a perfect dodge, while it is ready, starts no wait. To the Blade must be in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. The cast in that second starts no wait.
+
+
+      <b>Works with.</b> The perfect dodge, Flung Blade and Grave of Swords (a blade to fly to), Counter Cut on the enemy you arrive at.
+
+
+      <b>Not built yet.</b> The shared movement rule''s timing: cast in the instant a blow would land, it counts as a perfect dodge and you are untouchable from the press. For now the cast after a perfect dodge saves its wait.
+
+
+      <b>Example.</b> Perfect-dodge a brute''s swing and fly at once to the blade in the archer behind it, and again to the next.'
+  - Id: metal.devotion
+    Title: The Guard Holds
+    Group: 
+    Body: '<b>What it does.</b> The Guard Holds, Metal''s Devotion (GAME.md''s base buff for Metal, defence, at full strength): all in on Metal only. Your guard never breaks: a blow your stamina cannot pay for is held anyway, and what it cannot pay comes through as grey health. Every blow held on your guard notches the attacker and throws sparks into it. You take less from everything. Red attacks still need a dodge or a perfect guard.
+
+
+      <b>When it happens.</b> Only while Metal is carried twice (all in). Always on then.
+
+
+      <b>The numbers.</b> 6 Shards. You take 15% less from everything. Each blow held on your guard strikes the attacker for 4 damage and a notch, at most five times a second. As built a blow held on the guard costs half the stamina it did. All in, L2 with R2 is the deep strike, Red Iron.
+
+
+      <b>Works with.</b> Every Crack Rings, which it grows from, Sunder, Forged Answer, Hanging Swords (every held blow a perfect guard), Temper.
+
+
+      <b>Not built yet.</b> The guard that never breaks, what the stamina cannot pay coming through as grey health: for now the guard costs half as much stamina, so it breaks far later.
+
+
+      <b>Example.</b> Hold the guard up in the middle of a pack: every blow that lands on it notches its attacker, and the pour waits for all of them.'
   - Id: metal.hangingswords
     Title: Hanging Swords
     Group: 
@@ -5522,7 +6229,7 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The perfect moment lasts the whole of Temper, as long as the guard is raised fresh. Each guard gives 5 mana more, at most about three times a second. Eight swords at most; they fall 0.3 seconds after Temper ends, 0.11 seconds apart, each striking 1.5 metres round for 16 damage, 20 stagger and a notch of Sundered.
 
 
-      <b>Works with.</b> Temper (30% less damage taken, a notch more every blow), Long Temper, All Blades Home, Sunder, Forged Answer, Open Line, Edge Guard.
+      <b>Works with.</b> Temper (30% less damage taken, a notch more every blow), Sunder, Forged Answer, Open Line, Edge Guard, The Guard Holds, every Master that answers a perfect guard.
 
 
       <b>Example.</b> Light Temper and stand in the middle of a pack with your guard up: every blow turns, and when Temper ends eight swords come down on them.'
@@ -5801,19 +6508,168 @@ MonoBehaviour:
   - Id: poison.venom
     Title: Venom
     Group: 
-    Body: '<b>What it does.</b> Your weapon poisons. Every blow that lands adds a dose, a heavy blow one more, a finisher more again. The poison does not tick quietly: on a slow beat it bites for all its doses at once.
+    Body: '<b>What it does.</b> Your weapon poisons. Every blow that lands adds a dose, a heavy blow one more, a finisher more again. The poison does not tick quietly: on a slow beat it bites for all its doses at once. And a tenth of the damage your poison deals comes back to you as health, so every Poison player is fed by the poison.
 
 
-      <b>When it happens.</b> Always on once learned, while Poison is your first element: your weapon lays only your first element''s affliction, so with Poison second this mark does nothing on blows, and its doses come from your spells, the charged blade and the R2 strike instead.
+      <b>When it happens.</b> Always on once learned. The doses come with blows only while Poison is your first element: your weapon lays only your first element''s affliction, so with Poison second its doses come from your spells, the charged blade and the R2 strike instead. The healing comes whoever laid the poison.
 
 
-      <b>The numbers.</b> 2 Shards. One dose a blow; a heavy blow lays two, a finisher four. Up to eight doses, for 6 seconds, and each new dose starts the time again. Every 2 seconds the poison bites for 2 a dose: 16 at eight. Set off, it deals 6 a dose at once: 48 at eight.
+      <b>The numbers.</b> 2 Shards. One dose a blow; a heavy blow lays two, a finisher four. Up to eight doses, for 6 seconds, and each new dose starts the time again. Every 2 seconds the poison bites for 2 a dose: 16 at eight. Set off, it deals 6 a dose at once: 48 at eight. You heal 0.2 a dose at each bite (1.6 at eight) and 0.6 a dose when it is set off (4.8 at eight).
 
 
-      <b>Works with.</b> Rupture and Volatile to set it off, Catching to spread it, Left to Ripen and In Time on its beat, Deeper Dose (two doses deeper), Bitter Dose (20% harder bites), Fever (one more dose a blow), and Rot Roots when a Seeded enemy is poisoned.
+      <b>Works with.</b> Rupture and Volatile to set it off, Catching to spread it, In Time on its beat, every Poison spell, Fever, and Rot Roots when a Seeded enemy is poisoned.
 
 
-      <b>Example.</b> Four light blows and a heavy leave a soldier six doses deep; roll away and the next bite takes 12 from it while you are clear.'
+      <b>Not built yet.</b> The heal as a tenth of what the poison really dealt: for now it is counted from the plain 2 a bite and 6 a burst, so stronger or ripened poison feeds no more, and it comes at each bite rather than spread over time.
+
+
+      <b>Example.</b> Four light blows and a heavy leave a soldier six doses deep; roll away and the next bite takes 12 from it and gives you a little over 1.'
+  - Id: poison.rupture
+    Title: Rupture
+    Group: 
+    Body: '<b>What it does.</b> A heavy blow on an enemy poisoned to its full depth bursts the poison. All of it lands at once, on it and everyone close to it, and the doses are spent.
+
+
+      <b>When it happens.</b> A heavy blow or finisher that lands on an enemy carrying a full dose of poison.
+
+
+      <b>The numbers.</b> 3 Shards. Set off for 6 damage a dose, 48 at eight, with 4 stagger a dose, to everything within 1 metre of the enemy struck. At most about three times a second. Full is eight doses, twenty with Slow Death.
+
+
+      <b>Works with.</b> Venom (fill it with blows, end with a heavy), Blister and One by One, which grow from it, Volatile, Coiled Strike (four doses toward full), the root''s healing (each burst feeds you).
+
+
+      <b>Example.</b> Eight doses on a soldier, then a heavy blow: 48 lands at once with the blow, and the soldier beside it takes the same.'
+  - Id: poison.blister
+    Title: Blister
+    Group: 
+    Body: '<b>What it does.</b> Blister, the detonator of the tree. You raise a blister on the enemy you face. It swells each time its poison bites, through three sizes, and a heavy blow breaks it in a burst that poisons everything round it. Left too long, it withers.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). With no enemy faced, nothing is raised and the slot waits all the same.
+
+
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 50 damage). An enemy within 8 metres; one blister at a time; it waits 12 seconds. The burst is 3 metres in radius round the enemy: 40 damage, 30 stagger and four doses.
+
+
+      <b>Works with.</b> The root, Rupture, which it grows from (four doses toward full), Coiled Strike (step in and break it from behind), In Time, and the charged blade.
+
+
+      <b>Not built yet.</b> The swelling through three sizes, 20, 40 and 70 in two, three and four metres with 2, 4 and 6 doses: for now it bursts at the middle size. Broken by a heavy blow alone: for now any weapon blow on it breaks it.
+
+
+      <b>Example.</b> Blister the brute in the middle of a group, cut it once, and everyone round it is four doses deep.'
+  - Id: poison.blister.shape
+    Title: 'Blister: Weeping Sore or The Vessel'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Blister, chosen at any rest fire. <b>Weeping Sore</b>: it never bursts by itself or by a heavy blow. Each time its poison bites it weeps a bubbling puddle where the enemy stands, so a walking enemy lays your poison; your heavy blow bursts every puddle at once. Slow and insidious, not a swell and a pop. <b>The Vessel</b>, the court''s elixir-drinkers: the whole enemy swells, and when its poison bites at full depth it bursts by itself into a cloud that doses everything in it. You set it and leave it.
+
+
+      <b>When it happens.</b> Whenever you cast Blister, as the shape it wears. Before this is bought, the plain blister is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Weeping Sore: for 12 seconds, each bite of the enemy''s poison leaves a puddle 1.5 metres across for 3 seconds that doses what stands in it each second; a heavy blow on the sore bursts 2 metres round it for 12 damage and two doses, at most twice a second. The Vessel: for 12 seconds, the first bite at full depth lays three doses on everything within 2 metres and leaves a cloud 4 metres across for 3 seconds that doses each second, once a cast.
+
+
+      <b>Works with.</b> Weeping Sore: an enemy that walks, Catching, Low Mist. The Vessel: Venom''s blows to fill it, Catching, Slow Death (full is twenty, so it waits longer). Volatile stills the beat, and neither shape weeps or bursts without bites.
+
+
+      <b>Not built yet.</b> Both shapes still raise the plain blister beside them, which any weapon blow breaks: a shape cannot yet set aside its spell''s own work. Weeping Sore''s heavy blow bursts round the sore, not each puddle where it lies.
+
+
+      <b>Example.</b> Weeping Sore on a charging brute: it lays a trail of puddles as it comes, and the soldiers following it walk through them.'
+  - Id: poison.blister.master
+    Title: 'Blister: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Break it with a heavy blow as its poison bites, within a fifth of a second, and the burst doubles.
+
+
+      <b>When it happens.</b> The first heavy blow on the blistered enemy, with Blister in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For 12 seconds after the cast, the first heavy blow on that enemy, if it lands within a fifth of a second of its bite, strikes round it with a second burst as large: 40 damage, 30 stagger and four doses in 3 metres.
+
+
+      <b>Works with.</b> In Time (the same moment), Coiled Strike''s heavy blow made critical, a heavy weapon.
+
+
+      <b>Not built yet.</b> The blister''s own burst doubled: for now a second burst lands with it, and only if the heavy blow is the one that breaks it (a light blow breaks the plain blister first).
+
+
+      <b>Example.</b> Watch the bubbles on the blistered captain; as they burst, bring the heavy down: two bursts, 80 to all round it.'
+  - Id: poison.onebyone
+    Title: One by One
+    Group: 
+    Body: '<b>What it does.</b> One by One, Poison''s larger spell, paid in mana. Raise a hand: a green line runs along the ground from poisoned enemy to poisoned enemy, then you snap your fingers and each one''s poison bursts in turn, each passing its doses to the next before it goes. The last burst is the largest.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
+
+
+      <b>The numbers.</b> 4 Shards, 50 mana (its Empower: 45). Up to six enemies within 10 metres of you; half a second''s warning, then a column under each in turn, every 0.07 seconds, 1 metre round. The column itself does no damage; each poisoned enemy it strikes has its poison set off: 6 damage and 4 stagger a dose to everything within 1 metre, 48 and 32 at eight. What a column strikes is thrown up for 0.8 seconds.
+
+
+      <b>Works with.</b> Rupture, which it grows from, Venom, Blister, Catching and Miasma to lay the poison first, the root''s healing (every burst feeds you), and the charged blade.
+
+
+      <b>Not built yet.</b> The line from poisoned enemy to poisoned enemy alone: for now the columns come up under the six nearest, poisoned or not. Each passing its doses to the next, the last the largest: for now each bursts with what it carries. The Empower''s 7 a dose.
+
+
+      <b>Example.</b> Dose a pack with Miasma and a rush of Share Alike, then snap: six bursts in a breath, each one feeding you.'
+  - Id: poison.onebyone.shape
+    Title: 'One by One: Eaten in Turn or All Into One'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of One by One, chosen at any rest fire. <b>Eaten in Turn</b>, the gu jar, where the order of killing matters: the line is drawn but nothing bursts. For a while, when an enemy on it dies, all its doses pass to the next on the line, doubled; one pushed past eight bursts at once and passes on. The blade chooses the order. <b>All Into One</b>, the Metal and Poison reaction''s quicksilver: no line. The poison runs out of every poisoned enemy near as beads of mercury that join in the enemy you face, its doses added to its own with no limit. Then it alone bursts. For the one that matters.
+
+
+      <b>When it happens.</b> Whenever you cast One by One, as the shape it wears. Before this is bought, the plain line is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Eaten in Turn: for 8 seconds, each enemy the spell struck that dies poisoned passes twice its doses to the nearest other enemy within 10 metres. All Into One: one column only, under the nearest enemy.
+
+
+      <b>Works with.</b> Eaten in Turn: a pack of weak enemies to kill in order, Slow Death (twenty deep to pass on), Rupture and Volatile on the one fed. All Into One: a god or an elite, Catching and Miasma to dose the crowd first.
+
+
+      <b>Not built yet.</b> Eaten in Turn still bursts as the plain spell does, so what dies must be dosed again first; the doses go to the nearest, not the next on the line; one pushed past eight does not burst. All Into One gathers nothing yet: the one enemy bursts with what it carries.
+
+
+      <b>Example.</b> Eaten in Turn on five soldiers: re-dose them as you cut, kill the front one six deep, and the next is twelve.'
+  - Id: poison.onebyone.master
+    Title: 'One by One: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Snap your fingers within a fifth of a second of the poison''s beat, and every burst is one and a half times as strong.
+
+
+      <b>When it happens.</b> Each poisoned enemy a column strikes, with One by One in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now each poisoned enemy struck within a fifth of a second of its own bite takes a second burst: 24 damage and 16 stagger within 1 metre, half again an eight-deep burst.
+
+
+      <b>Works with.</b> In Time (the same beat), Catching (the beat runs across the pack), Venom.
+
+
+      <b>Not built yet.</b> The snap itself timed against the beat: for now each enemy is tested as its column comes. The bursts raised by half: for now the same extra for any depth.
+
+
+      <b>Example.</b> Watch the pack''s poison bite, raise the hand on it, and the columns that land in the bite strike half again.'
+  - Id: poison.volatile
+    Title: Volatile
+    Group: 
+    Body: '<b>What it does.</b> Your poison no longer bites on its beat. It builds until it is full, then bursts by itself, spends itself and begins again.
+
+
+      <b>When it happens.</b> Always on once learned. It bursts the moment any affliction fills on a poisoned enemy: usually the poison reaching full depth, but another element''s filling bursts it too, at whatever depth it has.
+
+
+      <b>The numbers.</b> 6 Shards. The burst deals 7 a dose, 56 at eight, with 4 stagger a dose, to everything within 2.5 metres of the enemy. At most twice a second. Full is eight doses, twenty with Slow Death (140 then).
+
+
+      <b>Works with.</b> Venom, Rupture, which it grows from, Slow Death, One by One, the root''s healing (each burst feeds you). Catching, In Time, Weeping Sore, The Vessel and the beat Masters wait on bites, and there are none.
+
+
+      <b>Example.</b> Eight light blows on a soldier and it goes up on the eighth, taking the two beside it with it.'
   - Id: poison.intime
     Title: In Time
     Group: 
@@ -5826,58 +6682,124 @@ MonoBehaviour:
       <b>The numbers.</b> 3 Shards. One dose more on the timed blow. For 1.2 seconds after it, your blows are critical (one and a half times damage). As built the timed blow itself is not made critical, only the ones after it.
 
 
-      <b>Works with.</b> Venom, One Sickness (every enemy bites on one beat, so the timing is the same for all), Lance the Wound (it makes the poison bite when you choose), a heavy blow or finisher in the critical moment, Coiled Strike.
+      <b>Works with.</b> Venom, Five Needles and Coiled Strike, which grow from it, every beat Master (the same moment), Blister''s Master, a heavy blow or finisher in the critical moment.
 
 
       <b>Example.</b> Watch the bubbles: as they burst, land a light blow, then a heavy in the next breath, and the heavy lands critical.'
-  - Id: poison.ripen
-    Title: Left to Ripen
+  - Id: poison.needles
+    Title: Five Needles
     Group: 
-    Body: '<b>What it does.</b> Poison you leave alone ripens. Each bite that comes without a fresh dose since the last is stronger than the one before. Your afflictions also last longer.
-
-
-      <b>When it happens.</b> Always on once learned. Any fresh dose, from a blow, a spell or a mark, starts the ripening over.
-
-
-      <b>The numbers.</b> 3 Shards. Each ripe bite adds a quarter of the bite: the first bite after a dose is as usual, the next 25% stronger, then 50%, then 75%. Every affliction you lay lasts 34% longer, so poison 8 seconds where it lasted 6.
-
-
-      <b>Works with.</b> Lingering and Still Air (longer still), Slow Death (the poison never fades, so it ripens without end), Bitter Dose, Lance the Wound. It works against Venom''s every blow, so dose deep, then step back and guard.
-
-
-      <b>Example.</b> Put eight doses on a brute and stop hitting it: its four bites come for 16, 20, 24 and 28.'
-  - Id: poison.lance
-    Title: Lance the Wound
-    Group: 
-    Body: '<b>What it does.</b> A perfect guard makes the attacker''s poison bite at once, and the poison in every enemy near it with it. Each bites at its own depth.
-
-
-      <b>When it happens.</b> A perfect guard: press the guard button just before a blow lands.
-
-
-      <b>The numbers.</b> 3 Shards. Every poisoned enemy within 5 metres of the attacker bites in the next moment, as hard as its beat would. Its own beat goes on as before, so it can bite again soon after.
-
-
-      <b>Works with.</b> Venom, Left to Ripen (a ripe bite called early), In Time (strike as it bites), Volatile (it still makes poison bite, though the beat is stilled), Catching (each bite throws a dose on), Waiting Game (more mana from perfect guards), Calm Pulse.
-
-
-      <b>Example.</b> Three soldiers at eight doses press you: guard the first swing perfectly and all three take 16 at once, off their beat.'
-  - Id: poison.coiled
-    Title: Coiled Strike
-    Group: 
-    Body: '<b>What it does.</b> You step through the enemy you face in an instant and come out on its far side, facing back, cutting everything on the line and poisoning it deeply. If the cut lands, your next heavy blow soon after is critical. Nothing can strike you in the step; a wall, or something too big to shove, stops you short.
+    Body: '<b>What it does.</b> Five Needles, the breaker of the tree. Five long needles, venom beading on them, are thrown in a narrow fan at the enemy you face. An enemy struck by all five is pinned at its points: held a moment, and its balance badly shaken.
 
 
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play. It goes up to 6 metres, ending 1.8 metres past the enemy faced (with none, 4.5 metres ahead). The cut is 1.1 metres to each side of the line: 24 damage, 25 stagger and four doses. A heavy blow within 3 seconds is critical. As built it is the step alone: the hold that coils it through three fangs is not made yet.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 8). A fan 8 metres long and 12 degrees wide: 15 damage, 50 stagger and five doses, the five needles'' worth, to everything in it. The first enemy it strikes is pinned: held 0.8 seconds (0.32 for a god or an elite) and 40 stagger more.
 
 
-      <b>Works with.</b> Venom, Rupture (four doses toward full), In Time, Blister, and the charged blade: if it lands it charges your weapon with Poison.
+      <b>Works with.</b> In Time, which it grows from, Rupture (five doses toward full), Coiled Strike (strike through the pinned one), and the charged blade.
+
+
+      <b>Not built yet.</b> Five needles thrown, each its own strike: for now the fan strikes as one, and the pin falls on the first enemy struck, not the one struck by all five. The Empower''s 14 stagger a needle and 50 for the pin.
+
+
+      <b>Example.</b> A shield-bearer turns to face you: the needles pin it, and you have most of a second to walk round its shield.'
+  - Id: poison.needles.shape
+    Title: 'Five Needles: Spread or Red Paper'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Five Needles, chosen at any rest fire. <b>Spread</b>: a wide fan, so each needle finds a different enemy; each enemy pierced takes two doses, and its poison bites at once. <b>Red Paper</b>, the five poisons pinned to red paper (the needle grids in the floor are the Poison god''s own weapon): all five needles pin one sheet of red paper to the enemy you face. For six seconds it cannot guard or turn a blow, and your blows on it pass any shield. The breaker for what hides behind a guard.
+
+
+      <b>When it happens.</b> Whenever you cast Five Needles, as the shape it wears. Before this is bought, the plain fan is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Spread: a fan of 60 degrees, 3 damage, 10 stagger and two doses to each enemy in it, and each one''s poison bites at once. Red Paper: the first enemy struck cannot raise its guard for 6 seconds.
+
+
+      <b>Works with.</b> Spread: a crowd, Catching (every bite throws a dose on), In Time. Red Paper: guarding enemies and captains, a heavy weapon, Blister.
+
+
+      <b>Not built yet.</b> Spread is one fan, not five needles, and still pins the first enemy it strikes. Red Paper''s blow that cannot be turned and the blows that pass a shield.
+
+
+      <b>Example.</b> Red Paper on a captain who guards everything: for six seconds your chain lands in full.'
+  - Id: poison.needles.master
+    Title: 'Five Needles: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Throw them on a poisoned enemy''s beat, within a fifth of a second of its bite, and every needle that strikes it makes its poison bite once more.
+
+
+      <b>When it happens.</b> Each poisoned enemy the needles strike, with Five Needles in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now an enemy struck within a fifth of a second of its bite bites once more at once, for all its depth: 16 at eight.
+
+
+      <b>Works with.</b> In Time (the same beat), Catching (every bite throws a dose on), the root''s healing (every bite feeds you), Spread.
+
+
+      <b>Not built yet.</b> A bite for every needle: for now one for the fan.
+
+
+      <b>Example.</b> A soldier eight deep: throw on its bite and it is bitten twice in a breath, 32.'
+  - Id: poison.coiled
+    Title: Coiled Strike
+    Group: 
+    Body: '<b>What it does.</b> Coiled Strike, Poison''s counter. You coil, then strike through the enemy you face in an instant and come out on its far side, facing back, cutting everything on the line and poisoning it deeply. If the cut lands, your next heavy blow soon after is critical. Nothing can strike you in the step; a wall, or something too big to shove, stops you short.
+
+
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
+
+
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 30 damage). It goes up to 6 metres, ending 1.8 metres past the enemy faced (with none, 4.5 metres ahead). The cut is 1.1 metres to each side of the line: 24 damage, 25 stagger and four doses, the strength of two fangs. A heavy blow within 3 seconds is critical.
+
+
+      <b>Works with.</b> In Time, which it grows from, Slow Death, which grows from it, Rupture (four doses toward full), Blister, and the charged blade: if it lands it charges your weapon with Poison.
+
+
+      <b>Not built yet.</b> The coil held up to 2.4 seconds while three fangs light (14, 24 or 38 damage and 2, 4 or 8 doses by the fangs): for now it strikes at once as two fangs. Let go as a blow is about to land, passing through you as three fangs.
 
 
       <b>Example.</b> Step through a shield-bearer to its back, turn, and the heavy blow you owe it lands critical.'
+  - Id: poison.coiled.shape
+    Title: 'Coiled Strike: Centipede''s Run or Shed Skin'
+    Group: 
+    Body: '<b>What it does.</b> Opens two shapes of Coiled Strike, chosen at any rest fire. <b>Centipede''s Run</b>, the centipede, one of the five poisons: let go and you strike through up to three enemies in a zigzag of short rushes, a bite on each, the fangs'' doses shared between them; you end behind the last. The snake strikes one, the centipede many. <b>Shed Skin</b>, the snake that sheds its skin: let go inside the perfect window and you leave your skin standing where you were, pale and papery. The enemy goes on striking it while your strike lands from behind.
+
+
+      <b>When it happens.</b> Whenever you cast Coiled Strike, as the shape it wears. Before this is bought, the plain strike is cast.
+
+
+      <b>The numbers.</b> 3 Shards. Centipede''s Run: a straight rush 12 metres through everything on a line 2 metres wide, 14 damage, 15 stagger and two doses to each (30 damage each once the Empower is bought, which sets its number on the rush too). Shed Skin: every enemy within 3 metres of where you stood loses sight of you for 1.5 seconds.
+
+
+      <b>Works with.</b> Centipede''s Run: a row of enemies, Catching, Rupture. Shed Skin: a pack that crowds you, Blister (break it from behind), a heavy weapon.
+
+
+      <b>Not built yet.</b> Centipede''s Run''s zigzag of three short rushes, ending behind the last: for now it is one straight run. Shed Skin only inside the perfect window, and a skin drawn standing: for now every cast blinds those near where you stood.
+
+
+      <b>Example.</b> Centipede''s Run down a line of archers: each takes two doses and you stand past the last.'
+  - Id: poison.coiled.master
+    Title: 'Coiled Strike: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Let go inside the perfect window, and Coiled Strike is ready again.
+
+
+      <b>When it happens.</b> With Coiled Strike in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now a perfect dodge ends Coiled Strike''s wait, once in 10 seconds.
+
+
+      <b>Works with.</b> Reading the enemies'' wind-ups, Shed Skin, In Time.
+
+
+      <b>Not built yet.</b> The let-go inside the perfect window as the moment: for now any perfect dodge does it.
+
+
+      <b>Example.</b> Dodge a captain''s swing perfectly and Coiled Strike is ready to put you at its back.'
   - Id: poison.slowdeath
     Title: Slow Death
     Group: 
@@ -5887,93 +6809,13 @@ MonoBehaviour:
       <b>When it happens.</b> Always on once learned. The greater depth holds while Poison is your first element; the poison stops fading either way.
 
 
-      <b>The numbers.</b> 6 Shards. Weapon damage 30% less. Poison holds twelve more doses, up to twenty (twenty-two with Deeper Dose): at twenty a bite deals 40 every 2 seconds, and set off it deals 120. Poison you lay does not run out.
+      <b>The numbers.</b> 6 Shards. Weapon damage 30% less. Poison holds twelve more doses, up to twenty: at twenty a bite deals 40 every 2 seconds, and set off it deals 120. Poison you lay does not run out.
 
 
-      <b>Works with.</b> Venom, Left to Ripen (it ripens without end), Catching, One Sickness, Volatile (it fills at twenty), Rupture (full is twenty now), Plague Bearer, Clean Blade.
+      <b>Works with.</b> Venom and its healing (a deep bite feeds you more), Coiled Strike, which it grows from, Catching, Volatile (it fills at twenty), Rupture (full is twenty now), One by One''s Eaten in Turn, Clean Blade.
 
 
       <b>Example.</b> Dose a Gate Captain twenty deep and spend the rest of the fight guarding: 40 every two seconds, and it never wears off.'
-  - Id: poison.rupture
-    Title: Rupture
-    Group: 
-    Body: '<b>What it does.</b> A heavy blow on an enemy poisoned to its full depth bursts the poison. All of it lands at once, on it and everyone close to it, and the doses are spent.
-
-
-      <b>When it happens.</b> A heavy blow or finisher that lands on an enemy carrying a full dose of poison.
-
-
-      <b>The numbers.</b> 3 Shards. Set off for 6 damage a dose, 48 at eight, with 4 stagger a dose, to everything within 1 metre of the enemy struck. At most about three times a second. Full is eight doses, ten with Deeper Dose and twenty with Slow Death.
-
-
-      <b>Works with.</b> Venom (fill it with blows, end with a heavy), Ripe (15% harder), Wider Rupture (25% further), Buckling (40% more stagger), Rotten Fruit, Blister.
-
-
-      <b>Example.</b> Eight doses on a soldier, then a heavy blow: 48 lands at once with the blow, and the soldier beside it takes the same.'
-  - Id: poison.rottenfruit
-    Title: Rotten Fruit
-    Group: 
-    Body: '<b>What it does.</b> A poisoned enemy that dies bursts, and everyone the burst reaches takes as many doses as it carried.
-
-
-      <b>When it happens.</b> The moment an enemy carrying poison dies, whatever killed it.
-
-
-      <b>The numbers.</b> 3 Shards. The burst is 3.5 metres in radius: 10 damage, 6 stagger, and as many doses as the dead one had, up to eight. At most a few times a second.
-
-
-      <b>Works with.</b> Venom, Catching, One Sickness, Rupture and Volatile (spend the poison or pass it on: choose), Slow Death.
-
-
-      <b>Example.</b> Kill a soldier at eight doses in the middle of a pack, and the two beside it start at eight.'
-  - Id: poison.blister
-    Title: Blister
-    Group: 
-    Body: '<b>What it does.</b> You raise a blister on the enemy you face. The next weapon blow you land on it breaks it in a wide burst that poisons everything round it. Left too long, it withers. With no enemy faced, nothing is raised and the slot waits all the same.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Then any blow on that enemy, light or heavy, breaks it.
-
-
-      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play. An enemy within 8 metres; one blister at a time; it waits 12 seconds. The burst is 3 metres in radius round the enemy: 40 damage, 30 stagger and four doses.
-
-
-      <b>Works with.</b> Venom, Rupture (four doses toward full), Rotten Fruit, Coiled Strike (step in and break it from behind), Spent Venom.
-
-
-      <b>Example.</b> Blister the brute in the middle of a group, cut it once, and everyone round it is four doses deep.'
-  - Id: poison.onebyone
-    Title: One by One
-    Group: 
-    Body: '<b>What it does.</b> A mark closes under each of the nearest enemies, follows it, and a moment later a column bursts up under each in turn, throwing it into the air.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
-
-
-      <b>The numbers.</b> 4 Shards, 50 mana. Up to six enemies within 10 metres of you; with fewer, the spare columns stand round the first. Half a second''s warning, then a column every 0.07 seconds, each 2.5 metres in radius: 30 damage and 20 stagger, a heavy blow, and what it strikes is thrown up for 0.8 seconds. As built the columns lay no poison and pass no depth from one enemy to the next.
-
-
-      <b>Works with.</b> Venom and Blister to lay the poison first, Rupture and Volatile, and the charged blade: if it lands it charges your weapon with Poison, whose blows dose twice.
-
-
-      <b>Example.</b> Six soldiers round you: all six go up at once, and you have a breath to roll clear or cut.'
-  - Id: poison.volatile
-    Title: Volatile
-    Group: 
-    Body: '<b>What it does.</b> Your poison no longer bites on its beat. It builds until it is full, then bursts by itself, spends itself and begins again.
-
-
-      <b>When it happens.</b> Always on once learned. It bursts the moment any affliction fills on a poisoned enemy: usually the poison reaching full depth, but another element''s filling bursts it too, at whatever depth it has.
-
-
-      <b>The numbers.</b> 6 Shards. The burst deals 7 a dose, 56 at eight, with 4 stagger a dose, to everything within 2.5 metres of the enemy. At most twice a second. Full is eight doses, ten with Deeper Dose, twenty with Slow Death (140 then).
-
-
-      <b>Works with.</b> Venom, Ripe, Wider Rupture, Buckling, Lance the Wound (it still makes the poison bite), Slow Death, Rotten Fruit. Catching, In Time and One Sickness wait on bites, and there are none.
-
-
-      <b>Example.</b> Eight light blows on a soldier and it goes up on the eighth, taking the two beside it with it.'
   - Id: poison.catching
     Title: Catching
     Group: 
@@ -5983,77 +6825,165 @@ MonoBehaviour:
       <b>When it happens.</b> Every bite of poison on any enemy, however it was laid.
 
 
-      <b>The numbers.</b> 3 Shards. One dose to the nearest enemy within 4 metres (6 with Long Leap).
+      <b>The numbers.</b> 3 Shards. One dose to the nearest enemy within 4 metres.
 
 
-      <b>Works with.</b> Venom, One Sickness (they all bite together, so the doses fly together), Lance the Wound (more bites, more leaps), Rotten Fruit, Plague Bearer, Still Air.
+      <b>Works with.</b> Venom, Miasma and the lift The Delayed Touch, which grow from it, Five Needles'' Spread and Master (more bites, more leaps), Share Alike, The Vessel.
 
 
       <b>Example.</b> Poison one soldier deep and keep it near its friends: every two seconds one of them gains a dose without a blow from you.'
-  - Id: poison.onesickness
-    Title: One Sickness
+  - Id: poison.base
+    Title: Miasma
     Group: 
-    Body: '<b>What it does.</b> The poison in every enemy bites on the same beat. Each poisoned enemy beyond the first that bit on the last beat makes every bite of the next one stronger. Blows on poisoned enemies give a little more mana.
+    Body: '<b>What it does.</b> Miasma, Poison''s own spell, comes with the element and is never bought. A low cloud rolls out ahead of you, hangs, creeps after the nearest enemy and doses whatever stands in it once a second; bubbles rise through it and it leaves a stain. You stand in it unharmed.
 
 
-      <b>When it happens.</b> Always on once learned.
+      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Carrying Poison, it is always yours to put in a slot.
 
 
-      <b>The numbers.</b> 3 Shards. One beat every 2 seconds for all. Each bite is 15% stronger for every enemy beyond the first that bit on the beat before: four bitten, the next bites are 45% stronger. Weapon blows on a poisoned enemy give 10% more mana.
+      <b>The numbers.</b> Given with Poison. No mana: it waits 7 seconds after a cast, less with weapon play; its Empower makes that 6. The cloud lies 4 metres ahead, 2.5 metres across, for 4 seconds, and doses what stands in it once a second.
 
 
-      <b>Works with.</b> Catching, Rotten Fruit, Swinging Censer, Share Alike and Plague Bearer to poison many, In Time (one beat to time against), Spent Venom.
+      <b>Works with.</b> Its Empower, its two shapes and its Master; the root, Catching, which it grows from, Rupture and One by One (doses for them to burst), and the charged blade, which it charges with Poison.
 
 
-      <b>Example.</b> Five soldiers poisoned eight deep: every two seconds they all bite at once for 16 each, 60% harder, 25.6 each.'
-  - Id: poison.censer
-    Title: Swinging Censer
+      <b>Not built yet.</b> The Empower''s cloud 3 metres across: the base spell is cast by Poison''s kit, which takes only the Empower''s shorter wait.
+
+
+      <b>Example.</b> Cloud the doorway a pack must come through, then guard: each one through it comes out dosed.'
+  - Id: poison.base.shape
+    Title: 'Miasma: Low Mist or Censer'
     Group: 
-    Body: '<b>What it does.</b> A smoking censer swings round you on its chain, dosing whatever it passes. When its time is up it flies off.
+    Body: '<b>What it does.</b> Opens two shapes of Miasma, chosen at any rest fire. <b>Low Mist</b>, the land''s hours of the miasma, mist that pools low and drives people up: the cloud is heavier than air and pours out from your feet along the floor the way you face, a low sheet with a hard top edge, stopping at walls. Enemies in it are dosed once a second, and a dodge or roll in it costs them a dose. A lane where the plain cloud is a disc. <b>Censer</b>, Swinging Censer folded in: the cloud is carried. A censer swings round you on its chain, and each pass deals damage and a dose and leaves smoke hanging. The fight comes with you.
 
 
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
+      <b>When it happens.</b> Whenever you cast Miasma, as the shape it wears. Before this is bought, the plain cloud is cast.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 8 seconds after a cast, less with weapon play. One censer, 3 metres out, for 8 seconds, going round about twice in three seconds. It bites every 1.2 seconds whatever is within 1 metre of it: 4 damage, 4 stagger and a dose. One at a time. As built it leaves no smoke behind it.
+      <b>The numbers.</b> 3 Shards. Low Mist: a row of mist 8 metres long and 2.5 metres wide from your feet, lying 5 seconds, a dose a second to what stands in it. Censer: one censer 3 metres out, for 8 seconds, going round once every 1.2 seconds; it strikes whatever is within 1 metre of it for 4 damage, 4 stagger and a dose.
 
 
-      <b>Works with.</b> One Sickness, Catching, Plague Bearer (both poison what stays near you), Venom, and the charged blade: if it strikes it charges your weapon with Poison.
+      <b>Works with.</b> Low Mist: a corridor, Weeping Sore, Tasted Every Herb. Censer: a pack that crowds you, Catching, a guard held while it swings.
 
 
-      <b>Example.</b> Cast it and stand your ground in a doorway: whatever crowds you is dosed every swing as you guard.'
+      <b>Not built yet.</b> Low Mist still casts the plain cloud beside the sheet, and does not stop at walls or take a dose from an enemy''s dodge. Censer''s smoke hanging 2 seconds after each pass.
+
+
+      <b>Example.</b> Censer, and stand your ground in a doorway: whatever crowds you is dosed every swing as you guard.'
+  - Id: poison.base.master
+    Title: 'Miasma: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Cast it on the poison''s beat, within a fifth of a second of a bite on any enemy near, and the cloud doses twice a second.
+
+
+      <b>When it happens.</b> Each enemy the cloud doses, with Miasma in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now an enemy the cloud doses within a fifth of a second of its own bite is dosed once more each second for 4 seconds.
+
+
+      <b>Works with.</b> In Time (the same beat), Catching, every other beat Master.
+
+
+      <b>Not built yet.</b> The cast itself timed against a bite on any enemy within 8 metres: for now each enemy is tested as the cloud doses it.
+
+
+      <b>Example.</b> Cast as a poisoned soldier bites, and the cloud lays two doses a second on it while it stands there.'
+  - Id: poison.lift
+    Title: The Delayed Touch
+    Group: 
+    Body: '<b>What it does.</b> The Delayed Touch, Poison''s reaction lift, from the legend of the delayed death touch. Every reaction poison takes part in is held in the body: a thin ring of mist closes on it, and the reaction lands later at double strength, dosing all it reaches. A heavy blow on that enemy brings it on at once. Poison is paid later, and the heavy chooses the moment.
+
+
+      <b>When it happens.</b> Whenever a reaction with Poisoned in it happens, on any enemy. Two and a half seconds later, or at your first heavy blow on that enemy before then.
+
+
+      <b>The numbers.</b> 3 Shards. A burst 2.5 metres round the enemy: 20 damage, 20 stagger and two doses to all it reaches.
+
+
+      <b>Works with.</b> Every reaction with Poisoned in it (Fire Medicine, Nerve Fire, Quicksilver, Venom Rime, Rot Roots and the rest), Catching, which it grows from, Share Alike and Tasted Every Herb, which grow from it, a heavy weapon.
+
+
+      <b>Not built yet.</b> The reaction itself held and landed again at double strength: for now a burst of its own lands when the hold ends. Burning Sap, which already waits, taking only the double strength. The closing ring of mist.
+
+
+      <b>Example.</b> Quicksilver goes off on a soldier: two and a half seconds later, or as your heavy lands, it bursts again and doses the two beside it.'
   - Id: poison.sharealike
     Title: Share Alike
     Group: 
-    Body: '<b>What it does.</b> You rush straight through everything before you, untouchable, and come out the far side facing back. Every enemy you pass is struck and poisoned, then a second cut lands on everyone on the line.
+    Body: '<b>What it does.</b> Share Alike, the movement spell. You rush straight through everything before you, untouchable, and come out the far side facing back. Every enemy you pass is struck and poisoned, and then every one of them is raised to the depth of the sickest.
 
 
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play. Up to 7 metres along a lane 2 metres wide; a wall or something too big to shove stops you. Passing: 10 damage, 10 stagger and two doses. The cut after: the same again, so four doses on each. As built it doses each one alone: it does not yet raise them all to the depth of the sickest.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 8, and nine metres). Up to 7 metres along a lane 2 metres wide; a wall or something too big to shove stops you. Passing: 10 damage, 10 stagger and two doses.
 
 
-      <b>Works with.</b> One Sickness, Catching, Rotten Fruit, Plague Bearer, and the charged blade: if it lands it charges your weapon with Poison.
+      <b>Works with.</b> The Delayed Touch, which it grows from, Catching, One by One (a line of poisoned enemies), Rupture, and the charged blade: if it lands it charges your weapon with Poison.
 
 
-      <b>Example.</b> Rush through a line of three archers: each is four doses deep and you stand behind them.'
-  - Id: poison.plaguebearer
-    Title: Plague Bearer
+      <b>Not built yet.</b> Every one passed raised to the depth of the sickest: for now each gets its two doses.
+
+
+      <b>Example.</b> Rush through a line of three archers: each is dosed and you stand behind them.'
+  - Id: poison.sharealike.shape
+    Title: 'Share Alike: Carried on the Blade or Shed Tail'
     Group: 
-    Body: '<b>What it does.</b> You carry the sickness. Enemies near you are poisoned without a blow, a dose at a time, deeper the longer they stay. Your flasks heal less.
+    Body: '<b>What it does.</b> Opens two shapes of Share Alike, chosen at any rest fire. <b>Carried on the Blade</b>: you rush through as learned, but take the sickest one''s depth onto your blade, and your next five weapon blows each set what they strike to that depth. Venom drips heavy from the edge, five beads to count down. The rush loads the weapon. <b>Shed Tail</b>, the gecko: you rush backward, away, and a thrashing tail is left where you stood, lashing everything near it. Away from them, and what follows you pays.
 
 
-      <b>When it happens.</b> Always on once learned, while an enemy is near.
+      <b>When it happens.</b> Whenever you cast Share Alike, as the shape it wears. Before this is bought, the plain rush is cast.
 
 
-      <b>The numbers.</b> 6 Shards. Every 1.5 seconds, one dose on every enemy within 4 metres of you. Flasks heal 30% less: 31.5 where they healed 45.
+      <b>The numbers.</b> 3 Shards. Carried on the Blade: for 5 seconds after the rush, every blow lays two doses more. Shed Tail: where you stood, for 2 seconds, everything within 2 metres takes three doses every half second.
 
 
-      <b>Works with.</b> Swinging Censer, One Sickness, Catching, Slow Death (nothing fades), Lance the Wound, Fever (its healing makes up for the flasks).
+      <b>Works with.</b> Carried on the Blade: a fast weapon, Rupture, In Time. Shed Tail: enemies that chase you, Catching, Low Mist.
 
 
-      <b>Example.</b> Guard in the middle of a pack: in twelve seconds each is eight doses deep without your blade moving.'
+      <b>Not built yet.</b> Carried on the Blade carrying the sickest one''s depth for five blows: for now two doses more a blow for 5 seconds. Shed Tail''s rush backward: for now you rush forward as learned, and the tail is left where you began.
+
+
+      <b>Example.</b> Carried on the Blade through a pack, then turn on the captain: every blow of your chain lays three.'
+  - Id: poison.sharealike.master
+    Title: 'Share Alike: Mastered'
+    Group: 
+    Body: '<b>What it does.</b> Rush on the poison''s beat, within a fifth of a second of a bite on any enemy you pass, and the doses double.
+
+
+      <b>When it happens.</b> Each enemy the rush passes, with Share Alike in a slot.
+
+
+      <b>The numbers.</b> 3 Shards. For now each enemy passed within a fifth of a second of its own bite takes two doses more.
+
+
+      <b>Works with.</b> In Time and every beat Master, Catching (the beat runs across the pack), One by One after.
+
+
+      <b>Not built yet.</b> A bite on any enemy passed as the moment: for now each enemy is tested as it is passed.
+
+
+      <b>Example.</b> Rush a poisoned pack as their poison bites, and each comes out four doses deeper.'
+  - Id: poison.devotion
+    Title: Tasted Every Herb
+    Group: 
+    Body: '<b>What it does.</b> Tasted Every Herb, Poison''s Devotion: all in on Poison only. No poison, cloud or mist harms you, yours or the enemy''s, the court''s miasma among them. Standing in any cloud heals you, and your blows dose twice while you stand in one. Where everyone else leaves the mist, you fight in it. Shennong, who tasted every poison; realgar wine, poison against poison.
+
+
+      <b>When it happens.</b> Only while Poison is carried twice (all in).
+
+
+      <b>The numbers.</b> 6 Shards. You heal 2 a second while an enemy is near, and every lay of doses lays one more. All in, L2 with R2 is the deep strike, Nine Times Refined.
+
+
+      <b>Works with.</b> Miasma and its Low Mist, Venom, The Delayed Touch, which it grows from, Fever, Clean Blade.
+
+
+      <b>Not built yet.</b> No poison, cloud or mist harming you: for now the enemy''s clouds harm you as before. The healing and the second dose only while you stand in a cloud: for now they hold in every fight.
+
+
+      <b>Example.</b> A god fills the floor with its own mist: you stay in it, mending, and every blow you land there doses twice.'
   - Id: poison.cleanblade
     Title: Clean Blade
     Group: 
@@ -6063,10 +6993,10 @@ MonoBehaviour:
       <b>When it happens.</b> Light the surge (a tap of L2, or F); it begins with whichever surge you wear. The flick comes when the surge ends. The extra dose holds while Poison is your first element.
 
 
-      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. One more dose a blow, on top of Fever''s. When the surge ends, every enemy within 14 metres takes one bite for each whole 2 seconds it waited, at its depth then, with 20 stagger. Fever''s 10 seconds owe five bites: 80 on an enemy at eight doses, 100 at ten.
+      <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. One more dose a blow, on top of Fever''s. When the surge ends, every enemy within 14 metres takes one bite for each whole 2 seconds it waited, at its depth then, with 20 stagger. Fever''s 10 seconds owe five bites: 80 on an enemy at eight doses.
 
 
-      <b>Works with.</b> Venom, Fever, Sweet Fever (a longer surge owes more), Deeper Dose and Slow Death (a deeper bite), Plague Bearer. Lance the Wound, In Time and Catching wait on bites, and there are none while the poison waits.
+      <b>Works with.</b> Venom, Fever, Slow Death (a deeper bite), Share Alike and Miasma to dose a pack while it waits. In Time, Catching and the beat Masters wait on bites, and there are none while the poison waits.
 
 
       <b>Example.</b> Light Fever, dose a whole pack to eight while it waits, and let the surge run out: each takes 80 at once.'

@@ -6,7 +6,7 @@ Read by Clover > Build > Playtest Texts from `docs/design/playtest/`.
 - marks/blight.md: 7 marks
 - marks/blizzard.md: 7 marks
 - marks/bloom.md: 7 marks
-- marks/dark.md: 17 marks
+- marks/dark.md: 28 marks
 - marks/earth.md: 27 marks
 - marks/eclipse.md: 7 marks
 - marks/fire.md: 28 marks
@@ -15,12 +15,12 @@ Read by Clover > Build > Playtest Texts from `docs/design/playtest/`.
 - marks/halo.md: 7 marks
 - marks/ice.md: 28 marks
 - marks/life.md: 28 marks
-- marks/light.md: 17 marks
+- marks/light.md: 27 marks
 - marks/lightning.md: 27 marks
-- marks/metal.md: 16 marks
+- marks/metal.md: 27 marks
 - marks/overgrowth.md: 7 marks
 - marks/plasma.md: 10 marks
-- marks/poison.md: 17 marks
+- marks/poison.md: 27 marks
 - marks/pyre.md: 7 marks
 - marks/tempest.md: 7 marks
 - marks/water.md: 28 marks
