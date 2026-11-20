@@ -49,8 +49,36 @@ namespace Clover.Player
         public MarkTree Tree = MarkTree.Element;
         /// <summary>For a reaction mark: its rest and what else the pair says; null for every other mark.</summary>
         public ReactionDef Reaction;
+        /// <summary>What it is bought with (IMPLEMENTATION.md 2.1). <see cref="Currency.None"/>: given, never sold, and it costs nothing.</summary>
+        public Currency Currency = Currency.Shards;
+        /// <summary>For a spell branch's marks: the id of its Learn mark, the branch's own id. Empty for a passive.</summary>
+        public string Branch = "";
+        /// <summary>Its place in its spell branch (Learn, Empower, Shape, Master); None for a passive.</summary>
+        public BranchPart Part = BranchPart.None;
+        /// <summary>On a Shape mark: the two versions it opens, first and second. Empty on every other mark.</summary>
+        public ShapeDef[] Shapes = Array.Empty<ShapeDef>();
+        /// <summary>On an Empower mark: the numbers it changes on its branch's spell. Null on every other mark.</summary>
+        public Empower Empower;
+        /// <summary>On a Learn mark (and a duo spell): what the spell is for, the role icon in the Hand.</summary>
+        public SpellRole Role = SpellRole.None;
+        /// <summary>On a reaction lift: the element whose reactions it lifts (its effects ride <see cref="UpgradeTrigger.Reacted"/>). Empty otherwise.</summary>
+        public string Lifts = "";
+        /// <summary>On a Way mark (phase 5): the aspect it belongs to (<c>katana.sheath</c>); empty for the trunk.</summary>
+        public string Aspect = "";
+        /// <summary>A progress flag that must be set before it can be bought (an elite beaten, a land reached); empty for none. Read by phase 5.</summary>
+        public string Gate = "";
+        /// <summary>One line for the body sign or look it brings (Heresies, phase 6); empty for none.</summary>
+        public string Seen = "";
         /// <summary>Its place in <see cref="All"/>.</summary>
         public int Index { get; internal set; }
+
+        /// <summary>
+        /// True for an element's base spell's Learn mark: its id is the base id (<c>fire.base</c>), it comes with its element
+        /// (never bought), and it is cast by the element's kit, so it has no form of its own.
+        /// </summary>
+        public bool IsBaseSpell => Part == BranchPart.Learn && Magic.SpellSlots.IsBase(Id);
+        /// <summary>True for a mark that is never sold: given, a god's gift, a hidden mark.</summary>
+        public bool Given => Currency == Currency.None || Signature || IsHidden;
 
         /// <summary>True for what only a god's fall gives: it is never for sale.</summary>
         public bool Signature => Kind == UpgradeKind.Signature;
@@ -96,9 +124,20 @@ namespace Clover.Player
                 case UpgradeKind.Spell: return 4;
                 case UpgradeKind.Keystone: return 6;
                 case UpgradeKind.Mix: return 3;
+                // The shared prices of steel/README.md: Devotion 6 Shards, an Evolution 5 once found, a deep Heresy 8, an
+                // aspect 2 Memories, a technique 2 Memories, a temper rank 1 (the dearer ranks write their own).
+                case UpgradeKind.Devotion: return 6;
+                case UpgradeKind.Evolution: return 5;
+                case UpgradeKind.Heresy: return 8;
+                case UpgradeKind.Aspect: return 2;
+                case UpgradeKind.Technique: return 2;
+                case UpgradeKind.Temper: return 1;
                 default: return 0;
             }
         }
+
+        /// <summary>What the mark costs unless it says otherwise: nothing when it is given, else its kind's usual cost.</summary>
+        public static int UsualCost(Upgrade mark) => mark == null || mark.Currency == Currency.None ? 0 : UsualCost(mark.Kind);
 
         private static List<Upgrade> all;
         private static Dictionary<string, Upgrade> byId;
@@ -141,7 +180,9 @@ namespace Clover.Player
             foreach (var upgrade in list)
             {
                 upgrade.Index = place++;
-                if (upgrade.Cost == 0) upgrade.Cost = UsualCost(upgrade.Kind);
+                // A given mark (a base spell's Learn) costs nothing, whatever its kind.
+                if (upgrade.Currency == Currency.None) upgrade.Cost = 0;
+                else if (upgrade.Cost == 0) upgrade.Cost = UsualCost(upgrade.Kind);
                 // Basic spells run on cooldowns and the larger ones cost mana, by the one table of the shared rules.
                 SpellTimings.Apply(upgrade);
                 index[upgrade.Id] = upgrade;
@@ -150,6 +191,17 @@ namespace Clover.Player
                     effect.Slot = slots++;
                     effect.Owner = upgrade;
                 }
+                // A shape's effects belong to its Shape mark: they run only while that shape is worn (SpellBranches.ShapeOf).
+                if (upgrade.Shapes != null)
+                    foreach (var shape in upgrade.Shapes)
+                    {
+                        if (shape?.Effects == null) continue;
+                        foreach (var effect in shape.Effects)
+                        {
+                            effect.Slot = slots++;
+                            effect.Owner = upgrade;
+                        }
+                    }
             }
             all = list;
             byId = index;

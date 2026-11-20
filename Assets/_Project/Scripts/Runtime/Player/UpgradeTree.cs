@@ -39,14 +39,15 @@ namespace Clover.Player
 
         /// <summary>
         /// True when what the upgrade grows from has been learned, or it grows from the foot of its tree. Whether
-        /// the tree itself is open to the player (the element held, a mix unlocked) is asked elsewhere.
+        /// the tree itself is open to the player (the element held, a mix unlocked) is asked elsewhere. An element's base
+        /// spell (<c>fire.base</c>) counts as learned: it comes with its element, so its branch's Empower is open at once.
         /// </summary>
         public static bool Reachable(Upgrade upgrade, ICollection<string> learned)
         {
             if (upgrade == null) return false;
             if (upgrade.Requires == null || upgrade.Requires.Length == 0) return true;
             foreach (string id in upgrade.Requires)
-                if (learned.Contains(id)) return true;
+                if (learned.Contains(id) || Magic.SpellSlots.IsBase(id)) return true;
             return false;
         }
 

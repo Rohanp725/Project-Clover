@@ -81,5 +81,11 @@ namespace Clover.Player
         /// look's bolt is drawn down it.
         /// </summary>
         Lane,
+        /// <summary>Takes seconds off every running spell and strike clock, as a landed blow does (IMPLEMENTATION.md 3.1). Reads: Amount (seconds).</summary>
+        CutCooldowns,
+        /// <summary>Ends the clock of a branch's slot at once: its own branch's, or the one named in Branch. Nothing when that spell sits in no slot. Reads: Branch.</summary>
+        ResetCooldown,
+        /// <summary>The next cast of a branch's slot starts no clock (its own branch's, or Branch's), within Seconds (0: until it is cast). Reads: Branch, Seconds.</summary>
+        InstantNext,
     }
 }
