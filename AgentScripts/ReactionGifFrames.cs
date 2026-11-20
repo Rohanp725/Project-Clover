@@ -174,6 +174,11 @@ public class ReactionGifFramesRunner : MonoBehaviour
     }
 
     // Puts every enemy back and stands the ones this clip wants: the main one at the middle, the group round it.
+    // The Bolt Runs True runs down an 8 m lane away from the player (2026-11-20): a second enemy stands on it further out,
+    // and the window is carried 2.4 m down it so the bolts running away are seen.
+    private bool lane;
+    private static readonly Vector3 OnTheLane = new Vector3(4.6f, 0f, -0.2f);
+
     private void StandCast(int count)
     {
         var homeField = typeof(Enemy).GetField("home", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -187,7 +192,7 @@ public class ReactionGifFramesRunner : MonoBehaviour
                 enemy.gameObject.SetActive(false);
                 continue;
             }
-            Vector3 at = Middle + (i == 0 ? Vector3.zero : Spread[i - 1]);
+            Vector3 at = Middle + (i == 0 ? Vector3.zero : lane && i == 2 ? OnTheLane : Spread[i - 1]);
             at.y = 0.05f;
             // Facing the player, as a fight would have them. Its home is made the spot, so putting it back stands it
             // there and an idle enemy has nowhere else to walk to.
@@ -280,14 +285,19 @@ public class ReactionGifFramesRunner : MonoBehaviour
 
             // A clean start: everyone put back and stood again, the player still, the pool empty and the ground clear.
             player.Teleport(Middle + Stand, Quaternion.LookRotation(Away, Vector3.up));
+            lane = look == "The Bolt Runs True";
             StandCast(count);
             float clear = Time.unscaledTime + 8f;
             while ((!PoolEmpty() || Hazards.Alive > 0) && Time.unscaledTime < clear) yield return null;
             bool wasClean = PoolEmpty();
+            // Ground the last reaction left (Caught Light's marking light) lays its affliction again on a body put back
+            // while it lasts: cleared once more now it is gone, or the next reaction starts on a third affliction and
+            // sets off others beside it (Girdled showed Diamond Ring and Shining Herb, 2026-11-20).
+            foreach (var enemy in cast) if (enemy != null && enemy.gameObject.activeInHierarchy) enemy.Afflictions.Clear();
             yield return Real(1f);
             var main = cast[0];
 
-            var window = Window(main.transform.position);
+            var window = Window(main.transform.position + (lane ? Away * 2.4f : Vector3.zero));
             Time.captureFramerate = Rate;
             int frame = 0;
             for (; frame < Before; frame++)
