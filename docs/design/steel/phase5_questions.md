@@ -33,3 +33,20 @@ every one is easy to change.
    Alternatives: flags named for each stage (`stage.tier2`); or the bough count as a rule in `WayRules`.
 7. **The Fists' two techniques before one is chosen.** Default: with no choice made, both techniques are in force and
    the chord takes the first (task 5.3 decides which). Alternative: neither works until one is chosen at a fire.
+
+## Task 5.6: Memories income
+
+1. **One payment per defeat.** An elite, a named fighter or a god is also the first of its kind. Default: it is paid as
+   what it is (an elite 4), not also as a new kind (+1), so way_plan.md's land table adds up (the Fire land 21).
+   Alternative: both, about one Memory more per elite and god.
+2. **Where a god is paid.** A god fights in more than one body (Khepharu as a man, then the Sun-Bearer). Default: its
+   bodies pay nothing as kinds; the god pays 8 once, under its fall's flag (`god.fire`), when the fall is reported.
+   Alternative: pay through the last body's death.
+3. **What wires the income in.** Default: the rules and their tests only (`Growth/Income.cs`, `IncomeTests`); nothing
+   pays yet, because the hooks (`AreaDirector`'s deaths, the god directors' falls, a found-Memory pickup) want a probe
+   in the editor. When wired, the Proving Ground's pens pay no Memories, as they pay no Shards (the playtest tops
+   Memories up at a rest anyway). Alternative: wire `AreaDirector` now, unprobed.
+4. **Named fighters, the Teacher and the last champion.** No enemy kind is any of these yet. Default: their prices are
+   in `Income` (2, 4, 12) and `Income.TierOf` reads only gods and elites, with a `NEEDS` for a field on `EnemyKind` when
+   the first is built.
+5. **A new climb at 1.5 times** (`depth_weapons.md` 6) is not built; it waits for a second climb to exist.
