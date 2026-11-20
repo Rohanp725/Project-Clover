@@ -85,10 +85,12 @@ namespace Clover.Player.Magic
             ["earth.stance"] = Cd(10f, SpellRole.Counter),
             ["earth.mound"] = Cd(9f, SpellRole.Movement),
             ["earth.cairn"] = Mana(40f, SpellRole.Detonator),       // Earth's larger spell
-            // Metal
+            // Metal, reshaped (Phase 4): Flung Blade is the base spell; Hone is cut (the charged blade does what it did);
+            // Returning Edge is rebuilt as the turning blade; Poured Bronze and To the Blade are new.
             ["metal.circle"] = Cd(10f, SpellRole.Counter),
-            ["metal.hone"] = Cd(9f, SpellRole.Breaker),             // not in the roster
             ["metal.returningedge"] = Cd(9f, SpellRole.Breaker),
+            ["metal.bronze"] = Cd(12f, SpellRole.Detonator),
+            ["metal.toblade"] = Cd(8f, SpellRole.Movement),
             ["metal.graveofswords"] = Mana(50f, SpellRole.Breaker), // Metal's larger spell
             // Light
             ["light.step"] = Cd(8f, SpellRole.Movement),
@@ -155,8 +157,8 @@ namespace Clover.Player.Magic
 
         /// <summary>
         /// What one mark takes off the wait of <paramref name="element"/>'s base spell (stat
-        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Metal second, Ready Steel
-        /// shortens Flung Blade and not the first element's spell.
+        /// <see cref="PlayerStat.BaseSpellCooldown"/>): the element's own marks only, so carrying Light second, Ready Light
+        /// shortens Glare and not the first element's spell.
         /// </summary>
         public static float BaseCooldownShare(Upgrade mark, string element)
         {

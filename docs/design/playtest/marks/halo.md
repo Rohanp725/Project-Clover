@@ -20,7 +20,7 @@ The long explanation the chart shows for every mark on Halo, the branch Metal an
 
 **The numbers.** Mix, 4 Shards. Six blades at most. Each flies at 16 metres a second, turning after the attacker, and strikes for 9 damage and 8 stagger with one notch of Sundered.
 
-**Works with.** Bright Steel and Marked enemies (every blow on them is critical), Counter Cut, Answering Draw, Clean Edge, Edge Guard, Blinding Guard.
+**Works with.** Bright Steel and Marked enemies (every blow on them is critical), Counter Cut, Answering Draw, Edge Guard, Blinding Guard.
 
 **Example.** Land three critical blows on a Marked soldier, then perfect-guard the brute behind it: three blades fly into the brute.
 
@@ -31,7 +31,7 @@ The long explanation the chart shows for every mark on Halo, the branch Metal an
 
 **The numbers.** Mix, 4 Shards. One stack of Marked and one notch of Sundered from the slash. For 1.5 seconds after a perfect guard, every weapon blow is critical (one and a half times damage). Where your first element's root mark already lays its own with the slash, that one is not laid twice.
 
-**Works with.** Master's Answer (after a perfect guard the slash comes at once, free, and critical), Halo of Blades, Bright Steel, Counter Cut, Clean Edge.
+**Works with.** Master's Answer (after a perfect guard the slash comes at once, free, and critical), Halo of Blades, Bright Steel, Counter Cut.
 
 **Example.** Perfect-guard a thrust and loose the Iaido Slash straight away: it lands critical on everything it cuts.
 
@@ -53,7 +53,7 @@ The long explanation the chart shows for every mark on Halo, the branch Metal an
 
 **The numbers.** Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Two wheels 2.5 metres out from you for 9 seconds. Every half second each strikes what is within a metre of it for 5 damage, 4 stagger and a notch of Sundered; an enemy is struck once in each half second however many wheels pass it.
 
-**Works with.** Ricochet (every strike is a spell striking), Sunder, the charged blade (it charges your weapon with Metal), True Flight.
+**Works with.** Sunder, Poured Bronze (it pours into the notches the wheels leave), the charged blade (it charges your weapon with Metal), Every Crack Rings.
 
 **Example.** Cast it before stepping into a ring of small enemies: nine seconds later each is notched three deep.
 

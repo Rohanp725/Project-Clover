@@ -100,6 +100,18 @@ namespace Clover.Player
             new RetiredMark("earth.stoneskin", 3), new RetiredMark("earth.aftershock", 3), new RetiredMark("earth.landslide", 3), new RetiredMark("earth.toppling", 3),
             new RetiredMark("earth.cleaver", 4), new RetiredMark("earth.rampart", 4),
             new RetiredMark("earth.closedring", 6),
+
+            // Metal (elements_b.md, "What to cut from the built content"): the plain minors and the dead "costs less" minor
+            // (Ready Steel), Hone cut as a repeat of the charged blade, Buried Blades folded into Flung Blade's Empower,
+            // Ricochet, Splinter and Shatter Point cut outright, and All Blades Home, a keystone not carried over (the tree
+            // keeps two beside its Devotion).
+            new RetiredMark("metal.practisedwrist", 1), new RetiredMark("metal.brightsparks", 1), new RetiredMark("metal.hardreturn", 1), new RetiredMark("metal.bracedframe", 1),
+            new RetiredMark("metal.longtemper", 1), new RetiredMark("metal.deepbite", 1), new RetiredMark("metal.finishingedge", 1), new RetiredMark("metal.cleanedge", 1),
+            new RetiredMark("metal.slowmending", 1), new RetiredMark("metal.balancedblade", 1), new RetiredMark("metal.trueflight", 1), new RetiredMark("metal.readysteel", 1),
+            new RetiredMark("metal.longthrow", 1), new RetiredMark("metal.paidinblows", 1),
+            new RetiredMark("metal.buriedblades", 3), new RetiredMark("metal.ricochet", 3), new RetiredMark("metal.splinter", 3), new RetiredMark("metal.shatterpoint", 3),
+            new RetiredMark("metal.hone", 4),
+            new RetiredMark("metal.allbladeshome", 6),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

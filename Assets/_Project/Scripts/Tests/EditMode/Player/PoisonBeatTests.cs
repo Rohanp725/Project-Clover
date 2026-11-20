@@ -214,8 +214,9 @@ namespace Clover.Tests
             var probe = new Upgrade { Id = "test.words", Name = "Words", Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Do = UpgradeAction.Heal, Amount = 1f } } };
             StringAssert.Contains("poison bites", TriggerWords.HowTo(probe));
             // Strong Arm, Following Draft and Held Fast, which gave PushDistance, BoonSeconds and FreezeSeconds, were retired with
-            // Wind's and Ice's reshaping (Phase 4); those stats wait for the Empowers and Bonds that will give them again.
-            var named = new[] { PlayerStat.GuardGrey, PlayerStat.ShatterDamage, PlayerStat.BurstStagger, PlayerStat.GroundSeconds, PlayerStat.LeapReach };
+            // Wind's and Ice's reshaping (Phase 4), and Braced Frame, which gave GuardGrey, with Metal's; those stats wait for
+            // the Empowers and Bonds that will give them again.
+            var named = new[] { PlayerStat.ShatterDamage, PlayerStat.BurstStagger, PlayerStat.GroundSeconds, PlayerStat.LeapReach };
             foreach (var stat in named)
                 Assert.IsTrue(Upgrade.All.Any(mark => mark.Stats.Any(mod => mod.Stat == stat)), $"No mark gives {stat}.");
             var stats = new PlayerStats();

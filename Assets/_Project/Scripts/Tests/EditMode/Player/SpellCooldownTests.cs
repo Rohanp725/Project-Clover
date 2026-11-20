@@ -138,7 +138,8 @@ namespace Clover.Tests
         {
             // The owner's decision of 2026-11-19: what once cost less mana now waits less, for its own element's base spell alone.
             // Fire's Short Breath, Lightning's Quick Clap, Wind's Easy Breath, Ice's Thin Ice, Water's Low Water, Life's Ready
-            // Soil and Earth's Near to Hand went with their trees' reshaping (Phase 4): their Empower marks do it now.
+            // Soil, Earth's Near to Hand and Metal's Ready Steel went with their trees' reshaping (Phase 4): their Empower marks
+            // do it now.
             Assert.IsTrue(RetiredMarks.IsRetired(IceTree.ThinIce));
             Assert.IsTrue(RetiredMarks.IsRetired(WaterTree.LowWater));
             Assert.IsNull(Upgrade.ById(WaterTree.LowWater));
@@ -146,10 +147,11 @@ namespace Clover.Tests
             Assert.IsNull(Upgrade.ById(LifeTree.ReadySoil));
             Assert.IsTrue(RetiredMarks.IsRetired(EarthTree.NearToHand));
             Assert.IsNull(Upgrade.ById(EarthTree.NearToHand));
+            Assert.IsTrue(RetiredMarks.IsRetired(MetalTree.ReadySteel));
+            Assert.IsNull(Upgrade.ById(MetalTree.ReadySteel));
             var minors = new (string Id, string Element)[]
             {
-                (LightTree.ReadyLight, Elements.Light),
-                (MetalTree.ReadySteel, Elements.Metal), (PoisonTree.ReadyPoison, Elements.Poison),
+                (LightTree.ReadyLight, Elements.Light), (PoisonTree.ReadyPoison, Elements.Poison),
             };
             foreach (var (id, element) in minors)
             {

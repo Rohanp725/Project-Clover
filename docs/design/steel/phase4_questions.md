@@ -145,3 +145,37 @@ Each was built with the default given here; every one is easy to change. Added t
    driven into one is hurt and breaks it); nothing yet stands on the field. Default: it keeps its built pillar on what a
    spell strikes, with its built words, and the design's in its details. Alternative: the design's words now, as
    Stone Remembers has, with the pillar as the stand-in.
+
+## Metal
+
+1. **Three keystones in the table, two kept.** Metal's passive table gives Edge Guard, Master's Answer and All Blades
+   Home; the cut list says each tree keeps two beside its Devotion. Default: Edge Guard and Master's Answer kept (both
+   answer the perfect guard, Metal's own timing), All Blades Home retired and refunded (6 Shards): its blades that never
+   fade need standing blades nothing has yet, and To the Blade and Grave of Swords now call blades home. Alternatives:
+   keep All Blades Home and cut Master's Answer (the one that changes the weapon's skill, which the Way may own now); or
+   keep it as a major (3 Shards) in the empty place at the top of the trunk.
+2. **Four Empowers with no shorter wait in the roster.** Flung Blade's, Circle of Steel's, Returning Edge's and Poured
+   Bronze's Empowers give only stronger numbers, but every Empower is "stronger, shorter cooldown" and the chart tests ask
+   for one. Default: each waits a second less (5, 9, 8 and 11 seconds), as Earth's Mountain Stance. Alternative: keep
+   their waits and let the test allow an Empower that only strengthens.
+3. **Returning Edge before a turning blade exists.** No form flies out and back to the hand yet. Default: a lane of
+   spikes broken open along the ground for the outward pass (12, 10, a notch), and each enemy it struck cut again a
+   second later for the way home. Alternatives: a returning projectile from the mark alone (it would not count as the
+   spell striking, so its shapes and the charged blade would not answer it); or keep the built lunging head until the
+   form is built.
+4. **Shapes that reach more than the design's enemies.** Poured Bronze's Set and Red-Hot crust every enemy the pour's
+   eight metres reached, not only the notched ones poured into (the shape answers after the pour has spent the notches);
+   The Golden Chair answers with a 90-degree cone at the attacker and binds everything the cone strikes. Default: as
+   written, with **Not built yet** lines. Alternatives: give those shapes nothing until the pieces are built; or narrow
+   them (Set and Red-Hot answering only a heavy blow's or a weapon blow's own enemy within two seconds of the pour).
+5. **Stand-ins that are stronger than their timing.** Until the moments exist, Flung Blade's Master ends its wait on
+   every perfect guard (as Thunderclap's does); Returning Edge's Master on any perfect guard once in 9 s; Bat It Home
+   throws a blade out and back on any perfect guard once in 2 s; Circle of Steel's Master gives its mana and reset for any
+   blow turned once in 20 s; Grave of Swords' Master gives 20 mana for any heavy blow on an enemy near the cast, once a
+   cast. Default: as written. Alternatives: give them nothing until the pieces are built; or lengthen their limits.
+6. **The Guard Holds before a guard that cannot break.** Default: your guard costs half the stamina (so it breaks far
+   later), you take 15% less, and each blow held on it notches and sparks the attacker. Alternative: no stamina change
+   until the unbreakable guard is built.
+7. **Two readings of the roster.** The Nail's "a pool of 3 m": default 3 m across (1.5 m round). The Tripods' "four
+   blades on each, cutting twice a second": default three helpers that cut for 6 s. Alternatives: a pool 3 m round; four
+   cuts each (2 s), then the tripod is spent.
