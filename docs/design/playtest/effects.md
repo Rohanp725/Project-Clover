@@ -963,6 +963,8 @@ Group: Reactions
 
 **What sets it off.** Static landing on a Seeded enemy, or a seed on a charged one.
 
+**Its shapes.** With the Shape mark of Lightning and Life's duo branch (Field or Oak: The Rice Wakes or Struck Oak, 3 Shards, in the heart of the chart) and both carried, Lightning Flower wears the shape chosen at a rest fire instead. The Rice Wakes: the fern's bolt as plain, and a field of shoots 3 m round it for 6 s that lays a Static each second on what stands in it. Struck Oak: no fern; a burst of 16 and 5 for each Static and Seed it carried, in 3 m, spending both.
+
 **How to use it.** Seed two enemies, then charge one.
 
 **How it looks.** Its name over the enemy and a strike where the bolt lands. Not yet: your grown things (briars, saplings, lilies) throwing bolts into it.

@@ -153,6 +153,7 @@ namespace Clover.Player.Magic
             ["thegrudge.exilesgrudge"] = Cd(12f, SpellRole.Counter),
             ["illwind.yellowgale"] = Cd(12f, SpellRole.Detonator),
             ["steam.quarrel"] = Cd(12f, SpellRole.Breaker),
+            ["lightningflower.sowing"] = Cd(10f, SpellRole.Detonator),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };
