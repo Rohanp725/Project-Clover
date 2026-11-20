@@ -66,7 +66,8 @@ namespace Clover.Tests
         {
             var set = ElementLookBuilder.Set();
             if (set == null) Assert.Ignore("The element looks have not been built; run Clover > Build > Element Looks.");
-            Assert.AreEqual(23, set.Looks.Length, "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks");
+            Assert.AreEqual(23, set.Looks.Count(look => !look.Key.Contains("@") && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
+                "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks");
             foreach (AfflictionKind kind in System.Enum.GetValues(typeof(AfflictionKind)))
                 for (int depth = 1; depth <= 6; depth++)
                 {
@@ -263,6 +264,32 @@ namespace Clover.Tests
                 var part = set.Parts[light.FirstPart + k];
                 if (part.Mesh.name.Contains("softray")) Assert.AreEqual(L.Flat, part.Kind, "Light's rays are soft see-through beams, not solid blades");
             }
+        }
+
+        [Test]
+        public void EachBuiltReactionHasItsOwnBespokeLook()
+        {
+            var set = ElementLookBuilder.Set();
+            if (set == null || UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(ElementLookBuilder.ReactionRecipePath) == null)
+                Assert.Ignore("The combos 4 recipe is not in the project yet, or the looks are not built.");
+            for (int pair = 0; pair < AfflictionPairs.Count; pair++)
+            {
+                string slug = ReactionLook.SlugOf(pair);
+                bool built = System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, slug) >= 0;
+                int look = set.Find(slug);
+                Assert.AreEqual(built, look >= 0, $"{AfflictionPairs.Name(pair)} ({slug}) has a bespoke look exactly when it is built");
+                if (!built) continue;
+                Assert.Greater(set.Looks[look].PartCount, 3, slug);
+                // Its own pieces, not element looks: no part of it is another look's.
+                for (int k = 0; k < set.Looks[look].PartCount; k++)
+                    StringAssert.StartsWith("look_" + slug, set.Parts[set.Looks[look].FirstPart + k].Mesh.name, slug);
+                for (int n = 1; n < 6; n++)
+                {
+                    int other = set.FindVariant(slug, (char)('0' + n));
+                    if (other >= 0) Assert.AreEqual(slug + "@" + n, set.Looks[other].Key);
+                }
+            }
+            Assert.AreEqual("drowned_weight", ReactionLook.SlugOf(AfflictionPairs.Index(AfflictionKind.Soaked, AfflictionKind.Cursed)));
         }
 
         [Test]

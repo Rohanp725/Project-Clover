@@ -53,6 +53,19 @@ namespace Clover.Player.Forms
         /// <summary>Pieces drawn now and looks playing now, for probes.</summary>
         public static int Shown => instance != null ? instance.used : 0;
         public static int Playing => instance != null ? instance.playing : 0;
+
+        /// <summary>Looks played once (a reaction's, a strike's) that are still playing, for probes: an affliction's kept look is not counted.</summary>
+        public static int PlayingOnce
+        {
+            get
+            {
+                if (instance == null || instance.showings == null) return 0;
+                int count = 0;
+                for (int i = 0; i < instance.showings.Length; i++)
+                    if (instance.showings[i].Active && instance.showings[i].Once) count++;
+                return count;
+            }
+        }
         public static bool Ready => instance != null && instance.set != null && ElementArt.Ready;
 
         private ElementLookSet set;
@@ -146,6 +159,87 @@ namespace Clover.Player.Forms
             if (showing < 0) return false;
             instance.showings[showing].Once = true;
             return true;
+        }
+
+        /// <summary>Plays a look once on a body, turned to <paramref name="yaw"/> degrees as <see cref="PlayAt"/> turns it.</summary>
+        public static bool Play(int look, Transform body, float yaw)
+        {
+            if (!Ready || body == null || look < 0 || look >= instance.set.Looks.Length) return false;
+            int showing = instance.Begin(look, body);
+            if (showing < 0) return false;
+            instance.showings[showing].Once = true;
+            instance.showings[showing].Turn = Quaternion.Euler(0f, yaw - instance.set.Looks[look].FacingYaw, 0f);
+            return true;
+        }
+
+        // What a reaction's look on another body may land on: enemies (and training dummies) found near where that body stood.
+        private static readonly Collider[] Near = new Collider[24];
+        private static readonly Transform[] Taken = new Transform[8];
+
+        /// <summary>
+        /// Plays a reaction's bespoke look (the Blender worker's combos 4, built under its slug): on <paramref name="body"/>,
+        /// the one it landed on, turned so the recipe's way from the player becomes <paramref name="away"/>; its player's
+        /// part on <paramref name="player"/>; and each part the recipe has on another body on the real enemy standing
+        /// nearest where that body stood, when one stands within reach of it (a chain or an area reaching others). False
+        /// when the reaction has no such look. Allocates nothing.
+        /// </summary>
+        public static bool PlayReaction(string slug, Transform body, Vector3 away, Transform player)
+        {
+            if (!Ready || body == null) return false;
+            int main = instance.set.Find(slug);
+            if (main < 0) return false;
+            away.y = 0f;
+            float yaw = away.sqrMagnitude > 0.0001f ? Mathf.Atan2(away.x, away.z) * Mathf.Rad2Deg : instance.set.Looks[main].FacingYaw;
+            Play(main, body, yaw);
+            var turn = Quaternion.Euler(0f, yaw - instance.set.Looks[main].FacingYaw, 0f);
+            if (player != null)
+            {
+                int own = instance.set.FindVariant(slug, 'p');
+                if (own >= 0) Play(own, player, yaw);
+            }
+            int taken = 0;
+            Taken[taken++] = body;
+            for (int n = 1; n < 8; n++)
+            {
+                int other = instance.set.FindVariant(slug, (char)('0' + n));
+                if (other < 0) break;
+                Vector3 wanted = body.position + turn * instance.set.Looks[other].FromMain;
+                var found = Nearest(wanted, 1.6f, taken);
+                if (found == null) continue;
+                Play(other, found, yaw);
+                if (taken < Taken.Length) Taken[taken++] = found;
+            }
+            for (int i = 0; i < Taken.Length; i++) Taken[i] = null;
+            return true;
+        }
+
+        // The enemy or dummy standing nearest a point, within reach of it, that no part of this reaction is on yet.
+        private static Transform Nearest(Vector3 point, float reach, int taken)
+        {
+            int count = Physics.OverlapSphereNonAlloc(point + Vector3.up, reach + 0.6f, Near, ~0, QueryTriggerInteraction.Ignore);
+            Transform best = null;
+            float bestDistance = float.MaxValue;
+            for (int i = 0; i < count; i++)
+            {
+                var enemy = Near[i].GetComponentInParent<Clover.Gameplay.Enemy>();
+                Transform at = enemy != null ? enemy.transform : null;
+                if (at == null)
+                {
+                    var dummy = Near[i].GetComponentInParent<Clover.Gameplay.TrainingDummy>();
+                    at = dummy != null ? dummy.transform : null;
+                }
+                if (at == null) continue;
+                bool used = false;
+                for (int k = 0; k < taken; k++) used |= ReferenceEquals(Taken[k], at);
+                if (used) continue;
+                Vector3 flat = at.position - point;
+                flat.y = 0f;
+                float distance = flat.magnitude;
+                if (distance > reach || distance >= bestDistance) continue;
+                best = at;
+                bestDistance = distance;
+            }
+            return best;
         }
 
         /// <summary>

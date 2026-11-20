@@ -20,11 +20,21 @@ namespace Clover.Player
         /// <paramref name="body"/> while it stands; <paramref name="away"/> is the way the blow carried (from the player
         /// through the enemy), which lays a look with a way to it (Rime, Capsize, Logan Stone, Stolen Warmth) along it.
         /// </summary>
-        public static void Play(int pair, Vector3 at, Transform body, Vector3 away)
+        public static void Play(int pair, Vector3 at, Transform body, Vector3 away) => Play(pair, at, body, away, null);
+
+        /// <summary>The same, with the player the reaction's own part on the player (if it has one) is drawn on.</summary>
+        public static void Play(int pair, Vector3 at, Transform body, Vector3 away, Transform player)
         {
             if (pair < 0 || pair >= AfflictionPairs.Count) return;
             if (Forms.ElementArt.Ready)
             {
+                // The bespoke look made for the pair (the Blender worker's combos 4, the owner's review of 2026-11-20: "breaking
+                // away from the copy paste effect concept"), where it has been built; else the earlier designed or composed look.
+                if (body != null && Forms.ElementLooks.PlayReaction(SlugOf(pair), body, away, player))
+                {
+                    Bespoke++;
+                    return;
+                }
                 if (!Forms.ReactionArt.Play(pair, at, body, away)) Forms.ReactionArt.Compose(pair, at, body, away);
                 // Rime's crust builds up slowly over the body, layer on layer, and its feathers grow into the wind (the
                 // owner, 2026-11-20: "the rime instantly all appears instead of slowly building").
@@ -33,6 +43,36 @@ namespace Clover.Player
             }
             Vfx.Play(VfxKind.TintPuff, at + Vector3.up * 1.3f, Vector3.up, 1.1f, Colour(pair));
         }
+
+        /// <summary>Reactions drawn by their bespoke look this play, for probes.</summary>
+        public static int Bespoke { get; private set; }
+
+        // Each pair's slug in the recipes ("Drowned Weight" is drowned_weight), made once.
+        private static string[] slugs;
+
+        /// <summary>The pair's name as the recipes write it: lower case, words joined by underscores, nothing else.</summary>
+        public static string SlugOf(int pair)
+        {
+            if (slugs == null)
+            {
+                slugs = new string[AfflictionPairs.Count];
+                for (int i = 0; i < slugs.Length; i++)
+                {
+                    var text = new System.Text.StringBuilder();
+                    foreach (char c in AfflictionPairs.Name(i).ToLowerInvariant())
+                    {
+                        if (char.IsLetterOrDigit(c)) text.Append(c);
+                        else if (c == ' ' || c == '-') text.Append('_');
+                    }
+                    slugs[i] = text.ToString();
+                }
+            }
+            return pair >= 0 && pair < slugs.Length ? slugs[pair] : "";
+        }
+
+        // Domain reload is off: the count starts again each play (the slugs are fixed).
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetStatics() => Bespoke = 0;
 
         /// <summary>Rime: Unsteady and Chill.</summary>
         public static readonly int Rime = AfflictionPairs.Index(AfflictionKind.Unsteady, AfflictionKind.Chill);

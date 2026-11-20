@@ -47,6 +47,11 @@ namespace Clover.Player.Forms
             /// (<see cref="ElementLooks.PlayAt"/>) is turned by the strike's yaw less this.
             /// </summary>
             public float FacingYaw;
+            /// <summary>
+            /// A reaction's look on another body (or the player): where that one stood from the main body in the recipe, so
+            /// the game can find the real one there (<see cref="ElementLooks.PlayReaction"/>).
+            /// </summary>
+            public Vector3 FromMain;
         }
 
         [Serializable]
@@ -109,6 +114,19 @@ namespace Clover.Player.Forms
         {
             for (int i = 0; i < Looks.Length; i++)
                 if (Looks[i].Key == key) return i;
+            return -1;
+        }
+
+        /// <summary>A reaction's look on another body or the player: the key "slug@n" (or "slug@p"), found without making the string.</summary>
+        public int FindVariant(string slug, char which)
+        {
+            if (string.IsNullOrEmpty(slug)) return -1;
+            for (int i = 0; i < Looks.Length; i++)
+            {
+                string key = Looks[i].Key;
+                if (key != null && key.Length == slug.Length + 2 && key[slug.Length] == '@' && key[slug.Length + 1] == which
+                    && string.CompareOrdinal(key, 0, slug, 0, slug.Length) == 0) return i;
+            }
             return -1;
         }
 

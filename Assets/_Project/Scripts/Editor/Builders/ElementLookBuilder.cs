@@ -28,6 +28,18 @@ namespace Clover.EditorTools
         private const string E2Kit = "vfx_elements_kit_e2.fbx";
         /// <summary>The Blender worker's eleven brazier loops (staging/blender/2026-11-20_braziers) and where they are built.</summary>
         public const string BrazierRecipePath = ReactionArtBuilder.CombosFolder + "/braziers_recipe.json";
+        /// <summary>
+        /// The Blender worker's bespoke reaction looks (staging/blender/2026-11-20_reactions4, combos 4), built into the same
+        /// set as the element looks when the recipe is there: each reaction a look on the body it lands on (its slug), one on
+        /// each other body it reaches ("slug@1", "slug@2"...) and one on the player ("slug@p").
+        /// </summary>
+        public const string ReactionRecipePath = ReactionArtBuilder.CombosFolder + "/combos4_recipe.json";
+
+        /// <summary>The reactions built from combos 4 so far; the rest keep their earlier looks. Thunder Gust and Carried Embers wait for their redo.</summary>
+        public static readonly string[] ReactionsBuilt =
+        {
+            "supercooled", "quickening", "drowned_weight", "winter_seed", "lightning_flower", "seized", "rust", "smoulder",
+        };
         public const string BrazierSetPath = ElementArtBuilder.Folder + "/brazier_looks.asset";
         private const string BrazierKit = "vfx_brazier_kit.fbx";
 
@@ -102,6 +114,29 @@ namespace Clover.EditorTools
             ["r4_dark_rim"] = new ReactionArtBuilder.Paint(0.42f, 0.14f, 0.85f),
             ["r4_brew"] = new ReactionArtBuilder.Paint(0.28f, 0.52f, 0.1f),
             ["m_vfx_lightning_scorch"] = new ReactionArtBuilder.Paint(0.05f, 0.05f, 0.09f),
+            // Combos 4, group A (Supercooled, Quickening, Drowned Weight, Winter Seed, Lightning Flower, Seized, Rust,
+            // Smoulder), matched by eye to the Blender worker's strips (staging/blender/2026-11-20_reactions4/r4_*.png): water
+            // a clear teal and blue, ice a clear blue (never white), the curse's water and flame near-black with a violet heart.
+            ["r4_megadrop"] = new ReactionArtBuilder.Paint(0.1f, 0.62f, 0.78f),
+            ["r4_splash"] = new ReactionArtBuilder.Paint(0.12f, 0.55f, 0.78f),
+            ["r4_waterplant"] = new ReactionArtBuilder.Paint(0.12f, 0.52f, 0.95f),
+            ["r4_waterpetal"] = new ReactionArtBuilder.Paint(0.18f, 0.5f, 1f),
+            ["r4_heal_green"] = new ReactionArtBuilder.Paint(0.3f, 0.85f, 0.35f),
+            ["r4_ice"] = new ReactionArtBuilder.Paint(0.25f, 0.55f, 1f),
+            // Lying face up, the spell shader lights it a quarter brighter plus its shine: a deep blue so it lands a clear blue.
+            ["r4_iceflower"] = new ReactionArtBuilder.Paint(0.1f, 0.3f, 0.8f),
+            ["r4_frozen_pool"] = new ReactionArtBuilder.Paint(0.22f, 0.5f, 0.88f, 0.6f, 1f, true),
+            ["r4_blackwater"] = new ReactionArtBuilder.Paint(0.02f, 0.03f, 0.07f),
+            ["r4_blackwater_flat"] = new ReactionArtBuilder.Paint(0.01f, 0.02f, 0.05f, 0.75f, 1f, true),
+            ["r4_boltpetal"] = new ReactionArtBuilder.Paint(0.38f, 0.38f, 1f),
+            ["r4_boltstem"] = new ReactionArtBuilder.Paint(0.1f, 0.14f, 0.42f),
+            // Seized's pool: a dark, see-through water (it read as a bright blue slab on the floor at 0.7).
+            ["r4_live_water"] = new ReactionArtBuilder.Paint(0.015f, 0.08f, 0.15f, 0.42f, 1f, true),
+            ["r4_rustwater"] = new ReactionArtBuilder.Paint(0.55f, 0.25f, 0.08f),
+            ["r4_blackflame"] = new ReactionArtBuilder.Paint(0.035f, 0.01f, 0.05f),
+            ["r4_blackflame_core"] = new ReactionArtBuilder.Paint(0.3f, 0.08f, 0.55f),
+            ["r4_blackflake"] = new ReactionArtBuilder.Paint(0.06f, 0.02f, 0.08f),
+            ["r4_coalglow"] = new ReactionArtBuilder.Paint(0.55f, 0.08f, 0.04f, 0.7f, 1f, true),
         };
 
         /// <summary>
@@ -136,6 +171,9 @@ namespace Clover.EditorTools
             ["ice_chill|m_vfx_ice_frost"] = new ReactionArtBuilder.Paint(0.22f, 0.5f, 0.9f, 0.6f, 1f, true),
             ["ice_chill|m2_light_white"] = new ReactionArtBuilder.Paint(0.45f, 0.7f, 1f),
             ["ice_chill|m_vfx_ice_fog"] = new ReactionArtBuilder.Paint(0.35f, 0.55f, 0.85f, 0.3f, 1f, true),
+            // Winter Seed's and Supercooled's frost rosette on the floor: a see-through mid blue (it lay as a pale 5 m star).
+            ["winter_seed|r4_frost_bed"] = new ReactionArtBuilder.Paint(0.12f, 0.36f, 0.8f, 0.45f, 1f, true),
+            ["supercooled|r4_frost_bed"] = new ReactionArtBuilder.Paint(0.12f, 0.36f, 0.8f, 0.45f, 1f, true),
             ["brazier_ice|m_vfx_ice_frost"] = new ReactionArtBuilder.Paint(0.22f, 0.5f, 0.9f, 0.6f, 1f, true),
             ["brazier_ice|m_vfx_ice"] = new ReactionArtBuilder.Paint(0.15f, 0.45f, 1f),
             ["light_clarity|m2_light_white"] = new ReactionArtBuilder.Paint(1f, 0.74f, 0.28f),
@@ -162,6 +200,11 @@ namespace Clover.EditorTools
             ["wind_strike|vfx3c_vfx_earth_chip"] = 0.6f,
             // Light's rays shorter, so they are beams round the orb, not the points of a star.
             ["brazier_light|vfxr4_softray"] = 0.8f,
+            // Quickening's water plants were faint beside the Seeded pods: larger, so the blue plants are what is seen.
+            ["quickening|vfx3c_vfx_life_vine_a"] = 1.6f,
+            ["winter_seed|vfx3c_vfx_ice_rosette"] = 0.5f,
+            ["quickening|vfxr4_vfx_life_sapling"] = 1.5f,
+            ["quickening|vfxr4_vfx_life_flower"] = 1.5f,
             // Tremor's cracks and dust were 2.3 m and 1.7 m across under one body: kept to about the body's own ground.
             ["earth_tremor|vfx3c_vfx_earth_crack2"] = 0.5f,
             ["earth_tremor|vfx3c_vfx_earth_dust"] = 0.5f,
@@ -249,6 +292,18 @@ namespace Clover.EditorTools
         public const string BedPiece = "vfxr4_disc";
         public static readonly ReactionArtBuilder.Paint GlazeCrystalPaint = new ReactionArtBuilder.Paint(0.15f, 0.45f, 1f);
 
+        /// <summary>
+        /// Materials drawn in another element's solid than their name says: Winter Seed's ice flower lies flat, and the ice
+        /// solid lights faces turned up white (its glint on the tops), so it is drawn in the water solid's flatter shine.
+        /// </summary>
+        public static readonly Dictionary<string, string> SolidOf = new Dictionary<string, string>
+        {
+            ["r4_iceflower"] = "water",
+            // Winter Seed's thorns and Supercooled's ice: the ice solid prints every face turned straight up pure white
+            // (its glint), which made the thorns a white star on the floor.
+            ["r4_ice"] = "water",
+        };
+
         /// <summary>Soaked: seconds the water takes to run down the body, and the most its puddle spans, metres.</summary>
         public const float WetRunsDown = 0.45f, SoakedPuddle = 1.15f;
 
@@ -279,6 +334,9 @@ namespace Clover.EditorTools
 
         public static string Build() => BuildSet(RecipePath, SetPath, "review/checks/element_looks.md", "Element looks (batches 1 and 2)", true);
 
+        /// <summary>The key of a reaction's look on another body (n of the recipe's bodies), or on the player (n below nought).</summary>
+        public static string ReactionKey(string slug, int body) => body == 0 ? slug : body < 0 ? slug + "@p" : slug + "@" + body;
+
         /// <summary>The eleven brazier loops (the recipe's lineup, all eleven together, is only a picture and is left out).</summary>
         public static string BuildBraziers() => BuildSet(BrazierRecipePath, BrazierSetPath, "review/checks/brazier_looks.md", "Brazier looks", false);
 
@@ -291,6 +349,8 @@ namespace Clover.EditorTools
             public readonly Dictionary<string, (Transform root, Dictionary<string, MeshFilter> pieces)> Kits = new Dictionary<string, (Transform, Dictionary<string, MeshFilter>)>();
             public int Ribbons;
             public ElementLookSet Target;
+            /// <summary>Building reactions: pieces split by the body they are on, the player's apart.</summary>
+            public bool Reactions;
         }
 
         private static string BuildSet(string recipePath, string setPath, string reportPath, string title, bool elementLooks)
@@ -319,6 +379,30 @@ namespace Clover.EditorTools
             Report.Clear();
             Unknown.Clear();
             var lists = new Lists { Target = set };
+            // The reactions' looks join the element looks, played by the same pool.
+            if (elementLooks)
+            {
+                var reactions = AssetDatabase.LoadAssetAtPath<TextAsset>(ReactionRecipePath);
+                if (reactions != null)
+                {
+                    lists.Reactions = true;
+                    foreach (Dictionary<string, object> look in (List<object>)((Dictionary<string, object>)ReactionRecipe.ReadJson(reactions.text))["looks"])
+                    {
+                        string slug = Text(look, "slug");
+                        if (!ReactionsBuilt.Contains(slug)) continue;
+                        var bodyAt = new List<Vector3>();
+                        foreach (Dictionary<string, object> body in (List<object>)look["bodies"]) bodyAt.Add(Vec(body["position"], Vector3.zero));
+                        for (int b = -1; b < Mathf.Max(1, bodyAt.Count); b++)
+                        {
+                            int before = lists.Looks.Count;
+                            BuildLook(look, slug, ReactionKey(slug, b), b, bodyAt, 0f, lists, elementArt, glow);
+                            // A body (or the player) with nothing of the look on it has no look of its own.
+                            if (b != 0 && lists.Looks.Count > before && lists.Looks[lists.Looks.Count - 1].PartCount == 0) lists.Looks.RemoveAt(lists.Looks.Count - 1);
+                        }
+                    }
+                    lists.Reactions = false;
+                }
+            }
             foreach (Dictionary<string, object> look in looks)
             {
                 string slug = Text(look, "slug");
@@ -380,9 +464,14 @@ namespace Clover.EditorTools
             Lists lists, ElementArtSet elementArt, Material glow)
         {
             string element = Text(look, "element");
+            if (string.IsNullOrEmpty(element) && look.TryGetValue("pair", out var pairValue) && pairValue is List<object> pair && pair.Count > 0) element = pair[0] as string ?? "";
             float seconds = Number(look, "duration_s", 2f) - shift;
-            Vector3 bodyFrom = onBody < bodyAt.Count ? bodyAt[onBody] : Vector3.zero;
-            var made = new ElementLookSet.Look { Key = key, Seconds = seconds, FirstPart = lists.Parts.Count, LoopFrom = seconds };
+            bool playerVariant = onBody < 0;
+            Vector3 playerAt = look.TryGetValue("player", out var playerAtValue) && playerAtValue is Dictionary<string, object> playerAtDict ? Vec(playerAtDict["position"], Vector3.zero) : Vector3.zero;
+            Vector3 bodyFrom = playerVariant ? playerAt : onBody < bodyAt.Count ? bodyAt[onBody] : Vector3.zero;
+            var made = new ElementLookSet.Look { Key = key, Seconds = seconds, FirstPart = lists.Parts.Count, LoopFrom = seconds, OnPlayer = playerVariant };
+            // Where this look's body stood from the main body's (or the player's), for the game to find the real one there.
+            if (lists.Reactions && bodyAt.Count > 0) made.FromMain = bodyFrom - bodyAt[0];
             // The way the recipe's player faced: toward the main body.
             if (look.TryGetValue("player", out var playerValue) && playerValue is Dictionary<string, object> player && bodyAt.Count > 0)
             {
@@ -402,8 +491,16 @@ namespace Clover.EditorTools
                     var instance = (List<object>)instances[n];
                     var motion = (Dictionary<string, object>)motions[n];
                     bool onPlayer = motion.TryGetValue("on_player", out var flag) && flag is bool yes && yes;
-                    made.OnPlayer |= onPlayer;
+                    string placementHere = instance.Count > 4 ? instance[4] as string : "b";
                     Vector3 position = Vec(instance[1], Vector3.zero);
+                    if (lists.Reactions)
+                    {
+                        // A reaction's piece belongs to the player's look or a body's, never to both.
+                        bool onThePlayer = onPlayer || placementHere == "p";
+                        if (onThePlayer != playerVariant) continue;
+                        if (playerVariant) onPlayer = true;
+                    }
+                    made.OnPlayer |= onPlayer;
                     // The main body's pieces only (or the player's): the other two bodies show the same timeline again.
                     Vector3 judged = position;
                     if (motion.TryGetValue("orbit", out var orbitValue) && orbitValue is Dictionary<string, object> orbitAt && orbitAt.ContainsKey("centre"))
@@ -414,7 +511,9 @@ namespace Clover.EditorTools
                     if (!onPlayer && bodyAt.Count > 0 && (instances.Count > 1 ? BodyOf(instance[0] as string, bodyAt, judged) : Nearest(bodyAt, judged)) != onBody) continue;
                     var window = Window(motion);
                     float show = window.x - shift, hide = window.y >= 9f ? 9f : window.y - shift;
-                    if (onBody != 0) position -= bodyFrom;
+                    // The piece about its own anchor: the player for the player's look, else its body.
+                    if (playerVariant) position -= playerAt;
+                    else if (onBody != 0) position -= bodyFrom;
                     // Soaked (the coordinator's check of 2026-11-20: the sheets and puddles grew to 3 m and buried the
                     // group): the water running down the body is a wet sheen on the body itself, drawn by its own
                     // material from the head down; the foam ring stacks are left out.
@@ -425,6 +524,11 @@ namespace Clover.EditorTools
                         continue;
                     }
                     if (slug == "water_soaked" && kitObject.Contains("water_ripple")) continue;
+                    if (kit == "enemy_model")
+                    {
+                        lists.Missing.Add($"{slug}: {kitObject} (a second skin of the enemy model, drawn by the body's own material: not built yet)");
+                        continue;
+                    }
                     if (kit == Mockup)
                     {
                         // The shell's band: its window opens when the band snaps on; the scale keys say how long it grows.
@@ -499,8 +603,16 @@ namespace Clover.EditorTools
                     if (lists.Parts.Count - made.FirstPart >= ElementLooks.MostParts) break;
                     string centre = Text(ribbon, "centre");
                     // A ribbon round the player belongs to the player's look; round a body, to that body's.
-                    if (centre != "player" && CentreBody(centre) != onBody) continue;
-                    if (centre == "player") made.OnPlayer = true;
+                    if (lists.Reactions)
+                    {
+                        if ((centre == "player") != playerVariant) continue;
+                        if (!playerVariant && CentreBody(centre) != onBody) continue;
+                    }
+                    else
+                    {
+                        if (centre != "player" && CentreBody(centre) != onBody) continue;
+                        if (centre == "player") made.OnPlayer = true;
+                    }
                     var motion = (Dictionary<string, object>)ribbon["motion"];
                     var window = Window(motion);
                     float show = window.x - shift, hide = window.y >= 9f ? 9f : window.y - shift;
@@ -797,7 +909,8 @@ namespace Clover.EditorTools
                 triangles.AddRange(subTriangles);
             }
             // A flame tongue or lick is banded from its foot up, hottest at the foot (notes.md, "Fire: Burn").
-            if ((filter.name == "vfxe2_flame" || filter.name == "vfxe2_flame_lick") && vertices.Length > 0)
+            // (Only in fire's own paint: Smoulder's black flame keeps its black.)
+            if ((filter.name == "vfxe2_flame" || filter.name == "vfxe2_flame_lick") && bare.StartsWith("m3_flame") && vertices.Length > 0)
             {
                 float low = float.MaxValue, high = float.MinValue;
                 foreach (var v in vertices)
@@ -821,7 +934,7 @@ namespace Clover.EditorTools
             if (flat) wears = glow;
             else
             {
-                string owner = ReactionArtBuilder.ElementOf(material.Substring(material.IndexOf('|') + 1), element + "_" + element);
+                string owner = SolidOf.TryGetValue(bare, out string drawnIn) ? drawnIn : ReactionArtBuilder.ElementOf(bare, element + "_" + element);
                 int ring = ReactionDesigns.RingIndex(owner);
                 wears = ring >= 0 && ring < elementArt.Solids.Length ? elementArt.Solids[ring] : elementArt.Solids[0];
             }

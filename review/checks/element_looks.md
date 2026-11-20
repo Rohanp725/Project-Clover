@@ -1,9 +1,46 @@
 # Element looks (batches 1 and 2)
 
-23 looks, 434 parts (116 ribbons), 2797 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+51 looks, 720 parts (191 ribbons), 3961 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
+| supercooled@p | 1.5 s | player | 0 | 0 | 1.50 s | - |
+| supercooled | 1.5 s | body | 30 | 0 | 1.03 s | 5 bands from 0.78 s, every 0.06 s, 0.12 s each |
+| supercooled@1 | 1.5 s | body | 1 | 0 | 1.09 s | - |
+| supercooled@2 | 1.5 s | body | 1 | 0 | 1.15 s | - |
+| quickening@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
+| quickening | 1.6 s | body | 24 | 0 | 1.60 s | - |
+| quickening@1 | 1.6 s | body | 11 | 0 | 1.60 s | - |
+| quickening@2 | 1.6 s | body | 11 | 0 | 1.60 s | - |
+| quickening@3 | 1.6 s | body | 6 | 0 | 1.60 s | - |
+| winter_seed@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
+| winter_seed | 1.6 s | body | 12 | 0 | 0.15 s | 5 bands from -0.30 s, every 0.00 s, 0.90 s each |
+| winter_seed@1 | 1.6 s | body | 7 | 0 | 0.22 s | - |
+| winter_seed@2 | 1.6 s | body | 7 | 0 | 0.29 s | - |
+| winter_seed@3 | 1.6 s | body | 4 | 0 | 0.36 s | - |
+| smoulder@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
+| smoulder | 1.6 s | body | 6 | 0 | -0.30 s | - |
+| smoulder@1 | 1.6 s | body | 14 | 0 | 1.55 s | - |
+| smoulder@2 | 1.6 s | body | 2 | 0 | 1.60 s | - |
+| smoulder@3 | 1.6 s | body | 2 | 0 | 1.60 s | - |
+| seized@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
+| seized | 1.6 s | body | 49 | 47 | -0.25 s | - |
+| seized@1 | 1.6 s | body | 4 | 4 | 0.66 s | - |
+| seized@2 | 1.6 s | body | 4 | 4 | 0.80 s | - |
+| seized@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
+| rust@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
+| rust | 1.6 s | body | 21 | 0 | 0.54 s | - |
+| rust@1 | 1.6 s | body | 3 | 0 | 0.62 s | - |
+| rust@2 | 1.6 s | body | 3 | 0 | 0.70 s | - |
+| lightning_flower@p | 1.5 s | player | 0 | 0 | 1.50 s | - |
+| lightning_flower | 1.5 s | body | 23 | 15 | -0.20 s | - |
+| lightning_flower@1 | 1.5 s | body | 12 | 4 | 0.95 s | - |
+| lightning_flower@2 | 1.5 s | body | 2 | 0 | 1.50 s | - |
+| drowned_weight@p | 1.6 s | player | 0 | 0 | 1.60 s | - |
+| drowned_weight | 1.6 s | body | 18 | 1 | -0.25 s | - |
+| drowned_weight@1 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| drowned_weight@2 | 1.6 s | body | 3 | 0 | 1.60 s | - |
+| drowned_weight@3 | 1.6 s | body | 3 | 0 | 1.60 s | - |
 | water_soaked | 2.2 s | body | 13 | 0 | 1.02 s | 1 bands from 0.50 s, every 0.10 s, 0.45 s each |
 | water_wellspring | 2.0 s | player | 27 | 0 | 2.00 s | - |
 | metal_sundered | 2.0 s | body | 5 | 0 | 0.68 s | - |
