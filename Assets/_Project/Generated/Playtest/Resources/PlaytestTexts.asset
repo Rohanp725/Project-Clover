@@ -3147,19 +3147,16 @@ MonoBehaviour:
   - Id: fire.devotion
     Title: Fire Without End
     Group: 
-    Body: '<b>What it does.</b> Fire Without End, Fire''s Devotion: all in on Fire only. Burns last far longer, and a burn left alone deepens by itself. Light everything once, then fight the one in front of you while the rest of the room cooks.
+    Body: '<b>What it does.</b> Fire Without End, Fire''s Devotion: all in on Fire only. Burns never go out by themselves; only death or water ends them. A burn left alone deepens by itself. Light everything once, then fight the one in front of you while the rest of the room cooks.
 
 
-      <b>When it happens.</b> Only while Fire is carried twice (all in). Then always.
+      <b>When it happens.</b> Only while Fire is carried twice (all in), once bought. Then always, on every burning enemy.
 
 
-      <b>The numbers.</b> 6 Shards. Burns last twice as long. Every 4 seconds, the burning enemy you face gains a stack of Burn, up to five. All in, L2 with R2 is the deep strike, Burnt Offering.
+      <b>The numbers.</b> 6 Shards. A burn''s time no longer runs down. Every burning enemy that has had no Burn laid on it for 4 seconds gains a stack, and another 4 seconds later another, up to five. A burn set off still goes, and Steam (Soaked meeting Burn) still takes half of it. All in, L2 with R2 is the deep strike, Burnt Offering: 20 mana on its own 8-second clock.
 
 
-      <b>Works with.</b> Cinder, Flame Wave, Catching Fire, and the deep strike.
-
-
-      <b>Not built yet.</b> Burns that never go out by themselves, and every burn near you deepening, not only the one faced.
+      <b>Works with.</b> Cinder, Flame Wave, Catching Fire, Breath of the Lioness, which sets a burn off, and the deep strike, whose pillar sets off the burn it lands on.
 
 
       <b>Example.</b> Flame Wave across a room, then a duel with one soldier: the rest are at five when you turn round.'
@@ -3931,16 +3928,13 @@ MonoBehaviour:
     Body: '<b>What it does.</b> Deep Winter, Ice''s Devotion: all in on Ice only. Chill never fades, and lighting Glaze freezes every enemy within four metres at once. No Chill is ever wasted, so you can spread it over a whole room and come back for each in turn.
 
 
-      <b>When it happens.</b> Only while Ice is carried twice (all in). The freeze comes each time Glaze is lit.
+      <b>When it happens.</b> Only while Ice is carried twice (all in), once bought. The freeze comes each time Glaze is lit.
 
 
-      <b>The numbers.</b> 6 Shards. Chill lasts three times as long (18 seconds where it lasted 6). Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. All in, L2 with R2 is the deep strike, Ice Through: the spike freezes the enemy at once if it carries three Chill or more.
+      <b>The numbers.</b> 6 Shards. Chill no longer runs down on any enemy: it stays until a freeze thaws it away or a shatter breaks it. Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. All in, L2 with R2 is the deep strike, Ice Through: the spike freezes the enemy at once if it carries three Chill or more.
 
 
       <b>Works with.</b> Every spell of the tree; Splinter Ward and The World Holds Still, which answer Glaze too; Flying Shards, for the room frozen at once.
-
-
-      <b>Not built yet.</b> Chill that never fades by itself: for now it lasts three times as long.
 
 
       <b>Example.</b> Chill four soldiers two deep each, step into the middle and light Glaze: all four are Frozen, and every heavy blow breaks one.'
@@ -5238,16 +5232,13 @@ MonoBehaviour:
     Body: '<b>What it does.</b> Full Daylight, Light''s Devotion: all in on Light only. A mark is no longer spent by blows. Every weapon blow on a Marked enemy is critical until the mark fades, but no mark can be laid on that enemy again for a while after it fades. The fight becomes a rhythm: mark, spend the window in full, wait out the light.
 
 
-      <b>When it happens.</b> Only while Light is carried twice (all in). Always on then.
+      <b>When it happens.</b> Only while Light is carried twice (all in), once bought. Always on then.
 
 
-      <b>The numbers.</b> 6 Shards. A mark carries 20 more critical blows (in practice, all of them) and fades in 6 seconds, where it lasted 8. All in, L2 with R2 is the deep strike, The Sun on the Blade.
+      <b>The numbers.</b> 6 Shards. Blows no longer spend a mark: every weapon blow on a Marked enemy is critical until the mark fades, in 6 seconds where it lasted 8. Once it has faded, that enemy cannot be Marked again for 4 seconds; a mark set off or spent by a spell does not wait. All in, L2 with R2 is the deep strike, The Sun on the Blade.
 
 
       <b>Works with.</b> Seen Plainly, which it grows from, the root, Just Cut and Unblemished (critical blows harder still with Weighed), quick weapons, The Scales.
-
-
-      <b>Not built yet.</b> The four seconds after a mark fades in which no mark can be laid on that enemy again: for now it can be Marked again at once.
 
 
       <b>Example.</b> Glare a captain, then cut it for six seconds: every one of a dozen blows lands critical.'
@@ -5416,16 +5407,13 @@ MonoBehaviour:
     Body: '<b>What it does.</b> In One Breath, Lightning''s Devotion: all in on Lightning only. After a perfect guard or a perfect dodge, your spells have no cooldown for a breath. Cast everything you hold in it; then the cooldowns start from full.
 
 
-      <b>When it happens.</b> Only while Lightning is carried twice (all in). Every perfect guard and perfect dodge.
+      <b>When it happens.</b> Only while Lightning is carried twice (all in), once bought. Every perfect guard and perfect dodge.
 
 
-      <b>The numbers.</b> 6 Shards. For now a perfect guard or dodge ends every running cooldown at once. All in, L2 with R2 is the deep strike, Down the Channel.
+      <b>The numbers.</b> 6 Shards. For 2.5 seconds after the perfect guard or dodge, all four slots are ready whatever their cooldowns say. A spell cast in the breath starts no cooldown then; when the breath ends its whole cooldown starts. The cooldowns of spells you did not cast run on beneath the breath. The L2 strikes keep their own clocks, and spells paid in mana still cost their mana. A perfect guard or dodge inside the breath makes it last 2.5 seconds from then. All in, L2 with R2 is the deep strike, Down the Channel: 20 mana on its own 8-second clock.
 
 
       <b>Works with.</b> Ring of Drums and Thunderclap''s Master, which also live on the perfect guard.
-
-
-      <b>Not built yet.</b> No cooldown at all for 2.5 seconds after the perfect guard or dodge (the first rule switch, in the next task).
 
 
       <b>Example.</b> Wait for the brute''s swing, guard it perfectly, and spend the whole Hand on it.'
@@ -6204,16 +6192,13 @@ MonoBehaviour:
     Body: '<b>What it does.</b> The Guard Holds, Metal''s Devotion (GAME.md''s base buff for Metal, defence, at full strength): all in on Metal only. Your guard never breaks: a blow your stamina cannot pay for is held anyway, and what it cannot pay comes through as grey health. Every blow held on your guard notches the attacker and throws sparks into it. You take less from everything. Red attacks still need a dodge or a perfect guard.
 
 
-      <b>When it happens.</b> Only while Metal is carried twice (all in). Always on then.
+      <b>When it happens.</b> Only while Metal is carried twice (all in), once bought. Always on then.
 
 
-      <b>The numbers.</b> 6 Shards. You take 15% less from everything. Each blow held on your guard strikes the attacker for 4 damage and a notch, at most five times a second. As built a blow held on the guard costs half the stamina it did. All in, L2 with R2 is the deep strike, Red Iron.
+      <b>The numbers.</b> 6 Shards. You take 15% less from everything. A blow your stamina cannot pay for is held: the stamina you have goes, and the share of the blow it could not pay comes through whole as grey health, on top of the usual chip, so with no stamina at all the whole blow is grey. Each blow held on your guard strikes the attacker for 4 damage and a notch, at most five times a second. All in, L2 with R2 is the deep strike, Red Iron.
 
 
       <b>Works with.</b> Every Crack Rings, which it grows from, Sunder, Forged Answer, Hanging Swords (every held blow a perfect guard), Temper.
-
-
-      <b>Not built yet.</b> The guard that never breaks, what the stamina cannot pay coming through as grey health: for now the guard costs half as much stamina, so it breaks far later.
 
 
       <b>Example.</b> Hold the guard up in the middle of a pack: every blow that lands on it notches its attacker, and the pour waits for all of them.'
