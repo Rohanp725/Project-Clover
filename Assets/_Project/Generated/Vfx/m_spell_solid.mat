@@ -28,6 +28,8 @@ Material:
     - _Bands4: 0
     - _Chrome: 0
     - _Cull: 2
+    - _DrawHead: 1
+    - _DrawTail: 0
     - _Hot: 0
     - _OutlineWidth: 0.035
     - _Sheen: 0.42

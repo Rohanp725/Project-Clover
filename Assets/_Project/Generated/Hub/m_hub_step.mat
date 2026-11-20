@@ -31,16 +31,26 @@ Material:
     m_Ints: []
     m_Floats:
     - _Fade: 1
+    - _Ice: 0
+    - _IceFrost: 0
+    - _IceReveal: 1
     - _LightBands: 2
+    - _Metal: 0
+    - _MetalLine: -1
+    - _MetalReveal: 1
     - _MidThreshold: 0.62
     - _MidTone: 0.78
     - _OutlineWidth: 0.021
+    - _RevealBase: 0
+    - _RevealHeight: 0
     - _RimWidth: 0.35
     - _ShadeSoftness: 0.006
     - _ShadeThreshold: 0.22
     - _SmoothNormalsInTangents: 0
     - _Sway: 0
     - _VertexColour: 0
+    - _Wet: 0
+    - _WetReveal: 1
     - _WorldMapping: 1
     - _WorldScale: 0.5
     m_Colors:
