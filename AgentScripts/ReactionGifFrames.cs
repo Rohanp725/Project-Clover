@@ -186,6 +186,33 @@ public class ReactionGifFramesRunner : MonoBehaviour
     // A bespoke reaction look (combos 4) plays once through the element looks' pool: it counts too.
     private bool PoolEmpty() => ReactionArt.PartsShown == 0 && ReactionArt.LampsShown == 0 && ActiveShowings() == 0 && ElementLooks.PlayingOnce == 0;
 
+    // The window about a group the look reaches: centred on the middle of all their bodies as the camera sees them (feet
+    // and heads), so a look carried to enemies 5 m behind (Golden Feathers) is filmed reaching them, not leaving the frame.
+    private RectInt GroupWindow(Vector3 main, int count)
+    {
+        var cam = Camera.main;
+        float scaleX = 1920f / Screen.width, scaleY = 1080f / Screen.height;
+        float low = float.MaxValue, high = float.MinValue, under = float.MaxValue, over = float.MinValue;
+        for (int i = 0; i < count && i < Mathf.Max(1, layout.Count); i++)
+        {
+            Vector3 feet = main + (i == 0 ? Vector3.zero : layout[i]);
+            foreach (var point in new[] { cam.WorldToScreenPoint(feet), cam.WorldToScreenPoint(feet + Vector3.up * 3f) })
+            {
+                low = Mathf.Min(low, point.x * scaleX);
+                high = Mathf.Max(high, point.x * scaleX);
+                under = Mathf.Min(under, point.y * scaleY);
+                over = Mathf.Max(over, point.y * scaleY);
+            }
+        }
+        // As wide as the group needs with a margin (the game camera's own view, drawn smaller), never less than the
+        // usual 1:1 window nor more than the whole view.
+        float wide = Mathf.Clamp(Mathf.Max(high - low + 500f, (over - under + 240f) * 16f / 9f), Width, 1440f);
+        int across = Mathf.RoundToInt(wide), up = Mathf.RoundToInt(wide * 9f / 16f);
+        int left = Mathf.Clamp(Mathf.RoundToInt((low + high) * 0.5f) - across / 2, 0, 1920 - across);
+        int bottom = Mathf.Clamp(Mathf.RoundToInt((under + over) * 0.5f) - up / 2, 0, 1080 - up);
+        return new RectInt(left, bottom, across, up);
+    }
+
     private RectInt Window(Vector3 host)
     {
         var cam = Camera.main;
@@ -199,7 +226,28 @@ public class ReactionGifFramesRunner : MonoBehaviour
     private void Grab(string folder, int index, RectInt window)
     {
         var shot = ScreenCapture.CaptureScreenshotAsTexture();
-        if (shot.width != 1920 || shot.height != 1080)
+        if ((window.width != Width || window.height != Height) && shot.width == 1920 && shot.height == 1080)
+        {
+            // A window wider than the film: the game view's part drawn down to the film's size, averaged on the CPU from
+            // the screenshot's own bytes (a blit through a render texture lightened every frame, a second gamma).
+            var source = shot.GetPixels32();
+            var drawn = new Color32[Width * Height];
+            float step = window.width / (float)Width;
+            for (int y = 0; y < Height; y++)
+                for (int x = 0; x < Width; x++)
+                {
+                    float sx = window.x + (x + 0.5f) * step - 0.5f, sy = window.y + (y + 0.5f) * step - 0.5f;
+                    int x0 = Mathf.Clamp((int)sx, 0, 1918), y0 = Mathf.Clamp((int)sy, 0, 1078);
+                    float fx = Mathf.Clamp01(sx - x0), fy = Mathf.Clamp01(sy - y0);
+                    var a = source[y0 * 1920 + x0];
+                    var b = source[y0 * 1920 + x0 + 1];
+                    var c = source[(y0 + 1) * 1920 + x0];
+                    var d = source[(y0 + 1) * 1920 + x0 + 1];
+                    drawn[y * Width + x] = Color32.Lerp(Color32.Lerp(a, b, fx), Color32.Lerp(c, d, fx), fy);
+                }
+            picture.SetPixels32(drawn);
+        }
+        else if (shot.width != 1920 || shot.height != 1080)
         {
             var whole = RenderTexture.GetTemporary(1920, 1080, 0, RenderTextureFormat.ARGB32);
             Graphics.Blit(shot, whole);
@@ -357,6 +405,16 @@ public class ReactionGifFramesRunner : MonoBehaviour
         hidden.AddRange(FindObjectsByType<TextMesh>(FindObjectsInactive.Exclude).Where(text => (text.transform.position - Middle).magnitude < 14f).Select(text => text.gameObject));
         hidden.AddRange(FindObjectsByType<TrainingDummy>(FindObjectsInactive.Exclude).Where(dummy => (dummy.transform.position - Middle).magnitude < 14f).Select(dummy => dummy.gameObject));
         foreach (var thing in hidden) thing.SetActive(false);
+        // The player's target brackets under the main enemy are the game's aim, not the reaction: on film they read as
+        // the "dashed rings" round the enemy's feet (the audit of 2026-11-20, Rime). Put away while filming.
+        var reticle = player.GetComponent<TargetReticle>();
+        var reticleRing = typeof(TargetReticle).GetField("ringRenderer", BindingFlags.NonPublic | BindingFlags.Instance)?.GetValue(reticle) as Renderer;
+        if (reticle != null) reticle.enabled = false;
+        if (reticleRing != null) reticleRing.enabled = false;
+        // A group's window can reach the screen's edges: the screen's own HUD (the player's bars, the boss's name, the
+        // Shards) is put away while filming, so only the game world is in the film.
+        var huds = FindObjectsByType<Canvas>(FindObjectsInactive.Exclude).Where(canvas => canvas.isRootCanvas && canvas.renderMode != RenderMode.WorldSpace && canvas.enabled).ToList();
+        foreach (var canvas in huds) canvas.enabled = false;
         player.Teleport(Middle + Stand, Quaternion.LookRotation(Away, Vector3.up));
         StandCast(1);
         yield return Real(1.5f);
@@ -405,6 +463,20 @@ public class ReactionGifFramesRunner : MonoBehaviour
             player.Teleport(Middle + Stand, Quaternion.LookRotation(Away, Vector3.up));
             lane = look == "The Bolt Runs True";
             StandCast(count);
+            // A group the look reaches is framed by the game camera itself: it looks ahead from the player to the middle of
+            // the group, at the game's own distance and angle, as it frames a fight (TopDownCamera.SetFraming). The film's
+            // window is then cut about the group (GroupWindow).
+            var gameCamera = Camera.main != null ? Camera.main.GetComponent<TopDownCamera>() : null;
+            if (gameCamera != null && layout.Count > 1 && !lane && !Binding.Contains(look))
+            {
+                Vector3 middle = Vector3.zero;
+                for (int i = 0; i < count && i < layout.Count; i++) middle += i == 0 ? Vector3.zero : layout[i];
+                middle /= Mathf.Max(1, count);
+                Vector3 ahead = Middle + middle * 0.8f - (Middle + Stand);
+                ahead.y = 0f;
+                gameCamera.SetFraming(1f, ahead);
+            }
+            else if (gameCamera != null) gameCamera.ClearFraming();
             float clear = Time.unscaledTime + 8f;
             while ((!PoolEmpty() || Hazards.Alive > 0) && Time.unscaledTime < clear) yield return null;
             bool wasClean = PoolEmpty();
@@ -412,14 +484,19 @@ public class ReactionGifFramesRunner : MonoBehaviour
             // while it lasts: cleared once more now it is gone, or the next reaction starts on a third affliction and
             // sets off others beside it (Girdled showed Diamond Ring and Shining Herb, 2026-11-20).
             foreach (var enemy in cast) if (enemy != null && enemy.gameObject.activeInHierarchy) enemy.Afflictions.Clear();
-            yield return Real(1f);
+            // Long enough for a sun-wheel the last film's Marked laid (1.5 s) to be gone: it stood under Girdled, Smoulder
+            // and Breath Taken at t 0 as a "beige compass ring" (the audit of 2026-11-20).
+            yield return Real(1.8f);
             var main = cast[0];
 
             // A film turned toward the screen's right edge has the spell slots' corner in its window: put away while filming.
-            var slots = (Facings.ContainsKey(look) || Binding.Contains(look)) && SpellDiamondHud.Instance != null ? SpellDiamondHud.Instance.gameObject : null;
+            // The spell slots' corner is put away while filming: a window carried to the group's side has it in view.
+            var slots = SpellDiamondHud.Instance != null ? SpellDiamondHud.Instance.gameObject : null;
             if (slots != null) slots.SetActive(false);
             var window = Window(main.transform.position + (lane ? Away * 2.4f : Binding.Contains(look) && layout.Count > 1 ? NearestOther(count) * 0.5f
                 : Facings.ContainsKey(look) && recipeLayout != null && recipeLayout.Count > 1 ? recipeLayout[1] * 0.5f : Vector3.zero));
+            if (!lane && !Binding.Contains(look) && layout.Count > 1) window = GroupWindow(main.transform.position, count);
+            Say($"{name} window {window.x},{window.y} {window.width}x{window.height}");
             Time.captureFramerate = Rate;
             int frame = 0;
             for (; frame < Before; frame++)
@@ -456,6 +533,7 @@ public class ReactionGifFramesRunner : MonoBehaviour
             }
             Time.captureFramerate = 0;
             if (slots != null) slots.SetActive(true);
+            if (gameCamera != null) gameCamera.ClearFraming();
             int lookStart = shownAt >= 0 ? shownAt - 1 : start;
             int impactFrame = lookStart + Mathf.RoundToInt(Mathf.Max(0f, impact) * Rate);
             bool wentOff = shownAt >= 0;
@@ -474,6 +552,8 @@ public class ReactionGifFramesRunner : MonoBehaviour
         Destroy(picture);
         foreach (var pen in pens) pen.Clear();
         foreach (var thing in hidden) if (thing != null) thing.SetActive(true);
+        if (reticle != null) reticle.enabled = true;
+        foreach (var canvas in huds) if (canvas != null) canvas.enabled = true;
         InputSystem.settings.backgroundBehavior = backgroundWas;
         InputSystem.settings.editorInputBehaviorInPlayMode = editorWas;
         Say($"filmed {filmed}, set off {setOff}, on a group {grouped}");
