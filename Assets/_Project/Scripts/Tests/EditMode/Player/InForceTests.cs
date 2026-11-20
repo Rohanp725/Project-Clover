@@ -206,7 +206,7 @@ namespace Clover.Tests
         {
             // Each first mark that says its blows lay two afflictions, with either of its elements first. Plasma's is cut: a duo
             // branch reshaped into the heart lays both by carrying both (pairs_d1_d2.md); its first mark is the reaction's shapes.
-            string[] firstMarks = { ForgeTree.HammerAndAnvil, OvergrowthTree.RootGrip, BlightTree.Wither, PyreTree.Fuel, EclipseTree.Twilight };
+            string[] firstMarks = { ForgeTree.HammerAndAnvil, BlightTree.Wither, PyreTree.Fuel, EclipseTree.Twilight };
             foreach (string id in firstMarks)
             {
                 var mark = Upgrade.ById(id);

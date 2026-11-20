@@ -168,6 +168,10 @@ namespace Clover.Player
             // Bloom, the duo branch of Water and Life (pairs_d1_d2.md; task 4.15): Wet Seed (the Shape mark takes its place),
             // Flowering (now the reaction, Quickening, without its wait) and Lotus Step (offered to Water's tree, whose roster is full).
             new RetiredMark("bloom.wetseed", 3), new RetiredMark("bloom.flower", 3), new RetiredMark("bloom.lotus", 4),
+
+            // Overgrowth, the duo branch of Life and Earth (pairs_d1_d2.md; task 4.15): Root Grip (now the reaction, Split Rock;
+            // the Shape mark takes its place) and Thorn Wall (offered to Earth's tree, whose roster is full).
+            new RetiredMark("overgrowth.rootgrip", 3), new RetiredMark("overgrowth.thornwall", 4),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

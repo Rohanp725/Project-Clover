@@ -528,6 +528,8 @@ Group: Reactions
 
 **What sets it off.** A seed landing on a shaken enemy, or Tremor on a Seeded one.
 
+**Its shapes.** With Overgrowth's Shape mark (Split Rock: Taking Root or Root Web, 3 Shards, in the heart of the chart) and both Life and Earth carried, Split Rock wears the shape chosen at a rest fire instead. Taking Root: held only 1 s, and a Tremor at once on everything within 2.5 m. Root Web: everything within 6 m is held 0.5 s and given a Tremor.
+
 **How to use it.** The hold is your window: bring the heavy before it ends.
 
 **How it looks.** Its name over the enemy, then a burst of earth when the floor splits.
