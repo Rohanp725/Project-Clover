@@ -1158,6 +1158,8 @@ Group: Reactions
 
 **What sets it off.** Chill landing on a Marked enemy, or a Mark on a chilled one.
 
+**Its shapes.** With the Shape mark of Ice and Light's duo branch (Mock Suns: Prism or Lens of Ice, 3 Shards, in the heart of the chart) and both carried, Mock Suns wears the shape chosen at a rest fire instead. Prism: no suns; for 4 s its Mark is not spent, and your next weapon blow on it throws three strikes on your line beyond it, 8, a Mark and a Chill each. Lens of Ice: while chilled and Marked its Mark is not spent, and a heavy blow on it at full Chill strikes 18 more and Marks every enemy within 4 m.
+
 **How to use it.** Strike as often as you can inside the 4 s: each blow is critical and chills it.
 
 **How it looks.** Its name over the enemy. Not yet: the suns turning with it, and only blows from its flanks counting.
