@@ -693,6 +693,8 @@ Group: Reactions
 
 **What sets it off.** A seed landing on a notched enemy, or a notch on a Seeded one.
 
+**Its shapes.** With Graft, the Shape mark of Life and Metal's duo branch (Iron Thorns: Pruning Hook or Iron Harvest, 3 Shards, in the heart of the chart) and both carried, Iron Thorns wears the shape chosen at a rest fire instead. Pruning Hook: your first three weapon blows on it prune a thorn each and heal you 4. Iron Harvest: none is thrown; when it dies or the 6 s end, a ring of blades to 3 m, 8 and a notch on each.
+
 **How to use it.** Fight the thorned one: the others around it take the thorns.
 
 **How it looks.** Its name over the enemy and a strike where each thorn lands. Not yet: one thorn for each notch it carried.
