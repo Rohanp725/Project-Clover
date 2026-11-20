@@ -111,14 +111,15 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.Keystone));
 
             // The duo spell, the crown (pairs_d1_d2.md): an opener on a 14 s cooldown (SpellTimings). The Discs form turns the
-            // shards; each pass lays the branch's first element's Chill, and every other pass a Static.
+            // shards; each pass lays the branch's first element's Chill, and half the passes (by chance) a Static.
+            // NEEDS: a count of passes per enemy, so it is every other pass and not half of them at random.
             // NEEDS: a weapon blow that flings an orbiting piece (each landed blow flings the nearest shard into the enemy struck,
             // 8, a Chill and a Static; a heavy blow flings all that are left); hard glassy splinters with threads of lightning
             // between them, never a glowing ring.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GlassStorm, Name = "Glass Storm", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { ChargedHail, ColdSnap }, Icon = UpgradeIcons.Orb,
-                Description = "Six shards of clear ice turn round you at 2 m for 8 s, threads of lightning jumping between them. Each shard that passes through an enemy cuts it for 4 and lays a Chill, every other pass a Static.",
+                Description = "Six shards of clear ice turn round you at 2 m for 8 s, threads of lightning jumping between them. Each shard that passes through an enemy cuts it for 4 and lays a Chill, and half the passes a Static.",
                 Form = SpellForms.Discs,
                 Spell = new SpellSpec { Count = 6, Radius = 2f, Seconds = 8f, Interval = 0.5f, Damage = 4f, Stagger = 4f, Stacks = 1 },
                 Effects = new[]

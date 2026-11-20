@@ -58,14 +58,14 @@ both are carried (in the playtest, whenever you pick Ice beside Lightning or Lig
 **Not built yet.** It answers a discharge, not every arc leaving a chilled enemy, and each arc after the first is its own 7 rather than the full strike carried on.
 
 ## sleetcharge.glassstorm
-**What it does.** Six shards of clear ice turn round you at 2 metres for 8 seconds, threads of lightning jumping between them. Each shard that passes through an enemy cuts it and lays a Chill, and every other pass a Static, so the ring sets up Sleet Charge on whatever presses in.
+**What it does.** Six shards of clear ice turn round you at 2 metres for 8 seconds, threads of lightning jumping between them. Each shard that passes through an enemy cuts it and lays a Chill, and half the passes a Static, so the ring sets up Sleet Charge on whatever presses in.
 
 **When it happens.** From a spell slot, while Ice and Lightning are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Ice, the branch's first element.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. No mana: it waits 14 seconds after a cast, less with weapon play. Six shards for 8 seconds; each that passes through an enemy strikes it at most every half second for 4 damage, 4 stagger and a Chill, and half the time a Static as well.
+**The numbers.** Mix, duo spell, opener, 5 Shards. No mana: it waits 14 seconds after a cast, less with weapon play. Six shards for 8 seconds; each that passes through an enemy strikes it at most every half second for 4 damage, 4 stagger and a Chill, and half the time (by chance) a Static as well.
 
 **Works with.** Sleet Charge and its shapes, Charged Hail, Nothing Resists, Cold Snap, and any heavy blow on a chilled, charged enemy.
 
 **Example.** Cast it as a pack closes: everyone the ring cuts is chilled, half of them charged, and Sleet Charge starts going off round you.
 
-**Not built yet.** Your weapon blows do not fling the shards yet (each landed blow should fling the nearest into the enemy struck, 8 with a Chill and a Static, and a heavy blow all that are left), and the shards are drawn as the toothed discs until their glassy look is made.
+**Not built yet.** The Static comes by chance on half the passes rather than on every other one. Your weapon blows do not fling the shards yet (each landed blow should fling the nearest into the enemy struck, 8 with a Chill and a Static, and a heavy blow all that are left), and the shards are drawn as the toothed discs until their glassy look is made.

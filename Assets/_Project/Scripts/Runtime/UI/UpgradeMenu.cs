@@ -131,6 +131,7 @@ namespace Clover.UI
         private string heldShown;
         // The heart: its own turned layer of the chart, the words over it, and the pair it shows.
         private RectTransform heart;
+        private Image heartKnot;
         private Text heartTitle;
         private int heartPair = -1;
         private string heartPartner = "";
@@ -243,6 +244,7 @@ namespace Clover.UI
             for (int i = 0; i < slotBadges.Length; i++) slotBadges[i] = null;
             heldShown = null;
             heart = null;
+            heartKnot = null;
             heartTitle = null;
             Build();
         }
@@ -292,7 +294,7 @@ namespace Clover.UI
             heart.anchorMin = heart.anchorMax = heart.pivot = new Vector2(0.5f, 0.5f);
             heart.anchoredPosition = Vector2.zero;
             heart.sizeDelta = Vector2.zero;
-            var heartKnot = Picture("Heart foot", emblemSprite, heart, HeartLayout.FootPlace * StepPixels, StepPixels * 0.5f);
+            heartKnot = Picture("Heart foot", emblemSprite, heart, HeartLayout.FootPlace * StepPixels, StepPixels * 0.5f);
             heartKnot.color = new Color(Guide.r, Guide.g, Guide.b, 0.6f);
             heartTitle = Label("", HeartLayout.TitlePlace * StepPixels, new Color(0.92f, 0.88f, 0.8f, 0.9f), heart);
             labels.Add(heartTitle);
@@ -594,8 +596,11 @@ namespace Clover.UI
                 }
                 mark.Place = UpgradeTree.Upright(mark.HeartPlace, -bearing);
             }
+            bool built = HeartLayout.Built(heartPair, Upgrade.All);
+            // The knot at the branch's foot only under a branch.
+            if (heartKnot != null && heartKnot.gameObject.activeSelf != built) heartKnot.gameObject.SetActive(built);
             if (heartTitle != null)
-                heartTitle.text = heartPair < 0 ? "" : HeartLayout.Title(viewed, heartPartner) + (HeartLayout.Built(heartPair, Upgrade.All) ? "" : "   (its branch is still to come)");
+                heartTitle.text = heartPair < 0 ? "" : HeartLayout.Title(viewed, heartPartner) + (built ? "" : "   (its branch is still to come)");
         }
 
         public void Close()
@@ -765,9 +770,9 @@ namespace Clover.UI
             {
                 if (spellAction != null && spellAction.WasPressedThisFrame()) OpenDetails();
                 else if (flaskAction != null && flaskAction.WasPressedThisFrame()) OpenGuide();
-                // In the heart, the shoulder buttons pick the partner; elsewhere, the tree.
-                else if (!IsWide && lightAction != null && lightAction.WasPressedThisFrame()) { if (!InHeartNow() || !ViewPartner(1)) ViewNext(1); }
-                else if (!IsWide && guardAction != null && guardAction.WasPressedThisFrame()) { if (!InHeartNow() || !ViewPartner(-1)) ViewNext(-1); }
+                // In the heart, the shoulder buttons pick the partner (and do nothing with one partner built); elsewhere, the tree.
+                else if (!IsWide && lightAction != null && lightAction.WasPressedThisFrame()) { if (InHeartNow()) ViewPartner(1); else ViewNext(1); }
+                else if (!IsWide && guardAction != null && guardAction.WasPressedThisFrame()) { if (InHeartNow()) ViewPartner(-1); else ViewNext(-1); }
             }
         }
 

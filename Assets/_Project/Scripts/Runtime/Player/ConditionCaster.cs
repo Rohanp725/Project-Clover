@@ -67,14 +67,23 @@ namespace Clover.Player
         public static float ShareOf(AfflictionSet set) => set != null && set.FreezeScale < 1f ? 0.5f : 1f;
 
         // Whether the mark has anything to do when a blow lands on the condition, when it ends, or when the enemy dies with
-        // it: only then is it told.
+        // it: only then is it told. A reaction's Shape mark answers from its shapes (task 4.5); each shape's ids are its own.
         private static void AnswersOf(UpgradeEffect effect, string id, out bool struck, out bool ended, out bool died)
         {
             struck = false;
             ended = false;
             died = false;
             if (effect.Owner == null) return;
-            foreach (var answer in effect.Owner.Effects)
+            Note(effect.Owner.Effects, id, ref struck, ref ended, ref died);
+            if (effect.Owner.Shapes == null) return;
+            foreach (var shape in effect.Owner.Shapes)
+                if (shape != null) Note(shape.Effects, id, ref struck, ref ended, ref died);
+        }
+
+        private static void Note(UpgradeEffect[] answers, string id, ref bool struck, ref bool ended, ref bool died)
+        {
+            if (answers == null) return;
+            foreach (var answer in answers)
             {
                 if (answer.Condition != id) continue;
                 if (answer.On == UpgradeTrigger.ConditionStruck) struck = true;

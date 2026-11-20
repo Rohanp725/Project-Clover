@@ -285,6 +285,7 @@ namespace Clover.Tests
             CollectionAssert.DoesNotContain(rules.ChoicesFor(0, Hand(Elements.Lightning, Elements.Fire), learned).Select(offered => offered.Id).ToList(), glass, "not with another partner");
             CollectionAssert.DoesNotContain(rules.ChoicesFor(0, Hand(Elements.Ice, Elements.Ice), learned).Select(offered => offered.Id).ToList(), glass, "not all in");
             // Slotted, it is dropped when the pair breaks at the next fire.
+            both.Surge = HandRules.SurgeId(Elements.Lightning);
             both.Slots[1] = glass;
             Assert.IsFalse(rules.Validate(both, learned), "it fits");
             both.Attune(Elements.Lightning, Elements.Fire);
