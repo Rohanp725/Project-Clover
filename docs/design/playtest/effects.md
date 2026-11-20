@@ -1143,6 +1143,8 @@ Group: Reactions
 
 **What sets it off.** Unsteady landing on a notched enemy, or a notch on a Unsteady one.
 
+**Its shapes.** With the Shape mark of Wind and Metal's duo branch (Sickle Wind: Sent Downwind or Cut Unfelt, 3 Shards, in the heart of the chart) and both carried, Sickle Wind wears the shape chosen at a rest fire instead. Sent Downwind: the whirl is laid as three patches on your line beyond it, cutting 3 and 4 stagger every 0.4 s for 3 s and notching each enemy there once. Cut Unfelt: nothing for 3 s, then 32 and 28 stagger in 1.5 m, and 6 more for each of your weapon blows on it meanwhile.
+
 **How to use it.** Notch it deep first: more notches, more blades. Keep clear of the whirl, or fight inside it.
 
 **How it looks.** Its name over the enemy and the whirl round it.

@@ -66,6 +66,7 @@ namespace Clover.Player.Trees
             Duo.VenomRimeDuo.Add(to);
             Duo.FirebloomDuo.Add(to);
             Duo.EarthedDuo.Add(to);
+            Duo.SickleWindDuo.Add(to);
             // The plain reactions, one hidden mark per pair, after every tree (they are on none).
             Reactions.Add(to);
         }
