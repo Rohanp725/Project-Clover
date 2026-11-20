@@ -149,6 +149,7 @@ namespace Clover.Player.Magic
             ["shiningherb.turnedtosun"] = Cd(11f, SpellRole.Opener),
             ["turnedtostone.underfoot"] = Cd(10f, SpellRole.Movement),
             ["quicksilver.ichor"] = Cd(11f, SpellRole.Counter),
+            ["kindlingpoint.hands"] = Cd(12f, SpellRole.Opener),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };

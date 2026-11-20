@@ -903,6 +903,8 @@ Group: Reactions
 
 **What sets it off.** A Mark landing on a burning enemy, or Burn on a Marked one.
 
+**Its shapes.** With the Shape mark of Light and Fire's duo branch (Kindling Point: Burning Glass or The Fire Is Hungry, 3 Shards, in the heart of the chart) and both carried, Kindling Point wears the shape chosen at a rest fire instead. Burning Glass: after the burst the point stays 4 s, deepening its Burn each second. The Fire Is Hungry: the third blow's flame leaps to the nearest other enemy within 6 m, 10 a Burn, Marking it and burning it two deep.
+
 **How to use it.** Three quick blows: the third is the payoff.
 
 **How it looks.** Its name over the enemy, then the flame bursting out at the third blow.
