@@ -558,6 +558,8 @@ Group: Reactions
 
 **What sets it off.** A notch landing on a Marked enemy, or a Mark on a notched one.
 
+**Its shapes.** With Halo's Shape mark (Glint: Mirror to Mirror or Burning Mirror, 3 Shards, in the heart of the chart) and both Metal and Light carried, Glint wears the shape chosen at a rest fire instead. Mirror to Mirror: the ray runs on through up to four enemies within 6 m of each other, 10, 15 stagger and a Mark each. Burning Mirror: no ray; for 5 s the next weapon blow on it lays two notches and 10 more damage.
+
 **How to use it.** Mark a notched enemy to Mark the one beside it too, ready for your critical blows.
 
 **How it looks.** Its name over the enemy and a strike where the ray lands.

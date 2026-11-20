@@ -176,6 +176,10 @@ namespace Clover.Player
             // Forge, the duo branch of Earth and Metal (pairs_d1_d2.md; task 4.15): Trip Hammer (offered to Earth's or Metal's tree,
             // whose rosters are full).
             new RetiredMark("forge.triphammer", 4),
+
+            // Halo, the duo branch of Metal and Light (pairs_d1_d2.md; task 4.15): Sun Wheels (offered to Metal's tree, whose
+            // roster is full). Answering Draw moves to the Katana's Way (the list below).
+            new RetiredMark("halo.sunwheels", 4),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
@@ -187,6 +191,8 @@ namespace Clover.Player
             new RetiredMark("wind.drawing", 3),
             // Ice's Winter Draw, the Iaido Slash's lane of ice.
             new RetiredMark("ice.winterdraw", 3),
+            // Halo's Answering Draw, the Iaido Slash's Mark and notch and the critical blows after a perfect guard (task 4.15).
+            new RetiredMark("halo.answeringdraw", 4),
         };
 
         /// <summary>The marks cut, with their prices: a save that holds one is refunded.</summary>

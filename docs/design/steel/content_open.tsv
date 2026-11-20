@@ -109,3 +109,5 @@ aim-at-afflicted	A form aimed at the nearest enemy carrying a given affliction, 
 duo-surge-slot	A duo surge worn in the Hand's surge slot while both elements are carried (HandRules offers none yet)	Great Lotus (now begun by a flask drunk in any surge while Water and Life are carried)
 rest-fire-counts	A count a mark keeps that empties at a rest fire (a fight's growth), neither kept for the run nor lost while the mark stays in force	Folded Steel (its folds now lost only when the mark leaves force)
 pieces-at-nearest	Pieces thrown from an enemy at the nearest others, each its own (not an arc from one to the next)	Forge's Hammer Scale (four flakes; now an arc through four)
+arc-through-afflicted	An arc that leaps on only from enemies carrying a given affliction, its first leap to any	Halo's Mirror to Mirror (on from each struck that carries Sundered; now through four, whatever they carry)
+blow-made-critical	A blow made critical by a condition on the enemy struck	Halo's Burning Mirror (the next weapon blow critical with two notches; now two notches and a burst of 10)
