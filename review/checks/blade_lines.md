@@ -16,5 +16,6 @@ What the swing looks follow on each weapon: the line the weapon builder measured
 | sickle | edge | Edge | (0.00, -0.04, 0.10) (0.00, -0.23, 0.08) (0.00, -0.34, -0.16) | (0.00, -0.02, 0.20) (0.00, -0.25, 0.15) (0.00, -0.34, -0.16) | 0.10 | 0.00 |
 | weight | weight | Head | (0.00, 0.00, 0.00) (0.00, 0.00, 0.22) | (0.00, 0.00, 0.00) (0.00, 0.00, 0.22) | 0.00 | 0.00 |
 | katana | edge | Edge | (0.00, -0.02, 0.13) (0.00, 0.04, 0.99) | (0.00, -0.02, 0.13) (0.00, -0.01, 0.99) | 0.01 | 0.06 |
+| fan | rim | Rim | (0.01, 0.00, 0.09) (0.01, 0.00, 0.41) | (0.00, 0.00, 0.00) (0.00, 0.00, 0.41) | 0.10 | 0.01 |
 
 Bare hands and the Armament sweep with the body: fist R (forearm.R to hand.R and 0.09 m on), fist L (forearm.L to hand.L and 0.09 m on), foot R (shin.R to foot.R and 0.12 m on), foot L (shin.L to foot.L and 0.12 m on).

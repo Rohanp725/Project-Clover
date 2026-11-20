@@ -72,7 +72,7 @@ namespace Clover.Player.Swings
         public static readonly SwingShape WarFan = new SwingShape
         {
             Weapon = "War Fan", SweepFrom = 0.1f, SweepTo = 1.05f, Width = 1.2f, Life = 1.1f, LeastSpeed = 2f, FullSpeed = 8f,
-            Note = "planned: the whole opened fan sweeps, pivot to rim, a broad fan-shaped trail",
+            Note = "the whole opened fan sweeps, leaf root to rim, a broad fan-shaped trail (its prefab is built; its moves are not)",
         };
 
         /// <summary>Every shape, for the tests and the guide.</summary>

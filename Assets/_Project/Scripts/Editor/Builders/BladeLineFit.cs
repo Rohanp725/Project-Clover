@@ -13,7 +13,7 @@ namespace Clover.EditorTools
     /// a <see cref="BladeLine"/> (the swing looks follow it through the animation). The line is measured from the mesh:
     /// the vertices of the slot its <see cref="WeaponBuilder.Spec.BladeSlots"/> names (the edge, the hammer's head, the
     /// bow's limbs), their two furthest-apart points the base and the tip and a bend between them when the edge curves; a
-    /// head's runs along the haft through its bounds. A measurement that strays far from the model notes' line
+    /// head's runs along the haft through its bounds; an opened fan's from the leaf's root out to the crown of its rim. A measurement that strays far from the model notes' line
     /// (<see cref="BladeLines.Defaults"/>) is not trusted: the notes' line is written instead, and the report says so.
     /// Clover > Weapons > Report Blade Lines writes review/checks/blade_lines.md from the built prefabs.
     /// </summary>
@@ -45,7 +45,7 @@ namespace Clover.EditorTools
                 Add(lines, spec, 0, "upper limb", cloud.Where(point => point.z > 0.05f).ToList(), notes);
                 Add(lines, spec, 1, "lower limb", cloud.Where(point => point.z < -0.05f).ToList(), notes);
             }
-            else Add(lines, spec, 0, spec.BladeKind == BladeKind.Head ? "head" : spec.BladeKind == BladeKind.Point ? "point" : "edge", cloud, notes);
+            else Add(lines, spec, 0, spec.BladeKind == BladeKind.Head ? "head" : spec.BladeKind == BladeKind.Point ? "point" : spec.BladeKind == BladeKind.Rim ? "rim" : "edge", cloud, notes);
             return lines;
         }
 
@@ -73,6 +73,21 @@ namespace Clover.EditorTools
                     var bounds = new Bounds(cloud[0], Vector3.zero);
                     foreach (var point in cloud) bounds.Encapsulate(point);
                     count = BladeFit.FitHead(bounds, points);
+                }
+            }
+            else if (spec.BladeKind == BladeKind.Rim)
+            {
+                // An opened fan sweeps as a whole: its line runs out through the middle of the leaf, from where the leaf
+                // starts by the rivet to the crown of the rim. Rim end to rim end (the furthest pair) would lie across
+                // the fan, and a swing along it would leave a thread, not the fan-shaped band.
+                if (cloud.Count > 0)
+                {
+                    Vector3 crown = cloud.OrderByDescending(point => point.z).First();
+                    var middle = cloud.Where(point => new Vector2(point.x - crown.x, point.y - crown.y).magnitude < 0.06f).ToList();
+                    float root = middle.Count > 0 ? middle.Min(point => point.z) : 0f;
+                    points[0] = new Vector3(crown.x, crown.y, root);
+                    points[1] = crown;
+                    count = crown.z - root > 0.05f ? 2 : 0;
                 }
             }
             else count = BladeFit.Fit(cloud, Vector3.zero, points);

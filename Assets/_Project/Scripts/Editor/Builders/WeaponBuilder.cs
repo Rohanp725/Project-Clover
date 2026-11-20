@@ -217,6 +217,22 @@ namespace Clover.EditorTools
             },
             new Spec
             {
+                // The plain War Fan as the hermit's cave gives it (lightning_wind_levels.md 3.3; plainweapons notes.md 3),
+                // opened: the swing looks follow the leaf from its root to the crown of the rim. The closed object waits
+                // for the open and shut toggle that comes with the fan's own moves; no Weapon uses this carry yet.
+                Carry = BladeLines.FanCarry, ModelFile = "warfan_lightningwind.fbx", ModelObjects = new[] { "warfan_lightningwind_open" }, StandIn = FanStandIn,
+                BladeSlots = new[] { "wrap", "inlay" }, BladeKind = BladeKind.Rim,
+                Notes = "War Fan, Lightning and Wind make (warfan_lightningwind of 2026-11-19), opened: 744 triangles, slots guard wrap grip accent inlay; origin at the hand, the rivet 0.06 m behind it, the leaf spread 148 degrees about +Z to its rim's crown at 0.41 m, thin along X",
+                // notes.md 3: iron sticks and ribs, the brown paper leaf in the wrap slot, the hermit's cord at the grip.
+                OwnColours = { { "guard", Linear(0.075f, 0.07f, 0.07f) }, { "wrap", Linear(0.28f, 0.17f, 0.08f) }, { "grip", Linear(0.10f, 0.07f, 0.05f) } },
+                // Thrust through the back of the belt beside the hip like the sickle, the leaf toward the right.
+                RestSocket = WeaponRack.Hip,
+                RestPosition = new Vector3(-0.08f, 0.08f, -0.16f), RestAlong = new Vector3(-0.1f, 1f, 0f), RestUp = new Vector3(-1f, -0.1f, 0f),
+                // Stood on its grip, the leaf's face toward whoever walks up.
+                DisplayPosition = new Vector3(0f, 1.0f, 0f), DisplayEuler = new Vector3(-90f, 90f, 0f),
+            },
+            new Spec
+            {
                 Carry = "arm", StandIn = _ => { },
                 Notes = "Full Body Armament: no model; shells on the forearms, hands and shins",
                 Worn = new[]
@@ -815,6 +831,32 @@ namespace Clover.EditorTools
             Box(root, "blade", "Blade", new Vector3(0f, 0f, 0.53f), new Vector3(0.012f, 0.04f, 0.82f));
             Box(root, "edge", "Edge", new Vector3(0f, -0.024f, 0.53f), new Vector3(0.008f, 0.01f, 0.82f));
             Box(root, "blade", "Kissaki", new Vector3(0f, 0f, 0.96f), new Vector3(0.011f, 0.03f, 0.06f), new Vector3(30f, 0f, 0f));
+        }
+
+        // The opened War Fan to the model's size, for when the file is missing: the grip at the origin, the rivet 0.06 m
+        // behind it, two iron sticks and the paper leaf spread 148 degrees about +Z out to a dark rim 0.47 m from the rivet.
+        private static void FanStandIn(Transform root)
+        {
+            Box(root, "grip", "Grip", new Vector3(0f, 0f, -0.035f), new Vector3(0.026f, 0.05f, 0.06f));
+            Box(root, "accent", "Rivet Cord", new Vector3(0f, -0.03f, -0.11f), new Vector3(0.02f, 0.08f, 0.03f));
+            var rivet = new Vector2(0f, -0.06f);
+            const int Folds = 6;
+            const float Spread = 148f, Radius = 0.47f;
+            for (int i = 0; i < Folds; i++)
+            {
+                float a = (-Spread / 2f + Spread * i / Folds) * Mathf.Deg2Rad, b = (-Spread / 2f + Spread * (i + 1) / Folds) * Mathf.Deg2Rad;
+                Vector2 from = rivet + new Vector2(Mathf.Sin(a), Mathf.Cos(a)) * Radius, to = rivet + new Vector2(Mathf.Sin(b), Mathf.Cos(b)) * Radius;
+                float middle = (a + b) * 0.5f;
+                Vector2 along = new Vector2(Mathf.Sin(middle), Mathf.Cos(middle));
+                // Each fold a long thin panel from near the rivet out to the rim, and the rim's strip across its end.
+                Span(root, "wrap", "Leaf " + i, rivet + along * 0.12f, rivet + along * (Radius - 0.03f), 0.012f, (to - from).magnitude * 0.6f);
+                Span(root, "inlay", "Rim " + i, from, to, 0.02f, 0.03f);
+            }
+            foreach (float side in new[] { -1f, 1f })
+            {
+                float edge = side * Spread / 2f * Mathf.Deg2Rad;
+                Span(root, "guard", side < 0f ? "Stick L" : "Stick R", rivet, rivet + new Vector2(Mathf.Sin(edge), Mathf.Cos(edge)) * (Radius + 0.02f), 0.03f, 0.03f);
+            }
         }
 
         // The weight on the end of the chain: an iron teardrop with a band round its belly, the chain joining at the origin.

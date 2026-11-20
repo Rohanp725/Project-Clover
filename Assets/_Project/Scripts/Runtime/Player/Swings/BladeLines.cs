@@ -7,13 +7,13 @@ namespace Clover.Player.Swings
     /// builder): what a swing effect follows when a prefab was built before <see cref="BladeLine"/> existed, and what the
     /// builder's measurement is checked against. The builder reads the real lines off each model's mesh at build time
     /// and writes them onto the prefab; these are the fallback, not the source. Bare hands and the Armament sweep with
-    /// the body (<see cref="Limbs"/>). The War Fan has no model or moves yet: its line is kept here for when it comes.
+    /// the body (<see cref="Limbs"/>). The War Fan has its model and prefab but no moves and no Weapon yet.
     /// </summary>
     public static class BladeLines
     {
         /// <summary>The carry name of the body's own lines (bare hands, the Armament).</summary>
         public const string BodyCarry = "body";
-        /// <summary>The War Fan's carry name, planned (GAME.md, the Hermit of the Pass): no model, no moves yet.</summary>
+        /// <summary>The War Fan's carry name, planned (GAME.md, the Hermit of the Pass): its prefab is built, its moves are not.</summary>
         public const string FanCarry = "fan";
 
         private static readonly Vector3 EdgeDown = new Vector3(0f, -1f, 0f);
@@ -42,8 +42,9 @@ namespace Clover.Player.Swings
             new BladeLineSpec("sickle", "edge", BladeKind.Edge, new Vector3(0f, 0.54f, -0.84f), 0.06f, new Vector3(0f, -0.02f, 0.2f), new Vector3(0f, -0.25f, 0.15f), new Vector3(0f, -0.34f, -0.16f)),
             // The weight on the end of its chain: its body, from the eye to the end.
             new BladeLineSpec("weight", "weight", BladeKind.Head, Vector3.forward, 0.075f, Vector3.zero, new Vector3(0f, 0f, 0.22f)),
-            // The War Fan, opened: from the pivot out to the rim. Planned; no model yet.
-            new BladeLineSpec(FanCarry, "rim", BladeKind.Rim, EdgeDown, 0.02f, new Vector3(0f, 0f, 0.08f), new Vector3(0f, -0.2f, 0.36f), new Vector3(0f, -0.1f, 0.47f)),
+            // The War Fan, opened (warfan_lightningwind_open): out through the middle of the leaf from its root by the
+            // rivet to the crown of the rim, 0.41 m ahead of the hand; the leaf spreads 148 degrees about it.
+            new BladeLineSpec(FanCarry, "rim", BladeKind.Rim, EdgeDown, 0.02f, new Vector3(0f, 0f, 0f), new Vector3(0f, 0f, 0.41f)),
         };
 
         /// <summary>The body's lines: each forearm to its knuckles, each shin to its toes.</summary>

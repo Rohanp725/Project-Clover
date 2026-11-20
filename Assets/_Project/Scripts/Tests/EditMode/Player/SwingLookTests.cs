@@ -218,7 +218,7 @@ namespace Clover.Tests
                 Assert.Greater(BladeLines.CountFor(weapon), 0, $"{weapon.Name} has no blade line");
                 Assert.IsNotNull(SwingShapes.For(weapon), $"{weapon.Name} has no swing shape");
             }
-            // The War Fan has no model or moves yet; its line waits for it.
+            // The War Fan is no Weapon yet (it has no moves), but its prefab is built and its line is ready.
             Assert.IsTrue(BladeLines.TryGet(BladeLines.FanCarry, 0, out var fan) && fan.Valid);
             Assert.AreEqual(4, BladeLines.CountFor(Weapons.Fists()), "bare hands sweep with both fists and both feet");
             Assert.AreEqual(3, BladeLines.CountFor(Weapons.GreatBow()), "the bow's two limbs and its arrow");
@@ -302,6 +302,26 @@ namespace Clover.Tests
                 }
             }
             if (checkedLines == 0) Assert.Ignore("No weapon prefab has been built yet; run Clover > Weapons > Build Weapon Prefabs.");
+        }
+
+        [Test]
+        public void TheWarFansLineRunsThroughItsLeafToTheRim()
+        {
+            // Measured off the opened fan: out along the middle of the leaf, not rim end to rim end across it.
+            var spec = WeaponBuilder.SpecFor(BladeLines.FanCarry);
+            Assert.IsNotNull(spec, "the War Fan has a Spec in the weapon builder");
+            Assert.AreEqual(BladeKind.Rim, spec.BladeKind);
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>($"{WeaponBuilder.Folder}/{spec.Carry}/{spec.Carry}.prefab");
+            if (prefab == null) Assert.Ignore("The War Fan's prefab has not been built yet; run Clover > Weapons > Build Weapon Prefabs.");
+            Assert.IsNotNull(prefab.GetComponentInChildren<Renderer>(), "the fan's model is in its prefab");
+            var lines = prefab.GetComponents<BladeLine>();
+            Assert.AreEqual(1, lines.Length);
+            var points = lines[0].Spec.Points;
+            Vector3 root = points[0], crown = points[points.Length - 1];
+            Assert.AreEqual(0.41f, crown.z, 0.04f, $"the crown of the rim, 0.41 m ahead of the hand: {crown}");
+            Assert.Less(root.z, 0.12f, $"the leaf's root by the rivet: {root}");
+            Assert.Less(new Vector2(crown.x, crown.y).magnitude, 0.03f, $"the crown lies on the fan's middle: {crown}");
+            Assert.Less(new Vector2(crown.x - root.x, crown.y - root.y).magnitude, 0.01f, "the line runs straight out along +Z");
         }
 
         // ---- The looks.

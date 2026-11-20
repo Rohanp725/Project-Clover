@@ -1591,7 +1591,10 @@ that weapon's own animation draws (`Runtime/Player/Swings`).
   The hammer and the chain's weight run along the haft through the head's bounds. The bow's two limbs are measured
   each by itself, and the arrow from its middle to its point. A measurement far from the model notes' line falls back
   to the notes (`BladeLines.Defaults`). Bare hands and the Armament sweep with the body: forearm to knuckles, shin to toes.
-  The War Fan's line is kept for when it exists. `Clover > Weapons > Report Blade Lines` writes `review/checks/blade_lines.md`.
+  Since 2026-11-20 the War Fan has a Spec and a prefab (the opened `warfan_lightningwind` make, carry `fan`): its line
+  runs out through the middle of the leaf from its root to the crown of the rim (0.09 to 0.41 m), not rim end to rim
+  end, so a sweep leaves a fan-shaped band. It is still no Weapon: it has no moves, and its swing clips are filmed on
+  the Katana's. `Clover > Weapons > Report Blade Lines` writes `review/checks/blade_lines.md`.
   Since 2026-11-20 a point (spear, sunspear, arrow) runs along the shaft through the middle of its slot, like a head: corner
   to corner had crossed the spear's flat leaf and the sunspear's disc. A head keeps only what stands out wide of the haft,
   so the hammer's line is its block (0.90 to 1.26 m), not the collar below it. The scythe's slot is `inlay`, checked on
