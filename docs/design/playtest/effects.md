@@ -468,6 +468,8 @@ Group: Reactions
 
 **What sets it off.** Static landing on a Unsteady enemy, or Unsteady on a charged one.
 
+**Its shapes.** With Tempest's Shape mark (Thunder Gust: Thunderhead or Bolt from the Blue, 3 Shards, in the heart of the chart) and both Lightning and Wind carried, Thunder Gust wears the shape chosen at a rest fire instead. Thunderhead: thrown up for 1 s, and half a second in its Static is discharged over the heads of the rest, 7 and 5 stagger a stack in 4 m. Bolt from the Blue: nothing is thrown; its Static goes off where it stands and an arc runs on through up to three enemies, 14 and a Static each.
+
 **How to use it.** Charge it deep first, then stand so it is thrown into the crowd: the discharge lands among them.
 
 **How it looks.** Its name over the enemy and a discharge where it lands. Not yet: what it hits on the way taking the discharge first.

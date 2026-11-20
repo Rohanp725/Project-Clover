@@ -4,65 +4,96 @@ using Clover.Gameplay;
 namespace Clover.Player.Trees
 {
     /// <summary>
-    /// Tempest: the branch Lightning and Wind share. Static in an enemy that has lost its footing: discharges throw
-    /// enemies into the sky and the sky answers. It is open to one who holds either and has held or consumed the
-    /// other in this run. The god's gift at its crown is given by consuming one of the two into the other.
+    /// Tempest: the duo branch Lightning and Wind share, reshaped by pairs_d1_d2.md ("Lightning and Wind", task 4.15) and
+    /// drawn in the chart's heart (<see cref="HeartPattern"/>). Its reaction is Thunder Gust; the Shape mark opens its two
+    /// shapes, Thunderhead and Bolt from the Blue. Charged Air is cut (the Shape mark takes its place), Thunder Lift is now
+    /// Thunderhead, and Storm Overhead, offered to Lightning's tree, is cut because that roster is full; all three are in
+    /// <see cref="RetiredMarks"/>. Kept: The Sky Finds Them (it pays off Thunderhead), Slip Current, Eye of the Storm (the
+    /// duo spell) and Falling Thunder, the branch's top mark. Open while both are carried.
     /// </summary>
     public static class TempestTree
     {
-        public const string ChargedAir = "tempest.charged";
-        public const string ThunderLift = "tempest.lift";
+        public const string Shape = "tempest.shape";
         public const string TheSkyFindsThem = "tempest.sky";
         public const string SlipCurrent = "tempest.slip";
-        public const string StormOverhead = "tempest.cloud";
         public const string EyeOfTheStorm = "tempest.eye";
         public const string FallingThunder = "tempest.falling";
+        /// <summary>The condition Thunderhead sets: the enemy rising, the bolt meeting it at the top.</summary>
+        public const string Rising = "thundergust.rising";
 
         public static void Add(List<Upgrade> to)
         {
-            // The first element is the one whose mix this is: the earlier of the two round the ring.
             const string A = Elements.Lightning, B = Elements.Wind;
 
-            // The foot of the branch. Both afflictions are named; the runner lays only what the held element's root has not laid with the same blow (schema 15.8). Static left by a Wind holder is set off by a heavy blow here, as Lightning's root would.
-            to.Add(new Upgrade { Id = ChargedAir, Name = "Charged Air", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, X = 0f, Y = 1f, Icon = UpgradeIcons.Bolt,
-                Description = "Your blows lay Static and Unsteady together.",
-                Effects = new[]
+            // NEEDS: thrown into something (Bolt from the Blue's arc runs along the line downwind of it, each enemy taking
+            // the whole discharge it would have had; now an arc through three from it, 14 each).
+            to.Add(HeartPattern.Put(new Upgrade
+            {
+                Id = Shape, Name = "Thunder Gust: Thunderhead or Bolt from the Blue", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
+                Description = "Opens Thunder Gust's two shapes, chosen at a rest fire. Thunderhead: it is thrown up, not away, and a bolt discharges it at the top of its rise. Bolt from the Blue: nothing is thrown, and the discharge runs on as an arc through the enemies behind it. Either runs instead of the plain Thunder Gust.",
+                Shapes = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.LightHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Static, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Cooldown = 0.3f },
-                } });
-            to.Add(new Upgrade { Id = ThunderLift, Name = "Thunder Lift", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { ChargedAir }, X = -0.5f, Y = 2.36f, Icon = UpgradeIcons.Arrow,
-                Description = "A discharge of five Static throws its enemy into the air.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SetOff, Spent = AfflictionKind.Static, SpentAtLeast = 5, Do = UpgradeAction.Lift, Seconds = 1f } } });
+                    new ShapeDef
+                    {
+                        Name = "Thunderhead",
+                        Description = "It is thrown up, not away, for 1 s, and a bolt meets it at the top of its rise and discharges its Static there, 7 and 5 stagger a stack to all within 4 m, over the heads of the rest.",
+                        Effects = new[]
+                        {
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Lift, Seconds = 1f },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Rising, Seconds = 0.5f } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Rising, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
+                        },
+                    },
+                    new ShapeDef
+                    {
+                        Name = "Bolt from the Blue",
+                        Description = "Nothing is thrown: its Static goes off where it stands, and the discharge runs on as an arc through up to three enemies behind it, 14, 10 stagger and a Static each.",
+                        Effects = new[]
+                        {
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 1.5f, Stagger = 5f },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Arc, FromTarget = true, Count = 3, Reach = 5f, Damage = 14f, Stagger = 10f, Affliction = AfflictionKind.Static, Stacks = 1 },
+                        },
+                    },
+                },
+            }, HeartPattern.Foot));
+
             // The enemies a dodge passed cannot be counted: whatever stands close where the dodge ends is left one deeper in
             // both. The stamina paid back is still to be written by hand.
-            to.Add(new Upgrade { Id = SlipCurrent, Name = "Slip Current", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { ChargedAir }, X = 0.5f, Y = 2.36f, Icon = UpgradeIcons.Boot,
+            to.Add(HeartPattern.Put(new Upgrade
+            {
+                Id = SlipCurrent, Name = "Slip Current", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Boot,
                 Description = "Where a dodge ends, every enemy close to you is left one deeper in Static and Unsteady.",
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 2.2f, Affliction = AfflictionKind.Static, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Do = UpgradeAction.Afflict, At = EffectAt.Self, Radius = 2.2f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },
-                } });
-            to.Add(new Upgrade { Id = TheSkyFindsThem, Name = "The Sky Finds Them", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { ThunderLift }, X = 0f, Y = 3.48f, Icon = UpgradeIcons.Chain,
-                Description = "An enemy in the air is struck by a bolt at the top of its rise.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Lifted, Do = UpgradeAction.Arc, Damage = 14f, Count = 2, Reach = 4f, Affliction = AfflictionKind.Static, Stacks = 2 } } });
-            // BESPOKE: a cloud that follows the player and answers each dodge beneath it with a bolt where they stood, three for a
-            // perfect dodge. Until then the rain form: bolts fall for a while round the place it was cast.
-            to.Add(new Upgrade { Id = StormOverhead, Name = "Storm Overhead", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { SlipCurrent }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Comet,
-                Description = "You call a storm over the ground before you. For ten seconds bolts fall inside its circle, one every 0.8 seconds.",
-                Form = "rain",
-                Spell = new SpellSpec { Cost = 40f, Reach = 1f, Radius = 3f, Seconds = 10f, Interval = 0.8f, Damage = 14f, Stagger = 20f, Stacks = 1 } });
-            // BESPOKE (built): EyeForm. Each bite lays the affliction of the element held, not one of each.
-            to.Add(new Upgrade { Id = EyeOfTheStorm, Name = "Eye of the Storm", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ThunderLift }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Spiral,
+                },
+            }, HeartPattern.LeftLow));
+
+            // Answers every throw into the air, Thunderhead's among them.
+            to.Add(HeartPattern.Put(new Upgrade
+            {
+                Id = TheSkyFindsThem, Name = "The Sky Finds Them", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Chain,
+                Description = "An enemy thrown into the air is struck by a bolt, which leaps on to two more and leaves Static on each.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Lifted, Do = UpgradeAction.Arc, Damage = 14f, Count = 2, Reach = 4f, Affliction = AfflictionKind.Static, Stacks = 2 } },
+            }, HeartPattern.RightLow));
+
+            // BESPOKE (built): EyeForm. Each bite lays the affliction of the branch's first element, Static. The duo spell.
+            to.Add(HeartPattern.Put(new Upgrade
+            {
+                Id = EyeOfTheStorm, Name = "Eye of the Storm", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Breaker, Requires = new[] { SlipCurrent, TheSkyFindsThem }, Icon = UpgradeIcons.Spiral,
                 Description = "While you keep the spell's button held you are the storm: a turning column of wind and lightning that drags enemies in and carries the light ones round. Let go and it throws them out, and a bolt meets each where it lands. 50 mana.",
                 Form = SpellForms.Eye,
-                Spell = new SpellSpec { Cost = 50f, Reach = 5f, Radius = 3.5f, Seconds = 2.5f, Interval = 0.4f, Damage = 6f, Stagger = 20f, LingerDamage = 12f, Stacks = 1 } });
+                Spell = new SpellSpec { Cost = 50f, Reach = 5f, Radius = 3.5f, Seconds = 2.5f, Interval = 0.4f, Damage = 6f, Stagger = 20f, LingerDamage = 12f, Stacks = 1 },
+            }, HeartPattern.Spell));
 
-            // BESPOKE (built): ThunderForm.
-            to.Add(new Upgrade { Id = FallingThunder, Name = "Falling Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
+            // BESPOKE (built): ThunderForm. The branch's top mark, begun by a finisher.
+            to.Add(HeartPattern.Put(new Upgrade
+            {
+                Id = FallingThunder, Name = "Falling Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
                 Description = "After your finisher lands you throw the enemy skyward, vanish, and come down on it as a bolt. Where you land, everything near is shocked and thrown back.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Thunder, Affliction = AfflictionKind.Static, Spell = new SpellSpec { Cost = 0f, Damage = 22f, Stagger = 40f, Radius = 4.5f, Stacks = 3 } } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.FinisherHit, Do = UpgradeAction.Form, Form = SpellForms.Thunder, Affliction = AfflictionKind.Static, Spell = new SpellSpec { Cost = 0f, Damage = 22f, Stagger = 40f, Radius = 4.5f, Stacks = 3 } } },
+            }, HeartPattern.Crown));
         }
     }
 }

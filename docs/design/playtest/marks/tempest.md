@@ -1,28 +1,21 @@
 # Tempest: detailed explanations
 
-The long explanation the chart shows for every mark on Tempest, the branch Lightning and Wind share.
+The long explanation the chart shows for every mark on Tempest, the duo branch Lightning and Wind share. Reshaped in
+Phase 4 (`docs/design/steel/pairs_d1_d2.md`, "Lightning and Wind") and drawn in the heart of the chart while Lightning
+and Wind are both carried. Its reaction is Thunder Gust; its Shape mark lets you choose what Thunder Gust does.
 
-## tempest.charged
-**What it does.** A heavy blow on an enemy carrying Static sets the Static off, as Lightning's root would, whichever of the two is your first element. Your blows also lay Static and Unsteady together, whichever of the two you carry first: every light blow a Static, every blow an Unsteady. Once your first element's root (Static or Unsteady) is learned, that element's own is the root's, not laid twice.
+## tempest.shape
+**What it does.** Opens Thunder Gust's two shapes. At a rest fire you choose which one your Thunder Gust wears, and from then on it runs instead of the plain one. **Thunderhead**: the enemy is thrown up, not away, and a bolt meets it at the top of its rise and discharges it over the heads of the rest. **Bolt from the Blue**: nothing is thrown; its Static goes off where it stands and runs on as an arc through the enemies behind it.
 
-**When it happens.** A heavy blow or finisher on an enemy carrying Static sets it off. Every light blow lays a Static, and every blow that lands an Unsteady.
+**When it happens.** Every time Thunder Gust fires (Unsteady landing on a charged enemy, or Static on an unsteady one) while Lightning and Wind are both carried. Before this mark is bought, or with only one of the two carried, the plain Thunder Gust runs.
 
-**The numbers.** Mix, 3 Shards. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most about three times a second. One stack a blow of each; of your first element's, none beyond its root's. Unsteady makes an enemy take 6% more stagger, be shoved 15% further and turn 8% slower for each stack, up to five.
+**The numbers.** Mix, 3 Shards. Thunderhead: thrown up for 1 second; half a second in, its Static is discharged, 7 damage and 5 stagger a stack to everything within 4 metres. Bolt from the Blue: its Static goes off in 1.5 metres, then an arc runs through up to three enemies, each up to 5 metres from the last, for 14 damage, 10 stagger and a Static each. Thunder Gust rests 4 seconds on each enemy.
 
-**Works with.** Thunderclap or Gust in a slot (more of either), the charged blade and the R2 strike, Thunder Lift, Slip Current, The Sky Finds Them, Falling Thunder.
+**Works with.** The Sky Finds Them (Thunderhead's throw calls its bolt), Slip Current, Static, Gust.
 
-**Example.** Carrying Wind first and Lightning second: your light blows build Unsteady and Static on a soldier, and the heavy blow that ends your chain sets the Static off into its neighbours.
+**Example.** A pack round one charged soldier: Thunderhead lifts it out of their middle and the bolt bursts over all of them. A line of archers: Bolt from the Blue runs the charge down the line.
 
-## tempest.lift
-**What it does.** A discharge of five Static or more throws its enemy into the air. What is too heavy to leave the ground reels where it stands instead.
-
-**When it happens.** Whenever a discharge spends five stacks or more: a heavy blow or finisher on a full enemy, or Conductor setting one off.
-
-**The numbers.** Mix, 4 Shards. Thrown up for 1 second. One too heavy to lift takes 40 stagger instead.
-
-**Works with.** Static, Charged Air, The Sky Finds Them, Full Discharge, Single Stroke, Eye of the Storm.
-
-**Example.** Fill a soldier with Static and land a heavy blow: it is thrown up, helpless, while you cut the next one.
+**Not built yet.** Bolt from the Blue's arc leaps to the nearest enemies rather than along the line downwind of the first, and each takes 14 rather than the whole discharge it would have had.
 
 ## tempest.slip
 **What it does.** Where a dodge ends, every enemy close to you is left one deeper in Static and in Unsteady.
@@ -31,31 +24,20 @@ The long explanation the chart shows for every mark on Tempest, the branch Light
 
 **The numbers.** Mix, 3 Shards. One stack of Static and one of Unsteady on every enemy within 2.2 metres of where you stop.
 
-**Works with.** Charged Air, Thunder Lift, Blink, Storm Step, Tailwind.
+**Works with.** Thunder Gust's shapes, Blink, Storm Step, Tailwind.
 
 **Example.** Roll into the middle of three soldiers: all three gain a stack of each before you have swung.
 
 ## tempest.sky
 **What it does.** An enemy you throw into the air is struck by a bolt, which leaps on to two more near it and leaves Static on each.
 
-**When it happens.** Each time one of your marks throws an enemy into the air, such as Thunder Lift. As built the bolt falls as soon as it is thrown up, not at the top of its rise.
+**When it happens.** Each time one of your marks throws an enemy into the air, such as Thunder Gust's Thunderhead. As built the bolt falls as soon as it is thrown up, not at the top of its rise.
 
 **The numbers.** Mix, 3 Shards. 14 damage and two stacks of Static to the one thrown, then the same to up to two more within 4 metres of each other.
 
-**Works with.** Thunder Lift, Static, Charged Air.
+**Works with.** Thunder Gust's Thunderhead, Static, Updraft.
 
-**Example.** Thunder Lift throws a soldier up; the bolt strikes it and its two neighbours and leaves each two deep in Static.
-
-## tempest.cloud
-**What it does.** You call a storm over the ground before you. For ten seconds bolts fall inside its circle, each warned by a ring closing on the spot. Half of them fall where an enemy stands.
-
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
-
-**The numbers.** Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. The circle is 3 metres in radius, 1 metre ahead of you, for 10 seconds. A bolt every 0.8 seconds, 0.34 seconds after its warning ring, 1.2 metres across in radius: 14 damage, 20 stagger and one stack of Static (the branch's spells are made of Lightning, whichever element is first).
-
-**Works with.** Charged Air, Static, Thunder Lift, Lodestone, Live Wire.
-
-**Example.** Call it over a gate as a pack comes through and fight on its edge.
+**Example.** Thunderhead throws a soldier up; the bolt strikes it and its two neighbours and leaves each two deep in Static.
 
 ## tempest.eye
 **What it does.** You become the storm: a turning column of wind and lightning round you that drags enemies in and bites them, and carries the light ones round. While it turns you walk slower, take half damage and cannot be made to flinch. Let go and it throws them all out, and a bolt meets each where it lands.
@@ -64,7 +46,7 @@ The long explanation the chart shows for every mark on Tempest, the branch Light
 
 **The numbers.** Mix, 5 Shards, 50 mana. Up to 2.5 seconds, at least half a second. The column is 3.5 metres in radius and holds up to eight. A bite every 0.4 seconds: 6 damage and one stack of Static (the branch's spells are made of Lightning, whichever element is first). Thrown out up to 5 metres; each bolt deals 12 damage and 20 stagger.
 
-**Works with.** Charged Air, Slip Current, Thunder Lift, Static.
+**Works with.** Slip Current or The Sky Finds Them (it grows from either), Thunder Gust's shapes, Static.
 
 **Example.** Swarmed by small enemies: hold it the full time, then let go and the bolts fall on every one thrown.
 
@@ -75,6 +57,6 @@ The long explanation the chart shows for every mark on Tempest, the branch Light
 
 **The numbers.** A god's gift, never sold; in the playtest it can be bought. You land 0.34 seconds after the throw. Everything within 4.5 metres takes 22 damage, 40 stagger, three stacks of Static and three of Unsteady, and is pushed 3 metres.
 
-**Works with.** Charged Air, Static, Thunder Lift, Slip Current, Stored Charge.
+**Works with.** Static, Thunder Gust's Thunderhead, Slip Current, Stored Charge.
 
 **Example.** Finish a staggered brute in a crowd and land among its friends with each three deep in both.

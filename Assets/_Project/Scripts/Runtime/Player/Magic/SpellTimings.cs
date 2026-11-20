@@ -134,7 +134,6 @@ namespace Clover.Player.Magic
 
             // The eleven spare ring-mix spells (Evolutions to come): a duo spell's cooldown. Plasma Lance was cut with Plasma's
             // reshaping (task 4.5).
-            ["tempest.cloud"] = Cd(DuoCooldown, SpellRole.Breaker),
             ["blizzard.whiteout"] = Cd(DuoCooldown, SpellRole.Breaker),
             ["glacier.creeping"] = Cd(DuoCooldown, SpellRole.Opener),
             ["bloom.lotus"] = Cd(DuoCooldown, SpellRole.Movement),

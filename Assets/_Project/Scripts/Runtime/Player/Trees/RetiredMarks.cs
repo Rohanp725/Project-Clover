@@ -152,6 +152,10 @@ namespace Clover.Player
             // Corona, Fused Core cut as a plain number, and Plasma Lance, which no roster has room for.
             new RetiredMark("plasma.embers", 3), new RetiredMark("plasma.arcfire", 3), new RetiredMark("plasma.fused", 4),
             new RetiredMark("plasma.lance", 5),
+
+            // Tempest, the duo branch of Lightning and Wind (pairs_d1_d2.md; task 4.15): Charged Air (the Shape mark takes its
+            // place), Thunder Lift (now the Thunderhead shape) and Storm Overhead (offered to Lightning's tree, whose roster is full).
+            new RetiredMark("tempest.charged", 3), new RetiredMark("tempest.lift", 4), new RetiredMark("tempest.cloud", 4),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

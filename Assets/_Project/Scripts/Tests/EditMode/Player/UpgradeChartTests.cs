@@ -256,7 +256,8 @@ namespace Clover.Tests
                 Assert.IsNotNull(crown, element.MixName + " has no crown");
                 Assert.AreSame(crown, Gifts.CrownOf(element.MixWith, element.Name), "in either order of holding");
                 Assert.IsTrue(crown.IsMix && crown.BelongsTo(element.Name) && crown.BelongsTo(element.MixWith));
-                Assert.GreaterOrEqual(Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.Element == element.Name), 6, element.MixName);
+                // A branch reshaped into the heart is four to eight marks with its crown (pairs_d1_d2.md); one still on the ring six or more.
+                Assert.GreaterOrEqual(Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && upgrade.BelongsTo(element.Name) && upgrade.BelongsTo(element.MixWith)), 4, element.MixName);
             }
             Assert.IsNull(Gifts.CrownOf(Elements.Fire, Elements.Water), "no branch between elements that are not neighbours");
             Assert.IsNull(Gifts.CrownOf(Elements.Fire, Elements.Fire));
@@ -669,7 +670,9 @@ namespace Clover.Tests
             }
             Assert.IsFalse(ring.Draws(null));
             Assert.AreEqual(UpgradeTree.Emblem(Elements.Fire), ring.Foot(Upgrade.ById(FireTree.Cinder)));
-            Assert.AreEqual(UpgradeTree.MixFoot(Elements.Lightning, Elements.Wind), ring.Foot(Upgrade.ById(TempestTree.ChargedAir)), "a mix not reshaped yet grows from its ring gap");
+            // A mix not reshaped yet grows from its ring gap (none is left once tasks 4.15 to 4.19 are done).
+            var ringMix = Upgrade.All.FirstOrDefault(mark => mark.IsMix && ring.Draws(mark));
+            if (ringMix != null) Assert.AreEqual(UpgradeTree.MixFoot(ringMix.Element, ringMix.Element2), ring.Foot(ringMix), ringMix.Id);
             Assert.IsFalse(ring.Draws(Upgrade.ById(PlasmaTree.IonisedAir)), "Plasma is in the heart now; its gap on the ring is empty");
             Assert.AreEqual(HeartLayout.FootPlace, HeartLayout.Instance.Foot(Upgrade.ById(PlasmaTree.IonisedAir)));
         }
@@ -717,10 +720,12 @@ namespace Clover.Tests
                     Assert.IsNotEmpty(shape.Description, name + ": " + shape.Name);
                     Assert.IsTrue(shape.Effects.Any(effect => effect.On == UpgradeTrigger.Reacted), name + ": " + shape.Name + " does something when the pair reacts");
                 }
-                // The shared prices: Shape 3, Minor 1, Major 3, Keystone 5, the duo spell 5 (pairs_d1_d2.md).
+                // The shared prices: Shape 3, Minor 1, Major 3, Keystone 5, the duo spell 5 (pairs_d1_d2.md). A crown that casts a
+                // form (Falling Thunder, begun by a finisher) is the god's gift, not the duo spell.
                 Assert.AreEqual(3, shapes[0].Cost, name);
-                foreach (var mark in branch.Where(mark => mark.IsSpell)) Assert.AreEqual(5, mark.Cost, mark.Id + ": a duo spell costs 5");
-                Assert.LessOrEqual(branch.Count(mark => mark.IsSpell), 1, name + " has one duo spell at most");
+                foreach (var mark in branch.Where(mark => mark.IsSpell && !mark.Signature)) Assert.AreEqual(5, mark.Cost, mark.Id + ": a duo spell costs 5");
+                Assert.LessOrEqual(branch.Count(mark => mark.IsSpell && !mark.Signature), 1, name + " has one duo spell at most");
+                Assert.LessOrEqual(branch.Count(mark => mark.Signature), 1, name + " has one crown at most");
                 Assert.IsTrue(branch.All(mark => mark.Cost == 0 || mark.Cost == 1 || mark.Cost == 3 || mark.Cost == 5), name + ": every price is a shared one");
                 // Every other mark of the branch grows from something in it.
                 foreach (var mark in branch.Where(mark => !ReactionTable.IsReactionShape(mark) && !mark.Signature))
