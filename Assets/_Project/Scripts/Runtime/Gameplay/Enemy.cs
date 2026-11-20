@@ -89,6 +89,21 @@ namespace Clover.Gameplay
         public static readonly Color ReactionFlashTint = new Color(0.55f, 0.5f, 0.92f, 1f);
         /// <summary>The flash a landed blow gives the body: white for a plain one, the element's colour softened under one (<see cref="StruckLook"/>).</summary>
         public static Color FlashColour(Color tint) => StruckLook.Flash(StruckFlash, tint);
+
+        /// <summary>
+        /// The guard's flash as a blow is turned on it: a cold white for a plain blow, but a blow of an element or a
+        /// reaction lights it in that hue, never white (the films of Thunder Gust and Glint, 2026-11-20: a white crescent
+        /// where a reaction's chained blow met a guard, 0.05 to 0.10 s in).
+        /// </summary>
+        public static Color GuardFlash(in Hit hit)
+        {
+            // A plain blow: the guard's own cold blue, not lit past its hue (bloom took any brighter pulse to white) (the element films of 2026-11-20 showed the
+            // white pulse as a bright ring segment under the enemy at the blow).
+            if (!hit.FromReaction && !StruckLook.Tinted(hit.Tint)) return new Color(0.4f, 0.65f, 1.1f, 1f);
+            Color hue = StruckLook.Tinted(hit.Tint) ? hit.Tint : ReactionFlashTint;
+            float peak = Mathf.Max(0.001f, Mathf.Max(hue.r, Mathf.Max(hue.g, hue.b)));
+            return new Color(hue.r / peak * 0.95f, hue.g / peak * 0.95f, hue.b / peak * 0.95f, 1f);
+        }
         public bool IsStaggered => Brain.State == EnemyState.Staggered;
         public bool IsDead => Brain.State == EnemyState.Dead;
         public bool IsCharged => chargedLeft > 0f;
@@ -630,7 +645,7 @@ namespace Clover.Gameplay
                 && Vector3.Angle(transform.forward, -hit.Direction) < 75f)
             {
                 BlowsGuarded++;
-                if (guardArc != null) guardArc.Pulse(new Color(3f, 3.4f, 4f, 1f), 0.18f, 0.25f);
+                if (guardArc != null) guardArc.Pulse(GuardFlash(hit), 0.18f, 0.25f);
                 Health.Damage(hit.Damage * takes * (hit.Heavy ? Kind.HeavyGuardedDamage : Kind.GuardedDamage));
                 Vfx.Play(VfxKind.GuardSpark, transform.position + Vector3.up * 1.2f + transform.forward * 0.5f, transform.forward);
                 Vector3 back = hit.Direction;
@@ -1513,7 +1528,8 @@ namespace Clover.Gameplay
             int glow = 0;
             if (flashLeft > 0f) glow = 1;
             // Held in stone (Turned to Stone) it does not glow the frozen pale blue: that lit the stone near white.
-            else if (Afflictions.IsFrozen && !IsDead && !(ice > 0f && shell == Clover.Player.Forms.ElementLookSet.Stone)) glow = 5;
+            // Nor under Winter Seed's ice flower (the coordinator, 2026-11-20: "remove the frozen body's pale glow").
+            else if (Afflictions.IsFrozen && !IsDead && !(ice > 0f && shell == Clover.Player.Forms.ElementLookSet.Stone) && !Clover.Player.Forms.ElementLooks.Thawed(transform)) glow = 5;
             else if (IsStaggered && Mathf.Repeat(Time.unscaledTime * 5f, 1f) < 0.5f) glow = 2;
             else if (IsCharged && !IsDead && Mathf.Repeat(Time.unscaledTime * 3f, 1f) < 0.6f) glow = 3;
             // Close to losing its balance, it flickers amber: one or two more blows will open it.

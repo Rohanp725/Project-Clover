@@ -105,6 +105,9 @@ namespace Clover.Player.Forms
                 if (kind == AfflictionKind.Soaked && (afflictions.Stacks(AfflictionKind.Static) >= SeizedStatic || afflictions.Stacks(AfflictionKind.Sundered) > 0)) continue;
                 // A reaction's own look is playing on it and shows what became of this one.
                 if (ElementLooks.Hides(body, (int)kind)) continue;
+                // Under ice that bursts through the body (Frost Bite's spike, the charged ice blade's crystals) Chill's
+                // shell does not cover it (the owner: "that white spiderweb thing is really covering everything up").
+                if (kind == AfflictionKind.Chill && ElementLooks.Thawed(body)) continue;
                 ElementLooks.Keep(ElementLooks.Find(LookOf(kind, depth)), body);
             }
         }
@@ -113,7 +116,68 @@ namespace Clover.Player.Forms
         public const float WheelFadeIn = 0.45f;
 
         /// <summary>Marked's sun-wheels lying under a body fade out: a reaction's own look is starting there.</summary>
-        public static void QuietMarks(Vector3 feet) => ElementArt.Hush(ElementArt.Piece("light_wheel_affliction"), feet, ElementLooks.QuietReach, 0.2f);
+        public static void QuietMarks(Vector3 feet)
+        {
+            ElementArt.Hush(ElementArt.Piece("light_wheel_affliction"), feet, ElementLooks.QuietReach, 0.2f);
+            // After the reaction's look, Marked shows there as a small gold flare on the body, not the floor's sun-wheel
+            // (the Blender worker's scale notes, 2026-11-20: "The Marked mandala must not be a reaction's biggest shape").
+            int slot = FlareNear(feet);
+            if (slot < 0)
+            {
+                slot = 0;
+                for (int i = 0; i < MostFlares; i++)
+                    if (flareUntil[i] < flareUntil[slot]) slot = i;
+            }
+            flareAt[slot] = feet;
+            flareUntil[slot] = Time.time + FlareSeconds;
+            flareSeen[slot] = Time.time;
+            flareDepth[slot] = -1;
+        }
+
+        /// <summary>
+        /// Seconds after a reaction that Marked on a body it reached shows only as a gold flare on the body; the full
+        /// sun-wheel comes back in sooner when the mark is laid again by something else (deeper, or after it was gone).
+        /// </summary>
+        public const float FlareSeconds = 6f;
+        public static readonly Color FlareGold = new Color(1f, 0.7f, 0.2f, 1f);
+
+        private const int MostFlares = 16;
+        private static readonly Vector3[] flareAt = new Vector3[MostFlares];
+        private static readonly float[] flareUntil = new float[MostFlares];
+        private static readonly float[] flareSeen = new float[MostFlares];
+        private static readonly int[] flareDepth = new int[MostFlares];
+
+        private static int FlareNear(Vector3 feet)
+        {
+            float now = Time.time;
+            for (int i = 0; i < MostFlares; i++)
+            {
+                if (flareUntil[i] <= now) continue;
+                Vector3 off = flareAt[i] - feet;
+                off.y = 0f;
+                if (off.sqrMagnitude <= ElementLooks.QuietReach * ElementLooks.QuietReach) return i;
+            }
+            return -1;
+        }
+
+        // Marked on a body a reaction reached a moment ago: its gold flare instead of the wheel, until it is laid anew or its time is out.
+        private static bool Flare(int depth, Vector3 feet)
+        {
+            int slot = FlareNear(feet);
+            if (slot < 0) return false;
+            float now = Time.time;
+            bool laidAgain = flareDepth[slot] >= 0 && (depth > flareDepth[slot] || now - flareSeen[slot] > 0.6f);
+            if (laidAgain)
+            {
+                flareUntil[slot] = 0f;
+                return false;
+            }
+            flareAt[slot] = feet;
+            flareSeen[slot] = now;
+            if (flareDepth[slot] < 0) flareDepth[slot] = depth;
+            ElementArt.Stand(ElementArt.Piece("light_glint_affliction"), feet + Vector3.up * 1.25f, 180f, 0.75f, 0.3f, FlareGold);
+            return true;
+        }
 
         /// <summary>The depth of Static at which a Soaked body is Seized (Reactions.Three: "two Static or more").</summary>
         public const int SeizedStatic = 2;
@@ -143,6 +207,10 @@ namespace Clover.Player.Forms
         private static void ResetStatics()
         {
             System.Array.Clear(shown, 0, shown.Length);
+            System.Array.Clear(flareAt, 0, MostFlares);
+            System.Array.Clear(flareUntil, 0, MostFlares);
+            System.Array.Clear(flareSeen, 0, MostFlares);
+            System.Array.Clear(flareDepth, 0, MostFlares);
             Jolts = 0;
             BurnStyle = DefaultBurnStyle;
             StaticStyle = DefaultStaticStyle;
@@ -266,6 +334,7 @@ namespace Clover.Player.Forms
                     // cream sun-wheel was the largest shape on screen in nine reactions): the wheel waits, then comes
                     // back in softly.
                     if (ElementLooks.QuietAt(feet)) return true;
+                    if (Flare(depth, feet)) return true;
                     // The wheel turns under it; the shaft lands on its head.
                     if (beat % 3 == 0) ElementArt.Floor(ElementArt.Piece("light_wheel_affliction"), feet, beat * 15f, 1f, 1f, 1.5f, 0f, true, Color.white, 40f, WheelFadeIn);
                     ElementArt.Stand(ElementArt.Piece("light_pencil_affliction"), feet + Vector3.up * 1.9f, 180f, 1f, 0.4f);
