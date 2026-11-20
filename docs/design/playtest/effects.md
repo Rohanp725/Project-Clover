@@ -858,6 +858,8 @@ Group: Reactions
 
 **What sets it off.** A seed landing on a Marked enemy, or a Mark on a Seeded one.
 
+**Its shapes.** With the Shape mark of Life and Light's duo branch (Shining Herb: Bitter Leaf or Seed of Light, 3 Shards, in the heart of the chart) and both carried, Shining Herb wears the shape chosen at a rest fire instead. Bitter Leaf: for 6 s your next weapon blow on it picks the herb and heals you 8. Seed of Light: for 6 s your next weapon blow on it bursts a flare that Marks and Seeds all within 4 m.
+
 **How to use it.** Let it flower in a crowd. Not yet: walking over the herb to pick it, for 8 health and a critical next blow.
 
 **How it looks.** Its name over the enemy, then a puff when it flowers. Not yet: the herb on the floor.
