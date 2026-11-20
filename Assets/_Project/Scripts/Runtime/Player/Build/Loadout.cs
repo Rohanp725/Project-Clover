@@ -32,8 +32,13 @@ namespace Clover.Player.Build
         public List<IdChoice> UseEvolved = new List<IdChoice>();
         /// <summary>The weapon kind carried (<c>Weapons.KatanaName</c>); a god's weapon counts as its kind.</summary>
         public string Weapon = "";
-        /// <summary>The active aspect of each weapon kind (phase 5).</summary>
+        /// <summary>The active aspect of each weapon kind (phase 5): the kind's name, then the aspect's id (<c>katana.sheath</c>).</summary>
         public List<IdText> Aspects = new List<IdText>();
+        /// <summary>
+        /// The keystone set on each bough (way_plan.md 0.1: both can be bought, one is active): the bough's aspect id (or
+        /// <see cref="Way.WayRules.BodyBough"/> for the Body's two bearings), then the keystone's mark id.
+        /// </summary>
+        public List<IdText> Keystones = new List<IdText>();
         /// <summary>The Fists' choice of technique (phase 5).</summary>
         public string Technique = "";
 
@@ -66,6 +71,18 @@ namespace Clover.Player.Build
 
         /// <summary>The slot's spell id, or "" for an empty or missing slot.</summary>
         public string SlotAt(int slot) => Slots != null && slot >= 0 && slot < Slots.Length ? Slots[slot] ?? "" : "";
+
+        /// <summary>The aspect chosen for a weapon kind, or "" for none (the plain weapon).</summary>
+        public string AspectOf(string kind) => TextOf(Aspects, kind);
+
+        /// <summary>Sets the aspect chosen for a weapon kind; "" takes the choice away.</summary>
+        public void SetAspect(string kind, string aspect) => SetText(Aspects, kind, aspect);
+
+        /// <summary>The keystone set on a bough, or "" for none.</summary>
+        public string KeystoneOf(string bough) => TextOf(Keystones, bough);
+
+        /// <summary>Sets the keystone of a bough; "" takes it away.</summary>
+        public void SetKeystone(string bough, string keystone) => SetText(Keystones, bough, keystone);
 
         /// <summary>The shape a spell or reaction wears: 0 (the first) unless 1 was chosen.</summary>
         public int ShapeOf(string id)
@@ -105,10 +122,9 @@ namespace Clover.Player.Build
             CopyArray(other.Attunements, ref Attunements, Math.Max(2, other.Attunements != null ? other.Attunements.Length : 2));
             Weapon = other.Weapon ?? "";
             Technique = other.Technique ?? "";
-            Aspects.Clear();
-            if (other.Aspects != null)
-                foreach (var aspect in other.Aspects)
-                    if (aspect != null) Aspects.Add(new IdText(aspect.Id, aspect.Text));
+            CopyTexts(other.Aspects, Aspects);
+            Keystones ??= new List<IdText>();
+            CopyTexts(other.Keystones, Keystones);
         }
 
         /// <summary>A copy that shares nothing with this one: for a saved Hand.</summary>
@@ -123,6 +139,30 @@ namespace Clover.Player.Build
         {
             if (into == null || into.Length != length) into = new string[length];
             for (int i = 0; i < length; i++) into[i] = from != null && i < from.Length && from[i] != null ? from[i] : "";
+        }
+
+        private static string TextOf(List<IdText> list, string id)
+        {
+            if (list == null || string.IsNullOrEmpty(id)) return "";
+            for (int i = 0; i < list.Count; i++)
+                if (list[i] != null && list[i].Id == id) return list[i].Text ?? "";
+            return "";
+        }
+
+        private static void SetText(List<IdText> list, string id, string text)
+        {
+            if (list == null || string.IsNullOrEmpty(id)) return;
+            for (int i = list.Count - 1; i >= 0; i--)
+                if (list[i] == null || list[i].Id == id) list.RemoveAt(i);
+            if (!string.IsNullOrEmpty(text)) list.Add(new IdText(id, text));
+        }
+
+        private static void CopyTexts(List<IdText> from, List<IdText> into)
+        {
+            into.Clear();
+            if (from == null) return;
+            foreach (var pair in from)
+                if (pair != null) into.Add(new IdText(pair.Id, pair.Text));
         }
 
         private static void CopyChoices(List<IdChoice> from, List<IdChoice> into)

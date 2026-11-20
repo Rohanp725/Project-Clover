@@ -22,8 +22,8 @@ namespace Clover.Core
         public const int RestShards = 9999;
 
         /// <summary>
-        /// The hook for the second currency (the Way's Memories, phase 5 of the playtest): when Memories exist, a rest
-        /// tops them up to this too, so the weapon tree is as free as the element trees. Nothing reads it yet.
+        /// What a rest tops the Memories up to (the Way's currency, phase 5 of the playtest), so the weapon trees and the
+        /// Body are as free as the element trees. Read through <see cref="MemoriesAfterRest"/> by the wallet's rest.
         /// </summary>
         public const int RestMemories = 9999;
 
@@ -58,5 +58,8 @@ namespace Clover.Core
 
         /// <summary>Shards after a rest: unlimited in the playtest, unchanged otherwise.</summary>
         public static int ShardsAfterRest(int carried) => On ? Mathf.Max(carried, RestShards) : carried;
+
+        /// <summary>Memories after a rest: unlimited in the playtest, unchanged otherwise.</summary>
+        public static int MemoriesAfterRest(int carried) => On ? Mathf.Max(carried, RestMemories) : carried;
     }
 }
