@@ -1083,6 +1083,8 @@ Group: Reactions
 
 **What sets it off.** A curse landing on a Unsteady enemy, or Unsteady on a Cursed one.
 
+**Its shapes.** With the Shape mark of Dark and Wind's duo branch (Storm or Breath: Black Storm or Second Wind, 3 Shards, in the heart of the chart) and both carried, Breath Taken wears the shape chosen at a rest fire instead. Both wind it as plain. Black Storm: the two nearest others within 6 m are winded too, Cursed and Unsteady. Second Wind: the breath comes to you, 25 stamina and 8 mana, and your dodges cost nothing for 3 s.
+
 **How to use it.** Wind it, then break its balance while it cannot answer.
 
 **How it looks.** Its name over the enemy. Not yet: the breath torn away on the wind.
