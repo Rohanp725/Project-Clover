@@ -35,13 +35,11 @@ both carried.
 
 **When it happens.** Each time Firebloom fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. One more lily grows than the seeds spent, four at most, and the lilies stand 7 seconds, not 5. In Between Two Fires you get one more pair, and they stand 7 seconds too.
 
 **Works with.** Firebloom and its shapes, Kindled Guard.
 
 **Example.** A lightly seeded enemy still blooms a full bed.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## firebloom.burningtree
 **What it does.** The first lily of each fight grows into a burning tree that stands 10 seconds and throws a burning seed at the nearest enemy every 2 seconds, Seeded and Burn.

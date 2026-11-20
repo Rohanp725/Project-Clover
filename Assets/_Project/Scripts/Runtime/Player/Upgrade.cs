@@ -59,6 +59,11 @@ namespace Clover.Player
         public ShapeDef[] Shapes = Array.Empty<ShapeDef>();
         /// <summary>On an Empower mark: the numbers it changes on its branch's spell. Null on every other mark.</summary>
         public Empower Empower;
+        /// <summary>
+        /// On a duo branch's mark: the numbers it changes on its branch's own reaction while it is in force (the ledger's
+        /// reaction-numbers), the plain reaction's or its shapes'. Null for none.
+        /// </summary>
+        public ReactionChange[] ReactionChanges;
         /// <summary>On a Learn mark (and a duo spell): what the spell is for, the role icon in the Hand.</summary>
         public SpellRole Role = SpellRole.None;
         /// <summary>On a reaction lift: the element whose reactions it lifts (its effects ride <see cref="UpgradeTrigger.Reacted"/>). Empty otherwise.</summary>

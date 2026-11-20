@@ -816,6 +816,24 @@ namespace Clover.Player
             return mark.Effects;
         }
 
+        /// <summary>
+        /// A reaction's effects as they run now: the plain reaction's (<paramref name="shape"/> -1) or a shape's, with the
+        /// numbers of every mark in force that changes that reaction (<see cref="Upgrade.ReactionChanges"/>), else as written.
+        /// </summary>
+        public UpgradeEffect[] ReactionEffects(int pair, int shape)
+        {
+            var written = ReactionNumbers.Written(pair, shape);
+            var changers = ReactionNumbers.Changers(pair);
+            if (changers == null || has == null) return written;
+            int mask = 0;
+            for (int i = 0; i < changers.Length; i++)
+            {
+                int index = changers[i].Index;
+                if (index < has.Length && has[index]) mask |= 1 << i;
+            }
+            return mask == 0 ? written : ReactionNumbers.Changed(pair, mask, shape) ?? written;
+        }
+
         /// <summary>The count a mark keeps now; zero when it keeps none or is not in force.</summary>
         public int Tally(string id)
         {
@@ -1357,6 +1375,7 @@ namespace Clover.Player
             int counted = spentBy == effect.Owner && spentOn == pending.Target ? lastSpent : 0;
             int per = effect.PerStack ? Mathf.Max(1, pending.Spent > 0 ? pending.Spent : counted) : 1;
             if (effect.PerStack && effect.Share > 0f && effect.Do != UpgradeAction.Spend) per = Mathf.Max(1, Mathf.CeilToInt(per * effect.Share - 0.0001f));
+            if (effect.PerStack && effect.PerMore > 0) per += effect.PerMore;
             if (effect.PerStack && effect.PerMost > 0) per = Mathf.Min(per, effect.PerMost);
             bool byCount = effect.Do == UpgradeAction.Projectile || effect.Do == UpgradeAction.Falling || effect.Do == UpgradeAction.Ward
                 || (effect.Do == UpgradeAction.Hazard && effect.PerStack && effect.Shape != HazardShape.Patch);

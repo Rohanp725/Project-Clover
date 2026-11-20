@@ -35,13 +35,11 @@ Water are both carried.
 
 **When it happens.** Each time Fish Poison fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The slick is 4 metres across, not 3, and stands 7 seconds, not 5. In Rock Pool the pool is 2 metres across and stands 7 seconds; in The Ebb Takes It the stream stands 7 seconds.
 
 **Works with.** Fish Poison and its shapes, The Tide Brings It.
 
 **Example.** The slick reaches the soldier beside it.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## fishpoison.fastwater
 **What it does.** Poison on a Soaked enemy bites twice as often and fades twice as fast.

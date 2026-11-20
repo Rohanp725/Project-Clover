@@ -59,7 +59,8 @@ namespace Clover.Player.Trees
             }, HeartPattern.Foot));
 
             // Re-aimed by the pair file: at full depth of poison, Fire Medicine spends nothing and strikes twice as hard.
-            // NEEDS: a mark that changes the reaction's own numbers; now a second bang of the same size and the spent doses laid
+            // NEEDS: the reaction's own numbers changed only on an enemy that meets a test as it fires (reaction-numbers-when);
+            // now a second bang of the same size and the spent doses laid
             // back, on an enemy whose poison is full as it reacts.
             to.Add(HeartPattern.Put(new Upgrade
             {

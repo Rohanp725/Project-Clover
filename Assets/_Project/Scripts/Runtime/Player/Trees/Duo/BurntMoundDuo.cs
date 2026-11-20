@@ -77,11 +77,21 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the stones lying 8 s, not 6, and Heaped Stones' boulder rolling 10 m, not 8.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HotStones, Name = "Hot Stones", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Burnt Mound's stones lie 2 s longer and skip 2 m further.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, Seconds = 8f },
+                    new ReactionChange { Shape = 0, Index = 0, Seconds = 8f },
+                    new ReactionChange { Shape = 0, Index = 1, ConditionSeconds = 8f },
+                    new ReactionChange { Shape = 0, Index = 2, Reach = 10f },
+                    new ReactionChange { Shape = 0, Index = 3, Reach = 10f },
+                    new ReactionChange { Shape = 1, Index = 0, Seconds = 8f },
+                },
             }, HeartPattern.RightLow));
 
             to.Add(HeartPattern.Put(new Upgrade

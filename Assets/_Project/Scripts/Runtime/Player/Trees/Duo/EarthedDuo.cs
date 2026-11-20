@@ -77,11 +77,25 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Tremor, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 2, Cooldown = 0.3f } },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the figure 1 m wider and the root 0.5 s longer, in the plain reaction and both shapes.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeepEarth, Name = "Deep Earth", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Earthed's figure is 1 m wider, and the grounded enemy is rooted 0.5 s longer.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 1, Radius = 5f },
+                    new ReactionChange { Shape = -1, Index = 2, Radius = 5f },
+                    new ReactionChange { Shape = -1, Index = 3, ConditionSeconds = 1.5f },
+                    new ReactionChange { Shape = 0, Index = 1, ConditionSeconds = 1.5f },
+                    new ReactionChange { Shape = 0, Index = 2, Radius = 7f },
+                    new ReactionChange { Shape = 0, Index = 3, Radius = 7f },
+                    new ReactionChange { Shape = 1, Index = 1, Radius = 7f },
+                    new ReactionChange { Shape = 1, Index = 2, Radius = 7f },
+                    new ReactionChange { Shape = 1, Index = 3, Radius = 7f },
+                    new ReactionChange { Shape = 1, Index = 4, ConditionSeconds = 1.5f },
+                },
             }, HeartPattern.RightLow));
 
             // NEEDS: the player's raised rocks as things that hold charge (standing-things): Static discharged within 4 m of

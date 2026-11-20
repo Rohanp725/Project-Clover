@@ -44,15 +44,13 @@ are both carried.
 ## illwind.finedust
 **What it does.** Ill Wind's trails last 2 seconds longer.
 
-**When it happens.** Always on once learned, while Poison and Wind are both carried.
+**When it happens.** Each time Ill Wind sheds its poison, while Poison and Wind are both carried.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The trail of poison lasts 5 seconds, not 3. In Dust Bank both trails last 2 seconds longer.
 
 **Works with.** Spring Dust, which it grows from, Ill Wind and its shapes.
 
 **Example.** The plume still lies when the next soldier steps in.
-
-**Not built yet.** It does nothing yet.
 
 ## illwind.nostillair
 **What it does.** A poisoned, Unsteady enemy cannot stand still: every 2 seconds the wind shoves it 1 metre away from you, and it sheds a trail each time.

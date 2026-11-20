@@ -48,13 +48,11 @@ both carried.
 
 **When it happens.** Each time an enemy is torn out.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The torn pit stands 8 seconds, not 5, and seeds two deep, not one. The same in Deep Roots.
 
 **Works with.** Seed on the Wind, which it grows from, Windthrow.
 
 **Example.** The pits left behind keep seeding the fight.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## windthrow.fairywind
 **What it does.** Where an enemy is torn out, a small whirlwind rises and wanders for 4 seconds, making what it passes Unsteady and Seeded, so tearing one out roots the next.

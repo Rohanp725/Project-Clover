@@ -72,11 +72,17 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // one more seed (four at most) and lilies standing 7 s, in the plain reaction and Between Two Fires.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DryPods, Name = "Dry Pods", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "One more seed is thrown, four at most, and lilies stand 2 s longer.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 1, PerMore = 1, PerMost = 4, Seconds = 7f },
+                    new ReactionChange { Shape = 0, Index = 1, PerMore = 1, PerMost = 4, Seconds = 7f },
+                },
             }, HeartPattern.RightLow));
 
             // The burning tree: a helper that strikes the enemy that bloomed every 2 s for 10 s, a Burn each time.

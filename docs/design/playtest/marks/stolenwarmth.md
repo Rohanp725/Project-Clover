@@ -35,13 +35,11 @@ are both carried.
 
 **When it happens.** Each weapon blow on such an enemy.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. Each blow draws 3 health, not 2 (1.5 from a god), at most four times a second: 12 a second. The same in Cold Shade.
 
 **Works with.** Stolen Warmth and Cold Shade, Hel's Half.
 
 **Example.** A long fight with one brute keeps you whole.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## stolenwarmth.nosummer
 **What it does.** Hunger costs no health while any enemy within 8 metres is Frozen.

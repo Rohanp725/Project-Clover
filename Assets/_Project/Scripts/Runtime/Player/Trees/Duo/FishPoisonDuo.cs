@@ -62,11 +62,18 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the slick 4 m across, not 3, and 7 s, not 5 (Rock Pool's pool 2 m across).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WideSlick, Name = "Wide Slick", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Fish Poison's slick is 4 m across and lasts 2 s longer.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, Radius = 2f, Seconds = 7f },
+                    new ReactionChange { Shape = 0, Index = 0, Radius = 1f, Seconds = 7f },
+                    new ReactionChange { Shape = 1, Index = 0, Seconds = 7f },
+                },
             }, HeartPattern.RightLow));
 
             // A second bite half a second after each bite on a Soaked enemy. The bite it makes is itself a bite, so the effect's

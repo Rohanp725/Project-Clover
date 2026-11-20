@@ -35,13 +35,11 @@ Wind are both carried.
 
 **When it happens.** Each time Golden Feathers fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. Four feathers fly, not three, and the farthest lands 9 metres beyond the enemy.
 
 **Works with.** Golden Feathers, Bane of Serpents.
 
 **Example.** The feathers reach the back of the room.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## goldenfeathers.wingsbehind
 **What it does.** Every perfect dodge raises a half ring of golden feathers behind you that flies out 4 metres, Marking and laying Unsteady on what it reaches.

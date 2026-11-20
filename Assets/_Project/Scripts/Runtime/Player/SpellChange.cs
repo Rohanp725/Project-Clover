@@ -124,8 +124,16 @@ namespace Clover.Player
         public float Seconds;
         public int Stacks;
         public int Count;
+        public float Reach;
+        public float Interval;
+        public float Delay;
+        public float Arc;
         /// <summary>For an effect multiplied by a count: the most it is multiplied by (Reckoning's 180 at most).</summary>
         public int PerMost;
+        /// <summary>For an effect multiplied by a count: added to the count first (Dry Pods' one more seed).</summary>
+        public int PerMore;
+        /// <summary>For an effect that sets a condition: the condition's own seconds (a copy of it is changed, never the original).</summary>
+        public float ConditionSeconds;
 
         /// <summary>Writes every number it sets over the effect's.</summary>
         public void ApplyTo(UpgradeEffect effect)
@@ -138,7 +146,28 @@ namespace Clover.Player
             if (Seconds > 0f) effect.Seconds = Seconds;
             if (Stacks > 0) effect.Stacks = Stacks;
             if (Count > 0) effect.Count = Count;
+            if (Reach > 0f) effect.Reach = Reach;
+            if (Interval > 0f) effect.Interval = Interval;
+            if (Delay > 0f) effect.Delay = Delay;
+            if (Arc > 0f) effect.Arc = Arc;
             if (PerMost > 0) effect.PerMost = PerMost;
+            if (PerMore > 0) effect.PerMore = PerMore;
+            if (ConditionSeconds > 0f && effect.State != null)
+            {
+                effect.State = effect.State.Copy();
+                effect.State.Seconds = ConditionSeconds;
+            }
         }
+    }
+
+    /// <summary>
+    /// New numbers for one effect of a reaction, set by a mark of its duo branch while that mark is in force (the ledger's
+    /// reaction-numbers: Dry Pods' fourth seed, Deep Swell's wider burst). <see cref="Shape"/> says which list: the plain
+    /// reaction's own effects, or one of its two shapes'.
+    /// </summary>
+    public class ReactionChange : EffectChange
+    {
+        /// <summary>-1: the plain reaction's effects; 0 or 1: the first or second shape's.</summary>
+        public int Shape = -1;
     }
 }

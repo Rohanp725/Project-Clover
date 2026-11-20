@@ -92,6 +92,8 @@ namespace Clover.Player
         public bool AnyMark;
         /// <summary>With <see cref="PerStack"/>: the most it is multiplied by (Ash Plume's five flashes); zero for no cap.</summary>
         public int PerMost;
+        /// <summary>With <see cref="PerStack"/>: added to what it is multiplied by, before <see cref="PerMost"/> (one more seed).</summary>
+        public int PerMore;
         /// <summary>
         /// For the dodge triggers (DodgeStart, DodgeEnd, PerfectDodge): only a dodge that went this way against the enemy
         /// faced (the ledger's dodge-direction). Any: every dodge.

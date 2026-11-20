@@ -46,7 +46,7 @@ Lightning and Water are both carried.
 
 **When it happens.** Each time Seized fires.
 
-**The numbers.** Mix, a minor, 1 Shard. As built: a second film 2.5 metres round it for 2 seconds after the first, a Static every half second to all in it.
+**The numbers.** Mix, a minor, 1 Shard. The film of live water lasts 5 seconds, not 3.
 
 **Works with.** Wet Thread, which it grows from, Seized.
 

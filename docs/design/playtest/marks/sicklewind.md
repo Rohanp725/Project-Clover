@@ -35,13 +35,11 @@ are both carried.
 
 **When it happens.** Each time Sickle Wind fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The whirl cuts for 6 each time, not 3, and lasts about 4 seconds, not 3. In Sent Downwind it lays one more patch and stands 4 seconds; in Cut Unfelt you have 4 seconds to add to the debt.
 
 **Works with.** Sickle Wind and its shapes, Bellows.
 
 **Example.** Even a fresh enemy throws a full whirl.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## sicklewind.windsickle
 **What it does.** The last blow of a light chain throws a sickle of wind 5 metres along the swing: 6 damage and an Unsteady, and a notch torn from a Sundered enemy becomes a shard that joins the nearest whirl.

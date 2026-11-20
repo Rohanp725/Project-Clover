@@ -70,11 +70,29 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // swollen 7 s, not 5, and the burst reaching 5 m, in the plain reaction and both shapes.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeepSwell, Name = "Deep Swell", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Drowned Weight stays swollen 2 s longer, and its burst reaches 5 m.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, ConditionSeconds = 7f },
+                    new ReactionChange { Shape = -1, Index = 1, ConditionSeconds = 7f },
+                    new ReactionChange { Shape = -1, Index = 2, Radius = 5f },
+                    new ReactionChange { Shape = -1, Index = 3, Radius = 5f },
+                    new ReactionChange { Shape = -1, Index = 4, Radius = 5f },
+                    new ReactionChange { Shape = -1, Index = 5, Radius = 5f },
+                    new ReactionChange { Shape = 0, Index = 0, ConditionSeconds = 7f },
+                    new ReactionChange { Shape = 0, Index = 1, ConditionSeconds = 7f },
+                    new ReactionChange { Shape = 0, Index = 2, Radius = 5f },
+                    new ReactionChange { Shape = 0, Index = 3, Radius = 5f },
+                    new ReactionChange { Shape = 0, Index = 4, Radius = 5f },
+                    new ReactionChange { Shape = 0, Index = 5, Radius = 5f },
+                    new ReactionChange { Shape = 1, Index = 0, ConditionSeconds = 7f },
+                    new ReactionChange { Shape = 1, Index = 1, ConditionSeconds = 7f },
+                },
             }, HeartPattern.RightLow));
 
             // The debt passes on: a Curse laid by the mark (not the reaction, so on purpose it reacts) on every enemy near a

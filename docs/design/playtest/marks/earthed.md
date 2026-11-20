@@ -33,13 +33,11 @@ Lightning and Earth are both carried.
 
 **When it happens.** Each time Earthed fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The figure reaches 5 metres, not 4, and the grounded enemy is rooted 1.5 seconds, not 1. In Thunderstone and Step Current the 6-metre reach becomes 7 metres, and the root lasts 1.5 seconds.
 
 **Works with.** Earthed and its shapes, The Watch Kept.
 
 **Example.** The fern reaches the archer at the back.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## earthed.groundanswers
 **What it does.** Every rock you raise holds charge. Static discharged within 4 metres of one runs into it and out of every other rock you have standing: 7 a stack in 2.5 metres round each.

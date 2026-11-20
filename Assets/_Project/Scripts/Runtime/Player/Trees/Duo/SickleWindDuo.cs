@@ -59,7 +59,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a dodge ending near a whirl feeding it a shard and its next cut laying Unsteady (reaction-numbers); now a
+            // NEEDS: a dodge ending near a whirl feeding it a shard and its next cut laying Unsteady (whirl-fed); now a
             // dodge's end lays an Unsteady on everything within 3 m of you, once in 2 s.
             to.Add(HeartPattern.Put(new Upgrade
             {
@@ -68,15 +68,23 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, At = EffectAt.Self, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Unsteady, Stacks = 1, Cooldown = 2f } },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // one more shard's cut each bite and the whirl a second longer (Sent Downwind: one more patch, a second longer; Cut Unfelt: its debt a second longer).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Grit, Name = "Grit", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Sickle Wind's whirl has one more shard and lasts 1 s longer.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 1, Damage = 6f, Count = 10 },
+                    new ReactionChange { Shape = 0, Index = 0, Seconds = 4f, Count = 4 },
+                    new ReactionChange { Shape = 0, Index = 1, Count = 4 },
+                    new ReactionChange { Shape = 1, Index = 0, ConditionSeconds = 4f },
+                },
             }, HeartPattern.RightLow));
 
             // The sickle of wind: a narrow cone 5 m along the swing from the last blow of a chain.
-            // NEEDS: a notch torn from a Sundered enemy into a shard that joins the nearest whirl (reaction-numbers); now only
+            // NEEDS: a notch torn from a Sundered enemy into a shard that joins the nearest whirl (whirl-fed); now only
             // the sickle's cut.
             to.Add(HeartPattern.Put(new Upgrade
             {

@@ -87,11 +87,18 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, At = EffectAt.Self, Do = UpgradeAction.Push, Radius = 2.5f, Amount = 3f, Cooldown = 0.5f } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: ground laid by one reaction lasting longer for a mark (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the trails lasting 2 s longer.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = FineDust, Name = "Fine Dust", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SpringDust }, Icon = UpgradeIcons.Hourglass,
                 Description = "Ill Wind's trails last 2 s longer.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 2, Seconds = 5f },
+                    new ReactionChange { Shape = 1, Index = 2, Seconds = 5f },
+                    new ReactionChange { Shape = 1, Index = 3, Seconds = 6f },
+                },
             }, HeartPattern.LeftHigh));
 
             // The restless wind: while an enemy carries both after Ill Wind fires, every 2 s it is shoved 1 m away from you and

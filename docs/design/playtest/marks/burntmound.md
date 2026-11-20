@@ -35,13 +35,11 @@ are both carried.
 
 **When it happens.** Each time Burnt Mound fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The three stones lie 8 seconds, not 6. In Heaped Stones the boulder lies 8 seconds and rolls 10 metres, not 8. In Fire-Cracked the stones lie 8 seconds.
 
 **Works with.** Burnt Mound and its shapes, Timber-Laced.
 
 **Example.** The stones still glow when the pack comes back round.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## burntmound.brickfire
 **What it does.** Heavy blows that land on a burning enemy lay Tremor; light blows that land on a shaken enemy lay Burn. The weave of light and heavy feeds both.

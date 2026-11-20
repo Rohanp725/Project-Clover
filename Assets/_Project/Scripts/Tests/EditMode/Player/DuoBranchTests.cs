@@ -228,5 +228,77 @@ namespace Clover.Tests
             Assert.AreEqual(2, storms.Count, "on the enemy's blow and at the end");
             Assert.IsTrue(storms.All(effect => effect.PerStack && effect.PerMost == 5), "five bolts at most");
         }
+
+        private static int Pair(string name)
+        {
+            for (int pair = 0; pair < AfflictionPairs.Count; pair++)
+                if (AfflictionPairs.Name(pair) == name) return pair;
+            return -1;
+        }
+
+        [Test]
+        public void AMarkChangesItsReactionsOwnNumbersInCopiesThatKeepTheOriginalsSlots()
+        {
+            // Dry Pods: one more seed, four at most, and lilies 2 s longer, in the plain Firebloom and Between Two Fires.
+            int firebloom = Pair("Firebloom");
+            var changers = ReactionNumbers.Changers(firebloom);
+            Assert.AreEqual(1, changers.Length);
+            Assert.AreEqual(Clover.Player.Trees.Duo.FirebloomDuo.DryPods, changers[0].Id);
+            var written = ReactionNumbers.Written(firebloom, -1);
+            var changed = ReactionNumbers.Changed(firebloom, 1, -1);
+            Assert.AreEqual(5f, written[1].Seconds, "the reaction as written is left as it is");
+            Assert.AreEqual(7f, changed[1].Seconds);
+            Assert.AreEqual(1, changed[1].PerMore);
+            Assert.AreEqual(4, changed[1].PerMost);
+            for (int i = 0; i < written.Length; i++)
+            {
+                Assert.AreNotSame(written[i], changed[i]);
+                Assert.AreEqual(written[i].Slot, changed[i].Slot, "a copy shares its original's slot");
+                Assert.AreSame(written[i].Owner, changed[i].Owner, "and its mark, so a condition it sets is answered from the same mark");
+            }
+            Assert.AreEqual(7f, ReactionNumbers.Changed(firebloom, 1, 0)[1].Seconds, "Between Two Fires' lilies too");
+            Assert.IsNull(ReactionNumbers.Changed(firebloom, 0, -1), "with no changer in force there is no copy");
+
+            // Deep Swell: a condition's own seconds are changed on a copy of it, never on the original.
+            int drowned = Pair("Drowned Weight");
+            var swollen = ReactionNumbers.Changed(drowned, 1, -1)[0].State;
+            var plain = ReactionNumbers.Written(drowned, -1)[0].State;
+            Assert.AreNotSame(plain, swollen);
+            Assert.AreEqual(plain.Id, swollen.Id, "the same condition, so its answers still find it");
+            Assert.AreEqual(5f, plain.Seconds);
+            Assert.AreEqual(7f, swollen.Seconds);
+            Assert.AreEqual(5f, ReactionNumbers.Changed(drowned, 1, -1)[2].Radius, "the burst reaches 5 m");
+
+            // A pair with no changer has none; a pair's changers keep their order.
+            Assert.IsNull(ReactionNumbers.Changers(Pair("Steam")));
+        }
+
+        [Test]
+        public void EveryReactionChangeNamesAnEffectThatIsThereAndChangesIt()
+        {
+            int marks = 0;
+            foreach (var mark in Upgrade.All.Where(mark => mark.ReactionChanges != null))
+            {
+                marks++;
+                Assert.IsTrue(mark.IsMix, mark.Id + " is a duo branch's mark");
+                Assert.IsEmpty(mark.Effects, mark.Id + " changes its reaction's numbers and keeps no stand-in effects");
+                int pair = HeartLayout.PairOf(mark);
+                var changers = ReactionNumbers.Changers(pair);
+                int bit = System.Array.IndexOf(changers, mark);
+                Assert.GreaterOrEqual(bit, 0, mark.Id);
+                foreach (var change in mark.ReactionChanges)
+                {
+                    var written = ReactionNumbers.Written(pair, change.Shape);
+                    Assert.That(change.Index, Is.InRange(0, written.Length - 1), mark.Id + " names an effect that is there");
+                    var copy = ReactionNumbers.Changed(pair, 1 << bit, change.Shape)[change.Index];
+                    var before = written[change.Index];
+                    bool differs = copy.Damage != before.Damage || copy.Stagger != before.Stagger || copy.Radius != before.Radius || copy.Reach != before.Reach
+                        || copy.Seconds != before.Seconds || copy.Count != before.Count || copy.Stacks != before.Stacks || copy.Amount != before.Amount
+                        || copy.PerMore != before.PerMore || copy.PerMost != before.PerMost || (copy.State != null && before.State != null && copy.State.Seconds != before.State.Seconds);
+                    Assert.IsTrue(differs, mark.Id + "'s change at " + change.Shape + "." + change.Index + " changes a number");
+                }
+            }
+            Assert.GreaterOrEqual(marks, 18, "the d5 minors and the 4.15 and 4.16 ones");
+        }
     }
 }

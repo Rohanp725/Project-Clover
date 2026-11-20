@@ -33,13 +33,11 @@ are both carried.
 
 **When it happens.** Each time Carried Embers fires, plain or shaped, while Fire and Wind are both carried.
 
-**The numbers.** Mix, a minor, 1 Shard. A fourth small fire 7 metres downwind: 1 metre across, 3 seconds, 3 damage and a Burn every half second.
+**The numbers.** Mix, a minor, 1 Shard. Four embers fly, not three, and they land 2 metres further downwind: the farthest about 8.5 metres away.
 
 **Works with.** Carried Embers, The Wind Carries It.
 
 **Example.** Embers land among the archers at the back as well as the soldiers in front.
-
-**Not built yet.** The three embers themselves do not fly further: a fourth one does.
 
 ## carriedembers.carries
 **What it does.** Your heavy blows on a burning enemy throw its embers downwind as if it had reacted, with no Unsteady needed and no rest. Each throw costs it one Burn. Where you stand when you strike aims the fire, so every heavy blow is a choice of where it lands.

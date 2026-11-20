@@ -72,11 +72,18 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Marked, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = 3 } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // herbs standing 9 s before they flower, not 6.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = LongDay, Name = "Long Day", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SixthMoon }, Icon = UpgradeIcons.Hourglass,
                 Description = "Herbs stand 3 s longer before they flower.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, ConditionSeconds = 9f },
+                    new ReactionChange { Shape = 0, Index = 0, ConditionSeconds = 9f },
+                    new ReactionChange { Shape = 1, Index = 0, ConditionSeconds = 9f },
+                },
             }, HeartPattern.LeftHigh));
 
             // NEEDS: pickups (herbs drawn to you when one is picked; each after the first healing twice); now each herb that

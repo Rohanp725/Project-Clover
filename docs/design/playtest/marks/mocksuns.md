@@ -35,13 +35,11 @@ both carried.
 
 **When it happens.** Each time Mock Suns fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The suns hang 6 seconds, not 4. With Prism the fan holds five rays, not three, and reaches 7 metres beyond the enemy.
 
 **Works with.** Mock Suns and its shapes, Bent Light.
 
 **Example.** The suns still hang when you have circled round.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## mocksuns.whitenight
 **What it does.** A perfect guard against a Marked enemy that carries three or more Chill freezes it at once.

@@ -35,13 +35,11 @@ Dark are both carried.
 
 **When it happens.** Each time Drowned Weight fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The enemy stays swollen and slow for 7 seconds, not 5, and its burst reaches 5 metres, not 4. The same in both shapes.
 
 **Works with.** Drowned Weight and its shapes, Held Under.
 
 **Example.** The burst catches the second rank too.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## drownedweight.debtpasses
 **What it does.** When a swollen enemy bursts, the nearest enemy the burst reaches swells at once, and killing a swollen enemy heals you 6 more.

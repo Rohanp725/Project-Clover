@@ -78,11 +78,19 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // 3 health a blow, not 2 (1.5 from a god), at the reaction's own four a second at most, 12 a second.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeepVeins, Name = "Deep Veins", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Each blow on an enemy whose warmth is stolen draws 3 health, not 2, and 12 a second at most.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 2, Amount = 3f },
+                    new ReactionChange { Shape = -1, Index = 3, Amount = 1.5f },
+                    new ReactionChange { Shape = 0, Index = 2, Amount = 3f },
+                    new ReactionChange { Shape = 0, Index = 3, Amount = 1.5f },
+                },
             }, HeartPattern.RightLow));
 
             // NEEDS: a state of an enemy within 8 m being Frozen (freeze-moment); now Hunger's health price is set aside for 4 s
