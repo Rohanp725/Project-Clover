@@ -4,7 +4,7 @@ For every folder review/gifs/swings/frames/<weapon>_<element>/ (000.png, 001.png
 info.txt) it writes review/gifs/swings/swing_<weapon>_<element>.gif: looping, 50 ms a frame, the last frame held 0.6 s
 longer, one palette of 255 colours for the whole GIF from a spread of its frames, no dithering, and the pixels that did
 not change since the frame shown before left transparent (counting a change of less than NEAR, summed over red, green
-and blue, as none). A GIF over 4.9 MB is made again smaller (0.8, 0.65, then 0.5 of 960x540) until it fits. Then
+and blue, as none). A GIF over 4.9 MB is made again smaller (0.8, 0.65, 0.5, then 0.4 of 960x540) until it fits. Then
 review/gifs/swings/contact_sheet.png: a row per weapon (in the probe's order) and a column per element (the ring's
 order), each cell the frame of its clip most unlike the first (where the swing is), labelled with the blows, landings
 and trails the probe counted; a clip not whole or not set off is labelled in red.
@@ -29,7 +29,8 @@ HOLD_MS = 600
 TRANSPARENT = 255
 NEAR = 24
 MOST_BYTES = 4.9e6
-SCALES = (1.0, 0.8, 0.65, 0.5)
+# The longest, brightest clips (Light's, about 250 frames) still passed 4.9 MB at half size: 0.4 is the last step.
+SCALES = (1.0, 0.8, 0.65, 0.5, 0.4)
 WEAPONS = ["katana", "gsword", "hammer", "knives", "scythe", "spear", "sickle", "bow", "fists", "armament", "fan"]
 WEAPON_NAMES = {
     "katana": "Katana", "gsword": "Massive Sword", "hammer": "Great Hammer", "knives": "Twin Knives", "scythe": "Scythe",

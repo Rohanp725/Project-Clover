@@ -246,6 +246,9 @@ public class SwingLookProbeRunner : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
             if (!filming) break;
+            // With no one to stop it, Lightning's infused strike carries the player out of a held camera and the clip
+            // ends on empty floor (the alone films of 2026-11-20): alone, the camera follows the player.
+            if (alone && anchor != null && player != null) anchor.position = player.transform.position;
             if (CutMarks.Drawn != drawnWas || combat.BlowsLanded != landedWas)
             {
                 drawnWas = CutMarks.Drawn;
