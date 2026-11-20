@@ -53,6 +53,8 @@ namespace Clover.UI
         /// <summary>Where on the screen the held tree is kept in the close view, away from the words on the right, and where the ring's middle is kept in the wide one.</summary>
         public Vector2 ViewCentre = new Vector2(-320f, -20f);
         public Vector2 WideCentre = new Vector2(0f, -8f);
+        /// <summary>Pixels the wide view keeps clear at the top (the title bar) and the bottom (the keys' bar), at the reference screen.</summary>
+        public float WideTopClear = 104f, WideBottomClear = 92f;
         /// <summary>How far the view leans from the middle of the tree toward the chosen mark: 0 holds still, 1 follows it.</summary>
         public float FollowChoice = 0.55f;
         /// <summary>Real seconds the stick must be held before the choice moves again.</summary>
@@ -89,6 +91,9 @@ namespace Clover.UI
         }
 
         private readonly List<Mark> marks = new List<Mark>();
+        // How far the farthest drawn mark reaches from the ring's middle (its place, half its size and a margin): what the wide
+        // view fits. A radius, because the chart is turned to put the held tree on top.
+        private float reach;
         private readonly List<Image> lines = new List<Image>();
         private readonly List<Image> emblems = new List<Image>();
         private readonly List<Image> emblemIcons = new List<Image>();
@@ -275,6 +280,9 @@ namespace Clover.UI
             if (slotsDrawn)
                 foreach (var slot in NotBuiltYet.ChartSlots)
                     marks.Add(new Mark { Upgrade = slot, Place = layout.Place(slot) * StepPixels, Size = SizeOf(slot) * 0.8f, Colour = NotBuiltColour });
+            // The wide view fits what is drawn, not a tree's designed height: the reshaped trees reach past it (2026-11-20).
+            reach = 0f;
+            foreach (var mark in marks) reach = Mathf.Max(reach, mark.Place.magnitude + mark.Size * 0.5f + StepPixels * 0.5f);
             // Lines first, so every mark lies over the lines that reach it.
             foreach (var mark in marks)
             {
@@ -548,13 +556,27 @@ namespace Clover.UI
         private float WideZoom()
         {
             Vector2 screen = ScreenSize();
-            float reach = (UpgradeTree.EmblemDistance + UpgradeTree.TreeHeight + 0.8f) * StepPixels;
-            return Mathf.Min(screen.x - 60f, screen.y - 110f) * 0.5f / reach;
+            if (reach > 1f) return Mathf.Min(screen.x - 60f, screen.y - WideTopClear - WideBottomClear) * 0.5f / reach;
+            float designed = (UpgradeTree.EmblemDistance + UpgradeTree.TreeHeight + 0.8f) * StepPixels;
+            return Mathf.Min(screen.x - 60f, screen.y - 110f) * 0.5f / designed;
+        }
+
+        /// <summary>The wide view's fit: true when every drawn mark lies inside the screen between the title bar and the keys' bar.</summary>
+        public bool WideFits()
+        {
+            Vector2 screen = ScreenSize();
+            float atZoom = WideZoom();
+            Vector2 centre = ViewTarget(atZoom);
+            float radius = reach * atZoom;
+            return centre.y + radius <= screen.y * 0.5f - WideTopClear + 1f && centre.y - radius >= -screen.y * 0.5f + WideBottomClear - 1f
+                && centre.x - radius >= -screen.x * 0.5f && centre.x + radius <= screen.x * 0.5f;
         }
 
         private Vector2 ViewTarget(float atZoom)
         {
-            if (IsWide) return WideCentre;
+            // Wide, the middle of what is drawn sits in the middle of the room between the two bars.
+            // (WideCentre moves it sideways only: up and down it sits between the bars.)
+            if (IsWide) return new Vector2(WideCentre.x, (WideBottomClear - WideTopClear) * 0.5f);
             Vector2 chosen = Selected < places.Count ? places[Selected] : treeMiddle;
             // A narrow screen has no room to keep the tree clear of the words; a wide one has room to spare.
             Vector2 centre = new Vector2(ViewCentre.x * Mathf.Clamp01(ScreenSize().x / 1920f), ViewCentre.y);
