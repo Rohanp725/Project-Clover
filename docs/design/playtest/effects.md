@@ -498,6 +498,8 @@ Group: Reactions
 
 **What sets it off.** Chill landing on a Soaked enemy (your Water, or the river's), or Water on a chilled one.
 
+**Its shapes.** With Glacier's Shape mark (Supercooled: Sea Ice or Hard Water, 3 Shards, in the heart of the chart) and both Ice and Water carried, Supercooled wears the shape chosen at a rest fire instead. Sea Ice: the blow that freezes it also lays 2 Chill on everything within 4 m, and on purpose this may start another Supercooled. Hard Water: only a heavy blow freezes it.
+
 **How to use it.** One touch of cold on a wet enemy, then any blow: it freezes, ready for a heavy to shatter.
 
 **How it looks.** Its name over the enemy, then the freeze.

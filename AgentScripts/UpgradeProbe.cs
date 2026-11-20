@@ -655,9 +655,8 @@ public class UpgradeProbeRunner : MonoBehaviour
             RunState.Points = 0;
             upgrades.Earn(10);
             yield return new WaitForSeconds(0.3f);
-            var foot = Upgrade.ById(GlacierTree.FlashFreeze);
-            foreach (var mark in Upgrade.All)
-                if (mark.Kind == UpgradeKind.Mix && mark.Element == Elements.Ice && mark.Requires.Length == 0) foot = mark;
+            // Glacier's foot is its Shape mark now, in the chart's heart (task 4.15): open only while Ice and Water are carried.
+            var foot = Upgrade.ById(GlacierTree.Shape);
             bool sealedFirst = !upgrades.Open(foot);
             giftShrine.Use(who);
             yield return null;

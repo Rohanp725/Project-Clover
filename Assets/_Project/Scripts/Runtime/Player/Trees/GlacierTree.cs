@@ -4,59 +4,100 @@ using Clover.Gameplay;
 namespace Clover.Player.Trees
 {
     /// <summary>
-    /// Glacier: the branch Ice and Water share. Water that has stopped: a Soaked enemy freezes sooner, guarding builds
-    /// ice on the player, and the great spell is a wave caught as it breaks. Its crown is given by consuming the
-    /// neighbour's god.
+    /// Glacier: the duo branch Ice and Water share, reshaped by pairs_d1_d2.md ("Ice and Water", task 4.15) and drawn in the
+    /// chart's heart (<see cref="HeartPattern"/>). Its reaction is Supercooled; the Shape mark opens its two shapes, Sea Ice
+    /// and Hard Water. Cold Water is cut (the Shape mark takes its place), Flash Freeze is now the reaction, and Creeping
+    /// Ice, offered to Ice's tree, is cut because that roster is full; all three are in <see cref="RetiredMarks"/>. Kept:
+    /// Icebreaker, Cold in the Bones, The Wave Stands Still (the duo spell) and Weight of Ice, begun by the guard, the
+    /// branch's top mark. Open while both are carried.
     /// </summary>
     public static class GlacierTree
     {
-        public const string ColdWater = "glacier.coldwater";
-        public const string FlashFreeze = "glacier.flash";
+        public const string Shape = "glacier.shape";
         public const string Icebreaker = "glacier.breaker";
         public const string ColdInTheBones = "glacier.bones";
-        public const string CreepingIce = "glacier.creeping";
         public const string TheWaveStandsStill = "glacier.wave";
         public const string Gift = "glacier.weight";
+        /// <summary>The conditions the two shapes set, each in place of the plain reaction's still water.</summary>
+        public const string SeaIce = "supercooled.sea";
+        public const string HardWater = "supercooled.hard";
+
+        // Laid as stacks, more than any affliction holds: "to full depth", whatever the depth is.
+        private const int ToFull = 99;
 
         public static void Add(List<Upgrade> to)
         {
-            // The first element is the one whose mix this is: the earlier of the two round the ring.
             const string A = Elements.Ice, B = Elements.Water;
 
-            // Both afflictions on every blow, the second element's too (the owner's of 2026-11-19); with the first element's root learned, the root's stack is that element's share and is not laid twice.
-            to.Add(new Upgrade { Id = ColdWater, Name = "Cold Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, X = 0f, Y = 1f, Icon = UpgradeIcons.Drop,
-                Description = "Your blows lay Chill and Soaked together.",
-                Effects = new[]
+            // NEEDS: Sea Ice's web reaching only the Soaked within 4 m (now every enemy there takes 2 Chill, on purpose able
+            // to react); Hard Water's freeze held half again as long and its shatter 30% harder (frozen-for).
+            to.Add(HeartPattern.Put(new Upgrade
+            {
+                Id = Shape, Name = "Supercooled: Sea Ice or Hard Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
+                Description = "Opens Supercooled's two shapes, chosen at a rest fire. Sea Ice: when it freezes, the cold runs out through the floor and chills the wet round it. Hard Water: only a heavy blow freezes it, and harder. Either runs instead of the plain Supercooled.",
+                Shapes = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Soaked, Stacks = 1 },
-                } });
-            // Built (Afflictions.FlashFreezeAt): a Soaked enemy freezes at three Chill, and the freeze spends the Soaked.
-            to.Add(new Upgrade { Id = FlashFreeze, Name = "Flash Freeze", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { ColdWater }, X = -0.5f, Y = 2.36f, Icon = UpgradeIcons.Snowflake,
-                Description = "A Soaked enemy freezes at three Chill, not five.",
-                Stats = new StatMod[0] });
-            // The spikes form gives the line of ice; holding enemies by the feet is not in it yet.
-            to.Add(new Upgrade { Id = CreepingIce, Name = "Creeping Ice", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { ColdWater }, X = 0.5f, Y = 2.36f, Icon = UpgradeIcons.Spike,
-                Description = "You send a line of ice spikes eight metres along the ground. Each enemy on the line is struck once.",
-                Form = "spikes",
-                Spell = new SpellSpec { Cost = 35f, Reach = 8f, Speed = 20f, Count = 1, Radius = 0.6f, Damage = 8f, Stagger = 10f, Stacks = 2 } });
-            to.Add(new Upgrade { Id = Icebreaker, Name = "Icebreaker", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { FlashFreeze }, X = -0.5f, Y = 4.6f, Icon = UpgradeIcons.Hammer,
+                    new ShapeDef
+                    {
+                        Name = "Sea Ice",
+                        Description = "The next weapon blow freezes it outright and spends the water, and the cold runs down into the floor and out in a web of frost: everything within 4 m takes 2 Chill, and a Soaked one reached becomes Supercooled itself.",
+                        Effects = new[]
+                        {
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SeaIce, Seconds = 6f, EndsWith = ConditionBlow.Weapon } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaIce, By = StruckBy.Weapon, Ranks = EnemyRank.Plain, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = ToFull },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaIce, By = StruckBy.Weapon, Ranks = EnemyRank.Elite, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 3 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaIce, By = StruckBy.Weapon, Ranks = EnemyRank.God, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaIce, By = StruckBy.Weapon, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Soaked },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaIce, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Chill, Stacks = 2, Cascades = true },
+                        },
+                    },
+                    new ShapeDef
+                    {
+                        Name = "Hard Water",
+                        Description = "Only a heavy blow freezes it, but that freeze is the harder for it: the water stays still for 6 s, and the first heavy blow freezes it outright and spends the water.",
+                        Effects = new[]
+                        {
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = HardWater, Seconds = 6f, EndsWith = ConditionBlow.Heavy } },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardWater, By = StruckBy.Heavy, Ranks = EnemyRank.Plain, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = ToFull },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardWater, By = StruckBy.Heavy, Ranks = EnemyRank.Elite, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 3 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardWater, By = StruckBy.Heavy, Ranks = EnemyRank.God, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HardWater, By = StruckBy.Heavy, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Soaked },
+                        },
+                    },
+                },
+            }, HeartPattern.Foot));
+
+            to.Add(HeartPattern.Put(new Upgrade
+            {
+                Id = Icebreaker, Name = "Icebreaker", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hammer,
                 Description = "Shattering an enemy gives mana and fills a little of an empty gourd.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.Mana, Amount = 12f }, new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.FlaskFill, Amount = 0.33f } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.Mana, Amount = 12f }, new UpgradeEffect { On = UpgradeTrigger.Shatter, Do = UpgradeAction.FlaskFill, Amount = 0.33f } },
+            }, HeartPattern.LeftLow));
+
             // NEAREST: an enemy's wind-up cannot be changed, so a blow on a Soaked enemy lengthens the player's own moment to guard for a while.
-            to.Add(new Upgrade { Id = ColdInTheBones, Name = "Cold in the Bones", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 4, Requires = new[] { FlashFreeze }, X = 0f, Y = 3.48f, Icon = UpgradeIcons.Hourglass,
+            to.Add(HeartPattern.Put(new Upgrade
+            {
+                Id = ColdInTheBones, Name = "Cold in the Bones", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "For four seconds after you strike a Soaked enemy, the moment for a perfect guard is a quarter longer.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictedHit, Do = UpgradeAction.Boon, Needs = AfflictionKind.Soaked, Stat = PlayerStat.PerfectGuardWindow, Amount = 0.25f, Seconds = 4f, Cooldown = 0.5f } } });
-            // BESPOKE (built): FrozenWaveForm.
-            to.Add(new Upgrade { Id = TheWaveStandsStill, Name = "The Wave Stands Still", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ColdInTheBones }, X = 0.5f, Y = 4.6f, Icon = UpgradeIcons.Wave,
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictedHit, Do = UpgradeAction.Boon, Needs = AfflictionKind.Soaked, Stat = PlayerStat.PerfectGuardWindow, Amount = 0.25f, Seconds = 4f, Cooldown = 0.5f } },
+            }, HeartPattern.RightLow));
+
+            // BESPOKE (built): FrozenWaveForm. The duo spell.
+            to.Add(HeartPattern.Put(new Upgrade
+            {
+                Id = TheWaveStandsStill, Name = "The Wave Stands Still", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Breaker, Requires = new[] { Icebreaker, ColdInTheBones }, Icon = UpgradeIcons.Wave,
                 Description = "You throw a great wave that rolls on while you keep the spell's button held. Let go, and it freezes where it stands with everything in it. One heavy blow shatters the wall and all it holds. 50 mana.",
                 Form = SpellForms.FrozenWave,
-                Spell = new SpellSpec { Cost = 50f, Reach = 9f, Speed = 6f, Arc = 6f, LingerDamage = 10f, Seconds = 4f, Damage = 45f, Stagger = 60f, Stacks = 5 } });
+                Spell = new SpellSpec { Cost = 50f, Reach = 9f, Speed = 6f, Arc = 6f, LingerDamage = 10f, Seconds = 4f, Damage = 45f, Stagger = 60f, Stacks = 5 },
+            }, HeartPattern.Spell));
 
-            // BESPOKE (built): PlatesForm.
-            to.Add(new Upgrade { Id = Gift, Name = "Weight of Ice", Element = A, Element2 = B, Kind = UpgradeKind.Signature, X = 0f, Y = 5.8f, Icon = UpgradeIcons.Crown,
+            // BESPOKE (built): PlatesForm. The branch's top mark, begun by the guard.
+            to.Add(HeartPattern.Put(new Upgrade
+            {
+                Id = Gift, Name = "Weight of Ice", Element = A, Element2 = B, Kind = UpgradeKind.Signature, Icon = UpgradeIcons.Crown,
                 Description = "Each blow you guard lays a plate of ice on you, up to five. A perfect guard lays two. Plates turn a little of every wound. Your next heavy blow spends them all in one great edge of ice.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Form, Form = SpellForms.Plates, Affliction = AfflictionKind.Chill, Spell = new SpellSpec { Cost = 0f, Count = 1, Damage = 12f, Stagger = 12f, Reach = 1.2f, Radius = 1.3f, Stacks = 1 } }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Form, Form = SpellForms.Plates, Affliction = AfflictionKind.Chill, Spell = new SpellSpec { Cost = 0f, Count = 2, Damage = 12f, Stagger = 12f, Reach = 1.2f, Radius = 1.3f, Stacks = 1 } } } });
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Guard, Do = UpgradeAction.Form, Form = SpellForms.Plates, Affliction = AfflictionKind.Chill, Spell = new SpellSpec { Cost = 0f, Count = 1, Damage = 12f, Stagger = 12f, Reach = 1.2f, Radius = 1.3f, Stacks = 1 } }, new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.Form, Form = SpellForms.Plates, Affliction = AfflictionKind.Chill, Spell = new SpellSpec { Cost = 0f, Count = 2, Damage = 12f, Stagger = 12f, Reach = 1.2f, Radius = 1.3f, Stacks = 1 } } },
+            }, HeartPattern.Crown));
         }
     }
 }

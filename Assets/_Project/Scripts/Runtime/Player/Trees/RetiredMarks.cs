@@ -160,6 +160,10 @@ namespace Clover.Player
             // Blizzard, the duo branch of Wind and Ice (pairs_d1_d2.md; task 4.15): Biting Wind (the Shape mark takes its place)
             // and Whiteout (offered to Ice's or Wind's tree, whose rosters are full).
             new RetiredMark("blizzard.biting", 3), new RetiredMark("blizzard.whiteout", 4),
+
+            // Glacier, the duo branch of Ice and Water (pairs_d1_d2.md; task 4.15): Cold Water (the Shape mark takes its place),
+            // Flash Freeze (now the reaction, Supercooled) and Creeping Ice (offered to Ice's tree, whose roster is full).
+            new RetiredMark("glacier.coldwater", 3), new RetiredMark("glacier.flash", 3), new RetiredMark("glacier.creeping", 4),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
