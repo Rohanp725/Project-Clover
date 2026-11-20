@@ -489,6 +489,8 @@ namespace Clover.Gameplay
         private int deathBolts;
         private float flashLeft, glowFlash;
         private bool flashing;
+        // The colour of the element on the weapon whose blow set off the flash; clear for white.
+        private Color flashTint;
         private float untilCrack;
 
         public void Configure(Transform targetToFight, Transform headPiece, Transform jawPiece, Transform bodyPiece, Transform left, Transform right,
@@ -780,6 +782,7 @@ namespace Clover.Gameplay
             float damage = finisher ? Mathf.Max(hit.Damage * 3f * takes, MaximumHealth * FinisherShare) : hit.Damage * share * takes;
             Health.Damage(damage);
             flashLeft = 0.09f;
+            flashTint = hit.Tint;
             glowFlash = 0.3f;
             if (Health.IsDead)
             {
@@ -3174,6 +3177,7 @@ namespace Clover.Gameplay
             var outcome = victim.TakeHit(hit);
             if (outcome != HitOutcome.PerfectGuard || IsStaggered || IsDead || balanceIfTurned <= 0f) return;
             flashLeft = 0.09f;
+            flashTint = default;
             glowFlash = 0.3f;
             if (Stagger.Add(balanceIfTurned)) BeginStagger();
         }
@@ -3251,7 +3255,7 @@ namespace Clover.Gameplay
                     continue;
                 }
                 block.Clear();
-                block.SetColor(Emission, flash ? new Color(1.5f, 1.5f, 1.5f) : iced ? FrozenGlow : new Color(0.8f, 0.55f, 0.12f));
+                block.SetColor(Emission, flash ? StruckLook.Flash(new Color(1.5f, 1.5f, 1.5f), flashTint) : iced ? FrozenGlow : new Color(0.8f, 0.55f, 0.12f));
                 shown.SetPropertyBlock(block);
             }
         }

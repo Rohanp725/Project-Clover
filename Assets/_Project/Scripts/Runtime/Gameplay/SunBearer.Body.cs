@@ -205,6 +205,7 @@ namespace Clover.Gameplay
             SunStrikes++;
             shellFireLeft = ShellFireSeconds;
             flashLeft = 0.12f;
+            flashTint = default;
             Vector3 struckAt = OnFloor(sunAt) + Vector3.up * 1.4f;
             Vfx.Play(VfxKind.Impact, struckAt, going, 2.2f);
             Vfx.Play(VfxKind.Burst, at + Vector3.up * 1.8f, Vector3.up, 2.2f);

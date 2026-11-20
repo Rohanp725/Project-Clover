@@ -46,6 +46,12 @@ namespace Clover.Gameplay
         public readonly bool FromReaction;
 
         /// <summary>
+        /// The colour of the element the weapon carries, which a landed blow's flash takes softened
+        /// (<see cref="Clover.Core.StruckLook"/>); clear (alpha zero) for a plain weapon, a spell or an enemy's blow.
+        /// </summary>
+        public readonly Color Tint;
+
+        /// <summary>
         /// True for a bite that only lays an affliction (a soaking slick, a dosing patch): no damage, no balance, not
         /// heavy, nothing set off. It is felt as the affliction, not as a blow: no shove, flinch, poise or guard.
         /// </summary>
@@ -56,9 +62,10 @@ namespace Clover.Gameplay
             AfflictionKind affliction = AfflictionKind.None, int afflictionStacks = 0, float afflictionSeconds = 0f, float afflictionPower = 1f,
             bool spell = false, bool critical = false,
             AfflictionKind affliction2 = AfflictionKind.None, int affliction2Stacks = 0, float affliction2Seconds = 0f,
-            bool fromReaction = false)
+            bool fromReaction = false, Color tint = default)
         {
             FromReaction = fromReaction;
+            Tint = tint;
             Damage = damage;
             Stagger = stagger;
             Direction = direction;

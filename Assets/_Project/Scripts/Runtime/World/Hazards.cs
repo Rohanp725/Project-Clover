@@ -210,7 +210,7 @@ namespace Clover.World
         /// every <paramref name="biteEvery"/> seconds (or each enemy once only) until its time is up.
         /// </summary>
         public static void Lay(HazardKind kind, Vector3 position, float radius, float seconds, float damage, float stagger, float burnSeconds,
-            float biteEvery = 0.4f, bool once = false, float delay = 0f, Vector3 velocity = default, bool burst = false)
+            float biteEvery = 0.4f, bool once = false, float delay = 0f, Vector3 velocity = default, bool burst = false, Color struck = default)
         {
             Lay(new HazardSpec
             {
@@ -230,6 +230,8 @@ namespace Clover.World
                     Affliction = burnSeconds > 0f ? AfflictionKind.Burn : AfflictionKind.None,
                     AfflictionSeconds = burnSeconds,
                     Effect = kind == HazardKind.Fire ? VfxKind.Fire : VfxKind.Shock,
+                    // Ground left by the element on the weapon bites with that element's softened flash (Hit.Tint).
+                    Struck = struck,
                 },
             });
         }

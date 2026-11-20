@@ -1,3 +1,4 @@
+using Clover.Core;
 using UnityEngine;
 
 namespace Clover.Gameplay
@@ -54,6 +55,8 @@ namespace Clover.Gameplay
         private Vector3 rock;
         private float sinceHit = float.MaxValue;
         private float flashLeft;
+        // The flash of the last blow: FlashColour for a plain one, the element's colour softened under one.
+        private Color flashTint;
         private float untilEmber;
         private int shownFlash;
 
@@ -92,6 +95,8 @@ namespace Clover.Gameplay
 
         public HitOutcome TakeHit(in Hit hit)
         {
+            if (hit.Tint != flashTint) shownFlash = -1;
+            flashTint = hit.Tint;
             HitsTaken++;
             sinceHit = 0f;
             float detonated = hit.Detonate ? Burn.Detonate() : 0f;
@@ -129,6 +134,8 @@ namespace Clover.Gameplay
         public void Rebuff(float stagger, Vector3 direction)
         {
             sinceHit = 0f;
+            if (StruckLook.Tinted(flashTint)) shownFlash = -1;
+            flashTint = default;
             Stagger.Add(stagger);
             Rock(direction, 1.6f);
         }
@@ -216,7 +223,7 @@ namespace Clover.Gameplay
                 if (flashRenderer == null) continue;
                 if (flash != 0)
                 {
-                    block.SetColor(Emission, flash == 1 ? FlashColour : flash == 3 ? FrozenColour : StaggeredColour);
+                    block.SetColor(Emission, flash == 1 ? StruckLook.Flash(FlashColour, flashTint) : flash == 3 ? FrozenColour : StaggeredColour);
                     flashRenderer.SetPropertyBlock(block);
                 }
                 else

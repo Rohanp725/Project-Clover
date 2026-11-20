@@ -160,6 +160,20 @@ namespace Clover.Player
         /// </summary>
         public ElementInfo SwingElement => Combo.Current == null ? null : InfusedNow && infusedElement != null ? infusedElement : moveCharged ? moveElement : null;
 
+        /// <summary>
+        /// The colour a landed blow of the move in progress marks what it struck with: its element's trail colour when the
+        /// weapon carries one (<see cref="SwingElement"/>), so the flash and the cut streak are tinted and softened and the
+        /// trail shows through (the owner's choice, 2026-11-19); clear for a plain move, which keeps its white.
+        /// </summary>
+        public Color StruckTint
+        {
+            get
+            {
+                var look = Clover.Player.Swings.SwingLooks.For(SwingElement);
+                return look != null ? look.Tint : default;
+            }
+        }
+
         /// <summary>True when the move in progress is an infused strike's carrier.</summary>
         public bool SwingInfused => InfusedNow && infusedElement != null;
         /// <summary>The strike clock a move belongs to (4 or 5) when it is an infused strike, else -1: its own blow does not cut its own clock.</summary>
@@ -723,7 +737,7 @@ namespace Clover.Player
         {
             if (step.Shot == null || shots == null) return;
             Vector3 forward = transform.forward;
-            int handle = shots.Fire(this, step.Shot, (step.Shot.FromStepStart ? stageOrigin : transform.position) + forward * 0.4f, forward, EffectColour, element != null ? element.Info : null);
+            int handle = shots.Fire(this, step.Shot, (step.Shot.FromStepStart ? stageOrigin : transform.position) + forward * 0.4f, forward, EffectColour, element != null ? element.Info : null, StruckTint);
             if (handle < 0 || !(step.Shot.Returns || step.Shot.RaysBack || step.FollowStep != null)) return;
             WeaponAway = true;
             awayShot = handle;
@@ -876,13 +890,13 @@ namespace Clover.Player
                 // A burn is given in seconds, with or without depth.
                 float seconds = (blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds : Clover.Gameplay.Afflictions.Spec(AfflictionKind.Burn).Seconds) * AfflictionSeconds;
                 return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, seconds, blow.Stacks > 0 ? blow.Stacks + ExtraStacks : 0, blow.Detonate,
-                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell, fromReaction: blow.FromReaction);
+                    AfflictionKind.None, 0, 0f, AfflictionPower, blow.Spell, fromReaction: blow.FromReaction, tint: blow.Struck);
             }
             bool lays = blow.Affliction != AfflictionKind.None && blow.Stacks > 0;
             float lasts = !lays ? 0f : blow.AfflictionSeconds > 0f ? blow.AfflictionSeconds * AfflictionSeconds
                 : AfflictionSeconds != 1f ? Clover.Gameplay.Afflictions.Spec(blow.Affliction).Seconds * AfflictionSeconds : 0f;
             return new Hit(damage, blow.Stagger, direction, blow.Heavy, true, origin, 0f, 0, blow.Detonate,
-                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell, fromReaction: blow.FromReaction);
+                lays ? blow.Affliction : AfflictionKind.None, lays ? blow.Stacks + ExtraStacks : 0, lasts, AfflictionPower, blow.Spell, fromReaction: blow.FromReaction, tint: blow.Struck);
         }
 
         // What every spell's blow does once it has landed: its effect, what it earns, and word to the upgrades.
@@ -1641,6 +1655,7 @@ namespace Clover.Player
             float reach = boundTo != null && step == Combo.ChainHeavy ? Mathf.Max(step.Reach, BindLeash + 1f) : step.Reach;
             Component nearest = null;
             float nearestAt = float.MaxValue;
+            Color struckTint = StruckTint;
             int count = Overlap(step.Radius > 0f ? discCentre : origin, step.Radius > 0f ? step.Radius + 0.5f : reach);
             for (int i = 0; i < count; i++)
             {
@@ -1761,7 +1776,7 @@ namespace Clover.Player
                 if (fromBehind) dealtStagger *= Weapon.BackMultiplier;
                 if (boundTo != null && ReferenceEquals(target, boundTo)) dealtStagger *= BoundStagger;
                 var outcome = target.TakeHit(new Hit(damage, dealtStagger, transform.forward, step.Heavy, carries && ElementSteel.PassesGuard(moveElement.Name), transform.position,
-                    burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical, second, secondStacks, secondLasts));
+                    burn, burnStacks, false, kind, kind != AfflictionKind.None ? stacks : 0, lasts, AfflictionPower, false, critical, second, secondStacks, secondLasts, tint: struckTint));
                 if (outcome == HitOutcome.Missed) continue;
                 struck.Add(target);
                 if (infused && infusedFirst == null && outcome != HitOutcome.Blocked && target is Component firstBody) infusedFirst = firstBody;
@@ -1867,9 +1882,9 @@ namespace Clover.Player
                 {
                     // The cut line: which way the blade went through, drawn over the sparks.
                     Vector3 through = CutDirection(step);
-                    if (outcome == HitOutcome.Finisher) CutMarks.Finisher(other.bounds.center, through);
-                    else if (step.Heavy) CutMarks.Heavy(other.bounds.center, through);
-                    else CutMarks.Light(other.bounds.center, through);
+                    if (outcome == HitOutcome.Finisher) CutMarks.Finisher(other.bounds.center, through, struckTint);
+                    else if (step.Heavy) CutMarks.Heavy(other.bounds.center, through, struckTint);
+                    else CutMarks.Light(other.bounds.center, through, struckTint);
                 }
                 if (reticle != null && target is Component struckThing) reticle.Struck(struckThing.transform);
                 if (outcome == HitOutcome.Finisher) Vfx.Play(VfxKind.Burst, other.bounds.center);

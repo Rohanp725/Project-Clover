@@ -312,6 +312,8 @@ namespace Clover.Gameplay
         private float stoopFollow = 1f;
         private bool laneChecked, laneUnlit;
         private float laneLength, laneDone, prepare, nearFor, sinceZenith = 100f, knockCount, untilTouch, untilBlaze, flashLeft, roarLeft;
+        // The colour of the element on the weapon whose blow set off the flash; clear for white.
+        private Color flashTint;
         private int rollsLeft, rollsInAll, step, passes;
         private string blowName;
         private bool struck, headOpen, furyShown, zenithOwed, saidLoose, saidBlaze, roared, flashing, turnedBack, landed;
@@ -633,6 +635,7 @@ namespace Clover.Gameplay
             float damage = finisher ? Mathf.Max(hit.Damage * 3f * takes, MaximumHealth * FinisherShare) : hit.Damage * share * takes;
             Health.Damage(damage);
             flashLeft = 0.09f;
+            flashTint = hit.Tint;
             if (Health.IsDead)
             {
                 BeginDying();
@@ -771,6 +774,7 @@ namespace Clover.Gameplay
             ScreenFlash.Flash(new Color(1f, 0.6f, 0.25f, 0.35f), 0.06f);
             if (shaker != null) shaker.Shake(0.6f, 0.35f);
             flashLeft = 0.12f;
+            flashTint = default;
             // The fire in it goes out: smoke from its glowing edges.
             for (int i = 0; i < 5; i++) Vfx.Play(VfxKind.Smoke, at + Facing(i * 72f) * 1.6f + Vector3.up * 1.2f, Vector3.up, 1f, Smoke);
             Health.Damage(ParryDamage);
@@ -2611,6 +2615,7 @@ namespace Clover.Gameplay
             var outcome = victim.TakeHit(hit);
             if (outcome != HitOutcome.PerfectGuard || IsStaggered || IsDead || balanceIfTurned <= 0f) return outcome;
             flashLeft = 0.09f;
+            flashTint = default;
             if (Poise.Add(Stagger, balanceIfTurned)) BeginStagger();
             return outcome;
         }
@@ -2751,7 +2756,7 @@ namespace Clover.Gameplay
                     shown.SetPropertyBlock(null);
                     continue;
                 }
-                Color glow = flash ? new Color(1.5f, 1.5f, 1.5f) : pulse ? new Color(0.8f, 0.55f, 0.12f) : iced ? FrozenGlow : Color.black;
+                Color glow = flash ? StruckLook.Flash(new Color(1.5f, 1.5f, 1.5f), flashTint) : pulse ? new Color(0.8f, 0.55f, 0.12f) : iced ? FrozenGlow : Color.black;
                 if (!flash && hot)
                 {
                     // Nearer the side the player stands on, hotter; a burning shell glows all over.

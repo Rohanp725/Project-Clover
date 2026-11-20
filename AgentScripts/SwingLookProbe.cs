@@ -72,6 +72,8 @@ public class SwingLookProbeRunner : MonoBehaviour
     private static readonly System.Reflection.FieldInfo SinceHurt = typeof(Enemy).GetField("sinceHurt", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
     private static readonly System.Reflection.FieldInfo BarsCalled = typeof(Enemy).GetField("barsCalled", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
     private static readonly System.Reflection.FieldInfo HomeField = typeof(Enemy).GetField("home", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+    private static readonly System.Reflection.FieldInfo FlashLeft = typeof(Enemy).GetField("flashLeft", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+    private static readonly System.Reflection.FieldInfo FlashColourField = typeof(Enemy).GetField("flashColour", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
     private static readonly System.Reflection.FieldInfo HomeTurnField = typeof(Enemy).GetField("homeRotation", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
     private PlayerController player;
@@ -101,6 +103,12 @@ public class SwingLookProbeRunner : MonoBehaviour
     private string folder;
     private RectInt window;
     private int mostRibbons, mostSheaths;
+    // The frames on which a cut streak was drawn (CutMarks.Drawn rose): the moments of contact, for the strips.
+    private readonly List<int> contacts = new List<int>();
+    private int drawnWas;
+    // Frames on which an enemy showed a struck flash, and of those how many were plain white (the blow carried no tint).
+    private int flashFrames, whiteFlashFrames;
+    private readonly List<int> whiteAt = new List<int>();
 
     private static void Say(string text) => Debug.Log("[Probe] " + text);
     private static void Keys(params Key[] held) => InputSystem.QueueStateEvent(Keyboard.current, new KeyboardState(held));
@@ -119,6 +127,18 @@ public class SwingLookProbeRunner : MonoBehaviour
             BarsCalled.SetValue(soldier, true);
             // Should a wind-up start all the same, it is turned into a moment's pause: the player's swings are never cut short.
             if (keepCalm && soldier.Brain.State == EnemyState.Telegraph) soldier.Brain.Occupy(0.35f);
+        }
+        if (filming && FlashLeft != null && FlashColourField != null)
+        {
+            bool flashed = false, white = false;
+            foreach (var soldier in soldiers)
+            {
+                if (soldier == null || (float)FlashLeft.GetValue(soldier) <= 0f) continue;
+                flashed = true;
+                white |= (Color)FlashColourField.GetValue(soldier) == Enemy.StruckFlash;
+            }
+            if (flashed) flashFrames++;
+            if (white) { whiteFlashFrames++; if (whiteAt.Count < 40) whiteAt.Add(frame); }
         }
         if (filming && trails != null)
         {
@@ -223,6 +243,11 @@ public class SwingLookProbeRunner : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
             if (!filming) break;
+            if (CutMarks.Drawn != drawnWas)
+            {
+                drawnWas = CutMarks.Drawn;
+                contacts.Add(frame);
+            }
             Grab(frame);
             frame++;
         }
@@ -310,6 +335,12 @@ public class SwingLookProbeRunner : MonoBehaviour
             yield return null;
         }
         Say($"screen {Screen.width}x{Screen.height}; idle floor: solids {idleSolids}, marks {idleMarks}, hazards {idleHazards}");
+        if (System.IO.File.Exists("AgentScripts/swing_soak.txt"))
+        {
+            yield return Soak();
+            Finish();
+            yield break;
+        }
 
         var summary = new StringBuilder();
         int filmed = 0, whole = 0, order = 0;
@@ -344,7 +375,7 @@ public class SwingLookProbeRunner : MonoBehaviour
                 }
                 var clip = new Clip();
                 yield return Film(info, weaponName, tag, stand, place, clip);
-                summary.AppendLine($"{tag}_{name}: {clip.Frames} frames ({clip.Frames / (float)Rate:0.00} s), blows {clip.Blows}, landings {clip.Landings}, ground {clip.Ground}, trails {clip.Ribbons}, sheaths {clip.Sheaths}, lines {clip.Lines} ({clip.Fitted} measured){(clip.Ended ? "" : ", CUT at the cap")}{(clip.SetOff ? "" : ", NOT set off")}");
+                summary.AppendLine($"{tag}_{name}: {clip.Frames} frames ({clip.Frames / (float)Rate:0.00} s), blows {clip.Blows}, landings {clip.Landings}, ground {clip.Ground}, trails {clip.Ribbons}, sheaths {clip.Sheaths}, lines {clip.Lines} ({clip.Fitted} measured), flashes {flashFrames} ({whiteFlashFrames} white){(clip.Ended ? "" : ", CUT at the cap")}{(clip.SetOff ? "" : ", NOT set off")}");
                 Say($"{tag}_{name}: {clip.Frames} frames, blows {clip.Blows}, landings {clip.Landings}, trails {clip.Ribbons}, sheaths {clip.Sheaths}{(clip.Ended ? "" : ", WRONG: cut at the cap (" + clip.Dirty + ")")}{(clip.SetOff ? "" : ", WRONG: not set off")}");
                 filmed++;
                 if (clip.Ended && clip.SetOff) whole++;
@@ -422,6 +453,88 @@ public class SwingLookProbeRunner : MonoBehaviour
     }
 
     // The soldiers healed, cleared and stood in a spread arc in front of the player; the pools back to the idle floor.
+    // The swing soak (AgentScripts/swing_soak.txt): the struck tint's calls measured directly, then 20 s of the Katana
+    // swung into the soldiers with Fire, Lightning, Ice and Poison in turn (charged chain and infused strike) and plain
+    // chains between, for the profiler to record. Nothing is filmed.
+    private IEnumerator Soak()
+    {
+        yield return Ready(1.9f);
+        var soldier = soldiers[0];
+        Color tint = SwingLooks.Fire.Tint;
+        Vector3 at = soldier.transform.position + Vector3.up;
+        // Warm every path once so first-call costs are not counted.
+        CutMarks.Light(at, Vector3.right, tint); CutMarks.Light(at, Vector3.right); _ = combat.StruckTint;
+        _ = StruckLook.Flash(Enemy.StruckFlash, tint); _ = StruckLook.Stroke(Color.white, tint); _ = StruckLook.Ink(Color.black, tint);
+        long before = GC.GetAllocatedBytesForCurrentThread();
+        for (int i = 0; i < 1000; i++)
+        {
+            CutMarks.Light(at, Vector3.right, tint);
+            CutMarks.Heavy(at, Vector3.right, tint);
+            CutMarks.Finisher(at, Vector3.right, tint);
+            CutMarks.Light(at, Vector3.right);
+        }
+        long marks = GC.GetAllocatedBytesForCurrentThread() - before;
+        before = GC.GetAllocatedBytesForCurrentThread();
+        Color sum = Color.black;
+        for (int i = 0; i < 1000; i++)
+        {
+            sum += combat.StruckTint;
+            sum += StruckLook.Flash(Enemy.StruckFlash, tint) + StruckLook.Stroke(Color.white, tint) + StruckLook.Ink(Color.black, tint) + Enemy.FlashColour(tint);
+        }
+        long looks = GC.GetAllocatedBytesForCurrentThread() - before;
+        // A blow with a tint against the same blow without: what the tint adds to TakeHit and the flash.
+        var plainHit = new Hit(0.01f, 0f, Vector3.forward);
+        var tintedHit = new Hit(0.01f, 0f, Vector3.forward, tint: tint);
+        soldier.TakeHit(plainHit); soldier.TakeHit(tintedHit);
+        before = GC.GetAllocatedBytesForCurrentThread();
+        for (int i = 0; i < 200; i++) soldier.TakeHit(plainHit);
+        long plain = GC.GetAllocatedBytesForCurrentThread() - before;
+        before = GC.GetAllocatedBytesForCurrentThread();
+        for (int i = 0; i < 200; i++) soldier.TakeHit(tintedHit);
+        long tinted = GC.GetAllocatedBytesForCurrentThread() - before;
+        soldier.Health.Fill();
+        Say($"measured: 4000 cut marks (3000 tinted) {marks} B; 1000 x StruckTint and the StruckLook sums {looks} B (sum {sum.a:0}); 200 plain TakeHit {plain} B, 200 tinted TakeHit {tinted} B");
+        yield return Real(0.5f);
+
+        string[] turns = { Elements.Fire, Elements.Lightning, Elements.Ice, Elements.Poison };
+        combat.Equip(Weapons.ByName(Weapons.KatanaName));
+        Say("soaking");
+        float end = Time.unscaledTime + 22f;
+        int turn = 0, blowsWere = combat.BlowsLanded, drawnAt = CutMarks.Drawn;
+        while (Time.unscaledTime < end)
+        {
+            string name = turns[turn++ % turns.Length];
+            build.Attune(name, "");
+            yield return Frames(2);
+            spells.Cooldowns.ResetAll();
+            combat.Mana.Gain(100f);
+            combat.Blade.Charge(name);
+            yield return Frames(4);
+            for (int press = 0; press < 3; press++)
+            {
+                yield return Tap(Key.J);
+                yield return UntilReal(() => !combat.IsAttacking, 1.2f);
+            }
+            combat.Blade.Clear();
+            Set(pad.leftTrigger, 1f);
+            yield return Frames(2);
+            Set(pad.rightShoulder, 1f);
+            yield return Frames(2);
+            Set(pad.rightShoulder, 0f);
+            yield return null;
+            Set(pad.leftTrigger, 0f);
+            yield return UntilReal(() => !combat.IsAttacking, 2f);
+            // A plain chain between, so the white path is soaked too.
+            for (int press = 0; press < 2; press++)
+            {
+                yield return Tap(Key.J);
+                yield return UntilReal(() => !combat.IsAttacking, 1.2f);
+            }
+            foreach (var one in soldiers) if (one != null && one.Health.Fraction < 0.6f) one.Health.Fill();
+        }
+        Say($"soak done: {combat.BlowsLanded - blowsWere} blows landed, {CutMarks.Drawn - drawnAt} cut marks drawn, {turn} turns");
+    }
+
     private IEnumerator Ready(float stand)
     {
         keepCalm = true;
@@ -471,6 +584,10 @@ public class SwingLookProbeRunner : MonoBehaviour
         window = WindowAbout(standAt + Vector3.forward * (stand * 0.6f) + Vector3.up * 1.7f);
         Time.captureFramerate = Rate;
         frame = 0;
+        contacts.Clear();
+        flashFrames = whiteFlashFrames = 0;
+        whiteAt.Clear();
+        drawnWas = CutMarks.Drawn;
         filming = true;
         StartCoroutine(Filmer());
         yield return Until(() => frame >= Before, 20);
@@ -532,7 +649,7 @@ public class SwingLookProbeRunner : MonoBehaviour
         clip.Fitted = trails.SourcesFitted;
         System.IO.File.WriteAllText(folder + "/info.txt",
             $"weapon={weaponName}\ntag={tag}\nelement={info.Name}\nstart={clip.Start}\npeak_frame={clip.Peak}\nframes={clip.Frames}\nended={clip.Ended}\nset_off={clip.SetOff}\n" +
-            $"blows={clip.Blows}\nlandings={clip.Landings}\nground={clip.Ground}\nmost_trails={clip.Ribbons}\nmost_sheaths={clip.Sheaths}\nlines={clip.Lines}\nfitted={clip.Fitted}\norder={order}\n");
+            $"blows={clip.Blows}\nlandings={clip.Landings}\nground={clip.Ground}\nmost_trails={clip.Ribbons}\nmost_sheaths={clip.Sheaths}\nlines={clip.Lines}\nfitted={clip.Fitted}\norder={order}\ncontacts={string.Join(",", contacts)}\nflash_frames={flashFrames}\nwhite_flash_frames={whiteFlashFrames}\nwhite_at={string.Join(",", whiteAt)}\n");
     }
 
     private void Finish()

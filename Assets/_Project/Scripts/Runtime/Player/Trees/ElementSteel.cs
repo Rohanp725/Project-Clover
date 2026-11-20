@@ -81,7 +81,7 @@ namespace Clover.Player
             {
                 case Elements.Fire:
                     // The third leaves the ground under its target burning: a 1.5 m patch for 3 s, a Burn a second.
-                    if (blow.Third) Hazards.Lay(HazardKind.Fire, Ground(at), 1.5f, 3f, 3f, 0f, 4f, 1f);
+                    if (blow.Third) Hazards.Lay(HazardKind.Fire, Ground(at), 1.5f, 3f, 3f, 0f, 4f, 1f, struck: Swings.SwingLooks.Fire.Tint);
                     break;
                 case Elements.Lightning:
                 {
@@ -188,7 +188,7 @@ namespace Clover.Player
                     {
                         // Burnt Offering: a pillar of flame on the enemy struck, 30 damage, and its burn goes off.
                         Vector3 at = first != null ? first.transform.position : print.Far;
-                        combat.StrikeArea(at, 1.6f, new SpellBlow { Damage = 30f, Stagger = 30f, Affliction = AfflictionKind.Burn, Stacks = 1, Detonate = true, Heavy = true, Effect = VfxKind.Fire });
+                        combat.StrikeArea(at, 1.6f, new SpellBlow { Damage = 30f, Stagger = 30f, Affliction = AfflictionKind.Burn, Stacks = 1, Detonate = true, Heavy = true, Effect = VfxKind.Fire, Struck = Swings.SwingLooks.Fire.Tint });
                         FormFx.Erupt(FormMesh.Flame, Ground(at), Quaternion.identity, new Vector3(1.4f, 4.2f, 1.4f), colour, 0.1f, 0.35f, 0.4f);
                         if (!art) Vfx.Play(VfxKind.Fire, at + Vector3.up * 1.4f, Vector3.up, 2.4f);
                         Vfx.Play(VfxKind.Embers, at + Vector3.up * 2f, Vector3.up, 2.2f);
@@ -368,6 +368,8 @@ namespace Clover.Player
             Tinted = ElementLook.Tints(element),
             Tint = element.Colour,
             Look = element,
+            // The weapon carries it: what it strikes flashes in the trail's colour, softened (the owner's choice, 2026-11-19).
+            Struck = Swings.SwingLooks.For(element)?.Tint ?? default,
         };
 
         // Strikes the footprint, reaching further by the metres given: an arc as a cone, a ring and a disc as circles, a lane and a path as lanes.
@@ -422,12 +424,12 @@ namespace Clover.Player
                 for (int i = 0; i < 3; i++)
                 {
                     Vector3 outward = Quaternion.Euler(0f, (i - 1) * arc / 3f, 0f) * print.Forward;
-                    Hazards.Lay(HazardKind.Fire, Ground(print.Origin + outward * ((print.Reach + further) * 0.6f)), 1.4f, 3f, 3f, 0f, 4f, 0.5f);
+                    Hazards.Lay(HazardKind.Fire, Ground(print.Origin + outward * ((print.Reach + further) * 0.6f)), 1.4f, 3f, 3f, 0f, 4f, 0.5f, struck: Swings.SwingLooks.Fire.Tint);
                 }
                 return;
             }
             for (int i = 0; i < 3; i++)
-                Hazards.Lay(HazardKind.Fire, Ground(print.Origin + print.Forward * ((print.Reach + further) * (i + 0.5f) / 3f)), 1.3f, 3f, 3f, 0f, 4f, 0.5f);
+                Hazards.Lay(HazardKind.Fire, Ground(print.Origin + print.Forward * ((print.Reach + further) * (i + 0.5f) / 3f)), 1.3f, 3f, 3f, 0f, 4f, 0.5f, struck: Swings.SwingLooks.Fire.Tint);
         }
 
         // Pushes every enemy the last strike reached along the strike (negative: toward the player).

@@ -23,6 +23,12 @@ namespace Clover.Player.Swings
         /// <summary>True when the charged blow's landing is drawn by the swing look and not by the hit art (Ice's crack-web, Earth's floating cubes).</summary>
         public bool ReplacesHitArt;
         /// <summary>
+        /// The colour the trail is drawn in, which a landed blow's flash and cut streak take, softened, under this element
+        /// (the owner's "Tint and soften", 2026-11-19; <see cref="Core.StruckLook"/>), so the two match.
+        /// Clear until set, so a look that forgets it keeps the plain white rather than a half-strength one.
+        /// </summary>
+        public UnityEngine.Color Tint;
+        /// <summary>
         /// The file a later art pass is to draw the trail's texture as (Art/VFX/&lt;Element&gt;/), empty until it exists. The
         /// trail is built to take one: U runs along the swing from tail to head, V across from the inner edge to the outer.
         /// </summary>

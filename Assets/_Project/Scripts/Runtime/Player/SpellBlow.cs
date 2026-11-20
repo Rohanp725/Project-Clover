@@ -33,5 +33,10 @@ namespace Clover.Player
         public ElementInfo Look;
         /// <summary>A reaction dealt it: what it lays starts no reaction (<see cref="Hit.FromReaction"/>).</summary>
         public bool FromReaction;
+        /// <summary>
+        /// The tint a blow of the element on the weapon (its infused or charged strike) gives what it lands on
+        /// (<see cref="Hit.Tint"/>, <see cref="Core.StruckLook"/>); clear for a spell's, a reaction's or an upgrade's.
+        /// </summary>
+        public Color Struck;
     }
 }

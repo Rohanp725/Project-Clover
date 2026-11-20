@@ -181,7 +181,7 @@ namespace Clover.Player
         /// Throws the shot (or its whole fan) from a point along a direction, in a colour, carrying the held element's
         /// affliction if there is one. Returns a handle to the last one thrown, or -1 when nothing left.
         /// </summary>
-        public int Fire(PlayerCombat combat, WeaponShot shot, Vector3 from, Vector3 direction, Color colour, ElementInfo held)
+        public int Fire(PlayerCombat combat, WeaponShot shot, Vector3 from, Vector3 direction, Color colour, ElementInfo held, Color struck = default)
         {
             if (flying == null || shot == null) return -1;
             direction.y = 0f;
@@ -196,10 +196,11 @@ namespace Clover.Player
                 handle = i;
                 float angle = count > 1 ? Mathf.Lerp(-shot.SpreadDegrees * 0.5f, shot.SpreadDegrees * 0.5f, n / (float)(count - 1)) : 0f;
                 bitten[i].Clear();
-                var blow = new SpellBlow { Damage = shot.Damage, Stagger = shot.Stagger, Heavy = shot.Heavy, Effect = VfxKind.TintSpark, Tinted = true, Tint = colour };
+                // A shot loosed from a weapon carrying an element marks what it strikes in that element's softened tint (Hit.Tint).
+                var blow = new SpellBlow { Damage = shot.Damage, Stagger = shot.Stagger, Heavy = shot.Heavy, Effect = VfxKind.TintSpark, Tinted = true, Tint = colour, Struck = struck };
                 var bite = new SpellBlow
                 {
-                    Damage = shot.HangBite, Stagger = shot.HangBite, Effect = VfxKind.TintSpark, Tinted = true, Tint = colour,
+                    Damage = shot.HangBite, Stagger = shot.HangBite, Effect = VfxKind.TintSpark, Tinted = true, Tint = colour, Struck = struck,
                     // What hangs lays the held element on what it bites.
                     Affliction = held != null ? held.Affliction : AfflictionKind.None, Stacks = held != null && held.Affliction != AfflictionKind.None ? 1 : 0,
                 };
@@ -208,7 +209,7 @@ namespace Clover.Player
                     Live = true, Combat = combat, Shot = shot, At = from, Direction = Quaternion.AngleAxis(angle, Vector3.up) * direction,
                     Colour = new Color(colour.r * 2.2f, colour.g * 2.2f, colour.b * 2.2f, 0.95f), Blow = blow, Bite = bite,
                     Prop = PropFor(shot.Prop), Owner = combat != null ? combat.transform : transform, ReturnSpeed = shot.ReturnSpeed,
-                    Back = new SpellBlow { Damage = shot.Damage * shot.ReturnScale, Stagger = shot.Stagger * shot.ReturnScale, Heavy = shot.Heavy, Effect = VfxKind.TintSpark, Tinted = true, Tint = colour },
+                    Back = new SpellBlow { Damage = shot.Damage * shot.ReturnScale, Stagger = shot.Stagger * shot.ReturnScale, Heavy = shot.Heavy, Effect = VfxKind.TintSpark, Tinted = true, Tint = colour, Struck = struck },
                 };
                 // A weapon that is itself thrown is drawn as itself, one at a time.
                 if (flying[i].Prop >= 0) props[flying[i].Prop].gameObject.SetActive(true);

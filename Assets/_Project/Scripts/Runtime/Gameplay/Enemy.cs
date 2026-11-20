@@ -82,6 +82,10 @@ namespace Clover.Gameplay
         public BurnStatus Burn => Afflictions.Burn;
         /// <summary>What it glows while frozen: it stands still in ice until it thaws or a heavy blow breaks it.</summary>
         public Color FrozenGlow = new Color(0.22f, 0.5f, 0.85f);
+        /// <summary>The white flash of a plain blow landing.</summary>
+        public static readonly Color StruckFlash = new Color(1.6f, 1.6f, 1.6f);
+        /// <summary>The flash a landed blow gives the body: white for a plain one, the element's colour softened under one (<see cref="StruckLook"/>).</summary>
+        public static Color FlashColour(Color tint) => StruckLook.Flash(StruckFlash, tint);
         public bool IsStaggered => Brain.State == EnemyState.Staggered;
         public bool IsDead => Brain.State == EnemyState.Dead;
         public bool IsCharged => chargedLeft > 0f;
@@ -266,6 +270,7 @@ namespace Clover.Gameplay
         /// <summary>Stagger taken on coming down from being thrown into the air.</summary>
         public float LandingStagger = 20f;
         private float flashLeft;
+        private Color flashColour = StruckFlash;
         private float chargedLeft;
         private float deadFor;
         private float untilEmber;
@@ -648,7 +653,7 @@ namespace Clover.Gameplay
             float multiplier = finisher ? FinisherDamageMultiplier : IsStaggered || busy == BusyDrink ? StaggeredDamageMultiplier : 1f;
             // A god is not cut down by one blow, however good: a finisher takes a fixed share of him.
             Health.Damage(detonated + (finisher && Kind.FinisherHealthShare > 0f ? Mathf.Max(hit.Damage * multiplier * takes, Kind.Health * Kind.FinisherHealthShare) : hit.Damage * multiplier * takes));
-            flashLeft = 0.09f;
+            Flash(FlashColour(hit.Tint));
             Vector3 away = hit.Direction;
             away.y = 0f;
             // Flat on its back it is not slid along the floor by the blows that follow the one that felled it.
@@ -1186,7 +1191,7 @@ namespace Clover.Gameplay
             if (outcome == HitOutcome.Landed) Took(attack);
             // A perfect guard turns a blow struck by hand back on the one who struck it. A thrown bolt has no one to turn on.
             if (outcome != HitOutcome.PerfectGuard || attack.Ranged) return;
-            flashLeft = 0.09f;
+            Flash(StruckFlash);
             shove = -transform.forward * (Shove * 1.6f);
             if (!IsStaggered && Stagger.Add(Kind.PerfectGuardStagger * Afflictions.StaggerTakenMultiplier))
             {
@@ -1471,7 +1476,15 @@ namespace Clover.Gameplay
             }
         }
 
-        // The body's glow: white for an instant when struck, a steady pale blue while frozen, a gold pulse while staggered, a blue one while charged.
+        // A colour new to a flash already showing is painted at once: the glow is only repainted when it changes.
+        private void Flash(Color colour)
+        {
+            flashLeft = 0.09f;
+            if (colour != flashColour) shownGlow = -1;
+            flashColour = colour;
+        }
+
+        // The body's glow: white for an instant when struck (the element's colour, softened, under an element), a steady pale blue while frozen, a gold pulse while staggered, a blue one while charged.
         private void Paint(float deltaTime)
         {
             int glow = 0;
@@ -1497,7 +1510,7 @@ namespace Clover.Gameplay
                     continue;
                 }
                 block.Clear();
-                block.SetColor(Emission, glow == 1 ? new Color(1.6f, 1.6f, 1.6f) : glow == 2 ? new Color(0.9f, 0.62f, 0.12f) : glow == 3 ? new Color(0.1f, 0.24f, 0.7f) : glow == 5 ? FrozenGlow : new Color(0.7f, 0.3f, 0.03f));
+                block.SetColor(Emission, glow == 1 ? flashColour : glow == 2 ? new Color(0.9f, 0.62f, 0.12f) : glow == 3 ? new Color(0.1f, 0.24f, 0.7f) : glow == 5 ? FrozenGlow : new Color(0.7f, 0.3f, 0.03f));
                 bodyRenderer.SetPropertyBlock(block);
             }
         }

@@ -100,7 +100,9 @@ namespace Clover.Player.Swings
 
         public static readonly SwingLook Fire = new SwingLook
         {
-            Element = 0, Name = Elements.Fire, Shed = SwingShed.Embers, ShedEvery = 0.035f,
+            Element = 0, Name = Elements.Fire,
+            // The struck tint: the flame's orange band in the Glow shader, which draws the fire trail.
+            Tint = new Color(2f, 0.52f, 0.06f), Shed = SwingShed.Embers, ShedEvery = 0.035f,
             Line = "a flame ribbon off the swing that licks upward once left, cools through red to smoke so the arc is scorched behind it, and sheds embers; a thin lick of flame along the edge while charged",
             Layers = new[]
             {
@@ -114,7 +116,9 @@ namespace Clover.Player.Swings
 
         public static readonly SwingLook Lightning = new SwingLook
         {
-            Element = 1, Name = Elements.Lightning, Shed = SwingShed.Crackle, ShedEvery = 0.04f,
+            Element = 1, Name = Elements.Lightning,
+            // The struck tint: the rim's.
+            Tint = new Color(1f, 1.4f, 2.9f), Shed = SwingShed.Crackle, ShedEvery = 0.04f,
             Line = "the liked crackle kept: a hard blue-white rim on the cut and two jagged arcs that crawl along the sweep, taking a new shape twenty times a second; a bolt running the edge while charged; a crack in the floor where a blow lands",
             Layers = new[]
             {
@@ -130,6 +134,8 @@ namespace Clover.Player.Swings
         public static readonly SwingLook Wind = new SwingLook
         {
             Element = 2, Name = Elements.Wind,
+            // The struck tint: the air-blade's.
+            Tint = new Color(1.05f, 1.2f, 1.12f),
             Line = "an air-blade: a pale see-through sweep with a bright leading streak that, once left, blows on the way the blade went, spreads and comes apart in gusts until nothing is left (never cut off); a faint stream of air along the edge while charged",
             Layers = new[]
             {
@@ -142,7 +148,9 @@ namespace Clover.Player.Swings
 
         public static readonly SwingLook Ice = new SwingLook
         {
-            Element = 3, Name = Elements.Ice, Shed = SwingShed.FrostBreath, ShedEvery = 0.08f, End = SwingEnd.Shatter, ReplacesHitArt = true,
+            Element = 3, Name = Elements.Ice,
+            // The struck tint: the crystal arc's.
+            Tint = new Color(0.72f, 0.92f, 1.05f), Shed = SwingShed.FrostBreath, ShedEvery = 0.08f, End = SwingEnd.Shatter, ReplacesHitArt = true,
             Line = "the chainsaw of ice: a row of frost teeth that run along the edge while charged; the swing leaves a crystal arc that freezes in the air, hangs, then shatters into shards that fall; frost and crystals where a blow lands, no crack-web",
             Layers = new[]
             {
@@ -160,7 +168,9 @@ namespace Clover.Player.Swings
 
         public static readonly SwingLook Water = new SwingLook
         {
-            Element = 4, Name = Elements.Water, End = SwingEnd.Spray,
+            Element = 4, Name = Elements.Water,
+            // The struck tint: the water arc's.
+            Tint = new Color(0.18f, 0.62f, 0.9f), End = SwingEnd.Spray,
             Line = "a sheath of water flowing along the edge toward the point; the swing draws a water arc with a foam rim that falls as it is left, and throws its water off the end of the swing in a spray of drops (none dotted on the blade)",
             Layers = new[]
             {
@@ -172,7 +182,9 @@ namespace Clover.Player.Swings
 
         public static readonly SwingLook Life = new SwingLook
         {
-            Element = 5, Name = Elements.Life, Thorns = true, Shed = SwingShed.Leaves, ShedEvery = 0.07f,
+            Element = 5, Name = Elements.Life,
+            // The struck tint: the green sweep's.
+            Tint = new Color(0.4f, 0.92f, 0.28f), Thorns = true, Shed = SwingShed.Leaves, ShedEvery = 0.07f,
             Line = "thorns grown along the real edge of each weapon while charged (the one look on the weapon, as the owner asked), a green sweep that sheds leaves, and pollen drifting off the point that rises and scatters",
             Layers = new[]
             {
@@ -185,7 +197,9 @@ namespace Clover.Player.Swings
 
         public static readonly SwingLook Earth = new SwingLook
         {
-            Element = 6, Name = Elements.Earth, Shed = SwingShed.Grit, ShedEvery = 0.08f, ReplacesHitArt = true,
+            Element = 6, Name = Elements.Earth,
+            // The struck tint: the dust's.
+            Tint = new Color(0.66f, 0.5f, 0.32f), Shed = SwingShed.Grit, ShedEvery = 0.08f, ReplacesHitArt = true,
             Line = "a dust trail that settles and spreads, with grit falling out of it; where a blow lands rocks are thrown up, fall, lie a moment and sink (never floating); grit along the edge while charged",
             Layers = new[]
             {
@@ -199,6 +213,8 @@ namespace Clover.Player.Swings
         public static readonly SwingLook Metal = new SwingLook
         {
             Element = 7, Name = Elements.Metal,
+            // The struck tint: the glint's.
+            Tint = new Color(2.2f, 2.3f, 2.5f),
             Line = "nothing added to the weapon but a glint: a point of light runs from the guard to the tip while charged and as each swing starts, and the tip leaves a hair-thin streak for a twelfth of a second",
             Layers = new[]
             {
@@ -214,6 +230,8 @@ namespace Clover.Player.Swings
         public static readonly SwingLook Light = new SwingLook
         {
             Element = 8, Name = Elements.Light,
+            // The struck tint: the arc of light's.
+            Tint = new Color(1.7f, 1.3f, 0.55f),
             Line = "the edge itself glows gold with a white heart, and the swing leaves a clean, hard-edged arc of light that fades without breaking up",
             Layers = new[]
             {
@@ -225,6 +243,8 @@ namespace Clover.Player.Swings
         public static readonly SwingLook Dark = new SwingLook
         {
             Element = 9, Name = Elements.Dark,
+            // The struck tint: the violet rim's: the shade under it is too dark to light a flash.
+            Tint = new Color(1f, 0.42f, 1.7f),
             Line = "a smear of shade that lags behind the blade and drains back into it as it sinks, with a violet rim; a shadow clinging along the edge while charged (no crystals, no symbols)",
             Layers = new[]
             {
@@ -240,7 +260,9 @@ namespace Clover.Player.Swings
 
         public static readonly SwingLook Poison = new SwingLook
         {
-            Element = 10, Name = Elements.Poison, Shed = SwingShed.Drips, ShedEvery = 0.05f,
+            Element = 10, Name = Elements.Poison,
+            // The struck tint: the venom trail's.
+            Tint = new Color(0.38f, 0.88f, 0.3f), Shed = SwingShed.Drips, ShedEvery = 0.05f,
             Line = "venom: a green trail that sags and drips as it is left, under a heavy mist that sinks off the arc; a coat of venom along the edge while charged that now and then drips off",
             Layers = new[]
             {
