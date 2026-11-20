@@ -828,6 +828,8 @@ Group: Reactions
 
 **What sets it off.** Chill landing on a shaken enemy, or Tremor on a chilled one.
 
+**Its shapes.** With the Shape mark of Ice and Earth's duo branch (Frost Heave: Sorted Stones or Pingo, 3 Shards, in the heart of the chart) and both carried, Frost Heave wears the shape chosen at a rest fire instead. Both heave it as before. Sorted Stones: everything else within 3 m is pushed 3 m out. Pingo: 2 s later the mound bursts, 24 and two Chill within 2.5 m.
+
 **How to use it.** Strike it while it hangs in the air.
 
 **How it looks.** Its name over the enemy, then the heave. Not yet: the rimed mound left standing for 6 s.
