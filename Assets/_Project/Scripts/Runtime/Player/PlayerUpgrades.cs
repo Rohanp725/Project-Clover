@@ -1721,6 +1721,9 @@ namespace Clover.Player
                 case UpgradeAction.TurnTide:
                     if (hasTideClock) TurnTide();
                     break;
+                case UpgradeAction.LengthenSurge:
+                    if (element.SurgeActive) element.SurgeKit.Lengthen(effect.Amount, effect.Seconds);
+                    break;
                 case UpgradeAction.KeepFrozen:
                     if (subject is IAfflictable frozen && frozen.Afflictions.KeepFrozen(effect.Seconds)) FreezesKept++;
                     break;

@@ -63,6 +63,8 @@ namespace Clover.Player
             if (mark == null || loadout == null || mark.IsHidden) return false;
             if (!WeaponCarried(mark, loadout) || !Carried(mark, loadout)) return false;
             if (mark.IsMix && mark.IsSpell && !loadout.Slotted(mark.Id)) return false;
+            // A duo surge only while it is the surge worn (the ledger's duo-surge-slot).
+            if (mark.Surge != null && mark.IsMix && loadout.Surge != mark.Id) return false;
             if (BranchNeedsSlot(mark) && !loadout.Slotted(mark.Branch)) return false;
             // The all-in passive (STEEL_AND_ELEMENT.md 5.6): the same element in both attunements.
             if (mark.Kind == UpgradeKind.Devotion && !(loadout.AllIn && loadout.First == mark.Element)) return false;

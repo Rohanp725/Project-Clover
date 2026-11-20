@@ -64,6 +64,8 @@ namespace Clover.Player
         /// reaction-numbers), the plain reaction's or its shapes'. Null for none.
         /// </summary>
         public ReactionChange[] ReactionChanges;
+        /// <summary>On a duo surge's mark: its own price and time in the Hand's surge slot (<see cref="DuoSurge"/>). Null otherwise.</summary>
+        public DuoSurge Surge;
         /// <summary>On a Learn mark (and a duo spell): what the spell is for, the role icon in the Hand.</summary>
         public SpellRole Role = SpellRole.None;
         /// <summary>On a reaction lift: the element whose reactions it lifts (its effects ride <see cref="UpgradeTrigger.Reacted"/>). Empty otherwise.</summary>

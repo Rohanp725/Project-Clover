@@ -77,14 +77,14 @@ Lightning are both carried.
 **Not built yet.** Each attacker is not yet tied by a thread and paid back twice what it dealt you (60 at most), and a blow on the guard does not yet count double.
 
 ## thegrudge.ashthunder
-**What it does.** A duo surge. While your surge lasts a plume of ash streams up off your shoulders: every blow you land lays a Static, every third calls a bolt down on a Cursed enemy, and each Cursed enemy killed heals you 6 more.
+**What it does.** A duo surge. While it burns a plume of ash streams up off your shoulders: every blow you land lays a Static, every third calls a bolt down on a Cursed enemy, and each Cursed enemy killed heals you 6 more.
 
-**When it happens.** While your surge lasts, with Dark and Lightning both carried.
+**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Dark and Lightning are both carried, and light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. As built: each blow lays one Static; one blow in three on a Cursed enemy discharges its Static; each Cursed enemy killed heals you 6.
+**The numbers.** Mix, duo surge, 5 Shards. 40 mana, 10 seconds; each kill while it burns adds 1 second. As built: each blow lays one Static; one blow in three on a Cursed enemy discharges its Static; each Cursed enemy killed heals you 6.
 
 **Works with.** The Grudge, The Exile Returns, Given Bones.
 
 **Example.** Curse a pack, light your surge, and the plume keeps the clouds gathering.
 
-**Not built yet.** It is not yet a surge of its own (40 mana, 10 seconds) in the Hand's surge slot; the bolt falls on one blow in three by chance on the enemy struck, not on every third blow at the nearest Cursed enemy within 8 metres, and a kill does not yet add a second.
+**Not built yet.** The bolt falls on one blow in three by chance on the enemy struck, not on every third blow at the nearest Cursed enemy within 8 metres.

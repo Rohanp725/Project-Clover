@@ -116,13 +116,14 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 } },
             }, HeartPattern.Spell));
 
-            // The duo surge. NEEDS: its own 40 mana and 10 s in the Hand's surge slot (duo-surge-slot), the frost on the floor
+            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge). NEEDS: the frost on the floor
             // round you, and statues of black ice a heavy blow shatters for 25, two Chill and a Curse in 3 m (standing-things);
-            // now while any surge lasts each enemy that dies leaves a patch that chills within 2.5 m for 5 s.
+            // now while it burns each enemy that dies leaves a patch that chills within 2.5 m for 5 s.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ThreeWinters, Name = "Three Winters", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { IceInTheBlood }, Icon = UpgradeIcons.Moon,
-                Description = "A duo surge. While your surge lasts frost creeps over the floor round you, and every enemy that dies freezes where it falls as a statue of black ice for 5 s, chilling a stack a second within 2.5 m; a heavy blow on a statue shatters it, 25, two Chill and a Curse in 3 m.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. While it lasts frost creeps over the floor round you, and every enemy that dies freezes where it falls as a statue of black ice for 5 s, chilling a stack a second within 2.5 m; a heavy blow on a statue shatters it, 25, two Chill and a Curse in 3 m.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Kill, WhileSurge = true, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 5f, Interval = 1f, Affliction = AfflictionKind.Chill, Stacks = 1 },

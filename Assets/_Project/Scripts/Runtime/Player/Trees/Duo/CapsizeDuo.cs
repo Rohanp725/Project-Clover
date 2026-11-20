@@ -97,14 +97,16 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.Spell));
 
             // The duo surge (pairs_d1_d2.md): a gourd of winds let out by each dodge.
-            // NEEDS: a duo surge worn in the Hand's surge slot, its own 40 mana and 10 s, and 1 s more for each capsize to 15 s
-            // (duo-surge-slot); now its answers ride any surge while both are carried.
+            // Worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge); each capsize while it burns adds a second,
+            // to 15 s in all (LengthenSurge).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = OpenTheGourd, Name = "Open the Gourd", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { RideTheSquall }, Icon = UpgradeIcons.Gust,
-                Description = "A duo surge. While your surge lasts a gourd of winds hangs at your hip: each dodge lets one out, a gust down the dodge's line that Soaks, unsteadies twice and shoves, and each capsize gives you 6 mana back.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. While it lasts a gourd of winds hangs at your hip: each dodge lets one out, a gust down the dodge's line that Soaks, unsteadies twice and shoves. Each capsize gives you 6 mana back and makes the surge last 1 second longer, up to 15 seconds.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[]
                 {
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, WhileSurge = true, Do = UpgradeAction.LengthenSurge, Amount = 1f, Seconds = 15f },
                     new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, WhileSurge = true, Do = UpgradeAction.Lane, Reach = 6f, Radius = 1f, Affliction = AfflictionKind.Unsteady, Stacks = 2 },
                     new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, WhileSurge = true, Do = UpgradeAction.Lane, Reach = 6f, Radius = 1f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, WhileSurge = true, At = EffectAt.Self, Do = UpgradeAction.Push, Radius = 3f, Amount = 2f },

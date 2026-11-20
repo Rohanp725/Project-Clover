@@ -70,12 +70,23 @@ namespace Clover.Player.Build
             return MarkRules.Slottable(mark, loadout);
         }
 
-        /// <summary>True when the id is a carried element's surge. Duo surges are not built yet, so none is offered.</summary>
+        /// <summary>True when the id is a carried element's surge.</summary>
         public static bool CanWearSurge(string id, Loadout loadout)
         {
             if (loadout == null) return false;
             string element = ElementOfSurge(id);
             return element.Length > 0 && loadout.Carries(element);
+        }
+
+        /// <summary>
+        /// True when the id may be the surge worn: a carried element's surge, or a learned duo surge while both its elements
+        /// are carried (the ledger's duo-surge-slot).
+        /// </summary>
+        public bool CanWear(string id, Loadout loadout, ICollection<string> learned)
+        {
+            if (CanWearSurge(id, loadout)) return true;
+            var mark = Find(id);
+            return DuoSurge.Is(mark) && learned != null && learned.Contains(id) && MarkRules.Carried(mark, loadout);
         }
 
         /// <summary>
@@ -111,7 +122,13 @@ namespace Clover.Player.Build
         }
 
         /// <summary>The surges the Hand can wear: each carried element's, the first's first.</summary>
-        public List<HandChoice> SurgesFor(Loadout loadout, List<HandChoice> into = null)
+        public List<HandChoice> SurgesFor(Loadout loadout, List<HandChoice> into = null) => SurgesFor(loadout, null, into);
+
+        /// <summary>
+        /// The surges the Hand can wear: each carried element's, the first's first, then, with two elements carried, each
+        /// learned duo surge of the pair, with its own price and time.
+        /// </summary>
+        public List<HandChoice> SurgesFor(Loadout loadout, ICollection<string> learned, List<HandChoice> into = null)
         {
             into ??= new List<HandChoice>();
             into.Clear();
@@ -133,6 +150,22 @@ namespace Clover.Player.Build
                     Mana = kit.SurgeCost,
                 });
             }
+            if (loadout.Mixed && learned != null)
+                foreach (var mark in catalogue)
+                {
+                    if (!DuoSurge.Is(mark) || !learned.Contains(mark.Id) || !MarkRules.Carried(mark, loadout)) continue;
+                    into.Add(new HandChoice
+                    {
+                        Id = mark.Id,
+                        Name = mark.Name,
+                        Element = mark.Element,
+                        Element2 = mark.Element2,
+                        Role = SpellRole.None,
+                        Line = $"A duo surge of {mark.Element} and {mark.Element2}, {Math.Round(mark.Surge.Mana)} mana, {Math.Round(mark.Surge.Seconds)} s.",
+                        InSlot = -1,
+                        Mana = mark.Surge.Mana,
+                    });
+                }
             return into;
         }
 
@@ -165,7 +198,7 @@ namespace Clover.Player.Build
                 changed = true;
             }
             string surge = loadout.Surge ?? "";
-            if (!CanWearSurge(surge, loadout))
+            if (!CanWear(surge, loadout, learned))
             {
                 string fallback = SurgeId(loadout.First);
                 if (fallback != surge)

@@ -137,14 +137,15 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Spell));
 
-            // The duo surge. NEEDS: its own 35 mana and 10 s in the Hand's surge slot (duo-surge-slot); a streaming field 9 m
+            // The duo surge, worn in the Hand's surge slot with its own 35 mana and 10 s (DuoSurge). NEEDS: a streaming field 9 m
             // long and 100 degrees wide turning with you, that carries a Curse laid in it to every enemy downwind (form-pieces);
-            // now while any surge lasts, once a second, a cone of black wind ahead lays an Unsteady and everything within 6 m is
+            // now while it burns, once a second, a cone of black wind ahead lays an Unsteady and everything within 6 m is
             // pushed half a metre away.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WindFromTheGrave, Name = "Wind From the Grave", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { BlownThrough }, Icon = UpgradeIcons.Gust,
-                Description = "A duo surge. While your surge lasts a black wind blows from you the way you face, 9 m long and 100 degrees wide: enemies in it are pushed away half a metre a second and made Unsteady each second, and a Curse laid on any in the wind is carried downwind.",
+                Description = "A duo surge for your surge slot: 35 mana, 10 seconds. While it lasts a black wind blows from you the way you face, 9 m long and 100 degrees wide: enemies in it are pushed away half a metre a second and made Unsteady each second, and a Curse laid on any in the wind is carried downwind.",
+                Surge = new DuoSurge { Mana = 35f, Seconds = 10f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.EverySeconds, Every = 1f, WhileSurge = true, Do = UpgradeAction.Cone, Reach = 9f, Arc = 100f, Affliction = AfflictionKind.Unsteady, Stacks = 1 },

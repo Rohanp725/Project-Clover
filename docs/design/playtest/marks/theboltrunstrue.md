@@ -66,14 +66,14 @@ while Light and Lightning are both carried.
 **Not built yet.** The line is not yet held on the button for up to 1.5 seconds, turning with you, and loosed on letting go; a perfect guard while it is held does not yet loose it at once for twice the damage.
 
 ## boltrunstrue.net
-**What it does.** A duo surge. While your surge lasts every Marked enemy within 12 metres is linked to every other by threads of light: a discharge on one runs the threads to all the others for half, and each critical blow on one gives every linked enemy a Static.
+**What it does.** A duo surge. While it burns every Marked enemy within 12 metres is linked to every other by threads of light: a discharge on one runs the threads to all the others for half, and each critical blow on one gives every linked enemy a Static.
 
-**When it happens.** While your surge lasts, with Light and Lightning both carried.
+**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Light and Lightning are both carried, and light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. As built: a discharge on a Marked enemy arcs on through up to five Marked enemies within 12 metres, 3.5 damage a stack each, at most every half second; a critical blow on a Marked enemy lays a Static on every enemy within 12 metres, at most every 0.3 seconds.
+**The numbers.** Mix, duo surge, 5 Shards. 45 mana, 10 seconds. As built: a discharge on a Marked enemy arcs on through up to five Marked enemies within 12 metres, 3.5 damage a stack each, at most every half second; a critical blow on a Marked enemy lays a Static on every enemy within 12 metres, at most every 0.3 seconds.
 
 **Works with.** Charged Light, Diamond Thunder, The Bolt Runs True.
 
 **Example.** Mark a pack, light your surge, and one discharge runs through them all.
 
-**Not built yet.** It is not yet a surge of its own (45 mana, 10 seconds) in the Hand's surge slot; there are no threads yet, so the discharge arcs from one to the next, and a critical blow charges every enemy near, Marked or not.
+**Not built yet.** There are no threads yet, so the discharge arcs from one to the next, and a critical blow charges every enemy near, Marked or not.

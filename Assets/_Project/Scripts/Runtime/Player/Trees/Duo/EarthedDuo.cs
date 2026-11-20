@@ -133,12 +133,13 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Spell));
 
-            // The duo surge. NEEDS: its own 40 mana and 10 s in the Hand's surge slot (duo-surge-slot); now it rides any surge.
-            // While it lasts each heavy blow shakes the floor round the enemy struck, and one carrying Static is Earthed at once.
+            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge). While it burns each heavy
+            // blow shakes the floor round the enemy struck, and one carrying Static is Earthed at once.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WhenTheWatchSleeps, Name = "When the Watch Sleeps", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { TheCapstone }, Icon = UpgradeIcons.Hammer,
-                Description = "A duo surge. While your surge lasts the god looks away and the ground is loose: every heavy blow shakes the floor in 3 m round the enemy struck, any enemy shaken while it carries Static is Earthed at once, and heavy blows deal 8 more stagger.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. While it lasts the god looks away and the ground is loose: every heavy blow shakes the floor in 3 m round the enemy struck, any enemy shaken while it carries Static is Earthed at once, and heavy blows deal 8 more stagger.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.HeavyHit, WhileSurge = true, Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Tremor, Stacks = 1 },

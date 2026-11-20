@@ -93,5 +93,7 @@ namespace Clover.Player
         RaiseHeat,
         /// <summary>Turns the player's tide at once, high to low or low to high, while a mark keeps the tide. Reads: nothing.</summary>
         TurnTide,
+        /// <summary>Makes the surge that burns last longer. Reads: Amount (seconds added), Seconds (the most it may last in all; 0 for no cap).</summary>
+        LengthenSurge,
     }
 }

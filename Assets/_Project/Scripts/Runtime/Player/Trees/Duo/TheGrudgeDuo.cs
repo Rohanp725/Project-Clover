@@ -115,14 +115,17 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 3 } },
             }, HeartPattern.Spell));
 
-            // The duo surge. NEEDS: its own 40 mana and 10 s in the Hand's surge slot (duo-surge-slot), the bolt on every third
-            // blow (now one blow in three by chance, on a cursed enemy struck), a second more for each kill.
+            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge); each kill while it burns
+            // adds a second (LengthenSurge). NEEDS: the bolt on every third blow (count-rules; now one blow in three by chance,
+            // on a Cursed enemy struck).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = AshAndThunder, Name = "Ash and Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { TheExilesGrudge }, Icon = UpgradeIcons.Comet,
-                Description = "A duo surge. While your surge lasts a plume of ash streams up off your shoulders: every blow you land lays a Static, every third calls a bolt down on a Cursed enemy, and each Cursed enemy killed heals you 6 more.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. While it lasts a plume of ash streams up off your shoulders: every blow you land lays a Static, every third calls a bolt down on a Cursed enemy, and each Cursed enemy killed heals you 6 more. Each kill makes the surge last 1 second longer.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[]
                 {
+                    new UpgradeEffect { On = UpgradeTrigger.Kill, WhileSurge = true, Do = UpgradeAction.LengthenSurge, Amount = 1f },
                     new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
                     new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, Needs = AfflictionKind.Cursed, Chance = 0.34f, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 2f, Damage = 2f, Stagger = 5f },
                     new UpgradeEffect { On = UpgradeTrigger.Kill, WhileSurge = true, Needs = AfflictionKind.Cursed, Do = UpgradeAction.Heal, Amount = 6f },

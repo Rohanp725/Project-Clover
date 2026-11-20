@@ -190,6 +190,67 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ALearnedDuoSurgeIsOfferedForTheSurgeSlotWhileBothItsElementsAreCarried()
+        {
+            // The ledger's duo-surge-slot: a duo surge is a surge of its own, worn in the Hand's surge slot.
+            var duo = new Upgrade { Id = "plasma.surge", Name = "Test Storm", Element = Elements.Fire, Element2 = Elements.Lightning, Kind = UpgradeKind.Mix, Surge = new DuoSurge { Mana = 45f, Seconds = 12f } };
+            var catalogue = Catalogue();
+            catalogue.Add(duo);
+            var rules = new HandRules(catalogue);
+            var learned = new HashSet<string> { duo.Id };
+            var mix = Hand(Elements.Fire, Elements.Lightning);
+            var surges = rules.SurgesFor(mix, learned);
+            CollectionAssert.AreEqual(new[] { "Kindle", "Overdrive", "Test Storm" }, surges.Select(choice => choice.Name).ToList());
+            Assert.AreEqual(45f, surges[2].Mana, "its own mana");
+            Assert.IsEmpty(rules.SurgesFor(mix, new HashSet<string>()).Where(choice => choice.Id == duo.Id), "not learned, not offered");
+            Assert.IsEmpty(rules.SurgesFor(Hand(Elements.Fire, ""), learned).Where(choice => choice.Id == duo.Id), "one element carried: not offered");
+            Assert.IsTrue(rules.CanWear(duo.Id, mix, learned));
+            Assert.IsFalse(rules.CanWear(duo.Id, Hand(Elements.Fire, Elements.Ice), learned), "its pair not carried");
+            // Validate keeps it while its pair is carried and puts the first element's surge back when it is not.
+            mix.Surge = duo.Id;
+            rules.Validate(mix, learned);
+            Assert.AreEqual(duo.Id, mix.Surge);
+            var broken = Hand(Elements.Fire, Elements.Ice);
+            broken.Surge = duo.Id;
+            rules.Validate(broken, learned);
+            Assert.AreEqual("fire.surge", broken.Surge);
+            // In force only while it is the surge worn.
+            mix.Surge = "fire.surge";
+            Assert.IsFalse(MarkRules.InForce(duo, mix));
+            mix.Surge = duo.Id;
+            Assert.IsTrue(MarkRules.InForce(duo, mix));
+            // Its kit lights it for its own price and time.
+            var kit = DuoSurge.KitFor(duo);
+            Assert.AreEqual("Test Storm", kit.SurgeName);
+            Assert.AreEqual(45f, kit.SurgeCost);
+            Assert.AreEqual(12f, kit.SurgeSeconds);
+            Assert.AreEqual(0, kit.SurgeStacks, "no element's affliction on the blows; its marks do the rest");
+        }
+
+        [Test]
+        public void EveryDuoSurgeHasItsOwnPriceAndTimeAndASurgeCanBeLengthened()
+        {
+            var surges = Upgrade.All.Where(DuoSurge.Is).Select(mark => mark.Name).ToList();
+            CollectionAssert.AreEquivalent(new[] { "Great Lotus", "Open the Gourd", "The Yawning Gap", "Ash and Thunder", "Heated Bronze", "The Net of Jewels", "Wind From the Grave", "When the Watch Sleeps", "Three Winters" }, surges);
+            foreach (var mark in Upgrade.All.Where(DuoSurge.Is))
+            {
+                Assert.That(mark.Surge.Mana, Is.InRange(30f, 50f), mark.Id);
+                Assert.AreEqual(10f, mark.Surge.Seconds, mark.Id);
+                StringAssert.StartsWith("A duo surge for your surge slot", mark.Description, mark.Id);
+            }
+            Assert.AreEqual(45f, Upgrade.ById(Clover.Player.Trees.Duo.TheBoltRunsTrueDuo.TheNetOfJewels).Surge.Mana);
+            Assert.AreEqual(35f, Upgrade.ById(Clover.Player.Trees.Duo.BreathTakenDuo.WindFromTheGrave).Surge.Mana);
+            // Open the Gourd lasts a second longer for each capsize, 15 s in all.
+            var kit = DuoSurge.KitFor(Upgrade.ById(Clover.Player.Trees.Duo.CapsizeDuo.OpenTheGourd));
+            var mana = new ManaPool();
+            mana.Gain(100f);
+            Assert.IsTrue(kit.TrySurge(mana));
+            for (int i = 0; i < 8; i++) kit.Lengthen(1f, 15f);
+            Assert.AreEqual(15f, kit.SurgeLength, 0.001f, "never past 15 s");
+            Assert.AreEqual(15f, kit.SurgeLeft, 0.001f);
+        }
+
+        [Test]
         public void TheSlotsOpenOnTheSchedule()
         {
             var flags = new HashSet<string>();

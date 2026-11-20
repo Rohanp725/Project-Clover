@@ -127,13 +127,14 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Spell));
 
-            // The duo surge. NEEDS: its own 40 mana and 10 s in the Hand's surge slot (duo-surge-slot); now its answers ride any
-            // surge while both are carried. The perfect guard's grip, held 1 s before the throw, waits for a push that comes
-            // after a hold (form-pieces); now it is burned and thrown at once.
+            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge). The perfect guard's grip,
+            // held 1 s before the throw, waits for a push that comes after a hold (form-pieces); now it is burned and thrown at
+            // once.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HeatedBronze, Name = "Heated Bronze", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { TippedCrucible }, Icon = UpgradeIcons.Shield,
-                Description = "A duo surge. While your surge lasts you glow red to the bone like the bronze guardian: every blow that lands on you or your guard burns and notches the one who struck, your guard costs 30% less stamina, and a perfect guard grips the attacker, burns it three deep and throws it 2 m.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. While it lasts you glow red to the bone like the bronze guardian: every blow that lands on you or your guard burns and notches the one who struck, your guard costs 30% less stamina, and a perfect guard grips the attacker, burns it three deep and throws it 2 m.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Stats = new[] { new StatMod(PlayerStat.GuardStamina, -0.3f, StatWhen.Surge) },
                 Effects = new[]
                 {
