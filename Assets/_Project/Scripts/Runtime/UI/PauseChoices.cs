@@ -41,6 +41,8 @@ namespace Clover.UI
             entries.Add(PauseEntry.Fullscreen);
             if (playtest)
             {
+                // The owner judges a trial outfit in play, so the playtest can put it on anywhere.
+                entries.Add(PauseEntry.TrialOutfit);
                 if (sceneName != Clover.Core.PlaytestMode.ProvingGroundScene) entries.Add(PauseEntry.ProvingGround);
             }
             else
@@ -110,6 +112,7 @@ namespace Clover.UI
                 case PauseEntry.Guide: return "Guide to effects";
                 case PauseEntry.WhatsNew: return "What's new";
                 case PauseEntry.ProvingGround: return "Return to the Proving Ground";
+                case PauseEntry.TrialOutfit: return TrialOutfitLabel(Clover.Player.Outfits.Chosen);
                 default: return "";
             }
         }
@@ -139,8 +142,13 @@ namespace Clover.UI
                 case PauseEntry.Guide: return "What every affliction, state and resource does: the numbers, what sets it off, how to use it and how it looks.";
                 case PauseEntry.WhatsNew: return "This playtest's version, and what each update added.";
                 case PauseEntry.ProvingGround: return "Back to the testing ground, keeping everything: the weapon, the element and every mark.";
+                case PauseEntry.TrialOutfit: return "The generated ronin, a trial body on the same skeleton, worn in every scene while it is on.\nOff, each land dresses you again.";
                 default: return "";
             }
         }
+
+        /// <summary>The trial outfit's row as it reads with the given outfit chosen.</summary>
+        public static string TrialOutfitLabel(string chosen) =>
+            chosen == Clover.Player.Outfits.RoninGen ? "Trial ronin: on" : "Trial ronin: off";
     }
 }

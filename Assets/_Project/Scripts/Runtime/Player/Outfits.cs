@@ -22,12 +22,31 @@ namespace Clover.Player
         public const string Celtic = "celtic";
         /// <summary>The last champion's land, Light and Dark.</summary>
         public const string Champion = "champion";
+        /// <summary>
+        /// The generated ronin (ComfyUI and TRELLIS.2, bound to the same rig), put in on 2026-11-20 as a trial to judge in
+        /// play beside the current ronin. No land wears it: it is on only while it is the chosen outfit.
+        /// </summary>
+        public const string RoninGen = "ronin_gen";
 
         /// <summary>
         /// Every outfit the game knows, the default first. An outfit whose model is not in the project yet is left out of
         /// the built set, and <see cref="Choose"/> passes over it.
         /// </summary>
-        public static readonly string[] All = { Ronin, Fire, Ice, Water, Metal, Poison, Celtic, Champion };
+        public static readonly string[] All = { Ronin, Fire, Ice, Water, Metal, Poison, Celtic, Champion, RoninGen };
+
+        /// <summary>
+        /// Outfits on trial: worn only when chosen, and never kept as the last outfit, so taking one off brings back
+        /// what the lands and the last scene would have put on.
+        /// </summary>
+        public static readonly string[] Trials = { RoninGen };
+
+        public static bool IsTrial(string id) => Array.IndexOf(Trials, id) >= 0;
+
+        /// <summary>
+        /// The playtest's switch for the trial outfit: what the chosen outfit becomes when it is pressed. On takes the
+        /// place of any other choice; off leaves no choice, so the lands decide again.
+        /// </summary>
+        public static string ToggleTrial(string chosen) => chosen == RoninGen ? "" : RoninGen;
 
         public const string ChosenPrefsKey = "clover.outfit.chosen";
         public const string ChosenSandboxKey = "clover.outfit.chosen.sandbox";
@@ -112,13 +131,13 @@ namespace Clover.Player
             }
         }
 
-        /// <summary>The outfit worn last, which a scene outside every land keeps on.</summary>
+        /// <summary>The outfit worn last, which a scene outside every land keeps on. A trial outfit is never kept as it.</summary>
         public static string Last
         {
             get => PlayerPrefs.GetString(LastKey, "");
             set
             {
-                if (string.IsNullOrEmpty(value) || PlayerPrefs.GetString(LastKey, "") == value) return;
+                if (string.IsNullOrEmpty(value) || IsTrial(value) || PlayerPrefs.GetString(LastKey, "") == value) return;
                 PlayerPrefs.SetString(LastKey, value);
                 PlayerPrefs.Save();
             }

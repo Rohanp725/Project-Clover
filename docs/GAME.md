@@ -270,6 +270,9 @@ are exactly nine weapon techniques, so each can carry one, with the Super Form l
   approved as revision 6), Earth and Life (green and ochre check, rust brat to the calves, gold torc), the last champion's
   land (cream dhoti with an indigo border, brass, rust angavastram). All eight are in the game; the four lands
   without scenes yet have their outfits mapped in data (Metal, Poison, Earth and Life, Light and Dark).
+- **Trial (2026-11-20)**: the generated ronin (ComfyUI and TRELLIS.2, bound to the same rig, with the shipped head,
+  scarf tails and pack) is in as the trial outfit `ronin_gen`, pending the owner's verdict in play; no land wears it,
+  and the playtest's pause menu switches it on and off ("Trial ronin").
 - Style: **Decided**: cel-shaded with outlines, like an anime. A dark, muted world (stone, ash, storm cloud) in which
   the elements are the only saturated colour, so every spell and elemental effect stands out. The user's condition:
   it must be done well or it will not fit, so it is judged on screenshots early. References: Hades, Cuphead and

@@ -223,6 +223,13 @@ namespace Clover.UI
                     // Everything carried goes with the player: the playtest loses nothing on the way home.
                     Leave(PlaytestMode.ProvingGroundScene);
                     break;
+                case PauseEntry.TrialOutfit:
+                    Outfits.Chosen = Outfits.ToggleTrial(Outfits.Chosen);
+                    // Changed on the spot, so the two bodies can be compared without leaving the scene.
+                    var outfit = player.GetComponent<PlayerOutfit>();
+                    if (outfit != null) outfit.Dress();
+                    Show();
+                    break;
                 case PauseEntry.Forget:
                     Progress.Forget(Progress.MetSponsor);
                     Progress.Forget(Progress.WeaponKey(Weapons.KatanaName));

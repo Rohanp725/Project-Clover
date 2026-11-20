@@ -32,11 +32,17 @@ namespace Clover.Player
         }
 
         // Awake, before anything that copies the body (afterimages, spell clones) reads it in Start or later.
-        private void Awake()
+        private void Awake() => Dress();
+
+        /// <summary>
+        /// Puts on what the scene calls for now: the chosen outfit, else the land's, else the last. Called on waking, and
+        /// again when the chosen outfit changes during play (the playtest's trial outfit switch).
+        /// </summary>
+        public bool Dress()
         {
-            if (outfits == null || body == null) return;
+            if (outfits == null || body == null) return false;
             string id = Outfits.Choose(SceneManager.GetActiveScene().name, Outfits.Chosen, Outfits.Last, known => outfits.Find(known) != null);
-            Wear(id);
+            return Wear(id);
         }
 
         /// <summary>Puts an outfit on by id and remembers it as the last worn. False when the set has no such outfit.</summary>

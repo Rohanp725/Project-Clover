@@ -16,5 +16,7 @@ namespace Clover.UI
         WhatsNew,
         /// <summary>The playtest's way home from any level.</summary>
         ProvingGround,
+        /// <summary>The playtest's switch that puts the trial outfit on and takes it off.</summary>
+        TrialOutfit,
     }
 }

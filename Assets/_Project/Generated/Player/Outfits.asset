@@ -385,3 +385,52 @@ MonoBehaviour:
     Bounds:
       m_Center: {x: 0, y: 0.9900139, z: -0.11905375}
       m_Extent: {x: 0.72154224, y: 1.0599855, z: 0.38973245}
+  - Id: ronin_gen
+    Mesh: {fileID: -5070108961991136264, guid: c7b541545694d75459fefd8e6c61238d, type: 3}
+    Materials:
+    - {fileID: 2100000, guid: f0a4a611b559fd947ba40e539ecfc00e, type: 2}
+    - {fileID: 2100000, guid: 2fb43368102c4234d81d919f2b85ec3a, type: 2}
+    - {fileID: 2100000, guid: 83086fef5cd71c5479070041f1c0b8c5, type: 2}
+    - {fileID: 2100000, guid: e638cc5fa9d975442881a1e09b63f7d1, type: 2}
+    - {fileID: 2100000, guid: ee1113fd56795234bbf454213fa6a294, type: 2}
+    - {fileID: 2100000, guid: 5472ffd834190364dac34b4c16d97b1f, type: 2}
+    - {fileID: 2100000, guid: 8f0d2713eb1f57f4b80d6043535c334d, type: 2}
+    - {fileID: 2100000, guid: de32c65559c6a7a47b3ba001377f7102, type: 2}
+    - {fileID: 2100000, guid: 9cab265d94acc4f428812341e30b3694, type: 2}
+    BoneNames:
+    - root
+    - hips
+    - spine
+    - chest
+    - neck
+    - head
+    - band_a1
+    - band_a2
+    - band_b1
+    - band_b2
+    - pony1
+    - pony2
+    - pony3
+    - shoulder.L
+    - upperarm.L
+    - forearm.L
+    - hand.L
+    - shoulder.R
+    - upperarm.R
+    - forearm.R
+    - hand.R
+    - weapon.R
+    - scarf_a1
+    - scarf_a2
+    - scarf_a3
+    - scarf_b1
+    - scarf_b2
+    - thigh.L
+    - shin.L
+    - foot.L
+    - thigh.R
+    - shin.R
+    - foot.R
+    Bounds:
+      m_Center: {x: 0.0014206767, y: 0.97324497, z: -0.099632174}
+      m_Extent: {x: 0.7518596, y: 1.0767545, z: 0.42431155}
