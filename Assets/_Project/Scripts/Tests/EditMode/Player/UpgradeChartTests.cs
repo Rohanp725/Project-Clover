@@ -173,9 +173,10 @@ namespace Clover.Tests
                     Assert.IsTrue(parent.Element == upgrade.Element && parent.Element2 == upgrade.Element2, upgrade.Id + " grows from a mark on another tree");
                     Assert.Greater(upgrade.Y, parent.Y - 0.01f, upgrade.Id + " lies inward of " + id);
                 }
-                // What it costs: nothing for a god's gift or a given mark, its kind's cost for the rest, three to five for a mix.
+                // What it costs: nothing for a god's gift or a given mark, its kind's cost for the rest, one to five for a mix (a duo
+                // branch's minor is 1, pairs_d1_d2.md).
                 if (upgrade.Signature || upgrade.Currency == Currency.None) Assert.AreEqual(0, upgrade.Cost, upgrade.Id);
-                else if (upgrade.Kind == UpgradeKind.Mix) Assert.That(upgrade.Cost, Is.InRange(3, 5), upgrade.Id);
+                else if (upgrade.Kind == UpgradeKind.Mix) Assert.That(upgrade.Cost, Is.InRange(1, 5), upgrade.Id);
                 else Assert.AreEqual(Upgrade.UsualCost(upgrade.Kind), upgrade.Cost, upgrade.Id);
                 // A spell names a form that exists and carries its numbers; an element's base spell is cast by its kit instead.
                 if (upgrade.Kind == UpgradeKind.Spell && !upgrade.IsBaseSpell) Assert.IsTrue(upgrade.IsSpell, upgrade.Id + " is a spell with no form");

@@ -588,6 +588,8 @@ Group: Reactions
 
 **What sets it off.** A curse landing on a poisoned enemy, or poison on a Cursed one.
 
+**Its shapes.** With Blight's Shape mark (Shut in the Dark: Swarm or Rot to the Bone, 3 Shards, in the heart of the chart) and both Dark and Poison carried, the jar wears the shape chosen at a rest fire instead. Both seal and break as the plain jar does. Swarm: as it breaks, 2 doses and a Curse leap to the nearest enemy within 8 m, which may seal a new jar there. Rot to the Bone: 9 stagger every second while it is sealed.
+
 **How to use it.** Dose it deep before you curse it: the deeper, the bigger the break. Killing it breaks the jar at once.
 
 **How it looks.** Its name over the enemy, then a burst when the jar breaks. Not yet: the black ring on the floor, and the poisoned that die inside crawling to it to feed it.

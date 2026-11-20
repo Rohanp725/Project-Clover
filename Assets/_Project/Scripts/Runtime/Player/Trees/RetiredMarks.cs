@@ -184,6 +184,10 @@ namespace Clover.Player
             // Eclipse, the duo branch of Light and Dark (pairs_d1_d2.md; task 4.15): Twilight (it only laid both; the Shape mark
             // takes its place) and Black Sun (offered to Dark's tree, whose roster is full).
             new RetiredMark("eclipse.twilight", 3), new RetiredMark("eclipse.blacksun", 4),
+
+            // Blight, the duo branch of Dark and Poison (pairs_d1_d2.md; task 4.15): Carrion Flies (now the Swarm shape) and Grave
+            // Soil (offered to Dark's or Poison's tree, whose rosters are full).
+            new RetiredMark("blight.carrionflies", 3), new RetiredMark("blight.gravesoil", 4),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.
