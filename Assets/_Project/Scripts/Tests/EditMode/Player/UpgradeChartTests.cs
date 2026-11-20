@@ -158,7 +158,10 @@ namespace Clover.Tests
                 Assert.IsNotNull(Elements.ByName(upgrade.Element), upgrade.Id + " names no element");
                 Assert.GreaterOrEqual(UpgradeIcons.IndexOf(upgrade.Icon), 0, upgrade.Id + " names a picture that does not exist: " + upgrade.Icon);
                 // A reaction is any pair's, on no tree: ReactionCatalogueTests checks its two elements.
-                if (upgrade.IsMix && !upgrade.IsHidden)
+                // A duo branch in the heart is any pair's, in either order (task 4.5); a mix still on the ring is a neighbour's.
+                if (upgrade.IsMix && !upgrade.IsHidden && upgrade.Tree == MarkTree.Duo)
+                    Assert.GreaterOrEqual(HeartLayout.PairOf(upgrade), 0, upgrade.Id + ": a duo mark names two different elements");
+                else if (upgrade.IsMix && !upgrade.IsHidden)
                     Assert.AreEqual(upgrade.Element2, Elements.ByName(upgrade.Element).MixWith, upgrade.Id + ": a mix names the earlier element first and its neighbour second");
                 if (!upgrade.IsHidden)
                     Assert.AreEqual(upgrade.Kind == UpgradeKind.Mix || (upgrade.Signature && upgrade.IsMix), upgrade.IsMix, upgrade.Id + ": only mix marks and a mix's own gift have a second element");
@@ -834,8 +837,11 @@ namespace Clover.Tests
         [Test]
         public void EveryTreeFileIsGatheredIntoTheCatalogue()
         {
+            // The trees, and the duo branches written one file to a pair under Trees/Duo/ (task 4.5).
+            string trees = typeof(UpgradeTrees).Namespace;
             var files = typeof(UpgradeTrees).Assembly.GetTypes()
-                .Where(type => type.Namespace == typeof(UpgradeTrees).Namespace && type != typeof(UpgradeTrees) && type.IsAbstract && type.IsSealed).ToList();
+                .Where(type => (type.Namespace == trees || type.Namespace == trees + ".Duo") && type != typeof(UpgradeTrees) && type.IsAbstract && type.IsSealed).ToList();
+            Assert.IsTrue(files.Contains(typeof(Clover.Player.Trees.Duo.SleetChargeDuo)));
             Assert.GreaterOrEqual(files.Count, 3);
             foreach (var file in files)
             {

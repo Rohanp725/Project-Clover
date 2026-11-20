@@ -93,6 +93,18 @@ namespace Clover.Player
             return "";
         }
 
+        /// <summary>
+        /// A duo branch's name: the ring's mix name for neighbours ("Plasma"), else its reaction's ("Sleet Charge"), as the
+        /// new branches take their reaction's name (IMPLEMENTATION.md 2.3). "" for no pair.
+        /// </summary>
+        public static string BranchName(string one, string other)
+        {
+            string mix = Elements.MixName(one, other);
+            if (!string.IsNullOrEmpty(mix)) return mix;
+            int pair = PairOf(one, other);
+            return pair < 0 ? "" : AfflictionPairs.Name(pair);
+        }
+
         /// <summary>The words over the heart: the pair and its reaction ("Fire and Lightning: Flashover").</summary>
         public static string Title(string one, string other)
         {

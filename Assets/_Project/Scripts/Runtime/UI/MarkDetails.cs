@@ -44,7 +44,7 @@ namespace Clover.UI
         {
             if (NotBuiltYet.IsSlot(mark)) return $"{NotBuiltYet.Label}  ·  beside the {mark.Element} tree";
             if (mark.Kind == UpgradeKind.Reaction) return $"Reaction  ·  {mark.Element} and {mark.Element2}  ·  always in force, never sold";
-            string tree = mark.IsMix ? $"{Elements.MixName(mark.Element, mark.Element2)} ({mark.Element} and {mark.Element2})" : mark.Element + " tree";
+            string tree = mark.IsMix ? $"{HeartLayout.BranchName(mark.Element, mark.Element2)} ({mark.Element} and {mark.Element2})" : mark.Element + " tree";
             string price = mark.Signature ? "a god's gift, never sold (a playtest unlock here)"
                 : mark.Currency == Currency.None ? "comes with " + mark.Element + ", never sold"
                 : mark.Cost == 1 ? "1 Shard" : mark.Cost + " Shards";
@@ -54,7 +54,9 @@ namespace Clover.UI
         public static string KindName(Upgrade mark)
         {
             if (mark.Signature) return mark.IsMix ? "Mix crown" : "God's gift";
-            if (mark.IsMix) return mark.IsSpell ? "Mix spell" : "Mix";
+            // A duo branch's Shape mark shapes its pair's reaction (task 4.5).
+            if (ReactionTable.IsReactionShape(mark)) return "Reaction shape";
+            if (mark.IsMix) return mark.IsSpell ? "Duo spell" : "Mix";
             // A spell branch's marks say their place in it (Phase 4).
             switch (mark.Part)
             {

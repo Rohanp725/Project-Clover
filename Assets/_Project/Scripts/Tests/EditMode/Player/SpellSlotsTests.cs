@@ -146,6 +146,8 @@ namespace Clover.Tests
                 var timing = SpellTimings.For(mark.Id);
                 if (mark.Id == "dark.pawnedheart") continue; // paid in health, with its own long wait (elements_b.md)
                 if (timing.IsLarger) Assert.That(timing.Mana, Is.InRange(30f, 60f), mark.Name);
+                // A duo spell of the new branches waits 12 to 16 s, as its pair file gives it (Glass Storm 14 s).
+                else if (mark.IsMix) Assert.That(timing.Cooldown, Is.InRange(6f, SpellTimings.LongestDuoCooldown), mark.Name);
                 else Assert.That(timing.Cooldown, Is.InRange(6f, 12f), mark.Name);
             }
             foreach (string element in Elements.All.Select(info => info.Name))

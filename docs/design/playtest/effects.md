@@ -611,6 +611,8 @@ Group: Reactions
 
 **What sets it off.** Static landing on a chilled enemy, or Chill on a charged one.
 
+**Its shapes.** With the Shape mark of Ice and Lightning's duo branch (Sleet Charge: Thundersnow or Glass Spear, 3 Shards, in the heart of the chart) and both carried, Sleet Charge wears the shape chosen at a rest fire instead. Both charge the same way. Thundersnow: when the charge goes off, a bolt runs on to every chilled enemy within 6 m, 7 and a Static each. Glass Spear: when the charge goes off, the enemy is Frozen at once, whatever its Chill (an elite takes 3 Chill, a god 2).
+
 **How to use it.** Wait out the 3 s for a full charge, or take it sooner with a heavy.
 
 **How it looks.** Its name over the enemy, then the discharge. Not yet: the bolt falling at once if it freezes.

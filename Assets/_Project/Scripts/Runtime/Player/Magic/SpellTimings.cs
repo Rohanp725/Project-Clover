@@ -17,6 +17,8 @@ namespace Clover.Player.Magic
         /// <summary>A spell the table does not know (one lent by the old yard's rack, a probe's own): a middling cooldown.</summary>
         public const float DefaultCooldown = 10f;
         public const float DuoCooldown = 12f;
+        /// <summary>The longest wait a duo spell of the new branches may have (pairs_d1_d2.md: The Fire Breathes In waits 16 s).</summary>
+        public const float LongestDuoCooldown = 16f;
 
         private static SpellTiming Cd(float seconds, SpellRole role) => new SpellTiming(seconds, 0f, role);
         private static SpellTiming Mana(float mana, SpellRole role) => new SpellTiming(0f, mana, role);
@@ -125,6 +127,10 @@ namespace Clover.Player.Magic
             ["eclipse.duskdawn"] = Mana(45f, SpellRole.Movement),
             ["blight.wastinggrip"] = Mana(40f, SpellRole.Opener),
             ["pyre.lightthepyres"] = Mana(60f, SpellRole.Detonator),
+
+            // The new duo branches' duo spells (pairs_d1_d2.md to pairs_d5.md, task 4.5 on): basic spells of the pair, on a
+            // duo spell's cooldown of 12 to 16 s, each its own.
+            ["sleetcharge.glassstorm"] = Cd(14f, SpellRole.Opener),
 
             // The eleven spare ring-mix spells (Evolutions to come): a duo spell's cooldown. Plasma Lance was cut with Plasma's
             // reshaping (task 4.5).

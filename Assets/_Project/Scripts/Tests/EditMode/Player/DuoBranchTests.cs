@@ -138,5 +138,57 @@ namespace Clover.Tests
             Assert.IsNull(SpellBranches.Worn(shapeMark, hand));
             Assert.IsTrue(MarkRules.InForce(shapeMark, hand, learned), "its Shape mark needs no slot");
         }
+
+        [Test]
+        public void EveryReactionShapeRidesAReactionsMomentsAndAnswersOnlyTheConditionsItSets()
+        {
+            var reactionTriggers = new[] { UpgradeTrigger.Reacted, UpgradeTrigger.ConditionBeat, UpgradeTrigger.ConditionStruck, UpgradeTrigger.ConditionEnded, UpgradeTrigger.ConditionDied };
+            var shapeMarks = Upgrade.All.Where(ReactionTable.IsReactionShape).ToList();
+            Assert.GreaterOrEqual(shapeMarks.Count, 2, "Flashover's and Sleet Charge's at least");
+            var conditionIds = new HashSet<string>();
+            foreach (var mark in shapeMarks)
+            {
+                Assert.AreEqual(MarkTree.Duo, mark.Tree, mark.Id + " is drawn in the heart");
+                Assert.IsEmpty(mark.Effects, mark.Id + ": a reaction's Shape mark does nothing of its own; its shapes do");
+                Assert.IsNotNull(ReactionTable.MarkFor(HeartLayout.PairOf(mark)), mark.Id + " shapes a reaction that is built");
+                foreach (var shape in mark.Shapes)
+                {
+                    var sets = new HashSet<string>(shape.Effects.Where(effect => effect.Do == UpgradeAction.Condition).Select(effect => effect.State.Id));
+                    foreach (string id in sets) Assert.IsTrue(conditionIds.Add(id), $"{mark.Id}'s {shape.Name} sets '{id}', which another shape sets too");
+                    foreach (var effect in shape.Effects)
+                    {
+                        CollectionAssert.Contains(reactionTriggers, effect.On, $"{mark.Id}'s {shape.Name} has an effect on {effect.On}");
+                        Assert.AreSame(mark, effect.Owner);
+                        if (effect.On != UpgradeTrigger.Reacted)
+                            Assert.IsTrue(sets.Contains(effect.Condition), $"{mark.Id}'s {shape.Name} answers '{effect.Condition}', which it never sets");
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void FlashoverAndSleetChargeChangeWithTheShapeWorn()
+        {
+            // The two built branches (task 4.5), on the game's own catalogue.
+            int flashover = AfflictionPairs.Index(AfflictionKind.Burn, AfflictionKind.Static);
+            int sleet = AfflictionPairs.Index(AfflictionKind.Static, AfflictionKind.Chill);
+            var learned = new HashSet<string> { Clover.Player.Trees.PlasmaTree.Shape, Clover.Player.Trees.Duo.SleetChargeDuo.Shape };
+            var plasma = Hand(Elements.Fire, Elements.Lightning);
+            Assert.AreEqual("Corona", ReactionTable.WornShape(flashover, plasma, learned).Name);
+            Assert.IsTrue(ReactionTable.EffectsFor(flashover, plasma, learned).Any(effect => effect.Do == UpgradeAction.Condition && effect.State.Id == Clover.Player.Trees.PlasmaTree.Corona));
+            Assert.IsFalse(ReactionTable.EffectsFor(flashover, plasma, learned).Any(effect => effect.Do == UpgradeAction.SetOff), "Corona spends nothing");
+            SpellBranches.Choose(plasma.Shapes, ReactionTable.ShapeKey(flashover), 1);
+            Assert.AreEqual("Fulgurite", ReactionTable.WornShape(flashover, plasma, learned).Name);
+            Assert.AreEqual(2, ReactionTable.EffectsFor(flashover, plasma, learned).Count(effect => effect.Do == UpgradeAction.Hazard), "Fulgurite lays its patch");
+            Assert.IsTrue(ReactionTable.EffectsFor(flashover, Hand(Elements.Fire, ""), learned).Any(effect => effect.Do == UpgradeAction.SetOff), "with Fire alone, the plain Flashover discharges");
+
+            var storm = Hand(Elements.Ice, Elements.Lightning);
+            Assert.AreEqual("Thundersnow", ReactionTable.WornShape(sleet, storm, learned).Name);
+            SpellBranches.Choose(storm.Shapes, ReactionTable.ShapeKey(sleet), 1);
+            var spear = ReactionTable.EffectsFor(sleet, storm, learned);
+            Assert.IsTrue(spear.Any(effect => effect.On == UpgradeTrigger.ConditionEnded && effect.Affliction == AfflictionKind.Chill && effect.Stacks >= Afflictions.Depth(AfflictionKind.Chill)),
+                "Glass Spear freezes as the charge ends");
+            Assert.AreEqual(0, storm.ShapeOf(ReactionTable.ShapeKey(flashover)), "each reaction keeps its own choice");
+        }
     }
 }
