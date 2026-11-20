@@ -133,7 +133,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while Wind is carried twice (all in). Then always.
 
-**The numbers.** 6 Shards. A spell cast in a dodge carries you 2 metres further. All in, L2 with R2 is the deep strike, Whirl Cut: the crescent becomes a small whirlwind that holds the first enemy it reaches in the air for a second.
+**The numbers.** 6 Shards. A spell cast in a dodge carries you 2 metres further. Buying this also gives you the deep strike, Whirl Cut. Use it with L2 and R2 while you carry this element alone or twice: the crescent becomes a small whirlwind that holds the first enemy it reaches in the air for a second.
 
 **Works with.** Every spell of the tree; Passing Cut and Leaf on the Wind; the deep strike.
 

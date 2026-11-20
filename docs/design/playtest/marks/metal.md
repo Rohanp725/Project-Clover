@@ -327,7 +327,7 @@ the steel you throw and plant: Flung Blade, the blades of Grave of Swords.
 
 **When it happens.** Only while Metal is carried twice (all in), once bought. Always on then.
 
-**The numbers.** 6 Shards. You take 15% less from everything. A blow your stamina cannot pay for is held: the stamina you have goes, and the share of the blow it could not pay comes through whole as grey health, on top of the usual chip, so with no stamina at all the whole blow is grey. Each blow held on your guard strikes the attacker for 4 damage and a notch, at most five times a second. All in, L2 with R2 is the deep strike, Red Iron.
+**The numbers.** 6 Shards. You take 15% less from everything. A blow your stamina cannot pay for is held: the stamina you have goes, and the share of the blow it could not pay comes through whole as grey health, on top of the usual chip, so with no stamina at all the whole blow is grey. Each blow held on your guard strikes the attacker for 4 damage and a notch, at most five times a second. Buying this also gives you the deep strike, Red Iron. Use it with L2 and R2 while you carry this element alone or twice.
 
 **Works with.** Every Crack Rings, which it grows from, Sunder, Forged Answer, Hanging Swords (every held blow a perfect guard), Temper.
 

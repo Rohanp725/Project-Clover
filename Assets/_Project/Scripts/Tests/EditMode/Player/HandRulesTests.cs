@@ -221,15 +221,19 @@ namespace Clover.Tests
         public void R1StrikesWithTheFirstAndR2WithTheSecondOrDeepAllInOrAlone()
         {
             var mix = Hand(Elements.Fire, Elements.Lightning);
-            Assert.AreEqual(Elements.Fire, HandRules.StrikeElement(mix, false, out bool deep));
+            Assert.AreEqual(Elements.Fire, HandRules.StrikeElement(mix, false, true, out bool deep));
             Assert.IsFalse(deep);
-            Assert.AreEqual(Elements.Lightning, HandRules.StrikeElement(mix, true, out deep));
+            Assert.AreEqual(Elements.Lightning, HandRules.StrikeElement(mix, true, true, out deep));
             Assert.IsFalse(deep, "with two elements R2 is the second element's strike, not the deep one");
-            Assert.AreEqual(Elements.Fire, HandRules.StrikeElement(Hand(Elements.Fire, Elements.Fire), true, out deep));
-            Assert.IsTrue(deep, "all in, R2 is the deep strike");
-            Assert.AreEqual(Elements.Ice, HandRules.StrikeElement(Hand(Elements.Ice, ""), true, out deep));
-            Assert.IsTrue(deep, "one element: the deep strike, as in Phase 1");
-            Assert.AreEqual("", HandRules.StrikeElement(Hand("", ""), false, out _));
+            Assert.AreEqual(Elements.Fire, HandRules.StrikeElement(Hand(Elements.Fire, Elements.Fire), true, true, out deep));
+            Assert.IsTrue(deep, "all in with the Devotion bought, R2 is the deep strike");
+            Assert.AreEqual(Elements.Fire, HandRules.StrikeElement(Hand(Elements.Fire, Elements.Fire), true, false, out deep));
+            Assert.IsFalse(deep, "all in without the Devotion, R2 is Fire's plain infused strike");
+            Assert.AreEqual(Elements.Ice, HandRules.StrikeElement(Hand(Elements.Ice, ""), true, true, out deep));
+            Assert.IsTrue(deep, "one element with its Devotion: the deep strike");
+            Assert.AreEqual(Elements.Ice, HandRules.StrikeElement(Hand(Elements.Ice, ""), true, false, out deep));
+            Assert.IsFalse(deep, "one element without its Devotion: its plain infused strike");
+            Assert.AreEqual("", HandRules.StrikeElement(Hand("", ""), false, false, out _));
         }
 
         [Test]

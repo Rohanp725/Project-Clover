@@ -327,7 +327,7 @@ the next blows on that enemy critical.
 
 **When it happens.** Only while Light is carried twice (all in), once bought. Always on then.
 
-**The numbers.** 6 Shards. Blows no longer spend a mark: every weapon blow on a Marked enemy is critical until the mark fades, in 6 seconds where it lasted 8. Once it has faded, that enemy cannot be Marked again for 4 seconds; a mark set off or spent by a spell does not wait. All in, L2 with R2 is the deep strike, The Sun on the Blade.
+**The numbers.** 6 Shards. Blows no longer spend a mark: every weapon blow on a Marked enemy is critical until the mark fades, in 6 seconds where it lasted 8. Once it has faded, that enemy cannot be Marked again for 4 seconds; a mark set off or spent by a spell does not wait. Buying this also gives you the deep strike, The Sun on the Blade. Use it with L2 and R2 while you carry this element alone or twice.
 
 **Works with.** Seen Plainly, which it grows from, the root, Just Cut and Unblemished (critical blows harder still with Weighed), quick weapons, The Scales.
 

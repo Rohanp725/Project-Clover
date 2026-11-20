@@ -125,7 +125,7 @@ ground: Briar Patch's bed, a thornbush, a sapling, a thicket, a tuft of briar.
 
 **When it happens.** Only while Life is carried twice (all in). A sapling is sown each time a spell strikes.
 
-**The numbers.** 6 Shards. A sapling where a spell strikes, at most one every 2 seconds: it reaches 3.5 metres, stands 12 seconds, and every 1.5 seconds strikes for 6 damage, 8 stagger and Seeded; four stand at once at most. All in, L2 with R2 is the deep strike, Briar Root: the cutting grows into a briar round the enemy's feet and roots it for a second.
+**The numbers.** 6 Shards. A sapling where a spell strikes, at most one every 2 seconds: it reaches 3.5 metres, stands 12 seconds, and every 1.5 seconds strikes for 6 damage, 8 stagger and Seeded; four stand at once at most. Buying this also gives you the deep strike, Briar Root. Use it with L2 and R2 while you carry this element alone or twice: the cutting grows into a briar round the enemy's feet and roots it for a second.
 
 **Works with.** Every spell of the tree; Reap What Is Sown and Drawn From the Wood, which spend the garden; Root Walk, which goes to it.
 

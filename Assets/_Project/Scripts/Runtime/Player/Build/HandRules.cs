@@ -182,16 +182,16 @@ namespace Clover.Player.Build
 
         /// <summary>
         /// The element an infused strike carries: L2 with R1 the first; L2 with R2 the second. All in, or with one
-        /// element (the plan's answer for a Hand of one, IMPLEMENTATION.md 8.5 question 3), L2 with R2 is the first
-        /// element's deep strike. "" with no element.
+        /// element, L2 with R2 is the first element's deep strike when <paramref name="devoted"/> (its Devotion bought, the
+        /// owner's answer of 2026-11-20), and its plain infused strike when not. "" with no element.
         /// </summary>
-        public static string StrikeElement(Loadout loadout, bool second, out bool deep)
+        public static string StrikeElement(Loadout loadout, bool second, bool devoted, out bool deep)
         {
             deep = false;
             if (loadout == null || loadout.First == "") return "";
             if (!second) return loadout.First;
             if (loadout.Mixed) return loadout.Second;
-            deep = true;
+            deep = devoted;
             return loadout.First;
         }
 

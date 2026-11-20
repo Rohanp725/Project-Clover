@@ -170,7 +170,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while Fire is carried twice (all in), once bought. Then always, on every burning enemy.
 
-**The numbers.** 6 Shards. A burn's time no longer runs down. Every burning enemy that has had no Burn laid on it for 4 seconds gains a stack, and another 4 seconds later another, up to five. A burn set off still goes, and Steam (Soaked meeting Burn) still takes half of it. All in, L2 with R2 is the deep strike, Burnt Offering: 20 mana on its own 8-second clock.
+**The numbers.** 6 Shards. A burn's time no longer runs down. Every burning enemy that has had no Burn laid on it for 4 seconds gains a stack, and another 4 seconds later another, up to five. A burn set off still goes, and Steam (Soaked meeting Burn) still takes half of it. Buying this also gives you the deep strike, Burnt Offering. Use it with L2 and R2 while you carry this element alone or twice: 20 mana on its own 8-second clock.
 
 **Works with.** Cinder, Flame Wave, Catching Fire, Breath of the Lioness, which sets a burn off, and the deep strike, whose pillar sets off the burn it lands on.
 

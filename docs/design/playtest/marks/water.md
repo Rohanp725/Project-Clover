@@ -126,7 +126,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while Water is carried twice (all in). A pool is left each time a spell strikes.
 
-**The numbers.** 6 Shards. A pool 4 metres across where a spell strikes, at most one every 2.5 seconds, for 10 seconds, biting once a second for 1 damage and Soaked. For now everywhere, not only in water: the dodge goes half again as far, and every spell clock runs 30% faster. All in, L2 with R2 is the deep strike, Thrown on the Reef: the lash wraps the enemy and a wave throws it 5 metres away from you.
+**The numbers.** 6 Shards. A pool 4 metres across where a spell strikes, at most one every 2.5 seconds, for 10 seconds, biting once a second for 1 damage and Soaked. For now everywhere, not only in water: the dodge goes half again as far, and every spell clock runs 30% faster. Buying this also gives you the deep strike, Thrown on the Reef. Use it with L2 and R2 while you carry this element alone or twice: the lash wraps the enemy and a wave throws it 5 metres away from you.
 
 **Works with.** Every spell of the tree; Deep Crack and Spreading Water on the soaked crowd; Undertow to draw them onto the water.
 

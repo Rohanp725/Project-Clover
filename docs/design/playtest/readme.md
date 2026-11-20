@@ -27,7 +27,8 @@ CONTROLS          Keys and mouse       PlayStation   Xbox
   First strike    Left Ctrl + left     hold L2, R1   hold LT, RB   (the first element)
   Second strike   Left Ctrl + right    hold L2, R2   hold LT, RT   (the second element;
                                                      with one element or all in, the
-                                                     deep strike, 20 mana)
+                                                     deep strike, 20 mana, once its
+                                                     Devotion is bought)
   Use / read on   E                    Cross         A
   Pause           Esc                  Options       Menu
   With the mouse, blows and spells go toward the cursor. On-screen prompts name

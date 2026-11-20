@@ -335,7 +335,7 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Only while Earth is carried twice (all in). Always on then.
 
-**The numbers.** 6 Shards. As built: what you leave on the ground (a spell's ground, a hazard from your marks, Left in Rubble's heaps) stands three times as long, and a heavy blow that lands strikes its enemy as if driven into stone, 1 metre round it, 20 damage, 35 stagger and one Tremor, once in 3 seconds. All in, L2 with R2 is the deep strike, Mountain Cleaver.
+**The numbers.** 6 Shards. As built: what you leave on the ground (a spell's ground, a hazard from your marks, Left in Rubble's heaps) stands three times as long, and a heavy blow that lands strikes its enemy as if driven into stone, 1 metre round it, 20 damage, 35 stagger and one Tremor, once in 3 seconds. Buying this also gives you the deep strike, Mountain Cleaver. Use it with L2 and R2 while you carry this element alone or twice.
 
 **Works with.** Left in Rubble, which it grows from, Fissure, Stone Rise, Standing Stones, Heavy Hand.
 

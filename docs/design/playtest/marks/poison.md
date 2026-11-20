@@ -328,7 +328,7 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Only while Poison is carried twice (all in).
 
-**The numbers.** 6 Shards. You heal 2 a second while an enemy is near, and every lay of doses lays one more. All in, L2 with R2 is the deep strike, Nine Times Refined.
+**The numbers.** 6 Shards. You heal 2 a second while an enemy is near, and every lay of doses lays one more. Buying this also gives you the deep strike, Nine Times Refined. Use it with L2 and R2 while you carry this element alone or twice.
 
 **Works with.** Miasma and its Low Mist, Venom, The Delayed Touch, which it grows from, Fever, Clean Blade.
 

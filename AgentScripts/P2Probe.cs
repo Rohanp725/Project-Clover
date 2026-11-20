@@ -441,6 +441,18 @@ public class P2ProbeRunner : MonoBehaviour
         Judge("the Fire altar with Fire alone offers all in", offered == "Carry Fire all in (lays Burn)", $"'{offered}'");
         yield return Altar(fireAltar, true);
         Judge("all in on Fire", element.AllIn && build.Read().AllIn && defence.LastCallout == "Fire all in", $"said '{defence.LastCallout}'");
+        // The deep strike asks for Fire's Devotion bought (the owner's answer of 2026-11-20): without it R2 is the plain strike.
+        spells.Cooldowns.ResetAll();
+        combat.Mana.Gain(60f);
+        yield return AtDummy();
+        deep = combat.DeepStrikes;
+        paid = spells.StrikeManaPaid;
+        yield return PadStrike(pad.rightTrigger);
+        yield return Until(() => combat.InfusedNow, 1f);
+        yield return WhenFree();
+        Judge("all in without the Devotion, L2 + RT is Fire's plain strike for no mana", combat.DeepStrikes == deep && spells.StrikeManaPaid == paid, $"paid {spells.StrikeManaPaid - paid:0}");
+        RunState.Unlocked.Add(Clover.Player.Trees.FireTree.FireWithoutEnd);
+        combat.GetComponent<PlayerUpgrades>().RefreshNow();
         spells.Cooldowns.ResetAll();
         combat.Mana.Gain(60f);
         yield return AtDummy();

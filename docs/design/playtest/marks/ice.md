@@ -135,7 +135,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while Ice is carried twice (all in), once bought. The freeze comes each time Glaze is lit.
 
-**The numbers.** 6 Shards. Chill no longer runs down on any enemy: it stays until a freeze thaws it away or a shatter breaks it. Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. All in, L2 with R2 is the deep strike, Ice Through: the spike freezes the enemy at once if it carries three Chill or more.
+**The numbers.** 6 Shards. Chill no longer runs down on any enemy: it stays until a freeze thaws it away or a shatter breaks it. Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. Buying this also gives you the deep strike, Ice Through. Use it with L2 and R2 while you carry this element alone or twice: the spike freezes the enemy at once if it carries three Chill or more.
 
 **Works with.** Every spell of the tree; Splinter Ward and The World Holds Still, which answer Glaze too; Flying Shards, for the room frozen at once.
 

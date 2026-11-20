@@ -207,15 +207,39 @@ namespace Clover.Player
 
         /// <summary>
         /// Whether an infused strike may start: L2 with R1 (<paramref name="second"/> false) or R2, and the element it
-        /// carries: R1 the first attunement's, R2 the second's. All in, or with one element (IMPLEMENTATION.md 8.5,
-        /// question 3), R2 is the first element's deep strike, so <paramref name="deep"/> is set.
+        /// carries: R1 the first attunement's, R2 the second's. All in, or with one element, R2 is the first element's deep
+        /// strike once its Devotion is bought, so <paramref name="deep"/> is set; without it, R2 is that element's plain
+        /// infused strike (the owner's answer of 2026-11-20).
         /// </summary>
         public StrikeRefusal CheckStrike(bool second, out bool deep, out ElementInfo strikeElement)
         {
-            deep = StrikeRules.IsDeep(second, element != null && element.Mixed);
-            strikeElement = element == null ? null : second && !deep ? element.SecondInfo : element.Info;
+            bool mixed = element != null && element.Mixed;
+            deep = StrikeRules.IsDeep(second, mixed, Devoted);
+            strikeElement = element == null ? null : second && mixed ? element.SecondInfo : element.Info;
             float mana = combat != null ? combat.Mana.Current : 0f;
             return Strikes.Check(Cooldowns, second, deep, mana, element != null && element.HasElement && strikeElement != null);
+        }
+
+        /// <summary>True when R2 is the deep strike now: one element carried (or the same twice) and its Devotion bought.</summary>
+        public bool DeepOnSecond => element != null && !element.Mixed && Devoted;
+
+        // Whether the first element's Devotion is bought, asked again only when what is learned or carried has changed
+        // (the HUD reads it each frame).
+        private bool devotedSeen;
+        private int devotedMarks = -1, devotedElements = -1, devotedLearned = -1;
+        private bool Devoted
+        {
+            get
+            {
+                if (element == null || element.Info == null || upgrades == null) return false;
+                int learned = RunState.Unlocked.Count;
+                if (devotedMarks == upgrades.SpellsVersion && devotedElements == element.Version && devotedLearned == learned) return devotedSeen;
+                devotedMarks = upgrades.SpellsVersion;
+                devotedElements = element.Version;
+                devotedLearned = learned;
+                devotedSeen = upgrades.Owns(StrikeRules.DevotionOf(element.Info.Name));
+                return devotedSeen;
+            }
         }
 
         /// <summary>The same, for callers that only ask whether it is the deep strike.</summary>

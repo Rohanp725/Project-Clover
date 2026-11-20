@@ -285,13 +285,29 @@ public class P1bProbeRunner : MonoBehaviour
         float extra = (r0 - spells.Cooldowns.Remaining(SpellCooldowns.StrikeFirst)) - (Time.time - t0);
         Judge("a landed light blow cuts the strike's clock 0.3 s", Mathf.Abs(extra - 0.3f) < 0.06f, $"fell {extra:0.00} s more than time");
 
-        // 4. The deep strike (L2 + RT): 20 mana, its own clock.
+        // 4. The deep strike (L2 + RT): 20 mana, its own clock, once Fire's Devotion is bought (the owner's answer of
+        // 2026-11-20). Without it, R2 is Fire's plain strike and costs nothing.
         yield return WhenFree();
         yield return AtDummy();
+        spells.Cooldowns.ResetAll();
         combat.Mana.Empty();
         combat.Mana.Gain(50f);
         int deep = combat.DeepStrikes;
         float paid = spells.StrikeManaPaid;
+        yield return PadStrike(pad.rightTrigger);
+        yield return Until(() => combat.InfusedNow, 1f);
+        yield return WhenFree();
+        Judge("without Fire's Devotion, L2 + RT is the plain strike and costs nothing", combat.DeepStrikes == deep && spells.StrikeManaPaid == paid,
+            $"deep {deep}->{combat.DeepStrikes}, paid {spells.StrikeManaPaid - paid:0}");
+        RunState.Unlocked.Add(Clover.Player.Trees.FireTree.FireWithoutEnd);
+        RunState.Unlocked.Add(Clover.Player.Trees.IceTree.DeepWinter);
+        combat.GetComponent<PlayerUpgrades>().RefreshNow();
+        spells.Cooldowns.ResetAll();
+        yield return AtDummy();
+        combat.Mana.Empty();
+        combat.Mana.Gain(50f);
+        deep = combat.DeepStrikes;
+        paid = spells.StrikeManaPaid;
         hits = still.HitsTaken;
         yield return PadStrike(pad.rightTrigger);
         yield return Until(() => combat.InfusedNow && combat.Combo.Phase == AttackPhase.Active, 1f);

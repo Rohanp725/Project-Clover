@@ -141,7 +141,7 @@ draining.
 
 **When it happens.** Only while Dark is carried twice (all in). Each Cursed death, and each death while you are Risen.
 
-**The numbers.** 6 Shards. Each shade stands where its body fell for 6 seconds and strikes what is within 2.5 metres of it every 0.8 seconds: 12 damage, 12 stagger and a Curse each time. All in, L2 with R2 is the deep strike, Yama's Noose.
+**The numbers.** 6 Shards. Each shade stands where its body fell for 6 seconds and strikes what is within 2.5 metres of it every 0.8 seconds: 12 damage, 12 stagger and a Curse each time. Buying this also gives you the deep strike, Yama's Noose. Use it with L2 and R2 while you carry this element alone or twice.
 
 **Works with.** The root and every Dark spell (Curse them before they die), Dread, Collected Twice, which it grows from, Dead Already (Risen for good, every death stands up), A Life for a Life.
 
