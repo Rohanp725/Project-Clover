@@ -1098,6 +1098,8 @@ Group: Reactions
 
 **What sets it off.** Poison landing on a chilled enemy, or Chill on a poisoned one.
 
+**Its shapes.** With the Shape mark of Poison and Ice's duo branch (Floor or Bone: Frost Over Frost or Cold Damage, 3 Shards, in the heart of the chart) and both carried, Venom Rime wears the shape chosen at a rest fire instead. Both keep the poison and lay a Chill at each bite as plain. Frost Over Frost: once it freezes, rime 3 m round it for 5 s lays a Chill and a dose each second. Cold Damage: while frozen each bite deals 2 more a dose, and a heavy blow on it frozen sets every dose off, 6 a dose.
+
 **How to use it.** Dose it and chill it once: the poison freezes it for you.
 
 **How it looks.** Its name over the enemy and a Chill at each bite.
