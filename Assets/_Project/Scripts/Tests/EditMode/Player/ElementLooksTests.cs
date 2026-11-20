@@ -300,6 +300,9 @@ namespace Clover.Tests
             // Turned to Stone climbs as stone and Venom Rime grows as poisoned ice, not as plain ice.
             Assert.AreEqual(ElementLookSet.Stone, set.Looks[set.Find("turned_to_stone")].Shell, "Turned to Stone's shell is stone");
             Assert.AreEqual(ElementLookSet.Venom, set.Looks[set.Find("venom_rime")].Shell, "Venom Rime's shell is poisoned ice");
+            // The stone stands as long as the enemy is stone (3.5 s), not only the look's 1.6 s.
+            Assert.AreEqual(3.5f, ElementLookSet.ShownFor(set.Looks[set.Find("turned_to_stone")]), 0.001f, "Turned to Stone holds while it stands as stone");
+            Assert.AreEqual(set.Looks[set.Find("glint")].Seconds, ElementLookSet.ShownFor(set.Looks[set.Find("glint")]), 0.001f, "a look with no hold ends at its length");
         }
 
         [Test]

@@ -58,7 +58,15 @@ namespace Clover.Player.Forms
             /// the game can find the real one there (<see cref="ElementLooks.PlayReaction"/>).
             /// </summary>
             public Vector3 FromMain;
+            /// <summary>
+            /// Seconds a reaction's look played once stays on past its own length, its held pieces and its shell standing,
+            /// for as long as what the reaction does lasts (Turned to Stone stands as stone 3.5 s); 0 ends it at its length.
+            /// </summary>
+            public float Hold;
         }
+
+        /// <summary>How long a look played once is shown: its own length, or its hold when that is longer.</summary>
+        public static float ShownFor(in Look look) => Mathf.Max(look.Seconds, look.Hold);
 
         [Serializable]
         public struct Part

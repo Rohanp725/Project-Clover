@@ -35,6 +35,19 @@ namespace Clover.EditorTools
         /// </summary>
         public const string ReactionRecipePath = ReactionArtBuilder.CombosFolder + "/combos4_recipe.json";
 
+        /// <summary>
+        /// Seconds a reaction's look stays on the body struck, its held pieces and shell standing, where what the reaction
+        /// does outlasts the recipe's 1.6 s (the films of 2026-11-20: Turned to Stone's stone fell away at 1.6 s while the
+        /// enemy stood as stone 1.9 s more; Venom Rime's green ice gave way to plain Chill while the poison still froze it).
+        /// Turned to Stone: 1 + 1 s of climbing and 1.5 s as stone (Reactions.Three). Venom Rime: its bites go on until it
+        /// freezes, about three (Reactions.Four).
+        /// </summary>
+        public static readonly Dictionary<string, float> ReactionHolds = new Dictionary<string, float>
+        {
+            ["turned_to_stone"] = 3.5f,
+            ["venom_rime"] = 4.5f,
+        };
+
         /// <summary>The reactions built from combos 4: all 55, each in its own bespoke look (groups A to F of the recipe).</summary>
         public static readonly string[] ReactionsBuilt =
         {
@@ -648,6 +661,8 @@ namespace Clover.EditorTools
             var made = new ElementLookSet.Look { Key = key, Seconds = seconds, FirstPart = lists.Parts.Count, LoopFrom = seconds, OnPlayer = playerVariant };
             // Where this look's body stood from the main body's (or the player's), for the game to find the real one there.
             if (lists.Reactions && bodyAt.Count > 0) made.FromMain = bodyFrom - bodyAt[0];
+            // A reaction whose doing outlasts its look keeps it standing on the body struck as long (ReactionHolds).
+            if (lists.Reactions && onBody == 0 && ReactionHolds.TryGetValue(slug, out float hold)) made.Hold = hold;
             // The way the recipe's player faced: toward the main body.
             if (look.TryGetValue("player", out var playerValue) && playerValue is Dictionary<string, object> player && bodyAt.Count > 0)
             {

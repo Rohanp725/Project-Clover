@@ -233,7 +233,7 @@ namespace Clover.Player.Forms
             if (!Ready || body == null) return false;
             int main = instance.set.Find(slug);
             if (main < 0) return false;
-            if (spends != 0) Hide(body, spends, instance.set.Looks[main].Seconds);
+            if (spends != 0) Hide(body, spends, ElementLookSet.ShownFor(instance.set.Looks[main]));
             away.y = 0f;
             float yaw = away.sqrMagnitude > 0.0001f ? Mathf.Atan2(away.x, away.z) * Mathf.Rad2Deg : instance.set.Looks[main].FacingYaw;
             Play(main, body, yaw);
@@ -255,7 +255,7 @@ namespace Clover.Player.Forms
                 Play(other, found, yaw);
                 // The others it reaches show it in its own look too, not in the plain looks of what it lays on them
                 // (Caught Light's and Earthlight's films of 2026-11-20: every body it Marked rang a cream sun-wheel).
-                if (spends != 0) Hide(found, spends, instance.set.Looks[main].Seconds);
+                if (spends != 0) Hide(found, spends, ElementLookSet.ShownFor(instance.set.Looks[main]));
                 if (taken < Taken.Length) Taken[taken++] = found;
             }
             for (int i = 0; i < Taken.Length; i++) Taken[i] = null;
@@ -432,7 +432,7 @@ namespace Clover.Player.Forms
                 one.Age += deltaTime;
                 if (!one.Ending)
                 {
-                    bool over = one.Once ? one.Age >= look.Seconds : now - one.KeptAt > Linger;
+                    bool over = one.Once ? one.Age >= ElementLookSet.ShownFor(look) : now - one.KeptAt > Linger;
                     if (over || bodyGone) one.Ending = true;
                 }
                 if (one.Ending)
