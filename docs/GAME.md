@@ -1931,6 +1931,59 @@ were not touched.
     Wellspring's flowing water, Broken Ground's stones, Sundered and Temper (blades), Seeded's spores, Regrowth's roots
     over the legs, the curse coming off a Cursed enemy, Taken, and Miasma's and Fever's clouds.
 
+### The owner's second review of the effects, fixed in Unity (2026-11-20; Claude's changes, not yet seen by the owner)
+
+The owner's 57 comments are in `docs/design/feedback/2026-11-20_effects_review_2.md`, the plan that answers them in
+`2026-11-20_fix_plan.md`. What lives in Unity's code, shaders or data was changed; new art for the elements is the Blender
+worker's. Films on the Proving Ground's real enemies in groups: `review/gifs/elements/`, `review/gifs/reactions/`, and
+before-and-after strips in `review/gifs/strips/`.
+
+- **Burn on a body** (`BodyFlames`, `FlameField.Body`, `ElementArtSet.BodyFlame`): the stacked kit tongues are gone. A
+  burning body burns in real flame, the burning ground's technique (clover_flame_field.shader): thirty thin tongues
+  rooted over the body from the shins to the shoulders, each its own height and time, flickering, licked at the edge and
+  churned from below, banded smoky red to orange to a yellow heart. It catches over a quarter of a second, grows with the
+  Burn's depth and dies down when it ends; the old flame puffs off the body go where it is drawn. Smoke and embers stay.
+- **Static**: each crawl is held until the next is drawn (no dark blink between), and a long jagged arc jumps off the
+  body outward at every beat and shrinks away.
+- **Overdrive**: the ring of drums, the floor ring at the start and the old wobbling bolts and shock sparks are gone. The
+  lightning kit's branching fork bursts on the body and its long jagged arcs jump off it, sixteen a second, each seen
+  for about a tenth of a second and shrinking as it goes. Its light on the floor is kept low.
+- **Temper** (`MetalSheen`, clover_toon.shader's `_Metal`): no blades and no floor seam. The player turns to steel over a
+  third of a second: a cool grey with a matcap-like banded shine, a hard specular spot and a cool rim, in the toon's hard
+  bands. Every outfit wears Clover/Toon, so every outfit takes it; it goes in 0.3 s when the surge ends.
+- **Hunger**: the surge's purple light is off (darkness gives none), and the eclipse at its middle is tinted to a
+  near-black purple on screen (`SurgeArt.HungerHeart`); its decal colour was dark only in linear terms and showed as a
+  33% purple.
+- **Regrowth**: a true pink (0.95, 0.36, 0.62) and a living green, larger leaves, and petals no longer whitened by shine.
+- **Tremor**: the shaking stays; the heaved ring of stones is gone. Dust is kicked up round the feet and grit hops off
+  the floor a hand high and falls back.
+- **Cursed**: no purple marks dropping. A black hole turns at the feet, a whirl of black streaks closes in on it, and
+  streaks of near-black are drawn down into it, faster as they near it. The hole reads; the pull is faint at the game
+  camera and wants art.
+- **Seized** (`ReactionDesigns.Seized`, `ReactionMotion.Crackle`, `HazardSpec.Quiet`, `SpellBlow.Unseen`): the water's
+  rings are gone from its look; its lightning crackles, redrawn three times a second (`CrackleRate`), never dark between,
+  no white frame. Its hold throws no ring; its live film no longer drops a bolt with a ring and a sky flash at each bite
+  every half second, and its bites throw no hit flash; the water a Seized body carries draws no wet rings (it has run
+  off into the film). Rings from what a reaction lays and Soaked carries on are not drawn either
+  (`CombatEvents.CarriedSource`); what a reaction's carried lay starts no reaction, as the rule always said.
+- **Rust**: everything in its composed look is drawn in rust (`ReactionDesigns.RustColour`, 0.62, 0.25, 0.08), and a
+  body that is Sundered and Soaked at once wears its plates, notch and filings in rust, its wet rings gone (the water has
+  gone into the rust).
+- **Flashover**: the veins of its scorch were still orange; they are the violet plasma now (`LookRecolours`). The rest of
+  the 2026-11-19 fix holds: violet flame up at the strike and gone within about a second, no plain fire on the body.
+- **Wind, nothing white**: wind's solids are held to pale dust with no sheen (about 85% at their brightest), Unsteady's
+  old pieces and Gust's every-third-cast fallback are pale dust, the gust sheet is tinted pale dust and thins into soft
+  streaks at its end instead of hard square flecks (Clover/Flipbook's `_Disperse`), and wind and leaves never land with a
+  white frame. The wind pieces of the designed wind reactions (Rime, Capsize) are drawn paler but still read close to
+  white at the game camera; their own art is the Blender worker's after the wind research.
+- **New motion verbs for the new recipes** (`ReactionMotion`): `orbit` (radius, turns a second, phase), `spiral` (an
+  orbit that climbs and widens or closes), `ribbon_draw` (a strip drawn on head first and wiped off tail first, clipped
+  along its u by Clover/Spell's `_DrawHead` and `_DrawTail`, and orbiting while it draws when given a way round), and
+  `crackle`. They allocate nothing.
+- **Waits for new art (the Blender worker)**: Clarity's ground pattern (the kolam and its dots are kit decals); Cursed's
+  dark energy pulled down into the hole as a real vortex; the redrawn Seized's dark pool and Rust's blade turning ochre
+  (the owner's comments on those two were on the redrawn timelines); Soaked's one mega drop; Smoulder's black flame.
+
 ## Credits (decided 2026-11-18)
 
 - **Decided (user)**: the published game has a credits section. It thanks **_dnen**, **parvar11** and **nairarj000**,
