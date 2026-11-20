@@ -1038,6 +1038,8 @@ Group: Reactions
 
 **What sets it off.** Tremor landing on a poisoned enemy, or poison on a shaken one.
 
+**Its shapes.** With the Shape mark of Earth and Poison's duo branch (Damp or Ore: Blackdamp or Red Ore, 3 Shards, in the heart of the chart) and both carried, Chokedamp wears the shape chosen at a rest fire instead. Blackdamp: the damp does not run; a pool 3.5 m wide for 7 s doses each second what stands in it and slows those in it as it pools. Red Ore: no mist; your next heavy blow on it within 4 s bursts the ore in 3 m, 14 and 3 for each dose, three doses and 30 stagger.
+
 **How to use it.** Shake the crowd first, then poison one: the damp finds them all.
 
 **How it looks.** Its name over the enemy. Not yet: the pools staying on the floor where they settle.
