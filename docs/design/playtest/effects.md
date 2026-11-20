@@ -1128,6 +1128,8 @@ Group: Reactions
 
 **What sets it off.** Static landing on a shaken enemy, or Tremor on a charged one.
 
+**Its shapes.** With the Shape mark of Lightning and Earth's duo branch (Earthed: Thunderstone or Step Current, 3 Shards, in the heart of the chart) and both carried, Earthed wears the shape chosen at a rest fire instead. Thunderstone: nothing is spent; its Static is held 6 s and your heavy blow on it throws all of it at everything within 6 m, 7 a stack and a Static each. Step Current: the figure spreads to 6 m and stays live 3 s, biting 4 and 6 stagger every half second.
+
 **How to use it.** Charge it deep in a crowd, then shake it: the charge goes to everyone near.
 
 **How it looks.** Its name over the enemy and a burst round it. Not yet: the fern on the floor, and sparing the grounded one (for now it takes its own).
