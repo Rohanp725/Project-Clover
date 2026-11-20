@@ -164,6 +164,10 @@ namespace Clover.Player
             // Glacier, the duo branch of Ice and Water (pairs_d1_d2.md; task 4.15): Cold Water (the Shape mark takes its place),
             // Flash Freeze (now the reaction, Supercooled) and Creeping Ice (offered to Ice's tree, whose roster is full).
             new RetiredMark("glacier.coldwater", 3), new RetiredMark("glacier.flash", 3), new RetiredMark("glacier.creeping", 4),
+
+            // Bloom, the duo branch of Water and Life (pairs_d1_d2.md; task 4.15): Wet Seed (the Shape mark takes its place),
+            // Flowering (now the reaction, Quickening, without its wait) and Lotus Step (offered to Water's tree, whose roster is full).
+            new RetiredMark("bloom.wetseed", 3), new RetiredMark("bloom.flower", 3), new RetiredMark("bloom.lotus", 4),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

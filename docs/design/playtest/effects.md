@@ -513,6 +513,8 @@ Group: Reactions
 
 **What sets it off.** Water landing on a Seeded enemy, or a seed on a Soaked one.
 
+**Its shapes.** With Bloom's Shape mark (Quickening: Floating Flower or Rootlets, 3 Shards, in the heart of the chart) and both Water and Life carried, Quickening wears the shape chosen at a rest fire instead. Floating Flower: the flower drops to the ground as a lily 2 m across for 5 s that soaks what stands on it, and you mend 8 as it opens. Rootlets: every enemy within 5 m is seeded to full, and a heavy blow on the flowering one within 4 s still mends you 10.
+
 **How to use it.** Water a seeded enemy in a crowd, then heavy it: a heal, and the whole crowd wet and seeded.
 
 **How it looks.** Its name over the enemy. Not yet: the white flower on its back.
