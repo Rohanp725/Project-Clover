@@ -35,7 +35,7 @@ namespace Clover.EditorTools
         /// </summary>
         public const string ReactionRecipePath = ReactionArtBuilder.CombosFolder + "/combos4_recipe.json";
 
-        /// <summary>The reactions built from combos 4 so far; the rest keep their earlier looks. Thunder Gust and Carried Embers wait for their redo.</summary>
+        /// <summary>The reactions built from combos 4: all 55, each in its own bespoke look (groups A to F of the recipe).</summary>
         public static readonly string[] ReactionsBuilt =
         {
             // Group A.
@@ -44,6 +44,12 @@ namespace Clover.EditorTools
             "seed_storm", "red_hot", "breath_taken", "live_iron", "golden_feathers", "rime", "flashover", "kindling_point", "quicksilver",
             // Group C.
             "chokedamp", "rot_roots", "fire_medicine", "nerve_fire", "shut_in_the_dark", "sleet_charge", "capsize", "the_ground_gives", "steam",
+            // Group D (the ten the owner praised; Root Snare is the game's Split Rock and Sun-Sap its Burning Sap).
+            "turned_to_stone", "shining_herb", "ill_wind", "frost_heave", "earthlight", "black_chain", "venom_rime", "mock_suns", "root_snare", "sun_sap",
+            // Group E.
+            "cold_short", "sickle_wind", "anvil_stone", "glint", "diamond_ring", "iron_thorns", "thermal_shock", "the_grudge", "logan_stone",
+            // Group F.
+            "caught_light", "girdled", "the_bolt_runs_true", "firebloom", "earthed", "burnt_mound", "stolen_warmth", "fish_poison",
         };
         public const string BrazierSetPath = ElementArtBuilder.Folder + "/brazier_looks.asset";
         private const string BrazierKit = "vfx_brazier_kit.fbx";
@@ -182,6 +188,40 @@ namespace Clover.EditorTools
             ["r4_wetsand"] = new ReactionArtBuilder.Paint(0.42f, 0.34f, 0.2f),
             ["r4_whirl_core"] = new ReactionArtBuilder.Paint(1f, 0.64f, 0.15f),
             ["r4_whitehot"] = new ReactionArtBuilder.Paint(1f, 0.82f, 0.42f),
+            // Combos 4, groups D, E and F and the polish pass's new materials, from the middle of each of the Blender
+            // worker's ramps (tools/specs_a, b, d, e, f): light is gold, never white; the curse's chain, bolt, roots and
+            // seams near-black with violet; frosted steel a pale steel blue; the floor's sap, slick and glow see-through.
+            ["r4_blackbolt"] = new ReactionArtBuilder.Paint(0.09f, 0.035f, 0.16f),
+            ["r4_chain"] = new ReactionArtBuilder.Paint(0.05f, 0.035f, 0.08f),
+            ["r4_crackglow"] = new ReactionArtBuilder.Paint(1f, 0.45f, 0.1f, 0.8f, 1f, true),
+            ["r4_dustband"] = new ReactionArtBuilder.Paint(0.55f, 0.55f, 0.5f),
+            ["r4_feather_shaft"] = new ReactionArtBuilder.Paint(0.5f, 0.26f, 0.07f),
+            ["r4_figroot"] = new ReactionArtBuilder.Paint(0.07f, 0.035f, 0.1f),
+            ["r4_foulwater"] = new ReactionArtBuilder.Paint(0.15f, 0.35f, 0.12f),
+            ["r4_frost_steel"] = new ReactionArtBuilder.Paint(0.5f, 0.66f, 0.82f),
+            ["r4_grudgecloud"] = new ReactionArtBuilder.Paint(0.06f, 0.05f, 0.1f),
+            ["r4_grudgelit"] = new ReactionArtBuilder.Paint(0.42f, 0.22f, 0.85f),
+            ["r4_halo"] = new ReactionArtBuilder.Paint(1f, 0.72f, 0.3f, 0.6f, 1f, true),
+            ["r4_hotstone"] = new ReactionArtBuilder.Paint(0.6f, 0.12f, 0.03f),
+            ["r4_lightherb"] = new ReactionArtBuilder.Paint(1f, 0.76f, 0.34f),
+            ["r4_lightpetal"] = new ReactionArtBuilder.Paint(1f, 0.74f, 0.34f),
+            ["r4_lilypetal"] = new ReactionArtBuilder.Paint(1f, 0.5f, 0.1f),
+            ["r4_lilystem"] = new ReactionArtBuilder.Paint(0.16f, 0.28f, 0.05f),
+            ["r4_mound"] = new ReactionArtBuilder.Paint(0.22f, 0.15f, 0.1f),
+            ["r4_net"] = new ReactionArtBuilder.Paint(1f, 0.74f, 0.32f),
+            ["r4_net_cyan"] = new ReactionArtBuilder.Paint(0.3f, 0.75f, 0.92f),
+            ["r4_poisonwind"] = new ReactionArtBuilder.Paint(0.4f, 0.66f, 0.18f),
+            ["r4_sap"] = new ReactionArtBuilder.Paint(0.85f, 0.66f, 0.08f),
+            ["r4_sap_edge"] = new ReactionArtBuilder.Paint(0.9f, 0.68f, 0.12f, 0.7f, 1f, true),
+            ["r4_sap_pool"] = new ReactionArtBuilder.Paint(0.55f, 0.45f, 0.04f, 0.6f, 1f, true),
+            ["r4_seam"] = new ReactionArtBuilder.Paint(0.06f, 0.02f, 0.1f),
+            ["r4_slick"] = new ReactionArtBuilder.Paint(0.06f, 0.13f, 0.05f, 0.6f, 1f, true),
+            ["r4_spark"] = new ReactionArtBuilder.Paint(1f, 0.6f, 0.18f),
+            ["r4_stone"] = new ReactionArtBuilder.Paint(0.36f, 0.33f, 0.3f),
+            ["r4_venom_frost"] = new ReactionArtBuilder.Paint(0.4f, 0.55f, 0.18f, 0.55f, 1f, true),
+            ["r4_venom_ice"] = new ReactionArtBuilder.Paint(0.42f, 0.7f, 0.16f),
+            ["r4_warmth"] = new ReactionArtBuilder.Paint(1f, 0.42f, 0.16f),
+            ["r4_wetfilm"] = new ReactionArtBuilder.Paint(0.03f, 0.12f, 0.2f, 0.5f, 1f, true),
         };
 
         /// <summary>
@@ -574,9 +614,11 @@ namespace Clover.EditorTools
                         continue;
                     }
                     if (slug == "water_soaked" && kitObject.Contains("water_ripple")) continue;
+                    // Turned to Stone's second skin of stone over the whole body is its stone shell at full height, which
+                    // the body's own material draws (Clover/Toon's _IceStone); nothing more to build.
                     if (kit == "enemy_model")
                     {
-                        lists.Missing.Add($"{slug}: {kitObject} (a second skin of the enemy model, drawn by the body's own material: not built yet)");
+                        if (material != "r4_stone") lists.Missing.Add($"{slug}: {kitObject} (a second skin of the enemy model, drawn by the body's own material: not built yet)");
                         continue;
                     }
                     if (kit == Mockup)
@@ -586,7 +628,11 @@ namespace Clover.EditorTools
                         if (motion.TryGetValue("scale_keys", out var growKeys) && growKeys is List<object> keyList && keyList.Count >= 2)
                             grow = (float)((double)((List<object>)keyList[keyList.Count - 1])[0] - (double)((List<object>)keyList[0])[0]);
                         shellTimes.Add((show, grow));
-                        made.Shell = slug.StartsWith("metal") ? ElementLookSet.Steel : slug.Contains("rime") ? ElementLookSet.Rime : ElementLookSet.Ice;
+                        // Turned to Stone's bands are stone and Venom Rime's poisoned ice, by the material they wore.
+                        made.Shell = slug.StartsWith("metal") ? ElementLookSet.Steel
+                            : material == "r4_stone" ? ElementLookSet.Stone
+                            : material == "r4_venom_ice" ? ElementLookSet.Venom
+                            : slug.Contains("rime") ? ElementLookSet.Rime : ElementLookSet.Ice;
                         continue;
                     }
                     // Temper's climbing ring and clang are the shader's bright front on the body now (no rings round the player).

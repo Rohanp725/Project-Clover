@@ -291,6 +291,15 @@ namespace Clover.Tests
             }
             Assert.AreEqual("drowned_weight", ReactionLook.SlugOf(AfflictionPairs.Index(AfflictionKind.Soaked, AfflictionKind.Cursed)));
             Assert.AreEqual("seed_storm", ReactionLook.SlugOf(AfflictionPairs.Index(AfflictionKind.Unsteady, AfflictionKind.Seeded)), "Windthrow's look is under its new name");
+            // All 55 are built (the owner's review of 2026-11-20: every reaction its own bespoke effect), none left on the
+            // earlier designed or composed looks, and every slug the builder names is a reaction of the game.
+            Assert.AreEqual(55, AfflictionPairs.Count);
+            Assert.AreEqual(AfflictionPairs.Count, ElementLookBuilder.ReactionsBuilt.Distinct().Count(), "every reaction is built, once");
+            for (int pair = 0; pair < AfflictionPairs.Count; pair++)
+                Assert.GreaterOrEqual(set.Find(ReactionLook.SlugOf(pair)), 0, $"{AfflictionPairs.Name(pair)} has its bespoke look");
+            // Turned to Stone climbs as stone and Venom Rime grows as poisoned ice, not as plain ice.
+            Assert.AreEqual(ElementLookSet.Stone, set.Looks[set.Find("turned_to_stone")].Shell, "Turned to Stone's shell is stone");
+            Assert.AreEqual(ElementLookSet.Venom, set.Looks[set.Find("venom_rime")].Shell, "Venom Rime's shell is poisoned ice");
         }
 
         [Test]
