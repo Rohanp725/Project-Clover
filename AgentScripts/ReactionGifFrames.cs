@@ -22,7 +22,8 @@ using UnityEngine.InputSystem.LowLevel;
 // laid for real (two stacks each, the first then the second, as a spell lays them) on the main enemy, so the game's own
 // reaction goes off: its look, its words and everything it does to the bodies. A reaction that reaches others (chains,
 // areas, carried afflictions, a bolt's discharge: effects.md) is filmed with four more enemies spread round the main one
-// 1.5 to 2.6 m off; the rest on the main enemy alone. Before each: every enemy put back (healed, afflictions and
+// 1.5 to 2.6 m off; the rest on the main enemy alone. A bespoke look (combos 4) is filmed instead on as many enemies as
+// its recipe has bodies, stood where the recipe stood them, turned to the game's way. Before each: every enemy put back (healed, afflictions and
 // conditions gone) and stood again, the look pool empty and the ground clear, and a second of nothing. Then game time is
 // fixed at 20 frames a second and the game camera's frame grabbed every frame, the 960x540 window about the main enemy
 // cut from the 1920x1080 view at 1:1 (its floor marks in view): 0.15 s before the afflictions are laid, through the look
@@ -142,6 +143,26 @@ public class ReactionGifFramesRunner : MonoBehaviour
         return impact;
     }
 
+    // The element looks playing now, by key and body, and the old reaction art's and the effects' counts.
+    private static string LooksPlaying()
+    {
+        var looksField = typeof(ElementLooks).GetField("instance", BindingFlags.NonPublic | BindingFlags.Static);
+        var looks = looksField.GetValue(null);
+        if (looks == null) return "no element looks";
+        var showings = (System.Array)typeof(ElementLooks).GetField("showings", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(looks);
+        var set = (ElementLookSet)typeof(ElementLooks).GetField("set", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(looks);
+        var type = showings.GetType().GetElementType();
+        var text = new StringBuilder();
+        foreach (var one in showings)
+        {
+            if (!(bool)type.GetField("Active").GetValue(one)) continue;
+            var body = (Transform)type.GetField("Body").GetValue(one);
+            text.Append(set.Looks[(int)type.GetField("Look").GetValue(one)].Key).Append(" on ").Append(body != null ? body.name : "-").Append("; ");
+        }
+        text.Append($"reaction art parts {ReactionArt.PartsShown}, lamps {ReactionArt.LampsShown}");
+        return text.ToString();
+    }
+
     // A bespoke reaction look (combos 4) plays once through the element looks' pool: it counts too.
     private bool PoolEmpty() => ReactionArt.PartsShown == 0 && ReactionArt.LampsShown == 0 && ActiveShowings() == 0 && ElementLooks.PlayingOnce == 0;
 
@@ -180,6 +201,53 @@ public class ReactionGifFramesRunner : MonoBehaviour
     private bool lane;
     private static readonly Vector3 OnTheLane = new Vector3(4.6f, 0f, -0.2f);
 
+    // Where the Blender worker's film stood the bodies about the main one (combos4_recipe.json), turned as the game turns
+    // the look (the recipe's player faced the main body; here the player faces east): so a chain, a ray or a thrown thorn
+    // reaches the enemy it was drawn to reach (2026-11-20: Black Chain's chain pointed at no one on the spread).
+    private readonly List<Vector3> layout = new List<Vector3>();
+    private Dictionary<string, List<Vector3>> recipeLayouts;
+
+    private List<Vector3> RecipeLayout(string slug)
+    {
+        if (recipeLayouts == null)
+        {
+            recipeLayouts = new Dictionary<string, List<Vector3>>();
+            var text = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(Clover.EditorTools.ElementLookBuilder.ReactionRecipePath);
+            if (text != null)
+                foreach (Dictionary<string, object> look in (List<object>)((Dictionary<string, object>)Clover.EditorTools.ReactionRecipe.ReadJson(text.text))["looks"])
+                {
+                    var bodies = new List<Vector3>();
+                    foreach (Dictionary<string, object> body in (List<object>)look["bodies"]) bodies.Add(Vec(body["position"]));
+                    Vector3 player = Vec(((Dictionary<string, object>)look["player"])["position"]);
+                    if (bodies.Count == 0) continue;
+                    Vector3 toward = bodies[0] - player;
+                    float facing = Mathf.Atan2(toward.x, toward.z) * Mathf.Rad2Deg;
+                    var turn = Quaternion.Euler(0f, Mathf.Atan2(Away.x, Away.z) * Mathf.Rad2Deg - facing, 0f);
+                    var placed = new List<Vector3>();
+                    for (int i = 0; i < bodies.Count; i++)
+                    {
+                        Vector3 at = turn * (bodies[i] - bodies[0]);
+                        // A body stood between the game camera and the main one hides it on film (Earthlight's Gate
+                        // Captain, 2026-11-20): moved clear, no further than the game's look still finds it (1.6 m).
+                        if (i > 0 && at.z < -0.4f && Mathf.Abs(at.x) < 1.4f)
+                        {
+                            if (at.magnitude < 1.5f) at.x = (at.x < 0f ? -1f : 1f) * 1.4f;
+                            else if (at.z > -2.5f) at.z = Mathf.Max(-2.5f, at.z - 1.2f);
+                        }
+                        placed.Add(at);
+                    }
+                    recipeLayouts[(string)look["slug"]] = placed;
+                }
+        }
+        return recipeLayouts.TryGetValue(slug, out var found) ? found : null;
+    }
+
+    private static Vector3 Vec(object value)
+    {
+        var list = (List<object>)value;
+        return new Vector3(System.Convert.ToSingle(list[0]), System.Convert.ToSingle(list[1]), System.Convert.ToSingle(list[2]));
+    }
+
     private void StandCast(int count)
     {
         var homeField = typeof(Enemy).GetField("home", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -193,7 +261,7 @@ public class ReactionGifFramesRunner : MonoBehaviour
                 enemy.gameObject.SetActive(false);
                 continue;
             }
-            Vector3 at = Middle + (i == 0 ? Vector3.zero : lane && i == 2 ? OnTheLane : Spread[i - 1]);
+            Vector3 at = Middle + (i == 0 ? Vector3.zero : layout.Count > i ? layout[i] : lane && i == 2 ? OnTheLane : Spread[i - 1]);
             at.y = 0.05f;
             // Facing the player, as a fight would have them. Its home is made the spot, so putting it back stands it
             // there and an idle enemy has nowhere else to walk to.
@@ -285,6 +353,16 @@ public class ReactionGifFramesRunner : MonoBehaviour
             string kind = bespoke ? "bespoke" : designed ? "designed" : "composed";
             bool group = Reaching.Contains(look);
             int count = group ? Mathf.Min(cast.Count, 5) : 1;
+            // A bespoke look is filmed on the bodies as its recipe stood them, all of them (those it reaches and those
+            // it leaves alone), so its reach shows as it was drawn.
+            layout.Clear();
+            var recipeLayout = bespoke ? RecipeLayout(ReactionLook.SlugOf(pair)) : null;
+            if (recipeLayout != null && recipeLayout.Count > 1)
+            {
+                layout.AddRange(recipeLayout);
+                count = Mathf.Min(cast.Count, recipeLayout.Count);
+                group = true;
+            }
 
             // A clean start: everyone put back and stood again, the player still, the pool empty and the ground clear.
             player.Teleport(Middle + Stand, Quaternion.LookRotation(Away, Vector3.up));
@@ -328,6 +406,8 @@ public class ReactionGifFramesRunner : MonoBehaviour
                     shownAt = frame;
                     impact = NewestImpact();
                 }
+                // What is drawn 0.8 s in, to tell the reaction's own look from the afflictions' and the game's.
+                if (frame - start == 16) Say($"{name} at 0.8 s: {LooksPlaying()}");
                 bool longEnough = (frame - start) / (float)Rate >= least;
                 if (tail < 0 && frame - start >= 4 && PoolEmpty() && longEnough && (shownAt >= 0 || frame - start > 40)) tail = 0;
                 if (tail >= 0 && tail++ >= After) break;
