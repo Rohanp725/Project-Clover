@@ -83,3 +83,74 @@ ring the seven reshaped trees stand as narrow stalk groups beside the four trees
 5. **Two base spells, one Master (as noted in the code).** With two elements carried, a base spell's Master answers either
    element's base spell. That is the `NEEDS` in `SpellBranches.OwnBranch`.
 6. The questions in `phase4_questions.md` are still open, with their defaults in force.
+
+## 2026-11-20: the Metal, Light, Dark and Poison trees merged into main and proven in the editor
+
+**Merged:** `17f73a0` exactly (Metal `b28625c`, Light `8a9727f`, Dark `5a11057`, Poison `17f73a0`), not the branch tip, with
+`--no-ff`. Merge commit: `04b6f7e`. The worktree was clean.
+
+**Conflicts:** none in the text. `AfflictionSet.cs` and `PlayerUpgrades.cs` were changed on both sides since the last merge,
+in different places, and both sides' changes are in the merged files. The merge added no new scripts, so no `.meta` files.
+
+**Compile:** clean, with 0 errors.
+
+**Playtest Texts** rebuilt first: 89 effects and 383 marks' details (`9b65a37`).
+
+**EditMode suite:** 743 run and 743 passed after the merge; 746 and 746 with the HitStop tests below.
+
+**PoisonBeatTests, the stats no mark gives** (checked in the editor):
+- Across the two merges the "every stat is given by some mark" list lost six stats: `PushDistance`, `BoonSeconds` and
+  `FreezeSeconds` (Strong Arm, Following Draft and Held Fast, cut with Wind and Ice), then `GuardGrey`, `BurstStagger` and
+  `LeapReach` (Braced Frame, Buckling and Long Leap, cut with Metal and Poison).
+- No mark gives any of the six now. Each is still read by the game as a multiplier, and with nothing laid on it each
+  reads x1, so the game runs at its base numbers.
+- The three newly cut marks are retired (`metal.bracedframe`, `poison.buckling`, `poison.longleap`), each with its refund
+  of 1.
+- So the change is sound. The test still checks the two stats a mark still gives (`ShatterDamage`, `GroundSeconds`).
+
+**Probes** (all in the sandbox, through `runprobe.sh`):
+- **`BranchProbe`, in ProvingGround: 110 OK, 0 WRONG.**
+  - Fire and Lightning as before.
+  - It now also learns Metal's Flung Blade, Light's Glare, Dark's Grasp and Poison's Miasma to their Masters, through
+    `PlayerBuild.Attune`. For each it reads the table's wait and the Empower's (6 to 5, 6 to 5, 7 to 6, 7 to 6), wears the
+    first shape, chooses the second at a rest fire, and casts the Master.
+  - A shape with no form of its own (Cherry Red, The Nail, Gathered, Tethered, Low Mist) is judged by being worn, its
+    effects riding the kit's cast. A shape with a form (Seven Horses, The Pit, Censer) casts through its mark in that form.
+- **A game bug found by it, and fixed** (`05c1555`, `HitStopTests`):
+  - The rest menu opened straight after a blow saved the hit stop's nearly frozen time scale (0.03) and put it back when it
+    closed. The hit stop had already let go, so the world stayed at three per cent speed, and every cast then held the
+    player thirty times as long.
+  - The hit stop now remembers what it wrote when it lets go. When time comes back to that scale, it puts back the scale
+    from before the stop.
+- **`MarksProbe`, in CombatTest:** runs to done, with errors +0 in every move.
+  - The retired Lance the Wound became Five Needles' Spread. It was cast as `wave`, heard 3 bites (one on each dummy hit)
+    and laid Poison x6.
+  - Great Lotus, Eye of the Storm, Twin Break and Meltdown report "in force False", because the probe holds one element.
+    Those mixes behaved this way before this merge too.
+- **`UpgradeProbe`, in CombatTest:** runs to done with 0 errors and 0 warnings.
+  - No retired id, constant or name is left in it after this merge (checked against `RetiredMarks.All` and the names those
+    marks had), so it needed no change.
+  - Its V lines buy each tree's first marks. Each worn spell logs "cast +0", which is the probe's own count and is worth a
+    look.
+- **`ReactionProbe2`: 336 OK, 0 WRONG** (heard 54, shown 54, dropped 0).
+- **`CrowdProbe`: 6 OK, 0 WRONG** (frame p95 6.5 ms, mean 4.7 ms).
+
+**The chart, the whole ring** (`review/shots/current/branch_chart_wide.png`, 460 marks): it still reads.
+- Eleven coloured fans of stalks stand round the hub, every tree's name is clear, and each element is its own colour.
+- It is denser than before. Single marks are dots at this zoom and are read tree by tree.
+- Light's and Metal's stalks crowd each other at the lower left.
+- The lowest marks and crowns of Metal and Earth run under the bottom bar.
+
+**Not merged: task 4.4 (Devotion, `7c5869b`).** The merge was refused by the session's permission rules, so it was not
+made. `DevotionProbe` has not been run, and the kept burn's flames and the HUD during the breath have not been looked at.
+It waits for the owner's permission.
+
+## For the owner (this merge)
+
+1. **The whole ring is cut at the bottom**: Metal's and Earth's lowest marks sit under the bottom bar in the wide view. The
+   careful fix is to zoom the wide view out a little or start it a little higher. It was left for a look.
+2. **Six stats are given by nothing** until the Empowers and Bonds that will give them again are built: `PushDistance`,
+   `BoonSeconds`, `FreezeSeconds`, `GuardGrey`, `BurstStagger`, `LeapReach`. They sit at x1.
+3. **Shapes without a form** (Cherry Red, The Nail, Gathered, Tethered, Low Mist) change the spell by their effects alone.
+   A tester sees the same cast with something added, not a new shape on the floor. That is as built, from the design.
+4. The questions for Metal, Light, Dark and Poison in `phase4_questions.md` are still open, with their defaults in force.
