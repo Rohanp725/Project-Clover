@@ -576,3 +576,13 @@ each shape.
   - Flashover's shapes don't flinch.
   - Breaking Swell throws and knocks down for 0.6 s.
 - **Every other question in this file keeps its default (approved).**
+
+## Owner's answers on Phase 4b (2026-11-20, evening)
+All accepted as built:
+- Spilled Water and Shade sit at the new top-of-trunk place (T.3).
+- Indrawn Breath and Ski Run grow from Hammer Down and Clean Break.
+- "Toward" and "away" for a dodge mean within 60° of the line to the enemy faced, within 12 m.
+- The roster readings stand: Grit, Green Wood, Riding High, Wide Fan, and the Reckoning and Daybreak Empowers.
+- Daybreak and One by One keep their roster prices.
+- Three Weasels' clock starts at the first press.
+- Under the Black Water keeps both blows.
