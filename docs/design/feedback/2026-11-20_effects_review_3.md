@@ -641,3 +641,16 @@ None. Every open thread in both documents was written by the owner, and none has
 120 threads were open when queried, all 120 are quoted above, and 19 of them have an "edit" part.
 Not counted: the four threads the owner closed themselves (listed under Themes) and the 26 threads from the second
 pass, which were already resolved.
+
+## The owner's answers to the ambiguous comments (2026-11-20, afternoon)
+
+1. **Rime:** go back to this morning's rime build-up, but form it on the enemy's back, with no refreeze after the effect, and redo the ice blowing out to others (it "looks really bad").
+2. **Carried Embers:** "When it reaches its furthest distance it doesnt reach a enemy but they get ignited anyways and take the hit." The hits must only land on enemies the column actually reaches, at the moment it reaches them.
+3. **Element comments written before the pictures were replaced at about 14:00:** re-judge them against the new films.
+   - Treat "old effects" as answered by the rebuild.
+   - Keep the specific asks:
+     - Briar Patch: only spiky plants, no flowers.
+     - Broken Ground: chunkier stones and no diagonal line.
+     - Tailwind: upside down, with the small end at the feet.
+     - The Lightning brazier: more detail.
+4. **The "hit" and "charged" picture slots** on the elements tab keep their katana swing films. Those films are re-filmed with the current game (in progress), so the caption stays right.
