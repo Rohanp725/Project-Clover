@@ -618,6 +618,8 @@ Group: Reactions
 
 **What sets it off.** Burn landing on an Unsteady enemy, or Unsteady on a burning one.
 
+**Its shapes.** With the Shape mark of Fire and Wind's duo branch (Carried Embers: Fire Whirl or Hot Wind, 3 Shards, in the heart of the chart) and both carried, Carried Embers wears the shape chosen at a rest fire instead. Fire Whirl: for 3 s, once a second, every enemy within 3 m is drawn 1 m toward it and everything within 2 m takes a Burn. Hot Wind: a lane 8 m long downwind lays a Burn on all in it, and the enemy is shoved 2 m.
+
 **How to use it.** You aim it by where you stand: put the enemy between you and the ones behind it, and the fire lands among them.
 
 **How it looks.** Its name over the enemy, then three small fires springing up beyond it.

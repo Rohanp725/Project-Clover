@@ -131,6 +131,7 @@ namespace Clover.Player.Magic
             // The new duo branches' duo spells (pairs_d1_d2.md to pairs_d5.md, task 4.5 on): basic spells of the pair, on a
             // duo spell's cooldown of 12 to 16 s, each its own.
             ["sleetcharge.glassstorm"] = Cd(14f, SpellRole.Opener),
+            ["carriedembers.breathesin"] = Cd(16f, SpellRole.Opener),
             // The twelve spare ring-mix spells were cut as their branches were reshaped (tasks 4.5 and 4.15): each was offered
             // to an element's tree whose roster of six was full (pairs_d1_d2.md), and is in RetiredMarks.
         };
