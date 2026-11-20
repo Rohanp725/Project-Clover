@@ -798,6 +798,8 @@ Group: Reactions
 
 **What sets it off.** A second Static on a Soaked enemy, or Water on one already carrying two. One Static is not enough, and nothing rests until there are two.
 
+**Its shapes.** With the Shape mark of Lightning and Water's duo branch (Seized: Can't Let Go or Running Water, 3 Shards, in the heart of the chart) and both carried, Seized wears the shape chosen at a rest fire instead. Can't Let Go: held 1 s, no film, and for 3 s each weapon blow holds it 0.3 s longer. Running Water: no hold; everything within 7 m is seized 0.5 s and given a Static.
+
 **How to use it.** Charge a wet enemy twice in a crowd: it is held, and the film charges everyone near for your Lightning.
 
 **How it looks.** Its name over the enemy and the film on the floor. Not yet: the film sparing the seized one (for now it charges it too).
