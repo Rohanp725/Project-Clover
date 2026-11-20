@@ -590,6 +590,9 @@ MonoBehaviour:
       <b>What sets it off.</b> Static landing on a Unsteady enemy, or Unsteady on a charged one.
 
 
+      <b>Its shapes.</b> With Tempest''s Shape mark (Thunder Gust: Thunderhead or Bolt from the Blue, 3 Shards, in the heart of the chart) and both Lightning and Wind carried, Thunder Gust wears the shape chosen at a rest fire instead. Thunderhead: thrown up for 1 s, and half a second in its Static is discharged over the heads of the rest, 7 and 5 stagger a stack in 4 m. Bolt from the Blue: nothing is thrown; its Static goes off where it stands and an arc runs on through up to three enemies, 14 and a Static each.
+
+
       <b>How to use it.</b> Charge it deep first, then stand so it is thrown into the crowd: the discharge lands among them.
 
 
@@ -604,6 +607,9 @@ MonoBehaviour:
 
 
       <b>What sets it off.</b> Chill landing on a Unsteady enemy, or Unsteady on a chilled one.
+
+
+      <b>Its shapes.</b> With Blizzard''s Shape mark (Rime: Rime Tree or Spindrift, 3 Shards, in the heart of the chart) and both Wind and Ice carried, Rime wears the shape chosen at a rest fire instead. Rime Tree: the crust never breaks, and for 5 s every blow on it adds a Chill. Spindrift: the ice blows out of its far side the moment Rime fires, at half damage (5, 2 Chill and 1 Unsteady), no heavy blow needed.
 
 
       <b>How to use it.</b> Put the enemy between you and the others, then bring the heavy: the ice lands on them.
@@ -622,6 +628,9 @@ MonoBehaviour:
       <b>What sets it off.</b> Chill landing on a Soaked enemy (your Water, or the river''s), or Water on a chilled one.
 
 
+      <b>Its shapes.</b> With Glacier''s Shape mark (Supercooled: Sea Ice or Hard Water, 3 Shards, in the heart of the chart) and both Ice and Water carried, Supercooled wears the shape chosen at a rest fire instead. Sea Ice: the blow that freezes it also lays 2 Chill on everything within 4 m, and on purpose this may start another Supercooled. Hard Water: only a heavy blow freezes it.
+
+
       <b>How to use it.</b> One touch of cold on a wet enemy, then any blow: it freezes, ready for a heavy to shatter.
 
 
@@ -636,6 +645,9 @@ MonoBehaviour:
 
 
       <b>What sets it off.</b> Water landing on a Seeded enemy, or a seed on a Soaked one.
+
+
+      <b>Its shapes.</b> With Bloom''s Shape mark (Quickening: Floating Flower or Rootlets, 3 Shards, in the heart of the chart) and both Water and Life carried, Quickening wears the shape chosen at a rest fire instead. Floating Flower: the flower drops to the ground as a lily 2 m across for 5 s that soaks what stands on it, and you mend 8 as it opens. Rootlets: every enemy within 5 m is seeded to full, and a heavy blow on the flowering one within 4 s still mends you 10.
 
 
       <b>How to use it.</b> Water a seeded enemy in a crowd, then heavy it: a heal, and the whole crowd wet and seeded.
@@ -654,6 +666,9 @@ MonoBehaviour:
       <b>What sets it off.</b> A seed landing on a shaken enemy, or Tremor on a Seeded one.
 
 
+      <b>Its shapes.</b> With Overgrowth''s Shape mark (Split Rock: Taking Root or Root Web, 3 Shards, in the heart of the chart) and both Life and Earth carried, Split Rock wears the shape chosen at a rest fire instead. Taking Root: held only 1 s, and a Tremor at once on everything within 2.5 m. Root Web: everything within 6 m is held 0.5 s and given a Tremor.
+
+
       <b>How to use it.</b> The hold is your window: bring the heavy before it ends.
 
 
@@ -668,6 +683,9 @@ MonoBehaviour:
 
 
       <b>What sets it off.</b> Tremor landing on a notched enemy, or a notch on a shaken one.
+
+
+      <b>Its shapes.</b> With Forge''s Shape mark (Anvil Stone: Ringing Iron or Hammer Scale, 3 Shards, in the heart of the chart) and both Earth and Metal carried, Anvil Stone wears the shape chosen at a rest fire instead. Ringing Iron: no stone, no heavy blow needed; its Sundered goes to full at once and sparks ring out 3 m, 10, 15 stagger and a notch each. Hammer Scale: no ring; up to four enemies within 6 m take 8, a notch and a Tremor.
 
 
       <b>How to use it.</b> Shake a notched enemy, then heavy it: the whole crowd notched for your Metal.
@@ -686,6 +704,9 @@ MonoBehaviour:
       <b>What sets it off.</b> A notch landing on a Marked enemy, or a Mark on a notched one.
 
 
+      <b>Its shapes.</b> With Halo''s Shape mark (Glint: Mirror to Mirror or Burning Mirror, 3 Shards, in the heart of the chart) and both Metal and Light carried, Glint wears the shape chosen at a rest fire instead. Mirror to Mirror: the ray runs on through up to four enemies within 6 m of each other, 10, 15 stagger and a Mark each. Burning Mirror: no ray; for 5 s the next weapon blow on it lays two notches and 10 more damage.
+
+
       <b>How to use it.</b> Mark a notched enemy to Mark the one beside it too, ready for your critical blows.
 
 
@@ -700,6 +721,9 @@ MonoBehaviour:
 
 
       <b>What sets it off.</b> A Mark landing on a Cursed enemy, or a curse on a Marked one.
+
+
+      <b>Its shapes.</b> With Eclipse''s Shape mark (Diamond Ring: Shadow Bands or Through the Throat, 3 Shards, in the heart of the chart) and both Light and Dark carried, Diamond Ring wears the shape chosen at a rest fire instead. Shadow Bands: the bead as before, and a Curse on everything within 5 m. Through the Throat: the light slips out of its far side as a line 6 m long, 12 and a Mark on all on it. Both keep its Mark from being spent for 4 s.
 
 
       <b>How to use it.</b> Curse a Marked enemy, then strike it again and again while the ring holds.
@@ -718,6 +742,9 @@ MonoBehaviour:
       <b>What sets it off.</b> A curse landing on a poisoned enemy, or poison on a Cursed one.
 
 
+      <b>Its shapes.</b> With Blight''s Shape mark (Shut in the Dark: Swarm or Rot to the Bone, 3 Shards, in the heart of the chart) and both Dark and Poison carried, the jar wears the shape chosen at a rest fire instead. Both seal and break as the plain jar does. Swarm: as it breaks, 2 doses and a Curse leap to the nearest enemy within 8 m, which may seal a new jar there. Rot to the Bone: 9 stagger every second while it is sealed.
+
+
       <b>How to use it.</b> Dose it deep before you curse it: the deeper, the bigger the break. Killing it breaks the jar at once.
 
 
@@ -732,6 +759,9 @@ MonoBehaviour:
 
 
       <b>What sets it off.</b> Poison landing on a burning enemy, or Burn on a poisoned one.
+
+
+      <b>Its shapes.</b> With Pyre''s Shape mark (Fire Medicine: Fire Lance or Flying Fire, 3 Shards, in the heart of the chart) and both Poison and Fire carried, Fire Medicine wears the shape chosen at a rest fire instead. Fire Lance: after the fuse, a lane 5 m long beyond it takes 4 a dose and 6 a Burn stack, 30 stagger, a dose and a Burn. Flying Fire: five small fires land in a ring 3 m out for 3 s, burning and poisoning what walks in. Both spend half its doses.
 
 
       <b>How to use it.</b> Dose first, then light it: deep poison makes the biggest bang.
@@ -1446,19 +1476,38 @@ MonoBehaviour:
 
       <b>How it looks.</b> Its name over the enemy and the slick on the floor. Not yet: others in the slick floating as they reach four doses.'
   Marks:
+  - Id: blight.shape
+    Title: 'Shut in the Dark: Swarm or Rot to the Bone'
+    Group: 
+    Body: '<b>What it does.</b> Opens Shut in the Dark''s two shapes. At a rest fire you choose which one your jar wears, and from then on it runs instead of the plain one. <b>Swarm</b>: when the jar breaks, its swarm crawls to the nearest enemy and seals a new jar there. <b>Rot to the Bone</b>: while it is sealed, the rot eats the enemy''s balance.
+
+
+      <b>When it happens.</b> Every time Shut in the Dark fires (Poison landing on a cursed enemy, or a Curse on a poisoned one) while Dark and Poison are both carried. Before this mark is bought, or with only one of the two carried, the plain jar runs.
+
+
+      <b>The numbers.</b> Mix, 3 Shards. Both: sealed 8 seconds with its doses kept from fading; when the time ends it breaks for 5 damage a dose in 3 metres and half its doses on all it reaches, and the same as it dies. Swarm: as it breaks, 2 doses and a Curse leap to the nearest enemy within 8 metres, which may seal a new jar there. Rot to the Bone: 9 stagger every second while it is sealed. Shut in the Dark rests 8 seconds on each enemy.
+
+
+      <b>Works with.</b> Miasma and Grasp to bring the two, Wither, Feeding Rot, One Death Feeds, The Reaping, Wasting Grip.
+
+
+      <b>Example.</b> A pack: Swarm walks the jar from one to the next. A brute: Rot to the Bone, and a finisher when its balance breaks.
+
+
+      <b>Not built yet.</b> The swarm leaps as a stroke of poison and curse rather than crawling, and Rot to the Bone''s stagger comes on a beat rather than with each bite''s doses, and the meter still recovers.'
   - Id: blight.wither
     Title: Wither
     Group: 
-    Body: '<b>What it does.</b> Poison bites a quarter harder on a Cursed enemy, and does not fade from it while the curse lasts. Your heavy blows also lay a Curse and poison together, whichever of the two you carry first.
+    Body: '<b>What it does.</b> Poison bites a quarter harder on a Cursed enemy, and does not fade from it while the curse lasts.
 
 
-      <b>When it happens.</b> Always on once learned, while you carry both Dark and Poison. The heavy-blow laying comes with every heavy blow or finisher that lands.
+      <b>When it happens.</b> Always on once learned, while you carry both Dark and Poison. Whenever poison bites a Cursed enemy.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. Poison on a Cursed enemy bites 25% harder and keeps its doses for as long as the curse holds. A heavy blow lays a Curse and two doses of poison. Of your first element''s affliction, once its root is learned, it adds only what goes beyond the root''s own stack: with Dark first the Curse, one deep at most, adds nothing; with Poison first the poison adds one dose. A mixed branch''s marks are the exception to the rule that weapon blows lay only your first element''s affliction.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. Poison on a Cursed enemy bites 25% harder and keeps its doses for as long as the curse holds. Re-aimed in Phase 4: its heavy blows no longer lay a Curse and poison (the jar does that work). Of your first element''s affliction, once its root is learned, it adds only what goes beyond the root''s own stack: with Dark first the Curse, one deep at most, adds nothing; with Poison first the poison adds one dose. A mixed branch''s marks are the exception to the rule that weapon blows lay only your first element''s affliction.
 
 
-      <b>Works with.</b> Curse or Venom, Feeding Rot, Carrion Flies, The Reaping, Grasp and Miasma, and the infused strikes (R2 lays the second element).
+      <b>Works with.</b> Curse or Venom, Feeding Rot, Shut in the Dark, The Reaping, Grasp and Miasma, and the infused strikes (R2 lays the second element).
 
 
       <b>Example.</b> Poison first: lay eight doses with blade and heavy blows; the heavy blows Curse the soldier as they go. While it stays Cursed the poison never runs out and bites for 20 at a time.'
@@ -1487,45 +1536,13 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). While it pours, the stick or the cursor turns it slowly. A dodge lets it go, and a blow that lands on you breaks it. The feeding comes whenever a spell of yours strikes a poisoned enemy.
 
 
-      <b>The numbers.</b> Mix, 4 Shards, 40 mana. A bar 2.5 metres long and 1.2 metres wide, after a 0.3-second brace, for 2.5 seconds. It bites every half second for 8 damage, 6 stagger and a Curse: five bites on what stays in it. A spell striking a poisoned enemy heals 5, at most once a second. As built it does not yet take hold of an enemy, drink its poison or throw it.
+      <b>The numbers.</b> Mix, duo spell, 5 Shards, 40 mana. On an enemy already Cursed and poisoned its stream seals the jar at once, whatever its rest (once each 2.5 seconds at most). A bar 2.5 metres long and 1.2 metres wide, after a 0.3-second brace, for 2.5 seconds. It bites every half second for 8 damage, 6 stagger and a Curse: five bites on what stays in it. A spell striking a poisoned enemy heals 5, at most once a second. As built it does not yet take hold of an enemy, drink its poison or throw it.
 
 
       <b>Works with.</b> Wither, Feeding Rot, Blood Price (pay in health when short of mana), Miasma and Grasp (both feed it when they strike the poisoned), and the charged blade (it charges with Dark).
 
 
       <b>Example.</b> A poisoned brute in front of you: pour the rot over it and it is Cursed through the bites while every spell you land on it heals 5.'
-  - Id: blight.carrionflies
-    Title: Carrion Flies
-    Group: 
-    Body: '<b>What it does.</b> An enemy that dies both Cursed and poisoned bursts a moment later. Everyone near takes the doses it carried, and a curse.
-
-
-      <b>When it happens.</b> The moment an enemy carrying both Curse and poison dies; the burst follows 0.8 seconds later.
-
-
-      <b>The numbers.</b> Mix, 3 Shards. Everything within 5 metres of where it fell is Cursed at once. Then the burst, 5 metres round: 3 damage and as many doses of poison as the dead one carried, up to eight. At most twice a second.
-
-
-      <b>Works with.</b> Wither, Feeding Rot, One Death Feeds, Dread, The Reaping.
-
-
-      <b>Example.</b> Kill a Cursed soldier at eight doses in a crowd, and the others are eight deep and Cursed before they reach you.'
-  - Id: blight.gravesoil
-    Title: Grave Soil
-    Group: 
-    Body: '<b>What it does.</b> You foul the ground round your feet. For a while, whatever stands on it is bitten every two seconds and Cursed.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
-
-
-      <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. A circle 5 metres in radius, half a metre ahead of you, for 8 seconds. It bites 0.3 seconds after the cast and then every 2 seconds, four bites in all: 3 damage and a Curse each, with no stagger. It always lays Curse, whichever element you carry first, and does not hurry the poison''s beat.
-
-
-      <b>Works with.</b> Wither (poison never fades from what stands in it), Feeding Rot, Carrion Flies, One Death Feeds, Dread.
-
-
-      <b>Example.</b> Plant it where you mean to fight a pack: everyone who steps in is Cursed, so Wither keeps their poison running.'
   - Id: blight.onedeathfeeds
     Title: One Death Feeds
     Group: 
@@ -1538,7 +1555,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 5 Shards. Every poisoned enemy within 12 metres of where it fell bites at once for its doses, and you heal 4 for each one bitten. Each poison keeps its own beat afterward.
 
 
-      <b>Works with.</b> Wither, Feeding Rot (each extra bite on a Cursed one feeds again), Carrion Flies, Dread, Curse.
+      <b>Works with.</b> Wither, Feeding Rot (each extra bite on a Cursed one feeds again), Shut in the Dark''s Swarm, Curse.
 
 
       <b>Example.</b> Five soldiers at eight doses: kill one Cursed, and the other four bite for 16 each at once while you heal 16.'
@@ -1554,26 +1571,29 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The sweep takes 0.42 seconds and reaches 9 metres round the finished enemy. Each poisoned enemy in it has its poison set off and spent: 9 damage a dose (72 at eight) and 4 stagger a dose. Half the total heals you.
 
 
-      <b>Works with.</b> Wither, Carrion Flies (spread the doses first), Devouring Maw, Miasma, Grasp, Never Sated.
+      <b>Works with.</b> Wither, Shut in the Dark (spread the doses first), Devouring Maw, Miasma, Grasp, Never Sated.
 
 
       <b>Example.</b> Four soldiers at eight doses round a Cursed brute: finish the brute and each takes 72 while you heal half of it.'
-  - Id: blizzard.biting
-    Title: Biting Wind
+  - Id: blizzard.shape
+    Title: 'Rime: Rime Tree or Spindrift'
     Group: 
-    Body: '<b>What it does.</b> Your weapon blows lay Unsteady and Chill together, whichever of the two you carry first. A mixed branch''s marks are the exception to the rule that weapon blows lay only your first element''s affliction.
+    Body: '<b>What it does.</b> Opens Rime''s two shapes. At a rest fire you choose which one your Rime wears, and from then on it runs instead of the plain one. <b>Rime Tree</b>: the crust never breaks, and every blow on it adds Chill, so it freezes standing in its rime. <b>Spindrift</b>: the wind tears the crust away at once, and the ice blows out of its far side the moment Rime fires, with no heavy blow needed.
 
 
-      <b>When it happens.</b> Every weapon blow that lands, while you carry both Wind and Ice.
+      <b>When it happens.</b> Every time Rime fires (Chill landing on an unsteady enemy, or Unsteady on a chilled one) while Wind and Ice are both carried. Before this mark is bought, or with only one of the two carried, the plain Rime runs.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. One stack of Unsteady and one of Chill a blow. Your first element''s own is not laid twice: once its root is learned, the root''s stack is the one a blow lays. Unsteady: 6% more stagger, 15% longer shoves and 8% slower turning a stack. Chill: 7% slower a stack, Frozen at five.
+      <b>The numbers.</b> Mix, 3 Shards. Rime Tree: for 5 seconds every blow that lands on it, weapon or spell, adds one Chill. Spindrift: two bursts on your line beyond it, 0.7 to 4.5 metres past it, 5 damage, 2 Chill and 1 Unsteady to everything in them. Rime rests 4 seconds on each enemy.
 
 
-      <b>Works with.</b> Windchill (it needs both, and your blows lay both), Sliding Ice, Gust or Hoarfrost from a slot for more of either, the charged blade.
+      <b>Works with.</b> Windchill, Sliding Ice, Diamond Dust (Rime Tree freezes them for shattering), Cold Front, Gust and Hoarfrost.
 
 
-      <b>Example.</b> Wind first: four blows leave a soldier four deep in Unsteady and Chill, and with Windchill it goes on growing colder by itself until it freezes.'
+      <b>Example.</b> A brute that must be frozen: Rime Tree, then three quick blows and it stands frozen. A pack behind one soldier: Spindrift sprays the ice into them the moment the two meet.
+
+
+      <b>Not built yet.</b> Rime Tree''s freeze is not yet held a second longer, nor its shatter made harder.'
   - Id: blizzard.windchill
     Title: Windchill
     Group: 
@@ -1586,7 +1606,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. One stack of Chill every 2 seconds. At five it is Frozen for 2.5 seconds (elites and gods 1 second).
 
 
-      <b>Works with.</b> Biting Wind, Cold Front, Sliding Ice, Hoarfrost and Gust, Diamond Dust (a frozen enemy to shatter).
+      <b>Works with.</b> Rime''s shapes, Cold Front, Sliding Ice, Hoarfrost and Gust, Diamond Dust (a frozen enemy to shatter).
 
 
       <b>Example.</b> Gust a soldier and Hoarfrost it, then keep facing it while you guard: eight seconds later it freezes without a blow from you.'
@@ -1602,7 +1622,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. A cone 4 metres long and 90 degrees wide: 10 damage, 20 stagger and two stacks of Chill. Every enemy within 4 metres of you takes two stacks of Unsteady and is pushed 3 metres away.
 
 
-      <b>Works with.</b> Windchill (both afflictions at once), Biting Wind, Empty Air, Rushing Wake, Thin Air, Tailwind.
+      <b>Works with.</b> Windchill (both afflictions at once), Rime''s Spindrift, Gust, Tailwind.
 
 
       <b>Example.</b> Roll through a brute''s swing at the last moment: it is two deep in both and being pushed off you before it has recovered.'
@@ -1615,29 +1635,13 @@ MonoBehaviour:
       <b>When it happens.</b> A light blow that lands on an enemy carrying Chill, at most once every 1.5 seconds.
 
 
-      <b>The numbers.</b> Mix, 4 Shards. Every enemy within 3.5 metres of you is pushed 5 metres away. The burst is 2.5 metres in radius, 0.5 seconds later: 20 damage and 20 stagger. It lays no affliction.
+      <b>The numbers.</b> Mix, 3 Shards. Every enemy within 3.5 metres of you is pushed 5 metres away. The burst is 2.5 metres in radius, 0.5 seconds later: 20 damage and 20 stagger. It lays no affliction.
 
 
-      <b>Works with.</b> Biting Wind, Windchill, Hoarfrost, Strong Arm (pushes 30% further), Avalanche.
+      <b>Works with.</b> Windchill, which it grows from, Hoarfrost, Avalanche.
 
 
       <b>Example.</b> Surrounded, cut a chilled soldier: the ring is thrown 5 metres back and you have room to raise your guard.'
-  - Id: blizzard.whiteout
-    Title: Whiteout
-    Group: 
-    Body: '<b>What it does.</b> You call driving snow down on a wide circle round you for eight seconds. Shards of ice fall inside it again and again, each warned by a ring closing on its spot, each a small bite. Half of them fall where an enemy stands. As built the snow does not yet hide you or slow the enemies'' turning.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
-
-
-      <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. The circle is 7 metres in radius, centred just ahead of you, for 8 seconds. A shard every 0.6 seconds, 0.34 seconds after its ring, 1.2 metres in radius: 3 damage, 4 stagger and one stack of Unsteady.
-
-
-      <b>Works with.</b> Windchill (it keeps a crowd Unsteady), Against the Wall (a burst on each enemy a shard strikes), Rising Cut, Biting Wind.
-
-
-      <b>Example.</b> Call it as a pack pours through a gate and fight on in the middle: they stay Unsteady while you work.'
   - Id: blizzard.avalanche
     Title: Avalanche
     Group: 
@@ -1650,7 +1654,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 5 Shards, 50 mana. The lane is 9 metres long and 2 metres to each side; the head takes about 1.3 seconds to run it. Passing: 12.5 damage, 15 stagger and four stacks of Unsteady, once each, and shoved along. The bite at the end is 3 metres in radius: 25 damage, 30 stagger, a heavy blow and four stacks of Unsteady.
 
 
-      <b>Works with.</b> Rising Cut (it leaves the bitten five deep), Hammer Down, Sliding Ice, Windchill, the charged blade (Wind''s shoves).
+      <b>Works with.</b> Windchill or Cold Front (it grows from either), Rising Cut (it leaves the bitten five deep), Sliding Ice, the charged blade (Wind''s shoves).
 
 
       <b>Example.</b> A line of soldiers on a bridge: send it down the bridge, and the whole line is heaped together at its end and bitten.'
@@ -1666,42 +1670,29 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Four shards for each shatter, twelve at most; they wait up to 40 seconds after the last shatter. The dodge throws them down a lane 9 metres long and 1.1 metres to each side, in volleys of four: each volley deals 24 damage, 16 stagger and one stack of Chill to everything in the lane.
 
 
-      <b>Works with.</b> Windchill, Cold Front, Biting Wind (Ice first), a heavy blow on a frozen enemy to shatter it, Ice''s charged blade (its blows shatter), Long Stride.
+      <b>Works with.</b> Windchill, Cold Front, Rime Tree, a heavy blow on a frozen enemy to shatter it, Ice''s charged blade (its blows shatter), Long Stride.
 
 
       <b>Example.</b> Shatter three frozen soldiers, then roll toward the archers: twelve shards go with you and strike each archer three times.'
-  - Id: bloom.wetseed
-    Title: Wet Seed
+  - Id: bloom.shape
+    Title: 'Quickening: Floating Flower or Rootlets'
     Group: 
-    Body: '<b>What it does.</b> Your blows lay Soaked and Seeded together, whichever of the two you carry first. A mixed branch''s marks are the exception to the rule that weapon blows lay only your first element''s affliction.
+    Body: '<b>What it does.</b> Opens Quickening''s two shapes. At a rest fire you choose which one your Quickening wears, and from then on it runs instead of the plain one. <b>Floating Flower</b>: the flower drops to the ground under the enemy as a lily that mends you and soaks what stands on it. <b>Rootlets</b>: as the flower opens, rootlets run through the wet and seed every enemy near to full; a heavy blow still bursts the flower for a heal.
 
 
-      <b>When it happens.</b> Every weapon blow that lands, while you carry both Water and Life.
+      <b>When it happens.</b> Every time Quickening fires (Seeded landing on a soaked enemy, or Soaked on a seeded one) while Water and Life are both carried. Before this mark is bought, or with only one of the two carried, the plain Quickening runs.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. One stack of Soaked and one of Seeded a blow. Your first element''s own is not laid twice: once its root is learned, the root''s stack is the one a blow lays. Soaked lasts 8 seconds; Seeded holds up to three stacks for 8 seconds, and each of your weapon blows on it heals you 1 a stack.
+      <b>The numbers.</b> Mix, 3 Shards. Both seed the enemy to full. Floating Flower: you mend 8 as it opens; the lily is 2 metres across for 5 seconds and soaks whatever stands on it once a second. Rootlets: every enemy within 5 metres is seeded to full; a heavy blow on the flowering one within 4 seconds mends you 10. Quickening rests 4 seconds on each enemy.
 
 
-      <b>Works with.</b> Flowering and Drowned Roots (they need Seeded, and Soaked as well), Riptide and Briar Patch for more of either, Strangling Vine, Great Lotus.
+      <b>Works with.</b> Riptide and Briar Patch to bring the water and the seed, Drowned Roots, Strangling Vine, Seeded''s own burst of thorns when a seeded enemy dies.
 
 
-      <b>Example.</b> Carrying Life first, every blow seeds and soaks, so a perfect guard soon binds the enemy for Drowned Roots.'
-  - Id: bloom.flower
-    Title: Flowering
-    Group: 
-    Body: '<b>What it does.</b> A heavy blow on a Seeded enemy bursts its seed: you are mended, and everyone near it takes a burst of thorns and is Seeded and Soaked. It can happen once every seven seconds. As built no flower is shown and the burst comes at once.
+      <b>Example.</b> A wet pack with one seeded soldier: Rootlets seeds them all to full, and each that dies bursts into thorns.
 
 
-      <b>When it happens.</b> A heavy blow or finisher that lands on an enemy carrying Seeded, at most once every 7 seconds.
-
-
-      <b>The numbers.</b> Mix, 3 Shards. You mend 12. Everything within 3.5 metres of the one struck takes 12 damage, no stagger, and a stack of Seeded. Soaked on everything within 3.5 metres too, whichever element you carry first. The enemy''s own Seeded stays.
-
-
-      <b>Works with.</b> Wet Seed, Briar Patch, Seeded''s own burst of thorns when a seeded enemy dies, Drowned Roots, Strangling Vine.
-
-
-      <b>Example.</b> Seed a soldier in a crowd and land a heavy blow: you mend 12 and the soldiers round it are seeded for your next cuts.'
+      <b>Not built yet.</b> The lily mends you once as it opens rather than 3 a second while you stand on it, and the rootlets reach every enemy within 5 metres, not only the soaked.'
   - Id: bloom.roots
     Title: Drowned Roots
     Group: 
@@ -1714,7 +1705,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. Held still for 1.2 seconds.
 
 
-      <b>Works with.</b> Wet Seed, Riptide and Briar Patch (one affliction each), Flowering, Lotus Step, Great Lotus, every Water and Life mark that answers a perfect guard.
+      <b>Works with.</b> Riptide and Briar Patch (one affliction each), Quickening''s shapes, Great Lotus, every Water and Life mark that answers a perfect guard.
 
 
       <b>Example.</b> Soak and seed a duellist, then guard its next thrust perfectly: it stands rooted while you land two cuts.'
@@ -1727,33 +1718,17 @@ MonoBehaviour:
       <b>When it happens.</b> The ward with every flask you drink; the blade of water with a weapon blow that lands, at most once every 0.8 seconds.
 
 
-      <b>The numbers.</b> Mix, 4 Shards. One ward a flask; you hold three at most. The blade flies 3.5 metres at 14 metres a second, 0.8 metres wide: 4 damage, no stagger, and Soaked.
+      <b>The numbers.</b> Mix, 3 Shards. One ward a flask; you hold three at most. The blade flies 3.5 metres at 14 metres a second, 0.8 metres wide: 4 damage, no stagger, and Soaked.
 
 
-      <b>Works with.</b> Spilled Water, Wellspring, Clear Water, Deep Well, Catch the Rain, Drowned Roots.
+      <b>Works with.</b> Wellspring, Deep Well, Drowned Roots.
 
 
       <b>Example.</b> Drink before the brute''s red overhead: the ward takes it, and your answering cuts soak it.'
-  - Id: bloom.lotus
-    Title: Lotus Step
-    Group: 
-    Body: '<b>What it does.</b> You open a lotus on the ground just ahead of you. For twelve seconds it cuts every enemy standing on it and keeps it Soaked. As built it is one patch; the lotus left by each dodge, and its mending, are still to come.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). It opens under an enemy within 2 metres, or 2 metres ahead.
-
-
-      <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. 1.5 metres in radius, for 12 seconds. It bites once a second for 10 damage, with no stagger, and lays Soaked. If it lands, it charges your blade with Water.
-
-
-      <b>Works with.</b> Drowned Roots (hold them on it), Wet Seed, Undertow (pull them onto it), Heavy Water, Great Lotus.
-
-
-      <b>Example.</b> Open it at your feet in a doorway and hold the doorway: every enemy that reaches you is bitten and Soaked.'
   - Id: bloom.vine
     Title: Strangling Vine
     Group: 
-    Body: '<b>What it does.</b> A great vine bursts up under the enemy nearest you. It strikes hard and throws that enemy and anything beside it into the air for a moment. As built the three-second hold and the greater mending are still to come.
+    Body: '<b>What it does.</b> A great vine bursts up under the enemy nearest you. It strikes hard and throws that enemy and anything beside it into the air for a moment. If the one it lifts is soaked and seeded, the vine drinks the water (the Soaked is spent) and the seed flowers at once: Quickening, whatever its rest. As built the vine rises under the nearest enemy, not the nearest soaked one, and the twice-as-great heal from a heavy blow on it while it is lifted is still to come.
 
 
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). It marks the spot under the enemy and follows it until the vine rises.
@@ -1762,7 +1737,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 5 Shards, 45 mana. The nearest enemy within 5 metres, or 5 metres ahead with none. It rises 0.5 seconds after the cast, 3 metres in radius: 20 damage and 50 stagger, a heavy blow, and Soaked. What it strikes is thrown up for 0.8 seconds. If it lands, it charges your blade with Water.
 
 
-      <b>Works with.</b> Spring Tide (it is paid in mana, so it grows), Flowering, Heavy Water, Undertow, Wet Seed.
+      <b>Works with.</b> Quickening (a soaked and seeded enemy it lifts flowers at once, whatever its rest), Drowned Roots or Morning Dew (it grows from either), Riptide.
 
 
       <b>Example.</b> A brute and two soldiers close in: the vine throws all three up, and you cut the brute as it comes down.'
@@ -1778,7 +1753,7 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. The lotus is 3 metres in radius and lasts 10 seconds. Each second, Soaked and a stack of Seeded on every enemy in it, and 2 health to you while you stand in it. Five petals; each holds its enemy 3 seconds. The burst is about 5 metres in radius: 30 damage and 30% more for each petal closed (75 at five), 40 stagger and a stack of Seeded.
 
 
-      <b>Works with.</b> Wellspring (the flask heals half again as much), Regrowth, Morning Dew (the flask''s ward), Drowned Roots, Spilled Water, Catch the Rain.
+      <b>Works with.</b> Wellspring (the flask heals half again as much), Morning Dew (the flask''s ward), Drowned Roots.
 
 
       <b>Example.</b> Light Wellspring, drink in the middle of a pack, then perfect-guard five blows in the lotus: it bursts for 75 on everyone held.'
@@ -2806,22 +2781,22 @@ MonoBehaviour:
 
 
       <b>Example.</b> Light Bedrock and finish a staggered soldier: the hand comes down on the finisher''s spot and staggers the two behind it.'
-  - Id: eclipse.twilight
-    Title: Twilight
+  - Id: eclipse.shape
+    Title: 'Diamond Ring: Shadow Bands or Through the Throat'
     Group: 
-    Body: '<b>What it does.</b> The blow that ends a chain both Marks and Curses the enemy it lands on. Critical blows on an enemy that bears both heal you for a share of what they deal.
+    Body: '<b>What it does.</b> Opens Diamond Ring''s two shapes. At a rest fire you choose which one your Diamond Ring wears, and from then on it runs instead of the plain one. <b>Shadow Bands</b>: the bead of light breaks as before, and bands of shadow ripple out across the floor and Curse every enemy they cross. <b>Through the Throat</b>: the light slips out of its far side as a line that cuts and Marks all on it.
 
 
-      <b>When it happens.</b> The last light blow of a chain, or the heavy blow that ends one, lays both. The healing comes with every critical blow on an enemy carrying Marked and Cursed together.
+      <b>When it happens.</b> Every time Diamond Ring fires (Cursed landing on a marked enemy, or Marked on a cursed one) while Light and Dark are both carried. Before this mark is bought, or with only one of the two carried, the plain Diamond Ring runs.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. One mark of each. Each critical blow on an enemy bearing both heals you 15% of its damage. A Marked enemy takes critical blows for three weapon blows; a Cursed one deals 15% less and heals you 6 when it dies.
+      <b>The numbers.</b> Mix, 3 Shards. Shadow Bands: the bead, 16 damage and 30 stagger, half a second on, and a Curse on everything within 5 metres. Through the Throat: a line 6 metres long beyond it, 12 damage and a Mark on everything on it. Both keep its Mark from being spent by blows for 4 seconds. Diamond Ring rests 4 seconds on each enemy.
 
 
-      <b>Works with.</b> Light''s root (marks on perfect guards too), Dark''s root or Grasp (curses), Unblemished and Just Cut (more critical blows), The Dividing Line, Totality.
+      <b>Works with.</b> Dusk and Dawn (its cut sets Diamond Ring off whatever the rest), Grasp and Glare to bring the two, The Dividing Line.
 
 
-      <b>Example.</b> End a chain on a brute: the three blows after it are critical and each one gives back health, while the brute''s own blows land 15% lighter.'
+      <b>Example.</b> A pack round a marked soldier: Shadow Bands curses them all. A line of them: stand at its end and Through the Throat marks the whole line.'
   - Id: eclipse.daynight
     Title: Day and Night
     Group: 
@@ -2831,7 +2806,7 @@ MonoBehaviour:
       <b>When it happens.</b> Every perfect dodge heals. Each perfect dodge opens a time in which perfect guards pay double; each perfect guard opens a time in which perfect dodges pay double.
 
 
-      <b>The numbers.</b> Mix, 4 Shards. 5 health for each perfect dodge. Each window lasts 6 seconds. A perfect guard gives 30 mana in it, where it gives 15; a perfect dodge 24, where it gives 12. As built the dodge heals always, not only after a guard.
+      <b>The numbers.</b> Mix, 3 Shards. 5 health for each perfect dodge. Each window lasts 6 seconds. A perfect guard gives 30 mana in it, where it gives 15; a perfect dodge 24, where it gives 12. As built the dodge heals always, not only after a guard.
 
 
       <b>Works with.</b> Clarity (perfect moments half again as long), Glare''s Master (a perfect dodge that holds and Marks), Low Sun, Daybreak and the deep strike to spend it.
@@ -2847,10 +2822,10 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). As built it is the step and its critical heavy blow; the stored cut of light that should land with that heavy blow is still to come.
 
 
-      <b>The numbers.</b> Mix, 4 Shards, 45 mana. Up to 5 metres: to 1.8 metres past the enemy faced, or about 4 metres ahead with none. The cut is 10 damage, 10 stagger and Marked on all on the line. The heavy blow after it is critical if it lands within 3 seconds.
+      <b>The numbers.</b> Mix, duo spell, 5 Shards, 45 mana. Up to 5 metres: to 1.8 metres past the enemy faced, or about 4 metres ahead with none. The cut is 10 damage, 10 stagger and Marked on all on the line. The heavy blow after it is critical if it lands within 3 seconds.
 
 
-      <b>Works with.</b> Twilight (a critical heavy blow on a Marked and Cursed enemy heals you), Light''s root, Reckoning''s Spoken Sentence, Weighed, and the charged blade, which it charges with Light.
+      <b>Works with.</b> Diamond Ring (on a Marked and Cursed enemy its cut sets it off at once, whatever the rest), Light''s root, Reckoning''s Spoken Sentence, Weighed, and the charged blade, which it charges with Light.
 
 
       <b>Example.</b> Step through a captain''s guard, turn, and land a critical heavy blow in its back.'
@@ -2870,22 +2845,6 @@ MonoBehaviour:
 
 
       <b>Example.</b> A brute''s blow leaves you at a quarter of your health: for twelve seconds every cut fills your mana nearly twice as fast, enough for Dusk and Dawn and a way out.'
-  - Id: eclipse.blacksun
-    Title: Black Sun
-    Group: 
-    Body: '<b>What it does.</b> You hang a black sun before you. For three seconds it drags everything near it inward, and then it bursts, striking and Marking all it drew in.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). It hangs over the enemy you face, or a little ahead of you with none.
-
-
-      <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. It hangs on an enemy within 5 metres, or 5 metres ahead. For 3 seconds it pulls everything within 5 metres most of the way to its middle. Then it bursts, 5 metres in radius: 40 damage and 40 stagger, a heavy blow, and Marked. As built it bursts at one strength; growing with the blows you land under it is still to come.
-
-
-      <b>Works with.</b> Light''s root and Reckoning''s Spoken Sentence (all of them Marked at once), Twilight, Condemned, Seen Plainly, and the charged blade, which it charges with Light.
-
-
-      <b>Example.</b> Hang it in the middle of a pack, guard on its edge while they are dragged together, then cut into the knot as it bursts.'
   - Id: eclipse.dividingline
     Title: The Dividing Line
     Group: 
@@ -2898,7 +2857,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 5 Shards. At half or more: critical blows deal 1.7 times their damage, where they deal 1.5, and blows give 20% more mana. Below half: each weapon blow Curses and heals you 8% of its damage. Below a third: a burst 3.5 metres round you, 16 damage, 25 stagger and Cursed, at most once every 4 seconds. As built the burst does not come when you cross half the other way.
 
 
-      <b>Works with.</b> Twilight, Low Sun, Light''s root and Unblemished on the day side, Dark''s Cursed kills on the night side, Totality.
+      <b>Works with.</b> Day and Night or Low Sun (it grows from either), Light''s root and Unblemished on the day side, Dark''s Cursed kills on the night side, Totality.
 
 
       <b>Example.</b> A brute drives you under half: each cut now curses and heals you, and when the next blow drops you below a third the burst curses the pack round you.'
@@ -2914,7 +2873,7 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Each second, Marked and Cursed on every enemy within 14 metres. Every weapon blow critical; each heals 1, at most five times a second. The returning column deals half of what that enemy lost to your weapon, 80 at most, with 30 stagger.
 
 
-      <b>Works with.</b> Clarity (eight seconds of dark that also marks with every blow) or Hunger (feeding you while it drains), Twilight (critical blows on the Marked and Cursed heal you more), Weighed, Reckoning''s Spoken Sentence, The Dividing Line.
+      <b>Works with.</b> Clarity (eight seconds of dark that also marks with every blow) or Hunger (feeding you while it drains), Diamond Ring''s shapes, Weighed, Reckoning''s Spoken Sentence, The Dividing Line.
 
 
       <b>Example.</b> Light the surge among four soldiers, cut each of them hard while the dark lasts, and watch the light come back down on all four as it ends.'
@@ -3411,6 +3370,25 @@ MonoBehaviour:
 
 
       <b>Example.</b> Press again over a crowd at five Burn.'
+  - Id: forge.shape
+    Title: 'Anvil Stone: Ringing Iron or Hammer Scale'
+    Group: 
+    Body: '<b>What it does.</b> Opens Anvil Stone''s two shapes. At a rest fire you choose which one your Anvil Stone wears, and from then on it runs instead of the plain one. <b>Ringing Iron</b>: no stone and no waiting for a heavy blow; the shaken armour rings like struck iron at once. <b>Hammer Scale</b>: no ring; flakes of glowing scale fly from it into the enemies near.
+
+
+      <b>When it happens.</b> Every time Anvil Stone fires (Sundered landing on a shaken enemy, or Tremor on a notched one) while Earth and Metal are both carried. Before this mark is bought, or with only one of the two carried, the plain Anvil Stone runs (a stone at its back for 5 seconds; your next heavy blow drives it onto it).
+
+
+      <b>The numbers.</b> Mix, 3 Shards. Ringing Iron: its Sundered to full at once, and a ring of sparks 3 metres round it, 10 damage, 15 stagger and a notch on each. Hammer Scale: up to four enemies, each within 6 metres of the last, take 8 damage, a notch and a Tremor. Anvil Stone rests 4 seconds on each enemy.
+
+
+      <b>Works with.</b> Buckled (the shaken and notched lose their balance sooner), Hammer and Anvil, Stone Rise and Flung Blade to bring the two.
+
+
+      <b>Example.</b> No time for a heavy blow: Ringing Iron breaks its armour the moment the two meet. A loose pack: Hammer Scale notches four at once.
+
+
+      <b>Not built yet.</b> Hammer Scale''s flakes leap from one enemy to the next as an arc rather than flying at each.'
   - Id: forge.hammeranvil
     Title: Hammer and Anvil
     Group: 
@@ -3439,7 +3417,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. The spike falls 0.2 seconds later, 1.2 metres in radius: 10 damage, 20 stagger and one stack of Tremor. The three blades fly in a narrow fan at 10 metres a second for 1.2 seconds; each strikes the first enemy it meets for 9 damage, 4 stagger and one notch of Sundered. As built the spike strikes and is gone; a pillar that stands to be broken is to come.
 
 
-      <b>Works with.</b> Buckled (both afflictions from one guard), Toppling and Stone Skin on the Earth tree, Immovable, Hammer and Anvil.
+      <b>Works with.</b> Buckled (both afflictions from one guard), Mountain Stance, Hammer and Anvil, Anvil Stone''s shapes.
 
 
       <b>Example.</b> Perfect-guard a soldier''s swing: it is shaken and notched at once, and the soldier behind it takes a blade too.'
@@ -3459,22 +3437,6 @@ MonoBehaviour:
 
 
       <b>Example.</b> Notch a brute with Metal blows, shake it with Quake Step, and its balance bar fills almost half again as fast.'
-  - Id: forge.triphammer
-    Title: Trip Hammer
-    Group: 
-    Body: '<b>What it does.</b> A great hammer forms over the enemy you face, follows it for a moment, then falls on it as a heavy blow and leaves a crack in the ground that bites for a second. As built it is a hammer that falls; landing a heavy blow of your own at the same instant does not yet double it.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). With no enemy faced it falls 10 metres ahead, and the slot still waits.
-
-
-      <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. An enemy within 10 metres. It falls 1 second after the cast, 2.5 metres in radius: 30 damage, 50 stagger, a heavy blow, one stack of Tremor. The crack is about 1.9 metres in radius for 1 second, biting for 2 every half second with a stack of Tremor.
-
-
-      <b>Works with.</b> Buckled, Hammer and Anvil (the Tremor it lays opens the second strike), Standing Stones. Landing it charges the blade with Earth.
-
-
-      <b>Example.</b> Cast it on a brute, then close in: by the time you reach it the hammer has fallen and it is shaken for your heavy blow.'
   - Id: forge.drawnfromstone
     Title: Drawn From Stone
     Group: 
@@ -3487,14 +3449,14 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 5 Shards, 50 mana. A half circle 4 metres deep: 40 damage, 60 stagger and one stack of Tremor to everything in it.
 
 
-      <b>Works with.</b> Buckled, Hammer and Anvil, Standing Stones, Hard Stone. Landing it charges the blade with Earth.
+      <b>Works with.</b> Hammer and Anvil or Struck Ore (it grows from either), Buckled, Standing Stones. Landing it charges the blade with Earth.
 
 
       <b>Example.</b> Ringed by soldiers in front of you: one swing shakes them all and leaves each well on its way to staggered.'
   - Id: forge.foldedsteel
     Title: Folded Steel
     Group: 
-    Body: '<b>What it does.</b> Every finisher you land folds your blade once more. Each fold makes every blow of the weapon a little harder, and a little heavier to swing. The count shows on the screen as Folds, and it is kept for the run.
+    Body: '<b>What it does.</b> Every finisher you land folds your blade once more. Each fold makes every blow of the weapon a little harder, and a little heavier to swing. The count shows on the screen as Folds; the folds are a fight''s growth, kept until your next rest fire, not the weapon''s (the Way is what improves a weapon). As built they are kept while the mark is in force and lost with it, and a rest fire does not yet empty them.
 
 
       <b>When it happens.</b> Each finisher that lands (a heavy blow on a staggered enemy) adds a fold.
@@ -3523,54 +3485,25 @@ MonoBehaviour:
 
 
       <b>Example.</b> Finish a soldier in a pack of four: the other three are shaken and notched three deep, and your next heavy blow throws three blades.'
-  - Id: glacier.coldwater
-    Title: Cold Water
+  - Id: glacier.shape
+    Title: 'Supercooled: Sea Ice or Hard Water'
     Group: 
-    Body: '<b>What it does.</b> Your blows lay Chill and Soaked together. A Soaked enemy passes any Chill laid on it to everyone within 4 metres, so from the second blow on, your cold spreads through a crowd.
+    Body: '<b>What it does.</b> Opens Supercooled''s two shapes. At a rest fire you choose which one your Supercooled wears, and from then on it runs instead of the plain one. <b>Sea Ice</b>: the next weapon blow freezes it outright as before, and the cold runs out through the floor in a web of frost that chills everything near, so a wet neighbour becomes Supercooled too. <b>Hard Water</b>: only a heavy blow freezes it.
 
 
-      <b>When it happens.</b> Every weapon blow that lands, light or heavy. It needs Ice and Water both carried.
+      <b>When it happens.</b> Every time Supercooled fires (Chill landing on a soaked enemy, or Soaked on a chilled one) while Ice and Water are both carried. Before this mark is bought, or with only one of the two carried, the plain Supercooled runs.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. One stack of Chill and one of Soaked on each blow, whichever of the two you carry first. Your first element''s own is not laid twice: with Ice first and Chill learned, a blow lays the root''s one Chill and this mark''s Soaked. Soaked lasts 8 seconds and makes spells deal the enemy 25% more damage.
+      <b>The numbers.</b> Mix, 3 Shards. Both: the water stays still for 6 seconds; the blow that ends it freezes an ordinary enemy outright (Chill to full), gives an elite 3 Chill and a god 2, and spends the Soaked. Sea Ice: that blow also lays 2 Chill on everything within 4 metres, and on purpose this may start another Supercooled. Hard Water: only a heavy blow ends it. Supercooled rests 4 seconds on each enemy.
 
 
-      <b>Works with.</b> Chill or Soaked, Flash Freeze, Cold in the Bones, Icebreaker, Creeping Ice, The Wave Stands Still, Riptide.
+      <b>Works with.</b> Icebreaker (mana and a flask''s sip for each shatter), Riptide and Hoarfrost to bring the water and the cold, The Wave Stands Still.
 
 
-      <b>Example.</b> Holding Ice first, two blows on a soldier in a pack leave it two deep in Chill and Soaked, and the Chill has run into the two beside it as well.'
-  - Id: glacier.flash
-    Title: Flash Freeze
-    Group: 
-    Body: '<b>What it does.</b> A Soaked enemy freezes at three Chill, not five. The water goes into the ice: the freeze spends the Soaked.
+      <b>Example.</b> Riptide soaks a pack and Hoarfrost touches one: with Sea Ice, one blow freezes it and the frost runs through the wet ones beside it.
 
 
-      <b>When it happens.</b> Always on once learned, the moment a Soaked enemy reaches three stacks of Chill.
-
-
-      <b>The numbers.</b> Mix, 3 Shards. Frozen at three for the usual 2.5 seconds (elites and gods 1 second). A heavy blow then shatters it for 45 more damage, as always.
-
-
-      <b>Works with.</b> Cold Water (both on every blow), Chill, Cold Read, Riptide, Icebreaker, All at Once, Brittle.
-
-
-      <b>Example.</b> With Cold Water and Chill learned, a soldier is frozen after its second blow; the heavy blow that follows shatters it.'
-  - Id: glacier.creeping
-    Title: Creeping Ice
-    Group: 
-    Body: '<b>What it does.</b> You send a line of ice spikes along the ground ahead of you. Each enemy on the line is struck once and chilled.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
-
-
-      <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. The spikes run 8 metres from 1.3 metres ahead of you, at 20 metres a second, each 0.6 metres in radius. 8 damage, 10 stagger and two stacks of Chill to each enemy. As built it does not hold enemies by the feet.
-
-
-      <b>Works with.</b> Cold Water (Soaked enemies pass the Chill on), Flash Freeze (two stacks and one blow freeze a Soaked enemy), Bitter Cold, Chill.
-
-
-      <b>Example.</b> Send it down a line of Soaked soldiers: each is two deep, and one more blow on any of them freezes it.'
+      <b>Not built yet.</b> Sea Ice''s frost reaches every enemy within 4 metres, not only the soaked ones, and Hard Water''s freeze is not yet held longer nor its shatter made harder.'
   - Id: glacier.breaker
     Title: Icebreaker
     Group: 
@@ -3583,7 +3516,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. 12 mana and a third of a flask a shatter, while you carry fewer flasks than your most. Three shatters leave it a hair short; the fourth fills it.
 
 
-      <b>Works with.</b> Flash Freeze, Cold Water, Flying Shards, All at Once, The Wave Stands Still (one heavy blow shatters all it holds), The World Holds Still.
+      <b>Works with.</b> Supercooled''s shapes, Flying Shards, All at Once, The Wave Stands Still (one heavy blow shatters all it holds), The World Holds Still.
 
 
       <b>Example.</b> Shatter four frozen soldiers in one fight and a spent flask is back on your belt.'
@@ -3596,10 +3529,10 @@ MonoBehaviour:
       <b>When it happens.</b> Each time a weapon blow or a spell of yours strikes a Soaked enemy, at most twice a second.
 
 
-      <b>The numbers.</b> Mix, 4 Shards. The perfect-guard moment is 25% longer for 4 seconds: about 0.23 seconds where it is 0.18. As built it lengthens your own moment to guard; it does not slow the enemy''s wind-up.
+      <b>The numbers.</b> Mix, 3 Shards. The perfect-guard moment is 25% longer for 4 seconds: about 0.23 seconds where it is 0.18. As built it lengthens your own moment to guard; it does not slow the enemy''s wind-up.
 
 
-      <b>Works with.</b> Cold Water (every blow soaks), Cold Read, Gathering Frost, Patient Guard, Weight of Ice.
+      <b>Works with.</b> Riptide (it soaks), Cold Read, Weight of Ice.
 
 
       <b>Example.</b> Cut a Soaked duellist twice, then meet its answer with a perfect guard you would have missed.'
@@ -3631,10 +3564,29 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Each plate takes 6% off the damage you take, 30% at five. The edge reaches 2.5 metres and 1.2 more a plate (8.5 at five), 1.3 metres to each side: 12 damage, 12 stagger and one stack of Chill a plate, as a heavy blow. Five plates: 60 damage, 60 stagger and five Chill, enough to freeze.
 
 
-      <b>Works with.</b> Cold Read, Gathering Frost, Cold in the Bones, Braced, Unmoved, Chill.
+      <b>Works with.</b> Cold Read, Cold in the Bones, Chill.
 
 
       <b>Example.</b> Guard a brute''s three-blow chain, the last perfectly: four plates. Your heavy blow throws an edge 7 metres long through it and the soldier behind.'
+  - Id: halo.shape
+    Title: 'Glint: Mirror to Mirror or Burning Mirror'
+    Group: 
+    Body: '<b>What it does.</b> Opens Glint''s two shapes. At a rest fire you choose which one your Glint wears, and from then on it runs instead of the plain one. <b>Mirror to Mirror</b>: the ray goes on from enemy to enemy, drawing a zigzag of light across the room. <b>Burning Mirror</b>: no ray; the light gathers into the cracks as one white-hot point, and your next weapon blow on it strikes hard and notches it twice.
+
+
+      <b>When it happens.</b> Every time Glint fires (Marked landing on a notched enemy, or Sundered on a marked one) while Metal and Light are both carried. Before this mark is bought, or with only one of the two carried, the plain Glint runs (one ray to the nearest other enemy within 6 metres).
+
+
+      <b>The numbers.</b> Mix, 3 Shards. Mirror to Mirror: up to four enemies, each within 6 metres of the last, take 10 damage, 15 stagger and a Mark, and its notch is passed on. Burning Mirror: the point lasts 5 seconds; the next weapon blow on it lays two notches and 10 more damage. Glint rests 4 seconds on each enemy.
+
+
+      <b>Works with.</b> Bright Steel (a perfect guard lays both), Halo of Blades, Counter Cut, Open Line.
+
+
+      <b>Example.</b> A crowd of marked soldiers: Mirror to Mirror throws one flash through four of them. A duel: Burning Mirror, then a heavy blow.
+
+
+      <b>Not built yet.</b> Mirror to Mirror''s ray leaps on from every enemy it strikes, not only those carrying Sundered, and Burning Mirror''s blow strikes 10 harder rather than being made critical.'
   - Id: halo.brightsteel
     Title: Bright Steel
     Group: 
@@ -3660,29 +3612,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each critical weapon blow forges one; a perfect guard looses every one that hangs. The count shows on the screen as Blades.
 
 
-      <b>The numbers.</b> Mix, 4 Shards. Six blades at most. Each flies at 16 metres a second, turning after the attacker, and strikes for 9 damage and 8 stagger with one notch of Sundered.
+      <b>The numbers.</b> Mix, 3 Shards. Six blades at most. Each flies at 16 metres a second, turning after the attacker, and strikes for 9 damage and 8 stagger with one notch of Sundered.
 
 
-      <b>Works with.</b> Bright Steel and Marked enemies (every blow on them is critical), Counter Cut, Answering Draw, Edge Guard, Blinding Guard.
+      <b>Works with.</b> Bright Steel and Marked enemies (every blow on them is critical), Counter Cut, Edge Guard, Blinding Guard.
 
 
       <b>Example.</b> Land three critical blows on a Marked soldier, then perfect-guard the brute behind it: three blades fly into the brute.'
-  - Id: halo.answeringdraw
-    Title: Answering Draw
-    Group: 
-    Body: '<b>What it does.</b> After any perfect guard, every blow you land for a moment is critical. The Iaido Slash also Marks what it cuts and notches its armour.
-
-
-      <b>When it happens.</b> The mark and notch when the Iaido Slash, the Katana''s weapon skill (Q, Triangle or Y), strikes. It needs the Katana. The critical moment opens with each perfect guard.
-
-
-      <b>The numbers.</b> Mix, 4 Shards. One stack of Marked and one notch of Sundered from the slash. For 1.5 seconds after a perfect guard, every weapon blow is critical (one and a half times damage). Where your first element''s root mark already lays its own with the slash, that one is not laid twice.
-
-
-      <b>Works with.</b> Master''s Answer (after a perfect guard the slash comes at once, free, and critical), Halo of Blades, Bright Steel, Counter Cut.
-
-
-      <b>Example.</b> Perfect-guard a thrust and loose the Iaido Slash straight away: it lands critical on everything it cuts.'
   - Id: halo.mirroredge
     Title: Mirror Edge
     Group: 
@@ -3699,22 +3635,6 @@ MonoBehaviour:
 
 
       <b>Example.</b> An archer looses and you perfect-guard the arrow: the bolt runs back down the line and Marks it.'
-  - Id: halo.sunwheels
-    Title: Sun Wheels
-    Group: 
-    Body: '<b>What it does.</b> Two wheels of bright steel turn round you for a while, cutting and notching whatever they pass.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). As built the wheels do not yet fly out on a perfect guard.
-
-
-      <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Two wheels 2.5 metres out from you for 9 seconds. Every half second each strikes what is within a metre of it for 5 damage, 4 stagger and a notch of Sundered; an enemy is struck once in each half second however many wheels pass it.
-
-
-      <b>Works with.</b> Sunder, Poured Bronze (it pours into the notches the wheels leave), the charged blade (it charges your weapon with Metal), Every Crack Rings.
-
-
-      <b>Example.</b> Cast it before stepping into a ring of small enemies: nine seconds later each is notched three deep.'
   - Id: halo.blindingguard
     Title: Blinding Guard
     Group: 
@@ -6224,22 +6144,25 @@ MonoBehaviour:
 
 
       <b>Example.</b> Light Temper and stand in the middle of a pack with your guard up: every blow turns, and when Temper ends eight swords come down on them.'
-  - Id: overgrowth.rootgrip
-    Title: Root Grip
+  - Id: overgrowth.shape
+    Title: 'Split Rock: Taking Root or Root Web'
     Group: 
-    Body: '<b>What it does.</b> A heavy blow on an enemy that carries both Tremor and Seeded sends roots up its legs and holds it where it stands. Your heavy blows also lay Tremor and Seeded together, whichever of the two you carry first.
+    Body: '<b>What it does.</b> Opens Split Rock''s two shapes. At a rest fire you choose which one your Split Rock wears, and from then on it runs instead of the plain one. <b>Taking Root</b>: a short hold, and the floor cracks round it at once, shaking everything near. <b>Root Web</b>: the roots run on underground and catch every enemy near it for a moment.
 
 
-      <b>When it happens.</b> Every heavy blow or finisher that lands. The hold comes when the enemy already carries both, at most once every 3 seconds.
+      <b>When it happens.</b> Every time Split Rock fires (Tremor landing on a seeded enemy, or Seeded on a shaken one) while Life and Earth are both carried. Before this mark is bought, or with only one of the two carried, the plain Split Rock runs (held 2 seconds; a heavy blow while it is held splits the floor).
 
 
-      <b>The numbers.</b> Mix, 3 Shards. A heavy blow lays one stack of Tremor and one of Seeded. Your first element''s own is not laid twice: once its root is learned, the root''s stack is the one a heavy blow lays. Held still for 1.2 seconds (elites and gods for less; a few great forms cannot be held).
+      <b>The numbers.</b> Mix, 3 Shards. Taking Root: held 1 second, and one Tremor on everything within 2.5 metres. Root Web: everything within 6 metres is held 0.5 seconds and given one Tremor. Split Rock rests 4 seconds on each enemy.
 
 
-      <b>Works with.</b> Seeded or Tremor, Briar Patch or Stone Rise for more of either, the charged blade, Living Rampart (its perfect guard lays Tremor), Ripening, The Ground Wakes.
+      <b>Works with.</b> Briar Patch and Stone Rise to bring the seed and the shaking, Living Rampart, Thorns Take Root, Stone Oak.
 
 
-      <b>Example.</b> Life first: a heavy blow seeds and shakes a brute, and the next one roots it for a light chain that mends you with every cut.'
+      <b>Example.</b> A pack closing: Root Web holds them all for half a second as you roll clear. One brute: the plain Split Rock and a heavy blow while it is held.
+
+
+      <b>Not built yet.</b> Taking Root''s crack shakes the one reacting too, not only the others, and Root Web catches every enemy within 6 metres, not only the seeded.'
   - Id: overgrowth.moss
     Title: Moss on Stone
     Group: 
@@ -6252,7 +6175,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. 2 health every 3 seconds. The thorns: 8 damage and one stack of Seeded, 1 metre round the attacker.
 
 
-      <b>Works with.</b> Root Grip, Living Rampart (guard instead of rolling), Briar Coat, Seeded, Shade.
+      <b>Works with.</b> Split Rock''s shapes, Living Rampart (guard instead of rolling), Seeded.
 
 
       <b>Example.</b> Hold a doorway with your guard and never roll: the soldiers that get a blow through are seeded for your answer.'
@@ -6268,26 +6191,10 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. A patch 3 metres in radius for 6 seconds. Every second it bites for 3 damage and one stack of Seeded; every 2 seconds it lays a stack of Tremor, which slows by 10% a stack and stops balance draining.
 
 
-      <b>Works with.</b> Seeded (its death burst comes first), Fallen Seeds (a thornbush in the same place), Root Grip (what walks through carries both), Living Rampart.
+      <b>Works with.</b> Seeded (its death burst comes first), Fallen Seeds (a thornbush in the same place), Split Rock (what walks through carries both), Living Rampart.
 
 
       <b>Example.</b> Kill a seeded soldier in the middle of the pack: the rest wade through briar, slowed and seeded, and their balance stops draining.'
-  - Id: overgrowth.thornwall
-    Title: Thorn Wall
-    Group: 
-    Body: '<b>What it does.</b> You raise a hedge of stone and briar before you. Nothing walks through it, and no blow from its far side reaches you. When its time is up, or sooner if you strike it with a heavy blow, it bursts into thorns.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Swing a heavy blow close to it to burst it early.
-
-
-      <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. The hedge stands 2.5 metres ahead, 5 metres wide, rises 0.2 seconds after the cast and stands 8 seconds. The burst reaches 5 metres from its middle: 20 damage, 25 stagger and one stack of Seeded; burst by your heavy blow it is a heavy blow. One hedge at a time. As built, touching the hedge does not cut.
-
-
-      <b>Works with.</b> Seeded, Ripening, Root Grip, Briar Patch, and the charged blade: its burst charges your weapon with Life.
-
-
-      <b>Example.</b> Wall off the archers while you deal with the spearman, then burst it with a heavy blow as they come round.'
   - Id: overgrowth.stoneoak
     Title: Stone Oak
     Group: 
@@ -6300,7 +6207,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 5 Shards, 45 mana. Planted 2 metres ahead; the circle is 5 metres in radius. It first strikes half a second after planting, then every 2 seconds, for 20 seconds: 10 damage, 15 stagger and one stack of Seeded each time. As built it strikes as a grown tree from the start; it does not grow with blows, mend in its shade or block the way, and it is not one of your grown things for Shade or Reap What Is Sown.
 
 
-      <b>Works with.</b> Seeded, Ripening, Root Grip, Paid in Blood, and the charged blade: its first strike charges your weapon with Life.
+      <b>Works with.</b> Seeded, Moss on Stone or Thorns Take Root (it grows from either), Split Rock, and the charged blade: its first strike charges your weapon with Life.
 
 
       <b>Example.</b> Plant it in the middle of a room and fight inside its circle: everything there is seeded every two seconds, and every cut mends you.'
@@ -6316,7 +6223,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 5 Shards. A blocked blow: 2 health and one stack of Seeded on the attacker. A perfect guard: held still for 1 second (elites and gods for less) and two stacks of Tremor (one, with Earth first and its root learned). Blocking costs 15% more stamina.
 
 
-      <b>Works with.</b> Moss on Stone, Root Grip (the perfect guard lays the Tremor it needs), Bitter Rind, Briar Coat, Green Wood.
+      <b>Works with.</b> Moss on Stone or Thorns Take Root (it grows from either), Split Rock (the perfect guard lays the Tremor it needs), Seeded.
 
 
       <b>Example.</b> Block a soldier''s three-blow chain: it is seeded, you are 6 health better off, and your answer mends you more.'
@@ -6332,7 +6239,7 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. Everything within 7 metres of you is held for 2 seconds (elites and gods for less) and takes three stacks of Tremor and one of Seeded. When the hold ends, everything within 7 metres takes 15 damage and 20 stagger, and you mend 5 for each enemy held.
 
 
-      <b>Works with.</b> Regrowth or Bedrock, Root Grip, Seeded, Ripening, Living Rampart.
+      <b>Works with.</b> Split Rock, Seeded, Living Rampart.
 
 
       <b>Example.</b> Light Regrowth with four soldiers round you: all four stand held and shaken for two seconds, then you mend 20.'
@@ -6952,54 +6859,44 @@ MonoBehaviour:
 
 
       <b>Example.</b> Light Fever, dose a whole pack to eight while it waits, and let the surge run out: each takes 80 at once.'
-  - Id: pyre.fuel
-    Title: Fuel
+  - Id: pyre.shape
+    Title: 'Fire Medicine: Fire Lance or Flying Fire'
     Group: 
-    Body: '<b>What it does.</b> Heavy blows both poison and burn, whichever of the two you carry first. A mixed branch''s marks are the exception to the rule that weapon blows lay only your first element''s affliction.
+    Body: '<b>What it does.</b> Opens Fire Medicine''s two shapes. At a rest fire you choose which one your Fire Medicine wears, and from then on it runs instead of the plain one. <b>Fire Lance</b>: the bang is a jet of fire out of the enemy''s far side, away from you. <b>Flying Fire</b>: the bang throws five burning pellets that land round it as small fires.
 
 
-      <b>When it happens.</b> Every heavy blow or finisher that lands.
+      <b>When it happens.</b> Every time Fire Medicine fires (Burn landing on a poisoned enemy, or poison on a burning one) while Poison and Fire are both carried. Before this mark is bought, or with only one of the two carried, the plain Fire Medicine runs (a bang round it, 2.5 metres).
 
 
-      <b>The numbers.</b> Mix, 3 Shards. Two doses of poison and one stack of Burn a heavy blow. Your first element''s root counts against its own: with Poison first and Venom learned, one dose beyond Venom''s; with Fire first and Cinder learned, no Burn beyond Cinder''s. Poison holds up to eight doses for 6 seconds and bites for 2 a dose every 2 seconds; set off, it deals 6 a dose.
+      <b>The numbers.</b> Mix, 3 Shards. Fire Lance: after the 0.6-second fuse, a lane 5 metres long and 2 metres wide beyond it takes 4 damage a dose and 6 a Burn stack, 30 stagger, a dose and a Burn. Flying Fire: five patches 1 metre across in a ring 3 metres out, for 3 seconds; each burns 3 every half second with a Burn and poisons once a second. Both spend half its doses. Fire Medicine rests 4 seconds on each enemy.
 
 
-      <b>Works with.</b> Venom or Cinder, Miasma or Flame Wave in a slot (more of either), the charged blade and the R2 strike, Goes Up, Funeral Fire, Light the Pyres.
+      <b>Works with.</b> Goes Up (at full depth the bang is twice as hard and spends nothing), Funeral Fire, Miasma and Flame Wave to bring the two, Slow Burn.
 
 
-      <b>Example.</b> Carrying Poison first and Fire second: a chain ending in a heavy blow leaves a soldier deep in poison and burning with it.'
+      <b>Example.</b> A line of soldiers behind a poisoned one: stand at its front and Fire Lance burns down the line. Holding a doorway: Flying Fire rings the poisoned one with fire.
+
+
+      <b>Not built yet.</b> Fire Lance''s jet is a lane rather than a cone 40 degrees wide.'
   - Id: pyre.flashpoint
     Title: Goes Up
     Group: 
-    Body: '<b>What it does.</b> When a burning enemy''s poison reaches its full depth, it goes up. The poison explodes and sets alight everyone near.
+    Body: '<b>What it does.</b> When Fire Medicine goes off on an enemy whose poison is at full depth, it strikes twice as hard and spends nothing: a second bang of the same size follows the first, and the doses it spent are laid back.
 
 
-      <b>When it happens.</b> The moment an affliction fills on an enemy that is burning and carries a full eight doses of poison.
+      <b>When it happens.</b> Each time Fire Medicine fires on an enemy at full depth of poison (eight doses), while Poison and Fire are both carried.
 
 
-      <b>The numbers.</b> Mix, 4 Shards. The poison is set off: 6 damage a dose to everything within 3 metres, 48 at eight, with 4 stagger a dose. Everything within 3 metres also takes two stacks of Burn. At most twice a second.
+      <b>The numbers.</b> Mix, 3 Shards. A second bang 2.5 metres round it, 0.65 seconds after the reaction: 32 damage, 30 stagger and a Burn on all it reaches. Four doses laid back on it.
 
 
-      <b>Works with.</b> Fuel, Cinder, Funeral Fire, Slow Burn, Searing Edge.
+      <b>Works with.</b> Miasma and Venom (eight doses fast), Fire Medicine''s shapes, Funeral Fire, Slow Burn.
 
 
-      <b>Example.</b> Keep a burning brute poisoned; the blow that brings it to eight doses makes it go up among its friends.'
-  - Id: pyre.fireeater
-    Title: Fire Eater
-    Group: 
-    Body: '<b>What it does.</b> You brace and breathe out a stream of green fire for two seconds, turning slowly as it burns. It poisons everything it sweeps across. A dodge lets it go.
+      <b>Example.</b> Fill a soldier with eight doses, then burn it: two bangs, and it is still eight deep.
 
 
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). While it pours, the stick or the cursor turns it.
-
-
-      <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. A bar 5 metres long and 1.2 metres to each side, after a 0.3-second brace, for 2 seconds. It bites every quarter second for 4 damage, 3 stagger and one dose of poison: eight bites on what stays in it. The branch''s spells are made of Poison whichever element is first, and one that lands charges the blade with Poison.
-
-
-      <b>Works with.</b> Goes Up (eight doses fast), Fuel, Funeral Fire, Light the Pyres.
-
-
-      <b>Example.</b> Sweep it across a line of soldiers as they come up the stair.'
+      <b>Not built yet.</b> The reaction itself is not doubled: a second bang stands in, and the doses are laid back after half are spent.'
   - Id: pyre.funeralfire
     Title: Funeral Fire
     Group: 
@@ -7012,26 +6909,10 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. A burst 3.5 metres in radius: 20 damage, 20 stagger and two doses of poison, and one stack of Burn on all within it. The ground burns 1.5 metres round for 4 seconds, biting for 5 every half second with a stack of Burn. At most twice a second.
 
 
-      <b>Works with.</b> Fuel, Goes Up, Catching Fire, Wildfire.
+      <b>Works with.</b> Goes Up, Catching Fire, Fire Medicine.
 
 
       <b>Example.</b> Kill one poisoned, burning soldier in a crowd and the rest catch both.'
-  - Id: pyre.slowfuse
-    Title: Lit Fuse
-    Group: 
-    Body: '<b>What it does.</b> You set a fuse on the enemy you face. Your next weapon blow on it within five seconds sets off a great blast round it. With no enemy faced nothing is set, and the slot waits all the same.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Then land a blow on that enemy.
-
-
-      <b>The numbers.</b> Mix, 5 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. An enemy within 8 metres. The blast is 3.5 metres in radius: 40 damage, 40 stagger and two doses of poison.
-
-
-      <b>Works with.</b> Fuel (make that blow a heavy one), Goes Up, Funeral Fire.
-
-
-      <b>Example.</b> Set the fuse on the brute in the middle and cut it once: the whole group takes 40.'
   - Id: pyre.slowburn
     Title: Slow Burn
     Group: 
@@ -7044,7 +6925,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 5 Shards. 30% stronger afflictions.
 
 
-      <b>Works with.</b> Fuel, Goes Up, Funeral Fire, Searing Edge, Light the Pyres.
+      <b>Works with.</b> Goes Up or Funeral Fire (it grows from either), Fire Medicine, Light the Pyres.
 
 
       <b>Example.</b> A five-deep burn that dealt 12.5 a second now deals over 16.'
@@ -7060,7 +6941,7 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. 60 mana. Up to six enemies within 9 metres. The three breaths take 2.2 seconds. Each pillar is 2 metres in radius: 40 damage and 40 stagger, a heavy blow, two doses of poison, plus 6 a dose of poison and 10 and 10 a stack of Burn set off.
 
 
-      <b>Works with.</b> Fuel, Fire Eater, Goes Up, Cinder, Slow Burn.
+      <b>Works with.</b> Goes Up, Fire Medicine, Cinder, Slow Burn.
 
 
       <b>Example.</b> Fight until five enemies are burning, roll clear, and light the pyres.'
@@ -7159,38 +7040,25 @@ MonoBehaviour:
 
 
       <b>Not built yet.</b> The Static comes by chance on half the passes rather than on every other one. Your weapon blows do not fling the shards yet (each landed blow should fling the nearest into the enemy struck, 8 with a Chill and a Static, and a heavy blow all that are left), and the shards are drawn as the toothed discs until their glassy look is made.'
-  - Id: tempest.charged
-    Title: Charged Air
+  - Id: tempest.shape
+    Title: 'Thunder Gust: Thunderhead or Bolt from the Blue'
     Group: 
-    Body: '<b>What it does.</b> A heavy blow on an enemy carrying Static sets the Static off, as Lightning''s root would, whichever of the two is your first element. Your blows also lay Static and Unsteady together, whichever of the two you carry first: every light blow a Static, every blow an Unsteady. Once your first element''s root (Static or Unsteady) is learned, that element''s own is the root''s, not laid twice.
+    Body: '<b>What it does.</b> Opens Thunder Gust''s two shapes. At a rest fire you choose which one your Thunder Gust wears, and from then on it runs instead of the plain one. <b>Thunderhead</b>: the enemy is thrown up, not away, and a bolt meets it at the top of its rise and discharges it over the heads of the rest. <b>Bolt from the Blue</b>: nothing is thrown; its Static goes off where it stands and runs on as an arc through the enemies behind it.
 
 
-      <b>When it happens.</b> A heavy blow or finisher on an enemy carrying Static sets it off. Every light blow lays a Static, and every blow that lands an Unsteady.
+      <b>When it happens.</b> Every time Thunder Gust fires (Unsteady landing on a charged enemy, or Static on an unsteady one) while Lightning and Wind are both carried. Before this mark is bought, or with only one of the two carried, the plain Thunder Gust runs.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. Static set off deals 7 damage a stack to everything within 4 metres, with no stagger, at most about three times a second. One stack a blow of each; of your first element''s, none beyond its root''s. Unsteady makes an enemy take 6% more stagger, be shoved 15% further and turn 8% slower for each stack, up to five.
+      <b>The numbers.</b> Mix, 3 Shards. Thunderhead: thrown up for 1 second; half a second in, its Static is discharged, 7 damage and 5 stagger a stack to everything within 4 metres. Bolt from the Blue: its Static goes off in 1.5 metres, then an arc runs through up to three enemies, each up to 5 metres from the last, for 14 damage, 10 stagger and a Static each. Thunder Gust rests 4 seconds on each enemy.
 
 
-      <b>Works with.</b> Thunderclap or Gust in a slot (more of either), the charged blade and the R2 strike, Thunder Lift, Slip Current, The Sky Finds Them, Falling Thunder.
+      <b>Works with.</b> The Sky Finds Them (Thunderhead''s throw calls its bolt), Slip Current, Static, Gust.
 
 
-      <b>Example.</b> Carrying Wind first and Lightning second: your light blows build Unsteady and Static on a soldier, and the heavy blow that ends your chain sets the Static off into its neighbours.'
-  - Id: tempest.lift
-    Title: Thunder Lift
-    Group: 
-    Body: '<b>What it does.</b> A discharge of five Static or more throws its enemy into the air. What is too heavy to leave the ground reels where it stands instead.
+      <b>Example.</b> A pack round one charged soldier: Thunderhead lifts it out of their middle and the bolt bursts over all of them. A line of archers: Bolt from the Blue runs the charge down the line.
 
 
-      <b>When it happens.</b> Whenever a discharge spends five stacks or more: a heavy blow or finisher on a full enemy, or Conductor setting one off.
-
-
-      <b>The numbers.</b> Mix, 4 Shards. Thrown up for 1 second. One too heavy to lift takes 40 stagger instead.
-
-
-      <b>Works with.</b> Static, Charged Air, The Sky Finds Them, Full Discharge, Single Stroke, Eye of the Storm.
-
-
-      <b>Example.</b> Fill a soldier with Static and land a heavy blow: it is thrown up, helpless, while you cut the next one.'
+      <b>Not built yet.</b> Bolt from the Blue''s arc leaps to the nearest enemies rather than along the line downwind of the first, and each takes 14 rather than the whole discharge it would have had.'
   - Id: tempest.slip
     Title: Slip Current
     Group: 
@@ -7203,7 +7071,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 3 Shards. One stack of Static and one of Unsteady on every enemy within 2.2 metres of where you stop.
 
 
-      <b>Works with.</b> Charged Air, Thunder Lift, Blink, Storm Step, Tailwind.
+      <b>Works with.</b> Thunder Gust''s shapes, Blink, Storm Step, Tailwind.
 
 
       <b>Example.</b> Roll into the middle of three soldiers: all three gain a stack of each before you have swung.'
@@ -7213,32 +7081,16 @@ MonoBehaviour:
     Body: '<b>What it does.</b> An enemy you throw into the air is struck by a bolt, which leaps on to two more near it and leaves Static on each.
 
 
-      <b>When it happens.</b> Each time one of your marks throws an enemy into the air, such as Thunder Lift. As built the bolt falls as soon as it is thrown up, not at the top of its rise.
+      <b>When it happens.</b> Each time one of your marks throws an enemy into the air, such as Thunder Gust''s Thunderhead. As built the bolt falls as soon as it is thrown up, not at the top of its rise.
 
 
       <b>The numbers.</b> Mix, 3 Shards. 14 damage and two stacks of Static to the one thrown, then the same to up to two more within 4 metres of each other.
 
 
-      <b>Works with.</b> Thunder Lift, Static, Charged Air.
+      <b>Works with.</b> Thunder Gust''s Thunderhead, Static, Updraft.
 
 
-      <b>Example.</b> Thunder Lift throws a soldier up; the bolt strikes it and its two neighbours and leaves each two deep in Static.'
-  - Id: tempest.cloud
-    Title: Storm Overhead
-    Group: 
-    Body: '<b>What it does.</b> You call a storm over the ground before you. For ten seconds bolts fall inside its circle, each warned by a ring closing on the spot. Half of them fall where an enemy stands.
-
-
-      <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
-
-
-      <b>The numbers.</b> Mix, 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. The circle is 3 metres in radius, 1 metre ahead of you, for 10 seconds. A bolt every 0.8 seconds, 0.34 seconds after its warning ring, 1.2 metres across in radius: 14 damage, 20 stagger and one stack of Static (the branch''s spells are made of Lightning, whichever element is first).
-
-
-      <b>Works with.</b> Charged Air, Static, Thunder Lift, Lodestone, Live Wire.
-
-
-      <b>Example.</b> Call it over a gate as a pack comes through and fight on its edge.'
+      <b>Example.</b> Thunderhead throws a soldier up; the bolt strikes it and its two neighbours and leaves each two deep in Static.'
   - Id: tempest.eye
     Title: Eye of the Storm
     Group: 
@@ -7251,7 +7103,7 @@ MonoBehaviour:
       <b>The numbers.</b> Mix, 5 Shards, 50 mana. Up to 2.5 seconds, at least half a second. The column is 3.5 metres in radius and holds up to eight. A bite every 0.4 seconds: 6 damage and one stack of Static (the branch''s spells are made of Lightning, whichever element is first). Thrown out up to 5 metres; each bolt deals 12 damage and 20 stagger.
 
 
-      <b>Works with.</b> Charged Air, Slip Current, Thunder Lift, Static.
+      <b>Works with.</b> Slip Current or The Sky Finds Them (it grows from either), Thunder Gust''s shapes, Static.
 
 
       <b>Example.</b> Swarmed by small enemies: hold it the full time, then let go and the bolts fall on every one thrown.'
@@ -7267,7 +7119,7 @@ MonoBehaviour:
       <b>The numbers.</b> A god''s gift, never sold; in the playtest it can be bought. You land 0.34 seconds after the throw. Everything within 4.5 metres takes 22 damage, 40 stagger, three stacks of Static and three of Unsteady, and is pushed 3 metres.
 
 
-      <b>Works with.</b> Charged Air, Static, Thunder Lift, Slip Current, Stored Charge.
+      <b>Works with.</b> Static, Thunder Gust''s Thunderhead, Slip Current, Stored Charge.
 
 
       <b>Example.</b> Finish a staggered brute in a crowd and land among its friends with each three deep in both.'
