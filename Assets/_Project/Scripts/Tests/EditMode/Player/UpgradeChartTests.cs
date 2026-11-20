@@ -500,6 +500,8 @@ namespace Clover.Tests
             [Elements.Light] = 9,
             // Dark's table gives two keystones, Never Sated and Dead Already, and four majors.
             [Elements.Dark] = 10,
+            // Poison's table gives three keystones; it keeps Slow Death and Volatile beside its Devotion.
+            [Elements.Poison] = 9,
         };
 
         [Test]

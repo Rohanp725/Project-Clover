@@ -237,3 +237,35 @@ Each was built with the default given here; every one is easy to change. Added t
 6. **Devouring Maw's jaw no longer Curses.** The built jaw Cursed what it struck, so every bite would find a Curse to
    spend; the roster's "on a Cursed enemy it spends the Curse" asks that it was Cursed before. Default: the jaw lays no
    Curse. Alternative: it Curses after the spend, so a second bite in the same fight feeds.
+
+## Poison
+
+1. **Three keystones in the table, two kept.** Poison's passive table gives Slow Death, Volatile and Plague Bearer; the
+   cut list says each tree keeps two beside its Devotion. Default: Slow Death and Volatile kept (both change the beat,
+   Poison's own timing, and PlayerUpgrades already keeps their rules), Plague Bearer retired and refunded (6 Shards):
+   its aura of doses overlaps Miasma's Censer and the Devotion's fighting in the mist. Alternatives: keep Plague Bearer
+   and cut Volatile or Slow Death; or keep it as a major (3 Shards) in the empty place at the top of the trunk.
+2. **Four Empowers with no shorter wait in the roster, and One by One's with no price.** Five Needles', Coiled
+   Strike's, Blister's and Share Alike's Empowers give only stronger numbers or reach. Default: each waits a second less
+   (8, 9, 9 and 8 seconds), as Metal's and Light's. One by One's gives "7 damage a dose": default 45 mana, not 50, with
+   the 7 a dose left for later (it is a number of the Learn's own burst, which an Empower cannot reach yet).
+   Alternatives: keep their waits and let the test allow an Empower that only strengthens; 50 mana kept for One by One.
+3. **The beat Masters test each enemy as it is struck.** A cast cannot be tested against the beat yet (a cast has no
+   enemy of its own). Default: Miasma's, One by One's and Share Alike's Masters answer each enemy struck within a fifth
+   of a second of its own bite, not the cast made on the beat of any enemy near. Alternatives: give them nothing until
+   the cast can be tested; or test the enemy faced at the cast.
+4. **Stand-ins wider than their timing.** Until the moments exist: Coiled Strike's Master ends its wait on any perfect
+   dodge, once in 10 s; Shed Skin blinds the enemies near where you stood on every cast, not only a let-go in the
+   perfect window; Tasted Every Herb heals 2 a second and adds a dose to every lay in every fight, not only in a cloud.
+   Default: as written, with **Not built yet** lines. Alternatives: give them nothing until the pieces are built; or
+   halve the Devotion's healing until clouds can be stood in.
+5. **Five Needles as one fan.** No form throws five separate needles yet. Default: one narrow cone with the five
+   needles' worth (15 damage, 50 stagger, five doses), and the first enemy struck pinned, once a cast. Alternative: the
+   bullets form (five things closing on the enemy faced from a ring), which strikes five times but from all sides.
+6. **Three readings of the roster.** Centipede's Run's "a bite on each": default a strike on each, 14 damage and 15
+   stagger (one fang's), two doses. Shed Tail's "every 0.5 s for 3 doses": default three doses at each lash. Low Mist's
+   sheet: default a row of six patches, each 2.5 m across. Alternatives: a bite of the poison on each; three doses over
+   the tail's whole time; one long patch.
+7. **Fever's new healing is not a mark.** The design raises Fever's healing to 40% of poison's and doubles its beat
+   now the root heals. Default: Fever unchanged here (it is the kit's surge, not part of the tree); the root's tenth is
+   built. Alternative: change the kit's Fever numbers in the same pass as the other surges.

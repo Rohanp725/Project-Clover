@@ -134,6 +134,18 @@ namespace Clover.Player
             new RetiredMark("dark.borrowed", 3), new RetiredMark("dark.feast", 3), new RetiredMark("dark.glut", 3),
             new RetiredMark("dark.deadstand", 4),
             new RetiredMark("dark.unpaid", 6),
+
+            // Poison (elements_b.md, "What to cut from the built content"): the plain minors and the dead "costs less" minor
+            // (Ready Poison), Left to Ripen, One Sickness and Lance the Wound cut outright, Rotten Fruit cut as a repeat of
+            // Blight's Carrion Flies, Swinging Censer folded into Miasma as its Censer shape, and Plague Bearer, a keystone not
+            // carried over (the tree keeps Slow Death and Volatile beside its Devotion).
+            new RetiredMark("poison.deeperdose", 1), new RetiredMark("poison.bitterdose", 1), new RetiredMark("poison.lingering", 1), new RetiredMark("poison.waitinggame", 1),
+            new RetiredMark("poison.calmpulse", 1), new RetiredMark("poison.ripe", 1), new RetiredMark("poison.wideburst", 1), new RetiredMark("poison.buckling", 1),
+            new RetiredMark("poison.spentvenom", 1), new RetiredMark("poison.stillair", 1), new RetiredMark("poison.widecloud", 1), new RetiredMark("poison.longleap", 1),
+            new RetiredMark("poison.readypoison", 1), new RetiredMark("poison.sweetfever", 1),
+            new RetiredMark("poison.ripen", 3), new RetiredMark("poison.lance", 3), new RetiredMark("poison.rottenfruit", 3), new RetiredMark("poison.onesickness", 3),
+            new RetiredMark("poison.censer", 4),
+            new RetiredMark("poison.plaguebearer", 6),
         };
 
         // NEEDS: the owner's word on whether a Shards-bought mark that moves to the Way (paid in Memories) is refunded then.

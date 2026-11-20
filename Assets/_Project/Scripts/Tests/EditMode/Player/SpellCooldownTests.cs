@@ -133,40 +133,35 @@ namespace Clover.Tests
             Assert.AreEqual(10f - 0.9f - 2f, clocks.Remaining(0), 1e-4f);
         }
 
-        [Test]
-        public void TheReadyMinorsLeftMakeTheirOwnBaseSpellWaitAFifthLess()
+        // A mark that makes its own element's base spell wait a fifth less, as the ready minors did: no mark in the
+        // catalogue gives the stat now, so the rule is held to it with one made here.
+        private static Upgrade ReadyMinor(string element) => new Upgrade
         {
-            // The owner's decision of 2026-11-19: what once cost less mana now waits less, for its own element's base spell alone.
-            // Fire's Short Breath, Lightning's Quick Clap, Wind's Easy Breath, Ice's Thin Ice, Water's Low Water, Life's Ready
-            // Soil, Earth's Near to Hand, Metal's Ready Steel and Light's Ready Light went with their trees' reshaping (Phase 4):
-            // their Empower marks do it now.
-            Assert.IsTrue(RetiredMarks.IsRetired(IceTree.ThinIce));
-            Assert.IsTrue(RetiredMarks.IsRetired(WaterTree.LowWater));
-            Assert.IsNull(Upgrade.ById(WaterTree.LowWater));
-            Assert.IsTrue(RetiredMarks.IsRetired(LifeTree.ReadySoil));
-            Assert.IsNull(Upgrade.ById(LifeTree.ReadySoil));
-            Assert.IsTrue(RetiredMarks.IsRetired(EarthTree.NearToHand));
-            Assert.IsNull(Upgrade.ById(EarthTree.NearToHand));
-            Assert.IsTrue(RetiredMarks.IsRetired(MetalTree.ReadySteel));
-            Assert.IsNull(Upgrade.ById(MetalTree.ReadySteel));
-            Assert.IsTrue(RetiredMarks.IsRetired(LightTree.ReadyLight));
-            Assert.IsNull(Upgrade.ById(LightTree.ReadyLight));
-            var minors = new (string Id, string Element)[]
+            Id = "test.readyminor", Name = "Ready", Element = element, Kind = UpgradeKind.Minor,
+            Stats = new[] { new StatMod(PlayerStat.BaseSpellCooldown, -0.2f) },
+        };
+
+        [Test]
+        public void TheReadyMinorsAreAllRetiredAndTheirShareStillShortensOnlyItsOwnBaseSpell()
+        {
+            // The owner's decision of 2026-11-19: what once cost less mana waited less, for its own element's base spell alone.
+            // All ten went with their trees' reshaping (Phase 4), Poison's Ready Poison the last: their Empower marks do it now.
+            var retired = new[]
             {
-                (PoisonTree.ReadyPoison, Elements.Poison),
+                "fire.shortbreath", "lightning.quickclap", "wind.easybreath", IceTree.ThinIce, WaterTree.LowWater, LifeTree.ReadySoil,
+                EarthTree.NearToHand, MetalTree.ReadySteel, LightTree.ReadyLight, PoisonTree.ReadyPoison,
             };
-            foreach (var (id, element) in minors)
+            foreach (string id in retired)
             {
-                var mark = Upgrade.ById(id);
-                Assert.IsNotNull(mark, id);
-                float share = SpellTimings.BaseCooldownShare(mark, element);
-                Assert.AreEqual(-0.2f, share, 1e-4f, id);
-                Assert.AreEqual(SpellTimings.Base(element).Cooldown * 0.8f, SpellTimings.BaseCooldown(element, share), 1e-4f, id + " shortens its own base spell");
-                string other = element == Elements.Fire ? Elements.Ice : Elements.Fire;
-                Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(mark, other), id + " leaves the other element's base spell alone");
-                StringAssert.Contains("waits a fifth less between casts", mark.Description, id);
-                StringAssert.DoesNotContain("mana", mark.Description, id);
+                Assert.IsTrue(RetiredMarks.IsRetired(id), id + " is retired");
+                Assert.IsNull(Upgrade.ById(id), id + " is in no tree");
             }
+            // The share rule itself is kept, for the Empowers and Bonds that may give it again.
+            var mark = ReadyMinor(Elements.Poison);
+            float share = SpellTimings.BaseCooldownShare(mark, Elements.Poison);
+            Assert.AreEqual(-0.2f, share, 1e-4f);
+            Assert.AreEqual(SpellTimings.Base(Elements.Poison).Cooldown * 0.8f, SpellTimings.BaseCooldown(Elements.Poison, share), 1e-4f, "it shortens its own base spell");
+            Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(mark, Elements.Fire), "it leaves another element's base spell alone");
         }
 
         [Test]
@@ -176,7 +171,7 @@ namespace Clover.Tests
             Assert.AreEqual(5.6f, SpellTimings.BaseCooldown(Elements.Ice, -0.2f), 1e-4f);
             Assert.AreEqual(0.7f, SpellTimings.BaseCooldown(Elements.Ice, -5f), 1e-4f, "no share takes the wait below a tenth");
             Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(null, Elements.Ice));
-            Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(Upgrade.ById(PoisonTree.ReadyPoison), ""));
+            Assert.AreEqual(0f, SpellTimings.BaseCooldownShare(ReadyMinor(Elements.Poison), ""));
         }
     }
 }
