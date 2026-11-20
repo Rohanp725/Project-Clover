@@ -678,6 +678,8 @@ Group: Reactions
 
 **What sets it off.** Tremor landing on a Soaked enemy, or Water on a shaken one.
 
+**Its shapes.** With the Shape mark of Water and Earth's duo branch (The Ground Gives: Quicksand or Sand Boil, 3 Shards, in the heart of the chart) and both carried, The Ground Gives wears the shape chosen at a rest fire instead. Quicksand: sunk 4 s, and once a second everything within 1.5 m is drawn 1 m toward it. Sand Boil: sunk 1.2 s, then lifted 1 s, and everything within 3 m takes 12, a Soaked and a Tremor.
+
 **How to use it.** Sink it, then come in with heavy blows: each one pins it for a moment. Not yet: sunk, it should be unable to dodge, leap or step back, and others wading in should slow too.
 
 **How it looks.** Its name over the enemy, and for a moment the floor tipping into a pit round it, wet at the rim. Not yet: the ring of sand staying round its feet.
