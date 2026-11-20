@@ -14,8 +14,8 @@ which was reworked overnight on 2026-11-20 to `feedback/2026-11-20_fix_plan.md`.
 | Weapon swings with each element (tinted hit flash) | "Weapon swings on film" (its own document) | All 121 in, both into enemies and trail alone |
 | The element on the blade | "The elements' own effects", each element | Replaced with the new swing films |
 | The braziers | "The elements' own effects", "The braziers" | All eleven contain their element, in the game |
-| The 55 reactions, built in the game | "Reactions" | Entries marked "rebuilt" are the new in-game films |
-| The 55 reactions, drawn | "Reactions, redrawn" | All 55 bespoke drawings, for the ones not yet built in the game |
+| The 55 reactions, built in the game | "Reactions" | All 55 rebuilt as bespoke effects and filmed on real enemies |
+| The 55 reactions, drawn | "Reactions, redrawn" | The Blender drawings each was built from, for comparison |
 
 ## How the review works
 
