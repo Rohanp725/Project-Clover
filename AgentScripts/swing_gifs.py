@@ -185,9 +185,24 @@ def main():
         made = make_gif(folder, out_path)
         if made:
             count, size_bytes, size = made
-            print(f"{name}: {count} frames, {count / 20.0:.2f} s, {size[0]}x{size[1]}, {size_bytes / 1e6:.2f} MB")
+            # Flushed line by line: a run of 121 GIFs takes minutes, and piped through tail it must show where it got to.
+            print(f"{name}: {count} frames, {count / 20.0:.2f} s, {size[0]}x{size[1]}, {size_bytes / 1e6:.2f} MB", flush=True)
     contact_sheet(entries, os.path.join(ROOT, "contact_sheet.png"))
-    print(f"contact sheet of {len(entries)}")
+    print(f"contact sheet of {len(entries)}", flush=True)
+    # Every clip of the grid should have its GIF, newer than its frames: say which do not.
+    missing, stale = [], []
+    for tag in WEAPONS:
+        for element in ELEMENTS:
+            name = f"{tag}_{element.lower()}"
+            gif = os.path.join(ROOT, f"swing_{name}.gif")
+            info = os.path.join(FRAMES, name, "info.txt")
+            if not os.path.exists(gif):
+                missing.append(name)
+            elif os.path.exists(info) and os.path.getmtime(gif) < os.path.getmtime(info):
+                stale.append(name)
+    print(f"GIFs: {len(WEAPONS) * len(ELEMENTS) - len(missing)} of {len(WEAPONS) * len(ELEMENTS)} present, "
+          f"{len(stale)} older than their frames"
+          + (f"; missing {', '.join(missing)}" if missing else "") + (f"; stale {', '.join(stale)}" if stale else ""), flush=True)
 
 
 if __name__ == "__main__":

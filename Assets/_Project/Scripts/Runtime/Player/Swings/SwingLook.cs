@@ -23,6 +23,11 @@ namespace Clover.Player.Swings
         /// <summary>True when the charged blow's landing is drawn by the swing look and not by the hit art (Ice's crack-web, Earth's floating cubes).</summary>
         public bool ReplacesHitArt;
         /// <summary>
+        /// True when a landed blow draws no cut streak through the body: Wind's, which goes round what it strikes (the
+        /// owner, 2026-11-20: "Wind is a line through the enemy"; nothing in a wind look passes through the body).
+        /// </summary>
+        public bool CutsRound;
+        /// <summary>
         /// The colour the trail is drawn in, which a landed blow's flash and cut streak take, softened, under this element
         /// (the owner's "Tint and soften", 2026-11-19; <see cref="Core.StruckLook"/>), so the two match.
         /// Clear until set, so a look that forgets it keeps the plain white rather than a half-strength one.

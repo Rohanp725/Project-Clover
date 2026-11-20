@@ -163,8 +163,9 @@ namespace Clover.Player.Swings
         public static readonly SwingLook Wind = new SwingLook
         {
             Element = 2, Name = Elements.Wind,
-            // The struck tint: the air-blade's.
-            Tint = new Color(1.05f, 1.2f, 1.12f),
+            // The struck tint: the teal of the elements 3 trail's middle step. The old air-blade's near-white lit the
+            // struck bodies white (the swing films of 2026-11-20). No cut streak through the body: wind goes round it.
+            Tint = new Color(0.22f, 0.7f, 0.5f), CutsRound = true,
             Line = "an air-blade: a pale see-through sweep with a bright leading streak that, once left, blows on the way the blade went, spreads and comes apart in gusts until nothing is left (never cut off); a faint stream of air along the edge while charged",
             // The elements 3 trail (staging/blender/2026-11-20_elements3): flat toon steps, never lit to white.
             Layers = Blowing(Bands(0.06f, 0.34f, 0.3f, 0.22f, 0.7f, 0.5f, 0.5f, 0.86f, 0.66f, 0.22f, 0.7f, 0.5f)),

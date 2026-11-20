@@ -1661,6 +1661,9 @@ namespace Clover.Player
             Component nearest = null;
             float nearestAt = float.MaxValue;
             Color struckTint = StruckTint;
+            // Wind's blows go round the body: no cut streak through it.
+            var struckLook = Clover.Player.Swings.SwingLooks.For(SwingElement);
+            bool cutsRound = struckLook != null && struckLook.CutsRound;
             int count = Overlap(step.Radius > 0f ? discCentre : origin, step.Radius > 0f ? step.Radius + 0.5f : reach);
             for (int i = 0; i < count; i++)
             {
@@ -1892,7 +1895,7 @@ namespace Clover.Player
                     Vfx.Play(VfxKind.Clang, other.ClosestPoint(origin));
                     if (shaker != null) shaker.Shake(0.06f, 0.1f);
                 }
-                if (outcome != HitOutcome.Blocked)
+                if (outcome != HitOutcome.Blocked && !cutsRound)
                 {
                     // The cut line: which way the blade went through, drawn over the sparks.
                     Vector3 through = CutDirection(step);
