@@ -53,6 +53,7 @@ checked against its code and committed on its own.
 - [x] marks/redhot.md: Red Hot's shapes (Burn bites twice as hard while it glows)
 - [x] effects.md: plain Red Hot (Burn bites twice as hard while it glows)
 - [x] marks/venomrime.md: Cold Damage (bites twice as hard while frozen; doses go off on the shatter), Six Levels Down (0.3 s more freeze a bite, wait per enemy)
+- [x] marks/smoulder.md: Night Sun (heals 1 for each Burn)
 
 ## Unsure lines
 
