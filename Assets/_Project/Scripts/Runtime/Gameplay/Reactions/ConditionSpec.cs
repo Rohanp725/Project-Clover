@@ -45,6 +45,9 @@ namespace Clover.Gameplay
         /// </summary>
         public AfflictionKind HoldsBites = AfflictionKind.None;
         public float HeldScale = 1f;
+        /// <summary>While it runs, this affliction beats <see cref="QuickenBy"/> times as fast; its fading is not hastened (Ichor's bleeding: poison every half second).</summary>
+        public AfflictionKind Quickens = AfflictionKind.None;
+        public float QuickenBy = 1f;
         public int DeepensBy;
         /// <summary>It lasts only while the enemy carries this (and <see cref="While2"/>): once one is gone it ends, and its end is told ("while both last").</summary>
         public AfflictionKind While = AfflictionKind.None;

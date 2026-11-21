@@ -577,7 +577,8 @@ namespace Clover.Gameplay
                     else if (poison && Afflictions.SharedBeat) bites = Afflictions.BeatNow;
                     else
                     {
-                        untilTick[i] -= deltaTime * pace;
+                        // A condition may quicken the beat alone (Ichor), not the fading.
+                        untilTick[i] -= deltaTime * pace * Conditions.Quickening((AfflictionKind)i);
                         bites = untilTick[i] <= 0f;
                         if (bites) untilTick[i] += spec.TickSeconds;
                     }

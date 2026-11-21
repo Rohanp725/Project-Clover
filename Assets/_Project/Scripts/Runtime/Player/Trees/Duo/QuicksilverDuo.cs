@@ -17,6 +17,8 @@ namespace Clover.Player.Trees.Duo
         public const string Cinnabar = "quicksilver.cinnabar";
         public const string TheUndyingDrink = "quicksilver.drink";
         public const string Ichor = "quicksilver.ichor";
+        /// <summary>The bleeding Ichor's answer sets: 4 s of poison beating every half second, then every dose at once.</summary>
+        public const string Bleeding = "quicksilver.ichor.bleeding";
         /// <summary>The conditions the two shapes set, each the beads as the plain reaction's.</summary>
         public const string HeavySilver = "quicksilver.heavy";
         public const string RunningSilver = "quicksilver.running";
@@ -104,19 +106,21 @@ namespace Clover.Player.Trees.Duo
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a counter on an 11 s cooldown (SpellTimings). The parry form turns the first blow and
             // answers it; the answer notches the attacker to full (the branch's first element), poisons it three deep and
-            // makes its poison bite.
-            // NEEDS: the bleeding 4 s (its poison biting every half second, then every dose at once), each weapon blow in it
-            // adding a dose, and half the cooldown back when nothing strikes.
+            // sets it bleeding for 4 s: its poison beats every half second (ConditionSpec.Quickens), each weapon blow in it adds
+            // a dose, and at the end every dose goes off at once. Nothing struck, it waits half as long (SpellSpec.MissedWait).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Ichor, Name = "Ichor", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Counter, Requires = new[] { EnvenomedEdge, TheNailPulled }, Icon = UpgradeIcons.Shield,
-                Description = "You raise the guard. The first blow that lands on it is turned, and your answer pulls the nail: the attacker is notched to full, poisoned three deep, and its poison bites.",
+                Description = "You raise the guard. The first blow that lands on it is turned, and your answer pulls the nail: the attacker is notched to full, poisoned three deep, and bleeds for 4 s. Its poison bites every half second, each of your weapon blows adds a dose, and at the end every dose goes off at once. If nothing strikes, it waits half as long.",
                 Form = SpellForms.Parry,
-                Spell = new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 90f, Damage = 10f, Stagger = 20f, Stacks = 99 },
+                Spell = new SpellSpec { Seconds = 1.2f, Reach = 3f, Arc = 90f, Damage = 10f, Stagger = 20f, Stacks = 99, MissedWait = 0.5f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 3 },
-                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Bite, Delay = 0.2f },
+                    new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Condition,
+                        State = new ConditionSpec { Id = Bleeding, Seconds = 4f, Quickens = AfflictionKind.Poison, QuickenBy = 2f } },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Bleeding, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Bleeding, Needs = AfflictionKind.Poison, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Poison, Radius = 0.6f },
                 },
             }, HeartPattern.Spell));
         }

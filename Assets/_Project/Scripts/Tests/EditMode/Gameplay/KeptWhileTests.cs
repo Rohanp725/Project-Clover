@@ -350,6 +350,31 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void IchorsBleedingBeatsThePoisonTwiceAsFastWithoutHasteningItsFade()
+        {
+            var bleeding = NewEnemy();
+            var plain = NewEnemy();
+            bleeding.Lay(AfflictionKind.Poison, 3, 30f, 1f, LaySource.Spell);
+            plain.Lay(AfflictionKind.Poison, 3, 30f, 1f, LaySource.Spell);
+            bleeding.Conditions.Set(new ConditionSpec { Id = "test.bleed", Seconds = 4f, Quickens = AfflictionKind.Poison, QuickenBy = 2f }, null, 1);
+            Assert.AreEqual(2f, bleeding.Conditions.Quickening(AfflictionKind.Poison), 1e-5f);
+            Assert.AreEqual(1f, bleeding.Conditions.Quickening(AfflictionKind.Burn), 1e-5f);
+            float fast = Damage(bleeding, 3.95f), slow = Damage(plain, 3.95f);
+            Assert.Greater(slow, 0f);
+            Assert.AreEqual(slow * 2f, fast, slow * 0.3f, "about twice the bites in the same time");
+            Assert.AreEqual(plain.SecondsLeft(AfflictionKind.Poison), bleeding.SecondsLeft(AfflictionKind.Poison), 0.05f, "its fading runs as written");
+
+            var ichor = Upgrade.ById(QuicksilverDuo.Ichor);
+            var bleed = ichor.Effects.Single(effect => effect.State != null && effect.State.Id == QuicksilverDuo.Bleeding).State;
+            Assert.AreEqual(4f, bleed.Seconds, 1e-5f);
+            Assert.AreEqual(AfflictionKind.Poison, bleed.Quickens);
+            Assert.AreEqual(2f, bleed.QuickenBy, 1e-5f);
+            Assert.IsTrue(ichor.Effects.Any(effect => effect.On == UpgradeTrigger.ConditionStruck && effect.Condition == QuicksilverDuo.Bleeding && effect.Do == UpgradeAction.Afflict), "each weapon blow adds a dose");
+            Assert.IsTrue(ichor.Effects.Any(effect => effect.On == UpgradeTrigger.ConditionEnded && effect.Condition == QuicksilverDuo.Bleeding && effect.Do == UpgradeAction.SetOff), "every dose at once at the end");
+            Assert.AreEqual(0.5f, ichor.Spell.MissedWait, 1e-5f, "half the wait when nothing strikes");
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))

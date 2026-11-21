@@ -80,6 +80,17 @@ namespace Clover.Gameplay
             return held;
         }
 
+        /// <summary>How fast the kind beats under the conditions running: the product of each one's quickening (1 as written).</summary>
+        public float Quickening(AfflictionKind kind)
+        {
+            int bit = Bit(kind);
+            float by = 1f;
+            if (bit == 0) return by;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && (runs[i].QuickMask & bit) != 0) by *= runs[i].QuickBy;
+            return by;
+        }
+
         /// <summary>How much deeper than its usual depth the kind may lie while the conditions running allow it (the most any one allows).</summary>
         public int DeeperBy(AfflictionKind kind)
         {
@@ -149,6 +160,8 @@ namespace Clover.Gameplay
             run.BiteFrozen = spec.BitesHarderFrozen;
             run.HoldMask = Bit(spec.HoldsBites);
             run.HeldScale = Math.Max(1f, spec.HeldScale);
+            run.QuickMask = spec.QuickenBy > 0f && spec.QuickenBy != 1f ? Bit(spec.Quickens) : 0;
+            run.QuickBy = spec.QuickenBy;
             run.DeepBy = Math.Max(0, spec.DeepensBy);
             run.WhileMask = Bit(spec.While) | Bit(spec.While2);
             run.OnBite = spec.OnBite;
