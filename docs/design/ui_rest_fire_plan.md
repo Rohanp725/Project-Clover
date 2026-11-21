@@ -13,7 +13,7 @@ This is a plan only. Nothing here is built, and no decision in it is final until
 - [x] 1. What exists now
 - [x] 2. What the best build screens do (research)
 - [x] 3. Three layouts for the Hand and the Way together
-- [ ] 4. A style guide for every menu
+- [x] 4. A style guide for every menu
 - [ ] 5. The build plan and the checks
 - [ ] 6. Owner questions
 
@@ -473,3 +473,135 @@ are not changing" makes one way of choosing for both the spells and the aspects.
 are worth having: B's aspect cards (they slide in over the Element column) and C's weapon picture (a small one in the
 Steel header, once the weapon renders exist). The rest menu becomes: **Loadout**, **The element chart**, **The Way
 chart**, **Leave** (and **To the hub** once built); "Set the Hand" and "Shapes" fold into Loadout (question Q4).
+
+---
+
+## 4. A style guide for every menu
+
+For every screen the player reads: the rest menu, the loadout, both charts, the pause menu, the controls page, the
+guide and the reading pages. The HUD in a fight is out of scope, except that it should wear the same icons.
+
+All sizes are pixels on the 1920 by 1080 board, set directly: the 86% shrink in `MenuParts.cs:39` goes. At 720p
+everything is two-thirds of this; at 4K, double.
+
+### 4.1 Type
+
+| Use | Face | Size | Colour |
+|---|---|---|---|
+| Screen title ("Loadout", "Rest") | Spectral SemiBold, the game's face | 48 | Gold |
+| Column or section header ("Steel: Katana") | Spectral SemiBold | 36 | Text |
+| Item name: a slot's spell, the pane's title | the body face, bold | 32 | Text |
+| Body: the pane's words, a list's rows | the body face, regular | 30 (rows 28) | Text |
+| Meta: role, kind, cost, shape | the body face, regular | 26 | Text 2 |
+| The smallest anything may be: glyph captions, counts | the body face, bold | 24 | Text 2 |
+
+- **Two faces.** Spectral stays for titles and headers, where its book look sets the mood. Body text moves to a plain
+  sans with open shapes, because Microsoft's "Clear Text" test asks for a sans-serif and Spectral's thin strokes
+  smear at small sizes on a TV (P1, P2). The recommended body face is **Atkinson Hyperlegible** (SIL Open Font
+  Licence, made by the Braille Institute for low vision; free, no account), pinned to one release at intake, with a
+  row in `ASSETS.csv` (question Q3).
+- **Nothing a player must read is under 24.** Body is 30, the sofa size (P1).
+- **Line length** 30 to 45 characters in the pane; line height 1.3 times the size; normal letter spacing (never
+  condensed).
+- **No outline component on menu text.** Words sit on a solid panel, so they need no outline; the drop outline stays
+  only for words drawn over the world (the HUD, floor labels).
+- **Text size option**: 100%, 125% and 150%, in the pause menu's settings and on L3 in the loadout. Every screen is
+  checked at 150% (5.3).
+- Text is drawn with TextMeshPro (signed-distance fonts stay sharp at every size), not the old `Text` (question Q2).
+
+### 4.2 Colour
+
+One set of named colours in one place, used by every screen (today there are four copies and three greys, 1.1).
+
+| Name | Value | Use |
+|---|---|---|
+| Panel | `#0A0914` at 96% | Every menu's backing. Words never sit on the dimmed world |
+| Raised | `#17142A` | Slots, cards, list rows' backs |
+| Focus fill | `#2B2134` | Behind the focused slot, card or row |
+| Text | `#EEE9E1` | Near-white main text. Never `#FFFFFF` |
+| Text 2 | `#B8B1A5` | Meta lines, captions (about 9 to 1 on Panel) |
+| Text off | `#86808F` | Locked, sleeping, not bought (about 5 to 1 on Panel; every grey is measured, not guessed) |
+| Gold | `#FFCC73` | Titles, the focus frame, the set keystone's frame |
+| Loss | `#FF7A5C` | "You will lose", "Not enough Memories". Always with words, never colour alone (P8) |
+| Memories | `#E8A24A` (amber) | The Memories count and prices, matching the paid mote (`way_build_plan.md` Q10) |
+| Shards | the HUD's Shard colour | Shard prices and counts |
+| Element colours | `Elements.Colour` | Element names, slot rims, list group headers, the element's icons |
+
+- **No pure white anywhere in a menu.** The standing rule bans pure white in effects; menus may use near-white for
+  text (`Text` above). `MenuParts.Faint`, which is pure white at 60%, is retired.
+- **Element colours on text** only for a name or a header, and only where the colour meets 4.5 to 1 on Panel. An
+  element whose colour is too dark for that (Dark, perhaps Poison or Metal) gets a lighter text tint of the same hue,
+  kept beside its colour in `Elements`.
+- **The focused thing** gets the Focus fill and a 3 px Gold frame outside its edge; its words stay `Text`. The orange
+  brush stroke with gold words on top (1.3 item 7) is retired from lists; it may stay as a decoration on the rest menu,
+  under near-white words.
+
+### 4.3 Icons
+
+- **Style**: flat, symmetrical, bold shapes with no stroke thinner than 4 px at 64 px, one colour on the ink, tinted by
+  element; the way the chart's icons are already painted (`UpgradeIcons.cs`, `Editor/Builders/UiArt.cs`), and as
+  Ghost of Tsushima drew its crests (P3).
+- **Sizes**: 64 in a slot or card, 40 in a list row, 28 inline in a line of text.
+- **An icon always has its word beside it**, except in the role-count strip, whose words are in the pane.
+- **Sets this pass needs**:
+  - The five roles (Opener, Breaker, Detonator, Counter, Movement), so a Hand reads like a hand of cards (P10).
+  - A picture for each spell. First pass: the element's icon with the role's icon in its corner, so no spell is a
+    blank box; each spell's own picture comes later, ledgered.
+  - Way pictures: an icon per aspect (about 35 across ten weapons), per keystone (about 70) and per bearing (2); the
+    technique's and Temper's.
+  - Button glyphs for the pad (Xbox and PlayStation shapes) and the keys, as pictures, replacing "E", "Space" and
+    "LT tap" written as words. They must follow rebinding (`ControlNames`).
+  - Later, the aspect cards' large pictures: renders of the approved weapon models in each aspect's look, from
+    Blender, through staging and intake.
+
+### 4.4 How a thing is described (the details pane)
+
+The pane sits in the same place on every screen that has one: on the right, 520 px wide, always describing the
+focused thing. There are no floating tooltips; a pad cannot hover (P12).
+
+```
+NAME                                                (32, bold)
+Kind line: "Lightning spell · Breaker", "Keystone of the Sheath"   (26, Text 2)
+What it does: one or two sentences, each 15 words or fewer.        (30)
+Cost line: "20 mana · Ready again in 6 s", or "Costs nothing".      (26)
+Press line, when it has its own press: "Hold RB, let go".           (26)
+Shape line, for a spell: "Shape: Rolling Thunder (left or right to swap)"
+------------------------------------------------------------------
+Compare: "Worn here now: ..." or "Set now: ... Setting this one turns that one off."
+What changes: "You will have no opener." "The Stream's 5 marks go to sleep."
+The press: "(A) Set this keystone"
+```
+
+- **Words**: 8th-grade, short sentences, present tense, "you", verbs first ("You dash and cut through any guard.").
+  Digits for numbers. Seconds as "s" only on the cost line; in sentences, "two seconds". No jargon a new player has
+  not met (no "DoT", "proc", "i-frames").
+- **A locked thing's first line is the reason and the way to fix it**: "Buy it on the Way chart. 4 Memories." "Opens
+  when the Fire god falls." (`way_build_plan.md` 2.5 already words these.)
+- **Keywords** (Burn, Static, stagger, the infused strike) are written in their colour; the first time one shows on a
+  screen, its one-line meaning is added at the foot of the pane.
+- **The long words** (the `docs/marks/` texts the chart's details page shows) follow under the rule; when they do not
+  fit, the right stick scrolls the pane. The separate full-page details (`UpgradeMenu.cs:530` to 537) go, and the
+  details stop being playtest-only.
+- **Numbers that decide a choice are always shown** (mana, cooldown, price); multipliers and fine print are in the
+  long words (P16).
+
+### 4.5 Focus, movement and buttons
+
+- One thing focused at all times; the stick and d-pad move to the neighbour in the direction pushed; nothing wraps
+  round the ends; each screen opens on the likely choice (P11 to P13). A held direction repeats after 0.32 s, then
+  every 0.2 s (as today).
+- A face button that acts on the focused thing shows its glyph on that thing or on the pane's last line. The footer
+  shows only Back and the screen-wide presses. No line of instructions (P14).
+- A (use) chooses or sets; B (dodge) backs out one level; LB and RB change page or weapon; X keeps (a Hand); the
+  right stick scrolls the pane; L3 changes text size. The mouse clicks what it points at and the wheel scrolls; the
+  keys follow the same map through `ControlNames`.
+- The cursor slides in 0.12 s with a soft tick on the UI mixer group; nothing waits on an animation (P19).
+
+### 4.6 Layout
+
+- Panels on solid Panel colour, with the world dimmed to about 70% behind them; the HUD's bars, the spell diamond and
+  the floor's words are hidden while a full-screen menu is open (1.2, 1.3).
+- Layout by layout groups and anchors, not typed pixel positions, so 125% and 150% text reflow instead of
+  overlapping.
+- Keep every word at least 64 px from the screen's edge.
+- The same frame sprite, title position and footer on every screen.
