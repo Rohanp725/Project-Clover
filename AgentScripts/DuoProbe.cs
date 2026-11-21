@@ -109,6 +109,11 @@ public class DuoProbeRunner : MonoBehaviour
         while (ReadingBox.Instance != null && ReadingBox.Instance.IsOpen && guard++ < 40) yield return Tap(Key.E);
         guard = 0;
         while (GuidePage.Showing && guard++ < 40) yield return Tap(Key.E);
+        // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
+        // the back key closes it, and failing that it is closed outright, so time is never left stopped.
+        if (GuidePage.Showing) yield return Tap(Key.Space);
+        if (GuidePage.Showing) GuidePage.Instance.Close();
+        if (Time.timeScale <= 0f) Debug.Log("[Probe] WRONG: time still stopped after the guide");
     }
 
     private TrainingDummy Copy(TrainingDummy from, string name, Vector3 at)

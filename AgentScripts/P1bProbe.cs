@@ -165,6 +165,11 @@ public class P1bProbeRunner : MonoBehaviour
         while (ReadingBox.Instance != null && ReadingBox.Instance.IsOpen && guard++ < 40) yield return Tap(Key.E);
         guard = 0;
         while (GuidePage.Showing && guard++ < 40) yield return Tap(Key.E);
+        // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
+        // the back key closes it, and failing that it is closed outright, so time is never left stopped.
+        if (GuidePage.Showing) yield return Tap(Key.Space);
+        if (GuidePage.Showing) GuidePage.Instance.Close();
+        if (Time.timeScale <= 0f) Debug.Log("[Probe] WRONG: time still stopped after the guide");
     }
 
     private static T Find<T>(Func<T, bool> which) where T : UnityEngine.Object =>
@@ -243,7 +248,10 @@ public class P1bProbeRunner : MonoBehaviour
             $"charged {combat.Blade.Charged} {combat.Blade.Element} x{combat.Blade.Left}, charges {charges}->{spells.BladeCharges}");
         yield return WhenFree();
         yield return Real(0.3f);
-        Judge("the blade shows Fire on the weapon", look.ShownElement == Elements.Fire && look.PiecesHeld > 0, $"{look.ShownElement}, {look.PiecesHeld} pieces");
+        // With the new effects on, nothing is drawn on the blade itself (the owner, 2026-11-20: the element pieces on the
+        // blade come off, the swing trails and the weapon's highlight stay); the old look still holds its pieces.
+        Judge("the blade carries Fire: drawn by the swing with the new effects, by pieces on the weapon with the old", combat.Blade.Element == Elements.Fire && (Clover.Player.Forms.ElementArt.On ? look.PiecesHeld == 0 : look.ShownElement == Elements.Fire && look.PiecesHeld > 0),
+            $"new effects {Clover.Player.Forms.ElementArt.On}, charge {combat.Blade.Element}, shown {look.ShownElement}, {look.PiecesHeld} pieces");
         yield return Showcase("fire");
         still.Afflictions.Clear();
         yield return BladeBlows(Elements.Fire, AfflictionKind.Burn, "fire");
@@ -393,7 +401,10 @@ public class P1bProbeRunner : MonoBehaviour
         Judge("Ice's spell lands and charges the blade with Ice", combat.Blade.Charged && combat.Blade.Element == Elements.Ice && spells.BladeCharges == charges + 1, $"{combat.Blade.Element} x{combat.Blade.Left}");
         yield return WhenFree();
         yield return Real(0.3f);
-        Judge("the blade shows Ice on the weapon", look.ShownElement == Elements.Ice && look.PiecesHeld > 0, $"{look.ShownElement}, {look.PiecesHeld} pieces");
+        // With the new effects on, nothing is drawn on the blade itself (the owner, 2026-11-20: the element pieces on the
+        // blade come off, the swing trails and the weapon's highlight stay); the old look still holds its pieces.
+        Judge("the blade carries Ice: drawn by the swing with the new effects, by pieces on the weapon with the old", combat.Blade.Element == Elements.Ice && (Clover.Player.Forms.ElementArt.On ? look.PiecesHeld == 0 : look.ShownElement == Elements.Ice && look.PiecesHeld > 0),
+            $"new effects {Clover.Player.Forms.ElementArt.On}, charge {combat.Blade.Element}, shown {look.ShownElement}, {look.PiecesHeld} pieces");
         yield return Showcase("ice");
         still.Afflictions.Clear();
         yield return BladeBlows(Elements.Ice, AfflictionKind.Chill, "ice");
