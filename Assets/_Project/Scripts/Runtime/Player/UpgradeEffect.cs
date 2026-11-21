@@ -59,6 +59,11 @@ namespace Clover.Player
         /// (Night Sun: 1 healed for each Burn on the enemy struck). Nothing is done when it carries none.
         /// </summary>
         public AfflictionKind PerDepthOf = AfflictionKind.None;
+        /// <summary>
+        /// Not None: a pull or push over an area takes only the enemies carrying this affliction (The Pull of Night draws
+        /// the Soaked alone).
+        /// </summary>
+        public AfflictionKind OnlyCarrying = AfflictionKind.None;
         /// <summary>The stacks it lays are as many as the trigger carried: what the dead enemy bore of <see cref="Needs"/>, or what a set-off spent.</summary>
         public bool CarriesDepth;
         /// <summary>Only while this state of the player holds.</summary>

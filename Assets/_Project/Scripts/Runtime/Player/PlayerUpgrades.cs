@@ -1690,7 +1690,7 @@ namespace Clover.Player
                         ElementLook.Ring(look, centre + Vector3.up * 0.2f);
                         break;
                     }
-                    combat.Displace(centre, Or(effect.Radius, 5f), Or(effect.Amount, 3f), effect.Do == UpgradeAction.Pull);
+                    combat.Displace(centre, Or(effect.Radius, 5f), Or(effect.Amount, 3f), effect.Do == UpgradeAction.Pull, effect.OnlyCarrying);
                     ElementLook.Ring(held, centre + Vector3.up * 0.2f);
                     break;
                 case UpgradeAction.SlowTime:

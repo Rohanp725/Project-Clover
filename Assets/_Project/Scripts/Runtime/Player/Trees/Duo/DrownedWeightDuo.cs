@@ -25,8 +25,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Water, B = Elements.Dark;
 
-            // NEEDS: pull-to-point (Drawn Under's pool drawing the others in at 1.5 m a second; now a pull of 2 m at once);
-            // afflicted-only (The Pull of Night drawing only the Soaked; now every enemy within 5 m).
+            // The Pull of Night draws only the Soaked (UpgradeEffect.OnlyCarrying).
+            // NEEDS: pull-to-point (Drawn Under's pool drawing the others in at 1.5 m a second; now a pull of 2 m at once).
             var under = new List<UpgradeEffect>(Swell(DrawnUnder, true))
             {
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Seconds = 1.5f },
@@ -34,7 +34,7 @@ namespace Clover.Player.Trees.Duo
             };
             var night = new List<UpgradeEffect>(Swell(PullOfNight, false))
             {
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PullOfNight, By = StruckBy.Weapon, Do = UpgradeAction.Pull, Radius = 5f, Amount = 1f, Cooldown = 0.3f },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = PullOfNight, By = StruckBy.Weapon, Do = UpgradeAction.Pull, Radius = 5f, Amount = 1f, OnlyCarrying = AfflictionKind.Soaked, Cooldown = 0.3f },
             };
             to.Add(HeartPattern.Put(new Upgrade
             {

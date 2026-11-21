@@ -375,6 +375,20 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void ThePullOfNightDrawsOnlyTheSoaked()
+        {
+            var wet = new Afflicted();
+            var dry = new Afflicted();
+            wet.Afflictions.Lay(AfflictionKind.Soaked, 1, 0f, 1f, LaySource.Spell);
+            Assert.IsTrue(PlayerCombat.Carries(wet, AfflictionKind.Soaked));
+            Assert.IsFalse(PlayerCombat.Carries(dry, AfflictionKind.Soaked));
+            Assert.IsTrue(PlayerCombat.Carries(dry, AfflictionKind.None), "nothing asked, everyone taken");
+            Assert.IsFalse(PlayerCombat.Carries(new object(), AfflictionKind.Soaked), "what carries nothing is not taken");
+            var night = Upgrade.ById(DrownedWeightDuo.Shape).Shapes.First(shape => shape.Name == "The Pull of Night").Effects;
+            Assert.IsTrue(night.Any(effect => effect.Do == UpgradeAction.Pull && effect.OnlyCarrying == AfflictionKind.Soaked));
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))

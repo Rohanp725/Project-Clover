@@ -1188,7 +1188,7 @@ namespace Clover.Player
         }
 
         /// <summary>Drags everything in a circle toward its middle, or throws it away from there, by about this many metres. Returns how many it moved.</summary>
-        public int Displace(Vector3 centre, float radius, float metres, bool pull)
+        public int Displace(Vector3 centre, float radius, float metres, bool pull, AfflictionKind onlyCarrying = AfflictionKind.None)
         {
             if (!pull) metres *= StatPush;
             spellStruck.Clear();
@@ -1199,6 +1199,8 @@ namespace Clover.Player
                 if (other.transform.root == transform.root) continue;
                 var target = other.GetComponentInParent<IDamageable>();
                 if (target == null || spellStruck.Contains(target) || !(target is IShovable shovable)) continue;
+                // Only those carrying the affliction asked for (The Pull of Night: the Soaked).
+                if (!Carries(target, onlyCarrying)) continue;
                 Vector3 offset = ((Component)target).transform.position - centre;
                 offset.y = 0f;
                 float distance = offset.magnitude;
@@ -1210,6 +1212,10 @@ namespace Clover.Player
             }
             return spellStruck.Count;
         }
+
+        /// <summary>True when no affliction is asked for, or the target carries it.</summary>
+        public static bool Carries(object target, AfflictionKind kind) =>
+            kind == AfflictionKind.None || (target is IAfflictable afflicted && afflicted.Afflictions.Has(kind));
 
         /// <summary>The nearest enemy all around within aiming range, or null. The guard uses it to know whom to face.</summary>
         public Transform NearestEnemy(float range = 0f) => FindEnemy(transform.forward, 360f, range > 0f ? range : AimRange, false);
