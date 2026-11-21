@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Clover.Player;
 using Clover.Player.Build;
 using Clover.Player.Growth;
+using Clover.Player.Trees;
 using Clover.Player.Way;
 using NUnit.Framework;
 
@@ -180,6 +181,28 @@ namespace Clover.Tests
             Assert.IsTrue(MarkRules.CanBuy(SheathStem, learned, wallet, true, false, flags.Contains, 0));
             Assert.IsTrue(MarkRules.CanBuy(Temper2, new HashSet<string> { Temper.Id }, wallet, true, false, null, 0), "temper grows rank by rank");
             Assert.IsFalse(MarkRules.CanBuy(Temper2, new HashSet<string>(), wallet, true, false, null, 0));
+        }
+
+        [Test]
+        public void TheChartsBuyAsksEachMarkInItsOwnCurrency()
+        {
+            var learned = new HashSet<string>();
+            var shardMark = Upgrade.ById(FireTree.FireWithoutEnd);
+            Assert.AreEqual(Currency.Shards, shardMark.Currency);
+            var wallet = new Wallet { Shards = 0, Memories = 0 };
+            // A Way mark: Memories from the wallet, however many Shards the run holds.
+            Assert.IsFalse(MarkRules.CanBuyInItsCurrency(Temper, learned, 999, wallet, true, false, null, 0), "no Memories, whatever the Shards");
+            wallet.Memories = Temper.Cost;
+            Assert.IsTrue(MarkRules.CanBuyInItsCurrency(Temper, learned, 0, wallet, true, false, null, 0), "Memories buy it with no Shards held");
+            Assert.IsTrue(wallet.Pay(Temper));
+            Assert.AreEqual(0, wallet.Memories, "paid in Memories");
+            Assert.IsFalse(MarkRules.CanBuyInItsCurrency(Temper, learned, 0, null, true, true, null, 0), "no wallet, no Memories mark");
+            Assert.IsFalse(MarkRules.CanBuyInItsCurrency(Technique, learned, 0, new Wallet { Memories = 9 }, true, false, new HashSet<string>().Contains, 0), "its gate still holds");
+            // An element mark: Shards, whatever the wallet's Memories.
+            var full = new Wallet { Memories = 999 };
+            Assert.AreEqual(MarkRules.CanBuy(shardMark, learned, 999, true, true), MarkRules.CanBuyInItsCurrency(shardMark, learned, 999, full, true, true, null, 0),
+                "a Shards mark is asked as the Shards chart asks it");
+            Assert.IsFalse(MarkRules.CanBuyInItsCurrency(shardMark, learned, 0, full, true, true, null, 0), "Memories never buy a Shards mark");
         }
 
         [Test]

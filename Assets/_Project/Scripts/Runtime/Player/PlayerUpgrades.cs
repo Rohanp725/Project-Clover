@@ -507,13 +507,27 @@ namespace Clover.Player
         }
 
         /// <summary>True when the mark can be bought now. A god's gift is never sold, except in the playtest, where it is a playtest unlock.</summary>
-        public bool CanBuy(Upgrade upgrade) =>
-            MarkRules.CanBuy(upgrade, RunState.Unlocked, RunState.Points, Open(upgrade), PlaytestMode.On);
+        public bool CanBuy(Upgrade upgrade)
+        {
+            // A mark priced in Memories is asked of the save's wallet and the Way's own opening; the save is read only then.
+            if (upgrade != null && upgrade.Currency == Currency.Memories)
+            {
+                var data = Progress.Data;
+                bool open = upgrade.IsWay ? Way.WayRules.Open(upgrade, data.OwnedWeapons, PlaytestMode.On) : Open(upgrade);
+                return MarkRules.CanBuyInItsCurrency(upgrade, RunState.Unlocked, RunState.Points, data.Wallet, open, PlaytestMode.On, Progress.Has, data.GodsFelled);
+            }
+            return MarkRules.CanBuyInItsCurrency(upgrade, RunState.Unlocked, RunState.Points, null, Open(upgrade), PlaytestMode.On, null, 0);
+        }
 
+        /// <summary>Buys the mark, paid in its own currency: Memories from the wallet, Shards from the run's purse.</summary>
         public bool TryBuy(Upgrade upgrade)
         {
             if (!CanBuy(upgrade)) return false;
-            RunState.Points -= upgrade.Cost;
+            if (upgrade.Currency == Currency.Memories)
+            {
+                if (!Progress.Data.Wallet.Pay(upgrade)) return false;
+            }
+            else RunState.Points -= upgrade.Cost;
             RunState.Unlocked.Add(upgrade.Id);
             Bought++;
             // A spell learned goes into an empty slot, if there is one, when the slots next look (PlayerSpells).

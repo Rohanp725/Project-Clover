@@ -62,6 +62,17 @@ namespace Clover.Player
             return Buyable(upgrade, unlocked, wallet.Of(upgrade.Currency), open, playtest, has, godsFelled);
         }
 
+        /// <summary>
+        /// The chart's one buy, asked in the mark's own currency: a mark priced in Memories (the Way, the Body) from the
+        /// wallet, any other from the run's <paramref name="shards"/> (RunState.Points until task L.3 moves them into the
+        /// wallet). <paramref name="wallet"/> may be null when the mark is not priced in Memories.
+        /// </summary>
+        public static bool CanBuyInItsCurrency(Upgrade upgrade, ICollection<string> unlocked, int shards, Wallet wallet, bool open, bool playtest,
+            Func<string, bool> has, int godsFelled) =>
+            upgrade != null && upgrade.Currency == Currency.Memories
+                ? CanBuy(upgrade, unlocked, wallet, open, playtest, has, godsFelled)
+                : CanBuy(upgrade, unlocked, shards, open, playtest);
+
         // The one rule both purses share; funds are what is held of the mark's own currency.
         private static bool Buyable(Upgrade upgrade, ICollection<string> unlocked, int funds, bool open, bool playtest, Func<string, bool> has, int godsFelled)
         {
