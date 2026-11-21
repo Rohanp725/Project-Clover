@@ -5,60 +5,60 @@ The long explanation the chart shows for every mark on Pyre, the duo branch Pois
 carried. Its reaction is Fire Medicine; its Shape mark lets you choose what Fire Medicine does.
 
 ## pyre.shape
-**What it does.** Opens Fire Medicine's two shapes. At a rest fire you choose which one your Fire Medicine wears, and from then on it runs instead of the plain one. **Fire Lance**: the bang is a jet of fire out of the enemy's far side, away from you. **Flying Fire**: the bang throws five burning pellets that land round it as small fires.
+**What it does.** Unlocks two new shapes for Fire Medicine. At a rest fire, you pick which shape your Fire Medicine uses. From then on, it uses that shape instead of the plain one. **Fire Lance**: the bang is a jet of fire out of the enemy's far side, away from you. **Flying Fire**: the bang throws five burning pellets that land around the enemy as small fires.
 
-**When it happens.** Every time Fire Medicine fires (Burn landing on a poisoned enemy, or poison on a burning one) while Poison and Fire are both carried. Before this mark is bought, or with only one of the two carried, the plain Fire Medicine runs (a bang round it, 2.5 metres).
+**When it happens.** Every time Fire Medicine goes off while you carry both Poison and Fire. Fire Medicine goes off when Burn lands on a poisoned enemy, or when poison lands on a burning one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Fire Medicine. The plain one makes a bang 2.5 metres around the enemy.
 
-**The numbers.** Mix, 3 Shards. Fire Lance: after the 0.6-second fuse, a lane 5 metres long and 2 metres wide beyond it takes 4 damage a dose and 6 a Burn stack, 30 stagger, a dose and a Burn. Flying Fire: five patches 1 metre across in a ring 3 metres out, for 3 seconds; each burns 3 every half second with a Burn and poisons once a second. Both spend half its doses. Fire Medicine rests 4 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Fire Lance: after a 0.6-second fuse, a path 5 metres long and 2 metres wide past the enemy takes 4 damage per dose and 6 per Burn stack, plus 30 stagger, a dose and a Burn. Flying Fire: five patches, each 1 metre across, land in a ring 3 metres out and last 3 seconds. Each one burns for 3 damage and a Burn every half second, and poisons once a second. Both shapes use up half of the enemy's doses. After Fire Medicine goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
-**Works with.** Goes Up (at full depth the bang is twice as hard and spends nothing), Funeral Fire, Miasma and Flame Wave to bring the two, Slow Burn.
+**Works with.** Goes Up (with full poison, the bang is twice as hard and uses nothing up), Funeral Fire, Miasma and Flame Wave to set it up, Slow Burn.
 
-**Example.** A line of soldiers behind a poisoned one: stand at its front and Fire Lance burns down the line. Holding a doorway: Flying Fire rings the poisoned one with fire.
+**Example.** A line of soldiers stands behind a poisoned one. Stand in front, and Fire Lance burns all the way down the line. Holding a doorway: Flying Fire surrounds the poisoned enemy with fire.
 
-**Not built yet.** Fire Lance's jet is a lane rather than a cone 40 degrees wide.
+**Not built yet.** For now, Fire Lance's jet is a straight path instead of a cone 40 degrees wide.
 
 ## pyre.flashpoint
-**What it does.** When Fire Medicine goes off on an enemy whose poison is at full depth, it strikes twice as hard and spends nothing: a second bang of the same size follows the first, and the doses it spent are laid back.
+**What it does.** When Fire Medicine goes off on an enemy whose poison is full, it hits twice as hard and uses nothing up. A second bang of the same size follows the first, and the doses it used are put back.
 
-**When it happens.** Each time Fire Medicine fires on an enemy at full depth of poison (eight doses), while Poison and Fire are both carried.
+**When it happens.** Each time Fire Medicine goes off on an enemy with full poison (eight doses), while you carry both Poison and Fire.
 
-**The numbers.** Mix, 3 Shards. A second bang 2.5 metres round it, 0.65 seconds after the reaction: 32 damage, 30 stagger and a Burn on all it reaches. Four doses laid back on it.
+**The numbers.** Mix, 3 Shards. A second bang 2.5 metres around the enemy, 0.65 seconds after the reaction. It deals 32 damage, 30 stagger and a Burn to everything it reaches. Four doses are put back on the enemy.
 
 **Works with.** Miasma and Venom (eight doses fast), Fire Medicine's shapes, Funeral Fire, Slow Burn.
 
-**Example.** Fill a soldier with eight doses, then burn it: two bangs, and it is still eight deep.
+**Example.** Give a soldier eight doses, then set it on fire. Two bangs go off, and it still has eight doses.
 
-**Not built yet.** The reaction itself is not doubled: a second bang stands in, and the doses are laid back after half are spent.
+**Not built yet.** The reaction itself isn't doubled yet. For now, a second bang takes its place, and the doses are put back after half are used up.
 
 ## pyre.funeralfire
-**What it does.** An enemy that dies poisoned and burning explodes, and leaves the ground burning where it fell.
+**What it does.** An enemy that dies while poisoned and burning explodes, and leaves the ground burning where it fell.
 
-**When it happens.** The moment an enemy dies carrying both poison and Burn.
+**When it happens.** The moment an enemy dies with both poison and Burn on it.
 
-**The numbers.** Mix, 3 Shards. A burst 3.5 metres in radius: 20 damage, 20 stagger and two doses of poison, and one stack of Burn on all within it. The ground burns 1.5 metres round for 4 seconds, biting for 5 every half second with a stack of Burn. At most twice a second.
+**The numbers.** Mix, 3 Shards. A burst with a 3.5-metre radius deals 20 damage, 20 stagger, two doses of poison and one stack of Burn to everything in it. The ground burns 1.5 metres around for 4 seconds, dealing 5 damage and a stack of Burn every half second. At most twice a second.
 
 **Works with.** Goes Up, Catching Fire, Fire Medicine.
 
-**Example.** Kill one poisoned, burning soldier in a crowd and the rest catch both.
+**Example.** Kill one poisoned, burning soldier in a crowd, and the rest catch both.
 
 ## pyre.slowburn
-**What it does.** Every affliction you lay works harder, Burn and poison among them: each bite, and each set-off.
+**What it does.** Every affliction you add works harder, including Burn and poison: every bite, and every time one is set off.
 
-**When it happens.** Always on once learned.
+**When it happens.** Always on once you learn it.
 
-**The numbers.** Mix, 5 Shards. 30% stronger afflictions.
+**The numbers.** Mix, 5 Shards. Afflictions are 30% stronger.
 
-**Works with.** Goes Up or Funeral Fire (it grows from either), Fire Medicine, Light the Pyres.
+**Works with.** Goes Up or Funeral Fire (it comes after either on the chart), Fire Medicine, Light the Pyres.
 
-**Example.** A five-deep burn that dealt 12.5 a second now deals over 16.
+**Example.** A five-stack burn that dealt 12.5 damage a second now deals over 16.
 
 ## pyre.lightthepyres
-**What it does.** You kneel and drive your weapon into the ground. A line of fire runs to every poisoned or burning enemy near and follows it. Stand through three breaths, and a pillar of flame rises under each, setting off its burn and its poison. A dodge or a blow taken breaks it. With no one alight, the mana comes back.
+**What it does.** You kneel and drive your weapon into the ground. A line of fire runs to every poisoned or burning enemy nearby and follows it. Stay still through three breaths, and a pillar of flame rises under each one, setting off its burn and its poison. A dodge or getting hit breaks it. If no enemy is poisoned or burning, you get the mana back.
 
-**When it happens.** Cast it from its spell slot (hold L2 and a face button, or 1 to 4) and stay still.
+**When it happens.** Cast it from its spell slot (hold L2 and a face button, or press 1 to 4) and stay still.
 
-**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. 60 mana. Up to six enemies within 9 metres. The three breaths take 2.2 seconds. Each pillar is 2 metres in radius: 40 damage and 40 stagger, a heavy blow, two doses of poison, plus 6 a dose of poison and 10 and 10 a stack of Burn set off.
+**The numbers.** 5 Shards. You can buy it once you carry both elements; no god gives it. 60 mana. It reaches up to six enemies within 9 metres. The three breaths take 2.2 seconds. Each pillar has a 2-metre radius and deals 40 damage and 40 stagger, counts as a heavy blow, and adds two doses of poison. On top of that, the poison is set off for 6 damage per dose, and the Burn for 10 damage plus 10 per stack.
 
 **Works with.** Goes Up, Fire Medicine, Cinder, Slow Burn.
 
-**Example.** Fight until five enemies are burning, roll clear, and light the pyres.
+**Example.** Fight until five enemies are burning, roll away from them, and light the pyres.

@@ -81,7 +81,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/overgrowth.md
 - [x] marks/plasma.md
 - [x] marks/poison.md
-- [ ] marks/pyre.md
+- [x] marks/pyre.md
 - [ ] marks/quicksilver.md
 - [ ] marks/redhot.md
 - [ ] marks/rotroots.md
