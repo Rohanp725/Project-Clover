@@ -542,7 +542,7 @@ DuoProbe, MarksProbe, and the end-of-job regression of ReactionProbe2, DuoProbeA
    whatever is ahead of you then, and only against the first enemy if nothing is ahead within 12 m. In a crowd, two dodges
    back from one enemy can count as one away and one toward another. Drawn Back to Break and Into the Fire both read it.
    **Answered 2026-11-20 (evening): remember the target until it dies or you get far from it.** Built on `phase4c`, with
-   16 m as "far" (below).
+   16 m as "far" (below). Then also: **let it go after 3 s without a dodge.**
 3. **Drawn Back to Break's throw** was not seen in the probe: the still dummy cannot be shoved, so "moved 0.0 m". The cone
    did soak it and spend the waves.
 
@@ -564,10 +564,13 @@ against that enemy while it lives and stands within `PlayerUpgrades.DodgeHoldRan
 fight's 12 m and most of a 4.5 m roll). When it dies or the player gets farther, the next dodge takes the enemy faced then.
 The one helper (`PlayerUpgrades.WayOf`) feeds both readers of a dodge's way: `OnDodge` (Drawn Back to Break's waves, Into
 the Fire's lunge and its perfect-dodge Heat) and `DodgeTermsFor` (Into the Fire's cost and safety). No other mark reads it.
-The hold has no clock: a held enemy stays held for as long as it lives and is near, however long since the last dodge.
+The owner then added a clock: the hold also ends 3 s after the last dodge (`DodgeRules.HoldSeconds`, exposed as
+`PlayerUpgrades.DodgeHoldSeconds`, read on `Time.time`; every dodge starts the 3 s again). After a longer pause the next
+dodge takes whoever is faced then.
 
-**Tests.** `KeystoneRuleTests` gains `TheEnemyFirstDodgedFromStillCountsInACrowd` and
-`TheHeldEnemyIsLetGoWhenItDiesOrThePlayerGetsFarFromIt`; `DuoBranchTests` gains
+**Tests.** `KeystoneRuleTests` gains `TheEnemyFirstDodgedFromStillCountsInACrowd`,
+`TheHeldEnemyIsLetGoWhenItDiesOrThePlayerGetsFarFromIt` and `TheHeldEnemyIsLetGoAfterThreeSecondsWithoutADodge` (held
+2.9 s after a dodge, let go 3.1 s after); `DuoBranchTests` gains
 `ThreeWeaselsFirstPressStopsInFrontAndTheSecondPassesThrough`; `SpellFormTests` knows the new form.
 
 **Probe.** `Phase4bProbe` drops the teleport back to the host before Drawn Back to Break's second dodge, and judges that

@@ -184,6 +184,8 @@ namespace Clover.Player
         /// the next dodge is measured against a new one. The enemy is also let go when it dies.
         /// </summary>
         public float DodgeHoldRange = DodgeRules.HoldRange;
+        /// <summary>The same: seconds without a dodge, from the last one, after which that enemy is let go.</summary>
+        public float DodgeHoldSeconds = DodgeRules.HoldSeconds;
         // The enemy the first dodge of a run was measured against; later dodges keep to it (the owner's answer of 2026-11-20).
         private readonly DodgeHold<Transform> dodgeHold = new DodgeHold<Transform>();
         /// <summary>True while the tide is high; read by the HUD and probes while High Water, Low Water is in force.</summary>
@@ -2532,13 +2534,14 @@ namespace Clover.Player
         private DodgeWay WayOf(Vector3 direction, Vector3 from, bool hold = false)
         {
             var against = DodgeFoe(from);
-            if (hold) dodgeHold.Took(against);
+            if (hold) dodgeHold.Took(against, Time.time);
             return DodgeRules.WayOf(direction, from, against != null ? against.position : from, against != null);
         }
 
-        // The enemy a dodge from here is measured against: the one the first dodge of the run held, while it lives and is
-        // within DodgeHoldRange, because a roll turns the player and the enemy ahead after it is often another one in a crowd;
-        // otherwise the enemy faced (the one ahead, else the nearest, within the fight).
+        // The enemy a dodge from here is measured against: the one the first dodge of the run held, while it lives, is within
+        // DodgeHoldRange and the last dodge was no more than DodgeHoldSeconds ago, because a roll turns the player and the
+        // enemy ahead after it is often another one in a crowd; otherwise the enemy faced (the one ahead, else the nearest,
+        // within the fight).
         private Transform DodgeFoe(Vector3 from)
         {
             var held = dodgeHold.Held;
@@ -2546,7 +2549,7 @@ namespace Clover.Player
             if (!ReferenceEquals(held, null))
             {
                 bool alive = held != null && PlayerReactions.Alive(held.GetComponent<IDamageable>() as Component);
-                if (dodgeHold.Keeps(from, alive, alive ? held.position : from, DodgeHoldRange)) return held;
+                if (dodgeHold.Keeps(from, alive, alive ? held.position : from, DodgeHoldRange, Time.time, DodgeHoldSeconds)) return held;
             }
             return combat != null ? combat.EnemyAhead(FightRange) : null;
         }
