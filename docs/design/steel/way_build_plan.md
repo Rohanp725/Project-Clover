@@ -1313,3 +1313,13 @@ placeholder.
 
 Forty-two questions in all: eleven on the shared systems, twelve on the Katana, three across the other nine Ways and
 sixteen on single weapons.
+
+## Owner's answers (2026-11-21)
+
+Recommended option for Q1-Q8, Q10-Q22. The exceptions:
+
+- **Q9 (setting the aspect and keystone): not answered as asked.** The owner, word for word: "There needs to be a pass that cleans up the ui completly and makes it much more readable and understandable, and not just what the hand is right now. Also the way should be changed on a similar screen to the hand, but the ui needs to be well designed, maybe even having them both on screen is possible but do some reasearch on the best uis and whatnot to work with."
+  - This adds a new work item: a UI pass on the rest-fire screens (the Hand and the Way), with research on the best game UIs first.
+  - The Way's aspect and keystone are set on a Hand-like screen, possibly the same screen as the Hand.
+  - It must be far more readable than the Hand is now.
+- **Q23 (Chiburi): (b).** A few dark drops flick onto the floor and fade in 1.5 s.
