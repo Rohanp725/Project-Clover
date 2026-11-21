@@ -77,7 +77,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/loganstone.md
 - [x] marks/metal.md
 - [x] marks/mocksuns.md
-- [ ] marks/nervefire.md
+- [x] marks/nervefire.md
 - [ ] marks/overgrowth.md
 - [ ] marks/plasma.md
 - [ ] marks/poison.md

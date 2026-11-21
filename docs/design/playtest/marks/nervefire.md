@@ -5,64 +5,64 @@ reaction, Nerve Fire (`docs/design/steel/pairs_d1_d2.md`, "Poison and Lightning"
 Poison and Lightning are both carried.
 
 ## nervefire.shape
-**What it does.** Struck Nerve: opens Nerve Fire's two shapes. At a rest fire you choose which one your Nerve Fire wears, and from then on it runs instead of the plain one. Both keep the jolts. **Ozone**: each jolt lets off a puff of sharp blue mist that poisons and charges the enemies near. **Lockjaw**: the third jolt locks it in place.
+**What it does.** Struck Nerve unlocks two new shapes for Nerve Fire. At a rest fire, you pick which shape your Nerve Fire uses. From then on, it uses that shape instead of the plain one. Both shapes keep the shocks. **Ozone**: each shock lets off a puff of sharp blue mist that poisons and charges nearby enemies. **Lockjaw**: the third shock locks the enemy in place.
 
-**When it happens.** Every time Nerve Fire fires (Static landing on a poisoned enemy, or poison on a charged one) while Poison and Lightning are both carried. Before this mark is bought, or with only one of the two carried, the plain Nerve Fire runs.
+**When it happens.** Every time Nerve Fire goes off while you carry both Poison and Lightning. Nerve Fire goes off when Static lands on a poisoned enemy, or when poison lands on a charged one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Nerve Fire.
 
-**The numbers.** Mix, 3 Shards. Both: while both last, each bite spends a Static and jolts it, 7 damage, 5 stagger and a 0.3-second flinch (an elite flinches once every 4 seconds; a god takes 11 stagger and does not flinch). Ozone: each jolt also lays a dose and a Static on everything within 1 metre. Lockjaw: the third jolt holds it 1.2 seconds. Nerve Fire rests 4 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Both shapes: while both afflictions last, each bite of poison uses up a Static and shocks the enemy, for 7 damage, 5 stagger and a 0.3-second flinch (an elite only flinches once every 4 seconds; a god takes 11 stagger and doesn't flinch). Ozone: each shock also adds a dose and a Static to everything within 1 metre. Lockjaw: the third shock holds the enemy for 1.2 seconds. After Nerve Fire goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
-**Works with.** Miasma and Thunderclap to bring the two, Strike on the Beat, Five Thunders, Hidden Crimes.
+**Works with.** Miasma and Thunderclap to set it up, Strike on the Beat, Five Thunders, Hidden Crimes.
 
-**Example.** A packed line: Ozone spreads the nerves down it. A brute winding up its big blow: Lockjaw.
+**Example.** A tightly packed line: Ozone spreads the shocks down it. A brute winding up its big blow: use Lockjaw.
 
-**Not built yet.** The shapes' jolts are seen as the burst alone, not the small jolts over the body the plain Nerve Fire has.
+**Not built yet.** For now, the shapes' shocks only show as the burst, not the small shocks across the body that the plain Nerve Fire shows.
 
 ## nervefire.beat
-**What it does.** A heavy blow that lands on the beat of its poison discharges all its Static and lays as many doses.
+**What it does.** A heavy blow that lands in time with the beat of the enemy's poison sets off all its Static and adds just as many doses.
 
-**When it happens.** A heavy blow or finisher that lands on an enemy carrying both Static and poison, at most twice a second.
+**When it happens.** A heavy blow or finisher that lands on an enemy that has both Static and poison, at most twice a second.
 
-**The numbers.** Mix, 3 Shards. Its Static is set off, 7 damage and 5 stagger a stack within 4 metres, and it takes a dose for each stack.
+**The numbers.** Mix, 3 Shards. Its Static goes off, dealing 7 damage and 5 stagger per stack within 4 metres, and it gets a dose for each stack.
 
 **Works with.** Nerve Fire, Hidden Crimes, Static.
 
-**Example.** Five Static on a poisoned soldier: one heavy blow turns them into five more doses.
+**Example.** A poisoned soldier has five Static. One heavy blow turns them into five more doses.
 
-**Not built yet.** It answers any heavy blow on a poisoned, charged enemy, not only one within 0.3 seconds of a bite.
+**Not built yet.** For now, it works on any heavy blow on a poisoned, charged enemy, not only one within 0.3 seconds of a bite.
 
 ## nervefire.fivethunders
-**What it does.** Every fifth bite of poison on an enemy carrying Static calls a bolt down on it, which leaps to two more.
+**What it does.** Every fifth bite of poison on an enemy with Static calls a bolt down on it, which jumps to two more enemies.
 
-**When it happens.** When poison bites an enemy carrying Static.
+**When it happens.** When poison bites an enemy that has Static.
 
-**The numbers.** Mix, 3 Shards. As built: one bite in five, by chance. 14 damage and a Static on it and on up to two more within 5 metres.
+**The numbers.** Mix, 3 Shards. For now: one bite in five, by chance. It deals 14 damage and a Static to the enemy and to up to two more within 5 metres.
 
 **Works with.** Nerve Fire, Miasma, Static.
 
 **Example.** A poisoned, charged pack crackles with bolts as the poison works.
 
-**Not built yet.** The bolt comes by chance on a fifth of the bites rather than on each fifth one.
+**Not built yet.** For now, the bolt comes by chance on one bite in five, instead of on exactly every fifth bite.
 
 ## nervefire.hiddencrimes
-**What it does.** Poison counts as charge: a discharge on a poisoned enemy deals 7 more for every two doses it carries, and spends them.
+**What it does.** Poison counts as charge. When Static goes off on a poisoned enemy, it deals 7 more damage for every two doses the enemy has, and uses them up.
 
-**When it happens.** Each time Static is set off on a poisoned enemy (a heavy blow, Strike on the Beat, Thunderclap).
+**When it happens.** Each time Static is set off on a poisoned enemy (by a heavy blow, Strike on the Beat, or Thunderclap).
 
-**The numbers.** Mix, keystone, 5 Shards. Every dose is spent: 3.5 damage each to everything within 4 metres, on top of the discharge. At most three times a second.
+**The numbers.** Mix, keystone, 5 Shards. Every dose is used up, dealing 3.5 damage each to everything within 4 metres, on top of the Static burst. At most three times a second.
 
 **Works with.** Strike on the Beat, Static, Miasma, One by One.
 
-**Example.** Eight doses and three Static: the heavy blow bursts for 21 and 28 more.
+**Example.** Eight doses and three Static: the heavy blow bursts for 21, plus 28 more.
 
 ## nervefire.seal
-**What it does.** You slap a seal of yellow paper on the brow of the enemy you face and it is held. For 6 seconds each weapon blow on it burns the seal down a fifth; at the fifth, thunder falls on it.
+**What it does.** You slap a seal of yellow paper on the forehead of the enemy you face, and it is held in place. For 6 seconds, each weapon blow on it burns the seal down by a fifth. On the fifth blow, thunder falls on it.
 
-**When it happens.** From a spell slot, while Poison and Lightning are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Poison.
+**When it happens.** Cast it from a spell slot while you carry both Poison and Lightning. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Poison.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. No mana: it waits 13 seconds after a cast, less with weapon play. Within 3 metres; an ordinary enemy is held 1.2 seconds. The thunder: 30 damage, 50 stagger and a dose within 3.5 metres.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 13 seconds to cast it again. Fighting with your weapon makes the wait shorter. It reaches an enemy within 3 metres. A normal enemy is held for 1.2 seconds. The thunder deals 30 damage, 50 stagger and a dose within 3.5 metres.
 
 **Works with.** Nerve Fire, Hidden Crimes, Strike on the Beat.
 
-**Example.** Seal a captain and land five blows: thunder on it and its guard.
+**Example.** Seal a captain and land five blows. Thunder falls on it and its guard.
 
-**Not built yet.** You do not yet step to the enemy; the thunder does not yet discharge its Static, add 4 a dose or pass each dose to all near; it does not fall at half when the 6 seconds run out; elites are not held at all yet.
+**Not built yet.** You don't step to the enemy yet. The thunder doesn't yet set off the enemy's Static, add 4 damage per dose, or pass each dose to everything nearby. It doesn't yet fall at half strength when the 6 seconds run out. Elites aren't held at all yet.
