@@ -14,8 +14,8 @@ using UnityEngine.InputSystem.LowLevel;
 
 // Play Mode probe of the Katana's Way in the Proving Ground: the title guide is closed with the back key and time is
 // shown to run (an open guide holds time at zero); the Katana is taken from the rack; the first trunk mark is bought
-// with Memories through the wallet's rule; the probe checks the mark is in force and the wallet paid, then stops play.
-// The game's own buy button still pays in Shards only, so the buy is the wallet's rule, not a chart press.
+// through the chart's own buy (PlayerUpgrades.TryBuy, which the Learn button calls), which pays a Memories mark from the
+// wallet; the probe checks the mark is in force, the wallet paid and the run's Shards untouched, then stops play.
 // Saved progress is kept out of it (runprobe.sh sandboxes the play; the probe refuses to pay if it is not).
 //   bash AgentScripts/runprobe.sh ProvingGround WayProbe 40
 public static class WayProbe
@@ -116,16 +116,15 @@ public class WayProbeRunner : MonoBehaviour
 
         if (wallet.Memories < mark.Cost) wallet.Earn(Currency.Memories, mark.Cost - wallet.Memories);
         int memoriesBefore = wallet.Memories;
-        bool open = WayRules.Open(mark, Progress.Data.OwnedWeapons, PlaytestMode.On);
-        bool canBuy = MarkRules.CanBuy(mark, RunState.Unlocked, wallet, open, PlaytestMode.On, Progress.Has, Progress.Data.GodsFelled);
-        Judge("the wallet can buy it", canBuy, $"open {open}, {memoriesBefore} Memories held, playtest {PlaytestMode.On}");
-        if (canBuy && wallet.Pay(mark))
-        {
-            RunState.Unlocked.Add(mark.Id);
-            upgrades.RefreshNow();
-        }
+        int shardsBefore = RunState.Points;
+        Judge("the chart's buy can buy it", upgrades.CanBuy(mark), $"{memoriesBefore} Memories held, {shardsBefore} Shards, playtest {PlaytestMode.On}");
+        Judge("the chart's buy bought it", upgrades.TryBuy(mark));
+        upgrades.RefreshNow();
         yield return null;
         Judge("the wallet was charged its price", wallet.Memories == memoriesBefore - mark.Cost, $"{memoriesBefore} -> {wallet.Memories}, price {mark.Cost}");
+        Judge("the run's Shards were not touched", RunState.Points == shardsBefore, $"{shardsBefore} -> {RunState.Points}");
+        Judge("it is learned", RunState.Unlocked.Contains(mark.Id));
+        Judge("it cannot be bought twice", !upgrades.CanBuy(mark));
         Judge("the mark is in force with the Katana held", upgrades.Has(mark.Id));
 
         Finish();
