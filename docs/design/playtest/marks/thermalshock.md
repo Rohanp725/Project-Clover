@@ -44,13 +44,11 @@ both carried.
 
 **When it happens.** Always on once you learn it, while you carry both Fire and Ice.
 
-**The numbers.** Mix, a minor mark, 1 Shard.
+**The numbers.** Mix, a minor mark, 1 Shard. Each one is kept while the other is there. Once one of them is gone, the other starts to fade as usual.
 
 **Works with.** Crazing (both afflictions must last), Spark and Rime, which it comes after on the chart.
 
 **Example.** A burning, chilled enemy stays both for the whole fight.
-
-**Not built yet.** It does nothing yet. The game can't yet make one affliction last as long as another one does.
 
 ## thermalshock.underice
 **What it does.** A Frozen enemy that is burning shatters on any blow, not only a heavy one, and its shatter sets everything within 3 metres on fire with two Burns.
