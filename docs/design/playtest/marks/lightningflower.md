@@ -5,64 +5,64 @@ reaction, Lightning Flower (`docs/design/steel/pairs_d4.md`, "Lightning and Life
 while Lightning and Life are both carried.
 
 ## lightningflower.shape
-**What it does.** Field or Oak: opens Lightning Flower's two shapes. At a rest fire you choose which one your Lightning Flower wears, and from then on it runs instead of the plain one. **The Rice Wakes**: the fern throws its bolt as before, and a field of green shoots springs up round the enemy, charging what stands in it. **Struck Oak**: no fern; the current boils the seed inside the body and it bursts like a struck oak, harder for every Static and Seed it carried.
+**What it does.** Field or Oak unlocks two new shapes for Lightning Flower. At a rest fire, you pick which shape your Lightning Flower uses. From then on, it uses that shape instead of the plain one. **The Rice Wakes**: the fern of lightning throws its bolt like before, and a field of green shoots springs up around the enemy, charging whatever stands in it. **Struck Oak**: no fern. Instead, the electric current boils the seed inside the enemy's body, and it bursts like an oak tree hit by lightning. It hits harder for every Static and Seed the enemy had.
 
-**When it happens.** Every time Lightning Flower fires (Static landing on a Seeded enemy, or a Seed on a charged one) while Lightning and Life are both carried. Before this mark is bought, or with only one of the two carried, the plain Lightning Flower runs.
+**When it happens.** Every time Lightning Flower goes off while you carry both Lightning and Life. Lightning Flower goes off when Static lands on a Seeded enemy, or when a Seed lands on a charged one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Lightning Flower.
 
-**The numbers.** Mix, 3 Shards. The Rice Wakes: the fern's bolt to the nearest other Seeded enemy within 8 metres, 8 and 10 stagger and a Static, as plain; the shoots lie 3 metres round it for 6 seconds, a grown thing of yours (two fields at most), and lay a Static once a second on each enemy in them. Struck Oak: a burst of 16, and 5 more for each Static and each Seed it carried, with 20 stagger, in 3 metres; its Static and Seeds are spent. Lightning Flower rests 4 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. The Rice Wakes: like the plain one, the fern throws a bolt to the nearest other Seeded enemy within 8 metres, for 8 damage, 10 stagger and a Static. The shoots cover a 3-metre radius around the enemy for 6 seconds. They count as something you grew (up to two fields), and they add a Static once a second to each enemy in them. Struck Oak: a burst within 3 metres deals 16 damage, plus 5 more for each Static and each Seed the enemy had, and 20 stagger. Its Static and Seeds are used up. After Lightning Flower goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
-**Works with.** Storm Season to bring the two, The Favoured Oak, Rain on the Field, Sowing Thunder.
+**Works with.** Storm Season to set it up, The Favoured Oak, Rain on the Field, Sowing Thunder.
 
-**Example.** A pack in a garden of your growing: The Rice Wakes, and the field keeps charging them. One deep-seeded brute: Struck Oak.
+**Example.** A pack in a garden you grew: use The Rice Wakes, and the field keeps charging them. One brute with lots of seeds: use Struck Oak.
 
-**Not built yet.** The Rice Wakes' shoots do not yet mend you 2 a second while you stand on them, and the grown things you have near do not yet throw their own bolts into the flower.
+**Not built yet.** The Rice Wakes' shoots don't heal you 2 a second yet while you stand on them. The things you grew nearby don't throw their own bolts into the flower yet.
 
 ## lightningflower.stormseason
-**What it does.** Your heavy blows lay Static and a Seed together.
+**What it does.** Your heavy blows add Static and a Seed at the same time.
 
-**When it happens.** Every heavy blow or finisher that lands, while Lightning and Life are both carried.
+**When it happens.** Every heavy blow or finisher that lands, while you carry both Lightning and Life.
 
 **The numbers.** Mix, 3 Shards. One Static and one Seed.
 
-**Works with.** Lightning Flower (one heavy blow on a fresh enemy brings both), The Favoured Oak.
+**Works with.** Lightning Flower (one heavy blow on a fresh enemy adds both), The Favoured Oak.
 
-**Example.** Heavy on each soldier in turn and each flowers.
+**Example.** Land a heavy blow on each soldier in turn, and each one flowers.
 
 ## lightningflower.favouredoak
-**What it does.** A perfect guard against a Seeded enemy hangs a scorched oak leaf on your blade. Your next heavy blow discharges at twice the strength.
+**What it does.** A perfect guard against a Seeded enemy hangs a scorched oak leaf on your blade. Your next heavy blow sets off the enemy's Static at twice the strength.
 
-**When it happens.** Each perfect guard against a Seeded enemy, while Lightning and Life are both carried; then your next heavy blow on that enemy within 8 seconds.
+**When it happens.** Each perfect guard against a Seeded enemy, while you carry both Lightning and Life. Then your next heavy blow on that enemy within 8 seconds.
 
-**The numbers.** Mix, 3 Shards. The heavy blow spends all the enemy's Static in a burst of 14 a stack, with 10 stagger a stack, in 4 metres: twice a plain discharge. At most once a second.
+**The numbers.** Mix, 3 Shards. The heavy blow uses up all the enemy's Static in a burst within 4 metres, dealing 14 damage and 10 stagger per stack: twice a normal burst. At most once a second.
 
-**Works with.** Storm Season (it seeds and charges with every heavy blow), Lightning Flower.
+**Works with.** Storm Season (every heavy blow Seeds and charges), Lightning Flower.
 
-**Example.** Turn a seeded brute's swing perfectly, then heavy it for a double discharge.
+**Example.** Block a seeded brute's swing perfectly, then hit it with a heavy blow for a double-strength burst.
 
-**Not built yet.** The leaf stays on the enemy you guarded rather than on your blade, so only a heavy blow on that one discharges twice.
+**Not built yet.** The leaf stays on the enemy you guarded instead of on your blade, so only a heavy blow on that enemy sets off the double burst.
 
 ## lightningflower.rain
-**What it does.** Each Lightning Flower mends you 3 for every bolt thrown into it, and every grown thing that throws one stands 3 s longer.
+**What it does.** Each Lightning Flower heals you 3 for every bolt thrown into it, and every thing you grew that throws one stays 3 seconds longer.
 
-**When it happens.** Every time Lightning Flower fires, while Lightning and Life are both carried.
+**When it happens.** Every time Lightning Flower goes off, while you carry both Lightning and Life.
 
 **The numbers.** Mix, keystone, 5 Shards. 3 health for each Lightning Flower.
 
 **Works with.** Lightning Flower and its shapes, Storm Season, Sowing Thunder.
 
-**Example.** Fight a seeded pack among your briars and every flower heals you.
+**Example.** Fight a seeded pack among your briars, and every flower heals you.
 
-**Not built yet.** Your grown things do not throw bolts into the flower yet, so it heals 3 for the fern's own bolt only, and nothing stands longer.
+**Not built yet.** The things you grow don't throw bolts into the flower yet, so it only heals 3 for the fern's own bolt, and nothing stays longer.
 
 ## lightningflower.sowing
-**What it does.** You fling seven seeds in a fan 6 metres ahead, like a farmer sowing; each that strikes an enemy Seeds it. For 6 seconds your heavy blow on a seeded one calls lightning down onto its seed, 12 and 20 stagger round it.
+**What it does.** You throw seven seeds in a fan 6 metres ahead, like a farmer planting a field. Each one that hits an enemy Seeds it. For 6 seconds, your heavy blow on a seeded enemy calls lightning down onto its seed, dealing 12 damage and 20 stagger around it.
 
-**When it happens.** From a spell slot, while Lightning and Life are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Lightning.
+**When it happens.** Cast it from a spell slot while you carry both Lightning and Life. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Lightning.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. A cone 6 metres long and 70 degrees wide: 4 damage, 6 stagger, a Static and a Seed to each enemy in it, so each flowers. For 6 seconds the first heavy blow on each calls a bolt: 12 and 20 stagger and a Static within 1.5 metres.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is a cone 6 metres long and 70 degrees wide. Each enemy in it takes 4 damage, 6 stagger, a Static and a Seed, so each one flowers. For 6 seconds, your first heavy blow on each one calls down a bolt, for 12 damage, 20 stagger and a Static within 1.5 metres.
 
-**Works with.** Lightning Flower (every enemy struck carries both), Rain on the Field, Storm Season.
+**Works with.** Lightning Flower (every enemy it hits gets both afflictions), Rain on the Field, Storm Season.
 
-**Example.** Sow a line of soldiers, then heavy down the line.
+**Example.** Sow seeds across a line of soldiers, then go down the line with heavy blows.
 
-**Not built yet.** The seeds that miss do not lie in the floor, one heavy blow or discharge does not yet call lightning onto every seed at once, and a finisher does not strike each bolt twice.
+**Not built yet.** Seeds that miss don't stay in the floor yet. One heavy blow or burst of Static doesn't yet call lightning onto every seed at once. A finisher doesn't make each bolt hit twice yet.
