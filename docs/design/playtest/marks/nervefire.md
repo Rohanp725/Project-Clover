@@ -9,7 +9,7 @@ Poison and Lightning are both carried.
 
 **When it happens.** Every time Nerve Fire goes off while you carry both Poison and Lightning. Nerve Fire goes off when Static lands on a poisoned enemy, or when poison lands on a charged one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Nerve Fire.
 
-**The numbers.** Mix, 3 Shards. Both shapes: while both afflictions last, each bite of poison uses up a Static and shocks the enemy, for 7 damage, 5 stagger and a 0.3-second flinch (an elite only flinches once every 4 seconds; a god takes 11 stagger and doesn't flinch). Ozone: each shock also adds a dose and a Static to everything within 1 metre. Lockjaw: the third shock holds the enemy for 1.2 seconds. After Nerve Fire goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: while both afflictions last, each bite of poison uses up a Static and shocks the enemy, for 7 damage, 5 stagger and a 0.3-second flinch (an elite only flinches once every 4 seconds, and each elite keeps its own wait; a god takes 11 stagger and doesn't flinch). Ozone: each shock also adds a dose and a Static to everything within 1 metre. Lockjaw: the third shock holds the enemy for 1.2 seconds. After Nerve Fire goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Miasma and Thunderclap to set it up, Strike on the Beat, Five Thunders, Hidden Crimes.
 
@@ -35,13 +35,11 @@ Poison and Lightning are both carried.
 
 **When it happens.** When poison bites an enemy that has Static.
 
-**The numbers.** Mix, 3 Shards. For now: one bite in five, by chance. It deals 14 damage and a Static to the enemy and to up to two more within 5 metres.
+**The numbers.** Mix, 3 Shards. Exactly every fifth bite. Each enemy keeps its own count. It deals 14 damage and a Static to the enemy and to up to two more within 5 metres.
 
 **Works with.** Nerve Fire, Miasma, Static.
 
 **Example.** A poisoned, charged pack crackles with bolts as the poison works.
-
-**Not built yet.** For now, the bolt comes by chance on one bite in five, instead of on exactly every fifth bite.
 
 ## nervefire.hiddencrimes
 **What it does.** Poison counts as charge. When Static goes off on a poisoned enemy, it deals 7 more damage for every two doses the enemy has, and uses them up.

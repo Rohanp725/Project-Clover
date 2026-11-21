@@ -22,6 +22,13 @@ run by this pass.
 
 This file is not read by the game: the builder reads only effects.md, whats_new.md and marks/*.md.
 
+## Sync with the stand-in passes (2026-11-21)
+
+Marks whose behaviour changed in code after the pass (list: the stand-in run's "Mark details to update"). Each file is
+checked against its code and committed on its own.
+
+- [x] marks/nervefire.md: Five Thunders (exact fifth bite on each enemy), Nerve Fire shapes (elite flinch wait per elite)
+
 ## Unsure lines
 
 Lines whose meaning was not clear. The facts were kept and written as clearly as possible; please check them.
