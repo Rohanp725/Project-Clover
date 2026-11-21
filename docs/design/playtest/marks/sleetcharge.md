@@ -10,13 +10,13 @@ both are carried (in the playtest, whenever you pick Ice beside Lightning or Lig
 
 **When it happens.** Every time Sleet Charge goes off while you carry both Ice and Lightning. Sleet Charge goes off when Static lands on a chilled enemy, or when Chill lands on a charged one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Sleet Charge.
 
-**The numbers.** Mix, 3 Shards. Both shapes: a Static every 0.5 seconds for 3 seconds, then the Static goes off, dealing 7 damage and 5 stagger per stack to everything within 4 metres. Thundersnow: then a bolt jumps on to every chilled enemy within 6 metres of the last one, up to six, dealing 7 damage, 5 stagger and a Static to each. Glass Spear: then a normal enemy's Chill fills all the way, which freezes it. An elite gets 3 Chill and a god 2. A heavy blow still sets off the Static early. After Sleet Charge goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: a Static every 0.5 seconds for 3 seconds, then the Static goes off, dealing 7 damage and 5 stagger per stack to everything within 4 metres. Thundersnow: then a bolt jumps on to every chilled enemy within 6 metres of the last one, up to six, dealing 7 damage, 5 stagger and a Static to each. Glass Spear: then a normal enemy is Frozen for 1.5 seconds, however much Chill it had. An elite gets 3 Chill and a god 2. A heavy blow still sets off the Static early. After Sleet Charge goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Hoarfrost or Glass Storm to add the Chill, Thunderclap or Static to add the charge, Charged Hail (Glass Spear's frozen enemy is ready to shatter), Nothing Resists.
 
 **Example.** A frozen line of soldiers: use Thundersnow and charge one of them. Three seconds later, the bolt runs through every chilled enemy near it. Against one brute: use Glass Spear, and when the charge breaks, it stands frozen for your heavy blow.
 
-**Not built yet.** Thundersnow's bolt jumps from one chilled enemy to the next instead of falling on each one at once, and each takes 7 damage instead of setting off the Static it has. Glass Spear freezes by filling the Chill, so the freeze lasts as long as Chill normally does instead of 1.5 seconds. The spear of clear ice isn't drawn yet.
+**Not built yet.** Thundersnow's bolt jumps from one chilled enemy to the next instead of falling on each one at once, and each takes 7 damage instead of setting off the Static it has. The spear of clear ice isn't drawn yet.
 
 ## sleetcharge.hail
 **What it does.** Shattering an enemy that had Static throws its charge into the shards. Everything the shards hit gets a Static.
@@ -58,14 +58,14 @@ both are carried (in the playtest, whenever you pick Ice beside Lightning or Lig
 **Not built yet.** For now, it only works when Static goes off, not on every arc that leaves a chilled enemy. Each arc after the first deals its own 7 damage, instead of carrying the full hit along.
 
 ## sleetcharge.glassstorm
-**What it does.** Six shards of clear ice spin around you, 2 metres away, for 8 seconds, with threads of lightning jumping between them. Each shard that passes through an enemy cuts it and adds a Chill, and half the passes add a Static too, so the ring sets up Sleet Charge on any enemy that pushes in.
+**What it does.** Six shards of clear ice spin around you, 2 metres away, for 8 seconds, with threads of lightning jumping between them. Each shard that passes through an enemy cuts it and adds a Chill, and every other pass adds a Static too, so the ring sets up Sleet Charge on any enemy that pushes in.
 
 **When it happens.** Cast it from a spell slot while you carry both Ice and Lightning. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Ice, this branch's first element.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 14 seconds to cast it again. Fighting with your weapon makes the wait shorter. Six shards spin for 8 seconds. Each one that passes through an enemy hits it at most once every half second, for 4 damage, 4 stagger and a Chill, and half the time (by chance) a Static as well.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 14 seconds to cast it again. Fighting with your weapon makes the wait shorter. Six shards spin for 8 seconds. Each one that passes through an enemy hits it at most once every half second, for 4 damage, 4 stagger and a Chill. Every other pass on an enemy adds a Static as well. Each enemy keeps its own count.
 
 **Works with.** Sleet Charge and its shapes, Charged Hail, Nothing Resists, Cold Snap, and any heavy blow on a chilled, charged enemy.
 
-**Example.** Cast it as a pack closes in. Every enemy the ring cuts is chilled, half of them are charged, and Sleet Charge starts going off all around you.
+**Example.** Cast it as a pack closes in. Every enemy the ring cuts is chilled, the ones it cuts twice are charged, and Sleet Charge starts going off all around you.
 
-**Not built yet.** For now, the Static comes by chance on half the passes, instead of on every other one. Your weapon blows don't throw the shards yet (each blow that lands should throw the nearest shard into the enemy you hit, for 8 damage, a Chill and a Static, and a heavy blow should throw all that are left). The shards look like toothed discs until their glassy look is made.
+**Not built yet.** Your weapon blows don't throw the shards yet (each blow that lands should throw the nearest shard into the enemy you hit, for 8 damage, a Chill and a Static, and a heavy blow should throw all that are left). The shards look like toothed discs until their glassy look is made.

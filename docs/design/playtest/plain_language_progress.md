@@ -30,6 +30,7 @@ checked against its code and committed on its own.
 - [x] marks/nervefire.md: Five Thunders (exact fifth bite on each enemy), Nerve Fire shapes (elite flinch wait per elite)
 - [x] marks/quicksilver.md: shapes (half-second bite wait per enemy; Running Silver passes every dose and notch),
   Cinnabar (notches kept while poisoned)
+- [x] marks/sleetcharge.md: Glass Storm (every other pass a Static, on each enemy), Glass Spear (frozen 1.5 s)
 
 ## Unsure lines
 
