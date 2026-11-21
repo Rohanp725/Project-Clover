@@ -142,15 +142,13 @@ design yet, its **Not built yet** line says what is missing.
 **Example.** Five quick blows on the brute, step back, and leap. Its burn goes off under the stone, and your mana is half full again.
 
 ## fire.lift
-**What it does.** Fuel to It. Every reaction with Burn in it leaves the ground where it happened on fire.
+**What it does.** Fuel to It. Every reaction with Burn in it hits 25% harder and leaves the ground where it happened on fire.
 
 **When it happens.** Whenever Burn reacts on an enemy with another affliction it has (Steam with Soaked, Flashover with Static, and the rest).
 
-**The numbers.** 3 Shards. A burning patch with a 1.5-metre radius that lasts 3 seconds. Every half second, it deals 3 damage and a stack of Burn.
+**The numbers.** 3 Shards. The reaction's own damage is 25% higher. A burning patch with a 1.5-metre radius that lasts 3 seconds. Every half second, it deals 3 damage and a stack of Burn.
 
 **Works with.** Carrying a second element: every one of Fire's ten reactions.
-
-**Not built yet.** The reactions themselves should hit 25% harder (the game needs a number for reaction damage first).
 
 **Example.** Fire and Water on one enemy: Steam bursts, and the ground under it keeps burning.
 
