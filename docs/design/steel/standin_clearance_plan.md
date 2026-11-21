@@ -140,10 +140,10 @@ needs a `playmode-probe` of what it touches, filmed only where the change is (ta
 | 1 | A: counts and clocks kept on each enemy | 44 (45) | 16 | nothing | medium | tests | no | no | no |
 | 2 | B: affliction depth moved, held and shared | 16 (61) | 12 | 1 | small | tests | no | no | no |
 | 3 | C: who a blow or reaction reaches | 49 (110) | 18 | 1 | medium | tests, one play check | no | no | no |
-| 4 | D: combat moments | 64 (174) | 18 | 1 | large (4a, 4b) | play | no | no | no |
-| 5 | E: shape and Empower order | 32 (206) | 5 | 4 for 6 lines | medium | tests | no | no | no |
-| 6 | F: presses and cast windows | 51 (257) | 8 | 4, 5 | medium | play, input | no | one held stance | no |
-| 7 | G: player rules, prices and the blade | 15 (272) | 13 | 1 | small | play, HUD | no | no | Q1 |
+| 4 | D: combat moments | 65 (175) | 18 | 1 | large (4a, 4b) | play | no | no | no |
+| 5 | E: shape and Empower order | 32 (207) | 5 | 4 for 6 lines | medium | tests | no | no | no |
+| 6 | F: presses and cast windows | 51 (258) | 8 | 4, 5 | medium | play, input | no | one held stance | no |
+| 7 | G: player rules, prices and the blade | 14 (272) | 13 | 1 | small | play, HUD | no | no | Q1 |
 | 8 | H: ground that keeps acting | 56 (328) | 16 | 1, 3, 4 | large | play, effects | no | no | no |
 | 9 | I: enemy states | 16 (344) | 9 | 4 | medium | play | no | knocked-down clip (in staging) | no |
 | 10 | J: the player's own things | 29 (373) | 10 | 4, 8 | medium | play | no | no | no |
@@ -215,7 +215,7 @@ Passes 2, 3 and 7 do not depend on each other and can run in any order after pas
   - the stats ReactionDamage and ReactionStagger.
 - **Checks**: EditMode tests, and one play check for side-of-blow, which needs the facing at the moment of reacting.
 
-### Pass 4: combat moments (large, as two passes; clears 64)
+### Pass 4: combat moments (large, as two passes; clears 65)
 
 - **4a, moments the game already sees in its own code (medium):**
   - freeze, thaw and shatter;
@@ -268,7 +268,7 @@ Passes 2, 3 and 7 do not depend on each other and can run in any order after pas
 - **Animation**: one stance, walking at half speed while held (`FireTree.cs:141`). Use a blend on the existing walk if
   it reads well, and a new clip only if not.
 
-### Pass 7: player rules, prices and the blade (small; clears 15)
+### Pass 7: player rules, prices and the blade (small; clears 14)
 
 - **Builds**:
   - the next light blow struck as a heavy;
@@ -396,3 +396,39 @@ Split three ways, and run after the passes whose rules the forms use.
 - Nothing waits on Bond, Heresies, Evolutions or Track L beyond the rest-fire check in pass 1.
 - Those phases will add stand-ins of their own. Each gets a NEEDS line and a ledger row when written, and joins the
   pass whose piece it waits for.
+
+## 3. Owner questions
+
+Only the stand-ins that need a design choice. Every other stand-in is engine work with its design already written.
+
+1. **Afflictions laid on the player** (pass 7; Tremor, Bedrock and Daybreak's High Noon answer them, 3 marks). Who
+   lays them?
+   - a) Elites and gods lay their land's affliction on a hit (Burn in Sun City, Chill on the Ice land).
+   - b) Every enemy lays its land's affliction.
+   - c) No one: the three marks are reworded to answer something that exists now, such as stagger or a knock-down.
+
+   **Recommended: a.** It gives the marks something to answer without making every fight about cleansing.
+2. **Pickups on the floor** (pass 11; Shining Herb, Firebloom, Seed Under Snow, The Whole Mountain, 5 lines). How do
+   they work?
+   - a) Real pickups: a small herb or seed you walk over to take, gone after 8 s.
+   - b) No pickup: the gift goes to you at once if you are within 3 m when it appears.
+   - c) They fly to you by themselves after 1 s.
+
+   **Recommended: a.** It is what the marks say, and it makes you move through the fight.
+3. **The creature forms** (pass 12c; the cobra, the serpent, the totem, the swarm, the jaw, the horns, the shades, the
+   sapling, the copy, 9 lines). What are they made of?
+   - a) Effects only (flame, water, shadow and particles shaped like the creature), no model.
+   - b) A Blender model for each, with a simple rig, dressed in its element's effect.
+   - c) Models from the ComfyUI and TRELLIS pilot once it is judged, Blender for the rest.
+
+   **Recommended: b** for the cobra, serpent and totem, which stay on screen and must read; **a** for the brief ones
+   (jaw, horns, swarm, copy).
+4. **Choosing a duo surge** (pass 13; Eclipse and Overgrowth, 2 lines and 2 rows). How does the player get it?
+   - a) The duo surge is picked in the Hand's surge slot at a rest, in place of a single element's surge.
+   - b) It fires by itself when any surge is lit while both elements are carried (the stand-in now).
+   - c) It gets a slot of its own beside the surge.
+
+   **Recommended: a.** One slot, one clear choice, and no surprise surges.
+5. **The Way refund** (pass 15; `RetiredMarks.cs:192`). This is already question 2 in `phase4_questions.md`. The
+   default stands until the owner answers there: no refund now, and the mark is kept under its id until the Way
+   arrives.
