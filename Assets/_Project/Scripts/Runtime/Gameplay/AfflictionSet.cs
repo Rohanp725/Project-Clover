@@ -116,6 +116,7 @@ namespace Clover.Gameplay
         // One bit for each kind whose stacks are above nought, kept as they rise and fall. Burn keeps its own engine,
         // which can be lit or put out from outside, so its bit is read from it live (see PresentMask).
         private int present;
+        private int keptForGood;
         // Seconds until each of the 55 pairs may react on this one again, and the longest of them, so a step with
         // nothing resting costs one comparison.
         private readonly float[] reactionRest = new float[AfflictionPairs.Count];
@@ -232,6 +233,7 @@ namespace Clover.Gameplay
         {
             owedSeconds = 0f;
             present = 0;
+            keptForGood = 0;
             Conditions.Clear();
             Tally.Clear();
             Array.Clear(reactionRest, 0, reactionRest.Length);
@@ -261,6 +263,19 @@ namespace Clover.Gameplay
             reeling = false;
             LandedThisTick = false;
         }
+
+        /// <summary>
+        /// The kind never fades from this enemy again, only by being spent, set off or its death (Stone Does Not Forgive:
+        /// once turned to stone it keeps its Tremor and its Curse). Lasts until <see cref="Clear"/>.
+        /// </summary>
+        public void KeepForGood(AfflictionKind kind)
+        {
+            if (kind == AfflictionKind.None || (int)kind >= Afflictions.Count) return;
+            keptForGood |= 1 << (int)kind;
+        }
+
+        /// <summary>True when the kind is kept on this enemy until it dies (<see cref="KeepForGood"/>).</summary>
+        public bool KeptForGood(AfflictionKind kind) => kind != AfflictionKind.None && (keptForGood & (1 << (int)kind)) != 0;
 
         /// <summary>How deep the kind can lie on this enemy now: its usual depth, deeper while a condition allows (Rust).</summary>
         public int DepthOf(AfflictionKind kind) => Afflictions.Depth(kind) + Conditions.DeeperBy(kind);
@@ -503,7 +518,7 @@ namespace Clover.Gameplay
             if (rules.Any || resting != 0) FollowRules(rules, deltaTime);
             // Kept from fading (Smoulder, or Fire Without End's rule): the burn's time is given back before it is spent, so it
             // bites on and never runs down.
-            if (Burn.IsBurning && (Conditions.KeepsKind(AfflictionKind.Burn) || rules.Keeps(AfflictionKind.Burn)
+            if (Burn.IsBurning && (Conditions.KeepsKind(AfflictionKind.Burn) || rules.Keeps(AfflictionKind.Burn) || KeptForGood(AfflictionKind.Burn)
                 || (rules.Any && rules.KeepsWith(AfflictionKind.Burn, PresentMask)))) Burn.Ignite(Burn.SecondsLeft + deltaTime);
             float burnt = Burn.Tick(deltaTime) * strength[(int)AfflictionKind.Burn];
             // The Blade Drinks Fire: a burn left alone does nothing; it is fuel for the blade.
@@ -579,7 +594,7 @@ namespace Clover.Gameplay
                     }
                 }
                 if (poison && (Afflictions.PoisonKeeps || cursed)) continue;
-                if (Conditions.KeepsKind((AfflictionKind)i) || rules.Keeps((AfflictionKind)i)) continue;
+                if (Conditions.KeepsKind((AfflictionKind)i) || rules.Keeps((AfflictionKind)i) || (keptForGood & (1 << i)) != 0) continue;
                 // Kept, or slowed, while the enemy carries another kind a rule pairs it with (Permafrost, Neither Wins, Brine).
                 float rulePace = 1f;
                 if (rules.Any)

@@ -95,11 +95,13 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftHigh));
 
-            // NEEDS: afflictions kept for the rest of the fight on one enemy (fades-never); until then it does nothing.
+            // As the stone closes over it (the climb's end, in the plain reaction or either shape), its Tremor and its Curse
+            // are kept on it until it dies (UpgradeAction.KeepForGood).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = StoneDoesNotForgive, Name = "Stone Does Not Forgive", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { GraveDirt, BrokenIdol }, Icon = UpgradeIcons.Rock,
                 Description = "An enemy turned to stone once keeps its Tremor and its Curse until it dies.",
+                Effects = KeptByStone(),
             }, HeartPattern.Keystone));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): a movement on a 10 s cooldown (SpellTimings). The step form carries you to the enemy
@@ -114,6 +116,18 @@ namespace Clover.Player.Trees.Duo
                 Spell = new SpellSpec { Reach = 8f, Damage = 6f, Stagger = 10f, Stacks = 2, Seconds = 1.5f },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Cursed, Stacks = 2 } },
             }, HeartPattern.Spell));
+        }
+
+        // Stone Does Not Forgive: at each climb's end, the plain reaction's and the two shapes', Tremor and Curse kept for good.
+        private static UpgradeEffect[] KeptByStone()
+        {
+            var effects = new List<UpgradeEffect>();
+            foreach (var climbed in new[] { Reactions.StoneClimbed, KingsMen + ".climbed", GraveMarker + ".climbed" })
+            {
+                effects.Add(new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = climbed, Do = UpgradeAction.KeepForGood, Affliction = AfflictionKind.Tremor });
+                effects.Add(new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = climbed, Do = UpgradeAction.KeepForGood, Affliction = AfflictionKind.Cursed });
+            }
+            return effects.ToArray();
         }
 
         // The climb and the stone as the plain Turned to Stone's, under the shape's own names (prefix.climbs, .climbed,

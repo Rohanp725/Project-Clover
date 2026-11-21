@@ -1864,6 +1864,9 @@ namespace Clover.Player
                 case UpgradeAction.Leech:
                     if (defence != null) defence.Heal(combat.LastBlowDamage * Or(eAmount, 0.1f), false);
                     break;
+                case UpgradeAction.KeepForGood:
+                    if (subject is IAfflictable keeper && kind != AfflictionKind.None) keeper.Afflictions.KeepForGood(kind);
+                    break;
                 case UpgradeAction.Spend:
                 {
                     lastSpent = 0;

@@ -125,6 +125,38 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AKindKeptForGoodNeverFadesFromThatEnemyUntilItIsCleared()
+        {
+            var stone = NewEnemy();
+            var other = NewEnemy();
+            Lay(stone, AfflictionKind.Tremor);
+            Lay(stone, AfflictionKind.Cursed);
+            Lay(other, AfflictionKind.Tremor);
+            stone.KeepForGood(AfflictionKind.Tremor);
+            stone.KeepForGood(AfflictionKind.Cursed);
+            Run(stone, 120f);
+            Run(other, 120f);
+            Assert.IsTrue(stone.Has(AfflictionKind.Tremor) && stone.Has(AfflictionKind.Cursed), "kept two minutes and on");
+            Assert.IsFalse(other.Has(AfflictionKind.Tremor), "only on the enemy turned to stone");
+            Assert.AreEqual(1, stone.Spend(AfflictionKind.Tremor, 1), "it can still be spent");
+            stone.Clear();
+            Assert.IsFalse(stone.KeptForGood(AfflictionKind.Cursed), "a new life forgets it");
+        }
+
+        [Test]
+        public void StoneDoesNotForgiveKeepsTremorAndCurseAtEachClimbsEnd()
+        {
+            var effects = Upgrade.ById(TurnedToStoneDuo.StoneDoesNotForgive).Effects;
+            foreach (var climbed in new[] { Clover.Player.Trees.Reactions.StoneClimbed, TurnedToStoneDuo.KingsMen + ".climbed", TurnedToStoneDuo.GraveMarker + ".climbed" })
+                foreach (var kind in new[] { AfflictionKind.Tremor, AfflictionKind.Cursed })
+                    Assert.IsTrue(effects.Any(effect => effect.On == UpgradeTrigger.ConditionEnded && effect.Condition == climbed && effect.Do == UpgradeAction.KeepForGood && effect.Affliction == kind),
+                        climbed + " " + kind);
+            // The climbs it answers are the ones the stone follows.
+            Assert.IsTrue(Upgrade.All.SelectMany(upgrade => upgrade.Effects).Any(effect => effect.On == UpgradeTrigger.ConditionEnded && effect.Condition == Clover.Player.Trees.Reactions.StoneClimbed
+                && effect.Do == UpgradeAction.Condition && effect.State != null && effect.State.Id == Clover.Player.Trees.Reactions.Stone));
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))

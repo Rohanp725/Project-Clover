@@ -106,5 +106,7 @@ namespace Clover.Player
         /// where the target stood. An elite or a god is not moved: the player comes up behind it instead. Reads: nothing.
         /// </summary>
         SwapPlaces,
+        /// <summary>The target keeps the affliction until it dies: it no longer fades (Stone Does Not Forgive). Reads: Affliction.</summary>
+        KeepForGood,
     }
 }
