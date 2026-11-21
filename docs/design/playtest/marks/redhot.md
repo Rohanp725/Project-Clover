@@ -9,13 +9,13 @@ both carried.
 
 **When it happens.** Every time Red Hot goes off while you carry both Metal and Fire. Red Hot goes off when a Burn lands on a notched enemy, or when a notch lands on a burning one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Red Hot.
 
-**The numbers.** Mix, 3 Shards. Slag: for 5 seconds, the enemy drips a pool of melted metal each second. Each pool is 0.8 metres across and burns for 3 seconds, dealing 3 damage and a Burn each second to everything in it except the enemy dripping it. The Burning Shirt: for 5 seconds, the enemy can't guard, and every 1.5 seconds it gets a Burn. After Red Hot goes off on an enemy, it can't go off on that enemy again for 5 seconds.
+**The numbers.** Mix, 3 Shards. Slag: for 5 seconds, the enemy drips a pool of melted metal each second. Each pool is 0.8 metres across and burns for 3 seconds, dealing 3 damage and a Burn each second to everything in it except the enemy dripping it. The Burning Shirt: for 5 seconds, the enemy can't guard, and every 1.5 seconds it gets a Burn. In both shapes, its Burn bites twice as hard for those 5 seconds, like the plain Red Hot's. After Red Hot goes off on an enemy, it can't go off on that enemy again for 5 seconds.
 
 **Works with.** Heated Edge to set it up, Strike While Hot, Red-Short, Tipped Crucible, Heated Bronze.
 
 **Example.** A brute in a crowd: use Slag, and drive it among them. A shield bearer: use The Burning Shirt, and its guard is gone.
 
-**Not built yet.** Slag drips each second where the enemy stands, instead of once for each metre it moves. The Burning Shirt doesn't yet answer each attack the enemy starts (with two more Burns and a flinch). For now, it burns on a timer, and the enemy can't guard for the whole 5 seconds, not only while it has five Burns. Its Burn doesn't yet bite twice as hard, like the plain Red Hot's does.
+**Not built yet.** Slag drips each second where the enemy stands, instead of once for each metre it moves. The Burning Shirt doesn't yet answer each attack the enemy starts (with two more Burns and a flinch). For now, it burns on a timer, and the enemy can't guard for the whole 5 seconds, not only while it has five Burns.
 
 ## redhot.heatededge
 **What it does.** Your heavy blows add a Burn and a notch at the same time.
