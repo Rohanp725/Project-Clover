@@ -69,11 +69,11 @@ namespace Clover.Player.Trees
                 BranchPattern.MiddleFoot));
 
             // The detonator: the brand form sets the seal on the enemy faced and flashes, striking nothing, at each blow it
-            // counts; the clock is a condition whose end carries the weapon blows it took. NEEDS: half of the damage dealt in
-            // the six seconds, 150 at most (damage-tally); until then 8 for each weapon blow landed on it.
+            // counts; the clock is a condition whose end carries the weapon blows it took: 8 for each weapon blow landed on it,
+            // as the owner decided (docs/design/steel/phase4_questions.md, the owner's answers: "Reckoning: 8 per blow").
             SpellBranch.Add(to, E, Reckoning, "Reckoning", SpellRole.Detonator, BranchPattern.MiddleA, Weighed, SpellForms.Brand,
                 new SpellSpec { Reach = 10f, Seconds = 6f, Count = 12, Radius = 0.6f, Damage = 0f, Stagger = 0f, Stacks = 0 },
-                "You set a seal on the enemy you face: a ring like a clock face on the ground under it, one hand sweeping it in six seconds. On the last tick it breaks upward in a column of light, and half of all your weapon did to that enemy in the six seconds is done to it again at once, 150 at most, with 40 stagger.",
+                "You set a seal on the enemy you face: a ring like a clock face on the ground under it, one hand sweeping it in six seconds. On the last tick it breaks upward in a column of light: 8 damage for each weapon blow you landed on that enemy in the six seconds, with 40 stagger.",
                 UpgradeIcons.Hourglass,
                 // The roster's numbers alone (the owner's answer of 2026-11-20). The count is the approved 8 for each weapon blow
                 // (the owner's "Reckoning: 8 per blow"); 60% for 50% is 10 a blow, and 180 at most is eighteen blows' worth, set
