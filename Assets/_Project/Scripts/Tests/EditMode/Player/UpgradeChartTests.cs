@@ -155,7 +155,9 @@ namespace Clover.Tests
                 Assert.IsNotEmpty(upgrade.Description, upgrade.Id);
                 Assert.IsFalse(upgrade.Description.Contains("!"), upgrade.Id + " shouts");
                 Assert.AreSame(upgrade, Upgrade.ById(upgrade.Id));
-                Assert.IsNotNull(Elements.ByName(upgrade.Element), upgrade.Id + " names no element");
+                // A mark of the Way or the Body names an element only when it works while that element is carried.
+                if (!upgrade.IsWay || !string.IsNullOrEmpty(upgrade.Element))
+                    Assert.IsNotNull(Elements.ByName(upgrade.Element), upgrade.Id + " names no element");
                 Assert.GreaterOrEqual(UpgradeIcons.IndexOf(upgrade.Icon), 0, upgrade.Id + " names a picture that does not exist: " + upgrade.Icon);
                 // A reaction is any pair's, on no tree: ReactionCatalogueTests checks its two elements.
                 // A duo branch in the heart is any pair's, in either order (task 4.5); a mix still on the ring is a neighbour's.
@@ -170,14 +172,22 @@ namespace Clover.Tests
                     var parent = Upgrade.ById(id);
                     Assert.IsNotNull(parent, upgrade.Id + " grows from something that does not exist: " + id);
                     Assert.IsFalse(parent.Signature, upgrade.Id + " grows from a god's gift");
-                    Assert.IsTrue(parent.Element == upgrade.Element && parent.Element2 == upgrade.Element2, upgrade.Id + " grows from a mark on another tree");
+                    if (upgrade.IsWay)
+                        Assert.IsTrue(parent.Tree == upgrade.Tree && parent.Weapon == upgrade.Weapon && parent.Aspect == upgrade.Aspect, upgrade.Id + " grows from a mark of another Way or bough");
+                    else
+                        Assert.IsTrue(parent.Element == upgrade.Element && parent.Element2 == upgrade.Element2, upgrade.Id + " grows from a mark on another tree");
                     Assert.Greater(upgrade.Y, parent.Y - 0.01f, upgrade.Id + " lies inward of " + id);
                 }
                 // What it costs: nothing for a god's gift or a given mark, its kind's cost for the rest, one to five for a mix (a duo
                 // branch's minor is 1, pairs_d1_d2.md).
                 if (upgrade.Signature || upgrade.Currency == Currency.None) Assert.AreEqual(0, upgrade.Cost, upgrade.Id);
                 else if (upgrade.Kind == UpgradeKind.Mix) Assert.That(upgrade.Cost, Is.InRange(1, 5), upgrade.Id);
-                else Assert.AreEqual(Upgrade.UsualCost(upgrade.Kind), upgrade.Cost, upgrade.Id);
+                // The Way's temper ranks are 1, 1, 2, 2 and 3 Memories (steel/weapons.md 0.2); every other Way mark its kind's price in Memories.
+                else if (upgrade.IsWay && upgrade.Kind == UpgradeKind.Temper) Assert.That(upgrade.Cost, Is.InRange(1, 3), upgrade.Id);
+                else Assert.AreEqual(Upgrade.UsualCost(upgrade), upgrade.Cost, upgrade.Id);
+                // The Way and the Body are bought with Memories, or given; nothing else is.
+                if (upgrade.IsWay) Assert.AreNotEqual(Currency.Shards, upgrade.Currency, upgrade.Id + ": the Way and the Body are bought with Memories");
+                else Assert.AreNotEqual(Currency.Memories, upgrade.Currency, upgrade.Id + ": Memories buy only the Way and the Body");
                 // A spell names a form that exists and carries its numbers; an element's base spell is cast by its kit instead.
                 if (upgrade.Kind == UpgradeKind.Spell && !upgrade.IsBaseSpell) Assert.IsTrue(upgrade.IsSpell, upgrade.Id + " is a spell with no form");
                 if (upgrade.IsBaseSpell) Assert.IsFalse(upgrade.IsSpell, upgrade.Id + ": a base spell's Learn is cast by its kit, not a form of its own");
@@ -252,7 +262,7 @@ namespace Clover.Tests
         {
             foreach (var element in Elements.All)
             {
-                int own = Upgrade.All.Count(upgrade => upgrade.Element == element.Name && !upgrade.IsMix);
+                int own = Upgrade.All.Count(upgrade => upgrade.Element == element.Name && !upgrade.IsMix && !upgrade.IsWay);
                 Assert.That(own, Is.InRange(30, 40), element.Name + " has thirty to forty marks of its own");
                 var gift = Gifts.SignatureOf(element.Name);
                 Assert.IsNotNull(gift, element.Name + " has no god's gift");
@@ -317,7 +327,7 @@ namespace Clover.Tests
             var roads = new Dictionary<string, int>();
             foreach (var element in Elements.All)
             {
-                var sold = Upgrade.All.Where(upgrade => upgrade.Element == element.Name && !upgrade.IsMix && !upgrade.Signature).ToList();
+                var sold = Upgrade.All.Where(upgrade => upgrade.Element == element.Name && !upgrade.IsMix && !upgrade.IsWay && !upgrade.Signature).ToList();
                 int whole = sold.Sum(upgrade => upgrade.Cost);
                 Assert.Greater(whole, run * 3, element.Name + ": the whole tree is far more than a run pays, so a path is chosen");
                 var keystones = sold.Where(upgrade => upgrade.Kind == UpgradeKind.Keystone).ToList();
@@ -339,7 +349,8 @@ namespace Clover.Tests
         public void TheFirstSixteenKeepTheirIdsOrAreRetiredOrMoving()
         {
             // Phase 4 kept every mark the design keeps under its id (Backdraft is Breath of the Lioness now), retired the cut
-            // ones (Burn and Detonate, folded into it; Overclock) and sent the Katana's two to its Way.
+            // ones (Burn and Detonate, folded into it; Overclock) and sent the Katana's two to its Way, where phase 5 took them
+            // back under the same ids.
             var first = new Dictionary<string, string>
             {
                 { "fire.heat", "Heat" }, { "fire.backdraft", "Breath of the Lioness" }, { "fire.trail", "Flame Trail" },
@@ -351,8 +362,18 @@ namespace Clover.Tests
             Assert.IsTrue(RetiredMarks.IsRetired(Upgrade.Overclock));
             Assert.IsTrue(RetiredMarks.IsMoving(Upgrade.BurningCrescent));
             Assert.IsTrue(RetiredMarks.IsMoving(Upgrade.DelayedCuts));
-            foreach (string gone in new[] { Upgrade.BurnAndDetonate, Upgrade.Overclock, Upgrade.BurningCrescent, Upgrade.DelayedCuts })
+            foreach (string gone in new[] { Upgrade.BurnAndDetonate, Upgrade.Overclock })
                 Assert.IsNull(Upgrade.ById(gone), gone);
+            foreach (string moved in new[] { Upgrade.BurningCrescent, Upgrade.DelayedCuts })
+            {
+                var mark = Upgrade.ById(moved);
+                Assert.IsNotNull(mark, moved + " has its home on the Katana's Way");
+                Assert.AreEqual(MarkTree.Way, mark.Tree, moved);
+                Assert.AreEqual(Weapons.KatanaName, mark.Weapon, moved);
+                Assert.IsEmpty(mark.Aspect, moved + " is on the trunk");
+            }
+            Assert.AreEqual("Burning Crescent", Upgrade.ById(Upgrade.BurningCrescent).Name);
+            Assert.AreEqual("Delayed Cuts", Upgrade.ById(Upgrade.DelayedCuts).Name);
             foreach (var pair in first)
             {
                 var upgrade = Upgrade.ById(pair.Key);
@@ -383,7 +404,7 @@ namespace Clover.Tests
         {
             foreach (var element in Elements.All)
             {
-                var tree = Upgrade.All.Where(upgrade => upgrade.Element == element.Name && !upgrade.IsMix).ToList();
+                var tree = Upgrade.All.Where(upgrade => upgrade.Element == element.Name && !upgrade.IsMix && !upgrade.IsWay).ToList();
                 if (tree.Count == 0) continue;
                 var sold = tree.Where(upgrade => !upgrade.Signature).ToList();
                 Assert.AreEqual(1, sold.Count(upgrade => upgrade.Kind == UpgradeKind.Root), element.Name + " has one root");
@@ -397,8 +418,8 @@ namespace Clover.Tests
             // share, reshaped as a duo branch (task 4.5): the Shape mark, Twin Break, Ionised Air, Chain Reaction, Meltdown and
             // Ball Lightning, with Plasma at its top.
             // Fire has its two new keystones, Into the Fire and The Blade Drinks Fire (the owner's picks of 2026-11-20).
-            Assert.AreEqual(35, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
-            Assert.AreEqual(32, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Lightning && !upgrade.IsMix && !upgrade.Signature && !upgrade.IsHidden));
+            Assert.AreEqual(35, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Fire && !upgrade.IsMix && !upgrade.IsWay && !upgrade.Signature && !upgrade.IsHidden));
+            Assert.AreEqual(32, Upgrade.All.Count(upgrade => upgrade.Element == Elements.Lightning && !upgrade.IsMix && !upgrade.IsWay && !upgrade.Signature && !upgrade.IsHidden));
             // Plasma Lance, the spare spell kept hidden for the Evolutions, is on no chart; Plasma itself is a duo mark now.
             Assert.AreEqual(7, Upgrade.All.Count(upgrade => upgrade.Kind == UpgradeKind.Mix && !upgrade.IsHidden && upgrade.Element == Elements.Fire && upgrade.Element2 == Elements.Lightning));
         }
@@ -408,7 +429,7 @@ namespace Clover.Tests
         {
             // Hidden marks (the reactions) are never drawn, so they have no place; the heart's duo branches are drawn one pair
             // at a time in the ring's middle (TheHeartsBranchesSitOnItsPatternClearOfEachOther).
-            var all = Upgrade.All.Where(upgrade => !upgrade.IsHidden && upgrade.Tree != MarkTree.Duo).ToList();
+            var all = Upgrade.All.Where(upgrade => !upgrade.IsHidden && upgrade.Tree != MarkTree.Duo && !upgrade.IsWay).ToList();
             foreach (var upgrade in all)
             {
                 if (upgrade.IsMix)
@@ -578,7 +599,7 @@ namespace Clover.Tests
         {
             foreach (string element in ReshapedPassives.Keys)
             {
-                var tree = Upgrade.All.Where(mark => mark.Element == element && !mark.IsMix && !mark.IsHidden).ToList();
+                var tree = Upgrade.All.Where(mark => mark.Element == element && !mark.IsMix && !mark.IsWay && !mark.IsHidden).ToList();
                 var taken = new HashSet<string>();
                 foreach (var mark in tree)
                 {
@@ -685,7 +706,7 @@ namespace Clover.Tests
         {
             foreach (string element in ReshapedPassives.Keys)
             {
-                var tree = Upgrade.All.Where(mark => mark.Element == element && !mark.IsMix && !mark.IsHidden).ToList();
+                var tree = Upgrade.All.Where(mark => mark.Element == element && !mark.IsMix && !mark.IsWay && !mark.IsHidden).ToList();
                 Assert.AreEqual(6, tree.Count(mark => mark.Part == BranchPart.Learn), element);
                 Assert.AreEqual(24, tree.Count(mark => mark.Part != BranchPart.None), element);
                 Assert.AreEqual(1, tree.Count(mark => mark.IsBaseSpell), element + "'s base spell is one of its six");
@@ -699,7 +720,7 @@ namespace Clover.Tests
             }
             // Each design's passives, with its Devotion, its lift and its gift.
             foreach (var pair in ReshapedPassives)
-                Assert.AreEqual(pair.Value, Upgrade.All.Count(mark => mark.Element == pair.Key && !mark.IsMix && !mark.IsHidden && mark.Part == BranchPart.None), pair.Key);
+                Assert.AreEqual(pair.Value, Upgrade.All.Count(mark => mark.Element == pair.Key && !mark.IsMix && !mark.IsWay && !mark.IsHidden && mark.Part == BranchPart.None), pair.Key);
         }
 
         [Test]
@@ -842,8 +863,11 @@ namespace Clover.Tests
             foreach (var mark in Upgrade.All)
             {
                 Assert.IsFalse(RetiredMarks.IsRetired(mark.Id), mark.Id + " was retired and must not be used again");
-                Assert.IsFalse(RetiredMarks.IsMoving(mark.Id), mark.Id + " waits for a weapon's Way");
+                // A mark that left an element tree for a weapon's Way is used again only there (phase 5).
+                if (RetiredMarks.IsMoving(mark.Id)) Assert.AreEqual(MarkTree.Way, mark.Tree, mark.Id + " left its tree for a weapon's Way");
             }
+            foreach (var moving in RetiredMarks.Moving)
+                Assert.IsNotNull(Upgrade.ById(moving.Id), moving.Id + " has its home on a weapon's Way");
         }
 
         [Test]

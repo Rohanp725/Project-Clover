@@ -44,6 +44,7 @@ namespace Clover.UI
         {
             if (NotBuiltYet.IsSlot(mark)) return $"{NotBuiltYet.Label}  ·  beside the {mark.Element} tree";
             if (mark.Kind == UpgradeKind.Reaction) return $"Reaction  ·  {mark.Element} and {mark.Element2}  ·  always in force, never sold";
+            if (mark.IsWay) return $"{KindName(mark)}  ·  {WayPlace(mark)}  ·  {WayPrice(mark)}";
             string tree = mark.IsMix ? $"{HeartLayout.BranchName(mark.Element, mark.Element2)} ({mark.Element} and {mark.Element2})" : mark.Element + " tree";
             string price = mark.Signature ? "a god's gift, never sold (a playtest unlock here)"
                 : mark.Currency == Currency.None ? "comes with " + mark.Element + ", never sold"
@@ -51,9 +52,40 @@ namespace Clover.UI
             return $"{KindName(mark)}  ·  {tree}  ·  {price}";
         }
 
+        // Where on the Way a mark sits: the Body, a weapon's trunk, or one of its boughs.
+        private static string WayPlace(Upgrade mark)
+        {
+            if (mark.Tree == MarkTree.Body) return "the Body";
+            string way = $"the {mark.Weapon}'s Way";
+            if (string.IsNullOrEmpty(mark.Aspect) || mark.Aspect == mark.Id) return mark.Kind == UpgradeKind.Aspect ? way : way + ", the trunk";
+            var bough = Upgrade.ById(mark.Aspect);
+            return bough != null ? $"{way}, {bough.Name}" : way;
+        }
+
+        // The Way's prices are in Memories; a god's bough comes with taking the god.
+        private static string WayPrice(Upgrade mark)
+        {
+            if (mark.Currency == Currency.None) return "given when the god is taken, never sold (a playtest unlock here)";
+            string price = mark.Cost == 1 ? "1 Memory" : mark.Cost + " Memories";
+            if (string.IsNullOrEmpty(mark.Gate)) return price;
+            if (mark.Gate.StartsWith(MarkRules.GodsGate, System.StringComparison.Ordinal))
+                return $"{price}, opens once {mark.Gate.Substring(MarkRules.GodsGate.Length)} gods have fallen";
+            return price + ", sealed until its teacher falls";
+        }
+
         public static string KindName(Upgrade mark)
         {
             if (mark.Signature) return mark.IsMix ? "Mix crown" : "God's gift";
+            if (mark.IsWay)
+                switch (mark.Kind)
+                {
+                    case UpgradeKind.Aspect: return mark.Currency == Currency.None ? "God's bough" : "Aspect";
+                    case UpgradeKind.Temper: return "Temper";
+                    case UpgradeKind.Technique: return "Technique";
+                    case UpgradeKind.Keystone: return mark.Tree == MarkTree.Body ? "Bearing" : "Keystone";
+                    case UpgradeKind.Minor: return "Number";
+                    case UpgradeKind.Major: return "Move or rule";
+                }
             // A duo branch's Shape mark shapes its pair's reaction (task 4.5).
             if (ReactionTable.IsReactionShape(mark)) return "Reaction shape";
             if (mark.IsMix) return mark.IsSpell ? "Duo spell" : "Mix";

@@ -19,7 +19,8 @@ namespace Clover.Player
     /// their numbers are fields here.
     /// </summary>
     [RequireComponent(typeof(PlayerController))]
-    public class PlayerUpgrades : MonoBehaviour
+    // It answers the Way's question of a mark (learned and in force: Has), so the armoury can build the weapon from it.
+    public class PlayerUpgrades : MonoBehaviour, Way.IMarkQuery
     {
         /// <summary>Upgrades the player has from the start of the scene, for trying things out.</summary>
         public List<string> StartWith = new List<string>();
@@ -594,10 +595,10 @@ namespace Clover.Player
             if (points > 0) RunState.Points += points;
         }
 
-        /// <summary>Taking a new element leaves the old one's learning behind.</summary>
+        /// <summary>Taking a new element leaves the old one's learning behind. The Way's and the Body's marks are kept: Memories are never lost.</summary>
         public void Forget()
         {
-            RunState.Unlocked.Clear();
+            RunState.Unlocked.RemoveWhere(id => !(Upgrade.ById(id)?.IsWay ?? false));
             Heat.Reset();
             if (combat != null)
             {

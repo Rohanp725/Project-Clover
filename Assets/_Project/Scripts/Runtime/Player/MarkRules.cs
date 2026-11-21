@@ -1,14 +1,21 @@
+using System;
 using System.Collections.Generic;
 using Clover.Gameplay;
+using Clover.Player.Growth;
 
 namespace Clover.Player
 {
     /// <summary>
     /// Whether a mark on the chart is open and can be bought, as plain rules over plain state so they can be tested
     /// without a player: the game's own rules, and the playtest's (every tree and branch open, the gods' gifts sold).
+    /// A mark is paid in its own currency (Shards for the element trees and duo branches, Memories for the Way and the
+    /// Body) and waits behind its gate (an elite beaten, a god felled, a count of gods), both asked here for every chart.
     /// </summary>
     public static class MarkRules
     {
+        /// <summary>A gate that opens on a count of gods felled: <c>gods.3</c> opens at the third (the Way's stages, depth_weapons.md 6).</summary>
+        public const string GodsGate = "gods.";
+
         /// <summary>True when the mark is on a tree or branch open now: the element held, a mix of it with an element held or consumed, or, in the playtest, any.</summary>
         public static bool Open(Upgrade upgrade, string held, ICollection<string> everHeld, ICollection<string> consumed, bool playtest)
         {
@@ -39,12 +46,47 @@ namespace Clover.Player
         /// </summary>
         public static bool CanBuy(Upgrade upgrade, ICollection<string> unlocked, int points, bool open, bool playtest)
         {
-            if (upgrade == null || upgrade.IsHidden || NotBuiltYet.IsSlot(upgrade) || !open) return false;
+            // The element chart's purse holds Shards only: a mark of the Way or the Body is bought from the wallet's Memories.
+            if (upgrade != null && upgrade.Currency == Currency.Memories) return false;
+            return Buyable(upgrade, unlocked, points, open, playtest, null, 0);
+        }
+
+        /// <summary>
+        /// True when the mark can be bought from the wallet: open, not learned, reachable, paid in its own currency, and
+        /// its gate open (<see cref="GateOpen(Upgrade, Func{string, bool}, int, bool)"/>, with <paramref name="has"/> asking
+        /// the progress flags). A god's gift and a god's bough are never sold, except as the playtest's unlocks.
+        /// </summary>
+        public static bool CanBuy(Upgrade upgrade, ICollection<string> unlocked, Wallet wallet, bool open, bool playtest, Func<string, bool> has, int godsFelled)
+        {
+            if (upgrade == null || wallet == null) return false;
+            return Buyable(upgrade, unlocked, wallet.Of(upgrade.Currency), open, playtest, has, godsFelled);
+        }
+
+        // The one rule both purses share; funds are what is held of the mark's own currency.
+        private static bool Buyable(Upgrade upgrade, ICollection<string> unlocked, int funds, bool open, bool playtest, Func<string, bool> has, int godsFelled)
+        {
+            if (upgrade == null || unlocked == null || upgrade.IsHidden || NotBuiltYet.IsSlot(upgrade) || !open) return false;
+            // A god's gift, and a god's bough on the Way (given by Take), are unlocks the playtest sells for nothing.
+            bool unlock = upgrade.Signature || Way.WayRules.IsGodBough(upgrade);
             // A given mark (a base spell's Learn, which comes with its element) is never sold, in the playtest either.
-            if (upgrade.Currency == Currency.None && !upgrade.Signature) return false;
-            if (upgrade.Signature && !playtest) return false;
-            if (unlocked.Contains(upgrade.Id) || points < upgrade.Cost) return false;
-            return upgrade.Signature || UpgradeTree.Reachable(upgrade, unlocked);
+            if (upgrade.Currency == Currency.None && !unlock) return false;
+            if (unlock && !playtest) return false;
+            if (unlocked.Contains(upgrade.Id) || funds < upgrade.Cost) return false;
+            if (!GateOpen(upgrade, has, godsFelled, playtest)) return false;
+            return unlock || UpgradeTree.Reachable(upgrade, unlocked);
+        }
+
+        /// <summary>True when the mark's gate is open: it has none, its flag is set, enough gods have fallen, or the playtest is on.</summary>
+        public static bool GateOpen(Upgrade upgrade, Func<string, bool> has, int godsFelled, bool playtest) =>
+            upgrade != null && GateOpen(upgrade.Gate, has, godsFelled, playtest);
+
+        /// <summary>True when a gate is open: none, a progress flag that <paramref name="has"/> says is set, or <c>gods.N</c> with N felled. The playtest opens every gate.</summary>
+        public static bool GateOpen(string gate, Func<string, bool> has, int godsFelled, bool playtest)
+        {
+            if (string.IsNullOrEmpty(gate) || playtest) return true;
+            if (gate.StartsWith(GodsGate, StringComparison.Ordinal) && int.TryParse(gate.Substring(GodsGate.Length), out int needed))
+                return godsFelled >= needed;
+            return has != null && has(gate);
         }
 
         /// <summary>
@@ -53,14 +95,16 @@ namespace Clover.Player
         /// branch's mark while both its elements are; a duo spell only while it also sits in a slot; a mark that names a
         /// weapon only while that weapon kind is carried (a god's weapon counts as its kind: the Storm Katana is a
         /// Katana). A spell branch's Empower, Shape and Master only while its spell sits in a slot (the shape's own effects
-        /// only for the shape worn: <see cref="SpellBranches.Worn"/>); a Devotion only all in. The rules for reactions,
-        /// the Way, Heresies, Bond and Evolutions join here as their fields are added (phases 3 to 6).
+        /// only for the shape worn: <see cref="SpellBranches.Worn"/>); a Devotion only all in. A Way or Body mark by the
+        /// Way's rules (<see cref="Way.WayRules.InForce"/>): its weapon kind carried, its bough the active aspect, its
+        /// keystone the one set. The rules for Heresies, Bond and Evolutions join here as their fields are added (phase 6).
         /// </summary>
         public static bool InForce(Upgrade mark, Build.Loadout loadout)
         {
             // A hidden mark (a spare spell kept for the Evolutions, a plain reaction) is never in force as a mark: a
             // reaction runs through the reaction table, not through what is learned.
             if (mark == null || loadout == null || mark.IsHidden) return false;
+            if (mark.IsWay) return Way.WayRules.InForce(mark, loadout);
             if (!WeaponCarried(mark, loadout) || !Carried(mark, loadout)) return false;
             if (mark.IsMix && mark.IsSpell && !loadout.Slotted(mark.Id)) return false;
             // A duo surge only while it is the surge worn (the ledger's duo-surge-slot).

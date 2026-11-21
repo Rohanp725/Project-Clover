@@ -22,7 +22,7 @@ namespace Clover.Player
         /// <summary>For a mark on a mixed branch: the second element. Empty otherwise.</summary>
         public string Element2 = "";
         public UpgradeKind Kind = UpgradeKind.Minor;
-        /// <summary>Embers to learn it. Left at zero it takes its kind's usual cost.</summary>
+        /// <summary>What it costs to learn, in its <see cref="Currency"/>. Left at zero it takes its kind's usual cost (<see cref="UsualCost(Upgrade)"/>).</summary>
         public int Cost;
         public string Description = "";
         /// <summary>The weapon it needs, or empty if it works with any.</summary>
@@ -80,7 +80,10 @@ namespace Clover.Player
         public string Lifts = "";
         /// <summary>On a Way mark (phase 5): the aspect it belongs to (<c>katana.sheath</c>); empty for the trunk.</summary>
         public string Aspect = "";
-        /// <summary>A progress flag that must be set before it can be bought (an elite beaten, a land reached); empty for none. Read by phase 5.</summary>
+        /// <summary>
+        /// A progress flag that must be set before it can be bought (an elite beaten, a land reached), or <c>gods.N</c> for
+        /// N gods felled; empty for none. Read by <see cref="MarkRules.GateOpen(Upgrade, Func{string, bool}, int, bool)"/>.
+        /// </summary>
         public string Gate = "";
         /// <summary>One line for the body sign or look it brings (Heresies, phase 6); empty for none.</summary>
         public string Seen = "";
@@ -114,8 +117,14 @@ namespace Clover.Player
         /// <summary>True for a mark on no chart (a reaction): never drawn, opened or sold.</summary>
         public bool IsHidden => Tree == MarkTree.Hidden;
 
-        /// <summary>True when it is on the tree of this element, or on a mixed branch this element shares. A hidden mark is on no tree.</summary>
-        public bool BelongsTo(string element) => !IsHidden && (Element == element || (IsMix && Element2 == element));
+        /// <summary>True for a mark of a weapon's Way or of the Body (phase 5): bought with Memories, on no element's tree even when it names an element.</summary>
+        public bool IsWay => Tree == MarkTree.Way || Tree == MarkTree.Body;
+
+        /// <summary>
+        /// True when it is on the tree of this element, or on a mixed branch this element shares. A hidden mark is on no tree,
+        /// and nor is a Way mark that names an element (the Katana's Burning Crescent works while Fire is carried, on the Way).
+        /// </summary>
+        public bool BelongsTo(string element) => !IsHidden && !IsWay && (Element == element || (IsMix && Element2 == element));
 
         // Fire: pressure and momentum.
         public const string Heat = "fire.heat";
@@ -160,8 +169,31 @@ namespace Clover.Player
             }
         }
 
-        /// <summary>What the mark costs unless it says otherwise: nothing when it is given, else its kind's usual cost.</summary>
-        public static int UsualCost(Upgrade mark) => mark == null || mark.Currency == Currency.None ? 0 : UsualCost(mark.Kind);
+        /// <summary>
+        /// What a mark of each kind costs on the Way and the Body, in Memories (steel/weapons.md 0.2, way_plan.md 0.3): a
+        /// Number 1, a Move or a Rule 2, a keystone (or the Body's bearing) 4, an aspect 2, a temper rank 1 (the dearer
+        /// ranks write their own), a technique 2.
+        /// </summary>
+        public static int UsualWayCost(UpgradeKind kind)
+        {
+            switch (kind)
+            {
+                case UpgradeKind.Minor: return 1;
+                case UpgradeKind.Major: return 2;
+                case UpgradeKind.Keystone: return 4;
+                case UpgradeKind.Aspect: return 2;
+                case UpgradeKind.Temper: return 1;
+                case UpgradeKind.Technique: return 2;
+                default: return 0;
+            }
+        }
+
+        /// <summary>What the mark costs unless it says otherwise: nothing when it is given, else its kind's usual cost in its currency.</summary>
+        public static int UsualCost(Upgrade mark)
+        {
+            if (mark == null || mark.Currency == Currency.None) return 0;
+            return mark.Currency == Currency.Memories ? UsualWayCost(mark.Kind) : UsualCost(mark.Kind);
+        }
 
         private static List<Upgrade> all;
         private static Dictionary<string, Upgrade> byId;
@@ -206,7 +238,7 @@ namespace Clover.Player
                 upgrade.Index = place++;
                 // A given mark (a base spell's Learn) costs nothing, whatever its kind.
                 if (upgrade.Currency == Currency.None) upgrade.Cost = 0;
-                else if (upgrade.Cost == 0) upgrade.Cost = UsualCost(upgrade.Kind);
+                else if (upgrade.Cost == 0) upgrade.Cost = UsualCost(upgrade);
                 // Basic spells run on cooldowns and the larger ones cost mana, by the one table of the shared rules.
                 SpellTimings.Apply(upgrade);
                 index[upgrade.Id] = upgrade;

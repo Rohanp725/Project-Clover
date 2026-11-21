@@ -53,8 +53,10 @@ namespace Clover.World
             // A rest ends every spell's clock and any fight.
             var spells = who.GetComponent<Clover.Player.PlayerSpells>();
             if (spells != null) spells.Rested();
-            // The playtest's rule: a rest gives as many Shards as the whole chart could ask for.
+            // The playtest's rule: a rest gives as many Shards as the whole chart could ask for, and as many Memories as the
+            // Way's charts could (the wallet's rest; the run's Shards are still RunState's until the death rule moves them).
             RunState.Points = PlaytestMode.ShardsAfterRest(RunState.Points);
+            Progress.Data.Wallet?.Rested();
             // Resting is a save point (IMPLEMENTATION.md 5.1), after the rest has given what it gives.
             Clover.Core.Save.SavePoints.Rested();
             // By the fire is where the embers are spent.
