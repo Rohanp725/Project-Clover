@@ -232,13 +232,16 @@ public class Phase4bProbeRunner : MonoBehaviour
         Judge("Drawn Back to Break: with no wave, the weapon a fifth softer", Mathf.Abs(upgrades.Stats.Multiplier(PlayerStat.WeaponDamage) - 0.8f) < 0.01f,
             $"weapon x{upgrades.Stats.Multiplier(PlayerStat.WeaponDamage):0.00}");
         yield return Dodge(Vector2.down);
+        Judge("the first dodge away holds the host", upgrades.DodgeHeld == host.transform, $"held {(upgrades.DodgeHeld != null ? upgrades.DodgeHeld.name : "nothing")}");
         player.Stamina.Fill();
         yield return Real(0.3f);
-        // The roll turns the player south, where the afflicted dummies stand 4 m off and would be the enemy faced: face the
-        // host again from where the first dodge began, as a player turning back to it would.
-        player.Teleport(Middle + Vector3.back * 2.5f, Quaternion.identity);
-        yield return Real(0.2f);
+        // The roll turns the player south, where the afflicted dummies stand 4 m off and are now the enemy ahead. The host
+        // stays the one that counts (the owner's answer of 2026-11-20), so a second roll south is away again, not toward them.
+        var aheadNow = combat.EnemyAhead(upgrades.FightRange);
+        Say($"after the first roll the enemy ahead is {(aheadNow != null ? aheadNow.name : "nothing")} at z {(aheadNow != null ? aheadNow.position.z : 0f):0.0}, you at z {player.transform.position.z:0.0}");
         yield return Dodge(Vector2.down);
+        Judge("the second dodge south still counts against the host: away", upgrades.LastDodgeWay == DodgeWay.Away && upgrades.DodgeHeld == host.transform,
+            $"{upgrades.LastDodgeWay}, held {(upgrades.DodgeHeld != null ? upgrades.DodgeHeld.name : "nothing")}, {(host.transform.position - player.transform.position).magnitude:0.0} m from it");
         Judge("two dodges away draw two waves", upgrades.Tally(WaterTree.DrawnBackToBreak) == 2, $"waves {upgrades.Tally(WaterTree.DrawnBackToBreak)}");
         player.Teleport(host.transform.position + Vector3.back * 1.6f, Quaternion.identity);
         yield return Real(0.2f);
@@ -307,11 +310,13 @@ public class Phase4bProbeRunner : MonoBehaviour
         Judge("Three Weasels' first press is cast", spells.TryCast(0));
         yield return Real(0.7f);
         float afterRush = player.transform.position.z, hostAfterRush = host.transform.position.z;
+        // The first weasel is a rush of its own (the owner's answer of 2026-11-20): it stops just in front of the enemy,
+        // on the near side, about 1.2 m off (the still dummy cannot be thrown, so it stays put).
+        Judge("the first press stops just in front of the enemy", afterRush < hostAfterRush && hostAfterRush - afterRush > 0.6f && hostAfterRush - afterRush < 2f,
+            $"you z {weaselStart:0.0} -> {afterRush:0.0}, it z {hostAfterRush:0.0}, {hostAfterRush - afterRush:0.0} m short");
         Judge("the second press passes through", spells.TryCast(0) && upgrades.PressesDone == presses + 1);
         yield return Real(0.5f);
-        // The first weasel is the step form, which already steps through the enemy, so the second comes back through it:
-        // judged as the player ending on the other side of it from where the rush left them.
-        Judge("and comes out beyond the enemy", (afterRush - hostAfterRush) * (player.transform.position.z - host.transform.position.z) < 0f,
+        Judge("and comes out beyond the enemy", player.transform.position.z > host.transform.position.z + 0.5f,
             $"you z {weaselStart:0.0} -> {afterRush:0.0} (rush) -> {player.transform.position.z:0.0}, it z {hostAfterRush:0.0} -> {host.transform.position.z:0.0}");
         Judge("the third press steps back", spells.TryCast(0) && upgrades.PressesDone == presses + 2);
         yield return Real(0.5f);

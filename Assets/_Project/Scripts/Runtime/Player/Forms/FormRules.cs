@@ -60,6 +60,32 @@ namespace Clover.Player.Forms
         /// <summary>How many slabs, posts or spikes cover a length when each covers <paramref name="each"/> of it: at least one.</summary>
         public static int Pieces(float length, float each) => Mathf.Max(1, Mathf.CeilToInt(length / Mathf.Max(0.05f, each) - 0.001f));
 
+        /// <summary>Metres a step through the enemy faced comes out beyond it.</summary>
+        public const float StepPast = 1.8f;
+
+        /// <summary>Metres short of the enemy faced that a rush to it stops: in front of it, within a blow's reach.</summary>
+        public const float RushShort = 1.2f;
+
+        /// <summary>How far a step through an enemy <paramref name="gap"/> metres off goes: out its far side, never past reach.</summary>
+        public static float StepRun(float gap, float reach) => Mathf.Min(reach, Mathf.Max(0f, gap) + StepPast);
+
+        /// <summary>
+        /// How far a rush to an enemy <paramref name="gap"/> metres off goes: to stand <see cref="RushShort"/> in front of it,
+        /// never past reach, and nowhere when it is already that near (Three Weasels' first weasel).
+        /// </summary>
+        public static float RushRun(float gap, float reach) => Mathf.Clamp(gap - RushShort, 0f, Mathf.Max(0f, reach));
+
+        /// <summary>
+        /// How far a mark's step toward an enemy <paramref name="gap"/> metres off goes (<c>UpgradeAction.Step</c>): with
+        /// <paramref name="beyond"/> above zero, straight through it and that far out the other side (Three Weasels' second
+        /// weasel); otherwise to stand <see cref="RushShort"/> in front of it. The enemy counts only out to reach.
+        /// </summary>
+        public static float MarkStep(float gap, float reach, float beyond)
+        {
+            float near = Mathf.Min(Mathf.Max(0f, reach), Mathf.Max(0f, gap));
+            return beyond > 0f ? near + beyond : Mathf.Max(0f, near - RushShort);
+        }
+
         /// <summary>The share of a clone's echo: a spell's damage number read as a percentage of the blow it repeats.</summary>
         public static float Echo(float blowDamage, float percent) => Mathf.Max(0f, blowDamage) * Mathf.Clamp(percent, 0f, 200f) / 100f;
     }

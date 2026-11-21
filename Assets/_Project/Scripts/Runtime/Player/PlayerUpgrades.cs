@@ -179,6 +179,15 @@ namespace Clover.Player
         /// <summary>Shared Roots: the share of each wound the Seeded carry, and how near they must stand.</summary>
         public float SharedShare = 1f / 3f;
         public float SharedReach = 8f;
+        /// <summary>
+        /// Into the Fire, Drawn Back to Break: metres the player may get from the enemy a run of dodges began against before
+        /// the next dodge is measured against a new one. The enemy is also let go when it dies.
+        /// </summary>
+        public float DodgeHoldRange = DodgeRules.HoldRange;
+        /// <summary>The same: seconds without a dodge, from the last one, after which that enemy is let go.</summary>
+        public float DodgeHoldSeconds = DodgeRules.HoldSeconds;
+        // The enemy the first dodge of a run was measured against; later dodges keep to it (the owner's answer of 2026-11-20).
+        private readonly DodgeHold<Transform> dodgeHold = new DodgeHold<Transform>();
         /// <summary>True while the tide is high; read by the HUD and probes while High Water, Low Water is in force.</summary>
         public bool TideHigh => tideHigh;
         public bool KeepsTide => hasTideClock;
@@ -189,6 +198,8 @@ namespace Clover.Player
         public int DodgesThrough { get; private set; }
         /// <summary>Which way the last dodge went against the enemy faced.</summary>
         public DodgeWay LastDodgeWay => lastDodgeWay;
+        /// <summary>The enemy the dodges are measured against now, held from the first of the run; null when none is held. For probes.</summary>
+        public Transform DodgeHeld => dodgeHold.Held;
 
         // The source of whatever the effect being done lays, and what the last Spend took (read by DamagePerSpent).
         private LaySource laying = LaySource.Effect;
@@ -1599,12 +1610,8 @@ namespace Clover.Player
                 {
                     float reach = Or(effect.Reach, 8f);
                     Vector3 to;
-                    if (target != null)
-                    {
-                        float gap = Mathf.Min(reach, toward.magnitude);
-                        // In front of it, or through it and out the far side.
-                        to = effect.Amount > 0f ? self + aim * (gap + effect.Amount) : self + aim * Mathf.Max(0f, gap - 1.2f);
-                    }
+                    // In front of it, or through it and out the far side.
+                    if (target != null) to = self + aim * Forms.FormRules.MarkStep(toward.magnitude, reach, effect.Amount);
                     else to = self + transform.forward * (reach * 0.5f);
                     if (afterimage != null) afterimage.Leave(0.35f);
                     ElementLook.Sparks(held, self + Vector3.up, Vector3.up, 1f);
@@ -2446,7 +2453,7 @@ namespace Clover.Player
             LastDodgeFrom = from;
             LastDodgeDirection = direction;
             sinceDodge = 0f;
-            lastDodgeWay = WayOf(direction, from);
+            lastDodgeWay = WayOf(direction, from, true);
             if (hasIntoFire && lastDodgeWay == DodgeWay.Toward)
             {
                 // Into the Fire: the roll is a lunge in flame.
@@ -2522,11 +2529,29 @@ namespace Clover.Player
             return terms;
         }
 
-        // Which way a dodge from here goes against the enemy faced (the one ahead, else the nearest, within the fight).
-        private DodgeWay WayOf(Vector3 direction, Vector3 from)
+        // Which way a dodge from here goes against the enemy it is measured against. Only the dodge itself holds that enemy
+        // (hold true, from OnDodge), so asking a roll's terms first holds nothing.
+        private DodgeWay WayOf(Vector3 direction, Vector3 from, bool hold = false)
         {
-            var faced = combat != null ? combat.EnemyAhead(FightRange) : null;
-            return DodgeRules.WayOf(direction, from, faced != null ? faced.position : from, faced != null);
+            var against = DodgeFoe(from);
+            if (hold) dodgeHold.Took(against, Time.time);
+            return DodgeRules.WayOf(direction, from, against != null ? against.position : from, against != null);
+        }
+
+        // The enemy a dodge from here is measured against: the one the first dodge of the run held, while it lives, is within
+        // DodgeHoldRange and the last dodge was no more than DodgeHoldSeconds ago, because a roll turns the player and the
+        // enemy ahead after it is often another one in a crowd; otherwise the enemy faced (the one ahead, else the nearest,
+        // within the fight).
+        private Transform DodgeFoe(Vector3 from)
+        {
+            var held = dodgeHold.Held;
+            // Asked as a plain reference: a held enemy destroyed since must still be let go.
+            if (!ReferenceEquals(held, null))
+            {
+                bool alive = held != null && PlayerReactions.Alive(held.GetComponent<IDamageable>() as Component);
+                if (dodgeHold.Keeps(from, alive, alive ? held.position : from, DodgeHoldRange, Time.time, DodgeHoldSeconds)) return held;
+            }
+            return combat != null ? combat.EnemyAhead(FightRange) : null;
         }
 
         /// <summary>High Water, Low Water: the tide turns, high to low or low to high, and its clock starts again.</summary>

@@ -133,6 +133,8 @@ namespace Clover.Player
         public const string Lodestone = "lodestone";
         /// <summary>Lightning's hung bolts, loosed only by the weapon's blows.</summary>
         public const string Waiting = "waiting";
+        /// <summary>Three Weasels' first weasel: a rush that stops just in front of the enemy faced and cuts it. Reads what the step reads.</summary>
+        public const string Rush = "rush";
 
         private static readonly ISpellForm[] all =
         {
@@ -196,6 +198,7 @@ namespace Clover.Player
             new SunspotForm(),
             new LodestoneForm(),
             new WaitingThunderForm(),
+            new RushForm(),
         };
 
         private static readonly Dictionary<string, ISpellForm> byId = Index();
