@@ -27,6 +27,9 @@ namespace Clover.Gameplay
         // Shared by the reactions of task 3.4 (docs/design/steel/content_open.tsv says which use each).
         /// <summary>While it runs, this affliction on the enemy neither fades nor is spent by blows (doses that stop fading, notches that stay).</summary>
         public AfflictionKind Keeps = AfflictionKind.None;
+        /// <summary>While it runs, this affliction can be laid <see cref="DeepensBy"/> deeper than its usual depth (Rust's notches past three, up to five).</summary>
+        public AfflictionKind Deepens = AfflictionKind.None;
+        public int DeepensBy;
         /// <summary>It lasts only while the enemy carries this (and <see cref="While2"/>): once one is gone it ends, and its end is told ("while both last").</summary>
         public AfflictionKind While = AfflictionKind.None;
         public AfflictionKind While2 = AfflictionKind.None;

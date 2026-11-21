@@ -1223,7 +1223,7 @@ namespace Clover.Player
                 if (effect.Needs != AfflictionKind.None)
                 {
                     if (!carried.Has(effect.Needs)) return;
-                    if (effect.NeedsFull && carried.Stacks(effect.Needs) < Afflictions.Depth(effect.Needs)) return;
+                    if (effect.NeedsFull && carried.Stacks(effect.Needs) < carried.DepthOf(effect.Needs)) return;
                     if (effect.NeedsAtLeast > 0 && carried.Stacks(effect.Needs) < effect.NeedsAtLeast) return;
                     if (dead != null) spent = carried.Stacks(effect.Needs);
                 }

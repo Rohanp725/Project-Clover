@@ -73,11 +73,12 @@ namespace Clover.Player.Trees
             // Water and Metal (27). While it is Soaked its notches do not fade and the rust spreads: one more notch every
             // 2 s. Once it is notched to full and rusts on, a plate falls: for 6 s it takes weapon blows as if notched two
             // deeper (16% more), wet or dry.
-            // NEEDS: Sundered past three (up to five), so the plate falls at five; here it falls at the beat after full.
+            // While it rusts its notches may run past three, up to five, and the plate falls at five.
             to.Add(Reaction(AfflictionKind.Soaked, AfflictionKind.Sundered,
                 "Soaked meets Sundered: the wet cuts rust. While it is wet its notches stay and spread, one every 2 s, and once it is rusted through a plate falls: it takes more from your weapon for 6 s.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = Rusting, Seconds = 30f, Beat = 2f, While = AfflictionKind.Soaked, Keeps = AfflictionKind.Sundered } },
+                    State = new ConditionSpec { Id = Rusting, Seconds = 30f, Beat = 2f, While = AfflictionKind.Soaked, Keeps = AfflictionKind.Sundered,
+                        Deepens = AfflictionKind.Sundered, DeepensBy = 2 } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Rusting, Needs = AfflictionKind.Sundered, NeedsFull = true, Do = UpgradeAction.Condition,
                     State = new ConditionSpec { Id = PlateFallen, Seconds = 6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.16f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Rusting, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1 }));

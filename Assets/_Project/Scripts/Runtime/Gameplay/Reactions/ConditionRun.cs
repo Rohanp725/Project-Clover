@@ -29,6 +29,9 @@ namespace Clover.Gameplay
         public bool AnswersAttack;
         /// <summary>The afflictions it keeps from fading, and those it lasts only while, as bits at <c>1 &lt;&lt; (int)kind</c>.</summary>
         public int KeepsMask;
+        /// <summary>The affliction it lets lie deeper, as a bit, and by how much.</summary>
+        public int DeepMask;
+        public int DeepBy;
         public int WhileMask;
         public bool OnBite;
         public ConditionBlow EndsWith;

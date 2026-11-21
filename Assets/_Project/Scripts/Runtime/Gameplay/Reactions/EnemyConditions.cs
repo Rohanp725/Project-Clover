@@ -53,6 +53,16 @@ namespace Clover.Gameplay
         /// <summary>True when a running condition keeps this affliction from fading.</summary>
         public bool KeepsKind(AfflictionKind kind) => (Keeps & (1 << (int)kind)) != 0;
 
+        /// <summary>How much deeper than its usual depth the kind may lie while the conditions running allow it (the most any one allows).</summary>
+        public int DeeperBy(AfflictionKind kind)
+        {
+            int bit = Bit(kind), most = 0;
+            if (bit == 0) return 0;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && (runs[i].DeepMask & bit) != 0 && runs[i].DeepBy > most) most = runs[i].DeepBy;
+            return most;
+        }
+
         public ConditionRun Run(int slot) => runs[slot];
 
         public bool Holds(string id) => Find(id, null, -2) >= 0;
@@ -105,6 +115,8 @@ namespace Clover.Gameplay
             run.AnswersDeath = answersDeath;
             run.AnswersAttack = answersAttack;
             run.KeepsMask = Bit(spec.Keeps);
+            run.DeepMask = Bit(spec.Deepens);
+            run.DeepBy = Math.Max(0, spec.DeepensBy);
             run.WhileMask = Bit(spec.While) | Bit(spec.While2);
             run.OnBite = spec.OnBite;
             run.EndsWith = spec.EndsWith;

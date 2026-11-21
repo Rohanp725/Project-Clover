@@ -27,8 +27,8 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Water, B = Elements.Metal;
 
-            // NEEDS: Sundered past three (sundered-past-three), as the plain reaction; a slowing and a turning slowed by the
-            // notch (Seized Joints; now the rusting enemy walks a fifth slower).
+            // Sundered runs past three, up to five, as the plain reaction.
+            // NEEDS: a slowing and a turning slowed by the notch (Seized Joints; now the rusting enemy walks a fifth slower).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Rust: Seized Joints or Flaking", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -118,7 +118,8 @@ namespace Clover.Player.Trees.Duo
         {
             var effects = new List<UpgradeEffect>
             {
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = id, Seconds = 30f, Beat = 2f, Pace = pace, While = AfflictionKind.Soaked, Keeps = AfflictionKind.Sundered } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = id, Seconds = 30f, Beat = 2f, Pace = pace, While = AfflictionKind.Soaked, Keeps = AfflictionKind.Sundered,
+                    Deepens = AfflictionKind.Sundered, DeepensBy = 2 } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = id, Needs = AfflictionKind.Sundered, NeedsFull = true, Do = UpgradeAction.Condition,
                     State = new ConditionSpec { Id = plate, Seconds = 6f, Flags = ConditionFlags.WeaponTakenShare, Scale = 1.16f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = id, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Sundered, Stacks = 1 },

@@ -1,3 +1,4 @@
+using System.Linq;
 using Clover.Gameplay;
 using Clover.Player;
 using Clover.Player.Growth;
@@ -103,6 +104,33 @@ namespace Clover.Tests
             Run(plain, 1f);
             Assert.AreEqual(0.5f, before - notched.SecondsLeft(AfflictionKind.Soaked), 0.02f, "Brine: half a second gone in a second");
             Assert.AreEqual(1f, before - plain.SecondsLeft(AfflictionKind.Soaked), 0.02f);
+        }
+
+        [Test]
+        public void WhileItRustsNotchesRunPastThreeToFive()
+        {
+            var set = NewEnemy();
+            int usual = Afflictions.Depth(AfflictionKind.Sundered);
+            set.Lay(AfflictionKind.Sundered, 9, 0f, 1f, LaySource.Spell);
+            Assert.AreEqual(usual, set.Stacks(AfflictionKind.Sundered), "three at most as written");
+            set.Conditions.Set(new ConditionSpec { Id = "test.rust", Seconds = 10f, Deepens = AfflictionKind.Sundered, DeepensBy = 2 }, null, 1);
+            Assert.AreEqual(usual + 2, set.DepthOf(AfflictionKind.Sundered));
+            Assert.AreEqual(Afflictions.Depth(AfflictionKind.Soaked), set.DepthOf(AfflictionKind.Soaked), "only the kind it names");
+            var result = set.Lay(AfflictionKind.Sundered, 1, 0f, 1f, LaySource.Spell);
+            Assert.AreEqual(usual + 1, set.Stacks(AfflictionKind.Sundered));
+            Assert.IsFalse(result.ReachedFull, "four is not full while it rusts");
+            result = set.Lay(AfflictionKind.Sundered, 5, 0f, 1f, LaySource.Spell);
+            Assert.AreEqual(usual + 2, set.Stacks(AfflictionKind.Sundered), "five at most");
+            Assert.IsTrue(result.ReachedFull, "full at five, where the plate falls");
+        }
+
+        [Test]
+        public void RustAndItsShapesLetTheNotchesRunDeeper()
+        {
+            var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))
+                .Where(effect => effect.State != null && effect.State.Keeps == AfflictionKind.Sundered && effect.State.While == AfflictionKind.Soaked).ToList();
+            Assert.GreaterOrEqual(rusting.Count, 3, "the plain Rust and its two shapes");
+            Assert.IsTrue(rusting.All(effect => effect.State.Deepens == AfflictionKind.Sundered && effect.State.DeepensBy == 2));
         }
 
         [Test]

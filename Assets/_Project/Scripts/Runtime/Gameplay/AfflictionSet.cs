@@ -262,6 +262,9 @@ namespace Clover.Gameplay
             LandedThisTick = false;
         }
 
+        /// <summary>How deep the kind can lie on this enemy now: its usual depth, deeper while a condition allows (Rust).</summary>
+        public int DepthOf(AfflictionKind kind) => Afflictions.Depth(kind) + Conditions.DeeperBy(kind);
+
         public bool Has(AfflictionKind kind) => kind == AfflictionKind.Burn ? Burn.IsBurning : kind != AfflictionKind.None && stacks[(int)kind] > 0;
 
         /// <summary>How deep it lies. A burn with no depth still counts as one.</summary>
@@ -333,7 +336,7 @@ namespace Clover.Gameplay
             int had = stacks[index];
             // A fresh dose: the poison is no longer left alone to ripen.
             if (kind == AfflictionKind.Poison) ripeBites = 0;
-            int deepest = Afflictions.Depth(kind);
+            int deepest = DepthOf(kind);
             stacks[index] = Math.Min(deepest, had + count);
             present |= 1 << index;
             left[index] = seconds > 0f ? seconds : spec.Seconds;
