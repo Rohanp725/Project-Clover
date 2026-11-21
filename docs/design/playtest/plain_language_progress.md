@@ -103,7 +103,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/water.md
 - [x] marks/wind.md
 - [x] marks/windthrow.md
-- [ ] marks/winterseed.md
+- [x] marks/winterseed.md
 
 ### 2. The guide to effects
 

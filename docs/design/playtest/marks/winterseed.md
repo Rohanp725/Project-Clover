@@ -5,64 +5,64 @@ Seed (`docs/design/steel/pairs_d1_d2.md`, "Ice and Life"). Drawn in the heart of
 carried.
 
 ## winterseed.shape
-**What it does.** Thaw: opens Winter Seed's two shapes. At a rest fire you choose which one your Winter Seed wears, and from then on it runs instead of the plain one. Both keep the sleep: the seed stops fading while the Chill lasts. They change the waking. **Hard Spring**: it wakes twice as hard and seeds everything it reaches to full. **Heart Under Ice**: the waking mends rather than wounds, and gives you a ward.
+**What it does.** Thaw unlocks two new shapes for Winter Seed. At a rest fire, you pick which shape your Winter Seed uses. From then on, it uses that shape instead of the plain one. Both shapes keep the sleep: the seed stops fading while the Chill lasts. They change how it wakes up. **Hard Spring**: it wakes up twice as hard and fills the Seeded of everything it reaches all the way. **Heart Under Ice**: waking up heals you instead of hurting enemies, and gives you a ward.
 
-**When it happens.** Every time Winter Seed fires (Seeded landing on a chilled enemy, or Chill on a seeded one) while Ice and Life are both carried; the waking comes when its Chill ends (a thaw or a shatter ends it too). Before this mark is bought, or with only one of the two carried, the plain Winter Seed runs.
+**When it happens.** Every time Winter Seed goes off while you carry both Ice and Life. Winter Seed goes off when Seeded lands on a chilled enemy, or when Chill lands on a seeded one. The seed wakes up when its Chill ends (a thaw or a shatter also ends it). If you have not bought this mark, or you carry only one of the two elements, you get the plain Winter Seed.
 
-**The numbers.** Mix, 3 Shards. Hard Spring: thorns of 24 a Seeded stack within 2.5 metres, seeding all they reach to full; you heal 3 a stack. Heart Under Ice: thorns of 6 a stack within 2.5 metres; you heal 5 a stack and gain one ward. Winter Seed rests 4 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Hard Spring: thorns deal 24 damage per Seeded stack within 2.5 metres, and fill the Seeded of everything they reach all the way. You heal 3 per stack. Heart Under Ice: thorns deal 6 damage per stack within 2.5 metres. You heal 5 per stack and get one ward. After Winter Seed goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
-**Works with.** Hoarfrost and Briar Patch to bring the two, a heavy blow on a frozen enemy (a shatter is the quickest spring), Green Under the Ice, Seed Under Snow.
+**Works with.** Hoarfrost and Briar Patch to set it up, a heavy blow on a frozen enemy (a shatter is the fastest way to wake it), Green Under the Ice, Seed Under Snow.
 
-**Example.** Hard Spring on a frozen, seeded soldier in a pack: shatter it and the thorns seed the whole pack to full.
+**Example.** Use Hard Spring on a frozen, seeded soldier in a pack. Shatter it, and the thorns fill the whole pack's Seeded all the way.
 
-**Not built yet.** Hard Spring is meant to wake only on a shatter; as built it wakes whenever the cold ends.
+**Not built yet.** Hard Spring is meant to wake up only on a shatter. For now, it wakes up whenever the cold ends.
 
 ## winterseed.undersnow
-**What it does.** An enemy that dies chilled and Seeded leaves a frozen seed that cracks: you heal, and everything near is chilled and seeded.
+**What it does.** An enemy that dies chilled and Seeded leaves a frozen seed that cracks open. You heal, and everything nearby is chilled and Seeded.
 
-**When it happens.** Each time an enemy carrying both Chill and Seeded dies.
+**When it happens.** Each time an enemy dies with both Chill and Seeded on it.
 
-**The numbers.** Mix, 3 Shards. You heal 8; everything within 2.5 metres of where it fell takes a Chill and a Seeded. At most twice a second.
+**The numbers.** Mix, 3 Shards. You heal 8, and everything within 2.5 metres of where it fell gets a Chill and a Seeded. At most twice a second.
 
 **Works with.** Winter Seed, Late Frost, Hidden in the Tree.
 
-**Example.** Kill a frosted, seeded soldier and its neighbours start their own Winter Seed.
+**Example.** Kill a frosted, seeded soldier, and the soldiers next to it start their own Winter Seed.
 
-**Not built yet.** The seed is meant to lie on the floor for 8 seconds until you step on it; as built it cracks as the enemy dies.
+**Not built yet.** The seed is meant to lie on the floor for 8 seconds until you step on it. For now, it cracks open as the enemy dies.
 
 ## winterseed.latefrost
-**What it does.** A perfect guard against a Seeded enemy roots it in frost.
+**What it does.** A perfect guard against a Seeded enemy freezes its feet to the ground.
 
-**When it happens.** Each perfect guard (press the guard button just before a blow lands) against an enemy carrying Seeded.
+**When it happens.** Each perfect guard (press the guard button just before a blow lands) against an enemy that has Seeded.
 
-**The numbers.** Mix, 3 Shards. Two stacks of Chill, and held still for 0.8 seconds.
+**The numbers.** Mix, 3 Shards. Two stacks of Chill, and the enemy is held still for 0.8 seconds.
 
 **Works with.** Winter Seed (the Chill puts the seed to sleep), Briar Patch, Seed Under Snow.
 
-**Example.** A seeded brute swings: guard it perfectly and it stands frozen to the ankles with its seed asleep.
+**Example.** A seeded brute swings. Guard it perfectly, and it stands frozen to the ankles with its seed asleep.
 
 ## winterseed.hidden
-**What it does.** Things you grow are rimed: while you stand within 4 metres of one, the first blow that would land on you every 6 seconds is turned by its frozen bark.
+**What it does.** The things you grow are covered in frost. While you stand within 4 metres of one, its frozen bark blocks the first blow that would land on you every 6 seconds.
 
-**When it happens.** Always on once learned, while Ice and Life are both carried and you stand near something you grew.
+**When it happens.** Always on once you learn it, while you carry both Ice and Life and stand near something you grew.
 
-**The numbers.** Mix, keystone, 5 Shards. A ward every 6 seconds while you stand within 4 metres of a grown thing.
+**The numbers.** Mix, keystone, 5 Shards. You get a ward every 6 seconds while you stand within 4 metres of something you grew.
 
 **Works with.** Briar Patch, Sapling and Elder Tree (things to grow), Late Frost.
 
-**Example.** Fight beside your sapling and the first blow of each exchange glances off its bark.
+**Example.** Fight next to your sapling, and the first blow of each exchange glances off its bark.
 
-**Not built yet.** Your grown things do not yet chill what they bite.
+**Not built yet.** The things you grow don't chill what they hit yet.
 
 ## winterseed.green
-**What it does.** You strike the floor and lines of green run through the frost to every enemy near: on each that carries both Chill and Seeded, the frost breaks and its sleeping seed wakes at once.
+**What it does.** You strike the floor, and lines of green run through the frost to every enemy nearby. On each one that has both Chill and Seeded, the frost breaks and its sleeping seed wakes up right away.
 
-**When it happens.** From a spell slot, while Ice and Life are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Ice.
+**When it happens.** Cast it from a spell slot while you carry both Ice and Life. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Ice.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. No mana: it waits 14 seconds after a cast, less with weapon play. Everything within 9 metres takes 4 damage and 4 stagger; on those carrying both, the Chill is spent, so Winter Seed (plain or shaped) wakes.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 14 seconds to cast it again. Fighting with your weapon makes the wait shorter. Everything within 9 metres takes 4 damage and 4 stagger. On enemies that have both afflictions, the Chill is used up, so Winter Seed (plain or with a shape) wakes up.
 
 **Works with.** Winter Seed and its shapes, Seed Under Snow, Late Frost.
 
-**Example.** Put five soldiers to sleep under the frost, then wake them all at once.
+**Example.** Put five soldiers to sleep under the frost, then wake them all up at once.
 
-**Not built yet.** The lines reach every enemy within 9 metres, not only those carrying both; a frozen one is not shattered; half the cooldown does not come back when no one is reached; and an enemy your weapon struck in the last 2 seconds does not yet wake harder.
+**Not built yet.** For now, the lines reach every enemy within 9 metres, not only those with both afflictions. A frozen enemy isn't shattered yet. If no one is reached, you don't get half the wait back yet. An enemy your weapon hit in the last 2 seconds doesn't wake up harder yet.
