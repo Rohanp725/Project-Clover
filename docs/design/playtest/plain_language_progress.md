@@ -27,6 +27,9 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   "it keeps its own timer for how long the enemy is winded".
 - marks/burningsap.md, burningsap.brightvenom: "the held bites" was read as "the saved-up poison bites" (the bites
   Burning Sap holds back until its end).
+- marks/earthed.md: "the burnt figure" and "the fern" were read as the fern-shaped burn mark Earthed leaves on the
+  ground.
+- marks/fire.md, fire.sun: "it rises in 1.5 seconds if Kindle has 3 left" was read as "if Kindle has 3 seconds left".
 
 ## Files
 
@@ -51,7 +54,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/earthlight.md
 - [x] marks/eclipse.md
 - [x] marks/fire.md
-- [ ] marks/firebloom.md
+- [x] marks/firebloom.md
 - [ ] marks/fishpoison.md
 - [ ] marks/forge.md
 - [ ] marks/frostheave.md
