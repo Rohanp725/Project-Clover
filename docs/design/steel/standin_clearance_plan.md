@@ -281,7 +281,7 @@ Passes 2, 3 and 7 do not depend on each other and can run in any order after pas
   - prices paid in health, in flasks, or as a share of health, and grey health owed;
   - wounds given back as grey health;
   - damage rising as health falls.
-- **Waits**: afflictions on the player wait on owner question 1, and on an enemy that lays them.
+- **Afflictions on the player** (question 1, decided): elites and gods lay their land's affliction when they hit.
 
 ### Pass 8: ground that keeps acting (large; clears 56)
 
@@ -350,7 +350,8 @@ Passes 2, 3 and 7 do not depend on each other and can run in any order after pas
   - a cone from an enemy's far side;
   - discharges that bend toward one enemy;
   - an orbiting piece flung by a blow.
-- **Pickups** wait on owner question 2 (`World/WeaponPickup.cs` is a starting point).
+- **Pickups** (question 2, decided): real pickups you walk over, gone after 8 s (`World/WeaponPickup.cs` is a
+  starting point).
 - **Blender**: about 5 props through the blender-prop skill (anvil stone, rimed mound, hollow trunk, ice wall, stone
   pillar), each scanned and walked.
 
@@ -380,7 +381,7 @@ Split three ways, and run after the passes whose rules the forms use.
 
 - **Builds** a duo surge chosen in the Hand's surge slot, and the open surge rows: Kindle's Fed Flame and the others
   in `surges`, and a surge lit by a mark at no cost.
-- **Waits** on owner question 4.
+- **Question 4, decided**: the duo surge is picked in the surge slot at a rest, in place of a single element's surge.
 
 ### Pass 14: looks (large, spread over the effects passes)
 
@@ -400,6 +401,8 @@ Split three ways, and run after the passes whose rules the forms use.
 ## 3. Owner questions
 
 Only the stand-ins that need a design choice. Every other stand-in is engine work with its design already written.
+The owner answered questions 1 to 4 on 2026-11-21 (also in the decisions log in `docs/GAME.md`); question 5 keeps its
+default.
 
 1. **Afflictions laid on the player** (pass 7; Tremor, Bedrock and Daybreak's High Noon answer them, 3 marks). Who
    lays them?
@@ -408,6 +411,8 @@ Only the stand-ins that need a design choice. Every other stand-in is engine wor
    - c) No one: the three marks are reworded to answer something that exists now, such as stagger or a knock-down.
 
    **Recommended: a.** It gives the marks something to answer without making every fight about cleansing.
+
+   **Decided 2026-11-21: a.** Elites and gods lay their land's affliction on the player when they hit.
 2. **Pickups on the floor** (pass 11; Shining Herb, Firebloom, Seed Under Snow, The Whole Mountain, 5 lines). How do
    they work?
    - a) Real pickups: a small herb or seed you walk over to take, gone after 8 s.
@@ -415,6 +420,8 @@ Only the stand-ins that need a design choice. Every other stand-in is engine wor
    - c) They fly to you by themselves after 1 s.
 
    **Recommended: a.** It is what the marks say, and it makes you move through the fight.
+
+   **Decided 2026-11-21: a.** Real pickups: you walk over a herb or seed to take it, and it is gone after 8 s.
 3. **The creature forms** (pass 12c; the cobra, the serpent, the totem, the swarm, the jaw, the horns, the shades, the
    sapling, the copy, 9 lines). What are they made of?
    - a) Effects only (flame, water, shadow and particles shaped like the creature), no model.
@@ -423,12 +430,20 @@ Only the stand-ins that need a design choice. Every other stand-in is engine wor
 
    **Recommended: b** for the cobra, serpent and totem, which stay on screen and must read; **a** for the brief ones
    (jaw, horns, swarm, copy).
+
+   **Decided 2026-11-21: a mix.** Blender models with a simple rig for the cobra, the serpent and the totem;
+   effect-only shapes for the jaw, the horns, the swarm, the copy, the shades and the sapling.
 4. **Choosing a duo surge** (pass 13; Eclipse and Overgrowth, 2 lines and 2 rows). How does the player get it?
    - a) The duo surge is picked in the Hand's surge slot at a rest, in place of a single element's surge.
    - b) It fires by itself when any surge is lit while both elements are carried (the stand-in now).
    - c) It gets a slot of its own beside the surge.
 
    **Recommended: a.** One slot, one clear choice, and no surprise surges.
+
+   **Decided 2026-11-21: a.** The duo surge is picked in the Hand's surge slot at a rest, in place of a single
+   element's surge.
 5. **The Way refund** (pass 15; `RetiredMarks.cs:192`). This is already question 2 in `phase4_questions.md`. The
    default stands until the owner answers there: no refund now, and the mark is kept under its id until the Way
    arrives.
+
+   **Default kept (2026-11-21).**
