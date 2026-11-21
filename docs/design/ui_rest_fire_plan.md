@@ -725,3 +725,14 @@ The recommended option is first in each.
 - (a, recommended) In this pass: 100%, 125% and 150%, in the pause menu and on L3 in the Loadout, with every screen
   checked at 150%.
 - (b) Later, after the screens are rebuilt.
+
+## Owner's answers (2026-11-21)
+
+- **Q1, the layout: C, the weapon in the centre (not the recommended A).** The weapon's picture sits in the middle with its Way choices around it, the Hand below, and the details pane. Rework section 3's wireframe and navigation for layout C, keeping A's good parts: an always-on details pane, "Worn here now", lists that keep the slot visible, and stick moves that go to the neighbour they point at.
+- **Q2, how it's built: (b), rebuilt in UI Toolkit** (not the recommended uGUI). Check the UI Toolkit skill and the project's existing UI first.
+- **Q3:** Spectral for titles, Atkinson Hyperlegible for reading text.
+- **Q4:** "Set the Hand" and "Shapes" fold into Loadout; reaction shapes move to a small Reactions page.
+- **Q5:** only the carried weapon; the other weapons are set on the Way chart.
+- **Q6:** simple icons painted by code first. This is a STAND-IN: ledger it in content_open.tsv so every spell, aspect and keystone gets real icon art in a later pass.
+- **Q7:** Kenney's Input Prompts pack (CC0). It enters through staging and the asset intake, with ASSETS.csv rows.
+- **Q8:** a text-size setting (100%, 125%, 150%) in this pass.
