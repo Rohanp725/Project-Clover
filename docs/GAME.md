@@ -2073,6 +2073,7 @@ the Proving Ground's real enemies, afflictions on the group of five and surges o
 
 | date | decision | why |
 |---|---|---|
+| 2026-11-20 | Stone Rise keeps no wall: big stones burst up under the enemy, knock it up and sink back, and nothing is left standing behind it (as built in the third effects review) | the owner |
 | 2026-11-20 | Three Weasels' first press is a short rush of its own that stops just in front of the enemy (1.2 m short); the second press is the one that passes straight through and comes out beyond it | the owner, after the Phase 4b probe found the first press used the step form and already went 1 m through |
 | 2026-11-20 | A run of dodges remembers its enemy: the enemy the first dodge was measured against stays the one that counts for the dodges after it (toward, away or across), until it dies, the player is more than 16 m from it (`DodgeRules.HoldRange`, the fight's 12 m and most of a roll), or 3 s pass without a dodge, counted from the last one (`DodgeRules.HoldSeconds`); Into the Fire and Drawn Back to Break read this | the owner: a roll turns you, so in a crowd a second dodge away could count as toward another enemy |
 | 2026-11-20 | Water-land enemies (generated, cleaned in Blender, still in staging): the reef-grown gets a back plate, a 10-15 degree stoop and 1.05 scale, and its young rank keeps one shoulder plate; the drowned keeps its too-long arms; the bait's lure must pass as a person calling for help, its jaws buried to the lip; the Water palette is approved | the owner, on staging/comfyui/2026-11-20_water_enemies |
@@ -2521,7 +2522,7 @@ Everything else in this pass is **Claude's default, not yet played by the owner*
 - The other ten tap spells each do what their stuff would do (table in `docs/design/FORMS.md`). Costs, damage and
   afflictions are as they were. What changed in play: Gust throws straight down the wind instead of outward; Hoarfrost
   leaves crystals a weapon blow can shatter (5 damage, one more Chill); Flame Wave leaves three patches burning 3 s;
-  Stone Rise leaves a wall behind the enemy for 4.5 s; Flung Blade bites for a quarter as it lands and cuts on its way
+  Stone Rise bursts big stones up under the enemy that knock it up and sink back, with no wall left behind (the owner, 2026-11-20); Flung Blade bites for a quarter as it lands and cuts on its way
   back to the hand; Glare is a narrow ray, not a wide flash (it rewards facing); Grasp is slow enough to watch, draws
   in what it passes and drags up to five; Miasma creeps after the nearest enemy.
 - The surge is worn on the body as the element's stuff, and each affliction is seen on the enemy as its element's

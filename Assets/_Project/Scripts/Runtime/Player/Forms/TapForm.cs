@@ -9,7 +9,7 @@ namespace Clover.Player.Forms
     /// burning; lightning is there and gone, jagged, from one body to the next; wind is a rush of streaks and leaves
     /// that throws and lifts; ice grows as crystals that stand until a blow shatters them; water rises as a wave out
     /// ahead and rolls back to the caster, carrying what it reaches to their feet; life grows a bed of thorned vines
-    /// that flowers and bites; earth breaks out under an enemy and leaves a wall of rock behind it; metal is a
+    /// that flowers and bites; earth breaks out under an enemy in big stones that knock it up and sink back; metal is a
     /// thrown blade that sticks, is driven in by the weapon and flies back to the hand; light is a ray with a flare
     /// that marks what it crosses; dark is a slow heavy ball that draws everything in, devours and drags; poison is
     /// a cloud that hangs, drifts after the nearest enemy and seeps. The run's <see cref="SpellRun.Count"/> is the
@@ -637,7 +637,7 @@ namespace Clover.Player.Forms
             return true;
         }
 
-        // ---- Earth: Stone Rise. The ground breaks under the enemy faced and a wall of rock is left standing behind it, which nothing walks through.
+        // ---- Earth: Stone Rise. Big stones burst up under the enemy faced, knock it up and sink back. No wall is left (the owner, 2026-11-20).
 
         /// <summary>Seconds elements 4's Stone Rise look plays after the stones burst up (its 1.6 s timeline).</summary>
         public const float StoneRiseShown = 1.6f;
@@ -655,14 +655,15 @@ namespace Clover.Player.Forms
             var cast = run.Cast;
             var points = SpellWorks.Points(run);
             var solids = SpellWorks.Solids(run);
-            float stands = Mathf.Max(1f, cast.Spec.Seconds);
+            // The stones without the element art rise and sink as quickly as the art's, with nothing left standing.
+            float stands = 1f;
             if (run.Phase == 0)
             {
                 if (run.Age < run.T0) return true;
                 run.Phase = 1;
                 run.T1 = run.Age;
                 cast.Combat.StrikeArea(run.C, cast.Spec.Radius, cast.Blow(cast.Damage, cast.Stagger));
-                // Up under them and down again; the wall behind them stays.
+                // Up under them and down again.
                 cast.Combat.LiftArea(run.C, cast.Spec.Radius, 0.35f);
                 // Elements 4's Stone Rise (the owner, 2026-11-20: "i still dont want the ring of 3 stones around the enemy, just
                 // the massive stones rising and knocking up the enemy"): massive stones burst up under each one struck and
@@ -680,11 +681,10 @@ namespace Clover.Player.Forms
                 Vector3 side = Side(run);
                 for (int j = 0; j < 3; j++)
                 {
-                    points[j] = run.C + run.B * (1.6f - 0.3f * Mathf.Abs(j - 1)) + side * ((j - 1) * 1.15f);
+                    points[j] = run.C + run.B * (0.3f - 0.3f * Mathf.Abs(j - 1)) + side * ((j - 1) * 0.7f);
                     solids[j] = FormFx.Hold(FormMesh.Rock, j == 1 ? cast.Colour : new Color(cast.Colour.r * 0.75f, cast.Colour.g * 0.75f, cast.Colour.b * 0.8f), 0.045f);
                     FormFx.Place(solids[j], points[j], Quaternion.identity, Vector3.one * 0.001f);
                 }
-                SpellWorks.Barrier(run, run.C + run.B * 1.55f + Vector3.up, FormKit.Yaw(run.B), new Vector3(3.5f, 2f, 0.9f));
                 for (int i = 0; i < 8; i++)
                 {
                     Vector3 way = FormRules.OnRing(i, 8, 1f, Random.value * 40f);

@@ -3676,13 +3676,13 @@ MonoBehaviour:
   - Id: earth.base
     Title: Stone Rise
     Group: 
-    Body: '<b>What it does.</b> Stone Rise, Earth''s own spell, comes with the element and is never bought. A quarter second after the cast the ground breaks under the enemy faced and throws it up for a moment, and three rocks stand behind it that nothing walks through.
+    Body: '<b>What it does.</b> Stone Rise, Earth''s own spell, comes with the element and is never bought. A quarter second after the cast big stones burst up under the enemy you face and knock it up into the air for a moment. Then they sink back into the ground. No wall is left behind.
 
 
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Carrying Earth, it is always yours to put in a slot.
 
 
-      <b>The numbers.</b> Given with Earth. No mana: it waits 7 seconds after a cast, less with weapon play; its Empower makes that 6. An enemy within 5 metres, 1.3 metres round it: 14 damage, 30 stagger and one Tremor. The rocks stand 4.5 seconds.
+      <b>The numbers.</b> Given with Earth. No mana: it waits 7 seconds after a cast, less with weapon play; its Empower makes that 6. An enemy within 5 metres, 1.3 metres round it: 14 damage, 30 stagger and one Tremor.
 
 
       <b>Works with.</b> Its Empower, its two shapes and its Master; Tremor and Cairn; Standing Stones (a pillar on what it strikes); the charged blade, which its landing charges with Earth.
@@ -3691,11 +3691,11 @@ MonoBehaviour:
       <b>Not built yet.</b> The Empower''s 18 damage and 36 stagger: the base spell is cast by Earth''s kit, which takes only the Empower''s shorter wait.
 
 
-      <b>Example.</b> Rise the stone under the archer at the back: it is thrown up, shaken, and walled off from the fight behind it.'
+      <b>Example.</b> Rise the stone under the archer at the back: it is knocked up into the air and shaken.'
   - Id: earth.base.shape
     Title: 'Stone Rise: Raised Stone or Dropped From the Apron'
     Group: 
-    Body: '<b>What it does.</b> Opens two shapes of Stone Rise, chosen at any rest fire. <b>Raised Stone</b>: no rocks behind; the pillar that lifted the enemy stays beside it, blocking bodies and thrown attacks, and a heavy blow of yours on it shatters it into a cone of shards away from you. Raise it, fight round it, break it through them. <b>Dropped From the Apron</b>: a boulder falls from above onto the spot, its shadow growing, and lies there; a heavy blow on it rolls it along the blow, crushing a lane, until it breaks on a wall or a large enemy.
+    Body: '<b>What it does.</b> Opens two shapes of Stone Rise, chosen at any rest fire. <b>Raised Stone</b>: the pillar that lifted the enemy stays beside it, blocking bodies and thrown attacks, and a heavy blow of yours on it shatters it into a cone of shards away from you. Raise it, fight round it, break it through them. <b>Dropped From the Apron</b>: a boulder falls from above onto the spot, its shadow growing, and lies there; a heavy blow on it rolls it along the blow, crushing a lane, until it breaks on a wall or a large enemy.
 
 
       <b>When it happens.</b> Whenever you cast Stone Rise, as the shape it wears. Before this is bought, the plain stone rises.
@@ -3707,7 +3707,7 @@ MonoBehaviour:
       <b>Works with.</b> Raised Stone: Heavy Hand, The Slow Hand. Dropped From the Apron: a pack in a corridor, Cairn on the lane it shook.
 
 
-      <b>Not built yet.</b> Raised Stone''s pillar left standing beside the enemy, blocking and struck itself (for now the kit''s rocks stand behind it, and the heavy blow lands on the enemy). Dropped From the Apron''s boulder falling from above and lying as a thing to strike, breaking on a wall or a large enemy (for now stone rises under the nearest enemy, and the heavy blow on it sends the lane on).
+      <b>Not built yet.</b> Raised Stone''s pillar left standing beside the enemy, blocking and struck itself (for now the stones sink back as usual, and the heavy blow lands on the enemy). Dropped From the Apron''s boulder falling from above and lying as a thing to strike, breaking on a wall or a large enemy (for now stone rises under the nearest enemy, and the heavy blow on it sends the lane on).
 
 
       <b>Example.</b> Dropped From the Apron on the first of three soldiers in a corridor: one heavy blow on it crushes the two behind.'
@@ -3726,7 +3726,7 @@ MonoBehaviour:
       <b>Works with.</b> Rooted, Immovable, Mountain Stance; Cairn on the two stacks it leaves.
 
 
-      <b>Not built yet.</b> Still for a second as the moment (for now Rooted only), and the throw before the rocks stand.
+      <b>Not built yet.</b> Still for a second as the moment (for now Rooted only), and the throw before the stones sink back.
 
 
       <b>Example.</b> Stand your ground and rise the stone under a brute that has come too close: it is thrown off you, two deep.'
