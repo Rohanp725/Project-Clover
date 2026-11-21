@@ -7,361 +7,361 @@ Empower is a plain number (the chart's own words say it), so it has no entry her
 design yet, its **Not built yet** line says what is missing.
 
 ## fire.cinder
-**What it does.** Every blow of your weapon that lands sets the enemy burning and lays one stack of Burn. Each further blow adds another stack, up to five. A burning enemy takes damage every second, more for each stack.
+**What it does.** Every weapon blow that lands sets the enemy on fire and adds one stack of Burn. Each blow after that adds another stack, up to five. A burning enemy takes damage every second, and more for each stack.
 
-**When it happens.** Always on once learned, while Fire is your first element: every weapon blow that lands, light or heavy. Carried as the second element, it lays nothing with the weapon; Burn then comes from your Fire spells, the charged blade and the R2 strike.
+**When it happens.** Always on once you learn it, while Fire is your first element: every weapon blow that lands, light or heavy. If Fire is your second element, your weapon adds nothing. Burn then comes from your Fire spells, the charged blade and the R2 strike.
 
-**The numbers.** 2 Shards. One stack a blow, five at most. A burn deals 5 damage a second and each stack adds 30%, so 12.5 a second at five. Each blow sets its clock back to 4 seconds; when it runs out the stacks go with it. A burn set off by another mark deals 10 damage and 10 more for each stack: 60 at five.
+**The numbers.** 2 Shards. One stack per blow, up to five. A burn deals 5 damage a second, and each stack adds 30%, so it deals 12.5 a second at five stacks. Each blow resets its timer to 4 seconds. When the timer runs out, all the stacks go away. When another mark sets off a burn, it deals 10 damage plus 10 more for each stack: 60 at five stacks.
 
-**Works with.** Heat, Breath of the Lioness (its cone sets a burn off), Catching Fire, Meteor Leap's Master, and Kindle.
+**Works with.** Heat, Breath of the Lioness (its cone sets off a burn), Catching Fire, Meteor Leap's Master mark, and Kindle.
 
-**Example.** Five quick light blows on a soldier leave it five deep, burning for 12.5 a second while you step back and raise your guard.
+**Example.** Five quick light blows on a soldier give it five stacks. It burns for 12.5 a second while you step back and raise your guard.
 
 ## fire.heat
-**What it does.** Landing blows without being struck builds Heat, a level at a time, up to five. Each level makes your weapon hit harder. A blow that lands on you puts it out, and standing off too long cools it a level at a time.
+**What it does.** Landing blows without getting hit builds up Heat, one level at a time, up to five. Each level makes your weapon hit harder. A blow that lands on you puts it out, and staying out of the fight too long cools it down one level at a time.
 
-**When it happens.** Always on once learned. Every weapon blow that lands counts; lighting Kindle with the surge button fills it at once.
+**When it happens.** Always on once you learn it. Every weapon blow that lands counts. Lighting Kindle with the surge button fills it right away.
 
-**The numbers.** 3 Shards. Three blows a level, five levels. Each level adds 6% weapon damage, 30% at five. Six seconds without landing a blow loses a level. A blow that lands on you drops it to nothing.
+**The numbers.** 3 Shards. Three blows for each level, up to five levels. Each level adds 6% weapon damage, so 30% at five. Going six seconds without landing a blow loses a level. A blow that lands on you drops it to zero.
 
-**Works with.** White Heat, Wildfire Rush (a level for each enemy passed), Kindle, and the two spells that grow from it, Uraeus and Meteor Leap.
+**Works with.** White Heat, Wildfire Rush (a level for each enemy you pass through), Kindle, and the two spells that come after it on the chart, Uraeus and Meteor Leap.
 
-**Example.** Fifteen blows in, every cut is 30% heavier. One careless swing from a brute and you are back to nothing.
+**Example.** Fifteen blows in, every cut does 30% more damage. One careless moment and a brute's swing puts you back to zero.
 
 ## fire.base
-**What it does.** Flame Wave, Fire's own spell, comes with the element and is never bought. Fire runs out along the ground in a cone ahead of you, striking everything in it and setting it burning, and three patches of fire burn on where it ran.
+**What it does.** Flame Wave, Fire's own spell. It comes with the element; you never buy it. Fire runs along the ground in a cone in front of you, hitting everything in it and setting it on fire. Three patches of fire keep burning where it ran.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Carrying Fire, it is always yours to put in a slot.
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Fire, you can always put it in a slot.
 
-**The numbers.** Given with Fire. No mana: it waits 7 seconds after a cast, less with weapon play; its Empower makes that 5.5. The cone is 5.5 metres long and 70 degrees wide: 20 damage, 24 stagger and a stack of Burn. Three patches burn on for 3 seconds.
+**The numbers.** Comes with Fire. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds. The cone is 5.5 metres long and 70 degrees wide. It deals 20 damage, 24 stagger and a stack of Burn. Three patches keep burning for 3 seconds.
 
-**Works with.** Its Empower, its two shapes and its Master; Cinder to deepen what it lit; the charged blade, which its landing charges with Fire.
+**Works with.** Its Empower, its two shapes and its Master mark; Cinder, to add more Burn to what it set on fire; and the charged blade, which it charges with Fire when it lands.
 
-**Not built yet.** The Empower's longer patches (5 seconds): the base spell is cast by Fire's kit, which takes only the Empower's shorter wait.
+**Not built yet.** The Empower's longer-lasting patches (5 seconds). For now, the spell only gets the Empower's shorter wait.
 
-**Example.** Open a fight with it across a line of soldiers: every one of them burning before your first blow.
+**Example.** Start a fight by casting it across a line of soldiers. Every one of them is burning before your first blow.
 
 ## fire.base.shape
-**What it does.** Opens two shapes of Flame Wave. Choose which it wears at any rest fire, in the Hand. **Cinder Fan**: close and wide, the shape for being surrounded; what it touches burns two deep and is thrown back. **Running Fire**: one narrow tongue of flame runs far along the ground, and a low burning line stays behind it; whatever crosses it takes two Burn.
+**What it does.** Unlocks two shapes for Flame Wave. You pick one at any rest fire, in the Hand. **Cinder Fan**: short and wide, the shape for when you are surrounded. Whatever it touches gets two stacks of Burn and is thrown back. **Running Fire**: one narrow tongue of flame runs far along the ground, and leaves a low burning line behind it. Anything that crosses the line gets two Burn.
 
-**When it happens.** Whenever you cast Flame Wave, as the shape it wears. Before this is bought, the plain wave is cast.
+**When it happens.** Whenever you cast Flame Wave, using the shape you picked. If you have not bought this, you cast the plain wave.
 
-**The numbers.** 3 Shards. Cinder Fan: 3 metres and 150 degrees, 22 damage, 20 stagger, two Burn, and a throw of 1.5 metres. Running Fire: 12 metres in under a second, 12 damage and 10 stagger with two Burn on what the tongue touches, and the line burns 4 seconds, biting 3 every half second with two Burn.
+**The numbers.** 3 Shards. Cinder Fan: 3 metres long and 150 degrees wide. It deals 22 damage, 20 stagger and two Burn, and throws enemies back 1.5 metres. Running Fire: it runs 12 metres in under a second. Whatever the flame touches takes 12 damage, 10 stagger and two Burn. The line burns for 4 seconds, dealing 3 damage and two Burn every half second.
 
-**Works with.** Catching Fire and Black Pitch in a crowd (Cinder Fan); Breath of the Lioness and Kiln Stance against a pack that closes in; Fuel to It on wet ground (Running Fire across a river makes steam).
+**Works with.** Catching Fire and Black Pitch in a crowd (Cinder Fan). Breath of the Lioness and Kiln Stance against a pack that closes in. Fuel to It on wet ground (Running Fire across a river makes steam).
 
-**Example.** Surrounded by four soldiers, Cinder Fan throws them all back burning two deep. Facing an archer behind a wall of shields, Running Fire reaches it.
+**Example.** Surrounded by four soldiers, Cinder Fan throws them all back with two stacks of Burn. Facing an archer behind a wall of shields, Running Fire can reach it.
 
 ## fire.base.master
-**What it does.** Cast Flame Wave in the same instant as the charged blade's third blow lands, and its cooldown does not start.
+**What it does.** Cast Flame Wave at the same moment the charged blade's third blow lands, and its wait doesn't start.
 
-**When it happens.** The third blow of a charged blade lands: for half a second after it, your next Flame Wave starts no wait. Flame Wave must be in a slot.
+**When it happens.** When the third blow of a charged blade lands, your next Flame Wave within half a second has no wait. Flame Wave must be in a spell slot.
 
-**The numbers.** 3 Shards. A window of 0.5 seconds after the third charged blow. Then the wave lands, charges the blade again, and the dance goes on.
+**The numbers.** 3 Shards. You have 0.5 seconds after the third charged blow. Then the wave lands, charges the blade again, and the cycle keeps going.
 
-**Works with.** The charged blade above all; Cinder and Heat, which pay for staying in.
+**Works with.** The charged blade most of all, plus Cinder and Heat, which reward you for staying in the fight.
 
-**Not built yet.** The wave leaving from the blade along the swing; for now it leaves from you as always.
+**Not built yet.** The wave should come out of the blade along the swing. For now, it comes out of you, like normal.
 
-**Example.** Wave, three blows, wave again at once: a burning crowd that never gets its feet.
+**Example.** Wave, three blows, and wave again right away: a burning crowd that never gets back on its feet.
 
 ## fire.uraeus
-**What it does.** A cobra of flame rises from your shoulder and stands for a while, spitting burning venom at enemies near you.
+**What it does.** A cobra made of flame rises from your shoulder and stays for a while, spitting burning venom at enemies near you.
 
-**When it happens.** From a spell slot: cast it with that slot's button. It spits by itself while it stands.
+**When it happens.** Cast it from a spell slot. Press that slot's button. It spits on its own while it is there.
 
-**The numbers.** 4 Shards, no mana: it waits 10 seconds (its Empower: 8). It stands 8 seconds and spits at enemies within 8 metres, six spits at most (its Empower: eight), each 8 damage, 6 stagger and two Burn.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again (its Empower makes it 8). It stays for 8 seconds and spits at enemies within 8 metres, up to six times (its Empower makes it eight). Each spit deals 8 damage, 6 stagger and two Burn.
 
-**Works with.** Heat, which it grows from; Cinder; its Master on what already burns.
+**Works with.** Heat, which it comes after on the chart; Cinder; and its Master mark on enemies that are already burning.
 
-**Not built yet.** The spit answering an enemy that begins an attack (it needs a trigger on an enemy's wind-up), and the venom burning at the target's feet. For now the cobra spits on its own, like a phalanx of fire.
+**Not built yet.** The spit should answer an enemy that starts an attack (the game needs a way to notice an enemy's wind-up), and the venom should burn at the enemy's feet. For now, the cobra spits on its own, like a guard made of fire.
 
-**Example.** Cast it before a pack closes in, and every one that comes near takes venom while you fight the first.
+**Example.** Cast it before a pack closes in. Every enemy that comes near gets hit with venom while you fight the first one.
 
 ## fire.uraeus.shape
-**What it does.** Opens two shapes of Uraeus, chosen at any rest fire. **Coiled**: it stays close and spits only at what is within 3 metres, each spit laying three Burn. **Set Down**: it is planted where you cast it and guards a circle of 9 metres round itself whether you stay or not: leave it on a door.
+**What it does.** Unlocks two shapes for Uraeus. You pick one at any rest fire. **Coiled**: it stays close and only spits at enemies within 3 metres, and each spit adds three Burn. **Set Down**: it is planted where you cast it and guards a 9-metre circle around itself, whether you stay or not. Leave it at a door.
 
-**When it happens.** Whenever you cast Uraeus, as the shape it wears.
+**When it happens.** Whenever you cast Uraeus, using the shape you picked.
 
-**The numbers.** 3 Shards. Coiled: reach 3 metres, three Burn a spit. Set Down: a spit every 1.2 seconds at an enemy within 9 metres of the cobra, 8 damage and two Burn, for 8 seconds.
+**The numbers.** 3 Shards. Coiled: it reaches 3 metres, and adds three Burn per spit. Set Down: it spits every 1.2 seconds at an enemy within 9 metres of the cobra, for 8 damage and two Burn, for 8 seconds.
 
-**Works with.** Kiln Stance and Breath of the Lioness (Coiled, for fighting close); Black Pitch and Catching Fire (Set Down by a crowd).
+**Works with.** Kiln Stance and Breath of the Lioness (Coiled, for fighting up close). Black Pitch and Catching Fire (Set Down next to a crowd).
 
-**Not built yet.** Coiled's spit holding the enemy's wind-up for a moment.
+**Not built yet.** Coiled's spit should freeze the enemy's wind-up for a moment.
 
-**Example.** Set it down at a gate and fight the brute on the far side of the yard while the cobra keeps the soldiers burning.
+**Example.** Set it down at a gate, and fight the brute on the far side of the yard while the cobra keeps the soldiers burning.
 
 ## fire.uraeus.master
-**What it does.** Each spit that lands on an enemy already burning lays twice the Burn: the fire is fed.
+**What it does.** Each spit that lands on an enemy that is already burning adds double the Burn. The fire is fed.
 
-**When it happens.** A spit of your Uraeus strikes an enemy that is already burning. Uraeus must be in a slot.
+**When it happens.** When your Uraeus's spit hits an enemy that is already burning. Uraeus must be in a spell slot.
 
 **The numbers.** 3 Shards. Two more stacks of Burn on top of the spit's own.
 
-**Works with.** Cinder and Flame Wave, which light them first.
+**Works with.** Cinder and Flame Wave, which set enemies on fire first.
 
-**Not built yet.** The cobra standing a second longer for each spit fed.
+**Not built yet.** The cobra should stay a second longer for each spit that feeds the fire.
 
-**Example.** Light a pack with Flame Wave, then cast Uraeus: every spit takes them a step nearer to five.
+**Example.** Set a pack on fire with Flame Wave, then cast Uraeus. Every spit brings them a step closer to five stacks.
 
 ## fire.meteor
-**What it does.** You leap out of the fight and come down beside the enemy you face as a falling stone, a heavy blow that leaves a burning crater. Nothing can strike you in the air.
+**What it does.** You leap out of the fight and come down next to the enemy you face like a falling stone. The landing is a heavy blow that leaves a burning crater. Nothing can hit you while you are in the air.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards, 45 mana (its Empower: 35). It finds an enemy faced within 9 metres and lands you 1 metre short of it; with none, 5 metres ahead. The leap takes 0.62 seconds. The landing strikes everything within 3.2 metres for 46 damage and 55 stagger. The crater burns for 4 seconds and bites for 5 every half second.
+**The numbers.** 4 Shards, 45 mana (its Empower makes it 35). It finds the enemy you face within 9 metres and lands you 1 metre in front of it. If there is none, you land 5 metres ahead. The leap takes 0.62 seconds. The landing hits everything within 3.2 metres for 46 damage and 55 stagger. The crater burns for 4 seconds and deals 5 damage every half second.
 
-**Works with.** Heat, which it grows from; Catching Fire; its Master on an enemy at five Burn.
+**Works with.** Heat, which it comes after on the chart; Catching Fire; and its Master mark on an enemy with five Burn.
 
-**Not built yet.** The Empower's longer crater (6 seconds).
+**Not built yet.** The Empower's longer-lasting crater (6 seconds).
 
-**Example.** An archer stands behind two shield-bearers: leap over them and land on it.
+**Example.** An archer stands behind two shield bearers. Leap over them and land on it.
 
 ## fire.meteor.shape
-**What it does.** Opens two shapes of Meteor Leap, chosen at any rest fire. **Falling Star**: you do not leap; a burning stone falls on the aim point after a breath and you go on fighting. **Ash Fall**: the landing throws hot ash round you, and enemies in it keep catching fire.
+**What it does.** Unlocks two shapes for Meteor Leap. You pick one at any rest fire. **Falling Star**: you don't leap. Instead, a burning stone falls where you aim a moment later, and you keep fighting. **Ash Fall**: the landing throws hot ash around you, and enemies in it keep catching fire.
 
-**When it happens.** Whenever you cast Meteor Leap, as the shape it wears.
+**When it happens.** Whenever you cast Meteor Leap, using the shape you picked.
 
-**The numbers.** 3 Shards. Falling Star: it falls 0.8 seconds after the cast, within 9 metres, 46 damage and 60 stagger in 3.2 metres, a stack of Burn, and a burning patch for 4 seconds. Ash Fall: ash 3 metres round where you land for 5 seconds, a Burn and 2 damage a second to all in it.
+**The numbers.** 3 Shards. Falling Star: it falls 0.8 seconds after you cast it, within 9 metres. It deals 46 damage, 60 stagger and a stack of Burn within 3.2 metres, and leaves a burning patch for 4 seconds. Ash Fall: ash covers 3 metres around where you land for 5 seconds. Every second, it deals a Burn and 2 damage to everything in it.
 
-**Works with.** Cinder and Catching Fire (Ash Fall in a crowd); Kiln Stance and Breath of the Lioness (Falling Star while you hold your ground).
+**Works with.** Cinder and Catching Fire (Ash Fall in a crowd). Kiln Stance and Breath of the Lioness (Falling Star while you hold your ground).
 
-**Not built yet.** Falling Star's own stone and growing shadow (it uses the thrown sphere for now), and balance not recovering in Ash Fall.
+**Not built yet.** Falling Star's own stone and growing shadow (for now, it uses the thrown ball). Enemies' balance not coming back while they stand in Ash Fall.
 
-**Example.** Hold the line with your guard and call the stone down on the brute behind it.
+**Example.** Hold the line with your guard, and call the stone down on the brute behind it.
 
 ## fire.meteor.master
-**What it does.** Land Meteor Leap on an enemy at five Burn and its burn goes off with the blow, and half the mana comes back.
+**What it does.** Land Meteor Leap on an enemy with five Burn, and its burn goes off with the blow. You also get half the mana back.
 
-**When it happens.** The leap's landing strikes an enemy at full Burn. Meteor Leap must be in a slot.
+**When it happens.** When the leap's landing hits an enemy with full Burn. Meteor Leap must be in a spell slot.
 
-**The numbers.** 3 Shards. The burn is set off for 10 damage a stack (50 at five). 22 mana comes back, once a landing.
+**The numbers.** 3 Shards. The burn goes off for 10 damage per stack (50 at five). You get 22 mana back, once per landing.
 
-**Works with.** Cinder and Uraeus, to bring an enemy to five; Heat for the weight behind it.
+**Works with.** Cinder and Uraeus, to bring an enemy up to five; Heat, for extra damage behind it.
 
-**Example.** Five quick blows on the brute, step back, leap: its burn goes off under the stone and your mana is half full again.
+**Example.** Five quick blows on the brute, step back, and leap. Its burn goes off under the stone, and your mana is half full again.
 
 ## fire.lift
-**What it does.** Fuel to It: every reaction with Burn in it leaves the ground where it happened burning.
+**What it does.** Fuel to It. Every reaction with Burn in it leaves the ground where it happened on fire.
 
-**When it happens.** Whenever Burn reacts on an enemy with the other affliction it carries (Steam with Soaked, Flashover with Static and the rest).
+**When it happens.** Whenever Burn reacts on an enemy with another affliction it has (Steam with Soaked, Flashover with Static, and the rest).
 
-**The numbers.** 3 Shards. A burning patch 1.5 metres in radius for 3 seconds, biting 3 every half second with a stack of Burn.
+**The numbers.** 3 Shards. A burning patch with a 1.5-metre radius that lasts 3 seconds. Every half second, it deals 3 damage and a stack of Burn.
 
-**Works with.** Carrying a second element: every reaction of Fire's ten.
+**Works with.** Carrying a second element: every one of Fire's ten reactions.
 
-**Not built yet.** The reactions themselves striking 25% harder (it needs a stat for reaction damage).
+**Not built yet.** The reactions themselves should hit 25% harder (the game needs a number for reaction damage first).
 
 **Example.** Fire and Water on one enemy: Steam bursts, and the ground under it keeps burning.
 
 ## fire.whiteheat
-**What it does.** Heat can rise to eight. Every level above five also quickens your swing. But struck while above five, you catch fire yourself for a while.
+**What it does.** Heat can go up to eight. Every level above five also makes you swing faster. But if you get hit while above five, you catch fire yourself for a while.
 
-**When it happens.** Always on once learned. The speed comes with each level above five; the burn comes when a blow lands on you up there.
+**When it happens.** Always on once you learn it. The extra speed comes with each level above five. The burn comes when a blow lands on you while you are above five.
 
-**The numbers.** 6 Shards. Heat to eight, 48% weapon damage at the top. Each level above five adds 5% swing speed, 15% at eight. Struck above five, you burn for 4 seconds at 4 damage a second; it never takes your last point. The blow still puts your Heat out, as always.
+**The numbers.** 6 Shards. Heat goes up to eight, which gives 48% more weapon damage at the top. Each level above five adds 5% swing speed, so 15% at eight. If you are hit above five, you burn for 4 seconds, taking 4 damage a second, but it never takes your last point. The blow still puts your Heat out, like always.
 
-**Works with.** Heat, Wildfire Rush, and Kindle, which now fills Heat to eight at once.
+**Works with.** Heat, Wildfire Rush, and Kindle, which now fills Heat up to eight right away.
 
-**Example.** Light Kindle at the start of a fight: you are at eight Heat straight away, swinging 15% faster for 48% more, as long as nothing touches you.
+**Example.** Light Kindle at the start of a fight. You are at eight Heat right away, swinging 15% faster for 48% more damage, as long as nothing hits you.
 
 ## fire.devotion
-**What it does.** Fire Without End, Fire's Devotion: all in on Fire only. Burns never go out by themselves; only death or water ends them. A burn left alone deepens by itself. Light everything once, then fight the one in front of you while the rest of the room cooks.
+**What it does.** Fire Without End, Fire's Devotion, for going all in on Fire only. Burns never go out on their own; only death or water ends them. A burn you leave alone grows stronger by itself. Set everything on fire once, then fight the enemy in front of you while the rest of the room cooks.
 
-**When it happens.** Only while Fire is carried twice (all in), once bought. Then always, on every burning enemy.
+**When it happens.** Only while you carry Fire twice (all in), once you buy it. Then always, on every burning enemy.
 
-**The numbers.** 6 Shards. A burn's time no longer runs down. Every burning enemy that has had no Burn laid on it for 4 seconds gains a stack, and another 4 seconds later another, up to five. A burn set off still goes, and Steam (Soaked meeting Burn) still takes half of it. Buying this also gives you the deep strike, Burnt Offering. Use it with L2 and R2 while you carry this element alone or twice: 20 mana on its own 8-second clock.
+**The numbers.** 6 Shards. A burn's timer no longer runs down. Every burning enemy that hasn't had Burn added for 4 seconds gains a stack, and another stack 4 seconds after that, up to five. A burn that is set off still goes away, and Steam (Soaked meeting Burn) still takes half of it. Buying this also gives you the deep strike, Burnt Offering. Use it with L2 and R2 while you carry Fire alone or twice. It costs 20 mana and has its own 8-second wait.
 
-**Works with.** Cinder, Flame Wave, Catching Fire, Breath of the Lioness, which sets a burn off, and the deep strike, whose pillar sets off the burn it lands on.
+**Works with.** Cinder, Flame Wave, Catching Fire, Breath of the Lioness (which sets off a burn), and the deep strike, whose pillar sets off the burn on the enemy it lands on.
 
-**Example.** Flame Wave across a room, then a duel with one soldier: the rest are at five when you turn round.
+**Example.** Cast Flame Wave across a room, then fight one soldier alone. When you turn around, the rest are at five stacks.
 
 ## fire.backdraft
-**What it does.** Breath of the Lioness (once Backdraft): a perfect guard throws a cone of fire back at the one who struck, as Sekhmet's breath was the desert wind. Against a burning enemy, its burn goes off too.
+**What it does.** Breath of the Lioness (it used to be called Backdraft). A perfect guard throws a cone of fire back at the enemy that hit you, the way the goddess Sekhmet's breath was the desert wind. If the enemy is burning, its burn goes off too.
 
-**When it happens.** A perfect guard: press the guard button just before a blow lands.
+**When it happens.** On a perfect guard: press the guard button just before a blow lands.
 
-**The numbers.** 3 Shards. A cone 4.5 metres long and 100 degrees wide. 16 damage and 18 stagger to all in it, and each burns for 3 seconds. Two stacks of Burn on the attacker. A burning attacker's burn goes off for 10 damage and 10 more for each stack.
+**The numbers.** 3 Shards. A cone 4.5 metres long and 100 degrees wide. It deals 16 damage and 18 stagger to everything in it, and each one burns for 3 seconds. The attacker gets two stacks of Burn. A burning attacker's burn goes off for 10 damage plus 10 more for each stack.
 
-**Works with.** Cinder to build the burn it sets off, Kiln Stance (whose turned blows count as perfect guards), Flame Trail.
+**Works with.** Cinder, to build up the burn it sets off; Kiln Stance (the blows it blocks count as perfect guards); Flame Trail.
 
-**Example.** Against a soldier's thrust, guard just before it lands: the fire throws it off balance; at five Burn, its burn goes off in the same breath.
+**Example.** A soldier thrusts at you. Guard just before it lands, and the fire knocks it off balance. At five Burn, its burn goes off at the same moment.
 
 ## fire.kiln
-**What it does.** You stand ready in flame. The first blow that reaches you, from any side, red attack or not, is turned for nothing and answered with fire. The caught blow counts as a perfect guard, so it gives that mana and sets off every mark that waits on one. If nothing comes, the stance goes out and the cast is spent.
+**What it does.** You stand ready, wrapped in flame. The first blow that reaches you, from any side, red attack or not, does nothing to you, and you answer it with fire. The blocked blow counts as a perfect guard, so it gives you that mana and sets off every mark that needs a perfect guard. If no blow comes, the stance goes out and the cast is used up.
 
-**When it happens.** From a spell slot: cast it with that slot's button, then any blow in the next 1.2 seconds.
+**When it happens.** Cast it from a spell slot. Press that slot's button. Then it works on any blow in the next 1.2 seconds.
 
-**The numbers.** 4 Shards, no mana: it waits 9 seconds (its Empower: 7, and four Burn). Ready for 1.2 seconds. The answer is a pillar of fire 1.7 metres in radius under the attacker: 30 damage, 50 stagger, a heavy blow, three stacks of Burn.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again (its Empower makes it 7 and adds a fourth Burn). It stays ready for 1.2 seconds. The answer is a pillar of fire with a 1.7-metre radius under the attacker. It deals 30 damage, 50 stagger, counts as a heavy blow, and adds three stacks of Burn.
 
-**Works with.** Breath of the Lioness, which it grows from; its Master on a burning attacker.
+**Works with.** Breath of the Lioness, which it comes after on the chart, and its Master mark on a burning attacker.
 
-**Not built yet.** Shut Door as designed: held up to 3 seconds, every blow turned banked as smoke under a hood (three at most), and the door opened in a cone of flame when you let go, 20 damage and 15 more for each blow banked. It needs a spell held on its button. For now the Learn is the stance as it was built, The Kiln.
+**Not built yet.** Shut Door, the planned version: you hold it for up to 3 seconds, every blow you block is stored as smoke under a hood (up to three), and when you let go, the door opens in a cone of flame that deals 20 damage plus 15 more for each stored blow. The game needs spells you can hold down on their button first. For now, the Learn mark is the stance as it was first built, The Kiln.
 
-**Example.** A brute winds up a red overhead you cannot guard: cast just before it falls, and the pillar answers it.
+**Example.** A brute winds up a red overhead swing you can't guard. Cast this just before it comes down, and the pillar answers it.
 
 ## fire.kiln.shape
-**What it does.** Opens two shapes of Kiln Stance, chosen at any rest fire. **The Kiln**: the stance as it was, the first blow answered at once by a pillar of fire, for single blows. **Firewalker**: a stance you walk in, for a shorter time: walk into the swing.
+**What it does.** Unlocks two shapes for Kiln Stance. You pick one at any rest fire. **The Kiln**: the stance as it was first built. A pillar of fire answers the first blow right away; it's best for single blows. **Firewalker**: a stance you can walk in, for a shorter time. Walk into the enemy's swing.
 
-**When it happens.** Whenever you cast Kiln Stance, as the shape it wears.
+**When it happens.** Whenever you cast Kiln Stance, using the shape you picked.
 
-**The numbers.** 3 Shards. The Kiln: ready 1.2 seconds, the pillar 30 damage, 50 stagger, three Burn. Firewalker: ready 0.6 seconds.
+**The numbers.** 3 Shards. The Kiln: ready for 1.2 seconds. The pillar deals 30 damage, 50 stagger and three Burn. Firewalker: ready for 0.6 seconds.
 
-**Works with.** Breath of the Lioness; Uraeus Coiled.
+**Works with.** Breath of the Lioness; Uraeus's Coiled shape.
 
-**Not built yet.** Walking at half speed in Firewalker (for now it is the stance held a shorter time).
+**Not built yet.** Walking at half speed in Firewalker (for now, it is the stance held for a shorter time).
 
-**Example.** Against a quick double cut, The Kiln answers the first; against a slow brute, Firewalker meets the swing.
+**Example.** Against a quick double cut, The Kiln answers the first one. Against a slow brute, Firewalker meets the swing.
 
 ## fire.kiln.master
-**What it does.** Turn a blow from an attacker already burning, and a pillar of fire rises under it with the answer: its burn goes off and it is thrown down.
+**What it does.** Block a blow from an attacker that is already burning, and a pillar of fire rises under it as your answer. Its burn goes off, and it is knocked down.
 
-**When it happens.** Kiln Stance's answer strikes a burning enemy. Kiln Stance must be in a slot.
+**When it happens.** When Kiln Stance's answer hits a burning enemy. Kiln Stance must be in a spell slot.
 
-**The numbers.** 3 Shards. Its burn goes off for 10 damage a stack, and it lies knocked down for 1.2 seconds (elites and gods less).
+**The numbers.** 3 Shards. Its burn goes off for 10 damage per stack, and it is knocked down for 1.2 seconds (less for elites and gods).
 
-**Works with.** Cinder and Flame Wave to light the attacker first.
+**Works with.** Cinder and Flame Wave, to set the attacker on fire first.
 
-**Example.** Light the brute, wait for its overhead, answer it: it goes up and down at once.
+**Example.** Set the brute on fire, wait for its overhead swing, and answer it. It goes up in flames and down at the same time.
 
 ## fire.trail
-**What it does.** Your dodge leaves a line of fire on the ground behind it that burns whatever walks through.
+**What it does.** Your dodge leaves a line of fire on the ground behind you that burns anything walking through it.
 
 **When it happens.** Every dodge.
 
-**The numbers.** 3 Shards. Four patches along the dodge's path, each 0.95 metres in radius, laid as you roll. Each burns for 2.6 seconds and bites for 4 damage every half second, setting what it touches burning for 2 seconds.
+**The numbers.** 3 Shards. Four patches along the dodge's path, each with a 0.95-metre radius, left as you roll. Each burns for 2.6 seconds and deals 4 damage every half second, setting whatever it touches on fire for 2 seconds.
 
-**Works with.** Wildfire Rush, which grows from it, for a second line; Breath of the Lioness.
+**Works with.** Wildfire Rush, which comes after it on the chart, for a second line; Breath of the Lioness.
 
-**Example.** Roll back from a charging brute: it runs through all four patches to reach you and arrives burning.
+**Example.** Roll back from a charging brute. It runs through all four patches to reach you, and arrives burning.
 
 ## fire.rush
-**What it does.** You become a point of fire and drive straight through every enemy in your path, coming out the far side facing back. Each enemy passed is struck, set burning and raises your Heat a level. Then a second cut lands on everyone on the line, and the line burns. Nothing can strike you while you drive; a wall, or something too big to shove, stops you.
+**What it does.** You turn into a point of fire and charge straight through every enemy in your path, coming out the far side facing back. Each enemy you pass is hit, set on fire, and raises your Heat by one level. Then a second cut lands on everyone on the line, and the line burns. Nothing can hit you while you charge. A wall, or an enemy too big to push past, stops you.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards, no mana: it waits 8 seconds after a cast (its Empower: 6, and the line burns 4 seconds). Up to 7 metres, along a lane 2 metres wide. Passing: 14 damage, 20 stagger and two stacks of Burn. The cut after: 14 damage, 20 stagger and two stacks more. The line burns 2.6 seconds, biting for 4 every half second. One Heat level for each enemy passed.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 8 seconds to cast it again (its Empower makes it 6, and makes the line burn for 4 seconds). It goes up to 7 metres, along a path 2 metres wide. As you pass, each enemy takes 14 damage, 20 stagger and two stacks of Burn. The cut after deals 14 damage, 20 stagger and two more stacks. The line burns for 2.6 seconds, dealing 4 damage every half second. You get one Heat level for each enemy you pass.
 
-**Works with.** Flame Trail, which it grows from; Heat and White Heat; Cinder; Catching Fire.
+**Works with.** Flame Trail, which it comes after on the chart; Heat and White Heat; Cinder; Catching Fire.
 
-**Example.** Drive through three soldiers in a row: Heat goes from none to three, and each is four deep in Burn.
+**Example.** Charge through three soldiers in a row. Your Heat goes from zero to three, and each soldier has four stacks of Burn.
 
 ## fire.rush.shape
-**What it does.** Opens two shapes of Wildfire Rush, chosen at any rest fire. **Fire Front**: you go as the front of a grass fire, a wall of flame, slower, and what it meets is thrown down at the end; the drive that pushes a crowd instead of passing through it. **Smoke Road**: the escape, the line of fire left between you and them.
+**What it does.** Unlocks two shapes for Wildfire Rush. You pick one at any rest fire. **Fire Front**: you move as the front of a grass fire, a wall of flame. It is slower, and whatever it meets is knocked down at the end. It pushes a crowd instead of passing through it. **Smoke Road**: the escape. It leaves a line of fire between you and them.
 
-**When it happens.** Whenever you cast Wildfire Rush, as the shape it wears.
+**When it happens.** Whenever you cast Wildfire Rush, using the shape you picked.
 
-**The numbers.** 3 Shards. Fire Front: 5 metres, 4 metres wide, a third of the speed; each enemy struck is knocked down for 0.6 seconds. Smoke Road: 6 metres, the passing cut lighter (4 damage).
+**The numbers.** 3 Shards. Fire Front: it goes 5 metres, is 4 metres wide, and moves at a third of the speed. Each enemy it hits is knocked down for 0.6 seconds. Smoke Road: it goes 6 metres, and the cut as you pass is weaker (4 damage).
 
 **Works with.** Catching Fire and Black Pitch (Fire Front into a crowd); Flame Trail (Smoke Road out of one).
 
-**Not built yet.** Fire Front carrying the enemies before you, and Smoke Road going back out of the fight: for now both drive forward.
+**Not built yet.** Fire Front should carry the enemies in front of you, and Smoke Road should take you back out of the fight. For now, both charge forward.
 
-**Example.** Fire Front through a doorway packed with soldiers: they go down burning in a heap on the far side.
+**Example.** Use Fire Front through a doorway packed with soldiers. They fall down burning in a pile on the far side.
 
 ## fire.rush.master
-**What it does.** Started in the instant a blow would land on you, Wildfire Rush counts as a perfect dodge, and your Heat goes to five.
+**What it does.** If you start Wildfire Rush right as a blow would land on you, it counts as a perfect dodge, and your Heat goes to five.
 
-**When it happens.** You cast Wildfire Rush. Wildfire Rush must be in a slot.
+**When it happens.** When you cast Wildfire Rush. Wildfire Rush must be in a spell slot.
 
-**The numbers.** 3 Shards. For now every cast gives what a perfect dodge gives: 12 mana and 1.5 seconds off every running cooldown.
+**The numbers.** 3 Shards. For now, every cast gives you what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting.
 
 **Works with.** Heat and White Heat.
 
-**Not built yet.** The timing (started as a blow would land) and Heat going to five: both need the enemy's blow as a moment.
+**Not built yet.** The timing (starting it right as a blow would land) and Heat going to five. Both need the game to know the moment an enemy's blow lands.
 
-**Example.** Drive out of a brute's swing and through its friends, and every other spell is that much nearer.
+**Example.** Charge out of a brute's swing and through its friends, and every other spell is that much closer to ready.
 
 ## fire.firebomb
-**What it does.** Holding the flask button throws the flask instead of drinking it. It heals nothing: it bursts in fire where it lands, leaves flames on the ground there, and lays three stacks of Burn on everything near. A short press still drinks.
+**What it does.** Holding the flask button throws the flask instead of drinking it. It doesn't heal. It bursts into fire where it lands, leaves flames on the ground, and puts three stacks of Burn on everything nearby. A short press still drinks it.
 
-**When it happens.** Hold the flask button. Each throw uses a flask.
+**When it happens.** Hold the flask button. Each throw uses up a flask.
 
-**The numbers.** 3 Shards. Hold 0.3 seconds to throw. It flies at the enemy ahead within 9 metres, or 5 metres ahead, and lands 0.4 seconds later. The burst is 2.6 metres in radius: 36 damage, 30 stagger, three stacks of Burn and 4 seconds of burning. The flames left are 2.2 metres in radius and bite for 5 every half second for 3.5 seconds.
+**The numbers.** 3 Shards. Hold for 0.3 seconds to throw. It flies at the enemy in front of you within 9 metres, or 5 metres ahead, and lands 0.4 seconds later. The burst has a 2.6-metre radius and deals 36 damage, 30 stagger, three stacks of Burn and 4 seconds of burning. The flames left behind have a 2.2-metre radius and deal 5 damage every half second for 3.5 seconds.
 
 **Works with.** Catching Fire, Black Pitch, Flame Wave (all on the Ruin bough).
 
-**Example.** Three soldiers bunch at a gate: one flask leaves all three three deep and standing in fire.
+**Example.** Three soldiers bunch up at a gate. One flask gives all three three stacks and leaves them standing in fire.
 
 ## fire.catch
-**What it does.** When a burning enemy dies, its burn is thrown onto everyone standing near it, as deep as it was.
+**What it does.** When a burning enemy dies, its burn jumps onto every enemy standing near it, with as many stacks as it had.
 
-**When it happens.** The moment a burning enemy dies, whatever killed it.
+**When it happens.** The moment a burning enemy dies, no matter what killed it.
 
-**The numbers.** 3 Shards. Every enemy within 4 metres of the one that died takes as many stacks of Burn as it carried, up to five. It can happen at most five times a second.
+**The numbers.** 3 Shards. Every enemy within 4 metres of the one that died gets as many stacks of Burn as it had, up to five. This can happen at most five times a second.
 
-**Works with.** Cinder to build the depth first, Black Pitch (which grows from it), Firebomb Flask, and Breath of the Lioness to set the new burns off.
+**Works with.** Cinder, to build up the stacks first; Black Pitch (which comes after it on the chart); Firebomb Flask; and Breath of the Lioness, to set off the new burns.
 
-**Example.** Kill a soldier at five Burn in the middle of a pack, and the two beside it are five deep at once without a blow from you.
+**Example.** Kill a soldier with five Burn in the middle of a pack. The two next to it get five stacks right away, without you hitting them.
 
 ## fire.pitch
-**What it does.** You throw a jar of embalmer's pitch at the enemy faced. Your next blows on it splash fire over everyone near it.
+**What it does.** You throw a jar of embalmer's pitch (a thick, sticky tar) at the enemy you face. Your next blows on it splash fire over everyone near it.
 
-**When it happens.** From a spell slot: cast it with that slot's button. Then the next three blows of your weapon on the coated enemy, within 8 seconds.
+**When it happens.** Cast it from a spell slot. Press that slot's button. Then it works on your next three weapon blows on the coated enemy, within 8 seconds.
 
-**The numbers.** 4 Shards, no mana: it waits 11 seconds (its Empower: 9, and the coat lasts 10 seconds). Thrown up to 7 metres. Each of three blows on it sets off a burst 2 metres round it: 16 damage, 35 stagger and three Burn.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again (its Empower makes it 9, and makes the coat last 10 seconds). You can throw it up to 7 metres. Each of the three blows on the coated enemy sets off a burst 2 metres around it, for 16 damage, 35 stagger and three Burn.
 
-**Works with.** Catching Fire, which it grows from; Cinder; Firebomb Flask.
+**Works with.** Catching Fire, which it comes after on the chart; Cinder; Firebomb Flask.
 
-**Not built yet.** The pitch as designed: blows spread a coat from enemy to enemy without fire, and the first fire that touches any coated enemy (a Burn laid, a burning patch, a reaction) takes all of them at once, 16 damage and 8 more for each blow that spread it, up to 70, and the floor under each burns. For now the coat is a brand that the next blows set off round the one coated.
+**Not built yet.** The planned pitch: your blows spread the coat from enemy to enemy without lighting it. Then the first fire that touches any coated enemy (a Burn, a burning patch, or a reaction) sets all of them on fire at once, for 16 damage plus 8 more for each blow that spread it, up to 70, and the floor under each one burns. For now, the coat is a mark that your next blows set off around the coated enemy.
 
-**Example.** Coat the soldier in the middle of a pack and cut it three times: the pack burns three deep.
+**Example.** Coat the soldier in the middle of a pack and cut it three times. The pack burns with three stacks.
 
 ## fire.pitch.shape
-**What it does.** Opens two shapes of Black Pitch, chosen at any rest fire. **Pitch Pool**: thrown on the floor, a pool of burning pitch. **The Torch**: one enemy coated deep, and nothing splashes; it burns and sets alight everyone near it each second as it walks.
+**What it does.** Unlocks two shapes for Black Pitch. You pick one at any rest fire. **Pitch Pool**: it is thrown on the floor as a pool of burning pitch. **The Torch**: one enemy is coated thickly, and nothing splashes. It burns, and every second it sets fire to everyone near it as it walks.
 
-**When it happens.** Whenever you cast Black Pitch, as the shape it wears.
+**When it happens.** Whenever you cast Black Pitch, using the shape you picked.
 
-**The numbers.** 3 Shards. Pitch Pool: 3 metres across, 8 seconds, biting 3 every half second with a stack of Burn. The Torch: for 8 seconds, every second, a stack of Burn on everyone within 2 metres of the torch; its blows set off a burst of 0.8 metres.
+**The numbers.** 3 Shards. Pitch Pool: 3 metres across, lasts 8 seconds, and deals 3 damage and a stack of Burn every half second. The Torch: for 8 seconds, every second, everyone within 2 metres of the torch gets a stack of Burn. Your blows on it set off a burst 0.8 metres across.
 
-**Works with.** Catching Fire (The Torch into a crowd); Flame Wave's Running Fire across the pool.
+**Works with.** Catching Fire (send The Torch into a crowd); Flame Wave's Running Fire across the pool.
 
-**Not built yet.** The pool coating whoever walks through it, and The Torch lit only when fire touches it (for now it is lit at once).
+**Not built yet.** The pool should coat anyone who walks through it, and The Torch should only light up when fire touches it (for now, it lights up right away).
 
-**Example.** Make the brute The Torch and let it walk into its friends.
+**Example.** Turn the brute into The Torch and let it walk into its friends.
 
 ## fire.pitch.master
-**What it does.** Light it with a finisher, and every other burning enemy near goes up with the coated, at half.
+**What it does.** Light it with a finisher, and every other burning enemy nearby goes up in flames along with the coated one, at half strength.
 
-**When it happens.** A finisher lands on a burning enemy. Black Pitch must be in a slot.
+**When it happens.** When a finisher lands on a burning enemy. Black Pitch must be in a spell slot.
 
-**The numbers.** 3 Shards. The finished enemy's burn is set off for 5 damage a stack in 4 metres.
+**The numbers.** 3 Shards. The finished enemy's burn goes off for 5 damage per stack within 4 metres.
 
 **Works with.** Cinder, Catching Fire.
 
-**Not built yet.** Every other burning enemy within 10 metres going up at half, and only when the finisher lights the coat.
+**Not built yet.** Every other burning enemy within 10 metres should go up at half strength, and only when the finisher lights the coat.
 
-**Example.** End a coated soldier's chain with a finisher, and the fire runs on to the next.
+**Example.** End a string of blows on a coated soldier with a finisher, and the fire spreads to the next one.
 
 ## fire.sun
-**What it does.** Lighting Kindle starts the sun on its road. At dawn it is rolled to the enemy you face, and the ground it crosses burns. At noon it hangs over that enemy, and burns near you deepen by themselves. At dusk it sets on the enemy below, heavier for every burn it finds. A blow on you sends it under, to rise again.
+**What it does.** Lighting Kindle starts the sun on its path across the sky. At dawn, it rolls toward the enemy you face, and the ground it crosses burns. At noon, it hangs over that enemy, and burns near you grow stronger on their own. At dusk, it sets on the enemy below it, hitting harder for every burn it finds. If you get hit, the sun goes down, and then it rises again.
 
 **When it happens.** Light Kindle with the surge button. It sets when Kindle ends, or when you press the surge button again.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. Dawn: up to 9 metres; the first enemy met takes 14 damage, 20 stagger, two Burn. Noon: each second, a stack of Burn on all within 6 metres of you. Dusk: 60 damage, 80 stagger in 4 metres, 8% more a Burn stack found, up to double; half if called while rolling. Sent under, it rises in 1.5 seconds if Kindle has 3 left.
+**The numbers.** A god's gift; it is never sold, but in the playtest you can buy it. Dawn: it rolls up to 9 metres, and the first enemy it meets takes 14 damage, 20 stagger and two Burn. Noon: every second, everything within 6 metres of you gets a stack of Burn. Dusk: 60 damage and 80 stagger within 4 metres, plus 8% more for each Burn stack it finds, up to double. If you call it while it is still rolling, it does half. If you get hit, it goes down and rises again 1.5 seconds later, if Kindle has 3 seconds left.
 
 **Works with.** Cinder, Heat.
 
-**Example.** Press again over a crowd at five Burn.
+**Example.** Press the surge button again over a crowd with five Burn each.
 
 ## fire.intothefire
-**What it does.** Fire never backs off. When you dodge toward an enemy, you pass right through it without being hit, and everything you pass catches fire. Dodging away costs more and can never be perfect.
+**What it does.** Fire never backs off. When you dodge toward an enemy, you pass right through it without being hit, and everything you pass catches fire. Dodging away costs more stamina and can never be a perfect dodge.
 
-**When it happens.** Every dodge, while Fire is carried. A dodge counts as toward the enemy you face when it goes within 60 degrees of the line to it, and as away when it goes within 60 degrees of the line away from it. A dodge to the side is a plain dodge.
+**When it happens.** Every dodge, while you carry Fire. A dodge counts as toward the enemy you face when it goes within 60 degrees of the direct line to it. It counts as away when it goes within 60 degrees of the line directly away from it. A dodge to the side is a normal dodge.
 
-**The numbers.** Keystone, 6 Shards. Toward: you cannot be hit for the whole dodge, you go through bodies (walls still stop you), and every enemy along your path takes two Burn. A perfect dodge toward the enemy also raises your Heat by one level. Away: the dodge costs twice the stamina, and it is never a perfect dodge, so it gives no mana and nothing that needs a perfect dodge happens.
+**The numbers.** Keystone, 6 Shards. Toward: you can't be hit for the whole dodge, and you pass through enemies (walls still stop you). Every enemy along your path takes two Burn. A perfect dodge toward the enemy also raises your Heat by one level. Away: the dodge costs twice the stamina, and it is never a perfect dodge, so it gives no mana and nothing that needs a perfect dodge happens.
 
-**Works with.** Flame Trail, which it grows from. Heat, which the perfect dodge feeds. Wildfire Rush. Big and red attacks, which you now meet by going through them.
+**Works with.** Flame Trail, which it comes after on the chart. Heat, which the perfect dodge builds up. Wildfire Rush. Big attacks and red attacks, which you now meet by going right through them.
 
-**Example.** A brute winds up a huge swing. Roll into it: you come out behind it, it is burning, and you are already swinging.
+**Example.** A brute winds up a huge swing. Roll into it. You come out behind it, it is burning, and you are already swinging.
 
 ## fire.drinks
-**What it does.** Your weapon stops setting enemies on fire. Instead it drinks the fire that is already there. Each blow on a burning enemy takes Burn off it and hits harder for each Burn it takes. Burns no longer hurt enemies by themselves.
+**What it does.** Your weapon stops setting enemies on fire. Instead, it drinks the fire that's already there. Each blow on a burning enemy takes Burn off it and hits harder for each Burn it takes. Burns no longer hurt enemies on their own.
 
-**When it happens.** Every weapon blow on a burning enemy, while Fire is carried.
+**When it happens.** Every weapon blow on a burning enemy, while you carry Fire.
 
-**The numbers.** Keystone, 6 Shards. A light blow takes 1 Burn, a heavy blow takes 3, and a finisher takes all of them. Each Burn taken adds 6 damage to that blow. Cinder no longer adds Burn to your blows. A burn left on an enemy does no damage over time, but it still runs out at its usual pace.
+**The numbers.** Keystone, 6 Shards. A light blow takes 1 Burn, a heavy blow takes 3, and a finisher takes all of them. Each Burn taken adds 6 damage to that blow. Cinder no longer adds Burn to your blows. A burn left on an enemy does no damage over time, but it still runs out at its normal speed.
 
-**Works with.** Catching Fire, which it grows from. Everything that sets fire without the weapon: Flame Wave, Uraeus, the Firebomb Flask, Fire's infused strike and reactions. Fire Without End, which keeps the fuel from running out.
+**Works with.** Catching Fire, which it comes after on the chart. Everything that sets fire without your weapon: Flame Wave, Uraeus, the Firebomb Flask, Fire's infused strike, and reactions. Fire Without End, which keeps the fuel from running out.
 
-**Example.** Throw a Flame Wave over a crowd for two Burn each, then finish the one in front of you: the finisher takes both Burn and hits 12 harder.
+**Example.** Throw a Flame Wave over a crowd for two Burn each, then finish the enemy in front of you. The finisher takes both Burn and hits for 12 more damage.
