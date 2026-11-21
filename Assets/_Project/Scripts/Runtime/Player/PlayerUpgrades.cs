@@ -1826,6 +1826,9 @@ namespace Clover.Player
                 case UpgradeAction.LengthenSurge:
                     if (element.SurgeActive) element.SurgeKit.Lengthen(effect.Amount, effect.Seconds);
                     break;
+                case UpgradeAction.Freeze:
+                    if (subject is IAfflictable freezing && freezing.Afflictions.FreezeFor(Or(effect.Seconds, 1.5f))) FreezesKept++;
+                    break;
                 case UpgradeAction.KeepFrozen:
                     if (subject is IAfflictable frozen && frozen.Afflictions.KeepFrozen(effect.Seconds)) FreezesKept++;
                     break;

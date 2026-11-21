@@ -72,8 +72,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a freeze held a set time longer (frozen-for): each bite adding 0.3 s to the freeze; now a fresh Chill laid
-            // on the frozen enemy at each bite, at most every 0.3 s.
+            // Each bite adds 0.3 s to the freeze (UpgradeAction.KeepFrozen), at most every 0.3 s on each enemy.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SixLevelsDown, Name = "Six Levels Down", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Snowflake,
@@ -81,7 +80,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     // A Chill laid on a frozen enemy does nothing (the freeze is full), so the bite keeps it frozen itself.
-                    new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Needs = AfflictionKind.Chill, NeedsFull = true, Cooldown = 0.3f, Do = UpgradeAction.KeepFrozen, Seconds = 0.3f },
+                    new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Needs = AfflictionKind.Chill, NeedsFull = true, Cooldown = 0.3f, CooldownPerEnemy = true, Do = UpgradeAction.KeepFrozen, Seconds = 0.3f },
                 },
             }, HeartPattern.RightLow));
 

@@ -369,7 +369,7 @@ namespace Clover.Gameplay
             if (freezes && spec.FreezesAtFull)
             {
                 IsFrozen = true;
-                FrozenLeft = GodHolds.Seconds(spec.FrozenSeconds * Afflictions.FreezeSeconds, phase, FreezeScale);
+                FrozenLeft = GodHolds.Seconds(spec.FrozenSeconds * Afflictions.FreezeSeconds * RuleFreezeScale, phase, FreezeScale);
                 left[index] = Math.Max(left[index], FrozenLeft);
                 if (flash)
                 {
@@ -765,6 +765,29 @@ namespace Clover.Gameplay
             for (int i = 2; i < stacks.Length; i++)
                 if (stacks[i] > 0) total += perStack(Afflictions.Spec((AfflictionKind)i)) * stacks[i] * strength[i];
             return total;
+        }
+
+        // A freeze held longer by the player's rules on an enemy carrying their partner (Winter in the Bones).
+        private float RuleFreezeScale => Afflictions.Rules.Any ? Afflictions.Rules.FreezeScale(PresentMask) : 1f;
+
+        /// <summary>
+        /// Frozen at once for <paramref name="seconds"/>, whatever its Chill (Glass Spear): the Chill is filled and the
+        /// freeze runs its own time. What cannot be frozen is not, an elite for its share, and a god as its hold allows.
+        /// False when it did not take.
+        /// </summary>
+        public bool FreezeFor(float seconds)
+        {
+            if (seconds <= 0f) return false;
+            var phase = GodPhase;
+            if (phase == GodPhase.None ? !CanFreeze || HoldsRefused : !GodMayStop) return false;
+            int index = (int)AfflictionKind.Chill;
+            stacks[index] = Math.Max(stacks[index], Afflictions.Depth(AfflictionKind.Chill));
+            present |= 1 << index;
+            float time = GodHolds.Seconds(seconds * RuleFreezeScale, phase, FreezeScale);
+            FrozenLeft = IsFrozen ? Math.Max(FrozenLeft, time) : time;
+            IsFrozen = true;
+            left[index] = Math.Max(left[index], FrozenLeft);
+            return true;
         }
 
         /// <summary>

@@ -248,6 +248,47 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AFreezeForASetTimeTakesWhateverTheChillAndRunsItsOwnTime()
+        {
+            var set = NewEnemy();
+            Assert.IsTrue(set.FreezeFor(1.5f), "frozen with no Chill at all");
+            Assert.IsTrue(set.IsFrozen);
+            Assert.AreEqual(1.5f, set.FrozenLeft, 1e-4f);
+            Assert.AreEqual(Afflictions.Depth(AfflictionKind.Chill), set.Stacks(AfflictionKind.Chill), "the Chill is full, ready for a heavy blow");
+            Assert.IsTrue(set.FreezeFor(0.5f));
+            Assert.AreEqual(1.5f, set.FrozenLeft, 1e-4f, "a shorter freeze does not cut a longer one");
+            var stone = new AfflictionSet { CanFreeze = false, Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+            Assert.IsFalse(stone.FreezeFor(1.5f), "what cannot be frozen is not");
+        }
+
+        [Test]
+        public void AShakenEnemysFreezeIsHeldTwiceAsLong()
+        {
+            Afflictions.Rules.FreezeLongerWith(AfflictionKind.Tremor, 2f);
+            var shaken = NewEnemy();
+            Lay(shaken, AfflictionKind.Tremor);
+            var plain = NewEnemy();
+            shaken.FreezeFor(1.5f);
+            plain.FreezeFor(1.5f);
+            Assert.AreEqual(3f, shaken.FrozenLeft, 1e-4f);
+            Assert.AreEqual(1.5f, plain.FrozenLeft, 1e-4f);
+            var chilled = NewEnemy();
+            Lay(chilled, AfflictionKind.Tremor);
+            chilled.Lay(AfflictionKind.Chill, 9, 0f, 1f, LaySource.Spell);
+            var cold = NewEnemy();
+            cold.Lay(AfflictionKind.Chill, 9, 0f, 1f, LaySource.Spell);
+            Assert.IsTrue(chilled.IsFrozen && cold.IsFrozen);
+            Assert.AreEqual(cold.FrozenLeft * 2f, chilled.FrozenLeft, 1e-4f, "a freeze by Chill is held longer too");
+
+            var book = new RuleBook();
+            Assert.IsTrue(book.Apply(Upgrade.ById(FrostHeaveDuo.WinterInTheBones)));
+            Assert.AreEqual(2f, book.Afflictions.FreezeScale(Mask(AfflictionKind.Tremor)), 1e-5f, "Winter in the Bones");
+            Assert.AreEqual(1f, book.Afflictions.FreezeScale(Mask(AfflictionKind.Chill)), 1e-5f);
+            var spear = Upgrade.ById(SleetChargeDuo.Shape).Shapes.First(shape => shape.Name == "Glass Spear").Effects;
+            Assert.IsTrue(spear.Any(effect => effect.Do == UpgradeAction.Freeze && effect.Ranks == EnemyRank.Plain && UnityEngine.Mathf.Approximately(effect.Seconds, 1.5f)), "Glass Spear freezes 1.5 s");
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))

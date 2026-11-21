@@ -23,6 +23,8 @@ namespace Clover.Gameplay
         private readonly int[] keepsWhile = new int[Afflictions.Count];
         private readonly int[] slowerWhile = new int[Afflictions.Count];
         private readonly float[] slowerPace = new float[Afflictions.Count];
+        private int freezeLongerWith;
+        private float freezeLongerBy = 1f;
 
         /// <summary>False while every affliction behaves as written: the sets then skip every rule here with one test.</summary>
         public bool Any { get; private set; }
@@ -38,6 +40,9 @@ namespace Clover.Gameplay
 
         /// <summary>How fast the kind fades on an enemy carrying <paramref name="carried"/>: 1 as written, less while a rule slows it (Brine).</summary>
         public float FadePace(AfflictionKind kind, int carried) => Valid(kind) && (slowerWhile[(int)kind] & carried) != 0 ? slowerPace[(int)kind] : 1f;
+
+        /// <summary>How much longer a freeze lasts on an enemy carrying <paramref name="carried"/>: 1 as written (Winter in the Bones: twice on the shaken).</summary>
+        public float FreezeScale(int carried) => (freezeLongerWith & carried) != 0 ? freezeLongerBy : 1f;
 
         /// <summary>True when the kind is not spent by weapon blows (a mark of light): it lasts its time instead.</summary>
         public bool Unspent(AfflictionKind kind) => (unspent & Bit(kind)) != 0;
@@ -103,6 +108,15 @@ namespace Clover.Gameplay
             Any = true;
         }
 
+        /// <summary>A freeze lasts <paramref name="scale"/> times as long on an enemy that also carries <paramref name="with"/>.</summary>
+        public void FreezeLongerWith(AfflictionKind with, float scale)
+        {
+            if (!Valid(with) || scale <= 1f) return;
+            freezeLongerWith |= Bit(with);
+            freezeLongerBy = Math.Max(freezeLongerBy, scale);
+            Any = true;
+        }
+
         /// <summary>The kind is not spent by weapon blows.</summary>
         public void NotSpentByBlows(AfflictionKind kind)
         {
@@ -142,6 +156,8 @@ namespace Clover.Gameplay
             Array.Clear(keepsWhile, 0, keepsWhile.Length);
             Array.Clear(slowerWhile, 0, slowerWhile.Length);
             Array.Clear(slowerPace, 0, slowerPace.Length);
+            freezeLongerWith = 0;
+            freezeLongerBy = 1f;
             Any = false;
         }
 
@@ -164,6 +180,8 @@ namespace Clover.Gameplay
             Array.Copy(other.keepsWhile, keepsWhile, keepsWhile.Length);
             Array.Copy(other.slowerWhile, slowerWhile, slowerWhile.Length);
             Array.Copy(other.slowerPace, slowerPace, slowerPace.Length);
+            freezeLongerWith = other.freezeLongerWith;
+            freezeLongerBy = other.freezeLongerBy;
             Any = other.Any;
         }
 

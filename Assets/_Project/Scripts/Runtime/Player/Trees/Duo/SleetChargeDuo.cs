@@ -34,8 +34,8 @@ namespace Clover.Player.Trees.Duo
 
             // Sleet Charge's two shapes. Both keep the charging (a Static every half second for 3 s); they change how it ends.
             // NEEDS: a set-off on every enemy in reach that carries a mark, each discharging its own Static (Thundersnow: now a
-            // bolt leaps from one chilled enemy to the next within 6 m); frozen for set seconds whatever its Chill (Glass Spear:
-            // now Chill to full, which freezes for the Chill's own time); the clear ice spear standing where the bolt struck.
+            // bolt leaps from one chilled enemy to the next within 6 m); the clear ice spear standing where the bolt struck.
+            // Glass Spear freezes for 1.5 s whatever its Chill (UpgradeAction.Freeze).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Sleet Charge: Thundersnow or Glass Spear", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -64,7 +64,7 @@ namespace Clover.Player.Trees.Duo
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Spear, Seconds = 3f, Beat = 0.5f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Spear, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Spear, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Spear, Ranks = EnemyRank.Plain, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = ToFull },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Spear, Ranks = EnemyRank.Plain, Do = UpgradeAction.Freeze, Seconds = 1.5f },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Spear, Ranks = EnemyRank.Elite, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 3 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Spear, Ranks = EnemyRank.God, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 },
                         },

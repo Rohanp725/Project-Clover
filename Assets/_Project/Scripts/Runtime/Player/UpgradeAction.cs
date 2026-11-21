@@ -108,5 +108,7 @@ namespace Clover.Player
         SwapPlaces,
         /// <summary>The target keeps the affliction until it dies: it no longer fades (Stone Does Not Forgive). Reads: Affliction.</summary>
         KeepForGood,
+        /// <summary>Freezes the target at once for Seconds, whatever its Chill (Glass Spear). Reads: Seconds (1.5).</summary>
+        Freeze,
     }
 }

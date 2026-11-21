@@ -91,11 +91,12 @@ namespace Clover.Player.Trees.Duo
                 Rules = book => book.Afflictions.KeepWhile(AfflictionKind.Tremor, AfflictionKind.Chill),
             }, HeartPattern.LeftHigh));
 
-            // NEEDS: a freeze held longer on a shaken enemy (frozen-for); the shatter's heave is built.
+            // A shaken enemy's freeze held twice as long (AfflictionRules.FreezeLongerWith); the shatter's heave is built.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WinterInTheBones, Name = "Winter in the Bones", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { HardFrost, FrozenFooting }, Icon = UpgradeIcons.Rock,
                 Description = "A Frozen enemy that is shaken stays frozen twice as long, and shattering it heaves the ground under every enemy within 4 m.",
+                Rules = book => book.Afflictions.FreezeLongerWith(AfflictionKind.Tremor, 2f),
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Shatter, Needs = AfflictionKind.Tremor, Do = UpgradeAction.Lift, Radius = 4f, Seconds = 1f, Cooldown = 0.3f },
