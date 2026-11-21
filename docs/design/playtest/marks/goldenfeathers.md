@@ -5,64 +5,64 @@ Golden Feathers (`docs/design/steel/pairs_d5.md`, "Light and Wind"). Drawn in th
 Wind are both carried.
 
 ## goldenfeathers.shape
-**What it does.** Feathered: opens Golden Feathers' two shapes. At a rest fire you choose which one your Golden Feathers wears, and from then on it runs instead of the plain one. **Eagle's Sight**: no feathers fly; the eagle's sight stays on the enemy, and your next dodge toward it carries you all the way in to a critical cut. **Wingbeat**: the feathers gather and beat once, a gust from the enemy that throws every other enemy near away and marks it.
+**What it does.** Feathered unlocks two new shapes for Golden Feathers. At a rest fire, you pick which shape your Golden Feathers uses. From then on, it uses that shape instead of the plain one. **Eagle's Sight**: no feathers fly. Instead, the eagle keeps its eye on the enemy, and your next dodge toward it carries you all the way in for a critical cut. **Wingbeat**: the feathers gather and beat once, making a gust out from the enemy that throws every other enemy nearby away and Marks them.
 
-**When it happens.** Every time Golden Feathers fires (a Mark landing on an Unsteady enemy, or Unsteady on a Marked one) while Light and Wind are both carried. Before this mark is bought, or with only one of the two carried, the plain Golden Feathers runs.
+**When it happens.** Every time Golden Feathers goes off while you carry both Light and Wind. Golden Feathers goes off when a Mark lands on an Unsteady enemy, or when Unsteady lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Golden Feathers.
 
-**The numbers.** Mix, 3 Shards. Eagle's Sight: for 4 seconds your next weapon blow on it is critical and cuts 10 more. Wingbeat: everything within 3 metres of it is thrown 3 metres away from it and Marked. Golden Feathers rests 4 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Eagle's Sight: for 4 seconds, your next weapon blow on the enemy is a critical hit and deals 10 more damage. Wingbeat: everything within 3 metres of the enemy is thrown 3 metres away from it and Marked. After Golden Feathers goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Bane of Serpents, Riding High, Wings Behind, Sweep of Wings.
 
-**Example.** One enemy you mean to reach: Eagle's Sight. Surrounded: Wingbeat, and the crowd is thrown back marked.
+**Example.** One enemy you want to reach: use Eagle's Sight. Surrounded: use Wingbeat, and the crowd is thrown back and Marked.
 
-**Not built yet.** Eagle's Sight does not yet carry your dodge to the enemy: the sight waits for your next weapon blow on it instead.
+**Not built yet.** Eagle's Sight doesn't carry your dodge to the enemy yet. For now, it waits for your next weapon blow on it instead.
 
 ## goldenfeathers.bane
-**What it does.** A feather that reaches an enemy already Marked strikes it for 12 and 20 stagger.
+**What it does.** A feather that reaches an enemy that is already Marked hits it for 12 damage and 20 stagger.
 
-**When it happens.** Each time Golden Feathers fires, while Light and Wind are both carried.
+**When it happens.** Each time Golden Feathers goes off, while you carry both Light and Wind.
 
-**The numbers.** Mix, 3 Shards. As built: three strikes on your line beyond the enemy, 1.4 metres apart and 0.7 round, each 12 damage and 20 stagger, at most once a second.
+**The numbers.** Mix, 3 Shards. For now: three hits in a line past the enemy, 1.4 metres apart, each 0.7 metres across. Each deals 12 damage and 20 stagger, at most once a second.
 
-**Works with.** Golden Feathers, Sweep of Wings (mark the pack first), Wings Behind.
+**Works with.** Golden Feathers, Sweep of Wings (Mark the pack first), Wings Behind.
 
-**Example.** Mark a pack, then set the feathers flying through it.
+**Example.** Mark a pack, then send the feathers flying through it.
 
-**Not built yet.** The feathers do not yet stop at the first enemy they touch, so it strikes everything on their line, Marked or not, and in whatever shape Golden Feathers wears.
+**Not built yet.** The feathers don't stop at the first enemy they touch yet. For now, they hit everything on their line, Marked or not, and with any shape of Golden Feathers.
 
 ## goldenfeathers.ridinghigh
-**What it does.** Golden Feathers' feathers fly 9 metres, four of them.
+**What it does.** Golden Feathers sends four feathers, and they fly up to 9 metres.
 
-**When it happens.** Each time Golden Feathers fires.
+**When it happens.** Each time Golden Feathers goes off.
 
-**The numbers.** Mix, a minor, 1 Shard. Four feathers fly, not three, and the farthest lands 9 metres beyond the enemy.
+**The numbers.** Mix, a minor mark, 1 Shard. Four feathers fly instead of three, and the farthest one lands 9 metres past the enemy.
 
 **Works with.** Golden Feathers, Bane of Serpents.
 
 **Example.** The feathers reach the back of the room.
 
 ## goldenfeathers.wingsbehind
-**What it does.** Every perfect dodge raises a half ring of golden feathers behind you that flies out 4 metres, Marking and laying Unsteady on what it reaches.
+**What it does.** Every perfect dodge raises a half ring of golden feathers behind you. It flies out 4 metres, adding a Mark and Unsteady to whatever it reaches.
 
-**When it happens.** Each perfect dodge, while Light and Wind are both carried.
+**When it happens.** Each perfect dodge, while you carry both Light and Wind.
 
-**The numbers.** Mix, keystone, 5 Shards. A Mark and an Unsteady on every enemy within 4 metres, at most every half second; laid together by a mark, they set Golden Feathers off on each.
+**The numbers.** Mix, keystone, 5 Shards. A Mark and an Unsteady on every enemy within 4 metres, at most once every half second. Since this mark adds both at once, it sets off Golden Feathers on each enemy.
 
 **Works with.** Golden Feathers, Bane of Serpents, Sweep of Wings.
 
-**Example.** Dodge through a pack at the last moment and every one of them throws feathers.
+**Example.** Dodge through a pack at the last moment, and every one of them throws feathers.
 
-**Not built yet.** The feathers reach all round you, not a half ring behind.
+**Not built yet.** For now, the feathers reach all around you, not just a half ring behind you.
 
 ## goldenfeathers.sweep
-**What it does.** A great wing of layered gold feathers sweeps from your side through 160 degrees, 6 metres out: 10, 25 stagger, a Mark and two Unsteady, and everything it strikes is thrown 3 metres along the sweep. For 3 seconds each weapon blow on an enemy it threw lays another Unsteady.
+**What it does.** A huge wing made of layers of gold feathers sweeps out from your side through 160 degrees, reaching 6 metres. It deals 10 damage, 25 stagger, a Mark and two Unsteady, and everything it hits is thrown 3 metres in the direction of the sweep. For 3 seconds after that, each weapon blow on an enemy it threw adds another Unsteady.
 
-**When it happens.** From a spell slot, while Light and Wind are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Light.
+**When it happens.** Cast it from a spell slot while you carry both Light and Wind. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Light.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. No mana: it waits 9 seconds after a cast, less with weapon play. A cone 6 metres long and 160 degrees wide: 10 damage, 25 stagger, a Mark, two Unsteady and a throw of 3 metres; then one Unsteady with each weapon blow on those it threw, for 3 seconds.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. It is a cone 6 metres long and 160 degrees wide. It deals 10 damage, 25 stagger, a Mark and two Unsteady, and throws enemies 3 metres. Then, for 3 seconds, each weapon blow on an enemy it threw adds one Unsteady.
 
-**Works with.** Golden Feathers (everything struck carries both), Bane of Serpents, Wings Behind.
+**Works with.** Golden Feathers (everything it hits gets both afflictions), Bane of Serpents, Wings Behind.
 
-**Example.** Open on a crowd: they are marked, shaken, and the feathers fly.
+**Example.** Start a fight with it on a crowd. They are Marked and knocked off balance, and the feathers fly.
 
-**Not built yet.** What it strikes is thrown straight away from you rather than sideways along the sweep.
+**Not built yet.** For now, the enemies it hits are thrown straight away from you, instead of sideways in the direction of the sweep.
