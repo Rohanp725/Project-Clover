@@ -1323,3 +1323,4 @@ Recommended option for Q1-Q8, Q10-Q22. The exceptions:
   - The Way's aspect and keystone are set on a Hand-like screen, possibly the same screen as the Hand.
   - It must be far more readable than the Hand is now.
 - **Q23 (Chiburi): (b).** A few dark drops flick onto the floor and fade in 1.5 s.
+- **Q24-Q42 (the other nine Ways):** the recommended option for every one except **Q27 (The Trade): (b).** The Massive Sword's highlight flashes red, bending the rule for this one sign.
