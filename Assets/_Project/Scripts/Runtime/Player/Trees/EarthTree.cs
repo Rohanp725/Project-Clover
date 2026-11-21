@@ -302,10 +302,11 @@ namespace Clover.Player.Trees
                 },
                 "Cast it while you stand your ground, Rooted or still for a second, and the stone rises under the enemy's own feet and throws it three metres away from you, two deep in Tremor, before it stands.");
 
-            // NEEDS: every reaction with Tremor in it striking 20% harder (reaction-stats), and the rubble standing as one of
-            // your stones that heavy blows drive enemies into (standing-things, thrown-into). The heap that bites is data.
+            // Every reaction with Tremor in it strikes 20% harder (PlayerStat.ReactionDamage). NEEDS: the rubble standing as one
+            // of your stones that heavy blows drive enemies into (standing-things, thrown-into). The heap that bites is data.
             to.Add(BranchPattern.Put(new Upgrade { Id = LeftInRubble, Name = "Left in Rubble", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { StandingStones }, Icon = UpgradeIcons.Rock,
-                Description = "Every reaction with Tremor in it leaves a knee-high heap of rubble where it happened. It stands six seconds and shakes whatever stands in it.",
+                Description = "Every reaction with Tremor in it strikes 20% harder and leaves a knee-high heap of rubble where it happened. It stands six seconds and shakes whatever stands in it.",
+                Stats = new[] { new StatMod(PlayerStat.ReactionDamage, 0.2f, T) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = T, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1f, Seconds = 6f, Interval = 1f, Damage = 3f, Stagger = 8f, Affliction = T, Stacks = 1 } } },
                 BranchPattern.RightMiddle));
 

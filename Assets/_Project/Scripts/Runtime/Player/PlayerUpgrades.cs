@@ -521,6 +521,14 @@ namespace Clover.Player
             return MarkRules.CanBuyInItsCurrency(upgrade, RunState.Unlocked, RunState.Points, null, Open(upgrade), PlaytestMode.On, null, 0);
         }
 
+        // What a reaction's own damage is multiplied by: 1 for an effect that is no reaction's (its plain mark or a duo shape).
+        private float ReactionScale(Upgrade owner)
+        {
+            if (owner == null) return 1f;
+            int pair = owner.Kind == UpgradeKind.Reaction ? ReactionTable.PairOf(owner.Id) : ReactionTable.IsReactionShape(owner) ? HeartLayout.PairOf(owner) : -1;
+            return pair < 0 ? 1f : Stats.ReactionMultiplier(PlayerStat.ReactionDamage, AfflictionPairs.First(pair), AfflictionPairs.Second(pair));
+        }
+
         /// <summary>How deep the kind lies on the one named, for an effect done by that depth (Night Sun); 0 for none or no one.</summary>
         public static int DepthOn(AfflictionKind kind, IAfflictable on) => on != null && kind != AfflictionKind.None ? on.Afflictions.Stacks(kind) : 0;
 
@@ -1434,6 +1442,9 @@ namespace Clover.Player
                 || (effect.Do == UpgradeAction.Hazard && effect.PerStack && effect.Shape != HazardShape.Patch);
             int spentHere = effect.DamagePerSpent > 0f ? counted : 0;
             float eDamage = (byCount ? effect.Damage : effect.Damage * per) + effect.DamagePerSpent * spentHere;
+            // A reaction's own blows, by the stat ReactionDamage (Fuel to It, Left in Rubble, Every Crack Rings).
+            float reactionScale = ReactionScale(effect.Owner);
+            eDamage *= reactionScale;
             // A reaction's blow on a ripe seed is stronger, on an unripe one softer (In Its Season).
             if (pending.Ripe > 0f) eDamage *= pending.Ripe;
             float eStagger = byCount ? effect.Stagger : effect.Stagger * per;
@@ -1743,7 +1754,7 @@ namespace Clover.Player
                     // A seed set off ripe bursts harder, unripe softer (In Its Season); read before it is spent.
                     bool ripeSeed = carrier.Afflictions.IsRipe(kind);
                     float ripeShare = carrier.Afflictions.RipeShare(kind);
-                    float damage = (carrier.Afflictions.SetOff(kind) + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage) * ripeShare;
+                    float damage = (carrier.Afflictions.SetOff(kind) * reactionScale + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage) * ripeShare;
                     if (ripeSeed) RipeBurstAt(subject, centre, depth);
                     combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0));
                     ElementLook.Strike(look, centre, 0.3f);

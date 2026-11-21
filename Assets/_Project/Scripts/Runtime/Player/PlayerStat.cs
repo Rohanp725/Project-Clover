@@ -158,5 +158,10 @@ namespace Clover.Player
         CooldownCut,
         /// <summary>Share: how fast the spell and strike clocks run out; 0.25 makes every wait a fifth shorter (it divides the wait by 1.25).</summary>
         SpellCooldown,
+        /// <summary>
+        /// Share: every reaction's own damage. Tied to an affliction (StatMod's against), only the reactions with that
+        /// affliction in them (Fuel to It: Burn 25%).
+        /// </summary>
+        ReactionDamage,
     }
 }

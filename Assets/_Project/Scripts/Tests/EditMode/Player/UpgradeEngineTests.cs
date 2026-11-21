@@ -1,5 +1,7 @@
+using System.Linq;
 using Clover.Gameplay;
 using Clover.Player;
+using Clover.Player.Trees;
 using NUnit.Framework;
 
 namespace Clover.Tests
@@ -321,6 +323,25 @@ namespace Clover.Tests
             Assert.AreEqual(8, heat.Level);
             heat.Tick(0.2f);
             Assert.AreEqual(7, heat.Level);
+        }
+
+        [Test]
+        public void AReactionsDamageIsRaisedByTheStatAndByWhatIsTiedToEitherOfItsAfflictions()
+        {
+            var stats = new PlayerStats();
+            Assert.AreEqual(1f, stats.ReactionMultiplier(PlayerStat.ReactionDamage, AfflictionKind.Burn, AfflictionKind.Chill), 1e-5f);
+            stats.AddLearned(new StatMod(PlayerStat.ReactionDamage, 0.25f, AfflictionKind.Burn));
+            stats.AddLearned(new StatMod(PlayerStat.ReactionDamage, 0.2f, AfflictionKind.Tremor));
+            Assert.AreEqual(1.25f, stats.ReactionMultiplier(PlayerStat.ReactionDamage, AfflictionKind.Burn, AfflictionKind.Chill), 1e-5f, "Fuel to It: Burn in it");
+            Assert.AreEqual(1.25f, stats.ReactionMultiplier(PlayerStat.ReactionDamage, AfflictionKind.Soaked, AfflictionKind.Burn), 1e-5f, "either side of the pair");
+            Assert.AreEqual(1.45f, stats.ReactionMultiplier(PlayerStat.ReactionDamage, AfflictionKind.Burn, AfflictionKind.Tremor), 1e-5f, "both");
+            Assert.AreEqual(1f, stats.ReactionMultiplier(PlayerStat.ReactionDamage, AfflictionKind.Soaked, AfflictionKind.Chill), 1e-5f, "neither");
+            stats.AddLearned(new StatMod(PlayerStat.ReactionDamage, 0.1f));
+            Assert.AreEqual(1.1f, stats.ReactionMultiplier(PlayerStat.ReactionDamage, AfflictionKind.Soaked, AfflictionKind.Chill), 1e-5f, "every reaction");
+
+            Assert.IsTrue(Upgrade.ById(FireTree.FuelToIt).Stats.Any(mod => mod.Stat == PlayerStat.ReactionDamage && mod.Against == AfflictionKind.Burn && System.Math.Abs(mod.Amount - 0.25f) < 1e-5f));
+            Assert.IsTrue(Upgrade.ById(EarthTree.LeftInRubble).Stats.Any(mod => mod.Stat == PlayerStat.ReactionDamage && mod.Against == AfflictionKind.Tremor && System.Math.Abs(mod.Amount - 0.2f) < 1e-5f));
+            Assert.IsTrue(Upgrade.ById(MetalTree.EveryCrackRings).Stats.Any(mod => mod.Stat == PlayerStat.ReactionDamage && mod.Against == AfflictionKind.Sundered && System.Math.Abs(mod.Amount - 0.25f) < 1e-5f));
         }
     }
 }

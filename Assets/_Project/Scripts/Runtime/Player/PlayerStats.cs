@@ -14,7 +14,7 @@ namespace Clover.Player
     /// </summary>
     public class PlayerStats
     {
-        public const int Count = (int)PlayerStat.SpellCooldown + 1;
+        public const int Count = (int)PlayerStat.ReactionDamage + 1;
         public const int WhenCount = (int)StatWhen.AirborneHeavyBlow + 1;
         /// <summary>How many timed boons can run at once; a new one past that takes the place of the one nearest its end.</summary>
         public const int BoonCapacity = 16;
@@ -129,6 +129,18 @@ namespace Clover.Player
             for (int i = 0; i < againstCount; i++)
                 if (against[i].Stat == stat && target.Has(against[i].Against)) sum += against[i].Amount;
             return sum;
+        }
+
+        /// <summary>
+        /// What multiplies a reaction's own damage for the pair <paramref name="first"/> and <paramref name="second"/>: the
+        /// stat's sum, and every learned change tied to either affliction (a reaction with it in it). Never below the least.
+        /// </summary>
+        public float ReactionMultiplier(PlayerStat stat, AfflictionKind first, AfflictionKind second)
+        {
+            float sum = Sum(stat);
+            for (int i = 0; i < againstCount; i++)
+                if (against[i].Stat == stat && (against[i].Against == first || against[i].Against == second)) sum += against[i].Amount;
+            return Math.Max(LeastMultiplier, 1f + sum);
         }
 
         public void ClearTally()

@@ -99,8 +99,9 @@ namespace Clover.Player.Trees
                 "Each spit that lands on an enemy already burning lays twice the Burn: the fire is fed.");
 
             to.Add(BranchPattern.Put(new Upgrade { Id = FuelToIt, Name = "Fuel to It", Element = E, Kind = UpgradeKind.Major, Lifts = E, Requires = new[] { Upgrade.Heat }, Icon = UpgradeIcons.Burst,
-                // NEEDS: the stat ReactionDamage (every reaction with Burn in it 25% harder). The ground burning is data.
-                Description = "Every reaction with Burn in it leaves the ground where it happened burning for three seconds.",
+                // Every reaction with Burn in it 25% harder (PlayerStat.ReactionDamage). The ground burning is data.
+                Description = "Every reaction with Burn in it strikes 25% harder and leaves the ground where it happened burning for three seconds.",
+                Stats = new[] { new StatMod(PlayerStat.ReactionDamage, 0.25f, AfflictionKind.Burn) },
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Burn, Do = UpgradeAction.Hazard, Shape = HazardShape.Patch, Radius = 1.5f, Seconds = 3f, Interval = 0.5f, Damage = 3f, Affliction = AfflictionKind.Burn, Stacks = 1 } } },
                 BranchPattern.MiddleCrown));
             // Built by hand in PlayerUpgrades (hasWhiteHeat).
