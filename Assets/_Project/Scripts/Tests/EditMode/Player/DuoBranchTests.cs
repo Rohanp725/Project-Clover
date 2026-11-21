@@ -193,7 +193,7 @@ namespace Clover.Tests
             Assert.AreEqual("Thundersnow", ReactionTable.WornShape(sleet, storm, learned).Name);
             SpellBranches.Choose(storm.Shapes, ReactionTable.ShapeKey(sleet), 1);
             var spear = ReactionTable.EffectsFor(sleet, storm, learned);
-            Assert.IsTrue(spear.Any(effect => effect.On == UpgradeTrigger.ConditionEnded && effect.Affliction == AfflictionKind.Chill && effect.Stacks >= Afflictions.Depth(AfflictionKind.Chill)),
+            Assert.IsTrue(spear.Any(effect => effect.On == UpgradeTrigger.ConditionEnded && effect.Do == UpgradeAction.Freeze),
                 "Glass Spear freezes as the charge ends");
             Assert.AreEqual(0, storm.ShapeOf(ReactionTable.ShapeKey(flashover)), "each reaction keeps its own choice");
         }

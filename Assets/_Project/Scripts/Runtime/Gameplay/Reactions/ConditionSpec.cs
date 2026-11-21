@@ -39,6 +39,12 @@ namespace Clover.Gameplay
         public float BiteScale = 1f;
         /// <summary>The harder bite only while the enemy is frozen (Cold Damage).</summary>
         public bool BitesHarderFrozen;
+        /// <summary>
+        /// While it runs, this affliction's bites are held back, not dealt; when nothing holds them any more every bite held
+        /// lands at once, <see cref="HeldScale"/> as hard (Burning Sap: poison held 3 s, then landed doubled).
+        /// </summary>
+        public AfflictionKind HoldsBites = AfflictionKind.None;
+        public float HeldScale = 1f;
         public int DeepensBy;
         /// <summary>It lasts only while the enemy carries this (and <see cref="While2"/>): once one is gone it ends, and its end is told ("while both last").</summary>
         public AfflictionKind While = AfflictionKind.None;

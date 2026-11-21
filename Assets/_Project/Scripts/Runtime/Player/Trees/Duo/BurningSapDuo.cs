@@ -26,8 +26,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Light, B = Elements.Poison;
 
-            // NEEDS: poison held back (as the plain reaction); a laying that reaches only the poisoned (The Light Finds Them;
-            // now every enemy within 8 m is Marked); weals raised only by critical blows (Blistered; now by every weapon blow).
+            // The poison held back and landed doubled, as the plain reaction (ConditionSpec.HoldsBites).
+            // NEEDS: a laying that reaches only the poisoned (The Light Finds Them; now every enemy within 8 m is Marked);
+            // weals raised only by critical blows (Blistered; now by every weapon blow).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Burning Sap: The Light Finds Them or Blistered", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -37,24 +38,22 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "The Light Finds Them",
-                        Description = "The sap wakes as before for 3 s, and the enemies within 8 m are Marked as well, their veins lit across the room. At the end the poison bites, and each weal bursts, two doses on all within 2.5 m.",
+                        Description = "The sap wakes as before for 3 s, and the enemies within 8 m are Marked as well, their veins lit across the room. At the end every bite the poison held back lands at once, doubled, and each weal bursts, two doses on all within 2.5 m.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Found, Seconds = 3f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Found, Seconds = 3f, HoldsBites = AfflictionKind.Poison, HeldScale = 2f } },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Radius = 8f, Affliction = AfflictionKind.Marked, Stacks = 1 },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Found, Do = UpgradeAction.Bite },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Found, SpentAtLeast = 1, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Poison, Stacks = 2, PerStack = true },
                         },
                     },
                     new ShapeDef
                     {
                         Name = "Blistered",
-                        Description = "The weals do not wait for the end: each of your weapon blows in the 3 s raises one that bursts at once, two doses on every enemy within 2.5 m. At the end the poison bites.",
+                        Description = "The weals do not wait for the end: each of your weapon blows in the 3 s raises one that bursts at once, two doses on every enemy within 2.5 m. At the end every bite the poison held back lands at once, doubled.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Blistered, Seconds = 3f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Blistered, Seconds = 3f, HoldsBites = AfflictionKind.Poison, HeldScale = 2f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Blistered, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Poison, Stacks = 2, Cooldown = 0.2f },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Blistered, Do = UpgradeAction.Bite },
                         },
                     },
                 },
@@ -82,13 +81,12 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a held bite's own strength (poison-held): the held bites 15% harder; now one
-            // more dose as Burning Sap fires.
+            // The held bites land 15% harder (AfflictionRules.HeldBitesStronger).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = BrightVenom, Name = "Bright Venom", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SeenThrough }, Icon = UpgradeIcons.Drop,
                 Description = "The held bites strike 15% harder when they land.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Poison, Stacks = 1 } },
+                Rules = book => book.Afflictions.HeldBitesStronger(0.15f),
             }, HeartPattern.RightHigh));
 
             // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 13 s cooldown (SpellTimings). The field form lays a patch at the aim

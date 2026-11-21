@@ -24,6 +24,7 @@ namespace Clover.Gameplay
         private readonly int[] slowerWhile = new int[Afflictions.Count];
         private readonly float[] slowerPace = new float[Afflictions.Count];
         private int freezeLongerWith;
+        private float heldStronger;
         private float freezeLongerBy = 1f;
 
         /// <summary>False while every affliction behaves as written: the sets then skip every rule here with one test.</summary>
@@ -43,6 +44,9 @@ namespace Clover.Gameplay
 
         /// <summary>How much longer a freeze lasts on an enemy carrying <paramref name="carried"/>: 1 as written (Winter in the Bones: twice on the shaken).</summary>
         public float FreezeScale(int carried) => (freezeLongerWith & carried) != 0 ? freezeLongerBy : 1f;
+
+        /// <summary>The share by which held bites land harder when let go (Bright Venom: 0.15); 0 as written.</summary>
+        public float HeldStronger => heldStronger;
 
         /// <summary>True when the kind is not spent by weapon blows (a mark of light): it lasts its time instead.</summary>
         public bool Unspent(AfflictionKind kind) => (unspent & Bit(kind)) != 0;
@@ -117,6 +121,14 @@ namespace Clover.Gameplay
             Any = true;
         }
 
+        /// <summary>Held bites land <paramref name="share"/> harder when they are let go (Bright Venom).</summary>
+        public void HeldBitesStronger(float share)
+        {
+            if (share <= 0f) return;
+            heldStronger += share;
+            Any = true;
+        }
+
         /// <summary>The kind is not spent by weapon blows.</summary>
         public void NotSpentByBlows(AfflictionKind kind)
         {
@@ -158,6 +170,7 @@ namespace Clover.Gameplay
             Array.Clear(slowerPace, 0, slowerPace.Length);
             freezeLongerWith = 0;
             freezeLongerBy = 1f;
+            heldStronger = 0f;
             Any = false;
         }
 
@@ -182,6 +195,7 @@ namespace Clover.Gameplay
             Array.Copy(other.slowerPace, slowerPace, slowerPace.Length);
             freezeLongerWith = other.freezeLongerWith;
             freezeLongerBy = other.freezeLongerBy;
+            heldStronger = other.heldStronger;
             Any = other.Any;
         }
 

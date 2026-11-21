@@ -35,6 +35,9 @@ namespace Clover.Gameplay
         public int BiteMask;
         public float BiteScale;
         public bool BiteFrozen;
+        /// <summary>The affliction whose bites it holds back, as a bit, and how hard they land when let go.</summary>
+        public int HoldMask;
+        public float HeldScale;
         public int DeepBy;
         public int WhileMask;
         public bool OnBite;

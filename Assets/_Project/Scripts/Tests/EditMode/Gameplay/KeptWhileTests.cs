@@ -304,6 +304,52 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void HeldBitesLandAllAtOnceDoubledWhenTheHoldEnds()
+        {
+            var held = NewEnemy();
+            var plain = NewEnemy();
+            held.Lay(AfflictionKind.Poison, 3, 30f, 1f, LaySource.Spell);
+            plain.Lay(AfflictionKind.Poison, 3, 30f, 1f, LaySource.Spell);
+            held.Conditions.Set(new ConditionSpec { Id = "test.sap", Seconds = 3f, HoldsBites = AfflictionKind.Poison, HeldScale = 2f }, null, 1);
+            float during = Damage(held, 2.9f), plainDuring = Damage(plain, 2.9f);
+            Assert.Greater(plainDuring, 0f);
+            Assert.AreEqual(0f, during, 1e-5f, "nothing bites while it is held");
+            Assert.Greater(held.HeldBite, 0f);
+            float landed = Damage(held, 0.3f);
+            Assert.AreEqual(0f, held.HeldBite, 1e-5f, "all of it let go");
+            Assert.GreaterOrEqual(landed, plainDuring * 2f - 1e-3f, "every held bite lands at once, doubled");
+
+            Afflictions.Rules.HeldBitesStronger(0.15f);
+            var bright = NewEnemy();
+            bright.Lay(AfflictionKind.Poison, 3, 30f, 1f, LaySource.Spell);
+            bright.Conditions.Set(new ConditionSpec { Id = "test.sap", Seconds = 3f, HoldsBites = AfflictionKind.Poison, HeldScale = 2f }, null, 1);
+            Damage(bright, 2.5f);
+            float heldBefore = bright.HeldBite;
+            for (int i = 0; i < 20 && bright.HeldBite > 0f; i++)
+            {
+                heldBefore = bright.HeldBite;
+                bright.Tick(Frame);
+            }
+            Assert.AreEqual(heldBefore * 2f * 1.15f, bright.BitDamage, 1e-3f, "Bright Venom: 15% harder");
+        }
+
+        [Test]
+        public void BurningSapAndItsShapesHoldThePoisonAndBrightVenomStrengthensIt()
+        {
+            var all = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))
+                .Where(effect => effect.State != null).ToList();
+            foreach (var id in new[] { Clover.Player.Trees.Reactions.SapWaits, BurningSapDuo.Found, BurningSapDuo.Blistered })
+            {
+                var spec = all.First(effect => effect.State.Id == id).State;
+                Assert.AreEqual(AfflictionKind.Poison, spec.HoldsBites, id);
+                Assert.AreEqual(2f, spec.HeldScale, 1e-5f, id);
+            }
+            var book = new RuleBook();
+            Assert.IsTrue(book.Apply(Upgrade.ById(BurningSapDuo.BrightVenom)));
+            Assert.AreEqual(0.15f, book.Afflictions.HeldStronger, 1e-5f);
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))

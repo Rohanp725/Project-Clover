@@ -64,6 +64,22 @@ namespace Clover.Gameplay
             return scale;
         }
 
+        /// <summary>True while a condition running holds the kind's bites back; <paramref name="scale"/> is how hard they land when let go (the most any asks).</summary>
+        public bool HoldsBite(AfflictionKind kind, out float scale)
+        {
+            int bit = Bit(kind);
+            scale = 1f;
+            bool held = false;
+            if (bit == 0) return false;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && (runs[i].HoldMask & bit) != 0)
+                {
+                    held = true;
+                    scale = Math.Max(scale, runs[i].HeldScale);
+                }
+            return held;
+        }
+
         /// <summary>How much deeper than its usual depth the kind may lie while the conditions running allow it (the most any one allows).</summary>
         public int DeeperBy(AfflictionKind kind)
         {
@@ -131,6 +147,8 @@ namespace Clover.Gameplay
             run.BiteMask = spec.BiteScale > 0f && spec.BiteScale != 1f ? Bit(spec.BitesHarder) : 0;
             run.BiteScale = spec.BiteScale;
             run.BiteFrozen = spec.BitesHarderFrozen;
+            run.HoldMask = Bit(spec.HoldsBites);
+            run.HeldScale = Math.Max(1f, spec.HeldScale);
             run.DeepBy = Math.Max(0, spec.DeepensBy);
             run.WhileMask = Bit(spec.While) | Bit(spec.While2);
             run.OnBite = spec.OnBite;

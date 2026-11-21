@@ -117,6 +117,12 @@ namespace Clover.Gameplay
         // which can be lit or put out from outside, so its bit is read from it live (see PresentMask).
         private int present;
         private int keptForGood;
+        // Poison bites held back by a condition (Burning Sap), and how hard they land when it lets go.
+        private float heldBite;
+        private float heldScale = 1f;
+
+        /// <summary>The poison damage held back now, waiting to land at once (Burning Sap).</summary>
+        public float HeldBite => heldBite;
         // Seconds until each of the 55 pairs may react on this one again, and the longest of them, so a step with
         // nothing resting costs one comparison.
         private readonly float[] reactionRest = new float[AfflictionPairs.Count];
@@ -234,6 +240,8 @@ namespace Clover.Gameplay
             owedSeconds = 0f;
             present = 0;
             keptForGood = 0;
+            heldBite = 0f;
+            heldScale = 1f;
             Conditions.Clear();
             Tally.Clear();
             Array.Clear(reactionRest, 0, reactionRest.Length);
@@ -538,6 +546,16 @@ namespace Clover.Gameplay
                 if (FrozenLeft <= 0f) End((int)AfflictionKind.Chill);
             }
             if (BrittleLeft > 0f) BrittleLeft = Math.Max(0f, BrittleLeft - deltaTime);
+            // Held bites land at once, at their hold's strength, once no condition holds them (Burning Sap).
+            if (heldBite > 0f && !Conditions.HoldsBite(AfflictionKind.Poison, out _))
+            {
+                float landed = heldBite * heldScale * (1f + (Afflictions.Rules.Any ? Afflictions.Rules.HeldStronger : 0f));
+                heldBite = 0f;
+                heldScale = 1f;
+                damage += landed;
+                BitDamage = landed;
+                BitThisTick = true;
+            }
             for (int i = 2; i < stacks.Length; i++)
             {
                 if (stacks[i] <= 0) continue;
@@ -569,6 +587,13 @@ namespace Clover.Gameplay
                         // Made to bite out of turn: its own beat goes on as it was.
                         bites = true;
                         biteOwed = false;
+                    }
+                    if (bites && poison && Conditions.HoldsBite(AfflictionKind.Poison, out float holdScale))
+                    {
+                        // Held back: counted, not dealt, and no bite is told until the hold lets go.
+                        heldBite += spec.DamagePerTick * stacks[i] * strength[i] * Conditions.BiteScale((AfflictionKind)i, IsFrozen);
+                        heldScale = Math.Max(heldScale, holdScale);
+                        bites = false;
                     }
                     if (bites)
                     {

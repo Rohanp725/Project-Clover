@@ -239,13 +239,12 @@ namespace Clover.Player.Trees
             // Light and Poison (20), rest 6 s. The sun wakes the sap for 3 s; each weapon blow in that time (each is
             // critical while the Mark lasts) raises a weal. At the end the poison bites at once, and each weal bursts,
             // two doses on every enemy within 2.5 m.
-            // NEEDS: poison held back: for the 3 s it stops biting, and at the end every bite it held back lands at once,
+            // For the 3 s its poison is held back (ConditionSpec.HoldsBites), and at the end every bite it held lands at once,
             // doubled.
             to.Add(Reaction(AfflictionKind.Marked, AfflictionKind.Poison,
-                "Marked meets Poisoned: the sun wakes the sap for 3 s. Each of your blows on it raises a weal; then the poison bites and each weal bursts, two doses to all within 2.5 m.",
+                "Marked meets Poisoned: the sun wakes the sap for 3 s and holds its poison back. Each of your blows on it raises a weal; then every held bite lands at once, doubled, and each weal bursts, two doses to all within 2.5 m.",
                 new ReactionDef { Rest = 6f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SapWaits, Seconds = 3f } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SapWaits, Do = UpgradeAction.Bite },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = SapWaits, Seconds = 3f, HoldsBites = AfflictionKind.Poison, HeldScale = 2f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = SapWaits, SpentAtLeast = 1, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Poison,
                     Stacks = 2, PerStack = true }));
 
