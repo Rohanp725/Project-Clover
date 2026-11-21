@@ -108,7 +108,8 @@ public class SwingLookProbeRunner : MonoBehaviour
     // ring emitters (Ring, TintRing) with their place and colour, and element looks begun (their key and body). Written
     // to <clip>/rings.txt.
     private readonly StringBuilder ringLog = new StringBuilder();
-    private ParticleSystem[] ringEmitters;
+    private ParticleSystem[] ringEmitters, allEmitters;
+    private readonly HashSet<Enemy> staggeredWas = new HashSet<Enemy>();
     private readonly int[] ringCounts = new int[2];
     private readonly ParticleSystem.Particle[] ringParticles = new ParticleSystem.Particle[256];
     private readonly HashSet<int> stampsSeen = new HashSet<int>();
@@ -121,7 +122,34 @@ public class SwingLookProbeRunner : MonoBehaviour
             var all = vfx != null ? (ParticleSystem[])typeof(Vfx).GetField("emitters", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(vfx) : null;
             if (all == null) return;
             ringEmitters = new[] { all[(int)VfxKind.Ring], all[(int)VfxKind.TintRing] };
+            allEmitters = all;
         }
+        // Every effect thrown this frame by kind, with its colour and place, to trace a flash to its source.
+        for (int e = 0; allEmitters != null && e < allEmitters.Length; e++)
+        {
+            var emitter = allEmitters[e];
+            if (emitter == null || e == (int)VfxKind.Ring || e == (int)VfxKind.TintRing) continue;
+            int count = emitter.GetParticles(ringParticles);
+            int born = 0;
+            Color first = Color.clear;
+            Vector3 where = Vector3.zero;
+            for (int q = 0; q < count; q++)
+            {
+                if (ringParticles[q].startLifetime - ringParticles[q].remainingLifetime > Time.deltaTime * 1.5f) continue;
+                if (born++ == 0)
+                {
+                    first = ringParticles[q].startColor;
+                    where = ringParticles[q].position - (player != null ? player.transform.position : Vector3.zero);
+                }
+            }
+            if (born > 0) ringLog.AppendLine($"f{frame} vfx {(VfxKind)e} x{born} at {where} from player, colour {first.r:0.00},{first.g:0.00},{first.b:0.00}");
+        }
+        foreach (var soldier in soldiers)
+            if (soldier != null && soldier.IsStaggered != staggeredWas.Contains(soldier))
+            {
+                if (soldier.IsStaggered) staggeredWas.Add(soldier); else staggeredWas.Remove(soldier);
+                ringLog.AppendLine($"f{frame} finish mark {(soldier.IsStaggered ? "shown" : "hidden")} on {soldier.Kind.Name} at {soldier.transform.position - player.transform.position} from player");
+            }
         for (int e = 0; e < ringEmitters.Length; e++)
         {
             var emitter = ringEmitters[e];
@@ -146,7 +174,7 @@ public class SwingLookProbeRunner : MonoBehaviour
             int stamp = (int)type.GetField("Stamp").GetValue(one);
             if (!stampsSeen.Add(stamp)) continue;
             var body = (Transform)type.GetField("Body").GetValue(one);
-            ringLog.AppendLine($"f{frame} look {set.Looks[(int)type.GetField("Look").GetValue(one)].Key} on {(body != null ? body.name : "the ground")}");
+            ringLog.AppendLine($"f{frame} look {set.Looks[(int)type.GetField("Look").GetValue(one)].Key} on {(body != null ? body.name : "the ground")}, swept {(trails != null ? trails.Swept : 0f):0} degrees, mirrored {((Vector3)type.GetField("Mirror").GetValue(one)).sqrMagnitude > 0.5f}");
         }
     }
     private RectInt window;
@@ -639,6 +667,21 @@ public class SwingLookProbeRunner : MonoBehaviour
         yield return Real(0.6f);
     }
 
+    private void Regroup(Vector3 standAt)
+    {
+        player.Teleport(standAt, Quaternion.identity);
+        foreach (var soldier in soldiers)
+        {
+            if (soldier == null || soldier.IsDead) continue;
+            var spot = (Vector3)HomeField.GetValue(soldier);
+            var turn = HomeTurnField != null ? (Quaternion)HomeTurnField.GetValue(soldier) : soldier.transform.rotation;
+            var controller = soldier.GetComponent<CharacterController>();
+            if (controller != null) controller.enabled = false;
+            soldier.transform.SetPositionAndRotation(spot, turn);
+            if (controller != null) controller.enabled = true;
+        }
+    }
+
     private IEnumerator Film(ElementInfo info, string weaponName, string tag, float stand, int order, Clip clip)
     {
         string name = info.Name.ToLowerInvariant();
@@ -694,6 +737,11 @@ public class SwingLookProbeRunner : MonoBehaviour
         yield return Until(() => !combat.IsAttacking, 40);
         combat.Blade.Clear();
         yield return Frames(6);
+        // The chain's blows push the soldiers off and the lunges carry the player on: the strike whiffed on the Massive
+        // Sword and the bow (the films of 2026-11-21), and Dark and Poison draw nothing on a miss. Everyone is stood back
+        // on their spots, afflictions and stagger kept, so the strike lands on the group.
+        if (!alone) Regroup(standAt);
+        yield return Frames(2);
 
         // The infused strike: the carrier swung with the element on it.
         Set(pad.leftTrigger, 1f);

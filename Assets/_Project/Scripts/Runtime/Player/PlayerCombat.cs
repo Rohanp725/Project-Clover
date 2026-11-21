@@ -177,6 +177,14 @@ namespace Clover.Player
         /// <summary>What a heavy blow's star is lit to under an element: its material glows six times past white.</summary>
         public const float ImpactGlow = 0.22f;
 
+        /// <summary>
+        /// A critical blow's gold, and what its star and its spray of sparks are lit to: both are drawn added on top of
+        /// each other, so lower than a heavy blow's single star, or where they cross they still burn pure white (Light's
+        /// films of 2026-11-21: at 0.22 and 0.35 a Marked group still showed 11,000 white pixels).
+        /// </summary>
+        public static readonly Color CriticalGold = new Color(1f, 0.72f, 0.2f);
+        public const float CriticalGlow = 0.12f, CriticalSparkGlow = 0.15f;
+
         public Color StruckTint
         {
             get
@@ -1886,8 +1894,11 @@ namespace Clover.Player
                     {
                         // The sign of a critical blow: a gold star with long points where it lands. A stored charge shows the same.
                         if (critical) Criticals++;
-                        Vfx.Play(VfxKind.Critical, other.bounds.center);
-                        Vfx.Play(VfxKind.TintSpark, other.bounds.center, transform.forward, 1.6f, new Color(1f, 0.85f, 0.35f));
+                        // Held below white, as the heavy blow's star is: thrown untinted it lit a pure-white starburst on
+                        // every Marked enemy an infused strike reached (Light's swing films of 2026-11-21, a mark of light
+                        // making each blow critical). The star keeps its gold.
+                        Vfx.Play(VfxKind.Critical, other.bounds.center, Vector3.up, 1f, StruckLook.Glow(CriticalGold, CriticalGlow));
+                        Vfx.Play(VfxKind.TintSpark, other.bounds.center, transform.forward, 1.6f, StruckLook.Glow(CriticalGold, CriticalSparkGlow));
                     }
                     if (afflictable != null)
                     {

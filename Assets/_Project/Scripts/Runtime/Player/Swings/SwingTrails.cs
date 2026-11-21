@@ -46,6 +46,12 @@ namespace Clover.Player.Swings
         public int SheathsShown { get; private set; }
         public int ThornsHeld { get; private set; }
         public int SourcesActive { get; private set; }
+        /// <summary>
+        /// Degrees the fastest blade tip has swept round the player since this move began, seen from above: positive
+        /// clockwise (left to right across the front), negative the other way. A strike's look is mirrored by it so its
+        /// glare, glint and stones run with the blade whichever way a weapon swings.
+        /// </summary>
+        public float Swept { get; private set; }
         public int SourcesFitted { get; private set; }
         public int SourcesTotal => sourceCount;
         public bool Ready => baseMaterial != null;
@@ -442,6 +448,7 @@ namespace Clover.Player.Swings
                 // A new move: the last one's trails live out their time, and this one starts its own.
                 StopAll(now);
                 lastStep = step;
+                Swept = 0f;
                 groundDone = false;
                 landedThisSwing = 0;
                 swingElement = step != null ? combat.SwingElement : null;
@@ -496,6 +503,7 @@ namespace Clover.Player.Swings
         private void Gather(Weapon weapon, float now, float deltaTime)
         {
             activeCount = 0;
+            float fastest = 0f, turned = 0f;
             for (int i = 0; i < sourceCount; i++)
             {
                 ref var source = ref sources[i];
@@ -512,6 +520,15 @@ namespace Clover.Player.Swings
                     Vector3 moved = tip - source.LastTip;
                     source.Speed = moved.magnitude / deltaTime;
                     if (moved.sqrMagnitude > 1e-8f) source.Way = moved.normalized;
+                    if (source.Speed > fastest)
+                    {
+                        // How far round the player this tip went since the last frame (the fastest one speaks for the swing).
+                        fastest = source.Speed;
+                        Vector3 from = source.LastTip - transform.position, to = tip - transform.position;
+                        from.y = 0f;
+                        to.y = 0f;
+                        turned = from.sqrMagnitude > 0.09f && to.sqrMagnitude > 0.09f ? Vector3.SignedAngle(from, to, Vector3.up) : 0f;
+                    }
                 }
                 else if (!source.HasLast)
                 {
@@ -532,6 +549,7 @@ namespace Clover.Player.Swings
                 active[activeCount++] = RestSlot;
             }
             SourcesActive = activeCount;
+            Swept += turned;
         }
 
         // A part with no blade line: the longest axis of its biggest piece, the end nearer the hand its base.

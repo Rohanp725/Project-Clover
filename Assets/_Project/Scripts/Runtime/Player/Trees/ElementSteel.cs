@@ -367,7 +367,9 @@ namespace Clover.Player
             if (art)
             {
                 int count = combat.CopyLastStruck(out var lastStruck);
-                StrikeArt.Play(element, print, first, lastStruck, count);
+                // Which way the blade went round: the strike's look runs with it (a strike lands once in eight seconds).
+                var trails = combat.GetComponent<Clover.Player.Swings.SwingTrails>();
+                StrikeArt.Play(element, print, first, lastStruck, count, trails != null ? trails.Swept : 0f);
             }
         }
 

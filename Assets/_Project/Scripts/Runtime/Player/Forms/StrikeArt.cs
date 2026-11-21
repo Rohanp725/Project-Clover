@@ -29,8 +29,12 @@ namespace Clover.Player.Forms
         private static readonly Color FireOrange = new Color(1f, 0.34f, 0.04f);
         private static readonly Color FireRed = new Color(0.85f, 0.16f, 0.04f);
 
-        /// <summary>Draws an element's strike. <paramref name="struck"/> holds the bodies it struck (the first <paramref name="count"/>). False when the new effects are off.</summary>
-        public static bool Play(ElementInfo element, in Footprint print, Component first, Component[] struck, int count)
+        /// <summary>
+        /// Draws an element's strike. <paramref name="struck"/> holds the bodies it struck (the first <paramref name="count"/>);
+        /// <paramref name="swept"/> is how far round the blade went, seen from above (positive clockwise), so a redrawn strike
+        /// runs with it. False when the new effects are off.
+        /// </summary>
+        public static bool Play(ElementInfo element, in Footprint print, Component first, Component[] struck, int count, float swept = 0f)
         {
             if (!ElementArt.Ready || element == null) return false;
             Played++;
@@ -47,7 +51,7 @@ namespace Clover.Player.Forms
             // the cut's arc, a steel glint and shards off each one struck, a warm glare line from the cut flaring on each
             // one struck; their arcs fitted to an arc's or ring's reach (a lane or a shot keeps the recipe's).
             float arcReach = print.Shape == FootprintShape.Arc || print.Shape == FootprintShape.Ring ? print.Reach : 0f;
-            if (ElementMoves.PlayStrike(element.Index, Ground(print.Origin) - Vector3.up * 0.05f, forward, struck, count, arcReach)) return true;
+            if (ElementMoves.PlayStrike(element.Index, Ground(print.Origin) - Vector3.up * 0.05f, forward, struck, count, arcReach, ElementMoves.Mirrors(swept))) return true;
             switch (element.Index)
             {
                 case ElementSubstance.Fire:

@@ -44,6 +44,11 @@ namespace Clover.Player.Forms
             /// <summary>How the look is turned about its anchor, and its size (a strike's look turned to the strike's way and reach).</summary>
             public Quaternion Turn;
             public float Size;
+            /// <summary>
+            /// The side of the look's own line, in its own frame, it is mirrored across (a strike drawn for a cut the other
+            /// way round); zero when it is drawn as made.
+            /// </summary>
+            public Vector3 Mirror;
             /// <summary>A reaction's look (played by <see cref="PlayReaction"/>): Marked's sun-wheel waits while it plays near.</summary>
             public bool Reaction;
             /// <summary>How much taller the body is than the recipe's stand-in (<see cref="StandIn"/>): the look is fitted to it.</summary>
@@ -469,14 +474,28 @@ namespace Clover.Player.Forms
         }
 
         /// <summary>Plays a look once on a body, turned to <paramref name="yaw"/> degrees as <see cref="PlayAt"/> turns it.</summary>
-        public static bool Play(int look, Transform body, float yaw)
+        public static bool Play(int look, Transform body, float yaw) => Play(look, body, yaw, false);
+
+        /// <summary>The same, mirrored across the look's own line when <paramref name="mirror"/> (<see cref="MirrorOf"/>).</summary>
+        public static bool Play(int look, Transform body, float yaw, bool mirror)
         {
             if (!Ready || body == null || look < 0 || look >= instance.set.Looks.Length) return false;
             int showing = instance.Begin(look, body);
             if (showing < 0) return false;
             instance.showings[showing].Once = true;
             instance.showings[showing].Turn = Quaternion.Euler(0f, yaw - instance.set.Looks[look].FacingYaw, 0f);
+            instance.showings[showing].Mirror = mirror ? MirrorOf(instance.set.Looks[look].FacingYaw) : Vector3.zero;
             return true;
+        }
+
+        /// <summary>
+        /// The side a look is mirrored across, in its own frame: square to the way its recipe's player faced, so the look
+        /// is reflected about the vertical plane down that line (a cut from the right drawn as one from the left).
+        /// </summary>
+        public static Vector3 MirrorOf(float facingYaw)
+        {
+            float radians = facingYaw * Mathf.Deg2Rad;
+            return new Vector3(Mathf.Cos(radians), 0f, -Mathf.Sin(radians));
         }
 
         // Bodies whose afflictions' looks are hidden while a reaction's own look plays on them: the body, the kinds, until when.
@@ -623,6 +642,14 @@ namespace Clover.Player.Forms
         /// as large (a strike's look fitted to its reach). False when it cannot be shown.
         /// </summary>
         public static bool PlayAt(int look, Vector3 at, float yaw, float size = 1f) => Held(look, at, yaw, size, 0f) >= 0;
+
+        /// <summary>The same, mirrored across the look's own line when <paramref name="mirror"/> (<see cref="MirrorOf"/>).</summary>
+        public static bool PlayAt(int look, Vector3 at, float yaw, float size, bool mirror)
+        {
+            if (!PlayAtShowing(look, at, yaw, size, out int showing)) return false;
+            if (mirror) instance.showings[showing].Mirror = MirrorOf(instance.set.Looks[look].FacingYaw);
+            return true;
+        }
 
         /// <summary>
         /// Plays a look once where it stands, as <see cref="PlayAt"/>, kept at least <paramref name="keep"/> seconds (its
@@ -869,7 +896,7 @@ namespace Clover.Player.Forms
                     float angleTime = part.RunsOn ? one.Age : t;
                     // (Not what rises under it from the floor: the anvil and the ice are what lift it.)
                     Vector3 anchor = !part.Follows ? one.Ground : raised > 0f && onBody[look.FirstPart + k] && part.Position.y > RaisedFrom ? feet + Vector3.up * raised : feet;
-                    Pose(part, look.FirstPart + k, flamesGoneBy[one.Look], t, angleTime, anchor, one.Turn, one.Size, one.Tall, one.Girth, shrink, blow, slot, at[pooled]);
+                    Pose(part, look.FirstPart + k, flamesGoneBy[one.Look], t, angleTime, anchor, one.Turn, one.Size, one.Mirror, one.Tall, one.Girth, shrink, blow, slot, at[pooled]);
                     if (part.Kind == ElementLookSet.Ribbon) Draw(part, t, pooled);
                     if (!shown[pooled].enabled) shown[pooled].enabled = true;
                 }
@@ -890,7 +917,7 @@ namespace Clover.Player.Forms
             blocked[pooled] = true;
         }
 
-        private void Pose(in ElementLookSet.Part part, int index, float goneBy, float t, float angleTime, Vector3 anchor, Quaternion turn, float size, float tall, int girth, float shrink, float blow, int slot, Transform frame)
+        private void Pose(in ElementLookSet.Part part, int index, float goneBy, float t, float angleTime, Vector3 anchor, Quaternion turn, float size, Vector3 mirror, float tall, int girth, float shrink, float blow, int slot, Transform frame)
         {
             set.LocalPose(part, t, angleTime, slot, out Vector3 position, out Quaternion rotation, out Vector3 scale);
             if (runStretch[index] > 0f)
@@ -915,6 +942,17 @@ namespace Clover.Player.Forms
             if (onBody[index] && girth >= 0) FitOnBody(part, tall, girth, ref position, out stretch);
             else if (tall > 1.001f) Fit(part, tall, ref position, out stretch);
             if (part.Kind == ElementLookSet.Flat) position.y += FlatLift;
+            if (mirror.sqrMagnitude > 0.5f)
+            {
+                // Reflected across the plane down the look's line: its place, and its turn as a turn and a flip of its own
+                // x (the renderer draws a flipped mesh's faces the right way out).
+                position -= 2f * Vector3.Dot(position, mirror) * mirror;
+                Vector3 ahead = rotation * Vector3.forward, up = rotation * Vector3.up;
+                ahead -= 2f * Vector3.Dot(ahead, mirror) * mirror;
+                up -= 2f * Vector3.Dot(up, mirror) * mirror;
+                rotation = Quaternion.LookRotation(ahead, up);
+                stretch.x = -stretch.x;
+            }
             Vector3 placed = anchor + turn * (position * size);
             if (part.Facing != 0f) placed += towardCamera * part.Facing;
             frame.SetPositionAndRotation(placed, turn * rotation);

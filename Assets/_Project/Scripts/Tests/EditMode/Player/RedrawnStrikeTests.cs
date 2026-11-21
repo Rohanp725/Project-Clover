@@ -86,6 +86,24 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void AStrikeIsMirroredToRunWithABladeSweptTheOtherWay()
+        {
+            // The recipe cut right to left (anticlockwise from above): a cut left to right is drawn mirrored; a thrust,
+            // a shot or a drop that barely turns is drawn as made.
+            Assert.IsTrue(ElementMoves.Mirrors(170f));
+            Assert.IsFalse(ElementMoves.Mirrors(-170f));
+            Assert.IsFalse(ElementMoves.Mirrors(ElementMoves.SweepTrusted * 0.5f));
+            foreach (float facing in new[] { -140f, 0f, 90f })
+            {
+                var side = ElementLooks.MirrorOf(facing);
+                var ahead = Quaternion.Euler(0f, facing, 0f) * Vector3.forward;
+                Assert.AreEqual(0f, Vector3.Dot(side, ahead), 1e-5f, "the mirror plane runs down the look's own line");
+                Assert.AreEqual(1f, side.magnitude, 1e-5f);
+                Assert.AreEqual(0f, side.y, 1e-5f);
+            }
+        }
+
+        [Test]
         public void EarthsStonesRiseOnTheArcAndLiftWhatTheyReach()
         {
             var set = Built();

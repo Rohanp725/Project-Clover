@@ -135,24 +135,42 @@ namespace Clover.Player.Forms
         /// The same, a redrawn strike's arc fitted to the weapon's <paramref name="reach"/> (metres; 0 keeps the recipe's):
         /// its stones and glare follow the weapon's own tip, a Massive Sword's further out than a Katana's.
         /// </summary>
-        public static bool PlayStrike(int element, Vector3 feet, Vector3 forward, Component[] struck, int count, float reach)
+        public static bool PlayStrike(int element, Vector3 feet, Vector3 forward, Component[] struck, int count, float reach) =>
+            PlayStrike(element, feet, forward, struck, count, reach, false);
+
+        /// <summary>
+        /// Degrees a blade must sweep round before its way is trusted: a thrust, a shot or a drop barely turns, and its
+        /// strike is drawn as the recipe drew it.
+        /// </summary>
+        public const float SweepTrusted = 15f;
+
+        /// <summary>
+        /// True when a strike swept <paramref name="swept"/> degrees (seen from above, positive clockwise) must be drawn
+        /// mirrored: the redrawn strikes' recipe cut right to left, anticlockwise, so a cut the other way has its glare,
+        /// glint and stones mirrored about its own line to run with the blade.
+        /// </summary>
+        public static bool Mirrors(float swept) => swept > SweepTrusted;
+
+        /// <summary>The same, mirrored about the strike's line when <paramref name="mirrored"/> (a redrawn strike only; the others keep their way).</summary>
+        public static bool PlayStrike(int element, Vector3 feet, Vector3 forward, Component[] struck, int count, float reach, bool mirrored)
         {
             if (!ElementArt.Ready || !HasStrike(element)) return false;
             float size = reach > 0f && IsRedrawn(element) ? Mathf.Clamp(reach / RedrawnReach, SmallestFit, LargestFit) : 1f;
             // Either half may be empty: Frost Bite is all on the bodies it strikes, Broken Ground all on its line.
-            ElementLooks.PlayAt(ElementLooks.Find(StrikeKey(element, false)), feet, Yaw(forward), size);
+            bool mirror = mirrored && IsRedrawn(element);
+            ElementLooks.PlayAt(ElementLooks.Find(StrikeKey(element, false)), feet, Yaw(forward), size, mirror);
             string onBody = StrikeKey(element, true);
             for (int i = 0; struck != null && i < count && i < struck.Length; i++)
-                if (struck[i] != null) OnBody(onBody, struck[i].transform, forward);
+                if (struck[i] != null) OnBody(onBody, struck[i].transform, forward, mirror);
             return true;
         }
 
-        private static void OnBody(string key, Transform body, Vector3 forward)
+        private static void OnBody(string key, Transform body, Vector3 forward, bool mirror = false)
         {
             if (key == null || body == null) return;
             int look = ElementLooks.Find(key);
             if (look < 0 || ElementLooks.IsPlaying(look, body)) return;
-            ElementLooks.Play(look, body, Yaw(forward));
+            ElementLooks.Play(look, body, Yaw(forward), mirror);
         }
     }
 }
