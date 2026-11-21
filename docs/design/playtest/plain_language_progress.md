@@ -135,4 +135,4 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 
 ### 5. Other player-facing files
 
-- [ ] readme.md (the READ ME beside the playtest exe; filled in by CombatPlaytestBuild, not by Playtest Texts)
+- [x] readme.md (the READ ME beside the playtest exe; filled in by CombatPlaytestBuild, not by Playtest Texts)
