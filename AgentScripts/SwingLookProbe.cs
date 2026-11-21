@@ -100,6 +100,7 @@ public class SwingLookProbeRunner : MonoBehaviour
     private bool alone;
 
     private bool filming, keepCalm;
+    private Vector3 filmStand;
     private int frame;
     private string folder;
 
@@ -245,9 +246,13 @@ public class SwingLookProbeRunner : MonoBehaviour
         while (GuidePage.Showing && guard++ < 40) yield return Tap(Key.E);
         // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
         // the back key closes it, and failing that it is closed outright, so time is never left stopped.
-        if (GuidePage.Showing) yield return Tap(Key.Space);
+        guard = 0;
+        while (GuidePage.Showing && guard++ < 5) yield return Tap(Key.Escape);
         if (GuidePage.Showing) GuidePage.Instance.Close();
-        if (Time.timeScale <= 0f) Debug.Log("[Probe] WRONG: time still stopped after the guide");
+        // Proof that the game runs again, not only that the page is shut.
+        float timeWas = Time.time;
+        yield return Real(0.3f);
+        Debug.Log($"[Probe] guide closed {!GuidePage.Showing}, time {timeWas:0.00} -> {Time.time:0.00}" + (Time.time > timeWas ? "" : ", WRONG: time is not moving"));
     }
 
     private bool Busy() =>
@@ -299,7 +304,9 @@ public class SwingLookProbeRunner : MonoBehaviour
             if (!filming) break;
             // With no one to stop it, Lightning's infused strike carries the player out of a held camera and the clip
             // ends on empty floor (the alone films of 2026-11-20): alone, the camera follows the player.
-            if (alone && anchor != null && player != null) anchor.position = player.transform.position;
+            // Into enemies the camera keeps half way between where the player stood and where they are, so a lunge
+            // that carries the player past the enemies keeps both in the frame (the films of 2026-11-21).
+            if (anchor != null && player != null) anchor.position = alone ? player.transform.position : Vector3.Lerp(filmStand, player.transform.position, 0.5f);
             if (CutMarks.Drawn != drawnWas || combat.BlowsLanded != landedWas)
             {
                 drawnWas = CutMarks.Drawn;
@@ -638,6 +645,7 @@ public class SwingLookProbeRunner : MonoBehaviour
         System.IO.Directory.CreateDirectory(folder);
         yield return Ready(stand);
         Vector3 standAt = player.transform.position;
+        filmStand = standAt;
         if (view != null)
         {
             anchor.position = standAt;

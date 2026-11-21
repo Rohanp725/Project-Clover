@@ -463,16 +463,25 @@ namespace Clover.Player
                 BurnPatch(Ground(print.Origin + print.Forward * (print.Reach * (i + 0.5f) / 3f)), 0.8f);
         }
 
-        // One patch of the strike's ground fire: the flames (the hazard's own real fire) stand on a dark scorch with a
-        // dull ember glow in it, so they burn on something and not on bare stone. Bites three times in its second.
+        // One patch of the strike's ground fire: the flames (the hazard's own real fire) stand on a patch of char with
+        // embers glowing in it, so they burn on something and not on bare stone. The char is two dark stains laid
+        // across each other (one alone barely shows on the dark floors); the embers are small spots of hot orange and
+        // red that shrink as the fire dies. Bites three times in its second.
         private static void BurnPatch(Vector3 at, float radius)
         {
             Hazards.Lay(HazardKind.Fire, at, radius, StrikeBurnSeconds, 5f, 0f, 4f, 0.35f, struck: Swings.SwingLooks.Fire.Tint);
             // The flames last as long as the player's numbers make fire on the ground last; the char outlives them a little.
             float seconds = StrikeBurnSeconds * Hazards.FireSecondsScale;
             float yaw = Random.value * 360f;
-            FormFx.Lay(FormMark.Scorch, at, radius * 2.6f, FormKit.Stain(EmberOrange, 0.85f), seconds + 0.6f, -1f, 0f, yaw);
-            FormFx.Lay(FormMark.Scorch, at + Vector3.up * 0.02f, radius * 1.8f, FormKit.Lit(EmberRed, 2.4f, 0.65f), seconds + 0.15f, radius * 1.3f, 0f, yaw + 50f);
+            FormFx.Lay(FormMark.Scorch, at, radius * 2.6f, FormKit.Stain(EmberOrange, 1f), seconds + 0.6f, -1f, 0f, yaw);
+            FormFx.Lay(FormMark.Scorch, at + new Vector3(0.15f, 0.01f, -0.1f), radius * 2.2f, FormKit.Stain(EmberOrange, 1f), seconds + 0.5f, -1f, 0f, yaw + 60f);
+            for (int i = 0; i < 6; i++)
+            {
+                Vector2 spot = Random.insideUnitCircle * (radius * 0.85f);
+                float size = Random.Range(0.3f, 0.6f);
+                FormFx.Lay(FormMark.Scorch, at + new Vector3(spot.x, 0.02f, spot.y), size, FormKit.Lit(i % 2 == 0 ? EmberOrange : EmberRed, 2.8f, 0.9f),
+                    seconds + 0.2f, size * 0.5f, 0f, Random.value * 360f);
+            }
             Vfx.Play(VfxKind.Embers, at + Vector3.up * 0.2f, Vector3.up, 0.6f);
         }
 
