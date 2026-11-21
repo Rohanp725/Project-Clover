@@ -109,8 +109,12 @@
   .rolecell.miss { outline: 2px dashed var(--loss); outline-offset: -2px; }
   .count { font-size: 28px; font-weight: 700; color: var(--text); min-width: 16px; }
 
-  .hand { width: 192px; height: 106px; padding: 10px 12px; }
-  .minis { display: flex; gap: 6px; margin-top: 10px; align-items: center; }
+  .hand {
+    width: 287px; height: 66px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+  }
+  .hand > * { flex: none; white-space: nowrap; }
+  .minis { display: flex; gap: 4px; align-items: center; }
   .minis .sep { width: 2px; height: 22px; background: rgba(184, 177, 165, 0.35); margin: 0 2px; }
 
   .pane {
@@ -258,15 +262,20 @@
 
 <!-- ===== Element half ===== -->
 <!-- Top-left corner: the elements carried -->
-<div class="abs col" style="left:64px; top:552px; width:396px; height:106px;">
-  <span class="label">Element</span>
-  <span class="header" style="margin-top:2px;"><span style="color:var(--fire)">Fire</span> + <span style="color:var(--water-text)">Water</span></span>
+<div class="abs col" style="left:64px; top:552px; width:396px; height:73px;">
+  <div class="row" style="gap:14px; align-items:baseline;">
+    <span class="label">Element</span>
+    <span class="header"><span style="color:var(--fire)">Fire</span> + <span style="color:var(--water-text)">Water</span></span>
+  </div>
   <span class="meta">Carried from the hub</span>
 </div>
 
 <!-- Top-right corner: the role strip -->
-<div class="abs col" style="left:852px; top:552px; width:396px; height:106px;">
-  <span class="label">Roles</span>
+<div class="abs col" style="left:852px; top:552px; width:396px; height:80px;">
+  <div class="row" style="gap:14px; align-items:baseline;">
+    <span class="label">Roles</span>
+    <span class="meta" style="color:var(--loss);">No movement spell</span>
+  </div>
   <div class="row" style="gap:6px; margin-top:4px;">
     <span class="rolecell"><svg width="32" height="32" style="color:var(--text)"><use href="#r-opener"/></svg><span class="count">1</span></span>
     <span class="rolecell"><svg width="32" height="32" style="color:var(--text)"><use href="#r-breaker"/></svg><span class="count">1</span></span>
@@ -274,10 +283,10 @@
     <span class="rolecell"><svg width="32" height="32" style="color:var(--text)"><use href="#r-counter"/></svg><span class="count">1</span></span>
     <span class="rolecell miss"><svg width="32" height="32" style="color:var(--loss)"><use href="#r-move"/></svg><span class="count" style="color:var(--loss)">0</span></span>
   </div>
-  <span class="meta" style="color:var(--loss); margin-top:2px;">No movement spell</span>
 </div>
 
-<!-- The diamond: North, West, surge, East, South -->
+<!-- The diamond: North, West, surge, East, South. West and East sit clear of North and South to each side, so the
+     four overlap in height like the pad's buttons and the whole diamond ends above the Hands strip. -->
 <div class="card water slot" style="left:476px; top:552px;">
   <svg width="56" height="56" style="color:var(--water); flex:none"><use href="#drop"/></svg>
   <div class="txt">
@@ -288,7 +297,7 @@
   <span class="g y slotglyph" style="left:296px; top:-17px;">Y</span>
 </div>
 
-<div class="card fire slot" style="left:216px; top:694px;">
+<div class="card fire slot" style="left:100px; top:647px;">
   <svg width="56" height="56" style="color:var(--fire); flex:none"><use href="#flame"/></svg>
   <div class="txt">
     <span class="name">Flame Wave</span>
@@ -298,15 +307,16 @@
   <span class="g x slotglyph" style="left:-18px; top:35px;">X</span>
 </div>
 
-<div class="abs col" style="left:584px; top:694px; width:144px; height:106px; align-items:center;">
-  <div style="position:relative; width:72px; height:72px; border-radius:50%; background:var(--raised); border:2px solid rgba(255,143,51,.75); display:flex; align-items:center; justify-content:center;">
-    <svg width="48" height="48" style="color:var(--fire)"><use href="#kindle"/></svg>
-    <span class="g sh" style="position:absolute; left:-30px; top:-8px; height:26px; font-size:15px; width:40px;">LT</span>
+<!-- The surge: its ring on the centre line, the LT glyph to the left, its name to the right. -->
+<div class="abs" style="left:576px; top:668px; width:200px; height:64px;">
+  <span class="g sh" style="position:absolute; left:0; top:19px; height:26px; font-size:15px; width:40px;">LT</span>
+  <div style="position:absolute; left:48px; top:0; width:64px; height:64px; border-radius:50%; background:var(--raised); border:2px solid rgba(255,143,51,.75); display:flex; align-items:center; justify-content:center;">
+    <svg width="44" height="44" style="color:var(--fire)"><use href="#kindle"/></svg>
   </div>
-  <span style="font-size:24px; font-weight:700; line-height:30px; margin-top:4px;">Kindle</span>
+  <span style="position:absolute; left:122px; top:0; font-size:24px; font-weight:700; line-height:64px;">Kindle</span>
 </div>
 
-<div class="card water slot" style="left:736px; top:694px;">
+<div class="card water slot" style="left:852px; top:647px;">
   <svg width="56" height="56" style="color:var(--water); flex:none"><use href="#drop"/></svg>
   <div class="txt">
     <span class="name">Whirlpool</span>
@@ -316,7 +326,7 @@
   <span class="g b slotglyph" style="left:342px; top:35px;">B</span>
 </div>
 
-<div class="card fire slot" style="left:476px; top:836px;">
+<div class="card fire slot" style="left:476px; top:742px;">
   <svg width="56" height="56" style="color:var(--fire); flex:none"><use href="#flame"/></svg>
   <div class="txt">
     <span class="name">Kiln Stance</span>
@@ -326,9 +336,10 @@
   <span class="g a slotglyph" style="left:296px; top:87px;">A</span>
 </div>
 
-<!-- Bottom corners: the Starter and three saved Hands, each a row of its four spells (W, N, E, S) and its surge -->
-<div class="abs label" style="left:64px; top:806px;">Hands</div>
-<div class="card hand" style="left:64px; top:836px;">
+<!-- The Hands strip, under the diamond and apart from it: the Starter and three saved Hands, each its four spells
+     (W, N, E, S) and its surge on one line -->
+<div class="abs label" style="left:64px; top:842px;">Hands</div>
+<div class="card hand" style="left:64px; top:876px;">
   <span class="name" style="font-size:24px;">Starter</span>
   <div class="minis">
     <svg width="28" height="28" style="color:var(--fire)"><use href="#flame"/></svg>
@@ -339,8 +350,9 @@
     <svg width="28" height="28" style="color:var(--fire)"><use href="#kindle"/></svg>
   </div>
 </div>
-<div class="card hand" style="left:268px; top:836px;">
-  <div class="row" style="justify-content:space-between;"><span class="name" style="font-size:24px;">Hand 1</span><span class="meta" style="color:var(--text);">Worn</span></div>
+<div class="card hand" style="left:363px; top:876px;">
+  <span class="name" style="font-size:24px;">Hand 1</span>
+  <span class="settag">Worn</span>
   <div class="minis">
     <svg width="28" height="28" style="color:var(--fire)"><use href="#flame"/></svg>
     <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
@@ -350,7 +362,7 @@
     <svg width="28" height="28" style="color:var(--fire)"><use href="#kindle"/></svg>
   </div>
 </div>
-<div class="card hand" style="left:852px; top:836px;">
+<div class="card hand" style="left:662px; top:876px;">
   <span class="name" style="font-size:24px;">Hand 2</span>
   <div class="minis">
     <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
@@ -361,9 +373,9 @@
     <svg width="28" height="28" style="color:var(--water)"><use href="#drop"/></svg>
   </div>
 </div>
-<div class="card hand" style="left:1056px; top:836px;">
+<div class="card hand" style="left:961px; top:876px;">
   <span class="name" style="font-size:24px;">Hand 3</span>
-  <div class="meta off" style="margin-top:12px;">Empty</div>
+  <span class="meta off">Empty</span>
 </div>
 
 <!-- ===== The pane: A Hundred Days at the Shrine ===== -->

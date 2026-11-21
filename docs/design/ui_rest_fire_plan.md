@@ -8,7 +8,8 @@ possible but do some reasearch on the best uis and whatnot to work with."
 
 This is a plan only. Nothing here is built. The owner answered section 6 on 2026-11-21 (layout C, UI Toolkit); section
 3.5 is the chosen layout in full, section 4 is adjusted to it, and section 5 is rewritten for UI Toolkit. A static
-mockup of 3.5 at 1920 by 1080 is `docs/design/mockups/loadout_c.html` (picture: `loadout_c.png`).
+mockup of 3.5 at 1920 by 1080 is `docs/design/mockups/loadout_c.html` (picture: `loadout_c.png`); the owner approved
+its look and answered 6.1's questions the same day.
 
 **Progress** (sections are committed one at a time; a section not ticked is not written yet)
 
@@ -18,7 +19,7 @@ mockup of 3.5 at 1920 by 1080 is `docs/design/mockups/loadout_c.html` (picture: 
 - [x] 3.5 Layout C as chosen, in full (after the owner's answers)
 - [x] 4. A style guide for every menu
 - [x] 5. The build plan and the checks (rewritten for UI Toolkit)
-- [x] 6. Owner questions (answered; new ones in 6.1)
+- [x] 6. Owner questions (answered, 6.1 included)
 
 ---
 
@@ -531,25 +532,25 @@ middle of columns 1 to 8.
             [ Infused strikes  [LT]+[RB] Fire strike . [LT]+[RT] Water strike ]   | -------------------------------- |
                                                                               | A draw is a cut made straight    |
                                                                               | from the sheath.                 |
-  +-----------------------+ +-(Y) North----------+ +-----------------------+  |                                  |
-  | ELEMENT               | | [56] Deep Crack    | | ROLES                 |  |                                  |
-  | Fire + Water          | |   Detonator . 11 s | | O1 B1 D1 C1 M0        |  |                                  |
-  | Carried from the hub  | |   Shape: Ink       | | No movement spell     |  |                                  |
-  +-----------------------+ +--------------------+ +-----------------------+  |                                  |
-                                                                              |                                  |
-                                                                              |                                  |
-            +-(X) West-----------+ +-------++-(B) East------------+           |                                  |
-            | [56] Flame Wave    | | (LT)  || [56] Whirlpool      |           |                                  |
-            |   Opener . 7 s     | | ( )   ||   Breaker . 10 s    |           |                                  |
-            |   Shape: Cinder Fa | | Kindl ||   Shape: Maelstrom  |           |                                  |
-            +--------------------+ +-------++---------------------+           |                                  |
-                                                                              |                                  |
-                                                                              |                                  |
-  +----------+ +----------+ +-(A) South----------+ +----------+ +----------+  |                                  |
-  | Starter  | | Hand 1   | | [56] Kiln Stance   | | Hand 2   | | Hand 3   |  |                                  |
-  | [][][][] | | [][][][] | |   Counter . 9 s    | | [][][][] | | [][][][] |  |                                  |
-  |          | |          | |   Shape: The Kiln  | |          | |          |  |                                  |
-  +----------+ +----------+ +--------------------+ +----------+ +----------+  +----------------------------------+
+  ELEMENT  Fire + Water     +-(Y) North----------+ ROLES  No movement spell   |                                  |
+  Carried from the hub      | [56] Deep Crack    |                            |                                  |
+                            |   Detonator . 11 s | O1 B1 D1 C1 M0             |                                  |
+                            |   Shape: Ink       |                            |                                  |
+                            |                    |                            |                                  |
+    +-(X) West-----------+  +--------------------+ +-(B) East------------+    |                                  |
+    | [56] Flame Wave    |                         | [56] Whirlpool      |    |                                  |
+    |   Opener . 7 s     |     (LT) ( ) Kindle     |   Breaker . 10 s    |    |                                  |
+    |   Shape: Cinder Fa |                         |   Shape: Maelstrom  |    |                                  |
+    |                    |                         |                     |    |                                  |
+    +--------------------+  +-(A) South----------+ +---------------------+    |                                  |
+                            | [56] Kiln Stance   |                            |                                  |
+                            |   Counter . 9 s    |                            |                                  |
+                            |   Shape: The Kiln  |                            |                                  |
+                            |                    |                            |                                  |
+  HANDS                     +--------------------+                            |                                  |
+  +---------------+ +-------(Worn)--+ +---------------+ +---------------+     |                                  |
+  | Starter FFWW F| | Hand 1  FWWF F| | Hand 2  WWWF W| | Hand 3  Empty |     |                                  |
+  +---------------+ +---------------+ +---------------+ +---------------+     +----------------------------------+
 
 
   (B) Back to the fire                                         (LB)(RB) Steel / Element   (L3) Text size   (RS) Scroll
@@ -570,14 +571,14 @@ One character is 16 px across and one line 20 px down. Every box, in pixels (x f
 | Temper row, Technique row | 824 | 160, 210 | 424 x 46 each, 4 apart | "Temper II" with five pips (two filled); "Before the Thunder" with a lock and "Sealed" in Text off |
 | Bearing cells | 824 | 304, 396 | 424 x 84 each | 48 px icon; name 28 bold; a short line 24 ("Hits push you less", "Quicker dodges") |
 | Infused strikes | 216 | 496 | 880 x 40 | "Infused strikes" 24 bold, Text 2; then "[LT]+[RB] Fire strike" and "[LT]+[RT] Water strike", 26 bold, glyphs 28 tall, the element words in their colours; one line, never wrapped |
-| Element header (corner) | 64 | 552 | 396 x 106 | "Element" 24 bold; "Fire + Water", Spectral 36, each word in its element's text tint; "Carried from the hub" 24 |
-| Role strip (corner) | 852 | 552 | 396 x 106 | "Roles" 24 bold; five cells of a 36 px role icon and its count (28 bold); the missing role's line, 24, Loss |
+| Element header (corner) | 64 | 552 | 396 x 73 | "Element" 24 bold and "Fire + Water" (Spectral 36, each word in its element's text tint) on one line; "Carried from the hub" 24 under it |
+| Role strip (corner) | 852 | 552 | 396 x 80 | "Roles" 24 bold with the missing role's line beside it ("No movement spell", 24, Loss); under them five cells of a 32 px role icon and its count (28 bold) |
 | North slot | 476 | 552 | 360 x 106 | see "A slot card" below |
-| West slot, East slot | 216, 736 | 694 | 360 x 106 each | |
-| Surge | 584 | 694 | 144 x 106 | a 64 px ring with the surge's icon and the LT glyph; its name 24 bold under it |
-| South slot | 476 | 836 | 360 x 106 | |
-| Hands label | 64 | 806 | 192 x 28 | "Hands", 24 bold, Text 2 |
-| Hands (two corners) | 64 and 268; 852 and 1056 | 836 | 192 x 106 each | "Starter" (the suggested Hand, a shorter word so it fits), "Hand 1"; "Hand 2", "Hand 3"; label 24 bold over a row of four 28 px spell icons in W, N, E, S order and the surge's icon |
+| West slot, East slot | 100, 852 | 647 | 360 x 106 each | 16 px clear of North and South at the sides, so the four overlap in height like the pad's buttons |
+| Surge | 576 | 668 | 200 x 64 | a 64 px ring with the surge's icon, on the centre line (624 to 688); the LT glyph to its left; its name 24 bold to its right |
+| South slot | 476 | 742 | 360 x 106 | its A glyph hangs 13 px below, to y 861 |
+| Hands label | 64 | 842 | 192 x 28 | "Hands", 24 bold, Text 2 |
+| Hands strip | 64, 363, 662, 961 | 876 | 287 x 66 each, 12 apart | Its own row under the whole diamond: "Starter" (the suggested Hand), "Hand 1", "Hand 2", "Hand 3", each a name 24 bold then four 28 px spell icons in W, N, E, S order and the surge's icon on one line; the worn one has a "Worn" tag on its top border, drawn like the "Set" tag; an empty one reads "Empty" in Text off |
 | The pane | 1280 | 128 | 576 x 814 | 28 px padding top and bottom, 32 at the sides; the lines of 4.4; scrolls with the right stick |
 | Footer | 64 to 1856 | 984 | 1792 x 40 | 32 px glyphs with 24 captions: Back on the left; the screen-wide presses on the right |
 
@@ -636,13 +637,13 @@ go plays a soft dull tick and stays):
 | Element header | Infused strikes | West | stays | North |
 | North | Infused strikes | Surge | Element header | Role strip |
 | Role strip | Infused strikes | East | North | stays |
-| West | Element header | back where it came from (Hand 1 the first time) | stays | Surge |
+| West | Element header | Starter | stays | back where it came from (Surge the first time) |
 | Surge | North | South | West | East |
-| East | Role strip | back where it came from (Hand 2 the first time) | Surge | stays |
-| South | Surge | stays | Hand 1 | Hand 2 |
+| East | Role strip | Hand 3 | back where it came from (Surge the first time) | stays |
+| South | Surge | back where it came from (Hand 1 the first time) | West | East |
 | Starter | West | stays | stays | Hand 1 |
-| Hand 1 | West | stays | Starter | South |
-| Hand 2 | East | stays | South | Hand 3 |
+| Hand 1 | South | stays | Starter | Hand 2 |
+| Hand 2 | South | stays | Hand 1 | Hand 3 |
 | Hand 3 | East | stays | Hand 2 | stays |
 
 The rule behind "back where it came from": when two places share one neighbour, that neighbour remembers which one
@@ -662,7 +663,7 @@ pane's last line, never in a line of instructions):
 | | a list row or aspect card | Chooses it and closes the list |
 | B (Circle) | anywhere | Closes an open list or the Reactions page with nothing changed; otherwise back to the rest menu at the fire |
 | X (Square) | Hand 1, 2 or 3 | Keeps the worn Hand there. On an empty Hand, a press. On one that holds a Hand, a 0.6 s hold, with a ring filling round the glyph, because it replaces what was kept. Nothing on Starter, which cannot be overwritten |
-| Y (Triangle) | a slot, or a row in a spell list | Swaps the spell to its other shape. If its Shape mark is not bought, nothing, and the pane's last line says where to buy it |
+| Y (Triangle) | a slot, or a row in a spell list | Cycles the spell to its next shape (N3). If its Shape mark is not bought, nothing, and the pane's last line says where to buy it |
 | LB, RB | anywhere | LB jumps focus to the Steel half, RB to the Element half; each half remembers where focus last was. In a spell list, LB and RB jump between the element groups |
 | Right stick | anywhere | Scrolls the pane when its words run long |
 | L3 (left stick press) | anywhere | Steps the text size: 100%, 125%, 150%, then back to 100% (3.5.8) |
@@ -700,7 +701,7 @@ diamond stays, and the West card pulses in Gold with "Choosing for (X) West" on 
 - The preview: the pane describes the focused spell (4.4), and under its rule: "Worn here now: Flame Wave, Opener,
   7 s" and what the swap does: "You will have no opener." or "It moves here from North. North gets Flame Wave." The
   role strip shows the counts as they would be, a changed count outlined with its old number beside it (Opener 1, now
-  0). Y swaps the focused row's shape before choosing.
+  0). Y cycles the focused row's shape before choosing.
 - The commit: A wears it in that shape; the list closes and focus goes back to West; one soft set sound. A spell
   that is in another slot changes places with what was here.
 
@@ -783,9 +784,8 @@ with the other options; it changes every menu, not the HUD.
 
 #### 3.5.9 What C needs that A did not
 
-- **A picture of the carried weapon in its aspect's look** (3.3's "Against"). The first pass is one render per
-  weapon of its approved plain model, tinted by the bough on the ink disc; the per-aspect pictures follow, ledgered in
-  `content_open.tsv` as a stand-in with the icons (Q6), or the picture is drawn live (question N1 in 6.1).
+- **The carried weapon in its aspect's look** (3.3's "Against"). The owner chose N1 (a): the weapon's own 3D model,
+  drawn live behind the menu and slowly turning, so it shows each aspect's look as soon as its props are in.
 - **A summary line for each half**, for 125% and 150% (3.5.8).
 - **The Reactions page** opened from the element header (Q4): a small list page in the same kit, a reaction per row
   with its two shapes side by side, as the shapes screen shows them today (1.4).
@@ -1052,8 +1052,7 @@ read `focusController.focusedElement` through `script eval`, instead of reading 
   staging and intake with `ASSETS.csv` rows (Q7): the Xbox, PlayStation and keyboard-and-mouse sets only.
 - **Icons**: painted by code in `UiArt`, as the chart's are: no outside art for U1. A stand-in by the owner's word
   (Q6), ledgered so every spell, aspect and keystone gets its own art later.
-- **The weapon picture** (U4): see question N1 in 6.1. If stills: renders of the approved plain models from Blender
-  through the `blender-prop` skill, into staging for the owner to approve, one per weapon first.
+- **The weapon picture** (U4): drawn live from the weapon's own model (N1 (a), 6.1), so no stills are needed.
 - **A sound**: one soft tick for the cursor, one dull tick for a move that goes nowhere, one for setting a thing,
   through `audio-intake` into `Audio/UI`, on the UI mixer group, meeting `Loudness.cs`.
 
@@ -1157,7 +1156,16 @@ The recommended option is first in each.
 - **Q7:** Kenney's Input Prompts pack (CC0). It enters through staging and the asset intake, with ASSETS.csv rows.
 - **Q8:** a text-size setting (100%, 125%, 150%) in this pass.
 
-### 6.1 New questions from the layout C rework (2026-11-21)
+Later the same day, on the questions in 6.1 and the mockup:
+
+- **N1: (a), drawn live.** The weapon's own 3D model, drawn behind the menu and slowly turning.
+- **N2: (a), folding.** At 125% and 150% text, the half you are not in folds to a one-line summary (3.5.8).
+- **N3: (a), Y.** Y on a slot or on a spell-list row cycles the spell's shape (3.5.4).
+- **The mockup's look is approved**, with one fix: the South slot sat inside the saved Hands' row, which was
+  confusing. The diamond and its surge now sit fully above the Hands, and the Hands are their own strip (3.5.2;
+  `docs/design/mockups/loadout_c.html` and `.png` redrawn).
+
+### 6.1 New questions from the layout C rework (2026-11-21; answered, see "Owner's answers")
 
 The recommended option is first in each.
 
