@@ -29,6 +29,9 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   Burning Sap holds back until its end).
 - marks/earthed.md: "the burnt figure" and "the fern" were read as the fern-shaped burn mark Earthed leaves on the
   ground.
+- marks/light.md, light.daybreak: the beam "bites every 0.1 seconds" for 12 a bite (48 over 0.4 seconds) and is also
+  "six rings' worth" with rings of 8 (also 48); the Empower makes "each ring 10" (60). Both ways of counting were
+  kept as written.
 - marks/fire.md, fire.sun: "it rises in 1.5 seconds if Kindle has 3 left" was read as "if Kindle has 3 seconds left".
 
 ## Files
@@ -68,7 +71,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/kindlingpoint.md
 - [x] marks/life.md
 - [x] marks/light.md
-- [ ] marks/lightning.md
+- [x] marks/lightning.md
 - [ ] marks/lightningflower.md
 - [ ] marks/liveiron.md
 - [ ] marks/loganstone.md
