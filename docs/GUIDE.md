@@ -1246,179 +1246,182 @@ later.
 
 ### The base game (hub, castle, summit)
 
-1. In the editor open `Assets/_Project/Scenes/Hub.unity` and press Play. The hub's door leads to the Castle, the
-   Castle's sealed door (open once the Gate Captain has fallen) leads to the Summit and the Lightning god, and the
-   Summit's door leads back to the hub.
-2. It plays with your real saved progress: the Katana if you have drawn it, Lightning if you have taken it.
-3. To play it from the very beginning without losing that progress, tick **Clover > Play > As A New Player (saves
+1. In the editor, open the Hub scene (in the project's Scenes folder) and press Play. The hub's door leads to the
+   Castle. The Castle's sealed door (open once the Gate Captain has fallen) leads to the Summit and the Lightning god,
+   and the Summit's door leads back to the hub.
+2. It plays with your real saved progress: the Katana if you've drawn it, and Lightning if you've taken it.
+3. To play from the very beginning without losing that progress, tick **Clover > Play > As A New Player (saves
    nothing)** before pressing Play. Untick it to get your progress back.
-4. The hub also holds the new work as a stopgap: stands for every new weapon along the western rim and nine extra
-   braziers along the eastern rim, all open. For the base game as designed, take only Fists or the Katana and only
-   Fire or Lightning.
-5. For a standalone build: **Clover > Build > Windows Playtest**. The build on disk is older than today's work until
-   that is run again.
+4. For now, the hub also holds the new work: stands for every new weapon along the western edge and nine extra
+   braziers along the eastern edge, all open. For the base game as it was planned, only take Fists or the Katana, and
+   only Fire or Lightning.
+5. For a build you can run on its own: **Clover > Build > Windows Playtest**. The build on disk is older than today's
+   work until you run that again.
 
 ### The Proving Ground (the combat playtest)
 
-Open `Assets/_Project/Scenes/ProvingGround.unity` and press Play (rebuilt by **Clover > Build > Proving Ground**). It
-is the combat playtest's start, and being there turns on the playtest's rules; **Clover > Play > Playtest Mode** turns
-them on for every other scene too. The title shows the version and what is new. The rest fire is in the middle with the
-eleven element altars round it (you arrive carrying Fire; carrying one element, another altar carries its element
-as the second and the altar of the one carried goes all in; carrying two, an altar starts again with its element alone;
-the prompt says which before the press: `Player/Build/AltarChoice.cs`); the rack is west (the gods' weapons and the "Not built yet" stands in its back row); the
-dummies are east; the castle's and the Fire land's pens are north, each with a post per enemy, a post per group and a
-pale post that clears; the gates to Narukami and Khepharu and the doors to the Castle and Sun City are furthest north.
+Open the Proving Ground scene and press Play (it is rebuilt by **Clover > Build > Proving Ground**). It is where the
+combat playtest starts, and being there turns on the playtest's rules; **Clover > Play > Playtest Mode** turns them on
+for every other scene too. The title screen shows the version and what's new. The rest fire is in the middle, with the
+eleven element altars around it. You arrive carrying Fire. If you carry one element, another altar makes its element
+your second, and the altar of the element you carry makes you all in. If you carry two, an altar starts you over with
+only its element. The prompt tells you which before you press. The weapon rack is to the west (the gods' weapons and the
+"Not built yet" stands are in its back row). The dummies are to the east. The pens for the castle's enemies and the Fire
+land's enemies are to the north, each with a post for each enemy, a post for each group, and a pale post that clears
+the pen. The gates to Narukami and Khepharu, and the doors to the Castle and Sun City, are farthest north.
 
-Playtest rules: a rest gives unlimited Shards; the chart is open in every tree and branch (guard and light attack turn
-to the tree before and after; the spell button opens the chosen mark's details; the flask button opens the guide to
-effects); the gods' gifts can be bought; a fall loses nothing; pause has "Guide to effects", "What's new" and "Return to
-the Proving Ground". The words of the guide, the details and what is new are in `docs/design/playtest/`; after editing
-them run **Clover > Build > Playtest Texts**. The build is **Clover > Build > Combat Playtest**.
+Playtest rules: resting gives unlimited Shards; the chart is open in every tree and branch (guard and light attack
+move to the tree before and after; the spell button opens the chosen mark's details; the flask button opens the guide
+to effects); you can buy the gods' gifts; falling loses nothing; and the pause menu has "Guide to effects", "What's
+new" and "Return to the Proving Ground". The text of the guide, the mark details and what's new are kept in the
+playtest folder of the design notes; after editing them, run **Clover > Build > Playtest Texts**. The build is made with
+**Clover > Build > Combat Playtest**.
 
 ### The test yard
 
-Open `Assets/_Project/Scenes/CombatTest.unity` and press Play. Three training dummies stand in the middle and one
-that hits back stands to the west, for practising the guard and the dodge.
+Open the Combat Test scene and press Play. Three training dummies stand in the middle, and one that hits back stands to
+the west, for practising your guard and dodge.
 
 | Where | What | How to use it |
 |---|---|---|
-| North wall | A rack of every built weapon, each named | Walk up and press use (E / Cross) to take one up. |
-| South wall | 24 stones, one for each spell form that has a sample, each named | Stand by one and a card shows what it does and how to cast it. Use it to wear the spell, then hold Triangle (U). Mana comes back by itself while a stone's spell is worn. |
-| In front of the stones, middle | ELEMENT stone | Use it to hold the next element round the ring. Its card says what you hold and what comes next. |
-| Left of the element stone | GOD GIFT shrine | Its card names the gift of the element you hold, what it does and what sets it going. Use it to be given that gift. |
-| Right of the element stone | CONSUME NEXT shrine | Consumes the next element round the ring: 4 Shards for the element you hold. No god gives a duo crown, so it gives none. |
+| North wall | A rack of every weapon built so far, each one named | Walk up and press use (E / Cross) to pick one up. |
+| South wall | 24 stones, one for each spell form that has an example, each one named | Stand next to one, and a card shows what it does and how to cast it. Use it to put the spell on, then hold Triangle (U). Your mana refills on its own while you have a stone's spell on. |
+| In front of the stones, middle | ELEMENT stone | Use it to switch to the next element around the ring. Its card says what you carry now and what comes next. |
+| Left of the element stone | GOD GIFT shrine | Its card names the gift of the element you carry, what it does, and what sets it off. Use it to get that gift. |
+| Right of the element stone | CONSUME NEXT shrine | Consumes the next element around the ring: 4 Shards for the element you carry. No god gives a duo branch's top mark, so it doesn't give one. |
 
-To try a particular god's gift: use the ELEMENT stone until you hold its element, read the GOD GIFT card, use the
-shrine, then do what the card says (most begin with the surge, L2 or I).
+To try a certain god's gift: use the ELEMENT stone until you carry its element, read the GOD GIFT card, use the shrine,
+then do what the card says (most start with the surge, L2 or I).
 
 ### The Fire land (not in the demo's build)
 
-Two scenes, neither of them in the list the playtest build is made from. Open one in the editor and press Play; tick
-**Clover > Play > As A New Player (saves nothing)** first if you do not want what you do there kept.
+Two scenes, and neither is on the list the playtest build is made from. Open one in the editor and press Play. Tick
+**Clover > Play > As A New Player (saves nothing)** first if you don't want to keep what you do there.
 
 | Scene | What it is | How it is rebuilt |
 |---|---|---|
-| `Assets/_Project/Scenes/SunCity.unity` | The whole land: the dry river, the city of wicks, the golden way, the Champion of the Gate. About half an hour on foot | **Clover > Build > Sun City** |
-| `Assets/_Project/Scenes/SunCourt.unity` | The god: Khepharu the man, then the Sun-Bearer, then the man again, and the sunset that is the way out | **Clover > Build > Sun Court** |
+| Sun City | The whole land: the dry river, the city of lamp wicks, the golden road, and the Champion of the Gate. About half an hour on foot | **Clover > Build > Sun City** |
+| Sun Court | The god: Khepharu the man, then the Sun-Bearer, then the man again, and the sunset that is the way out | **Clover > Build > Sun Court** |
 
-You enter each with fists (or the Great Spear, found at the Embalmers' Gate in the city) and **no element**: the spell
-and surge buttons do nothing until Fire is taken from the god. A fall puts you back at the last rest fire you lit. In
-the editor the Gate of Noon at the end of the city leads straight into the sun-court; in a built game it would not,
-because the court is not in the build.
+You enter each with your fists (or the Great Spear, found at the Embalmers' Gate in the city) and **no element**: the
+spell and surge buttons do nothing until you take Fire from the god. Falling puts you back at the last rest fire you lit.
+In the editor, the Gate of Noon at the end of the city leads straight into the Sun Court; in a built game it wouldn't,
+because the Sun Court isn't in the build.
 
 ### The chart
 
-Rest at a rest fire in the Castle and choose The chart in its menu. It stays on the tree of the element you hold; R2 or K shows the
-whole ring.
+Rest at a rest fire in the Castle and choose The chart from its menu. It stays on the tree of the element you carry;
+R2 or K shows the whole ring.
 
 ---
 
 ## 9. The storm dragon
 
 Narukami's second form, the last fight of the demo. When the swordsman falls, the dragon's head comes in through the
-north gate; two small claws grip the rim and its body winds through the cloud all round the summit. Its mouth, its
-magic and its tail take turns, and it never does the same kind of thing twice running. Pale marks on the floor can be
-guarded; red marks cannot, but a guard at the last instant turns anything.
+north gate. Two small claws grip the edge, and its body winds through the clouds all around the summit. Its mouth, its
+magic and its tail take turns, and it never does the same kind of attack twice in a row. Pale marks on the floor can be
+guarded; red marks can't, but a guard at the very last moment blocks anything.
 
 | Attack | What you see | What to do | Opening |
 |---|---|---|---|
-| **Beam** | Jaws open; a red lane from under his mouth | It crosses the whole floor. Roll through it, or get in beside his head where it cannot turn | His head lies spent: strike it |
-| **Breath** | Three red forked lanes | Step between or outside them | None |
-| **Bite** | A pale circle on you, only near the north gate | Step out or guard | His head sticks in the floor: strike it |
-| **Bolts** | Red circles: the middle, then a ring, then between | Stand in the band between | None |
-| **Sigils** | A ring of red circles that closes in three steps | Leave through a gap at once | None |
-| **Orbs** | Three orbs that drift after you | Keep walking; they burst | None |
-| **Storm** | Two opposite quarters of the floor turn red | Fight in the other two for eight seconds | None |
-| **Slither** | A red winding lane, rim to rim | Step off the lane or roll through the body | None |
-| **Flop** | The tail arched over a pale lane | Step aside or guard facing the rim | The tail lies slack: cut it |
-| **Coil** | A red ring round you | Get out through the gap, or roll through the body. Cut the coil hard enough as it tightens and it springs open and staggers him | While it tightens and just after |
-| **Scythe** | The whole floor ringed red | It sweeps across and back: roll through it each time, or stand under the arch where it comes over the rim | None |
-| **Walking flops** | Three pale lanes, one after another | Step off each and stay close to the lane, inside the red circles that run out from it | After the third it lies slack |
-| **Sting** | A pale circle under a raised tail, four times | Keep running or guard each stab | The last one sticks in the stone |
+| **Beam** | Jaws open; a red path from under its mouth | It crosses the whole floor. Roll through it, or get in next to its head, where it can't turn | Its head lies there, worn out: hit it |
+| **Breath** | Three red forked paths | Step between them or outside them | None |
+| **Bite** | A pale circle on you, only near the north gate | Step out or guard | Its head gets stuck in the floor: hit it |
+| **Bolts** | Red circles: the middle, then a ring, then in between | Stand in the space between them | None |
+| **Sigils** | A ring of red circles that closes in, in three steps | Leave through a gap right away | None |
+| **Orbs** | Three balls of light that float after you | Keep walking; they burst | None |
+| **Storm** | Two opposite quarters of the floor turn red | Fight in the other two quarters for eight seconds | None |
+| **Slither** | A red winding path, from edge to edge | Step off the path or roll through the body | None |
+| **Flop** | The tail arched over a pale path | Step aside, or guard facing the edge | The tail lies limp: cut it |
+| **Coil** | A red ring around you | Get out through the gap, or roll through the body. Hit the coil hard enough as it tightens, and it springs open and staggers the dragon | While it tightens and right after |
+| **Scythe** | The whole floor ringed in red | It sweeps across and back: roll through it each time, or stand under the arch where it comes over the edge | None |
+| **Walking flops** | Three pale paths, one after another | Step off each one and stay close to the path, inside the red circles that spread out from it | After the third, it lies limp |
+| **Sting** | A pale circle under a raised tail, four times | Keep running, or guard each stab | The last one gets stuck in the stone |
 
-Perfect guards and blows on his head, tail and claws wear down his balance. When it breaks, his head falls to the
-floor: a heavy blow there is the finisher, worth about a fifth of his health. Below half health he is faster and
-opens with the storm.
+Perfect guards and blows on its head, tail and claws wear down its balance. When its balance breaks, its head falls to
+the floor: a heavy blow there is the finisher, worth about a fifth of its health. Below half health, it is faster and
+starts with the storm.
 
 **Not yet**
 
-- The tail comes in between the gate posts on the east, south-east and their mirrors on the west; not from the north
-  (his head) or due south (the steps). It drapes over the rail but does not wrap round a post.
-- Two more tail moves (a furrow of live lightning and a whip-crack) are designed and not built.
-- The large robot this fight first used is kept only as an idea for the Metal god.
+- The tail comes in between the gate posts on the east and south-east sides, and the matching posts on the west; not
+  from the north (where its head is) or due south (the steps). It hangs over the railing but doesn't wrap around a post.
+- Two more tail attacks (a trench of live lightning and a whip crack) are planned but not built.
+- The large robot this fight first used is only kept as an idea for the Metal god.
 
 ---
 
 ## 10. Khepharu, the god of Fire
 
-The god of the Fire land, fought in `SunCourt.unity` (section 8 says how to open it). You have a spear or your fists
-and no element. An obelisk stands in the middle of the court and its shadow turns like the hand of a clock. **The
-shadow is the one thing to learn**: the man's falling sunlight cannot be aimed into it, hot floor is cold under it,
-and when the whole court burns it is the only ground that does not. Cross the gold line and he speaks; a wall of
-heat closes behind you. If you fall you wake at the fire in the forecourt and he is whole again.
+The god of the Fire land, fought in the Sun Court scene (section 8 says how to open it). You have a spear or your fists
+and no element. A tall stone pillar (an obelisk) stands in the middle of the court, and its shadow turns like the hand
+of a clock. **The shadow is the one thing to learn**: the man's falling sunlight can't be aimed into it, hot floor is
+cool under it, and when the whole court is burning, it's the only ground that isn't. Cross the gold line, and he
+speaks; a wall of heat closes behind you. If you fall, you wake up at the fire in the forecourt, and he is back to full
+health.
 
 ### The man with the sun-spear
 
-He keeps you at the far end of his spear. Pale marks can be guarded; red marks cannot.
+He keeps you at the far end of his spear. Pale marks can be guarded; red marks can't.
 
 | Attack | What you see | What to do | Opening |
 |---|---|---|---|
-| **Three thrusts** | Three pale lanes one after another; the third waits and turns to follow you | Guard all three, perfectly if you can | After the third |
-| **Reach** | One long pale lane when you hang back | Guard, or sidestep and close | A short one |
-| **Sweep** | A pale half-circle round him when you are close | Guard | A short one |
-| **Butt** | A quick pale wedge after your blows have been turned twice | Guard or step back | None |
-| **Throw** | A long red lane; the spear stands in the floor at its end | Step off the lane | The next row |
-| **Returning ray** | He stands empty-handed with one hand raised; a wider red lane from him to the spear, then a ray of light along it | Do not stand between him and the spear. **Hit him now: his hands are empty and he cannot guard** | The largest he gives: nearly two seconds |
-| **Planted spear** | He lifts the spear point-down; a red circle round him; then the ground inside burns for eight seconds | Get out of the circle and stay out while it burns | As he pulls the spear free |
-| **Noon** | He lifts the spear to the sky; three red circles fall on you one after another | Keep walking, or stand in the obelisk's shadow: they cannot be aimed into it | None |
+| **Three thrusts** | Three pale paths, one after another; the third one waits and turns to follow you | Guard all three, perfectly if you can | After the third |
+| **Reach** | One long pale path when you hang back | Guard, or sidestep and get close | A short one |
+| **Sweep** | A pale half-circle around him when you're close | Guard | A short one |
+| **Butt** | A quick pale wedge after he has blocked your blows twice | Guard or step back | None |
+| **Throw** | A long red path; the spear sticks in the floor at its end | Step off the path | The next set of attacks |
+| **Returning ray** | He stands empty-handed with one hand raised; a wider red path from him to the spear, then a ray of light along it | Don't stand between him and the spear. **Hit him now: his hands are empty and he can't guard** | The biggest opening he gives: almost two seconds |
+| **Planted spear** | He lifts the spear point-down; a red circle around him; then the ground inside burns for eight seconds | Get out of the circle and stay out while it burns | As he pulls the spear free |
+| **Noon** | He lifts the spear to the sky; three red circles fall on you, one after another | Keep walking, or stand in the obelisk's shadow: they can't be aimed into it | None |
 
-Below half health he says "It is always noon.", plants the spear at once, moves faster, and sometimes follows the
+Below half health, he says "It is always noon.", plants the spear right away, moves faster, and sometimes follows the
 long third thrust with the sweep.
 
 ### The Sun-Bearer
 
-Beaten, the man does not fall. He gets up off one knee and lifts the spear to the sky; a stream of fire pours down
-onto its point, the sun (a ball of burning matter, flames licking off it and smoke rolling up) comes down it into him
-and he catches and burns; in a burst of flame and smoke as it arrives he is gone into it, and the scarab rises under
-it and takes it up. This takes about five seconds, you cannot be struck while it
-happens, and the camera holds both of you. Then he is a scarab that rolls the sun across the floor and a falcon that
-carries it up: one creature, one shape at a time. **The sun is what hurts you, and taking it from him is how you hurt him.**
-While he holds it his shell is hot and blows do a quarter of their damage, but thirty damage to his body during one
-attack knocks the sun out of his hold, and so does a perfect guard against the sun itself. Then he lies on his back
-(or flat with his wings spread) for four seconds, every blow counts in full, and he must walk to the sun to take it
-up again. You can push the loose sun further off with a blow.
+When he's beaten, the man doesn't fall. He gets up off one knee and lifts the spear to the sky. A stream of fire pours
+down onto its point, and the sun (a ball of burning matter, with flames licking off it and smoke rolling up) comes down
+it into him, and he catches fire and burns. In a burst of flame and smoke as it arrives, he disappears into it, and
+the scarab beetle rises up under it and picks it up. This takes about five seconds, nothing can hit you while it
+happens, and the camera keeps both of you in view. Then he becomes a scarab beetle that rolls the sun across the floor,
+and a falcon that carries it up: one creature, one shape at a time. **The sun is what hurts you, and taking it from him
+is how you hurt him.** While he holds it, his shell is hot and your blows do a quarter of their damage. But thirty
+damage to his body during one attack knocks the sun out of his grip, and so does a perfect guard against the sun itself.
+Then he lies on his back (or flat with his wings spread) for four seconds, every blow does full damage, and he has to
+walk to the sun to pick it up again. You can push the loose sun farther away with a blow.
 
 | Attack | Shape | What you see | What to do | Opening |
 |---|---|---|---|---|
-| **Roll** | Scarab | He goes to the rim; a red lane four metres wide across the court; the sun rolls down it with him behind. The lane stays hot for ten seconds: scorched dark inside an orange edge, burning and smoking | Step off the lane. A lane drawn through the obelisk stops at it. Strike his flank as he passes | Only if the sun is knocked away |
-| **Furrows** | Scarab | Three rolls, back and forth, each to the side you went. Three hot lanes | Stand between two lanes or beyond the last | He rests on the sun for two seconds after the third |
-| **Ram** | Scarab | He leaves the sun and lowers his horn; a pale circle on you | Guard, or walk out | **The horn sticks in the paving: his head is open for nearly two seconds** |
-| **Sparks** | Scarab | Wing cases lifted and shaken; five red circles in an arc, then five more in the gaps | Step into the gaps, then into where the first fell | None |
-| **Rising** | Scarab to falcon | He rears and throws the sun up. In his fury a red circle of six metres round him burns | Be more than six metres off in the fury | None |
-| **Stoop** | Falcon | His shadow stops over you and a red circle follows you, then holds. He comes straight down, sun first. The middle stays hot | Walk out of the circle | **He stands on the sun for a second and a half: thirty damage knocks him off it** |
-| **Pass** | Falcon | A red lane five metres wide from rim to rim; he flies it low with the sun under him. The lane stays hot. In his fury he comes back down a second lane | Step off the lane | Only if the sun is knocked away |
-| **Feathers** | Falcon | Small red circles: where you stand, then a ring of six, then both again with the ring turned | Step out, step in, stand in the band between; or stand in the shadow, where none fall | None |
-| **Zenith** | Falcon | He climbs over the obelisk. **The whole floor fills red, all but the shadow.** Then the court burns for six seconds (eight in his fury) | **Be in the obelisk's shadow and walk with it as it turns.** In his fury the shadow stops for half a second and comes back the other way | He comes down spent and lies as the scarab with his head open for two and a half seconds |
-| **Setting** | Falcon to scarab | He lands on the rim furthest from you and folds | Nothing | None |
+| **Roll** | Scarab | He goes to the edge; a red path four metres wide across the court; the sun rolls down it with him behind it. The path stays hot for ten seconds: scorched dark inside an orange edge, burning and smoking | Step off the path. A path that would cross the obelisk stops at it. Hit his side as he passes | Only if the sun is knocked away |
+| **Furrows** | Scarab | Three rolls, back and forth, each toward the side you moved to. Three hot paths | Stand between two paths or past the last one | He rests on the sun for two seconds after the third |
+| **Ram** | Scarab | He leaves the sun and lowers his horn; a pale circle on you | Guard, or walk out | **The horn gets stuck in the stone floor: his head is open for almost two seconds** |
+| **Sparks** | Scarab | Wing shells lifted and shaken; five red circles in an arc, then five more in the gaps | Step into the gaps, then into where the first ones fell | None |
+| **Rising** | Scarab to falcon | He rears up and throws the sun into the air. When he is enraged, a red circle six metres across burns around him | Stay more than six metres away when he is enraged | None |
+| **Stoop** | Falcon | His shadow stops over you, and a red circle follows you, then stops. He dives straight down, sun first. The middle stays hot | Walk out of the circle | **He stands on the sun for a second and a half: thirty damage knocks him off it** |
+| **Pass** | Falcon | A red path five metres wide from edge to edge; he flies along it low, with the sun under him. The path stays hot. When he is enraged, he comes back down a second path | Step off the path | Only if the sun is knocked away |
+| **Feathers** | Falcon | Small red circles: where you stand, then a ring of six, then both again with the ring turned | Step out, step in, stand in the space between; or stand in the shadow, where none fall | None |
+| **Zenith** | Falcon | He climbs above the obelisk. **The whole floor turns red, except the shadow.** Then the court burns for six seconds (eight when he is enraged) | **Be in the obelisk's shadow, and walk with it as it turns.** When he is enraged, the shadow stops for half a second and then turns back the other way | He comes down worn out and lies there as the scarab, with his head open for two and a half seconds |
+| **Setting** | Falcon to scarab | He lands on the edge farthest from you and folds his wings | Nothing | None |
 
-Blows on him while he is open, perfect guards, and knocking the sun away wear down his balance. When it breaks he
-falls on his face: a heavy blow on the head is the finisher, worth at least 123 of his 560. Below half health he is a
-quarter faster, the shadow turns faster, and he opens with the Zenith.
+Hitting him while he's open, perfect guards, and knocking the sun away all wear down his balance. When it breaks, he
+falls on his face: a heavy blow on his head is the finisher, worth at least 123 of his 560 health. Below half health, he
+is a quarter faster, the shadow turns faster, and he starts with the Zenith.
 
-When the form dies its body comes apart into ash, and the dull sun rolls out along the obelisk's shadow, shudders with
-light and cracks open: **Khepharu is lying there**, a man again, across the shadow, and the sun leans from noon for the
-first time so the obelisk's own shadow falls over him. He says one line, which you read at your own pace: "I promised
-them gold. I gave them fire." Then **Take his fire**, standing over him, gives you Fire (there is no choice at this
-god), its gift Falling Sun, and the Sun-Spear; his own spear is gone from beside him. The sponsor speaks while **the
-sun sets**: it swings round into the west and sinks, the light goes orange and low, the obelisk's shadow stretches long
-to the east, and the gilded gate in the west wall sinks into the floor. The low sun's beam runs in through the gate
-across the court; walk into it to the gate's gold mark and **Go west with the sun** ends the land and returns you to
-the hub. (The stranded barque in the city's dry river is scenery; it is not the way out.)
+When this form dies, its body crumbles into ash, and the dull sun rolls out along the obelisk's shadow, shakes with light
+and cracks open: **Khepharu is lying there**, a man again, across the shadow. For the first time, the sun moves away
+from noon, so the obelisk's own shadow falls over him. He says one line, which you read at your own pace: "I promised
+them gold. I gave them fire." Then, standing over him, **Take his fire** gives you Fire (there is no choice with this
+god), its gift Falling Sun, and the Sun-Spear; his own spear is gone from beside him. The sponsor speaks while **the sun
+sets**: it swings around into the west and sinks, the light turns orange and low, the obelisk's shadow stretches long to
+the east, and the gold gate in the west wall sinks into the floor. The low sun's beam shines in through the gate across
+the court. Walk into it to the gate's gold mark, and **Go west with the sun** ends the land and sends you back to the
+hub. (The stranded boat in the city's dry river is just scenery; it isn't the way out.)
 
 **Not yet**
 
-- The ring of fire round the planted spear is a filled circle, not a ring you can stand inside.
-- The ray comes back down the line the spear was thrown along; he does not step aside first.
-- Nothing in this fight has sound, the transformation and the sunset included.
-- The man is posed only as the court's director holds him (lifting the spear, lying fallen); he does not speak with his
-  hands or turn his head to follow you.
+- The ring of fire around the planted spear is a filled circle, not a ring you can stand inside.
+- The ray comes back down the line the spear was thrown along; he doesn't step aside first.
+- Nothing in this fight has sound, including the transformation and the sunset.
+- The man only moves in the poses set for the court's cutscene (lifting the spear, lying fallen); he doesn't talk with
+  his hands or turn his head to follow you.
