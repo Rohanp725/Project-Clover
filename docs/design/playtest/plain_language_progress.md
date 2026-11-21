@@ -89,7 +89,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/seized.md
 - [x] marks/shiningherb.md
 - [x] marks/sicklewind.md
-- [ ] marks/sleetcharge.md
+- [x] marks/sleetcharge.md
 - [ ] marks/smoulder.md
 - [ ] marks/steam.md
 - [ ] marks/stolenwarmth.md
