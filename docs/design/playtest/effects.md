@@ -794,7 +794,7 @@ Title: Seized (Lightning and Water)
 Group: Reactions
 **What it is.** A Soaked enemy with two or more Static. The electricity locks up its muscles, and the water runs off it, electrified.
 
-**The numbers.** The enemy is held for 1 second (an elite for 0.4 seconds; a god for 0.3 seconds in human form, 0.12 seconds in god form, and not at all while its guard is up). The water forms an electrified film 2.5 metres around its feet for 3 seconds, giving one Static every half second to anyone standing in it. Its own Static isn't used up. Then it waits 6 seconds.
+**The numbers.** The enemy is held for 1 second (an elite for 0.4 seconds; a god for 0.3 seconds in human form, 0.12 seconds in god form, and not at all while its guard is up). The water forms an electrified film 2.5 metres around its feet for 3 seconds, giving one Static every half second to every other enemy standing in it. The locked-up enemy itself isn't charged by it. Its own Static isn't used up. Then it waits 6 seconds.
 
 **What sets it off.** A second Static on a Soaked enemy, or Water landing on an enemy that already has two. One Static isn't enough, and the wait doesn't start until there are two.
 
@@ -802,7 +802,7 @@ Group: Reactions
 
 **How to use it.** Charge a wet enemy twice in a crowd. It is held, and the film charges everyone nearby for your Lightning.
 
-**How it looks.** Its name over the enemy, and the film on the floor. Not built yet: the film leaving the locked-up enemy alone (for now, it charges it too).
+**How it looks.** Its name over the enemy, and the film on the floor.
 
 ## reaction-windthrow
 Title: Windthrow (Wind and Life)
@@ -1124,7 +1124,7 @@ Title: Earthed (Lightning and Earth)
 Group: Reactions
 **What it is.** Static meets Tremor. The charge runs into the ground, leaving a fern-shaped burn mark.
 
-**The numbers.** All its Static runs into the floor at once, dealing 5 damage and 3 stagger for each stack to everyone within 4 metres, plus a Tremor. The enemy is rooted in place for 1 second (an elite for half that; a god not at all). Then it waits 4 seconds.
+**The numbers.** All its Static runs into the floor at once, dealing 5 damage and 3 stagger for each stack to every other enemy within 4 metres, plus a Tremor. The Earthed enemy itself isn't hit by it. The enemy is rooted in place for 1 second (an elite for half that; a god not at all). Then it waits 4 seconds.
 
 **What sets it off.** Static landing on a shaken enemy, or Tremor landing on a charged one.
 
@@ -1132,7 +1132,7 @@ Group: Reactions
 
 **How to use it.** Charge it up a lot in a crowd, then shake it. The charge goes to everyone nearby.
 
-**How it looks.** Its name over the enemy, and a burst around it. Not built yet: the fern-shaped mark on the floor, and leaving the Earthed enemy itself alone (for now, it takes its own burst).
+**How it looks.** Its name over the enemy, and a burst around it. Not built yet: the fern-shaped mark on the floor.
 
 ## reaction-sickle-wind
 Title: Sickle Wind (Wind and Metal)
