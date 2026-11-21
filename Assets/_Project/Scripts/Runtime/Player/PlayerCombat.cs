@@ -1302,7 +1302,8 @@ namespace Clover.Player
         /// that carries <paramref name="seeks"/>, then on from there, up to <paramref name="leaps"/> times (Live Iron's
         /// iron to iron). Returns how many it struck.
         /// </summary>
-        public int StrikeChainFrom(Transform from, in SpellBlow blow, int leaps, float leapRange, ElementInfo look, AfflictionKind seeks)
+        public int StrikeChainFrom(Transform from, in SpellBlow blow, int leaps, float leapRange, ElementInfo look, AfflictionKind seeks,
+            AfflictionKind onwardFrom = AfflictionKind.None)
         {
             var struck = spellStruck;
             struck.Clear();
@@ -1330,6 +1331,8 @@ namespace Clover.Player
                     if (blow.Spell && upgrades != null) upgrades.OnSpellStruck(target, wasAfflicted);
                 }
                 at = next.position;
+                // It leaps on only from those carrying what is asked (Mirror to Mirror: Sundered).
+                if (!Carries(target, onwardFrom)) break;
             }
             return hits;
         }

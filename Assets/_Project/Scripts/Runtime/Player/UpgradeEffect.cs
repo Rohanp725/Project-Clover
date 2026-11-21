@@ -64,6 +64,11 @@ namespace Clover.Player
         /// Night draws the Soaked alone; Sea Ice's web chills only the Soaked).
         /// </summary>
         public AfflictionKind OnlyCarrying = AfflictionKind.None;
+        /// <summary>
+        /// Not None: an arc's first leap goes to any enemy, and it leaps on only from those carrying this affliction
+        /// (Mirror to Mirror: on from each struck that carries Sundered).
+        /// </summary>
+        public AfflictionKind LeapsOnFrom = AfflictionKind.None;
         /// <summary>The stacks it lays are as many as the trigger carried: what the dead enemy bore of <see cref="Needs"/>, or what a set-off spent.</summary>
         public bool CarriesDepth;
         /// <summary>Only while this state of the player holds.</summary>

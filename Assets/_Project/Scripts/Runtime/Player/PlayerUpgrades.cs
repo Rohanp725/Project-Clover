@@ -1583,7 +1583,7 @@ namespace Clover.Player
                         // Answering a blow, it carries a share of that blow (Amount); else its own Damage.
                         float arcDamage = effect.Amount > 0f && pending.Power > 0f ? pending.Power * effect.Amount : eDamage;
                         ArcsLeapt += combat.StrikeChainFrom(target, Blow(look, kind, arcDamage, eStagger, eStacks), Or(eCount, 2),
-                            Or(effect.Reach, 5f) * Stats.Multiplier(PlayerStat.LeapReach), look, effect.LeapsTo);
+                            Or(effect.Reach, 5f) * Stats.Multiplier(PlayerStat.LeapReach), look, effect.LeapsTo, effect.LeapsOnFrom);
                         break;
                     }
                     combat.StrikeChain(0f, Blow(look, kind, eDamage, eStagger, eStacks), Or(eCount, 2), Or(effect.Reach, 5f) * Stats.Multiplier(PlayerStat.LeapReach), look, target);

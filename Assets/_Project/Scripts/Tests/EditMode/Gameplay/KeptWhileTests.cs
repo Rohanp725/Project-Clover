@@ -417,6 +417,15 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void MirrorToMirrorLeapsOnOnlyFromTheNotched()
+        {
+            var mirror = Upgrade.ById(HaloTree.Shape).Shapes.First(shape => shape.Name == "Mirror to Mirror").Effects.Single(effect => effect.Do == UpgradeAction.Arc);
+            Assert.AreEqual(AfflictionKind.Sundered, mirror.LeapsOnFrom);
+            Assert.AreEqual(AfflictionKind.None, mirror.LeapsTo, "its first leap goes to any enemy");
+            Assert.AreEqual(4, mirror.Count);
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))

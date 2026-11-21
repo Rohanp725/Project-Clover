@@ -29,9 +29,8 @@ namespace Clover.Player.Trees
             const string A = Elements.Metal, B = Elements.Light;
             const AfflictionKind Notch = AfflictionKind.Sundered, Mark = AfflictionKind.Marked;
 
-            // NEEDS: an arc that leaps on only from those that carry an affliction (Mirror to Mirror leaps from each struck
-            // that carries Sundered; now through four, whatever they carry); a blow made critical by a condition (Burning
-            // Mirror; now the blow is answered by a burst of 10 on it).
+            // Mirror to Mirror leaps on only from each struck that carries Sundered (UpgradeEffect.LeapsOnFrom).
+            // NEEDS: a blow made critical by a condition (Burning Mirror; now the blow is answered by a burst of 10 on it).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Glint: Mirror to Mirror or Burning Mirror", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -41,10 +40,10 @@ namespace Clover.Player.Trees
                     new ShapeDef
                     {
                         Name = "Mirror to Mirror",
-                        Description = "The ray goes on from every enemy it strikes, up to four in all within 6 m of each other, drawing a zigzag across the room: 10, 15 stagger and a Mark each, and its notch passed on.",
+                        Description = "The ray goes on from every notched enemy it strikes, up to four in all within 6 m of each other, drawing a zigzag across the room: 10, 15 stagger and a Mark each, and its notch passed on.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Arc, FromTarget = true, Count = 4, Reach = 6f, Damage = 10f, Stagger = 15f, Affliction = Mark, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Arc, FromTarget = true, LeapsOnFrom = Notch, Count = 4, Reach = 6f, Damage = 10f, Stagger = 15f, Affliction = Mark, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Pass, Reach = 6f, Affliction = Notch, Stacks = 1 },
                         },
                     },
