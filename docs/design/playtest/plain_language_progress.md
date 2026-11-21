@@ -88,7 +88,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/rust.md
 - [x] marks/seized.md
 - [x] marks/shiningherb.md
-- [ ] marks/sicklewind.md
+- [x] marks/sicklewind.md
 - [ ] marks/sleetcharge.md
 - [ ] marks/smoulder.md
 - [ ] marks/steam.md
