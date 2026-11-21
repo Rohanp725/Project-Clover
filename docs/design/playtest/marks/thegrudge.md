@@ -40,17 +40,15 @@ Lightning are both carried.
 **Example.** Bring the cloud down on a charged captain. You heal, and the soldiers next to it are Cursed, ready for the next cloud.
 
 ## thegrudge.longmemory
-**What it does.** A Curse on a charged enemy lasts as long as its Static does.
+**What it does.** A Curse on a charged enemy lasts as long as its Static does. While an enemy has Static, its Curse doesn't fade.
 
 **When it happens.** Always on once you learn it, while you carry both Dark and Lightning.
 
-**The numbers.** Mix, a minor mark, 1 Shard.
+**The numbers.** Mix, a minor mark, 1 Shard. Once the Static is gone, the Curse starts to fade as usual.
 
 **Works with.** Grievance, which it comes after on the chart, The Grudge.
 
 **Example.** The Curse doesn't run out before the cloud gathers.
-
-**Not built yet.** It does nothing yet. The game can't yet make one affliction last as long as another one does.
 
 ## thegrudge.givenbones
 **What it does.** The Grudge's black bolt costs you 2 health and hits twice as hard. The health you pay turns grey, and you win it back by landing blows.
@@ -81,10 +79,10 @@ Lightning are both carried.
 
 **When it happens.** At a rest fire, pick it for your surge slot in the Hand while you carry both Dark and Lightning. Light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. 40 mana, lasts 10 seconds. Each kill while it is lit adds 1 second. For now: each blow adds one Static; one blow in three on a Cursed enemy sets off its Static; each Cursed enemy you kill heals you 6.
+**The numbers.** Mix, duo surge, 5 Shards. 40 mana, lasts 10 seconds. Each kill while it is lit adds 1 second. Each blow adds one Static. Every third blow on a Cursed enemy sets off its Static. Each enemy keeps its own count. Each Cursed enemy you kill heals you 6.
 
 **Works with.** The Grudge, The Exile Returns, Given Bones.
 
 **Example.** Curse a pack, light your surge, and the ash cloud keeps the storm clouds gathering.
 
-**Not built yet.** For now, the bolt falls on one blow in three, by chance, on the enemy you hit, instead of on every third blow at the nearest Cursed enemy within 8 metres.
+**Not built yet.** For now, the bolt falls on the enemy you hit, on every third blow that enemy takes. It should fall on every third blow you land, on the nearest Cursed enemy within 8 metres.

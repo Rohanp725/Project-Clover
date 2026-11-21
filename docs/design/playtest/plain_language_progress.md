@@ -31,6 +31,7 @@ checked against its code and committed on its own.
 - [x] marks/quicksilver.md: shapes (half-second bite wait per enemy; Running Silver passes every dose and notch),
   Cinnabar (notches kept while poisoned)
 - [x] marks/sleetcharge.md: Glass Storm (every other pass a Static, on each enemy), Glass Spear (frozen 1.5 s)
+- [x] marks/thegrudge.md: Ash and Thunder (every third blow on each Cursed enemy), Long Memory (Curse kept while charged)
 
 ## Unsure lines
 
