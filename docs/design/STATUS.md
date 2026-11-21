@@ -51,6 +51,9 @@ One page that lists everything done, in progress, parked or not started, so noth
   1. Push.
   2. Effects round 4.
   3. Finish stand-in passes 2–4.
-  3b. Finish the Way (the owner's call): Phase 5 tasks 5.3–5.7 and Memories income paying out in play.
+  3b. Finish the Way (the owner's call): Phase 5 tasks 5.3–5.7 and Memories income paying out in play. The plan is
+      `steel/way_build_plan.md`, and all 42 questions are answered. It starts with the Katana's Way.
+      It includes a **rest-fire UI pass** (the Hand and the Way on one well-designed screen, researched first;
+      `ui_rest_fire_plan.md`).
   4. Freeze new combat content until the Fire land is a finished slice: levels signed off, Khepharu relooked, enemies played, and basic sound.
   5. Then build the lands one at a time, Water first.
