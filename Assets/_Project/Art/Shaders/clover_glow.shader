@@ -286,7 +286,12 @@ Shader "Clover/Glow"
                 half4 colour = _Color * input.color;
                 // The flame's heart is the same fire, hotter: paler and yellower, with a hard line between the two.
                 colour.rgb = lerp(colour.rgb, colour.rgb * half3(1.25, 1.9, 2.4) + half3(0.25, 0.2, 0.1) * colour.a, inner);
-                if (_Core > 0.001) colour.rgb = lerp(colour.rgb, half3(3.2, 3.2, 3.2) * input.color.a, step(_Core, raw));
+                // The hot core: white for a plain effect, the tint's own hue for a tinted one, and dimmer for a tint thrown
+                // low (a colour held under white). A white core under any tint burned pure white however low the tint was
+                // thrown (Light's critical stars on Marked enemies, 2026-11-21).
+                half peak = max(max(input.color.r, input.color.g), max(input.color.b, 0.001));
+                half3 core = half3(3.2, 3.2, 3.2) * (input.color.rgb / peak) * saturate(peak * 4.0);
+                if (_Core > 0.001) colour.rgb = lerp(colour.rgb, core * input.color.a, step(_Core, raw));
                 colour.a = saturate(colour.a * mask);
                 // With additive blending the colour itself must fade; with alpha blending the alpha does it.
                 colour.rgb *= _DstBlend < 1.5 ? colour.a : 1.0;
