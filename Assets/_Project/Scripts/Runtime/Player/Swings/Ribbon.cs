@@ -12,8 +12,22 @@ namespace Clover.Player.Swings
     {
         public const int Capacity = 192;
 
+        /// <summary>
+        /// The most degrees round the swinger one trail keeps: the oldest of it gives way past this, so a spin never
+        /// closes into a ring about the player (the swing films of 2026-11-20: Dark's third blow and infused strike drew
+        /// a large purple ring round the player, standing alone).
+        /// </summary>
+        public const float MostSweepDegrees = 200f;
+
+        /// <summary>A blade point nearer the pivot than this (an arrow's own trail) is not measured round it.</summary>
+        private const float LeastReach = 0.3f;
+
         private readonly Vector3[] inner = new Vector3[Capacity], outer = new Vector3[Capacity], way = new Vector3[Capacity];
         private readonly float[] time = new float[Capacity], gate = new float[Capacity];
+        // Degrees turned round the pivot by the time each sample was laid, counted on from the trail's start.
+        private readonly float[] turned = new float[Capacity];
+        private float turnedSoFar, lastAngle;
+        private bool angled;
         private readonly int[] id = new int[Capacity];
         private int first, count, nextId;
         private Vector3 lastPivot, lastInnerOffset, lastOuterOffset, lastWay;
@@ -39,6 +53,8 @@ namespace Clover.Player.Swings
         {
             first = count = 0;
             hasLast = false;
+            angled = false;
+            turnedSoFar = 0f;
             Emitting = true;
             Seconds = Mathf.Max(0.02f, seconds);
             Lag = Mathf.Max(0f, lag);
@@ -60,6 +76,8 @@ namespace Clover.Player.Swings
             count = 0;
             Emitting = false;
             hasLast = false;
+            angled = false;
+            turnedSoFar = 0f;
             Stopped = float.MaxValue;
         }
 
@@ -86,11 +104,12 @@ namespace Clover.Player.Swings
                 for (int k = 1; k < steps; k++)
                 {
                     float s = k / (float)steps;
-                    Add(RibbonMath.Between(lastPivot, lastInnerOffset, pivot, innerOffset, s), RibbonMath.Between(lastPivot, lastOuterOffset, pivot, outerOffset, s),
-                        Vector3.Slerp(lastWay, moving, s), Mathf.Lerp(lastTime, now, s), Mathf.Lerp(lastGate, strength, s));
+                    Vector3 between = RibbonMath.Between(lastPivot, lastOuterOffset, pivot, outerOffset, s);
+                    Add(RibbonMath.Between(lastPivot, lastInnerOffset, pivot, innerOffset, s), between,
+                        Vector3.Slerp(lastWay, moving, s), Mathf.Lerp(lastTime, now, s), Mathf.Lerp(lastGate, strength, s), Vector3.Lerp(lastPivot, pivot, s));
                 }
             }
-            Add(innerPoint, outerPoint, moving, now, strength);
+            Add(innerPoint, outerPoint, moving, now, strength, pivot);
             lastPivot = pivot;
             lastInnerOffset = innerOffset;
             lastOuterOffset = outerOffset;
@@ -100,8 +119,17 @@ namespace Clover.Player.Swings
             hasLast = true;
         }
 
-        private void Add(Vector3 innerPoint, Vector3 outerPoint, Vector3 moving, float at, float strength)
+        private void Add(Vector3 innerPoint, Vector3 outerPoint, Vector3 moving, float at, float strength, Vector3 pivot)
         {
+            Vector3 reach = outerPoint - pivot;
+            reach.y = 0f;
+            if (reach.sqrMagnitude >= LeastReach * LeastReach)
+            {
+                float angle = Mathf.Atan2(reach.x, reach.z) * Mathf.Rad2Deg;
+                if (angled) turnedSoFar += Mathf.DeltaAngle(lastAngle, angle);
+                lastAngle = angle;
+                angled = true;
+            }
             if (count == Capacity)
             {
                 first = (first + 1) % Capacity;
@@ -113,8 +141,15 @@ namespace Clover.Player.Swings
             way[i] = moving;
             time[i] = at;
             gate[i] = strength;
+            turned[i] = turnedSoFar;
             id[i] = nextId++;
             count++;
+            // No more than so far round: the oldest gives way.
+            while (count > 2 && Mathf.Abs(turnedSoFar - turned[first]) > MostSweepDegrees)
+            {
+                first = (first + 1) % Capacity;
+                count--;
+            }
         }
 
         /// <summary>Lets go of the parts whose time is over. A frozen trail keeps every part until it shatters.</summary>

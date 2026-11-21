@@ -26,6 +26,12 @@ namespace Clover.Player.Trees
         public const string Sunk = "smoulder.sunk";
         public const string Nerves = "nervefire.nerves";
 
+        /// <summary>
+        /// Metres Carried Embers' column runs downwind from the one struck, down the charred lane its look lays (the look's
+        /// column is carried on to it, <see cref="Forms.ElementLooks"/>): the fire lights only what the column is seen to reach.
+        /// </summary>
+        public const float CarriedEmbersRun = 5f;
+
         private static void AddNear(List<Upgrade> to)
         {
             // ---- Distance 1.
@@ -149,15 +155,19 @@ namespace Clover.Player.Trees
 
             // ---- Distance 2.
 
-            // Fire and Wind (12). The wind strips three embers off it: they fly 5 m downwind (away from the player, along
-            // the line to it) and land 1 m apart as small fires (1 m, 3 s, 3 a bite, 1 Burn); whatever stands within
-            // 1.5 m of a landing is set alight as they land. The player aims the fire by where they stand.
+            // Fire and Wind (12). The wind takes the fire off it as a whirling column that runs 5 m downwind (away from the
+            // player, along the line to it), from 0.6 s to 1.25 s as its look runs: whatever the column reaches, within
+            // 1 m of it, is set alight (1 Burn) at the moment it reaches it, and the one struck is not lit again. As it
+            // blows out it drops its embers as three small fires (1 m, 3 s, 3 a bite, 1 Burn) along the last 1.2 m of its
+            // run, never beyond where it reached. (Before 2026-11-20 the embers landed 4 to 6 m out at 0.35 s and lit all
+            // within 1.5 m of them, while the look's column stopped at 2.5 m: the owner, "it doesnt reach a enemy but they
+            // get ignited anyways".) The player aims the fire by where they stand.
             to.Add(Reaction(AfflictionKind.Burn, AfflictionKind.Unsteady,
-                "Burn meets Unsteady: the wind strips three embers off it and carries them 5 m on, away from you. Where they land small fires burn, and lights what stands near.",
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 3, Reach = 5f, Amount = 1f,
-                    Radius = 1f, Seconds = 3f, Interval = 0.5f, Damage = 3f, Affliction = AfflictionKind.Burn, Stacks = 1, Delay = 0.35f },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 3, Reach = 5f, Amount = 1f,
-                    Radius = 1.5f, Damage = 0f, Affliction = AfflictionKind.Burn, Stacks = 1, Delay = 0.35f }));
+                "Burn meets Unsteady: the wind takes the fire off it as a whirling column that runs 5 m on, away from you, lighting whatever it reaches as it reaches it. Where it blows out it drops its embers as small fires.",
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Lane, Reach = CarriedEmbersRun, Radius = 1f, Delay = 0.6f, Interval = 0.65f / 4f,
+                    Damage = 0f, Affliction = AfflictionKind.Burn, Stacks = 1, SparesTarget = true },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 3, Reach = CarriedEmbersRun - 0.6f, Amount = 0.6f,
+                    Radius = 1f, Seconds = 3f, Interval = 0.5f, Damage = 3f, Affliction = AfflictionKind.Burn, Stacks = 1, Delay = 1.3f }));
 
             // Lightning and Ice (13). For 3 s it gains one Static every 0.5 s (to full); at the end a bolt discharges all
             // of it (7 damage and 5 stagger a stack in 4 m) and everything the discharge reaches takes 1 Chill. A heavy

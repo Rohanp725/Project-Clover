@@ -612,9 +612,9 @@ Group: Reactions
 ## reaction-carried-embers
 Title: Carried Embers (Fire and Wind)
 Group: Reactions
-**What it is.** Burn meets Unsteady. The wind strips three embers off the enemy and carries them on, away from you.
+**What it is.** Burn meets Unsteady. The wind takes the fire off the enemy as a whirling column and carries it on, away from you, lighting whatever it reaches.
 
-**The numbers.** The embers land 4, 5 and 6 m past the enemy, on your line to it, and burn there as small fires for 3 s (1 m across, 3 damage and 1 Burn a bite, two bites a second). Anything within 1.5 m of a landing is set alight as they land. The fire they lay starts nothing more. Rests 4 s.
+**The numbers.** The column runs 5 m past the enemy, on your line to it, in about two thirds of a second. Anything within 1 m of it is set alight (1 Burn) at the moment the column reaches it; nothing it does not reach is lit. Where it blows itself out it drops its embers as three small fires along the last metre and a bit of its run, burning for 3 s (1 m across, 3 damage and 1 Burn a bite, two bites a second). The fire they lay starts nothing more. Rests 4 s.
 
 **What sets it off.** Burn landing on an Unsteady enemy, or Unsteady on a burning one.
 
@@ -622,7 +622,7 @@ Group: Reactions
 
 **How to use it.** You aim it by where you stand: put the enemy between you and the ones behind it, and the fire lands among them.
 
-**How it looks.** Its name over the enemy, then three small fires springing up beyond it.
+**How it looks.** Its name over the enemy, then a column of fire spinning up off it and running away from you down a charred lane, lighting those it passes, until it spins apart.
 
 ## reaction-sleet-charge
 Title: Sleet Charge (Lightning and Ice)

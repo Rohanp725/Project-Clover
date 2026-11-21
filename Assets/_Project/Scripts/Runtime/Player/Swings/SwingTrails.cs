@@ -462,6 +462,9 @@ namespace Clover.Player.Swings
             lastElapsed = elapsed;
 
             Gather(weapon, now, deltaTime);
+            // A Light swing keeps Marked's sun-wheels off the floor about it while it plays: the soldiers it marks wear
+            // the shaft and glint on the body, not cream rings under the swing's gold.
+            if (On && step != null && swingElement != null && swingElement.Index == ElementSubstance.Light) Forms.AfflictionArt.SwingQuiet(transform.position);
             bool drawing = On && swingElement != null && step != null && combat.Combo.Phase != AttackPhase.Charge && InWindow(step, elapsed);
             if (drawing && deltaTime > 0f) Emit(swingElement, swingInfused ? InfusedWeight : 1f, false, view, now, deltaTime);
             else if (!drawing) StopEmitting(now, false);

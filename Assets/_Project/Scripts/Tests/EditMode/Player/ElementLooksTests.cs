@@ -63,8 +63,9 @@ namespace Clover.Tests
 
         /// <summary>
         /// The elements 3 moments (staging/blender/2026-11-20_elements3): each charged blade but Lightning's lands in its
-        /// own three blows and wears a sheath on the blade (Wind's and Dark's air and smoke are the trails' own), each
-        /// reworked spell and infused strike has its look, Tailwind is the wind's surge, and Red Hot blasts on.
+        /// own three blows and wears nothing on the blade (the owner, 2026-11-20: "take out all the elements on top of the
+        /// blade effects"), each reworked spell and infused strike has its look, Tailwind is the wind's surge, and Red Hot
+        /// blasts on.
         /// </summary>
         [Test]
         public void EveryElements3MomentIsBuilt()
@@ -77,19 +78,14 @@ namespace Clover.Tests
                 string blade = ElementMoves.BladeSlug(element);
                 if (blade == null) continue;
                 for (int blow = 1; blow <= 3; blow++) Assert.GreaterOrEqual(set.Find(ElementMoves.HitKey(element, blow)), 0, $"{blade}, blow {blow}");
-                bool airOrSmoke = element == ElementSubstance.Wind || element == ElementSubstance.Dark;
-                Assert.AreEqual(!airOrSmoke, set.FindSheath(element) >= 0, $"{blade}'s sheath");
+                Assert.Less(set.FindSheath(element), 0, $"{blade} wears a sheath on the blade");
                 string spell = ElementMoves.SpellKey(element, false), strike = ElementMoves.StrikeKey(element, false);
                 if (spell != null) Assert.GreaterOrEqual(set.Find(spell), 0, spell);
                 if (strike != null) Assert.IsTrue(set.Find(strike) >= 0 || set.Find(ElementMoves.StrikeKey(element, true)) >= 0, strike);
             }
             Assert.GreaterOrEqual(set.Find(ElementMoves.Tailwind), 0, "Tailwind");
             Assert.GreaterOrEqual(set.FindVariant("red_hot", '+'), 0, "Red Hot's blast");
-            foreach (var sheath in set.Sheaths)
-            {
-                Assert.IsNotNull(sheath.Mesh, $"sheath {sheath.Element}");
-                Assert.IsNotNull(sheath.Material, $"sheath {sheath.Element}");
-            }
+            Assert.AreEqual(0, set.Sheaths.Length, "blade sheaths built");
         }
 
         [Test]

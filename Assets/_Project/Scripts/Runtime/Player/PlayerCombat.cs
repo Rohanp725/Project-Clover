@@ -168,6 +168,9 @@ namespace Clover.Player
         /// weapon carries one (<see cref="SwingElement"/>), so the flash and the cut streak are tinted and softened and the
         /// trail shows through (the owner's choice, 2026-11-19); clear for a plain move, which keeps its white.
         /// </summary>
+        /// <summary>What a heavy blow's star is lit to under an element: its material glows six times past white.</summary>
+        public const float ImpactGlow = 0.22f;
+
         public Color StruckTint
         {
             get
@@ -1904,8 +1907,19 @@ namespace Clover.Player
                     else CutMarks.Light(other.bounds.center, through, struckTint);
                 }
                 if (reticle != null && target is Component struckThing) reticle.Struck(struckThing.transform);
-                if (outcome == HitOutcome.Finisher) Vfx.Play(VfxKind.Burst, other.bounds.center);
-                if (step.Heavy && outcome != HitOutcome.Blocked) Vfx.Play(VfxKind.Impact, other.bounds.center);
+                // A finisher's flash: white for a plain weapon, the element's hue under one, as the heavy blow's star.
+                if (outcome == HitOutcome.Finisher)
+                {
+                    if (StruckLook.Tinted(struckTint)) Vfx.Play(VfxKind.Burst, other.bounds.center, Vector3.up, 1f, StruckLook.Glow(struckTint, ImpactGlow));
+                    else Vfx.Play(VfxKind.Burst, other.bounds.center);
+                }
+                // A heavy blow's star: white for a plain weapon, the element's hue at a moderate brightness under one (the
+                // swing films of 2026-11-20: a white starburst on every element's infused strike).
+                if (step.Heavy && outcome != HitOutcome.Blocked)
+                {
+                    if (StruckLook.Tinted(struckTint)) Vfx.Play(VfxKind.Impact, other.bounds.center, Vector3.up, 1f, StruckLook.Glow(struckTint, ImpactGlow));
+                    else Vfx.Play(VfxKind.Impact, other.bounds.center);
+                }
                 Mana.Gain(earned);
                 BlowsLanded++;
                 if (defence != null && pays) defence.DealtDamage(damage);

@@ -70,6 +70,14 @@ namespace Clover.EditorTools
         public static readonly Dictionary<string, string[]> LeftOutNamed = new Dictionary<string, string[]>
         {
             ["red_hot"] = new[] { "_blast", "_wave", "_sparksh", "_fan" },
+            // Carried Embers' flame cones riding out along the column read as random cones of fire on the tornado (the
+            // owner, 2026-11-20: "the random cones of fire that appear on the tornado dont need to be there").
+            // Its embers flying off the column's top to land on the bodies the recipe stood 4 to 6 m out lit them wherever
+            // the column went: the column itself now lights what it reaches (Reactions.CarriedEmbersRun).
+            ["carried_embers"] = new[] { "_flag", "_ember0_", "_ember1_", "_ember2_" },
+            // Dark's charged third blow laid a black disc and a ring at the feet of the one it struck (the swing films of
+            // 2026-11-20: "black discs" and loops at the soldiers' feet); the dark poured down into the ground is kept.
+            ["e3_dark_blade_hit3"] = new[] { "_hole", "_horizon" },
         };
 
         public static bool LeftOutByName(string slug, string piece)

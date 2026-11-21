@@ -103,8 +103,13 @@ namespace Clover.Player.Forms
                 int depth = afflictions.Stacks(kind);
                 if (depth <= 0) continue;
                 if (kind == AfflictionKind.Soaked && (afflictions.Stacks(AfflictionKind.Static) >= SeizedStatic || afflictions.Stacks(AfflictionKind.Sundered) > 0)) continue;
-                // A reaction's own look is playing on it and shows what became of this one.
-                if (ElementLooks.Hides(body, (int)kind)) continue;
+                // A reaction's own look is playing on it and shows what became of this one: still carried, it is kept
+                // unseen and ageing, so it is simply there when that look is over, not cast again from its start.
+                if (ElementLooks.Hides(body, (int)kind))
+                {
+                    ElementLooks.KeepVeiled(ElementLooks.Find(LookOf(kind, depth)), body);
+                    continue;
+                }
                 // Under ice that bursts through the body (Frost Bite's spike, the charged ice blade's crystals) Chill's
                 // shell does not cover it (the owner: "that white spiderweb thing is really covering everything up").
                 if (kind == AfflictionKind.Chill && ElementLooks.Thawed(body)) continue;
@@ -179,6 +184,31 @@ namespace Clover.Player.Forms
             return true;
         }
 
+        /// <summary>
+        /// Metres from a player swinging a Light blade within which Marked's sun-wheel is not laid on the floor, and how
+        /// long after the swing's last frame. The wheels under the soldiers it marked lay cream rings over the swing's own
+        /// gold (the swing films of 2026-11-20): the shaft and the glint on the body stay.
+        /// </summary>
+        public const float SwingQuietReach = 6f, SwingQuietSeconds = 0.6f;
+
+        private static float swingQuietUntil;
+        private static Vector3 swingQuietAt;
+
+        /// <summary>A Light swing is being drawn by a player standing at <paramref name="at"/>: Marked's floor wheels near wait.</summary>
+        public static void SwingQuiet(Vector3 at)
+        {
+            swingQuietUntil = Time.time + SwingQuietSeconds;
+            swingQuietAt = at;
+        }
+
+        private static bool SwingQuietAt(Vector3 feet)
+        {
+            if (Time.time >= swingQuietUntil) return false;
+            Vector3 off = feet - swingQuietAt;
+            off.y = 0f;
+            return off.sqrMagnitude <= SwingQuietReach * SwingQuietReach;
+        }
+
         /// <summary>The depth of Static at which a Soaked body is Seized (Reactions.Three: "two Static or more").</summary>
         public const int SeizedStatic = 2;
 
@@ -212,6 +242,8 @@ namespace Clover.Player.Forms
             System.Array.Clear(flareSeen, 0, MostFlares);
             System.Array.Clear(flareDepth, 0, MostFlares);
             Jolts = 0;
+            swingQuietUntil = 0f;
+            swingQuietAt = Vector3.zero;
             BurnStyle = DefaultBurnStyle;
             StaticStyle = DefaultStaticStyle;
         }
@@ -335,8 +367,10 @@ namespace Clover.Player.Forms
                     // back in softly.
                     if (ElementLooks.QuietAt(feet)) return true;
                     if (Flare(depth, feet)) return true;
+                    // While a Light swing plays beside it the wheel is not laid, and one already down goes.
+                    if (SwingQuietAt(feet)) ElementArt.Hush(ElementArt.Piece("light_wheel_affliction"), feet, ElementLooks.QuietReach, 0.15f);
                     // The wheel turns under it; the shaft lands on its head.
-                    if (beat % 3 == 0) ElementArt.Floor(ElementArt.Piece("light_wheel_affliction"), feet, beat * 15f, 1f, 1f, 1.5f, 0f, true, Color.white, 40f, WheelFadeIn);
+                    else if (beat % 3 == 0) ElementArt.Floor(ElementArt.Piece("light_wheel_affliction"), feet, beat * 15f, 1f, 1f, 1.5f, 0f, true, Color.white, 40f, WheelFadeIn);
                     ElementArt.Stand(ElementArt.Piece("light_pencil_affliction"), feet + Vector3.up * 1.9f, 180f, 1f, 0.4f);
                     ElementArt.Stand(ElementArt.Piece("light_glint_affliction"), feet + Vector3.up * 2.05f, 180f, 0.8f, 0.2f);
                     return true;

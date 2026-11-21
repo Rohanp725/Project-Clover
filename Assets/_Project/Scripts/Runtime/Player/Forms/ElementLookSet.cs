@@ -278,9 +278,33 @@ namespace Clover.Player.Forms
             if (count <= 0) return 0f;
             int last = first + count - 1;
             if (count < 2 || time <= Keys[last].Time) return Sample(first, count, time, Vector3.zero).x;
+            // A channel that swings back and forth (a flame's wobble) goes round its last stretch again: run on at the
+            // rate of its last two keys, a flame kept for a reaction's aftermath turned 130 degrees a second and lay over
+            // on its side before it went (Red Hot, Firebloom, Fire Medicine, Smoulder, Flashover: "the flames keep
+            // rotating downward before dissapearing", 2026-11-20).
+            if (Swings(first, count))
+            {
+                float cycle = Mathf.Min(CycleSeconds, Keys[last].Time - Keys[first].Time);
+                if (cycle <= 0.0001f) return Keys[last].Value.x;
+                return Sample(first, count, Keys[last].Time - cycle + Mathf.Repeat(time - Keys[last].Time, cycle), Vector3.zero).x;
+            }
             float span = Keys[last].Time - Keys[last - 1].Time;
             float rate = span > 0.0001f ? (Keys[last].Value.x - Keys[last - 1].Value.x) / span : 0f;
             return Keys[last].Value.x + rate * (time - Keys[last].Time);
+        }
+
+        /// <summary>True when an angle channel turns one way and then back (a wobble), not on round one way (a lotus turning).</summary>
+        public bool Swings(int first, int count)
+        {
+            float way = 0f;
+            for (int k = first; k < first + count - 1; k++)
+            {
+                float step = Keys[k + 1].Value.x - Keys[k].Value.x;
+                if (Mathf.Abs(step) < 0.0001f) continue;
+                if (way != 0f && Mathf.Sign(step) != way) return true;
+                way = Mathf.Sign(step);
+            }
+            return false;
         }
 
         /// <summary>
@@ -318,8 +342,15 @@ namespace Clover.Player.Forms
         {
             if (age <= look.Seconds) return age;
             // A look played once and held past its end (a reaction's aftermath) keeps what stays moving: its flames
-            // flicker on and its clouds churn, never frozen mid-lick.
-            if (once) return part.Cycles ? CycleTime(look, part, age) : look.Seconds + 0.001f;
+            // flicker on and its clouds churn, never frozen mid-lick. A part whose own window ends after the look's
+            // length plays on to its end and goes: held at the look's length, Thunder Gust's last funnel bands and
+            // Carried Embers' column stood frozen for the whole hold and then faded ("it just pauses and then fades",
+            // 2026-11-20).
+            if (once)
+            {
+                if (part.Cycles) return CycleTime(look, part, age);
+                return part.Hide < 9f && part.Hide > look.Seconds ? Mathf.Min(age, part.Hide) : look.Seconds + 0.001f;
+            }
             if (part.Repeats)
             {
                 float span = Mathf.Max(0.1f, look.Seconds - look.LoopFrom);

@@ -1314,6 +1314,8 @@ namespace Clover.Player
                         Burst = !effect.Unseen && !bespoke, Quiet = bespoke, Blow = Unseen(Blow(look, kind, eDamage, eStagger, eStacks), bespoke), FromReaction = laying == LaySource.Reaction,
                         // One blow down the whole lane: an enemy where two patches meet is struck once.
                         Group = Hazards.NewGroup(),
+                        // A lane run out of the one struck (Carried Embers' column) may leave that one alone.
+                        Spares = effect.SparesTarget ? pending.Target as IDamageable : null,
                     };
                     for (int i = 0; i < patches; i++)
                     {
@@ -1705,7 +1707,11 @@ namespace Clover.Player
             Vector3 at = who.transform.position;
             // Filled by what a reaction laid (Seized's film, Rust), it is seen in the reaction's own look: no ring (the
             // owner, 2026-11-20: "remove the circles").
-            if (CombatEvents.LaidBy != LaySource.Reaction) Vfx.Play(VfxKind.TintRing, at + Vector3.up * 0.3f, Vector3.up, 1f, Afflictions.Spec(kind).Colour);
+            // Nor when the new effects draw the affliction on the body: its own look shows it filling, and the tinted ring
+            // round the feet was the glowing ring under every soldier a charged blade filled (Water's blue, Dark's pink,
+            // Light's cream at the first blow, Life's green at the third: the swing films of 2026-11-20).
+            if (CombatEvents.LaidBy != LaySource.Reaction && !Clover.Player.Forms.ElementArt.Ready)
+                Vfx.Play(VfxKind.TintRing, at + Vector3.up * 0.3f, Vector3.up, 1f, Afflictions.Spec(kind).Colour);
             Trigger(UpgradeTrigger.AfflictionFull, who, at);
         }
 

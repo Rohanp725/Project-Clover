@@ -58,6 +58,14 @@ namespace Clover.Core
         /// <summary>The bright stroke of the cut streak: <paramref name="plain"/> for a plain blow, the element's colour at <see cref="TintStrength"/> under one (at most, see <see cref="PalestStroke"/>).</summary>
         public static Color Stroke(Color plain, Color tint) => Tinted(tint) ? Lit(tint, Peak(plain) * TintStrength, plain.a * TintStrength, PalestStroke) : plain;
 
+        /// <summary>
+        /// A colour to throw a bright one-shot effect in (a heavy blow's star, a glint, a crackle, whose own material is
+        /// lit far past white): the element's hue at <paramref name="brightness"/> at its strongest channel, its palest
+        /// held under half of that so the material's glow takes the hue and not white (the swing films of 2026-11-20:
+        /// white starbursts where Metal's and Lightning's blows landed).
+        /// </summary>
+        public static Color Glow(Color tint, float brightness) => Lit(tint, brightness, 1f, brightness * 0.45f);
+
         /// <summary>The ink under the cut streak: unchanged for a plain blow, as faint as the stroke under an element.</summary>
         public static Color Ink(Color plain, Color tint) => Tinted(tint) ? new Color(plain.r, plain.g, plain.b, plain.a * TintStrength) : plain;
     }

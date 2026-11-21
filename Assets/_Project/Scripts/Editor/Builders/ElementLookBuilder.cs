@@ -134,6 +134,9 @@ namespace Clover.EditorTools
         public static readonly HashSet<string> LeftOut = new HashSet<string>
         {
             "black_chain|vfxr4_chain",
+            // Metal's charged blows threw a spray of white-hot sparks round the bite, a white starburst on every weapon (the
+            // swing films of 2026-11-20): Metal lands as a glint alone, painted steel (LookPaints).
+            "e3_metal_blade_hit1|vfx3c_vfx_metal_spark", "e3_metal_blade_hit2|vfx3c_vfx_metal_spark", "e3_metal_blade_hit3|vfx3c_vfx_metal_spark",
             // Chill's frost rosettes lay as a white snowflake under the frozen body in the element films of 2026-11-20 (the
             // owner of the ice hits: "The white spiderweb thing is really throwing off everything"; the elements 3 ice has no
             // snowflake decal): the crystals and the shell are Chill's look.
@@ -622,6 +625,10 @@ namespace Clover.EditorTools
             ["root_snare|m3_spore"] = new ReactionArtBuilder.Paint(0.5f, 0.62f, 0.12f),
             // Flashover's violet flame lit a pale pink-lilac on film: a deep violet with a paler violet heart.
             ["flashover|r4_plasmaflame"] = new ReactionArtBuilder.Paint(0.3f, 0.05f, 0.85f),
+            // Metal's bite glint, a cold steel blue at a moderate brightness, not white (the swing films of 2026-11-20).
+            ["e3_metal_blade_hit1|e3_glint"] = new ReactionArtBuilder.Paint(0.36f, 0.44f, 0.58f),
+            ["e3_metal_blade_hit2|e3_glint"] = new ReactionArtBuilder.Paint(0.36f, 0.44f, 0.58f),
+            ["e3_metal_blade_hit3|e3_glint"] = new ReactionArtBuilder.Paint(0.36f, 0.44f, 0.58f),
             ["flashover|r4_plasmacore"] = new ReactionArtBuilder.Paint(0.55f, 0.28f, 1f),
             // Quickening ("they should be much bluer to really get the water feel"): a deep blue, not a cyan.
             ["quickening|r4_waterplant"] = new ReactionArtBuilder.Paint(0.025f, 0.16f, 0.8f),
@@ -996,6 +1003,9 @@ namespace Clover.EditorTools
         [MenuItem("Clover/Build/Brazier Looks")]
         public static void BuildBraziersMenu() => BuildBraziers();
 
+        /// <summary>Whether the elements 3 blade sheaths (Fire's flame flags, Ice's teeth, Earth's spine...) are built: not since 2026-11-20.</summary>
+        public const bool BladeSheathsWorn = false;
+
         public static string Build() => BuildSet(RecipePath, SetPath, "review/checks/element_looks.md", "Element looks (batches 1 and 2)", true);
 
         /// <summary>The key of a reaction's look on another body (n of the recipe's bodies), or on the player (n below nought).</summary>
@@ -1120,7 +1130,10 @@ namespace Clover.EditorTools
             set.Looks = lists.Looks.ToArray();
             set.Parts = lists.Parts.ToArray();
             set.Keys = lists.Keys.ToArray();
-            if (elementLooks) set.Sheaths = BuildSheaths(lists, elementArt);
+            // No element stands on the blade any more (the owner, 2026-11-20: "take out all the elements on top of the blade
+            // effects ... the burning flames on the sword, the iceicles on the sides"): the sheaths are not built, and the
+            // weapon keeps only its element-dyed accent and inlay (WeaponRack) and the slash trails.
+            if (elementLooks) set.Sheaths = BladeSheathsWorn ? BuildSheaths(lists, elementArt) : new ElementLookSet.BladeSheath[0];
             if (elementLooks) set.Spans = lists.Spans.ToArray();
             if (elementLooks) BakeCrystal(set, lists, elementArt);
             EditorUtility.SetDirty(set);
@@ -1359,7 +1372,7 @@ namespace Clover.EditorTools
                     float show = window.x - shift, hide = window.y >= 9f ? 9f : window.y - shift;
                     string material = Text(ribbon, "material");
                     string ribbonKey = slug + "|" + material;
-                    if (LeftOutRibbons.Contains(ribbonKey)) continue;
+                    if (LeftOutRibbons.Contains(ribbonKey) || LeftOutByName(slug, Text(ribbon, "object"))) continue;
                     string note = Text(motion, "note");
                     // Unsteady's curl coming in from the blow lit as a white crescent beside the body it was laid on (Thunder
                     // Gust's film of 2026-11-20, 0.05 to 0.10 s): drawn in the elements 3 wind's mint with its teal rim.

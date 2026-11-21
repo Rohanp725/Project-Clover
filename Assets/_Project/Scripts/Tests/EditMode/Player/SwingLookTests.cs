@@ -336,7 +336,8 @@ namespace Clover.Tests
                 Assert.AreEqual(element.Name, look.Name);
                 Assert.Greater(look.Layers.Length, 0, $"{element.Name} leaves no trail");
                 Assert.LessOrEqual(look.Layers.Length, SwingLooks.MostLayers);
-                Assert.IsTrue(look.Sheath.Shown, $"{element.Name} shows nothing along a charged edge");
+                // Nothing of the element on the blade (the owner, 2026-11-20): the slash trails and the dyed accent only.
+                Assert.IsFalse(look.Sheath.Shown, $"{element.Name} draws its element along the charged edge");
                 Assert.IsFalse(string.IsNullOrEmpty(look.Line), element.Name);
                 foreach (var layer in look.Layers)
                 {
@@ -349,11 +350,12 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void OnlyLifeGrowsOnTheWeaponAndMetalOnlyGlints()
+        public void NothingGrowsOnTheWeaponAndMetalOnlyGlintsOffTheTip()
         {
-            foreach (var look in SwingLooks.All) Assert.AreEqual(look.Element == ElementSubstance.Life, look.Thorns, look.Name);
+            // The owner, 2026-11-20: "take out all the elements on top of the blade effects".
+            foreach (var look in SwingLooks.All) Assert.IsFalse(look.Thorns, look.Name);
             var metal = SwingLooks.Metal;
-            Assert.IsTrue(metal.Sheath.Glint, "Metal's charged edge is a glint");
+            Assert.IsFalse(metal.Sheath.Glint, "Metal's glint runs on the blade");
             Assert.AreEqual(SwingShed.None, metal.Shed);
             // One thin steel-shine arc off the tip (elements 3: "a glint and one steel shine"), never lit white.
             foreach (var layer in metal.Layers)
@@ -375,7 +377,7 @@ namespace Clover.Tests
             var wind = SwingLooks.Wind.Layers[0];
             Assert.Greater(wind.Drift, 0f, "wind blows on past the end of the stroke");
             Assert.Greater(wind.Scatter, 0f, "wind comes apart, never cut off");
-            Assert.IsTrue(SwingLooks.Ice.Sheath.Teeth, "the chainsaw of ice");
+            Assert.IsFalse(SwingLooks.Ice.Sheath.Teeth, "ice's teeth stand on the blade");
             Assert.AreEqual(SwingEnd.Spray, SwingLooks.Water.End, "water is flung off the end of each stroke");
             Assert.IsTrue(SwingLooks.Earth.ReplacesHitArt && SwingLooks.Ice.ReplacesHitArt, "Earth's floating cubes and Ice's crack-web give way");
             Assert.AreEqual(SwingShed.Drips, SwingLooks.Poison.Shed);

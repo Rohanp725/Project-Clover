@@ -771,10 +771,10 @@ MonoBehaviour:
   - Id: reaction-carried-embers
     Title: Carried Embers (Fire and Wind)
     Group: Reactions
-    Body: '<b>What it is.</b> Burn meets Unsteady. The wind strips three embers off the enemy and carries them on, away from you.
+    Body: '<b>What it is.</b> Burn meets Unsteady. The wind takes the fire off the enemy as a whirling column and carries it on, away from you, lighting whatever it reaches.
 
 
-      <b>The numbers.</b> The embers land 4, 5 and 6 m past the enemy, on your line to it, and burn there as small fires for 3 s (1 m across, 3 damage and 1 Burn a bite, two bites a second). Anything within 1.5 m of a landing is set alight as they land. The fire they lay starts nothing more. Rests 4 s.
+      <b>The numbers.</b> The column runs 5 m past the enemy, on your line to it, in about two thirds of a second. Anything within 1 m of it is set alight (1 Burn) at the moment the column reaches it; nothing it does not reach is lit. Where it blows itself out it drops its embers as three small fires along the last metre and a bit of its run, burning for 3 s (1 m across, 3 damage and 1 Burn a bite, two bites a second). The fire they lay starts nothing more. Rests 4 s.
 
 
       <b>What sets it off.</b> Burn landing on an Unsteady enemy, or Unsteady on a burning one.
@@ -786,7 +786,7 @@ MonoBehaviour:
       <b>How to use it.</b> You aim it by where you stand: put the enemy between you and the ones behind it, and the fire lands among them.
 
 
-      <b>How it looks.</b> Its name over the enemy, then three small fires springing up beyond it.'
+      <b>How it looks.</b> Its name over the enemy, then a column of fire spinning up off it and running away from you down a charred lane, lighting those it passes, until it spins apart.'
   - Id: reaction-sleet-charge
     Title: Sleet Charge (Lightning and Ice)
     Group: Reactions
@@ -2387,7 +2387,7 @@ MonoBehaviour:
     Body: '<b>What it does.</b> Opens Carried Embers'' two shapes. At a rest fire you choose which one your Carried Embers wears, and from then on it runs instead of the plain one. <b>Fire Whirl</b>: the flame stands up on the enemy as a turning column that draws the enemies near into it and lights them. <b>Hot Wind</b>: one long gust downwind, away from you, instead of embers.
 
 
-      <b>When it happens.</b> Every time Carried Embers fires (Unsteady landing on a burning enemy, or Burn on an unsteady one) while Fire and Wind are both carried. Before this mark is bought, or with only one of the two carried, the plain Carried Embers runs (three embers 5 metres downwind).
+      <b>When it happens.</b> Every time Carried Embers fires (Unsteady landing on a burning enemy, or Burn on an unsteady one) while Fire and Wind are both carried. Before this mark is bought, or with only one of the two carried, the plain Carried Embers runs (a column of fire running 5 metres downwind, lighting what it reaches).
 
 
       <b>The numbers.</b> Mix, 3 Shards. Fire Whirl: 3 seconds; once a second every enemy within 3 metres is drawn 1 metre toward it and everything within 2 metres takes a Burn. Hot Wind: a lane 8 metres long and 2 metres wide beyond it lays a Burn on all in it, and the enemy is shoved 2 metres. Carried Embers rests 4 seconds on each enemy.

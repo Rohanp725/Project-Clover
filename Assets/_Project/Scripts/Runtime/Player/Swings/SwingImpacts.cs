@@ -19,6 +19,12 @@ namespace Clover.Player.Swings
         private static readonly Color Gilt = new Color(1f, 0.78f, 0.35f);
         private static readonly Color FrostMist = new Color(0.36f, 0.6f, 0.86f);
 
+        /// <summary>
+        /// What a glint's and a crackle's colour is lit to: their materials glow five to eight times past white, so the
+        /// colour thrown is kept low and the glow comes out the element's hue at a moderate brightness.
+        /// </summary>
+        public const float GlintGlow = 0.17f, ShockGlow = 0.3f;
+
         private static Color ColourOf(int element)
         {
             var all = Elements.All;
@@ -55,9 +61,9 @@ namespace Clover.Player.Swings
                     FormFx.Lay(FormMark.Scorch, feet, 1.1f * weight, Soot, 2.2f);
                     break;
                 case ElementSubstance.Lightning:
-                    // The crack where it struck, white-blue and gone.
-                    FormFx.Lay(FormMark.Crack, feet, 1.5f * weight, FormKit.Lit(colour, 3f), 0.4f, 1.8f * weight, 0f, Random.value * 360f);
-                    Vfx.Play(VfxKind.Shock, at, flat, 0.9f * weight);
+                    // The crack where it struck and its crackle in the bolt's violet-blue, not a white starburst (2026-11-20).
+                    FormFx.Lay(FormMark.Crack, feet, 1.5f * weight, FormKit.Lit(colour, 1.6f), 0.4f, 1.8f * weight, 0f, Random.value * 360f);
+                    Vfx.Play(VfxKind.Shock, at, flat, 0.9f * weight, StruckLook.Glow(colour, ShockGlow));
                     break;
                 case ElementSubstance.Wind:
                     FormFx.Fly(FormMesh.Gust, at, at + flat * (2.4f * weight) + Vector3.up * 0.3f, Quaternion.LookRotation(flat), new Vector3(1.4f, 1.4f, 1.8f) * weight, ElementSubstance.Pale(colour), 0.35f);
@@ -91,11 +97,12 @@ namespace Clover.Player.Swings
                     Vfx.Play(VfxKind.Dust, feet, Vector3.up, 0.9f * weight);
                     break;
                 case ElementSubstance.Metal:
-                    Vfx.Play(VfxKind.Glint, at);
-                    Vfx.Play(VfxKind.GuardSpark, at, flat, 0.9f * weight);
+                    // Only a glint of steel where it bit: the guard's white spark burst read as a white starburst (2026-11-20).
+                    Vfx.Play(VfxKind.Glint, at, Vector3.up, 1f, StruckLook.Glow(colour, GlintGlow));
                     break;
                 case ElementSubstance.Light:
-                    FormFx.Face(FormMark.Star, at, 1.1f * weight, FormKit.Lit(Gilt, 3f), 0.14f);
+                    // Gold, lit only so far: three times over it came out a cream-white star.
+                    FormFx.Face(FormMark.Star, at, 1.1f * weight, FormKit.Lit(Gilt, 1.5f), 0.14f);
                     break;
                 case ElementSubstance.Dark:
                     Vfx.Play(VfxKind.TintPuff, at, Vector3.down, 0.9f * weight, ElementSubstance.Shade(colour));
@@ -123,7 +130,7 @@ namespace Clover.Player.Swings
                     Vfx.Play(VfxKind.Embers, feet + Vector3.up * 0.3f, Vector3.up, 1.4f * weight);
                     break;
                 case ElementSubstance.Lightning:
-                    FormFx.Lay(FormMark.Crack, feet, radius * 1.8f, FormKit.Lit(colour, 3f), 0.5f, radius * 2.2f, 0f, Random.value * 360f);
+                    FormFx.Lay(FormMark.Crack, feet, radius * 1.8f, FormKit.Lit(colour, 1.6f), 0.5f, radius * 2.2f, 0f, Random.value * 360f);
                     Clover.World.LightningBolts.Strike(feet, 0.3f);
                     break;
                 case ElementSubstance.Wind:
@@ -152,8 +159,8 @@ namespace Clover.Player.Swings
                     Vfx.Play(VfxKind.Dust, feet, Vector3.up, 1.5f * weight);
                     break;
                 case ElementSubstance.Metal:
-                    Vfx.Play(VfxKind.Glint, feet + Vector3.up * 0.2f);
-                    for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.GuardSpark, feet + Outward(i, 4, flat, 0f) * 0.4f + Vector3.up * 0.1f, Outward(i, 4, flat, 0f), 0.8f);
+                    Vfx.Play(VfxKind.Glint, feet + Vector3.up * 0.2f, Vector3.up, 1f, StruckLook.Glow(colour, GlintGlow));
+                    for (int i = 0; i < 4; i++) Vfx.Play(VfxKind.TintSpark, feet + Outward(i, 4, flat, 0f) * 0.4f + Vector3.up * 0.1f, Outward(i, 4, flat, 0f), 0.5f, StruckLook.Glow(colour, 0.8f));
                     break;
                 case ElementSubstance.Light:
                     // Gold flecks thrown up off the slam, cooling to burnt gold: no ring and no white-hot star (2026-11-20).

@@ -1,6 +1,6 @@
 # Element looks (batches 1 and 2)
 
-199 looks, 3715 parts (1179 ribbons), 23675 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
+199 looks, 3675 parts (1178 ribbons), 23463 keys, from Assets/_Project/Art/VFX/Combos/elements2_recipe.json.
 
 | Look | Length | On | Parts | Ribbons | Repeats from | Shell |
 |---|---|---|---|---|---|---|
@@ -58,7 +58,7 @@
 | fire_medicine@2 | 1.6 s | body | 14 | 0 | 1.02 s | - |
 | fire_medicine@3 | 1.6 s | body | 0 | 0 | 1.60 s | - |
 | carried_embers@p | 1.5 s | player | 0 | 0 | 1.50 s | - |
-| carried_embers | 1.5 s | body | 183 | 130 | -0.05 s | - |
+| carried_embers | 1.5 s | body | 163 | 130 | -0.05 s | - |
 | carried_embers@1 | 1.5 s | body | 12 | 0 | 1.40 s | - |
 | carried_embers@2 | 1.5 s | body | 12 | 0 | 1.46 s | - |
 | carried_embers@3 | 1.5 s | body | 11 | 0 | 1.50 s | - |
@@ -295,9 +295,9 @@
 | e3_water_blade_hit1 | 0.6 s | body | 10 | 2 | 0.05 s | - |
 | e3_water_blade_hit2 | 0.6 s | body | 9 | 2 | 0.05 s | - |
 | e3_water_blade_hit3 | 0.6 s | body | 9 | 2 | 0.05 s | - |
-| e3_metal_blade_hit1 | 0.6 s | body | 8 | 0 | 0.03 s | - |
-| e3_metal_blade_hit2 | 0.6 s | body | 8 | 0 | 0.03 s | - |
-| e3_metal_blade_hit3 | 0.6 s | body | 8 | 0 | 0.03 s | - |
+| e3_metal_blade_hit1 | 0.6 s | body | 2 | 0 | 0.03 s | - |
+| e3_metal_blade_hit2 | 0.6 s | body | 2 | 0 | 0.03 s | - |
+| e3_metal_blade_hit3 | 0.6 s | body | 2 | 0 | 0.03 s | - |
 | e3_earth_blade_hit1 | 0.6 s | body | 10 | 0 | 0.60 s | - |
 | e3_earth_blade_hit2 | 0.6 s | body | 9 | 0 | 0.60 s | - |
 | e3_earth_blade_hit3 | 0.6 s | body | 14 | 0 | 0.60 s | - |
@@ -309,7 +309,7 @@
 | e3_light_blade_hit3 | 0.6 s | body | 8 | 3 | 0.03 s | - |
 | e3_dark_blade_hit1 | 0.6 s | body | 3 | 3 | 0.03 s | - |
 | e3_dark_blade_hit2 | 0.6 s | body | 3 | 3 | 0.03 s | - |
-| e3_dark_blade_hit3 | 0.6 s | body | 13 | 4 | 0.03 s | - |
+| e3_dark_blade_hit3 | 0.6 s | body | 11 | 3 | 0.03 s | - |
 | e3_poison_blade_hit1 | 0.6 s | body | 4 | 0 | 0.60 s | - |
 | e3_poison_blade_hit2 | 0.6 s | body | 3 | 0 | 0.60 s | - |
 | e3_poison_blade_hit3 | 0.6 s | body | 15 | 0 | 0.23 s | - |
@@ -336,4 +336,3 @@
 | e3_broken_ground@b | 1.5 s | body | 0 | 0 | 1.50 s | - |
 | e3_tailwind | 1.6 s | body | 20 | 15 | 0.00 s | - |
 | red_hot@+ | 1.5 s | body | 87 | 37 | 1.55 s | - |
-| blade sheaths | - | blade | 8 | - | - | - |
