@@ -5,62 +5,62 @@ Burnt Mound (`docs/design/steel/pairs_d5.md`, "Earth and Fire"). Drawn in the he
 are both carried.
 
 ## burntmound.shape
-**What it does.** Fired Hard: opens Burnt Mound's two shapes. At a rest fire you choose which one your Burnt Mound wears, and from then on it runs instead of the plain one. **Heaped Stones**: the three hot stones fuse into one boulder, and your heavy blow rolls it through a line of enemies. **Fire-Cracked**: no batting; each stone cracks by itself when an enemy steps near it, a field to drive them across.
+**What it does.** Fired Hard unlocks two new shapes for Burnt Mound. At a rest fire, you pick which shape your Burnt Mound uses. From then on, it uses that shape instead of the plain one. **Heaped Stones**: the three hot stones melt together into one boulder. Your heavy blow rolls it through a line of enemies. **Fire-Cracked**: you don't hit the stones. Instead, each stone cracks on its own when an enemy steps near it, so you can drive enemies across a field of them.
 
-**When it happens.** Every time Burnt Mound fires (a Burn landing on a shaken enemy, or Tremor on a burning one) while Earth and Fire are both carried. Before this mark is bought, or with only one of the two carried, the plain Burnt Mound runs.
+**When it happens.** Every time Burnt Mound goes off while you carry both Earth and Fire. Burnt Mound goes off when a Burn lands on a shaken enemy, or when Tremor lands on a burning one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Burnt Mound.
 
-**The numbers.** Mix, 3 Shards. Heaped Stones: one red-hot boulder 1.5 metres out for 6 seconds, burning what touches it (3 damage and a Burn every half second); your first heavy blow on the enemy sends it rolling 8 metres on away from you, 20 damage, 20 stagger, two Burn and two Tremor to each it crosses. Fire-Cracked: three stones 1.5 metres out for 6 seconds, each biting 6 damage and a Burn once a second what stands within 1 metre. Burnt Mound rests 6 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Heaped Stones: one red-hot boulder appears 1.5 metres from the enemy and stays for 6 seconds. It burns anything that touches it (3 damage and a Burn every half second). Your first heavy blow on the enemy sends the boulder rolling 8 metres away from you. Each enemy it rolls over takes 20 damage, 20 stagger, two Burns and two Tremors. Fire-Cracked: three stones appear 1.5 metres from the enemy and stay for 6 seconds. Once a second, each one deals 6 damage and a Burn to anything within 1 metre of it. After Burnt Mound goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Timber-Laced, Hot Stones, Brick and Fire (which keeps both afflictions coming), Vitrified Wall.
 
-**Example.** A line of soldiers: Heaped Stones, and heavy the first one toward the rest. A crowd coming at you: Fire-Cracked, and fight behind the stones.
+**Example.** A line of soldiers: use Heaped Stones, and hit the first one toward the rest with a heavy blow. A crowd rushing at you: use Fire-Cracked, and fight from behind the stones.
 
-**Not built yet.** Heaped Stones' boulder does not yet roll from where it lies: your heavy blow on the enemy sends the roll out from the enemy itself. Fire-Cracked's stones bite each second rather than cracking once each as an enemy steps up, for 12 and a Burn in 2 metres.
+**Not built yet.** Heaped Stones' boulder doesn't yet roll from where it lies. For now, your heavy blow on the enemy sends the roll out from the enemy itself. Fire-Cracked's stones bite every second, instead of each cracking once when an enemy steps up, for 12 damage and a Burn within 2 metres.
 
 ## burntmound.timberlaced
-**What it does.** Rock you raise catches fire from a burning enemy within 2 metres: it burns what touches it, 4 and a Burn every half second, and when it ends it bursts in glass sherds, 12 in 2.5 metres.
+**What it does.** Rock you raise catches fire from a burning enemy within 2 metres. It burns anything that touches it for 4 damage and a Burn every half second. When it ends, it bursts into shards of glass that deal 12 damage within 2.5 metres.
 
-**When it happens.** As built, each spell of yours that strikes a burning enemy, while Earth and Fire are both carried.
+**When it happens.** For now, each time one of your spells hits a burning enemy, while you carry both Earth and Fire.
 
-**The numbers.** Mix, 3 Shards. Burning ground 2 metres across under it for 3 seconds (4 damage and a Burn every half second), then a burst of sherds, 12 damage and 10 stagger in 2.5 metres; at most once a second.
+**The numbers.** Mix, 3 Shards. The ground under the enemy burns in a patch 2 metres across for 3 seconds (4 damage and a Burn every half second). Then it bursts into glass shards for 12 damage and 10 stagger within 2.5 metres. At most once a second.
 
 **Works with.** Burnt Mound, Earth's raised stones, Brick and Fire, Vitrified Wall.
 
-**Example.** Raise stone under a burning brute and the ground catches.
+**Example.** Raise stone under a burning brute, and the ground catches fire.
 
-**Not built yet.** Your raised rock itself does not catch fire yet: any spell striking a burning enemy lays the burning ground and the sherds under it.
+**Not built yet.** Your raised rock doesn't catch fire itself yet. For now, any spell that hits a burning enemy puts the burning ground and the glass shards under it.
 
 ## burntmound.hotstones
-**What it does.** Burnt Mound's stones lie 2 seconds longer and skip 2 metres further.
+**What it does.** Burnt Mound's stones stay 2 seconds longer and roll 2 metres farther.
 
-**When it happens.** Each time Burnt Mound fires.
+**When it happens.** Each time Burnt Mound goes off.
 
-**The numbers.** Mix, a minor, 1 Shard. The three stones lie 8 seconds, not 6. In Heaped Stones the boulder lies 8 seconds and rolls 10 metres, not 8. In Fire-Cracked the stones lie 8 seconds.
+**The numbers.** Mix, a minor mark, 1 Shard. The three stones stay for 8 seconds instead of 6. With Heaped Stones, the boulder stays for 8 seconds and rolls 10 metres instead of 8. With Fire-Cracked, the stones stay for 8 seconds.
 
 **Works with.** Burnt Mound and its shapes, Timber-Laced.
 
-**Example.** The stones still glow when the pack comes back round.
+**Example.** The stones are still glowing when the pack comes back around.
 
 ## burntmound.brickfire
-**What it does.** Heavy blows that land on a burning enemy lay Tremor; light blows that land on a shaken enemy lay Burn. The weave of light and heavy feeds both.
+**What it does.** Heavy blows on a burning enemy add Tremor. Light blows on a shaken enemy add Burn. Mixing light and heavy blows keeps both coming.
 
-**When it happens.** Each heavy blow on a burning enemy and each light blow on a shaken one, while Earth and Fire are both carried.
+**When it happens.** Each heavy blow on a burning enemy, and each light blow on a shaken one, while you carry both Earth and Fire.
 
-**The numbers.** Mix, keystone, 5 Shards. One Tremor or one Burn a blow; of your first element's, none beyond what its root lays.
+**The numbers.** Mix, keystone, 5 Shards. One Tremor or one Burn per blow. For your first element's affliction, it adds nothing beyond what that element's root mark already adds.
 
-**Works with.** Burnt Mound (each brings the other, so the stones keep coming), Timber-Laced, Vitrified Wall.
+**Works with.** Burnt Mound (each affliction brings on the other, so the stones keep coming), Timber-Laced, Vitrified Wall.
 
-**Example.** Light, light, heavy on one enemy, and it shakes and burns by turns.
+**Example.** Hit one enemy light, light, heavy, and it shakes and burns, back and forth.
 
 ## burntmound.wall
-**What it does.** A rampart of stone laced with burning timber rises 4 metres ahead, 6 metres wide, and blocks for 5 seconds. A heavy blow on it, or its end, fuses it: the stone runs to black glass and bursts outward, 30 and 60 stagger, two Burn and two Tremor within 3 metres.
+**What it does.** A wall of stone woven with burning wood rises 4 metres ahead of you. It is 6 metres wide and blocks for 5 seconds. A heavy blow on it, or the end of its time, melts it: the stone turns to black glass and bursts outward. The burst deals 30 damage, 60 stagger, two Burns and two Tremors within 3 metres.
 
-**When it happens.** From a spell slot, while Earth and Fire are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Earth.
+**When it happens.** Cast it from a spell slot while you carry both Earth and Fire. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Earth.
 
-**The numbers.** Mix, duo spell, breaker, 5 Shards. No mana: it waits 12 seconds after a cast, less with weapon play. It rises after 0.4 seconds and stands 5 seconds; the burst is 30 damage, 60 stagger, two Tremor and two Burn to everything within 3 metres.
+**The numbers.** Mix, duo spell, breaker, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It rises after 0.4 seconds and stands for 5 seconds. The burst deals 30 damage, 60 stagger, two Tremors and two Burns to everything within 3 metres.
 
-**Works with.** Burnt Mound (everything in the burst carries both), Brick and Fire, Timber-Laced.
+**Works with.** Burnt Mound (everything in the burst gets both afflictions), Brick and Fire, Timber-Laced.
 
-**Example.** Wall off the pack, hold them at it, and let it burst in their faces.
+**Example.** Block the pack with the wall, keep them pinned against it, and let it burst in their faces.
 
-**Not built yet.** What stands where it rises is not yet thrown aside, the wall does not yet burn what touches it, and a heavy blow on it does not yet fuse it early: it bursts at its end.
+**Not built yet.** Enemies standing where it rises are not thrown aside yet. The wall doesn't burn anything that touches it yet. A heavy blow on it doesn't make it burst early yet; for now, it bursts when its time ends.
