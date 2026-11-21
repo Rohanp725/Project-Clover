@@ -7,362 +7,362 @@ Empower is a plain number (the chart's own words say it), so it has no entry her
 design yet, its **Not built yet** line says what is missing.
 
 ## ice.chill
-**What it does.** Every blow of your weapon that lands chills the enemy, a stack at a time, up to five. Each stack slows it. At five it is Frozen: held still in ice until it thaws, or until a heavy blow shatters it for a burst of damage.
+**What it does.** Every weapon blow that lands chills the enemy, one stack at a time, up to five. Each stack slows it down. At five stacks it is Frozen: stuck in ice until it thaws, or until a heavy blow shatters it for a burst of damage.
 
-**When it happens.** Always on once learned: every weapon blow that lands, light or heavy, while Ice is your first element (or all in). With Ice second, your weapon lays the first element's affliction and Chill comes from your Ice spells, the charged blade and the R2 strike.
+**When it happens.** Always on once you learn it: every weapon blow that lands, light or heavy, while Ice is your first element (or you are all in on Ice). If Ice is your second element, your weapon adds your first element's affliction, and Chill comes from your Ice spells, the charged blade and the R2 strike.
 
-**The numbers.** 2 Shards. One stack a blow, five at most, lasting 6 seconds. Each stack slows the enemy by 7%. At five it freezes for 2.5 seconds; elites and gods thaw after 1 second, and some great forms cannot be frozen. A heavy blow on a frozen enemy shatters it for 45 more damage, and the Chill ends. Nothing chills a frozen enemy further.
+**The numbers.** 2 Shards. One stack per blow, up to five, lasting 6 seconds. Each stack slows the enemy by 7%. At five stacks, it freezes for 2.5 seconds. Elites and gods thaw after 1 second, and some huge enemies can't be frozen. A heavy blow on a frozen enemy shatters it for 45 more damage, and the Chill ends. A frozen enemy can't be chilled any more.
 
-**Works with.** Glaze (one more Chill a blow), Hoarfrost, Cold Read, Flying Shards, Brittle, All at Once, Cold Settles, Deep Winter, and Soaked, which carries Chill to everyone within 4 metres.
+**Works with.** Glaze (one more Chill per blow), Hoarfrost, Cold Read, Flying Shards, Brittle, All at Once, Cold Settles, Deep Winter, and Soaked, which spreads Chill to everyone within 4 metres.
 
-**Example.** Four quick light blows slow a soldier to a crawl; the fifth freezes it, and a heavy blow breaks it for 45 on top of the cut.
+**Example.** Four quick light blows slow a soldier to a crawl. The fifth freezes it, and a heavy blow breaks it for 45 more damage on top of the cut.
 
 ## ice.shards
-**What it does.** A shattered enemy throws its ice wide. Everyone the shards reach is struck and chilled two deep, the one that shattered among them.
+**What it does.** A shattered enemy throws its ice all around. Everyone the shards reach is hit and gets two stacks of Chill, including the one that shattered.
 
 **When it happens.** Each time a frozen enemy is shattered, by your heavy blow or anything else that shatters.
 
-**The numbers.** 3 Shards. A burst 4.5 metres round the shattered enemy: 14 damage, 10 stagger and two stacks of Chill to each.
+**The numbers.** 3 Shards. A burst with a 4.5-metre radius around the shattered enemy. It deals 14 damage, 10 stagger and two stacks of Chill to each one.
 
-**Works with.** Chill, Brittle, All at Once, Eight Points and Hanging Ice, which grow from it, Cold Settles, Icebreaker on the Glacier branch, and The World Holds Still, whose chain of shatters throws the shards again at each link.
+**Works with.** Chill, Brittle, All at Once, Eight Points and Hanging Ice, which come after it on the chart, Cold Settles, Icebreaker on the Glacier branch, and The World Holds Still, whose chain of shatters throws the shards again at each step.
 
-**Example.** Shatter one frozen soldier in a pack of four: the other three are two deep at once, three light blows from freezing.
+**Example.** Shatter one frozen soldier in a pack of four. The other three get two stacks right away, three light blows away from freezing.
 
 ## ice.eight
-**What it does.** Eight shards stand on a ring round the enemy you face for a breath, then fly in together. Each lays a stack of Chill, and as they close they spend the Chill it carries for more damage: the detonator of the tree.
+**What it does.** Eight ice shards stand in a ring around the enemy you face for a moment, then fly in together. Each adds a stack of Chill, and as they close in they use up the enemy's Chill for more damage. This is the detonator of the Ice tree.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). With no enemy faced the shards close on a spot 6 metres ahead, and the slot still waits.
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If you aren't facing an enemy, the shards close in on a spot 6 metres ahead, and you still have to wait.
 
-**The numbers.** 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 9, and the shards close after 0.9 seconds). An enemy within 6 metres. The ring is 3.5 metres round it and closes after 1.2 seconds. Each shard deals 5 damage, 4 stagger and one stack of Chill; each that lands on a chilled enemy then spends its Chill in a small burst, 5 damage and 2 stagger a stack.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 9 seconds, and the shards close in after 0.9 seconds.) It targets an enemy within 6 metres. The ring has a 3.5-metre radius and closes after 1.2 seconds. Each shard deals 5 damage, 4 stagger and one stack of Chill. Each shard that lands on a chilled enemy then uses up its Chill in a small burst, for 5 damage and 2 stagger per stack.
 
-**Works with.** Flying Shards, which it grows from; Chill and Cold Read to lay the stacks first; Hanging Ice; All at Once; Cold Settles when a second element's affliction is on the enemy too.
+**Works with.** Flying Shards, which it comes after on the chart; Chill and Cold Read, to add the stacks first; Hanging Ice; All at Once; Cold Settles, when a second element's affliction is on the enemy too.
 
-**Not built yet.** A Frozen enemy shattered by the shards: a spell's blow does not shatter, so a frozen enemy's Chill is spent like any other's.
+**Not built yet.** The shards shattering a Frozen enemy. A spell's hit can't shatter yet, so a frozen enemy's Chill is used up like any other's.
 
-**Example.** Chill a brute four deep with your blade, then close the ring on it: the first shard spends all four for 25 on top of its own.
+**Example.** Give a brute four stacks of Chill with your blade, then close the ring on it. The first shard uses up all four for 25 damage on top of its own.
 
 ## ice.eight.shape
-**What it does.** Opens two shapes of Eight Points, chosen at any rest fire. **Wolf's Jaws**: two rows of four close from in front and behind in half a second, too fast to walk out of; one target only. **Eight on Eight**: one shard comes down on each of up to eight enemies within 8 metres, each spending that enemy's Chill; for crowds.
+**What it does.** Unlocks two shapes for Eight Points. You pick one at any rest fire. **Wolf's Jaws**: two rows of four shards close in from the front and back in half a second, too fast to walk out of. It only hits one target. **Eight on Eight**: one shard comes down on each of up to eight enemies within 8 metres, each using up that enemy's Chill. It's for crowds.
 
-**When it happens.** Whenever you cast Eight Points, as the shape it wears.
+**When it happens.** Whenever you cast Eight Points, using the shape you picked.
 
-**The numbers.** 3 Shards. Wolf's Jaws: the ring 2 metres round the enemy, closing after 0.5 seconds. Eight on Eight: up to eight enemies within 8 metres, each struck 0.5 seconds after the cast for 8 damage, 10 stagger and a stack of Chill, then its Chill spent as above.
+**The numbers.** 3 Shards. Wolf's Jaws: the ring has a 2-metre radius around the enemy and closes after 0.5 seconds. Eight on Eight: up to eight enemies within 8 metres are each hit 0.5 seconds after you cast it, for 8 damage, 10 stagger and a stack of Chill. Then their Chill is used up, like above.
 
-**Works with.** Hanging Ice (Wolf's Jaws on its enemy while it falls); Flying Shards and Cold Settles in a crowd (Eight on Eight).
+**Works with.** Hanging Ice (Wolf's Jaws on its enemy while the icicle falls); Flying Shards and Cold Settles in a crowd (Eight on Eight).
 
-**Not built yet.** Wolf's Jaws as two rows closing from front and back (for now a tighter, faster ring), and Eight on Eight's shards falling from above (for now they rise under each enemy as pillars).
+**Not built yet.** Wolf's Jaws should be two rows closing from the front and back (for now, it is a tighter, faster ring). Eight on Eight's shards should fall from above (for now, they rise under each enemy as pillars).
 
-**Example.** A duellist that steps out of the plain ring cannot step out of Wolf's Jaws. Six soldiers two deep: Eight on Eight spends all of them at once.
+**Example.** A duellist that can step out of the plain ring can't step out of Wolf's Jaws. Six soldiers with two stacks each: Eight on Eight uses up all of them at once.
 
 ## ice.eight.master
-**What it does.** Land a heavy blow on the enemy as the shards close, and every shard counts as a shatter.
+**What it does.** Land a heavy blow on the enemy as the shards close in, and every shard counts as a shatter.
 
-**When it happens.** A heavy blow (a finisher counts) on an enemy within 0.3 seconds of an Eight Points shard landing on it. Eight Points must be in a slot.
+**When it happens.** A heavy blow (a finisher counts) on an enemy within 0.3 seconds of an Eight Points shard landing on it. Eight Points must be in a spell slot.
 
-**The numbers.** 3 Shards. The heavy blow strikes once more as a shatter does: 45 damage, 30 stagger and a stack of Chill within a metre.
+**The numbers.** 3 Shards. The heavy blow hits once more, like a shatter does: 45 damage, 30 stagger and a stack of Chill within a metre.
 
-**Works with.** Hanging Ice and Flying Shards; All at Once; the heavy weapons, whose heavy is slow to time.
+**Works with.** Hanging Ice and Flying Shards; All at Once; the heavy weapons, whose heavy blows are hard to time because they're slow.
 
-**Not built yet.** Every shard counting as a shatter, eight shatters with Flying Shards from each: for now the timed heavy strikes once more, as one shatter.
+**Not built yet.** Every shard should count as a shatter, so you'd get eight shatters, each with Flying Shards. For now, the timed heavy blow hits once more, as one shatter.
 
-**Example.** Start the heavy as the ring tightens: it lands with the shards, and the enemy takes a second break on top.
+**Example.** Start the heavy blow as the ring tightens. It lands with the shards, and the enemy takes a second break on top.
 
 ## ice.hanging
-**What it does.** A great icicle hangs over the enemy you face and follows it while its shadow grows. Then it falls as a heavy blow that chills what it strikes, and leaves cracked ground that bites for a moment. On a Frozen enemy it shatters it.
+**What it does.** A huge icicle hangs over the enemy you face and follows it while its shadow grows. Then it falls as a heavy blow that chills what it hits, and leaves cracked ground that hurts for a moment. On a Frozen enemy, it shatters it.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). With no enemy faced the slot is still spent and waits.
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If you aren't facing an enemy, the spell is still used up and you have to wait.
 
-**The numbers.** 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 8, and it falls after 2.4 seconds). An enemy within 7 metres; with none, 7 metres ahead. It falls after 3 seconds, following its enemy until a moment before. The fall strikes everything within 2 metres for 30 damage, 60 stagger and three stacks of Chill, as a heavy blow. The crack, 1.5 metres round, bites every half second for 2 seconds for 2 damage and a stack of Chill.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 8 seconds, and makes it fall after 2.4 seconds.) It targets an enemy within 7 metres, or 7 metres ahead if there is none. It falls after 3 seconds, following its enemy until a moment before. The fall hits everything within 2 metres for 30 damage, 60 stagger and three stacks of Chill, as a heavy blow. The cracked ground has a 1.5-metre radius. Every half second for 2 seconds, it deals 2 damage and a stack of Chill.
 
-**Works with.** Chill (freeze it during the wait and the icicle shatters it), Flying Shards, which it grows from, Eight Points, Brittle, All at Once.
+**Works with.** Chill (freeze the enemy while you wait, and the icicle shatters it), Flying Shards, which it comes after on the chart, Eight Points, Brittle, All at Once.
 
-**Not built yet.** The shatter of a Frozen enemy for 90: for now the fall shatters it as any heavy blow does, for 45.
+**Not built yet.** Shattering a Frozen enemy for 90. For now, the fall shatters it like any heavy blow does, for 45.
 
-**Example.** Hang it over a brute and chill it to five with your blade as it falls: the icicle comes down on a frozen body and breaks it.
+**Example.** Hang it over a brute, and chill it to five with your blade while the icicle waits. The icicle comes down on a frozen body and breaks it.
 
 ## ice.hanging.shape
-**What it does.** Opens two shapes of Hanging Ice, chosen at any rest fire. **Icicles**: three smaller icicles fall a second apart along where the enemy moves; it punishes running. **Held by a Thread**: it does not fall by itself, but hangs up to eight seconds and falls with your next heavy blow on its enemy, woven into the heavy.
+**What it does.** Unlocks two shapes for Hanging Ice. You pick one at any rest fire. **Icicles**: three smaller icicles fall a second apart along the enemy's path. It punishes enemies that run. **Held by a Thread**: it doesn't fall on its own. It hangs for up to eight seconds and falls with your next heavy blow on its enemy, landing together with the blow.
 
-**When it happens.** Whenever you cast Hanging Ice, as the shape it wears.
+**When it happens.** Whenever you cast Hanging Ice, using the shape you picked.
 
-**The numbers.** 3 Shards. Icicles: three falls a second apart, each 1.5 metres round, 12 damage, 25 stagger and a stack of Chill. Held by a Thread: a sign on the enemy within 7 metres for 8 seconds; the next weapon blow on it brings down the full icicle, 30 damage, 60 stagger and three Chill in 2 metres.
+**The numbers.** 3 Shards. Icicles: three falls, a second apart, each with a 1.5-metre radius. Each deals 12 damage, 25 stagger and a stack of Chill. Held by a Thread: a sign appears on an enemy within 7 metres for 8 seconds. Your next weapon blow on it brings down the full icicle, for 30 damage, 60 stagger and three Chill within 2 metres.
 
-**Works with.** Chill and the heavy blow (Held by a Thread: the icicle and the heavy land together); Flying Shards.
+**Works with.** Chill and the heavy blow (with Held by a Thread, the icicle and the heavy blow land together); Flying Shards.
 
-**Not built yet.** Only a heavy blow bringing Held by a Thread down, and the icicle seen hanging (for now any weapon blow on its enemy sets it off, as a sign).
+**Not built yet.** Only a heavy blow should bring Held by a Thread down, and you should see the icicle hanging. For now, any weapon blow on its enemy sets it off, and you only see a sign.
 
-**Example.** An archer that keeps running from you: Icicles, and every step it takes is under ice.
+**Example.** An archer keeps running from you. Use Icicles, and every step it takes is under falling ice.
 
 ## ice.hanging.master
-**What it does.** Let Hanging Ice land in the moment its enemy freezes, and it shatters it four times over and its cooldown comes back.
+**What it does.** Let Hanging Ice land at the very moment its enemy freezes, and it shatters the enemy four times over, and you get its wait back.
 
-**When it happens.** For now, when the fall itself freezes what it strikes. Hanging Ice must be in a slot.
+**When it happens.** For now, when the fall itself freezes what it hits. Hanging Ice must be in a spell slot.
 
-**The numbers.** 3 Shards. The slot's wait is ended at once.
+**The numbers.** 3 Shards. The spell's wait ends right away.
 
-**Works with.** Chill and Cold Read to bring the enemy to two before it lands; Eight Points; Rime Guard.
+**Works with.** Chill and Cold Read, to get the enemy to two stacks before it lands; Eight Points; Rime Guard.
 
-**Not built yet.** The timing (within 0.3 seconds of the enemy becoming Frozen, by any hand) and the shatter four times over; for now a fall that brings its enemy to five freezes it and gives the cooldown back.
+**Not built yet.** The timing (within 0.3 seconds of the enemy becoming Frozen, from anything), and shattering four times over. For now, a fall that brings its enemy to five stacks freezes it and gives the wait back.
 
-**Example.** Two Chill on a brute, then the icicle's three: it freezes under the fall, and a second icicle is ready to hang over it.
+**Example.** Give a brute two Chill, then the icicle adds its three. It freezes under the fall, and a second icicle is ready to hang over it.
 
 ## ice.lift
-**What it does.** Cold Settles, Ice's reaction lift: every reaction with Chill in it leaves frozen ground where it happened, and what it struck is slowed.
+**What it does.** Cold Settles, Ice's reaction lift. Every reaction with Chill in it leaves frozen ground where it happened, and the enemy it hit is slowed.
 
-**When it happens.** Whenever Chill reacts on an enemy with the other affliction it carries (Steam with Burn, Supercooled with Static, and the rest).
+**When it happens.** Whenever Chill reacts on an enemy with another affliction it has (Steam with Burn, Supercooled with Static, and the rest).
 
-**The numbers.** 3 Shards. A patch of frozen ground 1.5 metres round the reaction for 4 seconds, biting once a second for 1 damage and a stack of Chill. The enemy it happened on keeps 60% of its speed for 2 seconds (elites half the slowing, gods none).
+**The numbers.** 3 Shards. A patch of frozen ground with a 1.5-metre radius around the reaction, lasting 4 seconds. Once a second, it deals 1 damage and a stack of Chill. The enemy where the reaction happened moves at 60% of its speed for 2 seconds (elites are slowed half as much; gods aren't slowed).
 
-**Works with.** Carrying a second element: every reaction of Ice's ten; Flying Shards, which it grows from; All at Once and Deep Winter above it.
+**Works with.** Carrying a second element: every one of Ice's ten reactions; Flying Shards, which it comes after on the chart; All at Once and Deep Winter, above it.
 
-**Not built yet.** The slow on everything the reaction struck: for now only the enemy it happened on.
+**Not built yet.** Slowing everything the reaction hit. For now, only the enemy where it happened is slowed.
 
-**Example.** Ice and Water on a soldier in a crowd: the reaction goes off, the floor freezes round it, and the soldiers walking in take Chill.
+**Example.** Ice and Water on a soldier in a crowd. The reaction goes off, the floor freezes around it, and soldiers walking in get Chill.
 
 ## ice.allatonce
-**What it does.** Shattering strikes three times as hard. The price: Chill no longer slows anyone. It still freezes at five.
+**What it does.** Shattering hits three times as hard. The cost: Chill no longer slows anyone. It still freezes at five stacks.
 
-**When it happens.** Always on once learned.
+**When it happens.** Always on once you learn it.
 
-**The numbers.** 6 Shards. A shatter deals 135 where it dealt 45. Chill's slowing is gone, at every depth.
+**The numbers.** 6 Shards. A shatter deals 135 instead of 45. Chill no longer slows enemies at any number of stacks.
 
 **Works with.** Eight Points, Hanging Ice, Flying Shards, Brittle, Cold Settles, Flash Freeze on the Glacier branch.
 
-**Example.** Freeze an elite and shatter it with one heavy blow: 135 from the ice alone, on top of the blow.
+**Example.** Freeze an elite and shatter it with one heavy blow: 135 damage from the ice alone, on top of the blow.
 
 ## ice.devotion
-**What it does.** Deep Winter, Ice's Devotion: all in on Ice only. Chill never fades, and lighting Glaze freezes every enemy within four metres at once. No Chill is ever wasted, so you can spread it over a whole room and come back for each in turn.
+**What it does.** Deep Winter, Ice's Devotion, for going all in on Ice only. Chill never fades, and lighting Glaze freezes every enemy within four metres at once. No Chill is ever wasted, so you can spread it over a whole room and come back for each enemy one at a time.
 
-**When it happens.** Only while Ice is carried twice (all in), once bought. The freeze comes each time Glaze is lit.
+**When it happens.** Only while you carry Ice twice (all in), once you buy it. The freeze comes each time you light Glaze.
 
-**The numbers.** 6 Shards. Chill no longer runs down on any enemy: it stays until a freeze thaws it away or a shatter breaks it. Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. Buying this also gives you the deep strike, Ice Through. Use it with L2 and R2 while you carry this element alone or twice: the spike freezes the enemy at once if it carries three Chill or more.
+**The numbers.** 6 Shards. Chill no longer runs out on any enemy. It stays until a freeze thaws it away or a shatter breaks it. Lighting Glaze fills Chill all the way on everything within 4 metres of you, which freezes everything that can be frozen. Buying this also gives you the deep strike, Ice Through. Use it with L2 and R2 while you carry Ice alone or twice. The spike freezes the enemy right away if it has three or more Chill.
 
-**Works with.** Every spell of the tree; Splinter Ward and The World Holds Still, which answer Glaze too; Flying Shards, for the room frozen at once.
+**Works with.** Every spell in the Ice tree; Splinter Ward and The World Holds Still, which also work with Glaze; Flying Shards, for a whole frozen room.
 
-**Example.** Chill four soldiers two deep each, step into the middle and light Glaze: all four are Frozen, and every heavy blow breaks one.
+**Example.** Give four soldiers two stacks of Chill each, step into the middle, and light Glaze. All four are Frozen, and every heavy blow breaks one.
 
 ## ice.coldread
-**What it does.** A perfect guard chills the one who struck, two stacks at once.
+**What it does.** A perfect guard chills the enemy that hit you, two stacks at once.
 
-**When it happens.** A perfect guard: press the guard button just before a blow lands.
+**When it happens.** On a perfect guard: press the guard button just before a blow lands.
 
 **The numbers.** 3 Shards. Two stacks of Chill on the attacker.
 
-**Works with.** Chill (three blows after the guard freeze it), Rime Guard and Splinter Ward, which grow from it, Flash Freeze on the Glacier branch.
+**Works with.** Chill (three blows after the guard freeze it), Rime Guard and Splinter Ward, which come after it on the chart, Flash Freeze on the Glacier branch.
 
-**Example.** A soldier already three deep swings at you: guard it perfectly and it freezes on the spot, ready for a heavy blow.
+**Example.** A soldier that already has three stacks swings at you. Guard it perfectly, and it freezes on the spot, ready for a heavy blow.
 
 ## ice.rime
-**What it does.** You breathe out a low, thin freezing fog round you. An enemy that strikes at you is chilled two deep, rime grows on its weapon arm, and its next wind-up comes half again as slowly. A perfect guard freezes the attacker at once.
+**What it does.** You breathe out a low, thin, freezing fog around you. An enemy that attacks you gets two stacks of Chill, frost grows on its weapon arm, and its next wind-up is 50% slower. A perfect guard freezes the attacker right away.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). The answers come from the next blows that come at you.
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). The answers come from the next blows aimed at you.
 
-**The numbers.** 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 7, and the fog 4 metres round). The fog is 3 metres round where you breathed it and stands 6 seconds; it does no harm itself. Each cast holds three answers: a blow that lands on you or on your guard lays two Chill on its attacker, and a perfect guard lays five, which freezes it. Every enemy standing in the fog winds up its attacks half again as slowly while it stays there.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 9 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 7 seconds, and the fog's radius 4 metres.) The fog has a 3-metre radius around where you breathed it and lasts 6 seconds. It doesn't hurt anything itself. Each cast gives three answers. A blow that lands on you or on your guard gives its attacker two Chill. A perfect guard gives five, which freezes it. Every enemy standing in the fog winds up its attacks 50% slower while it stays there.
 
-**Works with.** Cold Read, which it grows from (a perfect guard in the fog: Cold Read's two and the freeze); Hanging Ice; Splinter Ward.
+**Works with.** Cold Read, which it comes after on the chart (a perfect guard in the fog gives Cold Read's two and the freeze); Hanging Ice; Splinter Ward.
 
-**Not built yet.** The fog's six seconds as the window for the answers (for now the three answers wait for the next blows, fog or not, and are spent by them), the rime on the attacker's weapon arm, and only the attacker's next wind-up slowed (for now everything standing in the fog winds up slowly).
+**Not built yet.** The answers should only work during the fog's six seconds (for now, the three answers wait for the next blows, fog or not, and those blows use them up). Frost on the attacker's weapon arm. Only the attacker's next wind-up should be slowed (for now, everything standing in the fog winds up slowly).
 
-**Example.** Breathe the fog at a duellist and let it come: its first thrust lands you two Chill on it, its next comes slow enough to guard perfectly, and it freezes.
+**Example.** Breathe the fog at a duellist and let it come. Its first thrust gives it two Chill, its next attack comes slowly enough to guard perfectly, and it freezes.
 
 ## ice.rime.shape
-**What it does.** Opens two shapes of Rime Guard, chosen at any rest fire. **Freezing Fog**: the fog stays where it was breathed, five metres wide, and everything in it gains a Chill a second; hold a door with it. **Breath on the Steel**: no fog; the rime goes on your guard, and every blow guarded lays two Chill on the attacker and every perfect guard freezes it.
+**What it does.** Unlocks two shapes for Rime Guard. You pick one at any rest fire. **Freezing Fog**: the fog stays where you breathed it, five metres wide, and everything in it gets a Chill every second. Use it to hold a doorway. **Breath on the Steel**: no fog. Instead, frost goes on your guard. Every blow you guard gives the attacker two Chill, and every perfect guard freezes it.
 
-**When it happens.** Whenever you cast Rime Guard, as the shape it wears. Breath on the Steel's guard answers come while the shape is worn.
+**When it happens.** Whenever you cast Rime Guard, using the shape you picked. Breath on the Steel's guard answers work while you have that shape picked.
 
-**The numbers.** 3 Shards. Freezing Fog: 2.5 metres round, a stack of Chill on all in it each second for 6 seconds. Breath on the Steel: two Chill for each blow guarded, five (a freeze) for each perfect guard.
+**The numbers.** 3 Shards. Freezing Fog: a 2.5-metre radius, adding a stack of Chill to everything in it each second for 6 seconds. Breath on the Steel: two Chill for each blow you guard, and five (a freeze) for each perfect guard.
 
-**Works with.** Cold Read and Splinter Ward (Breath on the Steel); Winter Wall and Hanging Ice to keep them in the fog (Freezing Fog).
+**Works with.** Cold Read and Splinter Ward (Breath on the Steel); Winter Wall and Hanging Ice, to keep enemies in the fog (Freezing Fog).
 
-**Not built yet.** Breath on the Steel's six seconds after a cast: for now every guard chills and every perfect guard freezes while it is worn, cast or not. Freezing Fog empowered reaches 4 metres round, past its own 2.5 (an Empower's numbers are set after the shape's).
+**Not built yet.** Breath on the Steel should only work for six seconds after you cast it. For now, every guard chills and every perfect guard freezes while you have the shape picked, whether you cast it or not. With the Empower, Freezing Fog reaches a 4-metre radius instead of its own 2.5 (the Empower's numbers are applied after the shape's).
 
-**Example.** A corridor and a pack: Freezing Fog in the doorway, and they arrive at you three or four deep.
+**Example.** A hallway and a pack: put Freezing Fog in the doorway, and they reach you with three or four stacks.
 
 ## ice.rime.master
 **What it does.** A perfect guard in the fog's first second freezes everything in the fog, not only the attacker.
 
-**When it happens.** For now, any perfect guard while Rime Guard is in a slot, once in nine seconds.
+**When it happens.** For now, any perfect guard while Rime Guard is in a spell slot, once every nine seconds.
 
-**The numbers.** 3 Shards. Chill to full depth on everything within 3 metres of you, which freezes what can be frozen.
+**The numbers.** 3 Shards. Chill filled all the way on everything within 3 metres of you, which freezes everything that can be frozen.
 
-**Works with.** Cold Read, Flying Shards (a crowd frozen, then broken one by one), All at Once.
+**Works with.** Cold Read, Flying Shards (freeze a crowd, then break them one by one), All at Once.
 
-**Not built yet.** Only in the fog's first second, and only what stands in the fog; for now any perfect guard, fog or not, once in nine seconds.
+**Not built yet.** It should only work in the fog's first second, and only on enemies standing in the fog. For now, it works on any perfect guard, fog or not, once every nine seconds.
 
-**Example.** Three soldiers swing at once into the fresh fog: guard the first perfectly and all three stand frozen round you.
+**Example.** Three soldiers swing at once into the fresh fog. Guard the first one perfectly, and all three stand frozen around you.
 
 ## ice.splinter
-**What it does.** When a ward turns a blow, it bursts round you, striking and chilling everything near, and gives you what a perfect guard gives: its mana and its cut to every cooldown.
+**What it does.** When a ward blocks a blow, it bursts around you, hitting and chilling everything nearby. It also gives you what a perfect guard gives: its mana, and time off the wait on every spell.
 
-**When it happens.** Each time a ward is spent: Glaze's ward, or any other.
+**When it happens.** Each time a ward is used up: Glaze's ward, or any other.
 
-**The numbers.** 3 Shards. A burst 3.5 metres round you: 12 damage, 30 stagger and three stacks of Chill. 15 mana, and 2 seconds off every running cooldown.
+**The numbers.** 3 Shards. A burst with a 3.5-metre radius around you. It deals 12 damage, 30 stagger and three stacks of Chill. You get 15 mana, and 2 seconds come off the wait on every spell that is waiting.
 
-**Works with.** Glaze (one ward when lit), Cold Read, which it grows from, Winter Wall and Sent Sliding above it, Deep Winter, Chill.
+**Works with.** Glaze (one ward when you light it), Cold Read, which it comes after on the chart, Winter Wall and Sent Sliding above it, Deep Winter, Chill.
 
-**Not built yet.** The turned blow counting as a perfect guard for other marks (Cold Read, Rime Guard): for now it gives a perfect guard's mana and cut alone.
+**Not built yet.** The blocked blow should count as a perfect guard for other marks too (Cold Read, Rime Guard). For now, it only gives a perfect guard's mana and time off.
 
-**Example.** Light Glaze and let a brute's red attack land on the ward: everything round you is three deep and staggered, and your spells are two seconds nearer.
+**Example.** Light Glaze and let a brute's red attack land on the ward. Everything around you gets three stacks and is staggered, and your spells are two seconds closer to ready.
 
 ## ice.wall
-**What it does.** You raise a wall of ice before you. Nothing walks through it and blows from its far side do not reach you. When its time ends, or when you strike it with a heavy blow, it bursts and chills everything near it.
+**What it does.** You raise a wall of ice in front of you. Nothing can walk through it, and blows from the other side can't reach you. When its time ends, or when you hit it with a heavy blow, it bursts and chills everything near it.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). A heavy blow swung within reach of it bursts it early.
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). A heavy blow swung close enough to reach it bursts it early.
 
-**The numbers.** 4 Shards, 35 mana (its Empower: 30, and a burst of 36). The wall rises 2 metres ahead, 5 metres wide, and stands 6 seconds. The burst reaches 4 metres round it: 30 damage, 50 stagger and three stacks of Chill; burst by your heavy blow, it lands as a heavy blow. One wall of ice stands at a time.
+**The numbers.** 4 Shards, 35 mana (its Empower makes it 30, and the burst 36). The wall rises 2 metres ahead of you, is 5 metres wide, and stands for 6 seconds. The burst reaches 4 metres around it and deals 30 damage, 50 stagger and three stacks of Chill. If your heavy blow bursts it, it counts as a heavy blow. Only one wall of ice can stand at a time.
 
-**Works with.** Splinter Ward, which it grows from, Sent Sliding, Rime Guard's Freezing Fog, Chill.
+**Works with.** Splinter Ward, which it comes after on the chart, Sent Sliding, Rime Guard's Freezing Fog shape, Chill.
 
-**Not built yet.** Its 60 health, the touch that chills, and the burst thrown forward as a cone of 6 metres: for now it chills only when it bursts, round where it stands.
+**Not built yet.** The wall should have 60 health, chill anything that touches it, and throw its burst forward as a 6-metre cone. For now, it only chills when it bursts, all around where it stands.
 
-**Example.** Archers loose at you across a yard: raise the wall, wait behind it for the soldiers to come round, then cut it as they gather.
+**Example.** Archers shoot at you across a yard. Raise the wall, wait behind it for the soldiers to come around, then cut it as they gather.
 
 ## ice.wall.shape
-**What it does.** Opens two shapes of Winter Wall, chosen at any rest fire. **Shield Wall**: a shorter wall that moves ahead of you at walking pace; advance behind it. **Cracked Wall**: it bursts by itself a moment after an enemy first strikes it, a trap that answers the enemy, not you.
+**What it does.** Unlocks two shapes for Winter Wall. You pick one at any rest fire. **Shield Wall**: a shorter wall that moves ahead of you at walking speed. Move forward behind it. **Cracked Wall**: it bursts on its own a moment after an enemy first hits it. It's a trap that answers the enemy, not you.
 
-**When it happens.** Whenever you cast Winter Wall, as the shape it wears.
+**When it happens.** Whenever you cast Winter Wall, using the shape you picked.
 
-**The numbers.** 3 Shards. Shield Wall: 3 metres wide, standing 4 seconds. Cracked Wall: it bursts by itself 3 seconds after it rises, with the Learn's burst.
+**The numbers.** 3 Shards. Shield Wall: 3 metres wide, standing for 4 seconds. Cracked Wall: it bursts on its own 3 seconds after it rises, with the Learn mark's burst.
 
 **Works with.** Rime Guard and Hanging Ice behind a Shield Wall; Flying Shards at a Cracked Wall in a doorway.
 
-**Not built yet.** Shield Wall moving with you (for now it stands where it rose, shorter), and Cracked Wall bursting 1.5 seconds after an enemy first strikes it (for now on a clock).
+**Not built yet.** Shield Wall should move with you (for now, it stands where it rose, just shorter). Cracked Wall should burst 1.5 seconds after an enemy first hits it (for now, it bursts on a timer).
 
-**Example.** A god's charge across the arena: a Cracked Wall in its road, and it runs into the burst.
+**Example.** A god charges across the arena. Put a Cracked Wall in its path, and it runs into the burst.
 
 ## ice.wall.master
-**What it does.** Burst Winter Wall with a heavy blow in the instant after an enemy strikes it, and the cone freezes everything it reaches.
+**What it does.** Burst Winter Wall with a heavy blow right after an enemy hits it, and the burst freezes everything it reaches.
 
-**When it happens.** For now, every burst of the wall. Winter Wall must be in a slot.
+**When it happens.** For now, every time the wall bursts. Winter Wall must be in a spell slot.
 
-**The numbers.** 3 Shards. Chill to full depth on everything the burst strikes, which freezes what can be frozen.
+**The numbers.** 3 Shards. Chill filled all the way on everything the burst hits, which freezes everything that can be frozen.
 
 **Works with.** Flying Shards and All at Once (a frozen crowd to break), Sent Sliding.
 
-**Not built yet.** The timing (a heavy blow within 0.3 seconds of an enemy striking the wall): for now every burst freezes what it reaches.
+**Not built yet.** The timing (a heavy blow within 0.3 seconds of an enemy hitting the wall). For now, every burst freezes what it reaches.
 
-**Example.** Soldiers hacking at the wall: cut it as one strikes, and all of them stand frozen in its shards.
+**Example.** Soldiers are hacking at the wall. Cut it right as one of them hits it, and all of them stand frozen in its shards.
 
 ## ice.sliding
-**What it does.** Your heavy blow no longer shatters a Frozen enemy where it stands. It sends it sliding along the blow as a block of ice, striking all it meets, and it shatters at the end or on a wall. Freeze one, then bowl it into the rest.
+**What it does.** Your heavy blow no longer shatters a Frozen enemy where it stands. Instead, it sends it sliding in the direction of the blow as a block of ice, hitting everything it meets. It shatters at the end, or when it hits a wall. Freeze one, then bowl it into the rest.
 
-**When it happens.** Always on once learned: each time a frozen enemy is shattered.
+**When it happens.** Always on once you learn it: each time a frozen enemy is shattered.
 
-**The numbers.** 6 Shards. A lane of ice 10 metres long and 2 wide runs on from the shattered enemy along the blow: everything on it takes 30 damage, 30 stagger and two stacks of Chill. At most twice a second.
+**The numbers.** 6 Shards. A path of ice 10 metres long and 2 metres wide runs on from the shattered enemy in the direction of the blow. Everything on it takes 30 damage, 30 stagger and two stacks of Chill. At most twice a second.
 
-**Works with.** Flying Shards and Chill (each one struck is two nearer its own freeze), Winter Wall, All at Once, The World Holds Still.
+**Works with.** Flying Shards and Chill (each enemy hit is two stacks closer to freezing), Winter Wall, All at Once, The World Holds Still.
 
-**Not built yet.** The heavy blow sending the frozen body sliding as a block, throwing aside what it meets and shattering at its end or on a wall: for now it shatters where it stands as before, and the lane of ice runs on from it.
+**Not built yet.** The heavy blow sending the frozen body sliding as a block, knocking aside what it meets, and shattering at the end or on a wall. For now, it shatters where it stands like before, and the path of ice runs on from it.
 
-**Example.** Freeze the soldier at the head of a line and break it toward the rest: the ice runs through all of them.
+**Example.** Freeze the soldier at the front of a line and break it toward the rest. The ice runs through all of them.
 
 ## ice.brittle
-**What it does.** An enemy whose ice is gone, by a thaw or a shatter, stays brittle for a while. Your weapon cuts deeper into it and its balance breaks sooner.
+**What it does.** When an enemy's ice is gone, from thawing or shattering, it stays brittle for a while. Your weapon cuts deeper into it, and its balance breaks sooner.
 
-**When it happens.** Always on once learned, on every enemy that has been Frozen and is no longer.
+**When it happens.** Always on once you learn it, on every enemy that was Frozen and isn't anymore.
 
-**The numbers.** 3 Shards. For 5 seconds after its ice is gone the enemy takes 20% more damage from weapon blows and 20% more stagger from everything. Spells do not cut deeper.
+**The numbers.** 3 Shards. For 5 seconds after its ice is gone, the enemy takes 20% more damage from weapon blows and 20% more stagger from everything. Spells don't do extra damage.
 
-**Works with.** Chill, Flying Shards, All at Once, Clean Break, which grows from it (and Ski Run from that), and the finisher: a shatter and a few brittle blows often stagger it.
+**Works with.** Chill, Flying Shards, All at Once, Clean Break, which comes after it on the chart (and Ski Run after that), and the finisher: a shatter and a few brittle blows often stagger it.
 
-**Example.** Shatter a brute, then keep cutting: for five seconds every blow bites a fifth harder and its balance bar fills fast.
+**Example.** Shatter a brute, then keep cutting. For five seconds, every blow hits a fifth harder, and its balance bar fills fast.
 
 ## ice.base
-**What it does.** Hoarfrost, Ice's own spell, comes with the element and is never bought. Crystals grow out along the ground in a fan and the cold strikes as they come. They stand a while, and a blow of your weapon among them shatters them all.
+**What it does.** Hoarfrost, Ice's own spell. It comes with the element; you never buy it. Ice crystals grow out along the ground in a fan, and the cold hits as they come. They stay for a while, and one blow of your weapon among them shatters them all.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Carrying Ice, it is always yours to put in a slot.
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). While you carry Ice, you can always put it in a slot.
 
-**The numbers.** Given with Ice. No mana: it waits 7 seconds after a cast, less with weapon play; its Empower makes that 5.5. Thirteen crystals over a fan 4.5 metres long and 110 degrees wide: 10 damage, 15 stagger and two stacks of Chill. They stand 4 seconds; a weapon blow among them shatters them all, 5 damage, 8 stagger and one more Chill to everything near.
+**The numbers.** Comes with Ice. It costs no mana. After you cast it, you must wait 7 seconds to cast it again. Fighting with your weapon makes the wait shorter. Its Empower makes the wait 5.5 seconds. Thirteen crystals grow over a fan 4.5 metres long and 110 degrees wide. They deal 10 damage, 15 stagger and two stacks of Chill. They stay for 4 seconds. A weapon blow among them shatters them all, dealing 5 damage, 8 stagger and one more Chill to everything nearby.
 
-**Works with.** Its Empower, its two shapes and its Master; Chill; Brittle; the charged blade, which its landing charges with Ice.
+**Works with.** Its Empower, its two shapes and its Master mark; Chill; Brittle; and the charged blade, which it charges with Ice when it lands.
 
-**Not built yet.** The Empower's third stack of Chill: the base spell is cast by Ice's kit, which takes only the Empower's shorter wait.
+**Not built yet.** The Empower's third stack of Chill. For now, the spell only gets the Empower's shorter wait.
 
-**Example.** Cast it at three soldiers, then cut into the crystals: every one of them is three deep before your second blow.
+**Example.** Cast it at three soldiers, then cut into the crystals. Every one of them has three stacks before your second blow.
 
 ## ice.base.shape
-**What it does.** Opens two shapes of Hoarfrost, chosen at any rest fire. **Black Ice**: no crystals; a sheet of clear ice covers the ground ahead and chills what stands on it. **Frost Line**: one branching line of frost creeps far along the floor, chilling all it crosses; it reaches the archer behind the shield.
+**What it does.** Unlocks two shapes for Hoarfrost. You pick one at any rest fire. **Black Ice**: no crystals. Instead, a sheet of clear ice covers the ground ahead and chills whatever stands on it. **Frost Line**: one branching line of frost creeps far along the floor, chilling everything it crosses. It can reach the archer behind the shield.
 
-**When it happens.** Whenever you cast Hoarfrost, as the shape it wears. Before this is bought, the crystals are cast.
+**When it happens.** Whenever you cast Hoarfrost, using the shape you picked. If you have not bought this, you cast the crystals.
 
-**The numbers.** 3 Shards. Black Ice: a sheet 2.3 metres round, 2.5 metres ahead, for 5 seconds; each second it bites what stands on it for 1 damage and a stack of Chill. Frost Line: a line 10 metres long, 1.4 metres wide, run out in a moment: 8 damage, 10 stagger and two stacks of Chill.
+**The numbers.** 3 Shards. Black Ice: a sheet with a 2.3-metre radius, 2.5 metres ahead of you, lasting 5 seconds. Each second, it deals 1 damage and a stack of Chill to whatever stands on it. Frost Line: a line 10 metres long and 1.4 metres wide that spreads out in a moment. It deals 8 damage, 10 stagger and two stacks of Chill.
 
-**Works with.** Winter Wall and Rime Guard to keep enemies on the ice (Black Ice); Eight Points and Hanging Ice on the archer it reaches (Frost Line).
+**Works with.** Winter Wall and Rime Guard, to keep enemies on the ice (Black Ice); Eight Points and Hanging Ice on the archer it reaches (Frost Line).
 
-**Not built yet.** Black Ice throwing enemies on it half again as far and a dodge on it sliding twice as far.
+**Not built yet.** Black Ice should make enemies on it get thrown 50% farther, and make a dodge on it slide twice as far.
 
-**Example.** Black Ice down a corridor: the soldiers who walk in arrive two or three deep before you have swung.
+**Example.** Put Black Ice down a hallway. The soldiers who walk in reach you with two or three stacks before you have swung.
 
 ## ice.base.master
-**What it does.** Cast Hoarfrost within half a second after a shatter, and the crystals grow out from the shattered spot, Chill four deep.
+**What it does.** Cast Hoarfrost within half a second after a shatter, and the crystals grow out from the shattered spot with four stacks of Chill.
 
-**When it happens.** For now, in the moment after any shatter. Hoarfrost must be in a slot.
+**When it happens.** For now, right after any shatter. Hoarfrost must be in a spell slot.
 
-**The numbers.** 3 Shards. For 0.8 seconds after a shatter, every enemy within 6 metres of it is marked; the next blow or spell on each lays two more stacks of Chill.
+**The numbers.** 3 Shards. For 0.8 seconds after a shatter, every enemy within 6 metres of it is marked. The next blow or spell on each one adds two more stacks of Chill.
 
-**Works with.** Flying Shards (its burst is the blow that spends the mark); Chill; All at Once.
+**Works with.** Flying Shards (its burst is the hit that uses up the mark); Chill; All at Once.
 
-**Not built yet.** Only Hoarfrost cast in the half second after a shatter, its crystals grown from the shattered spot: for now anything that strikes them in that moment lays the two more.
+**Not built yet.** It should only work when you cast Hoarfrost in the half second after a shatter, with the crystals growing from the shattered spot. For now, anything that hits the marked enemies in that moment adds the two extra stacks.
 
-**Example.** Shatter one soldier and cast at once into the rest: they take the crystals' Chill and two more, one blow from freezing.
+**Example.** Shatter one soldier and cast right away into the rest. They get the crystals' Chill plus two more, one blow away from freezing.
 
 ## ice.ski
-**What it does.** A lane of clear ice runs out ahead and you slide down it at once, throwing snow, through whatever stands on it. Enemies on the lane are chilled two deep, and the lane stays.
+**What it does.** A path of clear ice shoots out in front of you, and you slide down it right away, throwing up snow, through whatever stands on it. Enemies on the path get two stacks of Chill, and the path stays.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). A wall, or anything too big to be shoved, stops the slide.
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). A wall, or anything too big to push, stops the slide.
 
-**The numbers.** 4 Shards, no mana: it waits 8 seconds after a cast, less with weapon play (its Empower: 6, and a lane of 12 metres). You go 9 metres; each enemy passed takes 6 damage, 10 stagger and two stacks of Chill. The lane stays 5 seconds and bites what stands on it for 1 damage every half second. Nothing can strike you while you slide.
+**The numbers.** 4 Shards. It costs no mana. After you cast it, you must wait 8 seconds to cast it again. Fighting with your weapon makes the wait shorter. (Its Empower makes the wait 6 seconds, and the path 12 metres.) You slide 9 metres. Each enemy you pass takes 6 damage, 10 stagger and two stacks of Chill. The path stays for 5 seconds and deals 1 damage every half second to whatever stands on it. Nothing can hit you while you slide.
 
-**Works with.** Clean Break, which it grows from; Brittle; Chill; Hanging Ice and Eight Points on those you leave behind.
+**Works with.** Clean Break, which it comes after on the chart; Brittle; Chill; Hanging Ice and Eight Points on the enemies you leave behind.
 
-**Not built yet.** The untouchable time only for the first 0.2 seconds (for now the whole slide), and a dodge along the lane carrying twice as far.
+**Not built yet.** You should only be untouchable for the first 0.2 seconds (for now, it's the whole slide). A dodge along the path should carry you twice as far.
 
-**Example.** Ringed in, slide out through the thinnest side: everyone you pass is two deep and the ice lies between you.
+**Example.** You're surrounded. Slide out through the thinnest side. Everyone you pass gets two stacks, and the ice lies between you and them.
 
 ## ice.ski.shape
-**What it does.** Opens two shapes of Ski Run, chosen at any rest fire. **Thin Ice**: the lane is lake ice over black water; whoever steps onto it cracks through to the knees and is held, and a heavy blow on it then freezes the water round it. **Shooting Run**: as you slide you loose three shards of ice at the nearest enemy, as she shoots from her skis.
+**What it does.** Unlocks two shapes for Ski Run. You pick one at any rest fire. **Thin Ice**: the path is thin lake ice over black water. Anyone who steps on it breaks through up to the knees and is stuck, and a heavy blow on them then freezes the water around them. **Shooting Run**: as you slide, you shoot three ice shards at the nearest enemy, the way the huntress shoots from her skis.
 
-**When it happens.** Whenever you cast Ski Run, as the shape it wears.
+**When it happens.** Whenever you cast Ski Run, using the shape you picked.
 
-**The numbers.** 3 Shards. Thin Ice: each enemy the slide passes is held for 1.2 seconds (elites less) and is three deep in Chill; a heavy blow on it within those 1.2 seconds lays Chill to full depth, and it is Frozen. Shooting Run: three homing shards, each 8 damage, 6 stagger and a stack of Chill.
+**The numbers.** 3 Shards. Thin Ice: each enemy the slide passes is held for 1.2 seconds (less for elites) and has three stacks of Chill. A heavy blow on it within those 1.2 seconds fills its Chill all the way, and it is Frozen. Shooting Run: three shards that chase their target, each dealing 8 damage, 6 stagger and a stack of Chill.
 
-**Works with.** Brittle and Flying Shards (Thin Ice: a held enemy frozen and broken); Hanging Ice (Shooting Run brings an archer's Chill up).
+**Works with.** Brittle and Flying Shards (Thin Ice: a held enemy frozen and broken); Hanging Ice (Shooting Run builds up an archer's Chill).
 
-**Not built yet.** Thin Ice taking whoever steps onto the lane within 5 seconds after (for now those the slide passes), and a god slowed by 30% rather than held; Shooting Run's shards loosed through the slide (for now all three as it starts).
+**Not built yet.** Thin Ice should catch anyone who steps on the path within 5 seconds after (for now, only enemies the slide passes), and a god should be slowed by 30% instead of held. Shooting Run's shards should be shot all through the slide (for now, all three go when it starts).
 
-**Example.** Slide past two soldiers on Thin Ice and turn: both are held to the knees, and one heavy blow freezes the first.
+**Example.** Slide past two soldiers on Thin Ice and turn around. Both are stuck to the knees, and one heavy blow freezes the first.
 
 ## ice.ski.master
-**What it does.** Started in the instant a blow would land on you, Ski Run counts as a perfect dodge. And slide through an enemy in the moment it shatters, and the lane freezes everything standing on it.
+**What it does.** If you start Ski Run right as a blow would land on you, it counts as a perfect dodge. Also, slide through an enemy at the moment it shatters, and the path freezes everything standing on it.
 
-**When it happens.** For now, every cast of Ski Run, and every slide through a Frozen enemy. Ski Run must be in a slot.
+**When it happens.** For now, every time you cast Ski Run, and every time you slide through a Frozen enemy. Ski Run must be in a spell slot.
 
-**The numbers.** 3 Shards. What a perfect dodge gives: 12 mana and 1.5 seconds off every running cooldown. Sliding through a Frozen enemy runs a lane 9 metres on from it, 2 metres wide, laying Chill to full depth on all on it, once a second at most.
+**The numbers.** 3 Shards. You get what a perfect dodge gives: 12 mana, and 1.5 seconds off the wait on every spell that is waiting. Sliding through a Frozen enemy sends a path 9 metres long and 2 metres wide on from it, filling Chill all the way on everything on it, at most once a second.
 
-**Works with.** Rime Guard's and Cold Read's freezes to slide through; Flying Shards; All at Once.
+**Works with.** Rime Guard's and Cold Read's freezes, to slide through; Flying Shards; All at Once.
 
-**Not built yet.** The timing (started as a blow would land), and the moment of a shatter: for now every cast gives the dodge's mana and cuts, and any Frozen enemy slid through freezes the lane on from it.
+**Not built yet.** The timing (starting it right as a blow would land), and the moment of a shatter. For now, every cast gives the dodge's mana and time off, and sliding through any Frozen enemy freezes the path past it.
 
-**Example.** Freeze the front soldier, slide through it at the line behind: the line stands frozen in your wake.
+**Example.** Freeze the front soldier, then slide through it toward the line behind. The line stands frozen behind you.
 
 ## ice.stillworld
-**What it does.** Lighting Glaze raises a shell of ice round you. Press the surge button again while Glaze lasts and the shell breaks outward as a ring that freezes everything it crosses, while the world is slowed. And whenever you shatter a frozen enemy, a line of breaking ice runs to the nearest one still Frozen and shatters that one too, which sends the line on again.
+**What it does.** Lighting Glaze raises a shell of ice around you. Press the surge button again while Glaze lasts, and the shell breaks outward as a ring that freezes everything it crosses, while the world slows down. Also, whenever you shatter a frozen enemy, a line of breaking ice runs to the nearest enemy that is still Frozen and shatters it too, which sends the line on again.
 
-**When it happens.** The shell comes when you light the surge, and stands while it lasts; the break comes when you press the surge button again, once each time you light it. As built it answers whichever surge you light. The chain of shatters comes with every shatter, Glaze or not.
+**When it happens.** The shell comes when you light the surge and stays while it lasts. The break comes when you press the surge button again, once each time you light it. For now, it works with whichever surge you light. The chain of shatters comes with every shatter, with or without Glaze.
 
-**The numbers.** A god's gift, never sold; in the playtest it can be bought. The ring runs out to 9 metres in half a second: 10 damage, 30 stagger and Chill to full depth, so it freezes what can be frozen. Enemies are slowed to a fifth of their speed for 1.5 seconds. Glaze and its ward stay. The chain looks for a Frozen enemy within 7 metres of the one that shattered and strikes it 0.2 seconds later for 20 damage and 30 stagger as a heavy blow, which shatters it for 45 more.
+**The numbers.** A god's gift; it is never sold, but in the playtest you can buy it. The ring spreads out to 9 metres in half a second. It deals 10 damage, 30 stagger and fills Chill all the way, so it freezes everything that can be frozen. Enemies slow to a fifth of their speed for 1.5 seconds. Glaze and its ward stay. The chain looks for a Frozen enemy within 7 metres of the one that shattered and hits it 0.2 seconds later for 20 damage and 30 stagger as a heavy blow, which shatters it for 45 more.
 
-**Works with.** Glaze, Flying Shards (the shards fly at every link), All at Once, Brittle, Sent Sliding, Deep Winter.
+**Works with.** Glaze, Flying Shards (the shards fly at every step of the chain), All at Once, Brittle, Sent Sliding, Deep Winter.
 
-**Example.** Light Glaze in a crowd, break it outward, and shatter the nearest: the ice runs from one to the next until every frozen body has broken.
+**Example.** Light Glaze in a crowd, break the shell outward, and shatter the nearest enemy. The ice runs from one to the next until every frozen body has broken.
 
 ## ice.cleanbreak
-**What it does.** Shatter an enemy that has less than a fifth of its health left, and nothing is left of it. Gods are spared; elites are not.
+**What it does.** Shatter an enemy that has less than a fifth of its health left, and nothing is left of it. Gods are safe from this; elites are not.
 
-**When it happens.** Each time you shatter a frozen enemy, while Ice is carried.
+**When it happens.** Each time you shatter a frozen enemy, while you carry Ice.
 
 **The numbers.** Major, 3 Shards. An enemy below 20% of its health when it is shattered dies a moment later. It never works on a god.
 
-**Works with.** Brittle, which it grows from, and Ski Run, which grows from it. Every way to freeze and shatter: Hoarfrost, Hanging Ice, heavy blows on a frozen enemy, All at Once.
+**Works with.** Brittle, which it comes after on the chart, and Ski Run, which comes after it. Every way to freeze and shatter: Hoarfrost, Hanging Ice, heavy blows on a frozen enemy, All at Once.
 
-**Example.** A knight is down to a sliver of health and frozen. One heavy blow shatters it, and it is gone.
+**Example.** A knight is frozen and down to a sliver of health. One heavy blow shatters it, and it's gone.
