@@ -68,6 +68,7 @@ checked against its code and committed on its own.
 - [x] marks/drownedweight.md: The Pull of Night (pulls only the Soaked)
 - [x] marks/forge.md: Folded Steel (kept across areas, emptied at every rest fire)
 - [x] effects.md: The Pull of Night in Drowned Weight's shapes (Soaked only)
+- [x] marks/burningsap.md: The Light Finds Them (Marks only the poisoned)
 
 ## Unsure lines
 
