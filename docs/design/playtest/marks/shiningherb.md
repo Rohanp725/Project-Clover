@@ -5,20 +5,20 @@ Shining Herb (`docs/design/steel/pairs_d3.md`, "Life and Light"). Drawn in the h
 are both carried.
 
 ## shiningherb.shape
-**What it does.** Opens Shining Herb's two shapes. At a rest fire you choose which one your Shining Herb wears, and from then on it runs instead of the plain one. **Bitter Leaf**: the herb grows on the enemy, and your next blow on it picks it, for those who never leave a target. **Seed of Light**: no herb; the seed bursts at your next blow as a flare that Marks and Seeds the enemies near.
+**What it does.** Unlocks two new shapes for Shining Herb. At a rest fire, you pick which shape your Shining Herb uses. From then on, it uses that shape instead of the plain one. **Bitter Leaf**: the herb grows on the enemy, and your next blow on it picks the herb. It's for players who stay on one target. **Seed of Light**: no herb. Instead, the seed bursts on your next blow as a flash of light that Marks and Seeds nearby enemies.
 
-**When it happens.** Every time Shining Herb fires (a Mark landing on a seeded enemy, or Seeded on a marked one) while Life and Light are both carried. Before this mark is bought, or with only one of the two carried, the plain Shining Herb runs.
+**When it happens.** Every time Shining Herb goes off while you carry both Life and Light. Shining Herb goes off when a Mark lands on a seeded enemy, or when Seeded lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Shining Herb.
 
-**The numbers.** Mix, 3 Shards. Bitter Leaf: for 6 seconds, your next weapon blow on it heals you 8. Seed of Light: for 6 seconds, your next weapon blow on it Marks and Seeds everything within 4 metres. Shining Herb rests 6 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Bitter Leaf: for 6 seconds, your next weapon blow on the enemy heals you 8. Seed of Light: for 6 seconds, your next weapon blow on the enemy Marks and Seeds everything within 4 metres. After Shining Herb goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
-**Works with.** Briar Patch and Glare to bring the two, Sixth Moon, Open to the Sun, Turned to the Sun.
+**Works with.** Briar Patch and Glare to set it up, Sixth Moon, Open to the Sun, Turned to the Sun.
 
-**Example.** A long duel: Bitter Leaf heals you as you fight. A pack: Seed of Light spreads both through it.
+**Example.** A long one-on-one fight: Bitter Leaf heals you as you fight. A pack: Seed of Light spreads both afflictions through it.
 
-**Not built yet.** The blow that picks or bursts it is any weapon blow, not only a critical one, and the next blow after picking is not yet made critical.
+**Not built yet.** For now, any weapon blow picks or bursts it, not only a critical hit. The next blow after picking the herb isn't a critical hit yet.
 
 ## shiningherb.sixthmoon
-**What it does.** The blow that ends a chain on a Seeded enemy Marks it.
+**What it does.** The blow that ends a chain of blows on a Seeded enemy Marks it.
 
 **When it happens.** The last blow of each chain that lands on a Seeded enemy.
 
@@ -26,52 +26,52 @@ are both carried.
 
 **Works with.** Briar Patch, Shining Herb, Long Day.
 
-**Example.** End each chain on a seeded soldier and a herb springs up.
+**Example.** End each chain on a seeded soldier, and a herb springs up.
 
 ## shiningherb.opentosun
-**What it does.** A perfect guard against a Marked enemy seeds it three deep.
+**What it does.** A perfect guard against a Marked enemy gives it three stacks of Seeded.
 
-**When it happens.** Each perfect guard (press the guard button just before a blow lands) against an enemy carrying a Mark.
+**When it happens.** Each perfect guard (press the guard button just before a blow lands) against an enemy that has a Mark.
 
 **The numbers.** Mix, 3 Shards. Three Seeded.
 
 **Works with.** Glare, Shining Herb, Sixth Moon.
 
-**Example.** A marked brute swings: guard it perfectly and a herb springs from it.
+**Example.** A Marked brute swings. Guard it perfectly, and a herb springs up from it.
 
 ## shiningherb.longday
-**What it does.** Herbs stand 3 seconds longer before they flower.
+**What it does.** Herbs stay 3 seconds longer before they flower.
 
-**When it happens.** Each time Shining Herb fires.
+**When it happens.** Each time Shining Herb goes off.
 
-**The numbers.** Mix, a minor, 1 Shard. Herbs stand 9 seconds before they flower, not 6. The same in both shapes.
+**The numbers.** Mix, a minor mark, 1 Shard. Herbs stay for 9 seconds before they flower, instead of 6. It's the same in both shapes.
 
-**Works with.** Sixth Moon, which it grows from, Shining Herb.
+**Works with.** Sixth Moon, which it comes after on the chart, Shining Herb.
 
-**Example.** More time to step in and pick.
+**Example.** More time to step in and pick the herb.
 
 ## shiningherb.wholemountain
-**What it does.** Picking a herb draws every other standing herb to you across the floor, and each one picked after the first heals twice.
+**What it does.** Picking a herb pulls every other herb across the floor to you, and each one picked after the first heals you twice as much.
 
-**When it happens.** Each time Shining Herb fires, while Life and Light are both carried.
+**When it happens.** Each time Shining Herb goes off, while you carry both Life and Light.
 
-**The numbers.** Mix, keystone, 5 Shards. As built: you heal 4 each time a herb springs.
+**The numbers.** Mix, keystone, 5 Shards. For now: you heal 4 each time a herb springs up.
 
 **Works with.** Shining Herb, Sixth Moon, Open to the Sun.
 
 **Example.** A fight full of herbs keeps you on your feet.
 
-**Not built yet.** Herbs are not yet things to pick from the floor, so none is drawn to you: a heal as each springs stands in.
+**Not built yet.** Herbs aren't things you can pick up from the floor yet, so none are pulled to you. For now, you heal each time one springs up instead.
 
 ## shiningherb.turnedtosun
-**What it does.** You plant a lit herb at the aim point. Every 2 seconds it flares, and every Seeded or Marked enemy near turns to face it, so their backs are yours.
+**What it does.** You plant a glowing herb where you aim. Every 2 seconds, it flashes, and every Seeded or Marked enemy nearby turns to face it, so their backs are open to you.
 
-**When it happens.** From a spell slot, while Life and Light are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Life.
+**When it happens.** Cast it from a spell slot while you carry both Life and Light. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Life.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. No mana: it waits 11 seconds after a cast, less with weapon play. Up to 7 metres ahead, 3 metres in radius, for 6 seconds: every 2 seconds, 2 damage, a Seeded and a Mark to all in it.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 7 metres ahead of you, covers a circle with a 3-metre radius, and lasts 6 seconds. Every 2 seconds, it deals 2 damage, a Seeded and a Mark to everything in it.
 
 **Works with.** Shining Herb, Sixth Moon, The Whole Mountain.
 
-**Example.** Plant it in a pack and every enemy in it carries both.
+**Example.** Plant it in a pack, and every enemy in it gets both afflictions.
 
-**Not built yet.** Enemies do not yet turn to face it, so blows on their backs are not yet critical.
+**Not built yet.** Enemies don't turn to face it yet, so blows on their backs aren't critical hits yet.
