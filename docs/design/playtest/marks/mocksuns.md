@@ -5,62 +5,62 @@ Mock Suns (`docs/design/steel/pairs_d5.md`, "Ice and Light"). Drawn in the heart
 both carried.
 
 ## mocksuns.shape
-**What it does.** Through the Ice: opens Mock Suns' two shapes. At a rest fire you choose which one your Mock Suns wears, and from then on it runs instead of the plain one. **Prism**: no mock suns; the frost on it clears to glass, your next weapon blow is critical, and its light fans out of the body's far side as three rays. **Lens of Ice**: the light is gathered into the one body; frozen, it keeps its Mark, and when it shatters the Mark is thrown onto everything near.
+**What it does.** Through the Ice unlocks two new shapes for Mock Suns. At a rest fire, you pick which shape your Mock Suns uses. From then on, it uses that shape instead of the plain one. **Prism**: no mock suns. Instead, the frost on the enemy clears to glass, your next weapon blow is a critical hit, and its light fans out of the enemy's far side as three rays. **Lens of Ice**: the light gathers inside the one enemy. While it is frozen, it keeps its Mark, and when it shatters, the Mark is thrown onto everything nearby.
 
-**When it happens.** Every time Mock Suns fires (a Mark landing on a chilled enemy, or Chill on a Marked one) while Ice and Light are both carried. Before this mark is bought, or with only one of the two carried, the plain Mock Suns runs.
+**When it happens.** Every time Mock Suns goes off while you carry both Ice and Light. Mock Suns goes off when a Mark lands on a chilled enemy, or when Chill lands on a Marked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Mock Suns.
 
-**The numbers.** Mix, 3 Shards. Prism: for 4 seconds its Mark is not spent; your next weapon blow on it, critical by the Mark, throws three strikes on your line beyond it, 1.5 metres apart and 0.8 metres round, each 8 damage, a Mark and a Chill. Lens of Ice: while it stays chilled and Marked its Mark is not spent by blows; a heavy blow on it at full Chill strikes 18 more and lays a Mark on every enemy within 4 metres. Mock Suns rests 4 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Prism: for 4 seconds, the enemy's Mark isn't used up. Your next weapon blow on it, a critical hit thanks to the Mark, sends three hits in a line past it, 1.5 metres apart and 0.8 metres across. Each deals 8 damage, a Mark and a Chill. Lens of Ice: while the enemy stays chilled and Marked, blows don't use up its Mark. A heavy blow on it at full Chill deals 18 more damage and puts a Mark on every enemy within 4 metres. After Mock Suns goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Bent Light, Wide Fan, White Night (freeze a Marked enemy with a perfect guard), Sunstone.
 
-**Example.** A crowd behind one soldier: Prism, and strike it so the rays run through the rest. A pack round a big enemy: Lens of Ice, freeze it and shatter it to mark them all.
+**Example.** A crowd behind one soldier: use Prism, and hit the soldier so the rays run through the rest. A pack around a big enemy: use Lens of Ice, then freeze and shatter the big one to Mark them all.
 
-**Not built yet.** Prism's rays are three strikes on your line beyond it rather than a fan of thin rays 6 metres long. Lens of Ice keeps the Mark while the enemy is chilled, not only while Frozen, and its heavy blow at full Chill stands in for the shatter's 60%.
+**Not built yet.** Prism's rays are three hits in a line past the enemy, instead of a fan of thin rays 6 metres long. Lens of Ice keeps the Mark while the enemy is chilled, not only while it is Frozen, and for now its heavy blow at full Chill takes the place of the shatter's 60%.
 
 ## mocksuns.bentlight
-**What it does.** A ray that meets ice you made (Hoarfrost's crystals, a wall of ice, a frozen enemy) bends toward the nearest enemy and runs on 5 metres: 8, a Mark.
+**What it does.** A ray that meets ice you made (Hoarfrost's crystals, a wall of ice, a frozen enemy) bends toward the nearest enemy and keeps going 5 metres, dealing 8 damage and a Mark.
 
-**When it happens.** Each spell that strikes a frozen enemy, while Ice and Light are both carried.
+**When it happens.** Each spell that hits a frozen enemy, while you carry both Ice and Light.
 
-**The numbers.** Mix, 3 Shards. An arc from the frozen enemy to the nearest other within 5 metres: 8 damage, 5 stagger and a Mark, at most every half second.
+**The numbers.** Mix, 3 Shards. An arc from the frozen enemy to the nearest other enemy within 5 metres, dealing 8 damage, 5 stagger and a Mark, at most once every half second.
 
 **Works with.** Mock Suns, Sunstone, White Night (freeze the enemy first).
 
-**Example.** Freeze one, then cast through it: the light finds the next.
+**Example.** Freeze one enemy, then cast through it. The light finds the next one.
 
-**Not built yet.** Only a frozen enemy bends the light, and any spell's blow counts, not only rays; Hoarfrost's crystals and walls of ice do not bend it yet.
+**Not built yet.** For now, only a frozen enemy bends the light, and any spell's hit counts, not only rays. Hoarfrost's crystals and walls of ice don't bend it yet.
 
 ## mocksuns.widefan
-**What it does.** The mock suns hang 2 seconds longer; with Prism, the fan reaches 8 metres and holds five rays.
+**What it does.** The mock suns hang in the sky 2 seconds longer. With Prism, the fan reaches 8 metres and has five rays.
 
-**When it happens.** Each time Mock Suns fires.
+**When it happens.** Each time Mock Suns goes off.
 
-**The numbers.** Mix, a minor, 1 Shard. The suns hang 6 seconds, not 4. With Prism the fan holds five rays, not three, and reaches 7 metres beyond the enemy.
+**The numbers.** Mix, a minor mark, 1 Shard. The suns hang for 6 seconds instead of 4. With Prism, the fan has five rays instead of three, and reaches 7 metres past the enemy.
 
 **Works with.** Mock Suns and its shapes, Bent Light.
 
-**Example.** The suns still hang when you have circled round.
+**Example.** The suns are still hanging there when you've circled back around.
 
 ## mocksuns.whitenight
-**What it does.** A perfect guard against a Marked enemy that carries three or more Chill freezes it at once.
+**What it does.** A perfect guard against a Marked enemy that has three or more Chill freezes it right away.
 
-**When it happens.** Each perfect guard against such an enemy, while Ice and Light are both carried.
+**When it happens.** Each perfect guard against an enemy like that, while you carry both Ice and Light.
 
-**The numbers.** Mix, keystone, 5 Shards. Its Chill is filled to full, which freezes it for the Chill's own time, at most every half second.
+**The numbers.** Mix, keystone, 5 Shards. Its Chill is filled all the way, which freezes it for as long as Chill normally freezes, at most once every half second.
 
 **Works with.** Mock Suns, Lens of Ice (freeze, then shatter), Bent Light, Sunstone.
 
-**Example.** Mark a brute, chill it three deep, and turn its next swing into ice.
+**Example.** Mark a brute, give it three stacks of Chill, and turn its next swing into ice.
 
 ## mocksuns.sunstone
-**What it does.** You hold up a block of clear ice spar for 1.2 seconds. The first blow that lands on it is caught for nothing and split: five rays fan 8 metres toward the attacker, 12 and 20 stagger each, a Mark and two Chill.
+**What it does.** You hold up a block of clear ice crystal for 1.2 seconds. The first blow that lands on it does nothing to you and is split: five rays fan out 8 metres toward the attacker, each dealing 12 damage, 20 stagger, a Mark and two Chill.
 
-**When it happens.** From a spell slot, while Ice and Light are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Ice.
+**When it happens.** Cast it from a spell slot while you carry both Ice and Light. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Ice.
 
-**The numbers.** Mix, duo spell, counter, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. The answer is a cone 8 metres long and 80 degrees wide: 12 damage, 20 stagger, two Chill and a Mark to everything in it.
+**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. The answer is a cone 8 metres long and 80 degrees wide. It deals 12 damage, 20 stagger, two Chill and a Mark to everything in it.
 
-**Works with.** Mock Suns (everything struck carries both), White Night, Bent Light.
+**Works with.** Mock Suns (everything it hits gets both afflictions), White Night, Bent Light.
 
-**Example.** Raise it as the brute swings, and its pack is marked and chilled behind it.
+**Example.** Raise it as the brute swings, and the pack behind it is Marked and chilled.
 
-**Not built yet.** The answer is one cone, not five rays; a perfect guard in its last 0.3 seconds does not yet freeze the attacker outright, and half the cooldown does not yet come back when nothing strikes it.
+**Not built yet.** For now, the answer is one cone, not five rays. A perfect guard in its last 0.3 seconds doesn't freeze the attacker solid yet. If nothing hits it, you don't get half the wait back yet.
