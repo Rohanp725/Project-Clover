@@ -44,13 +44,11 @@ while Light and Lightning are both carried.
 
 **When it happens.** Critical hits on a Marked enemy, while you carry both Light and Lightning.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: one critical hit in three on a Marked enemy adds a Static to it, by chance, so the bolt comes down. At most once every 5 seconds.
+**The numbers.** Mix, keystone, 5 Shards. Every third critical hit on a Marked enemy adds a Static to it, so the bolt comes down. Each enemy keeps its own count. At most once every 5 seconds.
 
 **Works with.** Charged Light, The Bolt Runs True, Diamond Thunder.
 
 **Example.** A Light player with Lightning as a second element calls down the bolt with the blade alone.
-
-**Not built yet.** The game doesn't count critical hits on one enemy yet, so the third one doesn't always call it. For now, one in three does, by chance.
 
 ## boltrunstrue.diamondthunder
 **What it does.** A straight line of light lies on the floor from your hand, 14 metres long, and lightning runs the whole line in one strike. Every enemy on it takes 22 damage and 40 stagger and is Marked, and every Static it meets goes off. Your first blow on each one within 2 seconds is a critical hit.
