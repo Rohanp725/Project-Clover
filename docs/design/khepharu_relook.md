@@ -697,12 +697,36 @@ run once in edit mode first, since the model's meshes cannot be read in Play Mod
 `review/khepharu/audit/<game|close>/` (one folder per move or case: `seq/*.jpg` every 0.1 s and `b1`..`b4` PNG beats;
 `worst/*.png` taken the frame a new worst is measured; `frames.csv`; `summary.txt`). The game view was 1920 x 1080.
 
-**Done so far:** the intro, every move of the man (four beats and a 0.1 s sequence each, at the game camera), the change
-up to the roar, the arena's edges walked and pushed. The form's moves, the twelve sun-against-body cases, the fury, the
-stagger, the death, the close camera, the profiler captures and the contact sheet are still to run (see "To resume").
+**Done so far:** the whole game-camera run: the intro, every move of the man, the change, every move of the
+Sun-Bearer (18, four beats and a 0.1 s sequence each), the twelve sun-against-body cases (sixteen runs), the arena's
+edges, the fury's Zenith, the Flares and Furrows in fury, the stagger and finisher, and the death
+(`review/khepharu/audit/game/summary.txt`; the first part, the man's moves, kept in `game_part1/`). **Still to do:** the
+close-camera run, `profile_court.sh`, `SunFightProbe` part `Clip` as the body's baseline, the GIFs, reading the frames,
+the full write-up below and `worst.png`.
+
 A first run of the form's moves was thrown away: the king's greeting was left open (the editor lost focus, so the probe's
 keys were dropped), which holds the player for the rest of the fight, and its sun-inside-the-body test read a held sun as
 3 m deep. Both are fixed in the probe (input ignores focus; a watchdog reads out any box; inside is now two-ray parity).
+
+### Headline numbers from the game-camera run (to be written up in full)
+
+- **The sun goes through the body: confirmed.** Deepest overlap of the ball (radius 1.5) with the body's triangles:
+  the Ram with the player in front **2.32 m** into the thorax (`game/worst/body_case_ram_front_Ram_Left_2p11.png` shows
+  the sun buried in the head); the parry **2.04 m** into the upturned body; a Ricochet whose bounce passes the scarab
+  **2.09 m** (abdomen), 1.95 and 1.87 m in the other two tries; taking the sun up from behind **1.90 m**; the walk round
+  to a sun on the far side **1.53 m** through the left foreleg; a light roll into the upturned scarab **1.40 m**
+  (midleg); the Ram's own turn **1.43 m** (midleg); a heavy roll (shell strike) **0.84 m** (upturned) and **0.76 m**
+  (righted). The falcon: its head is **2.35 m** into the sun through the whole Zenith, its talons 1.28 m in on the Stoop
+  and 1.46 m on the Rising.
+- **The corona below the floor: confirmed at every frame the burning sun is on the floor**: 1.03 m held or rolling
+  (Roll 641 of 641 frames over 0.05 m, Furrows 1608 of 1608, Ricochet 829 of 829), **1.29 m** with the Flares' swollen
+  sun. The Burrow carries the drawn, held sun **4.60 m** under unbroken paving (164 of 164 frames).
+- **The boss is off the screen 29.9% of the form fight's frames; the falcon 82.6% of its frames** (Feathers, Gust,
+  Sunfall, Zenith and Setting: every frame; Pass 429 of 530; Stoop 331 of 681). The scarab is off the screen for nearly
+  all of a Ricochet (1228 of 1230 frames).
+- **Frame time in the editor:** the form fight median 6.7 ms, p95 12.0, 502 of 50985 frames over 16.6 ms, 14.7 KB of
+  garbage a frame; the fury's Zenith median **12.3 ms, p95 22.5** (39 of 164 frames over 16.6); the death median 10.7,
+  p95 17.0, worst 87.4 ms.
 
 ### The brief's claims checked so far
 
@@ -740,9 +764,7 @@ keys were dropped), which holds the player for the rest of the fight, and its su
 1. In edit mode: `unity command script run -- --file AgentScripts/KhepharuMeshDump.cs --entry KhepharuMeshDump.Run`
    (only if `review/khepharu/audit/meshes.bin` is gone). Set the game view: `1920x1080` in
    `AgentScripts/gameview_size.txt`, then `script run --file AgentScripts/GameViewSize.cs --entry GameViewSize.Run`.
-2. `echo "Change Form Cases Beats" > AgentScripts/khepharu_only.txt`, then
-   `bash AgentScripts/runprobe.sh SunCourt KhepharuAudit 900` (slow: every capture stops time, about 3 s of real time a
-   game second).
+2. (Done: the game-camera run.)
 3. The close camera: `echo "Change Form Cases Close" > AgentScripts/khepharu_only.txt` and the same run.
 4. `bash AgentScripts/profile_court.sh`; then `SunFightProbe` part `Clip` (its guide handling is fixed) for the body's
    floor, rim and obelisk baseline.
