@@ -119,7 +119,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 
 ### 3. What's new (older sections only; the 0.5 Phase 4 section is already plain)
 
-- [ ] whats_new.md
+- [x] whats_new.md
 
 ### 4. The game guide
 
