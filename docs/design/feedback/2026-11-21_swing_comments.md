@@ -120,3 +120,11 @@ The final big swing in every film is the **infused strike** (L2 + RB), not the c
 - **Open from the films:**
   - Lightning's lunge carries the player so far that the crop splits player from enemies.
   - A white-blue bolt from the Storm Caller enemy appears in the Fire films.
+- **Done in Unity (2eaddfc, 20490f4, 2c4b056, 63bd109, bb3bd1a, 0c246f1):** Earth, Metal, Light, Dark and Poison play the Blender worker's final strikes (staging/blender/2026-11-21_strikes), on all 11 weapons. Pieces made once per enemy the cut hits are drawn only on those enemies, so Dark and Poison draw nothing on a miss. Earth's stones lift what they reach 0.55 m and set it down. Dark's hands have a violet rim and never lift or sink the enemy. The arcs are sized to the weapon's reach: as drawn for the Katana, at most 1.3 times larger and at least 0.85 times smaller. The old disc, rings, sundial, Taken and Venom Flick looks are no longer played. Films: review/gifs/swings/ and review/gifs/swings/alone/; stills on one soldier: review/gifs/swings/stills/.
+- **Open from these films:**
+  - The recipe's cut runs right to left, but some weapons swing left to right. On those, Light's glare and Metal's glint run against the blade.
+  - Gold-white starbursts flash on Marked enemies about 0.2 s before Light's strike look starts (the Katana film has 15,000 to 50,000 pure-white pixels). They are not part of the strike look; their source has not been traced.
+  - Other looks cover the struck enemies: Poisoned's lime clouds hide Poison's pools, Marked's sky beams and floor discs hide Light's glare, and Earth's charged hits leave cracks that read as brown thorns.
+  - Poison's vein web is faint on the real models. The Blender worker suggests a vein mask in the body's shader.
+  - A yellow dashed ring with an X shows round the player during every infused strike. It is older than this pass.
+  - In the film rig, the Massive Sword's strike often hits no one, so its Dark and Poison films show nothing.
