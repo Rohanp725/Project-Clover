@@ -37,6 +37,7 @@ checked against its code and committed on its own.
 - [x] marks/loganstone.md: The Prophecy Broken (every fourth Logan Stone on each elite; no 6-second wait)
 - [x] effects.md: plain Nerve Fire (elite flinch wait per elite), plain Quicksilver (bite wait per enemy), plain Stolen
   Warmth (8 health a second from each enemy), Lightning's Flash Cut (nothing can hit you through the lunge)
+- [x] marks/burningsap.md: Bared to the Sun (once on each enemy in each cast)
 
 ## Unsure lines
 

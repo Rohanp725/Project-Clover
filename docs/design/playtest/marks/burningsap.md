@@ -57,10 +57,10 @@ Poison are both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Light and Poison. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Light.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 13 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 8 metres ahead of you, covers a circle with a 2.5-metre radius, and lasts 5 seconds. Once a second, it deals 2 damage and adds a Mark to every enemy in it. A poisoned enemy starts Burning Sap (at most once a second in total).
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 13 seconds to cast it again. Fighting with your weapon makes the wait shorter. It lands up to 8 metres ahead of you, covers a circle with a 2.5-metre radius, and lasts 5 seconds. Once a second, it deals 2 damage and adds a Mark to every enemy in it. A poisoned enemy starts Burning Sap once in each cast. Each enemy keeps its own wait, so every poisoned enemy in the beam gets its turn.
 
 **Works with.** Burning Sap and its shapes, Miasma (poison them first), Nectar After Poison.
 
 **Example.** Poison a pack, then shine the sun on it.
 
-**Not built yet.** It can start Burning Sap at most once a second for all the enemies together, not once a second for each one. Your weapon blows inside the beam don't raise more blisters yet.
+**Not built yet.** Your weapon blows inside the beam don't raise more blisters yet.
