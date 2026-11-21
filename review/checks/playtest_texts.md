@@ -69,4 +69,4 @@ Read by Clover > Build > Playtest Texts from `docs/design/playtest/`.
 - marks/wind.md: 29 marks
 - marks/windthrow.md: 6 marks
 - marks/winterseed.md: 5 marks
-- whats_new.md: version "Combat Playtest 0.4 (unreleased)"
+- whats_new.md: version "Combat Playtest 0.5 (unreleased)"
