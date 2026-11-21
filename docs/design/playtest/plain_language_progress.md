@@ -91,7 +91,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/sicklewind.md
 - [x] marks/sleetcharge.md
 - [x] marks/smoulder.md
-- [ ] marks/steam.md
+- [x] marks/steam.md
 - [ ] marks/stolenwarmth.md
 - [ ] marks/tempest.md
 - [ ] marks/theboltrunstrue.md
