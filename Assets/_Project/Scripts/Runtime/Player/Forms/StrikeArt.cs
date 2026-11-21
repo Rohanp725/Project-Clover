@@ -67,11 +67,11 @@ namespace Clover.Player.Forms
                 }
                 case ElementSubstance.Lightning:
                 {
-                    // The channel re-struck along the lunge, and the strike where it ends.
+                    // The channel re-struck along the lunge, and the strike where it ends. Nothing is left on the floor
+                    // after it (the owner's review, 2026-11-21: the scorch star that stayed was taken out).
                     float length = Mathf.Max(2f, print.Reach);
                     ElementArt.Stand(ElementArt.Piece("lightning_restrike_infused"), Ground(print.Origin + forward * (length * 0.5f)), ElementArt.Turn(forward, 90f), length / 2.87f, 0.12f);
                     ElementArt.Sheet(ElementArt.SheetOf("lightning_bolt_strike"), Ground(print.Far) + Vector3.up * 1.4f, 3f, 0.5f);
-                    ElementArt.Floor(ElementArt.Piece("lightning_fern_spell"), Ground(print.Far), Random.value * 360f, 0.7f, 0.9f, 1.6f, 0.08f, true);
                     break;
                 }
                 case ElementSubstance.Wind:
