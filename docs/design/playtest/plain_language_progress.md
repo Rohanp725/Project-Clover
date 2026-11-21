@@ -35,6 +35,8 @@ checked against its code and committed on its own.
 - [x] marks/theboltrunstrue.md: The Diamond Falls (every third critical on each Marked enemy)
 - [x] marks/liveiron.md: Three Smiths (every third blow on each notched, charged enemy)
 - [x] marks/loganstone.md: The Prophecy Broken (every fourth Logan Stone on each elite; no 6-second wait)
+- [x] effects.md: plain Nerve Fire (elite flinch wait per elite), plain Quicksilver (bite wait per enemy), plain Stolen
+  Warmth (8 health a second from each enemy), Lightning's Flash Cut (nothing can hit you through the lunge)
 
 ## Unsure lines
 
