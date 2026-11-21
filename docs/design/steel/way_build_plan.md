@@ -14,7 +14,7 @@ the gap. Numbers this doc adds where the design gave none are marked **(P)** and
 - [x] 3. The Katana's Way, move by move
 - [x] 4. The other nine Ways
 - [x] 5. Build order and checks
-- [ ] 6. Owner questions
+- [x] 6. Owner questions
 
 **The owner's standing rules, baked into every line below.** Effects are animated timelines (the cause arriving,
 the impact, the aftermath), never a still that pops in and out. Film on real enemies, in groups of 3 to 5 where a move
@@ -1025,7 +1025,7 @@ named.
 | 2 | **Memories paid in play** (2.6): the hooks, the mote, the status line | Editor; one effect | Q10, Q11 |
 | 3 | **The Way chart** (2.5): `WayLayout`, the rest entry, choosing at the fire | Editor; screenshots | Q9 |
 | 4 | **The Body** (2.4): `BodyWay.cs`, `StaminaMost`, `Poise`, bearings, the found-piece pickup | Editor; a pickup model each (Blender or Forge) | Q8 |
-| 5 | **Engine pieces** (2.7), in the order of marks each finishes: chain rules (11), the answer window (7), aspect counters (6), the sheathe beat (5), the held light (3), the red attack as a trigger (3), the roll break, the thrown shot, turn to face, stand still on a lane, the finisher's held pose | Editor | Q5, Q13 |
+| 5 | **Engine pieces** (2.7), in the order of marks each finishes: chain rules (10), the answer window (7), aspect counters (6), the sheathe beat (5), the held light (3), the red attack as a trigger (3), the roll break, the thrown shot, turn to face, stand still on a lane, the finisher's held pose | Editor | Q5, Q13 |
 | 6 | **Task 5.3**: `Way/Infusion.cs`; the technique on the chord with Before the Thunder; Hold the Gate, after checking the Champion shows it | Editor | Q6, Q7 |
 | 7 | **The Katana's clips** (3.6), by bough: the trunk and the guard reactions; the Sheath; the Stream; the Answer; the Storm Katana. Each clip is checked as a Forge sheet (`ForgeSheet`) before it is wired | Forge (code, editor) | Q20, Q21 |
 | 8 | **The Katana's looks**, move by move, under the rules | Editor; Blender for the kozuka knife and any new mesh | Q1, Q2, Q12, Q14 to Q19, Q22, Q23 |
@@ -1070,3 +1070,246 @@ For every mark of section 3, in this order:
    that are still open, said plainly. Nothing that is still a stand-in is called done.
 
 ---
+
+## 6. Owner questions
+
+Each is a real gap: the design is silent, or it breaks a standing rule. The recommended option is first. Q1 to Q11 are
+the shared systems, Q12 to Q23 the Katana, Q24 on the other nine.
+
+### The shared systems
+
+**Q1. What colour replaces "white" in the Way's signs.** The design draws many signs white: the Answer's flick, the
+held draw's lane, the seams, the crescents, the bolts' cores. The rule is no pure white.
+- (a, recommended) The weapon's own slash colour (the Katana's pale steel-blue, the Storm Katana's cyan), or the
+  carried element's colour when the move carries one. A bolt's core is pale cyan.
+- (b) One warm colour, pale gold, for every Way sign on every weapon.
+- (c) Always the first element's colour, and steel-grey when none is carried.
+
+**Q2. Round shapes in floor warnings.** Effects never draw a ring. But some moves warn where they will land.
+- (a, recommended) Effects never draw a ring. A floor warning may be a filled patch with a soft edge, as the bosses'
+  slams already show, but never a bare outline circle.
+- (b) No round shapes at all, warnings included: a warning is a scorch, dust, or the body's pose only.
+
+**Q3. Numbers this plan fills in.** Timings, stamina, reach and the like that the design left out are marked (P).
+- (a, recommended) Use them as first guesses, kept as named numbers in the code and tuned in play.
+- (b) The owner checks each one before it is built.
+
+**Q4. Does Temper show on the weapon?**
+- (a, recommended) No. Nothing changes on the weapon; the chart shows the rank.
+- (b) The slash trail grows a little longer at each rank.
+
+**Q5. Temper V on the Katana.** Temper V makes the finisher's held pose 0.2 s longer, but the Katana's finisher has
+no held pose.
+- (a, recommended) Give the Katana's finisher a held pose: you stop behind the enemy with the blade out for 0.2 s,
+  then it falls. Temper V makes the hold 0.4 s and the blow 15% harder.
+- (b) On the Katana, Temper V only makes the finishing blow 15% harder.
+
+**Q6. Lying Draw with Fire.** Fire's own infused strike already leaves fire on the floor for 3 s, so Lying Draw adds
+nothing with Fire.
+- (a, recommended) With Fire, Lying Draw keeps the whole cut alight, not just a few patches, and for twice as long
+  (6 s). With Poison and Life it works as written.
+- (b) Lying Draw does nothing extra with Fire. It is for Poison and Life.
+- (c) With Fire, the flame spreads 1 m further out from the cut.
+
+**Q7. Before the Thunder's numbers.** The design says it lands in 0.12 s, "the quickest of any move", but the
+drawing cut lands in 0.10 s and the Iaido Slash in 0.08 s. Its damage and cost are not written.
+- (a, recommended) It lands in 0.06 s, does 22 damage (the infused draw's), and costs 15 stamina and no mana.
+- (b) It lands in 0.12 s as written, does 22 damage, and costs 15 stamina.
+- (c) It lands in 0.06 s, does 22 damage, and costs 20 mana instead of stamina.
+
+**Q8. Found Body pieces and found Memories in the Fire land.** The design says about one of each a land, but not
+where.
+- (a, recommended) Build the pickups now and test them in the Proving Ground. Place them once the Fire land's levels
+  are signed off: one vessel and one cache of 3 Memories on side paths, and the Fire god gives a flask shard.
+- (b) Place them now on the Fire land's side paths as they are.
+
+**Q9. How you set the aspect and keystone at the rest fire.**
+- (a, recommended) On the Way chart: press Use on a bought aspect or keystone to set it. A small frame shows which
+  one is set.
+- (b) On a separate list, like the Hand, before the chart opens.
+
+**Q10. How the player sees Memories being paid.**
+- (a, recommended) A small amber light rises from the fallen enemy and flies into you, like the Shards' embers, and
+  "+4 Memories" shows for 2 s under the Shards' count.
+- (b) Only the number, shown for 2 s.
+- (c) Nothing during a fight. The total shows at the rest fire.
+
+**Q11. The Gate Captain's Memories.** The code calls him an elite, but he teaches nothing yet, and the Fire land's
+total of 21 counts one elite.
+- (a, recommended) He pays as an ordinary new kind (1). The Fire land stays at 21.
+- (b) He pays 4 as an elite. The Fire land pays 25.
+
+### The Katana
+
+**Q12. How the Answer's moment to answer shows.** The design says "a white flick down the blade", which is white and
+drawn on the blade.
+- (a, recommended) The body shows it: the perfect-guard pose snaps the blade forward, ready, and the weapon's own
+  highlight glows for as long as the moment lasts.
+- (b) A small glint where the blades met, on the attacker's weapon, for as long as the moment lasts.
+
+**Q13. Telling a held light attack from a press (Held Draw).** Every light attack starts the moment it is pressed,
+so nothing waits.
+- (a, recommended) Under the Sheath with Held Draw, the draw starts on the press as always. If the button is still
+  held when its wind-up ends (0.10 s), the draw turns into the crouch instead of cutting.
+- (b) Under the Sheath, every light attack waits 0.12 s to see if it is held. Every draw gets a little slower.
+- (c) Move the held draw to another button: guard held, then heavy.
+
+**Q14. No Last Cut's last move.** The design draws it as "one ring round you".
+- (a, recommended) Five separate cuts at five angles, one after another over 0.25 s, with gaps between them. It
+  reads as five cuts, not a ring.
+- (b) One long cut along a line ahead instead.
+- (c) No last move. Just the loops.
+
+**Q15. Where the Seven Drums show.** The design draws them round the guard, which is a ring floating off the body.
+- (a, recommended) Seven small drum marks on the scabbard, lighting up one by one.
+- (b) Seven dots beside the spell diamond on the screen.
+- (c) Small storm-cloud drums floating round you, as written.
+
+**Q16. How The Drum Ring looks.** The design stands seven cloud drums in a ring 4 m across.
+- (a, recommended) No drums and no drawn ring. Seven bolts strike seven spots round you, one at a time. Each spot is
+  scorched with a small branching mark just before, as its warning, so it reads like a clock. The last bolt hits you
+  and shoots out along the line ahead.
+- (b) The seven bolts strike the seven nearest enemies within 6 m, one at a time, then the line ahead.
+- (c) Keep the cloud drums as written.
+
+**Q17. Raikiri's lightning "on the edge" and its "thunderclap ring".**
+- (a, recommended) The bolt strikes you as a column, and the weapon's own highlight blazes cyan instead of a bolt
+  drawn on the blade. On the cut, the bolt leaves along the line. The thunderclap is dust blown out in curls from your
+  feet and a branching scorch, not a ring.
+- (b) Keep the bolt crawling on the blade and the ring, as written.
+
+**Q18. A Hundred Days' hanging cut.** Every fourth draw leaves its cut hanging in the air for 0.6 s.
+- (a, recommended) Allowed: it is the slash trail itself, held where it was cut and fraying from its ends.
+- (b) Put it on the floor as a cut in the ground instead.
+
+**Q19. Zanshin's "thin white glance line".**
+- (a, recommended) No effect. The head turns first and the body follows. That is the sign.
+- (b) A small glint on the next enemy.
+
+**Q20. Moves played on another move's animation.** The Stream's turning and rising cuts, the Storm Katana's
+downward cut, the Riposte, Through the Gap and Ebb Step's slide all borrow another move's clip, which the no-reskin
+rule forbids.
+- (a, recommended) Each gets its own clip: six more, 27 in all for the Katana.
+- (b) Only the three that are in every combo (the turning, rising and downward cuts). The other three keep borrowed
+  clips, ledgered.
+
+**Q21. Stepping Water and the Rising Draw share one clip.**
+- (a, recommended) Keep one clip. Stepping Water is the Rising Draw opened up to the whole roll and linked into the
+  combo, and its words say so.
+- (b) Give Stepping Water its own clip: a flat cut thrown from the middle of the roll.
+
+**Q22. What counts as "a draw" on the Storm Katana** (for Seven Drums' bonus and Thunder Follows' line).
+- (a, recommended) Any draw: the first cut of a combo, the Thunder Draw and the Red Draw.
+- (b) Only the Thunder Draw and the Red Draw.
+
+**Q23. Chiburi shakes the blood off the blade.**
+- (a, recommended) Just the flick, with no drops. The body sells it.
+- (b) A few dark drops flicked onto the floor, fading in 1.5 s.
+
+### All nine other Ways
+
+**Q24. The same basics on every weapon.** Every weapon's second basic is a roll-then-heavy shove (45 stagger, a guard
+broken for 1 s), and most fourth basics make the enemy's next attack late.
+- (a, recommended) Keep the shared buttons, but give each weapon its own body and one twist of its own, written when
+  its Way is specced (the hammer's shove knocks down, the spear's butt trips).
+- (b) Keep them as written: the same move with each weapon's numbers.
+- (c) Replace each weapon's second basic with something unique.
+
+**Q25. Enemy states nothing has yet** (dazed, disarmed, held in the air, hooked, anchors in the scenery).
+- (a, recommended) Build each once, when the first Way needs it, as a shared enemy condition with one shared clip,
+  the way knocked down was built.
+- (b) Rewrite the marks that need them so they need nothing new.
+
+**Q26. Ways whose god's weapon is not built** (Brannoch's, Carnwyn's, the Smith's, the Alchemist's, the Huntress's,
+the Fisher's, Kazehaya's).
+- (a, recommended) Build each plain Way first. Build the god's weapon and bough when that god's land is built.
+- (b) Build the god's weapon together with its Way.
+
+### Massive Sword
+
+**Q27. The Trade's "red spark runs down the blade".** Red is not an element colour, and it is drawn on the blade.
+- (a, recommended) The trade shows on the body: a red flush across the chest and a grunt in the pose.
+- (b) The weapon's highlight flashes red, bending the rule for this one sign.
+
+**Q28. Bear-Shirt's "red shout ring".**
+- (a, recommended) The roar is the body's pose, with dust blown outward in curls from the feet.
+- (b) A filled red patch on the floor that fades.
+
+### Scythe
+
+**Q29. The Wild Hunt's "white hounds".**
+- (a, recommended) Bone-pale hounds with red ears, never pure white.
+- (b) Gold hounds, to match the Golden Scythe.
+
+**Q30. Haft Spin repeats the Great Spear's Spin the Shaft.**
+- (a, recommended) Replace the Scythe's with a new fourth basic, written when its Way is specced.
+- (b) Keep both, each with its own body and number.
+
+### Great Spear
+
+**Q31. Bare-Handed King borrows the Fists' jab and cross.**
+- (a, recommended) Its own clips: a king's open-hand strikes and backhand, burning, not boxing.
+- (b) Keep the Fists' clips.
+
+**Q32. The Sun-Spear's circles of fire** (Plant the Noon, the Winged Disc).
+- (a, recommended) Real flame laid along the path by the spear as it travels, piece by piece, so it is a trail and
+  not a drawn ring.
+- (b) Change them to arcs that do not close.
+
+### Great Hammer
+
+**Q33. The Smith's Hammer reads as Fire** (molten drops, a "white-hot" rivet).
+- (a, recommended) Heat shows as the hammer's head glowing from dull red to orange, with glints off what it strikes.
+  No molten drops and no flame.
+- (b) Keep the molten bronze, as the smith's myth has it.
+
+**Q34. The Smith's Gift swings the Massive Sword's sweeps.**
+- (a, recommended) Its own three swings, short and heavy, with the new blade still hot.
+- (b) Keep the sweeps.
+
+### Twin Knives
+
+**Q35. The Rattle's "white ticks" and the Hundred Cuts' "white lattice".**
+- (a, recommended) Small cuts on the body in the knives' slash colour, all opening together.
+- (b) A count over the enemy's health bar.
+
+**Q36. The Alchemist's mercury beads** read as Metal, not Poison.
+- (a, recommended) Miasma clouds in the five vials' colours; no mercury.
+- (b) Keep the mercury beads.
+
+### Great Bow
+
+**Q37. The Stave needs a third light attack the bow does not have.**
+- (a, recommended) Add a third stave light (the thrust) to the bow's moves before its Way is built.
+- (b) Rewrite the Stave for the two lights there are.
+
+### Chain Sickle
+
+**Q38. Round the Post needs something to wrap around.**
+- (a, recommended) Mark posts and pillars as anchors in every land's level builders.
+- (b) The weight wraps around enemies only.
+
+### Fists
+
+**Q39. Which technique the chord plays before one is chosen.**
+- (a, recommended) The one bought first.
+- (b) Neither, until one is chosen at a rest fire.
+
+### War Fan
+
+**Q40. Two moves on heavy held.** The plain fan's Thrown Fan is heavy held 0.4 s, and the Commander's signal is heavy
+held 0.3 s.
+- (a, recommended) The Thrown Fan keeps heavy held. The signal moves to guard held, then heavy.
+- (b) The signal keeps heavy held. The Thrown Fan moves to the fourth basic's button.
+
+**Q41. Kazehaya's "pale streak" and "thin cut of wind"** are lines, and Wind is curls.
+- (a, recommended) The Gale Road is drawn as curls and leaves along the road, with no straight streak.
+- (b) Keep the streak.
+
+**Q42. The Hermit of the Pass.** `way_plan.md` and `README.md` treat him as decided; `weapons.md` 14 calls him a
+placeholder.
+- (a, recommended) He is decided; `weapons.md` is brought up to date.
+- (b) He stays a placeholder until the Lightning and Wind land's overview.
+
+Forty-two questions in all: eleven on the shared systems, twelve on the Katana, three across the other nine Ways and
+sixteen on single weapons.
