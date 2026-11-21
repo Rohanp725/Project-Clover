@@ -119,6 +119,19 @@ public class Phase4bProbeRunner : MonoBehaviour
             yield return null;
             yield return null;
         }
+        // A guide opened as a list (the playtest's guide since Phase 4b) turns its pages on E and never closes on it:
+        // the back key closes it, and failing that it is closed outright, so time is never left stopped.
+        if (GuidePage.Showing)
+        {
+            InputSystem.QueueStateEvent(Keyboard.current, new KeyboardState(Key.Space));
+            yield return null;
+            yield return null;
+            InputSystem.QueueStateEvent(Keyboard.current, new KeyboardState());
+            yield return null;
+            yield return null;
+        }
+        if (GuidePage.Showing) GuidePage.Instance.Close();
+        if (Time.timeScale <= 0f) Say("WRONG: time still stopped after the guide");
     }
 
     // A fresh copy of the still dummy at the middle, and the player a few metres south of it facing it.
