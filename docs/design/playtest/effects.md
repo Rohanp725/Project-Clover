@@ -738,7 +738,7 @@ Group: Reactions
 
 **What sets it off.** A Mark landing on a poisoned enemy, or poison landing on a Marked one.
 
-**Its shapes.** If you have Lit Veins, the Shape mark of Light and Poison's duo branch (Burning Sap: The Light Finds Them or Blistered, 3 Shards, in the middle of the chart), and carry both, Burning Sap uses the shape you picked at a rest fire instead. The Light Finds Them: works like the plain one, and every enemy within 8 metres is Marked too. Blistered: for 3 seconds, each weapon blow on the enemy splashes two doses on everything within 2.5 metres right away. At the end, the saved-up bites land at once, doubled.
+**Its shapes.** If you have Lit Veins, the Shape mark of Light and Poison's duo branch (Burning Sap: The Light Finds Them or Blistered, 3 Shards, in the middle of the chart), and carry both, Burning Sap uses the shape you picked at a rest fire instead. The Light Finds Them: works like the plain one, and every poisoned enemy within 8 metres is Marked too. Blistered: for 3 seconds, each weapon blow on the enemy splashes two doses on everything within 2.5 metres right away. At the end, the saved-up bites land at once, doubled.
 
 **How to use it.** Land the Mark's three blows within the 3 seconds for three blisters.
 

@@ -73,6 +73,7 @@ checked against its code and committed on its own.
 - [x] marks/glacier.md: Sea Ice (Soaked only)
 - [x] marks/bloom.md: Rootlets (Soaked only)
 - [x] effects.md: Sea Ice, Rootlets, Taking Root and Root Web in the reaction shapes
+- [x] effects.md: The Light Finds Them in Burning Sap's shapes (poisoned only)
 
 ## Unsure lines
 
