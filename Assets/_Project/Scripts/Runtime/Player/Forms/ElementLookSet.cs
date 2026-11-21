@@ -22,13 +22,13 @@ namespace Clover.Player.Forms
         /// A body's shell the look asks the body's own material for: none, steel (Temper), ice (Chill), rime (Rime), wet
         /// (Soaked), stone bound by black seams (Turned to Stone), poisoned green-yellow ice (Venom Rime).
         /// </summary>
-        public const byte NoShell = 0, Steel = 1, Ice = 2, Rime = 3, Wet = 4, Stone = 5, Venom = 6;
+        public const byte NoShell = 0, Steel = 1, Ice = 2, Rime = 3, Wet = 4, Stone = 5, Venom = 6, DarkIce = 7;
 
         /// <summary>A look's body burning in the real flame field while it plays: not, in fire, in the curse's black fire.</summary>
         public const byte NoFlame = 0, Fire = 1, BlackFlame = 2;
 
         /// <summary>Shells the body's ice draws (Clover/Toon's _Ice, in its frost, stone or venom colouring).</summary>
-        public static bool IsIceShell(byte shell) => shell == Ice || shell == Rime || shell == Stone || shell == Venom;
+        public static bool IsIceShell(byte shell) => shell == Ice || shell == Rime || shell == Stone || shell == Venom || shell == DarkIce;
 
         /// <summary>Easings as the recipe names them: linear, out, in, inout, outback, step.</summary>
         public const byte Linear = 0, Out = 1, In = 2, InOut = 3, OutBack = 4, Step = 5;
@@ -76,6 +76,16 @@ namespace Clover.Player.Forms
             public float Hold;
             /// <summary>The body it plays on is not lit the frozen pale blue while it plays (Winter Seed's ice flower is what is seen).</summary>
             public bool Thawed;
+            /// <summary>
+            /// Keys of how high the body's model is raised while it plays (Anvil Stone's anvil, Frost Heave's ice lifting
+            /// it), metres in <see cref="Key.Value"/>.y; none for a look that leaves the body where it stands.
+            /// </summary>
+            public int RaiseFirst, RaiseCount;
+            /// <summary>
+            /// Kept on a body turned as the recipe's camera saw it (its player's way laid on the game camera's), not as the
+            /// recipe stood: Sundered's dagger runs from the back out of the chest toward the camera.
+            /// </summary>
+            public bool FacesCamera;
         }
 
         /// <summary>How long a look played once is shown: its own length, or its hold when that is longer.</summary>
@@ -209,6 +219,9 @@ namespace Clover.Player.Forms
         /// <summary>Glaze's crystal, stood on its base with its length up, and the ice it is drawn in (none in a set without it).</summary>
         public Mesh Crystal;
         public Material CrystalMaterial;
+        /// <summary>Bedrock's stone plate, stood on its base, and the stone it is drawn in (none in a set without it).</summary>
+        public Mesh ArmourPlate;
+        public Material ArmourMaterial;
         public Part[] Parts = new Part[0];
         public Key[] Keys = new Key[0];
 

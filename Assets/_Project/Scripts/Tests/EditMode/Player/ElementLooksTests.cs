@@ -93,8 +93,8 @@ namespace Clover.Tests
         {
             var set = ElementLookBuilder.Set();
             if (set == null) Assert.Ignore("The element looks have not been built; run Clover > Build > Element Looks.");
-            Assert.AreEqual(23, set.Looks.Count(look => !look.Key.Contains("@") && !look.Key.StartsWith(ElementMoves.Prefix) && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
-                "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks");
+            Assert.AreEqual(26, set.Looks.Count(look => !look.Key.Contains("@") && !look.Key.StartsWith(ElementMoves.Prefix) && System.Array.IndexOf(ElementLookBuilder.ReactionsBuilt, look.Key) < 0),
+                "21 looks of batches 1 and 2, Unsteady built for one, three and five stacks, and elements 4's Marked, Glaze and Bedrock");
             foreach (AfflictionKind kind in System.Enum.GetValues(typeof(AfflictionKind)))
                 for (int depth = 1; depth <= 6; depth++)
                 {
@@ -362,12 +362,31 @@ namespace Clover.Tests
                 }
             var wrong = new System.Collections.Generic.List<string>();
             int checkedPieces = 0;
-            foreach (bool reactions in new[] { true, false })
+            // The third review's recipes too: reactions 5's looks under the game's slugs (the options not picked left out),
+            // elements 4's under the game's keys; the earlier recipes' looks they replace are not built.
+            var combos5 = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(ElementLookBuilder.R5RecipePath);
+            var elements4 = UnityEditor.AssetDatabase.LoadAssetAtPath<TextAsset>(ElementLookBuilder.E4RecipePath);
+            var e4Keys = ElementLookBuilder.E4Looks.ToDictionary(pair => pair.Value, pair => pair.Key);
+            var passes = new System.Collections.Generic.List<(TextAsset recipe, bool reactions, bool redrawn)> { (combos, true, false), (elements, false, false) };
+            if (combos5 != null) passes.Add((combos5, true, true));
+            if (elements4 != null) passes.Add((elements4, false, true));
+            foreach (var (recipe, reactions, redrawn) in passes)
             {
-                var root = (System.Collections.Generic.Dictionary<string, object>)ReactionRecipe.ReadJson((reactions ? combos : elements).text);
+                var root = (System.Collections.Generic.Dictionary<string, object>)ReactionRecipe.ReadJson(recipe.text);
                 foreach (System.Collections.Generic.Dictionary<string, object> look in (System.Collections.Generic.List<object>)root["looks"])
                 {
                     string slug = (string)look["slug"];
+                    if (redrawn && reactions)
+                    {
+                        if (ElementLookBuilder.R5NotPicked.Contains(slug)) continue;
+                        if (ElementLookBuilder.R5GameSlugs.TryGetValue(slug, out var game)) slug = game;
+                    }
+                    else if (redrawn)
+                    {
+                        if (!e4Keys.TryGetValue(slug, out var key)) continue;
+                        slug = key;
+                    }
+                    else if (!reactions && elements4 != null && ElementLookBuilder.E4Looks.ContainsKey(slug)) continue;
                     var bodies = new System.Collections.Generic.List<Vector3>();
                     foreach (System.Collections.Generic.Dictionary<string, object> body in (System.Collections.Generic.List<object>)look["bodies"]) bodies.Add(Vec(body["position"]));
                     foreach (System.Collections.Generic.Dictionary<string, object> group in (System.Collections.Generic.List<object>)look["groups"])
@@ -384,7 +403,7 @@ namespace Clover.Tests
                             // A burning body's own tongues are its real flame (BodyFlames), by where the piece stands on its body.
                             var fromItsBody = Vec(instance[1]) - (body >= 0 && body < bodies.Count ? bodies[body] : Vector3.zero);
                             string notAMesh = ElementLookBuilder.NotAMesh(slug, (string)group["kit"], (string)group["kit_object"],
-                                reactions ? (string)group["material"] : null, fromItsBody, piece);
+                                reactions ? (string)group["material"] : null, fromItsBody, piece, redrawn);
                             string expected = reactions ? ElementLookBuilder.ReactionKey(slug, body)
                                 : ElementLookBuilder.PerBody.TryGetValue(slug, out var variants) ? (body < 0 ? variants[0] : body < variants.Length ? variants[body] : null)
                                 : body <= 0 ? slug : null;

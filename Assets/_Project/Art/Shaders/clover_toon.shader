@@ -36,6 +36,8 @@ Shader "Clover/Toon"
         _IceFrost ("Rime's white frost rather than clear ice", Range(0, 1)) = 0
         _IceStone ("Stone bound by black seams rather than ice (Turned to Stone)", Range(0, 1)) = 0
         _IceVenom ("Poisoned green-yellow ice rather than clear ice (Venom Rime)", Range(0, 1)) = 0
+        _IceEarth ("Earthen armour with ochre seams rather than ice (Bedrock)", Range(0, 1)) = 0
+        _IceDark ("Dark violet-blue ice rather than clear ice (Stolen Warmth)", Range(0, 1)) = 0
         _Wet ("Soaked (the water run down the body; set by the game)", Range(0, 1)) = 0
         _WetReveal ("Wet down from the top to this share of the body's height", Range(0, 1)) = 1
         _RevealBase ("The body's feet, world height (the reveals count up from here)", Float) = 0
@@ -82,6 +84,8 @@ Shader "Clover/Toon"
             half _IceFrost;
             half _IceStone;
             half _IceVenom;
+            half _IceEarth;
+            half _IceDark;
             float _RevealBase;
             float _RevealHeight;
             half _Wet;
@@ -158,6 +162,44 @@ Shader "Clover/Toon"
                 stone = seam < 0.11 ? half3(0.02, 0.01, 0.03) : stone;
                 stone = seam < 0.04 ? half3(0.2, 0.05, 0.34) : stone;
                 colour = lerp(colour, stone, _IceStone);
+            }
+            // Stolen Warmth's ice (the owner, 2026-11-20: "make the ice a bit darker, maybe with a slight purple hue"; the
+            // Blender worker's e4_ice_dark ramp): the same hard bands in a deep violet-blue, so the warm orange drawn out reads.
+            if (_IceDark > 0.001)
+            {
+                half3 dark = rim > 0.55 ? half3(0.3, 0.3, 0.68) : (rim > 0.22 ? half3(0.16, 0.12, 0.46) : half3(0.06, 0.03, 0.24));
+                dark = dark * lerp(0.82, 1.0, lit) + half3(0.22, 0.2, 0.5) * step(0.95, saturate(dot(normalWS, halfway)));
+                colour = lerp(colour, dark, _IceDark);
+            }
+            // Bedrock's earthen armour (the owner, 2026-11-20: "have earthen armor grow over my skin"; the Blender worker's
+            // e4_stone_armour): warm brown stone in the toon's hard bands, broken into hand-sized plates by dark seams, and
+            // now and then a seam glows ochre and fades, a few cells at a time.
+            if (_IceEarth > 0.001)
+            {
+                float3 cellAt = positionWS * 2.6;
+                float3 base = floor(cellAt);
+                float nearest = 9.0, second = 9.0;
+                float3 nearestCell = base;
+                for (int x = -1; x <= 1; x++)
+                for (int y = -1; y <= 1; y++)
+                for (int z = -1; z <= 1; z++)
+                {
+                    float3 cell = base + float3(x, y, z);
+                    float3 jitter = frac(sin(float3(dot(cell, float3(127.1, 311.7, 74.7)), dot(cell, float3(269.5, 183.3, 246.1)), dot(cell, float3(113.5, 271.9, 124.6)))) * 43758.5453);
+                    float distance = length(cell + jitter - cellAt);
+                    if (distance < nearest) { second = nearest; nearest = distance; nearestCell = cell; }
+                    else if (distance < second) second = distance;
+                }
+                float seam = second - nearest;
+                float fleck = frac(sin(dot(floor(positionWS * 24.0), float3(12.9898, 78.233, 37.719))) * 43758.5453);
+                half3 earth = lit > 0.6 ? half3(0.46, 0.36, 0.26) : (lit > 0.25 ? half3(0.33, 0.25, 0.18) : half3(0.2, 0.15, 0.11));
+                earth *= lerp(0.88, 1.06, step(0.6, fleck)) * lerp(1.0, 0.78, step(0.6, rim));
+                // Each plate's seams glow in their own turn: about a fifth of the time, rising and fading.
+                float turn = frac(_Time.y * 0.45 + frac(sin(dot(nearestCell, float3(7.1, 13.3, 3.7))) * 917.3));
+                half glow = saturate(1.0 - abs(turn - 0.1) / 0.1);
+                half3 seamColour = lerp(half3(0.09, 0.06, 0.04), half3(0.95, 0.52, 0.1), glow);
+                earth = seam < 0.09 ? seamColour : earth;
+                colour = lerp(colour, earth, _IceEarth);
             }
             return colour;
         }

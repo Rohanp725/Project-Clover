@@ -61,7 +61,8 @@ namespace Clover.Player.Forms
 
         /// <summary>
         /// The second-pass look an affliction wears (the Blender worker's batches 1 and 2, <see cref="ElementLooks"/>);
-        /// null for one that has none (Burn's is BodyFlames', Marked keeps its own).
+        /// null for one that has none (Burn's is BodyFlames'). Marked's is elements 4's one beam; its sun-wheel below is
+        /// drawn only in a scene without the built looks.
         /// </summary>
         public static string LookOf(AfflictionKind kind) => LookOf(kind, 3);
 
@@ -79,6 +80,8 @@ namespace Clover.Player.Forms
                 case AfflictionKind.Tremor: return "earth_tremor";
                 case AfflictionKind.Static: return StaticStyle != CodeLook ? "lightning_static" : null;
                 case AfflictionKind.Unsteady: return depth <= 2 ? "wind_unsteady_1" : depth >= 5 ? "wind_unsteady_5" : "wind_unsteady";
+                // Elements 4's one beam of light coming down on it (the owner, 2026-11-20: "right now it looks like 3 beams").
+                case AfflictionKind.Marked: return "light_marked";
                 default: return null;
             }
         }
@@ -86,7 +89,7 @@ namespace Clover.Player.Forms
         private static readonly AfflictionKind[] Looked =
         {
             AfflictionKind.Soaked, AfflictionKind.Sundered, AfflictionKind.Poison, AfflictionKind.Seeded, AfflictionKind.Cursed, AfflictionKind.Chill,
-            AfflictionKind.Tremor, AfflictionKind.Static, AfflictionKind.Unsteady,
+            AfflictionKind.Tremor, AfflictionKind.Static, AfflictionKind.Unsteady, AfflictionKind.Marked,
         };
 
         /// <summary>
@@ -113,6 +116,10 @@ namespace Clover.Player.Forms
                 // Under ice that bursts through the body (Frost Bite's spike, the charged ice blade's crystals) Chill's
                 // shell does not cover it (the owner: "that white spiderweb thing is really covering everything up").
                 if (kind == AfflictionKind.Chill && ElementLooks.Thawed(body)) continue;
+                // Marked after a reaction shows as its small gold flare for a while (FlareSeconds), not the beam from the
+                // sky: "The Marked mark must not be a reaction's biggest shape" (the beam stood over every reaction's
+                // aftermath in the films of the third pass).
+                if (kind == AfflictionKind.Marked && FlareNear(body.position) >= 0) continue;
                 ElementLooks.Keep(ElementLooks.Find(LookOf(kind, depth)), body);
             }
         }
@@ -255,7 +262,12 @@ namespace Clover.Player.Forms
             if ((int)kind >= 0 && (int)kind < shown.Length) shown[(int)kind]++;
             // An affliction with a second-pass look is drawn by it (KeepLooks), not by pieces thrown a few times a second;
             // Static drawn both ways keeps its crawl and jumping arcs under the look's.
-            if (ElementLooks.Find(LookOf(kind, depth)) >= 0 && !(kind == AfflictionKind.Static && StaticStyle == BothLooks)) return true;
+            if (ElementLooks.Find(LookOf(kind, depth)) >= 0 && !(kind == AfflictionKind.Static && StaticStyle == BothLooks))
+            {
+                // Marked on a body a reaction reached a moment ago is its small gold flare, not the beam (KeepLooks waits).
+                if (kind == AfflictionKind.Marked) Flare(depth, feet);
+                return true;
+            }
             float jitter = (ElementSubstance.Hash(beat) - 0.5f) * 40f;
             float more = 1f + 0.08f * depth;
             switch (kind)

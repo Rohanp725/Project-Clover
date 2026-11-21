@@ -120,6 +120,7 @@ namespace Clover.Player
             outfit = GetComponent<PlayerOutfit>();
             sheen = new MetalSheen();
             glaze = new GlazeIce();
+            armour = new StoneArmour();
             if (Elements.StartsEmpty(StartsWithNone, RunState.Element)) TakeNone();
             else
             {
@@ -551,6 +552,8 @@ namespace Clover.Player
         private MetalSheen sheen;
         // Glaze grows ice out of the body (crystals on its bones, its material frozen over).
         private GlazeIce glaze;
+        // Bedrock grows earthen armour over the body (plates on its bones, its material closed over in stone).
+        private StoneArmour armour;
         private PlayerOutfit outfit;
 
         /// <summary>How far the body is turned to steel now (Temper), 0 to 1, for probes.</summary>
@@ -559,6 +562,10 @@ namespace Clover.Player
         /// <summary>How far the body is iced over now (Glaze), 0 to 1, and how many crystals stand out of it, for probes.</summary>
         public float IceLevel => glaze != null ? glaze.Frost : 0f;
         public int GlazeCrystals => glaze != null ? glaze.Standing : 0;
+
+        /// <summary>How far the body is armoured in stone now (Bedrock), 0 to 1, and how many plates stand on it, for probes.</summary>
+        public float StoneLevel => armour != null ? armour.Level : 0f;
+        public int BedrockPlates => armour != null ? armour.Standing : 0;
 
         // True while the surge's own look is the element art's, which draws Overdrive's arcs in place of the old sparks.
         private bool ArtDrawsSurge(ElementInfo info) => info != null && Forms.ElementArt.Ready && Forms.SurgeArt.ReplacesBuilt(info);
@@ -570,6 +577,7 @@ namespace Clover.Player
             // No steel left on the body when the element goes (Temper's sheen is written only as it changes).
             sheen?.Clear();
             glaze?.Clear();
+            armour?.Clear();
         }
 
         private void LateUpdate()
@@ -591,6 +599,8 @@ namespace Clover.Player
             sheen?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Metal && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
             if (outfit != null && glaze != null) glaze.Watch(outfit.Body, transform);
             glaze?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Ice && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
+            if (outfit != null && armour != null) armour.Watch(outfit.Body, transform);
+            armour?.Tick(surging && SurgeInfo != null && SurgeInfo.Name == Elements.Earth && Forms.ElementArt.Ready, Time.deltaTime, transform.position.y);
             if (glow == null) return;
             float resting = surging ? GlowWhenSurging * Forms.SurgeArt.Glow(SurgeInfo) * (0.85f + 0.15f * Mathf.Sin(Time.time * 17f)) : 0f;
             glowLevel = Mathf.MoveTowards(glowLevel, resting, Time.deltaTime * 30f);

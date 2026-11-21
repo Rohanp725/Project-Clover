@@ -403,11 +403,14 @@ namespace Clover.Gameplay
 
         // Shaken while it carries Tremor: the model only, side to side and a little up and down, never the body that
         // moves and is struck, so nothing it does changes. Deeper Tremor shakes it harder.
+        // Raised by a reaction's look too (Anvil Stone's anvil, Frost Heave's ice heaving up under its feet): the model rides
+        // up on what rises under it instead of the stone or ice passing through it; the body that is struck stays put.
         private void LateUpdate()
         {
             if (animator == null || animator.transform == transform) return;
             int tremor = IsDead ? 0 : Afflictions.Stacks(AfflictionKind.Tremor);
-            if (tremor <= 0)
+            float raise = IsDead ? 0f : Clover.Player.Forms.ElementLooks.RaiseOf(transform);
+            if (tremor <= 0 && raise <= 0f)
             {
                 if (shaking) animator.transform.localPosition = modelRest;
                 shaking = false;
@@ -415,8 +418,13 @@ namespace Clover.Gameplay
             }
             if (!shaking) modelRest = animator.transform.localPosition;
             shaking = true;
-            float t = Time.time * TremorRate, size = TremorShake * (1f + 0.25f * (tremor - 1));
-            animator.transform.localPosition = modelRest + new Vector3(Mathf.Sin(t) * size, Mathf.Abs(Mathf.Sin(t * 1.7f + 1f)) * size * 0.5f, Mathf.Sin(t * 1.3f + 2f) * size * 0.6f);
+            Vector3 offset = animator.transform.parent != null ? animator.transform.parent.InverseTransformVector(Vector3.up * raise) : Vector3.up * raise;
+            if (tremor > 0)
+            {
+                float t = Time.time * TremorRate, size = TremorShake * (1f + 0.25f * (tremor - 1));
+                offset += new Vector3(Mathf.Sin(t) * size, Mathf.Abs(Mathf.Sin(t * 1.7f + 1f)) * size * 0.5f, Mathf.Sin(t * 1.3f + 2f) * size * 0.6f);
+            }
+            animator.transform.localPosition = modelRest + offset;
         }
 
         private void Awake()
@@ -1530,7 +1538,8 @@ namespace Clover.Gameplay
             if (flashLeft > 0f) glow = 1;
             // Held in stone (Turned to Stone) it does not glow the frozen pale blue: that lit the stone near white.
             // Nor under Winter Seed's ice flower (the coordinator, 2026-11-20: "remove the frozen body's pale glow").
-            else if (Afflictions.IsFrozen && !IsDead && !(ice > 0f && shell == Clover.Player.Forms.ElementLookSet.Stone) && !Clover.Player.Forms.ElementLooks.Thawed(transform)) glow = 5;
+            // Nor in Stolen Warmth's dark violet ice (the owner, 2026-11-20: "make the ice a bit darker"): the glow paled it.
+            else if (Afflictions.IsFrozen && !IsDead && !(ice > 0f && (shell == Clover.Player.Forms.ElementLookSet.Stone || shell == Clover.Player.Forms.ElementLookSet.DarkIce)) && !Clover.Player.Forms.ElementLooks.Thawed(transform)) glow = 5;
             else if (IsStaggered && Mathf.Repeat(Time.unscaledTime * 5f, 1f) < 0.5f) glow = 2;
             else if (IsCharged && !IsDead && Mathf.Repeat(Time.unscaledTime * 3f, 1f) < 0.6f) glow = 3;
             // Close to losing its balance, it flickers amber: one or two more blows will open it.
@@ -1555,14 +1564,16 @@ namespace Clover.Gameplay
                 shownFrost = shell == Clover.Player.Forms.ElementLookSet.Rime ? 1f : 0f;
                 shownStone = shell == Clover.Player.Forms.ElementLookSet.Stone ? 1f : 0f;
                 shownVenom = shell == Clover.Player.Forms.ElementLookSet.Venom ? 1f : 0f;
+                shownDark = shell == Clover.Player.Forms.ElementLookSet.DarkIce ? 1f : 0f;
                 SetGlow(glow);
             }
         }
 
-        private float shownIce, shownIceReveal = 1f, shownFrost, shownStone, shownVenom, shownWet, shownWetReveal = 1f;
+        private float shownIce, shownIceReveal = 1f, shownFrost, shownStone, shownVenom, shownDark, shownWet, shownWetReveal = 1f;
         private byte shownShell;
         private static readonly int IceStoneId = Shader.PropertyToID("_IceStone");
         private static readonly int IceVenomId = Shader.PropertyToID("_IceVenom");
+        private static readonly int IceDarkId = Shader.PropertyToID("_IceDark");
         private static readonly int WetId = Shader.PropertyToID("_Wet");
         private static readonly int WetRevealId = Shader.PropertyToID("_WetReveal");
         private static readonly int IceId = Shader.PropertyToID("_Ice");
@@ -1595,6 +1606,7 @@ namespace Clover.Gameplay
                     block.SetFloat(IceFrostId, shownFrost);
                     block.SetFloat(IceStoneId, shownStone);
                     block.SetFloat(IceVenomId, shownVenom);
+                    block.SetFloat(IceDarkId, shownDark);
                     block.SetFloat(RevealBaseId, feet);
                     block.SetFloat(RevealHeightId, Mathf.Max(0.8f, bodyRenderer.bounds.max.y - feet));
                 }

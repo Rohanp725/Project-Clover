@@ -74,8 +74,14 @@ namespace Clover.Player.Forms
                 case ElementSubstance.Poison: return "poison_fever";
                 case ElementSubstance.Life: return "life_regrowth";
                 case ElementSubstance.Dark: return "dark_hunger";
-                // Tailwind: the liked spiral in mint and pale dust, with curls peeling off behind (elements 3).
+                // Tailwind: the spiral turned upside down, its small end at the feet (elements 4).
                 case ElementSubstance.Wind: return ElementMoves.Tailwind;
+                // Glaze: blue frost and crystals at the feet and the ward of three shards (elements 4); the ice on the body
+                // and the crystals on its bones are GlazeIce's.
+                case ElementSubstance.Ice: return "ice_glaze";
+                // Bedrock: the earthen armour (the owner's pick, 2026-11-20); the stone skin and its plates are StoneArmour's,
+                // the grit and dust falling as it closes the look's.
+                case ElementSubstance.Earth: return "earth_bedrock";
                 default: return null;
             }
         }

@@ -18,7 +18,9 @@ namespace Clover.Player.Forms
         // Lightning's spell and blade were called good (2026-11-19) and keep their looks.
         private static readonly string[] Blades =
             { "fire_blade", null, "wind_blade", "ice_blade", "water_blade", "life_blade", "earth_blade", "metal_blade", "light_blade", "dark_blade", "poison_blade" };
-        private static readonly string[] Spells = { "flame_wave", null, null, null, "riptide", "briar_patch", null, null, null, null, "miasma" };
+        // Gust and Stone Rise are elements 4's (the third review): fronts of curls parting round the enemies, and massive
+        // stones bursting up under the one faced.
+        private static readonly string[] Spells = { "flame_wave", null, "gust", null, "riptide", "briar_patch", "stone_rise", null, null, null, "miasma" };
         private static readonly string[] Strikes = { null, null, "cutting_wind", "frost_bite", null, "grown_into_it", "broken_ground", null, null, "taken", null };
 
         /// <summary>Tailwind, the wind's surge.</summary>
@@ -55,6 +57,16 @@ namespace Clover.Player.Forms
         public static bool HasBlade(int element) => HitKey(element, 1) != null && ElementLooks.Find(HitKey(element, 1)) >= 0;
 
         public static bool HasSpell(int element) => SpellKey(element, false) != null && ElementLooks.Find(SpellKey(element, false)) >= 0;
+
+        /// <summary>True when the element's spell has a look on the bodies it reaches (Stone Rise's is all there, none about its caster).</summary>
+        public static bool HasSpellOnBody(int element) => SpellKey(element, true) != null && ElementLooks.Find(SpellKey(element, true)) >= 0;
+
+        /// <summary>The spell's look on a spot no body stands on (Stone Rise cast where nothing is reached), played there once.</summary>
+        public static bool SpellAt(int element, Vector3 feet, Vector3 forward)
+        {
+            string key = SpellKey(element, true);
+            return key != null && ElementLooks.PlayAt(ElementLooks.Find(key), feet, Yaw(forward));
+        }
 
         public static bool HasStrike(int element) =>
             StrikeKey(element, false) != null && (ElementLooks.Find(StrikeKey(element, false)) >= 0 || ElementLooks.Find(StrikeKey(element, true)) >= 0);

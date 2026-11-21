@@ -57,6 +57,9 @@ namespace Clover.Player.Forms
             return heights[slot] > 0f ? slot : -1;
         }
 
+        /// <summary>The body's measured height, metres from its feet to its crown; 0 for a slot not measured.</summary>
+        public static float Height(int slot) => slot >= 0 && slot < Most ? heights[slot] : 0f;
+
         /// <summary>How far out the body reaches at <paramref name="height"/> metres over its feet.</summary>
         public static float RadiusAt(int slot, float height)
         {

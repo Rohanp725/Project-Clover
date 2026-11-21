@@ -265,6 +265,16 @@ namespace Clover.Player.Forms
             // that reels from the blow first is still thrown the whole way.
             run.Phase = SigKit.Gather(run, middle, cast.Reach * 0.6f, 12);
             run.T3 = 0f;
+            // Elements 4's Gust (the owner, 2026-11-20: "static lines through the enemy"): fronts of crescent curls sweep out
+            // and part round each one reached, hooking in behind it, instead of streaks flown straight through the bodies.
+            run.Flag2 = ElementArt.Ready && ElementMoves.PlaySpell(ElementSubstance.Wind, run.A, run.B) >= 0;
+            if (run.Flag2)
+            {
+                int count = cast.Combat.CopyLastStruck(out var struck);
+                for (int i = 0; i < count; i++) ElementMoves.SpellReached(ElementSubstance.Wind, struck[i].transform, run.B);
+                TickWind(ref run, 0.1f);
+                return hits;
+            }
             Vfx.Play(VfxKind.Dust, run.A + run.B * 0.6f, run.B, 2f);
             Vfx.Play(VfxKind.Dust, middle, run.B, 3f);
             if (ElementArt.Ready)
@@ -292,7 +302,8 @@ namespace Clover.Player.Forms
                     if (FormKit.Alive(blown[i]) && blown[i] is IShovable body) body.Push(push);
             }
             run.T2 -= deltaTime;
-            while (run.T2 <= 0f)
+            // The look draws the wind; only the shove is the code's.
+            while (!run.Flag2 && run.T2 <= 0f)
             {
                 run.T2 += 0.012f;
                 run.Done++;
@@ -628,6 +639,9 @@ namespace Clover.Player.Forms
 
         // ---- Earth: Stone Rise. The ground breaks under the enemy faced and a wall of rock is left standing behind it, which nothing walks through.
 
+        /// <summary>Seconds elements 4's Stone Rise look plays after the stones burst up (its 1.6 s timeline).</summary>
+        public const float StoneRiseShown = 1.6f;
+
         private static int BeginEarth(ref SpellRun run)
         {
             var cast = run.Cast;
@@ -650,6 +664,18 @@ namespace Clover.Player.Forms
                 cast.Combat.StrikeArea(run.C, cast.Spec.Radius, cast.Blow(cast.Damage, cast.Stagger));
                 // Up under them and down again; the wall behind them stays.
                 cast.Combat.LiftArea(run.C, cast.Spec.Radius, 0.35f);
+                // Elements 4's Stone Rise (the owner, 2026-11-20: "i still dont want the ring of 3 stones around the enemy, just
+                // the massive stones rising and knocking up the enemy"): massive stones burst up under each one struck and
+                // sink back crumbling. No ring, no wall of three stones behind it: that wall was those stones.
+                if (ElementArt.Ready && ElementMoves.HasSpellOnBody(ElementSubstance.Earth))
+                {
+                    run.Flag2 = true;
+                    int count = cast.Combat.CopyLastStruck(out var struck);
+                    for (int i = 0; i < count; i++) ElementMoves.SpellReached(ElementSubstance.Earth, struck[i].transform, run.B);
+                    if (count == 0) ElementMoves.SpellAt(ElementSubstance.Earth, run.C, run.B);
+                    if (cast.Upgrades != null) cast.Upgrades.Jolt(0.05f, 0.24f, 0.25f);
+                    return true;
+                }
                 FormFx.Erupt(FormMesh.Rock, run.C, Quaternion.Euler(0f, Random.value * 360f, 0f), new Vector3(1.5f, 1.2f, 1.5f), cast.Colour, 0.07f, 0.25f, 0.5f);
                 Vector3 side = Side(run);
                 for (int j = 0; j < 3; j++)
@@ -678,6 +704,8 @@ namespace Clover.Player.Forms
                 if (cast.Upgrades != null) cast.Upgrades.Jolt(0.05f, 0.24f, 0.25f);
             }
             float since = run.Age - run.T1;
+            // The look plays the stones on its own; the spell ends with it.
+            if (run.Flag2) return since < StoneRiseShown;
             if (since > 0.3f && since < stands - 0.45f) return true;
             for (int j = 0; j < 3; j++)
             {

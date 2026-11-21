@@ -94,6 +94,9 @@ namespace Clover.Player.Forms
         /// </summary>
         public const float StandIn = 1.75f, MostTall = 1.45f;
 
+        /// <summary>The least share of its height a piece on a short body is brought down to (a body measured very short is likely half hidden).</summary>
+        public const float LeastUp = 0.55f;
+
         /// <summary>
         /// Metres out from the body within which a piece is moved out with the body's size; past it a piece moves only that
         /// much further, so what reaches another enemy (a feather, a lane, a thorn) still lands where it was drawn to.
@@ -149,6 +152,34 @@ namespace Clover.Player.Forms
                 if (off.sqrMagnitude <= QuietReach * QuietReach) return true;
             }
             return false;
+        }
+
+        /// <summary>
+        /// Seconds a raised body is let down over at the end of the look that raised it, and the height above its feet a
+        /// piece on it must stand at to ride up with it (lower, it is what rises from the floor and lifts it).
+        /// </summary>
+        public const float LetDown = 0.35f, RaisedFrom = 0.3f;
+
+        /// <summary>
+        /// Metres a reaction's look raises this body's model now (Anvil Stone's anvil, Frost Heave's ice under its feet),
+        /// grown with the body as the look is; 0 when none does. The model only: the body that moves and is struck stays.
+        /// </summary>
+        public static float RaiseOf(Transform body)
+        {
+            if (instance == null || instance.showings == null || body == null) return 0f;
+            float most = 0f;
+            for (int i = 0; i < instance.showings.Length; i++)
+            {
+                ref var one = ref instance.showings[i];
+                if (!one.Active || one.Ending || !ReferenceEquals(one.Body, body)) continue;
+                ref var look = ref instance.set.Looks[one.Look];
+                if (look.RaiseCount <= 0) continue;
+                float raise = instance.set.Sample(look.RaiseFirst, look.RaiseCount, one.Age, Vector3.zero).y * Mathf.Max(1f, one.Tall);
+                // Let down over the look's last moments, never dropped at once as it ends.
+                raise *= Mathf.Clamp01((ElementLookSet.ShownFor(look) - one.Age) / LetDown);
+                if (raise > most) most = raise;
+            }
+            return most;
         }
 
         private static readonly int HeadId = Shader.PropertyToID("_DrawHead");
@@ -350,6 +381,14 @@ namespace Clover.Player.Forms
             crystal = Ready ? instance.set.Crystal : null;
             ice = Ready ? instance.set.CrystalMaterial : null;
             return crystal != null && ice != null;
+        }
+
+        /// <summary>Bedrock's stone plate and the stone it is drawn in, from the built looks; false when the scene has none.</summary>
+        public static bool TryArmourPlate(out Mesh plate, out Material stone)
+        {
+            plate = Ready ? instance.set.ArmourPlate : null;
+            stone = Ready ? instance.set.ArmourMaterial : null;
+            return plate != null && stone != null;
         }
 
         /// <summary>An element's charged-blade sheath from the built looks; false when the scene has none for it.</summary>
@@ -701,6 +740,13 @@ namespace Clover.Player.Forms
                 Turn = Quaternion.identity, Size = 1f, Tall = TallOf(body), Stamp = ++stamps, VeiledAt = -1f, Coming = ComeIn,
                 Girth = BodyGirth.Slot(body),
             };
+            if (set.Looks[look].FacesCamera)
+            {
+                // The recipe's camera stood on its player's side: that way is turned onto the game camera's.
+                Vector3 seen = -towardCamera;
+                float cameraYaw = new Vector2(seen.x, seen.z).sqrMagnitude > 0.0001f ? Mathf.Atan2(seen.x, seen.z) * Mathf.Rad2Deg : 0f;
+                showings[free].Turn = Quaternion.Euler(0f, cameraYaw - set.Looks[look].FacingYaw, 0f);
+            }
             playing++;
             return free;
         }
@@ -803,6 +849,8 @@ namespace Clover.Player.Forms
                 shrink *= Mathf.Max(0.001f, Mathf.Clamp01(one.Coming / ComeIn));
                 // A whirl blowing itself out: how far through its last stretch it is.
                 float blow = blowTo[one.Look] > 0f ? Mathf.Clamp01((one.Age - blowFrom[one.Look]) / (blowTo[one.Look] - blowFrom[one.Look])) : 0f;
+                // What is on a body that a reaction raises (Anvil Stone's dagger in it) rides up with its model.
+                float raised = one.Fixed || bodyGone ? 0f : RaiseOf(one.Body);
                 for (int k = 0; k < look.PartCount && k < MostParts; k++)
                 {
                     int slot = i * MostParts + k;
@@ -819,7 +867,9 @@ namespace Clover.Player.Forms
                     // Spins and orbits of a part that keeps moving run on with the look's own age (a reaction's held
                     // aftermath too).
                     float angleTime = part.RunsOn ? one.Age : t;
-                    Pose(part, look.FirstPart + k, flamesGoneBy[one.Look], t, angleTime, part.Follows ? feet : one.Ground, one.Turn, one.Size, one.Tall, one.Girth, shrink, blow, slot, at[pooled]);
+                    // (Not what rises under it from the floor: the anvil and the ice are what lift it.)
+                    Vector3 anchor = !part.Follows ? one.Ground : raised > 0f && onBody[look.FirstPart + k] && part.Position.y > RaisedFrom ? feet + Vector3.up * raised : feet;
+                    Pose(part, look.FirstPart + k, flamesGoneBy[one.Look], t, angleTime, anchor, one.Turn, one.Size, one.Tall, one.Girth, shrink, blow, slot, at[pooled]);
                     if (part.Kind == ElementLookSet.Ribbon) Draw(part, t, pooled);
                     if (!shown[pooled].enabled) shown[pooled].enabled = true;
                 }
@@ -904,7 +954,10 @@ namespace Clover.Player.Forms
             // A ribbon's own points lie round the upright: it is measured where its middle is.
             float height = part.Kind == ElementLookSet.Ribbon && part.Mesh != null ? part.Mesh.bounds.center.y : position.y;
             float ratio = BodyGirth.Ratio(girth, height, StandIn);
-            position.y *= tall;
+            // Up a body shorter than the stand-in by its own height (the look is never drawn smaller, but what sits on the
+            // body sits at its chest): Anvil Stone's dagger stood over a Knife Acolyte's head (its film of 2026-11-20).
+            float measured = BodyGirth.Height(girth);
+            position.y *= measured > 0f && measured < StandIn ? Mathf.Max(LeastUp, measured / StandIn) : tall;
             position.x *= ratio;
             position.z *= ratio;
             stretch = new Vector3(tall, tall, tall);

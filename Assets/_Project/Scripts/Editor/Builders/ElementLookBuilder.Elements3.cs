@@ -52,6 +52,8 @@ namespace Clover.EditorTools
             ["the_grudge|r4_blackbolt"] = 0.6f,
             ["the_grudge|r4_grudgecloud"] = 0.6f,
             ["the_grudge|r4_grudgelit"] = 0.6f,
+            // Reactions 5's crisp black bolt and its arcs, in front of the bar too, or it is gone behind it in its 0.16 s.
+            ["the_grudge|e4_blackbolt"] = 0.6f,
         };
 
         /// <summary>Marked's sun-wheel piece, the glint a reaction draws in its place, and how much larger than the wheel was drawn.</summary>
@@ -78,6 +80,9 @@ namespace Clover.EditorTools
             // Dark's charged third blow laid a black disc and a ring at the feet of the one it struck (the swing films of
             // 2026-11-20: "black discs" and loops at the soldiers' feet); the dark poured down into the ground is kept.
             ["e3_dark_blade_hit3"] = new[] { "_hole", "_horizon" },
+            // Glaze's crystals jutting from the shoulders and hips stood on the stand-in's pose: GlazeIce grows them on the
+            // player's own bones, so they sit on the body however it moves.
+            ["ice_glaze"] = new[] { "_shouldercrystal" },
         };
 
         public static bool LeftOutByName(string slug, string piece)
@@ -102,12 +107,11 @@ namespace Clover.EditorTools
         /// <summary>
         /// Reactions that pulse once on the ground as they finish, by slug: (seconds in, metres across). Quickening (the
         /// owner, 2026-11-19: "this growth can also give off a green/brown pulse, when grown kind of visualizing the heal
-        /// and the seeding"): green edged brown, 2.5 m, as the plants finish growing.
+        /// and the seeding"): green edged brown, 2.5 m, as the plants finish growing. The owner's third review (2026-11-20)
+        /// took it out again ("not sure at all what the green brown circle underneath is trying to mean, it doesnt look
+        /// good"): none pulses now; the table is kept for a reaction that asks for one.
         /// </summary>
-        public static readonly Dictionary<string, Vector2> HealPulses = new Dictionary<string, Vector2>
-        {
-            ["quickening"] = new Vector2(0.95f, 2.5f),
-        };
+        public static readonly Dictionary<string, Vector2> HealPulses = new Dictionary<string, Vector2>();
         public static readonly Color PulseGreen = new Color(0.2f, 0.55f, 0.12f, 0.65f), PulseBrown = new Color(0.3f, 0.18f, 0.06f, 0.8f);
 
         // The heal pulse: a see-through disc on the floor, green at its middle going brown at its edge, opening out once and gone.
@@ -256,8 +260,9 @@ namespace Clover.EditorTools
         /// <summary>The elements 3 brazier that replaces one of the eleven loops (Lightning's caged storm), or null; its brazier itself is the hub's own.</summary>
         private static Dictionary<string, object> Elements3Brazier(string slug)
         {
-            if (slug != "brazier_lightning") return null;
-            var look = Elements3Looks().FirstOrDefault(l => Text(l, "slug") == slug);
+            // Six braziers are drawn anew in elements 4 (the third review); Lightning's there is the caged storm in more detail.
+            var look = E4Braziers.Contains(slug) ? Elements4Look(slug) : null;
+            if (look == null && slug == "brazier_lightning") look = Elements3Looks().FirstOrDefault(l => Text(l, "slug") == slug);
             if (look == null) return null;
             var copy = new Dictionary<string, object>(look);
             var groups = new List<object>();
@@ -271,7 +276,7 @@ namespace Clover.EditorTools
         private static void BuildElements3(Lists lists, ElementArtSet elementArt, Material glow)
         {
             lists.Flat = true;
-            foreach (var look in Elements3Looks())
+            foreach (var look in MomentLooks())
             {
                 string slug = Text(look, "slug"), moment = Text(look, "moment");
                 if (look.ContainsKey("revision_of") || moment == "brazier") continue;
