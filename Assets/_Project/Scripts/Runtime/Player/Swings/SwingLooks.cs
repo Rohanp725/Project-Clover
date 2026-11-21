@@ -177,7 +177,8 @@ namespace Clover.Player.Swings
             Line = "the swing leaves a crystal arc that freezes in the air, hangs, then shatters into shards that fall; frost and crystals where a blow lands, no crack-web",
             // Glacier ice, paler than Water's blue (the owner, 2026-11-20: Ice and Water swung the same blue): a steel-blue
             // edge, a pale sky middle and a frost tip still tinted blue, so it is never pure white and never Metal's grey.
-            Layers = Bands(0.30f, 0.52f, 0.68f, 0.62f, 0.86f, 0.95f, 0.86f, 0.97f, 1.0f, 0.62f, 0.86f, 0.95f),
+            // Filmed at the owner's first values (0.30/0.62/0.86 red) it read silver-grey beside Metal: a touch bluer.
+            Layers = Bands(0.22f, 0.46f, 0.68f, 0.5f, 0.8f, 0.96f, 0.74f, 0.93f, 1.0f, 0.5f, 0.8f, 0.96f),
         };
 
         public static readonly SwingLook Water = new SwingLook
