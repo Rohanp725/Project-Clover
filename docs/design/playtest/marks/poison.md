@@ -13,11 +13,9 @@ a blow or a cast "on the beat" comes within a fifth of a second of it.
 
 **When it happens.** Always on once you learn it. Your blows only add doses while Poison is your first element, because your weapon only adds your first element's affliction. If Poison is your second element, its doses come from your spells, the charged blade and the R2 strike instead. The healing works no matter who added the poison.
 
-**The numbers.** 2 Shards. One dose per blow; a heavy blow adds two, a finisher four. Up to eight doses, lasting 6 seconds, and each new dose restarts the timer. Every 2 seconds, the poison bites for 2 damage per dose: 16 at eight. When it is set off, it deals 6 damage per dose all at once: 48 at eight. You heal 0.2 per dose at each bite (1.6 at eight), and 0.6 per dose when it is set off (4.8 at eight).
+**The numbers.** 2 Shards. One dose per blow; a heavy blow adds two, a finisher four. Up to eight doses, lasting 6 seconds, and each new dose restarts the timer. Every 2 seconds, the poison bites for 2 damage per dose: 16 at eight. When it is set off, it deals 6 damage per dose all at once: 48 at eight. You get back a tenth of the damage the poison really deals, at each bite and each time it is set off (1.6 for a bite of 16, 4.8 for a burst of 48). Stronger or ripened poison heals you more. The health comes back over about 2 seconds, not all at once.
 
 **Works with.** Rupture and Volatile to set it off, Catching to spread it, In Time with its beat, every Poison spell, Fever, and Rot Roots when a Seeded enemy is poisoned.
-
-**Not built yet.** The healing should be a tenth of the damage the poison really deals. For now, it is counted from the basic 2 per bite and 6 per burst, so stronger or ripened poison doesn't heal you more, and it comes at each bite instead of spread out over time.
 
 **Example.** Four light blows and a heavy blow give a soldier six doses. Roll away, and the next bite takes 12 health from it and gives you a little over 1.
 

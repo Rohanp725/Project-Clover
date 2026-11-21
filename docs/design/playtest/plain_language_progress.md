@@ -61,6 +61,7 @@ checked against its code and committed on its own.
 - [x] marks/burningsap.md: Burning Sap's shapes (bites saved up and landed doubled)
 - [x] effects.md: plain Burning Sap (bites saved up and landed doubled)
 - [x] marks/quicksilver.md: Ichor (bleeds 4 s, blows add doses, every dose goes off at the end, half wait on a miss)
+- [x] marks/poison.md: Venom (heals a tenth of the real poison damage, over about 2 seconds)
 
 ## Unsure lines
 
