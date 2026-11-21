@@ -227,6 +227,26 @@ namespace Clover.Tests
             Assert.AreEqual(1f, frost.BiteScale, 1e-5f, "Frost Over Frost bites as written");
         }
 
+        private sealed class Afflicted : IAfflictable
+        {
+            public AfflictionSet Afflictions { get; } = new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+        }
+
+        [Test]
+        public void NightSunHealsOneForEachBurnOnTheEnemyStruck()
+        {
+            var enemy = new Afflicted();
+            Assert.AreEqual(0, PlayerUpgrades.DepthOn(AfflictionKind.Burn, enemy), "no Burn, no heal");
+            enemy.Afflictions.Ignite(4f, 3, LaySource.Spell);
+            Assert.AreEqual(3, PlayerUpgrades.DepthOn(AfflictionKind.Burn, enemy));
+            Assert.AreEqual(0, PlayerUpgrades.DepthOn(AfflictionKind.Burn, null));
+            Assert.AreEqual(0, PlayerUpgrades.DepthOn(AfflictionKind.None, enemy));
+            var shape = Upgrade.ById(SmoulderDuo.Shape).Shapes.First(one => one.Name == "Night Sun");
+            var heal = shape.Effects.Single(effect => effect.Do == UpgradeAction.Heal);
+            Assert.AreEqual(AfflictionKind.Burn, heal.PerDepthOf);
+            Assert.AreEqual(1f, heal.Amount, 1e-5f);
+        }
+
         [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {

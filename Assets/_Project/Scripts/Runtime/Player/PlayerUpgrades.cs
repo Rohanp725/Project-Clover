@@ -519,6 +519,9 @@ namespace Clover.Player
             return MarkRules.CanBuyInItsCurrency(upgrade, RunState.Unlocked, RunState.Points, null, Open(upgrade), PlaytestMode.On, null, 0);
         }
 
+        /// <summary>How deep the kind lies on the one named, for an effect done by that depth (Night Sun); 0 for none or no one.</summary>
+        public static int DepthOn(AfflictionKind kind, IAfflictable on) => on != null && kind != AfflictionKind.None ? on.Afflictions.Stacks(kind) : 0;
+
         /// <summary>A rest fire: the counts that are a fight's growth (Folded Steel's folds) are emptied.</summary>
         public void Rested()
         {
@@ -1418,6 +1421,12 @@ namespace Clover.Player
             if (effect.PerStack && effect.Share > 0f && effect.Do != UpgradeAction.Spend) per = Mathf.Max(1, Mathf.CeilToInt(per * effect.Share - 0.0001f));
             if (effect.PerStack && effect.PerMore > 0) per += effect.PerMore;
             if (effect.PerStack && effect.PerMost > 0) per = Mathf.Min(per, effect.PerMost);
+            // By the depth of an affliction on the one the trigger names (Night Sun: 1 a Burn stack).
+            if (effect.PerDepthOf != AfflictionKind.None)
+            {
+                per = DepthOn(effect.PerDepthOf, pending.Target as IAfflictable);
+                if (per <= 0) return;
+            }
             bool byCount = effect.Do == UpgradeAction.Projectile || effect.Do == UpgradeAction.Falling || effect.Do == UpgradeAction.Ward
                 || (effect.Do == UpgradeAction.Hazard && effect.PerStack && effect.Shape != HazardShape.Patch);
             int spentHere = effect.DamagePerSpent > 0f ? counted : 0;

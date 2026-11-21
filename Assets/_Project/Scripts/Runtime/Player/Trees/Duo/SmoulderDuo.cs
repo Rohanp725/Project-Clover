@@ -23,9 +23,9 @@ namespace Clover.Player.Trees.Duo
         {
             const string A = Elements.Dark, B = Elements.Fire;
 
-            // NEEDS: a heal by the depth of an affliction on the one struck (Night Sun, 1 a Burn stack; now 3 a blow); the coal
-            // seam flaring at its end and setting off every smoulder on it (Coal Seam; now a patch that curses what stands on it,
-            // on purpose able to react).
+            // Night Sun heals 1 for each Burn on the enemy struck (UpgradeEffect.PerDepthOf).
+            // NEEDS: the coal seam flaring at its end and setting off every smoulder on it (Coal Seam; now a patch that curses
+            // what stands on it, on purpose able to react).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Smoulder: Night Sun or Coal Seam", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -35,8 +35,8 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Night Sun",
-                        Description = "The fire sinks in as before, deepening while the curse lasts, and flares when it ends; while it smoulders, each of your blows on it heals you 3.",
-                        Effects = Sunk(NightSun, new[] { new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = NightSun, By = StruckBy.Any, Do = UpgradeAction.Heal, Amount = 3f, Cooldown = 0.2f } }),
+                        Description = "The fire sinks in as before, deepening while the curse lasts, and flares when it ends; while it smoulders, each of your blows on it heals you 1 for each Burn on it.",
+                        Effects = Sunk(NightSun, new[] { new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = NightSun, By = StruckBy.Any, Do = UpgradeAction.Heal, Amount = 1f, PerDepthOf = AfflictionKind.Burn, Cooldown = 0.2f } }),
                     },
                     new ShapeDef
                     {

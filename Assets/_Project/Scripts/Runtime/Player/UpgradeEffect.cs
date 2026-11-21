@@ -54,6 +54,11 @@ namespace Clover.Player
         /// up. A ground effect laid in a shape (a ring, a line) is multiplied in its patches instead (Firebloom's lilies).
         /// </summary>
         public bool PerStack;
+        /// <summary>
+        /// Not None: what is done is multiplied by how deep this affliction lies on the one the trigger names, at that moment
+        /// (Night Sun: 1 healed for each Burn on the enemy struck). Nothing is done when it carries none.
+        /// </summary>
+        public AfflictionKind PerDepthOf = AfflictionKind.None;
         /// <summary>The stacks it lays are as many as the trigger carried: what the dead enemy bore of <see cref="Needs"/>, or what a set-off spent.</summary>
         public bool CarriesDepth;
         /// <summary>Only while this state of the player holds.</summary>
