@@ -45,6 +45,7 @@ checked against its code and committed on its own.
 - [x] effects.md: plain Rust (notches up to five, plate falls at five)
 - [x] marks/metal.md: Poured Bronze (held 0.4 s a notch), Circle of Steel (half the wait when nothing hits)
 - [x] marks/dark.md: Gone to Ash (half the wait when nothing hits)
+- [x] marks/girdled.md: Death Turned Back (half the wait when no blow comes)
 
 ## Unsure lines
 
