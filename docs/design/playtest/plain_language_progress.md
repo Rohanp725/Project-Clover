@@ -94,7 +94,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/steam.md
 - [x] marks/stolenwarmth.md
 - [x] marks/tempest.md
-- [ ] marks/theboltrunstrue.md
+- [x] marks/theboltrunstrue.md
 - [ ] marks/thegroundgives.md
 - [ ] marks/thegrudge.md
 - [ ] marks/thermalshock.md

@@ -5,75 +5,75 @@ reaction, The Bolt Runs True (`docs/design/steel/pairs_d4.md`, "Light and Lightn
 while Light and Lightning are both carried.
 
 ## boltrunstrue.shape
-**What it does.** Flat or Again: opens The Bolt Runs True's two shapes. At a rest fire you choose which one your The Bolt Runs True wears, and from then on it runs instead of the plain one. **Laid Flat**: the thread of light lies along the ground to the next marked enemy, and the bolt runs that line. **Struck Again**: no great bolt; the thread stays on it while its Mark lasts, and each critical blow calls a smaller bolt down it.
+**What it does.** Flat or Again unlocks two new shapes for The Bolt Runs True. At a rest fire, you pick which shape your The Bolt Runs True uses. From then on, it uses that shape instead of the plain one. **Laid Flat**: the thread of light lies along the ground to the next Marked enemy, and the bolt runs along that line. **Struck Again**: no big bolt. Instead, the thread stays on the enemy while its Mark lasts, and each critical hit calls a smaller bolt down it.
 
-**When it happens.** Every time The Bolt Runs True fires (Static landing on a Marked enemy, or a Mark on a charged one) while Light and Lightning are both carried. Before this mark is bought, or with only one of the two carried, the plain The Bolt Runs True runs.
+**When it happens.** Every time The Bolt Runs True goes off while you carry both Light and Lightning. The Bolt Runs True goes off when Static lands on a Marked enemy, or when a Mark lands on a charged one. If you have not bought this mark, or you carry only one of the two elements, you get the plain The Bolt Runs True.
 
-**The numbers.** Mix, 3 Shards. Laid Flat: 0.5 seconds after it fires, 18 damage, 20 stagger and two Static to it and to the nearest other Marked enemy within 10 metres; then its Static discharges, 7 a stack in 4 metres. Struck Again: while its Mark lasts, each weapon blow on it (a Marked enemy's blows are your critical ones) calls a bolt of 9, 15 stagger and a Static. The Bolt Runs True rests 5 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Laid Flat: 0.5 seconds after it goes off, it deals 18 damage, 20 stagger and two Static to the enemy and to the nearest other Marked enemy within 10 metres. Then the enemy's Static goes off, dealing 7 damage per stack within 4 metres. Struck Again: while the enemy's Mark lasts, each weapon blow on it (blows on a Marked enemy are your critical hits) calls down a bolt for 9 damage, 15 stagger and a Static. After The Bolt Runs True goes off on an enemy, it can't go off on that enemy again for 5 seconds.
 
-**Works with.** Charged Light to bring the two, Diamond Guard, The Diamond Falls, Diamond Thunder, The Net of Jewels.
+**Works with.** Charged Light to set it up, Diamond Guard, The Diamond Falls, Diamond Thunder, The Net of Jewels.
 
-**Example.** Two marked captains apart: Laid Flat, and the bolt runs between them. One marked brute: Struck Again, and every critical calls the sky.
+**Example.** Two Marked captains far apart: use Laid Flat, and the bolt runs between them. One Marked brute: use Struck Again, and every critical hit calls down the sky.
 
-**Not built yet.** Laid Flat's bolt leaps to the enemy at the far end rather than striking everything on the line between, and it seeks only Marked enemies, not charged ones.
+**Not built yet.** For now, Laid Flat's bolt jumps to the enemy at the far end, instead of hitting everything on the line in between, and it only looks for Marked enemies, not charged ones.
 
 ## boltrunstrue.chargedlight
-**What it does.** Your light blows lay Static on a Marked enemy, and a discharge Marks every enemy it reaches.
+**What it does.** Your light blows add Static to a Marked enemy, and a burst of Static Marks every enemy it reaches.
 
-**When it happens.** Every light blow on a Marked enemy, and every discharge of Static, while Light and Lightning are both carried.
+**When it happens.** Every light blow on a Marked enemy, and every time Static goes off, while you carry both Light and Lightning.
 
-**The numbers.** Mix, 3 Shards. One Static a light blow; a Mark on every enemy within 4 metres of a discharge, at most every 0.3 seconds.
+**The numbers.** Mix, 3 Shards. One Static per light blow. A Mark on every enemy within 4 metres of a Static burst, at most once every 0.3 seconds.
 
-**Works with.** The Bolt Runs True (a light blow on a marked enemy brings both), Diamond Guard, The Net of Jewels.
+**Works with.** The Bolt Runs True (a light blow on a Marked enemy adds both), Diamond Guard, The Net of Jewels.
 
-**Example.** Mark one, cut it lightly, and the bolt comes down.
+**Example.** Mark an enemy, cut it with a light blow, and the bolt comes down.
 
 ## boltrunstrue.diamondguard
-**What it does.** A perfect guard against a Marked enemy calls the bolt onto it at once, whatever it carries. Once every 5 s.
+**What it does.** A perfect guard against a Marked enemy calls the bolt down on it right away, no matter what else it has. Once every 5 seconds.
 
-**When it happens.** A perfect guard against a Marked enemy, while Light and Lightning are both carried, at most once every 5 seconds.
+**When it happens.** A perfect guard against a Marked enemy, while you carry both Light and Lightning, at most once every 5 seconds.
 
-**The numbers.** Mix, 3 Shards. A Static laid on it, and The Bolt Runs True forced at once, even while it rests.
+**The numbers.** Mix, 3 Shards. It adds a Static, and The Bolt Runs True goes off right away, even if it would normally have to wait.
 
 **Works with.** The Bolt Runs True and its shapes, Charged Light.
 
-**Example.** Turn the marked brute's swing perfectly and the bolt answers.
+**Example.** Block the Marked brute's swing perfectly, and the bolt answers.
 
 ## boltrunstrue.diamondfalls
-**What it does.** The Bolt Runs True no longer needs Static: the third critical blow on a Marked enemy calls it, once every 5 s.
+**What it does.** The Bolt Runs True no longer needs Static. The third critical hit on a Marked enemy calls it down, once every 5 seconds.
 
-**When it happens.** Critical blows on a Marked enemy, while Light and Lightning are both carried.
+**When it happens.** Critical hits on a Marked enemy, while you carry both Light and Lightning.
 
-**The numbers.** Mix, keystone, 5 Shards. As built: one critical blow in three on a Marked enemy lays a Static on it, by chance, so the bolt comes down; at most once in 5 seconds.
+**The numbers.** Mix, keystone, 5 Shards. For now: one critical hit in three on a Marked enemy adds a Static to it, by chance, so the bolt comes down. At most once every 5 seconds.
 
 **Works with.** Charged Light, The Bolt Runs True, Diamond Thunder.
 
-**Example.** A Light player with Lightning beside it calls the bolt with the blade alone.
+**Example.** A Light player with Lightning as a second element calls down the bolt with the blade alone.
 
-**Not built yet.** Critical blows are not yet counted on one enemy, so the third does not call it for certain: one in three does, by chance.
+**Not built yet.** The game doesn't count critical hits on one enemy yet, so the third one doesn't always call it. For now, one in three does, by chance.
 
 ## boltrunstrue.diamondthunder
-**What it does.** A straight line of light lies on the floor from your hand, 14 metres, and lightning runs the whole line in one stroke: 22 and 40 stagger to every enemy on it, each Marked, and every Static it meets discharges. Your first blow on each within 2 seconds is critical.
+**What it does.** A straight line of light lies on the floor from your hand, 14 metres long, and lightning runs the whole line in one strike. Every enemy on it takes 22 damage and 40 stagger and is Marked, and every Static it meets goes off. Your first blow on each one within 2 seconds is a critical hit.
 
-**When it happens.** From a spell slot, while Light and Lightning are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Light.
+**When it happens.** Cast it from a spell slot while you carry both Light and Lightning. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Light.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. No mana: it waits 11 seconds after a cast, less with weapon play. 22 damage, 40 stagger and a Mark to each enemy on the line; its Static discharges, 7 a stack in 4 metres; for 2 seconds your first weapon blow on it is critical.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 11 seconds to cast it again. Fighting with your weapon makes the wait shorter. It deals 22 damage, 40 stagger and a Mark to each enemy on the line. Their Static goes off, dealing 7 damage per stack within 4 metres. For 2 seconds, your first weapon blow on each one is a critical hit.
 
-**Works with.** The Bolt Runs True (a charged enemy struck brings both), Charged Light, The Net of Jewels.
+**Works with.** The Bolt Runs True (a charged enemy it hits gets both afflictions), Charged Light, The Net of Jewels.
 
-**Example.** Charge a line of soldiers, then run the stroke down them.
+**Example.** Charge up a line of soldiers, then run the strike down them.
 
-**Not built yet.** The line is not yet held on the button for up to 1.5 seconds, turning with you, and loosed on letting go; a perfect guard while it is held does not yet loose it at once for twice the damage.
+**Not built yet.** You can't hold the line on the button yet for up to 1.5 seconds, turning with you, and release it when you let go. A perfect guard while you hold it doesn't yet release it right away for double damage.
 
 ## boltrunstrue.net
-**What it does.** A duo surge. While it burns every Marked enemy within 12 metres is linked to every other by threads of light: a discharge on one runs the threads to all the others for half, and each critical blow on one gives every linked enemy a Static.
+**What it does.** A duo surge. While it is lit, every Marked enemy within 12 metres is linked to every other one by threads of light. When Static goes off on one, it runs along the threads to all the others for half. Each critical hit on one gives every linked enemy a Static.
 
-**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Light and Lightning are both carried, and light it with the surge button.
+**When it happens.** At a rest fire, pick it for your surge slot in the Hand while you carry both Light and Lightning. Light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. 45 mana, 10 seconds. As built: a discharge on a Marked enemy arcs on through up to five Marked enemies within 12 metres, 3.5 damage a stack each, at most every half second; a critical blow on a Marked enemy lays a Static on every enemy within 12 metres, at most every 0.3 seconds.
+**The numbers.** Mix, duo surge, 5 Shards. 45 mana, lasts 10 seconds. For now: when Static goes off on a Marked enemy, it arcs through up to five Marked enemies within 12 metres, for 3.5 damage per stack each, at most once every half second. A critical hit on a Marked enemy adds a Static to every enemy within 12 metres, at most once every 0.3 seconds.
 
 **Works with.** Charged Light, Diamond Thunder, The Bolt Runs True.
 
-**Example.** Mark a pack, light your surge, and one discharge runs through them all.
+**Example.** Mark a pack, light your surge, and one burst of Static runs through all of them.
 
-**Not built yet.** There are no threads yet, so the discharge arcs from one to the next, and a critical blow charges every enemy near, Marked or not.
+**Not built yet.** There are no threads yet, so the Static arcs from one enemy to the next, and a critical hit charges every enemy nearby, Marked or not.
