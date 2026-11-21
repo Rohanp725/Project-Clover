@@ -115,7 +115,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 
 - [ ] effects.md (too long to rewrite in one go, so it is done in three parts, each committed):
   part 1, "# The guide to effects" to "## memories": done. Part 2, "## reactions" to "## reaction-kindling-point":
-  to do. Part 3, "## reaction-the-grudge" to the end: to do.
+  done. Part 3, "## reaction-the-grudge" to the end: to do.
 
 ### 3. What's new (older sections only; the 0.5 Phase 4 section is already plain)
 
