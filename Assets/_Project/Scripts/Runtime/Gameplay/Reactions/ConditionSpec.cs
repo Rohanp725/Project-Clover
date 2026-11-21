@@ -34,6 +34,11 @@ namespace Clover.Gameplay
         /// <see cref="Pace"/>; set by an effect marked PerStack. Never slower than 5% of its pace.
         /// </summary>
         public float SlowPerStack;
+        /// <summary>While it runs, this affliction's bites on the enemy are <see cref="BiteScale"/> as hard (Red Hot's burns twice as hard while it glows).</summary>
+        public AfflictionKind BitesHarder = AfflictionKind.None;
+        public float BiteScale = 1f;
+        /// <summary>The harder bite only while the enemy is frozen (Cold Damage).</summary>
+        public bool BitesHarderFrozen;
         public int DeepensBy;
         /// <summary>It lasts only while the enemy carries this (and <see cref="While2"/>): once one is gone it ends, and its end is told ("while both last").</summary>
         public AfflictionKind While = AfflictionKind.None;

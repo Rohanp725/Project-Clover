@@ -127,11 +127,11 @@ namespace Clover.Player.Trees
 
             // Metal and Fire (41), rest 5 s. The armour glows red 5 s; each heavy blow on it throws a spray of sparks out
             // of its far side, a cone 3 m long (two bursts on the player's line beyond it): 6 damage and a Burn to each.
-            // NEEDS: burns that bite twice as hard on one enemy while it glows.
+            // Its burns bite twice as hard while it glows (ConditionSpec.BitesHarder).
             to.Add(Reaction(AfflictionKind.Sundered, AfflictionKind.Burn,
                 "Sundered meets Burn: the notched armour heats red for 5 s. Each heavy blow on it sprays sparks out of its far side, 6 and a Burn to all behind it.",
                 5f,
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Glowing, Seconds = 5f } },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Glowing, Seconds = 5f, BitesHarder = AfflictionKind.Burn, BiteScale = 2f } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Glowing, By = StruckBy.Heavy, Do = UpgradeAction.Burst, Shape = HazardShape.Downwind, Count = 2,
                     Reach = 1.9f, Amount = 1.1f, Radius = 0.8f, Damage = 6f, Affliction = AfflictionKind.Burn, Stacks = 1 }));
 

@@ -176,6 +176,57 @@ namespace Clover.Tests
             Assert.AreEqual(0.4f, bronze.Seconds, 1e-5f);
         }
 
+        private static float Damage(AfflictionSet set, float seconds)
+        {
+            float dealt = 0f;
+            int steps = UnityEngine.Mathf.RoundToInt(seconds / Frame);
+            for (int i = 0; i < steps; i++) dealt += set.Tick(Frame);
+            return dealt;
+        }
+
+        [Test]
+        public void BurnsBiteTwiceAsHardWhileItGlows()
+        {
+            var glowing = NewEnemy();
+            var plain = NewEnemy();
+            glowing.Ignite(4f, 2, LaySource.Spell);
+            plain.Ignite(4f, 2, LaySource.Spell);
+            glowing.Conditions.Set(new ConditionSpec { Id = "test.glow", Seconds = 5f, BitesHarder = AfflictionKind.Burn, BiteScale = 2f }, null, 1);
+            float hot = Damage(glowing, 2f), cold = Damage(plain, 2f);
+            Assert.Greater(cold, 0f);
+            Assert.AreEqual(cold * 2f, hot, cold * 0.01f + 1e-4f);
+            Assert.AreEqual(1f, glowing.Conditions.BiteScale(AfflictionKind.Poison, false), "only the kind it names");
+        }
+
+        [Test]
+        public void AHarderBiteWhileFrozenWaitsForTheFreeze()
+        {
+            var set = NewEnemy();
+            set.Conditions.Set(new ConditionSpec { Id = "test.cold", Seconds = 30f, BitesHarder = AfflictionKind.Poison, BiteScale = 2f, BitesHarderFrozen = true }, null, 1);
+            Assert.AreEqual(1f, set.Conditions.BiteScale(AfflictionKind.Poison, false));
+            Assert.AreEqual(2f, set.Conditions.BiteScale(AfflictionKind.Poison, true));
+        }
+
+        [Test]
+        public void RedHotAndColdDamageCarryTheirHarderBites()
+        {
+            var all = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))
+                .Where(effect => effect.State != null).ToList();
+            foreach (var id in new[] { Clover.Player.Trees.Reactions.Glowing, RedHotDuo.Slag, RedHotDuo.Shirt })
+            {
+                var spec = all.First(effect => effect.State.Id == id).State;
+                Assert.AreEqual(AfflictionKind.Burn, spec.BitesHarder, id);
+                Assert.AreEqual(2f, spec.BiteScale, 1e-5f, id);
+                Assert.IsFalse(spec.BitesHarderFrozen, id);
+            }
+            var cold = all.First(effect => effect.State.Id == VenomRimeDuo.ColdDamage).State;
+            Assert.AreEqual(AfflictionKind.Poison, cold.BitesHarder);
+            Assert.AreEqual(2f, cold.BiteScale, 1e-5f);
+            Assert.IsTrue(cold.BitesHarderFrozen);
+            var frost = all.First(effect => effect.State.Id == VenomRimeDuo.FrostOverFrost).State;
+            Assert.AreEqual(1f, frost.BiteScale, 1e-5f, "Frost Over Frost bites as written");
+        }
+
         [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {

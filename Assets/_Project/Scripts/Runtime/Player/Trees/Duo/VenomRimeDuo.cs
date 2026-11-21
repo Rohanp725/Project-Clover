@@ -27,8 +27,8 @@ namespace Clover.Player.Trees.Duo
 
             // NEEDS: an enemy freezing as a moment (freeze-moment): Frost Over Frost's rime spread as it freezes, now the first
             // bite on it while frozen (at most once in 5 s). Cold Damage's doses go off on the blow that shatters it
-            // (StruckBy.Shatter: the shatter has ended the Chill before the answer, so Needs cannot ask for it). Poison biting
-            // harder on one enemy while frozen (bite-share): Cold Damage's bites twice as hard; now each bite while frozen adds 2 a dose.
+            // (StruckBy.Shatter: the shatter has ended the Chill before the answer, so Needs cannot ask for it). Cold Damage's
+            // poison bites twice as hard while it is frozen (ConditionSpec.BitesHarderFrozen).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Venom Rime: Frost Over Frost or Cold Damage", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -50,16 +50,13 @@ namespace Clover.Player.Trees.Duo
                     new ShapeDef
                     {
                         Name = "Cold Damage",
-                        Description = "Its poison does not fade and each bite lays a Chill, as before. While it is frozen its poison bites harder, 2 more a dose, and when your heavy blow shatters it every dose it carries goes off at once, 6 a dose, on top of the shatter.",
+                        Description = "Its poison does not fade and each bite lays a Chill, as before. While it is frozen its poison bites twice as hard, and when your heavy blow shatters it every dose it carries goes off at once, 6 a dose, on top of the shatter.",
                         Effects = Crust(ColdDamage, new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = ColdDamage, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison, CountOnly = true },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = ColdDamage, Needs = AfflictionKind.Chill, NeedsFull = true, Do = UpgradeAction.Burst, Radius = 0.4f, DamagePerSpent = 2f,
-                                Affliction = AfflictionKind.Poison, Unseen = true },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = ColdDamage, By = StruckBy.Shatter, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Poison },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = ColdDamage, By = StruckBy.Shatter, Do = UpgradeAction.Burst, Radius = 1f, DamagePerSpent = 6f,
                                 Affliction = AfflictionKind.Poison },
-                        }),
+                        }, 2f),
                     },
                 },
             }, HeartPattern.Foot));
@@ -124,12 +121,14 @@ namespace Clover.Player.Trees.Duo
 
         // The crust as the plain Venom Rime's, under the shape's own name: while both lie on it its poison does not fade and
         // each bite lays a Chill. Then the shape's own.
-        private static UpgradeEffect[] Crust(string id, UpgradeEffect[] more)
+        // frozenBite: how hard the poison bites while the enemy is frozen (Cold Damage's twice); 1 as written.
+        private static UpgradeEffect[] Crust(string id, UpgradeEffect[] more, float frozenBite = 1f)
         {
             var effects = new List<UpgradeEffect>
             {
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
-                    State = new ConditionSpec { Id = id, Seconds = 30f, OnBite = true, While = AfflictionKind.Poison, While2 = AfflictionKind.Chill, Keeps = AfflictionKind.Poison } },
+                    State = new ConditionSpec { Id = id, Seconds = 30f, OnBite = true, While = AfflictionKind.Poison, While2 = AfflictionKind.Chill, Keeps = AfflictionKind.Poison,
+                        BitesHarder = AfflictionKind.Poison, BiteScale = frozenBite, BitesHarderFrozen = true } },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = id, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },
             };
             effects.AddRange(more);

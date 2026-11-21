@@ -520,7 +520,7 @@ namespace Clover.Gameplay
             // bites on and never runs down.
             if (Burn.IsBurning && (Conditions.KeepsKind(AfflictionKind.Burn) || rules.Keeps(AfflictionKind.Burn) || KeptForGood(AfflictionKind.Burn)
                 || (rules.Any && rules.KeepsWith(AfflictionKind.Burn, PresentMask)))) Burn.Ignite(Burn.SecondsLeft + deltaTime);
-            float burnt = Burn.Tick(deltaTime) * strength[(int)AfflictionKind.Burn];
+            float burnt = Burn.Tick(deltaTime) * strength[(int)AfflictionKind.Burn] * Conditions.BiteScale(AfflictionKind.Burn, IsFrozen);
             // The Blade Drinks Fire: a burn left alone does nothing; it is fuel for the blade.
             float damage = Afflictions.BurnBiteOff ? 0f : burnt;
             if (!Burn.IsBurning) strength[(int)AfflictionKind.Burn] = 1f;
@@ -572,7 +572,7 @@ namespace Clover.Gameplay
                     }
                     if (bites)
                     {
-                        float bite = spec.DamagePerTick * stacks[i] * strength[i];
+                        float bite = spec.DamagePerTick * stacks[i] * strength[i] * Conditions.BiteScale((AfflictionKind)i, IsFrozen);
                         if (poison)
                         {
                             bite *= 1f + Afflictions.PoisonRipens * ripeBites;

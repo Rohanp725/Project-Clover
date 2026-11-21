@@ -53,6 +53,17 @@ namespace Clover.Gameplay
         /// <summary>True when a running condition keeps this affliction from fading.</summary>
         public bool KeepsKind(AfflictionKind kind) => (Keeps & (1 << (int)kind)) != 0;
 
+        /// <summary>How hard the kind bites under the conditions running: the product of each one's scale (1 as written).</summary>
+        public float BiteScale(AfflictionKind kind, bool frozen)
+        {
+            int bit = Bit(kind);
+            float scale = 1f;
+            if (bit == 0) return scale;
+            for (int i = 0; i < Slots; i++)
+                if (runs[i].Active && (runs[i].BiteMask & bit) != 0 && (!runs[i].BiteFrozen || frozen)) scale *= runs[i].BiteScale;
+            return scale;
+        }
+
         /// <summary>How much deeper than its usual depth the kind may lie while the conditions running allow it (the most any one allows).</summary>
         public int DeeperBy(AfflictionKind kind)
         {
@@ -117,6 +128,9 @@ namespace Clover.Gameplay
             run.AnswersAttack = answersAttack;
             run.KeepsMask = Bit(spec.Keeps);
             run.DeepMask = Bit(spec.Deepens);
+            run.BiteMask = spec.BiteScale > 0f && spec.BiteScale != 1f ? Bit(spec.BitesHarder) : 0;
+            run.BiteScale = spec.BiteScale;
+            run.BiteFrozen = spec.BitesHarderFrozen;
             run.DeepBy = Math.Max(0, spec.DeepensBy);
             run.WhileMask = Bit(spec.While) | Bit(spec.While2);
             run.OnBite = spec.OnBite;

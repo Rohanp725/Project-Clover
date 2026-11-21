@@ -31,6 +31,10 @@ namespace Clover.Gameplay
         public int KeepsMask;
         /// <summary>The affliction it lets lie deeper, as a bit, and by how much.</summary>
         public int DeepMask;
+        /// <summary>The affliction it makes bite harder, as a bit, by how much, and whether only while frozen.</summary>
+        public int BiteMask;
+        public float BiteScale;
+        public bool BiteFrozen;
         public int DeepBy;
         public int WhileMask;
         public bool OnBite;

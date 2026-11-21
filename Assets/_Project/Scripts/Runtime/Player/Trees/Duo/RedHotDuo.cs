@@ -34,8 +34,8 @@ namespace Clover.Player.Trees.Duo
             // NEEDS: ground laid along the path an enemy walks (plume-along-path): Slag's drip for each metre it moves; now a
             // drip each second where it stands. An enemy beginning an attack as a moment (enemy-begins-attack): The Burning
             // Shirt deepening its Burn by two and making it flinch with each attack it begins, and unable to guard only while it
-            // burns five deep; now a Burn every 1.5 s and no guard for the 5 s. As the plain one, burns biting twice as hard
-            // while it glows (burn-bite-share).
+            // burns five deep; now a Burn every 1.5 s and no guard for the 5 s. As the plain one, burns bite twice as hard
+            // while it glows (ConditionSpec.BitesHarder).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Red Hot: Slag or The Burning Shirt", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -48,7 +48,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "The notched armour glows red for 5 s and runs: every second it drips molten slag where it stands, a pool 0.8 m round that burns for 3 s, 3 and a Burn each second to whatever stands in it but its own wearer. Walk it through its friends.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Slag, Seconds = 5f, Beat = 1f } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Slag, Seconds = 5f, Beat = 1f, BitesHarder = AfflictionKind.Burn, BiteScale = 2f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Slag, Do = UpgradeAction.Hazard, Radius = 0.8f, Seconds = 3f, Interval = 1f, Damage = 3f,
                                 Affliction = AfflictionKind.Burn, Stacks = 1, SparesTarget = true },
                         },
@@ -59,7 +59,7 @@ namespace Clover.Player.Trees.Duo
                         Description = "No sparks: the hot plates cling. For 5 s it cannot guard, and every 1.5 s the metal sears it, a Burn deeper.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Shirt, Seconds = 5f, Beat = 1.5f, Flags = ConditionFlags.CannotGuard } },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Shirt, Seconds = 5f, Beat = 1.5f, Flags = ConditionFlags.CannotGuard, BitesHarder = AfflictionKind.Burn, BiteScale = 2f } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Shirt, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1 },
                         },
                     },
