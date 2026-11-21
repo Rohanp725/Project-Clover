@@ -49,7 +49,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/earth.md
 - [x] marks/earthed.md
 - [x] marks/earthlight.md
-- [ ] marks/eclipse.md
+- [x] marks/eclipse.md
 - [ ] marks/fire.md
 - [ ] marks/firebloom.md
 - [ ] marks/fishpoison.md
