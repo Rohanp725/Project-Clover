@@ -5,64 +5,64 @@ Cold Short (`docs/design/steel/pairs_d4.md`, "Ice and Metal"). Drawn in the hear
 are both carried.
 
 ## coldshort.shape
-**What it does.** Plate or Snap: opens Cold Short's two shapes. At a rest fire you choose which one your Cold Short wears, and from then on it runs instead of the plain one. **Shed Plate**: it goes brittle and your heavy blow cracks the plates off as before, and the cracked plate falls as a sheet of black ice that throws down those on it. **Snapped Blade**: the armour does not crack; its own weapon goes brittle and snaps, so its blows deal half.
+**What it does.** Plate or Snap unlocks two new shapes for Cold Short. At a rest fire, you pick which shape your Cold Short uses. From then on, it uses that shape instead of the plain one. **Shed Plate**: the enemy's armour turns brittle, and your heavy blow cracks the plates off, like before. The cracked plate falls as a sheet of black ice that knocks down enemies standing on it. **Snapped Blade**: the armour doesn't crack. Instead, the enemy's own weapon turns brittle and snaps, so its blows deal half damage.
 
-**When it happens.** Every time Cold Short fires (Chill landing on a notched enemy, or a notch on a chilled one) while Ice and Metal are both carried. Before this mark is bought, or with only one of the two carried, the plain Cold Short runs.
+**When it happens.** Every time Cold Short goes off while you carry both Ice and Metal. Cold Short goes off when Chill lands on a notched enemy, or when a notch lands on a chilled one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Cold Short.
 
-**The numbers.** Mix, 3 Shards. Shed Plate: brittle 5 seconds, its notches kept; your next heavy blow cracks the plates (25% more from your weapon for 6 seconds, the notches kept for the fight), and the black ice lies 2 metres across for 4 seconds while every enemy within 1.2 metres slips flat for 0.6 seconds. Snapped Blade: for 5 seconds its notches do not fade and its blows deal half. Cold Short rests 5 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Shed Plate: the enemy is brittle for 5 seconds, and its notches stay. Your next heavy blow cracks the plates: your weapon deals 25% more to it for 6 seconds, and its notches stay for the rest of the fight. The black ice is 2 metres across and lasts 4 seconds. Every enemy within 1.2 metres slips and falls flat for 0.6 seconds. Snapped Blade: for 5 seconds, the enemy's notches don't fade and its blows deal half damage. After Cold Short goes off on an enemy, it can't go off on that enemy again for 5 seconds.
 
-**Works with.** Rimed Edge to bring the two, Glass Bell, Brittle to the Core, Cold Chisel.
+**Works with.** Rimed Edge to set it up, Glass Bell, Brittle to the Core, Cold Chisel.
 
-**Example.** A shield wall: Shed Plate, and the ice under the first throws its neighbours down. A heavy hitter: Snapped Blade, and take its blows on your guard.
+**Example.** A wall of shields: use Shed Plate, and the ice under the first enemy knocks down the ones next to it. An enemy that hits hard: use Snapped Blade, and block its blows with your guard.
 
-**Not built yet.** Shed Plate's ice throws down those near as it falls, not those who step on it later. Snapped Blade does not yet turn a plain guard against it into a perfect one that breaks its weapon (50 stagger, held 1 second): its blows deal half from the moment it goes brittle.
+**Not built yet.** Shed Plate's ice knocks down enemies nearby when it falls, but not enemies who step on it later. Snapped Blade doesn't yet turn a normal guard against the enemy into a perfect guard that breaks its weapon (50 stagger, held for 1 second). For now, its blows deal half damage from the moment it turns brittle.
 
 ## coldshort.rimededge
-**What it does.** Your heavy blows lay a Chill and a notch together.
+**What it does.** Your heavy blows add a Chill and a notch at the same time.
 
-**When it happens.** Every heavy blow or finisher that lands, while Ice and Metal are both carried.
+**When it happens.** Every heavy blow or finisher that lands, while you carry both Ice and Metal.
 
 **The numbers.** Mix, 3 Shards. One Chill and one notch.
 
-**Works with.** Cold Short (one heavy blow on a fresh enemy brings both), Glass Bell.
+**Works with.** Cold Short (one heavy blow on a fresh enemy adds both), Glass Bell.
 
-**Example.** Heavy, and the struck armour frosts over.
+**Example.** Land a heavy blow, and the armour you hit frosts over.
 
 ## coldshort.glassbell
-**What it does.** Each blow on a brittle enemy rings like glass: 3 mana, and 0.3 s off every running spell cooldown.
+**What it does.** Each blow on a brittle enemy rings like glass. You get 3 mana, and 0.3 seconds come off the wait on every spell that is waiting.
 
-**When it happens.** Each weapon blow on an enemy in the 5 seconds after its Cold Short, until a heavy blow cracks it, while Ice and Metal are both carried.
+**When it happens.** Each weapon blow on an enemy during the 5 seconds after its Cold Short, until a heavy blow cracks it, while you carry both Ice and Metal.
 
-**The numbers.** Mix, 3 Shards. 3 mana and 0.3 seconds off every running spell clock a blow, at most ten times a second.
+**The numbers.** Mix, 3 Shards. 3 mana and 0.3 seconds off every spell's wait for each blow, at most ten times a second.
 
 **Works with.** Cold Short, Rimed Edge, Cold Chisel.
 
-**Example.** Ring a brittle brute with light blows before the heavy that cracks it.
+**Example.** Ring a brittle brute with light blows, then crack it with a heavy blow.
 
-**Not built yet.** It keeps its own brittle time from each Cold Short rather than reading the enemy's.
+**Not built yet.** For now, it keeps its own brittle timer from each Cold Short, instead of checking the enemy's.
 
 ## coldshort.core
-**What it does.** Cold Short on a frozen enemy shatters it as well, the shatter and the crack landing together.
+**What it does.** Cold Short on a frozen enemy also shatters it. The shatter and the crack land at the same time.
 
-**When it happens.** Each Cold Short on a frozen enemy, while Ice and Metal are both carried.
+**When it happens.** Each Cold Short on a frozen enemy, while you carry both Ice and Metal.
 
-**The numbers.** Mix, keystone, 5 Shards. As built: a blow of 30 and 40 stagger on it as it goes brittle.
+**The numbers.** Mix, keystone, 5 Shards. For now: a hit of 30 damage and 40 stagger on the enemy as it turns brittle.
 
 **Works with.** Rimed Edge, Cold Short, Cold Chisel.
 
-**Example.** Freeze a soldier, notch it, and it breaks at once.
+**Example.** Freeze a soldier and notch it, and it breaks right away.
 
-**Not built yet.** An effect cannot shatter yet: it strikes with a shatter's weight and leaves the frozen enemy for your heavy blow.
+**Not built yet.** An effect can't shatter an enemy yet. For now, it hits as hard as a shatter, and leaves the frozen enemy for your heavy blow to shatter.
 
 ## coldshort.chisel
-**What it does.** A chisel of black ice sets point-first in the enemy you face, within 8 metres. Each of your next blows on it taps it in, a notch and a Chill with a higher ringing note; the tap that finds three notches drives it home and splits the armour, 36 and 70 stagger, and Cold Short at once.
+**What it does.** A chisel of black ice sticks point-first into the enemy you face, if it is within 8 metres. Each of your next blows on that enemy taps the chisel in, adding a notch and a Chill with a higher ringing sound each time. The tap that finds three notches drives it all the way in and splits the armour: 36 damage, 70 stagger, and Cold Short goes off right away.
 
-**When it happens.** From a spell slot, while Ice and Metal are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Ice.
+**When it happens.** Cast it from a spell slot while you carry both Ice and Metal. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Ice.
 
-**The numbers.** Mix, duo spell, detonator, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. The chisel stands 6 seconds for three taps: each 6 damage, 8 stagger, a Chill and a notch. The tap that finds three notches drives it: 36 damage, 70 stagger, and Cold Short forced even while it rests.
+**The numbers.** Mix, duo spell, detonator, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. The chisel stays for 6 seconds, for three taps. Each tap deals 6 damage, 8 stagger, a Chill and a notch. The tap that finds three notches drives it in: 36 damage, 70 stagger, and Cold Short goes off even if it would normally have to wait.
 
 **Works with.** Cold Short and its shapes, Rimed Edge, Glass Bell, Brittle to the Core.
 
-**Example.** Set the chisel in the captain, tap, tap, and the third blow splits it.
+**Example.** Stick the chisel in the captain. Tap, tap, and the third blow splits its armour.
 
-**Not built yet.** Any blow taps it, not only light ones, and it is driven by the tap that finds three notches rather than by your first heavy blow; the drive does not yet grow 12 for each notch.
+**Not built yet.** Any blow taps it, not only light blows. It is driven in by the tap that finds three notches, instead of by your first heavy blow. The final hit doesn't yet grow by 12 for each notch.

@@ -43,7 +43,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/carriedembers.md
 - [x] marks/caughtlight.md
 - [x] marks/chokedamp.md
-- [ ] marks/coldshort.md
+- [x] marks/coldshort.md
 - [ ] marks/dark.md
 - [ ] marks/drownedweight.md
 - [ ] marks/earth.md
