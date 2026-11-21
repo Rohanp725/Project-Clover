@@ -31,15 +31,17 @@ both carried.
 **Not built yet.** For now, only a frozen enemy bends the light, and any spell's hit counts, not only rays. Hoarfrost's crystals and walls of ice don't bend it yet.
 
 ## mocksuns.widefan
-**What it does.** The mock suns hang in the sky 2 seconds longer. With Prism, the fan reaches 8 metres and has five rays.
+**What it does.** The mock suns hang in the sky 2 seconds longer. With Prism, the light past the enemy reaches farther and has five hits instead of three.
 
 **When it happens.** Each time Mock Suns goes off.
 
-**The numbers.** Mix, a minor mark, 1 Shard. The suns hang for 6 seconds instead of 4. With Prism, the fan has five rays instead of three, and reaches 7 metres past the enemy.
+**The numbers.** Mix, a minor mark, 1 Shard. The suns hang for 6 seconds instead of 4. With Prism, five hits go out in a line past the enemy instead of three, still 1.5 metres apart. The first is 1 metre past the enemy and the last is 7 metres past it.
 
 **Works with.** Mock Suns and its shapes, Bent Light.
 
 **Example.** The suns are still hanging there when you've circled back around.
+
+**Not built yet.** Prism's fan of rays 8 metres long. For now, it is the line of five hits.
 
 ## mocksuns.whitenight
 **What it does.** A perfect guard against a Marked enemy that has three or more Chill freezes it right away.
@@ -57,10 +59,10 @@ both carried.
 
 **When it happens.** Cast it from a spell slot while you carry both Ice and Light. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Ice.
 
-**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. The answer is a cone 8 metres long and 80 degrees wide. It deals 12 damage, 20 stagger, two Chill and a Mark to everything in it.
+**The numbers.** Mix, duo spell, counter, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. The answer is a cone 8 metres long and 80 degrees wide. It deals 12 damage, 20 stagger, two Chill and a Mark to everything in it. If nothing hits it, the wait is half as long: 5 seconds.
 
 **Works with.** Mock Suns (everything it hits gets both afflictions), White Night, Bent Light.
 
 **Example.** Raise it as the brute swings, and the pack behind it is Marked and chilled.
 
-**Not built yet.** For now, the answer is one cone, not five rays. A perfect guard in its last 0.3 seconds doesn't freeze the attacker solid yet. If nothing hits it, you don't get half the wait back yet.
+**Not built yet.** For now, the answer is one cone, not five rays. A perfect guard in its last 0.3 seconds doesn't freeze the attacker solid yet.

@@ -46,6 +46,7 @@ checked against its code and committed on its own.
 - [x] marks/metal.md: Poured Bronze (held 0.4 s a notch), Circle of Steel (half the wait when nothing hits)
 - [x] marks/dark.md: Gone to Ash (half the wait when nothing hits)
 - [x] marks/girdled.md: Death Turned Back (half the wait when no blow comes)
+- [x] marks/mocksuns.md: Sunstone (half the wait when nothing hits), Wide Fan (unsure line resolved)
 
 ## Unsure lines
 
@@ -65,7 +66,8 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   "six rings' worth" with rings of 8 (also 48); the Empower makes "each ring 10" (60). Both ways of counting were
   kept as written.
 - marks/mocksuns.md, mocksuns.widefan: "What it does" says the Prism fan reaches 8 metres, "The numbers" says 7 metres
-  beyond the enemy. Both kept.
+  beyond the enemy. Both kept. **Resolved:** the code puts five hits in a line from 1 to 7 metres past the enemy;
+  the 8-metre fan of rays is written as not built yet.
 - marks/turnedtostone.md, turnedtostone.heavycurse: says the stone climbs "in half a second, not one", but the shape's
   numbers say the enemy slows to a stop "over 2 seconds". Both kept.
 - effects.md, two-elements: "(the owner's decision of 2026-11-19)" is a note to the team, not to players. Kept as
