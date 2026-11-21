@@ -34,6 +34,7 @@ checked against its code and committed on its own.
 - [x] marks/thegrudge.md: Ash and Thunder (every third blow on each Cursed enemy), Long Memory (Curse kept while charged)
 - [x] marks/theboltrunstrue.md: The Diamond Falls (every third critical on each Marked enemy)
 - [x] marks/liveiron.md: Three Smiths (every third blow on each notched, charged enemy)
+- [x] marks/loganstone.md: The Prophecy Broken (every fourth Logan Stone on each elite; no 6-second wait)
 
 ## Unsure lines
 

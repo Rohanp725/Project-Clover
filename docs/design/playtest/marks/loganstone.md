@@ -46,13 +46,13 @@ are both carried.
 
 **When it happens.** Each Logan Stone on an elite, while you carry both Wind and Earth.
 
-**The numbers.** Mix, keystone, 5 Shards. For now: one Logan Stone in three on an elite knocks it flat for 1 second right away, by chance, at most once every 6 seconds.
+**The numbers.** Mix, keystone, 5 Shards. Every fourth Logan Stone on an elite knocks it flat for 1 second. Each elite keeps its own count.
 
 **Works with.** Logan Stone, Grit in the Wind, Walking Dune.
 
-**Example.** Keep an elite rocking, and every now and then it goes down.
+**Example.** Keep an elite rocking, and every fourth stone puts it down.
 
-**Not built yet.** The game doesn't count Logan Stones on one enemy over a fight yet, so the fall comes by chance instead of on the fourth. No god is knocked flat yet.
+**Not built yet.** No god is knocked flat yet.
 
 ## loganstone.dune
 **What it does.** A ridge of sand piles up in front of you, and the wind drives it 7 metres forward. Each enemy it rolls over takes 16 damage, 35 stagger, two Unsteady and a Tremor, so it rocks as the dune passes. It has to wade through sand for 4 seconds after.
