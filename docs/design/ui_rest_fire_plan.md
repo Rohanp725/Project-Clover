@@ -14,7 +14,7 @@ This is a plan only. Nothing here is built, and no decision in it is final until
 - [x] 2. What the best build screens do (research)
 - [x] 3. Three layouts for the Hand and the Way together
 - [x] 4. A style guide for every menu
-- [ ] 5. The build plan and the checks
+- [x] 5. The build plan and the checks
 - [ ] 6. Owner questions
 
 ---
@@ -605,3 +605,71 @@ The press: "(A) Set this keystone"
   overlapping.
 - Keep every word at least 64 px from the screen's edge.
 - The same frame sprite, title position and footer on every screen.
+
+---
+
+## 5. The build plan and the checks
+
+Assumes the recommended answers in section 6. Each step is one `feature-loop` slice: the check first, the code in the
+right assembly, verified in the editor, then handed over. The Katana is the first weapon the Steel half shows, as the
+Way plan builds it first.
+
+### 5.1 The order
+
+| Step | What | Replaces | Needs first |
+|---|---|---|---|
+| U0 | **The menu kit.** `MenuStyle` (the colours and sizes of section 4, one place); a kit that makes a panel, a TextMeshPro label, a focus frame, a glyph and a pane by name; `FocusGrid`, a plain class that holds each place's up, down, left and right neighbour (no wrapping); one shared reader for the stick, d-pad, repeat, mouse and wheel | `MenuParts.cs`, the copies in `GuidePage.cs:190`, the four screens' own `Update` loops | The body font (5.2); a check that TextMeshPro ships inside uGUI 2.0 in Unity 6000.6 (the `unity-api-checker` agent) |
+| U1 | **Icons and glyphs.** The five role icons and the first-pass spell icons painted in `UiArt`; button glyphs (5.2) | Role words, initials | U0 |
+| U2 | **The details pane and the words.** One `Describe` for spells, marks, aspects, keystones and bearings, giving the lines of 4.4; a "what it does" line for every spell in the Hand's lists (today an element's own spell says only "Fire's own spell", 1.3 item 1); each missing line ledgered in `content_open.tsv` until written | `HandMenu.Describe` (612 to 630), the playtest-only details page | U0 |
+| U3 | **Loadout, the Element half.** The diamond on `FocusGrid`, the list that slides over the Steel half, shapes swapped with left and right, the role strip, the Hands row | `HandMenu.cs`; the spell part of `ShapeMenu.cs` | U0 to U2 |
+| U4 | **Loadout, the Steel half.** Aspect cards, the keystone and bearing pairs, technique, Temper and the infused strikes shown | Nothing (new); closes `way_build_plan.md` Q9 | `way_build_plan.md` 2.0 (`PlayerBuild.Rearm`), so a set aspect changes the sword; 2.4 for bearings |
+| U5 | **The rest menu.** Loadout, the element chart, the Way chart, (to the hub), leave; restyled with the kit | `RestChoices` entries, `RestMenu.cs:139` | U3 |
+| U6 | **The charts.** The element chart's right panel becomes the pane; its hint lines become glyphs; the details stop being playtest-only; the "next slot round" stopgap goes. The Way chart (`way_build_plan.md` 2.5) is built on the kit from the start | `UpgradeMenu.cs:530` to 537, 814 to 830 | U0 to U2 |
+| U7 | **Pause, controls, guide and reading pages** restyled; the text size setting (100, 125, 150%) | Their own colour copies | U0 |
+| U8 | Later: the HUD's spell diamond wears the spell icons; the aspect cards' large pictures from Blender | `SpellDiamondHud.cs:169` initials | U1; weapon renders |
+
+U0 to U3 can start now. U4 waits on the Way's wiring (step 2.0 of the Way plan), which is the Way plan's own first
+step anyway.
+
+### 5.2 What is needed from outside the code
+
+- **Fonts**: Atkinson Hyperlegible (SIL Open Font Licence), downloaded to `staging/fonts/`, pinned to one release,
+  brought in through the `asset-intake` skill with its `ASSETS.csv` row; its TextMeshPro font asset, and Spectral's,
+  made by an editor builder into `Assets/_Project/Generated/` under stable names, Latin characters only.
+- **Button glyphs**: Kenney's "Input Prompts" pack (CC0, free, no account) pinned to the release downloaded, through
+  staging and intake; or painted by code in `UiArt` (question Q7).
+- **Icons**: painted by code in `UiArt`, as the chart's are: no outside art for U1. The aspect, keystone and bearing
+  icons are added weapon by weapon as each Way is built (the Katana's 4 aspects, 8 keystones and the Body's 2 first).
+- **Pictures for the aspect cards** (later, U8): renders of the approved weapon models in each aspect's look, from
+  Blender through the `blender-prop` skill, into staging for the owner to approve.
+- **A sound**: one soft tick for the cursor and one for setting a thing, through `audio-intake` into
+  `Audio/UI`, on the UI mixer group, meeting `Loudness.cs`.
+
+### 5.3 How each screen is checked
+
+Every screen, before the owner sees it (the `unity-check` skill, then the `playmode-probe` loop; probes run with saved
+progress sandboxed, never wiping it):
+
+1. **Tests (EditMode)**:
+   - `FocusGrid` for each screen: every place reachable from the opening place; pushing a direction and then its
+     opposite comes back; nothing wraps; no place is a dead end.
+   - `MenuStyle`: every text-on-background pair in use is at least 4.5 to 1 (computed from the colours, not by eye).
+   - Built menu: no TextMeshPro label under 24 px at 100%.
+   - `Describe`: every spell, aspect, keystone and bearing has a name, a kind line, a "what it does" line and a cost
+     line.
+2. **The words**: every "what it does" line is 15 words or fewer per sentence and reads at grade 8 or below on a
+   Flesch-Kincaid count (a small Python script in `AgentScripts/`, with `textstat` pinned to an exact version).
+3. **Screenshots** (`capture game_view`) at **1920x1080 and 1280x720**, and once at **150% text**, of each state: the
+   screen opened; choosing a spell; choosing an aspect; a locked keystone; Devotion on (all in); on pad glyphs and on
+   key glyphs. Named `review/shots/current/ui_<screen>_<state>_<width>.png`. Old and new are shown side by side to the
+   owner. A golden frame is taken only when the owner accepts the look.
+4. **A readability read** of every shot, by the `shot-reviewer` agent and by eye, against a list: the smallest words
+   at 720p are 16 px or more; nothing clipped, overlapping or running off a box; the focused thing is obvious with the
+   colour taken away (the shot turned grey); every press has its glyph next to what it does; nothing pure white.
+5. **The pad walk**: in Play Mode, the probe opens the fire and the loadout, walks the d-pad over every place (logging
+   each one reached), opens every list, sets a spell, swaps a shape, wears and keeps a Hand, sets an aspect, a
+   keystone and a bearing, and backs out with B from every depth. It checks the build changed through `script eval`
+   (the loadout's slots, `WayRules.ActiveAspect`) and that the sword was re-armed. Then the same with the mouse:
+   every click lands on what it points at.
+6. **Performance**: with the loadout open and the cursor moving, `diagnostics profiler_record` shows no steady
+   per-frame allocation (`profiler_summary`).
