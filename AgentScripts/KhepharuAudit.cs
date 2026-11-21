@@ -796,6 +796,22 @@ public class KhepharuAuditRunner : MonoBehaviour
         Say("done");
         Debug.Log("[Probe] done");
         Destroy(gameObject);
+        // Leave Play Mode on its own, so a run cut off from its shell never leaves the editor playing; the sandbox flag
+        // is taken off only once back in edit mode, so nothing the probe did is ever saved as real progress.
+        if (!File.Exists("AgentScripts/khepharu_stay.txt"))
+        {
+            UnityEditor.EditorApplication.playModeStateChanged += Unsandbox;
+            UnityEditor.EditorApplication.ExitPlaymode();
+        }
+    }
+
+    private static void Unsandbox(UnityEditor.PlayModeStateChange change)
+    {
+        if (change != UnityEditor.PlayModeStateChange.EnteredEditMode) return;
+        UnityEditor.EditorApplication.playModeStateChanged -= Unsandbox;
+        PlayerPrefs.DeleteKey("clover.progress.sandbox");
+        PlayerPrefs.Save();
+        Debug.Log("[Probe] back in edit mode, saves real again");
     }
 
     private InputSettings.BackgroundBehavior wasBackground;

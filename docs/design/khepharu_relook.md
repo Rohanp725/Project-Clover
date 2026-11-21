@@ -764,6 +764,11 @@ keys were dropped), which holds the player for the rest of the fight, and its su
 - 2026-11-21: extra (a) done: Drawn Back to Break's throw sized by `Enemy.ShoveTravel`; `DrawnBackThrowProbe` slid the
   soldier 2.53-2.58 m (2.1-2.2 m beyond a plain blow's 0.35-0.45 m) in three runs, 1.26 m in one where the soldier was
   mid-attack; `KeystoneRuleTests` 18 passed. Next: extra (b), then the close-camera run.
+- 2026-11-21: extra (b) done (`83dea3d`). **Running now: the close-camera run**, `echo "Change Form Cases Close" >
+  AgentScripts/khepharu_only.txt; bash AgentScripts/runprobe.sh SunCourt KhepharuAudit 900`; frames land in
+  `review/khepharu/audit/close/`, its report in `close/summary.txt`. The probe now leaves Play Mode by itself when done
+  (and clears the sandbox flag once in edit mode). If cut off: check `unity command editor status`; if still playing,
+  `editor.playmode stop`, then delete the PlayerPrefs key `clover.progress.sandbox`.
 
 ### To resume (in this order)
 
