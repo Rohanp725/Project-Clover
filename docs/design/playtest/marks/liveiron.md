@@ -22,13 +22,13 @@ Metal and Lightning are both carried.
 
 **When it happens.** Weapon blows on an enemy that is both notched and charged, while you carry both Metal and Lightning.
 
-**The numbers.** Mix, 3 Shards. For now: one blow in three, by chance, calls a bolt down on the enemy 0.3 seconds later, dealing 12 damage, 15 stagger and a Static within 1 metre, at most once every 0.3 seconds.
+**The numbers.** Mix, 3 Shards. Every third blow on the enemy calls a bolt down on it 0.3 seconds later. Each enemy keeps its own count. The bolt deals 12 damage, 15 stagger and a Static within 1 metre, at most once every 0.3 seconds.
 
 **Works with.** Live Iron and its shapes, Bare Wire, Lightning Seeks Iron.
 
 **Example.** Keep hitting a notched, charged brute, and the sky joins in.
 
-**Not built yet.** For now, it is a one-in-three chance on any enemy that is both notched and charged, instead of counting every third blow on an enemy with Live Iron.
+**Not built yet.** For now, it counts blows on any enemy that is both notched and charged, not only on an enemy with Live Iron.
 
 ## liveiron.barewire
 **What it does.** Live Iron's arcs carry 45% of the blow's damage.
