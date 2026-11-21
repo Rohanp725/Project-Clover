@@ -40,6 +40,7 @@ checked against its code and committed on its own.
 - [x] marks/burningsap.md: Bared to the Sun (once on each enemy in each cast)
 - [x] marks/frostheave.md: Permafrost (Tremor kept while chilled), Winter in the Bones (shaken freeze twice as long)
 - [x] marks/thermalshock.md: Neither Wins (Burn and Chill each kept while the other is on)
+- [x] marks/blackchain.md: Rust in the Curse (notches kept while Cursed)
 
 ## Unsure lines
 

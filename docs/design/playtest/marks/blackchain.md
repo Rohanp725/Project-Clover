@@ -35,13 +35,11 @@ both carried.
 
 **When it happens.** Always on once you learn it, while you carry both Metal and Dark.
 
-**The numbers.** Mix, 3 Shards.
+**The numbers.** Mix, 3 Shards. Once the Curse is gone, the notches start to fade as usual.
 
 **Works with.** Flung Blade and Sunder (for notches), Grasp (for Curses), Black Chain.
 
 **Example.** Curse a brute, and its broken armour stays broken.
-
-**Not built yet.** It does nothing yet. The game can't yet make one affliction last as long as another one does.
 
 ## blackchain.noose
 **What it does.** When you land a finisher on a chained enemy, it also hits the enemy it is chained to. That second hit does half the damage and half the stagger.
