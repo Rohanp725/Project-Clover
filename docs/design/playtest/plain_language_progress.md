@@ -123,7 +123,11 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 
 ### 4. The game guide
 
-- [ ] docs/GUIDE.md
+- [ ] docs/GUIDE.md (very long, so done in parts, each committed). Code file names, class names and save keys are
+  taken out of the prose (they are in git history before this pass). The "Every mark" tables in section 7 are
+  made by AgentScripts/DumpMarks.cs from the game's own mark data, so they are left as they are: plain words there
+  need the mark data in code changed. Parts: sections 1 and 2: done. Sections 3 (Weapons): to do. Sections 4 to 6:
+  to do. Section 7 text before the tables: to do. Sections 8 to 10: to do.
 
 ### 5. Other player-facing files
 

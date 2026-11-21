@@ -1,8 +1,8 @@
 # Project Clover: what does what
 
-Every button, weapon, element, spell form, god's gift and chart mark in the game as it is built now, and how to trigger each.
-Numbers are first values from the code and have not been tuned by play. Where the code and a design document disagree, this follows the code.
-"Not yet" notes say what is first-pass or missing. Nothing in the game has sound yet.
+Every button, weapon, element, spell form, god's gift and chart mark in the game as it is built now, and how to use each one.
+The numbers are the first values set in the game and haven't been tuned by playing yet. Where the game and a design document disagree, this guide follows the game.
+"Not yet" notes say what is a first version or still missing. Nothing in the game has sound yet.
 
 ## Contents
 
@@ -21,42 +21,42 @@ Numbers are first values from the code and have not been tuned by play. Where th
 
 ## 1. Controls
 
-The game plays with a PlayStation pad, an Xbox pad (or any pad Windows sees as one), or the keyboard and mouse. Every
-prompt on screen names the buttons of the device used last: PlayStation's names for a DualShock or DualSense, Xbox's
-for every other pad, keys and mouse buttons for the keyboard and mouse. Every action can be rebound (see the end of
-this section), and the prompts follow the rebinding.
+You can play with a PlayStation controller, an Xbox controller (or any controller Windows treats as one), or the
+keyboard and mouse. Every prompt on the screen names the buttons of whatever you used last: PlayStation names for a
+DualShock or DualSense, Xbox names for any other controller, and keys and mouse buttons for the keyboard and mouse. You
+can change the button for every action (see the end of this section), and the prompts follow your changes.
 
 ### In a fight
 
 | Action | PlayStation | Xbox | Keys and mouse | Keys only | Notes |
 |---|---|---|---|---|---|
-| Move | Left stick or d-pad | Left stick or d-pad | W A S D | W A S D | Attacks turn toward the nearest enemy in the stick's direction; with the mouse in use, toward the nearest enemy near the cursor. There is no lock-on. |
-| Light attack | R1 | RB | Left mouse | J | Press again during an attack to chain. The press is remembered. |
-| Heavy attack | R2 (tap) | RT (tap) | Right mouse (tap) | K (tap) | After one or more lights it is the weapon's chain heavy: quicker, harder, ends the chain. |
-| Charged heavy | R2 (hold, let go at the white flash) | RT (hold) | Right mouse (hold) | K (hold) | Massive Sword, Great Spear, Great Hammer, Great Bow and Armament only. Costs no mana. While charging, the stick (or the cursor) picks where the cut goes. On a weapon with no charged heavy, a held heavy swings the plain heavy at once. A held heavy never gives the skill now. |
-| Weapon skill | Triangle | Y | Q | Q | Costs mana (25 to 35 by weapon). Starts at once from standing, or from a light attack's recovery to end the chain. Without the mana it says "No mana" and nothing starts. The Armament's skill is a counter stance: hold Triangle (or the heavy) to brace, and a blow taken is thrown back. |
-| Finisher | R2 with a staggered enemy within 5 m | RT | Right mouse | K | A staggered enemy pulses gold and carries a gold broken ring. Replaces the heavy. |
-| Guard | L1 (hold) | LB (hold) | Left Shift (hold) | L (hold) | Blocks from the front. Turns you to the nearest enemy. You walk slowly while guarding. |
-| Perfect guard | L1 just before the blow lands | LB | Left Shift | L | Usually within 0.18 s. Pressing guard again within 0.4 s gives no perfect window. |
-| Dodge | Circle | B | Space | Space | Costs stamina. Can cut short an attack's recovery, never its wind-up or swing. |
-| Flask | Square (tap) | X (tap) | R (tap) | R | Heals. With Fire's Firebomb Flask learned, holding 0.3 s throws it instead. Not while L2 is held: then Square is a spell. |
-| Spell West, North, East, South | Hold L2, then Square, Triangle, Circle or Cross | Hold LT, then X, Y, B or A | 1, 2, 3, 4 | 1, 2, 3, 4 | Casts the spell in that slot (see "The four spell slots" below). While L2 is held the face buttons are spells only: no flask, skill, dodge or use. On the keys no layer is needed. With the mouse in use, the player turns to the cursor as it is cast. A spell held for longer (a beam, the Eye of the Storm) is held on its slot's button. |
-| Surge | L2 (tap) | LT (tap) | F | F | The element's self buff. A tap of L2 let go within 0.25 s with no spell cast while it was down lights it as it is let go; a longer hold lights nothing. Pressed while it runs, it starts over at full length and is paid for again. |
-| Surge again | Tap L2 while the surge runs | Tap LT | F | F | Only with a gift that listens for it (Falling Sun, The World Holds Still, The Sea Rises, First Spring). The second press triggers the gift and does not relight the surge. |
-| Spell layer | L2 (hold) | LT (hold) | Left Ctrl (hold) | Left Ctrl | Turns the face buttons into the four spells and R1 and R2 into the infused strikes. Holding it also shows the spell diamond large. |
-| Infused strike | Hold L2, then R1 | Hold LT, then RB | Left Ctrl + left mouse | Left Ctrl + J | The weapon's carrier move with the first element on it (see "The charged blade and infused strikes" below). Waits 8 s, cut by weapon play. Never charges the blade. |
-| Second strike or deep strike | Hold L2, then R2 | Hold LT, then RT | Left Ctrl + right mouse | Left Ctrl + K | With two elements carried, the carrier move with the second element on it, free, on its own 8 s wait. With one element, or all in, the deep strike: the heavier strike for 20 mana and its own 8 s wait. |
-| Technique chord | R1 and R2 together | RB and RT | Both mouse buttons | J and K | Ready for the gated techniques (none is learned yet, so today it is a light then a heavy). A heavy within 0.08 s of a light, while the light is in its first 0.08 s, cancels the light into the technique; the light is never held back to wait for it. |
-| Use | Cross | A | E | E | Rest fires, weapon stands, braziers, stones, doors, the next line of speech (a left click also reads on). |
-| Pause | Options | Menu | Esc | Esc | Resume, controls, fullscreen, give up the run (castle and summit), forget everything saved (hub), quit. Esc and Start (Options, Menu) always pause, whatever Pause is rebound to. |
+| Move | Left stick or d-pad | Left stick or d-pad | W A S D | W A S D | Attacks turn toward the nearest enemy in the direction of the stick. If you're using the mouse, they turn toward the nearest enemy near the cursor. There is no lock-on. |
+| Light attack | R1 | RB | Left mouse | J | Press again during an attack to keep the chain going. The game remembers the press. |
+| Heavy attack | R2 (tap) | RT (tap) | Right mouse (tap) | K (tap) | After one or more light attacks, it becomes the weapon's chain heavy: faster and harder, and it ends the chain. |
+| Charged heavy | R2 (hold, let go at the white flash) | RT (hold) | Right mouse (hold) | K (hold) | Only on the Massive Sword, Great Spear, Great Hammer, Great Bow and Armament. Costs no mana. While charging, the stick (or the cursor) picks where the cut goes. On a weapon with no charged heavy, holding the button swings the normal heavy right away. Holding heavy never uses the weapon skill anymore. |
+| Weapon skill | Triangle | Y | Q | Q | Costs mana (25 to 35, depending on the weapon). Starts right away from standing still, or as the end of a chain while a light attack is recovering. Without enough mana, it says "No mana" and nothing happens. The Armament's skill is a counter stance: hold Triangle (or heavy) to brace, and a blow you take is thrown back. |
+| Finisher | R2 with a staggered enemy within 5 metres | RT | Right mouse | K | A staggered enemy pulses gold and has a broken gold ring over it. Replaces the heavy attack. |
+| Guard | L1 (hold) | LB (hold) | Left Shift (hold) | L (hold) | Blocks attacks from the front. Turns you to face the nearest enemy. You walk slowly while guarding. |
+| Perfect guard | L1 just before the blow lands | LB | Left Shift | L | Usually within 0.18 seconds. Pressing guard again within 0.4 seconds doesn't give a perfect guard. |
+| Dodge | Circle | B | Space | Space | Costs stamina. It can cut short the end of an attack, but never the wind-up or the swing. |
+| Flask | Square (tap) | X (tap) | R (tap) | R | Heals you. With Fire's Firebomb Flask learned, holding it for 0.3 seconds throws the flask instead. Doesn't work while L2 is held, since Square is a spell then. |
+| Spell West, North, East, South | Hold L2, then Square, Triangle, Circle or Cross | Hold LT, then X, Y, B or A | 1, 2, 3, 4 | 1, 2, 3, 4 | Casts the spell in that slot (see "The four spell slots" below). While L2 is held, the face buttons only cast spells: no flask, skill, dodge or use. On the keyboard, you don't need to hold anything. If you're using the mouse, you turn toward the cursor as you cast. A spell you hold (a beam, the Eye of the Storm) is held on its slot's button. |
+| Surge | L2 (tap) | LT (tap) | F | F | The element's power-up for yourself. A tap of L2, let go within 0.25 seconds without casting a spell while it was down, lights the surge as you let go. Holding it longer lights nothing. Pressing it while the surge is running starts it over at full length, and you pay for it again. |
+| Surge again | Tap L2 while the surge is running | Tap LT | F | F | Only with a god's gift that uses it (Falling Sun, The World Holds Still, The Sea Rises, First Spring). The second press sets off the gift and doesn't relight the surge. |
+| Spell button | L2 (hold) | LT (hold) | Left Ctrl (hold) | Left Ctrl | Turns the face buttons into the four spells, and R1 and R2 into the infused strikes. Holding it also shows the spell diamond at full size. |
+| Infused strike | Hold L2, then R1 | Hold LT, then RB | Left Ctrl + left mouse | Left Ctrl + J | One of your weapon's moves with your first element on it (see "The charged blade and infused strikes" below). Has an 8-second wait, which fighting with your weapon shortens. Never charges the blade. |
+| Second strike or deep strike | Hold L2, then R2 | Hold LT, then RT | Left Ctrl + right mouse | Left Ctrl + K | With two elements, the same weapon move with your second element on it. It's free and has its own 8-second wait. With one element, or all in, it's the deep strike: a heavier strike for 20 mana, with its own 8-second wait. |
+| Technique button pair | R1 and R2 together | RB and RT | Both mouse buttons | J and K | Ready for the techniques you'll unlock later (none can be learned yet, so for now it's a light attack and then a heavy attack). A heavy press within 0.08 seconds of a light press, while the light attack is in its first 0.08 seconds, turns the light attack into the technique. The light attack is never held back to wait for it. |
+| Use | Cross | A | E | E | Rest fires, weapon stands, braziers, stones, doors, and the next line of speech (a left click also moves to the next line). |
+| Pause | Options | Menu | Esc | Esc | Resume, controls, fullscreen, give up the run (castle and summit), forget everything saved (hub), quit. Esc and Start (Options, Menu) always pause, no matter what button Pause is set to. |
 
-"Keys only" is a second set for playing without a mouse: J, K and L stand in for the two mouse buttons and Left Shift;
-everything else is the same key. "The mouse in use" means the mouse was moved or clicked more lately than a pad was
-touched; pressing keys does not end it, touching a pad does.
+"Keys only" is a second set of keys for playing without a mouse. J, K and L take the place of the two mouse buttons
+and Left Shift; everything else uses the same key. "Using the mouse" means you moved or clicked the mouse more recently
+than you touched a controller. Pressing keys doesn't change this; touching a controller does.
 
 ### In the menus
 
-| Action | Pad | Keys and mouse |
+| Action | Controller | Keys and mouse |
 |---|---|---|
 | Choose | Left stick or d-pad | W A S D, or point with the mouse |
 | Pick | Cross / A | E, or a left click |
@@ -65,152 +65,156 @@ touched; pressing keys does not end it, touching a pad does.
 
 ### At a rest fire: the rest menu and the Hand
 
-Using a rest fire opens the **rest menu** (`Runtime/UI/RestMenu.cs`, made at play under the HUD): **Set the Hand**,
-**Shapes**, **The chart** and **Leave the fire**. The world stays stopped while it, or a screen opened from it, is open;
-closing the chart, the Hand or the shapes comes back to it.
+Using a rest fire opens the **rest menu**: **Set the Hand**, **Shapes**, **The chart** and **Leave the fire**. The world
+stays paused while it, or any screen opened from it, is open. Closing the chart, the Hand or the shapes brings you back
+to it.
 
-**Shapes** (`Runtime/UI/ShapeMenu.cs`) lists every learned spell's Shape mark, then every learned reaction's, each with
-the shape worn, and shows the chosen line's two shapes in full on the right, the worn one lit. Up and down (W S, the
-wheel, the stick or the d-pad) choose a line; left and right (A D, the stick or the d-pad), use or a click wear the
-other shape; a click on a shape wears it. A spell's shape not in a slot, or a reaction's with one of its elements not
-carried, is kept for when it is. Shapes change only at a fire. The stick, the d-pad, W and S, the wheel or the mouse choose; use (or a click) acts;
-dodge, Esc or Start leaves. Words a fire speaks as it is lit are read first: the menu waits for them.
+**Shapes** lists the Shape mark of every spell you've learned, then the Shape mark of every reaction you've learned,
+each with the shape it's using now. On the right, it shows the chosen line's two shapes in full, with the one in use lit
+up. Up and down (W S, the mouse wheel, the stick or the d-pad) choose a line. Left and right (A D, the stick or the
+d-pad), use, or a click switch to the other shape. Clicking a shape picks it. The shape for a spell that isn't in a slot,
+or for a reaction when you don't carry both of its elements, is saved for when it is. You can only change shapes at a
+fire. The stick, the d-pad, W and S, the mouse wheel or the mouse choose; use (or a click) acts; dodge, Esc or Start
+leaves. If the fire says something when you light it, you read that first: the menu waits for it.
 
-**The Hand** (`Runtime/UI/HandMenu.cs`) is the build: the four spell slots in a diamond laid out like the face buttons,
-each named by its binding, the surge in the middle, the elements carried along the top, and on the right a Suggested
-Hand and three saved Hands. Use on a slot lists what can go there (only spells of the elements carried, a duo spell only
-with both, grouped by element, each with its role and one line); use on one wears it at once. The weapon skill button
-shows the numbers. On a saved Hand's row, use wears it and the heavy attack (or a right click) keeps the Hand worn now
-there. The Hand never changes which elements are carried. Its rules are `Player/Build/HandRules.cs`; the adapter is
-`Player/PlayerBuild.cs`.
+**The Hand** is your build: the four spell slots in a diamond laid out like the face buttons, each named by its button,
+the surge in the middle, the elements you carry along the top, and on the right, a Suggested Hand and three saved
+Hands. Press use on a slot to list what can go there (only spells of the elements you carry, and a duo spell only if
+you carry both its elements), grouped by element, each with its role and a short description. Press use on one to put
+it in right away. The weapon skill button shows the numbers. On a saved Hand's row, use puts that Hand on, and heavy
+attack (or a right click) saves the Hand you have on now there. The Hand never changes which elements you carry.
 
-**The slots open as you go** outside the playtest (`Player/Build/SlotSchedule.cs`): West and North at the start, East
-when the Champion of the Gate falls (progress flag `elite.champion_gate`, set by the Gate of Noon when its keeper
-dies), South when the Fire god falls (`god.fire`, set by the Sun Court when the Sun-Bearer is felled). The flags are kept
-from run to run. A shut slot holds nothing, is never filled, is skipped by the chart's next-slot round and shows on the
-Hand as "Shut" with what opens it. In the playtest every slot is open.
+**The slots open as you go**, outside the playtest. West and North are open at the start. East opens when the Champion
+of the Gate falls (the game marks this when the Gate of Noon's keeper dies). South opens when the Fire god falls (marked
+when the Sun-Bearer is beaten in the Sun Court). These stay marked from one run to the next. A closed slot holds
+nothing, is never filled, is skipped by the chart's next-slot order, and shows on the Hand as "Shut" along with what
+opens it. In the playtest, every slot is open.
 
 ### On the upgrade chart (opened from a rest fire's menu)
 
 | Action | PlayStation | Xbox | Keys and mouse |
 |---|---|---|---|
 | Move from mark to mark | Left stick or d-pad | Left stick or d-pad | W A S D |
-| Learn the chosen mark; on a spell already learned, put it in the next spell slot (West, North, East, South, round again) | Cross | A | E |
-| Whole-ring view, and back to your tree | R2 | RT | Right mouse (or K) |
+| Learn the chosen mark; on a spell you've already learned, put it in the next spell slot (West, North, East, South, then around again) | Cross | A | E |
+| See the whole ring, and go back to your tree | R2 | RT | Right mouse (or K) |
 | Leave | Circle | B | Space |
 
-The chart is not yet clickable with the mouse. A gold ring marks each spell that sits in a slot, and the words under a
-learned spell say which slot it is in, what it costs (seconds of cooldown or mana) and where use would put it.
+You can't click on the chart with the mouse yet. A gold ring marks each spell that is in a slot, and the words under a
+learned spell say which slot it's in, what it costs (seconds of wait or mana), and where use would put it.
 
 ### The four spell slots
 
-You carry four spells, one in each slot (West, North, East, South, laid out like the face buttons). Until a Hand is set
-at a rest fire (see "At a rest fire" above) the slots fill themselves: each carried element's own spell first, then
-each learned spell in force, in the chart's order, into the next empty open slot. A spell a god gives goes into the first empty slot, or
-North when all four are full. At a rest fire, choosing a learned spell on the chart and pressing use puts it in the next
-slot round. Taking another element puts its own spell where the old element's was and drops the old element's spells.
-The element's own spell is not on the chart, so once the next-slot round has pushed it out it stays out until
-another element is taken (or an empty slot opens); the Hand places it like any other.
-The slots go with the player from scene to scene in a run. The **spell diamond** in the bottom-right corner shows them
-(`Runtime/UI/SpellDiamondHud.cs`, built at play beside the HUD): the four slots laid out like the face buttons, each with
-its spell's picture (or initials), its button, a shade that sweeps back as its wait runs out with the seconds in it, and
-its mana price (blue, red when short); the surge in the middle (bright while it burns, shaded while Hunger waits); the two
-infused strikes under it with their own rings and R2's 20 mana; the charged blade's three pips on its left. Small at all
-times; large while L2 or Left Ctrl is held, with the spells' names. Button names follow the device used last (Xbox,
-PlayStation or keys) and the player's rebinding.
+You carry four spells, one in each slot (West, North, East and South, laid out like the face buttons). Until you set a
+Hand at a rest fire (see "At a rest fire" above), the slots fill themselves: first each element's own spell, then each
+spell you've learned, in the chart's order, into the next empty open slot. A spell a god gives you goes into the first
+empty slot, or into North if all four are full. At a rest fire, choosing a learned spell on the chart and pressing use
+puts it in the next slot. Taking another element puts its own spell where the old element's spell was, and removes the
+old element's spells. An element's own spell isn't on the chart, so once the next-slot order has pushed it out, it stays
+out until you take another element (or an empty slot opens). The Hand places it like any other spell.
+Your slots go with you from area to area during a run. The **spell diamond** in the bottom-right corner shows them: the
+four slots laid out like the face buttons, each with its spell's picture (or first letters), its button, shading that
+sweeps back as its wait runs out with the seconds left in it, and its mana cost (blue, or red if you don't have enough).
+The surge is in the middle (bright while it's lit, shaded while Hunger waits). The two infused strikes are under it, with
+their own rings and R2's cost of 20 mana. The charged blade's three dots are on its left. It's always small, and grows
+large while L2 or Left Ctrl is held, showing the spells' names. Button names follow whatever you used last (Xbox,
+PlayStation or keys) and any buttons you've changed.
 
-- **Cooldowns.** Basic spells cost no mana. Casting starts the slot's wait: each element's own spell 6 to 9 s, the
-  tree spells 7 to 12 s, the spare mixed spells 12 s (the table is `Runtime/Player/Magic/SpellTimings.cs`, from
-  `docs/design/steel/elements_a.md` and `elements_b.md`). Weapon play takes time off every waiting slot: a light blow
-  that lands 0.3 s, a heavy one 0.6 s (once per move, however many it strikes), a perfect guard 2 s, a perfect dodge
-  1.5 s, a finisher 3 s. A slot pressed while it waits says "Not ready". A rest ends every wait.
+- **Spell waits.** Basic spells cost no mana. Casting starts the slot's wait: 6 to 9 seconds for each element's own
+  spell, 7 to 12 seconds for the tree spells, and 12 seconds for the extra mixed spells. Fighting with your weapon takes
+  time off every waiting slot: 0.3 seconds for a light blow that lands, 0.6 seconds for a heavy blow (once per move, no
+  matter how many enemies it hits), 2 seconds for a perfect guard, 1.5 seconds for a perfect dodge, and 3 seconds for a
+  finisher. If you press a slot while it's waiting, it says "Not ready". Resting ends every wait.
 - **Larger spells** cost mana and have no wait: Meteor Leap 45, Seven Flashes 45, Sky Dance 45, Winter Wall 35, Poured
-  Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50, and the eleven built duo spells 40 to 60.
-  Pawned Heart is paid in health and waits 40 s. Earth has no larger spell yet (its Cairn is not built).
-- **Marks that once made the base spell cheaper** (Short Breath, Quick Clap, Easy Breath, Thin Ice, Low Water, Ready
-  Soil, Near to Hand, Ready Steel, Ready Light, Ready Poison) now make their own element's base spell wait a fifth
-  less between casts (Hoarfrost 5.6 s where it waits 7), whether that element is carried first or second; Spring Tide
-  works only on a spell that costs mana. The trees are reshaped in a later phase.
+  Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50, and the eleven duo spells built so far, 40 to
+  60. Pawned Heart is paid for with health and waits 40 seconds. Earth doesn't have a larger spell yet (its Cairn isn't
+  built).
+- **Marks that used to make the basic spell cheaper** (Short Breath, Quick Clap, Easy Breath, Thin Ice, Low Water, Ready
+  Soil, Near to Hand, Ready Steel, Ready Light, Ready Poison) now make their own element's basic spell wait a fifth less
+  between casts (Hoarfrost waits 5.6 seconds instead of 7), whether that element is your first or second. Spring Tide
+  only works on a spell that costs mana. The trees will be reshaped in a later phase.
 
 ### The charged blade and infused strikes
 
-- **The charged blade** (`Runtime/Player/Magic/ChargedBlade.cs`; spent in `PlayerCombat`'s blow path; the look is
-  `BladeLook`). The first enemy a slot spell strikes, within 8 s of the cast, charges the weapon with the spell's element
-  (the playtest's one element). The next three moves that land carry it: 1.2 times the damage, and one stack of the
-  element's affliction (two of Poison) on top of what the blow lays, or beside it as the blow's second affliction. A move
-  counts once however many it strikes. A blow turned on a guard spends nothing. A new landed spell gives three fresh
-  blows; a rest ends it. The surge, infused strikes, ground and marks' effects never charge it. Each element adds one
-  thing (`Trees/ElementSteel.cs`): Fire's third leaves 1.5 m of ground burning 3 s; Lightning's each leap to one more
-  enemy within 4 m for half; Wind's each shove 1.5 m along the swing, the third 4 m; Ice's each shatter a Frozen enemy,
-  light or heavy; Water's each splash 1.5 m round for a fifth and soak; Life's third throws thorns (2 m); Earth's each
-  throw a 2 m spray of gravel; Metal's pass any guard; Light's third throws a 5 m ray that Marks; Dark's third Curses
-  twice more; Poison's third makes the poison bite at once. Seen on the weapon in the element's substance (flame and
-  embers for Fire, bolts for Lightning, rime for Ice), fewer pieces as the blows are spent, and as three pips by the
-  diamond.
-- **Infused strikes** (L2 with R1; L2 with R2 the deep strike). Each weapon's carrier (`Weapon.Carrier`, a copy of one
-  of its moves): Katana, the drawing cut made at once (0.18 s, 22 damage, 170 degrees, 1.6 m step); Massive Sword, the
-  rising cut; Scythe, the full turn; Great Spear and Sun-Spear, the first thrust; Great Hammer, the drop; Twin Knives, the
-  crossing; Great Bow, the shot; Chain Sickle, the snap; Fists and Armament, the kick. Once the carrier's blow is out, the
-  element acts on the ground it covered (its footprint: arc, lane, disc, ring or path). The eleven strikes and deep
-  strikes are listed in the guide to effects ("Infused strikes"); Lightning's Flash Cut turns the carrier into a 5 m
-  lunge at half again its damage. Each button waits 8 s, cut by weapon play like a spell (the strike's own blow cuts every
-  other wait but not its own). The deep strike costs 20 mana. A strike counts as a weapon blow (mana, cuts) and neither
-  charges nor spends the charged blade.
-- **Hunger** (Dark's surge) waits 25 s from when it ends; a rest ends the wait.
+- **The charged blade.** The first enemy a spell from one of your slots hits, within 8 seconds of casting, charges your
+  weapon with the spell's element. Your next three moves that land carry it: they do 1.2 times the damage, and add one
+  stack of the element's affliction (two for Poison) on top of what the blow already adds, or alongside it as the blow's
+  second affliction. A move counts once, no matter how many enemies it hits. A blow that hits an enemy's guard uses
+  nothing up. A new spell that lands gives you three fresh blows; resting ends it. The surge, infused strikes, ground
+  effects and marks' effects never charge it. Each element adds one thing: Fire's third blow leaves 1.5 metres of ground
+  burning for 3 seconds. Lightning's blows each jump to one more enemy within 4 metres for half the damage. Wind's blows
+  each shove the enemy 1.5 metres in the direction of the swing, and the third one 4 metres. Ice's blows each shatter a
+  Frozen enemy, light blow or heavy. Water's blows each splash 1.5 metres around for a fifth of the damage, and soak.
+  Life's third blow throws thorns (2 metres). Earth's blows each throw a 2-metre spray of gravel. Metal's blows go
+  through any guard. Light's third blow shoots a 5-metre ray that Marks. Dark's third blow adds two more Curses.
+  Poison's third blow makes the poison bite right away. You can see it on the weapon in the element's own look (flame
+  and embers for Fire, bolts for Lightning, frost for Ice), with less of it as the blows are used up, and as three dots
+  next to the spell diamond.
+- **Infused strikes** (L2 with R1; L2 with R2 is the deep strike). Each weapon uses a copy of one of its own moves:
+  Katana, the drawing cut, done right away (0.18 seconds, 22 damage, 170 degrees wide, a 1.6-metre step); Massive Sword,
+  the rising cut; Scythe, the full spin; Great Spear and Sun-Spear, the first thrust; Great Hammer, the drop; Twin
+  Knives, the crossing cut; Great Bow, the shot; Chain Sickle, the snap; Fists and Armament, the kick. Once the move's
+  blow is out, the element acts on the ground the move covered (an arc, a line, a disc, a ring or a path). The eleven
+  strikes and deep strikes are listed in the guide to effects ("Infused strikes"). Lightning's Flash Cut turns the move
+  into a 5-metre lunge with 50% more damage. Each button has an 8-second wait, which fighting with your weapon shortens
+  like a spell's (the strike's own blow shortens every other wait, but not its own). The deep strike costs 20 mana. A
+  strike counts as a weapon blow (it gives mana and shortens waits), and it neither charges nor uses up the charged
+  blade.
+- **Hunger** (Dark's surge) has a 25-second wait from when it ends; resting ends the wait.
 
 ### Rebinding
 
-Pause, then Controls. The page lists every action in a row (Move as its four directions) with three columns: the pad,
-the keys and mouse, and the keys-only set. Choose a cell with the stick, the d-pad, the keys or the mouse, and press use
-(or click it): the cell says "press...", and the next button of that column's kind becomes the binding. Esc (keys) or
-Start (pad) leaves it as it was; so does waiting eight seconds.
+Pause, then choose Controls. The page lists every action in its own row (Move is split into its four directions), with
+three columns: the controller, the keys and mouse, and the keys-only set. Choose a box with the stick, the d-pad, the
+keys or the mouse, and press use (or click it). The box says "press...", and the next button of that column's kind
+becomes the new button. Esc (keys) or Start (controller) leaves it as it was, and so does waiting eight seconds.
 
-- A clash is swapped: give the light attack Q and the weapon skill takes the left mouse button, and the page says so.
-- The Spells rows (the layer and the four slots) are a second group under Pause. On the pad the four slots share the face
-  buttons with the flask, the skill, the dodge and use on purpose (L2 decides which), so no clash is found there; two
-  slots never share a button, and the layer's own button is never shared. On the keys a key does one thing in every
-  row: give a slot R and the flask takes the slot's old key.
-- Esc and Start are kept for the pause menu and cannot be given to anything. Pause itself can be given another key or
-  button, but Esc and Start go on pausing, so no binding can lock the player out of the menu. If giving Pause a key
-  would hand Esc or Start to another action, the change is refused and the page says why.
-- The pad's Move is the stick (left or right); the d-pad always moves as well and is never offered. Sticks and the
-  d-pad cannot be given to a button.
-- The bottom row, Reset to defaults, asks once and then puts every binding back as the game came.
-- Bindings are kept at once, between sessions, as the Input System's binding-override JSON in PlayerPrefs under the key
-  `clover.controls.bindings`, and laid over the controls when the player is made, before any button is read. A probe's
-  sandboxed play keeps them under `clover.controls.bindings.sandbox` instead and never touches the owner's.
+- If two actions would share a button, they swap: give the light attack Q, and the weapon skill takes the left mouse
+  button. The page tells you when this happens.
+- The Spells rows (the spell button and the four slots) are a second group under Pause. On the controller, the four
+  slots share the face buttons with the flask, the skill, the dodge and use on purpose (L2 decides which), so those
+  don't count as sharing. Two slots never share a button, and the spell button itself is never shared. On the keys, a
+  key does only one thing in every row: give a slot R, and the flask takes the slot's old key.
+- Esc and Start are saved for the pause menu and can't be given to anything else. You can give Pause another key or
+  button, but Esc and Start keep pausing too, so no change can lock you out of the menu. If giving Pause a key would
+  take Esc or Start away from it, the change is refused and the page tells you why.
+- On the controller, Move is a stick (left or right). The d-pad always moves too and isn't offered as a choice. Sticks
+  and the d-pad can't be given to a button.
+- The bottom row, Reset to defaults, asks once and then puts every button back the way the game came.
+- Your changes are saved right away and kept between sessions. They're put in place when your character is made, before
+  any button is read. Test runs save their own changes separately and never touch yours.
 
 **Not yet**
 
-- No hard lock-on. No way to choose whom the guard faces when several enemies are near.
-- The technique chord is wired but has nothing to play until the gated techniques (phase 5). Infusion marks that bend
-  the carrier, and the second element's strike on R2, come with the Way (phase 5) and two elements (phase 2).
-- Some parts of the strikes and the charged blade wait on engine pieces and say so in `ElementSteel.cs` (`NEEDS`): the
-  lunge's untouchability, Wind's and Water's throws into walls, Life's saplings, Dark's shadow cut loose, Earth's
-  unstoppable wind-up, Ice's spike broken by the next blow.
-- The Hand screen (choosing the four spells and the surge at a rest) is playtest phase 2; the chart's "next slot" stands
-  in for it.
-- The chart cannot be clicked; the pause menu and the controls page can.
-- Text names only; there are no button pictures.
+- No hard lock-on. No way to choose which enemy your guard faces when several are near.
+- The technique button pair is set up, but has nothing to do until the techniques you'll unlock later (phase 5). Marks
+  that change the infused strikes' move come with the Way (phase 5), and the second element's strike on R2 with two
+  elements (phase 2).
+- Some parts of the strikes and the charged blade are waiting on pieces of the game that aren't built yet: being
+  untouchable during the lunge, Wind's and Water's throws into walls, Life's saplings, Dark's loosed shadow, Earth's
+  unstoppable wind-up, and Ice's spike breaking on the next blow.
+- The Hand screen (choosing the four spells and the surge at a rest) is playtest phase 2; for now, the chart's "next
+  slot" does that job.
+- You can't click on the chart; the pause menu and the controls page can be clicked.
+- Button names are text only; there are no button pictures.
 
 ---
 
 ## 2. How a fight works
 
-- **Health** is 100. A blow taken unguarded makes you flinch for 0.35 s and pushes you back. In a run, falling ends the run and wakes you in the hub with bare hands, Fire, no Shards and nothing learned.
-- **Stamina** is 100. Attacks, dodges and blocked blows spend it. It refills at 30 a second after 0.8 s of spending nothing.
-- **Mana** is 100 at most and comes only from fighting: each weapon blow that lands (4 to 16 by move), a perfect guard (15), a perfect dodge (12), a finisher (15). It pays only for the big moves: the surge, the weapon skill, each element's one larger spell and the built duo spells. Basic spells run on cooldowns instead (section 1, "The four spell slots"). Every area is entered at half (50). Out of a fight, mana below half rises by 5 a second to half and stops; above half it stays. A fight starts with at least half: if less is held when an enemy within 12 m becomes aware of you, it is raised to 50. The fight ends once no enemy within 12 m has been aware of you for 8 s (or a rest).
-- **Guard** blocks the front arc (200 degrees for most weapons). A block costs stamina (0.9 per point of damage for most weapons), and 35% of the damage comes through as grey health. A blow the stamina cannot pay for breaks the guard: full damage and a long flinch.
-- **Grey health** is health you can win back: 0.6 per point of damage you deal. It starts fading 2.5 s after the last block or hit. An unguarded blow removes it. Guarding alone cannot kill you.
-- **Perfect guard** costs nothing, gives 15 mana, and throws a large amount of stagger back on the attacker. **Red attacks** go through a held guard: dodge them or perfect-guard them.
-- **Perfect dodge**: a blow that passes through the first 0.13 s of a roll gives 12 mana and a third of a second of slowed time.
-- **Stagger**: blows (heavies most of all) and perfect guards fill an enemy's stagger meter. At 70% it flickers amber. Full, it kneels for about 3 s and pulses gold. Light blows on it then do one and a half times damage. Heavy within 5 m is the **finisher**: three times the finisher's damage, no stamina, 15 mana, and blows pass through you while it lasts.
-- **Shards** buy marks on the chart. Each enemy gives 1 the first time it is killed on a visit, the Gate Captain 3, a god 5.
-- **Resting** at a rest fire refills health and flasks, brings the area's enemies back (not their Shards) and opens the rest menu (the Hand, the chart, leave). **Flasks**: three, 45 health each, 0.8 s to drink with the heal at 0.4 s. With none left, 120 damage dealt earns one back.
+- **Health** is 100. A blow you don't guard makes you flinch for 0.35 seconds and pushes you back. In a run, falling ends the run, and you wake up in the hub with bare hands, Fire, no Shards and nothing learned.
+- **Stamina** is 100. Attacks, dodges and blocked blows use it up. It refills at 30 a second after 0.8 seconds of not using any.
+- **Mana** goes up to 100 and only comes from fighting: each weapon blow that lands (4 to 16, depending on the move), a perfect guard (15), a perfect dodge (12), and a finisher (15). It only pays for the big moves: the surge, the weapon skill, each element's one larger spell, and the duo spells built so far. Basic spells have waits instead (see section 1, "The four spell slots"). You enter every area with half (50). Out of a fight, mana below half goes up by 5 a second until it reaches half, then stops; above half, it stays where it is. A fight starts with at least half: if you have less when an enemy within 12 metres notices you, it is raised to 50. The fight ends once no enemy within 12 metres has noticed you for 8 seconds (or when you rest).
+- **Guard** blocks attacks from the front (a 200-degree arc for most weapons). A block costs stamina (0.9 per point of damage for most weapons), and 35% of the damage comes through as grey health. A blow your stamina can't pay for breaks your guard: you take full damage and a long flinch.
+- **Grey health** is health you can win back: 0.6 for each point of damage you deal. It starts fading 2.5 seconds after your last block or hit. A blow you don't guard removes it. Guarding alone can't kill you.
+- **Perfect guard** costs nothing, gives 15 mana, and puts a lot of stagger on the attacker. **Red attacks** go through a held guard: dodge them or perfect-guard them.
+- **Perfect dodge**: a blow that passes through you in the first 0.13 seconds of a roll gives 12 mana and a third of a second of slowed time.
+- **Stagger**: blows (heavy blows most of all) and perfect guards fill an enemy's stagger meter. At 70%, the enemy flickers amber. When it's full, the enemy kneels for about 3 seconds and pulses gold. Light blows on it then do one and a half times the damage. A heavy blow within 5 metres is the **finisher**: it does three times the finisher's damage, costs no stamina, gives 15 mana, and blows pass through you while it lasts.
+- **Shards** buy marks on the chart. Each enemy gives 1 the first time it's killed on a visit, the Gate Captain gives 3, and a god gives 5.
+- **Resting** at a rest fire refills your health and flasks, brings back the area's enemies (but not their Shards), and opens the rest menu (the Hand, the chart, leave). **Flasks**: three, healing 45 each. Drinking takes 0.8 seconds, and the heal comes at 0.4 seconds. With none left, dealing 120 damage earns one back.
 
 **Not yet**
 
-- Enemies cannot lay afflictions on you.
+- Enemies can't put afflictions on you.
 - Dark's Rise (section 5) is the only way to survive a killing blow.
 
 ---
