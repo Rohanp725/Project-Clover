@@ -131,7 +131,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   taken out of the prose (they are in git history before this pass). The "Every mark" tables in section 7 are
   made by AgentScripts/DumpMarks.cs from the game's own mark data, so they are left as they are: plain words there
   need the mark data in code changed. Parts: sections 1 and 2: done. Section 3 (Weapons): done. Sections 4 to 6:
-  done. Section 7 text before the tables: to do. Sections 8 to 10: to do.
+  done. Section 7 text before the tables: done. Sections 8 to 10: to do.
 
 ### 5. Other player-facing files
 

@@ -647,59 +647,60 @@ Every form shows a warning on the ground before it lands (never less than 0.22 s
 
 ## 7. The upgrade chart
 
-**What it is.** One night sky holding every tree: 428 marks. Eleven element trees (30 to 36 marks each) stand round a ring in the order of section 4, each growing outward from its element's emblem. In the gap between each pair of neighbours grows the mixed branch they share (7 to 10 marks). The chart opens from a rest fire's menu, and the world stops while it is open.
+**What it is.** One night sky holding every tree: 428 marks. Eleven element trees (30 to 36 marks each) stand around a ring, in the order from section 4, each growing outward from its element's symbol. In the gap between each pair of neighbours grows the mixed branch they share (7 to 10 marks). You open the chart from a rest fire's menu, and the world is paused while it's open.
 
-**How a tree is built.** One root at the foot. Three boughs grow from it, each a spine of majors with minors hanging off, each ending in a keystone. Four or five spells. The god's gift at the crown. A mixed branch ends in its own crown.
+**How a tree is built.** One root mark at the bottom. Three boughs grow from it. Each bough is a line of major marks with minor marks hanging off it, and each ends in a keystone. Four or five spells. The god's gift at the top. A mixed branch ends in its own top mark.
 
 ### Mark kinds and costs
 
 | Kind | Cost in Shards | Frame | What it is |
 |---|---|---|---|
-| Root | 2 | The tree's foot | The foot of a tree. Turns the element's affliction on for weapon blows. |
-| Minor | 1 | Small and round | A plain number: more damage, cheaper dodge, and so on. |
-| Major | 3 | Square | A new rule: something happens on a trigger. |
-| Spell | 4 | Diamond | A move you perform with the spell button held (section 6). |
+| Root | 2 | The bottom of the tree | The bottom of a tree. Turns on the element's affliction for weapon blows. |
+| Minor | 1 | Small and round | A simple number boost: more damage, a cheaper dodge, and so on. |
+| Major | 3 | Square | A new rule: something happens when something else happens. |
+| Spell | 4 | Diamond | A move you do with the spell button held (section 6). |
 | Keystone | 6 | Large, eight-sided | The end of a bough. Changes how the element plays. |
 | Mix | 3 to 5, written on the mark | Six-sided | A mark on a branch shared by two neighbouring elements. Some are spells. |
-| Signature (a god's gift) | Never sold | The largest, a crowned sun | Given only by a god's fall (section 5). |
+| Signature (a god's gift) | Never sold | The largest, a crowned sun | Only given when a god falls (section 5). |
 
-A run through the castle and its god pays about 19 Shards. No tree can be bought whole in a run, and two keystones are beyond one run, so a path must be chosen.
+A run through the castle and its god earns about 19 Shards. You can't buy a whole tree in one run, and two keystones are more than one run can pay for, so you have to choose a path.
 
 ### What can be learned
 
-A mark can be learned when all of these hold:
+You can learn a mark when all of these are true:
 
-- **It is yours**: it is on the tree of the element you hold, or on one of the two branches that element shares.
-- **It is open**: a mix mark needs its branch open (you hold one element and have held or consumed the other this run). Otherwise it reads "Sealed" and names the element that opens it.
-- **It is reachable**: it grows from the foot of its tree, or **any one** of the marks it grows from is already learned. Otherwise the panel says "Grows from ..." and names them.
-- **You carry enough Shards.**
+- **It's yours**: it's on the tree of the element you carry, or on one of the two branches that element shares.
+- **It's open**: a mix mark needs its branch to be open (you carry one element, and have carried or consumed the other one this run). Otherwise it says "Sealed" and names the element that opens it.
+- **You can reach it**: it grows from the bottom of its tree, or you've already learned **any one** of the marks it grows from. Otherwise the panel says "Grows from ..." and names them.
+- **You have enough Shards.**
 
-How a mark is tinted tells you where it stands: the element's colour when learned; pale white when it can be bought now; grey-blue when reachable but too dear; dark when out of reach; dull red when sealed; dull gold for a god's gift. A gold ring sits round the worn spell. Other elements' trees are drawn faint.
+A mark's colour tells you where it stands: the element's colour when learned; pale white when you can buy it now; grey-blue when you can reach it but can't afford it; dark when you can't reach it; dull red when it's sealed; dull gold for a god's gift. A gold ring sits around the spell you have on. Other elements' trees are drawn faintly.
 
-Taking a new element forgets the old tree and gives back the Shards spent on it. Falling in a run loses everything learned.
+Taking a new element forgets the old tree and gives back the Shards you spent on it. Falling in a run loses everything you learned.
 
 ### Moving around and zoom
 
-- The chart is turned so your element's tree stands upright. The view stays close on that tree and leans toward the chosen mark.
-- **Left stick / W A S D** moves the choice to the nearest mark in that direction. Hold to keep moving. The choice moves only among your tree and its two shared branches.
-- **Cross / E** learns the chosen mark. On a spell you already own, it wears that spell.
-- **R2 / K** pulls the view back to show the whole ring with every tree; the words panel is hidden while pulled back. Press again to return. There are only these two zoom levels.
+- The chart is turned so your element's tree stands upright. The view stays zoomed in on that tree and leans toward the mark you've chosen.
+- **Left stick / W A S D** moves your choice to the nearest mark in that direction. Hold to keep moving. You can only move among your tree and its two shared branches.
+- **Cross / E** learns the chosen mark. On a spell you already have, it puts that spell on.
+- **R2 / K** zooms out to show the whole ring with every tree; the text panel is hidden while zoomed out. Press again to go back. There are only these two zoom levels.
 - **Circle / Space** leaves.
-- The words panel on the right gives the mark's name, kind and cost, how it stands with you (learned, worn, what it grows from, what opens it) and its description. The title shows your element and Shards.
+- The text panel on the right shows the mark's name, kind and cost, where it stands for you (learned, put on, what it grows from, what opens it), and its description. The title shows your element and your Shards.
 
 **Not yet**
 
-- The chart has been looked at only at the editor's 1920 by 936 view.
-- Some marks do less than their words; none of the numbers has been played for balance.
-- Counts that marks bank show as words on the HUD, not pips.
+- The chart has only been checked at the editor's 1920 by 936 screen size.
+- Some marks do less than their description says; none of the numbers has been played for balance.
+- Counts that marks save up show as words on the screen, not dots.
 
 ### Every mark
 
 All 428 marks, written out from the game's own data: the eleven trees in ring order, then the eleven mixed branches.
-"Shards" is the price; a gift is never sold. "How it happens" is read from the mark's first effect, so for a mark with
-several effects the description is the fuller account. Every description here says what the mark does today. By the builders' own count 315 are built as designed. The
-other 113 do less than their design asked, so their words were cut back to match; the designed version of each, with
-its old words, is kept in `docs/design/marks_reworded.md` for building later.
+"Shards" is the price; a gift is never sold. "How it happens" comes from the mark's first effect, so for a mark with
+several effects, the description gives the fuller picture. Every description here says what the mark does today. By the
+team's own count, 315 are built the way they were planned. The other 113 do less than planned, so their descriptions
+were cut back to match; the planned version of each, with its old description, is kept in the design notes for building
+later.
 
 #### Fire (34)
 
