@@ -9,13 +9,13 @@ carried.
 
 **When it happens.** Every time Rust goes off while you carry both Water and Metal. Rust goes off when Soaked lands on a notched enemy, or when a notch lands on a soaked one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Rust.
 
-**The numbers.** Mix, 3 Shards. Both shapes: while the enemy is Soaked, its notches stay and spread, one more every 2 seconds. Once it is rusted all the way through, a plate of armour falls off, and weapon blows hit it 16% harder for 6 seconds. Seized Joints: the enemy moves a fifth slower while it rusts. Flaking: a heavy blow uses up its notches, dealing 6 damage for each one to everything within 3 metres, plus a notch and a Soaked. After Rust goes off on an enemy, it can't go off on that enemy again for 6 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes: while the enemy is Soaked, its notches stay and spread, one more every 2 seconds. While it rusts, notches can go past three, up to five. Once it is rusted all the way through (five notches), a plate of armour falls off, and weapon blows hit it 16% harder for 6 seconds. Seized Joints: the enemy moves a fifth slower while it rusts. Flaking: a heavy blow uses up its notches, dealing 6 damage for each one to everything within 3 metres, plus a notch and a Soaked. After Rust goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
 **Works with.** Riptide and Flung Blade to set it up, Salt Edge, Salt Guard, The Sea Takes It.
 
 **Example.** An armoured brute: use Seized Joints, and walk around to its back. A pack: use Flaking, and land heavy blows on the rusted one.
 
-**Not built yet.** Notches can't go past three yet. Seized Joints slows by a fifth, instead of a little more for each notch, including turning.
+**Not built yet.** Seized Joints slows by a fifth, instead of a little more for each notch, including turning.
 
 ## rust.saltedge
 **What it does.** Heavy blows add one notch and Soak the enemy.
@@ -40,17 +40,15 @@ carried.
 **Example.** Guard a brute perfectly, and it starts to rust.
 
 ## rust.brine
-**What it does.** Soaked lasts longer on a notched enemy.
+**What it does.** Soaked lasts twice as long on a notched enemy.
 
 **When it happens.** Always on once you learn it, while you carry both Water and Metal.
 
-**The numbers.** Mix, a minor mark, 1 Shard.
+**The numbers.** Mix, a minor mark, 1 Shard. While the enemy has a notch, its Soaked fades at half the usual speed.
 
 **Works with.** Salt Edge, which it comes after on the chart, Rust.
 
 **Example.** A notched soldier stays wet, so it keeps rusting.
-
-**Not built yet.** It does nothing yet. The game can't yet make one affliction last longer while another is on the same enemy.
 
 ## rust.wreck
 **What it does.** A rusted enemy that dies leaves its armour on the floor as a wreck that Soaks and notches anything standing in it. Your heavy blows from inside it can't be interrupted by blows you take.
