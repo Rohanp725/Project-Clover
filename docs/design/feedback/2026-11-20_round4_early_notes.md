@@ -14,3 +14,7 @@ The owner said, word for word: "the ice fix didnt happen yet, the crystals pokin
 
 - **The finish mark** (`WorldBars.FinishMark`) is the "finish it" prompt over a staggered enemy: a gold broken ring around a cross. GAME.md records it as a decided cue, so its ring was kept. Its white was toned down to pale gold, and the stagger ring that widens on the enemy was made gold instead of blue-white (21319c7). Should the ring go, or be tinted per element?
 - **The white cut line across a struck enemy** (`m_cut_white`) is still near-white. Keep it, or tint it?
+
+## Idea saved by the owner (2026-11-21)
+
+- **Poison + Life reaction:** green roots growing out of the enemy's body. This came from the Poison infused-strike veins, which the owner said looked "almost like green roots growing out of them, which actually could be a cool visual concept for the posion life reaction save that idea". Consider it for the Poison + Life reaction look in the weekend round.
