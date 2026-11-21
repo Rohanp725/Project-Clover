@@ -49,6 +49,7 @@ checked against its code and committed on its own.
 - [x] marks/mocksuns.md: Sunstone (half the wait when nothing hits), Wide Fan (unsure line resolved)
 - [x] marks/turnedtostone.md: Stone Does Not Forgive (Tremor and Curse kept for good), Heavy Curse (unsure line resolved)
 - [x] marks/earth.md: Cairn (15% slower for each stone)
+- [x] marks/light.md: Reckoning (8 for each blow, the owner's decided number), Daybreak (unsure line resolved)
 
 ## Unsure lines
 
@@ -66,7 +67,8 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   ground.
 - marks/light.md, light.daybreak: the beam "bites every 0.1 seconds" for 12 a bite (48 over 0.4 seconds) and is also
   "six rings' worth" with rings of 8 (also 48); the Empower makes "each ring 10" (60). Both ways of counting were
-  kept as written.
+  kept as written. **Resolved:** the code fires four hits of 12 (48), and the Empower makes each hit 15 (60); the
+  numbers now count hits, and six rings of 8 is named only as the plan not built yet.
 - marks/mocksuns.md, mocksuns.widefan: "What it does" says the Prism fan reaches 8 metres, "The numbers" says 7 metres
   beyond the enemy. Both kept. **Resolved:** the code puts five hits in a line from 1 to 7 metres past the enemy;
   the 8-metre fan of rays is written as not built yet.

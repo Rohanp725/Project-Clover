@@ -32,7 +32,7 @@ the next blows on that enemy critical.
 **Example.** End three chains on a brute. It has three Marks, and for six seconds every critical hit does 1.8 times damage.
 
 ## light.reckoning
-**What it does.** Reckoning, the detonator of the Light tree. You put a seal on the enemy you face: a ring like a clock face on the ground under it, with one hand that sweeps around it in six seconds. On the last tick, it breaks upward in a column of light. Part of the damage your weapon did to that enemy in those six seconds is dealt to it again, along with a big hit to its balance.
+**What it does.** Reckoning, the detonator of the Light tree. You put a seal on the enemy you face: a ring like a clock face on the ground under it, with one hand that sweeps around it in six seconds. On the last tick, it breaks upward in a column of light. It deals 8 damage for each weapon blow you landed on that enemy in those six seconds, along with a big hit to its balance.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). If you aren't facing an enemy, nothing is sealed, and you still have to wait. Then fight that enemy for six seconds.
 
@@ -40,7 +40,7 @@ the next blows on that enemy critical.
 
 **Works with.** Fast weapons (more blows counted), the root mark and Just Cut (critical hits), Weighed, Condemned (the column's stagger plus a full Mark's), Ring of Spears (holds the enemy still while you cut), the charged blade.
 
-**Not built yet.** It should deal half the damage your weapon did in the six seconds, up to 150. For now, it is 8 per blow, no matter how hard the blow was. The clock face isn't drawn on the ground yet.
+**Not built yet.** The clock face isn't drawn on the ground yet.
 
 **Example.** Seal a captain behind its guard, then cut it eight times in six seconds. As the seal breaks, the column deals 64 more damage and 40 stagger.
 
@@ -288,11 +288,11 @@ the next blows on that enemy critical.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** 4 Shards, 45 mana. You brace, then fire a beam 12 metres long and 1.6 metres wide for 0.4 seconds. It hits every 0.1 seconds for 12 damage, 9 stagger and a Mark each time. An enemy that stays in it takes 48 damage and 36 stagger, worth six rings. Its Empower makes each ring 10 damage instead of 8 (60 in total); the two shapes keep their own numbers.
+**The numbers.** 4 Shards, 45 mana. You brace, then fire a beam 12 metres long and 1.6 metres wide for 0.4 seconds. It hits every 0.1 seconds, four times in all, for 12 damage, 9 stagger and a Mark each time. An enemy that stays in it takes 48 damage and 36 stagger. Its Empower makes each hit 15 damage instead of 12 (60 in total). The two shapes keep their own numbers.
 
 **Works with.** Brimming (mana kept full for it), Seen Plainly, which it comes after on the chart, Weighed, Condemned, Spoken Sentence, and the charged blade, which it charges with Light.
 
-**Not built yet.** The rings should build up on the blade from the blows you land after starting it, up to eight, each worth 8 damage and 6 stagger, and fire with a second press. For now, the beam fires right away at the strength of six rings.
+**Not built yet.** The rings should build up on the blade from the blows you land after starting it, up to eight, each worth 8 damage and 6 stagger, and fire with a second press. For now, the beam fires right away, as strong as six rings would be (48 damage).
 
 **Example.** A line of spearmen comes up a staircase. One beam down the stairs Marks them all and leaves them staggering.
 
