@@ -58,7 +58,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/fishpoison.md
 - [x] marks/forge.md
 - [x] marks/frostheave.md
-- [ ] marks/girdled.md
+- [x] marks/girdled.md
 - [ ] marks/glacier.md
 - [ ] marks/goldenfeathers.md
 - [ ] marks/halo.md
