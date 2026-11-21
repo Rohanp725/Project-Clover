@@ -9,13 +9,13 @@ are both carried.
 
 **When it happens.** Every time Venom Rime goes off while you carry both Poison and Ice. Venom Rime goes off when a dose lands on a chilled enemy, or when Chill lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Venom Rime.
 
-**The numbers.** Mix, 3 Shards. Both shapes work like the plain one: while the enemy has both afflictions, its poison doesn't fade, and each bite adds a Chill. Frost Over Frost: at the first bite after the enemy freezes, frost covers 3 metres around it for 5 seconds, adding a Chill and a dose each second to whatever stands there. At most once every 5 seconds. Cold Damage: each bite while the enemy is frozen deals 2 more damage per dose. A heavy blow on it while it is frozen sets off every dose, for 6 damage each, on top of the shatter. After Venom Rime goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Both shapes work like the plain one: while the enemy has both afflictions, its poison doesn't fade, and each bite adds a Chill. Frost Over Frost: at the first bite after the enemy freezes, frost covers 3 metres around it for 5 seconds, adding a Chill and a dose each second to whatever stands there. At most once every 5 seconds. Cold Damage: while the enemy is frozen, each bite deals twice as much. When it is shattered, every dose goes off at once, for 6 damage each, on top of the shatter. After Venom Rime goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Bitter Frost to set it up, Six Levels Down, The Drops Quicken, Rime Over Rime.
 
 **Example.** A crowd around one freezing brute: use Frost Over Frost. One captain with lots of doses: use Cold Damage, and shatter it.
 
-**Not built yet.** The game can't tell yet the exact moment an enemy freezes, so Frost Over Frost spreads at the first bite after the freeze. Cold Damage's bites deal 2 more per dose instead of twice as much, and its doses go off on your heavy blow on the frozen enemy, instead of on the shatter itself.
+**Not built yet.** The game can't tell yet the exact moment an enemy freezes, so Frost Over Frost spreads at the first bite after the freeze.
 
 ## venomrime.bitterfrost
 **What it does.** Your heavy blows add a Chill and a dose of poison at the same time.
@@ -33,13 +33,11 @@ are both carried.
 
 **When it happens.** Each bite of poison on a frozen enemy, while you carry both Poison and Ice.
 
-**The numbers.** Mix, 3 Shards. For now: each bite adds a fresh Chill to the enemy, at most once every 0.3 seconds.
+**The numbers.** Mix, 3 Shards. Each bite adds 0.3 seconds to the freeze, at most once every 0.3 seconds. Each enemy keeps its own wait.
 
 **Works with.** Venom Rime and its shapes, Bitter Frost, The Drops Quicken.
 
 **Example.** A frozen, poisoned soldier stays frozen while the poison works.
-
-**Not built yet.** The game can't yet make a freeze last a set amount of time longer. For now, each bite adds a Chill to the frozen enemy instead.
 
 ## venomrime.drops
 **What it does.** A frosted enemy that dies leaves behind a drop of poisoned frost. It rises as a small frost creature, hits the nearest enemy three times for 6 damage, a dose and a Chill each, then melts.
