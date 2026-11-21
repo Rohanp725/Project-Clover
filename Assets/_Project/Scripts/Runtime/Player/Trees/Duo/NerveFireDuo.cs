@@ -26,7 +26,7 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Poison, B = Elements.Lightning;
 
             // NEEDS: the jolt's own look on a shape's nerves (the plain reaction's small jolts over the body are drawn by its
-            // condition's name; the shapes' jolts show as the burst alone), and per-enemy cooldowns as the plain reaction.
+            // condition's name; the shapes' jolts show as the burst alone).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Nerve Fire: Ozone or Lockjaw", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -68,12 +68,12 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a count of bites kept on each enemy (every fifth; now one bite in five by chance).
+            // Every fifth bite on each enemy, counted on it.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = FiveThunders, Name = "Five Thunders", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Bolt,
                 Description = "Every fifth bite of poison on an enemy carrying Static calls a bolt down on it: 14 and a Static, leaping to two more.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Needs = AfflictionKind.Static, Chance = 0.2f, Do = UpgradeAction.Arc, Damage = 14f, Count = 3, Reach = 5f, Affliction = AfflictionKind.Static, Stacks = 1 } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Needs = AfflictionKind.Static, EveryOnEnemy = 5, Do = UpgradeAction.Arc, Damage = 14f, Count = 3, Reach = 5f, Affliction = AfflictionKind.Static, Stacks = 1 } },
             }, HeartPattern.RightLow));
 
             // Poison counts as charge: a discharge on a poisoned enemy spends its doses, 3.5 for each (7 for every two).
@@ -113,7 +113,7 @@ namespace Clover.Player.Trees.Duo
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = id, Ranks = EnemyRank.Plain | EnemyRank.Elite, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 7f, Stagger = 5f, Affliction = AfflictionKind.Static, Unseen = true },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = id, Ranks = EnemyRank.God, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 7f, Stagger = 11f, Affliction = AfflictionKind.Static, Unseen = true },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = id, Ranks = EnemyRank.Plain, Do = UpgradeAction.Flinch, Seconds = 0.3f },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = id, Ranks = EnemyRank.Elite, Cooldown = 4f, Do = UpgradeAction.Flinch, Seconds = 0.3f },
+                new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = id, Ranks = EnemyRank.Elite, Cooldown = 4f, CooldownPerEnemy = true, Do = UpgradeAction.Flinch, Seconds = 0.3f },
             };
             effects.AddRange(more);
             return effects.ToArray();

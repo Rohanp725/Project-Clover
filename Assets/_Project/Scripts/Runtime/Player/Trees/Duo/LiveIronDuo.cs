@@ -61,16 +61,16 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Foot));
 
-            // NEEDS: a count of weapon blows on an enemy in another mark's condition (condition-needs: every third blow on a Live
-            // Iron enemy); now one blow in three, by chance, on an enemy both notched and charged calls the bolt, at most every
-            // 0.3 s.
+            // Every third weapon blow on each enemy, counted on it, calls the bolt, at most every 0.3 s.
+            // NEEDS: the blows counted on an enemy in another mark's condition (condition-needs: a Live Iron enemy); now on an
+            // enemy both notched and charged.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ThreeSmiths, Name = "Three Smiths", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Hammer,
                 Description = "Every third weapon blow on a Live Iron enemy is answered from the sky: a bolt for 12, 15 stagger and a Static.",
                 Effects = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Sundered, Needs2 = AfflictionKind.Static, Chance = 0.34f, Do = UpgradeAction.Falling, Radius = 1f, Delay = 0.3f,
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, Needs = AfflictionKind.Sundered, Needs2 = AfflictionKind.Static, EveryOnEnemy = 3, Do = UpgradeAction.Falling, Radius = 1f, Delay = 0.3f,
                         Damage = 12f, Stagger = 15f, Affliction = AfflictionKind.Static, Stacks = 1, Cooldown = 0.3f },
                 },
             }, HeartPattern.LeftLow));

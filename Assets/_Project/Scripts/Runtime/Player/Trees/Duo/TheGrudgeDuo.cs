@@ -116,8 +116,8 @@ namespace Clover.Player.Trees.Duo
             }, HeartPattern.Spell));
 
             // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge); each kill while it burns
-            // adds a second (LengthenSurge). NEEDS: the bolt on every third blow (count-rules; now one blow in three by chance,
-            // on a Cursed enemy struck).
+            // adds a second (LengthenSurge). NEEDS: the bolt on every third blow you land, at the nearest Cursed enemy within
+            // 8 m (count-rules, aim-at-afflicted); now every third blow on each Cursed enemy struck, counted on it.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = AshAndThunder, Name = "Ash and Thunder", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { TheExilesGrudge }, Icon = UpgradeIcons.Comet,
@@ -127,7 +127,7 @@ namespace Clover.Player.Trees.Duo
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Kill, WhileSurge = true, Do = UpgradeAction.LengthenSurge, Amount = 1f },
                     new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
-                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, Needs = AfflictionKind.Cursed, Chance = 0.34f, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 2f, Damage = 2f, Stagger = 5f },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, Needs = AfflictionKind.Cursed, EveryOnEnemy = 3, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 2f, Damage = 2f, Stagger = 5f },
                     new UpgradeEffect { On = UpgradeTrigger.Kill, WhileSurge = true, Needs = AfflictionKind.Cursed, Do = UpgradeAction.Heal, Amount = 6f },
                 },
             }, HeartPattern.RightTop));

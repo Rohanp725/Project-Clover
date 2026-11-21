@@ -87,8 +87,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: the third critical blow on one enemy counted (count-rules); now one critical blow in three on a Marked
-            // enemy, by chance, charges it and calls the bolt, at most once in 5 s.
+            // The third critical blow on a Marked enemy, counted on it, charges it and calls the bolt, at most once in 5 s.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheDiamondFalls, Name = "The Diamond Falls", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { ChargedLight, DiamondGuard }, Icon = UpgradeIcons.Gem,
@@ -96,7 +95,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     // The Static laid on the Marked enemy sets the bolt off, through the pair's own rest.
-                    new UpgradeEffect { On = UpgradeTrigger.CritHit, Needs = AfflictionKind.Marked, Chance = 0.34f, Cooldown = 5f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.CritHit, Needs = AfflictionKind.Marked, EveryOnEnemy = 3, Cooldown = 5f, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Static, Stacks = 1 },
                 },
             }, HeartPattern.Keystone));
 

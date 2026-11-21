@@ -19,6 +19,16 @@ namespace Clover.Player
         public float Chance = 1f;
         /// <summary>Seconds after it happens before it can happen again.</summary>
         public float Cooldown;
+        /// <summary>
+        /// True when <see cref="Cooldown"/> runs on each enemy apart (kept in its <see cref="EnemyTally"/>): an elite's
+        /// flinch once every 4 s on each elite, not once every 4 s for all of them. With no enemy to keep it, one clock.
+        /// </summary>
+        public bool CooldownPerEnemy;
+        /// <summary>
+        /// Above one, it happens only every this many times it would on the same enemy, counted on that enemy (every
+        /// fifth bite, every other pass). With no enemy to count on, it does not happen.
+        /// </summary>
+        public int EveryOnEnemy;
         /// <summary>For <see cref="UpgradeTrigger.EverySeconds"/>: the seconds between.</summary>
         public float Every = 5f;
         /// <summary>The target must already carry this affliction. None asks for nothing.</summary>

@@ -93,15 +93,15 @@ namespace Clover.Player.Trees.Duo
 
             // The duo spell, bought with Shards once both are carried (no god gives it): an opener on a 13 s cooldown (SpellTimings). The field form lays a patch at the aim
             // point; each poisoned enemy it bites is Marked (the branch's first element) and starts Burning Sap past its rest.
-            // NEEDS: once each enemy (per-enemy cooldowns; now once a second for all); each weapon blow inside raising one
-            // more weal on the one struck.
+            // Once on each enemy in a cast (its clock runs the shaft's 5 s on each enemy apart).
+            // NEEDS: each weapon blow inside raising one more weal on the one struck.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = BaredToTheSun, Name = "Bared to the Sun", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Role = SpellRole.Opener, Requires = new[] { NectarAfterPoison, SeenThrough }, Icon = UpgradeIcons.Sun,
                 Description = "You tear the shade off a place: a hard-edged shaft of sun falls on the aim point for 5 s. Every enemy in it is Marked, and the poisoned start Burning Sap at once, whatever its rest.",
                 Form = SpellForms.Field,
                 Spell = new SpellSpec { Reach = 8f, Radius = 2.5f, Seconds = 5f, Interval = 1f, LingerDamage = 2f, Stacks = 1 },
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Needs = AfflictionKind.Poison, Do = UpgradeAction.ForceReaction, Reaction = Reaction, Cooldown = 1f } },
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Needs = AfflictionKind.Poison, Do = UpgradeAction.ForceReaction, Reaction = Reaction, Cooldown = 5f, CooldownPerEnemy = true } },
             }, HeartPattern.Spell));
         }
     }

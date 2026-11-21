@@ -273,7 +273,6 @@ namespace Clover.Player.Trees
             // Poison and Lightning (22). While both last, each bite of poison spends one Static and jolts it: 7 damage, 5
             // stagger and a 0.3 s flinch that breaks a wind-up. An elite flinches once every 4 s; a god never flinches and
             // takes 6 more stagger instead.
-            // NEEDS: per-enemy cooldowns: the elites' 4 s is one clock shared by every elite.
             to.Add(Reaction(AfflictionKind.Poison, AfflictionKind.Static,
                 "Poisoned meets Static: while both last, each bite of poison spends a Static and jolts it, 7 and a flinch that breaks its wind-up.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
@@ -284,7 +283,7 @@ namespace Clover.Player.Trees
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Nerves, Ranks = EnemyRank.God, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 7f, Stagger = 11f,
                     Affliction = AfflictionKind.Static, Unseen = true },
                 new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Nerves, Ranks = EnemyRank.Plain, Do = UpgradeAction.Flinch, Seconds = 0.3f },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Nerves, Ranks = EnemyRank.Elite, Cooldown = 4f, Do = UpgradeAction.Flinch, Seconds = 0.3f }));
+                new UpgradeEffect { On = UpgradeTrigger.ConditionBeat, Condition = Nerves, Ranks = EnemyRank.Elite, Cooldown = 4f, CooldownPerEnemy = true, Do = UpgradeAction.Flinch, Seconds = 0.3f }));
         }
     }
 }

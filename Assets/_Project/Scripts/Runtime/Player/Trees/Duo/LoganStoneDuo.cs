@@ -91,9 +91,8 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a count of one enemy's reactions over a fight (count-rules): the fourth Logan Stone on an elite that only
-            // reeled throws it flat; now one Logan Stone in three on an elite throws it flat for 1 s by chance, at most once in 6
-            // s; and a god knocked flat (gods never go down: ConditionCaster).
+            // The fourth Logan Stone on an elite, counted on it over the fight, throws it flat for 1 s.
+            // NEEDS: a god knocked flat (gods never go down: ConditionCaster).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheProphecyBroken, Name = "The Prophecy Broken", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { GritInTheWind, NewFace }, Icon = UpgradeIcons.Rock,
@@ -101,7 +100,7 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[]
                 {
                     // An elite lies half the time of a fall: 2 s asked is the entry's 1 s.
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Ranks = EnemyRank.Elite, Chance = 0.34f, Cooldown = 6f, Do = UpgradeAction.Condition,
+                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Ranks = EnemyRank.Elite, EveryOnEnemy = 4, Do = UpgradeAction.Condition,
                         State = new ConditionSpec { Id = Thrown, Seconds = 2f, Flags = ConditionFlags.Down } },
                 },
             }, HeartPattern.Keystone));

@@ -90,6 +90,8 @@ namespace Clover.Gameplay
 
         /// <summary>The timed states reactions and marks set on it (six slots), ticked and cleared with the rest.</summary>
         public EnemyConditions Conditions { get; } = new EnemyConditions();
+        /// <summary>The counts and clocks the player's marks keep on this enemy, cleared with the rest.</summary>
+        public EnemyTally Tally { get; } = new EnemyTally();
         /// <summary>How far off the ground it is now: up quickly, hanging, down quickly.</summary>
         public float AirHeight => !IsLifted ? 0f : AirRise * Math.Min(1f, Math.Min(airFor / 0.18f, AirLeft / 0.18f));
 
@@ -231,6 +233,7 @@ namespace Clover.Gameplay
             owedSeconds = 0f;
             present = 0;
             Conditions.Clear();
+            Tally.Clear();
             Array.Clear(reactionRest, 0, reactionRest.Length);
             restLongest = 0f;
             resting = 0;

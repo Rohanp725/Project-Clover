@@ -1223,6 +1223,11 @@ namespace Clover.Player
                 less = Mathf.Max(1, combat.WeaponAfflictionStacks);
                 if (Or(effect.Stacks, 1) - less <= 0) return;
             }
+            // Clocks and counts kept on the enemy itself, asked once the enemy is known and every other test has passed,
+            // so only the times that would really happen are counted.
+            var kept = (effect.CooldownPerEnemy || effect.EveryOnEnemy > 1) && target is IAfflictable keeper ? keeper.Afflictions.Tally : null;
+            if (effect.CooldownPerEnemy && kept != null && !kept.Ready(effect.Slot, Time.time)) return;
+            if (effect.EveryOnEnemy > 1 && (kept == null || !kept.AddAndCome(effect.Slot, effect.EveryOnEnemy))) return;
             if (effect.Chance < 1f && Random.value > effect.Chance) return;
             if ((effect.Spends > 0 || effect.SpendsAll) && effect.Owner != null)
             {
@@ -1239,7 +1244,9 @@ namespace Clover.Player
             if (effect.SpentAtLeast > 0 && spent < effect.SpentAtLeast) return;
             // Things that can set themselves off again are held to a few times a second at most.
             float least = effect.On == UpgradeTrigger.AfflictionFull || effect.On == UpgradeTrigger.Kill ? 0.2f : 0f;
-            readyAt[effect.Slot] = Time.time + Mathf.Max(effect.Cooldown, least);
+            float wait = Mathf.Max(effect.Cooldown, least);
+            if (effect.CooldownPerEnemy && kept != null) kept.Start(effect.Slot, Time.time, wait);
+            else readyAt[effect.Slot] = Time.time + wait;
             Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale });
         }
 

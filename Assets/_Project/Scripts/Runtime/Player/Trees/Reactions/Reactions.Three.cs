@@ -109,12 +109,11 @@ namespace Clover.Player.Trees
 
             // Metal and Poison (30). While it carries both, each weapon blow on it makes its poison bite at once, at its
             // depth, besides its beat (once every half second at most). The doses are not spent.
-            // NEEDS: per-enemy cooldowns: the half second is one clock for all enemies.
             to.Add(Reaction(AfflictionKind.Sundered, AfflictionKind.Poison,
                 "Sundered meets Poisoned: mercury runs into the cracks. While it carries both, each of your weapon blows makes its poison bite at once.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition,
                     State = new ConditionSpec { Id = Beads, Seconds = 30f, While = AfflictionKind.Sundered, While2 = AfflictionKind.Poison } },
-                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Beads, By = StruckBy.Weapon, Cooldown = 0.5f, Do = UpgradeAction.Bite }));
+                new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Beads, By = StruckBy.Weapon, Cooldown = 0.5f, CooldownPerEnemy = true, Do = UpgradeAction.Bite }));
 
             // Light and Fire (31). For as long as the Mark's three blows (8 s at most), each weapon blow on it (critical,
             // for it is Marked) deepens its Burn by one; the third sets it alight at the point: all its Burn bursts out,

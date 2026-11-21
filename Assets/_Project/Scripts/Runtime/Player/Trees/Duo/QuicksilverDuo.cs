@@ -41,7 +41,7 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = HeavySilver, Seconds = 30f, Pace = 0.7f, While = AfflictionKind.Sundered, While2 = AfflictionKind.Poison } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HeavySilver, By = StruckBy.Weapon, Cooldown = 0.5f, Do = UpgradeAction.Bite },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = HeavySilver, By = StruckBy.Weapon, Cooldown = 0.5f, CooldownPerEnemy = true, Do = UpgradeAction.Bite },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 6f, Interval = 1f, Affliction = AfflictionKind.Poison, Stacks = 1 },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hazard, Radius = 0.75f, Seconds = 6f, Interval = 2f, Affliction = AfflictionKind.Sundered, Stacks = 1 },
                         },
@@ -53,7 +53,7 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = RunningSilver, Seconds = 30f, While = AfflictionKind.Sundered, While2 = AfflictionKind.Poison } },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = RunningSilver, By = StruckBy.Weapon, Cooldown = 0.5f, Do = UpgradeAction.Bite },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = RunningSilver, By = StruckBy.Weapon, Cooldown = 0.5f, CooldownPerEnemy = true, Do = UpgradeAction.Bite },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = RunningSilver, Do = UpgradeAction.Pass, Reach = 6f, Affliction = AfflictionKind.Poison, Stacks = 4 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionDied, Condition = RunningSilver, Do = UpgradeAction.Pass, Reach = 6f, Affliction = AfflictionKind.Sundered, Stacks = 2 },
                         },
