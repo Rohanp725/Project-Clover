@@ -15,7 +15,7 @@ This is a plan only. Nothing here is built, and no decision in it is final until
 - [x] 3. Three layouts for the Hand and the Way together
 - [x] 4. A style guide for every menu
 - [x] 5. The build plan and the checks
-- [ ] 6. Owner questions
+- [x] 6. Owner questions
 
 ---
 
@@ -673,3 +673,55 @@ progress sandboxed, never wiping it):
    every click lands on what it points at.
 6. **Performance**: with the loadout open and the cursor moving, `diagnostics profiler_record` shows no steady
    per-frame allocation (`profiler_summary`).
+
+---
+
+## 6. Owner questions
+
+The recommended option is first in each.
+
+**Q1. The layout for the Hand and the Way.**
+- (a, recommended) Layout A: one Loadout screen, Steel (the Way's aspect, keystone and bearing) on the left, Element
+  (the four spells, the surge and the saved Hands) on the right, the details pane always on the far right.
+- (b) Layout B: one screen with two tabs, Element and Steel, switched with LB and RB, and a strip across the top
+  naming the whole build.
+- (c) Layout C: the weapon's picture in the middle, the Way's choices on its left and the spells on its right.
+
+**Q2. How the menus are drawn.**
+- (a, recommended) Stay with uGUI built by code, but switch every menu's words to TextMeshPro (sharp at every size)
+  and build every screen from one shared kit of colours, sizes and parts.
+- (b) Rebuild every menu in UI Toolkit, with one style sheet for the whole game. Cleaner in the end, but every menu
+  and its probes are rewritten.
+- (c) Keep the old text and only make it bigger and recolour it.
+
+**Q3. The font for reading.**
+- (a, recommended) Spectral stays for titles and headers; body text moves to Atkinson Hyperlegible, a free sans
+  made for easy reading.
+- (b) Spectral everywhere, only bigger.
+- (c) One sans for everything, titles included.
+
+**Q4. What happens to "Set the Hand" and "Shapes" on the rest menu.**
+- (a, recommended) Both fold into Loadout: a spell's shape is swapped right on its slot with left and right. The
+  reactions' shapes move to a small Reactions page opened from the Element header.
+- (b) Loadout sets the slots and the Way; Shapes stays its own entry for spells and reactions.
+
+**Q5. Which weapon's Way the Loadout sets.**
+- (a, recommended) Only the weapon you carry. Other weapons' aspects are set on the Way chart, where LB and RB already
+  change weapon.
+- (b) Every weapon you own, switched with LB and RB on the Loadout.
+
+**Q6. Icons for spells and the Way.**
+- (a, recommended) Painted by code like the chart's icons. At first each spell shows its element's icon with its role
+  in the corner; each spell's own picture comes later, ledgered.
+- (b) Draw a picture for every spell, aspect and keystone before the new screen ships.
+- (c) Words only for now; icons later.
+
+**Q7. Button glyphs (the pictures of A, B, LB, E, Space).**
+- (a, recommended) Kenney's free Input Prompts pack (CC0, no account), pinned and brought in through staging.
+- (b) Painted by code in the game's own style.
+- (c) Keep writing the button names as words.
+
+**Q8. A text size setting.**
+- (a, recommended) In this pass: 100%, 125% and 150%, in the pause menu and on L3 in the Loadout, with every screen
+  checked at 150%.
+- (b) Later, after the screens are rebuilt.
