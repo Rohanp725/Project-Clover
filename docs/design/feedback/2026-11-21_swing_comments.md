@@ -109,3 +109,14 @@ The final big swing in every film is the **infused strike** (L2 + RB), not the c
 - Film only these seven elements' strikes, on every weapon, into enemies and with the trail alone.
 - Check each film against this table and against the standing rules: animated, no white, no rings, on the body, nothing drawn on blades.
 - Have an independent review agent look for faults, then swap the films into the doc in place.
+
+## Owner's verdicts on the Blender strips (2026-11-21)
+
+- **Approved:** Earth and Metal, as they are.
+- **Light:** "light from the cut". No sky beam: the cut leaves a line of warm glare that flares on each struck enemy and breaks into motes.
+- **Dark:** "Do the many small hands, but dont actually move the enemy into the floor because that would read badly in my opinion". Many small, real hands tug downward at the legs from the shadow; the enemy stays on the floor.
+- **Poison:** "dont really like the clouds coming off the swing". It is now veins plus spatter: dark green veins spread over the struck body from the wound, and venom spatters to the floor in sizzling droplets. No clouds off the swing.
+- **Done in Unity (be75cac, 6c2b00c, 073fff5, df35a8d):** Fire and Lightning. Fire's ground burn is now 4 small patches on char with ember cracks, lasting about 1 s; Lightning's floor star is gone.
+- **Open from the films:**
+  - Lightning's lunge carries the player so far that the crop splits player from enemies.
+  - A white-blue bolt from the Storm Caller enemy appears in the Fire films.
