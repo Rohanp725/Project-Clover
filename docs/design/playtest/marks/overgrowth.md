@@ -10,13 +10,11 @@ Rock does.
 
 **When it happens.** Every time Split Rock goes off while you carry both Life and Earth. Split Rock goes off when Tremor lands on a seeded enemy, or when Seeded lands on a shaken one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Split Rock. The plain one holds the enemy for 2 seconds, and a heavy blow while it is held splits the floor.
 
-**The numbers.** Mix, 3 Shards. Taking Root: the enemy is held for 1 second, and everything within 2.5 metres gets one Tremor. Root Web: everything within 6 metres is held for 0.5 seconds and gets one Tremor. After Split Rock goes off on an enemy, it can't go off on that enemy again for 4 seconds.
+**The numbers.** Mix, 3 Shards. Taking Root: the enemy is held for 1 second, and every other enemy within 2.5 metres gets one Tremor. Root Web: every Seeded enemy within 6 metres is held for 0.5 seconds and gets one Tremor. After Split Rock goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
 **Works with.** Briar Patch and Stone Rise to add the seed and the shaking, Living Rampart, Thorns Take Root, Stone Oak.
 
 **Example.** A pack closing in: Root Web holds them all for half a second while you roll away. One brute: use the plain Split Rock, and land a heavy blow while it is held.
-
-**Not built yet.** Taking Root's crack also shakes the enemy where Split Rock went off, not only the others. Root Web catches every enemy within 6 metres, not only the seeded ones.
 
 ## overgrowth.moss
 **What it does.** Hold your ground, and the ground feeds you. While you fight without rolling, you heal slowly, and thorns grow on you that cut and Seed anyone who hits you.
