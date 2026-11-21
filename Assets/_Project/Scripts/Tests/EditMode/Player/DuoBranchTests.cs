@@ -3,6 +3,7 @@ using System.Linq;
 using Clover.Gameplay;
 using Clover.Player;
 using Clover.Player.Build;
+using Clover.Player.Forms;
 using NUnit.Framework;
 
 namespace Clover.Tests
@@ -326,11 +327,46 @@ namespace Clover.Tests
                 Assert.AreSame(weasels, effect.Owner);
                 Assert.GreaterOrEqual(effect.Slot, 0);
             }
+            Assert.AreEqual(SpellForms.Rush, weasels.Form, "the first weasel is a rush of its own, not the step through");
             // place swaps: the enemy where you stood, you where it stood.
             var water = Upgrade.ById(Clover.Player.Trees.Duo.DrownedWeightDuo.UnderTheBlackWater);
             Assert.AreEqual(UpgradeAction.SwapPlaces, water.Effects[0].Do, "the change of places comes first, then what is done to it");
             Assert.IsTrue(water.Effects.Any(effect => effect.Do == UpgradeAction.Hazard && effect.Affliction == AfflictionKind.Cursed), "the pool curses as well as soaks");
             Assert.IsTrue(water.Effects.Any(effect => effect.Do == UpgradeAction.Boon && effect.Stat == PlayerStat.WeaponDamage && effect.Amount == 0.5f && effect.UntilBlow), "the next blow half again");
+        }
+
+        [Test]
+        public void ThreeWeaselsFirstPressStopsInFrontAndTheSecondPassesThrough()
+        {
+            // The owner's answer of 2026-11-20, laid out as the Phase 4b probe has it: the player at z 2, the enemy at z 6.
+            var weasels = Upgrade.ById(Clover.Player.Trees.Duo.SickleWindDuo.ThreeWeasels);
+            float reach = weasels.Spell.Reach;
+            float start = 2f, enemy = 6f;
+
+            // The step form it used to be went 1 m through: z 2 to 7.
+            Assert.AreEqual(7f, start + FormRules.StepRun(enemy - start, reach), 0.001f, "the old first press, for the record");
+
+            // The first press: a rush that stops 1.2 m in front, still on the near side.
+            Assert.IsInstanceOf<RushForm>(SpellForms.Get(weasels.Form));
+            float rushed = start + FormRules.RushRun(enemy - start, reach);
+            Assert.AreEqual(enemy - FormRules.RushShort, rushed, 0.001f, "just in front of the enemy");
+            Assert.Less(rushed, enemy, "it does not pass through");
+            Assert.AreEqual(start, start + FormRules.RushRun(1f, reach), 0.001f, "already that near, it stays put");
+            Assert.AreEqual(start + reach, start + FormRules.RushRun(9f, reach), 0.001f, "farther than its reach, it runs its reach");
+
+            // The rush throws the enemy 2 m; a body too great to be thrown stays. Either way the second press goes straight
+            // through and out the far side, the distance its step names beyond.
+            var pass = weasels.Presses[0].Single(effect => effect.Do == UpgradeAction.Step);
+            foreach (float thrown in new[] { 0f, 2f })
+            {
+                float there = enemy + thrown;
+                float passed = rushed + FormRules.MarkStep(there - rushed, pass.Reach, pass.Amount);
+                Assert.Greater(passed, there, $"thrown {thrown} m: the second press comes out beyond the enemy");
+                Assert.AreEqual(there + pass.Amount, passed, 0.001f, $"thrown {thrown} m: {pass.Amount} m beyond it");
+            }
+
+            // A mark's step with nothing beyond stops in front, as the rush does.
+            Assert.AreEqual(4f - FormRules.RushShort, FormRules.MarkStep(4f, 8f, 0f), 0.001f);
         }
     }
 }

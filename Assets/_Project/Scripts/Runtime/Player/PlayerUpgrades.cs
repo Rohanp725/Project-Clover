@@ -1599,12 +1599,8 @@ namespace Clover.Player
                 {
                     float reach = Or(effect.Reach, 8f);
                     Vector3 to;
-                    if (target != null)
-                    {
-                        float gap = Mathf.Min(reach, toward.magnitude);
-                        // In front of it, or through it and out the far side.
-                        to = effect.Amount > 0f ? self + aim * (gap + effect.Amount) : self + aim * Mathf.Max(0f, gap - 1.2f);
-                    }
+                    // In front of it, or through it and out the far side.
+                    if (target != null) to = self + aim * Forms.FormRules.MarkStep(toward.magnitude, reach, effect.Amount);
                     else to = self + transform.forward * (reach * 0.5f);
                     if (afterimage != null) afterimage.Leave(0.35f);
                     ElementLook.Sparks(held, self + Vector3.up, Vector3.up, 1f);
