@@ -277,15 +277,15 @@ Rise's rocks, a pillar, a heap of rubble.
 **Example.** Hold your ground, and raise the stone under a brute that got too close. It is thrown off you with two stacks.
 
 ## earth.lift
-**What it does.** Left in Rubble, Earth's reaction lift. Every reaction with Tremor in it leaves a knee-high pile of rubble where it happened, with a puff of yellow-brown dust and broken stone. The pile shakes whatever stands in it.
+**What it does.** Left in Rubble, Earth's reaction lift. Every reaction with Tremor in it hits 20% harder and leaves a knee-high pile of rubble where it happened, with a puff of yellow-brown dust and broken stone. The pile shakes whatever stands in it.
 
 **When it happens.** Whenever a reaction with Tremor in it happens, on any enemy.
 
-**The numbers.** 3 Shards. A pile 1 metre across that lasts 6 seconds. Once a second, it deals 3 damage, 8 stagger and one Tremor.
+**The numbers.** 3 Shards. The reaction's own damage is 20% higher. A pile 1 metre across that lasts 6 seconds. Once a second, it deals 3 damage, 8 stagger and one Tremor.
 
 **Works with.** Every element pair with Tremor in it (The Ground Gives with Soaked, Chokedamp with Poison, and the rest), Stone Remembers (it lasts three times as long), and Fissure and Stone Remembers, which come after it on the chart.
 
-**Not built yet.** Every reaction with Tremor in it should hit 20% harder. The rubble should count as one of your stones, which heavy blows can knock enemies into and which The Circle Speaks can cast from.
+**Not built yet.** The rubble should count as one of your stones, which heavy blows can knock enemies into and which The Circle Speaks can cast from.
 
 **Example.** Soak and shake a soldier. The ground gives way under it, and the rubble left behind keeps shaking the next enemy that walks through.
 
