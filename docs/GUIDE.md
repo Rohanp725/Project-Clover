@@ -221,218 +221,219 @@ becomes the new button. Esc (keys) or Start (controller) leaves it as it was, an
 
 ## 3. Weapons
 
-One weapon is carried at a time. Ten can be taken up: Fists and the nine below it. "After N lights" means the heavy button pressed after that many light attacks in a chain. Damage is before upgrades and surges.
+You carry one weapon at a time. You can pick up ten: Fists and the nine below. "After N lights" means pressing the heavy button after that many light attacks in a chain. Damage numbers are before upgrades and surges.
 
-Guard and dodge when a weapon does not say otherwise: guard covers 200 degrees, perfect window 0.18 s, 0.9 stamina per point blocked, 35% comes through as grey health; the dodge goes 4.5 m for 25 stamina.
+Guard and dodge, unless a weapon says otherwise: the guard covers 200 degrees, the perfect guard window is 0.18 seconds, a block costs 0.9 stamina per point of damage, and 35% of the damage comes through as grey health. The dodge goes 4.5 metres and costs 25 stamina.
 
 **Not yet, for every weapon**
 
-- No element changes how a weapon behaves, beyond its colour and the affliction it lays.
-- Finishers lift or shove the enemy but do not carry it; enemies have no "held" pose.
-- The Massive Sword and Scythe show their own models, which are in the project marked pending approval. The Great Spear and Great Hammer are drawn with stand-in boxes until their models are approved. The Katana is part of the character's own model.
-- All new weapons' stands are open from the start because there is nowhere yet to win them. The Katana must still be drawn from the stone in the castle once.
+- No element changes how a weapon works, other than its colour and the affliction it adds.
+- Finishers lift or shove the enemy but don't carry it along. Enemies don't have a "held" pose.
+- The Massive Sword and Scythe show their own models, which are in the game but still waiting for approval. The Great Spear and Great Hammer are drawn as placeholder boxes until their models are approved. The Katana is part of the character's own model.
+- Every new weapon's stand is open from the start, because there's nowhere to win them yet. You still have to pull the Katana from the stone in the castle once.
 
 ### Fists
 
-The first run's weapon. The quickest chain, short reach, light damage, a great deal of stagger for its damage. Guard is crossed forearms (default numbers); default dodge.
+The weapon for your first run. The fastest chain, short reach, and light damage, but a lot of stagger for its damage. The guard is crossed forearms (normal numbers), with the normal dodge.
 
-| Input | Move | What it does |
+| Button | Move | What it does |
 |---|---|---|
-| R1 x4 | Jab, cross, hook, kick | 6, 7, 9, 14 damage. Reach 1.8 to 2.2 m. The fastest lights in the game. |
-| R2 | Lunging heavy | 18 damage, 34 stagger. Carries you 1.4 m forward. |
+| R1 x4 | Jab, cross, hook, kick | 6, 7, 9 and 14 damage. Reach 1.8 to 2.2 metres. The fastest light attacks in the game. |
+| R2 | Lunging heavy | 18 damage, 34 stagger. Carries you 1.4 metres forward. |
 | R2 after any light | Rising blow | 20 damage, 42 stagger. Ends the chain. |
-| Hold R2 0.4 s | **Skill: Breaker** (30 mana) | A charged straight that lunges 2.4 m: 30 damage, 75 stagger. Fills most of a stagger meter in one blow. |
+| Hold R2 0.4 seconds | **Skill: Breaker** (30 mana) | A charged straight punch that lunges 2.4 metres: 30 damage, 75 stagger. Fills most of a stagger meter in one blow. |
 | R2 on a staggered enemy | Finisher | One opening blow. 24 damage, tripled. |
 
-**Not yet**: one charge tier only (no free charged heavy). The finisher has no name and no staged beats.
+**Not yet**: only one charge level (no free charged heavy). The finisher has no name and no separate stages.
 
 ### Katana
 
-Found in the stone on the castle's shrine terrace. The sword lives in its sheath and every chain starts with a draw. Default guard and dodge.
+Found in the stone on the castle's shrine terrace. The sword stays in its sheath, and every chain starts by drawing it. Normal guard and dodge.
 
-| Input | Move | What it does |
+| Button | Move | What it does |
 |---|---|---|
-| R1 x3 | Drawing cut, return cut, stepping cut | 10, 11, 18 damage. Arcs of 140, 140 and 100 degrees, reach 2.4 to 2.7 m. The third steps 1.3 m in. |
-| R2 | Overhead | 26 damage, 34 stagger. 90 degree arc, reach 2.8 m. |
-| R2 after any light | Overhead, quicker | 30 damage, 40 stagger. Winds up in 0.20 s, not 0.30 s. Ends the chain. |
-| Hold R2 0.4 s | **Skill: Iaido Slash** (30 mana) | Sheathe, hold, release: a 170 degree drawing cut that carries you 2.6 m. 48 damage, 50 stagger. |
-| R2 on a staggered enemy | Finisher | A sheathed draw-cut through the enemy, a held pose in slowed time, then the return to the sheath. 30 damage, tripled. |
+| R1 x3 | Drawing cut, return cut, stepping cut | 10, 11 and 18 damage. Arcs of 140, 140 and 100 degrees, reaching 2.4 to 2.7 metres. The third one steps 1.3 metres in. |
+| R2 | Overhead | 26 damage, 34 stagger. A 90-degree arc, reaching 2.8 metres. |
+| R2 after any light | Overhead, faster | 30 damage, 40 stagger. Winds up in 0.20 seconds instead of 0.30. Ends the chain. |
+| Hold R2 0.4 seconds | **Skill: Iaido Slash** (30 mana) | Sheathe, hold, release: a 170-degree drawing cut that carries you 2.6 metres. 48 damage, 50 stagger. |
+| R2 on a staggered enemy | Finisher | A cut drawn straight from the sheath through the enemy, a frozen pose in slowed time, then the sword goes back into the sheath. 30 damage, tripled. |
 
-The **Storm Katana** is given with Lightning when it is taken from its god. Same moves, 15% more damage and stagger, and the skill (named Thunder Draw) carries 3.6 m with 3.8 m reach.
+You get the **Storm Katana** with Lightning when you take it from its god. It has the same moves, with 15% more damage and stagger, and its skill (called Thunder Draw) carries you 3.6 metres and reaches 3.8 metres.
 
-**Not yet**: one charge tier only. No perfect-guard or blocked-guard reaction animation.
+**Not yet**: only one charge level. No animation for a perfect guard or a blocked guard.
 
 ### Massive Sword
 
-Slow, wide and hard to interrupt. Its guard is the widest (240 degrees) and cheapest per point after the hammer's (0.6 stamina per point, 25% grey), with the tightest perfect window (0.15 s). The dodge is a short heavy dive: 3.9 m for 30 stamina. You walk at 92% speed and creep at a quarter speed while charging.
+Slow, wide, and hard to interrupt. Its guard is the widest (240 degrees) and the cheapest per point after the hammer's (0.6 stamina per point, 25% grey health), with the smallest perfect guard window (0.15 seconds). The dodge is a short, heavy dive: 3.9 metres for 30 stamina. You walk at 92% speed, and creep at a quarter speed while charging.
 
-**Poise**: during a swing, a small blow still hurts but does not stop the swing. Red attacks ignore poise.
+**Poise**: during a swing, a small blow still hurts you but doesn't stop the swing. Red attacks ignore poise. (The poise numbers below show how big a blow it can shrug off.)
 
-| Input | Move | What it does |
+| Button | Move | What it does |
 |---|---|---|
-| R1 x3 | Three sweeps | 24, 26, 34 damage. 190 degree fans at 3.4 m, then a full circle at 3.6 m. Each winds up faster than the last (0.34, 0.26, 0.20 s). Poise 12. |
-| R2 | Overhead | Buries itself: 44 damage, 56 stagger. Narrow (50 degrees), reach 3.6 m. Poise 22. |
-| R2 after any light | Rising cut | Dragged up off the ground: 46 damage, 60 stagger, 120 degree arc. Poise 22. |
-| Hold R2 0.45 s (white flash) | Charged heavy: leaping overhead | 62 damage, 80 stagger. No mana. Poise 30. |
-| Hold R2 0.95 s (element-coloured flash, "Ready") | **Skill: Elemental Spike Line** (35 mana) | The sword is driven into the ground (20 damage up close). Eight spikes of the held element run 10 m up the lane, one every 0.09 s. Each enemy is struck once for 34 and takes the element's affliction. |
-| R2 on a staggered enemy | **Finisher: The Headsman** | Pommel into the chest, a walk round to the side with the point scoring the ground, the blade held up, the cut. The ground splits along the cut a moment after. 44 damage, tripled. |
+| R1 x3 | Three sweeps | 24, 26 and 34 damage. Fans of 190 degrees at 3.4 metres, then a full circle at 3.6 metres. Each one winds up faster than the last (0.34, 0.26, 0.20 seconds). Poise 12. |
+| R2 | Overhead | Buries itself in the ground: 44 damage, 56 stagger. Narrow (50 degrees), reaching 3.6 metres. Poise 22. |
+| R2 after any light | Rising cut | Dragged up off the ground: 46 damage, 60 stagger, a 120-degree arc. Poise 22. |
+| Hold R2 0.45 seconds (white flash) | Charged heavy: leaping overhead | 62 damage, 80 stagger. No mana. Poise 30. |
+| Hold R2 0.95 seconds (flash in the element's colour, "Ready") | **Skill: Elemental Spike Line** (35 mana) | The sword is driven into the ground (20 damage up close). Eight spikes of your element run 10 metres along a straight path, one every 0.09 seconds. Each enemy is hit once for 34 damage and gets the element's affliction. |
+| R2 on a staggered enemy | **Finisher: The Headsman** | The handle into the chest, a walk around to the side with the point scraping the ground, the blade raised, then the cut. The ground splits along the cut a moment later. 44 damage, tripled. |
 
-**Not yet**: the pommel does not rock the enemy upright. No element changes it (no burning ring under the turn).
+**Not yet**: the handle doesn't rock the enemy upright. No element changes it (no burning ring under the turn).
 
 ### Scythe
 
-Spacing is the skill. Every cut does 0.6 of its damage nearer than 1.5 m (the haft), plain damage in the middle, and **1.5 damage and 1.6 stagger from 2.5 m out** (the tip). The arc is drawn with its outer part bright. Guard: the haft held across, 220 degrees, 1.0 stamina per point. Dodge: a longer step, 4.8 m.
+Spacing is the skill. Every cut does 0.6 of its damage closer than 1.5 metres (the handle), normal damage in the middle, and **1.5 times the damage and 1.6 times the stagger from 2.5 metres out** (the tip). The outer part of the swing is drawn brighter. Guard: the handle held across, 220 degrees, 1.0 stamina per point. Dodge: a longer step, 4.8 metres.
 
-| Input | Move | What it does |
+| Button | Move | What it does |
 |---|---|---|
-| R1 x3 | Out, back, full turn | 13, 13, 20 damage before the bands. 200 degree arcs at 3.5 m, then a full circle at 3.7 m. |
-| R2 | Back reap | A hop 1.4 m backward with the cut made by the retreat, so an enemy that was too close is at the tip. 24 damage, 28 stagger, 150 degree arc, reach 3.8 m. |
-| R2 after any light | Chain heavy | 28 damage, 34 stagger. Steps 0.8 m in, 120 degree arc. |
-| Hold R2 0.4 s | **Skill: Crescent Slash** (30 mana) | A 180 degree cut (16 damage), and a crescent of light that flies 6 m and strikes what it passes for 20. It then hangs there for 1.6 s, biting for 6 every 0.4 s and laying one stack of the held element's affliction with each bite. |
-| R2 on a staggered enemy | **Finisher: The Wheel** | The blade hooks under the enemy, one hauling turn, a heave that throws it into the air, a hold underneath, then one rising cut that meets it. 30 damage, tripled. Ignores the distance bands. |
+| R1 x3 | Out, back, full spin | 13, 13 and 20 damage before the distance bonus. Arcs of 200 degrees at 3.5 metres, then a full circle at 3.7 metres. |
+| R2 | Back reap | A hop 1.4 metres backward, cutting as you go, so an enemy that was too close ends up at the tip. 24 damage, 28 stagger, a 150-degree arc, reaching 3.8 metres. |
+| R2 after any light | Chain heavy | 28 damage, 34 stagger. Steps 0.8 metres in, a 120-degree arc. |
+| Hold R2 0.4 seconds | **Skill: Crescent Slash** (30 mana) | A 180-degree cut (16 damage), plus a crescent of light that flies 6 metres and hits whatever it passes for 20. Then it hangs there for 1.6 seconds, dealing 6 damage every 0.4 seconds and adding one stack of your element's affliction with each hit. |
+| R2 on a staggered enemy | **Finisher: The Wheel** | The blade hooks under the enemy, one heaving spin, a heave that throws it into the air, a pause underneath, then one rising cut that meets it. 30 damage, tripled. Ignores the distance rules. |
 
-**Not yet**: one charge tier only. The Wheel does not carry the enemy round you. The crescent hangs near the top edge of the view.
+**Not yet**: only one charge level. The Wheel doesn't carry the enemy around you. The crescent hangs near the top edge of the screen.
 
 ### Full Body Armament
 
-What bare hands become in the held element: a coat on the forearms, fists, shoulders and shins in the element's colour, named for it on screen ("Fire Armament"). **Every blow lays one stack of the held element's affliction.** It re-makes itself when you change element. Guard: 200 degrees, 0.8 stamina per point, 20% grey. Default dodge.
+What your bare hands become in your element: armour on your forearms, fists, shoulders and shins in the element's colour, named for it on the screen ("Fire Armament"). **Every blow adds one stack of your element's affliction.** It rebuilds itself when you change element. Guard: 200 degrees, 0.8 stamina per point, 20% grey health. Normal dodge.
 
-| Input | Move | What it does |
+| Button | Move | What it does |
 |---|---|---|
-| R1 x4 | Jab, cross, hook, kick | 8, 9, 11, 16 damage. The fists' timing, a little harder and 0.3 m further. |
-| R2 | Lunging heavy | 22 damage, 36 stagger. Carries you 1.8 m. Poise 16. |
-| R2 after 1 light | Ram | A shoulder charge that shoves the target 2.5 m. 14 damage, 30 stagger. Poise 22. |
-| R2 after 2 lights | Rising blow | 22 damage, 46 stagger: the most stagger for its time. |
-| R2 after 3 lights | Slam | Both fists on the ground: a disc of 2.2 m. 20 damage, 34 stagger. |
-| R2 after 4 lights | Burst | Both palms: a cone 4.2 m long. 28 damage, 40 stagger, two stacks of the affliction. |
-| Hold R2 0.3 s, let go | Charged heavy: Meteor Fist | A leaping punch that carries you 2.6 m. 28 damage, 52 stagger. No mana. Poise 26. |
-| Keep holding R2 past 0.3 s (up to 1.2 s more) | **Skill: Energy Reflect** (25 mana, paid only when struck) | You stand braced. A blow that lands on the stance, from any side, guardable or red, does nothing and is answered at once: a cone 5 m long for 20 damage plus the whole of the blow taken, and heavy stagger. With less than 25 mana the blow simply lands. Held to the end unstruck, it lets go as Meteor Fist. |
-| R2 on a staggered enemy | **Finisher: One Inch** | Six fast blows that deal nothing and drive the enemy back, a hold with the open hand on its chest, then the arm straightens. The element goes through as a cone and is laid on what stands behind. 26 damage, tripled. |
+| R1 x4 | Jab, cross, hook, kick | 8, 9, 11 and 16 damage. The same timing as the fists, a little harder and 0.3 metres farther. |
+| R2 | Lunging heavy | 22 damage, 36 stagger. Carries you 1.8 metres. Poise 16. |
+| R2 after 1 light | Ram | A shoulder charge that shoves the target 2.5 metres. 14 damage, 30 stagger. Poise 22. |
+| R2 after 2 lights | Rising blow | 22 damage, 46 stagger: the most stagger for how long it takes. |
+| R2 after 3 lights | Slam | Both fists on the ground: a circle 2.2 metres across. 20 damage, 34 stagger. |
+| R2 after 4 lights | Burst | Both palms: a cone 4.2 metres long. 28 damage, 40 stagger, two stacks of the affliction. |
+| Hold R2 0.3 seconds, let go | Charged heavy: Meteor Fist | A leaping punch that carries you 2.6 metres. 28 damage, 52 stagger. No mana. Poise 26. |
+| Keep holding R2 past 0.3 seconds (up to 1.2 seconds more) | **Skill: Energy Reflect** (25 mana, only paid when you're hit) | You stand braced. A blow that lands on you from any side, normal or red, does nothing and is answered right away: a cone 5 metres long that deals 20 damage plus all the damage of the blow you took, and heavy stagger. With less than 25 mana, the blow just lands. If you hold it to the end without being hit, it lets go as Meteor Fist. |
+| R2 on a staggered enemy | **Finisher: One Inch** | Six fast blows that do no damage and drive the enemy back, a pause with your open hand on its chest, then your arm straightens. The element goes through it as a cone and hits whatever stands behind. 26 damage, tripled. |
 
 **Not yet**
 
-- It is taken from a stand like any weapon. The design makes it a mark in every element's tree that replaces Fists while no weapon is carried; that mark is not built.
-- The coat is the same eight boxes in every element, coloured. The clips are the fists', set lower and wider.
-- The ram stops against its target; it does not pass through a crowd.
+- You take it from a stand like any weapon. The plan is for it to be a mark in every element's tree that replaces Fists while you carry no weapon; that mark isn't built.
+- The armour is the same eight boxes in every element, just coloured differently. The animations are the fists', set lower and wider.
+- The ram stops when it hits its target; it doesn't go through a crowd.
 
 ### Great Spear
 
-Owns a line. Thrusts are a lane 4 m long and 0.9 m wide; nearer than 1.4 m it is the haft and does six tenths. Its guard is the narrowest (160 degrees; 0.8 stamina per point, 30% grey) but you walk at half speed behind it, faster than behind other guards. Dodge: 4.2 m.
+Controls a straight line. Thrusts hit a path 4 metres long and 0.9 metres wide. Closer than 1.4 metres, you hit with the handle and do six tenths of the damage. Its guard is the narrowest (160 degrees; 0.8 stamina per point, 30% grey health), but you walk at half speed behind it, faster than behind other guards. Dodge: 4.2 metres.
 
-| Input | Move | What it does |
+| Button | Move | What it does |
 |---|---|---|
-| R1 x3 | Thrust, thrust, sweep | 10, 11 down the lane, then a 160 degree sweep at 3.6 m for 15 and 20 stagger. |
-| R1 while guarding (L1 held) | Guard thrust | A thrust from behind the guard without lowering it: 8 damage for 12 stamina, lane 3.8 m. Repeats as long as stamina lasts. A blow that arrives during it is still blocked. Does not start or continue the chain. |
-| R2 | Slap | The whole length brought down the lane: 24 damage, 32 stagger, 4.4 m long, 1.1 m wide. |
-| R2 after any light | Vault | A vault on the planted spear that kicks the target 2 m back. 20 damage, 44 stagger. |
-| Hold R2 0.5 s (white flash) | Charged heavy: couched charge | You travel 5 m in a third of a second, shoving what you meet 1.5 m. 30 damage, 36 stagger. No mana. Poise 16. |
-| Hold R2 0.9 s (element-coloured flash) | **Skill: Flying Spear** (30 mana) | The spear itself is thrown up to 11 m. It stops in the first enemy for 26, or stands in the ground. A moment later you **run to it**, untouchable for the run, and arrive with a full turning cut that rips it out and strikes all round for 18. **Hold the stick away from the throw** (more than 120 degrees off) to refuse the run: the spear flies back to your hand in half a second. Until it is back you cannot attack. Left alone for 3 s a stuck spear comes home by itself. |
-| R2 on a staggered enemy | **Finisher: The Standard** | A low thrust, the enemy levered up on the point, a hold with the spear upright, then the whole length brought over and down, shoving it 1.8 m on. 30 damage, tripled. |
+| R1 x3 | Thrust, thrust, sweep | 10 and 11 damage along the path, then a 160-degree sweep at 3.6 metres for 15 damage and 20 stagger. |
+| R1 while guarding (L1 held) | Guard thrust | A thrust from behind your guard without lowering it: 8 damage for 12 stamina, along a 3.8-metre path. Repeats as long as your stamina lasts. A blow that comes during it is still blocked. It doesn't start or continue a chain. |
+| R2 | Slap | The whole length of the spear brought down along the path: 24 damage, 32 stagger, 4.4 metres long and 1.1 metres wide. |
+| R2 after any light | Vault | A vault on the planted spear that kicks the target 2 metres back. 20 damage, 44 stagger. |
+| Hold R2 0.5 seconds (white flash) | Charged heavy: couched charge | You travel 5 metres in a third of a second, shoving whatever you hit 1.5 metres. 30 damage, 36 stagger. No mana. Poise 16. |
+| Hold R2 0.9 seconds (flash in the element's colour) | **Skill: Flying Spear** (30 mana) | You throw the spear itself up to 11 metres. It sticks in the first enemy for 26 damage, or stands in the ground. A moment later, you **run to it**, untouchable during the run, and arrive with a full spinning cut that rips it out and hits all around you for 18. **Hold the stick away from the throw** (more than 120 degrees off) to skip the run: the spear flies back to your hand in half a second. Until it's back, you can't attack. If you leave a stuck spear alone for 3 seconds, it comes back on its own. |
+| R2 on a staggered enemy | **Finisher: The Standard** | A low thrust, the enemy lifted up on the point, a pause with the spear upright, then the whole length brought over and down, shoving it 1.8 metres farther. 30 damage, tripled. |
 
 **Not yet**
 
-- The run to the spear stops at an enemy standing in the way; it does not pass through bodies.
-- The couched charge pushes against its target; it does not pass through.
-- No levelled "line" stance after an attack; the idle is always the upright spear.
+- The run to the spear stops at an enemy standing in the way; it doesn't go through bodies.
+- The couched charge pushes against its target; it doesn't go through.
+- No lowered "ready" stance after an attack; when standing still, the spear is always upright.
 
 ### Great Hammer
 
-Stagger on one target, and a guard that has to be read. Every swing has poise. Its block is the cheapest in the game (0.55 stamina per point, 20% grey, 180 degrees) and its **perfect guard opens late**: the press must come between 0.08 s and 0.24 s before the blow. Later than that is only a block, so raise it early. Its dodge is the worst: 3.6 m for 32 stamina. You walk at 90% speed.
+Stagger on one target, and a guard you have to time. Every swing has poise. Its block is the cheapest in the game (0.55 stamina per point, 20% grey health, 180 degrees), and its **perfect guard comes early**: you have to press between 0.08 and 0.24 seconds before the blow. Any later is just a block, so raise it early. Its dodge is the worst: 3.6 metres for 32 stamina. You walk at 90% speed.
 
-| Input | Move | What it does |
+| Button | Move | What it does |
 |---|---|---|
-| R1 x2 | Side swing, then drop | Two lights only. A 150 degree side swing (20 damage, 34 stagger), then a slower drop onto a disc of 1.5 m a stride ahead (26 damage, 48 stagger). Poise 12 and 16. |
-| R2 | Quake | A bigger drop with a jump in it: a disc of 2 m, 36 damage, 70 stagger. Poise 22. |
-| R2 after any light | Lift | A golfer's drive that throws the target 2.5 m. 34 damage, 64 stagger. Poise 22. |
-| Hold R2 0.55 s (white flash) | Charged heavy: Earthshaker | A disc 6 m across: 52 damage, 100 stagger. No mana. Poise 30. |
-| Hold R2 1.0 s (element-coloured flash) | **Skill: Spinning Hammer Toss** (35 mana) | Two turns that each strike all round for 14, then the hammer is let go. It flies 8 m end over end through everything for 28, hangs an instant, and comes back to your hand through everything again at half strength. About a second in all, during which you cannot attack. |
-| R2 on a staggered enemy | **Finisher: The Bell** | A lift under the chin throws the enemy into the air. You turn your back, let the head to the ground, coil and wait, then turn into it and meet it as it comes down. It leaves sideways, flung 6 m. 36 damage, tripled. |
+| R1 x2 | Side swing, then drop | Only two light attacks. A 150-degree side swing (20 damage, 34 stagger), then a slower drop onto a circle 1.5 metres across, one stride ahead (26 damage, 48 stagger). Poise 12 and 16. |
+| R2 | Quake | A bigger drop with a jump in it: a circle 2 metres across, 36 damage, 70 stagger. Poise 22. |
+| R2 after any light | Lift | A swing like a golf drive that throws the target 2.5 metres. 34 damage, 64 stagger. Poise 22. |
+| Hold R2 0.55 seconds (white flash) | Charged heavy: Earthshaker | A circle 6 metres across: 52 damage, 100 stagger. No mana. Poise 30. |
+| Hold R2 1.0 seconds (flash in the element's colour) | **Skill: Spinning Hammer Toss** (35 mana) | Two spins that each hit all around you for 14 damage, then you let go of the hammer. It flies 8 metres end over end through everything for 28 damage, hangs for a moment, and comes back to your hand through everything again at half strength. It takes about a second in total, and you can't attack during it. |
+| R2 on a staggered enemy | **Finisher: The Bell** | A lift under the chin throws the enemy into the air. You turn your back, rest the hammer's head on the ground, wind up and wait, then turn and hit it as it comes down. It flies off sideways, thrown 6 metres. 36 damage, tripled. |
 
 **Not yet**
 
-- You cannot walk or steer during the spin.
-- With the hammer thrown the guard is still the hammer's guard.
-- A drop does not reliably miss an enemy standing inside one metre.
+- You can't walk or steer during the spin.
+- While the hammer is thrown, your guard is still the hammer's guard.
+- A drop doesn't always miss an enemy standing within one metre.
 
 ### Twin Knives
 
-Be behind them. The quickest hands and the least reach; every blow on an enemy's back deals half as much again
-(damage and stagger, marked by a spark), though not the finisher or the fan. The guard is a parry and little else:
-the widest perfect window (0.21 s), narrow (160 degrees), the dearest block (1.25 stamina per point, 45% chip), and
-you keep 70% of your speed. The dodge is a spinning sidestep: 3.4 m in 0.26 s for 16 stamina.
+Get behind them. The fastest hands and the shortest reach. Every blow on an enemy's back deals 50% more (damage and
+stagger, shown by a spark), though not the finisher or the fan of knives. The guard is mostly for perfect guards: the
+widest perfect guard window (0.21 seconds), narrow (160 degrees), the most expensive block (1.25 stamina per point, 45%
+grey health), and you keep 70% of your speed. The dodge is a spinning sidestep: 3.4 metres in 0.26 seconds for 16
+stamina.
 
-| Input | Move | What it does |
+| Button | Move | What it does |
 |---|---|---|
-| R1 x1 | Flick | A flat backhand of the right knife. 5 damage. |
+| R1 x1 | Flick | A flat backhand with the right knife. 5 damage. |
 | R1 x2 | Back cut | The left knife back across. 5. |
 | R1 x3 | The Cross | Both knives cut in and out again: two blows of 5. |
 | R1 x4 | Rip | The right knife torn upward from the hip. 7. |
-| R1 x5 | Passing Spin | A spinning cut carried 2.4 m through the enemy; you end facing its back. 12. |
-| R2 | Lunge | A flat leap of 2.2 m with both points. 16 damage, 18 stagger. |
-| R2 after any light | Crossing Step | A low dash 3 m through the enemy, the left knife dragged across it; you end behind it. 18 damage, 20 stagger. |
-| R1 in the second half of a dodge | Cut out of the sidestep | One flat wide cut as the turn finishes. 9. Not part of the chain. |
-| Hold R2 0.3 s, release | **Skill: Fan of Knives** (25 mana) | A back handspring 2.6 m away and five knives of light in a 50 degree fan, 9 each: all five on an enemy a step away, about one at range. Earns no mana. |
+| R1 x5 | Passing Spin | A spinning cut that carries you 2.4 metres through the enemy; you end up facing its back. 12. |
+| R2 | Lunge | A flat leap of 2.2 metres with both points. 16 damage, 18 stagger. |
+| R2 after any light | Crossing Step | A low dash 3 metres through the enemy, with the left knife dragged across it; you end up behind it. 18 damage, 20 stagger. |
+| R1 in the second half of a dodge | Cut out of the sidestep | One flat, wide cut as the spin finishes. 9. Not part of the chain. |
+| Hold R2 0.3 seconds, release | **Skill: Fan of Knives** (25 mana) | A back handspring 2.6 metres away, and five knives of light thrown in a 50-degree fan, 9 each. All five hit an enemy a step away; about one hits from far away. Earns no mana. |
 | R2 on a staggered enemy | **Finisher: Three Crossings** | Three dashes through the enemy to the corners of a triangle, each leaving a line of light. You stop with your back turned, and the lines burst behind you. 22. |
 
-The whole light chain is 39 from the front and 58.5 from behind.
+The whole chain of light attacks does 39 from the front and 58.5 from behind.
 
 **Not yet**
 
-- The model is a box stand-in until the staged knife is approved; the left hand is not a true reverse grip; no sheaths.
-- The fan leaves from where the step began, so the knives appear ahead of the flipping body.
-- The finisher's second and third crossings pass beside the enemy, not through it.
+- The model is a placeholder box until the real knife is approved. The left hand doesn't really hold the knife backward. No sheaths.
+- The fan of knives starts from where the jump began, so the knives appear in front of your flipping body.
+- The finisher's second and third dashes pass next to the enemy, not through it.
 - No element changes the knives yet.
 
 ### Great Bow
 
-Plant arrows with the shots, then cash them with the stave. A shot leaves its arrow in the enemy (three at most in
-one body, for 12 s) or standing in the ground (six at most, for 8 s). A blow of the stave snaps every arrow in what
-it hits for 10 damage and 14 stagger each. A ground arrow goes off under the first enemy to come within 1.1 m. The
-guard is the stave held across the front: 180 degrees, costly (1.15 stamina per point, 40% chip), and a perfect
-guard plants an arrow in the attacker. The dodge is the usual roll. Shots aim up to 12 m but only within a narrow
-cone ahead.
+Plant arrows with your shots, then cash them in with the bow itself. A shot leaves its arrow in the enemy (up to three
+in one body, for 12 seconds) or standing in the ground (up to six, for 8 seconds). A blow with the bow snaps every arrow
+in whatever it hits, for 10 damage and 14 stagger each. An arrow in the ground goes off under the first enemy that comes
+within 1.1 metres. The guard is the bow held across the front: 180 degrees, expensive (1.15 stamina per point, 40% grey
+health), and a perfect guard plants an arrow in the attacker. The dodge is the normal roll. Shots aim up to 12 metres
+away, but only within a narrow cone in front of you.
 
-| Input | Move | What it does |
+| Button | Move | What it does |
 |---|---|---|
-| R1 | Swat | A long backhand with the upper limb. 9. Snaps every arrow in what it hits. |
-| R1 x2 | Arrow stab | 12. Snaps, then leaves its own arrow in the enemy. |
-| R2 | Snap shot | 18 from up to 9 m. Gives 8 mana. The arrow stays in the enemy, or stands in the ground if it hits no one. |
-| R2 after a light | Kick shot | A kick (6, snaps arrows), a spring 3 m back, and a shot of 20 loosed in the air. |
-| Hold R2 0.6 s | Charged heavy: Full draw | 34 damage, 44 stagger through every enemy on a 14 m line. You can walk and turn while drawing. |
-| Hold R2 1.0 s | **Skill: Landmines** (35 mana) | Five arrows fall in a ring round the enemy you face, 8 each where they land, and stand for 10 s. |
-| R2 on a staggered enemy | **Finisher: Nailed** | A sweep, a foot on the enemy, a slow draw straight down, loose. Every arrow in the enemy then goes off, one after another. |
+| R1 | Swat | A long backhand with the top of the bow. 9. Snaps every arrow in whatever it hits. |
+| R1 x2 | Arrow stab | 12. Snaps arrows, then leaves its own arrow in the enemy. |
+| R2 | Snap shot | 18 damage from up to 9 metres. Gives 8 mana. The arrow stays in the enemy, or stands in the ground if it misses. |
+| R2 after a light | Kick shot | A kick (6 damage, snaps arrows), a jump 3 metres back, and a shot of 20 fired in the air. |
+| Hold R2 0.6 seconds | Charged heavy: Full draw | 34 damage and 44 stagger to every enemy on a 14-metre line. You can walk and turn while drawing. |
+| Hold R2 1.0 seconds | **Skill: Landmines** (35 mana) | Five arrows fall in a ring around the enemy you face, dealing 8 each where they land, and stay for 10 seconds. |
+| R2 on a staggered enemy | **Finisher: Nailed** | A sweep, a foot on the enemy, a slow draw straight down, and release. Then every arrow in the enemy goes off, one after another. |
 
 **Not yet**
 
-- The bow and arrow are box stand-ins until the staged models are approved. No quiver; the arrow is always in the right hand.
-- The legs slide under the draw; the longer charge has no pose of its own.
-- The finisher does not throw the enemy flat.
+- The bow and arrow are placeholder boxes until the real models are approved. No quiver; the arrow is always in the right hand.
+- The legs slide while drawing; the longer charge has no pose of its own.
+- The finisher doesn't knock the enemy flat.
 - No element changes the bow yet.
 
 ### Chain Sickle
 
-A blade for the enemy in front and a weight on a chain for the one four metres off, and it moves what it catches.
-What gets moved depends on weight: an ordinary enemy is dragged to you; an elite, a god or a fixed thing pulls you
-to it. The guard is the chain held taut between the hands: 200 degrees, costly (1.1 stamina per point, 40% chip),
-and a perfect guard yanks the attacker 1.2 m in and adds 15 stagger. The dodge is the usual roll, and it lets go of
-a bound enemy.
+A blade for the enemy in front of you, and a weight on a chain for the one four metres away, and it moves whatever it
+catches. What moves depends on weight: a normal enemy is dragged to you, while an elite, a god or something fixed in
+place pulls you to it. The guard is the chain held tight between your hands: 200 degrees, expensive (1.1 stamina per
+point, 40% grey health), and a perfect guard yanks the attacker 1.2 metres in and adds 15 stagger. The dodge is the
+normal roll, and it lets go of an enemy you've tied up.
 
-| Input | Move | What it does |
+| Button | Move | What it does |
 |---|---|---|
 | R1 x1 | Sickle cut | A short hooking chop. 9. |
-| R1 x2 | Weight snap | The weight thrown down a 5.2 m lane. 11 damage, 20 stagger. |
-| R1 x3 | Hook | 10, and pulls the target 0.6 m nearer. |
-| R1 x4 | Whirl | Two rings all round at 4 m, 8 damage and 12 stagger each. |
-| R2 | Thrown sickle | The sickle on its chain swept through 220 degrees at 4.6 m. 22 damage, 26 stagger. |
-| R2 after a light | Yank | A 5.5 m lane, 14 damage, 30 stagger. Drags an ordinary enemy 3 m to your feet; a heavy one pulls you to it. |
-| Hold R2 0.4 s | **Skill: Entangle** (30 mana) | The weight thrown 7 m, 12 damage. The nearest enemy struck is Bound for 2.5 s: held still and taking a quarter more stagger. While it is bound, R2 is the Yank from any state. |
-| R2 on a staggered enemy | **Finisher: Unwinding** | You wrap the enemy, turn your back and walk the chain out, heave twice, and cut backward without looking. 28. |
+| R1 x2 | Weight snap | The weight thrown down a path 5.2 metres long. 11 damage, 20 stagger. |
+| R1 x3 | Hook | 10, and pulls the target 0.6 metres closer. |
+| R1 x4 | Whirl | Two circles all around you at 4 metres, 8 damage and 12 stagger each. |
+| R2 | Thrown sickle | The sickle on its chain swept through 220 degrees at 4.6 metres. 22 damage, 26 stagger. |
+| R2 after a light | Yank | A path 5.5 metres long, 14 damage, 30 stagger. Drags a normal enemy 3 metres to your feet; a heavy one pulls you to it. |
+| Hold R2 0.4 seconds | **Skill: Entangle** (30 mana) | The weight thrown 7 metres, 12 damage. The nearest enemy it hits is Bound for 2.5 seconds: held still and taking a quarter more stagger. While it is Bound, R2 does the Yank from anything you're doing. |
+| R2 on a staggered enemy | **Finisher: Unwinding** | You wrap the chain around the enemy, turn your back and walk the chain out, heave twice, and cut backward without looking. 28. |
 
 **Not yet**
 
-- The sickle and weight are box stand-ins; the chain is a plain bright line with no links.
-- Being Bound does not break an attack the enemy has already begun. The chain lets go at 8 m.
-- In the finisher the enemy does not spin in on the chain.
+- The sickle and weight are placeholder boxes; the chain is a plain bright line with no links.
+- Being Bound doesn't stop an attack the enemy has already started. The chain lets go at 8 metres.
+- In the finisher, the enemy doesn't spin in on the chain.
 - No element changes the sickle yet.
 
 ---
