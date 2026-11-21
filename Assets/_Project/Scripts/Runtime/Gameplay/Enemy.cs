@@ -192,6 +192,10 @@ namespace Clover.Gameplay
         [System.NonSerialized] public float GroundPace = 1f;
         /// <summary>Seconds left during which its guard is down whatever it is doing (a broken shield wall).</summary>
         [System.NonSerialized] public float GuardOpenFor;
+        // The ring that widens as it is staggered, in the finish mark's gold below white. Its material is lit far past white
+        // and blue (4, 5.5, 7), so plain it was a pale blue-white disc behind every finish mark (the swing films of
+        // 2026-11-20); this tint, multiplied by it, comes out about (1.3, 0.8, 0.15).
+        private static readonly Color StaggerRingTint = new Color(0.32f, 0.145f, 0.02f, 1f);
         // Somewhere it has been sent by something other than the fight (water to drink, its place in a line).
         private bool steered;
         private Vector3 steerTo;
@@ -672,7 +676,7 @@ namespace Clover.Gameplay
                 {
                     Brain.Stagger();
                     Clover.Player.Tips.EnemyStaggered(transform.position);
-                    Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up);
+                    Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up, 1f, StaggerRingTint);
                 }
                 else if (++blocked >= Kind.BlocksBeforeCounter)
                 {
@@ -711,7 +715,7 @@ namespace Clover.Gameplay
             {
                 Brain.Stagger();
                 Clover.Player.Tips.EnemyStaggered(transform.position);
-                Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up);
+                Vfx.Play(VfxKind.Ring, transform.position + Vector3.up * 1.4f, Vector3.up, 1f, StaggerRingTint);
             }
             else
             {
