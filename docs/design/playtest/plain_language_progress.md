@@ -64,6 +64,7 @@ checked against its code and committed on its own.
 - [x] marks/poison.md: Venom (heals a tenth of the real poison damage, over about 2 seconds)
 - [x] marks/fire.md: Fuel to It (Burn reactions 25% harder)
 - [x] marks/earth.md: Left in Rubble (Tremor reactions 20% harder)
+- [x] marks/metal.md: Every Crack Rings (Sundered reactions 25% harder)
 
 ## Unsure lines
 
