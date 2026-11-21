@@ -480,3 +480,64 @@ assemblies. The EditMode fixtures that run outside the editor pass: 708 in all, 
 6. **Three Weasels' clock** starts at the first press. A press refused (nothing to do) ends the run of presses.
 7. **What "toward" means for Into the Fire and Drawn Back to Break.** A dodge counts when it is within 60 degrees of the line
    to the enemy faced: the one ahead, or else the nearest, within 12 m. A dodge to the side is neither.
+
+## 2026-11-20 (late night): `phase4b` merged into main and partly proven in the editor
+
+**Merged:** `phase4b` (12 commits, `1e07c7f` to `9ff2272`) with `--no-ff`. Merge commit: `f4ecf80`. There were no conflicts in
+the text. Both sides touched `PlayerCombat.cs`, `PlayerUpgrades.cs`, `effects.md` and `carriedembers.md`, and git merged them
+cleanly. Main's effects fixes (`1d990fc`, `b863f3c`) survive, such as the tinted heavy-blow star, no affliction-full ring
+under the new art, and Carried Embers' column sparing its target. Reaction-numbers copies are made with `MemberwiseClone`,
+so they carry main's `SparesTarget` too.
+
+**Compile:** 0 errors, 0 warnings. **Playtest Texts** rebuilt, with ten new entries: Fire +2, Ice +1, Life +3, Water +3 and
+Wind +1. The three `.meta` files and the new `PlaytestTexts.asset` are committed (`2f96a1b`).
+
+**EditMode.** The merge plan's fixtures all passed:
+
+| Fixture | Passed |
+|---|---|
+| KeystoneRuleTests | 15 |
+| UpgradeChartTests | 31 |
+| SpellBranchTests | 12 |
+| DuoBranchTests | 10 |
+| HandRulesTests | 18 |
+| InForceTests | 53 |
+| PoisonBeatTests | 11 |
+| SaveMigrationTests | 12 |
+| RuleBookTests | 19 |
+| MarksBuiltTests | 9 |
+| SpellCooldownTests | 14 |
+| SpellSlotsTests | 10 |
+| ReactionCatalogueTests | 6 |
+
+The full suite: **822 run, 822 passed.**
+
+**Probes.** Each probe below had at least one WRONG on its first run. All of them were faults in the probe; the code was
+right.
+
+- **Phase4bProbe: 32 OK, 0 WRONG.** It first ran with 30 OK and 2 WRONG.
+  - **Drawn Back to Break: "waves 1".** A roll turns the player the way it goes. After the first dodge south, the player
+    faced the afflicted dummies 4 m away at z -5, so the second dodge counted as toward them. The probe now turns the player
+    back to the host before the second dodge.
+  - **Three Weasels: "comes out beyond the enemy".** The first press is the step form, which already steps through the
+    enemy (z 2 to 7, the host at 6). The second press then passes back through it, to z 3. The probe now checks that the
+    player ends on the other side of the enemy from where the rush left them.
+- **GrudgeProbe: 16 OK, 0 WRONG.** It first ran with 15 OK and 1 WRONG.
+  - **"Seven blows call down five bolts".** The probe read the host's health. But `Falling` drops its first bolt on the
+    enemy and the rest round it, so the health shows one bolt whatever the count (31 lost with three blows and with seven).
+    The probe now counts the bolts as they are laid: **5 laid from seven blows**.
+
+**Put off by the owner's change of priority** (the effects build needs the editor), and still to run: P1bProbe, P2Probe,
+DuoProbe, MarksProbe, and the end-of-job regression of ReactionProbe2, DuoProbeAll and CrowdProbe. DevotionProbe and the
+`HeartCrowdProbe` profiler pass from the merge plan have not been run either.
+
+## For the owner (this merge)
+
+1. **Three Weasels' first weasel steps through the enemy.** It is the plain step form, so the "rush to the enemy that throws
+   it" ends 1 m beyond the enemy. The second weasel's "pass straight through" then runs back the way you came. To make the
+   first press stop in front of the enemy, it would need a rush of its own.
+2. **"The enemy you face" after a roll away.** A roll turns you the way it goes. A second dodge away is measured against
+   whatever is ahead of you then, and only against the first enemy if nothing is ahead within 12 m. In a crowd, two dodges
+   back from one enemy can count as one away and one toward another. Drawn Back to Break and Into the Fire both read it.
+3. **Drawn Back to Break's throw** was not seen in the probe: the still dummy cannot be shoved, so "moved 0.0 m". The cone
+   did soak it and spend the waves.

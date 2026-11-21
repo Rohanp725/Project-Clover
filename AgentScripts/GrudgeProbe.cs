@@ -199,10 +199,15 @@ public class GrudgeProbeRunner : MonoBehaviour
             yield return Real(0.1f);
         }
         healthBefore = host.Health.Current;
+        // The first bolt falls on the enemy and the rest round it (Falling), so the enemy's health shows one bolt: the bolts
+        // are counted as they are laid, each waiting its 0.3 s and more before it falls.
+        int aliveBefore = Hazards.Alive;
         TheirBlow();
-        yield return Real(1.2f);
+        yield return Real(0.15f);
+        int bolts = Hazards.Alive - aliveBefore;
+        yield return Real(1.05f);
         float lost = healthBefore - host.Health.Current;
-        Judge("seven blows on the cloud call down five bolts, not seven", !Cloud(TheGrudgeDuo.AshPlume) && lost >= 60f && lost < 85f, $"health lost {lost:0} (five bolts and the discharge are about 71; seven would be about 91)");
+        Judge("seven blows on the cloud call down five bolts, not seven", !Cloud(TheGrudgeDuo.AshPlume) && bolts == 5, $"bolts laid {bolts}, health lost {lost:0}");
 
         // The Exile Returns answers the Grudge's bolt alone: at the storm, a second enemy 2 m from the host is Cursed.
         upgrades.Give(Upgrade.ById(TheGrudgeDuo.TheExileReturns));

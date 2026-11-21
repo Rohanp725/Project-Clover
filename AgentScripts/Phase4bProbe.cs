@@ -234,6 +234,10 @@ public class Phase4bProbeRunner : MonoBehaviour
         yield return Dodge(Vector2.down);
         player.Stamina.Fill();
         yield return Real(0.3f);
+        // The roll turns the player south, where the afflicted dummies stand 4 m off and would be the enemy faced: face the
+        // host again from where the first dodge began, as a player turning back to it would.
+        player.Teleport(Middle + Vector3.back * 2.5f, Quaternion.identity);
+        yield return Real(0.2f);
         yield return Dodge(Vector2.down);
         Judge("two dodges away draw two waves", upgrades.Tally(WaterTree.DrawnBackToBreak) == 2, $"waves {upgrades.Tally(WaterTree.DrawnBackToBreak)}");
         player.Teleport(host.transform.position + Vector3.back * 1.6f, Quaternion.identity);
@@ -299,11 +303,16 @@ public class Phase4bProbeRunner : MonoBehaviour
         yield return Fresh(4f);
         spells.Cooldowns.ResetAll();
         int presses = upgrades.PressesDone;
+        float weaselStart = player.transform.position.z;
         Judge("Three Weasels' first press is cast", spells.TryCast(0));
         yield return Real(0.7f);
+        float afterRush = player.transform.position.z, hostAfterRush = host.transform.position.z;
         Judge("the second press passes through", spells.TryCast(0) && upgrades.PressesDone == presses + 1);
         yield return Real(0.5f);
-        Judge("and comes out beyond the enemy", player.transform.position.z > host.transform.position.z, $"you z {player.transform.position.z:0.0}, it z {host.transform.position.z:0.0}");
+        // The first weasel is the step form, which already steps through the enemy, so the second comes back through it:
+        // judged as the player ending on the other side of it from where the rush left them.
+        Judge("and comes out beyond the enemy", (afterRush - hostAfterRush) * (player.transform.position.z - host.transform.position.z) < 0f,
+            $"you z {weaselStart:0.0} -> {afterRush:0.0} (rush) -> {player.transform.position.z:0.0}, it z {hostAfterRush:0.0} -> {host.transform.position.z:0.0}");
         Judge("the third press steps back", spells.TryCast(0) && upgrades.PressesDone == presses + 2);
         yield return Real(0.5f);
         Judge("a fourth press is a new cast, refused while the clock runs", !spells.TryCast(0));
