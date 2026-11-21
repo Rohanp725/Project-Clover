@@ -24,7 +24,7 @@ This file is not read by the game: the builder reads only effects.md, whats_new.
 ### 1. Mark details (marks/*.md)
 
 - [x] marks/blackchain.md
-- [ ] marks/blight.md
+- [x] marks/blight.md
 - [ ] marks/blizzard.md
 - [ ] marks/bloom.md
 - [ ] marks/breathtaken.md
