@@ -5,64 +5,64 @@ Venom Rime (`docs/design/steel/pairs_d4.md`, "Poison and Ice"). Drawn in the hea
 are both carried.
 
 ## venomrime.shape
-**What it does.** Floor or Bone: opens Venom Rime's two shapes. At a rest fire you choose which one your Venom Rime wears, and from then on it runs instead of the plain one. Both keep its poison from fading, each bite laying a Chill, as before. **Frost Over Frost**: a rimed enemy that freezes spreads its rime over the floor round it. **Cold Damage**: the cold drives the poison inward; while it is frozen its poison bites harder, and when it is shattered every dose goes off at once.
+**What it does.** Floor or Bone unlocks two new shapes for Venom Rime. At a rest fire, you pick which shape your Venom Rime uses. From then on, it uses that shape instead of the plain one. Both shapes still keep the enemy's poison from fading, with each bite adding a Chill, like before. **Frost Over Frost**: a frosted enemy that freezes spreads its poisoned frost over the floor around it. **Cold Damage**: the cold drives the poison deeper inside. While the enemy is frozen, its poison bites harder, and when it is shattered, every dose goes off at once.
 
-**When it happens.** Every time Venom Rime fires (a dose landing on a chilled enemy, or Chill on a poisoned one) while Poison and Ice are both carried. Before this mark is bought, or with only one of the two carried, the plain Venom Rime runs.
+**When it happens.** Every time Venom Rime goes off while you carry both Poison and Ice. Venom Rime goes off when a dose lands on a chilled enemy, or when Chill lands on a poisoned one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Venom Rime.
 
-**The numbers.** Mix, 3 Shards. Both, as plain: while it carries both, its poison does not fade and each bite lays a Chill. Frost Over Frost: at the first bite after it freezes, rime 3 metres round it for 5 seconds lays a Chill and a dose each second on what stands there; at most once in 5 seconds. Cold Damage: each bite while it is frozen deals 2 more a dose; a heavy blow on it while frozen sets every dose off, 6 a dose, on top of the shatter. Venom Rime rests 4 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Both shapes work like the plain one: while the enemy has both afflictions, its poison doesn't fade, and each bite adds a Chill. Frost Over Frost: at the first bite after the enemy freezes, frost covers 3 metres around it for 5 seconds, adding a Chill and a dose each second to whatever stands there. At most once every 5 seconds. Cold Damage: each bite while the enemy is frozen deals 2 more damage per dose. A heavy blow on it while it is frozen sets off every dose, for 6 damage each, on top of the shatter. After Venom Rime goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
-**Works with.** Bitter Frost to bring the two, Six Levels Down, The Drops Quicken, Rime Over Rime.
+**Works with.** Bitter Frost to set it up, Six Levels Down, The Drops Quicken, Rime Over Rime.
 
-**Example.** A crowd round one freezing brute: Frost Over Frost. One deep-dosed captain: Cold Damage, and shatter it.
+**Example.** A crowd around one freezing brute: use Frost Over Frost. One captain with lots of doses: use Cold Damage, and shatter it.
 
-**Not built yet.** Freezing is not yet a moment the rime can answer, so Frost Over Frost spreads at the first bite after the freeze. Cold Damage's bites are 2 a dose harder rather than twice as hard, and its doses go off on your heavy blow on the frozen enemy rather than on the shatter itself.
+**Not built yet.** The game can't tell yet the exact moment an enemy freezes, so Frost Over Frost spreads at the first bite after the freeze. Cold Damage's bites deal 2 more per dose instead of twice as much, and its doses go off on your heavy blow on the frozen enemy, instead of on the shatter itself.
 
 ## venomrime.bitterfrost
-**What it does.** Your heavy blows lay a Chill and a dose together.
+**What it does.** Your heavy blows add a Chill and a dose of poison at the same time.
 
-**When it happens.** Every heavy blow or finisher that lands, while Poison and Ice are both carried.
+**When it happens.** Every heavy blow or finisher that lands, while you carry both Poison and Ice.
 
 **The numbers.** Mix, 3 Shards. One Chill and one dose.
 
-**Works with.** Venom Rime (one heavy blow on a fresh enemy brings both), Six Levels Down.
+**Works with.** Venom Rime (one heavy blow on a fresh enemy adds both), Six Levels Down.
 
-**Example.** Heavy, and the rime begins to creep.
+**Example.** Land a heavy blow, and the poisoned frost starts to creep.
 
 ## venomrime.sixlevels
-**What it does.** Each bite on a frozen enemy keeps it frozen 0.3 s longer.
+**What it does.** Each poison bite on a frozen enemy keeps it frozen 0.3 seconds longer.
 
-**When it happens.** Each bite of poison on a frozen enemy, while Poison and Ice are both carried.
+**When it happens.** Each bite of poison on a frozen enemy, while you carry both Poison and Ice.
 
-**The numbers.** Mix, 3 Shards. As built: a fresh Chill laid on it at each bite, at most every 0.3 seconds.
+**The numbers.** Mix, 3 Shards. For now: each bite adds a fresh Chill to the enemy, at most once every 0.3 seconds.
 
 **Works with.** Venom Rime and its shapes, Bitter Frost, The Drops Quicken.
 
 **Example.** A frozen, poisoned soldier stays frozen while the poison works.
 
-**Not built yet.** A freeze cannot yet be held a set time longer: each bite lays a Chill on the frozen enemy instead.
+**Not built yet.** The game can't yet make a freeze last a set amount of time longer. For now, each bite adds a Chill to the frozen enemy instead.
 
 ## venomrime.drops
-**What it does.** A rimed enemy that dies leaves a drop of venom rime that rises as a small rime creature and strikes the nearest enemy three times, 6 each, a dose and a Chill, then melts.
+**What it does.** A frosted enemy that dies leaves behind a drop of poisoned frost. It rises as a small frost creature, hits the nearest enemy three times for 6 damage, a dose and a Chill each, then melts.
 
-**When it happens.** Each death of an enemy carrying both poison and Chill, while Poison and Ice are both carried.
+**When it happens.** Each time an enemy dies with both poison and Chill on it, while you carry both Poison and Ice.
 
-**The numbers.** Mix, keystone, 5 Shards. As built: three strikes 0.6 seconds apart, 6 damage, 6 stagger and a dose each; the rime it rises from lays a Chill on everything within 3 metres. At most every half second.
+**The numbers.** Mix, keystone, 5 Shards. For now: three hits 0.6 seconds apart, each dealing 6 damage, 6 stagger and a dose. The frost it rises from adds a Chill to everything within 3 metres. At most once every half second.
 
 **Works with.** Bitter Frost, Six Levels Down, Venom Rime.
 
-**Example.** Kill one in the rime and its drop goes after its neighbour.
+**Example.** Kill one enemy in the frost, and its drop goes after the enemy next to it.
 
-**Not built yet.** The creature's strikes lay only the dose; the Chill comes from the rime round where it fell.
+**Not built yet.** For now, the creature's hits only add the dose. The Chill comes from the frost around where the enemy fell.
 
 ## venomrime.rimeoverrime
-**What it does.** A drop of venom falls on the ground where you aim, within 8 metres, and rime grows from it frost over frost, out to 4.5 metres. Each time it grows it gives every enemy it reaches a dose and a Chill, three times over.
+**What it does.** A drop of venom falls on the ground where you aim, within 8 metres, and frost grows out from it, layer over layer, out to 4.5 metres. Each time it grows, it gives every enemy it reaches a dose and a Chill, three times in all.
 
-**When it happens.** From a spell slot, while Poison and Ice are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Poison.
+**When it happens.** Cast it from a spell slot while you carry both Poison and Ice. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Poison.
 
-**The numbers.** Mix, duo spell, opener, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. Three bites 0.6 seconds apart over 4.5 metres, each 3 damage, a dose and a Chill, so Venom Rime starts on all in it.
+**The numbers.** Mix, duo spell, opener, 5 Shards. It costs no mana. After you cast it, you must wait 10 seconds to cast it again. Fighting with your weapon makes the wait shorter. It bites three times, 0.6 seconds apart, over 4.5 metres. Each bite deals 3 damage, a dose and a Chill, so Venom Rime starts on everything in it.
 
 **Works with.** Venom Rime and its shapes, Bitter Frost, Six Levels Down.
 
-**Example.** Drop it in the middle of a pack and the rime takes them all.
+**Example.** Drop it in the middle of a pack, and the frost takes them all.
 
-**Not built yet.** The rime does not yet grow in rings outward, 1.5, 3 and 4.5 metres, nor stand 4 seconds after; a heavy blow struck on it does not yet shatter every ring at once (14, a Chill and two doses to each standing on it).
+**Not built yet.** The frost doesn't grow outward in rings yet (1.5, 3 and 4.5 metres), and it doesn't stay for 4 seconds afterward. A heavy blow on it doesn't yet shatter every ring at once (for 14 damage, a Chill and two doses to each enemy standing on it).

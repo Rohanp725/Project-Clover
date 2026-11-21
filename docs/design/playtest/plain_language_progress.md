@@ -99,7 +99,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/thegrudge.md
 - [x] marks/thermalshock.md
 - [x] marks/turnedtostone.md
-- [ ] marks/venomrime.md
+- [x] marks/venomrime.md
 - [ ] marks/water.md
 - [ ] marks/wind.md
 - [ ] marks/windthrow.md
