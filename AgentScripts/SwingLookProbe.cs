@@ -354,6 +354,8 @@ public class SwingLookProbeRunner : MonoBehaviour
         yield return Real(0.2f);
 
         // The castle's enemies first, as the reaction rig takes them; every other one let out is put away.
+        // The Storm Caller is left out: its own white-blue bolt fell into the strike films of 2026-11-21. Should the castle
+        // have fewer than three others, the nearest kinds from the other pens fill in.
         pens.AddRange(FindObjectsByType<EnemyPen>(FindObjectsInactive.Include).OrderBy(pen => pen.Land == "The castle" ? 0 : 1));
         foreach (var pen in pens)
         {
@@ -361,7 +363,7 @@ public class SwingLookProbeRunner : MonoBehaviour
             foreach (var enemy in pen.Enemies)
             {
                 if (enemy == null) continue;
-                if (soldiers.Count < CastCount && pen.Land == "The castle") soldiers.Add(enemy);
+                if (soldiers.Count < CastCount && enemy.Kind.Name != EnemyKind.CasterName && !enemy.Kind.Name.Contains("Caller")) soldiers.Add(enemy);
                 else enemy.gameObject.SetActive(false);
             }
         }

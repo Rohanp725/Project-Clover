@@ -197,6 +197,10 @@ namespace Clover.EditorTools
         public static readonly Dictionary<string, Color> SolidInks = new Dictionary<string, Color>
         {
             ["the_grudge|r4_grudgecloud"] = new Color(0.2f, 0.09f, 0.3f),
+            // Dark's strike: the near-black hands read only by a pale violet rim round their outer silhouette (the Blender
+            // worker's InkHands line set, notes.md); in the usual dark ink they melt into the shadow under the enemy.
+            // (The render's colour is linear; a material colour is set as seen.)
+            ["e3_strike_dark@b|st_hand_small"] = new Color(0.5f, 0.3f, 0.82f).gamma,
         };
 
         /// <summary>

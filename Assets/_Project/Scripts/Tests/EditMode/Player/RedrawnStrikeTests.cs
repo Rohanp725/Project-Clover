@@ -8,9 +8,10 @@ namespace Clover.Tests
 {
     /// <summary>
     /// The infused strikes redrawn from the owner's swing comments (docs/design/feedback/2026-11-21_swing_comments.md),
-    /// built from the Blender worker's strikes recipe: only the approved looks (Earth, Metal, Light), the pieces made once per
+    /// built from the Blender worker's strikes recipe: all five approved looks, the pieces made once per
     /// enemy struck on the struck body's look and nowhere else, Earth's stones lifting the body, Metal only a glint and
-    /// shards, Light's glare warm gold, and nothing painted white.
+    /// shards, Light's glare warm gold, Dark's hands rimmed violet with the enemy kept in place, Poison dark green, and
+    /// nothing painted white.
     /// </summary>
     public class RedrawnStrikeTests
     {
@@ -33,17 +34,38 @@ namespace Clover.Tests
         }
 
         [Test]
-        public void OnlyTheApprovedStrikesAreBuilt()
+        public void EveryRedrawnStrikeIsBuiltAndDarkAndPoisonDrawNothingOnAMiss()
         {
             var set = Built();
             foreach (int element in new[] { Earth, Metal, Light })
                 Assert.GreaterOrEqual(set.Find(ElementMoves.RedrawnKey(element, false)), 0, ElementMoves.RedrawnKey(element, false));
             foreach (int element in new[] { Dark, Poison })
             {
-                Assert.Less(set.Find(ElementMoves.RedrawnKey(element, false)), 0, "held until the owner approves its redraw");
-                Assert.Less(set.Find(ElementMoves.RedrawnKey(element, true)), 0, "held until the owner approves its redraw");
+                // Every piece of theirs is made per enemy struck: nothing about the player, so a miss shows nothing.
+                Assert.Less(set.Find(ElementMoves.RedrawnKey(element, false)), 0, ElementMoves.RedrawnKey(element, false) + " draws on a miss");
+                Assert.GreaterOrEqual(set.Find(ElementMoves.RedrawnKey(element, true)), 0, ElementMoves.RedrawnKey(element, true));
             }
             Assert.IsNull(ElementMoves.RedrawnKey(0, false), "Fire keeps its own strike");
+            Assert.IsEmpty(ElementLookBuilder.StrikesHeld, "all five are approved");
+        }
+
+        [Test]
+        public void DarksHandsGripInPlaceWithAVioletRimAndPoisonIsDarkGreen()
+        {
+            var set = Built();
+            var dark = set.Looks[set.Find("e3_strike_dark@b")];
+            Assert.AreEqual(0, dark.RaiseCount, "the enemy only strains in place, never lifted or sunk");
+            var hands = PartsOf(set, "e3_strike_dark@b").Where(part => part.Mesh.name.Contains("vfxst_hand_big")).ToArray();
+            Assert.AreEqual(6, hands.Length, "three hands, each open then gripping");
+            foreach (var hand in hands)
+            {
+                var rim = hand.Material.GetColor("_OutlineColor");
+                Assert.Greater(rim.b, 0.6f, $"{hand.Mesh.name}: a pale violet rim");
+                Assert.Greater(rim.r, rim.g, $"{hand.Mesh.name}: violet, not blue");
+            }
+            foreach (var part in PartsOf(set, "e3_strike_poison@b"))
+                foreach (var colour in part.Mesh.colors)
+                    Assert.IsTrue(colour.g >= colour.r && colour.g >= colour.b && colour.g < 0.3f, $"{part.Mesh.name}: dark green, nothing lime or bright");
         }
 
         [Test]
@@ -86,7 +108,7 @@ namespace Clover.Tests
         public void NothingIsWhiteAndLightsGlareIsWarm()
         {
             var set = Built();
-            foreach (string key in new[] { "e3_strike_earth", "e3_strike_metal", "e3_strike_metal@b", "e3_strike_light", "e3_strike_light@b" })
+            foreach (string key in new[] { "e3_strike_earth", "e3_strike_metal", "e3_strike_metal@b", "e3_strike_light", "e3_strike_light@b", "e3_strike_dark@b", "e3_strike_poison@b" })
                 foreach (var part in PartsOf(set, key))
                     foreach (var colour in part.Mesh.colors)
                         Assert.Less(Mathf.Min(colour.r, Mathf.Min(colour.g, colour.b)), 0.97f, $"{part.Mesh.name} is painted white");

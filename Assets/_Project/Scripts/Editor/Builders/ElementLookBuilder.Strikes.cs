@@ -22,11 +22,10 @@ namespace Clover.EditorTools
         public const string StrikesKit = "vfx_strikes_kit.fbx";
 
         /// <summary>
-        /// The recipe's strikes not built yet: Dark and Poison are being redrawn in Blender (2026-11-21) and keep their
-        /// current looks until the owner approves the new ones. Take a slug out of here (and bring the new recipe in) and
-        /// re-run Clover > Build > Element Looks to build it.
+        /// The recipe's strikes not built: none since the owner approved Dark's and Poison's last redraws (2026-11-21). A
+        /// slug put here keeps its element's earlier strike until it is taken out again and the looks are rebuilt.
         /// </summary>
-        public static readonly HashSet<string> StrikesHeld = new HashSet<string> { "strike_dark", "strike_poison" };
+        public static readonly HashSet<string> StrikesHeld = new HashSet<string>();
 
         /// <summary>
         /// The strike recipe's own materials, in linear colour from its specs (tools/st_specs.py): a ramp's colour is taken
@@ -35,16 +34,28 @@ namespace Clover.EditorTools
         /// </summary>
         public static readonly Dictionary<string, ReactionArtBuilder.Paint> StrikePaints = new Dictionary<string, ReactionArtBuilder.Paint>
         {
-            ["st_stone"] = new ReactionArtBuilder.Paint(0.40f, 0.28f, 0.18f),
-            ["st_glint"] = new ReactionArtBuilder.Paint(0.64f, 0.71f, 0.82f),
-            ["st_glint_flat"] = new ReactionArtBuilder.Paint(0.80f, 0.86f, 0.94f),
+            // The stone a step darker than its spec: lit by the earth solid it read pale tan beside the render's brown.
+            ["st_stone"] = new ReactionArtBuilder.Paint(0.28f, 0.19f, 0.115f),
+            // The glints a step darker than the specs: drawn flat in the glow, the specs' pale steel bloomed to pure white
+            // at the game camera (the Katana's film of 2026-11-21).
+            ["st_glint"] = new ReactionArtBuilder.Paint(0.50f, 0.60f, 0.76f),
+            ["st_glint_flat"] = new ReactionArtBuilder.Paint(0.58f, 0.68f, 0.84f),
             ["st_shard"] = new ReactionArtBuilder.Paint(0.565f, 0.625f, 0.71f),
             ["st_flare"] = new ReactionArtBuilder.Paint(1.00f, 0.683f, 0.213f),
             ["st_glare"] = new ReactionArtBuilder.Paint(1.00f, 0.655f, 0.175f),
             ["st_glare_amber"] = new ReactionArtBuilder.Paint(0.95f, 0.45f, 0.05f),
-            // Dark's and Poison's, for when they are built.
+            // Dark's shadow and its big hands, near black (their violet rim is the solid's ink, StrikeInks).
             ["st_shadow"] = new ReactionArtBuilder.Paint(0.010f, 0.003f, 0.017f),
             ["st_hand_small"] = new ReactionArtBuilder.Paint(0.020f, 0.006f, 0.040f),
+            // Poison's last redraw: dull near-black-green drops and round pools with no bright spot, a dark bruise and a
+            // fine dark vein web with a faint sickly sheen; nothing lime, nothing that reads as a sprout.
+            ["st_venom_drop"] = new ReactionArtBuilder.Paint(0.009f, 0.04f, 0.014f),
+            ["st_venom_pool"] = new ReactionArtBuilder.Paint(0.005f, 0.022f, 0.008f),
+            ["st_pool_sheen"] = new ReactionArtBuilder.Paint(0.05f, 0.17f, 0.07f),
+            ["st_vein_dark"] = new ReactionArtBuilder.Paint(0.013f, 0.045f, 0.018f),
+            ["st_bruise"] = new ReactionArtBuilder.Paint(0.035f, 0.055f, 0.03f),
+            ["st_vein_sheen"] = new ReactionArtBuilder.Paint(0.05f, 0.14f, 0.055f),
+            // Round 3's, kept for its recipe.
             ["st_vein"] = new ReactionArtBuilder.Paint(0.012f, 0.075f, 0.022f),
             ["st_vein_glow"] = new ReactionArtBuilder.Paint(0.05f, 0.36f, 0.09f),
             ["st_venom"] = new ReactionArtBuilder.Paint(0.05f, 0.31f, 0.075f),

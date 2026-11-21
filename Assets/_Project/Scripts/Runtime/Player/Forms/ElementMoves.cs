@@ -26,8 +26,12 @@ namespace Clover.Player.Forms
         // in place of the element's earlier strike once built (Clover > Build > Element Looks builds the approved ones).
         private static readonly string[] Redrawn = { null, null, null, null, null, null, "strike_earth", "strike_metal", "strike_light", "strike_dark", "strike_poison" };
 
-        /// <summary>How far out the redrawn strikes' recipe swung its blade tip, metres: their arcs are fitted from it to the weapon's reach.</summary>
-        public const float RedrawnTip = 1.55f;
+        /// <summary>
+        /// The reach the redrawn strikes' recipe was drawn for, metres: its carrier is the Katana's drawing cut (2.6 m), so a
+        /// Katana plays it as drawn, a longer reach a little larger (the Massive Sword's, the Scythe's) and a shorter one a
+        /// little smaller, never so far that the stones stand behind the enemies or swamp them.
+        /// </summary>
+        public const float RedrawnReach = 2.6f, SmallestFit = 0.85f, LargestFit = 1.3f;
 
         /// <summary>Tailwind, the wind's surge.</summary>
         public const string Tailwind = Prefix + "tailwind";
@@ -134,7 +138,7 @@ namespace Clover.Player.Forms
         public static bool PlayStrike(int element, Vector3 feet, Vector3 forward, Component[] struck, int count, float reach)
         {
             if (!ElementArt.Ready || !HasStrike(element)) return false;
-            float size = reach > 0f && IsRedrawn(element) ? Mathf.Clamp(reach / RedrawnTip, 0.85f, 1.5f) : 1f;
+            float size = reach > 0f && IsRedrawn(element) ? Mathf.Clamp(reach / RedrawnReach, SmallestFit, LargestFit) : 1f;
             // Either half may be empty: Frost Bite is all on the bodies it strikes, Broken Ground all on its line.
             ElementLooks.PlayAt(ElementLooks.Find(StrikeKey(element, false)), feet, Yaw(forward), size);
             string onBody = StrikeKey(element, true);
