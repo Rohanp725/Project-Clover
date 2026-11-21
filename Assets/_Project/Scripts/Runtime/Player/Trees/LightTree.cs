@@ -331,7 +331,7 @@ namespace Clover.Player.Trees
                     Description = "The light comes straight down on you as a column five metres across. It burns away every enemy cloud, flame, frost and hazard inside, clears every affliction on you, and strikes everything inside for 6 damage a ring, Marking it. The purifying version.",
                     Spell = new SpellSpec { Radius = 2.5f, Delay = 0.3f, Damage = 36f, Stagger = 36f, Stacks = 1 } },
                 "Opens two shapes of Daybreak, chosen at any rest fire: Red Before the Sun, a shield of dawn before the beam, or High Noon, a column that burns the ground clean.",
-                // NEEDS: the loosing within 0.2 s of a blow landing on you as the moment (their-blow-moment). Until then every cast
+                // NEEDS: the loosing within 0.2 s of a blow landing on you as the moment (blow-about-to-land). Until then every cast
                 // turns the next blow that would land, and one loosed in the half second after a perfect guard strikes half again
                 // as hard.
                 new[]

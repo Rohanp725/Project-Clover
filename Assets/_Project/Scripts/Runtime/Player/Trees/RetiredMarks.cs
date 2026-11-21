@@ -190,7 +190,7 @@ namespace Clover.Player
             new RetiredMark("pyre.fuel", 3),
         };
 
-        // NEEDS: the owner's word on whether a Shards-bought mark that moved to the Way (paid in Memories) is refunded
+        // NEEDS (way-refund): the owner's word on whether a Shards-bought mark that moved to the Way (paid in Memories) is refunded
         // (phase4_questions.md 2, phase5_questions.md). Kept, unrefunded, and learned on the Way as it was on the tree.
         private static readonly RetiredMark[] moving =
         {

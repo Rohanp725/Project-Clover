@@ -214,7 +214,7 @@ namespace Clover.Player.Trees
 
             // The counter: the step form strikes through the enemy faced at two fangs' strength, and makes the next heavy blow
             // critical. NEEDS: the coil held up to 2.4 s through three fangs (held-press), and the let-go as a blow is about to
-            // land passing it through you at three fangs (their-blow-moment).
+            // land passing it through you at three fangs (blow-about-to-land).
             SpellBranch.Add(to, E, CoiledStrike, "Coiled Strike", SpellRole.Counter, BranchPattern.LeftB, InTime, SpellForms.Step,
                 new SpellSpec { Reach = 6f, Damage = 24f, Stagger = 25f, Stacks = 4, Seconds = 3f },
                 "Coil for as long as you dare, up to 2.4 seconds, three fangs lighting over your head. Let go to strike through the enemy you face and stand behind it: 14, 24 or 38 damage and 2, 4 or 8 doses by the fangs lit. Let go as a blow is about to land and it passes through you, and the strike counts as three fangs.",
@@ -227,13 +227,13 @@ namespace Clover.Player.Trees
                 new ShapeDef { Name = "Centipede's Run", Form = SpellForms.Drill,
                     Description = "Let go and you strike through up to three enemies in a zigzag of short rushes, four metres each, a bite on each, the fangs' doses shared between them. You end behind the last. The snake strikes one, the centipede many.",
                     Spell = new SpellSpec { Reach = 12f, Radius = 1f, Count = 1, Damage = 14f, Stagger = 15f, Stacks = 2, Speed = 22f } },
-                // NEEDS: the skin left only when let go inside the perfect window (their-blow-moment). Until then every cast
+                // NEEDS: the skin left only when let go inside the perfect window (blow-about-to-land). Until then every cast
                 // leaves the enemies within three metres of where you stood unable to see you for a second and a half.
                 new ShapeDef { Name = "Shed Skin",
                     Description = "Let go inside the perfect window and you leave your skin standing where you were, pale and papery, for a second and a half. The enemy goes on striking it while your strike lands from behind.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, At = EffectAt.Self, Radius = 3f, State = new ConditionSpec { Id = ShedSkin, Seconds = 1.5f, Flags = ConditionFlags.SightShort, Sight = 0.5f } } } },
                 "Opens two shapes of Coiled Strike, chosen at any rest fire: Centipede's Run, a zigzag through three, or Shed Skin, a skin left for the blow.",
-                // NEEDS: the let-go inside the perfect window as the moment (held-press, their-blow-moment). Until then a perfect
+                // NEEDS: the let-go inside the perfect window as the moment (held-press, blow-about-to-land). Until then a perfect
                 // dodge ends Coiled Strike's wait, once in ten seconds.
                 new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.ResetCooldown, Cooldown = 10f } },
                 "Let go inside the perfect window, and Coiled Strike is ready again.");

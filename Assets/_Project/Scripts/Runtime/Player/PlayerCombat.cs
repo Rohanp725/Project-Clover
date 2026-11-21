@@ -1553,6 +1553,8 @@ namespace Clover.Player
                 return false;
             }
             spells.BeginStrike(second, deep);
+            float untouchable = ElementSteel.UntouchableSeconds(step, info.Name);
+            if (untouchable > 0f && defence != null) defence.UntouchableUntil = Mathf.Max(defence.UntouchableUntil, Time.time + untouchable);
             infusedStep = step;
             infusedSecond = second;
             infusedDeep = deep;

@@ -131,7 +131,7 @@ namespace Clover.Player.Trees
             // Dark and Lightning (32), rest 8 s, only once a Cursed enemy carries two Static or more (in either order).
             // A black cloud gathers over it for 8 s, and the enemy's next blow at you, landing or turned (the their-blow
             // moment), calls it down: a black bolt that discharges all its Static at double (14 a stack in 4 m) and stops
-            // it for 0.6 s. NEEDS: the cloud drifting to the nearest enemy within 6 m if it dies first.
+            // it for 0.6 s. NEEDS: the cloud drifting to the nearest enemy within 6 m if it dies first (drift-on-death).
             to.Add(Reaction(AfflictionKind.Cursed, AfflictionKind.Static,
                 "Cursed and two Static or more: a black cloud gathers over its head and waits for the next blow it aims at you. Landed or guarded, the cloud strikes it: its Static discharges at double, and it is stopped for a moment.",
                 new ReactionDef { Rest = 8f, DepthOf = AfflictionKind.Static, Depth = 2 },

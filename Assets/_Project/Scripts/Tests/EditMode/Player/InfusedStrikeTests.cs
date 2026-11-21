@@ -121,6 +121,18 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void LightningsFlashCutIsUntouchableThroughTheLungeAndNoOtherCarrierIs()
+        {
+            var step = Weapons.Katana().Carrier.Clone();
+            ElementSteel.Bend(step, Elements.Lightning, false);
+            Assert.AreEqual(step.Windup + step.Active, ElementSteel.UntouchableSeconds(step, Elements.Lightning), 1e-5f, "the wind-up and the 5 m it covers");
+            Assert.GreaterOrEqual(ElementSteel.UntouchableSeconds(step, Elements.Lightning), 0.16f, "at least the lunge itself");
+            var fire = Weapons.Katana().Carrier.Clone();
+            ElementSteel.Bend(fire, Elements.Fire, false);
+            Assert.AreEqual(0f, ElementSteel.UntouchableSeconds(fire, Elements.Fire), "Fire's carrier is open as any blow");
+        }
+
+        [Test]
         public void TheChordCancelsALightInItsFirstMomentAndNothingLater()
         {
             var stamina = new StaminaPool();

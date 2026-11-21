@@ -118,7 +118,7 @@ namespace Clover.Player
                     }
                     break;
                 case Elements.Earth:
-                    // Each throws a short spray of gravel: a 2 m cone, 4 damage. NEEDS: the wound-up blow that cannot be stopped.
+                    // Each throws a short spray of gravel: a 2 m cone, 4 damage. NEEDS: the wound-up blow that cannot be stopped (unshaken).
                     combat.StrikeCone(2.6f, 60f, Blow(element, 4f, 4f, 0));
                     if (!own) Vfx.Play(VfxKind.Dust, Ground(at), forward, 1.2f);
                     break;
@@ -132,7 +132,7 @@ namespace Clover.Player
                     }
                     break;
                 case Elements.Dark:
-                    // NEEDS: the shadow cut loose (an enemy state). For now the third sinks smoke at its feet and Curses twice more.
+                    // NEEDS: the shadow cut loose (an enemy state, shadow-cut-loose). For now the third sinks smoke at its feet and Curses twice more.
                     if (blow.Third && target is IAfflictable cursed)
                     {
                         cursed.Afflictions.Lay(AfflictionKind.Cursed, 2, 0f, 1f, LaySource.Weapon, target);
@@ -166,8 +166,17 @@ namespace Clover.Player
                 step.Active = Mathf.Max(step.Active, 0.16f);
                 step.PassThrough = true;
                 step.Damage *= 1.5f;
-                // NEEDS: untouchable through the lunge.
             }
+        }
+
+        /// <summary>
+        /// How long the player cannot be struck from the moment the bent carrier starts: Lightning's Flash Cut is
+        /// untouchable through the lunge, its wind-up and the 5 m it covers. The others are open as any blow is.
+        /// </summary>
+        public static float UntouchableSeconds(AttackStep step, string element)
+        {
+            if (step == null || element != Elements.Lightning) return 0f;
+            return step.Windup + step.Active;
         }
 
         /// <summary>

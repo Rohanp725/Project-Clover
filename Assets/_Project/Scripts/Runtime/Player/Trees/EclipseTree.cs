@@ -106,7 +106,7 @@ namespace Clover.Player.Trees
             }, HeartPattern.Spell));
 
             // BESPOKE (built): TotalityForm. The returning light gives back half of what each enemy lost in the dark, 80 at most.
-            // The branch's duo surge, begun by the surge, and its top mark. NEEDS: a duo surge chosen in the Hand's surge slot.
+            // The branch's duo surge, begun by the surge, and its top mark. NEEDS: a duo surge chosen in the Hand's surge slot (duo-surge-slot).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Totality, Name = "Totality", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DuskAndDawn }, Icon = UpgradeIcons.Crown,

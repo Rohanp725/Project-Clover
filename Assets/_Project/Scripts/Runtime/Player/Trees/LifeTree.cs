@@ -241,7 +241,7 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Condition, At = EffectAt.Self, Radius = 2.5f, State = new ConditionSpec { Id = Changeling, Seconds = 1.5f, Flags = ConditionFlags.SightShort, Sight = 0.5f } },
                     } },
                 "Opens two shapes of Root Walk, chosen at any rest fire: Up Through Them, up under a Seeded enemy, or Changeling, a grown thing left in the blow's path.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, their-blow-moment), and the full
+                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the full
                 // thornbush in place of the sapling. Until then the cast gives what a perfect dodge gives, and a thornbush
                 // grows beside the sapling.
                 new[]

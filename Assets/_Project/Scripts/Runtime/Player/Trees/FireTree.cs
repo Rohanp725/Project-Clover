@@ -181,7 +181,7 @@ namespace Clover.Player.Trees
                     Description = "You go six metres back out of the fight in a roll of black smoke, and the line of fire is left between you and them. The escape.",
                     Change = new SpellChange { Reach = 6f, Damage = 4f } },
                 "Opens two shapes of Wildfire Rush, chosen at any rest fire: Fire Front, a wall that carries a crowd, or Smoke Road, the escape.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, IMPLEMENTATION's their-blow-moment), and
+                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and
                 // Heat rising to five. Until then the cast gives what a perfect dodge gives.
                 new[]
                 {

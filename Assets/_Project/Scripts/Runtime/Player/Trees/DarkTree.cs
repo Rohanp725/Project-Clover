@@ -308,7 +308,7 @@ namespace Clover.Player.Trees
                 "Cast it within a second of being struck, and the one that struck you is dragged to your feet and Cursed twice. Dark answers when it is hurt.");
 
             // The movement spell: the clone form leaves your shadow to repeat your blows. NEEDS: the second press that changes
-            // places with it, once (second-press).
+            // places with it, once (press-on-standing-thing).
             SpellBranch.Add(to, E, SecondShadow, "Second Shadow", SpellRole.Movement, BranchPattern.RightB, HollowStrength, SpellForms.Clone,
                 new SpellSpec { Seconds = 8f, Damage = 50f, Stacks = 1 },
                 "Leave your shadow where you stand: your shape in flat black with violet eyes, joined to you by a thin line on the ground. For eight seconds it repeats every blow you land a tenth of a second late on the nearest enemy within its reach, at half the damage, Cursing. Press again to change places with it, once.",
@@ -317,7 +317,7 @@ namespace Clover.Player.Trees
                 new Empower { Cooldown = 10f, Damage = 60f, LearnOnly = true },
                 "Second Shadow waits 10 seconds, not 12, and repeats your blows at 60%.",
                 // NEEDS: the second press that sinks you into the shadow, and every wound taken since you left it given back as
-                // grey health (second-press, wounds-returned). Until then you take a quarter less from every blow while it stands.
+                // grey health (press-on-standing-thing, wounds-returned). Until then you take a quarter less from every blow while it stands.
                 new ShapeDef { Name = "Return to the Shadow",
                     Description = "The shadow fights as learned, but the second press does not swap. Within its eight seconds, press again to sink into it and rise where it lies, and every wound taken since you left it comes back as grey health to win back. A rewind paid in position.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Boon, Stat = PlayerStat.DamageTaken, Amount = -0.25f, Seconds = 8f } } },
@@ -328,7 +328,7 @@ namespace Clover.Player.Trees
                     Spell = new SpellSpec { Reach = 8f, Radius = 1f, Count = 1, Damage = 2f, Stagger = 0f, Stacks = 1, Speed = 26f } },
                 "Opens two shapes of Second Shadow, chosen at any rest fire: Return to the Shadow, a shadow to sink back into and mend, or Long Shadow, a road along the floor.",
                 // NEEDS: changing places within a second of being struck as the moment, the blow passed to the shadow and its
-                // health given back (second-press, spell-windows). Until then each cast turns the next blow that would land.
+                // health given back (press-on-standing-thing, spell-windows). Until then each cast turns the next blow that would land.
                 new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Ward, Count = 1 } },
                 "Change places within a second of being struck, and the blow passes to the shadow, and the health it took comes back to you.");
 

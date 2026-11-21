@@ -83,7 +83,7 @@ namespace Clover.Player
         public static bool OwnBranch(Upgrade owner, Upgrade castSource)
         {
             if (owner == null || string.IsNullOrEmpty(owner.Branch)) return false;
-            // NEEDS: the element of a base spell cast by its kit. Until then, with two elements carried, a base spell's
+            // NEEDS (base-spell-element): the element of a base spell cast by its kit. Until then, with two elements carried, a base spell's
             // Master answers either element's base spell.
             if (castSource == null) return SpellSlots.IsBase(owner.Branch);
             return castSource.Id == owner.Branch || castSource.Branch == owner.Branch;

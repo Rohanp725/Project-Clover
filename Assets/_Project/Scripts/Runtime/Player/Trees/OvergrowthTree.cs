@@ -89,7 +89,7 @@ namespace Clover.Player.Trees
             }, HeartPattern.Spell));
 
             // BESPOKE (built): GroundWakesForm. The branch's duo surge, begun by the surge, and its top mark.
-            // NEEDS: a duo surge chosen in the Hand's surge slot (now it answers any surge while both are carried).
+            // NEEDS (duo-surge-slot): a duo surge chosen in the Hand's surge slot (now it answers any surge while both are carried).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheGroundWakes, Name = "The Ground Wakes", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { StoneOak }, Icon = UpgradeIcons.Crown,

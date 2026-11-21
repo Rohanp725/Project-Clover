@@ -343,7 +343,7 @@ namespace Clover.Player.Trees
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Burst, Radius = 0.8f, Delay = 1f, Damage = 10f, Stagger = 15f, Affliction = S, Stacks = 1 } } },
                 "Opens two shapes of To the Blade, chosen at any rest fire: Chain, a tripwire left along your flight, or There and Back, a flight out and home again.",
                 // NEEDS: the shared movement rule's timing, cast as a blow would land and untouchable from the press
-                // (their-blow-moment). Until then a cast within a second after a perfect dodge starts no wait.
+                // (blow-about-to-land). Until then a cast within a second after a perfect dodge starts no wait.
                 new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.InstantNext, Seconds = 1f } },
                 "Cast it in the perfect dodge's moment, and you are untouchable from the press and To the Blade is ready again.");
 

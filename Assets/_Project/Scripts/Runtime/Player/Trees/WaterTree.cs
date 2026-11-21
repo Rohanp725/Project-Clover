@@ -136,7 +136,7 @@ namespace Clover.Player.Trees
                     Change = new SpellChange { Reach = 4f, Arc = 360f },
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Push, At = EffectAt.Self, Radius = 4f, Amount = 3f, Cooldown = 0.5f } } },
                 "Opens two shapes of Blowhole, chosen at any rest fire: Still Water, a quick parry, or Blown Out, a spout under you that makes room.",
-                // NEEDS: letting go within 0.2 s of a blow landing on the vent (held-press, their-blow-moment). As built every
+                // NEEDS: letting go within 0.2 s of a blow landing on the vent (held-press, blow-about-to-land). As built every
                 // answer comes in that instant, so every answer strikes again as hard and the vent comes back once in twenty seconds.
                 new[]
                 {
@@ -218,7 +218,7 @@ namespace Clover.Player.Trees
                         new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Soaked, Stacks = 1 },
                     } },
                 "Opens two shapes of The Tide Turns, chosen at any rest fire: King Tide, a wide flood that throws a crowd down, or Out to Sea, an enemy drawn away with you.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, their-blow-moment), and the flood's
+                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the flood's
                 // own press. Until then the cast gives what a perfect dodge gives, and the next cast within a second of a perfect
                 // dodge starts no clock.
                 new[]

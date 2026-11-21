@@ -88,7 +88,7 @@ namespace Clover.Player.Trees
                     Description = "Hold to stay under for up to a second and a half and steer. Come up under an enemy, and it is thrown up as by Stone Rise, and you stand behind it.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Lift, Seconds = 0.6f } } },
                 "Opens two shapes of Under the Mound, chosen at any rest fire: Ditch and Bank, a wall drawn along your path, or Barrow Road, steered under the ground to come up beneath an enemy.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, their-blow-moment), and the next blow
+                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the next blow
                 // landing as a heavy blow. Until then every cast gives what a perfect dodge gives, and the next blow that lands
                 // breaks half again as much balance and lays one Tremor more.
                 new[]

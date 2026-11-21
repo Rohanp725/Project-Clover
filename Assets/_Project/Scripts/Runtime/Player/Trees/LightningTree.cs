@@ -164,7 +164,7 @@ namespace Clover.Player.Trees
             to.Add(BranchPattern.Put(new Upgrade { Id = Upgrade.Blink, Name = "Blink", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Static }, Icon = UpgradeIcons.Boot,
                 Description = "Each dodge sends a line of lightning down its path that shocks whatever it crosses." }, BranchPattern.RightFoot));
 
-            // NEEDS: a second press while the rod stands stepping you to it in a flash (a 2.5 m shock, 14 damage, 20
+            // NEEDS (press-on-standing-thing): a second press while the rod stands stepping you to it in a flash (a 2.5 m shock, 14 damage, 20
             // stagger), the rod spent. Until then the rod strikes round itself.
             SpellBranch.Add(to, E, Upgrade.LightningRod, "Lightning Rod", SpellRole.Movement, BranchPattern.RightA, Upgrade.Blink, SpellForms.Rod,
                 new SpellSpec { Reach = 2f, Radius = 3.5f, Seconds = 8f, Interval = 0.9f, Damage = 12f, Stagger = 12f, Delay = 0.2f, Stacks = 1 },

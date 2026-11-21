@@ -206,7 +206,7 @@ namespace Clover.Player.Trees
                     Description = "It bursts by itself a second and a half after an enemy first strikes it. A trap that answers the enemy, not you.",
                     Change = new SpellChange { Seconds = 3f } },
                 "Opens two shapes of Winter Wall, chosen at any rest fire: Shield Wall, a wall you advance behind, or Cracked Wall, a trap that answers the enemy.",
-                // NEEDS: only a heavy blow's burst within 0.3 s of an enemy striking the wall (their-blow-moment). Until then
+                // NEEDS: only a heavy blow's burst within 0.3 s of an enemy striking the wall (blow-about-to-land). Until then
                 // every burst freezes what it reaches.
                 new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 5 } },
                 "Burst it with a heavy blow in the instant after an enemy strikes it, and the cone freezes everything it reaches.");
@@ -285,7 +285,7 @@ namespace Clover.Player.Trees
                     Description = "While you slide you loose three shards of ice at the nearest enemy, 8 damage and a Chill each, as she shoots from her skis.",
                     Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellCast, OwnBranch = true, Do = UpgradeAction.Projectile, Flight = Flight.Homing, Count = 3, Damage = 8f, Stagger = 6f, Radius = 0.5f, Speed = 18f, Seconds = 0.8f, Affliction = AfflictionKind.Chill, Stacks = 1 } } },
                 "Opens two shapes of Ski Run, chosen at any rest fire: Thin Ice, a lane that gives under those who follow, or Shooting Run, shards loosed as you slide.",
-                // NEEDS: the shared movement rule's timing (started as a blow would land, their-blow-moment), and the moment of a
+                // NEEDS: the shared movement rule's timing (started as a blow would land, blow-about-to-land), and the moment of a
                 // shatter. Until then the cast gives what a perfect dodge gives, and sliding through a Frozen enemy freezes
                 // everything on the lane on from it.
                 new[]

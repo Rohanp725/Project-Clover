@@ -29,7 +29,7 @@ namespace Clover.Player.Trees.Duo
 
             // Ash Plume's storm is called down by the enemy's own blow at you (the their-blow moment, ConditionAttacked), or
             // falls when its 6 s run out, one bolt for each weapon blow it took, five at most (the owner's answer of
-            // 2026-11-20). NEEDS: the cloud drifting to the nearest enemy if its host dies.
+            // 2026-11-20). NEEDS: the cloud drifting to the nearest enemy if its host dies (drift-on-death).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "The Grudge: First Strike or Ash Plume", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
