@@ -41,7 +41,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/burntmound.md
 - [x] marks/capsize.md
 - [x] marks/carriedembers.md
-- [ ] marks/caughtlight.md
+- [x] marks/caughtlight.md
 - [ ] marks/chokedamp.md
 - [ ] marks/coldshort.md
 - [ ] marks/dark.md
