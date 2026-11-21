@@ -90,7 +90,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/shiningherb.md
 - [x] marks/sicklewind.md
 - [x] marks/sleetcharge.md
-- [ ] marks/smoulder.md
+- [x] marks/smoulder.md
 - [ ] marks/steam.md
 - [ ] marks/stolenwarmth.md
 - [ ] marks/tempest.md
