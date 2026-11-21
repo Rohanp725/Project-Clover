@@ -689,75 +689,104 @@ after. For moving moves also a sequence of frames every 0.1 s (for a GIF), as th
 
 ---
 
-## Audit results (2026-11-20) — IN PROGRESS
+## Audit results (2026-11-20)
 
-Section 6's audit was started on the fight as it stands at commit `cabb87d` and paused part-way at the owner's request.
-Nothing in the game was changed. The probe is `AgentScripts/KhepharuAudit.cs` (with `KhepharuMeshDump.cs`, which must be
-run once in edit mode first, since the model's meshes cannot be read in Play Mode); frames go to
-`review/khepharu/audit/<game|close>/` (one folder per move or case: `seq/*.jpg` every 0.1 s and `b1`..`b4` PNG beats;
-`worst/*.png` taken the frame a new worst is measured; `frames.csv`; `summary.txt`). The game view was 1920 x 1080.
+**Status: the game-camera audit is complete and written up below; the close-camera run is IN PROGRESS** (see the running
+notes at the end). Measured on the fight as it stands at `cabb87d`, before any change, by `AgentScripts/KhepharuAudit.cs`
+(with `KhepharuMeshDump.cs` run once in edit mode, since the model's meshes cannot be read in Play Mode). Game view
+1920 x 1080. Everything lives under `review/khepharu/audit/` (not committed, about 1.5 GB): `game/summary.txt` (every
+worst number, per move, case, form state and sun state), `game/frames.csv` (one row a frame, 49 922 frames),
+`game/<move>/b1..b4.png` (the four beats), `game/<move>.gif` (51 GIFs, 10 frames a second), `game/worst/*.png` (taken on
+the frame each new worst was measured), and `worst.png` (the contact sheet). The man's part is in `game_part1/`.
 
-**Done so far:** the whole game-camera run: the intro, every move of the man, the change, every move of the
-Sun-Bearer (18, four beats and a 0.1 s sequence each), the twelve sun-against-body cases (sixteen runs), the arena's
-edges, the fury's Zenith, the Flares and Furrows in fury, the stagger and finisher, and the death
-(`review/khepharu/audit/game/summary.txt`; the first part, the man's moves, kept in `game_part1/`). **Still to do:** the
-close-camera run, `profile_court.sh`, `SunFightProbe` part `Clip` as the body's baseline, the GIFs, reading the frames,
-the full write-up below and `worst.png`.
+How it measures. **Sun against floor:** every frame, the lowest world point of every drawn sun part (the ball's and the
+dull ball's vertices, the corona quad's corners and its bottom edge, the trail) below 0.036 m. **Sun against body:** the
+ball (radius 1.5 x size) against every body piece's own triangles: the radius less the distance to the nearest point of
+the surface, or the radius plus it when the middle is inside (two-ray parity); the brief's eight-corner box measure is
+kept beside it in `summary.txt`. Each move was asked alone (`OnlyWhenAsked`, `Queued`) with the player standing in its mark.
 
-A first run of the form's moves was thrown away: the king's greeting was left open (the editor lost focus, so the probe's
-keys were dropped), which holds the player for the rest of the fight, and its sun-inside-the-body test read a held sun as
-3 m deep. Both are fixed in the probe (input ignores focus; a watchdog reads out any box; inside is now two-ray parity).
+### 1. The owner's two faults
 
-### Headline numbers from the game-camera run (to be written up in full)
+**The sun clips the floor: confirmed, and the cause is the corona quad, not the tongues.** Whenever the burning sun is on
+the floor the corona quad's lower edge is under the paving: **1.03 m** held, rolling, in Furrows, Ricochet, Roll, Sparks,
+Stoop, Pass and Setting (every frame of Roll 641/641, Furrows 1608/1608, Ricochet 829/829), **1.29 m** with the Flares'
+swollen sun (442/442 frames), 0.84 m at the finisher, 0.85 m in the change. The ball itself never goes under (at most
+0.05 m) except in the **Burrow, where the drawn, held sun sinks 3.61 m (the corona 4.60 m) through unbroken paving**
+(164 of 164 frames; `game/worst/floor_Burrow_Burrow_Held_4p29.png`), its trail 2.93 m.
 
-- **The sun goes through the body: confirmed.** Deepest overlap of the ball (radius 1.5) with the body's triangles:
-  the Ram with the player in front **2.32 m** into the thorax (`game/worst/body_case_ram_front_Ram_Left_2p11.png` shows
-  the sun buried in the head); the parry **2.04 m** into the upturned body; a Ricochet whose bounce passes the scarab
-  **2.09 m** (abdomen), 1.95 and 1.87 m in the other two tries; taking the sun up from behind **1.90 m**; the walk round
-  to a sun on the far side **1.53 m** through the left foreleg; a light roll into the upturned scarab **1.40 m**
-  (midleg); the Ram's own turn **1.43 m** (midleg); a heavy roll (shell strike) **0.84 m** (upturned) and **0.76 m**
-  (righted). The falcon: its head is **2.35 m** into the sun through the whole Zenith, its talons 1.28 m in on the Stoop
-  and 1.46 m on the Rising.
-- **The corona below the floor: confirmed at every frame the burning sun is on the floor**: 1.03 m held or rolling
-  (Roll 641 of 641 frames over 0.05 m, Furrows 1608 of 1608, Ricochet 829 of 829), **1.29 m** with the Flares' swollen
-  sun. The Burrow carries the drawn, held sun **4.60 m** under unbroken paving (164 of 164 frames).
-- **The boss is off the screen 29.9% of the form fight's frames; the falcon 82.6% of its frames** (Feathers, Gust,
-  Sunfall, Zenith and Setting: every frame; Pass 429 of 530; Stoop 331 of 681). The scarab is off the screen for nearly
-  all of a Ricochet (1228 of 1230 frames).
-- **Frame time in the editor:** the form fight median 6.7 ms, p95 12.0, 502 of 50985 frames over 16.6 ms, 14.7 KB of
-  garbage a frame; the fury's Zenith median **12.3 ms, p95 22.5** (39 of 164 frames over 16.6); the death median 10.7,
-  p95 17.0, worst 87.4 ms.
+**The ball rolls through the beetle: confirmed in every case the brief named.** Deepest overlap of the ball with the body:
 
-### The brief's claims checked so far
+| Case (brief 2.2) | Worst | Piece | Frame (`game/worst/` unless named) |
+|---|---|---|---|
+| Ram with the player beyond the sun (2) | **2.32 m** (312 of 373 frames over 0.05) | thorax; the sun sits inside the head | `body_case_ram_front_Ram_Left_2p11.png` |
+| Ricochet bounce passing the scarab (7) | **2.09 m**; 1.95 and 1.87 in the other tries | abdomen, thorax | `body_case_ricochet_pass_3_Ricochet_Left_2p00.png` |
+| Parry rebound (1) | **2.04 m** | thorax (the sun hidden inside the upturned body) | `body_case_parry_Exposed_Loose_1p95.png` |
+| Taking the sun up from behind (6) | **1.90 m** | thorax | `body_case_takeup_sun_behind_Exposed_Loose_1p58.png` |
+| Walking round to a sun on the far side (9) | **1.53 m** (628 of 677 frames) | left foreleg | `body_case_walk_sun_far_side_Exposed_Loose_1p21.png` |
+| Falcon hopping to its sun (8) | **1.53 m** | left talon | `body_case_falcon_hop_Idle_Held_1p47.png` |
+| Light roll into the scarab (4) | **1.40 m** upturned, 1.08 m righted | midleg, foreleg | `body_case_light_into_righted_Exposed_Loose_0p98.png` |
+| The Ram's own run (2) | 1.43 m | right midleg | `game/Ram.gif` |
+| Heavy roll, the shell strike (5) | 0.84 m upturned, 0.76 m righted | forelegs | `body_case_heavy_into_on_back_Exposed_Loose_0p76.png` |
+| Furrows' turns (3) | 0.59 m | **the head**, not the legs | `game/Furrows.gif` |
+| The falcon's head in the Zenith (new) | **2.35 m** for the whole climb and blaze (1274 of 1275 frames) | falcon head | `body_Zenith_Zenith_High_2p31.png` |
+| The falcon's talons, Stoop and Rising (new) | 1.28 m, 1.46 m | talons | `body_Rising_Rising_Left_1p46.png` |
+
+### 2. Every claim of sections 1 to 3, checked
 
 | Claim | Verdict | Evidence |
 |---|---|---|
-| 1.5 / 3.1: the fight camera looks 63 degrees down (55 + 8) | **Wrong** | `DuelPitch` and `ViewPitch` are **-8**: the view is 8 degrees *flatter*. Measured 47 degrees down in every filmed clip (duel and form). This changes every number below that was worked out at 63. |
-| 1.5: duel at 15.6 m, form fight at 24 m | Confirmed | Camera to player 15.4-15.6 m in all eight man clips; 22-25 m in the form fight (first run). |
-| 2.1.1: the corona quad goes below the floor, about 0.4 m | **Confirmed, and deeper** | At 47 degrees the quad's lower edge is **1.03 m** under the paving's top with the sun held at idle (286 of 975 frames over 0.05 m in the change; smoke run), **0.85 m** in this run's change at 3.34 s (32 of 502 frames over 0.05 m): `game/worst/floor_change_Entering_Left_0p85.png`. Still to check in close frames: whether the cut *shows* (at the game camera the flame ring reads whole, so the floor may only be cutting the quad's empty corners). |
-| 2.1.2: the twelve flame tongues spin into the floor | **Wrong** | The tongues are submesh 1 of `sun` (344 vertices, reaching 2.77 m) with `m_fire_hidden`: not drawn. The spikes in the frames (and in `suncourt_roll_2.png`) are the **corona quad's** flame ring, which always faces the camera. |
-| 2.1.5: the floor's top is at 0.036 | **Partly** | The drawn rings' tops are 0.004 to 0.028 m (`Paving Inner` 0.028 the highest); what is walked on (`Court Platform`) is at 0.000. The ball's lowest point is at about y 0 (0.04 below 0.036), so it sits up to 3 cm inside the drawn paving. |
-| 2.1.6: `SunFightProbe` part `Clip` cannot see the sun's parts | Confirmed | It measures the `Body/` pieces' boxes and three points of a 1.5 m sphere; the corona, the trail and the dull sun are never measured. |
-| 3.1: the man is about 160 px tall in the duel | **Wrong** | 206-232 px at 1920 x 1080 in the duel (eight clips); 163 px only at the intro's camera, before the duel framing. |
-| 1.5: the court's edge holds | Confirmed | Pushed outward for 1 s from r 19.3 at every 15 degrees, the player stops at r 19.92-20.37, never lower than y 0.08: no way out, no fall-out. The heat wall at the forecourt's mouth holds at z -19.72 at five points. |
+| 1.5, 3.1: the camera looks 63 degrees down | **Wrong** | `DuelPitch` and `ViewPitch` are -8: the view is 8 degrees *flatter*, **47 degrees** down in every clip (duel and form); the death at 51. |
+| 1.5: duel at 15.6 m, form fight at 24 m | Confirmed | 15.4-15.6 m in the duel; 21-25 m from the player in the form fight. |
+| 2.1.1: the corona goes under the floor, about 0.4 m | **Confirmed, 2.5 times deeper** | 1.03 m (see 1). The brief worked it at 63 degrees; at 47 the quad tips further back. |
+| 2.1.2: the tongues spin into the floor | **Wrong** | They are submesh 1 of `sun` (344 vertices, to 2.77 m) with `m_fire_hidden`, never drawn. The spikes in the frames are the corona quad's flame ring, which always faces the camera. |
+| 2.1.3: the spin is about the wrong axis | Confirmed in code, harmless to the floor | `Quaternion.Euler(sunSpin, yaw, 0)` (`SunBearer.cs` 2698); with the tongues hidden only the round ball turns, and it never dips (0.05 m at most). |
+| 2.1.4: the sun sinks through solid paving | **Confirmed** | The Burrow: the ball 3.61 m under, drawn, while held (164/164 frames). |
+| 2.1.5: the floor's top is at 0.036 | Partly | The drawn rings' tops are 0.004-0.028 m (`Paving Inner` the highest); the walked collider is at 0.000; the ball's foot is at about y 0, up to 3 cm inside the drawn paving. |
+| 2.1.6: `SunFightProbe` `Clip` cannot see the sun's parts | Confirmed | It reads the `Body/` boxes and three points of a 1.5 m sphere only. |
+| 2.2.1 to 2.2.9 | **Confirmed**, 3 and 5 partly | Table in 1. The Furrows' turn sinks the ball into the head, not the legs. The hard-roll check lets the ball 0.76-0.84 m into the legs before it counts, not "about 2 m". |
+| 3.1: the man is about 160 px tall in the duel | **Wrong** | 206-232 px at 1080p in the duel (eight clips); 163 px only at the intro's camera. |
+| 3.1: the scarab is about 230 px long | Wrong, larger | It covers about 375 x 246 px at idle at 1080p (the box round its drawn pieces, legs included). |
+| 3.1: the falcon rides the top edge or above it | **Confirmed, worse** | The falcon's middle is off the screen in **82.6%** of its frames (7336 of 8878): every frame of Feathers, Gust, Sunfall, the Zenith and Setting; Pass 429/530; Stoop 331/681; Grab 508/741. The boss as a whole is off the screen in **29.9%** of the form fight's frames. |
+| 3.1: the obelisk blocks the view | Confirmed | It stands between the camera and the boss in every frame of the change (732/732) and the Setting (629/629), 900 of 2333 in the Zenith, and 2814 of 2946 while the sun is taken up across it. The occlusion fader thins it to a dithered column running up through the frame. |
+| 1.5: the wall and the court's edge | Confirmed | Pushed outward for 1 s from r 19.3 at every 15 degrees the player stops at r 19.92-20.37 and stays at y 0.08: no way out, no fall-out, no standing on the low south wall. The heat wall holds at z -19.72 at five points. |
+| 1.2: the man's moves as tabled | Confirmed | Each forced move struck a player standing in its mark (thrusts +3, reach +1, sweep +1, butt +2, throw and ray +2, drive +3), except the noon shafts (+0: the player stood in the obelisk's shadow, which is the rule). |
 
-### New faults found so far
+### 3. New faults found
 
-1. **The obelisk's collider is wider than the stone.** Pushed into from eight sides the player stops 2.08 m from its
-   middle (1.94 on the diagonals); its drawn foot is 1.2 m half-across, so the player meets an invisible wall short of
-   the stone (player radius not yet logged).
-2. **The obelisk stands between the camera and the boss** for the whole change (502 of 502 frames): the occlusion
-   fader thins it to a dithered column that runs up through the frame to the sun.
-3. **The sun's corona is a flat spiky sticker.** At the game camera the burning sun reads as a ball on a flat,
-   camera-facing star of flame (see the frame above); it does not read as a burning mass from any side.
+1. **The obelisk's collider is 0.48 m wider than the stone.** The player (radius 0.40) stops 2.08 m from its middle
+   (1.94 on the diagonals); the drawn foot is 1.2 m half-across. An invisible wall stands half a metre off the stone.
+2. **The corona is a flat sticker.** A camera-facing quad of spiky flame behind a ball: at 47 degrees it reads as a star
+   badge, not a burning mass, and it is the one part that crosses the floor.
+3. **The falcon's head is inside the sun for the whole Zenith** (2.35 m, 1274 of 1275 frames).
+4. **The held sun overlaps the scarab's own head** by 0.17-0.47 m in idle, Roll, Kick and Furrows: the held pose itself
+   puts the ball into the head, before any turn.
+5. **The Ricochet takes the scarab out of the picture** (1228 of 1230 frames): it shoves the sun from the far rim while
+   the camera stays with the player.
+6. **The Zenith costs the most frame time** (below): its median is nearly twice the rest of the fight's.
+7. **A box of words left open holds the player for the rest of the fight** (no blow lands). In play the player reads it,
+   so this is a probe trap, not a game fault, but every probe of this fight must read boxes out.
 
-### Frame time so far (editor, 1920 x 1080, frames stalled by a capture left out)
+### 4. Frame time (editor, 1920 x 1080; frames a capture stalled are left out)
 
-| Part | Frame ms median / p95 / worst | Over 16.6 ms | Garbage a frame |
+| Part | Frame ms median / p95 / worst | Frames over 16.6 ms | Garbage a frame |
 |---|---|---|---|
 | Intro | 5.6 / 10.5 / 16.4 | 0 of 938 | 9.1 KB |
 | The man's moves | 5.8 / 10.1 / 26.1 | 12 of 5275 | 9.0 KB |
-| The change | 6.1 / 10.8 / 15.5 | 0 of 659 | 11.3 KB |
+| The change | 6.7 / 9.7 / 12.4 | 0 of 882 | 11.4 KB |
+| The form fight (all moves and cases) | 6.7 / 12.0 / 71.5 | 502 of 50 985 | 14.7 KB |
+| The fury's Zenith | **12.3 / 22.5** / 42.5 | 39 of 164 | 19.4 KB |
+| The death | 10.7 / 17.0 / 87.4 | 48 of 886 | 20.1 KB |
+
+The editor's own cost is in these. `profile_court.sh` was not re-run: the frame times above answer the brief's ask. The
+garbage (9-20 KB a frame) is against the project's zero-allocation rule and is worth a profiler capture once 5.1 lands.
+
+### 5. What it changes in the work list
+
+- 5.1 item 2 is the floor fix, and it is the corona that must be faded or rebuilt; the tongues need nothing (hidden).
+- 5.1 item 4 (a real hole) is needed: the Burrow is the deepest cut in the fight.
+- 5.1 item 5 is confirmed case by case; add the falcon's head in the Zenith and the held pose's overlap with the head.
+- 5.6 items 44-45 are the biggest single gain in readability: the falcon is off the screen in 83% of its frames.
+- Section 1.5's camera and every pixel figure in section 3.1 are to be read at 47 degrees, not 63.
 
 ### Running notes
 
