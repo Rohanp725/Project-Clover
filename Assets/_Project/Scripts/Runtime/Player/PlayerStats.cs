@@ -15,7 +15,7 @@ namespace Clover.Player
     public class PlayerStats
     {
         public const int Count = (int)PlayerStat.SpellCooldown + 1;
-        public const int WhenCount = (int)StatWhen.InOwnFire + 1;
+        public const int WhenCount = (int)StatWhen.AirborneHeavyBlow + 1;
         /// <summary>How many timed boons can run at once; a new one past that takes the place of the one nearest its end.</summary>
         public const int BoonCapacity = 16;
         /// <summary>How many learned changes can be tied to an affliction on the target; more are dropped.</summary>
@@ -53,7 +53,7 @@ namespace Clover.Player
             || stat == PlayerStat.AirSeconds || stat == PlayerStat.AirBlows || stat == PlayerStat.GrownLimit || stat == PlayerStat.MarkBlows;
 
         /// <summary>True for a condition asked of each blow, not held as a state.</summary>
-        public static bool IsBlow(StatWhen when) => when == StatWhen.HeavyBlow || when == StatWhen.LightBlow || when == StatWhen.CriticalBlow || when == StatWhen.ChainEndBlow || when == StatWhen.AirborneBlow;
+        public static bool IsBlow(StatWhen when) => when == StatWhen.HeavyBlow || when == StatWhen.LightBlow || when == StatWhen.CriticalBlow || when == StatWhen.ChainEndBlow || when == StatWhen.AirborneBlow || when == StatWhen.AirborneHeavyBlow;
 
         public void Clear()
         {
@@ -117,6 +117,9 @@ namespace Clover.Player
 
         /// <summary>What the learned changes add to a stat for a blow on an enemy in the air.</summary>
         public float InAir(PlayerStat stat) => conditional[(int)StatWhen.AirborneBlow * Count + (int)stat];
+
+        /// <summary>What holds on a heavy blow that lands on an enemy in the air, on top of <see cref="InAir"/> (Hammer Down).</summary>
+        public float InAirHeavy(PlayerStat stat) => conditional[(int)StatWhen.AirborneHeavyBlow * Count + (int)stat];
 
         /// <summary>What the learned changes add to a stat against a target carrying these afflictions.</summary>
         public float Against(PlayerStat stat, AfflictionSet target)

@@ -135,7 +135,17 @@ namespace Clover.Player
                 spec.Cost = learn.Spell != null ? learn.Spell.Cost : SpellTimings.For(learn.Id).Mana;
             }
             shape?.Change?.ApplyTo(spec);
-            if (Empowered(branch, learned)) EmpowerOf(branch)?.ApplyTo(spec);
+            if (Empowered(branch, learned))
+            {
+                var empower = EmpowerOf(branch);
+                // An Empower for the Learn's own spell leaves a shape's whole spell as the shape gives it, its wait apart.
+                if (empower != null && empower.LearnOnly && shape != null && shape.Spell != null)
+                {
+                    if (empower.Cooldown > 0f) spec.Cooldown = empower.Cooldown;
+                    if (empower.Mana > 0f) spec.Cost = empower.Mana;
+                }
+                else empower?.ApplyTo(spec);
+            }
             return spec;
         }
 

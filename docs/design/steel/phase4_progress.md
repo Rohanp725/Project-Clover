@@ -366,3 +366,117 @@ after Set the Hand.
 6. **Halo and Pyre in the heart** now have their duo spell at the spell's place and nothing at the crown. This has not been
    looked at on the chart.
 7. **The Grudge's cloud has no look of its own yet** (effects.md: "Not yet: the cloud itself").
+
+## 2026-11-20 (night): the owner's answers built offline on `phase4b` (not merged yet)
+
+Branch `phase4b`, from `main` at `7bc85df`. It was built with no editor, and every commit compiles clean in all four
+assemblies. The EditMode fixtures that run outside the editor pass: 708 in all, with the same 114 editor-only failures as
+`main`. The merge steps, fixtures and probes are in `phase4b_merge_plan.md`. `// NEEDS` lines went from 493 to 455.
+
+| Task | Commit | What was built |
+|---|---|---|
+| 1. Six keystones | `1bbd191` | See "The six keystones" below. |
+| 2. `reaction-numbers` | `234bb48` | A duo mark changes its own reaction's numbers. `ReactionNumbers` keeps copies of the reaction's effects and of its shapes' effects, one copy for each set of changing marks in force, in the original slots. 18 minors are finished. See below for the 7 that need other pieces. |
+| 3. `duo-surge-slot` | `4ec7497` | Each of the nine duo surges is its own surge in the Hand's surge slot. It is chosen at a rest fire while both elements are carried. It has its own kit for its own mana and time, and is in force only while worn. Open the Gourd lasts a second longer for each capsize, to 15 s. Ash and Thunder lasts a second longer for each kill. |
+| 4. `form-pieces` | `2b52de6` | See "Form pieces" below. |
+| 5. Empowers | `3581206` | See "Empowers" below. |
+| 6. Four marks kept | `48171c0` | See "Four marks kept" below. |
+| 7. The deep strike | `1e07c7f` | It needs the element's Devotion bought (`StrikeRules.IsDeep`). Without it, R2 alone or all in is the plain infused strike and costs no mana. The HUD, the guide and the Devotions' texts say so. |
+| 8. Smaller changes | `552fdf4` | See "Smaller changes" below. |
+| Review | `83dde33` | Nine fixes from a code review, and `Phase4bProbe`. |
+
+### The six keystones
+
+- **Into the Fire.** A dodge toward the enemy you face (within 60 degrees) is safe for its whole length and goes through
+  bodies. It sets everything on its path burning two deep. A perfect dodge toward the enemy raises Heat a level. A dodge
+  away costs twice the stamina and is never perfect.
+- **The Blade Drinks Fire.** Fire's root lays nothing with the weapon. Burns do not bite. Each blow takes Burn off a
+  burning enemy and hits 6 harder for each: one for a light blow, three for a heavy blow, all for a finisher.
+- **High Water, Low Water.** A tide clock turns every 6 s, and a perfect guard or dodge turns it at once. High water: spells
+  x1.33 and the weapon x0.8. Low water: the other way round.
+- **Drawn Back to Break.** Each dodge away banks a wave, three at most. The next blow breaks them all as a 4 m cone that
+  soaks and throws. With no wave held, the weapon is 20% softer (a count's empty state).
+- **Shared Roots (`life.sharedroots`).** A third of each wound goes to the Seeded enemies within 8 m, split between them.
+  Blows on Seeded enemies no longer heal you.
+- **In Its Season.** A seed left alone for 6 s ripens and stops fading. A ripe burst is three times as strong and grows a
+  thornbush (`RipeBurst`). An unripe burst is half as strong. A burst means set off, its bearer's death, or a reaction.
+
+### Smaller changes (task 8)
+
+- The heart's picker steps through all ten partners.
+- Fast Water quickens each Soaked enemy's own poison clock: it bites twice as often and fades twice as fast.
+- The Exile Returns and Given Bones answer only the Grudge's bolt, in any of its three shapes (`AnyMark`). Given Bones adds
+  14 a Static.
+- Ash Plume's storm is capped at five bolts.
+
+### Empowers (task 5)
+
+- The "a second less" defaults are undone, and the chart test lets an Empower strengthen or shorten.
+- Empowers can now change their Learn's own effects (`empower-effects`) or lay their numbers on the Learn's spell alone
+  (`LearnOnly`).
+- This finishes Poured Bronze, Reckoning, One by One, Daybreak, Five Needles, Returning Edge, Cairn, Reap What Is Sown,
+  Drawn From the Wood, Devouring Maw, Gone to Ash, Debts Called and Second Shadow.
+
+### Four marks kept (task 6)
+
+- Hammer Down and Clean Break are in the empty middle place of Wind's and Ice's right boughs. Indrawn Breath and Ski Run now
+  grow from them, as the pattern grows those stalks: a line from the foot would run over the kept mark, and the ring check
+  refuses that. So those two spells are 3 Shards dearer to reach. Hammer Down's heavy blow on an enemy in the air also hits
+  half again as hard.
+- Spilled Water and Shade are at a new place, the top of the trunk (`T.3`). Water and Life had no empty place left after
+  their keystones.
+
+### Form pieces (task 4)
+
+- A spell's later presses: `Upgrade.Presses`, done by the slot's own button within its window.
+- A change of places (`SwapPlaces`), a step straight back (`StepBack`), and a moment untouchable (`Untouchable`).
+- Three Weasels now has all three presses.
+- Under the Black Water now changes places. Elites and gods stay put and you rise behind them. Its pool curses, and your
+  next blow hits half again as hard.
+
+### What is left (all in the ledger)
+
+- **Reaction-numbers marks that need other pieces:**
+  - Goes Up (`reaction-numbers-when`)
+  - Held Down and What the Yew Keeps (`reaction-start-count`)
+  - Clear Sky (`mark-blows-on`)
+  - Bellows and Wind Sickle (`whirl-fed`)
+  - Bright Venom (`poison-held`)
+- **Empowers:**
+  - Standing Light's does nothing until `in-own-ground`.
+  - Flung Blade's now does nothing until `base-spell-marks`, since its shorter wait was the only part that worked.
+  - The `empower-after-shape` row is left for the rest.
+- **Second presses:** those a Shape or a Master adds, those that act on a thing the spell left standing, and Fire-Setting.
+  Fire-Setting needs a brand that lays the fire without a blow setting it off.
+- **The other duo spells' form pieces.** They stay in `form-pieces`, each with what it needs.
+- **The Yawning Gap:** alternating blows (`alternate-blows`).
+- **Looks**, in the `looks` row:
+  - the bud and flower of a ripe seed
+  - the tide ring and HUD sign
+  - the blade drinking fire
+  - Shared Roots' roots
+  - the waves behind the shoulders
+  - Into the Fire's lunge
+  - duo surges have no look of their own and wear their first element's
+
+## For the owner (this pass)
+
+1. **The top of the trunk.** Spilled Water and Shade are at a new place, `T.3`, at (0, 9.75). It grows from the middle
+   bough's crown (Spreading Water, Root and Branch), because their trees had no empty place left after the new keystones.
+   Alternatives: make one of them a minor somewhere else, or cut it again.
+2. **Indrawn Breath and Ski Run are dearer.** They now grow from Hammer Down and Clean Break, so each is 3 Shards dearer
+   to reach. Growing them from the foot as well would draw a line over the kept mark, which the ring check refuses. The
+   other choice is to put Hammer Down and Clean Break somewhere else.
+3. **Readings of the rosters**, as built:
+   - Grit: 6 a cut, not 3, and the whirl about 4 s.
+   - Green Wood: torn pits stand 8 s, not 5.
+   - Riding High: the farthest feather lands 9 m beyond the enemy.
+   - Wide Fan: Prism's five rays reach 7 m beyond the enemy.
+   - Reckoning's Empower: 10 a blow, 180 at most (60% of the approved 8 a blow).
+   - Daybreak's Empower: 10 a ring on the beam only.
+4. **Prices undone.** Daybreak's and One by One's price defaults were undone too, as the roster gave only stronger numbers
+   for them.
+5. **Duo surges start with no affliction of their own on the blows.** Their marks do everything.
+6. **Three Weasels' clock** starts at the first press. A press refused (nothing to do) ends the run of presses.
+7. **What "toward" means for Into the Fire and Drawn Back to Break.** A dodge counts when it is within 60 degrees of the line
+   to the enemy faced: the one ahead, or else the nearest, within 12 m. A dodge to the side is neither.

@@ -479,13 +479,13 @@ namespace Clover.UI
         }
 
         /// <summary>
-        /// The playtest's pair picker: the heart shows the next partner round the ring (by 1) or the one before (by -1)
-        /// whose branch with the tree looked at is built. The choice moves to the same place on the new branch, or its foot.
+        /// The playtest's pair picker: the heart shows the next partner round the ring (by 1) or the one before (by -1),
+        /// each of the ten in turn. The choice moves to the same place on the new branch, or its foot.
         /// </summary>
         public bool ViewPartner(int by)
         {
             if (!IsOpen || !PlaytestMode.On || viewed == null) return false;
-            string next = HeartLayout.NextPartner(viewed, heartPartner, by, Upgrade.All);
+            string next = HeartLayout.NextPartner(viewed, heartPartner, by);
             if (string.IsNullOrEmpty(next) || next == heartPartner) return false;
             return ViewHeart(next);
         }
@@ -493,7 +493,7 @@ namespace Clover.UI
         /// <summary>The playtest's pair picker, by name: the heart shows the branch of the tree looked at and this partner. True when it does.</summary>
         public bool ViewHeart(string partner)
         {
-            if (!IsOpen || !PlaytestMode.On || viewed == null || !HeartLayout.Built(HeartLayout.PairOf(viewed, partner), Upgrade.All)) return false;
+            if (!IsOpen || !PlaytestMode.On || viewed == null || HeartLayout.PairOf(viewed, partner) < 0) return false;
             var was = Chosen;
             Vector2 wasAt = was != null && heartLayout.Draws(was) ? heartLayout.Place(was) : HeartLayout.FootPlace;
             heartPicked = partner;

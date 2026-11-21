@@ -76,11 +76,19 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the suns hanging 6 s, not 4, and Prism's fan five rays reaching 7 m beyond the enemy.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WideFan, Name = "Wide Fan", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "The mock suns hang 2 s longer; with Prism, the fan reaches 8 m and holds five rays.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, ConditionSeconds = 6f },
+                    new ReactionChange { Shape = 0, Index = 0, ConditionSeconds = 6f },
+                    new ReactionChange { Shape = 0, Index = 1, Count = 5, Reach = 4f },
+                    new ReactionChange { Shape = 0, Index = 2, Count = 5, Reach = 4f },
+                },
             }, HeartPattern.RightLow));
 
             to.Add(HeartPattern.Put(new Upgrade

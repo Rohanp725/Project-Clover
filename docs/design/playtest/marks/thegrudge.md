@@ -9,13 +9,13 @@ Lightning are both carried.
 
 **When it happens.** Every time The Grudge fires (a second Static on a Cursed enemy, or a Curse on one carrying two) while Dark and Lightning are both carried. Before this mark is bought, or with only one of the two carried, the plain Grudge runs.
 
-**The numbers.** Mix, 3 Shards. First Strike: the cloud waits 8 seconds; your first heavy blow on it discharges all its Static at double, 14 for each in 4 metres, and holds it still 0.6 seconds. Ash Plume: the cloud waits up to 6 seconds, and when the enemy next strikes at you (landed, guarded or warded), or the time runs out, one bolt falls round it for each weapon blow you landed on it, 10 damage and a Static each, and all its Static is discharged in 4 metres. The Grudge rests 8 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. First Strike: the cloud waits 8 seconds; your first heavy blow on it discharges all its Static at double, 14 for each in 4 metres, and holds it still 0.6 seconds. Ash Plume: the cloud waits up to 6 seconds, and when the enemy next strikes at you (landed, guarded or warded), or the time runs out, one bolt falls round it for each weapon blow you landed on it, up to five bolts, 10 damage and a Static each, and all its Static is discharged in 4 metres. The Grudge rests 8 seconds on each enemy.
 
 **Works with.** Grievance to bring the Static, The Exile Returns, Given Bones, The Exile's Grudge.
 
 **Example.** A lone brute: First Strike, and end the cloud with a heavy. A pack round one cursed captain: Ash Plume, and keep hitting it for six seconds.
 
-**Not built yet.** Ash Plume's flashes are not yet capped at five. The cloud does not yet drift to the next enemy when its host dies.
+**Not built yet.** The cloud does not yet move to the next enemy when its host dies.
 
 ## thegrudge.grievance
 **What it does.** A blow held on your guard against a Cursed enemy lays two Static on it.
@@ -31,15 +31,13 @@ Lightning are both carried.
 ## thegrudge.exilereturns
 **What it does.** The Grudge's bolt heals you 1 for each Static it discharged and Curses everything within 3 metres.
 
-**When it happens.** Each discharge of Static on a Cursed enemy, while Dark and Lightning are both carried.
+**When it happens.** Each time the Grudge's black bolt falls, in any of its shapes: when the enemy under the cloud strikes at you, when your heavy blow calls it down (First Strike), or when Ash Plume's storm falls. Other ways of setting off Static do not count. Dark and Lightning must both be carried.
 
-**The numbers.** Mix, 3 Shards. 1 health for each Static spent; one Curse on everything within 3 metres. At most every 0.3 seconds.
+**The numbers.** Mix, 3 Shards. 1 health for each Static the bolt sets off, and one Curse on everything within 3 metres. At most once every 0.3 seconds.
 
 **Works with.** The Grudge and its shapes, Given Bones, Ash and Thunder.
 
 **Example.** Bring the cloud down on a charged captain: you mend, and the soldiers beside it are cursed for the next cloud.
-
-**Not built yet.** It answers any discharge on a Cursed enemy, not only the Grudge's own bolt.
 
 ## thegrudge.longmemory
 **What it does.** A Curse on a charged enemy lasts as long as its Static does.
@@ -55,11 +53,11 @@ Lightning are both carried.
 **Not built yet.** It does nothing yet: an affliction kept as long as another is still to come.
 
 ## thegrudge.givenbones
-**What it does.** A discharge on a Cursed enemy costs you 2 health, left grey to be won back by blows, and lands twice as hard.
+**What it does.** The Grudge's black bolt costs you 2 health and hits twice as hard. The health you pay turns grey, and you win it back by landing blows.
 
-**When it happens.** Each discharge of Static on a Cursed enemy, while Dark and Lightning are both carried.
+**When it happens.** Each time the Grudge's bolt falls, in any of its shapes. Other ways of setting off Static do not count. Dark and Lightning must both be carried.
 
-**The numbers.** Mix, keystone, 5 Shards. 2 health turned grey (never the last point), and a second burst of 7 for each Static spent, in 4 metres. At most every 0.3 seconds.
+**The numbers.** Mix, keystone, 5 Shards. 2 health turned grey (never your last point). The bolt hits a second time for 14 for each Static it sets off, within 4 metres. At most once every 0.3 seconds.
 
 **Works with.** The Grudge, The Exile Returns (which heals back what it costs), Ash and Thunder.
 
@@ -79,14 +77,14 @@ Lightning are both carried.
 **Not built yet.** Each attacker is not yet tied by a thread and paid back twice what it dealt you (60 at most), and a blow on the guard does not yet count double.
 
 ## thegrudge.ashthunder
-**What it does.** A duo surge. While your surge lasts a plume of ash streams up off your shoulders: every blow you land lays a Static, every third calls a bolt down on a Cursed enemy, and each Cursed enemy killed heals you 6 more.
+**What it does.** A duo surge. While it burns a plume of ash streams up off your shoulders: every blow you land lays a Static, every third calls a bolt down on a Cursed enemy, and each Cursed enemy killed heals you 6 more.
 
-**When it happens.** While your surge lasts, with Dark and Lightning both carried.
+**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Dark and Lightning are both carried, and light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. As built: each blow lays one Static; one blow in three on a Cursed enemy discharges its Static; each Cursed enemy killed heals you 6.
+**The numbers.** Mix, duo surge, 5 Shards. 40 mana, 10 seconds; each kill while it burns adds 1 second. As built: each blow lays one Static; one blow in three on a Cursed enemy discharges its Static; each Cursed enemy killed heals you 6.
 
 **Works with.** The Grudge, The Exile Returns, Given Bones.
 
 **Example.** Curse a pack, light your surge, and the plume keeps the clouds gathering.
 
-**Not built yet.** It is not yet a surge of its own (40 mana, 10 seconds) in the Hand's surge slot; the bolt falls on one blow in three by chance on the enemy struck, not on every third blow at the nearest Cursed enemy within 8 metres, and a kill does not yet add a second.
+**Not built yet.** The bolt falls on one blow in three by chance on the enemy struck, not on every third blow at the nearest Cursed enemy within 8 metres.

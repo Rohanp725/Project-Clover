@@ -39,11 +39,9 @@ draining.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
 
-**The numbers.** 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 10). It runs 5 metres along its lane: 24 damage and 30 stagger. Each Cursed enemy it bites loses its Curse, takes 20 damage more and heals you 12. The jaw itself lays no Curse: curse first, then bite.
+**The numbers.** 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 10, and each Cursed enemy bitten heals you 18). It runs 5 metres along its lane: 24 damage and 30 stagger. Each Cursed enemy it bites loses its Curse, takes 20 damage more and heals you 12. The jaw itself lays no Curse: curse first, then bite.
 
 **Works with.** The root, Grasp and Debts Called (curse first), Dread, which it grows from, Never Sated, Hunger, and the charged blade.
-
-**Not built yet.** The Empower's heal of 18: for now it only shortens the wait.
 
 **Example.** Curse a row of soldiers in a corridor with Grasp, then loose the jaw down it: each one bitten takes 44 and gives you 12.
 
@@ -82,7 +80,7 @@ draining.
 
 **Works with.** The root, Dread, which it grows from, Devouring Maw (bite what you came out behind), Near the Grave, and a heavy weapon.
 
-**Not built yet.** The wait of 5 seconds when nothing struck. The scattering into ash and standing again a moment later: for now you step at once. The blow struck as a heavy: for now it strikes twice as hard. The Empower's heal of 15.
+**Not built yet.** The wait of 5 seconds when nothing struck. The scattering into ash and standing again a moment later: for now you step at once. The blow struck as a heavy: for now it strikes twice as hard.
 
 **Example.** A captain swings at you: you scatter, stand at its back, and your cut lands double and gives you 10.
 
@@ -141,7 +139,7 @@ draining.
 
 **When it happens.** Only while Dark is carried twice (all in). Each Cursed death, and each death while you are Risen.
 
-**The numbers.** 6 Shards. Each shade stands where its body fell for 6 seconds and strikes what is within 2.5 metres of it every 0.8 seconds: 12 damage, 12 stagger and a Curse each time. All in, L2 with R2 is the deep strike, Yama's Noose.
+**The numbers.** 6 Shards. Each shade stands where its body fell for 6 seconds and strikes what is within 2.5 metres of it every 0.8 seconds: 12 damage, 12 stagger and a Curse each time. Buying this also gives you the deep strike, Yama's Noose. Use it with L2 and R2 while you carry this element alone or twice.
 
 **Works with.** The root and every Dark spell (Curse them before they die), Dread, Collected Twice, which it grows from, Dead Already (Risen for good, every death stands up), A Life for a Life.
 
@@ -171,7 +169,7 @@ draining.
 
 **Works with.** The root, Blood Price, which it grows from, Near the Grave and Pawned Heart (low health), Dread, Devouring Maw, and the charged blade.
 
-**Not built yet.** The damage rising smoothly as your health falls, 36 at one point: for now a step at half your health. The burst throwing back what it struck. The Empower's eight metres: for now it only shortens the wait.
+**Not built yet.** The damage rising smoothly as your health falls, 36 at one point: for now a step at half your health. The burst throwing back what it struck.
 
 **Example.** Four soldiers spread round you: one cast draws them into a knot at your sword's point, all Cursed, ready for a wide swing.
 
@@ -217,7 +215,7 @@ draining.
 
 **When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4). It cannot be cast at one point of health.
 
-**The numbers.** 4 Shards, no mana: the price is health, and it waits 40 seconds after a cast, less with weapon play (its Empower: 36, 70% more and a ring of 12 seconds). The heart lies 1.8 metres behind you and beats for 10 seconds. While it beats: 60% more weapon damage. You must step 2.6 metres from it, then come within 1 metre of it again: back come all the health pawned and 30% of the damage you dealt. A blow that lands on you while it beats can kill you.
+**The numbers.** 4 Shards, no mana: the price is health, and it waits 40 seconds after a cast, less with weapon play (its Empower: 70% more and a ring of 12 seconds). The heart lies 1.8 metres behind you and beats for 10 seconds. While it beats: 60% more weapon damage. You must step 2.6 metres from it, then come within 1 metre of it again: back come all the health pawned and 30% of the damage you dealt. A blow that lands on you while it beats can kill you.
 
 **Works with.** Near the Grave, which it grows from (you are below a third the whole time), Debts Called's Master, Dead Already, Hunger, and the wards of Near the Grave and Gone to Ash.
 
@@ -319,7 +317,7 @@ draining.
 
 **Works with.** The root, Hollow Strength, which it grows from, Pawned Heart (half of a much bigger blow), Near the Grave, Hunger.
 
-**Not built yet.** Pressing again to change places with the shadow, once. The Empower's 60%: for now it only shortens the wait.
+**Not built yet.** Pressing again to change places with the shadow, once.
 
 **Example.** Cast it as a brute kneels staggered: every cut of the finisher's opening lands twice.
 

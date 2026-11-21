@@ -81,11 +81,18 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the stone climbing in half a second, not one.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = HeavyCurse, Name = "Heavy Curse", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { GraveDirt }, Icon = UpgradeIcons.Hourglass,
                 Description = "Stone climbs half a second faster.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, ConditionSeconds = 0.5f },
+                    new ReactionChange { Shape = 0, Index = 0, ConditionSeconds = 0.5f },
+                    new ReactionChange { Shape = 1, Index = 0, ConditionSeconds = 0.5f },
+                },
             }, HeartPattern.LeftHigh));
 
             // NEEDS: afflictions kept for the rest of the fight on one enemy (fades-never); until then it does nothing.

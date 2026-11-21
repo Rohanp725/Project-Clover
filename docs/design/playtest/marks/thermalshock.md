@@ -79,14 +79,14 @@ both carried.
 **Not built yet.** A second press does not quench it yet (your weapon blow sets it off, as a brand); its Burn does not deepen while the fire is banked, and blows before the quench do not make it harder.
 
 ## thermalshock.gap
-**What it does.** A duo surge. While your surge lasts your weapon blows take turns, burning and chilling, so Thermal Shock keeps setting off, and each split lets fall drops of melt that heal you.
+**What it does.** A duo surge. While it burns your weapon blows take turns, burning and chilling, so Thermal Shock keeps setting off, and each split lets fall drops of melt that heal you.
 
-**When it happens.** While your surge lasts, with Fire and Ice both carried.
+**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Fire and Ice are both carried, and light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. As built: each blow lays a Chill; each Thermal Shock heals you 2.
+**The numbers.** Mix, duo surge, 5 Shards. 40 mana, 10 seconds. As built: each blow lays a Chill; each Thermal Shock heals you 2.
 
 **Works with.** Thermal Shock, Spark and Rime, Cinder.
 
 **Example.** Light your surge in a crowd and every second blow cracks something.
 
-**Not built yet.** It is not yet a surge of its own (40 mana, 10 seconds) in the Hand's surge slot, blows do not truly alternate, and Thermal Shock still rests 6 seconds rather than 2.
+**Not built yet.** Your blows do not truly take turns yet: each blow lays a Chill. Thermal Shock still rests 6 seconds rather than 2.

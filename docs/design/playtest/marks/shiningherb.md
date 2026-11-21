@@ -44,13 +44,11 @@ are both carried.
 
 **When it happens.** Each time Shining Herb fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. Herbs stand 9 seconds before they flower, not 6. The same in both shapes.
 
 **Works with.** Sixth Moon, which it grows from, Shining Herb.
 
 **Example.** More time to step in and pick.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## shiningherb.wholemountain
 **What it does.** Picking a herb draws every other standing herb to you across the floor, and each one picked after the first heals twice.

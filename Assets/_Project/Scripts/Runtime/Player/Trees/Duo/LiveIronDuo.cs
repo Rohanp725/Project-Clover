@@ -75,11 +75,17 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the arcs carrying 45% of the blow, not 35%.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = BareWire, Name = "Bare Wire", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Live Iron's arcs carry 45% of the blow.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 1, Amount = 0.45f },
+                    new ReactionChange { Shape = 0, Index = 1, Amount = 0.45f },
+                },
             }, HeartPattern.RightLow));
 
             // NEEDS: thrown blades that turn in flight to the nearest enemy carrying Static (aim-at-afflicted); now any spell of

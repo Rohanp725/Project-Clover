@@ -86,6 +86,12 @@ namespace Clover.Player
         public float StatSwing = 1f;
         /// <summary>What damage to an enemy that carries any affliction is multiplied by.</summary>
         public float StatAfflicted = 1f;
+        /// <summary>The Blade Drinks Fire: damage added to a weapon blow for each Burn it takes off the enemy struck; 0 for none.</summary>
+        [System.NonSerialized] public float DrinksBurn;
+        /// <summary>Burns the blade has drunk, counted for probes.</summary>
+        public int BurnsDrunk { get; private set; }
+        /// <summary>Shared Roots: blows on a Seeded enemy no longer mend the player.</summary>
+        [System.NonSerialized] public bool SeedMendingOff;
         /// <summary>The chance that a blow of the weapon is critical, and what a critical blow multiplies its damage by.</summary>
         public float CritChance;
         public float CritMultiplier = 1.5f;
@@ -1715,8 +1721,10 @@ namespace Clover.Player
                     var light = Combo.Steps;
                     bool endsChain = step == Combo.ChainHeavy || (light.Count > 0 && step == light[light.Count - 1]);
                     bool inAir = carried != null && carried.IsAirborne;
-                    damage *= Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.WeaponDamage, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.WeaponDamage, carried) + (inAir ? Stats.InAir(PlayerStat.WeaponDamage) : 0f));
-                    staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried) + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) : 0f));
+                    damage *= Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.WeaponDamage, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.WeaponDamage, carried)
+                        + (inAir ? Stats.InAir(PlayerStat.WeaponDamage) + (step.Heavy ? Stats.InAirHeavy(PlayerStat.WeaponDamage) : 0f) : 0f));
+                    staggerShare = Mathf.Max(0.1f, 1f + Stats.Blow(PlayerStat.StaggerDealt, step.Heavy, critical, endsChain) + Stats.Against(PlayerStat.StaggerDealt, carried)
+                        + (inAir ? Stats.InAir(PlayerStat.StaggerDealt) + (step.Heavy ? Stats.InAirHeavy(PlayerStat.StaggerDealt) : 0f) : 0f));
                 }
                 if (critical) damage *= CritMultiplier;
                 // A back is a back: the knives' blows count for more on it. The finisher has its own number.
@@ -1728,7 +1736,19 @@ namespace Clover.Player
                     fromBehind = toMe.sqrMagnitude > 0.01f && Vector3.Dot(back.transform.forward, toMe.normalized) < BackDot;
                     if (fromBehind) damage *= Weapon.BackMultiplier;
                 }
+                // Read before the blade drinks: a burn that was the enemy's only affliction still counts it afflicted.
                 bool wasAfflicted = afflictable != null && afflictable.Afflictions.Any;
+                // The Blade Drinks Fire: the blow takes Burn off a burning enemy (one, three for a heavy blow, all for a
+                // finisher) and strikes harder for each Burn it drinks.
+                if (DrinksBurn > 0f && afflictable != null && afflictable.Afflictions.Burn.IsBurning)
+                {
+                    int drunk = afflictable.Afflictions.Spend(AfflictionKind.Burn, Combo.IsFinishing ? int.MaxValue : step.Heavy ? 3 : 1);
+                    if (drunk > 0)
+                    {
+                        damage += DrinksBurn * drunk;
+                        BurnsDrunk += drunk;
+                    }
+                }
                 if (wasAfflicted) damage *= StatAfflicted;
                 float burn = (BurnStacksOnHit > 0 ? Mathf.Max(BurnOnHit, StackBurnSeconds) : BurnOnHit) * AfflictionSeconds;
                 // What the root of the tree and the surge lay, together, in the element's own affliction. The owner's rule
@@ -1857,7 +1877,7 @@ namespace Clover.Player
                     if (afflictable != null)
                     {
                         // Seeded: the blow feeds the one who struck it. Marked: it gives more mana.
-                        float fed = afflictable.Afflictions.HealOnBlow;
+                        float fed = SeedMendingOff ? 0f : afflictable.Afflictions.HealOnBlow;
                         if (fed > 0f && defence != null) defence.Heal(fed, false);
                         earned += afflictable.Afflictions.ManaOnBlow;
                         // A mark of light carries a few critical blows and is spent by them.

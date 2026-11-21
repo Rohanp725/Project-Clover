@@ -62,22 +62,29 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the slick 4 m across, not 3, and 7 s, not 5 (Rock Pool's pool 2 m across).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = WideSlick, Name = "Wide Slick", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Fish Poison's slick is 4 m across and lasts 2 s longer.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, Radius = 2f, Seconds = 7f },
+                    new ReactionChange { Shape = 0, Index = 0, Radius = 1f, Seconds = 7f },
+                    new ReactionChange { Shape = 1, Index = 0, Seconds = 7f },
+                },
             }, HeartPattern.RightLow));
 
             // A second bite half a second after each bite on a Soaked enemy. The bite it makes is itself a bite, so the effect's
             // cooldown is what keeps it from feeding itself.
-            // NEEDS: one enemy's poison beat quickened while it is Soaked, and its doses fading twice as fast (quickened-beat);
-            // now each bite on a Soaked enemy bites again half a second later, once in half a second for all.
+            // Built by hand (PlayerUpgrades.Refresh sets Afflictions.PoisonQuickWhenSoaked): each Soaked enemy's own poison
+            // clock runs at twice the pace, so its bites come twice as often and its doses fade twice as fast, enemy by enemy
+            // (the owner's answer of 2026-11-20, "Fast Water per enemy").
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = FastWater, Name = "Fast Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { TheTideBringsIt, WideSlick }, Icon = UpgradeIcons.Drop,
                 Description = "Poison on a Soaked enemy bites twice as often and fades twice as fast.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Bite, Delay = 0.5f, Cooldown = 0.5f } },
             }, HeartPattern.Keystone));
 
             // The duo spell, an opener on a 12 s cooldown (SpellTimings), bought with 5 Shards once both are carried. The field

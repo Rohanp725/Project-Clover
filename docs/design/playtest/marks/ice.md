@@ -135,7 +135,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while Ice is carried twice (all in), once bought. The freeze comes each time Glaze is lit.
 
-**The numbers.** 6 Shards. Chill no longer runs down on any enemy: it stays until a freeze thaws it away or a shatter breaks it. Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. All in, L2 with R2 is the deep strike, Ice Through: the spike freezes the enemy at once if it carries three Chill or more.
+**The numbers.** 6 Shards. Chill no longer runs down on any enemy: it stays until a freeze thaws it away or a shatter breaks it. Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. Buying this also gives you the deep strike, Ice Through. Use it with L2 and R2 while you carry this element alone or twice: the spike freezes the enemy at once if it carries three Chill or more.
 
 **Works with.** Every spell of the tree; Splinter Ward and The World Holds Still, which answer Glaze too; Flying Shards, for the room frozen at once.
 
@@ -263,7 +263,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **The numbers.** 3 Shards. For 5 seconds after its ice is gone the enemy takes 20% more damage from weapon blows and 20% more stagger from everything. Spells do not cut deeper.
 
-**Works with.** Chill, Flying Shards, All at Once, Ski Run, which grows from it, and the finisher: a shatter and a few brittle blows often stagger it.
+**Works with.** Chill, Flying Shards, All at Once, Clean Break, which grows from it (and Ski Run from that), and the finisher: a shatter and a few brittle blows often stagger it.
 
 **Example.** Shatter a brute, then keep cutting: for five seconds every blow bites a fifth harder and its balance bar fills fast.
 
@@ -313,7 +313,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **The numbers.** 4 Shards, no mana: it waits 8 seconds after a cast, less with weapon play (its Empower: 6, and a lane of 12 metres). You go 9 metres; each enemy passed takes 6 damage, 10 stagger and two stacks of Chill. The lane stays 5 seconds and bites what stands on it for 1 damage every half second. Nothing can strike you while you slide.
 
-**Works with.** Brittle, which it grows from; Chill; Hanging Ice and Eight Points on those you leave behind.
+**Works with.** Clean Break, which it grows from; Brittle; Chill; Hanging Ice and Eight Points on those you leave behind.
 
 **Not built yet.** The untouchable time only for the first 0.2 seconds (for now the whole slide), and a dodge along the lane carrying twice as far.
 
@@ -355,3 +355,14 @@ design yet, its **Not built yet** line says what is missing.
 **Works with.** Glaze, Flying Shards (the shards fly at every link), All at Once, Brittle, Sent Sliding, Deep Winter.
 
 **Example.** Light Glaze in a crowd, break it outward, and shatter the nearest: the ice runs from one to the next until every frozen body has broken.
+
+## ice.cleanbreak
+**What it does.** Shatter an enemy that has less than a fifth of its health left, and nothing is left of it. Gods are spared; elites are not.
+
+**When it happens.** Each time you shatter a frozen enemy, while Ice is carried.
+
+**The numbers.** Major, 3 Shards. An enemy below 20% of its health when it is shattered dies a moment later. It never works on a god.
+
+**Works with.** Brittle, which it grows from, and Ski Run, which grows from it. Every way to freeze and shatter: Hoarfrost, Hanging Ice, heavy blows on a frozen enemy, All at Once.
+
+**Example.** A knight is down to a sliver of health and frozen. One heavy blow shatters it, and it is gone.

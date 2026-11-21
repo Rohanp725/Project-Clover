@@ -71,11 +71,17 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // four feathers, the farthest 9 m beyond the enemy.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = RidingHigh, Name = "Riding High", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Golden Feathers' feathers fly 9 m, four of them.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, Count = 4, Reach = 5.7f, Amount = 2.2f },
+                    new ReactionChange { Shape = -1, Index = 1, Count = 4, Reach = 5.7f, Amount = 2.2f },
+                },
             }, HeartPattern.RightLow));
 
             // A ring of feathers round you on each perfect dodge; laying both at once, by a mark, it may set Golden Feathers off.

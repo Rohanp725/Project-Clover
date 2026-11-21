@@ -341,7 +341,9 @@ namespace Clover.Player
             {
                 // With no stick input the roll goes the way the player is facing.
                 Vector3 rollDirection = wish.sqrMagnitude > 0.01f ? wish : transform.forward;
-                if (Dodge.TryStart(rollDirection, Stamina))
+                // A mark may change this roll by which way it goes against the enemy faced (Into the Fire).
+                var terms = upgrades != null ? upgrades.DodgeTermsFor(rollDirection) : DodgeTerms.Plain;
+                if (Dodge.TryStart(rollDirection, Stamina, terms))
                 {
                     dodgeBuffered = 0f;
                     if (attacking) combat.Interrupt();
@@ -378,6 +380,7 @@ namespace Clover.Player
             }
 
             Vector3 step;
+            bool rolledThrough = false;
             if (helpless)
             {
                 Dodge.Tick(deltaTime);
@@ -386,6 +389,7 @@ namespace Clover.Player
             else if (Dodge.IsRolling)
             {
                 step = Dodge.Tick(deltaTime);
+                rolledThrough = Dodge.PassesBodies;
                 // The roll has just come to its end: some upgrades answer that.
                 if (!Dodge.IsRolling && upgrades != null) upgrades.OnDodgeEnd();
                 // The roll commits to its direction at once; there is no turning mid-roll.
@@ -441,7 +445,7 @@ namespace Clover.Player
             }
             fallSpeed = body.isGrounded ? 1f : fallSpeed + Gravity * deltaTime;
             step.y = -fallSpeed * deltaTime;
-            if (combat != null && combat.PassingThrough)
+            if ((combat != null && combat.PassingThrough) || rolledThrough)
             {
                 // A passing cut goes through bodies and stops at walls: the body is put there. The controller is not
                 // asked to move at all on these frames: standing inside an enemy, any move of its own pushes it back out

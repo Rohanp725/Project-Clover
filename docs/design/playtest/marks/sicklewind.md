@@ -35,13 +35,11 @@ are both carried.
 
 **When it happens.** Each time Sickle Wind fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The whirl cuts for 6 each time, not 3, and lasts about 4 seconds, not 3. In Sent Downwind it lays one more patch and stands 4 seconds; in Cut Unfelt you have 4 seconds to add to the debt.
 
 **Works with.** Sickle Wind and its shapes, Bellows.
 
 **Example.** Even a fresh enemy throws a full whirl.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## sicklewind.windsickle
 **What it does.** The last blow of a light chain throws a sickle of wind 5 metres along the swing: 6 damage and an Unsteady, and a notch torn from a Sundered enemy becomes a shard that joins the nearest whirl.
@@ -59,12 +57,10 @@ are both carried.
 ## sicklewind.weasels
 **What it does.** Three presses within 4 seconds, as the three sickle weasels work together: a rush of wind to the enemy you face that throws it, a pass straight through it that notches its armour, and a step back out of reach that binds your wounds.
 
-**When it happens.** From a spell slot, while Wind and Metal are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Wind.
+**When it happens.** From a spell slot, while Wind and Metal are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Wind. Press the same button again within 4 seconds for the second weasel, and again for the third.
 
-**The numbers.** Mix, duo spell, movement, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. As built, one press: a step of up to 5 metres to the enemy, 6 damage, 20 stagger, two Unsteady, a notch and a throw of 2 metres; your next heavy blow within 2 seconds is critical.
+**The numbers.** Mix, duo spell, movement, 5 Shards. No mana: it waits 10 seconds after the first press, less with weapon play. First press: a step of up to 5 metres to the enemy, 6 damage, 20 stagger, two Unsteady and a throw of 2 metres; your next heavy blow within 2 seconds is critical. Second press: you pass straight through the enemy you face to 3 metres beyond it, and nothing can hit you for 0.4 seconds: 12 damage, 10 stagger and a notch. Third press: you step 4 metres back from it and heal 2 for each weapon blow you landed since the first press, 16 at most.
 
 **Works with.** Sickle Wind (it lays both at once), Bellows, Wind Sickle.
 
 **Example.** Rush the archer and set its plates whirling.
-
-**Not built yet.** Only the first press is built. The second (a pass straight through it, untouchable, for 12 damage and a notch) and the third (a step back that binds 2 health for each weapon blow you landed since the first press, eight at most) wait for a slot's second press.

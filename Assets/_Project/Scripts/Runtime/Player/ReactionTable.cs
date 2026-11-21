@@ -122,6 +122,15 @@ namespace Clover.Player
             return mark.Shapes[choice];
         }
 
+        /// <summary>The place of the shape the pair's reaction wears among its Shape mark's two, or -1 for the plain reaction.</summary>
+        public static int WornShapeIndex(int pair, Build.Loadout loadout, ICollection<string> learned)
+        {
+            var mark = ShapeMarkFor(pair);
+            if (mark == null || !MarkRules.InForce(mark, loadout, learned)) return -1;
+            int choice = loadout.ShapeOf(ShapeKey(pair));
+            return choice < 0 || choice >= mark.Shapes.Length ? 0 : choice;
+        }
+
         /// <summary>How long the pair rests on one enemy: its mark's own rest, its entry's, or the shared default.</summary>
         public static float RestFor(int pair)
         {

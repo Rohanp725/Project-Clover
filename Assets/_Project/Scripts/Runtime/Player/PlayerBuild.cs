@@ -97,7 +97,7 @@ namespace Clover.Player
             bool holding = element != null && element.HasElement && element.Info != null;
             into.Attunements[0] = holding ? element.Info.Name : "";
             into.Attunements[1] = holding && element.SecondInfo != null ? element.SecondInfo.Name : "";
-            if (!surgeKnown) into.Surge = holding && element.SurgeInfo != null ? HandRules.SurgeId(element.SurgeInfo.Name) : "";
+            if (!surgeKnown) into.Surge = holding && element.SurgeInfo != null ? element.SurgeId : "";
             for (int i = 0; i < Loadout.SlotCount; i++) into.Slots[i] = spells != null ? spells.Slots[i] : "";
             into.Weapon = combat != null && combat.Weapon != null ? combat.Weapon.Name : "";
             return into;
@@ -209,7 +209,13 @@ namespace Clover.Player
         private void Push()
         {
             if (spells != null) spells.SetAll(Current.Slots);
-            if (element != null) element.WearSurge(HandRules.ElementOfSurge(Current.Surge));
+            if (element != null)
+            {
+                element.WearSurgeById(Current.Surge);
+                // A duo surge that cannot be worn falls back to the first element's: the Hand says so too, so its marks are
+                // not in force for a surge that is not lit.
+                if (element.HasElement && element.SurgeId != Current.Surge) Current.Surge = element.SurgeId;
+            }
             RunState.Surge = Current.Surge;
             if (upgrades != null) upgrades.RefreshNow();
             Read();

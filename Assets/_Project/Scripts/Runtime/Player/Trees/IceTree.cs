@@ -43,6 +43,7 @@ namespace Clover.Player.Trees
         public const string Settled = "ice.lift.slow";
 
         // Retired in Phase 4 (RetiredMarks): kept as names because code still asks for them.
+        /// <summary>Kept as a mark by the owner's answer of 2026-11-20, under its old id; built by hand (PlayerUpgrades.FinishBroken).</summary>
         public const string CleanBreak = "ice.cleanbreak";
         public const string Unmoved = "ice.unmoved";
         public const string BlackIce = "ice.blackice";
@@ -253,7 +254,16 @@ namespace Clover.Player.Trees
 
             // The drill carries the slide and leaves the lane; nothing can touch you for the whole slide, where the design asks
             // for its first 0.2 s. NEEDS: a dodge along the lane carrying twice as far.
-            SpellBranch.Add(to, E, SkiRun, "Ski Run", SpellRole.Movement, BranchPattern.RightB, Brittle, SpellForms.Drill,
+            // Kept as a mark (the owner's answer of 2026-11-20), in the right bough's empty middle place, from Brittle. Built by
+            // hand (PlayerUpgrades.OnShattered and FinishBroken): a shattered enemy under a fifth of its health dies at once;
+            // the gods are spared, elites are not.
+            to.Add(BranchPattern.Put(new Upgrade { Id = CleanBreak, Name = "Clean Break", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Brittle }, Icon = UpgradeIcons.Skull,
+                Description = "Shatter an enemy that has less than a fifth of its health left, and nothing is left of it. Gods are spared; elites are not." },
+                BranchPattern.RightMiddle));
+
+            // Ski Run grows from Clean Break in the bough's middle place, as the pattern grows its stalk (a line from the foot
+            // would run over Clean Break's mark).
+            SpellBranch.Add(to, E, SkiRun, "Ski Run", SpellRole.Movement, BranchPattern.RightB, CleanBreak, SpellForms.Drill,
                 new SpellSpec { Reach = 9f, Radius = 1f, Count = 1, Damage = 6f, Stagger = 10f, Stacks = 2, Speed = 18f, Seconds = 5f, LingerDamage = 1f },
                 "A lane of clear ice runs nine metres ahead and you slide down it at once, throwing snow, and nothing can touch you as you set off. Enemies on the lane are chilled two deep. The lane stays five seconds, and a dodge along it carries twice as far.",
                 UpgradeIcons.Boot,

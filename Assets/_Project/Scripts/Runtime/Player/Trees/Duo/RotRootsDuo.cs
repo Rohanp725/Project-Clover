@@ -70,11 +70,18 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PoisonBite, Needs = AfflictionKind.Seeded, Do = UpgradeAction.Heal, Amount = 1f, Cooldown = 0.5f } },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // roots reaching 7 m and joining four enemies, not three.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeepThreads, Name = "Deep Threads", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Rot Roots' roots reach 7 m and join one more enemy.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 0, Radius = 7f, Count = 4 },
+                    new ReactionChange { Shape = 0, Index = 0, Radius = 7f, Count = 4 },
+                    new ReactionChange { Shape = 0, Index = 2, Reach = 7f },
+                },
             }, HeartPattern.RightLow));
 
             // NEEDS: a death answered by the player's grown things near where it fell (at-grown): the grown thing within 3 m

@@ -89,5 +89,7 @@ namespace Clover.Player
         TheirBlow,
         /// <summary>The enemy carrying a condition this effect's mark set struck at the player, landing or turned. Target: that enemy; the weapon blows the condition took are carried (for PerStack).</summary>
         ConditionAttacked,
+        /// <summary>A ripe seed burst (In Its Season): set off, its bearer dead, or a reaction on it. Target: that enemy; carries the seeds it held.</summary>
+        RipeBurst,
     }
 }

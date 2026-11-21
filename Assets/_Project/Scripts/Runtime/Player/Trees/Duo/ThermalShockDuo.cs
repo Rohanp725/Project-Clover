@@ -108,13 +108,14 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 3 } },
             }, HeartPattern.Spell));
 
-            // The duo surge. NEEDS: blows that alternate affliction, Thermal Shock once per enemy every 2 s while it lasts, and
-            // a surge of its own in the Hand's surge slot (duo-surge-slot); now while any surge lasts each blow lays a Chill,
-            // and each Thermal Shock heals you 2.
+            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge). NEEDS: blows that alternate
+            // affliction, Thermal Shock once per enemy every 2 s while it lasts (alternate-blows); now while it burns each blow
+            // lays a Chill, and each Thermal Shock heals you 2.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheYawningGap, Name = "The Yawning Gap", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { FireSetting }, Icon = UpgradeIcons.Sun,
-                Description = "A duo surge. While your surge lasts your weapon blows take turns, burning and chilling, so Thermal Shock keeps setting off, and each split lets fall drops of melt that heal you.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. While it lasts your weapon blows take turns, burning and chilling, so Thermal Shock keeps setting off, and each split lets fall drops of melt that heal you.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.AnyHit, WhileSurge = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 1 },

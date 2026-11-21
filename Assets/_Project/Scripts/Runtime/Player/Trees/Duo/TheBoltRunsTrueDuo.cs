@@ -119,7 +119,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.Spell));
 
-            // The duo surge. NEEDS: its own 45 mana and 10 s in the Hand's surge slot (duo-surge-slot); threads linking every
+            // The duo surge, worn in the Hand's surge slot with its own 45 mana and 10 s (DuoSurge). NEEDS: threads linking every
             // Marked enemy within 12 m (six at most) that carry a discharge or a bolt on one to all the others for half
             // (links-pass-blows); now a discharge on a Marked enemy arcs on through up to five Marked enemies within 12 m,
             // half a discharge's 7 a stack each, and each critical blow on a Marked enemy lays a Static on every enemy within
@@ -127,7 +127,8 @@ namespace Clover.Player.Trees.Duo
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = TheNetOfJewels, Name = "The Net of Jewels", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { DiamondThunder }, Icon = UpgradeIcons.Chain,
-                Description = "A duo surge. While your surge lasts every Marked enemy within 12 m is linked to every other by threads of light: a discharge on one runs the threads to all the others for half, and each critical blow on one gives every linked enemy a Static.",
+                Description = "A duo surge for your surge slot: 45 mana, 10 seconds. While it lasts every Marked enemy within 12 m is linked to every other by threads of light: a discharge on one runs the threads to all the others for half, and each critical blow on one gives every linked enemy a Static.",
+                Surge = new DuoSurge { Mana = 45f, Seconds = 10f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.SetOff, WhileSurge = true, Spent = AfflictionKind.Static, Needs = AfflictionKind.Marked, Cooldown = 0.5f, Do = UpgradeAction.Arc, FromTarget = true,

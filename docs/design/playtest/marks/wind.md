@@ -133,7 +133,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **When it happens.** Only while Wind is carried twice (all in). Then always.
 
-**The numbers.** 6 Shards. A spell cast in a dodge carries you 2 metres further. All in, L2 with R2 is the deep strike, Whirl Cut: the crescent becomes a small whirlwind that holds the first enemy it reaches in the air for a second.
+**The numbers.** 6 Shards. A spell cast in a dodge carries you 2 metres further. Buying this also gives you the deep strike, Whirl Cut. Use it with L2 and R2 while you carry this element alone or twice: the crescent becomes a small whirlwind that holds the first enemy it reaches in the air for a second.
 
 **Works with.** Every spell of the tree; Passing Cut and Leaf on the Wind; the deep strike.
 
@@ -315,7 +315,7 @@ design yet, its **Not built yet** line says what is missing.
 
 **The numbers.** 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 9, and it draws from 8.5 metres). The point is 2 metres ahead, or on an enemy that close. For 0.5 seconds everything within 7 metres of it is dragged most of the way in. Then the burst: 10 damage, 25 stagger, a heavy blow and two stacks of Unsteady to each, and each enemy's Unsteady goes off for 6 damage and 8 stagger a stack.
 
-**Works with.** Against the Wall, which it grows from; Closing Circle (five deep inside the ring), Rising Cut; Catching Fire with Fire carried, since it bunches a crowd.
+**Works with.** Hammer Down, which it grows from; Against the Wall; Closing Circle (five deep inside the ring), Rising Cut; Catching Fire with Fire carried, since it bunches a crowd.
 
 **Example.** Archers spread round a room, each a few deep: draw them all to one spot, and every stack they carry bursts at once.
 
@@ -355,3 +355,14 @@ design yet, its **Not built yet** line says what is missing.
 **Works with.** Tailwind, Against the Wall (each falling cut is a spell striking), Nothing Beneath, Rising Cut.
 
 **Example.** Light Tailwind and cut a pack sixteen times: as it ends, sixteen cuts fall on them again at half strength.
+
+## wind.hammer
+**What it does.** A heavy blow on an enemy in the air drives it into the ground. The blow hits half again as hard, and where the enemy lands the ground bursts and throws back everyone near.
+
+**When it happens.** Each heavy blow (finishers too) that lands on an enemy in the air or reeling, while Wind is carried.
+
+**The numbers.** Major, 3 Shards. The heavy blow deals 50% more damage. The enemy drops at once. The burst deals 14 damage and 30 stagger to everything within 3 metres and throws them 2 metres back.
+
+**Works with.** Against the Wall, which it grows from, and its thrown enemies. Indrawn Breath, which grows from it. Lifting Wind, Sky Dance, Rising Cut and anything that throws enemies up.
+
+**Example.** Throw a soldier up with Lifting Wind, then bring a heavy blow down on it: it slams into the ground and knocks its friends back.

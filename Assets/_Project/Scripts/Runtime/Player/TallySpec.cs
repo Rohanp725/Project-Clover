@@ -19,5 +19,11 @@ namespace Clover.Player
         public float PerPoint2;
         /// <summary>Kept from scene to scene until the run ends.</summary>
         public bool Kept;
+        /// <summary>
+        /// A stat changed while the count is empty, by <see cref="EmptyAmount"/> (the ledger's while-count: Drawn Back to
+        /// Break's weaker blows with no wave drawn). Left at zero amount it changes nothing.
+        /// </summary>
+        public PlayerStat EmptyStat;
+        public float EmptyAmount;
     }
 }

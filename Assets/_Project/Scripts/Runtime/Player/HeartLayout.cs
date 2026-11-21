@@ -57,8 +57,8 @@ namespace Clover.Player
 
         /// <summary>
         /// The partner whose branch with <paramref name="viewed"/> the heart shows: the other element carried, when both are
-        /// carried; else, in the playtest, the one picked if its branch is built, or the first built one round the ring
-        /// after the element looked at. "" when the heart shows nothing (outside the playtest, a Hand of one element).
+        /// carried; else, in the playtest, the one picked, or the next element round the ring after the one looked at. ""
+        /// when the heart shows nothing (outside the playtest, a Hand of one element).
         /// </summary>
         public static string PartnerFor(string viewed, Build.Loadout loadout, bool playtest, string picked, IReadOnlyList<Upgrade> marks)
         {
@@ -69,15 +69,16 @@ namespace Clover.Player
                 if (!playtest || string.IsNullOrEmpty(picked)) return other;
             }
             if (!playtest) return "";
-            if (!string.IsNullOrEmpty(picked) && picked != viewed && Built(PairOf(viewed, picked), marks)) return picked;
-            return NextPartner(viewed, "", 1, marks);
+            if (!string.IsNullOrEmpty(picked) && picked != viewed && Elements.ByName(picked) != null) return picked;
+            return NextPartner(viewed, "", 1);
         }
 
         /// <summary>
-        /// The next partner round the ring from <paramref name="current"/> (by 1) or the one before (by -1) whose branch with
-        /// <paramref name="viewed"/> is built; <paramref name="current"/> itself when no other is, "" when none is.
+        /// The next partner round the ring from <paramref name="current"/> (by 1) or the one before (by -1): every one of the
+        /// ten other elements in turn, its branch built or not (the owner's answer of 2026-11-20; an unbuilt pair shows its
+        /// reaction's name over an empty heart). "" for an element that is not one.
         /// </summary>
-        public static string NextPartner(string viewed, string current, int by, IReadOnlyList<Upgrade> marks)
+        public static string NextPartner(string viewed, string current, int by)
         {
             var at = Elements.ByName(viewed);
             if (at == null) return "";
@@ -89,7 +90,7 @@ namespace Clover.Player
             {
                 var next = Elements.All[((start + step * i) % count + count) % count];
                 if (next.Name == viewed) continue;
-                if (Built(PairOf(viewed, next.Name), marks)) return next.Name;
+                return next.Name;
             }
             return "";
         }

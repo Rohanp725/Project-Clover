@@ -35,13 +35,11 @@ Metal and Lightning are both carried.
 
 **When it happens.** Each time Live Iron's arcs leap.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. Each arc carries 45% of the blow that set it off, not 35%. The same in Drawn Iron.
 
 **Works with.** Live Iron and Drawn Iron, Three Smiths.
 
 **Example.** The wire bites almost as hard as the blade.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## liveiron.callsstorm
 **What it does.** Every blade you throw (Flung Blade and the rest) turns in flight to the nearest enemy carrying Static and lands with two more.

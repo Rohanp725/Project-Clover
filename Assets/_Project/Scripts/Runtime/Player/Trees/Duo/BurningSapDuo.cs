@@ -82,7 +82,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers): the held bites 15% harder; now one
+            // NEEDS: a held bite's own strength (poison-held): the held bites 15% harder; now one
             // more dose as Burning Sap fires.
             to.Add(HeartPattern.Put(new Upgrade
             {

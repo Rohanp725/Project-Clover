@@ -151,7 +151,44 @@ namespace Clover.Player
             public int Less;
             // What lays what it lays: a reaction's effects start no reaction (IMPLEMENTATION.md 3.7).
             public LaySource Source;
+            // What its damage is multiplied by for a ripe or unripe seed it bursts (In Its Season); 0 is read as 1.
+            public float Ripe;
         }
+
+        // ---- The keystones of 2026-11-20 (keystones_fire_water_life.md).
+        private bool hasIntoFire, drinksFire, hasTideClock, sharedRoots;
+        private DodgeWay lastDodgeWay;
+        private bool tideHigh = true;
+        private float tideClock;
+        // While a reaction's effects are put in the line, what a ripe (or unripe) seed on its enemy makes their damage.
+        private float ripeScale = 1f;
+        // Shared Roots: the wound shares owed to the Seeded enemies near, struck on this component's next step, not inside
+        // the blow that wounded the player.
+        private const int MostSharers = 8;
+        private readonly Component[] sharers = new Component[MostSharers];
+        private int sharerCount;
+        private float sharedEach;
+        private System.Func<float, float> shareWound;
+        /// <summary>The Blade Drinks Fire: what each Burn drunk adds to a blow.</summary>
+        public float DrinkDamage = 6f;
+        /// <summary>Into the Fire: Burn laid on each enemy a dodge toward the enemy passes, and how wide the dodge's path is.</summary>
+        public int IntoFireStacks = 2;
+        public float IntoFireWidth = 1.1f;
+        /// <summary>High Water, Low Water: seconds between turns of the tide.</summary>
+        public float TideTurnSeconds = 6f;
+        /// <summary>Shared Roots: the share of each wound the Seeded carry, and how near they must stand.</summary>
+        public float SharedShare = 1f / 3f;
+        public float SharedReach = 8f;
+        /// <summary>True while the tide is high; read by the HUD and probes while High Water, Low Water is in force.</summary>
+        public bool TideHigh => tideHigh;
+        public bool KeepsTide => hasTideClock;
+        /// <summary>Counts for probes: tides turned, wound shares carried, ripe bursts, dodges that went through enemies.</summary>
+        public int TidesTurned { get; private set; }
+        public float WoundsCarried { get; private set; }
+        public int RipeBursts { get; private set; }
+        public int DodgesThrough { get; private set; }
+        /// <summary>Which way the last dodge went against the enemy faced.</summary>
+        public DodgeWay LastDodgeWay => lastDodgeWay;
 
         // The source of whatever the effect being done lays, and what the last Spend took (read by DamagePerSpent).
         private LaySource laying = LaySource.Effect;
@@ -595,6 +632,9 @@ namespace Clover.Player
                 if (offered[i]) spellsInForce.Add(catalogue[i].Id);
             tallied.Clear();
             hasRoot = false;
+            // The Blade Drinks Fire: Fire's root lays nothing with the weapon (root-silenced); the blade drinks instead.
+            var drinkMark = Upgrade.ById(Trees.FireTree.BladeDrinksFire);
+            drinksFire = drinkMark != null && drinkMark.Index < has.Length && has[drinkMark.Index];
             for (int i = 0; i < has.Length; i++)
             {
                 // A count is lost with the mark that kept it.
@@ -604,8 +644,10 @@ namespace Clover.Player
                     continue;
                 }
                 var upgrade = catalogue[i];
-                // The root that lays with the weapon is the first element's alone (the owner's rule of 2026-11-18).
-                if (upgrade.Kind == UpgradeKind.Root && upgrade.Element == first) hasRoot = true;
+                // The root that lays with the weapon is the first element's alone (the owner's rule of 2026-11-18), and a
+                // silenced root lays nothing at all.
+                bool silenced = drinksFire && upgrade.Kind == UpgradeKind.Root && upgrade.Element == Elements.Fire;
+                if (upgrade.Kind == UpgradeKind.Root && upgrade.Element == first && !silenced) hasRoot = true;
                 if (upgrade.Tally != null)
                 {
                     tallied.Add(i);
@@ -613,7 +655,7 @@ namespace Clover.Player
                     if (upgrade.Tally.Kept && tally[i] == 0 && RunState.Tallies.TryGetValue(upgrade.Id, out int kept)) tally[i] = kept;
                 }
                 foreach (var mod in upgrade.Stats) Stats.AddLearned(mod);
-                foreach (var effect in upgrade.Effects) byTrigger[(int)effect.On].Add(effect);
+                foreach (var effect in EffectsOf(upgrade)) byTrigger[(int)effect.On].Add(effect);
                 Rules.Apply(upgrade);
                 // A Shape mark adds the rule of the shape its spell wears, and only that one.
                 var worn = SpellBranches.Worn(upgrade, loadout);
@@ -623,7 +665,7 @@ namespace Clover.Player
                     foreach (var effect in worn.Effects) byTrigger[(int)effect.On].Add(effect);
                 }
                 // Weapon blows lay only the first element's affliction: a second element's root lays nothing with the weapon.
-                if (!upgrade.IsMix && upgrade.Element == first) weaponStacks += upgrade.WeaponStacks;
+                if (!upgrade.IsMix && upgrade.Element == first && !silenced) weaponStacks += upgrade.WeaponStacks;
             }
             Rules.Publish();
             // The slots look again: a spell no longer in force leaves its slot, a new one fills an empty slot.
@@ -632,6 +674,7 @@ namespace Clover.Player
             hasHeat = On(Upgrade.Heat);
             // Poison's beat as the marks in force make it, and the two states of the dead.
             Afflictions.PoisonBeatOff = Has(Trees.PoisonTree.Volatile);
+            Afflictions.PoisonQuickWhenSoaked = Has(Trees.Duo.FishPoisonDuo.FastWater);
             Afflictions.PoisonKeeps = Has(Trees.PoisonTree.SlowDeath);
             Afflictions.PoisonRipens = Has(Trees.PoisonTree.LeftToRipen) ? 0.25f : 0f;
             Afflictions.PoisonOnCursed = Has(Trees.BlightTree.Wither) ? 0.25f : 0f;
@@ -658,6 +701,24 @@ namespace Clover.Player
             hasStormStep = On(Upgrade.StormStep);
             hasPlasma = On(Upgrade.Plasma);
             hasWhiteHeat = On(Trees.FireTree.WhiteHeat);
+            hasIntoFire = On(Trees.FireTree.IntoTheFire);
+            Afflictions.BurnBiteOff = drinksFire;
+            if (combat != null) combat.DrinksBurn = drinksFire ? DrinkDamage : 0f;
+            bool tideNow = On(Trees.WaterTree.HighWaterLowWater);
+            if (tideNow != hasTideClock)
+            {
+                hasTideClock = tideNow;
+                tideHigh = true;
+                tideClock = 0f;
+            }
+            sharedRoots = On(Trees.LifeTree.SharedRoots);
+            if (combat != null) combat.SeedMendingOff = sharedRoots;
+            if (defence != null)
+            {
+                if (shareWound == null) shareWound = ShareWound;
+                defence.WoundShare = sharedRoots ? SharedShare : 0f;
+                defence.ShareWound = sharedRoots ? shareWound : null;
+            }
             hasFurnace = On(Trees.FireTree.OpenFurnace);
             hasStroke = On(Trees.LightningTree.SingleStroke);
             hasCleanBreak = On(Trees.IceTree.CleanBreak);
@@ -734,11 +795,43 @@ namespace Clover.Player
                 int held = tally[tallied[i]];
                 if (spec.PerPoint != 0f && held > 0) Stats.AddTally(spec.Stat, spec.PerPoint * held);
                 if (spec.PerPoint2 != 0f && held > 0) Stats.AddTally(spec.Stat2, spec.PerPoint2 * held);
+                // While the count is empty (Drawn Back to Break with no wave drawn).
+                if (spec.EmptyAmount != 0f && held == 0) Stats.AddTally(spec.EmptyStat, spec.EmptyAmount);
                 if (spec.Kept) RunState.Tallies[catalogue[tallied[i]].Id] = held;
                 tallyWords.Append("   ").Append(spec.Name).Append(' ').Append(held).Append('/').Append(spec.Cap);
             }
             TallyText = tallyWords.ToString();
             TallyVersion++;
+        }
+
+        /// <summary>
+        /// A mark's effects as they stand now: a Learn's twins with its Empower's numbers while that Empower is in force
+        /// (<see cref="Upgrade.EmpoweredEffects"/>), else its own. What a condition it set does is read through this too.
+        /// </summary>
+        public UpgradeEffect[] EffectsOf(Upgrade mark)
+        {
+            if (mark == null) return System.Array.Empty<UpgradeEffect>();
+            var empower = mark.EmpowerMark;
+            if (mark.EmpoweredEffects != null && empower != null && has != null && empower.Index < has.Length && has[empower.Index]) return mark.EmpoweredEffects;
+            return mark.Effects;
+        }
+
+        /// <summary>
+        /// A reaction's effects as they run now: the plain reaction's (<paramref name="shape"/> -1) or a shape's, with the
+        /// numbers of every mark in force that changes that reaction (<see cref="Upgrade.ReactionChanges"/>), else as written.
+        /// </summary>
+        public UpgradeEffect[] ReactionEffects(int pair, int shape)
+        {
+            var written = ReactionNumbers.Written(pair, shape);
+            var changers = ReactionNumbers.Changers(pair);
+            if (changers == null || has == null) return written;
+            int mask = 0;
+            for (int i = 0; i < changers.Length; i++)
+            {
+                int index = changers[i].Index;
+                if (index < has.Length && has[index]) mask |= 1 << i;
+            }
+            return mask == 0 ? written : ReactionNumbers.Changed(pair, mask, shape) ?? written;
         }
 
         /// <summary>The count a mark keeps now; zero when it keeps none or is not in force.</summary>
@@ -940,6 +1033,15 @@ namespace Clover.Player
             bool inFire = scorched && Hazards.FireUnder(transform.position);
             Stats.SetWhen(StatWhen.InOwnFire, inFire);
             SurgeHeld = inFire;
+            if (hasTideClock)
+            {
+                // The tide turns by itself every few seconds; a perfect guard or dodge turns it at once (TurnTide).
+                tideClock += deltaTime;
+                if (tideClock >= TideTurnSeconds) TurnTide();
+            }
+            Stats.SetWhen(StatWhen.HighWater, hasTideClock && tideHigh);
+            Stats.SetWhen(StatWhen.LowWater, hasTideClock && !tideHigh);
+            if (sharerCount > 0) PayShares();
             if (defence == null) return;
             Stats.SetWhen(StatWhen.Guarding, defence.IsGuarding);
             Stats.SetWhen(StatWhen.LowHealth, !defence.IsDead && defence.Health.Fraction < LowHealthShare);
@@ -1032,6 +1134,27 @@ namespace Clover.Player
             Consider(effect, target, at, true, spent, dead, source == LaySource.Reaction && effect.Cascades ? LaySource.Effect : source, power);
         }
 
+        /// <summary>
+        /// A condition's moment (its blow, its end, its carrier striking at you), told to the marks in force that answer
+        /// that condition whoever set it (<see cref="UpgradeEffect.AnyMark"/>): The Exile Returns and Given Bones answer the
+        /// Grudge's bolt in whichever shape calls it. Queued like any trigger; true when any was. Nothing they carry is
+        /// multiplied by the condition's blows: their own Spend counts what they need.
+        /// </summary>
+        public bool FireCondition(UpgradeTrigger trigger, in ConditionNews news, Component who, Vector3 at)
+        {
+            var list = byTrigger[(int)trigger];
+            bool any = false;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var effect = list[i];
+                if (!effect.AnyMark || effect.Condition != news.Id) continue;
+                if (trigger == UpgradeTrigger.ConditionStruck && !PlayerReactions.Answers(effect.By, news)) continue;
+                Consider(effect, who, at, true);
+                any = true;
+            }
+            return any;
+        }
+
         /// <summary>Does what waits in the runner's line now, rather than on its next step. Never inside a blow.</summary>
         public void FlushNow() => Flush();
 
@@ -1042,6 +1165,8 @@ namespace Clover.Player
         {
             if (effect.Slot < 0 || effect.Slot >= readyAt.Length) return;
             if (Time.time < readyAt[effect.Slot]) return;
+            // A dodge's way against the enemy faced (Into the Fire, Drawn Back to Break).
+            if (effect.Way != DodgeWay.Any && effect.Way != lastDodgeWay) return;
             if (effect.WhileSurge && !(element != null && element.SurgeActive)) return;
             if (effect.While != StatWhen.Always && !Stats.Holds(effect.While)) return;
             if (effect.NeedsAirborne && !(target is IAfflictable flying && flying.Afflictions.IsAirborne)) return;
@@ -1103,7 +1228,7 @@ namespace Clover.Player
             // Things that can set themselves off again are held to a few times a second at most.
             float least = effect.On == UpgradeTrigger.AfflictionFull || effect.On == UpgradeTrigger.Kill ? 0.2f : 0f;
             readyAt[effect.Slot] = Time.time + Mathf.Max(effect.Cooldown, least);
-            Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power });
+            Enqueue(new Pending { Effect = effect, Target = target, At = at, HasAt = hasAt, Spent = spent, Less = less, Source = source, Power = power, Ripe = ripeScale });
         }
 
         private void Enqueue(in Pending pending)
@@ -1250,10 +1375,14 @@ namespace Clover.Player
             int counted = spentBy == effect.Owner && spentOn == pending.Target ? lastSpent : 0;
             int per = effect.PerStack ? Mathf.Max(1, pending.Spent > 0 ? pending.Spent : counted) : 1;
             if (effect.PerStack && effect.Share > 0f && effect.Do != UpgradeAction.Spend) per = Mathf.Max(1, Mathf.CeilToInt(per * effect.Share - 0.0001f));
+            if (effect.PerStack && effect.PerMore > 0) per += effect.PerMore;
+            if (effect.PerStack && effect.PerMost > 0) per = Mathf.Min(per, effect.PerMost);
             bool byCount = effect.Do == UpgradeAction.Projectile || effect.Do == UpgradeAction.Falling || effect.Do == UpgradeAction.Ward
                 || (effect.Do == UpgradeAction.Hazard && effect.PerStack && effect.Shape != HazardShape.Patch);
             int spentHere = effect.DamagePerSpent > 0f ? counted : 0;
             float eDamage = (byCount ? effect.Damage : effect.Damage * per) + effect.DamagePerSpent * spentHere;
+            // A reaction's blow on a ripe seed is stronger, on an unripe one softer (In Its Season).
+            if (pending.Ripe > 0f) eDamage *= pending.Ripe;
             float eStagger = byCount ? effect.Stagger : effect.Stagger * per;
             float eAmount = effect.Amount * per;
             int eCount = byCount && effect.PerStack ? Or(effect.Count, 1) * per : effect.Count;
@@ -1339,6 +1468,15 @@ namespace Clover.Player
                     transform.rotation = Quaternion.LookRotation(aim, Vector3.up);
                     float reach = Or(effect.Reach, 4.5f);
                     combat.StrikeCone(reach, Or(effect.Arc, 90f), Blow(look, kind, eDamage, eStagger, eStacks));
+                    // Amount: each enemy the cone struck is thrown straight away from the player (Drawn Back to Break's breaker).
+                    if (effect.Amount > 0f)
+                        foreach (var struck in combat.LastStruck)
+                            if (struck is IShovable thrown && struck is Component body)
+                            {
+                                Vector3 away = body.transform.position - self;
+                                away.y = 0f;
+                                if (away.sqrMagnitude > 0.0001f) thrown.Push(away.normalized * effect.Amount * combat.StatPush);
+                            }
                     Vector3 hand = self + Vector3.up * 1.1f;
                     for (int i = 1; i <= 3; i++) ElementLook.Puff(look, hand + aim * (reach * i / 3.5f), aim, 0.7f);
                     ElementLook.Sparks(look, hand + aim * 1.5f, aim, 1.5f);
@@ -1551,7 +1689,11 @@ namespace Clover.Player
                 {
                     if (!(subject is IAfflictable carrier) || !carrier.Afflictions.Has(kind)) break;
                     int depth = carrier.Afflictions.Stacks(kind);
-                    float damage = (carrier.Afflictions.SetOff(kind) + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage);
+                    // A seed set off ripe bursts harder, unripe softer (In Its Season); read before it is spent.
+                    bool ripeSeed = carrier.Afflictions.IsRipe(kind);
+                    float ripeShare = carrier.Afflictions.RipeShare(kind);
+                    float damage = (carrier.Afflictions.SetOff(kind) + eDamage * depth) * Stats.Multiplier(PlayerStat.BurstDamage) * ripeShare;
+                    if (ripeSeed) RipeBurstAt(subject, centre, depth);
                     combat.StrikeArea(centre, Or(effect.Radius, 3f) * Stats.Multiplier(PlayerStat.BurstReach), Blow(look, kind, damage, eStagger * depth * Stats.Multiplier(PlayerStat.BurstStagger), 0));
                     ElementLook.Strike(look, centre, 0.3f);
                     // Whatever waits on an affliction being spent is told, with how deep it was.
@@ -1571,6 +1713,70 @@ namespace Clover.Player
                     }
                     break;
                 }
+                case UpgradeAction.RaiseHeat:
+                    if (hasHeat)
+                    {
+                        Heat.Raise(Or(effect.Count, 1));
+                        Vfx.Play(VfxKind.Embers, self + Vector3.up * 1.2f, Vector3.up, 1f);
+                    }
+                    break;
+                case UpgradeAction.TurnTide:
+                    if (hasTideClock) TurnTide();
+                    break;
+                case UpgradeAction.ClearCount:
+                {
+                    var owner = effect.Owner;
+                    if (owner != null && owner.Tally != null && owner.Index < tally.Length && tally[owner.Index] != 0)
+                    {
+                        tally[owner.Index] = 0;
+                        tallyDirty = true;
+                    }
+                    break;
+                }
+                case UpgradeAction.StepBack:
+                {
+                    Vector3 back = target != null ? -aim : -transform.forward;
+                    float far = Or(effect.Reach, 3f);
+                    if (afterimage != null) afterimage.Leave(0.3f);
+                    ElementLook.Sparks(held, self + Vector3.up, back, 1f);
+                    player.StepTo(self + back * far);
+                    break;
+                }
+                case UpgradeAction.Untouchable:
+                    if (defence != null) defence.UntouchableUntil = Mathf.Max(defence.UntouchableUntil, Time.time + Or(effect.Seconds, 0.3f));
+                    break;
+                case UpgradeAction.SwapPlaces:
+                {
+                    if (target == null || !(subject is IAfflictable placed)) break;
+                    Vector3 theirs = target.position;
+                    // Where the player stood as the spell was cast; with no cast known, where they stand now.
+                    Vector3 mine = castOrigin.sqrMagnitude > 0.0001f ? castOrigin : self;
+                    mine.y = theirs.y;
+                    ElementLook.Puff(held, theirs + Vector3.up * 0.4f, Vector3.up, 1.2f);
+                    ElementLook.Puff(held, mine + Vector3.up * 0.4f, Vector3.up, 1.2f);
+                    if (placed.Afflictions.Rank == EnemyRank.Plain)
+                    {
+                        // It rises out of your water, you out of its.
+                        PlaceBody(subject, mine);
+                        player.PassTo(theirs);
+                        PlacesSwapped++;
+                    }
+                    else
+                    {
+                        // What is too great to be moved stays: you come up behind it instead.
+                        Vector3 past = theirs - mine;
+                        past.y = 0f;
+                        player.PassTo(theirs + (past.sqrMagnitude > 0.01f ? past.normalized : transform.forward) * 1.5f);
+                    }
+                    // Face what you changed places with.
+                    Vector3 face = subject.transform.position - transform.position;
+                    face.y = 0f;
+                    if (face.sqrMagnitude > 0.01f) transform.rotation = Quaternion.LookRotation(face, Vector3.up);
+                    break;
+                }
+                case UpgradeAction.LengthenSurge:
+                    if (element.SurgeActive) element.SurgeKit.Lengthen(effect.Amount, effect.Seconds);
+                    break;
                 case UpgradeAction.KeepFrozen:
                     if (subject is IAfflictable frozen && frozen.Afflictions.KeepFrozen(effect.Seconds)) FreezesKept++;
                     break;
@@ -1657,6 +1863,39 @@ namespace Clover.Player
         public int Flinches { get; private set; }
         public int ConditionsSet { get; private set; }
         public int ArcsLeapt { get; private set; }
+        /// <summary>Counts for probes: places swapped (Under the Black Water) and later presses done (Three Weasels).</summary>
+        public int PlacesSwapped { get; private set; }
+        public int PressesDone { get; private set; }
+        // Where the player stood as the last spell was cast, for what is done where they were (a swap of places).
+        private Vector3 castOrigin;
+
+        // Puts an enemy's body at a spot at once: its controller is set aside for the move, as its own blinks do.
+        private static void PlaceBody(Component body, Vector3 to)
+        {
+            var controller = body.GetComponent<CharacterController>();
+            bool was = controller != null && controller.enabled;
+            if (was) controller.enabled = false;
+            body.transform.position = to;
+            if (was) controller.enabled = true;
+        }
+
+        /// <summary>
+        /// A later press of a spell of several presses (<see cref="Upgrade.Presses"/>): its effects are done now, aimed at the
+        /// enemy faced, as the spell's own. False when there is no such press.
+        /// </summary>
+        public bool Press(Upgrade mark, int index)
+        {
+            if (mark?.Presses == null || index < 0 || index >= mark.Presses.Length || mark.Presses[index] == null) return false;
+            castSource = mark;
+            castOrigin = transform.position;
+            int before = queued;
+            foreach (var effect in mark.Presses[index]) Consider(effect, null, transform.position, false);
+            castSource = null;
+            if (queued == before) return false;
+            PressesDone++;
+            return true;
+        }
+
         /// <summary>Counts for probes: freezes made to last longer (Six Levels Down).</summary>
         public int FreezesKept { get; private set; }
 
@@ -1673,6 +1912,8 @@ namespace Clover.Player
             if (burst > 0f) Enqueue(new Pending { Special = Special.DeathBurst, Source = laying, At = at, HasAt = true, Power = burst * Stats.Multiplier(PlayerStat.BurstDamage), Radius = radius * Stats.Multiplier(PlayerStat.BurstReach) });
             float fed = afflictions.HealOnKill;
             if (fed > 0f && defence != null) defence.Heal(fed);
+            // A ripe seed in the dead bursts ripe (In Its Season): the burst above was made stronger by the set itself.
+            if (afflictions.IsRipe(AfflictionKind.Seeded)) RipeBurstAt(who, at, afflictions.Stacks(AfflictionKind.Seeded));
             Trigger(UpgradeTrigger.Kill, null, at, true, 0, afflictions);
         }
 
@@ -2205,6 +2446,15 @@ namespace Clover.Player
             LastDodgeFrom = from;
             LastDodgeDirection = direction;
             sinceDodge = 0f;
+            lastDodgeWay = WayOf(direction, from);
+            if (hasIntoFire && lastDodgeWay == DodgeWay.Toward)
+            {
+                // Into the Fire: the roll is a lunge in flame.
+                var fire = lookOf[(int)AfflictionKind.Burn];
+                ElementLook.Sparks(fire, from + Vector3.up, direction, 1.4f);
+                ElementLook.Puff(fire, from + Vector3.up * 0.6f, direction, 1f);
+            }
+            else if (hasIntoFire && lastDodgeWay == DodgeWay.Away) Vfx.Play(VfxKind.Dust, from, -direction, 1.2f);
             if (hasTrail)
             {
                 // Laid behind the roll as it goes, a patch at a time.
@@ -2228,7 +2478,140 @@ namespace Clover.Player
         }
 
         /// <summary>A dodge has run its length.</summary>
-        public void OnDodgeEnd() => Trigger(UpgradeTrigger.DodgeEnd, null, transform.position, false);
+        public void OnDodgeEnd()
+        {
+            if (hasIntoFire && lastDodgeWay == DodgeWay.Toward && combat != null)
+            {
+                // Into the Fire: everything the dodge passed through is set burning two deep, each once. The whole roll is
+                // reckoned, from where it began along its way: its last step is not yet applied when its end is told.
+                Vector3 path = LastDodgeDirection * player.Dodge.Distance;
+                path.y = 0f;
+                float length = path.magnitude;
+                if (length > 0.2f)
+                {
+                    var fire = lookOf[(int)AfflictionKind.Burn];
+                    furnaceSeen.Clear();
+                    int passed = combat.StrikeLane(dodgeFrom, path / length, length, IntoFireWidth * 0.5f, Blow(fire, AfflictionKind.Burn, 0f, 0f, IntoFireStacks), furnaceSeen);
+                    furnaceSeen.Clear();
+                    if (passed > 0) DodgesThrough++;
+                    for (int i = 1; i <= 3; i++) ElementLook.Puff(fire, dodgeFrom + path * (i / 3.5f) + Vector3.up * 0.8f, Vector3.up, 0.9f);
+                }
+            }
+            Trigger(UpgradeTrigger.DodgeEnd, null, transform.position, false);
+        }
+
+        /// <summary>
+        /// The terms of a dodge about to go this way (Into the Fire): toward or through the enemy faced, safe for its whole
+        /// length and through bodies; away from it, twice the stamina and never perfect. Plain otherwise.
+        /// </summary>
+        public DodgeTerms DodgeTermsFor(Vector3 direction)
+        {
+            var terms = DodgeTerms.Plain;
+            if (!hasIntoFire) return terms;
+            switch (WayOf(direction, transform.position))
+            {
+                case DodgeWay.Toward:
+                    terms.WholeSafe = true;
+                    terms.PassesBodies = true;
+                    break;
+                case DodgeWay.Away:
+                    terms.CostScale = 2f;
+                    terms.NoPerfect = true;
+                    break;
+            }
+            return terms;
+        }
+
+        // Which way a dodge from here goes against the enemy faced (the one ahead, else the nearest, within the fight).
+        private DodgeWay WayOf(Vector3 direction, Vector3 from)
+        {
+            var faced = combat != null ? combat.EnemyAhead(FightRange) : null;
+            return DodgeRules.WayOf(direction, from, faced != null ? faced.position : from, faced != null);
+        }
+
+        /// <summary>High Water, Low Water: the tide turns, high to low or low to high, and its clock starts again.</summary>
+        public void TurnTide()
+        {
+            if (!hasTideClock) return;
+            tideHigh = !tideHigh;
+            tideClock = 0f;
+            TidesTurned++;
+            var water = lookOf[(int)AfflictionKind.Soaked];
+            ElementLook.Ring(water, transform.position + Vector3.up * 0.1f);
+            if (tideHigh) ElementLook.Puff(water, transform.position + Vector3.up * 0.3f, Vector3.up, 1.2f);
+            if (defence != null) defence.Callout(tideHigh ? "High water" : "Low water");
+        }
+
+        /// <summary>A reaction's effects are being put in the line on an enemy: a ripe seed there makes them stronger (In Its Season).</summary>
+        public void ReactingOn(Component who, int pair)
+        {
+            ripeScale = 1f;
+            if (!(who is IAfflictable afflicted) || pair < 0) return;
+            var set = afflicted.Afflictions;
+            var seed = AfflictionKind.Seeded;
+            if (AfflictionPairs.First(pair) != seed && AfflictionPairs.Second(pair) != seed) return;
+            bool ripeNow = set.IsRipe(seed);
+            float share = set.RipeShare(seed);
+            if (ripeNow) RipeBurstAt(who, who.transform.position, set.Stacks(seed));
+            ripeScale = share;
+        }
+
+        /// <summary>The reaction's effects are in the line: what follows is no reaction's.</summary>
+        public void ReactedOn() => ripeScale = 1f;
+
+        // A ripe seed burst on this enemy: whatever answers that (In Its Season's thornbush) is told.
+        private void RipeBurstAt(Component who, Vector3 at, int seeds)
+        {
+            RipeBursts++;
+            Trigger(UpgradeTrigger.RipeBurst, who, at, true, Mathf.Max(1, seeds));
+        }
+
+        // Shared Roots: the share of a wound the Seeded enemies within reach carry, split among them. Returns what they
+        // carry: the whole share when one is near, nothing when none is. They are struck on this component's next step.
+        private float ShareWound(float share)
+        {
+            if (combat == null || share <= 0f) return 0f;
+            if (sharerCount > 0)
+            {
+                // A second wound before the first share is paid: the same Seeded carry it too.
+                sharedEach += share / sharerCount;
+                WoundsCarried += share;
+                return share;
+            }
+            furnaceSeen.Clear();
+            for (int looked = 0; sharerCount < MostSharers && looked < 24; looked++)
+            {
+                var near = combat.EnemyNear(transform.position, SharedReach, furnaceSeen);
+                if (!(near is IDamageable one)) break;
+                furnaceSeen.Add(one);
+                if (near is IAfflictable carrier && carrier.Afflictions.Has(AfflictionKind.Seeded)) sharers[sharerCount++] = near;
+            }
+            furnaceSeen.Clear();
+            if (sharerCount == 0) return 0f;
+            sharedEach = share / sharerCount;
+            WoundsCarried += share;
+            return share;
+        }
+
+        private void PayShares()
+        {
+            var life = lookOf[(int)AfflictionKind.Seeded];
+            Vector3 heel = transform.position + Vector3.up * 0.1f;
+            for (int i = 0; i < sharerCount; i++)
+            {
+                var body = sharers[i];
+                sharers[i] = null;
+                if (body == null || !body.gameObject.activeInHierarchy || combat == null) continue;
+                var blow = Blow(life, AfflictionKind.None, sharedEach, 0f, 0);
+                combat.StrikeOne(body, blow, transform.position);
+                // The pulse runs down the roots from your heels to it.
+                Vector3 to = body.transform.position - heel;
+                to.y = 0f;
+                if (to.sqrMagnitude > 0.01f) ElementLook.Sparks(life, heel + to * 0.5f, to.normalized, 1f);
+                ElementLook.Puff(life, body.transform.position + Vector3.up * 1.2f, Vector3.up, 0.7f);
+            }
+            sharerCount = 0;
+        }
 
         /// <summary>A blow landed on the player; the attacker stands at the given place.</summary>
         public void OnStruck(Vector3 attacker)
@@ -2369,6 +2752,7 @@ namespace Clover.Player
                 }
             }
             castSource = mark;
+            castOrigin = transform.position;
             form.Cast(cast);
             castSource = mark;
             Trigger(UpgradeTrigger.SpellCast, null, transform.position, false);

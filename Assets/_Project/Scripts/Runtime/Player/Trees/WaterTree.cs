@@ -27,6 +27,11 @@ namespace Clover.Player.Trees
         public const string DeepWell = "water.well";
         public const string SpreadingWater = "water.lift";
         public const string TheSeaComesIn = "water.devotion";
+        // The two keystones the owner picked on 2026-11-20 (keystones_fire_water_life.md).
+        public const string HighWaterLowWater = "water.highlow";
+        /// <summary>Kept as a mark by the owner's answer of 2026-11-20, under its old id.</summary>
+        public const string SpilledWater = "water.spilled";
+        public const string DrawnBackToBreak = "water.drawnback";
         // The spells: each is its branch's Learn mark and the branch's id.
         public const string Riptide = "water.base";
         public const string TheTideTurns = "water.tide";
@@ -148,6 +153,31 @@ namespace Clover.Player.Trees
                 Description = "Every reaction with Soaked in it runs on at half strength to every other Soaked enemy within four metres.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Needs = AfflictionKind.Soaked, Do = UpgradeAction.Arc, LeapsTo = AfflictionKind.Soaked, Count = 4, Reach = 4f, Damage = 10f, Stagger = 15f, Stacks = 0 } } },
                 BranchPattern.MiddleCrown));
+            // The Current bough's keystone (the owner's pick of 2026-11-20). The tide clock is kept by hand (PlayerUpgrades:
+            // States turns it every six seconds and sets StatWhen.HighWater or LowWater, tide-clock); what each half does and
+            // the perfect guard's and dodge's turn are data.
+            to.Add(BranchPattern.Put(new Upgrade { Id = HighWaterLowWater, Name = "High Water, Low Water", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { SpreadingWater }, Icon = UpgradeIcons.Wave,
+                Description = "Your tide turns every six seconds. At high water your spells hit a third harder and your weapon a fifth softer. At low water it is the other way round. A perfect guard or a perfect dodge turns the tide at once.",
+                Stats = new[]
+                {
+                    new StatMod(PlayerStat.SpellDamage, 0.33f, StatWhen.HighWater), new StatMod(PlayerStat.WeaponDamage, -0.2f, StatWhen.HighWater),
+                    new StatMod(PlayerStat.WeaponDamage, 0.33f, StatWhen.LowWater), new StatMod(PlayerStat.SpellDamage, -0.2f, StatWhen.LowWater),
+                },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Do = UpgradeAction.TurnTide, Cooldown = 0.3f },
+                    new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Do = UpgradeAction.TurnTide, Cooldown = 0.3f },
+                } },
+                BranchPattern.TrunkLeft));
+            // Kept as a mark (the owner's answer of 2026-11-20), at the top of the trunk, the one place left on this tree.
+            to.Add(BranchPattern.Put(new Upgrade { Id = SpilledWater, Name = "Spilled Water", Element = E, Kind = UpgradeKind.Major, Requires = new[] { SpreadingWater }, Icon = UpgradeIcons.Ring,
+                Description = "When you drink a flask, a ring of water bursts out from you. It soaks everyone near and pushes them back.",
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, Do = UpgradeAction.Burst, At = EffectAt.Self, Damage = 1f, Stagger = 15f, Radius = 3.5f, Affliction = AfflictionKind.Soaked, Stacks = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.FlaskDrunk, Do = UpgradeAction.Push, At = EffectAt.Self, Radius = 3.5f, Amount = 2.5f },
+                } },
+                BranchPattern.TrunkTop));
             // NEEDS: the pools four at most, enemies in them 15% slower, and the dodge and the clocks quicker only while you
             // stand in your own water (in-own-water, ground-states). Until then every spell that strikes leaves
             // a soaking pool where it lands, and the dodge and the clocks are quicker everywhere.
@@ -205,6 +235,20 @@ namespace Clover.Player.Trees
                 Description = "Striking a Soaked enemy makes your weapon break balance a fifth sooner for three seconds.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.AfflictedHit, Do = UpgradeAction.Boon, Needs = AfflictionKind.Soaked, Stat = PlayerStat.StaggerDealt, Amount = 0.2f, Seconds = 3f, Cooldown = 0.5f } } },
                 BranchPattern.LeftMiddle));
+
+            // The Tide bough's keystone (the owner's pick of 2026-11-20): each dodge away from the enemy faced draws a wave
+            // (dodge-direction, a count of three), the next weapon blow that lands breaks them all on it as one cone that
+            // throws, and with none drawn your blows are a fifth softer (the count's empty state, while-count).
+            to.Add(BranchPattern.Put(new Upgrade { Id = DrawnBackToBreak, Name = "Drawn Back to Break", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { HeavyWater }, Icon = UpgradeIcons.Drop,
+                Description = "Each time you dodge away from the enemy you face, the sea comes back with you as a wave, three at most. Your next weapon blow that lands breaks all of them on it: for each wave, 12 damage and 20 stagger in front of you, out to 4 metres. Everything hit is Soaked and thrown 2 metres back. With no wave held, your blows hit a fifth softer.",
+                Tally = new TallySpec { Name = "Waves", Cap = 3, EmptyStat = PlayerStat.WeaponDamage, EmptyAmount = -0.2f },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.DodgeEnd, Way = DodgeWay.Away, Do = UpgradeAction.Bank, Count = 1 },
+                    new UpgradeEffect { On = UpgradeTrigger.AnyHit, SpendsAll = true, PerStack = true, Do = UpgradeAction.Cone, Reach = 4f, Arc = 120f, Damage = 12f, Stagger = 20f,
+                        Affliction = AfflictionKind.Soaked, Stacks = 1, Amount = 2f },
+                } },
+                BranchPattern.LeftCrown));
 
             // The field form bites and soaks; each bite breaks balance harder for a moment. NEEDS: enemies drawn to the middle
             // at 1.2 m a second (pull-to-point), and their balance not recovering inside it (enemy-balance-held).

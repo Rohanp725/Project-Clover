@@ -68,15 +68,16 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); now a fourth ember flies 7 m.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // four embers, not three, flying 2 m further.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = LongEmbers, Name = "Long Embers", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Flame,
                 Description = "When Carried Embers fires, one more ember flies 2 m further.",
-                Effects = new[]
+                ReactionChanges = new[]
                 {
-                    new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Hazard, Shape = HazardShape.Downwind, Count = 1, Reach = 7f, Amount = 1f,
-                        Radius = 1f, Seconds = 3f, Interval = 0.5f, Damage = 3f, Affliction = AfflictionKind.Burn, Stacks = 1, Delay = 0.45f },
+                    new ReactionChange { Shape = -1, Index = 0, Count = 4, Reach = 7f },
+                    new ReactionChange { Shape = -1, Index = 1, Count = 4, Reach = 7f },
                 },
             }, HeartPattern.RightLow));
 

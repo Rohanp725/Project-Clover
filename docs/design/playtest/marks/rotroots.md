@@ -35,13 +35,11 @@ are both carried.
 
 **When it happens.** Each time Rot Roots fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The roots reach 7 metres, not 5, and join four enemies, not three. In Gathered In the dose is passed up to 7 metres too.
 
 **Works with.** Rot Roots and its shapes, Tasting.
 
 **Example.** The roots find the archers at the back.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## rotroots.host
 **What it does.** Whatever you grow feeds on the poisoned: a poisoned enemy that dies within 3 metres of something grown makes it stand 3 seconds longer and lay a dose of poison with every bite.

@@ -72,12 +72,16 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Soaked, Needs2 = AfflictionKind.Static, Do = UpgradeAction.SetOff, Affliction = AfflictionKind.Static, Radius = 4f, Stagger = 5f, Cooldown = 0.3f } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); now a second film for 2 s after the first.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // the film standing 5 s, not 3.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = SaltWater, Name = "Salt Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { WetThread }, Icon = UpgradeIcons.Drop,
                 Description = "The film of live water stays 2 s longer.",
-                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Reacted, Reaction = Reaction, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 2f, Delay = 3f, Interval = 0.5f, Affliction = AfflictionKind.Static, Stacks = 1 } },
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 1, Seconds = 5f },
+                },
             }, HeartPattern.LeftHigh));
 
             // NEEDS: a discharge by itself at full depth, through the water to the Soaked only (now to all within 8 m).

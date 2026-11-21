@@ -104,6 +104,10 @@ namespace Clover.Gameplay
         // For the player's affliction rules (Afflictions.Rules): seconds since each kind was last laid or deepened, and
         // seconds each kind still rests after fading before it can be laid again, with one bit a resting kind.
         private readonly float[] sinceLaid = new float[Afflictions.Count];
+        // For a kind that ripens (In Its Season's seeds): seconds it has lain with nothing new laid on it, and one bit for
+        // each kind ripe here now.
+        private readonly float[] alone = new float[Afflictions.Count];
+        private int ripe;
         private readonly float[] restLeft = new float[Afflictions.Count];
         private int resting;
 
@@ -237,8 +241,10 @@ namespace Clover.Gameplay
                 untilTick[i] = 0f;
                 strength[i] = 1f;
                 sinceLaid[i] = 0f;
+                alone[i] = 0f;
                 restLeft[i] = 0f;
             }
+            ripe = 0;
             Burn.Reset();
             IsFrozen = false;
             FrozenLeft = 0f;
@@ -260,6 +266,29 @@ namespace Clover.Gameplay
             kind == AfflictionKind.Burn ? (Burn.IsBurning ? Math.Max(1, Burn.Stacks) : 0) : kind == AfflictionKind.None ? 0 : stacks[(int)kind];
 
         public float SecondsLeft(AfflictionKind kind) => kind == AfflictionKind.Burn ? Burn.SecondsLeft : left[(int)kind];
+
+        /// <summary>True when the kind lies here ripe: left alone long enough under a ripening rule (In Its Season's seeds).</summary>
+        public bool IsRipe(AfflictionKind kind) => kind != AfflictionKind.None && (ripe & (1 << (int)kind)) != 0 && Has(kind);
+
+        /// <summary>
+        /// What a burst of the kind here is multiplied by: the rules' ripe share when it is ripe, their unripe share when it
+        /// is not, and 1 when the kind does not ripen. Read before the burst spends it.
+        /// </summary>
+        public float RipeShare(AfflictionKind kind)
+        {
+            var rules = Afflictions.Rules;
+            if (!rules.Any || rules.RipensAfter(kind) <= 0f || !Has(kind)) return 1f;
+            return IsRipe(kind) ? rules.RipeShare(kind) : rules.UnripeShare(kind);
+        }
+
+        /// <summary>Seconds the kind has lain here with nothing new laid on it, for a kind that ripens.</summary>
+        public float AloneFor(AfflictionKind kind) => kind == AfflictionKind.None ? 0f : alone[(int)kind];
+
+        private void Unripen(int index)
+        {
+            alone[index] = 0f;
+            ripe &= ~(1 << index);
+        }
 
         public bool Any
         {
@@ -288,6 +317,7 @@ namespace Clover.Gameplay
             if (kind == AfflictionKind.Burn)
             {
                 sinceLaid[index] = 0f;
+                Unripen(index);
                 int before = Burn.Stacks;
                 Burn.Ignite(seconds > 0f ? seconds : spec.Seconds, count);
                 return new AfflictionResult(true, before < Burn.MaximumStacks && Burn.Stacks >= Burn.MaximumStacks, carried);
@@ -295,6 +325,8 @@ namespace Clover.Gameplay
             // What is frozen cannot be chilled further; the ice must break or melt first.
             if (IsFrozen && spec.FreezesAtFull) return default;
             sinceLaid[index] = 0f;
+            // A fresh seed laid on one already there: it is no longer left alone, and must ripen again.
+            Unripen(index);
             int had = stacks[index];
             // A fresh dose: the poison is no longer left alone to ripen.
             if (kind == AfflictionKind.Poison) ripeBites = 0;
@@ -466,7 +498,9 @@ namespace Clover.Gameplay
             // Kept from fading (Smoulder, or Fire Without End's rule): the burn's time is given back before it is spent, so it
             // bites on and never runs down.
             if (Burn.IsBurning && (Conditions.KeepsKind(AfflictionKind.Burn) || rules.Keeps(AfflictionKind.Burn))) Burn.Ignite(Burn.SecondsLeft + deltaTime);
-            float damage = Burn.Tick(deltaTime) * strength[(int)AfflictionKind.Burn];
+            float burnt = Burn.Tick(deltaTime) * strength[(int)AfflictionKind.Burn];
+            // The Blade Drinks Fire: a burn left alone does nothing; it is fuel for the blade.
+            float damage = Afflictions.BurnBiteOff ? 0f : burnt;
             if (!Burn.IsBurning) strength[(int)AfflictionKind.Burn] = 1f;
             // The guard is spent before a new one can begin on this step, so a guard always starts whole.
             if (GuardLeft > 0f) GuardLeft = Math.Max(0f, GuardLeft - deltaTime);
@@ -494,6 +528,8 @@ namespace Clover.Gameplay
                 var spec = Afflictions.Spec((AfflictionKind)i);
                 bool poison = i == (int)AfflictionKind.Poison;
                 bool cursed = poison && Afflictions.PoisonOnCursed > 0f && stacks[(int)AfflictionKind.Cursed] > 0;
+                // Fast Water: in a Soaked body the poison's own clock runs at twice the pace, its beat and its fading both.
+                float pace = poison && Afflictions.PoisonQuickWhenSoaked && stacks[(int)AfflictionKind.Soaked] > 0 ? 2f : 1f;
                 if (spec.TickSeconds > 0f && spec.DamagePerTick > 0f)
                 {
                     bool bites;
@@ -501,7 +537,7 @@ namespace Clover.Gameplay
                     else if (poison && Afflictions.SharedBeat) bites = Afflictions.BeatNow;
                     else
                     {
-                        untilTick[i] -= deltaTime;
+                        untilTick[i] -= deltaTime * pace;
                         bites = untilTick[i] <= 0f;
                         if (bites) untilTick[i] += spec.TickSeconds;
                     }
@@ -537,7 +573,13 @@ namespace Clover.Gameplay
                 }
                 if (poison && (Afflictions.PoisonKeeps || cursed)) continue;
                 if (Conditions.KeepsKind((AfflictionKind)i) || rules.Keeps((AfflictionKind)i)) continue;
-                left[i] -= deltaTime;
+                // A ripe seed stops fading (In Its Season); once the rule has left force it ripens no more and fades as written.
+                if ((ripe & (1 << i)) != 0)
+                {
+                    if (rules.RipensAfter((AfflictionKind)i) > 0f) continue;
+                    Unripen(i);
+                }
+                left[i] -= deltaTime * pace;
                 if (left[i] > 0f) continue;
                 End(i);
                 // Faded by itself: under a rule it rests before it can be laid here again.
@@ -570,6 +612,17 @@ namespace Clover.Gameplay
                         resting &= ~(1 << i);
                     }
                 }
+                float ripens = rules.RipensAfter(kind);
+                if (ripens > 0f && (ripe & (1 << i)) == 0)
+                {
+                    // Left alone long enough, it ripens (In Its Season): it stops fading until it bursts or a fresh one is laid.
+                    if (Has(kind))
+                    {
+                        alone[i] += deltaTime;
+                        if (alone[i] >= ripens) ripe |= 1 << i;
+                    }
+                    else alone[i] = 0f;
+                }
                 float every = rules.DeepensEvery(kind);
                 if (every <= 0f) continue;
                 bool burn = i == (int)AfflictionKind.Burn;
@@ -596,6 +649,7 @@ namespace Clover.Gameplay
             present &= ~(1 << index);
             left[index] = 0f;
             strength[index] = 1f;
+            Unripen(index);
             if (index == (int)AfflictionKind.Poison)
             {
                 ripeBites = 0;
@@ -750,7 +804,8 @@ namespace Clover.Gameplay
                 if (stacks[i] <= 0) continue;
                 var spec = Afflictions.Spec((AfflictionKind)i);
                 if (spec.DeathBurstPerStack <= 0f) continue;
-                damage += spec.DeathBurstPerStack * stacks[i] * strength[i];
+                // A kind that ripens bursts harder ripe, softer unripe (In Its Season).
+                damage += spec.DeathBurstPerStack * stacks[i] * strength[i] * RipeShare((AfflictionKind)i);
                 radius = Math.Max(radius, spec.DeathBurstRadius);
             }
             return damage;

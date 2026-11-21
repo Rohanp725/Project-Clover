@@ -22,6 +22,9 @@ namespace Clover.Player.Trees
         public const string WhiteHeat = "fire.whiteheat";
         public const string FuelToIt = "fire.lift";
         public const string FireWithoutEnd = "fire.devotion";
+        // The two keystones the owner picked on 2026-11-20 (keystones_fire_water_life.md).
+        public const string IntoTheFire = "fire.intothefire";
+        public const string BladeDrinksFire = "fire.drinks";
         /// <summary>Fire Without End: a burn left alone deepens by one this often, up to this depth.</summary>
         public const float DevotionDeepensEvery = 4f;
         public const int DevotionDeepensTo = 5;
@@ -152,6 +155,15 @@ namespace Clover.Player.Trees
             to.Add(BranchPattern.Put(new Upgrade { Id = Upgrade.FlameTrail, Name = "Flame Trail", Element = E, Kind = UpgradeKind.Major, Requires = new[] { Upgrade.Backdraft }, Icon = UpgradeIcons.Boot,
                 Description = "The dodge leaves a line of fire behind it that burns what follows." }, BranchPattern.LeftMiddle));
 
+            // The Answer bough's keystone (the owner's pick of 2026-11-20). Built by hand in PlayerUpgrades (DodgeTermsFor,
+            // OnDodgeEnd): which way a dodge goes against the enemy faced (dodge-direction). Toward or through it: safe for its
+            // whole length, through bodies, and everything passed set burning two deep. Away: twice the stamina and never
+            // perfect. The perfect dodge's Heat level is data.
+            to.Add(BranchPattern.Put(new Upgrade { Id = IntoTheFire, Name = "Into the Fire", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { Upgrade.FlameTrail }, Icon = UpgradeIcons.Boot,
+                Description = "Dodge toward an enemy and you pass right through it, safe for the whole dodge, and set everything you pass on fire, two Burn each. A perfect dodge toward it also raises your Heat a level. Dodging away costs twice the stamina and can never be perfect.",
+                Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectDodge, Way = DodgeWay.Toward, Do = UpgradeAction.RaiseHeat, Count = 1 } } },
+                BranchPattern.LeftCrown));
+
             // BESPOKE (built): DrillForm leaves the line burning and raises Heat a level for each enemy passed.
             SpellBranch.Add(to, E, WildfireRush, "Wildfire Rush", SpellRole.Movement, BranchPattern.LeftB, Upgrade.FlameTrail, SpellForms.Drill,
                 new SpellSpec { Reach = 7f, Radius = 1f, Count = 1, Damage = 14f, Stagger = 20f, Stacks = 2, Speed = 20f, Seconds = 2.6f, LingerDamage = 4f },
@@ -212,6 +224,14 @@ namespace Clover.Player.Trees
                 Description = "A burning enemy that dies throws its burn onto everyone near it.",
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.Kill, Needs = AfflictionKind.Burn, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Burn, Stacks = 1, CarriesDepth = true, Radius = 4f } } },
                 BranchPattern.RightMiddle));
+
+            // The Ruin bough's keystone (the owner's pick of 2026-11-20). Built by hand: Fire's root lays nothing with the
+            // weapon (PlayerUpgrades.Refresh, root-silenced), burns do no damage by themselves (Afflictions.BurnBiteOff), and
+            // each weapon blow on a burning enemy takes Burn off it and strikes 6 harder for each (PlayerCombat.DrinksBurn):
+            // one, three for a heavy blow, all of it for a finisher.
+            to.Add(BranchPattern.Put(new Upgrade { Id = BladeDrinksFire, Name = "The Blade Drinks Fire", Element = E, Kind = UpgradeKind.Keystone, Requires = new[] { CatchingFire }, Icon = UpgradeIcons.Blade,
+                Description = "Your weapon no longer sets enemies on fire. It drinks the fire instead. Each blow on a burning enemy takes one Burn off it and hits 6 harder for it. A heavy blow takes three, a finisher takes all. Burns no longer hurt by themselves, so your fire must come from spells, the ground and reactions."
+            }, BranchPattern.RightCrown));
 
             // NEEDS: the pitch as designed, a coat that blows spread over a crowd and that lights all at once on any Burn (16
             // and 8 more for each blow that spread it, 70 at most, 35 stagger, 3 Burn, the floor burning 3 s). Until then the

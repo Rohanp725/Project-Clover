@@ -68,14 +68,14 @@ both carried.
 **Not built yet.** The pours are not yet tipped one by one along each heavy swing as tongues 4 metres long cooling from white-gold to black: they fly at the nearest by themselves, or all at once on a heavy blow.
 
 ## redhot.heatedbronze
-**What it does.** A duo surge. While your surge lasts you glow red to the bone like the bronze guardian: every blow that lands on you or your guard burns and notches the one who struck, your guard costs 30% less stamina, and a perfect guard grips the attacker, burns it three deep and throws it 2 metres.
+**What it does.** A duo surge. While it burns you glow red to the bone like the bronze guardian: every blow that lands on you or your guard burns and notches the one who struck, your guard costs 30% less stamina, and a perfect guard grips the attacker, burns it three deep and throws it 2 metres.
 
-**When it happens.** While your surge lasts, with Metal and Fire both carried.
+**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Metal and Fire are both carried, and light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. As built: a Burn and a notch on whoever strikes you or your guard; your guard's stamina 30% less; a perfect guard lays three Burn and throws the attacker 2 metres.
+**The numbers.** Mix, duo surge, 5 Shards. 40 mana, 10 seconds. As built: a Burn and a notch on whoever strikes you or your guard; your guard's stamina 30% less; a perfect guard lays three Burn and throws the attacker 2 metres.
 
 **Works with.** Red Hot, Tipped Crucible, Heated Edge.
 
 **Example.** Light your surge and let the pack break itself on your guard.
 
-**Not built yet.** It is not yet a surge of its own (40 mana, 10 seconds) in the Hand's surge slot; the perfect guard throws at once rather than holding the attacker 1 second first.
+**Not built yet.** The perfect guard throws the attacker at once rather than holding it 1 second first.

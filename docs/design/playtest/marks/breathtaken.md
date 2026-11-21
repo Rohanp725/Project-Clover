@@ -68,14 +68,14 @@ both carried.
 **Not built yet.** The wind does not yet carry you through it untouchable and set you down facing it: you step past it. The blow from its back cuts every clock 4.5 seconds rather than giving back half of this one's, and when nothing comes the gust does not yet break in a small push.
 
 ## breathtaken.grave
-**What it does.** A duo surge. While your surge lasts a black wind blows from you the way you face, 9 metres long and 100 degrees wide: enemies in it are pushed away half a metre a second and made Unsteady each second, and a Curse laid on any in the wind is carried downwind.
+**What it does.** A duo surge. While it burns a black wind blows from you the way you face, 9 metres long and 100 degrees wide: enemies in it are pushed away half a metre a second and made Unsteady each second, and a Curse laid on any in the wind is carried downwind.
 
-**When it happens.** While your surge lasts, with Dark and Wind both carried.
+**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Dark and Wind are both carried, and light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. As built: once a second a cone 9 metres long and 100 degrees wide lays an Unsteady on what is in it, and everything within 6 metres of you is pushed half a metre away.
+**The numbers.** Mix, duo surge, 5 Shards. 35 mana, 10 seconds. As built: once a second a cone 9 metres long and 100 degrees wide lays an Unsteady on what is in it, and everything within 6 metres of you is pushed half a metre away.
 
 **Works with.** Breath Taken, Ill Omen, Blown Through.
 
 **Example.** Light your surge, face the pack, and Curse one: the wind does the rest.
 
-**Not built yet.** It is not yet a surge of its own (35 mana, 10 seconds) in the Hand's surge slot; there is no streaming field turning with you yet, the push is all round you, and a Curse is not yet carried downwind.
+**Not built yet.** There is no streaming field turning with you yet, the push is all round you, and a Curse is not yet carried downwind.

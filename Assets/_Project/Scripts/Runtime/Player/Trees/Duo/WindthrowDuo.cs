@@ -81,11 +81,17 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.HeavyHit, Needs = AfflictionKind.Seeded, Needs2 = AfflictionKind.Unsteady, Do = UpgradeAction.Push, Shape = HazardShape.Downwind, Amount = 3f, Cooldown = 0.5f } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // torn pits standing 8 s, not 5, and seeding two deep.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = GreenWood, Name = "Green Wood", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SeedOnTheWind }, Icon = UpgradeIcons.Tower,
                 Description = "Torn pits stand longer and seed one deeper.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 2, Seconds = 8f, Stacks = 2 },
+                    new ReactionChange { Shape = 1, Index = 3, Seconds = 8f, Stacks = 2 },
+                },
             }, HeartPattern.LeftHigh));
 
             // NEEDS: a small whirlwind that wanders where an enemy is torn out (now a still patch where it reacts that

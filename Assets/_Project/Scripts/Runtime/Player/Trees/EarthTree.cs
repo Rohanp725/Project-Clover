@@ -107,8 +107,8 @@ namespace Clover.Player.Trees
                 new SpellSpec { Radius = 10f, Delay = 0.3f, Damage = 0f, Stagger = 0f, Stacks = 0 },
                 "You stamp the weapon's butt, and stones fall from the Cailleach's apron onto every enemy within ten metres that carries Tremor, one stone for each depth. Each stone lands for 12 damage and 15 stagger, and the heap for 10 more. The Tremor is spent, and the stones stay heaped on it for four seconds, each slowing it 15%. 40 mana.",
                 UpgradeIcons.Comet,
-                // NEEDS: the stones landing for 14 (an Empower that changes its Learn's effects, empower-effects).
-                new Empower { Mana = 35f },
+                // The stones landing for 14 is the Learn's own fall, set by the Empower (empower-effects).
+                new Empower { Mana = 35f, Effects = new[] { new EffectChange { Index = 1, Damage = 14f } } },
                 "Cairn costs 35 mana, not 40, and each stone lands for 14.",
                 // NEEDS: the stones landing soft and waiting, so nothing falls at the cast (shape-sets-aside), and the burst as 18
                 // a stone (count-from-depth). Until then the stones still fall, and the heavy blow bursts the heap for 36.
@@ -209,9 +209,10 @@ namespace Clover.Player.Trees
                 new SpellSpec { Seconds = 2.5f, Reach = 3f, Arc = 120f, Damage = 6f, Stagger = 10f, Stacks = 2 },
                 "You go wholly to stone for up to two and a half seconds, unable to move or answer. Every blow is turned, red ones too, and each one that strikes the stone jars its attacker: two Tremor, and its next attack comes late. Let go, and your next heavy blow within a second carries 20 more stagger for each blow the stone turned.",
                 UpgradeIcons.Fist,
+                // The roster's numbers alone (the owner's answer of 2026-11-20: an Empower may strengthen without a shorter wait).
                 // NEEDS: 25 stagger a blow turned (held-press).
-                new Empower { Cooldown = 9f, Seconds = 3f },
-                "Mountain Stance waits 9 seconds, not 10, you stand as stone up to three seconds, and each blow turned loads 25 stagger.",
+                new Empower { Seconds = 3f },
+                "You stand as stone for up to three seconds, and each blow you turn loads 25 stagger.",
                 // Stone Skin, once a major, folded in with Aftershock. NEEDS: the answer set aside (shape-sets-aside), and a plate
                 // taking 60% of one blow, not the whole of it (plates). Until then the plates are wards, given when the stance
                 // turns a blow.

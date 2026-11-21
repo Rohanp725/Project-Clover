@@ -35,13 +35,11 @@ are both carried.
 
 **When it happens.** Each weapon blow on such an enemy.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. Each blow draws 3 health, not 2 (1.5 from a god), at most four times a second: 12 a second. The same in Cold Shade.
 
 **Works with.** Stolen Warmth and Cold Shade, Hel's Half.
 
 **Example.** A long fight with one brute keeps you whole.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## stolenwarmth.nosummer
 **What it does.** Hunger costs no health while any enemy within 8 metres is Frozen.
@@ -70,14 +68,14 @@ are both carried.
 **Not built yet.** The veins are not yet frozen one by one: the brand's own set-off by your blows stands in, and it does not wait for the fourth.
 
 ## stolenwarmth.threewinters
-**What it does.** A duo surge. While your surge lasts frost creeps over the floor round you, and every enemy that dies freezes where it falls as a statue of black ice for 5 seconds, chilling a stack a second within 2.5 metres; a heavy blow on a statue shatters it, 25, two Chill and a Curse in 3 metres.
+**What it does.** A duo surge. While it burns frost creeps over the floor round you, and every enemy that dies freezes where it falls as a statue of black ice for 5 seconds, chilling a stack a second within 2.5 metres; a heavy blow on a statue shatters it, 25, two Chill and a Curse in 3 metres.
 
-**When it happens.** While your surge lasts, with Dark and Ice both carried.
+**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Dark and Ice are both carried, and light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. As built: each enemy that dies leaves a patch 5 metres across for 5 seconds, chilling once a second what stands in it.
+**The numbers.** Mix, duo surge, 5 Shards. 40 mana, 10 seconds. As built: each enemy that dies leaves a patch 5 metres across for 5 seconds, chilling once a second what stands in it.
 
 **Works with.** Stolen Warmth, Hel's Half, No Summer, Ice in the Blood.
 
 **Example.** Light your surge in a crowd and each death freezes the floor round it.
 
-**Not built yet.** It is not yet a surge of its own (40 mana, 10 seconds) in the Hand's surge slot; it rides whatever surge you light. The frost on the floor is not drawn, and no statue stands to be shattered: each death leaves a chilling patch.
+**Not built yet.** The frost on the floor is not drawn, and no statue stands to be shattered: each death leaves a chilling patch.

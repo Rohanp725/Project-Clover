@@ -78,11 +78,19 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a mark that changes the reaction's own numbers (reaction-numbers); until then it does nothing.
+            // Changes its reaction's own numbers while it is in force (reaction-numbers, ReactionNumbers):
+            // 3 health a blow, not 2 (1.5 from a god), at the reaction's own four a second at most, 12 a second.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = DeepVeins, Name = "Deep Veins", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Shape }, Icon = UpgradeIcons.Hourglass,
                 Description = "Each blow on an enemy whose warmth is stolen draws 3 health, not 2, and 12 a second at most.",
+                ReactionChanges = new[]
+                {
+                    new ReactionChange { Shape = -1, Index = 2, Amount = 3f },
+                    new ReactionChange { Shape = -1, Index = 3, Amount = 1.5f },
+                    new ReactionChange { Shape = 0, Index = 2, Amount = 3f },
+                    new ReactionChange { Shape = 0, Index = 3, Amount = 1.5f },
+                },
             }, HeartPattern.RightLow));
 
             // NEEDS: a state of an enemy within 8 m being Frozen (freeze-moment); now Hunger's health price is set aside for 4 s
@@ -108,13 +116,14 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnSpell = true, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 } },
             }, HeartPattern.Spell));
 
-            // The duo surge. NEEDS: its own 40 mana and 10 s in the Hand's surge slot (duo-surge-slot), the frost on the floor
+            // The duo surge, worn in the Hand's surge slot with its own 40 mana and 10 s (DuoSurge). NEEDS: the frost on the floor
             // round you, and statues of black ice a heavy blow shatters for 25, two Chill and a Curse in 3 m (standing-things);
-            // now while any surge lasts each enemy that dies leaves a patch that chills within 2.5 m for 5 s.
+            // now while it burns each enemy that dies leaves a patch that chills within 2.5 m for 5 s.
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = ThreeWinters, Name = "Three Winters", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 5, Requires = new[] { IceInTheBlood }, Icon = UpgradeIcons.Moon,
-                Description = "A duo surge. While your surge lasts frost creeps over the floor round you, and every enemy that dies freezes where it falls as a statue of black ice for 5 s, chilling a stack a second within 2.5 m; a heavy blow on a statue shatters it, 25, two Chill and a Curse in 3 m.",
+                Description = "A duo surge for your surge slot: 40 mana, 10 seconds. While it lasts frost creeps over the floor round you, and every enemy that dies freezes where it falls as a statue of black ice for 5 s, chilling a stack a second within 2.5 m; a heavy blow on a statue shatters it, 25, two Chill and a Curse in 3 m.",
+                Surge = new DuoSurge { Mana = 40f, Seconds = 10f },
                 Effects = new[]
                 {
                     new UpgradeEffect { On = UpgradeTrigger.Kill, WhileSurge = true, Do = UpgradeAction.Hazard, Radius = 2.5f, Seconds = 5f, Interval = 1f, Affliction = AfflictionKind.Chill, Stacks = 1 },

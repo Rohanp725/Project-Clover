@@ -33,13 +33,11 @@ Lightning and Earth are both carried.
 
 **When it happens.** Each time Earthed fires.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor, 1 Shard. The figure reaches 5 metres, not 4, and the grounded enemy is rooted 1.5 seconds, not 1. In Thunderstone and Step Current the 6-metre reach becomes 7 metres, and the root lasts 1.5 seconds.
 
 **Works with.** Earthed and its shapes, The Watch Kept.
 
 **Example.** The fern reaches the archer at the back.
-
-**Not built yet.** It does nothing yet: a mark that changes the reaction's own numbers is still to come.
 
 ## earthed.groundanswers
 **What it does.** Every rock you raise holds charge. Static discharged within 4 metres of one runs into it and out of every other rock you have standing: 7 a stack in 2.5 metres round each.
@@ -68,14 +66,14 @@ Lightning and Earth are both carried.
 **Not built yet.** The stone is drawn as a great sword's fall and crack; the bolts answer your blows on the pinned enemy itself, not on anything within 2 metres of the stone.
 
 ## earthed.watchsleeps
-**What it does.** A duo surge. While your surge lasts the god looks away and the ground is loose: every heavy blow shakes the floor in 3 metres round the enemy struck, any enemy shaken while it carries Static is Earthed at once, and heavy blows deal 8 more stagger.
+**What it does.** A duo surge. While it burns the god looks away and the ground is loose: every heavy blow shakes the floor in 3 metres round the enemy struck, any enemy shaken while it carries Static is Earthed at once, and heavy blows deal 8 more stagger.
 
-**When it happens.** While your surge lasts, with Lightning and Earth both carried.
+**When it happens.** Choose it for your surge slot in the Hand at a rest fire, while Lightning and Earth are both carried, and light it with the surge button.
 
-**The numbers.** Mix, duo surge, 5 Shards. As built: each heavy blow lays a Tremor on everything within 3 metres and 8 more stagger on the enemy struck; a charged enemy struck is Earthed at once, at most every half second.
+**The numbers.** Mix, duo surge, 5 Shards. 40 mana, 10 seconds. As built: each heavy blow lays a Tremor on everything within 3 metres and 8 more stagger on the enemy struck; a charged enemy struck is Earthed at once, at most every half second.
 
 **Works with.** Earthed, The Capstone, The Watch Kept.
 
 **Example.** Charge a crowd, light your surge, and every heavy blow grounds them.
 
-**Not built yet.** It is not yet a surge of its own (40 mana, 10 seconds) in the Hand's surge slot; it rides whatever surge you light, and only the enemy struck is Earthed at once, not every charged enemy the shake reaches.
+**Not built yet.** Only the enemy struck is Earthed at once, not every charged enemy the shake reaches.

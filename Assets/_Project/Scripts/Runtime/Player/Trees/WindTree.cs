@@ -23,6 +23,8 @@ namespace Clover.Player.Trees
         public const string PassingCut = "wind.passing";
         public const string TurnedAside = "wind.turned";
         public const string AgainstTheWall = "wind.wall";
+        /// <summary>Kept as a mark by the owner's answer of 2026-11-20, under its old id.</summary>
+        public const string HammerDown = "wind.hammer";
         public const string LeafOnTheWind = "wind.leaf";
         public const string NothingBeneath = "wind.nothing";
         public const string CarriedFar = "wind.lift";
@@ -253,8 +255,23 @@ namespace Clover.Player.Trees
                 new[] { new UpgradeEffect { On = UpgradeTrigger.SpellHit, OwnBranch = true, Do = UpgradeAction.Flinch, Seconds = 0.4f } },
                 "Cast it in the instant an enemy's attack mark shows, and the gust turns its blow aside into empty air.");
 
-            // Re-aimed as the detonator: the burst spends each enemy's Unsteady.
-            SpellBranch.Add(to, E, IndrawnBreath, "Indrawn Breath", SpellRole.Detonator, BranchPattern.RightB, AgainstTheWall, SpellForms.Reverse,
+            // Kept as a mark (the owner's answer of 2026-11-20), in the right bough's empty middle place, from Against the
+            // Wall. A heavy blow on an enemy in the air drives it into the ground and the landing bursts; the heavy blow on it
+            // strikes half again as hard (StatWhen.AirborneHeavyBlow).
+            to.Add(BranchPattern.Put(new Upgrade { Id = HammerDown, Name = "Hammer Down", Element = E, Kind = UpgradeKind.Major, Requires = new[] { AgainstTheWall }, Icon = UpgradeIcons.Hammer,
+                Description = "A heavy blow on an enemy in the air hits half again as hard and drives it into the ground. Where it lands, the ground bursts and throws back everyone near.",
+                Stats = new[] { new StatMod(PlayerStat.WeaponDamage, 0.5f, StatWhen.AirborneHeavyBlow) },
+                Effects = new[]
+                {
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, NeedsAirborne = true, Do = UpgradeAction.Drop },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, NeedsAirborne = true, Do = UpgradeAction.Burst, Damage = 14f, Stagger = 30f, Radius = 3f },
+                    new UpgradeEffect { On = UpgradeTrigger.HeavyHit, NeedsAirborne = true, Do = UpgradeAction.Push, Radius = 3f, Amount = 2f },
+                } },
+                BranchPattern.RightMiddle));
+
+            // Re-aimed as the detonator: the burst spends each enemy's Unsteady. It grows from Hammer Down in the bough's middle
+            // place, as the pattern grows its stalk (a line from the foot would run over Hammer Down's mark).
+            SpellBranch.Add(to, E, IndrawnBreath, "Indrawn Breath", SpellRole.Detonator, BranchPattern.RightB, HammerDown, SpellForms.Reverse,
                 new SpellSpec { Reach = 2f, Radius = 7f, Delay = 0.5f, Damage = 10f, Stagger = 25f, Stacks = 2 },
                 "You drag everything near into one place before you, then burst it apart. The burst spends each enemy's Unsteady, harder for every stack.",
                 UpgradeIcons.Spiral,

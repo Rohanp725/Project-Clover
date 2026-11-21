@@ -72,7 +72,7 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: a reaction started at a count of its own (reaction-numbers): the fig wound at two coils; now a Seed laid
+            // NEEDS: a reaction started at a count of its own (reaction-start-count): the fig wound at two coils; now a Seed laid
             // and Girdled forced through its rest, at one coil.
             to.Add(HeartPattern.Put(new Upgrade
             {
