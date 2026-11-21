@@ -61,7 +61,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/girdled.md
 - [x] marks/glacier.md
 - [x] marks/goldenfeathers.md
-- [ ] marks/halo.md
+- [x] marks/halo.md
 - [ ] marks/ice.md
 - [ ] marks/illwind.md
 - [ ] marks/ironthorns.md
