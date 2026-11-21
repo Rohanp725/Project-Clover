@@ -421,7 +421,7 @@ MonoBehaviour:
     Body: '<b>What it is.</b> You carry two elements at once, the first and the second; the same one twice is all in. Each spell is cast in its own element and lays its own affliction, in its own colour. Your weapon''s blows lay only the first element''s affliction: the second comes from your spells, the charged blade and the R2 strike, so mixing comes from weaving weapon and spell.
 
 
-      <b>The numbers.</b> The weapon''s blows lay the first element''s affliction only, even with the second element''s root mark learned, except from a mixed branch''s own marks, which lay both of theirs (the owner''s decision of 2026-11-19) (Lightning''s Static is built by the weapon only while Lightning is first; a heavy blow still sets off Static laid another way). Marks of both elements are in force; a duo branch''s marks need both elements carried, and a duo spell also needs a slot. The surge you wear strengthens the weapon while it burns; if it is the second element''s surge, the blows still lay only the first element''s affliction. R1 strikes with the first element, R2 with the second; all in or with one element, R2 is the deep strike for 20 mana. The mana bar takes the first element''s colour.
+      <b>The numbers.</b> The weapon''s blows lay the first element''s affliction only, even with the second element''s root mark learned, except from a mixed branch''s own marks, which lay both of theirs (the owner''s decision of 2026-11-19) (Lightning''s Static is built by the weapon only while Lightning is first; a heavy blow still sets off Static laid another way). Marks of both elements are in force; a duo branch''s marks need both elements carried, and a duo spell also needs a slot. The surge you wear strengthens the weapon while it burns; if it is the second element''s surge, the blows still lay only the first element''s affliction. R1 strikes with the first element, R2 with the second. With one element, or the same one twice, R2 is the deep strike for 20 mana once you have bought that element''s Devotion; before that, R2 is the plain strike again. The mana bar takes the first element''s colour.
 
 
       <b>What sets it off.</b> The elements you carry are picked in the hub; in the full game the hub''s braziers still give only the first. In the playtest the altars round the rest fire set both: carrying one element, another altar carries its element as your second and the altar of the one you carry goes all in; carrying two (or all in), an altar starts again with its element alone. You arrive carrying Fire, and each altar''s prompt says what it will do before you press. A Hand''s spells of an element no longer carried leave their slots, and a surge of one falls back to the first element''s.
@@ -466,7 +466,7 @@ MonoBehaviour:
   - Id: infused-strikes
     Title: Infused strikes
     Group: Spells and cooldowns
-    Body: '<b>What it is.</b> Hold L2 (LT) and press R1 (RB) for an infused strike: your weapon''s own move, its carrier, played with your element on it. L2 with R2 (RT) is the deep strike, the heavier version, which also costs mana. On the keyboard, hold Left Ctrl and press the left or right mouse button.
+    Body: '<b>What it is.</b> Hold L2 (LT) and press R1 (RB) for an infused strike: your weapon''s own move, its carrier, played with your element on it. L2 with R2 (RT) is the deep strike, the heavier version, which also costs mana. You get the deep strike only after you buy your element''s Devotion. On the keyboard, hold Left Ctrl and press the left or right mouse button.
 
 
       <b>The numbers.</b> Each strike button has its own 8 s wait, which weapon play shortens like a spell''s (a light blow 0.3 s, a heavy 0.6 s, a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s). The deep strike costs 20 mana. A strike counts as a weapon blow: it gives mana and takes time off your spells, but it never charges the blade and does not spend a charge. The carriers: the Katana''s drawing cut (made at once, 22 damage, 170 degrees), the Massive Sword''s rising cut, the Scythe''s full turn, the Great Spear''s first thrust, the Great Hammer''s drop, the Twin Knives'' crossing, the Great Bow''s shot, the Chain Sickle''s snap, the Fists'' and the Armament''s kick. Each element''s strike, then its deep strike: Fire, Burning Edge (a sheet of flame along the swing and 3 m beyond, 2 Burn on all it reaches, the ground burning 3 s), then Burnt Offering (a pillar of flame on the enemy struck: 30 damage and its burn set off). Lightning, Flash Cut (a 5 m lunge through enemies as a line of lightning, half again the blow, 2 Static), then Down the Channel (bolts come down the whole line 0.4 s later). Wind, Cutting Wind (a crescent out to 7 m, 60% of the blow, 2 Unsteady, a 1 m push), then Whirl Cut (the first enemy held in the air 1 s). Ice, Frost Bite (a spike of ice through each enemy struck: 2 Chill, held 0.8 s), then Ice Through (frozen at once if it carries three Chill). Water, Lash (a whip twice the weapon''s reach, 80% of the blow, Soaked, pulled 1.5 m in), then Thrown on the Reef (thrown 5 m away). Life, Grown Into It (2 Seeded and a green shoot), then Briar Root (rooted 1 s). Earth, Broken Ground (four slabs heaved up in a 4 m line: 14 damage, 25 stagger, Tremor), then Mountain Cleaver (6.5 m, 55 damage, 70 stagger, Tremor 2). Metal, Struck Plate (a ripple 3 m round the one struck, 10 damage, Sundered), then Red Iron (half the blow again and two Sundered on it). Light, Ray Along the Edge (a ray 6 m out: 10 damage, 15 stagger, Marked), then The Sun on the Blade (the same cut at half strength on every Marked enemy within 8 m). Dark, Taken (everything struck dragged 2 m toward you: 12 damage, 20 stagger, Cursed), then Yama''s Noose (40 damage and 50 stagger to the enemy you face within 8 m). Poison, Venom Flick (a string of venom 5 m ahead and a puddle that doses once a second for 3 s), then Nine Times Refined (six doses on what the cut struck).
@@ -475,7 +475,7 @@ MonoBehaviour:
       <b>What sets it off.</b> L2 with R1 or R2 (Left Ctrl with a mouse button). A strike pressed while its button waits says "Not ready"; a deep strike without 20 mana says "No mana".
 
 
-      <b>How to use it.</b> The strike is your element at the weapon''s reach and in the weapon''s shape: a hammer''s drop lays it in a circle, a spear''s thrust in a line. Use it to open a fight or to lay your affliction on a crowd. With two elements, R1 (RB) is the first element''s strike and R2 (RT) the second''s, and neither costs mana: the strike is how your weapon lays the second element. Carrying one element, or the same one twice (all in), R2 is the first element''s deep strike for 20 mana.
+      <b>How to use it.</b> The strike is your element at the weapon''s reach and in the weapon''s shape: a hammer''s drop lays it in a circle, a spear''s thrust in a line. Use it to open a fight or to lay your affliction on a crowd. With two elements, R1 (RB) is the first element''s strike and R2 (RT) the second''s, and neither costs mana: the strike is how your weapon lays the second element. Carrying one element, or the same one twice (all in), R2 is that element''s deep strike for 20 mana, but only once you have bought its Devotion. Until then, R2 does the plain strike and costs nothing.
 
 
       <b>How it looks.</b> The carrier''s arc in the element''s colour, then the element along what it covered: flame, lightning, wind, ice, water, vines, stone, ripples, a ray, shadow or venom. Under the spell diamond, two small rings, one for each button, with their waits.'
@@ -1971,10 +1971,10 @@ MonoBehaviour:
     Body: '<b>What it does.</b> A flask drunk while your surge burns opens a great lotus under you. Inside it you mend, and enemies are Soaked and Seeded. Each perfect guard you make inside closes a petal on the attacker and holds it. When the last petal closes, or its time is done, the lotus bursts, harder for every petal closed.
 
 
-      <b>When it happens.</b> Drink a flask while Wellspring or Regrowth burns.
+      <b>When it happens.</b> Choose it for your surge slot in the Hand at a rest fire, while Water and Life are both carried, and light it with the surge button. Drink a flask while it burns to open the lotus.
 
 
-      <b>The numbers.</b> 5 Shards, bought once both elements are carried; no god gives it. The lotus is 3 metres in radius and lasts 10 seconds. Each second, Soaked and a stack of Seeded on every enemy in it, and 2 health to you while you stand in it. Five petals; each holds its enemy 3 seconds. The burst is about 5 metres in radius: 30 damage and 30% more for each petal closed (75 at five), 40 stagger and a stack of Seeded.
+      <b>The numbers.</b> 40 mana, 10 seconds. 5 Shards, bought once both elements are carried; no god gives it. The lotus is 3 metres in radius and lasts 10 seconds. Each second, Soaked and a stack of Seeded on every enemy in it, and 2 health to you while you stand in it. Five petals; each holds its enemy 3 seconds. The burst is about 5 metres in radius: 30 damage and 30% more for each petal closed (75 at five), 40 stagger and a stack of Seeded.
 
 
       <b>Works with.</b> Wellspring (the flask heals half again as much), Morning Dew (the flask''s ward), Drowned Roots.
@@ -2076,13 +2076,13 @@ MonoBehaviour:
   - Id: breathtaken.grave
     Title: Wind From the Grave
     Group: 
-    Body: '<b>What it does.</b> A duo surge. While your surge lasts a black wind blows from you the way you face, 9 metres long and 100 degrees wide: enemies in it are pushed away half a metre a second and made Unsteady each second, and a Curse laid on any in the wind is carried downwind.
+    Body: '<b>What it does.</b> A duo surge. While it burns a black wind blows from you the way you face, 9 metres long and 100 degrees wide: enemies in it are pushed away half a metre a second and made Unsteady each second, and a Curse laid on any in the wind is carried downwind.
 
 
-      <b>When it happens.</b> While your surge lasts, with Dark and Wind both carried.
+      <b>When it happens.</b> Choose it for your surge slot in the Hand at a rest fire, while Dark and Wind are both carried, and light it with the surge button.
 
 
-      <b>The numbers.</b> Mix, duo surge, 5 Shards. As built: once a second a cone 9 metres long and 100 degrees wide lays an Unsteady on what is in it, and everything within 6 metres of you is pushed half a metre away.
+      <b>The numbers.</b> Mix, duo surge, 5 Shards. 35 mana, 10 seconds. As built: once a second a cone 9 metres long and 100 degrees wide lays an Unsteady on what is in it, and everything within 6 metres of you is pushed half a metre away.
 
 
       <b>Works with.</b> Breath Taken, Ill Omen, Blown Through.
@@ -2091,7 +2091,7 @@ MonoBehaviour:
       <b>Example.</b> Light your surge, face the pack, and Curse one: the wind does the rest.
 
 
-      <b>Not built yet.</b> It is not yet a surge of its own (35 mana, 10 seconds) in the Hand''s surge slot; there is no streaming field turning with you yet, the push is all round you, and a Curse is not yet carried downwind.'
+      <b>Not built yet.</b> There is no streaming field turning with you yet, the push is all round you, and a Curse is not yet carried downwind.'
   - Id: burningsap.shape
     Title: 'Burning Sap: The Light Finds Them or Blistered'
     Group: 
@@ -2228,16 +2228,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Burnt Mound fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The three stones lie 8 seconds, not 6. In Heaped Stones the boulder lies 8 seconds and rolls 10 metres, not 8. In Fire-Cracked the stones lie 8 seconds.
 
 
       <b>Works with.</b> Burnt Mound and its shapes, Timber-Laced.
 
 
-      <b>Example.</b> The stones still glow when the pack comes back round.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> The stones still glow when the pack comes back round.'
   - Id: burntmound.brickfire
     Title: Brick and Fire
     Group: 
@@ -2365,22 +2362,19 @@ MonoBehaviour:
   - Id: capsize.gourd
     Title: Open the Gourd
     Group: 
-    Body: '<b>What it does.</b> A duo surge. While your surge lasts a gourd of winds hangs at your hip: each dodge lets one out, a gust down the dodge''s line that Soaks, unsteadies twice and shoves everything near, and each capsize gives you mana.
+    Body: '<b>What it does.</b> A duo surge. While it burns a gourd of winds hangs at your hip: each dodge lets one out, a gust down the dodge''s line that Soaks, unsteadies twice and shoves everything near, and each capsize gives you mana.
 
 
-      <b>When it happens.</b> Each dodge while your surge lasts, while Wind and Water are both carried.
+      <b>When it happens.</b> Choose it for your surge slot in the Hand at a rest fire, while Wind and Water are both carried, and light it with the surge button. Each dodge while it burns lets out a wind.
 
 
-      <b>The numbers.</b> Mix, duo surge, 5 Shards. A lane 6 metres long and 2 metres wide: 2 Unsteady and a Soaked. Everything within 3 metres of you is shoved 2 metres. 6 mana for each capsize.
+      <b>The numbers.</b> Mix, duo surge, 5 Shards. 40 mana, 10 seconds; each capsize while it burns adds 1 second, up to 15. A lane 6 metres long and 2 metres wide: 2 Unsteady and a Soaked. Everything within 3 metres of you is shoved 2 metres. 6 mana for each capsize.
 
 
       <b>Works with.</b> Capsize, Ride the Squall, Wake.
 
 
-      <b>Example.</b> Light your surge and roll through the fight: every roll knocks a line of them over.
-
-
-      <b>Not built yet.</b> It is not yet a surge of its own in the Hand''s surge slot (its own 40 mana and 10 seconds, a second more for each capsize up to 15): for now it rides whichever surge you light while both are carried.'
+      <b>Example.</b> Light your surge and roll through the fight: every roll knocks a line of them over.'
   - Id: carriedembers.shape
     Title: 'Carried Embers: Fire Whirl or Hot Wind'
     Group: 
@@ -2425,16 +2419,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Carried Embers fires, plain or shaped, while Fire and Wind are both carried.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard. A fourth small fire 7 metres downwind: 1 metre across, 3 seconds, 3 damage and a Burn every half second.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. Four embers fly, not three, and they land 2 metres further downwind: the farthest about 8.5 metres away.
 
 
       <b>Works with.</b> Carried Embers, The Wind Carries It.
 
 
-      <b>Example.</b> Embers land among the archers at the back as well as the soldiers in front.
-
-
-      <b>Not built yet.</b> The three embers themselves do not fly further: a fourth one does.'
+      <b>Example.</b> Embers land among the archers at the back as well as the soldiers in front.'
   - Id: carriedembers.carries
     Title: The Wind Carries It
     Group: 
@@ -2790,13 +2781,10 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 10). It runs 5 metres along its lane: 24 damage and 30 stagger. Each Cursed enemy it bites loses its Curse, takes 20 damage more and heals you 12. The jaw itself lays no Curse: curse first, then bite.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 10, and each Cursed enemy bitten heals you 18). It runs 5 metres along its lane: 24 damage and 30 stagger. Each Cursed enemy it bites loses its Curse, takes 20 damage more and heals you 12. The jaw itself lays no Curse: curse first, then bite.
 
 
       <b>Works with.</b> The root, Grasp and Debts Called (curse first), Dread, which it grows from, Never Sated, Hunger, and the charged blade.
-
-
-      <b>Not built yet.</b> The Empower''s heal of 18: for now it only shortens the wait.
 
 
       <b>Example.</b> Curse a row of soldiers in a corridor with Grasp, then loose the jaw down it: each one bitten takes 44 and gives you 12.'
@@ -2853,7 +2841,7 @@ MonoBehaviour:
       <b>Works with.</b> The root, Dread, which it grows from, Devouring Maw (bite what you came out behind), Near the Grave, and a heavy weapon.
 
 
-      <b>Not built yet.</b> The wait of 5 seconds when nothing struck. The scattering into ash and standing again a moment later: for now you step at once. The blow struck as a heavy: for now it strikes twice as hard. The Empower''s heal of 15.
+      <b>Not built yet.</b> The wait of 5 seconds when nothing struck. The scattering into ash and standing again a moment later: for now you step at once. The blow struck as a heavy: for now it strikes twice as hard.
 
 
       <b>Example.</b> A captain swings at you: you scatter, stand at its back, and your cut lands double and gives you 10.'
@@ -2939,7 +2927,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Dark is carried twice (all in). Each Cursed death, and each death while you are Risen.
 
 
-      <b>The numbers.</b> 6 Shards. Each shade stands where its body fell for 6 seconds and strikes what is within 2.5 metres of it every 0.8 seconds: 12 damage, 12 stagger and a Curse each time. All in, L2 with R2 is the deep strike, Yama''s Noose.
+      <b>The numbers.</b> 6 Shards. Each shade stands where its body fell for 6 seconds and strikes what is within 2.5 metres of it every 0.8 seconds: 12 damage, 12 stagger and a Curse each time. Buying this also gives you the deep strike, Yama''s Noose. Use it with L2 and R2 while you carry this element alone or twice.
 
 
       <b>Works with.</b> The root and every Dark spell (Curse them before they die), Dread, Collected Twice, which it grows from, Dead Already (Risen for good, every death stands up), A Life for a Life.
@@ -2983,7 +2971,7 @@ MonoBehaviour:
       <b>Works with.</b> The root, Blood Price, which it grows from, Near the Grave and Pawned Heart (low health), Dread, Devouring Maw, and the charged blade.
 
 
-      <b>Not built yet.</b> The damage rising smoothly as your health falls, 36 at one point: for now a step at half your health. The burst throwing back what it struck. The Empower''s eight metres: for now it only shortens the wait.
+      <b>Not built yet.</b> The damage rising smoothly as your health falls, 36 at one point: for now a step at half your health. The burst throwing back what it struck.
 
 
       <b>Example.</b> Four soldiers spread round you: one cast draws them into a knot at your sword''s point, all Cursed, ready for a wide swing.'
@@ -3050,7 +3038,7 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). It cannot be cast at one point of health.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: the price is health, and it waits 40 seconds after a cast, less with weapon play (its Empower: 36, 70% more and a ring of 12 seconds). The heart lies 1.8 metres behind you and beats for 10 seconds. While it beats: 60% more weapon damage. You must step 2.6 metres from it, then come within 1 metre of it again: back come all the health pawned and 30% of the damage you dealt. A blow that lands on you while it beats can kill you.
+      <b>The numbers.</b> 4 Shards, no mana: the price is health, and it waits 40 seconds after a cast, less with weapon play (its Empower: 70% more and a ring of 12 seconds). The heart lies 1.8 metres behind you and beats for 10 seconds. While it beats: 60% more weapon damage. You must step 2.6 metres from it, then come within 1 metre of it again: back come all the health pawned and 30% of the damage you dealt. A blow that lands on you while it beats can kill you.
 
 
       <b>Works with.</b> Near the Grave, which it grows from (you are below a third the whole time), Debts Called''s Master, Dead Already, Hunger, and the wards of Near the Grave and Gone to Ash.
@@ -3199,7 +3187,7 @@ MonoBehaviour:
       <b>Works with.</b> The root, Hollow Strength, which it grows from, Pawned Heart (half of a much bigger blow), Near the Grave, Hunger.
 
 
-      <b>Not built yet.</b> Pressing again to change places with the shadow, once. The Empower''s 60%: for now it only shortens the wait.
+      <b>Not built yet.</b> Pressing again to change places with the shadow, once.
 
 
       <b>Example.</b> Cast it as a brute kneels staggered: every cut of the finisher''s opening lands twice.'
@@ -3304,16 +3292,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Drowned Weight fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The enemy stays swollen and slow for 7 seconds, not 5, and its burst reaches 5 metres, not 4. The same in both shapes.
 
 
       <b>Works with.</b> Drowned Weight and its shapes, Held Under.
 
 
-      <b>Example.</b> The burst catches the second rank too.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> The burst catches the second rank too.'
   - Id: drownedweight.debtpasses
     Title: The Debt Passes
     Group: 
@@ -3342,16 +3327,13 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot, while Water and Dark are both carried: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Water.
 
 
-      <b>The numbers.</b> Mix, duo spell, movement, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. Up to 9 metres: 8 damage, 15 stagger, Soaked and Cursed (so it swells), held 1 second (elites 0.4); a pool 2.5 metres across where you land, soaking once a second for 3 seconds; your next heavy blow within 2 seconds is critical.
+      <b>The numbers.</b> Mix, duo spell, movement, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. Up to 9 metres: 8 damage, 15 stagger, Soaked and Cursed (so it swells), held 1 second (elites 0.4). You and the enemy change places: it ends up where you stood when you cast, and you where it stood. An elite or a god is too heavy to move, so you come up 1.5 metres behind it instead. The pool where you come up is 2.5 metres across and lasts 3 seconds; it soaks and curses once a second. Your next weapon blow within 2 seconds hits half again as hard, and your next heavy blow within 2 seconds is critical.
 
 
       <b>Works with.</b> Drowned Weight, Held Under, The Debt Passes.
 
 
-      <b>Example.</b> Drop through to the archer and come up swinging.
-
-
-      <b>Not built yet.</b> You do not yet change places: you step to the enemy and it stays where it was, and gods and elites are not yet passed behind. The pool soaks but does not curse, and the blow after it is a critical heavy blow rather than any blow at half again.'
+      <b>Example.</b> Drop through to the archer and come up swinging.'
   - Id: earth.tremor
     Title: Tremor
     Group: 
@@ -3459,7 +3441,7 @@ MonoBehaviour:
       <b>Works with.</b> Tremor and everything that lays it: heavy blows, finishers, Quake Step, The Slow Hand. Unbroken Cairn and your heavy blows, Rooted for its Master.
 
 
-      <b>Not built yet.</b> The slow as 15% a stone (for now 30% whatever the depth), and the Empower''s 14 a stone (for now 12).
+      <b>Not built yet.</b> The slow as 15% a stone (for now 30% whatever the depth).
 
 
       <b>Example.</b> Three soldiers each shaken three deep: one stamp drops nine stones and leaves all three slowed and with their shaking spent.'
@@ -3605,7 +3587,7 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4), then any blow while you stand.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 3 seconds). As built it is the stance of stone: up to 2.5 seconds, and the first blow to land is turned for nothing and answered by a jar of stone 3 metres long and 120 degrees wide toward the one who struck: 6 damage, 10 stagger and two Tremor. Its wind-ups come at 0.7 of their pace for 3 seconds, and for 3.5 seconds your next blow that lands breaks 50% more balance.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: you stand up to 3 seconds). As built it is the stance of stone: up to 2.5 seconds, and the first blow to land is turned for nothing and answered by a jar of stone 3 metres long and 120 degrees wide toward the one who struck: 6 damage, 10 stagger and two Tremor. Its wind-ups come at 0.7 of their pace for 3 seconds, and for 3.5 seconds your next blow that lands breaks 50% more balance.
 
 
       <b>Works with.</b> Rooted (stand, and it counts), Immovable, which grows from it, Heavy Hand, Cairn''s Master, Buckled on the Forge branch.
@@ -3833,7 +3815,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Earth is carried twice (all in). Always on then.
 
 
-      <b>The numbers.</b> 6 Shards. As built: what you leave on the ground (a spell''s ground, a hazard from your marks, Left in Rubble''s heaps) stands three times as long, and a heavy blow that lands strikes its enemy as if driven into stone, 1 metre round it, 20 damage, 35 stagger and one Tremor, once in 3 seconds. All in, L2 with R2 is the deep strike, Mountain Cleaver.
+      <b>The numbers.</b> 6 Shards. As built: what you leave on the ground (a spell''s ground, a hazard from your marks, Left in Rubble''s heaps) stands three times as long, and a heavy blow that lands strikes its enemy as if driven into stone, 1 metre round it, 20 damage, 35 stagger and one Tremor, once in 3 seconds. Buying this also gives you the deep strike, Mountain Cleaver. Use it with L2 and R2 while you carry this element alone or twice.
 
 
       <b>Works with.</b> Left in Rubble, which it grows from, Fissure, Stone Rise, Standing Stones, Heavy Hand.
@@ -3922,16 +3904,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Earthed fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The figure reaches 5 metres, not 4, and the grounded enemy is rooted 1.5 seconds, not 1. In Thunderstone and Step Current the 6-metre reach becomes 7 metres, and the root lasts 1.5 seconds.
 
 
       <b>Works with.</b> Earthed and its shapes, The Watch Kept.
 
 
-      <b>Example.</b> The fern reaches the archer at the back.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> The fern reaches the archer at the back.'
   - Id: earthed.groundanswers
     Title: The Ground Answers
     Group: 
@@ -3973,13 +3952,13 @@ MonoBehaviour:
   - Id: earthed.watchsleeps
     Title: When the Watch Sleeps
     Group: 
-    Body: '<b>What it does.</b> A duo surge. While your surge lasts the god looks away and the ground is loose: every heavy blow shakes the floor in 3 metres round the enemy struck, any enemy shaken while it carries Static is Earthed at once, and heavy blows deal 8 more stagger.
+    Body: '<b>What it does.</b> A duo surge. While it burns the god looks away and the ground is loose: every heavy blow shakes the floor in 3 metres round the enemy struck, any enemy shaken while it carries Static is Earthed at once, and heavy blows deal 8 more stagger.
 
 
-      <b>When it happens.</b> While your surge lasts, with Lightning and Earth both carried.
+      <b>When it happens.</b> Choose it for your surge slot in the Hand at a rest fire, while Lightning and Earth are both carried, and light it with the surge button.
 
 
-      <b>The numbers.</b> Mix, duo surge, 5 Shards. As built: each heavy blow lays a Tremor on everything within 3 metres and 8 more stagger on the enemy struck; a charged enemy struck is Earthed at once, at most every half second.
+      <b>The numbers.</b> Mix, duo surge, 5 Shards. 40 mana, 10 seconds. As built: each heavy blow lays a Tremor on everything within 3 metres and 8 more stagger on the enemy struck; a charged enemy struck is Earthed at once, at most every half second.
 
 
       <b>Works with.</b> Earthed, The Capstone, The Watch Kept.
@@ -3988,7 +3967,7 @@ MonoBehaviour:
       <b>Example.</b> Charge a crowd, light your surge, and every heavy blow grounds them.
 
 
-      <b>Not built yet.</b> It is not yet a surge of its own (40 mana, 10 seconds) in the Hand''s surge slot; it rides whatever surge you light, and only the enemy struck is Earthed at once, not every charged enemy the shake reaches.'
+      <b>Not built yet.</b> Only the enemy struck is Earthed at once, not every charged enemy the shake reaches.'
   - Id: earthlight.shape
     Title: 'Earthlight: Down the Passage or Lit Seam'
     Group: 
@@ -4055,16 +4034,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Earthlight fires, plain or shaped.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard. As built: a Mark on everything within 3.5 metres as it fires.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The star reaches 3.5 metres, not 3, and so does Lit Seam''s. In Down the Passage the lane is half a metre wider.
 
 
       <b>Works with.</b> Keeping the Hour, which it grows from, Earthlight.
 
 
-      <b>Example.</b> The soldier just outside the light is marked as well.
-
-
-      <b>Not built yet.</b> The star itself does not grow; a ring of Marks half a metre wider stands in.'
+      <b>Example.</b> The soldier just outside the light is marked as well.'
   - Id: earthlight.stone
     Title: The Stone Keeps the Hour
     Group: 
@@ -4421,7 +4397,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Fire is carried twice (all in), once bought. Then always, on every burning enemy.
 
 
-      <b>The numbers.</b> 6 Shards. A burn''s time no longer runs down. Every burning enemy that has had no Burn laid on it for 4 seconds gains a stack, and another 4 seconds later another, up to five. A burn set off still goes, and Steam (Soaked meeting Burn) still takes half of it. All in, L2 with R2 is the deep strike, Burnt Offering: 20 mana on its own 8-second clock.
+      <b>The numbers.</b> 6 Shards. A burn''s time no longer runs down. Every burning enemy that has had no Burn laid on it for 4 seconds gains a stack, and another 4 seconds later another, up to five. A burn set off still goes, and Steam (Soaked meeting Burn) still takes half of it. Buying this also gives you the deep strike, Burnt Offering. Use it with L2 and R2 while you carry this element alone or twice: 20 mana on its own 8-second clock.
 
 
       <b>Works with.</b> Cinder, Flame Wave, Catching Fire, Breath of the Lioness, which sets a burn off, and the deep strike, whose pillar sets off the burn it lands on.
@@ -4673,6 +4649,38 @@ MonoBehaviour:
 
 
       <b>Example.</b> Press again over a crowd at five Burn.'
+  - Id: fire.intothefire
+    Title: Into the Fire
+    Group: 
+    Body: '<b>What it does.</b> Fire never backs off. When you dodge toward an enemy, you pass right through it without being hit, and everything you pass catches fire. Dodging away costs more and can never be perfect.
+
+
+      <b>When it happens.</b> Every dodge, while Fire is carried. A dodge counts as toward the enemy you face when it goes within 60 degrees of the line to it, and as away when it goes within 60 degrees of the line away from it. A dodge to the side is a plain dodge.
+
+
+      <b>The numbers.</b> Keystone, 6 Shards. Toward: you cannot be hit for the whole dodge, you go through bodies (walls still stop you), and every enemy along your path takes two Burn. A perfect dodge toward the enemy also raises your Heat by one level. Away: the dodge costs twice the stamina, and it is never a perfect dodge, so it gives no mana and nothing that needs a perfect dodge happens.
+
+
+      <b>Works with.</b> Flame Trail, which it grows from. Heat, which the perfect dodge feeds. Wildfire Rush. Big and red attacks, which you now meet by going through them.
+
+
+      <b>Example.</b> A brute winds up a huge swing. Roll into it: you come out behind it, it is burning, and you are already swinging.'
+  - Id: fire.drinks
+    Title: The Blade Drinks Fire
+    Group: 
+    Body: '<b>What it does.</b> Your weapon stops setting enemies on fire. Instead it drinks the fire that is already there. Each blow on a burning enemy takes Burn off it and hits harder for each Burn it takes. Burns no longer hurt enemies by themselves.
+
+
+      <b>When it happens.</b> Every weapon blow on a burning enemy, while Fire is carried.
+
+
+      <b>The numbers.</b> Keystone, 6 Shards. A light blow takes 1 Burn, a heavy blow takes 3, and a finisher takes all of them. Each Burn taken adds 6 damage to that blow. Cinder no longer adds Burn to your blows. A burn left on an enemy does no damage over time, but it still runs out at its usual pace.
+
+
+      <b>Works with.</b> Catching Fire, which it grows from. Everything that sets fire without the weapon: Flame Wave, Uraeus, the Firebomb Flask, Fire''s infused strike and reactions. Fire Without End, which keeps the fuel from running out.
+
+
+      <b>Example.</b> Throw a Flame Wave over a crowd for two Burn each, then finish the one in front of you: the finisher takes both Burn and hits 12 harder.'
   - Id: firebloom.shape
     Title: 'Firebloom: Between Two Fires or Ash Bed'
     Group: 
@@ -4720,16 +4728,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Firebloom fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. One more lily grows than the seeds spent, four at most, and the lilies stand 7 seconds, not 5. In Between Two Fires you get one more pair, and they stand 7 seconds too.
 
 
       <b>Works with.</b> Firebloom and its shapes, Kindled Guard.
 
 
-      <b>Example.</b> A lightly seeded enemy still blooms a full bed.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> A lightly seeded enemy still blooms a full bed.'
   - Id: firebloom.burningtree
     Title: The Burning Tree
     Group: 
@@ -4815,16 +4820,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Fish Poison fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The slick is 4 metres across, not 3, and stands 7 seconds, not 5. In Rock Pool the pool is 2 metres across and stands 7 seconds; in The Ebb Takes It the stream stands 7 seconds.
 
 
       <b>Works with.</b> Fish Poison and its shapes, The Tide Brings It.
 
 
-      <b>Example.</b> The slick reaches the soldier beside it.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> The slick reaches the soldier beside it.'
   - Id: fishpoison.fastwater
     Title: Fast Water
     Group: 
@@ -4834,16 +4836,13 @@ MonoBehaviour:
       <b>When it happens.</b> Always on once learned, while Poison and Water are both carried.
 
 
-      <b>The numbers.</b> Mix, keystone, 5 Shards. As built: each bite of poison on a Soaked enemy bites again half a second later, at most every half second for all enemies together.
+      <b>The numbers.</b> Mix, keystone, 5 Shards. Poison usually bites every 2 seconds and lasts 6. On a Soaked enemy it bites every second and lasts 3. Each enemy keeps its own pace, so one enemy getting wet does not change the others.
 
 
       <b>Works with.</b> Fish Poison, The Tide Brings It, Poison the Lagoon.
 
 
-      <b>Example.</b> Soak a poisoned pack and the bites come fast.
-
-
-      <b>Not built yet.</b> One enemy''s beat is not yet quickened: a second bite follows each bite, at most every half second for all of them, and the doses do not yet fade faster.'
+      <b>Example.</b> Soak a poisoned pack and the bites come fast.'
   - Id: fishpoison.lagoon
     Title: Poison the Lagoon
     Group: 
@@ -5311,16 +5310,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Golden Feathers fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. Four feathers fly, not three, and the farthest lands 9 metres beyond the enemy.
 
 
       <b>Works with.</b> Golden Feathers, Bane of Serpents.
 
 
-      <b>Example.</b> The feathers reach the back of the room.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> The feathers reach the back of the room.'
   - Id: goldenfeathers.wingsbehind
     Title: Wings Behind
     Group: 
@@ -5648,7 +5644,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Ice is carried twice (all in), once bought. The freeze comes each time Glaze is lit.
 
 
-      <b>The numbers.</b> 6 Shards. Chill no longer runs down on any enemy: it stays until a freeze thaws it away or a shatter breaks it. Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. All in, L2 with R2 is the deep strike, Ice Through: the spike freezes the enemy at once if it carries three Chill or more.
+      <b>The numbers.</b> 6 Shards. Chill no longer runs down on any enemy: it stays until a freeze thaws it away or a shatter breaks it. Lighting Glaze lays Chill to full depth on everything within 4 metres of you, which freezes what can be frozen. Buying this also gives you the deep strike, Ice Through. Use it with L2 and R2 while you carry this element alone or twice: the spike freezes the enemy at once if it carries three Chill or more.
 
 
       <b>Works with.</b> Every spell of the tree; Splinter Ward and The World Holds Still, which answer Glaze too; Flying Shards, for the room frozen at once.
@@ -5835,7 +5831,7 @@ MonoBehaviour:
       <b>The numbers.</b> 3 Shards. For 5 seconds after its ice is gone the enemy takes 20% more damage from weapon blows and 20% more stagger from everything. Spells do not cut deeper.
 
 
-      <b>Works with.</b> Chill, Flying Shards, All at Once, Ski Run, which grows from it, and the finisher: a shatter and a few brittle blows often stagger it.
+      <b>Works with.</b> Chill, Flying Shards, All at Once, Clean Break, which grows from it (and Ski Run from that), and the finisher: a shatter and a few brittle blows often stagger it.
 
 
       <b>Example.</b> Shatter a brute, then keep cutting: for five seconds every blow bites a fifth harder and its balance bar fills fast.'
@@ -5908,7 +5904,7 @@ MonoBehaviour:
       <b>The numbers.</b> 4 Shards, no mana: it waits 8 seconds after a cast, less with weapon play (its Empower: 6, and a lane of 12 metres). You go 9 metres; each enemy passed takes 6 damage, 10 stagger and two stacks of Chill. The lane stays 5 seconds and bites what stands on it for 1 damage every half second. Nothing can strike you while you slide.
 
 
-      <b>Works with.</b> Brittle, which it grows from; Chill; Hanging Ice and Eight Points on those you leave behind.
+      <b>Works with.</b> Clean Break, which it grows from; Brittle; Chill; Hanging Ice and Eight Points on those you leave behind.
 
 
       <b>Not built yet.</b> The untouchable time only for the first 0.2 seconds (for now the whole slide), and a dodge along the lane carrying twice as far.
@@ -5969,6 +5965,22 @@ MonoBehaviour:
 
 
       <b>Example.</b> Light Glaze in a crowd, break it outward, and shatter the nearest: the ice runs from one to the next until every frozen body has broken.'
+  - Id: ice.cleanbreak
+    Title: Clean Break
+    Group: 
+    Body: '<b>What it does.</b> Shatter an enemy that has less than a fifth of its health left, and nothing is left of it. Gods are spared; elites are not.
+
+
+      <b>When it happens.</b> Each time you shatter a frozen enemy, while Ice is carried.
+
+
+      <b>The numbers.</b> Major, 3 Shards. An enemy below 20% of its health when it is shattered dies a moment later. It never works on a god.
+
+
+      <b>Works with.</b> Brittle, which it grows from, and Ski Run, which grows from it. Every way to freeze and shatter: Hoarfrost, Hanging Ice, heavy blows on a frozen enemy, All at Once.
+
+
+      <b>Example.</b> A knight is down to a sliver of health and frozen. One heavy blow shatters it, and it is gone.'
   - Id: illwind.shape
     Title: 'Ill Wind: Dust on the Blade or Dust Bank'
     Group: 
@@ -6029,19 +6041,16 @@ MonoBehaviour:
     Body: '<b>What it does.</b> Ill Wind''s trails last 2 seconds longer.
 
 
-      <b>When it happens.</b> Always on once learned, while Poison and Wind are both carried.
+      <b>When it happens.</b> Each time Ill Wind sheds its poison, while Poison and Wind are both carried.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The trail of poison lasts 5 seconds, not 3. In Dust Bank both trails last 2 seconds longer.
 
 
       <b>Works with.</b> Spring Dust, which it grows from, Ill Wind and its shapes.
 
 
-      <b>Example.</b> The plume still lies when the next soldier steps in.
-
-
-      <b>Not built yet.</b> It does nothing yet.'
+      <b>Example.</b> The plume still lies when the next soldier steps in.'
   - Id: illwind.nostillair
     Title: No Still Air
     Group: 
@@ -6327,7 +6336,7 @@ MonoBehaviour:
       <b>Works with.</b> Fallen Seeds and Sapling (the things it bursts), Briar Patch, Seeded and Ripening, Wood Grows Back (the garden comes again), Wildwood (more to burst), and the charged blade: it charges your weapon with Life when it lands.
 
 
-      <b>Not built yet.</b> Every Seeded enemy in the fight bursting, not only those within the call''s 6 metres; the Empower''s 7 mending a burst (for now 5).
+      <b>Not built yet.</b> Every Seeded enemy in the fight bursting, not only those within the call''s 6 metres.
 
 
       <b>Example.</b> Three saplings stand round you and a pack closes in: reap, and four bursts go off at once while you mend 20.'
@@ -6454,7 +6463,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Life is carried twice (all in). A sapling is sown each time a spell strikes.
 
 
-      <b>The numbers.</b> 6 Shards. A sapling where a spell strikes, at most one every 2 seconds: it reaches 3.5 metres, stands 12 seconds, and every 1.5 seconds strikes for 6 damage, 8 stagger and Seeded; four stand at once at most. All in, L2 with R2 is the deep strike, Briar Root: the cutting grows into a briar round the enemy''s feet and roots it for a second.
+      <b>The numbers.</b> 6 Shards. A sapling where a spell strikes, at most one every 2 seconds: it reaches 3.5 metres, stands 12 seconds, and every 1.5 seconds strikes for 6 damage, 8 stagger and Seeded; four stand at once at most. Buying this also gives you the deep strike, Briar Root. Use it with L2 and R2 while you carry this element alone or twice: the cutting grows into a briar round the enemy''s feet and roots it for a second.
 
 
       <b>Works with.</b> Every spell of the tree; Reap What Is Sown and Drawn From the Wood, which spend the garden; Root Walk, which goes to it.
@@ -6495,7 +6504,7 @@ MonoBehaviour:
       <b>Works with.</b> Fallen Seeds, Sapling, Briar Patch and Root Walk for the garden it spends; Wood Grows Back to have it again; Ripening, which it grows from; Seeded mending on top.
 
 
-      <b>Not built yet.</b> The window as a second and a half for each grown thing withered, ten seconds at most, and only those within 12 metres; the half-second kneel; the Empower''s 16-damage thorns (for now 12).
+      <b>Not built yet.</b> The window as a second and a half for each grown thing withered, ten seconds at most, and only those within 12 metres; the half-second kneel.
 
 
       <b>Example.</b> Three bushes stand round a brute: draw them in, and cut it with six seconds of critical, mending blows.'
@@ -6794,6 +6803,54 @@ MonoBehaviour:
 
 
       <b>Example.</b> Seed a pack with Briar Patch, light Regrowth, press again: the whole pack stands held while you cut your health back out of them.'
+  - Id: life.sharedroots
+    Title: Shared Roots
+    Group: 
+    Body: '<b>What it does.</b> Enemies with your seeds in them take part of your wounds for you. Thin roots run from your heels to each Seeded enemy near you. But your seeds no longer heal you when you hit.
+
+
+      <b>When it happens.</b> Every blow that hurts you, while Life is carried, if a Seeded enemy is within 8 metres.
+
+
+      <b>The numbers.</b> Keystone, 6 Shards. A third of each wound is taken off you and dealt to the Seeded enemies within 8 metres instead, split evenly between them (up to eight of them). With no Seeded enemy near, you take the whole wound. Blows on Seeded enemies no longer heal you.
+
+
+      <b>Works with.</b> Briar Coat, which it grows from, and seeds the enemies that strike you. Briar Patch and Seeded, to plant seeds in a crowd.
+
+
+      <b>Example.</b> Seed a whole pack with Briar Patch, then wade in: every blow you take is split between them.'
+  - Id: life.inseason
+    Title: In Its Season
+    Group: 
+    Body: '<b>What it does.</b> Your seeds ripen if you leave them alone. A ripe seed flowers and stops fading. When a ripe seed bursts, it hits three times as hard and leaves a thornbush behind. A seed that bursts before it is ripe hits only half as hard.
+
+
+      <b>When it happens.</b> A seed ripens when it has stayed six seconds in an enemy with no new seed planted on it, while Life is carried. A seed bursts when you set it off (Ripening, Reap What Is Sown), when the enemy dies, or in a reaction.
+
+
+      <b>The numbers.</b> Keystone, 6 Shards. Ripe after 6 seconds alone. A ripe seed does not fade until it bursts. Ripe burst: three times the damage, and a thornbush grows there that stands 8 seconds and bites what stands in it for 4 damage and a seed every half second (four bushes at most). Unripe burst: half the damage.
+
+
+      <b>Works with.</b> Root and Branch, which it grows from. Ripening, Reap What Is Sown, Fallen Seeds, and the reactions that use Seeded.
+
+
+      <b>Example.</b> Plant seeds in three enemies, then fight a fourth for six seconds. Now reap: three ripe bursts and three thornbushes.'
+  - Id: life.shade
+    Title: Shade
+    Group: 
+    Body: '<b>What it does.</b> While you stand near anything you have grown, you heal slowly and your stamina comes back faster.
+
+
+      <b>When it happens.</b> Every second, while something you grew stands within 4 metres of you and Life is carried.
+
+
+      <b>The numbers.</b> Major, 3 Shards. 2 health and 5 stamina each second.
+
+
+      <b>Works with.</b> Root and Branch, which it grows from. Briar Patch, Elder Tree, Sapling and Fallen Seeds, which grow things to stand by.
+
+
+      <b>Example.</b> Fight beside your Elder Tree: each second you heal a little and your stamina refills for the next dodge.'
   - Id: light.mark
     Title: Marked
     Group: 
@@ -6838,13 +6895,13 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). With no enemy faced nothing is sealed, and the slot still waits. Then fight that enemy for six seconds.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 11). An enemy within 10 metres. The sign flashes, striking nothing, at each blow you land on it. When the six seconds end: 8 damage for each weapon blow that landed on it in that time, and 40 stagger.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. An enemy within 10 metres. The sign flashes, striking nothing, at each blow you land on it. When the six seconds end: 8 damage for each weapon blow that landed on it in that time, and 40 stagger. Its Empower makes it 10 for each blow, up to 180.
 
 
       <b>Works with.</b> Quick weapons (more blows counted), the root and Just Cut (critical blows), Weighed, Condemned (the column''s stagger with a full mark''s), Ring of Spears (held still while you cut), the charged blade.
 
 
-      <b>Not built yet.</b> Half of the damage your weapon did in the six seconds, 150 at most: for now 8 a blow, whatever the blow. The clock face drawn on the ground. The Empower''s 60% and 180 at most: for now it only shortens the wait.
+      <b>Not built yet.</b> Half of the damage your weapon did in the six seconds, 150 at most: for now 8 a blow, whatever the blow. The clock face drawn on the ground.
 
 
       <b>Example.</b> Seal a captain behind its guard, then cut it eight times in six seconds: the column takes 64 more and 40 stagger as the seal breaks.'
@@ -6895,7 +6952,7 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). With no enemy faced they close on a spot ahead of you, and the slot still waits.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 40 stagger in all). It finds an enemy within 10 metres. The ring is 3 metres in radius and closes after 0.6 seconds. Each spear deals 6 damage and 5 stagger and Marks: 36 damage and 30 stagger in all. What it strikes is held still 1.5 seconds (a god or an elite 0.4 of that).
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 40 stagger in all). It finds an enemy within 10 metres. The ring is 3 metres in radius and closes after 0.6 seconds. Each spear deals 6 damage and 5 stagger and Marks: 36 damage and 30 stagger in all. What it strikes is held still 1.5 seconds (a god or an elite 0.4 of that).
 
 
       <b>Works with.</b> Weighed (each spear lays a mark), Reckoning (held still while the seal counts), Condemned, Spoken Sentence, and the charged blade, which it charges with Light.
@@ -7041,13 +7098,13 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Then guard.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 11). Planted 2.5 metres ahead; the glow is 5 metres in radius and lasts 10 seconds. It strikes 0.2 seconds after planting and then every 2.5 seconds: 2 damage and Marked each time. Each lamp gives three perfect-guard bursts, shown beside the weapon as Lamp: each is 10 damage and 25 stagger within 3.5 metres of you.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play. Planted 2.5 metres ahead; the glow is 5 metres in radius and lasts 10 seconds. It strikes 0.2 seconds after planting and then every 2.5 seconds: 2 damage and Marked each time. Each lamp gives three perfect-guard bursts, shown beside the weapon as Lamp: each is 10 damage and 25 stagger within 3.5 metres of you.
 
 
       <b>Works with.</b> The root (a fresh mark, and three fresh critical blows, every 2.5 seconds), Unblemished, which grows from it, Clarity''s longer perfect moments, Reckoning''s Witnessed, Condemned.
 
 
-      <b>Not built yet.</b> The burst only for a perfect guard made inside the glow: for now the next three perfect guards after each lamp burst, wherever you stand. No enemy cloud, flame or frost lying inside the glow. The Empower''s longer perfect windows inside the glow: for now it only shortens the wait.
+      <b>Not built yet.</b> The burst only for a perfect guard made inside the glow: for now the next three perfect guards after each lamp burst, wherever you stand. No enemy cloud, flame or frost lying inside the glow. The Empower''s longer perfect guard and dodge inside the glow: for now the Empower does nothing.
 
 
       <b>Example.</b> Plant it in a doorway and fight on its edge: everything that comes through arrives Marked, and each perfect guard throws them back.'
@@ -7206,13 +7263,13 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, 45 mana (its Empower: 40). A brace, then a beam 12 metres long and 1.6 metres wide for 0.4 seconds. It bites every 0.1 seconds: 12 damage, 9 stagger and Marked each time, 48 damage and 36 stagger on what stays in it, six rings'' worth.
+      <b>The numbers.</b> 4 Shards, 45 mana. A brace, then a beam 12 metres long and 1.6 metres wide for 0.4 seconds. It bites every 0.1 seconds: 12 damage, 9 stagger and Marked each time, 48 damage and 36 stagger on what stays in it, six rings'' worth. Its Empower makes each ring 10 damage, not 8 (60 in all); the two shapes keep their own numbers.
 
 
       <b>Works with.</b> Brimming (mana kept full for it), Seen Plainly, which it grows from, Weighed, Condemned, Spoken Sentence, and the charged blade, which it charges with Light.
 
 
-      <b>Not built yet.</b> The rings gathered on the blade by the blows you land after beginning, eight at most, 8 damage and 6 stagger each, and loosed by a second press: for now the beam is loosed at once at six rings'' strength. The Empower''s 10 a ring: for now it only lowers the price.
+      <b>Not built yet.</b> The rings gathered on the blade by the blows you land after beginning, eight at most, 8 damage and 6 stagger each, and loosed by a second press: for now the beam is loosed at once at six rings'' strength.
 
 
       <b>Example.</b> A line of spearmen coming up a stair: one beam down the stair marks them all and leaves them reeling.'
@@ -7263,7 +7320,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Light is carried twice (all in), once bought. Always on then.
 
 
-      <b>The numbers.</b> 6 Shards. Blows no longer spend a mark: every weapon blow on a Marked enemy is critical until the mark fades, in 6 seconds where it lasted 8. Once it has faded, that enemy cannot be Marked again for 4 seconds; a mark set off or spent by a spell does not wait. All in, L2 with R2 is the deep strike, The Sun on the Blade.
+      <b>The numbers.</b> 6 Shards. Blows no longer spend a mark: every weapon blow on a Marked enemy is critical until the mark fades, in 6 seconds where it lasted 8. Once it has faded, that enemy cannot be Marked again for 4 seconds; a mark set off or spent by a spell does not wait. Buying this also gives you the deep strike, The Sun on the Blade. Use it with L2 and R2 while you carry this element alone or twice.
 
 
       <b>Works with.</b> Seen Plainly, which it grows from, the root, Just Cut and Unblemished (critical blows harder still with Weighed), quick weapons, The Scales.
@@ -7457,7 +7514,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Lightning is carried twice (all in), once bought. Every perfect guard and perfect dodge.
 
 
-      <b>The numbers.</b> 6 Shards. For 2.5 seconds after the perfect guard or dodge, all four slots are ready whatever their cooldowns say. A spell cast in the breath starts no cooldown then; when the breath ends its whole cooldown starts. The cooldowns of spells you did not cast run on beneath the breath. The L2 strikes keep their own clocks, and spells paid in mana still cost their mana. A perfect guard or dodge inside the breath makes it last 2.5 seconds from then. All in, L2 with R2 is the deep strike, Down the Channel: 20 mana on its own 8-second clock.
+      <b>The numbers.</b> 6 Shards. For 2.5 seconds after the perfect guard or dodge, all four slots are ready whatever their cooldowns say. A spell cast in the breath starts no cooldown then; when the breath ends its whole cooldown starts. The cooldowns of spells you did not cast run on beneath the breath. The L2 strikes keep their own clocks, and spells paid in mana still cost their mana. A perfect guard or dodge inside the breath makes it last 2.5 seconds from then. Buying this also gives you the deep strike, Down the Channel. Use it with L2 and R2 while you carry this element alone or twice: 20 mana on its own 8-second clock.
 
 
       <b>Works with.</b> Ring of Drums and Thunderclap''s Master, which also live on the perfect guard.
@@ -7912,16 +7969,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Live Iron''s arcs leap.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. Each arc carries 45% of the blow that set it off, not 35%. The same in Drawn Iron.
 
 
       <b>Works with.</b> Live Iron and Drawn Iron, Three Smiths.
 
 
-      <b>Example.</b> The wire bites almost as hard as the blade.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> The wire bites almost as hard as the blade.'
   - Id: liveiron.callsstorm
     Title: Iron Calls the Storm
     Group: 
@@ -8093,13 +8147,13 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Only enemies carrying Sundered are poured into.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 11, and 15 a notch). Every enemy within 8 metres is reached 0.4 seconds after the cast. On each notched one: 10 damage, and 12 damage and 15 stagger for each notch it carried (46 damage and 45 stagger at three). Its notches are spent, and it is held 0.8 seconds (a god or an elite 0.4 of that).
+      <b>The numbers.</b> 4 Shards, no mana: it waits 12 seconds after a cast, less with weapon play (its Empower: 15 damage for each notch). Every enemy within 8 metres is reached 0.4 seconds after the cast. On each notched one: 10 damage, and 12 damage and 15 stagger for each notch it carried (46 damage and 45 stagger at three). Its notches are spent, and it is held 0.8 seconds (a god or an elite 0.4 of that).
 
 
       <b>Works with.</b> Sunder, Open Line and Forged Answer (they notch on the perfect guard), Every Crack Rings, the charged blade (its charged blows notch), Grave of Swords and Returning Edge, which notch a crowd for it to pour into.
 
 
-      <b>Not built yet.</b> The hold set by the notches, 0.4 seconds a notch (a quarter of that on a god or an elite): for now 0.8 seconds whatever the depth. The lip of bronze tipping over each enemy and the crust cooling on it. The Empower''s 15 a notch: for now it only shortens the wait.
+      <b>Not built yet.</b> The hold set by the notches, 0.4 seconds a notch (a quarter of that on a god or an elite): for now 0.8 seconds whatever the depth. The lip of bronze tipping over each enemy and the crust cooling on it.
 
 
       <b>Example.</b> Notch three soldiers to three with heavy blows and Grave of Swords, then pour: each takes 46 and stands held while you choose which to finish.'
@@ -8239,13 +8293,13 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 8, and 16 damage and 14 stagger). It runs 8 metres at 16 metres a second, 0.75 metres to each side of its line. Going: 12 damage, 10 stagger and a notch to each enemy it passes; a second later, coming home: 12 damage and 10 stagger again to each it struck going.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 16 damage and 14 stagger, going out and coming home). It runs 8 metres at 16 metres a second, 0.75 metres to each side of its line. Going: 12 damage, 10 stagger and a notch to each enemy it passes; a second later, coming home: 12 damage and 10 stagger again to each it struck going.
 
 
       <b>Works with.</b> Open Line, which it grows from, Sunder, Poured Bronze on the line it notched, the charged blade (it charges your weapon with Metal).
 
 
-      <b>Not built yet.</b> The turning blade itself, seen flying out and back to your hand: for now the lane breaks open along the ground as it runs, and what it struck is cut again a second later where it stands. The Empower''s numbers on the way home (for now the return keeps 12 and 10).
+      <b>Not built yet.</b> The turning blade itself, seen flying out and back to your hand: for now the lane breaks open along the ground as it runs, and what it struck is cut again a second later where it stands.
 
 
       <b>Example.</b> Four soldiers come down a corridor: the blade runs through them and back, and all four are notched for the pour.'
@@ -8296,7 +8350,7 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4), then any blow in the next 1.2 seconds.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, two blows turned, and 16 damage). The answer strikes everything within 3 metres, all the way round, for 14 damage, 20 stagger and one notch, a heavy blow. As built the caught blow is not a perfect guard for your marks: it gives no mana and sets off nothing that waits on one.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: two blows turned, and 16 damage). The answer strikes everything within 3 metres, all the way round, for 14 damage, 20 stagger and one notch, a heavy blow. As built the caught blow is not a perfect guard for your marks: it gives no mana and sets off nothing that waits on one.
 
 
       <b>Works with.</b> Open Line, which it grows from, Edge Guard, which grows from it, Sunder, Poured Bronze on the ring it notched, the charged blade (the answer is a spell, so it charges your weapon with Metal).
@@ -8388,13 +8442,13 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Carrying Metal, it is always yours to put in a slot.
 
 
-      <b>The numbers.</b> Given with Metal. No mana: it waits 6 seconds after a cast, less with weapon play; its Empower makes that 5. An enemy within 9 metres: 4 damage as it lands, and it stands 6 seconds. Driven by your next weapon blow: 12 damage, 15 stagger, a notch and a burst of sparks 1.5 metres round, and a third as much to what stands in the lane home.
+      <b>The numbers.</b> Given with Metal. No mana: it waits 6 seconds after a cast, less with weapon play. Its Empower makes the drive hit for 16. An enemy within 9 metres: 4 damage as it lands, and it stands 6 seconds. Driven by your next weapon blow: 12 damage, 15 stagger, a notch and a burst of sparks 1.5 metres round, and a third as much to what stands in the lane home.
 
 
       <b>Works with.</b> Its Empower, its two shapes and its Master; Sunder, Poured Bronze, To the Blade (it is a blade to fly to), the charged blade, which its landing charges with Metal.
 
 
-      <b>Not built yet.</b> The Empower''s 16 when driven, and up to three blades standing in one enemy with a heavy blow driving them all (once Buried Blades): the base spell is cast by Metal''s kit, which takes only the Empower''s shorter wait.
+      <b>Not built yet.</b> The Empower''s 16 when driven, and up to three blades standing in one enemy with a heavy blow driving them all (once Buried Blades): the base spell is cast by Metal''s kit, which does not read the Empower''s numbers yet, so for now the Empower does nothing.
 
 
       <b>Example.</b> Throw the blade into the archer at the back, then close and cut it: the blade bursts out of it and flies home through the soldier between.'
@@ -8521,7 +8575,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Metal is carried twice (all in), once bought. Always on then.
 
 
-      <b>The numbers.</b> 6 Shards. You take 15% less from everything. A blow your stamina cannot pay for is held: the stamina you have goes, and the share of the blow it could not pay comes through whole as grey health, on top of the usual chip, so with no stamina at all the whole blow is grey. Each blow held on your guard strikes the attacker for 4 damage and a notch, at most five times a second. All in, L2 with R2 is the deep strike, Red Iron.
+      <b>The numbers.</b> 6 Shards. You take 15% less from everything. A blow your stamina cannot pay for is held: the stamina you have goes, and the share of the blow it could not pay comes through whole as grey health, on top of the usual chip, so with no stamina at all the whole blow is grey. Each blow held on your guard strikes the attacker for 4 damage and a notch, at most five times a second. Buying this also gives you the deep strike, Red Iron. Use it with L2 and R2 while you carry this element alone or twice.
 
 
       <b>Works with.</b> Every Crack Rings, which it grows from, Sunder, Forged Answer, Hanging Swords (every held blow a perfect guard), Temper.
@@ -8610,16 +8664,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Mock Suns fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The suns hang 6 seconds, not 4. With Prism the fan holds five rays, not three, and reaches 7 metres beyond the enemy.
 
 
       <b>Works with.</b> Mock Suns and its shapes, Bent Light.
 
 
-      <b>Example.</b> The suns still hang when you have circled round.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> The suns still hang when you have circled round.'
   - Id: mocksuns.whitenight
     Title: White Night
     Group: 
@@ -9011,7 +9062,7 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). With no enemy faced, nothing is raised and the slot waits all the same.
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 50 damage). An enemy within 8 metres; one blister at a time; it waits 12 seconds. The burst is 3 metres in radius round the enemy: 40 damage, 30 stagger and four doses.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 50 damage). An enemy within 8 metres; one blister at a time; it waits 12 seconds. The burst is 3 metres in radius round the enemy: 40 damage, 30 stagger and four doses.
 
 
       <b>Works with.</b> The root, Rupture, which it grows from (four doses toward full), Coiled Strike (step in and break it from behind), In Time, and the charged blade.
@@ -9068,13 +9119,13 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, 50 mana (its Empower: 45). Up to six enemies within 10 metres of you; half a second''s warning, then a column under each in turn, every 0.07 seconds, 1 metre round. The column itself does no damage; each poisoned enemy it strikes has its poison set off: 6 damage and 4 stagger a dose to everything within 1 metre, 48 and 32 at eight. What a column strikes is thrown up for 0.8 seconds.
+      <b>The numbers.</b> 4 Shards, 50 mana (its Empower: 7 damage a dose, not 6). Up to six enemies within 10 metres of you; half a second''s warning, then a column under each in turn, every 0.07 seconds, 1 metre round. The column itself does no damage; each poisoned enemy it strikes has its poison set off: 6 damage and 4 stagger a dose to everything within 1 metre, 48 and 32 at eight. What a column strikes is thrown up for 0.8 seconds.
 
 
       <b>Works with.</b> Rupture, which it grows from, Venom, Blister, Catching and Miasma to lay the poison first, the root''s healing (every burst feeds you), and the charged blade.
 
 
-      <b>Not built yet.</b> The line from poisoned enemy to poisoned enemy alone: for now the columns come up under the six nearest, poisoned or not. Each passing its doses to the next, the last the largest: for now each bursts with what it carries. The Empower''s 7 a dose.
+      <b>Not built yet.</b> The line from poisoned enemy to poisoned enemy alone: for now the columns come up under the six nearest, poisoned or not. Each passing its doses to the next, the last the largest: for now each bursts with what it carries.
 
 
       <b>Example.</b> Dose a pack with Miasma and a rush of Share Alike, then snap: six bursts in a breath, each one feeding you.'
@@ -9157,13 +9208,13 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 8). A fan 8 metres long and 12 degrees wide: 15 damage, 50 stagger and five doses, the five needles'' worth, to everything in it. The first enemy it strikes is pinned: held 0.8 seconds (0.32 for a god or an elite) and 40 stagger more.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 14 stagger a needle, 70 in all, and 50 for the pin). A fan 8 metres long and 12 degrees wide: 15 damage, 50 stagger and five doses, the five needles'' worth, to everything in it. The first enemy it strikes is pinned: held 0.8 seconds (0.32 for a god or an elite) and 40 stagger more.
 
 
       <b>Works with.</b> In Time, which it grows from, Rupture (five doses toward full), Coiled Strike (strike through the pinned one), and the charged blade.
 
 
-      <b>Not built yet.</b> Five needles thrown, each its own strike: for now the fan strikes as one, and the pin falls on the first enemy struck, not the one struck by all five. The Empower''s 14 stagger a needle and 50 for the pin.
+      <b>Not built yet.</b> Five needles thrown, each its own strike: for now the fan strikes as one, and the pin falls on the first enemy struck, not the one struck by all five.
 
 
       <b>Example.</b> A shield-bearer turns to face you: the needles pin it, and you have most of a second to walk round its shield.'
@@ -9214,7 +9265,7 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 9, and 30 damage). It goes up to 6 metres, ending 1.8 metres past the enemy faced (with none, 4.5 metres ahead). The cut is 1.1 metres to each side of the line: 24 damage, 25 stagger and four doses, the strength of two fangs. A heavy blow within 3 seconds is critical.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 10 seconds after a cast, less with weapon play (its Empower: 30 damage). It goes up to 6 metres, ending 1.8 metres past the enemy faced (with none, 4.5 metres ahead). The cut is 1.1 metres to each side of the line: 24 damage, 25 stagger and four doses, the strength of two fangs. A heavy blow within 3 seconds is critical.
 
 
       <b>Works with.</b> In Time, which it grows from, Slow Death, which grows from it, Rupture (four doses toward full), Blister, and the charged blade: if it lands it charges your weapon with Poison.
@@ -9379,7 +9430,7 @@ MonoBehaviour:
       <b>When it happens.</b> From a spell slot: cast it with that slot''s button (hold L2 and a face button, or 1 to 4).
 
 
-      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: 8, and nine metres). Up to 7 metres along a lane 2 metres wide; a wall or something too big to shove stops you. Passing: 10 damage, 10 stagger and two doses.
+      <b>The numbers.</b> 4 Shards, no mana: it waits 9 seconds after a cast, less with weapon play (its Empower: nine metres). Up to 7 metres along a lane 2 metres wide; a wall or something too big to shove stops you. Passing: 10 damage, 10 stagger and two doses.
 
 
       <b>Works with.</b> The Delayed Touch, which it grows from, Catching, One by One (a line of poisoned enemies), Rupture, and the charged blade: if it lands it charges your weapon with Poison.
@@ -9436,7 +9487,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Poison is carried twice (all in).
 
 
-      <b>The numbers.</b> 6 Shards. You heal 2 a second while an enemy is near, and every lay of doses lays one more. All in, L2 with R2 is the deep strike, Nine Times Refined.
+      <b>The numbers.</b> 6 Shards. You heal 2 a second while an enemy is near, and every lay of doses lays one more. Buying this also gives you the deep strike, Nine Times Refined. Use it with L2 and R2 while you carry this element alone or twice.
 
 
       <b>Works with.</b> Miasma and its Low Mist, Venom, The Delayed Touch, which it grows from, Fever, Clean Blade.
@@ -9764,13 +9815,13 @@ MonoBehaviour:
   - Id: redhot.heatedbronze
     Title: Heated Bronze
     Group: 
-    Body: '<b>What it does.</b> A duo surge. While your surge lasts you glow red to the bone like the bronze guardian: every blow that lands on you or your guard burns and notches the one who struck, your guard costs 30% less stamina, and a perfect guard grips the attacker, burns it three deep and throws it 2 metres.
+    Body: '<b>What it does.</b> A duo surge. While it burns you glow red to the bone like the bronze guardian: every blow that lands on you or your guard burns and notches the one who struck, your guard costs 30% less stamina, and a perfect guard grips the attacker, burns it three deep and throws it 2 metres.
 
 
-      <b>When it happens.</b> While your surge lasts, with Metal and Fire both carried.
+      <b>When it happens.</b> Choose it for your surge slot in the Hand at a rest fire, while Metal and Fire are both carried, and light it with the surge button.
 
 
-      <b>The numbers.</b> Mix, duo surge, 5 Shards. As built: a Burn and a notch on whoever strikes you or your guard; your guard''s stamina 30% less; a perfect guard lays three Burn and throws the attacker 2 metres.
+      <b>The numbers.</b> Mix, duo surge, 5 Shards. 40 mana, 10 seconds. As built: a Burn and a notch on whoever strikes you or your guard; your guard''s stamina 30% less; a perfect guard lays three Burn and throws the attacker 2 metres.
 
 
       <b>Works with.</b> Red Hot, Tipped Crucible, Heated Edge.
@@ -9779,7 +9830,7 @@ MonoBehaviour:
       <b>Example.</b> Light your surge and let the pack break itself on your guard.
 
 
-      <b>Not built yet.</b> It is not yet a surge of its own (40 mana, 10 seconds) in the Hand''s surge slot; the perfect guard throws at once rather than holding the attacker 1 second first.'
+      <b>Not built yet.</b> The perfect guard throws the attacker at once rather than holding it 1 second first.'
   - Id: rotroots.shape
     Title: 'Rot Roots: Gathered In or Summer Grass'
     Group: 
@@ -9827,16 +9878,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Rot Roots fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The roots reach 7 metres, not 5, and join four enemies, not three. In Gathered In the dose is passed up to 7 metres too.
 
 
       <b>Works with.</b> Rot Roots and its shapes, Tasting.
 
 
-      <b>Example.</b> The roots find the archers at the back.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> The roots find the archers at the back.'
   - Id: rotroots.host
     Title: The Host
     Group: 
@@ -10046,7 +10094,7 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Seized fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard. As built: a second film 2.5 metres round it for 2 seconds after the first, a Static every half second to all in it.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The film of live water lasts 5 seconds, not 3.
 
 
       <b>Works with.</b> Wet Thread, which it grows from, Seized.
@@ -10151,16 +10199,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Shining Herb fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. Herbs stand 9 seconds before they flower, not 6. The same in both shapes.
 
 
       <b>Works with.</b> Sixth Moon, which it grows from, Shining Herb.
 
 
-      <b>Example.</b> More time to step in and pick.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> More time to step in and pick.'
   - Id: shiningherb.wholemountain
     Title: The Whole Mountain
     Group: 
@@ -10246,16 +10291,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Sickle Wind fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The whirl cuts for 6 each time, not 3, and lasts about 4 seconds, not 3. In Sent Downwind it lays one more patch and stands 4 seconds; in Cut Unfelt you have 4 seconds to add to the debt.
 
 
       <b>Works with.</b> Sickle Wind and its shapes, Bellows.
 
 
-      <b>Example.</b> Even a fresh enemy throws a full whirl.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> Even a fresh enemy throws a full whirl.'
   - Id: sicklewind.windsickle
     Title: Wind Sickle
     Group: 
@@ -10281,19 +10323,16 @@ MonoBehaviour:
     Body: '<b>What it does.</b> Three presses within 4 seconds, as the three sickle weasels work together: a rush of wind to the enemy you face that throws it, a pass straight through it that notches its armour, and a step back out of reach that binds your wounds.
 
 
-      <b>When it happens.</b> From a spell slot, while Wind and Metal are both carried: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Wind.
+      <b>When it happens.</b> From a spell slot, while Wind and Metal are both carried: cast it with that slot''s button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Wind. Press the same button again within 4 seconds for the second weasel, and again for the third.
 
 
-      <b>The numbers.</b> Mix, duo spell, movement, 5 Shards. No mana: it waits 10 seconds after a cast, less with weapon play. As built, one press: a step of up to 5 metres to the enemy, 6 damage, 20 stagger, two Unsteady, a notch and a throw of 2 metres; your next heavy blow within 2 seconds is critical.
+      <b>The numbers.</b> Mix, duo spell, movement, 5 Shards. No mana: it waits 10 seconds after the first press, less with weapon play. First press: a step of up to 5 metres to the enemy, 6 damage, 20 stagger, two Unsteady and a throw of 2 metres; your next heavy blow within 2 seconds is critical. Second press: you pass straight through the enemy you face to 3 metres beyond it, and nothing can hit you for 0.4 seconds: 12 damage, 10 stagger and a notch. Third press: you step 4 metres back from it and heal 2 for each weapon blow you landed since the first press, 16 at most.
 
 
       <b>Works with.</b> Sickle Wind (it lays both at once), Bellows, Wind Sickle.
 
 
-      <b>Example.</b> Rush the archer and set its plates whirling.
-
-
-      <b>Not built yet.</b> Only the first press is built. The second (a pass straight through it, untouchable, for 12 damage and a notch) and the third (a step back that binds 2 health for each weapon blow you landed since the first press, eight at most) wait for a slot''s second press.'
+      <b>Example.</b> Rush the archer and set its plates whirling.'
   - Id: sleetcharge.shape
     Title: 'Sleet Charge: Thundersnow or Glass Spear'
     Group: 
@@ -10617,16 +10656,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each weapon blow on such an enemy.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. Each blow draws 3 health, not 2 (1.5 from a god), at most four times a second: 12 a second. The same in Cold Shade.
 
 
       <b>Works with.</b> Stolen Warmth and Cold Shade, Hel''s Half.
 
 
-      <b>Example.</b> A long fight with one brute keeps you whole.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> A long fight with one brute keeps you whole.'
   - Id: stolenwarmth.nosummer
     Title: No Summer
     Group: 
@@ -10668,13 +10704,13 @@ MonoBehaviour:
   - Id: stolenwarmth.threewinters
     Title: Three Winters
     Group: 
-    Body: '<b>What it does.</b> A duo surge. While your surge lasts frost creeps over the floor round you, and every enemy that dies freezes where it falls as a statue of black ice for 5 seconds, chilling a stack a second within 2.5 metres; a heavy blow on a statue shatters it, 25, two Chill and a Curse in 3 metres.
+    Body: '<b>What it does.</b> A duo surge. While it burns frost creeps over the floor round you, and every enemy that dies freezes where it falls as a statue of black ice for 5 seconds, chilling a stack a second within 2.5 metres; a heavy blow on a statue shatters it, 25, two Chill and a Curse in 3 metres.
 
 
-      <b>When it happens.</b> While your surge lasts, with Dark and Ice both carried.
+      <b>When it happens.</b> Choose it for your surge slot in the Hand at a rest fire, while Dark and Ice are both carried, and light it with the surge button.
 
 
-      <b>The numbers.</b> Mix, duo surge, 5 Shards. As built: each enemy that dies leaves a patch 5 metres across for 5 seconds, chilling once a second what stands in it.
+      <b>The numbers.</b> Mix, duo surge, 5 Shards. 40 mana, 10 seconds. As built: each enemy that dies leaves a patch 5 metres across for 5 seconds, chilling once a second what stands in it.
 
 
       <b>Works with.</b> Stolen Warmth, Hel''s Half, No Summer, Ice in the Blood.
@@ -10683,7 +10719,7 @@ MonoBehaviour:
       <b>Example.</b> Light your surge in a crowd and each death freezes the floor round it.
 
 
-      <b>Not built yet.</b> It is not yet a surge of its own (40 mana, 10 seconds) in the Hand''s surge slot; it rides whatever surge you light. The frost on the floor is not drawn, and no statue stands to be shattered: each death leaves a chilling patch.'
+      <b>Not built yet.</b> The frost on the floor is not drawn, and no statue stands to be shattered: each death leaves a chilling patch.'
   - Id: tempest.shape
     Title: 'Thunder Gust: Thunderhead or Bolt from the Blue'
     Group: 
@@ -10859,13 +10895,13 @@ MonoBehaviour:
   - Id: boltrunstrue.net
     Title: The Net of Jewels
     Group: 
-    Body: '<b>What it does.</b> A duo surge. While your surge lasts every Marked enemy within 12 metres is linked to every other by threads of light: a discharge on one runs the threads to all the others for half, and each critical blow on one gives every linked enemy a Static.
+    Body: '<b>What it does.</b> A duo surge. While it burns every Marked enemy within 12 metres is linked to every other by threads of light: a discharge on one runs the threads to all the others for half, and each critical blow on one gives every linked enemy a Static.
 
 
-      <b>When it happens.</b> While your surge lasts, with Light and Lightning both carried.
+      <b>When it happens.</b> Choose it for your surge slot in the Hand at a rest fire, while Light and Lightning are both carried, and light it with the surge button.
 
 
-      <b>The numbers.</b> Mix, duo surge, 5 Shards. As built: a discharge on a Marked enemy arcs on through up to five Marked enemies within 12 metres, 3.5 damage a stack each, at most every half second; a critical blow on a Marked enemy lays a Static on every enemy within 12 metres, at most every 0.3 seconds.
+      <b>The numbers.</b> Mix, duo surge, 5 Shards. 45 mana, 10 seconds. As built: a discharge on a Marked enemy arcs on through up to five Marked enemies within 12 metres, 3.5 damage a stack each, at most every half second; a critical blow on a Marked enemy lays a Static on every enemy within 12 metres, at most every 0.3 seconds.
 
 
       <b>Works with.</b> Charged Light, Diamond Thunder, The Bolt Runs True.
@@ -10874,7 +10910,7 @@ MonoBehaviour:
       <b>Example.</b> Mark a pack, light your surge, and one discharge runs through them all.
 
 
-      <b>Not built yet.</b> It is not yet a surge of its own (45 mana, 10 seconds) in the Hand''s surge slot; there are no threads yet, so the discharge arcs from one to the next, and a critical blow charges every enemy near, Marked or not.'
+      <b>Not built yet.</b> There are no threads yet, so the discharge arcs from one to the next, and a critical blow charges every enemy near, Marked or not.'
   - Id: thegroundgives.shape
     Title: 'The Ground Gives: Quicksand or Sand Boil'
     Group: 
@@ -10979,7 +11015,7 @@ MonoBehaviour:
       <b>When it happens.</b> Every time The Grudge fires (a second Static on a Cursed enemy, or a Curse on one carrying two) while Dark and Lightning are both carried. Before this mark is bought, or with only one of the two carried, the plain Grudge runs.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. First Strike: the cloud waits 8 seconds; your first heavy blow on it discharges all its Static at double, 14 for each in 4 metres, and holds it still 0.6 seconds. Ash Plume: the cloud waits up to 6 seconds, and when the enemy next strikes at you (landed, guarded or warded), or the time runs out, one bolt falls round it for each weapon blow you landed on it, 10 damage and a Static each, and all its Static is discharged in 4 metres. The Grudge rests 8 seconds on each enemy.
+      <b>The numbers.</b> Mix, 3 Shards. First Strike: the cloud waits 8 seconds; your first heavy blow on it discharges all its Static at double, 14 for each in 4 metres, and holds it still 0.6 seconds. Ash Plume: the cloud waits up to 6 seconds, and when the enemy next strikes at you (landed, guarded or warded), or the time runs out, one bolt falls round it for each weapon blow you landed on it, up to five bolts, 10 damage and a Static each, and all its Static is discharged in 4 metres. The Grudge rests 8 seconds on each enemy.
 
 
       <b>Works with.</b> Grievance to bring the Static, The Exile Returns, Given Bones, The Exile''s Grudge.
@@ -10988,7 +11024,7 @@ MonoBehaviour:
       <b>Example.</b> A lone brute: First Strike, and end the cloud with a heavy. A pack round one cursed captain: Ash Plume, and keep hitting it for six seconds.
 
 
-      <b>Not built yet.</b> Ash Plume''s flashes are not yet capped at five. The cloud does not yet drift to the next enemy when its host dies.'
+      <b>Not built yet.</b> The cloud does not yet move to the next enemy when its host dies.'
   - Id: thegrudge.grievance
     Title: Grievance
     Group: 
@@ -11011,19 +11047,16 @@ MonoBehaviour:
     Body: '<b>What it does.</b> The Grudge''s bolt heals you 1 for each Static it discharged and Curses everything within 3 metres.
 
 
-      <b>When it happens.</b> Each discharge of Static on a Cursed enemy, while Dark and Lightning are both carried.
+      <b>When it happens.</b> Each time the Grudge''s black bolt falls, in any of its shapes: when the enemy under the cloud strikes at you, when your heavy blow calls it down (First Strike), or when Ash Plume''s storm falls. Other ways of setting off Static do not count. Dark and Lightning must both be carried.
 
 
-      <b>The numbers.</b> Mix, 3 Shards. 1 health for each Static spent; one Curse on everything within 3 metres. At most every 0.3 seconds.
+      <b>The numbers.</b> Mix, 3 Shards. 1 health for each Static the bolt sets off, and one Curse on everything within 3 metres. At most once every 0.3 seconds.
 
 
       <b>Works with.</b> The Grudge and its shapes, Given Bones, Ash and Thunder.
 
 
-      <b>Example.</b> Bring the cloud down on a charged captain: you mend, and the soldiers beside it are cursed for the next cloud.
-
-
-      <b>Not built yet.</b> It answers any discharge on a Cursed enemy, not only the Grudge''s own bolt.'
+      <b>Example.</b> Bring the cloud down on a charged captain: you mend, and the soldiers beside it are cursed for the next cloud.'
   - Id: thegrudge.longmemory
     Title: Long Memory
     Group: 
@@ -11046,13 +11079,13 @@ MonoBehaviour:
   - Id: thegrudge.givenbones
     Title: Given Bones
     Group: 
-    Body: '<b>What it does.</b> A discharge on a Cursed enemy costs you 2 health, left grey to be won back by blows, and lands twice as hard.
+    Body: '<b>What it does.</b> The Grudge''s black bolt costs you 2 health and hits twice as hard. The health you pay turns grey, and you win it back by landing blows.
 
 
-      <b>When it happens.</b> Each discharge of Static on a Cursed enemy, while Dark and Lightning are both carried.
+      <b>When it happens.</b> Each time the Grudge''s bolt falls, in any of its shapes. Other ways of setting off Static do not count. Dark and Lightning must both be carried.
 
 
-      <b>The numbers.</b> Mix, keystone, 5 Shards. 2 health turned grey (never the last point), and a second burst of 7 for each Static spent, in 4 metres. At most every 0.3 seconds.
+      <b>The numbers.</b> Mix, keystone, 5 Shards. 2 health turned grey (never your last point). The bolt hits a second time for 14 for each Static it sets off, within 4 metres. At most once every 0.3 seconds.
 
 
       <b>Works with.</b> The Grudge, The Exile Returns (which heals back what it costs), Ash and Thunder.
@@ -11081,13 +11114,13 @@ MonoBehaviour:
   - Id: thegrudge.ashthunder
     Title: Ash and Thunder
     Group: 
-    Body: '<b>What it does.</b> A duo surge. While your surge lasts a plume of ash streams up off your shoulders: every blow you land lays a Static, every third calls a bolt down on a Cursed enemy, and each Cursed enemy killed heals you 6 more.
+    Body: '<b>What it does.</b> A duo surge. While it burns a plume of ash streams up off your shoulders: every blow you land lays a Static, every third calls a bolt down on a Cursed enemy, and each Cursed enemy killed heals you 6 more.
 
 
-      <b>When it happens.</b> While your surge lasts, with Dark and Lightning both carried.
+      <b>When it happens.</b> Choose it for your surge slot in the Hand at a rest fire, while Dark and Lightning are both carried, and light it with the surge button.
 
 
-      <b>The numbers.</b> Mix, duo surge, 5 Shards. As built: each blow lays one Static; one blow in three on a Cursed enemy discharges its Static; each Cursed enemy killed heals you 6.
+      <b>The numbers.</b> Mix, duo surge, 5 Shards. 40 mana, 10 seconds; each kill while it burns adds 1 second. As built: each blow lays one Static; one blow in three on a Cursed enemy discharges its Static; each Cursed enemy killed heals you 6.
 
 
       <b>Works with.</b> The Grudge, The Exile Returns, Given Bones.
@@ -11096,7 +11129,7 @@ MonoBehaviour:
       <b>Example.</b> Curse a pack, light your surge, and the plume keeps the clouds gathering.
 
 
-      <b>Not built yet.</b> It is not yet a surge of its own (40 mana, 10 seconds) in the Hand''s surge slot; the bolt falls on one blow in three by chance on the enemy struck, not on every third blow at the nearest Cursed enemy within 8 metres, and a kill does not yet add a second.'
+      <b>Not built yet.</b> The bolt falls on one blow in three by chance on the enemy struck, not on every third blow at the nearest Cursed enemy within 8 metres.'
   - Id: thermalshock.shape
     Title: 'Thermal Shock: Hot Shards or Crazing'
     Group: 
@@ -11208,13 +11241,13 @@ MonoBehaviour:
   - Id: thermalshock.gap
     Title: The Yawning Gap
     Group: 
-    Body: '<b>What it does.</b> A duo surge. While your surge lasts your weapon blows take turns, burning and chilling, so Thermal Shock keeps setting off, and each split lets fall drops of melt that heal you.
+    Body: '<b>What it does.</b> A duo surge. While it burns your weapon blows take turns, burning and chilling, so Thermal Shock keeps setting off, and each split lets fall drops of melt that heal you.
 
 
-      <b>When it happens.</b> While your surge lasts, with Fire and Ice both carried.
+      <b>When it happens.</b> Choose it for your surge slot in the Hand at a rest fire, while Fire and Ice are both carried, and light it with the surge button.
 
 
-      <b>The numbers.</b> Mix, duo surge, 5 Shards. As built: each blow lays a Chill; each Thermal Shock heals you 2.
+      <b>The numbers.</b> Mix, duo surge, 5 Shards. 40 mana, 10 seconds. As built: each blow lays a Chill; each Thermal Shock heals you 2.
 
 
       <b>Works with.</b> Thermal Shock, Spark and Rime, Cinder.
@@ -11223,7 +11256,7 @@ MonoBehaviour:
       <b>Example.</b> Light your surge in a crowd and every second blow cracks something.
 
 
-      <b>Not built yet.</b> It is not yet a surge of its own (40 mana, 10 seconds) in the Hand''s surge slot, blows do not truly alternate, and Thermal Shock still rests 6 seconds rather than 2.'
+      <b>Not built yet.</b> Your blows do not truly take turns yet: each blow lays a Chill. Thermal Shock still rests 6 seconds rather than 2.'
   - Id: turnedtostone.shape
     Title: 'Turned to Stone: The King''s Men or Grave Marker'
     Group: 
@@ -11287,16 +11320,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time Turned to Stone fires.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The stone climbs in half a second, not one, so the enemy is caught sooner. The same in both shapes.
 
 
       <b>Works with.</b> Grave Dirt, which it grows from, Turned to Stone.
 
 
-      <b>Example.</b> The stone closes before the enemy can strike.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> The stone closes before the enemy can strike.'
   - Id: turnedtostone.forgive
     Title: Stone Does Not Forgive
     Group: 
@@ -11604,7 +11634,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Water is carried twice (all in). A pool is left each time a spell strikes.
 
 
-      <b>The numbers.</b> 6 Shards. A pool 4 metres across where a spell strikes, at most one every 2.5 seconds, for 10 seconds, biting once a second for 1 damage and Soaked. For now everywhere, not only in water: the dodge goes half again as far, and every spell clock runs 30% faster. All in, L2 with R2 is the deep strike, Thrown on the Reef: the lash wraps the enemy and a wave throws it 5 metres away from you.
+      <b>The numbers.</b> 6 Shards. A pool 4 metres across where a spell strikes, at most one every 2.5 seconds, for 10 seconds, biting once a second for 1 damage and Soaked. For now everywhere, not only in water: the dodge goes half again as far, and every spell clock runs 30% faster. Buying this also gives you the deep strike, Thrown on the Reef. Use it with L2 and R2 while you carry this element alone or twice: the lash wraps the enemy and a wave throws it 5 metres away from you.
 
 
       <b>Works with.</b> Every spell of the tree; Deep Crack and Spreading Water on the soaked crowd; Undertow to draw them onto the water.
@@ -11947,6 +11977,54 @@ MonoBehaviour:
 
 
       <b>Example.</b> Flood a crowd, cut into the middle of it for six seconds, then roll clear and face them as the sea breaks.'
+  - Id: water.highlow
+    Title: High Water, Low Water
+    Group: 
+    Body: '<b>What it does.</b> Your own tide turns back and forth. At high water your spells hit harder and your weapon softer. At low water it is the other way round. A perfect guard or a perfect dodge turns the tide at once.
+
+
+      <b>When it happens.</b> Always on once learned, while Water is carried. The tide turns by itself every six seconds. "High water" or "Low water" shows when it turns.
+
+
+      <b>The numbers.</b> Keystone, 6 Shards. High water: spells hit 33% harder, your weapon hits 20% softer. Low water: your weapon hits 33% harder, spells hit 20% softer. The tide starts high. A perfect guard or a perfect dodge turns it and starts the six seconds again.
+
+
+      <b>Works with.</b> Spreading Water, which it grows from. Ebb and Flood. Every spell in your Hand, and a weapon you like to swing.
+
+
+      <b>Example.</b> Cast your spells at high water. When it turns low, close in and use the blade. Need spells now? Make a perfect dodge to turn the tide back.'
+  - Id: water.drawnback
+    Title: Drawn Back to Break
+    Group: 
+    Body: '<b>What it does.</b> Each time you dodge away from the enemy you face, the sea comes back with you as a wave. Your next weapon blow that lands breaks all your waves at once in front of you. If you hold no wave, your blows are weaker.
+
+
+      <b>When it happens.</b> A wave comes with each dodge away from the enemy you face, while Water is carried. The waves break on your next weapon blow that lands. "Waves" shows how many you hold, next to the weapon.
+
+
+      <b>The numbers.</b> Keystone, 6 Shards. Three waves at most. For each wave, the break deals 12 damage and 20 stagger in front of you, out to 4 metres. Everything it hits is Soaked and thrown 2 metres back. With no wave held, your weapon hits 20% softer.
+
+
+      <b>Works with.</b> Heavy Water, which it grows from. Undertow and The Tide Turns, which pull enemies back in after you. Anything that sets off Soaked.
+
+
+      <b>Example.</b> Dodge back three times from a pack, then step in with one blow: three waves break, 36 damage and 60 stagger, and they are all thrown back and soaked.'
+  - Id: water.spilled
+    Title: Spilled Water
+    Group: 
+    Body: '<b>What it does.</b> When you drink a flask, a ring of water bursts out from you. It soaks everyone near and pushes them back, so you get room to breathe.
+
+
+      <b>When it happens.</b> Each time you drink a flask, while Water is carried.
+
+
+      <b>The numbers.</b> Major, 3 Shards. The ring reaches 3.5 metres. Everything in it takes 1 damage and 15 stagger, is Soaked, and is pushed 2.5 metres away.
+
+
+      <b>Works with.</b> Spreading Water, which it grows from. Everything that sets off Soaked. Deep Well and Broken Gourd, the other flask marks.
+
+
+      <b>Example.</b> Surrounded and hurt, you drink: the ring throws the pack back and soaks them, ready for your next reaction.'
   - Id: wind.unsteady
     Title: Unsteady
     Group: 
@@ -12134,7 +12212,7 @@ MonoBehaviour:
       <b>When it happens.</b> Only while Wind is carried twice (all in). Then always.
 
 
-      <b>The numbers.</b> 6 Shards. A spell cast in a dodge carries you 2 metres further. All in, L2 with R2 is the deep strike, Whirl Cut: the crescent becomes a small whirlwind that holds the first enemy it reaches in the air for a second.
+      <b>The numbers.</b> 6 Shards. A spell cast in a dodge carries you 2 metres further. Buying this also gives you the deep strike, Whirl Cut. Use it with L2 and R2 while you carry this element alone or twice: the crescent becomes a small whirlwind that holds the first enemy it reaches in the air for a second.
 
 
       <b>Works with.</b> Every spell of the tree; Passing Cut and Leaf on the Wind; the deep strike.
@@ -12400,7 +12478,7 @@ MonoBehaviour:
       <b>The numbers.</b> 4 Shards, no mana: it waits 11 seconds after a cast, less with weapon play (its Empower: 9, and it draws from 8.5 metres). The point is 2 metres ahead, or on an enemy that close. For 0.5 seconds everything within 7 metres of it is dragged most of the way in. Then the burst: 10 damage, 25 stagger, a heavy blow and two stacks of Unsteady to each, and each enemy''s Unsteady goes off for 6 damage and 8 stagger a stack.
 
 
-      <b>Works with.</b> Against the Wall, which it grows from; Closing Circle (five deep inside the ring), Rising Cut; Catching Fire with Fire carried, since it bunches a crowd.
+      <b>Works with.</b> Hammer Down, which it grows from; Against the Wall; Closing Circle (five deep inside the ring), Rising Cut; Catching Fire with Fire carried, since it bunches a crowd.
 
 
       <b>Example.</b> Archers spread round a room, each a few deep: draw them all to one spot, and every stack they carry bursts at once.'
@@ -12458,6 +12536,22 @@ MonoBehaviour:
 
 
       <b>Example.</b> Light Tailwind and cut a pack sixteen times: as it ends, sixteen cuts fall on them again at half strength.'
+  - Id: wind.hammer
+    Title: Hammer Down
+    Group: 
+    Body: '<b>What it does.</b> A heavy blow on an enemy in the air drives it into the ground. The blow hits half again as hard, and where the enemy lands the ground bursts and throws back everyone near.
+
+
+      <b>When it happens.</b> Each heavy blow (finishers too) that lands on an enemy in the air or reeling, while Wind is carried.
+
+
+      <b>The numbers.</b> Major, 3 Shards. The heavy blow deals 50% more damage. The enemy drops at once. The burst deals 14 damage and 30 stagger to everything within 3 metres and throws them 2 metres back.
+
+
+      <b>Works with.</b> Against the Wall, which it grows from, and its thrown enemies. Indrawn Breath, which grows from it. Lifting Wind, Sky Dance, Rising Cut and anything that throws enemies up.
+
+
+      <b>Example.</b> Throw a soldier up with Lifting Wind, then bring a heavy blow down on it: it slams into the ground and knocks its friends back.'
   - Id: windthrow.shape
     Title: 'Windthrow: Blown Seed or Deep Roots'
     Group: 
@@ -12524,16 +12618,13 @@ MonoBehaviour:
       <b>When it happens.</b> Each time an enemy is torn out.
 
 
-      <b>The numbers.</b> Mix, a minor, 1 Shard.
+      <b>The numbers.</b> Mix, a minor, 1 Shard. The torn pit stands 8 seconds, not 5, and seeds two deep, not one. The same in Deep Roots.
 
 
       <b>Works with.</b> Seed on the Wind, which it grows from, Windthrow.
 
 
-      <b>Example.</b> The pits left behind keep seeding the fight.
-
-
-      <b>Not built yet.</b> It does nothing yet: a mark that changes the reaction''s own numbers is still to come.'
+      <b>Example.</b> The pits left behind keep seeding the fight.'
   - Id: windthrow.fairywind
     Title: The Fairy Wind
     Group: 

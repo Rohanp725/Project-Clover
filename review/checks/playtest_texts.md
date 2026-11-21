@@ -21,7 +21,7 @@ Read by Clover > Build > Playtest Texts from `docs/design/playtest/`.
 - marks/earthed.md: 6 marks
 - marks/earthlight.md: 5 marks
 - marks/eclipse.md: 6 marks
-- marks/fire.md: 28 marks
+- marks/fire.md: 30 marks
 - marks/firebloom.md: 5 marks
 - marks/fishpoison.md: 5 marks
 - marks/forge.md: 7 marks
@@ -30,11 +30,11 @@ Read by Clover > Build > Playtest Texts from `docs/design/playtest/`.
 - marks/glacier.md: 5 marks
 - marks/goldenfeathers.md: 5 marks
 - marks/halo.md: 6 marks
-- marks/ice.md: 28 marks
+- marks/ice.md: 29 marks
 - marks/illwind.md: 6 marks
 - marks/ironthorns.md: 5 marks
 - marks/kindlingpoint.md: 6 marks
-- marks/life.md: 28 marks
+- marks/life.md: 31 marks
 - marks/light.md: 28 marks
 - marks/lightning.md: 27 marks
 - marks/lightningflower.md: 5 marks
@@ -65,8 +65,8 @@ Read by Clover > Build > Playtest Texts from `docs/design/playtest/`.
 - marks/thermalshock.md: 7 marks
 - marks/turnedtostone.md: 6 marks
 - marks/venomrime.md: 5 marks
-- marks/water.md: 28 marks
-- marks/wind.md: 28 marks
+- marks/water.md: 31 marks
+- marks/wind.md: 29 marks
 - marks/windthrow.md: 6 marks
 - marks/winterseed.md: 5 marks
 - whats_new.md: version "Combat Playtest 0.4 (unreleased)"
