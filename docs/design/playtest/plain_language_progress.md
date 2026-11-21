@@ -48,6 +48,7 @@ checked against its code and committed on its own.
 - [x] marks/girdled.md: Death Turned Back (half the wait when no blow comes)
 - [x] marks/mocksuns.md: Sunstone (half the wait when nothing hits), Wide Fan (unsure line resolved)
 - [x] marks/turnedtostone.md: Stone Does Not Forgive (Tremor and Curse kept for good), Heavy Curse (unsure line resolved)
+- [x] marks/earth.md: Cairn (15% slower for each stone)
 
 ## Unsure lines
 

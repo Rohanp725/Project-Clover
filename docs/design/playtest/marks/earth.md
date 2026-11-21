@@ -75,11 +75,9 @@ Rise's rocks, a pillar, a heap of rubble.
 
 **When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4). It costs mana instead of having a wait.
 
-**The numbers.** 4 Shards, 40 mana (its Empower makes it 35). It hits every enemy within 10 metres that has Tremor, 0.3 seconds after you cast it. A stone falls for each stack, dealing 12 damage and 15 stagger each (three stones on full Tremor: 36 damage and 45 stagger), plus 10 more damage for the pile. The pile stays for 4 seconds and slows the enemy by 30%. An enemy with no Tremor isn't touched.
+**The numbers.** 4 Shards, 40 mana (its Empower makes it 35). It hits every enemy within 10 metres that has Tremor, 0.3 seconds after you cast it. A stone falls for each stack, dealing 12 damage and 15 stagger each (three stones on full Tremor: 36 damage and 45 stagger), plus 10 more damage for the pile. The pile stays for 4 seconds and slows the enemy by 15% for each stone (45% with three stones). An enemy with no Tremor isn't touched.
 
 **Works with.** Tremor and everything that adds it: heavy blows, finishers, Quake Step, The Slow Hand. Unbroken Cairn and your heavy blows, and Rooted for its Master mark.
-
-**Not built yet.** The slow should be 15% for each stone; for now, it is 30% no matter how many stacks.
 
 **Example.** Three soldiers each have three stacks of Tremor. One stamp drops nine stones, and all three are slowed with their Tremor used up.
 
