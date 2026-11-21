@@ -5,80 +5,80 @@ The long explanation the chart shows for every mark on Forge, the duo branch Ear
 carried. Its reaction is Anvil Stone; its Shape mark lets you choose what Anvil Stone does.
 
 ## forge.shape
-**What it does.** Opens Anvil Stone's two shapes. At a rest fire you choose which one your Anvil Stone wears, and from then on it runs instead of the plain one. **Ringing Iron**: no stone and no waiting for a heavy blow; the shaken armour rings like struck iron at once. **Hammer Scale**: no ring; flakes of glowing scale fly from it into the enemies near.
+**What it does.** Unlocks two new shapes for Anvil Stone. At a rest fire, you pick which shape your Anvil Stone uses. From then on, it uses that shape instead of the plain one. **Ringing Iron**: no stone, and no waiting for a heavy blow. The shaken armour rings like struck iron right away. **Hammer Scale**: no ring. Instead, flakes of glowing metal fly off the enemy into the enemies nearby.
 
-**When it happens.** Every time Anvil Stone fires (Sundered landing on a shaken enemy, or Tremor on a notched one) while Earth and Metal are both carried. Before this mark is bought, or with only one of the two carried, the plain Anvil Stone runs (a stone at its back for 5 seconds; your next heavy blow drives it onto it).
+**When it happens.** Every time Anvil Stone goes off while you carry both Earth and Metal. Anvil Stone goes off when Sundered lands on a shaken enemy, or when Tremor lands on a notched one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Anvil Stone. The plain one puts a stone behind the enemy for 5 seconds, and your next heavy blow smashes the enemy into it.
 
-**The numbers.** Mix, 3 Shards. Ringing Iron: its Sundered to full at once, and a ring of sparks 3 metres round it, 10 damage, 15 stagger and a notch on each. Hammer Scale: up to four enemies, each within 6 metres of the last, take 8 damage, a notch and a Tremor. Anvil Stone rests 4 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Ringing Iron: the enemy's Sundered fills all the way right away, and a ring of sparks 3 metres around it deals 10 damage, 15 stagger and a notch to each enemy. Hammer Scale: up to four enemies, each within 6 metres of the last one, take 8 damage, a notch and a Tremor. After Anvil Stone goes off on an enemy, it can't go off on that enemy again for 4 seconds.
 
-**Works with.** Buckled (the shaken and notched lose their balance sooner), Hammer and Anvil, Stone Rise and Flung Blade to bring the two.
+**Works with.** Buckled (shaken, notched enemies lose their balance sooner), Hammer and Anvil, and Stone Rise and Flung Blade to set it up.
 
-**Example.** No time for a heavy blow: Ringing Iron breaks its armour the moment the two meet. A loose pack: Hammer Scale notches four at once.
+**Example.** No time for a heavy blow: Ringing Iron breaks the enemy's armour the moment the two afflictions meet. A spread-out pack: Hammer Scale notches four at once.
 
-**Not built yet.** Hammer Scale's flakes leap from one enemy to the next as an arc rather than flying at each.
+**Not built yet.** Hammer Scale's flakes should jump from one enemy to the next in an arc, instead of flying at each one.
 
 ## forge.hammeranvil
-**What it does.** A heavy blow on a shaken enemy strikes twice: once from your weapon, and once more a moment later as the stone answers. Heavy blows also lay Tremor and Sundered together, whichever of the two you carry first. As built, the second strike asks for Tremor on the enemy, not stone at its back, and it bursts round you rather than behind the enemy.
+**What it does.** A heavy blow on a shaken enemy hits twice: once from your weapon, and once more a moment later as the stone answers. Heavy blows also add Tremor and Sundered together, no matter which of the two elements is your first. For now, the second hit needs Tremor on the enemy, not a stone behind it, and it bursts around you instead of behind the enemy.
 
-**When it happens.** Every heavy blow that lands. The second strike needs the enemy to carry Tremor already.
+**When it happens.** Every heavy blow that lands. The second hit needs the enemy to already have Tremor.
 
-**The numbers.** Mix, 3 Shards. The second strike lands 0.15 seconds later, 2.3 metres round you: 60% of the heavy blow's damage and 20 stagger, at most twice a second. Each heavy blow also adds a stack of Tremor and a notch of Sundered; your first element's own is not laid twice when its root already lays it with heavy blows.
+**The numbers.** Mix, 3 Shards. The second hit lands 0.15 seconds later, in a 2.3-metre circle around you. It deals 60% of the heavy blow's damage and 20 stagger, at most twice a second. Each heavy blow also adds a stack of Tremor and a notch of Sundered. Your first element's affliction isn't added twice if its root mark already adds it with heavy blows.
 
-**Works with.** Tremor, Heavy Hand, Buckled, Mountain Stance and Quake Step (Tremor to start it), Metal's root.
+**Works with.** Tremor, Heavy Hand, Buckled, Mountain Stance and Quake Step (Tremor to start it), Metal's root mark.
 
-**Example.** Shake a brute with Quake Step, then land two heavy blows: each one lands again for 60% as the stone answers.
+**Example.** Shake a brute with Quake Step, then land two heavy blows. Each one hits again for 60% as the stone answers.
 
 ## forge.struckore
-**What it does.** A perfect guard strikes a spike of ore up from the ground under the one who struck and shakes it, and three blades fly from you toward it, notching what they pass.
+**What it does.** A perfect guard makes a spike of ore shoot up from the ground under the enemy that hit you, shaking it. Three blades also fly from you toward it, notching what they pass.
 
-**When it happens.** A perfect guard: press the guard button just before a blow lands.
+**When it happens.** On a perfect guard: press the guard button just before a blow lands.
 
-**The numbers.** Mix, 3 Shards. The spike falls 0.2 seconds later, 1.2 metres in radius: 10 damage, 20 stagger and one stack of Tremor. The three blades fly in a narrow fan at 10 metres a second for 1.2 seconds; each strikes the first enemy it meets for 9 damage, 4 stagger and one notch of Sundered. As built the spike strikes and is gone; a pillar that stands to be broken is to come.
+**The numbers.** Mix, 3 Shards. The spike comes 0.2 seconds later, with a 1.2-metre radius. It deals 10 damage, 20 stagger and one stack of Tremor. The three blades fly in a narrow fan at 10 metres a second for 1.2 seconds. Each one hits the first enemy it meets for 9 damage, 4 stagger and one notch of Sundered. For now, the spike hits and disappears. A pillar that stays standing until it is broken is not built yet.
 
 **Works with.** Buckled (both afflictions from one guard), Mountain Stance, Hammer and Anvil, Anvil Stone's shapes.
 
-**Example.** Perfect-guard a soldier's swing: it is shaken and notched at once, and the soldier behind it takes a blade too.
+**Example.** Perfect-guard a soldier's swing. It is shaken and notched at once, and the soldier behind it gets hit by a blade too.
 
 ## forge.buckled
-**What it does.** An enemy that is both shaken and notched loses its balance far sooner, from everything that strikes it.
+**What it does.** An enemy that is both shaken and notched loses its balance much sooner, from everything that hits it.
 
-**When it happens.** Always on once learned, on any enemy carrying Tremor and Sundered together.
+**When it happens.** Always on once you learn it, on any enemy that has Tremor and Sundered at the same time.
 
-**The numbers.** Mix, 3 Shards. 40% more stagger from every source while it carries both. Tremor also stops its balance draining, so what you put in stays.
+**The numbers.** Mix, 3 Shards. 40% more stagger from everything while it has both. Tremor also stops its stagger meter from going down, so the stagger you add stays.
 
-**Works with.** Hammer and Anvil, Struck Ore, World Anvil (lays both), Mountain Stance, Quake Step, Earth's and Metal's roots, the charged blade of whichever element you carry second.
+**Works with.** Hammer and Anvil, Struck Ore, World Anvil (adds both), Mountain Stance, Quake Step, the root marks of Earth and Metal, and the charged blade of whichever element you carry second.
 
-**Example.** Notch a brute with Metal blows, shake it with Quake Step, and its balance bar fills almost half again as fast.
+**Example.** Notch a brute with Metal blows, then shake it with Quake Step. Its balance bar fills almost 50% faster.
 
 ## forge.drawnfromstone
-**What it does.** You draw a sword of stone and iron from the ground and give one great swing through a half circle before you. As built it is that one swing; holding the great sword for three swings is to come.
+**What it does.** You pull a sword of stone and iron out of the ground and make one huge swing through a half circle in front of you. For now, it is that one swing. Holding the great sword for three swings is not built yet.
 
-**When it happens.** From a spell slot: cast it with that slot's button (hold L2 and a face button, or 1 to 4).
+**When it happens.** Cast it from a spell slot. Press that slot's button (hold L2 and a face button, or press 1 to 4).
 
-**The numbers.** Mix, 5 Shards, 50 mana. A half circle 4 metres deep: 40 damage, 60 stagger and one stack of Tremor to everything in it.
+**The numbers.** Mix, 5 Shards, 50 mana. A half circle 4 metres deep. It deals 40 damage, 60 stagger and one stack of Tremor to everything in it.
 
-**Works with.** Hammer and Anvil or Struck Ore (it grows from either), Buckled, Standing Stones. Landing it charges the blade with Earth.
+**Works with.** Hammer and Anvil or Struck Ore (it comes after either on the chart), Buckled, Standing Stones. When it lands, it charges your blade with Earth.
 
-**Example.** Ringed by soldiers in front of you: one swing shakes them all and leaves each well on its way to staggered.
+**Example.** Soldiers are lined up in front of you. One swing shakes them all and puts each one well on its way to a stagger.
 
 ## forge.foldedsteel
-**What it does.** Every finisher you land folds your blade once more. Each fold makes every blow of the weapon a little harder, and a little heavier to swing. The count shows on the screen as Folds; the folds are a fight's growth, kept until your next rest fire, not the weapon's (the Way is what improves a weapon). As built they are kept while the mark is in force and lost with it, and a rest fire does not yet empty them.
+**What it does.** Every finisher you land folds your blade one more time. Each fold makes every weapon blow a little stronger, and a little heavier to swing. The count shows on the screen as Folds. The folds belong to this stretch of fighting and last until your next rest fire. They don't improve the weapon itself (the Way is what improves a weapon). For now, they last while this mark is working and are lost when it stops, and a rest fire doesn't clear them yet.
 
 **When it happens.** Each finisher that lands (a heavy blow on a staggered enemy) adds a fold.
 
-**The numbers.** Mix, 5 Shards. Ten folds at most. Each fold: 3% more weapon damage and 1% more stamina for each blow. At ten: 30% more damage, 10% more stamina.
+**The numbers.** Mix, 5 Shards. Up to ten folds. Each fold adds 3% weapon damage and 1% stamina cost for each blow. At ten folds: 30% more damage and 10% more stamina.
 
-**Works with.** Buckled and Tremor (more staggers, more finishers), World Anvil, Hammer and Anvil.
+**Works with.** Buckled and Tremor (more staggers means more finishers), World Anvil, Hammer and Anvil.
 
-**Example.** Ten finishers into a land, every cut you make is 30% heavier than when you began.
+**Example.** After ten finishers in a land, every cut you make does 30% more damage than when you started.
 
 ## forge.worldanvil
-**What it does.** Your finisher is struck on an anvil that rises out of the ground. Its ring runs out and strikes every other enemy near, shaking it and breaking its armour, and a blade is forged for each one it reaches. The blades hang at your shoulders and fly with your next heavy blow, each at an enemy near.
+**What it does.** Your finisher strikes the enemy on an anvil that rises out of the ground. Its ringing sound spreads out and hits every other enemy nearby, shaking it and breaking its armour. A blade is made for each enemy it reaches. The blades hang at your shoulders and fly out with your next heavy blow, each one at a nearby enemy.
 
 **When it happens.** Every finisher that lands. The blades wait for your next heavy swing.
 
-**The numbers.** 5 Shards, bought once both elements are carried; no god gives it. The ring reaches 6 metres from the finished enemy: 15 damage, 30 stagger, three stacks of Tremor and three notches of Sundered to each other enemy in it. One blade for each enemy reached, six at most, kept up to 14 seconds. Each flies at an enemy within 10 metres for 10 damage, 12 stagger and one notch of Sundered.
+**The numbers.** 5 Shards. You can buy it once you carry both elements; no god gives it. The ring reaches 6 metres from the finished enemy. Every other enemy in it takes 15 damage, 30 stagger, three stacks of Tremor and three notches of Sundered. You get one blade for each enemy it reaches, up to six, and keep them for up to 14 seconds. Each blade flies at an enemy within 10 metres for 10 damage, 12 stagger and one notch of Sundered.
 
 **Works with.** Buckled (every enemy it reaches is left shaken and notched), Folded Steel, Hammer and Anvil.
 
-**Example.** Finish a soldier in a pack of four: the other three are shaken and notched three deep, and your next heavy blow throws three blades.
+**Example.** Finish a soldier in a pack of four. The other three are shaken and get three notches each, and your next heavy blow throws three blades.
