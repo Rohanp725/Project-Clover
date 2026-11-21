@@ -102,3 +102,15 @@ every one is easy to change.
 14. **Taking a new god's element under the old rule** (`GodReward`'s forget-and-refund, retired by task L.2). Default:
     the Way's and the Body's marks are neither refunded in Shards nor forgotten, since Memories are never lost (found in
     review: they would have been refunded as Shards and wiped).
+
+## Owner's answers (2026-11-21, early morning)
+
+Every question above was answered "keep the default". The owner picked these explicitly:
+
+- 5.1 Q2: the playtest opens every gate.
+- 5.1 Q3: the first aspect or keystone bought switches on at once.
+- 5.2 Q1: all five moved marks stay as the Katana's element marks.
+- 5.2 Q7: moves that can be built from existing swings play retimed, and the rest are ledgered stand-ins to get real clips later.
+- 5.6 Q1: one payment per defeat.
+
+All the other questions were accepted as built.
