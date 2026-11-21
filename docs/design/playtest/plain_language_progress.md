@@ -47,7 +47,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/dark.md
 - [x] marks/drownedweight.md
 - [x] marks/earth.md
-- [ ] marks/earthed.md
+- [x] marks/earthed.md
 - [ ] marks/earthlight.md
 - [ ] marks/eclipse.md
 - [ ] marks/fire.md
