@@ -65,6 +65,7 @@ checked against its code and committed on its own.
 - [x] marks/fire.md: Fuel to It (Burn reactions 25% harder)
 - [x] marks/earth.md: Left in Rubble (Tremor reactions 20% harder)
 - [x] marks/metal.md: Every Crack Rings (Sundered reactions 25% harder)
+- [x] marks/drownedweight.md: The Pull of Night (pulls only the Soaked)
 
 ## Unsure lines
 
