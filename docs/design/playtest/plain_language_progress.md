@@ -74,7 +74,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/lightning.md
 - [x] marks/lightningflower.md
 - [x] marks/liveiron.md
-- [ ] marks/loganstone.md
+- [x] marks/loganstone.md
 - [ ] marks/metal.md
 - [ ] marks/mocksuns.md
 - [ ] marks/nervefire.md
