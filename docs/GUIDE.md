@@ -126,8 +126,7 @@ PlayStation or keys) and any buttons you've changed.
   finisher. If you press a slot while it's waiting, it says "Not ready". Resting ends every wait.
 - **Larger spells** cost mana and have no wait: Meteor Leap 45, Seven Flashes 45, Sky Dance 45, Winter Wall 35, Poured
   Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50, and the eleven duo spells built so far, 40 to
-  60. Pawned Heart is paid for with health and waits 40 seconds. Earth doesn't have a larger spell yet (its Cairn isn't
-  built).
+  60. Pawned Heart is paid for with health and waits 40 seconds. Earth's larger spell is Cairn, 40 mana.
 - **Marks that used to make the basic spell cheaper** (Short Breath, Quick Clap, Easy Breath, Thin Ice, Low Water, Ready
   Soil, Near to Hand, Ready Steel, Ready Light, Ready Poison) now make their own element's basic spell wait a fifth less
   between casts (Hoarfrost waits 5.6 seconds instead of 7), whether that element is your first or second. Spring Tide
@@ -155,7 +154,7 @@ PlayStation or keys) and any buttons you've changed.
   Knives, the crossing cut; Great Bow, the shot; Chain Sickle, the snap; Fists and Armament, the kick. Once the move's
   blow is out, the element acts on the ground the move covered (an arc, a line, a disc, a ring or a path). The eleven
   strikes and deep strikes are listed in the guide to effects ("Infused strikes"). Lightning's Flash Cut turns the move
-  into a 5-metre lunge with 50% more damage. Each button has an 8-second wait, which fighting with your weapon shortens
+  into a 5-metre lunge with 50% more damage, and nothing can hit you through it. Each button has an 8-second wait, which fighting with your weapon shortens
   like a spell's (the strike's own blow shortens every other wait, but not its own). The deep strike costs 20 mana. A
   strike counts as a weapon blow (it gives mana and shortens waits), and it neither charges nor uses up the charged
   blade.
@@ -440,29 +439,30 @@ normal roll, and it lets go of an enemy you've tied up.
 
 ## 4. Elements
 
-You carry one element at a time. Each one gives you a **tap spell** (Triangle / U), a **surge** (L2 / I), and an **affliction** that you put on enemies. Each affliction on an enemy shows as a small diamond in its colour under the enemy's health bars, bigger with more stacks.
+You carry one or two elements, or one element twice (all in). Each one gives you its **own spell**, which comes free with the element and goes in a spell slot (section 1, "The four spell slots"), a **surge** (a tap of L2, or F), and an **affliction** that you put on enemies. Each affliction on an enemy shows as a small diamond in its colour under the enemy's health bars, bigger with more stacks.
 
 ### The ring
 
-The elements in order around the ring, clockwise. Each element shares a mixed branch with the one before it and the one after it.
+The elements in order around the ring, clockwise. Each element shares a mixed branch with the one before it and the one after it. Any two elements you carry together
+also open a small duo branch in the middle of the chart, named for their reaction (section 7).
 
-| # | Element | Affliction | Tap spell | Surge | Mixes (with) |
+| # | Element | Affliction | Own spell | Surge | Mixes (with) |
 |---|---|---|---|---|---|
-| 0 | Fire | Burn | **Flame Wave**, 25 mana | **Kindle**, 40 mana, 10 seconds | Pyre (Poison), Plasma (Lightning) |
-| 1 | Lightning | Static | **Thunderclap**, 25 mana | **Overdrive**, 40 mana, 10 seconds | Plasma (Fire), Tempest (Wind) |
-| 2 | Wind | Unsteady | **Gust**, 20 mana | **Tailwind**, 35 mana, 10 seconds | Tempest (Lightning), Blizzard (Ice) |
-| 3 | Ice | Chill | **Hoarfrost**, 25 mana | **Glaze**, 40 mana, 12 seconds | Blizzard (Wind), Glacier (Water) |
-| 4 | Water | Soaked | **Riptide**, 20 mana | **Wellspring**, 30 mana, 12 seconds | Glacier (Ice), Bloom (Life) |
-| 5 | Life | Seeded | **Briar Patch**, 20 mana | **Regrowth**, 40 mana, 6 seconds | Bloom (Water), Overgrowth (Earth) |
-| 6 | Earth | Tremor | **Stone Rise**, 25 mana | **Bedrock**, 40 mana, 10 seconds | Overgrowth (Life), Forge (Metal) |
-| 7 | Metal | Sundered | **Flung Blade**, 25 mana | **Temper**, 40 mana, 10 seconds | Forge (Earth), Halo (Light) |
-| 8 | Light | Marked | **Glare**, 25 mana | **Clarity**, 40 mana, 8 seconds | Halo (Metal), Eclipse (Dark) |
-| 9 | Dark | Cursed | **Grasp**, 25 mana | **Hunger**, no mana, 10 seconds | Eclipse (Light), Blight (Poison) |
-| 10 | Poison | Poisoned | **Miasma**, 25 mana | **Fever**, 40 mana, 10 seconds | Blight (Dark), Pyre (Fire) |
+| 0 | Fire | Burn | **Flame Wave**, waits 7 seconds | **Kindle**, 40 mana, 10 seconds | Pyre (Poison), Plasma (Lightning) |
+| 1 | Lightning | Static | **Thunderclap**, waits 9 seconds | **Overdrive**, 40 mana, 10 seconds | Plasma (Fire), Tempest (Wind) |
+| 2 | Wind | Unsteady | **Gust**, waits 6 seconds | **Tailwind**, 35 mana, 10 seconds | Tempest (Lightning), Blizzard (Ice) |
+| 3 | Ice | Chill | **Hoarfrost**, waits 7 seconds | **Glaze**, 40 mana, 12 seconds | Blizzard (Wind), Glacier (Water) |
+| 4 | Water | Soaked | **Riptide**, waits 6 seconds | **Wellspring**, 30 mana, 12 seconds | Glacier (Ice), Bloom (Life) |
+| 5 | Life | Seeded | **Briar Patch**, waits 7 seconds | **Regrowth**, 40 mana, 6 seconds | Bloom (Water), Overgrowth (Earth) |
+| 6 | Earth | Tremor | **Stone Rise**, waits 7 seconds | **Bedrock**, 40 mana, 10 seconds | Overgrowth (Life), Forge (Metal) |
+| 7 | Metal | Sundered | **Flung Blade**, waits 6 seconds | **Temper**, 40 mana, 10 seconds | Forge (Earth), Halo (Light) |
+| 8 | Light | Marked | **Glare**, waits 6 seconds | **Clarity**, 40 mana, 8 seconds | Halo (Metal), Eclipse (Dark) |
+| 9 | Dark | Cursed | **Grasp**, waits 7 seconds | **Hunger**, no mana, 10 seconds | Eclipse (Light), Blight (Poison) |
+| 10 | Poison | Poisoned | **Miasma**, waits 7 seconds | **Fever**, 40 mana, 10 seconds | Blight (Dark), Pyre (Fire) |
 
-### What each tap spell does
+### What each element's own spell does
 
-Each element's tap spell acts like the element it's made of, instead of being one shape in eleven colours.
+Each element's own spell costs no mana and has its own wait (the table above). It acts like the element it's made of, instead of being one shape in eleven colours.
 
 | Element | Spell | What it does |
 |---|---|---|
@@ -472,7 +472,7 @@ Each element's tap spell acts like the element it's made of, instead of being on
 | Ice | Hoarfrost | Ice crystals grow along the ground in a wide fan (110 degrees), 4.5 metres ahead. They deal 10 damage, 15 stagger and two stacks of Chill, and stay for 4 seconds. Land a weapon blow among them, and they shatter: 5 damage and one more Chill to everything in the fan. |
 | Water | Riptide | A wave rises 5 metres in front of you and rolls back toward you. Everything in its path takes 8 damage and 18 stagger, is Soaked, and is carried to your feet, within reach of your sword. |
 | Life | Briar Patch | A bed of thorny vines grows 3 metres ahead and flowers. It stays for 6 seconds, lashes twice a second, and Seeds whatever stands in it. It counts as something you grew. |
-| Earth | Stone Rise | After a quarter second, the ground breaks under the enemy you face (within 5 metres). It deals 14 damage, 30 stagger and a Tremor, and throws the enemy up for a moment. A wall of rock is left standing behind it for 4.5 seconds; nothing can walk through it. |
+| Earth | Stone Rise | After a quarter second, the ground breaks under the enemy you face (within 5 metres). It deals 14 damage, 30 stagger and a Tremor, and throws the enemy up for a moment. Then the stones sink back into the ground; no wall is left behind. |
 | Metal | Flung Blade | A blade is thrown into the enemy you face (within 9 metres) for 3 damage and stays stuck in it for 6 seconds. Your next weapon blow on that enemy drives it in for 12 damage and a notch of Sundered, and the blade flies back to your hand, cutting anything in its way for 4. |
 | Light | Glare | A narrow ray 5.5 metres ahead. It deals 8 damage, 22 stagger and a Mark. It only hits what you're facing, and whatever it Marks shows brackets of light. |
 | Dark | Grasp | A black ball crawls to the enemy you face within 6 metres, pulling in everything it passes. Where it arrives, it deals 10 damage, 12 stagger and a Curse, and whatever it has hold of is dragged to your feet. |
@@ -528,9 +528,9 @@ A **mixed branch** opens when you carry one of its two elements and have carried
 
 **Not yet**
 
-- Only one god exists: Narukami, the god of Lightning. So in play, the choice is Take (Lightning, the Storm Katana, Storm Step) or Consume (stay as you are, get 4 Shards and a plain Katana; if you carry Fire, you also get a stronger Flame Wave and Kindle).
-- The other nine elements don't have gods. Their braziers in the hub are lit from the start for now. Lightning's stays cold until you've taken it once.
-- Gust and Riptide move everything within reach, not only what the cone touched. Stone Rise's pillar doesn't stay standing to be broken. Flung Blade does no damage as it lands. Grasp doesn't drag you to things that can't be dragged.
+- Two gods exist: Narukami, the god of Lightning, and Khepharu, the god of Fire. Khepharu gives his fire with no choice (section 10). With Narukami, the choice is Take (Lightning, the Storm Katana, Storm Step) or Consume (stay as you are, get 4 Shards and a plain Katana; if you carry Fire, you also get a stronger Flame Wave and Kindle).
+- The other nine elements don't have gods yet. Their braziers in the hub are lit from the start for now. Lightning's stays cold until you've taken it once.
+- Gust and Riptide move everything within reach, not only what the cone touched. Flung Blade does no damage as it lands. Grasp doesn't drag you to things that can't be dragged.
 - Glaze, Wellspring, Bedrock, Temper, Clarity and Fever only have the basic effects listed above.
 - Dark's "one revive as a zombie" isn't the surge. It is the Rise, which comes from Dark's root mark, Curse, and which the god's gift A Life for a Life gives back (section 5).
 
@@ -568,17 +568,17 @@ Each of the eleven reshaped branches keeps the mark that used to be its top. Sin
 | Tempest (Lightning + Wind) | **Falling Thunder** | Land any finisher. | The enemy is thrown up, you vanish in a streak of light, and 0.34 seconds later you land on it as a bolt: 22 damage within 4.5 metres, plus three stacks each of Static and Unsteady, and everything is pushed 3 metres. You're untouchable the whole time. |
 | Blizzard (Wind + Ice) | **Diamond Dust** | Shatter a frozen enemy, then dodge. | Four shards from each shatter join a ring spinning around you, up to twelve. Your next dodge throws them along its path: a path 9 metres long, 6 damage per shard, four at a time. |
 | Glacier (Ice + Water) | **Weight of Ice** | Block blows (L1), then swing a heavy blow. | Each blow you block puts a plate of ice on you; a perfect guard puts two; up to five. Each plate blocks 6% of every wound. Your next heavy swing uses them all up as a path of ice fangs, longer and harder for each plate. |
-| Bloom (Water + Life) | **Great Lotus** | Drink a flask while your surge is running. | Five petals open on a circle 3 metres across for 10 seconds. Enemies inside are Soaked and Seeded each second, and you heal 2 health a second inside. Each perfect guard you make inside closes a petal over the attacker and holds it for 3 seconds. At the last petal, or when time is up, it bursts: 30 damage, plus 30% for each petal closed. |
+| Bloom (Water + Life) | **Great Lotus** | Pick it for your surge slot at a rest fire, light it (L2), then drink a flask. | Five petals open on a circle 3 metres across for 10 seconds. Enemies inside are Soaked and Seeded each second, and you heal 2 health a second inside. Each perfect guard you make inside closes a petal over the attacker and holds it for 3 seconds. At the last petal, or when time is up, it bursts: 30 damage, plus 30% for each petal closed. |
 | Overgrowth (Life + Earth) | **The Ground Wakes** | Light your surge (L2). | Sixteen stones and roots rise in a ring 7 metres across. Everything inside is held for 2 seconds, gets three stacks of Tremor, and is Seeded. Then it flowers: 15 damage inside, and you heal 5 for each enemy held. |
 | Forge (Earth + Metal) | **World Anvil** | Land any finisher, then swing a heavy blow. | An anvil rises under the finished enemy. Its ring hits every other enemy within 6 metres (15 damage), shakes it, and breaks its armour. A blade is made for each one it reaches, up to six, and carried at your shoulders. They fly at nearby enemies with your next heavy swing: 10 damage and a notch each. |
-| Halo (Metal + Light) | **Six Mirrors** | Hold Triangle / U (the spell you have on, 60 mana) while facing an enemy within 8 metres. | Six mirrors stand in a ring around the enemy. You vanish; a line crosses from each mirror in turn; you're back where you started, and a moment later all the cuts land: 14 each on the enemy, half on anything else a line crossed, and a Mark and a notch for each cut. You're untouchable the whole time. |
+| Halo (Metal + Light) | **Six Mirrors** | Cast it from its spell slot (hold L2 and a face button, or press 1 to 4), 60 mana, while facing an enemy within 8 metres. | Six mirrors stand in a ring around the enemy. You vanish; a line crosses from each mirror in turn; you're back where you started, and a moment later all the cuts land: 14 each on the enemy, half on anything else a line crossed, and a Mark and a notch for each cut. You're untouchable the whole time. |
 | Eclipse (Light + Dark) | **Totality** | Light your surge (L2), then fight. | A black sun hangs over you, and the ground goes dark. Each second, every enemy within 14 metres is Marked and Cursed. Every blow you land is a critical hit and heals you 1. When the surge ends, a column of light hits each enemy for half the damage your weapon did to it in the dark, up to 80. |
 | Blight (Dark + Poison) | **The Reaping** | Land a finisher on an enemy that is both Cursed and poisoned. | Time slows down, and a huge scythe sweeps once around the enemy. All the poison in every enemy within 9 metres goes off at once (plus 3 per dose), and you heal half the total. |
-| Pyre (Poison + Fire) | **Light the Pyres** | Hold Triangle / U (the spell you have on, 60 mana) and stand still. | You kneel. A line of fire runs to each burning or poisoned enemy within 9 metres (up to six) and follows it. Three rings mark three breaths over 2.2 seconds. Then a pillar rises under each one: 40 damage within 2 metres, with its burn and its poison set off. A dodge or getting hit breaks it. If no one is burning or poisoned, you get the mana back. |
+| Pyre (Poison + Fire) | **Light the Pyres** | Cast it from its spell slot, 60 mana, and stand still. | You kneel. A line of fire runs to each burning or poisoned enemy within 9 metres (up to six) and follows it. Three rings mark three breaths over 2.2 seconds. Then a pillar rises under each one: 40 damage within 2 metres, with its burn and its poison set off. A dodge or getting hit breaks it. If no one is burning or poisoned, you get the mana back. |
 
 ### Five other spells with moves of their own
 
-You buy these on the chart like any spell, then put them on and cast them by holding Triangle / U.
+You buy these on the chart like any spell. Put them in a spell slot at a rest fire (Set the Hand), and cast them from it: hold L2 and a face button, or press 1 to 4.
 
 | Spell | Where | Cost | What you do and what it does |
 |---|---|---|---|
@@ -603,45 +603,45 @@ You buy these on the chart like any spell, then put them on and cast them by hol
 
 A form is the shape a spell takes. Any element can use any form, in its own colour and with its own affliction. The Spell marks on the chart each name one.
 
-**Putting on and casting**: the first spell you learn is put on right away. To put on another, choose a spell you already have on the chart and press learn (Cross / E). The screen shows the name of the spell you have on next to the weapon. **Hold Triangle / U for 0.3 seconds** to cast the spell you have on; a tap still casts the element's own spell.
+**Putting on and casting**: an element's own spell comes free with the element. Every other spell is bought on the chart. At a rest fire, Set the Hand puts spells in your four slots (section 1, "The four spell slots"). To cast a slot's spell, **hold L2 and press that slot's face button**, or press 1 to 4.
 
 | Form | What you see and do |
 |---|---|
-| `wave` | A cone thrown ahead that hits everything in it. |
-| `bolt` | A bolt on the enemy you face that jumps to others near it. |
-| `leap` | A leap out of the fight, untouchable in the air, landing next to the enemy you face and leaving a crater. |
-| `rod` | A rod planted a little in front of you; the element strikes around it for a while. |
-| `blades` | Blades appear high over the enemy you face (or where you aim), hang there, then fall one after another, each hitting a small circle. |
-| `sword` | One sword as tall as the screen falls where you aim after a wait: a wide circle, a frozen moment when it hits, and a crack left in the ground that hurts enemies for a while. |
-| `beam` | You brace, then fire a thick beam for a few seconds that hits again and again. You can turn slowly while it lasts. You can't move; dodging lets you go. |
-| `phalanx` | Blades form in a fan behind your shoulders and hover. Each one fires on its own at the nearest enemy in reach, or all at once when you land a heavy blow. |
-| `dragon` | A huge head made of the element forms at your shoulder and lunges forward along a line, with its jaws closing at the end in a burst. Everything on the line is carried along a little. |
-| `nova` | A burst around you after a short wait, with a ring that sweeps outward. |
-| `orb` | A slow ball leaves your hand and follows the nearest enemy, then explodes. Hit it with a weapon blow, and it explodes right away, bigger. |
-| `bomb` | You raise a growing ball over your head (and can't move), then throw it forward: a huge burst, then a burning patch. |
-| `spikes` | Spikes shoot out along the ground in a line from you, one after another, each bursting up a moment after its mark shows. Some have several rows side by side. |
-| `field` | A patch of ground where you aim grows spikes, flame or frost for a while, hurting enemies again and again. |
-| `drill` | You become a spinning point of the element and bore forward through everything on the line, hitting each enemy several times, and come out the far side facing back. You're untouchable while it lasts. |
-| `minions` | Small helpers made of the element rise up next to you. Each runs at the nearest enemy, hits it a few times, then disappears. |
-| `bullets` | Bullets appear in a ring around the enemy you face, hang there, then all fly inward together. |
-| `reverse` | A spot in front of you pulls every nearby enemy inward for a moment, then bursts. |
-| `parry` | A guard stance you hold for a while. The first blow that lands on it does nothing and is answered with a cone of the element. If nothing hits it, the mana is lost. |
-| `wall` | A wall rises in front of you after a wait and blocks movement and shots for a while. It bursts when it ends, or when you hit it with a heavy blow. |
-| `discs` | Discs circle around you for a while, hitting whatever they pass. |
-| `brand` | A symbol is put on the enemy you face. Each of your next few weapon blows on it sets off a burst. Needs an enemy you're facing, or the mana is lost. |
-| `rain` | For a while, hits fall at random inside a circle around where you aim, each with its own small mark on the ground first. |
-| `clone` | A copy of you made of the element's light stands next to you and repeats every weapon blow a moment later, for part of its damage. |
-| `flash` | You vanish, and lines of light cross the enemy you face, one after another. You appear again behind it, standing still, with your back turned. After a wait, all the cuts land at once. You're untouchable while it lasts. |
-| `ring` | A ring closes around you and the enemy you face for a while. Nothing can cross it, and enemies that touch it get hurt. |
-| `pillars` | Pillars burst out of the ground under the nearest enemies in reach, each lifting whatever it hits for a moment. |
-| `step` | You step through the enemy you face along a line of the element and cut it as you pass. If it lands, your next heavy blow soon after is a critical hit. |
+| Wave | A cone thrown ahead that hits everything in it. |
+| Bolt | A bolt on the enemy you face that jumps to others near it. |
+| Leap | A leap out of the fight, untouchable in the air, landing next to the enemy you face and leaving a crater. |
+| Rod | A rod planted a little in front of you; the element strikes around it for a while. |
+| Blades | Blades appear high over the enemy you face (or where you aim), hang there, then fall one after another, each hitting a small circle. |
+| Sword | One sword as tall as the screen falls where you aim after a wait: a wide circle, a frozen moment when it hits, and a crack left in the ground that hurts enemies for a while. |
+| Beam | You brace, then fire a thick beam for a few seconds that hits again and again. You can turn slowly while it lasts. You can't move; dodging lets you go. |
+| Phalanx | Blades form in a fan behind your shoulders and hover. Each one fires on its own at the nearest enemy in reach, or all at once when you land a heavy blow. |
+| Dragon | A huge head made of the element forms at your shoulder and lunges forward along a line, with its jaws closing at the end in a burst. Everything on the line is carried along a little. |
+| Nova | A burst around you after a short wait, with a ring that sweeps outward. |
+| Orb | A slow ball leaves your hand and follows the nearest enemy, then explodes. Hit it with a weapon blow, and it explodes right away, bigger. |
+| Bomb | You raise a growing ball over your head (and can't move), then throw it forward: a huge burst, then a burning patch. |
+| Spikes | Spikes shoot out along the ground in a line from you, one after another, each bursting up a moment after its mark shows. Some have several rows side by side. |
+| Field | A patch of ground where you aim grows spikes, flame or frost for a while, hurting enemies again and again. |
+| Drill | You become a spinning point of the element and bore forward through everything on the line, hitting each enemy several times, and come out the far side facing back. You're untouchable while it lasts. |
+| Minions | Small helpers made of the element rise up next to you. Each runs at the nearest enemy, hits it a few times, then disappears. |
+| Bullets | Bullets appear in a ring around the enemy you face, hang there, then all fly inward together. |
+| Reverse | A spot in front of you pulls every nearby enemy inward for a moment, then bursts. |
+| Parry | A guard stance you hold for a while. The first blow that lands on it does nothing and is answered with a cone of the element. If nothing hits it, the spell still has to wait (some counters wait only half as long). |
+| Wall | A wall rises in front of you after a wait and blocks movement and shots for a while. It bursts when it ends, or when you hit it with a heavy blow. |
+| Discs | Discs circle around you for a while, hitting whatever they pass. |
+| Brand | A symbol is put on the enemy you face. Each of your next few weapon blows on it sets off a burst. It needs an enemy you're facing. With none, nothing is marked, and the spell still has to wait. |
+| Rain | For a while, hits fall at random inside a circle around where you aim, each with its own small mark on the ground first. |
+| Clone | A copy of you made of the element's light stands next to you and repeats every weapon blow a moment later, for part of its damage. |
+| Flash | You vanish, and lines of light cross the enemy you face, one after another. You appear again behind it, standing still, with your back turned. After a wait, all the cuts land at once. You're untouchable while it lasts. |
+| Ring | A ring closes around you and the enemy you face for a while. Nothing can cross it, and enemies that touch it get hurt. |
+| Pillars | Pillars burst out of the ground under the nearest enemies in reach, each lifting whatever it hits for a moment. |
+| Step | You step through the enemy you face along a line of the element and cut it as you pass. If it lands, your next heavy blow soon after is a critical hit. |
 
 Every form shows a warning on the ground before it lands (never less than 0.22 seconds), lands with a white star and a ring, and leaves a mark behind.
 
 **Not yet**
 
 - Enemies push against a wall or a ring and don't walk around it. The ring holds you in too.
-- The gods' gifts and crowns have their own forms (section 5), and other elements can't use them.
+- The gods' gifts and the duo branch tops have their own forms (section 5), and other elements can't use them.
 
 ---
 

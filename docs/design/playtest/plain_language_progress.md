@@ -94,6 +94,9 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
   give tap spells mana costs and say to cast with Triangle / U, and section 6's spell forms table still lists form
   ids). The facts were kept as written; the form ids in the table were kept too, since they are names, and the
   column was renamed "Form". These sections probably need a content update, not only plain words.
+  **Resolved:** own spells now show their waits (no mana), casting is L2 and a face button or 1 to 4, surges a tap of
+  L2 or F, form ids became plain names, parry and brand no longer "lose the mana", Stone Rise leaves no wall, and
+  the gods line names Khepharu too. Section 1's Cairn line and section 3's Flash Cut were brought up to date as well.
 - marks/fire.md, fire.sun: "it rises in 1.5 seconds if Kindle has 3 left" was read as "if Kindle has 3 seconds left".
   **Resolved:** the code confirms it (the sun rises again only with 3 seconds of Kindle left).
 - readme.md, "NOT BUILT YET": it still lists reactions, the spell branches and "written details for every tree but
