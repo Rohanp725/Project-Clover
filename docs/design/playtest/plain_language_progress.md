@@ -79,7 +79,7 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - [x] marks/mocksuns.md
 - [x] marks/nervefire.md
 - [x] marks/overgrowth.md
-- [ ] marks/plasma.md
+- [x] marks/plasma.md
 - [ ] marks/poison.md
 - [ ] marks/pyre.md
 - [ ] marks/quicksilver.md
