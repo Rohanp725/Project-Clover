@@ -5,429 +5,429 @@ Every affliction, state and resource in the playtest, as the pause menu and the 
 ## burn
 Title: Burn
 Group: Afflictions
-**What it is.** Fire's affliction. A burning enemy takes steady damage until the fire goes out. Depth makes it hurt more each second.
+**What it is.** Fire's affliction. A burning enemy keeps taking damage until the fire goes out. More stacks make it hurt more each second.
 
-**The numbers.** 5 damage a second. Each stack adds 30%, up to 5 stacks (12.5 a second at full depth). Laying it again keeps whichever time is longer, never past 8 s. When it goes out, its stacks go with it. Set off, it deals 10, plus 10 for each stack, all at once.
+**The numbers.** 5 damage a second. Each stack adds 30%, up to 5 stacks (12.5 damage a second at full). Adding it again keeps whichever time is longer, but never more than 8 seconds. When it goes out, all its stacks go too. When something sets it off, it deals 10 damage plus 10 for each stack, all at once.
 
-**What sets it off.** Flame Wave burns what it touches for 5 s, and its burning ground burns too. Each blow during Kindle burns for 3 s. With Fire's root mark learned, every weapon blow burns for 4 s and adds a stack. Some marks set a burn off.
+**What sets it off.** Flame Wave sets whatever it touches on fire for 5 seconds, and its burning ground does too. Each blow during Kindle sets the enemy on fire for 3 seconds. Once you learn Fire's root mark, every weapon blow sets the enemy on fire for 4 seconds and adds a stack. Some marks set off a burn.
 
-**How to use it.** Burn works while you guard and dodge. Light it, then fight safely. Stack it before a mark sets it off, so the burst lands harder.
+**How to use it.** Burn keeps working while you guard and dodge. Set the enemy on fire, then fight safely. Build up stacks before a mark sets it off, so the burst hits harder.
 
-**How it looks.** Flames lick up the enemy's body. An orange diamond sits under its bars, larger the deeper the burn.
+**How it looks.** Flames lick up the enemy's body. An orange diamond sits under its health bars, bigger with more stacks.
 
 ## static
 Title: Static
 Group: Afflictions
-**What it is.** Lightning's affliction. Charge builds up on an enemy and waits to be set off. When it goes, it arcs into the enemy and everyone near it.
+**What it is.** Lightning's affliction. Electric charge builds up on an enemy and waits to be set off. When it goes off, lightning jumps into the enemy and everyone near it.
 
-**The numbers.** Up to 5 stacks, 6 s, and each new stack starts the time again. A discharge deals 7 damage and 5 stagger for each stack to everyone within 4 m (35 damage and 25 stagger at full charge).
+**The numbers.** Up to 5 stacks, lasting 6 seconds. Each new stack restarts the timer. When it goes off, it deals 7 damage and 5 stagger for each stack to everyone within 4 metres (35 damage and 25 stagger when full).
 
-**What sets it off.** With Lightning's root mark learned, each light blow adds a stack. A heavy blow or a finisher on a charged enemy discharges it. Some marks set it off in other ways. Static laid on a Soaked enemy also spreads to everyone within 4 m.
+**What sets it off.** Once you learn Lightning's root mark, each light blow adds a stack. A heavy blow or a finisher on a charged enemy sets it off. Some marks set it off in other ways. Static put on a Soaked enemy also spreads to everyone within 4 metres.
 
-**How to use it.** Chain light blows up to five, then end with a heavy blow. Do it in a crowd: the discharge hits them all, and its stagger opens them up for finishers.
+**How to use it.** String together light blows up to five stacks, then finish with a heavy blow. Do it in a crowd: the burst hits all of them, and its stagger sets them up for finishers.
 
-**How it looks.** Small bolts jump over the enemy's body. A pale blue diamond sits under its bars. A discharge strikes the enemy with a bolt.
+**How it looks.** Small bolts jump over the enemy's body. A pale blue diamond sits under its health bars. When it goes off, a bolt hits the enemy.
 
 ## unsteady
 Title: Unsteady
 Group: Afflictions
-**What it is.** Wind's affliction. An unsteady enemy loses its footing: it is easier to stagger, flies further when struck, and turns slowly.
+**What it is.** Wind's affliction. An Unsteady enemy loses its footing. It is easier to stagger, flies farther when hit, and turns slowly.
 
-**The numbers.** Up to 5 stacks, 6 s. Each stack means 6% more stagger taken, a 15% longer shove and 8% slower turning. At full depth that is 30% more stagger, 75% longer shoves and 40% slower turning.
+**The numbers.** Up to 5 stacks, lasting 6 seconds. Each stack means the enemy takes 6% more stagger, is shoved 15% farther, and turns 8% slower. At full, that's 30% more stagger, 75% farther shoves, and 40% slower turning.
 
-**What sets it off.** Gust lays it two deep. With Wind's root mark learned, every weapon blow adds a stack. During Tailwind, every weapon blow adds one more.
+**What sets it off.** Gust adds two stacks. Once you learn Wind's root mark, every weapon blow adds a stack. During Tailwind, every weapon blow adds one more.
 
-**How to use it.** Slower turning lets you circle behind an enemy and hit its back. Longer shoves help you throw enemies into hazards and walls. The extra stagger works with every heavy blow.
+**How to use it.** Slower turning lets you circle behind an enemy and hit its back. Longer shoves help you throw enemies into danger zones and walls. The extra stagger works with every heavy blow.
 
-**How it looks.** Streaks of pale air circle the enemy's feet. A pale green diamond sits under its bars.
+**How it looks.** Streaks of pale air circle the enemy's feet. A pale green diamond sits under its health bars.
 
 ## chill
 Title: Chill and Frozen
 Group: Afflictions
-**What it is.** Ice's affliction. Each stack of Chill slows an enemy. At full depth it is Frozen: held still in ice until it thaws or a heavy blow shatters it.
+**What it is.** Ice's affliction. Each stack of Chill slows an enemy down. When it is full, the enemy is Frozen: stuck in ice until it thaws or a heavy blow shatters it.
 
-**The numbers.** Up to 5 stacks, 6 s. Each stack slows it by 7%. At 5 it freezes for 2.5 s. Elites thaw after 1 s. A god thaws sooner still: as a man after 0.75 s, in its godly form after 0.3 s, a hitch in whatever it was doing, which then carries on where it was. After a god thaws it cannot be frozen or held again for 3 s (as a man) or 5 s (in its godly form); its Chill still builds, and the next cold after that freezes it. A heavy blow on a frozen enemy shatters it for 45 more damage. A thaw or a shatter ends the Chill. Nothing can chill a frozen enemy further.
+**The numbers.** Up to 5 stacks, lasting 6 seconds. Each stack slows the enemy by 7%. At 5 stacks, it freezes for 2.5 seconds. Elites thaw after 1 second. A god thaws even sooner: in its human form after 0.75 seconds, and in its god form after 0.3 seconds. For a god it's just a short pause, and then it carries on with whatever it was doing. After a god thaws, it can't be frozen or held again for 3 seconds (in human form) or 5 seconds (in god form). Its Chill still builds up, and the next cold after that freezes it. A heavy blow on a frozen enemy shatters it for 45 more damage. A thaw or a shatter ends the Chill. A frozen enemy can't be chilled any more.
 
-**What sets it off.** Hoarfrost lays two stacks, and a weapon blow among its crystals breaks them for one more. With Ice's root mark learned, every weapon blow adds a stack. During Glaze, every weapon blow adds one more.
+**What sets it off.** Hoarfrost adds two stacks, and a weapon blow among its crystals breaks them for one more. Once you learn Ice's root mark, every weapon blow adds a stack. During Glaze, every weapon blow adds one more.
 
 **How to use it.** Freeze a dangerous enemy to buy time, then shatter it with a heavy blow. Soaked spreads Chill to everyone close by.
 
-**How it looks.** Frost crystals grow at the enemy's feet. Frozen, it glows a steady pale blue inside a cage of tall white crystals, and its diamond turns white and grows. A god's godly form glows the same blue for its moment, and the crystals burst where it was last struck.
+**How it looks.** Frost crystals grow at the enemy's feet. When Frozen, it glows a steady pale blue inside a cage of tall white crystals, and its diamond turns white and gets bigger. A god in its god form glows the same blue for that moment, and the crystals burst where it was last hit.
 
 ## soaked
 Title: Soaked
 Group: Afflictions
-**What it is.** Water's affliction. A soaked enemy takes more from spells, and passes Static and Chill on to everyone close to it.
+**What it is.** Water's affliction. A Soaked enemy takes more damage from spells, and passes Static and Chill on to everyone close to it.
 
-**The numbers.** On or off, 8 s. Spells deal it 25% more damage. Static or Chill laid on it is also laid on everyone within 4 m.
+**The numbers.** It is either on or off, and lasts 8 seconds. Spells deal 25% more damage to it. Static or Chill put on it is also put on everyone within 4 metres.
 
-**What sets it off.** Riptide soaks everything its wave carries. With Water's root mark learned, every weapon blow soaks. During Wellspring, every weapon blow soaks too.
+**What sets it off.** Riptide soaks everything its wave carries. Once you learn Water's root mark, every weapon blow soaks. During Wellspring, every weapon blow soaks too.
 
-**How to use it.** Soak a group, then charge or chill one of them, and it reaches them all. Cast your spells on soaked enemies.
+**How to use it.** Soak a group, then charge or chill one of them, and it reaches all of them. Cast your spells on Soaked enemies.
 
-**How it looks.** Water drips off the enemy and rings of water spread on the ground at its feet. A deep blue diamond sits under its bars.
+**How it looks.** Water drips off the enemy, and rings of water spread on the ground at its feet. A deep blue diamond sits under its health bars.
 
 ## seeded
 Title: Seeded
 Group: Afflictions
-**What it is.** Life's affliction. A seed grows in the enemy. Each of your weapon blows on it mends you, and when it dies it bursts into thorns.
+**What it is.** Life's affliction. A seed grows inside the enemy. Each of your weapon blows on it heals you, and when it dies, it bursts into thorns.
 
-**The numbers.** Up to 3 stacks, 8 s. Each weapon blow on it heals you 1 for each stack. When it dies, it deals 12 for each stack to everyone within 3 m (36 at full depth).
+**The numbers.** Up to 3 stacks, lasting 8 seconds. Each weapon blow on it heals you 1 for each stack. When it dies, it deals 12 damage for each stack to everyone within 3 metres (36 when full).
 
-**What sets it off.** Briar Patch seeds whatever stands in it. With Life's root mark learned, every weapon blow adds a stack. During Regrowth, every weapon blow adds one more.
+**What sets it off.** Briar Patch Seeds whatever stands in it. Once you learn Life's root mark, every weapon blow adds a stack. During Regrowth, every weapon blow adds one more.
 
-**How to use it.** Quick weapons gain the most, since every blow heals. Kill a fully seeded enemy in the middle of a group, so its thorns hit the rest.
+**How to use it.** Fast weapons get the most out of it, since every blow heals. Kill a fully Seeded enemy in the middle of a group, so its thorns hit the rest.
 
-**How it looks.** Vines grow at the enemy's feet and pink flowers open on it. A green diamond sits under its bars.
+**How it looks.** Vines grow at the enemy's feet, and pink flowers open on it. A green diamond sits under its health bars.
 
 ## tremor
 Title: Tremor
 Group: Afflictions
-**What it is.** Earth's affliction. The ground shakes under the enemy. It is slowed, and its balance does not come back while the shaking lasts.
+**What it is.** Earth's affliction. The ground shakes under the enemy. It is slowed, and its balance doesn't come back while the shaking lasts.
 
-**The numbers.** Up to 3 stacks, 6 s. Each stack slows it by 10%. While it lasts, the enemy's stagger meter does not drain.
+**The numbers.** Up to 3 stacks, lasting 6 seconds. Each stack slows the enemy by 10%. While it lasts, the enemy's stagger meter doesn't go down.
 
-**What sets it off.** Stone Rise lays a stack. With Earth's root mark learned, every heavy blow adds a stack and a finisher lays all three. During Bedrock, every weapon blow adds one more.
+**What sets it off.** Stone Rise adds a stack. Once you learn Earth's root mark, every heavy blow adds a stack, and a finisher adds all three. During Bedrock, every weapon blow adds one more.
 
-**How to use it.** Tremor keeps stagger from fading, so you can step back, guard or heal, and the meter waits for you. Use it on enemies with a big stagger meter.
+**How to use it.** Tremor keeps the stagger from fading, so you can step back, guard or heal, and the meter waits for you. Use it on enemies with a big stagger meter.
 
-**How it looks.** Pebbles hop around the enemy and the ground cracks under it. A brown diamond sits under its bars.
+**How it looks.** Pebbles hop around the enemy, and the ground cracks under it. A brown diamond sits under its health bars.
 
 ## sundered
 Title: Sundered
 Group: Afflictions
-**What it is.** Metal's affliction. Notches in the enemy's armour let your weapon bite deeper.
+**What it is.** Metal's affliction. Notches in the enemy's armour let your weapon cut deeper.
 
-**The numbers.** Up to 3 notches, 8 s. Each notch means 8% more damage from weapon blows (24% at full depth). Spells are not affected.
+**The numbers.** Up to 3 notches, lasting 8 seconds. Each notch means 8% more damage from weapon blows (24% when full). It doesn't affect spells.
 
-**What sets it off.** Flung Blade adds a notch when your next weapon blow drives the blade in. With Metal's root mark learned, every heavy blow and every perfect guard adds a notch, and a finisher lays all three. During Temper, every weapon blow adds one more.
+**What sets it off.** Flung Blade adds a notch when your next weapon blow drives the blade in. Once you learn Metal's root mark, every heavy blow and every perfect guard adds a notch, and a finisher adds all three. During Temper, every weapon blow adds one more.
 
-**How to use it.** Notch the armour first, then spend your hardest blows. Sundered and a critical blow multiply each other.
+**How to use it.** Notch the armour first, then use your hardest blows. Sundered and a critical hit multiply each other.
 
-**How it looks.** Splinters of plate fall from the enemy. A steel grey diamond sits under its bars.
+**How it looks.** Splinters of armour fall off the enemy. A steel-grey diamond sits under its health bars.
 
 ## marked
 Title: Marked
 Group: Afflictions
-**What it is.** Light's affliction. A mark of light makes your weapon blows on the enemy critical, until the mark is spent or fades.
+**What it is.** Light's affliction. A mark of light makes your weapon blows on the enemy critical hits, until the Mark is used up or fades.
 
-**The numbers.** One deep. It lasts 8 s or three weapon blows, whichever ends first. Each weapon blow on it is critical (one and a half times damage) and gives 2 more mana. Laying it again refills the three blows.
+**The numbers.** Only one stack. It lasts 8 seconds or three weapon blows, whichever ends first. Each weapon blow on it is a critical hit (one and a half times the damage) and gives 2 more mana. Marking the enemy again gives you three fresh blows.
 
-**What sets it off.** Glare marks what its ray strikes. With Light's root mark learned, the last blow of a chain and every perfect guard mark. During Clarity, every weapon blow marks.
+**What sets it off.** Glare Marks whatever its ray hits. Once you learn Light's root mark, the last blow of a chain and every perfect guard add a Mark. During Clarity, every weapon blow Marks.
 
-**How to use it.** Save the mark for your three hardest blows. A heavy blow or a finisher on a marked enemy hits hardest. The extra mana pays for your next spell.
+**How to use it.** Save the Mark for your three hardest blows. A heavy blow or a finisher on a Marked enemy hits hardest. The extra mana pays for your next spell.
 
-**How it looks.** A ray of white light stands over the enemy's head. A pale gold diamond sits under its bars. Each critical blow shows a gold star.
+**How it looks.** A beam of white light shines over the enemy's head. A pale gold diamond sits under its health bars. Each critical hit shows a gold star.
 
 ## cursed
 Title: Cursed
 Group: Afflictions
-**What it is.** Dark's affliction. A cursed enemy hits more weakly, and killing it feeds you.
+**What it is.** Dark's affliction. A Cursed enemy hits more weakly, and killing it heals you.
 
-**The numbers.** One deep, 8 s. It deals 15% less damage. Killing it heals you 6.
+**The numbers.** Only one stack, lasting 8 seconds. The enemy deals 15% less damage. Killing it heals you 6.
 
-**What sets it off.** Grasp curses what it reaches. With Dark's root mark learned, every weapon blow curses. During Hunger, every weapon blow curses too.
+**What sets it off.** Grasp Curses whatever it reaches. Once you learn Dark's root mark, every weapon blow Curses. During Hunger, every weapon blow Curses too.
 
-**How to use it.** Curse the enemy that hits hardest, and its blows take less of your health. Curse enemies that are nearly dead to heal as you kill them. This pairs well with Hunger, which costs health.
+**How to use it.** Curse the enemy that hits hardest, and its blows take less of your health. Curse enemies that are almost dead to heal as you kill them. This works well with Hunger, which costs health.
 
-**How it looks.** Dark violet smoke sinks over the enemy. A violet diamond sits under its bars.
+**How it looks.** Dark violet smoke sinks over the enemy. A violet diamond sits under its health bars.
 
 ## poisoned
 Title: Poisoned
 Group: Afflictions
-**What it is.** Poison's affliction. Doses build up, and on a slow beat the poison bites for all of them at once.
+**What it is.** Poison's affliction. Doses of poison build up, and on a slow, steady beat, the poison bites for all of them at once.
 
-**The numbers.** Up to 8 doses, 6 s. Each new dose starts the time again. Every 2 s it bites for 2 for each dose (16 at full depth). The first bite comes 2 s after the first dose. Set off, it deals 6 for each dose at once.
+**The numbers.** Up to 8 doses, lasting 6 seconds. Each new dose restarts the timer. Every 2 seconds, it bites for 2 damage for each dose (16 when full). The first bite comes 2 seconds after the first dose. When something sets it off, it deals 6 damage for each dose all at once.
 
-**What sets it off.** Miasma doses whatever stands in its cloud once a second. With Poison's root mark learned, every weapon blow adds a dose, a heavy blow adds one more, and a finisher adds two more. During Fever, every weapon blow adds one more. Some marks set it off.
+**What sets it off.** Miasma gives a dose to whatever stands in its cloud once a second. Once you learn Poison's root mark, every weapon blow adds a dose, a heavy blow adds one more, and a finisher adds two more. During Fever, every weapon blow adds one more. Some marks set it off.
 
-**How to use it.** Keep adding doses so the time never runs out. The deeper the poison, the harder each bite. Then dodge, guard and let the beat work.
+**How to use it.** Keep adding doses so the timer never runs out. The more doses, the harder each bite. Then dodge, guard, and let the poison do its work.
 
-**How it looks.** Yellow-green bubbles rise off the enemy, larger the deeper the poison. A yellow-green diamond sits under its bars.
+**How it looks.** Yellow-green bubbles rise off the enemy, bigger with more doses. A yellow-green diamond sits under its health bars.
 
 ## staggered
 Title: Staggered and the finisher
 Group: States
-**What it is.** Every enemy has a balance meter. Blows fill it. When it is full, the enemy is staggered: it kneels, helpless, for a few seconds. A heavy blow on it then is a finisher.
+**What it is.** Every enemy has a balance meter. Blows fill it up. When it's full, the enemy is staggered: it kneels, helpless, for a few seconds. A heavy blow on it then is a finisher.
 
-**The numbers.** Ordinary enemies stagger for 3.2 s, elites for 3 s and gods for 2.8 s. The meter starts to drain 2 s after the last blow, at 25 a second. While staggered, light blows deal one and a half times damage. A finisher reaches up to 5 m, deals three times damage, costs no stamina, gives 15 mana, and nothing can hit you while it lasts. On a god it takes at least a fifth of his health, and on an elite at least a third.
+**The numbers.** Normal enemies stay staggered for 3.2 seconds, elites for 3 seconds, and gods for 2.8 seconds. The meter starts to go down 2 seconds after the last blow, at 25 a second. While an enemy is staggered, light blows deal one and a half times the damage. A finisher reaches up to 5 metres, deals three times the damage, costs no stamina, gives 15 mana, and nothing can hit you while it lasts. On a god, it takes at least a fifth of its health, and on an elite at least a third.
 
-**What sets it off.** Every blow fills it. Heavy blows, perfect guards and some spells fill it most. Unsteady makes everything fill it more. Tremor stops it draining.
+**What sets it off.** Every blow fills it. Heavy blows, perfect guards and some spells fill it the most. Unsteady makes everything fill it more. Tremor stops it from going down.
 
-**How to use it.** Watch the balance bar under the enemy's health. When the enemy flickers, one or two more blows will open it. Save your heavy blow for the finisher.
+**How to use it.** Watch the balance bar under the enemy's health. When the enemy flickers, one or two more blows will break its balance. Save your heavy blow for the finisher.
 
-**How it looks.** At 70% the enemy flickers amber. Staggered, it pulses gold and carries a broken gold ring.
+**How it looks.** At 70%, the enemy flickers amber. When staggered, it pulses gold and has a broken gold ring over it.
 
 ## grey-health
 Title: Grey health
 Group: States
-**What it is.** A blocked blow still takes a little health, but that part turns grey and can be won back. Deal damage soon and it comes back. Wait too long and it fades.
+**What it is.** A blocked blow still takes a little health, but that part turns grey and you can win it back. Deal damage soon, and it comes back. Wait too long, and it fades.
 
-**The numbers.** 35% of a blocked blow's damage turns grey. Each point of damage you deal wins back 0.6 of grey health. The grey starts to fade 2.5 s after your last block or regain, at 10 a second. A blow you do not block removes all of it. Grey can never take your last point of health, so guarding alone cannot kill you.
+**The numbers.** 35% of a blocked blow's damage turns grey. Each point of damage you deal wins back 0.6 of grey health. The grey starts to fade 2.5 seconds after your last block or win-back, at 10 a second. A blow you don't block removes all of it. Grey health can never take your last point of health, so guarding alone can't kill you.
 
 **What sets it off.** Blocking with the guard button. Regrowth and Clarity turn all grey health back into real health at once.
 
-**How to use it.** After a block, strike back straight away to win the grey back. Do not take an unblocked blow while you have grey health, or you lose it.
+**How to use it.** After a block, hit back right away to win the grey health back. Don't take an unblocked blow while you have grey health, or you lose it.
 
 **How it looks.** A grey stretch at the end of your health bar, between your health and the empty part.
 
 ## guard-broken
 Title: Guard broken
 Group: States
-**What it is.** A held guard costs stamina for every blow it blocks. If you do not have the stamina to pay for a blow, the guard breaks and the blow lands in full.
+**What it is.** Holding your guard costs stamina for every blow it blocks. If you don't have enough stamina for a blow, your guard breaks and the blow hits you in full.
 
-**The numbers.** A block costs 0.9 stamina for each point of damage, for most weapons. When the guard breaks, the blow deals full damage, your stamina empties, and you are stuck for 0.8 s (an ordinary flinch is 0.35 s).
+**The numbers.** A block costs 0.9 stamina for each point of damage, with most weapons. When your guard breaks, the blow deals full damage, your stamina empties, and you are stuck for 0.8 seconds (a normal flinch is 0.35 seconds).
 
-**What sets it off.** A blocked blow that costs more stamina than you have. A ward takes the blow instead, if you have one.
+**What sets it off.** A blocked blow that costs more stamina than you have. If you have a ward, it takes the blow instead.
 
-**How to use it.** Watch your stamina while you guard. Against long chains, dodge some of the blows or perfect-guard them, since a perfect guard costs nothing. Stop attacking and let stamina refill before you block a big blow.
+**How to use it.** Watch your stamina while you guard. Against long strings of blows, dodge some of them or perfect-guard them, since a perfect guard costs nothing. Stop attacking and let your stamina refill before you block a big blow.
 
-**How it looks.** The guard arc pulses red, a danger flash shows, and the words "Guard broken" appear.
+**How it looks.** The guard arc pulses red, a warning flash shows, and the words "Guard broken" appear.
 
 ## perfect-guard
 Title: Perfect guard
 Group: States
-**What it is.** Press the guard button just before a blow lands. The blow is turned aside for nothing and the attacker loses its balance.
+**What it is.** Press the guard button just before a blow lands. The blow is pushed aside and does nothing, and the attacker loses its balance.
 
-**The numbers.** The blow must land within 0.18 s of the press, for most weapons. Pressing guard again within 0.4 s of the last press gives no perfect window, so mashing does not work. A perfect guard costs no stamina and no health, gives 15 mana, and adds a large amount of stagger to the attacker (40 to 55 on the castle's enemies). Clarity makes the window half again as long.
+**The numbers.** The blow must land within 0.18 seconds of your press, with most weapons. Pressing guard again within 0.4 seconds of your last press doesn't give a perfect guard, so mashing the button doesn't work. A perfect guard costs no stamina and no health, gives 15 mana, and adds a lot of stagger to the attacker (40 to 55 on the castle's enemies). Clarity makes the timing window 50% longer.
 
-**What sets it off.** A fresh press of the guard button, timed to the blow. It also turns red attacks, which a held guard cannot stop.
+**What sets it off.** A fresh press of the guard button, timed to the blow. It also blocks red attacks, which holding your guard can't stop.
 
-**How to use it.** Learn each enemy's rhythm and press at the moment of impact, not at the wind-up. It is the best source of mana and stagger in the game, and several marks reward it.
+**How to use it.** Learn each enemy's rhythm and press at the moment the blow hits, not when it winds up. It is the best way to get mana and stagger in the game, and many marks reward it.
 
-**How it looks.** The guard arc flashes gold, a ring and a pale flash burst from it, the world stops for an instant, and the words "Perfect guard" appear.
+**How it looks.** The guard arc flashes gold, a ring and a pale flash burst from it, the world freezes for an instant, and the words "Perfect guard" appear.
 
 ## perfect-dodge
 Title: Perfect dodge
 Group: States
-**What it is.** Roll through a blow at the last moment and time slows for a moment, giving you mana and an opening.
+**What it is.** Roll through a blow at the last moment, and time slows down for a moment, giving you mana and an opening.
 
-**The numbers.** A roll goes 4.5 m in 0.35 s for 25 stamina. Blows pass through you from 0.03 s to 0.25 s into the roll. A blow that passes through in the first 0.13 s is a perfect dodge. It gives 12 mana and slows time to 0.3 speed for 0.35 s.
+**The numbers.** A roll goes 4.5 metres in 0.35 seconds and costs 25 stamina. Blows pass through you from 0.03 seconds to 0.25 seconds into the roll. A blow that passes through you in the first 0.13 seconds is a perfect dodge. It gives 12 mana and slows time to 0.3 speed for 0.35 seconds.
 
-**What sets it off.** A dodge started just as a blow arrives. Red attacks can be dodged this way like any other.
+**What sets it off.** A dodge started right as a blow arrives. You can dodge red attacks this way like any other.
 
-**How to use it.** Roll into or across the attack, not away from it, so you come out close enough to punish. Tailwind halves the dodge's cost, sends it 30% further and keeps you safe 25% longer.
+**How to use it.** Roll into or across the attack, not away from it, so you come out close enough to hit back. Tailwind halves the dodge's cost, sends it 30% farther and keeps you safe 25% longer.
 
-**How it looks.** The world slows briefly and the words "Perfect dodge" appear.
+**How it looks.** The world slows for a moment, and the words "Perfect dodge" appear.
 
 ## red-attacks
 Title: Red attacks
 Group: States
-**What it is.** Some enemy attacks cannot be guarded. A held guard does nothing against them: the blow lands in full and you flinch.
+**What it is.** Some enemy attacks can't be guarded. Holding your guard does nothing against them: the blow hits you in full, and you flinch.
 
 **The numbers.** They hit as hard as any other attack, and often harder. The lunges, charges, leaps, bolts and roars of the castle's enemies and gods are among them.
 
-**What sets it off.** The enemy chooses them, often at range or as the last blow of a chain.
+**What sets it off.** The enemy chooses them, often from a distance or as the last blow of a string.
 
-**How to use it.** Dodge them, or perfect-guard them, since a perfect guard turns even these. A ward also takes one. Many leave the attacker open for a long time afterwards, so punish.
+**How to use it.** Dodge them, or perfect-guard them, since a perfect guard blocks even these. A ward also takes one. Many of them leave the attacker open for a long time afterward, so hit back.
 
-**How it looks.** As the enemy commits, a red flare shows over its head instead of the white glint of a blow you can guard. The warning shape on the ground is drawn in red.
+**How it looks.** As the enemy commits to the attack, a red flash shows over its head instead of the white glint of a blow you can guard. The warning shape on the ground is drawn in red.
 
 ## critical
 Title: Critical blows
 Group: States
-**What it is.** A critical blow is a weapon blow that lands for one and a half times its damage.
+**What it is.** A critical hit is a weapon blow that lands for one and a half times its damage.
 
-**The numbers.** One and a half times damage. You start with no chance of a critical blow. Some marks add a chance, some make certain blows always critical, and Marked makes every weapon blow critical for three blows.
+**The numbers.** One and a half times the damage. You start with no chance of a critical hit. Some marks add a chance, some make certain blows always critical, and Marked makes every weapon blow critical for three blows.
 
-**What sets it off.** Weapon blows on a Marked enemy, the chance that marks give, and blows that marks promise (for example a counter cut on an enemy showing its attack).
+**What sets it off.** Weapon blows on a Marked enemy, the chance that marks give, and blows that marks promise (for example, a counter cut on an enemy that is starting its attack).
 
-**How to use it.** Put your hardest blows on a critical: a heavy blow or a finisher on a Marked enemy. Critical blows stack with Sundered and with the surge.
+**How to use it.** Put your hardest blows on a critical hit: a heavy blow or a finisher on a Marked enemy. Critical hits stack with Sundered and with the surge.
 
-**How it looks.** A gold star with long points and a spray of gold sparks where the blow lands.
+**How it looks.** A gold star with long points, and a spray of gold sparks where the blow lands.
 
 ## wards
 Title: Wards
 Group: States
-**What it is.** A ward turns aside one blow that would have hurt you. It is spent instead of your health.
+**What it is.** A ward blocks one blow that would have hurt you. It is used up instead of your health.
 
-**The numbers.** You can hold up to 3 wards. Each one takes a blow you did not guard, or a blow that would have broken your guard. Wards stay until they are spent, until you rest, or until you change element.
+**The numbers.** You can hold up to 3 wards. Each one takes a blow you didn't guard, or a blow that would have broken your guard. Wards stay until they are used up, until you rest, or until you change element.
 
-**What sets it off.** Glaze (Ice's surge, 40 mana, 12 s) gives one ward when you light it. Some marks give wards too.
+**What sets it off.** Glaze (Ice's surge, 40 mana, lasts 12 seconds) gives one ward when you light it. Some marks give wards too.
 
-**How to use it.** Light Glaze before a big attack you cannot avoid, or when you want to trade blows. A ward also takes a red attack, which a held guard cannot.
+**How to use it.** Light Glaze before a big attack you can't avoid, or when you want to trade blows. A ward also takes a red attack, which holding your guard can't.
 
-**How it looks.** The status line by your bars reads "Ward" or "Wards 2". When one is spent, a pale blue ring and sparks burst in front of you with a clang, and the word "Warded" appears.
+**How it looks.** The status line next to your bars reads "Ward" or "Wards 2". When one is used up, a pale blue ring and sparks burst in front of you with a clang, and the word "Warded" appears.
 
 ## hurt
 Title: Hurt (the flinch)
 Group: States
-**What it is.** A blow that lands makes you flinch. You are pushed back and cannot act for a moment.
+**What it is.** A blow that lands makes you flinch. You are pushed back and can't act for a moment.
 
-**The numbers.** A flinch lasts 0.35 s and pushes you back 1.1 m. A broken guard holds you for 0.8 s. A blow that arrives during a flinch is ignored, so two enemies cannot keep you down.
+**The numbers.** A flinch lasts 0.35 seconds and pushes you back 1.1 metres. A broken guard holds you for 0.8 seconds. A blow that arrives while you're flinching is ignored, so two enemies can't keep you down.
 
-**What sets it off.** Any blow that is not blocked, dodged or warded. The flinch cuts off your attack, spell, dodge or drink, and drops your guard. Some heavy moves are poised: during their wind-up and swing a small blow hurts but does not stop them.
+**What sets it off.** Any blow that isn't blocked, dodged or stopped by a ward. The flinch cuts off your attack, spell, dodge or drink, and drops your guard. Some heavy moves are steady: while you wind them up and swing, a small blow still hurts you but doesn't stop them.
 
-**How to use it.** Do not start a slow drink or a long chain next to an enemy that is about to swing. Enemies flinch too: most at every blow, some only after a few light blows.
+**How to use it.** Don't start a slow drink or a long string of blows next to an enemy that is about to swing. Enemies flinch too: most at every blow, some only after a few light blows.
 
-**How it looks.** A red flash at the screen's edges, a spray from the wound and a shake of the camera.
+**How it looks.** A red flash at the edges of the screen, a spray from the wound, and a shake of the camera.
 
 ## health
 Title: Health
 Group: Resources
 **What it is.** Your life. It drops when blows land, partly turns grey when you block, and comes back from flasks, from some marks and from resting.
 
-**The numbers.** 100 to begin with. Some marks raise it. Below 30% the screen's edges darken red, and they darken more below 15%.
+**The numbers.** You start with 100. Some marks raise it. Below 30%, the edges of the screen turn dark red, and they get darker below 15%.
 
-**What sets it off.** Unblocked blows take it for good. Blocked blows turn some of it grey (see Grey health). Flasks, Seeded enemies, Cursed kills, Regrowth, Hunger and Fever give it back. A rest fire fills it.
+**What sets it off.** Unblocked blows take it away for good. Blocked blows turn some of it grey (see Grey health). Flasks, Seeded enemies, Cursed kills, Regrowth, Hunger and Fever give it back. A rest fire fills it.
 
-**How to use it.** Win back grey health by attacking, and drink only when you are safe. In the playtest: a fall returns you to your last rest fire with nothing lost, so try risky things freely.
+**How to use it.** Win back grey health by attacking, and only drink when you're safe. In the playtest, falling in battle sends you back to your last rest fire with nothing lost, so feel free to try risky things.
 
-**How it looks.** Your health bar in the corner of the screen. What a blow just took stays pale for a moment before it drains, so you can read how big the blow was.
+**How it looks.** Your health bar in the corner of the screen. What a blow just took stays pale for a moment before it drains, so you can see how big the blow was.
 
 ## stamina
 Title: Stamina
 Group: Resources
-**What it is.** What you spend to attack, dodge and block. When it runs out, you cannot dodge, and the next blocked blow breaks your guard.
+**What it is.** What you spend to attack, dodge and block. When it runs out, you can't dodge, and the next blocked blow breaks your guard.
 
-**The numbers.** 100. It refills at 30 a second, starting 0.8 s after you last spent any. A dodge costs 25. Attacks cost about 12 each, more for the heavier weapons. A block costs 0.9 for each point of damage, for most weapons. A broken guard empties it.
+**The numbers.** 100. It refills at 30 a second, starting 0.8 seconds after you last spent any. A dodge costs 25. Attacks cost about 12 each, more for the heavier weapons. A block costs 0.9 for each point of damage, with most weapons. A broken guard empties it.
 
-**What sets it off.** Attacking, dodging and blocking spend it. Waiting refills it. A rest fire fills it.
+**What sets it off.** Attacking, dodging and blocking use it up. Waiting refills it. A rest fire fills it.
 
-**How to use it.** Never empty it completely in front of an enemy. Keep enough for one dodge. Short pauses between chains let it refill.
+**How to use it.** Never empty it completely in front of an enemy. Keep enough for one dodge. Short pauses between strings of blows let it refill.
 
 **How it looks.** The bar under your health bar.
 
 ## mana
 Title: Mana
 Group: Resources
-**What it is.** The power behind your big moves: the surge, each element's one larger spell, the built duo spells and your weapon skill. Basic spells never cost mana: they run on cooldowns instead (see Spell cooldowns).
+**What it is.** The power behind your big moves: the surge, each element's one larger spell, the duo spells that are built so far, and your weapon skill. Basic spells never cost mana. They have waits instead (see Spell cooldowns).
 
-**The numbers.** Up to 100. You enter every area at half (50). Out of a fight, mana below half rises by 5 a second until it reaches half; mana above half stays where it is. A fight always starts with at least half: if you have less when an enemy notices you, it is raised to 50 at once. A fight ends when no enemy within 12 m has been aware of you for 8 s. Weapon blows that land give 3 to 16, depending on the move. A perfect guard gives 15, a perfect dodge 12 and a finisher 15. A Marked enemy gives 2 more for each blow. Blocked blows give nothing. Surges cost 30 to 40 (Hunger costs health instead, and waits 25 s after it ends), weapon skills 25 to 35, the deep strike 20, and the larger spells 30 to 50 (the built duo spells 40 to 60).
+**The numbers.** Up to 100. You enter every area with half (50). Out of a fight, mana below half goes up by 5 a second until it reaches half; mana above half stays where it is. A fight always starts with at least half: if you have less when an enemy notices you, it is raised to 50 right away. A fight ends when no enemy within 12 metres has noticed you for 8 seconds. Weapon blows that land give 3 to 16 mana, depending on the move. A perfect guard gives 15, a perfect dodge 12, and a finisher 15. A Marked enemy gives 2 more for each blow. Blocked blows give nothing. Surges cost 30 to 40 (Hunger costs health instead, and has a 25-second wait after it ends). Weapon skills cost 25 to 35, the deep strike 20, and the larger spells 30 to 50 (the built duo spells 40 to 60).
 
-**What sets it off.** Landing blows and timing guards and dodges well earn it; an infused strike's blow earns it like any weapon blow. The surge, the weapon skill, the deep strike and a larger spell spend it.
+**What sets it off.** Landing blows and timing guards and dodges well earn it. An infused strike's blow earns it like any weapon blow. The surge, the weapon skill, the deep strike and a larger spell spend it.
 
-**How to use it.** Basic spells are free, so cast them whenever their clock is ready. Save mana for the surge or your element's larger spell; what you earn above half in one fight is still there in the next. Perfect guards and perfect dodges fill it fastest.
+**How to use it.** Basic spells are free, so cast them whenever they're ready. Save mana for the surge or your element's larger spell. Whatever you earn above half in one fight is still there in the next. Perfect guards and perfect dodges fill it fastest.
 
-**How it looks.** The bar under your stamina, in the colour of the element you hold (grey with none). On the spell diamond a price is written in blue under the slot that pays it, and turns red, with the slot dimmed, when you hold less.
+**How it looks.** The bar under your stamina, in the colour of the element you have (grey with none). On the spell diamond, a price is written in blue under the slot that costs mana, and turns red, with the slot dimmed, when you don't have enough.
 
 ## spell-slots
 Title: Spell slots and the spell layer
 Group: Spells and cooldowns
-**What it is.** You carry four spells, one in each slot: West, North, East and South, laid out like the pad's face buttons. Hold L2 (LT) and press a face button to cast that slot's spell. On the keyboard, 1, 2, 3 and 4 cast them directly. While L2 is held, the face buttons are spells only: the flask, the weapon skill, the dodge and use wait until you let go. A quick tap of L2 on its own lights the surge.
+**What it is.** You carry four spells, one in each slot: West, North, East and South, laid out like the controller's face buttons. Hold L2 (LT) and press a face button to cast that slot's spell. On the keyboard, 1, 2, 3 and 4 cast them directly. While L2 is held, the face buttons only cast spells: the flask, the weapon skill, the dodge and use wait until you let go. A quick tap of L2 on its own lights the surge.
 
-**The numbers.** A tap of L2 counts if it is let go within 0.25 s and no spell was cast while it was held; the surge is lit as you let go. Held longer, letting go does nothing. On the keyboard the surge stays on F, and Left Ctrl is the layer for the infused strikes (Left Ctrl with a mouse button). With L2 held, R1 and R2 are the infused strikes, not attacks.
+**The numbers.** A tap of L2 counts if you let go within 0.25 seconds and didn't cast a spell while holding it. The surge lights when you let go. If you hold it longer, letting go does nothing. On the keyboard, the surge stays on F, and Left Ctrl is the button for the infused strikes (Left Ctrl with a mouse button). While L2 is held, R1 and R2 are the infused strikes, not attacks.
 
-**What sets it off.** At a rest fire, Set the Hand: choose what sits in each slot from the spells of the elements you carry (see The Hand). Until you first set a Hand, the slots fill themselves: each carried element's own spell first, then each spell you learn in the next empty slot; choosing a learned spell on the chart and pressing use still puts it in the next slot round.
+**What sets it off.** At a rest fire, choose Set the Hand, and pick what goes in each slot from the spells of the elements you carry (see The Hand). Until you first set a Hand, the slots fill themselves: each element's own spell first, then each spell you learn in the next empty slot. Picking a learned spell on the chart and pressing use still puts it in the next slot.
 
-**How to use it.** Keep spells of different jobs in your four slots: one to open a fight, one to break a guard, one to finish, one to escape. A spell slot can be rebound in the pause menu's controls, on the pad and on the keys.
+**How to use it.** Keep spells with different jobs in your four slots: one to start a fight, one to break a guard, one to finish, and one to escape. You can change the buttons for each spell slot in the pause menu's controls, for both the controller and the keyboard.
 
-**How it looks.** The spell diamond in the bottom-right corner: four round slots laid out like the face buttons, each with its spell's picture (or its initials) and its button, the surge in the middle, the two infused strikes under it. It is small at all times and grows while L2 is held, with each spell's name. The buttons are named for the pad or keys you use, and follow your rebinding.
+**How it looks.** The spell diamond in the bottom-right corner: four round slots laid out like the face buttons, each with its spell's picture (or its first letters) and its button, the surge in the middle, and the two infused strikes under it. It is always small, and grows while L2 is held, showing each spell's name. The buttons are named for the controller or keys you use, and follow any buttons you've changed.
 
 ## the-hand
 Title: The Hand and the rest menu
 Group: Spells and cooldowns
-**What it is.** Your build: the four spells in your slots and the surge a tap of L2 lights, chosen from the elements you carry. Resting at a fire opens the rest menu: Set the Hand, The chart (where Shards are spent) and Leave the fire.
+**What it is.** Your build: the four spells in your slots, plus the surge a tap of L2 lights, chosen from the elements you carry. Resting at a fire opens the rest menu: Set the Hand, The chart (where you spend Shards) and Leave the fire.
 
-**The numbers.** Four slots and one surge. A slot takes any learned spell of an element you carry, or that element's own spell, or a duo spell while both of its elements are carried; nothing goes in two slots at once. The surge is either carried element's. Three saved Hands. In the full game the slots open as you go: West and North at the start, East when the Champion of the Gate falls, South when the Fire god falls, and each stays open from then on; a shut slot holds nothing, is shown shut on the Hand with what opens it, and is never filled. In the playtest every slot is open.
+**The numbers.** Four slots and one surge. A slot can hold any learned spell of an element you carry, that element's own spell, or a duo spell while you carry both of its elements. Nothing can go in two slots at once. The surge can be either element's. You can save three Hands. In the full game, the slots open as you go: West and North at the start, East when the Champion of the Gate falls, and South when the Fire god falls. Each stays open from then on. A closed slot holds nothing, shows as closed on the Hand along with what opens it, and is never filled. In the playtest, every slot is open.
 
-**What sets it off.** Use a rest fire, then Set the Hand. Choose a slot and press use for its list, grouped by element, each spell with its role and one line; press use on one to wear it at once. The weapon skill button shows the numbers. On a saved Hand's row, use wears it and the heavy attack (or a right click) keeps the Hand you wear there. Suggested Hand fills the slots with each element's own spell and then your learned spells in order. The stick, the d-pad, W and S, the wheel and the mouse all choose; dodge (or Esc) backs out. The world is stopped meanwhile.
+**What sets it off.** Use a rest fire, then choose Set the Hand. Choose a slot and press use to see its list, grouped by element, with each spell's role and a short description. Press use on one to put it in the slot right away. The weapon skill button shows the numbers. On a saved Hand's row, use puts on that Hand, and heavy attack (or a right click) saves the Hand you have on now there. Suggested Hand fills the slots with each element's own spell, then your learned spells in order. The stick, the d-pad, W and S, the mouse wheel and the mouse all choose; dodge (or Esc) goes back. The world is paused while you do this.
 
-**How to use it.** Read your Hand like a hand of cards: an opener, a breaker, a detonator, a counter, a way to move. Keep a saved Hand for each kind of fight and swap at the fire. The Hand never changes which elements you carry: that is chosen in the hub (in the playtest, at the altars).
+**How to use it.** Read your Hand like a hand of cards: an opener, a breaker, a detonator, a counter, and a way to move. Keep a saved Hand for each kind of fight, and swap at the fire. The Hand never changes which elements you carry; you choose those in the hub (in the playtest, at the altars).
 
-**How it looks.** The four slots in a diamond laid out like the face buttons, named by your own bindings, each ringed in its element's colour; the surge in the middle; the elements you carry along the top; the suggested and saved Hands on the right.
+**How it looks.** The four slots in a diamond laid out like the face buttons, named with your own buttons, each ringed in its element's colour; the surge in the middle; the elements you carry along the top; and the suggested and saved Hands on the right.
 
 ## two-elements
 Title: Two elements
 Group: Spells and cooldowns
-**What it is.** You carry two elements at once, the first and the second; the same one twice is all in. Each spell is cast in its own element and lays its own affliction, in its own colour. Your weapon's blows lay only the first element's affliction: the second comes from your spells, the charged blade and the R2 strike, so mixing comes from weaving weapon and spell.
+**What it is.** You carry two elements at once, the first and the second. Carrying the same one twice is called all in. Each spell is cast in its own element and adds its own affliction, in its own colour. Your weapon's blows only add the first element's affliction. The second one's affliction comes from your spells, the charged blade and the R2 strike, so mixing comes from switching between weapon and spells.
 
-**The numbers.** The weapon's blows lay the first element's affliction only, even with the second element's root mark learned, except from a mixed branch's own marks, which lay both of theirs (the owner's decision of 2026-11-19) (Lightning's Static is built by the weapon only while Lightning is first; a heavy blow still sets off Static laid another way). Marks of both elements are in force; a duo branch's marks need both elements carried, and a duo spell also needs a slot. The surge you wear strengthens the weapon while it burns; if it is the second element's surge, the blows still lay only the first element's affliction. R1 strikes with the first element, R2 with the second. With one element, or the same one twice, R2 is the deep strike for 20 mana once you have bought that element's Devotion; before that, R2 is the plain strike again. The mana bar takes the first element's colour.
+**The numbers.** The weapon's blows only add the first element's affliction, even if you've learned the second element's root mark. The exception is a mixed branch's own marks, which add both of their afflictions (the owner decided this on 2026-11-19). Lightning's Static only builds from your weapon while Lightning is first, but a heavy blow still sets off Static added another way. Marks from both elements work. A duo branch's marks need you to carry both elements, and a duo spell also needs a slot. The surge you have picked makes your weapon stronger while it is lit. If it's the second element's surge, your blows still only add the first element's affliction. R1 strikes with the first element, and R2 with the second. With one element, or the same one twice, R2 is the deep strike for 20 mana once you've bought that element's Devotion. Before that, R2 is the plain strike again. The mana bar takes the first element's colour.
 
-**What sets it off.** The elements you carry are picked in the hub; in the full game the hub's braziers still give only the first. In the playtest the altars round the rest fire set both: carrying one element, another altar carries its element as your second and the altar of the one you carry goes all in; carrying two (or all in), an altar starts again with its element alone. You arrive carrying Fire, and each altar's prompt says what it will do before you press. A Hand's spells of an element no longer carried leave their slots, and a surge of one falls back to the first element's.
+**What sets it off.** You pick the elements you carry in the hub. In the full game, the hub's braziers still only give the first. In the playtest, the altars around the rest fire set both. If you carry one element, another altar makes its element your second, and the altar of the element you carry makes you all in. If you carry two (or are all in), an altar starts you over with only its element. You arrive carrying Fire, and each altar's prompt tells you what it will do before you press. Any spells in your Hand from an element you no longer carry leave their slots, and a surge from that element switches back to the first element's.
 
-**How to use it.** Put the element you want on every blow first. Use the second's spells and strike to lay its affliction beside the first; a charged blade carries a spell's element on your next three blows beside your own. All in, you trade the mix for depth.
+**How to use it.** Put the element you want on every blow first. Use the second element's spells and strike to add its affliction next to the first one. A charged blade carries a spell's element on your next three blows, alongside your own. Going all in trades the mix for more power in one element.
 
-**How it looks.** Each spell, ground and burst in its own element's stuff and colour. An enemy carrying two afflictions shows both diamonds under its bars.
+**How it looks.** Each spell, patch of ground and burst looks like its own element, in its own colour. An enemy with two afflictions shows both diamonds under its health bars.
 
 ## cooldowns
 Title: Spell cooldowns
 Group: Spells and cooldowns
-**What it is.** Basic spells cost no mana. After a spell is cast, its slot waits a few seconds before it can be cast again. Fighting with your weapon shortens the wait of every slot that is waiting.
+**What it is.** Basic spells cost no mana. After you cast a spell, its slot has to wait a few seconds before you can cast it again. Fighting with your weapon shortens the wait for every slot that is waiting.
 
-**The numbers.** Basic spells wait 6 to 12 s (the tree spells 7 to 12 s, each element's own spell 6 to 9 s, the spare mixed spells 12 s). Each element's one larger spell costs mana instead and has no wait: Meteor Leap 45, Seven Flashes 45, Sky Dance 45, Winter Wall 35, Poured Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50. Pawned Heart is paid in health and waits 40 s. Earth's larger spell (Cairn) is not built yet. The built duo spells (Ball Lightning, Eye of the Storm and the others) cost 40 to 60 mana. Weapon play takes time off every waiting slot: a light blow that lands 0.3 s, a heavy blow 0.6 s (once per move, however many it strikes), a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s. The two infused strikes wait 8 s each, cut by weapon play the same way (a strike's own blow cuts every other wait, not its own). Hunger, Dark's surge, waits 25 s from the moment it ends. Resting at a fire ends every wait.
+**The numbers.** Basic spells wait 6 to 12 seconds (the tree spells 7 to 12 seconds, each element's own spell 6 to 9 seconds, and the extra mixed spells 12 seconds). Each element's one larger spell costs mana instead and has no wait: Meteor Leap 45, Seven Flashes 45, Sky Dance 45, Winter Wall 35, Poured Blade 30, Elder Tree 40, Grave of Swords 50, Daybreak 45, One by One 50. Pawned Heart is paid for with health and waits 40 seconds. Earth's larger spell (Cairn) isn't built yet. The duo spells built so far (Ball Lightning, Eye of the Storm and the others) cost 40 to 60 mana. Fighting with your weapon takes time off every waiting slot: 0.3 seconds for a light blow that lands, 0.6 seconds for a heavy blow (once per move, no matter how many enemies it hits), 2 seconds for a perfect guard, 1.5 seconds for a perfect dodge, and 3 seconds for a finisher. The two infused strikes each wait 8 seconds, and weapon play shortens their wait the same way (a strike's own blow shortens every other wait, but not its own). Hunger, Dark's surge, waits 25 seconds from the moment it ends. Resting at a fire ends every wait.
 
-**What sets it off.** Casting a spell starts its slot's wait. Landing blows, perfect guards, perfect dodges and finishers shorten it. A slot pressed while it waits says "Not ready".
+**What sets it off.** Casting a spell starts its slot's wait. Landing blows, perfect guards, perfect dodges and finishers shorten it. If you press a slot while it is waiting, it says "Not ready".
 
-**How to use it.** Weave: cast, fight with the weapon until the spell is back, cast again. Perfect guards and dodges bring spells back fastest. Marks that only made a basic spell cheaper do nothing now; the trees are reshaped in a later phase.
+**How to use it.** Switch back and forth: cast, fight with your weapon until the spell is back, then cast again. Perfect guards and dodges bring spells back fastest. Marks that only made a basic spell cheaper do nothing now; the trees will be reshaped in a later phase.
 
-**How it looks.** On the spell diamond a waiting slot is shaded, and the shade sweeps back like a clock hand as the wait runs out, with the seconds left written in it. The slot's ring swells for a moment when it is ready again.
+**How it looks.** On the spell diamond, a waiting slot is shaded, and the shading sweeps back like a clock hand as the wait runs out, with the seconds left written in it. The slot's ring swells for a moment when it's ready again.
 
 ## charged-blade
 Title: The charged blade
 Group: Spells and cooldowns
-**What it is.** Magic feeds the weapon. When one of your four spells lands on an enemy, it charges your weapon with its element. The next three moves of the weapon that land carry the element: each hits 20% harder and lays the element's affliction, and the third does one thing more, its element's own.
+**What it is.** Magic powers up your weapon. When one of your four spells lands on an enemy, it charges your weapon with its element. Your weapon's next three moves that land carry the element: each one hits 20% harder and adds the element's affliction, and the third one does one extra thing, special to its element.
 
-**The numbers.** Three moves, each 1.2 times the damage. Each lays one stack of the element's affliction (two of Poison), on top of what the blow lays already, or beside it when that is another affliction. A move counts once however many it strikes, and carries the charge to all of them. A blow turned on a guard spends nothing. A new spell that lands replaces the charge with a fresh three. Resting ends it. What each element adds: Fire's third blow leaves the ground under the enemy burning for 3 s. Lightning's each leap on to one more enemy within 4 m for half the damage, with Static. Wind's each shove the enemy 1.5 m along the swing, the third 4 m. Ice's each shatter an enemy already Frozen, light blow or heavy. Water's each splash everything within 1.5 m for a fifth of the blow, and soak it. Life's third throws thorns round the enemy (2 m, Seeded). Earth's each throw a 2 m spray of gravel. Metal's pass any guard. Light's third throws a ray 5 m along the swing that Marks. Dark's third Curses twice more. Poison's third makes the poison bite at once.
+**The numbers.** Three moves, each dealing 1.2 times the damage. Each one adds one stack of the element's affliction (two for Poison), on top of what the blow already adds, or alongside it if that's a different affliction. A move counts once, no matter how many enemies it hits, and carries the charge to all of them. A blow that hits an enemy's guard uses nothing up. A new spell that lands replaces the charge with a fresh three. Resting ends it. What each element adds: Fire's third blow leaves the ground under the enemy burning for 3 seconds. Lightning's blows each jump to one more enemy within 4 metres for half the damage, with Static. Wind's blows each shove the enemy 1.5 metres in the direction of the swing, and the third one 4 metres. Ice's blows each shatter an enemy that is already Frozen, light blow or heavy. Water's blows each splash everything within 1.5 metres for a fifth of the blow's damage, and soak it. Life's third blow throws thorns around the enemy (2 metres, Seeded). Earth's blows each throw a 2-metre spray of gravel. Metal's blows go through any guard. Light's third blow shoots a ray 5 metres in the direction of the swing that Marks. Dark's third blow adds two more Curses. Poison's third blow makes the poison bite right away.
 
-**What sets it off.** A spell from one of your four slots that lands on an enemy, within 8 s of being cast (the first thing that cast strikes), charges it with that spell's own element: with Fire and Lightning carried, Flame Wave charges it with Fire and Thunderclap with Lightning. A duo spell charges it with the first of its pair. Ground left burning by an earlier cast, the surge, an infused strike and marks' effects never charge it.
+**What sets it off.** A spell from one of your four slots that lands on an enemy within 8 seconds of being cast (the first thing that cast hits). It charges your weapon with that spell's own element. With Fire and Lightning carried, Flame Wave charges it with Fire, and Thunderclap with Lightning. A duo spell charges it with the first element of its pair. Ground left burning by an earlier cast, the surge, an infused strike and marks' effects never charge it.
 
-**How to use it.** Weave: cast, then strike three times, then cast again while the weapon brings the spell back. A spell on cooldown and a charged blade are the same fight seen from two sides.
+**How to use it.** Switch back and forth: cast, then hit three times, then cast again while your weapon brings the spell back. A spell's wait and a charged blade are two sides of the same fight.
 
-**How it looks.** The element runs along the weapon's edge: tongues of flame shedding embers for Fire, bolts that jump along it for Lightning, rime feathers and breath-fog for Ice, the element's own stuff in its colour for the rest. Fewer as the blows are spent. Three pips beside the spell diamond, lit in the element's colour, one put out with each charged blow.
+**How it looks.** The element runs along the weapon's edge: flames shedding embers for Fire, bolts that jump along it for Lightning, frost feathers and cold mist for Ice, and each other element's own look and colour for the rest. There is less of it as the blows are used up. Three dots next to the spell diamond, lit in the element's colour, go out one at a time with each charged blow.
 
 ## infused-strikes
 Title: Infused strikes
 Group: Spells and cooldowns
-**What it is.** Hold L2 (LT) and press R1 (RB) for an infused strike: your weapon's own move, its carrier, played with your element on it. L2 with R2 (RT) is the deep strike, the heavier version, which also costs mana. You get the deep strike only after you buy your element's Devotion. On the keyboard, hold Left Ctrl and press the left or right mouse button.
+**What it is.** Hold L2 (LT) and press R1 (RB) for an infused strike: one of your weapon's own moves, done with your element on it. L2 with R2 (RT) is the deep strike, a heavier version that also costs mana. You only get the deep strike after you buy your element's Devotion. On the keyboard, hold Left Ctrl and press the left or right mouse button.
 
-**The numbers.** Each strike button has its own 8 s wait, which weapon play shortens like a spell's (a light blow 0.3 s, a heavy 0.6 s, a perfect guard 2 s, a perfect dodge 1.5 s, a finisher 3 s). The deep strike costs 20 mana. A strike counts as a weapon blow: it gives mana and takes time off your spells, but it never charges the blade and does not spend a charge. The carriers: the Katana's drawing cut (made at once, 22 damage, 170 degrees), the Massive Sword's rising cut, the Scythe's full turn, the Great Spear's first thrust, the Great Hammer's drop, the Twin Knives' crossing, the Great Bow's shot, the Chain Sickle's snap, the Fists' and the Armament's kick. Each element's strike, then its deep strike: Fire, Burning Edge (a sheet of flame along the swing and 3 m beyond, 2 Burn on all it reaches, the ground burning 3 s), then Burnt Offering (a pillar of flame on the enemy struck: 30 damage and its burn set off). Lightning, Flash Cut (a 5 m lunge through enemies as a line of lightning, half again the blow, 2 Static), then Down the Channel (bolts come down the whole line 0.4 s later). Wind, Cutting Wind (a crescent out to 7 m, 60% of the blow, 2 Unsteady, a 1 m push), then Whirl Cut (the first enemy held in the air 1 s). Ice, Frost Bite (a spike of ice through each enemy struck: 2 Chill, held 0.8 s), then Ice Through (frozen at once if it carries three Chill). Water, Lash (a whip twice the weapon's reach, 80% of the blow, Soaked, pulled 1.5 m in), then Thrown on the Reef (thrown 5 m away). Life, Grown Into It (2 Seeded and a green shoot), then Briar Root (rooted 1 s). Earth, Broken Ground (four slabs heaved up in a 4 m line: 14 damage, 25 stagger, Tremor), then Mountain Cleaver (6.5 m, 55 damage, 70 stagger, Tremor 2). Metal, Struck Plate (a ripple 3 m round the one struck, 10 damage, Sundered), then Red Iron (half the blow again and two Sundered on it). Light, Ray Along the Edge (a ray 6 m out: 10 damage, 15 stagger, Marked), then The Sun on the Blade (the same cut at half strength on every Marked enemy within 8 m). Dark, Taken (everything struck dragged 2 m toward you: 12 damage, 20 stagger, Cursed), then Yama's Noose (40 damage and 50 stagger to the enemy you face within 8 m). Poison, Venom Flick (a string of venom 5 m ahead and a puddle that doses once a second for 3 s), then Nine Times Refined (six doses on what the cut struck).
+**The numbers.** Each strike button has its own 8-second wait, which fighting with your weapon shortens like a spell's (0.3 seconds for a light blow, 0.6 for a heavy blow, 2 for a perfect guard, 1.5 for a perfect dodge, 3 for a finisher). The deep strike costs 20 mana. A strike counts as a weapon blow: it gives mana and takes time off your spells, but it never charges the blade and doesn't use up a charge. The move each weapon uses: the Katana's drawing cut (done right away, 22 damage, 170 degrees wide), the Massive Sword's rising cut, the Scythe's full spin, the Great Spear's first thrust, the Great Hammer's drop, the Twin Knives' crossing cut, the Great Bow's shot, the Chain Sickle's snap, and the Fists' and the Armament's kick. Each element's strike, then its deep strike: Fire, Burning Edge (a sheet of flame along the swing and 3 metres past it, 2 Burns on everything it reaches, and the ground burns for 3 seconds), then Burnt Offering (a pillar of flame on the enemy hit: 30 damage, and its burn is set off). Lightning, Flash Cut (a 5-metre lunge through enemies as a line of lightning, 50% more than the blow's damage, 2 Static), then Down the Channel (bolts come down along the whole line 0.4 seconds later). Wind, Cutting Wind (a crescent out to 7 metres, 60% of the blow's damage, 2 Unsteady, a 1-metre push), then Whirl Cut (the first enemy is held in the air for 1 second). Ice, Frost Bite (a spike of ice through each enemy hit: 2 Chill, held for 0.8 seconds), then Ice Through (frozen right away if it has three Chill). Water, Lash (a whip that reaches twice as far as the weapon, 80% of the blow's damage, Soaked, pulled 1.5 metres in), then Thrown on the Reef (thrown 5 metres away). Life, Grown Into It (2 Seeded and a green shoot), then Briar Root (rooted for 1 second). Earth, Broken Ground (four slabs of rock heaved up in a 4-metre line: 14 damage, 25 stagger, Tremor), then Mountain Cleaver (6.5 metres, 55 damage, 70 stagger, 2 Tremor). Metal, Struck Plate (a ripple 3 metres around the enemy hit, 10 damage, Sundered), then Red Iron (50% of the blow's damage again and two Sundered on it). Light, Ray Along the Edge (a ray 6 metres out: 10 damage, 15 stagger, Marked), then The Sun on the Blade (the same cut at half strength on every Marked enemy within 8 metres). Dark, Taken (everything hit is dragged 2 metres toward you: 12 damage, 20 stagger, Cursed), then Yama's Noose (40 damage and 50 stagger to the enemy you face within 8 metres). Poison, Venom Flick (a string of venom 5 metres ahead and a puddle that gives a dose once a second for 3 seconds), then Nine Times Refined (six doses on what the cut hit).
 
-**What sets it off.** L2 with R1 or R2 (Left Ctrl with a mouse button). A strike pressed while its button waits says "Not ready"; a deep strike without 20 mana says "No mana".
+**What sets it off.** L2 with R1 or R2 (Left Ctrl with a mouse button). If you press a strike while its button is waiting, it says "Not ready". A deep strike without 20 mana says "No mana".
 
-**How to use it.** The strike is your element at the weapon's reach and in the weapon's shape: a hammer's drop lays it in a circle, a spear's thrust in a line. Use it to open a fight or to lay your affliction on a crowd. With two elements, R1 (RB) is the first element's strike and R2 (RT) the second's, and neither costs mana: the strike is how your weapon lays the second element. Carrying one element, or the same one twice (all in), R2 is that element's deep strike for 20 mana, but only once you have bought its Devotion. Until then, R2 does the plain strike and costs nothing.
+**How to use it.** The strike is your element at your weapon's reach and in your weapon's shape: a hammer's drop puts it in a circle, a spear's thrust in a line. Use it to start a fight or to add your affliction to a crowd. With two elements, R1 (RB) is the first element's strike and R2 (RT) is the second's, and neither costs mana: the strike is how your weapon adds the second element. If you carry one element, or the same one twice (all in), R2 is that element's deep strike for 20 mana, but only once you've bought its Devotion. Until then, R2 does the plain strike and costs nothing.
 
-**How it looks.** The carrier's arc in the element's colour, then the element along what it covered: flame, lightning, wind, ice, water, vines, stone, ripples, a ray, shadow or venom. Under the spell diamond, two small rings, one for each button, with their waits.
+**How it looks.** The weapon's swing in the element's colour, then the element along what it covered: flame, lightning, wind, ice, water, vines, stone, ripples, a ray, shadow or venom. Under the spell diamond, there are two small rings, one for each button, showing their waits.
 
 ## spell-diamond
 Title: The spell diamond
 Group: Spells and cooldowns
-**What it is.** Your spells on the screen, in the bottom-right corner: the four slots laid out like the face buttons that cast them, the surge in the middle, the two infused strikes under them and the charged blade's pips beside them.
+**What it is.** Your spells on the screen, in the bottom-right corner: the four slots laid out like the face buttons that cast them, the surge in the middle, the two infused strikes under them, and the charged blade's dots next to them.
 
-**The numbers.** Small at all times, so the waits can be read in a fight; it grows to full size while L2 (or Left Ctrl) is held, with each spell's name, and shrinks back when you let go. Each slot shows its spell's picture or initials, its button, its wait and its mana price.
+**The numbers.** It is always small, so you can read the waits during a fight. It grows to full size while L2 (or Left Ctrl) is held, showing each spell's name, and shrinks back when you let go. Each slot shows its spell's picture or first letters, its button, its wait and its mana cost.
 
-**What sets it off.** Always shown while you hold an element. The buttons are named for whatever you used last: the pad's (Xbox or PlayStation) or the keys (1 to 4, and Ctrl with the mouse for the strikes). Rebind a slot in the controls and its new button shows at once.
+**What sets it off.** It is always shown while you carry an element. The buttons are named for whatever you used last: the controller's (Xbox or PlayStation) or the keys (1 to 4, and Ctrl with the mouse for the strikes). Change a slot's button in the controls, and its new button shows right away.
 
-**How to use it.** Glance at it between blows: a clear slot is ready, a shaded one is waiting. Hold L2 to read the names before you cast.
+**How to use it.** Glance at it between blows: a clear slot is ready, and a shaded one is waiting. Hold L2 to read the names before you cast.
 
-**How it looks.** Round dark buttons, each ringed in the colour of its own spell's element (with two elements carried, a slot of each colour); the surge ringed in the colour of the surge you wear; the R2 strike named and coloured for the second element, or for the deep strike. A waiting slot is shaded, the shade sweeping back as a clock hand. A ready slot's ring swells for a moment. Prices in blue, red when you hold too little. The surge's ring brightens while it burns and is shaded while it waits.
+**How it looks.** Round dark buttons, each ringed in the colour of its spell's element (with two elements carried, there are slots of each colour). The surge is ringed in the colour of the surge you have picked. The R2 strike is named and coloured for the second element, or for the deep strike. A waiting slot is shaded, with the shading sweeping back like a clock hand. A ready slot's ring swells for a moment. Costs are shown in blue, and in red when you don't have enough. The surge's ring brightens while it is lit, and is shaded while it waits.
 
 ## flasks
 Title: Flasks
 Group: Resources
-**What it is.** Your healing draughts. Drinking takes a moment, so drink when you are safe.
+**What it is.** Your healing drinks. Drinking takes a moment, so drink when you're safe.
 
-**The numbers.** 3 flasks, 45 health each. A drink takes 0.8 s and heals at 0.4 s. If a blow or a roll stops the drink before then, the flask is not used. At full health the button does nothing, so a flask is never wasted. With none left, dealing 120 damage earns one back. Wellspring makes flasks heal half again as much.
+**The numbers.** 3 flasks, each healing 45. A drink takes 0.8 seconds and heals at 0.4 seconds. If a blow or a roll stops the drink before then, the flask isn't used up. At full health, the button does nothing, so you never waste a flask. With none left, dealing 120 damage earns one back. Wellspring makes flasks heal 50% more.
 
-**What sets it off.** The flask button. A rest fire refills them all.
+**What sets it off.** The flask button. A rest fire refills all of them.
 
-**How to use it.** Drink after a dodge has put distance between you and the enemy, or while it is staggered. With every flask gone, keep fighting to earn one back. Some enemies come for your flask when they see you drink.
+**How to use it.** Drink after a dodge has put some distance between you and the enemy, or while it is staggered. With every flask gone, keep fighting to earn one back. Some enemies come at you when they see you drink.
 
-**How it looks.** Flasks drawn beside your bars, one for each you carry. With none left, the first slowly fills as you earn it back, and the words "Flask earned" appear when it is full.
+**How it looks.** Flasks drawn next to your bars, one for each you carry. With none left, the first one slowly fills up as you earn it back, and the words "Flask earned" appear when it is full.
 
 ## shards
 Title: Shards
 Group: Resources
-**What it is.** The currency of the upgrade chart. Spend them at a rest fire to learn marks on your element's tree.
+**What it is.** The money for the upgrade chart. Spend them at a rest fire to learn marks on your element's tree.
 
-**The numbers.** Most enemies give 1 the first time they fall, the stronger gilded ranks up to 3, an elite 3 and Narukami 5. Marks cost 1 (minor), 2 (root), 3 (major), 4 (spell), 6 (keystone), and 3 to 5 on a mixed branch.
+**The numbers.** Most enemies give 1 the first time you beat them. The stronger gilded ones give up to 3, an elite gives 3, and Narukami gives 5. Marks cost 1 (minor), 2 (root), 3 (major), 4 (spell), 6 (keystone), and 3 to 5 on a mixed branch.
 
-**What sets it off.** Killing enemies. In the full game, unspent Shards are lost when you fall. In the lands, the enemies you killed since your last rest carry them back, glowing, and killing them returns the Shards. Falling again first loses them for good.
+**What sets it off.** Killing enemies. In the full game, you lose your unspent Shards when you fall. In the lands, the enemies you killed since your last rest carry them, glowing, and killing them gets the Shards back. If you fall again first, they're gone for good.
 
-**How to use it.** In the playtest: resting gives unlimited Shards and a fall loses nothing, so learn anything you want and try every tree.
+**How to use it.** In the playtest, resting gives you unlimited Shards and falling loses nothing, so learn anything you want and try every tree.
 
-**How it looks.** "Shards" and a count on the HUD. Motes fly from each body to you, and the count swells as they land.
+**How it looks.** "Shards" and a count on the screen. Little lights fly from each body to you, and the count grows as they land.
 
 ## memories
 Title: Memories
 Group: Resources
-**What it is.** The second currency, earned by beating people. It will buy the weapon tree, the Way, and the Body branch of health, stamina, flasks and poise. Memories do not exist yet.
+**What it is.** The second kind of money, earned by beating people. It will buy the weapon tree (the Way) and the Body branch, which covers health, stamina, flasks and steadiness. Memories don't exist yet.
 
-**The numbers.** None yet. Memories arrive in a later phase of the playtest (phase 5), with the Way.
+**The numbers.** None yet. Memories will arrive in a later phase of the playtest (phase 5), along with the Way.
 
-**What sets it off.** The plan is that Memories come from beating each kind of enemy for the first time, and from elites, named fighters and gods, so they cannot be farmed.
+**What sets it off.** The plan is for Memories to come from beating each kind of enemy for the first time, and from elites, named fighters and gods, so you can't farm them.
 
-**How to use it.** In the playtest, Memories will be unlimited, like Shards, so every technique can be tried. In the full game they are kept when you fall.
+**How to use it.** In the playtest, Memories will be unlimited, like Shards, so you can try every technique. In the full game, you keep them when you fall.
 
 **How it looks.** Not shown yet.
 

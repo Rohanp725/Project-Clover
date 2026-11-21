@@ -32,6 +32,12 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 - marks/light.md, light.daybreak: the beam "bites every 0.1 seconds" for 12 a bite (48 over 0.4 seconds) and is also
   "six rings' worth" with rings of 8 (also 48); the Empower makes "each ring 10" (60). Both ways of counting were
   kept as written.
+- marks/mocksuns.md, mocksuns.widefan: "What it does" says the Prism fan reaches 8 metres, "The numbers" says 7 metres
+  beyond the enemy. Both kept.
+- marks/turnedtostone.md, turnedtostone.heavycurse: says the stone climbs "in half a second, not one", but the shape's
+  numbers say the enemy slows to a stop "over 2 seconds". Both kept.
+- effects.md, two-elements: "(the owner's decision of 2026-11-19)" is a note to the team, not to players. Kept as
+  "the owner decided this on 2026-11-19"; it could probably be cut.
 - marks/fire.md, fire.sun: "it rises in 1.5 seconds if Kindle has 3 left" was read as "if Kindle has 3 seconds left".
 
 ## Files
@@ -107,7 +113,9 @@ Lines whose meaning was not clear. The facts were kept and written as clearly as
 
 ### 2. The guide to effects
 
-- [ ] effects.md
+- [ ] effects.md (too long to rewrite in one go, so it is done in three parts, each committed):
+  part 1, "# The guide to effects" to "## memories": done. Part 2, "## reactions" to "## reaction-kindling-point":
+  to do. Part 3, "## reaction-the-grudge" to the end: to do.
 
 ### 3. What's new (older sections only; the 0.5 Phase 4 section is already plain)
 
