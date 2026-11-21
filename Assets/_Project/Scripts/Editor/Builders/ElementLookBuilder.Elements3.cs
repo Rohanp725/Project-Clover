@@ -310,6 +310,7 @@ namespace Clover.EditorTools
                 float first = FirstShown(onBody);
                 onBody["duration_s"] = (double)seconds;
                 AddElements3(onBody, key + "@b", first, facing, lists, elementArt, glow);
+                if (MarksStruck(look)) AddStrikeRaise(look, key + "@b", first, facing, lists);
             }
             // Red Hot's blast of fire through the enemy, as the Flame Wave's front.
             BuildBlasts(Elements3Looks(), lists, elementArt, glow);
@@ -400,6 +401,7 @@ namespace Clover.EditorTools
         private static Dictionary<string, object> Slice(Dictionary<string, object> look, Cut cut, List<Vector3> bodies, Vector3 player, float from, float to, float seconds)
         {
             Vector3 frame = cut == Cut.AboutPlayer || bodies.Count == 0 ? player : bodies[0];
+            bool marked = MarksStruck(look);
             var groups = new List<object>();
             foreach (Dictionary<string, object> group in (List<object>)look["groups"])
             {
@@ -417,7 +419,10 @@ namespace Clover.EditorTools
                     string placement = instance.Count > 4 ? instance[4] as string : "b";
                     Vector3 at = Vec(instance[1], Vector3.zero) + (onPlayer ? player : Vector3.zero);
                     int body = BodyOf(motion, at, bodies);
-                    bool bodys = !onPlayer && body >= 0 && (placement != "g" || cut == Cut.BladeBlow
+                    // A recipe that marks what is made once per enemy struck says which pieces are a body's: those, and
+                    // no piece that merely stands near one (a stone heaved up beside an enemy is the cut's, not its).
+                    bool bodys = marked ? PerStruckEnemy(motion) && body >= 0
+                        : !onPlayer && body >= 0 && (placement != "g" || cut == Cut.BladeBlow
                         || new Vector2(at.x - bodies[body].x, at.z - bodies[body].z).magnitude <= BodyGround);
                     bool keep;
                     switch (cut)
@@ -466,6 +471,8 @@ namespace Clover.EditorTools
                     // The trails along the stand-in's swing: the swing trails draw them along the real weapon's.
                     if (System.Text.RegularExpressions.Regex.IsMatch(name, @"_\d\d\d_trail")) continue;
                     int body = centre.StartsWith("body ") ? CentreBody(centre) : -1;
+                    // A ribbon made per enemy struck belongs to its body; any other is the cut's, whatever it is drawn about.
+                    if (marked && !PerStruckEnemy(ribbon["motion"] as Dictionary<string, object>)) body = -1;
                     Vector3 middle = centre == "player" ? player : body >= 0 && body < bodies.Count ? bodies[body] : Vector3.zero;
                     bool keep;
                     switch (cut)

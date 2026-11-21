@@ -138,6 +138,8 @@ namespace Clover.EditorTools
                 copy.Remove("revision_of");
                 looks.Add(copy);
             }
+            // The infused strikes redrawn from the owner's swing comments (ElementLookBuilder.Strikes), under their own keys.
+            looks.AddRange(StrikeLooks());
             return looks;
         }
 

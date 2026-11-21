@@ -22,6 +22,12 @@ namespace Clover.Player.Forms
         // stones bursting up under the one faced.
         private static readonly string[] Spells = { "flame_wave", null, "gust", null, "riptide", "briar_patch", "stone_rise", null, null, null, "miasma" };
         private static readonly string[] Strikes = { null, null, "cutting_wind", "frost_bite", null, "grown_into_it", "broken_ground", null, null, "taken", null };
+        // The strikes the Blender worker redrew from the owner's swing comments (2026-11-21), growing out of the cut: played
+        // in place of the element's earlier strike once built (Clover > Build > Element Looks builds the approved ones).
+        private static readonly string[] Redrawn = { null, null, null, null, null, null, "strike_earth", "strike_metal", "strike_light", "strike_dark", "strike_poison" };
+
+        /// <summary>How far out the redrawn strikes' recipe swung its blade tip, metres: their arcs are fitted from it to the weapon's reach.</summary>
+        public const float RedrawnTip = 1.55f;
 
         /// <summary>Tailwind, the wind's surge.</summary>
         public const string Tailwind = Prefix + "tailwind";
@@ -30,6 +36,7 @@ namespace Clover.Player.Forms
         private static readonly string[] HitKeys = Keys(Blades, "_hit1", "_hit2", "_hit3");
         private static readonly string[] SpellKeys = Keys(Spells, "", "@b");
         private static readonly string[] StrikeKeys = Keys(Strikes, "", "@b");
+        private static readonly string[] RedrawnKeys = Keys(Redrawn, "", "@b");
 
         private static string[] Keys(string[] slugs, params string[] endings)
         {
@@ -51,7 +58,18 @@ namespace Clover.Player.Forms
 
         public static string SpellKey(int element, bool onBody) => Key(SpellKeys, 2, element, onBody ? 1 : 0);
 
-        public static string StrikeKey(int element, bool onBody) => Key(StrikeKeys, 2, element, onBody ? 1 : 0);
+        public static string StrikeKey(int element, bool onBody) =>
+            IsRedrawn(element) ? Key(RedrawnKeys, 2, element, onBody ? 1 : 0) : Key(StrikeKeys, 2, element, onBody ? 1 : 0);
+
+        /// <summary>True when the element's infused strike plays its redrawn look (the end effect grown out of the cut).</summary>
+        public static bool IsRedrawn(int element)
+        {
+            string about = RedrawnKey(element, false);
+            return about != null && (ElementLooks.Find(about) >= 0 || ElementLooks.Find(RedrawnKey(element, true)) >= 0);
+        }
+
+        /// <summary>The key a redrawn strike is built under, built or not; null for an element with none.</summary>
+        public static string RedrawnKey(int element, bool onBody) => Key(RedrawnKeys, 2, element, onBody ? 1 : 0);
 
         /// <summary>True when the element's charged blade lands in its elements 3 look.</summary>
         public static bool HasBlade(int element) => HitKey(element, 1) != null && ElementLooks.Find(HitKey(element, 1)) >= 0;
@@ -107,11 +125,18 @@ namespace Clover.Player.Forms
         /// striker and its look on each body it struck (the first <paramref name="count"/> of <paramref name="struck"/>).
         /// False when there is none.
         /// </summary>
-        public static bool PlayStrike(int element, Vector3 feet, Vector3 forward, Component[] struck, int count)
+        public static bool PlayStrike(int element, Vector3 feet, Vector3 forward, Component[] struck, int count) => PlayStrike(element, feet, forward, struck, count, 0f);
+
+        /// <summary>
+        /// The same, a redrawn strike's arc fitted to the weapon's <paramref name="reach"/> (metres; 0 keeps the recipe's):
+        /// its stones and glare follow the weapon's own tip, a Massive Sword's further out than a Katana's.
+        /// </summary>
+        public static bool PlayStrike(int element, Vector3 feet, Vector3 forward, Component[] struck, int count, float reach)
         {
             if (!ElementArt.Ready || !HasStrike(element)) return false;
+            float size = reach > 0f && IsRedrawn(element) ? Mathf.Clamp(reach / RedrawnTip, 0.85f, 1.5f) : 1f;
             // Either half may be empty: Frost Bite is all on the bodies it strikes, Broken Ground all on its line.
-            ElementLooks.PlayAt(ElementLooks.Find(StrikeKey(element, false)), feet, Yaw(forward));
+            ElementLooks.PlayAt(ElementLooks.Find(StrikeKey(element, false)), feet, Yaw(forward), size);
             string onBody = StrikeKey(element, true);
             for (int i = 0; struck != null && i < count && i < struck.Length; i++)
                 if (struck[i] != null) OnBody(onBody, struck[i].transform, forward);

@@ -113,7 +113,8 @@ namespace Clover.Tests
             foreach (var look in set.Looks)
             {
                 Assert.Less(look.PartCount, ElementLooks.MostParts, $"{look.Key}: a look built at the cap has lost pieces");
-                Assert.Greater(look.PartCount, 0, look.Key);
+                // A strike's look that only lifts the body struck (Earth's stones throwing it up) has no pieces of its own.
+                if (look.RaiseCount == 0) Assert.Greater(look.PartCount, 0, look.Key);
                 for (int k = 0; k < look.PartCount; k++)
                 {
                     var part = set.Parts[look.FirstPart + k];

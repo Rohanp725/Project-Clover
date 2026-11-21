@@ -42,8 +42,12 @@ namespace Clover.Player.Forms
             float yaw = ElementArt.Turn(forward);
             float reach = Mathf.Max(1.5f, print.Reach);
             // The elements 3 strikes (Frost Bite's spike, Cutting Wind's crescent, Taken's hooks, Grown Into It's shoots,
-            // Broken Ground's slabs), about the player and on each one struck, in place of the pieces below.
-            if (ElementMoves.PlayStrike(element.Index, Ground(print.Origin) - Vector3.up * 0.05f, forward, struck, count)) return true;
+            // Broken Ground's slabs), about the player and on each one struck, in place of the pieces below. Earth, Metal and
+            // Light play the strikes redrawn from the owner's swing comments (2026-11-21) once built: stones heaving up along
+            // the cut's arc, a steel glint and shards off each one struck, a warm glare line from the cut flaring on each
+            // one struck; their arcs fitted to an arc's or ring's reach (a lane or a shot keeps the recipe's).
+            float arcReach = print.Shape == FootprintShape.Arc || print.Shape == FootprintShape.Ring ? print.Reach : 0f;
+            if (ElementMoves.PlayStrike(element.Index, Ground(print.Origin) - Vector3.up * 0.05f, forward, struck, count, arcReach)) return true;
             switch (element.Index)
             {
                 case ElementSubstance.Fire:

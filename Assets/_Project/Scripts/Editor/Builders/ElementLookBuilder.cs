@@ -2096,7 +2096,7 @@ namespace Clover.EditorTools
                 }
             }
             if (KitAliases.TryGetValue(kit + "|" + kitObject, out var alias)) (kit, kitObject) = alias;
-            string path = kit == E2Kit || kit == BrazierKit || kit == E3Kit || kit == E4Kit || kit == R5Kit ? ReactionArtBuilder.CombosFolder + "/" + kit : ReactionArtBuilder.KitPath(kit);
+            string path = kit == E2Kit || kit == BrazierKit || kit == E3Kit || kit == E4Kit || kit == R5Kit || kit == StrikesKit ? ReactionArtBuilder.CombosFolder + "/" + kit : ReactionArtBuilder.KitPath(kit);
             comboTurn = path.StartsWith(ReactionArtBuilder.CombosFolder);
             if (!kits.TryGetValue(path, out var loaded))
             {
@@ -2472,6 +2472,7 @@ namespace Clover.EditorTools
         {
             if (material != null && LookPaints.TryGetValue(material, out var paint)) return paint;
             if (material != null && Paints.TryGetValue(material, out paint)) return paint;
+            if (material != null && StrikePaints.TryGetValue(material, out paint)) return paint;
             if (ReactionArtBuilder.TryPaint(material, out paint)) return paint;
             if (material != null) Unknown.Add(material);
             return new ReactionArtBuilder.Paint(0.5f, 0.5f, 0.5f);
