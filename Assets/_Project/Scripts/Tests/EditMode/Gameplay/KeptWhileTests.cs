@@ -404,6 +404,19 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void EarthedAndSeizedSpareTheEnemyTheyStartFrom()
+        {
+            var earthed = ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Static, AfflictionKind.Tremor));
+            var seized = ReactionTable.MarkFor(AfflictionPairs.Index(AfflictionKind.Static, AfflictionKind.Soaked));
+            Assert.IsNotNull(earthed);
+            Assert.IsNotNull(seized);
+            var bursts = earthed.Effects.Where(effect => effect.Do == UpgradeAction.Burst).ToList();
+            Assert.AreEqual(2, bursts.Count);
+            Assert.IsTrue(bursts.All(effect => effect.SparesTarget), "the grounded one does not stand on its own fern");
+            Assert.IsTrue(seized.Effects.Single(effect => effect.Do == UpgradeAction.Hazard).SparesTarget, "the film does not charge the seized one");
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))

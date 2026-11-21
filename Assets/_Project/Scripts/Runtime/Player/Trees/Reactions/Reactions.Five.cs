@@ -31,13 +31,13 @@ namespace Clover.Player.Trees
 
             // Lightning and Earth (46). All its Static runs into the floor at once: 5 damage and 3 stagger for each stack
             // spent, and one Tremor, to every enemy within 4 m; it is rooted 1 s.
-            // NEEDS: a burst that spares the one it starts from: the grounded enemy stands on its own figure and takes it
-            // too. And the scorched fern left on the floor for 3 s.
+            // The burst spares the grounded enemy it starts from (SparesTarget).
+            // NEEDS: the scorched fern left on the floor for 3 s.
             to.Add(Reaction(AfflictionKind.Static, AfflictionKind.Tremor,
-                "Static meets Tremor: its charge runs into the ground as a burnt fern 4 m round it, 5 and 3 stagger a stack and a Tremor to all on it. It is rooted 1 s.",
+                "Static meets Tremor: its charge runs into the ground as a burnt fern 4 m round it, 5 and 3 stagger a stack and a Tremor to all the others on it. It is rooted 1 s.",
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Static },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 4f, Damage = 5f, Stagger = 3f, PerStack = true, Affliction = AfflictionKind.Static },
-                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 4f, Affliction = AfflictionKind.Tremor, Stacks = 1 },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 4f, Damage = 5f, Stagger = 3f, PerStack = true, Affliction = AfflictionKind.Static, SparesTarget = true },
+                new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Burst, Radius = 4f, Affliction = AfflictionKind.Tremor, Stacks = 1, SparesTarget = true },
                 new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Grounded, Seconds = 1f, Flags = ConditionFlags.Rooted } }));
 
             // Wind and Metal (47). Its loose plates whirl round it 1.5 m for 3 s: one shard for each notch, plus one, each
