@@ -5,77 +5,77 @@ Frost Heave (`docs/design/steel/pairs_d3.md`, "Ice and Earth"). Drawn in the hea
 both carried.
 
 ## frostheave.shape
-**What it does.** Opens Frost Heave's two shapes. At a rest fire you choose which one your Frost Heave wears, and from then on it runs instead of the plain one. **Sorted Stones**: the heave pushes everything else out, leaving the heaved enemy alone with you. **Pingo**: the mound has a core of ice that bursts.
+**What it does.** Unlocks two new shapes for Frost Heave. At a rest fire, you pick which shape your Frost Heave uses. From then on, it uses that shape instead of the plain one. **Sorted Stones**: the heave pushes every other enemy away, leaving the heaved enemy alone with you. **Pingo**: the mound has a core of ice that bursts.
 
-**When it happens.** Every time Frost Heave fires (Tremor landing on a chilled enemy, or Chill on a shaken one) while Ice and Earth are both carried. Before this mark is bought, or with only one of the two carried, the plain Frost Heave runs.
+**When it happens.** Every time Frost Heave goes off while you carry both Ice and Earth. Frost Heave goes off when Tremor lands on a chilled enemy, or when Chill lands on a shaken one. If you have not bought this mark, or you carry only one of the two elements, you get the plain Frost Heave.
 
-**The numbers.** Mix, 3 Shards. Both heave it 0.4 seconds on: 12 damage, 25 stagger, thrown up 1 second. Sorted Stones: everything else within 3 metres is pushed 3 metres out. Pingo: 2 seconds later the mound bursts, 24 damage and two Chill within 2.5 metres. Frost Heave rests 6 seconds on each enemy.
+**The numbers.** Mix, 3 Shards. Both shapes heave the enemy up 0.4 seconds later. It takes 12 damage and 25 stagger and is thrown into the air for 1 second. Sorted Stones: every other enemy within 3 metres is pushed 3 metres away. Pingo: 2 seconds later, the mound bursts for 24 damage and two Chill within 2.5 metres. After Frost Heave goes off on an enemy, it can't go off on that enemy again for 6 seconds.
 
-**Works with.** Hoarfrost and Stone Rise to bring the two, Hard Frost, The Hag's Staff.
+**Works with.** Hoarfrost and Stone Rise to set it up, Hard Frost, The Hag's Staff.
 
-**Example.** A duel in a crowd: Sorted Stones clears the circle. A pack chasing you: Pingo, and lead them over it.
+**Example.** A one-on-one fight in a crowd: Sorted Stones clears space around you. A pack chasing you: use Pingo, and lead them over it.
 
-**Not built yet.** No mound or ring of stones stands on the floor yet; Sorted Stones shoves the others out instead.
+**Not built yet.** No mound or ring of stones appears on the floor yet. For now, Sorted Stones just shoves the other enemies away.
 
 ## frostheave.hardfrost
-**What it does.** Heavy blows on a chilled enemy shake it; heavy blows on a shaken enemy chill it.
+**What it does.** Heavy blows on a chilled enemy shake it. Heavy blows on a shaken enemy chill it.
 
-**When it happens.** Every heavy blow or finisher that lands, while Ice and Earth are both carried.
+**When it happens.** Every heavy blow or finisher that lands, while you carry both Ice and Earth.
 
-**The numbers.** Mix, 3 Shards. One Tremor on the chilled, one Chill on the shaken.
+**The numbers.** Mix, 3 Shards. One Tremor on a chilled enemy, or one Chill on a shaken enemy.
 
 **Works with.** Frost Heave (one heavy blow starts it), Permafrost, Winter in the Bones.
 
-**Example.** Chill a soldier with Hoarfrost and one heavy blow heaves it.
+**Example.** Chill a soldier with Hoarfrost, and one heavy blow heaves it.
 
 ## frostheave.footing
 **What it does.** A perfect guard while you stand within 2 metres of a mound heaves the ground under the attacker.
 
-**When it happens.** Each perfect guard (press the guard button just before a blow lands) against an enemy carrying both Chill and Tremor.
+**When it happens.** Each perfect guard (press the guard button just before a blow lands) against an enemy that has both Chill and Tremor.
 
-**The numbers.** Mix, 3 Shards. Frost Heave goes off on the attacker, whatever its rest.
+**The numbers.** Mix, 3 Shards. Frost Heave goes off on the attacker, even if it would normally have to wait.
 
 **Works with.** Frost Heave, Hard Frost, Mountain Stance.
 
-**Example.** A chilled, shaken brute swings: guard it perfectly and it goes up.
+**Example.** A chilled, shaken brute swings. Guard it perfectly, and it goes flying up.
 
-**Not built yet.** It answers an attacker carrying both rather than asking you to stand by a mound.
+**Not built yet.** For now, it works on any attacker that has both afflictions, instead of needing you to stand next to a mound.
 
 ## frostheave.permafrost
-**What it does.** Tremor does not fade from a chilled enemy.
+**What it does.** Tremor doesn't fade from a chilled enemy.
 
-**When it happens.** Always on once learned, while Ice and Earth are both carried.
+**When it happens.** Always on once you learn it, while you carry both Ice and Earth.
 
-**The numbers.** Mix, a minor, 1 Shard.
+**The numbers.** Mix, a minor mark, 1 Shard.
 
-**Works with.** Hard Frost, which it grows from, Frost Heave.
+**Works with.** Hard Frost, which it comes after on the chart, Frost Heave.
 
 **Example.** A chilled soldier stays shaken.
 
-**Not built yet.** It does nothing yet: an affliction kept while another lasts is still to come.
+**Not built yet.** It does nothing yet. The game can't yet make one affliction last as long as another one does.
 
 ## frostheave.bones
-**What it does.** A Frozen enemy that is shaken stays frozen twice as long, and shattering it heaves the ground under every enemy within 4 metres.
+**What it does.** A shaken enemy that is Frozen stays frozen twice as long. Shattering it heaves the ground under every enemy within 4 metres.
 
-**When it happens.** Each time a shaken enemy shatters, while Ice and Earth are both carried.
+**When it happens.** Each time a shaken enemy is shattered, while you carry both Ice and Earth.
 
-**The numbers.** Mix, keystone, 5 Shards. Everything within 4 metres is thrown up 1 second and takes 12 damage, 25 stagger and a Tremor, at most three times a second.
+**The numbers.** Mix, keystone, 5 Shards. Everything within 4 metres is thrown into the air for 1 second and takes 12 damage, 25 stagger and a Tremor, at most three times a second.
 
 **Works with.** Hard Frost, Hoarfrost, Frost Heave.
 
-**Example.** Shatter a frozen, shaken soldier in a pack and the pack goes up.
+**Example.** Shatter a frozen, shaken soldier in a pack, and the whole pack goes flying up.
 
-**Not built yet.** The freeze is not yet held twice as long.
+**Not built yet.** The freeze doesn't last twice as long yet.
 
 ## frostheave.hagsstaff
-**What it does.** You strike the ground and hammer the frost into it. A disc round you goes hard and white; each second every enemy on it is chilled and shaken, so it heaves when the two meet.
+**What it does.** You strike the ground and hammer frost into it. A circle around you turns hard and white. Each second, every enemy on it is chilled and shaken, so it heaves when the two afflictions meet.
 
-**When it happens.** From a spell slot, while Ice and Earth are both carried: cast it with that slot's button (hold L2 and a face button, or 1 to 4). Its first landing charges your blade with Ice.
+**When it happens.** Cast it from a spell slot while you carry both Ice and Earth. Press that slot's button (hold L2 and a face button, or press 1 to 4). The first time it lands, it charges your blade with Ice.
 
-**The numbers.** Mix, duo spell, breaker, 5 Shards. No mana: it waits 12 seconds after a cast, less with weapon play. 6 metres round you for 6 seconds: each second 2 damage, a Chill and a Tremor.
+**The numbers.** Mix, duo spell, breaker, 5 Shards. It costs no mana. After you cast it, you must wait 12 seconds to cast it again. Fighting with your weapon makes the wait shorter. It covers 6 metres around you for 6 seconds. Each second, it deals 2 damage, a Chill and a Tremor.
 
 **Works with.** Frost Heave and its shapes, Hard Frost, Winter in the Bones.
 
-**Example.** Strike it in the middle of a pack and fight among the heaves.
+**Example.** Strike it in the middle of a pack, and fight among the enemies flying up.
 
-**Not built yet.** Your heavy blows on the frozen ground do not yet drive frost under the one struck.
+**Not built yet.** Your heavy blows on the frozen ground don't push frost under the enemy you hit yet.
