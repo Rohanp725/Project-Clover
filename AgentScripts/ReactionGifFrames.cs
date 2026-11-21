@@ -79,8 +79,13 @@ public class ReactionGifFramesRunner : MonoBehaviour
     // The reactions whose condition beats at the poison's bites: filmed long enough to see them.
     private static readonly string[] Biting = { "Nerve Fire", "Venom Rime" };
     private const int Rate = 20, Before = 3, After = 8, MostFrames = 260, Width = 960, Height = 540;
-    private const float LeastSeconds = 2.6f, BitingSeconds = 4.5f;
-    private const string Root = "review/gifs/reactions/frames/";
+    private const float LeastSeconds = 4.2f, BitingSeconds = 4.5f;
+    // AgentScripts/reaction_gif_close.txt present: each film is a close-up, the game camera drawn in to about 5 m from the
+    // struck one (the owner's note of 2026-11-20 on pieces floating off the body), to review/gifs/reactions/close/.
+    // The only-list may also name an affliction alone, "aff:Chill:2" (the kind and its depth), laid on every enemy stood.
+    private static bool Close => System.IO.File.Exists("AgentScripts/reaction_gif_close.txt");
+    private static string Root => Close ? "review/gifs/reactions/close/" : "review/gifs/reactions/frames/";
+    private const float CloseDistance = 5f;
 
     private Texture2D picture;
     private FieldInfo instanceField, showingsField;
@@ -177,7 +182,9 @@ public class ReactionGifFramesRunner : MonoBehaviour
         {
             if (!(bool)type.GetField("Active").GetValue(one)) continue;
             var body = (Transform)type.GetField("Body").GetValue(one);
-            text.Append(set.Looks[(int)type.GetField("Look").GetValue(one)].Key).Append(" on ").Append(body != null ? body.name : "-").Append("; ");
+            float age = (float)type.GetField("Age").GetValue(one), veiledAt = (float)type.GetField("VeiledAt").GetValue(one), keptAt = (float)type.GetField("KeptAt").GetValue(one);
+            text.Append(set.Looks[(int)type.GetField("Look").GetValue(one)].Key).Append(" on ").Append(body != null ? body.name : "-")
+                .Append($" age {age:0.00}{(veiledAt >= 0f && veiledAt >= keptAt ? " veiled" : "")}").Append("; ");
         }
         text.Append($"reaction art parts {ReactionArt.PartsShown}, lamps {ReactionArt.LampsShown}");
         return text.ToString();
@@ -211,6 +218,17 @@ public class ReactionGifFramesRunner : MonoBehaviour
         int left = Mathf.Clamp(Mathf.RoundToInt((low + high) * 0.5f) - across / 2, 0, 1920 - across);
         int bottom = Mathf.Clamp(Mathf.RoundToInt((under + over) * 0.5f) - up / 2, 0, 1080 - up);
         return new RectInt(left, bottom, across, up);
+    }
+
+    // A close-up's window: 1440x810 of the 1920x1080 view (drawn down to the film's size) about the struck one's chest.
+    private RectInt CloseWindow(Vector3 host)
+    {
+        var cam = Camera.main;
+        Vector3 onScreen = cam.WorldToScreenPoint(host + Vector3.up * 1.1f);
+        float scaleX = 1920f / Screen.width, scaleY = 1080f / Screen.height;
+        int left = Mathf.Clamp(Mathf.RoundToInt(onScreen.x * scaleX) - 720, 0, 1920 - 1440);
+        int bottom = Mathf.Clamp(Mathf.RoundToInt(onScreen.y * scaleY) - 405, 0, 1080 - 810);
+        return new RectInt(left, bottom, 1440, 810);
     }
 
     private RectInt Window(Vector3 host)
@@ -401,6 +419,12 @@ public class ReactionGifFramesRunner : MonoBehaviour
             yield break;
         }
         Say($"cast: {string.Join(", ", cast.Select(enemy => enemy.Kind.Name))}");
+        // What each body measures out from its upright at its knees, its chest and its head (BodyGirth).
+        foreach (var enemy in cast)
+        {
+            int girth = BodyGirth.Slot(enemy.transform);
+            Say($"{enemy.Kind.Name} girth: {BodyGirth.RadiusAt(girth, enemy.BodyHeight * 0.3f):0.00} m at the knee, {BodyGirth.RadiusAt(girth, enemy.BodyHeight * 0.65f):0.00} at the chest, {BodyGirth.RadiusAt(girth, enemy.BodyHeight * 0.9f):0.00} at the head");
+        }
         // The floor's painted words, the training dummies and the afflicted row near the floor are not the look.
         hidden.AddRange(FindObjectsByType<TextMesh>(FindObjectsInactive.Exclude).Where(text => (text.transform.position - Middle).magnitude < 14f).Select(text => text.gameObject));
         hidden.AddRange(FindObjectsByType<TrainingDummy>(FindObjectsInactive.Exclude).Where(dummy => (dummy.transform.position - Middle).magnitude < 14f).Select(dummy => dummy.gameObject));
@@ -477,6 +501,7 @@ public class ReactionGifFramesRunner : MonoBehaviour
                 gameCamera.SetFraming(1f, ahead);
             }
             else if (gameCamera != null) gameCamera.ClearFraming();
+            if (gameCamera != null && Close) gameCamera.SetFraming(CloseDistance / gameCamera.Distance, -Stand);
             float clear = Time.unscaledTime + 8f;
             while ((!PoolEmpty() || Hazards.Alive > 0) && Time.unscaledTime < clear) yield return null;
             bool wasClean = PoolEmpty();
@@ -495,7 +520,8 @@ public class ReactionGifFramesRunner : MonoBehaviour
             if (slots != null) slots.SetActive(false);
             var window = Window(main.transform.position + (lane ? Away * 2.4f : Binding.Contains(look) && layout.Count > 1 ? NearestOther(count) * 0.5f
                 : Facings.ContainsKey(look) && recipeLayout != null && recipeLayout.Count > 1 ? recipeLayout[1] * 0.5f : Vector3.zero));
-            if (!lane && !Binding.Contains(look) && layout.Count > 1) window = GroupWindow(main.transform.position, count);
+            if (!lane && !Binding.Contains(look) && layout.Count > 1 && !Close) window = GroupWindow(main.transform.position, count);
+            if (Close) window = CloseWindow(main.transform.position);
             Say($"{name} window {window.x},{window.y} {window.width}x{window.height}");
             Time.captureFramerate = Rate;
             int frame = 0;
@@ -526,6 +552,20 @@ public class ReactionGifFramesRunner : MonoBehaviour
                 }
                 // What is drawn 0.8 s in, to tell the reaction's own look from the afflictions' and the game's.
                 if (frame - start == 16) Say($"{name} at 0.8 s: {LooksPlaying()}");
+                // After the reaction's look and its held aftermath: what the struck one still carries, and its looks' ages
+                // (an affliction cast again shows an age under the time since the reaction).
+                if (frame - start == 70 || frame - start == 80)
+                {
+                    var others = new StringBuilder();
+                    for (int i = 1; i < count && i < cast.Count; i++)
+                    {
+                        var other = cast[i];
+                        if (other == null || !other.gameObject.activeInHierarchy) continue;
+                        Vector3 off = other.transform.position - main.transform.position;
+                        others.Append($"{other.Kind.Name} {Vector3.Dot(off, Away):0.0} m on, {Vector3.Cross(Away, off).magnitude:0.0} m off: {AfflictionPairs.First(pair)} {other.Afflictions.Stacks(AfflictionPairs.First(pair))} {AfflictionPairs.Second(pair)} {other.Afflictions.Stacks(AfflictionPairs.Second(pair))}; ");
+                    }
+                    Say($"{name} at {(frame - start) / (float)Rate:0.0} s: {AfflictionPairs.First(pair)} {main.Afflictions.Stacks(AfflictionPairs.First(pair))}, {AfflictionPairs.Second(pair)} {main.Afflictions.Stacks(AfflictionPairs.Second(pair))}; others: {others}; {LooksPlaying()}");
+                }
                 bool longEnough = (frame - start) / (float)Rate >= least;
                 if (tail < 0 && frame - start >= 4 && PoolEmpty() && longEnough && (shownAt >= 0 || frame - start > 40)) tail = 0;
                 if (tail >= 0 && tail++ >= After) break;
@@ -547,6 +587,12 @@ public class ReactionGifFramesRunner : MonoBehaviour
             if (group) grouped++;
             yield return null;
         }
+        foreach (var entry in Only)
+        {
+            if (!entry.StartsWith("aff:")) continue;
+            yield return FilmAffliction(entry, player, summary);
+            filmed++;
+        }
         Time.captureFramerate = 0;
         if (Only.Length == 0) System.IO.File.WriteAllText(Root + "summary.txt", summary.ToString());
         Destroy(picture);
@@ -559,6 +605,62 @@ public class ReactionGifFramesRunner : MonoBehaviour
         Say($"filmed {filmed}, set off {setOff}, on a group {grouped}");
         Say("done");
         Destroy(gameObject);
+    }
+
+    // One affliction alone, laid to the depth named on every enemy stood (the main one and four round it), filmed 3.5 s.
+    private IEnumerator FilmAffliction(string entry, PlayerController player, StringBuilder summary)
+    {
+        var parts = entry.Split(':');
+        if (parts.Length < 3 || !System.Enum.TryParse(parts[1], out AfflictionKind kind) || !int.TryParse(parts[2], out int depth)) yield break;
+        string name = $"aff_{kind.ToString().ToLowerInvariant()}{depth}";
+        string folder = Root + name;
+        if (System.IO.Directory.Exists(folder)) System.IO.Directory.Delete(folder, true);
+        System.IO.Directory.CreateDirectory(folder);
+        layout.Clear();
+        Away = Vector3.right;
+        Stand = -3f * Away;
+        lane = false;
+        player.Teleport(Middle + Stand, Quaternion.LookRotation(Away, Vector3.up));
+        int count = Mathf.Min(cast.Count, 5);
+        StandCast(count);
+        var gameCamera = Camera.main != null ? Camera.main.GetComponent<TopDownCamera>() : null;
+        if (gameCamera != null)
+        {
+            if (Close) gameCamera.SetFraming(CloseDistance / gameCamera.Distance, -Stand);
+            else gameCamera.ClearFraming();
+        }
+        float clear = Time.unscaledTime + 8f;
+        while ((!PoolEmpty() || Hazards.Alive > 0) && Time.unscaledTime < clear) yield return null;
+        foreach (var enemy in cast) if (enemy != null && enemy.gameObject.activeInHierarchy) enemy.Afflictions.Clear();
+        yield return Real(1.8f);
+        var main = cast[0];
+        var slots = SpellDiamondHud.Instance != null ? SpellDiamondHud.Instance.gameObject : null;
+        if (slots != null) slots.SetActive(false);
+        var window = Close ? CloseWindow(main.transform.position) : GroupWindow(main.transform.position, count);
+        Time.captureFramerate = Rate;
+        int frame = 0;
+        for (; frame < Before; frame++)
+        {
+            yield return new WaitForEndOfFrame();
+            Grab(folder, frame, window);
+            yield return null;
+        }
+        for (int i = 0; i < count; i++)
+            if (cast[i] != null && cast[i].gameObject.activeInHierarchy) cast[i].Afflictions.Lay(kind, depth, 0f, 1f, LaySource.Spell, cast[i]);
+        int start = frame;
+        while (frame - start < 70)
+        {
+            yield return new WaitForEndOfFrame();
+            Grab(folder, frame, window);
+            frame++;
+            yield return null;
+        }
+        Time.captureFramerate = 0;
+        if (slots != null) slots.SetActive(true);
+        if (gameCamera != null) gameCamera.ClearFraming();
+        System.IO.File.WriteAllText(folder + "/info.txt",
+            $"name={kind} {depth}\nkind=affliction\nstart={start}\nshown_frame={start}\nimpact=0\nimpact_frame={start}\nframes={frame}\nended=True\nclean_before=True\nenemies={count}\nset_off=True\n");
+        Say($"{name}: {count} enemies, {frame} frames, main carries {main.Afflictions.Stacks(kind)}");
     }
 
     private void OnDestroy() => Time.captureFramerate = 0;

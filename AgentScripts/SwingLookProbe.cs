@@ -102,6 +102,52 @@ public class SwingLookProbeRunner : MonoBehaviour
     private bool filming, keepCalm;
     private int frame;
     private string folder;
+
+    // What is thrown or begun on the floor each frame of a clip, to trace a ring at the feet to its source: births in the
+    // ring emitters (Ring, TintRing) with their place and colour, and element looks begun (their key and body). Written
+    // to <clip>/rings.txt.
+    private readonly StringBuilder ringLog = new StringBuilder();
+    private ParticleSystem[] ringEmitters;
+    private readonly int[] ringCounts = new int[2];
+    private readonly ParticleSystem.Particle[] ringParticles = new ParticleSystem.Particle[256];
+    private readonly HashSet<int> stampsSeen = new HashSet<int>();
+
+    private void LogRings()
+    {
+        if (ringEmitters == null)
+        {
+            var vfx = FindAnyObjectByType<Vfx>();
+            var all = vfx != null ? (ParticleSystem[])typeof(Vfx).GetField("emitters", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(vfx) : null;
+            if (all == null) return;
+            ringEmitters = new[] { all[(int)VfxKind.Ring], all[(int)VfxKind.TintRing] };
+        }
+        for (int e = 0; e < ringEmitters.Length; e++)
+        {
+            var emitter = ringEmitters[e];
+            if (emitter == null) continue;
+            int count = emitter.GetParticles(ringParticles);
+            for (int p = 0; p < count; p++)
+            {
+                if (ringParticles[p].startLifetime - ringParticles[p].remainingLifetime > Time.deltaTime * 1.5f) continue;
+                var c = ringParticles[p].startColor;
+                ringLog.AppendLine($"f{frame} {(e == 0 ? "Ring" : "TintRing")} at {ringParticles[p].position - (player != null ? player.transform.position : Vector3.zero)} from player, colour {c.r},{c.g},{c.b}, size {ringParticles[p].startSize:0.00}");
+            }
+        }
+        var looksField = typeof(ElementLooks).GetField("instance", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+        var looks = looksField.GetValue(null);
+        if (looks == null) return;
+        var showings = (System.Array)typeof(ElementLooks).GetField("showings", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(looks);
+        var set = (ElementLookSet)typeof(ElementLooks).GetField("set", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance).GetValue(looks);
+        var type = showings.GetType().GetElementType();
+        foreach (var one in showings)
+        {
+            if (!(bool)type.GetField("Active").GetValue(one)) continue;
+            int stamp = (int)type.GetField("Stamp").GetValue(one);
+            if (!stampsSeen.Add(stamp)) continue;
+            var body = (Transform)type.GetField("Body").GetValue(one);
+            ringLog.AppendLine($"f{frame} look {set.Looks[(int)type.GetField("Look").GetValue(one)].Key} on {(body != null ? body.name : "the ground")}");
+        }
+    }
     private RectInt window;
     private int mostRibbons, mostSheaths, mostBladeSheaths;
     // The frames on which a cut streak was drawn (CutMarks.Drawn rose) or a blow landed (Wind's draw no streak): the
@@ -255,6 +301,7 @@ public class SwingLookProbeRunner : MonoBehaviour
                 landedWas = combat.BlowsLanded;
                 contacts.Add(frame);
             }
+            LogRings();
             Grab(frame);
             frame++;
         }
@@ -603,6 +650,7 @@ public class SwingLookProbeRunner : MonoBehaviour
         whiteAt.Clear();
         drawnWas = CutMarks.Drawn;
         landedWas = combat.BlowsLanded;
+        ringLog.Clear();
         filming = true;
         StartCoroutine(Filmer());
         yield return Until(() => frame >= Before, 20);
@@ -663,6 +711,7 @@ public class SwingLookProbeRunner : MonoBehaviour
         clip.Sheaths = mostSheaths;
         clip.BladeSheaths = mostBladeSheaths;
         clip.Fitted = trails.SourcesFitted;
+        System.IO.File.WriteAllText(folder + "/rings.txt", ringLog.ToString());
         System.IO.File.WriteAllText(folder + "/info.txt",
             $"weapon={weaponName}\ntag={tag}\nelement={info.Name}\nstart={clip.Start}\npeak_frame={clip.Peak}\nframes={clip.Frames}\nended={clip.Ended}\nset_off={clip.SetOff}\n" +
             $"blows={clip.Blows}\nlandings={clip.Landings}\nground={clip.Ground}\nmost_trails={clip.Ribbons}\nmost_sheaths={clip.Sheaths}\nmost_blade_sheaths={clip.BladeSheaths}\nlines={clip.Lines}\nfitted={clip.Fitted}\norder={order}\ncontacts={string.Join(",", contacts)}\nflash_frames={flashFrames}\nwhite_flash_frames={whiteFlashFrames}\nwhite_at={string.Join(",", whiteAt)}\n");
