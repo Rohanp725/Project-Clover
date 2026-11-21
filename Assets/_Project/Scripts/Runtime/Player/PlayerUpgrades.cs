@@ -1467,7 +1467,8 @@ namespace Clover.Player
                     int stacks = eStacks;
                     if (effect.Radius > 0f)
                     {
-                        combat.AfflictArea(centre, effect.Radius, kind, stacks, null, laying);
+                        // Sparing the trigger's own enemy, or only those carrying an affliction, when the mark says so.
+                        combat.AfflictArea(centre, effect.Radius, kind, stacks, effect.SparesTarget ? subject : null, laying, effect.OnlyCarrying);
                         // A reaction with its own bespoke look shows what it lays in that look (Smoulder's black flare).
                         if (!bespoke) ElementLook.Ring(look, centre + Vector3.up * 0.2f);
                     }
@@ -1766,7 +1767,7 @@ namespace Clover.Player
                 {
                     // PerStack: held for each stack counted (Poured Bronze's 0.4 s a notch).
                     float seconds = Or(effect.Seconds, 1.5f) * per;
-                    if (effect.Radius > 0f) Holds += combat.HoldArea(centre, effect.Radius, seconds);
+                    if (effect.Radius > 0f) Holds += combat.HoldArea(centre, effect.Radius, seconds, effect.OnlyCarrying);
                     else if (subject is IAfflictable gripped && gripped.Afflictions.Hold(seconds)) Holds++;
                     // An unseen hold is drawn by its reaction's look alone: no ring (Seized, the owner's "remove the circles").
                     if (!effect.Unseen)

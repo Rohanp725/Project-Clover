@@ -60,8 +60,8 @@ namespace Clover.Player
         /// </summary>
         public AfflictionKind PerDepthOf = AfflictionKind.None;
         /// <summary>
-        /// Not None: a pull or push over an area takes only the enemies carrying this affliction (The Pull of Night draws
-        /// the Soaked alone).
+        /// Not None: a pull, push, hold or laying over an area takes only the enemies carrying this affliction (The Pull of
+        /// Night draws the Soaked alone; Sea Ice's web chills only the Soaked).
         /// </summary>
         public AfflictionKind OnlyCarrying = AfflictionKind.None;
         /// <summary>The stacks it lays are as many as the trigger carried: what the dead enemy bore of <see cref="Needs"/>, or what a set-off spent.</summary>

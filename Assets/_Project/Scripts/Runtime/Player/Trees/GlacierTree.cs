@@ -29,8 +29,8 @@ namespace Clover.Player.Trees
         {
             const string A = Elements.Ice, B = Elements.Water;
 
-            // NEEDS: Sea Ice's web reaching only the Soaked within 4 m (now every enemy there takes 2 Chill, on purpose able
-            // to react); Hard Water's freeze held half again as long and its shatter 30% harder (frozen-for).
+            // Sea Ice's web reaches only the Soaked within 4 m (UpgradeEffect.OnlyCarrying).
+            // NEEDS: Hard Water's freeze held half again as long and its shatter 30% harder (frozen-for).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Supercooled: Sea Ice or Hard Water", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -48,7 +48,7 @@ namespace Clover.Player.Trees
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaIce, By = StruckBy.Weapon, Ranks = EnemyRank.Elite, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 3 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaIce, By = StruckBy.Weapon, Ranks = EnemyRank.God, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Chill, Stacks = 2 },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaIce, By = StruckBy.Weapon, Do = UpgradeAction.Spend, Affliction = AfflictionKind.Soaked },
-                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaIce, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Chill, Stacks = 2, Cascades = true },
+                            new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = SeaIce, By = StruckBy.Weapon, Do = UpgradeAction.Afflict, Radius = 4f, Affliction = AfflictionKind.Chill, Stacks = 2, OnlyCarrying = AfflictionKind.Soaked, Cascades = true },
                         },
                     },
                     new ShapeDef

@@ -29,8 +29,7 @@ namespace Clover.Player.Trees
             const string A = Elements.Water, B = Elements.Life;
 
             // NEEDS: ground that mends the player who stands on it (Floating Flower's lily, 3 a second; now 8 at once as it
-            // opens, and the lily soaks what stands on it); a laying that reaches only the Soaked (Rootlets; now every enemy
-            // within 5 m is seeded to full).
+            // opens, and the lily soaks what stands on it). Rootlets seed only the Soaked (UpgradeEffect.OnlyCarrying).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Quickening: Floating Flower or Rootlets", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -51,11 +50,11 @@ namespace Clover.Player.Trees
                     new ShapeDef
                     {
                         Name = "Rootlets",
-                        Description = "As the flower opens, white rootlets run through the wet to the enemies within 5 m and seed each to full. A heavy blow within 4 s still bursts the flower: you heal 10.",
+                        Description = "As the flower opens, white rootlets run through the wet to the Soaked enemies within 5 m and seed each to full. A heavy blow within 4 s still bursts the flower: you heal 10.",
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Affliction = AfflictionKind.Seeded, Stacks = ToFull },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Radius = 5f, Affliction = AfflictionKind.Seeded, Stacks = ToFull },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Radius = 5f, Affliction = AfflictionKind.Seeded, Stacks = ToFull, OnlyCarrying = AfflictionKind.Soaked },
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Rooted, Seconds = 4f, EndsWith = ConditionBlow.Heavy } },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionStruck, Condition = Rooted, By = StruckBy.Heavy, Do = UpgradeAction.Heal, Amount = 10f },
                         },

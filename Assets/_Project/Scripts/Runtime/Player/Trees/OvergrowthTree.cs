@@ -24,8 +24,7 @@ namespace Clover.Player.Trees
         {
             const string A = Elements.Life, B = Elements.Earth;
 
-            // NEEDS: a laying that spares the reacting enemy (Taking Root's crack reaches "every other enemy"; now it takes
-            // the Tremor too) and one that reaches only the Seeded (Root Web; now every enemy within 6 m).
+            // Taking Root's crack spares the reacting enemy (SparesTarget); Root Web reaches only the Seeded (OnlyCarrying).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Split Rock: Taking Root or Root Web", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -35,21 +34,21 @@ namespace Clover.Player.Trees
                     new ShapeDef
                     {
                         Name = "Taking Root",
-                        Description = "Held only 1 s, and no split: the floor cracks round it at once, Tremor 1 on every enemy within 2.5 m.",
+                        Description = "Held only 1 s, and no split: the floor cracks round it at once, Tremor 1 on every other enemy within 2.5 m.",
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Seconds = 1f },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Tremor, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Tremor, Stacks = 1, SparesTarget = true },
                         },
                     },
                     new ShapeDef
                     {
                         Name = "Root Web",
-                        Description = "The roots run on underground, a line of lifting soil to each enemy within 6 m: each is held 0.5 s and given Tremor 1.",
+                        Description = "The roots run on underground, a line of lifting soil to each Seeded enemy within 6 m: each is held 0.5 s and given Tremor 1.",
                         Effects = new[]
                         {
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Radius = 6f, Seconds = 0.5f },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Radius = 6f, Affliction = AfflictionKind.Tremor, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Hold, Radius = 6f, Seconds = 0.5f, OnlyCarrying = AfflictionKind.Seeded },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Radius = 6f, Affliction = AfflictionKind.Tremor, Stacks = 1, OnlyCarrying = AfflictionKind.Seeded },
                         },
                     },
                 },

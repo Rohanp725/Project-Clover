@@ -389,6 +389,21 @@ namespace Clover.Tests
         }
 
         [Test]
+        public void TheWebsReachOnlyWhatTheyAskForAndTakingRootSparesItsOwn()
+        {
+            UpgradeEffect Find(System.Collections.Generic.IEnumerable<UpgradeEffect> effects, UpgradeAction action, AfflictionKind laid) =>
+                effects.First(effect => effect.Do == action && (laid == AfflictionKind.None || effect.Affliction == laid) && effect.Radius > 0f);
+            System.Collections.Generic.IEnumerable<UpgradeEffect> Shape(string mark, string name) => Upgrade.ById(mark).Shapes.First(shape => shape.Name == name).Effects;
+
+            Assert.AreEqual(AfflictionKind.Soaked, Find(Shape(GlacierTree.Shape, "Sea Ice"), UpgradeAction.Afflict, AfflictionKind.Chill).OnlyCarrying, "Sea Ice: the Soaked");
+            Assert.AreEqual(AfflictionKind.Soaked, Find(Shape(BloomTree.Shape, "Rootlets"), UpgradeAction.Afflict, AfflictionKind.Seeded).OnlyCarrying, "Rootlets: the Soaked");
+            Assert.AreEqual(AfflictionKind.Seeded, Find(Shape(OvergrowthTree.Shape, "Root Web"), UpgradeAction.Afflict, AfflictionKind.Tremor).OnlyCarrying, "Root Web: the Seeded");
+            Assert.AreEqual(AfflictionKind.Seeded, Find(Shape(OvergrowthTree.Shape, "Root Web"), UpgradeAction.Hold, AfflictionKind.None).OnlyCarrying, "Root Web holds the Seeded alone");
+            Assert.IsTrue(Find(Shape(OvergrowthTree.Shape, "Taking Root"), UpgradeAction.Afflict, AfflictionKind.Tremor).SparesTarget, "Taking Root spares the one reacting");
+            Assert.AreEqual(AfflictionKind.Poison, Find(Shape(BurningSapDuo.Shape, "The Light Finds Them"), UpgradeAction.Afflict, AfflictionKind.Marked).OnlyCarrying, "the poisoned alone Marked");
+        }
+
+        [Test]
         public void RustAndItsShapesLetTheNotchesRunDeeper()
         {
             var rusting = Upgrade.All.SelectMany(upgrade => upgrade.Effects.Concat(upgrade.Shapes == null ? Enumerable.Empty<UpgradeEffect>() : upgrade.Shapes.Where(shape => shape?.Effects != null).SelectMany(shape => shape.Effects)))

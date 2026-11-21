@@ -27,8 +27,8 @@ namespace Clover.Player.Trees.Duo
             const string A = Elements.Light, B = Elements.Poison;
 
             // The poison held back and landed doubled, as the plain reaction (ConditionSpec.HoldsBites).
-            // NEEDS: a laying that reaches only the poisoned (The Light Finds Them; now every enemy within 8 m is Marked);
-            // weals raised only by critical blows (Blistered; now by every weapon blow).
+            // The Light Finds Them Marks only the poisoned within 8 m (OnlyCarrying).
+            // NEEDS: weals raised only by critical blows (Blistered; now by every weapon blow).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Shape, Name = "Burning Sap: The Light Finds Them or Blistered", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Part = BranchPart.Shape, Cost = 3, Icon = UpgradeIcons.Spiral,
@@ -42,7 +42,7 @@ namespace Clover.Player.Trees.Duo
                         Effects = new[]
                         {
                             new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Condition, State = new ConditionSpec { Id = Found, Seconds = 3f, HoldsBites = AfflictionKind.Poison, HeldScale = 2f } },
-                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Radius = 8f, Affliction = AfflictionKind.Marked, Stacks = 1 },
+                            new UpgradeEffect { On = UpgradeTrigger.Reacted, Do = UpgradeAction.Afflict, Radius = 8f, Affliction = AfflictionKind.Marked, Stacks = 1, OnlyCarrying = AfflictionKind.Poison },
                             new UpgradeEffect { On = UpgradeTrigger.ConditionEnded, Condition = Found, SpentAtLeast = 1, Do = UpgradeAction.Afflict, Radius = 2.5f, Affliction = AfflictionKind.Poison, Stacks = 2, PerStack = true },
                         },
                     },
