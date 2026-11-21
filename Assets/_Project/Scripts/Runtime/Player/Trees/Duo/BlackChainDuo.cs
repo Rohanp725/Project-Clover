@@ -69,12 +69,12 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.LeftLow));
 
-            // NEEDS: an affliction kept from fading while another lasts on the same enemy (a notch kept while the curse
-            // holds, as Wither keeps poison); until then it does nothing.
+            // Notches kept from fading while the enemy is Cursed (AfflictionRules.KeepWhile).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = RustInTheCurse, Name = "Rust in the Curse", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 3, Requires = new[] { Shape }, Icon = UpgradeIcons.Skull,
                 Description = "Notches on a Cursed enemy do not fade while the curse lasts.",
+                Rules = book => book.Afflictions.KeepWhile(AfflictionKind.Sundered, AfflictionKind.Cursed),
             }, HeartPattern.RightLow));
 
             // NEEDS: the chain-mate (linked enemies); now the finisher's half leaps to the nearest other enemy within 4 m.

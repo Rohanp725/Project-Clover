@@ -83,11 +83,12 @@ namespace Clover.Player.Trees.Duo
                     new UpgradeEffect { Do = UpgradeAction.Afflict, Radius = 3f, Affliction = AfflictionKind.Cursed, Stacks = 1 }),
             }, HeartPattern.RightLow));
 
-            // NEEDS: an affliction lasting as long as another on the same enemy (fades-never); until then it does nothing.
+            // The Curse kept from fading while the enemy carries Static (AfflictionRules.KeepWhile).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = LongMemory, Name = "Long Memory", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { Grievance }, Icon = UpgradeIcons.Hourglass,
                 Description = "A Curse on a charged enemy lasts as long as its Static does.",
+                Rules = book => book.Afflictions.KeepWhile(AfflictionKind.Cursed, AfflictionKind.Static),
             }, HeartPattern.LeftHigh));
 
             // The Grudge's bolt alone (the owner's answer of 2026-11-20) lands twice as hard: a second burst as large as the

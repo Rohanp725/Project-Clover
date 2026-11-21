@@ -77,11 +77,13 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: an affliction lasting longer while another lies on the same enemy (fades-never); until then nothing.
+            // Soaked fades at half pace, lasting twice as long, while the enemy is notched (AfflictionRules.FadeSlowerWhile;
+            // the design says only "longer", so twice is Claude's number).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Brine, Name = "Brine", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SaltEdge }, Icon = UpgradeIcons.Drop,
-                Description = "Soaked lasts longer on a notched enemy.",
+                Description = "Soaked lasts twice as long on a notched enemy.",
+                Rules = book => book.Afflictions.FadeSlowerWhile(AfflictionKind.Soaked, AfflictionKind.Sundered, 0.5f),
             }, HeartPattern.LeftHigh));
 
             // NEEDS: heavy blows struck from inside ground of one's own not broken by blows taken (ground-states); the wreck is a

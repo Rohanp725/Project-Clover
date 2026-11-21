@@ -79,11 +79,16 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Burn, Needs2 = AfflictionKind.Chill, Do = UpgradeAction.Burst, Radius = 0.5f, Damage = 30f, Stagger = 40f, Affliction = AfflictionKind.Burn } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: an affliction kept from fading while another lasts (fades-never); until then it does nothing.
+            // Each of the two kept from fading while the other is carried (AfflictionRules.KeepWhile).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = NeitherWins, Name = "Neither Wins", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { SparkAndRime }, Icon = UpgradeIcons.Snowflake,
                 Description = "On an enemy that carries both, neither the Burn nor the Chill fades.",
+                Rules = book =>
+                {
+                    book.Afflictions.KeepWhile(AfflictionKind.Burn, AfflictionKind.Chill);
+                    book.Afflictions.KeepWhile(AfflictionKind.Chill, AfflictionKind.Burn);
+                },
             }, HeartPattern.LeftHigh));
 
             // NEEDS: a Frozen enemy that shatters on any blow (now its shatter, by a heavy blow as usual, sets all within 3 m

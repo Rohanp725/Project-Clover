@@ -1,0 +1,128 @@
+using Clover.Gameplay;
+using Clover.Player;
+using Clover.Player.Growth;
+using Clover.Player.Trees.Duo;
+using NUnit.Framework;
+
+namespace Clover.Tests
+{
+    /// <summary>
+    /// An affliction kept from fading, or slowed, while its enemy carries another (the ledger's fades-never,
+    /// standin_clearance_plan.md pass 1): the rule itself, what it does on an enemy's set, and the six marks that did
+    /// nothing until it was built (Permafrost, Neither Wins, Cinnabar, Long Memory, Brine, Rust in the Curse). The rules are the static the
+    /// enemies read, which these tests leave clear.
+    /// </summary>
+    public class KeptWhileTests
+    {
+        private const float Frame = 0.1f;
+
+        [SetUp]
+        [TearDown]
+        public void LeaveTheAfflictionsAsWritten() => Afflictions.Rules.Clear();
+
+        private static AfflictionSet NewEnemy() => new AfflictionSet { Reactions = new ReactionEngine((who, pair, laid) => { }, () => 0) };
+
+        private static void Lay(AfflictionSet set, AfflictionKind kind) => set.Lay(kind, 1, 0f, 1f, LaySource.Spell);
+
+        private static void Run(AfflictionSet set, float seconds)
+        {
+            int steps = UnityEngine.Mathf.RoundToInt(seconds / Frame);
+            for (int i = 0; i < steps; i++) set.Tick(Frame);
+        }
+
+        private static int Mask(params AfflictionKind[] kinds)
+        {
+            int mask = 0;
+            foreach (var kind in kinds) mask |= 1 << (int)kind;
+            return mask;
+        }
+
+        [Test]
+        public void TheRuleKeepsOnlyWhileItsPartnerIsCarried()
+        {
+            var rules = new AfflictionRules();
+            rules.KeepWhile(AfflictionKind.Tremor, AfflictionKind.Chill);
+            Assert.IsTrue(rules.Any);
+            Assert.IsTrue(rules.KeepsWith(AfflictionKind.Tremor, Mask(AfflictionKind.Tremor, AfflictionKind.Chill)));
+            Assert.IsFalse(rules.KeepsWith(AfflictionKind.Tremor, Mask(AfflictionKind.Tremor)), "no Chill, no keeping");
+            Assert.IsFalse(rules.KeepsWith(AfflictionKind.Chill, Mask(AfflictionKind.Tremor, AfflictionKind.Chill)), "one way only");
+            Assert.IsFalse(rules.Keeps(AfflictionKind.Tremor), "not kept outright");
+            rules.FadeSlowerWhile(AfflictionKind.Soaked, AfflictionKind.Sundered, 0.5f);
+            Assert.AreEqual(0.5f, rules.FadePace(AfflictionKind.Soaked, Mask(AfflictionKind.Soaked, AfflictionKind.Sundered)), 1e-5f);
+            Assert.AreEqual(1f, rules.FadePace(AfflictionKind.Soaked, Mask(AfflictionKind.Soaked)), 1e-5f);
+            var copy = new AfflictionRules();
+            copy.CopyFrom(rules);
+            Assert.IsTrue(copy.KeepsWith(AfflictionKind.Tremor, Mask(AfflictionKind.Chill)));
+            Assert.AreEqual(0.5f, copy.FadePace(AfflictionKind.Soaked, Mask(AfflictionKind.Sundered)), 1e-5f);
+            rules.Clear();
+            Assert.IsFalse(rules.KeepsWith(AfflictionKind.Tremor, Mask(AfflictionKind.Chill)));
+            Assert.AreEqual(1f, rules.FadePace(AfflictionKind.Soaked, Mask(AfflictionKind.Sundered)), 1e-5f);
+        }
+
+        [Test]
+        public void OnAnEnemyTheKeptKindOutlastsItsTimeOnlyBesideItsPartner()
+        {
+            Afflictions.Rules.Keep(AfflictionKind.Chill);
+            Afflictions.Rules.KeepWhile(AfflictionKind.Tremor, AfflictionKind.Chill);
+            var chilled = NewEnemy();
+            Lay(chilled, AfflictionKind.Chill);
+            Lay(chilled, AfflictionKind.Tremor);
+            var plain = NewEnemy();
+            Lay(plain, AfflictionKind.Tremor);
+            Run(chilled, 60f);
+            Run(plain, 60f);
+            Assert.IsTrue(chilled.Has(AfflictionKind.Tremor), "Permafrost: Tremor does not fade from a chilled enemy");
+            Assert.IsFalse(plain.Has(AfflictionKind.Tremor), "with no Chill it fades as written");
+        }
+
+        [Test]
+        public void ABurnIsKeptBesideItsPartnerToo()
+        {
+            Afflictions.Rules.Keep(AfflictionKind.Chill);
+            Afflictions.Rules.KeepWhile(AfflictionKind.Burn, AfflictionKind.Chill);
+            var set = NewEnemy();
+            set.Ignite(2f, 1, LaySource.Spell);
+            Lay(set, AfflictionKind.Chill);
+            Run(set, 30f);
+            Assert.IsTrue(set.Burn.IsBurning, "Neither Wins: the burn goes on while the Chill lasts");
+        }
+
+        [Test]
+        public void ASlowedKindFadesAtItsRulesPace()
+        {
+            Afflictions.Rules.Keep(AfflictionKind.Sundered);
+            Afflictions.Rules.FadeSlowerWhile(AfflictionKind.Soaked, AfflictionKind.Sundered, 0.5f);
+            var notched = NewEnemy();
+            Lay(notched, AfflictionKind.Sundered);
+            Lay(notched, AfflictionKind.Soaked);
+            var plain = NewEnemy();
+            Lay(plain, AfflictionKind.Soaked);
+            float before = notched.SecondsLeft(AfflictionKind.Soaked);
+            Assert.AreEqual(before, plain.SecondsLeft(AfflictionKind.Soaked), 1e-4f);
+            Run(notched, 1f);
+            Run(plain, 1f);
+            Assert.AreEqual(0.5f, before - notched.SecondsLeft(AfflictionKind.Soaked), 0.02f, "Brine: half a second gone in a second");
+            Assert.AreEqual(1f, before - plain.SecondsLeft(AfflictionKind.Soaked), 0.02f);
+        }
+
+        [Test]
+        public void TheSixMarksWriteTheirRules()
+        {
+            var book = new RuleBook();
+            Assert.IsTrue(book.Apply(Upgrade.ById(FrostHeaveDuo.Permafrost)));
+            Assert.IsTrue(book.Apply(Upgrade.ById(ThermalShockDuo.NeitherWins)));
+            Assert.IsTrue(book.Apply(Upgrade.ById(QuicksilverDuo.Cinnabar)));
+            Assert.IsTrue(book.Apply(Upgrade.ById(TheGrudgeDuo.LongMemory)));
+            Assert.IsTrue(book.Apply(Upgrade.ById(RustDuo.Brine)));
+            Assert.IsTrue(book.Apply(Upgrade.ById(BlackChainDuo.RustInTheCurse)));
+            var rules = book.Afflictions;
+            Assert.IsTrue(rules.KeepsWith(AfflictionKind.Tremor, Mask(AfflictionKind.Chill)), "Permafrost");
+            Assert.IsTrue(rules.KeepsWith(AfflictionKind.Burn, Mask(AfflictionKind.Chill)), "Neither Wins, the Burn");
+            Assert.IsTrue(rules.KeepsWith(AfflictionKind.Chill, Mask(AfflictionKind.Burn)), "Neither Wins, the Chill");
+            Assert.IsTrue(rules.KeepsWith(AfflictionKind.Sundered, Mask(AfflictionKind.Poison)), "Cinnabar");
+            Assert.IsTrue(rules.KeepsWith(AfflictionKind.Cursed, Mask(AfflictionKind.Static)), "Long Memory");
+            Assert.IsTrue(rules.KeepsWith(AfflictionKind.Sundered, Mask(AfflictionKind.Cursed)), "Rust in the Curse");
+            Assert.AreEqual(0.5f, rules.FadePace(AfflictionKind.Soaked, Mask(AfflictionKind.Sundered)), 1e-5f, "Brine");
+        }
+    }
+}

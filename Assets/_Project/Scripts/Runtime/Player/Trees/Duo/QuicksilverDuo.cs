@@ -83,11 +83,12 @@ namespace Clover.Player.Trees.Duo
                 },
             }, HeartPattern.RightLow));
 
-            // NEEDS: an affliction lasting as long as another on the same enemy (fades-never); until then it does nothing.
+            // Notches kept from fading while the enemy is poisoned (AfflictionRules.KeepWhile).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Cinnabar, Name = "Cinnabar", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { EnvenomedEdge }, Icon = UpgradeIcons.Gem,
                 Description = "Notches last as long as the poison does.",
+                Rules = book => book.Afflictions.KeepWhile(AfflictionKind.Sundered, AfflictionKind.Poison),
             }, HeartPattern.LeftHigh));
 
             to.Add(HeartPattern.Put(new Upgrade

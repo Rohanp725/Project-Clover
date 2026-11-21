@@ -83,11 +83,12 @@ namespace Clover.Player.Trees.Duo
                 Effects = new[] { new UpgradeEffect { On = UpgradeTrigger.PerfectGuard, Needs = AfflictionKind.Chill, Needs2 = AfflictionKind.Tremor, Do = UpgradeAction.ForceReaction, Reaction = Reaction } },
             }, HeartPattern.RightLow));
 
-            // NEEDS: an affliction kept from fading while another lasts (fades-never); until then it does nothing.
+            // Tremor kept from fading while the enemy carries Chill (AfflictionRules.KeepWhile).
             to.Add(HeartPattern.Put(new Upgrade
             {
                 Id = Permafrost, Name = "Permafrost", Element = A, Element2 = B, Kind = UpgradeKind.Mix, Cost = 1, Requires = new[] { HardFrost }, Icon = UpgradeIcons.Snowflake,
                 Description = "Tremor does not fade from a chilled enemy.",
+                Rules = book => book.Afflictions.KeepWhile(AfflictionKind.Tremor, AfflictionKind.Chill),
             }, HeartPattern.LeftHigh));
 
             // NEEDS: a freeze held longer on a shaken enemy (frozen-for); the shatter's heave is built.

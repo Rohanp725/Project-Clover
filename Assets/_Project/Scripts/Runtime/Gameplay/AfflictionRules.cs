@@ -20,12 +20,24 @@ namespace Clover.Gameplay
         private readonly float[] ripensAfter = new float[Afflictions.Count];
         private readonly float[] ripeShare = new float[Afflictions.Count];
         private readonly float[] unripeShare = new float[Afflictions.Count];
+        private readonly int[] keepsWhile = new int[Afflictions.Count];
+        private readonly int[] slowerWhile = new int[Afflictions.Count];
+        private readonly float[] slowerPace = new float[Afflictions.Count];
 
         /// <summary>False while every affliction behaves as written: the sets then skip every rule here with one test.</summary>
         public bool Any { get; private set; }
 
         /// <summary>True when the kind never fades by itself: only being set off, spent, or its bearer's death ends it.</summary>
         public bool Keeps(AfflictionKind kind) => (keeps & Bit(kind)) != 0;
+
+        /// <summary>
+        /// True when the kind does not fade while the enemy also carries one of the kinds a rule pairs it with
+        /// (Permafrost's Tremor on a chilled enemy); <paramref name="carried"/> is the enemy's mask of kinds carried.
+        /// </summary>
+        public bool KeepsWith(AfflictionKind kind, int carried) => Valid(kind) && (keepsWhile[(int)kind] & carried) != 0;
+
+        /// <summary>How fast the kind fades on an enemy carrying <paramref name="carried"/>: 1 as written, less while a rule slows it (Brine).</summary>
+        public float FadePace(AfflictionKind kind, int carried) => Valid(kind) && (slowerWhile[(int)kind] & carried) != 0 ? slowerPace[(int)kind] : 1f;
 
         /// <summary>True when the kind is not spent by weapon blows (a mark of light): it lasts its time instead.</summary>
         public bool Unspent(AfflictionKind kind) => (unspent & Bit(kind)) != 0;
@@ -74,6 +86,23 @@ namespace Clover.Gameplay
             Any = true;
         }
 
+        /// <summary>The kind does not fade while the enemy also carries <paramref name="with"/>; once that is gone it fades as written.</summary>
+        public void KeepWhile(AfflictionKind kind, AfflictionKind with)
+        {
+            if (!Valid(kind) || !Valid(with) || kind == with) return;
+            keepsWhile[(int)kind] |= Bit(with);
+            Any = true;
+        }
+
+        /// <summary>The kind fades at <paramref name="pace"/> (0.5: lasts twice as long) while the enemy also carries <paramref name="with"/>.</summary>
+        public void FadeSlowerWhile(AfflictionKind kind, AfflictionKind with, float pace)
+        {
+            if (!Valid(kind) || !Valid(with) || kind == with || pace <= 0f || pace >= 1f) return;
+            slowerWhile[(int)kind] |= Bit(with);
+            slowerPace[(int)kind] = slowerPace[(int)kind] > 0f ? Math.Min(slowerPace[(int)kind], pace) : pace;
+            Any = true;
+        }
+
         /// <summary>The kind is not spent by weapon blows.</summary>
         public void NotSpentByBlows(AfflictionKind kind)
         {
@@ -110,6 +139,9 @@ namespace Clover.Gameplay
             Array.Clear(ripensAfter, 0, ripensAfter.Length);
             Array.Clear(ripeShare, 0, ripeShare.Length);
             Array.Clear(unripeShare, 0, unripeShare.Length);
+            Array.Clear(keepsWhile, 0, keepsWhile.Length);
+            Array.Clear(slowerWhile, 0, slowerWhile.Length);
+            Array.Clear(slowerPace, 0, slowerPace.Length);
             Any = false;
         }
 
@@ -129,6 +161,9 @@ namespace Clover.Gameplay
             Array.Copy(other.ripensAfter, ripensAfter, ripensAfter.Length);
             Array.Copy(other.ripeShare, ripeShare, ripeShare.Length);
             Array.Copy(other.unripeShare, unripeShare, unripeShare.Length);
+            Array.Copy(other.keepsWhile, keepsWhile, keepsWhile.Length);
+            Array.Copy(other.slowerWhile, slowerWhile, slowerWhile.Length);
+            Array.Copy(other.slowerPace, slowerPace, slowerPace.Length);
             Any = other.Any;
         }
 

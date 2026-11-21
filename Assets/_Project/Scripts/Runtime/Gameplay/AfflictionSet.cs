@@ -500,7 +500,8 @@ namespace Clover.Gameplay
             if (rules.Any || resting != 0) FollowRules(rules, deltaTime);
             // Kept from fading (Smoulder, or Fire Without End's rule): the burn's time is given back before it is spent, so it
             // bites on and never runs down.
-            if (Burn.IsBurning && (Conditions.KeepsKind(AfflictionKind.Burn) || rules.Keeps(AfflictionKind.Burn))) Burn.Ignite(Burn.SecondsLeft + deltaTime);
+            if (Burn.IsBurning && (Conditions.KeepsKind(AfflictionKind.Burn) || rules.Keeps(AfflictionKind.Burn)
+                || (rules.Any && rules.KeepsWith(AfflictionKind.Burn, PresentMask)))) Burn.Ignite(Burn.SecondsLeft + deltaTime);
             float burnt = Burn.Tick(deltaTime) * strength[(int)AfflictionKind.Burn];
             // The Blade Drinks Fire: a burn left alone does nothing; it is fuel for the blade.
             float damage = Afflictions.BurnBiteOff ? 0f : burnt;
@@ -576,13 +577,21 @@ namespace Clover.Gameplay
                 }
                 if (poison && (Afflictions.PoisonKeeps || cursed)) continue;
                 if (Conditions.KeepsKind((AfflictionKind)i) || rules.Keeps((AfflictionKind)i)) continue;
+                // Kept, or slowed, while the enemy carries another kind a rule pairs it with (Permafrost, Neither Wins, Brine).
+                float rulePace = 1f;
+                if (rules.Any)
+                {
+                    int carried = PresentMask;
+                    if (rules.KeepsWith((AfflictionKind)i, carried)) continue;
+                    rulePace = rules.FadePace((AfflictionKind)i, carried);
+                }
                 // A ripe seed stops fading (In Its Season); once the rule has left force it ripens no more and fades as written.
                 if ((ripe & (1 << i)) != 0)
                 {
                     if (rules.RipensAfter((AfflictionKind)i) > 0f) continue;
                     Unripen(i);
                 }
-                left[i] -= deltaTime * pace;
+                left[i] -= deltaTime * pace * rulePace;
                 if (left[i] > 0f) continue;
                 End(i);
                 // Faded by itself: under a rule it rests before it can be laid here again.
